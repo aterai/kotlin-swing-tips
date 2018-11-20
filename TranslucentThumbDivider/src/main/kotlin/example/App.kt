@@ -3,16 +3,18 @@ package example
 import java.awt.*
 import java.awt.color.ColorSpace
 import java.awt.event.MouseEvent
+import java.awt.geom.AffineTransform
 import java.awt.geom.Ellipse2D
+import java.awt.geom.Line2D
+import java.awt.geom.Path2D
 import java.awt.image.BufferedImage
 import java.awt.image.ColorConvertOp
-// import java.util.Objects
+import java.util.Objects
 import javax.swing.*
 import javax.swing.plaf.LayerUI
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-
     val split = JSplitPane()
     split.setContinuousLayout(true)
     split.setResizeWeight(.5)
@@ -50,7 +52,12 @@ class MainPanel : JPanel(BorderLayout()) {
     }
     split.setRightComponent(afterCanvas)
 
-    add(JLayer<JSplitPane>(split, DividerLocationDragLayerUI()))
+    val layerUI = DividerLocationDragLayerUI()
+    val check = JCheckBox("Paint divider")
+    check.addActionListener({ e -> layerUI.setPaintDividerEnabled((e.getSource() as JCheckBox).isSelected()) })
+
+    add(JLayer<JSplitPane>(split, layerUI))
+    add(check, BorderLayout.SOUTH)
     setOpaque(false)
     setPreferredSize(Dimension(320, 240))
   }
@@ -64,6 +71,7 @@ internal class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
   private var dividerLocation: Int = 0
   private var isDragging: Boolean = false
   private var isEnter: Boolean = false
+  private var dividerEnabled: Boolean = false
 
   override fun installUI(c: JComponent) {
     super.installUI(c)
@@ -87,8 +95,41 @@ internal class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
       g2.setPaint(Color(255, 100, 100, 100))
       g2.fill(thumb)
+      if (dividerEnabled) {
+        paintDivider(g2)
+      }
       g2.dispose()
     }
+  }
+
+  private fun paintDivider(g2: Graphics2D) {
+    g2.setStroke(BasicStroke(5f))
+    g2.setPaint(Color.WHITE)
+    g2.draw(thumb)
+
+    val cx = thumb.getCenterX()
+    val cy = thumb.getCenterY()
+
+    val line = Line2D.Double(cx, 0.0, cx, thumb.getMinY())
+    g2.draw(line)
+
+    val v = 8.0
+    val mx = cx - thumb.getWidth() / 4.0 + v / 2.0
+    val triangle = Path2D.Double()
+    triangle.moveTo(mx, cy - v)
+    triangle.lineTo(mx - v, cy)
+    triangle.lineTo(mx, cy + v)
+    triangle.lineTo(mx, cy - v)
+    triangle.closePath()
+    g2.fill(triangle)
+
+    val at = AffineTransform.getQuadrantRotateInstance(2, cx, cy)
+    g2.draw(at.createTransformedShape(line))
+    g2.fill(at.createTransformedShape(triangle))
+  }
+
+  fun setPaintDividerEnabled(flg: Boolean) {
+    this.dividerEnabled = flg
   }
 
   protected override fun processMouseEvent(e: MouseEvent, l: JLayer<out JSplitPane>) {
