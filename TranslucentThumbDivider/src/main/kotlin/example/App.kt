@@ -32,7 +32,12 @@ class MainPanel : JPanel(BorderLayout()) {
     val beforeCanvas = object : JComponent() {
       protected override fun paintComponent(g: Graphics) {
         super.paintComponent(g)
-        g.drawImage(icon.getImage(), 0, 0, icon.getIconWidth(), icon.getIconHeight(), this)
+        val iw = icon.getIconWidth()
+        val ih = icon.getIconHeight()
+        val dim = split.getSize()
+        val x = (dim.width - iw) / 2
+        val y = (dim.height - ih) / 2
+        g.drawImage(icon.getImage(), x, y, iw, ih, this)
       }
     }
     split.setLeftComponent(beforeCanvas)
@@ -41,12 +46,16 @@ class MainPanel : JPanel(BorderLayout()) {
       protected override fun paintComponent(g: Graphics) {
         super.paintComponent(g)
         val g2 = g.create() as Graphics2D
-        val iw = icon.getIconWidth()
-        val ih = icon.getIconHeight()
+        val iw = destination.getWidth(this)
+        val ih = destination.getHeight(this)
         val pt = getLocation()
         val ins = split.getBorder().getBorderInsets(split)
         g2.translate(-pt.x + ins.left, 0)
-        g2.drawImage(destination, 0, 0, iw, ih, this)
+
+        val dim = split.getSize()
+        val x = (dim.width - iw) / 2
+        val y = (dim.height - ih) / 2
+        g2.drawImage(destination, x, y, iw, ih, this)
         g2.dispose()
       }
     }
