@@ -12,10 +12,12 @@ class MainPanel : JPanel(BorderLayout()) {
     val box = Box.createVerticalBox()
     box.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
     box.add(makeTitledPanel("defalut JLabel ellipsis", JLabel(text)))
-    box.add(Box.createVerticalStrut(15))
+    box.add(Box.createVerticalStrut(5))
     box.add(makeTitledPanel("html JLabel fade out", FadeOutLabel("<html>$text")))
-    box.add(Box.createVerticalStrut(15))
-    box.add(makeTitledPanel("JTextField fade out", FadingOutLabel(text)))
+    box.add(Box.createVerticalStrut(5))
+    box.add(makeTitledPanel("JLabel TextLayout fade out", TextOverfloFadeLabel(text)))
+    box.add(Box.createVerticalStrut(5))
+    box.add(makeTitledPanel("JLabel BufferedImage fade out", FadingOutLabel(text)))
     box.add(Box.createVerticalGlue())
 
     add(box, BorderLayout.NORTH)
@@ -64,19 +66,47 @@ internal class FadeOutLabel(text: String) : JLabel(text) {
   }
 }
 
-internal class FadingOutLabel(text: String) : JTextField(text) {
+internal class TextOverfloFadeLabel(text: String) : JLabel(text) {
+
+  override fun paintComponent(g: Graphics) {
+    val i = getInsets()
+    val w = getWidth() - i.left - i.right
+    val h = getHeight() - i.top - i.bottom
+    val rect = Rectangle(i.left, i.top, w - LENGTH, h)
+
+    val g2 = g.create() as Graphics2D
+    g2.setFont(g.getFont())
+    g2.setPaint(getForeground())
+
+    val frc = g2.getFontRenderContext()
+    val tl = TextLayout(getText(), getFont(), frc)
+    val baseline = getBaseline(w, h)
+
+    g2.setClip(rect)
+    tl.draw(g2, getInsets().left.toFloat(), baseline.toFloat())
+
+    rect.width = 1
+    var alpha = 1f
+    for (x in w - LENGTH until w) {
+      rect.x = x
+      alpha = Math.max(0f, alpha - DIFF)
+      g2.setComposite(AlphaComposite.SrcOver.derive(alpha))
+      g2.setClip(rect)
+      tl.draw(g2, getInsets().left.toFloat(), baseline.toFloat())
+    }
+    g2.dispose()
+  }
+
+  companion object {
+    private val LENGTH = 20
+    private val DIFF = .05f
+  }
+}
+
+internal class FadingOutLabel(text: String) : JLabel(text) {
   private val dim = Dimension()
   @Transient
   private var buffer: Image? = null
-
-  override fun updateUI() {
-    super.updateUI()
-    setOpaque(false)
-    setEditable(false)
-    setFocusable(false)
-    setEnabled(false)
-    setBorder(BorderFactory.createEmptyBorder())
-  }
 
   override fun paintComponent(g: Graphics) {
     // super.paintComponent(g);
