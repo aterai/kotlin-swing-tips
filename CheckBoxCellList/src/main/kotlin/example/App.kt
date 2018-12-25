@@ -16,7 +16,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val list1 = Box.createVerticalBox()
 
     val model = DefaultListModel<CheckBoxNode>()
-    val list2 = CheckBoxList<>(model)
+    val list2 = CheckBoxList<CheckBoxNode>(model)
 
     val list3 = object : JTree() {
       override fun updateUI() {
