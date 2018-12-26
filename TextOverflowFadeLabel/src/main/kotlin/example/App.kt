@@ -1,7 +1,6 @@
 package example
 
 import java.awt.*
-import java.awt.font.FontRenderContext
 import java.awt.font.TextLayout
 import java.awt.image.BufferedImage
 import javax.swing.*

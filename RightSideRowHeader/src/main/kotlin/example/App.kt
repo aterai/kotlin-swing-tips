@@ -4,9 +4,7 @@ import java.awt.*
 import java.util.Objects
 import java.util.stream.IntStream
 import javax.swing.*
-import javax.swing.border.Border
 import javax.swing.table.DefaultTableModel
-import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter
 
 class MainPanel : JPanel(BorderLayout()) {

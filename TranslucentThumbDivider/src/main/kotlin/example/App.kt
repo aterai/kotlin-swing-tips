@@ -9,7 +9,6 @@ import java.awt.geom.Line2D
 import java.awt.geom.Path2D
 import java.awt.image.BufferedImage
 import java.awt.image.ColorConvertOp
-import java.util.Objects
 import javax.swing.*
 import javax.swing.plaf.LayerUI
 

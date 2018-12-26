@@ -22,10 +22,10 @@ class MainPanel : JPanel(BorderLayout()) {
     }
 
     val tabbedPane = JTabbedPane().apply {
-      add("ComboBox.timeFactor", p)
-      add("List.timeFactor", JScrollPane(JList<String>(model)))
-      add("Table.timeFactor(JFileChooser)", JFileChooser())
-      add("Tree.timeFactor", JScrollPane(JTree()))
+      addTab("ComboBox.timeFactor", p)
+      addTab("List.timeFactor", JScrollPane(JList<String>(model)))
+      addTab("Table.timeFactor(JFileChooser)", JFileChooser())
+      addTab("Tree.timeFactor", JScrollPane(JTree()))
     }
 
     add(tabbedPane)
@@ -33,15 +33,20 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   override fun updateUI() {
-    val lv = Optional.ofNullable(spinner)
-        .map { it.getModel().getValue() }
-        .orElse(1000L)
     // Unnecessary safe call on a non-null receiver of type JSpinner
     // val lv = spinner
     //     ?.let { it.getModel().getValue() }
     //     ?: 1000L
+
     // NullPointerException
     // val lv = spinner.getModel().getValue()
+
+    // Condition 'spinner != null' is always 'true'
+    // val lv = if (spinner != null) spinner.getModel().getValue() else 1000L
+
+    val lv = Optional.ofNullable(spinner)
+        .map { it.getModel().getValue() }
+        .orElse(1000L)
     UIManager.put("ComboBox.timeFactor", lv)
     UIManager.put("List.timeFactor", lv)
     UIManager.put("Table.timeFactor", lv)
@@ -100,7 +105,7 @@ internal object LookAndFeelUtil {
       SwingUtilities.updateComponentTreeUI(window)
     }
   }
-}/* Singleton */
+} /* Singleton */
 
 fun main() {
   EventQueue.invokeLater(object : Runnable {

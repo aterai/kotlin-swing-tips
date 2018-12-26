@@ -1,14 +1,12 @@
 package example
 
 import java.awt.*
-import java.util.Enumeration
 import javax.swing.*
 import javax.swing.event.TreeExpansionEvent
 import javax.swing.event.TreeWillExpandListener
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.ExpandVetoException
-import javax.swing.tree.TreeModel
 import javax.swing.tree.TreePath
 
 class MainPanel : JPanel(BorderLayout()) {

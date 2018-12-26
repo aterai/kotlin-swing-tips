@@ -106,4 +106,4 @@ internal object LookAndFeelUtil {
       SwingUtilities.updateComponentTreeUI(window)
     }
   }
-}/* Singleton */
+} /* Singleton */

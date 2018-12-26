@@ -2,17 +2,13 @@ package example
 
 import java.awt.*
 import java.io.IOException
-import java.io.Reader
-import java.net.URI
 import java.net.URISyntaxException
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.nio.file.FileSystemNotFoundException
 import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.spi.FileSystemProvider
-import java.util.Collections
 import java.util.stream.Collectors
 import java.util.stream.Stream
 import javax.script.Invocable

@@ -12,14 +12,9 @@ import java.util.Objects
 import javax.imageio.IIOImage
 import javax.imageio.ImageIO
 import javax.imageio.ImageTypeSpecifier
-import javax.imageio.ImageWriteParam
-import javax.imageio.ImageWriter
 import javax.imageio.metadata.IIOMetadata
 import javax.imageio.metadata.IIOMetadataNode
-import javax.imageio.stream.ImageOutputStream
 import javax.swing.*
-
-import org.w3c.dom.Node
 
 class MainPanel : JPanel(BorderLayout()) {
   private val DELAY = 10

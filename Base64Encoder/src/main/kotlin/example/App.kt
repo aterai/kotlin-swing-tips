@@ -3,10 +3,8 @@ package example
 import java.awt.*
 import java.io.ByteArrayInputStream
 import java.io.IOException
-import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
-import java.nio.file.Path
 import java.util.Base64
 import javax.imageio.ImageIO
 import javax.swing.*

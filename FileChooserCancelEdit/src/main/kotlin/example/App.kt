@@ -2,8 +2,6 @@ package example
 
 import java.awt.*
 import java.util.Optional
-import java.util.function.BinaryOperator
-import java.util.function.Predicate
 import java.util.stream.Stream
 import javax.swing.*
 
@@ -83,7 +81,7 @@ class MainPanel : JPanel(BorderLayout()) {
 //       .filter(Predicate<Component> { Container::class.java.isInstance(it) })
 //       .map({ stream(Container::class.java.cast(it)) })
 //       .reduce(Stream.of(parent), BinaryOperator<Stream<Component>> { a, b -> Stream.concat(a, b) })
-    //return Stream.of(*parent.getComponents())
+    // return Stream.of(*parent.getComponents())
     return java.util.Arrays.stream(parent.getComponents())
       .filter(Container::class.java::isInstance)
       .map({ c -> stream(Container::class.java.cast(c)) })

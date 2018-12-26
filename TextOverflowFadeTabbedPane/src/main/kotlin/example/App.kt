@@ -1,7 +1,6 @@
 package example
 
 import java.awt.*
-import java.awt.font.FontRenderContext
 import java.awt.font.TextLayout
 import java.util.Arrays
 import java.util.Objects
@@ -10,7 +9,6 @@ import javax.swing.plaf.synth.Region
 import javax.swing.plaf.synth.SynthConstants
 import javax.swing.plaf.synth.SynthContext
 import javax.swing.plaf.synth.SynthLookAndFeel
-import javax.swing.plaf.synth.SynthStyle
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
@@ -18,7 +16,9 @@ class MainPanel : JPanel(BorderLayout()) {
         makeTestTabbedPane(ClippedTitleTabbedPane()),
         makeTestTabbedPane(TextOverfloFadeTabbedPane()))
 
-    val p = JPanel(GridLayout(2, 1))
+    val p = JPanel(GridLayout(list.size, 1))
+    // Unresolved reference: Consumer
+    // list.forEach(Consumer<out JTabbedPane> { p.add(it) })
     list.forEach({ t -> p.add(t) })
 
     val check = JCheckBox("LEFT")
@@ -83,10 +83,10 @@ open class ClippedTitleTabbedPane : JTabbedPane {
     val insets = getInsets()
     val tabPlacement = getTabPlacement()
     val areaWidth = getWidth() - tabAreaInsets.left - tabAreaInsets.right - insets.left - insets.right
-    var tabWidth : Int // = 0 // = tabInsets.left + tabInsets.right + 3;
-    var gap : Int // = 0
+    var tabWidth: Int // = 0 // = tabInsets.left + tabInsets.right + 3;
+    var gap: Int // = 0
 
-    if (tabPlacement == LEFT || tabPlacement == RIGHT) {
+    if (tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT) {
       tabWidth = areaWidth / 4
       gap = 0
     } else { // TOP || BOTTOM
@@ -103,7 +103,7 @@ open class ClippedTitleTabbedPane : JTabbedPane {
 
   override fun insertTab(title: String, icon: Icon, component: Component, tip: String?, index: Int) {
     super.insertTab(title, icon, component, Objects.toString(tip, title), index)
-    setTabComponentAt(index, JLabel(title))
+    setTabComponentAt(index, JLabel(title, icon, SwingConstants.LEADING))
   }
 
   protected fun updateAllTabWidth(tabWidth: Int, gap: Int) {
@@ -168,8 +168,8 @@ internal class TextOverfloFadeLabel(text: String) : JLabel(text) {
   }
 
   companion object {
-      private val LENGTH = 20
-      private val DIFF = .05f
+    private val LENGTH = 20
+    private val DIFF = .05f
   }
 }
 
@@ -182,11 +182,11 @@ internal class ColorIcon(private val color: Color) : Icon {
     g2.dispose()
   }
 
-  override fun getIconWidth() : Int {
+  override fun getIconWidth(): Int {
     return 16
   }
 
-  override fun getIconHeight() : Int {
+  override fun getIconHeight(): Int {
     return 16
   }
 }

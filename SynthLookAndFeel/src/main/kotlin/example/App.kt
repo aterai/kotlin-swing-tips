@@ -4,9 +4,6 @@ package example
 // vim:set fileencoding=utf-8:
 // @homepage@
 import java.awt.*
-import java.io.IOException
-import java.io.InputStream
-import java.text.ParseException
 import javax.swing.*
 import javax.swing.plaf.synth.SynthLookAndFeel
 

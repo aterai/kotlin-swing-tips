@@ -91,7 +91,7 @@ internal class FileIconTableCellRenderer(private val fileSystemView: FileSystemV
       2 -> l.setText(file.getAbsolutePath())
       else -> {
       }
-    }// l.setText(file.getName());
+    } // l.setText(file.getName());
     return l
   }
 }

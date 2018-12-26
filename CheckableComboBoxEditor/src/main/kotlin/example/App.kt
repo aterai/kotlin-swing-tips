@@ -33,7 +33,6 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-
 open class ComboItem(var isEnabled: Boolean = false, var isEditable: Boolean = false, var text: String? = "")
 
 class CheckComboBoxRenderer<E : ComboItem> : ListCellRenderer<E> {
