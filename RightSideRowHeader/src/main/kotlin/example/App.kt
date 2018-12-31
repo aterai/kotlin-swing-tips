@@ -332,15 +332,13 @@ internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
 }
 
 fun main() {
-  EventQueue.invokeLater(object : Runnable {
-    override fun run() {
-      JFrame().apply {
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-        getContentPane().add(MainPanel())
-        pack()
-        setLocationRelativeTo(null)
-        setVisible(true)
-      }
+  EventQueue.invokeLater({
+    JFrame().apply {
+      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+      getContentPane().add(MainPanel())
+      pack()
+      setLocationRelativeTo(null)
+      setVisible(true)
     }
   })
 }

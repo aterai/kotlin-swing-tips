@@ -29,36 +29,18 @@ class MainPanel : JPanel() {
 class MyButton(title: String) : JButton("$title: class")
 
 fun main() {
-  EventQueue.invokeLater(object : Runnable {
-    override fun run() {
-        MainPanel::class.java.getResourceAsStream("button.xml").use({ input ->
-          val synth = SynthLookAndFeel()
-          synth.load(input, MainPanel::class.java)
-          UIManager.setLookAndFeel(synth)
-        })
-//       try {
-//         // UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
-//         MainPanel::class.java.getResourceAsStream("button.xml").use({ input ->
-//           val synth = SynthLookAndFeel()
-//           synth.load(input, MainPanel::class.java)
-//           UIManager.setLookAndFeel(synth)
-//         })
-//       } catch (ex: ClassNotFoundException) {
-//         ex.printStackTrace()
-//       } catch (ex: InstantiationException) {
-//         ex.printStackTrace()
-//       } catch (ex: IllegalAccessException) {
-//         ex.printStackTrace()
-//       } catch (ex: UnsupportedLookAndFeelException) {
-//         ex.printStackTrace()
-//       }
-      JFrame().apply {
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-        getContentPane().add(MainPanel())
-        pack()
-        setLocationRelativeTo(null)
-        setVisible(true)
-      }
+  EventQueue.invokeLater({
+    MainPanel::class.java.getResourceAsStream("button.xml").use({ input ->
+      val synth = SynthLookAndFeel()
+      synth.load(input, MainPanel::class.java)
+      UIManager.setLookAndFeel(synth)
+    })
+    JFrame().apply {
+      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+      getContentPane().add(MainPanel())
+      pack()
+      setLocationRelativeTo(null)
+      setVisible(true)
     }
   })
 }

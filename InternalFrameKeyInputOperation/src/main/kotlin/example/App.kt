@@ -40,18 +40,16 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 fun main() {
-  EventQueue.invokeLater(object : Runnable {
-    override fun run() {
-      JFrame().apply {
-        val mb = JMenuBar()
-        mb.add(LookAndFeelUtil.createLookAndFeelMenu())
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-        getContentPane().add(MainPanel())
-        setJMenuBar(mb)
-        pack()
-        setLocationRelativeTo(null)
-        setVisible(true)
-      }
+  EventQueue.invokeLater({
+    JFrame().apply {
+      val mb = JMenuBar()
+      mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+      getContentPane().add(MainPanel())
+      setJMenuBar(mb)
+      pack()
+      setLocationRelativeTo(null)
+      setVisible(true)
     }
   })
 }
