@@ -126,7 +126,7 @@ class MainPanel : JPanel(BorderLayout()) {
       }
 
       return null
-        }
+    }
 
     private fun prettify(engine: ScriptEngine, src: String): String {
       try {

@@ -1,12 +1,9 @@
 package example
 
 import java.awt.*
-import java.awt.event.HierarchyEvent
-import java.awt.event.HierarchyListener
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 import java.util.Arrays
-import java.util.Objects
 import javax.swing.*
 import javax.swing.plaf.basic.BasicProgressBarUI
 
@@ -59,7 +56,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
 internal class OneDirectionIndeterminateProgressBarUI : BasicProgressBarUI() {
   // @see com/sun/java/swing/plaf/windows/WindowsProgressBarUI.java
-  override protected fun getBox(r: Rectangle): Rectangle {
+  protected override fun getBox(r: Rectangle): Rectangle {
     val rect = super.getBox(r)
     val framecount = getFrameCount() / 2
     val currentFrame = getAnimationIndex() % framecount
