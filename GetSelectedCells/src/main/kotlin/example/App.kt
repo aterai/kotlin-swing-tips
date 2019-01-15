@@ -136,7 +136,7 @@ internal class BooleanEditor : AbstractCellEditor(), TableCellEditor {
     }
   }
   protected val checkBox: JCheckBox = object : JCheckBox() {
-    var handler: MyHandler? = null
+    var handler: CheckBoxHandler? = null
 
     override fun updateUI() {
       removeActionListener(handler)
@@ -145,20 +145,20 @@ internal class BooleanEditor : AbstractCellEditor(), TableCellEditor {
       setOpaque(false)
       setFocusable(false)
       setRolloverEnabled(false)
-      handler = MyHandler()
+      handler = CheckBoxHandler()
       addActionListener(handler)
       addMouseListener(handler)
     }
   }
 
-  override fun getCellEditorValue(): Any {
-    return checkBox.isSelected()
-  }
-
   override fun getTableCellEditorComponent(table: JTable, value: Any, isSelected: Boolean, row: Int, column: Int): Component {
-    checkBox.setSelected(Objects.equals(value, java.lang.Boolean.TRUE))
+    checkBox.setSelected(value == java.lang.Boolean.TRUE)
     renderer.add(checkBox)
     return renderer
+  }
+
+  override fun getCellEditorValue(): Any {
+    return checkBox.isSelected()
   }
 
   override fun isCellEditable(e: EventObject): Boolean {
@@ -168,7 +168,7 @@ internal class BooleanEditor : AbstractCellEditor(), TableCellEditor {
     return super.isCellEditable(e)
   }
 
-  private inner class MyHandler : MouseAdapter(), ActionListener {
+  private inner class CheckBoxHandler : MouseAdapter(), ActionListener {
     override fun actionPerformed(e: ActionEvent) {
       fireEditingStopped()
     }
