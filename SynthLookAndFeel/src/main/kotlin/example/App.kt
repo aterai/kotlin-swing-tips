@@ -3,8 +3,8 @@ package example
 // -*- mode:java; encoding:utf-8 -*-
 // vim:set fileencoding=utf-8:
 // @homepage@
-import java.awt.*
-import javax.swing.*
+import java.awt.* // ktlint-disable no-wildcard-imports
+import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.synth.SynthLookAndFeel
 
 class MainPanel : JPanel() {

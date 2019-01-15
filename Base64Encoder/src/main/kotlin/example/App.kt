@@ -1,13 +1,13 @@
 package example
 
-import java.awt.*
+import java.awt.* // ktlint-disable no-wildcard-imports
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.util.Base64
 import javax.imageio.ImageIO
-import javax.swing.*
+import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.filechooser.FileNameExtensionFilter
 
 class MainPanel : JPanel(BorderLayout()) {

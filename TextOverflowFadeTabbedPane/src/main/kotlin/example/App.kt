@@ -1,10 +1,10 @@
 package example
 
-import java.awt.*
+import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.font.TextLayout
 import java.util.Arrays
 import java.util.Objects
-import javax.swing.*
+import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.synth.Region
 import javax.swing.plaf.synth.SynthConstants
 import javax.swing.plaf.synth.SynthContext

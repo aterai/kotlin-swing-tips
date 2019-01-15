@@ -1,6 +1,6 @@
 package example
 
-import java.awt.*
+import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.UnsupportedFlavorException
 import java.awt.event.ItemEvent
@@ -11,7 +11,7 @@ import java.util.Collections
 import java.util.Comparator
 import java.util.stream.IntStream
 import java.util.stream.Stream
-import javax.swing.*
+import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.filechooser.FileSystemView
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel

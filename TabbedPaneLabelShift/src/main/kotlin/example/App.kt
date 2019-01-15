@@ -4,8 +4,8 @@
 
 package example
 
-import java.awt.*
-import javax.swing.*
+import java.awt.* // ktlint-disable no-wildcard-imports
+import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel(BorderLayout(5, 5)) {
   init {

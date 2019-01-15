@@ -1,6 +1,6 @@
 package example
 
-import java.awt.*
+import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.HierarchyEvent
 import java.io.IOException
 import java.io.UncheckedIOException
@@ -14,7 +14,7 @@ import java.nio.file.WatchKey
 import java.nio.file.WatchService
 import java.util.Objects
 import java.util.TreeSet
-import javax.swing.*
+import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter

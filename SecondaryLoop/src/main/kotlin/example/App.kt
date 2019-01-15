@@ -1,9 +1,9 @@
 package example
 
-import java.awt.*
+import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.InputEvent
 import java.beans.PropertyChangeEvent
-import javax.swing.*
+import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.LayerUI
 
 class MainPanel : JPanel(BorderLayout()) {
