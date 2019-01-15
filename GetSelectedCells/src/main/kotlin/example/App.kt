@@ -7,7 +7,6 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.util.EventObject
-import java.util.Objects
 import java.util.Optional
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
@@ -28,15 +27,11 @@ class MainPanel : JPanel(GridBagLayout()) {
       arrayOf(true, false, true, false, true, true, false, true, true))
 
     val model = object : DefaultTableModel(data, columnNames) {
-      override fun getColumnClass(column: Int): Class<*> {
-        return java.lang.Boolean::class.java
-      }
+      override fun getColumnClass(column: Int): Class<*> = java.lang.Boolean::class.java
     }
 
     val table = object : JTable(model) {
-      override fun getPreferredScrollableViewportSize(): Dimension {
-        return super.getPreferredSize()
-      }
+      override fun getPreferredScrollableViewportSize() = super.getPreferredSize()
 
       override fun updateUI() {
         setDefaultEditor(java.lang.Boolean::class.java, null)
@@ -157,9 +152,7 @@ internal class BooleanEditor : AbstractCellEditor(), TableCellEditor {
     return renderer
   }
 
-  override fun getCellEditorValue(): Any {
-    return checkBox.isSelected()
-  }
+  override fun getCellEditorValue(): Any = checkBox.isSelected()
 
   override fun isCellEditable(e: EventObject): Boolean {
     if (e is MouseEvent) {

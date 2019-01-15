@@ -69,13 +69,9 @@ internal class ColorIcon(private val color: Color) : Icon {
     g2.dispose()
   }
 
-  override fun getIconWidth(): Int {
-    return 16
-  }
+  override fun getIconWidth() = 16
 
-  override fun getIconHeight(): Int {
-    return 16
-  }
+  override fun getIconHeight() = 16
 }
 
 fun main() {

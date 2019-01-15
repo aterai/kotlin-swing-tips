@@ -14,9 +14,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val columnNames = arrayOf("user", "rwx")
     val data = arrayOf(arrayOf<Any>("owner", 7), arrayOf<Any>("group", 6), arrayOf<Any>("other", 5))
     val model = object : DefaultTableModel(data, columnNames) {
-      override fun getColumnClass(column: Int): Class<*> {
-        return getValueAt(0, column).javaClass
-      }
+      override fun getColumnClass(column: Int): Class<*> = getValueAt(0, column).javaClass
     }
     val table = object : JTable(model) {
       override fun updateUI() {

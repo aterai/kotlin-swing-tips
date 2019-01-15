@@ -8,12 +8,16 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableRowSorter
 
 class MainPanel : JPanel(BorderLayout()) {
-  private val data = arrayOf(arrayOf<Any>(1, 11, "A", ES, ES, ES, ES, ES), arrayOf<Any>(2, 22, ES, "B", ES, ES, ES, ES), arrayOf<Any>(3, 33, ES, ES, "C", ES, ES, ES), arrayOf<Any>(4, 1, ES, ES, ES, "D", ES, ES), arrayOf<Any>(5, 55, ES, ES, ES, ES, "E", ES), arrayOf<Any>(6, 66, ES, ES, ES, ES, ES, "F"))
+  private val data = arrayOf(
+      arrayOf<Any>(1, 11, "A", ES, ES, ES, ES, ES),
+      arrayOf<Any>(2, 22, ES, "B", ES, ES, ES, ES),
+      arrayOf<Any>(3, 33, ES, ES, "C", ES, ES, ES),
+      arrayOf<Any>(4, 1, ES, ES, ES, "D", ES, ES),
+      arrayOf<Any>(5, 55, ES, ES, ES, ES, "E", ES),
+      arrayOf<Any>(6, 66, ES, ES, ES, ES, ES, "F"))
   private val columnNames = arrayOf("fixed 1", "fixed 2", "A", "B", "C", "D", "E", "F")
   private val model = object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int): Class<*> {
-      return if (column < FIXEDCOLUMN_RANGE) Int::class.java else Any::class.java
-    }
+    override fun getColumnClass(column: Int): Class<*> = if (column < FIXEDCOLUMN_RANGE) Int::class.java else Any::class.java
   }
   @Transient
   private val sorter = TableRowSorter<DefaultTableModel>(model)

@@ -22,9 +22,7 @@ class MainPanel : JPanel(BorderLayout()) {
   init {
     val columnNames = arrayOf("Name", "Size", "Full Path")
     val model = object : DefaultTableModel(null, columnNames) {
-      override fun getColumnClass(column: Int): Class<*> {
-        return File::class.java
-      }
+      override fun getColumnClass(column: Int): Class<*> = File::class.java
     }
     val table = JTable(model)
     table.putClientProperty("Table.isFileList", java.lang.Boolean.TRUE)
@@ -121,9 +119,7 @@ internal class FileTransferHandler : TransferHandler() {
     return support.isDataFlavorSupported(DataFlavor.javaFileListFlavor)
   }
 
-  override fun getSourceActions(component: JComponent): Int {
-    return TransferHandler.COPY
-  }
+  override fun getSourceActions(component: JComponent) = TransferHandler.COPY
 }
 
 open class DefaultFileComparator(protected val column: Int) : Comparator<File>, Serializable {

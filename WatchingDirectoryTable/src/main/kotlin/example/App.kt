@@ -16,7 +16,6 @@ import java.util.Objects
 import java.util.TreeSet
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
-import javax.swing.table.TableColumn
 import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter
 
@@ -176,17 +175,11 @@ internal class FileModel : DefaultTableModel() {
     return COLUMN_ARRAY[col].isEditable
   }
 
-  override fun getColumnClass(column: Int): Class<*> {
-    return COLUMN_ARRAY[column].columnClass
-  }
+  override fun getColumnClass(column: Int): Class<*> = COLUMN_ARRAY[column].columnClass
 
-  override fun getColumnCount(): Int {
-    return COLUMN_ARRAY.size
-  }
+  override fun getColumnCount() = COLUMN_ARRAY.size
 
-  override fun getColumnName(column: Int): String {
-    return COLUMN_ARRAY[column].columnName
-  }
+  override fun getColumnName(column: Int) = COLUMN_ARRAY[column].columnName
 
   private class ColumnContext(val columnName: String, val columnClass: Class<*>, val isEditable: Boolean)
 
@@ -215,7 +208,6 @@ internal class TablePopupMenu : JPopupMenu() {
         } catch (ex: IOException) {
           Toolkit.getDefaultToolkit().beep()
         }
-
       }
     })
   }
