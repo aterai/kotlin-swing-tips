@@ -8,16 +8,17 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 class MainPanel : JPanel(BorderLayout()) {
   init {
     val text = "012345678901234567890123456789012345678901234567890123456789"
-    val box = Box.createVerticalBox()
-    box.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-    box.add(makeTitledPanel("defalut JLabel ellipsis", JLabel(text)))
-    box.add(Box.createVerticalStrut(5))
-    box.add(makeTitledPanel("html JLabel fade out", FadeOutLabel("<html>$text")))
-    box.add(Box.createVerticalStrut(5))
-    box.add(makeTitledPanel("JLabel TextLayout fade out", TextOverfloFadeLabel(text)))
-    box.add(Box.createVerticalStrut(5))
-    box.add(makeTitledPanel("JLabel BufferedImage fade out", FadingOutLabel(text)))
-    box.add(Box.createVerticalGlue())
+    val box = Box.createVerticalBox().apply {
+      setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
+      add(makeTitledPanel("defalut JLabel ellipsis", JLabel(text)))
+      add(Box.createVerticalStrut(5))
+      add(makeTitledPanel("html JLabel fade out", FadeOutLabel("<html>$text")))
+      add(Box.createVerticalStrut(5))
+      add(makeTitledPanel("JLabel TextLayout fade out", TextOverfloFadeLabel(text)))
+      add(Box.createVerticalStrut(5))
+      add(makeTitledPanel("JLabel BufferedImage fade out", FadingOutLabel(text)))
+      add(Box.createVerticalGlue())
+    }
 
     add(box, BorderLayout.NORTH)
     setPreferredSize(Dimension(320, 240))
