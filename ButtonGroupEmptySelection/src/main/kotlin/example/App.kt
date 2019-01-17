@@ -1,29 +1,24 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.util.Optional
-import java.util.stream.Stream
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-
     val bg = ToggleButtonGroup()
     val p = JPanel()
-    // Stream.of("A", "B", "C").map(Function<String, JToggleButton> { JToggleButton(it) }).forEach({ r ->
-    Stream.of("A", "B", "C").map(::JToggleButton).forEach({ r ->
-      r.setActionCommand(r.getText())
-      p.add(r)
-      bg.add(r)
-    })
+    listOf("A", "B", "C").map(::JToggleButton).forEach {
+      it.setActionCommand(it.getText())
+      p.add(it)
+      bg.add(it)
+    }
 
     val label = JLabel()
     val button = JButton("check")
     button.addActionListener({
-      val txt = Optional.ofNullable(bg.getSelection())
-        .map({ b -> String.format("\"%s\" isSelected.", b.getActionCommand()) })
-        .orElse("Please select one of the option above.")
-      label.setText(txt)
+      label.setText(bg.getSelection()?.let {
+        "\"%s\" isSelected.".format(it.getActionCommand())
+      } ?: "Please select one of the option above.")
     })
 
     val box = Box.createHorizontalBox()
