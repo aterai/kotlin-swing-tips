@@ -80,12 +80,10 @@ class MainPanel : JPanel(BorderLayout()) {
     val texture = makeImageTexture()
     val scroll = object : JScrollPane(table) {
       protected override fun paintComponent(g: Graphics) {
-        if (Objects.nonNull(texture)) {
-          val g2 = g.create() as Graphics2D
-          g2.setPaint(texture)
-          g2.fillRect(0, 0, getWidth(), getHeight())
-          g2.dispose()
-        }
+        val g2 = g.create() as Graphics2D
+        g2.setPaint(texture)
+        g2.fillRect(0, 0, getWidth(), getHeight())
+        g2.dispose()
         super.paintComponent(g)
       }
     }
