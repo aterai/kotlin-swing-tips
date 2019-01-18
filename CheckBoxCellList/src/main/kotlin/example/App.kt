@@ -1,9 +1,10 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.event.ActionListener
+import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.util.EventObject
-import java.util.stream.Stream
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeCellRenderer
@@ -37,14 +38,14 @@ class MainPanel : JPanel(BorderLayout()) {
     p.add(makeTitledPanel("JTree", JScrollPane(list3)))
 
     val root = DefaultMutableTreeNode("JTree")
-    Stream.of("aaaa", "bbbbbbb", "ccc", "dddddd", "eeeeeee", "fffffffff", "gggggg", "hhhhh", "iiii", "jjjjjjjjjj").forEach({ title ->
-      val isSelected = title.length % 2 == 0
-      val c = JCheckBox(title, isSelected)
+    listOf("aaaa", "bbbbbbb", "ccc", "dddddd", "eeeeeee", "fffffffff", "gggggg", "hhhhh", "iiii", "jjjjjjjjjj").forEach {
+      val isSelected = it.length % 2 == 0
+      val c = JCheckBox(it, isSelected)
       c.setAlignmentX(Component.LEFT_ALIGNMENT)
       list1.add(c)
-      model.addElement(CheckBoxNode(title, isSelected))
-      root.add(DefaultMutableTreeNode(CheckBoxNode(title, isSelected)))
-    })
+      model.addElement(CheckBoxNode(it, isSelected))
+      root.add(DefaultMutableTreeNode(CheckBoxNode(it, isSelected)))
+    }
     list3.setModel(DefaultTreeModel(root))
 
     add(JLabel("JCheckBox in ", SwingConstants.CENTER), BorderLayout.NORTH)

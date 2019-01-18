@@ -9,8 +9,6 @@ import java.io.IOException
 import java.io.Serializable
 import java.util.Collections
 import java.util.Comparator
-import java.util.stream.IntStream
-import java.util.stream.Stream
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.filechooser.FileSystemView
 import javax.swing.table.DefaultTableCellRenderer
@@ -37,33 +35,37 @@ class MainPanel : JPanel(BorderLayout()) {
     table.setDefaultRenderer(Any::class.java, FileIconTableCellRenderer(FileSystemView.getFileSystemView()))
 
     val sorter = table.getRowSorter() as TableRowSorter<out TableModel>
-    IntStream.range(0, 3).forEach({ i -> sorter.setComparator(i, DefaultFileComparator(i)) })
+    // IntStream.range(0, 3).forEach({ i -> sorter.setComparator(i, DefaultFileComparator(i)) })
+    for (i in 0..2) { sorter.setComparator(i, DefaultFileComparator(i)) }
 
     val check1 = JRadioButton("Default", true)
     check1.addItemListener({ e ->
       if (e.getStateChange() == ItemEvent.SELECTED) {
-        IntStream.range(0, 3).forEach({ i -> sorter.setComparator(i, DefaultFileComparator(i)) })
+        // IntStream.range(0, 3).forEach({ i -> sorter.setComparator(i, DefaultFileComparator(i)) })
+        for (i in 0..2) { sorter.setComparator(i, DefaultFileComparator(i)) }
       }
     })
     val check2 = JRadioButton("Directory < File", false)
     check2.addItemListener({ e ->
       if (e.getStateChange() == ItemEvent.SELECTED) {
-        IntStream.range(0, 3).forEach({ i -> sorter.setComparator(i, FileComparator(i)) })
+        // IntStream.range(0, 3).forEach({ i -> sorter.setComparator(i, FileComparator(i)) })
+        for (i in 0..2) { sorter.setComparator(i, FileComparator(i)) }
       }
     })
     val check3 = JRadioButton("Group Sorting", false)
     check3.addItemListener({ e ->
       if (e.getStateChange() == ItemEvent.SELECTED) {
-        IntStream.range(0, 3).forEach({ i -> sorter.setComparator(i, FileGroupComparator(table, i)) })
+        // IntStream.range(0, 3).forEach({ i -> sorter.setComparator(i, FileGroupComparator(table, i)) })
+        for (i in 0..2) { sorter.setComparator(i, FileGroupComparator(table, i)) }
       }
     })
 
     val p = JPanel()
     val bg = ButtonGroup()
-    Stream.of(check1, check2, check3).forEach({ rb ->
-      bg.add(rb)
-      p.add(rb)
-    })
+    listOf(check1, check2, check3).forEach {
+      bg.add(it)
+      p.add(it)
+    }
     add(p, BorderLayout.NORTH)
     add(JScrollPane(table))
     setPreferredSize(Dimension(320, 240))

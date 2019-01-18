@@ -7,7 +7,6 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.util.Objects
-import java.util.stream.Stream
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
@@ -54,10 +53,10 @@ class MainPanel : JPanel(BorderLayout()) {
     })
 
     val box = Box.createVerticalBox()
-    Stream.of<Component>(textField1, textField2, combo3, combo4).forEach({ c ->
-      box.add(c)
+    listOf<Component>(textField1, textField2, combo3, combo4).forEach {
+      box.add(it)
       box.add(Box.createVerticalStrut(5))
-    })
+    }
 
     val textArea = JTextArea("dummy")
     textArea.setComponentPopupMenu(popup2)

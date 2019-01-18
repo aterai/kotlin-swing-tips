@@ -10,7 +10,6 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.spi.FileSystemProvider
 import java.util.stream.Collectors
-import java.util.stream.Stream
 import javax.script.Invocable
 import javax.script.ScriptEngine
 import javax.script.ScriptEngineManager
@@ -41,12 +40,12 @@ class MainPanel : JPanel(BorderLayout()) {
     val htmlEditorKit = HTMLEditorKit()
     htmlEditorKit.setStyleSheet(styleSheet)
 
-    Stream.of(editor1, editor2).forEach({ e ->
-      e.setEditorKit(htmlEditorKit)
-      e.setEditable(false)
-      // e.setSelectionColor(new Color(0x64_88_AA_AA, true));
-      e.setBackground(Color(200, 200, 200))
-    })
+    listOf(editor1, editor2).forEach {
+      it.setEditorKit(htmlEditorKit)
+      it.setEditable(false)
+      // it.setSelectionColor(new Color(0x64_88_AA_AA, true));
+      it.setBackground(Color(200, 200, 200))
+    }
 
     editor2.setSelectedTextColor(null)
     editor2.setSelectionColor(Color(0x6488AAAA, true))
