@@ -7,7 +7,6 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.util.EventObject
-import java.util.Optional
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellEditor
@@ -182,8 +181,8 @@ internal class BooleanEditor : AbstractCellEditor(), TableCellEditor {
       SwingUtilities.getAncestorOfClass(clz, e.getComponent())
         ?.takeIf { JTable::class.java.isInstance(it) }
         ?.let { JTable::class.java.cast(it) }
-        ?.takeIf { table-> table.isEditing() }
-        ?.let { table-> table.removeEditor() }
+        ?.takeIf { table -> table.isEditing() }
+        ?.let { table -> table.removeEditor() }
     }
   }
 }

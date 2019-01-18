@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionEvent
-import java.util.Optional
 import java.util.stream.Stream
 import javax.swing.* // ktlint-disable no-wildcard-imports
 

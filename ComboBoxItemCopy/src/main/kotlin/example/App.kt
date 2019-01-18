@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.util.Objects
-import java.util.Optional
 import java.util.stream.IntStream
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.DefaultEditorKit
