@@ -20,12 +20,12 @@ class MainPanel : JPanel(BorderLayout()) {
     val copy = object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
         val combo = e.getSource() as JComboBox<*>
-        Optional.ofNullable(combo.getSelectedItem()).ifPresent({ text ->
+        combo.getSelectedItem()?.let {
+          val contents = StringSelection(Objects.toString(it))
           val clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
-          val contents = StringSelection(Objects.toString(text))
           clipboard.setContents(contents, null)
-          println(text)
-        })
+          println(it)
+        }
       }
     }
     val am = combo1.getActionMap()

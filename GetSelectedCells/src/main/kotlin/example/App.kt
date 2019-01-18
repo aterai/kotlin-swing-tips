@@ -121,7 +121,6 @@ internal class BooleanEditor : AbstractCellEditor(), TableCellEditor {
     override fun updateUI() {
       removeMouseListener(listener)
       super.updateUI()
-      setBorder(UIManager.getBorder("Table.noFocusBorder"))
       listener = object : MouseAdapter() {
         override fun mousePressed(e: MouseEvent) {
           fireEditingStopped()
@@ -137,6 +136,7 @@ internal class BooleanEditor : AbstractCellEditor(), TableCellEditor {
       removeActionListener(handler)
       removeMouseListener(handler)
       super.updateUI()
+      setBorder(UIManager.getBorder("Table.noFocusBorder"))
       setOpaque(false)
       setFocusable(false)
       setRolloverEnabled(false)
@@ -179,11 +179,11 @@ internal class BooleanEditor : AbstractCellEditor(), TableCellEditor {
 
     override fun mouseExited(e: MouseEvent) {
       val clz = JTable::class.java
-      Optional.ofNullable(SwingUtilities.getAncestorOfClass(clz, e.getComponent()))
-        .filter(clz::isInstance)
-        .map(clz::cast)
-        .filter(JTable::isEditing)
-        .ifPresent(JTable::removeEditor)
+      SwingUtilities.getAncestorOfClass(clz, e.getComponent())
+        ?.takeIf { JTable::class.java.isInstance(it) }
+        ?.let { JTable::class.java.cast(it) }
+        ?.takeIf { table-> table.isEditing() }
+        ?.let { table-> table.removeEditor() }
     }
   }
 }

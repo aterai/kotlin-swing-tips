@@ -1,6 +1,7 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.event.ActionEvent
 import java.util.Optional
 import java.util.stream.Stream
 import javax.swing.* // ktlint-disable no-wildcard-imports
@@ -68,7 +69,9 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
   private fun setViewTypeDetails(fileChooser: JFileChooser) {
-    Optional.ofNullable(fileChooser.getActionMap().get("viewTypeDetails")).ifPresent({ a -> a.actionPerformed(null) })
+    fileChooser.getActionMap().get("viewTypeDetails")?.let {
+      it.actionPerformed(ActionEvent(fileChooser, ActionEvent.ACTION_PERFORMED, "viewTypeDetails"))
+    }
   }
 
   private fun append(log: JTextArea, str: String) {
