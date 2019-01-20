@@ -65,8 +65,7 @@ class CheckComboBoxEditor : ComboBoxEditor {
     EventQueue.invokeLater({
       val c = SwingUtilities.getAncestorOfClass(JComboBox::class.java, getEditorComponent())
       if (c is JComboBox<*>) {
-        val combo = c as JComboBox<*>
-        val idx = combo.getSelectedIndex()
+        val idx = c.getSelectedIndex()
         if (idx >= 0 && idx != editor.editingIndex) {
           println("setItem: $idx")
           editor.editingIndex = idx
