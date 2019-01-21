@@ -3,7 +3,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionEvent
 import java.util.Objects
-import java.util.Optional
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
@@ -30,7 +29,7 @@ class MainPanel : JPanel(BorderLayout()) {
             setPopupVisible(false)
             val m = getModel() as DefaultComboBoxModel<String>
             val str = Objects.toString(getEditor().getItem(), "")
-            if (m.getIndexOf(str) < 0 && getInputVerifier().verify(cb)) {
+            if (m.getIndexOf(str) < 0 && getInputVerifier()?.verify(cb) ?: false) {
               m.removeElement(str)
               m.insertElementAt(str, 0)
               if (m.getSize() > MAX_HISTORY) {
@@ -51,10 +50,7 @@ class MainPanel : JPanel(BorderLayout()) {
       // private var editorComponent: Component? = null
       override fun getEditorComponent(): Component? {
         var tc = super.getEditorComponent()
-        if (tc is JTextComponent) {
-          return JLayer<JTextComponent>(tc, ValidationLayerUI<JTextComponent>())
-        }
-        return tc
+        return if (tc is JTextComponent) JLayer<JTextComponent>(tc, ValidationLayerUI<JTextComponent>()) else tc
       }
     })
     comboBox.addPopupMenuListener(SelectItemMenuListener())
@@ -96,7 +92,7 @@ internal class ValidationLayerUI<V : JTextComponent> : LayerUI<V>() {
     super.paint(g, c)
     val cb = SwingUtilities.getAncestorOfClass(JComboBox::class.java, c)
     if (cb is JComboBox<*>) {
-      getInputVerifier(cb).filter({ iv -> !iv.verify(cb) }).ifPresent({
+      cb.getInputVerifier()?.takeUnless { it.verify(cb) }?.let {
         val w = c.getWidth()
         val h = c.getHeight()
         val s = 8
@@ -112,11 +108,8 @@ internal class ValidationLayerUI<V : JTextComponent> : LayerUI<V>() {
         g2.drawLine(0, 0, s, s)
         g2.drawLine(0, s, s, 0)
         g2.dispose()
-      })
+      }
     }
-  }
-  private fun getInputVerifier(c: JComponent): Optional<out InputVerifier> {
-    return Optional.ofNullable(c.getInputVerifier())
   }
 }
 
@@ -128,6 +121,7 @@ internal class LengthInputVerifier : InputVerifier() {
     }
     return false
   }
+
   companion object {
     private val MAX_LEN = 6
   }
