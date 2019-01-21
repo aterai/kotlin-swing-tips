@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.util.Objects
-import java.util.stream.IntStream
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableRowSorter
@@ -35,7 +34,7 @@ class MainPanel : JPanel(BorderLayout()) {
       } else {
         fixedTable.removeColumn(fixedTable.getColumnModel().getColumn(i))
       }
-  }
+    }
 
     fixedTable.setRowSorter(sorter)
     fixedTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF)
@@ -65,15 +64,18 @@ class MainPanel : JPanel(BorderLayout()) {
     scroll.getViewport().setBackground(Color.WHITE)
     scroll.getRowHeader().setBackground(Color.WHITE)
 
-    scroll.getRowHeader().addChangeListener({ e ->
+    scroll.getRowHeader().addChangeListener { e ->
       val viewport = e.getSource() as JViewport
       scroll.getVerticalScrollBar().setValue(viewport.getViewPosition().y)
-    })
+    }
 
-    addButton.addActionListener({
+    addButton.addActionListener {
       sorter.setSortKeys(null)
-      IntStream.range(0, 100).forEach({ i -> model.addRow(arrayOf<Any>(i, i + 1, "A$i", "B$i")) })
-    })
+      // IntStream.range(0, 100).forEach { i -> model.addRow(arrayOf<Any>(i, i + 1, "A$i", "B$i")) }
+      for (i in 0 until 100) {
+        model.addRow(arrayOf<Any>(i, i + 1, "A$i", "B$i"))
+      }
+    }
 
     add(scroll)
     add(addButton, BorderLayout.SOUTH)
@@ -142,9 +144,12 @@ internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
       vpbInsets = Insets(0, 0, 0, 0)
     }
 
-    val view = if (Objects.nonNull(viewport)) viewport.getView() else null
-    val viewPrefSize = if (Objects.nonNull(view)) view!!.getPreferredSize() else Dimension()
-    var extentSize = if (Objects.nonNull(viewport)) viewport.toViewCoordinates(availR.getSize()) else Dimension()
+    // val view = if (Objects.nonNull(viewport)) viewport.getView() else null
+    // val viewPrefSize = if (Objects.nonNull(view)) view!!.getPreferredSize() else Dimension()
+    // var extentSize = if (Objects.nonNull(viewport)) viewport.toViewCoordinates(availR.getSize()) else Dimension()
+    val view: Component? = viewport?.getView()
+    val viewPrefSize = view?.getPreferredSize() ?: Dimension()
+    var extentSize = viewport?.toViewCoordinates(availR.getSize()) ?: Dimension()
 
     var viewTracksViewportWidth = false
     var viewTracksViewportHeight = false
@@ -247,13 +252,15 @@ internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
     colHeadR.width = availR.width + vpbInsets.left + vpbInsets.right
     colHeadR.x = availR.x - vpbInsets.left
 
-    if (Objects.nonNull(rowHead)) {
-      rowHead.setBounds(rowHeadR)
-    }
+    // if (Objects.nonNull(rowHead)) {
+    //   rowHead.setBounds(rowHeadR)
+    // }
+    rowHead?.setBounds(rowHeadR)
 
-    if (Objects.nonNull(colHead)) {
-      colHead.setBounds(colHeadR)
-    }
+    // if (Objects.nonNull(colHead)) {
+    //   colHead.setBounds(colHeadR)
+    // }
+    colHead?.setBounds(colHeadR)
 
     if (Objects.nonNull(vsb)) {
       if (vsbNeeded) {
@@ -287,21 +294,25 @@ internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
       }
     }
 
-    if (Objects.nonNull(lowerLeft)) {
-      lowerLeft.setBounds(if (leftToRight) rowHeadR.x else vsbR.x, hsbR.y, if (leftToRight) rowHeadR.width else vsbR.width, hsbR.height)
-    }
+    // if (Objects.nonNull(lowerLeft)) {
+    //   lowerLeft.setBounds(if (leftToRight) rowHeadR.x else vsbR.x, hsbR.y, if (leftToRight) rowHeadR.width else vsbR.width, hsbR.height)
+    // }
+    lowerLeft?.setBounds(if (leftToRight) rowHeadR.x else vsbR.x, hsbR.y, if (leftToRight) rowHeadR.width else vsbR.width, hsbR.height)
 
-    if (Objects.nonNull(lowerRight)) {
-      lowerRight.setBounds(if (leftToRight) vsbR.x else rowHeadR.x, hsbR.y, if (leftToRight) vsbR.width else rowHeadR.width, hsbR.height)
-    }
+    // if (Objects.nonNull(lowerRight)) {
+    //   lowerRight.setBounds(if (leftToRight) vsbR.x else rowHeadR.x, hsbR.y, if (leftToRight) vsbR.width else rowHeadR.width, hsbR.height)
+    // }
+    lowerRight?.setBounds(if (leftToRight) vsbR.x else rowHeadR.x, hsbR.y, if (leftToRight) vsbR.width else rowHeadR.width, hsbR.height)
 
-    if (Objects.nonNull(upperLeft)) {
-      upperLeft.setBounds(if (leftToRight) rowHeadR.x else vsbR.x, colHeadR.y, if (leftToRight) rowHeadR.width else vsbR.width, colHeadR.height)
-    }
+    // if (Objects.nonNull(upperLeft)) {
+    //   upperLeft.setBounds(if (leftToRight) rowHeadR.x else vsbR.x, colHeadR.y, if (leftToRight) rowHeadR.width else vsbR.width, colHeadR.height)
+    // }
+    upperLeft?.setBounds(if (leftToRight) rowHeadR.x else vsbR.x, colHeadR.y, if (leftToRight) rowHeadR.width else vsbR.width, colHeadR.height)
 
-    if (Objects.nonNull(upperRight)) {
-      upperRight.setBounds(if (leftToRight) vsbR.x else rowHeadR.x, colHeadR.y, if (leftToRight) vsbR.width else rowHeadR.width, colHeadR.height)
-    }
+    // if (Objects.nonNull(upperRight)) {
+    //   upperRight.setBounds(if (leftToRight) vsbR.x else rowHeadR.x, colHeadR.y, if (leftToRight) vsbR.width else rowHeadR.width, colHeadR.height)
+    // }
+    upperRight?.setBounds(if (leftToRight) vsbR.x else rowHeadR.x, colHeadR.y, if (leftToRight) vsbR.width else rowHeadR.width, colHeadR.height)
   }
 
   private fun adjustForVsb(wantsVsb: Boolean, available: Rectangle, vsbR: Rectangle, vpbInsets: Insets, leftToRight: Boolean) {
@@ -336,7 +347,7 @@ internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     JFrame().apply {
       setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
       getContentPane().add(MainPanel())
@@ -344,5 +355,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }
