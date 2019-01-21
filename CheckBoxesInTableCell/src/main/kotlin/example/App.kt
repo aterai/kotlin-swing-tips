@@ -3,7 +3,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
-import java.util.ArrayList
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellEditor
@@ -12,9 +11,12 @@ import javax.swing.table.TableCellRenderer
 class MainPanel : JPanel(BorderLayout()) {
   init {
     val columnNames = arrayOf("user", "rwx")
-    val data = arrayOf(arrayOf<Any>("owner", 7), arrayOf<Any>("group", 6), arrayOf<Any>("other", 5))
+    val data = arrayOf(
+        arrayOf<Any>("owner", 7),
+        arrayOf<Any>("group", 6),
+        arrayOf<Any>("other", 5))
     val model = object : DefaultTableModel(data, columnNames) {
-      override fun getColumnClass(column: Int): Class<*> = getValueAt(0, column).javaClass
+      override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
     }
     val table = object : JTable(model) {
       override fun updateUI() {
@@ -32,13 +34,13 @@ class MainPanel : JPanel(BorderLayout()) {
 
 open class CheckBoxesPanel : JPanel() {
   protected val titles = arrayOf("r", "w", "x")
-  val buttons: MutableList<JCheckBox> = ArrayList<JCheckBox>(titles.size)
+  val buttons = mutableListOf<JCheckBox>()
   override fun updateUI() {
     super.updateUI()
     setOpaque(false)
     setBackground(BGC)
     setLayout(BoxLayout(this, BoxLayout.X_AXIS))
-    EventQueue.invokeLater({ initButtons() })
+    EventQueue.invokeLater { initButtons() }
   }
 
   private fun initButtons() {
@@ -81,21 +83,20 @@ class CheckBoxesRenderer : CheckBoxesPanel(), TableCellRenderer {
     updateButtons(value)
     return this
   }
-  // public static class UIResource extends CheckBoxesRenderer implements javax.swing.plaf.UIResource {}
+  // public static class UIResource extends CheckBoxesRenderer implements UIResource {}
 }
 
 class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
   private val panel = object : CheckBoxesPanel() {
     override fun updateUI() {
       super.updateUI()
-      EventQueue.invokeLater({
+      EventQueue.invokeLater {
         val am = getActionMap()
         for (i in buttons.indices) {
           val t = titles[i]
           am.put(t, object : AbstractAction(t) {
             override fun actionPerformed(e: ActionEvent) {
-              buttons.stream().filter({ b -> b.getText() == t })
-                .findFirst().ifPresent(AbstractButton::doClick)
+              buttons.filter { it.getText() == t }.first().let { it.doClick() }
               fireEditingStopped()
             }
           })
@@ -104,7 +105,7 @@ class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_R, 0), titles[0])
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), titles[1])
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, 0), titles[2])
-      })
+      }
     }
   }
 
@@ -123,7 +124,7 @@ class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: ClassNotFoundException) {
@@ -142,5 +143,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }
