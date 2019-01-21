@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.font.TextLayout
-import java.util.Arrays
 import java.util.Objects
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.synth.Region
@@ -12,20 +11,16 @@ import javax.swing.plaf.synth.SynthLookAndFeel
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    val list = Arrays.asList(
-        makeTestTabbedPane(ClippedTitleTabbedPane()),
-        makeTestTabbedPane(TextOverfloFadeTabbedPane()))
+    val list = listOf(makeTestTabbedPane(ClippedTitleTabbedPane()), makeTestTabbedPane(TextOverfloFadeTabbedPane()))
 
     val p = JPanel(GridLayout(list.size, 1))
-    // Unresolved reference: Consumer
-    // list.forEach(Consumer<out JTabbedPane> { p.add(it) })
-    list.forEach({ t -> p.add(t) })
+    list.forEach { p.add(it) }
 
     val check = JCheckBox("LEFT")
-    check.addActionListener({ e ->
+    check.addActionListener { e ->
       val tabPlacement = if ((e.getSource() as JCheckBox).isSelected()) JTabbedPane.LEFT else JTabbedPane.TOP
-      list.forEach({ t -> t.setTabPlacement(tabPlacement) })
-    })
+      list.forEach { it.setTabPlacement(tabPlacement) }
+    }
 
     add(check, BorderLayout.NORTH)
     add(p)
@@ -46,8 +41,8 @@ class MainPanel : JPanel(BorderLayout()) {
 open class ClippedTitleTabbedPane : JTabbedPane {
   private val tabInsets: Insets
     get() {
-      val insets = UIManager.getInsets("TabbedPane.tabInsets")
-      if (Objects.nonNull(insets)) {
+      val insets: Insets? = UIManager.getInsets("TabbedPane.tabInsets")
+      if (insets != null) {
         return insets
       } else {
         val style = SynthLookAndFeel.getStyle(this, Region.TABBED_PANE_TAB)
@@ -58,8 +53,8 @@ open class ClippedTitleTabbedPane : JTabbedPane {
 
   private val tabAreaInsets: Insets
     get() {
-      val insets = UIManager.getInsets("TabbedPane.tabAreaInsets")
-      if (Objects.nonNull(insets)) {
+      val insets: Insets? = UIManager.getInsets("TabbedPane.tabAreaInsets")
+      if (insets != null) {
         return insets
       } else {
         val style = SynthLookAndFeel.getStyle(this, Region.TABBED_PANE_TAB_AREA)
@@ -110,8 +105,8 @@ open class ClippedTitleTabbedPane : JTabbedPane {
     val dim = Dimension()
     var rest = gap
     for (i in 0 until getTabCount()) {
-      val tab = getTabComponentAt(i) as JComponent
-      if (Objects.nonNull(tab)) {
+      val tab: Component? = getTabComponentAt(i)
+      if (tab is JComponent) {
         val a = if (i == getTabCount() - 1) rest else 1
         val w = if (rest > 0) tabWidth + a else tabWidth
         dim.setSize(w, tab.getPreferredSize().height)
@@ -188,7 +183,7 @@ internal class ColorIcon(private val color: Color) : Icon {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: ClassNotFoundException) {
@@ -207,5 +202,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }
