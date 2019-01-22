@@ -5,10 +5,7 @@ import java.awt.geom.Ellipse2D
 import java.awt.image.BufferedImage
 import java.io.File
 import java.io.IOException
-import java.util.ArrayList
-import java.util.Arrays
 import java.util.Collections
-import java.util.Objects
 import javax.imageio.IIOImage
 import javax.imageio.ImageIO
 import javax.imageio.ImageTypeSpecifier
@@ -24,8 +21,7 @@ class MainPanel : JPanel(BorderLayout()) {
   private val SY = 20.0
   private val WIDTH = (R * 8 + SX * 2).toInt()
   private val HEIGHT = (R * 8 + SY * 2).toInt()
-  private val list = ArrayList<Shape>(
-    Arrays.asList(
+  private val list = mutableListOf<Shape>(
       Ellipse2D.Double(SX + 3 * R, SY + 0 * R, 2 * R, 2 * R),
       Ellipse2D.Double(SX + 5 * R, SY + 1 * R, 2 * R, 2 * R),
       Ellipse2D.Double(SX + 6 * R, SY + 3 * R, 2 * R, 2 * R),
@@ -33,10 +29,9 @@ class MainPanel : JPanel(BorderLayout()) {
       Ellipse2D.Double(SX + 3 * R, SY + 6 * R, 2 * R, 2 * R),
       Ellipse2D.Double(SX + 1 * R, SY + 5 * R, 2 * R, 2 * R),
       Ellipse2D.Double(SX + 0 * R, SY + 3 * R, 2 * R, 2 * R),
-      Ellipse2D.Double(SX + 1 * R, SY + 1 * R, 2 * R, 2 * R)))
+      Ellipse2D.Double(SX + 1 * R, SY + 1 * R, 2 * R, 2 * R))
 
   init {
-
     val label = JLabel()
     label.setOpaque(true)
     label.setBackground(Color.WHITE)
@@ -46,7 +41,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
     // File file = new File(System.getProperty("user.dir"), "anime.gif");
     val button = JButton("make")
-    button.addActionListener({
+    button.addActionListener {
       val image = BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB)
       val ite = ImageIO.getImageWritersByFormatName("gif")
       try {
@@ -55,9 +50,6 @@ class MainPanel : JPanel(BorderLayout()) {
         } else {
           throw IOException()
         }
-        // if (Objects.isNull(writer)) {
-        //   throw IOException()
-        // }
 
         val file = File.createTempFile("anime", ".gif")
         file.deleteOnExit()
@@ -70,7 +62,7 @@ class MainPanel : JPanel(BorderLayout()) {
         gce.setAttribute("userInputFlag", "FALSE")
         gce.setAttribute("transparentColorFlag", "FALSE")
         gce.setAttribute("transparentColorIndex", "0")
-        gce.setAttribute("delayTime", Objects.toString(DELAY))
+        gce.setAttribute("delayTime", DELAY.toString())
 
         val ae = IIOMetadataNode("ApplicationExtension")
         ae.setAttribute("applicationID", "NETSCAPE")
@@ -109,7 +101,7 @@ class MainPanel : JPanel(BorderLayout()) {
       } catch (ex: IOException) {
         ex.printStackTrace()
       }
-    })
+    }
 
     add(label)
     add(button, BorderLayout.SOUTH)
@@ -133,7 +125,7 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: ClassNotFoundException) {
@@ -152,5 +144,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }
