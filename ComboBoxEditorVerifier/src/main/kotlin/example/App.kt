@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionEvent
-import java.util.Objects
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
@@ -28,7 +27,7 @@ class MainPanel : JPanel(BorderLayout()) {
             val isPopupVisible = isPopupVisible()
             setPopupVisible(false)
             val m = getModel() as DefaultComboBoxModel<String>
-            val str = Objects.toString(getEditor().getItem(), "")
+            val str = getEditor().getItem()?.toString() ?: ""
             if (m.getIndexOf(str) < 0 && getInputVerifier()?.verify(cb) ?: false) {
               m.removeElement(str)
               m.insertElementAt(str, 0)
@@ -116,7 +115,7 @@ internal class ValidationLayerUI<V : JTextComponent> : LayerUI<V>() {
 internal class LengthInputVerifier : InputVerifier() {
   override fun verify(c: JComponent): Boolean {
     if (c is JComboBox<*>) {
-      val str = Objects.toString(c.getEditor().getItem(), "")
+      val str = c.getEditor().getItem()?.toString() ?: ""
       return MAX_LEN - str.length >= 0
     }
     return false

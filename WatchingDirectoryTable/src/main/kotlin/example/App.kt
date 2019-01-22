@@ -12,8 +12,6 @@ import java.nio.file.StandardWatchEventKinds
 import java.nio.file.WatchEvent
 import java.nio.file.WatchKey
 import java.nio.file.WatchService
-import java.util.Objects
-import java.util.TreeSet
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableModel
@@ -24,7 +22,7 @@ class MainPanel : JPanel(BorderLayout()) {
   private val model = FileModel()
   @Transient
   private val sorter = TableRowSorter<FileModel>(model)
-  val deleteRowSet: MutableSet<Int> = TreeSet<Int>()
+  val deleteRowSet = mutableSetOf<Int>()
 
   init {
 
@@ -51,7 +49,7 @@ class MainPanel : JPanel(BorderLayout()) {
           throw UncheckedIOException(ex)
         }
 
-        processEvents(dir, watcher!!)
+        processEvents(dir, watcher)
         loop.exit()
       }
     }
@@ -68,14 +66,14 @@ class MainPanel : JPanel(BorderLayout()) {
     }
 
     val button = JButton("createTempFile")
-    button.addActionListener({
+    button.addActionListener {
       try {
         val path = Files.createTempFile("_", ".tmp")
         path.toFile().deleteOnExit()
       } catch (ex: IOException) {
         append(ex.message)
       }
-    })
+    }
 
     val p = JPanel()
     p.add(button)
@@ -100,7 +98,7 @@ class MainPanel : JPanel(BorderLayout()) {
       try {
         key = watcher.take()
       } catch (ex: InterruptedException) {
-        EventQueue.invokeLater({ append("Interrupted") })
+        EventQueue.invokeLater { append("Interrupted") }
         return
       }
 
@@ -115,15 +113,14 @@ class MainPanel : JPanel(BorderLayout()) {
         }
 
         // The filename is the context of the event.
-        @Suppress("UNCHECKED_CAST")
-        val ev = event as WatchEvent<Path>
+        @Suppress("UNCHECKED_CAST") val ev = event as WatchEvent<Path>
         val filename = ev.context()
 
         val child = dir.resolve(filename)
-        EventQueue.invokeLater({
+        EventQueue.invokeLater {
           append(String.format("%s: %s", kind, child))
           updateTable(kind, child)
-        })
+        }
       }
 
       // Reset the key -- this step is critical if you want to
@@ -141,8 +138,7 @@ class MainPanel : JPanel(BorderLayout()) {
       model.addPath(child)
     } else if (kind === StandardWatchEventKinds.ENTRY_DELETE) {
       for (i in 0 until model.getRowCount()) {
-        val value = model.getValueAt(i, 2)
-        val path = Objects.toString(value, "")
+        val path = model.getValueAt(i, 2)?.toString() ?: ""
         if (path == child.toString()) {
           deleteRowSet.add(i)
           // model.removeRow(i);
@@ -196,20 +192,21 @@ internal class TablePopupMenu : JPopupMenu() {
 
   init {
     delete = add("delete")
-    delete.addActionListener({
+    delete.addActionListener {
       val table = getInvoker() as JTable
       val model = table.getModel() as DefaultTableModel
       val selection = table.getSelectedRows()
       for (i in selection.indices.reversed()) {
         val midx = table.convertRowIndexToModel(selection[i])
-        val path = Paths.get(Objects.toString(model.getValueAt(midx, 2)))
-        try {
-          Files.delete(path)
-        } catch (ex: IOException) {
-          Toolkit.getDefaultToolkit().beep()
+        model.getValueAt(midx, 2)?.toString().let {
+          try {
+            Files.delete(Paths.get(it))
+          } catch (ex: IOException) {
+            Toolkit.getDefaultToolkit().beep()
+          }
         }
       }
-    })
+    }
   }
 
   override fun show(c: Component, x: Int, y: Int) {
@@ -221,7 +218,7 @@ internal class TablePopupMenu : JPopupMenu() {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: ClassNotFoundException) {
@@ -240,5 +237,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }

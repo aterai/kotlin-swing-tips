@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.font.TextLayout
-import java.util.Objects
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.synth.Region
 import javax.swing.plaf.synth.SynthConstants
@@ -97,14 +96,14 @@ open class ClippedTitleTabbedPane : JTabbedPane {
   }
 
   override fun insertTab(title: String, icon: Icon, component: Component, tip: String?, index: Int) {
-    super.insertTab(title, icon, component, Objects.toString(tip, title), index)
+    super.insertTab(title, icon, component, tip?.toString() ?: title, index)
     setTabComponentAt(index, JLabel(title, icon, SwingConstants.LEADING))
   }
 
   protected fun updateAllTabWidth(tabWidth: Int, gap: Int) {
     val dim = Dimension()
     var rest = gap
-    for (i in 0 until getTabCount()) {
+    (0 until getTabCount()).forEach { i ->
       val tab: Component? = getTabComponentAt(i)
       if (tab is JComponent) {
         val a = if (i == getTabCount() - 1) rest else 1
@@ -123,7 +122,7 @@ internal class TextOverfloFadeTabbedPane : ClippedTitleTabbedPane {
   protected constructor(tabPlacement: Int) : super(tabPlacement) {}
 
   override fun insertTab(title: String, icon: Icon, component: Component, tip: String?, index: Int) {
-    super.insertTab(title, icon, component, Objects.toString(tip, title), index)
+    super.insertTab(title, icon, component, tip?.toString() ?: title, index)
     val p = JPanel(BorderLayout(2, 0))
     p.setOpaque(false)
     p.add(JLabel(icon), BorderLayout.WEST)
@@ -152,7 +151,7 @@ internal class TextOverfloFadeLabel(text: String) : JLabel(text) {
 
     rect.width = 1
     var alpha = 1f
-    for (x in w - LENGTH until w) {
+    (w - LENGTH until w).forEach { x ->
       rect.x = x
       alpha = Math.max(0f, alpha - DIFF)
       g2.setComposite(AlphaComposite.SrcOver.derive(alpha))

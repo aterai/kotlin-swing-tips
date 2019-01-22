@@ -3,7 +3,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.image.BufferedImage
 import java.io.IOException
-import java.util.Objects
 import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableCellRenderer
@@ -25,9 +24,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val model = object : DefaultTableModel(data, columnNames) {
       override fun isCellEditable(row: Int, column: Int) = column == 2
 
-      override fun getColumnClass(column: Int): Class<*> {
-        return getValueAt(0, column).javaClass
-      }
+      override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
     }
     val table = object : JTable(model) {
       override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int): Component {
@@ -97,9 +94,9 @@ class MainPanel : JPanel(BorderLayout()) {
     scroll.getColumnHeader().setBackground(alphaZero)
 
     val check = JCheckBox("setBackground(new Color(255, 0, 0, 50))")
-    check.addActionListener({ e ->
+    check.addActionListener { e ->
       table.setBackground(if ((e.getSource() as JCheckBox).isSelected()) color else alphaZero)
-    })
+    }
 
     add(check, BorderLayout.NORTH)
     add(scroll)
@@ -134,8 +131,8 @@ internal class TransparentHeader : JLabel(), TableCellRenderer {
   private val border = BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK), BorderFactory.createEmptyBorder(2, 2, 1, 2))
   private val alphaZero = Color(0x0, true)
 
-  override fun getTableCellRendererComponent(table: JTable, value: Any, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component {
-    this.setText(Objects.toString(value, ""))
+  override fun getTableCellRendererComponent(table: JTable, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component {
+    this.setText(value?.toString() ?: "")
     this.setHorizontalAlignment(SwingConstants.CENTER)
     this.setOpaque(false)
     this.setBackground(alphaZero)
@@ -190,7 +187,7 @@ internal class TranslucentBooleanRenderer : JCheckBox(), TableCellRenderer {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: ClassNotFoundException) {
@@ -209,5 +206,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }

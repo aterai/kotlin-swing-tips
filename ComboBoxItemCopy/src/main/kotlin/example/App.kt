@@ -5,8 +5,6 @@ import java.awt.datatransfer.StringSelection
 import java.awt.event.ActionEvent
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
-import java.util.Objects
-import java.util.stream.IntStream
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.DefaultEditorKit
 import javax.swing.text.JTextComponent
@@ -20,7 +18,7 @@ class MainPanel : JPanel(BorderLayout()) {
       override fun actionPerformed(e: ActionEvent) {
         val combo = e.getSource() as JComboBox<*>
         combo.getSelectedItem()?.let {
-          val contents = StringSelection(Objects.toString(it))
+          val contents = StringSelection(it.toString())
           val clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
           clipboard.setContents(contents, null)
           println(it)
@@ -34,7 +32,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val im = combo1.getInputMap(JComponent.WHEN_FOCUSED)
     im.put(keyStroke, COPY_KEY)
     val popup = JPopupMenu()
-    popup.add(COPY_KEY).addActionListener({ e ->
+    popup.add(COPY_KEY).addActionListener { e ->
       val o = popup.getInvoker()
       val c = if (o is JComboBox<*>) o else SwingUtilities.getAncestorOfClass(JComboBox::class.java, o as Component)
       if (c is JComboBox<*>) {
@@ -43,7 +41,7 @@ class MainPanel : JPanel(BorderLayout()) {
         // KeyEvent keyEvent = new KeyEvent(c, 0, 0, 0, 0, 'C');
         // SwingUtilities.notifyAction(a, keyStroke, keyEvent, c, modifiers);
       }
-    })
+    }
     combo1.setComponentPopupMenu(popup)
 
     val combo2 = JComboBox<String>(makeModel(10))
@@ -76,10 +74,11 @@ class MainPanel : JPanel(BorderLayout()) {
 
   private fun makeModel(start: Int): ComboBoxModel<String> {
     val model = DefaultComboBoxModel<String>()
-    IntStream.range(start, start + 5).forEach({ i -> model.addElement("item: $i") })
+    // IntStream.range(start, start + 5).forEach { i -> model.addElement("item: $i") }
+    (start until start + 5).forEach { model.addElement("item: $it") }
     return model
-    }
   }
+}
 
 internal class TextFieldPopupMenu : JPopupMenu() {
   private val cutAction = DefaultEditorKit.CutAction()
@@ -90,20 +89,20 @@ internal class TextFieldPopupMenu : JPopupMenu() {
       val c = getInvoker()
       if (c is JTextComponent) {
         c.replaceSelection(null)
+      }
     }
   }
-}
 
   init {
     add(cutAction)
     add(copyAction)
     add(pasteAction)
     add(deleteAction)
-}
+  }
 
   override fun show(c: Component, x: Int, y: Int) {
     if (c is JTextComponent) {
-      val hasSelectedText = Objects.nonNull(c.getSelectedText())
+      val hasSelectedText = c.getSelectedText() != null
       cutAction.setEnabled(hasSelectedText)
       copyAction.setEnabled(hasSelectedText)
       deleteAction.setEnabled(hasSelectedText)
@@ -113,7 +112,7 @@ internal class TextFieldPopupMenu : JPopupMenu() {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: ClassNotFoundException) {
@@ -132,5 +131,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }
