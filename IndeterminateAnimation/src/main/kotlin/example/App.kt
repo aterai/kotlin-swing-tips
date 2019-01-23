@@ -3,7 +3,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
-import java.util.Arrays
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicProgressBarUI
 
@@ -17,20 +16,20 @@ class MainPanel : JPanel(BorderLayout()) {
     }
     // TEST: progress.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 
-    val list = Arrays.asList(JProgressBar(), progress)
+    val list = listOf(JProgressBar(), progress)
 
     val p = JPanel(GridLayout(2, 1))
-    list.forEach({ bar -> p.add(makePanel(bar)) })
+    list.forEach { p.add(makePanel(it)) }
 
     val button = JButton("Start")
-    button.addActionListener({
-      val worker: SwingWorker<String, Void> = BackgroundTask()
-      list.forEach({ bar ->
+    button.addActionListener {
+      val worker = BackgroundTask()
+      list.forEach { bar ->
         bar.setIndeterminate(true)
         worker.addPropertyChangeListener(ProgressListener(bar))
-      })
+      }
       worker.execute()
-    })
+    }
 
     val box = Box.createHorizontalBox()
     box.add(Box.createHorizontalGlue())
@@ -115,7 +114,7 @@ internal class ProgressListener(private val progressBar: JProgressBar) : Propert
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     JFrame().apply {
       setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
       getContentPane().add(MainPanel())
@@ -123,5 +122,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }
