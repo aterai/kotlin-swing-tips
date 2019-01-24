@@ -14,7 +14,7 @@ class MainPanel : JPanel(BorderLayout()) {
       add(Box.createVerticalStrut(5))
       add(makeTitledPanel("html JLabel fade out", FadeOutLabel("<html>$text")))
       add(Box.createVerticalStrut(5))
-      add(makeTitledPanel("JLabel TextLayout fade out", TextOverfloFadeLabel(text)))
+      add(makeTitledPanel("JLabel TextLayout fade out", TextOverflowFadeLabel(text)))
       add(Box.createVerticalStrut(5))
       add(makeTitledPanel("JLabel BufferedImage fade out", FadingOutLabel(text)))
       add(Box.createVerticalGlue())
@@ -50,8 +50,8 @@ internal class FadeOutLabel(text: String) : JLabel(text) {
 
     rect.width = 1
     var alpha = 1f
-    for (x in w - LENGTH until w) {
-      rect.x = x
+    (w - LENGTH until w).forEach {
+      rect.x = it
       alpha = Math.max(0f, alpha - DIFF)
       g2.setComposite(AlphaComposite.SrcOver.derive(alpha))
       g2.setClip(rect)
@@ -61,13 +61,12 @@ internal class FadeOutLabel(text: String) : JLabel(text) {
   }
 
   companion object {
-    private val LENGTH = 20
-    private val DIFF = .05f
+    private const val LENGTH = 20
+    private const val DIFF = .05f
   }
 }
 
-internal class TextOverfloFadeLabel(text: String) : JLabel(text) {
-
+internal class TextOverflowFadeLabel(text: String) : JLabel(text) {
   override fun paintComponent(g: Graphics) {
     val i = getInsets()
     val w = getWidth() - i.left - i.right
@@ -80,26 +79,27 @@ internal class TextOverfloFadeLabel(text: String) : JLabel(text) {
 
     val frc = g2.getFontRenderContext()
     val tl = TextLayout(getText(), getFont(), frc)
-    val baseline = getBaseline(w, h)
+    val baseline = getBaseline(w, h).toFloat()
+    val fx = i.left.toFloat()
 
     g2.setClip(rect)
-    tl.draw(g2, getInsets().left.toFloat(), baseline.toFloat())
+    tl.draw(g2, fx, baseline)
 
     rect.width = 1
     var alpha = 1f
-    for (x in w - LENGTH until w) {
+    (w - LENGTH until w).forEach { x ->
       rect.x = x
       alpha = Math.max(0f, alpha - DIFF)
       g2.setComposite(AlphaComposite.SrcOver.derive(alpha))
       g2.setClip(rect)
-      tl.draw(g2, getInsets().left.toFloat(), baseline.toFloat())
+      tl.draw(g2, fx, baseline)
     }
     g2.dispose()
   }
 
   companion object {
-    private val LENGTH = 20
-    private val DIFF = .05f
+    private const val LENGTH = 20
+    private const val DIFF = .05f
   }
 }
 
@@ -126,16 +126,16 @@ internal class FadingOutLabel(text: String) : JLabel(text) {
     g2.setPaint(getForeground())
     val frc = g2.getFontRenderContext()
     val tl = TextLayout(getText(), getFont(), frc)
-    val baseline = getBaseline(d.width, d.height)
-    tl.draw(g2, getInsets().left.toFloat(), baseline.toFloat())
+    val baseline = getBaseline(d.width, d.height).toFloat()
+    tl.draw(g2, getInsets().left.toFloat(), baseline)
     g2.dispose()
 
     val spx = Math.max(0, d.width - LENGTH)
-    for (x in 0 until LENGTH) {
+    (0 until LENGTH).forEach { x ->
       val factor = 1.0 - x / LENGTH.toDouble()
-      for (y in 0 until d.height) {
+      (0 until d.height).forEach { y ->
         val argb = img.getRGB(spx + x, y)
-        val rgb = argb and 0x00FFFFFF
+        val rgb = argb and 0x00_FF_FF_FF
         val a = argb shr 24 and 0xFF
         img.setRGB(spx + x, y, (a * factor).toInt() shl 24 or rgb)
       }
@@ -144,12 +144,12 @@ internal class FadingOutLabel(text: String) : JLabel(text) {
   }
 
   companion object {
-    private val LENGTH = 20
+    private const val LENGTH = 20
   }
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: ClassNotFoundException) {
@@ -168,5 +168,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }
