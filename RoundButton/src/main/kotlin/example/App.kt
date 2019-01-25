@@ -5,7 +5,6 @@ import java.awt.geom.AffineTransform
 import java.awt.geom.Ellipse2D
 import java.awt.geom.Path2D
 import java.awt.geom.RoundRectangle2D
-import java.util.Optional
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel() {
@@ -39,7 +38,7 @@ class MainPanel : JPanel() {
     val add = 2 * Math.PI / (vc * 2)
     val p = Path2D.Double()
     p.moveTo(ora * 1.0, ora * 0.0)
-    for (i in 0 until vc * 2 - 1) {
+    (0 until vc * 2 - 1).forEach { i ->
       agl += add
       val r = if (i % 2 == 0) ira else ora
       p.lineTo(r * Math.cos(agl), r * Math.sin(agl))
@@ -241,7 +240,7 @@ internal class DummySizeIcon(private val shape: Shape) : Icon {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: ClassNotFoundException) {
@@ -260,5 +259,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }

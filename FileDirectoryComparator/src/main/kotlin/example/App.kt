@@ -7,7 +7,6 @@ import java.awt.event.ItemEvent
 import java.io.File
 import java.io.IOException
 import java.io.Serializable
-import java.util.Collections
 import java.util.Comparator
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.filechooser.FileSystemView
@@ -35,30 +34,30 @@ class MainPanel : JPanel(BorderLayout()) {
     table.setDefaultRenderer(Any::class.java, FileIconTableCellRenderer(FileSystemView.getFileSystemView()))
 
     val sorter = table.getRowSorter() as TableRowSorter<out TableModel>
-    // IntStream.range(0, 3).forEach({ i -> sorter.setComparator(i, DefaultFileComparator(i)) })
-    for (i in 0..2) { sorter.setComparator(i, DefaultFileComparator(i)) }
+    // IntStream.range(0, 3).forEach { i -> sorter.setComparator(i, DefaultFileComparator(i)) }
+    (0 until 3).forEach { sorter.setComparator(it, DefaultFileComparator(it)) }
 
     val check1 = JRadioButton("Default", true)
-    check1.addItemListener({ e ->
+    check1.addItemListener { e ->
       if (e.getStateChange() == ItemEvent.SELECTED) {
-        // IntStream.range(0, 3).forEach({ i -> sorter.setComparator(i, DefaultFileComparator(i)) })
-        for (i in 0..2) { sorter.setComparator(i, DefaultFileComparator(i)) }
+        // IntStream.range(0, 3).forEach { i -> sorter.setComparator(i, DefaultFileComparator(i)) }
+        (0 until 3).forEach { sorter.setComparator(it, DefaultFileComparator(it)) }
       }
-    })
+    }
     val check2 = JRadioButton("Directory < File", false)
-    check2.addItemListener({ e ->
+    check2.addItemListener { e ->
       if (e.getStateChange() == ItemEvent.SELECTED) {
-        // IntStream.range(0, 3).forEach({ i -> sorter.setComparator(i, FileComparator(i)) })
-        for (i in 0..2) { sorter.setComparator(i, FileComparator(i)) }
+        // IntStream.range(0, 3).forEach { i -> sorter.setComparator(i, FileComparator(i)) }
+        (0 until 3).forEach { i -> sorter.setComparator(i, FileComparator(i)) }
       }
-    })
+    }
     val check3 = JRadioButton("Group Sorting", false)
-    check3.addItemListener({ e ->
+    check3.addItemListener { e ->
       if (e.getStateChange() == ItemEvent.SELECTED) {
-        // IntStream.range(0, 3).forEach({ i -> sorter.setComparator(i, FileGroupComparator(table, i)) })
-        for (i in 0..2) { sorter.setComparator(i, FileGroupComparator(table, i)) }
+        // IntStream.range(0, 3).forEach { i -> sorter.setComparator(i, FileGroupComparator(table, i)) }
+        (0 until 3).forEach { i -> sorter.setComparator(i, FileGroupComparator(table, i)) }
       }
-    })
+    }
 
     val p = JPanel()
     val bg = ButtonGroup()
@@ -78,7 +77,7 @@ internal class FileIconTableCellRenderer(private val fileSystemView: FileSystemV
     l.setHorizontalAlignment(SwingConstants.LEFT)
     l.setIcon(null)
     val file = value as File
-    val c = table!!.convertColumnIndexToModel(column)
+    val c = table?.convertColumnIndexToModel(column) ?: -1
     when (c) {
       0 -> {
         l.setIcon(fileSystemView.getSystemIcon(file))
@@ -90,6 +89,7 @@ internal class FileIconTableCellRenderer(private val fileSystemView: FileSystemV
       }
       2 -> l.setText(file.getAbsolutePath())
       else -> {
+        assert(false) { "Should never happened." }
       }
     } // l.setText(file.getName());
     return l
@@ -103,7 +103,8 @@ internal class FileTransferHandler : TransferHandler() {
         val model = (support.getComponent() as JTable).getModel() as DefaultTableModel
         for (o in support.getTransferable().getTransferData(DataFlavor.javaFileListFlavor) as List<*>) {
           if (o is File) {
-            model.addRow(Collections.nCopies(3, o).toTypedArray())
+            // model.addRow(Collections.nCopies(3, o).toTypedArray())
+            model.addRow((0 until 3).map { o }.toTypedArray())
           }
         }
         return true
@@ -185,14 +186,14 @@ internal class TablePopupMenu : JPopupMenu() {
 
   init {
     delete = add("delete")
-    delete.addActionListener({
+    delete.addActionListener {
       val table = getInvoker() as JTable
       val model = table.getModel() as DefaultTableModel
       val selection = table.getSelectedRows()
       for (i in selection.indices.reversed()) {
         model.removeRow(table.convertRowIndexToModel(selection[i]))
       }
-    })
+    }
   }
 
   override fun show(c: Component, x: Int, y: Int) {
@@ -204,7 +205,7 @@ internal class TablePopupMenu : JPopupMenu() {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: ClassNotFoundException) {
@@ -223,5 +224,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }

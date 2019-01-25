@@ -25,10 +25,10 @@ class MainPanel : JPanel(BorderLayout()) {
     when (tabs.getTabPlacement()) {
       JTabbedPane.TOP, JTabbedPane.BOTTOM -> {
         val sidx = tabs.getSelectedIndex()
-        for (i in 0 until tabs.getTabCount()) {
-          val c = tabs.getTabComponentAt(i)
+        (0 until tabs.getTabCount()).forEach {
+          val c = tabs.getTabComponentAt(it)
           if (c is ShrinkLabel) {
-            c.isSelected = i == sidx
+            c.isSelected = it == sidx
           }
         }
       }

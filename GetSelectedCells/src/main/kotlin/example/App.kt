@@ -15,15 +15,15 @@ class MainPanel : JPanel(GridBagLayout()) {
   init {
     val columnNames = arrayOf("A", "B", "C", "D", "E", "F", "G", "H", "I")
     val data = arrayOf(
-      arrayOf(true, false, true, false, true, true, false, true, true),
-      arrayOf(true, false, true, false, true, true, false, true, true),
-      arrayOf(true, false, true, false, true, true, false, true, true),
-      arrayOf(true, false, true, false, true, true, false, true, true),
-      arrayOf(true, false, true, false, true, true, false, true, true),
-      arrayOf(true, false, true, false, true, true, false, true, true),
-      arrayOf(true, false, true, false, true, true, false, true, true),
-      arrayOf(true, false, true, false, true, true, false, true, true),
-      arrayOf(true, false, true, false, true, true, false, true, true))
+        arrayOf(true, false, true, false, true, true, false, true, true),
+        arrayOf(true, false, true, false, true, true, false, true, true),
+        arrayOf(true, false, true, false, true, true, false, true, true),
+        arrayOf(true, false, true, false, true, true, false, true, true),
+        arrayOf(true, false, true, false, true, true, false, true, true),
+        arrayOf(true, false, true, false, true, true, false, true, true),
+        arrayOf(true, false, true, false, true, true, false, true, true),
+        arrayOf(true, false, true, false, true, true, false, true, true),
+        arrayOf(true, false, true, false, true, true, false, true, true))
 
     val model = object : DefaultTableModel(data, columnNames) {
       override fun getColumnClass(column: Int): Class<*> = java.lang.Boolean::class.java
@@ -45,8 +45,8 @@ class MainPanel : JPanel(GridBagLayout()) {
     table.setComponentPopupMenu(TablePopupMenu())
 
     val m = table.getColumnModel()
-    for (i in 0 until m.getColumnCount()) {
-      val col = m.getColumn(i)
+    (0 until m.getColumnCount()).forEach {
+      val col = m.getColumn(it)
       col.setPreferredWidth(CELLSIZE)
       col.setResizable(false)
     }
@@ -71,27 +71,27 @@ internal class TablePopupMenu : JPopupMenu() {
 
   init {
     select = add("select")
-    select.addActionListener({
+    select.addActionListener {
       val table = getInvoker() as JTable
       for (row in table.getSelectedRows()) {
         for (col in table.getSelectedColumns()) {
           table.setValueAt(true, row, col)
         }
       }
-    })
+    }
 
     clear = add("clear")
-    clear.addActionListener({
+    clear.addActionListener {
       val table = getInvoker() as JTable
       for (row in table.getSelectedRows()) {
         for (col in table.getSelectedColumns()) {
           table.setValueAt(false, row, col)
         }
       }
-    })
+    }
 
     toggle = add("toggle")
-    toggle.addActionListener({
+    toggle.addActionListener {
       val table = getInvoker() as JTable
       for (row in table.getSelectedRows()) {
         for (col in table.getSelectedColumns()) {
@@ -99,7 +99,7 @@ internal class TablePopupMenu : JPopupMenu() {
           table.setValueAt(!b, row, col)
         }
       }
-    })
+    }
   }
 
   override fun show(c: Component, x: Int, y: Int) {
@@ -179,16 +179,16 @@ internal class BooleanEditor : AbstractCellEditor(), TableCellEditor {
     override fun mouseExited(e: MouseEvent) {
       val clz = JTable::class.java
       SwingUtilities.getAncestorOfClass(clz, e.getComponent())
-        ?.takeIf { JTable::class.java.isInstance(it) }
-        ?.let { JTable::class.java.cast(it) }
-        ?.takeIf { table -> table.isEditing() }
-        ?.let { table -> table.removeEditor() }
+          ?.takeIf { clz.isInstance(it) }
+          ?.let { clz.cast(it) }
+          ?.takeIf { table -> table.isEditing() }
+          ?.let { table -> table.removeEditor() }
     }
   }
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: ClassNotFoundException) {
@@ -207,5 +207,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }

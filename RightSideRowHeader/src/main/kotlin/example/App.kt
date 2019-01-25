@@ -72,9 +72,7 @@ class MainPanel : JPanel(BorderLayout()) {
     addButton.addActionListener {
       sorter.setSortKeys(null)
       // IntStream.range(0, 100).forEach { i -> model.addRow(arrayOf<Any>(i, i + 1, "A$i", "B$i")) }
-      for (i in 0 until 100) {
-        model.addRow(arrayOf<Any>(i, i + 1, "A$i", "B$i"))
-      }
+      (0 until 100).forEach { i -> model.addRow(arrayOf<Any>(i, i + 1, "A$i", "B$i")) }
     }
 
     add(scroll)
