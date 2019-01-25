@@ -16,13 +16,9 @@ class MainPanel : JPanel(BorderLayout()) {
 
   init {
     cancel.setEnabled(false)
-    cancel.addActionListener({
-      if (worker != null) {
-        worker!!.interrupt()
-      }
-    })
+    cancel.addActionListener { worker?.interrupt() }
 
-    button.addActionListener({
+    button.addActionListener {
       setInputBlock(true)
       val loop = Toolkit.getDefaultToolkit().getSystemEventQueue().createSecondaryLoop()
       worker = object : Thread() {
@@ -38,16 +34,17 @@ class MainPanel : JPanel(BorderLayout()) {
           loop.exit()
         }
       }
-      worker!!.start()
+      worker?.start()
       if (!loop.enter()) {
         append("Error")
       }
-    })
+    }
 
-    val p = JPanel()
-    p.add(JCheckBox())
-    p.add(JTextField(10))
-    p.add(button)
+    val p = JPanel().apply {
+      add(JCheckBox())
+      add(JTextField(10))
+      add(button)
+    }
     add(JLayer(p, layerUI), BorderLayout.NORTH)
     add(JScrollPane(logger))
     add(cancel, BorderLayout.SOUTH)
@@ -122,7 +119,7 @@ internal class DisableInputLayerUI<V : JComponent> : LayerUI<V>() {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: Exception) {
@@ -135,5 +132,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }
