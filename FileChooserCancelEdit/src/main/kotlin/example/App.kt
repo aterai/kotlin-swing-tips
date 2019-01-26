@@ -12,14 +12,14 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val fileChooser0 = JFileChooser()
     val button0 = JButton("default")
-    button0.addActionListener({
+    button0.addActionListener {
       setViewTypeDetails(fileChooser0)
-      // stream(fileChooser0).filter(Predicate<Component> { JTable::class.java!!.isInstance(it) }).map(Function<Component, JTable> { JTable::class.java!!.cast(it) }).findFirst().ifPresent({ table -> append(log, "isEditing: " + table.isEditing()) })
+      // stream(fileChooser0).filter(Predicate<Component> { JTable::class.java!!.isInstance(it) }).map(Function<Component, JTable> { JTable::class.java!!.cast(it) }).findFirst().ifPresent { table -> append(log, "isEditing: " + table.isEditing()) }
       stream(fileChooser0)
         .filter(JTable::class.java::isInstance)
         .map(JTable::class.java::cast)
         .findFirst()
-        .ifPresent({ table -> append(log, "isEditing: " + table.isEditing()) })
+        .ifPresent { append(log, "isEditing: " + it.isEditing()) }
       // val tbl = children(fileChooser0)
       //   .filterIsInstance(JTable::class.java)
       //   .first()
@@ -28,21 +28,21 @@ class MainPanel : JPanel(BorderLayout()) {
       if (retvalue == JFileChooser.APPROVE_OPTION) {
         append(log, fileChooser0.getSelectedFile().getAbsolutePath())
       }
-    })
+    }
 
     val fileChooser1 = JFileChooser()
     val button1 = JButton("removeEditor")
-    button1.addActionListener({
+    button1.addActionListener {
       setViewTypeDetails(fileChooser1)
-      // stream(fileChooser1).filter(Predicate<Component> { JTable::class.java!!.isInstance(it) }).map(Function<Component, JTable> { JTable::class.java!!.cast(it) }).peek({ table -> append(log, "isEditing: " + table.isEditing()) }).findFirst().filter(Predicate<JTable> { it.isEditing() }).ifPresent(Consumer<JTable> { it.removeEditor() })
+      // stream(fileChooser1).filter(Predicate<Component> { JTable::class.java!!.isInstance(it) }).map(Function<Component, JTable> { JTable::class.java!!.cast(it) }).peek { table -> append(log, "isEditing: " + table.isEditing()) }.findFirst().filter(Predicate<JTable> { it.isEditing() }).ifPresent(Consumer<JTable> { it.removeEditor() })
       // stream(fileChooser1)
       //   .filter(JTable::class.java::isInstance)
       //   .map(JTable::class.java::cast)
-      //   .peek({ table -> append(log, "isEditing: " + table.isEditing()) })
+      //   .peek { table -> append(log, "isEditing: " + table.isEditing()) }
       //   .findFirst()
-      //   // .filter({ it.isEditing() })
+      //   // .filter { it.isEditing() }
       //   .filter(JTable::isEditing)
-      //   // .ifPresent({ it.removeEditor() })
+      //   // .ifPresent { it.removeEditor() }
       //   .ifPresent(JTable::removeEditor)
 
       children(fileChooser1)
@@ -57,7 +57,7 @@ class MainPanel : JPanel(BorderLayout()) {
       if (retvalue == JFileChooser.APPROVE_OPTION) {
         append(log, fileChooser1.getSelectedFile().getAbsolutePath())
       }
-    })
+    }
 
     val p = JPanel()
     p.setBorder(BorderFactory.createTitledBorder("JFileChooser(viewTypeDetails)"))
@@ -68,9 +68,8 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
   private fun setViewTypeDetails(fileChooser: JFileChooser) {
-    fileChooser.getActionMap().get("viewTypeDetails")?.let {
-      it.actionPerformed(ActionEvent(fileChooser, ActionEvent.ACTION_PERFORMED, "viewTypeDetails"))
-    }
+    fileChooser.getActionMap().get("viewTypeDetails")?.actionPerformed(
+        ActionEvent(fileChooser, ActionEvent.ACTION_PERFORMED, "viewTypeDetails"))
   }
 
   private fun append(log: JTextArea, str: String) {
@@ -81,12 +80,12 @@ class MainPanel : JPanel(BorderLayout()) {
   fun stream(parent: Container): Stream<Component> {
 //     return Stream.of(*parent.getComponents())
 //       .filter(Predicate<Component> { Container::class.java.isInstance(it) })
-//       .map({ stream(Container::class.java.cast(it)) })
+//       .map { stream(Container::class.java.cast(it)) }
 //       .reduce(Stream.of(parent), BinaryOperator<Stream<Component>> { a, b -> Stream.concat(a, b) })
     // return Stream.of(*parent.getComponents())
     return java.util.Arrays.stream(parent.getComponents())
       .filter(Container::class.java::isInstance)
-      .map({ c -> stream(Container::class.java.cast(c)) })
+      .map { c -> stream(Container::class.java.cast(c)) }
       // OK: .reduce(Stream.of(parent), BinaryOperator<Stream<Component>>{ a, b -> Stream.concat(a, b) })
       // NG: .reduce(Stream.of(parent), Stream::concat)
       .reduce(Stream.of<Component>(parent), { a, b -> Stream.concat<Component>(a, b) }) // OK
@@ -100,7 +99,7 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: ClassNotFoundException) {
@@ -119,5 +118,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }

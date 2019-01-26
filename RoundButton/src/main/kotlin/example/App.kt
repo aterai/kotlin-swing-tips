@@ -131,7 +131,7 @@ open class RoundedCornerButton : JButton {
 
   override fun contains(x: Int, y: Int): Boolean {
     initShape()
-    return shape?.let { it.contains(x.toDouble(), y.toDouble()) } ?: false
+    return shape?.contains(x.toDouble(), y.toDouble()) ?: false
   }
 
   companion object {

@@ -90,10 +90,10 @@ class RoundedCornerButtonUI : BasicButtonUI() {
     super.paint(g, c)
   }
 
-  //protected fun isShapeContains(pt: Point): Boolean {
-  //  val s = shape
-  //  return s is Shape && s.contains(pt.getX(), pt.getY())
-  //}
+  // protected fun isShapeContains(pt: Point): Boolean {
+  //   val s = shape
+  //   return s is Shape && s.contains(pt.getX(), pt.getY())
+  // }
   protected fun isShapeContains(pt: Point) = shape?.contains(pt.getX(), pt.getY()) ?: false
 
   protected fun initShape(c: Component) {
