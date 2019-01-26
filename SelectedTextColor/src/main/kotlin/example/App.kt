@@ -3,7 +3,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.io.IOException
 import java.net.URISyntaxException
-import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.nio.file.FileSystemNotFoundException
 import java.nio.file.Files
@@ -21,21 +20,22 @@ import javax.swing.text.html.StyleSheet
 class MainPanel : JPanel(BorderLayout()) {
   private val editor1 = JEditorPane()
   private val editor2 = JEditorPane()
-  private val engine = createEngine()
+  private val engine: ScriptEngine? = createEngine()
 
   init {
-    val styleSheet = StyleSheet()
-    styleSheet.addRule(".str {color:#008800}")
-    styleSheet.addRule(".kwd {color:#000088}")
-    styleSheet.addRule(".com {color:#880000}")
-    styleSheet.addRule(".typ {color:#660066}")
-    styleSheet.addRule(".lit {color:#006666}")
-    styleSheet.addRule(".pun {color:#666600}")
-    styleSheet.addRule(".pln {color:#000000}")
-    styleSheet.addRule(".tag {color:#000088}")
-    styleSheet.addRule(".atn {color:#660066}")
-    styleSheet.addRule(".atv {color:#008800}")
-    styleSheet.addRule(".dec {color:#660066}")
+    val styleSheet = StyleSheet().apply {
+      addRule(".str {color:#008800}")
+      addRule(".kwd {color:#000088}")
+      addRule(".com {color:#880000}")
+      addRule(".typ {color:#660066}")
+      addRule(".lit {color:#006666}")
+      addRule(".pun {color:#666600}")
+      addRule(".pln {color:#000000}")
+      addRule(".tag {color:#000088}")
+      addRule(".atn {color:#660066}")
+      addRule(".atv {color:#008800}")
+      addRule(".dec {color:#660066}")
+    }
 
     val htmlEditorKit = HTMLEditorKit()
     htmlEditorKit.setStyleSheet(styleSheet)
@@ -47,27 +47,31 @@ class MainPanel : JPanel(BorderLayout()) {
       it.setBackground(Color(200, 200, 200))
     }
 
-    editor2.setSelectedTextColor(null)
-    editor2.setSelectionColor(Color(0x6488AAAA, true))
-    // TEST: editor2.setSelectionColor(null);
+    editor2.apply {
+      setSelectedTextColor(null)
+      setSelectionColor(Color(0x64_88_AA_AA, true))
+      // TEST: setSelectionColor(null);
+    }
 
     val button = JButton("open")
-    button.addActionListener({
+    button.addActionListener {
       val fileChooser = JFileChooser()
       val ret = fileChooser.showOpenDialog(getRootPane())
       if (ret == JFileChooser.APPROVE_OPTION) {
         loadFile(fileChooser.getSelectedFile().getAbsolutePath())
-  }
-    })
+      }
+    }
 
-    val box = Box.createHorizontalBox()
-    box.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
-    box.add(Box.createHorizontalGlue())
-    box.add(button)
+    val box = Box.createHorizontalBox().apply {
+      setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
+      add(Box.createHorizontalGlue())
+      add(button)
+    }
 
-    val p = JPanel(GridLayout(2, 1))
-    p.add(JScrollPane(editor1))
-    p.add(JScrollPane(editor2))
+    val p = JPanel(GridLayout(2, 1)).apply {
+      add(JScrollPane(editor1))
+      add(JScrollPane(editor2))
+    }
     add(p)
     add(box, BorderLayout.SOUTH)
     setPreferredSize(Dimension(320, 240))
@@ -75,12 +79,12 @@ class MainPanel : JPanel(BorderLayout()) {
 
   private fun loadFile(path: String) {
     try {
-      Files.lines(Paths.get(path), Charset.forName("UTF-8")).use({ lines ->
-        val txt = lines.map({ s -> s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") }).collect(Collectors.joining("\n"))
-        val html = "<pre>" + prettify(engine!!, txt) + "\n</pre>"
+      Files.lines(Paths.get(path), StandardCharsets.UTF_8).use { lines ->
+        val txt = lines.map { s -> s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") }.collect(Collectors.joining("\n"))
+        val html = "<pre>" + prettify(engine, txt) + "\n</pre>"
         editor1.setText(html)
         editor2.setText(html)
-      })
+      }
     } catch (ex: IOException) {
       ex.printStackTrace()
     }
@@ -111,11 +115,11 @@ class MainPanel : JPanel(BorderLayout()) {
 
         // String p = "https://raw.githubusercontent.com/google/code-prettify/f5ad44e3253f1bc8e288477a36b2ce5972e8e161/src/prettify.js";
         // try (Reader r = new BufferedReader(new InputStreamReader(new URL(p).openStream(), StandardCharsets.UTF_8))) {
-        Files.newBufferedReader(path, StandardCharsets.UTF_8).use({ r ->
+        Files.newBufferedReader(path, StandardCharsets.UTF_8).use { r ->
           engine.eval("var window={}, navigator=null;")
           engine.eval(r)
           return engine
-        })
+        }
       } catch (ex: IOException) {
         ex.printStackTrace()
       } catch (ex: ScriptException) {
@@ -127,9 +131,9 @@ class MainPanel : JPanel(BorderLayout()) {
       return null
     }
 
-    private fun prettify(engine: ScriptEngine, src: String): String {
+    private fun prettify(engine: ScriptEngine?, src: String): String {
       try {
-        val w = engine.get("window")
+        val w = engine?.get("window")
         return ((engine as Invocable).invokeMethod(w, "prettyPrintOne", src) as String)
       } catch (ex: ScriptException) {
         ex.printStackTrace()
@@ -143,7 +147,7 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: ClassNotFoundException) {
@@ -162,5 +166,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }
