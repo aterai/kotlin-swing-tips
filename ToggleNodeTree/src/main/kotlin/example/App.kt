@@ -37,7 +37,10 @@ class MainPanel : JPanel(BorderLayout()) {
       override fun updateUI() {
         setViewportBorder(null)
         super.updateUI()
-        EventQueue.invokeLater({ setViewportBorder(BorderFactory.createLineBorder(getViewport().getView().getBackground(), 5)) })
+        EventQueue.invokeLater {
+          val bgc = getViewport().getView().getBackground()
+          setViewportBorder(BorderFactory.createLineBorder(bgc, 5))
+        }
       }
     }
     add(scroll)
@@ -99,7 +102,7 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: ClassNotFoundException) {
@@ -118,5 +121,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }

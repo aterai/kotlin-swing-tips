@@ -5,7 +5,9 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel(BorderLayout()) {
   // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
-  private val icons = listOf("wi0009-16.png", "wi0054-16.png", "wi0062-16.png", "wi0063-16.png", "wi0124-16.png", "wi0126-16.png")
+  private val icons = listOf(
+      "wi0009-16.png", "wi0054-16.png", "wi0062-16.png",
+      "wi0063-16.png", "wi0124-16.png", "wi0126-16.png")
 
   init {
     val tabbedPane = JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT)

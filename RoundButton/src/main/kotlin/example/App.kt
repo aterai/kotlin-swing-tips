@@ -196,7 +196,7 @@ internal class ShapeButton(protected val shape: Shape) : JButton() {
   }
 
   private fun paintFocusAndRollover(g2: Graphics2D, color: Color) {
-    g2.setPaint(GradientPaint(0f, 0f, color, (getWidth() - 1).toFloat(), (getHeight() - 1).toFloat(), color.brighter(), true))
+    g2.setPaint(GradientPaint(0f, 0f, color, getWidth() - 1f, getHeight() - 1f, color.brighter(), true))
     g2.fill(shape)
   }
 

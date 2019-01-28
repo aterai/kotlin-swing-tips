@@ -62,7 +62,9 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val layerUI = DividerLocationDragLayerUI()
     val check = JCheckBox("Paint divider")
-    check.addActionListener({ e -> layerUI.setPaintDividerEnabled((e.getSource() as JCheckBox).isSelected()) })
+    check.addActionListener { e ->
+      layerUI.setPaintDividerEnabled((e.getSource() as JCheckBox).isSelected())
+    }
 
     add(JLayer<JSplitPane>(split, layerUI))
     add(check, BorderLayout.SOUTH)
@@ -174,7 +176,7 @@ internal class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
   }
 
   companion object {
-    private val R = 25
+    private val R = 25.0
     private fun isDraggableComponent(splitPane: JSplitPane, c: Component): Boolean {
       return splitPane == c || splitPane == SwingUtilities.getUnwrappedParent(c)
     }
@@ -182,9 +184,9 @@ internal class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
       if (splitPane is JSplitPane) {
         val pos = splitPane.getDividerLocation()
         if (splitPane.getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
-          thumb.setFrame((pos - R).toDouble(), (splitPane.getHeight() / 2 - R).toDouble(), (R + R).toDouble(), (R + R).toDouble())
+          thumb.setFrame(pos - R, splitPane.getHeight() / 2.0 - R, R + R, R + R)
         } else {
-          thumb.setFrame((splitPane.getWidth() / 2 - R).toDouble(), (pos - R).toDouble(), (R + R).toDouble(), (R + R).toDouble())
+          thumb.setFrame(splitPane.getWidth() / 2.0 - R, pos - R, R + R, R + R)
         }
       }
     }
@@ -192,7 +194,7 @@ internal class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: ClassNotFoundException) {
@@ -211,5 +213,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }

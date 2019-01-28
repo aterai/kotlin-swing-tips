@@ -16,7 +16,7 @@ class MainPanel : JPanel(BorderLayout()) {
       arrayOf<Any>(6, 66, ES, ES, ES, ES, ES, "F"))
   private val columnNames = arrayOf("fixed 1", "fixed 2", "A", "B", "C", "D", "E", "F")
   private val model = object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int): Class<*> = if (column < FIXEDCOLUMN_RANGE) Int::class.java else Any::class.java
+    override fun getColumnClass(column: Int) = if (column < FIXEDCOLUMN_RANGE) Int::class.java else Any::class.java
   }
   @Transient
   private val sorter = TableRowSorter<DefaultTableModel>(model)
@@ -293,27 +293,48 @@ internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
     }
 
     // if (Objects.nonNull(lowerLeft)) {
-    //   lowerLeft.setBounds(if (leftToRight) rowHeadR.x else vsbR.x, hsbR.y, if (leftToRight) rowHeadR.width else vsbR.width, hsbR.height)
+    //   lowerLeft.setBounds(
+    //     if (leftToRight) rowHeadR.x else vsbR.x, hsbR.y,
+    //     if (leftToRight) rowHeadR.width else vsbR.width, hsbR.height)
     // }
-    lowerLeft?.setBounds(if (leftToRight) rowHeadR.x else vsbR.x, hsbR.y, if (leftToRight) rowHeadR.width else vsbR.width, hsbR.height)
+    lowerLeft?.setBounds(
+      if (leftToRight) rowHeadR.x else vsbR.x, hsbR.y,
+      if (leftToRight) rowHeadR.width else vsbR.width, hsbR.height)
 
     // if (Objects.nonNull(lowerRight)) {
-    //   lowerRight.setBounds(if (leftToRight) vsbR.x else rowHeadR.x, hsbR.y, if (leftToRight) vsbR.width else rowHeadR.width, hsbR.height)
+    //   lowerRight.setBounds(if (leftToRight) vsbR.x else rowHeadR.x, hsbR.y,
+    //                        if (leftToRight) vsbR.width else rowHeadR.width, hsbR.height)
     // }
-    lowerRight?.setBounds(if (leftToRight) vsbR.x else rowHeadR.x, hsbR.y, if (leftToRight) vsbR.width else rowHeadR.width, hsbR.height)
+    lowerRight?.setBounds(
+      if (leftToRight) vsbR.x else rowHeadR.x, hsbR.y,
+      if (leftToRight) vsbR.width else rowHeadR.width, hsbR.height)
 
     // if (Objects.nonNull(upperLeft)) {
-    //   upperLeft.setBounds(if (leftToRight) rowHeadR.x else vsbR.x, colHeadR.y, if (leftToRight) rowHeadR.width else vsbR.width, colHeadR.height)
+    //   upperLeft.setBounds(
+    //     if (leftToRight) rowHeadR.x else vsbR.x, colHeadR.y,
+    //     if (leftToRight) rowHeadR.width else vsbR.width, colHeadR.height)
     // }
-    upperLeft?.setBounds(if (leftToRight) rowHeadR.x else vsbR.x, colHeadR.y, if (leftToRight) rowHeadR.width else vsbR.width, colHeadR.height)
+    upperLeft?.setBounds(
+      if (leftToRight) rowHeadR.x else vsbR.x, colHeadR.y,
+      if (leftToRight) rowHeadR.width else vsbR.width, colHeadR.height)
 
     // if (Objects.nonNull(upperRight)) {
-    //   upperRight.setBounds(if (leftToRight) vsbR.x else rowHeadR.x, colHeadR.y, if (leftToRight) vsbR.width else rowHeadR.width, colHeadR.height)
+    //   upperRight.setBounds(
+    //     if (leftToRight) vsbR.x else rowHeadR.x, colHeadR.y,
+    //     if (leftToRight) vsbR.width else rowHeadR.width, colHeadR.height)
     // }
-    upperRight?.setBounds(if (leftToRight) vsbR.x else rowHeadR.x, colHeadR.y, if (leftToRight) vsbR.width else rowHeadR.width, colHeadR.height)
+    upperRight?.setBounds(
+      if (leftToRight) vsbR.x else rowHeadR.x, colHeadR.y,
+      if (leftToRight) vsbR.width else rowHeadR.width, colHeadR.height)
   }
 
-  private fun adjustForVsb(wantsVsb: Boolean, available: Rectangle, vsbR: Rectangle, vpbInsets: Insets, leftToRight: Boolean) {
+  private fun adjustForVsb(
+    wantsVsb: Boolean,
+    available: Rectangle,
+    vsbR: Rectangle,
+    vpbInsets: Insets,
+    leftToRight: Boolean
+  ) {
     val oldWidth = vsbR.width
     if (wantsVsb) {
       val vsbWidth = Math.max(0, Math.min(vsb.getPreferredSize().width, available.width))

@@ -23,7 +23,11 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
   private fun makeModel(): Array<ComboItem> {
-    return arrayOf(ComboItem(true, true, "00000"), ComboItem(true, false, "11111"), ComboItem(false, true, "22222"), ComboItem(false, false, "33333"))
+    return arrayOf(
+      ComboItem(true, true, "00000"),
+      ComboItem(true, false, "11111"),
+      ComboItem(false, true, "22222"),
+      ComboItem(false, false, "33333"))
   }
   private fun makeTitledPanel(title: String, c: Component): Component {
     val p = JPanel(BorderLayout())
@@ -38,7 +42,13 @@ open class ComboItem(var isEnabled: Boolean = false, var isEditable: Boolean = f
 class CheckComboBoxRenderer<E : ComboItem> : ListCellRenderer<E> {
   private val SBGC = Color(100, 200, 255)
   private val renderer = EditorPanel(ComboItem())
-  override fun getListCellRendererComponent(list: JList<out E>, value: E, index: Int, isSelected: Boolean, cellHasFocus: Boolean): Component {
+  override fun getListCellRendererComponent(
+    list: JList<out E>,
+    value: E,
+    index: Int,
+    isSelected: Boolean,
+    cellHasFocus: Boolean
+  ): Component {
     renderer.item = value
     if (isSelected && index >= 0) {
       renderer.setOpaque(true)
@@ -62,7 +72,7 @@ class CheckComboBoxEditor : ComboBoxEditor {
   }
 
   override fun setItem(anObject: Any) {
-    EventQueue.invokeLater({
+    EventQueue.invokeLater {
       val c = SwingUtilities.getAncestorOfClass(JComboBox::class.java, getEditorComponent())
       if (c is JComboBox<*>) {
         val idx = c.getSelectedIndex()
@@ -71,7 +81,7 @@ class CheckComboBoxEditor : ComboBoxEditor {
           editor.editingIndex = idx
         }
       }
-    })
+    }
     if (anObject is ComboItem) {
       editor.item = anObject
     } else {
@@ -121,7 +131,7 @@ class EditorPanel(private val data: ComboItem) : JPanel() {
   init {
     item = data
 
-    enabledCheck.addActionListener({ e ->
+    enabledCheck.addActionListener { e ->
       val c = SwingUtilities.getAncestorOfClass(JComboBox::class.java, this)
       if (c is JComboBox<*>) {
         val item = c.getItemAt(editingIndex) as ComboItem
@@ -130,11 +140,11 @@ class EditorPanel(private val data: ComboItem) : JPanel() {
         textField.setEnabled(item.isEnabled)
         c.setSelectedIndex(editingIndex)
       }
-    })
+    }
     enabledCheck.setOpaque(false)
     enabledCheck.setFocusable(false)
 
-    editableCheck.addActionListener({ e ->
+    editableCheck.addActionListener { e ->
       val c = SwingUtilities.getAncestorOfClass(JComboBox::class.java, this)
       if (c is JComboBox<*>) {
         val item = c.getItemAt(editingIndex) as ComboItem
@@ -142,18 +152,18 @@ class EditorPanel(private val data: ComboItem) : JPanel() {
         textField.setEditable(item.isEditable)
         c.setSelectedIndex(editingIndex)
       }
-    })
+    }
     editableCheck.setOpaque(false)
     editableCheck.setFocusable(false)
 
-    textField.addActionListener({ e ->
+    textField.addActionListener { e ->
       val c = SwingUtilities.getAncestorOfClass(JComboBox::class.java, this)
       if (c is JComboBox<*>) {
         val item = c.getItemAt(editingIndex) as ComboItem
         item.text = (e.getSource() as JTextField).getText()
         c.setSelectedIndex(editingIndex)
       }
-    })
+    }
     textField.setBorder(BorderFactory.createEmptyBorder())
     textField.setOpaque(false)
 
@@ -184,7 +194,7 @@ class EditorPanel(private val data: ComboItem) : JPanel() {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: ClassNotFoundException) {
@@ -203,5 +213,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }

@@ -40,7 +40,7 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     JFrame().apply {
       val mb = JMenuBar()
       mb.add(LookAndFeelUtil.createLookAndFeelMenu())
@@ -51,7 +51,7 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }
 
 // @see https://java.net/projects/swingset3/sources/svn/content/trunk/SwingSet3/src/com/sun/swingset3/SwingSet3.java
@@ -66,11 +66,11 @@ internal object LookAndFeelUtil {
     return menu
   }
 
-  private fun createLookAndFeelItem(lafName: String, lafClassName: String, lafRadioGroup: ButtonGroup): JRadioButtonMenuItem {
+  private fun createLookAndFeelItem(lafName: String, lafClassName: String, lafRadioGroup: ButtonGroup): JMenuItem {
     val lafItem = JRadioButtonMenuItem(lafName, lafClassName == lookAndFeel)
     lafItem.setActionCommand(lafClassName)
     lafItem.setHideActionText(true)
-    lafItem.addActionListener({
+    lafItem.addActionListener {
       val m = lafRadioGroup.getSelection()
       try {
         setLookAndFeel(m.getActionCommand())
@@ -83,12 +83,13 @@ internal object LookAndFeelUtil {
       } catch (ex: UnsupportedLookAndFeelException) {
         ex.printStackTrace()
       }
-    })
+    }
     lafRadioGroup.add(lafItem)
     return lafItem
   }
 
-  @Throws(ClassNotFoundException::class, InstantiationException::class, IllegalAccessException::class, UnsupportedLookAndFeelException::class)
+  @Throws(ClassNotFoundException::class, InstantiationException::class,
+          IllegalAccessException::class, UnsupportedLookAndFeelException::class)
   private fun setLookAndFeel(lookAndFeel: String) {
     val oldLookAndFeel = LookAndFeelUtil.lookAndFeel
     if (oldLookAndFeel != lookAndFeel) {

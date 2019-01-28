@@ -72,7 +72,14 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 internal class FileIconTableCellRenderer(private val fileSystemView: FileSystemView) : DefaultTableCellRenderer() {
-  override fun getTableCellRendererComponent(table: JTable?, value: Any, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component {
+  override fun getTableCellRendererComponent(
+    table: JTable?,
+    value: Any,
+    isSelected: Boolean,
+    hasFocus: Boolean,
+    row: Int,
+    column: Int
+  ): Component {
     val l = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column) as JLabel
     l.setHorizontalAlignment(SwingConstants.LEFT)
     l.setIcon(null)

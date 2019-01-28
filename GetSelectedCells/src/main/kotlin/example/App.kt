@@ -145,7 +145,13 @@ internal class BooleanEditor : AbstractCellEditor(), TableCellEditor {
     }
   }
 
-  override fun getTableCellEditorComponent(table: JTable, value: Any, isSelected: Boolean, row: Int, column: Int): Component {
+  override fun getTableCellEditorComponent(
+    table: JTable,
+    value: Any,
+    isSelected: Boolean,
+    row: Int,
+    column: Int
+  ): Component {
     checkBox.setSelected(value == java.lang.Boolean.TRUE)
     renderer.add(checkBox)
     return renderer

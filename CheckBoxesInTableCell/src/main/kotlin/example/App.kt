@@ -79,7 +79,14 @@ class CheckBoxesRenderer : CheckBoxesPanel(), TableCellRenderer {
     setName("Table.cellRenderer")
   }
 
-  override fun getTableCellRendererComponent(table: JTable, value: Any, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component {
+  override fun getTableCellRendererComponent(
+    table: JTable,
+    value: Any,
+    isSelected: Boolean,
+    hasFocus: Boolean,
+    row: Int,
+    column: Int
+  ): Component {
     updateButtons(value)
     return this
   }
@@ -109,7 +116,13 @@ class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
     }
   }
 
-  override fun getTableCellEditorComponent(table: JTable, value: Any, isSelected: Boolean, row: Int, column: Int): Component {
+  override fun getTableCellEditorComponent(
+    table: JTable,
+    value: Any,
+    isSelected: Boolean,
+    row: Int,
+    column: Int
+  ): Component {
     panel.updateButtons(value)
     return panel
   }

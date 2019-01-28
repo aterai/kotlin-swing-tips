@@ -128,10 +128,19 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 internal class TransparentHeader : JLabel(), TableCellRenderer {
-  private val border = BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK), BorderFactory.createEmptyBorder(2, 2, 1, 2))
+  private val border = BorderFactory.createCompoundBorder(
+      BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
+      BorderFactory.createEmptyBorder(2, 2, 1, 2))
   private val alphaZero = Color(0x0, true)
 
-  override fun getTableCellRendererComponent(table: JTable, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component {
+  override fun getTableCellRendererComponent(
+    table: JTable,
+    value: Any?,
+    isSelected: Boolean,
+    hasFocus: Boolean,
+    row: Int,
+    column: Int
+  ): Component {
     this.setText(value?.toString() ?: "")
     this.setHorizontalAlignment(SwingConstants.CENTER)
     this.setOpaque(false)
@@ -143,7 +152,14 @@ internal class TransparentHeader : JLabel(), TableCellRenderer {
 }
 
 internal class TranslucentObjectRenderer : DefaultTableCellRenderer() {
-  override fun getTableCellRendererComponent(table: JTable?, value: Any, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component {
+  override fun getTableCellRendererComponent(
+    table: JTable?,
+    value: Any,
+    isSelected: Boolean,
+    hasFocus: Boolean,
+    row: Int,
+    column: Int
+  ): Component {
     val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column) as JComponent
     // c.setOpaque(true);
     c.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8))
@@ -160,7 +176,14 @@ internal class TranslucentBooleanRenderer : JCheckBox(), TableCellRenderer {
     setOpaque(false)
   }
 
-  override fun getTableCellRendererComponent(table: JTable, value: Any, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component {
+  override fun getTableCellRendererComponent(
+    table: JTable,
+    value: Any,
+    isSelected: Boolean,
+    hasFocus: Boolean,
+    row: Int,
+    column: Int
+  ): Component {
     setHorizontalAlignment(SwingConstants.CENTER)
     if (isSelected) {
       setForeground(table.getSelectionForeground())

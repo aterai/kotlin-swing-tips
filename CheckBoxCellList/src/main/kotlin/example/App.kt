@@ -38,7 +38,8 @@ class MainPanel : JPanel(BorderLayout()) {
     p.add(makeTitledPanel("JTree", JScrollPane(list3)))
 
     val root = DefaultMutableTreeNode("JTree")
-    listOf("aaaa", "bbbbbbb", "ccc", "dddddd", "eeeeeee", "fffffffff", "gggggg", "hhhhh", "iiii", "jjjjjjjjjj").forEach {
+    listOf("aaaa", "bbbbbbb", "ccc", "dddddd", "eeeeeee", "fffffffff",
+          "gggggg", "hhhhh", "iiii", "jjjjjjjjjj").forEach {
       val isSelected = it.length % 2 == 0
       val c = JCheckBox(it, isSelected)
       c.setAlignmentX(Component.LEFT_ALIGNMENT)
@@ -103,7 +104,10 @@ class CheckBoxList<E : CheckBoxNode>(model: ListModel<E>) : JList<E>(model) {
 
   protected override fun processMouseMotionEvent(e: MouseEvent) {
     if (pointOutsidePrefSize(e.getPoint())) {
-      val ev = MouseEvent(e.getComponent(), MouseEvent.MOUSE_EXITED, e.getWhen(), e.getModifiersEx(), e.getX(), e.getY(), e.getXOnScreen(), e.getYOnScreen(), e.getClickCount(), e.isPopupTrigger(), MouseEvent.NOBUTTON)
+      val ev = MouseEvent(
+          e.getComponent(), MouseEvent.MOUSE_EXITED, e.getWhen(), e.getModifiersEx(),
+          e.getX(), e.getY(), e.getXOnScreen(), e.getYOnScreen(), e.getClickCount(),
+          e.isPopupTrigger(), MouseEvent.NOBUTTON)
       super.processMouseEvent(ev)
     } else {
       super.processMouseMotionEvent(e)
@@ -114,7 +118,13 @@ class CheckBoxList<E : CheckBoxNode>(model: ListModel<E>) : JList<E>(model) {
 class CheckBoxCellRenderer<E : CheckBoxNode> : MouseAdapter(), ListCellRenderer<E> {
   private val checkBox = JCheckBox()
   private var rollOverRowIndex = -1
-  override fun getListCellRendererComponent(list: JList<out E>, value: E, index: Int, isSelected: Boolean, cellHasFocus: Boolean): Component {
+  override fun getListCellRendererComponent(
+    list: JList<out E>,
+    value: E,
+    index: Int,
+    isSelected: Boolean,
+    cellHasFocus: Boolean
+  ): Component {
     checkBox.setOpaque(true)
     if (isSelected) {
       checkBox.setBackground(list.getSelectionBackground())
@@ -165,7 +175,15 @@ class CheckBoxCellRenderer<E : CheckBoxNode> : MouseAdapter(), ListCellRenderer<
 class CheckBoxNodeRenderer : TreeCellRenderer {
   private val checkBox = JCheckBox()
   private val renderer = DefaultTreeCellRenderer()
-  override fun getTreeCellRendererComponent(tree: JTree, value: Any, selected: Boolean, expanded: Boolean, leaf: Boolean, row: Int, hasFocus: Boolean): Component {
+  override fun getTreeCellRendererComponent(
+    tree: JTree,
+    value: Any,
+    selected: Boolean,
+    expanded: Boolean,
+    leaf: Boolean,
+    row: Int,
+    hasFocus: Boolean
+  ): Component {
     if (leaf && value is DefaultMutableTreeNode) {
       checkBox.setOpaque(false)
       val userObject = value.getUserObject()
@@ -195,7 +213,14 @@ class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
     }
   }
 
-  override fun getTreeCellEditorComponent(tree: JTree, value: Any, selected: Boolean, expanded: Boolean, leaf: Boolean, row: Int): Component {
+  override fun getTreeCellEditorComponent(
+    tree: JTree,
+    value: Any,
+    selected: Boolean,
+    expanded: Boolean,
+    leaf: Boolean,
+    row: Int
+  ): Component {
     if (leaf && value is DefaultMutableTreeNode) {
       val userObject = value.getUserObject()
       if (userObject is CheckBoxNode) {
@@ -218,7 +243,7 @@ class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: ClassNotFoundException) {
@@ -237,5 +262,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }
