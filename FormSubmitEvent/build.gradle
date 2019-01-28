@@ -1,0 +1,56 @@
+group 'Example'
+version '1.0-SNAPSHOT'
+
+// apply plugin: 'java'
+apply plugin: 'kotlin'
+apply plugin: 'application'
+
+def defaultEncoding = 'UTF-8'
+[compileJava, compileTestJava]*.options*.encoding = defaultEncoding
+
+// mainClassName = 'example.AppKt'
+
+buildscript {
+  ext.kotlin_version = '1.3.0'
+  ext.coroutine_version = '1.0.0' // '0.30.2-eap13'
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+  }
+}
+
+sourceCompatibility = 1.8
+compileKotlin {
+  kotlinOptions.jvmTarget = "$sourceCompatibility"
+  kotlinOptions.includeRuntime = true
+  kotlinOptions.noStdlib = false
+}
+compileTestKotlin {
+  kotlinOptions.jvmTarget = "$sourceCompatibility"
+}
+
+kotlin {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-swing:$coroutine_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutine_version"
+  }
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+}
+
+application {
+    // Define the main class for the application
+    mainClassName = 'example.AppKt'
+}
