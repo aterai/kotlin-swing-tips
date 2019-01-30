@@ -31,7 +31,7 @@ class MainPanel : JPanel(BorderLayout()) {
     }
 
     val encode = JButton("encode")
-    encode.addActionListener({
+    encode.addActionListener {
       val chooser = JFileChooser()
       chooser.addChoosableFileFilter(FileNameExtensionFilter("PNG (*.png)", "png"))
       val retvalue = chooser.showOpenDialog(encode)
@@ -43,9 +43,9 @@ class MainPanel : JPanel(BorderLayout()) {
           ex.printStackTrace()
         }
       }
-    })
+    }
     val decode = JButton("decode")
-    decode.addActionListener({
+    decode.addActionListener {
       val b64 = textArea.getText()
       if (!b64.isEmpty()) {
         try {
@@ -57,7 +57,7 @@ class MainPanel : JPanel(BorderLayout()) {
           ex.printStackTrace()
         }
       }
-    })
+    }
 
     val box = JPanel(GridLayout(1, 2, 5, 5)).apply {
       setBorder(BorderFactory.createTitledBorder("java.util.Base64"))
@@ -73,7 +73,7 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: ClassNotFoundException) {
@@ -92,5 +92,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }

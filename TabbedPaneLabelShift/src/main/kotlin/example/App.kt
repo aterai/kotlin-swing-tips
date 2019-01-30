@@ -14,21 +14,21 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
 
     val slsiv = UIManager.getLookAndFeelDefaults().getInt("TabbedPane.selectedLabelShift")
     val slsSpinner = JSpinner(SpinnerNumberModel(slsiv, -5, 5, 1))
-    slsSpinner.addChangeListener({ e ->
+    slsSpinner.addChangeListener { e ->
       val source = e.getSource() as JSpinner
       val offset = source.getValue() as Int
       UIManager.put("TabbedPane.selectedLabelShift", offset)
       SwingUtilities.updateComponentTreeUI(source.getTopLevelAncestor())
-    })
+    }
 
     val lsiv = UIManager.getLookAndFeelDefaults().getInt("TabbedPane.labelShift")
     val lsSpinner = JSpinner(SpinnerNumberModel(lsiv, -5, 5, 1))
-    lsSpinner.addChangeListener({ e ->
+    lsSpinner.addChangeListener { e ->
       val source = e.getSource() as JSpinner
       val offset = source.getValue() as Int
       UIManager.put("TabbedPane.labelShift", offset)
       SwingUtilities.updateComponentTreeUI(source.getTopLevelAncestor())
-    })
+    }
 
     val box1 = Box.createHorizontalBox()
     box1.setBorder(BorderFactory.createTitledBorder("UIManager.put(\"TabbedPane.selectedLabelShift\", offset)"))
@@ -75,7 +75,7 @@ internal class ColorIcon(private val color: Color) : Icon {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: ClassNotFoundException) {
@@ -94,5 +94,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }

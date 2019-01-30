@@ -28,7 +28,7 @@ class MainPanel : JPanel(GridLayout(2, 1)) {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       // UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
       // UIManager.put("TabbedPane.tabAreaInsets", new Insets(10, 10, 2, 10));
@@ -56,5 +56,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }

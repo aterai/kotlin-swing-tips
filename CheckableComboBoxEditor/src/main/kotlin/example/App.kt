@@ -22,6 +22,7 @@ class MainPanel : JPanel(BorderLayout()) {
     add(box, BorderLayout.NORTH)
     setPreferredSize(Dimension(320, 240))
   }
+
   private fun makeModel(): Array<ComboItem> {
     return arrayOf(
       ComboItem(true, true, "00000"),
@@ -29,6 +30,7 @@ class MainPanel : JPanel(BorderLayout()) {
       ComboItem(false, true, "22222"),
       ComboItem(false, false, "33333"))
   }
+
   private fun makeTitledPanel(title: String, c: Component): Component {
     val p = JPanel(BorderLayout())
     p.setBorder(BorderFactory.createTitledBorder(title))

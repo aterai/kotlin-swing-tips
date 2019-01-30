@@ -15,11 +15,11 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val label = JLabel()
     val button = JButton("check")
-    button.addActionListener({
+    button.addActionListener {
       label.setText(bg.getSelection()?.let {
         "\"%s\" isSelected.".format(it.getActionCommand())
       } ?: "Please select one of the option above.")
-    })
+    }
 
     val box = Box.createHorizontalBox()
     box.add(label)
@@ -53,7 +53,7 @@ internal class ToggleButtonGroup : ButtonGroup() {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: ClassNotFoundException) {
@@ -72,5 +72,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }

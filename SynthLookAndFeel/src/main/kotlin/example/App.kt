@@ -9,7 +9,6 @@ import javax.swing.plaf.synth.SynthLookAndFeel
 
 class MainPanel : JPanel() {
   init {
-
     add(JButton("JButton1"))
     add(JButton("JButton2"))
     add(MyButton("MyButton"))
@@ -29,12 +28,12 @@ class MainPanel : JPanel() {
 class MyButton(title: String) : JButton("$title: class")
 
 fun main() {
-  EventQueue.invokeLater({
-    MainPanel::class.java.getResourceAsStream("button.xml").use({ input ->
+  EventQueue.invokeLater {
+    MainPanel::class.java.getResourceAsStream("button.xml").use { input ->
       val synth = SynthLookAndFeel()
       synth.load(input, MainPanel::class.java)
       UIManager.setLookAndFeel(synth)
-    })
+    }
     JFrame().apply {
       setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
       getContentPane().add(MainPanel())
@@ -42,5 +41,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }
