@@ -6,7 +6,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.util.Objects
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
@@ -90,7 +89,7 @@ class MainPanel : JPanel(BorderLayout()) {
         // TEST:
         // tc.requestFocusInWindow();
         // tc.selectAll();
-        val hasSelectedText = Objects.nonNull(tc.getSelectedText())
+        val hasSelectedText = tc.getSelectedText() != null
         cutAction.setEnabled(hasSelectedText)
         copyAction.setEnabled(hasSelectedText)
       }
@@ -115,7 +114,7 @@ class TextComponentPopupMenu : JPopupMenu() {
     if (c is JTextComponent) {
       // val tc = c as JTextComponent
       c.requestFocusInWindow()
-      var hasSelectedText = Objects.nonNull(c.getSelectedText())
+      var hasSelectedText = c.getSelectedText() != null
       if (c is JTextField && !c.isFocusOwner() && !hasSelectedText) {
         c.selectAll()
         hasSelectedText = true
@@ -128,7 +127,7 @@ class TextComponentPopupMenu : JPopupMenu() {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: ClassNotFoundException) {
@@ -147,5 +146,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }
