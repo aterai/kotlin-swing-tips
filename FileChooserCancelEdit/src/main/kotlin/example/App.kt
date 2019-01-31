@@ -45,8 +45,7 @@ class MainPanel : JPanel(BorderLayout()) {
       //   // .ifPresent { it.removeEditor() }
       //   .ifPresent(JTable::removeEditor)
 
-      children(fileChooser1)
-        .filterIsInstance(JTable::class.java)
+      children(fileChooser1).filterIsInstance(JTable::class.java)
         // .firstOrNull()?.apply(JTable::removeEditor)
         .firstOrNull()?.let { table ->
           println(table)
@@ -67,9 +66,10 @@ class MainPanel : JPanel(BorderLayout()) {
     add(JScrollPane(log))
     setPreferredSize(Dimension(320, 240))
   }
+
   private fun setViewTypeDetails(fileChooser: JFileChooser) {
     fileChooser.getActionMap().get("viewTypeDetails")?.actionPerformed(
-        ActionEvent(fileChooser, ActionEvent.ACTION_PERFORMED, "viewTypeDetails"))
+      ActionEvent(fileChooser, ActionEvent.ACTION_PERFORMED, "viewTypeDetails"))
   }
 
   private fun append(log: JTextArea, str: String) {
@@ -78,18 +78,19 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   fun stream(parent: Container): Stream<Component> {
-//     return Stream.of(*parent.getComponents())
-//       .filter(Predicate<Component> { Container::class.java.isInstance(it) })
-//       .map { stream(Container::class.java.cast(it)) }
-//       .reduce(Stream.of(parent), BinaryOperator<Stream<Component>> { a, b -> Stream.concat(a, b) })
     // return Stream.of(*parent.getComponents())
-    return java.util.Arrays.stream(parent.getComponents())
+    //   .filter(Predicate<Component> { Container::class.java.isInstance(it) })
+    //   .map { stream(Container::class.java.cast(it)) }
+    //   .reduce(Stream.of(parent), BinaryOperator<Stream<Component>> { a, b -> Stream.concat(a, b) })
+    return Stream.of(*parent.getComponents())
+    // return Arrays.stream(parent.getComponents())
       .filter(Container::class.java::isInstance)
       .map { c -> stream(Container::class.java.cast(c)) }
       // OK: .reduce(Stream.of(parent), BinaryOperator<Stream<Component>>{ a, b -> Stream.concat(a, b) })
       // NG: .reduce(Stream.of(parent), Stream::concat)
       .reduce(Stream.of<Component>(parent), { a, b -> Stream.concat<Component>(a, b) }) // OK
   }
+
   fun children(parent: Container): List<Component> {
     return parent.getComponents().toList()
       .filterIsInstance(Container::class.java)
