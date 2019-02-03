@@ -34,10 +34,13 @@ class MainPanel : JPanel(BorderLayout()) {
       }
 
       private fun resetViewportPosition(idx: Int) {
+        if (getTabCount() <= 0) {
+          return
+        }
         val viewport = getScrollableViewport()
         if (viewport is JViewport) {
           val c = viewport.getView() as JComponent
-          c.scrollRectToVisible(getBoundsAt(Math.max(0, idx - 1)))
+          c.scrollRectToVisible(getBoundsAt(idx))
         }
       }
 
