@@ -36,7 +36,7 @@ class MainPanel : JPanel(BorderLayout()) {
     progress1.setModel(slider.getModel())
 
     val button = JButton("start")
-    button.addActionListener({ e ->
+    button.addActionListener { e ->
       val b = e.getSource() as JButton
       b.setEnabled(false)
       val worker = object : BackgroundTask() {
@@ -48,7 +48,7 @@ class MainPanel : JPanel(BorderLayout()) {
       }
       worker.addPropertyChangeListener(ProgressListener(progress2))
       worker.execute()
-    })
+    }
 
     add(slider, BorderLayout.NORTH)
     add(JPanel(GridLayout(1, 2)).apply {
@@ -155,7 +155,7 @@ internal class ProgressListener(private val progressBar: JProgressBar) : Propert
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: ClassNotFoundException) {
@@ -174,5 +174,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }

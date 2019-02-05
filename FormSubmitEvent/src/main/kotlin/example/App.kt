@@ -22,7 +22,7 @@ class MainPanel : JPanel(GridLayout(2, 1, 5, 5)) {
 
     val form = "<form action='#'><input type='text' name='word' value='12345' /></form>"
     editor.setText("<html><h1>Form test</h1>$form")
-    editor.addHyperlinkListener({ e ->
+    editor.addHyperlinkListener { e ->
       if (e is FormSubmitEvent) {
         val data = (e as FormSubmitEvent).getData()
         logger.append(data + "\n")
@@ -38,7 +38,7 @@ class MainPanel : JPanel(GridLayout(2, 1, 5, 5)) {
           logger.append(ex.message + "\n")
         }
       }
-    })
+    }
 
     setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
     add(JScrollPane(editor))
@@ -48,7 +48,7 @@ class MainPanel : JPanel(GridLayout(2, 1, 5, 5)) {
 }
 
 fun main() {
-  EventQueue.invokeLater({
+  EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     } catch (ex: ClassNotFoundException) {
@@ -67,5 +67,5 @@ fun main() {
       setLocationRelativeTo(null)
       setVisible(true)
     }
-  })
+  }
 }
