@@ -63,9 +63,7 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 open class CheckBoxNode(val text: String, val selected: Boolean) {
-  override fun toString(): String {
-    return text
-  }
+  override fun toString() = text
 }
 
 class CheckBoxList<E : CheckBoxNode>(model: ListModel<E>) : JList<E>(model) {
@@ -233,13 +231,9 @@ class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
     return checkBox
   }
 
-  override fun getCellEditorValue(): Any {
-    return CheckBoxNode(checkBox.getText(), checkBox.isSelected())
-  }
+  override fun getCellEditorValue() = CheckBoxNode(checkBox.getText(), checkBox.isSelected())
 
-  override fun isCellEditable(e: EventObject?): Boolean {
-    return e is MouseEvent
-  }
+  override fun isCellEditable(e: EventObject?) = e is MouseEvent
 }
 
 fun main() {

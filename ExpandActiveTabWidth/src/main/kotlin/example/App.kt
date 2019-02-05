@@ -39,7 +39,7 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 internal class ShrinkLabel(title: String, icon: Icon) : JLabel(title, icon, SwingConstants.LEFT) {
-  var isSelected: Boolean = false
+  var isSelected = false
   override fun getPreferredSize(): Dimension {
     val d = super.getPreferredSize()
     if (!isSelected) {

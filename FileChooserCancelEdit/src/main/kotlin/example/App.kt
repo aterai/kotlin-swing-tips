@@ -91,12 +91,10 @@ class MainPanel : JPanel(BorderLayout()) {
       .reduce(Stream.of<Component>(parent), { a, b -> Stream.concat<Component>(a, b) }) // OK
   }
 
-  fun children(parent: Container): List<Component> {
-    return parent.getComponents().toList()
+  fun children(parent: Container): List<Component> = parent.getComponents().toList()
       .filterIsInstance(Container::class.java)
       .map { children(it) }
       .fold(listOf<Component>(parent), { a, b -> a + b })
-  }
 }
 
 fun main() {

@@ -40,8 +40,8 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 open class ClippedTitleTabbedPane : JTabbedPane {
-  private val tabInsets: Insets = UIManager.getInsets("TabbedPane.tabInsets") ?: getSynthTabInsets()
-  private val tabAreaInsets: Insets = UIManager.getInsets("TabbedPane.tabAreaInsets") ?: getSynthTabAreaInsets()
+  private val tabInsets = UIManager.getInsets("TabbedPane.tabInsets") ?: getSynthTabInsets()
+  private val tabAreaInsets = UIManager.getInsets("TabbedPane.tabAreaInsets") ?: getSynthTabAreaInsets()
 
   private fun getSynthTabInsets(): Insets {
     val style = SynthLookAndFeel.getStyle(this, Region.TABBED_PANE_TAB)
@@ -57,7 +57,7 @@ open class ClippedTitleTabbedPane : JTabbedPane {
 
   constructor() : super() {}
 
-  protected constructor(tabPlacement: Int) : super(tabPlacement) {}
+  constructor(tabPlacement: Int) : super(tabPlacement) {}
 
   override fun doLayout() {
     val tabCount = getTabCount()
@@ -70,16 +70,9 @@ open class ClippedTitleTabbedPane : JTabbedPane {
     val insets = getInsets()
     val tabPlacement = getTabPlacement()
     val areaWidth = getWidth() - tabAreaInsets.left - tabAreaInsets.right - insets.left - insets.right
-    var tabWidth: Int // = 0 // = tabInsets.left + tabInsets.right + 3;
-    var gap: Int // = 0
-
-    if (tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT) {
-      tabWidth = areaWidth / 4
-      gap = 0
-    } else { // TOP || BOTTOM
-      tabWidth = areaWidth / tabCount
-      gap = areaWidth - tabWidth * tabCount
-    }
+    val isSide = tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT
+    var tabWidth = if (isSide) areaWidth / 4 else areaWidth / tabCount
+    val gap = if (isSide) 0 else areaWidth - tabWidth * tabCount
 
     // "3" is magic number @see BasicTabbedPaneUI#calculateTabWidth
     tabWidth -= tabInsets.left + tabInsets.right + 3
@@ -112,7 +105,7 @@ open class ClippedTitleTabbedPane : JTabbedPane {
 open class TextOverflowFadeTabbedPane : ClippedTitleTabbedPane {
   constructor() : super()
 
-  protected constructor(tabPlacement: Int) : super(tabPlacement)
+  constructor(tabPlacement: Int) : super(tabPlacement)
 
   override fun insertTab(title: String, icon: Icon, component: Component, tip: String?, index: Int) {
     super.insertTab(title, icon, component, tip?.toString() ?: title, index)

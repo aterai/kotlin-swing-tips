@@ -62,7 +62,7 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 internal class DisableInputLayerUI<V : JComponent> : LayerUI<V>() {
-  private var running: Boolean = false
+  private var running = false
 
   fun setInputBlock(block: Boolean) {
     firePropertyChange(CMD_REPAINT, running, block)

@@ -19,7 +19,7 @@ class MainPanel : JPanel(BorderLayout()) {
   init {
     val columnNames = arrayOf("Name", "Size", "Full Path")
     val model = object : DefaultTableModel(null, columnNames) {
-      override fun getColumnClass(column: Int): Class<*> = File::class.java
+      override fun getColumnClass(column: Int) = File::class.java
     }
     val table = JTable(model)
     table.putClientProperty("Table.isFileList", java.lang.Boolean.TRUE)

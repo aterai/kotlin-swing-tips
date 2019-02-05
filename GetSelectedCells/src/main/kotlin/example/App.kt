@@ -26,7 +26,7 @@ class MainPanel : JPanel(GridBagLayout()) {
         arrayOf(true, false, true, false, true, true, false, true, true))
 
     val model = object : DefaultTableModel(data, columnNames) {
-      override fun getColumnClass(column: Int): Class<*> = java.lang.Boolean::class.java
+      override fun getColumnClass(column: Int) = java.lang.Boolean::class.java
     }
 
     val table = object : JTable(model) {
@@ -157,13 +157,10 @@ internal class BooleanEditor : AbstractCellEditor(), TableCellEditor {
     return renderer
   }
 
-  override fun getCellEditorValue(): Any = checkBox.isSelected()
+  override fun getCellEditorValue() = checkBox.isSelected()
 
   override fun isCellEditable(e: EventObject): Boolean {
-    if (e is MouseEvent) {
-      return !(e.isShiftDown() || e.isControlDown())
-    }
-    return super.isCellEditable(e)
+    return if (e is MouseEvent) !(e.isShiftDown() || e.isControlDown()) else super.isCellEditable(e)
   }
 
   private inner class CheckBoxHandler : MouseAdapter(), ActionListener {

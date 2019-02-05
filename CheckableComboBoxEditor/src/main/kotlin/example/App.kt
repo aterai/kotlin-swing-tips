@@ -23,13 +23,11 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  private fun makeModel(): Array<ComboItem> {
-    return arrayOf(
+  private fun makeModel() = arrayOf(
       ComboItem(true, true, "00000"),
       ComboItem(true, false, "11111"),
       ComboItem(false, true, "22222"),
       ComboItem(false, false, "33333"))
-  }
 
   private fun makeTitledPanel(title: String, c: Component): Component {
     val p = JPanel(BorderLayout())
@@ -69,9 +67,7 @@ class CheckComboBoxEditor : ComboBoxEditor {
     editor.selectAll()
   }
 
-  override fun getItem(): Any {
-    return editor.item
-  }
+  override fun getItem() = editor.item
 
   override fun setItem(anObject: Any) {
     EventQueue.invokeLater {
@@ -91,9 +87,7 @@ class CheckComboBoxEditor : ComboBoxEditor {
     }
   }
 
-  override fun getEditorComponent(): Component {
-    return editor
-  }
+  override fun getEditorComponent() = editor
 
   override fun addActionListener(l: ActionListener) {
     println("addActionListener: " + l.javaClass.getName())

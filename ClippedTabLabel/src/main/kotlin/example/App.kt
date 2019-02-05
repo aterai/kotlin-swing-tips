@@ -2,13 +2,11 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.util.Arrays
-import java.util.Objects
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.synth.Region
 import javax.swing.plaf.synth.SynthConstants
 import javax.swing.plaf.synth.SynthContext
 import javax.swing.plaf.synth.SynthLookAndFeel
-import javax.swing.plaf.synth.SynthStyle
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
@@ -28,15 +26,13 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  private fun makeTestTabbedPane(jtp: JTabbedPane): JTabbedPane {
-    return jtp.apply {
-      setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT)
-      addTab("1111111111111111111", ColorIcon(Color.RED), JScrollPane(JTree()))
-      addTab("2", ColorIcon(Color.GREEN), JLabel("bbbbbbbbb"))
-      addTab("33333333333333", ColorIcon(Color.BLUE), JScrollPane(JTree()))
-      addTab("444444444444444", ColorIcon(Color.ORANGE), JLabel("dddddddddd"))
-      addTab("55555555555555555555555555555555", ColorIcon(Color.CYAN), JLabel("e"))
-    }
+  private fun makeTestTabbedPane(jtp: JTabbedPane) = jtp.apply {
+    setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT)
+    addTab("1111111111111111111", ColorIcon(Color.RED), JScrollPane(JTree()))
+    addTab("2", ColorIcon(Color.GREEN), JLabel("bbbbbbbbb"))
+    addTab("33333333333333", ColorIcon(Color.BLUE), JScrollPane(JTree()))
+    addTab("444444444444444", ColorIcon(Color.ORANGE), JLabel("dddddddddd"))
+    addTab("55555555555555555555555555555555", ColorIcon(Color.CYAN), JLabel("e"))
   }
 }
 
@@ -73,7 +69,7 @@ internal class ClippedTitleTabbedPane : JTabbedPane {
     val areaWidth = getWidth() - tabAreaInsets.left - tabAreaInsets.right - insets.left - insets.right
     val isSide = tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT
     var tabWidth = if (isSide) areaWidth / 4 else areaWidth / tabCount
-    val gap= if (isSide) 0 else areaWidth - tabWidth * tabCount
+    val gap = if (isSide) 0 else areaWidth - tabWidth * tabCount
 
     // "3" is magic number @see BasicTabbedPaneUI#calculateTabWidth
     tabWidth -= tabInsets.left + tabInsets.right + 3

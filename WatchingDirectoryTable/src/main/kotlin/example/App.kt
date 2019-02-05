@@ -159,7 +159,7 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 internal class FileModel : DefaultTableModel() {
-  private var number: Int = 0
+  private var number = 0
 
   fun addPath(path: Path) {
     val obj = arrayOf<Any>(number, path.getFileName(), path.toAbsolutePath())

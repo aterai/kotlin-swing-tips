@@ -78,10 +78,10 @@ internal class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
   private val dc = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
   private val wc = Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR)
   private val thumb = Ellipse2D.Double()
-  private var dividerLocation: Int = 0
-  private var isDragging: Boolean = false
-  private var isEnter: Boolean = false
-  private var dividerEnabled: Boolean = false
+  private var dividerLocation = 0
+  private var isDragging = false
+  private var isEnter = false
+  private var dividerEnabled = false
 
   override fun installUI(c: JComponent) {
     super.installUI(c)

@@ -63,13 +63,11 @@ open class CheckBoxesPanel : JPanel() {
   }
 
   private val BGC = Color(0x0, true)
-  private fun makeCheckBox(title: String): JCheckBox {
-    return JCheckBox(title).apply {
-      setOpaque(false)
-      setFocusable(false)
-      setRolloverEnabled(false)
-      setBackground(BGC)
-    }
+  private fun makeCheckBox(title: String) = JCheckBox(title).apply {
+    setOpaque(false)
+    setFocusable(false)
+    setRolloverEnabled(false)
+    setBackground(BGC)
   }
 }
 

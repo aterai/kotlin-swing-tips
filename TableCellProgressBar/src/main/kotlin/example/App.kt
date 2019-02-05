@@ -163,7 +163,7 @@ open class BackgroundTask : SwingWorker<Int, Int>() {
 
 open class WorkerModel : DefaultTableModel() {
   private val swmap = ConcurrentHashMap<Int, SwingWorker<Int, Int>>()
-  private var number: Int = 0
+  private var number = 0
 
   fun addProgressValue(name: String, iv: Int, worker: SwingWorker<Int, Int>?) {
     super.addRow(arrayOf<Any>(number, name, iv))
@@ -176,21 +176,13 @@ open class WorkerModel : DefaultTableModel() {
     return swmap.get(key)
   }
 
-  override fun isCellEditable(row: Int, col: Int): Boolean {
-    return COLUMN_ARRAY[col].isEditable
-  }
+  override fun isCellEditable(row: Int, col: Int) = COLUMN_ARRAY[col].isEditable
 
-  override fun getColumnClass(column: Int): Class<*> {
-    return COLUMN_ARRAY[column].columnClass
-  }
+  override fun getColumnClass(column: Int) = COLUMN_ARRAY[column].columnClass
 
-  override fun getColumnCount(): Int {
-    return COLUMN_ARRAY.size
-  }
+  override fun getColumnCount() = COLUMN_ARRAY.size
 
-  override fun getColumnName(column: Int): String {
-    return COLUMN_ARRAY[column].columnName
-  }
+  override fun getColumnName(column: Int) = COLUMN_ARRAY[column].columnName
 
   private class ColumnContext(val columnName: String, val columnClass: Class<*>, val isEditable: Boolean)
 
