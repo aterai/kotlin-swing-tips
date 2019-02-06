@@ -14,13 +14,7 @@ import javax.imageio.metadata.IIOMetadataNode
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel(BorderLayout()) {
-  private val DELAY = 10
-  private val ELLIPSE_COLOR = Color(.5f, .5f, .5f)
-  private val R = 20.0
-  private val SX = 20.0
-  private val SY = 20.0
-  private val WIDTH = (R * 8 + SX * 2).toInt()
-  private val HEIGHT = (R * 8 + SY * 2).toInt()
+  private val ellipseColor = Color(.5f, .5f, .5f)
   private val list = mutableListOf<Shape>(
       Ellipse2D.Double(SX + 3 * R, SY + 0 * R, 2 * R, 2 * R),
       Ellipse2D.Double(SX + 5 * R, SY + 1 * R, 2 * R, 2 * R),
@@ -113,7 +107,7 @@ class MainPanel : JPanel(BorderLayout()) {
     g2.setPaint(Color.WHITE)
     g2.fillRect(0, 0, WIDTH, HEIGHT)
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    g2.setPaint(ELLIPSE_COLOR)
+    g2.setPaint(ellipseColor)
     val size = list.size.toFloat()
     list.forEach { s ->
       val alpha = (list.indexOf(s) + 1) / size
@@ -121,6 +115,15 @@ class MainPanel : JPanel(BorderLayout()) {
       g2.fill(s)
     }
     g2.dispose()
+  }
+
+  companion object {
+    private const val DELAY = 10
+    private const val R = 20.0
+    private const val SX = 20.0
+    private const val SY = 20.0
+    private const val WIDTH = (R * 8 + SX * 2).toInt()
+    private const val HEIGHT = (R * 8 + SY * 2).toInt()
   }
 }
 
