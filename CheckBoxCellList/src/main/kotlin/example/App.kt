@@ -32,10 +32,11 @@ class MainPanel : JPanel(BorderLayout()) {
       }
     }
 
-    val p = JPanel(GridLayout(1, 3))
-    p.add(makeTitledPanel("Box", JScrollPane(list1)))
-    p.add(makeTitledPanel("JList", JScrollPane(list2)))
-    p.add(makeTitledPanel("JTree", JScrollPane(list3)))
+    val p = JPanel(GridLayout(1, 3)).apply {
+      add(makeTitledPanel("Box", JScrollPane(list1)))
+      add(makeTitledPanel("JList", JScrollPane(list2)))
+      add(makeTitledPanel("JTree", JScrollPane(list3)))
+    }
 
     val root = DefaultMutableTreeNode("JTree")
     listOf("aaaa", "bbbbbbb", "ccc", "dddddd", "eeeeeee", "fffffffff",
@@ -54,11 +55,9 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  private fun makeTitledPanel(title: String, c: Component): Component {
-    val p = JPanel(BorderLayout())
-    p.setBorder(BorderFactory.createTitledBorder(title))
-    p.add(c)
-    return p
+  private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).apply {
+    setBorder(BorderFactory.createTitledBorder(title))
+    add(c)
   }
 }
 

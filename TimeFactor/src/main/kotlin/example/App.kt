@@ -65,13 +65,11 @@ class MainPanel : JPanel(BorderLayout()) {
 internal object LookAndFeelUtil {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.getName()
 
-  fun createLookAndFeelMenu(): JMenu {
-    val menu = JMenu("LookAndFeel")
+  fun createLookAndFeelMenu() = JMenu("LookAndFeel").apply {
     val lafRadioGroup = ButtonGroup()
     for (lafInfo in UIManager.getInstalledLookAndFeels()) {
-      menu.add(createLookAndFeelItem(lafInfo.getName(), lafInfo.getClassName(), lafRadioGroup))
+      add(createLookAndFeelItem(lafInfo.getName(), lafInfo.getClassName(), lafRadioGroup))
     }
-    return menu
   }
 
   private fun createLookAndFeelItem(lafName: String, lafClassName: String, lafRadioGroup: ButtonGroup): JMenuItem {

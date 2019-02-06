@@ -24,12 +24,10 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  private fun makeTitledPanel(title: String, c: Component): Component {
-    val box = Box.createVerticalBox()
-    box.setBorder(BorderFactory.createTitledBorder(title))
-    box.add(Box.createVerticalStrut(2))
-    box.add(c)
-    return box
+  private fun makeTitledPanel(title: String, c: Component) = Box.createVerticalBox().apply {
+    setBorder(BorderFactory.createTitledBorder(title))
+    add(Box.createVerticalStrut(2))
+    add(c)
   }
 }
 
