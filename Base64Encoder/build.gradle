@@ -11,13 +11,11 @@ def defaultEncoding = 'UTF-8'
 // mainClassName = 'example.AppKt'
 
 buildscript {
-  ext.kotlin_version = '1.3.0'
-  ext.coroutine_version = '1.0.0' // '0.30.2-eap13'
   repositories {
     mavenCentral()
   }
   dependencies {
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:latest.release"
   }
 }
 
@@ -36,9 +34,9 @@ kotlin {
     mavenCentral()
   }
   dependencies {
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-swing:$coroutine_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutine_version"
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:latest.release"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-swing:latest.release"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:latest.release"
   }
 }
 
@@ -47,7 +45,7 @@ repositories {
 }
 
 dependencies {
-  compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+  compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:latest.release"
 }
 
 application {
