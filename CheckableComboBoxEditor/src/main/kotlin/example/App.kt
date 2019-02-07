@@ -29,19 +29,18 @@ class MainPanel : JPanel(BorderLayout()) {
       ComboItem(false, true, "22222"),
       ComboItem(false, false, "33333"))
 
-  private fun makeTitledPanel(title: String, c: Component): Component {
-    val p = JPanel(BorderLayout())
-    p.setBorder(BorderFactory.createTitledBorder(title))
-    p.add(c)
-    return p
+  private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).apply {
+    setBorder(BorderFactory.createTitledBorder(title))
+    add(c)
   }
 }
 
 open class ComboItem(var isEnabled: Boolean = false, var isEditable: Boolean = false, var text: String? = "")
 
 class CheckComboBoxRenderer<E : ComboItem> : ListCellRenderer<E> {
-  private val SBGC = Color(100, 200, 255)
+  private val sbgc = Color(100, 200, 255)
   private val renderer = EditorPanel(ComboItem())
+
   override fun getListCellRendererComponent(
     list: JList<out E>,
     value: E,
@@ -52,7 +51,7 @@ class CheckComboBoxRenderer<E : ComboItem> : ListCellRenderer<E> {
     renderer.item = value
     if (isSelected && index >= 0) {
       renderer.setOpaque(true)
-      renderer.setBackground(SBGC)
+      renderer.setBackground(sbgc)
     } else {
       renderer.setOpaque(false)
       renderer.setBackground(Color.WHITE)

@@ -11,7 +11,7 @@ import javax.swing.text.JTextComponent
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    val COPY_KEY = "copy"
+    val copyKey = "copy"
 
     val combo1 = JComboBox<String>(makeModel(5))
     val copy = object : AbstractAction() {
@@ -26,17 +26,17 @@ class MainPanel : JPanel(BorderLayout()) {
       }
     }
     val am = combo1.getActionMap()
-    am.put(COPY_KEY, copy)
+    am.put(copyKey, copy)
     val modifiers = InputEvent.CTRL_DOWN_MASK
     val keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_C, modifiers)
     val im = combo1.getInputMap(JComponent.WHEN_FOCUSED)
-    im.put(keyStroke, COPY_KEY)
+    im.put(keyStroke, copyKey)
     val popup = JPopupMenu()
-    popup.add(COPY_KEY).addActionListener { e ->
+    popup.add(copyKey).addActionListener { e ->
       val o = popup.getInvoker()
       val c = if (o is JComboBox<*>) o else SwingUtilities.getAncestorOfClass(JComboBox::class.java, o as Component)
       if (c is JComboBox<*>) {
-        val a = c.getActionMap().get(COPY_KEY)
+        val a = c.getActionMap().get(copyKey)
         a.actionPerformed(ActionEvent(c, e.getID(), e.getActionCommand()))
         // KeyEvent keyEvent = new KeyEvent(c, 0, 0, 0, 0, 'C');
         // SwingUtilities.notifyAction(a, keyStroke, keyEvent, c, modifiers);
@@ -65,11 +65,9 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  private fun makeTitledPanel(title: String, c: Component): Component {
-    val p = JPanel(BorderLayout())
-    p.setBorder(BorderFactory.createTitledBorder(title))
-    p.add(c)
-    return p
+  private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).apply {
+    setBorder(BorderFactory.createTitledBorder(title))
+    add(c)
   }
 
   private fun makeModel(start: Int): ComboBoxModel<String> {

@@ -33,12 +33,14 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 open class CheckBoxesPanel : JPanel() {
+  private val bgc = Color(0x0, true)
   protected val titles = arrayOf("r", "w", "x")
   val buttons = mutableListOf<JCheckBox>()
+
   override fun updateUI() {
     super.updateUI()
     setOpaque(false)
-    setBackground(BGC)
+    setBackground(bgc)
     setLayout(BoxLayout(this, BoxLayout.X_AXIS))
     EventQueue.invokeLater { initButtons() }
   }
@@ -62,12 +64,11 @@ open class CheckBoxesPanel : JPanel() {
     buttons[2].setSelected(i and (1 shl 0) != 0)
   }
 
-  private val BGC = Color(0x0, true)
   private fun makeCheckBox(title: String) = JCheckBox(title).apply {
     setOpaque(false)
     setFocusable(false)
     setRolloverEnabled(false)
-    setBackground(BGC)
+    setBackground(bgc)
   }
 }
 
