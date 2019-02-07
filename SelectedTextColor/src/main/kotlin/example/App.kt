@@ -132,18 +132,17 @@ class MainPanel : JPanel(BorderLayout()) {
     return null
   }
 
-  private fun prettify(engine: ScriptEngine?, src: String): String {
+  private fun prettify(engine: ScriptEngine?, src: String) =
     try {
       val w = engine?.get("window")
-      return ((engine as Invocable).invokeMethod(w, "prettyPrintOne", src) as String)
+      ((engine as Invocable).invokeMethod(w, "prettyPrintOne", src) as String)
     } catch (ex: ScriptException) {
       ex.printStackTrace()
-      return ""
+      ""
     } catch (ex: NoSuchMethodException) {
       ex.printStackTrace()
-      return ""
+      ""
     }
-  }
 }
 
 fun main() {

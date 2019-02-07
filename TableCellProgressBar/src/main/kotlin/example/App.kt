@@ -110,9 +110,7 @@ class MainPanel : JPanel(BorderLayout()) {
       }
     }
     sorter.setRowFilter(object : RowFilter<TableModel, Int>() {
-      override fun include(entry: RowFilter.Entry<out TableModel, out Int>): Boolean {
-        return !deleteRowSet.contains(entry.getIdentifier())
-      }
+      override fun include(entry: Entry<out TableModel, out Int>) = !deleteRowSet.contains(entry.getIdentifier())
     })
     table.clearSelection()
     table.repaint()

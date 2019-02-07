@@ -146,9 +146,7 @@ class MainPanel : JPanel(BorderLayout()) {
         }
       }
       sorter.setRowFilter(object : RowFilter<TableModel, Int>() {
-        override fun include(entry: RowFilter.Entry<out TableModel, out Int>): Boolean {
-          return !deleteRowSet.contains(entry.getIdentifier())
-        }
+        override fun include(entry: Entry<out TableModel, out Int>) = !deleteRowSet.contains(entry.getIdentifier())
       })
     }
   }
@@ -167,11 +165,9 @@ internal class FileModel : DefaultTableModel() {
     number++
   }
 
-  override fun isCellEditable(row: Int, col: Int): Boolean {
-    return COLUMN_ARRAY[col].isEditable
-  }
+  override fun isCellEditable(row: Int, col: Int) = COLUMN_ARRAY[col].isEditable
 
-  override fun getColumnClass(column: Int): Class<*> = COLUMN_ARRAY[column].columnClass
+  override fun getColumnClass(column: Int) = COLUMN_ARRAY[column].columnClass
 
   override fun getColumnCount() = COLUMN_ARRAY.size
 
