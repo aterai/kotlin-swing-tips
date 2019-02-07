@@ -14,7 +14,12 @@ class MainPanel : JPanel(BorderLayout()) {
     val button0 = JButton("default")
     button0.addActionListener {
       setViewTypeDetails(fileChooser0)
-      // stream(fileChooser0).filter(Predicate<Component> { JTable::class.java!!.isInstance(it) }).map(Function<Component, JTable> { JTable::class.java!!.cast(it) }).findFirst().ifPresent { table -> append(log, "isEditing: " + table.isEditing()) }
+      // stream(fileChooser0)
+      //     .filter(Predicate<Component> { JTable::class.java!!.isInstance(it) })
+      //     .map(Function<Component, JTable> { JTable::class.java!!.cast(it) })
+      //     .findFirst()
+      //     .ifPresent { table -> append(log, "isEditing: " + table.isEditing()) }
+
       stream(fileChooser0)
         .filter(JTable::class.java::isInstance)
         .map(JTable::class.java::cast)
@@ -34,7 +39,12 @@ class MainPanel : JPanel(BorderLayout()) {
     val button1 = JButton("removeEditor")
     button1.addActionListener {
       setViewTypeDetails(fileChooser1)
-      // stream(fileChooser1).filter(Predicate<Component> { JTable::class.java!!.isInstance(it) }).map(Function<Component, JTable> { JTable::class.java!!.cast(it) }).peek { table -> append(log, "isEditing: " + table.isEditing()) }.findFirst().filter(Predicate<JTable> { it.isEditing() }).ifPresent(Consumer<JTable> { it.removeEditor() })
+      // stream(fileChooser1)
+      //     .filter(Predicate<Component> { JTable::class.java!!.isInstance(it) })
+      //     .map(Function<Component, JTable> { JTable::class.java!!.cast(it) })
+      //     .peek { table -> append(log, "isEditing: " + table.isEditing()) }
+      //     .findFirst().filter(Predicate<JTable> { it.isEditing() })
+      //     .ifPresent(Consumer<JTable> { it.removeEditor() })
       // stream(fileChooser1)
       //   .filter(JTable::class.java::isInstance)
       //   .map(JTable::class.java::cast)
@@ -82,13 +92,13 @@ class MainPanel : JPanel(BorderLayout()) {
     //   .filter(Predicate<Component> { Container::class.java.isInstance(it) })
     //   .map { stream(Container::class.java.cast(it)) }
     //   .reduce(Stream.of(parent), BinaryOperator<Stream<Component>> { a, b -> Stream.concat(a, b) })
-    return Stream.of(*parent.getComponents())
     // return Arrays.stream(parent.getComponents())
+    return Stream.of(*parent.getComponents())
       .filter(Container::class.java::isInstance)
       .map { c -> stream(Container::class.java.cast(c)) }
+      .reduce(Stream.of<Component>(parent), { a, b -> Stream.concat<Component>(a, b) }) // OK
       // OK: .reduce(Stream.of(parent), BinaryOperator<Stream<Component>>{ a, b -> Stream.concat(a, b) })
       // NG: .reduce(Stream.of(parent), Stream::concat)
-      .reduce(Stream.of<Component>(parent), { a, b -> Stream.concat<Component>(a, b) }) // OK
   }
 
   fun children(parent: Container): List<Component> = parent.getComponents().toList()
