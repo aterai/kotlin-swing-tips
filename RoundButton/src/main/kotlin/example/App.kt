@@ -57,23 +57,22 @@ open class RoundedCornerButton : JButton {
   protected var border: Shape? = null
   protected var base: Shape? = null
 
-  public constructor() : super() {}
+  public constructor() : super()
 
-  public constructor(icon: Icon) : super(icon) {}
+  public constructor(icon: Icon) : super(icon)
 
-  public constructor(text: String) : super(text) {}
+  public constructor(text: String) : super(text)
 
-  public constructor(a: Action) : super(a) {
-    // setAction(a);
-  }
+  public constructor(a: Action) : super(a)
 
-  public constructor(text: String, icon: Icon) : super(text, icon) {
-    // setModel(new DefaultButtonModel());
-    // init(text, icon);
-    // setContentAreaFilled(false);
-    // setBackground(new Color(250, 250, 250));
-    // initShape();
-  }
+  public constructor(text: String, icon: Icon) : super(text, icon)
+  // {
+  //   // setModel(new DefaultButtonModel());
+  //   // init(text, icon);
+  //   // setContentAreaFilled(false);
+  //   // setBackground(new Color(250, 250, 250));
+  //   // initShape();
+  // }
 
   override fun updateUI() {
     super.updateUI()
@@ -142,20 +141,19 @@ open class RoundedCornerButton : JButton {
 }
 
 open class RoundButton : RoundedCornerButton {
-  public constructor() : super() {}
+  public constructor() : super()
 
-  public constructor(icon: Icon) : super(icon) {}
+  public constructor(icon: Icon) : super(icon)
 
-  public constructor(text: String) : super(text) {}
+  public constructor(text: String) : super(text)
 
-  public constructor(a: Action) : super(a) {
-    // setAction(a);
-  }
+  public constructor(a: Action) : super(a)
 
-  public constructor(text: String, icon: Icon) : super(text, icon) {
-    // setModel(new DefaultButtonModel());
-    // init(text, icon);
-  }
+  public constructor(text: String, icon: Icon) : super(text, icon)
+  // {
+  //   // setModel(new DefaultButtonModel());
+  //   // init(text, icon);
+  // }
 
   override fun getPreferredSize(): Dimension {
     val d = super.getPreferredSize()

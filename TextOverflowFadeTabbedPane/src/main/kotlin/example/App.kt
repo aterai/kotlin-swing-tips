@@ -55,9 +55,9 @@ open class ClippedTitleTabbedPane : JTabbedPane {
     return style.getInsets(context, null)
   }
 
-  constructor() : super() {}
+  constructor() : super()
 
-  constructor(tabPlacement: Int) : super(tabPlacement) {}
+  constructor(tabPlacement: Int) : super(tabPlacement)
 
   override fun doLayout() {
     val tabCount = getTabCount()
