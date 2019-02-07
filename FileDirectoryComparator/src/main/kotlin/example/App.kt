@@ -125,20 +125,16 @@ internal class FileTransferHandler : TransferHandler() {
     return false
   }
 
-  override fun canImport(support: TransferHandler.TransferSupport): Boolean {
-    return support.isDataFlavorSupported(DataFlavor.javaFileListFlavor)
-  }
+  override fun canImport(support: TransferSupport) = support.isDataFlavorSupported(DataFlavor.javaFileListFlavor)
 
   override fun getSourceActions(component: JComponent) = TransferHandler.COPY
 }
 
 open class DefaultFileComparator(protected val column: Int) : Comparator<File>, Serializable {
-  override fun compare(a: File, b: File): Int {
-    when (column) {
-      0 -> return a.getName().compareTo(b.getName(), ignoreCase = true)
-      1 -> return java.lang.Long.compare(a.length(), b.length())
-      else -> return a.getAbsolutePath().compareTo(b.getAbsolutePath(), ignoreCase = true)
-    }
+  override fun compare(a: File, b: File): Int = when (column) {
+    0 -> a.getName().compareTo(b.getName(), ignoreCase = true)
+    1 -> java.lang.Long.compare(a.length(), b.length())
+    else -> a.getAbsolutePath().compareTo(b.getAbsolutePath(), ignoreCase = true)
   }
 
   companion object {
@@ -147,15 +143,10 @@ open class DefaultFileComparator(protected val column: Int) : Comparator<File>, 
 }
 
 internal class FileComparator(column: Int) : DefaultFileComparator(column) {
-  override fun compare(a: File, b: File): Int {
-    return if (a.isDirectory() && !b.isDirectory()) {
-      -1
-    } else if (!a.isDirectory() && b.isDirectory()) {
-      1
-    } else {
-      super.compare(a, b)
-    }
-  }
+  override fun compare(a: File, b: File) =
+    if (a.isDirectory() && !b.isDirectory()) -1
+    else if (!a.isDirectory() && b.isDirectory()) 1
+    else super.compare(a, b)
 
   companion object {
     private val serialVersionUID = 1L
@@ -174,13 +165,9 @@ internal class FileGroupComparator(private val table: JTable, column: Int) : Def
         flag = -1
       }
     }
-    return if (a.isDirectory() && !b.isDirectory()) {
-      -1 * flag
-    } else if (!a.isDirectory() && b.isDirectory()) {
-      1 * flag
-    } else {
-      super.compare(a, b)
-    }
+    return if (a.isDirectory() && !b.isDirectory()) -1 * flag
+      else if (!a.isDirectory() && b.isDirectory()) 1 * flag
+      else super.compare(a, b)
   }
 
   companion object {
