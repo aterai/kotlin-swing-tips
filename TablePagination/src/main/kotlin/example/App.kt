@@ -66,11 +66,11 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   private fun initLinkBoxLayout(
-      itemsPerPage: Int,
-      currentPageIndex: Int,
-      maxPageIndex: Int,
-      startPageIndex: Int,
-      endPageIndex: Int
+    itemsPerPage: Int,
+    currentPageIndex: Int,
+    maxPageIndex: Int,
+    startPageIndex: Int,
+    endPageIndex: Int
   ) {
     box.removeAll()
 
