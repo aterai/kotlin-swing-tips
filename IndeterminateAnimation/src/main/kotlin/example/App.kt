@@ -85,16 +85,18 @@ class BackgroundTask : SwingWorker<String, Void>() {
 
     var current = 0
     val lengthOfTask = 100
+    var text = "Done"
     while (current <= lengthOfTask && !isCancelled()) {
       try { // dummy task
         Thread.sleep(50)
       } catch (ex: InterruptedException) {
-        return "Interrupted"
+        text = "Interrupted"
+        break;
       }
       setProgress(100 * current / lengthOfTask)
       current++
     }
-    return "Done"
+    return text
   }
 }
 
