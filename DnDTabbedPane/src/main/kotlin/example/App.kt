@@ -294,17 +294,7 @@ internal class TabDragSourceListener : DragSourceListener {
   }
 
   override fun dragOver(e: DragSourceDragEvent) {
-    // Point glassPt = e.getLocation();
-    // JComponent glassPane = (JComponent) e.getDragSourceContext();
-    // SwingUtilities.convertPointFromScreen(glassPt, glassPane);
-    // int targetIdx = getTargetTabIndex(glassPt);
-    // if (getTabAreaBounds().contains(glassPt) && targetIdx >= 0 && targetIdx != dragTabIndex && targetIdx != dragTabIndex + 1) {
-    //   e.getDragSourceContext().setCursor(DragSource.DefaultMoveDrop);
-    //   glassPane.setCursor(DragSource.DefaultMoveDrop);
-    // } else {
-    //   e.getDragSourceContext().setCursor(DragSource.DefaultMoveNoDrop);
-    //   glassPane.setCursor(DragSource.DefaultMoveNoDrop);
-    // }
+    /* not needed */
   }
 
   override fun dragDropEnd(e: DragSourceDropEvent) {

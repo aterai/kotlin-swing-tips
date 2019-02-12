@@ -115,7 +115,8 @@ class MainPanel : JPanel(BorderLayout()) {
       val path = Paths.get(uri)
       // Path path = Paths.get(MainPanel.class.getResource("prettify.js").toURI());
 
-      // String p = "https://raw.githubusercontent.com/google/code-prettify/f5ad44e3253f1bc8e288477a36b2ce5972e8e161/src/prettify.js";
+      // String p = "https://raw.githubusercontent.com/google/code-prettify/" +
+      //            "f5ad44e3253f1bc8e288477a36b2ce5972e8e161/src/prettify.js";
       // try (Reader r = new BufferedReader(new InputStreamReader(new URL(p).openStream(), StandardCharsets.UTF_8))) {
       Files.newBufferedReader(path, StandardCharsets.UTF_8).use { r ->
         engine.eval("var window={}, navigator=null;")
