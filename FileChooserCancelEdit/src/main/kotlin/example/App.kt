@@ -2,6 +2,7 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionEvent
+import java.util.Arrays
 import java.util.stream.Stream
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
@@ -92,8 +93,8 @@ class MainPanel : JPanel(BorderLayout()) {
     //   .filter(Predicate<Component> { Container::class.java.isInstance(it) })
     //   .map { stream(Container::class.java.cast(it)) }
     //   .reduce(Stream.of(parent), BinaryOperator<Stream<Component>> { a, b -> Stream.concat(a, b) })
-    // return Arrays.stream(parent.getComponents())
-    return Stream.of(*parent.getComponents())
+    // return Stream.of(*parent.getComponents())
+    return Arrays.stream(parent.getComponents())
       .filter(Container::class.java::isInstance)
       .map { c -> stream(Container::class.java.cast(c)) }
       .reduce(Stream.of<Component>(parent), { a, b -> Stream.concat<Component>(a, b) }) // OK
