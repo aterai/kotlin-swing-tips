@@ -35,27 +35,27 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val sorter = table.getRowSorter() as TableRowSorter<out TableModel>
     // IntStream.range(0, 3).forEach { i -> sorter.setComparator(i, DefaultFileComparator(i)) }
-    (0 until 3).forEach { sorter.setComparator(it, DefaultFileComparator(it)) }
+    for (i in 0 until 3) { sorter.setComparator(i, DefaultFileComparator(i)) }
 
     val check1 = JRadioButton("Default", true)
     check1.addItemListener { e ->
       if (e.getStateChange() == ItemEvent.SELECTED) {
         // IntStream.range(0, 3).forEach { i -> sorter.setComparator(i, DefaultFileComparator(i)) }
-        (0 until 3).forEach { sorter.setComparator(it, DefaultFileComparator(it)) }
+        for (i in 0 until 3) { sorter.setComparator(i, DefaultFileComparator(i)) }
       }
     }
     val check2 = JRadioButton("Directory < File", false)
     check2.addItemListener { e ->
       if (e.getStateChange() == ItemEvent.SELECTED) {
         // IntStream.range(0, 3).forEach { i -> sorter.setComparator(i, FileComparator(i)) }
-        (0 until 3).forEach { i -> sorter.setComparator(i, FileComparator(i)) }
+        for (i in 0 until 3) { sorter.setComparator(i, FileComparator(i)) }
       }
     }
     val check3 = JRadioButton("Group Sorting", false)
     check3.addItemListener { e ->
       if (e.getStateChange() == ItemEvent.SELECTED) {
         // IntStream.range(0, 3).forEach { i -> sorter.setComparator(i, FileGroupComparator(table, i)) }
-        (0 until 3).forEach { i -> sorter.setComparator(i, FileGroupComparator(table, i)) }
+        for (i in 0 until 3) { sorter.setComparator(i, FileGroupComparator(table, i)) }
       }
     }
 
