@@ -91,7 +91,7 @@ class BackgroundTask : SwingWorker<String, Void>() {
         Thread.sleep(50)
       } catch (ex: InterruptedException) {
         text = "Interrupted"
-        break;
+        break
       }
       setProgress(100 * current / lengthOfTask)
       current++
