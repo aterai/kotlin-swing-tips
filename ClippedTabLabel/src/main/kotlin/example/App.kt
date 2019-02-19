@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.util.Arrays
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.synth.Region
 import javax.swing.plaf.synth.SynthConstants
@@ -10,7 +9,7 @@ import javax.swing.plaf.synth.SynthLookAndFeel
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    val list = Arrays.asList(makeTestTabbedPane(JTabbedPane()), makeTestTabbedPane(ClippedTitleTabbedPane()))
+    val list = listOf(makeTestTabbedPane(JTabbedPane()), makeTestTabbedPane(ClippedTitleTabbedPane()))
 
     val p = JPanel(GridLayout(list.size, 1))
     list.forEach { p.add(it) }

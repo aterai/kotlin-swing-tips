@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.util.Arrays
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel(BorderLayout()) {
@@ -55,7 +54,7 @@ class MainPanel : JPanel(BorderLayout()) {
       }
     }
 
-    val list = Arrays.asList(JTabbedPane(), tabbedPane1, tabbedPane2)
+    val list = listOf(JTabbedPane(), tabbedPane1, tabbedPane2)
     list.forEach {
       it.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT)
       it.addTab("00000000", JLabel("0"))
@@ -78,10 +77,8 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val button = JButton("Remove")
     button.addActionListener {
-      list.forEach {
-        if (it.getTabCount() > 0) {
-          it.removeTabAt(it.getTabCount() - 1)
-        }
+      list.filter { it.getTabCount() > 0 }?.forEach {
+        it.removeTabAt(it.getTabCount() - 1)
       }
     }
 
