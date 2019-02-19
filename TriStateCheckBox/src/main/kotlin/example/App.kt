@@ -3,7 +3,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import java.util.Objects
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.ColorUIResource
 import javax.swing.table.DefaultTableModel
@@ -36,26 +35,26 @@ class MainPanel : JPanel(BorderLayout()) {
       setSelectionForeground(ColorUIResource(Color.RED))
       setSelectionBackground(ColorUIResource(Color.RED))
       getTableHeader().removeMouseListener(handler)
-      var m = getModel()
-      if (Objects.nonNull(m)) {
-        m.removeTableModelListener(handler)
-      }
+      getModel()?.let { it.removeTableModelListener(handler) }
+
       super.updateUI()
 
-      m = getModel()
-      for (i in 0 until m.getColumnCount()) {
-        val r = getDefaultRenderer(m.getColumnClass(i))
-        if (r is Component) {
-          SwingUtilities.updateComponentTreeUI(r)
+      getModel()?.let {
+        for (i in 0 until it.getColumnCount()) {
+          val r = getDefaultRenderer(it.getColumnClass(i))
+          if (r is Component) {
+            SwingUtilities.updateComponentTreeUI(r)
+          }
         }
-      }
-      val column = getColumnModel().getColumn(CHECKBOX_COLUMN)
-      column.setHeaderRenderer(HeaderRenderer())
-      column.setHeaderValue(Status.INDETERMINATE)
+        getColumnModel()?.getColumn(CHECKBOX_COLUMN)?.apply {
+          setHeaderRenderer(HeaderRenderer())
+          setHeaderValue(Status.INDETERMINATE)
+        }
 
-      handler = HeaderCheckBoxHandler(this, CHECKBOX_COLUMN)
-      m.addTableModelListener(handler)
-      getTableHeader().addMouseListener(handler)
+        handler = HeaderCheckBoxHandler(this, CHECKBOX_COLUMN)
+        it.addTableModelListener(handler)
+        getTableHeader().addMouseListener(handler)
+      }
     }
 
     override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int): Component {

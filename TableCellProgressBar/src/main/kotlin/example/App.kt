@@ -194,7 +194,7 @@ open class WorkerModel : DefaultTableModel() {
 
 internal class ProgressRenderer : DefaultTableCellRenderer() {
   private val progress = JProgressBar()
-  private val renderer = JPanel(BorderLayout())
+  private val renderer: JPanel? = JPanel(BorderLayout())
 
   override fun getTableCellRendererComponent(
     table: JTable?,
@@ -208,7 +208,7 @@ internal class ProgressRenderer : DefaultTableCellRenderer() {
     var text = "Done"
     if (i < 0) {
       text = "Canceled"
-    } else if (i < progress.getMaximum()) { // < 100
+    } else if (i < progress.getMaximum() && renderer != null) { // < 100
       progress.setValue(i)
       renderer.add(progress)
       renderer.setOpaque(false)
@@ -222,9 +222,7 @@ internal class ProgressRenderer : DefaultTableCellRenderer() {
   override fun updateUI() {
     super.updateUI()
     setOpaque(false)
-    if (Objects.nonNull(renderer)) {
-      SwingUtilities.updateComponentTreeUI(renderer)
-    }
+    renderer?.let { SwingUtilities.updateComponentTreeUI(it) }
   }
 }
 
