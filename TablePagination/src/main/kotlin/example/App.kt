@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.util.Objects
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicHTML
 import javax.swing.plaf.basic.BasicRadioButtonUI
@@ -104,7 +103,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   private fun makeRadioButton(itemsPerPage: Int, current: Int, target: Int): JRadioButton {
-    val radio = object : JRadioButton(Objects.toString(target)) {
+    val radio = object : JRadioButton(target.toString()) {
       protected override fun fireStateChanged() {
         val bm = getModel()
         if (bm.isEnabled()) {
