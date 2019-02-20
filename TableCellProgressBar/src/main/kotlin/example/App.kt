@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.util.Objects
 import java.util.Random
 import java.util.TreeSet
 import java.util.concurrent.ConcurrentHashMap

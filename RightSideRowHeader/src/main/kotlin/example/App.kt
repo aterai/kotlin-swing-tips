@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.util.Objects
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableRowSorter
@@ -71,7 +70,6 @@ class MainPanel : JPanel(BorderLayout()) {
 
     addButton.addActionListener {
       sorter.setSortKeys(null)
-      // IntStream.range(0, 100).forEach { i -> model.addRow(arrayOf<Any>(i, i + 1, "A$i", "B$i")) }
       for (i in 0 until 100) { model.addRow(arrayOf<Any>(i, i + 1, "A$i", "B$i")) }
     }
 
@@ -108,43 +106,36 @@ internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
     val leftToRight = true // SwingUtilities.isLeftToRight(scrollPane);
 
     val colHeadR = Rectangle(0, availR.y, 0, 0)
-
-    if (Objects.nonNull(colHead) && colHead.isVisible()) {
-      val colHeadHeight = Math.min(availR.height, colHead.getPreferredSize().height)
+    colHead?.takeIf { it.isVisible() }?.let {
+      val colHeadHeight = Math.min(availR.height, it.getPreferredSize().height)
       colHeadR.height = colHeadHeight
       availR.y += colHeadHeight
       availR.height -= colHeadHeight
     }
 
     val rowHeadR = Rectangle(0, 0, 0, 0)
-    if (Objects.nonNull(rowHead) && rowHead.isVisible()) {
-      val rowHeadWidth = Math.min(availR.width, rowHead.getPreferredSize().width)
+    rowHead?.takeIf { it.isVisible() }?.let {
+      val rowHeadWidth = Math.min(availR.width, it.getPreferredSize().width)
       rowHeadR.width = rowHeadWidth
       availR.width -= rowHeadWidth
       // if (leftToRight) {
-      //   rowHeadR.x = availR.x;
-      //   availR.x += rowHeadWidth;
+      //   rowHeadR.x = availR.x
+      //   availR.x += rowHeadWidth
       // } else {
-      //   rowHeadR.x = availR.x + availR.width;
+      //   rowHeadR.x = availR.x + availR.width
       // }
       rowHeadR.x = availR.x + availR.width
     }
 
-    val viewportBorder = scrollPane.getViewportBorder()
-    val vpbInsets: Insets
-    if (Objects.nonNull(viewportBorder)) {
-      vpbInsets = viewportBorder.getBorderInsets(parent)
-      availR.x += vpbInsets.left
-      availR.y += vpbInsets.top
-      availR.width -= vpbInsets.left + vpbInsets.right
-      availR.height -= vpbInsets.top + vpbInsets.bottom
-    } else {
-      vpbInsets = Insets(0, 0, 0, 0)
-    }
+    val vpbInsets = scrollPane.getViewportBorder()?.let {
+      val ins = it.getBorderInsets(parent)
+      availR.x += ins.left
+      availR.y += ins.top
+      availR.width -= ins.left + ins.right
+      availR.height -= ins.top + ins.bottom
+      ins
+    } ?: Insets(0, 0, 0, 0)
 
-    // val view = if (Objects.nonNull(viewport)) viewport.getView() else null
-    // val viewPrefSize = if (Objects.nonNull(view)) view!!.getPreferredSize() else Dimension()
-    // var extentSize = if (Objects.nonNull(viewport)) viewport.toViewCoordinates(availR.getSize()) else Dimension()
     val view: Component? = viewport?.getView()
     val viewPrefSize = view?.getPreferredSize() ?: Dimension()
     var extentSize = viewport?.toViewCoordinates(availR.getSize()) ?: Dimension()
@@ -172,7 +163,7 @@ internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
       vsbNeeded = !viewTracksViewportHeight && viewPrefSize.height > extentSize.height
     }
 
-    if (Objects.nonNull(vsb) && vsbNeeded) {
+    if (vsb != null && vsbNeeded) {
       adjustForVsb(true, rowHeadR, vsbR, vpbInsets, leftToRight)
       extentSize = viewport.toViewCoordinates(availR.getSize())
     }
@@ -187,9 +178,9 @@ internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
       hsbNeeded = !viewTracksViewportWidth && viewPrefSize.width > extentSize.width
     }
 
-    if (Objects.nonNull(hsb) && hsbNeeded) {
+    if (hsb != null && hsbNeeded) {
       adjustForHsb(true, availR, hsbR, vpbInsets)
-      if (Objects.nonNull(vsb) && !vsbNeeded && vsbPolicy != ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER) {
+      if (vsb != null && !vsbNeeded && vsbPolicy != ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER) {
 
         extentSize = viewport.toViewCoordinates(availR.getSize())
         vsbNeeded = viewPrefSize.height > extentSize.height
@@ -211,7 +202,7 @@ internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
         val oldVsbNeeded = vsbNeeded
         viewTracksViewportWidth = sv.getScrollableTracksViewportWidth()
         viewTracksViewportHeight = sv.getScrollableTracksViewportHeight()
-        if (Objects.nonNull(vsb) && vsbPolicy == ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED) {
+        if (vsb != null && vsbPolicy == ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED) {
           val newVsbNeeded = !viewTracksViewportHeight && viewPrefSize.height > extentSize.height
           if (newVsbNeeded != vsbNeeded) {
             vsbNeeded = newVsbNeeded
@@ -220,12 +211,12 @@ internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
             extentSize = viewport.toViewCoordinates(availR.getSize())
           }
         }
-        if (Objects.nonNull(hsb) && hsbPolicy == ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+        if (hsb != null && hsbPolicy == ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
           val newHsbNeeded = !viewTracksViewportWidth && viewPrefSize.width > extentSize.width
           if (newHsbNeeded != hsbNeeded) {
             hsbNeeded = newHsbNeeded
             adjustForHsb(hsbNeeded, availR, hsbR, vpbInsets)
-            if (Objects.nonNull(vsb) && !vsbNeeded && vsbPolicy != ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER) {
+            if (vsb != null && !vsbNeeded && vsbPolicy != ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER) {
 
               extentSize = viewport.toViewCoordinates(availR.getSize())
               vsbNeeded = viewPrefSize.height > extentSize.height
@@ -250,20 +241,14 @@ internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
     colHeadR.width = availR.width + vpbInsets.left + vpbInsets.right
     colHeadR.x = availR.x - vpbInsets.left
 
-    // if (Objects.nonNull(rowHead)) {
-    //   rowHead.setBounds(rowHeadR)
-    // }
     rowHead?.setBounds(rowHeadR)
 
-    // if (Objects.nonNull(colHead)) {
-    //   colHead.setBounds(colHeadR)
-    // }
     colHead?.setBounds(colHeadR)
 
-    if (Objects.nonNull(vsb)) {
+    if (vsb != null) {
       if (vsbNeeded) {
-        // if (Objects.nonNull(colHead) && UIManager.getBoolean("ScrollPane.fillUpperCorner")) {
-        //   if (leftToRight && Objects.isNull(upperRight) || !leftToRight && Objects.isNull(upperLeft)) {
+        // if (colHead != null && UIManager.getBoolean("ScrollPane.fillUpperCorner")) {
+        //   if (leftToRight && upperRight != null || !leftToRight && upperLeft != null) {
         //     vsbR.y = colHeadR.y;
         //     vsbR.height += colHeadR.height;
         //   }
@@ -275,10 +260,10 @@ internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
       }
     }
 
-    if (Objects.nonNull(hsb)) {
+    if (hsb != null) {
       if (hsbNeeded) {
-        // if (Objects.nonNull(rowHead) && UIManager.getBoolean("ScrollPane.fillLowerCorner")) {
-        //   if (leftToRight && Objects.isNull(lowerLeft) || !leftToRight && Objects.isNull(lowerRight)) {
+        // if (rowHead != null && UIManager.getBoolean("ScrollPane.fillLowerCorner")) {
+        //   if (leftToRight && lowerLeft != null || !leftToRight && lowerRight != null) {
         //     if (leftToRight) {
         //       hsbR.x = rowHeadR.x;
         //     }
@@ -292,37 +277,18 @@ internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
       }
     }
 
-    // if (Objects.nonNull(lowerLeft)) {
-    //   lowerLeft.setBounds(
-    //     if (leftToRight) rowHeadR.x else vsbR.x, hsbR.y,
-    //     if (leftToRight) rowHeadR.width else vsbR.width, hsbR.height)
-    // }
     lowerLeft?.setBounds(
       if (leftToRight) rowHeadR.x else vsbR.x, hsbR.y,
       if (leftToRight) rowHeadR.width else vsbR.width, hsbR.height)
 
-    // if (Objects.nonNull(lowerRight)) {
-    //   lowerRight.setBounds(if (leftToRight) vsbR.x else rowHeadR.x, hsbR.y,
-    //                        if (leftToRight) vsbR.width else rowHeadR.width, hsbR.height)
-    // }
     lowerRight?.setBounds(
       if (leftToRight) vsbR.x else rowHeadR.x, hsbR.y,
       if (leftToRight) vsbR.width else rowHeadR.width, hsbR.height)
 
-    // if (Objects.nonNull(upperLeft)) {
-    //   upperLeft.setBounds(
-    //     if (leftToRight) rowHeadR.x else vsbR.x, colHeadR.y,
-    //     if (leftToRight) rowHeadR.width else vsbR.width, colHeadR.height)
-    // }
     upperLeft?.setBounds(
       if (leftToRight) rowHeadR.x else vsbR.x, colHeadR.y,
       if (leftToRight) rowHeadR.width else vsbR.width, colHeadR.height)
 
-    // if (Objects.nonNull(upperRight)) {
-    //   upperRight.setBounds(
-    //     if (leftToRight) vsbR.x else rowHeadR.x, colHeadR.y,
-    //     if (leftToRight) vsbR.width else rowHeadR.width, colHeadR.height)
-    // }
     upperRight?.setBounds(
       if (leftToRight) vsbR.x else rowHeadR.x, colHeadR.y,
       if (leftToRight) vsbR.width else rowHeadR.width, colHeadR.height)
