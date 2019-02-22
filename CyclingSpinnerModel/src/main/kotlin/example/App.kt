@@ -1,7 +1,7 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.time.DayOfWeek;
+import java.time.DayOfWeek
 import java.time.format.TextStyle
 import java.time.temporal.WeekFields
 import java.util.Locale
