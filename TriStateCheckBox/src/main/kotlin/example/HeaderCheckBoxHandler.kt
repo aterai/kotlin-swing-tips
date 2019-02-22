@@ -31,22 +31,22 @@ class HeaderCheckBoxHandler(val table: JTable, val targetColumnIndex: Int) : Mou
   }
 
   private fun fireUpdateEvent(m: DefaultTableModel, column: TableColumn, status: Any): Boolean {
-    if (Status.INDETERMINATE.equals(status)) {
+    return if (Status.INDETERMINATE.equals(status)) {
       val l = (m.getDataVector() as Vector<*>)
-          .stream()
-          .map { v -> (v as Vector<*>).get(targetColumnIndex) as Boolean }
-          .distinct()
-          .collect(Collectors.toList())
+        .stream()
+        .map { v -> (v as Vector<*>).get(targetColumnIndex) as Boolean }
+        .distinct()
+        .collect(Collectors.toList())
       val isOnlyOneSelected = l.size == 1
       if (isOnlyOneSelected) {
         column.setHeaderValue(if (l.get(0)) Status.SELECTED else Status.DESELECTED)
-        return true
+        true
       } else {
-        return false
+        false
       }
     } else {
       column.setHeaderValue(Status.INDETERMINATE)
-      return true
+      true
     }
   }
   // private boolean fireUpdateEvent(TableModel m, TableColumn column, Object status) {

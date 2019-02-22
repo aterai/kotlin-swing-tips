@@ -13,14 +13,15 @@ class MainPanel : JPanel(BorderLayout()) {
   private val checkBox = TriStateCheckBox("TriState JCheckBox")
   private val columnNames = arrayOf<Any>(Status.INDETERMINATE, "Integer", "String")
   private val data = arrayOf(
-      arrayOf<Any>(true, 1, "BBB"),
-      arrayOf<Any>(false, 12, "AAA"),
-      arrayOf<Any>(true, 2, "DDD"),
-      arrayOf<Any>(false, 5, "CCC"),
-      arrayOf<Any>(true, 3, "EEE"),
-      arrayOf<Any>(false, 6, "GGG"),
-      arrayOf<Any>(true, 4, "FFF"),
-      arrayOf<Any>(false, 7, "HHH"))
+    arrayOf<Any>(true, 1, "BBB"),
+    arrayOf<Any>(false, 12, "AAA"),
+    arrayOf<Any>(true, 2, "DDD"),
+    arrayOf<Any>(false, 5, "CCC"),
+    arrayOf<Any>(true, 3, "EEE"),
+    arrayOf<Any>(false, 6, "GGG"),
+    arrayOf<Any>(true, 4, "FFF"),
+    arrayOf<Any>(false, 7, "HHH")
+  )
   private val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
@@ -29,7 +30,7 @@ class MainPanel : JPanel(BorderLayout()) {
     protected var handler: HeaderCheckBoxHandler? = null
 
     override fun updateUI() {
-      // [JDK-6788475] Changing to Nimbus LAF and back doesn't reset look and feel of JTable completely - Java Bug System
+      // [JDK-6788475] Changing to Nimbus LAF and back doesn't reset look and feel of JTable completely
       // https://bugs.openjdk.java.net/browse/JDK-6788475
       // XXX: set dummy ColorUIResource
       setSelectionForeground(ColorUIResource(Color.RED))
@@ -244,10 +245,11 @@ internal object LookAndFeelUtil {
   }
 
   @Throws(
-      ClassNotFoundException::class,
-      InstantiationException::class,
-      IllegalAccessException::class,
-      UnsupportedLookAndFeelException::class)
+    ClassNotFoundException::class,
+    InstantiationException::class,
+    IllegalAccessException::class,
+    UnsupportedLookAndFeelException::class
+  )
   private fun setLookAndFeel(lookAndFeel: String) {
     val oldLookAndFeel = LookAndFeelUtil.lookAndFeel
     if (oldLookAndFeel != lookAndFeel) {
