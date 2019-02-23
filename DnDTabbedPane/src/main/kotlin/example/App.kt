@@ -238,33 +238,31 @@ internal class DnDTabbedPane : JTabbedPane() {
   }
 
   fun getTabAreaBounds(): Rectangle {
-      val tabbedRect = getBounds()
+    val tabbedRect = getBounds()
 
-      val compRect = getSelectedComponent()?.let { it.getBounds() } ?: Rectangle()
-      val tabPlacement = getTabPlacement()
-      if (isTopBottomTabPlacement(tabPlacement)) {
-        tabbedRect.height = tabbedRect.height - compRect.height
-        if (tabPlacement == SwingConstants.BOTTOM) {
-          tabbedRect.y += compRect.y + compRect.height
-        }
-      } else {
-        tabbedRect.width = tabbedRect.width - compRect.width
-        if (tabPlacement == SwingConstants.RIGHT) {
-          tabbedRect.x += compRect.x + compRect.width
-        }
+    val compRect = getSelectedComponent()?.let { it.getBounds() } ?: Rectangle()
+    val tabPlacement = getTabPlacement()
+    if (isTopBottomTabPlacement(tabPlacement)) {
+      tabbedRect.height = tabbedRect.height - compRect.height
+      if (tabPlacement == SwingConstants.BOTTOM) {
+        tabbedRect.y += compRect.y + compRect.height
       }
-      tabbedRect.grow(2, 2)
-      return tabbedRect
+    } else {
+      tabbedRect.width = tabbedRect.width - compRect.width
+      if (tabPlacement == SwingConstants.RIGHT) {
+        tabbedRect.x += compRect.x + compRect.width
+      }
     }
+    tabbedRect.grow(2, 2)
+    return tabbedRect
+  }
+
+  fun isTopBottomTabPlacement(tabPlacement: Int) = tabPlacement == TOP || tabPlacement == BOTTOM
 
   companion object {
     private const val LINEWIDTH = 3
     private const val RWH = 20
     private const val BUTTON_SIZE = 30 // XXX 30 is magic number of scroll button size
-
-    fun isTopBottomTabPlacement(tabPlacement: Int): Boolean {
-      return tabPlacement == JTabbedPane.TOP || tabPlacement == JTabbedPane.BOTTOM
-    }
   }
 }
 
@@ -310,18 +308,18 @@ internal class TabDragSourceListener : DragSourceListener {
 internal class TabDragGestureListener : DragGestureListener {
   override fun dragGestureRecognized(e: DragGestureEvent) {
     e.getComponent()?.takeIf { it is DnDTabbedPane }
-        ?.let { it as DnDTabbedPane }
-        ?.takeIf { it.getTabCount() > 1 }
-        ?.let { tabbedPane ->
-          val tabPt = e.getDragOrigin()
-          tabbedPane.dragTabIndex = tabbedPane.indexAtLocation(tabPt.x, tabPt.y)
-          if (tabbedPane.dragTabIndex >= 0 && tabbedPane.isEnabledAt(tabbedPane.dragTabIndex)) {
-            tabbedPane.initGlassPane(tabPt)
-            try {
-              e.startDrag(DragSource.DefaultMoveDrop, TabTransferable(tabbedPane), TabDragSourceListener())
-            } catch (ex: InvalidDnDOperationException) {
-              throw IllegalStateException(ex)
-            }
+      ?.let { it as DnDTabbedPane }
+      ?.takeIf { it.getTabCount() > 1 }
+      ?.let { tabbedPane ->
+        val tabPt = e.getDragOrigin()
+        tabbedPane.dragTabIndex = tabbedPane.indexAtLocation(tabPt.x, tabPt.y)
+        if (tabbedPane.dragTabIndex >= 0 && tabbedPane.isEnabledAt(tabbedPane.dragTabIndex)) {
+          tabbedPane.initGlassPane(tabPt)
+          try {
+            e.startDrag(DragSource.DefaultMoveDrop, TabTransferable(tabbedPane), TabDragSourceListener())
+          } catch (ex: InvalidDnDOperationException) {
+            throw IllegalStateException(ex)
+          }
         }
       }
   }
@@ -343,7 +341,7 @@ internal class TabDropTargetListener : DropTargetListener {
   override fun dragExit(e: DropTargetEvent) {
     // Component c = e.getDropTargetContext().getComponent();
     // System.out.println("DropTargetListener#dragExit: " + c.getName());
-    getGhostGlassPane(e.getDropTargetContext().getComponent())?. let {
+    getGhostGlassPane(e.getDropTargetContext().getComponent())?.let {
       it.setPoint(HIDDEN_POINT)
       it.setTargetRect(0, 0, 0, 0)
       it.repaint()
