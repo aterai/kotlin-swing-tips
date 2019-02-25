@@ -27,14 +27,20 @@ class MainPanel : JPanel(BorderLayout()) {
           super.toggleSortOrder(column)
           return
         }
-        val keys = ArrayList<RowSorter.SortKey>(getSortKeys())
-        if (!keys.isEmpty()) {
-          val sortKey = keys.get(0)
-          if (sortKey.getColumn() == column && sortKey.getSortOrder() == SortOrder.DESCENDING) {
+        // val keys = ArrayList<RowSorter.SortKey>(getSortKeys())
+        // if (!keys.isEmpty()) {
+        //   val sortKey = keys.get(0)
+        //   if (sortKey.getColumn() == column && sortKey.getSortOrder() == SortOrder.DESCENDING) {
+        //     setSortKeys(null)
+        //     return
+        //   }
+        // }
+        getSortKeys().firstOrNull()
+          ?.takeIf { it.getColumn() == column && it.getSortOrder() == SortOrder.DESCENDING }
+          ?.let {
             setSortKeys(null)
             return
           }
-        }
         super.toggleSortOrder(column)
       }
     }

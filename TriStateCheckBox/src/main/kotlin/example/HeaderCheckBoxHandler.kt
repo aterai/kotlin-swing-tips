@@ -39,7 +39,8 @@ class HeaderCheckBoxHandler(val table: JTable, val targetColumnIndex: Int) : Mou
         .collect(Collectors.toList())
       val isOnlyOneSelected = l.size == 1
       if (isOnlyOneSelected) {
-        column.setHeaderValue(if (l.get(0)) Status.SELECTED else Status.DESELECTED)
+        // column.setHeaderValue(if (l.get(0)) Status.SELECTED else Status.DESELECTED)
+        column.setHeaderValue(if (l.first()) Status.SELECTED else Status.DESELECTED)
         true
       } else {
         false
