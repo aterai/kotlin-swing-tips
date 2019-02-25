@@ -2,8 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionEvent
-import java.util.Arrays
-import java.util.stream.Stream
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel(BorderLayout()) {
@@ -21,15 +19,15 @@ class MainPanel : JPanel(BorderLayout()) {
       //     .findFirst()
       //     .ifPresent { table -> append(log, "isEditing: " + table.isEditing()) }
 
-      stream(fileChooser0)
-        .filter(JTable::class.java::isInstance)
-        .map(JTable::class.java::cast)
-        .findFirst()
-        .ifPresent { append(log, "isEditing: " + it.isEditing()) }
-      // val tbl = children(fileChooser0)
-      //   .filterIsInstance(JTable::class.java)
-      //   .first()
-      // append(log, "isEditing: " + tbl.isEditing())
+      // stream(fileChooser0)
+      //     .filter(JTable::class.java::isInstance)
+      //     .map(JTable::class.java::cast)
+      //     .findFirst()
+      //     .ifPresent { append(log, "isEditing: " + it.isEditing()) }
+      children(fileChooser0)
+          .filterIsInstance(JTable::class.java)
+          .first()?.let { append(log, "isEditing: " + it.isEditing()) }
+
       val retvalue = fileChooser0.showOpenDialog(getRootPane())
       if (retvalue == JFileChooser.APPROVE_OPTION) {
         append(log, fileChooser0.getSelectedFile().getAbsolutePath())
@@ -88,19 +86,19 @@ class MainPanel : JPanel(BorderLayout()) {
     log.setCaretPosition(log.getDocument().getLength())
   }
 
-  fun stream(parent: Container): Stream<Component> {
-    // return Stream.of(*parent.getComponents())
-    //   .filter(Predicate<Component> { Container::class.java.isInstance(it) })
-    //   .map { stream(Container::class.java.cast(it)) }
-    //   .reduce(Stream.of(parent), BinaryOperator<Stream<Component>> { a, b -> Stream.concat(a, b) })
-    // return Stream.of(*parent.getComponents())
-    return Arrays.stream(parent.getComponents())
-      .filter(Container::class.java::isInstance)
-      .map { c -> stream(Container::class.java.cast(c)) }
-      .reduce(Stream.of<Component>(parent), { a, b -> Stream.concat<Component>(a, b) }) // OK
-      // OK: .reduce(Stream.of(parent), BinaryOperator<Stream<Component>>{ a, b -> Stream.concat(a, b) })
-      // NG: .reduce(Stream.of(parent), Stream::concat)
-  }
+  // fun stream(parent: Container): Stream<Component> {
+  //   // return Stream.of(*parent.getComponents())
+  //   //   .filter(Predicate<Component> { Container::class.java.isInstance(it) })
+  //   //   .map { stream(Container::class.java.cast(it)) }
+  //   //   .reduce(Stream.of(parent), BinaryOperator<Stream<Component>> { a, b -> Stream.concat(a, b) })
+  //   // return Stream.of(*parent.getComponents())
+  //   return Arrays.stream(parent.getComponents())
+  //     .filter(Container::class.java::isInstance)
+  //     .map { c -> stream(Container::class.java.cast(c)) }
+  //     .reduce(Stream.of<Component>(parent), { a, b -> Stream.concat<Component>(a, b) }) // OK
+  //     // OK: .reduce(Stream.of(parent), BinaryOperator<Stream<Component>>{ a, b -> Stream.concat(a, b) })
+  //     // NG: .reduce(Stream.of(parent), Stream::concat)
+  // }
 
   fun children(parent: Container): List<Component> = parent.getComponents().toList()
       .filterIsInstance(Container::class.java)
