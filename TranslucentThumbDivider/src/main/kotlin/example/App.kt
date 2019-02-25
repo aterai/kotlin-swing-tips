@@ -180,6 +180,7 @@ internal class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
     private fun isDraggableComponent(splitPane: JSplitPane, c: Component): Boolean {
       return splitPane == c || splitPane == SwingUtilities.getUnwrappedParent(c)
     }
+
     private fun updateThumbLocation(splitPane: Component, thumb: Ellipse2D) {
       if (splitPane is JSplitPane) {
         val pos = splitPane.getDividerLocation()
