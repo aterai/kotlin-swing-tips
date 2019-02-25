@@ -10,7 +10,6 @@ import java.awt.geom.Path2D
 import java.awt.image.FilteredImageSource
 import java.awt.image.RGBImageFilter
 import java.io.IOException
-import java.util.stream.IntStream
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.Border
 import javax.swing.event.MouseInputAdapter
@@ -103,16 +102,15 @@ internal class ReorderbleList(model: ListModel<ListItem>) : JList<ListItem>(mode
         return
       }
       val destPoint = e.getPoint()
-      val rb = rubberBand
-      rb.reset()
-      rb.moveTo(srcPoint.x.toDouble(), srcPoint.y.toDouble())
-      rb.lineTo(destPoint.x.toDouble(), srcPoint.y.toDouble())
-      rb.lineTo(destPoint.x.toDouble(), destPoint.y.toDouble())
-      rb.lineTo(srcPoint.x.toDouble(), destPoint.y.toDouble())
-      rb.closePath()
+      rubberBand.reset()
+      rubberBand.moveTo(srcPoint.x.toDouble(), srcPoint.y.toDouble())
+      rubberBand.lineTo(destPoint.x.toDouble(), srcPoint.y.toDouble())
+      rubberBand.lineTo(destPoint.x.toDouble(), destPoint.y.toDouble())
+      rubberBand.lineTo(srcPoint.x.toDouble(), destPoint.y.toDouble())
+      rubberBand.closePath()
 
-      val indices = IntStream.range(0, l.getModel().getSize())
-          .filter { rb.intersects(l.getCellBounds(it, it)) }.toArray()
+      val indices = (0 until l.getModel().getSize())
+        .filter { rubberBand.intersects(l.getCellBounds(it, it)) }.toIntArray()
       l.setSelectedIndices(indices)
       l.repaint()
     }

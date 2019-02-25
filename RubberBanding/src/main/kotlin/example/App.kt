@@ -6,7 +6,6 @@ import java.awt.event.MouseEvent
 import java.awt.geom.Path2D
 import java.awt.image.FilteredImageSource
 import java.awt.image.RGBImageFilter
-import java.util.stream.IntStream
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.Border
 
@@ -83,16 +82,15 @@ internal class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListI
       val l = e.getComponent() as JList<*>
       l.setFocusable(true)
       val destPoint = e.getPoint()
-      val rb = rubberBand
-      rb.reset()
-      rb.moveTo(srcPoint.x.toDouble(), srcPoint.y.toDouble())
-      rb.lineTo(destPoint.x.toDouble(), srcPoint.y.toDouble())
-      rb.lineTo(destPoint.x.toDouble(), destPoint.y.toDouble())
-      rb.lineTo(srcPoint.x.toDouble(), destPoint.y.toDouble())
-      rb.closePath()
+      rubberBand.reset()
+      rubberBand.moveTo(srcPoint.x.toDouble(), srcPoint.y.toDouble())
+      rubberBand.lineTo(destPoint.x.toDouble(), srcPoint.y.toDouble())
+      rubberBand.lineTo(destPoint.x.toDouble(), destPoint.y.toDouble())
+      rubberBand.lineTo(srcPoint.x.toDouble(), destPoint.y.toDouble())
+      rubberBand.closePath()
 
-      val indices = IntStream.range(0, l.getModel().getSize())
-          .filter { rb.intersects(l.getCellBounds(it, it)) }.toArray()
+      val indices = (0 until l.getModel().getSize())
+        .filter { rubberBand.intersects(l.getCellBounds(it, it)) }.toIntArray()
       l.setSelectedIndices(indices)
       l.repaint()
     }
