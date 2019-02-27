@@ -33,8 +33,9 @@ class MainPanel : JPanel(BorderLayout()) {
     val button = JButton("rotate")
     button.setFocusable(false)
     button.addActionListener {
-      p1.setComponentZOrder(p1.getComponent(p1.getComponentCount() - 1), 0)
-      p2.setComponentZOrder(p2.getComponent(p2.getComponentCount() - 1), 0)
+      // p1.setComponentZOrder(p1.getComponent(p1.getComponentCount() - 1), 0)
+      p1.setComponentZOrder(p1.getComponents().last(), 0)
+      p2.setComponentZOrder(p2.getComponents().last(), 0)
       revalidate()
     }
 
