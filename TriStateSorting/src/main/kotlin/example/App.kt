@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.util.ArrayList
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableModel
