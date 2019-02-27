@@ -11,7 +11,7 @@ class MainPanel : JPanel(GridLayout(2, 1)) {
   init {
     val locale = Locale.ENGLISH // Locale.getDefault();
     val firstDayOfWeek = WeekFields.of(locale).getFirstDayOfWeek()
-    val weeks = (0 until DayOfWeek.values().size).toList()
+    val weeks = (0 until DayOfWeek.values().size)
         .map { firstDayOfWeek.plus(it.toLong()) }
         .map { it.getDisplayName(TextStyle.SHORT_STANDALONE, locale) }
 
