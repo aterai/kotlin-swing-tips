@@ -153,14 +153,10 @@ internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
     }
 
     val vsbR = Rectangle(0, availR.y - vpbInsets.top, 0, 0)
-
-    var vsbNeeded: Boolean
-    if (vsbPolicy == ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS) {
-      vsbNeeded = true
-    } else if (vsbPolicy == ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER) {
-      vsbNeeded = false
-    } else { // vsbPolicy == VERTICAL_SCROLLBAR_AS_NEEDED
-      vsbNeeded = !viewTracksViewportHeight && viewPrefSize.height > extentSize.height
+    var vsbNeeded = when (vsbPolicy) {
+      ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS -> true
+      ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER -> false
+      else -> !viewTracksViewportHeight && viewPrefSize.height > extentSize.height
     }
 
     if (vsb != null && vsbNeeded) {
@@ -169,13 +165,10 @@ internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
     }
 
     val hsbR = Rectangle(availR.x - vpbInsets.left, 0, 0, 0)
-    var hsbNeeded: Boolean
-    if (hsbPolicy == ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS) {
-      hsbNeeded = true
-    } else if (hsbPolicy == ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) {
-      hsbNeeded = false
-    } else { // hsbPolicy == HORIZONTAL_SCROLLBAR_AS_NEEDED
-      hsbNeeded = !viewTracksViewportWidth && viewPrefSize.width > extentSize.width
+    var hsbNeeded = when (hsbPolicy) {
+      ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS -> true
+      ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER -> false
+      else -> !viewTracksViewportWidth && viewPrefSize.width > extentSize.width
     }
 
     if (hsb != null && hsbNeeded) {
