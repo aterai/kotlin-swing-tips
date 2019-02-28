@@ -59,7 +59,7 @@ internal class MenuArrowIcon : Icon {
 internal class MenuToggleButton(text: String = "", icon: Icon? = null) : JToggleButton() {
   protected var popup: JPopupMenu? = null
 
-  constructor(icon: Icon) : this("", icon) {}
+  constructor(icon: Icon) : this("", icon)
 
   init {
     val action = object : AbstractAction(text) {
