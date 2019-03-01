@@ -35,27 +35,35 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val sorter = table.getRowSorter() as TableRowSorter<out TableModel>
     // IntStream.range(0, 3).forEach { i -> sorter.setComparator(i, DefaultFileComparator(i)) }
-    for (i in 0 until 3) { sorter.setComparator(i, DefaultFileComparator(i)) }
+    for (i in 0 until 3) {
+      sorter.setComparator(i, DefaultFileComparator(i))
+    }
 
     val check1 = JRadioButton("Default", true)
     check1.addItemListener { e ->
       if (e.getStateChange() == ItemEvent.SELECTED) {
         // IntStream.range(0, 3).forEach { i -> sorter.setComparator(i, DefaultFileComparator(i)) }
-        for (i in 0 until 3) { sorter.setComparator(i, DefaultFileComparator(i)) }
+        for (i in 0 until 3) {
+          sorter.setComparator(i, DefaultFileComparator(i))
+        }
       }
     }
     val check2 = JRadioButton("Directory < File", false)
     check2.addItemListener { e ->
       if (e.getStateChange() == ItemEvent.SELECTED) {
         // IntStream.range(0, 3).forEach { i -> sorter.setComparator(i, FileComparator(i)) }
-        for (i in 0 until 3) { sorter.setComparator(i, FileComparator(i)) }
+        for (i in 0 until 3) {
+          sorter.setComparator(i, FileComparator(i))
+        }
       }
     }
     val check3 = JRadioButton("Group Sorting", false)
     check3.addItemListener { e ->
       if (e.getStateChange() == ItemEvent.SELECTED) {
         // IntStream.range(0, 3).forEach { i -> sorter.setComparator(i, FileGroupComparator(table, i)) }
-        for (i in 0 until 3) { sorter.setComparator(i, FileGroupComparator(table, i)) }
+        for (i in 0 until 3) {
+          sorter.setComparator(i, FileGroupComparator(table, i))
+        }
       }
     }
 
@@ -104,24 +112,23 @@ internal class FileIconTableCellRenderer(private val fileSystemView: FileSystemV
 }
 
 internal class FileTransferHandler : TransferHandler() {
-  override fun importData(support: TransferHandler.TransferSupport) =
-    try {
-      if (canImport(support)) {
-        val model = (support.getComponent() as JTable).getModel() as DefaultTableModel
-        for (o in support.getTransferable().getTransferData(DataFlavor.javaFileListFlavor) as List<*>) {
-          (o as? File)?.also { file -> model.addRow((0..2).map { file }.toTypedArray()) }
-        }
-        true
-      } else {
-        false
+  override fun importData(support: TransferHandler.TransferSupport) = try {
+    if (canImport(support)) {
+      val model = (support.getComponent() as JTable).getModel() as DefaultTableModel
+      for (o in support.getTransferable().getTransferData(DataFlavor.javaFileListFlavor) as List<*>) {
+        (o as? File)?.also { file -> model.addRow((0..2).map { file }.toTypedArray()) }
       }
-    } catch (ex: UnsupportedFlavorException) {
-      ex.printStackTrace()
-      false
-    } catch (ex: IOException) {
-      ex.printStackTrace()
+      true
+    } else {
       false
     }
+  } catch (ex: UnsupportedFlavorException) {
+    ex.printStackTrace()
+    false
+  } catch (ex: IOException) {
+    ex.printStackTrace()
+    false
+  }
 
   override fun canImport(support: TransferSupport) = support.isDataFlavorSupported(DataFlavor.javaFileListFlavor)
 
@@ -141,8 +148,7 @@ open class DefaultFileComparator(protected val column: Int) : Comparator<File>, 
 }
 
 internal class FileComparator(column: Int) : DefaultFileComparator(column) {
-  override fun compare(a: File, b: File) =
-    if (a.isDirectory() && !b.isDirectory()) -1
+  override fun compare(a: File, b: File) = if (a.isDirectory() && !b.isDirectory()) -1
     else if (!a.isDirectory() && b.isDirectory()) 1
     else super.compare(a, b)
 
