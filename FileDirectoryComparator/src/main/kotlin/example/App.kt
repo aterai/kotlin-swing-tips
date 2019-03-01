@@ -104,26 +104,24 @@ internal class FileIconTableCellRenderer(private val fileSystemView: FileSystemV
 }
 
 internal class FileTransferHandler : TransferHandler() {
-  override fun importData(support: TransferHandler.TransferSupport): Boolean {
+  override fun importData(support: TransferHandler.TransferSupport) =
     try {
       if (canImport(support)) {
         val model = (support.getComponent() as JTable).getModel() as DefaultTableModel
         for (o in support.getTransferable().getTransferData(DataFlavor.javaFileListFlavor) as List<*>) {
-          if (o is File) {
-            // model.addRow(Collections.nCopies(3, o).toTypedArray())
-            model.addRow((0 until 3).map { o }.toTypedArray())
-          }
+          (o as? File)?.also { file -> model.addRow((0..2).map { file }.toTypedArray()) }
         }
-        return true
+        true
+      } else {
+        false
       }
     } catch (ex: UnsupportedFlavorException) {
       ex.printStackTrace()
+      false
     } catch (ex: IOException) {
       ex.printStackTrace()
+      false
     }
-
-    return false
-  }
 
   override fun canImport(support: TransferSupport) = support.isDataFlavorSupported(DataFlavor.javaFileListFlavor)
 
@@ -149,7 +147,7 @@ internal class FileComparator(column: Int) : DefaultFileComparator(column) {
     else super.compare(a, b)
 
   companion object {
-    private val serialVersionUID = 1L
+    private const val serialVersionUID = 1L
   }
 }
 
@@ -174,7 +172,7 @@ internal class FileGroupComparator(private val table: JTable, column: Int) : Def
   }
 
   companion object {
-    private val serialVersionUID = 1L
+    private const val serialVersionUID = 1L
   }
 }
 
@@ -194,10 +192,9 @@ internal class TablePopupMenu : JPopupMenu() {
   }
 
   override fun show(c: Component, x: Int, y: Int) {
-    if (c is JTable) {
-      delete.setEnabled(c.getSelectedRowCount() > 0)
-      super.show(c, x, y)
-    }
+    val table = c as? JTable ?: return
+    delete.setEnabled(table.getSelectedRowCount() > 0)
+    super.show(table, x, y)
   }
 }
 
