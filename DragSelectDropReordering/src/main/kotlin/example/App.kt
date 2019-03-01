@@ -31,6 +31,7 @@ class MainPanel : JPanel(BorderLayout()) {
       addElement(ListItem("test(1)", "wi0126-32.png"))
     }
     val list = ReorderbleList(model)
+    list.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10))
     add(JScrollPane(list))
     setPreferredSize(Dimension(320, 240))
   }
@@ -66,7 +67,7 @@ internal class ReorderbleList(model: ListModel<ListItem>) : JList<ListItem>(mode
     setVisibleRowCount(0)
     setFixedCellWidth(62)
     setFixedCellHeight(62)
-    setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10))
+    // setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10))
 
     setCellRenderer(ListItemListCellRenderer())
     rbl = RubberBandingListener()
