@@ -62,6 +62,7 @@ class CheckComboBoxRenderer<E : ComboItem> : ListCellRenderer<E> {
 
 class CheckComboBoxEditor : ComboBoxEditor {
   private val editor = EditorPanel(ComboItem())
+
   override fun selectAll() {
     editor.selectAll()
   }
@@ -71,19 +72,20 @@ class CheckComboBoxEditor : ComboBoxEditor {
   override fun setItem(anObject: Any) {
     EventQueue.invokeLater {
       val c = SwingUtilities.getAncestorOfClass(JComboBox::class.java, getEditorComponent())
-      if (c is JComboBox<*>) {
-        val idx = c.getSelectedIndex()
+      (c as? JComboBox<*>)?.also {
+        val idx = it.getSelectedIndex()
         if (idx >= 0 && idx != editor.editingIndex) {
           println("setItem: $idx")
           editor.editingIndex = idx
         }
       }
     }
-    if (anObject is ComboItem) {
-      editor.item = anObject
-    } else {
-      editor.item = ComboItem()
-    }
+    // if (anObject is ComboItem) {
+    //   editor.item = anObject
+    // } else {
+    //   editor.item = ComboItem()
+    // }
+    editor.item = anObject as? ComboItem ?: ComboItem()
   }
 
   override fun getEditorComponent() = editor

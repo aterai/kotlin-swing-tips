@@ -36,11 +36,8 @@ class MainPanel : JPanel(BorderLayout()) {
         if (getTabCount() <= 0) {
           return
         }
-        val viewport = getScrollableViewport()
-        if (viewport is JViewport) {
-          val c = viewport.getView() as JComponent
-          c.scrollRectToVisible(getBoundsAt(idx))
-        }
+        val viewport = getScrollableViewport() as? JViewport ?: return
+        (viewport.getView() as? JComponent)?.scrollRectToVisible(getBoundsAt(idx))
       }
 
       override fun removeTabAt(index: Int) {
@@ -77,7 +74,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val button = JButton("Remove")
     button.addActionListener {
-      list.filter { it.getTabCount() > 0 }?.forEach {
+      list.filter { it.getTabCount() > 0 }.forEach {
         it.removeTabAt(it.getTabCount() - 1)
       }
     }

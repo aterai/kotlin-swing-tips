@@ -42,10 +42,8 @@ class MainPanel : JPanel(BorderLayout()) {
 
       getModel()?.let {
         for (i in 0 until it.getColumnCount()) {
-          val r = getDefaultRenderer(it.getColumnClass(i))
-          if (r is Component) {
-            SwingUtilities.updateComponentTreeUI(r)
-          }
+          val r = getDefaultRenderer(it.getColumnClass(i)) as? Component ?: continue
+          SwingUtilities.updateComponentTreeUI(r)
         }
         getColumnModel()?.getColumn(CHECKBOX_COLUMN)?.apply {
           setHeaderRenderer(HeaderRenderer())
@@ -60,9 +58,9 @@ class MainPanel : JPanel(BorderLayout()) {
 
     override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int): Component {
       val c = super.prepareEditor(editor, row, column)
-      if (c is JCheckBox) {
-        c.setBackground(getSelectionBackground())
-        c.setBorderPainted(true)
+      (c as? JCheckBox)?.also {
+        it.setBackground(getSelectionBackground())
+        it.setBorderPainted(true)
       }
       return c
     }
@@ -124,10 +122,14 @@ internal class TriStateActionListener : ActionListener {
   override fun actionPerformed(e: ActionEvent) {
     val cb = e.getSource() as JCheckBox
     if (cb.isSelected()) {
-      if (cb.getIcon() != null) {
+      cb.getIcon()?.run {
         cb.setIcon(null)
         cb.setSelected(false)
       }
+      // if (cb.getIcon() != null) {
+      //   cb.setIcon(null)
+      //   cb.setSelected(false)
+      // }
     } else {
       cb.setIcon(currentIcon)
     }
@@ -166,7 +168,10 @@ internal class TriStateCheckBox(title: String) : JCheckBox(title) {
     listener = al
     currentIcon = iicon
     addActionListener(listener)
-    if (getIcon() != null) {
+    // if (getIcon() != null) {
+    //   setIcon(currentIcon)
+    // }
+    getIcon()?.run {
       setIcon(currentIcon)
     }
   }

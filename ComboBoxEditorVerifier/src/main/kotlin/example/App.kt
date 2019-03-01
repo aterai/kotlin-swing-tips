@@ -15,7 +15,6 @@ class MainPanel : JPanel(BorderLayout()) {
     val combo = JComboBox<String>(model)
     combo.setEditable(true)
 
-    // val comboBox = JComboBox<String>(model)
     val comboBox = object : JComboBox<String>(model) {
       override fun updateUI() {
         getActionMap().put(ENTER_PRESSED, null)
@@ -46,10 +45,12 @@ class MainPanel : JPanel(BorderLayout()) {
     comboBox.setEditable(true)
     comboBox.setInputVerifier(LengthInputVerifier())
     comboBox.setEditor(object : BasicComboBoxEditor() {
-      // private var editorComponent: Component? = null
+      private var validationEditor: Component? = null
+
       override fun getEditorComponent(): Component? {
-        var tc = super.getEditorComponent()
-        return if (tc is JTextComponent) JLayer<JTextComponent>(tc, ValidationLayerUI<JTextComponent>()) else tc
+        val tc = super.getEditorComponent() as JTextComponent
+        validationEditor = validationEditor ?: JLayer(tc, ValidationLayerUI())
+        return validationEditor
       }
     })
     comboBox.addPopupMenuListener(SelectItemMenuListener())
@@ -67,8 +68,8 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   companion object {
-    private val MAX_HISTORY = 10
-    private val ENTER_PRESSED = "enterPressed"
+    private const val MAX_HISTORY = 10
+    private const val ENTER_PRESSED = "enterPressed"
   }
 }
 
@@ -113,16 +114,11 @@ internal class ValidationLayerUI<V : JTextComponent> : LayerUI<V>() {
 }
 
 internal class LengthInputVerifier : InputVerifier() {
-  override fun verify(c: JComponent): Boolean {
-    if (c is JComboBox<*>) {
-      val str = c.getEditor().getItem()?.toString() ?: ""
-      return MAX_LEN - str.length >= 0
-    }
-    return false
-  }
+  override fun verify(c: JComponent) = (c as? JComboBox<*>)
+    ?.let { MAX_LEN - (it.getEditor().getItem()?.toString()?.length ?: 0) >= 0 } ?: false
 
   companion object {
-    private val MAX_LEN = 6
+    private const val MAX_LEN = 6
   }
 }
 
