@@ -83,26 +83,24 @@ internal class DisableInputLayerUI<V : JComponent> : LayerUI<V>() {
 
   override fun installUI(c: JComponent) {
     super.installUI(c)
-    if (c is JLayer<*>) {
-      c.getGlassPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR))
-      c.setLayerEventMask(
+    val layer = c as? JLayer<*> ?: return
+    layer.getGlassPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR))
+    layer.setLayerEventMask(
         AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
-          or AWTEvent.MOUSE_WHEEL_EVENT_MASK or AWTEvent.KEY_EVENT_MASK
-          or AWTEvent.FOCUS_EVENT_MASK or AWTEvent.COMPONENT_EVENT_MASK)
-    }
+        or AWTEvent.MOUSE_WHEEL_EVENT_MASK or AWTEvent.KEY_EVENT_MASK
+        or AWTEvent.FOCUS_EVENT_MASK or AWTEvent.COMPONENT_EVENT_MASK)
   }
 
   override fun uninstallUI(c: JComponent) {
-    if (c is JLayer<*>) {
-      c.setLayerEventMask(0)
-    }
+    (c as? JLayer<*>)?.setLayerEventMask(0)
     super.uninstallUI(c)
   }
 
   override fun eventDispatched(e: AWTEvent, l: JLayer<out V>) {
-    if (running && e is InputEvent) {
-      e.consume()
-    }
+    // if (running && e is InputEvent) {
+    //   e.consume()
+    // }
+    (e as? InputEvent)?.takeIf { running }?.consume()
   }
 
   override fun applyPropertyChange(pce: PropertyChangeEvent, l: JLayer<out V>) {

@@ -17,7 +17,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val copy = object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
         val combo = e.getSource() as JComboBox<*>
-        combo.getSelectedItem()?.let {
+        combo.getSelectedItem()?.also {
           val contents = StringSelection(it.toString())
           val clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
           clipboard.setContents(contents, null)
@@ -34,12 +34,12 @@ class MainPanel : JPanel(BorderLayout()) {
     val popup = JPopupMenu()
     popup.add(copyKey).addActionListener { e ->
       val o = popup.getInvoker()
-      val c = if (o is JComboBox<*>) o else SwingUtilities.getAncestorOfClass(JComboBox::class.java, o as Component)
-      if (c is JComboBox<*>) {
-        val a = c.getActionMap().get(copyKey)
-        a.actionPerformed(ActionEvent(c, e.getID(), e.getActionCommand()))
+      val c = o as? JComboBox<*> ?: SwingUtilities.getAncestorOfClass(JComboBox::class.java, o as Component)
+      (c as? JComboBox<*>)?.also {
+        val a = it.getActionMap().get(copyKey)
+        a.actionPerformed(ActionEvent(it, e.getID(), e.getActionCommand()))
         // KeyEvent keyEvent = new KeyEvent(c, 0, 0, 0, 0, 'C');
-        // SwingUtilities.notifyAction(a, keyStroke, keyEvent, c, modifiers);
+        // SwingUtilities.notifyAction(a, keyStroke, keyEvent, it, modifiers);
       }
     }
     combo1.setComponentPopupMenu(popup)
@@ -70,11 +70,10 @@ class MainPanel : JPanel(BorderLayout()) {
     add(c)
   }
 
-  private fun makeModel(start: Int): ComboBoxModel<String> {
-    val model = DefaultComboBoxModel<String>()
-    // IntStream.range(start, start + 5).forEach { i -> model.addElement("item: $i") }
-    (start until start + 5).forEach { model.addElement("item: $it") }
-    return model
+  private fun makeModel(start: Int) = DefaultComboBoxModel<String>().apply {
+    for (i in start until start + 5) {
+      addElement("item: $i")
+    }
   }
 }
 
@@ -84,10 +83,7 @@ internal class TextFieldPopupMenu : JPopupMenu() {
   private val pasteAction = DefaultEditorKit.PasteAction()
   private val deleteAction = object : AbstractAction("delete") {
     override fun actionPerformed(e: ActionEvent) {
-      val c = getInvoker()
-      if (c is JTextComponent) {
-        c.replaceSelection(null)
-      }
+      (getInvoker() as? JTextComponent)?.replaceSelection(null)
     }
   }
 

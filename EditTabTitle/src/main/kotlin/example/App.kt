@@ -56,10 +56,7 @@ internal class EditableTabbedPane : JTabbedPane() {
     override fun actionPerformed(e: ActionEvent) {
       if (!editor.getText().trim { it <= ' ' }.isEmpty()) {
         setTitleAt(getSelectedIndex(), editor.getText())
-        val c = getTabComponentAt(getSelectedIndex())
-        if (c is JComponent) {
-          c.revalidate()
-        }
+        (getTabComponentAt(getSelectedIndex()) as? JComponent)?.revalidate()
       }
       glassPane.setVisible(false)
     }
