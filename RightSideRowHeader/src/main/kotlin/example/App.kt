@@ -86,10 +86,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
 internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
   override fun layoutContainer(parent: Container) {
-    if (parent !is JScrollPane) {
-      return
-    }
-    val scrollPane = parent // as JScrollPane
+    val scrollPane = parent as? JScrollPane ?: return
     vsbPolicy = scrollPane.getVerticalScrollBarPolicy()
     hsbPolicy = scrollPane.getHorizontalScrollBarPolicy()
 
@@ -106,7 +103,7 @@ internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
     val leftToRight = true // SwingUtilities.isLeftToRight(scrollPane);
 
     val colHeadR = Rectangle(0, availR.y, 0, 0)
-    colHead?.takeIf { it.isVisible() }?.let {
+    colHead?.takeIf { it.isVisible() }?.also {
       val colHeadHeight = Math.min(availR.height, it.getPreferredSize().height)
       colHeadR.height = colHeadHeight
       availR.y += colHeadHeight
@@ -114,7 +111,7 @@ internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
     }
 
     val rowHeadR = Rectangle(0, 0, 0, 0)
-    rowHead?.takeIf { it.isVisible() }?.let {
+    rowHead?.takeIf { it.isVisible() }?.also {
       val rowHeadWidth = Math.min(availR.width, it.getPreferredSize().width)
       rowHeadR.width = rowHeadWidth
       availR.width -= rowHeadWidth

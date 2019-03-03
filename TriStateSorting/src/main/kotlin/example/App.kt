@@ -35,11 +35,11 @@ class MainPanel : JPanel(BorderLayout()) {
         //   }
         // }
         getSortKeys().firstOrNull()
-          ?.takeIf { it.getColumn() == column && it.getSortOrder() == SortOrder.DESCENDING }
-          ?.let {
-            setSortKeys(null)
-            return
-          }
+            ?.takeIf { it.getColumn() == column && it.getSortOrder() == SortOrder.DESCENDING }
+            ?.also {
+              setSortKeys(null)
+              return
+            }
         super.toggleSortOrder(column)
       }
     }
