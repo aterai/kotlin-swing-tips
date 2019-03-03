@@ -35,12 +35,12 @@ class MainPanel : JPanel(BorderLayout()) {
       // XXX: set dummy ColorUIResource
       setSelectionForeground(ColorUIResource(Color.RED))
       setSelectionBackground(ColorUIResource(Color.RED))
-      getTableHeader().removeMouseListener(handler)
-      getModel()?.let { it.removeTableModelListener(handler) }
+      getTableHeader()?.removeMouseListener(handler)
+      getModel()?.removeTableModelListener(handler)
 
       super.updateUI()
 
-      getModel()?.let {
+      getModel()?.also {
         for (i in 0 until it.getColumnCount()) {
           val r = getDefaultRenderer(it.getColumnClass(i)) as? Component ?: continue
           SwingUtilities.updateComponentTreeUI(r)

@@ -14,7 +14,7 @@ import javax.swing.table.TableRowSorter
 class MainPanel : JPanel(BorderLayout()) {
   protected val model = WorkerModel()
   protected val table = JTable(model)
-  protected val sorter: TableRowSorter<out TableModel> = TableRowSorter<WorkerModel>(model)
+  protected val sorter = TableRowSorter<WorkerModel>(model)
   protected val deleteRowSet: MutableSet<Int> = TreeSet<Int>()
   // TEST:
   // protected val executor = Executors.newCachedThreadPool() as ThreadPoolExecutor
@@ -90,7 +90,7 @@ class MainPanel : JPanel(BorderLayout()) {
   protected fun cancelActionPerformed() {
     for (i in table.getSelectedRows()) {
       val midx = table.convertRowIndexToModel(i)
-      model.getSwingWorker(midx)?.takeUnless { it.isDone() }?.let { it.cancel(true) }
+      model.getSwingWorker(midx)?.takeUnless { it.isDone() }?.cancel(true)
     }
     table.repaint()
   }
@@ -103,10 +103,7 @@ class MainPanel : JPanel(BorderLayout()) {
     for (i in selection) {
       val midx = table.convertRowIndexToModel(i)
       deleteRowSet.add(midx)
-      model.getSwingWorker(midx)?.takeUnless { it.isDone() }?.let {
-        it.cancel(true)
-        // executor.remove(it);
-      }
+      model.getSwingWorker(midx)?.takeUnless { it.isDone() }?.cancel(true)
     }
     sorter.setRowFilter(object : RowFilter<TableModel, Int>() {
       override fun include(entry: Entry<out TableModel, out Int>) = !deleteRowSet.contains(entry.getIdentifier())
@@ -129,12 +126,11 @@ class MainPanel : JPanel(BorderLayout()) {
     }
 
     override fun show(c: Component, x: Int, y: Int) {
-      if (c is JTable) {
-        val flag = c.getSelectedRowCount() > 0
-        cancelMenuItem.setEnabled(flag)
-        deleteMenuItem.setEnabled(flag)
-        super.show(c, x, y)
-      }
+      val table = c as? JTable ?: return
+      val flag = table.getSelectedRowCount() > 0
+      cancelMenuItem.setEnabled(flag)
+      deleteMenuItem.setEnabled(flag)
+      super.show(table, x, y)
     }
   }
 }
@@ -164,7 +160,7 @@ open class WorkerModel : DefaultTableModel() {
 
   fun addProgressValue(name: String, iv: Int, worker: SwingWorker<Int, Int>?) {
     super.addRow(arrayOf<Any>(number, name, iv))
-    worker?.let { swmap.put(number, it) }
+    worker?.also { swmap.put(number, it) }
     number++
   }
 
@@ -221,7 +217,7 @@ internal class ProgressRenderer : DefaultTableCellRenderer() {
   override fun updateUI() {
     super.updateUI()
     setOpaque(false)
-    renderer?.let { SwingUtilities.updateComponentTreeUI(it) }
+    renderer?.also { SwingUtilities.updateComponentTreeUI(it) }
   }
 }
 

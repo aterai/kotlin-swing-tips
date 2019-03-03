@@ -103,7 +103,7 @@ internal class DnDTabbedPane : JTabbedPane() {
       }
     }
     val button = if ("scrollTabsForwardAction" == actionKey) scrollForwardButton else scrollBackwardButton
-    button?.takeIf { it.isEnabled() }?.let { it.doClick() }
+    button?.takeIf { it.isEnabled() }?.doClick()
   }
 
   fun autoScrollTest(glassPt: Point) {
@@ -128,8 +128,7 @@ internal class DnDTabbedPane : JTabbedPane() {
     glassPane.setName("GlassPane")
     DropTarget(glassPane, DnDConstants.ACTION_COPY_OR_MOVE, TabDropTargetListener(), true)
     DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(
-      this, DnDConstants.ACTION_COPY_OR_MOVE, TabDragGestureListener()
-    )
+        this, DnDConstants.ACTION_COPY_OR_MOVE, TabDragGestureListener())
   }
 
   fun getTargetTabIndex(glassPt: Point): Int {
@@ -188,7 +187,7 @@ internal class DnDTabbedPane : JTabbedPane() {
       glassPane.setTargetRect(0, 0, 0, 0)
       return
     }
-    getBoundsAt(Math.max(0, next - 1))?.let {
+    getBoundsAt(Math.max(0, next - 1))?.also {
       val r = SwingUtilities.convertRectangle(this, it, glassPane)
       val a = Math.min(next, 1) // a = (next == 0) ? 0 : 1;
       if (isTopBottomTabPlacement(getTabPlacement())) {
@@ -240,7 +239,7 @@ internal class DnDTabbedPane : JTabbedPane() {
   fun getTabAreaBounds(): Rectangle {
     val tabbedRect = getBounds()
 
-    val compRect = getSelectedComponent()?.let { it.getBounds() } ?: Rectangle()
+    val compRect = getSelectedComponent()?.getBounds() ?: Rectangle()
     val tabPlacement = getTabPlacement()
     if (isTopBottomTabPlacement(tabPlacement)) {
       tabbedRect.height = tabbedRect.height - compRect.height
@@ -307,27 +306,26 @@ internal class TabDragSourceListener : DragSourceListener {
 
 internal class TabDragGestureListener : DragGestureListener {
   override fun dragGestureRecognized(e: DragGestureEvent) {
-    e.getComponent()?.takeIf { it is DnDTabbedPane }
-      ?.let { it as DnDTabbedPane }
-      ?.takeIf { it.getTabCount() > 1 }
-      ?.let { tabbedPane ->
-        val tabPt = e.getDragOrigin()
-        tabbedPane.dragTabIndex = tabbedPane.indexAtLocation(tabPt.x, tabPt.y)
-        if (tabbedPane.dragTabIndex >= 0 && tabbedPane.isEnabledAt(tabbedPane.dragTabIndex)) {
-          tabbedPane.initGlassPane(tabPt)
-          try {
-            e.startDrag(DragSource.DefaultMoveDrop, TabTransferable(tabbedPane), TabDragSourceListener())
-          } catch (ex: InvalidDnDOperationException) {
-            throw IllegalStateException(ex)
+    // e.getComponent()?.takeIf { it is DnDTabbedPane }
+    //   ?.let { it as DnDTabbedPane }
+    (e.getComponent() as? DnDTabbedPane)?.takeIf { it.getTabCount() > 1 }?.also {
+          val tabPt = e.getDragOrigin()
+          it.dragTabIndex = it.indexAtLocation(tabPt.x, tabPt.y)
+          if (it.dragTabIndex >= 0 && it.isEnabledAt(it.dragTabIndex)) {
+            it.initGlassPane(tabPt)
+            try {
+              e.startDrag(DragSource.DefaultMoveDrop, TabTransferable(it), TabDragSourceListener())
+            } catch (ex: InvalidDnDOperationException) {
+              throw IllegalStateException(ex)
+            }
           }
         }
-      }
   }
 }
 
 internal class TabDropTargetListener : DropTargetListener {
   override fun dragEnter(e: DropTargetDragEvent) {
-    getGhostGlassPane(e.getDropTargetContext().getComponent())?.let {
+    getGhostGlassPane(e.getDropTargetContext().getComponent())?.also {
       val t = e.getTransferable()
       val f = e.getCurrentDataFlavors()
       if (t.isDataFlavorSupported(f[0])) { // && tabbedPane.dragTabIndex >= 0) {
@@ -341,7 +339,7 @@ internal class TabDropTargetListener : DropTargetListener {
   override fun dragExit(e: DropTargetEvent) {
     // Component c = e.getDropTargetContext().getComponent();
     // System.out.println("DropTargetListener#dragExit: " + c.getName());
-    getGhostGlassPane(e.getDropTargetContext().getComponent())?.let {
+    getGhostGlassPane(e.getDropTargetContext().getComponent())?.also {
       it.setPoint(HIDDEN_POINT)
       it.setTargetRect(0, 0, 0, 0)
       it.repaint()
@@ -353,7 +351,7 @@ internal class TabDropTargetListener : DropTargetListener {
 
   override fun dragOver(e: DropTargetDragEvent) {
     val c = e.getDropTargetContext().getComponent()
-    getGhostGlassPane(c)?.let {
+    getGhostGlassPane(c)?.also {
       val glassPt = e.getLocation()
 
       val tabbedPane = it.tabbedPane
@@ -367,7 +365,7 @@ internal class TabDropTargetListener : DropTargetListener {
 
   override fun drop(e: DropTargetDropEvent) {
     val c = e.getDropTargetContext().getComponent()
-    getGhostGlassPane(c)?.let {
+    getGhostGlassPane(c)?.also {
       val tabbedPane = it.tabbedPane
       val t = e.getTransferable()
       val f = t.getTransferDataFlavors()
@@ -386,9 +384,9 @@ internal class TabDropTargetListener : DropTargetListener {
   companion object {
     private val HIDDEN_POINT = Point(0, -1000)
 
-    private fun getGhostGlassPane(c: Component?): GhostGlassPane? {
-      return c?.takeIf { it is GhostGlassPane }?.let { it as GhostGlassPane }
-    }
+    // private fun getGhostGlassPane(c: Component?) =
+    //     c?.takeIf { it is GhostGlassPane }?.let { it as GhostGlassPane }
+    private fun getGhostGlassPane(c: Component?) = c as? GhostGlassPane
   }
 }
 
@@ -434,7 +432,7 @@ internal class GhostGlassPane(val tabbedPane: DnDTabbedPane) : JComponent() {
       g2.fill(tabbedPane.rectBackward)
       g2.fill(tabbedPane.rectForward)
     }
-    draggingGhost?.let { img ->
+    draggingGhost?.also { img ->
       val xx = locPt.getX() - img.getWidth(this) / 2.0
       val yy = locPt.getY() - img.getHeight(this) / 2.0
       g2.drawImage(img, xx.toInt(), yy.toInt(), null)
