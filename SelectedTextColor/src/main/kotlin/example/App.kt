@@ -1,14 +1,11 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
-import java.net.URISyntaxException
+import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
-import java.nio.file.FileSystemNotFoundException
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.nio.file.spi.FileSystemProvider
 import javax.script.Invocable
 import javax.script.ScriptEngine
 import javax.script.ScriptEngineManager
@@ -44,7 +41,7 @@ class MainPanel : JPanel(BorderLayout()) {
       it.setEditorKit(htmlEditorKit)
       it.setEditable(false)
       // it.setSelectionColor(new Color(0x64_88_AA_AA, true));
-      it.setBackground(Color(200, 200, 200))
+      it.setBackground(Color(0xEE_EE_EE))
     }
 
     editor2.apply {
@@ -97,28 +94,19 @@ class MainPanel : JPanel(BorderLayout()) {
   private fun createEngine(): ScriptEngine? {
     val manager = ScriptEngineManager()
     val engine = manager.getEngineByName("JavaScript")
-    try {
-      val uri = MainPanel::class.java.getResource("prettify.js").toURI()
-      // https://stackoverflow.com/questions/22605666/java-access-files-in-jar-causes-java-nio-file-filesystemnotfoundexception
-      if ("jar".equals(uri.getScheme())) {
-        for (provider in FileSystemProvider.installedProviders()) {
-          if (provider.getScheme().equals("jar", ignoreCase = true)) {
-            try {
-              provider.getFileSystem(uri)
-            } catch (e: FileSystemNotFoundException) {
-              // in this case we need to initialize it first:
-              provider.newFileSystem(uri, emptyMap<String, Any>())
-            }
-          }
-        }
-      }
-      val path = Paths.get(uri)
-      // Path path = Paths.get(MainPanel.class.getResource("prettify.js").toURI());
+    // String p = "https://raw.githubusercontent.com/google/code-prettify/" +
+    //            "f5ad44e3253f1bc8e288477a36b2ce5972e8e161/src/prettify.js";
+    // URL url = new URL(p);
 
-      // String p = "https://raw.githubusercontent.com/google/code-prettify/" +
-      //            "f5ad44e3253f1bc8e288477a36b2ce5972e8e161/src/prettify.js";
-      // try (Reader r = new BufferedReader(new InputStreamReader(new URL(p).openStream(), StandardCharsets.UTF_8))) {
-      Files.newBufferedReader(path, StandardCharsets.UTF_8).use { r ->
+    // Files.newBufferedReader(path, StandardCharsets.UTF_8).use { r ->
+    //   engine.eval("var window={}, navigator=null;")
+    //   engine.eval(r)
+    //   return engine
+    // }
+
+    val url = MainPanel::class.java.getResource("prettify.js")
+    try {
+      BufferedReader(InputStreamReader(url.openStream(), StandardCharsets.UTF_8)).use { r ->
         engine.eval("var window={}, navigator=null;")
         engine.eval(r)
         return engine
@@ -127,23 +115,19 @@ class MainPanel : JPanel(BorderLayout()) {
       ex.printStackTrace()
     } catch (ex: ScriptException) {
       ex.printStackTrace()
-    } catch (ex: URISyntaxException) {
-      ex.printStackTrace()
     }
     return null
   }
 
-  private fun prettify(engine: ScriptEngine?, src: String) =
-    try {
-      val w = engine?.get("window")
-      ((engine as Invocable).invokeMethod(w, "prettyPrintOne", src) as String)
-    } catch (ex: ScriptException) {
-      ex.printStackTrace()
-      ""
-    } catch (ex: NoSuchMethodException) {
-      ex.printStackTrace()
-      ""
-    }
+  private fun prettify(engine: ScriptEngine?, src: String) = try {
+    ((engine as Invocable).invokeMethod(engine?.get("window"), "prettyPrintOne", src) as String)
+  } catch (ex: ScriptException) {
+    ex.printStackTrace()
+    ""
+  } catch (ex: NoSuchMethodException) {
+    ex.printStackTrace()
+    ""
+  }
 }
 
 fun main() {
