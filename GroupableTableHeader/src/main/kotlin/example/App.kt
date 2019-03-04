@@ -66,9 +66,7 @@ internal class GroupableTableHeader(model: TableColumnModel) : JTableHeader(mode
 
   // [java] BooleanGetMethodName: Don't report bad method names on @Override #97
   // https://github.com/pmd/pmd/pull/97
-  override fun getReorderingAllowed(): Boolean {
-    return false
-  }
+  override fun getReorderingAllowed() = false
 
   override fun setReorderingAllowed(b: Boolean) {
     super.setReorderingAllowed(false)
@@ -182,14 +180,15 @@ internal class GroupableTableHeaderUI : BasicTableHeaderUI() {
   }
 
   // Copied from javax/swing/plaf/basic/BasicTableHeaderUI.java
-  private fun createHeaderSize(width: Long): Dimension {
-    val w = Math.min(width, Integer.MAX_VALUE.toLong())
-    return Dimension(w.toInt(), getHeaderHeight())
-  }
+  // private fun createHeaderSize(width: Long): Dimension {
+  //   val w = Math.min(width, Integer.MAX_VALUE.toLong())
+  //   return Dimension(w.toInt(), getHeaderHeight())
+  // }
 
   override fun getPreferredSize(c: JComponent?): Dimension {
     val width = header.getColumnModel().getColumns().toList().map { it.getPreferredWidth().toLong() }.sum()
-    return createHeaderSize(width)
+    return Dimension(Math.min(width, Integer.MAX_VALUE.toLong()).toInt(), getHeaderHeight())
+    // return createHeaderSize(width)
   }
 }
 
@@ -210,23 +209,26 @@ internal class ColumnGroup(private val text: String) {
    * @param obj TableColumn or ColumnGroup
    */
   fun add(obj: Any?) {
-    obj?.let { list.add(it) }
+    obj?.also { list.add(it) }
   }
 
   fun getColumnGroupList(c: TableColumn, g: MutableList<Any>): List<*> {
     g.add(this)
-    if (list.contains(c)) {
-      return g
-    }
-    for (obj in list) {
-      if (obj is ColumnGroup) {
-        val groups = obj.getColumnGroupList(c, ArrayList<Any>(g))
-        if (!groups.isEmpty()) {
-          return groups
-        }
-      }
-    }
-    return emptyList<Any>()
+    // if (list.contains(c)) {
+    //   return g
+    // }
+    // for (obj in list) {
+    //   val cg = obj as? ColumnGroup ?: continue
+    //   val groups = cg.getColumnGroupList(c, ArrayList<Any>(g))
+    //   if (!groups.isEmpty()) {
+    //     return groups
+    //   }
+    // }
+    // return emptyList<Any>()
+    return if (list.contains(c)) g
+        else list.filterIsInstance(ColumnGroup::class.java)
+            .map { it.getColumnGroupList(c, ArrayList<Any>(g)) }
+            .filterNot { it.isEmpty() }.firstOrNull() ?: emptyList<Any>()
   }
 
   fun getSize(header: JTableHeader): Dimension {
@@ -234,7 +236,8 @@ internal class ColumnGroup(private val text: String) {
     val c = r.getTableCellRendererComponent(header.getTable(), headerValue, false, false, -1, -1)
     var width = 0
     for (o in list) {
-      width += if (o is TableColumn) o.getWidth() else (o as ColumnGroup).getSize(header).width
+      // width += if (o is TableColumn) o.getWidth() else (o as ColumnGroup).getSize(header).width
+      width += (o as? TableColumn)?.getWidth() ?: (o as? ColumnGroup)?.getSize(header)?.width ?: 0
     }
     return Dimension(width, c.getPreferredSize().height)
   }
