@@ -111,18 +111,16 @@ class TextComponentPopupMenu : JPopupMenu() {
 
   override fun show(c: Component, x: Int, y: Int) {
     println(c.javaClass.getName() + ": " + c.getName())
-    if (c is JTextComponent) {
-      // val tc = c as JTextComponent
-      c.requestFocusInWindow()
-      var hasSelectedText = c.getSelectedText() != null
-      if (c is JTextField && !c.isFocusOwner() && !hasSelectedText) {
-        c.selectAll()
-        hasSelectedText = true
-      }
-      cutAction.setEnabled(hasSelectedText)
-      copyAction.setEnabled(hasSelectedText)
-      super.show(c, x, y)
+    val tc = c as? JTextComponent ?: return
+    tc.requestFocusInWindow()
+    var hasSelectedText = tc.getSelectedText() != null
+    if (tc is JTextField && !tc.isFocusOwner() && !hasSelectedText) {
+      tc.selectAll()
+      hasSelectedText = true
     }
+    cutAction.setEnabled(hasSelectedText)
+    copyAction.setEnabled(hasSelectedText)
+    super.show(tc, x, y)
   }
 }
 

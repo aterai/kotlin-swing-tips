@@ -27,20 +27,11 @@ class MainPanel : JPanel(BorderLayout()) {
       override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
     }
     val table = object : JTable(model) {
-      override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int): Component {
-        val c = super.prepareEditor(editor, row, column)
-        if (c is JComponent) {
-          c.setOpaque(false)
-        }
-        return c
-      }
+      override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int) =
+        super.prepareEditor(editor, row, column).also { (it as? JComponent)?.setOpaque(false) }
 
-      override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int): Component {
-        return super.prepareRenderer(renderer, row, column).apply {
-          setForeground(Color.BLACK)
-          // setOpaque(false)
-        }
-      }
+      override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int) =
+        super.prepareRenderer(renderer, row, column).apply { setForeground(Color.BLACK) }
     }
     // table.setAutoCreateRowSorter(true);
     table.setRowSelectionAllowed(true)

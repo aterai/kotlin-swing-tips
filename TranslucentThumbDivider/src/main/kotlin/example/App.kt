@@ -85,15 +85,11 @@ internal class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
 
   override fun installUI(c: JComponent) {
     super.installUI(c)
-    if (c is JLayer<*>) {
-      c.setLayerEventMask(AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK)
-    }
+    (c as? JLayer<*>)?.setLayerEventMask(AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK)
   }
 
   override fun uninstallUI(c: JComponent) {
-    if (c is JLayer<*>) {
-      c.setLayerEventMask(0)
-    }
+    (c as? JLayer<*>)?.setLayerEventMask(0)
     super.uninstallUI(c)
   }
 
@@ -176,19 +172,18 @@ internal class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
   }
 
   companion object {
-    private val R = 25.0
+    private const val R = 25.0
     private fun isDraggableComponent(splitPane: JSplitPane, c: Component): Boolean {
       return splitPane == c || splitPane == SwingUtilities.getUnwrappedParent(c)
     }
 
-    private fun updateThumbLocation(splitPane: Component, thumb: Ellipse2D) {
-      if (splitPane is JSplitPane) {
-        val pos = splitPane.getDividerLocation()
-        if (splitPane.getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
-          thumb.setFrame(pos - R, splitPane.getHeight() / 2.0 - R, R + R, R + R)
-        } else {
-          thumb.setFrame(splitPane.getWidth() / 2.0 - R, pos - R, R + R, R + R)
-        }
+    private fun updateThumbLocation(c: Component, thumb: Ellipse2D) {
+      val splitPane = c as? JSplitPane ?: return
+      val pos = splitPane.getDividerLocation()
+      if (splitPane.getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
+        thumb.setFrame(pos - R, splitPane.getHeight() / 2.0 - R, R + R, R + R)
+      } else {
+        thumb.setFrame(splitPane.getWidth() / 2.0 - R, pos - R, R + R, R + R)
       }
     }
   }

@@ -129,12 +129,12 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   private fun makePrevNextRadioButton(itemsPerPage: Int, target: Int, title: String, flag: Boolean) =
-    JRadioButton(title).apply {
-      setForeground(Color.BLUE)
-      setUI(linkViewRadioButtonUI)
-      setEnabled(flag)
-      addActionListener { initLinkBox(itemsPerPage, target) }
-    }
+      JRadioButton(title).apply {
+        setForeground(Color.BLUE)
+        setUI(linkViewRadioButtonUI)
+        setEnabled(flag)
+        addActionListener { initLinkBox(itemsPerPage, target) }
+      }
 
   companion object {
     private const val LR_PAGE_SIZE = 5
@@ -153,9 +153,9 @@ internal class LinkViewRadioButtonUI : BasicRadioButtonUI() {
 
   @Synchronized
   override fun paint(g: Graphics, c: JComponent) {
-    val f = c.getFont()
-    g.setFont(f)
-    val fm = c.getFontMetrics(f)
+    // val f = c.getFont()
+    // val fm = c.getFontMetrics(f)
+    g.setFont(c.getFont())
 
     val i = c.getInsets()
     c.getSize(size)
@@ -171,26 +171,20 @@ internal class LinkViewRadioButtonUI : BasicRadioButtonUI() {
       g.fillRect(0, 0, size.width, size.height)
     }
 
-    if (c is AbstractButton) {
-      val text = SwingUtilities.layoutCompoundLabel(
-          c, fm, c.getText(), null, c.getVerticalAlignment(),
-          c.getHorizontalAlignment(), c.getVerticalTextPosition(), c.getHorizontalTextPosition(),
-          viewRect, iconRect, textRect, 0)
+    val b = c as? AbstractButton ?: return
+    val text = SwingUtilities.layoutCompoundLabel(
+        b, c.getFontMetrics(c.getFont()), b.getText(), null, b.getVerticalAlignment(),
+        b.getHorizontalAlignment(), b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
+        viewRect, iconRect, textRect, 0)
 
-      val m = c.getModel()
-      g.setColor(c.getForeground())
-      val isRollover = c.isRolloverEnabled() && m.isRollover()
-      val isNotAimed = !m.isSelected() && !m.isPressed() && !m.isArmed()
-      if (isNotAimed && isRollover) {
-        g.drawLine(viewRect.x, viewRect.y + viewRect.height, viewRect.x + viewRect.width, viewRect.y + viewRect.height)
-      }
-      val v = c.getClientProperty(BasicHTML.propertyKey)
-      if (v is View) {
-        v.paint(g, textRect)
-      } else {
-        paintText(g, c, textRect, text)
-      }
+    val m = b.getModel()
+    g.setColor(b.getForeground())
+    val isRollover = b.isRolloverEnabled() && m.isRollover()
+    val isNotAimed = !m.isSelected() && !m.isPressed() && !m.isArmed()
+    if (isNotAimed && isRollover) {
+      g.drawLine(viewRect.x, viewRect.y + viewRect.height, viewRect.x + viewRect.width, viewRect.y + viewRect.height)
     }
+    (b.getClientProperty(BasicHTML.propertyKey) as? View)?.paint(g, textRect) ?: paintText(g, b, textRect, text)
   }
 }
 

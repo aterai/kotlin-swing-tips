@@ -25,22 +25,26 @@ class MainPanel : JPanel() {
 
     val button1 = JButton("clipped window")
     button1.addActionListener { e ->
-      val window = JWindow()
-      window.getContentPane().add(makePanel(image))
-      window.setShape(shape)
-      window.pack()
-      window.setLocationRelativeTo((e.getSource() as AbstractButton).getRootPane())
-      window.setVisible(true)
+      val b = e.getSource() as? AbstractButton ?: return@addActionListener
+      JWindow().apply {
+        getContentPane().add(makePanel(image))
+        setShape(shape)
+        pack()
+        setLocationRelativeTo(b.getRootPane())
+        setVisible(true)
+      }
     }
 
     val button2 = JButton("soft clipped window")
     button2.addActionListener { e ->
-      val window = JWindow()
-      window.setBackground(Color(0x0, true))
-      window.getContentPane().add(makePanel(clippedImage))
-      window.pack()
-      window.setLocationRelativeTo((e.getSource() as AbstractButton).getRootPane())
-      window.setVisible(true)
+      val b = e.getSource() as? AbstractButton ?: return@addActionListener
+      JWindow().apply {
+        getContentPane().add(makePanel(clippedImage))
+        setBackground(Color(0x0, true))
+        pack()
+        setLocationRelativeTo(b.getRootPane())
+        setVisible(true)
+      }
     }
 
     add(button1)

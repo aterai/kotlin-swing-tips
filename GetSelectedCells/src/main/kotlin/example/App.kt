@@ -159,9 +159,8 @@ internal class BooleanEditor : AbstractCellEditor(), TableCellEditor {
 
   override fun getCellEditorValue() = checkBox.isSelected()
 
-  override fun isCellEditable(e: EventObject): Boolean {
-    return if (e is MouseEvent) !(e.isShiftDown() || e.isControlDown()) else super.isCellEditable(e)
-  }
+  override fun isCellEditable(e: EventObject) = (e as? MouseEvent)
+      ?.takeUnless { e.isShiftDown() || e.isControlDown() }?.let { true } ?: super.isCellEditable(e)
 
   private inner class CheckBoxHandler : MouseAdapter(), ActionListener {
     override fun actionPerformed(e: ActionEvent) {
@@ -180,12 +179,19 @@ internal class BooleanEditor : AbstractCellEditor(), TableCellEditor {
     }
 
     override fun mouseExited(e: MouseEvent) {
-      val clz = JTable::class.java
-      SwingUtilities.getAncestorOfClass(clz, e.getComponent())
-          ?.takeIf { clz.isInstance(it) }
-          ?.let { clz.cast(it) }
-          ?.takeIf { table -> table.isEditing() }
-          ?.let { table -> table.removeEditor() }
+      // SwingUtilities.getAncestorOfClass(JTable::class.java, e.getComponent())
+      //     ?.takeIf { it is JTable }?.let { it as JTable }
+      //     ?.takeIf { it.isEditing() }?.also { it.removeEditor() }
+      SwingUtilities.getAncestorOfClass(JTable::class.java, e.getComponent())
+          ?.takeIf { it is JTable && it.isEditing() }
+          ?.also { (it as JTable).removeEditor() }
+      // (SwingUtilities.getAncestorOfClass(JTable::class.java, e.getComponent()) as? JTable)
+      //     ?.takeIf { it.isEditing() }
+      //     ?.also { it.removeEditor() }
+      // val t = SwingUtilities.getAncestorOfClass(JTable::class.java, e.getComponent()) as? JTable ?: return
+      // if (t.isEditing()) {
+      //   t.removeEditor()
+      // }
     }
   }
 }
