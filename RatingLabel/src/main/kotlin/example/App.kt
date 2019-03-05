@@ -18,21 +18,19 @@ class MainPanel : JPanel(GridLayout(2, 2, 4, 4)) {
     val ip = defaultIcon.getImage().getSource()
 
     val list1 = listOf(
-      makeStarImageIcon(ip, SelectedImageFilter(1f, .5f, .5f)),
-      makeStarImageIcon(ip, SelectedImageFilter(.5f, 1f, .5f)),
-      makeStarImageIcon(ip, SelectedImageFilter(1f, .5f, 1f)),
-      makeStarImageIcon(ip, SelectedImageFilter(.5f, .5f, 1f)),
-      makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, .5f))
-    )
+        makeStarImageIcon(ip, SelectedImageFilter(1f, .5f, .5f)),
+        makeStarImageIcon(ip, SelectedImageFilter(.5f, 1f, .5f)),
+        makeStarImageIcon(ip, SelectedImageFilter(1f, .5f, 1f)),
+        makeStarImageIcon(ip, SelectedImageFilter(.5f, .5f, 1f)),
+        makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, .5f)))
     add(makeStarRatingPanel("gap=0", LevelBar(defaultIcon, list1, 0)))
 
     val list2 = listOf(
-      makeStarImageIcon(ip, SelectedImageFilter(.2f, .5f, .5f)),
-      makeStarImageIcon(ip, SelectedImageFilter(0f, 1f, .2f)),
-      makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, .2f)),
-      makeStarImageIcon(ip, SelectedImageFilter(.8f, .4f, .2f)),
-      makeStarImageIcon(ip, SelectedImageFilter(1f, .1f, .1f))
-    )
+        makeStarImageIcon(ip, SelectedImageFilter(.2f, .5f, .5f)),
+        makeStarImageIcon(ip, SelectedImageFilter(0f, 1f, .2f)),
+        makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, .2f)),
+        makeStarImageIcon(ip, SelectedImageFilter(.8f, .4f, .2f)),
+        makeStarImageIcon(ip, SelectedImageFilter(1f, .1f, .1f)))
     add(makeStarRatingPanel("gap=1+1", object : LevelBar(defaultIcon, list2, 1) {
       override fun repaintIcon(index: Int) {
         for (i in labelList.indices) {
@@ -43,12 +41,11 @@ class MainPanel : JPanel(GridLayout(2, 2, 4, 4)) {
     }))
 
     val list3 = listOf(
-      makeStarImageIcon(ip, SelectedImageFilter(.6f, .6f, 0f)),
-      makeStarImageIcon(ip, SelectedImageFilter(.7f, .7f, 0f)),
-      makeStarImageIcon(ip, SelectedImageFilter(.8f, .8f, 0f)),
-      makeStarImageIcon(ip, SelectedImageFilter(.9f, .9f, 0f)),
-      makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, 0f))
-    )
+        makeStarImageIcon(ip, SelectedImageFilter(.6f, .6f, 0f)),
+        makeStarImageIcon(ip, SelectedImageFilter(.7f, .7f, 0f)),
+        makeStarImageIcon(ip, SelectedImageFilter(.8f, .8f, 0f)),
+        makeStarImageIcon(ip, SelectedImageFilter(.9f, .9f, 0f)),
+        makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, 0f)))
     add(makeStarRatingPanel("gap=2+2", LevelBar(defaultIcon, list3, 2)))
 
     val star = makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, 0f))
@@ -57,15 +54,13 @@ class MainPanel : JPanel(GridLayout(2, 2, 4, 4)) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  private fun makeStarRatingPanel(title: String, label: LevelBar): JPanel {
+  private fun makeStarRatingPanel(title: String, label: LevelBar) = JPanel(FlowLayout(FlowLayout.LEFT)).apply {
     val button = JButton("clear")
     button.addActionListener { label.clear() }
 
-    val p = JPanel(FlowLayout(FlowLayout.LEFT))
-    p.setBorder(BorderFactory.createTitledBorder(title))
-    p.add(button)
-    p.add(label)
-    return p
+    setBorder(BorderFactory.createTitledBorder(title))
+    add(button)
+    add(label)
   }
 
   private fun makeStarImageIcon(ip: ImageProducer, filter: ImageFilter): ImageIcon {

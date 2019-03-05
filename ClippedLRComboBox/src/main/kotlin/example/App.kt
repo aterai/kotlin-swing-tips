@@ -74,10 +74,11 @@ internal class MultiColumnCellRenderer : ListCellRenderer<PairItem> {
     override fun getPreferredSize() = Dimension(80, 0)
   }
   private val renderer = object : JPanel(BorderLayout()) {
-    override fun getPreferredSize(): Dimension {
-      val d = super.getPreferredSize()
-      return Dimension(0, d.height)
-    }
+    // override fun getPreferredSize(): Dimension {
+    //   val d = super.getPreferredSize()
+    //   return Dimension(0, d.height)
+    // }
+    override fun getPreferredSize() = super.getPreferredSize().apply { width = 0 }
 
     override fun updateUI() {
       super.updateUI()

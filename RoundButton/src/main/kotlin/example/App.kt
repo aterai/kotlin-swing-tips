@@ -21,9 +21,9 @@ class MainPanel : JPanel() {
     add(button)
     add(RoundedCornerButton("Rounded Corner Button"))
     add(object : RoundButton(ImageIcon(MainPanel::class.java.getResource("16x16.png"))) {
-      override fun getPreferredSize(): Dimension {
+      override fun getPreferredSize() = super.getPreferredSize().apply {
         val r = 16 + (RoundedCornerButton.FOCUS_STROKE.toInt() + 4) * 2 // test margin = 4
-        return Dimension(r, r)
+        setSize(r, r)
       }
     })
     add(ShapeButton(makeStar(25, 30, 20)))
@@ -128,9 +128,13 @@ open class RoundedCornerButton : JButton {
     g2.dispose()
   }
 
-  override fun contains(x: Int, y: Int): Boolean {
+  // override fun contains(x: Int, y: Int): Boolean {
+  //   initShape()
+  //   return shape?.contains(x.toDouble(), y.toDouble()) ?: false
+  // }
+  override fun contains(x: Int, y: Int) = let {
     initShape()
-    return shape?.contains(x.toDouble(), y.toDouble()) ?: false
+    shape?.contains(x.toDouble(), y.toDouble()) ?: false
   }
 
   companion object {
@@ -155,11 +159,9 @@ open class RoundButton : RoundedCornerButton {
   //   // init(text, icon);
   // }
 
-  override fun getPreferredSize(): Dimension {
-    val d = super.getPreferredSize()
-    val s = Math.max(d.width, d.height)
-    d.setSize(s, s)
-    return d
+  override fun getPreferredSize() = super.getPreferredSize().apply {
+    val s = Math.max(width, height)
+    setSize(s, s)
   }
 
   override fun initShape() {

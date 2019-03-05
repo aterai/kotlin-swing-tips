@@ -102,8 +102,7 @@ class RoundedCornerButtonUI : BasicButtonUI() {
       shape = RoundRectangle2D.Double(0.0, 0.0, c.getWidth() - 1.0, c.getHeight() - 1.0, ARC_WIDTH, ARC_HEIGHT)
       border = RoundRectangle2D.Double(
           FOCUS_STROKE, FOCUS_STROKE,
-          c.getWidth() - 1 - FOCUS_STROKE * 2,
-          c.getHeight() - 1 - FOCUS_STROKE * 2,
+          c.getWidth() - 1 - FOCUS_STROKE * 2, c.getHeight() - 1 - FOCUS_STROKE * 2,
           ARC_WIDTH, ARC_HEIGHT)
     }
   }
@@ -116,8 +115,8 @@ class RoundedCornerButtonUI : BasicButtonUI() {
   }
 
   companion object {
-    private val ARC_WIDTH = 16.0
-    private val ARC_HEIGHT = 16.0
-    private val FOCUS_STROKE = 2.0
+    private const val ARC_WIDTH = 16.0
+    private const val ARC_HEIGHT = 16.0
+    private const val FOCUS_STROKE = 2.0
   }
 }
