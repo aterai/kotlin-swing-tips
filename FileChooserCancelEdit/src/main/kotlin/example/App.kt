@@ -24,9 +24,8 @@ class MainPanel : JPanel(BorderLayout()) {
       //     .map(JTable::class.java::cast)
       //     .findFirst()
       //     .ifPresent { append(log, "isEditing: " + it.isEditing()) }
-      children(fileChooser0)
-          .filterIsInstance(JTable::class.java)
-          .first()?.let { append(log, "isEditing: " + it.isEditing()) }
+      children(fileChooser0).filterIsInstance(JTable::class.java)
+          .firstOrNull()?.also { append(log, "isEditing: " + it.isEditing()) }
 
       val retvalue = fileChooser0.showOpenDialog(getRootPane())
       if (retvalue == JFileChooser.APPROVE_OPTION) {
@@ -55,11 +54,11 @@ class MainPanel : JPanel(BorderLayout()) {
       //   .ifPresent(JTable::removeEditor)
 
       children(fileChooser1).filterIsInstance(JTable::class.java)
-        // .firstOrNull()?.apply(JTable::removeEditor)
-        .firstOrNull()?.let { table ->
-          println(table)
-          table.removeEditor()
-        }
+          // .firstOrNull()?.apply(JTable::removeEditor)
+          .firstOrNull()?.also {
+            println(it)
+            it.removeEditor()
+          }
 
       val retvalue = fileChooser1.showOpenDialog(getRootPane())
       if (retvalue == JFileChooser.APPROVE_OPTION) {
@@ -78,7 +77,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
   private fun setViewTypeDetails(fileChooser: JFileChooser) {
     fileChooser.getActionMap().get("viewTypeDetails")?.actionPerformed(
-      ActionEvent(fileChooser, ActionEvent.ACTION_PERFORMED, "viewTypeDetails"))
+        ActionEvent(fileChooser, ActionEvent.ACTION_PERFORMED, "viewTypeDetails"))
   }
 
   private fun append(log: JTextArea, str: String) {
@@ -100,7 +99,12 @@ class MainPanel : JPanel(BorderLayout()) {
   //     // NG: .reduce(Stream.of(parent), Stream::concat)
   // }
 
-  fun children(parent: Container): List<Component> = parent.getComponents().toList()
+  // fun stream(parent: Container): Stream<Component> = Arrays.stream(parent.getComponents())
+  //     .filter(Container::class.java::isInstance)
+  //     .map { c -> stream(Container::class.java.cast(c)) }
+  //     .reduce(Stream.of<Component>(parent), { a, b -> Stream.concat<Component>(a, b) })
+
+  fun children(parent: Container): List<Component> = parent.getComponents()
       .filterIsInstance(Container::class.java)
       .map { children(it) }
       .fold(listOf<Component>(parent), { a, b -> a + b })
