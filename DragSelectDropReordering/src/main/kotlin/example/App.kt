@@ -111,7 +111,7 @@ internal class ReorderbleList(model: ListModel<ListItem>) : JList<ListItem>(mode
       rubberBand.closePath()
 
       val indices = (0 until l.getModel().getSize())
-        .filter { rubberBand.intersects(l.getCellBounds(it, it)) }.toIntArray()
+          .filter { rubberBand.intersects(l.getCellBounds(it, it)) }.toIntArray()
       l.setSelectedIndices(indices)
       l.repaint()
     }

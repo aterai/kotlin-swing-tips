@@ -72,6 +72,7 @@ class MainPanel : JPanel(BorderLayout()) {
     root.add(set4)
     return DefaultTreeModel(root)
   }
+
   fun collapseFirstHierarchy(tree: JTree) {
     val model = tree.getModel()
     val root = model.getRoot() as DefaultMutableTreeNode
