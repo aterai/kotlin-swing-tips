@@ -10,36 +10,36 @@ import javax.swing.border.Border
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    val model = DefaultListModel<ListItem>().apply {
-      addElement(ListItem("red", ColorIcon(Color.RED)))
-      addElement(ListItem("green", ColorIcon(Color.GREEN)))
-      addElement(ListItem("blue", ColorIcon(Color.BLUE)))
-      addElement(ListItem("cyan", ColorIcon(Color.CYAN)))
-      addElement(ListItem("darkGray", ColorIcon(Color.DARK_GRAY)))
-      addElement(ListItem("gray", ColorIcon(Color.GRAY)))
-      addElement(ListItem("lightGray", ColorIcon(Color.LIGHT_GRAY)))
-      addElement(ListItem("magenta", ColorIcon(Color.MAGENTA)))
-      addElement(ListItem("orange", ColorIcon(Color.ORANGE)))
-      addElement(ListItem("pink", ColorIcon(Color.PINK)))
-      addElement(ListItem("yellow", ColorIcon(Color.YELLOW)))
-      addElement(ListItem("black", ColorIcon(Color.BLACK)))
-      addElement(ListItem("white", ColorIcon(Color.WHITE)))
+    val model = DefaultListModel<ListItem>().also {
+      it.addElement(ListItem("red", ColorIcon(Color.RED)))
+      it.addElement(ListItem("green", ColorIcon(Color.GREEN)))
+      it.addElement(ListItem("blue", ColorIcon(Color.BLUE)))
+      it.addElement(ListItem("cyan", ColorIcon(Color.CYAN)))
+      it.addElement(ListItem("darkGray", ColorIcon(Color.DARK_GRAY)))
+      it.addElement(ListItem("gray", ColorIcon(Color.GRAY)))
+      it.addElement(ListItem("lightGray", ColorIcon(Color.LIGHT_GRAY)))
+      it.addElement(ListItem("magenta", ColorIcon(Color.MAGENTA)))
+      it.addElement(ListItem("orange", ColorIcon(Color.ORANGE)))
+      it.addElement(ListItem("pink", ColorIcon(Color.PINK)))
+      it.addElement(ListItem("yellow", ColorIcon(Color.YELLOW)))
+      it.addElement(ListItem("black", ColorIcon(Color.BLACK)))
+      it.addElement(ListItem("white", ColorIcon(Color.WHITE)))
     }
 
-    val list = RubberBandSelectionList(model).apply {
-      setOpaque(false)
-      setBackground(Color(0x0, true))
-      setForeground(Color.WHITE)
-      // addListSelectionListener { e -> SwingUtilities.getUnwrappedParent(e.getSource() as Component).repaint() }
+    val list = RubberBandSelectionList(model).also {
+      it.setOpaque(false)
+      it.setBackground(Color(0x0, true))
+      it.setForeground(Color.WHITE)
+      // it.addListSelectionListener { e -> SwingUtilities.getUnwrappedParent(e.getSource() as Component).repaint() }
     }
 
-    val scroll = JScrollPane(list).apply {
-      setBackground(Color(0x0, true))
-      setOpaque(false)
-      setBorder(BorderFactory.createEmptyBorder())
-      setViewportBorder(BorderFactory.createEmptyBorder())
-      // getViewport().addChangeListener { e -> (e.getSource() as Component).repaint() }
-      getViewport().setOpaque(false)
+    val scroll = JScrollPane(list).also {
+      it.setBackground(Color(0x0, true))
+      it.setOpaque(false)
+      it.setBorder(BorderFactory.createEmptyBorder())
+      it.setViewportBorder(BorderFactory.createEmptyBorder())
+      // it.getViewport().addChangeListener { e -> (e.getSource() as Component).repaint() }
+      it.getViewport().setOpaque(false)
     }
 
     val panel = object : JPanel(BorderLayout()) {

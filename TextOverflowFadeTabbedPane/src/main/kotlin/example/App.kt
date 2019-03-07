@@ -109,10 +109,10 @@ open class TextOverflowFadeTabbedPane : ClippedTitleTabbedPane {
 
   override fun insertTab(title: String, icon: Icon, component: Component, tip: String?, index: Int) {
     super.insertTab(title, icon, component, tip?.toString() ?: title, index)
-    setTabComponentAt(index, JPanel(BorderLayout(2, 0)).apply {
-      setOpaque(false)
-      add(JLabel(icon), BorderLayout.WEST)
-      add(TextOverflowFadeLabel(title))
+    setTabComponentAt(index, JPanel(BorderLayout(2, 0)).also {
+      it.setOpaque(false)
+      it.add(JLabel(icon), BorderLayout.WEST)
+      it.add(TextOverflowFadeLabel(title))
     })
   }
 }

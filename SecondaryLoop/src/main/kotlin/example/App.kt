@@ -40,10 +40,10 @@ class MainPanel : JPanel(BorderLayout()) {
       }
     }
 
-    val p = JPanel().apply {
-      add(JCheckBox())
-      add(JTextField(10))
-      add(button)
+    val p = JPanel().also {
+      it.add(JCheckBox())
+      it.add(JTextField(10))
+      it.add(button)
     }
     add(JLayer(p, layerUI), BorderLayout.NORTH)
     add(JScrollPane(logger))

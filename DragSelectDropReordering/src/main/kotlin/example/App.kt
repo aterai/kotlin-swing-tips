@@ -17,18 +17,18 @@ import javax.swing.event.MouseInputListener
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    val model = DefaultListModel<ListItem>().apply {
+    val model = DefaultListModel<ListItem>().also {
       // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
-      addElement(ListItem("asdasdfsd", "wi0009-32.png"))
-      addElement(ListItem("12345", "wi0054-32.png"))
-      addElement(ListItem("ADFFDF.asd", "wi0062-32.png"))
-      addElement(ListItem("test", "wi0063-32.png"))
-      addElement(ListItem("32.png", "wi0064-32.png"))
-      addElement(ListItem("asdfsd.jpg", "wi0096-32.png"))
-      addElement(ListItem("6896", "wi0111-32.png"))
-      addElement(ListItem("t467467est", "wi0122-32.png"))
-      addElement(ListItem("test123", "wi0124-32.png"))
-      addElement(ListItem("test(1)", "wi0126-32.png"))
+      it.addElement(ListItem("asdasdfsd", "wi0009-32.png"))
+      it.addElement(ListItem("12345", "wi0054-32.png"))
+      it.addElement(ListItem("ADFFDF.asd", "wi0062-32.png"))
+      it.addElement(ListItem("test", "wi0063-32.png"))
+      it.addElement(ListItem("32.png", "wi0064-32.png"))
+      it.addElement(ListItem("asdfsd.jpg", "wi0096-32.png"))
+      it.addElement(ListItem("6896", "wi0111-32.png"))
+      it.addElement(ListItem("t467467est", "wi0122-32.png"))
+      it.addElement(ListItem("test123", "wi0124-32.png"))
+      it.addElement(ListItem("test(1)", "wi0126-32.png"))
     }
     val list = ReorderbleList(model)
     list.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10))

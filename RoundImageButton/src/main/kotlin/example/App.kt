@@ -14,12 +14,11 @@ class MainPanel : JPanel(BorderLayout()) {
     box.setBorder(BorderFactory.createEmptyBorder(60, 10, 60, 10))
 
     val buttons = listOf(
-      RoundButton(ImageIcon(javaClass.getResource("005.png")), "005d.png", "005g.png"),
-      RoundButton(ImageIcon(javaClass.getResource("003.png")), "003d.png", "003g.png"),
-      RoundButton(ImageIcon(javaClass.getResource("001.png")), "001d.png", "001g.png"),
-      RoundButton(ImageIcon(javaClass.getResource("002.png")), "002d.png", "002g.png"),
-      RoundButton(ImageIcon(javaClass.getResource("004.png")), "004d.png", "004g.png")
-    )
+        RoundButton(ImageIcon(javaClass.getResource("005.png")), "005d.png", "005g.png"),
+        RoundButton(ImageIcon(javaClass.getResource("003.png")), "003d.png", "003g.png"),
+        RoundButton(ImageIcon(javaClass.getResource("001.png")), "001d.png", "001g.png"),
+        RoundButton(ImageIcon(javaClass.getResource("002.png")), "002d.png", "002g.png"),
+        RoundButton(ImageIcon(javaClass.getResource("004.png")), "004d.png", "004g.png"))
     // TEST: buttons = makeButtonArray2(getClass()); // Set ButtonUI
     buttons.forEach {
       box.add(it)
@@ -83,11 +82,11 @@ internal class RoundButton : JButton {
     initShape()
   }
 
-  override fun getPreferredSize(): Dimension {
+  override fun getPreferredSize() = super.getPreferredSize().also {
     val icon = getIcon()
     val i = getInsets()
     val iw = Math.max(icon.getIconWidth(), icon.getIconHeight())
-    return Dimension(iw + i.right + i.left, iw + i.top + i.bottom)
+    it.setSize(iw + i.right + i.left, iw + i.top + i.bottom)
   }
 
   fun initShape() {
@@ -107,9 +106,9 @@ internal class RoundButton : JButton {
     g2.dispose()
   }
 
-  override fun contains(x: Int, y: Int): Boolean {
+  override fun contains(x: Int, y: Int) = let {
     initShape()
-    return shape?.contains(x.toDouble(), y.toDouble()) ?: false
+    shape?.contains(x.toDouble(), y.toDouble()) ?: false
   }
 }
 
@@ -118,9 +117,7 @@ internal enum class ButtonAlignments private constructor(private val description
   CENTER("Center Alignment", Component.CENTER_ALIGNMENT),
   BOTTOM("Bottom Alignment", Component.BOTTOM_ALIGNMENT);
 
-  override fun toString(): String {
-    return description
-  }
+  override fun toString() = description
 }
 
 fun main() {

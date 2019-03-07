@@ -52,9 +52,9 @@ class MainPanel : JPanel(BorderLayout()) {
     }
 
     add(slider, BorderLayout.NORTH)
-    add(JPanel(GridLayout(1, 2)).apply {
-      add(progress1)
-      add(progress2)
+    add(JPanel(GridLayout(1, 2)).also {
+      it.add(progress1)
+      it.add(progress2)
     })
     add(button, BorderLayout.SOUTH)
     setPreferredSize(Dimension(320, 240))
@@ -62,9 +62,9 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 internal class ProgressCircleUI : BasicProgressBarUI() {
-  override fun getPreferredSize(c: JComponent) = super.getPreferredSize(c).apply {
-    val v = Math.max(width, height)
-    setSize(v, v)
+  override fun getPreferredSize(c: JComponent) = super.getPreferredSize(c).also {
+    val v = Math.max(it.width, it.height)
+    it.setSize(v, v)
   }
 
   override fun paint(g: Graphics, c: JComponent) {

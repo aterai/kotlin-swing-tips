@@ -11,16 +11,16 @@ import javax.swing.border.Border
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    val model = DefaultListModel<ListItem>().apply {
+    val model = DefaultListModel<ListItem>().also {
       // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
-      addElement(ListItem("ADFFDF asd", "wi0054-32.png"))
-      addElement(ListItem("test", "wi0062-32.png"))
-      addElement(ListItem("adfasdf", "wi0063-32.png"))
-      addElement(ListItem("Test", "wi0064-32.png"))
-      addElement(ListItem("12345", "wi0096-32.png"))
-      addElement(ListItem("111111", "wi0054-32.png"))
-      addElement(ListItem("22222", "wi0062-32.png"))
-      addElement(ListItem("3333", "wi0063-32.png"))
+      it.addElement(ListItem("ADFFDF asd", "wi0054-32.png"))
+      it.addElement(ListItem("test", "wi0062-32.png"))
+      it.addElement(ListItem("adfasdf", "wi0063-32.png"))
+      it.addElement(ListItem("Test", "wi0064-32.png"))
+      it.addElement(ListItem("12345", "wi0096-32.png"))
+      it.addElement(ListItem("111111", "wi0054-32.png"))
+      it.addElement(ListItem("22222", "wi0062-32.png"))
+      it.addElement(ListItem("3333", "wi0063-32.png"))
     }
     add(JScrollPane(RubberBandSelectionList(model)))
     setPreferredSize(Dimension(320, 240))

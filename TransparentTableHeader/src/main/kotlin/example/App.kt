@@ -31,7 +31,7 @@ class MainPanel : JPanel(BorderLayout()) {
         super.prepareEditor(editor, row, column).also { (it as? JComponent)?.setOpaque(false) }
 
       override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int) =
-        super.prepareRenderer(renderer, row, column).apply { setForeground(Color.BLACK) }
+        super.prepareRenderer(renderer, row, column).also { it.setForeground(Color.BLACK) }
     }
     // table.setAutoCreateRowSorter(true);
     table.setRowSelectionAllowed(true)

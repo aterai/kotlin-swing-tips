@@ -12,23 +12,22 @@ import javax.swing.filechooser.FileNameExtensionFilter
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    val textArea = JTextArea().apply {
-      setEditable(false)
-      setLineWrap(true)
+    val textArea = JTextArea().also {
+      it.setEditable(false)
+      it.setLineWrap(true)
     }
 
-    val label = JLabel().apply {
-      setHorizontalAlignment(SwingConstants.CENTER)
+    val label = JLabel().also {
+      it.setHorizontalAlignment(SwingConstants.CENTER)
     }
 
-    val p = JPanel(GridLayout(2, 1, 5, 5)).apply {
-      add(JScrollPane(textArea).apply {
-        setBorder(BorderFactory.createTitledBorder("File -> String"))
-      })
-      add(JScrollPane(label).apply {
-        setBorder(BorderFactory.createTitledBorder("JTextArea -> ImageIcon"))
-      })
-    }
+    val p = JPanel(GridLayout(2, 1, 5, 5))
+    p.add(JScrollPane(textArea).also {
+      it.setBorder(BorderFactory.createTitledBorder("File -> String"))
+    })
+    p.add(JScrollPane(label).also {
+      it.setBorder(BorderFactory.createTitledBorder("JTextArea -> ImageIcon"))
+    })
 
     val encode = JButton("encode")
     encode.addActionListener {
@@ -59,10 +58,10 @@ class MainPanel : JPanel(BorderLayout()) {
       }
     }
 
-    val box = JPanel(GridLayout(1, 2, 5, 5)).apply {
-      setBorder(BorderFactory.createTitledBorder("java.util.Base64"))
-      add(encode)
-      add(decode)
+    val box = JPanel(GridLayout(1, 2, 5, 5)).also {
+      it.setBorder(BorderFactory.createTitledBorder("java.util.Base64"))
+      it.add(encode)
+      it.add(decode)
     }
 
     add(box, BorderLayout.NORTH)

@@ -31,9 +31,9 @@ class MainPanel : JPanel(BorderLayout()) {
     desktop.add(frame)
   }
 
-  private fun makePanel() = JPanel().apply {
-    add(JLabel("label"))
-    add(JButton("button"))
+  private fun makePanel() = JPanel().also {
+    it.add(JLabel("label"))
+    it.add(JButton("button"))
   }
 }
 
@@ -55,10 +55,10 @@ fun main() {
 // @see https://java.net/projects/swingset3/sources/svn/content/trunk/SwingSet3/src/com/sun/swingset3/SwingSet3.java
 internal object LookAndFeelUtil {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.getName()
-  fun createLookAndFeelMenu() = JMenu("LookAndFeel").apply {
+  fun createLookAndFeelMenu() = JMenu("LookAndFeel").also {
     val lafRadioGroup = ButtonGroup()
     for (lafInfo in UIManager.getInstalledLookAndFeels()) {
-      add(createLookAndFeelItem(lafInfo.getName(), lafInfo.getClassName(), lafRadioGroup))
+      it.add(createLookAndFeelItem(lafInfo.getName(), lafInfo.getClassName(), lafRadioGroup))
     }
   }
 

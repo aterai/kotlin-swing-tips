@@ -20,18 +20,18 @@ class MainPanel : JPanel(BorderLayout()) {
   private val engine: ScriptEngine? = createEngine()
 
   init {
-    val styleSheet = StyleSheet().apply {
-      addRule(".str {color:#008800}")
-      addRule(".kwd {color:#000088}")
-      addRule(".com {color:#880000}")
-      addRule(".typ {color:#660066}")
-      addRule(".lit {color:#006666}")
-      addRule(".pun {color:#666600}")
-      addRule(".pln {color:#000000}")
-      addRule(".tag {color:#000088}")
-      addRule(".atn {color:#660066}")
-      addRule(".atv {color:#008800}")
-      addRule(".dec {color:#660066}")
+    val styleSheet = StyleSheet().also {
+      it.addRule(".str {color:#008800}")
+      it.addRule(".kwd {color:#000088}")
+      it.addRule(".com {color:#880000}")
+      it.addRule(".typ {color:#660066}")
+      it.addRule(".lit {color:#006666}")
+      it.addRule(".pun {color:#666600}")
+      it.addRule(".pln {color:#000000}")
+      it.addRule(".tag {color:#000088}")
+      it.addRule(".atn {color:#660066}")
+      it.addRule(".atv {color:#008800}")
+      it.addRule(".dec {color:#660066}")
     }
 
     val htmlEditorKit = HTMLEditorKit()
@@ -59,15 +59,15 @@ class MainPanel : JPanel(BorderLayout()) {
       }
     }
 
-    val box = Box.createHorizontalBox().apply {
-      setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
-      add(Box.createHorizontalGlue())
-      add(button)
+    val box = Box.createHorizontalBox().also {
+      it.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
+      it.add(Box.createHorizontalGlue())
+      it.add(button)
     }
 
-    val p = JPanel(GridLayout(2, 1)).apply {
-      add(JScrollPane(editor1))
-      add(JScrollPane(editor2))
+    val p = JPanel(GridLayout(2, 1)).also {
+      it.add(JScrollPane(editor1))
+      it.add(JScrollPane(editor2))
     }
     add(p)
     add(box, BorderLayout.SOUTH)

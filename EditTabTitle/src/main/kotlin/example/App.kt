@@ -11,11 +11,11 @@ class MainPanel : JPanel(BorderLayout()) {
   init {
     val a = JTextArea(INFO)
     a.setEditable(false)
-    val tabbedPane = EditableTabbedPane().apply {
-      addTab("Shortcuts", JScrollPane(a))
-      addTab("badfasdf", JLabel("bbbbbbbbbbbafasdf"))
-      addTab("cccc", JScrollPane(JTree()))
-      addTab("ddddddd", JButton("dadfasdfasd"))
+    val tabbedPane = EditableTabbedPane().also {
+      it.addTab("Shortcuts", JScrollPane(a))
+      it.addTab("badfasdf", JLabel("bbbbbbbbbbbafasdf"))
+      it.addTab("cccc", JScrollPane(JTree()))
+      it.addTab("ddddddd", JButton("dadfasdfasd"))
     }
     add(tabbedPane)
     setPreferredSize(Dimension(320, 240))

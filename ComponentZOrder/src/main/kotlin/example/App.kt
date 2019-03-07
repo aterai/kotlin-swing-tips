@@ -5,17 +5,15 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    // val p1 = new JPanel().apply {
-    // val p1 = Box.createHorizontalBox().apply {
-    val p1 = JPanel(GridLayout(1, 0, 2, 2)).apply {
-      setBorder(BorderFactory.createTitledBorder("GridLayout"))
-      add(JScrollPane(JTable(6, 3)))
-      add(JScrollPane(JTree()))
-      add(JScrollPane(JTextArea("JTextArea")))
+    val p1 = JPanel(GridLayout(1, 0, 2, 2)).also {
+      it.setBorder(BorderFactory.createTitledBorder("GridLayout"))
+      it.add(JScrollPane(JTable(6, 3)))
+      it.add(JScrollPane(JTree()))
+      it.add(JScrollPane(JTextArea("JTextArea")))
     }
 
-    val p2 = JPanel(GridBagLayout()).apply {
-      setBorder(BorderFactory.createTitledBorder("GridBagLayout"))
+    val p2 = JPanel(GridBagLayout()).also {
+      it.setBorder(BorderFactory.createTitledBorder("GridBagLayout"))
       val c = GridBagConstraints()
       c.insets = Insets(5, 5, 5, 0)
       c.fill = GridBagConstraints.BOTH
@@ -23,11 +21,11 @@ class MainPanel : JPanel(BorderLayout()) {
       c.weighty = 1.0
       // c.gridx = RELATIVE
       // c.gridx = 0
-      add(JScrollPane(JTable(6, 3)), c)
+      it.add(JScrollPane(JTable(6, 3)), c)
       // c.gridx = 1
-      add(JScrollPane(JTree()), c)
+      it.add(JScrollPane(JTree()), c)
       // c.gridx = 2
-      add(JScrollPane(JTextArea("JTextArea")), c)
+      it.add(JScrollPane(JTextArea("JTextArea")), c)
     }
 
     val button = JButton("rotate")
@@ -39,9 +37,9 @@ class MainPanel : JPanel(BorderLayout()) {
       revalidate()
     }
 
-    add(JPanel(GridLayout(2, 1)).apply {
-      add(p1)
-      add(p2)
+    add(JPanel(GridLayout(2, 1)).also {
+      it.add(p1)
+      it.add(p2)
     })
     add(button, BorderLayout.SOUTH)
     setPreferredSize(Dimension(320, 240))

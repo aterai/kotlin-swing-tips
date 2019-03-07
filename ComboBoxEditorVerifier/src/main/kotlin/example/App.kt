@@ -55,12 +55,12 @@ class MainPanel : JPanel(BorderLayout()) {
     })
     comboBox.addPopupMenuListener(SelectItemMenuListener())
 
-    val p = JPanel(GridLayout(5, 1)).apply {
-      add(JLabel("Default:", SwingConstants.LEFT))
-      add(combo)
-      add(Box.createVerticalStrut(15))
-      add(JLabel("6 >= str.length()", SwingConstants.LEFT))
-      add(comboBox)
+    val p = JPanel(GridLayout(5, 1)).also {
+      it.add(JLabel("Default:", SwingConstants.LEFT))
+      it.add(combo)
+      it.add(Box.createVerticalStrut(15))
+      it.add(JLabel("6 >= str.length()", SwingConstants.LEFT))
+      it.add(comboBox)
     }
     add(p, BorderLayout.NORTH)
     setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20))
@@ -114,8 +114,9 @@ internal class ValidationLayerUI<V : JTextComponent> : LayerUI<V>() {
 }
 
 internal class LengthInputVerifier : InputVerifier() {
-  override fun verify(c: JComponent) = (c as? JComboBox<*>)
-    ?.let { MAX_LEN - (it.getEditor().getItem()?.toString()?.length ?: 0) >= 0 } ?: false
+  override fun verify(c: JComponent) = (c as? JComboBox<*>)?.let {
+    MAX_LEN - (it.getEditor().getItem()?.toString()?.length ?: 0) >= 0
+  } ?: false
 
   companion object {
     private const val MAX_LEN = 6

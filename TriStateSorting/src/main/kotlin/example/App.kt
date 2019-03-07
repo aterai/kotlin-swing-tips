@@ -45,19 +45,19 @@ class MainPanel : JPanel(BorderLayout()) {
     }
     table.setRowSorter(sorter)
 
-    table.getColumnModel().getColumn(0).apply {
-      setMinWidth(60)
-      setMaxWidth(60)
-      setResizable(false)
+    table.getColumnModel().getColumn(0).also {
+      it.setMinWidth(60)
+      it.setMaxWidth(60)
+      it.setResizable(false)
     }
 
-    ButtonGroup().apply {
-      add(check1)
-      add(check2)
+    ButtonGroup().also {
+      it.add(check1)
+      it.add(check2)
     }
-    add(JPanel(GridLayout(2, 1)).apply {
-      add(check1)
-      add(check2)
+    add(JPanel(GridLayout(2, 1)).also {
+      it.add(check1)
+      it.add(check2)
     }, BorderLayout.NORTH)
     add(JScrollPane(table))
     setPreferredSize(Dimension(320, 240))

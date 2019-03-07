@@ -5,10 +5,10 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    val sp = JSplitPane().apply {
-      setLeftComponent(JScrollPane(JTree()))
-      setRightComponent(JScrollPane(JTable(6, 3)))
-      setResizeWeight(.4)
+    val sp = JSplitPane().also {
+      it.setLeftComponent(JScrollPane(JTree()))
+      it.setRightComponent(JScrollPane(JTable(6, 3)))
+      it.setResizeWeight(.4)
     }
 
     val check = JCheckBox("Keep DividerLocation", true)
@@ -35,11 +35,11 @@ class MainPanel : JPanel(BorderLayout()) {
       }
     }
 
-    val box = Box.createHorizontalBox().apply {
-      setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5))
-      add(check)
-      add(Box.createHorizontalGlue())
-      add(button)
+    val box = Box.createHorizontalBox().also {
+      it.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5))
+      it.add(check)
+      it.add(Box.createHorizontalGlue())
+      it.add(button)
     }
 
     add(sp)

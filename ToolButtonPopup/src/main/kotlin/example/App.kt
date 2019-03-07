@@ -8,28 +8,28 @@ import javax.swing.event.PopupMenuListener
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    val pop1 = JPopupMenu().apply {
-      add("000")
-      add("11111")
-      addSeparator()
-      add("2222222")
+    val pop1 = JPopupMenu().also {
+      it.add("000")
+      it.add("11111")
+      it.addSeparator()
+      it.add("2222222")
     }
-    val pop2 = JPopupMenu().apply {
-      add("33333333333333")
-      addSeparator()
-      add("4444")
-      add("5555555555")
+    val pop2 = JPopupMenu().also {
+      it.add("33333333333333")
+      it.addSeparator()
+      it.add("4444")
+      it.add("5555555555")
     }
     val url = javaClass.getResource("ei0021-16.png")
     val rigid = Box.createRigidArea(Dimension(5, 5))
 
-    val toolbar = JToolBar("toolbar").apply {
-      add(makeButton(pop1, "Text", null))
-      add(rigid)
-      add(makeButton(pop2, "", ImageIcon(url)))
-      add(rigid)
-      add(makeButton(pop2, "Icon+Text", ImageIcon(url)))
-      add(Box.createGlue())
+    val toolbar = JToolBar("toolbar").also {
+      it.add(makeButton(pop1, "Text", null))
+      it.add(rigid)
+      it.add(makeButton(pop2, "", ImageIcon(url)))
+      it.add(rigid)
+      it.add(makeButton(pop2, "Icon+Text", ImageIcon(url)))
+      it.add(Box.createGlue())
     }
     add(toolbar, BorderLayout.NORTH)
     setPreferredSize(Dimension(320, 240))

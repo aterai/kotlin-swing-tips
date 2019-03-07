@@ -67,11 +67,11 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   init {
-    add(JTabbedPane().apply {
+    add(JTabbedPane().also {
       val p = JPanel()
       p.add(checkBox)
-      addTab("JCheckBox", p)
-      addTab("JTableHeader", JScrollPane(table))
+      it.addTab("JCheckBox", p)
+      it.addTab("JTableHeader", JScrollPane(table))
     })
     setPreferredSize(Dimension(320, 240))
   }

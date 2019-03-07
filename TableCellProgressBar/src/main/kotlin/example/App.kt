@@ -32,10 +32,10 @@ class MainPanel : JPanel(BorderLayout()) {
     table.setShowGrid(false)
     table.putClientProperty("terminateEditOnFocusLost", java.lang.Boolean.TRUE)
 
-    table.getColumnModel().getColumn(0).apply {
-      setMaxWidth(60)
-      setMinWidth(60)
-      setResizable(false)
+    table.getColumnModel().getColumn(0).also {
+      it.setMaxWidth(60)
+      it.setMinWidth(60)
+      it.setResizable(false)
     }
     table.getColumnModel().getColumn(2).setCellRenderer(ProgressRenderer())
 

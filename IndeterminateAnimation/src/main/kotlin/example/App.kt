@@ -42,12 +42,12 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  private fun makePanel(cmp: Component) = JPanel(GridBagLayout()).apply {
+  private fun makePanel(cmp: Component) = JPanel(GridBagLayout()).also {
     val c = GridBagConstraints()
     c.fill = GridBagConstraints.HORIZONTAL
     c.insets = Insets(5, 5, 5, 5)
     c.weightx = 1.0
-    add(cmp, c)
+    it.add(cmp, c)
   }
 }
 

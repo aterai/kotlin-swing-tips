@@ -129,8 +129,8 @@ internal class GroupableTableHeaderUI : BasicTableHeaderUI() {
       var groupHeight = 0
       for (o in (header as GroupableTableHeader).getColumnGroups(tc)) {
         val cg = o as ColumnGroup
-        val groupRect = h.get(cg) ?: Rectangle(cellRect.getLocation(), cg.getSize(header)).apply {
-          h.put(cg, this)
+        val groupRect = h.get(cg) ?: Rectangle(cellRect.getLocation(), cg.getSize(header)).also {
+          h.put(cg, it)
         }
         paintCellGroup(g, groupRect, cg)
         groupHeight += groupRect.height

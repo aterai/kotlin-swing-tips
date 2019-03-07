@@ -15,16 +15,16 @@ class MainPanel : JPanel(BorderLayout()) {
     val combo = JComboBox<String>(model)
     combo.setPrototypeDisplayValue("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMM")
 
-    val p = JPanel().apply {
-      add(spinner)
-      add(combo)
+    val p = JPanel().also {
+      it.add(spinner)
+      it.add(combo)
     }
 
-    val tabbedPane = JTabbedPane().apply {
-      addTab("ComboBox.timeFactor", p)
-      addTab("List.timeFactor", JScrollPane(JList<String>(model)))
-      addTab("Table.timeFactor(JFileChooser)", JFileChooser())
-      addTab("Tree.timeFactor", JScrollPane(JTree()))
+    val tabbedPane = JTabbedPane().also {
+      it.addTab("ComboBox.timeFactor", p)
+      it.addTab("List.timeFactor", JScrollPane(JList<String>(model)))
+      it.addTab("Table.timeFactor(JFileChooser)", JFileChooser())
+      it.addTab("Tree.timeFactor", JScrollPane(JTree()))
     }
 
     add(tabbedPane)
@@ -65,10 +65,10 @@ class MainPanel : JPanel(BorderLayout()) {
 internal object LookAndFeelUtil {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.getName()
 
-  fun createLookAndFeelMenu() = JMenu("LookAndFeel").apply {
+  fun createLookAndFeelMenu() = JMenu("LookAndFeel").also {
     val lafRadioGroup = ButtonGroup()
     for (lafInfo in UIManager.getInstalledLookAndFeels()) {
-      add(createLookAndFeelItem(lafInfo.getName(), lafInfo.getClassName(), lafRadioGroup))
+      it.add(createLookAndFeelItem(lafInfo.getName(), lafInfo.getClassName(), lafRadioGroup))
     }
   }
 

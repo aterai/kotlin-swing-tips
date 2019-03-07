@@ -65,14 +65,14 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).apply {
-    setBorder(BorderFactory.createTitledBorder(title))
-    add(c)
+  private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
+    it.setBorder(BorderFactory.createTitledBorder(title))
+    it.add(c)
   }
 
-  private fun makeModel(start: Int) = DefaultComboBoxModel<String>().apply {
+  private fun makeModel(start: Int) = DefaultComboBoxModel<String>().also {
     for (i in start until start + 5) {
-      addElement("item: $i")
+      it.addElement("item: $i")
     }
   }
 }

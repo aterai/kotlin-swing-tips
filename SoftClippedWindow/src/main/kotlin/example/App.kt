@@ -26,24 +26,24 @@ class MainPanel : JPanel() {
     val button1 = JButton("clipped window")
     button1.addActionListener { e ->
       val b = e.getSource() as? AbstractButton ?: return@addActionListener
-      JWindow().apply {
-        getContentPane().add(makePanel(image))
-        setShape(shape)
-        pack()
-        setLocationRelativeTo(b.getRootPane())
-        setVisible(true)
+      JWindow().also {
+        it.getContentPane().add(makePanel(image))
+        it.setShape(shape)
+        it.pack()
+        it.setLocationRelativeTo(b.getRootPane())
+        it.setVisible(true)
       }
     }
 
     val button2 = JButton("soft clipped window")
     button2.addActionListener { e ->
       val b = e.getSource() as? AbstractButton ?: return@addActionListener
-      JWindow().apply {
-        getContentPane().add(makePanel(clippedImage))
-        setBackground(Color(0x0, true))
-        pack()
-        setLocationRelativeTo(b.getRootPane())
-        setVisible(true)
+      JWindow().also {
+        it.getContentPane().add(makePanel(clippedImage))
+        it.setBackground(Color(0x0, true))
+        it.pack()
+        it.setLocationRelativeTo(b.getRootPane())
+        it.setVisible(true)
       }
     }
 
@@ -75,11 +75,11 @@ class MainPanel : JPanel() {
       window.dispose()
     }
 
-    val box = Box.createHorizontalBox().apply {
-      setBorder(BorderFactory.createEmptyBorder(2, 0, 10, 30))
-      add(Box.createHorizontalGlue())
-      add(close)
-      // setOpaque(false)
+    val box = Box.createHorizontalBox().also {
+      it.setBorder(BorderFactory.createEmptyBorder(2, 0, 10, 30))
+      it.add(Box.createHorizontalGlue())
+      it.add(close)
+      // it.setOpaque(false)
     }
 
     panel.add(box, BorderLayout.SOUTH)

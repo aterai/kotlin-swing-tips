@@ -22,23 +22,23 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    val sub = DnDTabbedPane().apply {
-      setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT)
-      addTab("Title aa", JLabel("aaa"))
-      addTab("Title bb", JScrollPane(JTree()))
-      addTab("Title cc", JScrollPane(JTextArea("123412341234\n46746745\n245342\n")))
+    val sub = DnDTabbedPane().also {
+      it.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT)
+      it.addTab("Title aa", JLabel("aaa"))
+      it.addTab("Title bb", JScrollPane(JTree()))
+      it.addTab("Title cc", JScrollPane(JTextArea("123412341234\n46746745\n245342\n")))
     }
 
-    val tab = DnDTabbedPane().apply {
-      setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT)
-      addTab("JTree 00", JScrollPane(JTree()))
-      addTab("JLabel 01", JLabel("Test"))
-      addTab("JTable 02", JScrollPane(JTable(20, 3)))
-      addTab("JTextArea 03", JScrollPane(JTextArea("asfasdfasfasdfas\nafasfasdfaf\n")))
-      addTab("JLabel 04", JLabel("<html>asfasfdasdfasdfsa<br>asfdd13412341234123446745fgh"))
-      addTab("null 05", null)
-      addTab("JTabbedPane 06", sub)
-      addTab("Title 000000000000000007", JScrollPane(JTree()))
+    val tab = DnDTabbedPane().also {
+      it.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT)
+      it.addTab("JTree 00", JScrollPane(JTree()))
+      it.addTab("JLabel 01", JLabel("Test"))
+      it.addTab("JTable 02", JScrollPane(JTable(20, 3)))
+      it.addTab("JTextArea 03", JScrollPane(JTextArea("asfasdfasfasdfas\nafasfasdfaf\n")))
+      it.addTab("JLabel 04", JLabel("<html>asfasfdasdfasdfsa<br>asfdd13412341234123446745fgh"))
+      it.addTab("null 05", null)
+      it.addTab("JTabbedPane 06", sub)
+      it.addTab("Title 000000000000000007", JScrollPane(JTree()))
     }
 
     add(makeCheckBoxPanel(tab), BorderLayout.NORTH)
@@ -61,19 +61,19 @@ class MainPanel : JPanel(BorderLayout()) {
     val debugp = JCheckBox("Debug Paint", true)
     debugp.addActionListener { tab.isPaintScrollArea = debugp.isSelected() }
 
-    val p1 = JPanel(FlowLayout(FlowLayout.LEFT)).apply {
-      add(gcheck)
-      add(tcheck)
+    val p1 = JPanel(FlowLayout(FlowLayout.LEFT)).also {
+      it.add(gcheck)
+      it.add(tcheck)
     }
 
-    val p2 = JPanel(FlowLayout(FlowLayout.LEFT)).apply {
-      add(scheck)
-      add(debugp)
+    val p2 = JPanel(FlowLayout(FlowLayout.LEFT)).also {
+      it.add(scheck)
+      it.add(debugp)
     }
 
-    return JPanel(BorderLayout()).apply {
-      add(p1, BorderLayout.NORTH)
-      add(p2, BorderLayout.SOUTH)
+    return JPanel(BorderLayout()).also {
+      it.add(p1, BorderLayout.NORTH)
+      it.add(p2, BorderLayout.SOUTH)
     }
   }
 }

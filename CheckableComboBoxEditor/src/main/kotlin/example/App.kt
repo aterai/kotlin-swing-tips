@@ -29,9 +29,9 @@ class MainPanel : JPanel(BorderLayout()) {
       ComboItem(false, true, "22222"),
       ComboItem(false, false, "33333"))
 
-  private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).apply {
-    setBorder(BorderFactory.createTitledBorder(title))
-    add(c)
+  private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
+    it.setBorder(BorderFactory.createTitledBorder(title))
+    it.add(c)
   }
 }
 

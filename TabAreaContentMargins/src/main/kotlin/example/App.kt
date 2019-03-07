@@ -17,11 +17,11 @@ class MainPanel : JPanel(GridLayout(2, 1)) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  private fun makeTabbedPane() = JTabbedPane().apply {
-    // setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-    addTab("JTree", JScrollPane(JTree()))
-    addTab("JSplitPane", JSplitPane())
-    addTab("JTextArea", JScrollPane(JTextArea()))
+  private fun makeTabbedPane() = JTabbedPane().also {
+    // it.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+    it.addTab("JTree", JScrollPane(JTree()))
+    it.addTab("JSplitPane", JSplitPane())
+    it.addTab("JTextArea", JScrollPane(JTextArea()))
   }
 }
 

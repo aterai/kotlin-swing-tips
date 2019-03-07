@@ -54,13 +54,13 @@ class MainPanel : JPanel(GridLayout(2, 2, 4, 4)) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  private fun makeStarRatingPanel(title: String, label: LevelBar) = JPanel(FlowLayout(FlowLayout.LEFT)).apply {
+  private fun makeStarRatingPanel(title: String, label: LevelBar) = JPanel(FlowLayout(FlowLayout.LEFT)).also {
     val button = JButton("clear")
     button.addActionListener { label.clear() }
 
     setBorder(BorderFactory.createTitledBorder(title))
-    add(button)
-    add(label)
+    it.add(button)
+    it.add(label)
   }
 
   private fun makeStarImageIcon(ip: ImageProducer, filter: ImageFilter): ImageIcon {

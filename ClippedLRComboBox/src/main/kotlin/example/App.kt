@@ -41,16 +41,16 @@ class MainPanel : JPanel(BorderLayout()) {
     return box
   }
 
-  private fun makeModel() = DefaultComboBoxModel<PairItem>().apply {
+  private fun makeModel() = DefaultComboBoxModel<PairItem>().also {
     val name = "loooooooooooooooooooooooooooooooooong.1234567890.1234567890"
-    addElement(PairItem("asdfasdf", "846876"))
-    addElement(PairItem("bxcvzx", "asdfaasdfasdfasdfasdfsasd"))
-    addElement(PairItem(name, "qwerqwer.1234567890.1234567890.1234567890"))
-    addElement(PairItem("14234125", "64345424543523452345234523684"))
-    addElement(PairItem("hjklhjk", "addElement"))
-    addElement(PairItem("aaaaaaaa", "ddd"))
-    addElement(PairItem("bbbbbbbb", "eeeee"))
-    addElement(PairItem("cccccccc", "fffffff"))
+    it.addElement(PairItem("asdfasdf", "846876"))
+    it.addElement(PairItem("bxcvzx", "asdfaasdfasdfasdfasdfsasd"))
+    it.addElement(PairItem(name, "qwerqwer.1234567890.1234567890.1234567890"))
+    it.addElement(PairItem("14234125", "64345424543523452345234523684"))
+    it.addElement(PairItem("hjklhjk", "addElement"))
+    it.addElement(PairItem("aaaaaaaa", "ddd"))
+    it.addElement(PairItem("bbbbbbbb", "eeeee"))
+    it.addElement(PairItem("cccccccc", "fffffff"))
   }
 }
 
@@ -78,7 +78,7 @@ internal class MultiColumnCellRenderer : ListCellRenderer<PairItem> {
     //   val d = super.getPreferredSize()
     //   return Dimension(0, d.height)
     // }
-    override fun getPreferredSize() = super.getPreferredSize().apply { width = 0 }
+    override fun getPreferredSize() = super.getPreferredSize().also { it.width = 0 }
 
     override fun updateUI() {
       super.updateUI()

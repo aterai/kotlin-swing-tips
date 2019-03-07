@@ -13,11 +13,11 @@ class MainPanel : JPanel(GridLayout(2, 1, 5, 5)) {
     val logger = JTextArea()
     logger.setEditable(false)
 
-    val editor = JEditorPane().apply {
+    val editor = JEditorPane().also {
       val kit = HTMLEditorKit()
       kit.setAutoFormSubmission(false)
-      setEditorKit(kit)
-      setEditable(false)
+      it.setEditorKit(kit)
+      it.setEditable(false)
     }
 
     val form = "<form action='#'><input type='text' name='word' value='12345' /></form>"

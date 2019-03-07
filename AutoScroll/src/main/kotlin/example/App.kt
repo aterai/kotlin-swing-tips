@@ -11,16 +11,16 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 class MainPanel : JPanel(BorderLayout()) {
   init {
     val label = JLabel(ImageIcon(javaClass.getResource("CRW_3857_JFR.jpg")))
-    val scroll = JScrollPane(label).apply {
-      setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER)
-      setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
+    val scroll = JScrollPane(label).also {
+      it.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER)
+      it.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
     }
 
     val listener = ViewportDragScrollListener()
-    scroll.getViewport().apply {
-      addMouseMotionListener(listener)
-      addMouseListener(listener)
-      addHierarchyListener(listener)
+    scroll.getViewport().also {
+      it.addMouseMotionListener(listener)
+      it.addMouseListener(listener)
+      it.addHierarchyListener(listener)
     }
 
     add(scroll)

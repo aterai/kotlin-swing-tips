@@ -19,14 +19,14 @@ import javax.swing.event.DocumentListener
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    add(JTabbedPane().apply {
-      val l = TabTitleEditListener(this)
-      addChangeListener(l)
-      addMouseListener(l)
-      addTab("Shortcuts", JTextArea(INFO))
-      addTab("badfasdfa", JLabel("bbbbbbbbbbbafasdf"))
-      addTab("cccc", JScrollPane(JTree()))
-      addTab("dddddddd", JLabel("dadfasdfasd"))
+    add(JTabbedPane().also {
+      val l = TabTitleEditListener(it)
+      it.addChangeListener(l)
+      it.addMouseListener(l)
+      it.addTab("Shortcuts", JTextArea(INFO))
+      it.addTab("badfasdfa", JLabel("bbbbbbbbbbbafasdf"))
+      it.addTab("cccc", JScrollPane(JTree()))
+      it.addTab("dddddddd", JLabel("dadfasdfasd"))
     })
     setPreferredSize(Dimension(320, 240))
   }

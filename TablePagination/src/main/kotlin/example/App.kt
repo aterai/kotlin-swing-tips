@@ -129,11 +129,11 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   private fun makePrevNextRadioButton(itemsPerPage: Int, target: Int, title: String, flag: Boolean) =
-      JRadioButton(title).apply {
-        setForeground(Color.BLUE)
-        setUI(linkViewRadioButtonUI)
-        setEnabled(flag)
-        addActionListener { initLinkBox(itemsPerPage, target) }
+      JRadioButton(title).also {
+        it.setForeground(Color.BLUE)
+        it.setUI(linkViewRadioButtonUI)
+        it.setEnabled(flag)
+        it.addActionListener { initLinkBox(itemsPerPage, target) }
       }
 
   companion object {
