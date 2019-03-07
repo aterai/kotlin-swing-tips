@@ -185,18 +185,15 @@ internal class PrintGlassPane : JDesktopPane() {
   override fun setVisible(isVisible: Boolean) {
     val oldVisible = isVisible()
     super.setVisible(isVisible)
-    getRootPane()?.takeIf { isVisible() != oldVisible }?.let {
-      it.getLayeredPane().setVisible(!isVisible)
-    }
+    getRootPane()?.takeIf { isVisible() != oldVisible }?.getLayeredPane()?.setVisible(!isVisible)
   }
 
   protected override fun paintComponent(g: Graphics) {
-    getRootPane()?.let {
-      // http://weblogs.java.net/blog/alexfromsun/archive/2008/01/disabling_swing.html
-      // it is important to call print() instead of paint() here
-      // because print() doesn't affect the frame's double buffer
-      it.getLayeredPane().print(g)
-    }
+    // http://weblogs.java.net/blog/alexfromsun/archive/2008/01/disabling_swing.html
+    // it is important to call print() instead of paint() here
+    // because print() doesn't affect the frame's double buffer
+    getRootPane()?.getLayeredPane()?.print(g)
+
     val g2 = g.create() as Graphics2D
     g2.setPaint(TEXTURE)
     g2.fillRect(0, 0, getWidth(), getHeight())
