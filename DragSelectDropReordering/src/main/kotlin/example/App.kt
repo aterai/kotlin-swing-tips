@@ -217,7 +217,7 @@ internal class ListItemListCellRenderer : ListCellRenderer<ListItem> {
 internal class ListItemTransferHandler : TransferHandler() {
   val localObjectFlavor: DataFlavor
   // var indices: IntArray? = null
-  val selectedIndices = ArrayList<Int>()
+  val selectedIndices = mutableListOf<Int>()
   var addIndex = -1 // Location where items were added
   var addCount: Int = 0 // Number of items added.
 
