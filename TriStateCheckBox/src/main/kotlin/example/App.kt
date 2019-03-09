@@ -27,6 +27,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
   private val table = object : JTable(model) {
     protected val CHECKBOX_COLUMN = 0
+    @Transient
     protected var handler: HeaderCheckBoxHandler? = null
 
     override fun updateUI() {
@@ -37,7 +38,6 @@ class MainPanel : JPanel(BorderLayout()) {
       setSelectionBackground(ColorUIResource(Color.RED))
       getTableHeader()?.removeMouseListener(handler)
       getModel()?.removeTableModelListener(handler)
-
       super.updateUI()
 
       getModel()?.also {
@@ -45,14 +45,13 @@ class MainPanel : JPanel(BorderLayout()) {
           val r = getDefaultRenderer(it.getColumnClass(i)) as? Component ?: continue
           SwingUtilities.updateComponentTreeUI(r)
         }
-        getColumnModel()?.getColumn(CHECKBOX_COLUMN)?.apply {
-          setHeaderRenderer(HeaderRenderer())
-          setHeaderValue(Status.INDETERMINATE)
-        }
-
         handler = HeaderCheckBoxHandler(this, CHECKBOX_COLUMN)
         it.addTableModelListener(handler)
         getTableHeader().addMouseListener(handler)
+      }
+      getColumnModel().getColumn(CHECKBOX_COLUMN).also {
+        it.setHeaderRenderer(HeaderRenderer())
+        it.setHeaderValue(Status.INDETERMINATE)
       }
     }
 
@@ -99,15 +98,6 @@ internal class HeaderRenderer : TableCellRenderer {
     }
     l.setIcon(ComponentIcon(check))
     l.setText(null) // XXX: Nimbus???
-    // System.out.println("getHeaderRect: " + table.getTableHeader().getHeaderRect(column));
-    // System.out.println("getPreferredSize: " + l.getPreferredSize());
-    // System.out.println("getMaximunSize: " + l.getMaximumSize());
-    // System.out.println("----");
-    // if (l.getPreferredSize().height > 1000) { // XXX: Nimbus???
-    //   System.out.println(l.getPreferredSize().height);
-    //   Rectangle rect = table.getTableHeader().getHeaderRect(column);
-    //   l.setPreferredSize(new Dimension(0, rect.height));
-    // }
     return l
   }
 }
@@ -195,8 +185,8 @@ internal class IndeterminateIcon : Icon {
 
   companion object {
     private val FOREGROUND = Color.BLACK // TEST: UIManager.getColor("CheckBox.foreground");
-    private val SIDE_MARGIN = 4
-    private val HEIGHT = 2
+    private const val SIDE_MARGIN = 4
+    private const val HEIGHT = 2
   }
 }
 
