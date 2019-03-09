@@ -24,7 +24,7 @@ class MainPanel : JPanel(BorderLayout()) {
       private fun getScrollableViewport(): Component? {
         var cmp: Component? = null
         for (c in getComponents()) {
-          if ("TabbedPane.scrollableViewport".equals(c.getName())) {
+          if ("TabbedPane.scrollableViewport" == c.getName()) {
             cmp = c
             break
           }

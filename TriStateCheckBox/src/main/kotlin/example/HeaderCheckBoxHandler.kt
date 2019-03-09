@@ -1,7 +1,3 @@
-// -*- mode:java; encoding:utf-8 -*-
-// vim:set fileencoding=utf-8:
-// @homepage@
-
 package example
 
 import java.awt.event.MouseAdapter
@@ -31,7 +27,7 @@ class HeaderCheckBoxHandler(val table: JTable, val targetColumnIndex: Int) : Mou
   }
 
   private fun fireUpdateEvent(m: DefaultTableModel, column: TableColumn, status: Any): Boolean {
-    return if (Status.INDETERMINATE.equals(status)) {
+    return if (Status.INDETERMINATE == status) {
       val l = (m.getDataVector() as Vector<*>).stream()
           .map { v -> (v as Vector<*>).get(targetColumnIndex) as Boolean }
           .distinct()
@@ -49,30 +45,6 @@ class HeaderCheckBoxHandler(val table: JTable, val targetColumnIndex: Int) : Mou
       true
     }
   }
-  // private boolean fireUpdateEvent(TableModel m, TableColumn column, Object status) {
-  //   if (Status.INDETERMINATE.equals(status)) {
-  //     boolean selected = true;
-  //     boolean deselected = true;
-  //     for (int i = 0; i < m.getRowCount(); i++) {
-  //       Boolean b = (Boolean) m.getValueAt(i, targetColumnIndex);
-  //       selected &= b;
-  //       deselected &= !b;
-  //       if (selected == deselected) {
-  //         return false;
-  //       }
-  //     }
-  //     if (deselected) {
-  //       column.setHeaderValue(Status.DESELECTED);
-  //     } else if (selected) {
-  //       column.setHeaderValue(Status.SELECTED);
-  //     } else {
-  //       return false;
-  //     }
-  //   } else {
-  //     column.setHeaderValue(Status.INDETERMINATE);
-  //   }
-  //   return true;
-  // }
 
   override fun mouseClicked(e: MouseEvent) {
     val header = e.getComponent() as JTableHeader
@@ -84,7 +56,7 @@ class HeaderCheckBoxHandler(val table: JTable, val targetColumnIndex: Int) : Mou
     if (mci == targetColumnIndex && m.getRowCount() > 0) {
       val column = columnModel.getColumn(vci)
       val v = column.getHeaderValue()
-      val b = Status.DESELECTED.equals(v)
+      val b = Status.DESELECTED == v
       for (i in 0 until m.getRowCount()) {
         m.setValueAt(b, i, mci)
       }

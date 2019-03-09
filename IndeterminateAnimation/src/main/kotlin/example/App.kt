@@ -104,11 +104,9 @@ internal class ProgressListener(private val progressBar: JProgressBar) : Propert
   }
 
   override fun propertyChange(e: PropertyChangeEvent) {
-    val strPropertyName = e.getPropertyName()
-    if ("progress".equals(strPropertyName)) {
+    if (e.getPropertyName() == "progress") {
       progressBar.setIndeterminate(false)
-      val progress = e.getNewValue() as Int
-      progressBar.setValue(progress)
+      progressBar.setValue(e.getNewValue() as Int)
     }
   }
 }

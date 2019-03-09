@@ -136,7 +136,7 @@ class HeaderCheckBoxHandler(val table: JTable, val targetColumnIndex: Int) : Mou
   }
 
   private fun fireUpdateEvent(m: DefaultTableModel, column: TableColumn, status: Any): Boolean {
-    return if (Status.INDETERMINATE.equals(status)) {
+    return if (Status.INDETERMINATE == status) {
       val l = (m.getDataVector() as Vector<*>).stream()
           .map { v -> (v as Vector<*>).get(targetColumnIndex) as Boolean }
           .distinct()

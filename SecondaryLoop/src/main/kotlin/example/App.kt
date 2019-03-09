@@ -103,16 +103,15 @@ internal class DisableInputLayerUI<V : JComponent> : LayerUI<V>() {
     (e as? InputEvent)?.takeIf { running }?.consume()
   }
 
-  override fun applyPropertyChange(pce: PropertyChangeEvent, l: JLayer<out V>) {
-    val cmd = pce.getPropertyName()
-    if (CMD_REPAINT.equals(cmd)) {
-      l.getGlassPane().setVisible(pce.getNewValue() as Boolean)
+  override fun applyPropertyChange(e: PropertyChangeEvent, l: JLayer<out V>) {
+    if (e.getPropertyName() == CMD_REPAINT) {
+      l.getGlassPane().setVisible(e.getNewValue() as Boolean)
       l.repaint()
     }
   }
 
   companion object {
-    private val CMD_REPAINT = "repaint"
+    private const val CMD_REPAINT= "repaint"
   }
 }
 
