@@ -41,7 +41,7 @@ class MainPanel : JPanel(BorderLayout()) {
     alignmentsChoices.addItemListener { e ->
       if (e.getStateChange() == ItemEvent.SELECTED) {
         val ba = e.getItem() as ButtonAlignments
-        buttons.forEach({ b -> b.setAlignmentY(ba.alingment) })
+        buttons.forEach { it.setAlignmentY(ba.alingment) }
         box.revalidate()
       }
     }
