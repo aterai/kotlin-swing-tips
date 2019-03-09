@@ -111,7 +111,7 @@ internal class DisableInputLayerUI<V : JComponent> : LayerUI<V>() {
   }
 
   companion object {
-    private const val CMD_REPAINT= "repaint"
+    private const val CMD_REPAINT = "repaint"
   }
 }
 
