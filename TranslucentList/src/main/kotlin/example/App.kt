@@ -216,7 +216,9 @@ internal class ListItemListCellRenderer : ListCellRenderer<ListItem> {
 internal class ListItem(val title: String, val icon: Icon)
 
 internal object TextureUtils {
-  private val DEFAULT_COLOR = Color(-0x11cdcdce, true)
+  // private val DEFAULT_COLOR = Color(0xEE_32_32_32, true)
+  // private val DEFAULT_COLOR = Color(-0x11CDCDCE, true)
+  private val DEFAULT_COLOR = Color(0x32, 0x32, 0x32, 0xEE)
 
   @JvmOverloads
   fun createCheckerTexture(cs: Int, color: Color = DEFAULT_COLOR): TexturePaint {
