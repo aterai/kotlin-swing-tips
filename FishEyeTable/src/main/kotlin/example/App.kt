@@ -171,10 +171,11 @@ internal class FishEyeTable(m: TableModel) : JTable(m) {
     val rd2 = (fishEyeRowList.size - 1) / 2
     val rowCount = getModel().getRowCount()
     val viewRc = getViewableColoredRowCount(ccRow)
-    var viewH = 0
-    for (i in 0 until viewRc) {
-      viewH += fishEyeRowList[i].height
-    }
+    // var viewH = 0
+    // for (i in 0 until viewRc) {
+    //   viewH += fishEyeRowList[i].height
+    // }
+    val viewH = fishEyeRowList.map { it.height }.sum()
     val restRc = rowCount - viewRc
     val restH = height - viewH
     val restRh = Math.max(1, restH / restRc)
