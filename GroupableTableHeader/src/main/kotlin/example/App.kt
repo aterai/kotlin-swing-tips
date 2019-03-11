@@ -106,13 +106,13 @@ internal class GroupableTableHeader(model: TableColumnModel) : JTableHeader(mode
  * @author aterai aterai@outlook.com
  */
 internal class GroupableTableHeaderUI : BasicTableHeaderUI() {
-  override fun paint(g: Graphics?, c: JComponent?) {
-    val clip = g!!.getClipBounds()
-    val left = clip.getLocation()
-    val right = Point(clip.x + clip.width - 1, clip.y)
+  override fun paint(g: Graphics, c: JComponent?) {
+    val clip = g.getClipBounds()
+    // val left = clip.getLocation()
+    // val right = Point(clip.x + clip.width - 1, clip.y)
     val cm = header.getColumnModel()
-    val colMin = header.columnAtPoint(left)
-    val colMax = header.columnAtPoint(right)
+    val colMin = header.columnAtPoint(clip.getLocation())
+    val colMax = header.columnAtPoint(Point(clip.x + clip.width - 1, clip.y))
 
     val cellRect = header.getHeaderRect(colMin)
     val headerY = cellRect.y
