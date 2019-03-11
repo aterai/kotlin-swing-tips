@@ -120,7 +120,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   private fun prettify(engine: ScriptEngine?, src: String) = try {
-    ((engine as Invocable).invokeMethod(engine?.get("window"), "prettyPrintOne", src) as String)
+    (engine as? Invocable)?.invokeMethod(engine.get("window"), "prettyPrintOne", src) as String
   } catch (ex: ScriptException) {
     ex.printStackTrace()
     ""
