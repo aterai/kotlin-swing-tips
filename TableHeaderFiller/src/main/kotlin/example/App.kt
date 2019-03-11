@@ -6,8 +6,6 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.LayerUI
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.JTableHeader
-import javax.swing.table.TableColumn
-import javax.swing.table.TableColumnModel
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
