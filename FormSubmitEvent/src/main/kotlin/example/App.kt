@@ -23,20 +23,19 @@ class MainPanel : JPanel(GridLayout(2, 1, 5, 5)) {
     val form = "<form action='#'><input type='text' name='word' value='12345' /></form>"
     editor.setText("<html><h1>Form test</h1>$form")
     editor.addHyperlinkListener { e ->
-      if (e is FormSubmitEvent) {
-        val data = (e as FormSubmitEvent).getData()
-        logger.append(data + "\n")
+      // if (e is FormSubmitEvent) {
+      val data = (e as? FormSubmitEvent)?.getData() ?: return@addHyperlinkListener
+      logger.append(data + "\n")
 
-        val charset = Charset.defaultCharset().toString()
-        logger.append("default charset: $charset\n")
+      val charset = Charset.defaultCharset().toString()
+      logger.append("default charset: $charset\n")
 
-        try {
-          val txt = URLDecoder.decode(data, charset)
-          logger.append(txt + "\n")
-        } catch (ex: UnsupportedEncodingException) {
-          ex.printStackTrace()
-          logger.append(ex.message + "\n")
-        }
+      try {
+        val txt = URLDecoder.decode(data, charset)
+        logger.append(txt + "\n")
+      } catch (ex: UnsupportedEncodingException) {
+        ex.printStackTrace()
+        logger.append(ex.message + "\n")
       }
     }
 
