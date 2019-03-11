@@ -207,7 +207,7 @@ internal class TablePopupMenu : JPopupMenu() {
 
   override fun show(c: Component, x: Int, y: Int) {
     val table = c as? JTable ?: return
-    delete.setEnabled(c.getSelectedRowCount() > 0)
+    delete.setEnabled(table.getSelectedRowCount() > 0)
     super.show(c, x, y)
   }
 }
