@@ -124,26 +124,24 @@ internal class LengthInputVerifier : InputVerifier() {
 }
 
 fun main() {
-  EventQueue.invokeLater(object : Runnable {
-    override fun run() {
-      try {
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
-      } catch (ex: ClassNotFoundException) {
-        ex.printStackTrace()
-      } catch (ex: InstantiationException) {
-        ex.printStackTrace()
-      } catch (ex: IllegalAccessException) {
-        ex.printStackTrace()
-      } catch (ex: UnsupportedLookAndFeelException) {
-        ex.printStackTrace()
-      }
-      JFrame().apply {
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-        getContentPane().add(MainPanel())
-        pack()
-        setLocationRelativeTo(null)
-        setVisible(true)
-      }
+  EventQueue.invokeLater {
+    try {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+    } catch (ex: ClassNotFoundException) {
+      ex.printStackTrace()
+    } catch (ex: InstantiationException) {
+      ex.printStackTrace()
+    } catch (ex: IllegalAccessException) {
+      ex.printStackTrace()
+    } catch (ex: UnsupportedLookAndFeelException) {
+      ex.printStackTrace()
     }
-  })
+    JFrame().apply {
+      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+      getContentPane().add(MainPanel())
+      pack()
+      setLocationRelativeTo(null)
+      setVisible(true)
+    }
+  }
 }
