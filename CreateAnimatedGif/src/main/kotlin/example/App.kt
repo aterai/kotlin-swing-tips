@@ -108,11 +108,11 @@ class MainPanel : JPanel(BorderLayout()) {
     g2.fillRect(0, 0, WIDTH, HEIGHT)
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     g2.setPaint(ellipseColor)
-    val size = list.size.toFloat()
-    list.forEach { s ->
-      val alpha = (list.indexOf(s) + 1) / size
+    val size = list.size
+    list.forEachIndexed { idx, shape ->
+      val alpha = (idx + 1f) / size
       g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha))
-      g2.fill(s)
+      g2.fill(shape)
     }
     g2.dispose()
   }
