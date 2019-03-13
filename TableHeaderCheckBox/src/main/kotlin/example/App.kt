@@ -91,23 +91,13 @@ internal class HeaderRenderer : TableCellRenderer {
   ): Component {
     if (value is Status) {
       when (value) {
-        Status.SELECTED -> {
-          check.setSelected(true)
-          check.setEnabled(true)
-        }
-        Status.DESELECTED -> {
-          check.setSelected(false)
-          check.setEnabled(true)
-        }
-        Status.INDETERMINATE -> {
-          check.setSelected(true)
-          check.setEnabled(false)
-        }
-        else -> throw AssertionError("Unknown Status")
+        Status.SELECTED -> updateCheckBox(true, true)
+        Status.DESELECTED -> updateCheckBox(false, true)
+        Status.INDETERMINATE -> updateCheckBox(true, false)
+        // else -> throw AssertionError("Unknown Status")
       }
     } else {
-      check.setSelected(true)
-      check.setEnabled(false)
+      updateCheckBox(true, false)
     }
     check.setOpaque(false)
     check.setFont(table.getFont())
@@ -117,6 +107,11 @@ internal class HeaderRenderer : TableCellRenderer {
     l.setIcon(ComponentIcon(label))
     l.setText(null) // XXX: Nimbus???
     return l
+  }
+
+  private fun updateCheckBox(isSelected: Boolean, isEnabled: Boolean) {
+    check.setSelected(isSelected)
+    check.setEnabled(isEnabled)
   }
 }
 
