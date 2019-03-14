@@ -89,15 +89,13 @@ open class ClippedTitleTabbedPane : JTabbedPane {
   private fun updateAllTabWidth(tabWidth: Int, gap: Int) {
     val dim = Dimension()
     var rest = gap
-    (0 until getTabCount()).forEach { i ->
-      val tab: Component? = getTabComponentAt(i)
-      if (tab is JComponent) {
-        val a = if (i == getTabCount() - 1) rest else 1
-        val w = if (rest > 0) tabWidth + a else tabWidth
-        dim.setSize(w, tab.getPreferredSize().height)
-        tab.setPreferredSize(dim)
-        rest -= a
-      }
+    for (i in 0 until getTabCount()) {
+      val tab = getTabComponentAt(i) as? JComponent ?: continue
+      val a = if (i == getTabCount() - 1) rest else 1
+      val w = if (rest > 0) tabWidth + a else tabWidth
+      dim.setSize(w, tab.getPreferredSize().height)
+      tab.setPreferredSize(dim)
+      rest -= a
     }
   }
 }
@@ -128,8 +126,8 @@ internal class TextOverflowFadeLabel(text: String) : JLabel(text) {
     g2.setFont(g.getFont())
     g2.setPaint(getForeground())
 
-    val frc = g2.getFontRenderContext()
-    val tl = TextLayout(getText(), getFont(), frc)
+    // val frc = g2.getFontRenderContext()
+    val tl = TextLayout(getText(), getFont(), g2.getFontRenderContext())
     val baseline = getBaseline(w, h).toFloat()
     val fx = i.left.toFloat()
 
