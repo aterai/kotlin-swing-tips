@@ -13,7 +13,8 @@ class MainPanel : JPanel(BorderLayout()) {
   private val box = Box.createHorizontalBox()
   private val columnNames = arrayOf("Year", "String", "Comment")
   private val model = object : DefaultTableModel(null, columnNames) {
-    override fun getColumnClass(column: Int) = if (column == 0) java.lang.Integer::class.java else Any::class.java
+    // override fun getColumnClass(column: Int) = if (column == 0) java.lang.Integer::class.java else Any::class.java
+    override fun getColumnClass(column: Int) = if (column == 0) Int::class.java else Any::class.java
   }
   @Transient
   private val sorter = TableRowSorter<DefaultTableModel>(model)
