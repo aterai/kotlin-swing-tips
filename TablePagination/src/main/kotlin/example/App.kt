@@ -62,6 +62,8 @@ class MainPanel : JPanel(BorderLayout()) {
     }
     if (startPageIndex < endPageIndex) {
       initLinkBoxLayout(itemsPerPage, currentPageIndex, maxPageIndex, startPageIndex, endPageIndex)
+      box.revalidate()
+      box.repaint()
     }
   }
 
@@ -98,9 +100,6 @@ class MainPanel : JPanel(BorderLayout()) {
     val l = makePrevNextRadioButton(itemsPerPage, maxPageIndex, ">|", currentPageIndex < maxPageIndex)
     box.add(l)
     bg.add(l)
-
-    box.revalidate()
-    box.repaint()
   }
 
   private fun makeRadioButton(itemsPerPage: Int, current: Int, target: Int): JRadioButton {
