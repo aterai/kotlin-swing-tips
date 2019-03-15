@@ -38,7 +38,7 @@ class MainPanel : JPanel() {
     val add = 2 * Math.PI / (vc * 2)
     val p = Path2D.Double()
     p.moveTo(ora * 1.0, ora * 0.0)
-    (0 until vc * 2 - 1).forEach { i ->
+    for (i in 0 until vc * 2 - 1) {
       agl += add
       val r = if (i % 2 == 0) ira else ora
       p.lineTo(r * Math.cos(agl), r * Math.sin(agl))
