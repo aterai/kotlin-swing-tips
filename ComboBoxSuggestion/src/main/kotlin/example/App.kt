@@ -109,15 +109,14 @@ internal class ComboKeyHandler(private val comboBox: JComboBox<String>) : KeyAda
         shouldHide = true
       }
       KeyEvent.VK_ESCAPE -> shouldHide = true
-      else -> {
-      }
+      // else -> {}
     }
   }
 
   private fun setSuggestionModel(comboBox: JComboBox<String>, mdl: ComboBoxModel<String>, str: String) {
     comboBox.setModel(mdl)
     comboBox.setSelectedIndex(-1)
-    (comboBox.getEditor().getEditorComponent() as JTextField).setText(str)
+    (comboBox.getEditor().getEditorComponent() as? JTextField)?.setText(str)
   }
 
   private fun getSuggestedModel(list: List<String>, text: String): ComboBoxModel<String> {
