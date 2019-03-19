@@ -125,11 +125,6 @@ internal class RadialGradientButton(title: String) : JButton(title) {
     val g2 = g.create() as Graphics2D
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
 
-    // Stunning hover effects with CSS variables ? Prototypr
-    // https://blog.prototypr.io/stunning-hover-effects-with-css-variables-f855e7b95330
-    val c1 = Color(0x00_F7_23_59, true)
-    val c2 = Color(0x64_44_05_F7, true)
-
     // g2.setComposite(AlphaComposite.Clear);
     // g2.setPaint(new Color(0x0, true));
     // g2.fillRect(0, 0, getWidth(), getHeight());
@@ -140,13 +135,13 @@ internal class RadialGradientButton(title: String) : JButton(title) {
 
     if (radius > 0) {
       val r2 = radius + radius
-      val dist = floatArrayOf(0f, 1f)
-      val colors = arrayOf<Color>(c2, c1)
-      g2.setPaint(RadialGradientPaint(pt, r2.toFloat(), dist, colors))
-      val oval = Ellipse2D.Float(pt.x - radius, pt.y - radius, r2, r2)
+      // Stunning hover effects with CSS variables ? Prototypr
+      // https://blog.prototypr.io/stunning-hover-effects-with-css-variables-f855e7b95330
+      val colors = arrayOf<Color>(Color(0x64_44_05_F7, true), Color(0x00_F7_23_59, true))
+      g2.setPaint(RadialGradientPaint(pt, r2.toFloat(), floatArrayOf(0f, 1f), colors))
       g2.setComposite(AlphaComposite.SrcAtop)
       g2.setClip(shape)
-      g2.fill(oval)
+      g2.fill(Ellipse2D.Float(pt.x - radius, pt.y - radius, r2, r2))
     }
     g2.dispose()
 
@@ -221,20 +216,18 @@ internal class RadialGradientPaintButton(title: String) : JButton(title) {
   protected fun update() {
     if (getBounds() != base) {
       base = getBounds()
-      val w = getWidth()
-      val h = getHeight()
-      if (w > 0 && h > 0) {
-        buf = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+      if (getWidth() > 0 && getHeight() > 0) {
+        buf = BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB)
       }
-      shape = RoundRectangle2D.Float(0f, 0f, w - 1f, h - 1f, ARC_WIDTH, ARC_HEIGHT)
+      shape = RoundRectangle2D.Float(0f, 0f, getWidth() - 1f, getHeight() - 1f, ARC_WIDTH, ARC_HEIGHT)
     }
     // if (buf == null) {
     //   return
     // }
     val g2 = buf?.createGraphics() ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    val c1 = Color(0x00_F7_23_59, true)
-    val c2 = Color(0x64_44_05_F7, true)
+    // val c1 = Color(0x00_F7_23_59, true)
+    // val c2 = Color(0x64_44_05_F7, true)
 
     g2.setComposite(AlphaComposite.Clear)
     g2.fillRect(0, 0, getWidth(), getHeight())
@@ -245,13 +238,12 @@ internal class RadialGradientPaintButton(title: String) : JButton(title) {
 
     if (radius > 0) {
       val r2 = radius + radius
-      val dist = floatArrayOf(0f, 1f)
-      val colors = arrayOf<Color>(c2, c1)
-      g2.setPaint(RadialGradientPaint(pt, r2.toFloat(), dist, colors))
-      val oval = Ellipse2D.Float(pt.x - radius, pt.y - radius, r2, r2)
+      // val colors = arrayOf<Color>(c2, c1)
+      val colors = arrayOf<Color>(Color(0x64_44_05_F7, true), Color(0x00_F7_23_59, true))
+      g2.setPaint(RadialGradientPaint(pt, r2.toFloat(), floatArrayOf(0f, 1f), colors))
       g2.setComposite(AlphaComposite.SrcAtop)
       // g2.setClip(shape)
-      g2.fill(oval)
+      g2.fill(Ellipse2D.Float(pt.x - radius, pt.y - radius, r2, r2))
     }
     g2.dispose()
   }

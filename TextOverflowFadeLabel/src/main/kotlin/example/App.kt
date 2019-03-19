@@ -75,8 +75,7 @@ internal class TextOverflowFadeLabel(text: String) : JLabel(text) {
     g2.setFont(g.getFont())
     g2.setPaint(getForeground())
 
-    val frc = g2.getFontRenderContext()
-    val tl = TextLayout(getText(), getFont(), frc)
+    val tl = TextLayout(getText(), getFont(), g2.getFontRenderContext())
     val baseline = getBaseline(w, h).toFloat()
     val fx = i.left.toFloat()
 
@@ -122,8 +121,7 @@ internal class FadingOutLabel(text: String) : JLabel(text) {
     val g2 = img.createGraphics()
     g2.setFont(getFont())
     g2.setPaint(getForeground())
-    val frc = g2.getFontRenderContext()
-    val tl = TextLayout(getText(), getFont(), frc)
+    val tl = TextLayout(getText(), getFont(), g2.getFontRenderContext())
     val baseline = getBaseline(d.width, d.height).toFloat()
     tl.draw(g2, getInsets().left.toFloat(), baseline)
     g2.dispose()
