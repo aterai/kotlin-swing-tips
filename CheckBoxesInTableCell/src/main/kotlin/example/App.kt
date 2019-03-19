@@ -56,9 +56,9 @@ open class CheckBoxesPanel : JPanel() {
     }
   }
 
-  fun updateButtons(v: Any) {
+  fun updateButtons(value: Any?) {
     initButtons()
-    val i = v as? Int ?: 0
+    val i = value as? Int ?: 0
     buttons[0].setSelected(i and (1 shl 2) != 0)
     buttons[1].setSelected(i and (1 shl 1) != 0)
     buttons[2].setSelected(i and (1 shl 0) != 0)
@@ -80,7 +80,7 @@ class CheckBoxesRenderer : CheckBoxesPanel(), TableCellRenderer {
 
   override fun getTableCellRendererComponent(
     table: JTable,
-    value: Any,
+    value: Any?,
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
@@ -117,7 +117,7 @@ class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
 
   override fun getTableCellEditorComponent(
     table: JTable,
-    value: Any,
+    value: Any?,
     isSelected: Boolean,
     row: Int,
     column: Int

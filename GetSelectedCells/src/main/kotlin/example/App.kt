@@ -147,7 +147,7 @@ internal class BooleanEditor : AbstractCellEditor(), TableCellEditor {
 
   override fun getTableCellEditorComponent(
     table: JTable,
-    value: Any,
+    value: Any?,
     isSelected: Boolean,
     row: Int,
     column: Int

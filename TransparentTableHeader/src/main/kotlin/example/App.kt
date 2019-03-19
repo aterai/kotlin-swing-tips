@@ -144,8 +144,8 @@ internal class TransparentHeader : JLabel(), TableCellRenderer {
 
 internal class TranslucentObjectRenderer : DefaultTableCellRenderer() {
   override fun getTableCellRendererComponent(
-    table: JTable?,
-    value: Any,
+    table: JTable,
+    value: Any?,
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
@@ -169,7 +169,7 @@ internal class TranslucentBooleanRenderer : JCheckBox(), TableCellRenderer {
 
   override fun getTableCellRendererComponent(
     table: JTable,
-    value: Any,
+    value: Any?,
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,

@@ -83,7 +83,7 @@ internal class HeaderRenderer : TableCellRenderer {
 
   override fun getTableCellRendererComponent(
     table: JTable,
-    value: Any,
+    value: Any?,
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,

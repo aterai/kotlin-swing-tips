@@ -192,8 +192,8 @@ internal class ProgressRenderer : DefaultTableCellRenderer() {
   private val renderer: JPanel? = JPanel(BorderLayout())
 
   override fun getTableCellRendererComponent(
-    table: JTable?,
-    value: Any,
+    table: JTable,
+    value: Any?,
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
