@@ -40,17 +40,17 @@ internal class RadialGradientButton(title: String) : JButton(title) {
   private val timer1 = Timer(10, null)
   private val timer2 = Timer(10, null)
   private val pt = Point()
-  private var radius: Int = 0
+  private var radius = 0f
   protected var shape: Shape? = null
   protected var base: Rectangle? = null
 
   init {
     timer1.addActionListener {
-      radius = Math.min(200, radius + DELTA)
+      radius = Math.min(200f, radius + DELTA)
       repaint()
     }
     timer2.addActionListener {
-      radius = Math.max(0, radius - DELTA)
+      radius = Math.max(0f, radius - DELTA)
       repaint()
     }
     val listener = object : MouseAdapter() {
@@ -95,13 +95,13 @@ internal class RadialGradientButton(title: String) : JButton(title) {
   protected fun update() {
     if (getBounds() != base) {
       base = getBounds()
-      shape = RoundRectangle2D.Double(0.0, 0.0, getWidth() - 1.0, getHeight() - 1.0, ARC_WIDTH, ARC_HEIGHT)
+      shape = RoundRectangle2D.Float(0f, 0f, getWidth() - 1f, getHeight() - 1f, ARC_WIDTH, ARC_HEIGHT)
     }
   }
 
   override fun contains(x: Int, y: Int): Boolean {
     update()
-    // return Optional.ofNullable(shape).map { s -> s.contains(x.toDouble(), y.toDouble()) }.orElse(false)
+    // return Optional.ofNullable(shape).map { s -> s.contains(x.toFloat(), y.toDouble()) }.orElse(false)
     return shape?.let { it.contains(x.toDouble(), y.toDouble()) } ?: false
   }
 
@@ -135,21 +135,15 @@ internal class RadialGradientButton(title: String) : JButton(title) {
     // g2.fillRect(0, 0, getWidth(), getHeight());
 
     g2.setComposite(AlphaComposite.Src)
-    if (getModel().isArmed()) {
-      g2.setPaint(Color(0xFF_AA_AA))
-    } else {
-      g2.setPaint(Color(0xF7_23_59))
-    }
+    g2.setPaint(Color(if (getModel().isArmed()) 0xFF_AA_AA else 0xF7_23_59))
     g2.fill(shape)
 
     if (radius > 0) {
-      val cx = pt.x - radius
-      val cy = pt.y - radius
       val r2 = radius + radius
       val dist = floatArrayOf(0f, 1f)
       val colors = arrayOf<Color>(c2, c1)
       g2.setPaint(RadialGradientPaint(pt, r2.toFloat(), dist, colors))
-      val oval = Ellipse2D.Double(cx.toDouble(), cy.toDouble(), r2.toDouble(), r2.toDouble())
+      val oval = Ellipse2D.Float(pt.x - radius, pt.y - radius, r2, r2)
       g2.setComposite(AlphaComposite.SrcAtop)
       g2.setClip(shape)
       g2.fill(oval)
@@ -160,9 +154,9 @@ internal class RadialGradientButton(title: String) : JButton(title) {
   }
 
   companion object {
-    private const val DELTA = 10
-    private const val ARC_WIDTH = 32.0
-    private const val ARC_HEIGHT = 32.0
+    private const val DELTA = 10f
+    private const val ARC_WIDTH = 32f
+    private const val ARC_HEIGHT = 32f
   }
 }
 
@@ -170,7 +164,7 @@ internal class RadialGradientPaintButton(title: String) : JButton(title) {
   private val timer1 = Timer(10, null)
   private val timer2 = Timer(10, null)
   private val pt = Point()
-  private var radius: Int = 0
+  private var radius = 0f
   protected var shape: Shape? = null
   protected var base: Rectangle? = null
   @Transient
@@ -178,11 +172,11 @@ internal class RadialGradientPaintButton(title: String) : JButton(title) {
 
   init {
     timer1.addActionListener {
-      radius = Math.min(200, radius + DELTA)
+      radius = Math.min(200f, radius + DELTA)
       repaint()
     }
     timer2.addActionListener {
-      radius = Math.max(0, radius - DELTA)
+      radius = Math.max(0f, radius - DELTA)
       repaint()
     }
     val listener = object : MouseAdapter() {
@@ -232,7 +226,7 @@ internal class RadialGradientPaintButton(title: String) : JButton(title) {
       if (w > 0 && h > 0) {
         buf = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
       }
-      shape = RoundRectangle2D.Double(0.0, 0.0, getWidth() - 1.0, getHeight() - 1.0, ARC_WIDTH, ARC_HEIGHT)
+      shape = RoundRectangle2D.Float(0f, 0f, w - 1f, h - 1f, ARC_WIDTH, ARC_HEIGHT)
     }
     // if (buf == null) {
     //   return
@@ -246,21 +240,15 @@ internal class RadialGradientPaintButton(title: String) : JButton(title) {
     g2.fillRect(0, 0, getWidth(), getHeight())
 
     g2.setComposite(AlphaComposite.Src)
-    if (getModel().isArmed()) {
-      g2.setPaint(Color(0xFF_AA_AA))
-    } else {
-      g2.setPaint(Color(0xF7_23_59))
-    }
+    g2.setPaint(Color(if (getModel().isArmed()) 0xFF_AA_AA else 0xF7_23_59))
     g2.fill(shape)
 
     if (radius > 0) {
-      val cx = pt.x - radius
-      val cy = pt.y - radius
       val r2 = radius + radius
       val dist = floatArrayOf(0f, 1f)
       val colors = arrayOf<Color>(c2, c1)
       g2.setPaint(RadialGradientPaint(pt, r2.toFloat(), dist, colors))
-      val oval = Ellipse2D.Double(cx.toDouble(), cy.toDouble(), r2.toDouble(), r2.toDouble())
+      val oval = Ellipse2D.Float(pt.x - radius, pt.y - radius, r2, r2)
       g2.setComposite(AlphaComposite.SrcAtop)
       // g2.setClip(shape)
       g2.fill(oval)
@@ -281,9 +269,9 @@ internal class RadialGradientPaintButton(title: String) : JButton(title) {
   }
 
   companion object {
-    private const val DELTA = 10
-    private const val ARC_WIDTH = 32.0
-    private const val ARC_HEIGHT = 32.0
+    private const val DELTA = 10f
+    private const val ARC_WIDTH = 32f
+    private const val ARC_HEIGHT = 32f
   }
 }
 
