@@ -104,12 +104,7 @@ internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMot
         this, getFontMetrics(getFont()), value?.toString() ?: "", getIcon(),
         getVerticalAlignment(), getHorizontalAlignment(), getVerticalTextPosition(), getHorizontalTextPosition(),
         lrect, irect, trect, getIconTextGap())
-
-    if (isRolloverCell(table, row, column)) {
-      setText("<html><u><font color='blue'>$str")
-    } else {
-      setText(str)
-    }
+    setText(if (isRolloverCell(table, row, column)) "<html><u><font color='blue'>$str" else str)
     return this
   }
 

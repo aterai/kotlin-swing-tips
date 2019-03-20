@@ -11,6 +11,7 @@ import javax.swing.text.View
 
 class MainPanel : JPanel(BorderLayout()) {
   private val box = Box.createHorizontalBox()
+  private val group = ButtonGroup()
   private val columnNames = arrayOf("Year", "String", "Comment")
   private val model = object : DefaultTableModel(null, columnNames) {
     // override fun getColumnClass(column: Int) = if (column == 0) java.lang.Integer::class.java else Any::class.java
@@ -75,31 +76,26 @@ class MainPanel : JPanel(BorderLayout()) {
     endPageIndex: Int
   ) {
     box.removeAll()
+    group.getElements().toList().forEach { group.remove(it) }
 
-    val bg = ButtonGroup()
-    val f = makePrevNextRadioButton(itemsPerPage, 1, "|<", currentPageIndex > 1)
-    box.add(f)
-    bg.add(f)
+    addButton(makePrevNextRadioButton(itemsPerPage, 1, "|<", currentPageIndex > 1))
 
-    val p = makePrevNextRadioButton(itemsPerPage, currentPageIndex - 1, "<", currentPageIndex > 1)
-    box.add(p)
-    bg.add(p)
+    addButton(makePrevNextRadioButton(itemsPerPage, currentPageIndex - 1, "<", currentPageIndex > 1))
 
     box.add(Box.createHorizontalGlue())
     for (i in startPageIndex..endPageIndex) {
-      val c = makeRadioButton(itemsPerPage, currentPageIndex, i)
-      box.add(c)
-      bg.add(c)
+      addButton(makeRadioButton(itemsPerPage, currentPageIndex, i))
     }
     box.add(Box.createHorizontalGlue())
 
-    val n = makePrevNextRadioButton(itemsPerPage, currentPageIndex + 1, ">", currentPageIndex < maxPageIndex)
-    box.add(n)
-    bg.add(n)
+    addButton(makePrevNextRadioButton(itemsPerPage, currentPageIndex + 1, ">", currentPageIndex < maxPageIndex))
 
-    val l = makePrevNextRadioButton(itemsPerPage, maxPageIndex, ">|", currentPageIndex < maxPageIndex)
-    box.add(l)
-    bg.add(l)
+    addButton(makePrevNextRadioButton(itemsPerPage, maxPageIndex, ">|", currentPageIndex < maxPageIndex))
+  }
+
+  private fun addButton(button: AbstractButton) {
+    box.add(button)
+    group.add(button)
   }
 
   private fun makeRadioButton(itemsPerPage: Int, current: Int, target: Int): JRadioButton {
