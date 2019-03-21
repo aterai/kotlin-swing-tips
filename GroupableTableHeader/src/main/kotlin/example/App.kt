@@ -4,8 +4,6 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.io.IOException
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
-import java.util.ArrayList
-import java.util.concurrent.ConcurrentHashMap
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicTableHeaderUI
 import javax.swing.table.DefaultTableModel
@@ -57,7 +55,7 @@ class MainPanel : JPanel(BorderLayout()) {
  * @author aterai aterai@outlook.com
  */
 internal class GroupableTableHeader(model: TableColumnModel) : JTableHeader(model) {
-  private val columnGroups = ArrayList<ColumnGroup>()
+  private val columnGroups = mutableListOf<ColumnGroup>()
 
   override fun updateUI() {
     super.updateUI()
@@ -78,7 +76,7 @@ internal class GroupableTableHeader(model: TableColumnModel) : JTableHeader(mode
 
   fun getColumnGroups(col: TableColumn): List<*> {
     for (cg in columnGroups) {
-      val groups = cg.getColumnGroupList(col, ArrayList<Any>())
+      val groups = cg.getColumnGroupList(col, mutableListOf<Any>())
       if (!groups.isEmpty()) {
         return groups
       }
@@ -118,7 +116,7 @@ internal class GroupableTableHeaderUI : BasicTableHeaderUI() {
     val headerY = cellRect.y
     val headerHeight = cellRect.height
 
-    val h = ConcurrentHashMap<ColumnGroup, Rectangle>()
+    val map = hashMapOf<ColumnGroup, Rectangle>()
     // int columnMargin = header.getColumnModel().getColumnMargin();
     // int columnWidth;
     for (column in colMin..colMax) {
@@ -129,8 +127,8 @@ internal class GroupableTableHeaderUI : BasicTableHeaderUI() {
       var groupHeight = 0
       for (o in (header as GroupableTableHeader).getColumnGroups(tc)) {
         val cg = o as ColumnGroup
-        val groupRect = h.get(cg) ?: Rectangle(cellRect.getLocation(), cg.getSize(header)).also {
-          h.put(cg, it)
+        val groupRect = map.get(cg) ?: Rectangle(cellRect.getLocation(), cg.getSize(header)).also {
+          map.put(cg, it)
         }
         paintCellGroup(g, groupRect, cg)
         groupHeight += groupRect.height
@@ -201,7 +199,7 @@ internal class GroupableTableHeaderUI : BasicTableHeaderUI() {
  * @author aterai aterai@outlook.com
  */
 internal class ColumnGroup(private val text: String) {
-  private val list = ArrayList<Any>()
+  private val list = mutableListOf<Any>()
   val headerValue = text
 
   /**
@@ -219,7 +217,7 @@ internal class ColumnGroup(private val text: String) {
     // }
     // for (obj in list) {
     //   val cg = obj as? ColumnGroup ?: continue
-    //   val groups = cg.getColumnGroupList(c, ArrayList<Any>(g))
+    //   val groups = cg.getColumnGroupList(c, MutableList<Any>(g))
     //   if (!groups.isEmpty()) {
     //     return groups
     //   }
