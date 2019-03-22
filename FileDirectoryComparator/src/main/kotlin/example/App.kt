@@ -133,9 +133,11 @@ internal class FileTransferHandler : TransferHandler() {
 }
 
 open class DefaultFileComparator(protected val column: Int) : Comparator<File>, Serializable {
-  override fun compare(a: File, b: File): Int = when (column) {
+  override fun compare(a: File, b: File) = when (column) {
     0 -> a.getName().compareTo(b.getName(), ignoreCase = true)
-    1 -> java.lang.Long.compare(a.length(), b.length())
+    // 1 -> java.lang.Long.compare(a.length(), b.length())
+    // 1 -> if (a.length() < b.length()) -1 else if (a.length() == b.length()) 0 else 1
+    1 -> a.length().compareTo(b.length())
     else -> a.getAbsolutePath().compareTo(b.getAbsolutePath(), ignoreCase = true)
   }
 
