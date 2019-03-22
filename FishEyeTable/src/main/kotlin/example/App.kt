@@ -147,11 +147,8 @@ internal class FishEyeTable(m: TableModel) : JTable(m) {
         index++
       }
     }
-    c.setBackground(color)
     c.setFont(font)
-    if (isRowSelected(row)) {
-      c.setBackground(getSelectionBackground())
-    }
+    c.setBackground(if (isRowSelected(row)) getSelectionBackground() else color)
     return c
   }
 

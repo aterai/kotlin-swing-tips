@@ -89,20 +89,17 @@ internal class HeaderRenderer : TableCellRenderer {
     row: Int,
     column: Int
   ): Component {
-    if (value is Status) {
-      when (value) {
-        Status.SELECTED -> updateCheckBox(true, true)
-        Status.DESELECTED -> updateCheckBox(false, true)
-        Status.INDETERMINATE -> updateCheckBox(true, false)
-        // else -> throw AssertionError("Unknown Status")
-      }
-    } else {
-      updateCheckBox(true, false)
+    val status = value as? Status ?: Status.INDETERMINATE
+    when (status) {
+      Status.SELECTED -> updateCheckBox(true, true)
+      Status.DESELECTED -> updateCheckBox(false, true)
+      Status.INDETERMINATE -> updateCheckBox(true, false)
+      // else -> throw AssertionError("Unknown Status")
     }
     check.setOpaque(false)
     check.setFont(table.getFont())
     val r = table.getTableHeader().getDefaultRenderer()
-    val l = r.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column) as JLabel
+    val l = r.getTableCellRendererComponent(table, status, isSelected, hasFocus, row, column) as JLabel
     label.setIcon(ComponentIcon(check))
     l.setIcon(ComponentIcon(label))
     l.setText(null) // XXX: Nimbus???
