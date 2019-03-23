@@ -11,10 +11,10 @@ class MainPanel : JPanel(BorderLayout()) {
 
   init {
     val tabbedPane = JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT)
-    icons.forEach { s ->
-      val icon = ImageIcon(javaClass.getResource(s))
-      val label = ShrinkLabel(s, icon)
-      tabbedPane.addTab(s, icon, JLabel(s), s)
+    icons.forEach { path ->
+      val icon = ImageIcon(javaClass.getResource(path))
+      val label = ShrinkLabel(path, icon)
+      tabbedPane.addTab(path, icon, JLabel(path), path)
       tabbedPane.setTabComponentAt(tabbedPane.getTabCount() - 1, label)
     }
     updateTabWidth(tabbedPane)
