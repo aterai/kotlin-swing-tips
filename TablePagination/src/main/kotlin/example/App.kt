@@ -155,10 +155,7 @@ internal class LinkViewRadioButtonUI : BasicRadioButtonUI() {
 
     val i = c.getInsets()
     c.getSize(size)
-    viewRect.x = i.left
-    viewRect.y = i.top
-    viewRect.width = size.width - i.right - viewRect.x
-    viewRect.height = size.height - i.bottom - viewRect.y
+    viewRect.setBounds(i.left, i.top, size.width - i.right - i.left, size.height - i.top - i.bottom)
     iconRect.setBounds(0, 0, 0, 0)
     textRect.setBounds(0, 0, 0, 0)
 
