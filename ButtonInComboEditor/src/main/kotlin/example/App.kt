@@ -177,12 +177,10 @@ internal class SiteComboBoxLayout(private val favicon: JLabel?, private val feed
     }
 
     // Feed Icon JButton
-    feedButton?.also {
-      if (it.isVisible()) {
-        val feedInsets = it.getInsets()
-        feedWidth = it.getPreferredSize().width + feedInsets.left + feedInsets.right
-        it.setBounds(width - ins.right - feedWidth - arrowWidth, ins.top, feedWidth, arrowHeight)
-      }
+    feedButton?.takeIf { it.isVisible() }?.also {
+      val feedInsets = it.getInsets()
+      feedWidth = it.getPreferredSize().width + feedInsets.left + feedInsets.right
+      it.setBounds(width - ins.right - feedWidth - arrowWidth, ins.top, feedWidth, arrowHeight)
     }
 
     // JComboBox Editor
