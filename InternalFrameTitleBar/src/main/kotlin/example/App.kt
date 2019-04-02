@@ -11,50 +11,50 @@ import javax.swing.plaf.basic.BasicInternalFrameUI
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    add(makeUI())
+    val closeButton = JButton("close")
+    closeButton.addActionListener { e ->
+      val c = e.getSource() as? Component ?: return@addActionListener
+      (SwingUtilities.getRoot(c) as? Window)?.let {
+        it.dispatchEvent(WindowEvent(it, WindowEvent.WINDOW_CLOSING))
+      }
+    }
+
+    val p = JPanel(BorderLayout())
+    p.add(JScrollPane(JTree()))
+    p.add(closeButton, BorderLayout.SOUTH)
+
+    val internal = makeInternalFrame()
+    internal.getContentPane().add(p)
+    internal.setVisible(true)
+
+    add(internal)
     setOpaque(false)
     setPreferredSize(Dimension(320, 240))
   }
 
-  companion object {
-    private fun makeUI(): Component {
-      val internal = JInternalFrame("Title")
-      val ui = internal.getUI() as BasicInternalFrameUI
-      val title = ui.getNorthPane()
-      for (l in title.getListeners(MouseMotionListener::class.java)) {
-        title.removeMouseMotionListener(l)
-      }
-      val dwl = DragWindowListener()
-      title.addMouseListener(dwl)
-      title.addMouseMotionListener(dwl)
-
-      val closeButton = JButton("close")
-      closeButton.addActionListener { e ->
-        val c = e.getSource() as? Component ?: return@addActionListener
-        (SwingUtilities.getRoot(c) as? Window)?.let {
-          it.dispatchEvent(WindowEvent(it, WindowEvent.WINDOW_CLOSING))
-        }
-      }
-
-      val p = JPanel(BorderLayout())
-      p.add(JScrollPane(JTree()))
-      p.add(closeButton, BorderLayout.SOUTH)
-      internal.getContentPane().add(p)
-      internal.setVisible(true)
-
-      val focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager()
-      focusManager.addPropertyChangeListener { e ->
-        val prop = e.getPropertyName()
-        if ("activeWindow" == prop) {
-          try {
-            internal.setSelected(e.getNewValue() != null)
-          } catch (ex: PropertyVetoException) {
-            throw IllegalStateException(ex)
-          }
-        }
-      }
-      return internal
+  private fun makeInternalFrame(): JInternalFrame {
+    val internal = JInternalFrame("Title")
+    val ui = internal.getUI() as BasicInternalFrameUI
+    val title = ui.getNorthPane()
+    for (l in title.getListeners(MouseMotionListener::class.java)) {
+      title.removeMouseMotionListener(l)
     }
+    val dwl = DragWindowListener()
+    title.addMouseListener(dwl)
+    title.addMouseMotionListener(dwl)
+
+    val focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager()
+    focusManager.addPropertyChangeListener { e ->
+      val prop = e.getPropertyName()
+      if ("activeWindow" == prop) {
+        try {
+          internal.setSelected(e.getNewValue() != null)
+        } catch (ex: PropertyVetoException) {
+          throw IllegalStateException(ex)
+        }
+      }
+    }
+    return internal
   }
 }
 
