@@ -33,7 +33,7 @@ class MainPanel : JPanel(BorderLayout()) {
     progress2.setFont(progress2.getFont().deriveFont(24f))
 
     val slider = JSlider()
-    slider.putClientProperty("Slider.paintThumbArrowShape", java.lang.Boolean.TRUE)
+    slider.putClientProperty("Slider.paintThumbArrowShape", true)
     progress1.setModel(slider.getModel())
 
     val button = JButton("start")

@@ -25,7 +25,7 @@ class MainPanel : JPanel(BorderLayout()) {
         getColumnModel().getColumn(1).setCellEditor(CheckBoxesEditor())
       }
     }
-    table.putClientProperty("terminateEditOnFocusLost", java.lang.Boolean.TRUE)
+    table.putClientProperty("terminateEditOnFocusLost", true)
 
     add(JScrollPane(table))
     setPreferredSize(Dimension(320, 240))

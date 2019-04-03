@@ -80,7 +80,7 @@ class CheckBoxList<E : CheckBoxNode>(model: ListModel<E>) : JList<E>(model) {
     setCellRenderer(renderer)
     addMouseListener(renderer)
     addMouseMotionListener(renderer)
-    putClientProperty("List.isFileList", java.lang.Boolean.TRUE)
+    putClientProperty("List.isFileList", true)
   }
 
   // @see SwingUtilities2.pointOutsidePrefSize(...)

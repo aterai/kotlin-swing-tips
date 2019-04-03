@@ -22,7 +22,7 @@ class MainPanel : JPanel(BorderLayout()) {
       override fun getColumnClass(column: Int) = File::class.java
     }
     val table = JTable(model)
-    table.putClientProperty("Table.isFileList", java.lang.Boolean.TRUE)
+    table.putClientProperty("Table.isFileList", true)
     table.setCellSelectionEnabled(true)
     table.setIntercellSpacing(Dimension())
     table.setComponentPopupMenu(TablePopupMenu())

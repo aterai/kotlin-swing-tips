@@ -49,7 +49,7 @@ class MainPanel : JPanel(BorderLayout()) {
     table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
     table.setIntercellSpacing(Dimension())
     table.setShowGrid(false)
-    table.putClientProperty("terminateEditOnFocusLost", java.lang.Boolean.TRUE)
+    table.putClientProperty("terminateEditOnFocusLost", true)
     table.setAutoCreateRowSorter(true)
 
     var col = table.getColumnModel().getColumn(0)

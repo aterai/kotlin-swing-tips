@@ -26,7 +26,7 @@ class MainPanel : JPanel(BorderLayout()) {
     table.setFillsViewportHeight(true)
     table.setIntercellSpacing(Dimension())
     table.setShowGrid(false)
-    table.putClientProperty("terminateEditOnFocusLost", java.lang.Boolean.TRUE)
+    table.putClientProperty("terminateEditOnFocusLost", true)
     table.setRowSorter(sorter)
 
     (1..2016).map { i -> arrayOf<Any>(i, "Test: $i", if (i % 2 == 0) "" else "comment...") }

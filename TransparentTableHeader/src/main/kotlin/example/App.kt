@@ -183,7 +183,7 @@ internal class TranslucentBooleanRenderer : JCheckBox(), TableCellRenderer {
       setForeground(table.getForeground())
       setBackground(table.getBackground())
     }
-    setSelected(value == java.lang.Boolean.TRUE)
+    setSelected(value == true)
     return this
   }
 

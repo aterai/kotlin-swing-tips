@@ -38,14 +38,14 @@ class MainPanel : JPanel(BorderLayout()) {
     fixedTable.setRowSorter(sorter)
     fixedTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF)
     fixedTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
-    fixedTable.putClientProperty("terminateEditOnFocusLost", java.lang.Boolean.TRUE)
+    fixedTable.putClientProperty("terminateEditOnFocusLost", true)
     fixedTable.setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, Color.GRAY))
     fixedTable.getTableHeader().setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, Color.GRAY))
 
     table.setRowSorter(sorter)
     table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF)
     table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
-    table.putClientProperty("terminateEditOnFocusLost", java.lang.Boolean.TRUE)
+    table.putClientProperty("terminateEditOnFocusLost", true)
 
     val scroll = JScrollPane(table)
     scroll.setLayout(RightFixedScrollPaneLayout())

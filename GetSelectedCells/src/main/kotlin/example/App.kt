@@ -152,7 +152,7 @@ internal class BooleanEditor : AbstractCellEditor(), TableCellEditor {
     row: Int,
     column: Int
   ): Component {
-    checkBox.setSelected(value == java.lang.Boolean.TRUE)
+    checkBox.setSelected(value == true)
     renderer.add(checkBox)
     return renderer
   }
