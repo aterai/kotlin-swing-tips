@@ -134,7 +134,7 @@ internal class FileListTable(model: TableModel) : JTable(model) {
     addMouseMotionListener(rbl)
     addMouseListener(rbl)
 
-    putClientProperty("Table.isFileList", java.lang.Boolean.TRUE)
+    putClientProperty("Table.isFileList", true)
     setCellSelectionEnabled(true)
     setIntercellSpacing(Dimension())
     setShowGrid(false)
