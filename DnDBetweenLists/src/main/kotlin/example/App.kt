@@ -77,17 +77,17 @@ internal class ListItemTransferHandler : TransferHandler() {
   }
 
   protected override fun createTransferable(c: JComponent): Transferable? {
-    val src: JList<*>? = c as? JList<*>
+    val src: JList<*> = c as JList<*>
     source = src
-    src?.getSelectedIndices()?.forEach { selectedIndices.add(it) }
-    val transferedObjects = src?.getSelectedValuesList()
+    src.getSelectedIndices().forEach { selectedIndices.add(it) }
+    val transferedObjects = src.getSelectedValuesList()
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf<DataFlavor>(localObjectFlavor)
 
       override fun isDataFlavorSupported(flavor: DataFlavor) = localObjectFlavor == flavor
 
       @Throws(UnsupportedFlavorException::class, IOException::class)
-      override fun getTransferData(flavor: DataFlavor): Any? {
+      override fun getTransferData(flavor: DataFlavor): Any {
         return if (isDataFlavorSupported(flavor)) {
           transferedObjects
         } else {
@@ -97,23 +97,23 @@ internal class ListItemTransferHandler : TransferHandler() {
     }
   }
 
-  override fun canImport(info: TransferHandler.TransferSupport): Boolean {
-    return info.isDrop() && info.isDataFlavorSupported(localObjectFlavor)
-  }
+  override fun canImport(info: TransferHandler.TransferSupport) =
+    info.isDrop() &&
+    info.isDataFlavorSupported(localObjectFlavor) &&
+    info.getDropLocation() is JList.DropLocation
 
   override fun getSourceActions(c: JComponent) = TransferHandler.MOVE // TransferHandler.COPY_OR_MOVE
 
   override fun importData(info: TransferHandler.TransferSupport): Boolean {
-    val dl = info.getDropLocation() as? JList.DropLocation
-    if (!canImport(info) || dl == null) {
+    if (!canImport(info)) {
       return false
     }
+    val dl = info.getDropLocation() as JList.DropLocation
     val target = info.getComponent() as JList<*>
     @Suppress("UNCHECKED_CAST")
     val listModel = target.getModel() as DefaultListModel<Any>
     val max = listModel.getSize()
-    var index = dl.getIndex()
-    index = if (index < 0) max else index // If it is out of range, it is appended to the end
+    var index = dl.getIndex().takeIf { it >= 0 } ?: max
     index = Math.min(index, max)
     addIndex = index
     return try {
