@@ -212,7 +212,7 @@ internal class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   }
 }
 
-// Demo - BasicDnD (The Java? Tutorials > Creating a GUI With JFC/Swing > Drag and Drop and Data Transfer)
+// Demo - BasicDnD (The Java™ Tutorials > Creating a GUI With JFC/Swing > Drag and Drop and Data Transfer)
 // https://docs.oracle.com/javase/tutorial/uiswing/dnd/basicdemo.html
 internal class ListItemTransferHandler : TransferHandler() {
   val localObjectFlavor: DataFlavor
