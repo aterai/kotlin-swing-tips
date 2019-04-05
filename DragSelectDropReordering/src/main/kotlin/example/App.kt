@@ -267,8 +267,7 @@ internal class ListItemTransferHandler : TransferHandler() {
     @Suppress("UNCHECKED_CAST")
     val listModel = target.getModel() as DefaultListModel<Any>
     val max = listModel.getSize()
-    var index = dl.getIndex().takeIf { it >= 0 } ?: max
-    index = Math.min(index, max)
+    var index = dl.getIndex().takeIf { it >= 0 && it < max } ?: max
     addIndex = index
     return try {
       val values = info.getTransferable().getTransferData(localObjectFlavor) as List<*>

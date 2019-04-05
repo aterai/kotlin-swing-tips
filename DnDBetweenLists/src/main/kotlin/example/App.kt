@@ -77,7 +77,7 @@ internal class ListItemTransferHandler : TransferHandler() {
   }
 
   protected override fun createTransferable(c: JComponent): Transferable? {
-    val src: JList<*> = c as JList<*>
+    val src = c as JList<*>
     source = src
     src.getSelectedIndices().forEach { selectedIndices.add(it) }
     val transferedObjects = src.getSelectedValuesList()
@@ -113,8 +113,7 @@ internal class ListItemTransferHandler : TransferHandler() {
     @Suppress("UNCHECKED_CAST")
     val listModel = target.getModel() as DefaultListModel<Any>
     val max = listModel.getSize()
-    var index = dl.getIndex().takeIf { it >= 0 } ?: max
-    index = Math.min(index, max)
+    var index = dl.getIndex().takeIf { it >= 0 && it < max } ?: max
     addIndex = index
     return try {
       val values = info.getTransferable().getTransferData(localObjectFlavor) as List<*>
