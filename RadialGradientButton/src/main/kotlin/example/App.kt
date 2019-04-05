@@ -18,7 +18,10 @@ class MainPanel : JPanel(BorderLayout()) {
     button2.setForeground(Color.WHITE)
 
     val p = object : JPanel(FlowLayout(FlowLayout.CENTER, 20, 50)) {
-      private val texture = TextureUtils.createCheckerTexture(16, Color(-0x11cdcdce, true))
+      // private val texture = TextureUtils.createCheckerTexture(16, Color(-0x11cdcdce, true))
+      // private val texture = TextureUtils.createCheckerTexture(16, Color(0xEE_32_32_32.toInt(), true))
+      private val texture = TextureUtils.createCheckerTexture(16, Color(0x32, 0x32, 0x32, 0xEE))
+
       override fun paintComponent(g: Graphics) {
         val g2 = g.create() as Graphics2D
         g2.setPaint(texture)

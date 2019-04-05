@@ -39,7 +39,8 @@ internal class SelectedImageFilter : RGBImageFilter() {
   override fun filterRGB(x: Int, y: Int, argb: Int): Int {
     val r = argb shr 16 and 0xFF
     val g = argb shr 8 and 0xFF
-    return argb and -0xffff01 or (r shr 1 shl 16) or (g shr 1 shl 8)
+    val mask = 0xFF_00_00_FF.toInt() // -0xffff01
+    return argb and mask or (r shr 1 shl 16) or (g shr 1 shl 8)
   }
 }
 

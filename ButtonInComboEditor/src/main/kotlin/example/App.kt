@@ -200,7 +200,8 @@ internal class SelectedImageFilter : RGBImageFilter() {
     val r = Math.min(0xFF, ((argb shr 16 and 0xFF) * SCALE).toInt())
     val g = Math.min(0xFF, ((argb shr 8 and 0xFF) * SCALE).toInt())
     val b = Math.min(0xFF, ((argb and 0xFF) * SCALE).toInt())
-    return argb and -0x1000000 or (r shl 16) or (g shl 8) or b
+    // return argb and -0x1000000 or (r shl 16) or (g shl 8) or b
+    return argb and 0xFF_00_00_00.toInt() or (r shl 16) or (g shl 8) or b
   }
 
   companion object {
