@@ -4,7 +4,6 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ItemEvent
 import java.awt.image.BufferedImage
 import java.io.IOException
-import java.util.Optional
 import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
