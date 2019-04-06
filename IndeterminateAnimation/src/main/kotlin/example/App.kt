@@ -24,9 +24,9 @@ class MainPanel : JPanel(BorderLayout()) {
     val button = JButton("Start")
     button.addActionListener {
       val worker = BackgroundTask()
-      list.forEach { bar ->
-        bar.setIndeterminate(true)
-        worker.addPropertyChangeListener(ProgressListener(bar))
+      list.forEach {
+        it.setIndeterminate(true)
+        worker.addPropertyChangeListener(ProgressListener(it))
       }
       worker.execute()
     }

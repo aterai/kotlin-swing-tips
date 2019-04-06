@@ -19,7 +19,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val check = JCheckBox("JSlider.setMinorTickSpacing(5)")
     check.addActionListener { e ->
       val mts = if ((e.getSource() as JCheckBox).isSelected()) 5 else 0
-      list.forEach { slider -> slider.setMinorTickSpacing(mts) }
+      list.forEach { it.setMinorTickSpacing(mts) }
     }
 
     val box = Box.createVerticalBox()
