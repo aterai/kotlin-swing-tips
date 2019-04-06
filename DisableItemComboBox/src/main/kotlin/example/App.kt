@@ -40,7 +40,7 @@ class MainPanel : JPanel(BorderLayout()) {
     try {
       field.getText().split(",")
         .map { it.trim { it <= ' ' } }
-        .dropWhile { it.isEmpty() }
+        .filterNot { it.isEmpty() }
         .map { it.toInt() }
         .toSet()
     } catch (ex: NumberFormatException) {
