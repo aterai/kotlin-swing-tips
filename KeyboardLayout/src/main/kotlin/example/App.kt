@@ -11,7 +11,7 @@ class MainPanel : JPanel(BorderLayout(2, 2)) {
       arrayOf("Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]", "\\", ""),
       arrayOf("Ctrl", "A", "S", "D", "F", "G", "H", "J", "K", "L", ";", "'", "Enter", ""),
       arrayOf("Shift", "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/", "", "↑"),
-      arrayOf("Fn", "Alt", "                         ", "Alt", "←", "↓", "→"))
+      arrayOf("Fn", "Alt", "                                 ", "Alt", "←", "↓", "→"))
 
   init {
     val keyboard = makeKeyboardPanel()
@@ -40,19 +40,19 @@ class MainPanel : JPanel(BorderLayout(2, 2)) {
       for (col in 0 until keys[row].size) {
         val key = keys[row][col]
         val len = key.length
-        c.gridwidth = getKeyButtonColumnWidth(len)
+        c.gridwidth = getKeyButtonColumnGridWidth(len)
         it.add(if (key.isEmpty()) Box.createHorizontalStrut(KeyButton.SIZE) else KeyButton(key, len <= 2), c)
         c.gridx += c.gridwidth
       }
     }
   }
 
-  private fun getKeyButtonColumnWidth(length: Int) = when {
-    length > 10 -> 14
-    length > 4 -> 4
-    length > 1 -> 3
-    length == 1 -> 2
-    else -> 1
+  private fun getKeyButtonColumnGridWidth(length: Int) = when (length) {
+    in 5..8 -> 4 // Shift, Enter
+    in 2..4 -> 3 // Alt, Ctrl, Esc, Tab, ...
+    1 -> 2 // A, B, C, ..., Z
+    0 -> 1 // HorizontalStrut
+    else -> 14 // Space
   }
 }
 
