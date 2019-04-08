@@ -91,7 +91,7 @@ internal class DnDTabbedPane : JTabbedPane() {
   var dropLocation: DnDTabbedPane.DropLocation? = null
 
   fun getDropLineRect(): Rectangle {
-    val index = dropLocation?.takeIf { it.isDroppable }?.let { it.index } ?: -1
+    val index = dropLocation?.takeIf { it.isDroppable }?.index ?: -1
     if (index < 0) {
       RECT_LINE.setBounds(0, 0, 0, 0)
       return RECT_LINE
