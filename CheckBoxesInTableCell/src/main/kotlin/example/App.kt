@@ -102,7 +102,7 @@ class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
           val t = titles[i]
           am.put(t, object : AbstractAction(t) {
             override fun actionPerformed(e: ActionEvent) {
-              buttons.filter { it.getText() == t }.first().let { it.doClick() }
+              buttons.filter { it.getText() == t }.first().doClick()
               fireEditingStopped()
             }
           })
