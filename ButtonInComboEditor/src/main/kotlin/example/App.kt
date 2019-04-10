@@ -40,7 +40,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val model = DefaultComboBoxModel<SiteItem>()
     model.addElement(SiteItem("https://ateraimemo.com/", image1, true))
     model.addElement(SiteItem("https://ateraimemo.com/Swing.html", image1, true))
-    model.addElement(SiteItem("https://ateraimemo.com/JavaWebStart.html", image1, true))
+    model.addElement(SiteItem("https://ateraimemo.com/Kotlin.html", image1, true))
     model.addElement(SiteItem("https://github.com/aterai/java-swing-tips", image2, true))
     model.addElement(SiteItem("https://java-swing-tips.blogspot.com/", image2, true))
     model.addElement(SiteItem("http://www.example.com/", image2, false))
@@ -139,7 +139,7 @@ internal class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: Imag
       return o
     }
     val str = o?.toString() ?: ""
-    return (0 until model.getSize()).map { model.getElementAt(it) }.filter { ui -> ui.url == str }.firstOrNull()
+    return (0 until model.getSize()).map { model.getElementAt(it) }.filter { it.url == str }.firstOrNull()
   }
 }
 
