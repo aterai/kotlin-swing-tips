@@ -81,7 +81,13 @@ fun main() {
   EventQueue.invokeLater {
     try {
       UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
-    } catch (ex: Exception) {
+    } catch (ex: ClassNotFoundException) {
+      ex.printStackTrace()
+    } catch (ex: InstantiationException) {
+      ex.printStackTrace()
+    } catch (ex: IllegalAccessException) {
+      ex.printStackTrace()
+    } catch (ex: UnsupportedLookAndFeelException) {
       ex.printStackTrace()
     }
     JFrame().apply {
