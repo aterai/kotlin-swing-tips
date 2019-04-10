@@ -1,21 +1,14 @@
-// -*- mode:java; encoding:utf-8 -*-
-// vim:set fileencoding=utf-8:
-// @homepage@
-
 package example
 
-import java.awt.*
+import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
-import javax.swing.*
+import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.text.BadLocationException
-import javax.swing.text.Document
-import javax.swing.text.Element
 
 class MainPanel : JPanel(BorderLayout()) {
-
   init {
     val spinner = JSpinner(SpinnerNumberModel(100, 1, 2000, 1))
     // val textArea = JTextArea(Collections.nCopies(2000, "aaaaaaaaaaaaa").joinToString("\n"))
@@ -59,12 +52,7 @@ internal class LineNumberView(private val textArea: JTextArea) : JComponent() {
   private val fontHeight: Int
   private val fontDescent: Int
   private val fontLeading: Int
-
-  private// Document doc = textArea.getDocument();
-  // Element root = doc.getDefaultRootElement();
-  // int lineCount = root.getElementIndex(doc.getLength());
-  // return 48;
-  val componentWidth: Int
+  private val componentWidth: Int
     get() {
       val lineCount = textArea.getLineCount()
       val maxDigits = Math.max(3, lineCount.toString().length)
