@@ -138,12 +138,12 @@ internal class DnDTabbedPane : JTabbedPane() {
 //      val r = getBoundsAt(i)
 //      r.translate(-r.width * d.x / 2, -r.height * d.y / 2)
 //      r.contains(tabPt)
-//    }.findFirst().orElseGet({
+//    }.findFirst().orElseGet {
 //      val count = getTabCount()
 //      val r = getBoundsAt(count - 1)
 //      r.translate(r.width * d.x / 2, r.height * d.y / 2)
 //      if (r.contains(tabPt)) count else -1
-//    })
+//    }
     for (i in 0 until getTabCount()) {
       val r = getBoundsAt(i)
       r.translate(-r.width * d.x / 2, -r.height * d.y / 2)

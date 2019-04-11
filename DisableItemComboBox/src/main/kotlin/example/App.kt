@@ -103,7 +103,7 @@ internal class DisableItemComboBox<E> : JComboBox<E> {
         return c
       }
     })
-    EventQueue.invokeLater({
+    EventQueue.invokeLater {
       val am = getActionMap()
       am.put("selectPrevious3", up)
       am.put("selectNext3", down)
@@ -112,7 +112,7 @@ internal class DisableItemComboBox<E> : JComboBox<E> {
       im.put(KeyStroke.getKeyStroke(KeyEvent.VK_KP_UP, 0), "selectPrevious3")
       im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "selectNext3")
       im.put(KeyStroke.getKeyStroke(KeyEvent.VK_KP_DOWN, 0), "selectNext3")
-    })
+    }
   }
 
   fun setDisableIndex(set: Set<Int>) {
