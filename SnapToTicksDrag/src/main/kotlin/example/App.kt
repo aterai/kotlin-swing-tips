@@ -11,10 +11,10 @@ import javax.swing.plaf.metal.MetalSliderUI
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    val list = listOf(
-      makeSilder("Default SnapToTicks"),
-      makeSilder("Custom SnapToTicks")
-    )
+    val slider = makeSilder("Custom SnapToTicks")
+    initSilder(slider)
+
+    val list = listOf(makeSilder("Default SnapToTicks"), slider)
 
     val check = JCheckBox("JSlider.setMinorTickSpacing(5)")
     check.addActionListener { e ->
@@ -24,8 +24,8 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val box = Box.createVerticalBox()
     box.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10))
-    for (slider in list) {
-      box.add(slider)
+    for (s in list) {
+      box.add(s)
       box.add(Box.createVerticalStrut(10))
     }
     box.add(check)
@@ -35,17 +35,15 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  private fun makeSilder(title: String): JSlider {
-    val slider = JSlider(0, 100, 50)
-    // JSlider slider = new JSlider(-50, 50, 0);
-    slider.setBorder(BorderFactory.createTitledBorder(title))
-    slider.setMajorTickSpacing(10)
-    slider.setSnapToTicks(true)
-    slider.setPaintTicks(true)
-    slider.setPaintLabels(true)
-    if (title.startsWith("Default")) {
-      return slider
-    }
+  private fun makeSilder(title: String) = JSlider(0, 100, 50).also {
+    it.setBorder(BorderFactory.createTitledBorder(title))
+    it.setMajorTickSpacing(10)
+    it.setSnapToTicks(true)
+    it.setPaintTicks(true)
+    it.setPaintLabels(true)
+  }
+
+  private fun initSilder(slider: JSlider) {
     slider.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "RIGHT_ARROW")
     slider.getActionMap().put("RIGHT_ARROW", object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
@@ -73,7 +71,6 @@ class MainPanel : JPanel(BorderLayout()) {
     } else {
       slider.setUI(MetalSnapToTicksDragSliderUI())
     }
-    return slider
   }
 }
 
