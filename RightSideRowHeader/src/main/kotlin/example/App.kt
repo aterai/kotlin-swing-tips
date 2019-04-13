@@ -84,7 +84,9 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
+@Suppress("LargeClass")
 internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
+  @Suppress("LongMethod", "ComplexMethod", "NestedBlockDepth")
   override fun layoutContainer(parent: Container) {
     val scrollPane = parent as? JScrollPane ?: return
     vsbPolicy = scrollPane.getVerticalScrollBarPolicy()
