@@ -143,9 +143,7 @@ internal class LinkViewRadioButtonUI : BasicRadioButtonUI() {
   private val iconRect = Rectangle()
   private val textRect = Rectangle()
 
-  override fun getDefaultIcon(): Icon? {
-    return null
-  }
+  override fun getDefaultIcon() = null
 
   @Synchronized
   override fun paint(g: Graphics, c: JComponent) {

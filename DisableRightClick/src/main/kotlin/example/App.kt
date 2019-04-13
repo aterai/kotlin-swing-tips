@@ -10,37 +10,28 @@ import java.awt.event.MouseListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicComboBoxUI
 import javax.swing.plaf.basic.BasicComboPopup
-import javax.swing.plaf.basic.ComboPopup
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
     val combo1 = makeComboBox(5)
     if (combo1.getUI() is WindowsComboBoxUI) {
       combo1.setUI(object : WindowsComboBoxUI() {
-        protected override fun createPopup(): ComboPopup {
-          return BasicComboPopup2(comboBox)
-        }
+        protected override fun createPopup() = BasicComboPopup2(comboBox)
       })
     } else {
       combo1.setUI(object : BasicComboBoxUI() {
-        protected override fun createPopup(): ComboPopup {
-          return BasicComboPopup2(comboBox)
-        }
+        protected override fun createPopup() = BasicComboPopup2(comboBox)
       })
     }
 
     val combo2 = makeComboBox(20)
     if (combo2.getUI() is WindowsComboBoxUI) {
       combo2.setUI(object : WindowsComboBoxUI() {
-        protected override fun createPopup(): ComboPopup {
-          return BasicComboPopup3(comboBox)
-        }
+        protected override fun createPopup() = BasicComboPopup3(comboBox)
       })
     } else {
       combo2.setUI(object : BasicComboBoxUI() {
-        protected override fun createPopup(): ComboPopup {
-          return BasicComboPopup3(comboBox)
-        }
+        protected override fun createPopup() = BasicComboPopup3(comboBox)
       })
     }
 
@@ -57,11 +48,9 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  private fun makeTitledPanel(title: String, c: Component): Component {
-    val p = JPanel(BorderLayout())
-    p.setBorder(BorderFactory.createTitledBorder(title))
-    p.add(c)
-    return p
+  private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
+    it.setBorder(BorderFactory.createTitledBorder(title))
+    it.add(c)
   }
 
   private fun makeComboBox(size: Int): JComboBox<String> {

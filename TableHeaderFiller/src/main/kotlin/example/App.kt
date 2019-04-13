@@ -17,11 +17,9 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  private fun makeJTable(): JTable {
-    val table = JTable(4, 3)
-    table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF)
-    table.setAutoCreateRowSorter(true)
-    return table
+  private fun makeJTable() = JTable(4, 3).also {
+    it.setAutoResizeMode(JTable.AUTO_RESIZE_OFF)
+    it.setAutoCreateRowSorter(true)
   }
 }
 
