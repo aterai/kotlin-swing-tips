@@ -94,14 +94,9 @@ class MainPanel : JPanel(BorderLayout()) {
 internal class IndexedColor(val index: Int, val color: Color, val isTransparentPixel: Boolean)
 
 internal class PaletteListModel(private val model: IndexColorModel) : AbstractListModel<IndexedColor>() {
+  override fun getSize() = model.getMapSize()
 
-  override fun getSize(): Int {
-    return model.getMapSize()
-  }
-
-  override fun getElementAt(index: Int): IndexedColor {
-    return IndexedColor(index, Color(model.getRGB(index)), index == model.getTransparentPixel())
-  }
+  override fun getElementAt(idx: Int) = IndexedColor(idx, Color(model.getRGB(idx)), idx == model.getTransparentPixel())
 }
 
 internal class ColorIcon(private val color: Color) : Icon {

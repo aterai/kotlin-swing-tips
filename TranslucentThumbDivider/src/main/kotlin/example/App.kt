@@ -153,8 +153,7 @@ internal class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
           dividerLocation = splitPane.getDividerLocation()
         }
       }
-      else -> {
-      }
+      // else -> {}
     }
     splitPane.repaint()
   }
@@ -171,21 +170,21 @@ internal class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
     }
   }
 
+  private fun isDraggableComponent(splitPane: JSplitPane, c: Component) =
+      splitPane == c || splitPane == SwingUtilities.getUnwrappedParent(c)
+
+  private fun updateThumbLocation(c: Component, thumb: Ellipse2D) {
+    val splitPane = c as? JSplitPane ?: return
+    val pos = splitPane.getDividerLocation()
+    if (splitPane.getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
+      thumb.setFrame(pos - R, splitPane.getHeight() / 2.0 - R, R + R, R + R)
+    } else {
+      thumb.setFrame(splitPane.getWidth() / 2.0 - R, pos - R, R + R, R + R)
+    }
+  }
+
   companion object {
     private const val R = 25.0
-    private fun isDraggableComponent(splitPane: JSplitPane, c: Component): Boolean {
-      return splitPane == c || splitPane == SwingUtilities.getUnwrappedParent(c)
-    }
-
-    private fun updateThumbLocation(c: Component, thumb: Ellipse2D) {
-      val splitPane = c as? JSplitPane ?: return
-      val pos = splitPane.getDividerLocation()
-      if (splitPane.getOrientation() == JSplitPane.HORIZONTAL_SPLIT) {
-        thumb.setFrame(pos - R, splitPane.getHeight() / 2.0 - R, R + R, R + R)
-      } else {
-        thumb.setFrame(splitPane.getWidth() / 2.0 - R, pos - R, R + R, R + R)
-      }
-    }
   }
 }
 

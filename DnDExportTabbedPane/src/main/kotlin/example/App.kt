@@ -298,6 +298,8 @@ internal class DnDTabbedPane : JTabbedPane() {
     }
   }
 
+  fun isTopBottomTabPlacement(placement: Int) = placement == JTabbedPane.TOP || placement == JTabbedPane.BOTTOM
+
   companion object {
     private val SCROLL_SIZE = 20 // Test
     private val BUTTON_SIZE = 30 // XXX 30 is magic number of scroll button size
@@ -305,10 +307,6 @@ internal class DnDTabbedPane : JTabbedPane() {
     private val RECT_BACKWARD = Rectangle()
     private val RECT_FORWARD = Rectangle()
     protected val RECT_LINE = Rectangle()
-
-    fun isTopBottomTabPlacement(tabPlacement: Int): Boolean {
-      return tabPlacement == JTabbedPane.TOP || tabPlacement == JTabbedPane.BOTTOM
-    }
   }
 }
 

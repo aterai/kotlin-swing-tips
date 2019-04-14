@@ -101,13 +101,11 @@ internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMot
     return this
   }
 
-  private fun isRolloverCell(table: JTable, row: Int, column: Int): Boolean {
-    return !table.isEditing() && this.vrow == row && this.vcol == column && this.isRollover
-  }
+  private fun isRolloverCell(table: JTable, row: Int, column: Int) =
+      !table.isEditing() && vrow == row && vcol == column && isRollover
 
-  private fun isUrlColumn(table: JTable, column: Int): Boolean {
-    return column >= 0 && table.getColumnClass(column) == URL::class.java
-  }
+  private fun isUrlColumn(table: JTable, column: Int) =
+      column >= 0 && table.getColumnClass(column) == URL::class.java
 
   override fun mouseMoved(e: MouseEvent) {
     val table = e.getComponent() as? JTable ?: return
