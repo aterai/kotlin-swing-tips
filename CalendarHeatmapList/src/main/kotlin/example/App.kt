@@ -10,7 +10,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel(BorderLayout()) {
   val currentLocalDate = LocalDate.now()
-  val weekList: JList<Contribution> = object : JList<Contribution>(CalendarViewListModel(currentLocalDate)) {
+  val weekList = object : JList<Contribution>(CalendarViewListModel(currentLocalDate)) {
     override fun updateUI() {
       setCellRenderer(null)
       super.updateUI()
@@ -84,16 +84,14 @@ class MainPanel : JPanel(BorderLayout()) {
     }
   }
 
-  private fun makeWeekCalendar(weekList: JList<Contribution>, font: Font): Component {
+  private fun makeWeekCalendar(list: JList<*>, font: Font) = JScrollPane(list).also {
     val loc = Locale.getDefault()
-    return JScrollPane(weekList).also {
-      it.setBorder(BorderFactory.createEmptyBorder())
-      it.setColumnHeaderView(makeColumnHeader(loc))
-      it.setRowHeaderView(makeRowHeader(loc, font))
-      it.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER)
-      it.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
-      it.setBackground(Color.WHITE)
-    }
+    it.setBorder(BorderFactory.createEmptyBorder())
+    it.setColumnHeaderView(makeColumnHeader(loc))
+    it.setRowHeaderView(makeRowHeader(loc, font))
+    it.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER)
+    it.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
+    it.setBackground(Color.WHITE)
   }
 
   private fun makeRowHeader(loc: Locale, font: Font): Component {
@@ -141,11 +139,9 @@ class MainPanel : JPanel(BorderLayout()) {
     return colHeader
   }
 
-  private fun makeLabel(title: String, font: Font): JLabel {
-    val label = JLabel(title)
-    label.setFont(font)
-    label.setEnabled(false)
-    return label
+  private fun makeLabel(title: String, font: Font) = JLabel(title).also {
+    it.setFont(font)
+    it.setEnabled(false)
   }
 
   companion object {
