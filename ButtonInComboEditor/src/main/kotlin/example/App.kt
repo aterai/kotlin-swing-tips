@@ -16,10 +16,10 @@ class MainPanel : JPanel(BorderLayout()) {
     val image2 = ImageIcon(javaClass.getResource("16x16.png"))
     val rss = ImageIcon(javaClass.getResource("feed-icon-14x14.png")) // http://feedicons.com/
 
-    val combo01 = JComboBox<SiteItem>(makeTestModel(image1, image2))
+    val combo01 = JComboBox<SiteItem>(makeModel(image1, image2))
     initComboBox(combo01)
 
-    val combo02 = SiteItemComboBox(makeTestModel(image1, image2), rss)
+    val combo02 = SiteItemComboBox(makeModel(image1, image2), rss)
     initComboBox(combo02)
 
     val box = Box.createVerticalBox()
@@ -36,15 +36,13 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  private fun makeTestModel(image1: ImageIcon, image2: ImageIcon): DefaultComboBoxModel<SiteItem> {
-    val model = DefaultComboBoxModel<SiteItem>()
-    model.addElement(SiteItem("https://ateraimemo.com/", image1, true))
-    model.addElement(SiteItem("https://ateraimemo.com/Swing.html", image1, true))
-    model.addElement(SiteItem("https://ateraimemo.com/Kotlin.html", image1, true))
-    model.addElement(SiteItem("https://github.com/aterai/java-swing-tips", image2, true))
-    model.addElement(SiteItem("https://java-swing-tips.blogspot.com/", image2, true))
-    model.addElement(SiteItem("http://www.example.com/", image2, false))
-    return model
+  private fun makeModel(i1: Icon, i2: Icon) = DefaultComboBoxModel<SiteItem>().also {
+    it.addElement(SiteItem("https://ateraimemo.com/", i1, true))
+    it.addElement(SiteItem("https://ateraimemo.com/Swing.html", i1, true))
+    it.addElement(SiteItem("https://ateraimemo.com/Kotlin.html", i1, true))
+    it.addElement(SiteItem("https://github.com/aterai/java-swing-tips", i2, true))
+    it.addElement(SiteItem("https://java-swing-tips.blogspot.com/", i2, true))
+    it.addElement(SiteItem("http://www.example.com/", i2, false))
   }
 
   private fun initComboBox(combo: JComboBox<SiteItem>) {
@@ -104,24 +102,21 @@ internal class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: Imag
     }
   }
 
-  private fun makeRssButton(rss: ImageIcon): JButton {
-    val button = JButton(rss)
+  private fun makeRssButton(rss: ImageIcon) = JButton(rss).also {
     val ip = FilteredImageSource(rss.getImage().getSource(), SelectedImageFilter())
-    button.setRolloverIcon(ImageIcon(Toolkit.getDefaultToolkit().createImage(ip)))
-    // button.setRolloverIcon(makeFilteredImage(rss));
-    // button.setRolloverIcon(makeFilteredImage2(rss));
-    button.addActionListener { println("clicked...") }
-    button.setFocusPainted(false)
-    button.setBorderPainted(false)
-    button.setContentAreaFilled(false)
-    button.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
-    button.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 2))
-    return button
+    it.setRolloverIcon(ImageIcon(Toolkit.getDefaultToolkit().createImage(ip)))
+    // it.setRolloverIcon(makeFilteredImage(rss));
+    // it.setRolloverIcon(makeFilteredImage2(rss));
+    it.addActionListener { println("clicked...") }
+    it.setFocusPainted(false)
+    it.setBorderPainted(false)
+    it.setContentAreaFilled(false)
+    it.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
+    it.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 2))
   }
 
-  private fun makeLabel(field: JTextField): JLabel {
-    val label = JLabel()
-    label.addMouseListener(object : MouseAdapter() {
+  private fun makeLabel(field: JTextField) = JLabel().also {
+    it.addMouseListener(object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent?) {
         EventQueue.invokeLater {
           field.requestFocusInWindow()
@@ -129,9 +124,8 @@ internal class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: Imag
         }
       }
     })
-    label.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
-    label.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 2))
-    return label
+    it.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
+    it.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 2))
   }
 
   protected fun getSiteItemFromModel(model: ComboBoxModel<SiteItem>, o: Any?): SiteItem? {
@@ -191,7 +185,7 @@ internal class SiteComboBoxLayout(private val favicon: JLabel?, private val feed
   }
 }
 
-internal class SiteItem(val url: String, val favicon: ImageIcon, val hasRss: Boolean) {
+internal class SiteItem(val url: String, val favicon: Icon, val hasRss: Boolean) {
   override fun toString() = url
 }
 
