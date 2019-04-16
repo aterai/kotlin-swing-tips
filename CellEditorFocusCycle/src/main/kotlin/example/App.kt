@@ -101,11 +101,13 @@ internal class CheckBoxesPanel : JPanel() {
     }
   }
 
-  private fun makeCheckBox(title: String) = JCheckBox(" $title ").also {
-    it.setOpaque(false)
-    // it.setFocusPainted(false)
-    // it.setFocusable(false)
-    // it.setRolloverEnabled(false)
+  private fun makeCheckBox(title: String): JCheckBox {
+    val b = JCheckBox(" $title ")
+    b.setOpaque(false)
+    // b.setFocusPainted(false)
+    // b.setFocusable(false)
+    // b.setRolloverEnabled(false)
+    return b
   }
 
   fun updateButtons(v: Any) {

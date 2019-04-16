@@ -16,7 +16,11 @@ import javax.swing.text.html.StyleSheet
 
 class MainPanel : JPanel(BorderLayout()) {
   private val editor1 = JEditorPane()
-  private val editor2 = JEditorPane()
+  private val editor2 = JEditorPane().also {
+    it.setSelectedTextColor(null)
+    it.setSelectionColor(Color(0x64_88_AA_AA, true))
+    // TEST: it.setSelectionColor(null);
+  }
   private val engine: ScriptEngine? = createEngine()
 
   init {
@@ -42,12 +46,6 @@ class MainPanel : JPanel(BorderLayout()) {
       it.setEditable(false)
       // it.setSelectionColor(new Color(0x64_88_AA_AA, true));
       it.setBackground(Color(0xEE_EE_EE))
-    }
-
-    editor2.apply {
-      setSelectedTextColor(null)
-      setSelectionColor(Color(0x64_88_AA_AA, true))
-      // TEST: setSelectionColor(null);
     }
 
     val button = JButton("open")

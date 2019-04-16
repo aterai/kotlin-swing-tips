@@ -35,8 +35,8 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  private fun makeButton(pop: JPopupMenu, title: String, icon: ImageIcon?) = MenuToggleButton(title, icon)
-      .apply { setPopupMenu(pop) }
+  private fun makeButton(popup: JPopupMenu, title: String, icon: ImageIcon?) =
+      MenuToggleButton(title, icon).also { it.setPopupMenu(popup) }
 }
 
 internal class MenuArrowIcon : Icon {

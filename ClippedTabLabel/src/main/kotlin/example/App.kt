@@ -25,13 +25,13 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  private fun makeTestTabbedPane(jtp: JTabbedPane) = jtp.apply {
-    setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT)
-    addTab("1111111111111111111", ColorIcon(Color.RED), JScrollPane(JTree()))
-    addTab("2", ColorIcon(Color.GREEN), JLabel("bbbbbbbbb"))
-    addTab("33333333333333", ColorIcon(Color.BLUE), JScrollPane(JTree()))
-    addTab("444444444444444", ColorIcon(Color.ORANGE), JLabel("dddddddddd"))
-    addTab("55555555555555555555555555555555", ColorIcon(Color.CYAN), JLabel("e"))
+  private fun makeTestTabbedPane(tabbedPane: JTabbedPane) = tabbedPane.also {
+    it.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT)
+    it.addTab("1111111111111111111", ColorIcon(Color.RED), JScrollPane(JTree()))
+    it.addTab("2", ColorIcon(Color.GREEN), JLabel("bbbbbbbbb"))
+    it.addTab("33333333333333", ColorIcon(Color.BLUE), JScrollPane(JTree()))
+    it.addTab("444444444444444", ColorIcon(Color.ORANGE), JLabel("dddddddddd"))
+    it.addTab("55555555555555555555555555555555", ColorIcon(Color.CYAN), JLabel("e"))
   }
 }
 

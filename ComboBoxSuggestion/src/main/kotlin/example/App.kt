@@ -119,12 +119,14 @@ internal class ComboKeyHandler(private val comboBox: JComboBox<String>) : KeyAda
     (comboBox.getEditor().getEditorComponent() as? JTextField)?.setText(str)
   }
 
-  private fun getSuggestedModel(list: List<String>, text: String) = DefaultComboBoxModel<String>().also {
+  private fun getSuggestedModel(list: List<String>, text: String): ComboBoxModel<String> {
+    val m = DefaultComboBoxModel<String>()
     for (s in list) {
       if (s.startsWith(text)) {
-        it.addElement(s)
+        m.addElement(s)
       }
     }
+    return m
   }
 }
 

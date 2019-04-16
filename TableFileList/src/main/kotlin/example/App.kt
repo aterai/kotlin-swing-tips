@@ -150,7 +150,9 @@ internal class FileListTable(model: TableModel) : JTable(model) {
         hasFocus: Boolean,
         row: Int,
         column: Int
-      ) = super.getTableCellRendererComponent(table, value, false, false, row, column)
+      ): Component {
+        return super.getTableCellRendererComponent(table, value, false, false, row, column)
+      }
     })
 
     var col = getColumnModel().getColumn(0)
@@ -168,7 +170,9 @@ internal class FileListTable(model: TableModel) : JTable(model) {
       return null
     }
     val rect = getCellRect2(this, row, col)
-    return if (rect.contains(pt)) getValueAt(row, col).toString() else null
+    return if (rect.contains(pt)) {
+      getValueAt(row, col).toString()
+    } else null
   }
 
   override fun setColumnSelectionInterval(index0: Int, index1: Int) {
