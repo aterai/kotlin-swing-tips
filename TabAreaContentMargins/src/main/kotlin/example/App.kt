@@ -27,7 +27,7 @@ class MainPanel : JPanel(GridLayout(2, 1)) {
 
 fun main() {
   EventQueue.invokeLater {
-    try {
+    runCatching {
       // UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
       // UIManager.put("TabbedPane.tabAreaInsets", new Insets(10, 10, 2, 10));
 
@@ -38,14 +38,9 @@ fun main() {
       // d.put("TabbedPane:TabbedPaneTabArea.contentMargins", new Insets(3, 10, 4, 10));
       val i = d.getInsets("TabbedPane:TabbedPaneTabArea.contentMargins")
       d.put("TabbedPane:TabbedPaneTabArea.contentMargins", Insets(i.top, 0, i.bottom, 0))
-    } catch (ex: ClassNotFoundException) {
-      ex.printStackTrace()
-    } catch (ex: InstantiationException) {
-      ex.printStackTrace()
-    } catch (ex: IllegalAccessException) {
-      ex.printStackTrace()
-    } catch (ex: UnsupportedLookAndFeelException) {
-      ex.printStackTrace()
+    }.onFailure {
+      it.printStackTrace()
+      Toolkit.getDefaultToolkit().beep()
     }
     JFrame().apply {
       setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)

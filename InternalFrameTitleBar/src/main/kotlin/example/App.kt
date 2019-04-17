@@ -79,16 +79,11 @@ internal class DragWindowListener : MouseAdapter() {
 
 fun main() {
   EventQueue.invokeLater {
-    try {
+    runCatching {
       UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
-    } catch (ex: ClassNotFoundException) {
-      ex.printStackTrace()
-    } catch (ex: InstantiationException) {
-      ex.printStackTrace()
-    } catch (ex: IllegalAccessException) {
-      ex.printStackTrace()
-    } catch (ex: UnsupportedLookAndFeelException) {
-      ex.printStackTrace()
+    }.onFailure {
+      it.printStackTrace()
+      Toolkit.getDefaultToolkit().beep()
     }
     JFrame().apply {
       setUndecorated(true)

@@ -115,16 +115,11 @@ internal object LookAndFeelUtil {
 
 fun main() {
   EventQueue.invokeLater {
-    try {
+    runCatching {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
-    } catch (ex: ClassNotFoundException) {
-      ex.printStackTrace()
-    } catch (ex: InstantiationException) {
-      ex.printStackTrace()
-    } catch (ex: IllegalAccessException) {
-      ex.printStackTrace()
-    } catch (ex: UnsupportedLookAndFeelException) {
-      ex.printStackTrace()
+    }.onFailure {
+      it.printStackTrace()
+      Toolkit.getDefaultToolkit().beep()
     }
     val mb = JMenuBar()
     mb.add(LookAndFeelUtil.createLookAndFeelMenu())

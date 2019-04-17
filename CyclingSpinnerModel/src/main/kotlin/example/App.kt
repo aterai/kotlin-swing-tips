@@ -55,16 +55,11 @@ class MainPanel : JPanel(GridLayout(2, 1)) {
 
 fun main() {
   EventQueue.invokeLater {
-    try {
+    runCatching {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
-    } catch (ex: ClassNotFoundException) {
-      ex.printStackTrace()
-    } catch (ex: InstantiationException) {
-      ex.printStackTrace()
-    } catch (ex: IllegalAccessException) {
-      ex.printStackTrace()
-    } catch (ex: UnsupportedLookAndFeelException) {
-      ex.printStackTrace()
+    }.onFailure {
+      it.printStackTrace()
+      Toolkit.getDefaultToolkit().beep()
     }
     JFrame().apply {
       setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)

@@ -74,16 +74,11 @@ internal class KeyButton(str: String, private val square: Boolean = true) : JBut
 
 fun main() {
   EventQueue.invokeLater {
-    try {
+    runCatching {
       UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
-    } catch (ex: ClassNotFoundException) {
-      ex.printStackTrace()
-    } catch (ex: InstantiationException) {
-      ex.printStackTrace()
-    } catch (ex: IllegalAccessException) {
-      ex.printStackTrace()
-    } catch (ex: UnsupportedLookAndFeelException) {
-      ex.printStackTrace()
+    }.onFailure {
+      it.printStackTrace()
+      Toolkit.getDefaultToolkit().beep()
     }
     JFrame().apply {
       setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
