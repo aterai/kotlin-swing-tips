@@ -110,15 +110,27 @@ internal open class RolloverDefaultTableCellRenderer(val highlighter: HighlightL
   ): Component {
     super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     val str = value?.toString() ?: ""
-    if (highlighter.isHighlightableCell(row, column)) {
-      setText("<html><u>$str")
-      setForeground(if (isSelected) table.getSelectionForeground() else HIGHLIGHT)
-      setBackground(if (isSelected) table.getSelectionBackground().darker() else table.getBackground())
-    } else {
-      setText(str)
-      setForeground(if (isSelected) table.getSelectionForeground() else table.getForeground())
-      setBackground(if (isSelected) table.getSelectionBackground() else table.getBackground())
-    }
+//     if (highlighter.isHighlightableCell(row, column)) {
+//       setText("<html><u>$str")
+//       setForeground(if (isSelected) table.getSelectionForeground() else HIGHLIGHT)
+//       setBackground(if (isSelected) table.getSelectionBackground().darker() else table.getBackground())
+//     } else {
+//       setText(str)
+//       setForeground(if (isSelected) table.getSelectionForeground() else table.getForeground())
+//       setBackground(if (isSelected) table.getSelectionBackground() else table.getBackground())
+//     }
+    val isHighlightableCell = highlighter.isHighlightableCell(row, column)
+    setForeground(when {
+      isSelected -> table.getSelectionForeground()
+      !isSelected && isHighlightableCell -> HIGHLIGHT
+      else -> table.getForeground()
+    })
+    setBackground(when {
+      isSelected && isHighlightableCell -> table.getSelectionBackground().darker()
+      isSelected && !isHighlightableCell -> table.getSelectionBackground()
+      else -> table.getBackground()
+    })
+    setText(if (isHighlightableCell) "<html><u>$str" else str)
     return this
   }
 
