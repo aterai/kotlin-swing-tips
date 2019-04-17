@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.image.BufferedImage
-import java.io.IOException
 import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.ColorUIResource
@@ -82,13 +81,9 @@ class MainPanel : JPanel(BorderLayout()) {
 
   private fun makeImageTexture(): TexturePaint {
     // unkaku_w.png http://www.viva-edo.com/komon/edokomon.html
-    val bi = MainPanel::class.java.getResource("unkaku_w.png")?.let {
-      try {
-        ImageIO.read(it)
-      } catch (ex: IOException) {
-        makeMissingImage()
-      }
-    } ?: makeMissingImage()
+    val bi = runCatching {
+      ImageIO.read(javaClass.getResource("unkaku_w.png"))
+    }.getOrNull() ?: makeMissingImage()
     return TexturePaint(bi, Rectangle(bi.getWidth(), bi.getHeight()))
   }
 

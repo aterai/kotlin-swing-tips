@@ -5,7 +5,6 @@ import java.awt.image.BufferedImage
 import java.awt.image.ColorModel
 import java.awt.image.DataBuffer
 import java.awt.image.IndexColorModel
-import java.io.IOException
 import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
@@ -17,12 +16,16 @@ class MainPanel : JPanel(BorderLayout()) {
     val label2 = JLabel()
     p.add(label2)
 
-    val image = try {
-      ImageIO.read(javaClass.getResource("duke.gif"))
-    } catch (ex: IOException) {
-      ex.printStackTrace()
-      makeMissingImage()
-    }
+    // val image = try {
+    //   ImageIO.read(javaClass.getResource("duke.gif"))
+    // } catch (ex: IOException) {
+    //   ex.printStackTrace()
+    //   makeMissingImage()
+    // }
+    val image = runCatching { ImageIO.read(javaClass.getResource("duke.gif")) }
+        .onFailure { it.printStackTrace() }
+        .getOrNull() ?: makeMissingImage()
+
     label1.setIcon(ImageIcon(image))
 
     val colorModel = image.getColorModel()

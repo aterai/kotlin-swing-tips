@@ -5,17 +5,14 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.geom.RoundRectangle2D
 import java.awt.image.BufferedImage
-import java.io.IOException
 import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel() {
   init {
-    val image = try {
+    val image = runCatching {
       ImageIO.read(javaClass.getResource("test.jpg"))
-    } catch (ex: IOException) {
-      makeMissingImage()
-    }
+    }.getOrNull() ?: makeMissingImage()
 
     val width = image.getWidth()
     val height = image.getHeight()
