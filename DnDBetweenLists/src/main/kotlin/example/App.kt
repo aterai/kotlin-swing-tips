@@ -115,7 +115,7 @@ internal class ListItemTransferHandler : TransferHandler() {
     val max = listModel.getSize()
     var index = dl.getIndex().takeIf { it >= 0 && it < max } ?: max
     addIndex = index
-    return try {
+    return runCatching {
       val values = info.getTransferable().getTransferData(localObjectFlavor) as List<*>
       for (o in values) {
         val i = index++
@@ -123,12 +123,7 @@ internal class ListItemTransferHandler : TransferHandler() {
         target.addSelectionInterval(i, i)
       }
       addCount = if (target == source) values.size else 0
-      true
-    } catch (ex: UnsupportedFlavorException) {
-      false
-    } catch (ex: IOException) {
-      false
-    }
+    }.isSuccess
   }
 
   protected override fun exportDone(c: JComponent, data: Transferable, action: Int) {

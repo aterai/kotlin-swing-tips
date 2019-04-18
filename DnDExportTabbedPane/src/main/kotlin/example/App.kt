@@ -448,7 +448,7 @@ internal class TabTransferHandler : TransferHandler() {
     }
     // val target = support.getComponent() as? DnDTabbedPane ?: return false
     // val dl = target.dropLocation
-    return try {
+    return runCatching {
       val data = support.getTransferable().getTransferData(localObjectFlavor) as DnDTabData
       val src = data.tabbedPane
       val index = target.dropLocation?.index ?: -1
@@ -457,12 +457,7 @@ internal class TabTransferHandler : TransferHandler() {
       } else {
         src.exportTab(src.dragTabIndex, target, index)
       }
-      true
-    } catch (ex: UnsupportedFlavorException) {
-      false
-    } catch (ex: IOException) {
-      false
-    }
+    }.isSuccess
   }
 
   protected override fun exportDone(c: JComponent?, data: Transferable?, action: Int) {

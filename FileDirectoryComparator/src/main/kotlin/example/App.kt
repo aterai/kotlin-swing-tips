@@ -2,10 +2,8 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.datatransfer.DataFlavor
-import java.awt.datatransfer.UnsupportedFlavorException
 import java.awt.event.ItemEvent
 import java.io.File
-import java.io.IOException
 import java.io.Serializable
 import java.util.Comparator
 import javax.swing.* // ktlint-disable no-wildcard-imports
@@ -109,23 +107,13 @@ internal class FileIconTableCellRenderer(private val fileSystemView: FileSystemV
 }
 
 internal class FileTransferHandler : TransferHandler() {
-  override fun importData(support: TransferHandler.TransferSupport) = try {
-    if (canImport(support)) {
-      val model = (support.getComponent() as JTable).getModel() as DefaultTableModel
-      for (o in support.getTransferable().getTransferData(DataFlavor.javaFileListFlavor) as List<*>) {
-        (o as? File)?.also { file -> model.addRow((0..2).map { file }.toTypedArray()) }
-      }
-      true
-    } else {
-      false
-    }
-  } catch (ex: UnsupportedFlavorException) {
-    ex.printStackTrace()
-    false
-  } catch (ex: IOException) {
-    ex.printStackTrace()
-    false
-  }
+  override fun importData(support: TransferHandler.TransferSupport) = runCatching {
+    val model = (support.getComponent() as JTable).getModel() as DefaultTableModel
+    val list = support.getTransferable().getTransferData(DataFlavor.javaFileListFlavor) as List<*>
+    list.filterIsInstance(File::class.java)
+        .map { file -> (0..2).map { file }.toTypedArray() }
+        .forEach { model.addRow(it) }
+  }.isSuccess
 
   override fun canImport(support: TransferSupport) = support.isDataFlavorSupported(DataFlavor.javaFileListFlavor)
 
