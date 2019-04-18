@@ -60,7 +60,7 @@ class MainPanel : JPanel(GridBagLayout()) {
   }
 
   companion object {
-    val CELLSIZE = 24
+    const val CELLSIZE = 24
   }
 }
 

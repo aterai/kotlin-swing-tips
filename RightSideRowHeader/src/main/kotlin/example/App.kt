@@ -79,8 +79,8 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   companion object {
-    val FIXEDCOLUMN_RANGE = 2
-    private val ES = ""
+    const val FIXEDCOLUMN_RANGE = 2
+    private const val ES = ""
   }
 }
 

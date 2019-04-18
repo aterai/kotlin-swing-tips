@@ -138,9 +138,9 @@ open class RoundedCornerButton : JButton {
   }
 
   companion object {
-    private val ARC_WIDTH = 16.0
-    private val ARC_HEIGHT = 16.0
-    val FOCUS_STROKE = 2.0
+    private const val ARC_WIDTH = 16.0
+    private const val ARC_HEIGHT = 16.0
+    const val FOCUS_STROKE = 2.0
   }
 }
 
