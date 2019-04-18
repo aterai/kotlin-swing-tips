@@ -68,24 +68,23 @@ internal object LookAndFeelUtil {
     lafItem.setHideActionText(true)
     lafItem.addActionListener {
       val m = lafRadioGroup.getSelection()
-      try {
+      runCatching {
         setLookAndFeel(m.getActionCommand())
-      } catch (ex: ClassNotFoundException) {
-        ex.printStackTrace()
-      } catch (ex: InstantiationException) {
-        ex.printStackTrace()
-      } catch (ex: IllegalAccessException) {
-        ex.printStackTrace()
-      } catch (ex: UnsupportedLookAndFeelException) {
-        ex.printStackTrace()
+      }.onFailure {
+        it.printStackTrace()
+        Toolkit.getDefaultToolkit().beep()
       }
     }
     lafRadioGroup.add(lafItem)
     return lafItem
   }
 
-  @Throws(ClassNotFoundException::class, InstantiationException::class,
-          IllegalAccessException::class, UnsupportedLookAndFeelException::class)
+  @Throws(
+    ClassNotFoundException::class,
+    InstantiationException::class,
+    IllegalAccessException::class,
+    UnsupportedLookAndFeelException::class
+  )
   private fun setLookAndFeel(lookAndFeel: String) {
     val oldLookAndFeel = LookAndFeelUtil.lookAndFeel
     if (oldLookAndFeel != lookAndFeel) {

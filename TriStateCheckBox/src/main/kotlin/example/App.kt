@@ -223,16 +223,11 @@ internal object LookAndFeelUtil {
     lafItem.setHideActionText(true)
     lafItem.addActionListener {
       val m = lafGroup.getSelection()
-      try {
+      runCatching {
         setLookAndFeel(m.getActionCommand())
-      } catch (ex: ClassNotFoundException) {
-        ex.printStackTrace()
-      } catch (ex: InstantiationException) {
-        ex.printStackTrace()
-      } catch (ex: IllegalAccessException) {
-        ex.printStackTrace()
-      } catch (ex: UnsupportedLookAndFeelException) {
-        ex.printStackTrace()
+      }.onFailure {
+        it.printStackTrace()
+        Toolkit.getDefaultToolkit().beep()
       }
     }
     lafGroup.add(lafItem)
