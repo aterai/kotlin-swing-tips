@@ -194,10 +194,10 @@ internal class TablePopupMenu : JPopupMenu() {
       val selection = table.getSelectedRows()
       for (i in selection.indices.reversed()) {
         val midx = table.convertRowIndexToModel(selection[i])
-        model.getValueAt(midx, 2)?.toString().let {
-          try {
+        model.getValueAt(midx, 2)?.toString().also {
+          runCatching {
             Files.delete(Paths.get(it))
-          } catch (ex: IOException) {
+          }.onFailure {
             Toolkit.getDefaultToolkit().beep()
           }
         }

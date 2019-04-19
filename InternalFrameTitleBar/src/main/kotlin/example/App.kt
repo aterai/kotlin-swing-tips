@@ -14,7 +14,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val closeButton = JButton("close")
     closeButton.addActionListener { e ->
       val c = e.getSource() as? Component ?: return@addActionListener
-      (SwingUtilities.getRoot(c) as? Window)?.let {
+      (SwingUtilities.getRoot(c) as? Window)?.also {
         it.dispatchEvent(WindowEvent(it, WindowEvent.WINDOW_CLOSING))
       }
     }
