@@ -9,7 +9,6 @@ import java.nio.charset.StandardCharsets
 import javax.script.Invocable
 import javax.script.ScriptEngine
 import javax.script.ScriptEngineManager
-import javax.script.ScriptException
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.html.HTMLEditorKit
 import javax.swing.text.html.StyleSheet
@@ -90,8 +89,8 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   private fun createEngine(): ScriptEngine? {
-    val manager = ScriptEngineManager()
-    val engine = manager.getEngineByName("JavaScript")
+    // val manager = ScriptEngineManager()
+    val engine = ScriptEngineManager().getEngineByName("JavaScript")
     // String p = "https://raw.githubusercontent.com/google/code-prettify/" +
     //            "f5ad44e3253f1bc8e288477a36b2ce5972e8e161/src/prettify.js";
     // URL url = new URL(p);
@@ -103,29 +102,31 @@ class MainPanel : JPanel(BorderLayout()) {
     // }
 
     val url = MainPanel::class.java.getResource("prettify.js")
-    try {
+    return runCatching {
       BufferedReader(InputStreamReader(url.openStream(), StandardCharsets.UTF_8)).use { r ->
         engine.eval("var window={}, navigator=null;")
         engine.eval(r)
-        return engine
       }
-    } catch (ex: IOException) {
-      ex.printStackTrace()
-    } catch (ex: ScriptException) {
-      ex.printStackTrace()
-    }
-    return null
+      engine
+    }.onFailure { it.printStackTrace() }.getOrNull()
+
+//     try {
+//       BufferedReader(InputStreamReader(url.openStream(), StandardCharsets.UTF_8)).use { r ->
+//         engine.eval("var window={}, navigator=null;")
+//         engine.eval(r)
+//         return engine
+//       }
+//     } catch (ex: IOException) {
+//       ex.printStackTrace()
+//     } catch (ex: ScriptException) {
+//       ex.printStackTrace()
+//     }
+//     return null
   }
 
-  private fun prettify(engine: ScriptEngine?, src: String) = try {
+  private fun prettify(engine: ScriptEngine?, src: String) = runCatching {
     (engine as? Invocable)?.invokeMethod(engine.get("window"), "prettyPrintOne", src) as String
-  } catch (ex: ScriptException) {
-    ex.printStackTrace()
-    ""
-  } catch (ex: NoSuchMethodException) {
-    ex.printStackTrace()
-    ""
-  }
+  }.onFailure { it.printStackTrace() }.getOrNull() ?: ""
 }
 
 fun main() {

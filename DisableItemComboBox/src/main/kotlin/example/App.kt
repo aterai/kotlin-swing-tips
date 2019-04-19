@@ -36,18 +36,17 @@ class MainPanel : JPanel(BorderLayout()) {
     it.addElement("6666666666")
   }
 
-  private fun getDisableIndexFromTextField(field: JTextField) = // : Set<Int> {
-    try {
-      field.getText().split(",")
+  private fun getDisableIndexFromTextField(field: JTextField) = runCatching {
+    field.getText().split(",")
         .map { it.trim { it <= ' ' } }
         .filterNot { it.isEmpty() }
         .map { it.toInt() }
         .toSet()
-    } catch (ex: NumberFormatException) {
+    }.onFailure {
       Toolkit.getDefaultToolkit().beep()
-      JOptionPane.showMessageDialog(field, "invalid value.\n" + ex.message, "Error", JOptionPane.ERROR_MESSAGE)
-      emptySet<Int>()
-    }
+      val root = field.getRootPane()
+      JOptionPane.showMessageDialog(root, "invalid value.\n" + it.message, "Error", JOptionPane.ERROR_MESSAGE)
+    }.getOrNull() ?: emptySet<Int>()
 }
 
 internal class DisableItemComboBox<E> : JComboBox<E> {
