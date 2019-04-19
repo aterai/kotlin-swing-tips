@@ -4,7 +4,6 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.util.Random
 import java.util.TreeSet
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ExecutionException
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
@@ -70,14 +69,16 @@ class MainPanel : JPanel(BorderLayout()) {
           return
         }
         var i = -1
-        val text = if (isCancelled()) "Cancelled" else try {
-          i = get()
-          if (i >= 0) "Done" else "Disposed"
-        } catch (ex: InterruptedException) {
-          ex.message
-        } catch (ex: ExecutionException) {
-          ex.message
-        }
+//         val text = if (isCancelled()) "Cancelled" else try {
+//           i = get()
+//           if (i >= 0) "Done" else "Disposed"
+//         } catch (ex: InterruptedException) {
+//           ex.message
+//         } catch (ex: ExecutionException) {
+//           ex.message
+//         }
+        val text = if (isCancelled()) "Cancelled" else runCatching { get() }
+            .fold(onSuccess = { if (it >= 0) "Done" else "Disposed" }, onFailure = { it.message })
         System.out.format("%s:%s(%dms)%n", key, text, i)
         // executor.remove(this);
       }
