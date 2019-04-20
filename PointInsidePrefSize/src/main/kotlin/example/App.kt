@@ -4,9 +4,7 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.awt.event.MouseMotionListener
-import java.io.IOException
 import java.net.MalformedURLException
-import java.net.URISyntaxException
 import java.net.URL
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableCellRenderer
@@ -152,14 +150,12 @@ internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMot
       val crow = table.rowAtPoint(pt)
       val url = table.getValueAt(crow, ccol) as URL
       println(url)
-      try {
-        if (Desktop.isDesktopSupported()) { // JDK 1.6.0
+      if (Desktop.isDesktopSupported()) { // JDK 1.6.0
+        runCatching {
           Desktop.getDesktop().browse(url.toURI())
+        }.onFailure {
+          it.printStackTrace()
         }
-      } catch (ex: URISyntaxException) {
-        ex.printStackTrace()
-      } catch (ex: IOException) {
-        ex.printStackTrace()
       }
     }
   }
