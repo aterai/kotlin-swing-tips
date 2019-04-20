@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.util.regex.PatternSyntaxException
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
@@ -9,7 +8,6 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter
-import javax.swing.text.BadLocationException
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 // import javax.swing.text.Highlighter
 // import javax.swing.text.Highlighter.HighlightPainter
@@ -72,9 +70,9 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
       sorter.setRowFilter(null)
       renderer.updatePattern("")
     } else if (renderer.updatePattern(pattern)) {
-      try {
+      runCatching {
         sorter.setRowFilter(RowFilter.regexFilter(pattern))
-      } catch (ex: PatternSyntaxException) {
+      }.onFailure {
         field.setBackground(WARNING_COLOR)
       }
     }
@@ -136,13 +134,11 @@ internal class HighlightTableCellRenderer : JTextField(), TableCellRenderer {
       //   }
       //   pos = end
       // }
-      try {
+      runCatching {
         pattern.toRegex().findAll(txt).map { it.range }.filterNot { it.isEmpty() }.forEach {
           highlighter.addHighlight(it.first(), it.last() + 1, highlightPainter)
         }
-      } catch (ex: BadLocationException) {
-        UIManager.getLookAndFeel().provideErrorFeedback(this)
-      } catch (ex: PatternSyntaxException) {
+      }.onFailure {
         UIManager.getLookAndFeel().provideErrorFeedback(this)
       }
     }
