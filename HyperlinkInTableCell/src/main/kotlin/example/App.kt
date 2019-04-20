@@ -148,14 +148,12 @@ internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMot
       val crow = table.rowAtPoint(pt)
       val url = table.getValueAt(crow, ccol) as URL
       println(url)
-      try {
-        if (Desktop.isDesktopSupported()) { // JDK 1.6.0
+      if (Desktop.isDesktopSupported()) { // JDK 1.6.0
+        runCatching {
           Desktop.getDesktop().browse(url.toURI())
+        }.onFailure {
+          it.printStackTrace()
         }
-      } catch (ex: URISyntaxException) {
-        ex.printStackTrace()
-      } catch (ex: IOException) {
-        ex.printStackTrace()
       }
     }
   }
