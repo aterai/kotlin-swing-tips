@@ -50,7 +50,7 @@ class MainPanel : JPanel(BorderLayout()) {
     table.setRowSelectionAllowed(true)
     table.setFillsViewportHeight(true)
     table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
-    table.setDefaultRenderer(Boolean::class.java, TranslucentBooleanRenderer())
+    table.setDefaultRenderer(java.lang.Boolean::class.java, TranslucentBooleanRenderer())
     table.setOpaque(false)
     table.setBackground(alphaZero)
 
