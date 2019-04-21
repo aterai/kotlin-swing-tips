@@ -177,7 +177,7 @@ internal class FileModel : DefaultTableModel() {
 
   companion object {
     private val COLUMN_ARRAY = arrayOf(
-        ColumnContext("No.", Int::class.java, false),
+        ColumnContext("No.", Integer::class.java, false),
         ColumnContext("Name", String::class.java, false),
         ColumnContext("Full Path", String::class.java, false))
   }

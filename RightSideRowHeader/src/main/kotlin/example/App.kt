@@ -15,7 +15,7 @@ class MainPanel : JPanel(BorderLayout()) {
       arrayOf<Any>(6, 66, ES, ES, ES, ES, ES, "F"))
   private val columnNames = arrayOf("fixed 1", "fixed 2", "A", "B", "C", "D", "E", "F")
   private val model = object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int) = if (column < FIXEDCOLUMN_RANGE) Int::class.java else Any::class.java
+    override fun getColumnClass(column: Int) = if (column < FIXEDCOLUMN_RANGE) Integer::class.java else Any::class.java
   }
   @Transient
   private val sorter = TableRowSorter<DefaultTableModel>(model)

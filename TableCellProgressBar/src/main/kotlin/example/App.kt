@@ -182,9 +182,9 @@ open class WorkerModel : DefaultTableModel() {
 
   companion object {
     private val COLUMN_ARRAY = arrayOf(
-        ColumnContext("No.", Int::class.java, false),
+        ColumnContext("No.", Integer::class.java, false),
         ColumnContext("Name", String::class.java, false),
-        ColumnContext("Progress", Int::class.java, false))
+        ColumnContext("Progress", Integer::class.java, false))
   }
 }
 
