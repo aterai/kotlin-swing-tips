@@ -36,10 +36,10 @@ class MainPanel : JPanel(BorderLayout()) {
       val retvalue = chooser.showOpenDialog(encode)
       if (retvalue == JFileChooser.APPROVE_OPTION) {
         val path = chooser.getSelectedFile().toPath()
-        try {
+        runCatching {
           textArea.setText(Base64.getEncoder().encodeToString(Files.readAllBytes(path)))
-        } catch (ex: IOException) {
-          ex.printStackTrace()
+        }.onFailure {
+          textArea.setText(it.message)
         }
       }
     }
@@ -47,13 +47,14 @@ class MainPanel : JPanel(BorderLayout()) {
     decode.addActionListener {
       val b64 = textArea.getText()
       if (!b64.isEmpty()) {
-        try {
+        runCatching {
           val dec = Base64.getDecoder().decode(b64.toByteArray(StandardCharsets.ISO_8859_1))
           ByteArrayInputStream(dec).use { bais ->
             label.setIcon(ImageIcon(ImageIO.read(bais)))
           }
-        } catch (ex: IOException) {
-          ex.printStackTrace()
+        }.onFailure {
+          label.setIcon(null)
+          label.setText(it.message)
         }
       }
     }
