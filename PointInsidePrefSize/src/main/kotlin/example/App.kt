@@ -15,10 +15,10 @@ class MainPanel : JPanel(BorderLayout()) {
   private val columnNames = arrayOf("No.", "Name", "URL")
   private val model = object : DefaultTableModel(columnNames, 0) {
     override fun getColumnClass(column: Int) = when (column) {
-      0 -> { Int::class.java }
-      1 -> { String::class.java }
-      2 -> { URL::class.java }
-      else -> { super.getColumnClass(column) }
+      0 -> Number::class.java
+      1 -> String::class.java
+      2 -> URL::class.java
+      else -> super.getColumnClass(column)
     }
 
     override fun isCellEditable(row: Int, col: Int) = false
