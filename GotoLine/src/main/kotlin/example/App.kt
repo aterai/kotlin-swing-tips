@@ -6,7 +6,6 @@ import java.awt.event.ComponentEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
-import javax.swing.text.BadLocationException
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
@@ -22,7 +21,7 @@ class MainPanel : JPanel(BorderLayout()) {
       val doc = textArea.getDocument()
       val root = doc.getDefaultRootElement()
       val i = Math.max(1, Math.min(root.getElementCount(), spinner.getValue() as Int))
-      try {
+      runCatching {
         val elem = root.getElement(i - 1)
         val rect = textArea.modelToView(elem.getStartOffset())
         val vr = scroll.getViewport().getViewRect()
@@ -30,7 +29,7 @@ class MainPanel : JPanel(BorderLayout()) {
         textArea.scrollRectToVisible(rect)
         textArea.setCaretPosition(elem.getStartOffset())
         // textArea.requestFocus();
-      } catch (ex: BadLocationException) {
+      }.onFailure {
         UIManager.getLookAndFeel().provideErrorFeedback(textArea)
       }
     }

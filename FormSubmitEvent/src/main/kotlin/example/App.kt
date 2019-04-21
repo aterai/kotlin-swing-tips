@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import java.nio.charset.Charset
 import javax.swing.* // ktlint-disable no-wildcard-imports
@@ -30,12 +29,10 @@ class MainPanel : JPanel(GridLayout(2, 1, 5, 5)) {
       val charset = Charset.defaultCharset().toString()
       logger.append("default charset: $charset\n")
 
-      try {
-        val txt = URLDecoder.decode(data, charset)
-        logger.append(txt + "\n")
-      } catch (ex: UnsupportedEncodingException) {
-        ex.printStackTrace()
-        logger.append(ex.message + "\n")
+      runCatching {
+        logger.append(URLDecoder.decode(data, charset) + "\n")
+      }.onFailure {
+        logger.append(it.message + "\n")
       }
     }
 
