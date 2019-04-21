@@ -23,13 +23,7 @@ class MainPanel : JPanel(BorderLayout()) {
       val loop = Toolkit.getDefaultToolkit().getSystemEventQueue().createSecondaryLoop()
       worker = object : Thread() {
         override fun run() {
-          var msg = "Done"
-          try {
-            Thread.sleep(5000)
-          } catch (ex: InterruptedException) {
-            msg = "Interrupted"
-          }
-          append(msg)
+          append(runCatching { Thread.sleep(5000) }.fold(onSuccess = { "Done" }, onFailure = { "Interrupted" }))
           setInputBlock(false)
           loop.exit()
         }
