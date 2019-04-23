@@ -144,15 +144,13 @@ internal class FileListTable(model: TableModel) : JTable(model) {
 
     setDefaultRenderer(Any::class.java, object : DefaultTableCellRenderer() {
       override fun getTableCellRendererComponent(
-        table: JTable?,
-        value: Any,
+        table: JTable,
+        value: Any?,
         isSelected: Boolean,
         hasFocus: Boolean,
         row: Int,
         column: Int
-      ): Component {
-        return super.getTableCellRendererComponent(table, value, false, false, row, column)
-      }
+      ) = super.getTableCellRendererComponent(table, value, false, false, row, column)
     })
 
     var col = getColumnModel().getColumn(0)

@@ -110,7 +110,7 @@ internal class CheckBoxesPanel : JPanel() {
     return b
   }
 
-  fun updateButtons(v: Any) {
+  fun updateButtons(v: Any?) {
     initButtons()
     val f = v as? Set<*> ?: EnumSet.noneOf(Permissions::class.java)
     buttons[0].setSelected(f.contains(Permissions.READ))
@@ -124,7 +124,7 @@ internal class CheckBoxesRenderer : TableCellRenderer {
 
   override fun getTableCellRendererComponent(
     table: JTable,
-    value: Any,
+    value: Any?,
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
@@ -165,7 +165,7 @@ internal class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
 
   override fun getTableCellEditorComponent(
     table: JTable,
-    value: Any,
+    value: Any?,
     isSelected: Boolean,
     row: Int,
     column: Int
