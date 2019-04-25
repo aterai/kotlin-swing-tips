@@ -15,7 +15,6 @@ import java.awt.image.BufferedImage
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 import java.io.IOException
-import java.util.TooManyListenersException
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel(BorderLayout()) {
@@ -52,10 +51,10 @@ class MainPanel : JPanel(BorderLayout()) {
     listOf(tabbedPane, sub, sub2).forEach {
       it.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT)
       it.setTransferHandler(handler)
-      try {
+      runCatching {
         it.getDropTarget().addDropTargetListener(dropTargetListener)
-      } catch (ex: TooManyListenersException) {
-        ex.printStackTrace()
+      }.onFailure { // catch (ex: TooManyListenersException) {
+        it.printStackTrace()
         Toolkit.getDefaultToolkit().beep()
       }
     }

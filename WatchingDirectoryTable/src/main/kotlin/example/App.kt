@@ -67,11 +67,10 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val button = JButton("createTempFile")
     button.addActionListener {
-      try {
-        val path = Files.createTempFile("_", ".tmp")
-        path.toFile().deleteOnExit()
-      } catch (ex: IOException) {
-        append(ex.message)
+      runCatching {
+        Files.createTempFile("_", ".tmp").toFile().deleteOnExit()
+      }.onFailure {
+        append(it.message)
       }
     }
 
