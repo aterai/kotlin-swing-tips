@@ -5,7 +5,6 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.util.EnumSet
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.border.Border
 import javax.swing.border.EmptyBorder
 import javax.swing.plaf.ColorUIResource
 import javax.swing.table.DefaultTableModel
