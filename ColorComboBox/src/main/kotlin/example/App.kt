@@ -94,12 +94,7 @@ internal class AlternateRowColorComboBox<E> : JComboBox<E> {
     }
   }
 
-  companion object {
-    private val EVEN_BGCOLOR = Color(225, 255, 225)
-    private val ODD_BGCOLOR = Color(255, 255, 255)
-
-    protected fun getAlternateRowColor(index: Int) = if (index % 2 == 0) EVEN_BGCOLOR else ODD_BGCOLOR
-  }
+  protected fun getAlternateRowColor(idx: Int) = if (idx % 2 == 0) Color(0xE1_FF_E1) else Color.WHITE
 }
 
 fun main() {
