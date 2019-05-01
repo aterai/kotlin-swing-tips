@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.util.Random
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.BadLocationException
 
@@ -10,7 +9,7 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
   private val statusPanel = JPanel(BorderLayout())
   private val runButton = JButton("run")
   private val cancelButton = JButton("cancel")
-  private val pauseButton = JButton("resume")
+  private val pauseButton = JButton("pause")
   private val bar1 = JProgressBar()
   private val bar2 = JProgressBar()
   @Transient
@@ -37,20 +36,14 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
     pauseButton.addActionListener { e ->
       val b = e.getSource() as JButton
       worker?.also {
-        if (it.isCancelled() || it.isPaused) {
-          b.setText("pause")
-        } else {
-          b.setText("resume")
-        }
+        b.setText(if (it.isCancelled() || it.isPaused) "pause" else "resume")
         it.isPaused = it.isPaused xor true
-      }?.also {
-        b.setText("pause")
-      }
+      } ?: b.setText("pause")
     }
 
     cancelButton.setEnabled(false)
     cancelButton.addActionListener {
-      worker?.takeIf { it.isDone() }?.cancel(true)
+      worker?.takeUnless { it.isDone() }?.cancel(true)
       worker = null
       pauseButton.setText("pause")
       pauseButton.setEnabled(false)
@@ -64,7 +57,7 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  open inner class ProgressTask : BackgroundTask() {
+  private inner class ProgressTask : BackgroundTask() {
     protected override fun process(chunks: List<Progress>) {
       if (isCancelled()) {
         return
@@ -166,7 +159,6 @@ enum class ProgressType {
 class Progress(val component: ProgressType, val value: Any)
 
 open class BackgroundTask : SwingWorker<String, Progress>() {
-  private val rnd = Random()
   var isPaused: Boolean = false
 
   override fun doInBackground(): String {
@@ -192,7 +184,7 @@ open class BackgroundTask : SwingWorker<String, Progress>() {
   private fun convertFileToSomething() {
     var blinking = false
     var current = 0
-    val lengthOfTask = 10 + rnd.nextInt(50)
+    val lengthOfTask = (10..60).random()
     while (current <= lengthOfTask && !isCancelled()) {
       if (isPaused) {
         try {
