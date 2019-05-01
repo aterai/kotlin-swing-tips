@@ -6,7 +6,6 @@ import java.awt.event.ActionListener
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.io.Serializable
-import java.util.Random
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel(BorderLayout()) {
@@ -126,12 +125,10 @@ internal class CardLayoutTabbedPane : JPanel(BorderLayout()) {
         cardLayout.show(contentsPanel, title)
       }
     })
-    tab.setIcon(icons.get(Random().nextInt(icons.size)))
+    tab.setIcon(icons.get((0 until icons.size).random()))
     tab.setLayout(BorderLayout())
     val close = object : JButton(CloseTabIcon(Color.GRAY)) {
-      override fun getPreferredSize(): Dimension {
-        return Dimension(12, 12)
-      }
+      override fun getPreferredSize() = Dimension(12, 12)
     }
     close.addActionListener {
       tabPanel.remove(tab)
