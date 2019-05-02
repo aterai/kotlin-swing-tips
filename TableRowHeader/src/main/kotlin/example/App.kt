@@ -173,21 +173,13 @@ internal class RowDataModel(private val rowListModel: DefaultListModel<String>) 
     rowListModel.remove(index)
   }
 
-  override fun isCellEditable(row: Int, col: Int): Boolean {
-    return COLUMN_ARRAY[col].isEditable
-  }
+  override fun isCellEditable(row: Int, col: Int) = COLUMN_ARRAY[col].isEditable
 
-  override fun getColumnClass(column: Int): Class<*> {
-    return COLUMN_ARRAY[column].columnClass
-  }
+  override fun getColumnClass(column: Int) = COLUMN_ARRAY[column].columnClass
 
-  override fun getColumnCount(): Int {
-    return COLUMN_ARRAY.size
-  }
+  override fun getColumnCount() = COLUMN_ARRAY.size
 
-  override fun getColumnName(column: Int): String {
-    return COLUMN_ARRAY[column].columnName
-  }
+  override fun getColumnName(column: Int) = COLUMN_ARRAY[column].columnName
 
   private class ColumnContext(val columnName: String, val columnClass: Class<*>, val isEditable: Boolean)
 
