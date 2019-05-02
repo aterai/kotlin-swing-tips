@@ -1,8 +1,8 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.util.Random
 import java.util.TreeSet
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ConcurrentHashMap
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableCellRenderer
@@ -69,16 +69,14 @@ class MainPanel : JPanel(BorderLayout()) {
           return
         }
         var i = -1
-//         val text = if (isCancelled()) "Cancelled" else try {
-//           i = get()
-//           if (i >= 0) "Done" else "Disposed"
-//         } catch (ex: InterruptedException) {
-//           ex.message
-//         } catch (ex: ExecutionException) {
-//           ex.message
-//         }
-        val text = if (isCancelled()) "Cancelled" else runCatching { get() }
-            .fold(onSuccess = { if (it >= 0) "Done" else "Disposed" }, onFailure = { it.message })
+        val text = if (isCancelled()) "Cancelled" else try {
+          i = get()
+          if (i >= 0) "Done" else "Disposed"
+        } catch (ex: InterruptedException) {
+          "Interrupted"
+        } catch (ex: ExecutionException) {
+          ex.message
+        }
         System.out.format("%s:%s(%dms)%n", key, text, i)
         // executor.remove(this);
       }
@@ -137,7 +135,7 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 open class BackgroundTask : SwingWorker<Int, Int>() {
-  private val sleepDummy = Random().nextInt(100) + 1
+  private val sleepDummy = (1..100).random() // Random().nextInt(100) + 1
 
   protected override fun doInBackground(): Int? {
     val lengthOfTask = 120
