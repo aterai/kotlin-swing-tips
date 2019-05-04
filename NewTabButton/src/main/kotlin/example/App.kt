@@ -21,40 +21,6 @@ class MainPanel : JPanel(BorderLayout()) {
     add(tab3)
     setPreferredSize(Dimension(320, 240))
   }
-
-  companion object {
-
-    @JvmStatic
-    fun main(args: Array<String>) {
-      EventQueue.invokeLater(object : Runnable {
-        override fun run() {
-          createAndShowGui()
-        }
-      })
-    }
-
-    fun createAndShowGui() {
-      try {
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
-        // UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-      } catch (ex: ClassNotFoundException) {
-        ex.printStackTrace()
-      } catch (ex: InstantiationException) {
-        ex.printStackTrace()
-      } catch (ex: IllegalAccessException) {
-        ex.printStackTrace()
-      } catch (ex: UnsupportedLookAndFeelException) {
-        ex.printStackTrace()
-      }
-
-      val frame = JFrame("@title@")
-      frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-      frame.getContentPane().add(MainPanel())
-      frame.pack()
-      frame.setLocationRelativeTo(null)
-      frame.setVisible(true)
-    }
-  }
 }
 
 internal class CardLayoutTabbedPane : JPanel(BorderLayout()) {
@@ -233,16 +199,11 @@ internal class TabLayout : LayoutManager, Serializable {
 
 fun main() {
   EventQueue.invokeLater {
-    try {
+    runCatching {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
-    } catch (ex: ClassNotFoundException) {
-      ex.printStackTrace()
-    } catch (ex: InstantiationException) {
-      ex.printStackTrace()
-    } catch (ex: IllegalAccessException) {
-      ex.printStackTrace()
-    } catch (ex: UnsupportedLookAndFeelException) {
-      ex.printStackTrace()
+    }.onFailure {
+      it.printStackTrace()
+      Toolkit.getDefaultToolkit().beep()
     }
     JFrame().apply {
       setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)

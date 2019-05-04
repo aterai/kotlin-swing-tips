@@ -53,44 +53,6 @@ class MainPanel : JPanel(BorderLayout()) {
 
     setPreferredSize(Dimension(320, 240))
   }
-
-  companion object {
-
-    @JvmStatic
-    fun main(args: Array<String>) {
-      EventQueue.invokeLater(object : Runnable {
-        override fun run() {
-          createAndShowGui()
-        }
-      })
-    }
-
-    fun createAndShowGui() {
-      try {
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
-      } catch (ex: ClassNotFoundException) {
-        ex.printStackTrace()
-        Toolkit.getDefaultToolkit().beep()
-      } catch (ex: InstantiationException) {
-        ex.printStackTrace()
-        Toolkit.getDefaultToolkit().beep()
-      } catch (ex: IllegalAccessException) {
-        ex.printStackTrace()
-        Toolkit.getDefaultToolkit().beep()
-      } catch (ex: UnsupportedLookAndFeelException) {
-        ex.printStackTrace()
-        Toolkit.getDefaultToolkit().beep()
-      }
-
-      val frame = JFrame("@title@")
-      frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
-      // frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-      frame.getContentPane().add(MainPanel())
-      frame.pack()
-      frame.setLocationRelativeTo(null)
-      frame.setVisible(true)
-    }
-  }
 }
 
 internal class TriStateCheckBox : JCheckBox() {
