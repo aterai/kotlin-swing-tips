@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.text.BadLocationException
 
 class MainPanel : JPanel(BorderLayout(5, 5)) {
   private val area = JTextArea()
@@ -109,15 +108,19 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
     if (append) {
       area.append("*")
     } else {
-      try {
+      runCatching {
         val doc = area.getDocument()
         doc.remove(doc.getLength() - 1, 1)
-      } catch (ex: BadLocationException) {
-        // should never happen
-        val wrap = StringIndexOutOfBoundsException(ex.offsetRequested())
-        wrap.initCause(ex)
-        throw wrap
       }
+      // try {
+      //   val doc = area.getDocument()
+      //   doc.remove(doc.getLength() - 1, 1)
+      // } catch (ex: BadLocationException) {
+      //   // should never happen
+      //   val wrap = StringIndexOutOfBoundsException(ex.offsetRequested())
+      //   wrap.initCause(ex)
+      //   throw wrap
+      // }
     }
   }
 
