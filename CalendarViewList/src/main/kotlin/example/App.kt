@@ -59,7 +59,7 @@ class MainPanel : JPanel() {
           // val s = it.getDisplayName(TextStyle.SHORT_STANDALONE, l);
           // setText(s.substring(0, Math.min(2, s.length())));
           setText(it.getDisplayName(TextStyle.SHORT_STANDALONE, l))
-          setBackground(Color(0xDCDCDC))
+          setBackground(Color(0xDC_DC_DC))
         }
         return this
       }
@@ -84,7 +84,7 @@ class MainPanel : JPanel() {
 
     val label = JLabel(" ", SwingConstants.CENTER)
 
-    monthList.getSelectionModel().addListSelectionListener({ e ->
+    monthList.getSelectionModel().addListSelectionListener { e ->
       val lsm = e.getSource() as ListSelectionModel
       if (lsm.isSelectionEmpty()) {
         label.setText(" ")
@@ -94,7 +94,7 @@ class MainPanel : JPanel() {
         val to = model.getElementAt(lsm.getMaxSelectionIndex())
         label.setText(Period.between(from, to).toString())
       }
-    })
+    }
 
     val box = Box.createVerticalBox()
     box.add(yearMonthPanel)
@@ -218,7 +218,7 @@ internal class CalendarViewListModel(date: LocalDate) : AbstractListModel<LocalD
   override fun getElementAt(index: Int) = startDate.plusDays(index.toLong())
 
   companion object {
-    val ROW_COUNT = 6
+    const val ROW_COUNT = 6
   }
 }
 
