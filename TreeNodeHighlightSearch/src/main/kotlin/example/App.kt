@@ -106,7 +106,7 @@ internal class HighlightTreeCellRenderer : DefaultTreeCellRenderer() {
   }
 
   companion object {
-    private val ROLLOVER_ROW_COLOR = Color(0xDCF0FF)
+    private val ROLLOVER_ROW_COLOR = Color(0xDC_F0_FF)
   }
 }
 

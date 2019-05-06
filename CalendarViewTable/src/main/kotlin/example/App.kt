@@ -86,9 +86,9 @@ class MainPanel : JPanel(BorderLayout()) {
           Color.BLACK else Color.GRAY
         setForeground(fgc)
         val dow = it.getDayOfWeek()
-        val bgc = if (it.isEqual(realLocalDate)) Color(0xDCFFDC)
-            else if (dow == DayOfWeek.SUNDAY) Color(0xFFDCDC)
-            else if (dow == DayOfWeek.SATURDAY) Color(0xDCDCFF)
+        val bgc = if (it.isEqual(realLocalDate)) Color(0xDC_FF_DC)
+            else if (dow == DayOfWeek.SUNDAY) Color(0xFF_DC_DC)
+            else if (dow == DayOfWeek.SATURDAY) Color(0xDC_DC_FF)
             else Color.WHITE
         setBackground(bgc)
       }

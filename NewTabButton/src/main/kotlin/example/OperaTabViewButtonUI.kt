@@ -69,7 +69,7 @@ class OperaTabViewButtonUI : BasicTabViewButtonUI() {
 
     val model = b.getModel()
     if (!model.isSelected() && !model.isArmed() && !model.isRollover()) {
-      g2.setPaint(Color(0x64000000, true))
+      g2.setPaint(Color(0x64_00_00_00, true))
       g2.fillRect(0, 0, size.width, size.height)
       // g2.fill(viewRect);
     }

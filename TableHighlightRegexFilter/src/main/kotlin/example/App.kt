@@ -79,7 +79,7 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
   }
 
   companion object {
-    private val WARNING_COLOR = Color(0xFFC8C8)
+    private val WARNING_COLOR = Color(0xFF_C8_C8)
   }
 }
 
