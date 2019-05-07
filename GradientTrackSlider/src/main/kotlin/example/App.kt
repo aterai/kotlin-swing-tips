@@ -210,14 +210,18 @@ internal object GradientPalletUtils {
 
     val width = image.getWidth(null)
     val pallet = IntArray(width)
-    val pg = PixelGrabber(image, 0, 0, width, 1, pallet, 0, width)
-    try {
-      pg.grabPixels()
-    } catch (ex: InterruptedException) {
-      ex.printStackTrace()
+    runCatching {
+      PixelGrabber(image, 0, 0, width, 1, pallet, 0, width).grabPixels()
+    }.onFailure {
       Toolkit.getDefaultToolkit().beep()
     }
-
+//    val pg = PixelGrabber(image, 0, 0, width, 1, pallet, 0, width)
+//    try {
+//      pg.grabPixels()
+//    } catch (ex: InterruptedException) {
+//      ex.printStackTrace()
+//      Toolkit.getDefaultToolkit().beep()
+//    }
     return pallet
   }
 
