@@ -167,11 +167,10 @@ internal class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
     isSelected: Boolean,
     row: Int,
     column: Int
-  ): Component {
-    renderer.setOpaque(true)
-    renderer.setBackground(table.getSelectionBackground())
-    renderer.updateButtons(value)
-    return renderer
+  ) = renderer.also {
+    it.setOpaque(true)
+    it.setBackground(table.getSelectionBackground())
+    it.updateButtons(value)
   }
 
   override fun getCellEditorValue() = EnumSet.noneOf(Permissions::class.java).also {
