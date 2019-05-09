@@ -65,7 +65,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
   fun updateMonthView(localDate: LocalDate) {
     currentLocalDate = localDate
-    monthLabel.setText(localDate.format(DateTimeFormatter.ofPattern("YYYY / MM").withLocale(Locale.getDefault())))
+    monthLabel.setText(localDate.format(DateTimeFormatter.ofPattern("yyyy / MM").withLocale(Locale.getDefault())))
     monthTable.setModel(CalendarViewTableModel(localDate))
   }
 
