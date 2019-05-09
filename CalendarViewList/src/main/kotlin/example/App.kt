@@ -7,6 +7,7 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.Period
 import java.time.YearMonth
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.time.temporal.WeekFields
@@ -28,7 +29,7 @@ class MainPanel : JPanel() {
       getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
     }
   }
-  val realLocalDate = LocalDate.now()
+  val realLocalDate = LocalDate.now(ZoneId.systemDefault())
   private var currentLocalDate: LocalDate = realLocalDate
 
   init {

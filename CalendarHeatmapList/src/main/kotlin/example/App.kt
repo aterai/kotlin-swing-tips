@@ -3,13 +3,14 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.TextStyle
 import java.time.temporal.WeekFields
 import java.util.Locale
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel(BorderLayout()) {
-  val currentLocalDate = LocalDate.now()
+  val currentLocalDate = LocalDate.now(ZoneId.systemDefault())
   val weekList = object : JList<Contribution>(CalendarViewListModel(currentLocalDate)) {
     override fun updateUI() {
       setCellRenderer(null)

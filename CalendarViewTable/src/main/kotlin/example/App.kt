@@ -4,6 +4,7 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.time.temporal.WeekFields
@@ -14,7 +15,7 @@ import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 
 class MainPanel : JPanel(BorderLayout()) {
-  val realLocalDate = LocalDate.now()
+  val realLocalDate = LocalDate.now(ZoneId.systemDefault())
   private var currentLocalDate: LocalDate = realLocalDate
   private val dateLabel = JLabel(realLocalDate.toString(), SwingConstants.CENTER)
   private val monthLabel = JLabel("", SwingConstants.CENTER)
