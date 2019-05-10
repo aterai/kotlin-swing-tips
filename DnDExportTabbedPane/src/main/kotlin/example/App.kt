@@ -179,18 +179,18 @@ internal class DnDTabbedPane : JTabbedPane() {
     }
     for (i in 0 until getTabCount()) {
       if (getBoundsAt(i).contains(p)) {
-        return DropLocation(p, i)
+        return DnDTabbedPane.DropLocation(p, i)
       }
     }
     return if (tabAreaBounds.contains(p)) {
-      DropLocation(p, getTabCount())
-    } else DropLocation(p, -1)
+      DnDTabbedPane.DropLocation(p, getTabCount())
+    } else DnDTabbedPane.DropLocation(p, -1)
   }
 
   fun updateTabDropLocation(location: DnDTabbedPane.DropLocation?, forDrop: Boolean): Any? {
     val old = dropLocation
     if (location == null || !forDrop) {
-      dropLocation = DropLocation(Point(), -1)
+      dropLocation = DnDTabbedPane.DropLocation(Point(), -1)
     } else {
       dropLocation = location
     }
@@ -291,7 +291,7 @@ internal class DnDTabbedPane : JTabbedPane() {
         th.exportAsDrag(src, e, TransferHandler.MOVE)
         RECT_LINE.setBounds(0, 0, 0, 0)
         src.getRootPane().getGlassPane().setVisible(true)
-        src.updateTabDropLocation(DropLocation(tabPt, -1), true)
+        src.updateTabDropLocation(DnDTabbedPane.DropLocation(tabPt, -1), true)
         startPt = null
       }
     }
