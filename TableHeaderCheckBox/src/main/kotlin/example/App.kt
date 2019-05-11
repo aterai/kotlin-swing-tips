@@ -3,8 +3,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.util.Vector
-import java.util.stream.Collectors
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.TableModelEvent
 import javax.swing.event.TableModelListener
@@ -129,10 +127,7 @@ class HeaderCheckBoxHandler(val table: JTable, val targetColumnIndex: Int) : Mou
 
   private fun fireUpdateEvent(m: DefaultTableModel, column: TableColumn, status: Any): Boolean {
     return if (Status.INDETERMINATE == status) {
-      val l = (m.getDataVector() as Vector<*>).stream()
-          .map { v -> (v as Vector<*>).get(targetColumnIndex) as Boolean }
-          .distinct()
-          .collect(Collectors.toList())
+      val l = m.getDataVector().map { (it as List<*>).get(targetColumnIndex) as Boolean }.distinct()
       val isOnlyOneSelected = l.size == 1
       if (isOnlyOneSelected) {
         // column.setHeaderValue(if (l.get(0)) Status.SELECTED else Status.DESELECTED)
