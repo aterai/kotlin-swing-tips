@@ -4,7 +4,6 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ItemEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.util.Vector
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicComboPopup
 import javax.swing.plaf.basic.ComboPopup
@@ -14,13 +13,13 @@ import javax.swing.table.TableCellRenderer
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    val aseries = listOf<Vector<Any>>(
-      Vector<Any>(listOf("A1", 594, 841)),
-      Vector<Any>(listOf("A2", 420, 594)),
-      Vector<Any>(listOf("A3", 297, 420)),
-      Vector<Any>(listOf("A4", 210, 297)),
-      Vector<Any>(listOf("A5", 148, 210)),
-      Vector<Any>(listOf("A6", 105, 148))
+    val aseries = listOf<List<Any>>(
+      listOf("A1", 594, 841),
+      listOf("A2", 420, 594),
+      listOf("A3", 297, 420),
+      listOf("A4", 210, 297),
+      listOf("A5", 148, 210),
+      listOf("A6", 105, 148)
     )
 
     val columns = arrayOf("A series", "width", "height")
@@ -38,7 +37,7 @@ class MainPanel : JPanel(BorderLayout()) {
       override fun isCellEditable(row: Int, column: Int) = false
     }
 
-    val combo = DropdownTableComboBox<Vector<Any>>(aseries, model)
+    val combo = DropdownTableComboBox<List<Any>>(aseries, model)
     combo.addItemListener { e ->
       if (e.getStateChange() == ItemEvent.SELECTED) {
         val rowData = combo.getSelectedRow()
@@ -47,10 +46,10 @@ class MainPanel : JPanel(BorderLayout()) {
       }
     }
     val renderer = combo.getRenderer()
-    combo.setRenderer(object : ListCellRenderer<Vector<Any>> {
+    combo.setRenderer(object : ListCellRenderer<List<Any>> {
       override fun getListCellRendererComponent(
-        list: JList<out Vector<Any>>,
-        value: Vector<Any>?,
+        list: JList<out List<Any>>,
+        value: List<Any>?,
         index: Int,
         isSelected: Boolean,
         cellHasFocus: Boolean
@@ -88,7 +87,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class DropdownTableComboBox<E : Vector<Any>>(val list: List<E>, model: DefaultTableModel) : JComboBox<E>() {
+internal class DropdownTableComboBox<E : List<Any>>(val list: List<E>, model: DefaultTableModel) : JComboBox<E>() {
   @Transient
   protected val highlighter = HighlightListener()
   protected val table: JTable = object : JTable() {
@@ -117,7 +116,7 @@ internal class DropdownTableComboBox<E : Vector<Any>>(val list: List<E>, model: 
   init {
     table.setModel(model)
     list.forEach { this.addItem(it) }
-    list.forEach { model.addRow(it) }
+    list.forEach { v -> model.addRow(v.toTypedArray()) }
   }
 
   override fun updateUI() {
