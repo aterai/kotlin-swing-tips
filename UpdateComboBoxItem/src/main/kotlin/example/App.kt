@@ -115,9 +115,7 @@ open class CheckedComboBox<E : CheckableItem> : JComboBox<E> {
 
   constructor(model: ComboBoxModel<E>) : super(model)
 
-  override fun getPreferredSize(): Dimension {
-    return Dimension(200, 20)
-  }
+  override fun getPreferredSize() = Dimension(200, 20)
 
   override fun updateUI() {
     setRenderer(null)
