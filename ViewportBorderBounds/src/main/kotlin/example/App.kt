@@ -3,7 +3,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.io.BufferedReader
 import java.io.File
-import java.io.IOException
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 import javax.script.Invocable
@@ -77,15 +76,16 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   private fun loadFile(path: String) {
-    try {
-      val txt = File(path).useLines { it.toList() }.map {
-        it.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-      }.joinToString("\n")
-      val html = "<pre>" + prettify(engine, txt) + "\n</pre>"
-      editor.setText(html)
-    } catch (ex: IOException) {
-      ex.printStackTrace()
-    }
+    val html = runCatching {
+      File(path)
+        .useLines { it.toList() }
+        .map { it.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") }
+        .joinToString("\n")
+    }.fold(
+      onSuccess = { prettify(engine, it) },
+      onFailure = { it.message }
+    )
+    editor.setText("<pre>$html\n</pre>")
   }
 
   private fun createEngine(): ScriptEngine? {
@@ -102,7 +102,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
   private fun prettify(engine: ScriptEngine?, src: String) = runCatching {
     (engine as? Invocable)?.invokeMethod(engine.get("window"), "prettyPrintOne", src) as String
-  }.onFailure { it.printStackTrace() }.getOrNull() ?: ""
+  }.getOrNull() ?: "error"
 }
 
 internal class ScrollPaneLayerUI : LayerUI<JScrollPane>() {

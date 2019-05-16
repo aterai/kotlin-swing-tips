@@ -3,7 +3,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.io.BufferedReader
 import java.io.File
-import java.io.IOException
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
 import javax.script.Invocable
@@ -72,20 +71,31 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   private fun loadFile(path: String) {
-    try {
-      // val txt = Files.lines(Paths.get(path), StandardCharsets.UTF_8).map {
-      //   it.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-      // }.collect(Collectors.joining("\n"))
-      // By default uses UTF-8 charset.
-      val txt = File(path).useLines { it.toList() }.map {
-        it.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-      }.joinToString("\n")
-      val html = "<pre>" + prettify(engine, txt) + "\n</pre>"
-      editor1.setText(html)
-      editor2.setText(html)
-    } catch (ex: IOException) {
-      ex.printStackTrace()
-    }
+    // try {
+    //   // val txt = Files.lines(Paths.get(path), StandardCharsets.UTF_8).map {
+    //   //   it.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    //   // }.collect(Collectors.joining("\n"))
+    //   // By default uses UTF-8 charset.
+    //   val txt = File(path).useLines { it.toList() }.map {
+    //     it.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    //   }.joinToString("\n")
+    //   val html = "<pre>" + prettify(engine, txt) + "\n</pre>"
+    //   editor1.setText(html)
+    //   editor2.setText(html)
+    // } catch (ex: IOException) {
+    //   ex.printStackTrace()
+    // }
+    val html = runCatching {
+      File(path)
+        .useLines { it.toList() }
+        .map { it.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") }
+        .joinToString("\n")
+    }.fold(
+      onSuccess = { prettify(engine, it) },
+      onFailure = { it.message }
+    )
+    editor1.setText("<pre>$html\n</pre>")
+    editor2.setText("<pre>$html\n</pre>")
   }
 
   private fun createEngine(): ScriptEngine? {
@@ -126,7 +136,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
   private fun prettify(engine: ScriptEngine?, src: String) = runCatching {
     (engine as? Invocable)?.invokeMethod(engine.get("window"), "prettyPrintOne", src) as String
-  }.onFailure { it.printStackTrace() }.getOrNull() ?: ""
+  }.getOrNull() ?: "error"
 }
 
 fun main() {
