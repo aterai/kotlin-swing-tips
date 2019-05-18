@@ -20,7 +20,7 @@ class MainPanel : JPanel(GridBagLayout()) {
         arrayOf(0, 0, 0, 0, 8, 0, 0, 7, 9))
 
     val model = object : DefaultTableModel(data, columnNames) {
-      override fun getColumnClass(column: Int) = Integer::class.java
+      override fun getColumnClass(column: Int) = Number::class.java
 
       override fun isCellEditable(row: Int, column: Int) = data[row][column] == 0
     }
@@ -45,7 +45,20 @@ class MainPanel : JPanel(GridBagLayout()) {
     table.setRowMargin(0)
     table.getColumnModel().setColumnMargin(0)
 
-    table.setDefaultRenderer(Integer::class.java, SudokuCellRenderer(data, table.getFont()))
+    val editor = JTextField()
+    editor.setHorizontalAlignment(SwingConstants.CENTER)
+    // editor.setBorder(BorderFactory.createLineBorder(Color.RED));
+    table.setDefaultEditor(Number::class.java, object : DefaultCellEditor(editor) {
+      override fun getTableCellEditorComponent(table: JTable, value: Any, isSelected: Boolean, row: Int, column: Int): Component {
+        val v = if (value == 0) "" else value
+        return super.getTableCellEditorComponent(table, v, isSelected, row, column)
+      }
+
+      override fun getCellEditorValue(): Any {
+        return if (editor.getText().isEmpty()) 0 else super.getCellEditorValue()
+      }
+    })
+    table.setDefaultRenderer(Int::class.java, SudokuCellRenderer(data))
 
     val m = table.getColumnModel()
     m.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
@@ -69,8 +82,7 @@ class MainPanel : JPanel(GridBagLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  private class SudokuCellRenderer(src: Array<Array<Int>>, defFont: Font) : DefaultTableCellRenderer() {
-    private val defFont: Font
+  private class SudokuCellRenderer(src: Array<Array<Int>>) : DefaultTableCellRenderer() {
     private val bold: Font
     private val b0 = BorderFactory.createMatteBorder(0, 0, BORDERWIDTH1, BORDERWIDTH1, Color.GRAY)
     private val b1 = BorderFactory.createMatteBorder(0, 0, BORDERWIDTH2, BORDERWIDTH2, Color.BLACK)
@@ -80,16 +92,16 @@ class MainPanel : JPanel(GridBagLayout()) {
     private val b3 = BorderFactory.createCompoundBorder(
         BorderFactory.createMatteBorder(0, 0, 0, BORDERWIDTH2, Color.BLACK),
         BorderFactory.createMatteBorder(0, 0, BORDERWIDTH1, 0, Color.GRAY))
-    private val data: Array<Array<Int>>
+    private val mask: Array<Array<Int>>
 
     init {
-      this.defFont = defFont
-      this.bold = defFont.deriveFont(Font.BOLD)
-      val dest = Array(src.size, { Array(src[0].size, { 0 }) })
-      for (i in src.indices) {
-        System.arraycopy(src[i], 0, dest[i], 0, src[0].size)
-      }
-      this.data = dest
+      this.bold = font.deriveFont(Font.BOLD)
+      // val dest = Array(src.size, { Array(src[0].size, { 0 }) })
+      // for (i in src.indices) {
+      //   System.arraycopy(src[i], 0, dest[i], 0, src[0].size)
+      // }
+      // this.mask = dest
+      this.mask = Array(src.size, { i -> Array(src[i].size, { j -> src[i][j] }) })
     }
 
     override fun getTableCellRendererComponent(
@@ -100,7 +112,7 @@ class MainPanel : JPanel(GridBagLayout()) {
       row: Int,
       column: Int
     ): Component {
-      val isEditable = data[row][column] == 0
+      val isEditable = mask[row][column] == 0
       super.getTableCellRendererComponent(table, value, isEditable && isSelected, hasFocus, row, column)
       if (isEditable && value == 0) {
         this.setText(" ")
@@ -109,15 +121,21 @@ class MainPanel : JPanel(GridBagLayout()) {
       setHorizontalAlignment(SwingConstants.CENTER)
       val rf = (row + 1) % 3 == 0
       val cf = (column + 1) % 3 == 0
-      if (rf && cf) {
-        setBorder(b1)
-      } else if (rf) {
-        setBorder(b2)
-      } else if (cf) {
-        setBorder(b3)
-      } else {
-        setBorder(b0)
-      }
+      setBorder(when {
+        rf && cf -> b1
+        rf -> b2
+        cf -> b3
+        else -> b0
+      })
+//      if (rf && cf) {
+//        setBorder(b1)
+//      } else if (rf) {
+//        setBorder(b2)
+//      } else if (cf) {
+//        setBorder(b3)
+//      } else {
+//        setBorder(b0)
+//      }
       return this
     }
   }

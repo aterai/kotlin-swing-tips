@@ -48,7 +48,7 @@ class MainPanel : JPanel(BorderLayout()) {
 // http://shop.oreilly.com/product/9780596009076.do
 // 9. Blur Disabled Components
 // http://code.google.com/p/filthy-rich-clients/source/browse/trunk/swing-hacks-examples-20060109/Ch01-JComponents/09/swinghacks/ch01/JComponents/hack09/BlurJButton.java?r=11
-internal class BlurJButton (label: String) : JButton(label) {
+internal class BlurJButton(label: String) : JButton(label) {
   @Transient
   private var buf: BufferedImage? = null
 
