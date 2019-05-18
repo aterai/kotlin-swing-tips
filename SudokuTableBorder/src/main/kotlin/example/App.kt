@@ -49,7 +49,13 @@ class MainPanel : JPanel(GridBagLayout()) {
     editor.setHorizontalAlignment(SwingConstants.CENTER)
     // editor.setBorder(BorderFactory.createLineBorder(Color.RED));
     table.setDefaultEditor(Number::class.java, object : DefaultCellEditor(editor) {
-      override fun getTableCellEditorComponent(table: JTable, value: Any, isSelected: Boolean, row: Int, column: Int): Component {
+      override fun getTableCellEditorComponent(
+        table: JTable,
+        value: Any?,
+        isSelected: Boolean,
+        row: Int,
+        column: Int
+      ): Component {
         val v = if (value == 0) "" else value
         return super.getTableCellEditorComponent(table, v, isSelected, row, column)
       }
