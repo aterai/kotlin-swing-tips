@@ -64,7 +64,7 @@ class MainPanel : JPanel(GridBagLayout()) {
         return if (editor.getText().isEmpty()) 0 else super.getCellEditorValue()
       }
     })
-    table.setDefaultRenderer(Int::class.java, SudokuCellRenderer(data))
+    table.setDefaultRenderer(Number::class.java, SudokuCellRenderer(data))
 
     val m = table.getColumnModel()
     m.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
@@ -102,6 +102,7 @@ class MainPanel : JPanel(GridBagLayout()) {
 
     init {
       this.bold = font.deriveFont(Font.BOLD)
+      // // val dest = Array<Array<Int?>>(src.size) { arrayOfNulls(src[0].size) }
       // val dest = Array(src.size, { Array(src[0].size, { 0 }) })
       // for (i in src.indices) {
       //   System.arraycopy(src[i], 0, dest[i], 0, src[0].size)
