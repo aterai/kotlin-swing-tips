@@ -66,7 +66,8 @@ class MainPanel : JPanel(BorderLayout()) {
 
   fun updateMonthView(localDate: LocalDate) {
     currentLocalDate = localDate
-    monthLabel.setText(localDate.format(DateTimeFormatter.ofPattern("yyyy / MM").withLocale(Locale.getDefault())))
+    val dtf = DateTimeFormatter.ofPattern("yyyy / MM").withLocale(Locale.getDefault())
+    monthLabel.setText(localDate.format(dtf))
     monthTable.setModel(CalendarViewTableModel(localDate))
   }
 
@@ -103,7 +104,7 @@ internal class CalendarViewTableModel(date: LocalDate) : DefaultTableModel() {
   private val weekFields = WeekFields.of(Locale.getDefault())
 
   init {
-    val firstDayOfMonth = YearMonth.from(date).atDay(1) // date.with(TemporalAdjusters.firstDayOfMonth());
+    val firstDayOfMonth = YearMonth.from(date).atDay(1)
     // int dowv = firstDayOfMonth.get(WeekFields.SUNDAY_START.dayOfWeek()) - 1;
     val dowv = firstDayOfMonth.get(weekFields.dayOfWeek()) - 1
     startDate = firstDayOfMonth.minusDays(dowv.toLong())
@@ -111,14 +112,17 @@ internal class CalendarViewTableModel(date: LocalDate) : DefaultTableModel() {
 
   override fun getColumnClass(column: Int) = LocalDate::class.java
 
-  override fun getColumnName(column: Int) =
-    weekFields.getFirstDayOfWeek().plus(column.toLong()).getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault())
+  override fun getColumnName(column: Int) = weekFields
+      .getFirstDayOfWeek()
+      .plus(column.toLong())
+      .getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault())
 
   override fun getRowCount() = 6
 
   override fun getColumnCount() = 7
 
-  override fun getValueAt(row: Int, column: Int) = startDate.plusDays((row * getColumnCount() + column).toLong())
+  override fun getValueAt(row: Int, column: Int) = startDate
+      .plusDays((row * getColumnCount() + column).toLong())
 
   override fun isCellEditable(row: Int, column: Int) = false
 }

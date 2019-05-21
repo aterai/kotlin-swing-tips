@@ -169,7 +169,8 @@ class MainPanel : JPanel() {
 
   fun updateMonthView(localDate: LocalDate) {
     currentLocalDate = localDate
-    yearMonthLabel.setText(localDate.format(DateTimeFormatter.ofPattern("yyyy / MM").withLocale(Locale.getDefault())))
+    val dtf = DateTimeFormatter.ofPattern("yyyy / MM").withLocale(Locale.getDefault())
+    yearMonthLabel.setText(localDate.format(dtf))
     monthList.setModel(CalendarViewListModel(localDate))
   }
 
