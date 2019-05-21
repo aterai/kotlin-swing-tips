@@ -49,7 +49,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val combo1 = CheckedComboBox1(DefaultComboBoxModel(m))
     val combo2 = CheckedComboBox2(DefaultComboBoxModel(m))
     val combo3 = CheckedComboBox3(DefaultComboBoxModel(m))
-    val combo4 = CheckedComboBox4(CheckableComboBoxModel(*m))
+    val combo4 = CheckedComboBox4(CheckableComboBoxModel(m))
 
     listOf<Component>(combo0, combo1, combo2, combo3, combo4)
       .forEach {
@@ -196,7 +196,7 @@ class CheckedComboBox3<E : CheckableItem>(model: ComboBoxModel<E>) : CheckedComb
 }
 
 // class CheckableComboBoxModel<E> @SafeVarargs constructor(vararg items: E) : DefaultComboBoxModel<E>(items) {
-class CheckableComboBoxModel<E>(vararg items: E) : DefaultComboBoxModel<E>(items) {
+class CheckableComboBoxModel<E>(items: Array<E>) : DefaultComboBoxModel<E>(items) {
   fun fireContentsChanged(index: Int) {
     super.fireContentsChanged(this, index, index)
   }
