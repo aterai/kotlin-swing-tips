@@ -9,25 +9,29 @@ import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreeCellRenderer
 import javax.swing.tree.TreeModel
 
-class MainPanel : JPanel(GridLayout(1, 0)) {
+class MainPanel : JPanel(BorderLayout()) {
   init {
-    val tree1 = TooltipTree(DefaultTreeModel(makeTreeRoot()))
-    ToolTipManager.sharedInstance().registerComponent(tree1)
 
-    val tree2 = object : JTree(DefaultTreeModel(makeTreeRoot())) {
+    val tree0 = object : JTree(DefaultTreeModel(makeTreeRoot())) {
       override fun updateUI() {
         super.updateUI()
         setCellRenderer(TooltipTreeCellRenderer())
       }
     }
-    ToolTipManager.sharedInstance().registerComponent(tree2)
+    ToolTipManager.sharedInstance().registerComponent(tree0)
+
+    val tree1 = TooltipTree(DefaultTreeModel(makeTreeRoot()))
+    ToolTipManager.sharedInstance().registerComponent(tree1)
 
     val p = JPanel(GridLayout(2, 1))
+    p.add(makeTitledPanel("Default location", tree0))
     p.add(makeTitledPanel("Draw directly above the cell", tree1))
-    p.add(makeTitledPanel("Default location", tree2))
 
-    add(p)
-    add(JLabel("dummy panel"))
+    add(JSplitPane().also {
+      it.setResizeWeight(.5)
+      it.setLeftComponent(p)
+      it.setRightComponent(JLabel("dummy panel"))
+    })
     setPreferredSize(Dimension(320, 240))
   }
 
@@ -152,11 +156,11 @@ internal class RendererIcon(val renderer: Component, val rect: Rectangle) : Icon
   }
 
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-    if (c is Container) {
+    (c as? Container)?.also {
       val g2 = g.create() as Graphics2D
       g2.clearRect(0, 0, c.getWidth(), c.getHeight())
       // g2.translate(x, y)
-      SwingUtilities.paintComponent(g2, renderer, c as Container, rect)
+      SwingUtilities.paintComponent(g2, renderer, it, rect)
       g2.dispose()
     }
   }
