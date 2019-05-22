@@ -85,7 +85,7 @@ class MainPanel : JPanel(BorderLayout()) {
       override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
         val pop = e.getSource() as JPopupMenu
         val tc = pop.getInvoker() as JTextComponent
-        println(tc.javaClass.getName() + ": " + tc.getName())
+        println("${tc.javaClass.getName()}: ${tc.getName()}")
         // TEST:
         // tc.requestFocusInWindow();
         // tc.selectAll();
@@ -110,7 +110,7 @@ class TextComponentPopupMenu : JPopupMenu() {
   }
 
   override fun show(c: Component, x: Int, y: Int) {
-    println(c.javaClass.getName() + ": " + c.getName())
+    println("${c.javaClass.getName()}: ${c.getName()}")
     val tc = c as? JTextComponent ?: return
     tc.requestFocusInWindow()
     var hasSelectedText = tc.getSelectedText() != null

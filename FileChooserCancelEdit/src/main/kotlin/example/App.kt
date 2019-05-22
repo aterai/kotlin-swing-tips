@@ -17,15 +17,15 @@ class MainPanel : JPanel(BorderLayout()) {
       //     .filter(Predicate<Component> { JTable::class.java!!.isInstance(it) })
       //     .map(Function<Component, JTable> { JTable::class.java!!.cast(it) })
       //     .findFirst()
-      //     .ifPresent { table -> append(log, "isEditing: " + table.isEditing()) }
+      //     .ifPresent { table -> append(log, "isEditing: ${table.isEditing()}") }
 
       // stream(fileChooser0)
       //     .filter(JTable::class.java::isInstance)
       //     .map(JTable::class.java::cast)
       //     .findFirst()
-      //     .ifPresent { append(log, "isEditing: " + it.isEditing()) }
+      //     .ifPresent { append(log, "isEditing: ${it.isEditing()}") }
       children(fileChooser0).filterIsInstance(JTable::class.java)
-          .firstOrNull()?.also { append(log, "isEditing: " + it.isEditing()) }
+          .firstOrNull()?.also { append(log, "isEditing: ${it.isEditing()}") }
 
       val retvalue = fileChooser0.showOpenDialog(getRootPane())
       if (retvalue == JFileChooser.APPROVE_OPTION) {
@@ -40,13 +40,13 @@ class MainPanel : JPanel(BorderLayout()) {
       // stream(fileChooser1)
       //     .filter(Predicate<Component> { JTable::class.java!!.isInstance(it) })
       //     .map(Function<Component, JTable> { JTable::class.java!!.cast(it) })
-      //     .peek { table -> append(log, "isEditing: " + table.isEditing()) }
+      //     .peek { table -> append(log, "isEditing: ${table.isEditing()}") }
       //     .findFirst().filter(Predicate<JTable> { it.isEditing() })
       //     .ifPresent(Consumer<JTable> { it.removeEditor() })
       // stream(fileChooser1)
       //   .filter(JTable::class.java::isInstance)
       //   .map(JTable::class.java::cast)
-      //   .peek { table -> append(log, "isEditing: " + table.isEditing()) }
+      //   .peek { table -> append(log, "isEditing: ${table.isEditing()}") }
       //   .findFirst()
       //   // .filter { it.isEditing() }
       //   .filter(JTable::isEditing)

@@ -128,7 +128,7 @@ internal class IndexedColorListRenderer : ListCellRenderer<IndexedColor> {
   ): Component {
     val l = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus) as JLabel
     l.setIcon(ColorIcon(value.color))
-    l.setToolTipText("index: " + value.index)
+    l.setToolTipText("index: ${value.index}")
     l.setBorder(BorderFactory.createLineBorder(if (value.isTransparentPixel) Color.RED else Color.WHITE))
     return l
   }

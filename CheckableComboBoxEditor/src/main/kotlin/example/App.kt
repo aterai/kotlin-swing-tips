@@ -91,12 +91,12 @@ class CheckComboBoxEditor : ComboBoxEditor {
   override fun getEditorComponent() = editor
 
   override fun addActionListener(l: ActionListener) {
-    println("addActionListener: " + l.javaClass.getName())
+    println("addActionListener: ${l.javaClass.getName()}")
     editor.addActionListener(l)
   }
 
   override fun removeActionListener(l: ActionListener) {
-    println("removeActionListener: " + l.javaClass.getName())
+    println("removeActionListener: ${l.javaClass.getName()}")
     editor.removeActionListener(l)
   }
 }

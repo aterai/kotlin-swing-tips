@@ -18,7 +18,7 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
       comboBox.setPopupVisible(false)
       val o = listBox.getSelectedValue() ?: comboBox.getItemAt(0)
       println(o)
-      // println(o + ": " + comboBox?.getEditor()?.getItem())
+      // println("$o: ${comboBox?.getEditor()?.getItem()}")
     }
   }
 

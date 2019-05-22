@@ -5,6 +5,6 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 internal class SearchEngineComboBoxModel<E : SearchEngine> : DefaultComboBoxModel<E>() {
   override fun setSelectedItem(anObject: Any) {
-    // System.out.println("model: " + anObject)
+    // println("model: $anObject")
   }
 }

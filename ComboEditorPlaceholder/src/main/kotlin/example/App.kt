@@ -78,8 +78,8 @@ internal class PlaceholderLayerUI<E : JTextComponent>(hintMessage: String) : Lay
       if (tc.getText().length == 0 && !tc.hasFocus()) {
         val g2 = g.create() as Graphics2D
         g2.setPaint(INACTIVE)
-        // println("getInsets: " + tc.getInsets())
-        // println("getMargin: " + tc.getMargin())
+        // println("getInsets: ${tc.getInsets()}")
+        // println("getMargin: ${tc.getMargin()}")
         val i = tc.getMargin()
         val d = hint.getPreferredSize()
         SwingUtilities.paintComponent(g2, hint, tc, i.left, i.top, d.width, d.height)

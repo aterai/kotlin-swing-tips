@@ -78,8 +78,9 @@ class MainPanel : JPanel(BorderLayout()) {
         l.setToolTipText(null)
       } else {
         l.setIcon(activityIcons.get(value.activity))
-        val actTxt = if (value.activity == 0) "No" else value.activity.toString()
-        l.setToolTipText(actTxt + " contribution on " + value.date.toString())
+        val act = if (value.activity == 0) "No" else value.activity.toString()
+        val date = value.date.toString()
+        l.setToolTipText("$act contribution on $date")
       }
       return l
     }

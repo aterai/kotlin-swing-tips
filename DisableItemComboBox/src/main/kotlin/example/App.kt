@@ -45,7 +45,7 @@ class MainPanel : JPanel(BorderLayout()) {
     }.onFailure {
       Toolkit.getDefaultToolkit().beep()
       val root = field.getRootPane()
-      JOptionPane.showMessageDialog(root, "invalid value.\n" + it.message, "Error", JOptionPane.ERROR_MESSAGE)
+      JOptionPane.showMessageDialog(root, "invalid value.\n${it.message}", "Error", JOptionPane.ERROR_MESSAGE)
     }.getOrNull() ?: emptySet<Int>()
 }
 

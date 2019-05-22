@@ -338,7 +338,7 @@ internal class TabDropTargetListener : DropTargetListener {
 
   override fun dragExit(e: DropTargetEvent) {
     // Component c = e.getDropTargetContext().getComponent();
-    // System.out.println("DropTargetListener#dragExit: " + c.getName());
+    // System.out.println("DropTargetListener#dragExit: ${c.getName()}");
     getGhostGlassPane(e.getDropTargetContext().getComponent())?.also {
       it.setPoint(HIDDEN_POINT)
       it.setTargetRect(0, 0, 0, 0)

@@ -79,7 +79,7 @@ class MainPanel : JPanel(BorderLayout()) {
     //   val txt = File(path).useLines { it.toList() }.map {
     //     it.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
     //   }.joinToString("\n")
-    //   val html = "<pre>" + prettify(engine, txt) + "\n</pre>"
+    //   val html = "<pre>${prettify(engine, txt)}\n</pre>"
     //   editor1.setText(html)
     //   editor2.setText(html)
     // } catch (ex: IOException) {

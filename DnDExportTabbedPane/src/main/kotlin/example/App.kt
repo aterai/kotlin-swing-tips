@@ -318,19 +318,19 @@ internal class TabDropTargetAdapter : DropTargetAdapter() {
 
   override fun drop(dtde: DropTargetDropEvent) {
     val c = dtde.getDropTargetContext().getComponent()
-    println("DropTargetListener#drop: " + c.getName())
+    println("DropTargetListener#drop: ${c.getName()}")
     clearDropLocationPaint(c)
   }
 
   override fun dragExit(dte: DropTargetEvent) {
     val c = dte.getDropTargetContext().getComponent()
-    println("DropTargetListener#dragExit: " + c.getName())
+    println("DropTargetListener#dragExit: ${c.getName()}")
     clearDropLocationPaint(c)
   }
 
   override fun dragEnter(dtde: DropTargetDragEvent) {
     val c = dtde.getDropTargetContext().getComponent()
-    println("DropTargetListener#dragEnter: " + c.getName())
+    println("DropTargetListener#dragEnter: ${c.getName()}")
   }
   // @Override public void dragOver(DropTargetDragEvent dtde) {
   //   // System.out.println("dragOver")
@@ -374,7 +374,7 @@ internal class TabTransferHandler : TransferHandler() {
   override fun canImport(support: TransferHandler.TransferSupport): Boolean {
     // System.out.println("canImport")
     if (!support.isDrop() || !support.isDataFlavorSupported(localObjectFlavor)) {
-      println("canImport:" + support.isDrop() + " " + support.isDataFlavorSupported(localObjectFlavor))
+      println("canImport: ${support.isDrop()} ${support.isDataFlavorSupported(localObjectFlavor)}")
       return false
     }
     support.setDropAction(TransferHandler.MOVE)

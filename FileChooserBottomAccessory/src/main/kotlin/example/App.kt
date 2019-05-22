@@ -22,7 +22,7 @@ class MainPanel : JPanel(BorderLayout()) {
       val retvalue = fileChooser.showSaveDialog(getRootPane())
       if (retvalue == JFileChooser.APPROVE_OPTION) {
         (fileChooser.getUI() as? EncodingFileChooserUI)?.also {
-          val enc = "\nEncoding: " + it.combo.getSelectedItem()
+          val enc = "\nEncoding: ${it.combo.getSelectedItem()}"
           log.setText(fileChooser.getSelectedFile().getAbsolutePath() + enc)
         }
       }
