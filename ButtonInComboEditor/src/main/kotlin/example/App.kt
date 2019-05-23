@@ -63,7 +63,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: ImageIcon) : JComboBox<SiteItem>(model) {
+class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: ImageIcon) : JComboBox<SiteItem>(model) {
   init {
     val field = getEditor().getEditorComponent() as JTextField
     val feedButton = makeRssButton(rss)

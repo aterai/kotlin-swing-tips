@@ -123,7 +123,14 @@ internal class TranslucentSynthStyle(private val style: SynthStyle) : SynthStyle
 
   override fun getPainter(context: SynthContext?): SynthPainter {
     return object : SynthPainter() {
-      override fun paintInternalFrameBackground(context: SynthContext?, g: Graphics, x: Int, y: Int, w: Int, h: Int) {
+      override fun paintInternalFrameBackground(
+        context: SynthContext?,
+        g: Graphics,
+        x: Int,
+        y: Int,
+        w: Int,
+        h: Int
+      ) {
         g.setColor(Color(100, 200, 100, 100))
         g.fillRoundRect(x, y, w - 1, h - 1, 15, 15)
       }
