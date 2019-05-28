@@ -104,10 +104,10 @@ internal class ReorderbleList(model: ListModel<ListItem>) : JList<ListItem>(mode
       }
       val destPoint = e.getPoint()
       rubberBand.reset()
-      rubberBand.moveTo(srcPoint.x.toDouble(), srcPoint.y.toDouble())
-      rubberBand.lineTo(destPoint.x.toDouble(), srcPoint.y.toDouble())
-      rubberBand.lineTo(destPoint.x.toDouble(), destPoint.y.toDouble())
-      rubberBand.lineTo(srcPoint.x.toDouble(), destPoint.y.toDouble())
+      rubberBand.moveTo(srcPoint.getX(), srcPoint.getY())
+      rubberBand.lineTo(destPoint.getX(), srcPoint.getY())
+      rubberBand.lineTo(destPoint.getX(), destPoint.getY())
+      rubberBand.lineTo(srcPoint.getX(), destPoint.getY())
       rubberBand.closePath()
 
       val indices = (0 until l.getModel().getSize())
