@@ -105,7 +105,7 @@ internal class LabelHandler(private val textArea: Component) : MouseAdapter(), H
   private var direction: Int = 0
 
   private fun updateTextAreaLocation() {
-    val height = textArea.getPreferredSize().height.toDouble()
+    val height = textArea.getPreferredSize().getHeight()
     val a = AnimationUtil.easeInOut(count / height)
     count += direction
     textAreaHeight = (.5 + a * height).toInt()
