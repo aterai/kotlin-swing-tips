@@ -117,7 +117,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
         val child = dir.resolve(filename)
         EventQueue.invokeLater {
-          append(String.format("%s: %s", kind, child))
+          append("%s: %s".format(kind, child))
           updateTable(kind, child)
         }
       }

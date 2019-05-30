@@ -77,8 +77,8 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
       }
       updateComponentDone()
       val message = runCatching {
-        String.format("%n%s%n", if (isCancelled()) "Cancelled" else get())
-      }.getOrNull() ?: String.format("%n%s%n", "Interrupted")
+        "%n%s%n".format(if (isCancelled()) "Cancelled" else get())
+      }.getOrNull() ?: "%n%s%n".format("Interrupted")
       appendLine(message)
     }
   }
