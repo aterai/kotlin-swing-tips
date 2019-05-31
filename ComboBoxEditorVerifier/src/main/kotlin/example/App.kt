@@ -90,8 +90,8 @@ internal class SelectItemMenuListener : PopupMenuListener {
 internal class ValidationLayerUI<V : JTextComponent> : LayerUI<V>() {
   override fun paint(g: Graphics, c: JComponent) {
     super.paint(g, c)
-    val cb = SwingUtilities.getAncestorOfClass(JComboBox::class.java, c)
-    (cb as? JComboBox<*>)?.getInputVerifier()?.takeUnless { it.verify(cb) }?.also {
+    val cb = SwingUtilities.getAncestorOfClass(JComboBox::class.java, c) as? JComboBox<*> ?: return
+    cb.getInputVerifier()?.takeUnless { it.verify(cb) }?.also {
       val w = c.getWidth()
       val h = c.getHeight()
       val s = 8
