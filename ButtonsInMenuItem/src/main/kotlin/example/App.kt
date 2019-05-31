@@ -86,10 +86,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val b = JButton(action)
     b.addActionListener { e ->
       val a = e.getSource() as Component
-      val c = SwingUtilities.getAncestorOfClass(JPopupMenu::class.java, a)
-      (c as? JPopupMenu)?.also {
-        it.setVisible(false)
-      }
+      (SwingUtilities.getAncestorOfClass(JPopupMenu::class.java, a) as? JPopupMenu)?.setVisible(false)
     }
     b.setText(title)
     // b.setVerticalAlignment(SwingConstants.CENTER)

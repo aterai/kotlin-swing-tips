@@ -86,10 +86,11 @@ class BalloonToolTip : JToolTip() {
     listener = HierarchyListener { e ->
       val c = e.getComponent()
       if (e.getChangeFlags().toInt() and HierarchyEvent.SHOWING_CHANGED != 0 && c.isShowing()) {
-        (SwingUtilities.getRoot(c) as? JWindow)?.also {
-          println("Popup\$HeavyWeightWindow")
-          it.setBackground(Color(0x0, true))
-        }
+        // (SwingUtilities.getRoot(c) as? JWindow)?.also {
+        //   println("Popup\$HeavyWeightWindow")
+        //   it.setBackground(Color(0x0, true))
+        // }
+        (SwingUtilities.getRoot(c) as? JWindow)?.setBackground(Color(0x0, true))
       }
     }
     addHierarchyListener(listener)
