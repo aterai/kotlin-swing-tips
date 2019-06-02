@@ -36,13 +36,8 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   private fun makeComboBox(isDefault: Boolean, isEditable: Boolean): JComboBox<String> {
-    val m = DefaultComboBoxModel<String>(arrayOf("aaa", "bbb", "ccc"))
-    val comboBox: JComboBox<String>
-    if (isDefault) {
-      comboBox = JComboBox<String>(m)
-    } else {
-      comboBox = RemoveButtonComboBox<String>(m)
-    }
+    val m = DefaultComboBoxModel(arrayOf("aaa", "bbb", "ccc"))
+    val comboBox = if (isDefault) JComboBox(m) else RemoveButtonComboBox(m)
     comboBox.setEditable(isEditable)
     return comboBox
   }
