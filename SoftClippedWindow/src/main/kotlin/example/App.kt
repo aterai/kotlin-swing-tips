@@ -67,9 +67,7 @@ class MainPanel : JPanel() {
 
     val close = JButton("close")
     close.addActionListener { e ->
-      val c = e.getSource() as Component
-      val window = SwingUtilities.getWindowAncestor(c)
-      window.dispose()
+      (e.getSource() as? Component)?.also { SwingUtilities.getWindowAncestor(it)?.dispose() }
     }
 
     val box = Box.createHorizontalBox().also {
