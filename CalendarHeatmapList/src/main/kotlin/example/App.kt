@@ -1,6 +1,7 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.event.MouseEvent
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.ZoneId
@@ -23,14 +24,28 @@ class MainPanel : JPanel(BorderLayout()) {
       getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
       setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
     }
+
+    override fun getToolTipText(e: MouseEvent): String? {
+      val p = e.getPoint()
+      val idx = locationToIndex(p)
+      val rect = getCellBounds(idx, idx)
+      if (idx < 0 || !rect.contains(p.x, p.y)) {
+        return null
+      }
+      val value = getModel().getElementAt(idx)
+      val act = if (value.activity == 0) "No" else value.activity.toString()
+      val date = value.date.toString()
+      return "$act contribution on $date"
+    }
+
   }
-  val color = Color(50, 200, 50)
+  val color = Color(0x32_C8_32)
   val activityIcons = listOf(
-      ColorIcon(Color(200, 200, 200)),
-      ColorIcon(color.brighter()),
-      ColorIcon(color),
-      ColorIcon(color.darker()),
-      ColorIcon(color.darker().darker()))
+    ContributionIcon(Color(0xC8_C8_C8)),
+    ContributionIcon(color.brighter()),
+    ContributionIcon(color),
+    ContributionIcon(color.darker()),
+    ContributionIcon(color.darker().darker()))
 
   init {
     val font = weekList.getFont().deriveFont(CELLSZ.height - 1f)
@@ -74,13 +89,9 @@ class MainPanel : JPanel(BorderLayout()) {
     ): Component {
       val l = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus) as JLabel
       if (value.date.isAfter(currentLocalDate)) {
-        l.setIcon(ColorIcon(Color.WHITE))
-        l.setToolTipText(null)
+        l.setIcon(ContributionIcon(Color.WHITE))
       } else {
         l.setIcon(activityIcons.get(value.activity))
-        val act = if (value.activity == 0) "No" else value.activity.toString()
-        val date = value.date.toString()
-        l.setToolTipText("$act contribution on $date")
       }
       return l
     }
@@ -155,18 +166,17 @@ class Contribution(val date: LocalDate, val activity: Int)
 
 class CalendarViewListModel(date: LocalDate) : AbstractListModel<Contribution>() {
   private val startDate: LocalDate
+  private val displayDays: Int
   private val contributionActivity = mutableMapOf<LocalDate, Int>()
 
   init {
-    val weekFields = WeekFields.of(Locale.getDefault())
-    val dow = date.get(weekFields.dayOfWeek()) - 1
-    // int wby = date.get(weekFields.weekOfWeekBasedYear())
-    startDate = date.minusWeeks((WEEK_VIEW - 1).toLong()).minusDays(dow.toLong())
-    val size = DayOfWeek.values().size * WEEK_VIEW
-    (0 until size).forEach { contributionActivity.put(startDate.plusDays(it.toLong()), (0..4).random()) }
+    val dow = date.get(WeekFields.of(Locale.getDefault()).dayOfWeek())
+    this.startDate = date.minusWeeks((WEEK_VIEW - 1).toLong()).minusDays((dow - 1).toLong())
+    this.displayDays = DayOfWeek.values().size * (WEEK_VIEW - 1) + dow
+    (0 until displayDays).forEach { contributionActivity.put(startDate.plusDays(it.toLong()), (0..4).random()) }
   }
 
-  override fun getSize() = DayOfWeek.values().size * WEEK_VIEW
+  override fun getSize() = displayDays
 
   override fun getElementAt(index: Int): Contribution {
     val date = startDate.plusDays(index.toLong())
@@ -178,7 +188,7 @@ class CalendarViewListModel(date: LocalDate) : AbstractListModel<Contribution>()
   }
 }
 
-class ColorIcon(private val color: Color) : Icon {
+class ContributionIcon(private val color: Color) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as Graphics2D
     g2.translate(x, y)

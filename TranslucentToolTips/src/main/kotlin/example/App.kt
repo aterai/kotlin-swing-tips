@@ -17,6 +17,9 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 class MainPanel : JPanel(BorderLayout()) {
   val currentLocalDate = LocalDate.now(ZoneId.systemDefault())
   val weekList = object : JList<Contribution>(CalendarViewListModel(currentLocalDate)) {
+    @Transient
+    private var tip: JToolTip? = null
+
     override fun updateUI() {
       setCellRenderer(null)
       super.updateUI()
@@ -29,26 +32,43 @@ class MainPanel : JPanel(BorderLayout()) {
       setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
     }
 
+    override fun getToolTipText(e: MouseEvent): String? {
+      val p = e.getPoint()
+      val idx = locationToIndex(p)
+      val rect = getCellBounds(idx, idx)
+      if (idx < 0 || !rect.contains(p.x, p.y)) {
+        return null
+      }
+      val value = getModel().getElementAt(idx)
+      val act = if (value.activity == 0) "No" else value.activity.toString()
+      val date = value.date.toString()
+      return "<html>$act contribution <span style='color:#C8C8C8'> on $date"
+    }
+
     override fun getToolTipLocation(e: MouseEvent): Point? {
       val p = e.getPoint()
-      val r = getCellRenderer()
       val i = locationToIndex(p)
       val rect = getCellBounds(i, i)
-      if (i >= 0 && r != null && rect?.contains(p.x, p.y) ?: false) {
-        val value = getModel().getElementAt(i)
-        val renderer = r.getListCellRendererComponent(this, value, i, false, false)
-        (renderer as? JComponent)?.also {
-          val tip = createToolTip()
-          tip.setTipText(it.getToolTipText())
-          val d = tip.getPreferredSize()
-          val gap = 2
-          return Point((rect.getCenterX() - d.width / 2.0).toInt(), rect.y - d.height - gap)
-        }
+
+      val toolTipText = getToolTipText(e)
+      if (toolTipText != null) {
+        val tip = createToolTip()
+        tip?.setTipText(toolTipText)
+        val d = tip?.getPreferredSize() ?: Dimension()
+        val gap = 2
+        return Point((rect.getCenterX() - d.width / 2.0).toInt(), rect.y - d.height - gap)
       }
       return null
     }
 
-    override fun createToolTip() = BalloonToolTip().also { it.setComponent(this) }
+    override fun createToolTip(): JToolTip? {
+      if (tip == null) {
+        val tt = BalloonToolTip()
+        tt.setComponent(this)
+        tip = tt
+      }
+      return tip
+    }
   }
   val color = Color(0x32_C8_32)
   val activityIcons = listOf(
@@ -101,12 +121,8 @@ class MainPanel : JPanel(BorderLayout()) {
       val l = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus) as JLabel
       if (value.date.isAfter(currentLocalDate)) {
         l.setIcon(ContributionIcon(Color.WHITE))
-        l.setToolTipText(null)
       } else {
         l.setIcon(activityIcons.get(value.activity))
-        val act = if (value.activity == 0) "No" else value.activity.toString()
-        val date = value.date.toString()
-        l.setToolTipText("<html>$act contribution <span style='color:#C8C8C8'> on $date")
       }
       return l
     }
@@ -124,13 +140,13 @@ class MainPanel : JPanel(BorderLayout()) {
 
   private fun makeRowHeader(loc: Locale, font: Font): Component {
     val weekFields = WeekFields.of(loc)
-      val weekModel = DefaultListModel<String>()
-      val firstDayOfWeek = weekFields.getFirstDayOfWeek()
-      for (i in 0 until DayOfWeek.values().size) {
-        val isEven = i % 2 == 0
-        if (isEven) {
-          weekModel.add(i, "")
-        } else {
+    val weekModel = DefaultListModel<String>()
+    val firstDayOfWeek = weekFields.getFirstDayOfWeek()
+    for (i in 0 until DayOfWeek.values().size) {
+      val isEven = i % 2 == 0
+      if (isEven) {
+        weekModel.add(i, "")
+      } else {
         weekModel.add(i, firstDayOfWeek.plus(i.toLong()).getDisplayName(TextStyle.SHORT_STANDALONE, loc))
       }
     }
@@ -140,37 +156,37 @@ class MainPanel : JPanel(BorderLayout()) {
       it.setLayoutOrientation(JList.VERTICAL_WRAP)
       it.setVisibleRowCount(DayOfWeek.values().size)
       it.setFixedCellHeight(CELLSZ.height)
-        }
-      }
+    }
+  }
 
   private fun makeColumnHeader(loc: Locale): Component {
-      val colHeader = JPanel(GridBagLayout())
-      colHeader.setBackground(Color.WHITE)
-      val c = GridBagConstraints()
-      c.gridx = 0
-      while (c.gridx < CalendarViewListModel.WEEK_VIEW) {
-        colHeader.add(Box.createHorizontalStrut(CELLSZ.width), c) // grid guides
-        c.gridx++
-      }
-      c.anchor = GridBagConstraints.LINE_START
-      c.gridy = 1
-      c.gridwidth = 3 // use 3 columns to display the name of the month
-      c.gridx = 0
-      while (c.gridx < CalendarViewListModel.WEEK_VIEW - c.gridwidth + 1) {
-        val date = weekList.getModel().getElementAt(c.gridx * DayOfWeek.values().size).date
-        val isSimplyFirstWeekOfMonth = date.getMonth() != date.minusWeeks(1).getMonth()
-        if (isSimplyFirstWeekOfMonth) {
+    val colHeader = JPanel(GridBagLayout())
+    colHeader.setBackground(Color.WHITE)
+    val c = GridBagConstraints()
+    c.gridx = 0
+    while (c.gridx < CalendarViewListModel.WEEK_VIEW) {
+      colHeader.add(Box.createHorizontalStrut(CELLSZ.width), c) // grid guides
+      c.gridx++
+    }
+    c.anchor = GridBagConstraints.LINE_START
+    c.gridy = 1
+    c.gridwidth = 3 // use 3 columns to display the name of the month
+    c.gridx = 0
+    while (c.gridx < CalendarViewListModel.WEEK_VIEW - c.gridwidth + 1) {
+      val date = weekList.getModel().getElementAt(c.gridx * DayOfWeek.values().size).date
+      val isSimplyFirstWeekOfMonth = date.getMonth() != date.minusWeeks(1).getMonth()
+      if (isSimplyFirstWeekOfMonth) {
         colHeader.add(makeLabel(date.getMonth().getDisplayName(TextStyle.SHORT, loc), font), c)
-        }
-        c.gridx++
       }
+      c.gridx++
+    }
     return colHeader
   }
 
   private fun makeLabel(title: String, font: Font) = JLabel(title).also {
     it.setFont(font)
     it.setEnabled(false)
-    }
+  }
 
   companion object {
     val CELLSZ = Dimension(10, 10)
@@ -181,17 +197,17 @@ class Contribution(val date: LocalDate, val activity: Int)
 
 class CalendarViewListModel(date: LocalDate) : AbstractListModel<Contribution>() {
   private val startDate: LocalDate
+  private val displayDays: Int
   private val contributionActivity = mutableMapOf<LocalDate, Int>()
 
   init {
-    val weekFields = WeekFields.of(Locale.getDefault())
-    val dow = date.get(weekFields.dayOfWeek()) - 1
-    startDate = date.minusWeeks((WEEK_VIEW - 1).toLong()).minusDays(dow.toLong())
-    val size = DayOfWeek.values().size * WEEK_VIEW
-    (0 until size).forEach { contributionActivity.put(startDate.plusDays(it.toLong()), (0..4).random()) }
+    val dow = date.get(WeekFields.of(Locale.getDefault()).dayOfWeek())
+    this.startDate = date.minusWeeks((WEEK_VIEW - 1).toLong()).minusDays((dow - 1).toLong())
+    this.displayDays = DayOfWeek.values().size * (WEEK_VIEW - 1) + dow
+    (0 until displayDays).forEach { contributionActivity.put(startDate.plusDays(it.toLong()), (0..4).random()) }
   }
 
-  override fun getSize() = DayOfWeek.values().size * WEEK_VIEW
+  override fun getSize() = displayDays
 
   override fun getElementAt(index: Int): Contribution {
     val date = startDate.plusDays(index.toLong())
