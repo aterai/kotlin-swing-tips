@@ -37,7 +37,6 @@ class MainPanel : JPanel(BorderLayout()) {
       val date = value.date.toString()
       return "$act contribution on $date"
     }
-
   }
   val color = Color(0x32_C8_32)
   val activityIcons = listOf(
