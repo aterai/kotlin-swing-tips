@@ -28,9 +28,7 @@ class MainPanel : JPanel(BorderLayout()) {
       }
 
       @Throws(ExpandVetoException::class)
-      override fun treeWillCollapse(e: TreeExpansionEvent) {
-        // throw new ExpandVetoException(e, "Tree collapse cancelled");
-      }
+      override fun treeWillCollapse(e: TreeExpansionEvent) {}
     })
 
     val scroll = object : JScrollPane(tree) {

@@ -79,11 +79,9 @@ internal class SelectItemMenuListener : PopupMenuListener {
     c.setSelectedItem(c.getEditor().getItem())
   }
 
-  override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) { /* not needed */
-  }
+  override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {} // not needed
 
-  override fun popupMenuCanceled(e: PopupMenuEvent) { /* not needed */
-  }
+  override fun popupMenuCanceled(e: PopupMenuEvent) {} // not needed
 }
 
 // @see https://docs.oracle.com/javase/tutorial/uiswing/examples/misc/FieldValidatorProject/src/FieldValidator.java

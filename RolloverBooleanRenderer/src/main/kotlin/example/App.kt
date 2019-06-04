@@ -186,41 +186,27 @@ internal class RolloverBooleanRenderer(val highlighter: HighlightListener) : JCh
     } ?: super.isOpaque()
   }
 
-  protected override fun firePropertyChange(propertyName: String, oldValue: Any?, newValue: Any?) {
-    // System.out.println(propertyName);
-    // if (propertyName == "border" ||
-    //     ((propertyName == "font" || propertyName == "foreground") && oldValue != newValue)) {
-    //   super.firePropertyChange(propertyName, oldValue, newValue);
-    // }
-  }
+  protected override fun firePropertyChange(propertyName: String, oldValue: Any?, newValue: Any?) {}
+  //   System.out.println(propertyName);
+  //   if (propertyName == "border" ||
+  //       ((propertyName == "font" || propertyName == "foreground") && oldValue != newValue)) {
+  //     super.firePropertyChange(propertyName, oldValue, newValue);
+  //   }
+  // }
 
-  override fun firePropertyChange(propertyName: String, oldValue: Boolean, newValue: Boolean) {
-    /* Overridden for performance reasons. */
-  }
+  override fun firePropertyChange(propertyName: String, oldValue: Boolean, newValue: Boolean) {}
 
-  override fun repaint(tm: Long, x: Int, y: Int, width: Int, height: Int) {
-    /* Overridden for performance reasons. */
-  }
+  override fun repaint(tm: Long, x: Int, y: Int, width: Int, height: Int) {}
 
-  override fun repaint(r: Rectangle) {
-    /* Overridden for performance reasons. */
-  }
+  override fun repaint(r: Rectangle) {}
 
-  override fun repaint() {
-    /* Overridden for performance reasons. */
-  }
+  override fun repaint() {}
 
-  override fun invalidate() {
-    /* Overridden for performance reasons. */
-  }
+  override fun invalidate() {}
 
-  override fun validate() {
-    /* Overridden for performance reasons. */
-  }
+  override fun validate() {}
 
-  override fun revalidate() {
-    /* Overridden for performance reasons. */
-  }
+  override fun revalidate() {}
   // <---- Overridden for performance reasons.
 }
 

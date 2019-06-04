@@ -32,9 +32,7 @@ class MainPanel : JPanel(BorderLayout()) {
             iconRect: Rectangle?,
             textRect: Rectangle?,
             isSelected: Boolean
-          ) {
-            // Do not paint anything
-          }
+          ) {} // Do not paint anything
 
           protected override fun paintTabBorder(
             g: Graphics,
@@ -45,9 +43,7 @@ class MainPanel : JPanel(BorderLayout()) {
             w: Int,
             h: Int,
             isSelected: Boolean
-          ) {
-            // Do not paint anything
-          }
+          ) {} // Do not paint anything
 
           protected override fun paintTabBackground(
             g: Graphics,

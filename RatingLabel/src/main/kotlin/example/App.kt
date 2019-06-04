@@ -134,14 +134,11 @@ open class LevelBar(
     repaintIcon(clicked)
   }
 
-  override fun mouseDragged(e: MouseEvent) { /* not needed */
-  }
+  override fun mouseDragged(e: MouseEvent) {} // not needed
 
-  override fun mousePressed(e: MouseEvent) { /* not needed */
-  }
+  override fun mousePressed(e: MouseEvent) {} // not needed
 
-  override fun mouseReleased(e: MouseEvent) { /* not needed */
-  }
+  override fun mouseReleased(e: MouseEvent) {} // not needed
 }
 
 internal class SelectedImageFilter(rf: Float, gf: Float, bf: Float) : RGBImageFilter() {

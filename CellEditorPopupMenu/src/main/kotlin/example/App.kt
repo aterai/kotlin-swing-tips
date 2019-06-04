@@ -61,11 +61,9 @@ internal class TextComponentPopupMenu(tc: JTextComponent) : JPopupMenu() {
         e.getComponent().requestFocusInWindow()
       }
 
-      override fun ancestorMoved(e: AncestorEvent) { /* not needed */
-      }
+      override fun ancestorMoved(e: AncestorEvent) {} // not needed
 
-      override fun ancestorRemoved(e: AncestorEvent) { /* not needed */
-      }
+      override fun ancestorRemoved(e: AncestorEvent) {} // not needed
     })
     tc.getDocument().addUndoableEditListener(manager)
     tc.getActionMap().put("undo", undoAction)
@@ -76,8 +74,7 @@ internal class TextComponentPopupMenu(tc: JTextComponent) : JPopupMenu() {
     imap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, msk), "redo")
 
     addPopupMenuListener(object : PopupMenuListener {
-      override fun popupMenuCanceled(e: PopupMenuEvent) { /* not needed */
-      }
+      override fun popupMenuCanceled(e: PopupMenuEvent) {} // not needed
 
       override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
         undoAction.setEnabled(true)

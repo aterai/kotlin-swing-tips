@@ -77,9 +77,7 @@ internal class LineNumberView(private val textArea: JTextArea) : JComponent() {
         repaint()
       }
 
-      override fun changedUpdate(e: DocumentEvent) {
-        /* not needed */
-      }
+      override fun changedUpdate(e: DocumentEvent) {} // not needed
     })
     textArea.addComponentListener(object : ComponentAdapter() {
       override fun componentResized(e: ComponentEvent?) {

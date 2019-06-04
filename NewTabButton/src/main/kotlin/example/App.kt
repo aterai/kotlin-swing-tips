@@ -134,11 +134,9 @@ internal class CardLayoutTabbedPane : JPanel(BorderLayout()) {
 }
 
 internal class TabLayout : LayoutManager, Serializable {
-  override fun addLayoutComponent(name: String, comp: Component) { /* not needed */
-  }
+  override fun addLayoutComponent(name: String, comp: Component) {} // not needed
 
-  override fun removeLayoutComponent(comp: Component) { /* not needed */
-  }
+  override fun removeLayoutComponent(comp: Component) {} // not needed
 
   override fun preferredLayoutSize(parent: Container): Dimension {
     synchronized(parent.getTreeLock()) {

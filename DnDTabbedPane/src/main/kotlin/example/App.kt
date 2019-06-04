@@ -290,18 +290,14 @@ internal class TabDragSourceListener : DragSourceListener {
     // glassPane.repaint();
   }
 
-  override fun dragOver(e: DragSourceDragEvent) {
-    /* not needed */
-  }
+  override fun dragOver(e: DragSourceDragEvent) {} // not needed
 
-  override fun dragDropEnd(e: DragSourceDropEvent) {
-    // dragTabIndex = -1;
-    // glassPane.setVisible(false);
-  }
+  override fun dragDropEnd(e: DragSourceDropEvent) {}
+  //   dragTabIndex = -1;
+  //   glassPane.setVisible(false);
+  // }
 
-  override fun dropActionChanged(e: DragSourceDragEvent) {
-    /* not needed */
-  }
+  override fun dropActionChanged(e: DragSourceDragEvent) {} // not needed
 }
 
 internal class TabDragGestureListener : DragGestureListener {
@@ -346,8 +342,7 @@ internal class TabDropTargetListener : DropTargetListener {
     }
   }
 
-  override fun dropActionChanged(e: DropTargetDragEvent) { /* not needed */
-  }
+  override fun dropActionChanged(e: DropTargetDragEvent) {} // not needed
 
   override fun dragOver(e: DropTargetDragEvent) {
     val c = e.getDropTargetContext().getComponent()

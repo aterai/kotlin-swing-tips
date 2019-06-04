@@ -76,11 +76,9 @@ class MainPanel : JPanel(BorderLayout()) {
     popup1.add(copyAction)
     popup1.add(pasteAction)
     popup1.addPopupMenuListener(object : PopupMenuListener {
-      override fun popupMenuCanceled(e: PopupMenuEvent) { /* not needed */
-      }
+      override fun popupMenuCanceled(e: PopupMenuEvent) {} // not needed
 
-      override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) { /* not needed */
-      }
+      override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {} // not needed
 
       override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
         val pop = e.getSource() as JPopupMenu
