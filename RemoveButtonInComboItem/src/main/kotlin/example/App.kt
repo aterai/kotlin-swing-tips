@@ -80,79 +80,34 @@ internal class RemoveButtonComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(m
 }
 
 internal class CellButtonsMouseListener : MouseAdapter() {
-  private var prevIndex = -1
-  private var prevButton: JButton? = null
-
-  private fun rectRepaint(c: JComponent, rect: Rectangle?) {
-    rect?.also { c.repaint(it) }
-  }
-
   override fun mouseMoved(e: MouseEvent) {
-    val list = e.getComponent() as JList<*>
+    val list = e.getComponent() as? JList<*> ?: return
     val pt = e.getPoint()
-    var index = list.locationToIndex(pt)
-    if (!list.getCellBounds(index, index).contains(pt)) {
-      if (prevIndex >= 0) {
-        val r = list.getCellBounds(prevIndex, prevIndex)
-        rectRepaint(list, r)
-      }
-      // index = -1
-      prevButton = null
-      return
+    val idx = list.locationToIndex(pt)
+    (list.getCellRenderer() as? ButtonsRenderer<*>)?.also {
+      it.rolloverIndex = getButton(list, pt, idx)?.let { idx } ?: -1
     }
-    if (index >= 0) {
-      val button = getButton(list, pt, index)
-      val renderer = list.getCellRenderer() as ButtonsRenderer<*>
-      if (button != null) {
-        renderer.rolloverIndex = index
-        if (button != prevButton) {
-          val r = list.getCellBounds(prevIndex, index)
-          rectRepaint(list, r)
-        }
-      } else {
-        renderer.rolloverIndex = -1
-        var r: Rectangle? = null
-        if (prevIndex == index) {
-          if (prevIndex >= 0 && prevButton != null) {
-            r = list.getCellBounds(prevIndex, prevIndex)
-          }
-        } else {
-          r = list.getCellBounds(index, index)
-        }
-        rectRepaint(list, r)
-        prevIndex = -1
-      }
-      prevButton = button
-    }
-    prevIndex = index
+    list.repaint()
   }
 
   override fun mousePressed(e: MouseEvent) {
-    val list = e.getComponent() as JList<*>
-    val pt = e.getPoint()
-    val index = list.locationToIndex(pt)
-    if (index >= 0) {
-      if (getButton(list, pt, index) != null) {
-        rectRepaint(list, list.getCellBounds(index, index))
-      }
-    }
+    e.getComponent().repaint()
   }
 
   override fun mouseReleased(e: MouseEvent) {
-    val list = e.getComponent() as JList<*>
+    val list = e.getComponent() as? JList<*> ?: return
     val pt = e.getPoint()
     val index = list.locationToIndex(pt)
     if (index >= 0) {
-      getButton(list, pt, index)?.also {
-        it.doClick()
-        rectRepaint(list, list.getCellBounds(index, index))
-      }
+      getButton(list, pt, index)?.also { it.doClick() }
     }
+    (list.getCellRenderer() as? ButtonsRenderer<*>)?.rolloverIndex = -1
+    list.repaint()
   }
 
   override fun mouseExited(e: MouseEvent) {
-    val list = e.getComponent() as JList<*>
-    (list.getCellRenderer() as ButtonsRenderer<*>).rolloverIndex = -1
+    val list = e.getComponent() as? JList<*> ?: return
+    (list.getCellRenderer() as? ButtonsRenderer<*>)?.rolloverIndex = -1
   }
 
   private fun <E> getButton(list: JList<E>, pt: Point, index: Int): JButton? {
@@ -160,7 +115,7 @@ internal class CellButtonsMouseListener : MouseAdapter() {
     val c = list.getCellRenderer().getListCellRendererComponent(list, proto, index, false, false)
     val r = list.getCellBounds(index, index)
     c.setBounds(r)
-    // c.doLayout(); // may be needed for other layout managers (eg. FlowLayout) // *1
+    // c.doLayout(); // may be needed for other layout managers (eg. FlowLayout)
     pt.translate(-r.x, -r.y)
     return SwingUtilities.getDeepestComponentAt(c, pt.x, pt.y) as? JButton
   }
@@ -197,6 +152,7 @@ internal class ButtonsRenderer<E>(comboBox: RemoveButtonComboBox<E>) : ListCellR
       val isMoreThanOneItem = m.getSize() > 1
       if (isMoreThanOneItem && m is MutableComboBoxModel<*>) {
         m.removeElementAt(targetIndex)
+        comboBox.setSelectedIndex(-1)
         comboBox.showPopup()
       }
     }
@@ -223,13 +179,11 @@ internal class ButtonsRenderer<E>(comboBox: RemoveButtonComboBox<E>) : ListCellR
       panel.setBackground(if (index % 2 == 0) EVEN_COLOR else list.getBackground())
     }
     val showDeleteButton = list.getModel().getSize() > 1
+    deleteButton.setVisible(showDeleteButton)
     if (showDeleteButton) {
       val isRollover = index == rolloverIndex
-      deleteButton.setVisible(true)
       deleteButton.getModel().setRollover(isRollover)
       deleteButton.setForeground(if (isRollover) Color.WHITE else list.getForeground())
-    } else {
-      deleteButton.setVisible(false)
     }
     panel.add(l)
     return panel
