@@ -168,13 +168,11 @@ internal class BooleanEditor : AbstractCellEditor(), TableCellEditor {
     }
 
     override fun mousePressed(e: MouseEvent) {
-      val c = SwingUtilities.getAncestorOfClass(JTable::class.java, e.getComponent())
-      if (c is JTable) {
-        if (checkBox.getModel().isPressed() && c.isRowSelected(c.getEditingRow()) && e.isControlDown()) {
-          renderer.setBackground(c.getBackground())
-        } else {
-          renderer.setBackground(c.getSelectionBackground())
-        }
+      val t = SwingUtilities.getAncestorOfClass(JTable::class.java, e.getComponent()) as? JTable ?: return
+      if (checkBox.getModel().isPressed() && t.isRowSelected(t.getEditingRow()) && e.isControlDown()) {
+        renderer.setBackground(t.getBackground())
+      } else {
+        renderer.setBackground(t.getSelectionBackground())
       }
     }
 
