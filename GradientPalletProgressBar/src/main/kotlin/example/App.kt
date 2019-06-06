@@ -104,14 +104,12 @@ class GradientPalletProgressBarUI : BasicProgressBarUI() {
 
     val width = image.getWidth(null)
     val pallet = IntArray(width)
-    val pg = PixelGrabber(image, 0, 0, width, 1, pallet, 0, width)
-    try {
-      pg.grabPixels()
-    } catch (ex: InterruptedException) {
-      ex.printStackTrace()
+    runCatching {
+      PixelGrabber(image, 0, 0, width, 1, pallet, 0, width).grabPixels()
+    }.onFailure {
+      it.printStackTrace()
       Toolkit.getDefaultToolkit().beep()
     }
-
     return pallet
   }
 
@@ -135,20 +133,23 @@ class GradientPalletProgressBarUI : BasicProgressBarUI() {
     if (barRectWidth <= 0 || barRectHeight <= 0) {
       return
     }
-    // int cellLength = getCellLength();
-    // int cellSpacing = getCellSpacing();
+    // val cellLength = getCellLength()
+    // val cellSpacing = getCellSpacing()
     // amount of progress to draw
     val amountFull = getAmountFull(b, barRectWidth, barRectHeight)
 
     // draw the cells
-    if (progressBar.getOrientation() == SwingConstants.HORIZONTAL) {
-      val x = amountFull / barRectWidth.toFloat()
-      g.setColor(getColorFromPallet(pallet, x))
-      g.fillRect(b.left, b.top, amountFull, barRectHeight)
-    } else { // VERTICAL
-      val y = amountFull / barRectHeight.toFloat()
-      g.setColor(getColorFromPallet(pallet, y))
-      g.fillRect(b.left, barRectHeight + b.bottom - amountFull, barRectWidth, amountFull)
+    when (progressBar.getOrientation()) {
+      SwingConstants.HORIZONTAL -> {
+        val x = amountFull / barRectWidth.toFloat()
+        g.setColor(getColorFromPallet(pallet, x))
+        g.fillRect(b.left, b.top, amountFull, barRectHeight)
+      }
+      SwingConstants.VERTICAL -> {
+        val y = amountFull / barRectHeight.toFloat()
+        g.setColor(getColorFromPallet(pallet, y))
+        g.fillRect(b.left, barRectHeight + b.bottom - amountFull, barRectWidth, amountFull)
+      }
     }
     // Deal with possible text painting
     if (progressBar.isStringPainted()) {
