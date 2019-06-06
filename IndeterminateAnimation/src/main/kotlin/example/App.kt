@@ -73,7 +73,7 @@ internal class OneDirectionIndeterminateProgressBarUI : BasicProgressBarUI() {
   }
 }
 
-class BackgroundTask : SwingWorker<String, Void>() {
+class BackgroundTask : SwingWorker<String, Unit>() {
   override fun doInBackground(): String {
     try { // dummy task
       Thread.sleep(5000)

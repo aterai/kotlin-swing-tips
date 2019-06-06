@@ -109,7 +109,7 @@ internal class ProgressCircleUI : BasicProgressBarUI() {
   }
 }
 
-open class BackgroundTask : SwingWorker<String, Void>() {
+open class BackgroundTask : SwingWorker<String, Unit>() {
   override fun doInBackground(): String {
     var current = 0
     val lengthOfTask = 100

@@ -52,20 +52,19 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-open class BackgroundTask : SwingWorker<Void, Void>() {
-  override fun doInBackground(): Void? {
+open class BackgroundTask : SwingWorker<Unit, Unit>() {
+  override fun doInBackground(): Unit {
     var current = 0
     val lengthOfTask = 100
     while (current <= lengthOfTask && !isCancelled()) {
       try { // dummy task
         Thread.sleep(50)
       } catch (ex: InterruptedException) {
-        return null
+        return
       }
       setProgress(100 * current / lengthOfTask)
       current++
     }
-    return null
   }
 }
 
