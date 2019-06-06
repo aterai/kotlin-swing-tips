@@ -71,8 +71,7 @@ class CheckComboBoxEditor : ComboBoxEditor {
 
   override fun setItem(anObject: Any) {
     EventQueue.invokeLater {
-      val c = SwingUtilities.getAncestorOfClass(JComboBox::class.java, getEditorComponent())
-      (c as? JComboBox<*>)?.also {
+      (SwingUtilities.getAncestorOfClass(JComboBox::class.java, getEditorComponent()) as? JComboBox<*>)?.also {
         val idx = it.getSelectedIndex()
         if (idx >= 0 && idx != editor.editingIndex) {
           println("setItem: $idx")
@@ -129,36 +128,33 @@ class EditorPanel(private val data: ComboItem) : JPanel() {
     item = data
 
     enabledCheck.addActionListener { e ->
-      val c = SwingUtilities.getAncestorOfClass(JComboBox::class.java, this)
-      if (c is JComboBox<*>) {
-        val item = c.getItemAt(editingIndex) as ComboItem
+      (SwingUtilities.getAncestorOfClass(JComboBox::class.java, this) as? JComboBox<*>)?.also {
+        val item = it.getItemAt(editingIndex) as ComboItem
         item.isEnabled = (e.getSource() as JCheckBox).isSelected()
         editableCheck.setEnabled(item.isEnabled)
         textField.setEnabled(item.isEnabled)
-        c.setSelectedIndex(editingIndex)
+        it.setSelectedIndex(editingIndex)
       }
     }
     enabledCheck.setOpaque(false)
     enabledCheck.setFocusable(false)
 
     editableCheck.addActionListener { e ->
-      val c = SwingUtilities.getAncestorOfClass(JComboBox::class.java, this)
-      if (c is JComboBox<*>) {
-        val item = c.getItemAt(editingIndex) as ComboItem
+      (SwingUtilities.getAncestorOfClass(JComboBox::class.java, this) as? JComboBox<*>)?.also {
+        val item = it.getItemAt(editingIndex) as ComboItem
         item.isEditable = (e.getSource() as JCheckBox).isSelected()
         textField.setEditable(item.isEditable)
-        c.setSelectedIndex(editingIndex)
+        it.setSelectedIndex(editingIndex)
       }
     }
     editableCheck.setOpaque(false)
     editableCheck.setFocusable(false)
 
     textField.addActionListener { e ->
-      val c = SwingUtilities.getAncestorOfClass(JComboBox::class.java, this)
-      if (c is JComboBox<*>) {
-        val item = c.getItemAt(editingIndex) as ComboItem
+      (SwingUtilities.getAncestorOfClass(JComboBox::class.java, this) as? JComboBox<*>)?.also {
+        val item = it.getItemAt(editingIndex) as ComboItem
         item.text = (e.getSource() as JTextField).getText()
-        c.setSelectedIndex(editingIndex)
+        it.setSelectedIndex(editingIndex)
       }
     }
     textField.setBorder(BorderFactory.createEmptyBorder())

@@ -75,8 +75,7 @@ internal class RowHeaderList<E>(model: ListModel<E>, protected val table: JTable
     listSelection = getSelectionModel()
   }
 
-  protected inner class RowHeaderRenderer<E2>(private val header: JTableHeader) : JLabel(), ListCellRenderer<E2> {
-
+  inner class RowHeaderRenderer<E2>(private val header: JTableHeader) : JLabel(), ListCellRenderer<E2> {
     init {
       this.setOpaque(true)
       // this.setBorder(UIManager.getBorder("TableHeader.cellBorder"))

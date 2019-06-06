@@ -137,7 +137,7 @@ class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: ImageIcon) : 
   }
 }
 
-internal class SiteComboBoxLayout(private val favicon: JLabel?, private val feedButton: JButton?) : LayoutManager {
+class SiteComboBoxLayout(private val favicon: JLabel?, private val feedButton: JButton?) : LayoutManager {
   override fun addLayoutComponent(name: String, comp: Component) {}
 
   override fun removeLayoutComponent(comp: Component) {}
@@ -185,11 +185,11 @@ internal class SiteComboBoxLayout(private val favicon: JLabel?, private val feed
   }
 }
 
-internal class SiteItem(val url: String, val favicon: Icon, val hasRss: Boolean) {
+class SiteItem(val url: String, val favicon: Icon, val hasRss: Boolean) {
   override fun toString() = url
 }
 
-internal class SelectedImageFilter : RGBImageFilter() {
+class SelectedImageFilter : RGBImageFilter() {
   override fun filterRGB(x: Int, y: Int, argb: Int): Int {
     val r = Math.min(0xFF, ((argb shr 16 and 0xFF) * SCALE).toInt())
     val g = Math.min(0xFF, ((argb shr 8 and 0xFF) * SCALE).toInt())

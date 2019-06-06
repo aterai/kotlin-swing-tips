@@ -60,7 +60,7 @@ class MainPanel : JPanel(BorderLayout()) {
 //   }
 // }
 
-internal class LineFocusTable(model: TableModel) : JTable(model) {
+class LineFocusTable(model: TableModel) : JTable(model) {
   private val dotBorder = DotBorder(2, 2, 2, 2)
   private val emptyBorder = BorderFactory.createEmptyBorder(2, 2, 2, 2)
 
@@ -156,11 +156,11 @@ internal class LineFocusTable(model: TableModel) : JTable(model) {
   }
 }
 
-internal enum class Type {
+enum class Type {
   START, END
 }
 
-internal class DotBorder(top: Int, left: Int, bottom: Int, right: Int) : EmptyBorder(top, left, bottom, right) {
+class DotBorder(top: Int, left: Int, bottom: Int, right: Int) : EmptyBorder(top, left, bottom, right) {
   val type: MutableSet<Type> = EnumSet.noneOf(Type::class.java)
 
   override fun isBorderOpaque() = true
@@ -192,7 +192,7 @@ internal class DotBorder(top: Int, left: Int, bottom: Int, right: Int) : EmptyBo
   }
 }
 
-internal class TablePopupMenu : JPopupMenu() {
+class TablePopupMenu : JPopupMenu() {
   private val delete: JMenuItem
 
   init {

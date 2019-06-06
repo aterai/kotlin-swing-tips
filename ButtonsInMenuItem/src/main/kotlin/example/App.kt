@@ -102,7 +102,7 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 // https://ateraimemo.com/Swing/ToggleButtonBar.html
-internal class ToggleButtonBarCellIcon : Icon {
+class ToggleButtonBarCellIcon : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val parent = c.getParent() ?: return
     val r = 8
@@ -161,7 +161,7 @@ internal class ToggleButtonBarCellIcon : Icon {
   override fun getIconHeight() = 20
 }
 
-internal class EditMenuLayerUI<V : Component>(private val lastButton: AbstractButton) : LayerUI<V>() {
+class EditMenuLayerUI<V : Component>(private val lastButton: AbstractButton) : LayerUI<V>() {
   private var shape: Shape? = null
 
   override fun paint(g: Graphics, c: JComponent) {

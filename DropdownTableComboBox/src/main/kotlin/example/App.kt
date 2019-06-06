@@ -87,7 +87,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class DropdownTableComboBox<E : List<Any>>(val list: List<E>, model: DefaultTableModel) : JComboBox<E>() {
+class DropdownTableComboBox<E : List<Any>>(val list: List<E>, model: DefaultTableModel) : JComboBox<E>() {
   @Transient
   protected val highlighter = HighlightListener()
   protected val table: JTable = object : JTable() {
@@ -132,7 +132,7 @@ internal class DropdownTableComboBox<E : List<Any>>(val list: List<E>, model: De
   }
 }
 
-internal class ComboTablePopup(combo: JComboBox<*>, private val table: JTable) : BasicComboPopup(combo) {
+class ComboTablePopup(combo: JComboBox<*>, private val table: JTable) : BasicComboPopup(combo) {
   private val scroll: JScrollPane
 
   init {
@@ -178,7 +178,7 @@ internal class ComboTablePopup(combo: JComboBox<*>, private val table: JTable) :
   }
 }
 
-internal class HighlightListener : MouseAdapter() {
+class HighlightListener : MouseAdapter() {
   private var vrow = -1
 
   fun isHighlightableRow(row: Int): Boolean {

@@ -10,7 +10,7 @@ import javax.swing.plaf.synth.SynthLookAndFeel
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    val list = listOf(makeTestTabbedPane(ClippedTitleTabbedPane()), makeTestTabbedPane(TextOverflowFadeTabbedPane()))
+    val list = listOf(makeTabbedPane(ClippedTitleTabbedPane()), makeTabbedPane(TextOverflowFadeTabbedPane()))
 
     val p = JPanel(GridLayout(list.size, 1))
     list.forEach { p.add(it) }
@@ -26,7 +26,7 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  private fun makeTestTabbedPane(tabbedPane: JTabbedPane) = tabbedPane.also {
+  private fun makeTabbedPane(tabbedPane: JTabbedPane) = tabbedPane.also {
     it.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT)
     it.addTab("1111111111111111111", ColorIcon(Color.RED), JScrollPane(JTree()))
     it.addTab("2", ColorIcon(Color.GREEN), JLabel("bbbbbbbbb"))

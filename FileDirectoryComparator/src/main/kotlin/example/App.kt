@@ -77,7 +77,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class FileIconTableCellRenderer(private val fileSystemView: FileSystemView) : DefaultTableCellRenderer() {
+class FileIconTableCellRenderer(val fileSystemView: FileSystemView) : DefaultTableCellRenderer() {
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -106,7 +106,7 @@ internal class FileIconTableCellRenderer(private val fileSystemView: FileSystemV
   }
 }
 
-internal class FileTransferHandler : TransferHandler() {
+class FileTransferHandler : TransferHandler() {
   override fun importData(support: TransferHandler.TransferSupport) = runCatching {
     val model = (support.getComponent() as JTable).getModel() as DefaultTableModel
     val list = support.getTransferable().getTransferData(DataFlavor.javaFileListFlavor) as List<*>
@@ -115,7 +115,7 @@ internal class FileTransferHandler : TransferHandler() {
         .forEach { model.addRow(it) }
   }.isSuccess
 
-  override fun canImport(support: TransferSupport) = support.isDataFlavorSupported(DataFlavor.javaFileListFlavor)
+  override fun canImport(ts: TransferSupport) = ts.isDataFlavorSupported(DataFlavor.javaFileListFlavor)
 
   override fun getSourceActions(component: JComponent) = TransferHandler.COPY
 }
@@ -134,7 +134,7 @@ open class DefaultFileComparator(protected val column: Int) : Comparator<File>, 
   }
 }
 
-internal class FileComparator(column: Int) : DefaultFileComparator(column) {
+class FileComparator(column: Int) : DefaultFileComparator(column) {
   override fun compare(a: File, b: File) = if (a.isDirectory() && !b.isDirectory()) -1
     else if (!a.isDirectory() && b.isDirectory()) 1
     else super.compare(a, b)
@@ -146,7 +146,7 @@ internal class FileComparator(column: Int) : DefaultFileComparator(column) {
 
 // > dir /O:GN
 // > ls --group-directories-first
-internal class FileGroupComparator(private val table: JTable, column: Int) : DefaultFileComparator(column) {
+class FileGroupComparator(private val table: JTable, column: Int) : DefaultFileComparator(column) {
   override fun compare(a: File, b: File): Int {
     // var flag = 1
     // val keys = table.getRowSorter().getSortKeys()
@@ -169,7 +169,7 @@ internal class FileGroupComparator(private val table: JTable, column: Int) : Def
   }
 }
 
-internal class TablePopupMenu : JPopupMenu() {
+class TablePopupMenu : JPopupMenu() {
   private val delete: JMenuItem
 
   init {

@@ -53,7 +53,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class RoundButton : JButton {
+class RoundButton : JButton {
   var shape: Shape? = null
   var base: Shape? = null
 
@@ -112,7 +112,7 @@ internal class RoundButton : JButton {
   }
 }
 
-internal enum class ButtonAlignments private constructor(private val description: String, val alingment: Float) {
+enum class ButtonAlignments(val description: String, val alingment: Float) {
   TOP("Top Alignment", Component.TOP_ALIGNMENT),
   CENTER("Center Alignment", Component.CENTER_ALIGNMENT),
   BOTTOM("Bottom Alignment", Component.BOTTOM_ALIGNMENT);

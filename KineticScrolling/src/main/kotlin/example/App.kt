@@ -86,7 +86,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class KineticScrollingListener1(protected val label: JComponent) : MouseAdapter(), HierarchyListener {
+class KineticScrollingListener1(protected val label: JComponent) : MouseAdapter(), HierarchyListener {
   protected val dc: Cursor
   protected val hc = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
   protected val scroller: Timer
@@ -143,7 +143,7 @@ internal class KineticScrollingListener1(protected val label: JComponent) : Mous
   }
 }
 
-internal class KineticScrollingListener2(protected val label: JComponent) : MouseAdapter(), HierarchyListener {
+class KineticScrollingListener2(protected val label: JComponent) : MouseAdapter(), HierarchyListener {
   protected val startPt = Point()
   protected val delta = Point()
   protected val dc: Cursor

@@ -100,7 +100,8 @@ internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMot
 
     val str = SwingUtilities.layoutCompoundLabel(
         this, getFontMetrics(getFont()), value?.toString() ?: "", getIcon(),
-        getVerticalAlignment(), getHorizontalAlignment(), getVerticalTextPosition(), getHorizontalTextPosition(),
+        getVerticalAlignment(), getHorizontalAlignment(),
+        getVerticalTextPosition(), getHorizontalTextPosition(),
         lrect, irect, trect, getIconTextGap())
     setText(if (isRolloverCell(table, row, column)) "<html><u><font color='blue'>$str" else str)
     return this

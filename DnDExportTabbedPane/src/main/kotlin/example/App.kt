@@ -297,7 +297,7 @@ internal class DnDTabbedPane : JTabbedPane() {
     }
   }
 
-  fun isTopBottomTabPlacement(placement: Int) = placement == JTabbedPane.TOP || placement == JTabbedPane.BOTTOM
+  fun isTopBottomTabPlacement(tp: Int) = tp == JTabbedPane.TOP || tp == JTabbedPane.BOTTOM
 
   companion object {
     private const val SCROLL_SIZE = 20 // Test

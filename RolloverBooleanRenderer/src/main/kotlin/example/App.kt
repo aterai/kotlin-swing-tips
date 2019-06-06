@@ -58,7 +58,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class HighlightListener : MouseAdapter() {
+class HighlightListener : MouseAdapter() {
   private var vrow = -1 // viewRowIndex
   private var vcol = -1 // viewColumnIndex
 
@@ -99,7 +99,7 @@ internal class HighlightListener : MouseAdapter() {
   }
 }
 
-internal open class RolloverDefaultTableCellRenderer(val highlighter: HighlightListener) : DefaultTableCellRenderer() {
+open class RolloverDefaultTableCellRenderer(val highlighter: HighlightListener) : DefaultTableCellRenderer() {
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -139,13 +139,13 @@ internal open class RolloverDefaultTableCellRenderer(val highlighter: HighlightL
   }
 }
 
-internal class RolloverNumberRenderer(highlighter: HighlightListener) : RolloverDefaultTableCellRenderer(highlighter) {
+class RolloverNumberRenderer(highlighter: HighlightListener) : RolloverDefaultTableCellRenderer(highlighter) {
   init {
     setHorizontalAlignment(SwingConstants.RIGHT)
   }
 }
 
-internal class RolloverBooleanRenderer(val highlighter: HighlightListener) : JCheckBox(), TableCellRenderer {
+class RolloverBooleanRenderer(val highlighter: HighlightListener) : JCheckBox(), TableCellRenderer {
   init {
     setHorizontalAlignment(SwingConstants.CENTER)
     setBorderPainted(true)
