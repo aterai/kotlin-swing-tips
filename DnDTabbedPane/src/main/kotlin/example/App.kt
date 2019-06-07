@@ -51,11 +51,15 @@ class MainPanel : JPanel(BorderLayout()) {
     gcheck.addActionListener { tab.hasGhost = gcheck.isSelected() }
 
     val tcheck = JCheckBox("Top", true)
-    tcheck.addActionListener { tab.setTabPlacement(if (tcheck.isSelected()) JTabbedPane.TOP else JTabbedPane.RIGHT) }
+    tcheck.addActionListener { e ->
+      val b = (e.getSource() as JCheckBox).isSelected()
+      tab.setTabPlacement(if (b) JTabbedPane.TOP else JTabbedPane.RIGHT)
+    }
 
     val scheck = JCheckBox("SCROLL_TAB_LAYOUT", true)
-    scheck.addActionListener {
-      tab.setTabLayoutPolicy(if (scheck.isSelected()) JTabbedPane.SCROLL_TAB_LAYOUT else JTabbedPane.WRAP_TAB_LAYOUT)
+    scheck.addActionListener { e ->
+      val b = (e.getSource() as JCheckBox).isSelected()
+      tab.setTabLayoutPolicy(if (b) JTabbedPane.SCROLL_TAB_LAYOUT else JTabbedPane.WRAP_TAB_LAYOUT)
     }
 
     val debugp = JCheckBox("Debug Paint", true)

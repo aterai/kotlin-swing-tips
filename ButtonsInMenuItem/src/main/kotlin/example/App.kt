@@ -191,7 +191,11 @@ class EditMenuLayerUI<V : Component>(private val lastButton: AbstractButton) : L
       val c = e.getComponent()
       if (c != lastButton) {
         val r = c.getBounds()
-        s = Line2D.Double(r.getX() + r.getWidth(), r.getY(), r.getX() + r.getWidth(), r.getY() + r.getHeight() - 1.0)
+        val x = r.getX()
+        val y = r.getY()
+        val w = r.getWidth()
+        val h = r.getHeight()
+        s = Line2D.Double(x + w, y, x + w, y + h - 1.0)
       }
     }
     if (s != shape) {

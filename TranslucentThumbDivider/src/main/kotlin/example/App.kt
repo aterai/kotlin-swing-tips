@@ -165,7 +165,10 @@ internal class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
     if (e.getID() == MouseEvent.MOUSE_MOVED) {
       splitPane.setCursor(if (thumb.contains(e.getPoint())) wc else dc)
     } else if (isDragging && isDraggableComponent(splitPane, c) && e.getID() == MouseEvent.MOUSE_DRAGGED) {
-      val delta = if (splitPane.getOrientation() == JSplitPane.HORIZONTAL_SPLIT) pt.x - startPt.x else pt.y - startPt.y
+      val delta = when (splitPane.getOrientation()) {
+        JSplitPane.HORIZONTAL_SPLIT -> pt.x - startPt.x
+        else -> pt.y - startPt.y
+      }
       splitPane.setDividerLocation(Math.max(0, dividerLocation + delta))
     }
   }

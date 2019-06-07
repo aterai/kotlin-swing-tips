@@ -146,13 +146,14 @@ internal class GroupableTableHeaderUI : BasicTableHeaderUI() {
     val r = tc.getHeaderRenderer() ?: header.getDefaultRenderer()
     val hasFocus = !header.isPaintingForPrint() && header.hasFocus()
     // && (columnIndex == getSelectedColumnIndex())
-    return r.getTableCellRendererComponent(header.getTable(), tc.getHeaderValue(), false, hasFocus, -1, columnIndex)
+    val table = header.getTable()
+    return r.getTableCellRendererComponent(table, tc.getHeaderValue(), false, hasFocus, -1, columnIndex)
   }
 
   // Copied from javax/swing/plaf/basic/BasicTableHeaderUI.java
   private fun paintCell(g: Graphics, cellRect: Rectangle, columnIndex: Int) {
-    val component = getHeaderRenderer(columnIndex)
-    rendererPane.paintComponent(g, component, header, cellRect.x, cellRect.y, cellRect.width, cellRect.height, true)
+    val c = getHeaderRenderer(columnIndex)
+    rendererPane.paintComponent(g, c, header, cellRect.x, cellRect.y, cellRect.width, cellRect.height, true)
   }
 
   private fun paintCellGroup(g: Graphics, cellRect: Rectangle, columnGroup: ColumnGroup) {
