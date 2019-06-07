@@ -53,7 +53,7 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 open class BackgroundTask : SwingWorker<Unit, Unit>() {
-  override fun doInBackground(): Unit {
+  override fun doInBackground() {
     var current = 0
     val lengthOfTask = 100
     while (current <= lengthOfTask && !isCancelled()) {
