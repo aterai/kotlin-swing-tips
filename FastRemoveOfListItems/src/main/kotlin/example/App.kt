@@ -131,11 +131,9 @@ class MainPanel : JPanel(BorderLayout()) {
     return list
   }
 
-  private fun makeButton(title: String): JButton {
-    val button = JButton(title)
-    button.setFocusable(false)
-    button.setBorder(BorderFactory.createEmptyBorder(2, 8, 2, 8))
-    return button
+  private fun makeButton(title: String) = JButton(title).also {
+    it.setFocusable(false)
+    it.setBorder(BorderFactory.createEmptyBorder(2, 8, 2, 8))
   }
 }
 

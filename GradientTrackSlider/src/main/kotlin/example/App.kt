@@ -75,12 +75,10 @@ class MainPanel : JPanel(BorderLayout()) {
       return slider
     }
 
-    private fun makeTitledPanel(title: String, c: Component): Component {
-      val p = JPanel(BorderLayout())
-      p.setBorder(BorderFactory.createTitledBorder(title))
-      p.setOpaque(false)
-      p.add(c)
-      return p
+    private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
+      it.setBorder(BorderFactory.createTitledBorder(title))
+      it.setOpaque(false)
+      it.add(c)
     }
   }
 }

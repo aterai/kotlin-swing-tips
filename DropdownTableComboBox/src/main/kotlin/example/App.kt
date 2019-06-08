@@ -123,9 +123,7 @@ class DropdownTableComboBox<E : List<Any>>(val list: List<E>, model: DefaultTabl
     super.updateUI()
     EventQueue.invokeLater {
       setUI(object : MetalComboBoxUI() {
-        protected override fun createPopup(): ComboPopup {
-          return ComboTablePopup(comboBox, table)
-        }
+        protected override fun createPopup() = ComboTablePopup(comboBox, table)
       })
       setEditable(false)
     }
@@ -181,9 +179,7 @@ class ComboTablePopup(combo: JComboBox<*>, private val table: JTable) : BasicCom
 class HighlightListener : MouseAdapter() {
   private var vrow = -1
 
-  fun isHighlightableRow(row: Int): Boolean {
-    return this.vrow == row
-  }
+  fun isHighlightableRow(row: Int) = this.vrow == row
 
   private fun setHighlighTableCell(e: MouseEvent) {
     (e.getComponent() as? JTable)?.also {
