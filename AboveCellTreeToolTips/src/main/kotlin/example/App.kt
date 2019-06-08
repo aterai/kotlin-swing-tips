@@ -70,13 +70,11 @@ class MainPanel : JPanel(BorderLayout()) {
     return root
   }
 
-  private fun makeTitledPanel(title: String, c: Component): Component {
+  private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
     val scroll = JScrollPane(c)
     scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
-    val p = JPanel(BorderLayout())
-    p.setBorder(BorderFactory.createTitledBorder(title))
-    p.add(scroll)
-    return p
+    it.setBorder(BorderFactory.createTitledBorder(title))
+    it.add(scroll)
   }
 }
 

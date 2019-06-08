@@ -68,9 +68,7 @@ class MainPanel : JPanel(BorderLayout()) {
   private fun makeEditButtonBar(list: List<AbstractButton>): Component {
     val size = list.size
     val p = object : JPanel(GridLayout(1, size, 0, 0)) {
-      override fun getMaximumSize(): Dimension {
-        return super.getPreferredSize()
-      }
+      override fun getMaximumSize() = super.getPreferredSize()
     }
     list.forEach {
       it.setIcon(ToggleButtonBarCellIcon())
