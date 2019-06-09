@@ -6,7 +6,6 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicComboPopup
-import javax.swing.plaf.basic.ComboPopup
 import javax.swing.plaf.metal.MetalComboBoxUI
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
