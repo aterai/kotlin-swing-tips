@@ -15,9 +15,6 @@ class MainPanel : JPanel(BorderLayout()) {
   protected val table = JTable(model)
   protected val sorter = TableRowSorter<WorkerModel>(model)
   protected val deleteRowSet: MutableSet<Int> = TreeSet<Int>()
-  // TEST:
-  // protected val executor = Executors.newCachedThreadPool() as ThreadPoolExecutor
-  // protected val executor = Executors.newFixedThreadPool(2)
 
   init {
     table.setRowSorter(sorter)
@@ -55,7 +52,6 @@ class MainPanel : JPanel(BorderLayout()) {
         if (!isDisplayable()) {
           println("process: DISPOSE_ON_CLOSE")
           cancel(true)
-          // executor.shutdown();
           return
         }
         c.forEach { model.setValueAt(it, key, 2) }
@@ -65,7 +61,6 @@ class MainPanel : JPanel(BorderLayout()) {
         if (!isDisplayable()) {
           println("done: DISPOSE_ON_CLOSE")
           cancel(true)
-          // executor.shutdown();
           return
         }
         var i = -1
@@ -82,7 +77,6 @@ class MainPanel : JPanel(BorderLayout()) {
       }
     }
     model.addProgressValue("example", 0, worker)
-    // executor.execute(worker);
     worker.execute()
   }
 
@@ -180,9 +174,9 @@ open class WorkerModel : DefaultTableModel() {
 
   companion object {
     private val COLUMN_ARRAY = arrayOf(
-        ColumnContext("No.", Integer::class.java, false),
+        ColumnContext("No.", Number::class.java, false),
         ColumnContext("Name", String::class.java, false),
-        ColumnContext("Progress", Integer::class.java, false))
+        ColumnContext("Progress", Number::class.java, false))
   }
 }
 
