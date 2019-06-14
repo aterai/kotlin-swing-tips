@@ -50,12 +50,11 @@ class MainPanel : JPanel(BorderLayout()) {
 
     setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
     add(JScrollPane(tree))
-
     setPreferredSize(Dimension(320, 240))
   }
 }
 
-internal class TriStateCheckBox : JCheckBox() {
+open class TriStateCheckBox : JCheckBox() {
   override fun updateUI() {
     val currentIcon = getIcon()
     setIcon(null)
@@ -67,7 +66,7 @@ internal class TriStateCheckBox : JCheckBox() {
   }
 }
 
-internal class IndeterminateIcon : Icon {
+class IndeterminateIcon : Icon {
   private val icon = UIManager.getIcon("CheckBox.icon")
 
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
@@ -84,7 +83,7 @@ internal class IndeterminateIcon : Icon {
   override fun getIconHeight() = icon.getIconHeight()
 
   companion object {
-    private val FOREGROUND = Color(50, 20, 255, 200)
+    private val FOREGROUND = Color(0xC8_32_14_FF.toInt(), true)
     private const val SIDE_MARGIN = 4
     private const val HEIGHT = 2
   }

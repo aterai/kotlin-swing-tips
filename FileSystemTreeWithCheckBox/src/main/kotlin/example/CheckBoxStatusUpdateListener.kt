@@ -5,7 +5,7 @@ import javax.swing.event.TreeModelListener
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
 
-internal class CheckBoxStatusUpdateListener : TreeModelListener {
+class CheckBoxStatusUpdateListener : TreeModelListener {
   private var adjusting = false
 
   override fun treeNodesChanged(e: TreeModelEvent) {
@@ -14,10 +14,10 @@ internal class CheckBoxStatusUpdateListener : TreeModelListener {
     }
     adjusting = true
     val children = e.getChildren()
-    val model = e.getSource() as DefaultTreeModel
+    val model = e.getSource() as? DefaultTreeModel ?: return
 
     val node: DefaultMutableTreeNode
-    val c: CheckBoxNode // = (CheckBoxNode) node.getUserObject();
+    val c: CheckBoxNode
     val isOnlyOneNodeSelected = children != null && children.size == 1
     if (isOnlyOneNodeSelected) {
       node = children[0] as DefaultMutableTreeNode
@@ -26,12 +26,7 @@ internal class CheckBoxStatusUpdateListener : TreeModelListener {
       var n = parent.getLastPathComponent() as? DefaultMutableTreeNode
       while (n != null) {
         updateParentUserObject(n)
-        val tmp = n.getParent() as? DefaultMutableTreeNode
-        if (tmp != null) {
-          n = tmp
-        } else {
-          break
-        }
+        n = n.getParent() as? DefaultMutableTreeNode ?: break
       }
       model.nodeChanged(n)
     } else {
@@ -44,31 +39,29 @@ internal class CheckBoxStatusUpdateListener : TreeModelListener {
   }
 
   private fun updateParentUserObject(parent: DefaultMutableTreeNode) {
-    (parent.getUserObject() as? CheckBoxNode)?.also { node ->
-      val list = parent.children().toList()
-        .filterIsInstance(DefaultMutableTreeNode::class.java)
-        .map { it.getUserObject() }
-        .filterIsInstance(CheckBoxNode::class.java)
-        .map { it.getStatus() }
-        .distinct()
-      val status = if (list.all { it == Status.DESELECTED }) {
-        Status.DESELECTED
-      } else if (list.all { it == Status.SELECTED }) {
-        Status.SELECTED
-      } else {
-        Status.INDETERMINATE
+    val list = parent.children().toList()
+      .filterIsInstance(DefaultMutableTreeNode::class.java)
+      .map { it.getUserObject() }
+      .filterIsInstance(CheckBoxNode::class.java)
+      .map { it.getStatus() }
+
+    (parent.getUserObject() as? CheckBoxNode)?.also {
+      val status = when {
+        list.all { it === Status.DESELECTED } -> Status.DESELECTED
+        list.all { it === Status.SELECTED } -> Status.SELECTED
+        else -> Status.INDETERMINATE
       }
-      parent.setUserObject(CheckBoxNode(node.getFile(), status))
+      parent.setUserObject(CheckBoxNode(it.getFile(), status))
     }
   }
 
-  private fun updateAllChildrenUserObject(root: DefaultMutableTreeNode, status: Status) {
-    root.breadthFirstEnumeration().toList()
+  private fun updateAllChildrenUserObject(parent: DefaultMutableTreeNode, status: Status) {
+    parent.breadthFirstEnumeration().toList()
       .filterIsInstance(DefaultMutableTreeNode::class.java)
-      .filter { it != root }
-      .forEach { node ->
-        val check = node.getUserObject() as CheckBoxNode
-        node.setUserObject(CheckBoxNode(check.getFile(), status))
+      .filter { it != parent }
+      .forEach {
+        val check = it.getUserObject() as CheckBoxNode
+        it.setUserObject(CheckBoxNode(check.getFile(), status))
       }
   }
 
