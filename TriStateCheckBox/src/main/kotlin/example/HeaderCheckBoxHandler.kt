@@ -54,8 +54,7 @@ class HeaderCheckBoxHandler(val table: JTable, val targetColumnIndex: Int) : Mou
     val mci = tbl.convertColumnIndexToModel(vci)
     if (mci == targetColumnIndex && m.getRowCount() > 0) {
       val column = columnModel.getColumn(vci)
-      val v = column.getHeaderValue()
-      val b = Status.DESELECTED == v
+      val b = Status.DESELECTED === column.getHeaderValue()
       for (i in 0 until m.getRowCount()) {
         m.setValueAt(b, i, mci)
       }
