@@ -195,13 +195,20 @@ class MainPanel : JPanel() {
       return l
     }
 
-    private fun getForegroundColor(ld: LocalDate): Color {
-      val dow = ld.getDayOfWeek()
-      return if (ld.isEqual(realLocalDate)) Color(0x64_FF_64)
-          else if (dow == DayOfWeek.SUNDAY) Color(0xFF_64_64)
-          else if (dow == DayOfWeek.SATURDAY) Color(0x64_64_FF)
-          else Color.BLACK
-    }
+    private fun getForegroundColor(ld: LocalDate) =
+        if (ld.isEqual(realLocalDate)) Color(0x64_FF_64)
+        else when (ld.getDayOfWeek()) {
+          DayOfWeek.SUNDAY -> Color(0xFF_64_64)
+          DayOfWeek.SATURDAY -> Color(0x64_64_FF)
+          else -> Color.BLACK
+        }
+//     private fun getForegroundColor(ld: LocalDate): Color {
+//       val dow = ld.getDayOfWeek()
+//       return if (ld.isEqual(realLocalDate)) Color(0x64_FF_64)
+//           else if (dow == DayOfWeek.SUNDAY) Color(0xFF_64_64)
+//           else if (dow == DayOfWeek.SATURDAY) Color(0x64_64_FF)
+//           else Color.BLACK
+//     }
   }
 }
 
