@@ -185,13 +185,11 @@ internal class TabLayout : LayoutManager, Serializable {
     }
   }
 
-  override fun toString(): String {
-    return javaClass.getName()
-  }
+  override fun toString() = javaClass.getName()
 
   companion object {
     private const val serialVersionUID = 1L
-    private val TAB_WIDTH = 100
+    private const val TAB_WIDTH = 100
   }
 }
 
