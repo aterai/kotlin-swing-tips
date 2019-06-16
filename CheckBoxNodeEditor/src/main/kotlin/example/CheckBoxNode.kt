@@ -13,7 +13,5 @@ class CheckBoxNode {
     this.status = status
   }
 
-  override fun toString(): String {
-    return label
-  }
+  override fun toString() = label
 }
