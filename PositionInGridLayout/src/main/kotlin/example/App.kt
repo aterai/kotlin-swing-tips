@@ -18,11 +18,8 @@ class MainPanel : JPanel(BorderLayout()) {
       val col = idx % gl.getColumns()
       log.append(String.format("Row: %d, Column: %d%n", row + 1, col + 1))
     }
-    for (i in 0 until gl.getRows() * gl.getColumns()) {
-      val b = JButton()
-      b.addActionListener(al)
-      p.add(b)
-    }
+    List(gl.getRows() * gl.getColumns()) { JButton() }
+      .forEach { p.add(it.also { it.addActionListener(al) }) }
 
     add(p)
     add(JScrollPane(log), BorderLayout.SOUTH)
