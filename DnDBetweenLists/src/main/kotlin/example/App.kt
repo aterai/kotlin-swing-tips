@@ -52,7 +52,7 @@ class MainPanel : JPanel(BorderLayout()) {
     // Disable row Cut, Copy, Paste
     val map = list.getActionMap()
     val dummy = object : AbstractAction() {
-      override fun actionPerformed(e: ActionEvent) {} // Dummy action
+      override fun actionPerformed(e: ActionEvent) { /* Dummy action */ }
     }
     map.put(TransferHandler.getCutAction().getValue(Action.NAME), dummy)
     map.put(TransferHandler.getCopyAction().getValue(Action.NAME), dummy)

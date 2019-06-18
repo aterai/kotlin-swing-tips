@@ -13,7 +13,7 @@ import javax.swing.plaf.metal.MetalSliderUI
 class MainPanel : JPanel(BorderLayout()) {
   init {
     UIManager.put("Slider.horizontalThumbIcon", object : Icon {
-      override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {} // Empty icon
+      override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) { /* Empty icon */ }
 
       override fun getIconWidth() = 15
 

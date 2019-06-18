@@ -138,9 +138,9 @@ class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: ImageIcon) : 
 }
 
 class SiteComboBoxLayout(private val favicon: JLabel?, private val feedButton: JButton?) : LayoutManager {
-  override fun addLayoutComponent(name: String, comp: Component) {}
+  override fun addLayoutComponent(name: String, comp: Component) { /* not needed */ }
 
-  override fun removeLayoutComponent(comp: Component) {}
+  override fun removeLayoutComponent(comp: Component) { /* not needed */ }
 
   override fun preferredLayoutSize(parent: Container) = parent.getPreferredSize()
 

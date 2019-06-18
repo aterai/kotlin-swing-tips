@@ -156,13 +156,13 @@ internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMot
     }
   }
 
-  override fun mouseDragged(e: MouseEvent) {} // not needed
+  override fun mouseDragged(e: MouseEvent) { /* not needed */ }
 
-  override fun mouseEntered(e: MouseEvent) {} // not needed
+  override fun mouseEntered(e: MouseEvent) { /* not needed */ }
 
-  override fun mousePressed(e: MouseEvent) {} // not needed
+  override fun mousePressed(e: MouseEvent) { /* not needed */ }
 
-  override fun mouseReleased(e: MouseEvent) {} // not needed
+  override fun mouseReleased(e: MouseEvent) { /* not needed */ }
 }
 
 fun main() {

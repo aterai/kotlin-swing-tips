@@ -58,7 +58,7 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
           combo.getEditor().setItem(str)
         }
 
-        override fun popupMenuCanceled(e: PopupMenuEvent) {} // not needed
+        override fun popupMenuCanceled(e: PopupMenuEvent) { /* not needed */ }
       }
     }
     return popupMenuListener

@@ -76,9 +76,9 @@ internal class MenuToggleButton(text: String = "", icon: Icon? = null) : JToggle
   fun setPopupMenu(pop: JPopupMenu) {
     this.popup = pop
     pop.addPopupMenuListener(object : PopupMenuListener {
-      override fun popupMenuCanceled(e: PopupMenuEvent) {} // not needed
+      override fun popupMenuCanceled(e: PopupMenuEvent) { /* not needed */ }
 
-      override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {} // not needed
+      override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) { /* not needed */ }
 
       override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
         setSelected(false)

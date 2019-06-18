@@ -45,7 +45,7 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
         fireDocumentChangeEvent()
       }
 
-      override fun changedUpdate(e: DocumentEvent) {} // not needed
+      override fun changedUpdate(e: DocumentEvent) { /* not needed */ }
     })
     fireDocumentChangeEvent()
 

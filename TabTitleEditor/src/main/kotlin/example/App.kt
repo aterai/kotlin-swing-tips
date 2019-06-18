@@ -112,7 +112,7 @@ class TabTitleEditListener(val tabbedPane: JTabbedPane) : MouseAdapter(), Change
     updateTabSize()
   }
 
-  override fun changedUpdate(e: DocumentEvent) {} // not needed
+  override fun changedUpdate(e: DocumentEvent) { /* not needed */ }
 
   override fun mouseClicked(e: MouseEvent) {
     val r = tabbedPane.getBoundsAt(tabbedPane.getSelectedIndex())
