@@ -164,10 +164,10 @@ class EditMenuLayerUI<V : Component>(private val lastButton: AbstractButton) : L
 
   override fun paint(g: Graphics, c: JComponent) {
     super.paint(g, c)
-    if (shape != null) {
+    shape?.also {
       val g2 = g.create() as Graphics2D
       g2.setPaint(Color.GRAY)
-      g2.draw(shape)
+      g2.draw(it)
       g2.dispose()
     }
   }
