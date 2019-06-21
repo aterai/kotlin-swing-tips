@@ -20,7 +20,7 @@ class MainPanel : JPanel(BorderLayout()) {
   init {
     editor.setOpaque(false)
     editor.setEditable(false)
-    editor.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, java.lang.Boolean.TRUE)
+    editor.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true)
     editor.addHyperlinkListener { e ->
       if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
         Toolkit.getDefaultToolkit().beep()

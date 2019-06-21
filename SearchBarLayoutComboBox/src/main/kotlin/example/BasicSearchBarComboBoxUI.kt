@@ -26,7 +26,7 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
   protected override fun installDefaults() {
     super.installDefaults()
     // comboBox.setEditable(true)
-    comboBox.putClientProperty("JComboBox.isTableCellEditor", java.lang.Boolean.TRUE)
+    comboBox.putClientProperty("JComboBox.isTableCellEditor", true)
     // comboBox.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT)
   }
 

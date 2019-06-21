@@ -37,7 +37,7 @@ class MainPanel : JPanel(BorderLayout()) {
     table.setFillsViewportHeight(true)
     table.setShowGrid(false)
     table.setIntercellSpacing(Dimension())
-    table.putClientProperty("terminateEditOnFocusLost", java.lang.Boolean.TRUE)
+    table.putClientProperty("terminateEditOnFocusLost", true)
 
     table.setComponentPopupMenu(TablePopupMenu())
     add(JScrollPane(table))
