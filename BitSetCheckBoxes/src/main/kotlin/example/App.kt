@@ -35,16 +35,17 @@ class MainPanel : JPanel(BorderLayout()) {
 
   init {
     undoSupport.addUndoableEditListener(um)
-    val box = Box.createHorizontalBox()
-    box.add(Box.createHorizontalGlue())
-    box.add(JButton(undoAction))
-    box.add(Box.createHorizontalStrut(2))
-    box.add(JButton(redoAction))
-    box.add(Box.createHorizontalStrut(2))
-    box.add(JButton(selectAllAction))
-    box.add(Box.createHorizontalStrut(2))
-    box.add(JButton(clearAllAction))
-    box.add(Box.createHorizontalStrut(2))
+    val box = Box.createHorizontalBox().also {
+      it.add(Box.createHorizontalGlue())
+      it.add(JButton(undoAction))
+      it.add(Box.createHorizontalStrut(2))
+      it.add(JButton(redoAction))
+      it.add(Box.createHorizontalStrut(2))
+      it.add(JButton(selectAllAction))
+      it.add(Box.createHorizontalStrut(2))
+      it.add(JButton(clearAllAction))
+      it.add(Box.createHorizontalStrut(2))
+    }
 
     for (i in 0 until BIT_LENGTH) {
       val c = JCheckBox(Integer.toString(i), status.get(i))
