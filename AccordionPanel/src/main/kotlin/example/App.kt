@@ -109,7 +109,7 @@ abstract class AbstractExpansionPanel(private val title: String) : JPanel(Border
   }
 
   override fun getMaximumSize() = getPreferredSize().also {
-    it.width = java.lang.Short.MAX_VALUE.toInt()
+    it.width = Short.MAX_VALUE.toInt()
   }
 
   protected fun initPanel() {
