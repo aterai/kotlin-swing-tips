@@ -85,7 +85,7 @@ class RoundButton : JButton {
   override fun getPreferredSize() = super.getPreferredSize().also {
     val icon = getIcon()
     val i = getInsets()
-    val iw = Math.max(icon.getIconWidth(), icon.getIconHeight())
+    val iw = maxOf(icon.getIconWidth(), icon.getIconHeight())
     it.setSize(iw + i.right + i.left, iw + i.top + i.bottom)
   }
 

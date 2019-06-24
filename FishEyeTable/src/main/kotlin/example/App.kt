@@ -175,7 +175,7 @@ internal class FishEyeTable(m: TableModel) : JTable(m) {
     val viewH = fishEyeRowList.map { it.height }.sum()
     val restRc = rowCount - viewRc
     val restH = height - viewH
-    val restRh = Math.max(1, restH / restRc)
+    val restRh = maxOf(1, restH / restRc)
     var restGap = restH - restRh * restRc
     var index = -1
     for (i in -rd2 until rowCount) {

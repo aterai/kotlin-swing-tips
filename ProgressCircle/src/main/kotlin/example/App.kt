@@ -62,7 +62,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
 internal class ProgressCircleUI : BasicProgressBarUI() {
   override fun getPreferredSize(c: JComponent) = super.getPreferredSize(c).also {
-    val v = Math.max(it.width, it.height)
+    val v = maxOf(it.width, it.height)
     it.setSize(v, v)
   }
 

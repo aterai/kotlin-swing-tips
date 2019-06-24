@@ -169,7 +169,7 @@ internal class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
         JSplitPane.HORIZONTAL_SPLIT -> pt.x - startPt.x
         else -> pt.y - startPt.y
       }
-      splitPane.setDividerLocation(Math.max(0, dividerLocation + delta))
+      splitPane.setDividerLocation(maxOf(0, dividerLocation + delta))
     }
   }
 

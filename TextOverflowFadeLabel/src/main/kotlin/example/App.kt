@@ -50,7 +50,7 @@ internal class FadeOutLabel(text: String) : JLabel(text) {
     var alpha = 1f
     (w - LENGTH until w).forEach {
       rect.x = it
-      alpha = Math.max(0f, alpha - DIFF)
+      alpha = maxOf(0f, alpha - DIFF)
       g2.setComposite(AlphaComposite.SrcOver.derive(alpha))
       g2.setClip(rect)
       super.paintComponent(g2)
@@ -86,7 +86,7 @@ internal class TextOverflowFadeLabel(text: String) : JLabel(text) {
     var alpha = 1f
     (w - LENGTH until w).forEach {
       rect.x = it
-      alpha = Math.max(0f, alpha - DIFF)
+      alpha = maxOf(0f, alpha - DIFF)
       g2.setComposite(AlphaComposite.SrcOver.derive(alpha))
       g2.setClip(rect)
       tl.draw(g2, fx, baseline)
@@ -126,7 +126,7 @@ internal class FadingOutLabel(text: String) : JLabel(text) {
     tl.draw(g2, getInsets().left.toFloat(), baseline)
     g2.dispose()
 
-    val spx = Math.max(0, d.width - LENGTH)
+    val spx = maxOf(0, d.width - LENGTH)
     (0 until LENGTH).forEach { x ->
       val factor = 1.0 - x / LENGTH.toDouble()
       (0 until d.height).forEach { y ->

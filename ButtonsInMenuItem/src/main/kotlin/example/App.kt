@@ -40,7 +40,7 @@ class MainPanel : JPanel(BorderLayout()) {
       override fun getPreferredSize(): Dimension {
         val d = super.getPreferredSize()
         d.width += edit.getPreferredSize().width
-        d.height = Math.max(edit.getPreferredSize().height, d.height)
+        d.height = maxOf(edit.getPreferredSize().height, d.height)
         return d
       }
 

@@ -53,7 +53,7 @@ internal class RadialGradientButton(title: String) : JButton(title) {
       repaint()
     }
     timer2.addActionListener {
-      radius = Math.max(0f, radius - DELTA)
+      radius = maxOf(0f, radius - DELTA)
       repaint()
     }
     val listener = object : MouseAdapter() {
@@ -174,7 +174,7 @@ internal class RadialGradientPaintButton(title: String) : JButton(title) {
       repaint()
     }
     timer2.addActionListener {
-      radius = Math.max(0f, radius - DELTA)
+      radius = maxOf(0f, radius - DELTA)
       repaint()
     }
     val listener = object : MouseAdapter() {

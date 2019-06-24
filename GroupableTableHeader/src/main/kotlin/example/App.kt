@@ -173,7 +173,7 @@ internal class GroupableTableHeaderUI : BasicTableHeaderUI() {
         val cg = o as ColumnGroup
         rendererHeight += cg.getSize(header).height
       }
-      height = Math.max(height, rendererHeight)
+      height = maxOf(height, rendererHeight)
     }
     return height
   }

@@ -191,7 +191,7 @@ internal class DnDTabbedPane : JTabbedPane() {
       glassPane.setTargetRect(0, 0, 0, 0)
       return
     }
-    getBoundsAt(Math.max(0, next - 1))?.also {
+    getBoundsAt(maxOf(0, next - 1))?.also {
       val r = SwingUtilities.convertRectangle(this, it, glassPane)
       val a = Math.min(next, 1) // a = (next == 0) ? 0 : 1;
       if (isTopBottomTabPlacement(getTabPlacement())) {
@@ -230,8 +230,8 @@ internal class DnDTabbedPane : JTabbedPane() {
       //   rect.height = image.getHeight() - rect.y;
       // }
       // glassPane.setImage(image.getSubimage(rect.x, rect.y, rect.width, rect.height));
-      // // rect.x = Math.max(0, rect.x); // rect.x < 0 ? 0 : rect.x;
-      // // rect.y = Math.max(0, rect.y); // rect.y < 0 ? 0 : rect.y;
+      // // rect.x = maxOf(0, rect.x); // rect.x < 0 ? 0 : rect.x;
+      // // rect.y = maxOf(0, rect.y); // rect.y < 0 ? 0 : rect.y;
       // // image = image.getSubimage(rect.x, rect.y, rect.width, rect.height);
       // // glassPane.setImage(image);
     }
