@@ -71,6 +71,9 @@ class AlignedLabel(text: String) : JLabel(text) {
 
   private fun getMaxWidth(): Int {
     if (maxWidth == 0) {
+      // val max = group.stream().map { it.getSuperPreferredWidth() }.reduce(0, Integer::max)
+      // val max = group.map { it.getSuperPreferredWidth() }.fold(0) { a, b -> maxOf(a, b) }
+      // val max = group.map { it.getSuperPreferredWidth() }.fold(0, ::maxOf)
       val max = group.map { it.getSuperPreferredWidth() }.max() ?: 0
       group.forEach { al -> al.maxWidth = max }
     }
