@@ -63,7 +63,7 @@ internal class ZoomImage(@field:Transient private val image: Image) : JPanel() {
   }
 
   fun changeScale(iv: Int) {
-    scale = Math.max(.05, Math.min(5.0, scale - iv * .05))
+    scale = maxOf(.05, minOf(5.0, scale - iv * .05))
     repaint()
   }
 }

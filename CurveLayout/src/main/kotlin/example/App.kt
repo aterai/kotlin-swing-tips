@@ -47,7 +47,7 @@ class MainPanel : JPanel(BorderLayout()) {
                   val d = m.getPreferredSize()
                   m.setSize(d.width, d.height)
                   m.setLocation(x, y)
-                  y += vgap + Math.min(rowh, d.height)
+                  y += vgap + minOf(rowh, d.height)
                   x = (A2 * Math.sqrt(y.toDouble())).toInt()
                 }
               }

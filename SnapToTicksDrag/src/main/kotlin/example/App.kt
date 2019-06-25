@@ -64,7 +64,7 @@ class MainPanel : JPanel(BorderLayout()) {
       val tickSpacing = if (hasMinorTickSpacing) s.getMinorTickSpacing() else s.getMajorTickSpacing()
       val v = s.getValue() - e.getWheelRotation() * tickSpacing
       val m = s.getModel()
-      s.setValue(Math.min(m.getMaximum(), Math.max(v, m.getMinimum())))
+      s.setValue(minOf(m.getMaximum(), maxOf(v, m.getMinimum())))
     }
     if (slider.getUI() is WindowsSliderUI) {
       slider.setUI(WindowsSnapToTicksDragSliderUI(slider))

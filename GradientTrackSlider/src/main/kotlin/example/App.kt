@@ -224,7 +224,7 @@ internal object GradientPalletUtils {
   fun getColorFromPallet(pallet: IntArray, x: Float, alpha: Int): Color {
     val i = (pallet.size * x).toInt()
     val max = pallet.size - 1
-    val index = Math.min(Math.max(i, 0), max)
+    val index = minOf(maxOf(i, 0), max)
     val pix = pallet[index] and 0x00_FF_FF_FF
     // int alpha = 0x64 << 24;
     return Color(alpha or pix, true)

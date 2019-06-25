@@ -193,7 +193,7 @@ internal class DnDTabbedPane : JTabbedPane() {
     }
     getBoundsAt(maxOf(0, next - 1))?.also {
       val r = SwingUtilities.convertRectangle(this, it, glassPane)
-      val a = Math.min(next, 1) // a = (next == 0) ? 0 : 1;
+      val a = minOf(next, 1) // a = (next == 0) ? 0 : 1;
       if (isTopBottomTabPlacement(getTabPlacement())) {
         glassPane.setTargetRect(r.x + r.width * a - LINEWIDTH / 2, r.y, LINEWIDTH, r.height)
       } else {

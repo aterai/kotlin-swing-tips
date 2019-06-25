@@ -95,7 +95,7 @@ internal class DnDTabbedPane : JTabbedPane() {
       RECT_LINE.setBounds(0, 0, 0, 0)
       return RECT_LINE
     }
-    val a = Math.min(index, 1)
+    val a = minOf(index, 1)
     val r = getBoundsAt(a * (index - 1))
     if (isTopBottomTabPlacement(getTabPlacement())) {
       RECT_LINE.setBounds(r.x - LINE_WIDTH / 2 + r.width * a, r.y, LINE_WIDTH, r.height)

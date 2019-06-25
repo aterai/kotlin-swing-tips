@@ -49,7 +49,7 @@ internal class RadialGradientButton(title: String) : JButton(title) {
 
   init {
     timer1.addActionListener {
-      radius = Math.min(200f, radius + DELTA)
+      radius = minOf(200f, radius + DELTA)
       repaint()
     }
     timer2.addActionListener {
@@ -170,7 +170,7 @@ internal class RadialGradientPaintButton(title: String) : JButton(title) {
 
   init {
     timer1.addActionListener {
-      radius = Math.min(200f, radius + DELTA)
+      radius = minOf(200f, radius + DELTA)
       repaint()
     }
     timer2.addActionListener {

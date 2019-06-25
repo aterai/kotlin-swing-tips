@@ -20,7 +20,7 @@ class MainPanel : JPanel(BorderLayout()) {
     button.addActionListener {
       val doc = textArea.getDocument()
       val root = doc.getDefaultRootElement()
-      val i = Math.max(1, Math.min(root.getElementCount(), spinner.getValue() as Int))
+      val i = maxOf(1, minOf(root.getElementCount(), spinner.getValue() as Int))
       runCatching {
         val elem = root.getElement(i - 1)
         val rect = textArea.modelToView(elem.getStartOffset())

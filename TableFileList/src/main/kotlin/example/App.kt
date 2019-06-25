@@ -98,7 +98,7 @@ internal class FileNameRenderer(table: JTable) : TableCellRenderer {
     val i = textLabel.getInsets()
     val swidth = iconLabel.getPreferredSize().width + fm.stringWidth(textLabel.getText()) + i.left + i.right
     val cwidth = table.getColumnModel().getColumn(column).getWidth()
-    dim.width = Math.min(swidth, cwidth)
+    dim.width = minOf(swidth, cwidth)
 
     if (isSelected) {
       textLabel.setOpaque(true)

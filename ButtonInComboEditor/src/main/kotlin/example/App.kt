@@ -191,9 +191,9 @@ class SiteItem(val url: String, val favicon: Icon, val hasRss: Boolean) {
 
 class SelectedImageFilter : RGBImageFilter() {
   override fun filterRGB(x: Int, y: Int, argb: Int): Int {
-    val r = Math.min(0xFF, ((argb shr 16 and 0xFF) * SCALE).toInt())
-    val g = Math.min(0xFF, ((argb shr 8 and 0xFF) * SCALE).toInt())
-    val b = Math.min(0xFF, ((argb and 0xFF) * SCALE).toInt())
+    val r = minOf(0xFF, ((argb shr 16 and 0xFF) * SCALE).toInt())
+    val g = minOf(0xFF, ((argb shr 8 and 0xFF) * SCALE).toInt())
+    val b = minOf(0xFF, ((argb and 0xFF) * SCALE).toInt())
     // return argb and -0x1000000 or (r shl 16) or (g shl 8) or b
     return argb and 0xFF_00_00_00.toInt() or (r shl 16) or (g shl 8) or b
   }

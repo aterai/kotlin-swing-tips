@@ -78,7 +78,7 @@ internal class ProgressCircleUI : BasicProgressBarUI() {
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
 
     val degree = 360 * progressBar.getPercentComplete()
-    val sz = Math.min(barRectWidth, barRectHeight).toDouble()
+    val sz = minOf(barRectWidth, barRectHeight).toDouble()
     val cp = Point2D.Double(b.left + barRectWidth * .5, b.top + barRectHeight * .5)
     val r = sz * .5
 

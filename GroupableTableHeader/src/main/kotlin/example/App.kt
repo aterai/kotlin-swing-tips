@@ -180,13 +180,13 @@ internal class GroupableTableHeaderUI : BasicTableHeaderUI() {
 
   // Copied from javax/swing/plaf/basic/BasicTableHeaderUI.java
   // private fun createHeaderSize(width: Long): Dimension {
-  //   val w = Math.min(width, Integer.MAX_VALUE.toLong())
+  //   val w = minOf(width, Integer.MAX_VALUE.toLong())
   //   return Dimension(w.toInt(), getHeaderHeight())
   // }
 
   override fun getPreferredSize(c: JComponent?): Dimension {
     val width = header.getColumnModel().getColumns().toList().map { it.getPreferredWidth().toLong() }.sum()
-    return Dimension(Math.min(width, Integer.MAX_VALUE.toLong()).toInt(), getHeaderHeight())
+    return Dimension(minOf(width, Integer.MAX_VALUE.toLong()).toInt(), getHeaderHeight())
     // return createHeaderSize(width)
   }
 }

@@ -127,8 +127,8 @@ internal class RowHeaderList<E>(model: ListModel<E>, protected val table: JTable
     override fun mouseDragged(e: MouseEvent) {
       if (pressedRowIndex >= 0) {
         val row = locationToIndex(e.getPoint())
-        val start = Math.min(row, pressedRowIndex)
-        val end = Math.max(row, pressedRowIndex)
+        val start = minOf(row, pressedRowIndex)
+        val end = maxOf(row, pressedRowIndex)
         tableSelection.clearSelection()
         listSelection.clearSelection()
         tableSelection.addSelectionInterval(start, end)

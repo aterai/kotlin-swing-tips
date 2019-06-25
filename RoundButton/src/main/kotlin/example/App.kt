@@ -32,8 +32,8 @@ class MainPanel : JPanel() {
   }
 
   private fun makeStar(r1: Int, r2: Int, vc: Int): Path2D {
-    val ora = Math.max(r1, r2)
-    val ira = Math.min(r1, r2)
+    val ora = maxOf(r1, r2)
+    val ira = minOf(r1, r2)
     var agl = 0.0
     val add = 2 * Math.PI / (vc * 2)
     val p = Path2D.Double()
@@ -160,7 +160,7 @@ open class RoundButton : RoundedCornerButton {
   // }
 
   override fun getPreferredSize() = super.getPreferredSize().also {
-    val s = Math.max(width, height)
+    val s = maxOf(width, height)
     it.setSize(s, s)
   }
 

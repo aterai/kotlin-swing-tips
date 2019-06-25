@@ -106,7 +106,7 @@ internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
 
     val colHeadR = Rectangle(0, availR.y, 0, 0)
     colHead?.takeIf { it.isVisible() }?.also {
-      val colHeadHeight = Math.min(availR.height, it.getPreferredSize().height)
+      val colHeadHeight = minOf(availR.height, it.getPreferredSize().height)
       colHeadR.height = colHeadHeight
       availR.y += colHeadHeight
       availR.height -= colHeadHeight
@@ -114,7 +114,7 @@ internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
 
     val rowHeadR = Rectangle(0, 0, 0, 0)
     rowHead?.takeIf { it.isVisible() }?.also {
-      val rowHeadWidth = Math.min(availR.width, it.getPreferredSize().width)
+      val rowHeadWidth = minOf(availR.width, it.getPreferredSize().width)
       rowHeadR.width = rowHeadWidth
       availR.width -= rowHeadWidth
       // if (leftToRight) {
@@ -295,7 +295,7 @@ internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
   ) {
     val oldWidth = vsbR.width
     if (wantsVsb) {
-      val vsbWidth = Math.max(0, Math.min(vsb.getPreferredSize().width, available.width))
+      val vsbWidth = maxOf(0, minOf(vsb.getPreferredSize().width, available.width))
       available.width -= vsbWidth
       vsbR.width = vsbWidth
 
@@ -313,7 +313,7 @@ internal class RightFixedScrollPaneLayout : ScrollPaneLayout() {
   private fun adjustForHsb(wantsHsb: Boolean, available: Rectangle, hsbR: Rectangle, vpbInsets: Insets) {
     val oldHeight = hsbR.height
     if (wantsHsb) {
-      val hsbHeight = Math.max(0, Math.min(available.height, hsb.getPreferredSize().height))
+      val hsbHeight = maxOf(0, minOf(available.height, hsb.getPreferredSize().height))
       available.height -= hsbHeight
       hsbR.y = available.y + available.height + vpbInsets.bottom
       hsbR.height = hsbHeight

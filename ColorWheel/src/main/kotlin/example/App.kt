@@ -64,7 +64,7 @@ internal class ColorWheel : JPanel() {
         }
         val r = Math.sqrt(x * x + y * y)
         val hue = (theta / (2.0 * Math.PI)).toFloat()
-        val sat = Math.min((r / radius).toFloat(), 1f)
+        val sat = minOf((r / radius).toFloat(), 1f)
         val bri = 1f
         row[xidx] = Color.HSBtoRGB(hue, sat, bri)
       }

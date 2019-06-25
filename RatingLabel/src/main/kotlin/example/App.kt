@@ -147,9 +147,9 @@ internal class SelectedImageFilter(rf: Float, gf: Float, bf: Float) : RGBImageFi
   private val bf: Float
 
   init {
-    this.rf = Math.min(1f, rf)
-    this.gf = Math.min(1f, gf)
-    this.bf = Math.min(1f, bf)
+    this.rf = minOf(1f, rf)
+    this.gf = minOf(1f, gf)
+    this.bf = minOf(1f, bf)
     canFilterIndexColorModel = false
   }
 

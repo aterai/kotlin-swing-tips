@@ -118,7 +118,7 @@ class GradientPalletProgressBarUI : BasicProgressBarUI() {
     }
     val i = (pallet.size * x).toInt()
     val max = pallet.size - 1
-    val index = Math.min(Math.max(i, 0), max)
+    val index = minOf(maxOf(i, 0), max)
     return Color(pallet[index] and 0x00_FF_FF_FF)
     // translucent
     // val pix = pallet[index] & 0x00_FF_FF_FF | (0x64 << 24)

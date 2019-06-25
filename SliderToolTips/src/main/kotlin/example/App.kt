@@ -155,7 +155,7 @@ internal class SliderMouseWheelListener : MouseWheelListener {
     val s = e.getComponent() as? JSlider ?: return
     val i = s.getValue().toInt() - e.getWheelRotation()
     val m = s.getModel()
-    s.setValue(Math.min(Math.max(i, m.getMinimum()), m.getMaximum()))
+    s.setValue(minOf(maxOf(i, m.getMinimum()), m.getMaximum()))
   }
 }
 

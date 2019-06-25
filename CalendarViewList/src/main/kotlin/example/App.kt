@@ -58,7 +58,7 @@ class MainPanel : JPanel() {
         setHorizontalAlignment(SwingConstants.CENTER)
         (value as? DayOfWeek)?.also {
           // val s = it.getDisplayName(TextStyle.SHORT_STANDALONE, l);
-          // setText(s.substring(0, Math.min(2, s.length())));
+          // setText(s.substring(0, minOf(2, s.length())));
           setText(it.getDisplayName(TextStyle.SHORT_STANDALONE, l))
           setBackground(Color(0xDC_DC_DC))
         }
