@@ -9,7 +9,6 @@ import java.util.Collections
 import javax.imageio.IIOImage
 import javax.imageio.ImageIO
 import javax.imageio.ImageTypeSpecifier
-import javax.imageio.metadata.IIOMetadata
 import javax.imageio.metadata.IIOMetadataNode
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
