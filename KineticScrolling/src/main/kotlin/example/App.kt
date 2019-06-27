@@ -1,8 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
 import java.awt.event.HierarchyEvent
 import java.awt.event.HierarchyListener
 import java.awt.event.ItemEvent
@@ -148,53 +146,49 @@ class KineticScrollingListener2(protected val label: JComponent) : MouseAdapter(
   protected val delta = Point()
   protected val dc: Cursor
   protected val hc = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
-  protected val inside = Timer(DELAY, object : ActionListener {
-    override fun actionPerformed(e: ActionEvent) {
-      val vport = SwingUtilities.getUnwrappedParent(label) as JViewport
-      val vp = vport.getViewPosition()
-      vp.translate(-delta.x, -delta.y)
-      vport.setViewPosition(vp)
-      if (Math.abs(delta.x) > 0 || Math.abs(delta.y) > 0) {
-        delta.setLocation((delta.x * D).toInt(), (delta.y * D).toInt())
-        // Outside
-        if (vp.x < 0 || vp.x + vport.getWidth() - label.getWidth() > 0) {
-          delta.x = (delta.x * D).toInt()
-        }
-        if (vp.y < 0 || vp.y + vport.getHeight() - label.getHeight() > 0) {
-          delta.y = (delta.y * D).toInt()
-        }
-      } else {
-        // inside.stop()
-        (e.getSource() as Timer).stop()
-        if (!isInside(vport, label)) {
-          outside.start()
-        }
+  protected val inside = Timer(DELAY) { e ->
+    val vport = SwingUtilities.getUnwrappedParent(label) as JViewport
+    val vp = vport.getViewPosition()
+    vp.translate(-delta.x, -delta.y)
+    vport.setViewPosition(vp)
+    if (Math.abs(delta.x) > 0 || Math.abs(delta.y) > 0) {
+      delta.setLocation((delta.x * D).toInt(), (delta.y * D).toInt())
+      // Outside
+      if (vp.x < 0 || vp.x + vport.getWidth() - label.getWidth() > 0) {
+        delta.x = (delta.x * D).toInt()
+      }
+      if (vp.y < 0 || vp.y + vport.getHeight() - label.getHeight() > 0) {
+        delta.y = (delta.y * D).toInt()
+      }
+    } else {
+      // inside.stop()
+      (e.getSource() as Timer).stop()
+      if (!isInside(vport, label)) {
+        outside.start()
       }
     }
-  })
-  protected val outside = Timer(DELAY, object : ActionListener {
-    override fun actionPerformed(e: ActionEvent) {
-      val vport = SwingUtilities.getUnwrappedParent(label) as JViewport
-      val vp = vport.getViewPosition()
-      if (vp.x < 0) {
-        vp.x = (vp.x * D).toInt()
-      }
-      if (vp.y < 0) {
-        vp.y = (vp.y * D).toInt()
-      }
-      if (vp.x + vport.getWidth() - label.getWidth() > 0) {
-        vp.x = (vp.x - (vp.x + vport.getWidth() - label.getWidth()) * (1.0 - D)).toInt()
-      }
-      if (vp.y + vport.getHeight() > label.getHeight()) {
-        vp.y = (vp.y - (vp.y + vport.getHeight() - label.getHeight()) * (1.0 - D)).toInt()
-      }
-      vport.setViewPosition(vp)
-      if (isInside(vport, label)) {
-        // outside.stop()
-        (e.getSource() as Timer).stop()
-      }
+  }
+  protected val outside = Timer(DELAY) { e ->
+    val vport = SwingUtilities.getUnwrappedParent(label) as JViewport
+    val vp = vport.getViewPosition()
+    if (vp.x < 0) {
+      vp.x = (vp.x * D).toInt()
     }
-  })
+    if (vp.y < 0) {
+      vp.y = (vp.y * D).toInt()
+    }
+    if (vp.x + vport.getWidth() - label.getWidth() > 0) {
+      vp.x = (vp.x - (vp.x + vport.getWidth() - label.getWidth()) * (1.0 - D)).toInt()
+    }
+    if (vp.y + vport.getHeight() > label.getHeight()) {
+      vp.y = (vp.y - (vp.y + vport.getHeight() - label.getHeight()) * (1.0 - D)).toInt()
+    }
+    vport.setViewPosition(vp)
+    if (isInside(vport, label)) {
+      // outside.stop()
+      (e.getSource() as Timer).stop()
+    }
+  }
 
   init {
     this.dc = label.getCursor()
