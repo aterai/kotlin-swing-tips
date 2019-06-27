@@ -30,13 +30,16 @@ private val list = mutableListOf<Shape>(
     Ellipse2D.Double(SX + 0 * R, SY + 3 * R, 2 * R, 2 * R),
     Ellipse2D.Double(SX + 1 * R, SY + 1 * R, 2 * R, 2 * R))
 
-fun makeUI():Component {
-  val label = JLabel()
-  label.setOpaque(true)
-  label.setBackground(Color.WHITE)
-  label.setVerticalTextPosition(SwingConstants.TOP)
-  label.setHorizontalAlignment(SwingConstants.CENTER)
-  label.setHorizontalTextPosition(SwingConstants.CENTER)
+fun makeLabel() = JLabel().also {
+  it.setOpaque(true)
+  it.setBackground(Color.WHITE)
+  it.setVerticalTextPosition(SwingConstants.TOP)
+  it.setHorizontalAlignment(SwingConstants.CENTER)
+  it.setHorizontalTextPosition(SwingConstants.CENTER)
+}
+
+fun makeUI(): Component {
+  val label = makeLabel()
 
   // File file = new File(System.getProperty("user.dir"), "anime.gif");
   val button = JButton("make")
@@ -77,7 +80,7 @@ fun makeUI():Component {
       // Create animated GIF using imageio | Oracle Community
       // https://community.oracle.com/thread/1264385
       val iwp = writer.getDefaultWriteParam()
-      var metadata: IIOMetadata = writer.getDefaultImageMetadata(ImageTypeSpecifier(image), iwp)
+      var metadata = writer.getDefaultImageMetadata(ImageTypeSpecifier(image), iwp)
       val metaFormat = metadata.getNativeMetadataFormatName()
       val root = metadata.getAsTree(metaFormat)
       root.appendChild(gce)
