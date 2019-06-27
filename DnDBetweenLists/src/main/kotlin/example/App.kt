@@ -69,7 +69,7 @@ internal class ListItemTransferHandler : TransferHandler() {
   protected var source: JList<*>? = null
   protected val selectedIndices = mutableListOf<Int>()
   protected var addIndex = -1 // Location where items were added
-  protected var addCount: Int = 0 // Number of items added.
+  protected var addCount = 0 // Number of items added.
 
   init {
     localObjectFlavor = DataFlavor(List::class.java, "List of items")

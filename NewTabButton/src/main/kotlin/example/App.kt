@@ -70,7 +70,7 @@ internal class CardLayoutTabbedPane : JPanel(BorderLayout()) {
 
     button.setBorder(BorderFactory.createEmptyBorder())
     button.addActionListener(object : ActionListener {
-      private var count: Int = 0
+      private var count = 0
       override fun actionPerformed(e: ActionEvent) {
         addTab("new tab:$count", JLabel("xxx:$count"))
         count++

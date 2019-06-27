@@ -122,7 +122,7 @@ internal class CellButtonsMouseListener : MouseAdapter() {
 }
 
 internal class ButtonsRenderer<E>(comboBox: RemoveButtonComboBox<E>) : ListCellRenderer<E> {
-  var targetIndex: Int = 0
+  var targetIndex = 0
   var rolloverIndex = -1
   private val panel = object : JPanel(BorderLayout()) { // *1
     override fun getPreferredSize(): Dimension {

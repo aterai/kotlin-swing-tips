@@ -36,7 +36,7 @@ class MainPanel : JPanel(BorderLayout()) {
     menuBar.add(menu)
 
     var menuItem = JMenuItem(object : AbstractAction("New Frame") {
-      private var openFrameCount: Int = 0
+      private var openFrameCount = 0
       override fun actionPerformed(e: ActionEvent) {
         val iframe = JInternalFrame("title", true, true, true, true)
         iframe.setSize(130, 100)

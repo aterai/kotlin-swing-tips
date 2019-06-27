@@ -99,10 +99,10 @@ internal class ImageCaptionLabel(caption: String, icon: Icon) : JLabel() {
 
 internal class LabelHandler(private val textArea: Component) : MouseAdapter(), HierarchyListener {
   private val animator = Timer(5) { updateTextAreaLocation() }
-  var textAreaHeight: Int = 0
+  var textAreaHeight = 0
     private set
-  private var count: Int = 0
-  private var direction: Int = 0
+  private var count = 0
+  private var direction = 0
 
   private fun updateTextAreaLocation() {
     val height = textArea.getPreferredSize().getHeight()

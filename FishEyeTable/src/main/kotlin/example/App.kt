@@ -81,7 +81,7 @@ internal class FishEyeTable(m: TableModel) : JTable(m) {
 
   private inner class FishEyeTableHandler : MouseAdapter(), ListSelectionListener {
     var prevRow = -1
-    var prevHeight: Int = 0
+    var prevHeight = 0
 
     override fun mouseMoved(e: MouseEvent) {
       val row = rowAtPoint(e.getPoint())

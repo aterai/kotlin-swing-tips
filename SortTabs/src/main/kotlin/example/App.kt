@@ -106,7 +106,7 @@ class EditableTabbedPane : JTabbedPane() {
 }
 
 class TabbedPanePopupMenu : JPopupMenu() {
-  private var count: Int = 0
+  private var count = 0
   private val sortTabs: JMenuItem
   private val closePage: JMenuItem
   private val closeAll: JMenuItem
