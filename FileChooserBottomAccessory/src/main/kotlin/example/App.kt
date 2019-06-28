@@ -114,7 +114,7 @@ object SwingUtils {
   fun children(parent: Container): List<Component> = parent.getComponents()
     .filterIsInstance(Container::class.java)
     .map { children(it) }
-    .fold(listOf<Component>(parent), { a, b -> a + b })
+    .fold(listOf<Component>(parent)) { a, b -> a + b }
 //  fun stream(parent: Container): Stream<Component> {
 //    return Stream.of(*parent.getComponents())
 //      .filter { Container::class.java!!.isInstance(it) }
