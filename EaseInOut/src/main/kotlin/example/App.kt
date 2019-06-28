@@ -126,7 +126,7 @@ internal class LabelHandler(private val textArea: Component) : MouseAdapter(), H
     p.repaint()
   }
 
-  override fun mouseEntered(e: MouseEvent?) {
+  override fun mouseEntered(e: MouseEvent) {
     if (animator.isRunning() || textAreaHeight == textArea.getPreferredSize().height) {
       return
     }

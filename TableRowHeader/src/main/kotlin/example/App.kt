@@ -109,7 +109,7 @@ internal class RowHeaderList<E>(model: ListModel<E>, protected val table: JTable
   }
 
   private inner class RollOverListener : MouseAdapter() {
-    override fun mouseExited(e: MouseEvent?) {
+    override fun mouseExited(e: MouseEvent) {
       if (pressedRowIndex < 0) {
         rollOverRowIndex = -1
         repaint()
@@ -148,7 +148,7 @@ internal class RowHeaderList<E>(model: ListModel<E>, protected val table: JTable
       pressedRowIndex = row
     }
 
-    override fun mouseReleased(e: MouseEvent?) {
+    override fun mouseReleased(e: MouseEvent) {
       listSelection.clearSelection()
       pressedRowIndex = -1
       rollOverRowIndex = -1

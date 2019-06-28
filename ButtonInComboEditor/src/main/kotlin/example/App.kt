@@ -117,7 +117,7 @@ class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: ImageIcon) : 
 
   private fun makeLabel(field: JTextField) = JLabel().also {
     it.addMouseListener(object : MouseAdapter() {
-      override fun mousePressed(e: MouseEvent?) {
+      override fun mousePressed(e: MouseEvent) {
         EventQueue.invokeLater {
           field.requestFocusInWindow()
           field.selectAll()

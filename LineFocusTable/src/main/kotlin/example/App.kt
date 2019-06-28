@@ -108,7 +108,7 @@ class LineFocusTable(model: TableModel) : JTable(model) {
         }
       }
 
-      override fun mouseExited(e: MouseEvent?) {
+      override fun mouseExited(e: MouseEvent) {
         // in order to drag table row selection
         if (isEditing() && !getCellEditor().stopCellEditing()) {
           getCellEditor().cancelCellEditing()

@@ -88,7 +88,7 @@ class MainPanel : JPanel(BorderLayout()) {
       }
     })
     textField.addMouseListener(object : MouseAdapter() {
-      override fun mousePressed(e: MouseEvent?) {
+      override fun mousePressed(e: MouseEvent) {
         cardLayout.show(cp, "TextArea")
         textArea.requestFocusInWindow()
       }

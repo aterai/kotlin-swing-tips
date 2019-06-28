@@ -39,7 +39,7 @@ class MainPanel : JPanel(BorderLayout()) {
     textField4.setComponentPopupMenu(popup2)
     textField4.setName("textField4")
     textField4.addMouseListener(object : MouseAdapter() {
-      override fun mousePressed(e: MouseEvent?) {
+      override fun mousePressed(e: MouseEvent) {
         println("Close all JPopupMenu(excludes dropdown list of own JComboBox)")
         for (m in MenuSelectionManager.defaultManager().getSelectedPath()) {
           if (combo4.isPopupVisible()) { // m instanceof ComboPopup

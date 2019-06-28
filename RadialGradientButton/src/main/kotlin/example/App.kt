@@ -57,14 +57,14 @@ internal class RadialGradientButton(title: String) : JButton(title) {
       repaint()
     }
     val listener = object : MouseAdapter() {
-      override fun mouseEntered(e: MouseEvent?) {
+      override fun mouseEntered(e: MouseEvent) {
         timer2.stop()
         if (!timer1.isRunning()) {
           timer1.start()
         }
       }
 
-      override fun mouseExited(e: MouseEvent?) {
+      override fun mouseExited(e: MouseEvent) {
         timer1.stop()
         if (!timer2.isRunning()) {
           timer2.start()
@@ -178,14 +178,14 @@ internal class RadialGradientPaintButton(title: String) : JButton(title) {
       repaint()
     }
     val listener = object : MouseAdapter() {
-      override fun mouseEntered(e: MouseEvent?) {
+      override fun mouseEntered(e: MouseEvent) {
         timer2.stop()
         if (!timer1.isRunning()) {
           timer1.start()
         }
       }
 
-      override fun mouseExited(e: MouseEvent?) {
+      override fun mouseExited(e: MouseEvent) {
         timer1.stop()
         if (!timer2.isRunning()) {
           timer2.start()
