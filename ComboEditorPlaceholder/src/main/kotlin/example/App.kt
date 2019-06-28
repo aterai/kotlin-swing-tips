@@ -98,7 +98,7 @@ internal class PlaceholderLayerUI<E : JTextComponent>(hintMessage: String) : Lay
     (c as? JLayer<*>)?.setLayerEventMask(0)
   }
 
-  override fun processFocusEvent(e: FocusEvent?, l: JLayer<out E>) {
+  override fun processFocusEvent(e: FocusEvent, l: JLayer<out E>) {
     l.getView().repaint()
   }
 

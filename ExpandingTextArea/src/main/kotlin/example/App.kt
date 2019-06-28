@@ -75,14 +75,14 @@ class MainPanel : JPanel(BorderLayout()) {
     }
 
     textArea.addFocusListener(object : FocusAdapter() {
-      override fun focusLost(e: FocusEvent?) {
+      override fun focusLost(e: FocusEvent) {
         val text = textArea.getText()
         textField.setText(if (text.isEmpty()) " " else text)
         cardLayout.show(cp, "TextField")
       }
     })
     textField.addFocusListener(object : FocusAdapter() {
-      override fun focusGained(e: FocusEvent?) {
+      override fun focusGained(e: FocusEvent) {
         cardLayout.show(cp, "TextArea")
         textArea.requestFocusInWindow()
       }
