@@ -108,7 +108,8 @@ class MainPanel : JPanel(GridBagLayout()) {
       //   System.arraycopy(src[i], 0, dest[i], 0, src[0].size)
       // }
       // this.mask = dest
-      this.mask = Array(src.size, { i -> Array(src[i].size, { j -> src[i][j] }) })
+      // this.mask = Array(src.size, { i -> Array(src[i].size, { j -> src[i][j] }) })
+      this.mask = Array(src.size) { i -> Array(src[i].size) { j -> src[i][j] } }
     }
 
     override fun getTableCellRendererComponent(
