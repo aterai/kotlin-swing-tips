@@ -125,7 +125,7 @@ class MainPanel : JPanel(BorderLayout()) {
       optionPane.setMessageType(JOptionPane.INFORMATION_MESSAGE)
       removeSystemMenuListener(modal)
       modal.addInternalFrameListener(object : InternalFrameAdapter() {
-        override fun internalFrameClosed(e: InternalFrameEvent?) {
+        override fun internalFrameClosed(e: InternalFrameEvent) {
           glass.removeAll()
           glass.setVisible(false)
         }
