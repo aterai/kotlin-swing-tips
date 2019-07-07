@@ -3,47 +3,43 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(GridLayout(2, 1)) {
-  init {
-    val scrollbar = JScrollBar(Adjustable.HORIZONTAL, VALUE, EXTENT, MIN, MAX + EXTENT)
-    val spinner = JSpinner(SpinnerNumberModel(VALUE, MIN, MAX, STEP))
+private const val STEP = 5
+private const val EXTENT = 20
+private const val MIN = 0
+private const val MAX = EXTENT * 10 // 200
+private const val VALUE = 50
 
-    scrollbar.setUnitIncrement(STEP)
-    scrollbar.getModel().addChangeListener { e ->
-      spinner.setValue((e.getSource() as BoundedRangeModel).getValue())
-    }
+fun makeUI(): Component {
+  val scrollbar = JScrollBar(Adjustable.HORIZONTAL, VALUE, EXTENT, MIN, MAX + EXTENT)
+  val spinner = JSpinner(SpinnerNumberModel(VALUE, MIN, MAX, STEP))
 
-    spinner.addChangeListener { e ->
-      val source = e.getSource() as JSpinner
-      val iv = source.getValue() as Int
-      scrollbar.setValue(iv)
-    }
-
-    add(makeTitledPanel("JSpinner", spinner))
-    add(makeTitledPanel("JScrollBar", scrollbar))
-    setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5))
-    setPreferredSize(Dimension(320, 240))
+  scrollbar.setUnitIncrement(STEP)
+  scrollbar.getModel().addChangeListener { e ->
+    spinner.setValue((e.getSource() as BoundedRangeModel).getValue())
   }
 
-  private fun makeTitledPanel(title: String, cmp: Component): Component {
-    val p = JPanel(GridBagLayout())
-    p.setBorder(BorderFactory.createTitledBorder(title))
-    p.setBackground(Color.WHITE)
-    val c = GridBagConstraints()
-    c.weightx = 1.0
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.insets = Insets(5, 5, 5, 5)
-    p.add(cmp, c)
-    return p
+  spinner.addChangeListener { e ->
+    val source = e.getSource() as JSpinner
+    val iv = source.getValue() as Int
+    scrollbar.setValue(iv)
   }
 
-  companion object {
-    private const val STEP = 5
-    private const val EXTENT = 20
-    private const val MIN = 0
-    private const val MAX = EXTENT * 10 // 200
-    private const val VALUE = 50
+  return JPanel(GridLayout(2, 1)).also {
+    it.add(makeTitledPanel("JSpinner", spinner))
+    it.add(makeTitledPanel("JScrollBar", scrollbar))
+    it.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5))
+    it.setPreferredSize(Dimension(320, 240))
   }
+}
+
+fun makeTitledPanel(title: String, cmp: Component) = JPanel(GridBagLayout()).also {
+  it.setBorder(BorderFactory.createTitledBorder(title))
+  it.setBackground(Color.WHITE)
+  val c = GridBagConstraints()
+  c.weightx = 1.0
+  c.fill = GridBagConstraints.HORIZONTAL
+  c.insets = Insets(5, 5, 5, 5)
+  it.add(cmp, c)
 }
 
 fun main() {
@@ -56,7 +52,7 @@ fun main() {
     }
     JFrame().apply {
       setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-      getContentPane().add(MainPanel())
+      getContentPane().add(makeUI())
       pack()
       setLocationRelativeTo(null)
       setVisible(true)
