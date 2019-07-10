@@ -165,7 +165,7 @@ open class WorkerModel : DefaultTableModel() {
   private var number = 0
 
   fun addProgressValue(name: String, iv: Int, worker: SwingWorker<Int, Int>?) {
-    super.addRow(arrayOf<Any>(number, name, iv))
+    super.addRow(arrayOf(number, name, iv))
     worker?.also { swmap.put(number, it) }
     number++
   }

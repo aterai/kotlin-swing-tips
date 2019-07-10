@@ -53,7 +53,7 @@ internal class TablePopupMenu : JPopupMenu() {
     add("add").addActionListener {
       val table = getInvoker() as JTable
       val model = table.getModel() as DefaultTableModel
-      model.addRow(arrayOf<Any>(model.getRowCount(), "New row", false))
+      model.addRow(arrayOf(model.getRowCount(), "New row", false))
       val r = table.getCellRect(model.getRowCount() - 1, 0, true)
       table.scrollRectToVisible(r)
     }

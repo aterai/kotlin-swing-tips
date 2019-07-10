@@ -24,7 +24,7 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 internal class TableHeaderFillerLayerUI : LayerUI<JScrollPane>() {
-  private val tempTable = JTable(DefaultTableModel(arrayOf<Any>(""), 0))
+  private val tempTable = JTable(DefaultTableModel(arrayOf(""), 0))
   private val filler = tempTable.getTableHeader()
   private val fillerColumn = tempTable.getColumnModel().getColumn(0)
 

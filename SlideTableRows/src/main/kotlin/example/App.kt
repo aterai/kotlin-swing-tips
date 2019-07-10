@@ -66,7 +66,7 @@ fun makeUI(): Component {
 }
 
 fun createActionPerformed() {
-  model.addRow(arrayOf<Any>("New name", model.getRowCount(), false))
+  model.addRow(arrayOf("New name", model.getRowCount(), false))
   Timer(DELAY, object : ActionListener {
     private val index = table.convertRowIndexToView(model.getRowCount() - 1)
     private var height = START_HEIGHT
