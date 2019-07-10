@@ -159,7 +159,7 @@ internal class FileModel : DefaultTableModel() {
   private var number = 0
 
   fun addPath(path: Path) {
-    val obj = arrayOf<Any>(number, path.getFileName(), path.toAbsolutePath())
+    val obj = arrayOf(number, path.getFileName(), path.toAbsolutePath())
     super.addRow(obj)
     number++
   }

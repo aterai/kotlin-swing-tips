@@ -29,7 +29,7 @@ class MainPanel : JPanel(BorderLayout()) {
     table.putClientProperty("terminateEditOnFocusLost", true)
     table.setRowSorter(sorter)
 
-    (1..2016).map { i -> arrayOf<Any>(i, "Test: $i", if (i % 2 == 0) "" else "comment...") }
+    (1..2016).map { i -> arrayOf(i, "Test: $i", if (i % 2 == 0) "" else "comment...") }
         .forEach { model.addRow(it) }
 
     initLinkBox(100, 1)
