@@ -215,15 +215,11 @@ internal class ListItemListCellRenderer : ListCellRenderer<ListItem> {
 // Demo - BasicDnD (The Java™ Tutorials > Creating a GUI With JFC/Swing > Drag and Drop and Data Transfer)
 // https://docs.oracle.com/javase/tutorial/uiswing/dnd/basicdemo.html
 internal class ListItemTransferHandler : TransferHandler() {
-  val localObjectFlavor: DataFlavor
+  val localObjectFlavor = DataFlavor(List::class.java, "List of items")
   // var indices: IntArray? = null
   val selectedIndices = mutableListOf<Int>()
   var addIndex = -1 // Location where items were added
   var addCount = 0 // Number of items added.
-
-  init {
-    localObjectFlavor = DataFlavor(List::class.java, "List of items")
-  }
 
   override fun createTransferable(c: JComponent): Transferable? {
     val source = c as JList<*>
@@ -232,7 +228,7 @@ internal class ListItemTransferHandler : TransferHandler() {
     val transferedObjects = source.getSelectedValuesList()
     // return DataHandler(transferedObjects, localObjectFlavor.getMimeType())
     return object : Transferable {
-      override fun getTransferDataFlavors() = arrayOf<DataFlavor>(localObjectFlavor)
+      override fun getTransferDataFlavors() = arrayOf(localObjectFlavor)
 
       override fun isDataFlavorSupported(flavor: DataFlavor) = localObjectFlavor == flavor
 

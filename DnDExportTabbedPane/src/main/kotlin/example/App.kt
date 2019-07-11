@@ -343,20 +343,19 @@ internal class TabDropTargetAdapter : DropTargetAdapter() {
 internal class DnDTabData(val tabbedPane: DnDTabbedPane)
 
 internal class TabTransferHandler : TransferHandler() {
-  protected val localObjectFlavor: DataFlavor
+  protected val localObjectFlavor = DataFlavor(DnDTabData::class.java, "DnDTabData")
   protected var source: DnDTabbedPane? = null
 
-  init {
-    println("TabTransferHandler")
-    localObjectFlavor = DataFlavor(DnDTabData::class.java, "DnDTabData")
-  }
+  // init {
+  //   println("TabTransferHandler")
+  // }
 
   protected override fun createTransferable(c: JComponent): Transferable? {
     println("createTransferable")
     val src: DnDTabbedPane? = c as? DnDTabbedPane
     source = src
     return object : Transferable {
-      override fun getTransferDataFlavors() = arrayOf<DataFlavor>(localObjectFlavor)
+      override fun getTransferDataFlavors() = arrayOf(localObjectFlavor)
 
       override fun isDataFlavorSupported(flavor: DataFlavor) = localObjectFlavor == flavor
 

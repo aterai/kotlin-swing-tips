@@ -65,15 +65,11 @@ class MainPanel : JPanel(BorderLayout()) {
 // Demo - BasicDnD (The Java™ Tutorials > Creating a GUI With JFC/Swing > Drag and Drop and Data Transfer)
 // https://docs.oracle.com/javase/tutorial/uiswing/dnd/basicdemo.html
 internal class ListItemTransferHandler : TransferHandler() {
-  protected val localObjectFlavor: DataFlavor
+  protected val localObjectFlavor = DataFlavor(List::class.java, "List of items")
   protected var source: JList<*>? = null
   protected val selectedIndices = mutableListOf<Int>()
   protected var addIndex = -1 // Location where items were added
   protected var addCount = 0 // Number of items added.
-
-  init {
-    localObjectFlavor = DataFlavor(List::class.java, "List of items")
-  }
 
   protected override fun createTransferable(c: JComponent): Transferable? {
     val src = c as JList<*>
@@ -81,7 +77,7 @@ internal class ListItemTransferHandler : TransferHandler() {
     src.getSelectedIndices().forEach { selectedIndices.add(it) }
     val transferedObjects = src.getSelectedValuesList()
     return object : Transferable {
-      override fun getTransferDataFlavors() = arrayOf<DataFlavor>(localObjectFlavor)
+      override fun getTransferDataFlavors() = arrayOf(localObjectFlavor)
 
       override fun isDataFlavorSupported(flavor: DataFlavor) = localObjectFlavor == flavor
 
