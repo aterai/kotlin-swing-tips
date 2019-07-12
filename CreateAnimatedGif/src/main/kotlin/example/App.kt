@@ -19,7 +19,7 @@ private const val SY = 20.0
 private const val WIDTH = (R * 8 + SX * 2).toInt()
 private const val HEIGHT = (R * 8 + SY * 2).toInt()
 private val ellipseColor = Color(.5f, .5f, .5f)
-private val list = mutableListOf<Shape>(
+private val list = mutableListOf(
     Ellipse2D.Double(SX + 3 * R, SY + 0 * R, 2 * R, 2 * R),
     Ellipse2D.Double(SX + 5 * R, SY + 1 * R, 2 * R, 2 * R),
     Ellipse2D.Double(SX + 6 * R, SY + 3 * R, 2 * R, 2 * R),

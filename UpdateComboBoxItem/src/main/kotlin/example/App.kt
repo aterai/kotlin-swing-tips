@@ -51,7 +51,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val combo3 = CheckedComboBox3(DefaultComboBoxModel(m))
     val combo4 = CheckedComboBox4(CheckableComboBoxModel(m))
 
-    listOf<Component>(combo0, combo1, combo2, combo3, combo4)
+    listOf(combo0, combo1, combo2, combo3, combo4)
       .forEach {
         p.add(it, c)
         c.gridy += 1

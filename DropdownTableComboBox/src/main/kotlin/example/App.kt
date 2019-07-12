@@ -12,7 +12,7 @@ import javax.swing.table.TableCellRenderer
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    val aseries = listOf<List<Any>>(
+    val aseries = listOf(
       listOf("A1", 594, 841),
       listOf("A2", 420, 594),
       listOf("A3", 297, 420),
@@ -36,7 +36,7 @@ class MainPanel : JPanel(BorderLayout()) {
       override fun isCellEditable(row: Int, column: Int) = false
     }
 
-    val combo = DropdownTableComboBox<List<Any>>(aseries, model)
+    val combo = DropdownTableComboBox(aseries, model)
     combo.addItemListener { e ->
       if (e.getStateChange() == ItemEvent.SELECTED) {
         val rowData = combo.getSelectedRow()
