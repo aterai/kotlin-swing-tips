@@ -140,7 +140,7 @@ internal class RadialGradientButton(title: String) : JButton(title) {
       val r2 = radius + radius
       // Stunning hover effects with CSS variables ? Prototypr
       // https://blog.prototypr.io/stunning-hover-effects-with-css-variables-f855e7b95330
-      val colors = arrayOf<Color>(Color(0x64_44_05_F7, true), Color(0x00_F7_23_59, true))
+      val colors = arrayOf(Color(0x64_44_05_F7, true), Color(0x00_F7_23_59, true))
       g2.setPaint(RadialGradientPaint(pt, r2.toFloat(), floatArrayOf(0f, 1f), colors))
       g2.setComposite(AlphaComposite.SrcAtop)
       g2.setClip(shape)
@@ -241,8 +241,8 @@ internal class RadialGradientPaintButton(title: String) : JButton(title) {
 
     if (radius > 0) {
       val r2 = radius + radius
-      // val colors = arrayOf<Color>(c2, c1)
-      val colors = arrayOf<Color>(Color(0x64_44_05_F7, true), Color(0x00_F7_23_59, true))
+      // val colors = arrayOf(c2, c1)
+      val colors = arrayOf(Color(0x64_44_05_F7, true), Color(0x00_F7_23_59, true))
       g2.setPaint(RadialGradientPaint(pt, r2.toFloat(), floatArrayOf(0f, 1f), colors))
       g2.setComposite(AlphaComposite.SrcAtop)
       // g2.setClip(shape)

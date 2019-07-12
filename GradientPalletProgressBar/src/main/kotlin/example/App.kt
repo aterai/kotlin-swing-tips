@@ -96,7 +96,7 @@ class GradientPalletProgressBarUI : BasicProgressBarUI() {
     val start = Point2D.Float()
     val end = Point2D.Float(99f, 0f)
     val dist = floatArrayOf(0f, .5f, 1f)
-    val colors = arrayOf<Color>(Color.RED, Color.YELLOW, Color.GREEN)
+    val colors = arrayOf(Color.RED, Color.YELLOW, Color.GREEN)
     g2.setPaint(LinearGradientPaint(start, end, dist, colors))
     g2.fillRect(0, 0, 100, 1)
     g2.dispose()
