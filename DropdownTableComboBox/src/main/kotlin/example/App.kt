@@ -93,10 +93,11 @@ class DropdownTableComboBox<E : List<Any>>(val list: List<E>, model: DefaultTabl
     override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int): Component {
       val c = super.prepareRenderer(renderer, row, column)
       c.setForeground(Color.BLACK)
-      val bgc = if (highlighter.isHighlightableRow(row)) Color(0xFF_C8_C8)
-          else if (isRowSelected(row)) Color.CYAN
-          else Color.WHITE
-      c.setBackground(bgc)
+      c.setBackground(when {
+        highlighter.isHighlightableRow(row) -> Color(0xFF_C8_C8)
+        isRowSelected(row) -> Color.CYAN
+        else -> Color.WHITE
+      })
       return c
     }
 
