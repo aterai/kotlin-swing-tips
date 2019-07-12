@@ -3,26 +3,25 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(GridLayout(2, 1)) {
-  init {
+fun makeUI(): Component {
+  val tabbedPane = makeTabbedPane()
+  val d = UIDefaults()
+  d.put("TabbedPane:TabbedPaneTabArea.contentMargins", Insets(3, 30, 4, 30))
+  tabbedPane.putClientProperty("Nimbus.Overrides", d)
+  tabbedPane.putClientProperty("Nimbus.Overrides.InheritDefaults", true)
 
-    val tabbedPane = makeTabbedPane()
-    val d = UIDefaults()
-    d.put("TabbedPane:TabbedPaneTabArea.contentMargins", Insets(3, 30, 4, 30))
-    tabbedPane.putClientProperty("Nimbus.Overrides", d)
-    tabbedPane.putClientProperty("Nimbus.Overrides.InheritDefaults", true)
-
-    add(makeTabbedPane())
-    add(tabbedPane)
-    setPreferredSize(Dimension(320, 240))
+  return JPanel(GridLayout(2, 1)).also {
+    it.add(makeTabbedPane())
+    it.add(tabbedPane)
+    it.setPreferredSize(Dimension(320, 240))
   }
+}
 
-  private fun makeTabbedPane() = JTabbedPane().also {
-    // it.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-    it.addTab("JTree", JScrollPane(JTree()))
-    it.addTab("JSplitPane", JSplitPane())
-    it.addTab("JTextArea", JScrollPane(JTextArea()))
-  }
+private fun makeTabbedPane() = JTabbedPane().also {
+  // it.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+  it.addTab("JTree", JScrollPane(JTree()))
+  it.addTab("JSplitPane", JSplitPane())
+  it.addTab("JTextArea", JScrollPane(JTextArea()))
 }
 
 fun main() {
@@ -44,7 +43,7 @@ fun main() {
     }
     JFrame().apply {
       setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-      getContentPane().add(MainPanel())
+      getContentPane().add(makeUI())
       pack()
       setLocationRelativeTo(null)
       setVisible(true)
