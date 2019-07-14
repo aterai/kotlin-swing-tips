@@ -89,13 +89,11 @@ internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMot
   ): Component {
     super.getTableCellRendererComponent(table, value, isSelected, false, row, column)
     val str = value?.toString() ?: ""
-    if (isRolloverCell(table, row, column)) {
-      setText("<html><u><font color='blue'>$str")
-    } else if (hasFocus) {
-      setText("<html><font color='blue'>$str")
-    } else {
-      setText(str)
-    }
+    setText(when {
+      isRolloverCell(table, row, column) -> "<html><u><font color='blue'>$str"
+      hasFocus -> "<html><font color='blue'>$str"
+      else -> str
+    })
     return this
   }
 
