@@ -1,8 +1,5 @@
 package example
 
-// -*- mode:java; encoding:utf-8 -*-
-// vim:set fileencoding=utf-8:
-// @homepage@
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
