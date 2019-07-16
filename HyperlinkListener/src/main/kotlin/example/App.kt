@@ -33,13 +33,17 @@ class MainPanel : JPanel(BorderLayout()) {
     it.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true)
     it.setText(htmlText)
     it.addHyperlinkListener { e ->
-      if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-        JOptionPane.showMessageDialog(it, "You click the link with the URL " + e.getURL())
-      } else if (e.getEventType() == HyperlinkEvent.EventType.ENTERED) {
-        tooltip = it.getToolTipText()
-        it.setToolTipText(e.getURL()?.toExternalForm())
-      } else if (e.getEventType() == HyperlinkEvent.EventType.EXITED) {
-        it.setToolTipText(tooltip)
+      when (e.getEventType()) {
+        HyperlinkEvent.EventType.ACTIVATED -> {
+          JOptionPane.showMessageDialog(it, "You click the link with the URL " + e.getURL())
+        }
+        HyperlinkEvent.EventType.ENTERED -> {
+          tooltip = it.getToolTipText()
+          it.setToolTipText(e.getURL()?.toExternalForm())
+        }
+        HyperlinkEvent.EventType.EXITED -> {
+          it.setToolTipText(tooltip)
+        }
       }
     }
 
