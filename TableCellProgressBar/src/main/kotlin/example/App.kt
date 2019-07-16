@@ -2,8 +2,8 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.util.TreeSet
-import java.util.concurrent.ExecutionException
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ExecutionException
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
