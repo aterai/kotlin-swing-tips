@@ -1,7 +1,6 @@
 package example
 
 import com.sun.java.swing.plaf.windows.WindowsSliderUI
-
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent

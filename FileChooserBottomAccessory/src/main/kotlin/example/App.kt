@@ -1,7 +1,6 @@
 package example
 
 import com.sun.java.swing.plaf.windows.WindowsFileChooserUI
-
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.metal.MetalFileChooserUI
