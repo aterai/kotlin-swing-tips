@@ -316,7 +316,7 @@ naming:
     active: false
     rootPackage: ''
   MatchingDeclarationName:
-    active: false
+    active: true
   MemberNameEqualsClassName:
     active: false
     ignoreOverriddenFunction: true
