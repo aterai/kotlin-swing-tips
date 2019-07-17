@@ -41,7 +41,7 @@ private fun initComboBoxRenderer(combo: JComboBox<String>) {
       cellHasFocus: Boolean
     ): Component {
       super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-      var width = getAvailableWidth(combo, index)
+      val width = getAvailableWidth(combo, index)
       setText(getLeftClippedText(value?.toString() ?: "", getFontMetrics(getFont()), width))
       return this
     }

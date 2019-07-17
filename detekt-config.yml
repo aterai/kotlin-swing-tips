@@ -531,7 +531,7 @@ style:
   UtilityClassWithPublicConstructor:
     active: false
   VarCouldBeVal:
-    active: false
+    active: true
   WildcardImport:
     active: true
     excludes: "**/test/**,**/androidTest/**,**/*.Test.kt,**/*.Spec.kt,**/*.Spek.kt"

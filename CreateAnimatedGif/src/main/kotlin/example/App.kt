@@ -79,7 +79,7 @@ fun makeUI(): Component {
       // Create animated GIF using imageio | Oracle Community
       // https://community.oracle.com/thread/1264385
       val iwp = writer.getDefaultWriteParam()
-      var metadata = writer.getDefaultImageMetadata(ImageTypeSpecifier(image), iwp)
+      val metadata = writer.getDefaultImageMetadata(ImageTypeSpecifier(image), iwp)
       val metaFormat = metadata.getNativeMetadataFormatName()
       val root = metadata.getAsTree(metaFormat)
       root.appendChild(gce)
