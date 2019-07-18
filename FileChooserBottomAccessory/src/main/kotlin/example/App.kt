@@ -84,7 +84,7 @@ class EncodingFileChooserUI(filechooser: JFileChooser) : MetalFileChooserUI(file
       override fun getPreferredSize() = SwingUtils.children(bottomPanel)
           .filterIsInstance(JLabel::class.java)
           .firstOrNull()
-          ?.let { it.getPreferredSize() }
+          ?.getPreferredSize()
           ?: super.getPreferredSize()
     }
     label.setDisplayedMnemonic('E')

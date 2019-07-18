@@ -27,7 +27,7 @@ class PlusIcon : Icon {
     val g2 = g.create() as Graphics2D
     g2.translate(x, y)
 
-    val i = (c as? JComponent)?.let { it.getInsets() } ?: Insets(0, 0, 0, 0)
+    val i = (c as? JComponent)?.getInsets() ?: Insets(0, 0, 0, 0)
     val size = c.getSize()
 
     viewRect.x = i.left
