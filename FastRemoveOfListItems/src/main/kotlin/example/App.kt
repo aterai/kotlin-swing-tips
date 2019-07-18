@@ -36,7 +36,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
   private fun makeUI1(): Component {
     val model = DefaultListModel<String>()
-    for (i in 10000..30000) {
+    for (i in 10_000..30_000) {
       model.addElement(i.toString())
     }
     val leftList = makeList<String>(model)
@@ -54,7 +54,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
   private fun makeUI2(): Component {
     val model = ArrayListModel<String>()
-    for (i in 30000..50000) {
+    for (i in 30_000..50_000) {
       model.add(i.toString())
     }
     val leftList = makeList<String>(model)
