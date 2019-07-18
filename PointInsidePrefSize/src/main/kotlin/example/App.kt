@@ -120,7 +120,8 @@ internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMot
     vcol = table.columnAtPoint(pt)
     isRollover = isUrlColumn(table, vcol) && pointInsidePrefSize(table, pt)
     val isSameCell = vrow == prevRow && vcol == prevCol && isRollover == prevRollover
-    if (isSameCell || (!isRollover && !prevRollover)) {
+    val isNotRollover = !isRollover && !prevRollover
+    if (isSameCell || isNotRollover) {
       return
     }
     val repaintRect: Rectangle

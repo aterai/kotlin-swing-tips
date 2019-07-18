@@ -54,7 +54,7 @@ class EditableTabbedPane : JTabbedPane() {
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "rename-tab")
     am.put("rename-tab", object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
-        if (!editor.getText().trim({ it <= ' ' }).isEmpty()) {
+        if (!editor.getText().trim { it <= ' ' }.isEmpty()) {
           setTitleAt(getSelectedIndex(), editor.getText())
           (getTabComponentAt(getSelectedIndex()) as? JComponent)?.revalidate()
         }
