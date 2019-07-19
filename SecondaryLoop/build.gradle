@@ -1,4 +1,4 @@
-group 'Example'
+group 'KotlinSwingTips'
 version '1.0-SNAPSHOT'
 
 // apply plugin: 'java'
@@ -20,11 +20,13 @@ buildscript {
 }
 
 sourceCompatibility = 1.8
+
 compileKotlin {
   kotlinOptions.jvmTarget = "$sourceCompatibility"
-  kotlinOptions.includeRuntime = true
-  kotlinOptions.noStdlib = false
+  // kotlinOptions.includeRuntime = true
+  // kotlinOptions.noStdlib = false
 }
+
 compileTestKotlin {
   kotlinOptions.jvmTarget = "$sourceCompatibility"
 }
@@ -42,6 +44,7 @@ kotlin {
 
 repositories {
   mavenCentral()
+  jcenter()
 }
 
 dependencies {
@@ -49,6 +52,5 @@ dependencies {
 }
 
 application {
-    // Define the main class for the application
-    mainClassName = 'example.AppKt'
+  mainClassName = 'example.AppKt'
 }

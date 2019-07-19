@@ -15,19 +15,20 @@ class MainPanel : JPanel(BorderLayout()) {
       it.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
     }
 
+    val heavyweightLightweightMixing = false
     // val viewport = scroll.getViewport() // Java 6
     val viewport = object : JViewport() { // Java 7
-      private val HEAVYWEIGHT_LIGHTWEIGHT_MIXING = false
-      private var flag: Boolean = false
+      // private val HEAVYWEIGHT_LIGHTWEIGHT_MIXING = false
+      private var flag = false
       override fun revalidate() {
-        if (!HEAVYWEIGHT_LIGHTWEIGHT_MIXING && flag) {
+        if (!heavyweightLightweightMixing && flag) {
           return
         }
         super.revalidate()
       }
 
       override fun setViewPosition(p: Point) {
-        if (HEAVYWEIGHT_LIGHTWEIGHT_MIXING) {
+        if (heavyweightLightweightMixing) {
           super.setViewPosition(p)
         } else {
           flag = true

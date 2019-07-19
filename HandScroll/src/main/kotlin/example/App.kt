@@ -8,19 +8,19 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
+    val weightMixing = false
     val label = JLabel(ImageIcon(javaClass.getResource("CRW_3857_JFR.jpg"))) // http://sozai-free.com/
     val vport = object : JViewport() {
-      private val WEIGHT_MIXING = false
-      private var isAjusting: Boolean = false
+      private var isAjusting = false
       override fun revalidate() {
-        if (!WEIGHT_MIXING && isAjusting) {
+        if (!weightMixing && isAjusting) {
           return
         }
         super.revalidate()
       }
 
       override fun setViewPosition(p: Point) {
-        if (WEIGHT_MIXING) {
+        if (weightMixing) {
           super.setViewPosition(p)
         } else {
           isAjusting = true

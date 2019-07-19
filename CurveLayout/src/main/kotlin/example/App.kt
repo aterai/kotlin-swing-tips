@@ -4,9 +4,10 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
+  val a2 = 4.0
   val panel1 = JPanel(FlowLayout(FlowLayout.LEFT))
   val panel2 = object : JPanel() {
-    protected val A2 = 4.0
+    // protected val A2 = 4.0
     protected override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
       val i = getInsets()
@@ -17,7 +18,7 @@ fun makeUI(): Component {
       var px = 0
       var py = 0
       for (x in 0 until w) {
-        val y = Math.pow(x / A2, 2.0).toInt()
+        val y = Math.pow(x / a2, 2.0).toInt()
         g2.drawLine(px, py, x, y)
         px = x
         py = y
@@ -47,7 +48,7 @@ fun makeUI(): Component {
                 m.setSize(d.width, d.height)
                 m.setLocation(x, y)
                 y += vgap + minOf(rowh, d.height)
-                x = (A2 * Math.sqrt(y.toDouble())).toInt()
+                x = (a2 * Math.sqrt(y.toDouble())).toInt()
               }
             }
           }
