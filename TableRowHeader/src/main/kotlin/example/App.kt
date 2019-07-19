@@ -75,7 +75,7 @@ internal class RowHeaderList<E>(model: ListModel<E>, protected val table: JTable
     listSelection = getSelectionModel()
   }
 
-  inner class RowHeaderRenderer<E2>(private val header: JTableHeader) : JLabel(), ListCellRenderer<E2> {
+  protected inner class RowHeaderRenderer<E2>(private val header: JTableHeader) : JLabel(), ListCellRenderer<E2> {
     init {
       this.setOpaque(true)
       // this.setBorder(UIManager.getBorder("TableHeader.cellBorder"))
@@ -180,7 +180,7 @@ internal class RowDataModel(private val rowListModel: DefaultListModel<String>) 
 
   override fun getColumnName(column: Int) = COLUMN_ARRAY[column].columnName
 
-  private class ColumnContext(val columnName: String, val columnClass: Class<*>, val isEditable: Boolean)
+  private data class ColumnContext(val columnName: String, val columnClass: Class<*>, val isEditable: Boolean)
 
   companion object {
     private val COLUMN_ARRAY = arrayOf(
@@ -189,7 +189,7 @@ internal class RowDataModel(private val rowListModel: DefaultListModel<String>) 
   }
 }
 
-internal class RowData(var name: String, var comment: String)
+data class RowData(val name: String, val comment: String)
 
 internal class TablePopupMenu : JPopupMenu() {
   private val delete: JMenuItem

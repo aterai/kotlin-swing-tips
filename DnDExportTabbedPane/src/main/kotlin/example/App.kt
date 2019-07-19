@@ -128,7 +128,7 @@ internal class DnDTabbedPane : JTabbedPane() {
       return tabbedRect
     }
 
-  class DropLocation(pt: Point, val index: Int) : TransferHandler.DropLocation(pt) {
+  internal class DropLocation(pt: Point, val index: Int) : TransferHandler.DropLocation(pt) {
     var isDroppable = true
   }
 
@@ -340,7 +340,7 @@ internal class TabDropTargetAdapter : DropTargetAdapter() {
   // }
 }
 
-internal class DnDTabData(val tabbedPane: DnDTabbedPane)
+data class DnDTabData(val tabbedPane: DnDTabbedPane)
 
 internal class TabTransferHandler : TransferHandler() {
   protected val localObjectFlavor = DataFlavor(DnDTabData::class.java, "DnDTabData")
