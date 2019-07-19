@@ -155,7 +155,7 @@ internal class LabelHandler(private val textArea: Component) : MouseAdapter(), H
 }
 
 internal object AnimationUtil {
-  private val N = 3
+  private const val N = 3
 
   // http://www.anima-entertainment.de/math-easein-easeout-easeinout-and-bezier-curves
   // Math: EaseIn EaseOut, EaseInOut and Bezier Curves | Anima Entertainment GmbH

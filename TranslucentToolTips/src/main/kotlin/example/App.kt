@@ -279,7 +279,7 @@ class BalloonToolTip : JToolTip() {
   }
 
   companion object {
-    private val TRI_HEIGHT = 4
+    private const val TRI_HEIGHT = 4
   }
 }
 

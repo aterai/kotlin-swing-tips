@@ -26,7 +26,6 @@ class MainPanel : JPanel(BorderLayout()) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
   private val table = object : JTable(model) {
-    protected val CHECKBOX_COLUMN = 0
     @Transient
     protected var handler: HeaderCheckBoxHandler? = null
 
@@ -73,6 +72,10 @@ class MainPanel : JPanel(BorderLayout()) {
       it.addTab("JTableHeader", JScrollPane(table))
     })
     setPreferredSize(Dimension(320, 240))
+  }
+
+  companion object {
+    private const val CHECKBOX_COLUMN = 0
   }
 }
 

@@ -138,7 +138,7 @@ class LightboxGlassPane : JPanel() {
   }
 
   companion object {
-    private val BW = 5
+    private const val BW = 5
   }
 }
 
@@ -187,11 +187,11 @@ class AnimeIcon : Icon {
 
   companion object {
     private val ELLIPSE_COLOR = Color(0x80_80_80)
-    private val R = 2.0
-    private val SX = 0.0
-    private val SY = 0.0
-    private val WIDTH = (R * 8 + SX * 2).toInt()
-    private val HEIGHT = (R * 8 + SY * 2).toInt()
+    private const val R = 2.0
+    private const val SX = 0.0
+    private const val SY = 0.0
+    private const val WIDTH = (R * 8 + SX * 2).toInt()
+    private const val HEIGHT = (R * 8 + SY * 2).toInt()
   }
 }
 
