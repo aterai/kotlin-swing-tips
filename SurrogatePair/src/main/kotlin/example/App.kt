@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.io.BufferedInputStream
-import java.io.IOException
 import java.io.InputStreamReader
 import java.net.URL
 import java.nio.charset.StandardCharsets
@@ -22,9 +21,9 @@ fun makeUI(): Component {
 
   val cl = Thread.currentThread().getContextClassLoader()
   val url = cl.getResource("example/SurrogatePair.html")
-  try {
+  runCatching {
     InputStreamReader(url.openStream(), StandardCharsets.UTF_8).use { editor1.read(it, "html") }
-  } catch (ex: IOException) {
+  }.onFailure {
     editor1.setText("<html><p>(&#xD85B;&#xDE40;) (&#x26E40;)<br />(&#xD842;&#xDF9F;) (&#x00020B9F;)</p></html>")
   }
 
@@ -50,15 +49,14 @@ fun makeUI(): Component {
 
 private fun browseCacheFile(url: URL) {
   if (Desktop.isDesktopSupported()) {
-    try {
+    runCatching {
       BufferedInputStream(url.openStream()).use {
         val path = Files.createTempFile("_tmp", ".html")
         path.toFile().deleteOnExit()
         Files.copy(it, path, StandardCopyOption.REPLACE_EXISTING)
         Desktop.getDesktop().browse(path.toUri())
       }
-    } catch (ex: IOException) {
-      ex.printStackTrace()
+    }.onFailure {
       Toolkit.getDefaultToolkit().beep()
     }
   }
