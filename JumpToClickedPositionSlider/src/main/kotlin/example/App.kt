@@ -59,7 +59,7 @@ internal class WindowsJumpToClickedPositionSliderUI(slider: JSlider) : WindowsSl
           when (s.getOrientation()) {
             SwingConstants.VERTICAL -> s.setValue(valueForYPosition(e.getY()))
             SwingConstants.HORIZONTAL -> s.setValue(valueForXPosition(e.getX()))
-            else -> throw IllegalArgumentException("orientation must be one of: VERTICAL, HORIZONTAL")
+            else -> error("orientation must be one of: VERTICAL, HORIZONTAL")
           }
           super.mousePressed(e) // isDragging = true;
           super.mouseDragged(e)
@@ -82,7 +82,7 @@ internal class MetalJumpToClickedPositionSliderUI : MetalSliderUI() {
           when (s.getOrientation()) {
             SwingConstants.VERTICAL -> s.setValue(valueForYPosition(e.getY()))
             SwingConstants.HORIZONTAL -> s.setValue(valueForXPosition(e.getX()))
-            else -> throw IllegalArgumentException("orientation must be one of: VERTICAL, HORIZONTAL")
+            else -> error("orientation must be one of: VERTICAL, HORIZONTAL")
           }
           super.mousePressed(e) // isDragging = true;
           super.mouseDragged(e)

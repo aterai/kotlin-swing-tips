@@ -99,10 +99,8 @@ class FileIconTableCellRenderer(val fileSystemView: FileSystemView) : DefaultTab
         it.setText(if (file.isDirectory()) null else file.length().toString())
       }
       2 -> it.setText(file.getAbsolutePath())
-      // else -> {
-      //   assert(false) { "Should never happened." }
-      // }
-    } // it.setText(file.getName());
+      else -> error("Should never happened.")
+    }
   }
 }
 
