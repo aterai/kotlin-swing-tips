@@ -34,16 +34,13 @@ class MainPanel : JPanel(BorderLayout()) {
     it.setText(htmlText)
     it.addHyperlinkListener { e ->
       when (e.getEventType()) {
-        HyperlinkEvent.EventType.ACTIVATED -> {
+        HyperlinkEvent.EventType.ACTIVATED ->
           JOptionPane.showMessageDialog(it, "You click the link with the URL " + e.getURL())
-        }
         HyperlinkEvent.EventType.ENTERED -> {
           tooltip = it.getToolTipText()
           it.setToolTipText(e.getURL()?.toExternalForm())
         }
-        HyperlinkEvent.EventType.EXITED -> {
-          it.setToolTipText(tooltip)
-        }
+        HyperlinkEvent.EventType.EXITED -> it.setToolTipText(tooltip)
       }
     }
 
