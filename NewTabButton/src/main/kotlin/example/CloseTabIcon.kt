@@ -48,13 +48,9 @@ class PlusIcon : Icon {
     g2.dispose()
   }
 
-  override fun getIconWidth(): Int {
-    return 24
-  }
+  override fun getIconWidth() = 24
 
-  override fun getIconHeight(): Int {
-    return 24
-  }
+  override fun getIconHeight() = 24
 
   companion object {
     private val viewRect = Rectangle()

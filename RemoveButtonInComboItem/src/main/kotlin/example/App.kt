@@ -133,9 +133,7 @@ internal class ButtonsRenderer<E>(comboBox: RemoveButtonComboBox<E>) : ListCellR
   }
   private val renderer = DefaultListCellRenderer()
   private val deleteButton = object : JButton("x") {
-    override fun getPreferredSize(): Dimension {
-      return Dimension(16, 16)
-    }
+    override fun getPreferredSize() = Dimension(16, 16)
 
     override fun updateUI() {
       super.updateUI()

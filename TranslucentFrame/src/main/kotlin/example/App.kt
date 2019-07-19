@@ -5,7 +5,6 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.synth.ColorType
 import javax.swing.plaf.synth.Region
 import javax.swing.plaf.synth.SynthContext
-import javax.swing.plaf.synth.SynthGraphicsUtils
 import javax.swing.plaf.synth.SynthLookAndFeel
 import javax.swing.plaf.synth.SynthPainter
 import javax.swing.plaf.synth.SynthStyle
@@ -85,40 +84,26 @@ internal class MySynthStyleFactory(private val wrappedFactory: SynthStyleFactory
 
 @Suppress("TooManyFunctions")
 internal class TranslucentSynthStyle(private val style: SynthStyle) : SynthStyle() {
-  override operator fun get(context: SynthContext?, key: Any): Any? {
-    return style.get(context, key)
-  }
+  override operator fun get(context: SynthContext?, key: Any) = style.get(context, key)
 
-  override fun getBoolean(context: SynthContext, key: Any, defaultValue: Boolean): Boolean {
-    return style.getBoolean(context, key, defaultValue)
-  }
+  override fun getBoolean(context: SynthContext, key: Any, defaultValue: Boolean) =
+    style.getBoolean(context, key, defaultValue)
 
-  override fun getColor(context: SynthContext, type: ColorType): Color {
-    return style.getColor(context, type)
-  }
+  override fun getColor(context: SynthContext, type: ColorType) = style.getColor(context, type)
 
-  override fun getFont(context: SynthContext): Font {
-    return style.getFont(context)
-  }
+  override fun getFont(context: SynthContext) = style.getFont(context)
 
-  override fun getGraphicsUtils(context: SynthContext?): SynthGraphicsUtils {
-    return style.getGraphicsUtils(context)
-  }
+  override fun getGraphicsUtils(context: SynthContext?) = style.getGraphicsUtils(context)
 
-  override fun getIcon(context: SynthContext, key: Any): Icon? {
-    return style.getIcon(context, key)
-  }
+  override fun getIcon(context: SynthContext, key: Any) = style.getIcon(context, key)
 
-  override fun getInsets(context: SynthContext?, insets: Insets?): Insets {
-    return style.getInsets(context, insets)
-  }
+  override fun getInsets(context: SynthContext?, insets: Insets?) = style.getInsets(context, insets)
 
-  override fun getInt(context: SynthContext, key: Any, defaultValue: Int): Int {
-    return style.getInt(context, key, defaultValue)
-  }
+  override fun getInt(context: SynthContext, key: Any, defaultValue: Int) =
+    style.getInt(context, key, defaultValue)
 
-  override fun getPainter(context: SynthContext?): SynthPainter {
-    return object : SynthPainter() {
+  override fun getPainter(context: SynthContext?) =
+    object : SynthPainter() {
       override fun paintInternalFrameBackground(
         context: SynthContext?,
         g: Graphics,
@@ -131,36 +116,22 @@ internal class TranslucentSynthStyle(private val style: SynthStyle) : SynthStyle
         g.fillRoundRect(x, y, w - 1, h - 1, 15, 15)
       }
     }
-  }
 
-  override fun getString(context: SynthContext, key: Any, defaultValue: String): String {
-    return style.getString(context, key, defaultValue)
-  }
+  override fun getString(context: SynthContext, key: Any, defaultValue: String) =
+    style.getString(context, key, defaultValue)
 
-  override fun installDefaults(context: SynthContext) {
-    style.installDefaults(context)
-  }
+  override fun installDefaults(context: SynthContext) = style.installDefaults(context)
 
   override fun uninstallDefaults(context: SynthContext) {
     style.uninstallDefaults(context)
   }
 
-  override fun isOpaque(context: SynthContext): Boolean {
-    return context.getRegion() !== Region.INTERNAL_FRAME && style.isOpaque(context)
-    // if (context.getRegion() == Region.INTERNAL_FRAME) {
-    //   return false
-    // } else {
-    //   return style.isOpaque(context)
-    // }
-  }
+  override fun isOpaque(context: SynthContext) =
+    context.getRegion() !== Region.INTERNAL_FRAME && style.isOpaque(context)
 
-  override fun getColorForState(context: SynthContext, type: ColorType): Color? {
-    return null // Color.RED;
-  }
+  override fun getColorForState(context: SynthContext, type: ColorType) = null // Color.RED
 
-  override fun getFontForState(context: SynthContext): Font? {
-    return null // new Font(Font.MONOSPACED, Font.ITALIC, 24);
-  }
+  override fun getFontForState(context: SynthContext) = null // Font(Font.MONOSPACED, Font.ITALIC, 24)
 }
 
 fun main() {
