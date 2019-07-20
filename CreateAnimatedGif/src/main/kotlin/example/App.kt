@@ -87,7 +87,7 @@ fun makeUI(): Component {
       metadata.setFromTree(metaFormat, root)
 
       // make frame
-      for (i in 0 until list.size * DELAY) {
+      (0 until list.size * DELAY).forEach {
         paintFrame(image, list)
         Collections.rotate(list, 1)
         writer.writeToSequence(IIOImage(image, null, metadata), null)
