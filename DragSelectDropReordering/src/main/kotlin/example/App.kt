@@ -153,9 +153,10 @@ internal class ReorderbleList(model: ListModel<ListItem>) : JList<ListItem>(mode
       val r = c.getRed()
       val g = c.getGreen()
       val b = c.getBlue()
-      return if (r > g)
-        if (r > b) Color(r, 0, 0) else Color(0, 0, b)
-        else if (g > b) Color(0, g, 0) else Color(0, 0, b)
+      return when {
+        r > g -> if (r > b) Color(r, 0, 0) else Color(0, 0, b)
+        else  -> if (g > b) Color(0, g, 0) else Color(0, 0, b)
+      }
     }
   }
 }
@@ -296,8 +297,10 @@ internal class ListItemTransferHandler : TransferHandler() {
       //     }
       //   }
       // }
-      val selectedList = if (addCount > 0) selectedIndices.map { if (it >= addIndex) it + addCount else it }
-          else selectedIndices.toList()
+      val selectedList = when {
+        addCount > 0 -> selectedIndices.map { if (it >= addIndex) it + addCount else it }
+        else -> selectedIndices.toList()
+      }
       val model = (c as JList<*>).getModel() as DefaultListModel<*>
       for (i in selectedList.indices.reversed()) {
         model.remove(selectedList[i])

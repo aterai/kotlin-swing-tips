@@ -55,12 +55,11 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val check = JCheckBox("HORIZONTAL_SCROLLBAR_NEVER", true)
     check.addActionListener { e ->
-      val f = (e.getSource() as JCheckBox).isSelected()
-      val p = if (f)
-        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
-      else
-        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
-      scroll.setHorizontalScrollBarPolicy(p)
+      val flag = (e.getSource() as? JCheckBox)?.isSelected() ?: false
+      scroll.setHorizontalScrollBarPolicy(when {
+        flag -> ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+        else -> ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
+      })
     }
 
     val box = Box.createHorizontalBox().also {

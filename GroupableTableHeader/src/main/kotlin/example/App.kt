@@ -224,10 +224,12 @@ internal class ColumnGroup(private val text: String) {
     //   }
     // }
     // return emptyList<Any>()
-    return if (list.contains(c)) g
-        else list.filterIsInstance(ColumnGroup::class.java)
-            .map { it.getColumnGroupList(c, ArrayList<Any>(g)) }
-            .filterNot { it.isEmpty() }.firstOrNull() ?: emptyList<Any>()
+    return when {
+      list.contains(c) -> g
+      else -> list.filterIsInstance(ColumnGroup::class.java)
+                  .map { it.getColumnGroupList(c, ArrayList<Any>(g)) }
+                  .filterNot { it.isEmpty() }.firstOrNull() ?: emptyList<Any>()
+    }
   }
 
   fun getSize(header: JTableHeader): Dimension {

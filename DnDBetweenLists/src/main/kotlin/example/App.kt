@@ -130,8 +130,10 @@ internal class ListItemTransferHandler : TransferHandler() {
       // If we are moving items around in the same list, we
       // need to adjust the indices accordingly, since those
       // after the insertion point have moved.
-      val selectedList = if (addCount > 0) selectedIndices.map { if (it >= addIndex) it + addCount else it }
-          else selectedIndices.toList()
+      val selectedList = when {
+        addCount > 0 -> selectedIndices.map { if (it >= addIndex) it + addCount else it }
+        else -> selectedIndices.toList()
+      }
       val model = (c as JList<*>).getModel() as DefaultListModel<*>
       for (i in selectedList.indices.reversed()) {
         model.remove(selectedList[i])
