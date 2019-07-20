@@ -84,19 +84,24 @@ class MainPanel : JPanel(BorderLayout()) {
       setHorizontalAlignment(SwingConstants.CENTER)
       (value as? LocalDate)?.also {
         setText(it.getDayOfMonth().toString())
-        val fgc = if (YearMonth.from(it) == YearMonth.from(currentLocalDate))
-          Color.BLACK else Color.GRAY
-        setForeground(fgc)
-        val bgc = if (it.isEqual(realLocalDate)) Color(0xDC_FF_DC)
-          else when (it.getDayOfWeek()) {
-            DayOfWeek.SUNDAY -> Color(0xFF_DC_DC)
-            DayOfWeek.SATURDAY -> Color(0xDC_DC_FF)
-            else -> Color.WHITE
-          }
-        setBackground(bgc)
+        val fgcf = YearMonth.from(it) == YearMonth.from(currentLocalDate)
+        setForeground(when {
+          fgcf -> Color.BLACK
+          else -> Color.GRAY
+        })
+        setBackground(when {
+          it.isEqual(realLocalDate) -> Color(0xDC_FF_DC)
+          else -> getDayOfWeekColor(it.getDayOfWeek())
+        })
       }
       return this
     }
+  }
+
+  protected fun getDayOfWeekColor(dow: DayOfWeek) = when (dow) {
+    DayOfWeek.SUNDAY -> Color(0xFF_DC_DC)
+    DayOfWeek.SATURDAY -> Color(0xDC_DC_FF)
+    else -> Color.WHITE
   }
 }
 
