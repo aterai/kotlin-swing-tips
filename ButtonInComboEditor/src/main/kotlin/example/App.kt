@@ -185,7 +185,7 @@ class SiteComboBoxLayout(private val favicon: JLabel?, private val feedButton: J
   }
 }
 
-class SiteItem(val url: String, val favicon: Icon, val hasRss: Boolean) {
+data class SiteItem(val url: String, val favicon: Icon, val hasRss: Boolean) {
   override fun toString() = url
 }
 

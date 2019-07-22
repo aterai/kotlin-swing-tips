@@ -159,7 +159,7 @@ enum class ProgressType {
   TOTAL, FILE, LOG, PAUSE
 }
 
-class Progress(val component: ProgressType, val value: Any)
+data class Progress(val component: ProgressType, val value: Any)
 
 open class BackgroundTask : SwingWorker<String, Progress>() {
   var isPaused: Boolean = false

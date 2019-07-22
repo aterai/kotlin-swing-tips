@@ -161,7 +161,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-class Contribution(val date: LocalDate, val activity: Int)
+data class Contribution(val date: LocalDate, val activity: Int)
 
 class CalendarViewListModel(date: LocalDate) : AbstractListModel<Contribution>() {
   private val startDate: LocalDate

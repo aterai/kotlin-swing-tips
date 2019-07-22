@@ -94,7 +94,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class IndexedColor(val index: Int, val color: Color, val isTransparentPixel: Boolean)
+data class IndexedColor(val index: Int, val color: Color, val isTransparentPixel: Boolean)
 
 internal class PaletteListModel(private val model: IndexColorModel) : AbstractListModel<IndexedColor>() {
   override fun getSize() = model.getMapSize()

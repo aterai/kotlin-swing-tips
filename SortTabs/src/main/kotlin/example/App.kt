@@ -20,7 +20,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-class ComparableTab(val title: String, val component: Component)
+data class ComparableTab(val title: String, val component: Component)
 
 class EditableTabbedPane : JTabbedPane() {
   protected val glassPane: Container = EditorGlassPane()

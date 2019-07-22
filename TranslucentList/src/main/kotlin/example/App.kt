@@ -213,7 +213,7 @@ internal class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   }
 }
 
-internal class ListItem(val title: String, val icon: Icon)
+data class ListItem(val title: String, val icon: Icon)
 
 internal object TextureUtils {
   // private val DEFAULT_COLOR = Color(0xEE_32_32_32.toInt(), true)

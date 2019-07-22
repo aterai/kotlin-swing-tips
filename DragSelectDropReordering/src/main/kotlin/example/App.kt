@@ -37,7 +37,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class ListItem(val title: String, iconfile: String) {
+data class ListItem(val title: String, val iconfile: String) {
   val nicon: ImageIcon
   val sicon: ImageIcon
 
