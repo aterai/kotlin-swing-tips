@@ -247,8 +247,10 @@ internal class FileListTable(model: TableModel) : JTable(model) {
     val r = c.getRed()
     val g = c.getGreen()
     val b = c.getBlue()
-    return if (r > g) if (r > b) Color(r, 0, 0) else Color(0, 0, b)
-    else if (g > b) Color(0, g, 0) else Color(0, 0, b)
+    return when {
+      r > g -> if (r > b) Color(r, 0, 0) else Color(0, 0, b)
+      else -> if (g > b) Color(0, g, 0) else Color(0, 0, b)
+    }
   }
 
   companion object {
