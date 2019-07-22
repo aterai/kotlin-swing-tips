@@ -155,7 +155,7 @@ internal class ReorderbleList(model: ListModel<ListItem>) : JList<ListItem>(mode
       val b = c.getBlue()
       return when {
         r > g -> if (r > b) Color(r, 0, 0) else Color(0, 0, b)
-        else  -> if (g > b) Color(0, g, 0) else Color(0, 0, b)
+        else -> if (g > b) Color(0, g, 0) else Color(0, 0, b)
       }
     }
   }
