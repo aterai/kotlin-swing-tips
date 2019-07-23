@@ -79,7 +79,7 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 internal class TooltipTree(model: TreeModel) : JTree(model) {
-  protected val label: JLabel = object : JLabel() {
+  private val label: JLabel = object : JLabel() {
     override fun getPreferredSize() = super.getPreferredSize()?.also {
       it.height = getRowHeight()
     }
@@ -142,9 +142,9 @@ internal class TooltipTreeCellRenderer : TreeCellRenderer {
     row: Int,
     hasFocus: Boolean
   ): Component {
-    val l = renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus) as JLabel
-    l.setToolTipText(value?.toString())
-    return l
+    val c = renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+    (c as? JLabel)?.setToolTipText(value?.toString())
+    return c
   }
 }
 

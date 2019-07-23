@@ -19,7 +19,7 @@ fun makeUI(): Component {
   val format = SimpleDateFormat("mm:ss, SSS", Locale.getDefault())
   val factory = DefaultFormatterFactory(DateFormatter(format))
   val spinner1 = JSpinner(SpinnerDateModel(d, null, null, Calendar.SECOND))
-  (spinner1.getEditor() as JSpinner.DefaultEditor).getTextField().setFormatterFactory(factory)
+  (spinner1.getEditor() as? JSpinner.DefaultEditor)?.getTextField()?.setFormatterFactory(factory)
 
   val stepSizeMap = hashMapOf(
     Calendar.HOUR_OF_DAY to 1,
@@ -46,7 +46,7 @@ fun makeUI(): Component {
       return cal.getTime()
     }
   })
-  (spinner2.getEditor() as JSpinner.DefaultEditor).getTextField().setFormatterFactory(factory)
+  (spinner2.getEditor() as? JSpinner.DefaultEditor)?.getTextField()?.setFormatterFactory(factory)
 
   return JPanel(GridLayout(2, 1)).also {
     it.add(makeTitledPanel("Default SpinnerDateModel", spinner1))

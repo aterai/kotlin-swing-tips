@@ -44,8 +44,8 @@ internal class ViewportDragScrollListener : MouseAdapter(), HierarchyListener {
   }
 
   override fun mouseDragged(e: MouseEvent) {
-    val vport = e.getComponent() as JViewport
-    val c = vport.getView() as JComponent
+    val vport = e.getComponent() as? JViewport ?: return
+    val c = vport.getView() as? JComponent ?: return
     val pt = e.getPoint()
     val dx = startPt.x - pt.x
     val dy = startPt.y - pt.y
@@ -68,7 +68,7 @@ internal class ViewportDragScrollListener : MouseAdapter(), HierarchyListener {
     val c = e.getComponent()
     c.setCursor(DC)
     val vport = c as? JViewport ?: return
-    val label = vport.getView() as JComponent
+    val label = vport.getView() as? JComponent ?: return
     listener = ActionListener {
       val vp = vport.getViewPosition()
       vp.translate(move.x, move.y)

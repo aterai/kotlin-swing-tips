@@ -55,8 +55,8 @@ class MainPanel : JPanel(BorderLayout()) {
         isSelected: Boolean,
         cellHasFocus: Boolean
       ): Component {
-        val c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus) as JLabel
-        c.setIcon((value as? SiteItem)?.favicon)
+        val c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+        (c as? JLabel)?.setIcon((value as? SiteItem)?.favicon)
         return c
       }
     })

@@ -142,10 +142,10 @@ class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
     leaf: Boolean,
     row: Int
   ): Component {
-    val l = renderer.getTreeCellRendererComponent(tree, value, true, expanded, leaf, row, true) as JLabel
-    l.setFont(tree.getFont())
+    val c = renderer.getTreeCellRendererComponent(tree, value, true, expanded, leaf, row, true)
+    c.setFont(tree.getFont())
 
-    val treeNode = value as? DefaultMutableTreeNode ?: return l
+    val treeNode = value as? DefaultMutableTreeNode ?: return c
     panel.setFocusable(false)
     panel.setRequestFocusEnabled(false)
     panel.setOpaque(false)
@@ -159,12 +159,12 @@ class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
       } else {
         checkBox.setIcon(null)
       }
-      l.setText(it.label)
+      (c as? JLabel)?.setText(it.label)
       checkBox.setSelected(it.status === Status.SELECTED)
       str = it.label
     }
     panel.add(checkBox, BorderLayout.WEST)
-    panel.add(l)
+    panel.add(c)
     return panel
   }
 
@@ -172,9 +172,9 @@ class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
     CheckBoxNode(str ?: "", if (checkBox.isSelected()) Status.SELECTED else Status.DESELECTED)
 
   override fun isCellEditable(e: EventObject): Boolean {
-    if (e is MouseEvent && e.getSource() is JTree) {
+    val tree = e.getSource()
+    if (e is MouseEvent && tree is JTree) {
       val p = e.getPoint()
-      val tree = e.getSource() as JTree
       val path = tree.getPathForLocation(p.x, p.y)
       return tree.getPathBounds(path)?.let { r ->
         r.width = checkBox.getPreferredSize().width
