@@ -517,8 +517,8 @@ style:
   UnusedPrivateClass:
     active: false
   UnusedPrivateMember:
-    active: false
-    allowedNames: "(_|ignored|expected|serialVersionUID)"
+    active: true
+    allowedNames: "(_|ignored|expected|serialVersionUID|readObject|writeObject)"
   UseCheckOrError:
     active: false
   UseDataClass:
