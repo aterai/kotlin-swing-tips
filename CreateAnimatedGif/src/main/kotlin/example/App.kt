@@ -46,12 +46,7 @@ fun makeUI(): Component {
     val image = BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB)
     val ite = ImageIO.getImageWritersByFormatName("gif")
     try {
-      val writer = if (ite.hasNext()) {
-        ite.next()
-      } else {
-        throw IOException()
-      }
-
+      val writer = ite.next() ?: return@addActionListener
       val file = File.createTempFile("anime", ".gif")
       file.deleteOnExit()
       val stream = ImageIO.createImageOutputStream(file)
