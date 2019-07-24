@@ -9,8 +9,6 @@ import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
-// import javax.swing.text.Highlighter
-// import javax.swing.text.Highlighter.HighlightPainter
 
 class MainPanel : JPanel(BorderLayout(5, 5)) {
   private val field = JTextField("ab+")
