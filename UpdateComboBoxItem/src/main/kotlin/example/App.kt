@@ -176,9 +176,7 @@ class CheckedComboBox2<E : CheckableItem>(model: ComboBoxModel<E>) : CheckedComb
       item.isSelected = !item.isSelected
       repaint()
       val a = getAccessibleContext().getAccessibleChild(0)
-      if (a is ComboPopup) {
-        (a as ComboPopup).getList().repaint()
-      }
+      (a as? ComboPopup)?.getList()?.repaint()
     }
   }
 }

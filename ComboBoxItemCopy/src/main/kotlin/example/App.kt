@@ -34,7 +34,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val popup = JPopupMenu()
     popup.add(copyKey).addActionListener { e ->
       val o = popup.getInvoker()
-      val c = o as? JComboBox<*> ?: SwingUtilities.getAncestorOfClass(JComboBox::class.java, o as Component)
+      val c = o as? JComboBox<*> ?: SwingUtilities.getAncestorOfClass(JComboBox::class.java, o)
       (c as? JComboBox<*>)?.also {
         val a = it.getActionMap().get(copyKey)
         a.actionPerformed(ActionEvent(it, e.getID(), e.getActionCommand()))

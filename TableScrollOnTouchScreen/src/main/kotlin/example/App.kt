@@ -79,8 +79,7 @@ internal class TableTouchScreenHandler(table: JTable) : MouseAdapter(), ListSele
   override fun mouseDragged(e: MouseEvent) {
     val c = e.getComponent()
     val p = SwingUtilities.getUnwrappedParent(c)
-    if (p is JViewport) {
-      val vport = p as JViewport
+    (p as? JViewport)?.also { vport ->
       val cp = SwingUtilities.convertPoint(c, e.getPoint(), vport)
       val vp = vport.getViewPosition()
       vp.translate(startPt.x - cp.x, startPt.y - cp.y)
