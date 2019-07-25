@@ -42,7 +42,8 @@ class MainPanel : JPanel(BorderLayout()) {
     val scroll = JScrollPane(table)
     scroll.setRowHeaderView(rowHeader)
     scroll.getRowHeader().addChangeListener { e ->
-      scroll.getVerticalScrollBar().setValue((e.getSource() as JViewport).getViewPosition().y)
+      val vport = e.getSource() as? JViewport ?: return@addChangeListener
+      scroll.getVerticalScrollBar().setValue(vport.getViewPosition().y)
     }
     scroll.setComponentPopupMenu(TablePopupMenu())
     table.setInheritsPopupMenu(true)

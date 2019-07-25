@@ -157,7 +157,7 @@ internal class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListI
 }
 
 internal class ListItemListCellRenderer : ListCellRenderer<ListItem> {
-  private val label = object : JLabel("", null as Icon?, SwingConstants.CENTER) {
+  private val label = object : JLabel("", null, SwingConstants.CENTER) {
     protected override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
       if (SELECTED_COLOR == getBackground()) {

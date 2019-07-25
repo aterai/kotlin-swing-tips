@@ -63,7 +63,8 @@ class MainPanel : JPanel(BorderLayout()) {
     val layerUI = DividerLocationDragLayerUI()
     val check = JCheckBox("Paint divider")
     check.addActionListener { e ->
-      layerUI.setPaintDividerEnabled((e.getSource() as JCheckBox).isSelected())
+      val c = e.getSource() as? JCheckBox ?: return@addActionListener
+      layerUI.setPaintDividerEnabled(c.isSelected())
     }
 
     add(JLayer<JSplitPane>(split, layerUI))
