@@ -156,7 +156,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
   protected fun removeComponentMouseListener(c: Component) {
     for (ml in c.getMouseListeners()) {
-      (c as JComponent).removeMouseListener(ml)
+      (c as? JComponent)?.removeMouseListener(ml)
     }
   }
 }

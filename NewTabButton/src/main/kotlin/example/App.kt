@@ -102,8 +102,7 @@ internal class CardLayoutTabbedPane : JPanel(BorderLayout()) {
       val isMoreThanOne = tabPanel.getComponentCount() > 1
       if (isMoreThanOne) {
         tabPanel.revalidate()
-        val b = tabPanel.getComponent(0) as TabButton
-        b.setSelected(true)
+        (tabPanel.getComponent(0) as? TabButton)?.setSelected(true)
         cardLayout.first(contentsPanel)
       }
       tabPanel.revalidate()

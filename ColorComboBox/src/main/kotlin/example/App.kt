@@ -66,8 +66,8 @@ internal class AlternateRowColorComboBox<E> : JComboBox<E> {
         isSelected: Boolean,
         cellHasFocus: Boolean
       ): Component {
-        val c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus) as JLabel
-        c.setOpaque(true)
+        val c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+        (c as? JLabel)?.setOpaque(true)
         if (!isSelected) {
           c.setBackground(getAlternateRowColor(index))
         }
