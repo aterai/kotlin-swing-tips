@@ -91,10 +91,10 @@ internal class TableTouchScreenHandler(table: JTable) : MouseAdapter(), ListSele
 
   override fun mouseReleased(e: MouseEvent) {
     println("mouseReleased: $delta")
-    val c = e.getComponent() as JTable
-    c.setCursor(dc)
-    // c.setEnabled(true);
-    if (c.isEditing()) {
+    val table = e.getComponent() as? JTable ?: return
+    table.setCursor(dc)
+    // table.setEnabled(true);
+    if (table.isEditing()) {
       delta.setLocation(0, 0)
     } else {
       scroller.start()

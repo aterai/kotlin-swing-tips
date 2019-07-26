@@ -60,7 +60,7 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
   }
 
   private fun collapseAll(tree: JTree, parent: TreePath) {
-    val node = parent.getLastPathComponent() as TreeNode
+    val node = parent.getLastPathComponent() as? TreeNode ?: return
     if (!node.isLeaf()) {
       // Java 9: Collections.list(node.children()).stream()
       node.children().toList().forEach { parent.pathByAddingChild(it) }

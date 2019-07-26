@@ -107,8 +107,7 @@ class MainPanel : JPanel(BorderLayout()) {
 internal class ScrollPaneLayerUI : LayerUI<JScrollPane>() {
   override fun paint(g: Graphics, c: JComponent) {
     super.paint(g, c)
-    val layer = c as? JLayer<*> ?: return
-    val scroll = layer.getView() as JScrollPane
+    val scroll = (c as? JLayer<*>)?.getView() as? JScrollPane ?: return
     val rect = scroll.getViewportBorderBounds()
     val m = scroll.getHorizontalScrollBar().getModel()
     val extent = m.getExtent()

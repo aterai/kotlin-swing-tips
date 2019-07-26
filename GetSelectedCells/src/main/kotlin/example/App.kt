@@ -95,7 +95,7 @@ internal class TablePopupMenu : JPopupMenu() {
       val table = getInvoker() as JTable
       for (row in table.getSelectedRows()) {
         for (col in table.getSelectedColumns()) {
-          var b = table.getValueAt(row, col) as Boolean
+          var b = table.getValueAt(row, col) as? Boolean ?: continue
           table.setValueAt(!b, row, col)
         }
       }

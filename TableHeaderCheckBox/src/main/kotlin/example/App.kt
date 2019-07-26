@@ -146,8 +146,7 @@ class HeaderCheckBoxHandler(val table: JTable, val targetColumnIndex: Int) : Mou
   }
 
   override fun mouseClicked(e: MouseEvent) {
-    val header = e.getComponent() as JTableHeader
-    val tbl = header.getTable()
+    val tbl = (e.getComponent() as? JTableHeader)?.getTable() ?: return
     val columnModel = tbl.getColumnModel()
     val m = tbl.getModel()
     val vci = columnModel.getColumnIndexAtX(e.getX())

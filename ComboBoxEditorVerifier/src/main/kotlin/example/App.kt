@@ -75,7 +75,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
 internal class SelectItemMenuListener : PopupMenuListener {
   override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-    val c = e.getSource() as JComboBox<*>
+    val c = e.getSource() as? JComboBox<*> ?: return
     c.setSelectedItem(c.getEditor().getItem())
   }
 
