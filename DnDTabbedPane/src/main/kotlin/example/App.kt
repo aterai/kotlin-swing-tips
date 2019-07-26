@@ -52,13 +52,13 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val tcheck = JCheckBox("Top", true)
     tcheck.addActionListener { e ->
-      val b = (e.getSource() as JCheckBox).isSelected()
+      val b = (e.getSource() as? JCheckBox)?.isSelected() ?: false
       tab.setTabPlacement(if (b) JTabbedPane.TOP else JTabbedPane.RIGHT)
     }
 
     val scheck = JCheckBox("SCROLL_TAB_LAYOUT", true)
     scheck.addActionListener { e ->
-      val b = (e.getSource() as JCheckBox).isSelected()
+      val b = (e.getSource() as? JCheckBox)?.isSelected() ?: false
       tab.setTabLayoutPolicy(if (b) JTabbedPane.SCROLL_TAB_LAYOUT else JTabbedPane.WRAP_TAB_LAYOUT)
     }
 

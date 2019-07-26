@@ -7,7 +7,7 @@ class MainPanel : JPanel(BorderLayout()) {
   private val spinner: JSpinner? = JSpinner()
 
   init {
-    val lv = UIManager.get("Tree.timeFactor") as Number
+    val lv = UIManager.get("Tree.timeFactor") as? Number ?: 500
     spinner?.setModel(SpinnerNumberModel(lv, 0L, 5000L, 500L))
     UIManager.put("List.timeFactor", 5000L)
 
