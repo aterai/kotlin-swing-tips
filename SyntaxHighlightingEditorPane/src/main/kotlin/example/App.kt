@@ -84,7 +84,7 @@ fun createEngine(): ScriptEngine? {
 }
 
 fun prettify(engine: ScriptEngine?, src: String) = runCatching {
-  (engine as? Invocable)?.invokeMethod(engine.get("window"), "prettyPrintOne", src) as String
+  (engine as? Invocable)?.invokeMethod(engine.get("window"), "prettyPrintOne", src) as? String
 }.getOrNull() ?: "error"
 
 fun main() {

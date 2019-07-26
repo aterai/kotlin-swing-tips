@@ -118,13 +118,12 @@ class MainPanel : JPanel(BorderLayout()) {
       isSelected: Boolean,
       cellHasFocus: Boolean
     ): Component {
-      val l = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus) as JLabel
-      if (value.date.isAfter(currentLocalDate)) {
-        l.setIcon(ContributionIcon(Color.WHITE))
-      } else {
-        l.setIcon(activityIcons.get(value.activity))
-      }
-      return l
+      val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+      (c as? JLabel)?.setIcon(when {
+        value.date.isAfter(currentLocalDate) -> ContributionIcon(Color.WHITE)
+        else -> activityIcons.get(value.activity)
+      })
+      return c
     }
   }
 

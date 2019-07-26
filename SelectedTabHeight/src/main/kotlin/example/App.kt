@@ -12,8 +12,9 @@ class MainPanel : JPanel(BorderLayout()) {
 
   init {
     comboBox.addItemListener { e ->
-      if (e.getStateChange() == ItemEvent.SELECTED) {
-        tabbedPane.setTabPlacement((e.getItem() as TabPlacements).tabPlacement)
+      val item = e.getItem()
+      if (e.getStateChange() == ItemEvent.SELECTED && item is TabPlacements) {
+        tabbedPane.setTabPlacement(item.tabPlacement)
       }
     }
     val box = Box.createHorizontalBox()
