@@ -17,7 +17,8 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val check = JCheckBox("LEFT")
     check.addActionListener { e ->
-      val tabPlacement = if ((e.getSource() as JCheckBox).isSelected()) JTabbedPane.LEFT else JTabbedPane.TOP
+      val b = (e.getSource() as? JCheckBox)?.isSelected() ?: false
+      val tabPlacement = if (b) JTabbedPane.LEFT else JTabbedPane.TOP
       list.forEach { it.setTabPlacement(tabPlacement) }
     }
 

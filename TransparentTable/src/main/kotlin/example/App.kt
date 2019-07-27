@@ -71,7 +71,8 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val check = JCheckBox("setBackground(new Color(255, 0, 0, 50))")
     check.addActionListener { e ->
-      table.setBackground(if ((e.getSource() as JCheckBox).isSelected()) color else alphaZero)
+      val b = (e.getSource() as? JCheckBox)?.isSelected() ?: false
+      table.setBackground(if (b) color else alphaZero)
     }
 
     add(check, BorderLayout.NORTH)
