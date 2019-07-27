@@ -63,7 +63,7 @@ internal class MenuToggleButton(text: String = "", icon: Icon? = null) : JToggle
   init {
     val action = object : AbstractAction(text) {
       override fun actionPerformed(e: ActionEvent) {
-        val b = e.getSource() as Component
+        val b = e.getSource() as? Component ?: return@actionPerformed
         popup?.show(b, 0, b.getHeight())
       }
     }

@@ -28,7 +28,7 @@ class RoundedCornerButtonUI : BasicButtonUI() {
   protected override fun installListeners(button: AbstractButton) {
     val listener = object : BasicButtonListener(button) {
       override fun mousePressed(e: MouseEvent) {
-        val b = e.getComponent() as AbstractButton
+        val b = e.getComponent() as? AbstractButton ?: return@mousePressed
         initShape(b)
         if (isShapeContains(e.getPoint())) {
           super.mousePressed(e)

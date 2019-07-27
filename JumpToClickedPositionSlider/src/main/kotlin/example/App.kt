@@ -55,7 +55,7 @@ internal class WindowsJumpToClickedPositionSliderUI(slider: JSlider) : WindowsSl
     return object : TrackListener() {
       override fun mousePressed(e: MouseEvent) {
         if (UIManager.getBoolean("Slider.onlyLeftMouseButtonDrag") && SwingUtilities.isLeftMouseButton(e)) {
-          val s = e.getComponent() as JSlider
+          val s = e.getComponent() as? JSlider ?: return@mousePressed
           when (s.getOrientation()) {
             SwingConstants.VERTICAL -> s.setValue(valueForYPosition(e.getY()))
             SwingConstants.HORIZONTAL -> s.setValue(valueForXPosition(e.getX()))
@@ -78,7 +78,7 @@ internal class MetalJumpToClickedPositionSliderUI : MetalSliderUI() {
     return object : TrackListener() {
       override fun mousePressed(e: MouseEvent) {
         if (UIManager.getBoolean("Slider.onlyLeftMouseButtonDrag") && SwingUtilities.isLeftMouseButton(e)) {
-          val s = e.getComponent() as JSlider
+          val s = e.getComponent() as? JSlider ?: return@mousePressed
           when (s.getOrientation()) {
             SwingConstants.VERTICAL -> s.setValue(valueForYPosition(e.getY()))
             SwingConstants.HORIZONTAL -> s.setValue(valueForXPosition(e.getX()))
