@@ -79,7 +79,7 @@ internal class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListI
     private val srcPoint = Point()
 
     override fun mouseDragged(e: MouseEvent) {
-      val l = e.getComponent() as JList<*>
+      val l = e.getComponent() as? JList<*> ?: return
       l.setFocusable(true)
       val destPoint = e.getPoint()
       rubberBand.reset()
@@ -103,7 +103,7 @@ internal class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListI
     }
 
     override fun mousePressed(e: MouseEvent) {
-      val l = e.getComponent() as JList<*>
+      val l = e.getComponent() as? JList<*> ?: return
       val index = l.locationToIndex(e.getPoint())
       val rect = l.getCellBounds(index, index)
       if (rect.contains(e.getPoint())) {

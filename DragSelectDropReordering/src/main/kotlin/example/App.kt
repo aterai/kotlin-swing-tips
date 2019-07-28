@@ -98,10 +98,7 @@ internal class ReorderbleList(model: ListModel<ListItem>) : JList<ListItem>(mode
     private val srcPoint = Point()
 
     override fun mouseDragged(e: MouseEvent) {
-      val l = e.getComponent() as JList<*>
-      if (l.getDragEnabled()) {
-        return
-      }
+      val l = (e.getComponent() as? JList<*>)?.takeUnless { it.getDragEnabled() } ?: return
       val destPoint = e.getPoint()
       rubberBand.reset()
       rubberBand.moveTo(srcPoint.getX(), srcPoint.getY())
@@ -117,15 +114,16 @@ internal class ReorderbleList(model: ListModel<ListItem>) : JList<ListItem>(mode
     }
 
     override fun mouseReleased(e: MouseEvent) {
-      val l = e.getComponent() as JList<*>
-      l.setFocusable(true)
-      rubberBand.reset()
-      l.setDragEnabled(l.getSelectedIndices().size > 0)
-      l.repaint()
+      (e.getComponent() as? JList<*>)?.also {
+        rubberBand.reset()
+        it.setFocusable(true)
+        it.setDragEnabled(it.getSelectedIndices().size > 0)
+        it.repaint()
+      }
     }
 
     override fun mousePressed(e: MouseEvent) {
-      val l = e.getComponent() as JList<*>
+      val l = e.getComponent() as? JList<*> ?: return
       val index = l.locationToIndex(e.getPoint())
       val rect = l.getCellBounds(index, index)
       if (rect.contains(e.getPoint())) {

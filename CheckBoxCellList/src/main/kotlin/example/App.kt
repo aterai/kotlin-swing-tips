@@ -138,7 +138,7 @@ class CheckBoxCellRenderer<E : CheckBoxNode> : MouseAdapter(), ListCellRenderer<
 
   override fun mouseExited(e: MouseEvent) {
     if (rollOverRowIndex >= 0) {
-      val l = e.getComponent() as JList<*>
+      val l = e.getComponent() as? JList<*> ?: return
       l.repaint(l.getCellBounds(rollOverRowIndex, rollOverRowIndex))
       rollOverRowIndex = -1
     }
@@ -160,7 +160,7 @@ class CheckBoxCellRenderer<E : CheckBoxNode> : MouseAdapter(), ListCellRenderer<
   }
 
   override fun mouseMoved(e: MouseEvent) {
-    val l = e.getComponent() as JList<*>
+    val l = e.getComponent() as? JList<*> ?: return
     val index = l.locationToIndex(e.getPoint())
     if (index != rollOverRowIndex) {
       rollOverRowIndex = index

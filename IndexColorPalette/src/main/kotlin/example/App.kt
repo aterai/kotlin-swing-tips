@@ -126,11 +126,16 @@ internal class IndexedColorListRenderer : ListCellRenderer<IndexedColor> {
     isSelected: Boolean,
     cellHasFocus: Boolean
   ): Component {
-    val l = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus) as JLabel
-    l.setIcon(ColorIcon(value.color))
-    l.setToolTipText("index: ${value.index}")
-    l.setBorder(BorderFactory.createLineBorder(if (value.isTransparentPixel) Color.RED else Color.WHITE))
-    return l
+    val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+    (c as? JLabel)?.also {
+      it.setIcon(ColorIcon(value.color))
+      it.setToolTipText("index: ${value.index}")
+      it.setBorder(BorderFactory.createLineBorder(when {
+        value.isTransparentPixel -> Color.RED
+        else -> Color.WHITE
+      }))
+    }
+    return c
   }
 }
 
