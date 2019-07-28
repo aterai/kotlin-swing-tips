@@ -205,7 +205,7 @@ internal class ProgressRenderer : DefaultTableCellRenderer() {
     row: Int,
     column: Int
   ): Component {
-    val i = value as Int
+    val i = value as? Int ?: -1
     var text = "Done"
     if (i < 0) {
       text = "Canceled"

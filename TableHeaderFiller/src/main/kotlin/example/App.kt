@@ -30,9 +30,8 @@ internal class TableHeaderFillerLayerUI : LayerUI<JScrollPane>() {
 
   override fun paint(g: Graphics?, c: JComponent) {
     super.paint(g, c)
-    val layer = c as? JLayer<*> ?: return
-    val scroll = layer.getView() as JScrollPane
-    val table = scroll.getViewport().getView() as JTable
+    val scroll = (c as? JLayer<*>)?.getView() as? JScrollPane ?: return
+    val table = scroll.getViewport().getView() as? JTable ?: return
     val header = table.getTableHeader()
 
     var width = header.getWidth()

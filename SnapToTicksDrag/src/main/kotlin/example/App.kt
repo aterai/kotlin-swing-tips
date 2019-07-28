@@ -46,14 +46,14 @@ class MainPanel : JPanel(BorderLayout()) {
     slider.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "RIGHT_ARROW")
     slider.getActionMap().put("RIGHT_ARROW", object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
-        val s = e.getSource() as JSlider
+        val s = e.getSource() as? JSlider ?: return@actionPerformed
         s.setValue(s.getValue() + s.getMajorTickSpacing())
       }
     })
     slider.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false), "LEFT_ARROW")
     slider.getActionMap().put("LEFT_ARROW", object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
-        val s = e.getSource() as JSlider
+        val s = e.getSource() as? JSlider ?: return@actionPerformed
         s.setValue(s.getValue() - s.getMajorTickSpacing())
       }
     })
