@@ -86,15 +86,14 @@ class MainPanel : JPanel() {
     val label = JLabel(" ", SwingConstants.CENTER)
 
     monthList.getSelectionModel().addListSelectionListener { e ->
-      val lsm = e.getSource() as ListSelectionModel
-      if (lsm.isSelectionEmpty()) {
-        label.setText(" ")
-      } else {
-        val model = monthList.getModel()
-        val from = model.getElementAt(lsm.getMinSelectionIndex())
-        val to = model.getElementAt(lsm.getMaxSelectionIndex())
-        label.setText(Period.between(from, to).toString())
-      }
+      label.setText((e.getSource() as? ListSelectionModel)
+          ?.takeUnless { it.isSelectionEmpty() }
+          ?.let {
+            val model = monthList.getModel()
+            val from = model.getElementAt(it.getMinSelectionIndex())
+            val to = model.getElementAt(it.getMaxSelectionIndex())
+            Period.between(from, to).toString()
+          } ?: " ")
     }
 
     val box = Box.createVerticalBox()

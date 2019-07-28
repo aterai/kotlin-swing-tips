@@ -28,8 +28,9 @@ class MainPanel : JPanel(BorderLayout()) {
     }
 
     model.addTableModelListener { e ->
-      val m = e.getSource() as DefaultTableModel
-      editor.setVisible(m.getRowCount() == 0)
+      (e.getSource() as? DefaultTableModel)?.also {
+        editor.setVisible(it.getRowCount() == 0)
+      }
     }
 
     table.setAutoCreateRowSorter(true)
