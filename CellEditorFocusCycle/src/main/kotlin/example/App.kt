@@ -187,13 +187,13 @@ internal class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
 
   override fun isCellEditable(e: EventObject): Boolean {
     EventQueue.invokeLater {
-      getEditorFocusCycleAfter(e.getSource() as Component)?.requestFocus()
+      getEditorFocusCycleAfter(e.getSource() as? Component)?.requestFocus()
     }
     return super.isCellEditable(e)
   }
 
   companion object {
-    fun getEditorFocusCycleAfter(editor: Component): Component? {
+    fun getEditorFocusCycleAfter(editor: Component?): Component? {
       val fo = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner()
       val root: Container = (editor as? Container)?.let {
         if (it.isFocusCycleRoot()) it else it.getFocusCycleRootAncestor()

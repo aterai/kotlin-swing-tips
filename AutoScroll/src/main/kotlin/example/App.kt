@@ -111,7 +111,7 @@ internal class ComponentDragScrollListener : MouseAdapter(), HierarchyListener {
   override fun mouseDragged(e: MouseEvent) {
     scroller.stop()
     scroller.removeActionListener(listener)
-    val jc = e.getComponent() as JComponent
+    val jc = e.getComponent() as? JComponent ?: return
     val vport = SwingUtilities.getAncestorOfClass(JViewport::class.java, jc) as? JViewport ?: return
     val cp = SwingUtilities.convertPoint(jc, e.getPoint(), vport)
     val dx = startPt.x - cp.x
