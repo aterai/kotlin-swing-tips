@@ -1,46 +1,22 @@
-group 'KotlinSwingTips'
-version '1.0-SNAPSHOT'
+buildscript {
+  ext.kotlin_version = 'latest.release'
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+  }
+}
 
-// apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'application'
 
-def defaultEncoding = 'UTF-8'
-[compileJava, compileTestJava]*.options*.encoding = defaultEncoding
+// group 'KotlinSwingTips'
+// version '1.0-SNAPSHOT'
 
-// mainClassName = 'example.AppKt'
+mainClassName = 'example.AppKt'
 
-buildscript {
-  repositories {
-    mavenCentral()
-  }
-  dependencies {
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:latest.release"
-  }
-}
-
-sourceCompatibility = 1.8
-
-compileKotlin {
-  kotlinOptions.jvmTarget = "$sourceCompatibility"
-  // kotlinOptions.includeRuntime = true
-  // kotlinOptions.noStdlib = false
-}
-
-compileTestKotlin {
-  kotlinOptions.jvmTarget = "$sourceCompatibility"
-}
-
-kotlin {
-  repositories {
-    mavenCentral()
-  }
-  dependencies {
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:latest.release"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-swing:latest.release"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:latest.release"
-  }
-}
+defaultTasks 'run'
 
 repositories {
   mavenCentral()
@@ -48,9 +24,22 @@ repositories {
 }
 
 dependencies {
-  compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:latest.release"
+  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+  testCompile 'junit:junit:4.11'
+  testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 }
 
-application {
-  mainClassName = 'example.AppKt'
+sourceCompatibility = 1.8
+
+compileKotlin {
+  kotlinOptions.jvmTarget = "$sourceCompatibility"
+}
+
+compileTestKotlin {
+  kotlinOptions.jvmTarget = "$sourceCompatibility"
+}
+
+jar {
+  manifest { attributes 'Main-Class': "$mainClassName" }
+  from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }
