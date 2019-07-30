@@ -130,7 +130,7 @@ class HeaderCheckBoxHandler(val table: JTable, val targetColumnIndex: Int) : Mou
 
   private fun fireUpdateEvent(m: DefaultTableModel, column: TableColumn, status: Any): Boolean {
     return if (Status.INDETERMINATE == status) {
-      val l = m.getDataVector().map { (it as List<*>).get(targetColumnIndex) as Boolean }.distinct()
+      val l = m.getDataVector().mapNotNull { (it as? List<*>)?.get(targetColumnIndex) as? Boolean }.distinct()
       val isOnlyOneSelected = l.size == 1
       if (isOnlyOneSelected) {
         // column.setHeaderValue(if (l.get(0)) Status.SELECTED else Status.DESELECTED)

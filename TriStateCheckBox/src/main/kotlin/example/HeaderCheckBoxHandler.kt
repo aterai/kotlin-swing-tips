@@ -30,7 +30,7 @@ class HeaderCheckBoxHandler(val table: JTable, val targetColumnIndex: Int) : Mou
       //     .map { v -> (v as Vector<*>).get(targetColumnIndex) as Boolean }
       //     .distinct()
       //     .collect(Collectors.toList())
-      val l = m.getDataVector().map { (it as List<*>).get(targetColumnIndex) as Boolean }.distinct()
+      val l = m.getDataVector().mapNotNull { (it as? List<*>)?.get(targetColumnIndex) as? Boolean }.distinct()
       val isOnlyOneSelected = l.size == 1
       if (isOnlyOneSelected) {
         // column.setHeaderValue(if (l.get(0)) Status.SELECTED else Status.DESELECTED)
