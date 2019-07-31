@@ -32,8 +32,8 @@ class MainPanel : JPanel(BorderLayout()) {
     box.add(Box.createVerticalStrut(2))
     box.add(rightTextField)
     combo.addItemListener { e ->
-      if (e.getStateChange() == ItemEvent.SELECTED) {
-        val item = e.getItem() as PairItem
+      val item = e.getItem()
+      if (e.getStateChange() == ItemEvent.SELECTED && item is PairItem) {
         leftTextField.setText(item.leftText)
         rightTextField.setText(item.rightText)
       }

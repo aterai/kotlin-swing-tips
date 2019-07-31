@@ -135,7 +135,7 @@ open class CheckedComboBox<E : CheckableItem> : JComboBox<E> {
       override fun actionPerformed(e: ActionEvent) {
         val a = getAccessibleContext().getAccessibleChild(0)
         if (a is ComboPopup) {
-          updateItem((a as ComboPopup).getList().getSelectedIndex())
+          updateItem(a.getList().getSelectedIndex())
         }
       }
     })
@@ -205,10 +205,7 @@ class CheckedComboBox4<E : CheckableItem>(model: ComboBoxModel<E>) : CheckedComb
     if (isPopupVisible()) {
       val item = getItemAt(index)
       item.isSelected = !item.isSelected
-      val m = getModel()
-      if (m is CheckableComboBoxModel<*>) {
-        (m as CheckableComboBoxModel<E>).fireContentsChanged(index)
-      }
+      (getModel() as? CheckableComboBoxModel<E>)?.fireContentsChanged(index)
     }
   }
 }

@@ -85,7 +85,8 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val check = JCheckBox("setBackground(new Color(255, 0, 0, 50))")
     check.addActionListener { e ->
-      table.setBackground(if ((e.getSource() as JCheckBox).isSelected()) color else alphaZero)
+      val b = (e.getSource() as? JCheckBox)?.isSelected() ?: false
+      table.setBackground(if (b) color else alphaZero)
     }
 
     add(check, BorderLayout.NORTH)
@@ -145,11 +146,9 @@ internal class TranslucentObjectRenderer : DefaultTableCellRenderer() {
     hasFocus: Boolean,
     row: Int,
     column: Int
-  ): Component {
-    val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column) as JComponent
-    // c.setOpaque(true);
-    c.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8))
-    return c
+  ) = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column).also {
+    // it.setOpaque(true);
+    (it as? JComponent)?.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8))
   }
 }
 

@@ -69,10 +69,8 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  fun getOptionPaneIcon(key: String): Icon {
-    val icon = UIManager.getIcon(key) as ImageIcon
-    icon.setDescription(key)
-    return icon
+  fun getOptionPaneIcon(key: String) = (UIManager.getIcon(key) as? ImageIcon)?.also {
+    it.setDescription(key)
   }
 
   companion object {
