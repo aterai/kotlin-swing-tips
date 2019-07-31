@@ -85,21 +85,23 @@ class FileIconTableCellRenderer(val fileSystemView: FileSystemView) : DefaultTab
     hasFocus: Boolean,
     row: Int,
     column: Int
-  ) = (super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column) as JLabel).also {
-    it.setHorizontalAlignment(SwingConstants.LEFT)
-    it.setIcon(null)
-    val file = value as? File ?: return it
-    when (table.convertColumnIndexToModel(column)) {
-      0 -> {
-        it.setIcon(fileSystemView.getSystemIcon(file))
-        it.setText(fileSystemView.getSystemDisplayName(file))
+  ) = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column).also {
+    if (it is JLabel) {
+      it.setHorizontalAlignment(SwingConstants.LEFT)
+      it.setIcon(null)
+      val file = value as? File ?: return it
+      when (table.convertColumnIndexToModel(column)) {
+        0 -> {
+          it.setIcon(fileSystemView.getSystemIcon(file))
+          it.setText(fileSystemView.getSystemDisplayName(file))
+        }
+        1 -> {
+          it.setHorizontalAlignment(SwingConstants.RIGHT)
+          it.setText(if (file.isDirectory()) null else file.length().toString())
+        }
+        2 -> it.setText(file.getAbsolutePath())
+        else -> error("Should never happened.")
       }
-      1 -> {
-        it.setHorizontalAlignment(SwingConstants.RIGHT)
-        it.setText(if (file.isDirectory()) null else file.length().toString())
-      }
-      2 -> it.setText(file.getAbsolutePath())
-      else -> error("Should never happened.")
     }
   }
 }

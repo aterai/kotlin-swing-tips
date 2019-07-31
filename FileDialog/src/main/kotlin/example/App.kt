@@ -28,7 +28,7 @@ fun makeUI(): Component {
         append("Window: " + w.getLocation())
         fd.setTitle("windowOpened")
         // fd.setLocation(500, 500)
-        val d = SwingUtilities.getRoot(fd) as Dialog
+        val d = SwingUtilities.getRoot(fd) as? Dialog ?: return
         append("fd == SwingUtilities.getRoot(fd): " + (d == fd))
         append("fd == w: " + (w == fd))
       }

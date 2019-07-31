@@ -200,9 +200,9 @@ internal class CheckBoxNodeEditor(val fileSystemView: FileSystemView) : Abstract
   }
 
   override fun isCellEditable(e: EventObject): Boolean {
-    if (e is MouseEvent && e.getSource() is JTree) {
+    val tree = e.getSource()
+    if (e is MouseEvent && tree is JTree) {
       val p = e.getPoint()
-      val tree = e.getSource() as JTree
       val path = tree.getPathForLocation(p.x, p.y)
       return tree.getPathBounds(path)?.let {
         it.width = checkBox.getPreferredSize().width
@@ -215,19 +215,18 @@ internal class CheckBoxNodeEditor(val fileSystemView: FileSystemView) : Abstract
 
 internal class FolderSelectionListener(val fileSystemView: FileSystemView) : TreeSelectionListener {
   override fun valueChanged(e: TreeSelectionEvent) {
-    val pnode = e.getPath().getLastPathComponent() as DefaultMutableTreeNode
-    if (!pnode.isLeaf()) {
+    val pnode = e.getPath().getLastPathComponent()
+    if (pnode !is DefaultMutableTreeNode || !pnode.isLeaf()) {
       return
     }
-    val check = pnode.getUserObject() as CheckBoxNode // ?: return
-    val parent = check.getFile()
-    if (!parent.isDirectory()) {
+    val check = pnode.getUserObject()
+    if (check !is CheckBoxNode || !check.getFile().isDirectory()) {
       return
     }
 
     val parentStatus = if (check.getStatus() == Status.SELECTED) Status.SELECTED else Status.DESELECTED
     val model = (e.getSource() as JTree).getModel() as DefaultTreeModel
-    val worker = object : BackgroundTask(fileSystemView, parent) {
+    val worker = object : BackgroundTask(fileSystemView, check.getFile()) {
       protected override fun process(chunks: List<File>) {
         chunks.map { CheckBoxNode(it, parentStatus) }
           .map { DefaultMutableTreeNode(it) }
