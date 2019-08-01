@@ -65,10 +65,11 @@ class TooltipListCellRenderer<E> : ListCellRenderer<E> {
     isSelected: Boolean,
     cellHasFocus: Boolean
   ): Component {
-    val l = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus) as JLabel
+    val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+    val l = c as? JLabel ?: return c
     val i = l.getInsets()
-    val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
-    val rect = c.getBounds()
+    val v = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
+    val rect = v.getBounds()
     rect.width -= i.left + i.right
     val fm = l.getFontMetrics(l.getFont())
     val str = value?.toString() ?: ""

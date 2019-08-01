@@ -165,11 +165,11 @@ internal class ButtonsRenderer<E>(comboBox: RemoveButtonComboBox<E>) : ListCellR
     isSelected: Boolean,
     cellHasFocus: Boolean
   ): Component {
-    val l = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus) as JLabel
+    val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
     if (index < 0) {
-      return l
+      return c
     }
-    l.setOpaque(false)
+    (c as? JComponent)?.setOpaque(false)
     this.targetIndex = index
     if (isSelected) {
       panel.setBackground(list.getSelectionBackground())
@@ -183,7 +183,7 @@ internal class ButtonsRenderer<E>(comboBox: RemoveButtonComboBox<E>) : ListCellR
       deleteButton.getModel().setRollover(isRollover)
       deleteButton.setForeground(if (isRollover) Color.WHITE else list.getForeground())
     }
-    panel.add(l)
+    panel.add(c)
     return panel
   }
 

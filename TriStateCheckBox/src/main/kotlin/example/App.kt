@@ -91,7 +91,7 @@ internal class HeaderRenderer : TableCellRenderer {
     column: Int
   ): Component {
     val r = table.getTableHeader().getDefaultRenderer()
-    val l = r.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column) as JLabel
+    val c = r.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
 
     check.setOpaque(false)
     if (value is Status) {
@@ -99,9 +99,11 @@ internal class HeaderRenderer : TableCellRenderer {
     } else {
       check.setSelected(true)
     }
-    l.setIcon(ComponentIcon(check))
-    l.setText(null) // XXX: Nimbus???
-    return l
+    (c as? JLabel)?.also {
+      it.setIcon(ComponentIcon(check))
+      it.setText(null) // XXX: Nimbus???
+    }
+    return c
   }
 }
 
@@ -113,16 +115,12 @@ internal class TriStateActionListener : ActionListener {
   }
 
   override fun actionPerformed(e: ActionEvent) {
-    val cb = e.getSource() as JCheckBox
+    val cb = e.getSource() as? JCheckBox ?: return
     if (cb.isSelected()) {
       cb.getIcon()?.run {
         cb.setIcon(null)
         cb.setSelected(false)
       }
-      // if (cb.getIcon() != null) {
-      //   cb.setIcon(null)
-      //   cb.setSelected(false)
-      // }
     } else {
       cb.setIcon(currentIcon)
     }
@@ -161,9 +159,6 @@ internal class TriStateCheckBox(title: String) : JCheckBox(title) {
     listener = al
     currentIcon = iicon
     addActionListener(listener)
-    // if (getIcon() != null) {
-    //   setIcon(currentIcon)
-    // }
     getIcon()?.run {
       setIcon(currentIcon)
     }

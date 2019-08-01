@@ -232,7 +232,7 @@ class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
 
   override fun getCellEditorValue() = CheckBoxNode(checkBox.getText(), checkBox.isSelected())
 
-  override fun isCellEditable(e: EventObject?) = e is MouseEvent
+  override fun isCellEditable(e: EventObject) = e is MouseEvent
 }
 
 fun main() {

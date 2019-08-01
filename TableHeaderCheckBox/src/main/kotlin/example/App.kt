@@ -100,11 +100,13 @@ internal class HeaderRenderer : TableCellRenderer {
     check.setOpaque(false)
     check.setFont(table.getFont())
     val r = table.getTableHeader().getDefaultRenderer()
-    val l = r.getTableCellRendererComponent(table, status, isSelected, hasFocus, row, column) as JLabel
-    label.setIcon(ComponentIcon(check))
-    l.setIcon(ComponentIcon(label))
-    l.setText(null) // XXX: Nimbus???
-    return l
+    val c = r.getTableCellRendererComponent(table, status, isSelected, hasFocus, row, column)
+    (c as? JLabel)?.also {
+      label.setIcon(ComponentIcon(check))
+      it.setIcon(ComponentIcon(label))
+      it.setText(null) // XXX: Nimbus???
+    }
+    return c
   }
 
   private fun updateCheckBox(isSelected: Boolean, isEnabled: Boolean) {

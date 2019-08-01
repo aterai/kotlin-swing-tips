@@ -94,10 +94,10 @@ class CheckBoxNodeRenderer : TreeCellRenderer {
     row: Int,
     hasFocus: Boolean
   ): Component {
-    val l = renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus) as JLabel
-    l.setFont(tree.getFont())
+    val c = renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+    c.setFont(tree.getFont())
 
-    val treeNode = value as? DefaultMutableTreeNode ?: return l
+    val treeNode = value as? DefaultMutableTreeNode ?: return c
     panel.setFocusable(false)
     panel.setRequestFocusEnabled(false)
     panel.setOpaque(false)
@@ -107,11 +107,11 @@ class CheckBoxNodeRenderer : TreeCellRenderer {
     checkBox.setOpaque(false)
     (treeNode.getUserObject() as? CheckBoxNode)?.also {
       checkBox.setIcon(if (it.status === Status.INDETERMINATE) IndeterminateIcon() else null)
-      l.setText(it.label)
+      (c as? JLabel)?.setText(it.label)
       checkBox.setSelected(it.status === Status.SELECTED)
     }
     panel.add(checkBox, BorderLayout.WEST)
-    panel.add(l)
+    panel.add(c)
     return panel
   }
 }
