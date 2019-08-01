@@ -78,9 +78,8 @@ class LineFocusTable(model: TableModel) : JTable(model) {
   private fun updateRenderer() {
     val m = getModel()
     for (i in 0 until m.getColumnCount()) {
-      val r = getDefaultRenderer(m.getColumnClass(i))
-      if (r is Component) {
-        SwingUtilities.updateComponentTreeUI(r as Component)
+      (getDefaultRenderer(m.getColumnClass(i)) as? Component)?.also {
+        SwingUtilities.updateComponentTreeUI(it)
       }
     }
   }
@@ -92,7 +91,7 @@ class LineFocusTable(model: TableModel) : JTable(model) {
     checkBox.setOpaque(true)
     checkBox.addMouseListener(object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
-        val cb = e.getComponent() as JCheckBox
+        val cb = e.getComponent() as? JCheckBox ?: return
         val m = cb.getModel()
         if (m.isPressed() && isRowSelected(getEditingRow()) && e.isControlDown()) {
           if (getEditingRow() % 2 == 0) {
