@@ -148,7 +148,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   protected fun removeSystemMenuListener(modal: JInternalFrame) {
-    val ui = modal.getUI() as BasicInternalFrameUI
+    val ui = modal.getUI() as? BasicInternalFrameUI ?: return
     ui.getNorthPane().getComponents()
         .filter { it is JLabel || "InternalFrameTitlePane.menuButton" == it.getName() }
         .forEach { removeComponentMouseListener(it) }

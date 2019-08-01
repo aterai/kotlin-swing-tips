@@ -150,7 +150,7 @@ internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMot
     val ccol = table.columnAtPoint(pt)
     if (isUrlColumn(table, ccol) && pointInsidePrefSize(table, pt)) {
       val crow = table.rowAtPoint(pt)
-      val url = table.getValueAt(crow, ccol) as URL
+      val url = table.getValueAt(crow, ccol) as? URL ?: return
       println(url)
       if (Desktop.isDesktopSupported()) { // JDK 1.6.0
         runCatching {
@@ -186,10 +186,11 @@ internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMot
     val value = table.getValueAt(row, col)
     val cell = tcr.getTableCellRendererComponent(table, value, false, false, row, col)
     val itemSize = cell.getPreferredSize()
-    val i = (cell as JComponent).getInsets()
-    val cellBounds = table.getCellRect(row, col, false)
-    cellBounds.width = itemSize.width - i.right - i.left
-    cellBounds.translate(i.left, i.top)
+    val cellBounds = table.getCellRect(row, col, false).also {
+      val i = (cell as? JComponent)?.getInsets() ?: Insets(0, 0, 0, 0)
+      it.width = itemSize.width - i.right - i.left
+      it.translate(i.left, i.top)
+    }
     return cellBounds.contains(p)
   }
   }
