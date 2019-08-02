@@ -11,8 +11,7 @@ fun makeUI(): Component {
 
   val log = JTextArea(3, 0)
   val al = ActionListener { e ->
-    val c = e.getSource() as Component
-    val idx = p.getComponentZOrder(c)
+    val idx = p.getComponentZOrder(e.getSource() as? Component)
     val row = idx / gl.getColumns()
     val col = idx % gl.getColumns()
     log.append(String.format("Row: %d, Column: %d%n", row + 1, col + 1))

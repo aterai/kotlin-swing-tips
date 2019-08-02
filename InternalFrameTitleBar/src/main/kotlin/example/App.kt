@@ -34,7 +34,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
   private fun makeInternalFrame(): JInternalFrame {
     val internal = JInternalFrame("Title")
-    val ui = internal.getUI() as BasicInternalFrameUI
+    val ui = internal.getUI() as? BasicInternalFrameUI ?: return internal
     val title = ui.getNorthPane()
     for (l in title.getListeners(MouseMotionListener::class.java)) {
       title.removeMouseMotionListener(l)

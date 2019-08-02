@@ -53,8 +53,7 @@ class MainPanel : JPanel(BorderLayout()) {
         isSelected: Boolean,
         cellHasFocus: Boolean
       ): Component {
-        val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus) as JLabel
-        c.setOpaque(true)
+        val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
         if (isSelected) {
           c.setBackground(list.getSelectionBackground())
           c.setForeground(list.getSelectionForeground())
@@ -62,7 +61,10 @@ class MainPanel : JPanel(BorderLayout()) {
           c.setBackground(list.getBackground())
           c.setForeground(list.getForeground())
         }
-        c.setText(value?.get(0)?.toString() ?: "")
+        (c as? JLabel)?.also {
+          it.setOpaque(true)
+          it.setText(value?.get(0)?.toString() ?: "")
+        }
         return c
       }
     })

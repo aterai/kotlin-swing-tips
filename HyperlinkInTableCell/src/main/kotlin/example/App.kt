@@ -143,7 +143,7 @@ internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMot
     val ccol = table.columnAtPoint(pt)
     if (isUrlColumn(table, ccol)) {
       val crow = table.rowAtPoint(pt)
-      val url = table.getValueAt(crow, ccol) as URL
+      val url = table.getValueAt(crow, ccol) as? URL ?: return
       println(url)
       if (Desktop.isDesktopSupported()) { // JDK 1.6.0
         runCatching {

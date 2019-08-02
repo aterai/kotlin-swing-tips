@@ -78,7 +78,7 @@ class MainPanel : JPanel(BorderLayout()) {
       override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) { /* not needed */ }
 
       override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-        val pop = e.getSource() as JPopupMenu
+        val pop = e.getSource() as? JPopupMenu ?: return
         val tc = pop.getInvoker() as JTextComponent
         println("${tc.javaClass.getName()}: ${tc.getName()}")
         // TEST:
