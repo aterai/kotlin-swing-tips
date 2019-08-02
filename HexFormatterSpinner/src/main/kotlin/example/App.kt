@@ -27,10 +27,11 @@ class MainPanel : JPanel(BorderLayout()) {
 
   init {
     spinner.addChangeListener { fontPanel.repaint() }
-    val editor = spinner.getEditor() as JSpinner.NumberEditor
-    val ftf = editor.getTextField() as JFormattedTextField
-    ftf.setFont(Font(Font.MONOSPACED, Font.PLAIN, ftf.getFont().getSize()))
-    ftf.setFormatterFactory(makeFFactory())
+    val editor = spinner.getEditor() as? JSpinner.NumberEditor
+    (editor?.getTextField() as? JFormattedTextField)?.also {
+      it.setFont(Font(Font.MONOSPACED, Font.PLAIN, it.getFont().getSize()))
+      it.setFormatterFactory(makeFFactory())
+    }
 
     val exMi = JRadioButton(FontPaint.IPA_EX_MINCHO.toString())
     exMi.addItemListener { e ->

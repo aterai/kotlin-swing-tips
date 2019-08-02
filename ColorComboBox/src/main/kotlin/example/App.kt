@@ -75,8 +75,8 @@ internal class AlternateRowColorComboBox<E> : JComboBox<E> {
       }
     })
     itemColorListener = ItemListener { e ->
-      if (e.getStateChange() == ItemEvent.SELECTED) {
-        val cb = e.getItemSelectable() as JComboBox<*>
+      val cb = e.getItemSelectable()
+      if (e.getStateChange() == ItemEvent.SELECTED && cb is JComboBox<*>) {
         val rc = getAlternateRowColor(cb.getSelectedIndex())
         if (cb.isEditable()) {
           (cb.getEditor().getEditorComponent() as? JTextField)?.setBackground(rc)
