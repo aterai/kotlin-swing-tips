@@ -17,7 +17,8 @@ class MainPanel : JPanel() {
       }
     }
     preserveTopLevelSelectionCheck.addActionListener { e ->
-      UIManager.put(key, (e.getSource() as JCheckBox).isSelected())
+      val flg = (e.getSource() as? JCheckBox)?.isSelected() ?: false
+      UIManager.put(key, flg)
     }
 
     EventQueue.invokeLater { getRootPane().setJMenuBar(makeMenuBar()) }

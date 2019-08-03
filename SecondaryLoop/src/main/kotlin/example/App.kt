@@ -99,7 +99,7 @@ internal class DisableInputLayerUI<V : JComponent> : LayerUI<V>() {
 
   override fun applyPropertyChange(e: PropertyChangeEvent, l: JLayer<out V>) {
     if (e.getPropertyName() == CMD_REPAINT) {
-      l.getGlassPane().setVisible(e.getNewValue() as Boolean)
+      l.getGlassPane().setVisible(e.getNewValue() as? Boolean ?: false)
       l.repaint()
     }
   }
