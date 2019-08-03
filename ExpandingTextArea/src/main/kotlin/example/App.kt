@@ -28,14 +28,12 @@ private fun makeExpandingTextArea1(): Component {
   textArea.setLineWrap(true)
   textArea.addFocusListener(object : FocusListener {
     override fun focusGained(e: FocusEvent) {
-      val ta = e.getComponent() as JTextArea
-      ta.setRows(3)
+      (e.getComponent() as? JTextArea)?.setRows(3)
       p.revalidate()
     }
 
     override fun focusLost(e: FocusEvent) {
-      val ta = e.getComponent() as JTextArea
-      ta.setRows(1)
+      (e.getComponent() as? JTextArea)?.setRows(1)
       p.revalidate()
     }
   })
