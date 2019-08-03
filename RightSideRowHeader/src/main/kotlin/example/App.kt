@@ -64,7 +64,7 @@ class MainPanel : JPanel(BorderLayout()) {
     scroll.getRowHeader().setBackground(Color.WHITE)
 
     scroll.getRowHeader().addChangeListener { e ->
-      val viewport = e.getSource() as JViewport
+      val viewport = e.getSource() as? JViewport ?: return@addChangeListener
       scroll.getVerticalScrollBar().setValue(viewport.getViewPosition().y)
     }
 

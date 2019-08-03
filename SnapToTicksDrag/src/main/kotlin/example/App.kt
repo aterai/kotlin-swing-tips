@@ -58,7 +58,7 @@ class MainPanel : JPanel(BorderLayout()) {
       }
     })
     slider.addMouseWheelListener { e ->
-      val s = e.getComponent() as JSlider
+      val s = e.getComponent() as? JSlider ?: return@addMouseWheelListener
       val hasMinorTickSpacing = s.getMinorTickSpacing() > 0
       val tickSpacing = if (hasMinorTickSpacing) s.getMinorTickSpacing() else s.getMajorTickSpacing()
       val v = s.getValue() - e.getWheelRotation() * tickSpacing

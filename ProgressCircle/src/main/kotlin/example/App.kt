@@ -37,7 +37,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val button = JButton("start")
     button.addActionListener { e ->
-      val b = e.getSource() as JButton
+      val b = e.getSource() as? JButton ?: return@addActionListener
       b.setEnabled(false)
       val worker = object : BackgroundTask() {
         override fun done() {
@@ -133,10 +133,9 @@ internal class ProgressListener(private val progressBar: JProgressBar) : Propert
   }
 
   override fun propertyChange(e: PropertyChangeEvent) {
-    val strPropertyName = e.getPropertyName()
-    if ("progress" == strPropertyName) {
+    if ("progress" == e.getPropertyName()) {
       progressBar.setIndeterminate(false)
-      val progress = e.getNewValue() as Int
+      val progress = e.getNewValue() as? Int ?: 0
       progressBar.setValue(progress)
     }
   }
