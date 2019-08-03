@@ -12,8 +12,8 @@ class MainPanel : JPanel(BorderLayout()) {
     val combo = JComboBox<String>(array)
     combo.setEditable(true)
     combo.setSelectedIndex(-1)
-    val field = combo.getEditor().getEditorComponent() as JTextField
-    field.setText("")
+    val field = combo.getEditor().getEditorComponent()
+    (field as? JTextField)?.setText("")
     field.addKeyListener(ComboKeyHandler(combo))
 
     val p = JPanel(BorderLayout())

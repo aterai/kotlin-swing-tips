@@ -16,8 +16,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val combo1 = JComboBox<String>(makeModel(5))
     val copy = object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
-        val combo = e.getSource() as JComboBox<*>
-        combo.getSelectedItem()?.also {
+        (e.getSource() as? JComboBox<*>)?.getSelectedItem()?.also {
           val contents = StringSelection(it.toString())
           val clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
           clipboard.setContents(contents, null)
@@ -46,8 +45,8 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val combo2 = JComboBox<String>(makeModel(10))
     combo2.setEditable(true)
-    val field = combo2.getEditor().getEditorComponent() as JTextField
-    field.setComponentPopupMenu(TextFieldPopupMenu())
+    (combo2.getEditor().getEditorComponent() as? JTextField)
+        ?.setComponentPopupMenu(TextFieldPopupMenu())
 
     val box = Box.createVerticalBox()
     box.add(makeTitledPanel("Default:", JComboBox<String>(makeModel(0))))
