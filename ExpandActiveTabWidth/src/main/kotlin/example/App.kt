@@ -18,7 +18,11 @@ class MainPanel : JPanel(BorderLayout()) {
       tabbedPane.setTabComponentAt(tabbedPane.getTabCount() - 1, label)
     }
     updateTabWidth(tabbedPane)
-    tabbedPane.addChangeListener { e -> updateTabWidth(e.getSource() as JTabbedPane) }
+    tabbedPane.addChangeListener { e ->
+      (e.getSource() as? JTabbedPane)?.also {
+        updateTabWidth(it)
+      }
+    }
     add(tabbedPane)
     setPreferredSize(Dimension(320, 240))
   }
