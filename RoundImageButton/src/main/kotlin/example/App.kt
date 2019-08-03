@@ -29,7 +29,8 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val check = JCheckBox("ButtonBorder Color")
     check.addActionListener { e ->
-      val bgc = if ((e.getSource() as JCheckBox).isSelected()) Color.WHITE else Color.BLACK
+      val f = (e.getSource() as? JCheckBox)?.isSelected() ?: false
+      val bgc = if (f) Color.WHITE else Color.BLACK
       buttons.forEach { it.setBackground(bgc) }
       box.repaint()
     }
@@ -39,9 +40,9 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val alignmentsChoices = JComboBox<ButtonAlignments>(ButtonAlignments.values())
     alignmentsChoices.addItemListener { e ->
-      if (e.getStateChange() == ItemEvent.SELECTED) {
-        val ba = e.getItem() as ButtonAlignments
-        buttons.forEach { it.setAlignmentY(ba.alingment) }
+      val item = e.getItem()
+      if (e.getStateChange() == ItemEvent.SELECTED && item is ButtonAlignments) {
+        buttons.forEach { it.setAlignmentY(item.alingment) }
         box.revalidate()
       }
     }
