@@ -72,7 +72,7 @@ internal class TablePopupMenu : JPopupMenu() {
   init {
     select = add("select")
     select.addActionListener {
-      val table = getInvoker() as JTable
+      val table = getInvoker() as? JTable ?: return@addActionListener
       for (row in table.getSelectedRows()) {
         for (col in table.getSelectedColumns()) {
           table.setValueAt(true, row, col)
@@ -82,7 +82,7 @@ internal class TablePopupMenu : JPopupMenu() {
 
     clear = add("clear")
     clear.addActionListener {
-      val table = getInvoker() as JTable
+      val table = getInvoker() as? JTable ?: return@addActionListener
       for (row in table.getSelectedRows()) {
         for (col in table.getSelectedColumns()) {
           table.setValueAt(false, row, col)
@@ -92,7 +92,7 @@ internal class TablePopupMenu : JPopupMenu() {
 
     toggle = add("toggle")
     toggle.addActionListener {
-      val table = getInvoker() as JTable
+      val table = getInvoker() as? JTable ?: return@addActionListener
       for (row in table.getSelectedRows()) {
         for (col in table.getSelectedColumns()) {
           var b = table.getValueAt(row, col) as? Boolean ?: continue

@@ -50,7 +50,7 @@ internal class AlternateRowColorComboBox<E> : JComboBox<E> {
     super.setEditable(flag)
     if (flag) {
       val editor = getEditor().getEditorComponent()
-      (editor as JTextField)?.setOpaque(true)
+      (editor as? JTextField)?.setOpaque(true)
       editor.setBackground(getAlternateRowColor(getSelectedIndex()))
     }
   }
