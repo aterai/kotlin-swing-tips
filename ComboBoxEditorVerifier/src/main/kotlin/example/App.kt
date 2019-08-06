@@ -25,7 +25,7 @@ class MainPanel : JPanel(BorderLayout()) {
           override fun actionPerformed(e: ActionEvent) {
             val isPopupVisible = isPopupVisible()
             setPopupVisible(false)
-            val m = getModel() as DefaultComboBoxModel<String>
+            val m = getModel() as? DefaultComboBoxModel<String> ?: return@actionPerformed
             val str = getEditor().getItem()?.toString() ?: ""
             if (m.getIndexOf(str) < 0 && getInputVerifier()?.verify(cb) ?: false) {
               m.removeElement(str)
@@ -48,8 +48,9 @@ class MainPanel : JPanel(BorderLayout()) {
       private var validationEditor: Component? = null
 
       override fun getEditorComponent(): Component? {
-        val tc = super.getEditorComponent() as JTextComponent
-        validationEditor = validationEditor ?: JLayer(tc, ValidationLayerUI())
+        (super.getEditorComponent() as? JTextComponent)?.also {
+          validationEditor = validationEditor ?: JLayer(it, ValidationLayerUI())
+        }
         return validationEditor
       }
     })

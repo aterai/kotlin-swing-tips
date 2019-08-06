@@ -33,8 +33,9 @@ class MainPanel : JPanel(BorderLayout()) {
       private var editorComponent: Component? = null
 
       override fun getEditorComponent(): Component? {
-        val tc = super.getEditorComponent() as JTextComponent
-        editorComponent = editorComponent ?: JLayer(tc, PlaceholderLayerUI("- Select type -"))
+        (super.getEditorComponent() as? JTextComponent)?.also {
+          editorComponent = editorComponent ?: JLayer(it, PlaceholderLayerUI("- Select type -"))
+        }
         return editorComponent
       }
     })

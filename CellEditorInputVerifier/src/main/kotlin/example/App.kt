@@ -42,7 +42,7 @@ class MainPanel : JPanel(BorderLayout()) {
     table.getColumnModel().getColumn(1).setCellEditor(DefaultCellEditor(textField1))
     table.getColumnModel().getColumn(2).setCellEditor(object : DefaultCellEditor(textField2) {
       override fun stopCellEditing(): Boolean {
-        val editor = getComponent() as? JComponent ?: return false
+        val editor = getComponent() as? JComponent ?: return super.stopCellEditing()
         val isEditValid = editor.getInputVerifier().verify(editor)
         editor.setBorder(when {
           isEditValid -> BorderFactory.createEmptyBorder(1, 1, 1, 1)
@@ -53,7 +53,7 @@ class MainPanel : JPanel(BorderLayout()) {
     })
     table.getColumnModel().getColumn(3).setCellEditor(object : DefaultCellEditor(textField3) {
       override fun stopCellEditing(): Boolean {
-        val editor = getComponent() as JFormattedTextField
+        val editor = getComponent() as? JFormattedTextField ?: return super.stopCellEditing()
         val isEditValid = editor.isEditValid()
         editor.setBorder(when {
           isEditValid -> BorderFactory.createEmptyBorder(1, 1, 1, 1)
