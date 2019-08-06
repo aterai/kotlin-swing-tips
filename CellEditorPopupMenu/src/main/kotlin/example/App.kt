@@ -27,10 +27,10 @@ class MainPanel : JPanel(BorderLayout()) {
 
   init {
     table.setAutoCreateRowSorter(true)
-    val ce = table.getDefaultEditor(Any::class.java) as DefaultCellEditor
-    val textField = ce.getComponent() as JTextComponent
-    val popup = TextComponentPopupMenu(textField)
-    textField.setComponentPopupMenu(popup)
+    val editor = table.getDefaultEditor(Any::class.java)
+    ((editor as? DefaultCellEditor)?.getComponent() as? JTextComponent)?.also {
+      it.setComponentPopupMenu(TextComponentPopupMenu(it))
+    }
     add(JScrollPane(table))
     setPreferredSize(Dimension(320, 240))
   }

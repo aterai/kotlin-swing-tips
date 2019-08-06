@@ -72,7 +72,7 @@ internal class ListItemTransferHandler : TransferHandler() {
   protected var addCount = 0 // Number of items added.
 
   protected override fun createTransferable(c: JComponent): Transferable? {
-    val src = c as JList<*>
+    val src = c as? JList<*> ?: return null
     source = src
     src.getSelectedIndices().forEach { selectedIndices.add(it) }
     val transferedObjects = src.getSelectedValuesList()
@@ -100,10 +100,10 @@ internal class ListItemTransferHandler : TransferHandler() {
   override fun getSourceActions(c: JComponent) = TransferHandler.MOVE // TransferHandler.COPY_OR_MOVE
 
   override fun importData(info: TransferHandler.TransferSupport): Boolean {
-    if (!canImport(info)) {
+    val dl = info.getDropLocation()
+    if (!canImport(info) || dl !is JList.DropLocation) {
       return false
     }
-    val dl = info.getDropLocation() as JList.DropLocation
     val target = info.getComponent() as JList<*>
     @Suppress("UNCHECKED_CAST")
     val listModel = target.getModel() as DefaultListModel<Any>
