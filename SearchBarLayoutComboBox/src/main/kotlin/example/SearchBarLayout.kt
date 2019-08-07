@@ -28,7 +28,7 @@ class SearchBarLayout : LayoutManager {
     var loupeButton: JButton? = null
     for (c in cb.getComponents()) {
       if ("ComboBox.loupeButton" == c.getName()) {
-        loupeButton = c as JButton
+        loupeButton = c as? JButton
         break
       }
     }

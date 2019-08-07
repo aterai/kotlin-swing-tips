@@ -7,7 +7,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 open class JSearchBar<E : SearchEngine> : JComboBox<E> {
   override fun getUIClassID() = UI_CLASS_ID
 
-  override fun getUI() = ui as SearchBarComboBoxUI
+  override fun getUI() = ui as? SearchBarComboBoxUI
 
   // override fun setUI(newUI: SearchBarComboBoxUI) {
   //   super.setUI(newUI)
@@ -25,8 +25,8 @@ open class JSearchBar<E : SearchEngine> : JComboBox<E> {
     // }
     UIManager.put("ComboBox.font", getFont()) // XXX: ???
     getItemAt(0)?.also {
-      val arrowButton = getComponent(0) as JButton
-      arrowButton.setIcon(it.favicon)
+      // set ArrwoButton Icon
+      (getComponent(0) as? JButton)?.setIcon(it.favicon)
     }
   }
 
