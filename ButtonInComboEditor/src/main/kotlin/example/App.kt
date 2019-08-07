@@ -65,20 +65,20 @@ class MainPanel : JPanel(BorderLayout()) {
 
 class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: ImageIcon) : JComboBox<SiteItem>(model) {
   init {
-    val field = getEditor().getEditorComponent() as JTextField
     val feedButton = makeRssButton(rss)
-    val favicon = makeLabel(field)
+    val favicon = makeLabel()
     setLayout(SiteComboBoxLayout(favicon, feedButton))
     add(feedButton)
     add(favicon)
 
-    field.addFocusListener(object : FocusListener {
+    (getEditor().getEditorComponent() as? JTextField)?.addFocusListener(object : FocusListener {
       override fun focusGained(e: FocusEvent) {
         // field.setBorder(BorderFactory.createEmptyBorder(0, 16 + 4, 0, 0));
         feedButton.setVisible(false)
       }
 
       override fun focusLost(e: FocusEvent) {
+        val field = e.getComponent() as? JTextField ?: return
         getSiteItemFromModel(model, field.getText())?.also { item ->
           model.removeElement(item)
           model.insertElementAt(item, 0)
@@ -88,6 +88,7 @@ class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: ImageIcon) : 
         }
       }
     })
+
     addItemListener { e ->
       if (e.getStateChange() == ItemEvent.SELECTED) {
         updateFavicon(model, favicon)
@@ -115,10 +116,11 @@ class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: ImageIcon) : 
     it.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 2))
   }
 
-  private fun makeLabel(field: JTextField) = JLabel().also {
+  private fun makeLabel() = JLabel().also {
     it.addMouseListener(object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
         EventQueue.invokeLater {
+          val field = getEditor().getEditorComponent() as? JTextField ?: return@invokeLater
           field.requestFocusInWindow()
           field.selectAll()
         }
