@@ -150,26 +150,25 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 class ComboRolloverHandler : MouseAdapter() {
-  private fun getButtonModel(e: MouseEvent): ButtonModel {
-    val c = e.getComponent() as Container
-    val b = c.getComponent(0) as JButton
-    return b.getModel()
+  private fun getButtonModel(e: MouseEvent): ButtonModel? {
+    val c = e.getComponent() as? Container ?: return null
+    return (c.getComponent(0) as? JButton)?.getModel() ?: return null
   }
 
   override fun mouseEntered(e: MouseEvent) {
-    getButtonModel(e).setRollover(true)
+    getButtonModel(e)?.setRollover(true)
   }
 
   override fun mouseExited(e: MouseEvent) {
-    getButtonModel(e).setRollover(false)
+    getButtonModel(e)?.setRollover(false)
   }
 
   override fun mousePressed(e: MouseEvent) {
-    getButtonModel(e).setPressed(true)
+    getButtonModel(e)?.setPressed(true)
   }
 
   override fun mouseReleased(e: MouseEvent) {
-    getButtonModel(e).setPressed(false)
+    getButtonModel(e)?.setPressed(false)
   }
 }
 
