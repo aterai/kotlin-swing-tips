@@ -188,8 +188,8 @@ internal class TablePopupMenu : JPopupMenu() {
   init {
     delete = add("delete")
     delete.addActionListener {
-      val table = getInvoker() as JTable
-      val model = table.getModel() as DefaultTableModel
+      val table = getInvoker() as? JTable ?: return@addActionListener
+      val model = table.getModel() as? DefaultTableModel ?: return@addActionListener
       val selection = table.getSelectedRows()
       for (i in selection.indices.reversed()) {
         val midx = table.convertRowIndexToModel(selection[i])

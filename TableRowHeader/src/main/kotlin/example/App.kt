@@ -197,16 +197,16 @@ internal class TablePopupMenu : JPopupMenu() {
 
   init {
     add("add").addActionListener {
-      val table = getInvoker() as JTable
-      val model = table.getModel() as RowDataModel
+      val table = getInvoker() as? JTable ?: return@addActionListener
+      val model = table.getModel() as? RowDataModel ?: return@addActionListener
       model.addRowData(RowData("New row", ""))
       table.scrollRectToVisible(table.getCellRect(model.getRowCount() - 1, 0, true))
     }
     addSeparator()
     delete = add("delete")
     delete.addActionListener {
-      val table = getInvoker() as JTable
-      val model = table.getModel() as DefaultTableModel
+      val table = getInvoker() as? JTable ?: return@addActionListener
+      val model = table.getModel() as? DefaultTableModel ?: return@addActionListener
       val selection = table.getSelectedRows()
       for (i in selection.indices.reversed()) {
         model.removeRow(table.convertRowIndexToModel(selection[i]))
