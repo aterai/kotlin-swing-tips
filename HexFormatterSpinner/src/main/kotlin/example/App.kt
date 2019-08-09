@@ -18,17 +18,10 @@ class MainPanel : JPanel(BorderLayout()) {
   private val fontPanel = GlyphPaintPanel()
   var fontPaintFlag: Set<FontPaint> = EnumSet.allOf(FontPaint::class.java)
 
-  // protected// , 0, len);
-  val characterString: String
-    get() {
-      val code = spinner.getValue() as Int
-      return String(Character.toChars(code))
-    }
-
   init {
-    spinner.addChangeListener { fontPanel.repaint() }
+    nm.addChangeListener { fontPanel.repaint() }
     val editor = spinner.getEditor() as? JSpinner.NumberEditor
-    (editor?.getTextField() as? JFormattedTextField)?.also {
+    editor?.getTextField()?.also {
       it.setFont(Font(Font.MONOSPACED, Font.PLAIN, it.getFont().getSize()))
       it.setFormatterFactory(makeFFactory())
     }
@@ -67,6 +60,8 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
+  protected fun getCharacterString() = String(Character.toChars(nm.getNumber().toInt()))
+
   protected fun setFontPaintFlag(fp: EnumSet<FontPaint>) {
     fontPaintFlag = fp
     fontPanel.repaint()
@@ -82,7 +77,7 @@ class MainPanel : JPanel(BorderLayout()) {
       g2.setPaint(Color.WHITE)
       g2.fillRect(0, 0, getWidth(), getHeight())
 
-      val str = characterString
+      val str = getCharacterString()
 
       val frc = g2.getFontRenderContext()
       val exShape = TextLayout(str, ipaEx, frc).getOutline(null)
