@@ -9,8 +9,7 @@ import javax.swing.event.DocumentListener
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    val spinner = JSpinner(SpinnerNumberModel(100, 1, 2000, 1))
-    // val textArea = JTextArea(Collections.nCopies(2000, "aaaaaaaaaaaaa").joinToString("\n"))
+    val model = SpinnerNumberModel(100, 1, 2000, 1)
     val textArea = JTextArea("aaaaaaaaaaaaa\n".repeat(2000))
     textArea.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 0))
     val scroll = JScrollPane(textArea)
@@ -20,7 +19,7 @@ class MainPanel : JPanel(BorderLayout()) {
     button.addActionListener {
       val doc = textArea.getDocument()
       val root = doc.getDefaultRootElement()
-      val i = maxOf(1, minOf(root.getElementCount(), spinner.getValue() as Int))
+      val i = model.getNumber().toInt()
       runCatching {
         val elem = root.getElement(i - 1)
         val rect = textArea.modelToView(elem.getStartOffset())
@@ -37,7 +36,7 @@ class MainPanel : JPanel(BorderLayout()) {
     EventQueue.invokeLater { getRootPane().setDefaultButton(button) }
 
     val p = JPanel(BorderLayout())
-    p.add(spinner)
+    p.add(JSpinner(model))
     p.add(button, BorderLayout.EAST)
     add(p, BorderLayout.NORTH)
     add(scroll)

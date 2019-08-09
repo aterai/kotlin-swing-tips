@@ -9,19 +9,19 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
     println(UIManager.getLookAndFeelDefaults().get("TabbedPane.labelShift"))
 
     val slsiv = UIManager.getLookAndFeelDefaults().getInt("TabbedPane.selectedLabelShift")
-    val slsSpinner = JSpinner(SpinnerNumberModel(slsiv, -5, 5, 1))
-    slsSpinner.addChangeListener { e ->
-      val source = e.getSource() as JSpinner
-      val offset = source.getValue() as Int
+    val slsModel = SpinnerNumberModel(slsiv, -5, 5, 1)
+    slsModel.addChangeListener { e ->
+      val source = e.getSource() as? SpinnerNumberModel ?: return@addChangeListener
+      val offset = source.getNumber().toInt()
       UIManager.put("TabbedPane.selectedLabelShift", offset)
       SwingUtilities.updateComponentTreeUI(source.getTopLevelAncestor())
     }
 
     val lsiv = UIManager.getLookAndFeelDefaults().getInt("TabbedPane.labelShift")
-    val lsSpinner = JSpinner(SpinnerNumberModel(lsiv, -5, 5, 1))
-    lsSpinner.addChangeListener { e ->
-      val source = e.getSource() as JSpinner
-      val offset = source.getValue() as Int
+    val lsModel = SpinnerNumberModel(lsiv, -5, 5, 1)
+    lsModel.addChangeListener { e ->
+      val source = e.getSource() as? SpinnerNumberModel ?: return@addChangeListener
+      val offset = source.getNumber().toInt()
       UIManager.put("TabbedPane.labelShift", offset)
       SwingUtilities.updateComponentTreeUI(source.getTopLevelAncestor())
     }
@@ -29,13 +29,13 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
     val box1 = Box.createHorizontalBox()
     box1.setBorder(BorderFactory.createTitledBorder("UIManager.put(\"TabbedPane.selectedLabelShift\", offset)"))
     box1.add(JLabel("offset = "))
-    box1.add(slsSpinner)
+    box1.add(JSpinner(slsModel))
     box1.add(Box.createHorizontalGlue())
 
     val box2 = Box.createHorizontalBox()
     box2.setBorder(BorderFactory.createTitledBorder("UIManager.put(\"TabbedPane.labelShift\", offset)"))
     box2.add(JLabel("offset = "))
-    box2.add(lsSpinner)
+    box2.add(JSpinner(lsModel))
     box2.add(Box.createHorizontalGlue())
 
     val p = JPanel(GridLayout(2, 1))
