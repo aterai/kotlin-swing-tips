@@ -83,7 +83,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class DnDTabbedPane : JTabbedPane() {
+class DnDTabbedPane : JTabbedPane() {
   private val dropMode = DropMode.INSERT
   var dragTabIndex = -1
   @Transient
@@ -128,7 +128,7 @@ internal class DnDTabbedPane : JTabbedPane() {
       return tabbedRect
     }
 
-  internal class DropLocation(pt: Point, val index: Int) : TransferHandler.DropLocation(pt) {
+  class DropLocation(pt: Point, val index: Int) : TransferHandler.DropLocation(pt) {
     var isDroppable = true
   }
 
@@ -268,7 +268,7 @@ internal class DnDTabbedPane : JTabbedPane() {
 
     // MouseListener
     override fun mousePressed(e: MouseEvent) {
-      val src = e.getComponent() as DnDTabbedPane
+      val src = e.getComponent() as? DnDTabbedPane ?: return
       val isOnlyOneTab = src.getTabCount() <= 1
       if (isOnlyOneTab) {
         startPt = null
@@ -284,8 +284,8 @@ internal class DnDTabbedPane : JTabbedPane() {
 
     override fun mouseDragged(e: MouseEvent) {
       val tabPt = e.getPoint() // e.getDragOrigin()
-      if (tabPt.distance(startPt) > gestureMotionThreshold) {
-        val src = e.getComponent() as DnDTabbedPane
+      val src = e.getComponent()
+      if (tabPt.distance(startPt) > gestureMotionThreshold && src is DnDTabbedPane) {
         val th = src.getTransferHandler()
         dragTabIndex = src.indexAtLocation(tabPt.x, tabPt.y)
         th.exportAsDrag(src, e, TransferHandler.MOVE)
@@ -309,7 +309,7 @@ internal class DnDTabbedPane : JTabbedPane() {
   }
 }
 
-internal class TabDropTargetAdapter : DropTargetAdapter() {
+class TabDropTargetAdapter : DropTargetAdapter() {
   private fun clearDropLocationPaint(c: Component) {
     val t = c as? DnDTabbedPane ?: return
     t.updateTabDropLocation(null, false)
@@ -342,7 +342,7 @@ internal class TabDropTargetAdapter : DropTargetAdapter() {
 
 data class DnDTabData(val tabbedPane: DnDTabbedPane)
 
-internal class TabTransferHandler : TransferHandler() {
+class TabTransferHandler : TransferHandler() {
   protected val localObjectFlavor = DataFlavor(DnDTabData::class.java, "DnDTabData")
   protected var source: DnDTabbedPane? = null
 
@@ -468,7 +468,7 @@ internal class TabTransferHandler : TransferHandler() {
   }
 }
 
-internal class GhostGlassPane(private var tabbedPane: DnDTabbedPane) : JComponent() {
+class GhostGlassPane(private var tabbedPane: DnDTabbedPane) : JComponent() {
 
   init {
     setOpaque(false)
