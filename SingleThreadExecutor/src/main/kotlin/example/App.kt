@@ -171,7 +171,7 @@ open class WorkerModel : DefaultTableModel() {
   }
 
   fun getSwingWorker(identifier: Int): SwingWorker<Int, Int>? {
-    val key = getValueAt(identifier, 0) as Int
+    val key = getValueAt(identifier, 0) as? Int ?: -1
     return swmap.get(key)
   }
 

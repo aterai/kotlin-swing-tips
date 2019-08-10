@@ -158,7 +158,7 @@ open class WorkerModel : DefaultTableModel() {
   }
 
   fun getSwingWorker(identifier: Int): SwingWorker<Int, Int>? {
-    val key = getValueAt(identifier, 0) as Int
+    val key = getValueAt(identifier, 0) as? Int ?: -1
     return swmap.get(key)
   }
 
@@ -192,7 +192,7 @@ internal class ProgressRenderer : DefaultTableCellRenderer() {
     row: Int,
     column: Int
   ): Component {
-    val i = value as Int
+    val i = value as? Int ?: -1
     var text = "Done"
     if (i < 0) {
       text = "Canceled"
