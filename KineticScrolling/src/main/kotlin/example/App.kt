@@ -95,14 +95,15 @@ class KineticScrollingListener1(protected val label: JComponent) : MouseAdapter(
   init {
     this.dc = label.getCursor()
     this.scroller = Timer(DELAY) { e ->
-      val vport = SwingUtilities.getUnwrappedParent(label) as JViewport
+      val src = e.getSource()
+      val vport = SwingUtilities.getUnwrappedParent(label) as? JViewport ?: return@Timer
       val vp = vport.getViewPosition()
       vp.translate(-delta.x, -delta.y)
       label.scrollRectToVisible(Rectangle(vp, vport.getSize()))
       if (Math.abs(delta.x) > 0 || Math.abs(delta.y) > 0) {
         delta.setLocation((delta.x * D).toInt(), (delta.y * D).toInt())
-      } else {
-        (e.getSource() as Timer).stop()
+      } else if (src is Timer) {
+        src.stop()
       }
     }
   }

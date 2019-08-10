@@ -25,12 +25,11 @@ class MainPanel : JPanel(BorderLayout()) {
     progressBar.setUI(GradientPalletProgressBarUI())
 
     val button = JButton("Start")
-    button.addActionListener { e ->
-      val b = e.getSource() as JButton
-      b.setEnabled(false)
+    button.addActionListener {
+      button.setEnabled(false)
       val worker = object : BackgroundTask() {
         override fun done() {
-          b.takeIf { it.isDisplayable() }?.setEnabled(true)
+          button.takeIf { it.isDisplayable() }?.setEnabled(true)
         }
       }
       worker.addPropertyChangeListener(ProgressListener(progressBar))
@@ -75,10 +74,10 @@ class ProgressListener(val progressBar: JProgressBar) : PropertyChangeListener {
 
   override fun propertyChange(e: PropertyChangeEvent) {
     val strPropertyName = e.getPropertyName()
-    if ("progress" == strPropertyName) {
+    val nv = e.getNewValue()
+    if ("progress" == strPropertyName && nv is Int) {
       progressBar.setIndeterminate(false)
-      val progress = e.getNewValue() as Int
-      progressBar.setValue(progress)
+      progressBar.setValue(nv)
     }
   }
 }
