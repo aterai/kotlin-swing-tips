@@ -25,15 +25,15 @@ class MainPanel : JPanel(BorderLayout()) {
     val combo3 = JComboBox<String>(arrayOf("JPopupMenu does not open???", "111", "222"))
     combo3.setEditable(true)
     // NOT work: combo3.setComponentPopupMenu(popup2);
-    val textField3 = combo3.getEditor().getEditorComponent() as JTextField
-    textField3.setComponentPopupMenu(popup2)
+    val textField3 = combo3.getEditor().getEditorComponent()
+    (textField3 as? JComponent)?.setComponentPopupMenu(popup2)
     textField3.setName("textField3")
     // TEST: textField3.putClientProperty("doNotCancelPopup", null);
 
     val combo4 = JComboBox<String>(arrayOf("addMouseListener", "111", "222"))
     combo4.setEditable(true)
-    val textField4 = combo4.getEditor().getEditorComponent() as JTextField
-    textField4.setComponentPopupMenu(popup2)
+    val textField4 = combo4.getEditor().getEditorComponent()
+    (textField4 as? JComponent)?.setComponentPopupMenu(popup2)
     textField4.setName("textField4")
     textField4.addMouseListener(object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
@@ -79,14 +79,15 @@ class MainPanel : JPanel(BorderLayout()) {
 
       override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
         val pop = e.getSource() as? JPopupMenu ?: return
-        val tc = pop.getInvoker() as JTextComponent
-        println("${tc.javaClass.getName()}: ${tc.getName()}")
-        // TEST:
-        // tc.requestFocusInWindow();
-        // tc.selectAll();
-        val hasSelectedText = tc.getSelectedText() != null
-        cutAction.setEnabled(hasSelectedText)
-        copyAction.setEnabled(hasSelectedText)
+        (pop.getInvoker() as? JTextComponent)?.also {
+          println("${it.javaClass.getName()}: ${it.getName()}")
+          // TEST:
+          // it.requestFocusInWindow();
+          // it.selectAll();
+          val hasSelectedText = it.getSelectedText() != null
+          cutAction.setEnabled(hasSelectedText)
+          copyAction.setEnabled(hasSelectedText)
+        }
       }
     })
     return popup1
