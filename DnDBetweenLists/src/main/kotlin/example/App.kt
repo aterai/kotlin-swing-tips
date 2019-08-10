@@ -101,10 +101,10 @@ internal class ListItemTransferHandler : TransferHandler() {
 
   override fun importData(info: TransferHandler.TransferSupport): Boolean {
     val dl = info.getDropLocation()
-    if (!canImport(info) || dl !is JList.DropLocation) {
+    val target = info.getComponent()
+    if (!canImport(info) || dl !is JList.DropLocation || target !is JList<*>) {
       return false
     }
-    val target = info.getComponent() as JList<*>
     @Suppress("UNCHECKED_CAST")
     val listModel = target.getModel() as DefaultListModel<Any>
     val max = listModel.getSize()

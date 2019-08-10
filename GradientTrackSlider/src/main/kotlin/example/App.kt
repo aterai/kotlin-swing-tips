@@ -62,7 +62,7 @@ class MainPanel : JPanel(BorderLayout()) {
         }
 
         override fun mouseWheelMoved(e: MouseWheelEvent) {
-          val source = e.getComponent() as JSlider
+          val source = e.getComponent() as? JSlider ?: return
           val intValue = source.getValue().toInt() - e.getWheelRotation()
           val model = source.getModel()
           if (model.getMaximum() >= intValue && model.getMinimum() <= intValue) {

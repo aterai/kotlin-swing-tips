@@ -11,7 +11,7 @@ import javax.swing.text.JTextComponent
 class MainPanel : JPanel(BorderLayout()) {
   init {
     val combo1 = JComboBox<String>(arrayOf("colors", "sports", "food"))
-    combo1.setEditable(true)
+    // combo1.setEditable(true)
     combo1.setSelectedIndex(-1)
 
     val arrays = arrayOf(
@@ -22,8 +22,9 @@ class MainPanel : JPanel(BorderLayout()) {
     combo2.setEditable(true)
 
     combo1.addItemListener { e ->
-      if (e.getStateChange() == ItemEvent.SELECTED) {
-        val idx = (e.getItemSelectable() as JComboBox<*>).getSelectedIndex()
+      val cbox = e.getItemSelectable()
+      if (e.getStateChange() == ItemEvent.SELECTED && cbox is JComboBox<*>) {
+        val idx = cbox.getSelectedIndex()
         combo2.setModel(DefaultComboBoxModel<String>(arrays[idx]))
         combo2.setSelectedIndex(-1)
       }

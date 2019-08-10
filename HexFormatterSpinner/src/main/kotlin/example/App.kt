@@ -128,7 +128,7 @@ class MainPanel : JPanel(BorderLayout()) {
       }
 
       @Throws(ParseException::class)
-      override fun valueToString(value: Any?) = "%06X".format(value as Int?)
+      override fun valueToString(value: Any?) = "%06X".format(value as? Int)
     }
     formatter.setValueClass(Int::class.java)
     formatter.setOverwriteMode(true)
