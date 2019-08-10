@@ -14,7 +14,7 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
       val source = e.getSource() as? SpinnerNumberModel ?: return@addChangeListener
       val offset = source.getNumber().toInt()
       UIManager.put("TabbedPane.selectedLabelShift", offset)
-      SwingUtilities.updateComponentTreeUI(source.getTopLevelAncestor())
+      SwingUtilities.updateComponentTreeUI(getTopLevelAncestor())
     }
 
     val lsiv = UIManager.getLookAndFeelDefaults().getInt("TabbedPane.labelShift")
@@ -23,7 +23,7 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
       val source = e.getSource() as? SpinnerNumberModel ?: return@addChangeListener
       val offset = source.getNumber().toInt()
       UIManager.put("TabbedPane.labelShift", offset)
-      SwingUtilities.updateComponentTreeUI(source.getTopLevelAncestor())
+      SwingUtilities.updateComponentTreeUI(getTopLevelAncestor())
     }
 
     val box1 = Box.createHorizontalBox()
