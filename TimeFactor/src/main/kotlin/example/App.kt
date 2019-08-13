@@ -4,11 +4,12 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel(BorderLayout()) {
-  private val spinner: JSpinner? = JSpinner()
+  // private val spinner: JSpinner? = JSpinner()
+  private val snmodel: SpinnerNumberModel?
 
   init {
     val lv = UIManager.get("Tree.timeFactor") as? Number ?: 500
-    spinner?.setModel(SpinnerNumberModel(lv, 0L, 5000L, 500L))
+    snmodel = SpinnerNumberModel(lv.toLong(), 0L, 5000L, 500L)
     UIManager.put("List.timeFactor", 5000L)
 
     val model = arrayOf("a", "aa", "b", "bbb", "bbc")
@@ -16,7 +17,7 @@ class MainPanel : JPanel(BorderLayout()) {
     combo.setPrototypeDisplayValue("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMM")
 
     val p = JPanel().also {
-      it.add(spinner)
+      it.add(JSpinner(snmodel))
       it.add(combo)
     }
 
@@ -52,7 +53,9 @@ class MainPanel : JPanel(BorderLayout()) {
     //     .orElse(1000L)
 
     // private val spinner: JSpinner? = JSpinner()
-    val lv = spinner?.getModel()?.getValue() ?: 1000L
+    // val lv = spinner?.getModel()?.getValue() ?: 1000L
+
+    val lv = snmodel?.getNumber()?.toLong() ?: 1000L
 
     UIManager.put("ComboBox.timeFactor", lv)
     UIManager.put("List.timeFactor", lv)
