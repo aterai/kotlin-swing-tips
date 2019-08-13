@@ -187,7 +187,7 @@ fun loadFile(path: String) {
     onFailure = { it.message }
   )
   editor.setText("<pre>$html\n</pre>")
-  editor.moveCaretPosition(0)
+  editor.setCaretPosition(0)
 }
 
 fun createEngine(): ScriptEngine? {
