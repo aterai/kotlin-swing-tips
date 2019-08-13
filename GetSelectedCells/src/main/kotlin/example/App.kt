@@ -177,19 +177,8 @@ internal class BooleanEditor : AbstractCellEditor(), TableCellEditor {
     }
 
     override fun mouseExited(e: MouseEvent) {
-      // SwingUtilities.getAncestorOfClass(JTable::class.java, e.getComponent())
-      //     ?.takeIf { it is JTable }?.let { it as JTable }
-      //     ?.takeIf { it.isEditing() }?.also { it.removeEditor() }
-      SwingUtilities.getAncestorOfClass(JTable::class.java, e.getComponent())
-          ?.takeIf { it is JTable && it.isEditing() }
-          ?.also { (it as JTable).removeEditor() }
-      // (SwingUtilities.getAncestorOfClass(JTable::class.java, e.getComponent()) as? JTable)
-      //     ?.takeIf { it.isEditing() }
-      //     ?.also { it.removeEditor() }
-      // val t = SwingUtilities.getAncestorOfClass(JTable::class.java, e.getComponent()) as? JTable ?: return
-      // if (t.isEditing()) {
-      //   t.removeEditor()
-      // }
+      val c = SwingUtilities.getAncestorOfClass(JTable::class.java, e.getComponent())
+      (c as? JTable)?.takeIf { it.isEditing() }?.removeEditor()
     }
   }
 }

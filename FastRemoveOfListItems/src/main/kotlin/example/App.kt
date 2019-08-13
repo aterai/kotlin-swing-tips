@@ -72,9 +72,9 @@ class MainPanel : JPanel(BorderLayout()) {
 
   private fun <E> move0(from: JList<E>, to: JList<E>) {
     val selectedIndices = from.getSelectedIndices()
-    if (selectedIndices.size > 0) {
-      val fromModel = from.getModel() as DefaultListModel<E>
-      val toModel = to.getModel() as DefaultListModel<E>
+    val fromModel = from.getModel()
+    val toModel = to.getModel()
+    if (selectedIndices.size > 0 && fromModel is DefaultListModel<E> && toModel is DefaultListModel<E>) {
       for (i in selectedIndices) {
         toModel.addElement(fromModel.get(i))
       }
@@ -88,8 +88,8 @@ class MainPanel : JPanel(BorderLayout()) {
     val sm = from.getSelectionModel()
     val selectedIndices = from.getSelectedIndices()
 
-    val fromModel = from.getModel() as DefaultListModel<E>
-    val toModel = to.getModel() as DefaultListModel<E>
+    val fromModel = from.getModel() as? DefaultListModel<E> ?: return
+    val toModel = to.getModel() as? DefaultListModel<E> ?: return
     val unselectedValues = ArrayList<E>()
     for (i in 0 until fromModel.getSize()) {
       if (!sm.isSelectedIndex(i)) {
@@ -109,8 +109,8 @@ class MainPanel : JPanel(BorderLayout()) {
   private fun <E> move2(from: JList<E>, to: JList<E>) {
     val selectedIndices = from.getSelectedIndices()
     if (selectedIndices.size > 0) {
-      (to.getModel() as ArrayListModel<E>).addAll(from.getSelectedValuesList())
-      (from.getModel() as ArrayListModel<E>).remove(selectedIndices)
+      (to.getModel() as? ArrayListModel<E>)?.addAll(from.getSelectedValuesList())
+      (from.getModel() as? ArrayListModel<E>)?.remove(selectedIndices)
     }
   }
 
