@@ -152,9 +152,10 @@ internal class SliderPopupListener : MouseAdapter() {
 internal class SliderMouseWheelListener : MouseWheelListener {
   override fun mouseWheelMoved(e: MouseWheelEvent) {
     val s = e.getComponent() as? JSlider ?: return
-    val i = s.getValue().toInt() - e.getWheelRotation()
-    val m = s.getModel()
-    s.setValue(minOf(maxOf(i, m.getMinimum()), m.getMaximum()))
+    s.setValue(s.getValue().toInt() - e.getWheelRotation())
+    // val i = s.getValue().toInt() - e.getWheelRotation()
+    // val m = s.getModel()
+    // s.setValue(minOf(maxOf(i, m.getMinimum()), m.getMaximum()))
   }
 }
 
