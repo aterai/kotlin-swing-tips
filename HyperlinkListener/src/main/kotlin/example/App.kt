@@ -44,21 +44,23 @@ class MainPanel : JPanel(BorderLayout()) {
       }
     }
 
-    val doc = it.getDocument() as HTMLDocument
-    val s = doc.addStyle("button", null)
-    StyleConstants.setAlignment(s, StyleConstants.ALIGN_CENTER)
-    val button = HyperlinkButton(link)
-    button.addActionListener { e ->
-      val b = e.getSource() as AbstractButton
-      it.setBackground(if (b.isSelected()) Color.RED else Color.WHITE)
-      JOptionPane.showMessageDialog(it, "You click the link with the URL $link")
-    }
-    button.setToolTipText("button: $link")
-    button.setOpaque(false)
-    StyleConstants.setComponent(s, button)
-    runCatching {
-      doc.insertString(doc.getLength(), "\n----\nJButton:\n", null)
-      doc.insertString(doc.getLength(), link + "\n", doc.getStyle("button"))
+    val doc = it.getDocument()
+    if (doc is HTMLDocument) {
+      val s = doc.addStyle("button", null)
+      StyleConstants.setAlignment(s, StyleConstants.ALIGN_CENTER)
+      val button = HyperlinkButton(link)
+      button.addActionListener { e ->
+        val b = (e.getSource() as? AbstractButton)?.isSelected() ?: false
+        it.setBackground(if (b) Color.RED else Color.WHITE)
+        JOptionPane.showMessageDialog(it, "You click the link with the URL $link")
+      }
+      button.setToolTipText("button: $link")
+      button.setOpaque(false)
+      StyleConstants.setComponent(s, button)
+      runCatching {
+        doc.insertString(doc.getLength(), "\n----\nJButton:\n", null)
+        doc.insertString(doc.getLength(), link + "\n", doc.getStyle("button"))
+      }
     }
   }
 }
