@@ -33,7 +33,7 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
 
     pauseButton.setEnabled(false)
     pauseButton.addActionListener { e ->
-      val b = e.getSource() as JButton
+      val b = e.getSource() as? JButton ?: return@addActionListener
       worker?.also {
         b.setText(if (it.isCancelled() || it.isPaused) "pause" else "resume")
         it.isPaused = it.isPaused xor true

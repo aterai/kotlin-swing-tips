@@ -24,7 +24,7 @@ class TabButton : JRadioButton {
 
   override fun getUIClassID() = "TabViewButtonUI"
 
-  override fun getUI() = ui as TabViewButtonUI
+  override fun getUI() = ui as? TabViewButtonUI
 
   constructor() : super(null, null)
 
