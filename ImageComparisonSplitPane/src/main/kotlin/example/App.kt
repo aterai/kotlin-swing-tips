@@ -35,8 +35,7 @@ fun makeUI(): Component {
         g2.setPaintMode()
       }
       val pt = getLocation()
-      val ins = split.getBorder().getBorderInsets(split)
-      g2.translate(-pt.x + ins.left, 0)
+      g2.translate(-pt.x + split.getInsets().left, 0)
       g2.drawImage(icon.getImage(), 0, 0, iw, ih, this)
       g2.dispose()
     }

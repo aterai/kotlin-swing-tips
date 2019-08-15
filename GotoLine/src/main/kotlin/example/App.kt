@@ -54,7 +54,7 @@ internal class LineNumberView(private val textArea: JTextArea) : JComponent() {
     get() {
       val lineCount = textArea.getLineCount()
       val maxDigits = maxOf(3, lineCount.toString().length)
-      val i = getBorder().getBorderInsets(this)
+      val i = getInsets()
       return maxDigits * fontMetrics.stringWidth("0") + i.left + i.right
     }
 
@@ -111,7 +111,7 @@ internal class LineNumberView(private val textArea: JTextArea) : JComponent() {
     val start = getLineAtPoint(base)
     val end = getLineAtPoint(base + clip.height)
     var y = start * fontHeight
-    val rmg = getBorder().getBorderInsets(this).right
+    val rmg = getInsets().right
     for (i in start..end) {
       val text = (i + 1).toString()
       val x = componentWidth - rmg - fontMetrics.stringWidth(text)

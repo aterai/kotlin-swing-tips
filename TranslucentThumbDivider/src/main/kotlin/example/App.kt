@@ -48,8 +48,7 @@ class MainPanel : JPanel(BorderLayout()) {
         val iw = destination.getWidth(this)
         val ih = destination.getHeight(this)
         val pt = getLocation()
-        val ins = split.getBorder().getBorderInsets(split)
-        g2.translate(-pt.x + ins.left, 0)
+        g2.translate(-pt.x + split.getInsets().left, 0)
 
         val dim = split.getSize()
         val x = (dim.width - iw) / 2
