@@ -59,8 +59,9 @@ private fun initComboBoxRenderer(combo: JComboBox<String>) {
       if (index < 0) {
         // @see BasicComboBoxUI#rectangleForCurrentValue
         availableWidth -= getArrowButton(combo)?.getWidth() ?: combo.getHeight() - itb
-        insets = (combo.getEditor().getEditorComponent() as JTextField).getMargin()
-        availableWidth -= insets.left + insets.right
+        (combo.getEditor().getEditorComponent() as? JTextField)?.getMargin()?.also {
+          availableWidth -= it.left + it.right
+        }
       }
       return availableWidth
     }
