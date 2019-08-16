@@ -163,8 +163,7 @@ class KineticScrollingListener2(protected val label: JComponent) : MouseAdapter(
         delta.y = (delta.y * D).toInt()
       }
     } else {
-      // inside.stop()
-      (e.getSource() as Timer).stop()
+      (e.getSource() as? Timer)?.stop() // inside.stop()
       if (!isInside(vport, label)) {
         outside.start()
       }
@@ -187,8 +186,7 @@ class KineticScrollingListener2(protected val label: JComponent) : MouseAdapter(
     }
     vport.setViewPosition(vp)
     if (isInside(vport, label)) {
-      // outside.stop()
-      (e.getSource() as Timer).stop()
+      (e.getSource() as? Timer)?.stop() // outside.stop()
     }
   }
 
