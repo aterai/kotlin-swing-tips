@@ -80,12 +80,16 @@ internal class IntegerInputVerifier : InputVerifier() {
   override fun verify(c: JComponent): Boolean {
     var verified = false
     if (c is JTextComponent) {
-      val iv = runCatching { Integer.parseInt(c.getText()) }
+      val txt = c.getText()
+      if (txt.isEmpty()) {
+        return true;
+      }
+      val iv = runCatching { Integer.parseInt(txt) }
           .onFailure { UIManager.getLookAndFeel().provideErrorFeedback(c) }
           .getOrNull() ?: -1
       verified = iv >= 0
       // try {
-      //   val iv = Integer.parseInt(c.getText())
+      //   val iv = Integer.parseInt(txt)
       //   verified = iv >= 0
       // } catch (ex: NumberFormatException) {
       //   UIManager.getLookAndFeel().provideErrorFeedback(c)
@@ -119,6 +123,9 @@ internal class IntegerDocumentFilter : DocumentFilter() {
     val before = currentContent.substring(0, offset)
     val after = currentContent.substring(length + offset, currentLength)
     val newValue = before + Objects.toString(text, "") + after
+    if (newValue.isEmpty()) {
+      return
+    }
     runCatching {
       Integer.parseInt(newValue)
     }.getOrNull()?.also {
