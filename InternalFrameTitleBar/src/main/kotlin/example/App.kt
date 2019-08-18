@@ -45,12 +45,11 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager()
     focusManager.addPropertyChangeListener { e ->
-      val prop = e.getPropertyName()
-      if ("activeWindow" == prop) {
-        try {
+      if ("activeWindow" == e.getPropertyName()) {
+        runCatching {
           internal.setSelected(e.getNewValue() != null)
-        } catch (ex: PropertyVetoException) {
-          throw IllegalStateException(ex)
+        }.onFailure {
+          UIManager.getLookAndFeel().provideErrorFeedback(internal)
         }
       }
     }
