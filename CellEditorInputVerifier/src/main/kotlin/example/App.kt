@@ -82,7 +82,7 @@ internal class IntegerInputVerifier : InputVerifier() {
     if (c is JTextComponent) {
       val txt = c.getText()
       if (txt.isEmpty()) {
-        return true;
+        return true
       }
       val iv = runCatching { Integer.parseInt(txt) }
           .onFailure { UIManager.getLookAndFeel().provideErrorFeedback(c) }
