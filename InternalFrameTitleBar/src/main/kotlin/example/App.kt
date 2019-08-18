@@ -5,7 +5,6 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseMotionListener
 import java.awt.event.WindowEvent
-import java.beans.PropertyVetoException
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicInternalFrameUI
 
