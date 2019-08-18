@@ -313,10 +313,10 @@ internal class TabDragGestureListener : DragGestureListener {
           it.dragTabIndex = it.indexAtLocation(tabPt.x, tabPt.y)
           if (it.dragTabIndex >= 0 && it.isEnabledAt(it.dragTabIndex)) {
             it.initGlassPane(tabPt)
-            try {
+            runCatching {
               e.startDrag(DragSource.DefaultMoveDrop, TabTransferable(it), TabDragSourceListener())
-            } catch (ex: InvalidDnDOperationException) {
-              throw IllegalStateException(ex)
+            }.onFailure {
+              UIManager.getLookAndFeel().provideErrorFeedback(e.getComponent())
             }
           }
         }
