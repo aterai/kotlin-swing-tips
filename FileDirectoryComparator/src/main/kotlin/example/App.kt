@@ -26,12 +26,14 @@ class MainPanel : JPanel(BorderLayout()) {
     table.setComponentPopupMenu(TablePopupMenu())
     table.setShowGrid(false)
     table.setFillsViewportHeight(true)
-    table.setAutoCreateRowSorter(true)
+    // table.setAutoCreateRowSorter(true)
     table.setDropMode(DropMode.INSERT_ROWS)
     table.setTransferHandler(FileTransferHandler())
     table.setDefaultRenderer(Any::class.java, FileIconTableCellRenderer(FileSystemView.getFileSystemView()))
 
-    val sorter = table.getRowSorter() as TableRowSorter<out TableModel>
+    // val sorter = table.getRowSorter() as TableRowSorter<out TableModel>
+    val sorter = TableRowSorter<TableModel>(table.getModel())
+    table.setRowSorter(sorter)
     // IntStream.range(0, 3).forEach { i -> sorter.setComparator(i, DefaultFileComparator(i)) }
     for (i in 0 until 3) {
       sorter.setComparator(i, DefaultFileComparator(i))
@@ -107,13 +109,16 @@ class FileIconTableCellRenderer(val fileSystemView: FileSystemView) : DefaultTab
 }
 
 class FileTransferHandler : TransferHandler() {
-  override fun importData(support: TransferHandler.TransferSupport) = runCatching {
-    val model = (support.getComponent() as JTable).getModel() as DefaultTableModel
-    val list = support.getTransferable().getTransferData(DataFlavor.javaFileListFlavor) as List<*>
+  override fun importData(support: TransferHandler.TransferSupport): Boolean {
+    val list = runCatching {
+      support.getTransferable().getTransferData(DataFlavor.javaFileListFlavor) as? List<*>
+    }.getOrNull() ?: emptyList<Any>()
+    val model = (support.getComponent() as? JTable)?.getModel() as? DefaultTableModel ?: return false
     list.filterIsInstance(File::class.java)
         .map { file -> (0..2).map { file }.toTypedArray() }
         .forEach { model.addRow(it) }
-  }.isSuccess
+    return list.size > 0
+  }
 
   override fun canImport(ts: TransferSupport) = ts.isDataFlavorSupported(DataFlavor.javaFileListFlavor)
 
@@ -169,8 +174,8 @@ class TablePopupMenu : JPopupMenu() {
   init {
     delete = add("delete")
     delete.addActionListener {
-      val table = getInvoker() as JTable
-      val model = table.getModel() as DefaultTableModel
+      val table = getInvoker() as? JTable ?: return@addActionListener
+      val model = table.getModel() as? DefaultTableModel ?: return@addActionListener
       val selection = table.getSelectedRows()
       for (i in selection.indices.reversed()) {
         model.removeRow(table.convertRowIndexToModel(selection[i]))

@@ -221,7 +221,7 @@ internal class ListItemTransferHandler : TransferHandler() {
   var addCount = 0 // Number of items added.
 
   override fun createTransferable(c: JComponent): Transferable? {
-    val source = c as JList<*>
+    val source = c as? JList<*> ?: return null
     c.getRootPane().getGlassPane().setVisible(true)
     source.getSelectedIndices().forEach { selectedIndices.add(it) }
     val transferedObjects = source.getSelectedValuesList()
@@ -254,25 +254,26 @@ internal class ListItemTransferHandler : TransferHandler() {
   }
 
   override fun importData(info: TransferHandler.TransferSupport): Boolean {
-    if (!canImport(info)) {
+    val dl = info.getDropLocation()
+    val target = info.getComponent()
+    if (!canImport(info) || dl !is JList.DropLocation || target !is JList<*>) {
       return false
     }
-    val dl = info.getDropLocation() as JList.DropLocation
-    val target = info.getComponent() as JList<*>
     @Suppress("UNCHECKED_CAST")
     val listModel = target.getModel() as DefaultListModel<Any>
     val max = listModel.getSize()
     var index = dl.getIndex().takeIf { it >= 0 && it < max } ?: max
     addIndex = index
-    return runCatching {
-      val values = info.getTransferable().getTransferData(localObjectFlavor) as List<*>
-      for (o in values) {
-        val i = index++
-        listModel.add(i, o)
-        target.addSelectionInterval(i, i)
-      }
-      addCount = values.size
-    }.isSuccess
+    val values = runCatching {
+      info.getTransferable().getTransferData(localObjectFlavor) as? List<*>
+    }.getOrNull() ?: emptyList<Any>()
+    for (o in values) {
+      val i = index++
+      listModel.add(i, o)
+      target.addSelectionInterval(i, i)
+    }
+    addCount = values.size
+    return addCount > 0
   }
 
   override fun exportDone(c: JComponent, data: Transferable, action: Int) {
@@ -299,9 +300,10 @@ internal class ListItemTransferHandler : TransferHandler() {
         addCount > 0 -> selectedIndices.map { if (it >= addIndex) it + addCount else it }
         else -> selectedIndices.toList()
       }
-      val model = (c as JList<*>).getModel() as DefaultListModel<*>
-      for (i in selectedList.indices.reversed()) {
-        model.remove(selectedList[i])
+      ((c as? JList<*>)?.getModel() as? DefaultListModel<*>)?.also { model ->
+        for (i in selectedList.indices.reversed()) {
+          model.remove(selectedList[i])
+        }
       }
     }
     selectedIndices.clear()

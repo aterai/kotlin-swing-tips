@@ -372,14 +372,15 @@ class TabTransferHandler : TransferHandler() {
 
   override fun canImport(support: TransferHandler.TransferSupport): Boolean {
     // System.out.println("canImport")
-    if (!support.isDrop() || !support.isDataFlavorSupported(localObjectFlavor)) {
+    val target = support.getComponent()
+    if (!support.isDrop() || !support.isDataFlavorSupported(localObjectFlavor) || target !is DnDTabbedPane) {
       println("canImport: ${support.isDrop()} ${support.isDataFlavorSupported(localObjectFlavor)}")
       return false
     }
     support.setDropAction(TransferHandler.MOVE)
     val tdl = support.getDropLocation()
     val pt = tdl.getDropPoint()
-    val target = support.getComponent() as DnDTabbedPane
+    // val target = support.getComponent() as DnDTabbedPane
     target.autoScrollTest(pt)
     val dl = target.tabDropLocationForPoint(pt)
     val idx = dl.index
@@ -440,22 +441,21 @@ class TabTransferHandler : TransferHandler() {
 
   override fun importData(support: TransferHandler.TransferSupport): Boolean {
     println("importData")
-    val target = support.getComponent() as? DnDTabbedPane
-    if (!canImport(support) || target == null) {
+    val target = support.getComponent()
+    val data = runCatching {
+      support.getTransferable().getTransferData(localObjectFlavor) as? DnDTabData
+    }.getOrNull()
+    if (!canImport(support) || target !is DnDTabbedPane || data == null) {
       return false
     }
-    // val target = support.getComponent() as? DnDTabbedPane ?: return false
-    // val dl = target.dropLocation
-    return runCatching {
-      val data = support.getTransferable().getTransferData(localObjectFlavor) as DnDTabData
-      val src = data.tabbedPane
-      val index = target.dropLocation?.index ?: -1
-      if (target == src) {
-        src.convertTab(src.dragTabIndex, index) // getTargetTabIndex(e.getLocation()))
-      } else {
-        src.exportTab(src.dragTabIndex, target, index)
-      }
-    }.isSuccess
+    val src = data.tabbedPane
+    val index = target.dropLocation?.index ?: -1
+    if (target == src) {
+      src.convertTab(src.dragTabIndex, index) // getTargetTabIndex(e.getLocation()))
+    } else {
+      src.exportTab(src.dragTabIndex, target, index)
+    }
+    return true
   }
 
   protected override fun exportDone(c: JComponent?, data: Transferable?, action: Int) {

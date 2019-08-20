@@ -110,15 +110,16 @@ internal class ListItemTransferHandler : TransferHandler() {
     val max = listModel.getSize()
     var index = dl.getIndex().takeIf { it >= 0 && it < max } ?: max
     addIndex = index
-    return runCatching {
-      val values = info.getTransferable().getTransferData(localObjectFlavor) as List<*>
-      for (o in values) {
-        val i = index++
-        listModel.add(i, o)
-        target.addSelectionInterval(i, i)
-      }
-      addCount = if (target == source) values.size else 0
-    }.isSuccess
+    val values = runCatching {
+      info.getTransferable().getTransferData(localObjectFlavor) as? List<*>
+    }.getOrNull() ?: emptyList<Any>()
+    for (o in values) {
+      val i = index++
+      listModel.add(i, o)
+      target.addSelectionInterval(i, i)
+    }
+    addCount = if (target == source) values.size else 0
+    return values.size > 0
   }
 
   protected override fun exportDone(c: JComponent, data: Transferable, action: Int) {
@@ -134,9 +135,10 @@ internal class ListItemTransferHandler : TransferHandler() {
         addCount > 0 -> selectedIndices.map { if (it >= addIndex) it + addCount else it }
         else -> selectedIndices.toList()
       }
-      val model = (c as JList<*>).getModel() as DefaultListModel<*>
-      for (i in selectedList.indices.reversed()) {
-        model.remove(selectedList[i])
+      ((c as? JList<*>)?.getModel() as? DefaultListModel<*>)?.also { model ->
+        for (i in selectedList.indices.reversed()) {
+          model.remove(selectedList[i])
+        }
       }
     }
     selectedIndices.clear()
