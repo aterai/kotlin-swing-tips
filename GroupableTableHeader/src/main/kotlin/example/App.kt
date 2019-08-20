@@ -125,8 +125,9 @@ internal class GroupableTableHeaderUI : BasicTableHeaderUI() {
       cellRect.setSize(tc.getWidth(), headerHeight)
 
       var groupHeight = 0
-      for (o in (header as GroupableTableHeader).getColumnGroups(tc)) {
-        val cg = o as ColumnGroup
+      val cglist = (header as? GroupableTableHeader)?.getColumnGroups(tc) ?: emptyList<Any>()
+      for (o in cglist) {
+        val cg = o as? ColumnGroup ?: continue
         val groupRect = map.get(cg) ?: Rectangle(cellRect.getLocation(), cg.getSize(header)).also {
           map.put(cg, it)
         }
@@ -169,8 +170,9 @@ internal class GroupableTableHeaderUI : BasicTableHeaderUI() {
       val tc = columnModel.getColumn(column)
       val comp = getHeaderRenderer(column)
       var rendererHeight = comp.getPreferredSize().height
-      for (o in (header as GroupableTableHeader).getColumnGroups(tc)) {
-        val cg = o as ColumnGroup
+      val cglist = (header as? GroupableTableHeader)?.getColumnGroups(tc) ?: emptyList<Any>()
+      for (o in cglist) {
+        val cg = o as? ColumnGroup ?: continue
         rendererHeight += cg.getSize(header).height
       }
       height = maxOf(height, rendererHeight)
