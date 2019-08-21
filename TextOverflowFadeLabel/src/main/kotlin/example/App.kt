@@ -24,9 +24,8 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  private fun makeTitledPanel(title: String, c: Component) = Box.createVerticalBox().also {
+  private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
     it.setBorder(BorderFactory.createTitledBorder(title))
-    it.add(Box.createVerticalStrut(2))
     it.add(c)
   }
 }
