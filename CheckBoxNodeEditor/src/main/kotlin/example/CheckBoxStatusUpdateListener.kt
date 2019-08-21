@@ -68,8 +68,8 @@ class CheckBoxStatusUpdateListener : TreeModelListener {
       .filterIsInstance(DefaultMutableTreeNode::class.java)
       .filter { it != parent }
       .forEach {
-        val check = it.getUserObject() as CheckBoxNode
-        it.setUserObject(CheckBoxNode(check.label, status))
+        val label = (it.getUserObject() as? CheckBoxNode)?.label ?: ""
+        it.setUserObject(CheckBoxNode(label, status))
       }
   }
 

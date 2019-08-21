@@ -220,12 +220,11 @@ internal class FolderSelectionListener(val fileSystemView: FileSystemView) : Tre
       return
     }
     val check = pnode.getUserObject()
-    if (check !is CheckBoxNode || !check.getFile().isDirectory()) {
+    val model = (e.getSource() as? JTree)?.getModel()
+    if (model !is DefaultTreeModel || check !is CheckBoxNode || !check.getFile().isDirectory()) {
       return
     }
-
     val parentStatus = if (check.getStatus() == Status.SELECTED) Status.SELECTED else Status.DESELECTED
-    val model = (e.getSource() as JTree).getModel() as DefaultTreeModel
     val worker = object : BackgroundTask(fileSystemView, check.getFile()) {
       protected override fun process(chunks: List<File>) {
         chunks.map { CheckBoxNode(it, parentStatus) }
