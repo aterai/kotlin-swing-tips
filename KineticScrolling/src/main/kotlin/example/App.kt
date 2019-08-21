@@ -116,7 +116,7 @@ class KineticScrollingListener1(protected val label: JComponent) : MouseAdapter(
 
   override fun mouseDragged(e: MouseEvent) {
     val pt = e.getPoint()
-    val vport = e.getComponent() as JViewport // label.getParent()
+    val vport = e.getComponent() as? JViewport ?: return
     val vp = vport.getViewPosition() // = SwingUtilities.convertPoint(vport, 0, 0, label)
     vp.translate(startPt.x - pt.x, startPt.y - pt.y)
     delta.setLocation(SPEED * (pt.x - startPt.x), SPEED * (pt.y - startPt.y))
@@ -149,7 +149,7 @@ class KineticScrollingListener2(protected val label: JComponent) : MouseAdapter(
   protected val dc: Cursor
   protected val hc = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
   protected val inside = Timer(DELAY) { e ->
-    val vport = SwingUtilities.getUnwrappedParent(label) as JViewport
+    val vport = SwingUtilities.getUnwrappedParent(label) as? JViewport ?: return@Timer
     val vp = vport.getViewPosition()
     vp.translate(-delta.x, -delta.y)
     vport.setViewPosition(vp)
@@ -170,7 +170,7 @@ class KineticScrollingListener2(protected val label: JComponent) : MouseAdapter(
     }
   }
   protected val outside = Timer(DELAY) { e ->
-    val vport = SwingUtilities.getUnwrappedParent(label) as JViewport
+    val vport = SwingUtilities.getUnwrappedParent(label) as? JViewport ?: return@Timer
     val vp = vport.getViewPosition()
     if (vp.x < 0) {
       vp.x = (vp.x * D).toInt()
@@ -203,7 +203,7 @@ class KineticScrollingListener2(protected val label: JComponent) : MouseAdapter(
 
   override fun mouseDragged(e: MouseEvent) {
     val pt = e.getPoint()
-    val vport = SwingUtilities.getUnwrappedParent(label) as JViewport
+    val vport = SwingUtilities.getUnwrappedParent(label) as? JViewport ?: return
     val vp = vport.getViewPosition()
     vp.translate(startPt.x - pt.x, startPt.y - pt.y)
     vport.setViewPosition(vp)
@@ -213,7 +213,7 @@ class KineticScrollingListener2(protected val label: JComponent) : MouseAdapter(
 
   override fun mouseReleased(e: MouseEvent) {
     e.getComponent().setCursor(dc)
-    val vport = SwingUtilities.getUnwrappedParent(label) as JViewport
+    val vport = SwingUtilities.getUnwrappedParent(label) as? JViewport ?: return
     if (isInside(vport, label)) {
       inside.start()
     } else {
