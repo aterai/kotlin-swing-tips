@@ -19,13 +19,14 @@ class MainPanel : JPanel(BorderLayout()) {
   init {
     val box = JPanel(GridLayout(2, 2))
     val listener = ActionListener { e ->
-      val check = e.getSource() as JRadioButton
+      val check = e.getSource() as? JRadioButton ?: return@ActionListener
       if (check == reset) {
         tree.setModel(DefaultTreeModel(root))
       } else {
         TreeUtil.COMPARE_COUNTER.set(0)
         TreeUtil.SWAP_COUNTER.set(0)
-        val r = TreeUtil.deepCopyTree(root, root.clone() as DefaultMutableTreeNode)
+        // val r = TreeUtil.deepCopyTree(root, root.clone() as DefaultMutableTreeNode)
+        val r = TreeUtil.deepCopyTree(root, DefaultMutableTreeNode(root.getUserObject()))
         if (check == sort1) {
           TreeUtil.sortTree1(r)
         } else if (check == sort2) {
@@ -80,9 +81,9 @@ internal object TreeUtil {
     val n = root.getChildCount()
     for (i in 0 until n - 1) {
       for (j in n - 1 downTo i + 1) {
-        val curNode = root.getChildAt(j) as DefaultMutableTreeNode
-        val prevNode = root.getChildAt(j - 1) as DefaultMutableTreeNode
-        if (!prevNode.isLeaf()) {
+        val curNode = root.getChildAt(j) as? DefaultMutableTreeNode
+        val prevNode = root.getChildAt(j - 1) as? DefaultMutableTreeNode
+        if (prevNode != null && !prevNode.isLeaf()) {
           sortTree1(prevNode)
         }
         if (tnc.compare(prevNode, curNode) > 0) {
@@ -99,16 +100,16 @@ internal object TreeUtil {
     for (i in 0 until n - 1) {
       var min = i
       for (j in i + 1 until n) {
-        val a = parent.getChildAt(min) as DefaultMutableTreeNode
-        val b = parent.getChildAt(j) as DefaultMutableTreeNode
+        val a = parent.getChildAt(min) as? DefaultMutableTreeNode
+        val b = parent.getChildAt(j) as? DefaultMutableTreeNode
         if (tnc.compare(a, b) > 0) {
           min = j
         }
       }
       if (i != min) {
         SWAP_COUNTER.getAndIncrement()
-        val a = parent.getChildAt(i) as MutableTreeNode
-        val b = parent.getChildAt(min) as MutableTreeNode
+        val a = parent.getChildAt(i) as? MutableTreeNode
+        val b = parent.getChildAt(min) as? MutableTreeNode
         parent.insert(b, i)
         parent.insert(a, min)
       }
