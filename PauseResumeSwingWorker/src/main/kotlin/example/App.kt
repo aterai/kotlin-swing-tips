@@ -95,10 +95,10 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
   protected fun processChunks(chunks: List<Progress>) {
     for (s in chunks) {
       when (s.component) {
-        ProgressType.TOTAL -> bar1.setValue(s.value as Int)
-        ProgressType.FILE -> bar2.setValue(s.value as Int)
+        ProgressType.TOTAL -> bar1.setValue(s.value as? Int ?: 0)
+        ProgressType.FILE -> bar2.setValue(s.value as? Int ?: 0)
         ProgressType.LOG -> area.append(s.value.toString())
-        ProgressType.PAUSE -> textProgress(s.value as Boolean)
+        ProgressType.PAUSE -> textProgress(s.value as? Boolean ?: false)
         // else -> throw AssertionError("Unknown Progress")
       }
     }
