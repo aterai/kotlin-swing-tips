@@ -12,15 +12,15 @@ const val CELLSIZE = 18
 fun makeUI(): Component {
   val columnNames = arrayOf("1", "2", "3", "4", "5", "6", "7", "8", "9")
   val data = arrayOf(
-      arrayOf(5, 3, 0, 0, 7, 0, 0, 0, 0),
-      arrayOf(6, 0, 0, 1, 9, 5, 0, 0, 0),
-      arrayOf(0, 9, 8, 0, 0, 0, 0, 6, 0),
-      arrayOf(8, 0, 0, 0, 6, 0, 0, 0, 3),
-      arrayOf(4, 0, 0, 8, 0, 3, 0, 0, 1),
-      arrayOf(7, 0, 0, 0, 2, 0, 0, 0, 6),
-      arrayOf(0, 6, 0, 0, 0, 0, 2, 8, 0),
-      arrayOf(0, 0, 0, 4, 1, 9, 0, 0, 5),
-      arrayOf(0, 0, 0, 0, 8, 0, 0, 7, 9))
+      arrayOf<Number>(5, 3, 0, 0, 7, 0, 0, 0, 0),
+      arrayOf<Number>(6, 0, 0, 1, 9, 5, 0, 0, 0),
+      arrayOf<Number>(0, 9, 8, 0, 0, 0, 0, 6, 0),
+      arrayOf<Number>(8, 0, 0, 0, 6, 0, 0, 0, 3),
+      arrayOf<Number>(4, 0, 0, 8, 0, 3, 0, 0, 1),
+      arrayOf<Number>(7, 0, 0, 0, 2, 0, 0, 0, 6),
+      arrayOf<Number>(0, 6, 0, 0, 0, 0, 2, 8, 0),
+      arrayOf<Number>(0, 0, 0, 4, 1, 9, 0, 0, 5),
+      arrayOf<Number>(0, 0, 0, 0, 8, 0, 0, 7, 9))
 
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = Number::class.java
@@ -93,7 +93,7 @@ fun makeUI(): Component {
   }
 }
 
-private class SudokuCellRenderer(src: Array<Array<Int>>) : DefaultTableCellRenderer() {
+private class SudokuCellRenderer(src: Array<Array<Number>>) : DefaultTableCellRenderer() {
   private val bold: Font
   private val b0 = BorderFactory.createMatteBorder(0, 0, BORDERWIDTH1, BORDERWIDTH1, Color.GRAY)
   private val b1 = BorderFactory.createMatteBorder(0, 0, BORDERWIDTH2, BORDERWIDTH2, Color.BLACK)
@@ -103,7 +103,7 @@ private class SudokuCellRenderer(src: Array<Array<Int>>) : DefaultTableCellRende
   private val b3 = BorderFactory.createCompoundBorder(
       BorderFactory.createMatteBorder(0, 0, 0, BORDERWIDTH2, Color.BLACK),
       BorderFactory.createMatteBorder(0, 0, BORDERWIDTH1, 0, Color.GRAY))
-  private val mask: Array<Array<Int>>
+  private val mask: Array<Array<Number>>
 
   init {
     this.bold = font.deriveFont(Font.BOLD)
