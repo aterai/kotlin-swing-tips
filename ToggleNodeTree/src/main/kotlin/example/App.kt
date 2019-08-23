@@ -76,7 +76,12 @@ fun makeModel(): DefaultTreeModel {
 
 fun collapseFirstHierarchy(tree: JTree) {
   val root = tree.getModel().getRoot() as? DefaultMutableTreeNode ?: return
-
+  root.breadthFirstEnumeration().toList()
+      .filterIsInstance(DefaultMutableTreeNode::class.java)
+      .takeWhile { it.getLevel() <= 1 }
+      .dropWhile { it.isRoot() || it.isLeaf() }
+      .map { TreePath(it.getPath()) }
+      .forEach { tree.collapsePath(it) }
   // // Java 9:
   // Collections.list(root.breadthFirstEnumeration()).stream()
   //     .filter(DefaultMutableTreeNode.class::isInstance)
@@ -87,18 +92,6 @@ fun collapseFirstHierarchy(tree: JTree) {
   //     .map(DefaultMutableTreeNode::getPath)
   //     .map(TreePath::new)
   //     .forEach(tree::collapsePath);
-  // Java 9: Enumeration<TreeNode> e = root.breadthFirstEnumeration();
-  val e = root.breadthFirstEnumeration()
-  while (e.hasMoreElements()) {
-    val node = e.nextElement() as? DefaultMutableTreeNode ?: continue
-    val isOverFirstLevel = node.getLevel() > 1
-    if (isOverFirstLevel) { // Collapse only nodes in the first hierarchy
-      return
-    } else if (node.isLeaf() || node.isRoot()) {
-      continue
-    }
-    tree.collapsePath(TreePath(node.getPath()))
-  }
 }
 
 fun main() {
