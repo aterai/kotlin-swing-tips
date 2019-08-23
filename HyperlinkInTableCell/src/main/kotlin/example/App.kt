@@ -4,7 +4,6 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.awt.event.MouseMotionListener
-import java.net.MalformedURLException
 import java.net.URL
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableCellRenderer
@@ -25,14 +24,10 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   init {
-    try {
-      model.addRow(arrayOf<Any>(0, "FrontPage", URL("https://ateraimemo.com/")))
-      model.addRow(arrayOf<Any>(1, "Java Swing Tips", URL("https://ateraimemo.com/Swing.html")))
-      model.addRow(arrayOf<Any>(2, "Example", URL("http://www.example.com/")))
-      model.addRow(arrayOf<Any>(3, "Example.jp", URL("http://www.example.jp/")))
-    } catch (ex: MalformedURLException) {
-      ex.printStackTrace()
-    }
+    model.addRow(arrayOf<Any?>(0, "FrontPage", makeUrl("https://ateraimemo.com/")))
+    model.addRow(arrayOf<Any?>(1, "Java Swing Tips", makeUrl("https://ateraimemo.com/Swing.html")))
+    model.addRow(arrayOf<Any?>(2, "Example", makeUrl("http://www.example.com/")))
+    model.addRow(arrayOf<Any?>(3, "Example.jp", makeUrl("http://www.example.jp/")))
 
     val table = object : JTable(model) {
       private val evenColor = Color(250, 250, 250)
@@ -72,6 +67,8 @@ class MainPanel : JPanel(BorderLayout()) {
     add(scrollPane)
     setPreferredSize(Dimension(320, 240))
   }
+
+  private fun makeUrl(spec: String) = runCatching { URL(spec) }.getOrNull()
 }
 
 internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMotionListener {
