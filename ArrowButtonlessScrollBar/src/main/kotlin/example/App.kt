@@ -48,7 +48,7 @@ class ArrowButtonlessScrollBarUI : BasicScrollBarUI() {
   protected override fun createIncreaseButton(orientation: Int) = ZeroSizeButton()
 
   protected override fun paintTrack(g: Graphics, c: JComponent?, r: Rectangle) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.setPaint(trackColor)
     g2.fill(r)
     g2.dispose()
@@ -58,7 +58,7 @@ class ArrowButtonlessScrollBarUI : BasicScrollBarUI() {
     val sb = (c as? JScrollBar)?.takeIf { it.isEnabled() } ?: return
     val m = sb.getModel()
     if (m.getMaximum() - m.getMinimum() - m.getExtent() > 0) {
-      val g2 = g.create() as Graphics2D
+      val g2 = g.create() as? Graphics2D ?: return
       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
       val color = when {
         isDragging -> thumbDarkShadowColor

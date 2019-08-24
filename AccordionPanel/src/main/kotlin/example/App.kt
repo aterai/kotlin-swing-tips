@@ -74,7 +74,7 @@ abstract class AbstractExpansionPanel(private val title: String) : JPanel(Border
     label = object : JLabel("▼ $title") {
       private val bgc = Color(0xC8_C8_FF)
       protected override fun paintComponent(g: Graphics) {
-        val g2 = g.create() as Graphics2D
+        val g2 = g.create() as? Graphics2D ?: return
         // Insets ins = getInsets();
         g2.setPaint(GradientPaint(50f, 0f, Color.WHITE, getWidth().toFloat(), getHeight().toFloat(), bgc))
         g2.fillRect(0, 0, getWidth(), getHeight())
