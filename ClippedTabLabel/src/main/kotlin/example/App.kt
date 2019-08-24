@@ -83,7 +83,7 @@ internal class ClippedTitleTabbedPane : JTabbedPane {
     setTabComponentAt(index, JLabel(title, icon, SwingConstants.CENTER))
   }
 
-  protected fun updateAllTabWidth(tabWidth: Int, gap: Int) {
+  private fun updateAllTabWidth(tabWidth: Int, gap: Int) {
     val dim = Dimension()
     var rest = gap
     for (i in 0 until getTabCount()) {

@@ -130,7 +130,7 @@ class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: ImageIcon) : 
     it.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 2))
   }
 
-  protected fun getSiteItemFromModel(model: ComboBoxModel<SiteItem>, o: Any?): SiteItem? {
+  private fun getSiteItemFromModel(model: ComboBoxModel<SiteItem>, o: Any?): SiteItem? {
     if (o is SiteItem) {
       return o
     }

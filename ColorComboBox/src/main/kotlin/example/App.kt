@@ -94,7 +94,7 @@ internal class AlternateRowColorComboBox<E> : JComboBox<E> {
     }
   }
 
-  protected fun getAlternateRowColor(idx: Int) = if (idx % 2 == 0) Color(0xE1_FF_E1) else Color.WHITE
+  private fun getAlternateRowColor(idx: Int) = if (idx % 2 == 0) Color(0xE1_FF_E1) else Color.WHITE
 }
 
 fun main() {

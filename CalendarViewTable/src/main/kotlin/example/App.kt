@@ -98,7 +98,7 @@ class MainPanel : JPanel(BorderLayout()) {
     }
   }
 
-  protected fun getDayOfWeekColor(dow: DayOfWeek) = when (dow) {
+  private fun getDayOfWeekColor(dow: DayOfWeek) = when (dow) {
     DayOfWeek.SUNDAY -> Color(0xFF_DC_DC)
     DayOfWeek.SATURDAY -> Color(0xDC_DC_FF)
     else -> Color.WHITE

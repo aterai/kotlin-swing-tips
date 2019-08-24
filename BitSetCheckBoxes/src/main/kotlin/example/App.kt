@@ -9,9 +9,9 @@ import javax.swing.undo.UndoManager
 import javax.swing.undo.UndoableEditSupport
 
 class MainPanel : JPanel(BorderLayout()) {
-  protected var status = BitSet.valueOf(longArrayOf(java.lang.Long.valueOf("111000111", 2)))
+  private var status = BitSet.valueOf(longArrayOf(java.lang.Long.valueOf("111000111", 2)))
   @Transient
-  protected val undoSupport = UndoableEditSupport()
+  private val undoSupport = UndoableEditSupport()
   private val label = JLabel(print(status))
   private val panel = JPanel(GridLayout(0, 8))
   private val um = UndoManager()
@@ -68,7 +68,7 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  protected fun updateCheckBoxes(value: BitSet) {
+  fun updateCheckBoxes(value: BitSet) {
     status = value
     for (i in 0 until BIT_LENGTH) {
       (panel.getComponent(i) as? JCheckBox)?.setSelected(status.get(i))

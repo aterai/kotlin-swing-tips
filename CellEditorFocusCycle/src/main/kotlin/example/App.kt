@@ -33,7 +33,7 @@ class MainPanel : JPanel(GridLayout(2, 1)) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  protected fun isEditorFocusCycle(editor: Component) =
+  private fun isEditorFocusCycle(editor: Component) =
       CheckBoxesEditor.getEditorFocusCycleAfter(editor)?.let {
         it.requestFocus()
         true
@@ -142,7 +142,7 @@ internal class CheckBoxesRenderer : TableCellRenderer {
 }
 
 internal class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
-  protected val renderer = CheckBoxesPanel()
+  private val renderer = CheckBoxesPanel()
 
   init {
     val am = renderer.getActionMap()
