@@ -107,7 +107,7 @@ class ToggleButtonBarCellIcon : Icon {
     var w = c.getWidth()
     val h = c.getHeight() - 1
 
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
 
     val p = Path2D.Double()
@@ -165,7 +165,7 @@ class EditMenuLayerUI<V : Component>(private val lastButton: AbstractButton) : L
   override fun paint(g: Graphics, c: JComponent) {
     super.paint(g, c)
     shape?.also {
-      val g2 = g.create() as Graphics2D
+      val g2 = g.create() as? Graphics2D ?: return
       g2.setPaint(Color.GRAY)
       g2.draw(it)
       g2.dispose()
