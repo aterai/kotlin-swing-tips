@@ -343,14 +343,14 @@ class TabDropTargetAdapter : DropTargetAdapter() {
 data class DnDTabData(val tabbedPane: DnDTabbedPane)
 
 class TabTransferHandler : TransferHandler() {
-  protected val localObjectFlavor = DataFlavor(DnDTabData::class.java, "DnDTabData")
-  protected var source: DnDTabbedPane? = null
+  private val localObjectFlavor = DataFlavor(DnDTabData::class.java, "DnDTabData")
+  private var source: DnDTabbedPane? = null
 
   // init {
   //   println("TabTransferHandler")
   // }
 
-  protected override fun createTransferable(c: JComponent): Transferable? {
+  override fun createTransferable(c: JComponent): Transferable? {
     println("createTransferable")
     val src: DnDTabbedPane? = c as? DnDTabbedPane
     source = src
@@ -458,7 +458,7 @@ class TabTransferHandler : TransferHandler() {
     return true
   }
 
-  protected override fun exportDone(c: JComponent?, data: Transferable?, action: Int) {
+  override fun exportDone(c: JComponent?, data: Transferable?, action: Int) {
     println("exportDone")
     val src = c as? DnDTabbedPane ?: return
     src.getRootPane().getGlassPane().setVisible(false)
