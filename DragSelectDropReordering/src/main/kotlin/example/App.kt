@@ -48,10 +48,10 @@ data class ListItem(val title: String, val iconfile: String) {
   }
 }
 
-internal class ReorderbleList(model: ListModel<ListItem>) : JList<ListItem>(model) {
+class ReorderbleList(model: ListModel<ListItem>) : JList<ListItem>(model) {
   private var rbl: MouseInputListener? = null
   private var rubberBandColor: Color? = null
-  protected val rubberBand: Path2D = Path2D.Double()
+  private val rubberBand: Path2D = Path2D.Double()
 
   override fun updateUI() {
     setSelectionForeground(null) // Nimbus
@@ -80,7 +80,7 @@ internal class ReorderbleList(model: ListModel<ListItem>) : JList<ListItem>(mode
     setDropMode(DropMode.INSERT)
   }
 
-  protected override fun paintComponent(g: Graphics) {
+  override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     if (getDragEnabled()) {
       return
@@ -159,12 +159,12 @@ internal class ReorderbleList(model: ListModel<ListItem>) : JList<ListItem>(mode
   }
 }
 
-internal class SelectedImageFilter : RGBImageFilter() {
+class SelectedImageFilter : RGBImageFilter() {
   // override fun filterRGB(x: Int, y: Int, argb: Int) = argb and -0x100 or (argb and 0xFF shr 1)
   override fun filterRGB(x: Int, y: Int, argb: Int) = argb and 0xFF_FF_FF_00.toInt() or (argb and 0xFF shr 1)
 }
 
-internal class ListItemListCellRenderer : ListCellRenderer<ListItem> {
+class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   private val renderer = JPanel(BorderLayout())
   private val icon = JLabel(null as? Icon?, SwingConstants.CENTER)
   private val label = JLabel("", SwingConstants.CENTER)
@@ -213,7 +213,7 @@ internal class ListItemListCellRenderer : ListCellRenderer<ListItem> {
 
 // Demo - BasicDnD (The Java™ Tutorials > Creating a GUI With JFC/Swing > Drag and Drop and Data Transfer)
 // https://docs.oracle.com/javase/tutorial/uiswing/dnd/basicdemo.html
-internal class ListItemTransferHandler : TransferHandler() {
+class ListItemTransferHandler : TransferHandler() {
   val localObjectFlavor = DataFlavor(List::class.java, "List of items")
   // var indices: IntArray? = null
   val selectedIndices = mutableListOf<Int>()

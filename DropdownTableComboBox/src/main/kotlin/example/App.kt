@@ -90,8 +90,8 @@ class MainPanel : JPanel(BorderLayout()) {
 
 class DropdownTableComboBox<E : List<Any>>(val list: List<E>, model: DefaultTableModel) : JComboBox<E>() {
   @Transient
-  protected val highlighter = HighlightListener()
-  protected val table: JTable = object : JTable() {
+  private val highlighter = HighlightListener()
+  private val table: JTable = object : JTable() {
     override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int): Component {
       val c = super.prepareRenderer(renderer, row, column)
       c.setForeground(Color.BLACK)
@@ -125,7 +125,7 @@ class DropdownTableComboBox<E : List<Any>>(val list: List<E>, model: DefaultTabl
     super.updateUI()
     EventQueue.invokeLater {
       setUI(object : MetalComboBoxUI() {
-        protected override fun createPopup() = ComboTablePopup(comboBox, table)
+        override fun createPopup() = ComboTablePopup(comboBox, table)
       })
       setEditable(false)
     }
