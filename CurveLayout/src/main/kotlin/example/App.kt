@@ -11,7 +11,7 @@ fun makeUI(): Component {
     protected override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
       val i = getInsets()
-      val g2 = g.create() as Graphics2D
+      val g2 = g.create() as? Graphics2D ?: return
       g2.translate(i.left, i.top)
       g2.setPaint(Color.RED)
       val w = getWidth() - i.left - i.right

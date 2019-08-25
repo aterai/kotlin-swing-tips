@@ -39,7 +39,7 @@ class MainPanel : JPanel(BorderLayout()) {
 internal class CheckIcon : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val m = (c as? AbstractButton)?.getModel() ?: return
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.setPaint(if (m.isSelected()) Color.ORANGE else Color.GRAY)
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)

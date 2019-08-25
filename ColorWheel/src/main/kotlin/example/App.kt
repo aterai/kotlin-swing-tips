@@ -25,7 +25,7 @@ internal class ColorWheel : JPanel() {
 
     // SIZE = 32 * 6; // Drawing breaks on Corretto 1.8.0_212
     val s = SIZE
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
 
     // Soft Clipping
     val gc = g2.getDeviceConfiguration()
