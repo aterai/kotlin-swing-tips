@@ -107,7 +107,7 @@ fun makeUI(): Component {
 }
 
 private fun paintFrame(image: BufferedImage, list: List<Shape>) {
-  val g2 = image.createGraphics() as Graphics2D
+  val g2 = image.createGraphics()
   g2.setPaint(Color.WHITE)
   g2.fillRect(0, 0, WIDTH, HEIGHT)
   g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
