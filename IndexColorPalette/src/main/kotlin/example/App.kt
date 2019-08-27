@@ -104,7 +104,7 @@ internal class PaletteListModel(private val model: IndexColorModel) : AbstractLi
 
 internal class ColorIcon(private val color: Color) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.setPaint(color)
     g2.fillRect(0, 0, getIconWidth(), getIconHeight())

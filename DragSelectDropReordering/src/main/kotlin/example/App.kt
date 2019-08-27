@@ -85,7 +85,7 @@ class ReorderbleList(model: ListModel<ListItem>) : JList<ListItem>(model) {
     if (getDragEnabled()) {
       return
     }
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.setPaint(getSelectionBackground())
     g2.draw(rubberBand)
     g2.setComposite(ALPHA)

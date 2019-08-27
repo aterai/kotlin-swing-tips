@@ -423,7 +423,7 @@ internal class GhostGlassPane(val tabbedPane: DnDTabbedPane) : JComponent() {
   }
 
   protected override fun paintComponent(g: Graphics) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.setComposite(ALPHA)
     if (tabbedPane.isPaintScrollArea && tabbedPane.getTabLayoutPolicy() == JTabbedPane.SCROLL_TAB_LAYOUT) {
       g2.setPaint(Color.RED)

@@ -15,7 +15,7 @@ fun createMenuBar(): JMenuBar {
 
     protected override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
-      val g2 = g.create() as Graphics2D
+      val g2 = g.create() as? Graphics2D ?: return
       g2.setPaint(texture)
       g2.fillRect(0, 0, getWidth(), getHeight())
       g2.dispose()

@@ -170,7 +170,7 @@ internal class MyGlassPane : JDesktopPane() {
   }
 
   protected override fun paintComponent(g: Graphics) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.setPaint(TEXTURE)
     g2.fillRect(0, 0, getWidth(), getHeight())
     g2.dispose()
@@ -194,7 +194,7 @@ internal class PrintGlassPane : JDesktopPane() {
     // because print() doesn't affect the frame's double buffer
     getRootPane()?.getLayeredPane()?.print(g)
 
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.setPaint(TEXTURE)
     g2.fillRect(0, 0, getWidth(), getHeight())
     g2.dispose()

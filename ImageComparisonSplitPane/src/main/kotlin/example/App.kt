@@ -25,7 +25,7 @@ fun makeUI(): Component {
   val afterCanvas = object : JComponent() {
     protected override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
-      val g2 = g.create() as Graphics2D
+      val g2 = g.create() as? Graphics2D ?: return
       val iw = icon.getIconWidth()
       val ih = icon.getIconHeight()
       if (check.isSelected()) {
