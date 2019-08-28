@@ -14,11 +14,11 @@ class MainPanel : JPanel(BorderLayout()) {
     box.setBorder(BorderFactory.createEmptyBorder(60, 10, 60, 10))
 
     val buttons = listOf(
-        RoundButton(ImageIcon(javaClass.getResource("005.png")), "005d.png", "005g.png"),
-        RoundButton(ImageIcon(javaClass.getResource("003.png")), "003d.png", "003g.png"),
-        RoundButton(ImageIcon(javaClass.getResource("001.png")), "001d.png", "001g.png"),
-        RoundButton(ImageIcon(javaClass.getResource("002.png")), "002d.png", "002g.png"),
-        RoundButton(ImageIcon(javaClass.getResource("004.png")), "004d.png", "004g.png"))
+      RoundButton(ImageIcon(javaClass.getResource("005.png")), "005d.png", "005g.png"),
+      RoundButton(ImageIcon(javaClass.getResource("003.png")), "003d.png", "003g.png"),
+      RoundButton(ImageIcon(javaClass.getResource("001.png")), "001d.png", "001g.png"),
+      RoundButton(ImageIcon(javaClass.getResource("002.png")), "002d.png", "002g.png"),
+      RoundButton(ImageIcon(javaClass.getResource("004.png")), "004d.png", "004g.png"))
     // TEST: buttons = makeButtonArray2(getClass()); // Set ButtonUI
     buttons.forEach {
       box.add(it)
@@ -38,11 +38,11 @@ class MainPanel : JPanel(BorderLayout()) {
     val p = JPanel()
     p.add(check)
 
-    val alignmentsChoices = JComboBox<ButtonAlignments>(ButtonAlignments.values())
+    val alignmentsChoices = JComboBox(ButtonAlignments.values())
     alignmentsChoices.addItemListener { e ->
       val item = e.getItem()
       if (e.getStateChange() == ItemEvent.SELECTED && item is ButtonAlignments) {
-        buttons.forEach { it.setAlignmentY(item.alingment) }
+        buttons.forEach { it.setAlignmentY(item.alignment) }
         box.revalidate()
       }
     }
@@ -83,7 +83,7 @@ class RoundButton : JButton {
     initShape()
   }
 
-  override fun getPreferredSize() = super.getPreferredSize().also {
+  override fun getPreferredSize() = super.getPreferredSize()?.also {
     val icon = getIcon()
     val i = getInsets()
     val iw = maxOf(icon.getIconWidth(), icon.getIconHeight())
@@ -113,7 +113,7 @@ class RoundButton : JButton {
   }
 }
 
-enum class ButtonAlignments(val description: String, val alingment: Float) {
+enum class ButtonAlignments(private val description: String, val alignment: Float) {
   TOP("Top Alignment", Component.TOP_ALIGNMENT),
   CENTER("Center Alignment", Component.CENTER_ALIGNMENT),
   BOTTOM("Bottom Alignment", Component.BOTTOM_ALIGNMENT);
