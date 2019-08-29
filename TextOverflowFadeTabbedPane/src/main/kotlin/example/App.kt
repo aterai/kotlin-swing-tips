@@ -80,7 +80,7 @@ open class ClippedTitleTabbedPane : JTabbedPane {
   }
 
   override fun insertTab(title: String, icon: Icon, component: Component, tip: String?, index: Int) {
-    super.insertTab(title, icon, component, tip?.toString() ?: title, index)
+    super.insertTab(title, icon, component, tip ?: title, index)
     setTabComponentAt(index, JLabel(title, icon, SwingConstants.LEADING))
   }
 
@@ -104,7 +104,7 @@ open class TextOverflowFadeTabbedPane : ClippedTitleTabbedPane {
   constructor(tabPlacement: Int) : super(tabPlacement)
 
   override fun insertTab(title: String, icon: Icon, component: Component, tip: String?, index: Int) {
-    super.insertTab(title, icon, component, tip?.toString() ?: title, index)
+    super.insertTab(title, icon, component, tip ?: title, index)
     setTabComponentAt(index, JPanel(BorderLayout(2, 0)).also {
       it.setOpaque(false)
       it.add(JLabel(icon), BorderLayout.WEST)
