@@ -52,7 +52,7 @@ fun makeUI(): Component {
   val scroll = JScrollPane(table)
   scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER)
   scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
-  // TEST: scroll.addComponentListener(new TableRowHeidhtAdjuster())
+  // TEST: scroll.addComponentListener(new TableRowHeightAdjuster())
   scroll.addComponentListener(object : ComponentAdapter() {
     override fun componentResized(e: ComponentEvent) {
       val sp = e.getComponent() as? JScrollPane ?: return
@@ -71,7 +71,7 @@ fun makeUI(): Component {
 }
 
 // // TEST when not considering adding rows
-// class TableRowHeidhtAdjuster : ComponentAdapter() {
+// class TableRowHeightAdjuster : ComponentAdapter() {
 //   private var prevHeight = -1
 //
 //   override fun componentResized(e: ComponentEvent) {
