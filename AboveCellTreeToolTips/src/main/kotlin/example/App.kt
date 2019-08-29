@@ -95,7 +95,7 @@ internal class TooltipTree(model: TreeModel) : JTree(model) {
     val p = e.getPoint()
     val i = getRowForLocation(p.x, p.y)
     val cellBounds = getRowBounds(i)
-    if (i >= 0 && cellBounds?.contains(p.x, p.y) ?: false) {
+    if (i >= 0 && cellBounds?.contains(p.x, p.y) == true) {
       val tsm = getSelectionModel()
       val node = getPathForRow(i).getLastPathComponent()
       // println(node)
@@ -148,7 +148,7 @@ internal class TooltipTreeCellRenderer : TreeCellRenderer {
   }
 }
 
-internal class RendererIcon(val renderer: Component, val rect: Rectangle) : Icon {
+internal class RendererIcon(private val renderer: Component, private val rect: Rectangle) : Icon {
   init {
     rect.setLocation(0, 0)
   }
