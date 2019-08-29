@@ -87,10 +87,9 @@ fun loadFile(path: String) {
   //   ex.printStackTrace()
   // }
   val html = runCatching {
-    File(path)
-      .useLines { it.toList() }
-      .map { it.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") }
-      .joinToString("\n")
+    File(path).useLines { it.toList() }.joinToString("\n") {
+      it.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    }
   }.fold(
     onSuccess = { prettify(engine, it) },
     onFailure = { it.message }
@@ -113,7 +112,7 @@ fun createEngine(): ScriptEngine? {
   // }
 
   val cl = Thread.currentThread().getContextClassLoader()
-  val url = cl.getResource("example/prettify.js")
+  val url = cl.getResource("example/prettify.js") ?: return null
   return runCatching {
     BufferedReader(InputStreamReader(url.openStream(), StandardCharsets.UTF_8)).use { r ->
       engine.eval("var window={}, navigator=null;")

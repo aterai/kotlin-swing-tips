@@ -59,10 +59,9 @@ fun makeUI(): Component {
 
 fun loadFile(path: String) {
   val html = runCatching {
-    File(path)
-      .useLines { it.toList() }
-      .map { it.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") }
-      .joinToString("\n")
+    File(path).useLines { it.toList() }.joinToString("\n") {
+      it.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    }
   }.fold(
     onSuccess = { prettify(engine, it) },
     onFailure = { it.message }

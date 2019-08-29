@@ -69,17 +69,16 @@ class MainPanel : JPanel(BorderLayout()) {
       it.add(button)
     }
 
-    add(JLayer<JScrollPane>(scroll, ScrollPaneLayerUI()))
+    add(JLayer(scroll, ScrollPaneLayerUI()))
     add(box, BorderLayout.SOUTH)
     setPreferredSize(Dimension(320, 240))
   }
 
   private fun loadFile(path: String) {
     val html = runCatching {
-      File(path)
-        .useLines { it.toList() }
-        .map { it.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") }
-        .joinToString("\n")
+      File(path).useLines { it.toList() }.joinToString("\n") {
+        it.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+      }
     }.fold(
       onSuccess = { prettify(engine, it) },
       onFailure = { it.message }
@@ -89,7 +88,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
   private fun createEngine(): ScriptEngine? {
     val engine = ScriptEngineManager().getEngineByName("JavaScript")
-    val url = MainPanel::class.java.getResource("prettify.js")
+    val url = MainPanel::class.java.getResource("prettify.js") ?: return null
     return runCatching {
       BufferedReader(InputStreamReader(url.openStream(), StandardCharsets.UTF_8)).use { r ->
         engine.eval("var window={}, navigator=null;")

@@ -43,10 +43,7 @@ val label = object : JLabel() {
 
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
-    val vport = SwingUtilities.getAncestorOfClass(JViewport::class.java, editor)
-    if (vport !is JViewport) {
-      return
-    }
+    val vport = SwingUtilities.getAncestorOfClass(JViewport::class.java, editor) as? JViewport ?: return
     val vrect = vport.getBounds() // scroll.getViewportBorderBounds();
     val erect = editor.getBounds()
     val crect = SwingUtilities.calculateInnerArea(this, Rectangle())
@@ -69,7 +66,7 @@ val label = object : JLabel() {
   }
 }
 
-private class MiniMapHandler : MouseInputAdapter() {
+private open class MiniMapHandler : MouseInputAdapter() {
   override fun mousePressed(e: MouseEvent) {
     processMiniMapMouseEvent(e)
   }
@@ -78,7 +75,7 @@ private class MiniMapHandler : MouseInputAdapter() {
     processMiniMapMouseEvent(e)
   }
 
-  protected fun processMiniMapMouseEvent(e: MouseEvent) {
+  fun processMiniMapMouseEvent(e: MouseEvent) {
     val pt = e.getPoint()
     val c = e.getComponent()
     val m = scroll.getVerticalScrollBar().getModel()
@@ -153,14 +150,14 @@ fun makeUI(): Component {
         val bottom = height - insets.bottom
         val left = insets.left
         val right = width - insets.right
-        val ec = getLayoutComponent(parent, BorderLayout.EAST)
+        val ec = getLayoutComponent(parent, EAST)
         if (Objects.nonNull(ec)) {
           val d = ec.getPreferredSize()
           val vsb = scroll.getVerticalScrollBar()
           val vsw = if (vsb.isVisible()) vsb.getSize().width else 0
           ec.setBounds(right - d.width - vsw, top, d.width, bottom - top)
         }
-        val cc = getLayoutComponent(parent, BorderLayout.CENTER)
+        val cc = getLayoutComponent(parent, CENTER)
         if (Objects.nonNull(cc)) {
           cc.setBounds(left, top, right - left, bottom - top)
         }
@@ -178,10 +175,9 @@ fun makeUI(): Component {
 
 fun loadFile(path: String) {
   val html = runCatching {
-    File(path)
-      .useLines { it.toList() }
-      .map { it.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") }
-      .joinToString("\n")
+    File(path).useLines { it.toList() }.joinToString("\n") {
+      it.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    }
   }.fold(
     onSuccess = { prettify(engine, it) },
     onFailure = { it.message }
@@ -193,7 +189,7 @@ fun loadFile(path: String) {
 fun createEngine(): ScriptEngine? {
   val engine = ScriptEngineManager().getEngineByName("JavaScript")
   val cl = Thread.currentThread().getContextClassLoader()
-  val url = cl.getResource("example/prettify.js")
+  val url = cl.getResource("example/prettify.js") ?: return null
   return runCatching {
     BufferedReader(InputStreamReader(url.openStream(), StandardCharsets.UTF_8)).use { r ->
       engine.eval("var window={}, navigator=null;")
