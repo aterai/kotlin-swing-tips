@@ -39,12 +39,12 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  protected fun fireDocumentChangeEvent() {
+  private fun fireDocumentChangeEvent() {
     val q = field.getText()
     renderer.query = q
     val root = tree.getPathForRow(0)
     collapseAll(tree, root)
-    if (!q.isEmpty()) {
+    if (q.isNotEmpty()) {
       searchTree(tree, root, q)
     }
   }
@@ -81,8 +81,8 @@ internal class HighlightTreeCellRenderer : DefaultTreeCellRenderer() {
     super.updateUI()
   }
 
-  override fun getBackgroundNonSelectionColor() =
-      if (rollOver) ROLLOVER_ROW_COLOR else super.getBackgroundNonSelectionColor()
+  override fun getBackgroundNonSelectionColor(): Color? =
+    if (rollOver) ROLLOVER_ROW_COLOR else super.getBackgroundNonSelectionColor()
 
   override fun getTreeCellRendererComponent(
     tree: JTree,
@@ -97,7 +97,7 @@ internal class HighlightTreeCellRenderer : DefaultTreeCellRenderer() {
     if (selected) {
       c.setForeground(getTextSelectionColor())
     } else {
-      rollOver = !query.isEmpty() && (value?.toString() ?: "").startsWith(query)
+      rollOver = query.isNotEmpty() && (value?.toString() ?: "").startsWith(query)
       c.setForeground(getTextNonSelectionColor())
       c.setBackground(getBackgroundNonSelectionColor())
     }
