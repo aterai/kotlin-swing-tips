@@ -62,7 +62,7 @@ class AlignedLabel(text: String) : JLabel(text) {
     setHorizontalAlignment(SwingConstants.RIGHT)
   }
 
-  override fun getPreferredSize() = super.getPreferredSize().also {
+  override fun getPreferredSize() = super.getPreferredSize()?.also {
     // Align the width with all other labels in group.
     it.width = getMaxWidth() + INDENT
   }

@@ -15,15 +15,15 @@ import java.util.Locale
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel(BorderLayout()) {
-  val currentLocalDate = LocalDate.now(ZoneId.systemDefault())
-  val weekList = object : JList<Contribution>(CalendarViewListModel(currentLocalDate)) {
+  val currentLocalDate: LocalDate = LocalDate.now(ZoneId.systemDefault())
+  private val weekList = object : JList<Contribution>(CalendarViewListModel(currentLocalDate)) {
     @Transient
     private var tip: JToolTip? = null
 
     override fun updateUI() {
       setCellRenderer(null)
       super.updateUI()
-      setLayoutOrientation(JList.VERTICAL_WRAP)
+      setLayoutOrientation(VERTICAL_WRAP)
       setVisibleRowCount(DayOfWeek.values().size) // ensure 7 rows in the list
       setFixedCellWidth(CELLSZ.width)
       setFixedCellHeight(CELLSZ.height)
@@ -70,7 +70,7 @@ class MainPanel : JPanel(BorderLayout()) {
       return tip
     }
   }
-  val color = Color(0x32_C8_32)
+  private val color = Color(0x32_C8_32)
   val activityIcons = listOf(
     ContributionIcon(Color(0xC8_C8_C8)),
     ContributionIcon(color.brighter()),
@@ -121,7 +121,7 @@ class MainPanel : JPanel(BorderLayout()) {
       val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
       (c as? JLabel)?.setIcon(when {
         value.date.isAfter(currentLocalDate) -> ContributionIcon(Color.WHITE)
-        else -> activityIcons.get(value.activity)
+        else -> activityIcons[value.activity]
       })
       return c
     }
@@ -203,14 +203,16 @@ class CalendarViewListModel(date: LocalDate) : AbstractListModel<Contribution>()
     val dow = date.get(WeekFields.of(Locale.getDefault()).dayOfWeek())
     this.startDate = date.minusWeeks((WEEK_VIEW - 1).toLong()).minusDays((dow - 1).toLong())
     this.displayDays = DayOfWeek.values().size * (WEEK_VIEW - 1) + dow
-    (0 until displayDays).forEach { contributionActivity.put(startDate.plusDays(it.toLong()), (0..4).random()) }
+    (0 until displayDays).forEach {
+      contributionActivity[startDate.plusDays(it.toLong())] = (0..4).random()
+    }
   }
 
   override fun getSize() = displayDays
 
   override fun getElementAt(index: Int): Contribution {
     val date = startDate.plusDays(index.toLong())
-    return Contribution(date, contributionActivity.get(date) ?: 0)
+    return Contribution(date, contributionActivity[date] ?: 0)
   }
 
   companion object {
@@ -251,9 +253,9 @@ class BalloonToolTip : JToolTip() {
     setBorder(BorderFactory.createEmptyBorder(5, 5, 5 + TRI_HEIGHT, 5))
   }
 
-  override fun getPreferredSize() = super.getPreferredSize().also { it.height = 32 }
+  override fun getPreferredSize() = super.getPreferredSize()?.also { it.height = 32 }
 
-  protected override fun paintComponent(g: Graphics) {
+  override fun paintComponent(g: Graphics) {
     val s = makeBalloonShape()
     val g2 = g.create() as Graphics2D
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)

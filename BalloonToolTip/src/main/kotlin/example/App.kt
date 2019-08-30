@@ -101,9 +101,9 @@ class BalloonToolTip : JToolTip() {
     // setBackground(Color(0xEF_64_64_64.toInt(), true))
   }
 
-  override fun getPreferredSize() = super.getPreferredSize().also { it.height = 28 }
+  override fun getPreferredSize() = super.getPreferredSize()?.also { it.height = 28 }
 
-  protected override fun paintComponent(g: Graphics) {
+  override fun paintComponent(g: Graphics) {
     val s = makeBalloonShape()
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)

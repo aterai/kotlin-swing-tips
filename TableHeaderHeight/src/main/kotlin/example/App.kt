@@ -23,7 +23,7 @@ fun makeUI(): Component {
   val table2 = makeTable()
   val scroll = JScrollPane(table2)
   scroll.setColumnHeader(object : JViewport() {
-    override fun getPreferredSize() = super.getPreferredSize().also {
+    override fun getPreferredSize() = super.getPreferredSize()?.also {
       it.height = HEADER_HEIGHT
     }
   })

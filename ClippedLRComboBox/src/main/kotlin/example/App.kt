@@ -78,7 +78,7 @@ internal class MultiColumnCellRenderer : ListCellRenderer<PairItem> {
     //   val d = super.getPreferredSize()
     //   return Dimension(0, d.height)
     // }
-    override fun getPreferredSize() = super.getPreferredSize().also { it.width = 0 }
+    override fun getPreferredSize() = super.getPreferredSize()?.also { it.width = 0 }
 
     override fun updateUI() {
       super.updateUI()

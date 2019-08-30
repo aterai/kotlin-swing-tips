@@ -6,6 +6,8 @@ import java.awt.geom.Ellipse2D
 import java.awt.geom.Path2D
 import java.awt.geom.RoundRectangle2D
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import kotlin.math.cos
+import kotlin.math.sin
 
 class MainPanel : JPanel() {
   private val button = object : JButton("RoundedCornerButtonUI") {
@@ -21,7 +23,7 @@ class MainPanel : JPanel() {
     add(button)
     add(RoundedCornerButton("Rounded Corner Button"))
     add(object : RoundButton(ImageIcon(MainPanel::class.java.getResource("16x16.png"))) {
-      override fun getPreferredSize() = super.getPreferredSize().also {
+      override fun getPreferredSize() = super.getPreferredSize()?.also {
         val r = 16 + (RoundedCornerButton.FOCUS_STROKE.toInt() + 4) * 2 // test margin = 4
         it.setSize(r, r)
       }
@@ -41,7 +43,7 @@ class MainPanel : JPanel() {
     for (i in 0 until vc * 2 - 1) {
       agl += add
       val r = if (i % 2 == 0) ira else ora
-      p.lineTo(r * Math.cos(agl), r * Math.sin(agl))
+      p.lineTo(r * cos(agl), r * sin(agl))
     }
     p.closePath()
     val at = AffineTransform.getRotateInstance(-Math.PI / 2.0, ora.toDouble(), 0.0)
@@ -50,22 +52,22 @@ class MainPanel : JPanel() {
 }
 
 open class RoundedCornerButton : JButton {
-  protected val fc = Color(100, 150, 255, 200)
-  protected val ac = Color(230, 230, 230)
-  protected val rc = Color.ORANGE
+  private val fc = Color(100, 150, 255, 200)
+  private val ac = Color(230, 230, 230)
+  private val rc = Color.ORANGE
   protected var shape: Shape? = null
   protected var border: Shape? = null
   protected var base: Shape? = null
 
-  public constructor() : super()
+  constructor() : super()
 
-  public constructor(icon: Icon) : super(icon)
+  constructor(icon: Icon) : super(icon)
 
-  public constructor(text: String) : super(text)
+  constructor(text: String) : super(text)
 
-  public constructor(a: Action) : super(a)
+  constructor(a: Action) : super(a)
 
-  public constructor(text: String, icon: Icon) : super(text, icon)
+  constructor(text: String, icon: Icon) : super(text, icon)
   // {
   //   // setModel(new DefaultButtonModel());
   //   // init(text, icon);
@@ -87,9 +89,9 @@ open class RoundedCornerButton : JButton {
       base = getBounds()
       shape = RoundRectangle2D.Double(0.0, 0.0, getWidth() - 1.0, getHeight() - 1.0, ARC_WIDTH, ARC_HEIGHT)
       border = RoundRectangle2D.Double(
-          FOCUS_STROKE, FOCUS_STROKE,
-          getWidth() - 1 - FOCUS_STROKE * 2, getHeight() - 1 - FOCUS_STROKE * 2,
-          ARC_WIDTH, ARC_HEIGHT)
+        FOCUS_STROKE, FOCUS_STROKE,
+        getWidth() - 1 - FOCUS_STROKE * 2, getHeight() - 1 - FOCUS_STROKE * 2,
+        ARC_WIDTH, ARC_HEIGHT)
     }
   }
 
@@ -100,7 +102,7 @@ open class RoundedCornerButton : JButton {
     g2.fill(border)
   }
 
-  protected override fun paintComponent(g: Graphics) {
+  override fun paintComponent(g: Graphics) {
     initShape()
     val g2 = g.create() as Graphics2D
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
@@ -119,7 +121,7 @@ open class RoundedCornerButton : JButton {
     super.paintComponent(g)
   }
 
-  protected override fun paintBorder(g: Graphics) {
+  override fun paintBorder(g: Graphics) {
     initShape()
     val g2 = g.create() as Graphics2D
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
@@ -145,21 +147,21 @@ open class RoundedCornerButton : JButton {
 }
 
 open class RoundButton : RoundedCornerButton {
-  public constructor() : super()
+  constructor() : super()
 
-  public constructor(icon: Icon) : super(icon)
+  constructor(icon: Icon) : super(icon)
 
-  public constructor(text: String) : super(text)
+  constructor(text: String) : super(text)
 
-  public constructor(a: Action) : super(a)
+  constructor(a: Action) : super(a)
 
-  public constructor(text: String, icon: Icon) : super(text, icon)
+  constructor(text: String, icon: Icon) : super(text, icon)
   // {
   //   // setModel(new DefaultButtonModel());
   //   // init(text, icon);
   // }
 
-  override fun getPreferredSize() = super.getPreferredSize().also {
+  override fun getPreferredSize() = super.getPreferredSize()?.also {
     val s = maxOf(width, height)
     it.setSize(s, s)
   }
@@ -169,18 +171,18 @@ open class RoundButton : RoundedCornerButton {
       base = getBounds()
       shape = Ellipse2D.Double(0.0, 0.0, getWidth() - 1.0, getHeight() - 1.0)
       border = Ellipse2D.Double(
-          RoundedCornerButton.FOCUS_STROKE,
-          RoundedCornerButton.FOCUS_STROKE,
-          getWidth() - 1 - RoundedCornerButton.FOCUS_STROKE * 2,
-          getHeight() - 1 - RoundedCornerButton.FOCUS_STROKE * 2)
+        FOCUS_STROKE,
+        FOCUS_STROKE,
+        getWidth() - 1 - FOCUS_STROKE * 2,
+        getHeight() - 1 - FOCUS_STROKE * 2)
     }
   }
 }
 
-internal class ShapeButton(protected val shape: Shape) : JButton() {
-  protected val fc = Color(100, 150, 255, 200)
-  protected val ac = Color(230, 230, 230)
-  protected val rc = Color.ORANGE
+internal class ShapeButton(private val shape: Shape) : JButton() {
+  private val fc = Color(100, 150, 255, 200)
+  private val ac = Color(230, 230, 230)
+  private val rc = Color.ORANGE
 
   init {
     setModel(DefaultButtonModel())
@@ -200,7 +202,7 @@ internal class ShapeButton(protected val shape: Shape) : JButton() {
     g2.fill(shape)
   }
 
-  protected override fun paintComponent(g: Graphics) {
+  override fun paintComponent(g: Graphics) {
     val g2 = g.create() as Graphics2D
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     if (getModel().isArmed()) {
@@ -218,7 +220,7 @@ internal class ShapeButton(protected val shape: Shape) : JButton() {
     super.paintComponent(g)
   }
 
-  protected override fun paintBorder(g: Graphics) {
+  override fun paintBorder(g: Graphics) {
     val g2 = g.create() as Graphics2D
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     g2.setPaint(getForeground())
