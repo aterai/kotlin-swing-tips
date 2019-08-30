@@ -48,7 +48,7 @@ class MainPanel : JPanel(BorderLayout()) {
     }
 
     for (i in 0 until BIT_LENGTH) {
-      val c = JCheckBox(Integer.toString(i), status.get(i))
+      val c = JCheckBox(i.toString(), status.get(i))
       c.addActionListener { e ->
         val v = (e.getSource() as? JCheckBox)?.isSelected() ?: false
         val newValue = status.get(0, BIT_LENGTH)
@@ -76,7 +76,7 @@ class MainPanel : JPanel(BorderLayout()) {
     label.setText(print(status))
   }
 
-  inner class StatusEdit(val oldValue: BitSet, val newValue: BitSet) : AbstractUndoableEdit() {
+  inner class StatusEdit(private val oldValue: BitSet, private val newValue: BitSet) : AbstractUndoableEdit() {
     override fun undo() { // throws CannotUndoException {
       super.undo()
       updateCheckBoxes(oldValue)
