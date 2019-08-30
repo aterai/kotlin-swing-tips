@@ -16,10 +16,10 @@ class MainPanel : JPanel(BorderLayout()) {
   init {
     val columnNames = arrayOf("String", "Integer", "Boolean")
     val data = arrayOf(
-        arrayOf<Any>("aaa", 12, true),
-        arrayOf<Any>("bbb", 5, false),
-        arrayOf<Any>("CCC", 92, true),
-        arrayOf<Any>("DDD", 0, false))
+      arrayOf("aaa", 12, true),
+      arrayOf("bbb", 5, false),
+      arrayOf("CCC", 92, true),
+      arrayOf("DDD", 0, false))
     val model = object : DefaultTableModel(data, columnNames) {
       override fun isCellEditable(row: Int, column: Int) = column == 2
 
@@ -45,7 +45,7 @@ class MainPanel : JPanel(BorderLayout()) {
     table.setSelectionBackground(Color(0, 0, 100, 50))
 
     val checkBox = object : JCheckBox() {
-      protected override fun paintComponent(g: Graphics) {
+      override fun paintComponent(g: Graphics) {
         g.setColor(Color(0, 0, 100, 50))
         g.fillRect(0, 0, getWidth(), getHeight())
         super.paintComponent(g)
@@ -66,7 +66,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val texture = makeImageTexture()
     val scroll = object : JScrollPane(table) {
-      protected override fun paintComponent(g: Graphics) {
+      override fun paintComponent(g: Graphics) {
         val g2 = g.create() as Graphics2D
         g2.setPaint(texture)
         g2.fillRect(0, 0, getWidth(), getHeight())
@@ -116,8 +116,8 @@ class MainPanel : JPanel(BorderLayout()) {
 
 internal class TransparentHeader : JLabel(), TableCellRenderer {
   private val border = BorderFactory.createCompoundBorder(
-      BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
-      BorderFactory.createEmptyBorder(2, 2, 1, 2))
+    BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
+    BorderFactory.createEmptyBorder(2, 2, 1, 2))
   private val alphaZero = Color(0x0, true)
 
   override fun getTableCellRendererComponent(
@@ -146,7 +146,7 @@ internal class TranslucentObjectRenderer : DefaultTableCellRenderer() {
     hasFocus: Boolean,
     row: Int,
     column: Int
-  ) = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column).also {
+  ) = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)?.also {
     // it.setOpaque(true);
     (it as? JComponent)?.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8))
   }
@@ -181,7 +181,7 @@ internal class TranslucentBooleanRenderer : JCheckBox(), TableCellRenderer {
     return this
   }
 
-  protected override fun paintComponent(g: Graphics) {
+  override fun paintComponent(g: Graphics) {
     if (!isOpaque()) {
       g.setColor(getBackground())
       g.fillRect(0, 0, getWidth(), getHeight())
