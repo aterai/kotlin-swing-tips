@@ -52,7 +52,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
     menu.addSeparator()
 
-    menuItem = menu.add(ModalInternalFrameAction1("InternalMessageDialog(Nomal)"))
+    menuItem = menu.add(ModalInternalFrameAction1("InternalMessageDialog(Normal)"))
     menuItem.setMnemonic(KeyEvent.VK_1)
     menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.ALT_DOWN_MASK))
 
@@ -72,7 +72,7 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  // menuItem = new JMenuItem(new ModalInternalFrameAction1("InternalMessageDialog(Nomal)"))
+  // menuItem = new JMenuItem(new ModalInternalFrameAction1("InternalMessageDialog(Normal)"))
   // menuItem.setMnemonic(KeyEvent.VK_1)
   protected inner class ModalInternalFrameAction1(label: String) : AbstractAction(label) {
     override fun actionPerformed(e: ActionEvent) {
