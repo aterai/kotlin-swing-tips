@@ -4,6 +4,9 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.geom.Ellipse2D
 import java.awt.image.BufferedImage
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import kotlin.math.PI
+import kotlin.math.atan2
+import kotlin.math.hypot
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
@@ -58,12 +61,12 @@ internal class ColorWheel : JPanel() {
       val y = yidx - size / 2.0
       for (xidx in 0 until SIZE) {
         val x = xidx - size / 2.0
-        var theta = Math.atan2(y, x) - 3.0 * Math.PI / 2.0
+        var theta = atan2(y, x) - 3.0 * PI / 2.0
         if (theta < 0) {
-          theta += 2.0 * Math.PI
+          theta += 2.0 * PI
         }
-        val r = Math.sqrt(x * x + y * y)
-        val hue = (theta / (2.0 * Math.PI)).toFloat()
+        val r = hypot(x, y) // Math.sqrt(x * x + y * y)
+        val hue = (theta / (2.0 * PI)).toFloat()
         val sat = minOf((r / radius).toFloat(), 1f)
         val bri = 1f
         row[xidx] = Color.HSBtoRGB(hue, sat, bri)
