@@ -6,10 +6,10 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    val combo0 = JComboBox<ComboItem>(makeModel())
+    val combo0 = JComboBox(makeModel())
     combo0.setRenderer(CheckComboBoxRenderer<ComboItem>())
 
-    val combo1 = JComboBox<ComboItem>(makeModel())
+    val combo1 = JComboBox(makeModel())
     combo1.setEditable(true)
     combo1.setEditor(CheckComboBoxEditor())
     combo1.setRenderer(CheckComboBoxRenderer<ComboItem>())
@@ -24,10 +24,10 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   private fun makeModel() = arrayOf(
-      ComboItem(true, true, "00000"),
-      ComboItem(true, false, "11111"),
-      ComboItem(false, true, "22222"),
-      ComboItem(false, false, "33333"))
+    ComboItem(isEnabled = true, isEditable = true, text = "00000"),
+    ComboItem(isEnabled = true, isEditable = false, text = "11111"),
+    ComboItem(isEnabled = false, isEditable = true, text = "22222"),
+    ComboItem(isEnabled = false, isEditable = false, text = "33333"))
 
   private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
     it.setBorder(BorderFactory.createTitledBorder(title))
