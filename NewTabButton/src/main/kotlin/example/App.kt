@@ -23,12 +23,12 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class CardLayoutTabbedPane : JPanel(BorderLayout()) {
-  protected val cardLayout = CardLayout()
-  protected val tabPanel = JPanel(TabLayout())
-  protected val wrapPanel = JPanel(BorderLayout())
-  protected val contentsPanel = JPanel(cardLayout)
-  protected val bg = ButtonGroup()
+class CardLayoutTabbedPane : JPanel(BorderLayout()) {
+  private val cardLayout = CardLayout()
+  private val tabPanel = JPanel(TabLayout())
+  private val wrapPanel = JPanel(BorderLayout())
+  private val contentsPanel = JPanel(cardLayout)
+  private val bg = ButtonGroup()
   private val button = JButton(PlusIcon())
 
   // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
@@ -78,7 +78,7 @@ internal class CardLayoutTabbedPane : JPanel(BorderLayout()) {
     })
   }
 
-  protected fun createTabComponent(title: String, comp: Component): Component {
+  private fun createTabComponent(title: String, comp: Component): Component {
     // TabButton tab = new TabButton(new AbstractAction(title) {
     //   @Override public void actionPerformed(ActionEvent e) {
     //     cardLayout.show(contentsPanel, title);
@@ -91,7 +91,7 @@ internal class CardLayoutTabbedPane : JPanel(BorderLayout()) {
         cardLayout.show(contentsPanel, title)
       }
     })
-    tab.setIcon(icons.get((0 until icons.size).random()))
+    tab.setIcon(icons[icons.indices.random()])
     tab.setLayout(BorderLayout())
     val close = object : JButton(CloseTabIcon(Color.GRAY)) {
       override fun getPreferredSize() = Dimension(12, 12)
@@ -132,7 +132,7 @@ internal class CardLayoutTabbedPane : JPanel(BorderLayout()) {
   }
 }
 
-internal class TabLayout : LayoutManager, Serializable {
+class TabLayout : LayoutManager, Serializable {
   override fun addLayoutComponent(name: String, comp: Component) { /* not needed */ }
 
   override fun removeLayoutComponent(comp: Component) { /* not needed */ }
@@ -184,7 +184,7 @@ internal class TabLayout : LayoutManager, Serializable {
     }
   }
 
-  override fun toString() = javaClass.getName()
+  override fun toString() = "$javaClass.getName(): JTabbedPane tab layout"
 
   companion object {
     private const val serialVersionUID = 1L
