@@ -10,7 +10,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val text = "012345678901234567890123456789012345678901234567890123456789"
     val box = Box.createVerticalBox().also {
       it.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-      it.add(makeTitledPanel("defalut JLabel ellipsis", JLabel(text)))
+      it.add(makeTitledPanel("default JLabel ellipsis", JLabel(text)))
       it.add(Box.createVerticalStrut(5))
       it.add(makeTitledPanel("html JLabel fade out", FadeOutLabel("<html>$text")))
       it.add(Box.createVerticalStrut(5))
