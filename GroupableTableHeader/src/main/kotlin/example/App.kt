@@ -16,11 +16,11 @@ class MainPanel : JPanel(BorderLayout()) {
     // http://www2.gol.com/users/tame/swing/examples/JTableExamples1.html
     val columnNames = arrayOf("SNo.", "1", "2", "Native", "2", "3")
     val data = arrayOf(
-        arrayOf<Any>("119", "foo", "bar", "ja", "ko", "zh"),
-        arrayOf<Any>("911", "bar", "foo", "en", "fr", "pt"))
+      arrayOf("119", "foo", "bar", "ja", "ko", "zh"),
+      arrayOf("911", "bar", "foo", "en", "fr", "pt"))
     val model = DefaultTableModel(data, columnNames)
     val table = object : JTable(model) {
-      protected override fun createDefaultTableHeader(): JTableHeader {
+      override fun createDefaultTableHeader(): JTableHeader {
         val cm = getColumnModel()
         val gname = ColumnGroup("Name")
         gname.add(cm.getColumn(1))
@@ -76,8 +76,8 @@ internal class GroupableTableHeader(model: TableColumnModel) : JTableHeader(mode
 
   fun getColumnGroups(col: TableColumn): List<*> {
     for (cg in columnGroups) {
-      val groups = cg.getColumnGroupList(col, mutableListOf<Any>())
-      if (!groups.isEmpty()) {
+      val groups = cg.getColumnGroupList(col, mutableListOf())
+      if (groups.isNotEmpty()) {
         return groups
       }
     }
@@ -128,8 +128,8 @@ internal class GroupableTableHeaderUI : BasicTableHeaderUI() {
       val cglist = (header as? GroupableTableHeader)?.getColumnGroups(tc) ?: emptyList<Any>()
       for (o in cglist) {
         val cg = o as? ColumnGroup ?: continue
-        val groupRect = map.get(cg) ?: Rectangle(cellRect.getLocation(), cg.getSize(header)).also {
-          map.put(cg, it)
+        val groupRect = map[cg] ?: Rectangle(cellRect.getLocation(), cg.getSize(header)).also {
+          map[cg] = it
         }
         paintCellGroup(g, groupRect, cg)
         groupHeight += groupRect.height
@@ -201,7 +201,7 @@ internal class GroupableTableHeaderUI : BasicTableHeaderUI() {
  * @author Nobuo Tamemasa
  * @author aterai aterai@outlook.com
  */
-internal class ColumnGroup(private val text: String) {
+internal class ColumnGroup(text: String) {
   private val list = mutableListOf<Any>()
   val headerValue = text
 
@@ -229,8 +229,8 @@ internal class ColumnGroup(private val text: String) {
     return when {
       list.contains(c) -> g
       else -> list.filterIsInstance(ColumnGroup::class.java)
-                  .map { it.getColumnGroupList(c, ArrayList<Any>(g)) }
-                  .filterNot { it.isEmpty() }.firstOrNull() ?: emptyList<Any>()
+        .map { it.getColumnGroupList(c, ArrayList(g)) }
+        .filterNot { it.isEmpty() }.firstOrNull() ?: emptyList<Any>()
     }
   }
 

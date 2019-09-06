@@ -20,9 +20,9 @@ class MainPanel : JPanel(BorderLayout()) {
       it.addChangeListener(l)
       it.addMouseListener(l)
       it.addTab("Shortcuts", JTextArea(INFO))
-      it.addTab("badfasdfa", JLabel("bbbbbbbbbbbafasdf"))
-      it.addTab("cccc", JScrollPane(JTree()))
-      it.addTab("dddddddd", JLabel("dadfasdfasd"))
+      it.addTab("JLabel", JLabel("label"))
+      it.addTab("JTree", JScrollPane(JTree()))
+      it.addTab("JButton", JButton("button"))
     })
     setPreferredSize(Dimension(320, 240))
   }
@@ -36,12 +36,12 @@ Cancel editing: Esc-Key, title.isEmpty
 }
 
 class TabTitleEditListener(val tabbedPane: JTabbedPane) : MouseAdapter(), ChangeListener, DocumentListener {
-  protected val editor = JTextField()
-  protected var editingIdx = -1
-  protected var len = -1
-  protected var dim: Dimension? = null
-  protected var tabComponent: Component? = null
-  protected val startEditing: Action = object : AbstractAction() {
+  private val editor = JTextField()
+  private var editingIdx = -1
+  private var len = -1
+  private var dim: Dimension? = null
+  private var tabComponent: Component? = null
+  private val startEditing = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       editingIdx = tabbedPane.getSelectedIndex()
       tabComponent = tabbedPane.getTabComponentAt(editingIdx)
@@ -55,16 +55,16 @@ class TabTitleEditListener(val tabbedPane: JTabbedPane) : MouseAdapter(), Change
       editor.setMinimumSize(dim)
     }
   }
-  protected val renameTabTitle: Action = object : AbstractAction() {
+  private val renameTabTitle = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      val title = editor.getText().trim { it <= ' ' }
-      if (editingIdx >= 0 && !title.isEmpty()) {
+      val title = editor.getText().trim()
+      if (editingIdx >= 0 && title.isNotEmpty()) {
         tabbedPane.setTitleAt(editingIdx, title)
       }
       cancelEditing.actionPerformed(ActionEvent(tabbedPane, ActionEvent.ACTION_PERFORMED, CANCEL))
     }
   }
-  protected val cancelEditing: Action = object : AbstractAction() {
+  private val cancelEditing = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       if (editingIdx >= 0) {
         tabbedPane.setTabComponentAt(editingIdx, tabComponent)
@@ -120,15 +120,15 @@ class TabTitleEditListener(val tabbedPane: JTabbedPane) : MouseAdapter(), Change
     }
   }
 
-  protected fun updateTabSize() {
+  private fun updateTabSize() {
     editor.setPreferredSize(if (editor.getText().length > len) null else dim)
     tabbedPane.revalidate()
   }
 
   companion object {
-    protected const val START = "start-editing"
-    protected const val CANCEL = "cancel-editing"
-    protected const val RENAME = "rename-tab-title"
+    const val START = "start-editing"
+    const val CANCEL = "cancel-editing"
+    const val RENAME = "rename-tab-title"
   }
 }
 

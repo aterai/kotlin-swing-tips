@@ -23,9 +23,9 @@ class MainPanel : JPanel(BorderLayout()) {
 data class ComparableTab(val title: String, val component: Component)
 
 class EditableTabbedPane : JTabbedPane() {
-  protected val glassPane: Container = EditorGlassPane()
-  protected val editor = JTextField()
-  protected val startEditing: Action = object : AbstractAction() {
+  private val glassPane: Container = EditorGlassPane()
+  private val editor = JTextField()
+  private val startEditing = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       getRootPane().setGlassPane(glassPane)
       val rect = getBoundsAt(getSelectedIndex())
@@ -41,7 +41,7 @@ class EditableTabbedPane : JTabbedPane() {
       editor.requestFocusInWindow()
     }
   }
-  protected val cancelEditing: Action = object : AbstractAction() {
+  private val cancelEditing = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       glassPane.setVisible(false)
     }
@@ -54,7 +54,7 @@ class EditableTabbedPane : JTabbedPane() {
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "rename-tab")
     am.put("rename-tab", object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
-        if (!editor.getText().trim { it <= ' ' }.isEmpty()) {
+        if (editor.getText().trim().isNotEmpty()) {
           setTitleAt(getSelectedIndex(), editor.getText())
           (getTabComponentAt(getSelectedIndex()) as? JComponent)?.revalidate()
         }
@@ -143,9 +143,9 @@ class TabbedPanePopupMenu : JPopupMenu() {
     closeAllButActive = add("Close all bat active")
     closeAllButActive.addActionListener {
       (getInvoker() as? JTabbedPane)?.also {
-        val tabidx = it.getSelectedIndex()
-        val title = it.getTitleAt(tabidx)
-        val cmp = it.getComponentAt(tabidx)
+        val tabIdx = it.getSelectedIndex()
+        val title = it.getTitleAt(tabIdx)
+        val cmp = it.getComponentAt(tabIdx)
         it.removeAll()
         it.addTab(title, cmp)
       }
@@ -154,7 +154,6 @@ class TabbedPanePopupMenu : JPopupMenu() {
 
   override fun show(c: Component, x: Int, y: Int) {
     val tabs = c as? JTabbedPane ?: return
-    // JDK 1.3: tabindex = tabs.getUI().tabForCoordinate(tabs, x, y)
     sortTabs.setEnabled(tabs.getTabCount() > 1)
     closePage.setEnabled(tabs.indexAtLocation(x, y) >= 0)
     closeAll.setEnabled(tabs.getTabCount() > 0)

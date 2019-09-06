@@ -13,9 +13,9 @@ class MainPanel : JPanel(BorderLayout()) {
     a.setEditable(false)
     val tabbedPane = EditableTabbedPane().also {
       it.addTab("Shortcuts", JScrollPane(a))
-      it.addTab("badfasdf", JLabel("bbbbbbbbbbbafasdf"))
-      it.addTab("cccc", JScrollPane(JTree()))
-      it.addTab("ddddddd", JButton("dadfasdfasd"))
+      it.addTab("JLabel", JLabel("label"))
+      it.addTab("JTree", JScrollPane(JTree()))
+      it.addTab("JButton", JButton("button"))
     }
     add(tabbedPane)
     setPreferredSize(Dimension(320, 240))
@@ -29,10 +29,10 @@ Cancel editing: Esc-Key, title.isEmpty
   }
 }
 
-internal class EditableTabbedPane : JTabbedPane() {
-  protected val glassPane: Container = EditorGlassPane()
-  protected val editor = JTextField()
-  protected val startEditing: Action = object : AbstractAction() {
+class EditableTabbedPane : JTabbedPane() {
+  private val glassPane = EditorGlassPane()
+  private val editor = JTextField()
+  private val startEditing = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       getRootPane().setGlassPane(glassPane)
       val rect = getBoundsAt(getSelectedIndex())
@@ -47,14 +47,14 @@ internal class EditableTabbedPane : JTabbedPane() {
       editor.requestFocusInWindow()
     }
   }
-  protected val cancelEditing: Action = object : AbstractAction() {
+  private val cancelEditing = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       glassPane.setVisible(false)
     }
   }
-  protected val renameTab: Action = object : AbstractAction() {
+  val renameTab = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      if (!editor.getText().trim { it <= ' ' }.isEmpty()) {
+      if (editor.getText().trim().isNotEmpty()) {
         setTitleAt(getSelectedIndex(), editor.getText())
         (getTabComponentAt(getSelectedIndex()) as? JComponent)?.revalidate()
       }

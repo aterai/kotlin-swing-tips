@@ -21,15 +21,15 @@ class MainPanel : JPanel(BorderLayout()) {
     for (i in 0..5000) {
       model.addElement(i.toString())
     }
-    val leftList = makeList<String>(model)
+    val leftList = makeList(model)
 
-    val rightList = makeList<String>(DefaultListModel<String>())
+    val rightList = makeList(DefaultListModel<String>())
 
     val button1 = makeButton(">")
-    button1.addActionListener { move0<String>(leftList, rightList) }
+    button1.addActionListener { move0(leftList, rightList) }
 
     val button2 = makeButton("<")
-    button2.addActionListener { move0<String>(rightList, leftList) }
+    button2.addActionListener { move0(rightList, leftList) }
 
     return SpringLayoutUtil.makePanel(leftList, rightList, button1, button2)
   }
@@ -39,15 +39,15 @@ class MainPanel : JPanel(BorderLayout()) {
     for (i in 10_000..30_000) {
       model.addElement(i.toString())
     }
-    val leftList = makeList<String>(model)
+    val leftList = makeList(model)
 
-    val rightList = makeList<String>(DefaultListModel<String>())
+    val rightList = makeList(DefaultListModel<String>())
 
     val button1 = makeButton(">")
-    button1.addActionListener { move1<String>(leftList, rightList) }
+    button1.addActionListener { move1(leftList, rightList) }
 
     val button2 = makeButton("<")
-    button2.addActionListener { move1<String>(rightList, leftList) }
+    button2.addActionListener { move1(rightList, leftList) }
 
     return SpringLayoutUtil.makePanel(leftList, rightList, button1, button2)
   }
@@ -57,15 +57,15 @@ class MainPanel : JPanel(BorderLayout()) {
     for (i in 30_000..50_000) {
       model.add(i.toString())
     }
-    val leftList = makeList<String>(model)
+    val leftList = makeList(model)
 
     val rightList = makeList(ArrayListModel<String>())
 
     val button1 = makeButton(">")
-    button1.addActionListener { move2<String>(leftList, rightList) }
+    button1.addActionListener { move2(leftList, rightList) }
 
     val button2 = makeButton("<")
-    button2.addActionListener { move2<String>(rightList, leftList) }
+    button2.addActionListener { move2(rightList, leftList) }
 
     return SpringLayoutUtil.makePanel(leftList, rightList, button1, button2)
   }
@@ -74,9 +74,9 @@ class MainPanel : JPanel(BorderLayout()) {
     val selectedIndices = from.getSelectedIndices()
     val fromModel = from.getModel()
     val toModel = to.getModel()
-    if (selectedIndices.size > 0 && fromModel is DefaultListModel<E> && toModel is DefaultListModel<E>) {
+    if (selectedIndices.isNotEmpty() && fromModel is DefaultListModel<E> && toModel is DefaultListModel<E>) {
       for (i in selectedIndices) {
-        toModel.addElement(fromModel.get(i))
+        toModel.addElement(fromModel[i])
       }
       for (i in selectedIndices.indices.reversed()) {
         fromModel.remove(selectedIndices[i])
@@ -96,7 +96,7 @@ class MainPanel : JPanel(BorderLayout()) {
         unselectedValues.add(fromModel.getElementAt(i))
       }
     }
-    if (selectedIndices.size > 0) {
+    if (selectedIndices.isNotEmpty()) {
       for (i in selectedIndices) {
         toModel.addElement(fromModel.get(i))
       }
@@ -108,7 +108,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
   private fun <E> move2(from: JList<E>, to: JList<E>) {
     val selectedIndices = from.getSelectedIndices()
-    if (selectedIndices.size > 0) {
+    if (selectedIndices.isNotEmpty()) {
       (to.getModel() as? ArrayListModel<E>)?.addAll(from.getSelectedValuesList())
       (from.getModel() as? ArrayListModel<E>)?.remove(selectedIndices)
     }
@@ -152,14 +152,14 @@ internal class ArrayListModel<E> : AbstractListModel<E>() {
   }
 
   fun remove(index: Int): E {
-    val rv = delegate.get(index)
+    val rv = delegate[index]
     delegate.removeAt(index)
     fireIntervalRemoved(this, index, index)
     return rv
   }
 
   fun remove(selectedIndices: IntArray) {
-    if (selectedIndices.size > 0) {
+    if (selectedIndices.isNotEmpty()) {
       val max = selectedIndices.size - 1
       for (i in max downTo 0) {
         delegate.removeAt(selectedIndices[i])
@@ -168,13 +168,13 @@ internal class ArrayListModel<E> : AbstractListModel<E>() {
     }
   }
 
-  override fun getElementAt(index: Int) = delegate.get(index)
+  override fun getElementAt(index: Int) = delegate[index]
 
   override fun getSize() = delegate.size
 }
 
 internal object SpringLayoutUtil {
-  fun setScaleAndAdd(parent: Container, layout: SpringLayout, child: Component, r: Rectangle2D.Float) {
+  private fun setScaleAndAdd(parent: Container, layout: SpringLayout, child: Component, r: Rectangle2D.Float) {
     val panelw = layout.getConstraint(SpringLayout.WIDTH, parent)
     val panelh = layout.getConstraint(SpringLayout.HEIGHT, parent)
 

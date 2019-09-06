@@ -79,7 +79,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-class FileIconTableCellRenderer(val fileSystemView: FileSystemView) : DefaultTableCellRenderer() {
+class FileIconTableCellRenderer(private val fileSystemView: FileSystemView) : DefaultTableCellRenderer() {
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -87,42 +87,43 @@ class FileIconTableCellRenderer(val fileSystemView: FileSystemView) : DefaultTab
     hasFocus: Boolean,
     row: Int,
     column: Int
-  ) = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column).also {
-    if (it is JLabel) {
-      it.setHorizontalAlignment(SwingConstants.LEFT)
-      it.setIcon(null)
-      val file = value as? File ?: return it
+  ): Component {
+    val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    if (c is JLabel && value is File) {
+      c.setHorizontalAlignment(SwingConstants.LEFT)
+      c.setIcon(null)
       when (table.convertColumnIndexToModel(column)) {
         0 -> {
-          it.setIcon(fileSystemView.getSystemIcon(file))
-          it.setText(fileSystemView.getSystemDisplayName(file))
+          c.setIcon(fileSystemView.getSystemIcon(value))
+          c.setText(fileSystemView.getSystemDisplayName(value))
         }
         1 -> {
-          it.setHorizontalAlignment(SwingConstants.RIGHT)
-          it.setText(if (file.isDirectory()) null else file.length().toString())
+          c.setHorizontalAlignment(SwingConstants.RIGHT)
+          c.setText(if (value.isDirectory()) null else value.length().toString())
         }
-        2 -> it.setText(file.getAbsolutePath())
+        2 -> c.setText(value.getAbsolutePath())
         else -> error("Should never happened.")
       }
     }
+    return c
   }
 }
 
 class FileTransferHandler : TransferHandler() {
-  override fun importData(support: TransferHandler.TransferSupport): Boolean {
+  override fun importData(support: TransferSupport): Boolean {
     val list = runCatching {
       support.getTransferable().getTransferData(DataFlavor.javaFileListFlavor) as? List<*>
     }.getOrNull() ?: emptyList<Any>()
     val model = (support.getComponent() as? JTable)?.getModel() as? DefaultTableModel ?: return false
     list.filterIsInstance(File::class.java)
-        .map { file -> (0..2).map { file }.toTypedArray() }
-        .forEach { model.addRow(it) }
-    return list.size > 0
+      .map { file -> (0..2).map { file }.toTypedArray() }
+      .forEach { model.addRow(it) }
+    return list.isNotEmpty()
   }
 
   override fun canImport(ts: TransferSupport) = ts.isDataFlavorSupported(DataFlavor.javaFileListFlavor)
 
-  override fun getSourceActions(component: JComponent) = TransferHandler.COPY
+  override fun getSourceActions(component: JComponent) = COPY
 }
 
 open class DefaultFileComparator(protected val column: Int) : Comparator<File>, Serializable {
@@ -139,10 +140,10 @@ open class DefaultFileComparator(protected val column: Int) : Comparator<File>, 
 
 class FileComparator(column: Int) : DefaultFileComparator(column) {
   override fun compare(a: File, b: File) = when {
-      a.isDirectory() && !b.isDirectory() -> -1
-      !a.isDirectory() && b.isDirectory() -> 1
-      else -> super.compare(a, b)
-    }
+    a.isDirectory() && !b.isDirectory() -> -1
+    !a.isDirectory() && b.isDirectory() -> 1
+    else -> super.compare(a, b)
+  }
 
   companion object {
     private const val serialVersionUID = 1L
@@ -169,10 +170,9 @@ class FileGroupComparator(private val table: JTable, column: Int) : DefaultFileC
 }
 
 class TablePopupMenu : JPopupMenu() {
-  private val delete: JMenuItem
+  private val delete: JMenuItem = add("delete")
 
   init {
-    delete = add("delete")
     delete.addActionListener {
       val table = getInvoker() as? JTable ?: return@addActionListener
       val model = table.getModel() as? DefaultTableModel ?: return@addActionListener

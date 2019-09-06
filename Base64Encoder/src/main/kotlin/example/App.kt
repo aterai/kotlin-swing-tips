@@ -31,8 +31,8 @@ fun makeUI(): Component {
   encode.addActionListener {
     val chooser = JFileChooser()
     chooser.addChoosableFileFilter(FileNameExtensionFilter("PNG (*.png)", "png"))
-    val retvalue = chooser.showOpenDialog(encode)
-    if (retvalue == JFileChooser.APPROVE_OPTION) {
+    val retValue = chooser.showOpenDialog(encode)
+    if (retValue == JFileChooser.APPROVE_OPTION) {
       val path = chooser.getSelectedFile().toPath()
       runCatching {
         textArea.setText(Base64.getEncoder().encodeToString(Files.readAllBytes(path)))
@@ -44,11 +44,11 @@ fun makeUI(): Component {
   val decode = JButton("decode")
   decode.addActionListener {
     val b64 = textArea.getText()
-    if (!b64.isEmpty()) {
+    if (b64.isNotEmpty()) {
       runCatching {
         val dec = Base64.getDecoder().decode(b64.toByteArray(StandardCharsets.ISO_8859_1))
-        ByteArrayInputStream(dec).use { bais ->
-          label.setIcon(ImageIcon(ImageIO.read(bais)))
+        ByteArrayInputStream(dec).use {
+          label.setIcon(ImageIcon(ImageIO.read(it)))
         }
       }.onFailure {
         label.setIcon(null)

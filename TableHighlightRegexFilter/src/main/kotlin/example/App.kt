@@ -16,12 +16,12 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
 
   private val columnNames = arrayOf("A", "B")
   private val data = arrayOf(
-      arrayOf<Any>("aaa", "bbaacc"),
-      arrayOf<Any>("bbb", "defg"),
-      arrayOf<Any>("ccccbbbbaaabbbbaaeabee", "xxx"),
-      arrayOf<Any>("dddaaabbbbb", "ccbbaa"),
-      arrayOf<Any>("cc cc bbbb aaa bbbb e", "xxx"),
-      arrayOf<Any>("ddd aaa b bbbb", "cc bbaa"))
+    arrayOf("aaa", "111111"),
+    arrayOf("bbb", "22222"),
+    arrayOf("333333333333333", "xxx"),
+    arrayOf("4444444444444", "55555555"),
+    arrayOf("cc cc bbb1 aaa bbb2 e", "xxx"),
+    arrayOf("ddd aaa b bbb3", "cc #aabbcc"))
   private val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = String::class.java
   }
@@ -59,9 +59,9 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  protected fun fireDocumentChangeEvent() {
+  private fun fireDocumentChangeEvent() {
     field.setBackground(Color.WHITE)
-    val pattern = field.getText().trim { it <= ' ' }
+    val pattern = field.getText().trim()
     if (pattern.isEmpty()) {
       sorter.setRowFilter(null)
       renderer.updatePattern("")
@@ -115,7 +115,7 @@ internal class HighlightTableCellRenderer : JTextField(), TableCellRenderer {
     highlighter.removeAllHighlights()
     setText(txt)
     setBackground(if (isSelected) BACKGROUND_SELECTION_COLOR else Color.WHITE)
-    if (!pattern.isEmpty() && pattern != prev) {
+    if (pattern.isNotEmpty() && pattern != prev) {
       // val matcher = Pattern.compile(pattern).matcher(txt)
       // var pos = 0
       // while (matcher.find(pos) && !matcher.group().isEmpty()) {
