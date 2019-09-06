@@ -9,10 +9,10 @@ import javax.swing.plaf.metal.MetalSliderUI
 class MainPanel : JPanel(BorderLayout()) {
   init {
     val slider1 = JSlider(SwingConstants.VERTICAL, 0, 1000, 500)
-    setSilderUI(slider1)
+    setSliderUI(slider1)
 
     val slider2 = JSlider(0, 1000, 500)
-    setSilderUI(slider2)
+    setSliderUI(slider2)
 
     add(Box.createHorizontalBox().also {
       it.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20))
@@ -33,7 +33,7 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  private fun setSilderUI(slider: JSlider) {
+  private fun setSliderUI(slider: JSlider) {
     if (slider.getUI() is WindowsSliderUI) {
       slider.setUI(WindowsJumpToClickedPositionSliderUI(slider))
     } else {
@@ -50,12 +50,12 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class WindowsJumpToClickedPositionSliderUI(slider: JSlider) : WindowsSliderUI(slider) {
-  protected override fun createTrackListener(slider: JSlider?): TrackListener {
+class WindowsJumpToClickedPositionSliderUI(slider: JSlider) : WindowsSliderUI(slider) {
+  override fun createTrackListener(slider: JSlider?): TrackListener {
     return object : TrackListener() {
       override fun mousePressed(e: MouseEvent) {
         if (UIManager.getBoolean("Slider.onlyLeftMouseButtonDrag") && SwingUtilities.isLeftMouseButton(e)) {
-          val s = e.getComponent() as? JSlider ?: return@mousePressed
+          val s = e.getComponent() as? JSlider ?: return
           when (s.getOrientation()) {
             SwingConstants.VERTICAL -> s.setValue(valueForYPosition(e.getY()))
             SwingConstants.HORIZONTAL -> s.setValue(valueForXPosition(e.getX()))
@@ -73,12 +73,12 @@ internal class WindowsJumpToClickedPositionSliderUI(slider: JSlider) : WindowsSl
   }
 }
 
-internal class MetalJumpToClickedPositionSliderUI : MetalSliderUI() {
-  protected override fun createTrackListener(slider: JSlider?): TrackListener {
+class MetalJumpToClickedPositionSliderUI : MetalSliderUI() {
+  override fun createTrackListener(slider: JSlider?): TrackListener {
     return object : TrackListener() {
       override fun mousePressed(e: MouseEvent) {
         if (UIManager.getBoolean("Slider.onlyLeftMouseButtonDrag") && SwingUtilities.isLeftMouseButton(e)) {
-          val s = e.getComponent() as? JSlider ?: return@mousePressed
+          val s = e.getComponent() as? JSlider ?: return
           when (s.getOrientation()) {
             SwingConstants.VERTICAL -> s.setValue(valueForYPosition(e.getY()))
             SwingConstants.HORIZONTAL -> s.setValue(valueForXPosition(e.getX()))

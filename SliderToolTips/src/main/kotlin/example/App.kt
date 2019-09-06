@@ -14,7 +14,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val slider1 = makeSlider()
     val slider2 = makeSlider()
     slider2.setModel(slider1.getModel())
-    setSilderUI(slider2)
+    setSliderUI(slider2)
 
     val ma = SliderPopupListener()
     slider2.addMouseMotionListener(ma)
@@ -48,7 +48,7 @@ class MainPanel : JPanel(BorderLayout()) {
     return p
   }
 
-  private fun setSilderUI(slider: JSlider) {
+  private fun setSliderUI(slider: JSlider) {
     if (slider.getUI() is WindowsSliderUI) {
       slider.setUI(WindowsTooltipSliderUI(slider))
     } else {
@@ -57,8 +57,8 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class WindowsTooltipSliderUI(slider: JSlider) : WindowsSliderUI(slider) {
-  protected override fun createTrackListener(slider: JSlider?): TrackListener {
+class WindowsTooltipSliderUI(slider: JSlider) : WindowsSliderUI(slider) {
+  override fun createTrackListener(slider: JSlider?): TrackListener {
     return object : TrackListener() {
       override fun mousePressed(e: MouseEvent) {
         if (UIManager.getBoolean("Slider.onlyLeftMouseButtonDrag") && SwingUtilities.isLeftMouseButton(e)) {
@@ -81,8 +81,8 @@ internal class WindowsTooltipSliderUI(slider: JSlider) : WindowsSliderUI(slider)
   }
 }
 
-internal class MetalTooltipSliderUI : MetalSliderUI() {
-  protected override fun createTrackListener(slider: JSlider?): TrackListener {
+class MetalTooltipSliderUI : MetalSliderUI() {
+  override fun createTrackListener(slider: JSlider?): TrackListener {
     return object : TrackListener() {
       override fun mousePressed(e: MouseEvent) {
         if (UIManager.getBoolean("Slider.onlyLeftMouseButtonDrag") && SwingUtilities.isLeftMouseButton(e)) {
@@ -105,7 +105,7 @@ internal class MetalTooltipSliderUI : MetalSliderUI() {
   }
 }
 
-internal class SliderPopupListener : MouseAdapter() {
+class SliderPopupListener : MouseAdapter() {
   private val toolTip = JWindow()
   private val label = JLabel("", SwingConstants.CENTER)
   private val size = Dimension(30, 20)
@@ -119,9 +119,9 @@ internal class SliderPopupListener : MouseAdapter() {
     toolTip.setSize(size)
   }
 
-  protected fun updateToolTip(e: MouseEvent) {
+  private fun updateToolTip(e: MouseEvent) {
     val slider = e.getComponent() as? JSlider ?: return
-    val intValue = slider.getValue().toInt()
+    val intValue = slider.getValue()
     if (prevValue != intValue) {
       label.setText(String.format("%03d", slider.getValue()))
       val pt = e.getPoint()
@@ -149,10 +149,10 @@ internal class SliderPopupListener : MouseAdapter() {
   }
 }
 
-internal class SliderMouseWheelListener : MouseWheelListener {
+class SliderMouseWheelListener : MouseWheelListener {
   override fun mouseWheelMoved(e: MouseWheelEvent) {
     val s = e.getComponent() as? JSlider ?: return
-    s.setValue(s.getValue().toInt() - e.getWheelRotation())
+    s.setValue(s.getValue() - e.getWheelRotation())
     // val i = s.getValue().toInt() - e.getWheelRotation()
     // val m = s.getModel()
     // s.setValue(minOf(maxOf(i, m.getMinimum()), m.getMaximum()))
