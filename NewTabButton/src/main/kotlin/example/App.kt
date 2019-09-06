@@ -91,7 +91,7 @@ class CardLayoutTabbedPane : JPanel(BorderLayout()) {
         cardLayout.show(contentsPanel, title)
       }
     })
-    tab.setIcon(icons[icons.indices.random()])
+    tab.setIcon(icons.random())
     tab.setLayout(BorderLayout())
     val close = object : JButton(CloseTabIcon(Color.GRAY)) {
       override fun getPreferredSize() = Dimension(12, 12)
