@@ -44,8 +44,8 @@ internal class RadialGradientButton(title: String) : JButton(title) {
   private val timer2 = Timer(10, null)
   private val pt = Point()
   private var radius = 0f
-  protected var shape: Shape? = null
-  protected var base: Rectangle? = null
+  private var shape: Shape? = null
+  private var base: Rectangle? = null
 
   init {
     timer1.addActionListener {
@@ -95,7 +95,7 @@ internal class RadialGradientButton(title: String) : JButton(title) {
     update()
   }
 
-  protected fun update() {
+  private fun update() {
     if (getBounds() != base) {
       base = getBounds()
       shape = RoundRectangle2D.Float(0f, 0f, getWidth() - 1f, getHeight() - 1f, ARC_WIDTH, ARC_HEIGHT)
@@ -141,7 +141,7 @@ internal class RadialGradientButton(title: String) : JButton(title) {
       // Stunning hover effects with CSS variables ? Prototypr
       // https://blog.prototypr.io/stunning-hover-effects-with-css-variables-f855e7b95330
       val colors = arrayOf(Color(0x64_44_05_F7, true), Color(0x00_F7_23_59, true))
-      g2.setPaint(RadialGradientPaint(pt, r2.toFloat(), floatArrayOf(0f, 1f), colors))
+      g2.setPaint(RadialGradientPaint(pt, r2, floatArrayOf(0f, 1f), colors))
       g2.setComposite(AlphaComposite.SrcAtop)
       g2.setClip(shape)
       g2.fill(Ellipse2D.Float(pt.x - radius, pt.y - radius, r2, r2))
@@ -163,8 +163,8 @@ internal class RadialGradientPaintButton(title: String) : JButton(title) {
   private val timer2 = Timer(10, null)
   private val pt = Point()
   private var radius = 0f
-  protected var shape: Shape? = null
-  protected var base: Rectangle? = null
+  private var shape: Shape? = null
+  private var base: Rectangle? = null
   @Transient
   private var buf: BufferedImage? = null
 
@@ -216,7 +216,7 @@ internal class RadialGradientPaintButton(title: String) : JButton(title) {
     update()
   }
 
-  protected fun update() {
+  private fun update() {
     if (getBounds() != base) {
       base = getBounds()
       if (getWidth() > 0 && getHeight() > 0) {
@@ -243,7 +243,7 @@ internal class RadialGradientPaintButton(title: String) : JButton(title) {
       val r2 = radius + radius
       // val colors = arrayOf(c2, c1)
       val colors = arrayOf(Color(0x64_44_05_F7, true), Color(0x00_F7_23_59, true))
-      g2.setPaint(RadialGradientPaint(pt, r2.toFloat(), floatArrayOf(0f, 1f), colors))
+      g2.setPaint(RadialGradientPaint(pt, r2, floatArrayOf(0f, 1f), colors))
       g2.setComposite(AlphaComposite.SrcAtop)
       // g2.setClip(shape)
       g2.fill(Ellipse2D.Float(pt.x - radius, pt.y - radius, r2, r2))
