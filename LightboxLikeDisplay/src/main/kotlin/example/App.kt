@@ -99,21 +99,26 @@ class LightboxGlassPane : JPanel() {
     animatedIcon.setRunning(isVisible)
   }
 
-  protected override fun paintComponent(g: Graphics) {
+  override fun paintComponent(g: Graphics) {
     getRootPane()?.getLayeredPane()?.print(g)
     super.paintComponent(g)
 
-    if (curimgh < img.getIconHeight() + BW + BW) {
-      curimgh += img.getIconHeight() / 16
-    } else if (curimgw < img.getIconWidth() + BW + BW) {
-      curimgh = img.getIconHeight() + BW + BW
-      curimgw += img.getIconWidth() / 16
-    } else if (1f - alpha > 0) {
-      curimgw = img.getIconWidth() + BW + BW
-      alpha = alpha + .1f
-    } else {
-      animatedIcon.setRunning(false)
-      animator.stop()
+    when {
+      curimgh < img.getIconHeight() + BW + BW -> {
+        curimgh += img.getIconHeight() / 16
+      }
+      curimgw < img.getIconWidth() + BW + BW -> {
+        curimgh = img.getIconHeight() + BW + BW
+        curimgw += img.getIconWidth() / 16
+      }
+      1f - alpha > 0 -> {
+        curimgw = img.getIconWidth() + BW + BW
+        alpha += .1f
+      }
+      else -> {
+        animatedIcon.setRunning(false)
+        animator.stop()
+      }
     }
     rect.setSize(curimgw, curimgh)
     val screen = getBounds()
@@ -127,7 +132,7 @@ class LightboxGlassPane : JPanel() {
     g2.fill(rect)
 
     if (alpha > 0) {
-      g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Math.min(alpha, 1f)))
+      g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha.coerceAtMost(1f)))
       g2.drawImage(img.getImage(), rect.x + BW, rect.y + BW, img.getIconWidth(), img.getIconHeight(), this)
     } else {
       val cx = centerPt.x - animatedIcon.getIconWidth() / 2
@@ -176,7 +181,7 @@ class AnimeIcon : Icon {
     for (i in 0 until size) {
       val alpha = if (running) (i + 1) / size.toFloat() else .5f
       g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha))
-      g2.fill(list.get(i))
+      g2.fill(list[i])
     }
     g2.dispose()
   }
