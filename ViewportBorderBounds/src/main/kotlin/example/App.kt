@@ -22,7 +22,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val styleSheet = StyleSheet().also {
       it.addRule(".str {color:#ffa0a0}")
       it.addRule(".kwd {color:#f0e68c;font-weight:bold}")
-      it.addRule(".com {color:#87ceeb0}")
+      it.addRule(".com {color:#87ceeb}")
       it.addRule(".typ {color:#98fb98}")
       it.addRule(".lit {color:#cd5c5c}")
       it.addRule(".pun {color:#ffffff}")
