@@ -75,7 +75,7 @@ class ListItemTransferHandler : TransferHandler() {
     val src = c as? JList<*> ?: return null
     source = src
     src.getSelectedIndices().forEach { selectedIndices.add(it) }
-    val transferedObjects = src.getSelectedValuesList()
+    val transferObjects = src.getSelectedValuesList()
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(localObjectFlavor)
 
@@ -84,7 +84,7 @@ class ListItemTransferHandler : TransferHandler() {
       @Throws(UnsupportedFlavorException::class, IOException::class)
       override fun getTransferData(flavor: DataFlavor): Any {
         return if (isDataFlavorSupported(flavor)) {
-          transferedObjects
+          transferObjects
         } else {
           throw UnsupportedFlavorException(flavor)
         }
@@ -92,14 +92,14 @@ class ListItemTransferHandler : TransferHandler() {
     }
   }
 
-  override fun canImport(info: TransferHandler.TransferSupport) =
+  override fun canImport(info: TransferSupport) =
     info.isDrop() &&
-    info.isDataFlavorSupported(localObjectFlavor) &&
-    info.getDropLocation() is JList.DropLocation
+      info.isDataFlavorSupported(localObjectFlavor) &&
+      info.getDropLocation() is JList.DropLocation
 
-  override fun getSourceActions(c: JComponent) = TransferHandler.MOVE // TransferHandler.COPY_OR_MOVE
+  override fun getSourceActions(c: JComponent) = MOVE // COPY_OR_MOVE
 
-  override fun importData(info: TransferHandler.TransferSupport): Boolean {
+  override fun importData(info: TransferSupport): Boolean {
     val dl = info.getDropLocation()
     val target = info.getComponent()
     if (!canImport(info) || dl !is JList.DropLocation || target !is JList<*>) {
@@ -108,7 +108,8 @@ class ListItemTransferHandler : TransferHandler() {
     @Suppress("UNCHECKED_CAST")
     val listModel = target.getModel() as DefaultListModel<Any>
     val max = listModel.getSize()
-    var index = dl.getIndex().takeIf { it >= 0 && it < max } ?: max
+    // var index = minOf(maxOf(0, dl.getIndex()), max)
+    var index = dl.getIndex().takeIf { it in 0 until max } ?: max
     addIndex = index
     val values = runCatching {
       info.getTransferable().getTransferData(localObjectFlavor) as? List<*>
@@ -119,15 +120,15 @@ class ListItemTransferHandler : TransferHandler() {
       target.addSelectionInterval(i, i)
     }
     addCount = if (target == source) values.size else 0
-    return values.size > 0
+    return values.isNotEmpty()
   }
 
   override fun exportDone(c: JComponent, data: Transferable, action: Int) {
-    cleanup(c, action == TransferHandler.MOVE)
+    cleanup(c, action == MOVE)
   }
 
   private fun cleanup(c: JComponent, remove: Boolean) {
-    if (remove && !selectedIndices.isEmpty()) {
+    if (remove && selectedIndices.isNotEmpty()) {
       // If we are moving items around in the same list, we
       // need to adjust the indices accordingly, since those
       // after the insertion point have moved.

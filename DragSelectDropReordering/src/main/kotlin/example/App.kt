@@ -19,36 +19,35 @@ class MainPanel : JPanel(BorderLayout()) {
   init {
     val model = DefaultListModel<ListItem>().also {
       // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
-      it.addElement(ListItem("asdasdfsd", "wi0009-32.png"))
+      it.addElement(ListItem("11111111", "wi0009-32.png"))
       it.addElement(ListItem("12345", "wi0054-32.png"))
-      it.addElement(ListItem("ADFFDF.asd", "wi0062-32.png"))
+      it.addElement(ListItem("222222.asd", "wi0062-32.png"))
       it.addElement(ListItem("test", "wi0063-32.png"))
       it.addElement(ListItem("32.png", "wi0064-32.png"))
-      it.addElement(ListItem("asdfsd.jpg", "wi0096-32.png"))
+      it.addElement(ListItem("33333.jpg", "wi0096-32.png"))
       it.addElement(ListItem("6896", "wi0111-32.png"))
       it.addElement(ListItem("t467467est", "wi0122-32.png"))
       it.addElement(ListItem("test123", "wi0124-32.png"))
       it.addElement(ListItem("test(1)", "wi0126-32.png"))
     }
-    val list = ReorderbleList(model)
+    val list = ReorderingList(model)
     list.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10))
     add(JScrollPane(list))
     setPreferredSize(Dimension(320, 240))
   }
 }
 
-data class ListItem(val title: String, val iconfile: String) {
-  val nicon: ImageIcon
+data class ListItem(val title: String, val iconFile: String) {
+  val nicon = ImageIcon(javaClass.getResource(iconFile))
   val sicon: ImageIcon
 
   init {
-    this.nicon = ImageIcon(javaClass.getResource(iconfile))
     val ip = FilteredImageSource(nicon.getImage().getSource(), SelectedImageFilter())
     this.sicon = ImageIcon(Toolkit.getDefaultToolkit().createImage(ip))
   }
 }
 
-class ReorderbleList(model: ListModel<ListItem>) : JList<ListItem>(model) {
+class ReorderingList(model: ListModel<ListItem>) : JList<ListItem>(model) {
   private var rbl: MouseInputListener? = null
   private var rubberBandColor: Color? = null
   private val rubberBand: Path2D = Path2D.Double()
@@ -63,7 +62,7 @@ class ReorderbleList(model: ListModel<ListItem>) : JList<ListItem>(model) {
     super.updateUI()
 
     rubberBandColor = makeRubberBandColor(getSelectionBackground())
-    setLayoutOrientation(JList.HORIZONTAL_WRAP)
+    setLayoutOrientation(HORIZONTAL_WRAP)
     setVisibleRowCount(0)
     setFixedCellWidth(62)
     setFixedCellHeight(62)
@@ -108,7 +107,7 @@ class ReorderbleList(model: ListModel<ListItem>) : JList<ListItem>(model) {
       rubberBand.closePath()
 
       val indices = (0 until l.getModel().getSize())
-          .filter { rubberBand.intersects(l.getCellBounds(it, it)) }.toIntArray()
+        .filter { rubberBand.intersects(l.getCellBounds(it, it)) }.toIntArray()
       l.setSelectedIndices(indices)
       l.repaint()
     }
@@ -117,7 +116,7 @@ class ReorderbleList(model: ListModel<ListItem>) : JList<ListItem>(model) {
       (e.getComponent() as? JList<*>)?.also {
         rubberBand.reset()
         it.setFocusable(true)
-        it.setDragEnabled(it.getSelectedIndices().size > 0)
+        it.setDragEnabled(it.getSelectedIndices().isNotEmpty())
         it.repaint()
       }
     }
@@ -182,7 +181,7 @@ class ListItemListCellRenderer : ListCellRenderer<ListItem> {
     renderer.add(label, BorderLayout.SOUTH)
   }
 
-  fun getNimbusNoFocusBorder(): Border {
+  private fun getNimbusNoFocusBorder(): Border {
     val i = focusBorder.getBorderInsets(label)
     return BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
   }
@@ -216,16 +215,16 @@ class ListItemListCellRenderer : ListCellRenderer<ListItem> {
 class ListItemTransferHandler : TransferHandler() {
   val localObjectFlavor = DataFlavor(List::class.java, "List of items")
   // var indices: IntArray? = null
-  val selectedIndices = mutableListOf<Int>()
-  var addIndex = -1 // Location where items were added
-  var addCount = 0 // Number of items added.
+  private val selectedIndices = mutableListOf<Int>()
+  private var addIndex = -1 // Location where items were added
+  private var addCount = 0 // Number of items added.
 
   override fun createTransferable(c: JComponent): Transferable? {
     val source = c as? JList<*> ?: return null
     c.getRootPane().getGlassPane().setVisible(true)
     source.getSelectedIndices().forEach { selectedIndices.add(it) }
-    val transferedObjects = source.getSelectedValuesList()
-    // return DataHandler(transferedObjects, localObjectFlavor.getMimeType())
+    val transferObjects = source.getSelectedValuesList()
+    // return DataHandler(transferObjects, localObjectFlavor.getMimeType())
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(localObjectFlavor)
 
@@ -234,7 +233,7 @@ class ListItemTransferHandler : TransferHandler() {
       @Throws(UnsupportedFlavorException::class, IOException::class)
       override fun getTransferData(flavor: DataFlavor): Any {
         return if (isDataFlavorSupported(flavor)) {
-          transferedObjects
+          transferObjects
         } else {
           throw UnsupportedFlavorException(flavor)
         }
@@ -242,18 +241,18 @@ class ListItemTransferHandler : TransferHandler() {
     }
   }
 
-  override fun canImport(info: TransferHandler.TransferSupport) =
-    info.isDrop() &&
-    info.isDataFlavorSupported(localObjectFlavor) &&
-    info.getDropLocation() is JList.DropLocation
+  override fun canImport(info: TransferSupport) =
+      info.isDrop() &&
+      info.isDataFlavorSupported(localObjectFlavor) &&
+      info.getDropLocation() is JList.DropLocation
 
   override fun getSourceActions(c: JComponent): Int {
     println("getSourceActions")
     c.getRootPane().getGlassPane().setCursor(DragSource.DefaultMoveDrop)
-    return TransferHandler.MOVE // TransferHandler.COPY_OR_MOVE
+    return MOVE // COPY_OR_MOVE
   }
 
-  override fun importData(info: TransferHandler.TransferSupport): Boolean {
+  override fun importData(info: TransferSupport): Boolean {
     val dl = info.getDropLocation()
     val target = info.getComponent()
     if (!canImport(info) || dl !is JList.DropLocation || target !is JList<*>) {
@@ -262,7 +261,7 @@ class ListItemTransferHandler : TransferHandler() {
     @Suppress("UNCHECKED_CAST")
     val listModel = target.getModel() as DefaultListModel<Any>
     val max = listModel.getSize()
-    var index = dl.getIndex().takeIf { it >= 0 && it < max } ?: max
+    var index = dl.getIndex().takeIf { it in 0 until max } ?: max
     addIndex = index
     val values = runCatching {
       info.getTransferable().getTransferData(localObjectFlavor) as? List<*>
@@ -281,11 +280,11 @@ class ListItemTransferHandler : TransferHandler() {
     val glassPane = c.getRootPane().getGlassPane()
     // glassPane.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
     glassPane.setVisible(false)
-    cleanup(c, action == TransferHandler.MOVE)
+    cleanup(c, action == MOVE)
   }
 
   private fun cleanup(c: JComponent, remove: Boolean) {
-    if (remove && !selectedIndices.isEmpty()) {
+    if (remove && selectedIndices.isNotEmpty()) {
       // If we are moving items around in the same list, we
       // need to adjust the indices accordingly, since those
       // after the insertion point have moved.
