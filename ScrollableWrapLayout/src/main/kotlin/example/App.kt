@@ -62,9 +62,9 @@ class ScrollableWrapLayout(align: Int, hgap: Int, vgap: Int) : FlowLayout(align,
     width -= insets.left + insets.right + fixedHgap * 2
     for (i in 0 until target.componentCount) {
       val m: Component? = target.getComponent(i)
-      if (m!!.isVisible) {
+      if (m.isVisible) {
         val d: Dimension? = m.preferredSize
-        if (width - d!!.width - fixedHgap < 0) {
+        if (width - d.width - fixedHgap < 0) {
           columns = i
           break
         }
