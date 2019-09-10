@@ -11,9 +11,9 @@ class MainPanel : JPanel(BorderLayout()) {
     val weightMixing = false
     val label = JLabel(ImageIcon(javaClass.getResource("CRW_3857_JFR.jpg"))) // http://sozai-free.com/
     val vport = object : JViewport() {
-      private var isAjusting = false
+      private var isAdjusting = false
       override fun revalidate() {
-        if (!weightMixing && isAjusting) {
+        if (!weightMixing && isAdjusting) {
           return
         }
         super.revalidate()
@@ -23,9 +23,9 @@ class MainPanel : JPanel(BorderLayout()) {
         if (weightMixing) {
           super.setViewPosition(p)
         } else {
-          isAjusting = true
+          isAdjusting = true
           super.setViewPosition(p)
-          isAjusting = false
+          isAdjusting = false
         }
       }
     }
@@ -60,7 +60,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class HandScrollListener : MouseAdapter() {
+class HandScrollListener : MouseAdapter() {
   private val defCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
   private val hndCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
   private val pp = Point()
