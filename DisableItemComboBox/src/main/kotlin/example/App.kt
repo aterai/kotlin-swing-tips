@@ -38,15 +38,15 @@ class MainPanel : JPanel(BorderLayout()) {
 
   private fun getDisableIndexFromTextField(field: JTextField) = runCatching {
     field.getText().split(",")
-        .map { it.trim { it <= ' ' } }
-        .filterNot { it.isEmpty() }
-        .map { it.toInt() }
-        .toSet()
-    }.onFailure {
-      Toolkit.getDefaultToolkit().beep()
-      val root = field.getRootPane()
-      JOptionPane.showMessageDialog(root, "invalid value.\n${it.message}", "Error", JOptionPane.ERROR_MESSAGE)
-    }.getOrNull() ?: emptySet<Int>()
+      .map { it.trim() }
+      .filterNot { it.isEmpty() }
+      .map { it.toInt() }
+      .toSet()
+  }.onFailure {
+    Toolkit.getDefaultToolkit().beep()
+    val root = field.getRootPane()
+    JOptionPane.showMessageDialog(root, "invalid value.\n${it.message}", "Error", JOptionPane.ERROR_MESSAGE)
+  }.getOrNull() ?: emptySet()
 }
 
 class DisableItemComboBox<E> : JComboBox<E> {
