@@ -25,9 +25,9 @@ class MainPanel : JPanel(BorderLayout()) {
           override fun actionPerformed(e: ActionEvent) {
             val isPopupVisible = isPopupVisible()
             setPopupVisible(false)
-            val m = getModel() as? DefaultComboBoxModel<String> ?: return@actionPerformed
+            val m = getModel() as? DefaultComboBoxModel<String> ?: return
             val str = getEditor().getItem()?.toString() ?: ""
-            if (m.getIndexOf(str) < 0 && getInputVerifier()?.verify(cb) ?: false) {
+            if (m.getIndexOf(str) < 0 && getInputVerifier()?.verify(cb) == true) {
               m.removeElement(str)
               m.insertElementAt(str, 0)
               if (m.getSize() > MAX_HISTORY) {
@@ -74,7 +74,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class SelectItemMenuListener : PopupMenuListener {
+class SelectItemMenuListener : PopupMenuListener {
   override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
     val c = e.getSource() as? JComboBox<*> ?: return
     c.setSelectedItem(c.getEditor().getItem())
@@ -86,7 +86,7 @@ internal class SelectItemMenuListener : PopupMenuListener {
 }
 
 // @see https://docs.oracle.com/javase/tutorial/uiswing/examples/misc/FieldValidatorProject/src/FieldValidator.java
-internal class ValidationLayerUI<V : JTextComponent> : LayerUI<V>() {
+class ValidationLayerUI<V : JTextComponent> : LayerUI<V>() {
   override fun paint(g: Graphics, c: JComponent) {
     super.paint(g, c)
     val cb = SwingUtilities.getAncestorOfClass(JComboBox::class.java, c) as? JComboBox<*> ?: return
@@ -110,7 +110,7 @@ internal class ValidationLayerUI<V : JTextComponent> : LayerUI<V>() {
   }
 }
 
-internal class LengthInputVerifier : InputVerifier() {
+class LengthInputVerifier : InputVerifier() {
   override fun verify(c: JComponent) = (c as? JComboBox<*>)?.let {
     MAX_LEN - (it.getEditor().getItem()?.toString()?.length ?: 0) >= 0
   } ?: false
