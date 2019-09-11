@@ -27,12 +27,10 @@ class MainPanel : JPanel(BorderLayout()) {
         TreeUtil.SWAP_COUNTER.set(0)
         // val r = TreeUtil.deepCopyTree(root, root.clone() as DefaultMutableTreeNode)
         val r = TreeUtil.deepCopyTree(root, DefaultMutableTreeNode(root.getUserObject()))
-        if (check == sort1) {
-          TreeUtil.sortTree1(r)
-        } else if (check == sort2) {
-          TreeUtil.sortTree2(r)
-        } else {
-          TreeUtil.sortTree3(r)
+        when (check) {
+          sort1 -> TreeUtil.sortTree1(r)
+          sort2 -> TreeUtil.sortTree2(r)
+          else -> TreeUtil.sortTree3(r)
         }
         log(check.getText())
         tree.setModel(DefaultTreeModel(r))
@@ -75,7 +73,7 @@ internal object TreeUtil {
   // private val tnc = Comparator.comparing<DefaultMutableTreeNode, Boolean> { it.isLeaf() }
   //     .thenComparing { n -> n.getUserObject().toString() }
   private val tnc = compareBy<DefaultMutableTreeNode> { it.isLeaf() }
-      .thenBy { it.getUserObject().toString() }
+    .thenBy { it.getUserObject().toString() }
 
   fun sortTree1(root: DefaultMutableTreeNode) {
     val n = root.getChildCount()
@@ -118,37 +116,37 @@ internal object TreeUtil {
 
   fun sortTree2(parent: DefaultMutableTreeNode) {
     parent.preorderEnumeration().toList()
-        .filterIsInstance(DefaultMutableTreeNode::class.java)
-        .filterNot { it.isLeaf() }
-        .forEach { sort2(it) }
+      .filterIsInstance(DefaultMutableTreeNode::class.java)
+      .filterNot { it.isLeaf() }
+      .forEach { sort2(it) }
   }
 
-  fun sort3(parent: DefaultMutableTreeNode) {
+  private fun sort3(parent: DefaultMutableTreeNode) {
     val children = parent.children().toList()
-        .filterIsInstance(DefaultMutableTreeNode::class.java)
-        .sortedWith(tnc)
-        // .sortedWith(compareBy(DefaultMutableTreeNode::isLeaf, { it.getUserObject().toString() }))
+      .filterIsInstance(DefaultMutableTreeNode::class.java)
+      .sortedWith(tnc)
+    // .sortedWith(compareBy(DefaultMutableTreeNode::isLeaf, { it.getUserObject().toString() }))
     parent.removeAllChildren()
     children.forEach { parent.add(it) }
   }
 
   fun sortTree3(parent: DefaultMutableTreeNode) {
     parent.preorderEnumeration().toList()
-        .filterIsInstance(DefaultMutableTreeNode::class.java)
-        .filterNot { it.isLeaf() }
-        .forEach { sort3(it) }
+      .filterIsInstance(DefaultMutableTreeNode::class.java)
+      .filterNot { it.isLeaf() }
+      .forEach { sort3(it) }
   }
 
   fun deepCopyTree(src: DefaultMutableTreeNode, tgt: DefaultMutableTreeNode): DefaultMutableTreeNode {
     src.children().toList()
-        .filterIsInstance(DefaultMutableTreeNode::class.java)
-        .forEach {
-          val clone = DefaultMutableTreeNode(it.getUserObject())
-          tgt.add(clone)
-          if (!it.isLeaf()) {
-            deepCopyTree(it, clone)
-          }
+      .filterIsInstance(DefaultMutableTreeNode::class.java)
+      .forEach {
+        val clone = DefaultMutableTreeNode(it.getUserObject())
+        tgt.add(clone)
+        if (!it.isLeaf()) {
+          deepCopyTree(it, clone)
         }
+      }
     return tgt
   }
 
