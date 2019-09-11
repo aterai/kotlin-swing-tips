@@ -12,10 +12,10 @@ const val DELAY = 10
 
 val columnNames = arrayOf("String", "Integer", "Boolean")
 val data = arrayOf(
-    arrayOf("aaa", 12, true),
-    arrayOf("bbb", 5, false),
-    arrayOf("CCC", 92, true),
-    arrayOf("DDD", 0, false))
+  arrayOf("aaa", 12, true),
+  arrayOf("bbb", 5, false),
+  arrayOf("CCC", 92, true),
+  arrayOf("DDD", 0, false))
 val model: DefaultTableModel = object : DefaultTableModel(data, columnNames) {
   override fun getColumnClass(column: Int) = when (column) {
     0 -> String::class.java
@@ -82,7 +82,7 @@ fun createActionPerformed() {
 
 fun deleteActionPerformed() {
   val selection = table.getSelectedRows()
-  if (selection.size == 0) {
+  if (selection.isEmpty()) {
     return
   }
   Timer(DELAY, object : ActionListener {
