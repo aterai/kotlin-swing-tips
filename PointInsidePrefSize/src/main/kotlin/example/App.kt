@@ -30,7 +30,7 @@ class MainPanel : JPanel(BorderLayout()) {
     model.addRow(arrayOf<Any?>(3, "Example.jp", makeUrl("http://www.example.jp/")))
 
     val table = object : JTable(model) {
-      private val evenColor = Color(250, 250, 250)
+      private val evenColor = Color(0xFA_FA_FA)
       override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
         val c = super.prepareRenderer(tcr, row, column)
         c.setForeground(getForeground())
@@ -71,9 +71,9 @@ class MainPanel : JPanel(BorderLayout()) {
   private fun makeUrl(spec: String) = runCatching { URL(spec) }.getOrNull()
 }
 
-internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMotionListener {
-  private var vrow = -1 // viewRowIndex
-  private var vcol = -1 // viewColumnIndex
+class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMotionListener {
+  private var viewRowIndex = -1
+  private var viewColumnIndex = -1
   private var isRollover: Boolean = false
 
   override fun getTableCellRendererComponent(
@@ -88,55 +88,54 @@ internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMot
 
     val cm = table.getColumnModel()
     val i = this.getInsets()
-    lrect.x = i.left
-    lrect.y = i.top
-    lrect.width = cm.getColumn(column).getWidth() - cm.getColumnMargin() - i.right - lrect.x
-    lrect.height = table.getRowHeight(row) - table.getRowMargin() - i.bottom - lrect.y
-    irect.setBounds(0, 0, 0, 0)
-    trect.setBounds(0, 0, 0, 0)
+    CELL_RECT.x = i.left
+    CELL_RECT.y = i.top
+    CELL_RECT.width = cm.getColumn(column).getWidth() - cm.getColumnMargin() - i.right - CELL_RECT.x
+    CELL_RECT.height = table.getRowHeight(row) - table.getRowMargin() - i.bottom - CELL_RECT.y
+    ICON_RECT.setBounds(0, 0, 0, 0)
+    TEXT_RECT.setBounds(0, 0, 0, 0)
 
     val str = SwingUtilities.layoutCompoundLabel(
-        this, getFontMetrics(getFont()), value?.toString() ?: "", getIcon(),
-        getVerticalAlignment(), getHorizontalAlignment(),
-        getVerticalTextPosition(), getHorizontalTextPosition(),
-        lrect, irect, trect, getIconTextGap())
+      this, getFontMetrics(getFont()), value?.toString() ?: "", getIcon(),
+      getVerticalAlignment(), getHorizontalAlignment(),
+      getVerticalTextPosition(), getHorizontalTextPosition(),
+      CELL_RECT, ICON_RECT, TEXT_RECT, getIconTextGap())
     setText(if (isRolloverCell(table, row, column)) "<html><u><font color='blue'>$str" else str)
     return this
   }
 
   private fun isRolloverCell(table: JTable, row: Int, column: Int) =
-      !table.isEditing() && vrow == row && vcol == column && isRollover
+    !table.isEditing() && viewRowIndex == row && viewColumnIndex == column && isRollover
 
   override fun mouseMoved(e: MouseEvent) {
     val table = e.getComponent() as? JTable ?: return
     val pt = e.getPoint()
-    val prevRow = vrow
-    val prevCol = vcol
+    val prevRow = viewRowIndex
+    val prevCol = viewColumnIndex
     val prevRollover = isRollover
-    vrow = table.rowAtPoint(pt)
-    vcol = table.columnAtPoint(pt)
-    isRollover = isUrlColumn(table, vcol) && pointInsidePrefSize(table, pt)
-    val isSameCell = vrow == prevRow && vcol == prevCol && isRollover == prevRollover
+    viewRowIndex = table.rowAtPoint(pt)
+    viewColumnIndex = table.columnAtPoint(pt)
+    isRollover = isUrlColumn(table, viewColumnIndex) && pointInsidePrefSize(table, pt)
+    val isSameCell = viewRowIndex == prevRow && viewColumnIndex == prevCol && isRollover == prevRollover
     val isNotRollover = !isRollover && !prevRollover
     if (isSameCell || isNotRollover) {
       return
     }
-    val repaintRect: Rectangle
-    if (isRollover) {
-      val r = table.getCellRect(vrow, vcol, false)
-      repaintRect = if (prevRollover) r.union(table.getCellRect(prevRow, prevCol, false)) else r
+    val repaintRect = if (isRollover) {
+      val r = table.getCellRect(viewRowIndex, viewColumnIndex, false)
+      if (prevRollover) r.union(table.getCellRect(prevRow, prevCol, false)) else r
     } else { // if (prevRollover) {
-      repaintRect = table.getCellRect(prevRow, prevCol, false)
+      table.getCellRect(prevRow, prevCol, false)
     }
     table.repaint(repaintRect)
   }
 
   override fun mouseExited(e: MouseEvent) {
     val table = e.getComponent() as? JTable ?: return
-    if (isUrlColumn(table, vcol)) {
-      table.repaint(table.getCellRect(vrow, vcol, false))
-      vrow = -1
-      vcol = -1
+    if (isUrlColumn(table, viewColumnIndex)) {
+      table.repaint(table.getCellRect(viewRowIndex, viewColumnIndex, false))
+      viewRowIndex = -1
+      viewColumnIndex = -1
       isRollover = false
     }
   }
@@ -144,10 +143,10 @@ internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMot
   override fun mouseClicked(e: MouseEvent) {
     val table = e.getComponent() as? JTable ?: return
     val pt = e.getPoint()
-    val ccol = table.columnAtPoint(pt)
-    if (isUrlColumn(table, ccol) && pointInsidePrefSize(table, pt)) {
-      val crow = table.rowAtPoint(pt)
-      val url = table.getValueAt(crow, ccol) as? URL ?: return
+    val col = table.columnAtPoint(pt)
+    if (isUrlColumn(table, col) && pointInsidePrefSize(table, pt)) {
+      val row = table.rowAtPoint(pt)
+      val url = table.getValueAt(row, col) as? URL ?: return
       println(url)
       if (Desktop.isDesktopSupported()) { // JDK 1.6.0
         runCatching {
@@ -167,13 +166,7 @@ internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMot
 
   override fun mouseReleased(e: MouseEvent) { /* not needed */ }
 
-  companion object {
-    private val lrect = Rectangle()
-    private val irect = Rectangle()
-    private val trect = Rectangle()
-
-    private fun isUrlColumn(table: JTable, column: Int) =
-        column >= 0 && table.getColumnClass(column) == URL::class.java
+  private fun isUrlColumn(tbl: JTable, col: Int) = col >= 0 && tbl.getColumnClass(col) == URL::class.java
 
   // @see SwingUtilities2.pointOutsidePrefSize(...)
   private fun pointInsidePrefSize(table: JTable, p: Point): Boolean {
@@ -190,6 +183,11 @@ internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMot
     }
     return cellBounds.contains(p)
   }
+
+  companion object {
+    private val CELL_RECT = Rectangle()
+    private val ICON_RECT = Rectangle()
+    private val TEXT_RECT = Rectangle()
   }
 }
 
