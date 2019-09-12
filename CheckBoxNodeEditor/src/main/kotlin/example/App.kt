@@ -19,7 +19,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val model = tree.getModel()
     (model.getRoot() as? DefaultMutableTreeNode)?.also { root ->
       root.breadthFirstEnumeration().toList()
-        .filterIsInstance(DefaultMutableTreeNode::class.java)
+        .filterIsInstance<DefaultMutableTreeNode>()
         .forEach {
           val title = it.getUserObject()?.toString() ?: ""
           it.setUserObject(CheckBoxNode(title, Status.DESELECTED))

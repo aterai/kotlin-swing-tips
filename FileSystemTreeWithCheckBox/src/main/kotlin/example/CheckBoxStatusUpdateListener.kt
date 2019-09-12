@@ -44,10 +44,8 @@ class CheckBoxStatusUpdateListener : TreeModelListener {
 
   private fun updateParentUserObject(parent: DefaultMutableTreeNode) {
     val list = parent.children().toList()
-      .filterIsInstance(DefaultMutableTreeNode::class.java)
-      .map { it.getUserObject() }
-      .filterIsInstance(CheckBoxNode::class.java)
-      .map { it.getStatus() }
+      .filterIsInstance<DefaultMutableTreeNode>()
+      .mapNotNull { (it.getUserObject() as? CheckBoxNode)?.getStatus() }
 
     (parent.getUserObject() as? CheckBoxNode)?.also {
       val status = when {
@@ -61,7 +59,7 @@ class CheckBoxStatusUpdateListener : TreeModelListener {
 
   private fun updateAllChildrenUserObject(parent: DefaultMutableTreeNode, status: Status) {
     parent.breadthFirstEnumeration().toList()
-      .filterIsInstance(DefaultMutableTreeNode::class.java)
+      .filterIsInstance<DefaultMutableTreeNode>()
       .filter { it != parent }
       .forEach {
         (it.getUserObject() as? CheckBoxNode)?.also { check ->

@@ -228,7 +228,7 @@ internal class ColumnGroup(text: String) {
     // return emptyList<Any>()
     return when {
       list.contains(c) -> g
-      else -> list.filterIsInstance(ColumnGroup::class.java)
+      else -> list.filterIsInstance<ColumnGroup>()
         .map { it.getColumnGroupList(c, ArrayList(g)) }
         .filterNot { it.isEmpty() }.firstOrNull() ?: emptyList<Any>()
     }

@@ -115,7 +115,7 @@ class FileTransferHandler : TransferHandler() {
       support.getTransferable().getTransferData(DataFlavor.javaFileListFlavor) as? List<*>
     }.getOrNull() ?: emptyList<Any>()
     val model = (support.getComponent() as? JTable)?.getModel() as? DefaultTableModel ?: return false
-    list.filterIsInstance(File::class.java)
+    list.filterIsInstance<File>()
       .map { file -> (0..2).map { file }.toTypedArray() }
       .forEach { model.addRow(it) }
     return list.isNotEmpty()

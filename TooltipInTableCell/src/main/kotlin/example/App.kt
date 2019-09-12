@@ -13,11 +13,11 @@ class MainPanel : JPanel(BorderLayout()) {
   private val questionIcon = getOptionPaneIcon("OptionPane.questionIcon")
   private val warningIcon = getOptionPaneIcon("OptionPane.warningIcon")
   private val data = arrayOf(
-    arrayOf<Any>("aa", listOf(informationIcon, errorIcon)),
-    arrayOf<Any>("bb", listOf(errorIcon, informationIcon, warningIcon, questionIcon)),
-    arrayOf<Any>("cc", listOf(questionIcon, errorIcon, warningIcon)),
-    arrayOf<Any>("dd", listOf(informationIcon)),
-    arrayOf<Any>("ee", listOf(warningIcon, questionIcon)))
+    arrayOf("aa", listOf(informationIcon, errorIcon)),
+    arrayOf("bb", listOf(errorIcon, informationIcon, warningIcon, questionIcon)),
+    arrayOf("cc", listOf(questionIcon, errorIcon, warningIcon)),
+    arrayOf("dd", listOf(informationIcon)),
+    arrayOf("ee", listOf(warningIcon, questionIcon)))
   private val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = when (column) {
       1 -> List::class.java
@@ -27,13 +27,13 @@ class MainPanel : JPanel(BorderLayout()) {
   private val table = object : JTable(model) {
     override fun getToolTipText(e: MouseEvent): String? {
       val pt = e.getPoint()
-      val vrow = rowAtPoint(pt)
-      val vcol = columnAtPoint(pt)
-      val mcol = convertColumnIndexToModel(vcol)
-      if (mcol == LIST_ICON_COLUMN) {
-        val c = prepareRenderer(getCellRenderer(vrow, vcol), vrow, vcol)
+      val row = rowAtPoint(pt)
+      val column = columnAtPoint(pt)
+      val modelColumnIndex = convertColumnIndexToModel(column)
+      if (modelColumnIndex == LIST_ICON_COLUMN) {
+        val c = prepareRenderer(getCellRenderer(row, column), row, column)
         if (c is JPanel) {
-          val r = getCellRect(vrow, vcol, true)
+          val r = getCellRect(row, column, true)
           c.setBounds(r)
           // @see https://stackoverflow.com/questions/10854831/tool-tip-in-jpanel-in-jtable-not-working
           c.doLayout()
@@ -69,7 +69,7 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  fun getOptionPaneIcon(key: String) = (UIManager.getIcon(key) as? ImageIcon)?.also {
+  private fun getOptionPaneIcon(key: String) = (UIManager.getIcon(key) as? ImageIcon)?.also {
     it.setDescription(key)
   }
 
@@ -78,7 +78,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class ListIconRenderer : TableCellRenderer {
+class ListIconRenderer : TableCellRenderer {
   private val renderer = JPanel(FlowLayout(FlowLayout.LEFT))
 
   override fun getTableCellRendererComponent(
@@ -98,7 +98,7 @@ internal class ListIconRenderer : TableCellRenderer {
       // renderer.setBackground(table.getBackground())
     }
     if (value is List<*>) {
-      value.filterIsInstance(Icon::class.java)
+      value.filterIsInstance<Icon>()
         .map { makeLabel(it) }
         .forEach { renderer.add(it) }
     }

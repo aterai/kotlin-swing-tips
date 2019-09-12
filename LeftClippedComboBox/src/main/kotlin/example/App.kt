@@ -14,7 +14,7 @@ fun makeUI() = JPanel(BorderLayout()).also {
   it.setPreferredSize(Dimension(320, 240))
 }
 
-private fun getArrowButton(c: Container) = c.getComponents().filterIsInstance(JButton::class.java).firstOrNull()
+private fun getArrowButton(c: Container) = c.getComponents().filterIsInstance<JButton>().firstOrNull()
 
 private fun makeTitledPanel(title: String, c: Component) = Box.createVerticalBox().also {
   it.setBorder(BorderFactory.createTitledBorder(title))
@@ -24,9 +24,9 @@ private fun makeTitledPanel(title: String, c: Component) = Box.createVerticalBox
 
 private fun makeComboBoxModel() = DefaultComboBoxModel<String>().also {
   it.addElement("1234567890123456789012/3456789012345678901234567890123/456789012345678901234567890.jpg")
-  it.addElement("aaaa.tif")
-  it.addElement("\\asdfsadfs\\afsdfasdf\\asdfasdfasd.avi")
-  it.addElement("aaaabbbcc.pdf")
+  it.addElement("abc.tif")
+  it.addElement("\\0123456789\\0123456789\\0123456789.avi")
+  it.addElement("0123456789.pdf")
   it.addElement("c:/b12312343245/643667345624523451/324513/41234125/134513451345135125123412341bb1.mpg")
   it.addElement("http://localhost/1234567890123456789/345678901234567890123456789/456789012345678901234567890.jpg")
 }

@@ -18,8 +18,8 @@ class MainPanel : JPanel(BorderLayout()) {
           resetChoosableFileFilters()
         }
       }
-      val retvalue = fileChooser.showSaveDialog(getRootPane())
-      if (retvalue == JFileChooser.APPROVE_OPTION) {
+      val retValue = fileChooser.showSaveDialog(getRootPane())
+      if (retValue == JFileChooser.APPROVE_OPTION) {
         (fileChooser.getUI() as? EncodingFileChooserUI)?.also {
           val enc = "\nEncoding: ${it.combo.getSelectedItem()}"
           log.setText(fileChooser.getSelectedFile().getAbsolutePath() + enc)
@@ -36,7 +36,7 @@ class MainPanel : JPanel(BorderLayout()) {
             override fun installComponents(fc: JFileChooser) {
               super.installComponents(fc)
               SwingUtils.children(getBottomPanel())
-                .filterIsInstance(JLabel::class.java)
+                .filterIsInstance<JLabel>()
                 .forEach {
                   it.setAlignmentX(1f)
                   it.setHorizontalAlignment(SwingConstants.RIGHT)
@@ -46,8 +46,8 @@ class MainPanel : JPanel(BorderLayout()) {
           resetChoosableFileFilters()
         }
       }
-      val retvalue = fileChooser.showSaveDialog(getRootPane())
-      if (retvalue == JFileChooser.APPROVE_OPTION) {
+      val retValue = fileChooser.showSaveDialog(getRootPane())
+      if (retValue == JFileChooser.APPROVE_OPTION) {
         log.setText(fileChooser.getSelectedFile().getAbsolutePath())
       }
     }
@@ -55,8 +55,8 @@ class MainPanel : JPanel(BorderLayout()) {
     val button3 = JButton("Default")
     button3.addActionListener {
       val fileChooser = JFileChooser()
-      val retvalue = fileChooser.showSaveDialog(getRootPane())
-      if (retvalue == JFileChooser.APPROVE_OPTION) {
+      val retValue = fileChooser.showSaveDialog(getRootPane())
+      if (retValue == JFileChooser.APPROVE_OPTION) {
         log.setText(fileChooser.getSelectedFile().getAbsolutePath())
       }
     }
@@ -73,7 +73,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-class EncodingFileChooserUI(filechooser: JFileChooser) : MetalFileChooserUI(filechooser) {
+class EncodingFileChooserUI(chooser: JFileChooser) : MetalFileChooserUI(chooser) {
   val combo = JComboBox<String>(arrayOf("UTF-8", "UTF-16", "Shift_JIS", "EUC-JP"))
 
   override fun installComponents(fc: JFileChooser) {
@@ -82,10 +82,10 @@ class EncodingFileChooserUI(filechooser: JFileChooser) : MetalFileChooserUI(file
 
     val label = object : JLabel("Encoding:") {
       override fun getPreferredSize() = SwingUtils.children(bottomPanel)
-          .filterIsInstance(JLabel::class.java)
-          .firstOrNull()
-          ?.getPreferredSize()
-          ?: super.getPreferredSize()
+        .filterIsInstance<JLabel>()
+        .firstOrNull()
+        ?.getPreferredSize()
+        ?: super.getPreferredSize()
     }
     label.setDisplayedMnemonic('E')
     label.setLabelFor(combo)
@@ -101,7 +101,7 @@ class EncodingFileChooserUI(filechooser: JFileChooser) : MetalFileChooserUI(file
     bottomPanel.add(Box.createRigidArea(Dimension(1, 5)), 3)
     bottomPanel.add(panel, 4)
     SwingUtils.children(bottomPanel)
-      .filterIsInstance(JLabel::class.java)
+      .filterIsInstance<JLabel>()
       .forEach {
         it.setHorizontalAlignment(SwingConstants.RIGHT)
         it.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5))
@@ -111,7 +111,7 @@ class EncodingFileChooserUI(filechooser: JFileChooser) : MetalFileChooserUI(file
 
 object SwingUtils {
   fun children(parent: Container): List<Component> = parent.getComponents()
-    .filterIsInstance(Container::class.java)
+    .filterIsInstance<Container>()
     .map { children(it) }
     .fold(listOf<Component>(parent)) { a, b -> a + b }
 //  fun stream(parent: Container): Stream<Component> {

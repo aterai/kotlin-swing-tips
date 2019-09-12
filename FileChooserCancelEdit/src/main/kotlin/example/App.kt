@@ -23,11 +23,11 @@ fun makeUI(): Component {
     //     .map(JTable::class.java::cast)
     //     .findFirst()
     //     .ifPresent { append(log, "isEditing: ${it.isEditing()}") }
-    children(fileChooser0).filterIsInstance(JTable::class.java)
-        .firstOrNull()?.also { append(log, "isEditing: ${it.isEditing()}") }
+    children(fileChooser0).filterIsInstance<JTable>()
+      .firstOrNull()?.also { append(log, "isEditing: ${it.isEditing()}") }
 
-    val retvalue = fileChooser0.showOpenDialog(log.getRootPane())
-    if (retvalue == JFileChooser.APPROVE_OPTION) {
+    val retValue = fileChooser0.showOpenDialog(log.getRootPane())
+    if (retValue == JFileChooser.APPROVE_OPTION) {
       append(log, fileChooser0.getSelectedFile().getAbsolutePath())
     }
   }
@@ -52,15 +52,15 @@ fun makeUI(): Component {
     //   // .ifPresent { it.removeEditor() }
     //   .ifPresent(JTable::removeEditor)
 
-    children(fileChooser1).filterIsInstance(JTable::class.java)
-        // .firstOrNull()?.apply(JTable::removeEditor)
-        .firstOrNull()?.also {
-          println(it)
-          it.removeEditor()
-        }
+    children(fileChooser1).filterIsInstance<JTable>()
+      // .firstOrNull()?.apply(JTable::removeEditor)
+      .firstOrNull()?.also {
+        println(it)
+        it.removeEditor()
+      }
 
-    val retvalue = fileChooser1.showOpenDialog(log.getRootPane())
-    if (retvalue == JFileChooser.APPROVE_OPTION) {
+    val retValue = fileChooser1.showOpenDialog(log.getRootPane())
+    if (retValue == JFileChooser.APPROVE_OPTION) {
       append(log, fileChooser1.getSelectedFile().getAbsolutePath())
     }
   }
@@ -79,7 +79,7 @@ fun makeUI(): Component {
 
 private fun setViewTypeDetails(fileChooser: JFileChooser) {
   fileChooser.getActionMap().get("viewTypeDetails")?.actionPerformed(
-      ActionEvent(fileChooser, ActionEvent.ACTION_PERFORMED, "viewTypeDetails"))
+    ActionEvent(fileChooser, ActionEvent.ACTION_PERFORMED, "viewTypeDetails"))
 }
 
 private fun append(log: JTextArea, str: String) {
@@ -107,9 +107,9 @@ private fun append(log: JTextArea, str: String) {
 //     .reduce(Stream.of<Component>(parent), { a, b -> Stream.concat<Component>(a, b) })
 
 fun children(parent: Container): List<Component> = parent.getComponents()
-    .filterIsInstance(Container::class.java)
-    .map { children(it) }
-    .fold(listOf<Component>(parent)) { a, b -> a + b }
+  .filterIsInstance<Container>()
+  .map { children(it) }
+  .fold(listOf<Component>(parent)) { a, b -> a + b }
 
 fun main() {
   EventQueue.invokeLater {

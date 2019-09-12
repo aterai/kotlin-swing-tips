@@ -22,7 +22,7 @@ fun makeUI(): Component {
   }
   val menuBar = makeMenuBar()
   menuBar.getSubElements()
-    .filterIsInstance(JMenu::class.java)
+    .filterIsInstance<JMenu>()
     .forEach { it.addMouseListener(handler) }
 
   val p = JPanel(BorderLayout()).also {
