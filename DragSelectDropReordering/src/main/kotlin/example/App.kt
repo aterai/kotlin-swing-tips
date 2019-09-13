@@ -265,7 +265,7 @@ class ListItemTransferHandler : TransferHandler() {
     addIndex = index
     val values = runCatching {
       info.getTransferable().getTransferData(localObjectFlavor) as? List<*>
-    }.getOrNull() ?: emptyList<Any>()
+    }.getOrNull().orEmpty()
     for (o in values) {
       val i = index++
       listModel.add(i, o)

@@ -46,7 +46,7 @@ class MainPanel : JPanel(BorderLayout()) {
     Toolkit.getDefaultToolkit().beep()
     val root = field.getRootPane()
     JOptionPane.showMessageDialog(root, "invalid value.\n${it.message}", "Error", JOptionPane.ERROR_MESSAGE)
-  }.getOrNull() ?: emptySet()
+  }.getOrNull().orEmpty()
 }
 
 class DisableItemComboBox<E> : JComboBox<E> {

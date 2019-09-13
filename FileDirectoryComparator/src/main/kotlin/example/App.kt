@@ -113,7 +113,7 @@ class FileTransferHandler : TransferHandler() {
   override fun importData(support: TransferSupport): Boolean {
     val list = runCatching {
       support.getTransferable().getTransferData(DataFlavor.javaFileListFlavor) as? List<*>
-    }.getOrNull() ?: emptyList<Any>()
+    }.getOrNull().orEmpty()
     val model = (support.getComponent() as? JTable)?.getModel() as? DefaultTableModel ?: return false
     list.filterIsInstance<File>()
       .map { file -> (0..2).map { file }.toTypedArray() }

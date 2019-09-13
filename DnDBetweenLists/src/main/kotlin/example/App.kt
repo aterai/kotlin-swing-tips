@@ -93,7 +93,7 @@ class ListItemTransferHandler : TransferHandler() {
   }
 
   override fun canImport(info: TransferSupport) =
-    info.isDrop() &&
+      info.isDrop() &&
       info.isDataFlavorSupported(localObjectFlavor) &&
       info.getDropLocation() is JList.DropLocation
 
@@ -113,7 +113,7 @@ class ListItemTransferHandler : TransferHandler() {
     addIndex = index
     val values = runCatching {
       info.getTransferable().getTransferData(localObjectFlavor) as? List<*>
-    }.getOrNull() ?: emptyList<Any>()
+    }.getOrNull().orEmpty()
     for (o in values) {
       val i = index++
       listModel.add(i, o)

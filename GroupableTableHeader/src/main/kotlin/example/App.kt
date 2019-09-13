@@ -125,7 +125,7 @@ internal class GroupableTableHeaderUI : BasicTableHeaderUI() {
       cellRect.setSize(tc.getWidth(), headerHeight)
 
       var groupHeight = 0
-      val cglist = (header as? GroupableTableHeader)?.getColumnGroups(tc) ?: emptyList<Any>()
+      val cglist = (header as? GroupableTableHeader)?.getColumnGroups(tc).orEmpty()
       for (o in cglist) {
         val cg = o as? ColumnGroup ?: continue
         val groupRect = map[cg] ?: Rectangle(cellRect.getLocation(), cg.getSize(header)).also {
@@ -170,7 +170,7 @@ internal class GroupableTableHeaderUI : BasicTableHeaderUI() {
       val tc = columnModel.getColumn(column)
       val comp = getHeaderRenderer(column)
       var rendererHeight = comp.getPreferredSize().height
-      val cglist = (header as? GroupableTableHeader)?.getColumnGroups(tc) ?: emptyList<Any>()
+      val cglist = (header as? GroupableTableHeader)?.getColumnGroups(tc).orEmpty()
       for (o in cglist) {
         val cg = o as? ColumnGroup ?: continue
         rendererHeight += cg.getSize(header).height
@@ -230,7 +230,7 @@ internal class ColumnGroup(text: String) {
       list.contains(c) -> g
       else -> list.filterIsInstance<ColumnGroup>()
         .map { it.getColumnGroupList(c, ArrayList(g)) }
-        .filterNot { it.isEmpty() }.firstOrNull() ?: emptyList<Any>()
+        .filterNot { it.isEmpty() }.firstOrNull().orEmpty()
     }
   }
 
