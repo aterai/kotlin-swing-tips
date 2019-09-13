@@ -5,6 +5,7 @@ import java.awt.event.HierarchyEvent
 import java.util.TreeSet
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutionException
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableCellRenderer
@@ -13,12 +14,12 @@ import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter
 
 class MainPanel : JPanel(BorderLayout()) {
-  protected val model = WorkerModel()
-  protected val table = JTable(model)
-  protected val sorter = TableRowSorter<WorkerModel>(model)
-  protected val deleteRowSet: MutableSet<Int> = TreeSet<Int>()
-  // protected final ExecutorService executor = Executors.newFixedThreadPool(1);
-  protected val executor = Executors.newSingleThreadExecutor()
+  private val model = WorkerModel()
+  private val table = JTable(model)
+  private val sorter = TableRowSorter<WorkerModel>(model)
+  private val deleteRowSet: MutableSet<Int> = TreeSet()
+  // private final ExecutorService executor = Executors.newFixedThreadPool(1);
+  private val executor: ExecutorService = Executors.newSingleThreadExecutor()
 
   init {
     table.setRowSorter(sorter)
@@ -53,10 +54,10 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  protected fun addActionPerformed() {
+  private fun addActionPerformed() {
     val key = model.getRowCount()
     val worker = object : BackgroundTask() {
-      protected override fun process(c: List<Int>) {
+      override fun process(c: List<Int>) {
         if (isCancelled()) {
           return
         }
@@ -69,7 +70,7 @@ class MainPanel : JPanel(BorderLayout()) {
         c.forEach { model.setValueAt(it, key, 2) }
       }
 
-      protected override fun done() {
+      override fun done() {
         if (!isDisplayable()) {
           println("done: DISPOSE_ON_CLOSE")
           cancel(true)
@@ -93,23 +94,23 @@ class MainPanel : JPanel(BorderLayout()) {
     executor.execute(worker)
   }
 
-  protected fun cancelActionPerformed() {
+  private fun cancelActionPerformed() {
     for (i in table.getSelectedRows()) {
-      val midx = table.convertRowIndexToModel(i)
-      model.getSwingWorker(midx)?.takeUnless { it.isDone() }?.cancel(true)
+      val idx = table.convertRowIndexToModel(i)
+      model.getSwingWorker(idx)?.takeUnless { it.isDone() }?.cancel(true)
     }
     table.repaint()
   }
 
-  protected fun deleteActionPerformed() {
+  private fun deleteActionPerformed() {
     val selection = table.getSelectedRows()
-    if (selection.size == 0) {
+    if (selection.isEmpty()) {
       return
     }
     for (i in selection) {
-      val midx = table.convertRowIndexToModel(i)
-      deleteRowSet.add(midx)
-      model.getSwingWorker(midx)?.takeUnless { it.isDone() }?.cancel(true)
+      val mri = table.convertRowIndexToModel(i)
+      deleteRowSet.add(mri)
+      model.getSwingWorker(mri)?.takeUnless { it.isDone() }?.cancel(true)
     }
     sorter.setRowFilter(object : RowFilter<TableModel, Int>() {
       override fun include(entry: Entry<out TableModel, out Int>) = !deleteRowSet.contains(entry.getIdentifier())
@@ -144,7 +145,7 @@ class MainPanel : JPanel(BorderLayout()) {
 open class BackgroundTask : SwingWorker<Int, Int>() {
   private val sleepDummy = (1..50).random()
 
-  protected override fun doInBackground(): Int? {
+  override fun doInBackground(): Int? {
     val lengthOfTask = 120
     var current = 0
     while (current <= lengthOfTask && !isCancelled()) {
@@ -161,18 +162,18 @@ open class BackgroundTask : SwingWorker<Int, Int>() {
 }
 
 open class WorkerModel : DefaultTableModel() {
-  private val swmap = ConcurrentHashMap<Int, SwingWorker<Int, Int>>()
+  private val workerMap = ConcurrentHashMap<Int, SwingWorker<Int, Int>>()
   private var number = 0
 
   fun addProgressValue(name: String, iv: Int, worker: SwingWorker<Int, Int>?) {
     super.addRow(arrayOf(number, name, iv))
-    worker?.also { swmap.put(number, it) }
+    worker?.also { workerMap[number] = it }
     number++
   }
 
   fun getSwingWorker(identifier: Int): SwingWorker<Int, Int>? {
     val key = getValueAt(identifier, 0) as? Int ?: -1
-    return swmap.get(key)
+    return workerMap[key]
   }
 
   override fun isCellEditable(row: Int, col: Int) = COLUMN_ARRAY[col].isEditable
@@ -187,9 +188,9 @@ open class WorkerModel : DefaultTableModel() {
 
   companion object {
     private val COLUMN_ARRAY = arrayOf(
-        ColumnContext("No.", Number::class.java, false),
-        ColumnContext("Name", String::class.java, false),
-        ColumnContext("Progress", Number::class.java, false))
+      ColumnContext("No.", Number::class.java, false),
+      ColumnContext("Name", String::class.java, false),
+      ColumnContext("Progress", Number::class.java, false))
   }
 }
 

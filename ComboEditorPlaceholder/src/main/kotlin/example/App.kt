@@ -15,16 +15,16 @@ class MainPanel : JPanel(BorderLayout()) {
     combo1.setSelectedIndex(-1)
 
     val arrays = arrayOf(
-        arrayOf("blue", "violet", "red", "yellow"),
-        arrayOf("basketball", "soccer", "football", "hockey"),
-        arrayOf("hot dogs", "pizza", "ravioli", "bananas"))
+      arrayOf("blue", "violet", "red", "yellow"),
+      arrayOf("basketball", "soccer", "football", "hockey"),
+      arrayOf("hot dogs", "pizza", "ravioli", "bananas"))
     val combo2 = JComboBox<String>()
     combo2.setEditable(true)
 
     combo1.addItemListener { e ->
-      val cbox = e.getItemSelectable()
-      if (e.getStateChange() == ItemEvent.SELECTED && cbox is JComboBox<*>) {
-        val idx = cbox.getSelectedIndex()
+      val combo = e.getItemSelectable()
+      if (e.getStateChange() == ItemEvent.SELECTED && combo is JComboBox<*>) {
+        val idx = combo.getSelectedIndex()
         combo2.setModel(DefaultComboBoxModel<String>(arrays[idx]))
         combo2.setSelectedIndex(-1)
       }
@@ -66,18 +66,17 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 internal class PlaceholderLayerUI<E : JTextComponent>(hintMessage: String) : LayerUI<E>() {
-  private val hint: JLabel
+  private val hint = JLabel(hintMessage)
 
   init {
-    this.hint = JLabel(hintMessage)
     hint.setForeground(INACTIVE)
   }
 
   override fun paint(g: Graphics, c: JComponent) {
     super.paint(g, c)
     (c as? JLayer<*>)?.also {
-      val tc = it.getView() as? JTextComponent ?: return@paint
-      if (tc.getText().length == 0 && !tc.hasFocus()) {
+      val tc = it.getView() as? JTextComponent ?: return
+      if (tc.getText().isEmpty() && !tc.hasFocus()) {
         val g2 = g.create() as? Graphics2D ?: return
         g2.setPaint(INACTIVE)
         // println("getInsets: ${tc.getInsets()}")
