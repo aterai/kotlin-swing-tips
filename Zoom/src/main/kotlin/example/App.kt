@@ -30,17 +30,12 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class ZoomImage(@field:Transient private val image: Image) : JPanel() {
+class ZoomImage(@field:Transient private val image: Image) : JPanel() {
   @Transient
   private var handler: MouseWheelListener? = null
-  private val iw: Int
-  private val ih: Int
+  private val iw = image.getWidth(this)
+  private val ih = image.getHeight(this)
   private var scale = 1.0
-
-  init {
-    iw = image.getWidth(this)
-    ih = image.getHeight(this)
-  }
 
   override fun updateUI() {
     removeMouseWheelListener(handler)
@@ -49,9 +44,9 @@ internal class ZoomImage(@field:Transient private val image: Image) : JPanel() {
     addMouseWheelListener(handler)
   }
 
-  protected override fun paintComponent(g: Graphics) {
+  override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.scale(scale, scale)
     g2.drawImage(image, 0, 0, iw, ih, this)
     g2.dispose()
@@ -63,7 +58,8 @@ internal class ZoomImage(@field:Transient private val image: Image) : JPanel() {
   }
 
   fun changeScale(iv: Int) {
-    scale = maxOf(.05, minOf(5.0, scale - iv * .05))
+    // scale = maxOf(.05, minOf(5.0, scale - iv * .05))
+    scale = (scale - iv * .05).coerceIn(.05, 5.0)
     repaint()
   }
 }
