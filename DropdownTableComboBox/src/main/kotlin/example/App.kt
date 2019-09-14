@@ -12,7 +12,7 @@ import javax.swing.table.TableCellRenderer
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    val aseries = listOf(
+    val aSeries = listOf(
       listOf("A1", 594, 841),
       listOf("A2", 420, 594),
       listOf("A3", 297, 420),
@@ -31,12 +31,12 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val model = object : DefaultTableModel(null, columns) {
       override fun getColumnClass(column: Int) =
-          if (column == 1 || column == 2) Integer::class.java else String::class.java
+        if (column == 1 || column == 2) Integer::class.java else String::class.java
 
       override fun isCellEditable(row: Int, column: Int) = false
     }
 
-    val combo = DropdownTableComboBox(aseries, model)
+    val combo = DropdownTableComboBox(aSeries, model)
     combo.addItemListener { e ->
       if (e.getStateChange() == ItemEvent.SELECTED) {
         val rowData = combo.getSelectedRow()
@@ -45,29 +45,21 @@ class MainPanel : JPanel(BorderLayout()) {
       }
     }
     val renderer = combo.getRenderer()
-    combo.setRenderer(object : ListCellRenderer<List<Any>> {
-      override fun getListCellRendererComponent(
-        list: JList<out List<Any>>,
-        value: List<Any>?,
-        index: Int,
-        isSelected: Boolean,
-        cellHasFocus: Boolean
-      ): Component {
-        val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-        if (isSelected) {
-          c.setBackground(list.getSelectionBackground())
-          c.setForeground(list.getSelectionForeground())
-        } else {
-          c.setBackground(list.getBackground())
-          c.setForeground(list.getForeground())
-        }
-        (c as? JLabel)?.also {
-          it.setOpaque(true)
-          it.setText(value?.get(0)?.toString() ?: "")
-        }
-        return c
+    combo.setRenderer { list, value, index, isSelected, cellHasFocus ->
+      val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+      if (isSelected) {
+        c.setBackground(list.getSelectionBackground())
+        c.setForeground(list.getSelectionForeground())
+      } else {
+        c.setBackground(list.getBackground())
+        c.setForeground(list.getForeground())
       }
-    })
+      (c as? JLabel)?.also {
+        it.setOpaque(true)
+        it.setText(value?.get(0)?.toString() ?: "")
+      }
+      c
+    }
 
     EventQueue.invokeLater { combo.setSelectedIndex(3) }
 
@@ -88,7 +80,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-class DropdownTableComboBox<E : List<Any>>(val list: List<E>, model: DefaultTableModel) : JComboBox<E>() {
+class DropdownTableComboBox<E : List<Any>>(private val list: List<E>, model: DefaultTableModel) : JComboBox<E>() {
   @Transient
   private val highlighter = HighlightListener()
   private val table: JTable = object : JTable() {
@@ -96,7 +88,7 @@ class DropdownTableComboBox<E : List<Any>>(val list: List<E>, model: DefaultTabl
       val c = super.prepareRenderer(renderer, row, column)
       c.setForeground(Color.BLACK)
       c.setBackground(when {
-        highlighter.isHighlightableRow(row) -> Color(0xFF_C8_C8)
+        highlighter.isHighlightedRow(row) -> Color(0xFF_C8_C8)
         isRowSelected(row) -> Color.CYAN
         else -> Color.WHITE
       })
@@ -160,9 +152,9 @@ class ComboTablePopup(combo: JComboBox<*>, private val table: JTable) : BasicCom
   override fun show() {
     if (isEnabled()) {
       val ins = scroll.getInsets()
-      val tableh = table.getPreferredSize().height
-      val headerh = table.getTableHeader().getPreferredSize().height
-      scroll.setPreferredSize(Dimension(240, tableh + headerh + ins.top + ins.bottom))
+      val tableHt = table.getPreferredSize().height
+      val headerHt = table.getTableHeader().getPreferredSize().height
+      scroll.setPreferredSize(Dimension(240, tableHt + headerHt + ins.top + ins.bottom))
       super.removeAll()
       super.add(scroll)
       setRowSelection(comboBox.getSelectedIndex())
@@ -179,27 +171,27 @@ class ComboTablePopup(combo: JComboBox<*>, private val table: JTable) : BasicCom
 }
 
 class HighlightListener : MouseAdapter() {
-  private var vrow = -1
+  private var viewRowIndex = -1
 
-  fun isHighlightableRow(row: Int) = this.vrow == row
+  fun isHighlightedRow(row: Int) = this.viewRowIndex == row
 
-  private fun setHighlighTableCell(e: MouseEvent) {
+  private fun setHighlightedTableCell(e: MouseEvent) {
     (e.getComponent() as? JTable)?.also {
-      vrow = it.rowAtPoint(e.getPoint())
+      viewRowIndex = it.rowAtPoint(e.getPoint())
       it.repaint()
     }
   }
 
   override fun mouseMoved(e: MouseEvent) {
-    setHighlighTableCell(e)
+    setHighlightedTableCell(e)
   }
 
   override fun mouseDragged(e: MouseEvent) {
-    setHighlighTableCell(e)
+    setHighlightedTableCell(e)
   }
 
   override fun mouseExited(e: MouseEvent) {
-    vrow = -1
+    viewRowIndex = -1
     e.getComponent().repaint()
   }
 }
