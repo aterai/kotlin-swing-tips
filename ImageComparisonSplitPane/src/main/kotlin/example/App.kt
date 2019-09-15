@@ -15,7 +15,7 @@ fun makeUI(): Component {
   val icon = ImageIcon(cl.getResource("example/test.png"))
 
   val beforeCanvas = object : JComponent() {
-    protected override fun paintComponent(g: Graphics) {
+    override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
       g.drawImage(icon.getImage(), 0, 0, icon.getIconWidth(), icon.getIconHeight(), this)
     }
@@ -23,7 +23,7 @@ fun makeUI(): Component {
   split.setLeftComponent(beforeCanvas)
 
   val afterCanvas = object : JComponent() {
-    protected override fun paintComponent(g: Graphics) {
+    override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
       val g2 = g.create() as? Graphics2D ?: return
       val iw = icon.getIconWidth()
