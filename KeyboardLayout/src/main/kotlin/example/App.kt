@@ -7,11 +7,11 @@ class MainPanel : JPanel(BorderLayout(2, 2)) {
   // java - Laying out a keyboard in Swing - Stack Overflow
   // https://stackoverflow.com/questions/24622279/laying-out-a-keyboard-in-swing
   private val keys = arrayOf(
-      arrayOf("`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "BS"),
-      arrayOf("Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]", "\\", ""),
-      arrayOf("Ctrl", "A", "S", "D", "F", "G", "H", "J", "K", "L", ";", "'", "Enter", ""),
-      arrayOf("Shift", "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/", "", "↑"),
-      arrayOf("Fn", "Alt", "                                 ", "Alt", "←", "↓", "→"))
+    arrayOf("`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "BS"),
+    arrayOf("Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]", "\\", ""),
+    arrayOf("Ctrl", "A", "S", "D", "F", "G", "H", "J", "K", "L", ";", "'", "Enter", ""),
+    arrayOf("Shift", "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/", "", "↑"),
+    arrayOf("Fn", "Alt", "                                 ", "Alt", "←", "↓", "→"))
 
   init {
     val keyboard = makeKeyboardPanel()
@@ -37,8 +37,7 @@ class MainPanel : JPanel(BorderLayout(2, 2)) {
     for (row in keys.indices) {
       c.gridx = 0
       c.gridy = row
-      for (col in 0 until keys[row].size) {
-        val key = keys[row][col]
+      for (key in keys[row]) {
         val len = key.length
         c.gridwidth = getKeyButtonColumnGridWidth(len)
         it.add(if (key.isEmpty()) Box.createHorizontalStrut(KeyButton.SIZE) else KeyButton(key, len <= 2), c)
@@ -56,7 +55,7 @@ class MainPanel : JPanel(BorderLayout(2, 2)) {
   }
 }
 
-internal class KeyButton(str: String, private val square: Boolean = true) : JButton(str) {
+class KeyButton(str: String, private val square: Boolean = true) : JButton(str) {
   init {
     // val font = getFont()
     // setFont(font.deriveFont(6f))
@@ -65,7 +64,11 @@ internal class KeyButton(str: String, private val square: Boolean = true) : JBut
     setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0))
   }
 
-  override fun getPreferredSize() = if (square) Dimension(SIZE * 2, SIZE * 2) else super.getPreferredSize()
+  override fun getPreferredSize() = super.getPreferredSize()?.also {
+    if (square) {
+      it.setSize(SIZE * 2, SIZE * 2)
+    }
+  }
 
   companion object {
     const val SIZE = 10
