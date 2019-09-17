@@ -55,8 +55,8 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 class RoundButton : JButton {
-  var shape: Shape? = null
-  var base: Shape? = null
+  private var shape: Shape? = null
+  private var base: Shape? = null
 
   constructor() : super()
 
@@ -90,9 +90,9 @@ class RoundButton : JButton {
     it.setSize(iw + i.right + i.left, iw + i.top + i.bottom)
   }
 
-  fun initShape() {
+  private fun initShape() {
     if (getBounds() != base) {
-      val s = getPreferredSize()
+      val s = getPreferredSize() ?: Dimension(32, 32)
       base = getBounds()
       shape = Ellipse2D.Double(0.0, 0.0, s.width - 1.0, s.height - 1.0)
     }

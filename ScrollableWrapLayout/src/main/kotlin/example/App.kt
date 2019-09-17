@@ -7,7 +7,7 @@ class MainPanel : JPanel(GridLayout(2, 1)) {
   init {
     add(makePanel(JPanel(FlowLayout(FlowLayout.LEFT, 10, 10))))
     add(makePanel(ScrollableWrapPanel(ScrollableWrapLayout(FlowLayout.LEFT, 10, 10))))
-    preferredSize = Dimension(320, 240)
+    setPreferredSize(Dimension(320, 240))
   }
 
   private fun makePanel(box: JPanel): Component {
@@ -53,17 +53,17 @@ class ScrollableWrapPanel(layout: LayoutManager) : JPanel(layout), Scrollable {
 class ScrollableWrapLayout(align: Int, hgap: Int, vgap: Int) : FlowLayout(align, hgap, vgap) {
   private val fixedHgap = hgap
   private fun getPreferredHorizontalGap(target: Container): Int {
-    val insets: Insets = target.insets
+    val insets: Insets = target.getInsets()
     var columns = 0
-    var width = target.width
-    if (target.parent is JViewport) {
-      width = target.parent.bounds.width
+    var width = target.getWidth()
+    if (target.getParent() is JViewport) {
+      width = target.getParent().getBounds().width
     }
     width -= insets.left + insets.right + fixedHgap * 2
-    for (i in 0 until target.componentCount) {
-      val m: Component? = target.getComponent(i)
-      if (m.isVisible) {
-        val d: Dimension? = m.preferredSize
+    for (i in 0 until target.getComponentCount()) {
+      val m = target.getComponent(i)
+      if (m.isVisible()) {
+        val d = m.getPreferredSize()
         if (width - d.width - fixedHgap < 0) {
           columns = i
           break
@@ -82,12 +82,11 @@ class ScrollableWrapLayout(align: Int, hgap: Int, vgap: Int) : FlowLayout(align,
   override fun preferredLayoutSize(target: Container): Dimension {
     val dim = super.preferredLayoutSize(target)
     synchronized(target.treeLock) {
-      if (target.parent is JViewport) {
-        dim.width = target.parent.bounds.width
-        for (i in 0 until target.componentCount) {
-          val m: Component = target.getComponent(i)
-          if (m.isVisible) {
-            val d = m.preferredSize
+      if (target.getParent() is JViewport) {
+        dim.width = target.getParent().getBounds().width
+        for (m in target.getComponents()) {
+          if (m.isVisible()) {
+            val d = m.getPreferredSize()
             dim.height = dim.height.coerceAtLeast(d.height + m.y)
           }
         }
@@ -103,7 +102,7 @@ class ColorIcon(private val color: Color) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
-    g2.paint = color
+    g2.setPaint(color)
     g2.fillRect(0, 0, iconWidth, iconHeight)
     g2.dispose()
   }
