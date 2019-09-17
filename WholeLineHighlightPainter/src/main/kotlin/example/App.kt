@@ -5,7 +5,6 @@ import java.awt.event.FocusEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.AbstractDocument
 import javax.swing.text.BoxView
-import javax.swing.text.Caret
 import javax.swing.text.ComponentView
 import javax.swing.text.DefaultCaret
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
