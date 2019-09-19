@@ -89,14 +89,17 @@ class RearrangingHandler : MouseAdapter() {
     val ht2 = (.5 + r.height * .5).toInt()
     R1.setBounds(r.x, r.y, r.width, ht2)
     R2.setBounds(r.x, r.y + ht2, r.width, ht2)
-    if (R1.contains(pt)) {
-      prevRect.setBounds(R1)
-      return if (i > 1) i else 0
-    } else if (R2.contains(pt)) {
-      prevRect.setBounds(R2)
-      return i
+    return when {
+      R1.contains(pt) -> {
+        prevRect.setBounds(R1)
+        if (i > 1) i else 0
+      }
+      R2.contains(pt) -> {
+        prevRect.setBounds(R2)
+        i
+      }
+      else -> -1
     }
-    return -1
   }
 
   override fun mouseDragged(e: MouseEvent) {
