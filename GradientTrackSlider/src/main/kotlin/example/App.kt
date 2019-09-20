@@ -41,52 +41,49 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  protected override fun paintComponent(g: Graphics) {
-    val g2 = g.create() as Graphics2D
+  override fun paintComponent(g: Graphics) {
+    val g2 = g.create() as? Graphics2D ?: return
     g2.setPaint(TEXTURE)
     g2.fillRect(0, 0, getWidth(), getHeight())
     g2.dispose()
     super.paintComponent(g)
   }
 
-  companion object {
-    private val TEXTURE = TextureUtils.createCheckerTexture(6, Color(200, 150, 100, 50))
+  private fun makeSlider(): JSlider {
+    val slider = JSlider(SwingConstants.HORIZONTAL, 0, 100, 50)
+    slider.setBackground(Color.GRAY)
+    slider.setOpaque(false)
+    val ma = object : MouseAdapter() {
+      override fun mouseDragged(e: MouseEvent) {
+        e.getComponent().repaint()
+      }
 
-    private fun makeSlider(): JSlider {
-      val slider = JSlider(SwingConstants.HORIZONTAL, 0, 100, 50)
-      slider.setBackground(Color.GRAY)
-      slider.setOpaque(false)
-      val ma = object : MouseAdapter() {
-        override fun mouseDragged(e: MouseEvent) {
-          e.getComponent().repaint()
-        }
-
-        override fun mouseWheelMoved(e: MouseWheelEvent) {
-          val source = e.getComponent() as? JSlider ?: return
-          val intValue = source.getValue().toInt() - e.getWheelRotation()
-          val model = source.getModel()
-          if (model.getMaximum() >= intValue && model.getMinimum() <= intValue) {
-            source.setValue(intValue)
-          }
+      override fun mouseWheelMoved(e: MouseWheelEvent) {
+        (e.getComponent() as? JSlider)?.getModel()?.also {
+          it.setValue(it.getValue() - e.getWheelRotation())
         }
       }
-      slider.addMouseMotionListener(ma)
-      slider.addMouseWheelListener(ma)
-      return slider
     }
+    slider.addMouseMotionListener(ma)
+    slider.addMouseWheelListener(ma)
+    return slider
+  }
 
-    private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
-      it.setBorder(BorderFactory.createTitledBorder(title))
-      it.setOpaque(false)
-      it.add(c)
-    }
+  private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
+    it.setBorder(BorderFactory.createTitledBorder(title))
+    it.setOpaque(false)
+    it.add(c)
+  }
+
+  companion object {
+    private val TEXTURE = TextureUtils.createCheckerTexture(6, Color(200, 150, 100, 50))
   }
 }
 
-internal class GradientPalletSliderUI : MetalSliderUI() {
-  protected var controlDarkShadow = Color(0x64_64_64) // MetalLookAndFeel.getControlDarkShadow()
-  protected var controlHighlight = Color(0xC8_FF_C8) // MetalLookAndFeel.getControlHighlight()
-  protected var controlShadow = Color(0x00_64_00) // MetalLookAndFeel.getControlShadow()
+class GradientPalletSliderUI : MetalSliderUI() {
+  private var controlDarkShadow = Color(0x64_64_64) // MetalLookAndFeel.getControlDarkShadow()
+  private var controlHighlight = Color(0xC8_FF_C8) // MetalLookAndFeel.getControlHighlight()
+  private var controlShadow = Color(0x00_64_00) // MetalLookAndFeel.getControlShadow()
 
   override fun paintTrack(g: Graphics) {
     // val trackColor = if (!slider.isEnabled()) MetalLookAndFeel.getControlShadow() else slider.getForeground()
@@ -96,8 +93,8 @@ internal class GradientPalletSliderUI : MetalSliderUI() {
 
     var trackLeft = 0
     var trackTop = 0
-    var trackRight: Int // = 0
-    var trackBottom: Int // = 0
+    val trackRight: Int
+    val trackBottom: Int
     if (slider.getOrientation() == SwingConstants.HORIZONTAL) {
       trackBottom = trackRect.height - 1 - getThumbOverhang()
       trackTop = trackBottom - getTrackWidth() + 1
@@ -125,7 +122,7 @@ internal class GradientPalletSliderUI : MetalSliderUI() {
     g.translate(-trackRect.x, -trackRect.y)
   }
 
-  protected fun paintTrackBase(g: Graphics, trackTop: Int, trackLeft: Int, trackBottom: Int, trackRight: Int) {
+  private fun paintTrackBase(g: Graphics, trackTop: Int, trackLeft: Int, trackBottom: Int, trackRight: Int) {
     if (slider.isEnabled()) {
       g.setColor(controlDarkShadow)
       g.drawRect(trackLeft, trackTop, trackRight - trackLeft - 1, trackBottom - trackTop - 1)
@@ -143,12 +140,12 @@ internal class GradientPalletSliderUI : MetalSliderUI() {
     }
   }
 
-  protected fun paintTrackFill(g: Graphics, trackTop: Int, trackLeft: Int, trackBottom: Int, trackRight: Int) {
-    var middleOfThumb: Int // = 0
-    var fillTop: Int // = 0
-    var fillLeft: Int // = 0
-    var fillBottom: Int // = 0
-    var fillRight: Int // = 0
+  private fun paintTrackFill(g: Graphics, trackTop: Int, trackLeft: Int, trackBottom: Int, trackRight: Int) {
+    var middleOfThumb: Int
+    val fillTop: Int
+    val fillLeft: Int
+    val fillBottom: Int
+    val fillRight: Int
 
     if (slider.getOrientation() == SwingConstants.HORIZONTAL) {
       middleOfThumb = thumbRect.x + thumbRect.width / 2
@@ -176,7 +173,7 @@ internal class GradientPalletSliderUI : MetalSliderUI() {
     }
   }
 
-  protected fun paintTrackHighlight(g: Graphics, trackTop: Int, trackLeft: Int, trackBottom: Int, trackRight: Int) {
+  private fun paintTrackHighlight(g: Graphics, trackTop: Int, trackLeft: Int, trackBottom: Int, trackRight: Int) {
     var yy = trackTop + (trackBottom - trackTop) / 2
     for (i in 10 downTo 0) {
       g.setColor(makeColor(i * .07f))
@@ -192,7 +189,7 @@ internal class GradientPalletSliderUI : MetalSliderUI() {
   }
 }
 
-internal object GradientPalletUtils {
+object GradientPalletUtils {
   fun makeGradientPallet(): IntArray {
     val image = BufferedImage(100, 1, BufferedImage.TYPE_INT_RGB)
     val g2 = image.createGraphics()
@@ -211,27 +208,21 @@ internal object GradientPalletUtils {
     }.onFailure {
       Toolkit.getDefaultToolkit().beep()
     }
-//    val pg = PixelGrabber(image, 0, 0, width, 1, pallet, 0, width)
-//    try {
-//      pg.grabPixels()
-//    } catch (ex: InterruptedException) {
-//      ex.printStackTrace()
-//      Toolkit.getDefaultToolkit().beep()
-//    }
     return pallet
   }
 
   fun getColorFromPallet(pallet: IntArray, x: Float, alpha: Int): Color {
-    val i = (pallet.size * x).toInt()
-    val max = pallet.size - 1
-    val index = minOf(maxOf(i, 0), max)
+    // val i = (pallet.size * x).toInt()
+    // val max = pallet.size - 1
+    // val index = minOf(maxOf(i, 0), max)
+    val index = (pallet.size * x).toInt().coerceIn(0, pallet.size - 1)
     val pix = pallet[index] and 0x00_FF_FF_FF
     // int alpha = 0x64 << 24;
     return Color(alpha or pix, true)
   }
 } /* HideUtilityClassConstructor */
 
-internal object TextureUtils {
+object TextureUtils {
   fun createCheckerTexture(cs: Int, color: Color): TexturePaint {
     val size = cs * cs
     val img = BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB)
