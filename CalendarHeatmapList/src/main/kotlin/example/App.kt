@@ -11,15 +11,15 @@ import java.util.Locale
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel(BorderLayout()) {
-  val currentLocalDate = LocalDate.now(ZoneId.systemDefault())
-  val weekList = object : JList<Contribution>(CalendarViewListModel(currentLocalDate)) {
+  val currentLocalDate: LocalDate = LocalDate.now(ZoneId.systemDefault())
+  private val weekList = object : JList<Contribution>(CalendarViewListModel(currentLocalDate)) {
     override fun updateUI() {
       setCellRenderer(null)
       super.updateUI()
-      setLayoutOrientation(JList.VERTICAL_WRAP)
+      setLayoutOrientation(VERTICAL_WRAP)
       setVisibleRowCount(DayOfWeek.values().size) // ensure 7 rows in the list
-      setFixedCellWidth(CELLSZ.width)
-      setFixedCellHeight(CELLSZ.height)
+      setFixedCellWidth(CELL_SIZE.width)
+      setFixedCellHeight(CELL_SIZE.height)
       setCellRenderer(ContributionListRenderer())
       getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
       setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
@@ -38,7 +38,7 @@ class MainPanel : JPanel(BorderLayout()) {
       return "$act contribution on $date"
     }
   }
-  val color = Color(0x32_C8_32)
+  private val color = Color(0x32_C8_32)
   val activityIcons = listOf(
     ContributionIcon(Color(0xC8_C8_C8)),
     ContributionIcon(color.brighter()),
@@ -47,7 +47,7 @@ class MainPanel : JPanel(BorderLayout()) {
     ContributionIcon(color.darker().darker()))
 
   init {
-    val font = weekList.getFont().deriveFont(CELLSZ.height - 1f)
+    val font = weekList.getFont().deriveFont(CELL_SIZE.height - 1f)
 
     val box = Box.createHorizontalBox()
     box.add(makeLabel("Less", font))
@@ -89,7 +89,7 @@ class MainPanel : JPanel(BorderLayout()) {
       val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
       (c as? JLabel)?.setIcon(when {
         value.date.isAfter(currentLocalDate) -> ContributionIcon(Color.WHITE)
-        else -> activityIcons.get(value.activity)
+        else -> activityIcons[value.activity]
       })
       return c
     }
@@ -109,7 +109,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val weekFields = WeekFields.of(loc)
     val weekModel = DefaultListModel<String>()
     val firstDayOfWeek = weekFields.getFirstDayOfWeek()
-    for (i in 0 until DayOfWeek.values().size) {
+    for (i in DayOfWeek.values().indices) {
       val isEven = i % 2 == 0
       if (isEven) {
         weekModel.add(i, "")
@@ -122,7 +122,7 @@ class MainPanel : JPanel(BorderLayout()) {
       it.setFont(font)
       it.setLayoutOrientation(JList.VERTICAL_WRAP)
       it.setVisibleRowCount(DayOfWeek.values().size)
-      it.setFixedCellHeight(CELLSZ.height)
+      it.setFixedCellHeight(CELL_SIZE.height)
     }
   }
 
@@ -132,7 +132,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val c = GridBagConstraints()
     c.gridx = 0
     while (c.gridx < CalendarViewListModel.WEEK_VIEW) {
-      colHeader.add(Box.createHorizontalStrut(CELLSZ.width), c) // grid guides
+      colHeader.add(Box.createHorizontalStrut(CELL_SIZE.width), c) // grid guides
       c.gridx++
     }
     c.anchor = GridBagConstraints.LINE_START
@@ -156,7 +156,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   companion object {
-    val CELLSZ = Dimension(10, 10)
+    val CELL_SIZE = Dimension(10, 10)
   }
 }
 
@@ -171,14 +171,14 @@ class CalendarViewListModel(date: LocalDate) : AbstractListModel<Contribution>()
     val dow = date.get(WeekFields.of(Locale.getDefault()).dayOfWeek())
     this.startDate = date.minusWeeks((WEEK_VIEW - 1).toLong()).minusDays((dow - 1).toLong())
     this.displayDays = DayOfWeek.values().size * (WEEK_VIEW - 1) + dow
-    (0 until displayDays).forEach { contributionActivity.put(startDate.plusDays(it.toLong()), (0..4).random()) }
+    (0 until displayDays).forEach { contributionActivity[startDate.plusDays(it.toLong())] = (0..4).random() }
   }
 
   override fun getSize() = displayDays
 
   override fun getElementAt(index: Int): Contribution {
     val date = startDate.plusDays(index.toLong())
-    return Contribution(date, contributionActivity.get(date) ?: 0)
+    return Contribution(date, contributionActivity[date] ?: 0)
   }
 
   companion object {
@@ -195,9 +195,9 @@ class ContributionIcon(private val color: Color) : Icon {
     g2.dispose()
   }
 
-  override fun getIconWidth() = MainPanel.CELLSZ.width - 2
+  override fun getIconWidth() = MainPanel.CELL_SIZE.width - 2
 
-  override fun getIconHeight() = MainPanel.CELLSZ.height - 2
+  override fun getIconHeight() = MainPanel.CELL_SIZE.height - 2
 }
 
 fun main() {
