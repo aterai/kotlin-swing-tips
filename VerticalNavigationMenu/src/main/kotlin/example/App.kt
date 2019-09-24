@@ -5,7 +5,13 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.TreeExpansionEvent
 import javax.swing.event.TreeWillExpandListener
 import javax.swing.plaf.basic.BasicTreeUI
-import javax.swing.tree.*
+import javax.swing.tree.DefaultMutableTreeNode
+import javax.swing.tree.DefaultTreeCellRenderer
+import javax.swing.tree.DefaultTreeModel
+import javax.swing.tree.ExpandVetoException
+import javax.swing.tree.TreeModel
+import javax.swing.tree.TreePath
+import javax.swing.tree.TreeSelectionModel
 
 class MainPanel : JPanel(BorderLayout(2, 2)) {
   init {
@@ -27,7 +33,7 @@ class MainPanel : JPanel(BorderLayout(2, 2)) {
     root.postorderEnumeration().toList()
         .filterIsInstance<DefaultMutableTreeNode>()
         .map { it.getUserObject().toString() }
-        .forEach {p.add(JLabel(it), it) }
+        .forEach { p.add(JLabel(it), it) }
     val tree: JTree = RowSelectionTree()
     tree.setModel(model)
     tree.setRowHeight(32)
