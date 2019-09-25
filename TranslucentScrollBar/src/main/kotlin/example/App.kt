@@ -57,9 +57,7 @@ internal class TranslucentScrollPaneLayout : ScrollPaneLayout() {
     vsbR.x = availR.x + availR.width - vsbR.width
     vsbR.y = availR.y
 
-    viewport?.also {
-      it.setBounds(availR)
-    }
+    viewport?.setBounds(availR)
     vsb?.also {
       it.setVisible(true)
       it.setBounds(vsbR)
