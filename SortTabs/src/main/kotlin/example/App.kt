@@ -56,7 +56,7 @@ class EditableTabbedPane : JTabbedPane() {
       override fun actionPerformed(e: ActionEvent) {
         if (editor.getText().trim().isNotEmpty()) {
           setTitleAt(getSelectedIndex(), editor.getText())
-          (getTabComponentAt(getSelectedIndex()) as? JComponent)?.revalidate()
+          getTabComponentAt(getSelectedIndex())?.revalidate()
         }
         glassPane.setVisible(false)
       }
@@ -73,8 +73,8 @@ class EditableTabbedPane : JTabbedPane() {
         }
       }
     })
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "start-editing")
-    am.put("start-editing", startEditing)
+    getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "start-editing")
+    getActionMap().put("start-editing", startEditing)
   }
 
   private inner class EditorGlassPane : JComponent() {
