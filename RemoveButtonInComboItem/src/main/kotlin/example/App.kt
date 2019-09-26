@@ -10,17 +10,17 @@ import javax.swing.plaf.basic.ComboPopup
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    val c0 = makeComboBox(true, false)
-    val c1 = makeComboBox(false, false)
-    val c2 = makeComboBox(true, true)
-    val c3 = makeComboBox(false, true)
+    val c0 = makeComboBox(isDefault = true, isEditable = false)
+    val c1 = makeComboBox(isDefault = false, isEditable = false)
+    val c2 = makeComboBox(isDefault = true, isEditable = true)
+    val c3 = makeComboBox(isDefault = false, isEditable = true)
 
     val button = JButton("add")
     button.addActionListener {
       val str = LocalDateTime.now(ZoneId.systemDefault()).toString()
-      listOf(c0, c1, c2, c3).forEach {
-        (it.getModel() as? MutableComboBoxModel<String>)?.also {
-          it.insertElementAt(str, it.getSize())
+      listOf(c0, c1, c2, c3).forEach { c ->
+        (c.getModel() as? MutableComboBoxModel<String>)?.also { m ->
+          m.insertElementAt(str, m.getSize())
         }
       }
     }
@@ -55,38 +55,35 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class RemoveButtonComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(model) {
+class RemoveButtonComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(model) {
   @Transient
-  private var cbml: CellButtonsMouseListener? = null
+  private var handler: CellButtonsMouseListener? = null
 
-  protected fun getList() =
-      (getAccessibleContext().getAccessibleChild(0) as? ComboPopup)?.getList()
+  private fun getList() = (getAccessibleContext().getAccessibleChild(0) as? ComboPopup)?.getList()
 
   override fun updateUI() {
-    if (cbml != null) {
+    if (handler != null) {
       getList()?.also {
-        it.removeMouseListener(cbml)
-        it.removeMouseMotionListener(cbml)
+        it.removeMouseListener(handler)
+        it.removeMouseMotionListener(handler)
       }
     }
     super.updateUI()
     setRenderer(ButtonsRenderer(this))
     getList()?.also {
-      cbml = CellButtonsMouseListener()
-      it.addMouseListener(cbml)
-      it.addMouseMotionListener(cbml)
+      handler = CellButtonsMouseListener()
+      it.addMouseListener(handler)
+      it.addMouseMotionListener(handler)
     }
   }
 }
 
-internal class CellButtonsMouseListener : MouseAdapter() {
+class CellButtonsMouseListener : MouseAdapter() {
   override fun mouseMoved(e: MouseEvent) {
     val list = e.getComponent() as? JList<*> ?: return
     val pt = e.getPoint()
     val idx = list.locationToIndex(pt)
-    (list.getCellRenderer() as? ButtonsRenderer<*>)?.also {
-      it.rolloverIndex = getButton(list, pt, idx)?.let { idx } ?: -1
-    }
+    (list.getCellRenderer() as? ButtonsRenderer<*>)?.rolloverIndex = getButton(list, pt, idx)?.let { idx } ?: -1
     list.repaint()
   }
 
@@ -99,7 +96,7 @@ internal class CellButtonsMouseListener : MouseAdapter() {
     val pt = e.getPoint()
     val index = list.locationToIndex(pt)
     if (index >= 0) {
-      getButton(list, pt, index)?.also { it.doClick() }
+      getButton(list, pt, index)?.doClick()
     }
     (list.getCellRenderer() as? ButtonsRenderer<*>)?.rolloverIndex = -1
     list.repaint()
@@ -121,8 +118,8 @@ internal class CellButtonsMouseListener : MouseAdapter() {
   }
 }
 
-internal class ButtonsRenderer<E>(comboBox: RemoveButtonComboBox<E>) : ListCellRenderer<E> {
-  var targetIndex = 0
+class ButtonsRenderer<E>(comboBox: RemoveButtonComboBox<E>) : ListCellRenderer<E> {
+  private var targetIndex = 0
   var rolloverIndex = -1
   private val panel = object : JPanel(BorderLayout()) { // *1
     override fun getPreferredSize(): Dimension {
