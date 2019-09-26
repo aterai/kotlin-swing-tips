@@ -56,7 +56,7 @@ class EditableTabbedPane : JTabbedPane() {
     override fun actionPerformed(e: ActionEvent) {
       if (editor.getText().trim().isNotEmpty()) {
         setTitleAt(getSelectedIndex(), editor.getText())
-        (getTabComponentAt(getSelectedIndex()) as? JComponent)?.revalidate()
+        getTabComponentAt(getSelectedIndex())?.revalidate()
       }
       glassPane.setVisible(false)
     }
