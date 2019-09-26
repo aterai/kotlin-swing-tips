@@ -15,10 +15,10 @@ import javax.swing.table.TableModel
 class MainPanel : JPanel(BorderLayout()) {
   private val columnNames = arrayOf("String", "Integer", "Boolean")
   private val data = arrayOf(
-      arrayOf<Any>("aaa", 12, true),
-      arrayOf<Any>("bbb", 5, false),
-      arrayOf<Any>("CCC", 92, true),
-      arrayOf<Any>("DDD", 0, false))
+    arrayOf("aaa", 12, true),
+    arrayOf("bbb", 5, false),
+    arrayOf("CCC", 92, true),
+    arrayOf("DDD", 0, false))
   private val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = when (column) {
       0 -> String::class.java
@@ -44,21 +44,6 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 }
-
-// class TestRenderer extends DefaultTableCellRenderer {
-//   private static final DotBorder dotBorder = new DotBorder(2, 2, 2, 2);
-//   private static final Border emptyBorder = BorderFactory.createEmptyBorder(2, 2, 2, 2);
-//   @Override public Component getTableCellRendererComponent(
-//         JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-//     Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-//     if (c instanceof JComponent) {
-//       int lsi = table.getSelectionModel().getLeadSelectionIndex();
-//       ((JComponent) c).setBorder(row == lsi ? dotBorder : emptyBorder);
-//       dotBorder.setLastCellFlag(row == lsi && column == table.getColumnCount() - 1);
-//     }
-//     return c;
-//   }
-// }
 
 class LineFocusTable(model: TableModel) : JTable(model) {
   private val dotBorder = DotBorder(2, 2, 2, 2)
@@ -130,9 +115,7 @@ class LineFocusTable(model: TableModel) : JTable(model) {
   override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
     val o = super.prepareRenderer(tcr, row, column)
     val c = o as? JComponent ?: return o
-    (c as? JCheckBox)?.also {
-      it.setBorderPainted(true)
-    }
+    (c as? JCheckBox)?.setBorderPainted(true)
     if (row == getSelectionModel().getLeadSelectionIndex()) { // isRowSelected(row)) {
       c.setBorder(dotBorder)
       updateBorderType(dotBorder, column)
@@ -198,7 +181,7 @@ class TablePopupMenu : JPopupMenu() {
     add("add").addActionListener {
       val table = getInvoker() as? JTable ?: return@addActionListener
       val model = table.getModel()
-      (model as? DefaultTableModel)?.addRow(arrayOf<Any>("New row", model.getRowCount(), false))
+      (model as? DefaultTableModel)?.addRow(arrayOf("New row", model.getRowCount(), false))
       val r = table.getCellRect(model.getRowCount() - 1, 0, true)
       table.scrollRectToVisible(r)
     }
