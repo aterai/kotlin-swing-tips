@@ -18,11 +18,10 @@ class MainPanel : JPanel(BorderLayout()) {
     val button = JButton("add")
     button.addActionListener {
       val str = LocalDateTime.now(ZoneId.systemDefault()).toString()
-      listOf(c0, c1, c2, c3).forEach { c ->
-        (c.getModel() as? MutableComboBoxModel<String>)?.also { m ->
-          m.insertElementAt(str, m.getSize())
-        }
-      }
+      listOf(c0, c1, c2, c3)
+        // .map { it.getModel() }.filterIsInstance<MutableComboBoxModel<String>>()
+        .mapNotNull { it.getModel() as? MutableComboBoxModel<String> }
+        .forEach { it.insertElementAt(str, it.getSize()) }
     }
 
     val p = JPanel(GridLayout(2, 1))
