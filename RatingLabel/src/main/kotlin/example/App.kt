@@ -1,9 +1,8 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.awt.event.MouseListener
-import java.awt.event.MouseMotionListener
 import java.awt.image.FilteredImageSource
 import java.awt.image.ImageFilter
 import java.awt.image.ImageProducer
@@ -18,34 +17,34 @@ class MainPanel : JPanel(GridLayout(2, 2, 4, 4)) {
     val ip = defaultIcon.getImage().getSource()
 
     val list1 = listOf(
-        makeStarImageIcon(ip, SelectedImageFilter(1f, .5f, .5f)),
-        makeStarImageIcon(ip, SelectedImageFilter(.5f, 1f, .5f)),
-        makeStarImageIcon(ip, SelectedImageFilter(1f, .5f, 1f)),
-        makeStarImageIcon(ip, SelectedImageFilter(.5f, .5f, 1f)),
-        makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, .5f)))
+      makeStarImageIcon(ip, SelectedImageFilter(1f, .5f, .5f)),
+      makeStarImageIcon(ip, SelectedImageFilter(.5f, 1f, .5f)),
+      makeStarImageIcon(ip, SelectedImageFilter(1f, .5f, 1f)),
+      makeStarImageIcon(ip, SelectedImageFilter(.5f, .5f, 1f)),
+      makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, .5f)))
     add(makeStarRatingPanel("gap=0", LevelBar(defaultIcon, list1, 0)))
 
     val list2 = listOf(
-        makeStarImageIcon(ip, SelectedImageFilter(.2f, .5f, .5f)),
-        makeStarImageIcon(ip, SelectedImageFilter(0f, 1f, .2f)),
-        makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, .2f)),
-        makeStarImageIcon(ip, SelectedImageFilter(.8f, .4f, .2f)),
-        makeStarImageIcon(ip, SelectedImageFilter(1f, .1f, .1f)))
+      makeStarImageIcon(ip, SelectedImageFilter(.2f, .5f, .5f)),
+      makeStarImageIcon(ip, SelectedImageFilter(0f, 1f, .2f)),
+      makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, .2f)),
+      makeStarImageIcon(ip, SelectedImageFilter(.8f, .4f, .2f)),
+      makeStarImageIcon(ip, SelectedImageFilter(1f, .1f, .1f)))
     add(makeStarRatingPanel("gap=1+1", object : LevelBar(defaultIcon, list2, 1) {
       override fun repaintIcon(index: Int) {
         for (i in labelList.indices) {
-          labelList.get(i).setIcon(if (i <= index) iconList.get(index) else defaultIcon)
+          labelList[i].setIcon(if (i <= index) iconList[index] else defaultIcon)
         }
         repaint()
       }
     }))
 
     val list3 = listOf(
-        makeStarImageIcon(ip, SelectedImageFilter(.6f, .6f, 0f)),
-        makeStarImageIcon(ip, SelectedImageFilter(.7f, .7f, 0f)),
-        makeStarImageIcon(ip, SelectedImageFilter(.8f, .8f, 0f)),
-        makeStarImageIcon(ip, SelectedImageFilter(.9f, .9f, 0f)),
-        makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, 0f)))
+      makeStarImageIcon(ip, SelectedImageFilter(.6f, .6f, 0f)),
+      makeStarImageIcon(ip, SelectedImageFilter(.7f, .7f, 0f)),
+      makeStarImageIcon(ip, SelectedImageFilter(.8f, .8f, 0f)),
+      makeStarImageIcon(ip, SelectedImageFilter(.9f, .9f, 0f)),
+      makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, 0f)))
     add(makeStarRatingPanel("gap=2+2", LevelBar(defaultIcon, list3, 2)))
 
     val star = makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, 0f))
@@ -70,29 +69,48 @@ class MainPanel : JPanel(GridLayout(2, 2, 4, 4)) {
 }
 
 open class LevelBar(
-  protected val defaultIcon: ImageIcon,
+  private val defaultIcon: ImageIcon,
   protected val iconList: List<ImageIcon>,
   private val gap: Int
-) : JPanel(GridLayout(1, 5, gap * 2, gap * 2)), MouseListener, MouseMotionListener {
+) : JPanel(GridLayout(1, 5, gap * 2, gap * 2)) {
   protected val labelList = listOf(
     JLabel(), JLabel(), JLabel(), JLabel(), JLabel()
   )
   private var clicked = -1
-
-  var level: Int
-    get() = clicked
-    set(l) {
-      clicked = l
-      repaintIcon(clicked)
-    }
+  private var handler: MouseAdapter? = null
 
   init {
-    for (l in labelList) {
-      l.setIcon(defaultIcon)
-      add(l)
+    EventQueue.invokeLater {
+      for (l in labelList) {
+        l.setIcon(defaultIcon)
+        add(l)
+      }
     }
-    addMouseListener(this)
-    addMouseMotionListener(this)
+  }
+
+  override fun updateUI() {
+    removeMouseListener(handler)
+    removeMouseMotionListener(handler)
+    super.updateUI()
+    handler = object : MouseAdapter() {
+      override fun mouseMoved(e: MouseEvent) {
+        repaintIcon(getSelectedIconIndex(e.getPoint()))
+      }
+
+      override fun mouseEntered(e: MouseEvent) {
+        repaintIcon(getSelectedIconIndex(e.getPoint()))
+      }
+
+      override fun mouseClicked(e: MouseEvent) {
+        clicked = getSelectedIconIndex(e.getPoint())
+      }
+
+      override fun mouseExited(e: MouseEvent) {
+        repaintIcon(clicked)
+      }
+    }
+    addMouseListener(handler)
+    addMouseMotionListener(handler)
   }
 
   fun clear() {
@@ -102,7 +120,7 @@ open class LevelBar(
 
   private fun getSelectedIconIndex(p: Point): Int {
     for (i in labelList.indices) {
-      val r = labelList.get(i).getBounds()
+      val r = labelList[i].getBounds()
       r.grow(gap, gap)
       if (r.contains(p)) {
         return i
@@ -113,43 +131,18 @@ open class LevelBar(
 
   open fun repaintIcon(index: Int) {
     for (i in labelList.indices) {
-      labelList.get(i).setIcon(if (i <= index) iconList[i] else defaultIcon)
+      labelList[i].setIcon(if (i <= index) iconList[i] else defaultIcon)
     }
     repaint()
   }
-
-  override fun mouseMoved(e: MouseEvent) {
-    repaintIcon(getSelectedIconIndex(e.getPoint()))
-  }
-
-  override fun mouseEntered(e: MouseEvent) {
-    repaintIcon(getSelectedIconIndex(e.getPoint()))
-  }
-
-  override fun mouseClicked(e: MouseEvent) {
-    clicked = getSelectedIconIndex(e.getPoint())
-  }
-
-  override fun mouseExited(e: MouseEvent) {
-    repaintIcon(clicked)
-  }
-
-  override fun mouseDragged(e: MouseEvent) { /* not needed */ }
-
-  override fun mousePressed(e: MouseEvent) { /* not needed */ }
-
-  override fun mouseReleased(e: MouseEvent) { /* not needed */ }
 }
 
-internal class SelectedImageFilter(rf: Float, gf: Float, bf: Float) : RGBImageFilter() {
-  private val rf: Float
-  private val gf: Float
-  private val bf: Float
+class SelectedImageFilter(rf: Float, gf: Float, bf: Float) : RGBImageFilter() {
+  private val rf = rf.coerceIn(0f, 1f)
+  private val gf = gf.coerceIn(0f, 1f)
+  private val bf = bf.coerceIn(0f, 1f)
 
   init {
-    this.rf = minOf(1f, rf)
-    this.gf = minOf(1f, gf)
-    this.bf = minOf(1f, bf)
     canFilterIndexColorModel = false
   }
 
