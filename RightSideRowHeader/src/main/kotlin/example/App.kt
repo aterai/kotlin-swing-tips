@@ -7,15 +7,15 @@ import javax.swing.table.TableRowSorter
 
 class MainPanel : JPanel(BorderLayout()) {
   private val data = arrayOf(
-      arrayOf<Any>(1, 11, "A", ES, ES, ES, ES, ES),
-      arrayOf<Any>(2, 22, ES, "B", ES, ES, ES, ES),
-      arrayOf<Any>(3, 33, ES, ES, "C", ES, ES, ES),
-      arrayOf<Any>(4, 1, ES, ES, ES, "D", ES, ES),
-      arrayOf<Any>(5, 55, ES, ES, ES, ES, "E", ES),
-      arrayOf<Any>(6, 66, ES, ES, ES, ES, ES, "F"))
+    arrayOf(1, 11, "A", ES, ES, ES, ES, ES),
+    arrayOf(2, 22, ES, "B", ES, ES, ES, ES),
+    arrayOf(3, 33, ES, ES, "C", ES, ES, ES),
+    arrayOf(4, 1, ES, ES, ES, "D", ES, ES),
+    arrayOf(5, 55, ES, ES, ES, ES, "E", ES),
+    arrayOf(6, 66, ES, ES, ES, ES, ES, "F"))
   private val columnNames = arrayOf("fixed 1", "fixed 2", "A", "B", "C", "D", "E", "F")
   private val model = object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int) = if (column < FIXEDCOL_RANGE) Number::class.java else Any::class.java
+    override fun getColumnClass(column: Int) = if (column < FIXED_RANGE) Number::class.java else Any::class.java
   }
   @Transient
   private val sorter = TableRowSorter<DefaultTableModel>(model)
@@ -27,7 +27,7 @@ class MainPanel : JPanel(BorderLayout()) {
     fixedTable.setSelectionModel(table.getSelectionModel())
 
     for (i in model.getColumnCount() - 1 downTo 0) {
-      if (i < FIXEDCOL_RANGE) {
+      if (i < FIXED_RANGE) {
         table.removeColumn(table.getColumnModel().getColumn(i))
         fixedTable.getColumnModel().getColumn(i).setResizable(false)
       } else {
@@ -70,7 +70,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
     addButton.addActionListener {
       sorter.setSortKeys(null)
-      for (i in 0 until 100) { model.addRow(arrayOf<Any>(i, i + 1, "A$i", "B$i")) }
+      for (i in 0 until 100) { model.addRow(arrayOf(i, i + 1, "A$i", "B$i")) }
     }
 
     add(scroll)
@@ -79,7 +79,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   companion object {
-    const val FIXEDCOL_RANGE = 2
+    const val FIXED_RANGE = 2
     private const val ES = ""
   }
 }

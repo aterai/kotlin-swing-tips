@@ -14,12 +14,12 @@ import javax.swing.table.TableModel
 class MainPanel : JPanel(BorderLayout()) {
   init {
     val columnNames = arrayOf("String", "Integer", "Boolean")
-    val data = arrayOf(arrayOf<Any>("aaa", -1, true))
+    val data = arrayOf(arrayOf("aaa", -1, true))
     val model = object : DefaultTableModel(data, columnNames) {
       override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
     }
     for (i in 0 until 20) {
-      model.addRow(arrayOf<Any>("Name: $i", i, i % 2 == 0))
+      model.addRow(arrayOf("Name: $i", i, i % 2 == 0))
     }
     val table = FishEyeTable(model)
     table.setRowSelectionInterval(0, 0)
@@ -55,13 +55,14 @@ internal class FishEyeTable(m: TableModel) : JTable(m) {
     val color32 = Color(230, 230, 250)
 
     fishEyeRowList = listOf(
-        FishEyeRowContext(12, font12, color12),
-        FishEyeRowContext(18, font18, color18),
-        FishEyeRowContext(24, font24, color24),
-        FishEyeRowContext(32, font32, color32),
-        FishEyeRowContext(24, font24, color24),
-        FishEyeRowContext(18, font18, color18),
-        FishEyeRowContext(12, font12, color12))
+      FishEyeRowContext(12, font12, color12),
+      FishEyeRowContext(18, font18, color18),
+      FishEyeRowContext(24, font24, color24),
+      FishEyeRowContext(32, font32, color32),
+      FishEyeRowContext(24, font24, color24),
+      FishEyeRowContext(18, font18, color18),
+      FishEyeRowContext(12, font12, color12)
+    )
   }
 
   override fun updateUI() {
@@ -152,19 +153,19 @@ internal class FishEyeTable(m: TableModel) : JTable(m) {
     return c
   }
 
-  private fun getViewableColoredRowCount(ridx: Int): Int {
+  private fun getViewableColoredRowCount(idx: Int): Int {
     val rd2 = (fishEyeRowList.size - 1) / 2
     val rc = getModel().getRowCount()
-    return if (rd2 - ridx > 0 && ridx < rd2) {
-      rd2 + 1 + ridx
-    } else if (ridx > rc - 1 - rd2 && ridx < rc - 1 + rd2) {
-      rc - ridx + rd2
+    return if (rd2 - idx > 0 && idx < rd2) {
+      rd2 + 1 + idx
+    } else if (idx > rc - 1 - rd2 && idx < rc - 1 + rd2) {
+      rc - idx + rd2
     } else {
       fishEyeRowList.size
     }
   }
 
-  protected fun initRowHeight(height: Int, ccRow: Int) {
+  private fun initRowHeight(height: Int, ccRow: Int) {
     val rd2 = (fishEyeRowList.size - 1) / 2
     val rowCount = getModel().getRowCount()
     val viewRc = getViewableColoredRowCount(ccRow)

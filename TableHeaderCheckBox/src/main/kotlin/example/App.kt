@@ -14,23 +14,23 @@ import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableColumn
 
 class MainPanel : JPanel(BorderLayout()) {
-  private val columnNames = arrayOf<Any>(Status.INDETERMINATE, "Integer", "String")
+  private val columnNames = arrayOf(Status.INDETERMINATE, "Integer", "String")
   private val data = arrayOf(
-    arrayOf<Any>(true, 1, "BBB"),
-    arrayOf<Any>(false, 12, "AAA"),
-    arrayOf<Any>(true, 2, "DDD"),
-    arrayOf<Any>(false, 5, "CCC"),
-    arrayOf<Any>(true, 3, "EEE"),
-    arrayOf<Any>(false, 6, "GGG"),
-    arrayOf<Any>(true, 4, "FFF"),
-    arrayOf<Any>(false, 7, "HHH")
+    arrayOf(true, 1, "BBB"),
+    arrayOf(false, 12, "AAA"),
+    arrayOf(true, 2, "DDD"),
+    arrayOf(false, 5, "CCC"),
+    arrayOf(true, 3, "EEE"),
+    arrayOf(false, 6, "GGG"),
+    arrayOf(true, 4, "FFF"),
+    arrayOf(false, 7, "HHH")
   )
   private val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
   private val table = object : JTable(model) {
     @Transient
-    protected var handler: HeaderCheckBoxHandler? = null
+    private var handler: HeaderCheckBoxHandler? = null
 
     override fun updateUI() {
       // [JDK-6788475] Changing to Nimbus LAF and back doesn't reset look and feel of JTable completely
@@ -78,7 +78,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class HeaderRenderer : TableCellRenderer {
+class HeaderRenderer : TableCellRenderer {
   private val check = JCheckBox("")
   private val label = JLabel("Check All")
 
@@ -92,9 +92,9 @@ internal class HeaderRenderer : TableCellRenderer {
   ): Component {
     val status = value as? Status ?: Status.INDETERMINATE
     when (status) {
-      Status.SELECTED -> updateCheckBox(true, true)
-      Status.DESELECTED -> updateCheckBox(false, true)
-      Status.INDETERMINATE -> updateCheckBox(true, false)
+      Status.SELECTED -> updateCheckBox(isSelected = true, isEnabled = true)
+      Status.DESELECTED -> updateCheckBox(isSelected = false, isEnabled = true)
+      Status.INDETERMINATE -> updateCheckBox(isSelected = true, isEnabled = false)
       // else -> throw AssertionError("Unknown Status")
     }
     check.setOpaque(false)
@@ -115,8 +115,10 @@ internal class HeaderRenderer : TableCellRenderer {
   }
 }
 
-class HeaderCheckBoxHandler(val table: JTable, val targetColumnIndex: Int) : MouseAdapter(), TableModelListener {
-
+class HeaderCheckBoxHandler(
+  private val table: JTable,
+  private val targetColumnIndex: Int
+) : MouseAdapter(), TableModelListener {
   override fun tableChanged(e: TableModelEvent) {
     if (e.getType() == TableModelEvent.UPDATE && e.getColumn() == targetColumnIndex) {
       val vci = table.convertColumnIndexToView(targetColumnIndex)
@@ -164,8 +166,7 @@ class HeaderCheckBoxHandler(val table: JTable, val targetColumnIndex: Int) : Mou
   }
 }
 
-internal class ComponentIcon(private val cmp: Component) : Icon {
-
+class ComponentIcon(private val cmp: Component) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     SwingUtilities.paintComponent(g, cmp, c.getParent(), x, y, getIconWidth(), getIconHeight())
   }
@@ -175,7 +176,7 @@ internal class ComponentIcon(private val cmp: Component) : Icon {
   override fun getIconHeight() = cmp.getPreferredSize().height
 }
 
-internal enum class Status {
+enum class Status {
   SELECTED, DESELECTED, INDETERMINATE
 }
 

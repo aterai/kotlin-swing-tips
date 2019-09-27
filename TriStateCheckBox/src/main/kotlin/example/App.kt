@@ -11,16 +11,16 @@ import javax.swing.table.TableCellRenderer
 
 class MainPanel : JPanel(BorderLayout()) {
   private val checkBox = TriStateCheckBox("TriState JCheckBox")
-  private val columnNames = arrayOf<Any>(Status.INDETERMINATE, "Integer", "String")
+  private val columnNames = arrayOf(Status.INDETERMINATE, "Integer", "String")
   private val data = arrayOf(
-    arrayOf<Any>(true, 1, "BBB"),
-    arrayOf<Any>(false, 12, "AAA"),
-    arrayOf<Any>(true, 2, "DDD"),
-    arrayOf<Any>(false, 5, "CCC"),
-    arrayOf<Any>(true, 3, "EEE"),
-    arrayOf<Any>(false, 6, "GGG"),
-    arrayOf<Any>(true, 4, "FFF"),
-    arrayOf<Any>(false, 7, "HHH")
+    arrayOf(true, 1, "BBB"),
+    arrayOf(false, 12, "AAA"),
+    arrayOf(true, 2, "DDD"),
+    arrayOf(false, 5, "CCC"),
+    arrayOf(true, 3, "EEE"),
+    arrayOf(false, 6, "GGG"),
+    arrayOf(true, 4, "FFF"),
+    arrayOf(false, 7, "HHH")
   )
   private val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
@@ -128,7 +128,7 @@ internal class TriStateActionListener : ActionListener {
 }
 
 internal class TriStateCheckBox(title: String) : JCheckBox(title) {
-  protected var listener: TriStateActionListener? = null
+  private var listener: TriStateActionListener? = null
   private var currentIcon: Icon? = null
 
   fun updateStatus(s: Status) {
