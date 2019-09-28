@@ -53,11 +53,7 @@ fun makeUI(): Component {
     //   .ifPresent(JTable::removeEditor)
 
     children(fileChooser1).filterIsInstance<JTable>()
-      // .firstOrNull()?.apply(JTable::removeEditor)
-      .firstOrNull()?.also {
-        println(it)
-        it.removeEditor()
-      }
+      .firstOrNull()?.removeEditor()
 
     val retValue = fileChooser1.showOpenDialog(log.getRootPane())
     if (retValue == JFileChooser.APPROVE_OPTION) {
