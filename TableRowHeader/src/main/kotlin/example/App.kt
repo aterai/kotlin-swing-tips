@@ -57,11 +57,11 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class RowHeaderList<E>(model: ListModel<E>, protected val table: JTable) : JList<E>(model) {
-  protected val tableSelection: ListSelectionModel
-  protected val listSelection: ListSelectionModel
-  protected var rollOverRowIndex = -1
-  protected var pressedRowIndex = -1
+class RowHeaderList<E>(model: ListModel<E>, private val table: JTable) : JList<E>(model) {
+  private val tableSelection: ListSelectionModel
+  private val listSelection: ListSelectionModel
+  private var rollOverRowIndex = -1
+  private var pressedRowIndex = -1
 
   init {
     setFixedCellHeight(table.getRowHeight())
@@ -76,7 +76,7 @@ internal class RowHeaderList<E>(model: ListModel<E>, protected val table: JTable
     listSelection = getSelectionModel()
   }
 
-  protected inner class RowHeaderRenderer<E2>(private val header: JTableHeader) : JLabel(), ListCellRenderer<E2> {
+  inner class RowHeaderRenderer<E2>(private val header: JTableHeader) : JLabel(), ListCellRenderer<E2> {
     init {
       this.setOpaque(true)
       // this.setBorder(UIManager.getBorder("TableHeader.cellBorder"))
@@ -94,15 +94,14 @@ internal class RowHeaderList<E>(model: ListModel<E>, protected val table: JTable
       isSelected: Boolean,
       cellHasFocus: Boolean
     ): Component {
-      if (index == pressedRowIndex) {
-        setBackground(Color.GRAY)
-      } else if (index == rollOverRowIndex) {
-        setBackground(Color.WHITE)
-      } else if (isSelected) {
-        setBackground(Color.GRAY.brighter())
-      } else {
-        setForeground(header.getForeground())
-        setBackground(header.getBackground())
+      when {
+        index == pressedRowIndex -> setBackground(Color.GRAY)
+        index == rollOverRowIndex -> setBackground(Color.WHITE)
+        isSelected -> setBackground(Color.GRAY.brighter())
+        else -> {
+          setForeground(header.getForeground())
+          setBackground(header.getBackground())
+        }
       }
       setText(value?.toString() ?: "")
       return this
@@ -158,7 +157,7 @@ internal class RowHeaderList<E>(model: ListModel<E>, protected val table: JTable
   }
 }
 
-internal class RowDataModel(private val rowListModel: DefaultListModel<String>) : DefaultTableModel() {
+class RowDataModel(private val rowListModel: DefaultListModel<String>) : DefaultTableModel() {
   private var number = 0
 
   fun addRowData(t: RowData) {
@@ -185,14 +184,14 @@ internal class RowDataModel(private val rowListModel: DefaultListModel<String>) 
 
   companion object {
     private val COLUMN_ARRAY = arrayOf(
-        ColumnContext("Name", String::class.java, false),
-        ColumnContext("Comment", String::class.java, false))
+      ColumnContext("Name", String::class.java, false),
+      ColumnContext("Comment", String::class.java, false))
   }
 }
 
 data class RowData(val name: String, val comment: String)
 
-internal class TablePopupMenu : JPopupMenu() {
+class TablePopupMenu : JPopupMenu() {
   private val delete: JMenuItem
 
   init {
