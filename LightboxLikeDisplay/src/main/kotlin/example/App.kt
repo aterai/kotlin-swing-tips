@@ -80,15 +80,14 @@ class LightboxGlassPane : JPanel() {
     }
   }
 
-  override fun setVisible(isVisible: Boolean) {
+  override fun setVisible(b: Boolean) {
     val oldVisible = isVisible()
-    super.setVisible(isVisible)
-    getRootPane()?.also {
-      if (isVisible() != oldVisible) {
-        it.getLayeredPane().setVisible(!isVisible)
-      }
-    }
-    if (isVisible && !animator.isRunning()) {
+    super.setVisible(b)
+    getRootPane()
+      ?.takeUnless { b == oldVisible }
+      ?.getLayeredPane()
+      ?.setVisible(!b)
+    if (b && !animator.isRunning()) {
       curimgw = 40
       curimgh = 40
       alpha = 0f
@@ -96,7 +95,7 @@ class LightboxGlassPane : JPanel() {
     } else {
       animator.stop()
     }
-    animatedIcon.setRunning(isVisible)
+    animatedIcon.setRunning(b)
   }
 
   override fun paintComponent(g: Graphics) {
