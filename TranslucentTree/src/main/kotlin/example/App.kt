@@ -41,7 +41,7 @@ class TransparentTree : JTree() {
       getLeadSelectionPath()?.also {
         val r = getRowBounds(getRowForPath(it))
         g2.setPaint(SELECTED_COLOR.darker())
-        g2.drawRect(0, r.y, width - 1, r.height - 1)
+        g2.drawRect(0, r.y, getWidth() - 1, r.height - 1)
       }
     }
     g2.dispose()
@@ -49,14 +49,14 @@ class TransparentTree : JTree() {
 
   override fun updateUI() {
     super.updateUI()
-    UIManager.put("Tree.repaintWholeRow", java.lang.Boolean.TRUE)
+    UIManager.put("Tree.repaintWholeRow", true)
     setCellRenderer(TransparentTreeCellRenderer())
     setOpaque(false)
     setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
   }
 
   companion object {
-    private val SELECTED_COLOR = Color(0x646464FF, true)
+    private val SELECTED_COLOR = Color(0x64_64_64_FF, true)
   }
 }
 
