@@ -32,16 +32,14 @@ class MainPanel : JPanel(BorderLayout()) {
       JTabbedPane.TOP, JTabbedPane.BOTTOM -> {
         val idx = tabs.getSelectedIndex()
         for (i in 0 until tabs.getTabCount()) {
-          (tabs.getTabComponentAt(i) as? ShrinkLabel)?.also {
-            it.isSelected = i == idx
-          }
+          (tabs.getTabComponentAt(i) as? ShrinkLabel)?.isSelected = i == idx
         }
       }
     }
   }
 }
 
-internal class ShrinkLabel(title: String, icon: Icon) : JLabel(title, icon, SwingConstants.LEFT) {
+class ShrinkLabel(title: String, icon: Icon) : JLabel(title, icon, SwingConstants.LEFT) {
   var isSelected = false
 
   override fun getPreferredSize() = super.getPreferredSize()?.also {
