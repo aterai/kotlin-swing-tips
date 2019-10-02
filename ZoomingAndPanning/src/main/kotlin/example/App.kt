@@ -10,12 +10,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 class MainPanel : JPanel(BorderLayout()) {
   @Transient
   private var zoomAndPanHandler: ZoomAndPanHandler? = null
-  private val icon: ImageIcon
-
-  init {
-    icon = ImageIcon(javaClass.getResource("CRW_3857_JFR.jpg"))
-    setPreferredSize(Dimension(320, 240))
-  }
+  private val icon = ImageIcon(javaClass.getResource("CRW_3857_JFR.jpg"))
 
   override fun updateUI() {
     removeMouseListener(zoomAndPanHandler)
@@ -28,7 +23,9 @@ class MainPanel : JPanel(BorderLayout()) {
     addMouseWheelListener(zoomAndPanHandler)
   }
 
-  protected override fun paintComponent(g: Graphics) {
+  override fun getPreferredSize() = Dimension(320, 240)
+
+  override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     val g2 = g.create() as Graphics2D
     g2.setTransform(zoomAndPanHandler?.coordAndZoomTransform)
