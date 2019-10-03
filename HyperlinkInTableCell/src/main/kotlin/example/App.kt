@@ -72,8 +72,8 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMotionListener {
-  private var vrow = -1 // viewRowIndex
-  private var vcol = -1 // viewColumnIndex
+  private var viewRowIndex = -1
+  private var viewColumnIndex = -1 // viewColumnIndex
   private var isRollover: Boolean = false
 
   override fun getTableCellRendererComponent(
@@ -95,41 +95,40 @@ internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMot
   }
 
   private fun isRolloverCell(table: JTable, row: Int, column: Int) =
-      !table.isEditing() && vrow == row && vcol == column && isRollover
+    !table.isEditing() && viewRowIndex == row && viewColumnIndex == column && isRollover
 
   private fun isUrlColumn(table: JTable, column: Int) =
-      column >= 0 && table.getColumnClass(column) == URL::class.java
+    column >= 0 && table.getColumnClass(column) == URL::class.java
 
   override fun mouseMoved(e: MouseEvent) {
     val table = e.getComponent() as? JTable ?: return
     val pt = e.getPoint()
-    val prevRow = vrow
-    val prevCol = vcol
+    val prevRow = viewRowIndex
+    val prevCol = viewColumnIndex
     val prevRollover = isRollover
-    vrow = table.rowAtPoint(pt)
-    vcol = table.columnAtPoint(pt)
-    isRollover = isUrlColumn(table, vcol)
-    val isSameCell = vrow == prevRow && vcol == prevCol && isRollover == prevRollover
+    viewRowIndex = table.rowAtPoint(pt)
+    viewColumnIndex = table.columnAtPoint(pt)
+    isRollover = isUrlColumn(table, viewColumnIndex)
+    val isSameCell = viewRowIndex == prevRow && viewColumnIndex == prevCol && isRollover == prevRollover
     val isNotRollover = !isRollover && !prevRollover
     if (isSameCell || isNotRollover) {
       return
     }
-    val repaintRect: Rectangle
-    if (isRollover) {
-      val r = table.getCellRect(vrow, vcol, false)
-      repaintRect = if (prevRollover) r.union(table.getCellRect(prevRow, prevCol, false)) else r
-    } else { // if (prevRollover) {
-      repaintRect = table.getCellRect(prevRow, prevCol, false)
-    }
-    table.repaint(repaintRect)
+    table.repaint(when {
+      isRollover -> {
+        val r = table.getCellRect(viewRowIndex, viewColumnIndex, false)
+        if (prevRollover) r.union(table.getCellRect(prevRow, prevCol, false)) else r
+      }
+      else -> table.getCellRect(prevRow, prevCol, false)
+    })
   }
 
   override fun mouseExited(e: MouseEvent) {
     val table = e.getComponent() as? JTable ?: return
-    if (isUrlColumn(table, vcol)) {
-      table.repaint(table.getCellRect(vrow, vcol, false))
-      vrow = -1
-      vcol = -1
+    if (isUrlColumn(table, viewColumnIndex)) {
+      table.repaint(table.getCellRect(viewRowIndex, viewColumnIndex, false))
+      viewRowIndex = -1
+      viewColumnIndex = -1
       isRollover = false
     }
   }
@@ -137,10 +136,10 @@ internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMot
   override fun mouseClicked(e: MouseEvent) {
     val table = e.getComponent() as? JTable ?: return
     val pt = e.getPoint()
-    val ccol = table.columnAtPoint(pt)
-    if (isUrlColumn(table, ccol)) {
-      val crow = table.rowAtPoint(pt)
-      val url = table.getValueAt(crow, ccol) as? URL ?: return
+    val col = table.columnAtPoint(pt)
+    if (isUrlColumn(table, col)) {
+      val row = table.rowAtPoint(pt)
+      val url = table.getValueAt(row, col) as? URL ?: return
       println(url)
       if (Desktop.isDesktopSupported()) { // JDK 1.6.0
         runCatching {
