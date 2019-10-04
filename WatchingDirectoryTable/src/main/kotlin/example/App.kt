@@ -2,8 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.HierarchyEvent
-import java.io.IOException
-import java.io.UncheckedIOException
 import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.Path
@@ -25,7 +23,6 @@ class MainPanel : JPanel(BorderLayout()) {
   val deleteRowSet = mutableSetOf<Int>()
 
   init {
-
     val table = JTable(model)
     table.setRowSorter(sorter)
     table.setFillsViewportHeight(true)
@@ -40,16 +37,15 @@ class MainPanel : JPanel(BorderLayout()) {
     val loop = Toolkit.getDefaultToolkit().getSystemEventQueue().createSecondaryLoop()
     val worker = object : Thread() {
       override fun run() {
-        var watcher: WatchService?
-        try {
-          watcher = FileSystems.getDefault().newWatchService()
-          dir.register(watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE)
+        runCatching {
+          FileSystems.getDefault().newWatchService()
+        }.onSuccess {
+          dir.register(it, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE)
           append("register: $dir")
-        } catch (ex: IOException) {
-          throw UncheckedIOException(ex)
+          processEvents(dir, it)
+        }.onFailure {
+          append(it.message)
         }
-
-        processEvents(dir, watcher)
         loop.exit()
       }
     }
@@ -132,7 +128,7 @@ class MainPanel : JPanel(BorderLayout()) {
     }
   }
 
-  fun updateTable(kind: WatchEvent.Kind<*>, child: Path) {
+  private fun updateTable(kind: WatchEvent.Kind<*>, child: Path) {
     if (kind === StandardWatchEventKinds.ENTRY_CREATE) {
       model.addPath(child)
     } else if (kind === StandardWatchEventKinds.ENTRY_DELETE) {
@@ -183,17 +179,16 @@ internal class FileModel : DefaultTableModel() {
 }
 
 internal class TablePopupMenu : JPopupMenu() {
-  private val delete: JMenuItem
+  private val delete = add("delete")
 
   init {
-    delete = add("delete")
     delete.addActionListener {
       val table = getInvoker() as? JTable ?: return@addActionListener
       val model = table.getModel() as? DefaultTableModel ?: return@addActionListener
       val selection = table.getSelectedRows()
       for (i in selection.indices.reversed()) {
-        val midx = table.convertRowIndexToModel(selection[i])
-        model.getValueAt(midx, 2)?.toString().also {
+        val idx = table.convertRowIndexToModel(selection[i])
+        model.getValueAt(idx, 2)?.toString()?.also {
           runCatching {
             Files.delete(Paths.get(it))
           }.onFailure {
