@@ -25,11 +25,11 @@ class MainPanel : JPanel(BorderLayout()) {
     listOf(
       "setSelectedIndex(-1/idx):", "contentsChanged(...):", "repaint():",
       "(remove/insert)ItemAt(...):", "fireContentsChanged(...):")
-        .map { JLabel(it) }
-        .forEach {
-          p.add(it, c)
-          c.gridy += 1
-        }
+      .map { JLabel(it) }
+      .forEach {
+        p.add(it, c)
+        c.gridy += 1
+      }
 
     c.gridy = 0
     c.gridx = 1
@@ -38,11 +38,11 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val m = arrayOf(
       CheckableItem("aaa", false),
-      CheckableItem("bbbbb", true),
+      CheckableItem("00000", true),
       CheckableItem("111", false),
       CheckableItem("33333", true),
       CheckableItem("2222", true),
-      CheckableItem("ccccccc", false)
+      CheckableItem("444444", false)
     )
 
     val combo0 = CheckedComboBox(DefaultComboBoxModel(m))
@@ -62,7 +62,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-open class CheckableItem(val text: String, var isSelected: Boolean) {
+open class CheckableItem(private val text: String, var isSelected: Boolean) {
   override fun toString() = text
 }
 
@@ -79,7 +79,8 @@ class CheckBoxCellRenderer<E : CheckableItem> : ListCellRenderer<E> {
   ): Component {
     if (index < 0) {
       val txt = getCheckedItemString(list.getModel())
-      label.setText(if (txt.isEmpty()) " " else txt)
+      // label.setText(if (txt.isEmpty()) " " else txt)
+      label.setText(txt.takeUnless { it.isEmpty() } ?: " ")
       return label
     } else {
       check.setText(value.toString())
@@ -97,12 +98,12 @@ class CheckBoxCellRenderer<E : CheckableItem> : ListCellRenderer<E> {
 
   private fun <E : CheckableItem> getCheckedItemString(model: ListModel<E>): String {
     return (0 until model.getSize())
-      .map { model.getElementAt(it) }
-      .filter { it.isSelected }
-      .map { it.toString() }
-      .sorted()
-      .joinToString()
-      // .collect(Collectors.joining(", "))
+        .asSequence()
+        .map { model.getElementAt(it) }
+        .filter { it.isSelected }
+        .map { it.toString() }
+        .sorted()
+        .joinToString()
   }
 }
 
