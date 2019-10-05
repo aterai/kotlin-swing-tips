@@ -7,7 +7,6 @@ import java.awt.datatransfer.UnsupportedFlavorException
 import java.awt.dnd.DragSource
 import java.awt.event.ActionEvent
 import java.io.IOException
-// import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
@@ -188,9 +187,9 @@ class ListItemTransferHandler : TransferHandler() {
   }
 
   override fun canImport(info: TransferSupport) =
-      info.isDrop() &&
-      info.isDataFlavorSupported(localObjectFlavor) &&
-      info.getDropLocation() is JList.DropLocation
+    info.isDrop() &&
+        info.isDataFlavorSupported(localObjectFlavor) &&
+        info.getDropLocation() is JList.DropLocation
 
   override fun getSourceActions(c: JComponent) = MOVE // COPY_OR_MOVE
 
@@ -243,8 +242,9 @@ class ListItemTransferHandler : TransferHandler() {
   }
 }
 
-internal class TableRowTransferHandler : TransferHandler() {
-  private var indices: IntArray? = null
+class TableRowTransferHandler : TransferHandler() {
+  // private var indices: IntArray? = null
+  private val selectedIndices = mutableListOf<Int>()
   private var addIndex = -1 // Location where items were added
   private var addCount = 0 // Number of items added.
 
@@ -252,7 +252,7 @@ internal class TableRowTransferHandler : TransferHandler() {
     c.getRootPane().getGlassPane().setVisible(true)
     val table = c as JTable
     val model = table.model as DefaultTableModel
-    indices = table.getSelectedRows()
+    table.getSelectedRows().forEach { selectedIndices.add(it) }
     val transferredObjects = table.getSelectedRows().map { model.dataVector[it] }
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(FLAVOR)
@@ -294,25 +294,19 @@ internal class TableRowTransferHandler : TransferHandler() {
     var index = tdl.getRow()
     index = if (index in 0 until max) index else max
     addIndex = index
-    return try {
-      val values =
-        info.transferable.getTransferData(FLAVOR) as List<*>
-      addCount = values.size
-      // val array = arrayOfNulls<Any>(0)
-      for (o in values) {
-        val row = index++
-        val list = o as? ArrayList<*> ?: continue
-        val array = arrayOfNulls<Any?>(list.size)
-        list.toArray(array)
-        model.insertRow(row, array)
-        target.getSelectionModel().addSelectionInterval(row, row)
-      }
-      true
-    } catch (ex: UnsupportedFlavorException) {
-      false
-    } catch (ex: IOException) {
-      false
+    val values = runCatching {
+      info.getTransferable().getTransferData(FLAVOR) as? List<*>
+    }.getOrNull().orEmpty()
+    addCount = values.size
+    for (o in values) {
+      val row = index++
+      val list = o as? List<*> ?: continue
+      val array = arrayOfNulls<Any?>(list.size)
+      for ((i, v) in list.withIndex()) { array[i] = v }
+      model.insertRow(row, array)
+      target.getSelectionModel().addSelectionInterval(row, row)
     }
+    return values.isNotEmpty()
   }
 
   override fun exportDone(
@@ -324,22 +318,19 @@ internal class TableRowTransferHandler : TransferHandler() {
   }
 
   private fun cleanup(c: JComponent, remove: Boolean) {
-    c.rootPane.glassPane.isVisible = false
-    if (remove && indices != null) {
-      val model =
-        (c as JTable).model as DefaultTableModel
-      if (addCount > 0) {
-        for (i in indices!!.indices) {
-          if (indices!![i] >= addIndex) {
-            indices!![i] += addCount
-          }
+    c.getRootPane().getGlassPane().setVisible(false)
+    if (remove && selectedIndices.isNotEmpty()) {
+      val selectedList = when {
+        addCount > 0 -> selectedIndices.map { if (it >= addIndex) it + addCount else it }
+        else -> selectedIndices.toList()
+      }
+      ((c as? JTable)?.getModel() as? DefaultTableModel)?.also { model ->
+        for (i in selectedList.indices.reversed()) {
+          model.removeRow(selectedList[i])
         }
       }
-      for (i in indices!!.indices.reversed()) {
-        model.removeRow(indices!![i])
-      }
     }
-    indices = null
+    selectedIndices.clear()
     addCount = 0
     addIndex = -1
   }
@@ -349,7 +340,7 @@ internal class TableRowTransferHandler : TransferHandler() {
   }
 }
 
-internal class TreeTransferHandler : TransferHandler() {
+class TreeTransferHandler : TransferHandler() {
   private var source: JTree? = null
   override fun createTransferable(c: JComponent): Transferable? {
     val src = c as? JTree ?: return null
