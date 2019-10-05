@@ -183,9 +183,9 @@ class TranslucentScrollBarUI : BasicScrollBarUI() {
   }
 
   override fun paintThumb(g: Graphics, c: JComponent, r: Rectangle) {
-    val sb = c as JScrollBar
+    val sb = c as? JScrollBar
     val color: Color
-    if (!sb.isEnabled || r.width > r.height) {
+    if (sb == null || !sb.isEnabled || r.width > r.height) {
       return
     } else if (isDragging) {
       color = DRAGGING_COLOR
@@ -197,9 +197,9 @@ class TranslucentScrollBarUI : BasicScrollBarUI() {
       r.x += dw
       r.width -= dw
     }
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    g2.paint = color
+    g2.setPaint(color)
     g2.fillRect(r.x, r.y, r.width - 2, r.height - 1)
     g2.dispose()
   }

@@ -28,11 +28,13 @@ class MainPanel : JPanel(BorderLayout(2, 2)) {
     val p = JPanel(cardLayout)
 
     // https://ateraimemo.com/Swing/TraverseAllNodes.html
-    val root = model.root as DefaultMutableTreeNode
-    root.postorderEnumeration().toList()
+    (model.getRoot() as? DefaultMutableTreeNode)?.also { root ->
+      root.postorderEnumeration().toList()
         .filterIsInstance<DefaultMutableTreeNode>()
         .map { it.getUserObject().toString() }
         .forEach { p.add(JLabel(it), it) }
+    }
+
     val tree: JTree = RowSelectionTree()
     tree.setModel(model)
     tree.setRowHeight(32)
@@ -88,8 +90,8 @@ class RowSelectionTree : JTree() {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setPaint(SELECTED_COLOR)
     getSelectionRows()
-        ?.map { getRowBounds(it) }
-        ?.forEach { g2.fillRect(0, it.y, getWidth(), it.height) }
+      ?.map { getRowBounds(it) }
+      ?.forEach { g2.fillRect(0, it.y, getWidth(), it.height) }
     super.paintComponent(g)
     if (hasFocus()) {
       getLeadSelectionPath().also {
@@ -150,16 +152,15 @@ class RowSelectionTree : JTree() {
       row: Int,
       hasFocus: Boolean
     ): Component {
-      val l =
-        super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus) as JLabel
-      l.background = if (selected) SELECTED_COLOR else tree.background
-      l.isOpaque = true
-      return l
+      val c = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+      c.setBackground(if (selected) SELECTED_COLOR else tree.getBackground())
+      (c as? JComponent)?.setOpaque(true)
+      return c
     }
   }
 
   companion object {
-    private val SELECTED_COLOR = Color(0x6496C8)
+    private val SELECTED_COLOR = Color(0x64_96_C8)
   }
 }
 
