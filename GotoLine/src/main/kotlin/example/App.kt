@@ -10,7 +10,7 @@ import javax.swing.event.DocumentListener
 class MainPanel : JPanel(BorderLayout()) {
   init {
     val model = SpinnerNumberModel(100, 1, 2000, 1)
-    val textArea = JTextArea("aaaaaaaaaaaaa\n".repeat(2000))
+    val textArea = JTextArea("1111111111111111\n".repeat(2000))
     textArea.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 0))
     val scroll = JScrollPane(textArea)
     scroll.setRowHeaderView(LineNumberView(textArea))
@@ -86,8 +86,8 @@ internal class LineNumberView(private val textArea: JTextArea) : JComponent() {
     })
     val i = textArea.getInsets()
     setBorder(BorderFactory.createCompoundBorder(
-        BorderFactory.createMatteBorder(0, 0, 0, 1, Color.GRAY),
-        BorderFactory.createEmptyBorder(i.top, MARGIN, i.bottom, MARGIN - 1)))
+      BorderFactory.createMatteBorder(0, 0, 0, 1, Color.GRAY),
+      BorderFactory.createEmptyBorder(i.top, MARGIN, i.bottom, MARGIN - 1)))
     setOpaque(true)
     setBackground(Color.WHITE)
     setFont(font)
@@ -101,7 +101,7 @@ internal class LineNumberView(private val textArea: JTextArea) : JComponent() {
 
   override fun getPreferredSize() = Dimension(componentWidth, textArea.getHeight())
 
-  protected override fun paintComponent(g: Graphics) {
+  override fun paintComponent(g: Graphics) {
     g.setColor(getBackground())
     val clip = g.getClipBounds()
     g.fillRect(clip.x, clip.y, clip.width, clip.height)

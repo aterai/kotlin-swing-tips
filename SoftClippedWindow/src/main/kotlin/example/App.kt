@@ -53,7 +53,7 @@ class MainPanel : JPanel() {
     val panel = object : JPanel(BorderLayout()) {
       override fun getPreferredSize() = Dimension(image.getWidth(this) / 2, image.getHeight(this) / 2)
 
-      protected override fun paintComponent(g: Graphics) {
+      override fun paintComponent(g: Graphics) {
         val g2 = g.create() as Graphics2D
         g2.drawImage(image, 0, 0, this)
         g2.dispose()

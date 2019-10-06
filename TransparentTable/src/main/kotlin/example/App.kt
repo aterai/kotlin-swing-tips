@@ -16,10 +16,10 @@ class MainPanel : JPanel(BorderLayout()) {
   init {
     val columnNames = arrayOf("String", "Integer", "Boolean")
     val data = arrayOf(
-        arrayOf<Any>("aaa", 12, true),
-        arrayOf<Any>("bbb", 5, false),
-        arrayOf<Any>("CCC", 92, true),
-        arrayOf<Any>("DDD", 0, false))
+      arrayOf<Any>("aaa", 12, true),
+      arrayOf<Any>("bbb", 5, false),
+      arrayOf<Any>("CCC", 92, true),
+      arrayOf<Any>("DDD", 0, false))
     val model = object : DefaultTableModel(data, columnNames) {
       override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
     }
@@ -56,8 +56,8 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val texture = makeImageTexture()
     val scroll = object : JScrollPane(table) {
-      protected override fun createViewport() = object : JViewport() {
-        protected override fun paintComponent(g: Graphics) {
+      override fun createViewport() = object : JViewport() {
+        override fun paintComponent(g: Graphics) {
           val g2 = g.create() as Graphics2D
           g2.setPaint(texture)
           g2.fillRect(0, 0, getWidth(), getHeight())
@@ -130,7 +130,7 @@ internal class TranslucentBooleanRenderer : JCheckBox(), TableCellRenderer {
     return this
   }
 
-  protected override fun paintComponent(g: Graphics) {
+  override fun paintComponent(g: Graphics) {
     if (!isOpaque()) {
       g.setColor(getBackground())
       g.fillRect(0, 0, getWidth(), getHeight())

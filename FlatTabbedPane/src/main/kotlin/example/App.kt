@@ -25,7 +25,7 @@ fun makeUI(): Component {
     override fun updateUI() {
       super.updateUI()
       setUI(object : BasicTabbedPaneUI() {
-        protected override fun paintFocusIndicator(
+        override fun paintFocusIndicator(
           g: Graphics,
           tabPlacement: Int,
           rects: Array<Rectangle>,
@@ -35,7 +35,7 @@ fun makeUI(): Component {
           isSelected: Boolean
         ) { /* Do not paint anything */ }
 
-        protected override fun paintTabBorder(
+        override fun paintTabBorder(
           g: Graphics,
           tabPlacement: Int,
           tabIndex: Int,
@@ -46,7 +46,7 @@ fun makeUI(): Component {
           isSelected: Boolean
         ) { /* Do not paint anything */ }
 
-        protected override fun paintTabBackground(
+        override fun paintTabBackground(
           g: Graphics,
           tabPlacement: Int,
           tabIndex: Int,
@@ -60,7 +60,7 @@ fun makeUI(): Component {
           g.fillRect(x, y, w, h)
         }
 
-        protected override fun paintContentBorderTopEdge(
+        override fun paintContentBorderTopEdge(
           g: Graphics,
           tabPlacement: Int,
           selectedIndex: Int,
@@ -73,7 +73,7 @@ fun makeUI(): Component {
           g.fillRect(x, y, w, h)
         }
 
-        protected override fun paintContentBorderRightEdge(
+        override fun paintContentBorderRightEdge(
           g: Graphics,
           tabPlacement: Int,
           selectedIndex: Int,
@@ -86,7 +86,7 @@ fun makeUI(): Component {
           g.fillRect(x, y, w, h)
         }
 
-        protected override fun paintContentBorderBottomEdge(
+        override fun paintContentBorderBottomEdge(
           g: Graphics,
           tabPlacement: Int,
           selectedIndex: Int,
@@ -99,7 +99,7 @@ fun makeUI(): Component {
           g.fillRect(x, y, w, h)
         }
 
-        protected override fun paintContentBorderLeftEdge(
+        override fun paintContentBorderLeftEdge(
           g: Graphics,
           tabPlacement: Int,
           selectedIndex: Int,
@@ -116,7 +116,7 @@ fun makeUI(): Component {
       setForeground(Color.WHITE)
       setBackground(UNSELECTED_BG)
       setTabPlacement(SwingConstants.LEFT)
-      setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT)
+      setTabLayoutPolicy(SCROLL_TAB_LAYOUT)
     }
   }
 

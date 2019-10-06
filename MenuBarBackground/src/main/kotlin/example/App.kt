@@ -13,7 +13,7 @@ fun createMenuBar(): JMenuBar {
   val mb = object : JMenuBar() {
     @Transient private val texture = makeCheckerTexture()
 
-    protected override fun paintComponent(g: Graphics) {
+    override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
       val g2 = g.create() as? Graphics2D ?: return
       g2.setPaint(texture)
@@ -30,7 +30,7 @@ fun createMenuBar(): JMenuBar {
 
 fun createMenu(key: String): JMenu {
   val menu = object : JMenu(key) {
-    protected override fun fireStateChanged() {
+    override fun fireStateChanged() {
       val m = getModel()
       if (m.isPressed() && m.isArmed()) {
         setOpaque(true)

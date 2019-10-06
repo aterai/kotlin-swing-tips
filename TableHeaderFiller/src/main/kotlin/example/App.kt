@@ -58,7 +58,7 @@ internal class TableHeaderFillerLayerUI : LayerUI<JScrollPane>() {
     super.uninstallUI(c)
   }
 
-  protected override fun processComponentEvent(e: ComponentEvent, l: JLayer<out JScrollPane>) {
+  override fun processComponentEvent(e: ComponentEvent, l: JLayer<out JScrollPane>) {
     val c = e.getComponent() as? JTableHeader ?: return
     l.repaint(c.getBounds())
   }
