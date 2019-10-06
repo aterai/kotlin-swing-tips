@@ -7,6 +7,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.ListSelectionEvent
 import javax.swing.event.ListSelectionListener
 import javax.swing.table.DefaultTableModel
+import kotlin.math.abs
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
@@ -16,7 +17,7 @@ class MainPanel : JPanel(BorderLayout()) {
     }
 
     for (i in 0 until 1000) {
-      model.addRow(arrayOf("aaaaa", i, i % 2 == 0))
+      model.addRow(arrayOf("12345", i, i % 2 == 0))
     }
 
     val table = object : JTable(model) {
@@ -42,7 +43,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class TableTouchScreenHandler(table: JTable) : MouseAdapter(), ListSelectionListener {
+class TableTouchScreenHandler(table: JTable) : MouseAdapter(), ListSelectionListener {
   private val dc = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
   private val hc = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
   private val scroller: Timer
@@ -56,7 +57,7 @@ internal class TableTouchScreenHandler(table: JTable) : MouseAdapter(), ListSele
       val vp = vport.getViewPosition()
       vp.translate(-delta.x, -delta.y)
       table.scrollRectToVisible(Rectangle(vp, vport.getSize()))
-      if (Math.abs(delta.x) > 0 || Math.abs(delta.y) > 0) {
+      if (abs(delta.x) > 0 || abs(delta.y) > 0) {
         delta.setLocation((delta.x * GRAVITY).toInt(), (delta.y * GRAVITY).toInt())
       } else {
         (e.getSource() as? Timer)?.stop()
