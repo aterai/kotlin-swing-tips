@@ -1,6 +1,6 @@
 package example
 
-import java.awt.*
+import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
 import java.awt.datatransfer.UnsupportedFlavorException
@@ -8,9 +8,13 @@ import java.awt.dnd.DragSource
 import java.awt.event.ActionEvent
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicInteger
-import javax.swing.*
+import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
-import javax.swing.tree.*
+import javax.swing.tree.DefaultMutableTreeNode
+import javax.swing.tree.DefaultTreeModel
+import javax.swing.tree.MutableTreeNode
+import javax.swing.tree.TreePath
+import javax.swing.tree.TreeSelectionModel
 
 class MainPanel : JPanel(BorderLayout()) {
   init {

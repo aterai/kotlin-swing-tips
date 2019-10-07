@@ -4,7 +4,7 @@
 
 package example
 
-import java.awt.*  // ktlint-disable no-wildcard-imports
+import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
