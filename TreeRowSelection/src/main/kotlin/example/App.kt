@@ -6,31 +6,28 @@ import javax.swing.plaf.basic.BasicTreeUI
 import javax.swing.tree.DefaultTreeCellRenderer
 import javax.swing.tree.TreePath
 
-class MainPanel : JPanel(BorderLayout()) {
+class MainPanel : JPanel(GridLayout(1, 2, 2, 2)) {
   init {
-    add(JPanel(GridLayout(1, 2)).also {
-      it.add(JScrollPane(JTree()))
-      it.add(JScrollPane(RowSelectionTree()))
-    })
+    add(JScrollPane(JTree()))
+    add(JScrollPane(RowSelectionTree()))
     setPreferredSize(Dimension(320, 240))
   }
 }
 
-internal class RowSelectionTree : JTree() {
-  protected override fun paintComponent(g: Graphics) {
+class RowSelectionTree : JTree() {
+  override fun paintComponent(g: Graphics) {
     g.setColor(getBackground())
     g.fillRect(0, 0, getWidth(), getHeight())
-    val g2 = g.create() as Graphics2D
-    g2.setPaint(SELC)
-    getSelectionRows()?.forEach {
-      val r = getRowBounds(it)
-      g2.fillRect(0, r.y, getWidth(), r.height)
-    }
+    val g2 = g.create() as? Graphics2D ?: return
+    g2.setPaint(SELECTED_COLOR)
+    getSelectionRows()
+        ?.map { getRowBounds(it) }
+        ?.forEach { g2.fillRect(0, it.y, getWidth(), it.height) }
     super.paintComponent(g)
     if (hasFocus()) {
       getLeadSelectionPath()?.also {
         val r = getRowBounds(getRowForPath(it))
-        g2.setPaint(SELC.darker())
+        g2.setPaint(SELECTED_COLOR.darker())
         g2.drawRect(0, r.y, getWidth() - 1, r.height - 1)
       }
     }
@@ -69,14 +66,14 @@ internal class RowSelectionTree : JTree() {
     ): Component {
       val c = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
       val l = c as? JLabel ?: return c
-      l.setBackground(if (selected) SELC else tree.getBackground())
+      l.setBackground(if (selected) SELECTED_COLOR else tree.getBackground())
       l.setOpaque(true)
       return l
     }
   }
 
   companion object {
-    val SELC = Color(0x64_96_C8)
+    private val SELECTED_COLOR = Color(0x64_96_C8)
   }
 }
 
