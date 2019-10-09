@@ -13,7 +13,6 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.MutableTreeNode
-import javax.swing.tree.TreePath
 import javax.swing.tree.TreeSelectionModel
 
 class MainPanel : JPanel(BorderLayout()) {
@@ -275,11 +274,11 @@ class TableRowTransferHandler : TransferHandler() {
   }
 
   override fun canImport(info: TransferSupport): Boolean {
-    val isDroppable = info.isDrop() && info.isDataFlavorSupported(FLAVOR)
     val c = info.getComponent() as? JComponent ?: return false
     val glassPane = c.getRootPane().getGlassPane()
-    glassPane.setCursor(if (isDroppable) DragSource.DefaultMoveDrop else DragSource.DefaultMoveNoDrop)
-    return isDroppable
+    val canDrop = info.isDrop() && info.isDataFlavorSupported(FLAVOR)
+    glassPane.setCursor(if (canDrop) DragSource.DefaultMoveDrop else DragSource.DefaultMoveNoDrop)
+    return canDrop
   }
 
   override fun getSourceActions(c: JComponent?) = MOVE
@@ -394,7 +393,7 @@ class TreeTransferHandler : TransferHandler() {
       val parent = dest.getLastPathComponent() as DefaultMutableTreeNode
       val tree = support.getComponent() as JTree
       val model = tree.getModel() as DefaultTreeModel
-      val idx = AtomicInteger(if (childIndex < 0) parent.childCount else childIndex)
+      val idx = AtomicInteger(if (childIndex < 0) parent.getChildCount() else childIndex)
       nodes.forEach {
         val clone = DefaultMutableTreeNode(it.getUserObject())
         model.insertNodeInto(deepCopyTreeNode(it, clone), parent, idx.incrementAndGet())
@@ -404,17 +403,13 @@ class TreeTransferHandler : TransferHandler() {
     return false
   }
 
-  override fun exportDone(
-    src: JComponent?,
-    data: Transferable?,
-    action: Int
-  ) {
+  override fun exportDone(src: JComponent?, data: Transferable?, action: Int) {
     if (action == MOVE && src is JTree) {
-      val model = src.model as DefaultTreeModel
-      val selectionPaths: Array<TreePath>? = src.selectionPaths
-      if (selectionPaths != null) {
+      val model = src.getModel() as? DefaultTreeModel
+      val selectionPaths = src.getSelectionPaths()
+      if (model != null && selectionPaths != null) {
         for (path in selectionPaths) {
-          model.removeNodeFromParent(path.lastPathComponent as MutableTreeNode)
+          model.removeNodeFromParent(path.getLastPathComponent() as? MutableTreeNode)
         }
       }
     }
