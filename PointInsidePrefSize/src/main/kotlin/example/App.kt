@@ -1,9 +1,8 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.awt.event.MouseListener
-import java.awt.event.MouseMotionListener
 import java.net.URL
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableCellRenderer
@@ -71,7 +70,8 @@ class MainPanel : JPanel(BorderLayout()) {
   private fun makeUrl(spec: String) = runCatching { URL(spec) }.getOrNull()
 }
 
-class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMotionListener {
+class UrlRenderer : MouseAdapter(), TableCellRenderer {
+  private val renderer = DefaultTableCellRenderer()
   private var viewRowIndex = -1
   private var viewColumnIndex = -1
   private var isRollover: Boolean = false
@@ -84,10 +84,10 @@ class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMotionListen
     row: Int,
     column: Int
   ): Component {
-    super.getTableCellRendererComponent(table, value, isSelected, false, row, column)
-
+    val c = renderer.getTableCellRendererComponent(table, value, isSelected, false, row, column)
+    val label = c as? JLabel ?: return c
     val cm = table.getColumnModel()
-    val i = this.getInsets()
+    val i = renderer.getInsets()
     CELL_RECT.x = i.left
     CELL_RECT.y = i.top
     CELL_RECT.width = cm.getColumn(column).getWidth() - cm.getColumnMargin() - i.right - CELL_RECT.x
@@ -96,12 +96,12 @@ class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMotionListen
     TEXT_RECT.setBounds(0, 0, 0, 0)
 
     val str = SwingUtilities.layoutCompoundLabel(
-      this, getFontMetrics(getFont()), value?.toString() ?: "", getIcon(),
-      getVerticalAlignment(), getHorizontalAlignment(),
-      getVerticalTextPosition(), getHorizontalTextPosition(),
-      CELL_RECT, ICON_RECT, TEXT_RECT, getIconTextGap())
-    setText(if (isRolloverCell(table, row, column)) "<html><u><font color='blue'>$str" else str)
-    return this
+      label, label.getFontMetrics(label.getFont()), value?.toString() ?: "", label.getIcon(),
+      label.getVerticalAlignment(), label.getHorizontalAlignment(),
+      label.getVerticalTextPosition(), label.getHorizontalTextPosition(),
+      CELL_RECT, ICON_RECT, TEXT_RECT, label.getIconTextGap())
+    label.setText(if (isRolloverCell(table, row, column)) "<html><u><font color='blue'>$str" else str)
+    return label
   }
 
   private fun isRolloverCell(table: JTable, row: Int, column: Int) =
@@ -157,14 +157,6 @@ class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMotionListen
       }
     }
   }
-
-  override fun mouseDragged(e: MouseEvent) { /* not needed */ }
-
-  override fun mouseEntered(e: MouseEvent) { /* not needed */ }
-
-  override fun mousePressed(e: MouseEvent) { /* not needed */ }
-
-  override fun mouseReleased(e: MouseEvent) { /* not needed */ }
 
   private fun isUrlColumn(tbl: JTable, col: Int) = col >= 0 && tbl.getColumnClass(col) == URL::class.java
 
