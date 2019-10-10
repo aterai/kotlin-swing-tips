@@ -9,16 +9,13 @@ import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.filechooser.FileNameExtensionFilter
 
+private val textArea = JTextArea().also {
+  it.setEditable(false)
+  it.setLineWrap(true)
+}
+private val label = JLabel(" ", SwingConstants.CENTER)
+
 fun makeUI(): Component {
-  val textArea = JTextArea().also {
-    it.setEditable(false)
-    it.setLineWrap(true)
-  }
-
-  val label = JLabel().also {
-    it.setHorizontalAlignment(SwingConstants.CENTER)
-  }
-
   val p = JPanel(GridLayout(2, 1, 5, 5))
   p.add(JScrollPane(textArea).also {
     it.setBorder(BorderFactory.createTitledBorder("File -> String"))
@@ -41,6 +38,7 @@ fun makeUI(): Component {
       }
     }
   }
+
   val decode = JButton("decode")
   decode.addActionListener {
     val b64 = textArea.getText()
