@@ -92,9 +92,7 @@ class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
     row: Int
   ): Component {
     if (leaf && value is DefaultMutableTreeNode) {
-      val userObject = value.getUserObject()
-      val b = if (userObject is CheckBoxNode) userObject.selected else false
-      checkBox.setSelected(b)
+      checkBox.setSelected((value.getUserObject() as? CheckBoxNode)?.selected == true)
       checkBox.setText(value.toString())
     }
     return checkBox
@@ -108,9 +106,7 @@ class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
 }
 
 data class CheckBoxNode(val text: String, val selected: Boolean) {
-  override fun toString(): String {
-    return text
-  }
+  override fun toString() = text
 }
 
 fun main() {
