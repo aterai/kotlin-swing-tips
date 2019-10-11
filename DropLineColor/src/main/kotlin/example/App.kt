@@ -254,7 +254,7 @@ class TableRowTransferHandler : TransferHandler() {
   override fun createTransferable(c: JComponent): Transferable {
     c.getRootPane().getGlassPane().setVisible(true)
     val table = c as JTable
-    val model = table.model as DefaultTableModel
+    val model = table.getModel() as DefaultTableModel
     table.getSelectedRows().forEach { selectedIndices.add(it) }
     val transferredObjects = table.getSelectedRows().map { model.dataVector[it] }
     return object : Transferable {
@@ -284,14 +284,11 @@ class TableRowTransferHandler : TransferHandler() {
   override fun getSourceActions(c: JComponent?) = MOVE
 
   override fun importData(info: TransferSupport): Boolean {
-    if (!canImport(info)) {
-      return false
-    }
     val tdl = info.getDropLocation()
-    if (tdl !is JTable.DropLocation) {
+    val target = info.getComponent()
+    if (!canImport(info) || tdl !is JTable.DropLocation || target !is JTable) {
       return false
     }
-    val target = info.getComponent() as JTable
     val model = target.getModel() as DefaultTableModel
     val max = model.getRowCount()
     var index = tdl.getRow()
@@ -371,23 +368,16 @@ class TreeTransferHandler : TransferHandler() {
 
   override fun getSourceActions(c: JComponent) = MOVE
 
-  override fun canImport(support: TransferSupport): Boolean {
-    if (!support.isDrop()) {
-      return false
-    }
-    if (!support.isDataFlavorSupported(FLAVOR)) {
-      return false
-    }
-    return support.getComponent() as? JTree != source
-  }
+  override fun canImport(support: TransferSupport) = support.isDrop()
+      && support.isDataFlavorSupported(FLAVOR)
+      && support.getComponent() != source
 
   override fun importData(support: TransferSupport): Boolean {
     val nodes = runCatching {
       support.getTransferable().getTransferData(FLAVOR) as? Array<*>
     }.getOrNull()?.filterIsInstance<DefaultMutableTreeNode>() ?: return false // .orEmpty()
 
-    val dl = support.getDropLocation()
-    if (dl is JTree.DropLocation) {
+    return (support.getDropLocation() as? JTree.DropLocation)?.let { dl ->
       val childIndex = dl.getChildIndex()
       val dest = dl.getPath()
       val parent = dest.getLastPathComponent() as DefaultMutableTreeNode
@@ -398,9 +388,8 @@ class TreeTransferHandler : TransferHandler() {
         val clone = DefaultMutableTreeNode(it.getUserObject())
         model.insertNodeInto(deepCopyTreeNode(it, clone), parent, idx.incrementAndGet())
       }
-      return true
-    }
-    return false
+      true
+    } ?: false
   }
 
   override fun exportDone(src: JComponent?, data: Transferable?, action: Int) {
