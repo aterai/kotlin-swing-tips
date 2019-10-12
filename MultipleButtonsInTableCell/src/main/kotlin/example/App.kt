@@ -15,10 +15,10 @@ class MainPanel : JPanel(BorderLayout()) {
     val empty = ""
     val columnNames = arrayOf("String", "Button")
     val data = arrayOf(
-        arrayOf<Any>("AAA", empty),
-        arrayOf<Any>("CCC", empty),
-        arrayOf<Any>("BBB", empty),
-        arrayOf<Any>("ZZZ", empty))
+      arrayOf<Any>("AAA", empty),
+      arrayOf<Any>("CCC", empty),
+      arrayOf<Any>("BBB", empty),
+      arrayOf<Any>("ZZZ", empty))
     val model = object : DefaultTableModel(data, columnNames) {
       override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
     }
@@ -44,16 +44,22 @@ open class ButtonsPanel : JPanel() {
   val buttons = listOf(JButton("view"), JButton("edit"))
 
   init {
-    setOpaque(true)
-    for (b in buttons) {
-      b.setFocusable(false)
-      b.setRolloverEnabled(false)
-      add(b)
+    EventQueue.invokeLater {
+      for (b in buttons) {
+        b.setFocusable(false)
+        b.setRolloverEnabled(false)
+        add(b)
+      }
     }
+  }
+
+  override fun updateUI() {
+    super.updateUI()
+    setOpaque(true)
   }
 }
 
-internal class ButtonsRenderer : TableCellRenderer {
+class ButtonsRenderer : TableCellRenderer {
   private val panel = object : ButtonsPanel() {
     override fun updateUI() {
       super.updateUI()
@@ -74,13 +80,13 @@ internal class ButtonsRenderer : TableCellRenderer {
   }
 }
 
-internal class ViewAction(private val table: JTable) : AbstractAction("view") {
+class ViewAction(private val table: JTable) : AbstractAction("view") {
   override fun actionPerformed(e: ActionEvent) {
     JOptionPane.showMessageDialog(table, "Viewing")
   }
 }
 
-internal class EditAction(private val table: JTable) : AbstractAction("edit") {
+class EditAction(private val table: JTable) : AbstractAction("edit") {
   override fun actionPerformed(e: ActionEvent) {
     // Object o = table.getModel().getValueAt(table.getSelectedRow(), 0);
     val row = table.convertRowIndexToModel(table.getEditingRow())
@@ -89,8 +95,8 @@ internal class EditAction(private val table: JTable) : AbstractAction("edit") {
   }
 }
 
-internal class ButtonsEditor(protected val table: JTable) : AbstractCellEditor(), TableCellEditor {
-  protected val panel = ButtonsPanel()
+class ButtonsEditor(private val table: JTable) : AbstractCellEditor(), TableCellEditor {
+  private val panel = ButtonsPanel()
 
   private inner class EditingStopHandler : MouseAdapter(), ActionListener {
     override fun mousePressed(e: MouseEvent) {
@@ -110,8 +116,8 @@ internal class ButtonsEditor(protected val table: JTable) : AbstractCellEditor()
   }
 
   init {
-    panel.buttons.get(0).setAction(ViewAction(table))
-    panel.buttons.get(1).setAction(EditAction(table))
+    panel.buttons[0].setAction(ViewAction(table))
+    panel.buttons[1].setAction(EditAction(table))
 
     val handler = EditingStopHandler()
     for (b in panel.buttons) {
@@ -122,7 +128,7 @@ internal class ButtonsEditor(protected val table: JTable) : AbstractCellEditor()
   }
 
   override fun getTableCellEditorComponent(tbl: JTable, value: Any, isSelected: Boolean, row: Int, column: Int) =
-      panel.also { it.setBackground(tbl.getSelectionBackground()) }
+    panel.also { it.setBackground(tbl.getSelectionBackground()) }
 
   override fun getCellEditorValue() = ""
 }
