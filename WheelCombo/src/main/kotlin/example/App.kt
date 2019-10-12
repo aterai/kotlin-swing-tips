@@ -1,0 +1,72 @@
+package example
+
+import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.event.MouseWheelListener
+import javax.swing.* // ktlint-disable no-wildcard-imports
+
+class MainPanel : JPanel(BorderLayout()) {
+  init {
+    val combo = object : JComboBox<String>(makeModel()) {
+      @Transient
+      private var handler: MouseWheelListener? = null
+      override fun updateUI() {
+        removeMouseWheelListener(handler)
+        super.updateUI()
+        handler = MouseWheelListener { e ->
+          val c = e.getComponent()
+          if (c is JComboBox<*> && c.hasFocus()) {
+            val idx = c.getSelectedIndex() + e.getWheelRotation()
+            c.setSelectedIndex(idx.coerceIn(0 until c.getItemCount()))
+          }
+        }
+        addMouseWheelListener(handler)
+      }
+    }
+    val p = JPanel(GridBagLayout())
+    p.setBorder(BorderFactory.createTitledBorder("JComboBox"))
+    val c = GridBagConstraints()
+    c.gridx = 0
+    c.insets = Insets(5, 5, 5, 0)
+    c.anchor = GridBagConstraints.LINE_END
+    p.add(JLabel("Wheel:"), c)
+    p.add(JLabel("Normal:"), c)
+    c.gridx = 1
+    c.weightx = 1.0
+    c.fill = GridBagConstraints.HORIZONTAL
+    p.add(combo, c)
+    p.add(JComboBox(makeModel()), c)
+    val textArea = JTextArea("dummy")
+    add(p, BorderLayout.NORTH)
+    add(JScrollPane(textArea))
+    setPreferredSize(Dimension(320, 240))
+  }
+
+  private fun makeModel() = DefaultComboBoxModel<String>().also {
+    it.addElement("111111")
+    it.addElement("22222222")
+    it.addElement("3333333333")
+    it.addElement("444444444444")
+    it.addElement("5555555")
+    it.addElement("66666666666")
+    it.addElement("77777777")
+    it.addElement("88888888888")
+  }
+}
+
+fun main() {
+  EventQueue.invokeLater {
+    runCatching {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+    }.onFailure {
+      it.printStackTrace()
+      Toolkit.getDefaultToolkit().beep()
+    }
+    JFrame().apply {
+      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+      getContentPane().add(MainPanel())
+      pack()
+      setLocationRelativeTo(null)
+      setVisible(true)
+    }
+  }
+}
