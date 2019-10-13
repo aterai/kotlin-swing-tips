@@ -368,9 +368,10 @@ class TreeTransferHandler : TransferHandler() {
 
   override fun getSourceActions(c: JComponent) = MOVE
 
-  override fun canImport(support: TransferSupport) = support.isDrop()
-      && support.isDataFlavorSupported(FLAVOR)
-      && support.getComponent() != source
+  override fun canImport(support: TransferSupport) =
+      support.isDrop() &&
+      support.isDataFlavorSupported(FLAVOR) &&
+      support.getComponent() != source
 
   override fun importData(support: TransferSupport): Boolean {
     val nodes = runCatching {
