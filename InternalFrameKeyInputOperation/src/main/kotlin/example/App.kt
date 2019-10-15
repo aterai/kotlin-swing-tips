@@ -91,12 +91,12 @@ internal object LookAndFeelUtil {
       UIManager.setLookAndFeel(lookAndFeel)
       LookAndFeelUtil.lookAndFeel = lookAndFeel
       updateLookAndFeel()
-      // firePropertyChange("lookAndFeel", oldLookAndFeel, lookAndFeel);
+      // firePropertyChange("lookAndFeel", oldLookAndFeel, lookAndFeel)
     }
   }
 
   private fun updateLookAndFeel() {
-    for (window in Frame.getWindows()) {
+    for (window in Window.getWindows()) {
       SwingUtilities.updateComponentTreeUI(window)
     }
   }

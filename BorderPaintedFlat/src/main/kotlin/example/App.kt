@@ -88,7 +88,7 @@ internal object LookAndFeelUtil {
   }
 
   private fun updateLookAndFeel() {
-    for (window in Frame.getWindows()) {
+    for (window in Window.getWindows()) {
       SwingUtilities.updateComponentTreeUI(window)
     }
   }

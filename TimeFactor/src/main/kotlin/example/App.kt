@@ -5,19 +5,19 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel(BorderLayout()) {
   // private val spinner: JSpinner? = JSpinner()
-  private val snmodel: SpinnerNumberModel?
+  private val numberModel: SpinnerNumberModel?
 
   init {
     val lv = UIManager.get("Tree.timeFactor") as? Number ?: 500
-    snmodel = SpinnerNumberModel(lv.toLong(), 0L, 5000L, 500L)
+    numberModel = SpinnerNumberModel(lv.toLong(), 0L, 5000L, 500L)
     UIManager.put("List.timeFactor", 5000L)
 
     val model = arrayOf("a", "aa", "b", "bbb", "bbc")
     val combo = JComboBox<String>(model)
-    combo.setPrototypeDisplayValue("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMM")
+    combo.setPrototypeDisplayValue("M".repeat(30))
 
     val p = JPanel().also {
-      it.add(JSpinner(snmodel))
+      it.add(JSpinner(numberModel))
       it.add(combo)
     }
 
@@ -55,7 +55,7 @@ class MainPanel : JPanel(BorderLayout()) {
     // private val spinner: JSpinner? = JSpinner()
     // val lv = spinner?.getModel()?.getValue() ?: 1000L
 
-    val lv = snmodel?.getNumber()?.toLong() ?: 1000L
+    val lv = numberModel?.getNumber()?.toLong() ?: 1000L
 
     UIManager.put("ComboBox.timeFactor", lv)
     UIManager.put("List.timeFactor", lv)
@@ -104,12 +104,12 @@ internal object LookAndFeelUtil {
       UIManager.setLookAndFeel(lookAndFeel)
       LookAndFeelUtil.lookAndFeel = lookAndFeel
       updateLookAndFeel()
-      // firePropertyChange("lookAndFeel", oldLookAndFeel, lookAndFeel);
+      // firePropertyChange("lookAndFeel", oldLookAndFeel, lookAndFeel)
     }
   }
 
   private fun updateLookAndFeel() {
-    for (window in Frame.getWindows()) {
+    for (window in Window.getWindows()) {
       SwingUtilities.updateComponentTreeUI(window)
     }
   }

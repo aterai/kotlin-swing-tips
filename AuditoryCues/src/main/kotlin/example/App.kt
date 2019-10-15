@@ -35,7 +35,7 @@ class MainPanel : JPanel(GridLayout(2, 1, 5, 5)) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  fun showMessageDialogAndPlayAudio(p: Component, msg: String, audioResource: String) {
+  private fun showMessageDialogAndPlayAudio(p: Component, msg: String, audioResource: String) {
     val url = MainPanel::class.java.getResource(audioResource)
     AudioSystem.getAudioInputStream(url).use { soundStream ->
       (AudioSystem.getLine(DataLine.Info(Clip::class.java, soundStream.getFormat())) as? Clip)?.use { clip ->
@@ -53,7 +53,7 @@ class MainPanel : JPanel(GridLayout(2, 1, 5, 5)) {
     }
   }
 
-  fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
+  private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
     it.setBorder(BorderFactory.createTitledBorder(title))
     it.add(c)
   }
@@ -111,7 +111,7 @@ internal object LookAndFeelUtil {
   }
 
   private fun updateLookAndFeel() {
-    for (window in Frame.getWindows()) {
+    for (window in Window.getWindows()) {
       SwingUtilities.updateComponentTreeUI(window)
     }
   }
