@@ -5,50 +5,34 @@ import java.util.Locale
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.FontUIResource
 
-class MainPanel : JPanel(BorderLayout()) {
-  private fun updateFont(font: Font) {
-    val fontResource = FontUIResource(font)
-    UIManager.getLookAndFeelDefaults()
-      .forEach { key, _ ->
-        if (key.toString().toLowerCase(Locale.ENGLISH).endsWith("font")) {
-          UIManager.put(key, fontResource)
-        }
-      }
-    recursiveUpdateUI(this)
-    (getTopLevelAncestor() as? Window)?.pack()
-  }
+private val FONT12 = Font(Font.SANS_SERIF, Font.PLAIN, 12)
+private val FONT24 = Font(Font.SANS_SERIF, Font.PLAIN, 24)
+private val FONT32 = Font(Font.SANS_SERIF, Font.PLAIN, 32)
 
-  private fun recursiveUpdateUI(p: Container) {
-    p.getComponents()
-      .filterIsInstance<JComponent>()
-      .filterNot { it is JToolBar }
-      .forEach {
-        it.updateUI()
-        if (it.getComponentCount() > 0) {
-          recursiveUpdateUI(it)
-        }
-      }
-  }
+fun makeToolBar(parent: JComponent): JToolBar {
+  val tgb12 = JToggleButton("12")
+  tgb12.addActionListener { updateFont(FONT12, parent) }
+  val tgb24 = JToggleButton("24")
+  tgb24.addActionListener { updateFont(FONT24, parent) }
+  val tgb32 = JToggleButton("32")
+  tgb32.addActionListener { updateFont(FONT32, parent) }
 
-  init {
-    val tgb12 = JToggleButton("12")
-    tgb12.addActionListener { updateFont(FONT12) }
-    val tgb24 = JToggleButton("24")
-    tgb24.addActionListener { updateFont(FONT24) }
-    val tgb32 = JToggleButton("32")
-    tgb32.addActionListener { updateFont(FONT32) }
-    val toolbar = JToolBar()
-    val bg = ButtonGroup()
-    listOf(tgb12, tgb24, tgb32).forEach {
-      it.setFocusPainted(false)
-      bg.add(it)
-      toolbar.add(it)
-    }
+  val toolbar = JToolBar()
+  val bg = ButtonGroup()
+  listOf(tgb12, tgb24, tgb32).forEach {
+    it.setFocusPainted(false)
+    bg.add(it)
+    toolbar.add(it)
+  }
+  return toolbar
+}
+
+  fun makeUI(): Component {
     val button = JButton("Dialog")
     button.addActionListener {
       Toolkit.getDefaultToolkit().beep()
       JOptionPane.showMessageDialog(
-        rootPane,
+        button.getRootPane(),
         "MessageDialog",
         "Change All Font Size",
         JOptionPane.ERROR_MESSAGE
@@ -66,18 +50,39 @@ class MainPanel : JPanel(BorderLayout()) {
     c.insets = Insets(5, 5, 5, 5)
     c.anchor = GridBagConstraints.LINE_END
     panel.add(button, c)
-    add(toolbar, BorderLayout.NORTH)
-    add(panel)
-    updateFont(FONT12)
-    setPreferredSize(Dimension(320, 240))
+
+    updateFont(FONT12, panel)
+
+    val p = JPanel(BorderLayout())
+    p.add(panel)
+    p.add(makeToolBar(panel), BorderLayout.NORTH)
+    p.setPreferredSize(Dimension(320, 240))
+    return p
   }
 
-  companion object {
-    private val FONT12 = Font(Font.SANS_SERIF, Font.PLAIN, 12)
-    private val FONT24 = Font(Font.SANS_SERIF, Font.PLAIN, 24)
-    private val FONT32 = Font(Font.SANS_SERIF, Font.PLAIN, 32)
+  private fun updateFont(font: Font, parent: JComponent) {
+    val fontResource = FontUIResource(font)
+    UIManager.getLookAndFeelDefaults()
+      .forEach { key, _ ->
+        if (key.toString().toLowerCase(Locale.ENGLISH).endsWith("font")) {
+          UIManager.put(key, fontResource)
+        }
+      }
+    recursiveUpdateUI(parent)
+    (parent.getTopLevelAncestor() as? Window)?.pack()
   }
-}
+
+  private fun recursiveUpdateUI(p: Container) {
+    p.getComponents()
+      .filterIsInstance<JComponent>()
+      .filterNot { it is JToolBar }
+      .forEach {
+        it.updateUI()
+        if (it.getComponentCount() > 0) {
+          recursiveUpdateUI(it)
+        }
+      }
+  }
 
 fun main() {
   EventQueue.invokeLater {
@@ -89,7 +94,7 @@ fun main() {
     }
     JFrame().apply {
       setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-      getContentPane().add(MainPanel())
+      getContentPane().add(makeUI())
       pack()
       setLocationRelativeTo(null)
       setVisible(true)
