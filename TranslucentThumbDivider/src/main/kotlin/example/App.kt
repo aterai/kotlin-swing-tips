@@ -75,7 +75,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
 internal class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
   private val startPt = Point()
-  private val dc = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+  private val dc = Cursor.getDefaultCursor()
   private val wc = Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR)
   private val thumb = Ellipse2D.Double()
   private var dividerLocation = 0

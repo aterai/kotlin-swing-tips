@@ -88,7 +88,7 @@ internal class ViewportDragScrollListener : MouseAdapter(), HierarchyListener {
   companion object {
     private const val SPEED = 4
     private const val DELAY = 10
-    private val DC = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+    private val DC = Cursor.getDefaultCursor()
     private val HC = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
   }
 }
@@ -157,7 +157,7 @@ internal class ComponentDragScrollListener : MouseAdapter(), HierarchyListener {
   companion object {
     private const val SPEED = 4
     private const val DELAY = 10
-    private val DC = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+    private val DC = Cursor.getDefaultCursor()
     private val HC = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
   }
 }

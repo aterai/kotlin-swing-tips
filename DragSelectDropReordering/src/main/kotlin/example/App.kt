@@ -278,7 +278,7 @@ class ListItemTransferHandler : TransferHandler() {
   override fun exportDone(c: JComponent, data: Transferable, action: Int) {
     println("exportDone")
     val glassPane = c.getRootPane().getGlassPane()
-    // glassPane.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
+    // glassPane.setCursor(Cursor.getDefaultCursor())
     glassPane.setVisible(false)
     cleanup(c, action == MOVE)
   }

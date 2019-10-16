@@ -112,7 +112,7 @@ class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: ImageIcon) : 
     it.setFocusPainted(false)
     it.setBorderPainted(false)
     it.setContentAreaFilled(false)
-    it.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
+    it.setCursor(Cursor.getDefaultCursor())
     it.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 2))
   }
 
@@ -126,7 +126,7 @@ class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: ImageIcon) : 
         }
       }
     })
-    it.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
+    it.setCursor(Cursor.getDefaultCursor())
     it.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 2))
   }
 

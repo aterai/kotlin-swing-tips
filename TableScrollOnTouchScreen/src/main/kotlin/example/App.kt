@@ -44,7 +44,7 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 class TableTouchScreenHandler(table: JTable) : MouseAdapter(), ListSelectionListener {
-  private val dc = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+  private val dc = Cursor.getDefaultCursor()
   private val hc = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
   private val scroller: Timer
   private val startPt = Point()

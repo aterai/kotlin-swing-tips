@@ -61,7 +61,7 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 class HandScrollListener : MouseAdapter() {
-  private val defCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+  private val defCursor = Cursor.getDefaultCursor()
   private val hndCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
   private val pp = Point()
   var withinRangeMode = true
@@ -73,7 +73,7 @@ class HandScrollListener : MouseAdapter() {
     vp.translate(pp.x - cp.x, pp.y - cp.y)
     if (withinRangeMode) {
       (SwingUtilities.getUnwrappedView(vport) as? JComponent)
-          ?.scrollRectToVisible(Rectangle(vp, vport.getSize()))
+        ?.scrollRectToVisible(Rectangle(vp, vport.getSize()))
     } else {
       vport.setViewPosition(vp)
     }

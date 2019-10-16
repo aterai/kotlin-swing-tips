@@ -311,7 +311,7 @@ class TabDropTargetAdapter : DropTargetAdapter() {
   private fun clearDropLocationPaint(c: Component) {
     val t = c as? DnDTabbedPane ?: return
     t.updateTabDropLocation(null, false)
-    t.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
+    t.setCursor(Cursor.getDefaultCursor())
   }
 
   override fun drop(dtde: DropTargetDropEvent) {
@@ -462,7 +462,7 @@ class TabTransferHandler : TransferHandler() {
     src.getRootPane().getGlassPane().setVisible(false)
     src.updateTabDropLocation(null, false)
     src.repaint()
-    src.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
+    src.setCursor(Cursor.getDefaultCursor())
   }
 }
 
