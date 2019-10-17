@@ -1,11 +1,11 @@
 package example
 
-import java.awt.*
+import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseEvent
 import java.awt.event.WindowEvent
 import java.util.EnumSet
 import java.util.function.BiFunction
-import javax.swing.*
+import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.MouseInputAdapter
 
 class MainPanel : JPanel(BorderLayout()) {
