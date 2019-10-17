@@ -40,19 +40,15 @@ class MainPanel : JPanel(GridLayout(1, 2)) {
 class LightboxGlassPane : JPanel() {
   private val img = ImageIcon(LightboxGlassPane::class.java.getResource("test.png"))
   @Transient
-  private val animatedIcon = AnimeIcon()
+  private val animatedIcon = LoadingIcon()
   private var alpha = 0f
-  private var curimgw = 0
-  private var curimgh = 0
+  private var curImgWidth = 0
+  private var curImgHeight = 0
   private val rect = Rectangle()
   private val animator = Timer(10) {
     animatedIcon.next()
     repaint()
   }
-  // private val animator = Timer(10, {
-  //   animatedIcon.next()
-  //   repaint()
-  // })
   @Transient
   private var handler: Handler? = null
 
@@ -88,8 +84,8 @@ class LightboxGlassPane : JPanel() {
       ?.getLayeredPane()
       ?.setVisible(!b)
     if (b && !animator.isRunning()) {
-      curimgw = 40
-      curimgh = 40
+      curImgWidth = 40
+      curImgHeight = 40
       alpha = 0f
       animator.start()
     } else {
@@ -103,15 +99,14 @@ class LightboxGlassPane : JPanel() {
     super.paintComponent(g)
 
     when {
-      curimgh < img.getIconHeight() + BW + BW -> {
-        curimgh += img.getIconHeight() / 16
-      }
-      curimgw < img.getIconWidth() + BW + BW -> {
-        curimgh = img.getIconHeight() + BW + BW
-        curimgw += img.getIconWidth() / 16
+      curImgHeight < img.getIconHeight() + BW + BW ->
+        curImgHeight += img.getIconHeight() / 16
+      curImgWidth < img.getIconWidth() + BW + BW -> {
+        curImgHeight = img.getIconHeight() + BW + BW
+        curImgWidth += img.getIconWidth() / 16
       }
       1f - alpha > 0 -> {
-        curimgw = img.getIconWidth() + BW + BW
+        curImgWidth = img.getIconWidth() + BW + BW
         alpha += .1f
       }
       else -> {
@@ -119,7 +114,7 @@ class LightboxGlassPane : JPanel() {
         animator.stop()
       }
     }
-    rect.setSize(curimgw, curimgh)
+    rect.setSize(curImgWidth, curImgHeight)
     val screen = getBounds()
     val centerPt = Point(screen.x + screen.width / 2, screen.y + screen.height / 2)
     rect.setLocation(centerPt.x - rect.width / 2, centerPt.y - rect.height / 2)
@@ -146,7 +141,7 @@ class LightboxGlassPane : JPanel() {
   }
 }
 
-class AnimeIcon : Icon {
+class LoadingIcon : Icon {
   private val list = mutableListOf(
     Ellipse2D.Double(SX + 3 * R, SY + 0 * R, 2 * R, 2 * R),
     Ellipse2D.Double(SX + 5 * R, SY + 1 * R, 2 * R, 2 * R),

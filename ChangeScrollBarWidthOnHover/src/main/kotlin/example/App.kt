@@ -15,15 +15,15 @@ class MainPanel : JPanel(BorderLayout()) {
 
   init {
     val scroll = JScrollPane(makeList())
-    scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+    scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
     val controls = JPanel()
     val animator = Timer(10, ActionListener { controls.revalidate() })
-    controls.layout = object : BorderLayout(0, 0) {
+    controls.setLayout(object : BorderLayout(0, 0) {
       private var controlsWidth = MIN_WIDTH
       override fun preferredLayoutSize(target: Container): Dimension {
-        val ps: Dimension = super.preferredLayoutSize(target)
+        val ps = super.preferredLayoutSize(target)
         val controlsPreferredWidth = ps.width
-        if (animator.isRunning) {
+        if (animator.isRunning()) {
           if (willExpand) {
             if (controls.width < controlsPreferredWidth) {
               controlsWidth += 1
@@ -44,57 +44,55 @@ class MainPanel : JPanel(BorderLayout()) {
         ps.width = controlsWidth
         return ps
       }
-    }
-    controls.add(scroll.verticalScrollBar)
+    })
+    controls.add(scroll.getVerticalScrollBar())
     val p = JPanel(BorderLayout())
     p.add(controls, BorderLayout.EAST)
     p.add(scroll)
     val pp = JPanel(GridLayout(1, 2))
-    pp.add(JLayer<JPanel>(p, object : LayerUI<JPanel>() {
+    pp.add(JLayer(p, object : LayerUI<JPanel>() {
       private var isDragging = false
       override fun installUI(c: JComponent) {
         super.installUI(c)
-        (c as? JLayer<*>)?.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
+        (c as? JLayer<*>)?.setLayerEventMask(AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK)
       }
 
       override fun uninstallUI(c: JComponent) {
-        (c as? JLayer<*>)?.layerEventMask = 0
+        (c as? JLayer<*>)?.setLayerEventMask(0)
         super.uninstallUI(c)
       }
 
       override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out JPanel>) {
-        val id = e.id
-        val c: Component = e.component
+        val id = e.getID()
+        val c = e.getComponent()
         if (c is JScrollBar && id == MouseEvent.MOUSE_DRAGGED) {
           isDragging = true
         }
       }
 
       override fun processMouseEvent(e: MouseEvent, l: JLayer<out JPanel>) {
-        if (e.component is JScrollBar) {
-          when (e.id) {
-            MouseEvent.MOUSE_ENTERED -> if (!animator.isRunning && !isDragging) {
+        if (e.getComponent() is JScrollBar) {
+          when (e.getID()) {
+            MouseEvent.MOUSE_ENTERED -> if (!animator.isRunning() && !isDragging) {
               willExpand = true
               animator.initialDelay = 0
               animator.start()
             }
-            MouseEvent.MOUSE_EXITED -> if (!animator.isRunning && !isDragging) {
+            MouseEvent.MOUSE_EXITED -> if (!animator.isRunning() && !isDragging) {
               willExpand = false
-              animator.initialDelay = 500
+              animator.setInitialDelay(500)
               animator.start()
             }
             MouseEvent.MOUSE_RELEASED -> {
               isDragging = false
-              if (!animator.isRunning && !e.component.bounds.contains(e.point)) {
+              if (!animator.isRunning() && !e.getComponent().getBounds().contains(e.getPoint())) {
                 willExpand = false
-                animator.initialDelay = 500
+                animator.setInitialDelay(500)
                 animator.start()
               }
             }
-            else -> {
-            }
           }
-          l.view.repaint()
+          l.getView().repaint()
         }
       }
     }))
@@ -105,7 +103,7 @@ class MainPanel : JPanel(BorderLayout()) {
       )
     )
     add(pp)
-    preferredSize = Dimension(320, 240)
+    setPreferredSize(Dimension(320, 240))
   }
 
   private fun makeList(): Component {
@@ -118,22 +116,20 @@ class MainPanel : JPanel(BorderLayout()) {
 
   private fun makeTranslucentScrollBar(c: Component): JScrollPane {
     return object : JScrollPane(c) {
-      override fun isOptimizedDrawingEnabled(): Boolean {
-        return false // JScrollBar is overlap
-      }
+      override fun isOptimizedDrawingEnabled() = false // JScrollBar is overlap
 
       override fun updateUI() {
         super.updateUI()
         EventQueue.invokeLater {
-          getVerticalScrollBar().ui = TranslucentScrollBarUI()
+          getVerticalScrollBar().setUI(TranslucentScrollBarUI())
           setComponentZOrder(getVerticalScrollBar(), 0)
           setComponentZOrder(getViewport(), 1)
-          getVerticalScrollBar().isOpaque = false
-          getVerticalScrollBar().preferredSize = Dimension(6, 0)
+          getVerticalScrollBar().setOpaque(false)
+          getVerticalScrollBar().setPreferredSize(Dimension(6, 0))
         }
         setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS)
         setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
-        layout = TranslucentScrollPaneLayout()
+        setLayout(TranslucentScrollPaneLayout())
       }
     }
   }
@@ -146,10 +142,10 @@ class MainPanel : JPanel(BorderLayout()) {
 class TranslucentScrollPaneLayout : ScrollPaneLayout() {
   override fun layoutContainer(parent: Container) {
     if (parent is JScrollPane) {
-      val availR: Rectangle = parent.bounds
+      val availR = parent.getBounds()
       availR.setLocation(0, 0) // availR.x = availR.y = 0;
 
-      val insets: Insets = parent.getInsets()
+      val insets = parent.getInsets()
       availR.x = insets.left
       availR.y = insets.top
       availR.width -= insets.left + insets.right
@@ -159,9 +155,9 @@ class TranslucentScrollPaneLayout : ScrollPaneLayout() {
       vsbR.height = availR.height
       vsbR.x = availR.x + availR.width - vsbR.width
       vsbR.y = availR.y
-      viewport?.bounds = availR
-      vsb?.isVisible = true
-      vsb?.bounds = vsbR
+      viewport?.setBounds(availR)
+      vsb?.setVisible(true)
+      vsb?.setBounds(vsbR)
     }
   }
 }
@@ -193,7 +189,7 @@ class TranslucentScrollBarUI : BasicScrollBarUI() {
       color = ROLLOVER_COLOR
     } else {
       color = DEFAULT_COLOR
-      val dw = r.width - sb.preferredSize.width
+      val dw = r.width - sb.getPreferredSize().width
       r.x += dw
       r.width -= dw
     }
@@ -220,29 +216,28 @@ class ScrollBarOnHoverLayerUI : LayerUI<JScrollPane>() {
 
   override fun installUI(c: JComponent) {
     super.installUI(c)
-    (c as? JLayer<*>)?.layerEventMask = AWTEvent.MOUSE_EVENT_MASK
+    (c as? JLayer<*>)?.setLayerEventMask(AWTEvent.MOUSE_EVENT_MASK)
   }
 
   override fun uninstallUI(c: JComponent) {
-    (c as? JLayer<*>)?.layerEventMask = 0
+    (c as? JLayer<*>)?.setLayerEventMask(0)
     super.uninstallUI(c)
   }
 
   override fun processMouseEvent(e: MouseEvent, l: JLayer<out JScrollPane>) {
-    val c = e.component as? JScrollBar ?: return
-    when (e.id) {
-      MouseEvent.MOUSE_ENTERED -> {
+    val c = e.getComponent() as? JScrollBar ?: return
+    when (e.getID()) {
+      MouseEvent.MOUSE_ENTERED ->
         c.setPreferredSize(Dimension(TranslucentScrollBarUI.MAX_WIDTH, 0))
-      }
       MouseEvent.MOUSE_EXITED -> {
         timer.removeActionListener(listener)
         listener = ActionListener {
           c.setPreferredSize(Dimension(TranslucentScrollBarUI.MIN_WIDTH, 0))
-          l.view.revalidate()
-          l.view.repaint()
+          l.getView().revalidate()
+          l.getView().repaint()
         }
         timer.addActionListener(listener)
-        timer.isRepeats = false
+        timer.setRepeats(false)
         timer.start()
       }
     }
