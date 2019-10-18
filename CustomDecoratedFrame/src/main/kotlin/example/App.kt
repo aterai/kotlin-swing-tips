@@ -119,7 +119,7 @@ enum class Side(
 ) {
   N(
     Cursor.N_RESIZE_CURSOR, Dimension(0, 4),
-    BiFunction<Rectangle, Point, Rectangle> { r, d ->
+    BiFunction { r, d ->
       r.y += d.y
       r.height -= d.y
       r
@@ -127,7 +127,7 @@ enum class Side(
   ),
   W(
     Cursor.W_RESIZE_CURSOR, Dimension(4, 0),
-    BiFunction<Rectangle, Point, Rectangle> { r, d ->
+    BiFunction { r, d ->
       r.x += d.x
       r.width -= d.x
       r
@@ -135,21 +135,21 @@ enum class Side(
   ),
   E(
     Cursor.E_RESIZE_CURSOR, Dimension(4, 0),
-    BiFunction<Rectangle, Point, Rectangle> { r, d ->
+    BiFunction { r, d ->
       r.width += d.x
       r
     }
   ),
   S(
     Cursor.S_RESIZE_CURSOR, Dimension(0, 4),
-    BiFunction<Rectangle, Point, Rectangle> { r, d ->
+    BiFunction { r, d ->
       r.height += d.y
       r
     }
   ),
   NW(
     Cursor.NW_RESIZE_CURSOR, Dimension(4, 4),
-    BiFunction<Rectangle, Point, Rectangle> { r, d ->
+    BiFunction { r, d ->
       r.y += d.y
       r.height -= d.y
       r.x += d.x
@@ -159,7 +159,7 @@ enum class Side(
   ),
   NE(
     Cursor.NE_RESIZE_CURSOR, Dimension(4, 4),
-    BiFunction<Rectangle, Point, Rectangle> { r, d ->
+    BiFunction { r, d ->
       r.y += d.y
       r.height -= d.y
       r.width += d.x
@@ -168,7 +168,7 @@ enum class Side(
   ),
   SW(
     Cursor.SW_RESIZE_CURSOR, Dimension(4, 4),
-    BiFunction<Rectangle, Point, Rectangle> { r, d ->
+    BiFunction { r, d ->
       r.height += d.y
       r.x += d.x
       r.width -= d.x
@@ -177,10 +177,10 @@ enum class Side(
   ),
   SE(
     Cursor.SE_RESIZE_CURSOR, Dimension(4, 4),
-    BiFunction<Rectangle, Point, Rectangle> { r, d ->
-        r.height += d.y
-        r.width += d.x
-        r
+    BiFunction { r, d ->
+      r.height += d.y
+      r.width += d.x
+      r
     }
   );
 
