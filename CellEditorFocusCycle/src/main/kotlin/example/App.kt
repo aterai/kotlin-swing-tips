@@ -15,11 +15,11 @@ class MainPanel : JPanel(GridLayout(2, 1)) {
   init {
     val table = makeTable()
     val am = table.getActionMap()
-    val sncc = am.get("selectNextColumnCell")
+    val selectNextAction = am.get("selectNextColumnCell")
     val action = object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
         if (!table.isEditing() || !isEditorFocusCycle(table.getEditorComponent())) {
-          sncc.actionPerformed(e)
+          selectNextAction.actionPerformed(e)
         }
       }
     }
@@ -34,17 +34,17 @@ class MainPanel : JPanel(GridLayout(2, 1)) {
   }
 
   private fun isEditorFocusCycle(editor: Component) =
-      CheckBoxesEditor.getEditorFocusCycleAfter(editor)?.let {
-        it.requestFocus()
-        true
-      } ?: false
+    CheckBoxesEditor.getEditorFocusCycleAfter(editor)?.let {
+      it.requestFocus()
+      true
+    } ?: false
 
   private fun makeTable(): JTable {
     val columnNames = arrayOf("user", "rwx")
     val data = arrayOf(
-        arrayOf<Any>("owner", EnumSet.allOf(Permissions::class.java)),
-        arrayOf<Any>("group", EnumSet.of(Permissions.READ)),
-        arrayOf<Any>("other", EnumSet.noneOf(Permissions::class.java)))
+      arrayOf<Any>("owner", EnumSet.allOf(Permissions::class.java)),
+      arrayOf<Any>("group", EnumSet.of(Permissions.READ)),
+      arrayOf<Any>("other", EnumSet.noneOf(Permissions::class.java)))
     val model = object : DefaultTableModel(data, columnNames) {
       override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
     }
@@ -149,7 +149,7 @@ internal class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
     renderer.titles.forEach { title ->
       am.put(title, object : AbstractAction(title) {
         override fun actionPerformed(e: ActionEvent) {
-          renderer.buttons.filter { it.getText().trim() == title }.firstOrNull()?.doClick()
+          renderer.buttons.firstOrNull { it.getText().trim() == title }?.doClick()
           // fireEditingStopped();
         }
       })
@@ -173,7 +173,7 @@ internal class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
     it.updateButtons(value)
   }
 
-  override fun getCellEditorValue() = EnumSet.noneOf(Permissions::class.java).also {
+  override fun getCellEditorValue(): Any = EnumSet.noneOf(Permissions::class.java).also {
     if (renderer.buttons[0].isSelected()) {
       it.add(Permissions.READ)
     }
@@ -195,7 +195,7 @@ internal class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
   companion object {
     fun getEditorFocusCycleAfter(editor: Component?): Component? {
       val fo = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner()
-      val root: Container = (editor as? Container)?.let {
+      val root = (editor as? Container)?.let {
         if (it.isFocusCycleRoot()) it else it.getFocusCycleRootAncestor()
       } ?: return null
       return root.getFocusTraversalPolicy().getComponentAfter(root, fo)?.takeIf {
