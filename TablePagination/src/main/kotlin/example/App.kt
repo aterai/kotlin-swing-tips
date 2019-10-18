@@ -30,7 +30,7 @@ class MainPanel : JPanel(BorderLayout()) {
     table.setRowSorter(sorter)
 
     (1..2016).map { i -> arrayOf(i, "Test: $i", if (i % 2 == 0) "" else "comment...") }
-        .forEach { model.addRow(it) }
+      .forEach { model.addRow(it) }
 
     initLinkBox(100, 1)
     box.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
@@ -42,7 +42,7 @@ class MainPanel : JPanel(BorderLayout()) {
   private fun initLinkBox(itemsPerPage: Int, currentPageIndex: Int) {
     // assert currentPageIndex > 0;
     sorter.setRowFilter(object : RowFilter<TableModel, Int>() {
-      override fun include(entry: RowFilter.Entry<out TableModel, out Int>): Boolean {
+      override fun include(entry: Entry<out TableModel, out Int>): Boolean {
         val ti = currentPageIndex - 1
         val ei = entry.getIdentifier().toInt()
         return ti * itemsPerPage <= ei && ei < ti * itemsPerPage + itemsPerPage
@@ -100,7 +100,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
   private fun makeRadioButton(itemsPerPage: Int, current: Int, target: Int): JRadioButton {
     val radio = object : JRadioButton(target.toString()) {
-      protected override fun fireStateChanged() {
+      override fun fireStateChanged() {
         val bm = getModel()
         if (bm.isEnabled()) {
           if (bm.isPressed() && bm.isArmed()) {
@@ -125,12 +125,12 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   private fun makePrevNextRadioButton(itemsPerPage: Int, target: Int, title: String, flag: Boolean) =
-      JRadioButton(title).also {
-        it.setForeground(Color.BLUE)
-        it.setUI(linkViewRadioButtonUI)
-        it.setEnabled(flag)
-        it.addActionListener { initLinkBox(itemsPerPage, target) }
-      }
+    JRadioButton(title).also {
+      it.setForeground(Color.BLUE)
+      it.setUI(linkViewRadioButtonUI)
+      it.setEnabled(flag)
+      it.addActionListener { initLinkBox(itemsPerPage, target) }
+    }
 
   companion object {
     private const val LR_PAGE_SIZE = 5
@@ -164,9 +164,9 @@ internal class LinkViewRadioButtonUI : BasicRadioButtonUI() {
 
     val b = c as? AbstractButton ?: return
     val text = SwingUtilities.layoutCompoundLabel(
-        b, c.getFontMetrics(c.getFont()), b.getText(), null, b.getVerticalAlignment(),
-        b.getHorizontalAlignment(), b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
-        viewRect, iconRect, textRect, 0)
+      b, c.getFontMetrics(c.getFont()), b.getText(), null, b.getVerticalAlignment(),
+      b.getHorizontalAlignment(), b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
+      viewRect, iconRect, textRect, 0)
 
     val m = b.getModel()
     g.setColor(b.getForeground())
