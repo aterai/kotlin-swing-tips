@@ -343,12 +343,14 @@ class TableRowTransferHandler : TransferHandler() {
 class TreeTransferHandler : TransferHandler() {
   private var source: JTree? = null
   override fun createTransferable(c: JComponent): Transferable? {
-    val src = c as? JTree ?: return null
-    source = src
-    val paths = src.getSelectionPaths() ?: return null
+    if (c !is JTree || c.getSelectionModel() == null) {
+      return null
+    }
+    source = c
+    val paths = c.getSelectionPaths()
     val nodes = arrayOfNulls<DefaultMutableTreeNode?>(paths.size)
     for (i in paths.indices) {
-      nodes[i] = paths[i].lastPathComponent as DefaultMutableTreeNode
+      nodes[i] = paths[i].getLastPathComponent() as? DefaultMutableTreeNode
     }
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(FLAVOR)
