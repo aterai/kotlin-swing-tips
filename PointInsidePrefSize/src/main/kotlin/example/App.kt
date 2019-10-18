@@ -74,7 +74,7 @@ class UrlRenderer : MouseAdapter(), TableCellRenderer {
   private val renderer = DefaultTableCellRenderer()
   private var viewRowIndex = -1
   private var viewColumnIndex = -1
-  private var isRollover: Boolean = false
+  private var isRollover = false
 
   override fun getTableCellRendererComponent(
     table: JTable,

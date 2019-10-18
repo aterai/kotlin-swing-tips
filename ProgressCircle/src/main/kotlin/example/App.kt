@@ -11,14 +11,14 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicProgressBarUI
 
 class MainPanel : JPanel(BorderLayout()) {
-  protected val progress1: JProgressBar = object : JProgressBar() {
+  private val progress1 = object : JProgressBar() {
     override fun updateUI() {
       super.updateUI()
       setUI(ProgressCircleUI())
       setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25))
     }
   }
-  protected val progress2: JProgressBar = object : JProgressBar() {
+  private val progress2 = object : JProgressBar() {
     override fun updateUI() {
       super.updateUI()
       setUI(ProgressCircleUI())
@@ -60,8 +60,8 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class ProgressCircleUI : BasicProgressBarUI() {
-  override fun getPreferredSize(c: JComponent) = super.getPreferredSize(c).also {
+class ProgressCircleUI : BasicProgressBarUI() {
+  override fun getPreferredSize(c: JComponent) = super.getPreferredSize(c)?.also {
     val v = maxOf(it.width, it.height)
     it.setSize(v, v)
   }
@@ -127,7 +127,7 @@ open class BackgroundTask : SwingWorker<String, Unit>() {
   }
 }
 
-internal class ProgressListener(private val progressBar: JProgressBar) : PropertyChangeListener {
+class ProgressListener(private val progressBar: JProgressBar) : PropertyChangeListener {
   init {
     this.progressBar.setValue(0)
   }

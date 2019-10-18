@@ -13,7 +13,7 @@ import javax.swing.tree.TreeNode
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    val tree: JTree = object : JTree() {
+    val tree = object : JTree() {
       override fun updateUI() {
         setCellRenderer(null)
         setCellEditor(null)
@@ -69,7 +69,7 @@ class CheckBoxNodeRenderer : TreeCellRenderer {
 }
 
 class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
-  private val checkBox: JCheckBox = object : JCheckBox() {
+  private val checkBox = object : JCheckBox() {
     @Transient
     private var handler: ActionListener? = null
 

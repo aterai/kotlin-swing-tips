@@ -15,15 +15,15 @@ class MainPanel : JPanel(GridBagLayout()) {
   init {
     val columnNames = arrayOf("A", "B", "C", "D", "E", "F", "G", "H", "I")
     val data = arrayOf(
-        arrayOf(true, false, true, false, true, true, false, true, true),
-        arrayOf(true, false, true, false, true, true, false, true, true),
-        arrayOf(true, false, true, false, true, true, false, true, true),
-        arrayOf(true, false, true, false, true, true, false, true, true),
-        arrayOf(true, false, true, false, true, true, false, true, true),
-        arrayOf(true, false, true, false, true, true, false, true, true),
-        arrayOf(true, false, true, false, true, true, false, true, true),
-        arrayOf(true, false, true, false, true, true, false, true, true),
-        arrayOf(true, false, true, false, true, true, false, true, true))
+      arrayOf(true, false, true, false, true, true, false, true, true),
+      arrayOf(true, false, true, false, true, true, false, true, true),
+      arrayOf(true, false, true, false, true, true, false, true, true),
+      arrayOf(true, false, true, false, true, true, false, true, true),
+      arrayOf(true, false, true, false, true, true, false, true, true),
+      arrayOf(true, false, true, false, true, true, false, true, true),
+      arrayOf(true, false, true, false, true, true, false, true, true),
+      arrayOf(true, false, true, false, true, true, false, true, true),
+      arrayOf(true, false, true, false, true, true, false, true, true))
 
     val model = object : DefaultTableModel(data, columnNames) {
       override fun getColumnClass(column: Int) = java.lang.Boolean::class.java
@@ -47,7 +47,7 @@ class MainPanel : JPanel(GridBagLayout()) {
     val m = table.getColumnModel()
     (0 until m.getColumnCount()).forEach {
       val col = m.getColumn(it)
-      col.setPreferredWidth(CELLSIZE)
+      col.setPreferredWidth(CELL_SIZE)
       col.setResizable(false)
     }
 
@@ -60,17 +60,16 @@ class MainPanel : JPanel(GridBagLayout()) {
   }
 
   companion object {
-    private const val CELLSIZE = 24
+    private const val CELL_SIZE = 24
   }
 }
 
 internal class TablePopupMenu : JPopupMenu() {
-  private val select: JMenuItem
-  private val clear: JMenuItem
-  private val toggle: JMenuItem
+  private val select = add("select")
+  private val clear = add("clear")
+  private val toggle = add("toggle")
 
   init {
-    select = add("select")
     select.addActionListener {
       val table = getInvoker() as? JTable ?: return@addActionListener
       for (row in table.getSelectedRows()) {
@@ -80,7 +79,6 @@ internal class TablePopupMenu : JPopupMenu() {
       }
     }
 
-    clear = add("clear")
     clear.addActionListener {
       val table = getInvoker() as? JTable ?: return@addActionListener
       for (row in table.getSelectedRows()) {
@@ -90,12 +88,11 @@ internal class TablePopupMenu : JPopupMenu() {
       }
     }
 
-    toggle = add("toggle")
     toggle.addActionListener {
       val table = getInvoker() as? JTable ?: return@addActionListener
       for (row in table.getSelectedRows()) {
         for (col in table.getSelectedColumns()) {
-          var b = table.getValueAt(row, col) as? Boolean ?: continue
+          val b = table.getValueAt(row, col) as? Boolean ?: continue
           table.setValueAt(!b, row, col)
         }
       }
@@ -114,8 +111,8 @@ internal class TablePopupMenu : JPopupMenu() {
 }
 
 internal class BooleanEditor : AbstractCellEditor(), TableCellEditor {
-  protected val renderer: Container = object : JPanel(GridBagLayout()) {
-    protected var listener: MouseListener? = null
+  private val renderer = object : JPanel(GridBagLayout()) {
+    private var listener: MouseListener? = null
 
     override fun updateUI() {
       removeMouseListener(listener)
@@ -128,7 +125,7 @@ internal class BooleanEditor : AbstractCellEditor(), TableCellEditor {
       addMouseListener(listener)
     }
   }
-  protected val checkBox: JCheckBox = object : JCheckBox() {
+  private val checkBox = object : JCheckBox() {
     var handler: CheckBoxHandler? = null
 
     override fun updateUI() {
@@ -160,7 +157,7 @@ internal class BooleanEditor : AbstractCellEditor(), TableCellEditor {
   override fun getCellEditorValue() = checkBox.isSelected()
 
   override fun isCellEditable(e: EventObject) = (e as? MouseEvent)
-      ?.takeUnless { e.isShiftDown() || e.isControlDown() }?.let { true } ?: super.isCellEditable(e)
+    ?.takeUnless { e.isShiftDown() || e.isControlDown() }?.let { true } ?: super.isCellEditable(e)
 
   private inner class CheckBoxHandler : MouseAdapter(), ActionListener {
     override fun actionPerformed(e: ActionEvent) {

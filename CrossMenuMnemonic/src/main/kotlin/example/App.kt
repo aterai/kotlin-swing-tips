@@ -1,7 +1,3 @@
-// -*- mode:java; encoding:utf-8 -*-
-// vim:set fileencoding=utf-8:
-// @homepage@
-
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
@@ -14,7 +10,7 @@ class MainPanel : JPanel() {
     val key = "Menu.crossMenuMnemonic"
     val b = UIManager.getBoolean(key)
     println("$key: $b")
-    val check: JCheckBox = object : JCheckBox(key, b) {
+    val check = object : JCheckBox(key, b) {
       override fun updateUI() {
         super.updateUI()
         setSelected(UIManager.getLookAndFeelDefaults().getBoolean(key))

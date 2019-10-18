@@ -24,10 +24,10 @@ class MainPanel : JPanel() {
     }
     val bg = ButtonGroup()
     listOf(hideLastSubmenuRadio, hideMenuTreeRadio).forEach {
-        it.addItemListener(handler)
-        bg.add(it)
-        box.add(it)
-      }
+      it.addItemListener(handler)
+      bg.add(it)
+      box.add(it)
+    }
     add(box)
     EventQueue.invokeLater { getRootPane().setJMenuBar(makeMenuBar()) }
     setPreferredSize(Dimension(320, 240))
@@ -43,7 +43,7 @@ class MainPanel : JPanel() {
 
   private fun makeMenuBar(): JMenuBar {
     val bar = JMenuBar()
-    val menu: JMenu = bar.add(JMenu("Test"))
+    val menu = bar.add(JMenu("Test"))
     menu.add("JMenuItem1")
     menu.add("JMenuItem2")
     val sub = JMenu("JMenu")

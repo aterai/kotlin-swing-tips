@@ -11,7 +11,6 @@ import javax.swing.tree.TreeModel
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-
     val tree0 = object : JTree(DefaultTreeModel(makeTreeRoot())) {
       override fun updateUI() {
         super.updateUI()
@@ -38,9 +37,9 @@ class MainPanel : JPanel(BorderLayout()) {
   private fun makeTreeRoot(): DefaultMutableTreeNode {
     val set4 = DefaultMutableTreeNode("Set 00000004")
     set4.add(DefaultMutableTreeNode("222222111111111111111122222"))
-    set4.add(DefaultMutableTreeNode("eeeeeeeeeeeee"))
-    set4.add(DefaultMutableTreeNode("bbbbbbbbbbbb"))
-    set4.add(DefaultMutableTreeNode("zzzzzzz"))
+    set4.add(DefaultMutableTreeNode("111111111111111"))
+    set4.add(DefaultMutableTreeNode("2222222222222"))
+    set4.add(DefaultMutableTreeNode("3333333"))
 
     val set1 = DefaultMutableTreeNode("Set 00000001")
     set1.add(DefaultMutableTreeNode("33333333333333333333333333333333333"))
@@ -51,22 +50,22 @@ class MainPanel : JPanel(BorderLayout()) {
     set1.add(DefaultMutableTreeNode("222222222"))
 
     val set2 = DefaultMutableTreeNode("Set 00000002")
-    set2.add(DefaultMutableTreeNode("eeeeeeeeeeeee"))
-    set2.add(DefaultMutableTreeNode("bbbbbbbbbbbb"))
+    set2.add(DefaultMutableTreeNode("5555555555"))
+    set2.add(DefaultMutableTreeNode("6666666666666"))
 
     val set3 = DefaultMutableTreeNode("Set 00000003")
-    set3.add(DefaultMutableTreeNode("zzzzzzz"))
-    set3.add(DefaultMutableTreeNode("aaaaaaaaaaaa"))
-    set3.add(DefaultMutableTreeNode("ccccccccc"))
+    set3.add(DefaultMutableTreeNode("7777777777"))
+    set3.add(DefaultMutableTreeNode("8888888888888"))
+    set3.add(DefaultMutableTreeNode("9999999"))
 
     val root = DefaultMutableTreeNode("Root")
-    root.add(DefaultMutableTreeNode("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"))
+    root.add(DefaultMutableTreeNode("00000000000000000000000000000"))
     root.add(set3)
-    root.add(DefaultMutableTreeNode("eeeeeeeeeeeeeeeeeeeeeeeeeeeee"))
+    root.add(DefaultMutableTreeNode("111111111111111111111111111"))
     root.add(set1)
     root.add(set2)
     root.add(DefaultMutableTreeNode("22222222222222222222222222222222222"))
-    root.add(DefaultMutableTreeNode("bbbbbbbbbbbbbbbbbbbbbbbbbbbbb"))
+    root.add(DefaultMutableTreeNode("33333333333333333333333"))
     return root
   }
 
@@ -79,7 +78,7 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 internal class TooltipTree(model: TreeModel) : JTree(model) {
-  private val label: JLabel = object : JLabel() {
+  private val label = object : JLabel() {
     override fun getPreferredSize() = super.getPreferredSize()?.also {
       it.height = getRowHeight()
     }

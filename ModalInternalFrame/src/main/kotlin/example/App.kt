@@ -12,14 +12,14 @@ import javax.swing.plaf.basic.BasicInternalFrameUI
 import javax.swing.text.DefaultEditorKit
 
 class MainPanel : JPanel(BorderLayout()) {
-  protected val desktop = JDesktopPane()
+  private val desktop = JDesktopPane()
   private val menuBar = JMenuBar()
   private val dummyBar = JMenuBar()
 
   init {
-
     val button = JButton(ModalInternalFrameAction3("Show"))
     button.setMnemonic(KeyEvent.VK_S)
+
     val internal = JInternalFrame("Button")
     internal.getContentPane().add(button)
     internal.setSize(100, 100)
@@ -38,11 +38,11 @@ class MainPanel : JPanel(BorderLayout()) {
     var menuItem = JMenuItem(object : AbstractAction("New Frame") {
       private var openFrameCount = 0
       override fun actionPerformed(e: ActionEvent) {
-        val iframe = JInternalFrame("title", true, true, true, true)
-        iframe.setSize(130, 100)
-        iframe.setLocation(30 * openFrameCount, 30 * openFrameCount)
-        desktop.add(iframe)
-        iframe.setVisible(true)
+        val frame = JInternalFrame("title", true, true, true, true)
+        frame.setSize(130, 100)
+        frame.setLocation(30 * openFrameCount, 30 * openFrameCount)
+        desktop.add(frame)
+        frame.setVisible(true)
         openFrameCount++
       }
     })
@@ -74,7 +74,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
   // menuItem = new JMenuItem(new ModalInternalFrameAction1("InternalMessageDialog(Normal)"))
   // menuItem.setMnemonic(KeyEvent.VK_1)
-  protected inner class ModalInternalFrameAction1(label: String) : AbstractAction(label) {
+  inner class ModalInternalFrameAction1(label: String) : AbstractAction(label) {
     override fun actionPerformed(e: ActionEvent) {
       setJMenuEnabled(false)
       JOptionPane.showInternalMessageDialog(desktop, "information", "modal1", JOptionPane.INFORMATION_MESSAGE)
@@ -84,7 +84,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
   // menuItem = new JMenuItem(new ModalInternalFrameAction2("InternalMessageDialog"));
   // menuItem.setMnemonic(KeyEvent.VK_2);
-  protected inner class ModalInternalFrameAction2(label: String) : AbstractAction(label) {
+  inner class ModalInternalFrameAction2(label: String) : AbstractAction(label) {
     private val glass = MyGlassPane()
 
     init {
@@ -109,8 +109,8 @@ class MainPanel : JPanel(BorderLayout()) {
   // menuItem.setMnemonic(KeyEvent.VK_3);
   // Creating Modal Internal Frames -- Approach 1 and Approach 2
   // http://java.sun.com/developer/JDCTechTips/2001/tt1220.html
-  protected inner class ModalInternalFrameAction3(label: String) : AbstractAction(label) {
-    protected val glass: JComponent = PrintGlassPane()
+  inner class ModalInternalFrameAction3(label: String) : AbstractAction(label) {
+    private val glass = PrintGlassPane()
 
     init {
       glass.setVisible(false)
@@ -141,27 +141,27 @@ class MainPanel : JPanel(BorderLayout()) {
     }
   }
 
-  protected fun setJMenuEnabled(flag: Boolean) {
+  private fun setJMenuEnabled(flag: Boolean) {
     val bar = getRootPane().getJMenuBar()
     bar.setVisible(flag)
     dummyBar.setVisible(!flag)
   }
 
-  protected fun removeSystemMenuListener(modal: JInternalFrame) {
+  private fun removeSystemMenuListener(modal: JInternalFrame) {
     val ui = modal.getUI() as? BasicInternalFrameUI ?: return
     ui.getNorthPane().getComponents()
-        .filter { it is JLabel || "InternalFrameTitlePane.menuButton" == it.getName() }
-        .forEach { removeComponentMouseListener(it) }
+      .filter { it is JLabel || "InternalFrameTitlePane.menuButton" == it.getName() }
+      .forEach { removeComponentMouseListener(it) }
   }
 
-  protected fun removeComponentMouseListener(c: Component) {
+  private fun removeComponentMouseListener(c: Component) {
     for (ml in c.getMouseListeners()) {
       (c as? JComponent)?.removeMouseListener(ml)
     }
   }
 }
 
-internal class MyGlassPane : JDesktopPane() {
+class MyGlassPane : JDesktopPane() {
   override fun updateUI() {
     super.updateUI()
     setFocusTraversalPolicy(object : DefaultFocusTraversalPolicy() {
@@ -169,7 +169,7 @@ internal class MyGlassPane : JDesktopPane() {
     })
   }
 
-  protected override fun paintComponent(g: Graphics) {
+  override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setPaint(TEXTURE)
     g2.fillRect(0, 0, getWidth(), getHeight())
@@ -181,14 +181,14 @@ internal class MyGlassPane : JDesktopPane() {
   }
 }
 
-internal class PrintGlassPane : JDesktopPane() {
+class PrintGlassPane : JDesktopPane() {
   override fun setVisible(isVisible: Boolean) {
     val oldVisible = isVisible()
     super.setVisible(isVisible)
     getRootPane()?.takeIf { isVisible() != oldVisible }?.getLayeredPane()?.setVisible(!isVisible)
   }
 
-  protected override fun paintComponent(g: Graphics) {
+  override fun paintComponent(g: Graphics) {
     // http://weblogs.java.net/blog/alexfromsun/archive/2008/01/disabling_swing.html
     // it is important to call print() instead of paint() here
     // because print() doesn't affect the frame's double buffer
@@ -205,7 +205,7 @@ internal class PrintGlassPane : JDesktopPane() {
   }
 }
 
-internal object TextureUtils {
+object TextureUtils {
   private val DEFAULT_COLOR = Color(100, 100, 100, 100)
 
   @JvmOverloads

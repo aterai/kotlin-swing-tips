@@ -170,7 +170,7 @@ class FileGroupComparator(private val table: JTable, column: Int) : DefaultFileC
 }
 
 class TablePopupMenu : JPopupMenu() {
-  private val delete: JMenuItem = add("delete")
+  private val delete = add("delete")
 
   init {
     delete.addActionListener {

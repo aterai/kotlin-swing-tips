@@ -52,7 +52,7 @@ class MainPanel : JPanel(BorderLayout()) {
 class DisableItemComboBox<E> : JComboBox<E> {
   private val disableIndexSet = mutableSetOf<Int>()
   private var isDisableIndex = false
-  private val up: Action = object : AbstractAction() {
+  private val up = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val si = getSelectedIndex()
       for (i in si - 1 downTo 0) {
@@ -63,7 +63,7 @@ class DisableItemComboBox<E> : JComboBox<E> {
       }
     }
   }
-  private val down: Action = object : AbstractAction() {
+  private val down = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val si = getSelectedIndex()
       for (i in si + 1 until getModel().getSize()) {

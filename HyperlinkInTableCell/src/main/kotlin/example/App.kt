@@ -74,7 +74,7 @@ class MainPanel : JPanel(BorderLayout()) {
 internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMotionListener {
   private var viewRowIndex = -1
   private var viewColumnIndex = -1 // viewColumnIndex
-  private var isRollover: Boolean = false
+  private var isRollover = false
 
   override fun getTableCellRendererComponent(
     table: JTable,

@@ -53,7 +53,7 @@ class ScrollableWrapPanel(layout: LayoutManager) : JPanel(layout), Scrollable {
 class ScrollableWrapLayout(align: Int, hgap: Int, vgap: Int) : FlowLayout(align, hgap, vgap) {
   private val fixedHgap = hgap
   private fun getPreferredHorizontalGap(target: Container): Int {
-    val insets: Insets = target.getInsets()
+    val insets = target.getInsets()
     var columns = 0
     var width = target.getWidth()
     if (target.getParent() is JViewport) {

@@ -83,7 +83,7 @@ class MainPanel : JPanel(BorderLayout()) {
 class DropdownTableComboBox<E : List<Any>>(private val list: List<E>, model: DefaultTableModel) : JComboBox<E>() {
   @Transient
   private val highlighter = HighlightListener()
-  private val table: JTable = object : JTable() {
+  private val table = object : JTable() {
     override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int): Component {
       val c = super.prepareRenderer(renderer, row, column)
       c.setForeground(Color.BLACK)
