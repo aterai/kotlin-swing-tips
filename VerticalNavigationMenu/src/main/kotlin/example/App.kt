@@ -6,7 +6,6 @@ import javax.swing.event.TreeExpansionEvent
 import javax.swing.event.TreeWillExpandListener
 import javax.swing.plaf.basic.BasicTreeUI
 import javax.swing.tree.DefaultMutableTreeNode
-import javax.swing.tree.DefaultTreeCellRenderer
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.ExpandVetoException
 import javax.swing.tree.TreePath
@@ -35,7 +34,7 @@ class MainPanel : JPanel(BorderLayout(2, 2)) {
         .forEach { p.add(JLabel(it), it) }
     }
 
-    val tree: JTree = RowSelectionTree()
+    val tree = RowSelectionTree()
     tree.setModel(model)
     tree.setRowHeight(32)
     tree.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
@@ -124,39 +123,28 @@ class RowSelectionTree : JTree() {
       }
     })
     UIManager.put("Tree.repaintWholeRow", java.lang.Boolean.TRUE)
-    setCellRenderer(Handler())
-    isOpaque = false
-    isRootVisible = false
-    // https://ateraimemo.com/Swing/TreeNodeCollapseVeto.html
+    val r = getCellRenderer()
+    setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
+      val c = r.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+      c.setBackground(if (selected) SELECTED_COLOR else tree.getBackground())
+      (c as? JComponent)?.setOpaque(true)
+      return@setCellRenderer c
+    }
+    setOpaque(false)
+    setRootVisible(false)
 
+    // https://ateraimemo.com/Swing/TreeNodeCollapseVeto.html
     listener = object : TreeWillExpandListener {
-      override fun treeWillExpand(e: TreeExpansionEvent?) { // throws ExpandVetoException {
+      override fun treeWillExpand(e: TreeExpansionEvent) { // throws ExpandVetoException {
         // throw new ExpandVetoException(e, "Tree expansion cancelled");
       }
 
       @Throws(ExpandVetoException::class)
-      override fun treeWillCollapse(e: TreeExpansionEvent?) {
+      override fun treeWillCollapse(e: TreeExpansionEvent) {
         throw ExpandVetoException(e, "Tree collapse cancelled")
       }
     }
     addTreeWillExpandListener(listener)
-  }
-
-  private class Handler : DefaultTreeCellRenderer() {
-    override fun getTreeCellRendererComponent(
-      tree: JTree,
-      value: Any?,
-      selected: Boolean,
-      expanded: Boolean,
-      leaf: Boolean,
-      row: Int,
-      hasFocus: Boolean
-    ): Component {
-      val c = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
-      c.setBackground(if (selected) SELECTED_COLOR else tree.getBackground())
-      (c as? JComponent)?.setOpaque(true)
-      return c
-    }
   }
 
   companion object {
