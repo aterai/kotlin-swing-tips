@@ -3,14 +3,13 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionEvent
 import java.awt.event.MouseEvent
-import java.util.*
+import java.util.EnumSet
 import java.util.function.BiFunction
 import java.util.function.Function
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.Border
 import javax.swing.event.MouseInputAdapter
 import javax.swing.event.MouseInputListener
-
 
 class MainPanel : JPanel(BorderLayout()) {
   private val layeredPane = object : JLayeredPane() {
@@ -234,7 +233,6 @@ class DefaultResizableBorder : ResizableBorder, SwingConstants {
     private const val SIZE = 6
   }
 }
-
 
 class ResizeMouseListener : MouseInputAdapter() {
   private var cursor = Cursor.getDefaultCursor()
