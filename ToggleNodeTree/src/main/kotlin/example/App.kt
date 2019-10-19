@@ -6,15 +6,14 @@ import javax.swing.event.TreeExpansionEvent
 import javax.swing.event.TreeWillExpandListener
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
-import javax.swing.tree.ExpandVetoException
 import javax.swing.tree.TreePath
 
 fun makeUI(): Component {
   val tree = JTree(makeModel())
   tree.setRootVisible(false)
   tree.addTreeWillExpandListener(object : TreeWillExpandListener {
-    private var isAdjusting: Boolean = false
-    @Throws(ExpandVetoException::class)
+    private var isAdjusting = false
+    // @Throws(ExpandVetoException::class)
     override fun treeWillExpand(e: TreeExpansionEvent) {
       // collapseAll(tree); // StackOverflowError when collapsing nodes below 2nd level
       if (isAdjusting) {
@@ -26,7 +25,7 @@ fun makeUI(): Component {
       isAdjusting = false
     }
 
-    @Throws(ExpandVetoException::class)
+    // @Throws(ExpandVetoException::class)
     override fun treeWillCollapse(e: TreeExpansionEvent) {
       // throw new ExpandVetoException(e, "Tree collapse cancelled");
     }
@@ -55,13 +54,13 @@ fun makeModel(): DefaultTreeModel {
   set1.add(DefaultMutableTreeNode("33333"))
 
   val set2 = DefaultMutableTreeNode("Set 002")
-  set2.add(DefaultMutableTreeNode("asdfasdfas"))
-  set2.add(DefaultMutableTreeNode("asdf"))
+  set2.add(DefaultMutableTreeNode("4444444444444"))
+  set2.add(DefaultMutableTreeNode("5555555"))
 
   val set3 = DefaultMutableTreeNode("Set 003")
-  set3.add(DefaultMutableTreeNode("asdfasdfasdf"))
-  set3.add(DefaultMutableTreeNode("qwerqwer"))
-  set3.add(DefaultMutableTreeNode("zvxcvzxcvzxzxcvzxcv"))
+  set3.add(DefaultMutableTreeNode("6666666666"))
+  set3.add(DefaultMutableTreeNode("77777777"))
+  set3.add(DefaultMutableTreeNode("888888888888888"))
 
   val set4 = DefaultMutableTreeNode("Set 004")
   set4.add(DefaultMutableTreeNode("444"))
@@ -77,21 +76,11 @@ fun makeModel(): DefaultTreeModel {
 fun collapseFirstHierarchy(tree: JTree) {
   val root = tree.getModel().getRoot() as? DefaultMutableTreeNode ?: return
   root.breadthFirstEnumeration().toList()
-      .filterIsInstance<DefaultMutableTreeNode>()
-      .takeWhile { it.getLevel() <= 1 }
-      .dropWhile { it.isRoot() || it.isLeaf() }
-      .map { TreePath(it.getPath()) }
-      .forEach { tree.collapsePath(it) }
-  // // Java 9:
-  // Collections.list(root.breadthFirstEnumeration()).stream()
-  //     .filter(DefaultMutableTreeNode.class::isInstance)
-  //     .map(DefaultMutableTreeNode.class::cast)
-  //     .takeWhile(node -> node.getLevel() <= 1)
-  //     .dropWhile(DefaultMutableTreeNode::isRoot)
-  //     .dropWhile(DefaultMutableTreeNode::isLeaf)
-  //     .map(DefaultMutableTreeNode::getPath)
-  //     .map(TreePath::new)
-  //     .forEach(tree::collapsePath);
+    .filterIsInstance<DefaultMutableTreeNode>()
+    .takeWhile { it.getLevel() <= 1 }
+    .dropWhile { it.isRoot() || it.isLeaf() }
+    .map { TreePath(it.getPath()) }
+    .forEach { tree.collapsePath(it) }
 }
 
 fun main() {

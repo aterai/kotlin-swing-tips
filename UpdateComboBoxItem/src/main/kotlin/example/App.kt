@@ -108,7 +108,7 @@ class CheckBoxCellRenderer<E : CheckableItem> : ListCellRenderer<E> {
 }
 
 open class CheckedComboBox<E : CheckableItem> : JComboBox<E> {
-  private var keepOpen: Boolean = false
+  private var keepOpen = false
   @Transient
   private var listener: ActionListener? = null
 

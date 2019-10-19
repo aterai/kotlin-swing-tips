@@ -139,7 +139,7 @@ fun main() {
       it.printStackTrace()
       Toolkit.getDefaultToolkit().beep()
     }
-    val frame: JFrame = object : JFrame() {
+    val frame = object : JFrame() {
       override fun createRootPane(): JRootPane {
         return TransparentRootPane()
       }

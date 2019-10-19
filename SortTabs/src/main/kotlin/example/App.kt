@@ -23,7 +23,7 @@ class MainPanel : JPanel(BorderLayout()) {
 data class ComparableTab(val title: String, val component: Component)
 
 class EditableTabbedPane : JTabbedPane() {
-  private val glassPane: Container = EditorGlassPane()
+  private val glassPane = EditorGlassPane()
   private val editor = JTextField()
   private val startEditing = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
