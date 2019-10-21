@@ -5,7 +5,6 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.AttributeSet
 import javax.swing.text.BadLocationException
 import javax.swing.text.DefaultStyledDocument
-import javax.swing.text.Element
 import javax.swing.text.Style
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
@@ -55,8 +54,8 @@ class SimpleSyntaxDocument : DefaultStyledDocument() {
 
   @Throws(BadLocationException::class)
   private fun processChangedLines(offset: Int, length: Int) {
-    val root: Element = defaultRootElement
-    val content: String = getText(0, getLength())
+    val root = getDefaultRootElement()
+    val content = getText(0, getLength())
     val startLine = root.getElementIndex(offset)
     val endLine = root.getElementIndex(offset + length)
     for (i in startLine..endLine) {

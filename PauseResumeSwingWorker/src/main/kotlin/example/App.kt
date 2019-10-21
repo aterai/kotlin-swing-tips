@@ -57,7 +57,7 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
   }
 
   private inner class ProgressTask : BackgroundTask() {
-    protected override fun process(chunks: List<Progress>) {
+    override fun process(chunks: List<Progress>) {
       if (isCancelled()) {
         return
       }
@@ -92,7 +92,7 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
     statusPanel.revalidate()
   }
 
-  protected fun processChunks(chunks: List<Progress>) {
+  private fun processChunks(chunks: List<Progress>) {
     for (s in chunks) {
       when (s.component) {
         ProgressType.TOTAL -> bar1.setValue(s.value as? Int ?: 0)
@@ -104,7 +104,7 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
     }
   }
 
-  fun textProgress(append: Boolean) {
+  private fun textProgress(append: Boolean) {
     if (append) {
       area.append("*")
     } else {
@@ -130,7 +130,7 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
   }
 
   // @see https://ateraimemo.com/Swing/ButtonWidth.html
-  fun createRightAlignButtonBox4(list: List<Component>, buttonWidth: Int, gap: Int): Component {
+  private fun createRightAlignButtonBox4(list: List<Component>, buttonWidth: Int, gap: Int): Component {
     val layout = SpringLayout()
     val p = object : JPanel(layout) {
       override fun getPreferredSize(): Dimension {
@@ -162,11 +162,11 @@ enum class ProgressType {
 data class Progress(val component: ProgressType, val value: Any)
 
 open class BackgroundTask : SwingWorker<String, Progress>() {
-  var isPaused: Boolean = false
+  var isPaused = false
 
   override fun doInBackground(): String {
     var current = 0
-    val lengthOfTask = 12 // filelist.size();
+    val lengthOfTask = 12 // fileList.size();
     publish(Progress(ProgressType.LOG, "Length Of Task: $lengthOfTask"))
     publish(Progress(ProgressType.LOG, "\n------------------------------\n"))
     while (current < lengthOfTask && !isCancelled()) {

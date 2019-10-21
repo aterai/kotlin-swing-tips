@@ -16,7 +16,7 @@ val data = arrayOf(
   arrayOf("bbb", 5, false),
   arrayOf("CCC", 92, true),
   arrayOf("DDD", 0, false))
-val model: DefaultTableModel = object : DefaultTableModel(data, columnNames) {
+val model = object : DefaultTableModel(data, columnNames) {
   override fun getColumnClass(column: Int) = when (column) {
     0 -> String::class.java
     1 -> Number::class.java
@@ -25,12 +25,12 @@ val model: DefaultTableModel = object : DefaultTableModel(data, columnNames) {
   }
 }
 val table = JTable(model)
-val createAction: Action = object : AbstractAction("add") {
+val createAction = object : AbstractAction("add") {
   override fun actionPerformed(e: ActionEvent) {
     createActionPerformed()
   }
 }
-val deleteAction: Action = object : AbstractAction("delete") {
+val deleteAction = object : AbstractAction("delete") {
   override fun actionPerformed(e: ActionEvent) {
     deleteActionPerformed()
   }

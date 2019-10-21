@@ -14,7 +14,7 @@ class MainPanel : JPanel(BorderLayout()) {
   init {
     val field = JTextField("asd", 10)
     val tree = JTree(makeModel())
-    val findNextAction: Action = object : AbstractAction("Find Next") {
+    val findNextAction = object : AbstractAction("Find Next") {
       private val rollOverPathLists = mutableListOf<TreePath>()
       override fun actionPerformed(e: ActionEvent) {
         val selectedPath = tree.getSelectionPath()
@@ -46,7 +46,7 @@ class MainPanel : JPanel(BorderLayout()) {
     showHideButton.setFocusable(false)
     val modifiers = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()
     // Java 10: val modifiers = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()
-    val im: InputMap = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+    val im = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F, modifiers), "open-search-box")
     getActionMap().put("open-search-box", layout.showHideAction)
     add(controls, BorderLayout.NORTH)
@@ -88,7 +88,7 @@ class ControlPanelLayout(private val controls: Container, hgap: Int, vgap: Int) 
   private var isHidden = true
   private val animator = Timer(5, null)
   private var controlsHeight = 0
-  val showHideAction: Action = object : AbstractAction("Show/Hide Search Box") {
+  val showHideAction = object : AbstractAction("Show/Hide Search Box") {
     override fun actionPerformed(e: ActionEvent) {
       if (!animator.isRunning) {
         isHidden = controls.height == 0
