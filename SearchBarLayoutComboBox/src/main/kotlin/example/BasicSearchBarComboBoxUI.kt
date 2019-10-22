@@ -11,42 +11,41 @@ import javax.swing.event.PopupMenuListener
 
 @Suppress("TooManyFunctions")
 class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
-  protected var popupMenuListener: PopupMenuListener? = null
-  protected var loupeButton: JButton? = null
-  protected var loupeAction: Action = object : AbstractAction() {
+  private var popupMenuListener: PopupMenuListener? = null
+  private var loupeButton: JButton? = null
+  private val loupeAction = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       comboBox.setPopupVisible(false)
       val o = listBox.getSelectedValue() ?: comboBox.getItemAt(0)
-      println(o)
-      // println("$o: ${comboBox?.getEditor()?.getItem()}")
+      println("$o: ${comboBox?.getEditor()?.getItem()}")
     }
   }
 
   // protected boolean isEditable = true;
-  protected override fun installDefaults() {
+  override fun installDefaults() {
     super.installDefaults()
     // comboBox.setEditable(true)
     comboBox.putClientProperty("JComboBox.isTableCellEditor", true)
     // comboBox.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT)
   }
 
-  protected override fun installListeners() {
+  override fun installListeners() {
     super.installListeners()
     popupMenuListener = createPopupMenuListener()
     comboBox.addPopupMenuListener(popupMenuListener)
   }
 
-  protected override fun uninstallListeners() {
+  override fun uninstallListeners() {
     super.uninstallListeners()
     comboBox.removePopupMenuListener(popupMenuListener)
   }
 
-  protected fun createPopupMenuListener(): PopupMenuListener? {
+  private fun createPopupMenuListener(): PopupMenuListener? {
     if (popupMenuListener == null) {
       popupMenuListener = object : PopupMenuListener {
         private var str: String? = null
         override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-          val combo = e.getSource() as? JComboBox<*> ?: return@popupMenuWillBecomeVisible
+          val combo = e.getSource() as? JComboBox<*> ?: return
           str = combo.getEditor().getItem().toString()
         }
 
@@ -73,9 +72,9 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
   //   return keyListener;
   // }
 
-  protected override fun configureEditor() {
+  override fun configureEditor() {
     // super.configureEditor()
-    // Should be in the same state as the combobox
+    // Should be in the same state as the comboBox
     editor.setEnabled(comboBox.isEnabled())
     editor.setFocusable(comboBox.isFocusable())
     editor.setFont(comboBox.getFont())
@@ -93,7 +92,7 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
     editor.addPropertyChangeListener(propertyChangeListener)
   }
 
-  protected override fun createArrowButton() = TriangleArrowButton()
+  override fun createArrowButton() = TriangleArrowButton()
 
   override fun configureArrowButton() {
     super.configureArrowButton()
@@ -109,7 +108,7 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
     }
   }
 
-  protected override fun installComponents() {
+  override fun installComponents() {
     // super.installComponents();
     arrowButton = createArrowButton()
     comboBox.add(arrowButton)
@@ -124,7 +123,7 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
     comboBox.add(currentValuePane)
   }
 
-  protected override fun uninstallComponents() {
+  override fun uninstallComponents() {
     if (loupeButton != null) {
       unconfigureLoupeButton()
     }
@@ -132,7 +131,7 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
     super.uninstallComponents()
   }
 
-  protected fun createLoupeButton(): JButton {
+  private fun createLoupeButton(): JButton {
     val button = JButton(loupeAction)
     val loupe = ImageIcon(BasicSearchBarComboBoxUI::class.java.getResource("loupe.png"))
     button.setIcon(loupe)
@@ -140,7 +139,7 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
     return button
   }
 
-  fun configureLoupeButton() {
+  private fun configureLoupeButton() {
     loupeButton?.also {
       it.setName("ComboBox.loupeButton")
       it.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1))
@@ -158,15 +157,15 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
     }
   }
 
-  protected fun unconfigureLoupeButton() {
+  private fun unconfigureLoupeButton() {
     loupeButton?.setAction(null)
   }
 
-  protected override fun createRenderer() = SearchEngineListCellRenderer<SearchEngine>()
+  override fun createRenderer() = SearchEngineListCellRenderer<SearchEngine>()
 
-  protected override fun createLayoutManager() = SearchBarLayout()
+  override fun createLayoutManager() = SearchBarLayout()
 
-  protected fun makeRolloverIcon(srcIcon: Icon): Icon {
+  private fun makeRolloverIcon(srcIcon: Icon): Icon {
     val op = RescaleOp(floatArrayOf(1.2f, 1.2f, 1.2f, 1f), floatArrayOf(0f, 0f, 0f, 0f), null)
     val img = BufferedImage(srcIcon.getIconWidth(), srcIcon.getIconHeight(), BufferedImage.TYPE_INT_ARGB)
     val g = img.getGraphics()

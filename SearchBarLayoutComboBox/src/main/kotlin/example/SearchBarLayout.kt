@@ -8,9 +8,9 @@ class SearchBarLayout : LayoutManager {
 
   override fun removeLayoutComponent(comp: Component) { /* not needed */ }
 
-  override fun preferredLayoutSize(parent: Container) = parent.getPreferredSize()
+  override fun preferredLayoutSize(parent: Container): Dimension? = parent.getPreferredSize()
 
-  override fun minimumLayoutSize(parent: Container) = parent.getMinimumSize()
+  override fun minimumLayoutSize(parent: Container): Dimension? = parent.getMinimumSize()
 
   override fun layoutContainer(parent: Container) {
     val cb = parent as? JComboBox<*> ?: return
@@ -25,6 +25,7 @@ class SearchBarLayout : LayoutManager {
       buttonWidth = it.getPreferredSize().width + arrowInsets.left + arrowInsets.right
       it.setBounds(insets.left, insets.top, buttonWidth, buttonHeight)
     }
+
     var loupeButton: JButton? = null
     for (c in cb.getComponents()) {
       if ("ComboBox.loupeButton" == c.getName()) {
@@ -32,13 +33,8 @@ class SearchBarLayout : LayoutManager {
         break
       }
     }
-    if (loupeButton != null) {
-      loupeButton.setBounds(
-          width - insets.right - buttonHeight,
-          insets.top,
-          buttonHeight,
-          buttonHeight)
-    }
+    loupeButton?.setBounds(width - insets.right - buttonHeight, insets.top, buttonHeight, buttonHeight)
+
     (cb.getEditor().getEditorComponent() as? JTextField)?.also {
       it.setBounds(
           insets.left + buttonWidth,

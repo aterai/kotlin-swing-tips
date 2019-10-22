@@ -1,6 +1,5 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.FocusEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
@@ -25,7 +24,7 @@ open class JSearchBar<E : SearchEngine> : JComboBox<E> {
     // }
     UIManager.put("ComboBox.font", getFont()) // XXX: ???
     getItemAt(0)?.also {
-      // set ArrwoButton Icon
+      // set ArrowButton Icon
       (getComponent(0) as? JButton)?.setIcon(it.favicon)
     }
   }

@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.Component
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class SearchEngineListCellRenderer<E : SearchEngine> : ListCellRenderer<E> {
