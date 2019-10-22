@@ -7,6 +7,7 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import kotlin.math.pow
 
 class MainPanel : JPanel() {
   init {
@@ -17,12 +18,12 @@ class MainPanel : JPanel() {
   }
 }
 
-internal class ImageCaptionLabel(caption: String, icon: Icon) : JLabel() {
-  protected val textArea: JTextArea = object : JTextArea() {
+class ImageCaptionLabel(caption: String, icon: Icon) : JLabel() {
+  private val textArea = object : JTextArea() {
     @Transient
-    protected var listener: MouseListener? = null
+    private var listener: MouseListener? = null
 
-    protected override fun paintComponent(g: Graphics) {
+    override fun paintComponent(g: Graphics) {
       val g2 = g.create() as Graphics2D
       g2.setPaint(getBackground())
       g2.fillRect(0, 0, getWidth(), getHeight())
@@ -56,9 +57,9 @@ internal class ImageCaptionLabel(caption: String, icon: Icon) : JLabel() {
     // }
   }
   @Transient
-  protected val handler = LabelHandler(textArea)
+  private val handler = LabelHandler(textArea)
 
-  protected fun dispatchMouseEvent(e: MouseEvent) {
+  private fun dispatchMouseEvent(e: MouseEvent) {
     val src = e.getComponent()
     // this: target Component;
     this.dispatchEvent(SwingUtilities.convertMouseEvent(src, e, this))
@@ -67,8 +68,8 @@ internal class ImageCaptionLabel(caption: String, icon: Icon) : JLabel() {
   override fun updateUI() {
     super.updateUI()
     setBorder(BorderFactory.createCompoundBorder(
-        BorderFactory.createLineBorder(Color(0xDE_DE_DE)),
-        BorderFactory.createLineBorder(Color.WHITE, 4)))
+      BorderFactory.createLineBorder(Color(0xDE_DE_DE)),
+      BorderFactory.createLineBorder(Color.WHITE, 4)))
     setLayout(object : OverlayLayout(this) {
       override fun layoutContainer(parent: Container) {
         // Insets insets = parent.getInsets();
@@ -148,7 +149,7 @@ internal class LabelHandler(private val textArea: Component) : MouseAdapter(), H
 
   override fun hierarchyChanged(e: HierarchyEvent) {
     if (e.getChangeFlags().toInt() and HierarchyEvent.DISPLAYABILITY_CHANGED != 0 &&
-        !e.getComponent().isDisplayable()) {
+      !e.getComponent().isDisplayable()) {
       animator.stop()
     }
   }
@@ -159,19 +160,17 @@ internal object AnimationUtil {
 
   // http://www.anima-entertainment.de/math-easein-easeout-easeinout-and-bezier-curves
   // Math: EaseIn EaseOut, EaseInOut and Bezier Curves | Anima Entertainment GmbH
-  fun easeIn(t: Double) = Math.pow(t, N.toDouble()) // range: 0.0 <= t <= 1.0
+  fun easeIn(t: Double) = t.pow(N.toDouble()) // range: 0.0 <= t <= 1.0
 
-  fun easeOut(t: Double) = Math.pow(t - 1.0, N.toDouble()) + 1.0
+  fun easeOut(t: Double) = (t - 1.0).pow(N.toDouble()) + 1.0
 
   fun easeInOut(t: Double): Double {
-    val ret: Double
     val isFirstHalf = t < .5
-    if (isFirstHalf) {
-      ret = .5 * intpow(t * 2.0, N)
+    return if (isFirstHalf) {
+      .5 * intpow(t * 2.0, N)
     } else {
-      ret = .5 * (intpow(t * 2.0 - 2.0, N) + 2.0)
+      .5 * (intpow(t * 2.0 - 2.0, N) + 2.0)
     }
-    return ret
   }
 
   // http://d.hatena.ne.jp/pcl/20120617/p1
@@ -180,9 +179,7 @@ internal object AnimationUtil {
   // http://www.osix.net/modules/article/?id=696
   fun intpow(da: Double, ib: Int): Double {
     var b = ib
-    if (b < 0) {
-      throw IllegalArgumentException("B must be a positive integer or zero")
-    }
+    require(b >= 0) { "B must be a positive integer or zero" }
     var a = da
     var d = 1.0
     while (b > 0) {
