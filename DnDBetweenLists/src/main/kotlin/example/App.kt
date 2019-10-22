@@ -102,7 +102,7 @@ class ListItemTransferHandler : TransferHandler() {
   override fun importData(info: TransferSupport): Boolean {
     val dl = info.getDropLocation()
     val target = info.getComponent()
-    if (!canImport(info) || dl !is JList.DropLocation || target !is JList<*>) {
+    if (dl !is JList.DropLocation || target !is JList<*>) {
       return false
     }
     @Suppress("UNCHECKED_CAST")

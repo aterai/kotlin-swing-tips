@@ -443,7 +443,7 @@ class TabTransferHandler : TransferHandler() {
     val data = runCatching {
       support.getTransferable().getTransferData(localObjectFlavor) as? DnDTabData
     }.getOrNull()
-    if (!canImport(support) || target !is DnDTabbedPane || data == null) {
+    if (target !is DnDTabbedPane || data == null) {
       return false
     }
     val src = data.tabbedPane

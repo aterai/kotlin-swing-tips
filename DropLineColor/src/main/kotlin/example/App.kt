@@ -199,7 +199,7 @@ class ListItemTransferHandler : TransferHandler() {
   override fun importData(info: TransferSupport): Boolean {
     val dl = info.getDropLocation()
     val target = info.getComponent()
-    if (!canImport(info) || dl !is JList.DropLocation || target !is JList<*>) {
+    if (dl !is JList.DropLocation || target !is JList<*>) {
       return false
     }
     @Suppress("UNCHECKED_CAST")
@@ -286,7 +286,7 @@ class TableRowTransferHandler : TransferHandler() {
   override fun importData(info: TransferSupport): Boolean {
     val tdl = info.getDropLocation()
     val target = info.getComponent()
-    if (!canImport(info) || tdl !is JTable.DropLocation || target !is JTable) {
+    if (tdl !is JTable.DropLocation || target !is JTable) {
       return false
     }
     val model = target.getModel() as DefaultTableModel
