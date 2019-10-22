@@ -175,7 +175,7 @@ class DefaultResizableBorder : ResizableBorder, SwingConstants {
       }
     );
 
-    val cursor: Cursor = Cursor.getPredefinedCursor(cursor)
+    val cursor = Cursor.getPredefinedCursor(cursor)
 
     fun getPoint(r: Rectangle) = location.apply(r)
   }
@@ -315,8 +315,7 @@ class ResizeMouseListener : MouseInputAdapter() {
     parentBounds: Rectangle,
     deltaX: Int,
     deltaY: Int
-  ): Point {
-    return when (cursor.type) {
+  ) = when (cursor.type) {
       Cursor.N_RESIZE_CURSOR -> Point(0, getDeltaY(deltaY))
       Cursor.S_RESIZE_CURSOR -> Point(0, getDeltaY(deltaY, parentBounds))
       Cursor.W_RESIZE_CURSOR -> Point(getDeltaX(deltaX), 0)
@@ -327,7 +326,6 @@ class ResizeMouseListener : MouseInputAdapter() {
       Cursor.SE_RESIZE_CURSOR -> Point(getDeltaX(deltaX, parentBounds), getDeltaY(deltaY, parentBounds))
       else -> Point(deltaX, deltaY)
     }
-  }
 
   companion object {
     private val MIN = Dimension(50, 50)
@@ -442,7 +440,8 @@ enum class Directions(
   fun getBounds(rect: Rectangle, delta: Point) = getBounds.apply(rect, delta)
 
   companion object {
-    fun getByCursorType(cursor: Int): Directions? = EnumSet.allOf(Directions::class.java).first { d -> d.cursor == cursor }
+    fun getByCursorType(cursor: Int): Directions? =
+        EnumSet.allOf(Directions::class.java).first { d -> d.cursor == cursor }
   }
 }
 
