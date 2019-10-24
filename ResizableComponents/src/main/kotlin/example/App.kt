@@ -4,7 +4,6 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionEvent
 import java.awt.event.MouseEvent
 import java.util.EnumSet
-import java.util.function.BiFunction
 import java.util.function.Function
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.Border
@@ -19,7 +18,7 @@ class MainPanel : JPanel(BorderLayout()) {
   private val pt = Point()
   private fun createTree() {
     val tree = JTree()
-    tree.visibleRowCount = 8
+    tree.setVisibleRowCount(8)
     val c = JScrollPane(tree)
     val d = c.getPreferredSize()
     val resizer = JResizer(BorderLayout())
@@ -175,7 +174,7 @@ class DefaultResizableBorder : ResizableBorder, SwingConstants {
       }
     );
 
-    val cursor = Cursor.getPredefinedCursor(cursor)
+    val cursor: Cursor = Cursor.getPredefinedCursor(cursor)
 
     fun getPoint(r: Rectangle) = location.apply(r)
   }
@@ -211,22 +210,20 @@ class DefaultResizableBorder : ResizableBorder, SwingConstants {
     val h = c.height
     val pt = e.getPoint()
     val bounds = Rectangle(w, h)
-    if (!bounds.contains(pt)) {
-      return Cursor.getDefaultCursor()
-    }
     val actualBounds = Rectangle(SIZE, SIZE, w - 2 * SIZE, h - 2 * SIZE)
-    if (actualBounds.contains(pt)) {
+    if (!bounds.contains(pt) || actualBounds.contains(pt)) {
       return Cursor.getDefaultCursor()
     }
     val rect = Rectangle(SIZE, SIZE)
     val r = Rectangle(0, 0, w, h)
+    var cursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR)
     for (loc in Locations.values()) {
       rect.setLocation(loc.getPoint(r))
       if (rect.contains(pt)) {
-        return loc.cursor
+        cursor = loc.cursor
       }
     }
-    return Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR)
+    return cursor
   }
 
   companion object {
@@ -246,15 +243,15 @@ class ResizeMouseListener : MouseInputAdapter() {
   }
 
   override fun mouseExited(e: MouseEvent) {
-    e.component.cursor = Cursor.getDefaultCursor()
+    e.getComponent().setCursor(Cursor.getDefaultCursor())
   }
 
   override fun mousePressed(e: MouseEvent) {
-    val c = e.component
+    val c = e.getComponent()
     val border = (c as? JComponent)?.border as? ResizableBorder ?: return
     cursor = border.getResizeCursor(e)
     startPos.setLocation(SwingUtilities.convertPoint(c, e.x, e.y, null))
-    startingBounds.setBounds(c.bounds)
+    startingBounds.setBounds(c.getBounds())
     (SwingUtilities.getAncestorOfClass(JLayeredPane::class.java, c) as? JLayeredPane)?.moveToFront(c)
   }
 
@@ -267,181 +264,194 @@ class ResizeMouseListener : MouseInputAdapter() {
     if (startingBounds.isEmpty()) {
       return
     }
-    val c = e.component
+    val c = e.getComponent()
     val p = SwingUtilities.convertPoint(c, e.x, e.y, null)
     val deltaX = startPos.x - p.x
     val deltaY = startPos.y - p.y
     val parent = SwingUtilities.getUnwrappedParent(c)
-    Directions.getByCursorType(cursor.type)?.also {
-      val delta = getLimitedDelta(parent.bounds, deltaX, deltaY)
-      c.bounds = it.getBounds(startingBounds, delta)
+    Directions.getByCursorType(cursor.getType())?.also {
+      val delta = it.getLimitedDelta(startingBounds, parent.getBounds(), deltaX, deltaY)
+      c.setBounds(it.getBounds(startingBounds, delta))
     }
     parent.revalidate()
   }
+}
 
-  private fun getDeltaX(dx: Int): Int {
-    val left = minOf(
-      MAX.width - startingBounds.width,
-      startingBounds.x
+enum class Directions(private val cursor: Int) {
+  NORTH(Cursor.N_RESIZE_CURSOR) {
+    override fun getLimitedDelta(
+      startingBounds: Rectangle,
+      parentBounds: Rectangle,
+      deltaX: Int,
+      deltaY: Int
+    ) = Point(0, getDeltaY(deltaY, startingBounds))
+    override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
+      rect.x,
+      rect.y - delta.y,
+      rect.width,
+      rect.height + delta.y
     )
-    return dx.coerceIn(MIN.width - startingBounds.width, left)
-  }
-
-  private fun getDeltaX(dx: Int, parentBounds: Rectangle): Int {
-    val right = maxOf(
-      startingBounds.width - MAX.width,
-      startingBounds.x + startingBounds.width - parentBounds.width
+  },
+  SOUTH(Cursor.S_RESIZE_CURSOR) {
+    override fun getLimitedDelta(
+      startingBounds: Rectangle,
+      parentBounds: Rectangle,
+      deltaX: Int,
+      deltaY: Int
+    ) = Point(0, getDeltaY(deltaY, parentBounds, startingBounds))
+    override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
+      rect.x,
+      rect.y,
+      rect.width,
+      rect.height - delta.y
     )
-    return dx.coerceIn(right, startingBounds.width - MIN.width)
-  }
-
-  private fun getDeltaY(dy: Int): Int {
-    val top = minOf(
-      MAX.height - startingBounds.height,
-      startingBounds.y
+  },
+  WEST(Cursor.W_RESIZE_CURSOR) {
+    override fun getLimitedDelta(
+      startingBounds: Rectangle,
+      parentBounds: Rectangle,
+      deltaX: Int,
+      deltaY: Int
+    ) = Point(getDeltaX(deltaX, startingBounds), 0)
+    override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
+      rect.x - delta.x,
+      rect.y,
+      rect.width + delta.x,
+      rect.height
     )
-    return dy.coerceIn(MIN.height - startingBounds.height, top)
-  }
-
-  private fun getDeltaY(dy: Int, parentBounds: Rectangle): Int {
-    val bottom = maxOf(
-      startingBounds.height - MAX.height,
-      startingBounds.y + startingBounds.height - parentBounds.height
+  },
+  EAST(Cursor.E_RESIZE_CURSOR) {
+    override fun getLimitedDelta(
+      startingBounds: Rectangle,
+      parentBounds: Rectangle,
+      deltaX: Int,
+      deltaY: Int
+    ) = Point(getDeltaX(deltaX, parentBounds, startingBounds), 0)
+    override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
+      rect.x,
+      rect.y,
+      rect.width - delta.x,
+      rect.height
     )
-    return dy.coerceIn(bottom, startingBounds.height - MIN.height)
-  }
+  },
+  NORTH_WEST(Cursor.NW_RESIZE_CURSOR) {
+    override fun getLimitedDelta(
+      startingBounds: Rectangle,
+      parentBounds: Rectangle,
+      deltaX: Int,
+      deltaY: Int
+    ) = Point(getDeltaX(deltaX, startingBounds), getDeltaY(deltaY, startingBounds))
+    override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
+      rect.x - delta.x,
+      rect.y - delta.y,
+      rect.width + delta.x,
+      rect.height + delta.y
+    )
+  },
+  NORTH_EAST(Cursor.NE_RESIZE_CURSOR) {
+    override fun getLimitedDelta(
+      startingBounds: Rectangle,
+      parentBounds: Rectangle,
+      deltaX: Int,
+      deltaY: Int
+    ) = Point(getDeltaX(deltaX, parentBounds, startingBounds), getDeltaY(deltaY, startingBounds))
+    override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
+      rect.x,
+      rect.y - delta.y,
+      rect.width - delta.x,
+      rect.height + delta.y
+    )
+  },
+  SOUTH_WEST(Cursor.SW_RESIZE_CURSOR) {
+    override fun getLimitedDelta(
+      startingBounds: Rectangle,
+      parentBounds: Rectangle,
+      deltaX: Int,
+      deltaY: Int
+    ) = Point(getDeltaX(deltaX, startingBounds), getDeltaY(deltaY, parentBounds, startingBounds))
+    override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
+      rect.x,
+      rect.y,
+      rect.width,
+      rect.height
+    )
+  },
+  SOUTH_EAST(Cursor.SE_RESIZE_CURSOR) {
+    override fun getLimitedDelta(
+      startingBounds: Rectangle,
+      parentBounds: Rectangle,
+      deltaX: Int,
+      deltaY: Int
+    ) = Point(getDeltaX(deltaX, parentBounds, startingBounds), getDeltaY(deltaY, parentBounds, startingBounds))
+    override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
+      rect.x,
+      rect.y,
+      rect.width - delta.x,
+      rect.height - delta.y
+    )
+  },
+  MOVE(Cursor.MOVE_CURSOR) {
+    override fun getLimitedDelta(
+      startingBounds: Rectangle,
+      parentBounds: Rectangle,
+      deltaX: Int,
+      deltaY: Int
+    ) = Point(deltaX, deltaY)
+    override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
+      rect.x - delta.x,
+      rect.y - delta.y,
+      rect.width,
+      rect.height
+    )
+  };
 
-  private fun getLimitedDelta(
+  abstract fun getBounds(rect: Rectangle, delta: Point): Rectangle
+
+  abstract fun getLimitedDelta(
+    startingBounds: Rectangle,
     parentBounds: Rectangle,
     deltaX: Int,
     deltaY: Int
-  ) = when (cursor.type) {
-      Cursor.N_RESIZE_CURSOR -> Point(0, getDeltaY(deltaY))
-      Cursor.S_RESIZE_CURSOR -> Point(0, getDeltaY(deltaY, parentBounds))
-      Cursor.W_RESIZE_CURSOR -> Point(getDeltaX(deltaX), 0)
-      Cursor.E_RESIZE_CURSOR -> Point(getDeltaX(deltaX, parentBounds), 0)
-      Cursor.NW_RESIZE_CURSOR -> Point(getDeltaX(deltaX), getDeltaY(deltaY))
-      Cursor.SW_RESIZE_CURSOR -> Point(getDeltaX(deltaX), getDeltaY(deltaY, parentBounds))
-      Cursor.NE_RESIZE_CURSOR -> Point(getDeltaX(deltaX, parentBounds), getDeltaY(deltaY))
-      Cursor.SE_RESIZE_CURSOR -> Point(getDeltaX(deltaX, parentBounds), getDeltaY(deltaY, parentBounds))
-      else -> Point(deltaX, deltaY)
-    }
+  ): Point
 
   companion object {
     private val MIN = Dimension(50, 50)
     private val MAX = Dimension(500, 500)
-  }
-}
 
-enum class Directions(
-  private val cursor: Int,
-  private val getBounds: BiFunction<Rectangle, Point, Rectangle>
-) {
-  NORTH(
-    Cursor.N_RESIZE_CURSOR,
-    BiFunction { r, d ->
-      Rectangle(
-        r.x,
-        r.y - d.y,
-        r.width,
-        r.height + d.y
-      )
-    }
-  ),
-  SOUTH(
-    Cursor.S_RESIZE_CURSOR,
-    BiFunction { r, d ->
-      Rectangle(
-        r.x,
-        r.y,
-        r.width,
-        r.height - d.y
-      )
-    }
-  ),
-  WEST(
-    Cursor.W_RESIZE_CURSOR,
-    BiFunction { r, d ->
-      Rectangle(
-        r.x - d.x,
-        r.y,
-        r.width + d.x,
-        r.height
-      )
-    }
-  ),
-  EAST(
-    Cursor.E_RESIZE_CURSOR,
-    BiFunction { r, d ->
-      Rectangle(
-        r.x,
-        r.y,
-        r.width - d.x,
-        r.height
-      )
-    }
-  ),
-  NORTH_WEST(
-    Cursor.NW_RESIZE_CURSOR,
-    BiFunction { r, d ->
-      Rectangle(
-        r.x - d.x,
-        r.y - d.y,
-        r.width + d.x,
-        r.height + d.y
-      )
-    }
-  ),
-  NORTH_EAST(
-    Cursor.NE_RESIZE_CURSOR,
-    BiFunction { r, d ->
-      Rectangle(
-        r.x,
-        r.y - d.y,
-        r.width - d.x,
-        r.height + d.y
-      )
-    }
-  ),
-  SOUTH_WEST(
-    Cursor.SW_RESIZE_CURSOR,
-    BiFunction { r, _ ->
-      Rectangle(
-        r.x,
-        r.y,
-        r.width,
-        r.height
-      )
-    }
-  ),
-  SOUTH_EAST(
-    Cursor.SE_RESIZE_CURSOR,
-    BiFunction { r, d ->
-      Rectangle(
-        r.x,
-        r.y,
-        r.width - d.x,
-        r.height - d.y
-      )
-    }
-  ),
-  MOVE(
-    Cursor.MOVE_CURSOR,
-    BiFunction { r, d ->
-      Rectangle(
-        r.x - d.x,
-        r.y - d.y,
-        r.width,
-        r.height
-      )
-    }
-  );
-
-  fun getBounds(rect: Rectangle, delta: Point) = getBounds.apply(rect, delta)
-
-  companion object {
     fun getByCursorType(cursor: Int): Directions? =
-        EnumSet.allOf(Directions::class.java).first { d -> d.cursor == cursor }
+      EnumSet.allOf(Directions::class.java).first { d -> d.cursor == cursor }
+
+    private fun getDeltaX(dx: Int, startingBounds: Rectangle): Int {
+      val left = minOf(
+        MAX.width - startingBounds.width,
+        startingBounds.x
+      )
+      return dx.coerceIn(MIN.width - startingBounds.width, left)
+    }
+
+    private fun getDeltaX(dx: Int, parentBounds: Rectangle, startingBounds: Rectangle): Int {
+      val right = maxOf(
+        startingBounds.width - MAX.width,
+        startingBounds.x + startingBounds.width - parentBounds.width
+      )
+      return dx.coerceIn(right, startingBounds.width - MIN.width)
+    }
+
+    private fun getDeltaY(dy: Int, startingBounds: Rectangle): Int {
+      val top = minOf(
+        MAX.height - startingBounds.height,
+        startingBounds.y
+      )
+      return dy.coerceIn(MIN.height - startingBounds.height, top)
+    }
+
+    private fun getDeltaY(dy: Int, parentBounds: Rectangle, startingBounds: Rectangle): Int {
+      val bottom = maxOf(
+        startingBounds.height - MAX.height,
+        startingBounds.y + startingBounds.height - parentBounds.height
+      )
+      return dy.coerceIn(bottom, startingBounds.height - MIN.height)
+    }
   }
 }
 
