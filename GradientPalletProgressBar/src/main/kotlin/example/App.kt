@@ -52,30 +52,26 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 open class BackgroundTask : SwingWorker<Unit, Unit>() {
+  @Throws(InterruptedException::class)
   override fun doInBackground() {
     var current = 0
     val lengthOfTask = 100
     while (current <= lengthOfTask && !isCancelled()) {
-      try { // dummy task
-        Thread.sleep(50)
-      } catch (ex: InterruptedException) {
-        return
-      }
+      Thread.sleep(50) // dummy task
       setProgress(100 * current / lengthOfTask)
       current++
     }
   }
 }
 
-class ProgressListener(val progressBar: JProgressBar) : PropertyChangeListener {
+class ProgressListener(private val progressBar: JProgressBar) : PropertyChangeListener {
   init {
     this.progressBar.setValue(0)
   }
 
   override fun propertyChange(e: PropertyChangeEvent) {
-    val strPropertyName = e.getPropertyName()
     val nv = e.getNewValue()
-    if ("progress" == strPropertyName && nv is Int) {
+    if ("progress" == e.getPropertyName() && nv is Int) {
       progressBar.setIndeterminate(false)
       progressBar.setValue(nv)
     }
@@ -112,9 +108,7 @@ class GradientPalletProgressBarUI : BasicProgressBarUI() {
   }
 
   private fun getColorFromPallet(pallet: IntArray, x: Float): Color {
-    if (x < 0f || x > 1f) {
-      throw IllegalArgumentException("Parameter outside of expected range")
-    }
+    require(x in 0f..1f) { "Parameter outside of expected range" }
     val i = (pallet.size * x).toInt()
     val max = pallet.size - 1
     val index = minOf(maxOf(i, 0), max)
