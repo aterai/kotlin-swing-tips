@@ -51,22 +51,22 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class OneDirectionIndeterminateProgressBarUI : BasicProgressBarUI() {
+class OneDirectionIndeterminateProgressBarUI : BasicProgressBarUI() {
   // @see com/sun/java/swing/plaf/windows/WindowsProgressBarUI.java
-  protected override fun getBox(r: Rectangle): Rectangle {
+  override fun getBox(r: Rectangle): Rectangle {
     val rect = super.getBox(r)
-    val framecount = getFrameCount() / 2
-    val currentFrame = getAnimationIndex() % framecount
+    val frameCount = getFrameCount() / 2
+    val currentFrame = getAnimationIndex() % frameCount
 
     if (progressBar.getOrientation() == JProgressBar.VERTICAL) {
       var len = progressBar.getHeight()
       len += rect.height * 2 // add 2x for the trails
-      val delta = len / framecount.toDouble()
+      val delta = len / frameCount.toDouble()
       rect.y = (delta * currentFrame).toInt()
     } else {
       var len = progressBar.getWidth()
       len += rect.width * 2 // add 2x for the trails
-      val delta = len / framecount.toDouble()
+      val delta = len / frameCount.toDouble()
       rect.x = (delta * currentFrame).toInt()
     }
     return rect
@@ -74,31 +74,21 @@ internal class OneDirectionIndeterminateProgressBarUI : BasicProgressBarUI() {
 }
 
 class BackgroundTask : SwingWorker<String, Unit>() {
+  @Throws(InterruptedException::class)
   override fun doInBackground(): String {
-    try { // dummy task
-      Thread.sleep(5000)
-    } catch (ex: InterruptedException) {
-      return "Interrupted"
-    }
-
+    Thread.sleep(5000)
     var current = 0
     val lengthOfTask = 100
-    var text = "Done"
     while (current <= lengthOfTask && !isCancelled()) {
-      try { // dummy task
-        Thread.sleep(50)
-      } catch (ex: InterruptedException) {
-        text = "Interrupted"
-        break
-      }
+      Thread.sleep(50)
       setProgress(100 * current / lengthOfTask)
       current++
     }
-    return text
+    return "Done"
   }
 }
 
-internal class ProgressListener(private val progressBar: JProgressBar) : PropertyChangeListener {
+class ProgressListener(private val progressBar: JProgressBar) : PropertyChangeListener {
   init {
     this.progressBar.setValue(0)
   }
