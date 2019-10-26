@@ -176,9 +176,7 @@ class DnDTabbedPane : JTabbedPane() {
 
   // @Override TransferHandler.DropLocation dropLocationForPoint(Point p) {
   fun tabDropLocationForPoint(p: Point): DropLocation {
-    if (dropMode != DropMode.INSERT) {
-      assert(false) { "Unexpected drop mode" }
-    }
+    check(dropMode == DropMode.INSERT) { "Unexpected drop mode" }
     for (i in 0 until getTabCount()) {
       if (getBoundsAt(i).contains(p)) {
         return DropLocation(p, i)
@@ -330,9 +328,11 @@ class TabDropTargetAdapter : DropTargetAdapter() {
     val c = dtde.getDropTargetContext().getComponent()
     println("DropTargetListener#dragEnter: ${c.getName()}")
   }
+
   // @Override public void dragOver(DropTargetDragEvent dtde) {
   //   // System.out.println("dragOver")
   // }
+
   // @Override public void dropActionChanged(DropTargetDragEvent dtde) {
   //   System.out.println("dropActionChanged")
   // }
