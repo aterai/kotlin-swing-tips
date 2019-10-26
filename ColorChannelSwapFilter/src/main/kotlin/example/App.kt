@@ -89,7 +89,7 @@ class BlockedColorLayerUI<V : Component> : LayerUI<V>() {
     if (isPreventing && c is JLayer<*>) {
       val d = c.getView().getSize()
       val buffer = buf?.takeIf { it.width == d.width && it.height == d.height }
-          ?: BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_ARGB)
+        ?: BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_ARGB)
       buf = buffer
       val g2 = buffer.createGraphics()
       super.paint(g2, c)
@@ -126,9 +126,10 @@ class BackgroundTask : SwingWorker<String, Void>() {
 
 class ProgressListener(private val progressBar: JProgressBar) : PropertyChangeListener {
   override fun propertyChange(e: PropertyChangeEvent) {
-    if ("progress" == e.getPropertyName()) {
+    val nv = e.getNewValue()
+    if ("progress" == e.getPropertyName() && nv is Int) {
       progressBar.setIndeterminate(false)
-      progressBar.setValue(e.getNewValue() as Int)
+      progressBar.setValue(nv)
     }
   }
 
