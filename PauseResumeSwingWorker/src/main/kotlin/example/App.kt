@@ -26,9 +26,7 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
       statusPanel.add(bar1, BorderLayout.NORTH)
       statusPanel.add(bar2, BorderLayout.SOUTH)
       statusPanel.revalidate()
-      val w = ProgressTask()
-      worker = w
-      w.execute()
+      worker = ProgressTask().also { it.execute() }
     }
 
     pauseButton.setEnabled(false)
@@ -48,7 +46,7 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
       pauseButton.setEnabled(false)
     }
 
-    val box = createRightAlignButtonBox4(listOf(pauseButton, cancelButton, runButton), 80, 5)
+    val box = createRightAlignButtonBox4(pauseButton, cancelButton, runButton)
     add(JScrollPane(area))
     add(box, BorderLayout.NORTH)
     add(statusPanel, BorderLayout.SOUTH)
@@ -130,7 +128,9 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
   }
 
   // @see https://ateraimemo.com/Swing/ButtonWidth.html
-  private fun createRightAlignButtonBox4(list: List<Component>, buttonWidth: Int, gap: Int): Component {
+  private fun createRightAlignButtonBox4(vararg list: Component): Component {
+    val buttonWidth = 80
+    val gap = 5
     val layout = SpringLayout()
     val p = object : JPanel(layout) {
       override fun getPreferredSize(): Dimension {
@@ -164,6 +164,7 @@ data class Progress(val component: ProgressType, val value: Any)
 open class BackgroundTask : SwingWorker<String, Progress>() {
   var isPaused = false
 
+  @Throws(InterruptedException::class)
   override fun doInBackground(): String {
     var current = 0
     val lengthOfTask = 12 // fileList.size();
@@ -172,11 +173,7 @@ open class BackgroundTask : SwingWorker<String, Progress>() {
     while (current < lengthOfTask && !isCancelled()) {
       publish(Progress(ProgressType.TOTAL, 100 * current / lengthOfTask))
       publish(Progress(ProgressType.LOG, "*"))
-      try {
-        convertFileToSomething()
-      } catch (ex: InterruptedException) {
-        return "Interrupted"
-      }
+      convertFileToSomething()
       current++
     }
     publish(Progress(ProgressType.LOG, "\n"))
@@ -190,11 +187,7 @@ open class BackgroundTask : SwingWorker<String, Progress>() {
     val lengthOfTask = (10..60).random()
     while (current <= lengthOfTask && !isCancelled()) {
       if (isPaused) {
-        try {
-          Thread.sleep(500)
-        } catch (ex: InterruptedException) {
-          return
-        }
+        Thread.sleep(500)
         publish(Progress(ProgressType.PAUSE, blinking))
         blinking = blinking xor true
         continue
