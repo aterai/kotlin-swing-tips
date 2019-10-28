@@ -5,6 +5,8 @@ import java.awt.event.MouseEvent
 import java.io.File
 import java.util.EventObject
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.event.TreeModelEvent
+import javax.swing.event.TreeModelListener
 import javax.swing.event.TreeSelectionEvent
 import javax.swing.event.TreeSelectionListener
 import javax.swing.filechooser.FileSystemView
@@ -16,7 +18,6 @@ import javax.swing.tree.TreeCellRenderer
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-
     val fileSystemView = FileSystemView.getFileSystemView()
     val root = DefaultMutableTreeNode()
     val treeModel = DefaultTreeModel(root)
@@ -93,28 +94,11 @@ enum class Status {
   SELECTED, DESELECTED, INDETERMINATE
 }
 
-class CheckBoxNode {
-  private val file: File
-  private val status: Status
-
-  constructor(file: File) {
-    this.file = file
-    this.status = Status.INDETERMINATE
-  }
-
-  constructor(file: File, status: Status) {
-    this.file = file
-    this.status = status
-  }
-
-  fun getFile() = file
-
-  fun getStatus() = status
-
-  override fun toString() = file.getName()
+class CheckBoxNode(val file: File, val status: Status) {
+  override fun toString() = file.getName() ?: ""
 }
 
-internal class FileTreeCellRenderer(private val fileSystemView: FileSystemView) : TreeCellRenderer {
+class FileTreeCellRenderer(private val fileSystemView: FileSystemView) : TreeCellRenderer {
   private val checkBox = TriStateCheckBox().also { it.setOpaque(false) }
   private val renderer = DefaultTreeCellRenderer()
   private val panel = JPanel(BorderLayout()).also {
@@ -140,12 +124,12 @@ internal class FileTreeCellRenderer(private val fileSystemView: FileSystemView) 
       checkBox.setEnabled(tree.isEnabled())
       checkBox.setFont(tree.getFont())
       (value.getUserObject() as? CheckBoxNode)?.also {
-        checkBox.setIcon(if (it.getStatus() == Status.INDETERMINATE) IndeterminateIcon() else null)
-        val file = it.getFile()
+        checkBox.setIcon(if (it.status == Status.INDETERMINATE) IndeterminateIcon() else null)
+        val file = it.file
         l.setIcon(fileSystemView.getSystemIcon(file))
         l.setText(fileSystemView.getSystemDisplayName(file))
         l.setToolTipText(file.getPath())
-        checkBox.setSelected(it.getStatus() == Status.SELECTED)
+        checkBox.setSelected(it.status == Status.SELECTED)
       }
       panel.add(l)
       panel
@@ -153,7 +137,7 @@ internal class FileTreeCellRenderer(private val fileSystemView: FileSystemView) 
   }
 }
 
-internal class CheckBoxNodeEditor(val fileSystemView: FileSystemView) : AbstractCellEditor(), TreeCellEditor {
+class CheckBoxNodeEditor(private val fileSystemView: FileSystemView) : AbstractCellEditor(), TreeCellEditor {
   private val checkBox = TriStateCheckBox().also {
     it.setOpaque(false)
     it.setFocusable(false)
@@ -183,11 +167,11 @@ internal class CheckBoxNodeEditor(val fileSystemView: FileSystemView) : Abstract
       checkBox.setEnabled(tree.isEnabled())
       checkBox.setFont(tree.getFont())
       (value.getUserObject() as? CheckBoxNode)?.also {
-        checkBox.setIcon(if (it.getStatus() == Status.INDETERMINATE) IndeterminateIcon() else null)
-        file = it.getFile()
+        checkBox.setIcon(if (it.status == Status.INDETERMINATE) IndeterminateIcon() else null)
+        file = it.file
         l.setIcon(fileSystemView.getSystemIcon(file))
         l.setText(fileSystemView.getSystemDisplayName(file))
-        checkBox.setSelected(it.getStatus() == Status.SELECTED)
+        checkBox.setSelected(it.status == Status.SELECTED)
       }
       panel.add(l)
       panel
@@ -213,36 +197,109 @@ internal class CheckBoxNodeEditor(val fileSystemView: FileSystemView) : Abstract
   }
 }
 
-internal class FolderSelectionListener(val fileSystemView: FileSystemView) : TreeSelectionListener {
+class FolderSelectionListener(val fileSystemView: FileSystemView) : TreeSelectionListener {
   override fun valueChanged(e: TreeSelectionEvent) {
-    val pnode = e.getPath().getLastPathComponent()
-    if (pnode !is DefaultMutableTreeNode || !pnode.isLeaf()) {
+    val node = e.getPath().getLastPathComponent()
+    if (node !is DefaultMutableTreeNode || !node.isLeaf()) {
       return
     }
-    val check = pnode.getUserObject()
+    val check = node.getUserObject()
     val model = (e.getSource() as? JTree)?.getModel()
-    if (model !is DefaultTreeModel || check !is CheckBoxNode || !check.getFile().isDirectory()) {
+    if (model !is DefaultTreeModel || check !is CheckBoxNode || !check.file.isDirectory()) {
       return
     }
-    val parentStatus = if (check.getStatus() == Status.SELECTED) Status.SELECTED else Status.DESELECTED
-    val worker = object : BackgroundTask(fileSystemView, check.getFile()) {
-      protected override fun process(chunks: List<File>) {
+    val parentStatus = if (check.status == Status.SELECTED) Status.SELECTED else Status.DESELECTED
+    val worker = object : BackgroundTask(fileSystemView, check.file) {
+      override fun process(chunks: List<File>) {
         chunks.map { CheckBoxNode(it, parentStatus) }
           .map { DefaultMutableTreeNode(it) }
-          .forEach { model.insertNodeInto(it, pnode, pnode.getChildCount()) }
+          .forEach { model.insertNodeInto(it, node, node.getChildCount()) }
       }
     }
     worker.execute()
   }
 }
 
-open class BackgroundTask(val fileSystemView: FileSystemView, val parent: File) : SwingWorker<String, File>() {
+open class BackgroundTask(
+  private val fileSystemView: FileSystemView,
+  private val parent: File
+) : SwingWorker<String, File>() {
+  @Throws(InterruptedException::class)
   override fun doInBackground(): String {
     fileSystemView.getFiles(parent, true)
       .filter { it.isDirectory() }
       .forEach { this.publish(it) }
     return "done"
   }
+}
+
+class CheckBoxStatusUpdateListener : TreeModelListener {
+  private var adjusting = false
+
+  override fun treeNodesChanged(e: TreeModelEvent) {
+    if (adjusting) {
+      return
+    }
+    adjusting = true
+    val model = e.getSource() as? DefaultTreeModel ?: return
+    // https://docs.oracle.com/javase/8/docs/api/javax/swing/event/TreeModelListener.html#treeNodesChanged-javax.swing.event.TreeModelEvent-
+    // To indicate the root has changed, childIndices and children will be null.
+    val children = e.getChildren()
+    val isRoot = children == null
+
+    // If the parent node exists, update its status
+    if (!isRoot) {
+      val parent = e.getTreePath()
+      var n = parent.getLastPathComponent() as? DefaultMutableTreeNode
+      while (n != null) {
+        updateParentUserObject(n)
+        n = n.getParent() as? DefaultMutableTreeNode ?: break
+      }
+      model.nodeChanged(n)
+    }
+
+    // Update the status of all child nodes to be the same as the current node status
+    val isOnlyOneNodeSelected = children != null && children.size == 1
+    val current = if (isOnlyOneNodeSelected) children[0] else model.getRoot()
+    if (current is DefaultMutableTreeNode) {
+      val status = (current.getUserObject() as? CheckBoxNode)?.status ?: Status.INDETERMINATE
+      updateAllChildrenUserObject(current, status)
+      model.nodeChanged(current)
+    }
+    adjusting = false
+  }
+
+  private fun updateParentUserObject(parent: DefaultMutableTreeNode) {
+    val list = parent.children().toList()
+      .filterIsInstance<DefaultMutableTreeNode>()
+      .mapNotNull { (it.getUserObject() as? CheckBoxNode)?.status }
+
+    (parent.getUserObject() as? CheckBoxNode)?.also { node ->
+      val status = when {
+        list.all { it === Status.DESELECTED } -> Status.DESELECTED
+        list.all { it === Status.SELECTED } -> Status.SELECTED
+        else -> Status.INDETERMINATE
+      }
+      parent.setUserObject(CheckBoxNode(node.file, status))
+    }
+  }
+
+  private fun updateAllChildrenUserObject(parent: DefaultMutableTreeNode, status: Status) {
+    parent.breadthFirstEnumeration().toList()
+      .filterIsInstance<DefaultMutableTreeNode>()
+      .filter { it != parent }
+      .forEach {
+        (it.getUserObject() as? CheckBoxNode)?.also { check ->
+          it.setUserObject(CheckBoxNode(check.file, status))
+        }
+      }
+  }
+
+  override fun treeNodesInserted(e: TreeModelEvent) { /* not needed */ }
+
+  override fun treeNodesRemoved(e: TreeModelEvent) { /* not needed */ }
+
+  override fun treeStructureChanged(e: TreeModelEvent) { /* not needed */ }
 }
 
 fun main() {
