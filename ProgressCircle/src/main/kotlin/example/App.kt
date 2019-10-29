@@ -110,16 +110,12 @@ class ProgressCircleUI : BasicProgressBarUI() {
 }
 
 open class BackgroundTask : SwingWorker<String, Unit>() {
+  @Throws(InterruptedException::class)
   override fun doInBackground(): String {
     var current = 0
     val lengthOfTask = 100
     while (current <= lengthOfTask && !isCancelled()) {
-      try { // dummy task
-        Thread.sleep(80)
-      } catch (ex: InterruptedException) {
-        return "Interrupted"
-      }
-
+      Thread.sleep(80) // dummy task
       setProgress(100 * current / lengthOfTask)
       current++
     }
@@ -133,10 +129,10 @@ class ProgressListener(private val progressBar: JProgressBar) : PropertyChangeLi
   }
 
   override fun propertyChange(e: PropertyChangeEvent) {
-    if ("progress" == e.getPropertyName()) {
+    val iv = e.getNewValue()
+    if ("progress" == e.getPropertyName() && iv is Int) {
       progressBar.setIndeterminate(false)
-      val progress = e.getNewValue() as? Int ?: 0
-      progressBar.setValue(progress)
+      progressBar.setValue(iv)
     }
   }
 }
