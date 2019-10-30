@@ -21,7 +21,7 @@ class MainPanel : JPanel(BorderLayout()) {
         return d
       }
     }
-    textArea.setText("aaaaaaaaa\nbbbbbbbbbbbbbb\n\n\n\n\n\n\n\n\n\nccccccccccccc")
+    textArea.setText("1111111111\n222222222222\n\n\n\n\n\n\n\n\n\n333333333333333")
     textArea.setCaretPosition(0)
     textArea.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 0))
 
@@ -45,15 +45,6 @@ class LineNumberView(private val textArea: JTextArea) : JComponent() {
   private val fontHeight: Int
   private val fontDescent: Int
   private val fontLeading: Int
-
-  protected fun getComponentWidth(): Int {
-    val lineCount = textArea.getLineCount()
-    val maxDigits = maxOf(3, lineCount.toString().length)
-    val i = getInsets()
-    return maxDigits * fontMetrics.stringWidth("0") + i.left + i.right
-  }
-
-  override fun getPreferredSize() = Dimension(getComponentWidth(), textArea.getHeight())
 
   init {
     val font = textArea.getFont()
@@ -84,20 +75,23 @@ class LineNumberView(private val textArea: JTextArea) : JComponent() {
     })
     val i = textArea.getInsets()
     setBorder(BorderFactory.createCompoundBorder(
-        BorderFactory.createMatteBorder(0, 0, 0, 1, Color.GRAY),
-        BorderFactory.createEmptyBorder(i.top, MARGIN, i.bottom, MARGIN - 1)))
+      BorderFactory.createMatteBorder(0, 0, 0, 1, Color.GRAY),
+      BorderFactory.createEmptyBorder(i.top, MARGIN, i.bottom, MARGIN - 1)))
     setOpaque(true)
     setBackground(Color.WHITE)
     setFont(font)
   }
 
-  private fun getLineAtPoint(y: Int): Int {
-    val root = textArea.getDocument().getDefaultRootElement()
-    val pos = textArea.viewToModel(Point(0, y))
-    return root.getElementIndex(pos)
+  private fun getComponentWidth(): Int {
+    val lineCount = textArea.getLineCount()
+    val maxDigits = maxOf(3, lineCount.toString().length)
+    val i = getInsets()
+    return maxDigits * fontMetrics.stringWidth("0") + i.left + i.right
   }
 
-  protected override fun paintComponent(g: Graphics) {
+  override fun getPreferredSize() = Dimension(getComponentWidth(), textArea.getHeight())
+
+  override fun paintComponent(g: Graphics) {
     g.setColor(getBackground())
     val clip = g.getClipBounds()
     g.fillRect(clip.x, clip.y, clip.width, clip.height)
@@ -115,6 +109,12 @@ class LineNumberView(private val textArea: JTextArea) : JComponent() {
       g.drawString(text, x, y)
       y += fontDescent + fontLeading
     }
+  }
+
+  private fun getLineAtPoint(y: Int): Int {
+    val root = textArea.getDocument().getDefaultRootElement()
+    val pos = textArea.viewToModel(Point(0, y))
+    return root.getElementIndex(pos)
   }
 
   companion object {
