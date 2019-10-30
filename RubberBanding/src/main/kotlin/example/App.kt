@@ -13,9 +13,9 @@ class MainPanel : JPanel(BorderLayout()) {
   init {
     val model = DefaultListModel<ListItem>().also {
       // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
-      it.addElement(ListItem("ADFFDF asd", "wi0054-32.png"))
+      it.addElement(ListItem("wi0054 aaa", "wi0054-32.png"))
       it.addElement(ListItem("test", "wi0062-32.png"))
-      it.addElement(ListItem("adfasdf", "wi0063-32.png"))
+      it.addElement(ListItem("wi0063 00", "wi0063-32.png"))
       it.addElement(ListItem("Test", "wi0064-32.png"))
       it.addElement(ListItem("12345", "wi0096-32.png"))
       it.addElement(ListItem("111111", "wi0054-32.png"))
@@ -27,21 +27,20 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-data class ListItem(val title: String, val iconfile: String) {
-  val nicon: ImageIcon
-  val sicon: ImageIcon
+data class ListItem(val title: String, val iconFile: String) {
+  val icon = ImageIcon(javaClass.getResource(iconFile))
+  val selectedIcon: ImageIcon
 
   init {
-    this.nicon = ImageIcon(javaClass.getResource(iconfile))
-    val ip = FilteredImageSource(nicon.getImage().getSource(), SelectedImageFilter())
-    this.sicon = ImageIcon(Toolkit.getDefaultToolkit().createImage(ip))
+    val ip = FilteredImageSource(icon.getImage().getSource(), SelectedImageFilter())
+    this.selectedIcon = ImageIcon(Toolkit.getDefaultToolkit().createImage(ip))
   }
 }
 
-internal class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListItem>(model) {
+class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListItem>(model) {
   private var rbl: RubberBandingListener? = null
   private var rubberBandColor: Color? = null
-  protected val rubberBand: Path2D = Path2D.Double()
+  private val rubberBand = Path2D.Double()
 
   override fun updateUI() {
     setSelectionForeground(null) // Nimbus
@@ -52,7 +51,7 @@ internal class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListI
     super.updateUI()
 
     rubberBandColor = makeRubberBandColor(getSelectionBackground())
-    setLayoutOrientation(JList.HORIZONTAL_WRAP)
+    setLayoutOrientation(HORIZONTAL_WRAP)
     setVisibleRowCount(0)
     setFixedCellWidth(62)
     setFixedCellHeight(62)
@@ -64,7 +63,7 @@ internal class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListI
     addMouseListener(rbl)
   }
 
-  protected override fun paintComponent(g: Graphics) {
+  override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     val g2 = g.create() as Graphics2D
     g2.setPaint(getSelectionBackground())
@@ -90,7 +89,8 @@ internal class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListI
       rubberBand.closePath()
 
       val indices = (0 until l.getModel().getSize())
-          .filter { rubberBand.intersects(l.getCellBounds(it, it)) }.toIntArray()
+        .filter { rubberBand.intersects(l.getCellBounds(it, it)) }
+        .toIntArray()
       l.setSelectedIndices(indices)
       l.repaint()
     }
@@ -134,12 +134,12 @@ internal class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListI
   }
 }
 
-internal class SelectedImageFilter : RGBImageFilter() {
+class SelectedImageFilter : RGBImageFilter() {
   // override fun filterRGB(x: Int, y: Int, argb: Int) = argb and -0x100 or (argb and 0xFF shr 1)
   override fun filterRGB(x: Int, y: Int, argb: Int) = argb and 0xFF_FF_FF_00.toInt() or (argb and 0xFF shr 1)
 }
 
-internal class ListItemListCellRenderer : ListCellRenderer<ListItem> {
+class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   private val renderer = JPanel(BorderLayout())
   private val icon = JLabel(null as? Icon?, SwingConstants.CENTER)
   private val label = JLabel("", SwingConstants.CENTER)
@@ -157,7 +157,7 @@ internal class ListItemListCellRenderer : ListCellRenderer<ListItem> {
     renderer.add(label, BorderLayout.SOUTH)
   }
 
-  fun getNimbusNoFocusBorder(): Border {
+  private fun getNimbusNoFocusBorder(): Border {
     val i = focusBorder.getBorderInsets(label)
     return BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
   }
@@ -172,12 +172,12 @@ internal class ListItemListCellRenderer : ListCellRenderer<ListItem> {
     label.setText(value.title)
     label.setBorder(if (cellHasFocus) focusBorder else noFocusBorder)
     if (isSelected) {
-      icon.setIcon(value.sicon)
+      icon.setIcon(value.selectedIcon)
       label.setForeground(list.getSelectionForeground())
       label.setBackground(list.getSelectionBackground())
       label.setOpaque(true)
     } else {
-      icon.setIcon(value.nicon)
+      icon.setIcon(value.icon)
       label.setForeground(list.getForeground())
       label.setBackground(list.getBackground())
       label.setOpaque(false)
