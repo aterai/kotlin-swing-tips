@@ -94,7 +94,7 @@ enum class Status {
   SELECTED, DESELECTED, INDETERMINATE
 }
 
-class CheckBoxNode(val file: File, val status: Status) {
+data class CheckBoxNode(val file: File, val status: Status) {
   override fun toString() = file.getName() ?: ""
 }
 
