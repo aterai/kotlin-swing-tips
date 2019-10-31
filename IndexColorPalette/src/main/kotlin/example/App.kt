@@ -23,8 +23,8 @@ class MainPanel : JPanel(BorderLayout()) {
     //   makeMissingImage()
     // }
     val image = runCatching { ImageIO.read(javaClass.getResource("duke.gif")) }
-        .onFailure { it.printStackTrace() }
-        .getOrNull() ?: makeMissingImage()
+      .onFailure { it.printStackTrace() }
+      .getOrNull() ?: makeMissingImage()
 
     label1.setIcon(ImageIcon(image))
 
@@ -42,10 +42,10 @@ class MainPanel : JPanel(BorderLayout()) {
         override fun updateUI() {
           setCellRenderer(null)
           super.updateUI()
-          setLayoutOrientation(JList.HORIZONTAL_WRAP)
+          setLayoutOrientation(HORIZONTAL_WRAP)
           setVisibleRowCount(8)
-          setFixedCellWidth(CELLSZ.width)
-          setFixedCellHeight(CELLSZ.height)
+          setFixedCellWidth(CELL_SIZE.width)
+          setFixedCellHeight(CELL_SIZE.height)
           setCellRenderer(IndexedColorListRenderer())
           getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
           setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
@@ -90,7 +90,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   companion object {
-    val CELLSZ = Dimension(8, 8)
+    val CELL_SIZE = Dimension(8, 8)
   }
 }
 
@@ -111,9 +111,9 @@ internal class ColorIcon(private val color: Color) : Icon {
     g2.dispose()
   }
 
-  override fun getIconWidth() = MainPanel.CELLSZ.width - 2
+  override fun getIconWidth() = MainPanel.CELL_SIZE.width - 2
 
-  override fun getIconHeight() = MainPanel.CELLSZ.height - 2
+  override fun getIconHeight() = MainPanel.CELL_SIZE.height - 2
 }
 
 internal class IndexedColorListRenderer : ListCellRenderer<IndexedColor> {

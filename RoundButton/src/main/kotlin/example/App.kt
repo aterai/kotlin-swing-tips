@@ -24,7 +24,7 @@ class MainPanel : JPanel() {
     add(RoundedCornerButton("Rounded Corner Button"))
     add(object : RoundButton(ImageIcon(MainPanel::class.java.getResource("16x16.png"))) {
       override fun getPreferredSize() = super.getPreferredSize()?.also {
-        val r = 16 + (RoundedCornerButton.FOCUS_STROKE.toInt() + 4) * 2 // test margin = 4
+        val r = 16 + (FOCUS_STROKE.toInt() + 4) * 2 // test margin = 4
         it.setSize(r, r)
       }
     })
@@ -179,7 +179,7 @@ open class RoundButton : RoundedCornerButton {
   }
 }
 
-internal class ShapeButton(private val shape: Shape) : JButton() {
+class ShapeButton(private val shape: Shape) : JButton() {
   private val fc = Color(100, 150, 255, 200)
   private val ac = Color(230, 230, 230)
   private val rc = Color.ORANGE
@@ -231,7 +231,7 @@ internal class ShapeButton(private val shape: Shape) : JButton() {
   override fun contains(x: Int, y: Int) = shape.contains(x.toDouble(), y.toDouble())
 }
 
-internal class DummySizeIcon(private val shape: Shape) : Icon {
+class DummySizeIcon(private val shape: Shape) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) { /* Empty icon */ }
 
   override fun getIconWidth() = shape.getBounds().width

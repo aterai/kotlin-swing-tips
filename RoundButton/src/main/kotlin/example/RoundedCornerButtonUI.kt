@@ -8,14 +8,14 @@ import javax.swing.plaf.basic.BasicButtonListener
 import javax.swing.plaf.basic.BasicButtonUI
 
 class RoundedCornerButtonUI : BasicButtonUI() {
-  protected val fc = Color(100, 150, 255)
-  protected val ac = Color(220, 225, 230)
-  protected val rc = Color.ORANGE
+  private val fc = Color(100, 150, 255)
+  private val ac = Color(220, 225, 230)
+  private val rc = Color.ORANGE
   private var shape: Shape? = null
   private var border: Shape? = null
   private var base: Shape? = null
 
-  protected override fun installDefaults(b: AbstractButton) {
+  override fun installDefaults(b: AbstractButton) {
     super.installDefaults(b)
     b.setContentAreaFilled(false)
     b.setBorderPainted(false)
@@ -25,10 +25,10 @@ class RoundedCornerButtonUI : BasicButtonUI() {
     initShape(b)
   }
 
-  protected override fun installListeners(button: AbstractButton) {
+  override fun installListeners(button: AbstractButton) {
     val listener = object : BasicButtonListener(button) {
       override fun mousePressed(e: MouseEvent) {
-        val b = e.getComponent() as? AbstractButton ?: return@mousePressed
+        val b = e.getComponent() as? AbstractButton ?: return
         initShape(b)
         if (isShapeContains(e.getPoint())) {
           super.mousePressed(e)
@@ -86,24 +86,25 @@ class RoundedCornerButtonUI : BasicButtonUI() {
     super.paint(g, c)
   }
 
-  // protected fun isShapeContains(pt: Point): Boolean {
+  // private fun isShapeContains(pt: Point): Boolean {
   //   val s = shape
   //   return s is Shape && s.contains(pt.getX(), pt.getY())
   // }
-  protected fun isShapeContains(pt: Point) = shape?.contains(pt.getX(), pt.getY()) ?: false
 
-  protected fun initShape(c: Component) {
+  private fun isShapeContains(pt: Point) = shape?.contains(pt.getX(), pt.getY()) ?: false
+
+  private fun initShape(c: Component) {
     if (c.getBounds() != base) {
       base = c.getBounds()
       shape = RoundRectangle2D.Double(0.0, 0.0, c.getWidth() - 1.0, c.getHeight() - 1.0, ARC_WIDTH, ARC_HEIGHT)
       border = RoundRectangle2D.Double(
-          FOCUS_STROKE, FOCUS_STROKE,
-          c.getWidth() - 1 - FOCUS_STROKE * 2, c.getHeight() - 1 - FOCUS_STROKE * 2,
-          ARC_WIDTH, ARC_HEIGHT)
+        FOCUS_STROKE, FOCUS_STROKE,
+        c.getWidth() - 1 - FOCUS_STROKE * 2, c.getHeight() - 1 - FOCUS_STROKE * 2,
+        ARC_WIDTH, ARC_HEIGHT)
     }
   }
 
-  protected fun paintFocusAndRollover(g2: Graphics2D, c: Component, color: Color) {
+  private fun paintFocusAndRollover(g2: Graphics2D, c: Component, color: Color) {
     g2.setPaint(GradientPaint(0f, 0f, color, c.getWidth() - 1f, c.getHeight() - 1f, color.brighter(), true))
     g2.fill(shape)
     g2.setPaint(c.getBackground())

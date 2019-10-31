@@ -63,7 +63,7 @@ class MainPanel : JPanel(BorderLayout()) {
 internal class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListItem>(model) {
   private var rbl: RubberBandingListener? = null
   private var rubberBandColor: Color? = null
-  protected val rubberBand: Path2D = Path2D.Double()
+  private val rubberBand = Path2D.Double()
 
   override fun updateUI() {
     setSelectionForeground(null) // Nimbus
@@ -74,7 +74,7 @@ internal class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListI
     super.updateUI()
 
     rubberBandColor = makeRubberBandColor(getSelectionBackground())
-    setLayoutOrientation(JList.HORIZONTAL_WRAP)
+    setLayoutOrientation(HORIZONTAL_WRAP)
     setVisibleRowCount(0)
     setFixedCellWidth(62)
     setFixedCellHeight(62)
@@ -86,7 +86,7 @@ internal class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListI
     addMouseListener(rbl)
   }
 
-  protected override fun paintComponent(g: Graphics) {
+  override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     val g2 = g.create() as Graphics2D
     g2.setPaint(getSelectionBackground())
@@ -112,7 +112,7 @@ internal class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListI
       rubberBand.closePath()
 
       val indices = (0 until l.getModel().getSize())
-          .filter { rubberBand.intersects(l.getCellBounds(it, it)) }.toIntArray()
+        .filter { rubberBand.intersects(l.getCellBounds(it, it)) }.toIntArray()
       l.setSelectedIndices(indices)
       l.repaint()
     }
@@ -156,9 +156,9 @@ internal class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListI
   }
 }
 
-internal class ListItemListCellRenderer : ListCellRenderer<ListItem> {
+class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   private val label = object : JLabel("", null, SwingConstants.CENTER) {
-    protected override fun paintComponent(g: Graphics) {
+    override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
       if (SELECTED_COLOR == getBackground()) {
         val g2 = g.create() as Graphics2D
@@ -184,7 +184,7 @@ internal class ListItemListCellRenderer : ListCellRenderer<ListItem> {
     renderer.setOpaque(false)
   }
 
-  fun getNimbusNoFocusBorder(): Border {
+  private fun getNimbusNoFocusBorder(): Border {
     val i = focusBorder.getBorderInsets(label)
     return BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
   }
@@ -210,13 +210,13 @@ internal class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   }
 
   companion object {
-    protected val SELECTED_COLOR = Color(50, 100, 255, 64)
+    val SELECTED_COLOR = Color(50, 100, 255, 64)
   }
 }
 
 data class ListItem(val title: String, val icon: Icon)
 
-internal object TextureUtils {
+object TextureUtils {
   // private val DEFAULT_COLOR = Color(0xEE_32_32_32.toInt(), true)
   // private val DEFAULT_COLOR = Color(-0x11CDCDCE, true)
   private val DEFAULT_COLOR = Color(0x32, 0x32, 0x32, 0xEE)
@@ -244,7 +244,7 @@ internal object TextureUtils {
   }
 } /* HideUtilityClassConstructor */
 
-internal class ColorIcon(private val color: Color) : Icon {
+class ColorIcon(private val color: Color) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as Graphics2D
     g2.translate(x, y)
