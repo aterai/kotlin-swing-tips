@@ -36,10 +36,10 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   private fun makeButton(popup: JPopupMenu, title: String, icon: ImageIcon?) =
-      MenuToggleButton(title, icon).also { it.setPopupMenu(popup) }
+    MenuToggleButton(title, icon).also { it.setPopupMenu(popup) }
 }
 
-internal class MenuArrowIcon : Icon {
+class MenuArrowIcon : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as Graphics2D
     g2.translate(x, y)
@@ -55,15 +55,15 @@ internal class MenuArrowIcon : Icon {
   override fun getIconHeight() = 9
 }
 
-internal class MenuToggleButton(text: String = "", icon: Icon? = null) : JToggleButton() {
-  protected var popup: JPopupMenu? = null
+class MenuToggleButton(text: String = "", icon: Icon? = null) : JToggleButton() {
+  private var popup: JPopupMenu? = null
 
-  constructor(icon: Icon) : this("", icon)
+  // constructor(icon: Icon) : this("", icon)
 
   init {
     val action = object : AbstractAction(text) {
       override fun actionPerformed(e: ActionEvent) {
-        val b = e.getSource() as? Component ?: return@actionPerformed
+        val b = e.getSource() as? Component ?: return
         popup?.show(b, 0, b.getHeight())
       }
     }
@@ -86,7 +86,7 @@ internal class MenuToggleButton(text: String = "", icon: Icon? = null) : JToggle
     })
   }
 
-  protected override fun paintComponent(g: Graphics) {
+  override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     val dim = getSize()
     val ins = getInsets()
