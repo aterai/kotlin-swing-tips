@@ -7,6 +7,7 @@ import java.awt.event.ItemEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import kotlin.math.abs
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
@@ -15,26 +16,26 @@ class MainPanel : JPanel(BorderLayout()) {
       it.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
     }
 
-    val heavyweightLightweightMixing = false
+    // val heavyweightLightweightMixing = false
     // val viewport = scroll.getViewport() // Java 6
     val viewport = object : JViewport() { // Java 7
       // private val HEAVYWEIGHT_LIGHTWEIGHT_MIXING = false
-      private var flag = false
+      private var adjusting = false
       override fun revalidate() {
-        if (!heavyweightLightweightMixing && flag) {
-          return
+        // if (!heavyweightLightweightMixing && adjusting) {
+        if (adjusting) {
+            return
         }
         super.revalidate()
       }
 
       override fun setViewPosition(p: Point) {
-        if (heavyweightLightweightMixing) {
-          super.setViewPosition(p)
-        } else {
-          flag = true
-          super.setViewPosition(p)
-          flag = false
-        }
+        // if (heavyweightLightweightMixing) {
+        //   super.setViewPosition(p)
+        // } else {
+        adjusting = true
+        super.setViewPosition(p)
+        adjusting = false
       }
     }
     scroll.setViewport(viewport)
@@ -85,22 +86,21 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-class KineticScrollingListener1(protected val label: JComponent) : MouseAdapter(), HierarchyListener {
-  protected val dc: Cursor
-  protected val hc = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
-  protected val scroller: Timer
-  protected val startPt = Point()
-  protected val delta = Point()
+class KineticScrollingListener1(private val label: JComponent) : MouseAdapter(), HierarchyListener {
+  private val dc = label.getCursor()
+  private val hc = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
+  private val scroller: Timer
+  private val startPt = Point()
+  private val delta = Point()
 
   init {
-    this.dc = label.getCursor()
     this.scroller = Timer(DELAY) { e ->
       val src = e.getSource()
       val vport = SwingUtilities.getUnwrappedParent(label) as? JViewport ?: return@Timer
       val vp = vport.getViewPosition()
       vp.translate(-delta.x, -delta.y)
       label.scrollRectToVisible(Rectangle(vp, vport.getSize()))
-      if (Math.abs(delta.x) > 0 || Math.abs(delta.y) > 0) {
+      if (abs(delta.x) > 0 || abs(delta.y) > 0) {
         delta.setLocation((delta.x * D).toInt(), (delta.y * D).toInt())
       } else if (src is Timer) {
         src.stop()
@@ -137,23 +137,23 @@ class KineticScrollingListener1(protected val label: JComponent) : MouseAdapter(
   }
 
   companion object {
-    protected const val SPEED = 4
-    protected const val DELAY = 10
-    protected const val D = .8
+    private const val SPEED = 4
+    private const val DELAY = 10
+    private const val D = .8
   }
 }
 
-class KineticScrollingListener2(protected val label: JComponent) : MouseAdapter(), HierarchyListener {
-  protected val startPt = Point()
-  protected val delta = Point()
-  protected val dc: Cursor
-  protected val hc = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
-  protected val inside = Timer(DELAY) { e ->
+class KineticScrollingListener2(private val label: JComponent) : MouseAdapter(), HierarchyListener {
+  private val dc = label.getCursor()
+  private val hc = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
+  private val startPt = Point()
+  private val delta = Point()
+  private val inside = Timer(DELAY) { e ->
     val vport = SwingUtilities.getUnwrappedParent(label) as? JViewport ?: return@Timer
     val vp = vport.getViewPosition()
     vp.translate(-delta.x, -delta.y)
     vport.setViewPosition(vp)
-    if (Math.abs(delta.x) > 0 || Math.abs(delta.y) > 0) {
+    if (abs(delta.x) > 0 || abs(delta.y) > 0) {
       delta.setLocation((delta.x * D).toInt(), (delta.y * D).toInt())
       // Outside
       if (vp.x < 0 || vp.x + vport.getWidth() - label.getWidth() > 0) {
@@ -169,7 +169,7 @@ class KineticScrollingListener2(protected val label: JComponent) : MouseAdapter(
       }
     }
   }
-  protected val outside = Timer(DELAY) { e ->
+  private val outside = Timer(DELAY) { e ->
     val vport = SwingUtilities.getUnwrappedParent(label) as? JViewport ?: return@Timer
     val vp = vport.getViewPosition()
     if (vp.x < 0) {
@@ -188,10 +188,6 @@ class KineticScrollingListener2(protected val label: JComponent) : MouseAdapter(
     if (isInside(vport, label)) {
       (e.getSource() as? Timer)?.stop() // outside.stop()
     }
-  }
-
-  init {
-    this.dc = label.getCursor()
   }
 
   override fun mousePressed(e: MouseEvent) {
@@ -229,16 +225,16 @@ class KineticScrollingListener2(protected val label: JComponent) : MouseAdapter(
     }
   }
 
-  protected fun isInside(vport: JViewport, comp: JComponent) = vport.getViewPosition().let {
+  private fun isInside(vport: JViewport, comp: JComponent) = vport.getViewPosition().let {
     val ww = it.x >= 0 && it.x + vport.getWidth() - comp.getWidth() <= 0
     val hh = it.y >= 0 && it.y + vport.getHeight() - comp.getHeight() <= 0
     ww && hh
   }
 
   companion object {
-    protected const val SPEED = 4
-    protected const val DELAY = 10
-    protected const val D = .8
+    private const val SPEED = 4
+    private const val DELAY = 10
+    private const val D = .8
   }
 }
 
