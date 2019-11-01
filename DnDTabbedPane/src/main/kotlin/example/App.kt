@@ -131,7 +131,7 @@ internal class DnDTabbedPane : JTabbedPane() {
     glassPane.setName("GlassPane")
     DropTarget(glassPane, DnDConstants.ACTION_COPY_OR_MOVE, TabDropTargetListener(), true)
     DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(
-        this, DnDConstants.ACTION_COPY_OR_MOVE, TabDragGestureListener())
+      this, DnDConstants.ACTION_COPY_OR_MOVE, TabDragGestureListener())
   }
 
   fun getTargetTabIndex(glassPt: Point): Int {
@@ -239,7 +239,7 @@ internal class DnDTabbedPane : JTabbedPane() {
     glassPane.setVisible(true)
   }
 
-  fun getTabAreaBounds(): Rectangle {
+  private fun getTabAreaBounds(): Rectangle {
     val tabbedRect = getBounds()
 
     val compRect = getSelectedComponent()?.getBounds() ?: Rectangle()
@@ -259,7 +259,7 @@ internal class DnDTabbedPane : JTabbedPane() {
     return tabbedRect
   }
 
-  fun isTopBottomTabPlacement(tabPlacement: Int) = tabPlacement == TOP || tabPlacement == BOTTOM
+  private fun isTopBottomTabPlacement(tabPlacement: Int) = tabPlacement == TOP || tabPlacement == BOTTOM
 
   companion object {
     private const val LINEWIDTH = 3
@@ -308,17 +308,17 @@ internal class TabDragGestureListener : DragGestureListener {
     // e.getComponent()?.takeIf { it is DnDTabbedPane }
     //   ?.let { it as DnDTabbedPane }
     (e.getComponent() as? DnDTabbedPane)?.takeIf { it.getTabCount() > 1 }?.also {
-          val tabPt = e.getDragOrigin()
-          it.dragTabIndex = it.indexAtLocation(tabPt.x, tabPt.y)
-          if (it.dragTabIndex >= 0 && it.isEnabledAt(it.dragTabIndex)) {
-            it.initGlassPane(tabPt)
-            runCatching {
-              e.startDrag(DragSource.DefaultMoveDrop, TabTransferable(it), TabDragSourceListener())
-            }.onFailure {
-              UIManager.getLookAndFeel().provideErrorFeedback(e.getComponent())
-            }
-          }
+      val tabPt = e.getDragOrigin()
+      it.dragTabIndex = it.indexAtLocation(tabPt.x, tabPt.y)
+      if (it.dragTabIndex >= 0 && it.isEnabledAt(it.dragTabIndex)) {
+        it.initGlassPane(tabPt)
+        runCatching {
+          e.startDrag(DragSource.DefaultMoveDrop, TabTransferable(it), TabDragSourceListener())
+        }.onFailure {
+          UIManager.getLookAndFeel().provideErrorFeedback(e.getComponent())
         }
+      }
+    }
   }
 }
 
@@ -422,7 +422,7 @@ internal class GhostGlassPane(val tabbedPane: DnDTabbedPane) : JComponent() {
     }
   }
 
-  protected override fun paintComponent(g: Graphics) {
+  override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setComposite(ALPHA)
     if (tabbedPane.isPaintScrollArea && tabbedPane.getTabLayoutPolicy() == JTabbedPane.SCROLL_TAB_LAYOUT) {
