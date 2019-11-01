@@ -17,14 +17,14 @@ class MainPanel : JPanel(BorderLayout()) {
   init {
     val columnNames = arrayOf("Name", "Comment")
     val data = arrayOf(
-        arrayOf<Any>("test1.jpg", "adfasd"),
-        arrayOf<Any>("test1234.jpg", "  "),
-        arrayOf<Any>("test15354.gif", "fasdf"),
-        arrayOf<Any>("t.png", "comment"),
-        arrayOf<Any>("tfasdfasd.jpg", "123"),
-        arrayOf<Any>("afsdfasdfffffffffffasdfasdf.mpg", "test"),
-        arrayOf<Any>("fffffffffffasdfasdf", ""),
-        arrayOf<Any>("test1.jpg", ""))
+      arrayOf<Any>("test1.jpg", "111111"),
+      arrayOf<Any>("test1234.jpg", "  "),
+      arrayOf<Any>("test15354.gif", "22222222"),
+      arrayOf<Any>("t.png", "comment"),
+      arrayOf<Any>("3333333333.jpg", "123"),
+      arrayOf<Any>("444444444444444444444444.mpg", "test"),
+      arrayOf<Any>("5555555555555555", ""),
+      arrayOf<Any>("test1.jpg", ""))
     val model = object : DefaultTableModel(data, columnNames) {
       override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
 
@@ -45,7 +45,7 @@ internal class SelectedImageFilter : RGBImageFilter() {
 }
 
 internal class FileNameRenderer(table: JTable) : TableCellRenderer {
-  protected val dim = Dimension()
+  private val dim = Dimension()
   private val renderer = JPanel(BorderLayout())
   private val textLabel = JLabel(" ")
   private val iconLabel: JLabel
@@ -54,8 +54,8 @@ internal class FileNameRenderer(table: JTable) : TableCellRenderer {
     val i = focusBorder.getBorderInsets(textLabel)
     BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
   }
-  private val nicon: ImageIcon
-  private val sicon: ImageIcon
+  private val icon: ImageIcon
+  private val selectedIcon: ImageIcon
 
   init {
     val p = object : JPanel(BorderLayout()) {
@@ -65,12 +65,12 @@ internal class FileNameRenderer(table: JTable) : TableCellRenderer {
     renderer.setOpaque(false)
 
     // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
-    nicon = ImageIcon(javaClass.getResource("wi0063-16.png"))
+    icon = ImageIcon(javaClass.getResource("wi0063-16.png"))
 
-    val ip = FilteredImageSource(nicon.getImage().getSource(), SelectedImageFilter())
-    sicon = ImageIcon(p.createImage(ip))
+    val ip = FilteredImageSource(icon.getImage().getSource(), SelectedImageFilter())
+    selectedIcon = ImageIcon(p.createImage(ip))
 
-    iconLabel = JLabel(nicon)
+    iconLabel = JLabel(icon)
     iconLabel.setBorder(BorderFactory.createEmptyBorder())
 
     p.add(iconLabel, BorderLayout.WEST)
@@ -96,29 +96,29 @@ internal class FileNameRenderer(table: JTable) : TableCellRenderer {
 
     val fm = table.getFontMetrics(table.getFont())
     val i = textLabel.getInsets()
-    val swidth = iconLabel.getPreferredSize().width + fm.stringWidth(textLabel.getText()) + i.left + i.right
-    val cwidth = table.getColumnModel().getColumn(column).getWidth()
-    dim.width = minOf(swidth, cwidth)
+    val sw = iconLabel.getPreferredSize().width + fm.stringWidth(textLabel.getText()) + i.left + i.right
+    val cw = table.getColumnModel().getColumn(column).getWidth()
+    dim.width = minOf(sw, cw)
 
     if (isSelected) {
       textLabel.setOpaque(true)
       textLabel.setForeground(table.getSelectionForeground())
       textLabel.setBackground(table.getSelectionBackground())
-      iconLabel.setIcon(sicon)
+      iconLabel.setIcon(selectedIcon)
     } else {
       textLabel.setOpaque(false)
       textLabel.setForeground(table.getForeground())
       textLabel.setBackground(table.getBackground())
-      iconLabel.setIcon(nicon)
+      iconLabel.setIcon(icon)
     }
     return renderer
   }
 }
 
-internal class FileListTable(model: TableModel) : JTable(model) {
-  private val rcolor = SystemColor.activeCaption
-  private val pcolor = makeColor(rcolor)
-  protected val rubberBand: Path2D = Path2D.Double()
+class FileListTable(model: TableModel) : JTable(model) {
+  private val bandColor = SystemColor.activeCaption
+  private val rectColor = makeColor(bandColor)
+  private val rubberBand = Path2D.Double()
   @Transient
   private var rbl: RubberBandingListener? = null
 
@@ -192,11 +192,11 @@ internal class FileListTable(model: TableModel) : JTable(model) {
       clearSelection()
       val col = convertColumnIndexToView(0)
       (0 until getModel().getRowCount())
-          .filter { rubberBand.intersects(getCellRect2(this@FileListTable, it, col)) }
-          .forEach {
-            addRowSelectionInterval(it, it)
-            changeSelection(it, col, true, true)
-          }
+        .filter { rubberBand.intersects(getCellRect2(this@FileListTable, it, col)) }
+        .forEach {
+          addRowSelectionInterval(it, it)
+          changeSelection(it, col, true, true)
+        }
       repaint()
     }
 
@@ -221,19 +221,19 @@ internal class FileListTable(model: TableModel) : JTable(model) {
     }
   }
 
-  protected override fun paintComponent(g: Graphics) {
+  override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     val g2 = g.create() as Graphics2D
-    g2.setPaint(rcolor)
+    g2.setPaint(bandColor)
     g2.draw(rubberBand)
     g2.setComposite(ALPHA)
-    g2.setPaint(pcolor)
+    g2.setPaint(rectColor)
     g2.fill(rubberBand)
     g2.dispose()
   }
 
   // SwingUtilities2.pointOutsidePrefSize(...)
-  protected fun getCellRect2(table: JTable, row: Int, col: Int): Rectangle {
+  private fun getCellRect2(table: JTable, row: Int, col: Int): Rectangle {
     val tcr = table.getCellRenderer(row, col)
     val value = table.getValueAt(row, col)
     val cell = tcr.getTableCellRendererComponent(table, value, false, false, row, col)
