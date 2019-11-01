@@ -5,6 +5,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.synth.ColorType
 import javax.swing.plaf.synth.Region
 import javax.swing.plaf.synth.SynthContext
+import javax.swing.plaf.synth.SynthGraphicsUtils
 import javax.swing.plaf.synth.SynthLookAndFeel
 import javax.swing.plaf.synth.SynthPainter
 import javax.swing.plaf.synth.SynthStyle
@@ -17,7 +18,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val p1 = JPanel()
     p1.setOpaque(false)
     val p2 = object : JPanel() {
-      protected override fun paintComponent(g: Graphics) {
+      override fun paintComponent(g: Graphics) {
         // super.paintComponent(g);
         g.setColor(Color(100, 50, 50, 100))
         g.fillRect(0, 0, getWidth(), getHeight())
@@ -25,26 +26,13 @@ class MainPanel : JPanel(BorderLayout()) {
     }
     p2.setOpaque(false)
 
-//    d.put("InternalFrame[Enabled].backgroundPainter", object : Painter<JComponent> {
-//      override fun paint(g: Graphics2D, c: JComponent, w: Int, h: Int) {
-//        g.setColor(Color(100, 200, 100, 100))
-//        g.fillRoundRect(0, 0, w - 1, h - 1, 15, 15)
-//      }
-//    })
-//    d.put("InternalFrame[Enabled+WindowFocused].backgroundPainter", object : Painter {
-//      fun paint(g: Graphics2D, c: JComponent, w: Int, h: Int) {
-//        g.setColor(Color(100, 250, 120, 100))
-//        g.fillRoundRect(0, 0, w - 1, h - 1, 15, 15)
-//      }
-//    })
-
     createFrame(initContainer(p1), 0)
     createFrame(initContainer(p2), 1)
     add(desktop)
     setPreferredSize(Dimension(320, 240))
   }
 
-  protected fun createFrame(panel: Container, idx: Int): JInternalFrame {
+  private fun createFrame(panel: Container, idx: Int): JInternalFrame {
     val frame = MyInternalFrame()
     // frame.putClientProperty("Nimbus.Overrides", d)
     // // frame.putClientProperty("Nimbus.Overrides.InheritDefaults", false)
@@ -84,22 +72,22 @@ internal class MySynthStyleFactory(private val wrappedFactory: SynthStyleFactory
 
 @Suppress("TooManyFunctions")
 internal class TranslucentSynthStyle(private val style: SynthStyle) : SynthStyle() {
-  override operator fun get(context: SynthContext?, key: Any) = style.get(context, key)
+  override operator fun get(context: SynthContext?, key: Any): Any? = style.get(context, key)
 
-  override fun getBoolean(context: SynthContext, key: Any, defaultValue: Boolean) =
+  override fun getBoolean(context: SynthContext?, key: Any, defaultValue: Boolean) =
     style.getBoolean(context, key, defaultValue)
 
-  override fun getColor(context: SynthContext, type: ColorType) = style.getColor(context, type)
+  override fun getColor(context: SynthContext?, type: ColorType): Color? = style.getColor(context, type)
 
-  override fun getFont(context: SynthContext) = style.getFont(context)
+  override fun getFont(context: SynthContext?): Font? = style.getFont(context)
 
-  override fun getGraphicsUtils(context: SynthContext?) = style.getGraphicsUtils(context)
+  override fun getGraphicsUtils(context: SynthContext?): SynthGraphicsUtils? = style.getGraphicsUtils(context)
 
-  override fun getIcon(context: SynthContext, key: Any) = style.getIcon(context, key)
+  override fun getIcon(context: SynthContext?, key: Any): Icon? = style.getIcon(context, key)
 
-  override fun getInsets(context: SynthContext?, insets: Insets?) = style.getInsets(context, insets)
+  override fun getInsets(context: SynthContext?, insets: Insets?): Insets? = style.getInsets(context, insets)
 
-  override fun getInt(context: SynthContext, key: Any, defaultValue: Int) =
+  override fun getInt(context: SynthContext?, key: Any, defaultValue: Int) =
     style.getInt(context, key, defaultValue)
 
   override fun getPainter(context: SynthContext?) =
@@ -117,7 +105,7 @@ internal class TranslucentSynthStyle(private val style: SynthStyle) : SynthStyle
       }
     }
 
-  override fun getString(context: SynthContext, key: Any, defaultValue: String) =
+  override fun getString(context: SynthContext, key: Any, defaultValue: String): String? =
     style.getString(context, key, defaultValue)
 
   override fun installDefaults(context: SynthContext) = style.installDefaults(context)
