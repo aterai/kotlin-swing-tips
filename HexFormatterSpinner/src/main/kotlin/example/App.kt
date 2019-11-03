@@ -26,14 +26,14 @@ class MainPanel : JPanel(BorderLayout()) {
       it.setFormatterFactory(makeFFactory())
     }
 
-    val exMi = JRadioButton(FontPaint.IPA_EX_MINCHO.toString())
+    val exMi = JRadioButton("IPAexMincho")
     exMi.addItemListener { e ->
       if (e.getStateChange() == ItemEvent.SELECTED) {
         setFontPaintFlag(EnumSet.of(FontPaint.IPA_EX_MINCHO))
       }
     }
 
-    val mjMi = JRadioButton(FontPaint.IPA_MJ_MINCHO.toString())
+    val mjMi = JRadioButton("IPAmjMincho")
     mjMi.addItemListener { e ->
       if (e.getStateChange() == ItemEvent.SELECTED) {
         setFontPaintFlag(EnumSet.of(FontPaint.IPA_MJ_MINCHO))
@@ -60,9 +60,9 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  protected fun getCharacterString() = String(Character.toChars(nm.getNumber().toInt()))
+  private fun getCharacterString() = String(Character.toChars(nm.getNumber().toInt()))
 
-  protected fun setFontPaintFlag(fp: EnumSet<FontPaint>) {
+  private fun setFontPaintFlag(fp: EnumSet<FontPaint>) {
     fontPaintFlag = fp
     fontPanel.repaint()
   }
@@ -71,7 +71,7 @@ class MainPanel : JPanel(BorderLayout()) {
     private val ipaEx = Font("IPAexMincho", Font.PLAIN, 200)
     private val ipaMj = Font("IPAmjMincho", Font.PLAIN, 200)
 
-    protected override fun paintComponent(g: Graphics) {
+    override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
       g2.setPaint(Color.WHITE)
