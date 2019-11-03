@@ -1,8 +1,8 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.AlphaComposite
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 
 class MainPanel : JPanel(BorderLayout()) {
@@ -12,11 +12,8 @@ class MainPanel : JPanel(BorderLayout()) {
     val cards: JPanel = object : JPanel(cardLayout) {
       override fun paintComponent(g: Graphics) {
         super.paintComponent(g)
-        for (c in components) {
-          if (c.isVisible()) {
-            paintSideComponents(g, getComponentZOrder(c))
-            return
-          }
+        getComponents().first { it.isVisible() }?.also {
+          paintSideComponents(g, getComponentZOrder(it))
         }
       }
 
