@@ -28,12 +28,12 @@ class MainPanel : JPanel(BorderLayout()) {
         Toolkit.getDefaultToolkit().beep()
       }
     })
-    field.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_B, InputEvent.SHIFT_DOWN_MASK),"beep")
+    field.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_B, InputEvent.SHIFT_DOWN_MASK), "beep")
     field.addKeyListener(object : KeyAdapter() {
       override fun keyPressed(e: KeyEvent) {
         val shiftActive = e.getModifiersEx() and InputEvent.SHIFT_DOWN_MASK != 0
         if (e.getKeyCode() == KeyEvent.VK_N && shiftActive) {
-           Toolkit.getDefaultToolkit().beep()
+          Toolkit.getDefaultToolkit().beep()
         }
       }
     })
