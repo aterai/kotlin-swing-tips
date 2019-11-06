@@ -18,6 +18,7 @@ import java.awt.dnd.DropTargetEvent
 import java.awt.dnd.DropTargetListener
 import java.awt.image.BufferedImage
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.plaf.metal.MetalTabbedPaneUI
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
@@ -33,8 +34,8 @@ class MainPanel : JPanel(BorderLayout()) {
       it.addTab("JTree 00", JScrollPane(JTree()))
       it.addTab("JLabel 01", JLabel("Test"))
       it.addTab("JTable 02", JScrollPane(JTable(20, 3)))
-      it.addTab("JTextArea 03", JScrollPane(JTextArea("asfasdfasfasdfas\nafasfasdfaf\n")))
-      it.addTab("JLabel 04", JLabel("<html>asfasfdasdfasdfsa<br>asfdd13412341234123446745fgh"))
+      it.addTab("JTextArea 03", JScrollPane(JTextArea("111111111\n2222222222\n")))
+      it.addTab("JLabel 04", JLabel("<html>33333333333333<br>13412341234123446745"))
       it.addTab("null 05", null)
       it.addTab("JTabbedPane 06", sub)
       it.addTab("Title 000000000000000007", JScrollPane(JTree()))
@@ -46,32 +47,32 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   private fun makeCheckBoxPanel(tab: DnDTabbedPane): Component {
-    val gcheck = JCheckBox("Tab Ghost", true)
-    gcheck.addActionListener { tab.hasGhost = gcheck.isSelected() }
+    val check1 = JCheckBox("Tab Ghost", true)
+    check1.addActionListener { tab.hasGhost = check1.isSelected() }
 
-    val tcheck = JCheckBox("Top", true)
-    tcheck.addActionListener { e ->
+    val check2 = JCheckBox("Top", true)
+    check2.addActionListener { e ->
       val b = (e.getSource() as? JCheckBox)?.isSelected() ?: false
       tab.setTabPlacement(if (b) JTabbedPane.TOP else JTabbedPane.RIGHT)
     }
 
-    val scheck = JCheckBox("SCROLL_TAB_LAYOUT", true)
-    scheck.addActionListener { e ->
+    val check3 = JCheckBox("SCROLL_TAB_LAYOUT", true)
+    check3.addActionListener { e ->
       val b = (e.getSource() as? JCheckBox)?.isSelected() ?: false
       tab.setTabLayoutPolicy(if (b) JTabbedPane.SCROLL_TAB_LAYOUT else JTabbedPane.WRAP_TAB_LAYOUT)
     }
 
-    val debugp = JCheckBox("Debug Paint", true)
-    debugp.addActionListener { tab.isPaintScrollArea = debugp.isSelected() }
+    val check4 = JCheckBox("Debug Paint", true)
+    check4.addActionListener { tab.isPaintScrollArea = check4.isSelected() }
 
     val p1 = JPanel(FlowLayout(FlowLayout.LEFT)).also {
-      it.add(gcheck)
-      it.add(tcheck)
+      it.add(check1)
+      it.add(check2)
     }
 
     val p2 = JPanel(FlowLayout(FlowLayout.LEFT)).also {
-      it.add(scheck)
-      it.add(debugp)
+      it.add(check3)
+      it.add(check4)
     }
 
     return JPanel(BorderLayout()).also {
@@ -81,7 +82,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class DnDTabbedPane : JTabbedPane() {
+class DnDTabbedPane : JTabbedPane() {
   private val glassPane = GhostGlassPane(this)
   var dragTabIndex = -1
 
@@ -98,7 +99,7 @@ internal class DnDTabbedPane : JTabbedPane() {
     var scrollBackwardButton: JButton? = null
     for (c in getComponents()) {
       if (c is JButton) {
-        if (scrollForwardButton == null && scrollBackwardButton == null) {
+        if (scrollForwardButton == null) {
           scrollForwardButton = c
         } else if (scrollBackwardButton == null) {
           scrollBackwardButton = c
@@ -170,18 +171,18 @@ internal class DnDTabbedPane : JTabbedPane() {
     val icon = getIconAt(prev)
     val tip = getToolTipTextAt(prev)
     val isEnabled = isEnabledAt(prev)
-    val tgtindex = if (prev > next) next else next - 1
+    val tgtIndex = if (prev > next) next else next - 1
     remove(prev)
-    insertTab(title, icon, cmp, tip, tgtindex)
-    setEnabledAt(tgtindex, isEnabled)
+    insertTab(title, icon, cmp, tip, tgtIndex)
+    setEnabledAt(tgtIndex, isEnabled)
     // When you drag'n'drop a disabled tab, it finishes enabled and selected.
     // pointed out by dlorde
     if (isEnabled) {
-      setSelectedIndex(tgtindex)
+      setSelectedIndex(tgtIndex)
     }
-    // I have a component in all tabs (jlabel with an X to close the tab) and when i move a tab the component disappear.
+    // I have a component in all tabs (JLabel with an X to close the tab) and when i move a tab the component disappear.
     // pointed out by Daniel Dario Morales Salas
-    setTabComponentAt(tgtindex, tab)
+    setTabComponentAt(tgtIndex, tab)
   }
 
   fun initTargetLine(next: Int) {
@@ -194,9 +195,9 @@ internal class DnDTabbedPane : JTabbedPane() {
       val r = SwingUtilities.convertRectangle(this, it, glassPane)
       val a = minOf(next, 1) // a = (next == 0) ? 0 : 1;
       if (isTopBottomTabPlacement(getTabPlacement())) {
-        glassPane.setTargetRect(r.x + r.width * a - LINEWIDTH / 2, r.y, LINEWIDTH, r.height)
+        glassPane.setTargetRect(r.x + r.width * a - LINE_SIZE / 2, r.y, LINE_SIZE, r.height)
       } else {
-        glassPane.setTargetRect(r.x, r.y + r.height * a - LINEWIDTH / 2, r.width, LINEWIDTH)
+        glassPane.setTargetRect(r.x, r.y + r.height * a - LINE_SIZE / 2, r.width, LINE_SIZE)
       }
     }
   }
@@ -262,13 +263,13 @@ internal class DnDTabbedPane : JTabbedPane() {
   private fun isTopBottomTabPlacement(tabPlacement: Int) = tabPlacement == TOP || tabPlacement == BOTTOM
 
   companion object {
-    private const val LINEWIDTH = 3
+    private const val LINE_SIZE = 3
     private const val RWH = 20
     private const val BUTTON_SIZE = 30 // XXX 30 is magic number of scroll button size
   }
 }
 
-internal class TabTransferable(private val tabbedPane: Component) : Transferable {
+class TabTransferable(private val tabbedPane: Component) : Transferable {
   override fun getTransferData(flavor: DataFlavor) = tabbedPane
 
   override fun getTransferDataFlavors() = arrayOf(FLAVOR)
@@ -307,9 +308,15 @@ internal class TabDragGestureListener : DragGestureListener {
   override fun dragGestureRecognized(e: DragGestureEvent) {
     // e.getComponent()?.takeIf { it is DnDTabbedPane }
     //   ?.let { it as DnDTabbedPane }
+
     (e.getComponent() as? DnDTabbedPane)?.takeIf { it.getTabCount() > 1 }?.also {
       val tabPt = e.getDragOrigin()
-      it.dragTabIndex = it.indexAtLocation(tabPt.x, tabPt.y)
+      val idx = it.indexAtLocation(tabPt.x, tabPt.y)
+      val selIdx = it.getSelectedIndex()
+      val isTabRunsRotated = it.getUI() !is MetalTabbedPaneUI
+          && it.getTabLayoutPolicy() == JTabbedPane.WRAP_TAB_LAYOUT
+          && idx != selIdx
+      it.dragTabIndex = if (isTabRunsRotated) selIdx else idx
       if (it.dragTabIndex >= 0 && it.isEnabledAt(it.dragTabIndex)) {
         it.initGlassPane(tabPt)
         runCatching {
