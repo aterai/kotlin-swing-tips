@@ -16,6 +16,8 @@ import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 import java.io.IOException
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.plaf.metal.MetalTabbedPaneUI
+
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
@@ -139,7 +141,7 @@ class DnDTabbedPane : JTabbedPane() {
     var scrollBackwardButton: JButton? = null
     for (c in getComponents()) {
       val b = c as? JButton ?: continue
-      if (scrollForwardButton == null && scrollBackwardButton == null) {
+      if (scrollForwardButton == null) {
         scrollForwardButton = b
       } else if (scrollBackwardButton == null) {
         scrollBackwardButton = b
@@ -283,7 +285,11 @@ class DnDTabbedPane : JTabbedPane() {
       val src = e.getComponent()
       if (tabPt.distance(startPt) > gestureMotionThreshold && src is DnDTabbedPane) {
         val th = src.getTransferHandler()
-        dragTabIndex = src.indexAtLocation(tabPt.x, tabPt.y)
+        val idx = src.indexAtLocation(tabPt.x, tabPt.y)
+        val selIdx = src.selectedIndex
+        val isRotateTabRuns = src.getUI() !is MetalTabbedPaneUI
+            && src.tabLayoutPolicy == WRAP_TAB_LAYOUT && idx != selIdx
+        dragTabIndex = if (isRotateTabRuns) selIdx else idx
         th.exportAsDrag(src, e, TransferHandler.MOVE)
         RECT_LINE.setBounds(0, 0, 0, 0)
         src.getRootPane().getGlassPane().setVisible(true)
@@ -467,7 +473,6 @@ class TabTransferHandler : TransferHandler() {
 }
 
 class GhostGlassPane(private var tabbedPane: DnDTabbedPane) : JComponent() {
-
   init {
     setOpaque(false)
   }
