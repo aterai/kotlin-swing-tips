@@ -18,7 +18,6 @@ import java.io.IOException
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.metal.MetalTabbedPaneUI
 
-
 class MainPanel : JPanel(BorderLayout()) {
   init {
     val sub = DnDTabbedPane().also {
