@@ -71,7 +71,7 @@ class MainPanel : JPanel(BorderLayout()) {
   private fun makeCheckBoxPanel(tabs: JTabbedPane): Component {
     val tc = JCheckBox("Top", true)
     tc.addActionListener {
-      tabs.setTabPlacement(if (tc.isSelected()) JTabbedPane.TOP else JTabbedPane.RIGHT)
+      tabs.setTabPlacement(if (tc.isSelected()) SwingConstants.TOP else SwingConstants.RIGHT)
     }
     val sc = JCheckBox("SCROLL_TAB_LAYOUT", true)
     sc.addActionListener {
@@ -286,9 +286,8 @@ class DnDTabbedPane : JTabbedPane() {
         val th = src.getTransferHandler()
         val idx = src.indexAtLocation(tabPt.x, tabPt.y)
         val selIdx = src.selectedIndex
-        val isRotateTabRuns = src.getUI() !is MetalTabbedPaneUI
-            && src.tabLayoutPolicy == WRAP_TAB_LAYOUT && idx != selIdx
-        dragTabIndex = if (isRotateTabRuns) selIdx else idx
+        val isRotate = src.getUI() !is MetalTabbedPaneUI && src.tabLayoutPolicy == WRAP_TAB_LAYOUT && idx != selIdx
+        dragTabIndex = if (isRotate) selIdx else idx
         th.exportAsDrag(src, e, TransferHandler.MOVE)
         RECT_LINE.setBounds(0, 0, 0, 0)
         src.getRootPane().getGlassPane().setVisible(true)
