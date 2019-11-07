@@ -304,18 +304,14 @@ internal class TabDragSourceListener : DragSourceListener {
   override fun dropActionChanged(e: DragSourceDragEvent) { /* not needed */ }
 }
 
-internal class TabDragGestureListener : DragGestureListener {
+class TabDragGestureListener : DragGestureListener {
   override fun dragGestureRecognized(e: DragGestureEvent) {
-    // e.getComponent()?.takeIf { it is DnDTabbedPane }
-    //   ?.let { it as DnDTabbedPane }
-
     (e.getComponent() as? DnDTabbedPane)?.takeIf { it.getTabCount() > 1 }?.also {
       val tabPt = e.getDragOrigin()
       val idx = it.indexAtLocation(tabPt.x, tabPt.y)
       val selIdx = it.getSelectedIndex()
-      val isTabRunsRotated = it.getUI() !is MetalTabbedPaneUI
-          && it.getTabLayoutPolicy() == JTabbedPane.WRAP_TAB_LAYOUT
-          && idx != selIdx
+      val isTabRunsRotated = it.getUI() !is MetalTabbedPaneUI &&
+          it.getTabLayoutPolicy() == JTabbedPane.WRAP_TAB_LAYOUT && idx != selIdx
       it.dragTabIndex = if (isTabRunsRotated) selIdx else idx
       if (it.dragTabIndex >= 0 && it.isEnabledAt(it.dragTabIndex)) {
         it.initGlassPane(tabPt)
