@@ -5,7 +5,10 @@ import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.MouseInputAdapter
 import javax.swing.plaf.ColorUIResource
-import javax.swing.table.*
+import javax.swing.table.DefaultTableModel
+import javax.swing.table.JTableHeader
+import javax.swing.table.TableCellEditor
+import javax.swing.table.TableCellRenderer
 
 class MainPanel : JPanel(BorderLayout()) {
   private val columnNames = arrayOf("Boolean", "Integer", "String")
@@ -36,7 +39,7 @@ class MainPanel : JPanel(BorderLayout()) {
     }
 
     override fun prepareEditor(
-      editor: TableCellEditor?,
+      editor: TableCellEditor,
       row: Int,
       column: Int
     ): Component {
@@ -159,7 +162,7 @@ class MenuArrowIcon : Icon {
     g2.dispose()
   }
 
-  override fun getIconWidth()= 10
+  override fun getIconWidth() = 10
 
   override fun getIconHeight() = 10
 }
