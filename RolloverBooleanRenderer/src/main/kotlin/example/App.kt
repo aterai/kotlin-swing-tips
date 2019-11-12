@@ -12,16 +12,16 @@ import javax.swing.table.TableCellRenderer
 class MainPanel : JPanel(BorderLayout()) {
   private val columnNames = arrayOf("String", "Integer", "Boolean")
   private val data = arrayOf(
-      arrayOf<Any>("aaa", 12, true),
-      arrayOf<Any>("bbb", 5, false),
-      arrayOf<Any>("CCC", 92, true),
-      arrayOf<Any>("DDD", 0, false))
+    arrayOf("aaa", 12, true),
+    arrayOf("bbb", 5, false),
+    arrayOf("CCC", 92, true),
+    arrayOf("DDD", 0, false))
   private val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
   private val table = object : JTable(model) {
     @Transient
-    protected var highlighter: HighlightListener? = null
+    private var highlighter: HighlightListener? = null
 
     override fun updateUI() {
       addMouseListener(highlighter)
@@ -40,9 +40,9 @@ class MainPanel : JPanel(BorderLayout()) {
     }
 
     override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int) =
-        super.prepareEditor(editor, row, column).also {
-          (it as? JCheckBox)?.setBackground(getSelectionBackground())
-        }
+      super.prepareEditor(editor, row, column).also {
+        (it as? JCheckBox)?.setBackground(getSelectionBackground())
+      }
   }
 
   init {
@@ -59,47 +59,50 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 class HighlightListener : MouseAdapter() {
-  private var vrow = -1 // viewRowIndex
-  private var vcol = -1 // viewColumnIndex
+  private var viewRowIndex = -1
+  private var viewColumnIndex = -1
 
-  fun isHighlightableCell(row: Int, column: Int) = vrow == row && vcol == column
+  fun isHighlightedCell(row: Int, column: Int) = viewRowIndex == row && viewColumnIndex == column
 
   override fun mouseMoved(e: MouseEvent) {
     (e.getComponent() as? JTable)?.also { table ->
       val pt = e.getPoint()
-      val prevRow = vrow
-      val prevCol = vcol
-      vrow = table.rowAtPoint(pt)
-      vcol = table.columnAtPoint(pt)
-      if (vrow < 0 || vcol < 0) {
-        vrow = -1
-        vcol = -1
+      val prevRow = viewRowIndex
+      val prevCol = viewColumnIndex
+      viewRowIndex = table.rowAtPoint(pt)
+      viewColumnIndex = table.columnAtPoint(pt)
+      if (viewRowIndex < 0 || viewColumnIndex < 0) {
+        viewRowIndex = -1
+        viewColumnIndex = -1
       }
-      if (vrow == prevRow && vcol == prevCol) {
+      if (viewRowIndex == prevRow && viewColumnIndex == prevCol) {
         return
       }
-      val repaintRect = if (vrow >= 0 && vcol >= 0) {
-        val r = table.getCellRect(vrow, vcol, false)
-        if (prevRow >= 0 && prevCol >= 0) r.union(table.getCellRect(prevRow, prevCol, false)) else r
-      } else {
-        table.getCellRect(prevRow, prevCol, false)
-      }
-      table.repaint(repaintRect)
+      table.repaint(getRepaintRect(table, prevRow, prevCol))
+    }
+  }
+
+  private fun getRepaintRect(table: JTable, prevRow: Int, prevCol: Int): Rectangle {
+    return if (viewRowIndex >= 0 && viewColumnIndex >= 0) {
+      val r = table.getCellRect(viewRowIndex, viewColumnIndex, false)
+      if (prevRow >= 0 && prevCol >= 0) r.union(table.getCellRect(prevRow, prevCol, false)) else r
+    } else {
+      table.getCellRect(prevRow, prevCol, false)
     }
   }
 
   override fun mouseExited(e: MouseEvent) {
     (e.getComponent() as? JTable)?.also { table ->
-      if (vrow >= 0 && vcol >= 0) {
-        table.repaint(table.getCellRect(vrow, vcol, false))
+      if (viewRowIndex >= 0 && viewColumnIndex >= 0) {
+        table.repaint(table.getCellRect(viewRowIndex, viewColumnIndex, false))
       }
-      vrow = -1
-      vcol = -1
+      viewRowIndex = -1
+      viewColumnIndex = -1
     }
   }
 }
 
-open class RolloverDefaultTableCellRenderer(val highlighter: HighlightListener) : DefaultTableCellRenderer() {
+open class RolloverDefaultTableCellRenderer(private val highlighter: HighlightListener) : DefaultTableCellRenderer() {
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -110,7 +113,7 @@ open class RolloverDefaultTableCellRenderer(val highlighter: HighlightListener) 
   ): Component {
     super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     val str = value?.toString() ?: ""
-//     if (highlighter.isHighlightableCell(row, column)) {
+//     if (highlighter.isHighlightedCell(row, column)) {
 //       setText("<html><u>$str")
 //       setForeground(if (isSelected) table.getSelectionForeground() else HIGHLIGHT)
 //       setBackground(if (isSelected) table.getSelectionBackground().darker() else table.getBackground())
@@ -119,18 +122,18 @@ open class RolloverDefaultTableCellRenderer(val highlighter: HighlightListener) 
 //       setForeground(if (isSelected) table.getSelectionForeground() else table.getForeground())
 //       setBackground(if (isSelected) table.getSelectionBackground() else table.getBackground())
 //     }
-    val isHighlightableCell = highlighter.isHighlightableCell(row, column)
+    val isHighlightedCell = highlighter.isHighlightedCell(row, column)
     setForeground(when {
       isSelected -> table.getSelectionForeground()
-      !isSelected && isHighlightableCell -> HIGHLIGHT
+      !isSelected && isHighlightedCell -> HIGHLIGHT
       else -> table.getForeground()
     })
     setBackground(when {
-      isSelected && isHighlightableCell -> table.getSelectionBackground().darker()
-      isSelected && !isHighlightableCell -> table.getSelectionBackground()
+      isSelected && isHighlightedCell -> table.getSelectionBackground().darker()
+      isSelected && !isHighlightedCell -> table.getSelectionBackground()
       else -> table.getBackground()
     })
-    setText(if (isHighlightableCell) "<html><u>$str" else str)
+    setText(if (isHighlightedCell) "<html><u>$str" else str)
     return this
   }
 
@@ -145,7 +148,7 @@ class RolloverNumberRenderer(highlighter: HighlightListener) : RolloverDefaultTa
   }
 }
 
-class RolloverBooleanRenderer(val highlighter: HighlightListener) : JCheckBox(), TableCellRenderer {
+class RolloverBooleanRenderer(private val highlighter: HighlightListener) : JCheckBox(), TableCellRenderer {
   init {
     setHorizontalAlignment(SwingConstants.CENTER)
     setBorderPainted(true)
@@ -162,7 +165,7 @@ class RolloverBooleanRenderer(val highlighter: HighlightListener) : JCheckBox(),
     row: Int,
     column: Int
   ): Component {
-    getModel().setRollover(highlighter.isHighlightableCell(row, column))
+    getModel().setRollover(highlighter.isHighlightedCell(row, column))
 
     if (isSelected) {
       setForeground(table.getSelectionForeground())
@@ -186,7 +189,7 @@ class RolloverBooleanRenderer(val highlighter: HighlightListener) : JCheckBox(),
     } ?: super.isOpaque()
   }
 
-  protected override fun firePropertyChange(propertyName: String, oldValue: Any?, newValue: Any?) {
+  override fun firePropertyChange(propertyName: String, oldValue: Any?, newValue: Any?) {
     // System.out.println(propertyName);
     // if (propertyName == "border" ||
     //     ((propertyName == "font" || propertyName == "foreground") && oldValue != newValue)) {
