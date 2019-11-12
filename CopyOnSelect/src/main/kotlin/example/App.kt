@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.OutputStream
+import java.lang.invoke.MethodHandles
 import java.util.logging.LogRecord
 import java.util.logging.Logger
 import java.util.logging.SimpleFormatter
@@ -51,7 +52,8 @@ class MainPanel : JPanel(GridLayout(2, 1)) {
 }
 
   companion object {
-    private val LOGGER = Logger.getLogger("java-swing-tips")
+    val LOGGER_NAME: String = MethodHandles.lookup().lookupClass().getName()
+    private val LOGGER = Logger.getLogger(LOGGER_NAME)
   }
 }
 
@@ -97,7 +99,7 @@ class CopyOnSelectListener : MouseAdapter(), CaretListener, KeyListener {
       val m = caret.getMark()
       if (d != m && (dot != d || mark != m)) {
         c.getSelectedText()?.also {
-          LOGGER.info(it)
+          LOGGER.info { it }
           c.copy()
       }
     }
@@ -107,9 +109,9 @@ class CopyOnSelectListener : MouseAdapter(), CaretListener, KeyListener {
   }
 
   companion object {
-    private val LOGGER = Logger.getLogger("java-swing-tips")
+    private val LOGGER = Logger.getLogger(MainPanel.LOGGER_NAME)
   }
-  }
+}
 
 class TextAreaOutputStream(private val textArea: JTextArea) : OutputStream() {
   private val buffer = ByteArrayOutputStream()

@@ -4,6 +4,7 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.OutputStream
+import java.lang.invoke.MethodHandles
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -80,7 +81,7 @@ class MainPanel : JPanel(BorderLayout()) {
       makeDestDirPath(str)?.also { destDir ->
         val path = Paths.get(str)
         try {
-          //if (Files.exists(destDir)) { // noticeably poor performance in JDK 8
+          // if (Files.exists(destDir)) { // noticeably poor performance in JDK 8
           if (destDir.toFile().exists()) {
             val m = "<html>%s already exists.<br>Do you want to overwrite it?".format(destDir.toString())
             val rv = JOptionPane.showConfirmDialog(getRootPane(), m, "Unzip", JOptionPane.YES_NO_OPTION)
@@ -135,12 +136,13 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   companion object {
-    private val LOGGER = Logger.getLogger("zip-test")
+    val LOGGER_NAME: String = MethodHandles.lookup().lookupClass().getName()
+    private val LOGGER = Logger.getLogger(LOGGER_NAME)
   }
 }
 
 object ZipUtil {
-  private val logger = Logger.getLogger("zip-test")
+  private val logger = Logger.getLogger(MainPanel.LOGGER_NAME)
   @Throws(IOException::class)
   fun zip(srcDir: Path, zip: Path) {
     // try (Stream<Path> s = Files.walk(srcDir).filter(Files::isRegularFile)) { // noticeably poor performance in JDK 8
@@ -170,11 +172,10 @@ object ZipUtil {
           logger.info { "mkdir1: $path" }
           Files.createDirectories(path)
         } else {
-          val parent = path.getParent()
           // if (Files.notExists(parent)) { // noticeably poor performance in JDK 8
-          if (!parent.toFile().exists()) {
-            logger.info { "mkdir2: $parent" }
-            Files.createDirectories(parent)
+          path.getParent()?.takeUnless { it.toFile().exists() }?.also {
+            logger.info { "mkdir2: $it" }
+            Files.createDirectories(it)
           }
           logger.info { "copy: $path" }
           Files.copy(zipFile.getInputStream(entry), path, StandardCopyOption.REPLACE_EXISTING)
