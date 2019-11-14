@@ -12,26 +12,25 @@ import javax.swing.text.DefaultEditorKit
 class MainPanel : JPanel(BorderLayout()) {
   init {
     add(JScrollPane(JTextArea()))
-    EventQueue.invokeLater { getRootPane().setJMenuBar(makeManuBar()) }
+    EventQueue.invokeLater { getRootPane().setJMenuBar(makeMenuBar()) }
     setPreferredSize(Dimension(320, 240))
   }
 
-  fun makeManuBar(): JMenuBar {
+  private fun makeMenuBar(): JMenuBar {
     val edit = makeEditButtonBar(listOf(
-        makeButton("Cut", DefaultEditorKit.CutAction()),
-        makeButton("Copy", DefaultEditorKit.CopyAction()),
-        makeButton("Paste", DefaultEditorKit.PasteAction())))
+      makeButton("Cut", DefaultEditorKit.CutAction()),
+      makeButton("Copy", DefaultEditorKit.CopyAction()),
+      makeButton("Paste", DefaultEditorKit.PasteAction())))
 
     val menu = JMenu("File").also {
-      it.add("aaaaaaaaaa")
+      it.add("1111111111111")
       it.addSeparator()
       it.add(makeEditMenuItem(edit))
       it.addSeparator()
-      it.add("bbbb")
-      it.add("cccccc")
-      it.add("ddddd")
+      it.add("2222")
+      it.add("333333")
+      it.add("44444")
     }
-
     return JMenuBar().also { it.add(menu) }
   }
 
@@ -44,7 +43,7 @@ class MainPanel : JPanel(BorderLayout()) {
         return d
       }
 
-      protected override fun fireStateChanged() {
+      override fun fireStateChanged() {
         setForeground(Color.BLACK)
         super.fireStateChanged()
       }
@@ -54,7 +53,6 @@ class MainPanel : JPanel(BorderLayout()) {
     val c = GridBagConstraints()
     item.setLayout(GridBagLayout())
     c.anchor = GridBagConstraints.LINE_END
-    // c.gridx = GridBagConstraints.RELATIVE
     c.weightx = 1.0
 
     c.fill = GridBagConstraints.HORIZONTAL
@@ -103,36 +101,42 @@ class MainPanel : JPanel(BorderLayout()) {
 class ToggleButtonBarCellIcon : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val parent = c.getParent() ?: return
-    val r = 8
-    var w = c.getWidth()
-    val h = c.getHeight() - 1
+    val r = 8.0
+    val dx = x.toDouble()
+    val dy = y.toDouble()
+    var dw = c.getWidth().toDouble()
+    val dh = c.getHeight() - 1.0
 
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
 
     val p = Path2D.Double()
-    if (c === parent.getComponent(0)) {
-      // :first-child
-      p.moveTo(x.toDouble(), (y + r).toDouble())
-      p.quadTo(x.toDouble(), y.toDouble(), (x + r).toDouble(), y.toDouble())
-      p.lineTo((x + w).toDouble(), y.toDouble())
-      p.lineTo((x + w).toDouble(), (y + h).toDouble())
-      p.lineTo((x + r).toDouble(), (y + h).toDouble())
-      p.quadTo(x.toDouble(), (y + h).toDouble(), x.toDouble(), (y + h - r).toDouble())
-    } else if (c === parent.getComponent(parent.getComponentCount() - 1)) {
-      // :last-child
-      w--
-      p.moveTo(x.toDouble(), y.toDouble())
-      p.lineTo((x + w - r).toDouble(), y.toDouble())
-      p.quadTo((x + w).toDouble(), y.toDouble(), (x + w).toDouble(), (y + r).toDouble())
-      p.lineTo((x + w).toDouble(), (y + h - r).toDouble())
-      p.quadTo((x + w).toDouble(), (y + h).toDouble(), (x + w - r).toDouble(), (y + h).toDouble())
-      p.lineTo(x.toDouble(), (y + h).toDouble())
-    } else {
-      p.moveTo(x.toDouble(), y.toDouble())
-      p.lineTo((x + w).toDouble(), y.toDouble())
-      p.lineTo((x + w).toDouble(), (y + h).toDouble())
-      p.lineTo(x.toDouble(), (y + h).toDouble())
+    when {
+      c === parent.getComponent(0) -> {
+        // :first-child
+        p.moveTo(dx, dy + r)
+        p.quadTo(dx, dy, dx + r, dy)
+        p.lineTo(dx + dw, dy)
+        p.lineTo(dx + dw, dy + dh)
+        p.lineTo(dx + r, dy + dh)
+        p.quadTo(dx, dy + dh, dx, dy + dh - r)
+      }
+      c === parent.getComponent(parent.getComponentCount() - 1) -> {
+        // :last-child
+        dw--
+        p.moveTo(dx, dy)
+        p.lineTo(dx + dw - r, dy)
+        p.quadTo(dx + dw, dy, dx + dw, dy + r)
+        p.lineTo(dx + dw, dy + dh - r)
+        p.quadTo(dx + dw, dy + dh, dx + dw - r, dy + dh)
+        p.lineTo(dx, dy + dh)
+      }
+      else -> {
+        p.moveTo(dx, dy)
+        p.lineTo(dx + dw, dy)
+        p.lineTo(dx + dw, dy + dh)
+        p.lineTo(dx, (dy + dh))
+      }
     }
     p.closePath()
     val area = Area(p)
@@ -189,11 +193,7 @@ class EditMenuLayerUI<V : Component>(private val lastButton: AbstractButton) : L
       val c = e.getComponent()
       if (c != lastButton) {
         val r = c.getBounds()
-        val x = r.getX()
-        val y = r.getY()
-        val w = r.getWidth()
-        val h = r.getHeight()
-        s = Line2D.Double(x + w, y, x + w, y + h - 1.0)
+        s = Line2D.Double(r.getMaxX(), r.getY(), r.getMaxX(), r.getMaxY() - 1.0)
       }
     }
     if (s != shape) {
@@ -202,11 +202,11 @@ class EditMenuLayerUI<V : Component>(private val lastButton: AbstractButton) : L
     }
   }
 
-  protected override fun processMouseEvent(e: MouseEvent, l: JLayer<out V>) {
+  override fun processMouseEvent(e: MouseEvent, l: JLayer<out V>) {
     update(e, l)
   }
 
-  protected override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out V>) {
+  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out V>) {
     update(e, l)
   }
 }
