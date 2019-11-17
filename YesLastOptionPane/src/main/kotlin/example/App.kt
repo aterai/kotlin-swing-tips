@@ -23,7 +23,7 @@ fun makeUI(): Component {
   p.setBorder(BorderFactory.createTitledBorder("JOptionPane"))
   p.add(defaultButton)
   p.add(yesLastButton)
-    
+
   val panel = object : JPanel(BorderLayout()) {
     override fun updateUI() {
       UIManager.put(KEY, null)
