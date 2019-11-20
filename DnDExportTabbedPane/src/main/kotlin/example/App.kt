@@ -85,7 +85,7 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 class DnDTabbedPane : JTabbedPane() {
-  private val dropMode = DropMode.INSERT
+  // private val dropMode = DropMode.INSERT
   var dragTabIndex = -1
   @Transient
   var dropLocation: DropLocation? = null
@@ -107,7 +107,6 @@ class DnDTabbedPane : JTabbedPane() {
     return RECT_LINE
   }
 
-  // tabbedRect.grow(2, 2)
   val tabAreaBounds: Rectangle
     get() {
       val tabbedRect = getBounds()
@@ -177,7 +176,7 @@ class DnDTabbedPane : JTabbedPane() {
 
   // @Override TransferHandler.DropLocation dropLocationForPoint(Point p) {
   fun tabDropLocationForPoint(p: Point): DropLocation {
-    check(dropMode == DropMode.INSERT) { "Unexpected drop mode" }
+    // check(dropMode == DropMode.INSERT) { "Unexpected drop mode" }
     for (i in 0 until getTabCount()) {
       if (getBoundsAt(i).contains(p)) {
         return DropLocation(p, i)
@@ -273,8 +272,6 @@ class DnDTabbedPane : JTabbedPane() {
       }
       val tabPt = e.getPoint() // e.getDragOrigin()
       val idx = src.indexAtLocation(tabPt.x, tabPt.y)
-      // disabled tab, null component problem.
-      // pointed out by daryl. NullPointerException: i.e. addTab("Tab", null)
       val flag = idx < 0 || !src.isEnabledAt(idx) || src.getComponentAt(idx) == null
       startPt = if (flag) null else tabPt
     }
@@ -286,8 +283,9 @@ class DnDTabbedPane : JTabbedPane() {
         val th = src.getTransferHandler()
         val idx = src.indexAtLocation(tabPt.x, tabPt.y)
         val selIdx = src.selectedIndex
-        val isRotate = src.getUI() !is MetalTabbedPaneUI && src.tabLayoutPolicy == WRAP_TAB_LAYOUT && idx != selIdx
-        dragTabIndex = if (isRotate) selIdx else idx
+        val isTabRunsRotated = src.getUI() !is MetalTabbedPaneUI &&
+            src.tabLayoutPolicy == WRAP_TAB_LAYOUT && idx != selIdx
+        dragTabIndex = if (isTabRunsRotated) selIdx else idx
         th.exportAsDrag(src, e, TransferHandler.MOVE)
         RECT_LINE.setBounds(0, 0, 0, 0)
         src.getRootPane().getGlassPane().setVisible(true)
