@@ -6,30 +6,30 @@ import java.awt.event.FocusEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.JTextComponent
 
-class MainPanel : JPanel(GridLayout(2, 1)) {
-  init {
-    val field = JTextField("111111111")
-    field.addFocusListener(object : FocusAdapter() {
-      override fun focusGained(e: FocusEvent) {
-        (e.getComponent() as? JTextComponent)?.selectAll()
-      }
-    })
-    add(makeTitledPanel("focusGained: selectAll", field))
-    add(makeTitledPanel("default", JTextField("22222222")))
-    setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5))
-    setPreferredSize(Dimension(320, 240))
-  }
+fun makeUI(): Component {
+  val field = JTextField("111111111")
+  field.addFocusListener(object : FocusAdapter() {
+    override fun focusGained(e: FocusEvent) {
+      (e.getComponent() as? JTextComponent)?.selectAll()
+    }
+  })
+  val p = JPanel(GridLayout(2, 1))
+  p.add(makeTitledPanel("focusGained: selectAll", field))
+  p.add(makeTitledPanel("default", JTextField("22222222")))
+  p.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5))
+  p.setPreferredSize(Dimension(320, 240))
+  return p
+}
 
-  private fun makeTitledPanel(title: String, cmp: Component): Component {
-    val p = JPanel(GridBagLayout())
-    p.setBorder(BorderFactory.createTitledBorder(title))
-    val c = GridBagConstraints()
-    c.weightx = 1.0
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.insets = Insets(5, 5, 5, 5)
-    p.add(cmp, c)
-    return p
-  }
+private fun makeTitledPanel(title: String, cmp: Component): Component {
+  val p = JPanel(GridBagLayout())
+  p.setBorder(BorderFactory.createTitledBorder(title))
+  val c = GridBagConstraints()
+  c.weightx = 1.0
+  c.fill = GridBagConstraints.HORIZONTAL
+  c.insets = Insets(5, 5, 5, 5)
+  p.add(cmp, c)
+  return p
 }
 
 fun main() {
@@ -42,7 +42,7 @@ fun main() {
     }
     JFrame().apply {
       setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-      getContentPane().add(MainPanel())
+      getContentPane().add(makeUI())
       pack()
       setLocationRelativeTo(null)
       setVisible(true)
