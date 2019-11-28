@@ -5,6 +5,16 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.html.HTMLEditorKit
 import javax.swing.text.html.StyleSheet
 
+private const val TEST_HTML = """
+<html>
+  <body>
+    <div>0000000</div>
+    <div class='highlight'>1111111111</div>
+    <div>2222222222</div>
+  </body>
+</html>
+"""
+
 fun makeUI(): Component {
   val styleSheet = StyleSheet().also {
     it.addRule("body {font-size: 12pt;}")
@@ -16,22 +26,12 @@ fun makeUI(): Component {
   val editor = JEditorPane()
   editor.setEditorKit(htmlEditorKit)
   // editor.setDocument(htmlDocument)
-  editor.setText(makeTestHtml())
+  editor.setText(TEST_HTML)
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(editor))
     it.setPreferredSize(Dimension(320, 240))
   }
 }
-
-private fun makeTestHtml() = """
-<html>
-  <body>
-    <div>0000000</div>
-    <div class='highlight'>1111111111</div>
-    <div>2222222222</div>
-  </body>
-</html>
-"""
 
 fun main() {
   EventQueue.invokeLater {

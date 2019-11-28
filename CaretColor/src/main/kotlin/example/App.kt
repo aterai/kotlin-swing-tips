@@ -6,6 +6,16 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.html.HTMLEditorKit
 import javax.swing.text.html.StyleSheet
 
+private const val TEST_HTML = """
+  <html>
+    <body>
+      <div>JTextPane#setCaretColor(null)</div>
+      <div class='highlight'>1111111111</div>
+      <div>2222222222</div>
+    </body>
+  </html>
+"""
+
 fun makeUI(): Component {
   // UIManager.put("TextPane.caretForeground", Color.ORANGE)
   val styleSheet = StyleSheet()
@@ -16,7 +26,7 @@ fun makeUI(): Component {
   val editor = JEditorPane()
   // editor.setEditable(false);
   editor.setEditorKit(htmlEditorKit)
-  editor.setText(makeTestHtml())
+  editor.setText(TEST_HTML)
   editor.setCaretColor(null)
 
   val field = JTextField("JTextField")
@@ -76,16 +86,6 @@ fun makeUI(): Component {
     it.setPreferredSize(Dimension(320, 240))
   }
 }
-
-private fun makeTestHtml() = """
-  <html>
-    <body>
-      <div>JTextPane#setCaretColor(null)</div>
-      <div class='highlight'>1111111111</div>
-      <div>2222222222</div>
-    </body>
-  </html>
-"""
 
 fun main() {
   EventQueue.invokeLater {
