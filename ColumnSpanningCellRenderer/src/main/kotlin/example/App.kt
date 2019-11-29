@@ -49,7 +49,7 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 class ColumnSpanningCellRenderer : JPanel(BorderLayout()), TableCellRenderer {
-  private val textArea = JTextArea(2, 999999)
+  private val textArea = JTextArea(2, 999_999)
   private val label = JLabel()
   private val iconLabel = JLabel()
   private val scroll = JScrollPane(textArea)
