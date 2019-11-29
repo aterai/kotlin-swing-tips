@@ -4,7 +4,6 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseEvent
 import java.util.Objects
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.text.BadLocationException
 import javax.swing.text.DefaultCaret
 import javax.swing.text.JTextComponent
 import javax.swing.text.Position.Bias
@@ -51,12 +50,12 @@ class SelectWordCaret : DefaultCaret() {
         selectingMode = SelectingMode.ROW
         val target = getComponent()
         val offs = target.getCaretPosition()
-        try {
+        runCatching {
           p0 = Utilities.getRowStart(target, offs)
           p1 = Utilities.getRowEnd(target, offs)
           setDot(p0)
           moveDot(p1)
-        } catch (ex: BadLocationException) {
+        }.onFailure {
           UIManager.getLookAndFeel().provideErrorFeedback(target)
         }
       }
@@ -89,7 +88,7 @@ class SelectWordCaret : DefaultCaret() {
     val biasRet = arrayOfNulls<Bias>(1)
     val c = getComponent()
     val pos = getCaretPositionByLocation(c, e.getPoint(), biasRet)
-    try {
+    runCatching {
       when {
         pos in p0 until p1 -> {
           setDot(p0)
@@ -104,7 +103,7 @@ class SelectWordCaret : DefaultCaret() {
           moveDot(Utilities.getWordStart(c, pos), biasRet[0])
         }
       }
-    } catch (ex: BadLocationException) {
+    }.onFailure {
       UIManager.getLookAndFeel().provideErrorFeedback(c)
     }
   }
@@ -113,7 +112,7 @@ class SelectWordCaret : DefaultCaret() {
     val biasRet = arrayOfNulls<Bias>(1)
     val c = getComponent()
     val pos = getCaretPositionByLocation(c, e.getPoint(), biasRet)
-    try {
+    runCatching {
       when {
         pos in p0 until p1 -> {
           setDot(p0)
@@ -128,7 +127,7 @@ class SelectWordCaret : DefaultCaret() {
           moveDot(Utilities.getRowStart(c, pos), biasRet[0])
         }
       }
-    } catch (ex: BadLocationException) {
+    }.onFailure {
       UIManager.getLookAndFeel().provideErrorFeedback(c)
     }
   }

@@ -49,10 +49,9 @@ class MainPanel : JPanel(BorderLayout()) {
           return@addActionListener
         }
       }
-      try {
+      runCatching {
         ZipUtil.zip(path, tgt)
-      } catch (ex: IOException) {
-        // ex.printStackTrace()
+      }.onFailure {
         LOGGER.info { "Cant zip! : $path" }
         Toolkit.getDefaultToolkit().beep()
       }
@@ -80,7 +79,7 @@ class MainPanel : JPanel(BorderLayout()) {
       val str = field.getText()
       makeDestDirPath(str)?.also { destDir ->
         val path = Paths.get(str)
-        try {
+        runCatching {
           // if (Files.exists(destDir)) { // noticeably poor performance in JDK 8
           if (destDir.toFile().exists()) {
             val m = "<html>%s already exists.<br>Do you want to overwrite it?".format(destDir.toString())
@@ -93,8 +92,7 @@ class MainPanel : JPanel(BorderLayout()) {
             Files.createDirectories(destDir)
           }
           ZipUtil.unzip(path, destDir)
-        } catch (ex: IOException) {
-          // ex.printStackTrace()
+        }.onFailure {
           LOGGER.info { "Cant unzip! : $path" }
           Toolkit.getDefaultToolkit().beep()
         }
