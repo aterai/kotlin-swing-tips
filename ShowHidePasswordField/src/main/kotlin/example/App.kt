@@ -17,7 +17,7 @@ class MainPanel : JPanel(GridLayout(4, 1, 0, 2)) {
     val b1 = JCheckBox("show passwords")
     b1.addActionListener { e: ActionEvent ->
       val c = e.getSource() as? AbstractButton ?: return@addActionListener
-      pf1.setEchoChar(if (c.isSelected()) '\u0000' else (UIManager.get(ECHO_CHAR) as Char))
+      pf1.setEchoChar(if (c.isSelected()) '\u0000' else UIManager.get(ECHO_CHAR) as Char)
     }
     val p1 = JPanel(BorderLayout())
     p1.add(pf1)
@@ -27,7 +27,7 @@ class MainPanel : JPanel(GridLayout(4, 1, 0, 2)) {
     val b2 = JToggleButton()
     b2.addActionListener { e ->
       val c = e.getSource() as? AbstractButton ?: return@addActionListener
-      pf2.setEchoChar(if (c.isSelected()) '\u0000' else (UIManager.get(ECHO_CHAR) as Char))
+      pf2.setEchoChar(if (c.isSelected()) '\u0000' else UIManager.get(ECHO_CHAR) as Char)
     }
     initEyeButton(b2)
     val p2 = makeOverlayLayoutPanel()

@@ -135,7 +135,7 @@ class ToggleButtonBarCellIcon : Icon {
         p.moveTo(dx, dy)
         p.lineTo(dx + dw, dy)
         p.lineTo(dx + dw, dy + dh)
-        p.lineTo(dx, (dy + dh))
+        p.lineTo(dx, dy + dh)
       }
     }
     p.closePath()
