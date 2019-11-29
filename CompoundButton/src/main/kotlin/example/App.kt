@@ -88,9 +88,7 @@ class CompoundButton(private val dim: Dimension, private val bl: ButtonLocation)
     g2.dispose()
   }
 
-  override fun contains(x: Int, y: Int): Boolean {
-    return shape?.contains(x.toDouble(), y.toDouble()) ?: false
-  }
+  override fun contains(x: Int, y: Int) = shape?.contains(x.toDouble(), y.toDouble()) ?: false
 
   init {
     icon = object : Icon {

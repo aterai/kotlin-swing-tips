@@ -47,9 +47,7 @@ class TitledSeparator(
     ))
   }
 
-  override fun getMaximumSize(): Dimension {
-    return Dimension(Short.MAX_VALUE.toInt(), super.getPreferredSize().height)
-  }
+  override fun getMaximumSize() = Dimension(Short.MAX_VALUE.toInt(), super.getPreferredSize().height)
 
   override fun updateUI() {
     super.updateUI()

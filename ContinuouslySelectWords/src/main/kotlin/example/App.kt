@@ -143,9 +143,7 @@ class SelectWordCaret : DefaultCaret() {
     return p0 == other.p0 && p1 == other.p1
   }
 
-  override fun hashCode(): Int {
-    return Objects.hash(super.hashCode(), p0, p1)
-  }
+  override fun hashCode() = Objects.hash(super.hashCode(), p0, p1)
 }
 
 fun main() {

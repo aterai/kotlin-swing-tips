@@ -557,9 +557,7 @@ class ButtonTabComponent(private val tabbedPane: JTabbedPane) : JPanel(FlowLayou
 }
 
 class TabButton : JButton() {
-  override fun getPreferredSize(): Dimension {
-    return Dimension(SIZE, SIZE)
-  }
+  override fun getPreferredSize() = Dimension(SIZE, SIZE)
 
   override fun updateUI() {
     // we don't want to update UI for this button
