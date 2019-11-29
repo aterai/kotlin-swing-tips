@@ -57,7 +57,7 @@ class RowDataModel : DefaultTableModel() {
 
   override fun getColumnName(column: Int) = COLUMN_ARRAY[column].columnName
 
-  private class ColumnContext(
+  private data class ColumnContext(
     val columnName: String,
     val columnClass: Class<*>,
     val isEditable: Boolean
@@ -72,13 +72,13 @@ class RowDataModel : DefaultTableModel() {
   }
 }
 
-data class RowData(var name: String, var comment: String)
+data class RowData(val name: String, val comment: String)
 
 class TablePopupMenu : JPopupMenu() {
   private val delete: JMenuItem
   override fun show(c: Component, x: Int, y: Int) {
     if (c is JTable) {
-      delete.setEnabled(c.selectedRowCount > 0)
+      delete.setEnabled(c.getSelectedRowCount() > 0)
       super.show(c, x, y)
     }
   }
@@ -88,7 +88,7 @@ class TablePopupMenu : JPopupMenu() {
       (getInvoker() as? JTable)?.also { table ->
         (table.getModel() as? RowDataModel)?.also { model ->
           model.addRowData(RowData("New row", ""))
-          val r = table.getCellRect(model.rowCount - 1, 0, true)
+          val r = table.getCellRect(model.getRowCount() - 1, 0, true)
           table.scrollRectToVisible(r)
         }
       }
