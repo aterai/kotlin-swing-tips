@@ -85,10 +85,7 @@ class MainPanel : JPanel(BorderLayout()) {
       (value as? LocalDate)?.also {
         setText(it.getDayOfMonth().toString())
         val fgcf = YearMonth.from(it) == YearMonth.from(currentLocalDate)
-        setForeground(when {
-          fgcf -> Color.BLACK
-          else -> Color.GRAY
-        })
+        setForeground(if (fgcf) Color.BLACK else Color.GRAY)
         setBackground(when {
           it.isEqual(realLocalDate) -> Color(0xDC_FF_DC)
           else -> getDayOfWeekColor(it.getDayOfWeek())
