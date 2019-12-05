@@ -13,14 +13,14 @@ fun makeUI(): Component {
 
   val columnNames = arrayOf("String", "Integer", "Boolean")
   val data = arrayOf(
-    arrayOf<Any>("AA", 1, true), arrayOf<Any>("BB", 2, false),
-    arrayOf<Any>("cc", 3, true), arrayOf<Any>("dd", 4, false),
-    arrayOf<Any>("ee", 5, false), arrayOf<Any>("FF", -1, true),
-    arrayOf<Any>("GG", -2, false), arrayOf<Any>("HH", -3, true),
-    arrayOf<Any>("II", -4, false), arrayOf<Any>("JJ", -5, false),
-    arrayOf<Any>("KK", 11, true), arrayOf<Any>("LL", 22, false),
-    arrayOf<Any>("MM", 33, true), arrayOf<Any>("NN", 44, false),
-    arrayOf<Any>("OO", 55, false)
+    arrayOf("AA", 1, true), arrayOf("BB", 2, false),
+    arrayOf("cc", 3, true), arrayOf("dd", 4, false),
+    arrayOf("ee", 5, false), arrayOf("FF", -1, true),
+    arrayOf("GG", -2, false), arrayOf("HH", -3, true),
+    arrayOf("II", -4, false), arrayOf("JJ", -5, false),
+    arrayOf("KK", 11, true), arrayOf("LL", 22, false),
+    arrayOf("MM", 33, true), arrayOf("NN", 44, false),
+    arrayOf("OO", 55, false)
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
@@ -31,8 +31,8 @@ fun makeUI(): Component {
 
   val filter = object : RowFilter<TableModel, Int>() {
     override fun include(entry: Entry<out TableModel, out Int>): Boolean {
-      val vidx = table.convertRowIndexToView(entry.getIdentifier().toInt())
-      return vidx < USER_SPECIFIED_NUMBER_OF_ROWS
+      val idx = table.convertRowIndexToView(entry.getIdentifier().toInt())
+      return idx < USER_SPECIFIED_NUMBER_OF_ROWS
     }
   }
   val sorter = object : TableRowSorter<TableModel>(model) {

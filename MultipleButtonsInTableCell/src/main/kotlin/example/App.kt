@@ -15,10 +15,10 @@ class MainPanel : JPanel(BorderLayout()) {
     val empty = ""
     val columnNames = arrayOf("String", "Button")
     val data = arrayOf(
-      arrayOf<Any>("AAA", empty),
-      arrayOf<Any>("CCC", empty),
-      arrayOf<Any>("BBB", empty),
-      arrayOf<Any>("ZZZ", empty))
+      arrayOf("AAA", empty),
+      arrayOf("CCC", empty),
+      arrayOf("BBB", empty),
+      arrayOf("ZZZ", empty))
     val model = object : DefaultTableModel(data, columnNames) {
       override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
     }
@@ -100,11 +100,9 @@ class ButtonsEditor(private val table: JTable) : AbstractCellEditor(), TableCell
 
   private inner class EditingStopHandler : MouseAdapter(), ActionListener {
     override fun mousePressed(e: MouseEvent) {
-      val o = e.getSource()
-      if (o is TableCellEditor) {
-        actionPerformed(ActionEvent(o, ActionEvent.ACTION_PERFORMED, ""))
-      } else if (o is JButton) {
-        if (o.getModel().isPressed() && table.isRowSelected(table.getEditingRow()) && e.isControlDown()) {
+      when (val o = e.getSource()) {
+        is TableCellEditor -> actionPerformed(ActionEvent(o, ActionEvent.ACTION_PERFORMED, ""))
+        is JButton -> if (o.getModel().isPressed() && table.isRowSelected(table.getEditingRow()) && e.isControlDown()) {
           panel.setBackground(table.getBackground())
         }
       }

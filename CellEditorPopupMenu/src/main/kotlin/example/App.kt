@@ -16,10 +16,10 @@ import javax.swing.undo.UndoManager
 class MainPanel : JPanel(BorderLayout()) {
   private val columnNames = arrayOf("String", "String")
   private val data = arrayOf(
-      arrayOf<Any>("Undo", "Ctrl Z"),
-      arrayOf<Any>("Redo", "Ctrl Y"),
-      arrayOf<Any>("AAA", "bbbbbb"),
-      arrayOf<Any>("CCC", "ddddddd"))
+    arrayOf("Undo", "Ctrl Z"),
+    arrayOf("Redo", "Ctrl Y"),
+    arrayOf("AAA", "bbb bbb"),
+    arrayOf("CCC", "ddd ddd"))
   private val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
@@ -36,7 +36,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class TextComponentPopupMenu(tc: JTextComponent) : JPopupMenu() {
+class TextComponentPopupMenu(tc: JTextComponent) : JPopupMenu() {
   init {
     val cutAction = DefaultEditorKit.CutAction()
     add(cutAction)
@@ -69,9 +69,9 @@ internal class TextComponentPopupMenu(tc: JTextComponent) : JPopupMenu() {
     tc.getActionMap().put("undo", undoAction)
     tc.getActionMap().put("redo", redoAction)
     val msk = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()
-    val imap = tc.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-    imap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, msk), "undo")
-    imap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, msk), "redo")
+    val im = tc.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, msk), "undo")
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, msk), "redo")
 
     addPopupMenuListener(object : PopupMenuListener {
       override fun popupMenuCanceled(e: PopupMenuEvent) { /* not needed */ }
@@ -82,8 +82,8 @@ internal class TextComponentPopupMenu(tc: JTextComponent) : JPopupMenu() {
       }
 
       override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-        val tcmp = getInvoker() as? JTextComponent
-        val hasSelectedText = tcmp?.getSelectedText() != null
+        val textComponent = getInvoker() as? JTextComponent
+        val hasSelectedText = textComponent?.getSelectedText() != null
         cutAction.setEnabled(hasSelectedText)
         copyAction.setEnabled(hasSelectedText)
         deleteAction.setEnabled(hasSelectedText)
@@ -94,7 +94,7 @@ internal class TextComponentPopupMenu(tc: JTextComponent) : JPopupMenu() {
   }
 }
 
-internal class UndoAction(private val undoManager: UndoManager) : AbstractAction("undo") {
+class UndoAction(private val undoManager: UndoManager) : AbstractAction("undo") {
   override fun actionPerformed(e: ActionEvent) {
     runCatching {
       undoManager.undo()
@@ -104,7 +104,7 @@ internal class UndoAction(private val undoManager: UndoManager) : AbstractAction
   }
 }
 
-internal class RedoAction(private val undoManager: UndoManager) : AbstractAction("redo") {
+class RedoAction(private val undoManager: UndoManager) : AbstractAction("redo") {
   override fun actionPerformed(e: ActionEvent) {
     runCatching {
       undoManager.redo()
@@ -114,7 +114,7 @@ internal class RedoAction(private val undoManager: UndoManager) : AbstractAction
   }
 }
 
-internal class DeleteAction : AbstractAction("delete") {
+class DeleteAction : AbstractAction("delete") {
   override fun actionPerformed(e: ActionEvent) {
     val c = e.getSource() as? Component ?: return
     val pop = SwingUtilities.getUnwrappedParent(c) as? JPopupMenu ?: return

@@ -17,14 +17,14 @@ class MainPanel : JPanel(BorderLayout()) {
   init {
     val columnNames = arrayOf("Name", "Comment")
     val data = arrayOf(
-      arrayOf<Any>("test1.jpg", "111111"),
-      arrayOf<Any>("test1234.jpg", "  "),
-      arrayOf<Any>("test15354.gif", "22222222"),
-      arrayOf<Any>("t.png", "comment"),
-      arrayOf<Any>("3333333333.jpg", "123"),
-      arrayOf<Any>("444444444444444444444444.mpg", "test"),
-      arrayOf<Any>("5555555555555555", ""),
-      arrayOf<Any>("test1.jpg", ""))
+      arrayOf("test1.jpg", "111111"),
+      arrayOf("test1234.jpg", "  "),
+      arrayOf("test15354.gif", "22222222"),
+      arrayOf("t.png", "comment"),
+      arrayOf("3333333333.jpg", "123"),
+      arrayOf("444444444444444444444444.mpg", "test"),
+      arrayOf("5555555555555555", ""),
+      arrayOf("test1.jpg", ""))
     val model = object : DefaultTableModel(data, columnNames) {
       override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
 
