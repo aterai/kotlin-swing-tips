@@ -135,7 +135,7 @@ class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: ImageIcon) : 
       return o
     }
     val str = o?.toString() ?: ""
-    return (0 until model.getSize()).map { model.getElementAt(it) }.filter { it.url == str }.firstOrNull()
+    return (0 until model.getSize()).map { model.getElementAt(it) }.firstOrNull { it.url == str }
   }
 }
 
@@ -144,9 +144,9 @@ class SiteComboBoxLayout(private val favicon: JLabel?, private val feedButton: J
 
   override fun removeLayoutComponent(comp: Component) { /* not needed */ }
 
-  override fun preferredLayoutSize(parent: Container) = parent.getPreferredSize()
+  override fun preferredLayoutSize(parent: Container): Dimension? = parent.getPreferredSize()
 
-  override fun minimumLayoutSize(parent: Container) = parent.getMinimumSize()
+  override fun minimumLayoutSize(parent: Container): Dimension? = parent.getMinimumSize()
 
   override fun layoutContainer(parent: Container) {
     val cb = parent as? JComboBox<*> ?: return
@@ -182,7 +182,7 @@ class SiteComboBoxLayout(private val favicon: JLabel?, private val feedButton: J
     // JComboBox Editor
     cb.getEditor().getEditorComponent()?.also {
       it.setBounds(ins.left + faviconWidth, ins.top,
-          width - ins.left - ins.right - arrowWidth - faviconWidth - feedWidth, height - ins.top - ins.bottom)
+        width - ins.left - ins.right - arrowWidth - faviconWidth - feedWidth, height - ins.top - ins.bottom)
     }
   }
 }

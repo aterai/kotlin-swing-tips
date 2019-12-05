@@ -230,7 +230,7 @@ internal class ColumnGroup(text: String) {
       list.contains(c) -> g
       else -> list.filterIsInstance<ColumnGroup>()
         .map { it.getColumnGroupList(c, ArrayList(g)) }
-        .filterNot { it.isEmpty() }.firstOrNull().orEmpty()
+        .firstOrNull { it.isNotEmpty() }.orEmpty()
     }
   }
 

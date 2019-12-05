@@ -12,9 +12,9 @@ class MainPanel : JPanel(BorderLayout()) {
   init {
     val columnNames = arrayOf("user", "rwx")
     val data = arrayOf(
-        arrayOf<Any>("owner", 7),
-        arrayOf<Any>("group", 6),
-        arrayOf<Any>("other", 5))
+      arrayOf("owner", 7),
+      arrayOf("group", 6),
+      arrayOf("other", 5))
     val model = object : DefaultTableModel(data, columnNames) {
       override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
     }
@@ -102,7 +102,7 @@ class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
           val t = titles[i]
           am.put(t, object : AbstractAction(t) {
             override fun actionPerformed(e: ActionEvent) {
-              buttons.filter { it.getText() == t }.firstOrNull()?.doClick()
+              buttons.firstOrNull { it.getText() == t }?.doClick()
               fireEditingStopped()
             }
           })
@@ -128,9 +128,9 @@ class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
 
   override fun getCellEditorValue(): Any {
     var i = 0
-    i = if (panel.buttons.get(0).isSelected()) 1 shl 2 or i else i
-    i = if (panel.buttons.get(1).isSelected()) 1 shl 1 or i else i
-    i = if (panel.buttons.get(2).isSelected()) 1 shl 0 or i else i
+    i = if (panel.buttons[0].isSelected()) 1 shl 2 or i else i
+    i = if (panel.buttons[1].isSelected()) 1 shl 1 or i else i
+    i = if (panel.buttons[2].isSelected()) 1 shl 0 or i else i
     return i
   }
 }
