@@ -50,7 +50,7 @@ class AlignDecimalCellRenderer : TableCellRenderer {
     override fun updateUI() {
       super.updateUI()
       setOpaque(false)
-      putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, java.lang.Boolean.TRUE)
+      putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true)
       EventQueue.invokeLater {
         val attr = getStyle(StyleContext.DEFAULT_STYLE)
         val ts = arrayOf(TabStop(25f, TabStop.ALIGN_DECIMAL, TabStop.LEAD_NONE))

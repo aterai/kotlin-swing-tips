@@ -10,7 +10,7 @@ import javax.swing.plaf.basic.BasicScrollBarUI
 class MainPanel : JPanel(BorderLayout(5, 5)) {
   init {
     // https://docs.oracle.com/javase/8/docs/api/javax/swing/plaf/synth/doc-files/componentProperties.html
-    UIManager.put("ScrollBar.allowsAbsolutePositioning", java.lang.Boolean.TRUE)
+    UIManager.put("ScrollBar.allowsAbsolutePositioning", true)
 
     val help = "middle mouse click in the track will set the position of the track to where the mouse is.\n"
     val txt = help.repeat(100)
@@ -51,7 +51,7 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
 }
 
 class AbsolutePositioningWindowsScrollBarUI : WindowsScrollBarUI() {
-  protected override fun createTrackListener(): BasicScrollBarUI.TrackListener {
+  override fun createTrackListener(): TrackListener {
     return object : BasicScrollBarUI.TrackListener() {
       override fun mousePressed(e: MouseEvent) {
         if (SwingUtilities.isLeftMouseButton(e)) {
@@ -72,7 +72,7 @@ class AbsolutePositioningWindowsScrollBarUI : WindowsScrollBarUI() {
 }
 
 class AbsolutePositioningBasicScrollBarUI : BasicScrollBarUI() {
-  protected override fun createTrackListener(): BasicScrollBarUI.TrackListener {
+  override fun createTrackListener(): TrackListener {
     return object : BasicScrollBarUI.TrackListener() {
       override fun mousePressed(e: MouseEvent) {
         if (SwingUtilities.isLeftMouseButton(e)) {

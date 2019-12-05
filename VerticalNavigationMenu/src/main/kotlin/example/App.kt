@@ -122,7 +122,7 @@ class RowSelectionTree : JTree() {
         return rect
       }
     })
-    UIManager.put("Tree.repaintWholeRow", java.lang.Boolean.TRUE)
+    UIManager.put("Tree.repaintWholeRow", true)
     val r = getCellRenderer()
     setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
       val c = r.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
