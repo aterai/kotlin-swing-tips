@@ -32,7 +32,7 @@ fun makeUI(): Component {
       val cal = Calendar.getInstance()
       cal.setTime(getDate())
       val calendarField = getCalendarField()
-      val stepSize = stepSizeMap.get(calendarField) ?: 1
+      val stepSize = stepSizeMap[calendarField] ?: 1
       cal.add(calendarField, -stepSize)
       return cal.getTime()
     }
@@ -41,7 +41,7 @@ fun makeUI(): Component {
       val cal = Calendar.getInstance()
       cal.setTime(getDate())
       val calendarField = getCalendarField()
-      val stepSize = stepSizeMap.get(calendarField) ?: 1
+      val stepSize = stepSizeMap[calendarField] ?: 1
       cal.add(calendarField, stepSize)
       return cal.getTime()
     }
