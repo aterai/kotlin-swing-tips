@@ -74,13 +74,13 @@ class HyperlinkButton : JButton {
     setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR))
   }
 
-  public constructor(text: String?, icon: Icon?) : super(text, icon)
+  constructor(text: String?, icon: Icon?) : super(text, icon)
 
-  public constructor(text: String?) : this(text, null)
+  constructor(text: String?) : this(text, null)
 
-  public constructor(icon: Icon) : this(null, icon)
+  constructor(icon: Icon) : this(null, icon)
 
-  public constructor(a: Action) : this(null, null) {
+  constructor(a: Action) : this(null, null) {
     super.setAction(a)
   }
 }
@@ -105,10 +105,10 @@ class BasicLinkViewButtonUI : LinkViewButtonUI() {
     textRect.setBounds(0, 0, 0, 0)
 
     val text = SwingUtilities.layoutCompoundLabel(
-        c, c.getFontMetrics(f), b.getText(), null, // altIcon != null ? altIcon : getDefaultIcon(),
-        b.getVerticalAlignment(), b.getHorizontalAlignment(),
-        b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
-        viewRect, iconRect, textRect, 0) // b.getText() == null ? 0 : b.getIconTextGap())
+      c, c.getFontMetrics(f), b.getText(), null, // altIcon != null ? altIcon : getDefaultIcon(),
+      b.getVerticalAlignment(), b.getHorizontalAlignment(),
+      b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
+      viewRect, iconRect, textRect, 0) // b.getText() == null ? 0 : b.getIconTextGap())
 
     if (c.isOpaque()) {
       g.setColor(b.getBackground())
@@ -118,8 +118,8 @@ class BasicLinkViewButtonUI : LinkViewButtonUI() {
     if (b.isRolloverEnabled() && b.getModel().isRollover()) {
       g.setColor(Color.BLUE)
       g.drawLine(
-          viewRect.x, viewRect.y + viewRect.height,
-          viewRect.x + viewRect.width, viewRect.y + viewRect.height)
+        viewRect.x, viewRect.y + viewRect.height,
+        viewRect.x + viewRect.width, viewRect.y + viewRect.height)
     }
 
     (c.getClientProperty(BasicHTML.propertyKey) as? View)?.also {
