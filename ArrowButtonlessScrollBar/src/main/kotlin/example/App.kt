@@ -24,7 +24,7 @@ class MainPanel : JPanel(GridLayout(1, 0)) {
     val trackColor = Color(0xF0_F0_F0)
     UIManager.put("ScrollBar.track", trackColor)
 
-    val txt = "aaaaaaaaaaaaaaaaaaa\n".repeat(100)
+    val txt = "*****************\n".repeat(100)
 
     add(JScrollPane(JTextArea(txt)))
     add(object : JScrollPane(JTextArea(txt)) {
@@ -43,18 +43,18 @@ class ZeroSizeButton : JButton() {
 }
 
 class ArrowButtonlessScrollBarUI : BasicScrollBarUI() {
-  protected override fun createDecreaseButton(orientation: Int) = ZeroSizeButton()
+  override fun createDecreaseButton(orientation: Int) = ZeroSizeButton()
 
-  protected override fun createIncreaseButton(orientation: Int) = ZeroSizeButton()
+  override fun createIncreaseButton(orientation: Int) = ZeroSizeButton()
 
-  protected override fun paintTrack(g: Graphics, c: JComponent?, r: Rectangle) {
+  override fun paintTrack(g: Graphics, c: JComponent?, r: Rectangle) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setPaint(trackColor)
     g2.fill(r)
     g2.dispose()
   }
 
-  protected override fun paintThumb(g: Graphics, c: JComponent?, r: Rectangle) {
+  override fun paintThumb(g: Graphics, c: JComponent?, r: Rectangle) {
     val sb = (c as? JScrollBar)?.takeIf { it.isEnabled() } ?: return
     val m = sb.getModel()
     if (m.getMaximum() - m.getMinimum() - m.getExtent() > 0) {
