@@ -25,8 +25,8 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class DropcapLabel(text: String) : JLabel(text) {
-  protected override fun paintComponent(g: Graphics) {
+class DropcapLabel(text: String) : JLabel(text) {
+  override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setPaint(getBackground())
     g2.fillRect(0, 0, getWidth(), getHeight())
