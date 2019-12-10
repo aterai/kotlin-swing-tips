@@ -10,14 +10,14 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 class MainPanel : JPanel(GridLayout(1, 2)) {
   init {
     val model = DefaultListModel<String>()
-    model.addElement("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-    model.addElement("aaaa")
-    model.addElement("aaaabbb")
-    model.addElement("aaaabbbcc")
-    model.addElement("1234567890abcdefghijklmnopqrstuvwxyz")
+    model.addElement("ABC DEF GHI JKL MNO PQR STU VWX YZ")
+    model.addElement("111")
+    model.addElement("111222")
+    model.addElement("111222333")
+    model.addElement("1234567890 abc def ghi jkl mno pqr stu vwx yz")
     model.addElement("bbb1")
     model.addElement("bbb12")
-    model.addElement("1234567890-+*/=ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+    model.addElement("1234567890-+*/=ABC DEF GHI JKL MNO PQR STU VWX YZ")
     model.addElement("bbb123")
 
     val list1 = object : JList<String>(model) {
@@ -66,15 +66,13 @@ class TooltipListCellRenderer<E> : ListCellRenderer<E> {
     cellHasFocus: Boolean
   ): Component {
     val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-    val l = c as? JLabel ?: return c
-    val i = l.getInsets()
-    val v = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
-    val rect = v.getBounds()
-    rect.width -= i.left + i.right
-    val fm = l.getFontMetrics(l.getFont())
-    val str = value?.toString() ?: ""
-    l.setToolTipText(if (fm.stringWidth(str) > rect.width) str else null)
-    return l
+    (SwingUtilities.getAncestorOfClass(JViewport::class.java, list) as? JViewport)?.also {
+      val rect = SwingUtilities.calculateInnerArea(it, it.getBounds())
+      val fm = c.getFontMetrics(c.getFont())
+      val str = value?.toString() ?: ""
+      (c as? JComponent)?.setToolTipText(if (fm.stringWidth(str) > rect.width) str else null)
+    }
+    return c
   }
 }
 
