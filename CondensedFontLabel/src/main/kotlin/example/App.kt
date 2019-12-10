@@ -43,20 +43,20 @@ class MainPanel : JPanel(GridLayout(0, 1)) {
   }
 
   companion object {
-    private const val TEXT = "1234567890 ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    private const val TEXT = "The quick brown fox jumps over the lazy dog."
   }
 }
 
 class WrappingLabel(text: String?) : JLabel(text) {
+  private val rect = Rectangle()
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     g2.setPaint(getForeground())
     g2.setFont(getFont())
-    val i = getInsets()
-    val x = i.left.toFloat()
-    var y = i.top.toFloat()
-    val w = getWidth() - i.left - i.right
+    val w = SwingUtilities.calculateInnerArea(this, rect).width
+    val x = rect.x.toFloat()
+    var y = rect.y.toFloat()
     val attr = AttributedString(text)
     attr.addAttribute(TextAttribute.FONT, getFont())
     val aci = attr.getIterator()
@@ -75,10 +75,10 @@ class WrappedLabel(str: String?) : JLabel(str) {
   @Transient
   private var gvText: GlyphVector? = null
   private var prevWidth = -1
+  private val rect = Rectangle()
 
   override fun doLayout() {
-    val i = getInsets()
-    val w = getWidth() - i.left - i.right
+    val w = SwingUtilities.calculateInnerArea(this, rect).width
     if (w != prevWidth) {
       val fm = getFontMetrics(getFont())
       val frc = fm.getFontRenderContext()
