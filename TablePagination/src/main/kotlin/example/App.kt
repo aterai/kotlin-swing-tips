@@ -14,7 +14,6 @@ class MainPanel : JPanel(BorderLayout()) {
   private val group = ButtonGroup()
   private val columnNames = arrayOf("Year", "String", "Comment")
   private val model = object : DefaultTableModel(null, columnNames) {
-    // override fun getColumnClass(column: Int) = if (column == 0) Integer::class.java else Any::class.java
     override fun getColumnClass(column: Int) = if (column == 0) Number::class.java else Any::class.java
   }
   @Transient
@@ -29,7 +28,7 @@ class MainPanel : JPanel(BorderLayout()) {
     table.putClientProperty("terminateEditOnFocusLost", true)
     table.setRowSorter(sorter)
 
-    (1..2016).map { i -> arrayOf(i, "Test: $i", if (i % 2 == 0) "" else "comment...") }
+    (1..2019).map { i -> arrayOf(i, "Test: $i", if (i % 2 == 0) "" else "comment...") }
       .forEach { model.addRow(it) }
 
     initLinkBox(100, 1)
@@ -40,7 +39,6 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   private fun initLinkBox(itemsPerPage: Int, currentPageIndex: Int) {
-    // assert currentPageIndex > 0;
     sorter.setRowFilter(object : RowFilter<TableModel, Int>() {
       override fun include(entry: Entry<out TableModel, out Int>): Boolean {
         val ti = currentPageIndex - 1
@@ -137,8 +135,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class LinkViewRadioButtonUI : BasicRadioButtonUI() {
-  private val size = Dimension()
+class LinkViewRadioButtonUI : BasicRadioButtonUI() {
   private val viewRect = Rectangle()
   private val iconRect = Rectangle()
   private val textRect = Rectangle()
@@ -147,19 +144,15 @@ internal class LinkViewRadioButtonUI : BasicRadioButtonUI() {
 
   @Synchronized
   override fun paint(g: Graphics, c: JComponent) {
-    // val f = c.getFont()
-    // val fm = c.getFontMetrics(f)
     g.setFont(c.getFont())
 
-    val i = c.getInsets()
-    c.getSize(size)
-    viewRect.setBounds(i.left, i.top, size.width - i.right - i.left, size.height - i.top - i.bottom)
+    SwingUtilities.calculateInnerArea(c, viewRect)
     iconRect.setBounds(0, 0, 0, 0)
     textRect.setBounds(0, 0, 0, 0)
 
     if (c.isOpaque()) {
       g.setColor(c.getBackground())
-      g.fillRect(0, 0, size.width, size.height)
+      g.fillRect(0, 0, c.getWidth(), c.getHeight())
     }
 
     val b = c as? AbstractButton ?: return
