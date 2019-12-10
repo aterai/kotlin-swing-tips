@@ -88,7 +88,6 @@ class HyperlinkButton : JButton {
 open class LinkViewButtonUI : BasicButtonUI() /* ButtonUI */
 
 class BasicLinkViewButtonUI : LinkViewButtonUI() {
-  private val size = Dimension()
   private val viewRect = Rectangle()
   private val iconRect = Rectangle()
   private val textRect = Rectangle()
@@ -98,9 +97,7 @@ class BasicLinkViewButtonUI : LinkViewButtonUI() {
     val f = c.getFont()
     g.setFont(f)
 
-    val i = c.getInsets()
-    b.getSize(size)
-    viewRect.setBounds(i.left, i.top, size.width - i.left - i.right, size.height - i.top - i.bottom)
+    SwingUtilities.calculateInnerArea(c, viewRect)
     iconRect.setBounds(0, 0, 0, 0)
     textRect.setBounds(0, 0, 0, 0)
 
@@ -112,7 +109,7 @@ class BasicLinkViewButtonUI : LinkViewButtonUI() {
 
     if (c.isOpaque()) {
       g.setColor(b.getBackground())
-      g.fillRect(0, 0, size.width, size.height)
+      g.fillRect(0, 0, c.getWidth(), c.getHeight())
     }
 
     if (b.isRolloverEnabled() && b.getModel().isRollover()) {
