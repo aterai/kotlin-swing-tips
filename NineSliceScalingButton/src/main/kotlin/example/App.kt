@@ -143,7 +143,8 @@ class NineSliceScalingIcon(
     val iw = image.getWidth(c)
     val ih = image.getHeight(c)
     g2.drawImage(image.getSubimage(lw, th, iw - lw - rw, ih - th - bh), lw, th, width - lw - rw, height - th - bh, c)
-    if (lw > 0 && rw > 0 && th > 0 && bh > 0) {
+    // if (lw > 0 && rw > 0 && th > 0 && bh > 0) {
+    if (listOf(lw, rw, th, bh).filterNot { it > 0 }.isEmpty()) {
       g2.drawImage(image.getSubimage(lw, 0, iw - lw - rw, th), lw, 0, width - lw - rw, th, c)
       g2.drawImage(image.getSubimage(lw, ih - bh, iw - lw - rw, bh), lw, height - bh, width - lw - rw, bh, c)
       g2.drawImage(image.getSubimage(0, th, lw, ih - th - bh), 0, th, lw, height - th - bh, c)
@@ -159,7 +160,6 @@ class NineSliceScalingIcon(
   companion object {
     private val RECT = Rectangle()
   }
-
 }
 
 class PressedImageFilter : RGBImageFilter() {
