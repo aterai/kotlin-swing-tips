@@ -25,7 +25,7 @@ private fun makeComboBoxModel() = DefaultComboBoxModel<String>().also {
   it.addElement("http://localhost/0123456789/0123456789/0123456789/0123456789/03.png")
 }
 
-private fun makeComboBox(model: ComboBoxModel<String>) = object : JComboBox<String>(model) {
+private fun <E> makeComboBox(model: ComboBoxModel<E>) = object : JComboBox<E>(model) {
   override fun updateUI() {
     setRenderer(null)
     super.updateUI()
@@ -35,9 +35,9 @@ private fun makeComboBox(model: ComboBoxModel<String>) = object : JComboBox<Stri
     setRenderer { list, value, index, isSelected, cellHasFocus ->
       val r = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
       val c = r as? JComponent ?: return@setRenderer r
-      val ins = c.getInsets()
       val rect = SwingUtilities.calculateInnerArea(combo, null)
-      var availableWidth = rect.width - ins.top - ins.bottom
+      val i = c.getInsets()
+      var availableWidth = rect.width - i.top - i.bottom
 
       val str = value?.toString() ?: ""
       val fm = c.getFontMetrics(c.getFont())
@@ -55,7 +55,6 @@ private fun makeComboBox(model: ComboBoxModel<String>) = object : JComboBox<Stri
   }
 
   private fun getArrowButton(combo: Container): JButton? {
-    // return combo.getComponents()?.filterIsInstance<JButton>()?.firstOrNull()
     return combo.getComponents()?.firstOrNull { it is JButton } as? JButton
   }
 }
