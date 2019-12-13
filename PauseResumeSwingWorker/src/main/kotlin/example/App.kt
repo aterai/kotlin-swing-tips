@@ -4,11 +4,12 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel(BorderLayout(5, 5)) {
+  private val pauseTxt = "pause"
   private val area = JTextArea()
   private val statusPanel = JPanel(BorderLayout())
   private val runButton = JButton("run")
   private val cancelButton = JButton("cancel")
-  private val pauseButton = JButton("pause")
+  private val pauseButton = JButton(pauseTxt)
   private val bar1 = JProgressBar()
   private val bar2 = JProgressBar()
   @Transient
@@ -33,16 +34,16 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
     pauseButton.addActionListener { e ->
       val b = e.getSource() as? JButton ?: return@addActionListener
       worker?.also {
-        b.setText(if (it.isCancelled() || it.isPaused) "pause" else "resume")
+        b.setText(if (it.isCancelled() || it.isPaused) pauseTxt else "resume")
         it.isPaused = it.isPaused xor true
-      } ?: b.setText("pause")
+      } ?: b.setText(pauseTxt)
     }
 
     cancelButton.setEnabled(false)
     cancelButton.addActionListener {
       worker?.takeUnless { it.isDone() }?.cancel(true)
       worker = null
-      pauseButton.setText("pause")
+      pauseButton.setText(pauseTxt)
       pauseButton.setEnabled(false)
     }
 
