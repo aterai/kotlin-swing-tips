@@ -4,7 +4,6 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.HierarchyEvent
 import java.util.TreeSet
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ExecutionException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import javax.swing.* // ktlint-disable no-wildcard-imports
@@ -16,7 +15,7 @@ import javax.swing.table.TableRowSorter
 class MainPanel : JPanel(BorderLayout()) {
   private val model = WorkerModel()
   private val table = JTable(model)
-  private val sorter = TableRowSorter<WorkerModel>(model)
+  private val sorter = TableRowSorter(model)
   private val deleteRowSet: MutableSet<Int> = TreeSet()
   // private final ExecutorService executor = Executors.newFixedThreadPool(1);
   private val executor: ExecutorService = Executors.newSingleThreadExecutor()
@@ -78,15 +77,11 @@ class MainPanel : JPanel(BorderLayout()) {
           return
         }
         var i = -1
-        val text = if (isCancelled()) "Cancelled" else try {
+        val message = runCatching {
           i = get()
           if (i >= 0) "Done" else "Disposed"
-        } catch (ex: InterruptedException) {
-          "Interrupted"
-        } catch (ex: ExecutionException) {
-          ex.message
-        }
-        System.out.format("%s:%s(%dms)%n", key, text, i)
+        }.getOrNull() ?: "Interrupted"
+        System.out.format("%s:%s(%dms)%n", key, message, i)
         // executor.remove(this);
       }
     }
@@ -96,8 +91,8 @@ class MainPanel : JPanel(BorderLayout()) {
 
   private fun cancelActionPerformed() {
     for (i in table.getSelectedRows()) {
-      val idx = table.convertRowIndexToModel(i)
-      model.getSwingWorker(idx)?.takeUnless { it.isDone() }?.cancel(true)
+      val mi = table.convertRowIndexToModel(i)
+      model.getSwingWorker(mi)?.takeUnless { it.isDone() }?.cancel(true)
     }
     table.repaint()
   }
@@ -108,9 +103,9 @@ class MainPanel : JPanel(BorderLayout()) {
       return
     }
     for (i in selection) {
-      val mri = table.convertRowIndexToModel(i)
-      deleteRowSet.add(mri)
-      model.getSwingWorker(mri)?.takeUnless { it.isDone() }?.cancel(true)
+      val mi = table.convertRowIndexToModel(i)
+      deleteRowSet.add(mi)
+      model.getSwingWorker(mi)?.takeUnless { it.isDone() }?.cancel(true)
     }
     sorter.setRowFilter(object : RowFilter<TableModel, Int>() {
       override fun include(entry: Entry<out TableModel, out Int>) = !deleteRowSet.contains(entry.getIdentifier())
