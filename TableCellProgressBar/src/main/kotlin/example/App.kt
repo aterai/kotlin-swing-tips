@@ -131,16 +131,13 @@ class MainPanel : JPanel(BorderLayout()) {
 open class BackgroundTask : SwingWorker<Int, Int>() {
   private val sleepDummy = (1..100).random() // Random().nextInt(100) + 1
 
+  @Throws(InterruptedException::class)
   override fun doInBackground(): Int? {
     val lengthOfTask = 120
     var current = 0
     while (current <= lengthOfTask && !isCancelled()) {
       publish(100 * current / lengthOfTask)
-      try {
-        Thread.sleep(sleepDummy.toLong())
-      } catch (ex: InterruptedException) {
-        break
-      }
+      Thread.sleep(sleepDummy.toLong())
       current++
     }
     return sleepDummy * lengthOfTask
