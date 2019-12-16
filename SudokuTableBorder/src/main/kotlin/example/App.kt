@@ -5,22 +5,22 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 
-const val BORDERWIDTH1 = 1
-const val BORDERWIDTH2 = 2
-const val CELLSIZE = 18
+const val BORDER_WIDTH1 = 1
+const val BORDER_WIDTH2 = 2
+const val CELL_SIZE = 18
 
 fun makeUI(): Component {
   val columnNames = arrayOf("1", "2", "3", "4", "5", "6", "7", "8", "9")
   val data = arrayOf(
-      arrayOf<Number>(5, 3, 0, 0, 7, 0, 0, 0, 0),
-      arrayOf<Number>(6, 0, 0, 1, 9, 5, 0, 0, 0),
-      arrayOf<Number>(0, 9, 8, 0, 0, 0, 0, 6, 0),
-      arrayOf<Number>(8, 0, 0, 0, 6, 0, 0, 0, 3),
-      arrayOf<Number>(4, 0, 0, 8, 0, 3, 0, 0, 1),
-      arrayOf<Number>(7, 0, 0, 0, 2, 0, 0, 0, 6),
-      arrayOf<Number>(0, 6, 0, 0, 0, 0, 2, 8, 0),
-      arrayOf<Number>(0, 0, 0, 4, 1, 9, 0, 0, 5),
-      arrayOf<Number>(0, 0, 0, 0, 8, 0, 0, 7, 9))
+    arrayOf<Number>(5, 3, 0, 0, 7, 0, 0, 0, 0),
+    arrayOf<Number>(6, 0, 0, 1, 9, 5, 0, 0, 0),
+    arrayOf<Number>(0, 9, 8, 0, 0, 0, 0, 6, 0),
+    arrayOf<Number>(8, 0, 0, 0, 6, 0, 0, 0, 3),
+    arrayOf<Number>(4, 0, 0, 8, 0, 3, 0, 0, 1),
+    arrayOf<Number>(7, 0, 0, 0, 2, 0, 0, 0, 6),
+    arrayOf<Number>(0, 6, 0, 0, 0, 0, 2, 8, 0),
+    arrayOf<Number>(0, 0, 0, 4, 1, 9, 0, 0, 5),
+    arrayOf<Number>(0, 0, 0, 0, 8, 0, 0, 7, 9))
 
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = Number::class.java
@@ -31,8 +31,8 @@ fun makeUI(): Component {
     override fun getPreferredScrollableViewportSize() = super.getPreferredSize()
   }
   for (i in 0 until table.getRowCount()) {
-    val a = if ((i + 1) % 3 == 0) BORDERWIDTH2 else BORDERWIDTH1
-    table.setRowHeight(i, CELLSIZE + a)
+    val a = if ((i + 1) % 3 == 0) BORDER_WIDTH2 else BORDER_WIDTH1
+    table.setRowHeight(i, CELL_SIZE + a)
   }
 
   table.setCellSelectionEnabled(true)
@@ -73,8 +73,8 @@ fun makeUI(): Component {
   m.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
   for (i in 0 until m.getColumnCount()) {
     val col = m.getColumn(i)
-    val a = if ((i + 1) % 3 == 0) BORDERWIDTH2 else BORDERWIDTH1
-    col.setPreferredWidth(CELLSIZE + a)
+    val a = if ((i + 1) % 3 == 0) BORDER_WIDTH2 else BORDER_WIDTH1
+    col.setPreferredWidth(CELL_SIZE + a)
     col.setResizable(false)
   }
 
@@ -82,7 +82,7 @@ fun makeUI(): Component {
     it.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER)
     it.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
     it.setBorder(BorderFactory.createEmptyBorder())
-    it.setViewportBorder(BorderFactory.createMatteBorder(BORDERWIDTH2, BORDERWIDTH2, 0, 0, Color.BLACK))
+    it.setViewportBorder(BorderFactory.createMatteBorder(BORDER_WIDTH2, BORDER_WIDTH2, 0, 0, Color.BLACK))
     it.setColumnHeader(JViewport())
     it.getColumnHeader().setVisible(false)
   }
@@ -94,19 +94,18 @@ fun makeUI(): Component {
 }
 
 private class SudokuCellRenderer(src: Array<Array<Number>>) : DefaultTableCellRenderer() {
-  private val bold: Font
-  private val b0 = BorderFactory.createMatteBorder(0, 0, BORDERWIDTH1, BORDERWIDTH1, Color.GRAY)
-  private val b1 = BorderFactory.createMatteBorder(0, 0, BORDERWIDTH2, BORDERWIDTH2, Color.BLACK)
+  private val bold = getFont().deriveFont(Font.BOLD)
+  private val b0 = BorderFactory.createMatteBorder(0, 0, BORDER_WIDTH1, BORDER_WIDTH1, Color.GRAY)
+  private val b1 = BorderFactory.createMatteBorder(0, 0, BORDER_WIDTH2, BORDER_WIDTH2, Color.BLACK)
   private val b2 = BorderFactory.createCompoundBorder(
-      BorderFactory.createMatteBorder(0, 0, BORDERWIDTH2, 0, Color.BLACK),
-      BorderFactory.createMatteBorder(0, 0, 0, BORDERWIDTH1, Color.GRAY))
+    BorderFactory.createMatteBorder(0, 0, BORDER_WIDTH2, 0, Color.BLACK),
+    BorderFactory.createMatteBorder(0, 0, 0, BORDER_WIDTH1, Color.GRAY))
   private val b3 = BorderFactory.createCompoundBorder(
-      BorderFactory.createMatteBorder(0, 0, 0, BORDERWIDTH2, Color.BLACK),
-      BorderFactory.createMatteBorder(0, 0, BORDERWIDTH1, 0, Color.GRAY))
+    BorderFactory.createMatteBorder(0, 0, 0, BORDER_WIDTH2, Color.BLACK),
+    BorderFactory.createMatteBorder(0, 0, BORDER_WIDTH1, 0, Color.GRAY))
   private val mask: Array<Array<Number>>
 
   init {
-    this.bold = font.deriveFont(Font.BOLD)
     // // val dest = Array<Array<Int?>>(src.size) { arrayOfNulls(src[0].size) }
     // val dest = Array(src.size, { Array(src[0].size, { 0 }) })
     // for (i in src.indices) {
