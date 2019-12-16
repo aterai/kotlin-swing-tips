@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.util.stream.Stream
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
@@ -50,29 +49,20 @@ class TableHeaderPopupMenu(table: JTable) : JPopupMenu() {
   private fun updateMenuItems(columnModel: TableColumnModel) {
     val isOnlyOneMenu = columnModel.getColumnCount() == 1
     if (isOnlyOneMenu) {
-      stream(this)
+      children(this)
         .map { it.getComponent() }
-        .forEach { mi -> mi.setEnabled(mi !is AbstractButton || !mi.isSelected()) }
+        .forEach { it.setEnabled(it !is AbstractButton || !it.isSelected()) }
     } else {
-      stream(this)
-        .forEach { me -> me.component.setEnabled(true) }
+      children(this)
+        .forEach { it.getComponent().setEnabled(true) }
     }
   }
 
-  companion object {
-    private fun stream(me: MenuElement): Stream<MenuElement> {
-      return Stream.of(*me.subElements)
-        .flatMap { m: MenuElement ->
-          Stream.concat(
-            Stream.of(m),
-            stream(m)
-          )
-        }
-    }
-  }
+  private fun children(me: MenuElement): List<MenuElement> =
+    me.getSubElements().map { children(it) }.fold(listOf(me)) { a, b -> a + b }
 
   init {
-    val columnModel = table.columnModel
+    val columnModel = table.getColumnModel()
     columnModel.getColumns().toList().forEach { tableColumn ->
       val name = tableColumn.getHeaderValue()?.toString() ?: ""
       val item = JCheckBoxMenuItem(name, true)
