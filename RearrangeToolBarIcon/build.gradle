@@ -24,10 +24,10 @@ repositories {
 }
 
 dependencies {
-  compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
   implementation fileTree(dir: 'lib', include: ['*.jar'])
-  testCompile 'junit:junit:4.11'
-  testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+  testImplementation 'junit:junit:4.11'
+  testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 }
 
 sourceCompatibility = 1.8
@@ -42,5 +42,5 @@ compileTestKotlin {
 
 jar {
   manifest { attributes 'Main-Class': "$mainClassName" }
-  from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+  from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
 }
