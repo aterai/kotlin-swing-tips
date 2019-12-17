@@ -49,17 +49,18 @@ class TableHeaderPopupMenu(table: JTable) : JPopupMenu() {
   private fun updateMenuItems(columnModel: TableColumnModel) {
     val isOnlyOneMenu = columnModel.getColumnCount() == 1
     if (isOnlyOneMenu) {
-      children(this)
+      descendants(this)
         .map { it.getComponent() }
         .forEach { it.setEnabled(it !is AbstractButton || !it.isSelected()) }
     } else {
-      children(this)
+      descendants(this)
         .forEach { it.getComponent().setEnabled(true) }
     }
   }
 
-  private fun children(me: MenuElement): List<MenuElement> =
-    me.getSubElements().map { children(it) }.fold(listOf(me)) { a, b -> a + b }
+  private fun descendants(me: MenuElement): List<MenuElement> =
+    // me.getSubElements().map { children(it) }.fold(listOf(me)) { a, b -> a + b }
+    me.getSubElements().flatMap { listOf(it) + descendants(it) }
 
   init {
     val columnModel = table.getColumnModel()

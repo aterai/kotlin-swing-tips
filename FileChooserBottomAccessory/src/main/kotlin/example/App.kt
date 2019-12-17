@@ -35,7 +35,7 @@ class MainPanel : JPanel(BorderLayout()) {
           setUI(object : WindowsFileChooserUI(this) {
             override fun installComponents(fc: JFileChooser) {
               super.installComponents(fc)
-              SwingUtils.children(getBottomPanel())
+              SwingUtils.descendants(getBottomPanel())
                 .filterIsInstance<JLabel>()
                 .forEach {
                   it.setAlignmentX(1f)
@@ -74,14 +74,14 @@ class MainPanel : JPanel(BorderLayout()) {
 }
 
 class EncodingFileChooserUI(chooser: JFileChooser) : MetalFileChooserUI(chooser) {
-  val combo = JComboBox<String>(arrayOf("UTF-8", "UTF-16", "Shift_JIS", "EUC-JP"))
+  val combo = JComboBox(arrayOf("UTF-8", "UTF-16", "Shift_JIS", "EUC-JP"))
 
   override fun installComponents(fc: JFileChooser) {
     super.installComponents(fc)
     val bottomPanel = getBottomPanel()
 
     val label = object : JLabel("Encoding:") {
-      override fun getPreferredSize() = SwingUtils.children(bottomPanel)
+      override fun getPreferredSize() = SwingUtils.descendants(bottomPanel)
         .filterIsInstance<JLabel>()
         .firstOrNull()
         ?.getPreferredSize()
@@ -100,7 +100,7 @@ class EncodingFileChooserUI(chooser: JFileChooser) : MetalFileChooserUI(chooser)
     // 2: filesOfTypePanel
     bottomPanel.add(Box.createRigidArea(Dimension(1, 5)), 3)
     bottomPanel.add(panel, 4)
-    SwingUtils.children(bottomPanel)
+    SwingUtils.descendants(bottomPanel)
       .filterIsInstance<JLabel>()
       .forEach {
         it.setHorizontalAlignment(SwingConstants.RIGHT)
@@ -110,10 +110,11 @@ class EncodingFileChooserUI(chooser: JFileChooser) : MetalFileChooserUI(chooser)
 }
 
 object SwingUtils {
-  fun children(parent: Container): List<Component> = parent.getComponents()
+  fun descendants(parent: Container): List<Component> = parent.getComponents()
     .filterIsInstance<Container>()
-    .map { children(it) }
-    .fold(listOf<Component>(parent)) { a, b -> a + b }
+    .flatMap { listOf(it) + descendants(it) }
+    // .map { children(it) }.fold(listOf<Component>(parent)) { a, b -> a + b }
+
 //  fun stream(parent: Container): Stream<Component> {
 //    return Stream.of(*parent.getComponents())
 //      .filter { Container::class.java!!.isInstance(it) }

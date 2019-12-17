@@ -23,7 +23,7 @@ fun makeUI(): Component {
     //     .map(JTable::class.java::cast)
     //     .findFirst()
     //     .ifPresent { append(log, "isEditing: ${it.isEditing()}") }
-    children(fileChooser0).filterIsInstance<JTable>()
+    descendants(fileChooser0).filterIsInstance<JTable>()
       .firstOrNull()?.also { append(log, "isEditing: ${it.isEditing()}") }
 
     val retValue = fileChooser0.showOpenDialog(log.getRootPane())
@@ -52,7 +52,7 @@ fun makeUI(): Component {
     //   // .ifPresent { it.removeEditor() }
     //   .ifPresent(JTable::removeEditor)
 
-    children(fileChooser1).filterIsInstance<JTable>()
+    descendants(fileChooser1).filterIsInstance<JTable>()
       .firstOrNull()?.removeEditor()
 
     val retValue = fileChooser1.showOpenDialog(log.getRootPane())
@@ -102,10 +102,10 @@ private fun append(log: JTextArea, str: String) {
 //     .map { c -> stream(Container::class.java.cast(c)) }
 //     .reduce(Stream.of<Component>(parent), { a, b -> Stream.concat<Component>(a, b) })
 
-fun children(parent: Container): List<Component> = parent.getComponents()
+fun descendants(parent: Container): List<Component> = parent.getComponents()
   .filterIsInstance<Container>()
-  .map { children(it) }
-  .fold(listOf<Component>(parent)) { a, b -> a + b }
+  // .map { children(it) }.fold(listOf<Component>(parent)) { a, b -> a + b }
+  .flatMap { listOf(it) + descendants(it) }
 
 fun main() {
   EventQueue.invokeLater {
