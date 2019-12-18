@@ -42,7 +42,7 @@ class MainPanel : JPanel(BorderLayout(2, 2)) {
       .forEach {
         runCatching {
           val tag = "<a name='%s' href='#'>%s</a>" + "<br>".repeat(8)
-          doc.insertBeforeEnd(element, String.format(tag, it, it))
+          doc.insertBeforeEnd(element, tag.format(it, it))
         }.onFailure {
           UIManager.getLookAndFeel().provideErrorFeedback(editor)
         }

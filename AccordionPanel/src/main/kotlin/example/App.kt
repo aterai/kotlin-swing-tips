@@ -73,7 +73,7 @@ abstract class AbstractExpansionPanel(private val title: String) : JPanel(Border
   init {
     label = object : JLabel("▼ $title") {
       private val bgc = Color(0xC8_C8_FF)
-      protected override fun paintComponent(g: Graphics) {
+      override fun paintComponent(g: Graphics) {
         val g2 = g.create() as? Graphics2D ?: return
         // Insets ins = getInsets();
         g2.setPaint(GradientPaint(50f, 0f, Color.WHITE, getWidth().toFloat(), getHeight().toFloat(), bgc))
@@ -102,19 +102,19 @@ abstract class AbstractExpansionPanel(private val title: String) : JPanel(Border
     add(panel)
   }
 
-  override fun getPreferredSize() = label.getPreferredSize().also {
+  override fun getPreferredSize(): Dimension? = label.getPreferredSize()?.also {
     if (panel.isVisible()) {
       it.height += panel.getPreferredSize().height
     }
   }
 
-  override fun getMaximumSize() = getPreferredSize().also {
+  override fun getMaximumSize() = getPreferredSize()?.also {
     it.width = Short.MAX_VALUE.toInt()
   }
 
   protected fun initPanel() {
     panel.setVisible(!panel.isVisible())
-    label.setText(String.format("%s %s", if (panel.isVisible()) "△" else "▼", title))
+    label.setText("%s %s".format(if (panel.isVisible()) "△" else "▼", title))
     revalidate()
     // fireExpansionEvent()
     EventQueue.invokeLater { panel.scrollRectToVisible(panel.getBounds()) }

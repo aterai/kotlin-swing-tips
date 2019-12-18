@@ -12,10 +12,10 @@ class MainPanel : JPanel(BorderLayout()) {
   init {
     val columnNames = arrayOf("String", "Integer", "Boolean")
     val data = arrayOf(
-        arrayOf("aaa", 12, true),
-        arrayOf("bbb", 5, false),
-        arrayOf("CCC", 92, true),
-        arrayOf("DDD", 0, false))
+      arrayOf("aaa", 12, true),
+      arrayOf("bbb", 5, false),
+      arrayOf("CCC", 92, true),
+      arrayOf("DDD", 0, false))
     val model = object : DefaultTableModel(data, columnNames) {
       override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
     }
@@ -38,7 +38,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class ColumnWidthResizeHandler : MouseInputAdapter() {
+class ColumnWidthResizeHandler : MouseInputAdapter() {
   private val window = JWindow()
   private val tip = JToolTip()
   private var prev = ""
@@ -55,7 +55,7 @@ internal class ColumnWidthResizeHandler : MouseInputAdapter() {
 
   private fun updateTooltipText(e: MouseEvent) {
     getResizingColumn(e)?.also {
-      val txt = String.format("Width: %dpx", it.getWidth())
+      val txt = "Width: %dpx".format(it.getWidth())
       tip.setTipText(txt)
       if (prev.length != txt.length) {
         window.pack()

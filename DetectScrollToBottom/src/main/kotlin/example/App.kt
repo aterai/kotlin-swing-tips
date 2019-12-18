@@ -9,7 +9,7 @@ fun makeUI(): Component {
   val textArea = JTextArea()
   val sb = StringBuilder()
   for (i in 0..2000) {
-    sb.append(String.format("%04d%n", i))
+    sb.append("%04d%n".format(i))
   }
   textArea.setText(sb.toString())
   textArea.setCaretPosition(0)

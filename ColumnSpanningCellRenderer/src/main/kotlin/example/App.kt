@@ -43,7 +43,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val key = type + "Icon"
     val icon = UIManager.getIcon("OptionPane.$key")
     val fmt = "public static final int %s_MESSAGE%nUsed for %s messages."
-    val msg = String.format(fmt, type.toUpperCase(Locale.ENGLISH), type)
+    val msg = fmt.format(type.toUpperCase(Locale.ENGLISH), type)
     return OptionPaneDescription(key, icon, msg)
   }
 }

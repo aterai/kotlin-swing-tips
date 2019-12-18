@@ -14,7 +14,7 @@ fun makeUI(): Component {
     val idx = p.getComponentZOrder(e.getSource() as? Component)
     val row = idx / gl.getColumns()
     val col = idx % gl.getColumns()
-    log.append(String.format("Row: %d, Column: %d%n", row + 1, col + 1))
+    log.append("Row: %d, Column: %d%n".format(row + 1, col + 1))
   }
   List(gl.getRows() * gl.getColumns()) { JButton() }
     .forEach { p.add(it.also { it.addActionListener(al) }) }

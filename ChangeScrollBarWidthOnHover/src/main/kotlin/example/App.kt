@@ -109,7 +109,7 @@ class MainPanel : JPanel(BorderLayout()) {
   private fun makeList(): Component {
     val m = DefaultListModel<String>()
     (0 until 50).map {
-      String.format("%05d: %s", it, LocalDateTime.now(ZoneId.systemDefault()))
+      "%05d: %s".format(it, LocalDateTime.now(ZoneId.systemDefault()))
     }.forEach { m.addElement(it) }
     return JList(m)
   }

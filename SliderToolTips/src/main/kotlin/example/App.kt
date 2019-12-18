@@ -123,7 +123,7 @@ class SliderPopupListener : MouseAdapter() {
     val slider = e.getComponent() as? JSlider ?: return
     val intValue = slider.getValue()
     if (prevValue != intValue) {
-      label.setText(String.format("%03d", slider.getValue()))
+      label.setText("%03d".format(slider.getValue()))
       val pt = e.getPoint()
       pt.y = -size.height
       SwingUtilities.convertPointToScreen(pt, e.getComponent())

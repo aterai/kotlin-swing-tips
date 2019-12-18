@@ -25,7 +25,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   private fun createSortablePanel(i: Int, c: Component): Component {
-    val l = JLabel(String.format(" %04d ", i))
+    val l = JLabel(" %04d ".format(i))
     l.setOpaque(true)
     l.setBackground(Color.RED)
     val p = JPanel(BorderLayout())
