@@ -86,9 +86,7 @@ class MainPanel : JPanel(BorderLayout()) {
       super.show(table, x, y)
     }
 
-    private fun getSwingWorker(identifier: Int): SwingWorker<*, *>? {
-      return model.getValueAt(identifier, 3) as? SwingWorker<*, *>
-    }
+    private fun getSwingWorker(identifier: Int) = model.getValueAt(identifier, 3) as? SwingWorker<*, *>
 
     private fun deleteActionPerformed() {
       val selection = table.getSelectedRows()
