@@ -9,7 +9,7 @@ class MainPanel : JPanel(BorderLayout()) {
   init {
     val field = JTextField("1, 2, 5")
 
-    val combo = DisableItemComboBox<String>(makeModel())
+    val combo = DisableItemComboBox(makeModel())
     combo.setDisableIndex(getDisableIndexFromTextField(field))
 
     val button = JButton("init")
@@ -49,7 +49,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }.getOrNull().orEmpty()
 }
 
-class DisableItemComboBox<E> : JComboBox<E> {
+class DisableItemComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(model) {
   private val disableIndexSet = mutableSetOf<Int>()
   private var isDisableIndex = false
   private val up = object : AbstractAction() {
@@ -75,33 +75,26 @@ class DisableItemComboBox<E> : JComboBox<E> {
     }
   }
 
-  constructor() : super()
+  // constructor() : super()
 
-  constructor(model: ComboBoxModel<E>) : super(model)
+  // constructor(model: ComboBoxModel<E>) : super(model)
 
-  constructor(items: Array<E>) : super(items)
+  // constructor(items: Array<E>) : super(items)
 
   override fun updateUI() {
     super.updateUI()
-    setRenderer(object : DefaultListCellRenderer() {
-      override fun getListCellRendererComponent(
-        list: JList<*>,
-        value: Any?,
-        index: Int,
-        isSelected: Boolean,
-        cellHasFocus: Boolean
-      ): Component {
-        val c: Component
-        if (disableIndexSet.contains(index)) {
-          c = super.getListCellRendererComponent(list, value, index, false, false)
-          c.setEnabled(false)
-        } else {
-          c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-          c.setEnabled(true)
-        }
-        return c
+    val renderer = getRenderer()
+    setRenderer { list, value, index, isSelected, cellHasFocus ->
+      val c: Component
+      if (disableIndexSet.contains(index)) {
+        c = renderer.getListCellRendererComponent(list, value, index, false, false)
+        c.setEnabled(false)
+      } else {
+        c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+        c.setEnabled(true)
       }
-    })
+      return@setRenderer c
+    }
     EventQueue.invokeLater {
       val am = getActionMap()
       am.put("selectPrevious3", up)
