@@ -6,7 +6,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 fun makeUI(): Component {
   val p = JPanel(GridLayout(4, 1, 5, 5))
   p.add(JLabel("Default JComboBox"))
-  p.add(JComboBox<String>(arrayOf("Google", "Yahoo!", "Bing")))
+  p.add(JComboBox(arrayOf("Google", "Yahoo!", "Bing")))
   p.add(JLabel("SearchBar JComboBox"))
 
   val cl = Thread.currentThread().getContextClassLoader()

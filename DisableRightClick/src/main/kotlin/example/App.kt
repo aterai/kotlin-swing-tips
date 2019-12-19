@@ -15,22 +15,22 @@ class MainPanel : JPanel(BorderLayout()) {
     val combo1 = makeComboBox(5)
     if (combo1.getUI() is WindowsComboBoxUI) {
       combo1.setUI(object : WindowsComboBoxUI() {
-        protected override fun createPopup() = BasicComboPopup2(comboBox)
+        override fun createPopup() = BasicComboPopup2(comboBox)
       })
     } else {
       combo1.setUI(object : BasicComboBoxUI() {
-        protected override fun createPopup() = BasicComboPopup2(comboBox)
+        override fun createPopup() = BasicComboPopup2(comboBox)
       })
     }
 
     val combo2 = makeComboBox(20)
     if (combo2.getUI() is WindowsComboBoxUI) {
       combo2.setUI(object : WindowsComboBoxUI() {
-        protected override fun createPopup() = BasicComboPopup3(comboBox)
+        override fun createPopup() = BasicComboPopup3(comboBox)
       })
     } else {
       combo2.setUI(object : BasicComboBoxUI() {
-        protected override fun createPopup() = BasicComboPopup3(comboBox)
+        override fun createPopup() = BasicComboPopup3(comboBox)
       })
     }
 
@@ -57,11 +57,11 @@ class MainPanel : JPanel(BorderLayout()) {
     for (i in 0 until size) {
       model.addElement("No.$i")
     }
-    return JComboBox<String>(model)
+    return JComboBox(model)
   }
 }
 
-internal class BasicComboPopup2(combo: JComboBox<*>) : BasicComboPopup(combo) {
+class BasicComboPopup2(combo: JComboBox<*>) : BasicComboPopup(combo) {
   @Transient
   private var handler2: MouseListener? = null
 
@@ -70,7 +70,7 @@ internal class BasicComboPopup2(combo: JComboBox<*>) : BasicComboPopup(combo) {
     handler2 = null
   }
 
-  protected override fun createListMouseListener() = handler2 ?: Handler2()
+  override fun createListMouseListener() = handler2 ?: Handler2()
 
   private inner class Handler2 : MouseAdapter() {
     override fun mouseReleased(e: MouseEvent) {
@@ -98,10 +98,10 @@ internal class BasicComboPopup2(combo: JComboBox<*>) : BasicComboPopup(combo) {
   }
 }
 
-internal class BasicComboPopup3(combo: JComboBox<*>) : BasicComboPopup(combo) {
-  protected override fun createList(): JList<*> {
+class BasicComboPopup3(combo: JComboBox<*>) : BasicComboPopup(combo) {
+  override fun createList(): JList<*> {
     return object : JList<Any>(comboBox.getModel()) {
-      protected override fun processMouseEvent(e: MouseEvent) {
+      override fun processMouseEvent(e: MouseEvent) {
         if (SwingUtilities.isRightMouseButton(e)) {
           return
         }

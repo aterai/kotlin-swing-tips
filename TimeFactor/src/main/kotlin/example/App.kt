@@ -13,7 +13,7 @@ class MainPanel : JPanel(BorderLayout()) {
     UIManager.put("List.timeFactor", 5000L)
 
     val model = arrayOf("a", "aa", "b", "bbb", "bbc")
-    val combo = JComboBox<String>(model)
+    val combo = JComboBox(model)
     combo.setPrototypeDisplayValue("M".repeat(30))
 
     val p = JPanel().also {
@@ -23,7 +23,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val tabbedPane = JTabbedPane().also {
       it.addTab("ComboBox.timeFactor", p)
-      it.addTab("List.timeFactor", JScrollPane(JList<String>(model)))
+      it.addTab("List.timeFactor", JScrollPane(JList(model)))
       it.addTab("Table.timeFactor(JFileChooser)", JFileChooser())
       it.addTab("Tree.timeFactor", JScrollPane(JTree()))
     }
@@ -65,7 +65,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal object LookAndFeelUtil {
+object LookAndFeelUtil {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.getName()
 
   fun createLookAndFeelMenu() = JMenu("LookAndFeel").also {

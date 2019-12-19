@@ -10,7 +10,7 @@ import javax.swing.text.JTextComponent
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    val combo1 = JComboBox<String>(arrayOf("colors", "sports", "food"))
+    val combo1 = JComboBox(arrayOf("colors", "sports", "food"))
     // combo1.setEditable(true)
     combo1.setSelectedIndex(-1)
 
@@ -25,7 +25,7 @@ class MainPanel : JPanel(BorderLayout()) {
       val combo = e.getItemSelectable()
       if (e.getStateChange() == ItemEvent.SELECTED && combo is JComboBox<*>) {
         val idx = combo.getSelectedIndex()
-        combo2.setModel(DefaultComboBoxModel<String>(arrays[idx]))
+        combo2.setModel(DefaultComboBoxModel(arrays[idx]))
         combo2.setSelectedIndex(-1)
       }
     }
@@ -56,7 +56,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val button = JButton("clear")
     button.addActionListener {
       combo1.setSelectedIndex(-1)
-      combo2.setModel(DefaultComboBoxModel<String>())
+      combo2.setModel(DefaultComboBoxModel())
     }
 
     add(p, BorderLayout.NORTH)

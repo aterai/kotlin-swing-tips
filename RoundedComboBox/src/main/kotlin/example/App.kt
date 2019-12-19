@@ -15,16 +15,16 @@ import javax.swing.plaf.metal.MetalComboBoxUI
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    val combo0 = JComboBox<String>(makeModel())
-    val combo1 = JComboBox<String>(makeModel())
-    val combo2 = JComboBox<String>(makeModel())
+    val combo0 = JComboBox(makeModel())
+    val combo1 = JComboBox(makeModel())
+    val combo2 = JComboBox(makeModel())
 
     combo0.setBorder(RoundedCornerBorder())
     combo1.setBorder(KamabokoBorder())
     combo2.setBorder(KamabokoBorder())
     if (combo2.getUI() is WindowsComboBoxUI) {
       combo2.setUI(object : WindowsComboBoxUI() {
-        protected override fun createArrowButton(): JButton {
+        override fun createArrowButton(): JButton {
           val b = JButton(ArrowIcon(Color.BLACK, Color.BLUE)) // .createArrowButton();
           b.setContentAreaFilled(false)
           b.setFocusPainted(false)
@@ -48,7 +48,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
     UIManager.put("ComboBox.foreground", FOREGROUND)
     UIManager.put("ComboBox.background", BACKGROUND)
-    UIManager.put("ComboBox.selectionForeground", SELECTIONFOREGROUND)
+    UIManager.put("ComboBox.selectionForeground", SELECTION_FOREGROUND)
     UIManager.put("ComboBox.selectionBackground", BACKGROUND)
 
     UIManager.put("ComboBox.buttonDarkShadow", BACKGROUND)
@@ -60,16 +60,16 @@ class MainPanel : JPanel(BorderLayout()) {
     // UIManager.put("ComboBox.editorBorder", BorderFactory.createLineBorder(Color.GREEN));
     UIManager.put("ComboBox.border", KamabokoBorder())
 
-    val combo00 = JComboBox<String>(makeModel())
-    val combo01 = JComboBox<String>(makeModel())
+    val combo00 = JComboBox(makeModel())
+    val combo01 = JComboBox(makeModel())
 
     UIManager.put("ComboBox.border", KamabokoBorder())
-    val combo02 = JComboBox<String>(makeModel())
+    val combo02 = JComboBox(makeModel())
 
     combo00.setUI(MetalComboBoxUI())
     combo01.setUI(BasicComboBoxUI())
     combo02.setUI(object : BasicComboBoxUI() {
-      protected override fun createArrowButton(): JButton {
+      override fun createArrowButton(): JButton {
         val b = JButton(ArrowIcon(BACKGROUND, FOREGROUND))
         b.setContentAreaFilled(false)
         b.setFocusPainted(false)
@@ -81,11 +81,11 @@ class MainPanel : JPanel(BorderLayout()) {
     combo02.addMouseListener(ComboRolloverHandler())
 
     (combo00.getAccessibleContext().getAccessibleChild(0) as? JComponent)
-        ?.setBorder(BorderFactory.createMatteBorder(0, 1, 1, 1, FOREGROUND))
+      ?.setBorder(BorderFactory.createMatteBorder(0, 1, 1, 1, FOREGROUND))
     (combo01.getAccessibleContext().getAccessibleChild(0) as? JComponent)
-        ?.setBorder(BorderFactory.createMatteBorder(0, 1, 1, 1, FOREGROUND))
+      ?.setBorder(BorderFactory.createMatteBorder(0, 1, 1, 1, FOREGROUND))
     (combo02.getAccessibleContext().getAccessibleChild(0) as? JComponent)
-        ?.setBorder(BorderFactory.createMatteBorder(0, 1, 1, 1, FOREGROUND))
+      ?.setBorder(BorderFactory.createMatteBorder(0, 1, 1, 1, FOREGROUND))
 
     val box1 = Box.createVerticalBox()
     box1.add(makeTitledPanel("MetalComboBoxUI:", combo00, BACKGROUND))
@@ -114,9 +114,9 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   companion object {
-    val BACKGROUND = Color.BLACK // RED;
-    val FOREGROUND = Color.WHITE // YELLOW;
-    val SELECTIONFOREGROUND = Color.CYAN
+    val BACKGROUND : Color = Color.BLACK // RED;
+    val FOREGROUND : Color = Color.WHITE // YELLOW;
+    val SELECTION_FOREGROUND : Color = Color.CYAN
 
     private fun makeTitledPanel(title: String?, cmp: Container, bgc: Color?): Component {
       val p = JPanel(BorderLayout())
@@ -139,12 +139,10 @@ class MainPanel : JPanel(BorderLayout()) {
       return p
     }
 
-    private fun makeModel(): DefaultComboBoxModel<String> {
-      val model = DefaultComboBoxModel<String>()
-      model.addElement("1234")
-      model.addElement("5555555555555555555555")
-      model.addElement("6789000000000")
-      return model
+    private fun makeModel() = DefaultComboBoxModel<String>().also {
+      it.addElement("1234")
+      it.addElement("5555555555555555555555")
+      it.addElement("6789000000000")
     }
   }
 }

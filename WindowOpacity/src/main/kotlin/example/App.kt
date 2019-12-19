@@ -31,7 +31,7 @@ fun makeUI(): Component {
   p.add(JButton("JButton"))
 
   val model = arrayOf("Color(.5f, .8f, .5f, .5f)", "ImageTexturePaint", "CheckerTexturePaint")
-  val combo = JComboBox<String>(model)
+  val combo = JComboBox(model)
   combo.addItemListener { e ->
     if (e.getStateChange() == ItemEvent.SELECTED) {
       when (e.getItem()) {

@@ -149,7 +149,7 @@ class MainPanel : JPanel(BorderLayout()) {
         weekModel.add(i, firstDayOfWeek.plus(i.toLong()).getDisplayName(TextStyle.SHORT_STANDALONE, loc))
       }
     }
-    return JList<String>(weekModel).also {
+    return JList(weekModel).also {
       it.setEnabled(false)
       it.setFont(font)
       it.setLayoutOrientation(JList.VERTICAL_WRAP)
