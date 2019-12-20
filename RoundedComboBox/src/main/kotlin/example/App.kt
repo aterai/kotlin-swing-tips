@@ -114,9 +114,9 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   companion object {
-    val BACKGROUND : Color = Color.BLACK // RED;
-    val FOREGROUND : Color = Color.WHITE // YELLOW;
-    val SELECTION_FOREGROUND : Color = Color.CYAN
+    val BACKGROUND: Color = Color.BLACK // RED;
+    val FOREGROUND: Color = Color.WHITE // YELLOW;
+    val SELECTION_FOREGROUND: Color = Color.CYAN
 
     private fun makeTitledPanel(title: String?, cmp: Container, bgc: Color?): Component {
       val p = JPanel(BorderLayout())
