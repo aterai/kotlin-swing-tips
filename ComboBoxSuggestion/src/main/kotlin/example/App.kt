@@ -8,8 +8,8 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 class MainPanel : JPanel(BorderLayout()) {
   init {
     val array = arrayOf(
-        "aaaa", "aaaabbb", "aaaabbbcc", "aaaabbbccddd", "abcde", "abefg", "bbb1", "bbb12")
-    val combo = JComboBox<String>(array)
+      "111", "1111222", "111122233", "111122233444", "1234", "12567", "2221", "22212")
+    val combo = JComboBox(array)
     combo.setEditable(true)
     combo.setSelectedIndex(-1)
     val field = combo.getEditor().getEditorComponent()
@@ -72,13 +72,12 @@ internal class ComboKeyHandler(private val comboBox: JComboBox<String>) : KeyAda
   override fun keyTyped(e: KeyEvent) {
     EventQueue.invokeLater {
       val text = (e.getComponent() as? JTextField)?.getText() ?: return@invokeLater
-      val m: ComboBoxModel<String>
       if (text.isEmpty()) {
-        m = DefaultComboBoxModel<String>(list.toTypedArray())
+        val m = DefaultComboBoxModel(list.toTypedArray())
         setSuggestionModel(comboBox, m, "")
         comboBox.hidePopup()
       } else {
-        m = getSuggestedModel(list, text)
+        val m = getSuggestedModel(list, text)
         if (m.getSize() == 0 || shouldHide) {
           comboBox.hidePopup()
         } else {
