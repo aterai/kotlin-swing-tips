@@ -1,23 +1,17 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.ActionEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel(GridLayout(4, 1, 0, 2)) {
-  companion object {
-    private val FONT = Font(Font.MONOSPACED, Font.PLAIN, 12)
-    private const val ECHO_CHAR = "PasswordField.echoChar"
-  }
-
   init {
     val pf1 = makePasswordField()
     val b1 = JCheckBox("show passwords")
-    b1.addActionListener { e: ActionEvent ->
+    b1.addActionListener { e ->
       val c = e.getSource() as? AbstractButton ?: return@addActionListener
-      pf1.setEchoChar(if (c.isSelected()) '\u0000' else UIManager.get(ECHO_CHAR) as Char)
+      pf1.setEchoChar(if (c.isSelected()) '\u0000' else getUIEchoChar())
     }
     val p1 = JPanel(BorderLayout())
     p1.add(pf1)
@@ -27,7 +21,7 @@ class MainPanel : JPanel(GridLayout(4, 1, 0, 2)) {
     val b2 = JToggleButton()
     b2.addActionListener { e ->
       val c = e.getSource() as? AbstractButton ?: return@addActionListener
-      pf2.setEchoChar(if (c.isSelected()) '\u0000' else UIManager.get(ECHO_CHAR) as Char)
+      pf2.setEchoChar(if (c.isSelected()) '\u0000' else getUIEchoChar())
     }
     initEyeButton(b2)
     val p2 = makeOverlayLayoutPanel()
@@ -36,7 +30,7 @@ class MainPanel : JPanel(GridLayout(4, 1, 0, 2)) {
     add(makeTitledPanel("OverlayLayout + JToggleButton", p2))
     val pf3 = makePasswordField()
     val tf3 = JTextField(24)
-    tf3.setFont(FONT)
+    tf3.setFont(Font(Font.MONOSPACED, Font.PLAIN, 12))
     tf3.enableInputMethods(false)
     tf3.setDocument(pf3.getDocument())
     val cardLayout = CardLayout()
@@ -46,8 +40,8 @@ class MainPanel : JPanel(GridLayout(4, 1, 0, 2)) {
         setAlignmentX(Component.RIGHT_ALIGNMENT)
       }
     }
-    p3.add(pf3, String.format("%s", PasswordField.HIDE))
-    p3.add(tf3, String.format("%s", PasswordField.SHOW))
+    p3.add(pf3, PasswordField.HIDE.toString())
+    p3.add(tf3, PasswordField.SHOW.toString())
     val b3 = JToggleButton()
     b3.addActionListener { e ->
       val c = e.getSource() as? AbstractButton ?: return@addActionListener
@@ -67,7 +61,7 @@ class MainPanel : JPanel(GridLayout(4, 1, 0, 2)) {
       }
 
       override fun mouseReleased(e: MouseEvent) {
-        pf4.setEchoChar(UIManager.get(ECHO_CHAR) as Char)
+        pf4.setEchoChar(getUIEchoChar())
       }
     })
     initEyeButton(b4)
@@ -78,6 +72,8 @@ class MainPanel : JPanel(GridLayout(4, 1, 0, 2)) {
     setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5))
     setPreferredSize(Dimension(320, 240))
   }
+
+  private fun getUIEchoChar() = UIManager.get("PasswordField.echoChar") as? Char ?: '*'
 
   private fun initEyeButton(b: AbstractButton) {
     b.setFocusable(false)
