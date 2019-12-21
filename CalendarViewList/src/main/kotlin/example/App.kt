@@ -15,21 +15,21 @@ import java.util.Locale
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel() {
-  val cellsz = Dimension(40, 26)
-  val yearMonthLabel = JLabel("", SwingConstants.CENTER)
+  val cellSize = Dimension(40, 26)
+  private val yearMonthLabel = JLabel("", SwingConstants.CENTER)
   val monthList: JList<LocalDate> = object : JList<LocalDate>() {
     override fun updateUI() {
       setCellRenderer(null)
       super.updateUI()
-      setLayoutOrientation(JList.HORIZONTAL_WRAP)
+      setLayoutOrientation(HORIZONTAL_WRAP)
       setVisibleRowCount(CalendarViewListModel.ROW_COUNT) // ensure 6 rows in the list
-      setFixedCellWidth(cellsz.width)
-      setFixedCellHeight(cellsz.height)
+      setFixedCellWidth(cellSize.width)
+      setFixedCellHeight(cellSize.height)
       setCellRenderer(CalendarListRenderer())
       getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
     }
   }
-  val realLocalDate = LocalDate.now(ZoneId.systemDefault())
+  val realLocalDate: LocalDate = LocalDate.now(ZoneId.systemDefault())
   private var currentLocalDate: LocalDate = realLocalDate
 
   init {
@@ -38,33 +38,29 @@ class MainPanel : JPanel() {
     val l = Locale.getDefault()
     val weekModel = DefaultListModel<DayOfWeek>()
     val firstDayOfWeek = WeekFields.of(l).getFirstDayOfWeek()
-    for (i in 0 until DayOfWeek.values().size) {
+    for (i in DayOfWeek.values().indices) {
       weekModel.add(i, firstDayOfWeek.plus(i.toLong()))
     }
-    val header = JList<DayOfWeek>(weekModel)
-    header.setLayoutOrientation(JList.HORIZONTAL_WRAP)
-    header.setVisibleRowCount(0)
-    header.setFixedCellWidth(cellsz.width)
-    header.setFixedCellHeight(cellsz.height)
-    header.setCellRenderer(object : DefaultListCellRenderer() {
-      override fun getListCellRendererComponent(
-        list: JList<*>,
-        value: Any?,
-        index: Int,
-        isSelected: Boolean,
-        cellHasFocus: Boolean
-      ): Component {
-        super.getListCellRendererComponent(list, value, index, false, false)
-        setHorizontalAlignment(SwingConstants.CENTER)
-        (value as? DayOfWeek)?.also {
-          // val s = it.getDisplayName(TextStyle.SHORT_STANDALONE, l);
-          // setText(s.substring(0, minOf(2, s.length())));
-          setText(it.getDisplayName(TextStyle.SHORT_STANDALONE, l))
-          setBackground(Color(0xDC_DC_DC))
+    val header = object : JList<DayOfWeek>(weekModel) {
+      override fun updateUI() {
+        setCellRenderer(null)
+        super.updateUI()
+        setLayoutOrientation(HORIZONTAL_WRAP)
+        setVisibleRowCount(0)
+        setFixedCellWidth(cellSize.width)
+        setFixedCellHeight(cellSize.height)
+        val renderer = getCellRenderer()
+        setCellRenderer { list, value, index, _, _ ->
+          val c = renderer.getListCellRendererComponent(list, value, index, false, false)
+          (c as? JLabel)?.also { 
+            it.setHorizontalAlignment(SwingConstants.CENTER)
+            it.setText(value.getDisplayName(TextStyle.SHORT_STANDALONE, l))
+            it.setBackground(Color(0xDC_DC_DC))
+          }
+          return@setCellRenderer c
         }
-        return this
       }
-    })
+    }
     updateMonthView(realLocalDate)
 
     val prev = JButton("<")
@@ -87,13 +83,13 @@ class MainPanel : JPanel() {
 
     monthList.getSelectionModel().addListSelectionListener { e ->
       label.setText((e.getSource() as? ListSelectionModel)
-          ?.takeUnless { it.isSelectionEmpty() }
-          ?.let {
-            val model = monthList.getModel()
-            val from = model.getElementAt(it.getMinSelectionIndex())
-            val to = model.getElementAt(it.getMaxSelectionIndex())
-            Period.between(from, to).toString()
-          } ?: " ")
+        ?.takeUnless { it.isSelectionEmpty() }
+        ?.let {
+          val model = monthList.getModel()
+          val from = model.getElementAt(it.getMinSelectionIndex())
+          val to = model.getElementAt(it.getMaxSelectionIndex())
+          Period.between(from, to).toString()
+        } ?: " ")
     }
 
     val box = Box.createVerticalBox()
@@ -140,9 +136,9 @@ class MainPanel : JPanel() {
     am.put("selectPreviousRow", object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
         val index = monthList.getLeadSelectionIndex()
-        val dowvl = DayOfWeek.values().size // 7
-        if (index < dowvl) {
-          val d = monthList.getModel().getElementAt(index).minusDays(dowvl.toLong())
+        val weekLength = DayOfWeek.values().size // 7
+        if (index < weekLength) {
+          val d = monthList.getModel().getElementAt(index).minusDays(weekLength.toLong())
           updateMonthView(currentLocalDate.minusMonths(1))
           monthList.setSelectedValue(d, false)
         } else {
@@ -154,9 +150,9 @@ class MainPanel : JPanel() {
     am.put("selectNextRow", object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
         val index = monthList.getLeadSelectionIndex()
-        val dowvl = DayOfWeek.values().size // 7
-        if (index > monthList.getModel().getSize() - dowvl) {
-          val d = monthList.getModel().getElementAt(index).plusDays(dowvl.toLong())
+        val weekLength = DayOfWeek.values().size // 7
+        if (index > monthList.getModel().getSize() - weekLength) {
+          val d = monthList.getModel().getElementAt(index).plusDays(weekLength.toLong())
           updateMonthView(currentLocalDate.plusMonths(1))
           monthList.setSelectedValue(d, false)
         } else {
@@ -213,13 +209,13 @@ internal class CalendarViewListModel(date: LocalDate) : AbstractListModel<LocalD
 
   init {
     val firstDayOfMonth = YearMonth.from(date).atDay(1)
-    val dowv = firstDayOfMonth.get(weekFields.dayOfWeek()) - 1
-    startDate = firstDayOfMonth.minusDays(dowv.toLong())
+    val v = firstDayOfMonth.get(weekFields.dayOfWeek()) - 1
+    startDate = firstDayOfMonth.minusDays(v.toLong())
   }
 
   override fun getSize() = DayOfWeek.values().size * ROW_COUNT
 
-  override fun getElementAt(index: Int) = startDate.plusDays(index.toLong())
+  override fun getElementAt(index: Int): LocalDate = startDate.plusDays(index.toLong())
 
   companion object {
     const val ROW_COUNT = 6
