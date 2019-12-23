@@ -20,7 +20,15 @@ class MainPanel : JPanel(BorderLayout()) {
       setVisibleRowCount(DayOfWeek.values().size) // ensure 7 rows in the list
       setFixedCellWidth(CELL_SIZE.width)
       setFixedCellHeight(CELL_SIZE.height)
-      setCellRenderer(ContributionListRenderer())
+      val renderer = getCellRenderer()
+      setCellRenderer { list, value, index, isSelected, cellHasFocus ->
+        val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+        (c as? JLabel)?.setIcon(when {
+          value.date.isAfter(currentLocalDate) -> ContributionIcon(Color.WHITE)
+          else -> activityIcons[value.activity]
+        })
+        return@setCellRenderer c
+      }
       getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
       setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
     }
@@ -76,24 +84,24 @@ class MainPanel : JPanel(BorderLayout()) {
     setPreferredSize(Dimension(320, 240))
   }
 
-  private inner class ContributionListRenderer : ListCellRenderer<Contribution> {
-    private val renderer = DefaultListCellRenderer()
-
-    override fun getListCellRendererComponent(
-      list: JList<out Contribution>,
-      value: Contribution,
-      index: Int,
-      isSelected: Boolean,
-      cellHasFocus: Boolean
-    ): Component {
-      val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-      (c as? JLabel)?.setIcon(when {
-        value.date.isAfter(currentLocalDate) -> ContributionIcon(Color.WHITE)
-        else -> activityIcons[value.activity]
-      })
-      return c
-    }
-  }
+  // private inner class ContributionListRenderer : ListCellRenderer<Contribution> {
+  //   private val renderer = DefaultListCellRenderer()
+  //
+  //   override fun getListCellRendererComponent(
+  //     list: JList<out Contribution>,
+  //     value: Contribution,
+  //     index: Int,
+  //     isSelected: Boolean,
+  //     cellHasFocus: Boolean
+  //   ): Component {
+  //     val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+  //     (c as? JLabel)?.setIcon(when {
+  //       value.date.isAfter(currentLocalDate) -> ContributionIcon(Color.WHITE)
+  //       else -> activityIcons[value.activity]
+  //     })
+  //     return c
+  //   }
+  // }
 
   private fun makeWeekCalendar(list: JList<*>, font: Font) = JScrollPane(list).also {
     val loc = Locale.getDefault()
