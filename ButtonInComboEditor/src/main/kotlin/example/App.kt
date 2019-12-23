@@ -47,19 +47,12 @@ class MainPanel : JPanel(BorderLayout()) {
 
   private fun initComboBox(combo: JComboBox<SiteItem>) {
     combo.setEditable(true)
-    combo.setRenderer(object : DefaultListCellRenderer() {
-      override fun getListCellRendererComponent(
-        list: JList<*>,
-        value: Any?,
-        index: Int,
-        isSelected: Boolean,
-        cellHasFocus: Boolean
-      ): Component {
-        val c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-        (c as? JLabel)?.setIcon((value as? SiteItem)?.favicon)
-        return c
-      }
-    })
+    val renderer = combo.getRenderer()
+    combo.setRenderer { list, value, index, isSelected, cellHasFocus ->
+      val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+      (c as? JLabel)?.setIcon(value?.favicon)
+      return@setRenderer c
+    }
   }
 }
 

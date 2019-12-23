@@ -27,24 +27,24 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   private fun makeModel() = DefaultComboBoxModel<String>().also {
-    it.addElement("aaaa")
-    it.addElement("aaaabbb")
-    it.addElement("aaaabbbcc")
+    it.addElement("aaa")
+    it.addElement("aaa111")
+    it.addElement("aaa222bb")
     it.addElement("1234123512351234")
     it.addElement("bbb1")
     it.addElement("bbb12")
   }
 }
 
-internal class AlternateRowColorComboBox<E> : JComboBox<E> {
+class AlternateRowColorComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(model) {
   @Transient
   private var itemColorListener: ItemListener? = null
 
-  constructor() : super()
+  // constructor() : super()
 
-  constructor(model: ComboBoxModel<E>) : super(model)
+  // constructor(model: ComboBoxModel<E>) : super(model)
 
-  constructor(items: Array<E>) : super(items)
+  // constructor(items: Array<E>) : super(items)
 
   override fun setEditable(flag: Boolean) {
     super.setEditable(flag)
@@ -57,23 +57,17 @@ internal class AlternateRowColorComboBox<E> : JComboBox<E> {
 
   override fun updateUI() {
     removeItemListener(itemColorListener)
+    setRenderer(null)
     super.updateUI()
-    setRenderer(object : DefaultListCellRenderer() {
-      override fun getListCellRendererComponent(
-        list: JList<*>,
-        value: Any?,
-        index: Int,
-        isSelected: Boolean,
-        cellHasFocus: Boolean
-      ): Component {
-        val c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-        (c as? JLabel)?.setOpaque(true)
-        if (!isSelected) {
-          c.setBackground(getAlternateRowColor(index))
-        }
-        return c
+    val renderer = getRenderer()
+    setRenderer { list, value, index, isSelected, cellHasFocus ->
+      val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+      (c as? JLabel)?.setOpaque(true)
+      if (!isSelected) {
+        c.setBackground(getAlternateRowColor(index))
       }
-    })
+      return@setRenderer c
+    }
     itemColorListener = ItemListener { e ->
       val cb = e.getItemSelectable()
       if (e.getStateChange() == ItemEvent.SELECTED && cb is JComboBox<*>) {
