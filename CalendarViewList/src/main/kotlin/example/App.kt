@@ -52,7 +52,7 @@ class MainPanel : JPanel() {
         val renderer = getCellRenderer()
         setCellRenderer { list, value, index, _, _ ->
           val c = renderer.getListCellRendererComponent(list, value, index, false, false)
-          (c as? JLabel)?.also { 
+          (c as? JLabel)?.also {
             it.setHorizontalAlignment(SwingConstants.CENTER)
             it.setText(value.getDisplayName(TextStyle.SHORT_STANDALONE, l))
             it.setBackground(Color(0xDC_DC_DC))
