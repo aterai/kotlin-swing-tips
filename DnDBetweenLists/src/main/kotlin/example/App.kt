@@ -30,24 +30,22 @@ class MainPanel : JPanel(BorderLayout()) {
       it.addElement(Color.PINK)
       it.addElement(Color.MAGENTA)
     }
-    val list = JList<Color>(listModel)
-    list.setCellRenderer(object : DefaultListCellRenderer() {
-      override fun getListCellRendererComponent(
-        list: JList<*>,
-        value: Any?,
-        index: Int,
-        isSelected: Boolean,
-        cellHasFocus: Boolean
-      ): Component {
-        val c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-        (c as? JLabel)?.setForeground(value as? Color)
-        return c
+    val list = object : JList<Color>(listModel) {
+      override fun updateUI() {
+        setCellRenderer(null)
+        super.updateUI()
+        getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
+        setDropMode(DropMode.INSERT)
+        setDragEnabled(true)
+        setTransferHandler(handler)
+        val renderer = getCellRenderer()
+        setCellRenderer { list, value, index, isSelected, cellHasFocus ->
+          val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+          (c as? JLabel)?.setForeground(value)
+          return@setCellRenderer c
+        }
       }
-    })
-    list.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
-    list.setDropMode(DropMode.INSERT)
-    list.setDragEnabled(true)
-    list.setTransferHandler(handler)
+    }
 
     // Disable row Cut, Copy, Paste
     val map = list.getActionMap()
@@ -62,7 +60,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-// Demo - BasicDnD (The Java™ Tutorials > Creating a GUI With JFC/Swing > Drag and Drop and Data Transfer)
+// Demo - BasicDnD (The Java? Tutorials > Creating a GUI With JFC/Swing > Drag and Drop and Data Transfer)
 // https://docs.oracle.com/javase/tutorial/uiswing/dnd/basicdemo.html
 class ListItemTransferHandler : TransferHandler() {
   private val localObjectFlavor = DataFlavor(List::class.java, "List of items")
@@ -93,9 +91,9 @@ class ListItemTransferHandler : TransferHandler() {
   }
 
   override fun canImport(info: TransferSupport) =
-      info.isDrop() &&
-      info.isDataFlavorSupported(localObjectFlavor) &&
-      info.getDropLocation() is JList.DropLocation
+    info.isDrop() &&
+        info.isDataFlavorSupported(localObjectFlavor) &&
+        info.getDropLocation() is JList.DropLocation
 
   override fun getSourceActions(c: JComponent) = MOVE // COPY_OR_MOVE
 
