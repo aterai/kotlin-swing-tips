@@ -4,17 +4,22 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.tree.DefaultMutableTreeNode
-import javax.swing.tree.DefaultTreeCellRenderer
 import javax.swing.tree.DefaultTreeModel
-import javax.swing.tree.TreeCellRenderer
 import javax.swing.tree.TreeModel
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
     val tree0 = object : JTree(DefaultTreeModel(makeTreeRoot())) {
       override fun updateUI() {
+        setCellRenderer(null)
         super.updateUI()
-        setCellRenderer(TooltipTreeCellRenderer())
+        // setRowHeight(24)
+        val renderer = getCellRenderer()
+        setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
+          val c = renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+          (c as? JLabel)?.setToolTipText(value?.toString())
+          return@setCellRenderer c
+        }
       }
     }
     ToolTipManager.sharedInstance().registerComponent(tree0)
@@ -77,7 +82,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class TooltipTree(model: TreeModel) : JTree(model) {
+class TooltipTree(model: TreeModel) : JTree(model) {
   private val label = object : JLabel() {
     override fun getPreferredSize() = super.getPreferredSize()?.also {
       it.height = getRowHeight()
@@ -85,9 +90,15 @@ internal class TooltipTree(model: TreeModel) : JTree(model) {
   }
 
   override fun updateUI() {
+    setCellRenderer(null)
     super.updateUI()
     // setRowHeight(24)
-    setCellRenderer(TooltipTreeCellRenderer())
+    val renderer = getCellRenderer()
+    setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
+      val c = renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+      (c as? JLabel)?.setToolTipText(value?.toString())
+      return@setCellRenderer c
+    }
   }
 
   override fun getToolTipLocation(e: MouseEvent): Point? {
@@ -129,25 +140,7 @@ internal class TooltipTree(model: TreeModel) : JTree(model) {
   }
 }
 
-internal class TooltipTreeCellRenderer : TreeCellRenderer {
-  private val renderer = DefaultTreeCellRenderer()
-
-  override fun getTreeCellRendererComponent(
-    tree: JTree,
-    value: Any?,
-    selected: Boolean,
-    expanded: Boolean,
-    leaf: Boolean,
-    row: Int,
-    hasFocus: Boolean
-  ): Component {
-    val c = renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
-    (c as? JLabel)?.setToolTipText(value?.toString())
-    return c
-  }
-}
-
-internal class RendererIcon(private val renderer: Component, private val rect: Rectangle) : Icon {
+class RendererIcon(private val renderer: Component, private val rect: Rectangle) : Icon {
   init {
     rect.setLocation(0, 0)
   }
