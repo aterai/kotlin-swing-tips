@@ -3,7 +3,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicTreeUI
-import javax.swing.tree.DefaultTreeCellRenderer
 import javax.swing.tree.TreePath
 
 class MainPanel : JPanel(GridLayout(1, 2, 2, 2)) {
@@ -21,8 +20,8 @@ class RowSelectionTree : JTree() {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setPaint(SELECTED_COLOR)
     getSelectionRows()
-        ?.map { getRowBounds(it) }
-        ?.forEach { g2.fillRect(0, it.y, getWidth(), it.height) }
+      ?.map { getRowBounds(it) }
+      ?.forEach { g2.fillRect(0, it.y, getWidth(), it.height) }
     super.paintComponent(g)
     if (hasFocus()) {
       getLeadSelectionPath()?.also {
@@ -35,6 +34,7 @@ class RowSelectionTree : JTree() {
   }
 
   override fun updateUI() {
+    setCellRenderer(null)
     super.updateUI()
     setUI(object : BasicTreeUI() {
       override fun getPathBounds(tree: JTree?, path: TreePath?): Rectangle? {
@@ -50,26 +50,14 @@ class RowSelectionTree : JTree() {
         }
     })
     UIManager.put("Tree.repaintWholeRow", true)
-    setCellRenderer(Handler())
-    setOpaque(false)
-  }
-
-  private class Handler : DefaultTreeCellRenderer() {
-    override fun getTreeCellRendererComponent(
-      tree: JTree,
-      value: Any?,
-      selected: Boolean,
-      expanded: Boolean,
-      leaf: Boolean,
-      row: Int,
-      hasFocus: Boolean
-    ): Component {
-      val c = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
-      val l = c as? JLabel ?: return c
-      l.setBackground(if (selected) SELECTED_COLOR else tree.getBackground())
-      l.setOpaque(true)
-      return l
+    val renderer = getCellRenderer()
+    setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
+      val c = renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+      c.setBackground(if (selected) SELECTED_COLOR else tree.getBackground())
+      (c as? JLabel)?.setOpaque(true)
+      return@setCellRenderer c
     }
+    setOpaque(false)
   }
 
   companion object {
