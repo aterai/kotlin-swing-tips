@@ -87,15 +87,15 @@ class RearrangingHandler : MouseAdapter() {
 
   private fun getTargetIndex(r: Rectangle, pt: Point, i: Int): Int {
     val ht2 = (.5 + r.height * .5).toInt()
-    R1.setBounds(r.x, r.y, r.width, ht2)
-    R2.setBounds(r.x, r.y + ht2, r.width, ht2)
+    PREV_AREA.setBounds(r.x, r.y, r.width, ht2)
+    NEXT_AREA.setBounds(r.x, r.y + ht2, r.width, ht2)
     return when {
-      R1.contains(pt) -> {
-        prevRect.setBounds(R1)
+      PREV_AREA.contains(pt) -> {
+        prevRect.setBounds(PREV_AREA)
         if (i > 1) i else 0
       }
-      R2.contains(pt) -> {
-        prevRect.setBounds(R2)
+      NEXT_AREA.contains(pt) -> {
+        prevRect.setBounds(NEXT_AREA)
         i
       }
       else -> -1
@@ -160,12 +160,11 @@ class RearrangingHandler : MouseAdapter() {
     parent.remove(remove)
     parent.add(insert, idx)
     parent.revalidate()
-    parent.repaint()
   }
 
   companion object {
-    private val R1 = Rectangle()
-    private val R2 = Rectangle()
+    private val PREV_AREA = Rectangle()
+    private val NEXT_AREA = Rectangle()
   }
 }
 
