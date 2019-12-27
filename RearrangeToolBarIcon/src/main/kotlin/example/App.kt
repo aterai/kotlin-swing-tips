@@ -70,7 +70,7 @@ class DragHandler : MouseAdapter() {
   }
 
   override fun mouseDragged(e: MouseEvent) {
-    val pt: Point = e.getPoint()
+    val pt = e.getPoint()
     val parent = e.getComponent() as? Container ?: return
     if (!window.isVisible() || draggingComponent == null) {
       if (startPt.distance(pt) > gestureMotionThreshold) {
@@ -82,21 +82,10 @@ class DragHandler : MouseAdapter() {
     val p = Point(pt.x - d.width / 2, pt.y - d.height / 2)
     SwingUtilities.convertPointToScreen(p, parent)
     window.setLocation(p)
-    for ((i, c) in parent.getComponents().withIndex()) {
-      val r = c.getBounds()
-      val wd2 = r.width / 2
-      PREV_AREA.setBounds(r.x, r.y, wd2, r.height)
-      NEXT_AREA.setBounds(r.x + wd2, r.y, wd2, r.height)
-      if (PREV_AREA.contains(pt)) {
-        swapComponentLocation(parent, gap, gap, if (i > 1) i else 0)
-        return
-      } else if (NEXT_AREA.contains(pt)) {
-        swapComponentLocation(parent, gap, gap, i)
-        return
-      }
+    if (!searchAndSwap(parent, gap, pt)) {
+      parent.remove(gap)
+      parent.revalidate()
     }
-    parent.remove(gap)
-    parent.revalidate()
   }
 
   override fun mouseReleased(e: MouseEvent) {
@@ -109,29 +98,37 @@ class DragHandler : MouseAdapter() {
     val cmp = draggingComponent
     draggingComponent = null
 
+    if (!searchAndSwap(parent, cmp, pt)) {
+      val idx = if (parent.getParent().getBounds().contains(pt)) parent.getComponentCount() else index
+      swapComponentLocation(parent, gap, cmp, idx)
+    }
+  }
+
+  private fun searchAndSwap(parent: Container, cmp: Component?, pt: Point): Boolean {
+    var find = false
     for ((i, c) in parent.getComponents().withIndex()) {
-      val r: Rectangle = c.bounds
+      val r = c.getBounds()
       val wd2 = r.width / 2
       PREV_AREA.setBounds(r.x, r.y, wd2, r.height)
       NEXT_AREA.setBounds(r.x + wd2, r.y, wd2, r.height)
       if (PREV_AREA.contains(pt)) {
         swapComponentLocation(parent, gap, cmp, if (i > 1) i else 0)
-        return
+        return true
       } else if (NEXT_AREA.contains(pt)) {
         swapComponentLocation(parent, gap, cmp, i)
-        return
+        find = true
+        break
       }
     }
-    val idx = if (parent.getParent().getBounds().contains(pt)) parent.getComponentCount() else index
-    swapComponentLocation(parent, gap, cmp, idx)
+    return find
   }
 
-  private fun swapComponentLocation(parent: Container, remove: Component, add: Component?, idx: Int) {
-    if (add == null) {
+  private fun swapComponentLocation(parent: Container, remove: Component, insert: Component?, idx: Int) {
+    if (insert == null) {
       return
     }
     parent.remove(remove)
-    parent.add(add, idx)
+    parent.add(insert, idx)
     parent.revalidate()
   }
 
