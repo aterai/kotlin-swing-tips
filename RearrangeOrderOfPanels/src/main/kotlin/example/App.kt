@@ -104,30 +104,19 @@ class RearrangingHandler : MouseAdapter() {
 
   override fun mouseDragged(e: MouseEvent) {
     val pt = e.getPoint()
-    val parent = e.getComponent() as? Container ?: return
-    if (draggingComponent == null) {
-      if (startPt.distance(pt) > gestureMotionThreshold) {
-        startDragging(parent, pt)
-      }
-      return
-    }
-    updateWindowLocation(pt, parent)
-    if (prevRect.contains(pt)) {
-      return
-    }
-    for ((i, c) in parent.getComponents().withIndex()) {
-      val r = c.getBounds()
-      if (c == gap && r.contains(pt)) {
+    (e.getComponent() as? Container)?.also { parent ->
+      if (draggingComponent == null) {
+        if (startPt.distance(pt) > gestureMotionThreshold) {
+          startDragging(parent, pt)
+        }
         return
       }
-      val tgt = getTargetIndex(r, pt, i)
-      if (tgt >= 0) {
-        swapComponentLocation(parent, gap, gap, tgt)
-        return
+      updateWindowLocation(pt, parent)
+      if (!prevRect.contains(pt) && !searchAndSwap(parent, gap, pt)) {
+        parent.remove(gap)
+        parent.revalidate()
       }
     }
-    parent.remove(gap)
-    parent.revalidate()
   }
 
   override fun mouseReleased(e: MouseEvent) {
@@ -136,23 +125,32 @@ class RearrangingHandler : MouseAdapter() {
     window.setVisible(false)
 
     val pt = e.getPoint()
-    val parent = e.getComponent() as? Container ?: return
-    val cmp = draggingComponent
-    draggingComponent = null
-
-    for ((i, c) in parent.getComponents().withIndex()) {
-      if (c == gap) {
-        swapComponentLocation(parent, gap, cmp, i)
-        return
-      }
-      val tgt = getTargetIndex(c.getBounds(), pt, i)
-      if (tgt >= 0) {
-        swapComponentLocation(parent, gap, cmp, tgt)
-        return
+    (e.getComponent() as? Container)?.also { parent ->
+      val c = draggingComponent
+      draggingComponent = null
+      if (!searchAndSwap(parent, c, pt)) {
+        val i = if (parent.getParent().getBounds().contains(pt)) parent.getComponentCount() else index
+        swapComponentLocation(parent, gap, c, i)
       }
     }
-    val idx = if (parent.getParent().getBounds().contains(pt)) parent.getComponentCount() else index
-    swapComponentLocation(parent, gap, cmp, idx)
+  }
+
+  private fun searchAndSwap(parent: Container, cmp: Component?, pt: Point): Boolean {
+    var find = false
+    for ((i, c) in parent.getComponents().withIndex()) {
+      val r = c.getBounds()
+      if (c == gap && r.contains(pt)) {
+        swapComponentLocation(parent, gap, cmp, i)
+        return true
+      }
+      val tgt = getTargetIndex(r, pt, i)
+      if (tgt >= 0) {
+        swapComponentLocation(parent, gap, cmp, tgt)
+        find = true
+        break
+      }
+    }
+    return find
   }
 
   private fun swapComponentLocation(parent: Container, remove: Component?, insert: Component?, idx: Int) {
