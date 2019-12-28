@@ -46,9 +46,21 @@ class MainPanel : JPanel(BorderLayout()) {
           setVisibleRowCount(8)
           setFixedCellWidth(CELL_SIZE.width)
           setFixedCellHeight(CELL_SIZE.height)
-          setCellRenderer(IndexedColorListRenderer())
           getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
           setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
+          val renderer = getCellRenderer()
+          setCellRenderer { list, value, index, isSelected, cellHasFocus ->
+            val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+            (c as? JLabel)?.also {
+              it.setIcon(ColorIcon(value.color))
+              it.setToolTipText("index: ${value.index}")
+              it.setBorder(BorderFactory.createLineBorder(when {
+                value.isTransparentPixel -> Color.RED
+                else -> Color.WHITE
+              }))
+            }
+            return@setCellRenderer c
+          }
         }
       }
       box.add(JScrollPane(palette), GridBagConstraints())
@@ -96,13 +108,13 @@ class MainPanel : JPanel(BorderLayout()) {
 
 data class IndexedColor(val index: Int, val color: Color, val isTransparentPixel: Boolean)
 
-internal class PaletteListModel(private val model: IndexColorModel) : AbstractListModel<IndexedColor>() {
+class PaletteListModel(private val model: IndexColorModel) : AbstractListModel<IndexedColor>() {
   override fun getSize() = model.getMapSize()
 
   override fun getElementAt(i: Int) = IndexedColor(i, Color(model.getRGB(i)), i == model.getTransparentPixel())
 }
 
-internal class ColorIcon(private val color: Color) : Icon {
+class ColorIcon(private val color: Color) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
@@ -114,29 +126,6 @@ internal class ColorIcon(private val color: Color) : Icon {
   override fun getIconWidth() = MainPanel.CELL_SIZE.width - 2
 
   override fun getIconHeight() = MainPanel.CELL_SIZE.height - 2
-}
-
-internal class IndexedColorListRenderer : ListCellRenderer<IndexedColor> {
-  private val renderer = DefaultListCellRenderer()
-
-  override fun getListCellRendererComponent(
-    list: JList<out IndexedColor>,
-    value: IndexedColor,
-    index: Int,
-    isSelected: Boolean,
-    cellHasFocus: Boolean
-  ): Component {
-    val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-    (c as? JLabel)?.also {
-      it.setIcon(ColorIcon(value.color))
-      it.setToolTipText("index: ${value.index}")
-      it.setBorder(BorderFactory.createLineBorder(when {
-        value.isTransparentPixel -> Color.RED
-        else -> Color.WHITE
-      }))
-    }
-    return c
-  }
 }
 
 fun main() {
