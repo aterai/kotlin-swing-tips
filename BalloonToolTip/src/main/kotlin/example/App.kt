@@ -28,15 +28,37 @@ class MainPanel : JPanel(GridLayout(1, 2)) {
       }
 
       override fun updateUI() {
+        setCellRenderer(null)
         super.updateUI()
-        setCellRenderer(TooltipListCellRenderer<Any>())
+        val renderer = DefaultListCellRenderer()
+        setCellRenderer { list, value, index, isSelected, cellHasFocus ->
+          val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+          (SwingUtilities.getAncestorOfClass(JViewport::class.java, list) as? JViewport)?.also {
+            val rect = SwingUtilities.calculateInnerArea(it, it.getBounds())
+            val fm = c.getFontMetrics(c.getFont())
+            val str = value?.toString() ?: ""
+            (c as? JComponent)?.setToolTipText(if (fm.stringWidth(str) > rect.width) str else null)
+          }
+          return@setCellRenderer c
+        }
       }
     }
 
     val list2 = object : JList<String>(model) {
       override fun updateUI() {
+        setCellRenderer(null)
         super.updateUI()
-        setCellRenderer(TooltipListCellRenderer<Any>())
+        val renderer = DefaultListCellRenderer()
+        setCellRenderer { list, value, index, isSelected, cellHasFocus ->
+          val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+          (SwingUtilities.getAncestorOfClass(JViewport::class.java, list) as? JViewport)?.also {
+            val rect = SwingUtilities.calculateInnerArea(it, it.getBounds())
+            val fm = c.getFontMetrics(c.getFont())
+            val str = value?.toString() ?: ""
+            (c as? JComponent)?.setToolTipText(if (fm.stringWidth(str) > rect.width) str else null)
+          }
+          return@setCellRenderer c
+        }
       }
     }
 
@@ -52,27 +74,6 @@ class MainPanel : JPanel(GridLayout(1, 2)) {
     p.setBorder(BorderFactory.createTitledBorder(title))
     p.add(scroll)
     return p
-  }
-}
-
-class TooltipListCellRenderer<E> : ListCellRenderer<E> {
-  private val renderer = DefaultListCellRenderer()
-
-  override fun getListCellRendererComponent(
-    list: JList<out E>,
-    value: E?,
-    index: Int,
-    isSelected: Boolean,
-    cellHasFocus: Boolean
-  ): Component {
-    val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-    (SwingUtilities.getAncestorOfClass(JViewport::class.java, list) as? JViewport)?.also {
-      val rect = SwingUtilities.calculateInnerArea(it, it.getBounds())
-      val fm = c.getFontMetrics(c.getFont())
-      val str = value?.toString() ?: ""
-      (c as? JComponent)?.setToolTipText(if (fm.stringWidth(str) > rect.width) str else null)
-    }
-    return c
   }
 }
 
