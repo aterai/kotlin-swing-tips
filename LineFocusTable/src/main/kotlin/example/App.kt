@@ -99,7 +99,7 @@ class LineFocusTable(model: TableModel) : JTable(model) {
         }
       }
     })
-    setDefaultEditor(Boolean::class.java, DefaultCellEditor(checkBox))
+    setDefaultEditor(java.lang.Boolean::class.java, DefaultCellEditor(checkBox))
   }
 
   private fun updateBorderType(border: DotBorder, column: Int) {
