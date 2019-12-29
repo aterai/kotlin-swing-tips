@@ -12,7 +12,7 @@ class MainPanel : JPanel(GridLayout(1, 0)) {
     UIManager.put("ScrollBar.incrementButtonGap", 0)
     UIManager.put("ScrollBar.decrementButtonGap", 0)
 
-    // UIManager.put("ScrollBar.squareButtons", Boolean.TRUE)
+    // UIManager.put("ScrollBar.squareButtons", true)
     // UIManager.put("ArrowButton.size", 8)
 
     val thumbColor = Color(0xCD_CD_CD)

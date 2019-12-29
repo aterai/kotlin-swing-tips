@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  // UIManager.put("FileChooser.readOnly", Boolean.TRUE);
+  // UIManager.put("FileChooser.readOnly", true);
   val log = JTextArea()
 
   val fileChooser0 = JFileChooser()

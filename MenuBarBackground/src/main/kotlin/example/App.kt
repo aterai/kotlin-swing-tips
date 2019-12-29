@@ -92,7 +92,7 @@ fun main() {
     }
     // val key = "Menu.useMenuBarBackgroundForTopLevel"
     // println("$key: ${UIManager.getBoolean(key)}")
-    // TEST: UIManager.put(key, Boolean.FALSE);
+    // TEST: UIManager.put(key, false)
     JFrame().apply {
       setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
       getContentPane().add(makeUI())

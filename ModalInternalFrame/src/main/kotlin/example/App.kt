@@ -118,9 +118,9 @@ class MainPanel : JPanel(BorderLayout()) {
 
     override fun actionPerformed(e: ActionEvent) {
       val optionPane = JOptionPane()
-      // TEST: UIManager.put("InternalFrame.titleButtonToolTipsOn", Boolean.FALSE)
+      // TEST: UIManager.put("InternalFrame.titleButtonToolTipsOn", false)
       val modal = optionPane.createInternalFrame(desktop, "modal3")
-      // TEST: UIManager.put("InternalFrame.titleButtonToolTipsOn", Boolean.TRUE)
+      // TEST: UIManager.put("InternalFrame.titleButtonToolTipsOn", true)
       optionPane.setMessage("Hello, World")
       optionPane.setMessageType(JOptionPane.INFORMATION_MESSAGE)
       removeSystemMenuListener(modal)

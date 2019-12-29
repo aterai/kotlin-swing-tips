@@ -73,7 +73,7 @@ class ReorderingList(model: ListModel<ListItem>) : JList<ListItem>(model) {
     addMouseMotionListener(rbl)
     addMouseListener(rbl)
 
-    // putClientProperty("List.isFileList", Boolean.TRUE)
+    // putClientProperty("List.isFileList", true)
     getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
     setTransferHandler(ListItemTransferHandler())
     setDropMode(DropMode.INSERT)

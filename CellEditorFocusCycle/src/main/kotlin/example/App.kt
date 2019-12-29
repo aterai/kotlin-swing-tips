@@ -51,7 +51,7 @@ class MainPanel : JPanel(GridLayout(2, 1)) {
     return object : JTable(model) {
       override fun updateUI() {
         super.updateUI()
-        // putClientProperty("terminateEditOnFocusLost", Boolean.TRUE)
+        // putClientProperty("terminateEditOnFocusLost", true)
         setSelectionForeground(Color.BLACK)
         setSelectionBackground(Color(220, 220, 255))
         getColumnModel().getColumn(1)?.also {
