@@ -101,7 +101,7 @@ class SolidGaugeUI(range: Int, extent: Double) : BasicProgressBarUI() {
     // Draw the circular sector
     g2.paint = getColorFromPallet(pallet, progressBar.percentComplete)
     g2.fill(foreground)
-    // Draw ...
+    // Draw minimum, maximum
     val font = progressBar.font
     val fsz = font.size2D
     val min = (cx - or - fsz).toFloat()
@@ -127,22 +127,21 @@ class SolidGaugeUI(range: Int, extent: Double) : BasicProgressBarUI() {
   private fun makeGradientPallet(range: Int): IntArray {
     val image = BufferedImage(range, 1, BufferedImage.TYPE_INT_RGB)
     val g2 = image.createGraphics()
-    val start: Point2D = Point2D.Float()
-    val end: Point2D = Point2D.Float(range - 1f, 0f)
+    val start = Point2D.Float()
+    val end = Point2D.Float(range - 1f, 0f)
     val dist = floatArrayOf(0f, .8f, .9f, 1f)
     val colors = arrayOf(Color.GREEN, Color.YELLOW, Color.ORANGE, Color.RED)
     g2.paint = LinearGradientPaint(start, end, dist, colors)
     g2.fillRect(0, 0, range, 1)
     g2.dispose()
+
     val width = image.getWidth(null)
     val pallet = IntArray(width)
-    val pg = PixelGrabber(image, 0, 0, width, 1, pallet, 0, width)
-    try {
-      pg.grabPixels()
-    } catch (ex: InterruptedException) {
-      ex.printStackTrace()
+    runCatching {
+      PixelGrabber(image, 0, 0, width, 1, pallet, 0, width).grabPixels()
+    }.onFailure {
+      it.printStackTrace()
       Toolkit.getDefaultToolkit().beep()
-      Thread.currentThread().interrupt()
     }
     return pallet
   }
