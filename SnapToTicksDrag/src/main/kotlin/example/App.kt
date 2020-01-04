@@ -87,22 +87,21 @@ internal class WindowsSnapToTicksDragSliderUI(slider: JSlider) : WindowsSliderUI
         val trackLength = trackRect.width
         val trackLeft = trackRect.x - halfThumbWidth
         val trackRight = trackRect.x + trackRect.width - 1 + halfThumbWidth
-        val xpos = e.getX()
+        val pos = e.getX()
         val snappedPos = when {
-          xpos <= trackLeft -> trackLeft
-          xpos >= trackRight -> trackRight
+          pos <= trackLeft -> trackLeft
+          pos >= trackRight -> trackRight
           else -> {
             offset = 0
             val possibleTickPositions = slider.getMaximum() - slider.getMinimum()
             val hasMinorTick = slider.getMinorTickSpacing() > 0
             val tickSpacing = if (hasMinorTick) slider.getMinorTickSpacing() else slider.getMajorTickSpacing()
             val actualPixelsForOneTick = trackLength * tickSpacing / possibleTickPositions.toFloat()
-            val px = xpos - trackLeft
-            // (Math.round(px / actualPixelsForOneTick) * actualPixelsForOneTick + .5).toInt() + trackLeft
-            ((px / actualPixelsForOneTick).toInt() * actualPixelsForOneTick).roundToInt() + trackLeft
+            val px = pos - trackLeft
+            ((px / actualPixelsForOneTick).roundToInt() * actualPixelsForOneTick).roundToInt() + trackLeft
           }
         }
-        e.translatePoint(snappedPos - xpos, 0)
+        e.translatePoint(snappedPos - pos, 0)
         super.mouseDragged(e)
       }
     }
@@ -122,22 +121,21 @@ internal class MetalSnapToTicksDragSliderUI : MetalSliderUI() {
         val trackLength = trackRect.width
         val trackLeft = trackRect.x - halfThumbWidth
         val trackRight = trackRect.x + trackRect.width - 1 + halfThumbWidth
-        val xpos = e.getX()
+        val pos = e.getX()
         val snappedPos = when {
-          xpos <= trackLeft -> trackLeft
-          xpos >= trackRight -> trackRight
+          pos <= trackLeft -> trackLeft
+          pos >= trackRight -> trackRight
           else -> {
             offset = 0
             val possibleTickPositions = slider.getMaximum() - slider.getMinimum()
             val hasMinorTick = slider.getMinorTickSpacing() > 0
             val tickSpacing = if (hasMinorTick) slider.getMinorTickSpacing() else slider.getMajorTickSpacing()
             val actualPixelsForOneTick = trackLength * tickSpacing / possibleTickPositions.toFloat()
-            val px = xpos - trackLeft
-            // (Math.round(px / actualPixelsForOneTick) * actualPixelsForOneTick + .5).toInt() + trackLeft
-            ((px / actualPixelsForOneTick).toInt() * actualPixelsForOneTick).roundToInt() + trackLeft
+            val px = pos - trackLeft
+            ((px / actualPixelsForOneTick).roundToInt() * actualPixelsForOneTick).roundToInt() + trackLeft
           }
         }
-        e.translatePoint(snappedPos - xpos, 0)
+        e.translatePoint(snappedPos - pos, 0)
         super.mouseDragged(e)
       }
     }

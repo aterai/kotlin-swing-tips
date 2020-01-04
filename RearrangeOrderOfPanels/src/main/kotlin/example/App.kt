@@ -86,7 +86,7 @@ class RearrangingHandler : MouseAdapter() {
   }
 
   private fun getTargetIndex(r: Rectangle, pt: Point, i: Int): Int {
-    val ht2 = (.5 + r.height * .5).toInt()
+    val ht2 = (r.height / 2f).roundToInt()
     PREV_AREA.setBounds(r.x, r.y, r.width, ht2)
     NEXT_AREA.setBounds(r.x, r.y + ht2, r.width, ht2)
     return when {
