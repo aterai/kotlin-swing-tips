@@ -13,7 +13,7 @@ class MainPanel : JPanel(BorderLayout()) {
   init {
     val copyKey = "copy"
 
-    val combo1 = JComboBox<String>(makeModel(5))
+    val combo1 = JComboBox(makeModel(5))
     val copy = object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
         (e.getSource() as? JComboBox<*>)?.getSelectedItem()?.also {
@@ -43,13 +43,13 @@ class MainPanel : JPanel(BorderLayout()) {
     }
     combo1.setComponentPopupMenu(popup)
 
-    val combo2 = JComboBox<String>(makeModel(10))
+    val combo2 = JComboBox(makeModel(10))
     combo2.setEditable(true)
     (combo2.getEditor().getEditorComponent() as? JTextField)
-        ?.setComponentPopupMenu(TextFieldPopupMenu())
+      ?.setComponentPopupMenu(TextFieldPopupMenu())
 
     val box = Box.createVerticalBox()
-    box.add(makeTitledPanel("Default:", JComboBox<String>(makeModel(0))))
+    box.add(makeTitledPanel("Default:", JComboBox(makeModel(0))))
     box.add(Box.createVerticalStrut(5))
     box.add(makeTitledPanel("Editable: false, JPopupMenu, Ctrl+C", combo1))
     box.add(Box.createVerticalStrut(5))

@@ -12,7 +12,7 @@ import javax.swing.text.JTextComponent
 class MainPanel : JPanel(BorderLayout()) {
   init {
     val model = arrayOf("123456", "7890")
-    val combo = JComboBox<String>(model)
+    val combo = JComboBox(model)
     combo.setEditable(true)
 
     val comboBox = object : JComboBox<String>(model) {
