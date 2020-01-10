@@ -10,6 +10,7 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 
+
 class MainPanel : JPanel(BorderLayout()) {
   init {
     val columnNames = arrayOf("user", "rwx")
@@ -79,11 +80,13 @@ enum class Permissions {
 
 class CheckBoxesPanel : JPanel() {
   val titles = arrayOf("r", "w", "x")
-  val buttons = titles.map { makeCheckBox(it) }
+  private val buttons = titles.map { makeCheckBox(it) }
+  private val alphaZero = Color(0x0, true)
+
   override fun updateUI() {
     super.updateUI()
     isOpaque = false
-    background = BGC
+    background = alphaZero
     layout = BoxLayout(this, BoxLayout.X_AXIS)
     EventQueue.invokeLater { initButtons() }
   }
@@ -104,17 +107,31 @@ class CheckBoxesPanel : JPanel() {
     buttons[2].isSelected = f.contains(Permissions.EXECUTE)
   }
 
-  companion object {
-    private val BGC = Color(0x0, true)
+  fun doClickCheckBox(title: String) {
+    buttons.firstOrNull { it.text == title }?.doClick()
+  }
 
-    private fun makeCheckBox(title: String): JCheckBox {
-      val b = JCheckBox(title)
-      b.isOpaque = false
-      b.isFocusable = false
-      b.isRolloverEnabled = false
-      b.background = BGC
-      return b
+  fun getPermissionsValue(): Set<Permissions> {
+    val f = EnumSet.noneOf(Permissions::class.java)
+    if (buttons[0].isSelected) {
+      f.add(Permissions.READ)
     }
+    if (buttons[1].isSelected) {
+      f.add(Permissions.WRITE)
+    }
+    if (buttons[2].isSelected) {
+      f.add(Permissions.EXECUTE)
+    }
+    return f
+  }
+
+  private fun makeCheckBox(title: String): JCheckBox {
+    val b = JCheckBox(title)
+    b.isOpaque = false
+    b.isFocusable = false
+    b.isRolloverEnabled = false
+    b.background = alphaZero
+    return b
   }
 }
 
@@ -146,26 +163,14 @@ class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
     return renderer
   }
 
-  override fun getCellEditorValue(): Any {
-    val f = EnumSet.noneOf(Permissions::class.java)
-    if (renderer.buttons[0].isSelected) {
-      f.add(Permissions.READ)
-    }
-    if (renderer.buttons[1].isSelected) {
-      f.add(Permissions.WRITE)
-    }
-    if (renderer.buttons[2].isSelected) {
-      f.add(Permissions.EXECUTE)
-    }
-    return f
-  }
+  override fun getCellEditorValue() = renderer.getPermissionsValue()
 
   init {
     val am = renderer.actionMap
     renderer.titles.forEach {
       am.put(it, object : AbstractAction(it) {
         override fun actionPerformed(e: ActionEvent) {
-          renderer.buttons.firstOrNull { b -> b.text == it }?.doClick()
+          renderer.doClickCheckBox(it)
           fireEditingStopped()
         }
       })
