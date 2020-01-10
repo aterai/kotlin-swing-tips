@@ -10,7 +10,6 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 
-
 class MainPanel : JPanel(BorderLayout()) {
   init {
     val columnNames = arrayOf("user", "rwx")

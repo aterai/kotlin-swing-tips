@@ -67,7 +67,6 @@ fun makeUI(): Component {
   return p
 }
 
-
 fun main() {
   EventQueue.invokeLater {
     runCatching {
