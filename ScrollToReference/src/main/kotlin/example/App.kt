@@ -28,17 +28,24 @@ class MainPanel : JPanel(BorderLayout(2, 2)) {
     UIManager.put("Tree.rightChildIndent", 0)
     UIManager.put("Tree.paintLines", false)
     val htmlEditorKit = HTMLEditorKit()
-    editor.setEditable(false)
-    editor.setEditorKit(htmlEditorKit)
-    editor.setText("<html><body><p id='main'></p><p id='bottom'>id=bottom</p></body></html>")
-    val doc = editor.getDocument() as HTMLDocument
+    editor.isEditable = false
+    editor.editorKit = htmlEditorKit
+    editor.text = """
+      <html>
+        <body>
+          <p id='main'></p>
+          <p id='bottom'>id=bottom</p>
+        </body>
+      </html>
+      """.trimIndent()
+    val doc = editor.document as HTMLDocument
     val element = doc.getElement("main")
     val model = makeModel()
-    val root = model.getRoot() as DefaultMutableTreeNode
-    root.breadthFirstEnumeration().toList()
+    val root = model.root as DefaultMutableTreeNode
+    root.preorderEnumeration().toList()
       .filterIsInstance<DefaultMutableTreeNode>()
-      .filterNot { it.isRoot() }
-      .map { it.getUserObject() }
+      .filterNot { it.isRoot }
+      .map { it.userObject }
       .forEach {
         runCatching {
           val tag = "<a name='%s' href='#'>%s</a>" + "<br>".repeat(8)
@@ -47,17 +54,18 @@ class MainPanel : JPanel(BorderLayout(2, 2)) {
           UIManager.getLookAndFeel().provideErrorFeedback(editor)
         }
       }
+
     val tree = RowSelectionTree()
-    tree.setModel(model)
-    tree.setRowHeight(32)
-    tree.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
+    tree.model = model
+    tree.rowHeight = 32
+    tree.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
 
     // https://ateraimemo.com/Swing/ExpandAllNodes.html
     var row = 0
-    while (row < tree.getRowCount()) {
+    while (row < tree.rowCount) {
       tree.expandRow(row++)
     }
-    tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION)
+    tree.selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
     tree.addTreeSelectionListener { e ->
       (e.getNewLeadSelectionPath().getLastPathComponent() as? DefaultMutableTreeNode)?.also {
         val ref = it.getUserObject().toString()
@@ -117,19 +125,22 @@ class RowSelectionTree : JTree() {
   private var listener: TreeWillExpandListener? = null
 
   override fun paintComponent(g: Graphics) {
-    g.setColor(getBackground())
-    g.fillRect(0, 0, getWidth(), getHeight())
+    val sr = selectionRows
+    if (sr == null) {
+      super.paintComponent(g)
+      return
+    }
+    g.color = background
+    g.fillRect(0, 0, width, height)
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setPaint(SELECTED_COLOR)
-    getSelectionRows()
-      ?.map { getRowBounds(it) }
-      ?.forEach { g2.fillRect(0, it.y, getWidth(), it.height) }
+    g2.paint = SELECTED_COLOR
+    sr.map { getRowBounds(it) }.forEach { g2.fillRect(0, it.y, width, it.height) }
     super.paintComponent(g)
     if (hasFocus()) {
-      getLeadSelectionPath().also {
+      leadSelectionPath?.also {
         val r = getRowBounds(getRowForPath(it))
-        g2.setPaint(SELECTED_COLOR.darker())
-        g2.drawRect(0, r.y, getWidth() - 1, r.height - 1)
+        g2.paint = SELECTED_COLOR.darker()
+        g2.drawRect(0, r.y, width - 1, r.height - 1)
       }
     }
     g2.dispose()
@@ -148,9 +159,9 @@ class RowSelectionTree : JTree() {
 
       private fun getPathBounds(path: TreePath?, insets: Insets, bounds: Rectangle): Rectangle? {
         val rect = treeState.getBounds(path, bounds)
-        if (rect != null) {
-          rect.width = tree.width
-          rect.y += insets.top
+        rect?.also {
+          it.width = tree.width
+          it.y += insets.top
         }
         return rect
       }
@@ -159,14 +170,13 @@ class RowSelectionTree : JTree() {
     val r = getCellRenderer()
     setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
       val c = r.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
-      c.setBackground(if (selected) SELECTED_COLOR else tree.getBackground())
-      (c as? JComponent)?.setOpaque(true)
-      return@setCellRenderer c
+      c.background = if (selected) SELECTED_COLOR else tree.background
+      (c as? JComponent)?.isOpaque = true
+      c
     }
-    setOpaque(false)
-    setRootVisible(false)
+    isOpaque = false
+    isRootVisible = false
 
-    // https://ateraimemo.com/Swing/TreeNodeCollapseVeto.html
     listener = object : TreeWillExpandListener {
       override fun treeWillExpand(e: TreeExpansionEvent) { // throws ExpandVetoException {
         // throw new ExpandVetoException(e, "Tree expansion cancelled");
