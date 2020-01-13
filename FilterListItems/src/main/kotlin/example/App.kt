@@ -1,0 +1,171 @@
+package example
+
+import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.image.FilteredImageSource
+import java.awt.image.RGBImageFilter
+import java.util.regex.Pattern
+import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.border.Border
+import javax.swing.event.DocumentEvent
+import javax.swing.event.DocumentListener
+
+class MainPanel : JPanel(BorderLayout(5, 5)) {
+  @Transient
+  private val defaultModel = arrayOf(
+    ListItem("wi0009-32.png"),
+    ListItem("wi0054-32.png"),
+    ListItem("wi0062-32.png"),
+    ListItem("wi0063-32.png"),
+    ListItem("wi0064-32.png"),
+    ListItem("wi0096-32.png"),
+    ListItem("wi0111-32.png"),
+    ListItem("wi0122-32.png"),
+    ListItem("wi0124-32.png"),
+    ListItem("wi0126-32.png")
+  )
+  private val model = DefaultListModel<ListItem>()
+  private val list = object : JList<ListItem>(model) {
+    override fun updateUI() {
+      selectionForeground = null // Nimbus
+      selectionBackground = null // Nimbus
+      cellRenderer = null
+      super.updateUI()
+      layoutOrientation = HORIZONTAL_WRAP
+      visibleRowCount = 0
+      fixedCellWidth = 82
+      fixedCellHeight = 64
+      border = BorderFactory.createEmptyBorder(5, 10, 5, 10)
+      setCellRenderer(ListItemListCellRenderer())
+      selectionModel.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
+    }
+  }
+  private val field = JTextField(15)
+
+  init {
+    for (item in defaultModel) {
+      model.addElement(item)
+    }
+    field.document.addDocumentListener(object : DocumentListener {
+      override fun insertUpdate(e: DocumentEvent) {
+        filter()
+      }
+
+      override fun removeUpdate(e: DocumentEvent) {
+        filter()
+      }
+
+      override fun changedUpdate(e: DocumentEvent) {
+        /* not needed */
+      }
+    })
+    add(field, BorderLayout.NORTH)
+    add(JScrollPane(list))
+    border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    preferredSize = Dimension(320, 240)
+  }
+
+  private fun getPattern() = field.text
+    ?.takeIf { it.isNotEmpty() }
+    ?.let {
+      runCatching {
+        Pattern.compile(it)
+      }.getOrNull()
+    }
+
+  private fun filter() {
+    getPattern()?.also { pattern ->
+      // val selected = list.selectedValuesList
+      model.clear()
+      defaultModel
+        .filter { item -> pattern.matcher(item.title).find() }
+        .forEach { element -> model.addElement(element) }
+      for (item in list.selectedValuesList) {
+        val i = model.indexOf(item)
+        list.addSelectionInterval(i, i)
+      }
+    }
+  }
+}
+
+class ListItem(iconFile: String) {
+  val icon = ImageIcon(javaClass.getResource(iconFile))
+  val selectedIcon: ImageIcon
+  val title: String
+
+  init {
+    val ip = FilteredImageSource(icon.image.source, SelectedImageFilter())
+    selectedIcon = ImageIcon(Toolkit.getDefaultToolkit().createImage(ip))
+    title = iconFile
+  }
+}
+
+class SelectedImageFilter : RGBImageFilter() {
+  override fun filterRGB(x: Int, y: Int, argb: Int): Int {
+    return argb and -0x100 or (argb and 0xFF shr 1)
+  }
+}
+
+class ListItemListCellRenderer : ListCellRenderer<ListItem> {
+  private val renderer = JPanel(BorderLayout())
+  private val icon = JLabel(null as Icon?, SwingConstants.CENTER)
+  private val label = JLabel("", SwingConstants.CENTER)
+  private val focusBorder = UIManager.getBorder("List.focusCellHighlightBorder")
+  private val noFocusBorder: Border
+  override fun getListCellRendererComponent(
+    list: JList<out ListItem>,
+    value: ListItem?,
+    index: Int,
+    isSelected: Boolean,
+    cellHasFocus: Boolean
+  ): Component {
+    label.text = value?.title
+    label.border = if (cellHasFocus) focusBorder else noFocusBorder
+    if (isSelected) {
+      icon.icon = value?.selectedIcon
+      label.foreground = list.selectionForeground
+      label.background = list.selectionBackground
+      label.isOpaque = true
+    } else {
+      icon.icon = value?.icon
+      label.foreground = list.foreground
+      label.background = list.background
+      label.isOpaque = false
+    }
+    return renderer
+  }
+
+  init {
+    var b = UIManager.getBorder("List.noFocusBorder")
+    if (b == null) { // Nimbus???
+      val i = focusBorder.getBorderInsets(label)
+      b = BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
+    }
+    noFocusBorder = b
+    icon.isOpaque = false
+    label.foreground = renderer.foreground
+    label.background = renderer.background
+    label.border = noFocusBorder
+    renderer.isOpaque = false
+    renderer.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
+    renderer.add(icon)
+    renderer.add(label, BorderLayout.SOUTH)
+  }
+}
+
+fun main() {
+  EventQueue.invokeLater {
+    runCatching {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+    }.onFailure {
+      it.printStackTrace()
+      Toolkit.getDefaultToolkit().beep()
+    }
+    JFrame().apply {
+      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+      getContentPane().add(MainPanel())
+      pack()
+      setLocationRelativeTo(null)
+      setVisible(true)
+    }
+  }
+}
