@@ -87,7 +87,7 @@ class MainPanel : JPanel(BorderLayout(5, 5)) {
   }
 }
 
-class ListItem(iconFile: String) {
+data class ListItem(val iconFile: String) {
   val icon = ImageIcon(javaClass.getResource(iconFile))
   val selectedIcon: ImageIcon
   val title: String
