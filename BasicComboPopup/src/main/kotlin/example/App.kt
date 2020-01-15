@@ -9,7 +9,6 @@ import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicComboPopup
-import javax.swing.text.BadLocationException
 import javax.swing.text.JTextComponent
 
 class MainPanel : JPanel(BorderLayout()) {
@@ -50,7 +49,7 @@ class MainPanel : JPanel(BorderLayout()) {
     imc.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "myEnt")
     jtp.actionMap.put("myPop", object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
-        try {
+        runCatching {
           val rect = jtp.modelToView(jtp.caretPosition)
           // Java 9: Rectangle rect = jtp.modelToView2D(jtp.getCaretPosition()).getBounds();
           popup.show(jtp, rect.x, rect.maxY.toInt())
@@ -61,10 +60,9 @@ class MainPanel : JPanel(BorderLayout()) {
             }
             popup.requestFocusInWindow()
           }
-        } catch (ex: BadLocationException) { // should never happen
-          val wrap: RuntimeException = StringIndexOutOfBoundsException(ex.offsetRequested())
-          wrap.initCause(ex)
-          throw wrap
+        }.onFailure { // should never happen
+          it.printStackTrace()
+          UIManager.getLookAndFeel().provideErrorFeedback(jtp)
         }
       }
     })
@@ -102,13 +100,12 @@ class EditorComboPopup(private val textArea: JTextComponent, cb: JComboBox<*>?) 
 
 object TextEditorUtils {
   fun append(editor: JTextComponent, str: String?) {
-    try {
+    runCatching {
       val doc = editor.document
       doc.insertString(editor.caretPosition, str, null)
-    } catch (ex: BadLocationException) { // should never happen
-      val wrap: RuntimeException = StringIndexOutOfBoundsException(ex.offsetRequested())
-      wrap.initCause(ex)
-      throw wrap
+    }.onFailure { // should never happen
+      it.printStackTrace()
+      UIManager.getLookAndFeel().provideErrorFeedback(editor)
     }
   }
 }

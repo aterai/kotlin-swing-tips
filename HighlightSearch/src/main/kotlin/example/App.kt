@@ -115,13 +115,12 @@ class MainPanel : JPanel(BorderLayout()) {
       label.isOpaque = false
       val hh = highlighter.highlights[current]
       highlighter.removeHighlight(hh)
-      try {
+      runCatching {
         highlighter.addHighlight(hh.startOffset, hh.endOffset, currentPainter)
         scrollToCenter(textArea, hh.startOffset)
-      } catch (ex: BadLocationException) { // should never happen
-        val wrap: RuntimeException = StringIndexOutOfBoundsException(ex.offsetRequested())
-        wrap.initCause(ex)
-        throw wrap
+      }.onFailure { // should never happen
+        it.printStackTrace()
+        UIManager.getLookAndFeel().provideErrorFeedback(field)
       }
     }
     label.text = String.format("%02d / %02d%n", current + 1, hits)
