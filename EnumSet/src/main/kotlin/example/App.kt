@@ -100,7 +100,7 @@ class CheckBoxesPanel : JPanel() {
 
   fun updateButtons(v: Any?) {
     initButtons()
-    val f = (v as? Set<*>) ?: EnumSet.noneOf(Permissions::class.java)
+    val f = v as? Set<*> ?: EnumSet.noneOf(Permissions::class.java)
     buttons[0].isSelected = f.contains(Permissions.READ)
     buttons[1].isSelected = f.contains(Permissions.WRITE)
     buttons[2].isSelected = f.contains(Permissions.EXECUTE)
