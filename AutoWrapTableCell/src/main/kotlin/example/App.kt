@@ -93,16 +93,13 @@ class TextAreaCellRenderer : TableCellRenderer {
       list.add(0)
     }
     list[column] = preferredHeight
-    val max =
-      list.stream().max { x: Int?, y: Int? -> (x!!).compareTo(y!!) }.orElse(0)
+    val max = list.max() ?: 0
     if (table.getRowHeight(row) != max) {
       table.setRowHeight(row, max)
     }
   }
 
-  private fun <E> createMutableList(initialCapacity: Int): MutableList<E> {
-    return ArrayList(initialCapacity)
-  }
+  private fun <E> createMutableList(initialCapacity: Int) = ArrayList<E>(initialCapacity)
 
   init {
     renderer.lineWrap = true
