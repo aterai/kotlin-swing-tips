@@ -61,9 +61,7 @@ data class PluginNode(
 ) {
   var selectedIndex = 0
 
-  override fun toString(): String {
-    return name
-  }
+  override fun toString() = name
 }
 
 class PluginPanel(val comboBox: JComboBox<String>) : JPanel() {

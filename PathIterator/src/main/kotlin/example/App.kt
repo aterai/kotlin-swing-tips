@@ -162,13 +162,9 @@ class StarIcon(private val star: Shape, private val antialias: Boolean) : Icon {
     g2.dispose()
   }
 
-  override fun getIconWidth(): Int {
-    return star.bounds.width
-  }
+  override fun getIconWidth() = star.bounds.width
 
-  override fun getIconHeight(): Int {
-    return star.bounds.height
-  }
+  override fun getIconHeight() = star.bounds.height
 }
 
 fun main() {

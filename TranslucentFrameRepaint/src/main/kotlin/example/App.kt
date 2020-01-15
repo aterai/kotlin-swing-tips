@@ -108,9 +108,7 @@ enum class TexturePaints(private val description: String) {
       NULL -> null
     }
 
-  override fun toString(): String {
-    return description
-  }
+  override fun toString() = description
 }
 
 object TextureUtil {

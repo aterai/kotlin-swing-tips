@@ -77,9 +77,7 @@ class CheckedComboBox(model: ComboBoxModel<CheckableItem>) : JComboBox<Checkable
   @Transient
   private var listener: ActionListener? = null
 
-  override fun getPreferredSize(): Dimension {
-    return Dimension(200, 20)
-  }
+  override fun getPreferredSize() = Dimension(200, 20)
 
   override fun updateUI() {
     setRenderer(null)

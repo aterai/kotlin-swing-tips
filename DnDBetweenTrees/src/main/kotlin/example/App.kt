@@ -74,13 +74,10 @@ class TreeTransferHandler : TransferHandler() {
     }
   }
 
-  override fun getSourceActions(c: JComponent): Int {
-    return MOVE
-  }
+  override fun getSourceActions(c: JComponent) = MOVE
 
-  override fun canImport(support: TransferSupport): Boolean {
-    return support.isDrop && support.isDataFlavorSupported(FLAVOR) && support.component != source
-  }
+  override fun canImport(support: TransferSupport) =
+    support.isDrop && support.isDataFlavorSupported(FLAVOR) && support.component != source
 
   override fun importData(support: TransferSupport): Boolean {
     @Suppress("UNCHECKED_CAST")

@@ -97,9 +97,7 @@ class EditorComboPopup(private val textArea: JTextComponent, cb: JComboBox<*>?) 
     super.uninstallingUI()
   }
 
-  override fun isFocusable(): Boolean {
-    return true
-  }
+  override fun isFocusable() = true
 }
 
 object TextEditorUtils {

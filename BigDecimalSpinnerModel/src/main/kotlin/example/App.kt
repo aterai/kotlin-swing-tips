@@ -40,13 +40,9 @@ class BigDecimalSpinnerModel(
   maximum: Double,
   stepSize: Double
 ) : SpinnerNumberModel(value, minimum, maximum, stepSize) {
-  override fun getPreviousValue(): Any? {
-    return incrValue2(-1)
-  }
+  override fun getPreviousValue() = incrValue2(-1)
 
-  override fun getNextValue(): Any? {
-    return incrValue2(+1)
-  }
+  override fun getNextValue() = incrValue2(+1)
 
   private fun incrValue2(dir: Int): Number? {
     val value = BigDecimal.valueOf(number as Double)
