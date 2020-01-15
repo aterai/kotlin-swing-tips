@@ -4,10 +4,8 @@ import com.sun.java.swing.plaf.windows.WindowsScrollBarUI
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.geom.AffineTransform
 import java.util.regex.Pattern
-import java.util.regex.PatternSyntaxException
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.metal.MetalScrollBarUI
-import javax.swing.text.BadLocationException
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.text.JTextComponent
 
@@ -92,7 +90,7 @@ Lesson: Learning Swing by Example
     val highlighter = jtc.highlighter
     highlighter.removeAllHighlights()
     val doc = jtc.document
-    try {
+    runCatching {
       val text = doc.getText(0, doc.length)
       val matcher = Pattern.compile(pattern).matcher(text)
       var pos = 0
@@ -102,9 +100,7 @@ Lesson: Learning Swing by Example
         highlighter.addHighlight(start, end, HIGHLIGHT)
         pos = end
       }
-    } catch (ex: BadLocationException) {
-      UIManager.getLookAndFeel().provideErrorFeedback(jtc)
-    } catch (ex: PatternSyntaxException) {
+    }.onFailure {
       UIManager.getLookAndFeel().provideErrorFeedback(jtc)
     }
   }
