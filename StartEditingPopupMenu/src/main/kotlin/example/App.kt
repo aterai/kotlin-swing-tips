@@ -15,7 +15,7 @@ class MainPanel : JPanel(BorderLayout()) {
   init {
     val tree = JTree()
     tree.cellEditor = object : DefaultTreeCellEditor(tree, tree.cellRenderer as? DefaultTreeCellRenderer) {
-      override fun isCellEditable(e: EventObject) = e !is MouseEvent && super.isCellEditable(e)
+      override fun isCellEditable(e: EventObject?) = e !is MouseEvent && super.isCellEditable(e)
     }
     tree.isEditable = true
     tree.componentPopupMenu = TreePopupMenu()
