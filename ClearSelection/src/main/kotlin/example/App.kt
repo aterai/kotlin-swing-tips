@@ -19,27 +19,27 @@ class MainPanel : JPanel(GridLayout(1, 2)) {
     it.addElement("2222222222")
     it.addElement("33333")
     it.addElement("44444444444")
-}
+  }
 
   private fun <E> makeList(model: ListModel<E>): JList<E> {
     return object : JList<E>(model) {
       @Transient
       private var listener: MouseInputListener? = null
 
-    override fun updateUI() {
+      override fun updateUI() {
         removeMouseListener(listener)
         removeMouseMotionListener(listener)
         setForeground(null)
         setBackground(null)
         setSelectionForeground(null)
         setSelectionBackground(null)
-      super.updateUI()
+        super.updateUI()
         listener = ClearSelectionListener()
         addMouseListener(listener)
         addMouseMotionListener(listener)
+      }
     }
   }
-    }
 
   private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
     it.setBorder(BorderFactory.createTitledBorder(title))
@@ -50,7 +50,7 @@ class MainPanel : JPanel(GridLayout(1, 2)) {
 class ClearSelectionListener : MouseInputAdapter() {
   private var startOutside = false
   override fun mousePressed(e: MouseEvent) {
-    val list = e.component as JList<*>
+    val list = e.component as? JList<*> ?: return
     startOutside = !contains(list, e.point)
     if (startOutside) {
       clearSelectionAndFocus(list)
@@ -82,10 +82,10 @@ class ClearSelectionListener : MouseInputAdapter() {
     for (i in 0 until list.getModel().getSize()) {
       if (list.getCellBounds(i, i).contains(pt)) {
         return true
+      }
     }
-  }
     return false
-}
+  }
 }
 
 fun main() {
