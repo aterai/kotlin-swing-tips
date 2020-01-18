@@ -74,19 +74,20 @@ private fun makeBooleanEditor(table: JTable): JCheckBox {
   checkBox.setOpaque(true)
   checkBox.addMouseListener(object : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
-      val cb = e.getComponent() as JCheckBox
-      val m = cb.getModel()
-      val editingRow = table.getEditingRow()
-      if (m.isPressed() && table.isRowSelected(editingRow) && e.isControlDown()) {
-        if (editingRow % 2 == 0) {
-          cb.setOpaque(false)
+      (e.getComponent() as? JCheckBox)?.also { cb ->
+        val m = cb.getModel()
+        val editingRow = table.getEditingRow()
+        if (m.isPressed() && table.isRowSelected(editingRow) && e.isControlDown()) {
+          if (editingRow % 2 == 0) {
+            cb.setOpaque(false)
+          } else {
+            cb.setOpaque(true)
+            cb.setBackground(UIManager.getColor("Table.alternateRowColor"))
+          }
         } else {
+          cb.setBackground(table.getSelectionBackground())
           cb.setOpaque(true)
-          cb.setBackground(UIManager.getColor("Table.alternateRowColor"))
         }
-      } else {
-        cb.setBackground(table.getSelectionBackground())
-        cb.setOpaque(true)
       }
     }
 
