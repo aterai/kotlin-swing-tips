@@ -5,19 +5,18 @@ import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
 import java.awt.datatransfer.UnsupportedFlavorException
 import java.awt.event.ActionEvent
-import java.io.IOException
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
     val p = JPanel(GridLayout(1, 2, 10, 0))
     val h = ListItemTransferHandler()
-    p.setBorder(BorderFactory.createTitledBorder("Drag & Drop between JLists"))
+    p.border = BorderFactory.createTitledBorder("Drag & Drop between JLists")
     p.add(JScrollPane(makeList(h)))
     p.add(JScrollPane(makeList(h)))
     add(p)
-    setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-    setPreferredSize(Dimension(320, 240))
+    border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    preferredSize = Dimension(320, 240)
   }
 
   private fun makeList(handler: TransferHandler): JList<Color> {
@@ -32,17 +31,17 @@ class MainPanel : JPanel(BorderLayout()) {
     }
     val list = object : JList<Color>(listModel) {
       override fun updateUI() {
-        setCellRenderer(null)
+        cellRenderer = null
         super.updateUI()
-        getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
-        setDropMode(DropMode.INSERT)
-        setDragEnabled(true)
-        setTransferHandler(handler)
-        val renderer = getCellRenderer()
+        selectionModel.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
+        dropMode = DropMode.INSERT
+        dragEnabled = true
+        transferHandler = handler
+        val renderer = cellRenderer
         setCellRenderer { list, value, index, isSelected, cellHasFocus ->
           val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-          (c as? JLabel)?.setForeground(value)
-          return@setCellRenderer c
+          c.foreground = value
+          c
         }
       }
     }
@@ -60,10 +59,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-// Demo - BasicDnD (The Java? Tutorials > Creating a GUI With JFC/Swing > Drag and Drop and Data Transfer)
-// https://docs.oracle.com/javase/tutorial/uiswing/dnd/basicdemo.html
 class ListItemTransferHandler : TransferHandler() {
-  private val localObjectFlavor = DataFlavor(List::class.java, "List of items")
   private var source: JList<*>? = null
   private val selectedIndices = mutableListOf<Int>()
   private var addIndex = -1 // Location where items were added
@@ -73,16 +69,16 @@ class ListItemTransferHandler : TransferHandler() {
     val src = c as? JList<*> ?: return null
     source = src
     src.getSelectedIndices().forEach { selectedIndices.add(it) }
-    val transferObjects = src.getSelectedValuesList()
+    val transferredObjects = src.selectedValuesList
     return object : Transferable {
-      override fun getTransferDataFlavors() = arrayOf(localObjectFlavor)
+      override fun getTransferDataFlavors() = arrayOf(FLAVOR)
 
-      override fun isDataFlavorSupported(flavor: DataFlavor) = localObjectFlavor == flavor
+      override fun isDataFlavorSupported(flavor: DataFlavor) = FLAVOR == flavor
 
-      @Throws(UnsupportedFlavorException::class, IOException::class)
+      @Throws(UnsupportedFlavorException::class)
       override fun getTransferData(flavor: DataFlavor): Any {
         return if (isDataFlavorSupported(flavor)) {
-          transferObjects
+          transferredObjects
         } else {
           throw UnsupportedFlavorException(flavor)
         }
@@ -92,10 +88,10 @@ class ListItemTransferHandler : TransferHandler() {
 
   override fun canImport(info: TransferSupport) =
     info.isDrop() &&
-        info.isDataFlavorSupported(localObjectFlavor) &&
+        info.isDataFlavorSupported(FLAVOR) &&
         info.getDropLocation() is JList.DropLocation
 
-  override fun getSourceActions(c: JComponent) = MOVE // COPY_OR_MOVE
+  override fun getSourceActions(c: JComponent) = MOVE
 
   override fun importData(info: TransferSupport): Boolean {
     val dl = info.getDropLocation()
@@ -106,11 +102,10 @@ class ListItemTransferHandler : TransferHandler() {
     @Suppress("UNCHECKED_CAST")
     val listModel = target.getModel() as DefaultListModel<Any>
     val max = listModel.getSize()
-    // var index = minOf(maxOf(0, dl.getIndex()), max)
     var index = dl.getIndex().takeIf { it in 0 until max } ?: max
     addIndex = index
     val values = runCatching {
-      info.getTransferable().getTransferData(localObjectFlavor) as? List<*>
+      info.transferable.getTransferData(FLAVOR) as? List<*>
     }.getOrNull().orEmpty()
     for (o in values) {
       val i = index++
@@ -143,6 +138,10 @@ class ListItemTransferHandler : TransferHandler() {
     selectedIndices.clear()
     addCount = 0
     addIndex = -1
+  }
+
+  companion object {
+    private val FLAVOR = DataFlavor(MutableList::class.java, "List of items")
   }
 }
 
