@@ -11,7 +11,7 @@ import kotlin.math.pow
 
 class MainPanel : JPanel() {
   init {
-    val txt = "Mini-size 86Key Japanese Keyboard\n  Model No: DE-SK-86BK\n  SEREIAL NO: 00000000"
+    val txt = "Mini-size 86Key Japanese Keyboard\n  Model No: DE-SK-86BK\n  SERIAL NO: 00000000"
     val icon = ImageIcon(javaClass.getResource("test.png"))
     add(ImageCaptionLabel(txt, icon))
     setPreferredSize(Dimension(320, 240))
