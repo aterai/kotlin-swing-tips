@@ -22,14 +22,15 @@ class MainPanel : JPanel(BorderLayout()) {
         setCellEditor(CheckBoxNodeEditor())
       }
     }
-    val root = tree.getModel().getRoot() as DefaultMutableTreeNode
-    root.breadthFirstEnumeration().toList()
-      .filterIsInstance<DefaultMutableTreeNode>()
-      .filter { it.isLeaf() }
-      .forEach {
-        val isEven = it.getParent().getIndex(it) % 2 == 0
-        it.setUserObject(CheckBoxNode(it.getUserObject().toString(), isEven))
-      }
+    (tree.getModel().getRoot() as? DefaultMutableTreeNode)?.also { root ->
+      root.breadthFirstEnumeration().toList()
+        .filterIsInstance<DefaultMutableTreeNode>()
+        .filter { it.isLeaf() }
+        .forEach {
+          val isEven = it.getParent().getIndex(it) % 2 == 0
+          it.setUserObject(CheckBoxNode(it.getUserObject().toString(), isEven))
+        }
+    }
     tree.setEditable(true)
     tree.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4))
     for (i in 0 until tree.getRowCount()) {

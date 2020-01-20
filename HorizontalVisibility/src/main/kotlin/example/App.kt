@@ -34,7 +34,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
     val check = JCheckBox("add EmptyThumbHandler")
     check.addActionListener { e: ActionEvent ->
-      if ((e.source as JCheckBox).isSelected) {
+      if ((e.source as? JCheckBox)?.isSelected == true) {
         textField1.addComponentListener(handler)
         textField1.document.addDocumentListener(handler)
       } else {
