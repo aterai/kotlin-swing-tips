@@ -9,7 +9,8 @@ import javax.swing.table.TableCellRenderer
 class MainPanel : JPanel(BorderLayout()) {
   init {
     val table0 = makeTable()
-    (table0.tableHeader.defaultRenderer as JLabel).horizontalAlignment = SwingConstants.CENTER
+    (table0.tableHeader.defaultRenderer as? JLabel)?.horizontalAlignment = SwingConstants.CENTER
+
     val table1 = makeTable()
     table1.tableHeader.defaultRenderer = object : DefaultTableCellRenderer() {
       override fun getTableCellRendererComponent(
