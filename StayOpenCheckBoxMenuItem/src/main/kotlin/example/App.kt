@@ -112,8 +112,8 @@ class TogglePopupHandler(
   private val button: AbstractButton
 ) : PopupMenuListener, ActionListener {
   override fun actionPerformed(e: ActionEvent) {
-    val b = e.source as AbstractButton
-    if (b.isSelected) {
+    val b = e.source as? AbstractButton
+    if (b?.isSelected == true) {
       val p = SwingUtilities.getUnwrappedParent(b)
       val r = b.bounds
       popup.show(p, r.x, r.y + r.height)
