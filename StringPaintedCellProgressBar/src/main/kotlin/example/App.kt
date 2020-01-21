@@ -112,7 +112,7 @@ class MainPanel : JPanel(BorderLayout()) {
         getSwingWorker(mi)?.takeUnless { it.isDone() }?.cancel(true)
       }
       val sorter = table.rowSorter
-      (sorter as TableRowSorter<out TableModel>).setRowFilter(object : RowFilter<TableModel, Int>() {
+      (sorter as? TableRowSorter<out TableModel>)?.setRowFilter(object : RowFilter<TableModel, Int>() {
         override fun include(entry: Entry<out TableModel, out Int>) = !deletedRowSet.contains(entry.getIdentifier())
       })
       table.clearSelection()
