@@ -1,0 +1,108 @@
+package example
+
+import java.awt.* // ktlint-disable no-wildcard-imports
+import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.table.DefaultTableModel
+import javax.swing.table.TableCellEditor
+import javax.swing.table.TableCellRenderer
+import javax.swing.table.TableModel
+
+class MainPanel : JPanel(BorderLayout()) {
+  init {
+    val columnNames = arrayOf("Column1", "Column2")
+    val data = arrayOf(
+      arrayOf("colors", makeModel("blue", "violet", "red", "yellow")),
+      arrayOf("sports", makeModel("basketball", "soccer", "football", "hockey")),
+      arrayOf("food", makeModel("hot dogs", "pizza", "ravioli", "bananas"))
+    )
+    val model: TableModel = object : DefaultTableModel(data, columnNames) {
+      override fun getColumnClass(column: Int) =
+        if (column == 1) DefaultComboBoxModel::class.java else String::class.java
+    }
+    val table = JTable(model)
+    table.rowHeight = 24
+    table.autoCreateRowSorter = true
+    val col = table.columnModel.getColumn(1)
+    col.cellRenderer = ComboCellRenderer()
+    col.cellEditor = ComboCellEditor()
+    add(JScrollPane(table))
+    preferredSize = Dimension(320, 240)
+  }
+
+  private fun makeModel(vararg items: String) =
+    object : DefaultComboBoxModel<String>(items) {
+      override fun toString() = selectedItem?.toString() ?: ""
+    }
+}
+
+class ComboCellRenderer : TableCellRenderer {
+  private val combo = JComboBox<String>()
+  override fun getTableCellRendererComponent(
+    table: JTable,
+    value: Any?,
+    isSelected: Boolean,
+    hasFocus: Boolean,
+    row: Int,
+    column: Int
+  ): Component {
+    combo.removeAllItems()
+    if (value is DefaultComboBoxModel<*>) {
+      combo.addItem(value.selectedItem.toString())
+    }
+    return combo
+  }
+}
+
+class ComboCellEditor : AbstractCellEditor(), TableCellEditor {
+  private val combo = JComboBox<String>()
+  override fun getTableCellEditorComponent(
+    table: JTable,
+    value: Any?,
+    isSelected: Boolean,
+    row: Int,
+    column: Int
+  ): Component { // combo.setBackground(table.getSelectionBackground());
+    if (value is ComboBoxModel<*>) {
+      @Suppress("UNCHECKED_CAST")
+      val m = value as ComboBoxModel<String>
+      combo.model = m
+    }
+    return combo
+  }
+
+  override fun getCellEditorValue(): Any {
+    val m = combo.model
+    if (m is DefaultComboBoxModel<String> && combo.isEditable) {
+      val str = combo.editor?.item?.toString() ?: ""
+      if (str.isNotEmpty() && m.getIndexOf(str) < 0) {
+        m.insertElementAt(str, 0)
+        combo.selectedIndex = 0
+      }
+    }
+    return m
+  }
+
+  init {
+    combo.putClientProperty("JComboBox.isTableCellEditor", true)
+    combo.isEditable = true
+    combo.addActionListener { fireEditingStopped() }
+  }
+}
+
+fun main() {
+  EventQueue.invokeLater {
+    runCatching {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+    }.onFailure {
+      it.printStackTrace()
+      Toolkit.getDefaultToolkit().beep()
+    }
+    JFrame().apply {
+      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+      getContentPane().add(MainPanel())
+      pack()
+      setLocationRelativeTo(null)
+      setVisible(true)
+    }
+  }
+}
