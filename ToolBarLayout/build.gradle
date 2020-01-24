@@ -1,0 +1,46 @@
+buildscript {
+  ext.kotlin_version = 'latest.release'
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+  }
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'application'
+
+// group 'KotlinSwingTips'
+// version '1.0-SNAPSHOT'
+
+mainClassName = 'example.AppKt'
+
+defaultTasks 'run'
+
+repositories {
+  mavenCentral()
+  jcenter()
+}
+
+dependencies {
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+  implementation fileTree(dir: 'lib', include: ['*.jar'])
+  testImplementation 'junit:junit:4.11'
+  testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+}
+
+sourceCompatibility = 1.8
+
+compileKotlin {
+  kotlinOptions.jvmTarget = "$sourceCompatibility"
+}
+
+compileTestKotlin {
+  kotlinOptions.jvmTarget = "$sourceCompatibility"
+}
+
+jar {
+  manifest { attributes 'Main-Class': "$mainClassName" }
+  from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+}
