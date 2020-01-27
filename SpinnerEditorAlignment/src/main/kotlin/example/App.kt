@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.ItemEvent
 import java.awt.event.ItemListener
 import java.util.Calendar
 import java.util.Date
