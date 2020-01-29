@@ -1,11 +1,21 @@
 package example
 
-import java.awt.*
+import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionListener
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import javax.swing.*
-import javax.swing.text.*
+import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.text.AbstractDocument
+import javax.swing.text.BoxView
+import javax.swing.text.ComponentView
+import javax.swing.text.Element
+import javax.swing.text.IconView
+import javax.swing.text.LabelView
+import javax.swing.text.ParagraphView
+import javax.swing.text.StyleConstants
+import javax.swing.text.StyledEditorKit
+import javax.swing.text.View
+import javax.swing.text.ViewFactory
 
 class MainPanel(threadPool: ExecutorService) : JPanel(BorderLayout()) {
   init {
