@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.IconUIResource
@@ -34,13 +33,13 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   private fun makeRadioPane(table: JTable): Box {
-    val customAscendingSortIcon: Icon = ImageIcon(javaClass.getResource("ascending.png"))
-    val customDescendingSortIcon: Icon = ImageIcon(javaClass.getResource("descending.png"))
+    val customAscendingSortIcon = ImageIcon(javaClass.getResource("ascending.png"))
+    val customDescendingSortIcon = ImageIcon(javaClass.getResource("descending.png"))
     val r0 = JRadioButton("Default", true)
     val r1 = JRadioButton("Empty")
     val r2 = JRadioButton("Custom")
-    val al = ActionListener { e: ActionEvent ->
-      val r = e.source as JRadioButton
+    val al = ActionListener { e ->
+      val r = e.source as? JRadioButton ?: return@ActionListener
       val ascending: Icon
       val descending: Icon
       when (r) {
@@ -76,7 +75,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   companion object {
-    private val EMPTY_ICON: Icon = EmptyIcon()
+    private val EMPTY_ICON = EmptyIcon()
   }
 }
 
