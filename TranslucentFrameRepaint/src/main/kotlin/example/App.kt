@@ -49,9 +49,9 @@ class MainPanel : JPanel(BorderLayout()) {
       }
     }
     combo.addItemListener { e ->
-      if (e.stateChange == ItemEvent.SELECTED) {
-        val t = e.item as TexturePaints
-        tp.setTexturePaint(t.texturePaint)
+      val item = e.item
+      if (e.stateChange == ItemEvent.SELECTED && item is TexturePaints) {
+        tp.setTexturePaint(item.texturePaint)
         repaintWindowAncestor(tp)
       }
     }
@@ -172,10 +172,10 @@ object TextureUtil {
   }
 
   private fun makeFont(url: URL): Font? = runCatching {
-      url.openStream().use {
-        Font.createFont(Font.TRUETYPE_FONT, it).deriveFont(12f)
-      }
-    }.getOrNull()
+    url.openStream().use {
+      Font.createFont(Font.TRUETYPE_FONT, it).deriveFont(12f)
+    }
+  }.getOrNull()
 }
 
 class DragWindowListener : MouseAdapter() {
