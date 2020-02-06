@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.ActionEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.AncestorEvent
 import javax.swing.event.AncestorListener
@@ -20,7 +19,7 @@ class MainPanel : JPanel(GridLayout(1, 2)) {
     tree.setComponentPopupMenu(TreePopupMenu())
     // model.setAsksAllowsChildren(true);
     val check = JCheckBox("setAsksAllowsChildren")
-    check.addActionListener { e: ActionEvent ->
+    check.addActionListener { e ->
       model.setAsksAllowsChildren((e.getSource() as? JCheckBox)?.isSelected() ?: false)
       tree.repaint()
     }

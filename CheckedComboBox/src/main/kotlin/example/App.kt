@@ -83,7 +83,7 @@ class CheckedComboBox(model: ComboBoxModel<CheckableItem>) : JComboBox<Checkable
     setRenderer(null)
     removeActionListener(listener)
     super.updateUI()
-    listener = ActionListener { e: ActionEvent ->
+    listener = ActionListener { e ->
       if (e.modifiers.toLong() and AWTEvent.MOUSE_EVENT_MASK != 0L) {
         updateItem(selectedIndex)
         keepOpen = true

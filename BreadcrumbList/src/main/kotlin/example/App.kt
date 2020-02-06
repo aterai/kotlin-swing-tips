@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.ActionEvent
 import java.awt.event.MouseEvent
 import java.awt.geom.AffineTransform
 import java.awt.geom.Path2D
@@ -73,7 +72,7 @@ class MainPanel : JPanel(BorderLayout()) {
         } ?: super.contains(x, y)
     }
     if (tree != null) {
-      b.addActionListener { e: ActionEvent ->
+      b.addActionListener { e ->
         (e.source as? JRadioButton)?.also {
           tree.selectionPath = path
           it.isSelected = true

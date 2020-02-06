@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
@@ -17,7 +16,7 @@ class MainPanel : JPanel() {
         UIManager.put(key, isSelected())
       }
     }
-    check.addActionListener { e: ActionEvent ->
+    check.addActionListener { e ->
       UIManager.put(key, (e.getSource() as? JCheckBox)?.isSelected() == true)
       SwingUtilities.updateComponentTreeUI(getRootPane().getJMenuBar())
     }

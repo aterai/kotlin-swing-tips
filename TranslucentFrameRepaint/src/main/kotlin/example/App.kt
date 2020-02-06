@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.ActionEvent
 import java.awt.event.ItemEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
@@ -56,7 +55,7 @@ class MainPanel : JPanel(BorderLayout()) {
       }
     }
     val button = JToggleButton("timer")
-    button.addActionListener { e: ActionEvent ->
+    button.addActionListener { e ->
       if ((e.source as? AbstractButton)?.isSelected == true) {
         val t = combo.getItemAt(combo.selectedIndex)
         tp.setTexturePaint(t.texturePaint)

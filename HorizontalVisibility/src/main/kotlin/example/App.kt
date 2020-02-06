@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.ActionEvent
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
@@ -33,7 +32,7 @@ class MainPanel : JPanel(BorderLayout()) {
     scroller2.model = textField2.horizontalVisibility
 
     val check = JCheckBox("add EmptyThumbHandler")
-    check.addActionListener { e: ActionEvent ->
+    check.addActionListener { e ->
       if ((e.source as? JCheckBox)?.isSelected == true) {
         textField1.addComponentListener(handler)
         textField1.document.addDocumentListener(handler)
