@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.ActionEvent
 import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
 import java.awt.image.ByteLookupTable
@@ -23,12 +22,12 @@ private val editorPane = JEditorPane()
 
 private fun makeUI(): Component {
   val check = JCheckBox("setSelectionColor(#C86464FF)", true)
-  check.addActionListener { e: ActionEvent ->
-    val c = e.source as JCheckBox
-    editorPane.selectionColor = if (c.isSelected) SELECTION else null
+  check.addActionListener { e ->
+    val sc = if ((e.source as? JCheckBox)?.isSelected == true) SELECTION else null
+    editorPane.selectionColor = sc
   }
   val styleSheet = StyleSheet()
-  styleSheet.addRule(".highlight {color: blue; background: #FF5533; opacity: 0.5;}") // INCOMPLETE: opacity
+  styleSheet.addRule(".highlight {color: blue; background: #FF5533; opacity: 0.5;}")
   val htmlEditorKit = HTMLEditorKit()
   htmlEditorKit.styleSheet = styleSheet
   editorPane.editorKit = htmlEditorKit
@@ -53,7 +52,7 @@ private static void createAndShowGui() {
   val highlightPainter: HighlightPainter = DefaultHighlightPainter(HIGHLIGHT)
   val button = JToggleButton("highlight")
   button.addActionListener { e ->
-    if ((e.source as JToggleButton).isSelected) {
+    if ((e.source as? JToggleButton)?.isSelected == true) {
       setHighlight(editorPane, "[Ff]rame", highlightPainter)
     } else {
       editorPane.highlighter.removeAllHighlights()
