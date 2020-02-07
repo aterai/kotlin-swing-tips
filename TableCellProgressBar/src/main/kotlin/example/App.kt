@@ -18,7 +18,7 @@ class MainPanel : JPanel(BorderLayout()) {
       val progress = JProgressBar()
       val renderer = DefaultTableCellRenderer()
       val tc = getColumnModel().getColumn(2)
-      tc.setCellRenderer { tbl: JTable?, value: Any, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int ->
+      tc.setCellRenderer { tbl, value, isSelected, hasFocus, row, column ->
           val i = value as? Int ?: -1
           var text = "Done"
           if (i < 0) {
