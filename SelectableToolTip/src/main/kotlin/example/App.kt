@@ -44,8 +44,8 @@ fun makeUI(): Component {
   editor.editorKit = HTMLEditorKit()
   editor.text = HTML_TEXT
   editor.isEditable = false
-  editor.addHyperlinkListener { e: HyperlinkEvent ->
-    val editorPane = e.source as JEditorPane
+  editor.addHyperlinkListener { e ->
+    val editorPane = e.source as? JEditorPane ?: return@addHyperlinkListener
     when (e.eventType) {
       HyperlinkEvent.EventType.ACTIVATED -> JOptionPane.showMessageDialog(
         editorPane, "You click the link with the URL " + e.url
@@ -57,7 +57,7 @@ fun makeUI(): Component {
           ?.also {
             val title = it.getAttribute(HTML.Attribute.TITLE).toString()
             val url = e.url.toString()
-            hint.text = "<html>%s: <a href='%s'>%s</a>".format(title, url, url)
+            hint.text = """<html>$title: <a href="$url">$url</a>"""
             popup.pack()
           }
       }
