@@ -113,7 +113,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
         val child = dir.resolve(filename)
         EventQueue.invokeLater {
-          append("%s: %s".format(kind, child))
+          append("$kind: $child")
           updateTable(kind, child)
         }
       }
@@ -151,7 +151,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-internal class FileModel : DefaultTableModel() {
+class FileModel : DefaultTableModel() {
   private var number = 0
 
   fun addPath(path: Path) {
@@ -172,13 +172,13 @@ internal class FileModel : DefaultTableModel() {
 
   companion object {
     private val COLUMN_ARRAY = arrayOf(
-        ColumnContext("No.", Integer::class.java, false),
-        ColumnContext("Name", String::class.java, false),
-        ColumnContext("Full Path", String::class.java, false))
+      ColumnContext("No.", Integer::class.java, false),
+      ColumnContext("Name", String::class.java, false),
+      ColumnContext("Full Path", String::class.java, false))
   }
 }
 
-internal class TablePopupMenu : JPopupMenu() {
+class TablePopupMenu : JPopupMenu() {
   private val delete = add("delete")
 
   init {
