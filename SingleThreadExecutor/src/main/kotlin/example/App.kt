@@ -81,8 +81,8 @@ class MainPanel : JPanel(BorderLayout()) {
           i = get()
           if (i >= 0) "Done" else "Disposed"
         }.getOrNull() ?: "Interrupted"
-        System.out.format("%s:%s(%dms)%n", key, message, i)
-        // executor.remove(this);
+        println("$key:$message(${i}ms)")
+        // executor.remove(this)
       }
     }
     model.addProgressValue("example", 0, worker)
