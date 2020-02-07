@@ -14,9 +14,9 @@ fun makeUI(): Component {
   val tk = Toolkit.getDefaultToolkit()
   val fmt = "  Frame.MAXIMIZED_%s: %s%n"
   log.append("Toolkit#isFrameStateSupported(int)\n")
-  log.append(String.format(fmt, "HORIZ", tk.isFrameStateSupported(Frame.MAXIMIZED_HORIZ)))
-  log.append(String.format(fmt, "VERT", tk.isFrameStateSupported(Frame.MAXIMIZED_VERT)))
-  log.append(String.format(fmt, "BOTH", tk.isFrameStateSupported(Frame.MAXIMIZED_BOTH)))
+  log.append(fmt.format("HORIZ", tk.isFrameStateSupported(Frame.MAXIMIZED_HORIZ)))
+  log.append(fmt.format("VERT", tk.isFrameStateSupported(Frame.MAXIMIZED_VERT)))
+  log.append(fmt.format("BOTH", tk.isFrameStateSupported(Frame.MAXIMIZED_BOTH)))
 
   EventQueue.invokeLater {
     val c = p.topLevelAncestor
@@ -30,7 +30,7 @@ fun makeUI(): Component {
           Frame.MAXIMIZED_BOTH -> "MAXIMIZED_BOTH"
           else -> "ERROR"
         }
-        log.append(String.format("WindowStateListener: %s%n", ws))
+        log.append("WindowStateListener: $ws\n")
       }
 
       c.addWindowListener(object : WindowListener {
