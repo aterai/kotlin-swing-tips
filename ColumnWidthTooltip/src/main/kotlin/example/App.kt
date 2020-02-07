@@ -55,7 +55,7 @@ class ColumnWidthResizeHandler : MouseInputAdapter() {
 
   private fun updateTooltipText(e: MouseEvent) {
     getResizingColumn(e)?.also {
-      val txt = "Width: %dpx".format(it.getWidth())
+      val txt = "Width: ${it.getWidth()}px"
       tip.setTipText(txt)
       if (prev.length != txt.length) {
         window.pack()

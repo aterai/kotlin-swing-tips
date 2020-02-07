@@ -48,11 +48,11 @@ class AutomaticallyCloseListener : HierarchyListener {
       val l = e.getComponent() as? JLabel ?: return
       if (l.isShowing()) {
         atomicDown.set(SECONDS)
-        l.setText("Closing in %d seconds".format(SECONDS))
+        l.setText("Closing in $SECONDS seconds")
         timer.removeActionListener(listener)
         listener = ActionListener {
           val i = atomicDown.decrementAndGet()
-          l.setText("Closing in %d seconds".format(i))
+          l.setText("Closing in $i seconds")
           if (i <= 0 && timer.isRunning()) {
             timer.stop()
             (l.getTopLevelAncestor() as? Window)?.dispose()

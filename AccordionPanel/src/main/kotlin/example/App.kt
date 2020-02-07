@@ -114,7 +114,8 @@ abstract class AbstractExpansionPanel(private val title: String) : JPanel(Border
 
   protected fun initPanel() {
     panel.setVisible(!panel.isVisible())
-    label.setText("%s %s".format(if (panel.isVisible()) "△" else "▼", title))
+    val mark = if (panel.isVisible()) "△" else "▼"
+    label.setText("$mark $title")
     revalidate()
     // fireExpansionEvent()
     EventQueue.invokeLater { panel.scrollRectToVisible(panel.getBounds()) }
