@@ -17,7 +17,7 @@ class MainPanel : JPanel(BorderLayout()) {
     val button = JButton("check")
     button.addActionListener {
       label.setText(bg.getSelection()?.let {
-        "\"%s\" isSelected.".format(it.getActionCommand())
+        """"${it.getActionCommand()}" isSelected."""
       } ?: "Please select one of the option above.")
     }
 

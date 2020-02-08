@@ -60,7 +60,7 @@ class MainPanel : JPanel(BorderLayout()) {
     private var openFrameCount = 0
 
     private fun createFrame(c: JComponent?): JInternalFrame {
-      val title = "Frame #%s".format(++openFrameCount)
+      val title = "Frame #${++openFrameCount}"
       val frame = JInternalFrame(title, true, true, true, true)
       if (c is JPanel) {
         c.add(JLabel("label"))

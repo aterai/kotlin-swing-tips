@@ -8,7 +8,8 @@ fun makeUI(): Component {
     override fun approveSelection() {
       val f = getSelectedFile()
       if (f.exists() && getDialogType() == SAVE_DIALOG) {
-        val m = "<html>%s already exists.<br>Do you want to replace it?".format(f.getAbsolutePath())
+        val path = f.getAbsolutePath()
+        val m = "<html>$path already exists.<br>Do you want to replace it?"
         val rv = JOptionPane.showConfirmDialog(this, m, "Save As", JOptionPane.YES_NO_OPTION)
         if (rv != JOptionPane.YES_OPTION) {
           return

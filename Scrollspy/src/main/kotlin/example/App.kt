@@ -49,8 +49,8 @@ class MainPanel : JPanel(BorderLayout(2, 2)) {
       .map { it.userObject }
       .forEach {
         runCatching {
-          val tag = "<a name='%s' href='#'>%s</a>" + "<br>".repeat(8)
-          doc.insertBeforeEnd(element, tag.format(it, it))
+          val tag = "<a name='$it' href='#'>$it</a>" + "<br />".repeat(8)
+          doc.insertBeforeEnd(element, tag)
         }.onFailure {
           UIManager.getLookAndFeel().provideErrorFeedback(editor)
         }
