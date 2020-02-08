@@ -145,7 +145,7 @@ object ZipUtil {
   fun zip(srcDir: Path, zip: Path) {
     // try (Stream<Path> s = Files.walk(srcDir).filter(Files::isRegularFile)) { // noticeably poor performance in JDK 8
     Files.walk(srcDir)
-      .filter { f: Path -> f.toFile().isFile() }
+      .filter { it.toFile().isFile() }
       .use {
         val files = it.collect(Collectors.toList())
         ZipOutputStream(Files.newOutputStream(zip)).use { zos ->
