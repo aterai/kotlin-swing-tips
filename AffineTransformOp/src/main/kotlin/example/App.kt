@@ -65,7 +65,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   private fun makeMissingImage(): BufferedImage {
-    val missingIcon: Icon = MissingIcon()
+    val missingIcon = MissingIcon()
     val w = missingIcon.getIconWidth()
     val h = missingIcon.getIconHeight()
     val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)

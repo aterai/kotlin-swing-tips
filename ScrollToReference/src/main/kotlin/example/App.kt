@@ -18,7 +18,7 @@ class MainPanel : JPanel(BorderLayout(2, 2)) {
   private val editor = JEditorPane()
 
   init {
-    val emptyIcon: Icon = EmptyIcon()
+    val emptyIcon = EmptyIcon()
     UIManager.put("Tree.openIcon", emptyIcon)
     UIManager.put("Tree.closedIcon", emptyIcon)
     UIManager.put("Tree.leafIcon", emptyIcon)

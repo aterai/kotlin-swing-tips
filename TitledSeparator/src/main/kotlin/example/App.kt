@@ -40,7 +40,7 @@ class TitledSeparator(
   )
 
   private fun updateBorder() {
-    val icon: Icon = TitledSeparatorIcon()
+    val icon = TitledSeparatorIcon()
     setBorder(BorderFactory.createTitledBorder(
       BorderFactory.createMatteBorder(separatorHeight, 0, 0, 0, icon), title,
       TitledBorder.DEFAULT_JUSTIFICATION, titlePosition
