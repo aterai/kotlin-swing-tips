@@ -121,7 +121,7 @@ fun setHighlight(jtc: JTextComponent, pattern: String, painter: HighlightPainter
   jtc.repaint()
 }
 
-class CentredBackgroundBorder(private val image: BufferedImage) : Border {
+private class CentredBackgroundBorder(private val image: BufferedImage) : Border {
   override fun paintBorder(
     c: Component,
     g: Graphics,

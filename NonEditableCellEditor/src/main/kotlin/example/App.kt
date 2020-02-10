@@ -49,8 +49,8 @@ fun makeUI(): Component {
   return p
 }
 
-class TextComponentPopupMenu : JPopupMenu() {
-  private val copyAction: Action = CopyAction()
+private class TextComponentPopupMenu : JPopupMenu() {
+  private val copyAction = CopyAction()
   override fun show(c: Component, x: Int, y: Int) {
     if (c is JTextComponent) {
       copyAction.isEnabled = c.selectedText != null
