@@ -38,22 +38,25 @@ class MainPanel : JPanel(BorderLayout(2, 2)) {
         </body>
       </html>
       """.trimIndent()
-    val doc = editor.document as HTMLDocument
-    val element = doc.getElement("main")
+
     val model = makeModel()
-    val root = model.root as DefaultMutableTreeNode
-    root.preorderEnumeration().toList()
-      .filterIsInstance<DefaultMutableTreeNode>()
-      .filterNot { it.isRoot }
-      .map { it.userObject }
-      .forEach {
-        runCatching {
-          val tag = "<a name='$it' href='#'>$it</a>" + "<br />".repeat(8)
-          doc.insertBeforeEnd(element, tag)
-        }.onFailure {
-          UIManager.getLookAndFeel().provideErrorFeedback(editor)
-        }
+    (editor.document as? HTMLDocument)?.also { doc ->
+      (model.root as? DefaultMutableTreeNode)?.also { root ->
+        val element = doc.getElement("main")
+        root.preorderEnumeration().toList()
+          .filterIsInstance<DefaultMutableTreeNode>()
+          .filterNot { it.isRoot }
+          .map { it.userObject }
+          .forEach {
+            runCatching {
+              val tag = "<a name='$it' href='#'>$it</a>" + "<br />".repeat(8)
+              doc.insertBeforeEnd(element, tag)
+            }.onFailure {
+              UIManager.getLookAndFeel().provideErrorFeedback(editor)
+            }
+          }
       }
+    }
 
     val tree = RowSelectionTree()
     tree.model = model
