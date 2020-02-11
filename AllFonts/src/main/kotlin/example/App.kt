@@ -6,16 +6,18 @@ import javax.swing.table.DefaultTableModel
 
 fun makeUI(): Component {
   val columnNames = arrayOf("family", "name", "postscript name")
-  val model: DefaultTableModel = object : DefaultTableModel(null, columnNames) {
+  val model = object : DefaultTableModel(null, columnNames) {
     override fun isCellEditable(row: Int, column: Int) = false
 
     override fun getColumnClass(column: Int) = String::class.java
   }
   val table = JTable(model)
   table.setAutoCreateRowSorter(true)
+
   GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()
-      .map { arrayOf(it.getFamily(), it.getName(), it.getPSName()) }
-      .forEach { model.addRow(it) }
+    .map { arrayOf(it.getFamily(), it.getName(), it.getPSName()) }
+    .forEach { model.addRow(it) }
+
   val p = JPanel(BorderLayout())
   p.add(JScrollPane(table))
   p.setPreferredSize(Dimension(320, 240))
