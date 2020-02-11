@@ -152,11 +152,11 @@ class TableOfContentsTree(model: TreeModel?) : JTree(model) {
         } else {
           g2.paint = foreground
         }
-        val node = path.lastPathComponent as DefaultMutableTreeNode
-        (node.userObject as? TableOfContents)?.also {
+        val node = path.lastPathComponent as? DefaultMutableTreeNode
+        (node?.userObject as? TableOfContents)?.also {
           val pn = it.page.toString()
           val x = width - 1 - fm.stringWidth(pn) - ins.right
-          val y = r.y + (tcr as Component).getBaseline(r.width, r.height)
+          val y = r.y + ((tcr as? Component)?.getBaseline(r.width, r.height) ?: 0)
           g2.drawString(pn, x, y)
           val gap = 5
           val x2 = width - 1 - pageNumMaxWidth - ins.right
