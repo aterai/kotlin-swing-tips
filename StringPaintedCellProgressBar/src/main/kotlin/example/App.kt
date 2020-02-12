@@ -30,7 +30,7 @@ class MainPanel : JPanel(BorderLayout()) {
             current < lengthOfTask -> {
               progress.setValue(current * 100 / lengthOfTask)
               progress.setStringPainted(true)
-              progress.setString("%d/%d".format(current, lengthOfTask))
+              progress.setString("$current/$lengthOfTask")
               progress
             }
             else ->
@@ -80,7 +80,7 @@ class MainPanel : JPanel(BorderLayout()) {
           i = get()
           if (i >= 0) "Done" else "Disposed"
         }.getOrNull() ?: "Interrupted"
-        System.out.format("%s:%s(%dms)%n", key, message, i)
+        println("$key:$message(${i}ms)")
       }
     }
     addProgressValue("example(max: $lengthOfTask)", ProgressValue(lengthOfTask, 0), worker)

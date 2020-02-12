@@ -19,17 +19,17 @@ class MainPanel : JPanel(BorderLayout()) {
       val renderer = DefaultTableCellRenderer()
       val tc = getColumnModel().getColumn(2)
       tc.setCellRenderer { tbl, value, isSelected, hasFocus, row, column ->
-          val i = value as? Int ?: -1
-          var text = "Done"
-          if (i < 0) {
-            text = "Canceled"
-          } else if (i < progress.getMaximum()) { // < 100
-            progress.setValue(i)
-            progress.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
-            return@setCellRenderer progress
-          }
-          renderer.getTableCellRendererComponent(tbl, text, isSelected, hasFocus, row, column)
+        val i = value as? Int ?: -1
+        var text = "Done"
+        if (i < 0) {
+          text = "Canceled"
+        } else if (i < progress.getMaximum()) { // < 100
+          progress.setValue(i)
+          progress.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
+          return@setCellRenderer progress
         }
+        renderer.getTableCellRendererComponent(tbl, text, isSelected, hasFocus, row, column)
+      }
     }
   }
   private val deletedRowSet: MutableSet<Int> = TreeSet()
@@ -67,7 +67,7 @@ class MainPanel : JPanel(BorderLayout()) {
           i = get()
           if (i >= 0) "Done" else "Disposed"
         }.getOrNull() ?: "Interrupted"
-        System.out.format("%s:%s(%dms)%n", key, message, i)
+        println("$key:$message(${i}ms)")
       }
     }
     addProgressValue("example", 0, worker)
