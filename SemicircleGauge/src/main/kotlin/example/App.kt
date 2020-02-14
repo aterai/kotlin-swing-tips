@@ -163,10 +163,11 @@ class SolidGaugeUI(range: Int, extent: Double) : BasicProgressBarUI() {
 class ProgressListener(private val progressBar: JProgressBar) : PropertyChangeListener {
   override fun propertyChange(e: PropertyChangeEvent) {
     val strPropertyName = e.propertyName
-    if ("progress" == strPropertyName) {
+    val nv = e.newValue
+    if ("progress" == strPropertyName && nv is Int) {
       progressBar.isIndeterminate = false
       val range = progressBar.maximum - progressBar.minimum
-      val iv = (range * .01 * e.newValue as Int).toInt()
+      val iv = (range * .01 * nv).toInt()
       progressBar.value = iv
     }
   }
