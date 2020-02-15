@@ -43,7 +43,7 @@ class MainPanel : JPanel(BorderLayout()) {
       val tgt = path.resolveSibling(name)
       // if (Files.exists(tgt)) { // noticeably poor performance in JDK 8
       if (tgt.toFile().exists()) {
-        val m = "<html>%s already exists.<br>Do you want to overwrite it?".format(tgt.toString())
+        val m = "<html>$tgt already exists.<br>Do you want to overwrite it?"
         val rv = JOptionPane.showConfirmDialog(getRootPane(), m, "Zip", JOptionPane.YES_NO_OPTION)
         if (rv != JOptionPane.YES_OPTION) {
           return@addActionListener
@@ -82,7 +82,7 @@ class MainPanel : JPanel(BorderLayout()) {
         runCatching {
           // if (Files.exists(destDir)) { // noticeably poor performance in JDK 8
           if (destDir.toFile().exists()) {
-            val m = "<html>%s already exists.<br>Do you want to overwrite it?".format(destDir.toString())
+            val m = "<html>$destDir already exists.<br>Do you want to overwrite it?"
             val rv = JOptionPane.showConfirmDialog(getRootPane(), m, "Unzip", JOptionPane.YES_NO_OPTION)
             if (rv != JOptionPane.YES_OPTION) {
               return@addActionListener
