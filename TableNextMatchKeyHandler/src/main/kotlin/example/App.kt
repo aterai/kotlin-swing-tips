@@ -1,10 +1,10 @@
 package example
 
-import java.awt.*
+import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 import java.util.Locale
-import javax.swing.*
+import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.text.Position.Bias
 
@@ -54,7 +54,7 @@ private class TableNextMatchKeyHandler : KeyAdapter() {
   }
 
   override fun keyTyped(e: KeyEvent) {
-    val src = e.component as JTable
+    val src = e.component as? JTable ?: return
     val max = src.rowCount
     if (max == 0 || e.isAltDown || isNavigationKey(e)) {
       return
