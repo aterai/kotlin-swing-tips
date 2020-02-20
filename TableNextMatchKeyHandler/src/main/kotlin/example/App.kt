@@ -34,8 +34,8 @@ fun makeUI(): Component {
 // @see javax/swing/plaf/basic/BasicListUI.Handler
 // @see javax/swing/plaf/basic/BasicTreeUI.Handler
 private class TableNextMatchKeyHandler : KeyAdapter() {
-  private var prefix: String? = ""
-  private var typedString: String? = null
+  private var prefix = ""
+  private var typedString = ""
   private var lastTime = 0L
 
   private fun isNavigationKey(event: KeyEvent): Boolean {
@@ -66,7 +66,7 @@ private class TableNextMatchKeyHandler : KeyAdapter() {
     var startIndex = src.selectedRow
     if (time - lastTime < TIME_FACTOR) {
       typedString += c
-      if (prefix!!.length == 1 && c == prefix!![0]) {
+      if (prefix.length == 1 && c == prefix[0]) {
         startIndex += increment
       } else {
         prefix = typedString
@@ -77,7 +77,7 @@ private class TableNextMatchKeyHandler : KeyAdapter() {
       prefix = typedString
     }
     lastTime = time
-    scrollNextMatch(src, max, e, prefix ?: "", startIndex, startingFromSelection)
+    scrollNextMatch(src, max, e, prefix, startIndex, startingFromSelection)
   }
 
   private fun scrollNextMatch(
