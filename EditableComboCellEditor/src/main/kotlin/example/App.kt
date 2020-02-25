@@ -5,7 +5,6 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
-import javax.swing.table.TableModel
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
@@ -15,7 +14,7 @@ class MainPanel : JPanel(BorderLayout()) {
       arrayOf("sports", makeModel("basketball", "soccer", "football", "hockey")),
       arrayOf("food", makeModel("hot dogs", "pizza", "ravioli", "bananas"))
     )
-    val model: TableModel = object : DefaultTableModel(data, columnNames) {
+    val model = object : DefaultTableModel(data, columnNames) {
       override fun getColumnClass(column: Int) =
         if (column == 1) DefaultComboBoxModel::class.java else String::class.java
     }

@@ -5,7 +5,6 @@ import java.util.Locale
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
-import javax.swing.table.TableModel
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
@@ -17,7 +16,7 @@ class MainPanel : JPanel(BorderLayout()) {
       arrayOf(makeOptionPaneDescription("question"), see),
       arrayOf(makeOptionPaneDescription("warning"), see)
     )
-    val model: TableModel = object : DefaultTableModel(data, columnNames) {
+    val model = object : DefaultTableModel(data, columnNames) {
       override fun isCellEditable(row: Int, column: Int) = false
     }
     val table = JTable(model)

@@ -4,7 +4,6 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
-import javax.swing.table.TableModel
 import javax.swing.text.DefaultEditorKit.CopyAction
 import javax.swing.text.JTextComponent
 
@@ -16,7 +15,7 @@ fun makeUI(): Component {
     arrayOf("CCC", "kkk", "jj"),
     arrayOf("DDD", "ii mm nn", "hhh hhh lll")
   )
-  val model: TableModel = object : DefaultTableModel(data, columnNames) {
+  val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int): Class<*> {
       return getValueAt(0, column).javaClass
     }
