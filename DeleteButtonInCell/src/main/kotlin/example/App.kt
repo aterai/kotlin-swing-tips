@@ -57,21 +57,13 @@ private class RowDataModel : DefaultTableModel() {
     number++
   }
 
-  override fun isCellEditable(row: Int, col: Int): Boolean {
-    return COLUMN_ARRAY[col].isEditable
-  }
+  override fun isCellEditable(row: Int, col: Int) = COLUMN_ARRAY[col].isEditable
 
-  override fun getColumnClass(column: Int): Class<*> {
-    return COLUMN_ARRAY[column].columnClass
-  }
+  override fun getColumnClass(column: Int) = COLUMN_ARRAY[column].columnClass
 
-  override fun getColumnCount(): Int {
-    return COLUMN_ARRAY.size
-  }
+  override fun getColumnCount() = COLUMN_ARRAY.size
 
-  override fun getColumnName(column: Int): String {
-    return COLUMN_ARRAY[column].columnName
-  }
+  override fun getColumnName(column: Int) = COLUMN_ARRAY[column].columnName
 
   private class ColumnContext(
     val columnName: String,
@@ -111,9 +103,7 @@ private class DeleteButtonRenderer : TableCellRenderer {
     hasFocus: Boolean,
     row: Int,
     column: Int
-  ): Component {
-    return renderer
-  }
+  ) = renderer
 }
 
 private class DeleteButtonEditor : AbstractCellEditor(), TableCellEditor {
@@ -124,9 +114,7 @@ private class DeleteButtonEditor : AbstractCellEditor(), TableCellEditor {
     isSelected: Boolean,
     row: Int,
     column: Int
-  ): Component {
-    return renderer
-  }
+  ) = renderer
 
   override fun getCellEditorValue() = ""
 

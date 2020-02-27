@@ -79,9 +79,7 @@ private class CustomComponentCellEditor(private val field: JTextField) : Default
     return super.isCellEditable(e)
   }
 
-  override fun getComponent(): Component {
-    return panel
-  }
+  override fun getComponent() = panel
 
   init {
     val button: JButton = object : JButton() {

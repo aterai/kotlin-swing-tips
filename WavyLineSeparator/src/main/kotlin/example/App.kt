@@ -83,13 +83,9 @@ private class WavyLineSeparator(orientation: Int = SwingConstants.HORIZONTAL) : 
       g2.dispose()
     }
 
-    override fun getIconWidth(): Int {
-      return if (orientation == SwingConstants.HORIZONTAL) ICON_WIDTH * 2 else ICON_WIDTH
-    }
+    override fun getIconWidth() = if (orientation == SwingConstants.HORIZONTAL) ICON_WIDTH * 2 else ICON_WIDTH
 
-    override fun getIconHeight(): Int {
-      return if (orientation == SwingConstants.HORIZONTAL) ICON_WIDTH else ICON_WIDTH * 2
-    }
+    override fun getIconHeight() = if (orientation == SwingConstants.HORIZONTAL) ICON_WIDTH else ICON_WIDTH * 2
   }
 
   companion object {
