@@ -141,6 +141,8 @@ empty-blocks:
     active: true
   EmptySecondaryConstructor:
     active: true
+  EmptyTryBlock:
+    active: true
   EmptyWhenBlock:
     active: true
   EmptyWhileBlock:
@@ -218,6 +220,7 @@ formatting:
   FinalNewline:
     active: true
     autoCorrect: true
+    insertFinalNewLine: true
   ImportOrdering:
     active: false
     autoCorrect: true
@@ -351,6 +354,7 @@ naming:
     rootPackage: ''
   MatchingDeclarationName:
     active: true
+    mustBeFirst: true
   MemberNameEqualsClassName:
     active: true
     ignoreOverridden: true
