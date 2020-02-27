@@ -69,12 +69,7 @@ class MainPanel(threadPool: ExecutorService) : JPanel(BorderLayout()) {
     private var text: String? = null
     fun initLongLineStringInBackground(threadPool: ExecutorService, length: Int) {
       threadPool.execute {
-        val sb = StringBuilder(length)
-        for (i in 0 until length - 2) {
-          sb.append('a')
-        }
-        sb.append("x\n")
-        text = sb.toString()
+        text = "a".repeat(length - 2) + "x\n"
       }
     }
   }
