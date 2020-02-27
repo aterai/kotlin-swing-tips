@@ -55,8 +55,8 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-data class PluginNode(
-  val name: String,
+class PluginNode(
+  private val name: String,
   val plugins: List<String> = emptyList()
 ) {
   var selectedIndex = 0

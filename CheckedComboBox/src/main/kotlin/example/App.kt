@@ -29,7 +29,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-data class CheckableItem(private val text: String, var isSelected: Boolean) {
+class CheckableItem(private val text: String, var isSelected: Boolean) {
   override fun toString() = text
 }
 
