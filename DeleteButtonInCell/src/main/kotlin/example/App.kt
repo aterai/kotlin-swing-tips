@@ -65,20 +65,19 @@ private class RowDataModel : DefaultTableModel() {
 
   override fun getColumnName(column: Int) = COLUMN_ARRAY[column].columnName
 
-  private class ColumnContext(
+  private data class ColumnContext(
     val columnName: String,
     val columnClass: Class<*>,
     val isEditable: Boolean
   )
 
   companion object {
-    private val COLUMN_ARRAY =
-      arrayOf(
-        ColumnContext("No.", Int::class.java, false),
-        ColumnContext("Name", String::class.java, true),
-        ColumnContext("Comment", String::class.java, true),
-        ColumnContext("", String::class.java, true)
-      )
+    private val COLUMN_ARRAY = arrayOf(
+      ColumnContext("No.", Int::class.java, false),
+      ColumnContext("Name", String::class.java, true),
+      ColumnContext("Comment", String::class.java, true),
+      ColumnContext("", String::class.java, true)
+    )
   }
 }
 

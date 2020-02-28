@@ -55,12 +55,11 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-class PluginNode(
+data class PluginNode(
   private val name: String,
-  val plugins: List<String> = emptyList()
+  val plugins: List<String> = emptyList(),
+  val selectedIndex: Int = -1
 ) {
-  var selectedIndex = 0
-
   override fun toString() = name
 }
 
@@ -134,8 +133,8 @@ class PluginCellEditor(comboBox: JComboBox<String>) : DefaultCellEditor(comboBox
     return node
       ?.let { it as? PluginNode }
       ?.let {
-        val pn = PluginNode(panel.pluginName.text, it.plugins)
-        pn.selectedIndex = (panel.comboBox.model as? DefaultComboBoxModel<String>)?.getIndexOf(o) ?: -1
+        val idx = (panel.comboBox.model as? DefaultComboBoxModel<String>)?.getIndexOf(o) ?: -1
+        val pn = PluginNode(panel.pluginName.text, it.plugins, idx)
         pn
       } ?: o
   }

@@ -29,8 +29,8 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-class CheckableItem(private val text: String, var isSelected: Boolean) {
-  override fun toString() = text
+data class CheckableItem(val title: String, val isSelected: Boolean) {
+  override fun toString() = title
 }
 
 // class CheckBoxCellRenderer : ListCellRenderer<CheckableItem> {
@@ -134,12 +134,11 @@ class CheckedComboBox(model: ComboBoxModel<CheckableItem>) : JComboBox<Checkable
   }
 
   private fun updateItem(index: Int) {
-    if (isPopupVisible) {
-      getItemAt(index)?.also {
-        it.isSelected = !it.isSelected
-        selectedIndex = -1
-        selectedItem = it
-      }
+    val item = getItemAt(index)
+    if (isPopupVisible && item != null) {
+      removeItemAt(index)
+      insertItemAt(CheckableItem(item.title, !item.isSelected), index)
+      selectedIndex = index
     }
   }
 
