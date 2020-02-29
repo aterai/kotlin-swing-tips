@@ -39,8 +39,8 @@ class MainPanel : JPanel(BorderLayout()) {
     }
 
     val root = DefaultMutableTreeNode("JTree")
-    listOf("aaaa", "bbbbbbb", "ccc", "dddddd", "eeeeeee", "fffffffff",
-          "gggggg", "hhhhh", "iiii", "jjjjjjjjjj").forEach {
+    listOf("aaa", "bbb bb bb", "ccc", "dd dd dd", "eee eee", "ff ff ff fff",
+      "ggg ggg", "hhh hh", "ii ii", "jjj jjj jj jj").forEach {
       val isSelected = it.length % 2 == 0
       val c = JCheckBox(it, isSelected)
       c.setAlignmentX(Component.LEFT_ALIGNMENT)
@@ -93,18 +93,18 @@ class CheckBoxList<E : CheckBoxNode>(model: ListModel<E>) : JList<E>(model) {
     return i < 0 || !rect.contains(p)
   }
 
-  protected override fun processMouseEvent(e: MouseEvent) {
+  override fun processMouseEvent(e: MouseEvent) {
     if (!pointOutsidePrefSize(e.getPoint())) {
       super.processMouseEvent(e)
     }
   }
 
-  protected override fun processMouseMotionEvent(e: MouseEvent) {
+  override fun processMouseMotionEvent(e: MouseEvent) {
     if (pointOutsidePrefSize(e.getPoint())) {
       val ev = MouseEvent(
-          e.getComponent(), MouseEvent.MOUSE_EXITED, e.getWhen(), e.getModifiersEx(),
-          e.getX(), e.getY(), e.getXOnScreen(), e.getYOnScreen(), e.getClickCount(),
-          e.isPopupTrigger(), MouseEvent.NOBUTTON)
+        e.getComponent(), MouseEvent.MOUSE_EXITED, e.getWhen(), e.getModifiersEx(),
+        e.getX(), e.getY(), e.getXOnScreen(), e.getYOnScreen(), e.getClickCount(),
+        e.isPopupTrigger(), MouseEvent.NOBUTTON)
       super.processMouseEvent(ev)
     } else {
       super.processMouseMotionEvent(e)
@@ -144,14 +144,14 @@ class CheckBoxCellRenderer<E : CheckBoxNode> : MouseAdapter(), ListCellRenderer<
     }
   }
 
-  @Suppress("UNCHECKED_CAST")
   override fun mouseClicked(e: MouseEvent) {
+    @Suppress("UNCHECKED_CAST")
+    val l = e.getComponent() as? JList<CheckBoxNode> ?: return
     if (e.getButton() == MouseEvent.BUTTON1) {
-      val l = e.getComponent() as JList<CheckBoxNode>
       val p = e.getPoint()
       val index = l.locationToIndex(p)
-      if (index >= 0) {
-        val m = l.getModel() as DefaultListModel<CheckBoxNode>
+      val m = l.getModel()
+      if (index >= 0 && m is DefaultListModel<CheckBoxNode>) {
         val n = m.get(index)
         m.set(index, CheckBoxNode(n.text, !n.selected))
         l.repaint(l.getCellBounds(index, index))
@@ -198,7 +198,7 @@ class CheckBoxNodeRenderer : TreeCellRenderer {
 class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
   private val checkBox = object : JCheckBox() {
     @Transient
-    protected var handler: ActionListener? = null
+    private var handler: ActionListener? = null
 
     override fun updateUI() {
       removeActionListener(handler)
