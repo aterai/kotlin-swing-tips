@@ -122,7 +122,7 @@ private class DeleteButtonEditor : AbstractCellEditor(), TableCellEditor {
       (SwingUtilities.getAncestorOfClass(JTable::class.java, renderer) as? JTable)?.also { table ->
         val row = table.convertRowIndexToModel(table.editingRow)
         fireEditingStopped()
-        (table.model as DefaultTableModel).removeRow(row)
+        (table.model as? DefaultTableModel)?.removeRow(row)
       }
     }
   }

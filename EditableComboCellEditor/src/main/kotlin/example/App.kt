@@ -63,8 +63,7 @@ class ComboCellEditor : AbstractCellEditor(), TableCellEditor {
   ): Component { // combo.setBackground(table.getSelectionBackground());
     if (value is ComboBoxModel<*>) {
       @Suppress("UNCHECKED_CAST")
-      val m = value as ComboBoxModel<String>
-      combo.model = m
+      combo.model = value as? ComboBoxModel<String>
     }
     return combo
   }
