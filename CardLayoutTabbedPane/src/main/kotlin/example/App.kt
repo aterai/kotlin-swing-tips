@@ -47,7 +47,7 @@ class CardLayoutTabbedPane : JPanel(BorderLayout()) {
     val tab = TabButton(title)
     tab.addMouseListener(object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
-        (e.component as AbstractButton).isSelected = true
+        (e.component as? AbstractButton)?.isSelected = true
         cardLayout.show(contentsPanel, title)
       }
     })
@@ -99,7 +99,7 @@ class TabButton(text: String?) : JRadioButton(text, null) {
 
   override fun updateUI() {
     // if (UIManager.get(uiClassID) != null) {
-    //   setUI(UIManager.getUI(this) as TabViewButtonUI)
+    //   setUI(UIManager.getUI(this) as? TabViewButtonUI)
     // } else {
     //   setUI(BasicTabViewButtonUI())
     // }
@@ -108,7 +108,7 @@ class TabButton(text: String?) : JRadioButton(text, null) {
 
   override fun getUIClassID() = UI_CLASS_ID
 
-  override fun getUI() = ui as TabViewButtonUI
+  override fun getUI() = ui as? TabViewButtonUI
 
   override fun fireStateChanged() {
     val model = getModel()
@@ -135,7 +135,7 @@ class TabButton(text: String?) : JRadioButton(text, null) {
 
 class CloseTabIcon(private val color: Color) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = color
     g2.drawLine(2, 2, 9, 9)
