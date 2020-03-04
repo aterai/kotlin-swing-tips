@@ -122,6 +122,7 @@ object MenuItemHelper {
     }
   }
 
+  @Suppress("LongParameterList")
   fun paintAccText(
     g: Graphics,
     lh: MenuItemLayoutHelper,

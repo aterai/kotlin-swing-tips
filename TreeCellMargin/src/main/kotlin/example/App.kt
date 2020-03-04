@@ -99,6 +99,7 @@ private class MarginTreeCellRenderer : DefaultTreeCellRenderer() {
     }
   }
 
+  @Suppress("LongParameterList")
   private fun paintFocusRect(
     g: Graphics,
     x: Int,

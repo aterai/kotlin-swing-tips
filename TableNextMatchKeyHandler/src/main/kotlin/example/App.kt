@@ -80,6 +80,7 @@ private class TableNextMatchKeyHandler : KeyAdapter() {
     scrollNextMatch(src, max, e, prefix, startIndex, startingFromSelection)
   }
 
+  @Suppress("LongParameterList")
   private fun scrollNextMatch(
     src: JTable,
     max: Int,
