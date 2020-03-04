@@ -165,6 +165,7 @@ internal class FishEyeTable(m: TableModel) : JTable(m) {
     }
   }
 
+  @Suppress("LoopWithTooManyJumpStatements")
   private fun initRowHeight(height: Int, ccRow: Int) {
     val rd2 = (fishEyeRowList.size - 1) / 2
     val rowCount = getModel().getRowCount()
