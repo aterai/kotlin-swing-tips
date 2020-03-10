@@ -1,0 +1,143 @@
+package example
+
+import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.event.ActionEvent
+import java.awt.event.KeyEvent
+import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.tree.DefaultMutableTreeNode
+import javax.swing.tree.TreeNode
+
+private fun makeComboBoxModel(model: DefaultComboBoxModel<TreeNode>, node: TreeNode) {
+  if (node is DefaultMutableTreeNode && !node.isRoot) {
+    model.addElement(node)
+  }
+  if (!node.isLeaf) {
+    node.children().toList()
+      .filterIsInstance<TreeNode>()
+      .forEach { makeComboBoxModel(model, it) }
+  }
+}
+
+private fun makeModel() = JTree().model
+
+private fun makeTitledPanel(title: String, c: Component): Component {
+  val p = JPanel(BorderLayout())
+  p.border = BorderFactory.createTitledBorder(title)
+  p.add(c)
+  return p
+}
+
+fun makeUI(): Component {
+  val model1 = DefaultComboBoxModel<TreeNode>()
+  val model2 = DefaultComboBoxModel<TreeNode>()
+  (makeModel().root as? DefaultMutableTreeNode)?.also { root ->
+    makeComboBoxModel(model1, root)
+    makeComboBoxModel(model2, root)
+  }
+
+  val combo = TreeComboBox<TreeNode?>()
+  combo.model = model2
+  combo.selectedIndex = -1
+
+  val box = Box.createVerticalBox()
+  box.add(makeTitledPanel("default:", JComboBox(model1)))
+  box.add(Box.createVerticalStrut(5))
+  box.add(makeTitledPanel("Tree ComboBoxModel:", combo))
+  box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+
+  return JPanel(BorderLayout()).also {
+    it.add(box, BorderLayout.NORTH)
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private class TreeComboBox<E : TreeNode?> : JComboBox<E>() {
+  private var isNotSelectableIndex = false
+  private val up = object : AbstractAction() {
+    override fun actionPerformed(e: ActionEvent) {
+      val si = selectedIndex
+      for (i in si - 1 downTo 0) {
+        if (getItemAt(i)?.isLeaf == true) {
+          selectedIndex = i
+          break
+        }
+      }
+    }
+  }
+  private val down = object : AbstractAction() {
+    override fun actionPerformed(e: ActionEvent) {
+      val si = selectedIndex
+      for (i in si + 1 until model.size) {
+        if (getItemAt(i)?.isLeaf == true) {
+          selectedIndex = i
+          break
+        }
+      }
+    }
+  }
+
+  override fun updateUI() {
+    super.updateUI()
+    val renderer = getRenderer()
+    setRenderer { list, value, index, isSelected, cellHasFocus ->
+      val l = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+      (l as? JComponent)?.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
+      if (index >= 0 && value is DefaultMutableTreeNode) {
+        val indent = 0.coerceAtLeast(value.level - 1) * 16
+        (l as? JComponent)?.border = BorderFactory.createEmptyBorder(1, indent + 1, 1, 1)
+        if (!value.isLeaf()) {
+          l.foreground = Color.WHITE
+          l.background = Color.GRAY.darker()
+        }
+      }
+      l
+    }
+    EventQueue.invokeLater {
+      val prevKey = "selectPrevious3"
+      val nextKey = "selectNext3"
+      val am = actionMap
+      am.put(prevKey, up)
+      am.put(nextKey, down)
+      val im = inputMap
+      im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), prevKey)
+      im.put(KeyStroke.getKeyStroke(KeyEvent.VK_KP_UP, 0), prevKey)
+      im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), nextKey)
+      im.put(KeyStroke.getKeyStroke(KeyEvent.VK_KP_DOWN, 0), nextKey)
+    }
+  }
+
+  override fun setPopupVisible(v: Boolean) {
+    if (!v && isNotSelectableIndex) {
+      isNotSelectableIndex = false
+    } else {
+      super.setPopupVisible(v)
+    }
+  }
+
+  override fun setSelectedIndex(index: Int) {
+    val node = getItemAt(index)
+    if (node != null && node.isLeaf) {
+      super.setSelectedIndex(index)
+    } else {
+      isNotSelectableIndex = true
+    }
+  }
+}
+
+fun main() {
+  EventQueue.invokeLater {
+    runCatching {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+    }.onFailure {
+      it.printStackTrace()
+      Toolkit.getDefaultToolkit().beep()
+    }
+    JFrame().apply {
+      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+      getContentPane().add(makeUI())
+      pack()
+      setLocationRelativeTo(null)
+      setVisible(true)
+    }
+  }
+}
