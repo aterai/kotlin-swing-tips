@@ -94,11 +94,11 @@ fun main() {
     // println("$key: ${UIManager.getBoolean(key)}")
     // TEST: UIManager.put(key, false)
     JFrame().apply {
-      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-      getContentPane().add(makeUI())
+      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
-      setVisible(true)
+      isVisible = true
     }
   }
 }

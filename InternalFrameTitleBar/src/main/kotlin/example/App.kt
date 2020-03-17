@@ -86,12 +86,12 @@ fun main() {
     JFrame().apply {
       setUndecorated(true)
       setMinimumSize(Dimension(300, 120))
-      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-      getContentPane().add(MainPanel())
+      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+      contentPane.add(MainPanel())
       setBackground(Color(0x0, true))
       pack()
       setLocationRelativeTo(null)
-      setVisible(true)
+      isVisible = true
     }
   }
 }

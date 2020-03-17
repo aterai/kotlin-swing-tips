@@ -59,7 +59,7 @@ fun makeUI(): Component {
 fun makeImageTexture(): TexturePaint {
   // unkaku_w.png http://www.viva-edo.com/komon/edokomon.html
   val bi = runCatching {
-    val cl = Thread.currentThread().getContextClassLoader()
+    val cl = Thread.currentThread().contextClassLoader
     ImageIO.read(cl.getResource("example/unkaku_w.png"))
   }.getOrNull() ?: makeMissingImage()
   return TexturePaint(bi, Rectangle(bi.getWidth(), bi.getHeight()))
@@ -103,11 +103,11 @@ fun main() {
     JFrame.setDefaultLookAndFeelDecorated(true)
     JFrame().apply {
       setBackground(Color(0x0, true))
-      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-      getContentPane().add(makeUI())
+      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
-      setVisible(true)
+      isVisible = true
     }
   }
 }

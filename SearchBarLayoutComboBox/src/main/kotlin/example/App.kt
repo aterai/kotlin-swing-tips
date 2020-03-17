@@ -9,7 +9,7 @@ fun makeUI(): Component {
   p.add(JComboBox(arrayOf("Google", "Yahoo!", "Bing")))
   p.add(JLabel("SearchBar JComboBox"))
 
-  val cl = Thread.currentThread().getContextClassLoader()
+  val cl = Thread.currentThread().contextClassLoader
   val m = SearchEngineComboBoxModel<example.SearchEngine>()
   m.addElement(SearchEngine("Google", "http://www.google.com/", ImageIcon(cl.getResource("example/google.png"))))
   m.addElement(SearchEngine("Yahoo!", "http://www.yahoo.com/", ImageIcon(cl.getResource("example/yahoo.png"))))
@@ -36,11 +36,11 @@ fun main() {
       Toolkit.getDefaultToolkit().beep()
     }
     JFrame().apply {
-      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-      getContentPane().add(makeUI())
+      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
-      setVisible(true)
+      isVisible = true
     }
   }
 }

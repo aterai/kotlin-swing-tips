@@ -125,12 +125,12 @@ fun main() {
     JFrame().apply {
       val mb = JMenuBar()
       mb.add(LookAndFeelUtil.createLookAndFeelMenu())
-      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-      getContentPane().add(MainPanel())
+      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+      contentPane.add(MainPanel())
       setJMenuBar(mb)
       pack()
       setLocationRelativeTo(null)
-      setVisible(true)
+      isVisible = true
     }
   }
 }

@@ -265,11 +265,11 @@ fun main() {
     }
     val p = MainPanel()
     p.makeFrame("title").apply {
-      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-      getContentPane().add(p)
+      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+      contentPane.add(p)
       pack()
       setLocationRelativeTo(null)
-      setVisible(true)
+      isVisible = true
     }
   }
 }

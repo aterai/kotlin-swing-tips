@@ -145,7 +145,7 @@ fun main() {
       }
     }
     (frame.getContentPane() as? JComponent)?.setOpaque(false)
-    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+    frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
     frame.getContentPane().add(MainPanel())
     frame.pack()
     frame.setLocationRelativeTo(null)

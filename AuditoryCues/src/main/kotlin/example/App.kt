@@ -132,11 +132,11 @@ fun main() {
     // UIManager.put("OptionPane.informationSound", "/example/notice2.wav")
     // UIManager.put("OptionPane.informationSound", "sounds/OptionPaneError.wav")
     JFrame().apply {
-      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-      getContentPane().add(MainPanel())
+      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+      contentPane.add(MainPanel())
       pack()
       setLocationRelativeTo(null)
-      setVisible(true)
+      isVisible = true
     }
   }
 }

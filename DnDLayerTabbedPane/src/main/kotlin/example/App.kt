@@ -615,7 +615,7 @@ fun main() {
     menuBar.add(menu)
     val layerUI = DropLocationLayerUI()
     val frame = JFrame("main")
-    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+    frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
     frame.getContentPane().add(MainPanel(handler, layerUI))
     frame.setJMenuBar(menuBar)
     frame.pack()

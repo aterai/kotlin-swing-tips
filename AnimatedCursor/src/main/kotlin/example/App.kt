@@ -8,7 +8,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val pt = Point()
-  val cl = Thread.currentThread().getContextClassLoader()
+  val cl = Thread.currentThread().contextClassLoader
   val tk = Toolkit.getDefaultToolkit()
   val list = listOf("00", "01", "02").map {
     tk.createCustomCursor(tk.createImage(cl.getResource("example/$it.png")), pt, it)
@@ -65,11 +65,11 @@ fun main() {
       Toolkit.getDefaultToolkit().beep()
     }
     JFrame().apply {
-      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-      getContentPane().add(makeUI())
+      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
-      setVisible(true)
+      isVisible = true
     }
   }
 }

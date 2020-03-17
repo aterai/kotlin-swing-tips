@@ -5,7 +5,7 @@ import java.net.URL
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  val cl = Thread.currentThread().getContextClassLoader()
+  val cl = Thread.currentThread().contextClassLoader
   var url1 = cl.getResource("toolbarButtonGraphics/general/Copy24.gif")
   var url2 = cl.getResource("toolbarButtonGraphics/general/Cut24.gif")
   var url3 = cl.getResource("toolbarButtonGraphics/general/Help24.gif")
@@ -50,11 +50,11 @@ fun main() {
       Toolkit.getDefaultToolkit().beep()
     }
     JFrame().apply {
-      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-      getContentPane().add(makeUI())
+      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
-      setVisible(true)
+      isVisible = true
     }
   }
 }

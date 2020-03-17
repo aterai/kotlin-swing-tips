@@ -5,7 +5,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val box = Box.createVerticalBox()
-  val cl = Thread.currentThread().getContextClassLoader()
+  val cl = Thread.currentThread().contextClassLoader
   listOf(
       "no_disposal_specified",
       "do_not_dispose",
@@ -34,11 +34,11 @@ fun main() {
       Toolkit.getDefaultToolkit().beep()
     }
     JFrame().apply {
-      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-      getContentPane().add(makeUI())
+      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
-      setVisible(true)
+      isVisible = true
     }
   }
 }

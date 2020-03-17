@@ -19,7 +19,7 @@ fun makeUI(): Component {
   val editor1 = JEditorPane()
   editor1.setEditorKit(htmlEditorKit)
 
-  val cl = Thread.currentThread().getContextClassLoader()
+  val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/SurrogatePair.html")
   runCatching {
     InputStreamReader(url.openStream(), StandardCharsets.UTF_8).use { editor1.read(it, "html") }
@@ -75,11 +75,11 @@ fun main() {
       Toolkit.getDefaultToolkit().beep()
     }
     JFrame().apply {
-      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-      getContentPane().add(makeUI())
+      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
-      setVisible(true)
+      isVisible = true
     }
   }
 }

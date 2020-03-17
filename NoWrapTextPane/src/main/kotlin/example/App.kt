@@ -108,13 +108,13 @@ fun main() {
       Toolkit.getDefaultToolkit().beep()
     }
     JFrame().apply {
-      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
       val threadPool = Executors.newCachedThreadPool()
       MainPanel.initLongLineStringInBackground(threadPool, 1024 * 1024)
-      getContentPane().add(MainPanel(threadPool))
+      contentPane.add(MainPanel(threadPool))
       pack()
       setLocationRelativeTo(null)
-      setVisible(true)
+      isVisible = true
     }
   }
 }

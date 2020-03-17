@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI() = JPanel().also {
-  val cl = Thread.currentThread().getContextClassLoader()
+  val cl = Thread.currentThread().contextClassLoader
   val icon = ImageIcon(cl.getResource("example/duke.gif"))
   // val icon = UIManager.getIcon("OptionPane.warningIcon")
   it.add(makeLabel("Default", icon))
@@ -103,11 +103,11 @@ fun main() {
       Toolkit.getDefaultToolkit().beep()
     }
     JFrame().apply {
-      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-      getContentPane().add(makeUI())
+      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
-      setVisible(true)
+      isVisible = true
     }
   }
 }

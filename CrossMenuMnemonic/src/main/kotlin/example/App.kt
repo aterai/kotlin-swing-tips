@@ -124,12 +124,12 @@ fun main() {
       Toolkit.getDefaultToolkit().beep()
     }
     JFrame().apply {
-      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-      getContentPane().add(MainPanel())
+      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+      contentPane.add(MainPanel())
       setJMenuBar(MenuBarUtil.createMenuBar())
       pack()
       setLocationRelativeTo(null)
-      setVisible(true)
+      isVisible = true
     }
   }
 }

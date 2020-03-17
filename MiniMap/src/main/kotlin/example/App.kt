@@ -188,7 +188,7 @@ fun loadFile(path: String) {
 
 fun createEngine(): ScriptEngine? {
   val engine = ScriptEngineManager().getEngineByName("JavaScript")
-  val cl = Thread.currentThread().getContextClassLoader()
+  val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/prettify.js") ?: return null
   return runCatching {
     BufferedReader(InputStreamReader(url.openStream(), StandardCharsets.UTF_8)).use { r ->
@@ -225,11 +225,11 @@ fun main() {
       Toolkit.getDefaultToolkit().beep()
     }
     JFrame().apply {
-      setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-      getContentPane().add(makeUI())
+      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
-      setVisible(true)
+      isVisible = true
     }
   }
 }
