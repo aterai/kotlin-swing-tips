@@ -28,39 +28,39 @@ class MainPanel : JPanel(BorderLayout()) {
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     val g2 = g.create() as Graphics2D
-    g2.setTransform(zoomAndPanHandler?.coordAndZoomTransform)
+    g2.transform = zoomAndPanHandler?.coordAndZoomTransform
     icon.paintIcon(this, g2, 0, 0)
     g2.dispose()
   }
 }
 
-internal class ZoomAndPanHandler : MouseAdapter() {
+private class ZoomAndPanHandler : MouseAdapter() {
   private val zoomRange = DefaultBoundedRangeModel(0, EXTENT, MIN_ZOOM, MAX_ZOOM + EXTENT)
   val coordAndZoomTransform = AffineTransform()
   private val dragStartPoint = Point()
 
   override fun mousePressed(e: MouseEvent) {
-    dragStartPoint.setLocation(e.getPoint())
+    dragStartPoint.location = e.point
   }
 
   override fun mouseDragged(e: MouseEvent) {
-    val dragEndPoint = e.getPoint()
+    val dragEndPoint = e.point
     val dragStart = transformPoint(dragStartPoint)
     val dragEnd = transformPoint(dragEndPoint)
     coordAndZoomTransform.translate(dragEnd.getX() - dragStart.getX(), dragEnd.getY() - dragStart.getY())
-    dragStartPoint.setLocation(dragEndPoint)
-    e.getComponent().repaint()
+    dragStartPoint.location = dragEndPoint
+    e.component.repaint()
   }
 
   override fun mouseWheelMoved(e: MouseWheelEvent) {
-    val dir = e.getWheelRotation()
-    val z = zoomRange.getValue()
-    zoomRange.setValue(z + EXTENT * if (dir > 0) -1 else 1)
-    if (z == zoomRange.getValue()) {
+    val dir = e.wheelRotation
+    val z = zoomRange.value
+    zoomRange.value = z + EXTENT * if (dir > 0) -1 else 1
+    if (z == zoomRange.value) {
       return
     }
-    val c = e.getComponent()
-    val r = c.getBounds()
+    val c = e.component
+    val r = c.bounds
     // Point p = e.getPoint();
     val p = Point(r.x + r.width / 2, r.y + r.height / 2)
     val p1 = transformPoint(p)
@@ -74,16 +74,6 @@ internal class ZoomAndPanHandler : MouseAdapter() {
   // https://community.oracle.com/thread/1263955
   // How to implement Zoom & Pan in Java using Graphics2D
   private fun transformPoint(p1: Point): Point {
-//    var inverse = coordAndZoomTransform
-//    val hasInverse = coordAndZoomTransform.getDeterminant() != 0.0
-//    if (hasInverse) {
-//      try {
-//        inverse = coordAndZoomTransform.createInverse()
-//      } catch (ex: NoninvertibleTransformException) {
-//        // should never happen
-//        assert(false)
-//      }
-//    }
     val inverse = runCatching { coordAndZoomTransform.createInverse() }
       .getOrNull() ?: coordAndZoomTransform
     val p2 = Point()

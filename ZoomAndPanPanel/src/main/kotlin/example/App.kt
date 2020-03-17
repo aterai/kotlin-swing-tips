@@ -9,39 +9,42 @@ import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val img = runCatching { ImageIO.read(javaClass.getResource("CRW_3857_JFR.jpg")) }
-      .onFailure { it.printStackTrace() }
-      .getOrNull() ?: makeMissingImage()
-    add(JScrollPane(ZoomAndPanePanel(img)))
-    setPreferredSize(Dimension(320, 240))
-  }
-
-  private fun makeMissingImage(): Image {
-    val missingIcon = MissingIcon()
-    val w = missingIcon.iconWidth
-    val h = missingIcon.iconHeight
-    val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
-    val g2 = bi.createGraphics()
-    missingIcon.paintIcon(null, g2, 0, 0)
-    g2.dispose()
-    return bi
+fun makeUI(): Component {
+  val cl = Thread.currentThread().contextClassLoader
+  val img = runCatching { ImageIO.read(cl.getResource("example/CRW_3857_JFR.jpg")) }
+    .onFailure { it.printStackTrace() }
+    .getOrNull() ?: makeMissingImage()
+  return JPanel(BorderLayout()).also {
+    it.add(JScrollPane(ZoomAndPanePanel(img)))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class ZoomAndPanePanel(@field:Transient private val img: Image) : JPanel() {
+private fun makeMissingImage(): Image {
+  val missingIcon = MissingIcon()
+  val w = missingIcon.iconWidth
+  val h = missingIcon.iconHeight
+  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, 0, 0)
+  g2.dispose()
+  return bi
+}
+
+private class ZoomAndPanePanel(@field:Transient private val img: Image) : JPanel() {
   private val zoomTransform = AffineTransform()
   private val imageRect = Rectangle(img.getWidth(this), img.getHeight(this))
+
   @Transient
   private var handler: ZoomHandler? = null
+
   @Transient
   private var listener: DragScrollListener? = null
 
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setPaint(Color(0x55_FF_00_00, true))
+    g2.paint = Color(0x55_FF_00_00, true)
     val r = Rectangle(500, 140, 150, 150)
     g2.drawImage(img, zoomTransform, this)
     g2.fill(zoomTransform.createTransformedShape(r))
@@ -49,7 +52,7 @@ class ZoomAndPanePanel(@field:Transient private val img: Image) : JPanel() {
   }
 
   override fun getPreferredSize(): Dimension {
-    val r = zoomTransform.createTransformedShape(imageRect).getBounds()
+    val r = zoomTransform.createTransformedShape(imageRect).bounds
     return Dimension(r.width, r.height)
   }
 
@@ -74,20 +77,20 @@ class ZoomAndPanePanel(@field:Transient private val img: Image) : JPanel() {
     )
 
     override fun mouseWheelMoved(e: MouseWheelEvent) {
-      val dir = e.getWheelRotation()
-      val z = zoomRange.getValue()
-      zoomRange.setValue(z + EXTENT * if (dir > 0) -1 else 1)
+      val dir = e.wheelRotation
+      val z = zoomRange.value
+      zoomRange.value = z + EXTENT * if (dir > 0) -1 else 1
       if (z != zoomRange.value) {
-        val c = e.getComponent()
+        val c = e.component
         val p = SwingUtilities.getAncestorOfClass(JViewport::class.java, c)
         if (p is JViewport) {
-          val ovr = p.getViewRect()
+          val ovr = p.viewRect
           val s = if (dir > 0) 1.0 / ZOOM_MULTIPLICATION_FACTOR else ZOOM_MULTIPLICATION_FACTOR
           zoomTransform.scale(s, s)
-          val nvr = AffineTransform.getScaleInstance(s, s).createTransformedShape(ovr).getBounds()
-          val vp = nvr.getLocation()
+          val nvr = AffineTransform.getScaleInstance(s, s).createTransformedShape(ovr).bounds
+          val vp = nvr.location
           vp.translate((nvr.width - ovr.width) / 2, (nvr.height - ovr.height) / 2)
-          p.setViewPosition(vp)
+          p.viewPosition = vp
           c.revalidate()
           c.repaint()
         }
@@ -103,37 +106,37 @@ class ZoomAndPanePanel(@field:Transient private val img: Image) : JPanel() {
   }
 }
 
-class DragScrollListener : MouseAdapter() {
+private class DragScrollListener : MouseAdapter() {
   private val defCursor = Cursor.getDefaultCursor()
   private val hndCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
   private val pp = Point()
   override fun mouseDragged(e: MouseEvent) {
-    val c = e.getComponent()
+    val c = e.component
     val p = SwingUtilities.getUnwrappedParent(c)
     if (p is JViewport) {
       val cp = SwingUtilities.convertPoint(c, e.point, p)
-      val vp = p.getViewPosition()
+      val vp = p.viewPosition
       vp.translate(pp.x - cp.x, pp.y - cp.y)
       (c as? JComponent)?.scrollRectToVisible(Rectangle(vp, p.getSize()))
-      pp.setLocation(cp)
+      pp.location = cp
     }
   }
 
   override fun mousePressed(e: MouseEvent) {
-    val c = e.getComponent()
-    c.setCursor(hndCursor)
+    val c = e.component
+    c.cursor = hndCursor
     val p = SwingUtilities.getUnwrappedParent(c)
     if (p is JViewport) {
-      pp.setLocation(SwingUtilities.convertPoint(c, e.getPoint(), p))
+      pp.location = SwingUtilities.convertPoint(c, e.point, p)
     }
   }
 
   override fun mouseReleased(e: MouseEvent) {
-    e.getComponent().setCursor(defCursor)
+    e.component.cursor = defCursor
   }
 }
 
-class MissingIcon : Icon {
+private class MissingIcon : Icon {
   override fun paintIcon(
     c: Component?,
     g: Graphics,
@@ -141,13 +144,13 @@ class MissingIcon : Icon {
     y: Int
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    val w = getIconWidth()
-    val h = getIconHeight()
+    val w = iconWidth
+    val h = iconHeight
     val gap = w / 5
-    g2.setPaint(Color.WHITE)
+    g2.paint = Color.WHITE
     g2.fillRect(x, y, w, h)
-    g2.setPaint(Color.RED)
-    g2.setStroke(BasicStroke(w / 8f))
+    g2.paint = Color.RED
+    g2.stroke = BasicStroke(w / 8f)
     g2.drawLine(x + gap, y + gap, x + w - gap, y + h - gap)
     g2.drawLine(x + gap, y + h - gap, x + w - gap, y + gap)
     g2.dispose()
@@ -168,7 +171,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

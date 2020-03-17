@@ -4,33 +4,34 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseWheelListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val icon = ImageIcon(javaClass.getResource("test.png"))
-    val zoom = ZoomImage(icon.getImage())
+fun makeUI(): Component {
+  val cl = Thread.currentThread().contextClassLoader
+  val icon = ImageIcon(cl.getResource("example/test.png"))
+  val zoom = ZoomImage(icon.image)
 
-    val button1 = JButton("Zoom In")
-    button1.addActionListener { zoom.changeScale(-5) }
+  val button1 = JButton("Zoom In")
+  button1.addActionListener { zoom.changeScale(-5) }
 
-    val button2 = JButton("Zoom Out")
-    button2.addActionListener { zoom.changeScale(5) }
+  val button2 = JButton("Zoom Out")
+  button2.addActionListener { zoom.changeScale(5) }
 
-    val button3 = JButton("Original size")
-    button3.addActionListener { zoom.initScale() }
+  val button3 = JButton("Original size")
+  button3.addActionListener { zoom.initScale() }
 
-    val box = Box.createHorizontalBox()
-    box.add(Box.createHorizontalGlue())
-    box.add(button1)
-    box.add(button2)
-    box.add(button3)
+  val box = Box.createHorizontalBox()
+  box.add(Box.createHorizontalGlue())
+  box.add(button1)
+  box.add(button2)
+  box.add(button3)
 
-    add(zoom)
-    add(box, BorderLayout.SOUTH)
-    setPreferredSize(Dimension(320, 240))
+  return JPanel(BorderLayout()).also {
+    it.add(zoom)
+    it.add(box, BorderLayout.SOUTH)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class ZoomImage(@field:Transient private val image: Image) : JPanel() {
+private class ZoomImage(@field:Transient private val image: Image) : JPanel() {
   @Transient
   private var handler: MouseWheelListener? = null
   private val iw = image.getWidth(this)
@@ -40,7 +41,7 @@ class ZoomImage(@field:Transient private val image: Image) : JPanel() {
   override fun updateUI() {
     removeMouseWheelListener(handler)
     super.updateUI()
-    handler = MouseWheelListener { e -> changeScale(e.getWheelRotation()) }
+    handler = MouseWheelListener { e -> changeScale(e.wheelRotation) }
     addMouseWheelListener(handler)
   }
 
@@ -74,7 +75,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
