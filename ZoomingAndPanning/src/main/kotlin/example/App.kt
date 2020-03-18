@@ -7,31 +7,34 @@ import java.awt.event.MouseWheelEvent
 import java.awt.geom.AffineTransform
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  @Transient
-  private var zoomAndPanHandler: ZoomAndPanHandler? = null
-  private val icon = ImageIcon(javaClass.getResource("CRW_3857_JFR.jpg"))
+fun makeUI(): Component {
+  val cl = Thread.currentThread().contextClassLoader
+  val icon = ImageIcon(cl.getResource("example/CRW_3857_JFR.jpg"))
+  val p = object : JPanel(BorderLayout()) {
+    var zoomAndPanHandler: ZoomAndPanHandler? = null
+    override fun updateUI() {
+      removeMouseListener(zoomAndPanHandler)
+      removeMouseMotionListener(zoomAndPanHandler)
+      removeMouseWheelListener(zoomAndPanHandler)
+      super.updateUI()
+      zoomAndPanHandler = ZoomAndPanHandler()
+      addMouseListener(zoomAndPanHandler)
+      addMouseMotionListener(zoomAndPanHandler)
+      addMouseWheelListener(zoomAndPanHandler)
+    }
 
-  override fun updateUI() {
-    removeMouseListener(zoomAndPanHandler)
-    removeMouseMotionListener(zoomAndPanHandler)
-    removeMouseWheelListener(zoomAndPanHandler)
-    super.updateUI()
-    zoomAndPanHandler = ZoomAndPanHandler()
-    addMouseListener(zoomAndPanHandler)
-    addMouseMotionListener(zoomAndPanHandler)
-    addMouseWheelListener(zoomAndPanHandler)
+    override fun getPreferredSize() = Dimension(320, 240)
+
+    override fun paintComponent(g: Graphics) {
+      super.paintComponent(g)
+      val g2 = g.create() as Graphics2D
+      g2.transform = zoomAndPanHandler?.coordAndZoomTransform
+      icon.paintIcon(this, g2, 0, 0)
+      g2.dispose()
+    }
   }
-
-  override fun getPreferredSize() = Dimension(320, 240)
-
-  override fun paintComponent(g: Graphics) {
-    super.paintComponent(g)
-    val g2 = g.create() as Graphics2D
-    g2.transform = zoomAndPanHandler?.coordAndZoomTransform
-    icon.paintIcon(this, g2, 0, 0)
-    g2.dispose()
-  }
+  p.preferredSize = Dimension(320, 240)
+  return p
 }
 
 private class ZoomAndPanHandler : MouseAdapter() {
@@ -99,7 +102,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
