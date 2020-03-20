@@ -5,139 +5,135 @@ import java.awt.geom.Rectangle2D
 import java.util.ArrayList
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val tabbedPane = JTabbedPane().also {
-      it.addTab("default remove", makeUI0())
-      it.addTab("clear + addElement", makeUI1())
-      it.addTab("addAll + remove", makeUI2())
-    }
-    add(tabbedPane)
-    setPreferredSize(Dimension(320, 240))
+fun makeUI() = JTabbedPane().also {
+  it.addTab("default remove", makeUI0())
+  it.addTab("clear + addElement", makeUI1())
+  it.addTab("addAll + remove", makeUI2())
+  it.preferredSize = Dimension(320, 240)
+}
+
+private fun makeUI0(): Component {
+  val model = DefaultListModel<String>()
+  for (i in 0..5000) {
+    model.addElement(i.toString())
   }
+  val leftList = makeList(model)
 
-  private fun makeUI0(): Component {
-    val model = DefaultListModel<String>()
-    for (i in 0..5000) {
-      model.addElement(i.toString())
-    }
-    val leftList = makeList(model)
+  val rightList = makeList(DefaultListModel<String>())
 
-    val rightList = makeList(DefaultListModel<String>())
+  val button1 = makeButton(">")
+  button1.addActionListener { move0(leftList, rightList) }
 
-    val button1 = makeButton(">")
-    button1.addActionListener { move0(leftList, rightList) }
+  val button2 = makeButton("<")
+  button2.addActionListener { move0(rightList, leftList) }
 
-    val button2 = makeButton("<")
-    button2.addActionListener { move0(rightList, leftList) }
+  return SpringLayoutUtil.makePanel(leftList, rightList, button1, button2)
+}
 
-    return SpringLayoutUtil.makePanel(leftList, rightList, button1, button2)
+private fun makeUI1(): Component {
+  val model = DefaultListModel<String>()
+  for (i in 10_000..30_000) {
+    model.addElement(i.toString())
   }
+  val leftList = makeList(model)
 
-  private fun makeUI1(): Component {
-    val model = DefaultListModel<String>()
-    for (i in 10_000..30_000) {
-      model.addElement(i.toString())
-    }
-    val leftList = makeList(model)
+  val rightList = makeList(DefaultListModel<String>())
 
-    val rightList = makeList(DefaultListModel<String>())
+  val button1 = makeButton(">")
+  button1.addActionListener { move1(leftList, rightList) }
 
-    val button1 = makeButton(">")
-    button1.addActionListener { move1(leftList, rightList) }
+  val button2 = makeButton("<")
+  button2.addActionListener { move1(rightList, leftList) }
 
-    val button2 = makeButton("<")
-    button2.addActionListener { move1(rightList, leftList) }
+  return SpringLayoutUtil.makePanel(leftList, rightList, button1, button2)
+}
 
-    return SpringLayoutUtil.makePanel(leftList, rightList, button1, button2)
+private fun makeUI2(): Component {
+  val model = ArrayListModel<String>()
+  for (i in 30_000..50_000) {
+    model.add(i.toString())
   }
+  val leftList = makeList(model)
 
-  private fun makeUI2(): Component {
-    val model = ArrayListModel<String>()
-    for (i in 30_000..50_000) {
-      model.add(i.toString())
+  val rightList = makeList(ArrayListModel<String>())
+
+  val button1 = makeButton(">")
+  button1.addActionListener { move2(leftList, rightList) }
+
+  val button2 = makeButton("<")
+  button2.addActionListener { move2(rightList, leftList) }
+
+  return SpringLayoutUtil.makePanel(leftList, rightList, button1, button2)
+}
+
+private fun <E> move0(from: JList<E>, to: JList<E>) {
+  val selectedIndices = from.selectedIndices
+  val fromModel = from.model
+  val toModel = to.model
+  if (selectedIndices.isNotEmpty() && fromModel is DefaultListModel<E> && toModel is DefaultListModel<E>) {
+    for (i in selectedIndices) {
+      toModel.addElement(fromModel[i])
     }
-    val leftList = makeList(model)
-
-    val rightList = makeList(ArrayListModel<String>())
-
-    val button1 = makeButton(">")
-    button1.addActionListener { move2(leftList, rightList) }
-
-    val button2 = makeButton("<")
-    button2.addActionListener { move2(rightList, leftList) }
-
-    return SpringLayoutUtil.makePanel(leftList, rightList, button1, button2)
-  }
-
-  private fun <E> move0(from: JList<E>, to: JList<E>) {
-    val selectedIndices = from.getSelectedIndices()
-    val fromModel = from.getModel()
-    val toModel = to.getModel()
-    if (selectedIndices.isNotEmpty() && fromModel is DefaultListModel<E> && toModel is DefaultListModel<E>) {
-      for (i in selectedIndices) {
-        toModel.addElement(fromModel[i])
-      }
-      for (i in selectedIndices.indices.reversed()) {
-        fromModel.remove(selectedIndices[i])
-      }
+    for (i in selectedIndices.indices.reversed()) {
+      fromModel.remove(selectedIndices[i])
     }
-  }
-
-  private fun <E> move1(from: JList<E>, to: JList<E>) {
-    val sm = from.getSelectionModel()
-    val selectedIndices = from.getSelectedIndices()
-
-    val fromModel = from.getModel() as? DefaultListModel<E> ?: return
-    val toModel = to.getModel() as? DefaultListModel<E> ?: return
-    val unselectedValues = ArrayList<E>()
-    for (i in 0 until fromModel.getSize()) {
-      if (!sm.isSelectedIndex(i)) {
-        unselectedValues.add(fromModel.getElementAt(i))
-      }
-    }
-    if (selectedIndices.isNotEmpty()) {
-      for (i in selectedIndices) {
-        toModel.addElement(fromModel.get(i))
-      }
-      val model = DefaultListModel<E>()
-      unselectedValues.forEach { model.addElement(it) }
-      from.setModel(model)
-    }
-  }
-
-  private fun <E> move2(from: JList<E>, to: JList<E>) {
-    val selectedIndices = from.getSelectedIndices()
-    if (selectedIndices.isNotEmpty()) {
-      (to.getModel() as? ArrayListModel<E>)?.addAll(from.getSelectedValuesList())
-      (from.getModel() as? ArrayListModel<E>)?.remove(selectedIndices)
-    }
-  }
-
-  private fun <E> makeList(model: ListModel<E>): JList<E> {
-    val list = JList<E>(model)
-    val popup = JPopupMenu()
-    popup.add("reverse").addActionListener {
-      val sm = list.getSelectionModel()
-      for (i in 0 until list.getModel().getSize()) {
-        if (sm.isSelectedIndex(i)) {
-          sm.removeSelectionInterval(i, i)
-        } else {
-          sm.addSelectionInterval(i, i)
-        }
-      }
-    }
-    list.setComponentPopupMenu(popup)
-    return list
-  }
-
-  private fun makeButton(title: String) = JButton(title).also {
-    it.setFocusable(false)
-    it.setBorder(BorderFactory.createEmptyBorder(2, 8, 2, 8))
   }
 }
 
-internal class ArrayListModel<E> : AbstractListModel<E>() {
+private fun <E> move1(from: JList<E>, to: JList<E>) {
+  val sm = from.selectionModel
+  val selectedIndices = from.selectedIndices
+
+  val fromModel = from.model as? DefaultListModel<E> ?: return
+  val toModel = to.model as? DefaultListModel<E> ?: return
+  val unselectedValues = ArrayList<E>()
+  for (i in 0 until fromModel.size) {
+    if (!sm.isSelectedIndex(i)) {
+      unselectedValues.add(fromModel.getElementAt(i))
+    }
+  }
+  if (selectedIndices.isNotEmpty()) {
+    for (i in selectedIndices) {
+      toModel.addElement(fromModel.get(i))
+    }
+    val model = DefaultListModel<E>()
+    unselectedValues.forEach { model.addElement(it) }
+    from.model = model
+  }
+}
+
+private fun <E> move2(from: JList<E>, to: JList<E>) {
+  val selectedIndices = from.selectedIndices
+  if (selectedIndices.isNotEmpty()) {
+    (to.model as? ArrayListModel<E>)?.addAll(from.selectedValuesList)
+    (from.model as? ArrayListModel<E>)?.remove(selectedIndices)
+  }
+}
+
+private fun <E> makeList(model: ListModel<E>): JList<E> {
+  val list = JList(model)
+  val popup = JPopupMenu()
+  popup.add("reverse").addActionListener {
+    val sm = list.selectionModel
+    for (i in 0 until list.model.size) {
+      if (sm.isSelectedIndex(i)) {
+        sm.removeSelectionInterval(i, i)
+      } else {
+        sm.addSelectionInterval(i, i)
+      }
+    }
+  }
+  list.componentPopupMenu = popup
+  return list
+}
+
+private fun makeButton(title: String) = JButton(title).also {
+  it.isFocusable = false
+  it.border = BorderFactory.createEmptyBorder(2, 8, 2, 8)
+}
+
+
+class ArrayListModel<E> : AbstractListModel<E>() {
   private val delegate = ArrayList<E>()
 
   fun add(element: E) {
@@ -151,12 +147,12 @@ internal class ArrayListModel<E> : AbstractListModel<E>() {
     fireIntervalAdded(this, 0, delegate.size)
   }
 
-  fun remove(index: Int): E {
-    val rv = delegate[index]
-    delegate.removeAt(index)
-    fireIntervalRemoved(this, index, index)
-    return rv
-  }
+  // fun remove(index: Int): E {
+  //   val rv = delegate[index]
+  //   delegate.removeAt(index)
+  //   fireIntervalRemoved(this, index, index)
+  //   return rv
+  // }
 
   fun remove(selectedIndices: IntArray) {
     if (selectedIndices.isNotEmpty()) {
@@ -173,23 +169,23 @@ internal class ArrayListModel<E> : AbstractListModel<E>() {
   override fun getSize() = delegate.size
 }
 
-internal object SpringLayoutUtil {
+object SpringLayoutUtil {
   private fun setScaleAndAdd(parent: Container, layout: SpringLayout, child: Component, r: Rectangle2D.Float) {
-    val panelw = layout.getConstraint(SpringLayout.WIDTH, parent)
-    val panelh = layout.getConstraint(SpringLayout.HEIGHT, parent)
+    val pnlWidth = layout.getConstraint(SpringLayout.WIDTH, parent)
+    val pnlHeight = layout.getConstraint(SpringLayout.HEIGHT, parent)
 
     val c = layout.getConstraints(child)
-    c.setX(Spring.scale(panelw, r.x))
-    c.setY(Spring.scale(panelh, r.y))
-    c.setWidth(Spring.scale(panelw, r.width))
-    c.setHeight(Spring.scale(panelh, r.height))
+    c.x = Spring.scale(pnlWidth, r.x)
+    c.y = Spring.scale(pnlHeight, r.y)
+    c.width = Spring.scale(pnlWidth, r.width)
+    c.height = Spring.scale(pnlHeight, r.height)
 
     parent.add(child)
   }
 
   fun makePanel(leftList: JList<*>, rightList: JList<*>, l2rButton: JButton, r2lButton: JButton): Component {
     val box = Box.createVerticalBox()
-    box.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2))
+    box.border = BorderFactory.createEmptyBorder(0, 2, 0, 2)
     box.add(Box.createVerticalGlue())
     box.add(l2rButton)
     box.add(Box.createVerticalStrut(20))
@@ -221,7 +217,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
