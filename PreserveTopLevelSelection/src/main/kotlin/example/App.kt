@@ -3,78 +3,76 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel() {
-  init {
-    val key = "Menu.preserveTopLevelSelection"
-
-    val b = UIManager.getBoolean(key)
-    println("$key: $b")
-    val preserveTopLevelSelectionCheck = object : JCheckBox(key, b) {
-      override fun updateUI() {
-        super.updateUI()
-        setSelected(UIManager.getLookAndFeelDefaults().getBoolean(key))
-        UIManager.put(key, isSelected())
-      }
+fun makeUI(): Component {
+  val key = "Menu.preserveTopLevelSelection"
+  val b = UIManager.getBoolean(key)
+  println("$key: $b")
+  val preserveTopLevelSelectionCheck = object : JCheckBox(key, b) {
+    override fun updateUI() {
+      super.updateUI()
+      isSelected = UIManager.getLookAndFeelDefaults().getBoolean(key)
+      UIManager.put(key, isSelected)
     }
-    preserveTopLevelSelectionCheck.addActionListener { e ->
-      val flg = (e.getSource() as? JCheckBox)?.isSelected() ?: false
-      UIManager.put(key, flg)
-    }
+  }
+  preserveTopLevelSelectionCheck.addActionListener { e ->
+    UIManager.put(key, (e.source as? JCheckBox)?.isSelected == true)
+  }
+  val p = JPanel()
+  p.add(preserveTopLevelSelectionCheck)
+  p.preferredSize = Dimension(320, 240)
 
-    EventQueue.invokeLater { getRootPane().setJMenuBar(makeMenuBar()) }
-    add(preserveTopLevelSelectionCheck)
-    setPreferredSize(Dimension(320, 240))
+  EventQueue.invokeLater { p.rootPane.jMenuBar = makeMenuBar() }
+  return p
+}
+
+private fun makeMenuBar() = JMenuBar().also {
+  it.add(JMenu("File")).also { menu ->
+    menu.add("Open")
+    menu.add("Save")
+    menu.add("Exit")
   }
 
-  private fun makeMenuBar() = JMenuBar().also {
-    it.add(JMenu("File")).also { menu ->
-      menu.add("Open")
-      menu.add("Save")
-      menu.add("Exit")
-    }
-
-    it.add(JMenu("Edit")).also { menu ->
-      menu.add("Undo")
-      menu.add("Redo")
-      menu.addSeparator()
-      menu.add("Cut")
-      menu.add("Copy")
-      menu.add("Paste")
-      menu.add("Delete")
-    }
-
-    it.add(JMenu("Test")).also { menu ->
-      menu.add("JMenuItem1")
-      menu.add("JMenuItem2")
-      menu.add(JMenu("JMenu").also { sub ->
-        sub.add("JMenuItem4")
-        sub.add("JMenuItem5")
-      })
-      menu.add("JMenuItem3")
-    }
-
-    it.add(LookAndFeelUtil.createLookAndFeelMenu())
+  it.add(JMenu("Edit")).also { menu ->
+    menu.add("Undo")
+    menu.add("Redo")
+    menu.addSeparator()
+    menu.add("Cut")
+    menu.add("Copy")
+    menu.add("Paste")
+    menu.add("Delete")
   }
+
+  it.add(JMenu("Test")).also { menu ->
+    menu.add("JMenuItem1")
+    menu.add("JMenuItem2")
+    menu.add(JMenu("JMenu").also { sub ->
+      sub.add("JMenuItem4")
+      sub.add("JMenuItem5")
+    })
+    menu.add("JMenuItem3")
+  }
+
+  it.add(LookAndFeelUtil.createLookAndFeelMenu())
 }
 
 // @see https://java.net/projects/swingset3/sources/svn/content/trunk/SwingSet3/src/com/sun/swingset3/SwingSet3.java
-internal object LookAndFeelUtil {
-  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.getName()
+private object LookAndFeelUtil {
+  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
   fun createLookAndFeelMenu() = JMenu("LookAndFeel").also {
     val lafRadioGroup = ButtonGroup()
     for (lafInfo in UIManager.getInstalledLookAndFeels()) {
-      it.add(createLookAndFeelItem(lafInfo.getName(), lafInfo.getClassName(), lafRadioGroup))
+      it.add(createLookAndFeelItem(lafInfo.name, lafInfo.className, lafRadioGroup))
     }
   }
 
   private fun createLookAndFeelItem(lafName: String, lafClassName: String, lafRadioGroup: ButtonGroup): JMenuItem {
     val lafItem = JRadioButtonMenuItem(lafName, lafClassName == lookAndFeel)
-    lafItem.setActionCommand(lafClassName)
-    lafItem.setHideActionText(true)
+    lafItem.actionCommand = lafClassName
+    lafItem.hideActionText = true
     lafItem.addActionListener {
-      val m = lafRadioGroup.getSelection()
+      val m = lafRadioGroup.selection
       runCatching {
-        setLookAndFeel(m.getActionCommand())
+        setLookAndFeel(m.actionCommand)
       }.onFailure {
         it.printStackTrace()
         Toolkit.getDefaultToolkit().beep()
@@ -105,7 +103,7 @@ internal object LookAndFeelUtil {
       SwingUtilities.updateComponentTreeUI(window)
     }
   }
-} /* Singleton */
+}
 
 fun main() {
   EventQueue.invokeLater {
@@ -117,7 +115,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
