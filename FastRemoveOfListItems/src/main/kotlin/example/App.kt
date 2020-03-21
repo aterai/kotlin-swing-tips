@@ -132,7 +132,6 @@ private fun makeButton(title: String) = JButton(title).also {
   it.border = BorderFactory.createEmptyBorder(2, 8, 2, 8)
 }
 
-
 class ArrayListModel<E> : AbstractListModel<E>() {
   private val delegate = ArrayList<E>()
 
