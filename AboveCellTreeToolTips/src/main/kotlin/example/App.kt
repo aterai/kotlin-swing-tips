@@ -7,82 +7,80 @@ import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreeModel
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val tree0 = object : JTree(DefaultTreeModel(makeTreeRoot())) {
-      override fun updateUI() {
-        setCellRenderer(null)
-        super.updateUI()
-        // setRowHeight(24)
-        val renderer = getCellRenderer()
-        setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-          val c = renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
-          (c as? JLabel)?.setToolTipText(value?.toString())
-          return@setCellRenderer c
-        }
+fun makeUI(): Component {
+  val tree0 = object : JTree(DefaultTreeModel(makeTreeRoot())) {
+    override fun updateUI() {
+      setCellRenderer(null)
+      super.updateUI()
+      // setRowHeight(24)
+      val renderer = getCellRenderer()
+      setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
+        val c = renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+        (c as? JLabel)?.toolTipText = value?.toString()
+        return@setCellRenderer c
       }
     }
-    ToolTipManager.sharedInstance().registerComponent(tree0)
-
-    val tree1 = TooltipTree(DefaultTreeModel(makeTreeRoot()))
-    ToolTipManager.sharedInstance().registerComponent(tree1)
-
-    val p = JPanel(GridLayout(2, 1))
-    p.add(makeTitledPanel("Default location", tree0))
-    p.add(makeTitledPanel("Draw directly above the cell", tree1))
-
-    add(JSplitPane().also {
-      it.setResizeWeight(.5)
-      it.setLeftComponent(p)
-      it.setRightComponent(JLabel("dummy panel"))
-    })
-    setPreferredSize(Dimension(320, 240))
   }
+  ToolTipManager.sharedInstance().registerComponent(tree0)
 
-  private fun makeTreeRoot(): DefaultMutableTreeNode {
-    val set4 = DefaultMutableTreeNode("Set 00000004")
-    set4.add(DefaultMutableTreeNode("222222111111111111111122222"))
-    set4.add(DefaultMutableTreeNode("111111111111111"))
-    set4.add(DefaultMutableTreeNode("2222222222222"))
-    set4.add(DefaultMutableTreeNode("3333333"))
+  val tree1 = TooltipTree(DefaultTreeModel(makeTreeRoot()))
+  ToolTipManager.sharedInstance().registerComponent(tree1)
 
-    val set1 = DefaultMutableTreeNode("Set 00000001")
-    set1.add(DefaultMutableTreeNode("33333333333333333333333333333333333"))
-    set1.add(DefaultMutableTreeNode("111111111"))
-    set1.add(DefaultMutableTreeNode("22222222222"))
-    set1.add(set4)
-    set1.add(DefaultMutableTreeNode("222222"))
-    set1.add(DefaultMutableTreeNode("222222222"))
+  val p = JPanel(GridLayout(2, 1))
+  p.add(makeTitledPanel("Default location", tree0))
+  p.add(makeTitledPanel("Draw directly above the cell", tree1))
 
-    val set2 = DefaultMutableTreeNode("Set 00000002")
-    set2.add(DefaultMutableTreeNode("5555555555"))
-    set2.add(DefaultMutableTreeNode("6666666666666"))
-
-    val set3 = DefaultMutableTreeNode("Set 00000003")
-    set3.add(DefaultMutableTreeNode("7777777777"))
-    set3.add(DefaultMutableTreeNode("8888888888888"))
-    set3.add(DefaultMutableTreeNode("9999999"))
-
-    val root = DefaultMutableTreeNode("Root")
-    root.add(DefaultMutableTreeNode("00000000000000000000000000000"))
-    root.add(set3)
-    root.add(DefaultMutableTreeNode("111111111111111111111111111"))
-    root.add(set1)
-    root.add(set2)
-    root.add(DefaultMutableTreeNode("22222222222222222222222222222222222"))
-    root.add(DefaultMutableTreeNode("33333333333333333333333"))
-    return root
-  }
-
-  private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
-    val scroll = JScrollPane(c)
-    scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
-    it.setBorder(BorderFactory.createTitledBorder(title))
-    it.add(scroll)
+  return JSplitPane().also {
+    it.resizeWeight = .5
+    it.leftComponent = p
+    it.rightComponent = JLabel("dummy panel")
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class TooltipTree(model: TreeModel) : JTree(model) {
+private fun makeTreeRoot(): DefaultMutableTreeNode {
+  val set4 = DefaultMutableTreeNode("Set 00000004")
+  set4.add(DefaultMutableTreeNode("222222111111111111111122222"))
+  set4.add(DefaultMutableTreeNode("111111111111111"))
+  set4.add(DefaultMutableTreeNode("2222222222222"))
+  set4.add(DefaultMutableTreeNode("3333333"))
+
+  val set1 = DefaultMutableTreeNode("Set 00000001")
+  set1.add(DefaultMutableTreeNode("33333333333333333333333333333333333"))
+  set1.add(DefaultMutableTreeNode("111111111"))
+  set1.add(DefaultMutableTreeNode("22222222222"))
+  set1.add(set4)
+  set1.add(DefaultMutableTreeNode("222222"))
+  set1.add(DefaultMutableTreeNode("222222222"))
+
+  val set2 = DefaultMutableTreeNode("Set 00000002")
+  set2.add(DefaultMutableTreeNode("5555555555"))
+  set2.add(DefaultMutableTreeNode("6666666666666"))
+
+  val set3 = DefaultMutableTreeNode("Set 00000003")
+  set3.add(DefaultMutableTreeNode("7777777777"))
+  set3.add(DefaultMutableTreeNode("8888888888888"))
+  set3.add(DefaultMutableTreeNode("9999999"))
+
+  val root = DefaultMutableTreeNode("Root")
+  root.add(DefaultMutableTreeNode("00000000000000000000000000000"))
+  root.add(set3)
+  root.add(DefaultMutableTreeNode("111111111111111111111111111"))
+  root.add(set1)
+  root.add(set2)
+  root.add(DefaultMutableTreeNode("22222222222222222222222222222222222"))
+  root.add(DefaultMutableTreeNode("33333333333333333333333"))
+  return root
+}
+
+private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
+  val scroll = JScrollPane(c)
+  scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+  it.border = BorderFactory.createTitledBorder(title)
+  it.add(scroll)
+}
+
+private class TooltipTree(model: TreeModel) : JTree(model) {
   private val label = object : JLabel() {
     override fun getPreferredSize() = super.getPreferredSize()?.also {
       it.height = getRowHeight()
@@ -96,31 +94,27 @@ class TooltipTree(model: TreeModel) : JTree(model) {
     val renderer = getCellRenderer()
     setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
       val c = renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
-      (c as? JLabel)?.setToolTipText(value?.toString())
+      (c as? JLabel)?.toolTipText = value?.toString()
       return@setCellRenderer c
     }
   }
 
   override fun getToolTipLocation(e: MouseEvent): Point? {
-    val p = e.getPoint()
+    val p = e.point
     val i = getRowForLocation(p.x, p.y)
     val cellBounds = getRowBounds(i)
     if (i >= 0 && cellBounds?.contains(p.x, p.y) == true) {
       val tsm = getSelectionModel()
-      val node = getPathForRow(i).getLastPathComponent()
-      // println(node)
-      val hasFocus = hasFocus() && tsm.getLeadSelectionRow() == i
-      val isLeaf = getModel().isLeaf(node)
+      val node = getPathForRow(i).lastPathComponent
+      val hasFocus = hasFocus() && tsm.leadSelectionRow == i
+      val isLeaf = model.isLeaf(node)
       val r = getCellRenderer()
       val tcr = r.getTreeCellRendererComponent(this, node, isRowSelected(i), isExpanded(i), isLeaf, i, hasFocus)
-      if ((tcr as? JComponent)?.getToolTipText() != null) {
-        // println(((JComponent) tcr).getToolTipText())
-        val pt = cellBounds.getLocation()
-        // label.setBorder(BorderFactory.createLineBorder(Color.RED))
-        val ins = label.getInsets()
+      if ((tcr as? JComponent)?.toolTipText != null) {
+        val pt = cellBounds.location
+        val ins = label.insets
         pt.translate(-ins.left, -ins.top)
-        label.setIcon(RendererIcon(tcr, cellBounds))
-        // println(pt)
+        label.icon = RendererIcon(tcr, cellBounds)
         return pt
       }
     }
@@ -129,18 +123,17 @@ class TooltipTree(model: TreeModel) : JTree(model) {
 
   override fun createToolTip(): JToolTip {
     val tip = object : JToolTip() {
-      override fun getPreferredSize() = label.getPreferredSize()
+      override fun getPreferredSize() = label.preferredSize
     }
-    // println("createToolTip")
-    tip.setBorder(BorderFactory.createEmptyBorder())
-    tip.setLayout(BorderLayout())
-    tip.setComponent(this)
+    tip.border = BorderFactory.createEmptyBorder()
+    tip.layout = BorderLayout()
+    tip.component = this
     tip.add(label)
     return tip
   }
 }
 
-class RendererIcon(private val renderer: Component, private val rect: Rectangle) : Icon {
+private class RendererIcon(private val renderer: Component, private val rect: Rectangle) : Icon {
   init {
     rect.setLocation(0, 0)
   }
@@ -155,9 +148,9 @@ class RendererIcon(private val renderer: Component, private val rect: Rectangle)
     }
   }
 
-  override fun getIconWidth() = renderer.getPreferredSize().width
+  override fun getIconWidth() = renderer.preferredSize.width
 
-  override fun getIconHeight() = renderer.getPreferredSize().height
+  override fun getIconHeight() = renderer.preferredSize.height
 }
 
 fun main() {
@@ -170,7 +163,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
