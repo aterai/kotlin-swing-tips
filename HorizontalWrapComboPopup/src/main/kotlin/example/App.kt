@@ -38,7 +38,6 @@ fun makeUI(): Component {
   }
 }
 
-
 private fun makeComboBox1(model: ComboBoxModel<Icon>, proto: Icon): JComboBox<Icon> {
   return object : JComboBox<Icon>(model) {
     override fun getPreferredSize(): Dimension {
