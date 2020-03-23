@@ -6,22 +6,10 @@ import java.awt.event.KeyEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
+import javax.swing.table.TableModel
 
 fun makeUI(): Component {
-  val columnNames = arrayOf("A", "B", "C")
-  val data = arrayOf(
-    arrayOf("0, 0", "0, 1", "0, 2"),
-    arrayOf("1, 0", "1, 1", "1, 2"),
-    arrayOf("2, 0", "2, 1", "2, 2"),
-    arrayOf("3, 0", "3, 1", "3, 2"),
-    arrayOf("4, 0", "4, 1", "4, 2"),
-    arrayOf("5, 0", "5, 1", "5, 2"),
-    arrayOf("6, 0", "6, 1", "6, 2"),
-    arrayOf("7, 0", "7, 1", "7, 2"),
-    arrayOf("8, 0", "8, 1", "8, 2"),
-    arrayOf("9, 0", "9, 1", "9, 2")
-  )
-  val model = DefaultTableModel(data, columnNames)
+  val model = makeModel()
   val table = object : JTable(model) {
     private val evenColor = Color(0xFA_FA_FA)
     override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
@@ -37,6 +25,7 @@ fun makeUI(): Component {
     }
   }
   table.cellSelectionEnabled = true
+
   val actionMapKey = "clear-selection"
   table.actionMap.put(actionMapKey, object : AbstractAction(actionMapKey) {
     override fun actionPerformed(e: ActionEvent) {
@@ -90,6 +79,23 @@ fun makeUI(): Component {
     it.add(JScrollPane(table))
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+private fun makeModel(): TableModel {
+  val columnNames = arrayOf("A", "B", "C")
+  val data = arrayOf(
+    arrayOf("0, 0", "0, 1", "0, 2"),
+    arrayOf("1, 0", "1, 1", "1, 2"),
+    arrayOf("2, 0", "2, 1", "2, 2"),
+    arrayOf("3, 0", "3, 1", "3, 2"),
+    arrayOf("4, 0", "4, 1", "4, 2"),
+    arrayOf("5, 0", "5, 1", "5, 2"),
+    arrayOf("6, 0", "6, 1", "6, 2"),
+    arrayOf("7, 0", "7, 1", "7, 2"),
+    arrayOf("8, 0", "8, 1", "8, 2"),
+    arrayOf("9, 0", "9, 1", "9, 2")
+  )
+  return DefaultTableModel(data, columnNames)
 }
 
 fun main() {
