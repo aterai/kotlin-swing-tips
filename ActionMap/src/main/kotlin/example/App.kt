@@ -7,12 +7,12 @@ import javax.swing.text.DefaultEditorKit
 
 fun makeUI(): Component {
   val pf1 = JTextField(25)
-  pf1.setActionMap(pf1.getActionMap().also {
+  pf1.actionMap = pf1.actionMap.also {
     val beep = DefaultEditorKit.BeepAction()
     it.put(DefaultEditorKit.cutAction, beep)
     it.put(DefaultEditorKit.copyAction, beep)
     it.put(DefaultEditorKit.pasteAction, beep)
-  })
+  }
 
   val pf2 = object : JTextField() {
     override fun copy() {
@@ -23,14 +23,14 @@ fun makeUI(): Component {
       UIManager.getLookAndFeel().provideErrorFeedback(this)
     }
   }
-  pf2.setActionMap(pf2.getActionMap().also {
+  pf2.actionMap = pf2.actionMap.also {
     it.put(DefaultEditorKit.pasteAction, object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
-        val c = e.getSource() as? JComponent ?: return@actionPerformed
+        val c = e.source as? JComponent ?: return
         EventQueue.invokeLater {
           Toolkit.getDefaultToolkit().beep()
           JOptionPane.showMessageDialog(
-            c.getRootPane(),
+            c.rootPane,
             "paste is disabled",
             "title",
             JOptionPane.ERROR_MESSAGE
@@ -38,10 +38,10 @@ fun makeUI(): Component {
         }
       }
     })
-  })
+  }
 
   val box = Box.createVerticalBox()
-  box.setBorder(BorderFactory.createTitledBorder("E-mail Address"))
+  box.border = BorderFactory.createTitledBorder("E-mail Address")
   box.add(pf1)
   box.add(Box.createVerticalStrut(5))
   box.add(JLabel("Please enter your email address twice for confirmation:"))
@@ -49,10 +49,10 @@ fun makeUI(): Component {
   box.add(Box.createVerticalStrut(5))
 
   val p = JPanel(BorderLayout())
-  p.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
+  p.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   p.add(box, BorderLayout.NORTH)
   p.add(JScrollPane(JTextArea("Dummy")))
-  p.setPreferredSize(Dimension(320, 240))
+  p.preferredSize = Dimension(320, 240)
   return p
 }
 
