@@ -8,23 +8,22 @@ import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreePath
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val tree = JTree()
-    tree.setComponentPopupMenu(TreePopupMenu())
-    add(JScrollPane(tree))
-    setPreferredSize(Dimension(320, 240))
+fun makeUI(): Component {
+  val tree = JTree()
+  tree.componentPopupMenu = TreePopupMenu()
+  return JScrollPane(tree).also {
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class TreePopupMenu : JPopupMenu() {
+private class TreePopupMenu : JPopupMenu() {
   private var path: TreePath? = null
 
   override fun show(c: Component?, x: Int, y: Int) {
     (c as? JTree)?.also { tree ->
       path = tree.getPathForLocation(x, y)
       path?.also { treePath ->
-        c.setSelectionPath(treePath)
+        c.selectionPath = treePath
         super.show(c, x, y)
       }
     }
@@ -43,9 +42,9 @@ class TreePopupMenu : JPopupMenu() {
       }
     }
     add("add").addActionListener {
-      (getInvoker() as? JTree)?.also { tree ->
-        (tree.getModel() as? DefaultTreeModel)?.also { model ->
-          (path?.getLastPathComponent() as? DefaultMutableTreeNode)?.also { parent ->
+      (invoker as? JTree)?.also { tree ->
+        (tree.model as? DefaultTreeModel)?.also { model ->
+          (path?.lastPathComponent as? DefaultMutableTreeNode)?.also { parent ->
             val child = DefaultMutableTreeNode("New node")
             model.insertNodeInto(child, parent, parent.childCount)
             tree.scrollPathToVisible(TreePath(child.path))
@@ -54,47 +53,47 @@ class TreePopupMenu : JPopupMenu() {
       }
     }
     add("add & reload").addActionListener {
-      (getInvoker() as? JTree)?.also { tree ->
-        (tree.getModel() as? DefaultTreeModel)?.also { model ->
-          (path?.getLastPathComponent() as? DefaultMutableTreeNode)?.also { parent ->
+      (invoker as? JTree)?.also { tree ->
+        (tree.model as? DefaultTreeModel)?.also { model ->
+          (path?.lastPathComponent as? DefaultMutableTreeNode)?.also { parent ->
             val child = DefaultMutableTreeNode("New node")
             parent.add(child)
             model.reload(parent)
-            tree.scrollPathToVisible(TreePath(child.getPath()))
+            tree.scrollPathToVisible(TreePath(child.path))
           }
         }
       }
     }
     add("edit").addActionListener {
-      val node = path?.getLastPathComponent()
+      val node = path?.lastPathComponent
       if (node !is DefaultMutableTreeNode) {
         return@addActionListener
       }
-      textField.setText(node.getUserObject().toString())
-      (getInvoker() as? JTree)?.also { tree ->
+      textField.text = node.userObject.toString()
+      (invoker as? JTree)?.also { tree ->
         val ret = JOptionPane.showConfirmDialog(
           tree, textField, "edit", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
         )
         if (ret == JOptionPane.OK_OPTION) {
-          tree.getModel().valueForPathChanged(path, textField.getText())
+          tree.model.valueForPathChanged(path, textField.text)
         }
       }
     }
     addSeparator()
     add("remove").addActionListener {
-      val node = path?.getLastPathComponent() as? DefaultMutableTreeNode
-      if (node != null && !node.isRoot()) {
-        (getInvoker() as? JTree)?.also { tree ->
-          (tree.getModel() as? DefaultTreeModel)?.removeNodeFromParent(node)
+      val node = path?.lastPathComponent as? DefaultMutableTreeNode
+      if (node != null && !node.isRoot) {
+        (invoker as? JTree)?.also { tree ->
+          (tree.model as? DefaultTreeModel)?.removeNodeFromParent(node)
         }
       }
     }
   }
 }
 
-class FocusAncestorListener : AncestorListener {
+private class FocusAncestorListener : AncestorListener {
   override fun ancestorAdded(e: AncestorEvent) {
-    e.getComponent().requestFocusInWindow()
+    e.component.requestFocusInWindow()
   }
 
   override fun ancestorMoved(e: AncestorEvent) {
@@ -116,7 +115,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
