@@ -8,38 +8,37 @@ import java.awt.geom.RoundRectangle2D
 import java.awt.image.BufferedImage
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
+fun makeUI(): Component {
+  val button1 = RadialGradientButton("JButton JButton JButton JButton")
+  button1.foreground = Color.WHITE
 
-    val button1 = RadialGradientButton("JButton JButton JButton JButton")
-    button1.setForeground(Color.WHITE)
+  val button2 = RadialGradientPaintButton("JButton JButton JButton JButton")
+  button2.foreground = Color.WHITE
 
-    val button2 = RadialGradientPaintButton("JButton JButton JButton JButton")
-    button2.setForeground(Color.WHITE)
+  val p = object : JPanel(FlowLayout(FlowLayout.CENTER, 20, 50)) {
+    // private val texture = TextureUtils.createCheckerTexture(16, Color(-0x11cdcdce, true))
+    // private val texture = TextureUtils.createCheckerTexture(16, Color(0xEE_32_32_32.toInt(), true))
+    private val texture = TextureUtils.createCheckerTexture(16, Color(0x32, 0x32, 0x32, 0xEE))
 
-    val p = object : JPanel(FlowLayout(FlowLayout.CENTER, 20, 50)) {
-      // private val texture = TextureUtils.createCheckerTexture(16, Color(-0x11cdcdce, true))
-      // private val texture = TextureUtils.createCheckerTexture(16, Color(0xEE_32_32_32.toInt(), true))
-      private val texture = TextureUtils.createCheckerTexture(16, Color(0x32, 0x32, 0x32, 0xEE))
-
-      override fun paintComponent(g: Graphics) {
-        val g2 = g.create() as Graphics2D
-        g2.setPaint(texture)
-        g2.fillRect(0, 0, getWidth(), getHeight())
-        g2.dispose()
-        super.paintComponent(g)
-      }
+    override fun paintComponent(g: Graphics) {
+      val g2 = g.create() as? Graphics2D ?: return
+      g2.paint = texture
+      g2.fillRect(0, 0, width, height)
+      g2.dispose()
+      super.paintComponent(g)
     }
-    p.setOpaque(false)
-    p.add(button1)
-    p.add(button2)
+  }
+  p.isOpaque = false
+  p.add(button1)
+  p.add(button2)
 
-    add(p)
-    setPreferredSize(Dimension(320, 240))
+  return JPanel(BorderLayout()).also {
+    it.add(p)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-internal class RadialGradientButton(title: String) : JButton(title) {
+private class RadialGradientButton(title: String) : JButton(title) {
   private val timer1 = Timer(10, null)
   private val timer2 = Timer(10, null)
   private val pt = Point()
@@ -59,26 +58,27 @@ internal class RadialGradientButton(title: String) : JButton(title) {
     val listener = object : MouseAdapter() {
       override fun mouseEntered(e: MouseEvent) {
         timer2.stop()
-        if (!timer1.isRunning()) {
+        if (!timer1.isRunning) {
           timer1.start()
         }
       }
 
       override fun mouseExited(e: MouseEvent) {
         timer1.stop()
-        if (!timer2.isRunning()) {
+        if (!timer2.isRunning) {
           timer2.start()
         }
       }
 
       override fun mouseMoved(e: MouseEvent) {
-        pt.setLocation(e.getPoint())
+        pt.location = e.point
         repaint()
       }
 
       override fun mouseDragged(e: MouseEvent) {
-        pt.setLocation(e.getPoint())
-        repaint()
+        mouseMoved(e)
+        // pt.location = e.point
+        // repaint()
       }
     }
     addMouseListener(listener)
@@ -87,18 +87,18 @@ internal class RadialGradientButton(title: String) : JButton(title) {
 
   override fun updateUI() {
     super.updateUI()
-    setOpaque(false)
-    setContentAreaFilled(false)
-    setFocusPainted(false)
-    setBackground(Color(0xF7_23_59))
-    setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10))
+    isOpaque = false
+    isContentAreaFilled = false
+    isFocusPainted = false
+    background = Color(0xF7_23_59)
+    border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
     update()
   }
 
   private fun update() {
-    if (getBounds() != base) {
-      base = getBounds()
-      shape = RoundRectangle2D.Float(0f, 0f, getWidth() - 1f, getHeight() - 1f, ARC_WIDTH, ARC_HEIGHT)
+    if (bounds != base) {
+      base = bounds
+      shape = RoundRectangle2D.Float(0f, 0f, width - 1f, height - 1f, ARC_WIDTH, ARC_HEIGHT)
     }
   }
 
@@ -124,16 +124,15 @@ internal class RadialGradientButton(title: String) : JButton(title) {
 
   override fun paintComponent(g: Graphics) {
     update()
-
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
 
-    // g2.setComposite(AlphaComposite.Clear);
-    // g2.setPaint(new Color(0x0, true));
-    // g2.fillRect(0, 0, getWidth(), getHeight());
+    // g2.setComposite(AlphaComposite.Clear)
+    // g2.setPaint(Color(0x0, true))
+    // g2.fillRect(0, 0, getWidth(), getHeight())
 
-    g2.setComposite(AlphaComposite.Src)
-    g2.setPaint(Color(if (getModel().isArmed()) 0xFF_AA_AA else 0xF7_23_59))
+    g2.composite = AlphaComposite.Src
+    g2.paint = Color(if (getModel().isArmed) 0xFF_AA_AA else 0xF7_23_59)
     g2.fill(shape)
 
     if (radius > 0) {
@@ -141,9 +140,9 @@ internal class RadialGradientButton(title: String) : JButton(title) {
       // Stunning hover effects with CSS variables ? Prototypr
       // https://blog.prototypr.io/stunning-hover-effects-with-css-variables-f855e7b95330
       val colors = arrayOf(Color(0x64_44_05_F7, true), Color(0x00_F7_23_59, true))
-      g2.setPaint(RadialGradientPaint(pt, r2, floatArrayOf(0f, 1f), colors))
-      g2.setComposite(AlphaComposite.SrcAtop)
-      g2.setClip(shape)
+      g2.paint = RadialGradientPaint(pt, r2, floatArrayOf(0f, 1f), colors)
+      g2.composite = AlphaComposite.SrcAtop
+      g2.clip = shape
       g2.fill(Ellipse2D.Float(pt.x - radius, pt.y - radius, r2, r2))
     }
     g2.dispose()
@@ -158,13 +157,14 @@ internal class RadialGradientButton(title: String) : JButton(title) {
   }
 }
 
-internal class RadialGradientPaintButton(title: String) : JButton(title) {
+private class RadialGradientPaintButton(title: String) : JButton(title) {
   private val timer1 = Timer(10, null)
   private val timer2 = Timer(10, null)
   private val pt = Point()
   private var radius = 0f
   private var shape: Shape? = null
   private var base: Rectangle? = null
+
   @Transient
   private var buf: BufferedImage? = null
 
@@ -180,26 +180,27 @@ internal class RadialGradientPaintButton(title: String) : JButton(title) {
     val listener = object : MouseAdapter() {
       override fun mouseEntered(e: MouseEvent) {
         timer2.stop()
-        if (!timer1.isRunning()) {
+        if (!timer1.isRunning) {
           timer1.start()
         }
       }
 
       override fun mouseExited(e: MouseEvent) {
         timer1.stop()
-        if (!timer2.isRunning()) {
+        if (!timer2.isRunning) {
           timer2.start()
         }
       }
 
       override fun mouseMoved(e: MouseEvent) {
-        pt.setLocation(e.getPoint())
+        pt.location = e.point
         repaint()
       }
 
       override fun mouseDragged(e: MouseEvent) {
-        pt.setLocation(e.getPoint())
-        repaint()
+        mouseMoved(e)
+        // pt.location = e.point
+        // repaint()
       }
     }
     addMouseListener(listener)
@@ -208,21 +209,21 @@ internal class RadialGradientPaintButton(title: String) : JButton(title) {
 
   override fun updateUI() {
     super.updateUI()
-    setOpaque(false)
-    setContentAreaFilled(false)
-    setFocusPainted(false)
-    setBackground(Color(0xF7_23_59))
-    setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10))
+    isOpaque = false
+    isContentAreaFilled = false
+    isFocusPainted = false
+    background = Color(0xF7_23_59)
+    border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
     update()
   }
 
   private fun update() {
-    if (getBounds() != base) {
-      base = getBounds()
-      if (getWidth() > 0 && getHeight() > 0) {
-        buf = BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB)
+    if (bounds != base) {
+      base = bounds
+      if (width > 0 && height > 0) {
+        buf = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
       }
-      shape = RoundRectangle2D.Float(0f, 0f, getWidth() - 1f, getHeight() - 1f, ARC_WIDTH, ARC_HEIGHT)
+      shape = RoundRectangle2D.Float(0f, 0f, width - 1f, height - 1f, ARC_WIDTH, ARC_HEIGHT)
     }
     // if (buf == null) {
     //   return
@@ -232,19 +233,19 @@ internal class RadialGradientPaintButton(title: String) : JButton(title) {
     // val c1 = Color(0x00_F7_23_59, true)
     // val c2 = Color(0x64_44_05_F7, true)
 
-    g2.setComposite(AlphaComposite.Clear)
-    g2.fillRect(0, 0, getWidth(), getHeight())
+    g2.composite = AlphaComposite.Clear
+    g2.fillRect(0, 0, width, height)
 
-    g2.setComposite(AlphaComposite.Src)
-    g2.setPaint(Color(if (getModel().isArmed()) 0xFF_AA_AA else 0xF7_23_59))
+    g2.composite = AlphaComposite.Src
+    g2.paint = Color(if (getModel().isArmed) 0xFF_AA_AA else 0xF7_23_59)
     g2.fill(shape)
 
     if (radius > 0) {
       val r2 = radius + radius
       // val colors = arrayOf(c2, c1)
       val colors = arrayOf(Color(0x64_44_05_F7, true), Color(0x00_F7_23_59, true))
-      g2.setPaint(RadialGradientPaint(pt, r2, floatArrayOf(0f, 1f), colors))
-      g2.setComposite(AlphaComposite.SrcAtop)
+      g2.paint = RadialGradientPaint(pt, r2, floatArrayOf(0f, 1f), colors)
+      g2.composite = AlphaComposite.SrcAtop
       // g2.setClip(shape)
       g2.fill(Ellipse2D.Float(pt.x - radius, pt.y - radius, r2, r2))
     }
@@ -253,7 +254,6 @@ internal class RadialGradientPaintButton(title: String) : JButton(title) {
 
   override fun contains(x: Int, y: Int): Boolean {
     update()
-    // return Optional.ofNullable(shape).map { s -> s.contains(x.toDouble(), y.toDouble()) }.orElse(false)
     return shape?.contains(x.toDouble(), y.toDouble()) ?: false
   }
 
@@ -270,12 +270,12 @@ internal class RadialGradientPaintButton(title: String) : JButton(title) {
   }
 }
 
-internal object TextureUtils {
+private object TextureUtils {
   fun createCheckerTexture(cs: Int, color: Color): TexturePaint {
     val size = cs * cs
     val img = BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB)
     val g2 = img.createGraphics()
-    g2.setPaint(color)
+    g2.paint = color
     g2.fillRect(0, 0, size, size)
     var i = 0
     while (i * cs < size) {
@@ -303,7 +303,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
