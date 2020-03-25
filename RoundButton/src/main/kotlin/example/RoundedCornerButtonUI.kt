@@ -17,32 +17,32 @@ class RoundedCornerButtonUI : BasicButtonUI() {
 
   override fun installDefaults(b: AbstractButton) {
     super.installDefaults(b)
-    b.setContentAreaFilled(false)
-    b.setBorderPainted(false)
-    b.setOpaque(false)
-    b.setBackground(Color(245, 250, 255))
-    b.setBorder(BorderFactory.createEmptyBorder(4, 12, 4, 12))
+    b.isContentAreaFilled = false
+    b.isBorderPainted = false
+    b.isOpaque = false
+    b.background = Color(245, 250, 255)
+    b.border = BorderFactory.createEmptyBorder(4, 12, 4, 12)
     initShape(b)
   }
 
   override fun installListeners(button: AbstractButton) {
     val listener = object : BasicButtonListener(button) {
       override fun mousePressed(e: MouseEvent) {
-        val b = e.getComponent() as? AbstractButton ?: return
+        val b = e.component as? AbstractButton ?: return
         initShape(b)
-        if (isShapeContains(e.getPoint())) {
+        if (isShapeContains(e.point)) {
           super.mousePressed(e)
         }
       }
 
       override fun mouseEntered(e: MouseEvent) {
-        if (isShapeContains(e.getPoint())) {
+        if (isShapeContains(e.point)) {
           super.mouseEntered(e)
         }
       }
 
       override fun mouseMoved(e: MouseEvent) {
-        if (isShapeContains(e.getPoint())) {
+        if (isShapeContains(e.point)) {
           super.mouseEntered(e)
         } else {
           super.mouseExited(e)
@@ -60,27 +60,27 @@ class RoundedCornerButtonUI : BasicButtonUI() {
   override fun paint(g: Graphics, c: JComponent) {
     initShape(c)
 
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
 
     // ContentArea
     if (c is AbstractButton) {
-      val model = c.getModel()
-      if (model.isArmed()) {
-        g2.setPaint(ac)
+      val model = c.model
+      if (model.isArmed) {
+        g2.paint = ac
         g2.fill(shape)
-      } else if (c.isRolloverEnabled() && model.isRollover()) {
+      } else if (c.isRolloverEnabled && model.isRollover) {
         paintFocusAndRollover(g2, c, rc)
       } else if (c.hasFocus()) {
         paintFocusAndRollover(g2, c, fc)
       } else {
-        g2.setPaint(c.getBackground())
+        g2.paint = c.getBackground()
         g2.fill(shape)
       }
     }
 
     // Border
-    g2.setPaint(c.getForeground())
+    g2.paint = c.foreground
     g2.draw(shape)
     g2.dispose()
     super.paint(g, c)
@@ -94,20 +94,21 @@ class RoundedCornerButtonUI : BasicButtonUI() {
   private fun isShapeContains(pt: Point) = shape?.contains(pt.getX(), pt.getY()) ?: false
 
   private fun initShape(c: Component) {
-    if (c.getBounds() != base) {
-      base = c.getBounds()
-      shape = RoundRectangle2D.Double(0.0, 0.0, c.getWidth() - 1.0, c.getHeight() - 1.0, ARC_WIDTH, ARC_HEIGHT)
+    if (c.bounds != base) {
+      base = c.bounds
+      shape = RoundRectangle2D.Double(0.0, 0.0, c.width - 1.0, c.height - 1.0, ARC_WIDTH, ARC_HEIGHT)
       border = RoundRectangle2D.Double(
         FOCUS_STROKE, FOCUS_STROKE,
-        c.getWidth() - 1 - FOCUS_STROKE * 2, c.getHeight() - 1 - FOCUS_STROKE * 2,
-        ARC_WIDTH, ARC_HEIGHT)
+        c.width - 1 - FOCUS_STROKE * 2, c.height - 1 - FOCUS_STROKE * 2,
+        ARC_WIDTH, ARC_HEIGHT
+      )
     }
   }
 
   private fun paintFocusAndRollover(g2: Graphics2D, c: Component, color: Color) {
-    g2.setPaint(GradientPaint(0f, 0f, color, c.getWidth() - 1f, c.getHeight() - 1f, color.brighter(), true))
+    g2.paint = GradientPaint(0f, 0f, color, c.width - 1f, c.height - 1f, color.brighter(), true)
     g2.fill(shape)
-    g2.setPaint(c.getBackground())
+    g2.paint = c.background
     g2.fill(border)
   }
 

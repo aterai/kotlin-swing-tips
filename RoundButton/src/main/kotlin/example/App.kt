@@ -9,46 +9,45 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import kotlin.math.cos
 import kotlin.math.sin
 
-class MainPanel : JPanel() {
-  private val button = object : JButton("RoundedCornerButtonUI") {
-    override fun updateUI() {
-      // IGNORE LnF change: super.updateUI();
-      setUI(RoundedCornerButtonUI())
-    }
+private val button = object : JButton("RoundedCornerButtonUI") {
+  override fun updateUI() {
+    // IGNORE LnF change: super.updateUI()
+    setUI(RoundedCornerButtonUI())
   }
+}
 
-  init {
-    add(JButton("Default JButton"))
-    // button.setUI(new RoundedCornerButtonUI());
-    add(button)
-    add(RoundedCornerButton("Rounded Corner Button"))
-    add(object : RoundButton(ImageIcon(MainPanel::class.java.getResource("16x16.png"))) {
-      override fun getPreferredSize() = super.getPreferredSize()?.also {
-        val r = 16 + (FOCUS_STROKE.toInt() + 4) * 2 // test margin = 4
-        it.setSize(r, r)
-      }
-    })
-    add(ShapeButton(makeStar(25, 30, 20)))
-    add(RoundButton("Round Button"))
-    setPreferredSize(Dimension(320, 240))
-  }
-
-  private fun makeStar(r1: Int, r2: Int, vc: Int): Path2D {
-    val ora = maxOf(r1, r2)
-    val ira = minOf(r1, r2)
-    var agl = 0.0
-    val add = 2 * Math.PI / (vc * 2)
-    val p = Path2D.Double()
-    p.moveTo(ora * 1.0, ora * 0.0)
-    for (i in 0 until vc * 2 - 1) {
-      agl += add
-      val r = if (i % 2 == 0) ira else ora
-      p.lineTo(r * cos(agl), r * sin(agl))
+fun makeUI() = JPanel().also {
+  it.add(JButton("Default JButton"))
+  // button.setUI(RoundedCornerButtonUI())
+  it.add(button)
+  it.add(RoundedCornerButton("Rounded Corner Button"))
+  val cl = Thread.currentThread().contextClassLoader
+  it.add(object : RoundButton(ImageIcon(cl.getResource("example/16x16.png"))) {
+    override fun getPreferredSize() = super.getPreferredSize()?.also { d ->
+      val r = 16 + (FOCUS_STROKE.toInt() + 4) * 2 // test margin = 4
+      d.setSize(r, r)
     }
-    p.closePath()
-    val at = AffineTransform.getRotateInstance(-Math.PI / 2.0, ora.toDouble(), 0.0)
-    return Path2D.Double(p, at)
+  })
+  it.add(ShapeButton(makeStar(25, 30, 20)))
+  it.add(RoundButton("Round Button"))
+  it.preferredSize = Dimension(320, 240)
+}
+
+fun makeStar(r1: Int, r2: Int, vc: Int): Path2D {
+  val ora = maxOf(r1, r2)
+  val ira = minOf(r1, r2)
+  var agl = 0.0
+  val add = 2 * Math.PI / (vc * 2)
+  val p = Path2D.Double()
+  p.moveTo(ora * 1.0, ora * 0.0)
+  for (i in 0 until vc * 2 - 1) {
+    agl += add
+    val r = if (i % 2 == 0) ira else ora
+    p.lineTo(r * cos(agl), r * sin(agl))
   }
+  p.closePath()
+  val at = AffineTransform.getRotateInstance(-Math.PI / 2.0, ora.toDouble(), 0.0)
+  return Path2D.Double(p, at)
 }
 
 open class RoundedCornerButton : JButton {
@@ -78,43 +77,44 @@ open class RoundedCornerButton : JButton {
 
   override fun updateUI() {
     super.updateUI()
-    setContentAreaFilled(false)
-    setFocusPainted(false)
-    setBackground(Color(250, 250, 250))
+    isContentAreaFilled = false
+    isFocusPainted = false
+    background = Color(250, 250, 250)
     initShape()
   }
 
   open fun initShape() {
-    if (getBounds() != base) {
-      base = getBounds()
-      shape = RoundRectangle2D.Double(0.0, 0.0, getWidth() - 1.0, getHeight() - 1.0, ARC_WIDTH, ARC_HEIGHT)
+    if (bounds != base) {
+      base = bounds
+      shape = RoundRectangle2D.Double(0.0, 0.0, width - 1.0, height - 1.0, ARC_WIDTH, ARC_HEIGHT)
       border = RoundRectangle2D.Double(
         FOCUS_STROKE, FOCUS_STROKE,
-        getWidth() - 1 - FOCUS_STROKE * 2, getHeight() - 1 - FOCUS_STROKE * 2,
-        ARC_WIDTH, ARC_HEIGHT)
+        width - 1 - FOCUS_STROKE * 2, height - 1 - FOCUS_STROKE * 2,
+        ARC_WIDTH, ARC_HEIGHT
+      )
     }
   }
 
   private fun paintFocusAndRollover(g2: Graphics2D, color: Color) {
-    g2.setPaint(GradientPaint(0f, 0f, color, getWidth() - 1f, getHeight() - 1f, color.brighter(), true))
+    g2.paint = GradientPaint(0f, 0f, color, width - 1f, height - 1f, color.brighter(), true)
     g2.fill(shape)
-    g2.setPaint(getBackground())
+    g2.paint = background
     g2.fill(border)
   }
 
   override fun paintComponent(g: Graphics) {
     initShape()
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    if (getModel().isArmed()) {
-      g2.setPaint(ac)
+    if (getModel().isArmed) {
+      g2.paint = ac
       g2.fill(shape)
-    } else if (isRolloverEnabled() && getModel().isRollover()) {
+    } else if (isRolloverEnabled && getModel().isRollover) {
       paintFocusAndRollover(g2, rc)
     } else if (hasFocus()) {
       paintFocusAndRollover(g2, fc)
     } else {
-      g2.setPaint(getBackground())
+      g2.paint = background
       g2.fill(shape)
     }
     g2.dispose()
@@ -123,9 +123,9 @@ open class RoundedCornerButton : JButton {
 
   override fun paintBorder(g: Graphics) {
     initShape()
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    g2.setPaint(getForeground())
+    g2.paint = foreground
     g2.draw(shape)
     g2.dispose()
   }
@@ -157,7 +157,7 @@ open class RoundButton : RoundedCornerButton {
 
   constructor(text: String, icon: Icon) : super(text, icon)
   // {
-  //   // setModel(new DefaultButtonModel());
+  //   // setModel(DefaultButtonModel())
   //   // init(text, icon);
   // }
 
@@ -167,14 +167,15 @@ open class RoundButton : RoundedCornerButton {
   }
 
   override fun initShape() {
-    if (getBounds() != base) {
-      base = getBounds()
-      shape = Ellipse2D.Double(0.0, 0.0, getWidth() - 1.0, getHeight() - 1.0)
+    if (bounds != base) {
+      base = bounds
+      shape = Ellipse2D.Double(0.0, 0.0, width - 1.0, height - 1.0)
       border = Ellipse2D.Double(
         FOCUS_STROKE,
         FOCUS_STROKE,
-        getWidth() - 1 - FOCUS_STROKE * 2,
-        getHeight() - 1 - FOCUS_STROKE * 2)
+        width - 1 - FOCUS_STROKE * 2,
+        height - 1 - FOCUS_STROKE * 2
+      )
     }
   }
 }
@@ -187,33 +188,33 @@ class ShapeButton(private val shape: Shape) : JButton() {
   init {
     setModel(DefaultButtonModel())
     init("Shape", DummySizeIcon(shape))
-    setVerticalAlignment(SwingConstants.CENTER)
-    setVerticalTextPosition(SwingConstants.CENTER)
-    setHorizontalAlignment(SwingConstants.CENTER)
-    setHorizontalTextPosition(SwingConstants.CENTER)
-    setBorder(BorderFactory.createEmptyBorder())
-    setContentAreaFilled(false)
-    setFocusPainted(false)
-    setBackground(Color(250, 250, 250))
+    verticalAlignment = SwingConstants.CENTER
+    verticalTextPosition = SwingConstants.CENTER
+    horizontalAlignment = SwingConstants.CENTER
+    horizontalTextPosition = SwingConstants.CENTER
+    border = BorderFactory.createEmptyBorder()
+    isContentAreaFilled = false
+    isFocusPainted = false
+    background = Color(250, 250, 250)
   }
 
   private fun paintFocusAndRollover(g2: Graphics2D, color: Color) {
-    g2.setPaint(GradientPaint(0f, 0f, color, getWidth() - 1f, getHeight() - 1f, color.brighter(), true))
+    g2.paint = GradientPaint(0f, 0f, color, width - 1f, height - 1f, color.brighter(), true)
     g2.fill(shape)
   }
 
   override fun paintComponent(g: Graphics) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    if (getModel().isArmed()) {
-      g2.setPaint(ac)
+    if (getModel().isArmed) {
+      g2.paint = ac
       g2.fill(shape)
-    } else if (isRolloverEnabled() && getModel().isRollover()) {
+    } else if (isRolloverEnabled && getModel().isRollover) {
       paintFocusAndRollover(g2, rc)
     } else if (hasFocus()) {
       paintFocusAndRollover(g2, fc)
     } else {
-      g2.setPaint(getBackground())
+      g2.paint = background
       g2.fill(shape)
     }
     g2.dispose()
@@ -221,9 +222,9 @@ class ShapeButton(private val shape: Shape) : JButton() {
   }
 
   override fun paintBorder(g: Graphics) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    g2.setPaint(getForeground())
+    g2.paint = foreground
     g2.draw(shape)
     g2.dispose()
   }
@@ -232,11 +233,12 @@ class ShapeButton(private val shape: Shape) : JButton() {
 }
 
 class DummySizeIcon(private val shape: Shape) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) { /* Empty icon */ }
+  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) { /* Empty icon */
+  }
 
-  override fun getIconWidth() = shape.getBounds().width
+  override fun getIconWidth() = shape.bounds.width
 
-  override fun getIconHeight() = shape.getBounds().height
+  override fun getIconHeight() = shape.bounds.height
 }
 
 fun main() {
@@ -249,7 +251,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
