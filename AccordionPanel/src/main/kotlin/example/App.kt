@@ -5,120 +5,126 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val accordion = Box.createVerticalBox()
-    accordion.setOpaque(true)
-    accordion.setBackground(Color(0xB4_B4_FF))
-    accordion.setBorder(BorderFactory.createEmptyBorder(10, 5, 5, 5))
-    makeExpansionPanelList().forEach {
-      accordion.add(it)
-      accordion.add(Box.createVerticalStrut(5))
-    }
-    accordion.add(Box.createVerticalGlue())
-
-    val scroll = JScrollPane(accordion)
-    scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
-    scroll.getVerticalScrollBar().setUnitIncrement(25)
-
-    val split = JSplitPane()
-    split.setResizeWeight(.5)
-    split.setDividerSize(2)
-    split.setLeftComponent(scroll)
-    split.setRightComponent(JLabel("Dummy"))
-    add(split)
-    setPreferredSize(Dimension(320, 240))
+fun makeUI(): Component {
+  val accordion = Box.createVerticalBox()
+  accordion.isOpaque = true
+  accordion.background = Color(0xB4_B4_FF)
+  accordion.border = BorderFactory.createEmptyBorder(10, 5, 5, 5)
+  makeExpansionPanelList().forEach {
+    accordion.add(it)
+    accordion.add(Box.createVerticalStrut(5))
   }
+  accordion.add(Box.createVerticalGlue())
 
-  private fun makeExpansionPanelList() = listOf(
-    object : AbstractExpansionPanel("System Tasks") {
-      override fun makePanel() = JPanel(GridLayout(0, 1)).also { p ->
-        listOf("aaaa", "aaaaaaa")
-          .map { title -> JCheckBox(title) }
-          .forEach { check ->
-            check.setOpaque(false)
-            p.add(check)
-          }
-      }
-    },
-    object : AbstractExpansionPanel("Other Places") {
-      override fun makePanel() = JPanel(GridLayout(0, 1)).also { p ->
-        listOf("Desktop", "My Network Places", "My Documents", "Shared Documents")
-          .map { title -> JLabel(title) }
-          .forEach { label -> p.add(label) }
-      }
-    },
-    object : AbstractExpansionPanel("Details") {
-      override fun makePanel() = JPanel(GridLayout(0, 1)).also { p ->
-        val bg = ButtonGroup()
-        listOf("aaa", "bbb", "ccc", "ddd")
-          .map { title -> JRadioButton(title) }
-          .forEach { radio ->
-            radio.setSelected(p.getComponentCount() == 0)
-            radio.setOpaque(false)
-            p.add(radio)
-            bg.add(radio)
-          }
-      }
-    }
-  )
+  val scroll = JScrollPane(accordion)
+  scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+  scroll.verticalScrollBar.unitIncrement = 25
+
+  val split = JSplitPane()
+  split.resizeWeight = .5
+  split.dividerSize = 2
+  split.leftComponent = scroll
+  split.rightComponent = JLabel("Dummy")
+  return JPanel(BorderLayout()).also {
+    it.add(split)
+    it.preferredSize = Dimension(320, 240)
+  }
 }
 
+private fun makeExpansionPanelList() = listOf(
+  object : AbstractExpansionPanel("System Tasks") {
+    override fun makePanel() = JPanel(GridLayout(0, 1)).also { p ->
+      listOf("111", "222222222")
+        .map { title -> JCheckBox(title) }
+        .forEach { check ->
+          check.isOpaque = false
+          p.add(check)
+        }
+    }
+  },
+  object : AbstractExpansionPanel("Other Places") {
+    override fun makePanel() = JPanel(GridLayout(0, 1)).also { p ->
+      listOf("Desktop", "My Network Places", "My Documents", "Shared Documents")
+        .map { title -> JLabel(title) }
+        .forEach { label -> p.add(label) }
+    }
+  },
+  object : AbstractExpansionPanel("Details") {
+    override fun makePanel() = JPanel(GridLayout(0, 1)).also { p ->
+      val bg = ButtonGroup()
+      listOf("aaa", "bbb", "ccc", "ddd")
+        .map { title -> JRadioButton(title) }
+        .forEach { radio ->
+          radio.isSelected = p.componentCount == 0
+          radio.isOpaque = false
+          p.add(radio)
+          bg.add(radio)
+        }
+    }
+  }
+)
+
 abstract class AbstractExpansionPanel(private val title: String) : JPanel(BorderLayout()) {
-  private val label: JLabel
-  private val panel: JPanel
+  private var label: JLabel? = null
+  private var panel: JPanel? = null
 
   abstract fun makePanel(): JPanel
 
-  init {
-    label = object : JLabel("▼ $title") {
+  override fun updateUI() {
+    super.updateUI()
+    val l = object : JLabel("▼ $title") {
       private val bgc = Color(0xC8_C8_FF)
       override fun paintComponent(g: Graphics) {
         val g2 = g.create() as? Graphics2D ?: return
-        // Insets ins = getInsets();
-        g2.setPaint(GradientPaint(50f, 0f, Color.WHITE, getWidth().toFloat(), getHeight().toFloat(), bgc))
-        g2.fillRect(0, 0, getWidth(), getHeight())
+        g2.paint = GradientPaint(50f, 0f, Color.WHITE, width.toFloat(), height.toFloat(), bgc)
+        g2.fillRect(0, 0, width, height)
         g2.dispose()
         super.paintComponent(g)
       }
     }
-    label.addMouseListener(object : MouseAdapter() {
+    l.addMouseListener(object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
         initPanel()
       }
     })
-    label.setForeground(Color.BLUE)
-    label.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 2))
-    add(label, BorderLayout.NORTH)
+    l.foreground = Color.BLUE
+    l.border = BorderFactory.createEmptyBorder(2, 5, 2, 2)
+    add(l, BorderLayout.NORTH)
 
-    panel = makePanel()
-    panel.setVisible(false)
-    panel.setOpaque(true)
-    panel.setBackground(Color(0xF0_F0_FF))
+    val p = makePanel()
+    p.isVisible = false
+    p.isOpaque = true
+    p.background = Color(0xF0_F0_FF)
     val outBorder = BorderFactory.createMatteBorder(0, 2, 2, 2, Color.WHITE)
     val inBorder = BorderFactory.createEmptyBorder(10, 10, 10, 10)
     val border = BorderFactory.createCompoundBorder(outBorder, inBorder)
-    panel.setBorder(border)
-    add(panel)
+    p.border = border
+    add(p)
+
+    label = l
+    panel = p
   }
 
-  override fun getPreferredSize(): Dimension? = label.getPreferredSize()?.also {
-    if (panel.isVisible()) {
-      it.height += panel.getPreferredSize().height
-    }
+  override fun getPreferredSize(): Dimension? = label?.preferredSize?.also {
+    panel?.takeIf { it.isVisible }
+      ?.also { panel ->
+        it.height += panel.preferredSize.height
+      }
   }
 
-  override fun getMaximumSize() = getPreferredSize()?.also {
+  override fun getMaximumSize() = preferredSize?.also {
     it.width = Short.MAX_VALUE.toInt()
   }
 
   protected fun initPanel() {
-    panel.setVisible(!panel.isVisible())
-    val mark = if (panel.isVisible()) "△" else "▼"
-    label.setText("$mark $title")
-    revalidate()
-    // fireExpansionEvent()
-    EventQueue.invokeLater { panel.scrollRectToVisible(panel.getBounds()) }
+    panel?.also {
+      it.isVisible = !it.isVisible
+      val mark = if (it.isVisible) "△" else "▼"
+      label?.text = "$mark $title"
+      revalidate()
+      // fireExpansionEvent()
+      EventQueue.invokeLater { it.scrollRectToVisible(it.bounds) }
+    }
   }
 }
 
@@ -132,7 +138,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
