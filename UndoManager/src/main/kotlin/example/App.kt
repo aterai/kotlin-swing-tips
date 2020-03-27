@@ -1,13 +1,10 @@
-// -*- mode:java; encoding:utf-8 -*-
-// vim:set fileencoding=utf-8:
-// @homepage@
 package example
 
-import java.awt.*
+import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionEvent
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
-import javax.swing.*
+import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.JTextComponent
 import javax.swing.undo.UndoManager
 
