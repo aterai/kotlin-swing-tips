@@ -9,42 +9,42 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val locale = Locale.ENGLISH // Locale.getDefault();
-  val firstDayOfWeek = WeekFields.of(locale).getFirstDayOfWeek()
-  val weeks = (0 until DayOfWeek.values().size)
+  val firstDayOfWeek = WeekFields.of(locale).firstDayOfWeek
+  val weeks = DayOfWeek.values().indices
     .map { firstDayOfWeek.plus(it.toLong()) }
     .map { it.getDisplayName(TextStyle.SHORT_STANDALONE, locale) }
 
   val spinner01 = JSpinner()
-  spinner01.setModel(SpinnerNumberModel(20, 0, 59, 1))
+  spinner01.model = SpinnerNumberModel(20, 0, 59, 1)
 
   val spinner02 = JSpinner()
-  spinner02.setModel(SpinnerListModel(weeks))
+  spinner02.model = SpinnerListModel(weeks)
 
   val spinner03 = JSpinner()
-  spinner03.setModel(object : SpinnerNumberModel(20, 0, 59, 1) {
-    override fun getNextValue() = super.getNextValue() ?: getMinimum()
+  spinner03.model = object : SpinnerNumberModel(20, 0, 59, 1) {
+    override fun getNextValue() = super.getNextValue() ?: minimum
 
-    override fun getPreviousValue() = super.getPreviousValue() ?: getMaximum()
-  })
+    override fun getPreviousValue() = super.getPreviousValue() ?: maximum
+  }
 
   val spinner04 = JSpinner()
-  spinner04.setModel(object : SpinnerListModel(weeks) {
-    override fun getNextValue() = super.getNextValue() ?: getList().first()
+  spinner04.model = object : SpinnerListModel(weeks) {
+    override fun getNextValue() = super.getNextValue() ?: list.first()
 
-    override fun getPreviousValue() = super.getPreviousValue() ?: getList().last()
-  })
+    override fun getPreviousValue() = super.getPreviousValue() ?: list.last()
+  }
 
   return JPanel(GridLayout(2, 1)).also {
     it.add(makeTitledPanel("default model", spinner01, spinner02))
     it.add(makeTitledPanel("cycling model", spinner03, spinner04))
-    it.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-    it.setPreferredSize(Dimension(320, 240))
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
 private fun makeTitledPanel(title: String, vararg list: Component): Component {
   val p = JPanel(GridBagLayout())
-  p.setBorder(BorderFactory.createTitledBorder(title))
+  p.border = BorderFactory.createTitledBorder(title)
   val c = GridBagConstraints()
   c.fill = GridBagConstraints.HORIZONTAL
   c.insets = Insets(5, 5, 5, 5)
