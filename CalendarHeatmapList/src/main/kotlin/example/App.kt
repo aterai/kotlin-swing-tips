@@ -14,33 +14,33 @@ class MainPanel : JPanel(BorderLayout()) {
   val currentLocalDate: LocalDate = LocalDate.now(ZoneId.systemDefault())
   private val weekList = object : JList<Contribution>(CalendarViewListModel(currentLocalDate)) {
     override fun updateUI() {
-      setCellRenderer(null)
+      cellRenderer = null
       super.updateUI()
-      setLayoutOrientation(VERTICAL_WRAP)
-      setVisibleRowCount(DayOfWeek.values().size) // ensure 7 rows in the list
-      setFixedCellWidth(CELL_SIZE.width)
-      setFixedCellHeight(CELL_SIZE.height)
-      val renderer = getCellRenderer()
+      layoutOrientation = VERTICAL_WRAP
+      visibleRowCount = DayOfWeek.values().size // ensure 7 rows in the list
+      fixedCellWidth = CELL_SIZE.width
+      fixedCellHeight = CELL_SIZE.height
+      val renderer = cellRenderer
       setCellRenderer { list, value, index, isSelected, cellHasFocus ->
         val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-        (c as? JLabel)?.setIcon(when {
+        (c as? JLabel)?.icon = when {
           value.date.isAfter(currentLocalDate) -> ContributionIcon(Color.WHITE)
           else -> activityIcons[value.activity]
-        })
+        }
         return@setCellRenderer c
       }
-      getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
-      setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
+      selectionModel.selectionMode = ListSelectionModel.SINGLE_INTERVAL_SELECTION
+      border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
     }
 
     override fun getToolTipText(e: MouseEvent): String? {
-      val p = e.getPoint()
+      val p = e.point
       val idx = locationToIndex(p)
       val rect = getCellBounds(idx, idx)
       if (idx < 0 || !rect.contains(p.x, p.y)) {
         return null
       }
-      val value = getModel().getElementAt(idx)
+      val value = model.getElementAt(idx)
       val act = if (value.activity == 0) "No" else value.activity.toString()
       val date = value.date.toString()
       return "$act contribution on $date"
@@ -55,7 +55,7 @@ class MainPanel : JPanel(BorderLayout()) {
     ContributionIcon(color.darker().darker()))
 
   init {
-    val font = weekList.getFont().deriveFont(CELL_SIZE.height - 1f)
+    val font = weekList.font.deriveFont(CELL_SIZE.height - 1f)
 
     val box = Box.createHorizontalBox()
     box.add(makeLabel("Less", font))
@@ -67,8 +67,8 @@ class MainPanel : JPanel(BorderLayout()) {
     box.add(makeLabel("More", font))
 
     val p = JPanel(GridBagLayout())
-    p.setBorder(BorderFactory.createEmptyBorder(10, 2, 10, 2))
-    p.setBackground(Color.WHITE)
+    p.border = BorderFactory.createEmptyBorder(10, 2, 10, 2)
+    p.background = Color.WHITE
 
     val c = GridBagConstraints()
     p.add(makeWeekCalendar(weekList, font), c)
@@ -80,8 +80,8 @@ class MainPanel : JPanel(BorderLayout()) {
 
     add(p, BorderLayout.NORTH)
     add(JScrollPane(JTextArea()))
-    setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
-    setPreferredSize(Dimension(320, 240))
+    border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
+    preferredSize = Dimension(320, 240)
   }
 
   // private inner class ContributionListRenderer : ListCellRenderer<Contribution> {
@@ -105,18 +105,18 @@ class MainPanel : JPanel(BorderLayout()) {
 
   private fun makeWeekCalendar(list: JList<*>, font: Font) = JScrollPane(list).also {
     val loc = Locale.getDefault()
-    it.setBorder(BorderFactory.createEmptyBorder())
+    it.border = BorderFactory.createEmptyBorder()
     it.setColumnHeaderView(makeColumnHeader(loc))
     it.setRowHeaderView(makeRowHeader(loc, font))
-    it.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER)
-    it.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
-    it.setBackground(Color.WHITE)
+    it.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
+    it.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+    it.background = Color.WHITE
   }
 
   private fun makeRowHeader(loc: Locale, font: Font): Component {
     val weekFields = WeekFields.of(loc)
     val weekModel = DefaultListModel<String>()
-    val firstDayOfWeek = weekFields.getFirstDayOfWeek()
+    val firstDayOfWeek = weekFields.firstDayOfWeek
     for (i in DayOfWeek.values().indices) {
       val isEven = i % 2 == 0
       if (isEven) {
@@ -125,18 +125,18 @@ class MainPanel : JPanel(BorderLayout()) {
         weekModel.add(i, firstDayOfWeek.plus(i.toLong()).getDisplayName(TextStyle.SHORT_STANDALONE, loc))
       }
     }
-    return JList<String>(weekModel).also {
-      it.setEnabled(false)
-      it.setFont(font)
-      it.setLayoutOrientation(JList.VERTICAL_WRAP)
-      it.setVisibleRowCount(DayOfWeek.values().size)
+    return JList(weekModel).also {
+      it.isEnabled = false
+      it.font = font
+      it.layoutOrientation = JList.VERTICAL_WRAP
+      it.visibleRowCount = DayOfWeek.values().size
       it.setFixedCellHeight(CELL_SIZE.height)
     }
   }
 
   private fun makeColumnHeader(loc: Locale): Component {
     val colHeader = JPanel(GridBagLayout())
-    colHeader.setBackground(Color.WHITE)
+    colHeader.background = Color.WHITE
     val c = GridBagConstraints()
     c.gridx = 0
     while (c.gridx < CalendarViewListModel.WEEK_VIEW) {
@@ -148,10 +148,10 @@ class MainPanel : JPanel(BorderLayout()) {
     c.gridwidth = 3 // use 3 columns to display the name of the month
     c.gridx = 0
     while (c.gridx < CalendarViewListModel.WEEK_VIEW - c.gridwidth + 1) {
-      val date = weekList.getModel().getElementAt(c.gridx * DayOfWeek.values().size).date
-      val isSimplyFirstWeekOfMonth = date.getMonth() != date.minusWeeks(1).getMonth()
+      val date = weekList.model.getElementAt(c.gridx * DayOfWeek.values().size).date
+      val isSimplyFirstWeekOfMonth = date.month != date.minusWeeks(1).month
       if (isSimplyFirstWeekOfMonth) {
-        colHeader.add(makeLabel(date.getMonth().getDisplayName(TextStyle.SHORT, loc), font), c)
+        colHeader.add(makeLabel(date.month.getDisplayName(TextStyle.SHORT, loc), font), c)
       }
       c.gridx++
     }
@@ -159,8 +159,8 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 
   private fun makeLabel(title: String, font: Font) = JLabel(title).also {
-    it.setFont(font)
-    it.setEnabled(false)
+    it.font = font
+    it.isEnabled = false
   }
 
   companion object {
@@ -198,8 +198,8 @@ class ContributionIcon(private val color: Color) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
-    g2.setPaint(color)
-    g2.fillRect(0, 0, getIconWidth(), getIconHeight())
+    g2.paint = color
+    g2.fillRect(0, 0, iconWidth, iconHeight)
     g2.dispose()
   }
 
