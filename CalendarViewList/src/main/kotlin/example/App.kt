@@ -14,196 +14,196 @@ import java.time.temporal.WeekFields
 import java.util.Locale
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel() {
-  val cellSize = Dimension(40, 26)
-  private val yearMonthLabel = JLabel("", SwingConstants.CENTER)
-  val monthList: JList<LocalDate> = object : JList<LocalDate>() {
+val cellSize = Dimension(40, 26)
+private val yearMonthLabel = JLabel("", SwingConstants.CENTER)
+val monthList: JList<LocalDate> = object : JList<LocalDate>() {
+  override fun updateUI() {
+    cellRenderer = null
+    super.updateUI()
+    layoutOrientation = HORIZONTAL_WRAP
+    visibleRowCount = CalendarViewListModel.ROW_COUNT // ensure 6 rows in the list
+    fixedCellWidth = cellSize.width
+    fixedCellHeight = cellSize.height
+    cellRenderer = CalendarListRenderer()
+    selectionModel.selectionMode = ListSelectionModel.SINGLE_INTERVAL_SELECTION
+  }
+}
+val realLocalDate: LocalDate = LocalDate.now(ZoneId.systemDefault())
+private var currentLocalDate: LocalDate = realLocalDate
+
+fun makeUI(): Component {
+  installActions()
+
+  val l = Locale.getDefault()
+  val weekModel = DefaultListModel<DayOfWeek>()
+  val firstDayOfWeek = WeekFields.of(l).firstDayOfWeek
+  for (i in DayOfWeek.values().indices) {
+    weekModel.add(i, firstDayOfWeek.plus(i.toLong()))
+  }
+  val header = object : JList<DayOfWeek>(weekModel) {
     override fun updateUI() {
-      setCellRenderer(null)
+      cellRenderer = null
       super.updateUI()
-      setLayoutOrientation(HORIZONTAL_WRAP)
-      setVisibleRowCount(CalendarViewListModel.ROW_COUNT) // ensure 6 rows in the list
-      setFixedCellWidth(cellSize.width)
-      setFixedCellHeight(cellSize.height)
-      setCellRenderer(CalendarListRenderer())
-      getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
+      layoutOrientation = HORIZONTAL_WRAP
+      visibleRowCount = 0
+      fixedCellWidth = cellSize.width
+      fixedCellHeight = cellSize.height
+      val renderer = cellRenderer
+      setCellRenderer { list, value, index, _, _ ->
+        val c = renderer.getListCellRendererComponent(list, value, index, false, false)
+        (c as? JLabel)?.also {
+          it.horizontalAlignment = SwingConstants.CENTER
+          it.text = value.getDisplayName(TextStyle.SHORT_STANDALONE, l)
+          it.background = Color(0xDC_DC_DC)
+        }
+        return@setCellRenderer c
+      }
     }
   }
-  val realLocalDate: LocalDate = LocalDate.now(ZoneId.systemDefault())
-  private var currentLocalDate: LocalDate = realLocalDate
+  updateMonthView(realLocalDate)
 
-  init {
-    installActions()
+  val prev = JButton("<")
+  prev.addActionListener { updateMonthView(currentLocalDate.minusMonths(1)) }
 
-    val l = Locale.getDefault()
-    val weekModel = DefaultListModel<DayOfWeek>()
-    val firstDayOfWeek = WeekFields.of(l).getFirstDayOfWeek()
-    for (i in DayOfWeek.values().indices) {
-      weekModel.add(i, firstDayOfWeek.plus(i.toLong()))
-    }
-    val header = object : JList<DayOfWeek>(weekModel) {
-      override fun updateUI() {
-        setCellRenderer(null)
-        super.updateUI()
-        setLayoutOrientation(HORIZONTAL_WRAP)
-        setVisibleRowCount(0)
-        setFixedCellWidth(cellSize.width)
-        setFixedCellHeight(cellSize.height)
-        val renderer = getCellRenderer()
-        setCellRenderer { list, value, index, _, _ ->
-          val c = renderer.getListCellRendererComponent(list, value, index, false, false)
-          (c as? JLabel)?.also {
-            it.setHorizontalAlignment(SwingConstants.CENTER)
-            it.setText(value.getDisplayName(TextStyle.SHORT_STANDALONE, l))
-            it.setBackground(Color(0xDC_DC_DC))
-          }
-          return@setCellRenderer c
-        }
-      }
-    }
-    updateMonthView(realLocalDate)
+  val next = JButton(">")
+  next.addActionListener { updateMonthView(currentLocalDate.plusMonths(1)) }
 
-    val prev = JButton("<")
-    prev.addActionListener { updateMonthView(currentLocalDate.minusMonths(1)) }
+  val yearMonthPanel = JPanel(BorderLayout())
+  yearMonthPanel.add(yearMonthLabel)
+  yearMonthPanel.add(prev, BorderLayout.WEST)
+  yearMonthPanel.add(next, BorderLayout.EAST)
 
-    val next = JButton(">")
-    next.addActionListener { updateMonthView(currentLocalDate.plusMonths(1)) }
+  val scroll = JScrollPane(monthList)
+  scroll.setColumnHeaderView(header)
+  scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
+  scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
 
-    val yearMonthPanel = JPanel(BorderLayout())
-    yearMonthPanel.add(yearMonthLabel)
-    yearMonthPanel.add(prev, BorderLayout.WEST)
-    yearMonthPanel.add(next, BorderLayout.EAST)
+  val label = JLabel(" ", SwingConstants.CENTER)
 
-    val scroll = JScrollPane(monthList)
-    scroll.setColumnHeaderView(header)
-    scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER)
-    scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
-
-    val label = JLabel(" ", SwingConstants.CENTER)
-
-    monthList.getSelectionModel().addListSelectionListener { e ->
-      label.setText((e.getSource() as? ListSelectionModel)
-        ?.takeUnless { it.isSelectionEmpty() }
-        ?.let {
-          val model = monthList.getModel()
-          val from = model.getElementAt(it.getMinSelectionIndex())
-          val to = model.getElementAt(it.getMaxSelectionIndex())
-          Period.between(from, to).toString()
-        } ?: " ")
-    }
-
-    val box = Box.createVerticalBox()
-    box.add(yearMonthPanel)
-    box.add(Box.createVerticalStrut(2))
-    box.add(scroll)
-    box.add(label)
-
-    add(box)
-    setPreferredSize(Dimension(320, 240))
+  monthList.selectionModel.addListSelectionListener { e ->
+    label.text = (e.source as? ListSelectionModel)
+      ?.takeUnless { it.isSelectionEmpty }
+      ?.let {
+        val model = monthList.model
+        val from = model.getElementAt(it.minSelectionIndex)
+        val to = model.getElementAt(it.maxSelectionIndex)
+        Period.between(from, to).toString()
+      } ?: " "
   }
 
-  private fun installActions() {
-    val im = monthList.getInputMap(JComponent.WHEN_FOCUSED)
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "selectNextIndex")
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "selectPreviousIndex")
+  val box = Box.createVerticalBox()
+  box.add(yearMonthPanel)
+  box.add(Box.createVerticalStrut(2))
+  box.add(scroll)
+  box.add(label)
 
-    val am = monthList.getActionMap()
-    am.put("selectPreviousIndex", object : AbstractAction() {
-      override fun actionPerformed(e: ActionEvent) {
-        val index = monthList.getLeadSelectionIndex()
-        if (index > 0) {
-          monthList.setSelectedIndex(index - 1)
-        } else {
-          val d = monthList.getModel().getElementAt(0).minusDays(1)
-          updateMonthView(currentLocalDate.minusMonths(1))
-          monthList.setSelectedValue(d, false)
-        }
-      }
-    })
-    am.put("selectNextIndex", object : AbstractAction() {
-      override fun actionPerformed(e: ActionEvent) {
-        val index = monthList.getLeadSelectionIndex()
-        if (index < monthList.getModel().getSize() - 1) {
-          monthList.setSelectedIndex(index + 1)
-        } else {
-          val d = monthList.getModel().getElementAt(monthList.getModel().getSize() - 1).plusDays(1)
-          updateMonthView(currentLocalDate.plusMonths(1))
-          monthList.setSelectedValue(d, false)
-        }
-      }
-    })
-    val selectPreviousRow = am.get("selectPreviousRow")
-    am.put("selectPreviousRow", object : AbstractAction() {
-      override fun actionPerformed(e: ActionEvent) {
-        val index = monthList.getLeadSelectionIndex()
-        val weekLength = DayOfWeek.values().size // 7
-        if (index < weekLength) {
-          val d = monthList.getModel().getElementAt(index).minusDays(weekLength.toLong())
-          updateMonthView(currentLocalDate.minusMonths(1))
-          monthList.setSelectedValue(d, false)
-        } else {
-          selectPreviousRow.actionPerformed(e)
-        }
-      }
-    })
-    val selectNextRow = am.get("selectNextRow")
-    am.put("selectNextRow", object : AbstractAction() {
-      override fun actionPerformed(e: ActionEvent) {
-        val index = monthList.getLeadSelectionIndex()
-        val weekLength = DayOfWeek.values().size // 7
-        if (index > monthList.getModel().getSize() - weekLength) {
-          val d = monthList.getModel().getElementAt(index).plusDays(weekLength.toLong())
-          updateMonthView(currentLocalDate.plusMonths(1))
-          monthList.setSelectedValue(d, false)
-        } else {
-          selectNextRow.actionPerformed(e)
-        }
-      }
-    })
-  }
-
-  fun updateMonthView(localDate: LocalDate) {
-    currentLocalDate = localDate
-    val dtf = DateTimeFormatter.ofPattern("yyyy / MM").withLocale(Locale.getDefault())
-    yearMonthLabel.setText(localDate.format(dtf))
-    monthList.setModel(CalendarViewListModel(localDate))
-  }
-
-  private inner class CalendarListRenderer : ListCellRenderer<LocalDate> {
-    private val renderer = DefaultListCellRenderer()
-
-    override fun getListCellRendererComponent(
-      list: JList<out LocalDate>,
-      value: LocalDate,
-      index: Int,
-      isSelected: Boolean,
-      cellHasFocus: Boolean
-    ): Component {
-      val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-      val l = c as? JLabel ?: return c
-      l.setOpaque(true)
-      l.setHorizontalAlignment(SwingConstants.CENTER)
-      l.setText(value.getDayOfMonth().toString())
-      val isSameMonth = YearMonth.from(value) == YearMonth.from(currentLocalDate)
-      val fgc = if (isSameMonth) getForegroundColor(value) else Color.GRAY
-      l.setForeground(if (isSelected) l.getForeground() else fgc)
-      return l
-    }
-
-    private fun getForegroundColor(ld: LocalDate) = when {
-      ld.isEqual(realLocalDate) -> Color(0x64_FF_64)
-      else -> getDayOfWeekColor(ld.getDayOfWeek())
-    }
-
-    private fun getDayOfWeekColor(dow: DayOfWeek) = when (dow) {
-      DayOfWeek.SUNDAY -> Color(0xFF_64_64)
-      DayOfWeek.SATURDAY -> Color(0x64_64_FF)
-      else -> Color.BLACK
-    }
+  return JPanel().also {
+    it.add(box)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-internal class CalendarViewListModel(date: LocalDate) : AbstractListModel<LocalDate>() {
+private fun installActions() {
+  val im = monthList.getInputMap(JComponent.WHEN_FOCUSED)
+  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "selectNextIndex")
+  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "selectPreviousIndex")
+
+  val am = monthList.actionMap
+  am.put("selectPreviousIndex", object : AbstractAction() {
+    override fun actionPerformed(e: ActionEvent) {
+      val index = monthList.leadSelectionIndex
+      if (index > 0) {
+        monthList.setSelectedIndex(index - 1)
+      } else {
+        val d = monthList.model.getElementAt(0).minusDays(1)
+        updateMonthView(currentLocalDate.minusMonths(1))
+        monthList.setSelectedValue(d, false)
+      }
+    }
+  })
+  am.put("selectNextIndex", object : AbstractAction() {
+    override fun actionPerformed(e: ActionEvent) {
+      val index = monthList.leadSelectionIndex
+      if (index < monthList.model.size - 1) {
+        monthList.setSelectedIndex(index + 1)
+      } else {
+        val d = monthList.model.getElementAt(monthList.model.size - 1).plusDays(1)
+        updateMonthView(currentLocalDate.plusMonths(1))
+        monthList.setSelectedValue(d, false)
+      }
+    }
+  })
+  val selectPreviousRow = am.get("selectPreviousRow")
+  am.put("selectPreviousRow", object : AbstractAction() {
+    override fun actionPerformed(e: ActionEvent) {
+      val index = monthList.leadSelectionIndex
+      val weekLength = DayOfWeek.values().size // 7
+      if (index < weekLength) {
+        val d = monthList.model.getElementAt(index).minusDays(weekLength.toLong())
+        updateMonthView(currentLocalDate.minusMonths(1))
+        monthList.setSelectedValue(d, false)
+      } else {
+        selectPreviousRow.actionPerformed(e)
+      }
+    }
+  })
+  val selectNextRow = am.get("selectNextRow")
+  am.put("selectNextRow", object : AbstractAction() {
+    override fun actionPerformed(e: ActionEvent) {
+      val index = monthList.leadSelectionIndex
+      val weekLength = DayOfWeek.values().size // 7
+      if (index > monthList.model.size - weekLength) {
+        val d = monthList.model.getElementAt(index).plusDays(weekLength.toLong())
+        updateMonthView(currentLocalDate.plusMonths(1))
+        monthList.setSelectedValue(d, false)
+      } else {
+        selectNextRow.actionPerformed(e)
+      }
+    }
+  })
+}
+
+fun updateMonthView(localDate: LocalDate) {
+  currentLocalDate = localDate
+  val dtf = DateTimeFormatter.ofPattern("yyyy / MM").withLocale(Locale.getDefault())
+  yearMonthLabel.text = localDate.format(dtf)
+  monthList.model = CalendarViewListModel(localDate)
+}
+
+private class CalendarListRenderer : ListCellRenderer<LocalDate> {
+  private val renderer = DefaultListCellRenderer()
+
+  override fun getListCellRendererComponent(
+    list: JList<out LocalDate>,
+    value: LocalDate,
+    index: Int,
+    isSelected: Boolean,
+    cellHasFocus: Boolean
+  ): Component {
+    val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+    val l = c as? JLabel ?: return c
+    l.isOpaque = true
+    l.horizontalAlignment = SwingConstants.CENTER
+    l.text = value.dayOfMonth.toString()
+    val isSameMonth = YearMonth.from(value) == YearMonth.from(currentLocalDate)
+    val fgc = if (isSameMonth) getForegroundColor(value) else Color.GRAY
+    l.foreground = if (isSelected) l.foreground else fgc
+    return l
+  }
+
+  private fun getForegroundColor(ld: LocalDate) = when {
+    ld.isEqual(realLocalDate) -> Color(0x64_FF_64)
+    else -> getDayOfWeekColor(ld.dayOfWeek)
+  }
+
+  private fun getDayOfWeekColor(dow: DayOfWeek) = when (dow) {
+    DayOfWeek.SUNDAY -> Color(0xFF_64_64)
+    DayOfWeek.SATURDAY -> Color(0x64_64_FF)
+    else -> Color.BLACK
+  }
+}
+
+private class CalendarViewListModel(date: LocalDate) : AbstractListModel<LocalDate>() {
   private val startDate: LocalDate
   private val weekFields = WeekFields.of(Locale.getDefault())
 
@@ -232,7 +232,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
