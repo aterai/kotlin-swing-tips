@@ -8,42 +8,39 @@ import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.hypot
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    add(ColorWheel())
-    setPreferredSize(Dimension(320, 240))
-  }
+fun makeUI() = JPanel(BorderLayout()).also {
+  it.add(ColorWheel())
+  it.preferredSize = Dimension(320, 240)
 }
 
-internal class ColorWheel : JPanel() {
+private class ColorWheel : JPanel() {
   @Transient private val image: BufferedImage
 
   init {
     image = updateImage()
-    setPreferredSize(Dimension(320, 240))
+    preferredSize = Dimension(320, 240)
   }
 
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
 
-    // SIZE = 32 * 6; // Drawing breaks on Corretto 1.8.0_212
     val s = SIZE
     val g2 = g.create() as? Graphics2D ?: return
 
     // Soft Clipping
-    val gc = g2.getDeviceConfiguration()
+    val gc = g2.deviceConfiguration
     val buf = gc.createCompatibleImage(s, s, Transparency.TRANSLUCENT)
     val g2d = buf.createGraphics()
 
-    g2d.setComposite(AlphaComposite.Src)
+    g2d.composite = AlphaComposite.Src
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     g2d.fill(Ellipse2D.Float(0f, 0f, s.toFloat(), s.toFloat()))
 
-    g2d.setComposite(AlphaComposite.SrcAtop)
+    g2d.composite = AlphaComposite.SrcAtop
     g2d.drawImage(image, 0, 0, null)
     g2d.dispose()
 
-    g2.drawImage(buf, null, (getWidth() - s) / 2, (getHeight() - s) / 2)
+    g2.drawImage(buf, null, (width - s) / 2, (height - s) / 2)
     g2.dispose()
   }
 
@@ -57,10 +54,10 @@ internal class ColorWheel : JPanel() {
     val size = SIZE.toFloat()
     val radius = size / 2f
 
-    for (yidx in 0 until SIZE) {
-      val y = yidx - size / 2.0
-      for (xidx in 0 until SIZE) {
-        val x = xidx - size / 2.0
+    for (yi in 0 until SIZE) {
+      val y = yi - size / 2.0
+      for (xi in 0 until SIZE) {
+        val x = xi - size / 2.0
         var theta = atan2(y, x) - 3.0 * PI / 2.0
         if (theta < 0) {
           theta += 2.0 * PI
@@ -69,9 +66,9 @@ internal class ColorWheel : JPanel() {
         val hue = (theta / (2.0 * PI)).toFloat()
         val sat = minOf((r / radius).toFloat(), 1f)
         val bri = 1f
-        row[xidx] = Color.HSBtoRGB(hue, sat, bri)
+        row[xi] = Color.HSBtoRGB(hue, sat, bri)
       }
-      image.getRaster().setDataElements(0, yidx, SIZE, 1, row)
+      image.raster.setDataElements(0, yi, SIZE, 1, row)
     }
     return image
   }
@@ -91,7 +88,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
