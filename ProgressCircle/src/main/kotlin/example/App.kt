@@ -10,53 +10,53 @@ import java.beans.PropertyChangeListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicProgressBarUI
 
-class MainPanel : JPanel(BorderLayout()) {
-  private val progress1 = object : JProgressBar() {
-    override fun updateUI() {
-      super.updateUI()
-      setUI(ProgressCircleUI())
-      setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25))
-    }
+private val progress1 = object : JProgressBar() {
+  override fun updateUI() {
+    super.updateUI()
+    setUI(ProgressCircleUI())
+    border = BorderFactory.createEmptyBorder(25, 25, 25, 25)
   }
-  private val progress2 = object : JProgressBar() {
-    override fun updateUI() {
-      super.updateUI()
-      setUI(ProgressCircleUI())
-      setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25))
-    }
+}
+private val progress2 = object : JProgressBar() {
+  override fun updateUI() {
+    super.updateUI()
+    setUI(ProgressCircleUI())
+    border = BorderFactory.createEmptyBorder(25, 25, 25, 25)
   }
+}
 
-  init {
-    progress1.setForeground(Color(0xFF_AA_AA))
-    progress2.setStringPainted(true)
-    progress2.setFont(progress2.getFont().deriveFont(24f))
+fun makeUI(): Component {
+  progress1.foreground = Color(0xFF_AA_AA)
+  progress2.isStringPainted = true
+  progress2.font = progress2.font.deriveFont(24f)
 
-    val slider = JSlider()
-    slider.putClientProperty("Slider.paintThumbArrowShape", true)
-    progress1.setModel(slider.getModel())
+  val slider = JSlider()
+  slider.putClientProperty("Slider.paintThumbArrowShape", true)
+  progress1.model = slider.model
 
-    val button = JButton("start")
-    button.addActionListener { e ->
-      val b = e.getSource() as? JButton ?: return@addActionListener
-      b.setEnabled(false)
-      val worker = object : BackgroundTask() {
-        override fun done() {
-          if (b.isDisplayable()) {
-            b.setEnabled(true)
-          }
+  val button = JButton("start")
+  button.addActionListener { e ->
+    val b = e.source as? JButton ?: return@addActionListener
+    b.isEnabled = false
+    val worker = object : BackgroundTask() {
+      override fun done() {
+        if (b.isDisplayable) {
+          b.isEnabled = true
         }
       }
-      worker.addPropertyChangeListener(ProgressListener(progress2))
-      worker.execute()
     }
+    worker.addPropertyChangeListener(ProgressListener(progress2))
+    worker.execute()
+  }
 
-    add(slider, BorderLayout.NORTH)
-    add(JPanel(GridLayout(1, 2)).also {
-      it.add(progress1)
-      it.add(progress2)
+  return JPanel(BorderLayout()).also {
+    it.add(slider, BorderLayout.NORTH)
+    it.add(JPanel(GridLayout(1, 2)).also { p ->
+      p.add(progress1)
+      p.add(progress2)
     })
-    add(button, BorderLayout.SOUTH)
-    setPreferredSize(Dimension(320, 240))
+    it.add(button, BorderLayout.SOUTH)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
@@ -67,9 +67,9 @@ class ProgressCircleUI : BasicProgressBarUI() {
   }
 
   override fun paint(g: Graphics, c: JComponent) {
-    val b = progressBar.getInsets() // area for border
-    val barRectWidth = progressBar.getWidth() - b.right - b.left
-    val barRectHeight = progressBar.getHeight() - b.top - b.bottom
+    val b = progressBar.insets // area for border
+    val barRectWidth = progressBar.width - b.right - b.left
+    val barRectHeight = progressBar.height - b.top - b.bottom
     // if (barRectWidth <= 0 || barRectHeight <= 0) {
     //   return
     // }
@@ -77,7 +77,7 @@ class ProgressCircleUI : BasicProgressBarUI() {
     val g2 = g as Graphics2D
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
 
-    val degree = 360 * progressBar.getPercentComplete()
+    val degree = 360 * progressBar.percentComplete
     val sz = minOf(barRectWidth, barRectHeight).toDouble()
     val cp = Point2D.Double(b.left + barRectWidth * .5, b.top + barRectHeight * .5)
     val r = sz * .5
@@ -90,7 +90,7 @@ class ProgressCircleUI : BasicProgressBarUI() {
     sector.subtract(hole)
 
     // draw the track
-    g2.setPaint(Color(0xDD_DD_DD))
+    g2.paint = Color(0xDD_DD_DD)
     g2.fill(track)
 
     // draw the circular sector
@@ -98,12 +98,12 @@ class ProgressCircleUI : BasicProgressBarUI() {
     // at.translate(-(barRectWidth + b.left * 2), 0);
     // AffineTransform at = AffineTransform.getRotateInstance(Math.toRadians(degree), cp.x, cp.y);
     // g2.fill(at.createTransformedShape(area));
-    g2.setPaint(progressBar.getForeground())
+    g2.paint = progressBar.foreground
     g2.fill(sector)
     // g2.dispose()
 
     // Deal with possible text painting
-    if (progressBar.isStringPainted()) {
+    if (progressBar.isStringPainted) {
       paintString(g, b.left, b.top, barRectWidth, barRectHeight, 0, b)
     }
   }
@@ -114,9 +114,9 @@ open class BackgroundTask : SwingWorker<String, Unit>() {
   override fun doInBackground(): String {
     var current = 0
     val lengthOfTask = 100
-    while (current <= lengthOfTask && !isCancelled()) {
+    while (current <= lengthOfTask && !isCancelled) {
       Thread.sleep(80) // dummy task
-      setProgress(100 * current / lengthOfTask)
+      progress = 100 * current / lengthOfTask
       current++
     }
     return "Done"
@@ -125,14 +125,14 @@ open class BackgroundTask : SwingWorker<String, Unit>() {
 
 class ProgressListener(private val progressBar: JProgressBar) : PropertyChangeListener {
   init {
-    this.progressBar.setValue(0)
+    this.progressBar.value = 0
   }
 
   override fun propertyChange(e: PropertyChangeEvent) {
-    val iv = e.getNewValue()
-    if ("progress" == e.getPropertyName() && iv is Int) {
-      progressBar.setIndeterminate(false)
-      progressBar.setValue(iv)
+    val iv = e.newValue
+    if ("progress" == e.propertyName && iv is Int) {
+      progressBar.isIndeterminate = false
+      progressBar.value = iv
     }
   }
 }
@@ -147,7 +147,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
