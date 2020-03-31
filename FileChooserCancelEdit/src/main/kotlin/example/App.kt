@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  // UIManager.put("FileChooser.readOnly", true);
+  // UIManager.put("FileChooser.readOnly", true)
   val log = JTextArea()
 
   val fileChooser0 = JFileChooser()
@@ -24,11 +24,11 @@ fun makeUI(): Component {
     //     .findFirst()
     //     .ifPresent { append(log, "isEditing: ${it.isEditing()}") }
     descendants(fileChooser0).filterIsInstance<JTable>()
-      .firstOrNull()?.also { append(log, "isEditing: ${it.isEditing()}") }
+      .firstOrNull()?.also { append(log, "isEditing: ${it.isEditing}") }
 
-    val retValue = fileChooser0.showOpenDialog(log.getRootPane())
+    val retValue = fileChooser0.showOpenDialog(log.rootPane)
     if (retValue == JFileChooser.APPROVE_OPTION) {
-      append(log, fileChooser0.getSelectedFile().getAbsolutePath())
+      append(log, fileChooser0.selectedFile.absolutePath)
     }
   }
 
@@ -55,32 +55,32 @@ fun makeUI(): Component {
     descendants(fileChooser1).filterIsInstance<JTable>()
       .firstOrNull()?.removeEditor()
 
-    val retValue = fileChooser1.showOpenDialog(log.getRootPane())
+    val retValue = fileChooser1.showOpenDialog(log.rootPane)
     if (retValue == JFileChooser.APPROVE_OPTION) {
-      append(log, fileChooser1.getSelectedFile().getAbsolutePath())
+      append(log, fileChooser1.selectedFile.absolutePath)
     }
   }
 
   val p = JPanel()
-  p.setBorder(BorderFactory.createTitledBorder("JFileChooser(viewTypeDetails)"))
+  p.border = BorderFactory.createTitledBorder("JFileChooser(viewTypeDetails)")
   p.add(button0)
   p.add(button1)
 
   return JPanel(BorderLayout()).also {
     it.add(p, BorderLayout.NORTH)
     it.add(JScrollPane(log))
-    it.setPreferredSize(Dimension(320, 240))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
 private fun setViewTypeDetails(fileChooser: JFileChooser) {
-  fileChooser.getActionMap().get("viewTypeDetails")?.actionPerformed(
+  fileChooser.actionMap.get("viewTypeDetails")?.actionPerformed(
     ActionEvent(fileChooser, ActionEvent.ACTION_PERFORMED, "viewTypeDetails"))
 }
 
 private fun append(log: JTextArea, str: String) {
   log.append(str + "\n")
-  log.setCaretPosition(log.getDocument().getLength())
+  log.caretPosition = log.document.length
 }
 
 // fun stream(parent: Container): Stream<Component> {
@@ -102,7 +102,7 @@ private fun append(log: JTextArea, str: String) {
 //     .map { c -> stream(Container::class.java.cast(c)) }
 //     .reduce(Stream.of<Component>(parent), { a, b -> Stream.concat<Component>(a, b) })
 
-fun descendants(parent: Container): List<Component> = parent.getComponents()
+fun descendants(parent: Container): List<Component> = parent.components
   .filterIsInstance<Container>()
   // .map { children(it) }.fold(listOf<Component>(parent)) { a, b -> a + b }
   .flatMap { listOf(it) + descendants(it) }

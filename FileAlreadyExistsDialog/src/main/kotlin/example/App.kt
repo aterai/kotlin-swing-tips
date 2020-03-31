@@ -6,9 +6,9 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 fun makeUI(): Component {
   val fileChooser = object : JFileChooser() {
     override fun approveSelection() {
-      val f = getSelectedFile()
-      if (f.exists() && getDialogType() == SAVE_DIALOG) {
-        val path = f.getAbsolutePath()
+      val f = selectedFile
+      if (f.exists() && dialogType == SAVE_DIALOG) {
+        val path = f.absolutePath
         val m = "<html>$path already exists.<br>Do you want to replace it?"
         val rv = JOptionPane.showConfirmDialog(this, m, "Save As", JOptionPane.YES_NO_OPTION)
         if (rv != JOptionPane.YES_OPTION) {
@@ -20,19 +20,19 @@ fun makeUI(): Component {
   }
   val button = JButton("Override JFileChooser#approveSelection()")
   button.addActionListener {
-    val ret = fileChooser.showSaveDialog(button.getRootPane())
+    val ret = fileChooser.showSaveDialog(button.rootPane)
     if (ret == JFileChooser.APPROVE_OPTION) {
-      val file = fileChooser.getSelectedFile()
+      val file = fileChooser.selectedFile
       println(file)
     }
   }
   val p = JPanel(GridBagLayout())
-  p.setBorder(BorderFactory.createCompoundBorder(
+  p.border = BorderFactory.createCompoundBorder(
     BorderFactory.createEmptyBorder(20, 20, 20, 20),
     BorderFactory.createTitledBorder("JFileChooser#showSaveDialog(...)")
-  ))
+  )
   p.add(button)
-  p.setPreferredSize(Dimension(320, 240))
+  p.preferredSize = Dimension(320, 240)
   return p
 }
 
