@@ -19,52 +19,49 @@ import javax.swing.event.CaretEvent
 import javax.swing.event.CaretListener
 import javax.swing.text.JTextComponent
 
-class MainPanel : JPanel(GridLayout(2, 1)) {
-  init {
-    val log = JTextArea()
-    LOGGER.setUseParentHandlers(false)
-    LOGGER.addHandler(TextAreaHandler(TextAreaOutputStream(log)))
-    val textArea = object : JTextArea("012345 67890 123456789") {
-      @Transient
-      private var handler: CopyOnSelectListener? = null
+private val logger = Logger.getLogger(MethodHandles.lookup().lookupClass().name)
 
-      override fun updateUI() {
-        removeCaretListener(handler)
-        removeMouseListener(handler)
-        removeKeyListener(handler)
-        super.updateUI()
-        handler = CopyOnSelectListener()
-        addCaretListener(handler)
-        addMouseListener(handler)
-        addKeyListener(handler)
-      }
+fun makeUI(): Component {
+  val log = JTextArea()
+  logger.useParentHandlers = false
+  logger.addHandler(TextAreaHandler(TextAreaOutputStream(log)))
+  val textArea = object : JTextArea("012345 67890 123456789") {
+    @Transient
+    private var handler: CopyOnSelectListener? = null
+
+    override fun updateUI() {
+      removeCaretListener(handler)
+      removeMouseListener(handler)
+      removeKeyListener(handler)
+      super.updateUI()
+      handler = CopyOnSelectListener()
+      addCaretListener(handler)
+      addMouseListener(handler)
+      addKeyListener(handler)
     }
-    add(makeTitledPanel("Copy On Select", JScrollPane(textArea)))
-    add(makeTitledPanel("log", JScrollPane(log)))
-    setPreferredSize(Dimension(320, 240))
   }
-
-  private fun makeTitledPanel(title: String, c: Component): Component {
-    val p = JPanel(BorderLayout())
-    p.setBorder(BorderFactory.createTitledBorder(title))
-    p.add(c)
-    return p
-}
-
-  companion object {
-    val LOGGER_NAME: String = MethodHandles.lookup().lookupClass().getName()
-    private val LOGGER = Logger.getLogger(LOGGER_NAME)
+  return JPanel(GridLayout(2, 1)).also {
+    it.add(makeTitledPanel("Copy On Select", JScrollPane(textArea)))
+    it.add(makeTitledPanel("log", JScrollPane(log)))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class CopyOnSelectListener : MouseAdapter(), CaretListener, KeyListener {
+private fun makeTitledPanel(title: String, c: Component): Component {
+  val p = JPanel(BorderLayout())
+  p.border = BorderFactory.createTitledBorder(title)
+  p.add(c)
+  return p
+}
+
+private class CopyOnSelectListener : MouseAdapter(), CaretListener, KeyListener {
   private var dragActive = false
   private var shiftActive = false
   private var dot = 0
   private var mark = 0
   override fun caretUpdate(e: CaretEvent) {
     if (!dragActive && !shiftActive) {
-      fire(e.getSource())
+      fire(e.source)
     }
   }
 
@@ -74,17 +71,17 @@ class CopyOnSelectListener : MouseAdapter(), CaretListener, KeyListener {
 
   override fun mouseReleased(e: MouseEvent) {
     dragActive = false
-    fire(e.getSource())
-}
+    fire(e.source)
+  }
 
   override fun keyPressed(e: KeyEvent) {
-    shiftActive = e.getModifiersEx() and InputEvent.SHIFT_DOWN_MASK != 0
-}
+    shiftActive = e.modifiersEx and InputEvent.SHIFT_DOWN_MASK != 0
+  }
 
   override fun keyReleased(e: KeyEvent) {
-    shiftActive = e.getModifiersEx() and InputEvent.SHIFT_DOWN_MASK != 0
+    shiftActive = e.modifiersEx and InputEvent.SHIFT_DOWN_MASK != 0
     if (!shiftActive) {
-      fire(e.getSource())
+      fire(e.source)
     }
   }
 
@@ -94,27 +91,24 @@ class CopyOnSelectListener : MouseAdapter(), CaretListener, KeyListener {
 
   private fun fire(c: Any) {
     if (c is JTextComponent) {
-      val caret = c.getCaret()
-      val d = caret.getDot()
-      val m = caret.getMark()
+      val caret = c.caret
+      val d = caret.dot
+      val m = caret.mark
       if (d != m && (dot != d || mark != m)) {
-        c.getSelectedText()?.also {
-          LOGGER.info { it }
+        c.selectedText?.also {
+          logger.info { it }
           c.copy()
+        }
       }
-    }
       dot = d
       mark = m
     }
   }
-
-  companion object {
-    private val LOGGER = Logger.getLogger(MainPanel.LOGGER_NAME)
-  }
 }
 
-class TextAreaOutputStream(private val textArea: JTextArea) : OutputStream() {
+private class TextAreaOutputStream(private val textArea: JTextArea) : OutputStream() {
   private val buffer = ByteArrayOutputStream()
+
   @Throws(IOException::class)
   override fun flush() {
     textArea.append(buffer.toString("UTF-8"))
@@ -130,14 +124,14 @@ class TextAreaOutputStream(private val textArea: JTextArea) : OutputStream() {
   }
 }
 
-class TextAreaHandler(os: OutputStream) : StreamHandler() {
+private class TextAreaHandler(os: OutputStream) : StreamHandler() {
   private fun configure() {
-    setFormatter(SimpleFormatter())
+    formatter = SimpleFormatter()
     runCatching {
-      setEncoding("UTF-8")
+      encoding = "UTF-8"
     }.onFailure {
       // doing a setEncoding with null should always work.
-      setEncoding(null)
+      encoding = null
     }
   }
 
@@ -168,7 +162,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
