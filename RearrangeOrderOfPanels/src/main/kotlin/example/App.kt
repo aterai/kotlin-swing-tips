@@ -5,42 +5,43 @@ import java.awt.dnd.DragSource
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import kotlin.math.roundToInt
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val box = Box.createVerticalBox()
-    val dh = RearrangingHandler()
-    box.addMouseListener(dh)
-    box.addMouseMotionListener(dh)
-    for ((i, c) in listOf<Component>(
-      JLabel("<html>1<br>11<br>111"),
-      JButton("22"),
-      JCheckBox("333"),
-      JScrollPane(JTextArea(4, 12))
-    ).withIndex()) {
-      box.add(createSortablePanel(i, c))
-    }
-    add(box, BorderLayout.NORTH)
-    setPreferredSize(Dimension(320, 240))
+fun makeUI(): Component {
+  val box = Box.createVerticalBox()
+  val dh = RearrangingHandler()
+  box.addMouseListener(dh)
+  box.addMouseMotionListener(dh)
+  for ((i, c) in listOf<Component>(
+    JLabel("<html>1<br>11<br>111"),
+    JButton("22"),
+    JCheckBox("333"),
+    JScrollPane(JTextArea(4, 12))
+  ).withIndex()) {
+    box.add(createSortablePanel(i, c))
   }
-
-  private fun createSortablePanel(i: Int, c: Component): Component {
-    val l = JLabel(" %04d ".format(i))
-    l.setOpaque(true)
-    l.setBackground(Color.RED)
-    val p = JPanel(BorderLayout())
-    p.setBorder(BorderFactory.createCompoundBorder(
-      BorderFactory.createEmptyBorder(5, 5, 5, 5),
-      BorderFactory.createLineBorder(Color.BLUE, 2)
-    ))
-    p.add(l, BorderLayout.WEST)
-    p.add(c)
-    p.setOpaque(false)
-    return p
+  return JPanel(BorderLayout()).also {
+    it.add(box, BorderLayout.NORTH)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class RearrangingHandler : MouseAdapter() {
+private fun createSortablePanel(i: Int, c: Component): Component {
+  val l = JLabel(" %04d ".format(i))
+  l.isOpaque = true
+  l.background = Color.RED
+  val p = JPanel(BorderLayout())
+  p.border = BorderFactory.createCompoundBorder(
+    BorderFactory.createEmptyBorder(5, 5, 5, 5),
+    BorderFactory.createLineBorder(Color.BLUE, 2)
+  )
+  p.add(l, BorderLayout.WEST)
+  p.add(c)
+  p.isOpaque = false
+  return p
+}
+
+private class RearrangingHandler : MouseAdapter() {
   private val prevRect = Rectangle()
   private val gestureMotionThreshold = DragSource.getDragThreshold()
   private val window = JWindow()
@@ -51,9 +52,9 @@ class RearrangingHandler : MouseAdapter() {
   private var gap: Component? = null
 
   override fun mousePressed(e: MouseEvent) {
-    val c = e.getComponent() as? Container ?: return
-    if (c.getComponentCount() > 0) {
-      startPt.setLocation(e.getPoint())
+    val c = e.component as? Container ?: return
+    if (c.componentCount > 0) {
+      startPt.location = e.point
     }
   }
 
@@ -64,24 +65,24 @@ class RearrangingHandler : MouseAdapter() {
       return
     }
     draggingComponent = c
-    val d = c.getSize()
-    val dp = c.getLocation()
+    val d = c.size
+    val dp = c.location
     dragOffset.setLocation(pt.x - dp.x, pt.y - dp.y)
     gap = Box.createRigidArea(d)
     swapComponentLocation(parent, c, gap, index)
-    window.setBackground(Color(0x0, true))
+    window.background = Color(0x0, true)
     window.add(draggingComponent)
     // window.setSize(d)
     window.pack()
     updateWindowLocation(pt, parent)
-    window.setVisible(true)
+    window.isVisible = true
   }
 
   private fun updateWindowLocation(pt: Point, parent: Component) {
-    if (window.isVisible() && draggingComponent != null) {
+    if (window.isVisible && draggingComponent != null) {
       val p = Point(pt.x - dragOffset.x, pt.y - dragOffset.y)
       SwingUtilities.convertPointToScreen(p, parent)
-      window.setLocation(p)
+      window.location = p
     }
   }
 
@@ -91,11 +92,11 @@ class RearrangingHandler : MouseAdapter() {
     NEXT_AREA.setBounds(r.x, r.y + ht2, r.width, ht2)
     return when {
       PREV_AREA.contains(pt) -> {
-        prevRect.setBounds(PREV_AREA)
+        prevRect.bounds = PREV_AREA
         if (i > 1) i else 0
       }
       NEXT_AREA.contains(pt) -> {
-        prevRect.setBounds(NEXT_AREA)
+        prevRect.bounds = NEXT_AREA
         i
       }
       else -> -1
@@ -103,8 +104,8 @@ class RearrangingHandler : MouseAdapter() {
   }
 
   override fun mouseDragged(e: MouseEvent) {
-    val pt = e.getPoint()
-    (e.getComponent() as? Container)?.also { parent ->
+    val pt = e.point
+    (e.component as? Container)?.also { parent ->
       if (draggingComponent == null) {
         if (startPt.distance(pt) > gestureMotionThreshold) {
           startDragging(parent, pt)
@@ -122,14 +123,14 @@ class RearrangingHandler : MouseAdapter() {
   override fun mouseReleased(e: MouseEvent) {
     dragOffset.setLocation(0, 0)
     prevRect.setBounds(0, 0, 0, 0)
-    window.setVisible(false)
+    window.isVisible = false
 
-    val pt = e.getPoint()
-    (e.getComponent() as? Container)?.also { parent ->
+    val pt = e.point
+    (e.component as? Container)?.also { parent ->
       val c = draggingComponent
       draggingComponent = null
       if (!searchAndSwap(parent, c, pt)) {
-        val i = if (parent.getParent().getBounds().contains(pt)) parent.getComponentCount() else index
+        val i = if (parent.parent.bounds.contains(pt)) parent.componentCount else index
         swapComponentLocation(parent, gap, c, i)
       }
     }
@@ -137,8 +138,8 @@ class RearrangingHandler : MouseAdapter() {
 
   private fun searchAndSwap(parent: Container, cmp: Component?, pt: Point): Boolean {
     var find = false
-    for ((i, c) in parent.getComponents().withIndex()) {
-      val r = c.getBounds()
+    for ((i, c) in parent.components.withIndex()) {
+      val r = c.bounds
       if (c == gap && r.contains(pt)) {
         swapComponentLocation(parent, gap, cmp, i)
         return true
@@ -178,7 +179,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
