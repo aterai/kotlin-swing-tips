@@ -14,85 +14,87 @@ import javax.swing.event.ListSelectionListener
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 
-class MainPanel : JPanel(BorderLayout()) {
-  private val realLocalDate: LocalDate = LocalDate.now(ZoneId.systemDefault())
-  private var currentLocalDate: LocalDate = realLocalDate
-  private val dateLabel = JLabel(realLocalDate.toString(), SwingConstants.CENTER)
-  private val monthLabel = JLabel("", SwingConstants.CENTER)
-  private val monthTable = object : JTable() {
-    override fun updateUI() {
-      super.updateUI()
-      setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
-      setCellSelectionEnabled(true)
-      setRowHeight(20)
-      setFillsViewportHeight(true)
-      val renderer = DefaultTableCellRenderer()
-      setDefaultRenderer(LocalDate::class.java) { table, value, selected, focused, row, column ->
-        val c = renderer.getTableCellRendererComponent(table, value, selected, focused, row, column)
-        if (c is JLabel && value is LocalDate) {
-          c.setHorizontalAlignment(SwingConstants.CENTER)
-          c.setText(value.getDayOfMonth().toString())
-          val flg = YearMonth.from(value) == YearMonth.from(currentLocalDate)
-          c.setForeground(if (flg) Color.BLACK else Color.GRAY)
-          c.setBackground(when {
+private val realLocalDate: LocalDate = LocalDate.now(ZoneId.systemDefault())
+private var currentLocalDate: LocalDate = realLocalDate
+private val dateLabel = JLabel(realLocalDate.toString(), SwingConstants.CENTER)
+private val monthLabel = JLabel("", SwingConstants.CENTER)
+private val monthTable = object : JTable() {
+  override fun updateUI() {
+    super.updateUI()
+    setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
+    setCellSelectionEnabled(true)
+    setRowHeight(20)
+    fillsViewportHeight = true
+    val renderer = DefaultTableCellRenderer()
+    setDefaultRenderer(LocalDate::class.java) { table, value, selected, focused, row, column ->
+      val c = renderer.getTableCellRendererComponent(table, value, selected, focused, row, column)
+      if (c is JLabel && value is LocalDate) {
+        c.horizontalAlignment = SwingConstants.CENTER
+        c.text = value.dayOfMonth.toString()
+        val flg = YearMonth.from(value) == YearMonth.from(currentLocalDate)
+        c.setForeground(if (flg) Color.BLACK else Color.GRAY)
+        c.setBackground(
+          when {
             value.isEqual(realLocalDate) -> Color(0xDC_FF_DC)
-            else -> getDayOfWeekColor(value.getDayOfWeek())
-          })
-        }
-        return@setDefaultRenderer c
+            else -> getDayOfWeekColor(value.dayOfWeek)
+          }
+        )
+      }
+      return@setDefaultRenderer c
+    }
+  }
+}
+
+fun makeUI(): Component {
+  val header = monthTable.tableHeader
+  header.resizingAllowed = false
+  header.reorderingAllowed = false
+  (header.defaultRenderer as? JLabel)?.horizontalAlignment = SwingConstants.CENTER
+
+  val selectionListener = ListSelectionListener { e ->
+    if (!e.valueIsAdjusting) {
+      val o = monthTable.getValueAt(monthTable.selectedRow, monthTable.selectedColumn)
+      (o as? LocalDate)?.also {
+        dateLabel.text = it.toString()
       }
     }
   }
+  monthTable.selectionModel.addListSelectionListener(selectionListener)
+  monthTable.columnModel.selectionModel.addListSelectionListener(selectionListener)
 
-  init {
-    val header = monthTable.getTableHeader()
-    header.setResizingAllowed(false)
-    header.setReorderingAllowed(false)
-    (header.getDefaultRenderer() as? JLabel)?.setHorizontalAlignment(SwingConstants.CENTER)
+  updateMonthView(realLocalDate)
 
-    val selectionListener = ListSelectionListener { e ->
-      if (!e.getValueIsAdjusting()) {
-        val o = monthTable.getValueAt(monthTable.getSelectedRow(), monthTable.getSelectedColumn())
-        (o as? LocalDate)?.also {
-          dateLabel.setText(it.toString())
-        }
-      }
-    }
-    monthTable.getSelectionModel().addListSelectionListener(selectionListener)
-    monthTable.getColumnModel().getSelectionModel().addListSelectionListener(selectionListener)
+  val prev = JButton("<")
+  prev.addActionListener { updateMonthView(currentLocalDate.minusMonths(1)) }
 
-    updateMonthView(realLocalDate)
+  val next = JButton(">")
+  next.addActionListener { updateMonthView(currentLocalDate.plusMonths(1)) }
 
-    val prev = JButton("<")
-    prev.addActionListener { updateMonthView(currentLocalDate.minusMonths(1)) }
+  val p = JPanel(BorderLayout())
+  p.add(monthLabel)
+  p.add(prev, BorderLayout.WEST)
+  p.add(next, BorderLayout.EAST)
 
-    val next = JButton(">")
-    next.addActionListener { updateMonthView(currentLocalDate.plusMonths(1)) }
-
-    val p = JPanel(BorderLayout())
-    p.add(monthLabel)
-    p.add(prev, BorderLayout.WEST)
-    p.add(next, BorderLayout.EAST)
-
-    add(p, BorderLayout.NORTH)
-    add(JScrollPane(monthTable))
-    add(dateLabel, BorderLayout.SOUTH)
-    setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-    setPreferredSize(Dimension(320, 240))
+  return JPanel(BorderLayout()).also {
+    it.add(p, BorderLayout.NORTH)
+    it.add(JScrollPane(monthTable))
+    it.add(dateLabel, BorderLayout.SOUTH)
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    it.preferredSize = Dimension(320, 240)
   }
+}
 
-  private fun updateMonthView(localDate: LocalDate) {
-    currentLocalDate = localDate
-    val dtf = DateTimeFormatter.ofPattern("yyyy / MM").withLocale(Locale.getDefault())
-    monthLabel.setText(localDate.format(dtf))
-    monthTable.setModel(CalendarViewTableModel(localDate))
-  }
+private fun updateMonthView(localDate: LocalDate) {
+  currentLocalDate = localDate
+  val dtf = DateTimeFormatter.ofPattern("yyyy / MM").withLocale(Locale.getDefault())
+  monthLabel.text = localDate.format(dtf)
+  monthTable.model = CalendarViewTableModel(localDate)
+}
 
-  private fun getDayOfWeekColor(dow: DayOfWeek) = when (dow) {
-    DayOfWeek.SUNDAY -> Color(0xFF_DC_DC)
-    DayOfWeek.SATURDAY -> Color(0xDC_DC_FF)
-    else -> Color.WHITE
-  }
+private fun getDayOfWeekColor(dow: DayOfWeek) = when (dow) {
+  DayOfWeek.SUNDAY -> Color(0xFF_DC_DC)
+  DayOfWeek.SATURDAY -> Color(0xDC_DC_FF)
+  else -> Color.WHITE
 }
 
 internal class CalendarViewTableModel(date: LocalDate) : DefaultTableModel() {
@@ -109,7 +111,7 @@ internal class CalendarViewTableModel(date: LocalDate) : DefaultTableModel() {
   override fun getColumnClass(column: Int) = LocalDate::class.java
 
   override fun getColumnName(column: Int): String = weekFields
-    .getFirstDayOfWeek()
+    .firstDayOfWeek
     .plus(column.toLong())
     .getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault())
 
@@ -118,7 +120,7 @@ internal class CalendarViewTableModel(date: LocalDate) : DefaultTableModel() {
   override fun getColumnCount() = 7
 
   override fun getValueAt(row: Int, column: Int): LocalDate =
-    startDate.plusDays((row * getColumnCount() + column).toLong())
+    startDate.plusDays((row * columnCount + column).toLong())
 
   override fun isCellEditable(row: Int, column: Int) = false
 }
@@ -133,7 +135,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
