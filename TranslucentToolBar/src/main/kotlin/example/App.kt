@@ -11,20 +11,22 @@ import java.awt.image.RescaleOp
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.Timer
 
-class MainPanel : JPanel() {
-  init {
-    val label = LabelWithToolBox(ImageIcon(javaClass.getResource("test.png")))
-    label.border = BorderFactory.createCompoundBorder(
-      BorderFactory.createLineBorder(Color(0xDE_DE_DE)),
-      BorderFactory.createLineBorder(Color.WHITE, 4)
-    )
-    add(label)
-    preferredSize = Dimension(320, 240)
+fun makeUI(): Component {
+  val cl = Thread.currentThread().contextClassLoader
+  val label = LabelWithToolBox(ImageIcon(cl.getResource("example/test.png")))
+  label.border = BorderFactory.createCompoundBorder(
+    BorderFactory.createLineBorder(Color(0xDE_DE_DE)),
+    BorderFactory.createLineBorder(Color.WHITE, 4)
+  )
+  return JPanel().also {
+    it.add(label)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class LabelWithToolBox(image: Icon?) : JLabel(image) {
+private class LabelWithToolBox(image: Icon?) : JLabel(image) {
   private val animator = Timer(DELAY, null)
+
   @Transient
   private var handler: ToolBoxHandler? = null
   private var isHidden = false
@@ -35,7 +37,7 @@ class LabelWithToolBox(image: Icon?) : JLabel(image) {
     private var listener: MouseListener? = null
 
     override fun paintComponent(g: Graphics) {
-      val g2 = g.create() as Graphics2D
+      val g2 = g.create() as? Graphics2D ?: return
       g2.paint = background
       g2.fillRect(0, 0, width, height)
       g2.dispose()
@@ -159,7 +161,7 @@ class LabelWithToolBox(image: Icon?) : JLabel(image) {
   }
 }
 
-class ParentDispatchMouseListener : MouseAdapter() {
+private class ParentDispatchMouseListener : MouseAdapter() {
   override fun mouseEntered(e: MouseEvent) {
     dispatchMouseEvent(e)
   }
@@ -176,7 +178,7 @@ class ParentDispatchMouseListener : MouseAdapter() {
   }
 }
 
-object AnimationUtil {
+private object AnimationUtil {
   private const val N = 3
 
   fun easeInOut(t: Double): Double {
@@ -218,7 +220,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

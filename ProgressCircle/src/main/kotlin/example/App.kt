@@ -74,7 +74,7 @@ class ProgressCircleUI : BasicProgressBarUI() {
     //   return
     // }
 
-    val g2 = g as Graphics2D
+    val g2 = g as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
 
     val degree = 360 * progressBar.percentComplete
