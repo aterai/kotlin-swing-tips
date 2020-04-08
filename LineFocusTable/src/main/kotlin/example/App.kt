@@ -12,40 +12,41 @@ import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableModel
 
-class MainPanel : JPanel(BorderLayout()) {
-  private val columnNames = arrayOf("String", "Integer", "Boolean")
-  private val data = arrayOf(
-    arrayOf("aaa", 12, true),
-    arrayOf("bbb", 5, false),
-    arrayOf("CCC", 92, true),
-    arrayOf("DDD", 0, false))
-  private val model = object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int) = when (column) {
-      0 -> String::class.java
-      1 -> Number::class.java
-      2 -> java.lang.Boolean::class.java
-      else -> super.getColumnClass(column)
-    }
+private val columnNames = arrayOf("String", "Integer", "Boolean")
+private val data = arrayOf(
+  arrayOf("aaa", 12, true),
+  arrayOf("bbb", 5, false),
+  arrayOf("CCC", 92, true),
+  arrayOf("DDD", 0, false)
+)
+private val model = object : DefaultTableModel(data, columnNames) {
+  override fun getColumnClass(column: Int) = when (column) {
+    0 -> String::class.java
+    1 -> Number::class.java
+    2 -> java.lang.Boolean::class.java
+    else -> super.getColumnClass(column)
   }
-  private val table = LineFocusTable(model)
+}
+private val table = LineFocusTable(model)
 
-  init {
-    UIManager.put("Table.focusCellHighlightBorder", DotBorder(2, 2, 2, 2))
+fun makeUI(): Component {
+  UIManager.put("Table.focusCellHighlightBorder", DotBorder(2, 2, 2, 2))
 
-    table.setRowSelectionAllowed(true)
-    table.setAutoCreateRowSorter(true)
-    table.setFillsViewportHeight(true)
-    table.setShowGrid(false)
-    table.setIntercellSpacing(Dimension())
-    table.putClientProperty("terminateEditOnFocusLost", true)
+  table.rowSelectionAllowed = true
+  table.autoCreateRowSorter = true
+  table.fillsViewportHeight = true
+  table.setShowGrid(false)
+  table.intercellSpacing = Dimension()
+  table.putClientProperty("terminateEditOnFocusLost", true)
 
-    table.setComponentPopupMenu(TablePopupMenu())
-    add(JScrollPane(table))
-    setPreferredSize(Dimension(320, 240))
+  table.componentPopupMenu = TablePopupMenu()
+  return JPanel(BorderLayout()).also {
+    it.add(JScrollPane(table))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class LineFocusTable(model: TableModel) : JTable(model) {
+private class LineFocusTable(model: TableModel) : JTable(model) {
   private val dotBorder = DotBorder(2, 2, 2, 2)
   private val emptyBorder = BorderFactory.createEmptyBorder(2, 2, 2, 2)
 
@@ -61,8 +62,8 @@ class LineFocusTable(model: TableModel) : JTable(model) {
   }
 
   private fun updateRenderer() {
-    val m = getModel()
-    for (i in 0 until m.getColumnCount()) {
+    val m = model
+    for (i in 0 until m.columnCount) {
       (getDefaultRenderer(m.getColumnClass(i)) as? Component)?.also {
         SwingUtilities.updateComponentTreeUI(it)
       }
@@ -71,30 +72,30 @@ class LineFocusTable(model: TableModel) : JTable(model) {
 
   private fun remakeBooleanEditor() {
     val checkBox = JCheckBox()
-    checkBox.setHorizontalAlignment(SwingConstants.CENTER)
-    checkBox.setBorderPainted(true)
-    checkBox.setOpaque(true)
+    checkBox.horizontalAlignment = SwingConstants.CENTER
+    checkBox.isBorderPainted = true
+    checkBox.isOpaque = true
     checkBox.addMouseListener(object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
-        val cb = e.getComponent() as? JCheckBox ?: return
-        val m = cb.getModel()
-        if (m.isPressed() && isRowSelected(getEditingRow()) && e.isControlDown()) {
+        val cb = e.component as? JCheckBox ?: return
+        val m = cb.model
+        if (m.isPressed && isRowSelected(getEditingRow()) && e.isControlDown) {
           if (getEditingRow() % 2 == 0) {
-            cb.setOpaque(false)
+            cb.isOpaque = false
             // cb.setBackground(getBackground());
           } else {
-            cb.setOpaque(true)
-            cb.setBackground(UIManager.getColor("Table.alternateRowColor"))
+            cb.isOpaque = true
+            cb.background = UIManager.getColor("Table.alternateRowColor")
           }
         } else {
-          cb.setBackground(getSelectionBackground())
-          cb.setOpaque(true)
+          cb.background = getSelectionBackground()
+          cb.isOpaque = true
         }
       }
 
       override fun mouseExited(e: MouseEvent) {
         // in order to drag table row selection
-        if (isEditing() && !getCellEditor().stopCellEditing()) {
+        if (isEditing && !getCellEditor().stopCellEditing()) {
           getCellEditor().cancelCellEditing()
         }
       }
@@ -107,7 +108,7 @@ class LineFocusTable(model: TableModel) : JTable(model) {
     if (column == 0) {
       border.type.add(Type.START)
     }
-    if (column == getColumnCount() - 1) {
+    if (column == columnCount - 1) {
       border.type.add(Type.END)
     }
   }
@@ -115,12 +116,12 @@ class LineFocusTable(model: TableModel) : JTable(model) {
   override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
     val o = super.prepareRenderer(tcr, row, column)
     val c = o as? JComponent ?: return o
-    (c as? JCheckBox)?.setBorderPainted(true)
-    if (row == getSelectionModel().getLeadSelectionIndex()) { // isRowSelected(row)) {
-      c.setBorder(dotBorder)
+    (c as? JCheckBox)?.isBorderPainted = true
+    if (row == getSelectionModel().leadSelectionIndex) { // isRowSelected(row)) {
+      c.border = dotBorder
       updateBorderType(dotBorder, column)
     } else {
-      c.setBorder(emptyBorder)
+      c.border = emptyBorder
     }
     return c
   }
@@ -128,7 +129,7 @@ class LineFocusTable(model: TableModel) : JTable(model) {
   override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int): Component {
     val c = super.prepareEditor(editor, row, column)
     (c as? JCheckBox)?.also {
-      it.setBorder(dotBorder)
+      it.border = dotBorder
       updateBorderType(dotBorder, column)
       // updateBorderType((DotBorder) it.getBorder(), column)
       // it.setBorderPainted(true)
@@ -138,27 +139,27 @@ class LineFocusTable(model: TableModel) : JTable(model) {
   }
 }
 
-enum class Type {
+private enum class Type {
   START, END
 }
 
-class DotBorder(top: Int, left: Int, bottom: Int, right: Int) : EmptyBorder(top, left, bottom, right) {
+private class DotBorder(top: Int, left: Int, bottom: Int, right: Int) : EmptyBorder(top, left, bottom, right) {
   val type: MutableSet<Type> = EnumSet.noneOf(Type::class.java)
 
   override fun isBorderOpaque() = true
 
   override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, w: Int, h: Int) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
-    g2.setPaint(DOT_COLOR)
-    g2.setStroke(DASHED)
+    g2.paint = DOT_COLOR
+    g2.stroke = DASHED
     if (type.contains(Type.START)) {
       g2.drawLine(0, 0, 0, h)
     }
     if (type.contains(Type.END)) {
       g2.drawLine(w - 1, 0, w - 1, h)
     }
-    if (c.getBounds().x % 2 == 0) {
+    if (c.bounds.x % 2 == 0) {
       g2.drawLine(0, 0, w, 0)
       g2.drawLine(0, h - 1, w, h - 1)
     } else {
@@ -174,24 +175,24 @@ class DotBorder(top: Int, left: Int, bottom: Int, right: Int) : EmptyBorder(top,
   }
 }
 
-class TablePopupMenu : JPopupMenu() {
+private class TablePopupMenu : JPopupMenu() {
   private val delete: JMenuItem
 
   init {
     add("add").addActionListener {
-      val table = getInvoker() as? JTable ?: return@addActionListener
-      val model = table.getModel()
+      val table = invoker as? JTable ?: return@addActionListener
+      val model = table.model
       (model as? DefaultTableModel)?.addRow(arrayOf("New row", model.getRowCount(), false))
-      val r = table.getCellRect(model.getRowCount() - 1, 0, true)
+      val r = table.getCellRect(model.rowCount - 1, 0, true)
       table.scrollRectToVisible(r)
     }
-    add("clearSelection").addActionListener { (getInvoker() as? JTable)?.clearSelection() }
+    add("clearSelection").addActionListener { (invoker as? JTable)?.clearSelection() }
     addSeparator()
     delete = add("delete")
     delete.addActionListener {
-      val table = getInvoker() as? JTable ?: return@addActionListener
-      val model = table.getModel() as? DefaultTableModel ?: return@addActionListener
-      val selection = table.getSelectedRows()
+      val table = invoker as? JTable ?: return@addActionListener
+      val model = table.model as? DefaultTableModel ?: return@addActionListener
+      val selection = table.selectedRows
       for (i in selection.indices.reversed()) {
         model.removeRow(table.convertRowIndexToModel(selection[i]))
       }
@@ -200,7 +201,7 @@ class TablePopupMenu : JPopupMenu() {
 
   override fun show(c: Component, x: Int, y: Int) {
     (c as? JTable)?.also {
-      delete.setEnabled(it.getSelectedRowCount() > 0)
+      delete.isEnabled = it.selectedRowCount > 0
       super.show(it, x, y)
     }
   }
@@ -216,7 +217,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
