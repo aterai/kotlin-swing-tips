@@ -18,14 +18,14 @@ fun makeUI(): Component {
     override fun paintComponent(g: Graphics) {
       texture?.also {
         val g2 = g.create() as? Graphics2D ?: return@also
-        g2.setPaint(it)
-        g2.fillRect(0, 0, getWidth(), getHeight())
+        g2.paint = it
+        g2.fillRect(0, 0, width, height)
         g2.dispose()
       }
       super.paintComponent(g)
     }
   }
-  p.setBackground(Color(.5f, .8f, .5f, .5f))
+  p.background = Color(.5f, .8f, .5f, .5f)
   p.add(JLabel("JLabel: "))
   p.add(JTextField(10))
   p.add(JButton("JButton"))
@@ -33,26 +33,26 @@ fun makeUI(): Component {
   val model = arrayOf("Color(.5f, .8f, .5f, .5f)", "ImageTexturePaint", "CheckerTexturePaint")
   val combo = JComboBox(model)
   combo.addItemListener { e ->
-    if (e.getStateChange() == ItemEvent.SELECTED) {
-      when (e.getItem()) {
+    if (e.stateChange == ItemEvent.SELECTED) {
+      when (e.item) {
         "ImageTexturePaint" -> {
           texture = imageTexture
-          p.setOpaque(false)
+          p.isOpaque = false
         }
         "CheckerTexturePaint" -> {
           texture = checkerTexture
-          p.setOpaque(false)
+          p.isOpaque = false
         }
         else -> {
           texture = null
-          p.setOpaque(true)
+          p.isOpaque = true
         }
       }
-      p.getRootPane().getContentPane().repaint()
+      p.rootPane.contentPane.repaint()
     }
   }
   p.add(combo)
-  p.setPreferredSize(Dimension(320, 240))
+  p.preferredSize = Dimension(320, 240)
   return p
 }
 
@@ -62,13 +62,13 @@ fun makeImageTexture(): TexturePaint {
     val cl = Thread.currentThread().contextClassLoader
     ImageIO.read(cl.getResource("example/unkaku_w.png"))
   }.getOrNull() ?: makeMissingImage()
-  return TexturePaint(bi, Rectangle(bi.getWidth(), bi.getHeight()))
+  return TexturePaint(bi, Rectangle(bi.width, bi.height))
 }
 
 fun makeMissingImage(): BufferedImage {
   val missingIcon = UIManager.getIcon("OptionPane.errorIcon")
-  val w = missingIcon.getIconWidth()
-  val h = missingIcon.getIconHeight()
+  val w = missingIcon.iconWidth
+  val h = missingIcon.iconHeight
   val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
   val g2 = bi.createGraphics()
   missingIcon.paintIcon(null, g2, 0, 0)
@@ -81,7 +81,7 @@ fun makeCheckerTexture(): TexturePaint {
   val sz = cs * cs
   val bi = BufferedImage(sz, sz, BufferedImage.TYPE_INT_ARGB)
   val g2 = bi.createGraphics()
-  g2.setPaint(Color(200, 150, 100, 50))
+  g2.paint = Color(200, 150, 100, 50)
   g2.fillRect(0, 0, sz, sz)
   var i = 0
   while (i * cs < sz) {
@@ -102,7 +102,7 @@ fun main() {
   EventQueue.invokeLater {
     JFrame.setDefaultLookAndFeelDecorated(true)
     JFrame().apply {
-      setBackground(Color(0x0, true))
+      background = Color(0x0, true)
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
       contentPane.add(makeUI())
       pack()

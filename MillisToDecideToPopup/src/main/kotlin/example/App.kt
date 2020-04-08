@@ -44,7 +44,6 @@ private fun executeWorker(
   worker.execute()
 }
 
-
 fun makeUI(): Component {
   val area = JTextArea()
   area.isEditable = false
