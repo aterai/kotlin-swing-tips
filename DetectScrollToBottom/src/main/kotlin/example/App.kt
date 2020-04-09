@@ -11,28 +11,28 @@ fun makeUI(): Component {
   for (i in 0..2000) {
     sb.append("%04d%n".format(i))
   }
-  textArea.setText(sb.toString())
-  textArea.setCaretPosition(0)
+  textArea.text = sb.toString()
+  textArea.caretPosition = 0
 
   return JPanel(GridLayout(1, 2)).also {
     it.add(makePanel(textArea))
     it.add(makePanel(JTable(100, 3)))
-    it.setPreferredSize(Dimension(320, 240))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
 private fun makePanel(c: Component): Component {
   val check = JCheckBox("JCheckBox")
-  check.setEnabled(false)
+  check.isEnabled = false
   val p = JPanel(BorderLayout())
   val scroll = JScrollPane(c)
-  scroll.getVerticalScrollBar().getModel().addChangeListener { e ->
-    (e.getSource() as? BoundedRangeModel)?.also {
-      val extent = it.getExtent()
-      val maximum = it.getMaximum()
-      val value = it.getValue()
+  scroll.verticalScrollBar.model.addChangeListener { e ->
+    (e.source as? BoundedRangeModel)?.also {
+      val extent = it.extent
+      val maximum = it.maximum
+      val value = it.value
       if (value + extent >= maximum) {
-        check.setEnabled(true)
+        check.isEnabled = true
       }
     }
   }
