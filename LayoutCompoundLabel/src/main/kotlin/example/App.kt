@@ -15,31 +15,31 @@ fun makeUI(): Component {
       SwingUtilities.calculateInnerArea(this, viewRect)
       SwingUtilities.layoutCompoundLabel(
         this,
-        this.getFontMetrics(this.getFont()),
-        this.getText(),
-        this.getIcon(),
-        this.getVerticalAlignment(),
-        this.getHorizontalAlignment(),
-        this.getVerticalTextPosition(),
-        this.getHorizontalTextPosition(),
+        this.getFontMetrics(this.font),
+        this.text,
+        this.icon,
+        this.verticalAlignment,
+        this.horizontalAlignment,
+        this.verticalTextPosition,
+        this.horizontalTextPosition,
         viewRect,
         iconRect,
         textRect,
-        this.getIconTextGap()
+        this.iconTextGap
       )
       val tip = super.getToolTipText(e)
       return when {
         tip == null -> null
-        iconRect.contains(e.getPoint()) -> "Icon: $tip"
-        textRect.contains(e.getPoint()) -> "Text: $tip"
+        iconRect.contains(e.point) -> "Icon: $tip"
+        textRect.contains(e.point) -> "Text: $tip"
         else -> "Border: $tip"
       }
     }
   }
-  label.setOpaque(true)
-  label.setBackground(Color.GREEN)
-  label.setBorder(BorderFactory.createMatteBorder(20, 10, 50, 30, Color.RED))
-  label.setToolTipText("ToolTipText ToolTipText")
+  label.isOpaque = true
+  label.background = Color.GREEN
+  label.border = BorderFactory.createMatteBorder(20, 10, 50, 30, Color.RED)
+  label.toolTipText = "ToolTipText ToolTipText"
 
   val item = IconTooltipItem("Information", icon)
   item.toolTipText = "Information item"
@@ -49,7 +49,7 @@ fun makeUI(): Component {
   menuBar.add(menu)
 
   return JPanel().also {
-    EventQueue.invokeLater { it.getRootPane().jMenuBar = menuBar }
+    EventQueue.invokeLater { it.rootPane.jMenuBar = menuBar }
     it.add(label)
     it.preferredSize = Dimension(320, 240)
   }
