@@ -20,29 +20,27 @@ import javax.swing.text.TabStop
 import javax.swing.text.View
 import javax.swing.text.ViewFactory
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val editor = JTextPane()
-    editor.font = Font(Font.MONOSPACED, Font.PLAIN, 12)
-    editor.editorKit = CustomEditorKit()
-    editor.text = IDEOGRAPHIC_SPACE_TXT + TAB_TXT
-    add(JScrollPane(editor))
-    preferredSize = Dimension(320, 240)
-  }
-
-  companion object {
-    private const val TAB_TXT = "\n1\taaa\n12\taaa\n123\taaa\n1234\taaa\t\t\t\t\t\t\n"
-    private const val IDEOGRAPHIC_SPACE_TXT = """123456789012
+private const val TAB_TXT = "\n1\taaa\n12\taaa\n123\taaa\n1234\taaa\t\t\t\t\t\t\n"
+private const val IDEOGRAPHIC_SPACE_TXT = """123456789012
 bbb2　　1 3 ccc3
 
 
 00000　12345　
 　日本語　
 """
+
+fun makeUI(): Component {
+    val editor = JTextPane()
+    editor.font = Font(Font.MONOSPACED, Font.PLAIN, 12)
+    editor.editorKit = CustomEditorKit()
+    editor.text = IDEOGRAPHIC_SPACE_TXT + TAB_TXT
+  return JPanel(BorderLayout()).also {
+    it.add(JScrollPane(editor))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-internal class CustomEditorKit : StyledEditorKit() {
+private class CustomEditorKit : StyledEditorKit() {
   override fun install(c: JEditorPane) {
     val fm = c.getFontMetrics(c.font)
     val tabLength = fm.charWidth('m') * 4
@@ -70,7 +68,7 @@ internal class CustomEditorKit : StyledEditorKit() {
   }
 }
 
-class CustomViewFactory : ViewFactory {
+private class CustomViewFactory : ViewFactory {
   override fun create(elem: Element) = when (elem.name) {
     AbstractDocument.ParagraphElementName -> ParagraphWithEopmView(elem)
     AbstractDocument.SectionElementName -> BoxView(elem, View.Y_AXIS)
@@ -80,7 +78,7 @@ class CustomViewFactory : ViewFactory {
   }
 }
 
-class ParagraphWithEopmView(elem: Element) : ParagraphView(elem) {
+private class ParagraphWithEopmView(elem: Element) : ParagraphView(elem) {
   override fun paint(g: Graphics, allocation: Shape) {
     super.paint(g, allocation)
     paintCustomParagraph(g, allocation)
@@ -107,7 +105,7 @@ class ParagraphWithEopmView(elem: Element) : ParagraphView(elem) {
   }
 }
 
-class WhitespaceLabelView(elem: Element) : LabelView(elem) {
+private class WhitespaceLabelView(elem: Element) : LabelView(elem) {
   override fun paint(g: Graphics, a: Shape) {
     super.paint(g, a)
     val g2 = g.create() as? Graphics2D ?: return
@@ -159,7 +157,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
