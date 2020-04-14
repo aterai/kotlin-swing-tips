@@ -5,26 +5,24 @@ import java.awt.geom.GeneralPath
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicTabbedPaneUI
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val tabs: JTabbedPane = object : JTabbedPane() {
-      override fun updateUI() {
-        super.updateUI()
-        UIManager.put("TabbedPane.highlight", Color.GRAY)
-        tabLayoutPolicy = SCROLL_TAB_LAYOUT
-        setUI(IsoscelesTrapezoidTabbedPaneUI())
-      }
+fun makeUI(): Component {
+  val tabs = object : JTabbedPane() {
+    override fun updateUI() {
+      super.updateUI()
+      UIManager.put("TabbedPane.highlight", Color.GRAY)
+      tabLayoutPolicy = SCROLL_TAB_LAYOUT
+      setUI(IsoscelesTrapezoidTabbedPaneUI())
     }
-    tabs.addTab("JTextArea", JScrollPane(JTextArea()))
-    tabs.addTab("JTree", JScrollPane(JTree()))
-    tabs.addTab("JButton", JButton("button"))
-    tabs.addTab("JSplitPane", JSplitPane())
-    add(tabs)
-    preferredSize = Dimension(320, 240)
   }
+  tabs.addTab("JTextArea", JScrollPane(JTextArea()))
+  tabs.addTab("JTree", JScrollPane(JTree()))
+  tabs.addTab("JButton", JButton("button"))
+  tabs.addTab("JSplitPane", JSplitPane())
+  tabs.preferredSize = Dimension(320, 240)
+  return tabs
 }
 
-class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
+private class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
   private val selectedTabColor = UIManager.getColor("TabbedPane.selected")
   override fun paintTabArea(g: Graphics, tabPlacement: Int, selectedIndex: Int) {
     val tabCount = tabPane.tabCount
@@ -129,7 +127,7 @@ fun main() {
   EventQueue.invokeLater {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
