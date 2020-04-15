@@ -11,119 +11,121 @@ import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.Border
 
-class MainPanel : JPanel() {
-  private val texture = makeCheckerTexture()
+private val texture = makeCheckerTexture()
 
-  override fun paintComponent(g: Graphics) {
-    val g2 = g.create() as? Graphics2D ?: return
-    g2.paint = texture
-    g2.fillRect(0, 0, width, height)
-    g2.dispose()
-    super.paintComponent(g)
-  }
+private fun makeTitleWithIcon(url: URL?, title: String, align: String) =
+  "<html><p align='$align'><img src='$url' align='$align' />&nbsp;$title</p></html>"
 
-  private fun makeTitleWithIcon(url: URL, title: String, align: String) =
-    "<html><p align='$align'><img src='$url' align='$align' />&nbsp;$title</p></html>"
-
-  private fun makeButton(title: String): AbstractButton {
-    return object : JButton(title) {
-      override fun updateUI() {
-        super.updateUI()
-        verticalAlignment = SwingConstants.CENTER
-        verticalTextPosition = SwingConstants.CENTER
-        horizontalAlignment = SwingConstants.CENTER
-        horizontalTextPosition = SwingConstants.CENTER
-        border = BorderFactory.createEmptyBorder(2, 8, 2, 8)
-        margin = Insets(2, 8, 2, 8)
-        isBorderPainted = false
-        isContentAreaFilled = false
-        isFocusPainted = false
-        isOpaque = false
-        foreground = Color.WHITE
-        icon = TranslucentButtonIcon(this)
-      }
+private fun makeButton(title: String): AbstractButton {
+  return object : JButton(title) {
+    override fun updateUI() {
+      super.updateUI()
+      verticalAlignment = SwingConstants.CENTER
+      verticalTextPosition = SwingConstants.CENTER
+      horizontalAlignment = SwingConstants.CENTER
+      horizontalTextPosition = SwingConstants.CENTER
+      border = BorderFactory.createEmptyBorder(2, 8, 2, 8)
+      margin = Insets(2, 8, 2, 8)
+      isBorderPainted = false
+      isContentAreaFilled = false
+      isFocusPainted = false
+      isOpaque = false
+      foreground = Color.WHITE
+      icon = TranslucentButtonIcon(this)
     }
-  }
-
-  private fun getFilteredImage(url: URL?): BufferedImage {
-    val img = runCatching { ImageIO.read(url) }.getOrNull() ?: makeMissingImage()
-    val dest = BufferedImage(img.width, img.height, BufferedImage.TYPE_INT_RGB)
-    val b = ByteArray(256)
-    for (i in b.indices) {
-      b[i] = (i * .5).toByte()
-    }
-    val op = LookupOp(ByteLookupTable(0, b), null)
-    op.filter(img, dest)
-    return dest
-  }
-
-  private fun makeMissingImage(): BufferedImage {
-    val missingIcon = UIManager.getIcon("OptionPane.errorIcon")
-    val w = missingIcon.iconWidth
-    val h = missingIcon.iconHeight
-    val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_RGB)
-    val g2 = bi.createGraphics()
-    missingIcon.paintIcon(null, g2, 0, 0)
-    g2.dispose()
-    return bi
-  }
-
-  private fun makeCheckerTexture(): TexturePaint {
-    val cs = 6
-    val sz = cs * cs
-    val img = BufferedImage(sz, sz, BufferedImage.TYPE_INT_ARGB)
-    val g2 = img.createGraphics()
-    g2.paint = Color(120, 120, 120)
-    g2.fillRect(0, 0, sz, sz)
-    g2.paint = Color(200, 200, 200, 20)
-    var i = 0
-    while (i * cs < sz) {
-      var j = 0
-      while (j * cs < sz) {
-        if ((i + j) % 2 == 0) {
-          g2.fillRect(i * cs, j * cs, cs, cs)
-        }
-        j++
-      }
-      i++
-    }
-    g2.dispose()
-    return TexturePaint(img, Rectangle(sz, sz))
-  }
-
-  init {
-    // Icon: refer to http://chrfb.deviantart.com/art/quot-ecqlipse-2-quot-PNG-59941546
-    val url = javaClass.getResource("RECYCLE BIN - EMPTY_16x16-32.png")
-    add(makeButton(makeTitleWithIcon(url, "align=top", "top")))
-    add(makeButton(makeTitleWithIcon(url, "align=middle", "middle")))
-    add(makeButton(makeTitleWithIcon(url, "align=bottom", "bottom")))
-    val icon = ImageIcon(url)
-    val label = JLabel("JLabel", icon, SwingConstants.CENTER)
-    label.foreground = Color.WHITE
-    label.alignmentX = Component.CENTER_ALIGNMENT
-    val b = makeButton("")
-    b.alignmentX = Component.CENTER_ALIGNMENT
-    val p = JPanel()
-    p.layout = OverlayLayout(p)
-    p.isOpaque = false
-    p.add(label)
-    p.add(b)
-    add(p)
-    add(makeButton("? text"))
-    add(TranslucentButton("TranslucentButton", icon))
-    add(makeButton("1"))
-    add(makeButton("22222222"))
-    add(makeButton("333333333333333333"))
-    add(makeButton("44444444444444444444444444444"))
-    val bi = getFilteredImage(javaClass.getResource("test.jpg"))
-    border = CentredBackgroundBorder(bi)
-    // setBackground(new Color(50, 50, 50));
-    isOpaque = false
-    preferredSize = Dimension(320, 240)
   }
 }
 
-class TranslucentButton(text: String?, icon: Icon?) : JButton(text, icon) {
+private fun getFilteredImage(url: URL?): BufferedImage {
+  val img = runCatching { ImageIO.read(url) }.getOrNull() ?: makeMissingImage()
+  val dest = BufferedImage(img.width, img.height, BufferedImage.TYPE_INT_RGB)
+  val b = ByteArray(256)
+  for (i in b.indices) {
+    b[i] = (i * .5).toByte()
+  }
+  val op = LookupOp(ByteLookupTable(0, b), null)
+  op.filter(img, dest)
+  return dest
+}
+
+private fun makeMissingImage(): BufferedImage {
+  val missingIcon = UIManager.getIcon("OptionPane.errorIcon")
+  val w = missingIcon.iconWidth
+  val h = missingIcon.iconHeight
+  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_RGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, 0, 0)
+  g2.dispose()
+  return bi
+}
+
+private fun makeCheckerTexture(): TexturePaint {
+  val cs = 6
+  val sz = cs * cs
+  val img = BufferedImage(sz, sz, BufferedImage.TYPE_INT_ARGB)
+  val g2 = img.createGraphics()
+  g2.paint = Color(120, 120, 120)
+  g2.fillRect(0, 0, sz, sz)
+  g2.paint = Color(200, 200, 200, 20)
+  var i = 0
+  while (i * cs < sz) {
+    var j = 0
+    while (j * cs < sz) {
+      if ((i + j) % 2 == 0) {
+        g2.fillRect(i * cs, j * cs, cs, cs)
+      }
+      j++
+    }
+    i++
+  }
+  g2.dispose()
+  return TexturePaint(img, Rectangle(sz, sz))
+}
+
+fun makeUI(): Component {
+  val cl = Thread.currentThread().contextClassLoader
+  // Icon: refer to http://chrfb.deviantart.com/art/quot-ecqlipse-2-quot-PNG-59941546
+  val url = cl.getResource("example/RECYCLE BIN - EMPTY_16x16-32.png")
+  val panel = object : JPanel() {
+    override fun paintComponent(g: Graphics) {
+      val g2 = g.create() as? Graphics2D ?: return
+      g2.paint = texture
+      g2.fillRect(0, 0, width, height)
+      g2.dispose()
+      super.paintComponent(g)
+    }
+  }
+
+  panel.add(makeButton(makeTitleWithIcon(url, "align=top", "top")))
+  panel.add(makeButton(makeTitleWithIcon(url, "align=middle", "middle")))
+  panel.add(makeButton(makeTitleWithIcon(url, "align=bottom", "bottom")))
+  val icon = ImageIcon(url)
+  val label = JLabel("JLabel", icon, SwingConstants.CENTER)
+  label.foreground = Color.WHITE
+  label.alignmentX = Component.CENTER_ALIGNMENT
+  val b = makeButton("")
+  b.alignmentX = Component.CENTER_ALIGNMENT
+  val p = JPanel()
+  p.layout = OverlayLayout(p)
+  p.isOpaque = false
+  p.add(label)
+  p.add(b)
+  panel.add(p)
+  panel.add(makeButton("? text"))
+  panel.add(TranslucentButton("TranslucentButton", icon))
+  panel.add(makeButton("1"))
+  panel.add(makeButton("22222222"))
+  panel.add(makeButton("333333333333333333"))
+  panel.add(makeButton("44444444444444444444444444444"))
+  val bi = getFilteredImage(cl.getResource("example/test.jpg"))
+  panel.border = CentredBackgroundBorder(bi)
+  // setBackground(new Color(50, 50, 50));
+  panel.isOpaque = false
+  panel.preferredSize = Dimension(320, 240)
+  return panel
+}
+
+private class TranslucentButton(text: String?, icon: Icon?) : JButton(text, icon) {
   override fun updateUI() {
     super.updateUI()
     isContentAreaFilled = false
@@ -168,7 +170,7 @@ class TranslucentButton(text: String?, icon: Icon?) : JButton(text, icon) {
   }
 }
 
-class TranslucentButtonIcon(c: JComponent) : Icon {
+private class TranslucentButtonIcon(c: JComponent) : Icon {
   private var width = 100
   private var height = 20
 
@@ -182,8 +184,8 @@ class TranslucentButtonIcon(c: JComponent) : Icon {
       height = r.height
       val g2 = g.create() as? Graphics2D ?: return
       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-      val fx = (x - r.getMinX()).toFloat()
-      val fy = (y - r.getMinY()).toFloat()
+      val fx = (x - r.minX).toFloat()
+      val fy = (y - r.minY).toFloat()
       val area = RoundRectangle2D.Float(fx, fy, w - 1f, h - 1f, R, R)
       var ssc = TL
       var bgc = BR
@@ -225,7 +227,7 @@ class TranslucentButtonIcon(c: JComponent) : Icon {
 
 // https://community.oracle.com/thread/1395763 How can I use TextArea with Background Picture ?
 // https://ateraimemo.com/Swing/CentredBackgroundBorder.html
-class CentredBackgroundBorder(private val image: BufferedImage) : Border {
+private class CentredBackgroundBorder(private val image: BufferedImage) : Border {
   override fun paintBorder(
     c: Component,
     g: Graphics,
@@ -257,7 +259,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
