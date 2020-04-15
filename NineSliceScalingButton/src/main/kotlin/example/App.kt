@@ -9,70 +9,75 @@ import java.net.URL
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import kotlin.math.roundToInt
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    // symbol_scale_2.jpg: Real World Illustrator: Understanding 9-Slice Scaling
-    // https://rwillustrator.blogspot.jp/2007/04/understanding-9-slice-scaling.html
-    val img = makeBufferedImage(javaClass.getResource("symbol_scale_2.jpg"))
-    val b1 = ScalingButton("Scaling", img)
-    val b2 = NineSliceScalingButton("9-Slice Scaling", img)
-    val p1 = JPanel(GridLayout(1, 2, 5, 5))
-    p1.add(b1)
-    p1.add(b2)
-    val bi = makeBufferedImage(javaClass.getResource("blue.png"))
-    val b3 = JButton("Scaling Icon", NineSliceScalingIcon(bi, 0, 0, 0, 0))
-    b3.setContentAreaFilled(false)
-    b3.setBorder(BorderFactory.createEmptyBorder())
-    b3.setForeground(Color.WHITE)
-    b3.setHorizontalTextPosition(SwingConstants.CENTER)
-    b3.setPressedIcon(NineSliceScalingIcon(makeFilteredImage(bi, PressedImageFilter()), 0, 0, 0, 0))
-    b3.setRolloverIcon(NineSliceScalingIcon(makeFilteredImage(bi, RolloverImageFilter()), 0, 0, 0, 0))
-    val b4 = JButton("9-Slice Scaling Icon", NineSliceScalingIcon(bi, 8, 8, 8, 8))
-    b4.setContentAreaFilled(false)
-    b4.setBorder(BorderFactory.createEmptyBorder())
-    b4.setForeground(Color.WHITE)
-    b4.setHorizontalTextPosition(SwingConstants.CENTER)
-    b4.setPressedIcon(NineSliceScalingIcon(makeFilteredImage(bi, PressedImageFilter()), 8, 8, 8, 8))
-    b4.setRolloverIcon(NineSliceScalingIcon(makeFilteredImage(bi, RolloverImageFilter()), 8, 8, 8, 8))
-    val p2 = JPanel(GridLayout(1, 2, 5, 5))
-    p2.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-    p2.add(b3)
-    p2.add(b4)
-    add(p1)
-    add(p2, BorderLayout.SOUTH)
-    setPreferredSize(Dimension(320, 240))
-  }
+fun makeUI(): Component {
+  val cl = Thread.currentThread().contextClassLoader
+  // symbol_scale_2.jpg: Real World Illustrator: Understanding 9-Slice Scaling
+  // https://rwillustrator.blogspot.jp/2007/04/understanding-9-slice-scaling.html
+  val img = makeBufferedImage(cl.getResource("example/symbol_scale_2.jpg"))
+  val b1 = ScalingButton("Scaling", img)
+  val b2 = NineSliceScalingButton("9-Slice Scaling", img)
+  val p1 = JPanel(GridLayout(1, 2, 5, 5))
+  p1.add(b1)
+  p1.add(b2)
 
-  private fun makeBufferedImage(url: URL): BufferedImage {
-    val ic = ImageIcon(url)
-    val w = ic.iconWidth
-    val h = ic.iconHeight
-    val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
-    val g2 = bi.createGraphics()
-    ic.paintIcon(this, g2, 0, 0)
-    g2.dispose()
-    return bi
-  }
+  val bi = makeBufferedImage(cl.getResource("example/blue.png"))
+  val b3 = JButton("Scaling Icon", NineSliceScalingIcon(bi, 0, 0, 0, 0))
+  b3.isContentAreaFilled = false
+  b3.border = BorderFactory.createEmptyBorder()
+  b3.foreground = Color.WHITE
+  b3.horizontalTextPosition = SwingConstants.CENTER
+  b3.pressedIcon = NineSliceScalingIcon(makeFilteredImage(bi, PressedImageFilter()), 0, 0, 0, 0)
+  b3.rolloverIcon = NineSliceScalingIcon(makeFilteredImage(bi, RolloverImageFilter()), 0, 0, 0, 0)
 
-  private fun makeFilteredImage(src: BufferedImage, filter: ImageFilter): BufferedImage {
-    val ip = src.getSource()
-    val img = Toolkit.getDefaultToolkit().createImage(FilteredImageSource(ip, filter))
-    val w = img.getWidth(null)
-    val h = img.getHeight(null)
-    val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
-    val g = bi.createGraphics()
-    g.drawImage(img, 0, 0, null)
-    g.dispose()
-    return bi
+  val b4 = JButton("9-Slice Scaling Icon", NineSliceScalingIcon(bi, 8, 8, 8, 8))
+  b4.isContentAreaFilled = false
+  b4.border = BorderFactory.createEmptyBorder()
+  b4.foreground = Color.WHITE
+  b4.horizontalTextPosition = SwingConstants.CENTER
+  b4.pressedIcon = NineSliceScalingIcon(makeFilteredImage(bi, PressedImageFilter()), 8, 8, 8, 8)
+  b4.rolloverIcon = NineSliceScalingIcon(makeFilteredImage(bi, RolloverImageFilter()), 8, 8, 8, 8)
+
+  val p2 = JPanel(GridLayout(1, 2, 5, 5))
+  p2.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+  p2.add(b3)
+  p2.add(b4)
+
+  return JPanel(BorderLayout()).also {
+    it.add(p1)
+    it.add(p2, BorderLayout.SOUTH)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class ScalingButton(title: String?, @field:Transient private val image: BufferedImage) : JButton() {
+private fun makeBufferedImage(url: URL?): BufferedImage {
+  val ic = ImageIcon(url)
+  val w = ic.iconWidth
+  val h = ic.iconHeight
+  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  ic.paintIcon(null, g2, 0, 0)
+  g2.dispose()
+  return bi
+}
+
+private fun makeFilteredImage(src: BufferedImage, filter: ImageFilter): BufferedImage {
+  val ip = src.source
+  val img = Toolkit.getDefaultToolkit().createImage(FilteredImageSource(ip, filter))
+  val w = img.getWidth(null)
+  val h = img.getHeight(null)
+  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+  val g = bi.createGraphics()
+  g.drawImage(img, 0, 0, null)
+  g.dispose()
+  return bi
+}
+
+private class ScalingButton(title: String?, @field:Transient private val image: BufferedImage) : JButton() {
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    val bw = getWidth()
-    val bh = getHeight()
+    val bw = width
+    val bh = height
     g2.drawImage(image, 0, 0, bw, bh, this)
     g2.dispose()
     super.paintComponent(g)
@@ -81,18 +86,18 @@ class ScalingButton(title: String?, @field:Transient private val image: Buffered
   init {
     setModel(DefaultButtonModel())
     init(title, null)
-    setContentAreaFilled(false)
+    isContentAreaFilled = false
   }
 }
 
-class NineSliceScalingButton(title: String?, @field:Transient private val image: BufferedImage) : JButton() {
+private class NineSliceScalingButton(title: String?, @field:Transient private val image: BufferedImage) : JButton() {
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     val iw = image.getWidth(this)
     val ih = image.getHeight(this)
-    val ww = getWidth()
-    val hh = getHeight()
+    val ww = width
+    val hh = height
     val lw = 37
     val rw = 36
     val th = 36
@@ -113,11 +118,11 @@ class NineSliceScalingButton(title: String?, @field:Transient private val image:
   init {
     setModel(DefaultButtonModel())
     init(title, null)
-    setContentAreaFilled(false)
+    isContentAreaFilled = false
   }
 }
 
-class NineSliceScalingIcon(
+private class NineSliceScalingIcon(
   private val image: BufferedImage,
   private val lw: Int,
   private val rw: Int,
@@ -162,14 +167,14 @@ class NineSliceScalingIcon(
   }
 }
 
-class PressedImageFilter : RGBImageFilter() {
+private class PressedImageFilter : RGBImageFilter() {
   override fun filterRGB(x: Int, y: Int, argb: Int): Int {
     val r = ((argb shr 16 and 0xFF) * .6f).roundToInt()
     return argb and -0xff0001 or (r shl 16)
   }
 }
 
-class RolloverImageFilter : RGBImageFilter() {
+private class RolloverImageFilter : RGBImageFilter() {
   override fun filterRGB(x: Int, y: Int, argb: Int): Int { // int r = (argb >> 16) & 0xFF;
     val g = 0xFF.coerceAtMost(((argb shr 8 and 0xFF) * 1.5f).roundToInt())
     val b = 0xFF.coerceAtMost(((argb and 0xFF) * 1.5f).roundToInt())
@@ -187,7 +192,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
