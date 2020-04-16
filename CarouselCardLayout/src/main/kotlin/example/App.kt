@@ -7,21 +7,21 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 fun makeUI(): Component {
   val cardLayout = CardLayout(50, 5)
 
-  val cards: JPanel = object : JPanel(cardLayout) {
+  val cards = object : JPanel(cardLayout) {
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
-      getComponents().first { it.isVisible() }?.also {
+      components.first { it.isVisible }?.also {
         paintSideComponents(g, getComponentZOrder(it))
       }
     }
 
     private fun paintSideComponents(g: Graphics, idx: Int) {
       val g2 = g.create() as? Graphics2D ?: return
-      g2.setComposite(AlphaComposite.SrcOver.derive(.5f))
-      val insets = getInsets()
-      val hgap = cardLayout.getHgap()
-      val vgap = cardLayout.getVgap()
-      val nc = getComponentCount()
+      g2.composite = AlphaComposite.SrcOver.derive(.5f)
+      val insets = insets
+      val hgap = cardLayout.hgap
+      val vgap = cardLayout.vgap
+      val nc = componentCount
       val cw = width - (hgap * 2 + insets.left + insets.right)
       // val ch = getHeight() - (vgap * 2 + insets.top + insets.bottom)
       val gap = 10
@@ -50,7 +50,7 @@ fun makeUI(): Component {
     cards.repaint()
   }
   val box: Box = Box.createHorizontalBox()
-  box.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
+  box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   box.add(prevButton)
   box.add(Box.createHorizontalGlue())
   box.add(nextButton)
@@ -58,7 +58,7 @@ fun makeUI(): Component {
   val p = JPanel(BorderLayout())
   p.add(cards)
   p.add(box, BorderLayout.SOUTH)
-  p.setPreferredSize(Dimension(320, 240))
+  p.preferredSize = Dimension(320, 240)
   return p
 }
 
