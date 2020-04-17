@@ -11,63 +11,65 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 
-class MainPanel : JPanel(GridLayout(2, 1)) {
-  init {
-    val table = makeTable()
-    val am = table.getActionMap()
-    val selectNextAction = am.get("selectNextColumnCell")
-    val action = object : AbstractAction() {
-      override fun actionPerformed(e: ActionEvent) {
-        if (!table.isEditing() || !isEditorFocusCycle(table.getEditorComponent())) {
-          selectNextAction.actionPerformed(e)
-        }
+
+fun makeUI(): Component {
+  val table = makeTable()
+  val am = table.actionMap
+  val selectNextAction = am.get("selectNextColumnCell")
+  val action = object : AbstractAction() {
+    override fun actionPerformed(e: ActionEvent) {
+      if (!table.isEditing || !isEditorFocusCycle(table.editorComponent)) {
+        selectNextAction.actionPerformed(e)
       }
     }
-    am.put("selectNextColumnCell2", action)
-
-    val im = table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), "selectNextColumnCell2")
-
-    add(JScrollPane(makeTable()))
-    add(JScrollPane(table))
-    setPreferredSize(Dimension(320, 240))
   }
+  am.put("selectNextColumnCell2", action)
 
-  private fun isEditorFocusCycle(editor: Component) =
-    CheckBoxesEditor.getEditorFocusCycleAfter(editor)?.let {
-      it.requestFocus()
-      true
-    } ?: false
+  val im = table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), "selectNextColumnCell2")
 
-  private fun makeTable(): JTable {
-    val columnNames = arrayOf("user", "rwx")
-    val data = arrayOf(
-      arrayOf<Any>("owner", EnumSet.allOf(Permissions::class.java)),
-      arrayOf<Any>("group", EnumSet.of(Permissions.READ)),
-      arrayOf<Any>("other", EnumSet.noneOf(Permissions::class.java)))
-    val model = object : DefaultTableModel(data, columnNames) {
-      override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
-    }
-    return object : JTable(model) {
-      override fun updateUI() {
-        super.updateUI()
-        // putClientProperty("terminateEditOnFocusLost", true)
-        setSelectionForeground(Color.BLACK)
-        setSelectionBackground(Color(220, 220, 255))
-        getColumnModel().getColumn(1)?.also {
-          it.setCellRenderer(CheckBoxesRenderer())
-          it.setCellEditor(CheckBoxesEditor())
-        }
+  return JPanel(GridLayout(2, 1)).also {
+    it.add(JScrollPane(makeTable()))
+    it.add(JScrollPane(table))
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private fun isEditorFocusCycle(editor: Component) =
+  CheckBoxesEditor.getEditorFocusCycleAfter(editor)?.let {
+    it.requestFocus()
+    true
+  } ?: false
+
+private fun makeTable(): JTable {
+  val columnNames = arrayOf("user", "rwx")
+  val data = arrayOf(
+    arrayOf("owner", EnumSet.allOf(Permissions::class.java)),
+    arrayOf("group", EnumSet.of(Permissions.READ)),
+    arrayOf("other", EnumSet.noneOf(Permissions::class.java))
+  )
+  val model = object : DefaultTableModel(data, columnNames) {
+    override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
+  }
+  return object : JTable(model) {
+    override fun updateUI() {
+      super.updateUI()
+      // putClientProperty("terminateEditOnFocusLost", true)
+      setSelectionForeground(Color.BLACK)
+      setSelectionBackground(Color(220, 220, 255))
+      getColumnModel().getColumn(1)?.also {
+        it.cellRenderer = CheckBoxesRenderer()
+        it.cellEditor = CheckBoxesEditor()
       }
     }
   }
 }
 
-internal enum class Permissions {
+private enum class Permissions {
   EXECUTE, WRITE, READ
 }
 
-internal class CheckBoxesPanel : JPanel() {
+private class CheckBoxesPanel : JPanel() {
   val titles = arrayOf("r", "w", "x")
   val buttons = mutableListOf<JCheckBox>()
   var focusBorder: Border? = null
@@ -75,10 +77,10 @@ internal class CheckBoxesPanel : JPanel() {
 
   override fun updateUI() {
     super.updateUI()
-    setOpaque(false)
-    setFocusTraversalPolicyProvider(true)
-    setFocusCycleRoot(true)
-    setLayout(BoxLayout(this, BoxLayout.X_AXIS))
+    isOpaque = false
+    isFocusTraversalPolicyProvider = true
+    isFocusCycleRoot = true
+    layout = BoxLayout(this, BoxLayout.X_AXIS)
     val fb: Border? = UIManager.getBorder("Table.focusCellHighlightBorder")
     var nfb: Border? = UIManager.getBorder("Table.noFocusBorder")
     if (nfb == null) { // Nimbus???
@@ -102,7 +104,7 @@ internal class CheckBoxesPanel : JPanel() {
   }
 
   private fun makeCheckBox(title: String) = JCheckBox(" $title ").also {
-    it.setOpaque(false)
+    it.isOpaque = false
     // it.setFocusPainted(false)
     // it.setFocusable(false)
     // it.setRolloverEnabled(false)
@@ -111,13 +113,13 @@ internal class CheckBoxesPanel : JPanel() {
   fun updateButtons(v: Any?) {
     initButtons()
     val f = v as? Set<*> ?: EnumSet.noneOf(Permissions::class.java)
-    buttons[0].setSelected(f.contains(Permissions.READ))
-    buttons[1].setSelected(f.contains(Permissions.WRITE))
-    buttons[2].setSelected(f.contains(Permissions.EXECUTE))
+    buttons[0].isSelected = f.contains(Permissions.READ)
+    buttons[1].isSelected = f.contains(Permissions.WRITE)
+    buttons[2].isSelected = f.contains(Permissions.EXECUTE)
   }
 }
 
-internal class CheckBoxesRenderer : TableCellRenderer {
+private class CheckBoxesRenderer : TableCellRenderer {
   private val renderer = CheckBoxesPanel()
 
   override fun getTableCellRendererComponent(
@@ -129,27 +131,27 @@ internal class CheckBoxesRenderer : TableCellRenderer {
     column: Int
   ): Component {
     if (isSelected) {
-      renderer.setOpaque(true)
-      renderer.setBackground(table.getSelectionBackground())
+      renderer.isOpaque = true
+      renderer.background = table.selectionBackground
     } else {
-      renderer.setOpaque(true)
-      renderer.setBackground(Color(0x0, true))
+      renderer.isOpaque = true
+      renderer.background = Color(0x0, true)
     }
-    renderer.setBorder(if (hasFocus) renderer.focusBorder else renderer.noFocusBorder)
+    renderer.border = if (hasFocus) renderer.focusBorder else renderer.noFocusBorder
     renderer.updateButtons(value)
     return renderer
   }
 }
 
-internal class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
+private class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
   private val renderer = CheckBoxesPanel()
 
   init {
-    val am = renderer.getActionMap()
+    val am = renderer.actionMap
     renderer.titles.forEach { title ->
       am.put(title, object : AbstractAction(title) {
         override fun actionPerformed(e: ActionEvent) {
-          renderer.buttons.firstOrNull { it.getText().trim() == title }?.doClick()
+          renderer.buttons.firstOrNull { it.text.trim() == title }?.doClick()
           // fireEditingStopped();
         }
       })
@@ -168,37 +170,37 @@ internal class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
     row: Int,
     column: Int
   ) = renderer.also {
-    it.setOpaque(true)
-    it.setBackground(table.getSelectionBackground())
+    it.isOpaque = true
+    it.background = table.selectionBackground
     it.updateButtons(value)
   }
 
   override fun getCellEditorValue(): Any = EnumSet.noneOf(Permissions::class.java).also {
-    if (renderer.buttons[0].isSelected()) {
+    if (renderer.buttons[0].isSelected) {
       it.add(Permissions.READ)
     }
-    if (renderer.buttons[1].isSelected()) {
+    if (renderer.buttons[1].isSelected) {
       it.add(Permissions.WRITE)
     }
-    if (renderer.buttons[2].isSelected()) {
+    if (renderer.buttons[2].isSelected) {
       it.add(Permissions.EXECUTE)
     }
   }
 
   override fun isCellEditable(e: EventObject): Boolean {
     EventQueue.invokeLater {
-      getEditorFocusCycleAfter(e.getSource() as? Component)?.requestFocus()
+      getEditorFocusCycleAfter(e.source as? Component)?.requestFocus()
     }
     return super.isCellEditable(e)
   }
 
   companion object {
     fun getEditorFocusCycleAfter(editor: Component?): Component? {
-      val fo = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner()
+      val fo = KeyboardFocusManager.getCurrentKeyboardFocusManager().focusOwner
       val root = (editor as? Container)?.let {
-        if (it.isFocusCycleRoot()) it else it.getFocusCycleRootAncestor()
+        if (it.isFocusCycleRoot) it else it.focusCycleRootAncestor
       } ?: return null
-      return root.getFocusTraversalPolicy().getComponentAfter(root, fo)?.takeIf {
+      return root.focusTraversalPolicy.getComponentAfter(root, fo)?.takeIf {
         SwingUtilities.isDescendingFrom(it, editor)
       }
     }
@@ -215,7 +217,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
