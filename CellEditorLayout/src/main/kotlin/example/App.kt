@@ -31,7 +31,7 @@ private class CustomCellEditor(field: JTextField) : DefaultCellEditor(field) {
 
   init {
     field.border = BorderFactory.createEmptyBorder(0, 2, 0, BUTTON_WIDTH)
-    field.addHierarchyListener { e: HierarchyEvent ->
+    field.addHierarchyListener { e ->
       val c = e.component
       if (e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L && c is JTextField && c.isShowing()) {
         c.removeAll()

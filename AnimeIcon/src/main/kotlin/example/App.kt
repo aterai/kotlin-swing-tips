@@ -9,87 +9,88 @@ import java.beans.PropertyChangeListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.Timer
 
-class MainPanel : JPanel(BorderLayout()) {
-  private val area = JTextArea()
-  private val bar = JProgressBar()
-  private val statusPanel = JPanel(BorderLayout())
-  private val runButton = JButton("run")
-  private val cancelButton = JButton("cancel")
-  private val loadingLabel = LoadingLabel()
-  @Transient
-  private var worker: BackgroundTask? = null
+private val area = JTextArea()
+private val bar = JProgressBar()
+private val statusPanel = JPanel(BorderLayout())
+private val runButton = JButton("run")
+private val cancelButton = JButton("cancel")
+private val loadingLabel = LoadingLabel()
 
-  private fun executeWorker() {
-    runButton.isEnabled = false
-    cancelButton.isEnabled = true
-    loadingLabel.startAnimation()
-    statusPanel.removeAll()
-    statusPanel.add(bar)
-    statusPanel.revalidate()
-    bar.isIndeterminate = true
-    val w = object : BackgroundTask() {
-      override fun process(chunks: List<String?>) {
-        if (isCancelled) {
-          return
-        }
-        if (!isDisplayable) {
-          cancel(true)
-          return
-        }
-        chunks.forEach { appendLine(it) }
+@Transient
+private var worker: BackgroundTask? = null
+
+private fun executeWorker() {
+  runButton.isEnabled = false
+  cancelButton.isEnabled = true
+  loadingLabel.startAnimation()
+  statusPanel.removeAll()
+  statusPanel.add(bar)
+  statusPanel.revalidate()
+  bar.isIndeterminate = true
+  val w = object : BackgroundTask() {
+    override fun process(chunks: List<String?>) {
+      if (isCancelled) {
+        return
       }
-
-      public override fun done() {
-        if (!isDisplayable) {
-          cancel(true)
-          return
-        }
-        loadingLabel.stopAnimation()
-        runButton.isEnabled = true
-        cancelButton.isEnabled = false
-        statusPanel.remove(bar)
-        statusPanel.revalidate()
-        appendLine("\n")
-        runCatching {
-          appendLine(if (isCancelled) "Cancelled" else get())
-        }.onFailure {
-          appendLine("Interrupted")
-          Thread.currentThread().interrupt()
-        }
-        appendLine("\n\n")
+      if (!runButton.isDisplayable) {
+        cancel(true)
+        return
       }
+      chunks.forEach { appendLine(it) }
     }
-    w.addPropertyChangeListener(ProgressListener(bar))
-    w.execute()
-    worker = w
-  }
 
-  private fun appendLine(str: String?) {
-    area.append(str)
-    area.caretPosition = area.document.length
-  }
-
-  init {
-    area.isEditable = false
-    area.lineWrap = true
-    runButton.addActionListener { executeWorker() }
-    cancelButton.addActionListener {
-      worker?.takeUnless { it.isDone }?.cancel(true)
-      worker = null
+    public override fun done() {
+      if (!runButton.isDisplayable) {
+        cancel(true)
+        return
+      }
+      loadingLabel.stopAnimation()
+      runButton.isEnabled = true
+      cancelButton.isEnabled = false
+      statusPanel.remove(bar)
+      statusPanel.revalidate()
+      appendLine("\n")
+      runCatching {
+        appendLine(if (isCancelled) "Cancelled" else get())
+      }.onFailure {
+        appendLine("Interrupted")
+        Thread.currentThread().interrupt()
+      }
+      appendLine("\n\n")
     }
-    val box = Box.createHorizontalBox()
-    box.add(loadingLabel)
-    box.add(Box.createHorizontalGlue())
-    box.add(runButton)
-    box.add(cancelButton)
-    add(box, BorderLayout.NORTH)
-    add(statusPanel, BorderLayout.SOUTH)
-    add(JScrollPane(area))
-    preferredSize = Dimension(320, 240)
+  }
+  w.addPropertyChangeListener(ProgressListener(bar))
+  w.execute()
+  worker = w
+}
+
+private fun appendLine(str: String?) {
+  area.append(str)
+  area.caretPosition = area.document.length
+}
+
+fun makeUI(): Component {
+  area.isEditable = false
+  area.lineWrap = true
+  runButton.addActionListener { executeWorker() }
+  cancelButton.addActionListener {
+    worker?.takeUnless { it.isDone }?.cancel(true)
+    worker = null
+  }
+  val box = Box.createHorizontalBox()
+  box.add(loadingLabel)
+  box.add(Box.createHorizontalGlue())
+  box.add(runButton)
+  box.add(cancelButton)
+  return JPanel(BorderLayout()).also {
+    it.add(box, BorderLayout.NORTH)
+    it.add(statusPanel, BorderLayout.SOUTH)
+    it.add(JScrollPane(area))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-open class BackgroundTask : SwingWorker<String, String?>() {
+private open class BackgroundTask : SwingWorker<String, String?>() {
   @Throws(InterruptedException::class)
   public override fun doInBackground(): String {
     Thread.sleep(1000)
@@ -142,7 +143,7 @@ private class LoadingLabel : JLabel() {
 
   init {
     setIcon(icon)
-    addHierarchyListener { e: HierarchyEvent ->
+    addHierarchyListener { e ->
       if (e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L && !e.component.isDisplayable) {
         animator.stop()
       }
@@ -215,7 +216,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
