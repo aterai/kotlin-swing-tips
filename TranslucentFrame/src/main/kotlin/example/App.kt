@@ -11,55 +11,55 @@ import javax.swing.plaf.synth.SynthPainter
 import javax.swing.plaf.synth.SynthStyle
 import javax.swing.plaf.synth.SynthStyleFactory
 
-class MainPanel : JPanel(BorderLayout()) {
-  private val desktop = JDesktopPane()
+private val desktop = JDesktopPane()
 
-  init {
-    val p1 = JPanel()
-    p1.setOpaque(false)
-    val p2 = object : JPanel() {
-      override fun paintComponent(g: Graphics) {
-        // super.paintComponent(g);
-        g.setColor(Color(100, 50, 50, 100))
-        g.fillRect(0, 0, getWidth(), getHeight())
-      }
+fun makeUI(): Component {
+  val p1 = JPanel()
+  p1.isOpaque = false
+  val p2 = object : JPanel() {
+    override fun paintComponent(g: Graphics) {
+      // super.paintComponent(g);
+      g.color = Color(100, 50, 50, 100)
+      g.fillRect(0, 0, width, height)
     }
-    p2.setOpaque(false)
-
-    createFrame(initContainer(p1), 0)
-    createFrame(initContainer(p2), 1)
-    add(desktop)
-    setPreferredSize(Dimension(320, 240))
   }
+  p2.isOpaque = false
 
-  private fun createFrame(panel: Container, idx: Int): JInternalFrame {
-    val frame = MyInternalFrame()
-    // frame.putClientProperty("Nimbus.Overrides", d)
-    // // frame.putClientProperty("Nimbus.Overrides.InheritDefaults", false)
-    frame.setContentPane(panel)
-    frame.getRootPane().setOpaque(false)
-    frame.setOpaque(false)
-    frame.setVisible(true)
-    frame.setLocation(10 + 60 * idx, 10 + 40 * idx)
-    desktop.add(frame)
-    desktop.getDesktopManager().activateFrame(frame)
-    return frame
-  }
-
-  private fun initContainer(p: Container): Container {
-    p.add(JLabel("label"))
-    p.add(JButton("button"))
-    return p
+  createFrame(initContainer(p1), 0)
+  createFrame(initContainer(p2), 1)
+  return JPanel(BorderLayout()).also {
+    it.add(desktop)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-internal class MyInternalFrame : JInternalFrame("title", true, true, true, true) {
+private fun createFrame(panel: Container, idx: Int): JInternalFrame {
+  val frame = MyInternalFrame()
+  // frame.putClientProperty("Nimbus.Overrides", d)
+  // // frame.putClientProperty("Nimbus.Overrides.InheritDefaults", false)
+  frame.contentPane = panel
+  frame.rootPane.isOpaque = false
+  frame.isOpaque = false
+  frame.isVisible = true
+  frame.setLocation(10 + 60 * idx, 10 + 40 * idx)
+  desktop.add(frame)
+  desktop.desktopManager.activateFrame(frame)
+  return frame
+}
+
+private fun initContainer(p: Container): Container {
+  p.add(JLabel("label"))
+  p.add(JButton("button"))
+  return p
+}
+
+private class MyInternalFrame : JInternalFrame("title", true, true, true, true) {
   init {
     setSize(160, 100)
   }
 }
 
-internal class MySynthStyleFactory(private val wrappedFactory: SynthStyleFactory) : SynthStyleFactory() {
+private class MySynthStyleFactory(private val wrappedFactory: SynthStyleFactory) : SynthStyleFactory() {
   override fun getStyle(c: JComponent, id: Region): SynthStyle {
     var s = wrappedFactory.getStyle(c, id)
     // if (id == Region.INTERNAL_FRAME_TITLE_PANE || id == Region.INTERNAL_FRAME) {
@@ -71,7 +71,7 @@ internal class MySynthStyleFactory(private val wrappedFactory: SynthStyleFactory
 }
 
 @Suppress("TooManyFunctions")
-internal class TranslucentSynthStyle(private val style: SynthStyle) : SynthStyle() {
+private class TranslucentSynthStyle(private val style: SynthStyle) : SynthStyle() {
   override operator fun get(context: SynthContext?, key: Any): Any? = style.get(context, key)
 
   override fun getBoolean(context: SynthContext?, key: Any, defaultValue: Boolean) =
@@ -100,7 +100,7 @@ internal class TranslucentSynthStyle(private val style: SynthStyle) : SynthStyle
         w: Int,
         h: Int
       ) {
-        g.setColor(Color(100, 200, 100, 100))
+        g.color = Color(100, 200, 100, 100)
         g.fillRoundRect(x, y, w - 1, h - 1, 15, 15)
       }
     }
@@ -115,7 +115,7 @@ internal class TranslucentSynthStyle(private val style: SynthStyle) : SynthStyle
   }
 
   override fun isOpaque(context: SynthContext) =
-    context.getRegion() !== Region.INTERNAL_FRAME && style.isOpaque(context)
+    context.region !== Region.INTERNAL_FRAME && style.isOpaque(context)
 
   override fun getColorForState(context: SynthContext, type: ColorType) = null // Color.RED
 
@@ -134,7 +134,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
