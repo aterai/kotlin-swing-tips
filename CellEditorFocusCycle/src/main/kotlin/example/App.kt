@@ -11,7 +11,6 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 
-
 fun makeUI(): Component {
   val table = makeTable()
   val am = table.actionMap
