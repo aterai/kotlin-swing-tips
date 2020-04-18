@@ -20,7 +20,7 @@ fun makeUI(): Component {
   editor.isOpaque = false // editor.setBackground(getBackground());
   editor.isEditable = false // REQUIRED
   editor.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true)
-  editor.addHyperlinkListener { e: HyperlinkEvent ->
+  editor.addHyperlinkListener { e ->
     if (e.eventType == HyperlinkEvent.EventType.ACTIVATED) {
       UIManager.getLookAndFeel().provideErrorFeedback(e.source as? Component)
     }
