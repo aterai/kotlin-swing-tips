@@ -1,8 +1,7 @@
 package example
 
-import java.awt.*
-import javax.swing.*
-
+import java.awt.* // ktlint-disable no-wildcard-imports
+import javax.swing.* // ktlint-disable no-wildcard-imports
 
 private val EVEN_BACKGROUND = Color(0xAA_DD_FF_FF.toInt(), true)
 
