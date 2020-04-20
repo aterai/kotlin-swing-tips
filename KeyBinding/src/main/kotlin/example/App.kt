@@ -131,7 +131,7 @@ private class BindingMapModel : DefaultTableModel() {
 
   override fun getColumnName(column: Int) = COLUMN_ARRAY[column].columnName
 
-  private class ColumnContext(
+  private data class ColumnContext(
     val columnName: String,
     val columnClass: Class<*>,
     val isEditable: Boolean

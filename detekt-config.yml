@@ -577,9 +577,9 @@ style:
     active: true
     max: 2
   TrailingWhitespace:
-    active: false
+    active: true
   UnderscoresInNumericLiterals:
-    active: false
+    active: true
     acceptableDecimalLength: 5
   UnnecessaryAbstractClass:
     active: true
@@ -608,7 +608,7 @@ style:
   UseCheckOrError:
     active: false
   UseDataClass:
-    active: false
+    active: true
     excludeAnnotatedClasses: []
     allowVars: false
   UseIfInsteadOfWhen:
