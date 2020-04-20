@@ -61,7 +61,7 @@ fun makeUI(): Component {
 
     // System.out.println(monitor.getMillisToDecideToPopup());
     // System.out.println(monitor.getMillisToPopup());
-    val lengthOfTask = 10000.coerceAtLeast(toDecideToPopup * 5)
+    val lengthOfTask = 10_000.coerceAtLeast(toDecideToPopup * 5)
     runButton.isEnabled = false
     executeWorker(monitor, lengthOfTask, runButton, area)
   }

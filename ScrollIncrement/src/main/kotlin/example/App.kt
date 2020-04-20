@@ -15,7 +15,7 @@ fun makeUI(): Component {
   scrollPane.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS
 
   val vsb = scrollPane.verticalScrollBar
-  val model = SpinnerNumberModel(vsb.getUnitIncrement(1), 1, 100000, 1)
+  val model = SpinnerNumberModel(vsb.getUnitIncrement(1), 1, 100_000, 1)
   model.addChangeListener {
     vsb.unitIncrement = model.number.toInt()
   }
