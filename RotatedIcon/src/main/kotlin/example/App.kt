@@ -36,13 +36,9 @@ private class RotateIcon(icon: Icon, rotate: Int) : Icon {
     g2.dispose()
   }
 
-  override fun getIconWidth(): Int {
-    return dim.width
-  }
+  override fun getIconWidth() = dim.width
 
-  override fun getIconHeight(): Int {
-    return dim.height
-  }
+  override fun getIconHeight() = dim.height
 
   init {
     require(rotate % 90 == 0) { "$rotate: Rotate must be (rotate % 90 == 0)" }

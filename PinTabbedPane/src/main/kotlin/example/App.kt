@@ -74,13 +74,10 @@ internal class PinTabPopupMenu : JPopupMenu() {
     return i
   }
 
-  private fun isSelectedPinTab(t: JTabbedPane, idx: Int): Boolean {
-    return idx >= 0 && idx == t.selectedIndex && isEmpty(t.getTitleAt(idx))
-  }
+  private fun isSelectedPinTab(t: JTabbedPane, idx: Int) = 
+      idx >= 0 && idx == t.selectedIndex && isEmpty(t.getTitleAt(idx))
 
-  private fun isEmpty(s: String?): Boolean {
-    return s == null || s.isEmpty()
-  }
+  private fun isEmpty(s: String?) = s == null || s.isEmpty()
 
   init {
     add(pinTabMenuItem)
