@@ -12,7 +12,7 @@ class MainPanel : JPanel(BorderLayout()) {
   init {
     val tab1 = JTabbedPane()
     tab1.addTab("JTree", JScrollPane(JTree()))
-    tab1.addTab("JLabel", JLabel("JLabel"))
+    tab1.addTab("JLabel", JLabel("JLabel 1"))
     tab1.addTab("JSplitPane", JSplitPane())
     tab1.addTab("JButton", JButton("JButton 1"))
 
@@ -20,7 +20,7 @@ class MainPanel : JPanel(BorderLayout()) {
     tab2.addTab("JTabbedPane: default", tab1)
     tab2.addTab("JTree", JScrollPane(JTree()))
     tab2.addTab("JSplitPane", JSplitPane())
-    tab2.addTab("JLabel", JLabel("JLabel"))
+    tab2.addTab("JLabel", JLabel("JLabel 2"))
     tab2.addTab("JButton", JButton("JButton"))
     add(tab2)
 
