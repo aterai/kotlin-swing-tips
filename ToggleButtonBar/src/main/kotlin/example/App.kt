@@ -30,7 +30,7 @@ class MainPanel : JPanel() {
   private fun makeToggleButtonBar(cc: Int, icon: Icon): Component {
     val bg = ButtonGroup()
     val p = JPanel(GridLayout(1, 0, 0, 0))
-    p.border = BorderFactory.createTitledBorder(String.format("Color: #%06X", cc))
+    p.border = BorderFactory.createTitledBorder("Color: #%06X".format(cc))
     val color = Color(cc)
     listOf("left", "center", "right")
       .map { makeButton(it) }

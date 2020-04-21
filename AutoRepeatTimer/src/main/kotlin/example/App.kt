@@ -38,7 +38,7 @@ fun makeUI(): Component {
 }
 
 private fun makeButton(extent: Int, view: JTextField): JButton {
-  val title = String.format("%+d", extent)
+  val title = "%+d".format(extent)
   val button: JButton = object : JButton(title) {
     override fun getMaximumSize(): Dimension {
       return Dimension(50, 50)

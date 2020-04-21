@@ -61,7 +61,7 @@ fun makeUI(): Component {
   return p
 }
 
-private class UrlLabel(h: String?) : JLabel(String.format("<html><a href='%s'>%s", h, h)) {
+private class UrlLabel(h: String?) : JLabel("<html><a href='$h'>$h") {
   @Transient
   private var handler: MouseListener? = null
   override fun updateUI() {

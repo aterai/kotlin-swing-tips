@@ -123,7 +123,7 @@ class MainPanel : JPanel(BorderLayout()) {
         UIManager.getLookAndFeel().provideErrorFeedback(field)
       }
     }
-    label.text = String.format("%02d / %02d%n", current + 1, hits)
+    label.text = "%02d / %02d%n".format(current + 1, hits)
     field.repaint()
   }
 

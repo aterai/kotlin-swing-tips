@@ -25,9 +25,9 @@ class MainPanel : JPanel(BorderLayout()) {
 
     // TEST:
     val d = 29.7 - 29.6 - .1
-    val str1 = String.format("%f-%f-%f>=0:%b%n", 29.7, 29.6, .1, d >= .0)
-    val str2 = String.format("abs(%f-%f-%f)<1.0e-14:%b%n", 29.7, 29.6, .1, abs(d) < 1.0e-14)
-    val str3 = String.format("abs(%f-%f-%f)<1.0e-15:%b%n", 29.7, 29.6, .1, abs(d) < 1.0e-15)
+    val str1 = "%f-%f-%f>=0:%b%n".format(29.7, 29.6, .1, d >= .0)
+    val str2 = "abs(%f-%f-%f)<1.0e-14:%b%n".format(29.7, 29.6, .1, abs(d) < 1.0e-14)
+    val str3 = "abs(%f-%f-%f)<1.0e-15:%b%n".format(29.7, 29.6, .1, abs(d) < 1.0e-15)
     add(box, BorderLayout.NORTH)
     add(JScrollPane(JTextArea(str1 + str2 + str3)))
     preferredSize = Dimension(320, 240)

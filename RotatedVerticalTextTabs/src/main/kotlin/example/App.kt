@@ -31,7 +31,7 @@ fun makeUI(): Component {
   val tabs1 = JTabbedPane(SwingConstants.LEFT)
   val tabs2 = JTabbedPane(SwingConstants.RIGHT)
   listOf("computer", "directory", "file").forEach {
-    val icon = UIManager.getIcon(String.format("FileView.%sIcon", it))
+    val icon = UIManager.getIcon("FileView.${it}Icon")
     val c1 = JLabel(it, icon, SwingConstants.LEADING)
     tabs1.addTab(null, makeVerticalTabIcon(it, icon, false), c1)
     val c2 = JLabel(it, icon, SwingConstants.CENTER)

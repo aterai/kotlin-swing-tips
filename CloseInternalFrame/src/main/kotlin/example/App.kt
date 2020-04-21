@@ -83,7 +83,7 @@ private fun createToolBar(desktop: JDesktopPane): JToolBar {
 
 private fun makeInternalFrame(desktop: JDesktopPane): JInternalFrame {
   val f = JInternalFrame(
-    String.format("Document #%s", ++openFrameCount),
+    "Document #${++openFrameCount}",
     true,
     true,
     true,

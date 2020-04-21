@@ -29,7 +29,7 @@ fun makeUI(): Component {
   l2.toolTipText = "Test2"
 
   val l3 = JLabel("Gif Animated ToolTip(html)")
-  l3.toolTipText = String.format("<html><img src='%s'>Test3</html>", url)
+  l3.toolTipText = "<html><img src='$url'>Test3</html>"
 
   val p1 = JPanel(BorderLayout())
   p1.border = BorderFactory.createTitledBorder("javax.swing.Timer")

@@ -61,7 +61,7 @@ class TableOfContentsTreeCellRenderer : DefaultTreeCellRenderer() {
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
       if (pn >= 0) {
-        val str = String.format("%3d", pn)
+        val str = "%3d".format(pn)
         val metrics = g.fontMetrics
         val g2 = g.create() as? Graphics2D ?: return
         g2.paint = if (isSynth) foreground else getTextNonSelectionColor()
