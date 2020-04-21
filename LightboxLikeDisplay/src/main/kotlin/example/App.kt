@@ -13,23 +13,23 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 class MainPanel : JPanel(GridLayout(1, 2)) {
   init {
     EventQueue.invokeLater {
-      getRootPane().setGlassPane(LightboxGlassPane())
-      getRootPane().getGlassPane().setVisible(false)
+      rootPane.glassPane = LightboxGlassPane()
+      rootPane.glassPane.isVisible = false
     }
     val button = JButton("Open")
-    button.addActionListener { getRootPane().getGlassPane().setVisible(true) }
+    button.addActionListener { rootPane.glassPane.isVisible = true }
     add(makeDummyPanel())
     add(button)
-    setPreferredSize(Dimension(320, 240))
+    preferredSize = Dimension(320, 240)
   }
 
   private fun makeDummyPanel(): JPanel {
     val b = JButton("Button & Mnemonic")
-    b.setMnemonic(KeyEvent.VK_B)
+    b.mnemonic = KeyEvent.VK_B
     val t = JTextField("TextField & ToolTip")
-    t.setToolTipText("ToolTip")
+    t.toolTipText = "ToolTip"
     val p = JPanel(BorderLayout(5, 5))
-    p.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
+    p.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
     p.add(b, BorderLayout.NORTH)
     p.add(t, BorderLayout.SOUTH)
     p.add(JScrollPane(JTree()))
@@ -56,7 +56,7 @@ class LightboxGlassPane : JPanel() {
     removeMouseListener(handler)
     removeHierarchyListener(handler)
     super.updateUI()
-    setOpaque(false)
+    isOpaque = false
     super.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR))
     handler = Handler()
     addMouseListener(handler)
@@ -65,25 +65,22 @@ class LightboxGlassPane : JPanel() {
 
   private inner class Handler : MouseAdapter(), HierarchyListener {
     override fun mouseClicked(e: MouseEvent) {
-      e.getComponent().setVisible(false)
+      e.component.isVisible = false
     }
 
     override fun hierarchyChanged(e: HierarchyEvent) {
-      val f = e.getChangeFlags().toInt() and HierarchyEvent.DISPLAYABILITY_CHANGED != 0
-      if (f && !e.getComponent().isDisplayable()) {
+      val f = e.changeFlags.toInt() and HierarchyEvent.DISPLAYABILITY_CHANGED != 0
+      if (f && !e.component.isDisplayable) {
         animator.stop()
       }
     }
   }
 
   override fun setVisible(b: Boolean) {
-    val oldVisible = isVisible()
+    val oldVisible = isVisible
     super.setVisible(b)
-    getRootPane()
-      ?.takeUnless { b == oldVisible }
-      ?.getLayeredPane()
-      ?.setVisible(!b)
-    if (b && !animator.isRunning()) {
+    rootPane?.takeUnless { b == oldVisible }?.layeredPane?.isVisible = !b
+    if (b && !animator.isRunning) {
       curImgWidth = 40
       curImgHeight = 40
       alpha = 0f
@@ -95,18 +92,18 @@ class LightboxGlassPane : JPanel() {
   }
 
   override fun paintComponent(g: Graphics) {
-    getRootPane()?.getLayeredPane()?.print(g)
+    rootPane?.layeredPane?.print(g)
     super.paintComponent(g)
 
     when {
-      curImgHeight < img.getIconHeight() + BW + BW ->
-        curImgHeight += img.getIconHeight() / 16
-      curImgWidth < img.getIconWidth() + BW + BW -> {
-        curImgHeight = img.getIconHeight() + BW + BW
-        curImgWidth += img.getIconWidth() / 16
+      curImgHeight < img.iconHeight + BW + BW ->
+        curImgHeight += img.iconHeight / 16
+      curImgWidth < img.iconWidth + BW + BW -> {
+        curImgHeight = img.iconHeight + BW + BW
+        curImgWidth += img.iconWidth / 16
       }
       1f - alpha > 0 -> {
-        curImgWidth = img.getIconWidth() + BW + BW
+        curImgWidth = img.iconWidth + BW + BW
         alpha += .1f
       }
       else -> {
@@ -115,22 +112,22 @@ class LightboxGlassPane : JPanel() {
       }
     }
     rect.setSize(curImgWidth, curImgHeight)
-    val screen = getBounds()
+    val screen = bounds
     val centerPt = Point(screen.x + screen.width / 2, screen.y + screen.height / 2)
     rect.setLocation(centerPt.x - rect.width / 2, centerPt.y - rect.height / 2)
 
-    val g2 = g.create() as Graphics2D
-    g2.setPaint(Color(0x64_64_64_64, true))
+    val g2 = g.create() as? Graphics2D ?: return
+    g2.paint = Color(0x64_64_64_64, true)
     g2.fill(screen)
-    g2.setPaint(Color(0xC8_FF_FF_FF.toInt(), true))
+    g2.paint = Color(0xC8_FF_FF_FF.toInt(), true)
     g2.fill(rect)
 
     if (alpha > 0) {
-      g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha.coerceAtMost(1f)))
-      g2.drawImage(img.getImage(), rect.x + BW, rect.y + BW, img.getIconWidth(), img.getIconHeight(), this)
+      g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha.coerceAtMost(1f))
+      g2.drawImage(img.image, rect.x + BW, rect.y + BW, img.iconWidth, img.iconHeight, this)
     } else {
-      val cx = centerPt.x - animatedIcon.getIconWidth() / 2
-      val cy = centerPt.y - animatedIcon.getIconHeight() / 2
+      val cx = centerPt.x - animatedIcon.iconWidth / 2
+      val cy = centerPt.y - animatedIcon.iconHeight / 2
       animatedIcon.paintIcon(this, g2, cx, cy)
     }
     g2.dispose()
@@ -165,16 +162,16 @@ class LoadingIcon : Icon {
   }
 
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
-    g2.setPaint(Color(0x0, true))
-    g2.fillRect(0, 0, getIconWidth(), getIconHeight())
+    g2.paint = Color(0x0, true)
+    g2.fillRect(0, 0, iconWidth, iconHeight)
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    g2.setPaint(ELLIPSE_COLOR)
+    g2.paint = ELLIPSE_COLOR
     val size = list.size
     for (i in 0 until size) {
       val alpha = if (running) (i + 1) / size.toFloat() else .5f
-      g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha))
+      g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha)
       g2.fill(list[i])
     }
     g2.dispose()
