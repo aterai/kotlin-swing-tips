@@ -7,36 +7,36 @@ import javax.swing.plaf.synth.SynthConstants
 import javax.swing.plaf.synth.SynthContext
 import javax.swing.plaf.synth.SynthLookAndFeel
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val list = listOf(makeTestTabbedPane(JTabbedPane()), makeTestTabbedPane(ClippedTitleTabbedPane()))
+fun makeUI(): Component {
+  val list = listOf(makeTestTabbedPane(JTabbedPane()), makeTestTabbedPane(ClippedTitleTabbedPane()))
 
-    val p = JPanel(GridLayout(list.size, 1))
-    list.forEach { p.add(it) }
+  val p = JPanel(GridLayout(list.size, 1))
+  list.forEach { p.add(it) }
 
-    val check = JCheckBox("LEFT")
-    check.addActionListener { e ->
-      val b = (e.getSource() as? JCheckBox)?.isSelected() ?: false
-      val tabPlacement = if (b) JTabbedPane.LEFT else JTabbedPane.TOP
-      list.forEach { it.setTabPlacement(tabPlacement) }
-    }
-
-    add(check, BorderLayout.NORTH)
-    add(p)
-    setPreferredSize(Dimension(320, 240))
+  val check = JCheckBox("LEFT")
+  check.addActionListener { e ->
+    val b = (e.source as? JCheckBox)?.isSelected ?: false
+    val tabPlacement = if (b) JTabbedPane.LEFT else JTabbedPane.TOP
+    list.forEach { it.tabPlacement = tabPlacement }
   }
 
-  private fun makeTestTabbedPane(tabbedPane: JTabbedPane) = tabbedPane.also {
-    it.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT)
-    it.addTab("1111111111111111111", ColorIcon(Color.RED), JScrollPane(JTree()))
-    it.addTab("2", ColorIcon(Color.GREEN), JLabel("bbbbbbbbb"))
-    it.addTab("33333333333333", ColorIcon(Color.BLUE), JScrollPane(JTree()))
-    it.addTab("444444444444444", ColorIcon(Color.ORANGE), JLabel("dddddddddd"))
-    it.addTab("55555555555555555555555555555555", ColorIcon(Color.CYAN), JLabel("e"))
+  return JPanel(BorderLayout()).also {
+    it.add(check, BorderLayout.NORTH)
+    it.add(p)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-internal class ClippedTitleTabbedPane : JTabbedPane {
+private fun makeTestTabbedPane(tabbedPane: JTabbedPane) = tabbedPane.also {
+  it.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
+  it.addTab("1111111111111111111", ColorIcon(Color.RED), JScrollPane(JTree()))
+  it.addTab("2", ColorIcon(Color.GREEN), JLabel("JLabel 1"))
+  it.addTab("33333333333333", ColorIcon(Color.BLUE), JScrollPane(JTree()))
+  it.addTab("444444444444444", ColorIcon(Color.ORANGE), JLabel("JLabel 2"))
+  it.addTab("55555555555555555555555555555555", ColorIcon(Color.CYAN), JLabel("e"))
+}
+
+private class ClippedTitleTabbedPane : JTabbedPane {
   private val tabInsets = UIManager.getInsets("TabbedPane.tabInsets") ?: getSynthTabInsets()
   private val tabAreaInsets = UIManager.getInsets("TabbedPane.tabAreaInsets") ?: getSynthTabAreaInsets()
 
@@ -57,16 +57,16 @@ internal class ClippedTitleTabbedPane : JTabbedPane {
   constructor(tabPlacement: Int) : super(tabPlacement)
 
   override fun doLayout() {
-    val tabCount = getTabCount()
-    if (tabCount == 0 || !isVisible()) {
+    val tabCount = tabCount
+    if (tabCount == 0 || !isVisible) {
       super.doLayout()
       return
     }
     val tabInsets = tabInsets
     val tabAreaInsets = tabAreaInsets
-    val insets = getInsets()
+    val insets = insets
     val tabPlacement = getTabPlacement()
-    val areaWidth = getWidth() - tabAreaInsets.left - tabAreaInsets.right - insets.left - insets.right
+    val areaWidth = width - tabAreaInsets.left - tabAreaInsets.right - insets.left - insets.right
     val isSide = tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT
     var tabWidth = if (isSide) areaWidth / 4 else areaWidth / tabCount
     val gap = if (isSide) 0 else areaWidth - tabWidth * tabCount
@@ -86,23 +86,23 @@ internal class ClippedTitleTabbedPane : JTabbedPane {
   private fun updateAllTabWidth(tabWidth: Int, gap: Int) {
     val dim = Dimension()
     var rest = gap
-    for (i in 0 until getTabCount()) {
+    for (i in 0 until tabCount) {
       val tab = getTabComponentAt(i) as? JComponent ?: continue
-      val a = if (i == getTabCount() - 1) rest else 1
+      val a = if (i == tabCount - 1) rest else 1
       val w = if (rest > 0) tabWidth + a else tabWidth
-      dim.setSize(w, tab.getPreferredSize().height)
-      tab.setPreferredSize(dim)
+      dim.setSize(w, tab.preferredSize.height)
+      tab.preferredSize = dim
       rest -= a
     }
   }
 }
 
-internal class ColorIcon(private val color: Color) : Icon {
+private class ColorIcon(private val color: Color) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
-    g2.setPaint(color)
-    g2.fillRect(1, 1, getIconWidth() - 2, getIconHeight() - 2)
+    g2.paint = color
+    g2.fillRect(1, 1, iconWidth - 2, iconHeight - 2)
     g2.dispose()
   }
 
@@ -121,7 +121,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
