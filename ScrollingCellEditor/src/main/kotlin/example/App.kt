@@ -9,7 +9,6 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
-import javax.swing.table.TableModel
 
 fun makeUI(): Component {
   val columnNames = arrayOf("JTextField", "JTextArea")
