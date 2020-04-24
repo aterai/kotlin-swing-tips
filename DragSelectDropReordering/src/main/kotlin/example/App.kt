@@ -223,7 +223,7 @@ private class ListItemTransferHandler : TransferHandler() {
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(FLAVOR)
 
-      override fun isDataFlavorSupported(flavor: DataFlavor) = FLAVOR==flavor
+      override fun isDataFlavorSupported(flavor: DataFlavor) = FLAVOR == flavor
 
       @Throws(UnsupportedFlavorException::class)
       override fun getTransferData(flavor: DataFlavor): Any {
@@ -272,7 +272,7 @@ private class ListItemTransferHandler : TransferHandler() {
     println("exportDone")
     val glassPane = c.rootPane.glassPane
     glassPane.isVisible = false
-    cleanup(c, action==MOVE)
+    cleanup(c, action == MOVE)
   }
 
   private fun cleanup(c: JComponent, remove: Boolean) {

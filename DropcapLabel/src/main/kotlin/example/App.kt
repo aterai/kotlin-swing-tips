@@ -17,55 +17,55 @@ class MainPanel : JPanel(BorderLayout()) {
        the Java programming language.
     """.trimIndent()
     val label = DropcapLabel(text)
-    label.setFont(Font(Font.SERIF, Font.PLAIN, 17))
-    label.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
+    label.font = Font(Font.SERIF, Font.PLAIN, 17)
+    label.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     add(label)
-    setBorder(BorderFactory.createLineBorder(Color(100, 200, 200, 100), 10))
-    setPreferredSize(Dimension(320, 240))
+    border = BorderFactory.createLineBorder(Color(100, 200, 200, 100), 10)
+    preferredSize = Dimension(320, 240)
   }
 }
 
 class DropcapLabel(text: String) : JLabel(text) {
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setPaint(getBackground())
-    g2.fillRect(0, 0, getWidth(), getHeight())
+    g2.paint = background
+    g2.fillRect(0, 0, width, height)
 
-    val i = getInsets()
+    val i = insets
     val x0 = i.left.toFloat()
     val y0 = i.top.toFloat()
 
-    val font = getFont()
-    val txt = getText()
+    val font = font
+    val txt = text
 
-    val frc = g2.getFontRenderContext()
+    val frc = g2.fontRenderContext
     val shape = TextLayout(txt.substring(0, 1), font, frc).getOutline(null)
 
     val at1 = AffineTransform.getScaleInstance(5.0, 5.0)
     val s1 = at1.createTransformedShape(shape)
-    val r = s1.getBounds()
+    val r = s1.bounds
     r.grow(6, 2)
     val rw = r.width
     val rh = r.height
 
     val at2 = AffineTransform.getTranslateInstance(x0.toDouble(), (y0 + rh).toDouble())
     val s2 = at2.createTransformedShape(s1)
-    g2.setPaint(getForeground())
+    g2.paint = foreground
     g2.fill(s2)
 
     var x = x0 + rw
     var y = y0
-    val w0 = getWidth() - i.left - i.right
+    val w0 = width - i.left - i.right
     var w = w0 - rw
 
     val attr = AttributedString(txt.substring(1))
     attr.addAttribute(TextAttribute.FONT, font)
-    val aci = attr.getIterator()
+    val aci = attr.iterator
     val lbm = LineBreakMeasurer(aci, frc)
-    while (lbm.getPosition() < aci.getEndIndex()) {
+    while (lbm.position < aci.endIndex) {
       val tl = lbm.nextLayout(w.toFloat())
-      tl.draw(g2, x, y + tl.getAscent())
-      y += tl.getDescent() + tl.getLeading() + tl.getAscent()
+      tl.draw(g2, x, y + tl.ascent)
+      y += tl.descent + tl.leading + tl.ascent
       if (y0 + rh < y) {
         x = x0
         w = w0
