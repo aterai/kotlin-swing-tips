@@ -137,7 +137,7 @@ class TableRowTransferHandler : TransferHandler() {
         addCount > 0 -> selectedIndices.map { if (it >= addIndex) it + addCount else it }
         else -> selectedIndices.toList()
       }
-      ((c as? JTable)?.getModel() as? DefaultTableModel)?.also { model ->
+      ((c as? JTable)?.model as? DefaultTableModel)?.also { model ->
         for (i in selectedList.indices.reversed()) {
           model.removeRow(selectedList[i])
         }
