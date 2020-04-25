@@ -9,64 +9,64 @@ import java.awt.event.MouseWheelListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.metal.MetalSliderUI
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val slider1 = makeSlider()
-    val slider2 = makeSlider()
-    slider2.setModel(slider1.getModel())
-    setSliderUI(slider2)
+fun makeUI(): Component {
+  val slider1 = makeSlider()
+  val slider2 = makeSlider()
+  slider2.model = slider1.model
+  setSliderUI(slider2)
 
-    val ma = SliderPopupListener()
-    slider2.addMouseMotionListener(ma)
-    slider2.addMouseListener(ma)
+  val ma = SliderPopupListener()
+  slider2.addMouseMotionListener(ma)
+  slider2.addMouseListener(ma)
 
-    add(Box.createVerticalBox().also {
-      it.add(Box.createVerticalStrut(5))
-      it.add(makeTitledPanel("Default", slider1))
-      it.add(Box.createVerticalStrut(25))
-      it.add(makeTitledPanel("Show ToolTip", slider2))
-      it.add(Box.createVerticalGlue())
-    }, BorderLayout.NORTH)
-    setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-    setPreferredSize(Dimension(320, 240))
-  }
+  val p = JPanel(BorderLayout())
+  p.add(Box.createVerticalBox().also {
+    it.add(Box.createVerticalStrut(5))
+    it.add(makeTitledPanel("Default", slider1))
+    it.add(Box.createVerticalStrut(25))
+    it.add(makeTitledPanel("Show ToolTip", slider2))
+    it.add(Box.createVerticalGlue())
+  }, BorderLayout.NORTH)
+  p.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+  p.preferredSize = Dimension(320, 240)
+  return p
+}
 
-  private fun makeSlider(): JSlider {
-    val slider = JSlider(0, 100, 0)
-    slider.setMajorTickSpacing(10)
-    slider.setMinorTickSpacing(5)
-    slider.setPaintTicks(true)
-    // slider.setPaintLabels(true)
-    slider.addMouseWheelListener(SliderMouseWheelListener())
-    return slider
-  }
+private fun makeSlider(): JSlider {
+  val slider = JSlider(0, 100, 0)
+  slider.majorTickSpacing = 10
+  slider.minorTickSpacing = 5
+  slider.paintTicks = true
+  // slider.setPaintLabels(true)
+  slider.addMouseWheelListener(SliderMouseWheelListener())
+  return slider
+}
 
-  private fun makeTitledPanel(title: String, c: Component): Component {
-    val p = JPanel(BorderLayout())
-    p.setBorder(BorderFactory.createTitledBorder(title))
-    p.add(c)
-    return p
-  }
+private fun makeTitledPanel(title: String, c: Component): Component {
+  val p = JPanel(BorderLayout())
+  p.border = BorderFactory.createTitledBorder(title)
+  p.add(c)
+  return p
+}
 
-  private fun setSliderUI(slider: JSlider) {
-    if (slider.getUI() is WindowsSliderUI) {
-      slider.setUI(WindowsTooltipSliderUI(slider))
-    } else {
-      slider.setUI(MetalTooltipSliderUI())
-    }
+private fun setSliderUI(slider: JSlider) {
+  if (slider.ui is WindowsSliderUI) {
+    slider.ui = WindowsTooltipSliderUI(slider)
+  } else {
+    slider.ui = MetalTooltipSliderUI()
   }
 }
 
-class WindowsTooltipSliderUI(slider: JSlider) : WindowsSliderUI(slider) {
+private class WindowsTooltipSliderUI(slider: JSlider) : WindowsSliderUI(slider) {
   override fun createTrackListener(slider: JSlider?): TrackListener {
     return object : TrackListener() {
       override fun mousePressed(e: MouseEvent) {
         if (UIManager.getBoolean("Slider.onlyLeftMouseButtonDrag") && SwingUtilities.isLeftMouseButton(e)) {
-          (e.getComponent() as? JSlider)?.also {
-            if (it.getOrientation() == SwingConstants.VERTICAL) {
-              it.setValue(valueForYPosition(e.getY()))
+          (e.component as? JSlider)?.also {
+            if (it.orientation == SwingConstants.VERTICAL) {
+              it.value = valueForYPosition(e.y)
             } else { // SwingConstants.HORIZONTAL
-              it.setValue(valueForXPosition(e.getX()))
+              it.value = valueForXPosition(e.x)
             }
             super.mousePressed(e) // isDragging = true
             super.mouseDragged(e)
@@ -81,16 +81,16 @@ class WindowsTooltipSliderUI(slider: JSlider) : WindowsSliderUI(slider) {
   }
 }
 
-class MetalTooltipSliderUI : MetalSliderUI() {
+private class MetalTooltipSliderUI : MetalSliderUI() {
   override fun createTrackListener(slider: JSlider?): TrackListener {
     return object : TrackListener() {
       override fun mousePressed(e: MouseEvent) {
         if (UIManager.getBoolean("Slider.onlyLeftMouseButtonDrag") && SwingUtilities.isLeftMouseButton(e)) {
-          (e.getComponent() as? JSlider)?.also {
-            if (it.getOrientation() == SwingConstants.VERTICAL) {
-              it.setValue(valueForYPosition(e.getY()))
+          (e.component as? JSlider)?.also {
+            if (it.orientation == SwingConstants.VERTICAL) {
+              it.value = valueForYPosition(e.y)
             } else { // SwingConstants.HORIZONTAL
-              it.setValue(valueForXPosition(e.getX()))
+              it.value = valueForXPosition(e.x)
             }
             super.mousePressed(e) // isDragging = true
             super.mouseDragged(e)
@@ -105,30 +105,30 @@ class MetalTooltipSliderUI : MetalSliderUI() {
   }
 }
 
-class SliderPopupListener : MouseAdapter() {
+private class SliderPopupListener : MouseAdapter() {
   private val toolTip = JWindow()
   private val label = JLabel("", SwingConstants.CENTER)
   private val size = Dimension(30, 20)
   private var prevValue = -1
 
   init {
-    label.setOpaque(false)
-    label.setBackground(UIManager.getColor("ToolTip.background"))
-    label.setBorder(UIManager.getBorder("ToolTip.border"))
+    label.isOpaque = false
+    label.background = UIManager.getColor("ToolTip.background")
+    label.border = UIManager.getBorder("ToolTip.border")
     toolTip.add(label)
-    toolTip.setSize(size)
+    toolTip.size = size
   }
 
   private fun updateToolTip(e: MouseEvent) {
-    val slider = e.getComponent() as? JSlider ?: return
-    val intValue = slider.getValue()
+    val slider = e.component as? JSlider ?: return
+    val intValue = slider.value
     if (prevValue != intValue) {
-      label.setText("%03d".format(slider.getValue()))
-      val pt = e.getPoint()
+      label.text = "%03d".format(slider.value)
+      val pt = e.point
       pt.y = -size.height
-      SwingUtilities.convertPointToScreen(pt, e.getComponent())
+      SwingUtilities.convertPointToScreen(pt, e.component)
       pt.translate(-size.width / 2, 0)
-      toolTip.setLocation(pt)
+      toolTip.location = pt
     }
     prevValue = intValue
   }
@@ -139,20 +139,20 @@ class SliderPopupListener : MouseAdapter() {
 
   override fun mousePressed(e: MouseEvent) {
     if (UIManager.getBoolean("Slider.onlyLeftMouseButtonDrag") && SwingUtilities.isLeftMouseButton(e)) {
-      toolTip.setVisible(true)
+      toolTip.isVisible = true
       updateToolTip(e)
     }
   }
 
   override fun mouseReleased(e: MouseEvent) {
-    toolTip.setVisible(false)
+    toolTip.isVisible = false
   }
 }
 
-class SliderMouseWheelListener : MouseWheelListener {
+private class SliderMouseWheelListener : MouseWheelListener {
   override fun mouseWheelMoved(e: MouseWheelEvent) {
-    val s = e.getComponent() as? JSlider ?: return
-    s.setValue(s.getValue() - e.getWheelRotation())
+    val s = e.component as? JSlider ?: return
+    s.value = s.value - e.wheelRotation
     // val i = s.getValue().toInt() - e.getWheelRotation()
     // val m = s.getModel()
     // s.setValue(minOf(maxOf(i, m.getMinimum()), m.getMaximum()))
@@ -169,7 +169,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
