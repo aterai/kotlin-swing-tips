@@ -50,13 +50,13 @@ fun makeUI(): Component {
       fixedCellHeight = cellSize.height
       val renderer = cellRenderer
       setCellRenderer { list, value, index, _, _ ->
-        val c = renderer.getListCellRendererComponent(list, value, index, false, false)
-        (c as? JLabel)?.also {
-          it.horizontalAlignment = SwingConstants.CENTER
-          it.text = value.getDisplayName(TextStyle.SHORT_STANDALONE, l)
-          it.background = Color(0xDC_DC_DC)
+        renderer.getListCellRendererComponent(list, value, index, false, false).also {
+          (it as? JLabel)?.also { label ->
+            label.horizontalAlignment = SwingConstants.CENTER
+            label.text = value.getDisplayName(TextStyle.SHORT_STANDALONE, l)
+            label.background = Color(0xDC_DC_DC)
+          }
         }
-        return@setCellRenderer c
       }
     }
   }

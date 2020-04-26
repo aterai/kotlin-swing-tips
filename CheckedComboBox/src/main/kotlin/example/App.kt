@@ -7,29 +7,29 @@ import java.awt.event.KeyEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.ComboPopup
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val m = arrayOf(
-      CheckableItem("aaa", false),
-      CheckableItem("bb", true),
-      CheckableItem("111", false),
-      CheckableItem("33333", true),
-      CheckableItem("2222", true),
-      CheckableItem("c", false)
-    )
-    val p = JPanel(GridLayout(0, 1))
-    p.border = BorderFactory.createEmptyBorder(5, 20, 5, 20)
-    p.add(JLabel("Default:"))
-    p.add(JComboBox(m))
-    p.add(Box.createVerticalStrut(20))
-    p.add(JLabel("CheckedComboBox:"))
-    p.add(CheckedComboBox(DefaultComboBoxModel(m)))
-    add(p, BorderLayout.NORTH)
-    preferredSize = Dimension(320, 240)
+fun makeUI(): Component {
+  val m = arrayOf(
+    CheckableItem("aaa", false),
+    CheckableItem("bb", true),
+    CheckableItem("111", false),
+    CheckableItem("33333", true),
+    CheckableItem("2222", true),
+    CheckableItem("c", false)
+  )
+  val p = JPanel(GridLayout(0, 1))
+  p.border = BorderFactory.createEmptyBorder(5, 20, 5, 20)
+  p.add(JLabel("Default:"))
+  p.add(JComboBox(m))
+  p.add(Box.createVerticalStrut(20))
+  p.add(JLabel("CheckedComboBox:"))
+  p.add(CheckedComboBox(DefaultComboBoxModel(m)))
+  return JPanel(BorderLayout()).also {
+    it.add(p, BorderLayout.NORTH)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-data class CheckableItem(val title: String, val isSelected: Boolean) {
+private data class CheckableItem(val title: String, val isSelected: Boolean) {
   override fun toString() = title
 }
 
@@ -72,8 +72,9 @@ data class CheckableItem(val title: String, val isSelected: Boolean) {
 //  }
 // }
 
-class CheckedComboBox(model: ComboBoxModel<CheckableItem>) : JComboBox<CheckableItem>(model) {
+private class CheckedComboBox(model: ComboBoxModel<CheckableItem>) : JComboBox<CheckableItem>(model) {
   private var keepOpen = false
+
   @Transient
   private var listener: ActionListener? = null
 
@@ -92,7 +93,7 @@ class CheckedComboBox(model: ComboBoxModel<CheckableItem>) : JComboBox<Checkable
     val label = JLabel(" ")
     val check = JCheckBox(" ")
     setRenderer { list, value, index, isSelected, _ ->
-      return@setRenderer if (index < 0) {
+      if (index < 0) {
         val txt = getCheckedItemString(list.model)
         label.text = if (txt.isEmpty()) " " else txt
         label
@@ -161,7 +162,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

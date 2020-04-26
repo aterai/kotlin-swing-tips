@@ -7,6 +7,28 @@ import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreePath
 
+private val tree = object : JTree() {
+  override fun updateUI() {
+    setCellRenderer(null)
+    super.updateUI()
+    val r = getCellRenderer()
+    setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
+      r.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus).also {
+        if (it is JLabel) {
+          val uo = (value as? DefaultMutableTreeNode)?.userObject
+          if (uo is NodeObject) {
+            it.text = uo.title
+            it.icon = uo.icon
+          } else {
+            it.text = value?.toString() ?: ""
+            it.icon = null
+          }
+        }
+      }
+    }
+  }
+}
+
 fun makeUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
   val icon = ImageIcon(cl.getResource("example/restore_to_background_color.gif"))
@@ -15,39 +37,20 @@ fun makeUI(): Component {
   val s1 = DefaultMutableTreeNode(NodeObject("setImageObserver", icon))
   root.add(s0)
   root.add(s1)
+  tree.model = DefaultTreeModel(root)
+  tree.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
 
-  val tree = object : JTree(DefaultTreeModel(root)) {
-    override fun updateUI() {
-      setCellRenderer(null)
-      super.updateUI()
-      val r = getCellRenderer()
-      setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-        val c = r.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
-        val l = c as? JLabel ?: return@setCellRenderer c
-        val uo = (value as? DefaultMutableTreeNode)?.userObject
-        if (uo is NodeObject) {
-          l.text = uo.title
-          l.icon = uo.icon
-        } else {
-          l.text = value?.toString() ?: ""
-          l.icon = null
-        }
-        l
-      }
-    }
-  }
   val path = TreePath(s1.path)
   icon.imageObserver = ImageObserver { _, infoFlags, _, _, _, _ ->
-    if (!tree.isShowing) {
-      return@ImageObserver false
-    }
-    val cellRect = tree.getPathBounds(path)
-    if (infoFlags and (ImageObserver.FRAMEBITS or ImageObserver.ALLBITS) != 0 && cellRect != null) {
-      tree.repaint(cellRect)
-    }
-    infoFlags and (ImageObserver.ALLBITS or ImageObserver.ABORT) == 0
+    if (tree.isShowing) {
+      val cellRect = tree.getPathBounds(path)
+      if (infoFlags and (ImageObserver.FRAMEBITS or ImageObserver.ALLBITS) != 0 && cellRect != null) {
+        tree.repaint(cellRect)
+      }
+      infoFlags and (ImageObserver.ALLBITS or ImageObserver.ABORT) == 0
+    } else false
   }
-  tree.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(tree))
     it.preferredSize = Dimension(320, 240)

@@ -31,14 +31,14 @@ fun makeUI(): Component {
       super.updateUI()
       val renderer = DefaultListCellRenderer()
       setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-        val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-        (SwingUtilities.getAncestorOfClass(JViewport::class.java, list) as? JViewport)?.also {
-          val rect = SwingUtilities.calculateInnerArea(it, it.bounds)
-          val fm = c.getFontMetrics(c.font)
-          val str = value?.toString() ?: ""
-          (c as? JComponent)?.toolTipText = if (fm.stringWidth(str) > rect.width) str else null
+        renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also { c ->
+          (SwingUtilities.getAncestorOfClass(JViewport::class.java, list) as? JViewport)?.also {
+            val rect = SwingUtilities.calculateInnerArea(it, it.bounds)
+            val fm = c.getFontMetrics(c.font)
+            val str = value?.toString() ?: ""
+            (c as? JComponent)?.toolTipText = if (fm.stringWidth(str) > rect.width) str else null
+          }
         }
-        return@setCellRenderer c
       }
     }
   }
@@ -49,14 +49,14 @@ fun makeUI(): Component {
       super.updateUI()
       val renderer = DefaultListCellRenderer()
       setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-        val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-        (SwingUtilities.getAncestorOfClass(JViewport::class.java, list) as? JViewport)?.also {
-          val rect = SwingUtilities.calculateInnerArea(it, it.bounds)
-          val fm = c.getFontMetrics(c.font)
-          val str = value?.toString() ?: ""
-          (c as? JComponent)?.toolTipText = if (fm.stringWidth(str) > rect.width) str else null
+        renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also { c ->
+          (SwingUtilities.getAncestorOfClass(JViewport::class.java, list) as? JViewport)?.also {
+            val rect = SwingUtilities.calculateInnerArea(it, it.bounds)
+            val fm = c.getFontMetrics(c.font)
+            val str = value?.toString() ?: ""
+            (c as? JComponent)?.toolTipText = if (fm.stringWidth(str) > rect.width) str else null
+          }
         }
-        return@setCellRenderer c
       }
     }
   }

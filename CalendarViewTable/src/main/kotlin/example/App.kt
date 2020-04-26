@@ -20,27 +20,26 @@ private val dateLabel = JLabel(realLocalDate.toString(), SwingConstants.CENTER)
 private val monthLabel = JLabel("", SwingConstants.CENTER)
 private val monthTable = object : JTable() {
   override fun updateUI() {
+    setDefaultRenderer(LocalDate::class.java, null)
     super.updateUI()
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
-    setCellSelectionEnabled(true)
-    setRowHeight(20)
+    cellSelectionEnabled = true
+    rowHeight = 20
     fillsViewportHeight = true
     val renderer = DefaultTableCellRenderer()
     setDefaultRenderer(LocalDate::class.java) { table, value, selected, focused, row, column ->
-      val c = renderer.getTableCellRendererComponent(table, value, selected, focused, row, column)
-      if (c is JLabel && value is LocalDate) {
-        c.horizontalAlignment = SwingConstants.CENTER
-        c.text = value.dayOfMonth.toString()
-        val flg = YearMonth.from(value) == YearMonth.from(currentLocalDate)
-        c.setForeground(if (flg) Color.BLACK else Color.GRAY)
-        c.setBackground(
-          when {
+      renderer.getTableCellRendererComponent(table, value, selected, focused, row, column).also {
+        if (it is JLabel && value is LocalDate) {
+          it.horizontalAlignment = SwingConstants.CENTER
+          it.text = value.dayOfMonth.toString()
+          val flg = YearMonth.from(value) == YearMonth.from(currentLocalDate)
+          it.foreground = if (flg) Color.BLACK else Color.GRAY
+          it.background = when {
             value.isEqual(realLocalDate) -> Color(0xDC_FF_DC)
             else -> getDayOfWeekColor(value.dayOfWeek)
           }
-        )
+        }
       }
-      return@setDefaultRenderer c
     }
   }
 }

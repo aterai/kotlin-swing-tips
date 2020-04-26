@@ -5,38 +5,40 @@ import java.awt.event.ItemEvent
 import java.awt.event.ItemListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val combo01 = AlternateRowColorComboBox<String>(makeModel())
+fun makeUI(): Component {
+  val combo01 = AlternateRowColorComboBox<String>(makeModel())
 
-    val combo02 = AlternateRowColorComboBox<String>(makeModel())
-    combo02.setEditable(true)
+  val combo02 = AlternateRowColorComboBox<String>(makeModel())
+  combo02.isEditable = true
 
-    add(Box.createVerticalBox().also {
-      it.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-      it.add(makeTitledPanel("setEditable(false)", combo01))
-      it.add(Box.createVerticalStrut(5))
-      it.add(makeTitledPanel("setEditable(true)", combo02))
-    }, BorderLayout.NORTH)
-    setPreferredSize(Dimension(320, 240))
+  val box = Box.createVerticalBox().also {
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    it.add(makeTitledPanel("setEditable(false)", combo01))
+    it.add(Box.createVerticalStrut(5))
+    it.add(makeTitledPanel("setEditable(true)", combo02))
   }
 
-  private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
-    it.setBorder(BorderFactory.createTitledBorder(title))
-    it.add(c)
-  }
-
-  private fun makeModel() = DefaultComboBoxModel<String>().also {
-    it.addElement("aaa")
-    it.addElement("aaa111")
-    it.addElement("aaa222bb")
-    it.addElement("1234123512351234")
-    it.addElement("bbb1")
-    it.addElement("bbb12")
+  return JPanel(BorderLayout()).also {
+    it.add(box, BorderLayout.NORTH)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class AlternateRowColorComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(model) {
+private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
+  it.border = BorderFactory.createTitledBorder(title)
+  it.add(c)
+}
+
+private fun makeModel() = DefaultComboBoxModel<String>().also {
+  it.addElement("aaa")
+  it.addElement("aaa111")
+  it.addElement("aaa222bb")
+  it.addElement("1234123512351234")
+  it.addElement("bbb1")
+  it.addElement("bbb12")
+}
+
+private class AlternateRowColorComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(model) {
   @Transient
   private var itemColorListener: ItemListener? = null
 
@@ -49,9 +51,9 @@ class AlternateRowColorComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(model
   override fun setEditable(flag: Boolean) {
     super.setEditable(flag)
     if (flag) {
-      val editor = getEditor().getEditorComponent()
-      (editor as? JTextField)?.setOpaque(true)
-      editor.setBackground(getAlternateRowColor(getSelectedIndex()))
+      val editor = getEditor().editorComponent
+      (editor as? JTextField)?.isOpaque = true
+      editor.background = getAlternateRowColor(selectedIndex)
     }
   }
 
@@ -61,19 +63,19 @@ class AlternateRowColorComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(model
     super.updateUI()
     val renderer = getRenderer()
     setRenderer { list, value, index, isSelected, cellHasFocus ->
-      val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-      (c as? JLabel)?.setOpaque(true)
-      if (!isSelected) {
-        c.setBackground(getAlternateRowColor(index))
+      renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
+        (it as? JLabel)?.isOpaque = true
+        if (!isSelected) {
+          it.background = getAlternateRowColor(index)
+        }
       }
-      return@setRenderer c
     }
     itemColorListener = ItemListener { e ->
-      val cb = e.getItemSelectable()
-      if (e.getStateChange() == ItemEvent.SELECTED && cb is JComboBox<*>) {
-        val rc = getAlternateRowColor(cb.getSelectedIndex())
-        if (cb.isEditable()) {
-          (cb.getEditor().getEditorComponent() as? JTextField)?.setBackground(rc)
+      val cb = e.itemSelectable
+      if (e.stateChange == ItemEvent.SELECTED && cb is JComboBox<*>) {
+        val rc = getAlternateRowColor(cb.selectedIndex)
+        if (cb.isEditable) {
+          (cb.editor.editorComponent as? JTextField)?.background = rc
         } else {
           cb.setBackground(rc)
         }
@@ -81,9 +83,9 @@ class AlternateRowColorComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(model
     }
     addItemListener(itemColorListener)
     EventQueue.invokeLater {
-      (getEditor().getEditorComponent() as? JTextField)?.also {
-        it.setOpaque(true)
-        it.setBackground(getAlternateRowColor(getSelectedIndex()))
+      (getEditor().editorComponent as? JTextField)?.also {
+        it.isOpaque = true
+        it.background = getAlternateRowColor(selectedIndex)
       }
     }
   }
@@ -101,7 +103,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

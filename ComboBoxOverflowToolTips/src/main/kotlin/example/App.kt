@@ -7,12 +7,12 @@ fun makeUI() = JPanel(BorderLayout()).also {
   val m = makeComboBoxModel()
   it.add(makeTitledPanel("Overflow ToolTip JComboBox", makeComboBox(m)), BorderLayout.NORTH)
   it.add(makeTitledPanel("Default JComboBox", JComboBox(m)), BorderLayout.SOUTH)
-  it.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-  it.setPreferredSize(Dimension(320, 240))
+  it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+  it.preferredSize = Dimension(320, 240)
 }
 
 private fun makeTitledPanel(title: String, c: Component) = Box.createVerticalBox().also {
-  it.setBorder(BorderFactory.createTitledBorder(title))
+  it.border = BorderFactory.createTitledBorder(title)
   it.add(Box.createVerticalStrut(2))
   it.add(c)
 }
@@ -34,29 +34,27 @@ private fun <E> makeComboBox(model: ComboBoxModel<E>) = object : JComboBox<E>(mo
     val arrowButton = getArrowButton(combo)
     setRenderer { list, value, index, isSelected, cellHasFocus ->
       val r = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-      val c = r as? JComponent ?: return@setRenderer r
-      val rect = SwingUtilities.calculateInnerArea(combo, null)
-      val i = c.getInsets()
-      var availableWidth = rect.width - i.top - i.bottom
-
-      val str = value?.toString() ?: ""
-      val fm = c.getFontMetrics(c.getFont())
-      c.setToolTipText(if (fm.stringWidth(str) > availableWidth) str else null)
-      if (index < 0) {
-        val buttonSize = arrowButton?.getWidth() ?: rect.height
-        availableWidth -= buttonSize
-        (combo.getEditor().getEditorComponent() as? JTextField)?.also {
-          availableWidth -= it.getMargin().left + it.getMargin().right
-          combo.setToolTipText(if (fm.stringWidth(str) > availableWidth) str else null)
+      (r as? JComponent)?.also { c ->
+        val rect = SwingUtilities.calculateInnerArea(combo, null)
+        val i = c.insets
+        var availableWidth = rect.width - i.top - i.bottom
+        val str = value?.toString() ?: ""
+        val fm = c.getFontMetrics(c.font)
+        c.toolTipText = if (fm.stringWidth(str) > availableWidth) str else null
+        if (index < 0) {
+          val buttonSize = arrowButton?.width ?: rect.height
+          availableWidth -= buttonSize
+          (combo.getEditor().editorComponent as? JTextField)?.also {
+            availableWidth -= it.margin.left + it.margin.right
+            combo.setToolTipText(if (fm.stringWidth(str) > availableWidth) str else null)
+          }
         }
-      }
-      return@setRenderer c
+      } ?: r
     }
   }
 
-  private fun getArrowButton(combo: Container): JButton? {
-    return combo.getComponents()?.firstOrNull { it is JButton } as? JButton
-  }
+  private fun getArrowButton(combo: Container): JButton? =
+    combo.components?.firstOrNull { it is JButton } as? JButton
 }
 
 fun main() {
