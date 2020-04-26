@@ -6,19 +6,20 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 fun makeUI(): Component {
   val check = JCheckBox("Always On Top", true)
   check.addActionListener { e ->
-    val c = e.getSource() as? JCheckBox ?: return@addActionListener
-    (c.getTopLevelAncestor() as? Window)?.setAlwaysOnTop(c.isSelected())
+    (e.source as? JCheckBox)?.also {
+      (it.topLevelAncestor as? Window)?.isAlwaysOnTop = it.isSelected
+    }
   }
 
   val p = JPanel().also {
-    it.setBorder(BorderFactory.createTitledBorder("JFrame#setAlwaysOnTop(boolean)"))
+    it.border = BorderFactory.createTitledBorder("JFrame#setAlwaysOnTop(boolean)")
     it.add(check)
   }
 
   return JPanel(BorderLayout()).also {
     it.add(p, BorderLayout.NORTH)
-    it.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-    it.setPreferredSize(Dimension(320, 240))
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
@@ -33,7 +34,7 @@ fun main() {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
       contentPane.add(makeUI())
-      setAlwaysOnTop(true)
+      isAlwaysOnTop = true
       pack()
       setLocationRelativeTo(null)
       isVisible = true
