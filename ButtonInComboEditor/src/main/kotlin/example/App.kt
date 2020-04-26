@@ -10,80 +10,81 @@ import java.awt.image.FilteredImageSource
 import java.awt.image.RGBImageFilter
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val image1 = ImageIcon(javaClass.getResource("favicon.png"))
-    val image2 = ImageIcon(javaClass.getResource("16x16.png"))
-    val rss = ImageIcon(javaClass.getResource("feed-icon-14x14.png")) // http://feedicons.com/
+fun makeUI(): Component {
+  val cl = Thread.currentThread().contextClassLoader
+  val image1 = ImageIcon(cl.getResource("example/favicon.png"))
+  val image2 = ImageIcon(cl.getResource("example/16x16.png"))
+  val rss = ImageIcon(cl.getResource("example/feed-icon-14x14.png")) // http://feedicons.com/
 
-    val combo01 = JComboBox<SiteItem>(makeModel(image1, image2))
-    initComboBox(combo01)
+  val combo01 = JComboBox(makeModel(image1, image2))
+  initComboBox(combo01)
 
-    val combo02 = SiteItemComboBox(makeModel(image1, image2), rss)
-    initComboBox(combo02)
+  val combo02 = SiteItemComboBox(makeModel(image1, image2), rss)
+  initComboBox(combo02)
 
-    val box = Box.createVerticalBox()
-    box.setBorder(BorderFactory.createTitledBorder("setEditable(true)"))
-    box.add(Box.createVerticalStrut(2))
-    box.add(combo01)
-    box.add(Box.createVerticalStrut(5))
-    box.add(combo02)
-    box.add(Box.createVerticalStrut(2))
+  val box = Box.createVerticalBox()
+  box.border = BorderFactory.createTitledBorder("setEditable(true)")
+  box.add(Box.createVerticalStrut(2))
+  box.add(combo01)
+  box.add(Box.createVerticalStrut(5))
+  box.add(combo02)
+  box.add(Box.createVerticalStrut(2))
 
-    add(box, BorderLayout.NORTH)
-    add(JScrollPane(JTextArea()))
-    setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-    setPreferredSize(Dimension(320, 240))
+  return JPanel(BorderLayout()).also {
+    it.add(box, BorderLayout.NORTH)
+    it.add(JScrollPane(JTextArea()))
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    it.preferredSize = Dimension(320, 240)
   }
+}
 
-  private fun makeModel(i1: Icon, i2: Icon) = DefaultComboBoxModel<SiteItem>().also {
-    it.addElement(SiteItem("https://ateraimemo.com/", i1, true))
-    it.addElement(SiteItem("https://ateraimemo.com/Swing.html", i1, true))
-    it.addElement(SiteItem("https://ateraimemo.com/Kotlin.html", i1, true))
-    it.addElement(SiteItem("https://github.com/aterai/java-swing-tips", i2, true))
-    it.addElement(SiteItem("https://java-swing-tips.blogspot.com/", i2, true))
-    it.addElement(SiteItem("http://www.example.com/", i2, false))
-  }
+private fun makeModel(i1: Icon, i2: Icon) = DefaultComboBoxModel<SiteItem>().also {
+  it.addElement(SiteItem("https://ateraimemo.com/", i1, true))
+  it.addElement(SiteItem("https://ateraimemo.com/Swing.html", i1, true))
+  it.addElement(SiteItem("https://ateraimemo.com/Kotlin.html", i1, true))
+  it.addElement(SiteItem("https://github.com/aterai/java-swing-tips", i2, true))
+  it.addElement(SiteItem("https://java-swing-tips.blogspot.com/", i2, true))
+  it.addElement(SiteItem("http://www.example.com/", i2, false))
+}
 
-  private fun initComboBox(combo: JComboBox<SiteItem>) {
-    combo.setEditable(true)
-    val renderer = combo.getRenderer()
-    combo.setRenderer { list, value, index, isSelected, cellHasFocus ->
-      val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-      (c as? JLabel)?.setIcon(value?.favicon)
-      return@setRenderer c
+private fun initComboBox(combo: JComboBox<SiteItem>) {
+  combo.isEditable = true
+  val renderer = combo.renderer
+  combo.setRenderer { list, value, index, isSelected, cellHasFocus ->
+    renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
+      (it as? JLabel)?.icon = value?.favicon
     }
   }
 }
 
-class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: ImageIcon) : JComboBox<SiteItem>(model) {
+private class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: ImageIcon) : JComboBox<SiteItem>(model) {
   init {
     val feedButton = makeRssButton(rss)
     val favicon = makeLabel()
-    setLayout(SiteComboBoxLayout(favicon, feedButton))
+    layout = SiteComboBoxLayout(favicon, feedButton)
     add(feedButton)
     add(favicon)
 
-    (getEditor().getEditorComponent() as? JTextField)?.addFocusListener(object : FocusListener {
+    (getEditor().editorComponent as? JTextField)?.addFocusListener(object : FocusListener {
       override fun focusGained(e: FocusEvent) {
         // field.setBorder(BorderFactory.createEmptyBorder(0, 16 + 4, 0, 0));
-        feedButton.setVisible(false)
+        feedButton.isVisible = false
       }
 
       override fun focusLost(e: FocusEvent) {
-        val field = e.getComponent() as? JTextField ?: return
-        getSiteItemFromModel(model, field.getText())?.also { item ->
+        val field = e.component as? JTextField ?: return
+        getSiteItemFromModel(model, field.text)?.also { item ->
           model.removeElement(item)
           model.insertElementAt(item, 0)
-          favicon.setIcon(item.favicon)
-          feedButton.setVisible(item.hasRss)
-          setSelectedIndex(0)
+          favicon.icon = item.favicon
+          feedButton.isVisible = item.hasRss
+          selectedIndex = 0
         }
       }
     })
 
     addItemListener { e ->
-      if (e.getStateChange() == ItemEvent.SELECTED) {
+      if (e.stateChange == ItemEvent.SELECTED) {
         updateFavicon(model, favicon)
       }
     }
@@ -92,35 +93,35 @@ class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: ImageIcon) : 
 
   private fun updateFavicon(model: ComboBoxModel<SiteItem>, label: JLabel) {
     EventQueue.invokeLater {
-      getSiteItemFromModel(model, getSelectedItem())?.also { label.setIcon(it.favicon) }
+      getSiteItemFromModel(model, selectedItem)?.also { label.icon = it.favicon }
     }
   }
 
   private fun makeRssButton(rss: ImageIcon) = JButton(rss).also {
-    val ip = FilteredImageSource(rss.getImage().getSource(), SelectedImageFilter())
-    it.setRolloverIcon(ImageIcon(Toolkit.getDefaultToolkit().createImage(ip)))
+    val ip = FilteredImageSource(rss.image.source, SelectedImageFilter())
+    it.rolloverIcon = ImageIcon(Toolkit.getDefaultToolkit().createImage(ip))
     // it.setRolloverIcon(makeFilteredImage(rss));
     // it.setRolloverIcon(makeFilteredImage2(rss));
     it.addActionListener { println("clicked...") }
-    it.setFocusPainted(false)
-    it.setBorderPainted(false)
-    it.setContentAreaFilled(false)
-    it.setCursor(Cursor.getDefaultCursor())
-    it.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 2))
+    it.isFocusPainted = false
+    it.isBorderPainted = false
+    it.isContentAreaFilled = false
+    it.cursor = Cursor.getDefaultCursor()
+    it.border = BorderFactory.createEmptyBorder(0, 1, 0, 2)
   }
 
   private fun makeLabel() = JLabel().also {
     it.addMouseListener(object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
         EventQueue.invokeLater {
-          val field = getEditor().getEditorComponent() as? JTextField ?: return@invokeLater
+          val field = getEditor().editorComponent as? JTextField ?: return@invokeLater
           field.requestFocusInWindow()
           field.selectAll()
         }
       }
     })
-    it.setCursor(Cursor.getDefaultCursor())
-    it.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 2))
+    it.cursor = Cursor.getDefaultCursor()
+    it.border = BorderFactory.createEmptyBorder(0, 1, 0, 2)
   }
 
   private fun getSiteItemFromModel(model: ComboBoxModel<SiteItem>, o: Any?): SiteItem? {
@@ -128,24 +129,26 @@ class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: ImageIcon) : 
       return o
     }
     val str = o?.toString() ?: ""
-    return (0 until model.getSize()).map { model.getElementAt(it) }.firstOrNull { it.url == str }
+    return (0 until model.size).map { model.getElementAt(it) }.firstOrNull { it.url == str }
   }
 }
 
-class SiteComboBoxLayout(private val favicon: JLabel?, private val feedButton: JButton?) : LayoutManager {
-  override fun addLayoutComponent(name: String, comp: Component) { /* not needed */ }
+private class SiteComboBoxLayout(private val favicon: JLabel?, private val feedButton: JButton?) : LayoutManager {
+  override fun addLayoutComponent(name: String, comp: Component) { /* not needed */
+  }
 
-  override fun removeLayoutComponent(comp: Component) { /* not needed */ }
+  override fun removeLayoutComponent(comp: Component) { /* not needed */
+  }
 
-  override fun preferredLayoutSize(parent: Container): Dimension? = parent.getPreferredSize()
+  override fun preferredLayoutSize(parent: Container): Dimension? = parent.preferredSize
 
-  override fun minimumLayoutSize(parent: Container): Dimension? = parent.getMinimumSize()
+  override fun minimumLayoutSize(parent: Container): Dimension? = parent.minimumSize
 
   override fun layoutContainer(parent: Container) {
     val cb = parent as? JComboBox<*> ?: return
-    val width = cb.getWidth()
-    val height = cb.getHeight()
-    val ins = cb.getInsets()
+    val width = cb.width
+    val height = cb.height
+    val ins = cb.insets
     val arrowHeight = height - ins.top - ins.bottom
     var arrowWidth = arrowHeight
     var faviconWidth = arrowHeight
@@ -153,38 +156,38 @@ class SiteComboBoxLayout(private val favicon: JLabel?, private val feedButton: J
 
     // Arrow Icon JButton
     (cb.getComponent(0) as? JButton)?.also {
-      val arrowInsets = it.getInsets()
-      arrowWidth = it.getPreferredSize().width + arrowInsets.left + arrowInsets.right
+      val arrowInsets = it.insets
+      arrowWidth = it.preferredSize.width + arrowInsets.left + arrowInsets.right
       it.setBounds(width - ins.right - arrowWidth, ins.top, arrowWidth, arrowHeight)
     }
 
     // Favicon JLabel
     favicon?.also {
-      val faviconInsets = it.getInsets()
-      faviconWidth = it.getPreferredSize().width + faviconInsets.left + faviconInsets.right
+      val faviconInsets = it.insets
+      faviconWidth = it.preferredSize.width + faviconInsets.left + faviconInsets.right
       it.setBounds(ins.left, ins.top, faviconWidth, arrowHeight)
     }
 
     // Feed Icon JButton
-    feedButton?.takeIf { it.isVisible() }?.also {
-      val feedInsets = it.getInsets()
-      feedWidth = it.getPreferredSize().width + feedInsets.left + feedInsets.right
+    feedButton?.takeIf { it.isVisible }?.also {
+      val feedInsets = it.insets
+      feedWidth = it.preferredSize.width + feedInsets.left + feedInsets.right
       it.setBounds(width - ins.right - feedWidth - arrowWidth, ins.top, feedWidth, arrowHeight)
     }
 
     // JComboBox Editor
-    cb.getEditor().getEditorComponent()?.also {
+    cb.editor.editorComponent?.also {
       it.setBounds(ins.left + faviconWidth, ins.top,
         width - ins.left - ins.right - arrowWidth - faviconWidth - feedWidth, height - ins.top - ins.bottom)
     }
   }
 }
 
-data class SiteItem(val url: String, val favicon: Icon, val hasRss: Boolean) {
+private data class SiteItem(val url: String, val favicon: Icon, val hasRss: Boolean) {
   override fun toString() = url
 }
 
-class SelectedImageFilter : RGBImageFilter() {
+private class SelectedImageFilter : RGBImageFilter() {
   override fun filterRGB(x: Int, y: Int, argb: Int): Int {
     val r = minOf(0xFF, ((argb shr 16 and 0xFF) * SCALE).toInt())
     val g = minOf(0xFF, ((argb shr 8 and 0xFF) * SCALE).toInt())
@@ -208,7 +211,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

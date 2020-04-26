@@ -85,15 +85,15 @@ private class DisableItemComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(mod
     super.updateUI()
     val renderer = getRenderer()
     setRenderer { list, value, index, isSelected, cellHasFocus ->
-      val c: Component
       if (disableIndexSet.contains(index)) {
-        c = renderer.getListCellRendererComponent(list, value, index, false, false)
-        c.isEnabled = false
+        renderer.getListCellRendererComponent(list, value, index, false, false).also {
+          it.isEnabled = false
+        }
       } else {
-        c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-        c.isEnabled = true
+        renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
+          it.isEnabled = true
+        }
       }
-      return@setRenderer c
     }
     EventQueue.invokeLater {
       val am = actionMap
@@ -126,7 +126,7 @@ private class DisableItemComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(mod
     if (disableIndexSet.contains(index)) {
       isDisableIndex = true
     } else {
-      // isDisableIndex = false;
+      // isDisableIndex = false
       super.setSelectedIndex(index)
     }
   }
