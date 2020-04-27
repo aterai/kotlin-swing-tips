@@ -9,19 +9,17 @@ fun makeUI(): Component {
   frame.setSize(240, 240)
   val center = JButton("frame.setLocationRelativeTo(null)")
   center.addActionListener {
-    if (frame.isVisible) {
-      return@addActionListener
+    if (!frame.isVisible) {
+      frame.setLocationRelativeTo(null)
+      frame.isVisible = true
     }
-    frame.setLocationRelativeTo(null)
-    frame.isVisible = true
   }
   val relative = JButton("frame.setLocationRelativeTo(button)")
   relative.addActionListener { e ->
-    if (frame.isVisible) {
-      return@addActionListener
+    if (!frame.isVisible) {
+      frame.setLocationRelativeTo(e.source as? Component)
+      frame.isVisible = true
     }
-    frame.setLocationRelativeTo(e.source as? Component)
-    frame.isVisible = true
   }
   return JPanel(GridLayout(2, 1, 5, 5)).also {
     it.add(makeTitledPanel("in center of screen", center))

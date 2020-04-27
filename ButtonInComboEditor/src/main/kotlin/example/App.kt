@@ -110,18 +110,21 @@ private class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: Image
     it.border = BorderFactory.createEmptyBorder(0, 1, 0, 2)
   }
 
-  private fun makeLabel() = JLabel().also {
-    it.addMouseListener(object : MouseAdapter() {
+  private fun makeLabel(): JLabel {
+    val label = JLabel()
+    label.cursor = Cursor.getDefaultCursor()
+    label.border = BorderFactory.createEmptyBorder(0, 1, 0, 2)
+    label.addMouseListener(object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
         EventQueue.invokeLater {
-          val field = getEditor().editorComponent as? JTextField ?: return@invokeLater
-          field.requestFocusInWindow()
-          field.selectAll()
+          (editor.editorComponent as? JTextField)?.also {
+            it.requestFocusInWindow()
+            it.selectAll()
+          }
         }
       }
     })
-    it.cursor = Cursor.getDefaultCursor()
-    it.border = BorderFactory.createEmptyBorder(0, 1, 0, 2)
+    return label
   }
 
   private fun getSiteItemFromModel(model: ComboBoxModel<SiteItem>, o: Any?): SiteItem? {

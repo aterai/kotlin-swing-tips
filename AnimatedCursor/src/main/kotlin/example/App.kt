@@ -18,13 +18,14 @@ fun makeUI(): Component {
   val button = JButton("Start")
   button.cursor = list[0]
   button.addActionListener { e ->
-    val b = e.source as? JButton ?: return@addActionListener
-    if (animator.isRunning) {
-      b.text = "Start"
-      animator.stop()
-    } else {
-      b.text = "Stop"
-      animator.start()
+    (e.source as? JButton)?.also {
+      if (animator.isRunning) {
+        it.text = "Start"
+        animator.stop()
+      } else {
+        it.text = "Stop"
+        animator.start()
+      }
     }
   }
   button.addHierarchyListener { e ->
