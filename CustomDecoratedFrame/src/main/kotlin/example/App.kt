@@ -21,11 +21,11 @@ class MainPanel : JPanel(BorderLayout()) {
     private val borderColor = Color(0x64_64_64)
     override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
-      val w = getWidth()
-      val h = getHeight()
-      g2.setPaint(Color.ORANGE)
+      val w = width
+      val h = height
+      g2.paint = Color.ORANGE
       g2.fillRect(0, 0, w, h)
-      g2.setPaint(borderColor)
+      g2.paint = borderColor
       g2.drawRect(0, 0, w - 1, h - 1)
       g2.drawLine(0, 2, 2, 0)
       g2.drawLine(w - 3, 0, w - 1, 2)
@@ -39,7 +39,7 @@ class MainPanel : JPanel(BorderLayout()) {
 
   init {
     add(JScrollPane(JTree()))
-    setPreferredSize(Dimension(320, 240))
+    preferredSize = Dimension(320, 240)
   }
 
   fun makeFrame(title: String): JFrame {
@@ -47,9 +47,9 @@ class MainPanel : JPanel(BorderLayout()) {
     val dwl = DragWindowListener()
     titleBar.addMouseListener(dwl)
     titleBar.addMouseMotionListener(dwl)
-    titleBar.setOpaque(false)
+    titleBar.isOpaque = false
 
-    titleBar.setBorder(BorderFactory.createEmptyBorder(W, W, W, W))
+    titleBar.border = BorderFactory.createEmptyBorder(W, W, W, W)
     titleBar.add(JLabel(title, SwingConstants.CENTER))
     titleBar.add(makeCloseButton(), BorderLayout.EAST)
 
@@ -63,45 +63,44 @@ class MainPanel : JPanel(BorderLayout()) {
     val titlePanel = JPanel(BorderLayout()).also {
       it.add(top, BorderLayout.NORTH)
       it.add(titleBar, BorderLayout.CENTER)
-      it.setOpaque(false)
+      it.isOpaque = false
     }
 
     val northPanel = JPanel(BorderLayout()).also {
       it.add(topLeft, BorderLayout.WEST)
       it.add(titlePanel, BorderLayout.CENTER)
       it.add(topRight, BorderLayout.EAST)
-      it.setOpaque(false)
+      it.isOpaque = false
     }
 
     val southPanel = JPanel(BorderLayout()).also {
       it.add(bottomLeft, BorderLayout.WEST)
       it.add(bottom, BorderLayout.CENTER)
       it.add(bottomRight, BorderLayout.EAST)
-      it.setOpaque(false)
+      it.isOpaque = false
     }
 
     resizePanel.add(left, BorderLayout.WEST)
     resizePanel.add(right, BorderLayout.EAST)
     resizePanel.add(northPanel, BorderLayout.NORTH)
     resizePanel.add(southPanel, BorderLayout.SOUTH)
-    resizePanel.setOpaque(false)
+    resizePanel.isOpaque = false
 
     val frame = JFrame(title)
-    frame.setUndecorated(true)
-    frame.setBackground(Color(0x0, true))
-    frame.setContentPane(resizePanel)
+    frame.isUndecorated = true
+    frame.background = Color(0x0, true)
+    frame.contentPane = resizePanel
     return frame
   }
 
   private fun makeCloseButton() = JButton(CloseIcon()).also {
-    it.setContentAreaFilled(false)
-    it.setFocusPainted(false)
-    it.setBorder(BorderFactory.createEmptyBorder())
-    it.setOpaque(true)
-    it.setBackground(Color.ORANGE)
+    it.isContentAreaFilled = false
+    it.isFocusPainted = false
+    it.border = BorderFactory.createEmptyBorder()
+    it.isOpaque = true
+    it.background = Color.ORANGE
     it.addActionListener { e ->
-      val b = e.getSource() as? JComponent ?: return@addActionListener
-      (b.getTopLevelAncestor() as? Window)?.also { window ->
+      ((e.source as? JComponent)?.topLevelAncestor as? Window)?.also { window ->
         window.dispatchEvent(WindowEvent(window, WindowEvent.WINDOW_CLOSING))
       }
     }
@@ -112,7 +111,7 @@ class MainPanel : JPanel(BorderLayout()) {
   }
 }
 
-enum class Side(
+private enum class Side(
   val cursor: Int,
   val size: Dimension,
   val resize: BiFunction<Rectangle, Point, Rectangle>
@@ -189,46 +188,46 @@ enum class Side(
   }
 }
 
-class SideLabel(private val side: Side) : JLabel() {
+private class SideLabel(private val side: Side) : JLabel() {
   override fun getPreferredSize() = side.size
 
-  override fun getMinimumSize() = getPreferredSize()
+  override fun getMinimumSize() = preferredSize
 
-  override fun getMaximumSize() = getPreferredSize()
+  override fun getMaximumSize() = preferredSize
 
   init {
-    setCursor(Cursor.getPredefinedCursor(side.cursor))
+    cursor = Cursor.getPredefinedCursor(side.cursor)
   }
 }
 
-class ResizeWindowListener : MouseInputAdapter() {
+private class ResizeWindowListener : MouseInputAdapter() {
   private val rect = Rectangle()
   override fun mousePressed(e: MouseEvent) {
-    (SwingUtilities.getRoot(e.getComponent()) as? Window)?.also {
-      rect.setBounds(it.getBounds())
+    (SwingUtilities.getRoot(e.component) as? Window)?.also {
+      rect.bounds = it.bounds
     }
   }
 
   override fun mouseDragged(e: MouseEvent) {
-    val c = e.getComponent()
+    val c = e.component
     val p = SwingUtilities.getRoot(c)
-    if (!rect.isEmpty() && c is SideLabel && p is Window) {
-      val side = Side.getByType(c.cursor.getType()) ?: return
-      p.setBounds(side.resize.apply(rect, e.getPoint()))
+    if (!rect.isEmpty && c is SideLabel && p is Window) {
+      val side = Side.getByType(c.cursor.type) ?: return
+      p.setBounds(side.resize.apply(rect, e.point))
     }
   }
 }
 
-class DragWindowListener : MouseInputAdapter() {
+private class DragWindowListener : MouseInputAdapter() {
   private val startPt = Point()
   override fun mousePressed(e: MouseEvent) {
     if (SwingUtilities.isLeftMouseButton(e)) {
-      startPt.setLocation(e.getPoint())
+      startPt.location = e.point
     }
   }
 
   override fun mouseDragged(e: MouseEvent) {
-    val c = SwingUtilities.getRoot(e.getComponent())
+    val c = SwingUtilities.getRoot(e.component)
     if (c is Window && SwingUtilities.isLeftMouseButton(e)) {
       val pt = c.getLocation()
       c.setLocation(pt.x - startPt.x + e.x, pt.y - startPt.y + e.y)
@@ -236,11 +235,11 @@ class DragWindowListener : MouseInputAdapter() {
   }
 }
 
-class CloseIcon : Icon {
+private class CloseIcon : Icon {
   override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
-    g2.setPaint(Color.BLACK)
+    g2.paint = Color.BLACK
     g2.drawLine(4, 4, 11, 11)
     g2.drawLine(4, 5, 10, 11)
     g2.drawLine(5, 4, 11, 10)
