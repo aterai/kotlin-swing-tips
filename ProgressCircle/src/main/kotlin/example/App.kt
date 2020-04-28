@@ -36,17 +36,18 @@ fun makeUI(): Component {
 
   val button = JButton("start")
   button.addActionListener { e ->
-    val b = e.source as? JButton ?: return@addActionListener
-    b.isEnabled = false
-    val worker = object : BackgroundTask() {
-      override fun done() {
-        if (b.isDisplayable) {
-          b.isEnabled = true
+    (e.source as? JButton)?.also {
+      it.isEnabled = false
+      val worker = object : BackgroundTask() {
+        override fun done() {
+          if (it.isDisplayable) {
+            it.isEnabled = true
+          }
         }
       }
+      worker.addPropertyChangeListener(ProgressListener(progress2))
+      worker.execute()
     }
-    worker.addPropertyChangeListener(ProgressListener(progress2))
-    worker.execute()
   }
 
   return JPanel(BorderLayout()).also {
@@ -60,7 +61,7 @@ fun makeUI(): Component {
   }
 }
 
-class ProgressCircleUI : BasicProgressBarUI() {
+private class ProgressCircleUI : BasicProgressBarUI() {
   override fun getPreferredSize(c: JComponent) = super.getPreferredSize(c)?.also {
     val v = maxOf(it.width, it.height)
     it.setSize(v, v)
@@ -74,7 +75,7 @@ class ProgressCircleUI : BasicProgressBarUI() {
     //   return
     // }
 
-    val g2 = g as? Graphics2D ?: return
+    val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
 
     val degree = 360 * progressBar.percentComplete
@@ -94,13 +95,9 @@ class ProgressCircleUI : BasicProgressBarUI() {
     g2.fill(track)
 
     // draw the circular sector
-    // AffineTransform at = AffineTransform.getScaleInstance(-1.0, 1.0);
-    // at.translate(-(barRectWidth + b.left * 2), 0);
-    // AffineTransform at = AffineTransform.getRotateInstance(Math.toRadians(degree), cp.x, cp.y);
-    // g2.fill(at.createTransformedShape(area));
     g2.paint = progressBar.foreground
     g2.fill(sector)
-    // g2.dispose()
+    g2.dispose()
 
     // Deal with possible text painting
     if (progressBar.isStringPainted) {
@@ -109,7 +106,7 @@ class ProgressCircleUI : BasicProgressBarUI() {
   }
 }
 
-open class BackgroundTask : SwingWorker<String, Unit>() {
+private open class BackgroundTask : SwingWorker<String, Unit>() {
   @Throws(InterruptedException::class)
   override fun doInBackground(): String {
     var current = 0
@@ -123,7 +120,7 @@ open class BackgroundTask : SwingWorker<String, Unit>() {
   }
 }
 
-class ProgressListener(private val progressBar: JProgressBar) : PropertyChangeListener {
+private class ProgressListener(private val progressBar: JProgressBar) : PropertyChangeListener {
   init {
     this.progressBar.value = 0
   }
