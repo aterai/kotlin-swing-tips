@@ -80,17 +80,17 @@ private class TreeComboBox<E : TreeNode?> : JComboBox<E>() {
     super.updateUI()
     val renderer = getRenderer()
     setRenderer { list, value, index, isSelected, cellHasFocus ->
-      val l = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-      (l as? JComponent)?.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
-      if (index >= 0 && value is DefaultMutableTreeNode) {
-        val indent = 0.coerceAtLeast(value.level - 1) * 16
-        (l as? JComponent)?.border = BorderFactory.createEmptyBorder(1, indent + 1, 1, 1)
-        if (!value.isLeaf()) {
-          l.foreground = Color.WHITE
-          l.background = Color.GRAY.darker()
+      renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
+        (it as? JComponent)?.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
+        if (index >= 0 && value is DefaultMutableTreeNode) {
+          val indent = 0.coerceAtLeast(value.level - 1) * 16
+          (it as? JComponent)?.border = BorderFactory.createEmptyBorder(1, indent + 1, 1, 1)
+          if (!value.isLeaf()) {
+            it.foreground = Color.WHITE
+            it.background = Color.GRAY.darker()
+          }
         }
       }
-      l
     }
     EventQueue.invokeLater {
       val prevKey = "selectPrevious3"
