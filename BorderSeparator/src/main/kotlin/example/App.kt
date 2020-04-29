@@ -38,20 +38,20 @@ private fun makeComboBox(model: ComboBoxModel<ComboItem>) = object : JComboBox<C
     super.updateUI()
     val renderer = getRenderer()
     setRenderer { list, value, index, isSelected, cellHasFocus ->
-      val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-      if (c is JComponent && value != null) {
-        if (index != -1 && value.hasSeparator) {
-          c.border = BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY)
-        } else {
-          c.border = BorderFactory.createEmptyBorder()
+      renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
+        if (it is JComponent && value != null) {
+          it.border = if (index != -1 && value.hasSeparator) {
+            BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY)
+          } else {
+            BorderFactory.createEmptyBorder()
+          }
         }
       }
-      c
     }
   }
 }
 
-data class ComboItem(val item: String, val hasSeparator: Boolean = false) {
+private data class ComboItem(val item: String, val hasSeparator: Boolean = false) {
   override fun toString() = item
 }
 

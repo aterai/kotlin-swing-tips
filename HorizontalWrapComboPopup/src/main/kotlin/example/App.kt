@@ -51,7 +51,7 @@ private fun makeComboBox1(model: ComboBoxModel<Icon>, proto: Icon): JComboBox<Ic
       super.updateUI()
       setMaximumRowCount(3)
       prototypeDisplayValue = proto
-      val popup = getAccessibleContext().getAccessibleChild(0) as ComboPopup
+      val popup = getAccessibleContext().getAccessibleChild(0) as? ComboPopup ?: return
       val list = popup.list
       list.layoutOrientation = JList.HORIZONTAL_WRAP
       list.visibleRowCount = 3
@@ -77,12 +77,12 @@ private fun makeComboBox2(model: ComboBoxModel<Icon>, proto: Icon): JComboBox<Ic
       prototypeDisplayValue = proto
       val r = getRenderer()
       setRenderer { list, value, index, isSelected, cellHasFocus ->
-        val c = r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-        if (c is JLabel) {
-          c.icon = value
-          c.border = BorderFactory.createEmptyBorder()
+        r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
+          if (it is JLabel) {
+            it.icon = value
+            it.border = BorderFactory.createEmptyBorder()
+          }
         }
-        c
       }
       val popup = getAccessibleContext().getAccessibleChild(0) as ComboPopup
       val list = popup.list
