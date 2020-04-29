@@ -6,76 +6,76 @@ import java.awt.event.ItemListener
 import java.awt.event.KeyEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel() {
-  init {
-    val key = "Menu.cancelMode"
-    val cancelMode = UIManager.getString(key)
-    println("$key: $cancelMode")
-    val defaultMode = "hideMenuTree" == cancelMode
-    val hideMenuTreeRadio = makeRadioButton("hideMenuTree", defaultMode)
-    val hideLastSubmenuRadio = makeRadioButton("hideLastSubmenu", !defaultMode)
-    val box = Box.createHorizontalBox()
-    box.setBorder(BorderFactory.createTitledBorder(key))
-    val handler = ItemListener { e ->
-      if (e.stateChange == ItemEvent.SELECTED) {
-        val r = e.getSource() as? JRadioButton ?: return@ItemListener
-        UIManager.put(key, r.getText())
-      }
-    }
-    val bg = ButtonGroup()
-    listOf(hideLastSubmenuRadio, hideMenuTreeRadio).forEach {
-      it.addItemListener(handler)
-      bg.add(it)
-      box.add(it)
-    }
-    add(box)
-    EventQueue.invokeLater { getRootPane().setJMenuBar(makeMenuBar()) }
-    setPreferredSize(Dimension(320, 240))
-  }
-
-  private fun makeRadioButton(text: String, selected: Boolean) = object : JRadioButton(text, selected) {
-    override fun updateUI() {
-      super.updateUI()
-      val mode = UIManager.getLookAndFeelDefaults().getString("Menu.cancelMode")
-      setSelected(text == mode)
+fun makeUI(): Component {
+  val key = "Menu.cancelMode"
+  val cancelMode = UIManager.getString(key)
+  println("$key: $cancelMode")
+  val defaultMode = "hideMenuTree" == cancelMode
+  val hideMenuTreeRadio = makeRadioButton("hideMenuTree", defaultMode)
+  val hideLastSubmenuRadio = makeRadioButton("hideLastSubmenu", !defaultMode)
+  val box = Box.createHorizontalBox()
+  box.border = BorderFactory.createTitledBorder(key)
+  val handler = ItemListener { e ->
+    val r = e.source
+    if (r is JRadioButton && e.stateChange == ItemEvent.SELECTED) {
+      UIManager.put(key, r.text)
     }
   }
-
-  private fun makeMenuBar(): JMenuBar {
-    val bar = JMenuBar()
-    val menu = bar.add(JMenu("Test"))
-    menu.add("JMenuItem1")
-    menu.add("JMenuItem2")
-    val sub = JMenu("JMenu")
-    sub.add("JMenuItem4")
-    sub.add("JMenuItem5")
-    menu.add(sub)
-    menu.add("JMenuItem3")
-    bar.add(LookAndFeelUtil.createLookAndFeelMenu())
-    return bar
+  val bg = ButtonGroup()
+  listOf(hideLastSubmenuRadio, hideMenuTreeRadio).forEach {
+    it.addItemListener(handler)
+    bg.add(it)
+    box.add(it)
+  }
+  return JPanel().also {
+    EventQueue.invokeLater { it.rootPane.jMenuBar = makeMenuBar() }
+    it.add(box)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
+private fun makeRadioButton(text: String, selected: Boolean) = object : JRadioButton(text, selected) {
+  override fun updateUI() {
+    super.updateUI()
+    val mode = UIManager.getLookAndFeelDefaults().getString("Menu.cancelMode")
+    isSelected = text == mode
+  }
+}
+
+private fun makeMenuBar(): JMenuBar {
+  val bar = JMenuBar()
+  val menu = bar.add(JMenu("Test"))
+  menu.add("JMenuItem1")
+  menu.add("JMenuItem2")
+  val sub = JMenu("JMenu")
+  sub.add("JMenuItem4")
+  sub.add("JMenuItem5")
+  menu.add(sub)
+  menu.add("JMenuItem3")
+  bar.add(LookAndFeelUtil.createLookAndFeelMenu())
+  return bar
+}
+
 // @see https://java.net/projects/swingset3/sources/svn/content/trunk/SwingSet3/src/com/sun/swingset3/SwingSet3.java
-object LookAndFeelUtil {
-  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.getName()
+private object LookAndFeelUtil {
+  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
   fun createLookAndFeelMenu() = JMenu("LookAndFeel").also {
-    it.setMnemonic(KeyEvent.VK_L)
+    it.mnemonic = KeyEvent.VK_L
     val lafRadioGroup = ButtonGroup()
     for (lafInfo in UIManager.getInstalledLookAndFeels()) {
-      it.add(createLookAndFeelItem(lafInfo.getName(), lafInfo.getClassName(), lafRadioGroup))
+      it.add(createLookAndFeelItem(lafInfo.name, lafInfo.className, lafRadioGroup))
     }
   }
 
   private fun createLookAndFeelItem(lafName: String, lafClassName: String, lafRadioGroup: ButtonGroup): JMenuItem {
     val lafItem = JRadioButtonMenuItem(lafName, lafClassName == lookAndFeel)
-    lafItem.setActionCommand(lafClassName)
-    lafItem.setMnemonic(lafName.codePointAt(0))
-    lafItem.setHideActionText(true)
+    lafItem.actionCommand = lafClassName
+    lafItem.mnemonic = lafName.codePointAt(0)
+    lafItem.hideActionText = true
     lafItem.addActionListener {
-      val m = lafRadioGroup.getSelection()
+      val m = lafRadioGroup.selection
       runCatching {
-        setLookAndFeel(m.getActionCommand())
+        setLookAndFeel(m.actionCommand)
       }.onFailure {
         it.printStackTrace()
         Toolkit.getDefaultToolkit().beep()
@@ -106,7 +106,7 @@ object LookAndFeelUtil {
       SwingUtilities.updateComponentTreeUI(window)
     }
   }
-} /* Singleton */
+}
 
 fun main() {
   EventQueue.invokeLater {
@@ -118,7 +118,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
