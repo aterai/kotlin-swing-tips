@@ -14,117 +14,116 @@ import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 import javax.swing.plaf.basic.BasicComboBoxUI
 
-class MainPanel : JPanel(BorderLayout()) {
-  companion object {
-    val BACKGROUND: Color = Color.BLACK
-    val FOREGROUND: Color = Color.WHITE
-    val SELECTION_FOREGROUND: Color = Color.ORANGE
-    val PANEL_BACKGROUND: Color = Color.GRAY
-    const val KEY = "ComboBox.border"
+private val BACKGROUND = Color.BLACK
+private val FOREGROUND = Color.WHITE
+private val SELECTION_FOREGROUND = Color.ORANGE
+private val PANEL_BACKGROUND = Color.GRAY
+private const val KEY = "ComboBox.border"
+
+fun makeUI(): Component {
+  UIManager.put("ComboBox.foreground", FOREGROUND)
+  UIManager.put("ComboBox.background", BACKGROUND)
+  UIManager.put("ComboBox.selectionForeground", SELECTION_FOREGROUND)
+  UIManager.put("ComboBox.selectionBackground", BACKGROUND)
+  UIManager.put("ComboBox.buttonDarkShadow", BACKGROUND)
+  UIManager.put("ComboBox.buttonBackground", FOREGROUND)
+  UIManager.put("ComboBox.buttonHighlight", FOREGROUND)
+  UIManager.put("ComboBox.buttonShadow", FOREGROUND)
+  val combo0 = object : JComboBox<String>(makeModel()) {
+    override fun updateUI() {
+      UIManager.put(KEY, BorderFactory.createLineBorder(FOREGROUND))
+      super.updateUI()
+      setUI(BasicComboBoxUI())
+      (getAccessibleContext().getAccessibleChild(0) as? JComponent)?.also {
+        it.border = BorderFactory.createLineBorder(FOREGROUND)
+        it.foreground = FOREGROUND
+        it.background = BACKGROUND
+      }
+    }
   }
+  val combo1 = object : JComboBox<String>(makeModel()) {
+    @Transient
+    private var listener: PopupMenuListener? = null
 
-  init {
-    UIManager.put("ComboBox.foreground", FOREGROUND)
-    UIManager.put("ComboBox.background", BACKGROUND)
-    UIManager.put("ComboBox.selectionForeground", SELECTION_FOREGROUND)
-    UIManager.put("ComboBox.selectionBackground", BACKGROUND)
-    UIManager.put("ComboBox.buttonDarkShadow", BACKGROUND)
-    UIManager.put("ComboBox.buttonBackground", FOREGROUND)
-    UIManager.put("ComboBox.buttonHighlight", FOREGROUND)
-    UIManager.put("ComboBox.buttonShadow", FOREGROUND)
-    val combo0 = object : JComboBox<String>(makeModel()) {
-      override fun updateUI() {
-        UIManager.put(KEY, BorderFactory.createLineBorder(FOREGROUND))
-        super.updateUI()
-        setUI(BasicComboBoxUI())
-        (getAccessibleContext().getAccessibleChild(0) as? JComponent)?.also {
-          it.setBorder(BorderFactory.createLineBorder(FOREGROUND))
-          it.setForeground(FOREGROUND)
-          it.setBackground(BACKGROUND)
-        }
+    override fun updateUI() {
+      removePopupMenuListener(listener)
+      UIManager.put(KEY, RoundedCornerBorder())
+      super.updateUI()
+      setUI(BasicComboBoxUI())
+      listener = HeavyWeightContainerListener()
+      addPopupMenuListener(listener)
+      (getAccessibleContext().getAccessibleChild(0) as? JComponent)?.also {
+        it.border = RoundedCornerBorder()
+        it.foreground = FOREGROUND
+        it.background = BACKGROUND
       }
     }
-    val combo1 = object : JComboBox<String>(makeModel()) {
-      @Transient
-      private var listener: PopupMenuListener? = null
-
-      override fun updateUI() {
-        removePopupMenuListener(listener)
-        UIManager.put(KEY, RoundedCornerBorder())
-        super.updateUI()
-        setUI(BasicComboBoxUI())
-        listener = HeavyWeightContainerListener()
-        addPopupMenuListener(listener)
-        (getAccessibleContext().getAccessibleChild(0) as? JComponent)?.also {
-          it.setBorder(RoundedCornerBorder())
-          it.setForeground(FOREGROUND)
-          it.setBackground(BACKGROUND)
-        }
-      }
-    }
-    val combo2 = object : JComboBox<String>(makeModel()) {
-      @Transient
-      private var handler: MouseListener? = null
-      @Transient
-      private var listener: PopupMenuListener? = null
-
-      override fun updateUI() {
-        removeMouseListener(handler)
-        removePopupMenuListener(listener)
-        UIManager.put(KEY, TopRoundedCornerBorder())
-        super.updateUI()
-        setUI(object : BasicComboBoxUI() {
-          override fun createArrowButton(): JButton {
-            val b = JButton(ArrowIcon(BACKGROUND, FOREGROUND))
-            b.setContentAreaFilled(false)
-            b.setFocusPainted(false)
-            b.setBorder(BorderFactory.createEmptyBorder())
-            return b
-          }
-        })
-        handler = ComboRolloverHandler()
-        addMouseListener(handler)
-        listener = HeavyWeightContainerListener()
-        addPopupMenuListener(listener)
-        (getAccessibleContext().getAccessibleChild(0) as? JComponent)?.also {
-          it.setBorder(BottomRoundedCornerBorder())
-          it.setForeground(FOREGROUND)
-          it.setBackground(BACKGROUND)
-        }
-      }
-    }
-    val p = JPanel(GridLayout(0, 1, 15, 15))
-    p.setOpaque(true)
-    p.setBackground(PANEL_BACKGROUND)
-    p.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15))
-    p.add(combo0)
-    p.add(combo1)
-    p.add(combo2)
-    add(p, BorderLayout.NORTH)
-    setOpaque(true)
-    setBackground(PANEL_BACKGROUND)
-    setPreferredSize(Dimension(320, 240))
   }
+  val combo2 = object : JComboBox<String>(makeModel()) {
+    @Transient
+    private var handler: MouseListener? = null
 
-  private fun makeModel(): DefaultComboBoxModel<String> {
-    val model = DefaultComboBoxModel<String>()
-    model.addElement("1234")
-    model.addElement("5555555555555555555555")
-    model.addElement("6789000000000")
-    model.addElement("aaa")
-    model.addElement("999999999")
-    return model
+    @Transient
+    private var listener: PopupMenuListener? = null
+
+    override fun updateUI() {
+      removeMouseListener(handler)
+      removePopupMenuListener(listener)
+      UIManager.put(KEY, TopRoundedCornerBorder())
+      super.updateUI()
+      setUI(object : BasicComboBoxUI() {
+        override fun createArrowButton(): JButton {
+          val b = JButton(ArrowIcon(BACKGROUND, FOREGROUND))
+          b.isContentAreaFilled = false
+          b.isFocusPainted = false
+          b.border = BorderFactory.createEmptyBorder()
+          return b
+        }
+      })
+      handler = ComboRolloverHandler()
+      addMouseListener(handler)
+      listener = HeavyWeightContainerListener()
+      addPopupMenuListener(listener)
+      (getAccessibleContext().getAccessibleChild(0) as? JComponent)?.also {
+        it.border = BottomRoundedCornerBorder()
+        it.foreground = FOREGROUND
+        it.background = BACKGROUND
+      }
+    }
+  }
+  val p = JPanel(GridLayout(0, 1, 15, 15))
+  p.isOpaque = true
+  p.background = PANEL_BACKGROUND
+  p.border = BorderFactory.createEmptyBorder(15, 15, 15, 15)
+  p.add(combo0)
+  p.add(combo1)
+  p.add(combo2)
+  return JPanel(BorderLayout()).also {
+    it.add(p, BorderLayout.NORTH)
+    it.isOpaque = true
+    it.background = PANEL_BACKGROUND
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class HeavyWeightContainerListener : PopupMenuListener {
+private fun makeModel(): DefaultComboBoxModel<String> {
+  val model = DefaultComboBoxModel<String>()
+  model.addElement("1234")
+  model.addElement("5555555555555555555555")
+  model.addElement("6789000000000")
+  model.addElement("aaa")
+  model.addElement("999999999")
+  return model
+}
+
+private class HeavyWeightContainerListener : PopupMenuListener {
   override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
     EventQueue.invokeLater {
-      val combo = e.getSource() as? JComboBox<*> ?: return@invokeLater
-      (combo.getUI().getAccessibleChild(combo, 0) as? JPopupMenu)?.also {
-        (it.getTopLevelAncestor() as? JWindow)?.also { top ->
+      val c = e.source as? JComboBox<*>
+      (c?.ui?.getAccessibleChild(c, 0) as? JPopupMenu)?.also {
+        (it.topLevelAncestor as? JWindow)?.also { top ->
           println("HeavyWeightContainer")
-          top.setBackground(Color(0x0, true))
+          top.background = Color(0x0, true)
         }
       }
     }
@@ -139,41 +138,41 @@ class HeavyWeightContainerListener : PopupMenuListener {
   }
 }
 
-class ComboRolloverHandler : MouseAdapter() {
+private class ComboRolloverHandler : MouseAdapter() {
   override fun mouseEntered(e: MouseEvent) {
-    getButtonModel(e)?.setRollover(true)
+    getButtonModel(e)?.isRollover = true
   }
 
   override fun mouseExited(e: MouseEvent) {
-    getButtonModel(e)?.setRollover(false)
+    getButtonModel(e)?.isRollover = false
   }
 
   override fun mousePressed(e: MouseEvent) {
-    getButtonModel(e)?.setRollover(true)
+    getButtonModel(e)?.isRollover = true
   }
 
   override fun mouseReleased(e: MouseEvent) {
-    getButtonModel(e)?.setRollover(false)
+    getButtonModel(e)?.isRollover = false
   }
 
   private fun getButtonModel(e: MouseEvent): ButtonModel? {
-    val c = e.getComponent() as? Container ?: return null
-    return (c.getComponent(0) as? JButton)?.getModel()
+    val c = e.component as? Container ?: return null
+    return (c.getComponent(0) as? JButton)?.model
   }
 }
 
-class ArrowIcon(private val color: Color, private val rollover: Color) : Icon {
+private class ArrowIcon(private val color: Color, private val rollover: Color) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setPaint(color)
+    g2.paint = color
     var shift = 0
     if (c is AbstractButton) {
-      val m = c.getModel()
-      if (m.isPressed()) {
+      val m = c.model
+      if (m.isPressed) {
         shift = 1
       } else {
-        if (m.isRollover()) {
-          g2.setPaint(rollover)
+        if (m.isRollover) {
+          g2.paint = rollover
         }
       }
     }
@@ -189,7 +188,7 @@ class ArrowIcon(private val color: Color, private val rollover: Color) : Icon {
   override fun getIconHeight() = 9
 }
 
-open class RoundedCornerBorder : AbstractBorder() {
+private open class RoundedCornerBorder : AbstractBorder() {
   override fun paintBorder(
     c: Component,
     g: Graphics,
@@ -207,17 +206,17 @@ open class RoundedCornerBorder : AbstractBorder() {
     val dh = height.toDouble()
     val round = Area(RoundRectangle2D.Double(dx, dy, dw - 1.0, dh - 1.0, r, r))
     if (c is JPopupMenu) {
-      g2.setPaint(c.getBackground())
+      g2.paint = c.getBackground()
       g2.fill(round)
     } else {
-      c.getParent()?.also {
-        g2.setPaint(it.getBackground())
+      c.parent?.also {
+        g2.paint = it.background
         val corner = Area(Rectangle2D.Double(dx, dy, dw, dh))
         corner.subtract(round)
         g2.fill(corner)
       }
     }
-    g2.setPaint(c.getForeground())
+    g2.paint = c.foreground
     g2.draw(round)
     g2.dispose()
   }
@@ -234,7 +233,7 @@ open class RoundedCornerBorder : AbstractBorder() {
   }
 }
 
-class TopRoundedCornerBorder : RoundedCornerBorder() {
+private class TopRoundedCornerBorder : RoundedCornerBorder() {
   // https://ateraimemo.com/Swing/RoundedComboBox.html
   override fun paintBorder(
     c: Component,
@@ -255,23 +254,23 @@ class TopRoundedCornerBorder : RoundedCornerBorder() {
     val dw = width.toDouble()
     val dh = height.toDouble()
     val round = Area(RoundRectangle2D.Double(dx, dy, dw - 1.0, dh - 1.0, r, r))
-    val b = round.getBounds()
+    val b = round.bounds
     b.setBounds(b.x, b.y + ARC, b.width, b.height - ARC)
     round.add(Area(b))
 
-    c.getParent()?.also {
-      g2.setPaint(it.getBackground())
+    c.parent?.also {
+      g2.paint = it.background
       val corner = Area(Rectangle2D.Double(dx, dy, dw, dh))
       corner.subtract(round)
       g2.fill(corner)
     }
-    g2.setPaint(c.getForeground())
+    g2.paint = c.foreground
     g2.draw(round)
     g2.dispose()
   }
 }
 
-class BottomRoundedCornerBorder : RoundedCornerBorder() {
+private class BottomRoundedCornerBorder : RoundedCornerBorder() {
   override fun paintBorder(
     c: Component,
     g: Graphics,
@@ -296,12 +295,12 @@ class BottomRoundedCornerBorder : RoundedCornerBorder() {
     p.closePath()
     // Area round = new Area(p)
 
-    g2.setPaint(c.getBackground())
+    g2.paint = c.background
     g2.fill(p)
 
-    g2.setPaint(c.getForeground())
+    g2.paint = c.foreground
     g2.draw(p)
-    g2.setPaint(c.getBackground())
+    g2.paint = c.background
     g2.drawLine(x + 1, y, x + width - 2, y)
     g2.dispose()
   }
@@ -317,7 +316,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
