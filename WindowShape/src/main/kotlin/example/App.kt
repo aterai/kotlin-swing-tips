@@ -14,18 +14,18 @@ private val FONT = Font(Font.SERIF, Font.PLAIN, 300)
 fun makeUI(): Component {
   val label = JLabel("", SwingConstants.CENTER)
   val frame = JFrame().also {
-    it.setUndecorated(true)
-    it.setAlwaysOnTop(true)
-    it.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE)
-    it.getContentPane().add(label)
-    it.getContentPane().background = Color.GREEN
+    it.isUndecorated = true
+    it.isAlwaysOnTop = true
+    it.defaultCloseOperation = WindowConstants.HIDE_ON_CLOSE
+    it.contentPane.add(label)
+    it.contentPane.background = Color.GREEN
     it.pack()
   }
   val textField = JTextField("š", 20)
   val button = JToggleButton("show")
   button.addActionListener { e ->
-    val btn = e.source as? AbstractButton ?: return@addActionListener
-    if (btn.isSelected) {
+    val btn = e.source as? AbstractButton
+    if (btn?.isSelected == true) {
       val str = textField.text.trim()
       val tl = TextLayout(str, FONT, FRC)
       val b = tl.bounds
