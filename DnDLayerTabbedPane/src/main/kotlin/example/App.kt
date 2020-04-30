@@ -24,81 +24,80 @@ import javax.swing.plaf.LayerUI
 import javax.swing.plaf.basic.BasicButtonUI
 import javax.swing.plaf.metal.MetalTabbedPaneUI
 
-class MainPanel(handler: TransferHandler, layerUI: LayerUI<DnDTabbedPane>) : JPanel(BorderLayout()) {
-  init {
-    val sub = DnDTabbedPane().also {
-      it.addTab("Title aa", JLabel("aaa"))
-      it.addTab("Title bb", JScrollPane(JTree()))
-      it.addTab("Title cc", JScrollPane(JTextArea("JTextArea cc")))
-    }
-
-    val tabbedPane = DnDTabbedPane().also {
-      it.addTab("JTree 00", JScrollPane(JTree()))
-      it.addTab("JLabel 01", JLabel("Test"))
-      it.addTab("JTable 02", JScrollPane(JTable(10, 3)))
-      it.addTab("JTextArea 03", JScrollPane(JTextArea("JTextArea 03")))
-      it.addTab("JLabel 04", JLabel("<html>1111111111111111<br>13412341234123446745"))
-      it.addTab("null 05", null)
-      it.addTab("JTabbedPane 06", sub)
-      it.addTab("Title 000000000000000007", JScrollPane(JTree()))
-    }
-    // ButtonTabComponent
-    (0 until tabbedPane.getTabCount()).forEach { setTabComponent(tabbedPane, it) }
-
-    val sub2 = DnDTabbedPane().also {
-      it.addTab("Title aaa", JLabel("aaa"))
-      it.addTab("Title bbb", JScrollPane(JTree()))
-      it.addTab("Title ccc", JScrollPane(JTextArea("JTextArea ccc")))
-    }
-
-    tabbedPane.setName("JTabbedPane#main")
-    sub.setName("JTabbedPane#sub1")
-    sub2.setName("JTabbedPane#sub2")
-
-    val dropTargetListener = TabDropTargetAdapter()
-    // val handler = TabTransferHandler()
-    listOf(tabbedPane, sub, sub2).forEach { tp ->
-      tp.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT)
-      tp.setTransferHandler(handler)
-      runCatching {
-        tp.getDropTarget().addDropTargetListener(dropTargetListener)
-      }.onFailure { ex -> // catch (ex: TooManyListenersException) {
-        ex.printStackTrace()
-        getDefaultToolkit().beep()
-      }
-    }
-
-    val p = JPanel(GridLayout(2, 1))
-    p.add(JLayer(tabbedPane, layerUI))
-    p.add(JLayer(sub2, layerUI))
-    add(p)
-    add(makeCheckBoxPanel(tabbedPane), BorderLayout.NORTH)
-    setPreferredSize(Dimension(320, 240))
+fun makeUI(handler: TransferHandler, layerUI: LayerUI<DnDTabbedPane>): Component {
+  val sub = DnDTabbedPane().also {
+    it.addTab("Title aa", JLabel("aaa"))
+    it.addTab("Title bb", JScrollPane(JTree()))
+    it.addTab("Title cc", JScrollPane(JTextArea("JTextArea cc")))
   }
 
-  private fun setTabComponent(tabbedPane: JTabbedPane, i: Int) {
-    tabbedPane.setTabComponentAt(i, ButtonTabComponent(tabbedPane))
-    tabbedPane.setToolTipTextAt(i, "tooltip: $i")
+  val tabbedPane = DnDTabbedPane().also {
+    it.addTab("JTree 00", JScrollPane(JTree()))
+    it.addTab("JLabel 01", JLabel("Test"))
+    it.addTab("JTable 02", JScrollPane(JTable(10, 3)))
+    it.addTab("JTextArea 03", JScrollPane(JTextArea("JTextArea 03")))
+    it.addTab("JLabel 04", JLabel("<html>1111111111111111<br>13412341234123446745"))
+    it.addTab("null 05", null)
+    it.addTab("JTabbedPane 06", sub)
+    it.addTab("Title 000000000000000007", JScrollPane(JTree()))
+  }
+  // ButtonTabComponent
+  (0 until tabbedPane.tabCount).forEach { setTabComponent(tabbedPane, it) }
+
+  val sub2 = DnDTabbedPane().also {
+    it.addTab("Title aaa", JLabel("aaa"))
+    it.addTab("Title bbb", JScrollPane(JTree()))
+    it.addTab("Title ccc", JScrollPane(JTextArea("JTextArea ccc")))
   }
 
-  private fun makeCheckBoxPanel(tabs: JTabbedPane): Component {
-    val tc = JCheckBox("Top", true)
-    tc.addActionListener {
-      tabs.setTabPlacement(if (tc.isSelected()) SwingConstants.TOP else SwingConstants.RIGHT)
+  tabbedPane.name = "JTabbedPane#main"
+  sub.name = "JTabbedPane#sub1"
+  sub2.name = "JTabbedPane#sub2"
+
+  val dropTargetListener = TabDropTargetAdapter()
+  // val handler = TabTransferHandler()
+  listOf(tabbedPane, sub, sub2).forEach { tp ->
+    tp.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
+    tp.transferHandler = handler
+    runCatching {
+      tp.dropTarget.addDropTargetListener(dropTargetListener)
+    }.onFailure { ex ->
+      ex.printStackTrace()
+      getDefaultToolkit().beep()
     }
-    val sc = JCheckBox("SCROLL_TAB_LAYOUT", true)
-    sc.addActionListener {
-      tabs.setTabLayoutPolicy(if (sc.isSelected()) JTabbedPane.SCROLL_TAB_LAYOUT else JTabbedPane.WRAP_TAB_LAYOUT)
-    }
-    return JPanel(FlowLayout(FlowLayout.LEFT)).also {
-      it.add(tc)
-      it.add(sc)
-    }
+  }
+
+  val p = JPanel(GridLayout(2, 1))
+  p.add(JLayer(tabbedPane, layerUI))
+  p.add(JLayer(sub2, layerUI))
+  return JPanel(BorderLayout()).also {
+    it.add(p)
+    it.add(makeCheckBoxPanel(tabbedPane), BorderLayout.NORTH)
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private fun setTabComponent(tabbedPane: JTabbedPane, i: Int) {
+  tabbedPane.setTabComponentAt(i, ButtonTabComponent(tabbedPane))
+  tabbedPane.setToolTipTextAt(i, "tooltip: $i")
+}
+
+private fun makeCheckBoxPanel(tabs: JTabbedPane): Component {
+  val tc = JCheckBox("Top", true)
+  tc.addActionListener {
+    tabs.tabPlacement = if (tc.isSelected) SwingConstants.TOP else SwingConstants.RIGHT
+  }
+  val sc = JCheckBox("SCROLL_TAB_LAYOUT", true)
+  sc.addActionListener {
+    tabs.tabLayoutPolicy = if (sc.isSelected) JTabbedPane.SCROLL_TAB_LAYOUT else JTabbedPane.WRAP_TAB_LAYOUT
+  }
+  return JPanel(FlowLayout(FlowLayout.LEFT)).also {
+    it.add(tc)
+    it.add(sc)
   }
 }
 
 class DnDTabbedPane : JTabbedPane() {
-  // private val dropMode = DropMode.INSERT
   var dragTabIndex = -1
   @Transient
   var dropLocation: DropLocation? = null
@@ -108,7 +107,7 @@ class DnDTabbedPane : JTabbedPane() {
       val tabbedRect = bounds
       val xx = tabbedRect.x
       val yy = tabbedRect.y
-      val compRect = selectedComponent?.getBounds() ?: Rectangle()
+      val compRect = selectedComponent?.bounds ?: Rectangle()
       val tabPlacement = getTabPlacement()
       if (isTopBottomTabPlacement(tabPlacement)) {
         tabbedRect.height = tabbedRect.height - compRect.height
@@ -122,19 +121,16 @@ class DnDTabbedPane : JTabbedPane() {
         }
       }
       tabbedRect.translate(-xx, -yy)
-      // tabbedRect.grow(2, 2);
+      // tabbedRect.grow(2, 2)
       return tabbedRect
     }
 
   class DropLocation(pt: Point, val index: Int) : TransferHandler.DropLocation(pt)
-  // {
-  //   var canDrop = true
-  // }
 
   private fun clickArrowButton(actionKey: String) {
     var scrollForwardButton: JButton? = null
     var scrollBackwardButton: JButton? = null
-    for (c in getComponents()) {
+    for (c in components) {
       val b = c as? JButton ?: continue
       if (scrollForwardButton == null) {
         scrollForwardButton = b
@@ -143,7 +139,7 @@ class DnDTabbedPane : JTabbedPane() {
       }
     }
     val button = if ("scrollTabsForwardAction" == actionKey) scrollForwardButton else scrollBackwardButton
-    button?.takeIf { it.isEnabled() }?.doClick()
+    button?.takeIf { it.isEnabled }?.doClick()
   }
 
   fun autoScrollTest(pt: Point) {
@@ -171,16 +167,15 @@ class DnDTabbedPane : JTabbedPane() {
     addPropertyChangeListener(h)
   }
 
-  // @Override TransferHandler.DropLocation dropLocationForPoint(Point p) {
   fun tabDropLocationForPoint(p: Point): DropLocation {
     // check(dropMode == DropMode.INSERT) { "Unexpected drop mode" }
-    for (i in 0 until getTabCount()) {
+    for (i in 0 until tabCount) {
       if (getBoundsAt(i).contains(p)) {
         return DropLocation(p, i)
       }
     }
     return if (tabAreaBounds.contains(p)) {
-      DropLocation(p, getTabCount())
+      DropLocation(p, tabCount)
     } else DropLocation(p, -1)
   }
 
@@ -214,9 +209,6 @@ class DnDTabbedPane : JTabbedPane() {
 
   fun convertTab(prev: Int, next: Int) {
     println("convertTab")
-    // if (next < 0 || prev == next) {
-    //   return
-    // }
     val cmp = getComponentAt(prev)
     val tab = getTabComponentAt(prev)
     val title = getTitleAt(prev)
@@ -227,13 +219,9 @@ class DnDTabbedPane : JTabbedPane() {
     remove(prev)
     insertTab(title, icon, cmp, tip, tgtIndex)
     setEnabledAt(tgtIndex, isEnabled)
-    // When you drag'n'drop a disabled tab, it finishes enabled and selected.
-    // pointed out by dlorde
     if (isEnabled) {
-      setSelectedIndex(tgtIndex)
+      selectedIndex = tgtIndex
     }
-    // I have a component in all tabs (JLabel with an X to close the tab) and when I move a tab the component disappear.
-    // pointed out by Daniel Dario Morales Salas
     setTabComponentAt(tgtIndex, tab)
   }
 
@@ -243,17 +231,17 @@ class DnDTabbedPane : JTabbedPane() {
 
     // PropertyChangeListener
     override fun propertyChange(e: PropertyChangeEvent) {
-      val propertyName = e.getPropertyName()
+      val propertyName = e.propertyName
       if ("dropLocation" == propertyName) {
-        // System.out.println("propertyChange: dropLocation")
+        // println("propertyChange: dropLocation")
         repaint()
       }
     }
 
     // MouseListener
     override fun mousePressed(e: MouseEvent) {
-      val src = e.getComponent() as? DnDTabbedPane ?: return
-      val isOnlyOneTab = src.getTabCount() <= 1
+      val src = e.component as? DnDTabbedPane ?: return
+      val isOnlyOneTab = src.tabCount <= 1
       if (isOnlyOneTab) {
         startPt = null
         return
@@ -265,10 +253,10 @@ class DnDTabbedPane : JTabbedPane() {
     }
 
     override fun mouseDragged(e: MouseEvent) {
-      val tabPt = e.getPoint() // e.getDragOrigin()
-      val src = e.getComponent()
+      val tabPt = e.point // e.getDragOrigin()
+      val src = e.component
       if (tabPt.distance(startPt) > gestureMotionThreshold && src is DnDTabbedPane) {
-        val th = src.getTransferHandler()
+        val th = src.transferHandler
         val idx = src.indexAtLocation(tabPt.x, tabPt.y)
         val selIdx = src.selectedIndex
         val isRotate = src.getUI() !is MetalTabbedPaneUI && src.tabLayoutPolicy == WRAP_TAB_LAYOUT && idx != selIdx
@@ -296,36 +284,36 @@ class TabDropTargetAdapter : DropTargetAdapter() {
   private fun clearDropLocationPaint(c: Component) {
     val t = c as? DnDTabbedPane ?: return
     t.updateTabDropLocation(null, false)
-    t.setCursor(Cursor.getDefaultCursor())
+    t.cursor = Cursor.getDefaultCursor()
   }
 
   override fun drop(dtde: DropTargetDropEvent) {
-    val c = dtde.getDropTargetContext().getComponent()
-    println("DropTargetListener#drop: ${c.getName()}")
+    val c = dtde.dropTargetContext.component
+    println("DropTargetListener#drop: ${c.name}")
     clearDropLocationPaint(c)
   }
 
   override fun dragExit(dte: DropTargetEvent) {
-    val c = dte.getDropTargetContext().getComponent()
-    println("DropTargetListener#dragExit: ${c.getName()}")
+    val c = dte.dropTargetContext.component
+    println("DropTargetListener#dragExit: ${c.name}")
     clearDropLocationPaint(c)
   }
 
   override fun dragEnter(dtde: DropTargetDragEvent) {
-    val c = dtde.getDropTargetContext().getComponent()
-    println("DropTargetListener#dragEnter: ${c.getName()}")
+    val c = dtde.dropTargetContext.component
+    println("DropTargetListener#dragEnter: ${c.name}")
   }
 
-  // @Override public void dragOver(DropTargetDragEvent dtde) {
-  //   // System.out.println("dragOver")
+  // override dragOver(e: DropTargetDragEvent) {
+  //   println("dragOver")
   // }
 
-  // @Override public void dropActionChanged(DropTargetDragEvent dtde) {
-  //   System.out.println("dropActionChanged")
+  // override dropActionChanged(e: DropTargetDragEvent) {
+  //   println("dropActionChanged")
   // }
 }
 
-data class DnDTabData(val tabbedPane: DnDTabbedPane)
+private data class DnDTabData(val tabbedPane: DnDTabbedPane)
 
 class TabTransferHandler : TransferHandler() {
   private val localObjectFlavor = DataFlavor(DnDTabData::class.java, "DnDTabData")
@@ -363,14 +351,14 @@ class TabTransferHandler : TransferHandler() {
 
   override fun canImport(support: TransferSupport): Boolean {
     // System.out.println("canImport")
-    val target = support.getComponent()
-    if (!support.isDrop() || !support.isDataFlavorSupported(localObjectFlavor) || target !is DnDTabbedPane) {
-      println("canImport: ${support.isDrop()} ${support.isDataFlavorSupported(localObjectFlavor)}")
+    val target = support.component
+    if (!support.isDrop || !support.isDataFlavorSupported(localObjectFlavor) || target !is DnDTabbedPane) {
+      println("canImport: ${support.isDrop} ${support.isDataFlavorSupported(localObjectFlavor)}")
       return false
     }
-    support.setDropAction(MOVE)
-    val tdl = support.getDropLocation()
-    val pt = tdl.getDropPoint()
+    support.dropAction = MOVE
+    val tdl = support.dropLocation
+    val pt = tdl.dropPoint
     // val target = support.getComponent() as DnDTabbedPane
     target.autoScrollTest(pt)
     val dl = target.tabDropLocationForPoint(pt)
@@ -383,8 +371,6 @@ class TabTransferHandler : TransferHandler() {
       source?.let { !it.isAncestorOf(target) } ?: false && isAreaContains
     }
 
-    // [JDK-6700748] Cursor flickering during D&D when using CellRendererPane with validation - Java Bug System
-    // https://bugs.openjdk.java.net/browse/JDK-6700748
     target.setCursor(if (canDrop) DragSource.DefaultMoveDrop else DragSource.DefaultMoveNoDrop)
 
     support.setShowDropLocation(canDrop)
@@ -395,7 +381,7 @@ class TabTransferHandler : TransferHandler() {
 
   private fun makeDragTabImage(tabbedPane: DnDTabbedPane): BufferedImage {
     val rect = tabbedPane.getBoundsAt(tabbedPane.dragTabIndex)
-    val image = BufferedImage(tabbedPane.getWidth(), tabbedPane.getHeight(), BufferedImage.TYPE_INT_ARGB)
+    val image = BufferedImage(tabbedPane.width, tabbedPane.height, BufferedImage.TYPE_INT_ARGB)
     val g2 = image.createGraphics()
     tabbedPane.paint(g2)
     g2.dispose()
@@ -405,11 +391,11 @@ class TabTransferHandler : TransferHandler() {
     if (rect.y < 0) {
       rect.translate(0, -rect.y)
     }
-    if (rect.x + rect.width > image.getWidth()) {
-      rect.width = image.getWidth() - rect.x
+    if (rect.x + rect.width > image.width) {
+      rect.width = image.width - rect.x
     }
-    if (rect.y + rect.height > image.getHeight()) {
-      rect.height = image.getHeight() - rect.y
+    if (rect.y + rect.height > image.height) {
+      rect.height = image.height - rect.y
     }
     return image.getSubimage(rect.x, rect.y, rect.width, rect.height)
   }
@@ -425,7 +411,7 @@ class TabTransferHandler : TransferHandler() {
         dialog.pack()
         dialog.isVisible = true
       } else {
-        setDragImage(makeDragTabImage(src))
+        dragImage = makeDragTabImage(src)
       }
       MOVE
     }
@@ -433,9 +419,9 @@ class TabTransferHandler : TransferHandler() {
 
   override fun importData(support: TransferSupport): Boolean {
     println("importData")
-    val target = support.getComponent()
+    val target = support.component
     val data = runCatching {
-      support.getTransferable().getTransferData(localObjectFlavor) as? DnDTabData
+      support.transferable.getTransferData(localObjectFlavor) as? DnDTabData
     }.getOrNull()
     if (target !is DnDTabbedPane || data == null) {
       return false
@@ -456,26 +442,26 @@ class TabTransferHandler : TransferHandler() {
     src.updateTabDropLocation(null, false)
     src.repaint()
     if (mode === DragImageMode.HEAVYWEIGHT) {
-      dialog.setVisible(false)
+      dialog.isVisible = false
     }
   }
 
   init {
     println("TabTransferHandler")
     dialog.add(label)
-    dialog.setOpacity(.5f)
+    dialog.opacity = .5f
     DragSource.getDefaultDragSource().addDragSourceMotionListener { e ->
-      val pt = e.getLocation()
+      val pt = e.location
       pt.translate(5, 5) // offset
-      dialog.setLocation(pt)
+      dialog.location = pt
     }
   }
 }
 
-class DropLocationLayerUI : LayerUI<DnDTabbedPane>() {
+private class DropLocationLayerUI : LayerUI<DnDTabbedPane>() {
   override fun paint(g: Graphics, c: JComponent) {
     super.paint(g, c)
-    val tabbedPane = (c as? JLayer<*>)?.getView() as? DnDTabbedPane ?: return
+    val tabbedPane = (c as? JLayer<*>)?.view as? DnDTabbedPane ?: return
     tabbedPane.dropLocation?.takeIf { it.index >= 0 }?.also {
       val g2 = g.create() as Graphics2D
       g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f)
@@ -490,7 +476,7 @@ class DropLocationLayerUI : LayerUI<DnDTabbedPane>() {
     val index = loc.index
     val a = minOf(index, 1)
     val r = tabbedPane.getBoundsAt(a * (index - 1))
-    if (tabbedPane.getTabPlacement() == JTabbedPane.TOP || tabbedPane.getTabPlacement() == JTabbedPane.BOTTOM) {
+    if (tabbedPane.tabPlacement == JTabbedPane.TOP || tabbedPane.tabPlacement == JTabbedPane.BOTTOM) {
       RECT_LINE.setBounds(r.x - LINE_SIZE / 2 + r.width * a, r.y, LINE_SIZE, r.height)
     } else {
       RECT_LINE.setBounds(r.x, r.y - LINE_SIZE / 2 + r.height * a, r.width, LINE_SIZE)
@@ -503,9 +489,8 @@ class DropLocationLayerUI : LayerUI<DnDTabbedPane>() {
   }
 }
 
-class ButtonTabComponent(private val tabbedPane: JTabbedPane) : JPanel(FlowLayout(FlowLayout.LEFT, 0, 0)) {
-  private inner class TabButtonHandler : MouseAdapter(),
-    ActionListener {
+private class ButtonTabComponent(private val tabbedPane: JTabbedPane) : JPanel(FlowLayout(FlowLayout.LEFT, 0, 0)) {
+  private inner class TabButtonHandler : MouseAdapter(), ActionListener {
     override fun actionPerformed(e: ActionEvent) {
       val i = tabbedPane.indexOfTabComponent(this@ButtonTabComponent)
       if (i != -1) {
@@ -514,14 +499,14 @@ class ButtonTabComponent(private val tabbedPane: JTabbedPane) : JPanel(FlowLayou
     }
 
     override fun mouseEntered(e: MouseEvent) {
-      val component: Component = e.getComponent()
+      val component: Component = e.component
       if (component is AbstractButton) {
         component.isBorderPainted = true
       }
     }
 
     override fun mouseExited(e: MouseEvent) {
-      val component: Component = e.getComponent()
+      val component: Component = e.component
       if (component is AbstractButton) {
         component.isBorderPainted = false
       }
@@ -556,7 +541,7 @@ class ButtonTabComponent(private val tabbedPane: JTabbedPane) : JPanel(FlowLayou
   }
 }
 
-class TabButton : JButton() {
+private class TabButton : JButton() {
   override fun getPreferredSize() = Dimension(SIZE, SIZE)
 
   override fun updateUI() {
@@ -606,8 +591,8 @@ fun main() {
     val handler = TabTransferHandler()
     val check = JCheckBoxMenuItem("Ghost image: Heavyweight")
     check.addActionListener { e ->
-      val c = e.getSource() as? JCheckBoxMenuItem ?: return@addActionListener
-      handler.setDragImageMode(if (c.isSelected()) DragImageMode.HEAVYWEIGHT else DragImageMode.LIGHTWEIGHT)
+      val b = (e.source as? JCheckBoxMenuItem)?.isSelected == true
+      handler.setDragImageMode(if (b) DragImageMode.HEAVYWEIGHT else DragImageMode.LIGHTWEIGHT)
     }
     val menu = JMenu("Debug")
     menu.add(check)
@@ -616,17 +601,17 @@ fun main() {
     val layerUI = DropLocationLayerUI()
     val frame = JFrame("main")
     frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-    frame.getContentPane().add(MainPanel(handler, layerUI))
-    frame.setJMenuBar(menuBar)
+    frame.contentPane.add(makeUI(handler, layerUI))
+    frame.jMenuBar = menuBar
     frame.pack()
     frame.setLocationRelativeTo(null)
-    val pt = frame.getLocation()
+    val pt = frame.location
     pt.translate(360, 60)
     val sub = JFrame("sub")
-    sub.getContentPane().add(MainPanel(handler, layerUI))
+    sub.contentPane.add(makeUI(handler, layerUI))
     sub.pack()
-    sub.setLocation(pt)
-    frame.setVisible(true)
-    sub.setVisible(true)
+    sub.location = pt
+    frame.isVisible = true
+    sub.isVisible = true
   }
 }
