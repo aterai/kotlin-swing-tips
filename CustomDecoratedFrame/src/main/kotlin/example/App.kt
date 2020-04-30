@@ -8,106 +8,96 @@ import java.util.function.BiFunction
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.MouseInputAdapter
 
-class MainPanel : JPanel(BorderLayout()) {
-  private val left = SideLabel(Side.W)
-  private val right = SideLabel(Side.E)
-  private val top = SideLabel(Side.N)
-  private val bottom = SideLabel(Side.S)
-  private val topLeft = SideLabel(Side.NW)
-  private val topRight = SideLabel(Side.NE)
-  private val bottomLeft = SideLabel(Side.SW)
-  private val bottomRight = SideLabel(Side.SE)
-  private val resizePanel = object : JPanel(BorderLayout()) {
-    private val borderColor = Color(0x64_64_64)
-    override fun paintComponent(g: Graphics) {
-      val g2 = g.create() as? Graphics2D ?: return
-      val w = width
-      val h = height
-      g2.paint = Color.ORANGE
-      g2.fillRect(0, 0, w, h)
-      g2.paint = borderColor
-      g2.drawRect(0, 0, w - 1, h - 1)
-      g2.drawLine(0, 2, 2, 0)
-      g2.drawLine(w - 3, 0, w - 1, 2)
-      g2.clearRect(0, 0, 2, 1)
-      g2.clearRect(0, 0, 1, 2)
-      g2.clearRect(w - 2, 0, 2, 1)
-      g2.clearRect(w - 1, 0, 1, 2)
-      g2.dispose()
+private val left = SideLabel(Side.W)
+private val right = SideLabel(Side.E)
+private val top = SideLabel(Side.N)
+private val bottom = SideLabel(Side.S)
+private val topLeft = SideLabel(Side.NW)
+private val topRight = SideLabel(Side.NE)
+private val bottomLeft = SideLabel(Side.SW)
+private val bottomRight = SideLabel(Side.SE)
+private val resizePanel = object : JPanel(BorderLayout()) {
+  private val borderColor = Color(0x64_64_64)
+  override fun paintComponent(g: Graphics) {
+    val g2 = g.create() as? Graphics2D ?: return
+    val w = width
+    val h = height
+    g2.paint = Color.ORANGE
+    g2.fillRect(0, 0, w, h)
+    g2.paint = borderColor
+    g2.drawRect(0, 0, w - 1, h - 1)
+    g2.drawLine(0, 2, 2, 0)
+    g2.drawLine(w - 3, 0, w - 1, 2)
+    g2.clearRect(0, 0, 2, 1)
+    g2.clearRect(0, 0, 1, 2)
+    g2.clearRect(w - 2, 0, 2, 1)
+    g2.clearRect(w - 1, 0, 1, 2)
+    g2.dispose()
+  }
+}
+
+fun makeUI() = JScrollPane(JTree()).also {
+  it.preferredSize = Dimension(320, 240)
+}
+
+fun makeResizableContentPane(title: String): Container {
+  val titleBar = JPanel(BorderLayout())
+  val dwl = DragWindowListener()
+  titleBar.addMouseListener(dwl)
+  titleBar.addMouseMotionListener(dwl)
+  titleBar.isOpaque = false
+
+  val gap = 4
+  titleBar.border = BorderFactory.createEmptyBorder(gap, gap, gap, gap)
+  titleBar.add(JLabel(title, SwingConstants.CENTER))
+  titleBar.add(makeCloseButton(), BorderLayout.EAST)
+
+  val rwl = ResizeWindowListener()
+  listOf(left, right, top, bottom, topLeft, topRight, bottomLeft, bottomRight)
+    .forEach {
+      it.addMouseListener(rwl)
+      it.addMouseMotionListener(rwl)
     }
+
+  val titlePanel = JPanel(BorderLayout()).also {
+    it.add(top, BorderLayout.NORTH)
+    it.add(titleBar, BorderLayout.CENTER)
+    it.isOpaque = false
   }
 
-  init {
-    add(JScrollPane(JTree()))
-    preferredSize = Dimension(320, 240)
+  val northPanel = JPanel(BorderLayout()).also {
+    it.add(topLeft, BorderLayout.WEST)
+    it.add(titlePanel, BorderLayout.CENTER)
+    it.add(topRight, BorderLayout.EAST)
+    it.isOpaque = false
   }
 
-  fun makeFrame(title: String): JFrame {
-    val titleBar = JPanel(BorderLayout())
-    val dwl = DragWindowListener()
-    titleBar.addMouseListener(dwl)
-    titleBar.addMouseMotionListener(dwl)
-    titleBar.isOpaque = false
-
-    titleBar.border = BorderFactory.createEmptyBorder(W, W, W, W)
-    titleBar.add(JLabel(title, SwingConstants.CENTER))
-    titleBar.add(makeCloseButton(), BorderLayout.EAST)
-
-    val rwl = ResizeWindowListener()
-    listOf(left, right, top, bottom, topLeft, topRight, bottomLeft, bottomRight)
-      .forEach {
-        it.addMouseListener(rwl)
-        it.addMouseMotionListener(rwl)
-      }
-
-    val titlePanel = JPanel(BorderLayout()).also {
-      it.add(top, BorderLayout.NORTH)
-      it.add(titleBar, BorderLayout.CENTER)
-      it.isOpaque = false
-    }
-
-    val northPanel = JPanel(BorderLayout()).also {
-      it.add(topLeft, BorderLayout.WEST)
-      it.add(titlePanel, BorderLayout.CENTER)
-      it.add(topRight, BorderLayout.EAST)
-      it.isOpaque = false
-    }
-
-    val southPanel = JPanel(BorderLayout()).also {
-      it.add(bottomLeft, BorderLayout.WEST)
-      it.add(bottom, BorderLayout.CENTER)
-      it.add(bottomRight, BorderLayout.EAST)
-      it.isOpaque = false
-    }
-
-    resizePanel.add(left, BorderLayout.WEST)
-    resizePanel.add(right, BorderLayout.EAST)
-    resizePanel.add(northPanel, BorderLayout.NORTH)
-    resizePanel.add(southPanel, BorderLayout.SOUTH)
-    resizePanel.isOpaque = false
-
-    val frame = JFrame(title)
-    frame.isUndecorated = true
-    frame.background = Color(0x0, true)
-    frame.contentPane = resizePanel
-    return frame
+  val southPanel = JPanel(BorderLayout()).also {
+    it.add(bottomLeft, BorderLayout.WEST)
+    it.add(bottom, BorderLayout.CENTER)
+    it.add(bottomRight, BorderLayout.EAST)
+    it.isOpaque = false
   }
 
-  private fun makeCloseButton() = JButton(CloseIcon()).also {
-    it.isContentAreaFilled = false
-    it.isFocusPainted = false
-    it.border = BorderFactory.createEmptyBorder()
-    it.isOpaque = true
-    it.background = Color.ORANGE
-    it.addActionListener { e ->
-      ((e.source as? JComponent)?.topLevelAncestor as? Window)?.also { window ->
-        window.dispatchEvent(WindowEvent(window, WindowEvent.WINDOW_CLOSING))
-      }
-    }
-  }
+  resizePanel.add(left, BorderLayout.WEST)
+  resizePanel.add(right, BorderLayout.EAST)
+  resizePanel.add(northPanel, BorderLayout.NORTH)
+  resizePanel.add(southPanel, BorderLayout.SOUTH)
+  resizePanel.isOpaque = false
 
-  companion object {
-    private const val W = 4
+  return resizePanel
+}
+
+private fun makeCloseButton() = JButton(CloseIcon()).also {
+  it.isContentAreaFilled = false
+  it.isFocusPainted = false
+  it.border = BorderFactory.createEmptyBorder()
+  it.isOpaque = true
+  it.background = Color.ORANGE
+  it.addActionListener { e ->
+    ((e.source as? JComponent)?.topLevelAncestor as? Window)?.also { window ->
+      window.dispatchEvent(WindowEvent(window, WindowEvent.WINDOW_CLOSING))
+    }
   }
 }
 
@@ -262,10 +252,12 @@ fun main() {
       it.printStackTrace()
       Toolkit.getDefaultToolkit().beep()
     }
-    val p = MainPanel()
-    p.makeFrame("title").apply {
+    JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(p)
+      isUndecorated = true
+      background = Color(0x0, true)
+      contentPane = makeResizableContentPane("title")
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
