@@ -15,12 +15,13 @@ fun makeUI(): Component {
       val t = Toolkit.getDefaultToolkit().systemClipboard.getContents(null)
       if (t == null) {
         Toolkit.getDefaultToolkit().beep()
-        return@addActionListener
-      }
-      if (t.isDataFlavorSupported(DataFlavor.imageFlavor)) {
-        image = ImageIcon(t.getTransferData(DataFlavor.imageFlavor) as? Image)
-      } else if (t.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-        str = t.getTransferData(DataFlavor.stringFlavor).toString()
+        str = "the current transferable object on the clipboard is null"
+      } else {
+        if (t.isDataFlavorSupported(DataFlavor.imageFlavor)) {
+          image = ImageIcon(t.getTransferData(DataFlavor.imageFlavor) as? Image)
+        } else if (t.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+          str = t.getTransferData(DataFlavor.stringFlavor).toString()
+        }
       }
     }.onFailure {
       Toolkit.getDefaultToolkit().beep()
