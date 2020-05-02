@@ -65,11 +65,9 @@ private class TreePopupMenu : JPopupMenu() {
       }
     }
     add("edit").addActionListener {
-      val node = path?.lastPathComponent
-      if (node !is DefaultMutableTreeNode) {
-        return@addActionListener
+      (path?.lastPathComponent as? DefaultMutableTreeNode)?.also {
+        textField.text = it.userObject.toString()
       }
-      textField.text = node.userObject.toString()
       (invoker as? JTree)?.also { tree ->
         val ret = JOptionPane.showConfirmDialog(
           tree, textField, "edit", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
