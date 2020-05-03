@@ -77,10 +77,11 @@ fun makeUI(): Component {
     }
   }
 
-  val tefCheck = JCheckBox("terminateEditOnFocusLost", true)
+  val key = "terminateEditOnFocusLost"
+  val tefCheck = JCheckBox(key, true)
   tefCheck.addActionListener { e ->
     val isSelected = (e.source as? JCheckBox)?.isSelected == true
-    table.putClientProperty("terminateEditOnFocusLost", isSelected)
+    table.putClientProperty(key, isSelected)
   }
   val box = JPanel(GridLayout(4, 0))
   box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
