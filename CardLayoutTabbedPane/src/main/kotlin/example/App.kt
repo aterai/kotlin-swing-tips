@@ -14,14 +14,14 @@ class MainPanel : JPanel(BorderLayout()) {
     tab1.addTab("JTree", JScrollPane(JTree()))
     tab1.addTab("JLabel", JLabel("JLabel 1"))
     tab1.addTab("JSplitPane", JSplitPane())
-    tab1.addTab("JButton", JButton("JButton 1"))
+    tab1.addTab("JButton 1", JButton("JButton 1"))
 
     val tab2 = CardLayoutTabbedPane()
     tab2.addTab("JTabbedPane: default", tab1)
     tab2.addTab("JTree", JScrollPane(JTree()))
     tab2.addTab("JSplitPane", JSplitPane())
     tab2.addTab("JLabel", JLabel("JLabel 2"))
-    tab2.addTab("JButton", JButton("JButton"))
+    tab2.addTab("JButton 2", JButton("JButton 2"))
     add(tab2)
 
     // UIManager.put("example.TabButton", "TabViewButtonUI")

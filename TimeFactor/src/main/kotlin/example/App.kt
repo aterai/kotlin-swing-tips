@@ -3,86 +3,67 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  // private val spinner: JSpinner? = JSpinner()
-  private val numberModel: SpinnerNumberModel?
+private const val key = "timeFactor"
 
-  init {
-    val lv = UIManager.get("Tree.timeFactor") as? Number ?: 500
-    numberModel = SpinnerNumberModel(lv.toLong(), 0L, 5000L, 500L)
-    UIManager.put("List.timeFactor", 5000L)
+fun makeUI(): Component {
+  val lv = UIManager.get("Tree.$key") as? Number ?: 500
+  val numberModel = SpinnerNumberModel(lv.toLong(), 0L, 5000L, 500L)
+  UIManager.put("Tree.$key", 5000L)
 
-    val model = arrayOf("a", "aa", "b", "bbb", "bbc")
-    val combo = JComboBox(model)
-    combo.setPrototypeDisplayValue("M".repeat(30))
+  val model = arrayOf("a", "aa", "b", "bbb", "bbc")
+  val combo = JComboBox(model)
+  combo.prototypeDisplayValue = "M".repeat(30)
 
-    val p = JPanel().also {
-      it.add(JSpinner(numberModel))
-      it.add(combo)
-    }
-
-    val tabbedPane = JTabbedPane().also {
-      it.addTab("ComboBox.timeFactor", p)
-      it.addTab("List.timeFactor", JScrollPane(JList(model)))
-      it.addTab("Table.timeFactor(JFileChooser)", JFileChooser())
-      it.addTab("Tree.timeFactor", JScrollPane(JTree()))
-    }
-
-    add(tabbedPane)
-    setPreferredSize(Dimension(320, 240))
+  val p = JPanel().also {
+    it.add(JSpinner(numberModel))
+    it.add(combo)
   }
 
-  override fun updateUI() {
-    // Unnecessary safe call on a non-null receiver of type JSpinner
-    // private val spinner = JSpinner()
-    // val lv = spinner
-    //     ?.let { it.getModel().getValue() }
-    //     ?: 1000L
-
-    // NullPointerException
-    // private val spinner = JSpinner()
-    // val lv = spinner.getModel().getValue()
-
-    // Condition 'spinner != null' is always 'true'
-    // private val spinner = JSpinner()
-    // val lv = if (spinner != null) spinner.getModel().getValue() else 1000L
-
-    // private val spinner = JSpinner()
-    // val lv = Optional.ofNullable(spinner)
-    //     .map { it.getModel().getValue() }
-    //     .orElse(1000L)
-
-    // private val spinner: JSpinner? = JSpinner()
-    // val lv = spinner?.getModel()?.getValue() ?: 1000L
-
-    val lv = numberModel?.getNumber()?.toLong() ?: 1000L
-
-    UIManager.put("ComboBox.timeFactor", lv)
-    UIManager.put("List.timeFactor", lv)
-    UIManager.put("Table.timeFactor", lv)
-    UIManager.put("Tree.timeFactor", lv)
-    super.updateUI()
+  val tabbedPane = JTabbedPane().also {
+    it.addTab("ComboBox.$key", p)
+    it.addTab("List.$key", JScrollPane(JList(model)))
+    it.addTab("Table.$key(JFileChooser)", JFileChooser())
+    it.addTab("Tree.$key", JScrollPane(JTree()))
+    it.preferredSize = Dimension(320, 240)
+    EventQueue.invokeLater {
+      val mb = JMenuBar()
+      mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+      it.rootPane.jMenuBar = mb
+    }
   }
+
+  val panel = object :  JPanel(BorderLayout()) {
+    override fun updateUI() {
+      val v = numberModel.number.toLong()
+      UIManager.put("ComboBox.$key", v)
+      UIManager.put("List.$key", v)
+      UIManager.put("Table.$key", v)
+      UIManager.put("Tree.$key", v)
+      super.updateUI()
+    }
+  }
+  panel.add(tabbedPane)
+  return panel
 }
 
-object LookAndFeelUtil {
-  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.getName()
+private object LookAndFeelUtil {
+  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu() = JMenu("LookAndFeel").also {
     val lafRadioGroup = ButtonGroup()
     for (lafInfo in UIManager.getInstalledLookAndFeels()) {
-      it.add(createLookAndFeelItem(lafInfo.getName(), lafInfo.getClassName(), lafRadioGroup))
+      it.add(createLookAndFeelItem(lafInfo.name, lafInfo.className, lafRadioGroup))
     }
   }
 
   private fun createLookAndFeelItem(lafName: String, lafClassName: String, lafRadioGroup: ButtonGroup): JMenuItem {
     val lafItem = JRadioButtonMenuItem(lafName, lafClassName == lookAndFeel)
-    lafItem.setActionCommand(lafClassName)
-    lafItem.setHideActionText(true)
+    lafItem.actionCommand = lafClassName
+    lafItem.hideActionText = true
     lafItem.addActionListener {
-      val m = lafRadioGroup.getSelection()
+      val m = lafRadioGroup.selection
       runCatching {
-        setLookAndFeel(m.getActionCommand())
+        setLookAndFeel(m.actionCommand)
       }.onFailure {
         it.printStackTrace()
         Toolkit.getDefaultToolkit().beep()
@@ -113,7 +94,7 @@ object LookAndFeelUtil {
       SwingUtilities.updateComponentTreeUI(window)
     }
   }
-} /* Singleton */
+}
 
 fun main() {
   EventQueue.invokeLater {
@@ -123,13 +104,9 @@ fun main() {
       it.printStackTrace()
       Toolkit.getDefaultToolkit().beep()
     }
-    val mb = JMenuBar()
-    mb.add(LookAndFeelUtil.createLookAndFeelMenu())
-
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
-      setJMenuBar(mb)
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
