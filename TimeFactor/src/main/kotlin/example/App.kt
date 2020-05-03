@@ -3,12 +3,12 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-private const val key = "timeFactor"
+private const val KEY = "timeFactor"
 
 fun makeUI(): Component {
-  val lv = UIManager.get("Tree.$key") as? Number ?: 500
+  val lv = UIManager.get("Tree.$KEY") as? Number ?: 500
   val numberModel = SpinnerNumberModel(lv.toLong(), 0L, 5000L, 500L)
-  UIManager.put("Tree.$key", 5000L)
+  UIManager.put("Tree.$KEY", 5000L)
 
   val model = arrayOf("a", "aa", "b", "bbb", "bbc")
   val combo = JComboBox(model)
@@ -20,10 +20,10 @@ fun makeUI(): Component {
   }
 
   val tabbedPane = JTabbedPane().also {
-    it.addTab("ComboBox.$key", p)
-    it.addTab("List.$key", JScrollPane(JList(model)))
-    it.addTab("Table.$key(JFileChooser)", JFileChooser())
-    it.addTab("Tree.$key", JScrollPane(JTree()))
+    it.addTab("ComboBox.$KEY", p)
+    it.addTab("List.$KEY", JScrollPane(JList(model)))
+    it.addTab("Table.$KEY(JFileChooser)", JFileChooser())
+    it.addTab("Tree.$KEY", JScrollPane(JTree()))
     it.preferredSize = Dimension(320, 240)
     EventQueue.invokeLater {
       val mb = JMenuBar()
@@ -32,13 +32,13 @@ fun makeUI(): Component {
     }
   }
 
-  val panel = object :  JPanel(BorderLayout()) {
+  val panel = object : JPanel(BorderLayout()) {
     override fun updateUI() {
       val v = numberModel.number.toLong()
-      UIManager.put("ComboBox.$key", v)
-      UIManager.put("List.$key", v)
-      UIManager.put("Table.$key", v)
-      UIManager.put("Tree.$key", v)
+      UIManager.put("ComboBox.$KEY", v)
+      UIManager.put("List.$KEY", v)
+      UIManager.put("Table.$KEY", v)
+      UIManager.put("Tree.$KEY", v)
       super.updateUI()
     }
   }
