@@ -12,34 +12,34 @@ private const val TEXT = "The quick brown fox jumps over the lazy dog."
 
 fun makeUI() = JPanel(BorderLayout()).also {
   val box = Box.createVerticalBox()
-  box.setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30))
+  box.border = BorderFactory.createEmptyBorder(10, 30, 10, 30)
   box.add(makeExpandingTextArea1())
   box.add(Box.createVerticalStrut(10))
   box.add(makeExpandingTextArea2())
 
   it.add(box, BorderLayout.NORTH)
   it.add(JButton("focus dummy"), BorderLayout.SOUTH)
-  it.setPreferredSize(Dimension(320, 240))
+  it.preferredSize = Dimension(320, 240)
 }
 
 private fun makeExpandingTextArea1(): Component {
   val p = JPanel(BorderLayout())
   val textArea = JTextArea(TEXT, 1, 10)
-  textArea.setLineWrap(true)
+  textArea.lineWrap = true
   textArea.addFocusListener(object : FocusListener {
     override fun focusGained(e: FocusEvent) {
-      (e.getComponent() as? JTextArea)?.setRows(3)
+      (e.component as? JTextArea)?.rows = 3
       p.revalidate()
     }
 
     override fun focusLost(e: FocusEvent) {
-      (e.getComponent() as? JTextArea)?.setRows(1)
+      (e.component as? JTextArea)?.rows = 1
       p.revalidate()
     }
   })
   val scroll = JScrollPane(textArea)
-  // scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-  scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
+  // scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
+  scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
   p.add(scroll, BorderLayout.NORTH)
   return p
 }
@@ -51,54 +51,55 @@ private fun makeExpandingTextArea2(): Component {
   val textArea = object : JTextArea(TEXT, 3, 10) {
     override fun updateUI() {
       super.updateUI()
-      setLineWrap(true)
-      setWrapStyleWord(true)
-      setMargin(Insets(1, 1, 1, 1))
+      lineWrap = true
+      wrapStyleWord = true
+      margin = Insets(1, 1, 1, 1)
     }
   }
 
   val textField = object : JLabel(TEXT) {
     override fun updateUI() {
       super.updateUI()
-      setOpaque(true)
-      setFocusable(true)
-      setBackground(UIManager.getColor("TextField.background"))
-      setForeground(UIManager.getColor("TextField.foreground"))
-      setBorder(
-        BorderFactory.createCompoundBorder(
-          UIManager.getBorder("TextField.border"), BorderFactory.createEmptyBorder(1, 1, 1, 1)
-        )
+      isOpaque = true
+      isFocusable = true
+      background = UIManager.getColor("TextField.background")
+      foreground = UIManager.getColor("TextField.foreground")
+      border = BorderFactory.createCompoundBorder(
+        UIManager.getBorder("TextField.border"), BorderFactory.createEmptyBorder(1, 1, 1, 1)
       )
-      setFont(UIManager.getFont("TextArea.font"))
+      font = UIManager.getFont("TextArea.font")
     }
   }
 
+  val keyCollapse = "TextField"
+  val keyExpand = "TextArea"
   textArea.addFocusListener(object : FocusAdapter() {
     override fun focusLost(e: FocusEvent) {
-      val text = textArea.getText()
-      textField.setText(if (text.isEmpty()) " " else text)
-      cardLayout.show(cp, "TextField")
+      val text = textArea.text
+      // textField.text = if (text.isEmpty()) " " else text
+      textField.text = text.takeIf { it.isNotEmpty() } ?: " "
+      cardLayout.show(cp, keyCollapse)
     }
   })
   textField.addFocusListener(object : FocusAdapter() {
     override fun focusGained(e: FocusEvent) {
-      cardLayout.show(cp, "TextArea")
+      cardLayout.show(cp, keyExpand)
       textArea.requestFocusInWindow()
     }
   })
   textField.addMouseListener(object : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
-      cardLayout.show(cp, "TextArea")
+      cardLayout.show(cp, keyExpand)
       textArea.requestFocusInWindow()
     }
   })
   val panel = JPanel(BorderLayout())
   panel.add(textField, BorderLayout.NORTH)
   val scroll = JScrollPane(textArea)
-  scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER)
-  scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
-  cp.add(panel, "TextField")
-  cp.add(scroll, "TextArea")
+  scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
+  scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+  cp.add(panel, keyCollapse)
+  cp.add(scroll, keyExpand)
   return cp
 }
 
