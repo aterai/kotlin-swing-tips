@@ -7,87 +7,89 @@ import java.util.Date
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.JSpinner.DateEditor
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val r1 = JRadioButton("LEADING")
-    val r2 = JRadioButton("CENTER")
-    val r3 = JRadioButton("TRAILING")
-    val il = ItemListener { e ->
-      val alignment = when {
-        e.itemSelectable === r1 -> SwingConstants.LEADING
-        e.itemSelectable === r2 -> SwingConstants.CENTER
-        else -> SwingConstants.TRAILING
-      }
-      UIManager.put("Spinner.editorAlignment", alignment)
-      SwingUtilities.updateComponentTreeUI(this)
-    }
-    val bg = ButtonGroup()
-    val box = Box.createHorizontalBox()
-    for (r in listOf(r1, r2, r3)) {
-      r.addItemListener(il)
-      bg.add(r)
-      box.add(r)
-    }
-    val weeks = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Sat")
-    val spinner0 = JSpinner(SpinnerListModel(weeks))
-    val date = Date()
-    val spinner1 = JSpinner(SpinnerDateModel(date, date, null, Calendar.DAY_OF_MONTH))
-    spinner1.editor = DateEditor(spinner1, "yyyy/MM/dd")
+val r1 = JRadioButton("LEADING")
+val r2 = JRadioButton("CENTER")
+val r3 = JRadioButton("TRAILING")
 
-    val spinner2 = JSpinner(SpinnerNumberModel(5, 0, 10, 1))
+fun makeUI(): Component {
+  val il = ItemListener { e ->
+    val alignment = when {
+      e.itemSelectable === r1 -> SwingConstants.LEADING
+      e.itemSelectable === r2 -> SwingConstants.CENTER
+      else -> SwingConstants.TRAILING
+    }
+    UIManager.put("Spinner.editorAlignment", alignment)
+    SwingUtilities.updateComponentTreeUI(r1.rootPane)
+  }
+  val bg = ButtonGroup()
+  val box = Box.createHorizontalBox()
+  for (r in listOf(r1, r2, r3)) {
+    r.addItemListener(il)
+    bg.add(r)
+    box.add(r)
+  }
+  val weeks = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Sat")
+  val spinner0 = JSpinner(SpinnerListModel(weeks))
+  val date = Date()
+  val spinner1 = JSpinner(SpinnerDateModel(date, date, null, Calendar.DAY_OF_MONTH))
+  spinner1.editor = DateEditor(spinner1, "yyyy/MM/dd")
 
-    val p = JPanel(GridBagLayout())
-    val c = GridBagConstraints()
-    c.gridheight = 1
-    c.gridwidth = 1
-    c.gridx = 0
-    c.weightx = 0.0
-    c.insets = Insets(5, 5, 5, 0)
-    c.anchor = GridBagConstraints.EAST
-    c.gridy = 0
-    p.add(JLabel("SpinnerListModel: "), c)
-    c.gridy = 1
-    p.add(JLabel("SpinnerDateModel: "), c)
-    c.gridy = 2
-    p.add(JLabel("SpinnerNumberModel: "), c)
-    c.gridx = 1
-    c.weightx = 1.0
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.gridy = 0
-    p.add(spinner0, c)
-    c.gridy = 1
-    p.add(spinner1, c)
-    c.gridy = 2
-    p.add(spinner2, c)
-    add(box, BorderLayout.NORTH)
-    add(p)
+  val spinner2 = JSpinner(SpinnerNumberModel(5, 0, 10, 1))
+
+  val p = JPanel(GridBagLayout())
+  val c = GridBagConstraints()
+  c.gridheight = 1
+  c.gridwidth = 1
+  c.gridx = 0
+  c.weightx = 0.0
+  c.insets = Insets(5, 5, 5, 0)
+  c.anchor = GridBagConstraints.EAST
+  c.gridy = 0
+  p.add(JLabel("SpinnerListModel: "), c)
+  c.gridy = 1
+  p.add(JLabel("SpinnerDateModel: "), c)
+  c.gridy = 2
+  p.add(JLabel("SpinnerNumberModel: "), c)
+  c.gridx = 1
+  c.weightx = 1.0
+  c.fill = GridBagConstraints.HORIZONTAL
+  c.gridy = 0
+  p.add(spinner0, c)
+  c.gridy = 1
+  p.add(spinner1, c)
+  c.gridy = 2
+  p.add(spinner2, c)
+
+  return JPanel(BorderLayout()).also {
+    it.add(box, BorderLayout.NORTH)
+    it.add(p)
     EventQueue.invokeLater {
       val mb = JMenuBar()
       mb.add(LookAndFeelUtil.createLookAndFeelMenu())
-      rootPane.jMenuBar = mb
+      it.rootPane.jMenuBar = mb
     }
-    border = BorderFactory.createEmptyBorder(10, 5, 10, 5)
-    preferredSize = Dimension(320, 240)
+    it.border = BorderFactory.createEmptyBorder(10, 5, 10, 5)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-object LookAndFeelUtil {
-  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.getName()
+private object LookAndFeelUtil {
+  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
   fun createLookAndFeelMenu() = JMenu("LookAndFeel").also {
     val lafRadioGroup = ButtonGroup()
     for (lafInfo in UIManager.getInstalledLookAndFeels()) {
-      it.add(createLookAndFeelItem(lafInfo.getName(), lafInfo.getClassName(), lafRadioGroup))
+      it.add(createLookAndFeelItem(lafInfo.name, lafInfo.className, lafRadioGroup))
     }
   }
 
   private fun createLookAndFeelItem(lafName: String, lafClassName: String, lafRadioGroup: ButtonGroup): JMenuItem {
     val lafItem = JRadioButtonMenuItem(lafName, lafClassName == lookAndFeel)
-    lafItem.setActionCommand(lafClassName)
-    lafItem.setHideActionText(true)
+    lafItem.actionCommand = lafClassName
+    lafItem.hideActionText = true
     lafItem.addActionListener {
-      val m = lafRadioGroup.getSelection()
+      val m = lafRadioGroup.selection
       runCatching {
-        setLookAndFeel(m.getActionCommand())
+        setLookAndFeel(m.actionCommand)
       }.onFailure {
         it.printStackTrace()
         Toolkit.getDefaultToolkit().beep()
@@ -130,7 +132,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
