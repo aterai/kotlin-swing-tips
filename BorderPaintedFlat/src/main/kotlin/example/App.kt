@@ -3,65 +3,68 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout(5, 5)) {
-  init {
-    val box1 = Box.createVerticalBox()
-    box1.setBorder(BorderFactory.createTitledBorder("setBorderPainted: false"))
+fun makeUI(): Component {
+  val box1 = Box.createVerticalBox()
+  box1.border = BorderFactory.createTitledBorder("setBorderPainted: false")
 
-    val c0 = JCheckBox("setBorderPaintedFlat: false")
-    c0.setBorderPainted(false)
-    c0.setBorderPaintedFlat(false)
-    box1.add(c0)
-    box1.add(Box.createVerticalStrut(5))
+  val c0 = JCheckBox("setBorderPaintedFlat: false")
+  c0.isBorderPainted = false
+  c0.isBorderPaintedFlat = false
+  box1.add(c0)
+  box1.add(Box.createVerticalStrut(5))
 
-    val c1 = JCheckBox("setBorderPaintedFlat: true")
-    c1.setBorderPainted(false)
-    c1.setBorderPaintedFlat(true)
-    box1.add(c1)
+  val c1 = JCheckBox("setBorderPaintedFlat: true")
+  c1.isBorderPainted = false
+  c1.isBorderPaintedFlat = true
+  box1.add(c1)
 
-    val box2 = Box.createVerticalBox()
-    box2.setBorder(BorderFactory.createTitledBorder("setBorderPainted: true"))
+  val box2 = Box.createVerticalBox()
+  box2.border = BorderFactory.createTitledBorder("setBorderPainted: true")
 
-    val c2 = JCheckBox("setBorderPaintedFlat: true")
-    c2.setBorderPainted(true)
-    c2.setBorderPaintedFlat(true)
-    box2.add(c2)
-    box2.add(Box.createVerticalStrut(5))
+  val c2 = JCheckBox("setBorderPaintedFlat: true")
+  c2.isBorderPainted = true
+  c2.isBorderPaintedFlat = true
+  box2.add(c2)
+  box2.add(Box.createVerticalStrut(5))
 
-    val c3 = JCheckBox("setBorderPaintedFlat: false")
-    c3.setBorderPainted(true)
-    c3.setBorderPaintedFlat(false)
-    box2.add(c3)
-    box2.add(Box.createVerticalStrut(5))
+  val c3 = JCheckBox("setBorderPaintedFlat: false")
+  c3.isBorderPainted = true
+  c3.isBorderPaintedFlat = false
+  box2.add(c3)
+  box2.add(Box.createVerticalStrut(5))
 
-    val box = Box.createVerticalBox()
-    box.add(box1)
-    box.add(Box.createVerticalStrut(10))
-    box.add(box2)
-    add(box, BorderLayout.NORTH)
-    setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-    setPreferredSize(Dimension(320, 240))
+  val box = Box.createVerticalBox()
+  box.add(box1)
+  box.add(Box.createVerticalStrut(10))
+  box.add(box2)
+
+  return JPanel(BorderLayout(5, 5)).also {
+    val mb = JMenuBar()
+    mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+    EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
+    it.add(box, BorderLayout.NORTH)
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-// @see https://java.net/projects/swingset3/sources/svn/content/trunk/SwingSet3/src/com/sun/swingset3/SwingSet3.java
-internal object LookAndFeelUtil {
-  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.getName()
+private object LookAndFeelUtil {
+  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
   fun createLookAndFeelMenu() = JMenu("LookAndFeel").also {
     val lafRadioGroup = ButtonGroup()
     for (lafInfo in UIManager.getInstalledLookAndFeels()) {
-      it.add(createLookAndFeelItem(lafInfo.getName(), lafInfo.getClassName(), lafRadioGroup))
+      it.add(createLookAndFeelItem(lafInfo.name, lafInfo.className, lafRadioGroup))
     }
   }
 
   private fun createLookAndFeelItem(lafName: String, lafClassName: String, lafRadioGroup: ButtonGroup): JMenuItem {
     val lafItem = JRadioButtonMenuItem(lafName, lafClassName == lookAndFeel)
-    lafItem.setActionCommand(lafClassName)
-    lafItem.setHideActionText(true)
+    lafItem.actionCommand = lafClassName
+    lafItem.hideActionText = true
     lafItem.addActionListener {
-      val m = lafRadioGroup.getSelection()
+      val m = lafRadioGroup.selection
       runCatching {
-        setLookAndFeel(m.getActionCommand())
+        setLookAndFeel(m.actionCommand)
       }.onFailure {
         it.printStackTrace()
         Toolkit.getDefaultToolkit().beep()
@@ -83,7 +86,6 @@ internal object LookAndFeelUtil {
       UIManager.setLookAndFeel(lookAndFeel)
       LookAndFeelUtil.lookAndFeel = lookAndFeel
       updateLookAndFeel()
-      // firePropertyChange("lookAndFeel", oldLookAndFeel, lookAndFeel)
     }
   }
 
@@ -92,16 +94,19 @@ internal object LookAndFeelUtil {
       SwingUtilities.updateComponentTreeUI(window)
     }
   }
-} /* Singleton */
+}
 
 fun main() {
   EventQueue.invokeLater {
+    runCatching {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+    }.onFailure {
+      it.printStackTrace()
+      Toolkit.getDefaultToolkit().beep()
+    }
     JFrame().apply {
-      val mb = JMenuBar()
-      mb.add(LookAndFeelUtil.createLookAndFeelMenu())
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
-      setJMenuBar(mb)
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

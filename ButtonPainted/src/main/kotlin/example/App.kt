@@ -5,59 +5,60 @@ import java.awt.image.BufferedImage
 import java.awt.image.RescaleOp
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val p = JPanel()
-    val b1 = JButton("button")
-    val b2 = JButton()
-    val rss = ImageIcon(javaClass.getResource("feed-icon-14x14.png")) // http://feedicons.com/
-    b2.icon = rss
-    b2.rolloverIcon = makeRolloverIcon(rss)
-    p.add(b1)
-    p.add(b2)
-    p.border = BorderFactory.createEmptyBorder(20, 10, 20, 10)
-    val list = listOf(b1, b2)
+fun makeUI(): Component {
+  val p = JPanel()
+  val b1 = JButton("button")
+  val b2 = JButton()
+  val cl = Thread.currentThread().contextClassLoader
+  val rss = ImageIcon(cl.getResource("example/feed-icon-14x14.png")) // http://feedicons.com/
+  b2.icon = rss
+  b2.rolloverIcon = makeRolloverIcon(rss)
+  p.add(b1)
+  p.add(b2)
+  p.border = BorderFactory.createEmptyBorder(20, 10, 20, 10)
+  val list = listOf(b1, b2)
 
-    val focusPainted = JCheckBox("setFocusPainted", true)
-    focusPainted.addActionListener { e ->
-      val flg = (e.source as? JCheckBox)?.isSelected == true
-      list.forEach { it.isFocusPainted = flg }
-      p.revalidate()
-    }
+  val focusPainted = JCheckBox("setFocusPainted", true)
+  focusPainted.addActionListener { e ->
+    val flg = (e.source as? JCheckBox)?.isSelected == true
+    list.forEach { it.isFocusPainted = flg }
+    p.revalidate()
+  }
 
-    val borderPainted = JCheckBox("setBorderPainted", true)
-    borderPainted.addActionListener { e ->
-      val flg = (e.source as? JCheckBox)?.isSelected == true
-      list.forEach { it.isBorderPainted = flg }
-      p.revalidate()
-    }
+  val borderPainted = JCheckBox("setBorderPainted", true)
+  borderPainted.addActionListener { e ->
+    val flg = (e.source as? JCheckBox)?.isSelected == true
+    list.forEach { it.isBorderPainted = flg }
+    p.revalidate()
+  }
 
-    val contentAreaFilled = JCheckBox("setContentAreaFilled", true)
-    contentAreaFilled.addActionListener { e ->
-      val flg = (e.source as? JCheckBox)?.isSelected == true
-      list.forEach { it.isContentAreaFilled = flg }
-      p.revalidate()
-    }
+  val contentAreaFilled = JCheckBox("setContentAreaFilled", true)
+  contentAreaFilled.addActionListener { e ->
+    val flg = (e.source as? JCheckBox)?.isSelected == true
+    list.forEach { it.isContentAreaFilled = flg }
+    p.revalidate()
+  }
 
-    val rolloverEnabled = JCheckBox("setRolloverEnabled", true)
-    rolloverEnabled.addActionListener { e ->
-      val flg = (e.source as? JCheckBox)?.isSelected == true
-      list.forEach { it.isRolloverEnabled = flg }
-      p.revalidate()
-    }
+  val rolloverEnabled = JCheckBox("setRolloverEnabled", true)
+  rolloverEnabled.addActionListener { e ->
+    val flg = (e.source as? JCheckBox)?.isSelected == true
+    list.forEach { it.isRolloverEnabled = flg }
+    p.revalidate()
+  }
 
-    val box = Box.createVerticalBox()
-    listOf(focusPainted, borderPainted, contentAreaFilled, rolloverEnabled).forEach { box.add(it) }
-    add(box, BorderLayout.NORTH)
-    add(p)
+  val box = Box.createVerticalBox()
+  listOf(focusPainted, borderPainted, contentAreaFilled, rolloverEnabled).forEach { box.add(it) }
 
+  return JPanel(BorderLayout()).also {
     val mb = JMenuBar()
     mb.add(LookAndFeelUtil.createLookAndFeelMenu())
-    EventQueue.invokeLater { getRootPane().setJMenuBar(mb) }
-
-    border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-    preferredSize = Dimension(320, 240)
+    EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
+    it.add(box, BorderLayout.NORTH)
+    it.add(p)
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    it.preferredSize = Dimension(320, 240)
   }
+}
 
   private fun makeRolloverIcon(srcIcon: ImageIcon): ImageIcon {
     val w = srcIcon.iconWidth
@@ -71,25 +72,24 @@ class MainPanel : JPanel(BorderLayout()) {
     g2.dispose()
     return ImageIcon(op.filter(img, null))
   }
-}
 
-object LookAndFeelUtil {
-  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.getName()
+private object LookAndFeelUtil {
+  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
   fun createLookAndFeelMenu() = JMenu("LookAndFeel").also {
     val lafRadioGroup = ButtonGroup()
     for (lafInfo in UIManager.getInstalledLookAndFeels()) {
-      it.add(createLookAndFeelItem(lafInfo.getName(), lafInfo.getClassName(), lafRadioGroup))
+      it.add(createLookAndFeelItem(lafInfo.name, lafInfo.className, lafRadioGroup))
     }
   }
 
   private fun createLookAndFeelItem(lafName: String, lafClassName: String, lafRadioGroup: ButtonGroup): JMenuItem {
     val lafItem = JRadioButtonMenuItem(lafName, lafClassName == lookAndFeel)
-    lafItem.setActionCommand(lafClassName)
-    lafItem.setHideActionText(true)
+    lafItem.actionCommand = lafClassName
+    lafItem.hideActionText = true
     lafItem.addActionListener {
-      val m = lafRadioGroup.getSelection()
+      val m = lafRadioGroup.selection
       runCatching {
-        setLookAndFeel(m.getActionCommand())
+        setLookAndFeel(m.actionCommand)
       }.onFailure {
         it.printStackTrace()
         Toolkit.getDefaultToolkit().beep()
@@ -131,7 +131,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

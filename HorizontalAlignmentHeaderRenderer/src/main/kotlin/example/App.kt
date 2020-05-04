@@ -6,60 +6,64 @@ import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val table0 = makeTable()
-    (table0.tableHeader.defaultRenderer as? JLabel)?.horizontalAlignment = SwingConstants.CENTER
+fun makeUI(): Component {
+  val table0 = makeTable()
+  (table0.tableHeader.defaultRenderer as? JLabel)?.horizontalAlignment = SwingConstants.CENTER
 
-    val table1 = makeTable()
-    table1.tableHeader.defaultRenderer = object : DefaultTableCellRenderer() {
-      override fun getTableCellRendererComponent(
-        table: JTable,
-        value: Any?,
-        isSelected: Boolean,
-        hasFocus: Boolean,
-        row: Int,
-        column: Int
-      ): Component {
-        super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
-        horizontalAlignment = SwingConstants.CENTER
-        return this
-      }
+  val table1 = makeTable()
+  table1.tableHeader.defaultRenderer = object : DefaultTableCellRenderer() {
+    override fun getTableCellRendererComponent(
+      table: JTable,
+      value: Any?,
+      isSelected: Boolean,
+      hasFocus: Boolean,
+      row: Int,
+      column: Int
+    ): Component {
+      super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+      horizontalAlignment = SwingConstants.CENTER
+      return this
     }
-
-    val table2 = makeTable()
-    val cm = table2.columnModel
-    cm.getColumn(0).headerRenderer = HorizontalAlignmentHeaderRenderer(SwingConstants.LEFT)
-    cm.getColumn(1).headerRenderer = HorizontalAlignmentHeaderRenderer(SwingConstants.CENTER)
-    cm.getColumn(2).headerRenderer = HorizontalAlignmentHeaderRenderer(SwingConstants.RIGHT)
-
-    val tabs = JTabbedPane()
-    tabs.addTab("Default", JScrollPane(makeTable()))
-    tabs.addTab("Test0", JScrollPane(table0))
-    tabs.addTab("Test1", JScrollPane(table1))
-    tabs.addTab("Test2", JScrollPane(table2))
-    add(tabs)
-    preferredSize = Dimension(320, 240)
   }
 
-  private fun makeTable(): JTable {
-    val columnNames = arrayOf("String", "Integer", "Boolean")
-    val data = arrayOf(
-      arrayOf("aaa", 12, true),
-      arrayOf("bbb", 5, false),
-      arrayOf("CCC", 92, true),
-      arrayOf("DDD", 0, false)
-    )
-    val model = object : DefaultTableModel(data, columnNames) {
-      override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
-    }
-    val table = JTable(model)
-    table.autoCreateRowSorter = true
-    return table
+  val table2 = makeTable()
+  val cm = table2.columnModel
+  cm.getColumn(0).headerRenderer = HorizontalAlignmentHeaderRenderer(SwingConstants.LEFT)
+  cm.getColumn(1).headerRenderer = HorizontalAlignmentHeaderRenderer(SwingConstants.CENTER)
+  cm.getColumn(2).headerRenderer = HorizontalAlignmentHeaderRenderer(SwingConstants.RIGHT)
+
+  val tabs = JTabbedPane()
+  tabs.addTab("Default", JScrollPane(makeTable()))
+  tabs.addTab("Test0", JScrollPane(table0))
+  tabs.addTab("Test1", JScrollPane(table1))
+  tabs.addTab("Test2", JScrollPane(table2))
+
+  return JPanel(BorderLayout()).also {
+    val mb = JMenuBar()
+    mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+    EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
+    it.add(tabs)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class HorizontalAlignmentHeaderRenderer(private val horizontalAlignment: Int) : TableCellRenderer {
+private fun makeTable(): JTable {
+  val columnNames = arrayOf("String", "Integer", "Boolean")
+  val data = arrayOf(
+    arrayOf("aaa", 12, true),
+    arrayOf("bbb", 5, false),
+    arrayOf("CCC", 92, true),
+    arrayOf("DDD", 0, false)
+  )
+  val model = object : DefaultTableModel(data, columnNames) {
+    override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
+  }
+  val table = JTable(model)
+  table.autoCreateRowSorter = true
+  return table
+}
+
+private class HorizontalAlignmentHeaderRenderer(private val horizontalAlignment: Int) : TableCellRenderer {
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -75,23 +79,23 @@ class HorizontalAlignmentHeaderRenderer(private val horizontalAlignment: Int) : 
   }
 }
 
-object LookAndFeelUtil {
-  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.getName()
+private object LookAndFeelUtil {
+  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
   fun createLookAndFeelMenu() = JMenu("LookAndFeel").also {
     val lafRadioGroup = ButtonGroup()
     for (lafInfo in UIManager.getInstalledLookAndFeels()) {
-      it.add(createLookAndFeelItem(lafInfo.getName(), lafInfo.getClassName(), lafRadioGroup))
+      it.add(createLookAndFeelItem(lafInfo.name, lafInfo.className, lafRadioGroup))
     }
   }
 
   private fun createLookAndFeelItem(lafName: String, lafClassName: String, lafRadioGroup: ButtonGroup): JMenuItem {
     val lafItem = JRadioButtonMenuItem(lafName, lafClassName == lookAndFeel)
-    lafItem.setActionCommand(lafClassName)
-    lafItem.setHideActionText(true)
+    lafItem.actionCommand = lafClassName
+    lafItem.hideActionText = true
     lafItem.addActionListener {
-      val m = lafRadioGroup.getSelection()
+      val m = lafRadioGroup.selection
       runCatching {
-        setLookAndFeel(m.getActionCommand())
+        setLookAndFeel(m.actionCommand)
       }.onFailure {
         it.printStackTrace()
         Toolkit.getDefaultToolkit().beep()
@@ -122,16 +126,13 @@ object LookAndFeelUtil {
       SwingUtilities.updateComponentTreeUI(window)
     }
   }
-} /* Singleton */
+}
 
 fun main() {
   EventQueue.invokeLater {
     JFrame().apply {
-      val mb = JMenuBar()
-      mb.add(LookAndFeelUtil.createLookAndFeelMenu())
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
-      setJMenuBar(mb)
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

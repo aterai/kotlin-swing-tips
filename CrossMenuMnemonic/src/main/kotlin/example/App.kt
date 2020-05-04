@@ -4,28 +4,33 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.KeyEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel() {
-  init {
-    val key = "Menu.crossMenuMnemonic"
-    val b = UIManager.getBoolean(key)
-    println("$key: $b")
-    val check = object : JCheckBox(key, b) {
-      override fun updateUI() {
-        super.updateUI()
-        setSelected(UIManager.getLookAndFeelDefaults().getBoolean(key))
-        UIManager.put(key, isSelected())
-      }
+fun makeUI(): Component {
+  val key = "Menu.crossMenuMnemonic"
+  val b = UIManager.getBoolean(key)
+  println("$key: $b")
+
+  val check = object : JCheckBox(key, b) {
+    override fun updateUI() {
+      super.updateUI()
+      isSelected = UIManager.getLookAndFeelDefaults().getBoolean(key)
+      UIManager.put(key, isSelected)
     }
-    check.addActionListener { e ->
-      UIManager.put(key, (e.getSource() as? JCheckBox)?.isSelected() == true)
-      SwingUtilities.updateComponentTreeUI(getRootPane().getJMenuBar())
+  }
+  check.addActionListener { e ->
+    UIManager.put(key, (e.source as? JCheckBox)?.isSelected == true)
+    SwingUtilities.updateComponentTreeUI(check.rootPane.jMenuBar)
+  }
+
+  return JPanel().also {
+    EventQueue.invokeLater {
+      it.rootPane.jMenuBar = MenuBarUtil.createMenuBar()
     }
-    add(check)
-    setPreferredSize(Dimension(320, 240))
+    it.add(check)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-object MenuBarUtil {
+private object MenuBarUtil {
   fun createMenuBar(): JMenuBar {
     val mb = JMenuBar()
     mb.add(createFileMenu())
@@ -38,51 +43,50 @@ object MenuBarUtil {
 
   private fun createFileMenu(): JMenu {
     val menu = JMenu("File")
-    menu.setMnemonic(KeyEvent.VK_F)
-    menu.add("New").setMnemonic(KeyEvent.VK_N)
-    menu.add("Open").setMnemonic(KeyEvent.VK_O)
+    menu.mnemonic = KeyEvent.VK_F
+    menu.add("New").mnemonic = KeyEvent.VK_N
+    menu.add("Open").mnemonic = KeyEvent.VK_O
     return menu
   }
 
   private fun createEditMenu(): JMenu {
     val menu = JMenu("Edit")
-    menu.setMnemonic(KeyEvent.VK_E)
-    menu.add("Cut").setMnemonic(KeyEvent.VK_T)
-    menu.add("Copy").setMnemonic(KeyEvent.VK_C)
-    menu.add("Paste").setMnemonic(KeyEvent.VK_P)
-    menu.add("Delete").setMnemonic(KeyEvent.VK_D)
+    menu.mnemonic = KeyEvent.VK_E
+    menu.add("Cut").mnemonic = KeyEvent.VK_T
+    menu.add("Copy").mnemonic = KeyEvent.VK_C
+    menu.add("Paste").mnemonic = KeyEvent.VK_P
+    menu.add("Delete").mnemonic = KeyEvent.VK_D
     return menu
   }
 
   private fun createHelpMenu(): JMenu {
     val menu = JMenu("Help")
-    menu.setMnemonic(KeyEvent.VK_H)
-    menu.add("About").setMnemonic(KeyEvent.VK_A)
-    menu.add("Version").setMnemonic(KeyEvent.VK_V)
+    menu.mnemonic = KeyEvent.VK_H
+    menu.add("About").mnemonic = KeyEvent.VK_A
+    menu.add("Version").mnemonic = KeyEvent.VK_V
     return menu
   }
 }
 
-// @see https://java.net/projects/swingset3/sources/svn/content/trunk/SwingSet3/src/com/sun/swingset3/SwingSet3.java
-object LookAndFeelUtil {
-  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.getName()
+private object LookAndFeelUtil {
+  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
   fun createLookAndFeelMenu() = JMenu("LookAndFeel").also {
-    it.setMnemonic(KeyEvent.VK_L)
+    it.mnemonic = KeyEvent.VK_L
     val lafRadioGroup = ButtonGroup()
     for (lafInfo in UIManager.getInstalledLookAndFeels()) {
-      it.add(createLookAndFeelItem(lafInfo.getName(), lafInfo.getClassName(), lafRadioGroup))
+      it.add(createLookAndFeelItem(lafInfo.name, lafInfo.className, lafRadioGroup))
     }
   }
 
   private fun createLookAndFeelItem(lafName: String, lafClassName: String, lafRadioGroup: ButtonGroup): JMenuItem {
     val lafItem = JRadioButtonMenuItem(lafName, lafClassName == lookAndFeel)
-    lafItem.setActionCommand(lafClassName)
-    lafItem.setMnemonic(lafName.codePointAt(0))
-    lafItem.setHideActionText(true)
+    lafItem.actionCommand = lafClassName
+    lafItem.mnemonic = lafName.codePointAt(0)
+    lafItem.hideActionText = true
     lafItem.addActionListener {
-      val m = lafRadioGroup.getSelection()
+      val m = lafRadioGroup.selection
       runCatching {
-        setLookAndFeel(m.getActionCommand())
+        setLookAndFeel(m.actionCommand)
       }.onFailure {
         it.printStackTrace()
         Toolkit.getDefaultToolkit().beep()
@@ -113,7 +117,7 @@ object LookAndFeelUtil {
       SwingUtilities.updateComponentTreeUI(window)
     }
   }
-} /* Singleton */
+}
 
 fun main() {
   EventQueue.invokeLater {
@@ -125,8 +129,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
-      setJMenuBar(MenuBarUtil.createMenuBar())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
