@@ -17,7 +17,7 @@ fun makeUI(): Component {
   }
 
   val button = JButton("open")
-  button.addActionListener { e: ActionEvent ->
+  button.addActionListener { e ->
     val flg = check.isSelected
     UIManager.put("FileView.fullRowSelection", flg)
     val chooser = JFileChooser()
@@ -25,7 +25,7 @@ fun makeUI(): Component {
       ActionEvent(e.source, e.id, "viewTypeDetails"))
 
     descendants(chooser)
-      .filterIsInstance(JTable::class.java)
+      .filterIsInstance<JTable>()
       .firstOrNull()?.putClientProperty("Table.isFileList", !flg)
 
     val retValue = chooser.showOpenDialog(button.rootPane)
@@ -48,12 +48,14 @@ fun makeUI(): Component {
   }
 }
 
-fun descendants(parent: Container): List<Component> {
-  return parent.components.toList()
-    .filterIsInstance(Container::class.java)
-    .map { descendants(it) }
-    .fold(listOf<Component>(parent)) { a, b -> a + b }
-}
+fun descendants(parent: Container): List<Component> = parent.components
+  .filterIsInstance<Container>()
+  .flatMap { listOf(it) + descendants(it) }
+
+// fun descendants(parent: Container): List<Component> = parent.components
+//   .filterIsInstance<Container>()
+//   .map { descendants(it) }
+//   .fold(listOf<Component>(parent)) { a, b -> a + b }
 
 private object LookAndFeelUtil {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
