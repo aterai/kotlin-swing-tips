@@ -256,8 +256,10 @@ private object LookAndFeelUtil {
   }
 }
 
-private class HeaderCheckBoxHandler(val table: JTable, val targetColumnIndex: Int) : MouseAdapter(), TableModelListener {
-
+private class HeaderCheckBoxHandler(
+  val table: JTable,
+  val targetColumnIndex: Int
+) : MouseAdapter(), TableModelListener {
   override fun tableChanged(e: TableModelEvent) {
     if (e.type == TableModelEvent.UPDATE && e.column == targetColumnIndex) {
       val vci = table.convertColumnIndexToView(targetColumnIndex)
