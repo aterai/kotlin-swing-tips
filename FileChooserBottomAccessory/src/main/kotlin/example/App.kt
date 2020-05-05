@@ -113,7 +113,6 @@ object SwingUtils {
   fun descendants(parent: Container): List<Component> = parent.components
     .filterIsInstance<Container>()
     .flatMap { listOf(it) + descendants(it) }
-  // .map { children(it) }.fold(listOf<Component>(parent)) { a, b -> a + b }
 }
 
 fun main() {

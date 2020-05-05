@@ -104,7 +104,6 @@ private fun append(log: JTextArea, str: String) {
 
 fun descendants(parent: Container): List<Component> = parent.components
   .filterIsInstance<Container>()
-  // .map { children(it) }.fold(listOf<Component>(parent)) { a, b -> a + b }
   .flatMap { listOf(it) + descendants(it) }
 
 fun main() {

@@ -64,12 +64,9 @@ private fun descendants(parent: Container): List<Component> = parent.components
   .filterIsInstance<Container>()
   .flatMap { listOf(it) + descendants(it) }
 
-// private fun descendants(parent: Container): List<Component> {
-//   return parent.components.toList()
-//     .filterIsInstance(Container::class.java)
-//     .map { descendants(it) }
-//     .fold(listOf<Component>(parent)) { a, b -> a + b }
-// }
+// private fun descendants(parent: Container) = parent.components
+//   .filterIsInstance<Container>()
+//   .fold(listOf<Component>(parent)) { a, b -> a + b }
 
 private object TextureUtils {
   fun createCheckerTexture(cs: Int, color: Color?): TexturePaint {

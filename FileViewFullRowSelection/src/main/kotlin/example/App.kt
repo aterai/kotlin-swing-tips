@@ -52,9 +52,8 @@ fun descendants(parent: Container): List<Component> = parent.components
   .filterIsInstance<Container>()
   .flatMap { listOf(it) + descendants(it) }
 
-// fun descendants(parent: Container): List<Component> = parent.components
+// fun descendants(parent: Container) = parent.components
 //   .filterIsInstance<Container>()
-//   .map { descendants(it) }
 //   .fold(listOf<Component>(parent)) { a, b -> a + b }
 
 private object LookAndFeelUtil {

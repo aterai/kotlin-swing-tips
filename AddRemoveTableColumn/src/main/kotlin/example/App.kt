@@ -39,7 +39,6 @@ private class TableHeaderPopupMenu(table: JTable) : JPopupMenu() {
   }
 
   private fun descendants(me: MenuElement): List<MenuElement> =
-    // me.getSubElements().map { children(it) }.fold(listOf(me)) { a, b -> a + b }
     me.subElements.flatMap { listOf(it) + descendants(it) }
 
   init {
