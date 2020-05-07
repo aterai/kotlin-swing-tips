@@ -96,14 +96,16 @@ private class DisableItemComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(mod
       }
     }
     EventQueue.invokeLater {
+      val prevKey = "selectPrevious3"
+      val nextKey = "selectNext3"
       val am = actionMap
-      am.put("selectPrevious3", up)
-      am.put("selectNext3", down)
+      am.put(prevKey, up)
+      am.put(nextKey, down)
       val im = inputMap
-      im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "selectPrevious3")
-      im.put(KeyStroke.getKeyStroke(KeyEvent.VK_KP_UP, 0), "selectPrevious3")
-      im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "selectNext3")
-      im.put(KeyStroke.getKeyStroke(KeyEvent.VK_KP_DOWN, 0), "selectNext3")
+      im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), prevKey)
+      im.put(KeyStroke.getKeyStroke(KeyEvent.VK_KP_UP, 0), prevKey)
+      im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), nextKey)
+      im.put(KeyStroke.getKeyStroke(KeyEvent.VK_KP_DOWN, 0), nextKey)
     }
   }
 
