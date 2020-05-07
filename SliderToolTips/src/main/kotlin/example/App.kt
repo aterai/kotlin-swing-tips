@@ -9,6 +9,8 @@ import java.awt.event.MouseWheelListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.metal.MetalSliderUI
 
+private const val KEY = "Slider.onlyLeftMouseButtonDrag"
+
 fun makeUI(): Component {
   val slider1 = makeSlider()
   val slider2 = makeSlider()
@@ -61,7 +63,7 @@ private class WindowsTooltipSliderUI(slider: JSlider) : WindowsSliderUI(slider) 
   override fun createTrackListener(slider: JSlider?): TrackListener {
     return object : TrackListener() {
       override fun mousePressed(e: MouseEvent) {
-        if (UIManager.getBoolean("Slider.onlyLeftMouseButtonDrag") && SwingUtilities.isLeftMouseButton(e)) {
+        if (UIManager.getBoolean(KEY) && SwingUtilities.isLeftMouseButton(e)) {
           (e.component as? JSlider)?.also {
             if (it.orientation == SwingConstants.VERTICAL) {
               it.value = valueForYPosition(e.y)
@@ -85,7 +87,7 @@ private class MetalTooltipSliderUI : MetalSliderUI() {
   override fun createTrackListener(slider: JSlider?): TrackListener {
     return object : TrackListener() {
       override fun mousePressed(e: MouseEvent) {
-        if (UIManager.getBoolean("Slider.onlyLeftMouseButtonDrag") && SwingUtilities.isLeftMouseButton(e)) {
+        if (UIManager.getBoolean(KEY) && SwingUtilities.isLeftMouseButton(e)) {
           (e.component as? JSlider)?.also {
             if (it.orientation == SwingConstants.VERTICAL) {
               it.value = valueForYPosition(e.y)
@@ -138,7 +140,7 @@ private class SliderPopupListener : MouseAdapter() {
   }
 
   override fun mousePressed(e: MouseEvent) {
-    if (UIManager.getBoolean("Slider.onlyLeftMouseButtonDrag") && SwingUtilities.isLeftMouseButton(e)) {
+    if (UIManager.getBoolean(KEY) && SwingUtilities.isLeftMouseButton(e)) {
       toolTip.isVisible = true
       updateToolTip(e)
     }
