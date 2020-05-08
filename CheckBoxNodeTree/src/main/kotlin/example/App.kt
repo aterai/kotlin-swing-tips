@@ -11,38 +11,38 @@ import javax.swing.tree.TreeCellEditor
 import javax.swing.tree.TreeCellRenderer
 import javax.swing.tree.TreeNode
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val tree = object : JTree() {
-      override fun updateUI() {
-        setCellRenderer(null)
-        setCellEditor(null)
-        super.updateUI()
-        setCellRenderer(CheckBoxNodeRenderer())
-        setCellEditor(CheckBoxNodeEditor())
+fun makeUI(): Component {
+  val tree = object : JTree() {
+    override fun updateUI() {
+      setCellRenderer(null)
+      setCellEditor(null)
+      super.updateUI()
+      setCellRenderer(CheckBoxNodeRenderer())
+      setCellEditor(CheckBoxNodeEditor())
+    }
+  }
+  (tree.model.root as? DefaultMutableTreeNode)?.also { root ->
+    root.breadthFirstEnumeration().toList()
+      .filterIsInstance<DefaultMutableTreeNode>()
+      .filter { it.isLeaf }
+      .forEach {
+        val isEven = it.parent.getIndex(it) % 2 == 0
+        it.userObject = CheckBoxNode(it.userObject.toString(), isEven)
       }
-    }
-    (tree.getModel().getRoot() as? DefaultMutableTreeNode)?.also { root ->
-      root.breadthFirstEnumeration().toList()
-        .filterIsInstance<DefaultMutableTreeNode>()
-        .filter { it.isLeaf() }
-        .forEach {
-          val isEven = it.getParent().getIndex(it) % 2 == 0
-          it.setUserObject(CheckBoxNode(it.getUserObject().toString(), isEven))
-        }
-    }
-    tree.setEditable(true)
-    tree.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4))
-    for (i in 0 until tree.getRowCount()) {
-      tree.expandRow(i)
-    }
-    setBorder(BorderFactory.createTitledBorder("JCheckBoxes as JTree Leaf Nodes"))
-    add(JScrollPane(tree))
-    setPreferredSize(Dimension(320, 240))
+  }
+  tree.isEditable = true
+  tree.border = BorderFactory.createEmptyBorder(4, 4, 4, 4)
+  for (i in 0 until tree.rowCount) {
+    tree.expandRow(i)
+  }
+  return JPanel(BorderLayout()).also {
+    it.border = BorderFactory.createTitledBorder("JCheckBoxes as JTree Leaf Nodes")
+    it.add(JScrollPane(tree))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class CheckBoxNodeRenderer : TreeCellRenderer {
+private class CheckBoxNodeRenderer : TreeCellRenderer {
   private val checkBox = JCheckBox()
   private val renderer = DefaultTreeCellRenderer()
   override fun getTreeCellRendererComponent(
@@ -55,13 +55,13 @@ class CheckBoxNodeRenderer : TreeCellRenderer {
     hasFocus: Boolean
   ): Component {
     if (leaf && value is DefaultMutableTreeNode) {
-      checkBox.setEnabled(tree.isEnabled())
-      checkBox.setFont(tree.getFont())
-      checkBox.setOpaque(false)
-      checkBox.setFocusable(false)
-      (value.getUserObject() as? CheckBoxNode)?.also {
-        checkBox.setText(it.text)
-        checkBox.setSelected(it.selected)
+      checkBox.isEnabled = tree.isEnabled
+      checkBox.font = tree.font
+      checkBox.isOpaque = false
+      checkBox.isFocusable = false
+      (value.userObject as? CheckBoxNode)?.also {
+        checkBox.text = it.text
+        checkBox.isSelected = it.selected
       }
       return checkBox
     }
@@ -69,7 +69,7 @@ class CheckBoxNodeRenderer : TreeCellRenderer {
   }
 }
 
-class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
+private class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
   private val checkBox = object : JCheckBox() {
     @Transient
     private var handler: ActionListener? = null
@@ -77,8 +77,8 @@ class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
     override fun updateUI() {
       removeActionListener(handler)
       super.updateUI()
-      setOpaque(false)
-      setFocusable(false)
+      isOpaque = false
+      isFocusable = false
       handler = ActionListener { stopCellEditing() }
       addActionListener(handler)
     }
@@ -93,8 +93,8 @@ class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
     row: Int
   ): Component {
     if (leaf && value is DefaultMutableTreeNode) {
-      checkBox.setSelected((value.getUserObject() as? CheckBoxNode)?.selected == true)
-      checkBox.setText(value.toString())
+      checkBox.isSelected = (value.userObject as? CheckBoxNode)?.selected == true
+      checkBox.text = value.toString()
     }
     return checkBox
   }
@@ -102,11 +102,11 @@ class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
   override fun getCellEditorValue() = CheckBoxNode(checkBox.text, checkBox.isSelected)
 
   override fun isCellEditable(e: EventObject) = (e as? MouseEvent)
-    ?.let { it.getComponent() as? JTree }?.getPathForLocation(e.x, e.y)
-    ?.let { it.getLastPathComponent() as? TreeNode }?.isLeaf() == true
+    ?.let { it.component as? JTree }?.getPathForLocation(e.x, e.y)
+    ?.let { it.lastPathComponent as? TreeNode }?.isLeaf == true
 }
 
-data class CheckBoxNode(val text: String, val selected: Boolean) {
+private data class CheckBoxNode(val text: String, val selected: Boolean) {
   override fun toString() = text
 }
 
@@ -120,7 +120,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
