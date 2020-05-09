@@ -4,62 +4,62 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.TitledBorder
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val fileNameLabel = AlignedLabel("File Name:")
-    val filesOfTypeLabel = AlignedLabel("Files of Type:")
-    val hostLabel = AlignedLabel("Host:")
-    val portLabel = AlignedLabel("Port:")
-    val userLabel = AlignedLabel("User Name:")
-    val passwordLabel = AlignedLabel("Password:")
-    AlignedLabel.groupLabels(fileNameLabel, filesOfTypeLabel, hostLabel, portLabel, userLabel, passwordLabel)
+fun makeUI(): Component {
+  val fileNameLabel = AlignedLabel("File Name:")
+  val filesOfTypeLabel = AlignedLabel("Files of Type:")
+  val hostLabel = AlignedLabel("Host:")
+  val portLabel = AlignedLabel("Port:")
+  val userLabel = AlignedLabel("User Name:")
+  val passwordLabel = AlignedLabel("Password:")
+  AlignedLabel.groupLabels(fileNameLabel, filesOfTypeLabel, hostLabel, portLabel, userLabel, passwordLabel)
 
-    val innerBorder = BorderFactory.createEmptyBorder(5, 2, 5, 5)
+  val innerBorder = BorderFactory.createEmptyBorder(5, 2, 5, 5)
 
-    val box1 = Box.createVerticalBox()
-    val border1 = BorderFactory.createTitledBorder("FileChooser")
-    border1.setTitlePosition(TitledBorder.ABOVE_TOP)
-    box1.setBorder(BorderFactory.createCompoundBorder(border1, innerBorder))
-    box1.add(makeLabeledBox(fileNameLabel, JTextField()))
-    box1.add(Box.createVerticalStrut(5))
-    box1.add(makeLabeledBox(filesOfTypeLabel, JComboBox<String>()))
+  val box1 = Box.createVerticalBox()
+  val border1 = BorderFactory.createTitledBorder("FileChooser")
+  border1.titlePosition = TitledBorder.ABOVE_TOP
+  box1.border = BorderFactory.createCompoundBorder(border1, innerBorder)
+  box1.add(makeLabeledBox(fileNameLabel, JTextField()))
+  box1.add(Box.createVerticalStrut(5))
+  box1.add(makeLabeledBox(filesOfTypeLabel, JComboBox<String>()))
 
-    val box2 = Box.createVerticalBox()
-    val border2 = BorderFactory.createTitledBorder("HTTP Proxy")
-    border2.setTitlePosition(TitledBorder.ABOVE_TOP)
-    box2.setBorder(BorderFactory.createCompoundBorder(border2, innerBorder))
-    box2.add(makeLabeledBox(hostLabel, JTextField()))
-    box2.add(Box.createVerticalStrut(5))
-    box2.add(makeLabeledBox(portLabel, JTextField()))
-    box2.add(Box.createVerticalStrut(5))
-    box2.add(makeLabeledBox(userLabel, JTextField()))
-    box2.add(Box.createVerticalStrut(5))
-    box2.add(makeLabeledBox(passwordLabel, JPasswordField()))
+  val box2 = Box.createVerticalBox()
+  val border2 = BorderFactory.createTitledBorder("HTTP Proxy")
+  border2.titlePosition = TitledBorder.ABOVE_TOP
+  box2.border = BorderFactory.createCompoundBorder(border2, innerBorder)
+  box2.add(makeLabeledBox(hostLabel, JTextField()))
+  box2.add(Box.createVerticalStrut(5))
+  box2.add(makeLabeledBox(portLabel, JTextField()))
+  box2.add(Box.createVerticalStrut(5))
+  box2.add(makeLabeledBox(userLabel, JTextField()))
+  box2.add(Box.createVerticalStrut(5))
+  box2.add(makeLabeledBox(passwordLabel, JPasswordField()))
 
-    val box = Box.createVerticalBox()
-    box.add(box1)
-    box.add(Box.createVerticalStrut(10))
-    box.add(box2)
+  val box = Box.createVerticalBox()
+  box.add(box1)
+  box.add(Box.createVerticalStrut(10))
+  box.add(box2)
 
-    add(box, BorderLayout.NORTH)
-    setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-    setPreferredSize(Dimension(320, 240))
-  }
-
-  private fun makeLabeledBox(label: Component, c: Component) = Box.createHorizontalBox().also {
-    it.add(label)
-    it.add(Box.createHorizontalStrut(5))
-    it.add(c)
+  return JPanel(BorderLayout()).also {
+    it.add(box, BorderLayout.NORTH)
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
+private fun makeLabeledBox(label: Component, c: Component) = Box.createHorizontalBox().also {
+  it.add(label)
+  it.add(Box.createHorizontalStrut(5))
+  it.add(c)
+}
+
 // @see javax/swing/plaf/metal/MetalFileChooserUI.java
-class AlignedLabel(text: String) : JLabel(text) {
+private class AlignedLabel(text: String) : JLabel(text) {
   private var group = mutableListOf<AlignedLabel>()
   private var maxWidth = 0
 
   init {
-    setHorizontalAlignment(SwingConstants.RIGHT)
+    horizontalAlignment = SwingConstants.RIGHT
   }
 
   override fun getPreferredSize() = super.getPreferredSize()?.also {
@@ -100,7 +100,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
