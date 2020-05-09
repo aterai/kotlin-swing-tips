@@ -12,10 +12,14 @@ private val fc0 = JFileChooser()
 private val fc1 = JFileChooser()
 private val fc2 = object : JFileChooser() {
   override fun setCurrentDirectory(dir: File?) {
-    if (dir != null && !dir.exists()) {
-      super.setCurrentDirectory(dir.parentFile)
+    var current = dir
+    if (current != null && !isTraversable(current)) {
+      current = current.parentFile
+      while (current != null && !isTraversable(current)) {
+        current = current.parentFile
+      }
     }
-    super.setCurrentDirectory(dir)
+    super.setCurrentDirectory(current)
   }
 }
 
