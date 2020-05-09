@@ -5,43 +5,43 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val model = RowDataModel()
-    val table = object : JTable(model) {
-      private val evenColor = Color(0xFA_FA_FA)
-      override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
-        val c = super.prepareRenderer(tcr, row, column)
-        if (isRowSelected(row)) {
-          c.setForeground(getSelectionForeground())
-          c.setBackground(getSelectionBackground())
-        } else {
-          c.setForeground(getForeground())
-          c.setBackground(if (row % 2 == 0) evenColor else getBackground())
-        }
-        return c
+fun makeUI(): Component {
+  val model = RowDataModel()
+  val table = object : JTable(model) {
+    private val evenColor = Color(0xFA_FA_FA)
+    override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
+      val c = super.prepareRenderer(tcr, row, column)
+      if (isRowSelected(row)) {
+        c.foreground = getSelectionForeground()
+        c.background = getSelectionBackground()
+      } else {
+        c.foreground = foreground
+        c.background = if (row % 2 == 0) evenColor else background
       }
+      return c
     }
-    val col = table.getColumnModel().getColumn(0)
-    col.setMinWidth(60)
-    col.setMaxWidth(60)
-    col.setResizable(false)
-    model.addRowData(RowData("Name 1", "comment..."))
-    model.addRowData(RowData("Name 2", "Test"))
-    model.addRowData(RowData("Name d", "ee"))
-    model.addRowData(RowData("Name c", "Test cc"))
-    model.addRowData(RowData("Name b", "Test bb"))
-    model.addRowData(RowData("Name a", "ff"))
-    model.addRowData(RowData("Name 0", "Test aa"))
-    table.setAutoCreateRowSorter(true)
-    table.setFillsViewportHeight(true)
-    table.setComponentPopupMenu(TablePopupMenu())
-    add(JScrollPane(table))
-    setPreferredSize(Dimension(320, 240))
+  }
+  val col = table.columnModel.getColumn(0)
+  col.minWidth = 60
+  col.maxWidth = 60
+  col.resizable = false
+  model.addRowData(RowData("Name 1", "comment..."))
+  model.addRowData(RowData("Name 2", "Test"))
+  model.addRowData(RowData("Name d", "ee"))
+  model.addRowData(RowData("Name c", "Test cc"))
+  model.addRowData(RowData("Name b", "Test bb"))
+  model.addRowData(RowData("Name a", "ff"))
+  model.addRowData(RowData("Name 0", "Test aa"))
+  table.autoCreateRowSorter = true
+  table.fillsViewportHeight = true
+  table.componentPopupMenu = TablePopupMenu()
+  return JPanel(BorderLayout()).also {
+    it.add(JScrollPane(table))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class RowDataModel : DefaultTableModel() {
+private class RowDataModel : DefaultTableModel() {
   private var number = 0
   fun addRowData(t: RowData) {
     val obj = arrayOf(number, t.name, t.comment)
@@ -72,23 +72,23 @@ class RowDataModel : DefaultTableModel() {
   }
 }
 
-data class RowData(val name: String, val comment: String)
+private data class RowData(val name: String, val comment: String)
 
-class TablePopupMenu : JPopupMenu() {
+private class TablePopupMenu : JPopupMenu() {
   private val delete: JMenuItem
   override fun show(c: Component, x: Int, y: Int) {
     if (c is JTable) {
-      delete.setEnabled(c.getSelectedRowCount() > 0)
+      delete.isEnabled = c.selectedRowCount > 0
       super.show(c, x, y)
     }
   }
 
   init {
     add("add").addActionListener {
-      (getInvoker() as? JTable)?.also { table ->
-        (table.getModel() as? RowDataModel)?.also { model ->
+      (invoker as? JTable)?.also { table ->
+        (table.model as? RowDataModel)?.also { model ->
           model.addRowData(RowData("New row", ""))
-          val r = table.getCellRect(model.getRowCount() - 1, 0, true)
+          val r = table.getCellRect(model.rowCount - 1, 0, true)
           table.scrollRectToVisible(r)
         }
       }
@@ -96,9 +96,9 @@ class TablePopupMenu : JPopupMenu() {
     addSeparator()
     delete = add("delete")
     delete.addActionListener {
-      (getInvoker() as? JTable)?.also { table ->
-        (table.getModel() as? RowDataModel)?.also { model ->
-          val selection = table.getSelectedRows()
+      (invoker as? JTable)?.also { table ->
+        (table.model as? RowDataModel)?.also { model ->
+          val selection = table.selectedRows
           for (i in selection.indices.reversed()) {
             model.removeRow(table.convertRowIndexToModel(selection[i]))
           }
@@ -118,7 +118,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
