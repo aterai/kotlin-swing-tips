@@ -9,38 +9,37 @@ import javax.swing.text.StyleContext
 import javax.swing.text.TabSet
 import javax.swing.text.TabStop
 
-class MainPanel : JPanel(BorderLayout()) {
-  private val columnNames = arrayOf("String", "Double", "ALIGN_DECIMAL")
-  private val data = arrayOf(
+fun makeUI(): Component {
+  val columnNames = arrayOf("String", "Double", "ALIGN_DECIMAL")
+  val data = arrayOf(
     arrayOf("aaa", 1.4142, 1.4142),
     arrayOf("bbb", 98.765, 98.765),
     arrayOf("CCC", 1.73, 1.73),
     arrayOf("DDD", 0.0, 0.0)
   )
-  private val model = object : DefaultTableModel(data, columnNames) {
+  val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
-
-  init {
-    val table: JTable = object : JTable(model) {
-      override fun updateUI() {
-        super.updateUI()
-        getColumnModel().getColumn(2).setCellRenderer(AlignDecimalCellRenderer())
-      }
+  val table = object : JTable(model) {
+    override fun updateUI() {
+      super.updateUI()
+      getColumnModel().getColumn(2).cellRenderer = AlignDecimalCellRenderer()
+      autoCreateRowSorter = true
+      rowSelectionAllowed = true
+      fillsViewportHeight = true
+      showVerticalLines = false
+      showHorizontalLines = false
+      isFocusable = false
+      intercellSpacing = Dimension()
     }
-    table.setAutoCreateRowSorter(true)
-    table.setRowSelectionAllowed(true)
-    table.setFillsViewportHeight(true)
-    table.setShowVerticalLines(false)
-    table.setShowHorizontalLines(false)
-    table.setFocusable(false)
-    table.setIntercellSpacing(Dimension())
-    add(JScrollPane(table))
-    setPreferredSize(Dimension(320, 240))
+  }
+  return JPanel(BorderLayout()).also {
+    it.add(JScrollPane(table))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class AlignDecimalCellRenderer : TableCellRenderer {
+private class AlignDecimalCellRenderer : TableCellRenderer {
   private val panel = JPanel(BorderLayout())
   private val textPane: JTextPane = object : JTextPane() {
     override fun getPreferredSize() = super.getPreferredSize().also {
@@ -49,7 +48,7 @@ class AlignDecimalCellRenderer : TableCellRenderer {
 
     override fun updateUI() {
       super.updateUI()
-      setOpaque(false)
+      isOpaque = false
       putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true)
       EventQueue.invokeLater {
         val attr = getStyle(StyleContext.DEFAULT_STYLE)
@@ -68,14 +67,14 @@ class AlignDecimalCellRenderer : TableCellRenderer {
     row: Int,
     column: Int
   ): Component {
-    textPane.setFont(table.getFont())
-    textPane.setText("\t" + value?.toString())
+    textPane.font = table.font
+    textPane.text = "\t" + value?.toString()
     if (isSelected) {
-      textPane.setForeground(table.getSelectionForeground())
-      panel.setBackground(table.getSelectionBackground())
+      textPane.foreground = table.selectionForeground
+      panel.background = table.selectionBackground
     } else {
-      textPane.setForeground(table.getForeground())
-      panel.setBackground(table.getBackground())
+      textPane.foreground = table.foreground
+      panel.background = table.background
     }
     panel.add(textPane, BorderLayout.EAST)
     return panel
@@ -92,7 +91,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
