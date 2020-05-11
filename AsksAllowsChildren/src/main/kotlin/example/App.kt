@@ -8,61 +8,64 @@ import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreePath
 
-class MainPanel : JPanel(GridLayout(1, 2)) {
-  init {
-    val t = JTree(makeDefaultTreeModel())
-    t.setComponentPopupMenu(TreePopupMenu())
-    add(makeTitledPanel("Default", JScrollPane(t)))
+fun makeUI(): Component {
+  val t = JTree(makeDefaultTreeModel())
+  t.componentPopupMenu = TreePopupMenu()
 
-    val model = makeDefaultTreeModel()
-    val tree = JTree(model)
-    tree.setComponentPopupMenu(TreePopupMenu())
-    // model.setAsksAllowsChildren(true);
-    val check = JCheckBox("setAsksAllowsChildren")
-    check.addActionListener { e ->
-      model.setAsksAllowsChildren((e.getSource() as? JCheckBox)?.isSelected() ?: false)
-      tree.repaint()
-    }
-    val p = JPanel(BorderLayout())
-    p.add(JScrollPane(tree))
-    p.add(check, BorderLayout.SOUTH)
-    add(makeTitledPanel("setAsksAllowsChildren", p))
-    setPreferredSize(Dimension(320, 240))
+  val model = makeDefaultTreeModel()
+  val tree = JTree(model)
+  tree.componentPopupMenu = TreePopupMenu()
+  // model.setAsksAllowsChildren(true);
+
+  val check = JCheckBox("setAsksAllowsChildren")
+  check.addActionListener { e ->
+    model.setAsksAllowsChildren((e.source as? JCheckBox)?.isSelected ?: false)
+    tree.repaint()
   }
 
-  private fun makeTitledPanel(title: String, c: Component): Component {
-    val p = JPanel(BorderLayout())
-    p.setBorder(BorderFactory.createTitledBorder(title))
-    p.add(c)
-    return p
-  }
+  val p = JPanel(BorderLayout())
+  p.add(JScrollPane(tree))
+  p.add(check, BorderLayout.SOUTH)
 
-  private fun makeDefaultTreeModel(): DefaultTreeModel {
-    val root = DefaultMutableTreeNode("Root")
-    root.add(DefaultMutableTreeNode("colors").also {
-      it.add(DefaultMutableTreeNode("blue", false))
-      it.add(DefaultMutableTreeNode("violet", false))
-      it.add(DefaultMutableTreeNode("red", false))
-      it.add(DefaultMutableTreeNode("yellow", false))
-    })
-    root.add(DefaultMutableTreeNode("sports").also {
-      it.add(DefaultMutableTreeNode("basketball", false))
-      it.add(DefaultMutableTreeNode("soccer", false))
-      it.add(DefaultMutableTreeNode("football", false))
-      it.add(DefaultMutableTreeNode("hockey", false))
-    })
-    root.add(DefaultMutableTreeNode("food").also {
-      it.add(DefaultMutableTreeNode("hot dogs", false))
-      it.add(DefaultMutableTreeNode("pizza", false))
-      it.add(DefaultMutableTreeNode("ravioli", false))
-      it.add(DefaultMutableTreeNode("bananas", false))
-    })
-    root.add(DefaultMutableTreeNode("test"))
-    return DefaultTreeModel(root)
+  return JPanel(GridLayout(1, 2)).also {
+    it.add(makeTitledPanel("Default", JScrollPane(t)))
+    it.add(makeTitledPanel("setAsksAllowsChildren", p))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class TreePopupMenu : JPopupMenu() {
+private fun makeTitledPanel(title: String, c: Component): Component {
+  val p = JPanel(BorderLayout())
+  p.border = BorderFactory.createTitledBorder(title)
+  p.add(c)
+  return p
+}
+
+private fun makeDefaultTreeModel(): DefaultTreeModel {
+  val root = DefaultMutableTreeNode("Root")
+  root.add(DefaultMutableTreeNode("colors").also {
+    it.add(DefaultMutableTreeNode("blue", false))
+    it.add(DefaultMutableTreeNode("violet", false))
+    it.add(DefaultMutableTreeNode("red", false))
+    it.add(DefaultMutableTreeNode("yellow", false))
+  })
+  root.add(DefaultMutableTreeNode("sports").also {
+    it.add(DefaultMutableTreeNode("basketball", false))
+    it.add(DefaultMutableTreeNode("soccer", false))
+    it.add(DefaultMutableTreeNode("football", false))
+    it.add(DefaultMutableTreeNode("hockey", false))
+  })
+  root.add(DefaultMutableTreeNode("food").also {
+    it.add(DefaultMutableTreeNode("hot dogs", false))
+    it.add(DefaultMutableTreeNode("pizza", false))
+    it.add(DefaultMutableTreeNode("ravioli", false))
+    it.add(DefaultMutableTreeNode("bananas", false))
+  })
+  root.add(DefaultMutableTreeNode("test"))
+  return DefaultTreeModel(root)
+}
+
+private class TreePopupMenu : JPopupMenu() {
   private val textField = object : JTextField(24) {
     @Transient
     private var listener: AncestorListener? = null
@@ -80,49 +83,49 @@ class TreePopupMenu : JPopupMenu() {
 
   init {
     addFolderItem.addActionListener {
-      (getInvoker() as? JTree)?.also { tree ->
-        (tree.getModel() as? DefaultTreeModel)?.also { model ->
-          (path?.getLastPathComponent() as? DefaultMutableTreeNode)?.also { parent ->
+      (invoker as? JTree)?.also { tree ->
+        (tree.model as? DefaultTreeModel)?.also { model ->
+          (path?.lastPathComponent as? DefaultMutableTreeNode)?.also { parent ->
             val child = DefaultMutableTreeNode("New Folder", true)
-            child.setAllowsChildren(true)
-            model.insertNodeInto(child, parent, parent.getChildCount())
-            tree.scrollPathToVisible(TreePath(child.getPath()))
+            child.allowsChildren = true
+            model.insertNodeInto(child, parent, parent.childCount)
+            tree.scrollPathToVisible(TreePath(child.path))
           }
         }
       }
     }
 
     addNodeItem.addActionListener {
-      (getInvoker() as? JTree)?.also { tree ->
-        (tree.getModel() as? DefaultTreeModel)?.also { model ->
-          (path?.getLastPathComponent() as? DefaultMutableTreeNode)?.also { parent ->
+      (invoker as? JTree)?.also { tree ->
+        (tree.model as? DefaultTreeModel)?.also { model ->
+          (path?.lastPathComponent as? DefaultMutableTreeNode)?.also { parent ->
             val child = DefaultMutableTreeNode("New Item", false)
             // child.setAllowsChildren(false)
-            model.insertNodeInto(child, parent, parent.getChildCount())
-            tree.scrollPathToVisible(TreePath(child.getPath()))
+            model.insertNodeInto(child, parent, parent.childCount)
+            tree.scrollPathToVisible(TreePath(child.path))
           }
         }
       }
     }
 
     add("edit").addActionListener {
-      val node = path?.getLastPathComponent()
+      val node = path?.lastPathComponent
       if (node is DefaultMutableTreeNode) {
-        textField.setText(node.getUserObject()?.toString())
-        val tree = getInvoker() as? JTree ?: return@addActionListener
+        textField.text = node.userObject?.toString()
+        val tree = invoker as? JTree ?: return@addActionListener
         val ret = JOptionPane.showConfirmDialog(
           tree, textField, "edit", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
         )
         if (ret == JOptionPane.OK_OPTION) {
-          tree.getModel().valueForPathChanged(path, textField.getText())
+          tree.model.valueForPathChanged(path, textField.text)
         }
       }
     }
     addSeparator()
     add("remove").addActionListener {
-      val node = path?.getLastPathComponent()
-      if (node is DefaultMutableTreeNode && !node.isRoot()) {
-        ((getInvoker() as? JTree)?.getModel() as? DefaultTreeModel)?.removeNodeFromParent(node)
+      val node = path?.lastPathComponent
+      if (node is DefaultMutableTreeNode && !node.isRoot) {
+        ((invoker as? JTree)?.model as? DefaultTreeModel)?.removeNodeFromParent(node)
       }
     }
   }
@@ -131,10 +134,10 @@ class TreePopupMenu : JPopupMenu() {
     if (c is JTree) {
       path = c.getPathForLocation(x, y)
       path?.also { treePath ->
-        (treePath.getLastPathComponent() as? DefaultMutableTreeNode)?.also { node ->
-          val flag = node.getAllowsChildren()
-          addFolderItem.setEnabled(flag)
-          addNodeItem.setEnabled(flag)
+        (treePath.lastPathComponent as? DefaultMutableTreeNode)?.also { node ->
+          val flag = node.allowsChildren
+          addFolderItem.isEnabled = flag
+          addNodeItem.isEnabled = flag
           super.show(c, x, y)
         }
       }
@@ -142,9 +145,9 @@ class TreePopupMenu : JPopupMenu() {
   }
 }
 
-class FocusAncestorListener : AncestorListener {
+private class FocusAncestorListener : AncestorListener {
   override fun ancestorAdded(e: AncestorEvent) {
-    e.getComponent().requestFocusInWindow()
+    e.component.requestFocusInWindow()
   }
 
   override fun ancestorMoved(e: AncestorEvent) {
@@ -166,7 +169,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
