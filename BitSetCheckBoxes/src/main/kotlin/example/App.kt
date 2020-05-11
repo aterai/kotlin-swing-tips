@@ -8,106 +8,102 @@ import javax.swing.undo.AbstractUndoableEdit
 import javax.swing.undo.UndoManager
 import javax.swing.undo.UndoableEditSupport
 
-class MainPanel : JPanel(BorderLayout()) {
-  private var status = BitSet.valueOf(longArrayOf(java.lang.Long.valueOf("111000111", 2)))
-  @Transient
-  private val undoSupport = UndoableEditSupport()
-  private val label = JLabel(print(status))
-  private val panel = JPanel(GridLayout(0, 8))
-  private val um = UndoManager()
-  private val undoAction = UndoAction(um)
-  private val redoAction = RedoAction(um)
-  private val selectAllAction = object : AbstractAction("select all") {
-    override fun actionPerformed(e: ActionEvent) {
-      val newValue = BitSet(BIT_LENGTH)
-      newValue.set(0, BIT_LENGTH, true)
-      undoSupport.postEdit(StatusEdit(status, newValue))
-      updateCheckBoxes(newValue)
-    }
+private const val BIT_LENGTH = 72
+private val ZERO_PAD = "0".repeat(BIT_LENGTH)
+
+private var status = BitSet.valueOf(longArrayOf(java.lang.Long.valueOf("111000111", 2)))
+
+@Transient
+private val undoSupport = UndoableEditSupport()
+private val label = JLabel(print(status))
+private val panel = JPanel(GridLayout(0, 8))
+private val um = UndoManager()
+private val undoAction = UndoAction(um)
+private val redoAction = RedoAction(um)
+private val selectAllAction = object : AbstractAction("select all") {
+  override fun actionPerformed(e: ActionEvent) {
+    val newValue = BitSet(BIT_LENGTH)
+    newValue.set(0, BIT_LENGTH, true)
+    undoSupport.postEdit(StatusEdit(status, newValue))
+    updateCheckBoxes(newValue)
   }
-  private val clearAllAction = object : AbstractAction("clear all") {
-    override fun actionPerformed(e: ActionEvent) {
-      val newValue = BitSet(BIT_LENGTH)
-      undoSupport.postEdit(StatusEdit(status, newValue))
-      updateCheckBoxes(newValue)
-    }
-  }
-
-  init {
-    undoSupport.addUndoableEditListener(um)
-    val box = Box.createHorizontalBox().also {
-      it.add(Box.createHorizontalGlue())
-      it.add(JButton(undoAction))
-      it.add(Box.createHorizontalStrut(2))
-      it.add(JButton(redoAction))
-      it.add(Box.createHorizontalStrut(2))
-      it.add(JButton(selectAllAction))
-      it.add(Box.createHorizontalStrut(2))
-      it.add(JButton(clearAllAction))
-      it.add(Box.createHorizontalStrut(2))
-    }
-
-    for (i in 0 until BIT_LENGTH) {
-      val c = JCheckBox(i.toString(), status.get(i))
-      c.addActionListener { e ->
-        val v = (e.getSource() as? JCheckBox)?.isSelected() ?: false
-        val newValue = status.get(0, BIT_LENGTH)
-        newValue.set(i, v)
-        undoSupport.postEdit(StatusEdit(status, newValue))
-        status = newValue
-        label.setText(print(status))
-      }
-      panel.add(c)
-    }
-
-    label.setFont(label.getFont().deriveFont(8f))
-
-    add(label, BorderLayout.NORTH)
-    add(JScrollPane(panel))
-    add(box, BorderLayout.SOUTH)
-    setPreferredSize(Dimension(320, 240))
-  }
-
-  fun updateCheckBoxes(value: BitSet) {
-    status = value
-    for (i in 0 until BIT_LENGTH) {
-      (panel.getComponent(i) as? JCheckBox)?.setSelected(status.get(i))
-    }
-    label.setText(print(status))
-  }
-
-  inner class StatusEdit(private val oldValue: BitSet, private val newValue: BitSet) : AbstractUndoableEdit() {
-    override fun undo() { // throws CannotUndoException {
-      super.undo()
-      updateCheckBoxes(oldValue)
-    }
-
-    override fun redo() { // throws CannotRedoException {
-      super.redo()
-      updateCheckBoxes(newValue)
-    }
-  }
-
-  private fun print(bitSet: BitSet): String {
-    val buf = StringBuilder()
-    for (lv in bitSet.toLongArray()) {
-      buf.insert(0, java.lang.Long.toUnsignedString(lv, 2))
-    }
-    val b = buf.toString()
-    val count = bitSet.cardinality()
-    return "<html>0b" + ZEROPAD.substring(b.length) + b + "<br/> count: " + count
-  }
-
-  companion object {
-    // Long.MAX_VALUE
-    // 0b111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111
-    // const val BIT_LENGTH = 63;
-    const val BIT_LENGTH = 72
-    val ZEROPAD = "0".repeat(BIT_LENGTH)
+}
+private val clearAllAction = object : AbstractAction("clear all") {
+  override fun actionPerformed(e: ActionEvent) {
+    val newValue = BitSet(BIT_LENGTH)
+    undoSupport.postEdit(StatusEdit(status, newValue))
+    updateCheckBoxes(newValue)
   }
 }
 
-class UndoAction(private val um: UndoManager) : AbstractAction("undo") {
+fun makeUI(): Component {
+  undoSupport.addUndoableEditListener(um)
+  val box = Box.createHorizontalBox().also {
+    it.add(Box.createHorizontalGlue())
+    it.add(JButton(undoAction))
+    it.add(Box.createHorizontalStrut(2))
+    it.add(JButton(redoAction))
+    it.add(Box.createHorizontalStrut(2))
+    it.add(JButton(selectAllAction))
+    it.add(Box.createHorizontalStrut(2))
+    it.add(JButton(clearAllAction))
+    it.add(Box.createHorizontalStrut(2))
+  }
+
+  for (i in 0 until BIT_LENGTH) {
+    val c = JCheckBox(i.toString(), status.get(i))
+    c.addActionListener { e ->
+      val v = (e.source as? JCheckBox)?.isSelected ?: false
+      val newValue = status.get(0, BIT_LENGTH)
+      newValue.set(i, v)
+      undoSupport.postEdit(StatusEdit(status, newValue))
+      status = newValue
+      label.text = print(status)
+    }
+    panel.add(c)
+  }
+
+  label.font = label.font.deriveFont(8f)
+
+  return JPanel(BorderLayout()).also {
+    it.add(label, BorderLayout.NORTH)
+    it.add(JScrollPane(panel))
+    it.add(box, BorderLayout.SOUTH)
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
+fun updateCheckBoxes(value: BitSet) {
+  status = value
+  for (i in 0 until BIT_LENGTH) {
+    (panel.getComponent(i) as? JCheckBox)?.isSelected = status.get(i)
+  }
+  label.text = print(status)
+}
+
+private class StatusEdit(private val oldValue: BitSet, private val newValue: BitSet) : AbstractUndoableEdit() {
+  override fun undo() { // throws CannotUndoException {
+    super.undo()
+    updateCheckBoxes(oldValue)
+  }
+
+  override fun redo() { // throws CannotRedoException {
+    super.redo()
+    updateCheckBoxes(newValue)
+  }
+}
+
+private fun print(bitSet: BitSet): String {
+  val buf = StringBuilder()
+  for (lv in bitSet.toLongArray()) {
+    buf.insert(0, java.lang.Long.toUnsignedString(lv, 2))
+  }
+  val b = buf.toString()
+  val count = bitSet.cardinality()
+  return "<html>0b" + ZERO_PAD.substring(b.length) + b + "<br/> count: " + count
+}
+
+private class UndoAction(private val um: UndoManager) : AbstractAction("undo") {
   override fun actionPerformed(e: ActionEvent) {
     if (um.canUndo()) {
       um.undo()
@@ -115,7 +111,7 @@ class UndoAction(private val um: UndoManager) : AbstractAction("undo") {
   }
 }
 
-class RedoAction(private val um: UndoManager) : AbstractAction("redo") {
+private class RedoAction(private val um: UndoManager) : AbstractAction("redo") {
   override fun actionPerformed(e: ActionEvent) {
     if (um.canRedo()) {
       um.redo()
@@ -133,7 +129,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
