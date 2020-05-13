@@ -3,12 +3,11 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
+fun makeUI(): Component {
     val bg = ToggleButtonGroup()
     val p = JPanel()
     listOf("A", "B", "C").map(::JToggleButton).forEach {
-      it.setActionCommand(it.getText())
+      it.actionCommand = it.text
       p.add(it)
       bg.add(it)
     }
@@ -16,9 +15,9 @@ class MainPanel : JPanel(BorderLayout()) {
     val label = JLabel()
     val button = JButton("check")
     button.addActionListener {
-      label.setText(bg.getSelection()?.let {
-        """"${it.getActionCommand()}" isSelected."""
-      } ?: "Please select one of the option above.")
+      label.text = bg.selection?.let {
+        """"${it.actionCommand}" isSelected."""
+      } ?: "Please select one of the option above."
     }
 
     val box = Box.createHorizontalBox()
@@ -27,14 +26,15 @@ class MainPanel : JPanel(BorderLayout()) {
     box.add(button, BorderLayout.WEST)
     box.add(Box.createHorizontalStrut(5))
 
-    add(p)
-    add(box, BorderLayout.SOUTH)
-    setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-    setPreferredSize(Dimension(320, 240))
+  return JPanel(BorderLayout()).also {
+    it.add(p)
+    it.add(box, BorderLayout.SOUTH)
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-internal class ToggleButtonGroup : ButtonGroup() {
+private class ToggleButtonGroup : ButtonGroup() {
   private var prevModel: ButtonModel? = null
   private var isAdjusting = false
   override fun setSelected(m: ButtonModel?, b: Boolean) {
@@ -48,7 +48,7 @@ internal class ToggleButtonGroup : ButtonGroup() {
     } else {
       super.setSelected(m, b)
     }
-    prevModel = getSelection()
+    prevModel = selection
   }
 }
 
@@ -62,7 +62,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
