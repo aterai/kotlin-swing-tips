@@ -9,93 +9,91 @@ import javax.swing.plaf.LayerUI
 import javax.swing.tree.MutableTreeNode
 import javax.swing.tree.TreePath
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val breadcrumb = makeContainer(10 + 1)
-    val tree = JTree()
-    tree.setSelectionRow(0)
-    tree.addTreeSelectionListener {
-      val o = tree.lastSelectedPathComponent
-      if (o is MutableTreeNode && !o.isLeaf) {
-        initBreadcrumbList(breadcrumb, tree)
-        breadcrumb.revalidate()
-        breadcrumb.repaint()
-      }
+fun makeUI(): Component {
+  val breadcrumb = makeContainer(10 + 1)
+  val tree = JTree()
+  tree.setSelectionRow(0)
+  tree.addTreeSelectionListener {
+    val o = tree.lastSelectedPathComponent
+    if (o is MutableTreeNode && !o.isLeaf) {
+      initBreadcrumbList(breadcrumb, tree)
+      breadcrumb.revalidate()
+      breadcrumb.repaint()
     }
-    initBreadcrumbList(breadcrumb, tree)
-    add(JLayer(breadcrumb, BreadcrumbLayerUI<Component>()), BorderLayout.NORTH)
+  }
+  initBreadcrumbList(breadcrumb, tree)
+  return JPanel(BorderLayout()).also {
+    it.add(JLayer(breadcrumb, BreadcrumbLayerUI<Component>()), BorderLayout.NORTH)
     val c = makeBreadcrumbList(listOf("aaa", "bb", "c"))
-    add(c, BorderLayout.SOUTH)
-    add(JScrollPane(tree))
-    preferredSize = Dimension(320, 240)
+    it.add(c, BorderLayout.SOUTH)
+    it.add(JScrollPane(tree))
+    it.preferredSize = Dimension(320, 240)
   }
+}
 
-  private fun makeContainer(overlap: Int): Container {
-    val p: JPanel = object : JPanel(FlowLayout(FlowLayout.LEADING, -overlap, 0)) {
-      override fun isOptimizedDrawingEnabled(): Boolean {
-        return false
+private fun makeContainer(overlap: Int): Container {
+  val p = object : JPanel(FlowLayout(FlowLayout.LEADING, -overlap, 0)) {
+    override fun isOptimizedDrawingEnabled() = false
+  }
+  p.border = BorderFactory.createEmptyBorder(4, overlap + 4, 4, 4)
+  p.isOpaque = false
+  return p
+}
+
+private fun initBreadcrumbList(p: Container, tree: JTree) {
+  val treePath = tree.selectionPath ?: return
+  val paths = treePath.path
+  val bg = ButtonGroup()
+  p.removeAll()
+  for (i in paths.indices) {
+    val b = makeButton(tree, TreePath(paths.copyOf(i + 1)), Color.ORANGE)
+    p.add(b)
+    bg.add(b)
+  }
+}
+
+private fun makeBreadcrumbList(list: List<String>): Component {
+  val p = makeContainer(5 + 1)
+  val bg = ButtonGroup()
+  list.map { makeButton(null, TreePath(it), Color.PINK) }
+    .forEach {
+      p.add(it)
+      bg.add(it)
+    }
+  return p
+}
+
+private fun makeButton(tree: JTree?, path: TreePath, color: Color): AbstractButton {
+  val b = object : JRadioButton(path.lastPathComponent.toString()) {
+    override fun contains(x: Int, y: Int) =
+      (icon as? ArrowToggleButtonBarCellIcon)?.let {
+        it.shape?.contains(x.toDouble(), y.toDouble())
+      } ?: super.contains(x, y)
+  }
+  if (tree != null) {
+    b.addActionListener { e ->
+      (e.source as? JRadioButton)?.also {
+        tree.selectionPath = path
+        it.isSelected = true
       }
     }
-    p.border = BorderFactory.createEmptyBorder(4, overlap + 4, 4, 4)
-    p.isOpaque = false
-    return p
   }
-
-  private fun initBreadcrumbList(p: Container, tree: JTree) {
-    val treePath = tree.selectionPath ?: return
-    val paths = treePath.path
-    val bg = ButtonGroup()
-    p.removeAll()
-    for (i in paths.indices) {
-      val b = makeButton(tree, TreePath(paths.copyOf(i + 1)), Color.ORANGE)
-      p.add(b)
-      bg.add(b)
-    }
-  }
-
-  private fun makeBreadcrumbList(list: List<String>): Component {
-    val p = makeContainer(5 + 1)
-    val bg = ButtonGroup()
-    list.map { makeButton(null, TreePath(it), Color.PINK) }
-      .forEach {
-        p.add(it)
-        bg.add(it)
-      }
-    return p
-  }
-
-  private fun makeButton(tree: JTree?, path: TreePath, color: Color): AbstractButton {
-    val b: AbstractButton = object : JRadioButton(path.lastPathComponent.toString()) {
-      override fun contains(x: Int, y: Int) =
-        (icon as? ArrowToggleButtonBarCellIcon)?.let {
-          it.shape?.contains(x.toDouble(), y.toDouble())
-        } ?: super.contains(x, y)
-    }
-    if (tree != null) {
-      b.addActionListener { e ->
-        (e.source as? JRadioButton)?.also {
-          tree.selectionPath = path
-          it.isSelected = true
-        }
-      }
-    }
-    b.icon = ArrowToggleButtonBarCellIcon()
-    b.isContentAreaFilled = false
-    b.border = BorderFactory.createEmptyBorder()
-    b.verticalAlignment = SwingConstants.CENTER
-    b.verticalTextPosition = SwingConstants.CENTER
-    b.horizontalAlignment = SwingConstants.CENTER
-    b.horizontalTextPosition = SwingConstants.CENTER
-    b.isFocusPainted = false
-    b.isOpaque = false
-    b.background = color
-    return b
-  }
+  b.icon = ArrowToggleButtonBarCellIcon()
+  b.isContentAreaFilled = false
+  b.border = BorderFactory.createEmptyBorder()
+  b.verticalAlignment = SwingConstants.CENTER
+  b.verticalTextPosition = SwingConstants.CENTER
+  b.horizontalAlignment = SwingConstants.CENTER
+  b.horizontalTextPosition = SwingConstants.CENTER
+  b.isFocusPainted = false
+  b.isOpaque = false
+  b.background = color
+  return b
 }
 
 // https://ateraimemo.com/Swing/ToggleButtonBar.html
 // https://java-swing-tips.blogspot.com/2012/11/make-togglebuttonbar-with-jradiobuttons.html
-class ArrowToggleButtonBarCellIcon : Icon {
+private class ArrowToggleButtonBarCellIcon : Icon {
   var shape: Shape? = null
     private set
 
@@ -148,7 +146,7 @@ class ArrowToggleButtonBarCellIcon : Icon {
   }
 }
 
-class BreadcrumbLayerUI<V : Component> : LayerUI<V>() {
+private class BreadcrumbLayerUI<V : Component> : LayerUI<V>() {
   private var shape: Shape? = null
 
   override fun paint(g: Graphics, c: JComponent) {
@@ -176,7 +174,7 @@ class BreadcrumbLayerUI<V : Component> : LayerUI<V>() {
       MouseEvent.MOUSE_ENTERED, MouseEvent.MOUSE_MOVED ->
         (e.component as? AbstractButton)?.let { button ->
           (button.icon as? ArrowToggleButtonBarCellIcon)?.let { icon ->
-            val r = button.getBounds()
+            val r = button.bounds
             val at = AffineTransform.getTranslateInstance(r.x.toDouble(), r.y.toDouble())
             at.createTransformedShape(icon.shape)
           }
@@ -208,7 +206,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
