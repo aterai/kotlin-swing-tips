@@ -5,34 +5,32 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(GridLayout(1, 3)) {
-  init {
-    add(makeTitledPanel("Default", JList(makeModel())))
-    add(makeTitledPanel("MouseEvent", SingleMouseClickSelectList(makeModel())))
-    add(makeTitledPanel("SelectionInterval", SingleClickSelectList(makeModel())))
-    setPreferredSize(Dimension(320, 240))
-  }
-
-  private fun makeModel() = DefaultListModel<String>().also {
-    it.addElement("111111111")
-    it.addElement("22222222222222")
-    it.addElement("333333333")
-    it.addElement("44444444")
-    it.addElement("5555555555")
-  }
-
-  private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
-    it.setBorder(BorderFactory.createTitledBorder(title))
-    it.add(JScrollPane(c))
-  }
+fun makeUI() = JPanel(GridLayout(1, 3)).also {
+  it.add(makeTitledPanel("Default", JList(makeModel())))
+  it.add(makeTitledPanel("MouseEvent", SingleMouseClickSelectList(makeModel())))
+  it.add(makeTitledPanel("SelectionInterval", SingleClickSelectList(makeModel())))
+  it.preferredSize = Dimension(320, 240)
 }
 
-class SingleMouseClickSelectList<E>(model: ListModel<E>) : JList<E>(model) {
+private fun makeModel() = DefaultListModel<String>().also {
+  it.addElement("111111111")
+  it.addElement("22222222222222")
+  it.addElement("333333333")
+  it.addElement("44444444")
+  it.addElement("5555555555")
+}
+
+private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
+  it.border = BorderFactory.createTitledBorder(title)
+  it.add(JScrollPane(c))
+}
+
+private class SingleMouseClickSelectList<E>(model: ListModel<E>) : JList<E>(model) {
   override fun updateUI() {
-    setForeground(null)
-    setBackground(null)
-    setSelectionForeground(null)
-    setSelectionBackground(null)
+    foreground = null
+    background = null
+    selectionForeground = null
+    selectionBackground = null
     super.updateUI()
   }
 
@@ -41,10 +39,10 @@ class SingleMouseClickSelectList<E>(model: ListModel<E>) : JList<E>(model) {
   }
 
   override fun processMouseEvent(e: MouseEvent) {
-    if (e.getID() == MouseEvent.MOUSE_ENTERED || e.getID() == MouseEvent.MOUSE_EXITED) {
+    if (e.id == MouseEvent.MOUSE_ENTERED || e.id == MouseEvent.MOUSE_EXITED) {
       super.processMouseEvent(e)
     } else {
-      if (getCellBounds(0, getModel().getSize() - 1).contains(e.getPoint())) {
+      if (getCellBounds(0, model.size - 1).contains(e.point)) {
         super.processMouseEvent(convertMouseEvent(e))
       } else {
         e.consume()
@@ -55,33 +53,34 @@ class SingleMouseClickSelectList<E>(model: ListModel<E>) : JList<E>(model) {
 
   private fun convertMouseEvent(e: MouseEvent): MouseEvent {
     return MouseEvent(
-      e.getComponent(),
-      e.getID(), e.getWhen(),
-      e.getModifiersEx() or Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(),
+      e.component,
+      e.id, e.getWhen(),
+      e.modifiersEx or Toolkit.getDefaultToolkit().menuShortcutKeyMask,
       // Java 10: e.getModifiersEx() or Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx(),
-      e.getX(), e.getY(),
-      e.getXOnScreen(), e.getYOnScreen(),
-      e.getClickCount(),
-      e.isPopupTrigger(),
-      e.getButton()
+      e.x, e.y,
+      e.xOnScreen, e.yOnScreen,
+      e.clickCount,
+      e.isPopupTrigger,
+      e.button
     )
   }
 }
 
-class SingleClickSelectList<E>(model: ListModel<E>) : JList<E>(model) {
+private class SingleClickSelectList<E>(model: ListModel<E>) : JList<E>(model) {
   @Transient
   private var listener: SelectionHandler? = null
   private var isDragging = false
   private var isCellInsideDragging = false
   private var startOutside = false
   private var startIndex = -1
+
   override fun updateUI() {
     removeMouseListener(listener)
     removeMouseMotionListener(listener)
-    setForeground(null)
-    setBackground(null)
-    setSelectionForeground(null)
-    setSelectionBackground(null)
+    foreground = null
+    background = null
+    selectionForeground = null
+    selectionBackground = null
     super.updateUI()
     listener = SelectionHandler()
     addMouseListener(listener)
@@ -106,15 +105,15 @@ class SingleClickSelectList<E>(model: ListModel<E>) : JList<E>(model) {
   }
 
   private fun clearSelectionAndFocus() {
-    getSelectionModel().also {
+    selectionModel.also {
       it.clearSelection()
-      it.setAnchorSelectionIndex(-1)
-      it.setLeadSelectionIndex(-1)
+      it.anchorSelectionIndex = -1
+      it.leadSelectionIndex = -1
     }
   }
 
   private fun cellsContains(pt: Point): Boolean {
-    for (i in 0 until getModel().getSize()) {
+    for (i in 0 until model.size) {
       val r = getCellBounds(i, i)
       if (r.contains(pt)) {
         return true
@@ -166,7 +165,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
