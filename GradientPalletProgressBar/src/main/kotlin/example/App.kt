@@ -9,56 +9,54 @@ import java.beans.PropertyChangeListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicProgressBarUI
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    add(JPanel(GridLayout(3, 1)).also {
-      it.add(makeUI())
-      it.add(makeUI())
-      it.add(makeUI())
-    }, BorderLayout.NORTH)
-    setPreferredSize(Dimension(320, 240))
-  }
-
-  private fun makeUI(): Component {
-    val progressBar = JProgressBar()
-    progressBar.setOpaque(false)
-    progressBar.setUI(GradientPalletProgressBarUI())
-
-    val button = JButton("Start")
-    button.addActionListener {
-      button.setEnabled(false)
-      val worker = object : BackgroundTask() {
-        override fun done() {
-          button.takeIf { it.isDisplayable() }?.setEnabled(true)
-        }
-      }
-      worker.addPropertyChangeListener(ProgressListener(progressBar))
-      worker.execute()
-    }
-
-    val p = JPanel(GridBagLayout())
-    p.setBorder(BorderFactory.createEmptyBorder(32, 8, 0, 8))
-    val c = GridBagConstraints()
-
-    c.insets = Insets(0, 0, 0, 4)
-    c.weightx = 1.0
-    c.fill = GridBagConstraints.HORIZONTAL
-    p.add(progressBar, c)
-
-    c.weightx = 0.0
-    p.add(button, c)
-    return p
-  }
+fun makeUI() = JPanel(BorderLayout()).also {
+  val p = JPanel(GridLayout(3, 1))
+  p.add(makeProgressBar())
+  p.add(makeProgressBar())
+  p.add(makeProgressBar())
+  it.add(p, BorderLayout.NORTH)
+  it.preferredSize = Dimension(320, 240)
 }
 
-open class BackgroundTask : SwingWorker<Unit, Unit>() {
+private fun makeProgressBar(): Component {
+  val progressBar = JProgressBar()
+  progressBar.isOpaque = false
+  progressBar.ui = GradientPalletProgressBarUI()
+
+  val button = JButton("Start")
+  button.addActionListener {
+    button.isEnabled = false
+    val worker = object : BackgroundTask() {
+      override fun done() {
+        button.takeIf { it.isDisplayable }?.isEnabled = true
+      }
+    }
+    worker.addPropertyChangeListener(ProgressListener(progressBar))
+    worker.execute()
+  }
+
+  val p = JPanel(GridBagLayout())
+  p.border = BorderFactory.createEmptyBorder(32, 8, 0, 8)
+  val c = GridBagConstraints()
+
+  c.insets = Insets(0, 0, 0, 4)
+  c.weightx = 1.0
+  c.fill = GridBagConstraints.HORIZONTAL
+  p.add(progressBar, c)
+
+  c.weightx = 0.0
+  p.add(button, c)
+  return p
+}
+
+private open class BackgroundTask : SwingWorker<Unit, Unit>() {
   @Throws(InterruptedException::class)
   override fun doInBackground() {
     var current = 0
     val lengthOfTask = 100
-    while (current <= lengthOfTask && !isCancelled()) {
+    while (current <= lengthOfTask && !isCancelled) {
       Thread.sleep(50) // dummy task
-      setProgress(100 * current / lengthOfTask)
+      progress = 100 * current / lengthOfTask
       current++
     }
   }
@@ -66,14 +64,14 @@ open class BackgroundTask : SwingWorker<Unit, Unit>() {
 
 class ProgressListener(private val progressBar: JProgressBar) : PropertyChangeListener {
   init {
-    this.progressBar.setValue(0)
+    this.progressBar.value = 0
   }
 
   override fun propertyChange(e: PropertyChangeEvent) {
-    val nv = e.getNewValue()
-    if ("progress" == e.getPropertyName() && nv is Int) {
-      progressBar.setIndeterminate(false)
-      progressBar.setValue(nv)
+    val nv = e.newValue
+    if ("progress" == e.propertyName && nv is Int) {
+      progressBar.isIndeterminate = false
+      progressBar.value = nv
     }
   }
 }
@@ -92,7 +90,7 @@ class GradientPalletProgressBarUI : BasicProgressBarUI() {
     val end = Point2D.Float(99f, 0f)
     val dist = floatArrayOf(0f, .5f, 1f)
     val colors = arrayOf(Color.RED, Color.YELLOW, Color.GREEN)
-    g2.setPaint(LinearGradientPaint(start, end, dist, colors))
+    g2.paint = LinearGradientPaint(start, end, dist, colors)
     g2.fillRect(0, 0, 100, 1)
     g2.dispose()
 
@@ -119,9 +117,9 @@ class GradientPalletProgressBarUI : BasicProgressBarUI() {
   }
 
   override fun paintDeterminate(g: Graphics, c: JComponent) {
-    val b = progressBar.getInsets() // area for border
-    val barRectWidth = progressBar.getWidth() - b.right - b.left
-    val barRectHeight = progressBar.getHeight() - b.top - b.bottom
+    val b = progressBar.insets // area for border
+    val barRectWidth = progressBar.width - b.right - b.left
+    val barRectHeight = progressBar.height - b.top - b.bottom
     if (barRectWidth <= 0 || barRectHeight <= 0) {
       return
     }
@@ -131,20 +129,20 @@ class GradientPalletProgressBarUI : BasicProgressBarUI() {
     val amountFull = getAmountFull(b, barRectWidth, barRectHeight)
 
     // draw the cells
-    when (progressBar.getOrientation()) {
+    when (progressBar.orientation) {
       SwingConstants.HORIZONTAL -> {
         val x = amountFull / barRectWidth.toFloat()
-        g.setColor(getColorFromPallet(pallet, x))
+        g.color = getColorFromPallet(pallet, x)
         g.fillRect(b.left, b.top, amountFull, barRectHeight)
       }
       SwingConstants.VERTICAL -> {
         val y = amountFull / barRectHeight.toFloat()
-        g.setColor(getColorFromPallet(pallet, y))
+        g.color = getColorFromPallet(pallet, y)
         g.fillRect(b.left, barRectHeight + b.bottom - amountFull, barRectWidth, amountFull)
       }
     }
     // Deal with possible text painting
-    if (progressBar.isStringPainted()) {
+    if (progressBar.isStringPainted) {
       paintString(g, b.left, b.top, barRectWidth, barRectHeight, amountFull, b)
     }
   }
@@ -160,7 +158,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
