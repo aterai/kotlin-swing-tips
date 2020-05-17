@@ -11,38 +11,38 @@ import javax.swing.table.JTableHeader
 import javax.swing.table.TableColumn
 import javax.swing.table.TableColumnModel
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    // http://www2.gol.com/users/tame/swing/examples/JTableExamples1.html
-    val columnNames = arrayOf("SNo.", "1", "2", "Native", "2", "3")
-    val data = arrayOf(
-      arrayOf("119", "foo", "bar", "ja", "ko", "zh"),
-      arrayOf("911", "bar", "foo", "en", "fr", "pt"))
-    val model = DefaultTableModel(data, columnNames)
-    val table = object : JTable(model) {
-      override fun createDefaultTableHeader(): JTableHeader {
-        val cm = getColumnModel()
-        val gname = ColumnGroup("Name")
-        gname.add(cm.getColumn(1))
-        gname.add(cm.getColumn(2))
+fun makeUI(): Component {
+  // http://www2.gol.com/users/tame/swing/examples/JTableExamples1.html
+  val columnNames = arrayOf("SNo.", "1", "2", "Native", "2", "3")
+  val data = arrayOf(
+    arrayOf("119", "foo", "bar", "ja", "ko", "zh"),
+    arrayOf("911", "bar", "foo", "en", "fr", "pt"))
+  val model = DefaultTableModel(data, columnNames)
+  val table = object : JTable(model) {
+    override fun createDefaultTableHeader(): JTableHeader {
+      val cm = getColumnModel()
+      val gname = ColumnGroup("Name")
+      gname.add(cm.getColumn(1))
+      gname.add(cm.getColumn(2))
 
-        val glang = ColumnGroup("Language")
-        glang.add(cm.getColumn(3))
+      val glang = ColumnGroup("Language")
+      glang.add(cm.getColumn(3))
 
-        val gother = ColumnGroup("Others")
-        gother.add(cm.getColumn(4))
-        gother.add(cm.getColumn(5))
+      val gother = ColumnGroup("Others")
+      gother.add(cm.getColumn(4))
+      gother.add(cm.getColumn(5))
 
-        glang.add(gother)
+      glang.add(gother)
 
-        val header = GroupableTableHeader(cm)
-        header.addColumnGroup(gname)
-        header.addColumnGroup(glang)
-        return header
-      }
+      val header = GroupableTableHeader(cm)
+      header.addColumnGroup(gname)
+      header.addColumnGroup(glang)
+      return header
     }
-    add(JScrollPane(table))
-    setPreferredSize(Dimension(320, 240))
+  }
+  return JPanel(BorderLayout()).also {
+    it.add(JScrollPane(table))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
@@ -54,7 +54,7 @@ class MainPanel : JPanel(BorderLayout()) {
  * @author Nobuo Tamemasa
  * @author aterai aterai@outlook.com
  */
-internal class GroupableTableHeader(model: TableColumnModel) : JTableHeader(model) {
+private class GroupableTableHeader(model: TableColumnModel) : JTableHeader(model) {
   private val columnGroups = mutableListOf<ColumnGroup>()
 
   override fun updateUI() {
@@ -103,13 +103,13 @@ internal class GroupableTableHeader(model: TableColumnModel) : JTableHeader(mode
  * @author Nobuo Tamemasa
  * @author aterai aterai@outlook.com
  */
-internal class GroupableTableHeaderUI : BasicTableHeaderUI() {
+private class GroupableTableHeaderUI : BasicTableHeaderUI() {
   override fun paint(g: Graphics, c: JComponent?) {
-    val clip = g.getClipBounds()
+    val clip = g.clipBounds
     // val left = clip.getLocation()
     // val right = Point(clip.x + clip.width - 1, clip.y)
-    val cm = header.getColumnModel()
-    val colMin = header.columnAtPoint(clip.getLocation())
+    val cm = header.columnModel
+    val colMin = header.columnAtPoint(clip.location)
     val colMax = header.columnAtPoint(Point(clip.x + clip.width - 1, clip.y))
 
     val cellRect = header.getHeaderRect(colMin)
@@ -122,13 +122,13 @@ internal class GroupableTableHeaderUI : BasicTableHeaderUI() {
     for (column in colMin..colMax) {
       val tc = cm.getColumn(column)
       cellRect.y = headerY
-      cellRect.setSize(tc.getWidth(), headerHeight)
+      cellRect.setSize(tc.width, headerHeight)
 
       var groupHeight = 0
       val cglist = (header as? GroupableTableHeader)?.getColumnGroups(tc).orEmpty()
       for (o in cglist) {
         val cg = o as? ColumnGroup ?: continue
-        val groupRect = map[cg] ?: Rectangle(cellRect.getLocation(), cg.getSize(header)).also {
+        val groupRect = map[cg] ?: Rectangle(cellRect.location, cg.getSize(header)).also {
           map[cg] = it
         }
         paintCellGroup(g, groupRect, cg)
@@ -143,12 +143,12 @@ internal class GroupableTableHeaderUI : BasicTableHeaderUI() {
 
   // Copied from javax/swing/plaf/basic/BasicTableHeaderUI.java
   private fun getHeaderRenderer(columnIndex: Int): Component {
-    val tc = header.getColumnModel().getColumn(columnIndex)
-    val r = tc.getHeaderRenderer() ?: header.getDefaultRenderer()
-    val hasFocus = !header.isPaintingForPrint() && header.hasFocus()
+    val tc = header.columnModel.getColumn(columnIndex)
+    val r = tc.headerRenderer ?: header.defaultRenderer
+    val hasFocus = !header.isPaintingForPrint && header.hasFocus()
     // && (columnIndex == getSelectedColumnIndex())
-    val table = header.getTable()
-    return r.getTableCellRendererComponent(table, tc.getHeaderValue(), false, hasFocus, -1, columnIndex)
+    val table = header.table
+    return r.getTableCellRendererComponent(table, tc.headerValue, false, hasFocus, -1, columnIndex)
   }
 
   // Copied from javax/swing/plaf/basic/BasicTableHeaderUI.java
@@ -158,18 +158,18 @@ internal class GroupableTableHeaderUI : BasicTableHeaderUI() {
   }
 
   private fun paintCellGroup(g: Graphics, cellRect: Rectangle, columnGroup: ColumnGroup) {
-    val r = header.getDefaultRenderer()
-    val c = r.getTableCellRendererComponent(header.getTable(), columnGroup.headerValue, false, false, -1, -1)
+    val r = header.defaultRenderer
+    val c = r.getTableCellRendererComponent(header.table, columnGroup.headerValue, false, false, -1, -1)
     rendererPane.paintComponent(g, c, header, cellRect.x, cellRect.y, cellRect.width, cellRect.height, true)
   }
 
   private fun getHeaderHeight(): Int {
     var height = 0
-    val columnModel = header.getColumnModel()
-    for (column in 0 until columnModel.getColumnCount()) {
+    val columnModel = header.columnModel
+    for (column in 0 until columnModel.columnCount) {
       val tc = columnModel.getColumn(column)
       val comp = getHeaderRenderer(column)
-      var rendererHeight = comp.getPreferredSize().height
+      var rendererHeight = comp.preferredSize.height
       val cglist = (header as? GroupableTableHeader)?.getColumnGroups(tc).orEmpty()
       for (o in cglist) {
         val cg = o as? ColumnGroup ?: continue
@@ -187,7 +187,7 @@ internal class GroupableTableHeaderUI : BasicTableHeaderUI() {
   // }
 
   override fun getPreferredSize(c: JComponent?): Dimension {
-    val width = header.getColumnModel().getColumns().toList().map { it.getPreferredWidth().toLong() }.sum()
+    val width = header.columnModel.columns.toList().map { it.preferredWidth.toLong() }.sum()
     return Dimension(minOf(width, Integer.MAX_VALUE.toLong()).toInt(), getHeaderHeight())
     // return createHeaderSize(width)
   }
@@ -201,7 +201,7 @@ internal class GroupableTableHeaderUI : BasicTableHeaderUI() {
  * @author Nobuo Tamemasa
  * @author aterai aterai@outlook.com
  */
-internal class ColumnGroup(text: String) {
+private class ColumnGroup(text: String) {
   private val list = mutableListOf<Any>()
   val headerValue = text
 
@@ -235,14 +235,14 @@ internal class ColumnGroup(text: String) {
   }
 
   fun getSize(header: JTableHeader): Dimension {
-    val r = header.getDefaultRenderer()
-    val c = r.getTableCellRendererComponent(header.getTable(), headerValue, false, false, -1, -1)
+    val r = header.defaultRenderer
+    val c = r.getTableCellRendererComponent(header.table, headerValue, false, false, -1, -1)
     var width = 0
     for (o in list) {
       // width += if (o is TableColumn) o.getWidth() else (o as ColumnGroup).getSize(header).width
-      width += (o as? TableColumn)?.getWidth() ?: (o as? ColumnGroup)?.getSize(header)?.width ?: 0
+      width += (o as? TableColumn)?.width ?: (o as? ColumnGroup)?.getSize(header)?.width ?: 0
     }
-    return Dimension(width, c.getPreferredSize().height)
+    return Dimension(width, c.preferredSize.height)
   }
 }
 
@@ -250,7 +250,7 @@ fun main() {
   EventQueue.invokeLater {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
