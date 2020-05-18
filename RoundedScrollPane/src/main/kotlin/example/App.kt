@@ -117,7 +117,7 @@ fun makeUI(): Component {
       getHorizontalScrollBar().ui = WithoutArrowButtonScrollBarUI()
     }
   }
-  scroll.background = Color.WHITE
+  scroll.background = tree.background
   scroll.border = RoundedCornerBorder()
 
   return JPanel(BorderLayout(15, 15)).also {
