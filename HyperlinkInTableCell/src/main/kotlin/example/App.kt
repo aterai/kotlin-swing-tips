@@ -10,9 +10,9 @@ import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 
-class MainPanel : JPanel(BorderLayout()) {
-  private val columnNames = arrayOf("No.", "Name", "URL")
-  private val model = object : DefaultTableModel(columnNames, 0) {
+fun makeUI(): Component {
+  val columnNames = arrayOf("No.", "Name", "URL")
+  val model = object : DefaultTableModel(columnNames, 0) {
     override fun getColumnClass(column: Int) = when (column) {
       0 -> Number::class.java
       1 -> String::class.java
@@ -22,56 +22,55 @@ class MainPanel : JPanel(BorderLayout()) {
 
     override fun isCellEditable(row: Int, col: Int) = false
   }
+  model.addRow(arrayOf(0, "FrontPage", makeUrl("https://ateraimemo.com/")))
+  model.addRow(arrayOf(1, "Java Swing Tips", makeUrl("https://ateraimemo.com/Swing.html")))
+  model.addRow(arrayOf(2, "Example", makeUrl("http://www.example.com/")))
+  model.addRow(arrayOf(3, "Example.jp", makeUrl("http://www.example.jp/")))
 
-  init {
-    model.addRow(arrayOf<Any?>(0, "FrontPage", makeUrl("https://ateraimemo.com/")))
-    model.addRow(arrayOf<Any?>(1, "Java Swing Tips", makeUrl("https://ateraimemo.com/Swing.html")))
-    model.addRow(arrayOf<Any?>(2, "Example", makeUrl("http://www.example.com/")))
-    model.addRow(arrayOf<Any?>(3, "Example.jp", makeUrl("http://www.example.jp/")))
-
-    val table = object : JTable(model) {
-      private val evenColor = Color(250, 250, 250)
-      override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
-        val c = super.prepareRenderer(tcr, row, column)
-        c.setForeground(getForeground())
-        c.setBackground(if (row % 2 == 0) evenColor else getBackground())
-        return c
-      }
+  val table = object : JTable(model) {
+    private val evenColor = Color(250, 250, 250)
+    override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
+      val c = super.prepareRenderer(tcr, row, column)
+      c.foreground = foreground
+      c.background = if (row % 2 == 0) evenColor else background
+      return c
     }
-    table.setRowSelectionAllowed(true)
-    table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
-    table.setIntercellSpacing(Dimension())
-    table.setShowGrid(false)
-    table.putClientProperty("terminateEditOnFocusLost", true)
-    table.setAutoCreateRowSorter(true)
-
-    var col = table.getColumnModel().getColumn(0)
-    col.setMinWidth(50)
-    col.setMaxWidth(50)
-    col.setResizable(false)
-
-    val renderer = UrlRenderer()
-    table.setDefaultRenderer(URL::class.java, renderer)
-    table.addMouseListener(renderer)
-    table.addMouseMotionListener(renderer)
-
-    col = table.getColumnModel().getColumn(1)
-    col.setPreferredWidth(1000)
-
-    col = table.getColumnModel().getColumn(2)
-    // col.setCellRenderer(renderer)
-    col.setPreferredWidth(2000)
-
-    val scrollPane = JScrollPane(table)
-    scrollPane.getViewport().setBackground(Color.WHITE)
-    add(scrollPane)
-    setPreferredSize(Dimension(320, 240))
   }
+  table.rowSelectionAllowed = true
+  table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
+  table.intercellSpacing = Dimension()
+  table.setShowGrid(false)
+  table.putClientProperty("terminateEditOnFocusLost", true)
+  table.autoCreateRowSorter = true
 
-  private fun makeUrl(spec: String) = runCatching { URL(spec) }.getOrNull()
+  var col = table.columnModel.getColumn(0)
+  col.minWidth = 50
+  col.maxWidth = 50
+  col.resizable = false
+
+  val renderer = UrlRenderer()
+  table.setDefaultRenderer(URL::class.java, renderer)
+  table.addMouseListener(renderer)
+  table.addMouseMotionListener(renderer)
+
+  col = table.columnModel.getColumn(1)
+  col.preferredWidth = 1000
+
+  col = table.columnModel.getColumn(2)
+  // col.setCellRenderer(renderer)
+  col.preferredWidth = 2000
+
+  val scrollPane = JScrollPane(table)
+  scrollPane.viewport.background = Color.WHITE
+  return JPanel(BorderLayout()).also {
+    it.add(scrollPane)
+    it.preferredSize = Dimension(320, 240)
+  }
 }
 
-internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMotionListener {
+private fun makeUrl(spec: String) = runCatching { URL(spec) }.getOrNull()
+
+private class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMotionListener {
   private var viewRowIndex = -1
   private var viewColumnIndex = -1 // viewColumnIndex
   private var isRollover = false
@@ -86,23 +85,23 @@ internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMot
   ): Component {
     super.getTableCellRendererComponent(table, value, isSelected, false, row, column)
     val str = value?.toString() ?: ""
-    setText(when {
+    text = when {
       isRolloverCell(table, row, column) -> "<html><u><font color='blue'>$str"
       hasFocus -> "<html><font color='blue'>$str"
       else -> str
-    })
+    }
     return this
   }
 
   private fun isRolloverCell(table: JTable, row: Int, column: Int) =
-    !table.isEditing() && viewRowIndex == row && viewColumnIndex == column && isRollover
+    !table.isEditing && viewRowIndex == row && viewColumnIndex == column && isRollover
 
   private fun isUrlColumn(table: JTable, column: Int) =
     column >= 0 && table.getColumnClass(column) == URL::class.java
 
   override fun mouseMoved(e: MouseEvent) {
-    val table = e.getComponent() as? JTable ?: return
-    val pt = e.getPoint()
+    val table = e.component as? JTable ?: return
+    val pt = e.point
     val prevRow = viewRowIndex
     val prevCol = viewColumnIndex
     val prevRollover = isRollover
@@ -124,7 +123,7 @@ internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMot
   }
 
   override fun mouseExited(e: MouseEvent) {
-    val table = e.getComponent() as? JTable ?: return
+    val table = e.component as? JTable ?: return
     if (isUrlColumn(table, viewColumnIndex)) {
       table.repaint(table.getCellRect(viewRowIndex, viewColumnIndex, false))
       viewRowIndex = -1
@@ -134,8 +133,8 @@ internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMot
   }
 
   override fun mouseClicked(e: MouseEvent) {
-    val table = e.getComponent() as? JTable ?: return
-    val pt = e.getPoint()
+    val table = e.component as? JTable ?: return
+    val pt = e.point
     val col = table.columnAtPoint(pt)
     if (isUrlColumn(table, col)) {
       val row = table.rowAtPoint(pt)
@@ -151,13 +150,21 @@ internal class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMot
     }
   }
 
-  override fun mouseDragged(e: MouseEvent) { /* not needed */ }
+  override fun mouseDragged(e: MouseEvent) {
+    /* not needed */
+  }
 
-  override fun mouseEntered(e: MouseEvent) { /* not needed */ }
+  override fun mouseEntered(e: MouseEvent) {
+    /* not needed */
+  }
 
-  override fun mousePressed(e: MouseEvent) { /* not needed */ }
+  override fun mousePressed(e: MouseEvent) {
+    /* not needed */
+  }
 
-  override fun mouseReleased(e: MouseEvent) { /* not needed */ }
+  override fun mouseReleased(e: MouseEvent) {
+    /* not needed */
+  }
 }
 
 fun main() {
@@ -170,7 +177,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
