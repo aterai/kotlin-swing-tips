@@ -9,76 +9,76 @@ import javax.swing.tree.TreeCellRenderer
 import javax.swing.tree.TreeNode
 import javax.swing.tree.TreePath
 
-class MainPanel : JPanel(BorderLayout()) {
-  private val tree = JTree()
-  private val field = JTextField("foo")
-  private val renderer = HighlightTreeCellRenderer()
+private val tree = JTree()
+private val field = JTextField("foo")
+private val renderer = HighlightTreeCellRenderer()
 
-  private fun fireDocumentChangeEvent() {
-    val q = field.getText()
-    renderer.setQuery(q)
-    val root = tree.getPathForRow(0)
-    collapseAll(tree, root)
-    if (q.isNotEmpty()) {
-      searchTree(tree, root, q)
+fun makeUI(): Component {
+  field.document.addDocumentListener(object : DocumentListener {
+    override fun insertUpdate(e: DocumentEvent) {
+      fireDocumentChangeEvent()
     }
-  }
 
-  private fun searchTree(tree: JTree, path: TreePath, q: String) {
-    val node = path.getLastPathComponent() as? TreeNode ?: return
-    if (node.toString().startsWith(q)) {
-      tree.expandPath(path.parentPath)
+    override fun removeUpdate(e: DocumentEvent) {
+      fireDocumentChangeEvent()
     }
-    if (!node.isLeaf()) {
-      node.children().toList()
-        .forEach { searchTree(tree, path.pathByAddingChild(it), q) }
+
+    override fun changedUpdate(e: DocumentEvent) {
+      /* not needed */
     }
-  }
-
-  private fun collapseAll(tree: JTree, parent: TreePath) {
-    val node = parent.getLastPathComponent() as? TreeNode ?: return
-    if (!node.isLeaf()) {
-      node.children().toList()
-        .forEach { collapseAll(tree, parent.pathByAddingChild(it)) }
-    }
-    tree.collapsePath(parent)
-  }
-
-  init {
-    field.getDocument().addDocumentListener(object : DocumentListener {
-      override fun insertUpdate(e: DocumentEvent) {
-        fireDocumentChangeEvent()
-      }
-
-      override fun removeUpdate(e: DocumentEvent) {
-        fireDocumentChangeEvent()
-      }
-
-      override fun changedUpdate(e: DocumentEvent) {
-        /* not needed */
-      }
-    })
-    val n = JPanel(BorderLayout())
-    n.add(field)
-    n.setBorder(BorderFactory.createTitledBorder("Search"))
-    tree.setCellRenderer(renderer)
-    renderer.setQuery(field.getText())
-    fireDocumentChangeEvent()
-    add(n, BorderLayout.NORTH)
-    add(JScrollPane(tree))
-    setPreferredSize(Dimension(320, 240))
+  })
+  val n = JPanel(BorderLayout())
+  n.add(field)
+  n.border = BorderFactory.createTitledBorder("Search")
+  tree.cellRenderer = renderer
+  renderer.setQuery(field.text)
+  fireDocumentChangeEvent()
+  return JPanel(BorderLayout()).also {
+    it.add(n, BorderLayout.NORTH)
+    it.add(JScrollPane(tree))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class HighlightTreeCellRenderer : JTextField(), TreeCellRenderer {
+private fun fireDocumentChangeEvent() {
+  val q = field.text
+  renderer.setQuery(q)
+  val root = tree.getPathForRow(0)
+  collapseAll(tree, root)
+  if (q.isNotEmpty()) {
+    searchTree(tree, root, q)
+  }
+}
+
+private fun searchTree(tree: JTree, path: TreePath, q: String) {
+  val node = path.lastPathComponent as? TreeNode ?: return
+  if (node.toString().startsWith(q)) {
+    tree.expandPath(path.parentPath)
+  }
+  if (!node.isLeaf) {
+    node.children().toList()
+      .forEach { searchTree(tree, path.pathByAddingChild(it), q) }
+  }
+}
+
+private fun collapseAll(tree: JTree, parent: TreePath) {
+  val node = parent.lastPathComponent as? TreeNode ?: return
+  if (!node.isLeaf) {
+    node.children().toList()
+      .forEach { collapseAll(tree, parent.pathByAddingChild(it)) }
+  }
+  tree.collapsePath(parent)
+}
+
+private class HighlightTreeCellRenderer : JTextField(), TreeCellRenderer {
   private var query: String? = null
   override fun updateUI() {
     super.updateUI()
-    setOpaque(true)
-    setBorder(BorderFactory.createEmptyBorder())
-    setForeground(Color.BLACK)
-    setBackground(Color.WHITE)
-    setEditable(false)
+    isOpaque = true
+    border = BorderFactory.createEmptyBorder()
+    foreground = Color.BLACK
+    background = Color.WHITE
+    isEditable = false
   }
 
   fun setQuery(query: String?) {
@@ -96,8 +96,8 @@ class HighlightTreeCellRenderer : JTextField(), TreeCellRenderer {
   ): Component {
     val txt = value?.toString() ?: ""
     highlighter.removeAllHighlights()
-    setText(txt)
-    setBackground(if (selected) BACKGROUND_SELECTION_COLOR else Color.WHITE)
+    text = txt
+    background = if (selected) BACKGROUND_SELECTION_COLOR else Color.WHITE
     val q = query ?: ""
     if (q.isNotEmpty() && txt.startsWith(q)) {
       runCatching { highlighter.addHighlight(0, q.length, HIGHLIGHT) }
@@ -121,7 +121,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
