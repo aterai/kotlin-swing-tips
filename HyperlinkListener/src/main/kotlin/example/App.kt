@@ -9,10 +9,10 @@ import javax.swing.text.StyleConstants
 import javax.swing.text.View
 import javax.swing.text.html.HTMLDocument
 
-private const val link = "https://ateraimemo.com/"
-private const val htmlText = """
+private const val LINK = "https://ateraimemo.com/"
+private const val HTML = """
       <html><body>
-        html tag: <br /><a href='$link'>$link</a>
+        html tag: <br /><a href='$LINK'>$LINK</a>
       </body></html>
     """
 private var tooltip: String? = null
@@ -28,7 +28,7 @@ private fun makeEditorPane(editable: Boolean) = JEditorPane().also {
   it.isEditable = editable
   it.contentType = "text/html"
   it.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true)
-  it.text = htmlText
+  it.text = HTML
   it.addHyperlinkListener { e ->
     when (e.eventType) {
       HyperlinkEvent.EventType.ACTIVATED ->
@@ -45,18 +45,18 @@ private fun makeEditorPane(editable: Boolean) = JEditorPane().also {
   if (doc is HTMLDocument) {
     val s = doc.addStyle("button", null)
     StyleConstants.setAlignment(s, StyleConstants.ALIGN_CENTER)
-    val button = HyperlinkButton(link)
+    val button = HyperlinkButton(LINK)
     button.addActionListener { e ->
       val b = (e.source as? AbstractButton)?.isSelected ?: false
       it.background = if (b) Color.RED else Color.WHITE
-      JOptionPane.showMessageDialog(it, "You click the link with the URL $link")
+      JOptionPane.showMessageDialog(it, "You click the link with the URL $LINK")
     }
-    button.toolTipText = "button: $link"
+    button.toolTipText = "button: $LINK"
     button.isOpaque = false
     StyleConstants.setComponent(s, button)
     runCatching {
       doc.insertString(doc.getLength(), "\n----\nJButton:\n", null)
-      doc.insertString(doc.getLength(), link + "\n", doc.getStyle("button"))
+      doc.insertString(doc.getLength(), LINK + "\n", doc.getStyle("button"))
     }
   }
 }
