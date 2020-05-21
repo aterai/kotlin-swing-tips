@@ -6,14 +6,14 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.MouseInputAdapter
 import javax.swing.event.MouseInputListener
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val model = DefaultListModel<String>()
-    model.addElement("11\n1")
-    model.addElement("222222222222222\n222222222222222")
-    model.addElement("3333333333333333333\n33333333333333333333\n33333333333333333")
-    model.addElement("444")
-    add(JScrollPane(object : JList<String>(model) {
+fun makeUI(): Component {
+  val model = DefaultListModel<String>()
+  model.addElement("11\n1")
+  model.addElement("222222222222222\n222222222222222")
+  model.addElement("3333333333333333333\n33333333333333333333\n33333333333333333")
+  model.addElement("444")
+  return JPanel(BorderLayout()).also {
+    it.add(JScrollPane(object : JList<String>(model) {
       @Transient
       private var handler: MouseInputListener? = null
 
@@ -25,14 +25,14 @@ class MainPanel : JPanel(BorderLayout()) {
         handler = CellButtonsMouseListener(this)
         addMouseListener(handler)
         addMouseMotionListener(handler)
-        setCellRenderer(ButtonsRenderer(model))
+        cellRenderer = ButtonsRenderer(model)
       }
     }))
-    preferredSize = Dimension(320, 240)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class CellButtonsMouseListener<E>(private val list: JList<E>) : MouseInputAdapter() {
+private class CellButtonsMouseListener<E>(private val list: JList<E>) : MouseInputAdapter() {
   private var prevIndex = -1
   private var prevButton: JButton? = null
   override fun mouseMoved(e: MouseEvent) {
@@ -119,7 +119,7 @@ class CellButtonsMouseListener<E>(private val list: JList<E>) : MouseInputAdapte
   }
 }
 
-class ButtonsRenderer<E>(model: DefaultListModel<E>) : JPanel(BorderLayout()), ListCellRenderer<E> {
+private class ButtonsRenderer<E>(model: DefaultListModel<E>) : JPanel(BorderLayout()), ListCellRenderer<E> {
   private val textArea = JTextArea()
   private val deleteButton = JButton("delete")
   private val copyButton = JButton("copy")
@@ -168,7 +168,7 @@ class ButtonsRenderer<E>(model: DefaultListModel<E>) : JPanel(BorderLayout()), L
     textArea.text = value?.toString() ?: ""
     targetIndex = index
     if (isSelected) {
-      setBackground(list.selectionBackground)
+      background = list.selectionBackground
       textArea.foreground = list.selectionForeground
     } else {
       background = if (index % 2 == 0) EVEN_COLOR else list.background
@@ -210,7 +210,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
