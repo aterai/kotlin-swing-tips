@@ -13,30 +13,30 @@ import javax.swing.text.DefaultEditorKit
 import javax.swing.text.JTextComponent
 import javax.swing.undo.UndoManager
 
-class MainPanel : JPanel(BorderLayout()) {
-  private val columnNames = arrayOf("String", "String")
-  private val data = arrayOf(
+fun makeUI(): Component {
+  val columnNames = arrayOf("String", "String")
+  val data = arrayOf(
     arrayOf("Undo", "Ctrl Z"),
     arrayOf("Redo", "Ctrl Y"),
     arrayOf("AAA", "bbb bbb"),
     arrayOf("CCC", "ddd ddd"))
-  private val model = object : DefaultTableModel(data, columnNames) {
+  val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
-  private val table = JTable(model)
+  val table = JTable(model)
+  table.autoCreateRowSorter = true
+  val editor = table.getDefaultEditor(Any::class.java)
+  ((editor as? DefaultCellEditor)?.component as? JTextComponent)?.also {
+    it.componentPopupMenu = TextComponentPopupMenu(it)
+  }
 
-  init {
-    table.setAutoCreateRowSorter(true)
-    val editor = table.getDefaultEditor(Any::class.java)
-    ((editor as? DefaultCellEditor)?.getComponent() as? JTextComponent)?.also {
-      it.setComponentPopupMenu(TextComponentPopupMenu(it))
-    }
-    add(JScrollPane(table))
-    setPreferredSize(Dimension(320, 240))
+  return JPanel(BorderLayout()).also {
+    it.add(JScrollPane(table))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class TextComponentPopupMenu(tc: JTextComponent) : JPopupMenu() {
+private class TextComponentPopupMenu(tc: JTextComponent) : JPopupMenu() {
   init {
     val cutAction = DefaultEditorKit.CutAction()
     add(cutAction)
@@ -58,43 +58,49 @@ class TextComponentPopupMenu(tc: JTextComponent) : JPopupMenu() {
     tc.addAncestorListener(object : AncestorListener {
       override fun ancestorAdded(e: AncestorEvent) {
         manager.discardAllEdits()
-        e.getComponent().requestFocusInWindow()
+        e.component.requestFocusInWindow()
       }
 
-      override fun ancestorMoved(e: AncestorEvent) { /* not needed */ }
+      override fun ancestorMoved(e: AncestorEvent) {
+        /* not needed */
+      }
 
-      override fun ancestorRemoved(e: AncestorEvent) { /* not needed */ }
+      override fun ancestorRemoved(e: AncestorEvent) {
+        /* not needed */
+      }
     })
-    tc.getDocument().addUndoableEditListener(manager)
-    tc.getActionMap().put("undo", undoAction)
-    tc.getActionMap().put("redo", redoAction)
-    val msk = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()
+    tc.document.addUndoableEditListener(manager)
+    tc.actionMap.put("undo", undoAction)
+    tc.actionMap.put("redo", redoAction)
+    val msk = Toolkit.getDefaultToolkit().menuShortcutKeyMask
     val im = tc.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, msk), "undo")
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, msk), "redo")
 
     addPopupMenuListener(object : PopupMenuListener {
-      override fun popupMenuCanceled(e: PopupMenuEvent) { /* not needed */ }
+      override fun popupMenuCanceled(e: PopupMenuEvent) {
+        /* not needed */
+      }
 
       override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
-        undoAction.setEnabled(true)
-        redoAction.setEnabled(true)
+        undoAction.isEnabled = true
+        redoAction.isEnabled = true
       }
 
       override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-        val textComponent = getInvoker() as? JTextComponent
-        val hasSelectedText = textComponent?.getSelectedText() != null
-        cutAction.setEnabled(hasSelectedText)
-        copyAction.setEnabled(hasSelectedText)
-        deleteAction.setEnabled(hasSelectedText)
-        undoAction.setEnabled(manager.canUndo())
-        redoAction.setEnabled(manager.canRedo())
+        val textComponent = invoker as? JTextComponent
+        val hasSelectedText = textComponent?.selectedText != null
+        cutAction.isEnabled = hasSelectedText
+        copyAction.isEnabled = hasSelectedText
+        deleteAction.isEnabled = hasSelectedText
+        undoAction.isEnabled = manager.canUndo()
+        redoAction.isEnabled = manager.canRedo()
       }
     })
   }
 }
 
-class UndoAction(private val undoManager: UndoManager) : AbstractAction("undo") {
+private class UndoAction(private val undoManager: UndoManager) : AbstractAction("undo") {
   override fun actionPerformed(e: ActionEvent) {
     runCatching {
       undoManager.undo()
@@ -104,7 +110,7 @@ class UndoAction(private val undoManager: UndoManager) : AbstractAction("undo") 
   }
 }
 
-class RedoAction(private val undoManager: UndoManager) : AbstractAction("redo") {
+private class RedoAction(private val undoManager: UndoManager) : AbstractAction("redo") {
   override fun actionPerformed(e: ActionEvent) {
     runCatching {
       undoManager.redo()
@@ -114,11 +120,11 @@ class RedoAction(private val undoManager: UndoManager) : AbstractAction("redo") 
   }
 }
 
-class DeleteAction : AbstractAction("delete") {
+private class DeleteAction : AbstractAction("delete") {
   override fun actionPerformed(e: ActionEvent) {
-    val c = e.getSource() as? Component ?: return
+    val c = e.source as? Component ?: return
     val pop = SwingUtilities.getUnwrappedParent(c) as? JPopupMenu ?: return
-    (pop.getInvoker() as? JTextComponent)?.replaceSelection(null)
+    (pop.invoker as? JTextComponent)?.replaceSelection(null)
   }
 }
 
@@ -132,7 +138,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
