@@ -4,41 +4,41 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val combo0 = JComboBox(makeModel())
-    combo0.setRenderer(CheckComboBoxRenderer<ComboItem>())
+fun makeUI(): Component {
+  val combo0 = JComboBox(makeModel())
+  combo0.renderer = CheckComboBoxRenderer<ComboItem>()
 
-    val combo1 = JComboBox(makeModel())
-    combo1.setEditable(true)
-    combo1.setEditor(CheckComboBoxEditor())
-    combo1.setRenderer(CheckComboBoxRenderer<ComboItem>())
+  val combo1 = JComboBox(makeModel())
+  combo1.isEditable = true
+  combo1.editor = CheckComboBoxEditor()
+  combo1.renderer = CheckComboBoxRenderer<ComboItem>()
 
-    val box = Box.createVerticalBox()
-    box.add(makeTitledPanel("setEditable(false), setRenderer(...)", combo0))
-    box.add(Box.createVerticalStrut(5))
-    box.add(makeTitledPanel("setEditable(true), setRenderer(...), setEditor(...)", combo1))
-    box.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-    add(box, BorderLayout.NORTH)
-    setPreferredSize(Dimension(320, 240))
-  }
-
-  private fun makeModel() = arrayOf(
-    ComboItem(isEnabled = true, isEditable = true, text = "00000"),
-    ComboItem(isEnabled = true, isEditable = false, text = "11111"),
-    ComboItem(isEnabled = false, isEditable = true, text = "22222"),
-    ComboItem(isEnabled = false, isEditable = false, text = "33333"))
-
-  private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
-    it.setBorder(BorderFactory.createTitledBorder(title))
-    it.add(c)
+  val box = Box.createVerticalBox()
+  box.add(makeTitledPanel("setEditable(false), setRenderer(...)", combo0))
+  box.add(Box.createVerticalStrut(5))
+  box.add(makeTitledPanel("setEditable(true), setRenderer(...), setEditor(...)", combo1))
+  box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+  return JPanel(BorderLayout()).also {
+    it.add(box, BorderLayout.NORTH)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-open class ComboItem(var isEnabled: Boolean = false, var isEditable: Boolean = false, var text: String? = "")
+private fun makeModel() = arrayOf(
+  ComboItem(isEnabled = true, isEditable = true, text = "00000"),
+  ComboItem(isEnabled = true, isEditable = false, text = "11111"),
+  ComboItem(isEnabled = false, isEditable = true, text = "22222"),
+  ComboItem(isEnabled = false, isEditable = false, text = "33333"))
 
-class CheckComboBoxRenderer<E : ComboItem> : ListCellRenderer<E> {
-  private val sbgc = Color(100, 200, 255)
+private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
+  it.border = BorderFactory.createTitledBorder(title)
+  it.add(c)
+}
+
+private open class ComboItem(var isEnabled: Boolean = false, var isEditable: Boolean = false, var text: String? = "")
+
+private class CheckComboBoxRenderer<E : ComboItem> : ListCellRenderer<E> {
+  private val bgc = Color(100, 200, 255)
   private val renderer = EditorPanel(ComboItem())
 
   override fun getListCellRendererComponent(
@@ -50,17 +50,17 @@ class CheckComboBoxRenderer<E : ComboItem> : ListCellRenderer<E> {
   ): Component {
     renderer.item = value
     if (isSelected && index >= 0) {
-      renderer.setOpaque(true)
-      renderer.setBackground(sbgc)
+      renderer.isOpaque = true
+      renderer.background = bgc
     } else {
-      renderer.setOpaque(false)
-      renderer.setBackground(Color.WHITE)
+      renderer.isOpaque = false
+      renderer.background = Color.WHITE
     }
     return renderer
   }
 }
 
-class CheckComboBoxEditor : ComboBoxEditor {
+private class CheckComboBoxEditor : ComboBoxEditor {
   private val editor = EditorPanel(ComboItem())
 
   override fun selectAll() {
@@ -71,57 +71,52 @@ class CheckComboBoxEditor : ComboBoxEditor {
 
   override fun setItem(anObject: Any) {
     EventQueue.invokeLater {
-      (SwingUtilities.getAncestorOfClass(JComboBox::class.java, getEditorComponent()) as? JComboBox<*>)?.also {
-        val idx = it.getSelectedIndex()
+      (SwingUtilities.getAncestorOfClass(JComboBox::class.java, editorComponent) as? JComboBox<*>)?.also {
+        val idx = it.selectedIndex
         if (idx >= 0 && idx != editor.editingIndex) {
           println("setItem: $idx")
           editor.editingIndex = idx
         }
       }
     }
-    // if (anObject is ComboItem) {
-    //   editor.item = anObject
-    // } else {
-    //   editor.item = ComboItem()
-    // }
     editor.item = anObject as? ComboItem ?: ComboItem()
   }
 
   override fun getEditorComponent() = editor
 
   override fun addActionListener(l: ActionListener) {
-    println("addActionListener: ${l.javaClass.getName()}")
+    println("addActionListener: ${l.javaClass.name}")
     editor.addActionListener(l)
   }
 
   override fun removeActionListener(l: ActionListener) {
-    println("removeActionListener: ${l.javaClass.getName()}")
+    println("removeActionListener: ${l.javaClass.name}")
     editor.removeActionListener(l)
   }
 }
 
-class EditorPanel(private val data: ComboItem) : JPanel() {
+private class EditorPanel(private val data: ComboItem) : JPanel() {
   private val enabledCheck = JCheckBox()
   private val editableCheck = JCheckBox()
   private val textField = JTextField("", 16)
   var editingIndex = -1
-  // data.index(this.data.index);
+
   var item: ComboItem
     get() {
-      data.isEnabled = enabledCheck.isSelected()
-      data.isEditable = editableCheck.isSelected()
-      data.text = textField.getText()
+      data.isEnabled = enabledCheck.isSelected
+      data.isEditable = editableCheck.isSelected
+      data.text = textField.text
       return data
     }
     set(item) {
-      enabledCheck.setSelected(item.isEnabled)
+      enabledCheck.isSelected = item.isEnabled
 
-      editableCheck.setSelected(item.isEditable)
-      editableCheck.setEnabled(item.isEnabled)
+      editableCheck.isSelected = item.isEditable
+      editableCheck.isEnabled = item.isEnabled
 
-      textField.setText(item.text)
-      textField.setEnabled(item.isEnabled)
-      textField.setEditable(item.isEditable)
+      textField.text = item.text
+      textField.isEnabled = item.isEnabled
+      textField.isEditable = item.isEditable
     }
 
   init {
@@ -129,39 +124,42 @@ class EditorPanel(private val data: ComboItem) : JPanel() {
 
     enabledCheck.addActionListener { e ->
       val c = SwingUtilities.getAncestorOfClass(JComboBox::class.java, this)
-      val cbox = c as? JComboBox<*> ?: return@addActionListener
-      val item = cbox.getItemAt(editingIndex) as? ComboItem ?: return@addActionListener
-      item.isEnabled = (e.getSource() as? JCheckBox)?.isSelected() ?: false
-      editableCheck.setEnabled(item.isEnabled)
-      textField.setEnabled(item.isEnabled)
-      cbox.setSelectedIndex(editingIndex)
+      val check = c as? JComboBox<*>
+      (check?.getItemAt(editingIndex) as? ComboItem)?.also {
+        it.isEnabled = (e.source as? JCheckBox)?.isSelected ?: false
+        editableCheck.isEnabled = it.isEnabled
+        textField.isEnabled = it.isEnabled
+        check.setSelectedIndex(editingIndex)
+      }
     }
-    enabledCheck.setOpaque(false)
-    enabledCheck.setFocusable(false)
+    enabledCheck.isOpaque = false
+    enabledCheck.isFocusable = false
 
     editableCheck.addActionListener { e ->
       val c = SwingUtilities.getAncestorOfClass(JComboBox::class.java, this)
-      val cbox = c as? JComboBox<*> ?: return@addActionListener
-      val item = cbox.getItemAt(editingIndex) as? ComboItem ?: return@addActionListener
-      item.isEditable = (e.getSource() as? JCheckBox)?.isSelected() ?: false
-      textField.setEditable(item.isEditable)
-      cbox.setSelectedIndex(editingIndex)
+      val check = c as? JComboBox<*>
+      (check?.getItemAt(editingIndex) as? ComboItem)?.also {
+        it.isEditable = (e.source as? JCheckBox)?.isSelected ?: false
+        textField.isEditable = it.isEditable
+        check.setSelectedIndex(editingIndex)
+      }
     }
-    editableCheck.setOpaque(false)
-    editableCheck.setFocusable(false)
+    editableCheck.isOpaque = false
+    editableCheck.isFocusable = false
 
     textField.addActionListener { e ->
       val c = SwingUtilities.getAncestorOfClass(JComboBox::class.java, this)
-      val cbox = c as? JComboBox<*> ?: return@addActionListener
-      val item = cbox.getItemAt(editingIndex) as? ComboItem ?: return@addActionListener
-      item.text = (e.getSource() as? JTextField)?.getText() ?: ""
-      cbox.setSelectedIndex(editingIndex)
+      val check = c as? JComboBox<*>
+      (check?.getItemAt(editingIndex) as? ComboItem)?.also {
+        it.text = (e.source as? JTextField)?.text ?: ""
+        check.setSelectedIndex(editingIndex)
+      }
     }
-    textField.setBorder(BorderFactory.createEmptyBorder())
-    textField.setOpaque(false)
+    textField.border = BorderFactory.createEmptyBorder()
+    textField.isOpaque = false
 
-    setOpaque(false)
-    setLayout(BoxLayout(this, BoxLayout.LINE_AXIS))
+    isOpaque = false
+    layout = BoxLayout(this, BoxLayout.LINE_AXIS)
 
     add(enabledCheck)
     add(editableCheck)
@@ -196,7 +194,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
