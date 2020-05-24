@@ -6,48 +6,46 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.MouseInputAdapter
 import javax.swing.event.MouseInputListener
 
-class MainPanel : JPanel(GridLayout(1, 2)) {
-  init {
-    add(makeTitledPanel("Default", JScrollPane(JList(makeModel()))))
-    add(makeTitledPanel("clearSelection", JScrollPane(makeList(makeModel()))))
-    setPreferredSize(Dimension(320, 240))
-  }
+fun makeUI() = JPanel(GridLayout(1, 2)).also {
+  it.add(makeTitledPanel("Default", JScrollPane(JList(makeModel()))))
+  it.add(makeTitledPanel("clearSelection", JScrollPane(makeList(makeModel()))))
+  it.preferredSize = Dimension(320, 240)
+}
 
-  private fun makeModel() = DefaultListModel<String>().also {
-    it.addElement("000000000")
-    it.addElement("111111111")
-    it.addElement("2222222222")
-    it.addElement("33333")
-    it.addElement("44444444444")
-  }
+private fun makeModel() = DefaultListModel<String>().also {
+  it.addElement("000000000")
+  it.addElement("111111111")
+  it.addElement("2222222222")
+  it.addElement("33333")
+  it.addElement("44444444444")
+}
 
-  private fun <E> makeList(model: ListModel<E>): JList<E> {
-    return object : JList<E>(model) {
-      @Transient
-      private var listener: MouseInputListener? = null
+private fun <E> makeList(model: ListModel<E>): JList<E> {
+  return object : JList<E>(model) {
+    @Transient
+    private var listener: MouseInputListener? = null
 
-      override fun updateUI() {
-        removeMouseListener(listener)
-        removeMouseMotionListener(listener)
-        setForeground(null)
-        setBackground(null)
-        setSelectionForeground(null)
-        setSelectionBackground(null)
-        super.updateUI()
-        listener = ClearSelectionListener()
-        addMouseListener(listener)
-        addMouseMotionListener(listener)
-      }
+    override fun updateUI() {
+      removeMouseListener(listener)
+      removeMouseMotionListener(listener)
+      foreground = null
+      background = null
+      selectionForeground = null
+      selectionBackground = null
+      super.updateUI()
+      listener = ClearSelectionListener()
+      addMouseListener(listener)
+      addMouseMotionListener(listener)
     }
-  }
-
-  private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
-    it.setBorder(BorderFactory.createTitledBorder(title))
-    it.add(c)
   }
 }
 
-class ClearSelectionListener : MouseInputAdapter() {
+private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
+  it.border = BorderFactory.createTitledBorder(title)
+  it.add(c)
+}
+
+private class ClearSelectionListener : MouseInputAdapter() {
   private var startOutside = false
   override fun mousePressed(e: MouseEvent) {
     val list = e.component as? JList<*> ?: return
@@ -63,7 +61,7 @@ class ClearSelectionListener : MouseInputAdapter() {
 
   override fun mouseDragged(e: MouseEvent) {
     val list = e.component as? JList<*> ?: return
-    if (contains(list, e.getPoint())) {
+    if (contains(list, e.point)) {
       startOutside = false
     } else if (startOutside) {
       clearSelectionAndFocus(list)
@@ -72,14 +70,14 @@ class ClearSelectionListener : MouseInputAdapter() {
 
   private fun clearSelectionAndFocus(list: JList<*>) {
     list.clearSelection()
-    list.getSelectionModel().also {
-      it.setAnchorSelectionIndex(-1)
-      it.setLeadSelectionIndex(-1)
+    list.selectionModel.also {
+      it.anchorSelectionIndex = -1
+      it.leadSelectionIndex = -1
     }
   }
 
   private fun contains(list: JList<*>, pt: Point): Boolean {
-    for (i in 0 until list.getModel().getSize()) {
+    for (i in 0 until list.model.size) {
       if (list.getCellBounds(i, i).contains(pt)) {
         return true
       }
@@ -98,7 +96,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
