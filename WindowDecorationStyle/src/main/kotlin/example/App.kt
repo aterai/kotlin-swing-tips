@@ -1,10 +1,12 @@
 package example
 
-import java.awt.*
-import java.awt.event.*
+import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
+import java.awt.event.MouseMotionListener
+import java.awt.event.WindowEvent
 import java.beans.PropertyVetoException
-import java.util.*
-import javax.swing.*
+import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicInternalFrameUI
 
 fun makeUI(): Component {
@@ -75,7 +77,7 @@ private class DraggableInternalFrame(title: String?) : JInternalFrame(title) {
       val prop = e.propertyName
       if ("activeWindow" == prop) {
         try {
-          setSelected(Objects.nonNull(e.newValue))
+          setSelected(e.newValue != null)
         } catch (ex: PropertyVetoException) {
           throw IllegalStateException(ex)
         }
