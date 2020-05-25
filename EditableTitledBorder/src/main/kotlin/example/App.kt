@@ -31,7 +31,15 @@ fun makeUI(): Component {
   }
 }
 
-private class EditableTitledBorder(border: Border?, title: String?, justification: Int, pos: Int, font: Font?, color: Color?, var comp: Component) : TitledBorder(border, title, justification, pos, font, color), MouseListener {
+private class EditableTitledBorder(
+  border: Border?,
+  title: String?,
+  justification: Int,
+  pos: Int,
+  font: Font?,
+  color: Color?,
+  var comp: Component
+) : TitledBorder(border, title, justification, pos, font, color), MouseListener {
   private val glassPane: Container = EditorGlassPane()
   private val editorTextField = JTextField()
   private val dummy = JLabel()
@@ -66,10 +74,14 @@ private class EditableTitledBorder(border: Border?, title: String?, justificatio
   }
 
   constructor(title: String?, c: Component) : this(null, title, LEADING, DEFAULT_POSITION, null, null, c)
-  // constructor(border: Border?, c: Component) : this(border, "", LEADING, DEFAULT_POSITION, null, null, c) {}
-  // constructor(border: Border?, title: String?, c: Component) : this(border, title, LEADING, DEFAULT_POSITION, null, null, c) {}
-  constructor(border: Border?, title: String?, justification: Int, pos: Int, c: Component) : this(border, title, justification, pos, null, null, c)
-  // constructor(border: Border?, title: String?, justification: Int, pos: Int, font: Font?, c: Component) : this(border, title, justification, pos, font, null, c) {}
+
+  constructor(
+    border: Border?,
+    title: String?,
+    justification: Int,
+    pos: Int,
+    c: Component
+  ) : this(border, title, justification, pos, null, null, c)
 
   override fun isBorderOpaque() = true
 
@@ -182,9 +194,7 @@ private class EditableTitledBorder(border: Border?, title: String?, justificatio
     init {
       isOpaque = false
       focusTraversalPolicy = object : DefaultFocusTraversalPolicy() {
-        public override fun accept(c: Component): Boolean {
-          return c == editorTextField
-        }
+        public override fun accept(c: Component) = c == editorTextField
       }
       addMouseListener(object : MouseAdapter() {
         override fun mouseClicked(e: MouseEvent) {
@@ -213,10 +223,12 @@ private class EditableTitledBorder(border: Border?, title: String?, justificatio
 
   init {
     comp.addMouseListener(this)
-    editorTextField.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "rename-title")
-    editorTextField.actionMap.put("rename-title", renameTitle)
-    editorTextField.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancel-editing")
-    editorTextField.actionMap.put("cancel-editing", cancelEditing)
+    val im = editorTextField.getInputMap(JComponent.WHEN_FOCUSED)
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "rename-title")
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancel-editing")
+    val am = editorTextField.actionMap
+    am.put("rename-title", renameTitle)
+    am.put("cancel-editing", cancelEditing)
   }
 }
 
