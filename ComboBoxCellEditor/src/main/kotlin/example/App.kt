@@ -9,53 +9,53 @@ import javax.swing.event.TreeModelListener
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.TreeCellRenderer
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val root = DefaultMutableTreeNode(PluginNode("Plugins"))
-    val model1 = listOf("Disabled", "Enabled", "Debug mode")
-    root.add(DefaultMutableTreeNode(PluginNode("Plugin 1", model1)))
-    root.add(DefaultMutableTreeNode(PluginNode("Plugin 2", model1)))
-    val leaf = DefaultMutableTreeNode(PluginNode("Plugin 3"))
-    root.add(leaf)
-    val model2 = listOf("Disabled", "Enabled")
-    leaf.add(DefaultMutableTreeNode(PluginNode("Plugin 3A", model2)))
-    leaf.add(DefaultMutableTreeNode(PluginNode("Plugin 3B", model2)))
+fun makeUI(): Component {
+  val root = DefaultMutableTreeNode(PluginNode("Plugins"))
+  val model1 = listOf("Disabled", "Enabled", "Debug mode")
+  root.add(DefaultMutableTreeNode(PluginNode("Plugin 1", model1)))
+  root.add(DefaultMutableTreeNode(PluginNode("Plugin 2", model1)))
+  val leaf = DefaultMutableTreeNode(PluginNode("Plugin 3"))
+  root.add(leaf)
+  val model2 = listOf("Disabled", "Enabled")
+  leaf.add(DefaultMutableTreeNode(PluginNode("Plugin 3A", model2)))
+  leaf.add(DefaultMutableTreeNode(PluginNode("Plugin 3B", model2)))
 
-    val tree = JTree(root)
-    tree.rowHeight = 0
-    tree.isEditable = true
-    tree.cellRenderer = PluginCellRenderer(JComboBox())
-    tree.cellEditor = PluginCellEditor(JComboBox())
-    val textArea = JTextArea(5, 1)
-    tree.model.addTreeModelListener(object : TreeModelListener {
-      override fun treeNodesChanged(e: TreeModelEvent) {
-        val node = e.children?.takeIf { it.size == 1 }?.firstOrNull()
-        (node as? DefaultMutableTreeNode)
-          ?.let { it.userObject as? PluginNode }
-          ?.also {
-            textArea.append("%s %s%n".format(it, it.plugins[it.selectedIndex]))
-          }
-      }
+  val tree = JTree(root)
+  tree.rowHeight = 0
+  tree.isEditable = true
+  tree.cellRenderer = PluginCellRenderer(JComboBox())
+  tree.cellEditor = PluginCellEditor(JComboBox())
+  val textArea = JTextArea(5, 1)
+  tree.model.addTreeModelListener(object : TreeModelListener {
+    override fun treeNodesChanged(e: TreeModelEvent) {
+      val node = e.children?.takeIf { it.size == 1 }?.firstOrNull()
+      (node as? DefaultMutableTreeNode)
+        ?.let { it.userObject as? PluginNode }
+        ?.also {
+          textArea.append("%s %s%n".format(it, it.plugins[it.selectedIndex]))
+        }
+    }
 
-      override fun treeNodesInserted(e: TreeModelEvent) {
-        /* not needed */
-      }
+    override fun treeNodesInserted(e: TreeModelEvent) {
+      /* not needed */
+    }
 
-      override fun treeNodesRemoved(e: TreeModelEvent) {
-        /* not needed */
-      }
+    override fun treeNodesRemoved(e: TreeModelEvent) {
+      /* not needed */
+    }
 
-      override fun treeStructureChanged(e: TreeModelEvent) {
-        /* not needed */
-      }
-    })
-    add(JScrollPane(tree))
-    add(JScrollPane(textArea), BorderLayout.SOUTH)
-    preferredSize = Dimension(320, 240)
+    override fun treeStructureChanged(e: TreeModelEvent) {
+      /* not needed */
+    }
+  })
+  return JPanel(BorderLayout()).also {
+    it.add(JScrollPane(tree))
+    it.add(JScrollPane(textArea), BorderLayout.SOUTH)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-data class PluginNode(
+private data class PluginNode(
   private val name: String,
   val plugins: List<String> = emptyList(),
   val selectedIndex: Int = -1
@@ -63,7 +63,7 @@ data class PluginNode(
   override fun toString() = name
 }
 
-class PluginPanel(val comboBox: JComboBox<String>) : JPanel() {
+private class PluginPanel(val comboBox: JComboBox<String>) : JPanel() {
   val pluginName = JLabel()
 
   fun extractNode(value: Any?): PluginNode? {
@@ -95,7 +95,7 @@ class PluginPanel(val comboBox: JComboBox<String>) : JPanel() {
   }
 }
 
-class PluginCellRenderer(comboBox: JComboBox<String>) : TreeCellRenderer {
+private class PluginCellRenderer(comboBox: JComboBox<String>) : TreeCellRenderer {
   private val panel = PluginPanel(comboBox)
   override fun getTreeCellRendererComponent(
     tree: JTree,
@@ -111,8 +111,9 @@ class PluginCellRenderer(comboBox: JComboBox<String>) : TreeCellRenderer {
   }
 }
 
-class PluginCellEditor(comboBox: JComboBox<String>) : DefaultCellEditor(comboBox) {
+private class PluginCellEditor(comboBox: JComboBox<String>) : DefaultCellEditor(comboBox) {
   private val panel = PluginPanel(comboBox)
+
   @Transient
   private var node: PluginNode? = null
 
@@ -131,7 +132,6 @@ class PluginCellEditor(comboBox: JComboBox<String>) : DefaultCellEditor(comboBox
   override fun getCellEditorValue(): Any {
     val o = super.getCellEditorValue()
     return node
-      ?.let { it as? PluginNode }
       ?.let {
         val idx = (panel.comboBox.model as? DefaultComboBoxModel<String>)?.getIndexOf(o) ?: -1
         val pn = PluginNode(panel.pluginName.text, it.plugins, idx)
@@ -172,7 +172,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
