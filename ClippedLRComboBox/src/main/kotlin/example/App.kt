@@ -4,71 +4,71 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ItemEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val combo = object : JComboBox<PairItem>(makeModel()) {
-      override fun updateUI() {
-        // setRenderer(null);
-        super.updateUI()
-        setRenderer(MultiColumnCellRenderer())
-      }
+fun makeUI(): Component {
+  val combo = object : JComboBox<PairItem>(makeModel()) {
+    override fun updateUI() {
+      // setRenderer(null);
+      super.updateUI()
+      setRenderer(MultiColumnCellRenderer())
     }
-    add(makeTitledBox("MultiColumnComboBox", combo), BorderLayout.NORTH)
-    add(makeTitledBox("DefaultComboBox", JComboBox<PairItem>(makeModel())), BorderLayout.SOUTH)
-    setPreferredSize(Dimension(320, 240))
   }
-
-  private fun makeTitledBox(title: String, combo: JComboBox<*>): Box {
-    val leftTextField = JTextField()
-    val rightTextField = JTextField()
-    leftTextField.setEditable(false)
-    rightTextField.setEditable(false)
-    val box = Box.createVerticalBox()
-    box.setBorder(BorderFactory.createTitledBorder(title))
-    box.add(Box.createVerticalStrut(2))
-    box.add(combo)
-    box.add(Box.createVerticalStrut(2))
-    box.add(leftTextField)
-    box.add(Box.createVerticalStrut(2))
-    box.add(rightTextField)
-    combo.addItemListener { e ->
-      val item = e.getItem()
-      if (e.getStateChange() == ItemEvent.SELECTED && item is PairItem) {
-        leftTextField.setText(item.leftText)
-        rightTextField.setText(item.rightText)
-      }
-    }
-    return box
-  }
-
-  private fun makeModel() = DefaultComboBoxModel<PairItem>().also {
-    val name = "loooooooooooooooooooooooooooooooooong.1234567890.1234567890"
-    it.addElement(PairItem("asdfasdf", "846876"))
-    it.addElement(PairItem("bxcvzx", "asdfaasdfasdfasdfasdfsasd"))
-    it.addElement(PairItem(name, "qwerqwer.1234567890.1234567890.1234567890"))
-    it.addElement(PairItem("14234125", "64345424543523452345234523684"))
-    it.addElement(PairItem("hjklhjk", "addElement"))
-    it.addElement(PairItem("aaaaaaaa", "ddd"))
-    it.addElement(PairItem("bbbbbbbb", "eeeee"))
-    it.addElement(PairItem("cccccccc", "fffffff"))
+  return JPanel(BorderLayout()).also {
+    it.add(makeTitledBox("MultiColumnComboBox", combo), BorderLayout.NORTH)
+    it.add(makeTitledBox("DefaultComboBox", JComboBox(makeModel())), BorderLayout.SOUTH)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-internal class MultiColumnCellRenderer : ListCellRenderer<PairItem> {
+private fun makeTitledBox(title: String, combo: JComboBox<*>): Box {
+  val leftTextField = JTextField()
+  val rightTextField = JTextField()
+  leftTextField.isEditable = false
+  rightTextField.isEditable = false
+  val box = Box.createVerticalBox()
+  box.border = BorderFactory.createTitledBorder(title)
+  box.add(Box.createVerticalStrut(2))
+  box.add(combo)
+  box.add(Box.createVerticalStrut(2))
+  box.add(leftTextField)
+  box.add(Box.createVerticalStrut(2))
+  box.add(rightTextField)
+  combo.addItemListener { e ->
+    val item = e.item
+    if (e.stateChange == ItemEvent.SELECTED && item is PairItem) {
+      leftTextField.text = item.leftText
+      rightTextField.text = item.rightText
+    }
+  }
+  return box
+}
+
+private fun makeModel() = DefaultComboBoxModel<PairItem>().also {
+  val name = "loooooooooooooooooooooooooooooooooong.1234567890.1234567890"
+  it.addElement(PairItem("ccc", "846876"))
+  it.addElement(PairItem("bbb", "111111111111111111111"))
+  it.addElement(PairItem(name, "aaa.1234567890.1234567890.1234567890"))
+  it.addElement(PairItem("14234125", "64345424543523452345234523684"))
+  it.addElement(PairItem("555555", "addElement"))
+  it.addElement(PairItem("666666666", "ddd"))
+  it.addElement(PairItem("7777777", "33333"))
+  it.addElement(PairItem("88888888", "4444444444"))
+}
+
+private class MultiColumnCellRenderer : ListCellRenderer<PairItem> {
   private val leftLabel = object : JLabel() {
     override fun updateUI() {
       super.updateUI()
-      setOpaque(false)
-      setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 0))
+      isOpaque = false
+      border = BorderFactory.createEmptyBorder(0, 2, 0, 0)
     }
   }
   private val rightLabel = object : JLabel() {
     override fun updateUI() {
       super.updateUI()
-      setOpaque(false)
-      setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2))
-      setForeground(Color.GRAY)
-      setHorizontalAlignment(SwingConstants.RIGHT)
+      isOpaque = false
+      border = BorderFactory.createEmptyBorder(0, 2, 0, 2)
+      foreground = Color.GRAY
+      horizontalAlignment = SwingConstants.RIGHT
     }
 
     override fun getPreferredSize() = Dimension(80, 0)
@@ -82,7 +82,7 @@ internal class MultiColumnCellRenderer : ListCellRenderer<PairItem> {
 
     override fun updateUI() {
       super.updateUI()
-      setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1))
+      border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
     }
   }
 
@@ -93,28 +93,28 @@ internal class MultiColumnCellRenderer : ListCellRenderer<PairItem> {
     isSelected: Boolean,
     cellHasFocus: Boolean
   ): Component {
-    leftLabel.setText(value.leftText)
-    rightLabel.setText(value.rightText)
+    leftLabel.text = value.leftText
+    rightLabel.text = value.rightText
 
-    leftLabel.setFont(list.getFont())
-    rightLabel.setFont(list.getFont())
+    leftLabel.font = list.font
+    rightLabel.font = list.font
 
     renderer.add(leftLabel)
     renderer.add(rightLabel, BorderLayout.EAST)
 
     if (index < 0) {
-      leftLabel.setForeground(list.getForeground())
-      renderer.setOpaque(false)
+      leftLabel.foreground = list.foreground
+      renderer.isOpaque = false
     } else {
-      leftLabel.setForeground(if (isSelected) list.getSelectionForeground() else list.getForeground())
-      renderer.setBackground(if (isSelected) list.getSelectionBackground() else list.getBackground())
-      renderer.setOpaque(true)
+      leftLabel.foreground = if (isSelected) list.selectionForeground else list.foreground
+      renderer.background = if (isSelected) list.selectionBackground else list.background
+      renderer.isOpaque = true
     }
     return renderer
   }
 }
 
-data class PairItem(val leftText: String, val rightText: String) {
+private data class PairItem(val leftText: String, val rightText: String) {
   override fun toString() = "$leftText / $rightText"
 }
 
@@ -128,7 +128,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
