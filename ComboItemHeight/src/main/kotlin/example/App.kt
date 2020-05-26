@@ -48,7 +48,7 @@ fun makeUI(): Component {
       setRenderer { list, value, index, isSelected, cellHasFocus ->
         r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
           if (index >= 0) {
-            (it as? JLabel)?.text = "<html><table><td height='32'>${value}"
+            (it as? JLabel)?.text = "<html><table><td height='32'>$value"
           }
         }
       }
