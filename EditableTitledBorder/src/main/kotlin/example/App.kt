@@ -31,16 +31,17 @@ fun makeUI(): Component {
   }
 }
 
+@Suppress("LongParameterList")
 private class EditableTitledBorder(
   border: Border?,
-  title: String?,
+  title: String,
   justification: Int,
   pos: Int,
   font: Font?,
   color: Color?,
   var comp: Component
 ) : TitledBorder(border, title, justification, pos, font, color), MouseListener {
-  private val glassPane: Container = EditorGlassPane()
+  private val glassPane = EditorGlassPane()
   private val editorTextField = JTextField()
   private val dummy = JLabel()
   private val rect = Rectangle()
@@ -73,11 +74,11 @@ private class EditableTitledBorder(
     }
   }
 
-  constructor(title: String?, c: Component) : this(null, title, LEADING, DEFAULT_POSITION, null, null, c)
+  constructor(title: String, c: Component) : this(null, title, LEADING, DEFAULT_POSITION, null, null, c)
 
   constructor(
     border: Border?,
-    title: String?,
+    title: String,
     justification: Int,
     pos: Int,
     c: Component
@@ -104,56 +105,53 @@ private class EditableTitledBorder(
   }
 
   private fun getTitleBounds(c: Component, width: Int, height: Int): Rectangle {
-    val title = getTitle()
-    if (title?.isNotEmpty() == true) {
-      val border = getBorder()
-      val edge = if (border is TitledBorder) 0 else EDGE_SPACING
-      val label = getLabel(c)
-      val size = label.preferredSize
-      val insets = makeBorderInsets(border, c, Insets(0, 0, 0, 0))
-      var labelY = 0
-      val labelH = size.height
-      when (getTitlePosition()) {
-        ABOVE_TOP -> {
-          insets.left = 0
-          insets.right = 0
-        }
-        TOP -> {
-          insets.top = edge + insets.top / 2 - labelH / 2
-          if (insets.top >= edge) {
-            labelY += insets.top
-          }
-        }
-        BELOW_TOP -> labelY += insets.top + edge
-        ABOVE_BOTTOM -> labelY += height - labelH - insets.bottom - edge
-        BOTTOM -> {
-          labelY += height - labelH
-          insets.bottom = edge + (insets.bottom - labelH) / 2
-          if (insets.bottom >= edge) {
-            labelY -= insets.bottom
-          }
-        }
-        BELOW_BOTTOM -> {
-          insets.left = 0
-          insets.right = 0
-          labelY += height - labelH
+    // if (getTitle()?.isNotEmpty() == true) {
+    val border = getBorder()
+    val edge = if (border is TitledBorder) 0 else EDGE_SPACING
+    val label = getLabel(c)
+    val size = label.preferredSize
+    val insets = makeBorderInsets(border, c, Insets(0, 0, 0, 0))
+    var labelY = 0
+    val labelH = size.height
+    when (getTitlePosition()) {
+      ABOVE_TOP -> {
+        insets.left = 0
+        insets.right = 0
+      }
+      TOP -> {
+        insets.top = edge + insets.top / 2 - labelH / 2
+        if (insets.top >= edge) {
+          labelY += insets.top
         }
       }
-      insets.left += edge + TEXT_INSET_H
-      insets.right += edge + TEXT_INSET_H
-      var labelX = 0
-      var labelW = width - insets.left - insets.right
-      if (labelW > size.width) {
-        labelW = size.width
+      BELOW_TOP -> labelY += insets.top + edge
+      ABOVE_BOTTOM -> labelY += height - labelH - insets.bottom - edge
+      BOTTOM -> {
+        labelY += height - labelH
+        insets.bottom = edge + (insets.bottom - labelH) / 2
+        if (insets.bottom >= edge) {
+          labelY -= insets.bottom
+        }
       }
-      when (getJustification(c)) {
-        LEFT -> labelX += insets.left
-        RIGHT -> labelX += width - insets.right - labelW
-        CENTER -> labelX += (width - labelW) / 2
+      BELOW_BOTTOM -> {
+        insets.left = 0
+        insets.right = 0
+        labelY += height - labelH
       }
-      return Rectangle(labelX, labelY, labelW, labelH)
     }
-    return Rectangle()
+    insets.left += edge + TEXT_INSET_H
+    insets.right += edge + TEXT_INSET_H
+    var labelX = 0
+    var labelW = width - insets.left - insets.right
+    if (labelW > size.width) {
+      labelW = size.width
+    }
+    when (getJustification(c)) {
+      LEFT -> labelX += insets.left
+      RIGHT -> labelX += width - insets.right - labelW
+      CENTER -> labelX += (width - labelW) / 2
+    }
+    return Rectangle(labelX, labelY, labelW, labelH)
   }
 
   override fun mouseClicked(e: MouseEvent) {
