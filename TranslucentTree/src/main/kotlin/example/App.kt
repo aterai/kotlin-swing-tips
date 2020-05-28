@@ -5,43 +5,41 @@ import java.awt.image.BufferedImage
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.tree.DefaultTreeCellRenderer
 
-class MainPanel : JPanel(GridLayout(1, 2, 2, 2)) {
-  init {
-    add(makeTranslucentScrollPane(TranslucentTree()))
-    add(makeTranslucentScrollPane(TransparentTree()))
-    setOpaque(false)
-    setPreferredSize(Dimension(320, 240))
-  }
-
-  private fun makeTranslucentScrollPane(view: Component) = JScrollPane(view).also {
-    it.setOpaque(false)
-    it.getViewport().setOpaque(false)
-  }
+fun makeUI() = JPanel(GridLayout(1, 2, 2, 2)).also {
+  it.add(makeTranslucentScrollPane(TranslucentTree()))
+  it.add(makeTranslucentScrollPane(TransparentTree()))
+  it.isOpaque = false
+  it.preferredSize = Dimension(320, 240)
 }
 
-class TranslucentTree : JTree() {
+private fun makeTranslucentScrollPane(view: Component) = JScrollPane(view).also {
+  it.isOpaque = false
+  it.viewport.isOpaque = false
+}
+
+private class TranslucentTree : JTree() {
   override fun updateUI() {
     super.updateUI()
     UIManager.put("Tree.repaintWholeRow", true)
     setCellRenderer(TranslucentTreeCellRenderer())
-    setOpaque(false)
-    setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
+    isOpaque = false
+    border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   }
 }
 
-class TransparentTree : JTree() {
+private class TransparentTree : JTree() {
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setPaint(SELECTED_COLOR)
-    getSelectionRows()
-        ?.map { getRowBounds(it) }
-        ?.forEach { g2.fillRect(0, it.y, getWidth(), it.height) }
+    g2.paint = SELECTED_COLOR
+    selectionRows
+      ?.map { getRowBounds(it) }
+      ?.forEach { g2.fillRect(0, it.y, width, it.height) }
     super.paintComponent(g)
     if (hasFocus()) {
-      getLeadSelectionPath()?.also {
+      leadSelectionPath?.also {
         val r = getRowBounds(getRowForPath(it))
-        g2.setPaint(SELECTED_COLOR.darker())
-        g2.drawRect(0, r.y, getWidth() - 1, r.height - 1)
+        g2.paint = SELECTED_COLOR.darker()
+        g2.drawRect(0, r.y, width - 1, r.height - 1)
       }
     }
     g2.dispose()
@@ -51,8 +49,8 @@ class TransparentTree : JTree() {
     super.updateUI()
     UIManager.put("Tree.repaintWholeRow", true)
     setCellRenderer(TransparentTreeCellRenderer())
-    setOpaque(false)
-    setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
+    isOpaque = false
+    border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   }
 
   companion object {
@@ -61,18 +59,18 @@ class TransparentTree : JTree() {
 }
 
 // https://ateraimemo.com/Swing/RootPaneBackground.html
-class TransparentRootPane : JRootPane() {
+private class TransparentRootPane : JRootPane() {
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setPaint(TEXTURE)
-    g2.fillRect(0, 0, getWidth(), getHeight())
+    g2.paint = TEXTURE
+    g2.fillRect(0, 0, width, height)
     g2.dispose()
   }
 
   override fun updateUI() {
     super.updateUI()
-    setOpaque(false)
+    isOpaque = false
   }
 
   companion object {
@@ -82,9 +80,9 @@ class TransparentRootPane : JRootPane() {
       val sz = cs * cs
       val img = BufferedImage(sz, sz, BufferedImage.TYPE_INT_ARGB)
       val g2: Graphics2D = img.createGraphics()
-      g2.setPaint(Color(0xDC_DC_DC))
+      g2.paint = Color(0xDC_DC_DC)
       g2.fillRect(0, 0, sz, sz)
-      g2.setPaint(Color(0xC8_C8_C8_C8.toInt(), true))
+      g2.paint = Color(0xC8_C8_C8_C8.toInt(), true)
       var i = 0
       while (i * cs < sz) {
         var j = 0
@@ -103,7 +101,7 @@ class TransparentRootPane : JRootPane() {
 }
 
 // https://ateraimemo.com/Swing/TreeBackgroundSelectionColor.html
-open class TransparentTreeCellRenderer : DefaultTreeCellRenderer() {
+private open class TransparentTreeCellRenderer : DefaultTreeCellRenderer() {
   override fun getTreeCellRendererComponent(
     tree: JTree,
     value: Any?,
@@ -114,7 +112,7 @@ open class TransparentTreeCellRenderer : DefaultTreeCellRenderer() {
     hasFocus: Boolean
   ): Component {
     val c = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, false)
-    (c as? JComponent)?.setOpaque(false)
+    (c as? JComponent)?.isOpaque = false
     return c
   }
 
@@ -127,7 +125,7 @@ open class TransparentTreeCellRenderer : DefaultTreeCellRenderer() {
   }
 }
 
-class TranslucentTreeCellRenderer : TransparentTreeCellRenderer() {
+private class TranslucentTreeCellRenderer : TransparentTreeCellRenderer() {
   override fun getBackgroundSelectionColor() = Color(0x64_64_64_FF, true)
 }
 
@@ -144,11 +142,11 @@ fun main() {
         return TransparentRootPane()
       }
     }
-    (frame.getContentPane() as? JComponent)?.setOpaque(false)
+    (frame.contentPane as? JComponent)?.isOpaque = false
     frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-    frame.getContentPane().add(MainPanel())
+    frame.contentPane.add(makeUI())
     frame.pack()
     frame.setLocationRelativeTo(null)
-    frame.setVisible(true)
+    frame.isVisible = true
   }
 }
