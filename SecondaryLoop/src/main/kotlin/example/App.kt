@@ -6,53 +6,54 @@ import java.beans.PropertyChangeEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.LayerUI
 
-class MainPanel : JPanel(BorderLayout()) {
-  private val logger = JTextArea()
-  private val cancel = JButton("cancel")
-  private val button = JButton("Stop 5sec")
-  private val layerUI = DisableInputLayerUI<JComponent>()
-  @Transient
-  private var worker: Thread? = null
+private val logger = JTextArea()
+private val cancel = JButton("cancel")
+private val button = JButton("Stop 5sec")
+private val layerUI = DisableInputLayerUI<JComponent>()
+@Transient
+private var worker: Thread? = null
 
-  init {
-    cancel.setEnabled(false)
-    cancel.addActionListener { worker?.interrupt() }
+fun makeUI(): Component {
+  cancel.isEnabled = false
+  cancel.addActionListener { worker?.interrupt() }
 
-    button.addActionListener {
-      setInputBlock(true)
-      val loop = Toolkit.getDefaultToolkit().getSystemEventQueue().createSecondaryLoop()
-      worker = object : Thread() {
-        override fun run() {
-          append(runCatching { Thread.sleep(5000) }.fold(onSuccess = { "Done" }, onFailure = { "Interrupted" }))
-          setInputBlock(false)
-          loop.exit()
-        }
-      }
-      worker?.start()
-      if (!loop.enter()) {
-        append("Error")
+  button.addActionListener {
+    setInputBlock(true)
+    val loop = Toolkit.getDefaultToolkit().systemEventQueue.createSecondaryLoop()
+    worker = object : Thread() {
+      override fun run() {
+        append(runCatching { sleep(5000) }.fold(onSuccess = { "Done" }, onFailure = { "Interrupted" }))
+        setInputBlock(false)
+        loop.exit()
       }
     }
-
-    val p = JPanel().also {
-      it.add(JCheckBox())
-      it.add(JTextField(10))
-      it.add(button)
+    worker?.start()
+    if (!loop.enter()) {
+      append("Error")
     }
-    add(JLayer(p, layerUI), BorderLayout.NORTH)
-    add(JScrollPane(logger))
-    add(cancel, BorderLayout.SOUTH)
-    setPreferredSize(Dimension(320, 240))
   }
 
-  fun setInputBlock(flg: Boolean) {
-    layerUI.setInputBlock(flg)
-    cancel.setEnabled(flg)
+  val p = JPanel().also {
+    it.add(JCheckBox())
+    it.add(JTextField(10))
+    it.add(button)
   }
 
-  fun append(str: String) {
-    logger.append(str + "\n")
+  return JPanel(BorderLayout()).also {
+    it.add(JLayer(p, layerUI), BorderLayout.NORTH)
+    it.add(JScrollPane(logger))
+    it.add(cancel, BorderLayout.SOUTH)
+    it.preferredSize = Dimension(320, 240)
   }
+}
+
+fun setInputBlock(flg: Boolean) {
+  layerUI.setInputBlock(flg)
+  cancel.isEnabled = flg
+}
+
+fun append(str: String) {
+  logger.append(str + "\n")
 }
 
 internal class DisableInputLayerUI<V : JComponent> : LayerUI<V>() {
@@ -69,24 +70,23 @@ internal class DisableInputLayerUI<V : JComponent> : LayerUI<V>() {
       return
     }
     val g2 = g.create() as Graphics2D
-    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f))
-    g2.setPaint(Color.GRAY.brighter())
-    g2.fillRect(0, 0, c.getWidth(), c.getHeight())
+    g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f)
+    g2.paint = Color.GRAY.brighter()
+    g2.fillRect(0, 0, c.width, c.height)
     g2.dispose()
   }
 
   override fun installUI(c: JComponent) {
     super.installUI(c)
     val layer = c as? JLayer<*> ?: return
-    layer.getGlassPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR))
-    layer.setLayerEventMask(
-        AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
+    layer.glassPane.cursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)
+    layer.layerEventMask = (AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
         or AWTEvent.MOUSE_WHEEL_EVENT_MASK or AWTEvent.KEY_EVENT_MASK
         or AWTEvent.FOCUS_EVENT_MASK or AWTEvent.COMPONENT_EVENT_MASK)
   }
 
   override fun uninstallUI(c: JComponent) {
-    (c as? JLayer<*>)?.setLayerEventMask(0)
+    (c as? JLayer<*>)?.layerEventMask = 0
     super.uninstallUI(c)
   }
 
@@ -98,8 +98,8 @@ internal class DisableInputLayerUI<V : JComponent> : LayerUI<V>() {
   }
 
   override fun applyPropertyChange(e: PropertyChangeEvent, l: JLayer<out V>) {
-    if (e.getPropertyName() == CMD_REPAINT) {
-      l.getGlassPane().setVisible(e.getNewValue() as? Boolean ?: false)
+    if (e.propertyName == CMD_REPAINT) {
+      l.glassPane.isVisible = e.newValue as? Boolean ?: false
       l.repaint()
     }
   }
@@ -119,7 +119,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
