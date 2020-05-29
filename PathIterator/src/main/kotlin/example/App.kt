@@ -9,94 +9,94 @@ import javax.swing.event.ChangeListener
 import kotlin.math.cos
 import kotlin.math.sin
 
-class MainPanel : JPanel(BorderLayout()) {
-  private val outer = SpinnerNumberModel(40, 10, 1000, 1)
-  private val inner = SpinnerNumberModel(30, 10, 1000, 1)
-  private val vcModel = SpinnerNumberModel(20, 3, 100, 1)
-  private val styleField = JTextField("stroke:none; fill:pink")
-  private val check = JCheckBox("Antialias", true)
-  private val label = JLabel()
-  private val textArea = JTextArea()
+private val outer = SpinnerNumberModel(40, 10, 1000, 1)
+private val inner = SpinnerNumberModel(30, 10, 1000, 1)
+private val vcModel = SpinnerNumberModel(20, 3, 100, 1)
+private val styleField = JTextField("stroke:none; fill:pink")
+private val check = JCheckBox("Antialias", true)
+private val label = JLabel()
+private val textArea = JTextArea()
 
-  private fun makePreviewPanel(): Component {
-    val p = JPanel(BorderLayout())
-    p.add(check, BorderLayout.SOUTH)
-    p.add(JScrollPane(label))
-    return p
-  }
-
-  private fun makePreferencesPanel(): Component {
-    val p = JPanel(GridBagLayout())
-    p.border = BorderFactory.createTitledBorder("Preferences")
-    val c = GridBagConstraints()
-    c.gridx = 0
-    c.insets = Insets(5, 5, 5, 0)
-    c.anchor = GridBagConstraints.LINE_END
-    p.add(JLabel("Addendum Circle Radius:"), c)
-    p.add(JLabel("Dedendum Circle Radius:"), c)
-    p.add(JLabel("Count of Teeth:"), c)
-    c.gridx = 1
-    c.weightx = 1.0
-    c.fill = GridBagConstraints.HORIZONTAL
-    p.add(JSpinner(outer), c)
-    p.add(JSpinner(inner), c)
-    p.add(JSpinner(vcModel), c)
-    return p
-  }
-
-  private fun makeSvgPanel(): Component {
-    val button = JButton("set")
-    button.addActionListener { initStar() }
-
-    val sp = JPanel(BorderLayout(2, 2))
-    sp.add(JLabel("style:"), BorderLayout.WEST)
-    sp.add(styleField)
-    sp.add(button, BorderLayout.EAST)
-
-    val p = JPanel(BorderLayout(5, 5))
-    p.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-    p.add(sp, BorderLayout.SOUTH)
-    p.add(JScrollPane(textArea))
-    return p
-  }
-
-  private fun initStar() {
-    val r1 = outer.number.toInt()
-    val r2 = inner.number.toInt()
-    val vc = vcModel.number.toInt()
-    val antialias = check.isSelected
-    val star = SvgUtils.makeStar(r1, r2, vc)
-    label.icon = StarIcon(star, antialias)
-    val style = styleField.text.trim()
-    val min = r1.coerceAtMost(r2)
-    val max = r1.coerceAtLeast(r2)
-    val fmt = "addendum_circle_radius=\"%d\" dedendum_circle_radius =\"%d\" number_of_teeth=\"%dT\""
-    val desc = fmt.format(max, min, vc)
-    textArea.text = SvgUtils.makeStarburstSvg(star.getPathIterator(null), max * 2, style, desc)
-  }
-
-  init {
-    initStar()
-    val cl = ChangeListener { initStar() }
-    outer.addChangeListener(cl)
-    inner.addChangeListener(cl)
-    vcModel.addChangeListener(cl)
-    check.addChangeListener(cl)
-    label.verticalAlignment = SwingConstants.CENTER
-    label.horizontalAlignment = SwingConstants.CENTER
-    check.horizontalAlignment = SwingConstants.RIGHT
-    val tab = JTabbedPane()
-    tab.addTab("Preview", makePreviewPanel())
-    tab.addTab("SVG", makeSvgPanel())
-    val panel = JPanel(BorderLayout())
-    panel.add(makePreferencesPanel(), BorderLayout.NORTH)
-    panel.add(tab)
-    add(panel)
-    preferredSize = Dimension(320, 240)
+fun makeUI(): Component {
+  initStar()
+  val cl = ChangeListener { initStar() }
+  outer.addChangeListener(cl)
+  inner.addChangeListener(cl)
+  vcModel.addChangeListener(cl)
+  check.addChangeListener(cl)
+  label.verticalAlignment = SwingConstants.CENTER
+  label.horizontalAlignment = SwingConstants.CENTER
+  check.horizontalAlignment = SwingConstants.RIGHT
+  val tab = JTabbedPane()
+  tab.addTab("Preview", makePreviewPanel())
+  tab.addTab("SVG", makeSvgPanel())
+  val panel = JPanel(BorderLayout())
+  panel.add(makePreferencesPanel(), BorderLayout.NORTH)
+  panel.add(tab)
+  return JPanel(BorderLayout()).also {
+    it.add(panel)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-object SvgUtils {
+private fun makePreviewPanel(): Component {
+  val p = JPanel(BorderLayout())
+  p.add(check, BorderLayout.SOUTH)
+  p.add(JScrollPane(label))
+  return p
+}
+
+private fun makePreferencesPanel(): Component {
+  val p = JPanel(GridBagLayout())
+  p.border = BorderFactory.createTitledBorder("Preferences")
+  val c = GridBagConstraints()
+  c.gridx = 0
+  c.insets = Insets(5, 5, 5, 0)
+  c.anchor = GridBagConstraints.LINE_END
+  p.add(JLabel("Addendum Circle Radius:"), c)
+  p.add(JLabel("Dedendum Circle Radius:"), c)
+  p.add(JLabel("Count of Teeth:"), c)
+  c.gridx = 1
+  c.weightx = 1.0
+  c.fill = GridBagConstraints.HORIZONTAL
+  p.add(JSpinner(outer), c)
+  p.add(JSpinner(inner), c)
+  p.add(JSpinner(vcModel), c)
+  return p
+}
+
+private fun makeSvgPanel(): Component {
+  val button = JButton("set")
+  button.addActionListener { initStar() }
+
+  val sp = JPanel(BorderLayout(2, 2))
+  sp.add(JLabel("style:"), BorderLayout.WEST)
+  sp.add(styleField)
+  sp.add(button, BorderLayout.EAST)
+
+  val p = JPanel(BorderLayout(5, 5))
+  p.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+  p.add(sp, BorderLayout.SOUTH)
+  p.add(JScrollPane(textArea))
+  return p
+}
+
+private fun initStar() {
+  val r1 = outer.number.toInt()
+  val r2 = inner.number.toInt()
+  val vc = vcModel.number.toInt()
+  val antialias = check.isSelected
+  val star = SvgUtils.makeStar(r1, r2, vc)
+  label.icon = StarIcon(star, antialias)
+  val style = styleField.text.trim()
+  val min = r1.coerceAtMost(r2)
+  val max = r1.coerceAtLeast(r2)
+  val fmt = "addendum_circle_radius=\"%d\" dedendum_circle_radius =\"%d\" number_of_teeth=\"%dT\""
+  val desc = fmt.format(max, min, vc)
+  textArea.text = SvgUtils.makeStarburstSvg(star.getPathIterator(null), max * 2, style, desc)
+}
+
+private object SvgUtils {
   fun makeStarburstSvg(
     pi: PathIterator,
     sz: Int,
@@ -150,9 +150,9 @@ object SvgUtils {
   }
 }
 
-class StarIcon(private val star: Shape, private val antialias: Boolean) : Icon {
+private class StarIcon(private val star: Shape, private val antialias: Boolean) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = Color.PINK
     if (antialias) {
@@ -177,7 +177,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
