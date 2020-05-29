@@ -9,16 +9,14 @@ import javax.swing.text.Style
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val textPane = JTextPane(SimpleSyntaxDocument())
-    textPane.setText("red green, blue. red-green;blue.")
-    add(JScrollPane(textPane))
-    setPreferredSize(Dimension(320, 240))
-  }
+fun makeUI() = JPanel(BorderLayout()).also {
+  val textPane = JTextPane(SimpleSyntaxDocument())
+  textPane.text = "red green, blue. red-green;blue."
+  it.add(JScrollPane(textPane))
+  it.preferredSize = Dimension(320, 240)
 }
 
-class SimpleSyntaxDocument : DefaultStyledDocument() {
+private class SimpleSyntaxDocument : DefaultStyledDocument() {
   private val def: Style? = getStyle(StyleContext.DEFAULT_STYLE)
 
   init {
@@ -54,7 +52,7 @@ class SimpleSyntaxDocument : DefaultStyledDocument() {
 
   @Throws(BadLocationException::class)
   private fun processChangedLines(offset: Int, length: Int) {
-    val root = getDefaultRootElement()
+    val root = defaultRootElement
     val content = getText(0, getLength())
     val startLine = root.getElementIndex(offset)
     val endLine = root.getElementIndex(offset + length)
@@ -65,9 +63,9 @@ class SimpleSyntaxDocument : DefaultStyledDocument() {
 
   @Throws(BadLocationException::class)
   private fun applyHighlighting(content: String, line: Int) {
-    val root = getDefaultRootElement()
-    val startOffset = root.getElement(line).getStartOffset()
-    var endOffset = root.getElement(line).getEndOffset() - 1
+    val root = defaultRootElement
+    val startOffset = root.getElement(line).startOffset
+    var endOffset = root.getElement(line).endOffset - 1
     val lineLength = endOffset - startOffset
     val contentLength = content.length
     endOffset = if (endOffset >= contentLength) contentLength - 1 else endOffset
@@ -122,7 +120,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
