@@ -8,80 +8,81 @@ import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.MutableTreeNode
 
-class MainPanel : JPanel(BorderLayout()) {
-  private val root = TreeUtil.makeTreeRoot()
-  private val tree = JTree(DefaultTreeModel(TreeUtil.makeTreeRoot()))
-  private val sort1 = JRadioButton("1: bubble sort")
-  private val sort2 = JRadioButton("2: selection sort")
-  private val sort3 = JRadioButton("3: TimSort") // JDK 1.7.0
-  private val reset = JRadioButton("reset")
+private val root = TreeUtil.makeTreeRoot()
+private val tree = JTree(DefaultTreeModel(TreeUtil.makeTreeRoot()))
+private val sort1 = JRadioButton("1: bubble sort")
+private val sort2 = JRadioButton("2: selection sort")
+private val sort3 = JRadioButton("3: TimSort") // JDK 1.7.0
+private val reset = JRadioButton("reset")
 
-  init {
-    val box = JPanel(GridLayout(2, 2))
-    val listener = ActionListener { e ->
-      val check = e.getSource() as? JRadioButton ?: return@ActionListener
-      if (check == reset) {
-        tree.setModel(DefaultTreeModel(root))
-      } else {
-        TreeUtil.COMPARE_COUNTER.set(0)
-        TreeUtil.SWAP_COUNTER.set(0)
-        // val r = TreeUtil.deepCopyTree(root, root.clone() as DefaultMutableTreeNode)
-        val r = TreeUtil.deepCopyTree(root, DefaultMutableTreeNode(root.getUserObject()))
-        when (check) {
-          sort1 -> TreeUtil.sortTree1(r)
-          sort2 -> TreeUtil.sortTree2(r)
-          else -> TreeUtil.sortTree3(r)
-        }
-        log(check.getText())
-        tree.setModel(DefaultTreeModel(r))
+fun makeUI(): Component {
+  val box = JPanel(GridLayout(2, 2))
+  val listener = ActionListener { e ->
+    val check = e.source as? JRadioButton ?: return@ActionListener
+    if (check == reset) {
+      tree.model = DefaultTreeModel(root)
+    } else {
+      TreeUtil.COMPARE_COUNTER.set(0)
+      TreeUtil.SWAP_COUNTER.set(0)
+      // val r = TreeUtil.deepCopyTree(root, root.clone() as DefaultMutableTreeNode)
+      val r = TreeUtil.deepCopyTree(root, DefaultMutableTreeNode(root.userObject))
+      when (check) {
+        sort1 -> TreeUtil.sortTree1(r)
+        sort2 -> TreeUtil.sortTree2(r)
+        else -> TreeUtil.sortTree3(r)
       }
-      TreeUtil.expandAll(tree)
+      log(check.text)
+      tree.model = DefaultTreeModel(r)
     }
-    val bg = ButtonGroup()
-    listOf(reset, sort1, sort2, sort3).forEach {
-      box.add(it)
-      bg.add(it)
-      it.addActionListener(listener)
-    }
-    add(box, BorderLayout.SOUTH)
-
-    val p = JPanel(BorderLayout())
-    p.setBorder(BorderFactory.createTitledBorder("Sort JTree"))
-    p.add(JScrollPane(tree))
-    add(p)
     TreeUtil.expandAll(tree)
-    setPreferredSize(Dimension(320, 240))
+  }
+  val bg = ButtonGroup()
+  listOf(reset, sort1, sort2, sort3).forEach {
+    box.add(it)
+    bg.add(it)
+    it.addActionListener(listener)
   }
 
-  private fun log(title: String) {
-    if (TreeUtil.SWAP_COUNTER.get() == 0) {
-      val cc = TreeUtil.COMPARE_COUNTER.get()
-      println("%-24s - compare: %3d, swap: ---%n".format(title, cc))
-    } else {
-      val cc = TreeUtil.COMPARE_COUNTER.get()
-      val sc = TreeUtil.SWAP_COUNTER.get()
-      println("%-24s - compare: %3d, swap: %3d%n".format(title, cc, sc))
-    }
+  return JPanel(BorderLayout()).also {
+    it.add(box, BorderLayout.SOUTH)
+
+    val p = JPanel(BorderLayout())
+    p.border = BorderFactory.createTitledBorder("Sort JTree")
+    p.add(JScrollPane(tree))
+    it.add(p)
+    TreeUtil.expandAll(tree)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-internal object TreeUtil {
+private fun log(title: String) {
+  if (TreeUtil.SWAP_COUNTER.get() == 0) {
+    val cc = TreeUtil.COMPARE_COUNTER.get()
+    println("%-24s - compare: %3d, swap: ---%n".format(title, cc))
+  } else {
+    val cc = TreeUtil.COMPARE_COUNTER.get()
+    val sc = TreeUtil.SWAP_COUNTER.get()
+    println("%-24s - compare: %3d, swap: %3d%n".format(title, cc, sc))
+  }
+}
+
+private object TreeUtil {
   val COMPARE_COUNTER = AtomicInteger()
   val SWAP_COUNTER = AtomicInteger()
 
   // // private val tnc = Comparator.comparing(Function<DefaultMutableTreeNode, Boolean> { it.isLeaf() })
   // private val tnc = Comparator.comparing<DefaultMutableTreeNode, Boolean> { it.isLeaf() }
   //     .thenComparing { n -> n.getUserObject().toString() }
-  private val tnc = compareBy<DefaultMutableTreeNode> { it.isLeaf() }
-    .thenBy { it.getUserObject().toString() }
+  private val tnc = compareBy<DefaultMutableTreeNode> { it.isLeaf }
+    .thenBy { it.userObject.toString() }
 
   fun sortTree1(root: DefaultMutableTreeNode) {
-    val n = root.getChildCount()
+    val n = root.childCount
     for (i in 0 until n - 1) {
       for (j in n - 1 downTo i + 1) {
         val curNode = root.getChildAt(j) as? DefaultMutableTreeNode
         val prevNode = root.getChildAt(j - 1) as? DefaultMutableTreeNode
-        if (prevNode != null && !prevNode.isLeaf()) {
+        if (prevNode != null && !prevNode.isLeaf) {
           sortTree1(prevNode)
         }
         if (tnc.compare(prevNode, curNode) > 0) {
@@ -94,7 +95,7 @@ internal object TreeUtil {
   }
 
   private fun sort2(parent: DefaultMutableTreeNode) {
-    val n = parent.getChildCount()
+    val n = parent.childCount
     for (i in 0 until n - 1) {
       var min = i
       for (j in i + 1 until n) {
@@ -117,7 +118,7 @@ internal object TreeUtil {
   fun sortTree2(parent: DefaultMutableTreeNode) {
     parent.preorderEnumeration().toList()
       .filterIsInstance<DefaultMutableTreeNode>()
-      .filterNot { it.isLeaf() }
+      .filterNot { it.isLeaf }
       .forEach { sort2(it) }
   }
 
@@ -133,7 +134,7 @@ internal object TreeUtil {
   fun sortTree3(parent: DefaultMutableTreeNode) {
     parent.preorderEnumeration().toList()
       .filterIsInstance<DefaultMutableTreeNode>()
-      .filterNot { it.isLeaf() }
+      .filterNot { it.isLeaf }
       .forEach { sort3(it) }
   }
 
@@ -141,9 +142,9 @@ internal object TreeUtil {
     src.children().toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .forEach {
-        val clone = DefaultMutableTreeNode(it.getUserObject())
+        val clone = DefaultMutableTreeNode(it.userObject)
         tgt.add(clone)
-        if (!it.isLeaf()) {
+        if (!it.isLeaf) {
           deepCopyTree(it, clone)
         }
       }
@@ -187,7 +188,7 @@ internal object TreeUtil {
 
   fun expandAll(tree: JTree) {
     var row = 0
-    while (row < tree.getRowCount()) {
+    while (row < tree.rowCount) {
       tree.expandRow(row++)
     }
   }
@@ -203,7 +204,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
