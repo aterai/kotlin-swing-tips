@@ -17,10 +17,8 @@ fun makeUI(): Component {
       super.updateUI()
       val r = getCellRenderer()
       setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-        r.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus).also {
-          if (it is JComponent) {
-            it.toolTipText = value?.let { v -> "TreeCellRenderer: $v" }
-          }
+        r.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)?.also {
+          (it as? JComponent)?.toolTipText = value?.let { v -> "TreeCellRenderer: $v" }
         }
       }
     }
