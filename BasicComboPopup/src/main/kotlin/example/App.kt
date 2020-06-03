@@ -11,68 +11,70 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicComboPopup
 import javax.swing.text.JTextComponent
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val jtp = JTextPane()
-    jtp.text = "Shift+Tab"
-    val combo = JComboBox(
-      arrayOf(
-        "public", "protected", "private",
-        "final", "transient", "super", "this", "return", "class"
-      )
+fun makeUI(): Component {
+  val jtp = JTextPane()
+  jtp.text = "Shift+Tab: open EditorComboPopup\n"
+
+  val combo = JComboBox(
+    arrayOf(
+      "public", "protected", "private",
+      "final", "transient", "super", "this", "return", "class"
     )
-    val popup: BasicComboPopup = EditorComboPopup(jtp, combo)
-    val amc = popup.actionMap
-    amc.put("myUp", object : AbstractAction() {
-      override fun actionPerformed(e: ActionEvent) {
-        val i = combo.selectedIndex
-        combo.selectedIndex = if (i == 0) combo.itemCount - 1 else i - 1
+  )
+
+  val popup = EditorComboPopup(jtp, combo)
+  val am = popup.actionMap
+  am.put("myUp", object : AbstractAction() {
+    override fun actionPerformed(e: ActionEvent) {
+      val i = combo.selectedIndex
+      combo.selectedIndex = if (i == 0) combo.itemCount - 1 else i - 1
+    }
+  })
+  am.put("myDown", object : AbstractAction() {
+    override fun actionPerformed(e: ActionEvent) {
+      val i = combo.selectedIndex
+      combo.selectedIndex = if (i == combo.itemCount - 1) 0 else i + 1
+    }
+  })
+  am.put("myEnt", object : AbstractAction() {
+    override fun actionPerformed(e: ActionEvent) {
+      combo.getItemAt(combo.selectedIndex)?.also {
+        popup.hide()
+        TextEditorUtils.append(jtp, it)
       }
-    })
-    amc.put("myDown", object : AbstractAction() {
-      override fun actionPerformed(e: ActionEvent) {
-        val i = combo.selectedIndex
-        combo.selectedIndex = if (i == combo.itemCount - 1) 0 else i + 1
-      }
-    })
-    amc.put("myEnt", object : AbstractAction() {
-      override fun actionPerformed(e: ActionEvent) {
-        combo.getItemAt(combo.selectedIndex)?.also {
-          popup.hide()
-          TextEditorUtils.append(jtp, it)
+    }
+  })
+
+  val im = popup.inputMap
+  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "myUp")
+  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "myDown")
+  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "myEnt")
+
+  jtp.actionMap.put("myPop", object : AbstractAction() {
+    override fun actionPerformed(e: ActionEvent) {
+      runCatching {
+        val rect = jtp.modelToView(jtp.caretPosition)
+        // Java 9: val rect = jtp.modelToView2D(jtp.caretPosition).bounds
+        popup.show(jtp, rect.x, rect.maxY.toInt())
+        EventQueue.invokeLater {
+          (popup.topLevelAncestor as? Window)?.toFront()
+          popup.requestFocusInWindow()
         }
+      }.onFailure { // should never happen
+        it.printStackTrace()
+        UIManager.getLookAndFeel().provideErrorFeedback(jtp)
       }
-    })
-    val imc = popup.inputMap
-    imc.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "myUp")
-    imc.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "myDown")
-    imc.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "myEnt")
-    jtp.actionMap.put("myPop", object : AbstractAction() {
-      override fun actionPerformed(e: ActionEvent) {
-        runCatching {
-          val rect = jtp.modelToView(jtp.caretPosition)
-          // Java 9: Rectangle rect = jtp.modelToView2D(jtp.getCaretPosition()).getBounds();
-          popup.show(jtp, rect.x, rect.maxY.toInt())
-          EventQueue.invokeLater {
-            val c = popup.topLevelAncestor
-            if (c is Window) {
-              c.toFront()
-            }
-            popup.requestFocusInWindow()
-          }
-        }.onFailure { // should never happen
-          it.printStackTrace()
-          UIManager.getLookAndFeel().provideErrorFeedback(jtp)
-        }
-      }
-    })
-    jtp.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK), "myPop")
-    add(JScrollPane(jtp))
-    preferredSize = Dimension(320, 240)
+    }
+  })
+  jtp.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK), "myPop")
+
+  return JPanel(BorderLayout()).also {
+    it.add(JScrollPane(jtp))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class EditorComboPopup(private val textArea: JTextComponent, cb: JComboBox<*>?) : BasicComboPopup(cb) {
+private class EditorComboPopup(private val textArea: JTextComponent, cb: JComboBox<*>) : BasicComboPopup(cb) {
   @Transient
   private var listener: MouseListener? = null
 
@@ -98,7 +100,7 @@ class EditorComboPopup(private val textArea: JTextComponent, cb: JComboBox<*>?) 
   override fun isFocusable() = true
 }
 
-object TextEditorUtils {
+private object TextEditorUtils {
   fun append(editor: JTextComponent, str: String?) {
     runCatching {
       val doc = editor.document
@@ -120,7 +122,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
