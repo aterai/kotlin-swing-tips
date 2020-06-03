@@ -5,28 +5,28 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val columnNames = arrayOf("A", "B")
-    val data = arrayOf(
-      arrayOf("123456789012345678901234567890123456789012345678901234567890", "12345"),
-      arrayOf("bbb", "abcdefghijklmnopqrstuvwxyz----abcdefghijklmnopqrstuvwxyz")
-    )
-    val model = object : DefaultTableModel(data, columnNames) {
-      override fun isCellEditable(row: Int, column: Int) = false
+fun makeUI(): Component {
+  val columnNames = arrayOf("A", "B")
+  val data = arrayOf(
+    arrayOf("123456789012345678901234567890123456789012345678901234567890", "12345"),
+    arrayOf("bbb", "abcdefghijklmnopqrstuvwxyz----abcdefghijklmnopqrstuvwxyz")
+  )
+  val model = object : DefaultTableModel(data, columnNames) {
+    override fun isCellEditable(row: Int, column: Int) = false
 
-      override fun getColumnClass(column: Int) = String::class.java
-    }
-    val table = JTable(model)
-    table.setAutoCreateRowSorter(true)
-    table.setRowHeight(table.getRowHeight() * 2)
-    table.setDefaultRenderer(String::class.java, TwoRowsCellRenderer())
-    add(JScrollPane(table))
-    setPreferredSize(Dimension(320, 240))
+    override fun getColumnClass(column: Int) = String::class.java
+  }
+  val table = JTable(model)
+  table.autoCreateRowSorter = true
+  table.rowHeight = table.rowHeight * 2
+  table.setDefaultRenderer(String::class.java, TwoRowsCellRenderer())
+  return JPanel(BorderLayout()).also {
+    it.add(JScrollPane(table))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class TwoRowsCellRenderer : JPanel(GridLayout(2, 1, 0, 0)), TableCellRenderer {
+private class TwoRowsCellRenderer : JPanel(GridLayout(2, 1, 0, 0)), TableCellRenderer {
   private val top = JLabel()
   private val bottom = JLabel()
 
@@ -44,11 +44,11 @@ class TwoRowsCellRenderer : JPanel(GridLayout(2, 1, 0, 0)), TableCellRenderer {
     column: Int
   ): Component {
     if (isSelected) {
-      setForeground(table.getSelectionForeground())
-      setBackground(table.getSelectionBackground())
+      foreground = table.selectionForeground
+      background = table.selectionBackground
     } else {
-      setForeground(table.getForeground())
-      setBackground(table.getBackground())
+      foreground = table.foreground
+      background = table.background
     }
     font = table.font
     val fm = top.getFontMetrics(top.font)
@@ -68,8 +68,8 @@ class TwoRowsCellRenderer : JPanel(GridLayout(2, 1, 0, 0)), TableCellRenderer {
       }
       i += Character.charCount(cp)
     }
-    top.setText(first)
-    bottom.setText(second)
+    top.text = first
+    bottom.text = second
     return this
   }
 }
@@ -84,7 +84,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
