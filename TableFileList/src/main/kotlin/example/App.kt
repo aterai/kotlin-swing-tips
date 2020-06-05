@@ -13,29 +13,30 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableModel
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val columnNames = arrayOf("Name", "Comment")
-    val data = arrayOf(
-      arrayOf("test1.jpg", "111111"),
-      arrayOf("test1234.jpg", "  "),
-      arrayOf("test15354.gif", "22222222"),
-      arrayOf("t.png", "comment"),
-      arrayOf("3333333333.jpg", "123"),
-      arrayOf("444444444444444444444444.mpg", "test"),
-      arrayOf("5555555555555555", ""),
-      arrayOf("test1.jpg", ""))
-    val model = object : DefaultTableModel(data, columnNames) {
-      override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
+fun makeUI(): Component {
+  val columnNames = arrayOf("Name", "Comment")
+  val data = arrayOf(
+    arrayOf("test1.jpg", "111111"),
+    arrayOf("test1234.jpg", "  "),
+    arrayOf("test15354.gif", "22222222"),
+    arrayOf("t.png", "comment"),
+    arrayOf("3333333333.jpg", "123"),
+    arrayOf("444444444444444444444444.mpg", "test"),
+    arrayOf("5555555555555555", ""),
+    arrayOf("test1.jpg", "")
+  )
+  val model = object : DefaultTableModel(data, columnNames) {
+    override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
 
-      override fun isCellEditable(row: Int, column: Int) = false
-    }
-    add(JScrollPane(FileListTable(model)))
-    setPreferredSize(Dimension(320, 240))
+    override fun isCellEditable(row: Int, column: Int) = false
+  }
+  return JPanel(BorderLayout()).also {
+    it.add(JScrollPane(FileListTable(model)))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-internal class SelectedImageFilter : RGBImageFilter() {
+private class SelectedImageFilter : RGBImageFilter() {
   override fun filterRGB(x: Int, y: Int, argb: Int): Int {
     val r = argb shr 16 and 0xFF
     val g = argb shr 8 and 0xFF
@@ -44,7 +45,7 @@ internal class SelectedImageFilter : RGBImageFilter() {
   }
 }
 
-internal class FileNameRenderer(table: JTable) : TableCellRenderer {
+private class FileNameRenderer(table: JTable) : TableCellRenderer {
   private val dim = Dimension()
   private val renderer = JPanel(BorderLayout())
   private val textLabel = JLabel(" ")
@@ -61,25 +62,25 @@ internal class FileNameRenderer(table: JTable) : TableCellRenderer {
     val p = object : JPanel(BorderLayout()) {
       override fun getPreferredSize() = dim
     }
-    p.setOpaque(false)
-    renderer.setOpaque(false)
+    p.isOpaque = false
+    renderer.isOpaque = false
 
     // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
     icon = ImageIcon(javaClass.getResource("wi0063-16.png"))
 
-    val ip = FilteredImageSource(icon.getImage().getSource(), SelectedImageFilter())
+    val ip = FilteredImageSource(icon.image.source, SelectedImageFilter())
     selectedIcon = ImageIcon(p.createImage(ip))
 
     iconLabel = JLabel(icon)
-    iconLabel.setBorder(BorderFactory.createEmptyBorder())
+    iconLabel.border = BorderFactory.createEmptyBorder()
 
     p.add(iconLabel, BorderLayout.WEST)
     p.add(textLabel)
     renderer.add(p, BorderLayout.WEST)
 
-    val d = iconLabel.getPreferredSize()
-    dim.setSize(d)
-    table.setRowHeight(d.height)
+    val d = iconLabel.preferredSize
+    dim.size = d
+    table.rowHeight = d.height
   }
 
   override fun getTableCellRendererComponent(
@@ -90,35 +91,36 @@ internal class FileNameRenderer(table: JTable) : TableCellRenderer {
     row: Int,
     column: Int
   ): Component {
-    textLabel.setFont(table.getFont())
-    textLabel.setText(value?.toString() ?: "")
-    textLabel.setBorder(if (hasFocus) focusBorder else noFocusBorder)
+    textLabel.font = table.font
+    textLabel.text = value?.toString() ?: ""
+    textLabel.border = if (hasFocus) focusBorder else noFocusBorder
 
-    val fm = table.getFontMetrics(table.getFont())
-    val i = textLabel.getInsets()
-    val sw = iconLabel.getPreferredSize().width + fm.stringWidth(textLabel.getText()) + i.left + i.right
-    val cw = table.getColumnModel().getColumn(column).getWidth()
+    val fm = table.getFontMetrics(table.font)
+    val i = textLabel.insets
+    val sw = iconLabel.preferredSize.width + fm.stringWidth(textLabel.text) + i.left + i.right
+    val cw = table.columnModel.getColumn(column).width
     dim.width = minOf(sw, cw)
 
     if (isSelected) {
-      textLabel.setOpaque(true)
-      textLabel.setForeground(table.getSelectionForeground())
-      textLabel.setBackground(table.getSelectionBackground())
-      iconLabel.setIcon(selectedIcon)
+      textLabel.isOpaque = true
+      textLabel.foreground = table.selectionForeground
+      textLabel.background = table.selectionBackground
+      iconLabel.icon = selectedIcon
     } else {
-      textLabel.setOpaque(false)
-      textLabel.setForeground(table.getForeground())
-      textLabel.setBackground(table.getBackground())
-      iconLabel.setIcon(icon)
+      textLabel.isOpaque = false
+      textLabel.foreground = table.foreground
+      textLabel.background = table.background
+      iconLabel.icon = icon
     }
     return renderer
   }
 }
 
-class FileListTable(model: TableModel) : JTable(model) {
+private class FileListTable(model: TableModel) : JTable(model) {
   private val bandColor = SystemColor.activeCaption
   private val rectColor = makeColor(bandColor)
   private val rubberBand = Path2D.Double()
+
   @Transient
   private var rbl: RubberBandingListener? = null
 
@@ -137,10 +139,10 @@ class FileListTable(model: TableModel) : JTable(model) {
 
     putClientProperty("Table.isFileList", true)
     setCellSelectionEnabled(true)
-    setIntercellSpacing(Dimension())
+    intercellSpacing = Dimension()
     setShowGrid(false)
-    setAutoCreateRowSorter(true)
-    setFillsViewportHeight(true)
+    autoCreateRowSorter = true
+    fillsViewportHeight = true
 
     setDefaultRenderer(Any::class.java, object : DefaultTableCellRenderer() {
       override fun getTableCellRendererComponent(
@@ -154,17 +156,17 @@ class FileListTable(model: TableModel) : JTable(model) {
     })
 
     var col = getColumnModel().getColumn(0)
-    col.setCellRenderer(FileNameRenderer(this))
-    col.setPreferredWidth(200)
+    col.cellRenderer = FileNameRenderer(this)
+    col.preferredWidth = 200
     col = getColumnModel().getColumn(1)
-    col.setPreferredWidth(300)
+    col.preferredWidth = 300
   }
 
   override fun getToolTipText(e: MouseEvent): String? {
-    val pt = e.getPoint()
+    val pt = e.point
     val row = rowAtPoint(pt)
     val col = columnAtPoint(pt)
-    if (convertColumnIndexToModel(col) != 0 || row < 0 || row > getRowCount()) {
+    if (convertColumnIndexToModel(col) != 0 || row < 0 || row > rowCount) {
       return null
     }
     val rect = getCellRect2(this, row, col)
@@ -182,7 +184,7 @@ class FileListTable(model: TableModel) : JTable(model) {
     private val srcPoint = Point()
 
     override fun mouseDragged(e: MouseEvent) {
-      val destPoint = e.getPoint()
+      val destPoint = e.point
       rubberBand.reset()
       rubberBand.moveTo(srcPoint.getX(), srcPoint.getY())
       rubberBand.lineTo(destPoint.getX(), srcPoint.getY())
@@ -191,7 +193,7 @@ class FileListTable(model: TableModel) : JTable(model) {
       rubberBand.closePath()
       clearSelection()
       val col = convertColumnIndexToView(0)
-      (0 until getModel().getRowCount())
+      (0 until model.rowCount)
         .filter { rubberBand.intersects(getCellRect2(this@FileListTable, it, col)) }
         .forEach {
           addRowSelectionInterval(it, it)
@@ -206,14 +208,14 @@ class FileListTable(model: TableModel) : JTable(model) {
     }
 
     override fun mousePressed(e: MouseEvent) {
-      srcPoint.setLocation(e.getPoint())
-      if (rowAtPoint(e.getPoint()) < 0) {
+      srcPoint.location = e.point
+      if (rowAtPoint(e.point) < 0) {
         clearSelection()
         repaint()
       } else {
-        val index = rowAtPoint(e.getPoint())
+        val index = rowAtPoint(e.point)
         val rect = getCellRect2(this@FileListTable, index, convertColumnIndexToView(0))
-        if (!rect.contains(e.getPoint())) {
+        if (!rect.contains(e.point)) {
           clearSelection()
           repaint()
         }
@@ -224,10 +226,10 @@ class FileListTable(model: TableModel) : JTable(model) {
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     val g2 = g.create() as Graphics2D
-    g2.setPaint(bandColor)
+    g2.paint = bandColor
     g2.draw(rubberBand)
-    g2.setComposite(ALPHA)
-    g2.setPaint(rectColor)
+    g2.composite = ALPHA
+    g2.paint = rectColor
     g2.fill(rubberBand)
     g2.dispose()
   }
@@ -237,16 +239,16 @@ class FileListTable(model: TableModel) : JTable(model) {
     val tcr = table.getCellRenderer(row, col)
     val value = table.getValueAt(row, col)
     val cell = tcr.getTableCellRendererComponent(table, value, false, false, row, col)
-    val itemSize = cell.getPreferredSize()
+    val itemSize = cell.preferredSize
     val cellBounds = table.getCellRect(row, col, false)
     cellBounds.width = itemSize.width
     return cellBounds
   }
 
   private fun makeColor(c: Color): Color {
-    val r = c.getRed()
-    val g = c.getGreen()
-    val b = c.getBlue()
+    val r = c.red
+    val g = c.green
+    val b = c.blue
     return when {
       r > g -> if (r > b) Color(r, 0, 0) else Color(0, 0, b)
       else -> if (g > b) Color(0, g, 0) else Color(0, 0, b)
@@ -268,7 +270,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
