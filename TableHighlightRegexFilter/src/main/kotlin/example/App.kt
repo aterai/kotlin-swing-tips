@@ -10,76 +10,75 @@ import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 
-class MainPanel : JPanel(BorderLayout(5, 5)) {
-  private val field = JTextField("ab+")
-  private val renderer = HighlightTableCellRenderer()
+private val WARNING_COLOR = Color(0xFF_C8_C8)
 
-  private val columnNames = arrayOf("A", "B")
-  private val data = arrayOf(
-    arrayOf("aaa", "111111"),
-    arrayOf("bbb", "22222"),
-    arrayOf("333333333333333", "xxx"),
-    arrayOf("4444444444444", "55555555"),
-    arrayOf("cc cc bbb1 aaa bbb2 e", "xxx"),
-    arrayOf("ddd aaa b bbb3", "cc #aabbcc"))
-  private val model = object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int) = String::class.java
-  }
-  @Transient
-  private val sorter = TableRowSorter<TableModel>(model)
-  private val table = JTable(model)
+private val field = JTextField("ab+")
+private val renderer = HighlightTableCellRenderer()
+private val columnNames = arrayOf("A", "B")
+private val data = arrayOf(
+  arrayOf("aaa", "111111"),
+  arrayOf("bbb", "22222"),
+  arrayOf("333333333333333", "xxx"),
+  arrayOf("4444444444444", "55555555"),
+  arrayOf("cc cc bbb1 aaa bbb2 e", "xxx"),
+  arrayOf("ddd aaa b bbb3", "cc #aabbcc")
+)
+private val model = object : DefaultTableModel(data, columnNames) {
+  override fun getColumnClass(column: Int) = String::class.java
+}
 
-  init {
-    table.setFillsViewportHeight(true)
-    table.setRowSorter(sorter)
-    table.setDefaultRenderer(String::class.java, renderer)
+@Transient
+private val sorter = TableRowSorter<TableModel>(model)
+private val table = JTable(model)
 
-    field.getDocument().addDocumentListener(object : DocumentListener {
-      override fun insertUpdate(e: DocumentEvent) {
-        fireDocumentChangeEvent()
-      }
-
-      override fun removeUpdate(e: DocumentEvent) {
-        fireDocumentChangeEvent()
-      }
-
-      override fun changedUpdate(e: DocumentEvent) { /* not needed */ }
-    })
-    fireDocumentChangeEvent()
-
-    val sp = JPanel(BorderLayout(5, 5))
-    sp.add(JLabel("regex pattern:"), BorderLayout.WEST)
-    sp.add(field)
-    sp.add(Box.createVerticalStrut(2), BorderLayout.SOUTH)
-    sp.setBorder(BorderFactory.createTitledBorder("Search"))
-
-    setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-    add(sp, BorderLayout.NORTH)
-    add(JScrollPane(table))
-    setPreferredSize(Dimension(320, 240))
-  }
-
-  private fun fireDocumentChangeEvent() {
-    field.setBackground(Color.WHITE)
-    val pattern = field.getText().trim()
-    if (pattern.isEmpty()) {
-      sorter.setRowFilter(null)
-      renderer.updatePattern("")
-    } else if (renderer.updatePattern(pattern)) {
-      runCatching {
-        sorter.setRowFilter(RowFilter.regexFilter(pattern))
-      }.onFailure {
-        field.setBackground(WARNING_COLOR)
-      }
+fun makeUI(): Component {
+  table.fillsViewportHeight = true
+  table.rowSorter = sorter
+  table.setDefaultRenderer(String::class.java, renderer)
+  field.document.addDocumentListener(object : DocumentListener {
+    override fun insertUpdate(e: DocumentEvent) {
+      fireDocumentChangeEvent()
     }
-  }
 
-  companion object {
-    private val WARNING_COLOR = Color(0xFF_C8_C8)
+    override fun removeUpdate(e: DocumentEvent) {
+      fireDocumentChangeEvent()
+    }
+
+    override fun changedUpdate(e: DocumentEvent) { /* not needed */
+    }
+  })
+  fireDocumentChangeEvent()
+
+  val sp = JPanel(BorderLayout(5, 5))
+  sp.add(JLabel("regex pattern:"), BorderLayout.WEST)
+  sp.add(field)
+  sp.add(Box.createVerticalStrut(2), BorderLayout.SOUTH)
+  sp.border = BorderFactory.createTitledBorder("Search")
+
+  return JPanel(BorderLayout(5, 5)).also {
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    it.add(sp, BorderLayout.NORTH)
+    it.add(JScrollPane(table))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-internal class HighlightTableCellRenderer : JTextField(), TableCellRenderer {
+private fun fireDocumentChangeEvent() {
+  field.background = Color.WHITE
+  val pattern = field.text.trim()
+  if (pattern.isEmpty()) {
+    sorter.rowFilter = null
+    renderer.updatePattern("")
+  } else if (renderer.updatePattern(pattern)) {
+    runCatching {
+      sorter.setRowFilter(RowFilter.regexFilter(pattern))
+    }.onFailure {
+      field.background = WARNING_COLOR
+    }
+  }
+}
+
+private class HighlightTableCellRenderer : JTextField(), TableCellRenderer {
   @Transient
   private val highlightPainter = DefaultHighlightPainter(Color.YELLOW)
   private var pattern = ""
@@ -95,11 +94,11 @@ internal class HighlightTableCellRenderer : JTextField(), TableCellRenderer {
 
   override fun updateUI() {
     super.updateUI()
-    setOpaque(true)
-    setBorder(BorderFactory.createEmptyBorder())
-    setForeground(Color.BLACK)
-    setBackground(Color.WHITE)
-    setEditable(false)
+    isOpaque = true
+    border = BorderFactory.createEmptyBorder()
+    foreground = Color.BLACK
+    background = Color.WHITE
+    isEditable = false
   }
 
   override fun getTableCellRendererComponent(
@@ -111,25 +110,11 @@ internal class HighlightTableCellRenderer : JTextField(), TableCellRenderer {
     column: Int
   ): Component {
     val txt = value?.toString() ?: ""
-    val highlighter = getHighlighter()
+    val highlighter = highlighter
     highlighter.removeAllHighlights()
-    setText(txt)
-    setBackground(if (isSelected) BACKGROUND_SELECTION_COLOR else Color.WHITE)
+    text = txt
+    background = if (isSelected) BACKGROUND_SELECTION_COLOR else Color.WHITE
     if (pattern.isNotEmpty() && pattern != prev) {
-      // val matcher = Pattern.compile(pattern).matcher(txt)
-      // var pos = 0
-      // while (matcher.find(pos) && !matcher.group().isEmpty()) {
-      //   val start = matcher.start()
-      //   val end = matcher.end()
-      //   try {
-      //     highlighter.addHighlight(start, end, highlightPainter)
-      //   } catch (ex: BadLocationException) {
-      //     UIManager.getLookAndFeel().provideErrorFeedback(this)
-      //   } catch (ex: PatternSyntaxException) {
-      //     UIManager.getLookAndFeel().provideErrorFeedback(this)
-      //   }
-      //   pos = end
-      // }
       runCatching {
         pattern.toRegex().findAll(txt).map { it.range }.filterNot { it.isEmpty() }.forEach {
           highlighter.addHighlight(it.first(), it.last() + 1, highlightPainter)
@@ -156,7 +141,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
