@@ -5,29 +5,27 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicTreeUI
 import javax.swing.tree.TreePath
 
-class MainPanel : JPanel(GridLayout(1, 2, 2, 2)) {
-  init {
-    add(JScrollPane(JTree()))
-    add(JScrollPane(RowSelectionTree()))
-    setPreferredSize(Dimension(320, 240))
-  }
+fun makeUI() = JPanel(GridLayout(1, 2, 2, 2)).also {
+  it.add(JScrollPane(JTree()))
+  it.add(JScrollPane(RowSelectionTree()))
+  it.preferredSize = Dimension(320, 240)
 }
 
-class RowSelectionTree : JTree() {
+private class RowSelectionTree : JTree() {
   override fun paintComponent(g: Graphics) {
-    g.setColor(getBackground())
-    g.fillRect(0, 0, getWidth(), getHeight())
+    g.color = background
+    g.fillRect(0, 0, width, height)
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setPaint(SELECTED_COLOR)
-    getSelectionRows()
+    g2.paint = SELECTED_COLOR
+    selectionRows
       ?.map { getRowBounds(it) }
-      ?.forEach { g2.fillRect(0, it.y, getWidth(), it.height) }
+      ?.forEach { g2.fillRect(0, it.y, width, it.height) }
     super.paintComponent(g)
     if (hasFocus()) {
-      getLeadSelectionPath()?.also {
+      leadSelectionPath?.also {
         val r = getRowBounds(getRowForPath(it))
-        g2.setPaint(SELECTED_COLOR.darker())
-        g2.drawRect(0, r.y, getWidth() - 1, r.height - 1)
+        g2.paint = SELECTED_COLOR.darker()
+        g2.drawRect(0, r.y, width - 1, r.height - 1)
       }
     }
     g2.dispose()
@@ -39,13 +37,13 @@ class RowSelectionTree : JTree() {
     setUI(object : BasicTreeUI() {
       override fun getPathBounds(tree: JTree?, path: TreePath?): Rectangle? {
         return if (tree != null && treeState != null) {
-          getPathBounds(path, tree.getInsets(), Rectangle())
+          getPathBounds(path, tree.insets, Rectangle())
         } else null
       }
 
       private fun getPathBounds(path: TreePath?, insets: Insets, bounds: Rectangle) =
         treeState.getBounds(path, bounds)?.also {
-          it.width = tree.getWidth()
+          it.width = tree.width
           it.y += insets.top
         }
     })
@@ -53,11 +51,11 @@ class RowSelectionTree : JTree() {
     val renderer = getCellRenderer()
     setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
       val c = renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
-      c.setBackground(if (selected) SELECTED_COLOR else tree.getBackground())
-      (c as? JLabel)?.setOpaque(true)
+      c.background = if (selected) SELECTED_COLOR else tree.background
+      (c as? JLabel)?.isOpaque = true
       return@setCellRenderer c
     }
-    setOpaque(false)
+    isOpaque = false
   }
 
   companion object {
@@ -75,7 +73,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
