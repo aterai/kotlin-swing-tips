@@ -8,68 +8,70 @@ import javax.swing.tree.DefaultTreeCellRenderer
 import javax.swing.tree.TreeNode
 import javax.swing.tree.TreePath
 
-class MainPanel : JPanel(BorderLayout(5, 5)) {
-  private val tree = JTree()
-  private val field = JTextField("foo")
-  private val renderer = HighlightTreeCellRenderer()
+private val tree = JTree()
+private val field = JTextField("foo")
+private val renderer = HighlightTreeCellRenderer()
 
-  init {
-    field.getDocument().addDocumentListener(object : DocumentListener {
-      override fun insertUpdate(e: DocumentEvent) {
-        fireDocumentChangeEvent()
-      }
-
-      override fun removeUpdate(e: DocumentEvent) {
-        fireDocumentChangeEvent()
-      }
-
-      override fun changedUpdate(e: DocumentEvent) { /* not needed */ }
-    })
-    val box = JPanel(BorderLayout())
-    box.add(field)
-    box.setBorder(BorderFactory.createTitledBorder("Highlight Search"))
-
-    tree.setCellRenderer(renderer)
-    renderer.query = field.getText()
-    fireDocumentChangeEvent()
-
-    setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-    add(box, BorderLayout.NORTH)
-    add(JScrollPane(tree))
-    setPreferredSize(Dimension(320, 240))
-  }
-
-  private fun fireDocumentChangeEvent() {
-    val q = field.getText()
-    renderer.query = q
-    val root = tree.getPathForRow(0)
-    collapseAll(tree, root)
-    if (q.isNotEmpty()) {
-      searchTree(tree, root, q)
+fun makeUI(): Component {
+  field.document.addDocumentListener(object : DocumentListener {
+    override fun insertUpdate(e: DocumentEvent) {
+      fireDocumentChangeEvent()
     }
-  }
 
-  private fun searchTree(tree: JTree, path: TreePath, q: String) {
-    val node = path.getLastPathComponent() as? TreeNode ?: return
-    if (node.toString().startsWith(q)) {
-      tree.expandPath(path.getParentPath())
+    override fun removeUpdate(e: DocumentEvent) {
+      fireDocumentChangeEvent()
     }
-    if (!node.isLeaf()) {
-      node.children().toList().forEach { searchTree(tree, path.pathByAddingChild(it), q) }
-    }
-  }
 
-  private fun collapseAll(tree: JTree, parent: TreePath) {
-    val node = parent.getLastPathComponent() as? TreeNode ?: return
-    if (!node.isLeaf()) {
-      // Java 9: Collections.list(node.children()).stream()
-      node.children().toList().forEach { parent.pathByAddingChild(it) }
+    override fun changedUpdate(e: DocumentEvent) {
+      /* not needed */
     }
-    tree.collapsePath(parent)
+  })
+  val box = JPanel(BorderLayout())
+  box.add(field)
+  box.border = BorderFactory.createTitledBorder("Highlight Search")
+
+  tree.cellRenderer = renderer
+  renderer.query = field.text
+  fireDocumentChangeEvent()
+
+  return JPanel(BorderLayout(5, 5)).also {
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    it.add(box, BorderLayout.NORTH)
+    it.add(JScrollPane(tree))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-internal class HighlightTreeCellRenderer : DefaultTreeCellRenderer() {
+private fun fireDocumentChangeEvent() {
+  val q = field.text
+  renderer.query = q
+  val root = tree.getPathForRow(0)
+  collapseAll(tree, root)
+  if (q.isNotEmpty()) {
+    searchTree(tree, root, q)
+  }
+}
+
+private fun searchTree(tree: JTree, path: TreePath, q: String) {
+  val node = path.lastPathComponent as? TreeNode ?: return
+  if (node.toString().startsWith(q)) {
+    tree.expandPath(path.parentPath)
+  }
+  if (!node.isLeaf) {
+    node.children().toList().forEach { searchTree(tree, path.pathByAddingChild(it), q) }
+  }
+}
+
+private fun collapseAll(tree: JTree, parent: TreePath) {
+  val node = parent.lastPathComponent as? TreeNode ?: return
+  if (!node.isLeaf) {
+    // Java 9: Collections.list(node.children()).stream()
+    node.children().toList().forEach { parent.pathByAddingChild(it) }
+  }
+  tree.collapsePath(parent)
+}
+
+private class HighlightTreeCellRenderer : DefaultTreeCellRenderer() {
   var query = ""
   private var rollOver = false
 
@@ -95,11 +97,11 @@ internal class HighlightTreeCellRenderer : DefaultTreeCellRenderer() {
   ): Component {
     val c = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
     if (selected) {
-      c.setForeground(getTextSelectionColor())
+      c.foreground = getTextSelectionColor()
     } else {
       rollOver = query.isNotEmpty() && (value?.toString() ?: "").startsWith(query)
-      c.setForeground(getTextNonSelectionColor())
-      c.setBackground(getBackgroundNonSelectionColor())
+      c.foreground = getTextNonSelectionColor()
+      c.background = getBackgroundNonSelectionColor()
     }
     return c
   }
@@ -119,7 +121,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
