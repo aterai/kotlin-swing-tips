@@ -24,7 +24,7 @@ private val defaultModel = arrayOf(
   ListItem("white", Color.WHITE)
 )
 private val model = DefaultListModel<ListItem>()
-private val list: JList<ListItem> = object : JList<ListItem>(model) {
+private val list = object : JList<ListItem>(model) {
   @Transient
   private var handler: MouseInputAdapter? = null
   override fun updateUI() {
@@ -49,13 +49,14 @@ private var comparator: Comparator<ListItem>? = null
 private val ascending = JRadioButton("ascending", true)
 private val descending = JRadioButton("descending")
 private val directionList = listOf(ascending, descending)
+private val r1 = JRadioButton("None", true)
+private val r2 = JRadioButton("Name")
+private val r3 = JRadioButton("Color")
 
 fun makeUI(): Component {
   defaultModel.forEach { model.addElement(it) }
   list.model = model
-  val r1 = JRadioButton("None", true)
-  val r2 = JRadioButton("Name")
-  val r3 = JRadioButton("Color")
+
   val box1 = Box.createHorizontalBox()
   box1.add(JLabel("Sort: "))
   val bg1 = ButtonGroup()
@@ -65,6 +66,44 @@ fun makeUI(): Component {
   }
   box1.add(Box.createHorizontalGlue())
 
+  r1.addItemListener { e ->
+    if (e.stateChange == ItemEvent.SELECTED) {
+      comparator = null
+      sort()
+    }
+  }
+  r2.addItemListener { e ->
+    if (e.stateChange == ItemEvent.SELECTED) {
+      comparator = Comparator.comparing { item: ListItem -> item.title }
+      if (descending.isSelected) {
+        comparator = comparator?.reversed()
+      }
+      sort()
+    }
+  }
+  r3.addItemListener { e ->
+    if (e.stateChange == ItemEvent.SELECTED) {
+      comparator = Comparator.comparing { item: ListItem -> item.color.rgb }
+      if (descending.isSelected) {
+        comparator = comparator?.reversed()
+      }
+      sort()
+    }
+  }
+
+  val p = JPanel(GridLayout(2, 1))
+  p.border = BorderFactory.createEmptyBorder(2, 5, 2, 2)
+  p.add(box1)
+  p.add(makeDirectionBox())
+
+  return JPanel(BorderLayout()).also {
+    it.add(p, BorderLayout.NORTH)
+    it.add(JScrollPane(list))
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private fun makeDirectionBox(): Component {
   val box2 = Box.createHorizontalBox()
   box2.add(JLabel("Direction: "))
   val bg2 = ButtonGroup()
@@ -81,51 +120,7 @@ fun makeUI(): Component {
     it.isEnabled = false
   }
   box2.add(Box.createHorizontalGlue())
-
-  r1.addItemListener { e ->
-    if (e.stateChange == ItemEvent.SELECTED) {
-      comparator = null
-      sort()
-      listOf(ascending, descending).forEach {
-        it.isEnabled = false
-      }
-    }
-  }
-  r2.addItemListener { e ->
-    if (e.stateChange == ItemEvent.SELECTED) {
-      comparator = Comparator.comparing { item: ListItem -> item.title }
-      if (descending.isSelected) {
-        comparator = comparator?.reversed()
-      }
-      sort()
-      listOf(ascending, descending).forEach {
-        it.isEnabled = true
-      }
-    }
-  }
-  r3.addItemListener { e ->
-    if (e.stateChange == ItemEvent.SELECTED) {
-      comparator = Comparator.comparing { item: ListItem -> item.color.rgb }
-      if (descending.isSelected) {
-        comparator = comparator?.reversed()
-      }
-      sort()
-      listOf(ascending, descending).forEach {
-        it.isEnabled = true
-      }
-    }
-  }
-
-  val p = JPanel(GridLayout(2, 1))
-  p.border = BorderFactory.createEmptyBorder(2, 5, 2, 2)
-  p.add(box1, BorderLayout.NORTH)
-  p.add(box2, BorderLayout.NORTH)
-
-  return JPanel(BorderLayout()).also {
-    it.add(p, BorderLayout.NORTH)
-    it.add(JScrollPane(list))
-    it.preferredSize = Dimension(320, 240)
-  }
+  return box2
 }
 
 private fun sort() {
