@@ -9,52 +9,52 @@ import javax.swing.event.ListDataEvent
 import javax.swing.plaf.basic.ComboPopup
 
 fun makeUI(): Component {
-    val c = GridBagConstraints()
-    val p = JPanel(GridBagLayout())
-    p.border = BorderFactory.createEmptyBorder(10, 20, 10, 20)
+  val c = GridBagConstraints()
+  val p = JPanel(GridBagLayout())
+  p.border = BorderFactory.createEmptyBorder(10, 20, 10, 20)
 
-    c.insets = Insets(10, 5, 5, 0)
-    c.gridheight = 1
-    c.gridwidth = 1
-    c.gridy = 0
+  c.insets = Insets(10, 5, 5, 0)
+  c.gridheight = 1
+  c.gridwidth = 1
+  c.gridy = 0
 
-    c.gridx = 0
-    c.weightx = 0.0
-    c.anchor = GridBagConstraints.WEST
-    listOf(
-      "setSelectedIndex(-1/idx):", "contentsChanged(...):", "repaint():",
-      "(remove/insert)ItemAt(...):", "fireContentsChanged(...):")
-      .map { JLabel(it) }
-      .forEach {
-        p.add(it, c)
-        c.gridy += 1
-      }
+  c.gridx = 0
+  c.weightx = 0.0
+  c.anchor = GridBagConstraints.WEST
+  listOf(
+    "setSelectedIndex(-1/idx):", "contentsChanged(...):", "repaint():",
+    "(remove/insert)ItemAt(...):", "fireContentsChanged(...):")
+    .map { JLabel(it) }
+    .forEach {
+      p.add(it, c)
+      c.gridy += 1
+    }
 
-    c.gridy = 0
-    c.gridx = 1
-    c.weightx = 1.0
-    c.fill = GridBagConstraints.HORIZONTAL
+  c.gridy = 0
+  c.gridx = 1
+  c.weightx = 1.0
+  c.fill = GridBagConstraints.HORIZONTAL
 
-    val m = arrayOf(
-      CheckableItem("aaa", false),
-      CheckableItem("00000", true),
-      CheckableItem("111", false),
-      CheckableItem("33333", true),
-      CheckableItem("2222", true),
-      CheckableItem("444444", false)
-    )
+  val m = arrayOf(
+    CheckableItem("aaa", false),
+    CheckableItem("00000", true),
+    CheckableItem("111", false),
+    CheckableItem("33333", true),
+    CheckableItem("2222", true),
+    CheckableItem("444444", false)
+  )
 
-    val combo0 = CheckedComboBox(DefaultComboBoxModel(m))
-    val combo1 = CheckedComboBox1(DefaultComboBoxModel(m))
-    val combo2 = CheckedComboBox2(DefaultComboBoxModel(m))
-    val combo3 = CheckedComboBox3(DefaultComboBoxModel(m))
-    val combo4 = CheckedComboBox4(CheckableComboBoxModel(m))
+  val combo0 = CheckedComboBox(DefaultComboBoxModel(m))
+  val combo1 = CheckedComboBox1(DefaultComboBoxModel(m))
+  val combo2 = CheckedComboBox2(DefaultComboBoxModel(m))
+  val combo3 = CheckedComboBox3(DefaultComboBoxModel(m))
+  val combo4 = CheckedComboBox4(CheckableComboBoxModel(m))
 
-    listOf(combo0, combo1, combo2, combo3, combo4)
-      .forEach {
-        p.add(it, c)
-        c.gridy += 1
-      }
+  listOf(combo0, combo1, combo2, combo3, combo4)
+    .forEach {
+      p.add(it, c)
+      c.gridy += 1
+    }
 
   return JPanel(BorderLayout()).also {
     it.add(p, BorderLayout.NORTH)

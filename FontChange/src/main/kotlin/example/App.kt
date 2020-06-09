@@ -20,69 +20,69 @@ fun makeToolBar(parent: JComponent): JToolBar {
   val toolbar = JToolBar()
   val bg = ButtonGroup()
   listOf(tgb12, tgb24, tgb32).forEach {
-    it.setFocusPainted(false)
+    it.isFocusPainted = false
     bg.add(it)
     toolbar.add(it)
   }
   return toolbar
 }
 
-  fun makeUI(): Component {
-    val button = JButton("Dialog")
-    button.addActionListener {
-      Toolkit.getDefaultToolkit().beep()
-      JOptionPane.showMessageDialog(
-        button.getRootPane(),
-        "MessageDialog",
-        "Change All Font Size",
-        JOptionPane.ERROR_MESSAGE
-      )
+fun makeUI(): Component {
+  val button = JButton("Dialog")
+  button.addActionListener {
+    Toolkit.getDefaultToolkit().beep()
+    JOptionPane.showMessageDialog(
+      button.rootPane,
+      "MessageDialog",
+      "Change All Font Size",
+      JOptionPane.ERROR_MESSAGE
+    )
+  }
+  val panel = JPanel(GridBagLayout())
+  val c = GridBagConstraints()
+  c.weightx = 0.0
+  c.insets = Insets(5, 5, 5, 0)
+  panel.add(JLabel("Test:"), c)
+  c.weightx = 1.0
+  c.fill = GridBagConstraints.HORIZONTAL
+  panel.add(JComboBox(arrayOf("Test")), c)
+  c.weightx = 0.0
+  c.insets = Insets(5, 5, 5, 5)
+  c.anchor = GridBagConstraints.LINE_END
+  panel.add(button, c)
+
+  updateFont(FONT12, panel)
+
+  val p = JPanel(BorderLayout())
+  p.add(panel)
+  p.add(makeToolBar(panel), BorderLayout.NORTH)
+  p.preferredSize = Dimension(320, 240)
+  return p
+}
+
+private fun updateFont(font: Font, parent: JComponent) {
+  val fontResource = FontUIResource(font)
+  UIManager.getLookAndFeelDefaults()
+    .forEach { key, _ ->
+      if (key.toString().toLowerCase(Locale.ENGLISH).endsWith("font")) {
+        UIManager.put(key, fontResource)
+      }
     }
-    val panel = JPanel(GridBagLayout())
-    val c = GridBagConstraints()
-    c.weightx = 0.0
-    c.insets = Insets(5, 5, 5, 0)
-    panel.add(JLabel("Test:"), c)
-    c.weightx = 1.0
-    c.fill = GridBagConstraints.HORIZONTAL
-    panel.add(JComboBox(arrayOf("Test")), c)
-    c.weightx = 0.0
-    c.insets = Insets(5, 5, 5, 5)
-    c.anchor = GridBagConstraints.LINE_END
-    panel.add(button, c)
+  recursiveUpdateUI(parent)
+  (parent.topLevelAncestor as? Window)?.pack()
+}
 
-    updateFont(FONT12, panel)
-
-    val p = JPanel(BorderLayout())
-    p.add(panel)
-    p.add(makeToolBar(panel), BorderLayout.NORTH)
-    p.setPreferredSize(Dimension(320, 240))
-    return p
-  }
-
-  private fun updateFont(font: Font, parent: JComponent) {
-    val fontResource = FontUIResource(font)
-    UIManager.getLookAndFeelDefaults()
-      .forEach { key, _ ->
-        if (key.toString().toLowerCase(Locale.ENGLISH).endsWith("font")) {
-          UIManager.put(key, fontResource)
-        }
+private fun recursiveUpdateUI(p: Container) {
+  p.components
+    .filterIsInstance<JComponent>()
+    .filterNot { it is JToolBar }
+    .forEach {
+      it.updateUI()
+      if (it.componentCount > 0) {
+        recursiveUpdateUI(it)
       }
-    recursiveUpdateUI(parent)
-    (parent.getTopLevelAncestor() as? Window)?.pack()
-  }
-
-  private fun recursiveUpdateUI(p: Container) {
-    p.getComponents()
-      .filterIsInstance<JComponent>()
-      .filterNot { it is JToolBar }
-      .forEach {
-        it.updateUI()
-        if (it.getComponentCount() > 0) {
-          recursiveUpdateUI(it)
-        }
-      }
-  }
+    }
+}
 
 fun main() {
   EventQueue.invokeLater {

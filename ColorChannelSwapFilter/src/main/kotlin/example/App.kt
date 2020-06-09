@@ -10,8 +10,8 @@ import java.beans.PropertyChangeListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.LayerUI
 
-  @Transient
-  private var worker: SwingWorker<String, Void>? = null
+@Transient
+private var worker: SwingWorker<String, Void>? = null
 
 fun makeUI(): Component {
   val model = DefaultBoundedRangeModel()
@@ -68,17 +68,17 @@ fun makeUI(): Component {
   }
 }
 
-  private fun makeTitledPanel(title: String, vararg list: Component): Component {
-    val p = JPanel(GridBagLayout())
-    p.border = BorderFactory.createTitledBorder(title)
-    val c = GridBagConstraints()
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.insets = Insets(5, 5, 5, 5)
-    c.weightx = 1.0
-    c.gridx = GridBagConstraints.REMAINDER
-    list.forEach { p.add(it, c) }
-    return p
-  }
+private fun makeTitledPanel(title: String, vararg list: Component): Component {
+  val p = JPanel(GridBagLayout())
+  p.border = BorderFactory.createTitledBorder(title)
+  val c = GridBagConstraints()
+  c.fill = GridBagConstraints.HORIZONTAL
+  c.insets = Insets(5, 5, 5, 5)
+  c.weightx = 1.0
+  c.gridx = GridBagConstraints.REMAINDER
+  list.forEach { p.add(it, c) }
+  return p
+}
 
 private class BlockedColorLayerUI<V : Component> : LayerUI<V>() {
   var isPreventing = false

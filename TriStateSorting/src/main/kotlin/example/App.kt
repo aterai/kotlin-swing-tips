@@ -11,17 +11,17 @@ fun makeUI(): Component {
   val check2 = JRadioButton("ASCENDING->DESCENDING->UNSORTED", true)
   val columnNames = arrayOf("String", "Integer", "Boolean")
   val data = arrayOf(
-      arrayOf("aaa", 12, true),
-      arrayOf("bbb", 5, false),
-      arrayOf("CCC", 92, true),
-      arrayOf("DDD", 0, false))
+    arrayOf("aaa", 12, true),
+    arrayOf("bbb", 5, false),
+    arrayOf("CCC", 92, true),
+    arrayOf("DDD", 0, false))
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
   val table = JTable(model)
   val sorter = object : TableRowSorter<TableModel>(model) {
     override fun toggleSortOrder(column: Int) {
-      if (!check2.isSelected() || !isSortable(column)) {
+      if (!check2.isSelected || !isSortable(column)) {
         super.toggleSortOrder(column)
         return
       }
@@ -33,21 +33,21 @@ fun makeUI(): Component {
       //     return
       //   }
       // }
-      getSortKeys().firstOrNull()
-          ?.takeIf { it.getColumn() == column && it.getSortOrder() == SortOrder.DESCENDING }
-          ?.also {
-            setSortKeys(null)
-            return
-          }
+      sortKeys.firstOrNull()
+        ?.takeIf { it.column == column && it.sortOrder == SortOrder.DESCENDING }
+        ?.also {
+          sortKeys = null
+          return
+        }
       super.toggleSortOrder(column)
     }
   }
-  table.setRowSorter(sorter)
+  table.rowSorter = sorter
 
-  table.getColumnModel().getColumn(0).also {
-    it.setMinWidth(60)
-    it.setMaxWidth(60)
-    it.setResizable(false)
+  table.columnModel.getColumn(0).also {
+    it.minWidth = 60
+    it.maxWidth = 60
+    it.resizable = false
   }
 
   ButtonGroup().also {
@@ -61,7 +61,7 @@ fun makeUI(): Component {
   return JPanel(BorderLayout()).also {
     it.add(p, BorderLayout.NORTH)
     it.add(JScrollPane(table))
-    it.setPreferredSize(Dimension(320, 240))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 

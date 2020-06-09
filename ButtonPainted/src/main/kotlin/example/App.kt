@@ -60,18 +60,18 @@ fun makeUI(): Component {
   }
 }
 
-  private fun makeRolloverIcon(srcIcon: ImageIcon): ImageIcon {
-    val w = srcIcon.iconWidth
-    val h = srcIcon.iconHeight
-    val img = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
-    val g2 = img.createGraphics()
-    srcIcon.paintIcon(null, g2, 0, 0)
-    val scaleFactors = floatArrayOf(1.2f, 1.2f, 1.2f, 1f)
-    val offsets = floatArrayOf(0f, 0f, 0f, 0f)
-    val op = RescaleOp(scaleFactors, offsets, g2.renderingHints)
-    g2.dispose()
-    return ImageIcon(op.filter(img, null))
-  }
+private fun makeRolloverIcon(srcIcon: ImageIcon): ImageIcon {
+  val w = srcIcon.iconWidth
+  val h = srcIcon.iconHeight
+  val img = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+  val g2 = img.createGraphics()
+  srcIcon.paintIcon(null, g2, 0, 0)
+  val scaleFactors = floatArrayOf(1.2f, 1.2f, 1.2f, 1f)
+  val offsets = floatArrayOf(0f, 0f, 0f, 0f)
+  val op = RescaleOp(scaleFactors, offsets, g2.renderingHints)
+  g2.dispose()
+  return ImageIcon(op.filter(img, null))
+}
 
 private object LookAndFeelUtil {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name

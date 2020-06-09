@@ -30,10 +30,10 @@ bbb2Å@Å@1 3 ccc3
 """
 
 fun makeUI(): Component {
-    val editor = JTextPane()
-    editor.font = Font(Font.MONOSPACED, Font.PLAIN, 12)
-    editor.editorKit = CustomEditorKit()
-    editor.text = IDEOGRAPHIC_SPACE_TXT + TAB_TXT
+  val editor = JTextPane()
+  editor.font = Font(Font.MONOSPACED, Font.PLAIN, 12)
+  editor.editorKit = CustomEditorKit()
+  editor.text = IDEOGRAPHIC_SPACE_TXT + TAB_TXT
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(editor))
     it.preferredSize = Dimension(320, 240)

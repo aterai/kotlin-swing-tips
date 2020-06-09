@@ -20,21 +20,21 @@ private const val WIDTH = (R * 8 + SX * 2).toInt()
 private const val HEIGHT = (R * 8 + SY * 2).toInt()
 private val ellipseColor = Color(.5f, .5f, .5f)
 private val list = mutableListOf(
-    Ellipse2D.Double(SX + 3 * R, SY + 0 * R, 2 * R, 2 * R),
-    Ellipse2D.Double(SX + 5 * R, SY + 1 * R, 2 * R, 2 * R),
-    Ellipse2D.Double(SX + 6 * R, SY + 3 * R, 2 * R, 2 * R),
-    Ellipse2D.Double(SX + 5 * R, SY + 5 * R, 2 * R, 2 * R),
-    Ellipse2D.Double(SX + 3 * R, SY + 6 * R, 2 * R, 2 * R),
-    Ellipse2D.Double(SX + 1 * R, SY + 5 * R, 2 * R, 2 * R),
-    Ellipse2D.Double(SX + 0 * R, SY + 3 * R, 2 * R, 2 * R),
-    Ellipse2D.Double(SX + 1 * R, SY + 1 * R, 2 * R, 2 * R))
+  Ellipse2D.Double(SX + 3 * R, SY + 0 * R, 2 * R, 2 * R),
+  Ellipse2D.Double(SX + 5 * R, SY + 1 * R, 2 * R, 2 * R),
+  Ellipse2D.Double(SX + 6 * R, SY + 3 * R, 2 * R, 2 * R),
+  Ellipse2D.Double(SX + 5 * R, SY + 5 * R, 2 * R, 2 * R),
+  Ellipse2D.Double(SX + 3 * R, SY + 6 * R, 2 * R, 2 * R),
+  Ellipse2D.Double(SX + 1 * R, SY + 5 * R, 2 * R, 2 * R),
+  Ellipse2D.Double(SX + 0 * R, SY + 3 * R, 2 * R, 2 * R),
+  Ellipse2D.Double(SX + 1 * R, SY + 1 * R, 2 * R, 2 * R))
 
 fun makeLabel() = JLabel().also {
-  it.setOpaque(true)
-  it.setBackground(Color.WHITE)
-  it.setVerticalTextPosition(SwingConstants.TOP)
-  it.setHorizontalAlignment(SwingConstants.CENTER)
-  it.setHorizontalTextPosition(SwingConstants.CENTER)
+  it.isOpaque = true
+  it.background = Color.WHITE
+  it.verticalTextPosition = SwingConstants.TOP
+  it.horizontalAlignment = SwingConstants.CENTER
+  it.horizontalTextPosition = SwingConstants.CENTER
 }
 
 fun makeUI(): Component {
@@ -50,7 +50,7 @@ fun makeUI(): Component {
       val file = File.createTempFile("anime", ".gif")
       file.deleteOnExit()
       val stream = ImageIO.createImageOutputStream(file)
-      writer.setOutput(stream)
+      writer.output = stream
       writer.prepareWriteSequence(null)
 
       val gce = IIOMetadataNode("GraphicControlExtension")
@@ -66,23 +66,23 @@ fun makeUI(): Component {
       // last two bytes is an unsigned short (little endian) that
       // indicates the the number of times to loop.
       // 0 means loop forever.
-      ae.setUserObject(byteArrayOf(0x1, 0x0, 0x0))
+      ae.userObject = byteArrayOf(0x1, 0x0, 0x0)
 
       val aes = IIOMetadataNode("ApplicationExtensions")
       aes.appendChild(ae)
 
       // Create animated GIF using imageio | Oracle Community
       // https://community.oracle.com/thread/1264385
-      val iwp = writer.getDefaultWriteParam()
+      val iwp = writer.defaultWriteParam
       val metadata = writer.getDefaultImageMetadata(ImageTypeSpecifier(image), iwp)
-      val metaFormat = metadata.getNativeMetadataFormatName()
+      val metaFormat = metadata.nativeMetadataFormatName
       val root = metadata.getAsTree(metaFormat)
       root.appendChild(gce)
       root.appendChild(aes)
       metadata.setFromTree(metaFormat, root)
 
       // make frame
-      (0 until list.size * DELAY).forEach {
+      (0 until list.size * DELAY).forEach { _ ->
         paintFrame(image, list)
         Collections.rotate(list, 1)
         writer.writeToSequence(IIOImage(image, null, metadata), null)
@@ -91,9 +91,9 @@ fun makeUI(): Component {
       writer.endWriteSequence()
       stream.close()
 
-      val path = file.getAbsolutePath()
-      label.setText(path)
-      label.setIcon(ImageIcon(path))
+      val path = file.absolutePath
+      label.text = path
+      label.icon = ImageIcon(path)
     } catch (ex: IOException) {
       ex.printStackTrace()
     }
@@ -102,20 +102,20 @@ fun makeUI(): Component {
   return JPanel(BorderLayout()).also {
     it.add(label)
     it.add(button, BorderLayout.SOUTH)
-    it.setPreferredSize(Dimension(320, 240))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
 private fun paintFrame(image: BufferedImage, list: List<Shape>) {
   val g2 = image.createGraphics()
-  g2.setPaint(Color.WHITE)
+  g2.paint = Color.WHITE
   g2.fillRect(0, 0, WIDTH, HEIGHT)
   g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-  g2.setPaint(ellipseColor)
+  g2.paint = ellipseColor
   val size = list.size
   list.forEachIndexed { idx, shape ->
     val alpha = (idx + 1f) / size
-    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha))
+    g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha)
     g2.fill(shape)
   }
   g2.dispose()

@@ -4,27 +4,27 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-    val bg = ToggleButtonGroup()
-    val p = JPanel()
-    listOf("A", "B", "C").map(::JToggleButton).forEach {
-      it.actionCommand = it.text
-      p.add(it)
-      bg.add(it)
-    }
+  val bg = ToggleButtonGroup()
+  val p = JPanel()
+  listOf("A", "B", "C").map(::JToggleButton).forEach {
+    it.actionCommand = it.text
+    p.add(it)
+    bg.add(it)
+  }
 
-    val label = JLabel()
-    val button = JButton("check")
-    button.addActionListener {
-      label.text = bg.selection?.let {
-        """"${it.actionCommand}" isSelected."""
-      } ?: "Please select one of the option above."
-    }
+  val label = JLabel()
+  val button = JButton("check")
+  button.addActionListener {
+    label.text = bg.selection?.let {
+      """"${it.actionCommand}" isSelected."""
+    } ?: "Please select one of the option above."
+  }
 
-    val box = Box.createHorizontalBox()
-    box.add(label)
-    box.add(Box.createHorizontalGlue())
-    box.add(button, BorderLayout.WEST)
-    box.add(Box.createHorizontalStrut(5))
+  val box = Box.createHorizontalBox()
+  box.add(label)
+  box.add(Box.createHorizontalGlue())
+  box.add(button, BorderLayout.WEST)
+  box.add(Box.createHorizontalStrut(5))
 
   return JPanel(BorderLayout()).also {
     it.add(p)
