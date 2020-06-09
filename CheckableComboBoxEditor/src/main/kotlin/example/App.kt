@@ -28,7 +28,8 @@ private fun makeModel() = arrayOf(
   ComboItem(isEnabled = true, isEditable = true, text = "00000"),
   ComboItem(isEnabled = true, isEditable = false, text = "11111"),
   ComboItem(isEnabled = false, isEditable = true, text = "22222"),
-  ComboItem(isEnabled = false, isEditable = false, text = "33333"))
+  ComboItem(isEnabled = false, isEditable = false, text = "33333")
+)
 
 private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
   it.border = BorderFactory.createTitledBorder(title)

@@ -180,8 +180,12 @@ private class SiteComboBoxLayout(private val favicon: JLabel?, private val feedB
 
     // JComboBox Editor
     cb.editor.editorComponent?.also {
-      it.setBounds(ins.left + faviconWidth, ins.top,
-        width - ins.left - ins.right - arrowWidth - faviconWidth - feedWidth, height - ins.top - ins.bottom)
+      it.setBounds(
+        ins.left + faviconWidth,
+        ins.top,
+        width - ins.left - ins.right - arrowWidth - faviconWidth - feedWidth,
+        height - ins.top - ins.bottom
+      )
     }
   }
 }

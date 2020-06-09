@@ -5,80 +5,81 @@ import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val array = arrayOf(
-      "111", "1111222", "111122233", "111122233444", "1234", "12567", "2221", "22212")
-    val combo = JComboBox(array)
-    combo.setEditable(true)
-    combo.setSelectedIndex(-1)
-    val field = combo.getEditor().getEditorComponent()
-    (field as? JTextField)?.setText("")
-    field.addKeyListener(ComboKeyHandler(combo))
+fun makeUI(): Component {
+  val array = arrayOf(
+    "111", "1111222", "111122233", "111122233444", "1234", "12567", "2221", "22212"
+  )
+  val combo = JComboBox(array)
+  combo.isEditable = true
+  combo.selectedIndex = -1
+  val field = combo.editor.editorComponent
+  (field as? JTextField)?.text = ""
+  field.addKeyListener(ComboKeyHandler(combo))
 
-    val p = JPanel(BorderLayout())
-    p.setBorder(BorderFactory.createTitledBorder("Auto-Completion ComboBox"))
-    p.add(combo, BorderLayout.NORTH)
+  val p = JPanel(BorderLayout())
+  p.border = BorderFactory.createTitledBorder("Auto-Completion ComboBox")
+  p.add(combo, BorderLayout.NORTH)
 
-    val box = Box.createVerticalBox()
-    box.add(makeHelpPanel())
-    box.add(Box.createVerticalStrut(5))
-    box.add(p)
-    add(box, BorderLayout.NORTH)
-    setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-    setPreferredSize(Dimension(320, 240))
-  }
-
-  private fun makeHelpPanel(): Component {
-    val lp = JPanel(GridLayout(2, 1, 2, 2))
-    lp.add(JLabel("Char: show Popup"))
-    lp.add(JLabel("ESC: hide Popup"))
-
-    val rp = JPanel(GridLayout(2, 1, 2, 2))
-    rp.add(JLabel("RIGHT: Completion"))
-    rp.add(JLabel("ENTER: Add/Selection"))
-
-    val p = JPanel(GridBagLayout())
-    p.setBorder(BorderFactory.createTitledBorder("Help"))
-
-    val c = GridBagConstraints()
-    c.insets = Insets(0, 5, 0, 5)
-    c.fill = GridBagConstraints.BOTH
-    c.weighty = 1.0
-
-    c.weightx = 1.0
-    p.add(lp, c)
-
-    c.weightx = 0.0
-    p.add(JSeparator(SwingConstants.VERTICAL), c)
-
-    c.weightx = 1.0
-    p.add(rp, c)
-
-    return p
+  val box = Box.createVerticalBox()
+  box.add(makeHelpPanel())
+  box.add(Box.createVerticalStrut(5))
+  box.add(p)
+  return JPanel(BorderLayout()).also {
+    it.add(box, BorderLayout.NORTH)
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-internal class ComboKeyHandler(private val comboBox: JComboBox<String>) : KeyAdapter() {
+private fun makeHelpPanel(): Component {
+  val lp = JPanel(GridLayout(2, 1, 2, 2))
+  lp.add(JLabel("Char: show Popup"))
+  lp.add(JLabel("ESC: hide Popup"))
+
+  val rp = JPanel(GridLayout(2, 1, 2, 2))
+  rp.add(JLabel("RIGHT: Completion"))
+  rp.add(JLabel("ENTER: Add/Selection"))
+
+  val p = JPanel(GridBagLayout())
+  p.border = BorderFactory.createTitledBorder("Help")
+
+  val c = GridBagConstraints()
+  c.insets = Insets(0, 5, 0, 5)
+  c.fill = GridBagConstraints.BOTH
+  c.weighty = 1.0
+
+  c.weightx = 1.0
+  p.add(lp, c)
+
+  c.weightx = 0.0
+  p.add(JSeparator(SwingConstants.VERTICAL), c)
+
+  c.weightx = 1.0
+  p.add(rp, c)
+
+  return p
+}
+
+private class ComboKeyHandler(private val comboBox: JComboBox<String>) : KeyAdapter() {
   private val list = mutableListOf<String>()
   private var shouldHide = false
 
   init {
-    for (i in 0 until comboBox.getModel().getSize()) {
+    for (i in 0 until comboBox.model.size) {
       list.add(comboBox.getItemAt(i))
     }
   }
 
   override fun keyTyped(e: KeyEvent) {
     EventQueue.invokeLater {
-      val text = (e.getComponent() as? JTextField)?.getText() ?: return@invokeLater
+      val text = (e.component as? JTextField)?.text ?: return@invokeLater
       if (text.isEmpty()) {
         val m = DefaultComboBoxModel(list.toTypedArray())
         setSuggestionModel(comboBox, m, "")
         comboBox.hidePopup()
       } else {
         val m = getSuggestedModel(list, text)
-        if (m.getSize() == 0 || shouldHide) {
+        if (m.size == 0 || shouldHide) {
           comboBox.hidePopup()
         } else {
           setSuggestionModel(comboBox, m, text)
@@ -89,13 +90,13 @@ internal class ComboKeyHandler(private val comboBox: JComboBox<String>) : KeyAda
   }
 
   override fun keyPressed(e: KeyEvent) {
-    val textField = e.getComponent() as? JTextField ?: return
-    val text = textField.getText()
+    val textField = e.component as? JTextField ?: return
+    val text = textField.text
     shouldHide = false
-    when (e.getKeyCode()) {
+    when (e.keyCode) {
       KeyEvent.VK_RIGHT -> for (s in list) {
         if (s.startsWith(text)) {
-          textField.setText(s)
+          textField.text = s
           return
         }
       }
@@ -113,9 +114,9 @@ internal class ComboKeyHandler(private val comboBox: JComboBox<String>) : KeyAda
   }
 
   private fun setSuggestionModel(comboBox: JComboBox<String>, mdl: ComboBoxModel<String>, str: String) {
-    comboBox.setModel(mdl)
-    comboBox.setSelectedIndex(-1)
-    (comboBox.getEditor().getEditorComponent() as? JTextField)?.setText(str)
+    comboBox.model = mdl
+    comboBox.selectedIndex = -1
+    (comboBox.editor.editorComponent as? JTextField)?.text = str
   }
 
   private fun getSuggestedModel(list: List<String>, text: String): ComboBoxModel<String> {
@@ -139,7 +140,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

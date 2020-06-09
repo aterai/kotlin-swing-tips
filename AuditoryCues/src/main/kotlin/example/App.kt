@@ -12,7 +12,8 @@ val AUDITORY_CUES = arrayOf(
   "OptionPane.errorSound",
   "OptionPane.informationSound",
   "OptionPane.questionSound",
-  "OptionPane.warningSound")
+  "OptionPane.warningSound"
+)
 
 fun makeUI(): Component {
   val button1 = JButton("showMessageDialog1")

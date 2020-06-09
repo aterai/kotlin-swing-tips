@@ -8,81 +8,80 @@ import javax.swing.plaf.LayerUI
 import javax.swing.plaf.basic.BasicComboBoxEditor
 import javax.swing.text.JTextComponent
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val combo1 = JComboBox(arrayOf("colors", "sports", "food"))
-    // combo1.setEditable(true)
-    combo1.setSelectedIndex(-1)
+fun makeUI(): Component {
+  val combo1 = JComboBox(arrayOf("colors", "sports", "food"))
+  // combo1.setEditable(true)
+  combo1.selectedIndex = -1
 
-    val arrays = arrayOf(
-      arrayOf("blue", "violet", "red", "yellow"),
-      arrayOf("basketball", "soccer", "football", "hockey"),
-      arrayOf("hot dogs", "pizza", "ravioli", "bananas"))
-    val combo2 = JComboBox<String>()
-    combo2.setEditable(true)
+  val arrays = arrayOf(
+    arrayOf("blue", "violet", "red", "yellow"),
+    arrayOf("basketball", "soccer", "football", "hockey"),
+    arrayOf("hot dogs", "pizza", "ravioli", "bananas")
+  )
+  val combo2 = JComboBox<String>()
+  combo2.isEditable = true
 
-    combo1.addItemListener { e ->
-      val combo = e.getItemSelectable()
-      if (e.getStateChange() == ItemEvent.SELECTED && combo is JComboBox<*>) {
-        val idx = combo.getSelectedIndex()
-        combo2.setModel(DefaultComboBoxModel(arrays[idx]))
-        combo2.setSelectedIndex(-1)
-      }
+  combo1.addItemListener { e ->
+    val combo = e.itemSelectable
+    if (e.stateChange == ItemEvent.SELECTED && combo is JComboBox<*>) {
+      val idx = combo.selectedIndex
+      combo2.model = DefaultComboBoxModel(arrays[idx])
+      combo2.selectedIndex = -1
     }
+  }
 
-    combo2.setEditor(object : BasicComboBoxEditor() {
-      private var editorComponent: Component? = null
+  combo2.editor = object : BasicComboBoxEditor() {
+    private var editorComponent: Component? = null
 
-      override fun getEditorComponent(): Component? {
-        (super.getEditorComponent() as? JTextComponent)?.also {
-          editorComponent = editorComponent ?: JLayer(it, PlaceholderLayerUI("- Select type -"))
-        }
-        return editorComponent
+    override fun getEditorComponent(): Component? {
+      (super.getEditorComponent() as? JTextComponent)?.also {
+        editorComponent = editorComponent ?: JLayer(it, PlaceholderLayerUI("- Select type -"))
       }
-    })
-    combo2.setBorder(
-      BorderFactory.createCompoundBorder(
-        combo2.getBorder(), BorderFactory.createEmptyBorder(0, 2, 0, 0)
-      )
-    )
-
-    val p = JPanel(GridLayout(4, 1, 5, 5))
-    setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 20))
-    p.add(JLabel("Category"))
-    p.add(combo1)
-    p.add(JLabel("Type"))
-    p.add(combo2)
-
-    val button = JButton("clear")
-    button.addActionListener {
-      combo1.setSelectedIndex(-1)
-      combo2.setModel(DefaultComboBoxModel())
+      return editorComponent
     }
+  }
+  combo2.border = BorderFactory.createCompoundBorder(
+    combo2.border, BorderFactory.createEmptyBorder(0, 2, 0, 0)
+  )
 
-    add(p, BorderLayout.NORTH)
-    add(button, BorderLayout.SOUTH)
-    setPreferredSize(Dimension(320, 240))
+  val p = JPanel(GridLayout(4, 1, 5, 5))
+  p.border = BorderFactory.createEmptyBorder(5, 20, 5, 20)
+  p.add(JLabel("Category"))
+  p.add(combo1)
+  p.add(JLabel("Type"))
+  p.add(combo2)
+
+  val button = JButton("clear")
+  button.addActionListener {
+    combo1.selectedIndex = -1
+    combo2.setModel(DefaultComboBoxModel())
+  }
+
+  return JPanel(BorderLayout()).also {
+    it.add(p, BorderLayout.NORTH)
+    it.add(button, BorderLayout.SOUTH)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-internal class PlaceholderLayerUI<E : JTextComponent>(hintMessage: String) : LayerUI<E>() {
+private class PlaceholderLayerUI<E : JTextComponent>(hintMessage: String) : LayerUI<E>() {
   private val hint = JLabel(hintMessage)
 
   init {
-    hint.setForeground(INACTIVE)
+    hint.foreground = INACTIVE
   }
 
   override fun paint(g: Graphics, c: JComponent) {
     super.paint(g, c)
     (c as? JLayer<*>)?.also {
-      val tc = it.getView() as? JTextComponent ?: return
-      if (tc.getText().isEmpty() && !tc.hasFocus()) {
+      val tc = it.view as? JTextComponent ?: return
+      if (tc.text.isEmpty() && !tc.hasFocus()) {
         val g2 = g.create() as? Graphics2D ?: return
-        g2.setPaint(INACTIVE)
+        g2.paint = INACTIVE
         // println("getInsets: ${tc.getInsets()}")
         // println("getMargin: ${tc.getMargin()}")
-        val i = tc.getMargin()
-        val d = hint.getPreferredSize()
+        val i = tc.margin
+        val d = hint.preferredSize
         SwingUtilities.paintComponent(g2, hint, tc, i.left, i.top, d.width, d.height)
         g2.dispose()
       }
@@ -91,16 +90,16 @@ internal class PlaceholderLayerUI<E : JTextComponent>(hintMessage: String) : Lay
 
   override fun installUI(c: JComponent?) {
     super.installUI(c)
-    (c as? JLayer<*>)?.setLayerEventMask(AWTEvent.FOCUS_EVENT_MASK)
+    (c as? JLayer<*>)?.layerEventMask = AWTEvent.FOCUS_EVENT_MASK
   }
 
   override fun uninstallUI(c: JComponent?) {
     super.uninstallUI(c)
-    (c as? JLayer<*>)?.setLayerEventMask(0)
+    (c as? JLayer<*>)?.layerEventMask = 0
   }
 
   override fun processFocusEvent(e: FocusEvent, l: JLayer<out E>) {
-    l.getView().repaint()
+    l.view.repaint()
   }
 
   companion object {
@@ -118,7 +117,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

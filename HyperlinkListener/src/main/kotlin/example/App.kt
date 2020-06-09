@@ -111,8 +111,11 @@ private class BasicLinkViewButtonUI : LinkViewButtonUI() {
     if (b.isRolloverEnabled && b.model.isRollover) {
       g.color = Color.BLUE
       g.drawLine(
-        viewRect.x, viewRect.y + viewRect.height,
-        viewRect.x + viewRect.width, viewRect.y + viewRect.height)
+        viewRect.x,
+        viewRect.y + viewRect.height,
+        viewRect.x + viewRect.width,
+        viewRect.y + viewRect.height
+      )
     }
 
     (c.getClientProperty(BasicHTML.propertyKey) as? View)?.also {

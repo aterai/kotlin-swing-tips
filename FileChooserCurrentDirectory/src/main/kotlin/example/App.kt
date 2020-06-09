@@ -49,18 +49,17 @@ fun makeUI(): Component {
 
   val button2 = JButton("setSelectedFile")
   button2.addActionListener {
-    val f = File(field.text.trim())
+    val file = File(field.text.trim())
     val fc = fc1
-    System.out.format(
-      "isAbsolute: %s, isParent: %s%n",
-      f.isAbsolute, !fc.fileSystemView.isParent(fc.currentDirectory, f))
-    fc.selectedFile = f
+    val b = !fc.fileSystemView.isParent(fc.currentDirectory, file)
+    println("isAbsolute: ${file.isAbsolute}, isParent: $b\n")
+    fc.selectedFile = file
     val retValue = fc.showOpenDialog(p)
     if (retValue == JFileChooser.APPROVE_OPTION) {
       log.text = fc.selectedFile.absolutePath
     }
     if (check2.isSelected) {
-      fc.selectedFile = f.parentFile // XXX: reset???
+      fc.selectedFile = file.parentFile // XXX: reset???
     }
   }
 

@@ -16,7 +16,8 @@ fun makeUI(): Component {
   val columnNames = arrayOf("SNo.", "1", "2", "Native", "2", "3")
   val data = arrayOf(
     arrayOf("119", "foo", "bar", "ja", "ko", "zh"),
-    arrayOf("911", "bar", "foo", "en", "fr", "pt"))
+    arrayOf("911", "bar", "foo", "en", "fr", "pt")
+  )
   val model = DefaultTableModel(data, columnNames)
   val table = object : JTable(model) {
     override fun createDefaultTableHeader(): JTableHeader {

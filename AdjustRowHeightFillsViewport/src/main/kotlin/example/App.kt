@@ -11,7 +11,8 @@ private val data = arrayOf(
   arrayOf("aaa", 12, true),
   arrayOf("bbb", 5, false),
   arrayOf("CCC", 92, true),
-  arrayOf("DDD", 0, false))
+  arrayOf("DDD", 0, false)
+)
 private val model = object : DefaultTableModel(data, columnNames) {
   override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
 }
@@ -20,8 +21,8 @@ private val table = object : JTable(model) {
   private var prevCount = -1
 
   private fun updateRowsHeight(vport: JViewport) {
-    val height = vport.getExtentSize().height
-    val rowCount = getModel().getRowCount()
+    val height = vport.extentSize.height
+    val rowCount = model.rowCount
     val defaultRowHeight = height / rowCount
     if ((height != prevHeight || rowCount != prevCount) && defaultRowHeight > 0) {
       // var remainder = height - rowCount * defaultRowHeight
@@ -42,21 +43,18 @@ private val table = object : JTable(model) {
     (SwingUtilities.getAncestorOfClass(clz, this) as? JViewport)?.also {
       updateRowsHeight(it)
     }
-    // Optional.ofNullable(SwingUtilities.getAncestorOfClass(clz, this))
-    //   .filter { clz.isInstance(it) }.map { clz.cast(it) }
-    //   .ifPresent { this.updateRowsHeight(it) }
   }
 }
 
 fun makeUI(): Component {
   val scroll = JScrollPane(table)
-  scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER)
-  scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
+  scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
+  scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
   // TEST: scroll.addComponentListener(new TableRowHeightAdjuster())
   scroll.addComponentListener(object : ComponentAdapter() {
     override fun componentResized(e: ComponentEvent) {
-      val sp = e.getComponent() as? JScrollPane ?: return
-      sp.getViewport().getView().revalidate()
+      val sp = e.component as? JScrollPane ?: return
+      sp.viewport.view.revalidate()
     }
   })
 
@@ -66,7 +64,7 @@ fun makeUI(): Component {
   return JPanel(BorderLayout()).also {
     it.add(scroll)
     it.add(button, BorderLayout.SOUTH)
-    it.setPreferredSize(Dimension(320, 240))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 

@@ -14,50 +14,51 @@ fun makeUI(): Component {
   calendar.clear(Calendar.MINUTE)
   calendar.clear(Calendar.SECOND)
   calendar.clear(Calendar.MILLISECOND)
-  val d = calendar.getTime()
+  val d = calendar.time
 
   val format = SimpleDateFormat("mm:ss, SSS", Locale.getDefault())
   val factory = DefaultFormatterFactory(DateFormatter(format))
   val spinner1 = JSpinner(SpinnerDateModel(d, null, null, Calendar.SECOND))
-  (spinner1.getEditor() as? JSpinner.DefaultEditor)?.getTextField()?.setFormatterFactory(factory)
+  (spinner1.editor as? JSpinner.DefaultEditor)?.textField?.formatterFactory = factory
 
   val stepSizeMap = hashMapOf(
     Calendar.HOUR_OF_DAY to 1,
     Calendar.MINUTE to 1,
     Calendar.SECOND to 30,
-    Calendar.MILLISECOND to 500)
+    Calendar.MILLISECOND to 500
+  )
 
   val spinner2 = JSpinner(object : SpinnerDateModel(d, null, null, Calendar.SECOND) {
     override fun getPreviousValue(): Any {
       val cal = Calendar.getInstance()
-      cal.setTime(getDate())
-      val calendarField = getCalendarField()
+      cal.time = date
+      val calendarField = calendarField
       val stepSize = stepSizeMap[calendarField] ?: 1
       cal.add(calendarField, -stepSize)
-      return cal.getTime()
+      return cal.time
     }
 
     override fun getNextValue(): Any {
       val cal = Calendar.getInstance()
-      cal.setTime(getDate())
-      val calendarField = getCalendarField()
+      cal.time = date
+      val calendarField = calendarField
       val stepSize = stepSizeMap[calendarField] ?: 1
       cal.add(calendarField, stepSize)
-      return cal.getTime()
+      return cal.time
     }
   })
-  (spinner2.getEditor() as? JSpinner.DefaultEditor)?.getTextField()?.setFormatterFactory(factory)
+  (spinner2.editor as? JSpinner.DefaultEditor)?.textField?.formatterFactory = factory
 
   return JPanel(GridLayout(2, 1)).also {
     it.add(makeTitledPanel("Default SpinnerDateModel", spinner1))
     it.add(makeTitledPanel("Override SpinnerDateModel#getNextValue(...)", spinner2))
-    it.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5))
-    it.setPreferredSize(Dimension(320, 240))
+    it.border = BorderFactory.createEmptyBorder(10, 5, 10, 5)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
 private fun makeTitledPanel(title: String, cmp: Component) = JPanel(GridBagLayout()).also {
-  it.setBorder(BorderFactory.createTitledBorder(title))
+  it.border = BorderFactory.createTitledBorder(title)
   val c = GridBagConstraints()
   c.weightx = 1.0
   c.fill = GridBagConstraints.HORIZONTAL

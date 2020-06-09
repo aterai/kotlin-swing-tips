@@ -16,10 +16,12 @@ fun makeUI() = JPanel(BorderLayout()).also {
 }
 
 private fun makeMenuBar(): JMenuBar {
-  val edit = makeEditButtonBar(listOf(
+  val actions = listOf(
     makeButton("Cut", DefaultEditorKit.CutAction()),
     makeButton("Copy", DefaultEditorKit.CopyAction()),
-    makeButton("Paste", DefaultEditorKit.PasteAction())))
+    makeButton("Paste", DefaultEditorKit.PasteAction())
+  )
+  val edit = makeEditButtonBar(actions)
 
   val menu = JMenu("File").also {
     it.add("1111111111111")

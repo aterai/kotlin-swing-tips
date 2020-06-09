@@ -10,7 +10,8 @@ private val keys = arrayOf(
   arrayOf("Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]", "\\", ""),
   arrayOf("Ctrl", "A", "S", "D", "F", "G", "H", "J", "K", "L", ";", "'", "Enter", ""),
   arrayOf("Shift", "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/", "", "↑"),
-  arrayOf("Fn", "Alt", "                                 ", "Alt", "←", "↓", "→"))
+  arrayOf("Fn", "Alt", "                                 ", "Alt", "←", "↓", "→")
+)
 
 fun makeUI(): Component {
   val keyboard = makeKeyboardPanel()

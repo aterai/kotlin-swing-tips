@@ -10,37 +10,34 @@ import java.awt.geom.Ellipse2D
 import java.util.Collections
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(GridLayout(1, 2)) {
-  init {
-    EventQueue.invokeLater {
-      rootPane.glassPane = LightboxGlassPane()
-      rootPane.glassPane.isVisible = false
-    }
-    val button = JButton("Open")
-    button.addActionListener { rootPane.glassPane.isVisible = true }
-    add(makeDummyPanel())
-    add(button)
-    preferredSize = Dimension(320, 240)
+fun makeUI() = JPanel(GridLayout(1, 2)).also {
+  EventQueue.invokeLater {
+    it.rootPane.glassPane = LightboxGlassPane()
+    it.rootPane.glassPane.isVisible = false
   }
-
-  private fun makeDummyPanel(): JPanel {
-    val b = JButton("Button & Mnemonic")
-    b.mnemonic = KeyEvent.VK_B
-    val t = JTextField("TextField & ToolTip")
-    t.toolTipText = "ToolTip"
-    val p = JPanel(BorderLayout(5, 5))
-    p.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
-    p.add(b, BorderLayout.NORTH)
-    p.add(t, BorderLayout.SOUTH)
-    p.add(JScrollPane(JTree()))
-    return p
-  }
+  val button = JButton("Open")
+  button.addActionListener { button.rootPane.glassPane.isVisible = true }
+  it.add(makeDummyPanel())
+  it.add(button)
+  it.preferredSize = Dimension(320, 240)
 }
 
-class LightboxGlassPane : JPanel() {
+private fun makeDummyPanel(): JPanel {
+  val b = JButton("Button & Mnemonic")
+  b.mnemonic = KeyEvent.VK_B
+  val t = JTextField("TextField & ToolTip")
+  t.toolTipText = "ToolTip"
+  val p = JPanel(BorderLayout(5, 5))
+  p.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
+  p.add(b, BorderLayout.NORTH)
+  p.add(t, BorderLayout.SOUTH)
+  p.add(JScrollPane(JTree()))
+  return p
+}
+
+private class LightboxGlassPane : JPanel() {
   private val img = ImageIcon(LightboxGlassPane::class.java.getResource("test.png"))
-  @Transient
-  private val animatedIcon = LoadingIcon()
+  @Transient private val animatedIcon = LoadingIcon()
   private var alpha = 0f
   private var curImgWidth = 0
   private var curImgHeight = 0
@@ -49,8 +46,7 @@ class LightboxGlassPane : JPanel() {
     animatedIcon.next()
     repaint()
   }
-  @Transient
-  private var handler: Handler? = null
+  @Transient private var handler: Handler? = null
 
   override fun updateUI() {
     removeMouseListener(handler)
@@ -138,7 +134,7 @@ class LightboxGlassPane : JPanel() {
   }
 }
 
-class LoadingIcon : Icon {
+private class LoadingIcon : Icon {
   private val list = mutableListOf(
     Ellipse2D.Double(SX + 3 * R, SY + 0 * R, 2 * R, 2 * R),
     Ellipse2D.Double(SX + 5 * R, SY + 1 * R, 2 * R, 2 * R),
@@ -147,7 +143,8 @@ class LoadingIcon : Icon {
     Ellipse2D.Double(SX + 3 * R, SY + 6 * R, 2 * R, 2 * R),
     Ellipse2D.Double(SX + 1 * R, SY + 5 * R, 2 * R, 2 * R),
     Ellipse2D.Double(SX + 0 * R, SY + 3 * R, 2 * R, 2 * R),
-    Ellipse2D.Double(SX + 1 * R, SY + 1 * R, 2 * R, 2 * R))
+    Ellipse2D.Double(SX + 1 * R, SY + 1 * R, 2 * R, 2 * R)
+  )
   private var running = false
 
   operator fun next() {
@@ -201,7 +198,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
