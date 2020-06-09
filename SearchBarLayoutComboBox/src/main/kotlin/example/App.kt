@@ -22,8 +22,8 @@ fun makeUI(): Component {
   // p.add(new SearchBarComboBox(makeModel()));
   return JPanel(BorderLayout()).also {
     it.add(p, BorderLayout.NORTH)
-    it.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 20))
-    it.setPreferredSize(Dimension(320, 240))
+    it.border = BorderFactory.createEmptyBorder(5, 20, 5, 20)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 

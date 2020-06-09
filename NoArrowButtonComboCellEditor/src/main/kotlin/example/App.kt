@@ -90,8 +90,7 @@ private class LocalDateTimeTableCellEditor : AbstractCellEditor(), TableCellEdit
   override fun getTableCellEditorComponent(
     table: JTable,
     value: Any?,
-    isSelected:
-    Boolean,
+    isSelected: Boolean,
     row: Int,
     column: Int
   ): Component {

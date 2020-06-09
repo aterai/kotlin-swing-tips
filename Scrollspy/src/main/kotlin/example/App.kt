@@ -38,7 +38,7 @@ class MainPanel : JPanel(BorderLayout(2, 2)) {
           <p id='bottom'>id=bottom</p>
         </body>
       </html>
-      """.trimIndent()
+    """.trimIndent()
     val doc = editor.document as HTMLDocument
     val element = doc.getElement("main")
     val model = makeModel()
@@ -71,8 +71,8 @@ class MainPanel : JPanel(BorderLayout(2, 2)) {
       if (!tree.isEnabled) {
         return@addTreeSelectionListener
       }
-      (e.getNewLeadSelectionPath().getLastPathComponent() as? DefaultMutableTreeNode)?.also {
-        val ref = it.getUserObject().toString()
+      (e.newLeadSelectionPath.lastPathComponent as? DefaultMutableTreeNode)?.also {
+        val ref = it.userObject.toString()
         editor.scrollToReference(ref)
       }
     }
@@ -171,7 +171,7 @@ class RowSelectionTree : JTree() {
     setUI(object : BasicTreeUI() {
       override fun getPathBounds(tree: JTree?, path: TreePath?): Rectangle? {
         return if (tree != null && treeState != null) {
-          getPathBounds(path, tree.getInsets(), Rectangle())
+          getPathBounds(path, tree.insets, Rectangle())
         } else null
       }
 

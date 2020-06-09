@@ -22,10 +22,10 @@ open class JSearchBar<E : SearchEngine> : JComboBox<E> {
     // } else {
     setUI(BasicSearchBarComboBoxUI())
     // }
-    UIManager.put("ComboBox.font", getFont()) // XXX: ???
+    UIManager.put("ComboBox.font", font) // XXX: ???
     getItemAt(0)?.also {
       // set ArrowButton Icon
-      (getComponent(0) as? JButton)?.setIcon(it.favicon)
+      (getComponent(0) as? JButton)?.icon = it.favicon
     }
   }
 
@@ -34,7 +34,7 @@ open class JSearchBar<E : SearchEngine> : JComboBox<E> {
   @SafeVarargs
   constructor(vararg items: E) : super(items)
 
-  protected override fun processFocusEvent(e: FocusEvent) {
+  override fun processFocusEvent(e: FocusEvent) {
     println("processFocusEvent")
   }
 

@@ -8,39 +8,40 @@ class SearchBarLayout : LayoutManager {
 
   override fun removeLayoutComponent(comp: Component) { /* not needed */ }
 
-  override fun preferredLayoutSize(parent: Container): Dimension? = parent.getPreferredSize()
+  override fun preferredLayoutSize(parent: Container): Dimension? = parent.preferredSize
 
-  override fun minimumLayoutSize(parent: Container): Dimension? = parent.getMinimumSize()
+  override fun minimumLayoutSize(parent: Container): Dimension? = parent.minimumSize
 
   override fun layoutContainer(parent: Container) {
     val cb = parent as? JComboBox<*> ?: return
-    val width = cb.getWidth()
-    val height = cb.getHeight()
-    val insets = cb.getInsets()
+    val width = cb.width
+    val height = cb.height
+    val insets = cb.insets
     val buttonHeight = height - insets.top - insets.bottom
     var buttonWidth = buttonHeight
 
     (cb.getComponent(0) as? JButton)?.also {
-      val arrowInsets = it.getInsets()
-      buttonWidth = it.getPreferredSize().width + arrowInsets.left + arrowInsets.right
+      val arrowInsets = it.insets
+      buttonWidth = it.preferredSize.width + arrowInsets.left + arrowInsets.right
       it.setBounds(insets.left, insets.top, buttonWidth, buttonHeight)
     }
 
     var loupeButton: JButton? = null
-    for (c in cb.getComponents()) {
-      if ("ComboBox.loupeButton" == c.getName()) {
+    for (c in cb.components) {
+      if ("ComboBox.loupeButton" == c.name) {
         loupeButton = c as? JButton
         break
       }
     }
     loupeButton?.setBounds(width - insets.right - buttonHeight, insets.top, buttonHeight, buttonHeight)
 
-    (cb.getEditor().getEditorComponent() as? JTextField)?.also {
+    (cb.editor.editorComponent as? JTextField)?.also {
       it.setBounds(
-          insets.left + buttonWidth,
-          insets.top,
-          width - insets.left - insets.right - buttonWidth - buttonHeight,
-          height - insets.top - insets.bottom)
+        insets.left + buttonWidth,
+        insets.top,
+        width - insets.left - insets.right - buttonWidth - buttonHeight,
+        height - insets.top - insets.bottom
+      )
     }
   }
 }
