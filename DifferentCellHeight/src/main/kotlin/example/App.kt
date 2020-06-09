@@ -33,13 +33,10 @@ private fun <E> makeList(model: ListModel<E>, hasTextAreaRenderer: Boolean): JLi
   }
 }
 
-private class TextAreaRenderer<E> : JTextArea(),
-  ListCellRenderer<E> {
-  @Transient
-  private var noFocusBorder: Border? = null
+private class TextAreaRenderer<E> : JTextArea(), ListCellRenderer<E> {
+  @Transient private var noFocusBorder: Border? = null
+  @Transient private var focusBorder: Border? = null
 
-  @Transient
-  private var focusBorder: Border? = null
   override fun getListCellRendererComponent(
     list: JList<out E>,
     value: E?,
