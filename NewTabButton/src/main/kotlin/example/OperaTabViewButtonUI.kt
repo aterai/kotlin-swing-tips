@@ -11,10 +11,10 @@ class OperaTabViewButtonUI : BasicTabViewButtonUI() {
   private val iconRect = Rectangle()
   private val textRect = Rectangle()
 
-  protected override fun installDefaults(b: AbstractButton) {
+  override fun installDefaults(b: AbstractButton) {
     super.installDefaults(b)
-    b.setBorder(BorderFactory.createEmptyBorder())
-    b.setForeground(Color.WHITE)
+    b.border = BorderFactory.createEmptyBorder()
+    b.foreground = Color.WHITE
     (b as? TabButton)?.also {
       it.textColor = Color(230, 245, 255)
       it.pressedTextColor = Color.WHITE.darker()
@@ -31,7 +31,7 @@ class OperaTabViewButtonUI : BasicTabViewButtonUI() {
   override fun paint(g: Graphics, c: JComponent) {
     val b = c as? AbstractButton ?: return
     val f = c.getFont()
-    g.setFont(f)
+    g.font = f
 
     val i = c.getInsets()
     b.getSize(size)
@@ -48,14 +48,14 @@ class OperaTabViewButtonUI : BasicTabViewButtonUI() {
     // g2.fill(viewRect);
     tabPainter(g2, viewRect)
 
-    val icon = b.getIcon()
-    viewRect.width = size.width - i.right - viewRect.x - CLOSEICON_WIDTH
+    val icon = b.icon
+    viewRect.width = size.width - i.right - viewRect.x - CLOSE_ICON_WIDTH
     val text = SwingUtilities.layoutCompoundLabel(
-      c, c.getFontMetrics(f), b.getText(), icon, // altIcon != null ? altIcon : getDefaultIcon(),
-      b.getVerticalAlignment(), b.getHorizontalAlignment(),
-      b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
+      c, c.getFontMetrics(f), b.text, icon, // altIcon != null ? altIcon : getDefaultIcon(),
+      b.verticalAlignment, b.horizontalAlignment,
+      b.verticalTextPosition, b.horizontalTextPosition,
       viewRect, iconRect, textRect,
-      if (b.getText() != null) b.getIconTextGap() else 0
+      if (b.text != null) b.iconTextGap else 0
     )
 
     val v = c.getClientProperty(BasicHTML.propertyKey) as? View
@@ -67,9 +67,9 @@ class OperaTabViewButtonUI : BasicTabViewButtonUI() {
     }
     icon?.paintIcon(c, g, iconRect.x + 4, iconRect.y + 2)
 
-    val model = b.getModel()
-    if (!model.isSelected() && !model.isArmed() && !model.isRollover()) {
-      g2.setPaint(Color(0x64_00_00_00, true))
+    val model = b.model
+    if (!model.isSelected && !model.isArmed && !model.isRollover) {
+      g2.paint = Color(0x64_00_00_00, true)
       g2.fillRect(0, 0, size.width, size.height)
       // g2.fill(viewRect);
     }
@@ -77,7 +77,7 @@ class OperaTabViewButtonUI : BasicTabViewButtonUI() {
   }
 
   companion object {
-    private const val CLOSEICON_WIDTH = 12
+    private const val CLOSE_ICON_WIDTH = 12
 
     // "Accidental override" reported when a @JvmStatic method in a Kotlin class has
     //   the same signature as a static method in a Java base class : KT-12993
@@ -92,53 +92,47 @@ class OperaTabViewButtonUI : BasicTabViewButtonUI() {
       val r2 = Rectangle(r.x, r.y + r.height / 2, r.width, r.height / 2)
       val r3 = Rectangle(r.x, r.y + r.height / 2 - 2, r.width, r.height / 4)
 
-      g2.setPaint(
-        GradientPaint(
-          0f,
-          r1.y.toFloat(),
-          Color(0x84_A2_B4),
-          0f,
-          (r1.y + r1.height).toFloat(),
-          Color(0x67_85_98),
-          true
-        )
+      g2.paint = GradientPaint(
+        0f,
+        r1.y.toFloat(),
+        Color(0x84_A2_B4),
+        0f,
+        (r1.y + r1.height).toFloat(),
+        Color(0x67_85_98),
+        true
       )
       g2.fill(r1)
-      g2.setPaint(
-        GradientPaint(
-          0f,
-          r2.y.toFloat(),
-          Color(0x32_49_54),
-          0f,
-          (r2.y + r2.height).toFloat(),
-          Color(0x3C_56_65),
-          true
-        )
+      g2.paint = GradientPaint(
+        0f,
+        r2.y.toFloat(),
+        Color(0x32_49_54),
+        0f,
+        (r2.y + r2.height).toFloat(),
+        Color(0x3C_56_65),
+        true
       )
       g2.fill(r2)
-      g2.setPaint(
-        GradientPaint(
-          0f,
-          r3.y.toFloat(),
-          Color(0, 0, 0, 30),
-          0f,
-          (r3.y + r3.height).toFloat(),
-          Color(0, 0, 0, 5),
-          true
-        )
+      g2.paint = GradientPaint(
+        0f,
+        r3.y.toFloat(),
+        Color(0, 0, 0, 30),
+        0f,
+        (r3.y + r3.height).toFloat(),
+        Color(0, 0, 0, 5),
+        true
       )
       g2.fill(r3)
 
-      g2.setPaint(Color(39, 56, 67)) // g2.setPaint(Color.GREEN);
+      g2.paint = Color(39, 56, 67) // g2.setPaint(Color.GREEN);
       g2.drawLine(r.x, r.y, r.x + r.width, r.y)
 
-      g2.setPaint(Color(255, 255, 255, 30)) // g2.setPaint(Color.RED);
+      g2.paint = Color(255, 255, 255, 30) // g2.setPaint(Color.RED);
       g2.drawLine(r.x + 1, r.y + 1, r.x + r.width, r.y + 1)
 
-      g2.setPaint(Color(255, 255, 255, 60)) // g2.setPaint(Color.BLUE);
+      g2.paint = Color(255, 255, 255, 60) // g2.setPaint(Color.BLUE);
       g2.drawLine(r.x, r.y, r.x, r.y + r.height)
 
-      g2.setPaint(Color(39, 56, 67, 250)) // g2.setPaint(Color.YELLOW);
+      g2.paint = Color(39, 56, 67, 250) // g2.setPaint(Color.YELLOW);
       g2.drawLine(r.x + r.width - 1, r.y, r.x + r.width - 1, r.y + r.height)
 
       // g2.setPaint(Color.PINK);

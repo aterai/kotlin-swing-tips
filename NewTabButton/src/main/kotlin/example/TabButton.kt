@@ -36,20 +36,20 @@ class TabButton : JRadioButton {
 
   constructor(text: String, icon: Icon) : super(text, icon)
 
-  protected override fun fireStateChanged() {
+  override fun fireStateChanged() {
     val model = getModel()
-    if (model.isEnabled()) {
-      if (model.isPressed() && model.isArmed()) {
-        setForeground(pressedTextColor)
-      } else if (model.isSelected()) {
-        setForeground(selectedTextColor)
-      } else if (isRolloverEnabled() && model.isRollover()) {
-        setForeground(rolloverTextColor)
+    foreground = if (model.isEnabled) {
+      if (model.isPressed && model.isArmed) {
+        pressedTextColor
+      } else if (model.isSelected) {
+        selectedTextColor
+      } else if (isRolloverEnabled && model.isRollover) {
+        rolloverTextColor
       } else {
-        setForeground(textColor)
+        textColor
       }
     } else {
-      setForeground(Color.GRAY)
+      Color.GRAY
     }
     super.fireStateChanged()
   }

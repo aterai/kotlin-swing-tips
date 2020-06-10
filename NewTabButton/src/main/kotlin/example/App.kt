@@ -8,22 +8,22 @@ import java.awt.event.MouseEvent
 import java.io.Serializable
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    UIManager.put("example.TabButton", "TabViewButtonUI")
-    UIManager.put("TabViewButtonUI", "example.OperaTabViewButtonUI")
-    val tab3 = CardLayoutTabbedPane()
-    tab3.setBorder(BorderFactory.createTitledBorder("CardLayout+JRadioButton(opera like)"))
-    tab3.addTab("9999", JScrollPane(JTree()))
-    tab3.addTab("aaaaaaaaaaaaaaaaaaaaaaa", JLabel("hhhhh"))
-    tab3.addTab("bbbb", JLabel("iiii"))
-    tab3.addTab("cccc", JButton("jjjjjj"))
-    add(tab3)
-    setPreferredSize(Dimension(320, 240))
+fun makeUI(): Component {
+  UIManager.put("example.TabButton", "TabViewButtonUI")
+  UIManager.put("TabViewButtonUI", "example.OperaTabViewButtonUI")
+  val tab3 = CardLayoutTabbedPane()
+  tab3.border = BorderFactory.createTitledBorder("CardLayout+JRadioButton(opera like)")
+  tab3.addTab("9999", JScrollPane(JTree()))
+  tab3.addTab("11111111111111", JLabel("666666"))
+  tab3.addTab("222222", JLabel("555555555"))
+  tab3.addTab("333", JButton("4444"))
+  return JPanel(BorderLayout()).also {
+    it.add(tab3)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class CardLayoutTabbedPane : JPanel(BorderLayout()) {
+private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
   private val cardLayout = CardLayout()
   private val tabPanel = JPanel(TabLayout())
   private val wrapPanel = JPanel(BorderLayout())
@@ -42,19 +42,20 @@ class CardLayoutTabbedPane : JPanel(BorderLayout()) {
     ImageIcon(javaClass.getResource("wi0111-16.png")),
     ImageIcon(javaClass.getResource("wi0122-16.png")),
     ImageIcon(javaClass.getResource("wi0124-16.png")),
-    ImageIcon(javaClass.getResource("wi0126-16.png")))
+    ImageIcon(javaClass.getResource("wi0126-16.png"))
+  )
 
   init {
     val left = 0
     val right = 0
-    tabPanel.setBorder(BorderFactory.createMatteBorder(0, left, 0, right, Color(20, 30, 50)))
-    contentsPanel.setBorder(BorderFactory.createEmptyBorder(4, left, 2, right))
+    tabPanel.border = BorderFactory.createMatteBorder(0, left, 0, right, Color(20, 30, 50))
+    contentsPanel.border = BorderFactory.createEmptyBorder(4, left, 2, right)
 
-    tabPanel.setOpaque(true)
-    tabPanel.setBackground(Color(20, 30, 50))
+    tabPanel.isOpaque = true
+    tabPanel.background = Color(20, 30, 50)
 
-    wrapPanel.setOpaque(true)
-    wrapPanel.setBackground(Color(20, 30, 50))
+    wrapPanel.isOpaque = true
+    wrapPanel.background = Color(20, 30, 50)
 
     // contentsPanel.setOpaque(true);
     // contentsPanel.setBackground(new Color(20, 30, 50));
@@ -68,7 +69,7 @@ class CardLayoutTabbedPane : JPanel(BorderLayout()) {
     add(wrapPanel, BorderLayout.NORTH)
     add(contentsPanel)
 
-    button.setBorder(BorderFactory.createEmptyBorder())
+    button.border = BorderFactory.createEmptyBorder()
     button.addActionListener(object : ActionListener {
       private var count = 0
       override fun actionPerformed(e: ActionEvent) {
@@ -79,46 +80,41 @@ class CardLayoutTabbedPane : JPanel(BorderLayout()) {
   }
 
   private fun createTabComponent(title: String, comp: Component): Component {
-    // TabButton tab = new TabButton(new AbstractAction(title) {
-    //   @Override public void actionPerformed(ActionEvent e) {
-    //     cardLayout.show(contentsPanel, title);
-    //   }
-    // });
     val tab = TabButton(title)
     tab.addMouseListener(object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
-        (e.getComponent() as? AbstractButton)?.setSelected(true)
+        (e.component as? AbstractButton)?.isSelected = true
         cardLayout.show(contentsPanel, title)
       }
     })
-    tab.setIcon(icons.random())
-    tab.setLayout(BorderLayout())
+    tab.icon = icons.random()
+    tab.layout = BorderLayout()
     val close = object : JButton(CloseTabIcon(Color.GRAY)) {
       override fun getPreferredSize() = Dimension(12, 12)
     }
     close.addActionListener {
       tabPanel.remove(tab)
       contentsPanel.remove(comp)
-      val isMoreThanOne = tabPanel.getComponentCount() > 1
+      val isMoreThanOne = tabPanel.componentCount > 1
       if (isMoreThanOne) {
         tabPanel.revalidate()
-        (tabPanel.getComponent(0) as? TabButton)?.setSelected(true)
+        (tabPanel.getComponent(0) as? TabButton)?.isSelected = true
         cardLayout.first(contentsPanel)
       }
       tabPanel.revalidate()
     }
-    close.setBorder(BorderFactory.createEmptyBorder())
-    close.setFocusPainted(false)
-    close.setContentAreaFilled(false)
-    close.setPressedIcon(CloseTabIcon(Color.BLACK))
-    close.setRolloverIcon(CloseTabIcon(Color.ORANGE))
+    close.border = BorderFactory.createEmptyBorder()
+    close.isFocusPainted = false
+    close.isContentAreaFilled = false
+    close.pressedIcon = CloseTabIcon(Color.BLACK)
+    close.rolloverIcon = CloseTabIcon(Color.ORANGE)
 
     val p = JPanel(BorderLayout())
-    p.setOpaque(false)
+    p.isOpaque = false
     p.add(close, BorderLayout.NORTH)
     tab.add(p, BorderLayout.EAST)
     bg.add(tab)
-    tab.setSelected(true)
+    tab.isSelected = true
     return tab
   }
 
@@ -132,52 +128,54 @@ class CardLayoutTabbedPane : JPanel(BorderLayout()) {
   }
 }
 
-class TabLayout : LayoutManager, Serializable {
-  override fun addLayoutComponent(name: String, comp: Component) { /* not needed */ }
+private class TabLayout : LayoutManager, Serializable {
+  override fun addLayoutComponent(name: String, comp: Component) { /* not needed */
+  }
 
-  override fun removeLayoutComponent(comp: Component) { /* not needed */ }
+  override fun removeLayoutComponent(comp: Component) { /* not needed */
+  }
 
   override fun preferredLayoutSize(parent: Container): Dimension {
-    synchronized(parent.getTreeLock()) {
-      val last = parent.getComponentCount() - 1
+    synchronized(parent.treeLock) {
+      val last = parent.componentCount - 1
       var w = 0
       var h = 0
       if (last >= 0) {
         val comp = parent.getComponent(last)
-        val d = comp.getPreferredSize()
+        val d = comp.preferredSize
         w = d.width
         h = d.height
       }
-      val i = parent.getInsets()
+      val i = parent.insets
       return Dimension(i.left + i.right + w, i.top + i.bottom + h)
     }
   }
 
   override fun minimumLayoutSize(parent: Container): Dimension {
-    synchronized(parent.getTreeLock()) {
+    synchronized(parent.treeLock) {
       return Dimension(100, 24)
     }
   }
 
   override fun layoutContainer(parent: Container) {
-    synchronized(parent.getTreeLock()) {
-      val ncomponents = parent.getComponentCount()
-      if (ncomponents == 0) {
+    synchronized(parent.treeLock) {
+      val componentCount = parent.componentCount
+      if (componentCount == 0) {
         return
       }
-      // int nrows = 1;
-      // boolean ltr = parent.getComponentOrientation().isLeftToRight()
-      val insets = parent.getInsets()
-      val ncols = ncomponents - 1
-      val lastw = parent.getComponent(ncomponents - 1).getPreferredSize().width
-      val width = parent.getWidth() - insets.left - insets.right - lastw
-      val h = parent.getHeight() - insets.top - insets.bottom
-      val w = if (width > TAB_WIDTH * ncols) TAB_WIDTH else width / ncols
-      var gap = width - w * ncols
+      // val numRows = 1
+      // val ltr = parent.componentOrientation.isLeftToRight
+      val insets = parent.insets
+      val numCols = componentCount - 1
+      val lastWidth = parent.getComponent(componentCount - 1).preferredSize.width
+      val width = parent.width - insets.left - insets.right - lastWidth
+      val h = parent.height - insets.top - insets.bottom
+      val w = if (width > TAB_WIDTH * numCols) TAB_WIDTH else width / numCols
+      var gap = width - w * numCols
       var x = insets.left
       val y = insets.top
-      for (i in 0 until ncomponents) {
-        val cw = if (i == ncols) lastw else w + if (gap-- > 0) 1 else 0
+      for (i in 0 until componentCount) {
+        val cw = if (i == numCols) lastWidth else w + if (gap-- > 0) 1 else 0
         parent.getComponent(i).setBounds(x, y, cw, h)
         x += cw
       }
@@ -202,7 +200,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

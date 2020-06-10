@@ -6,17 +6,14 @@ import javax.swing.plaf.basic.BasicHTML
 import javax.swing.text.View
 
 open class BasicTabViewButtonUI : TabViewButtonUI() {
-
-  protected override fun installDefaults(b: AbstractButton) {
+  override fun installDefaults(b: AbstractButton) {
     super.installDefaults(b)
-    b.setPreferredSize(Dimension(0, 24))
-    b.setRolloverEnabled(true)
-    b.setOpaque(true)
-    val outer = BorderFactory.createMatteBorder(2, 0, 0, 0, b.getBackground())
+    b.preferredSize = Dimension(0, 24)
+    b.isRolloverEnabled = true
+    b.isOpaque = true
+    val outer = BorderFactory.createMatteBorder(2, 0, 0, 0, b.background)
     val inner = BorderFactory.createMatteBorder(1, 1, 0, 1, Color.RED)
-    b.setBorder(BorderFactory.createCompoundBorder(outer, inner))
-    // b.setForeground(Color.GREEN);
-
+    b.border = BorderFactory.createCompoundBorder(outer, inner)
     (b as? TabButton)?.also {
       it.textColor = Color(100, 100, 100)
       it.pressedTextColor = Color.GRAY
@@ -36,7 +33,7 @@ open class BasicTabViewButtonUI : TabViewButtonUI() {
   override fun paint(g: Graphics, c: JComponent) {
     val b = c as? AbstractButton ?: return
     val f = c.getFont()
-    g.setFont(f)
+    g.font = f
 
     val i = c.getInsets()
     b.getSize(size)
@@ -48,21 +45,21 @@ open class BasicTabViewButtonUI : TabViewButtonUI() {
     textRect.setBounds(0, 0, 0, 0) // .x = textRect.y = textRect.width = textRect.height = 0;
 
     val text = SwingUtilities.layoutCompoundLabel(
-      c, c.getFontMetrics(f), b.getText(), null, // altIcon != null ? altIcon : getDefaultIcon(),
-      b.getVerticalAlignment(), b.getHorizontalAlignment(),
-      b.getVerticalTextPosition(), b.getHorizontalTextPosition(),
+      c, c.getFontMetrics(f), b.text, null, // altIcon != null ? altIcon : getDefaultIcon(),
+      b.verticalAlignment, b.horizontalAlignment,
+      b.verticalTextPosition, b.horizontalTextPosition,
       viewRect, iconRect, textRect,
       0
     ) // b.getText() == null ? 0 : b.getIconTextGap());
 
-    g.setColor(b.getBackground())
+    g.color = b.background
     g.fillRect(0, 0, size.width, size.height)
 
-    val model = b.getModel()
-    if (model.isSelected() || model.isArmed()) {
-      g.setColor(Color.WHITE)
+    val model = b.model
+    if (model.isSelected || model.isArmed) {
+      g.color = Color.WHITE
     } else {
-      g.setColor(Color(220, 220, 220))
+      g.color = Color(220, 220, 220)
     }
     g.fillRect(
       viewRect.x, viewRect.y,
@@ -70,26 +67,26 @@ open class BasicTabViewButtonUI : TabViewButtonUI() {
     )
 
     val color = Color(255, 120, 40)
-    if (model.isSelected()) {
-      g.setColor(color)
+    if (model.isSelected) {
+      g.color = color
       g.drawLine(viewRect.x + 1, viewRect.y - 2, viewRect.x + viewRect.width - 1, viewRect.y - 2)
-      g.setColor(color.brighter())
+      g.color = color.brighter()
       g.drawLine(viewRect.x + 0, viewRect.y - 1, viewRect.x + viewRect.width - 0, viewRect.y - 1)
-      g.setColor(color)
+      g.color = color
       g.drawLine(viewRect.x + 0, viewRect.y - 0, viewRect.x + viewRect.width - 0, viewRect.y - 0)
-    } else if (model.isRollover()) {
-      g.setColor(color)
+    } else if (model.isRollover) {
+      g.color = color
       g.drawLine(viewRect.x + 1, viewRect.y + 0, viewRect.x + viewRect.width - 1, viewRect.y + 0)
-      g.setColor(color.brighter())
+      g.color = color.brighter()
       g.drawLine(viewRect.x + 0, viewRect.y + 1, viewRect.x + viewRect.width - 0, viewRect.y + 1)
-      g.setColor(color)
+      g.color = color
       g.drawLine(viewRect.x + 0, viewRect.y + 2, viewRect.x + viewRect.width - 0, viewRect.y + 2)
     }
     val v = c.getClientProperty(BasicHTML.propertyKey) as? View
     if (v != null) {
       v.paint(g, textRect)
     } else {
-      if (model.isSelected()) {
+      if (model.isSelected) {
         textRect.y -= 2
         textRect.x -= 1
       }

@@ -5,9 +5,9 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class CloseTabIcon(private val color: Color) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
-    g2.setPaint(color)
+    g2.paint = color
     g2.drawLine(2, 2, 9, 9)
     g2.drawLine(2, 3, 8, 9)
     g2.drawLine(3, 2, 9, 8)
@@ -27,8 +27,8 @@ class PlusIcon : Icon {
     val g2 = g.create() as Graphics2D
     g2.translate(x, y)
 
-    val i = (c as? JComponent)?.getInsets() ?: Insets(0, 0, 0, 0)
-    val size = c.getSize()
+    val i = (c as? JComponent)?.insets ?: Insets(0, 0, 0, 0)
+    val size = c.size
 
     viewRect.x = i.left
     viewRect.y = i.top
@@ -36,7 +36,7 @@ class PlusIcon : Icon {
     viewRect.height = size.height - i.bottom - viewRect.y
     OperaTabViewButtonUI.tabPainter(g2, viewRect)
 
-    g2.setPaint(Color.WHITE)
+    g2.paint = Color.WHITE
     var w = viewRect.width
     val a = w / 2
     val b = w / 3
