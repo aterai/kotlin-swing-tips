@@ -289,7 +289,7 @@ private class TabDragGestureListener : DragGestureListener {
       val idx = it.indexAtLocation(tabPt.x, tabPt.y)
       val selIdx = it.selectedIndex
       val isTabRunsRotated = it.ui !is MetalTabbedPaneUI &&
-          it.tabLayoutPolicy == JTabbedPane.WRAP_TAB_LAYOUT && idx != selIdx
+        it.tabLayoutPolicy == JTabbedPane.WRAP_TAB_LAYOUT && idx != selIdx
       it.dragTabIndex = if (isTabRunsRotated) selIdx else idx
       if (it.dragTabIndex >= 0 && it.isEnabledAt(it.dragTabIndex)) {
         it.initGlassPane(tabPt)

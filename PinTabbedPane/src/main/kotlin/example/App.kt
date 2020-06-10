@@ -21,7 +21,7 @@ fun makeUI(): Component {
   }
 }
 
-internal class PinTabPopupMenu : JPopupMenu() {
+private class PinTabPopupMenu : JPopupMenu() {
   private val pinTabMenuItem = JCheckBoxMenuItem(object : AbstractAction("pin tab") {
     override fun actionPerformed(e: ActionEvent) {
       val t = invoker as JTabbedPane
@@ -74,8 +74,8 @@ internal class PinTabPopupMenu : JPopupMenu() {
     return i
   }
 
-  private fun isSelectedPinTab(t: JTabbedPane, idx: Int) =
-      idx >= 0 && idx == t.selectedIndex && isEmpty(t.getTitleAt(idx))
+  private fun isSelectedPinTab(t: JTabbedPane, idx: Int) = idx >= 0 &&
+    idx == t.selectedIndex && isEmpty(t.getTitleAt(idx))
 
   private fun isEmpty(s: String?) = s == null || s.isEmpty()
 
@@ -83,10 +83,11 @@ internal class PinTabPopupMenu : JPopupMenu() {
     add(pinTabMenuItem)
     addSeparator()
     add("close all").addActionListener {
-      val t = invoker as? JTabbedPane ?: return@addActionListener
-      for (i in t.tabCount - 1 downTo 0) {
-        if (!isEmpty(t.getTitleAt(i))) {
-          t.removeTabAt(i)
+      (invoker as? JTabbedPane)?.also {
+        for (i in it.tabCount - 1 downTo 0) {
+          if (!isEmpty(it.getTitleAt(i))) {
+            it.removeTabAt(i)
+          }
         }
       }
     }

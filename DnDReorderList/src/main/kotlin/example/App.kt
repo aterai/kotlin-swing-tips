@@ -84,10 +84,9 @@ private class ListItemTransferHandler : TransferHandler() {
     }
   }
 
-  override fun canImport(info: TransferSupport) =
-    info.isDrop &&
-        info.isDataFlavorSupported(FLAVOR) &&
-        info.dropLocation is JList.DropLocation
+  override fun canImport(info: TransferSupport) = info.isDrop &&
+    info.isDataFlavorSupported(FLAVOR) &&
+    info.dropLocation is JList.DropLocation
 
   override fun getSourceActions(c: JComponent) = MOVE
 
