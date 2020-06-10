@@ -9,68 +9,68 @@ import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 
-class MainPanel : JPanel(BorderLayout()) {
-  private val columnNames = arrayOf("No.", "Name", "URL")
-  private val model = object : DefaultTableModel(columnNames, 0) {
-    override fun getColumnClass(column: Int) = when (column) {
-      0 -> Number::class.java
-      1 -> String::class.java
-      2 -> URL::class.java
-      else -> super.getColumnClass(column)
-    }
-
-    override fun isCellEditable(row: Int, col: Int) = false
+private val columnNames = arrayOf("No.", "Name", "URL")
+private val model = object : DefaultTableModel(columnNames, 0) {
+  override fun getColumnClass(column: Int) = when (column) {
+    0 -> Number::class.java
+    1 -> String::class.java
+    2 -> URL::class.java
+    else -> super.getColumnClass(column)
   }
 
-  init {
-    model.addRow(arrayOf<Any?>(0, "FrontPage", makeUrl("https://ateraimemo.com/")))
-    model.addRow(arrayOf<Any?>(1, "Java Swing Tips", makeUrl("https://ateraimemo.com/Swing.html")))
-    model.addRow(arrayOf<Any?>(2, "Example", makeUrl("http://www.example.com/")))
-    model.addRow(arrayOf<Any?>(3, "Example.jp", makeUrl("http://www.example.jp/")))
-
-    val table = object : JTable(model) {
-      private val evenColor = Color(0xFA_FA_FA)
-      override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
-        val c = super.prepareRenderer(tcr, row, column)
-        c.setForeground(getForeground())
-        c.setBackground(if (row % 2 == 0) evenColor else getBackground())
-        return c
-      }
-    }
-    table.setRowSelectionAllowed(true)
-    table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
-    table.setIntercellSpacing(Dimension())
-    table.setShowGrid(false)
-    table.putClientProperty("terminateEditOnFocusLost", true)
-    table.setAutoCreateRowSorter(true)
-
-    var col = table.getColumnModel().getColumn(0)
-    col.setMinWidth(50)
-    col.setMaxWidth(50)
-    col.setResizable(false)
-
-    val renderer = UrlRenderer()
-    table.setDefaultRenderer(URL::class.java, renderer)
-    table.addMouseListener(renderer)
-    table.addMouseMotionListener(renderer)
-
-    col = table.getColumnModel().getColumn(1)
-    col.setPreferredWidth(1000)
-
-    col = table.getColumnModel().getColumn(2)
-    // col.setCellRenderer(renderer)
-    col.setPreferredWidth(2000)
-
-    val scrollPane = JScrollPane(table)
-    scrollPane.getViewport().setBackground(Color.WHITE)
-    add(scrollPane)
-    setPreferredSize(Dimension(320, 240))
-  }
-
-  private fun makeUrl(spec: String) = runCatching { URL(spec) }.getOrNull()
+  override fun isCellEditable(row: Int, col: Int) = false
 }
 
-class UrlRenderer : MouseAdapter(), TableCellRenderer {
+fun makeUI(): Component {
+  model.addRow(arrayOf(0, "FrontPage", makeUrl("https://ateraimemo.com/")))
+  model.addRow(arrayOf(1, "Java Swing Tips", makeUrl("https://ateraimemo.com/Swing.html")))
+  model.addRow(arrayOf(2, "Example", makeUrl("http://www.example.com/")))
+  model.addRow(arrayOf(3, "Example.jp", makeUrl("http://www.example.jp/")))
+
+  val table = object : JTable(model) {
+    private val evenColor = Color(0xFA_FA_FA)
+    override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
+      val c = super.prepareRenderer(tcr, row, column)
+      c.foreground = foreground
+      c.background = if (row % 2 == 0) evenColor else background
+      return c
+    }
+  }
+  table.rowSelectionAllowed = true
+  table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
+  table.intercellSpacing = Dimension()
+  table.setShowGrid(false)
+  table.putClientProperty("terminateEditOnFocusLost", true)
+  table.autoCreateRowSorter = true
+
+  var col = table.columnModel.getColumn(0)
+  col.minWidth = 50
+  col.maxWidth = 50
+  col.resizable = false
+
+  val renderer = UrlRenderer()
+  table.setDefaultRenderer(URL::class.java, renderer)
+  table.addMouseListener(renderer)
+  table.addMouseMotionListener(renderer)
+
+  col = table.columnModel.getColumn(1)
+  col.preferredWidth = 1000
+
+  col = table.columnModel.getColumn(2)
+  // col.setCellRenderer(renderer)
+  col.preferredWidth = 2000
+
+  val scrollPane = JScrollPane(table)
+  scrollPane.viewport.background = Color.WHITE
+  return JPanel(BorderLayout()).also {
+    it.add(scrollPane)
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private fun makeUrl(spec: String) = runCatching { URL(spec) }.getOrNull()
+
+private class UrlRenderer : MouseAdapter(), TableCellRenderer {
   private val renderer = DefaultTableCellRenderer()
   private var viewRowIndex = -1
   private var viewColumnIndex = -1
@@ -86,30 +86,39 @@ class UrlRenderer : MouseAdapter(), TableCellRenderer {
   ): Component {
     val c = renderer.getTableCellRendererComponent(table, value, isSelected, false, row, column)
     val label = c as? JLabel ?: return c
-    val cm = table.getColumnModel()
-    val i = renderer.getInsets()
+    val cm = table.columnModel
+    val i = renderer.insets
     CELL_RECT.x = i.left
     CELL_RECT.y = i.top
-    CELL_RECT.width = cm.getColumn(column).getWidth() - cm.getColumnMargin() - i.right - CELL_RECT.x
-    CELL_RECT.height = table.getRowHeight(row) - table.getRowMargin() - i.bottom - CELL_RECT.y
+    CELL_RECT.width = cm.getColumn(column).width - cm.columnMargin - i.right - CELL_RECT.x
+    CELL_RECT.height = table.getRowHeight(row) - table.rowMargin - i.bottom - CELL_RECT.y
     ICON_RECT.setBounds(0, 0, 0, 0)
     TEXT_RECT.setBounds(0, 0, 0, 0)
 
     val str = SwingUtilities.layoutCompoundLabel(
-      label, label.getFontMetrics(label.getFont()), value?.toString() ?: "", label.getIcon(),
-      label.getVerticalAlignment(), label.getHorizontalAlignment(),
-      label.getVerticalTextPosition(), label.getHorizontalTextPosition(),
-      CELL_RECT, ICON_RECT, TEXT_RECT, label.getIconTextGap())
-    label.setText(if (isRolloverCell(table, row, column)) "<html><u><font color='blue'>$str" else str)
+      label,
+      label.getFontMetrics(label.font),
+      value?.toString() ?: "",
+      label.icon,
+      label.verticalAlignment,
+      label.horizontalAlignment,
+      label.verticalTextPosition,
+      label.horizontalTextPosition,
+      CELL_RECT,
+      ICON_RECT,
+      TEXT_RECT,
+      label.iconTextGap
+    )
+    label.text = if (isRolloverCell(table, row, column)) "<html><u><font color='blue'>$str" else str
     return label
   }
 
   private fun isRolloverCell(table: JTable, row: Int, column: Int) =
-    !table.isEditing() && viewRowIndex == row && viewColumnIndex == column && isRollover
+    !table.isEditing && viewRowIndex == row && viewColumnIndex == column && isRollover
 
   override fun mouseMoved(e: MouseEvent) {
-    val table = e.getComponent() as? JTable ?: return
-    val pt = e.getPoint()
+    val table = e.component as? JTable ?: return
+    val pt = e.point
     val prevRow = viewRowIndex
     val prevCol = viewColumnIndex
     val prevRollover = isRollover
@@ -131,7 +140,7 @@ class UrlRenderer : MouseAdapter(), TableCellRenderer {
   }
 
   override fun mouseExited(e: MouseEvent) {
-    val table = e.getComponent() as? JTable ?: return
+    val table = e.component as? JTable ?: return
     if (isUrlColumn(table, viewColumnIndex)) {
       table.repaint(table.getCellRect(viewRowIndex, viewColumnIndex, false))
       viewRowIndex = -1
@@ -141,8 +150,8 @@ class UrlRenderer : MouseAdapter(), TableCellRenderer {
   }
 
   override fun mouseClicked(e: MouseEvent) {
-    val table = e.getComponent() as? JTable ?: return
-    val pt = e.getPoint()
+    val table = e.component as? JTable ?: return
+    val pt = e.point
     val col = table.columnAtPoint(pt)
     if (isUrlColumn(table, col) && pointInsidePrefSize(table, pt)) {
       val row = table.rowAtPoint(pt)
@@ -167,9 +176,9 @@ class UrlRenderer : MouseAdapter(), TableCellRenderer {
     val tcr = table.getCellRenderer(row, col)
     val value = table.getValueAt(row, col)
     val cell = tcr.getTableCellRendererComponent(table, value, false, false, row, col)
-    val itemSize = cell.getPreferredSize()
+    val itemSize = cell.preferredSize
     val cellBounds = table.getCellRect(row, col, false).also {
-      val i = (cell as? JComponent)?.getInsets() ?: Insets(0, 0, 0, 0)
+      val i = (cell as? JComponent)?.insets ?: Insets(0, 0, 0, 0)
       it.width = itemSize.width - i.right - i.left
       it.translate(i.left, i.top)
     }
@@ -193,7 +202,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

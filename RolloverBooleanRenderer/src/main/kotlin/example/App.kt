@@ -9,64 +9,64 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 
-class MainPanel : JPanel(BorderLayout()) {
-  private val columnNames = arrayOf("String", "Integer", "Boolean")
-  private val data = arrayOf(
-    arrayOf("aaa", 12, true),
-    arrayOf("bbb", 5, false),
-    arrayOf("CCC", 92, true),
-    arrayOf("DDD", 0, false))
-  private val model = object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
-  }
-  private val table = object : JTable(model) {
-    @Transient
-    private var highlighter: HighlightListener? = null
+private val columnNames = arrayOf("String", "Integer", "Boolean")
+private val data = arrayOf(
+  arrayOf("aaa", 12, true),
+  arrayOf("bbb", 5, false),
+  arrayOf("CCC", 92, true),
+  arrayOf("DDD", 0, false)
+)
+private val model = object : DefaultTableModel(data, columnNames) {
+  override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
+}
+private val table = object : JTable(model) {
+  @Transient private var highlighter: HighlightListener? = null
 
-    override fun updateUI() {
-      addMouseListener(highlighter)
-      addMouseMotionListener(highlighter)
-      setDefaultRenderer(Any::class.java, null)
-      setDefaultRenderer(Number::class.java, null)
-      setDefaultRenderer(java.lang.Boolean::class.java, null)
-      super.updateUI()
-      val hl = HighlightListener()
-      highlighter = hl
-      addMouseListener(hl)
-      addMouseMotionListener(hl)
-      setDefaultRenderer(Any::class.java, RolloverDefaultTableCellRenderer(hl))
-      setDefaultRenderer(Number::class.java, RolloverNumberRenderer(hl))
-      setDefaultRenderer(java.lang.Boolean::class.java, RolloverBooleanRenderer(hl))
+  override fun updateUI() {
+    addMouseListener(highlighter)
+    addMouseMotionListener(highlighter)
+    setDefaultRenderer(Any::class.java, null)
+    setDefaultRenderer(Number::class.java, null)
+    setDefaultRenderer(java.lang.Boolean::class.java, null)
+    super.updateUI()
+    val hl = HighlightListener()
+    highlighter = hl
+    addMouseListener(hl)
+    addMouseMotionListener(hl)
+    setDefaultRenderer(Any::class.java, RolloverDefaultTableCellRenderer(hl))
+    setDefaultRenderer(Number::class.java, RolloverNumberRenderer(hl))
+    setDefaultRenderer(java.lang.Boolean::class.java, RolloverBooleanRenderer(hl))
+  }
+
+  override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int) =
+    super.prepareEditor(editor, row, column).also {
+      (it as? JCheckBox)?.background = getSelectionBackground()
     }
+}
 
-    override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int) =
-      super.prepareEditor(editor, row, column).also {
-        (it as? JCheckBox)?.setBackground(getSelectionBackground())
-      }
-  }
+fun makeUI(): Component {
+  table.autoCreateRowSorter = true
 
-  init {
-    table.setAutoCreateRowSorter(true)
+  val sp = JSplitPane(JSplitPane.VERTICAL_SPLIT)
+  sp.topComponent = JScrollPane(JTable(model))
+  sp.bottomComponent = JScrollPane(table)
+  sp.resizeWeight = .5
 
-    val sp = JSplitPane(JSplitPane.VERTICAL_SPLIT)
-    sp.setTopComponent(JScrollPane(JTable(model)))
-    sp.setBottomComponent(JScrollPane(table))
-    sp.setResizeWeight(.5)
-
-    add(sp)
-    setPreferredSize(Dimension(320, 240))
+  return JPanel(BorderLayout()).also {
+    it.add(sp)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class HighlightListener : MouseAdapter() {
+private class HighlightListener : MouseAdapter() {
   private var viewRowIndex = -1
   private var viewColumnIndex = -1
 
   fun isHighlightedCell(row: Int, column: Int) = viewRowIndex == row && viewColumnIndex == column
 
   override fun mouseMoved(e: MouseEvent) {
-    (e.getComponent() as? JTable)?.also { table ->
-      val pt = e.getPoint()
+    (e.component as? JTable)?.also { table ->
+      val pt = e.point
       val prevRow = viewRowIndex
       val prevCol = viewColumnIndex
       viewRowIndex = table.rowAtPoint(pt)
@@ -92,7 +92,7 @@ class HighlightListener : MouseAdapter() {
   }
 
   override fun mouseExited(e: MouseEvent) {
-    (e.getComponent() as? JTable)?.also { table ->
+    (e.component as? JTable)?.also { table ->
       if (viewRowIndex >= 0 && viewColumnIndex >= 0) {
         table.repaint(table.getCellRect(viewRowIndex, viewColumnIndex, false))
       }
@@ -102,7 +102,7 @@ class HighlightListener : MouseAdapter() {
   }
 }
 
-open class RolloverDefaultTableCellRenderer(private val highlighter: HighlightListener) : DefaultTableCellRenderer() {
+private open class RolloverDefaultTableCellRenderer(private val highlighter: HighlightListener) : DefaultTableCellRenderer() {
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -113,27 +113,18 @@ open class RolloverDefaultTableCellRenderer(private val highlighter: HighlightLi
   ): Component {
     super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     val str = value?.toString() ?: ""
-//     if (highlighter.isHighlightedCell(row, column)) {
-//       setText("<html><u>$str")
-//       setForeground(if (isSelected) table.getSelectionForeground() else HIGHLIGHT)
-//       setBackground(if (isSelected) table.getSelectionBackground().darker() else table.getBackground())
-//     } else {
-//       setText(str)
-//       setForeground(if (isSelected) table.getSelectionForeground() else table.getForeground())
-//       setBackground(if (isSelected) table.getSelectionBackground() else table.getBackground())
-//     }
     val isHighlightedCell = highlighter.isHighlightedCell(row, column)
-    setForeground(when {
-      isSelected -> table.getSelectionForeground()
+    foreground = when {
+      isSelected -> table.selectionForeground
       !isSelected && isHighlightedCell -> HIGHLIGHT
-      else -> table.getForeground()
-    })
-    setBackground(when {
-      isSelected && isHighlightedCell -> table.getSelectionBackground().darker()
-      isSelected && !isHighlightedCell -> table.getSelectionBackground()
-      else -> table.getBackground()
-    })
-    setText(if (isHighlightedCell) "<html><u>$str" else str)
+      else -> table.foreground
+    }
+    background = when {
+      isSelected && isHighlightedCell -> table.selectionBackground.darker()
+      isSelected && !isHighlightedCell -> table.selectionBackground
+      else -> table.background
+    }
+    text = if (isHighlightedCell) "<html><u>$str" else str
     return this
   }
 
@@ -142,19 +133,19 @@ open class RolloverDefaultTableCellRenderer(private val highlighter: HighlightLi
   }
 }
 
-class RolloverNumberRenderer(highlighter: HighlightListener) : RolloverDefaultTableCellRenderer(highlighter) {
+private class RolloverNumberRenderer(highlighter: HighlightListener) : RolloverDefaultTableCellRenderer(highlighter) {
   init {
-    setHorizontalAlignment(SwingConstants.RIGHT)
+    horizontalAlignment = SwingConstants.RIGHT
   }
 }
 
-class RolloverBooleanRenderer(private val highlighter: HighlightListener) : JCheckBox(), TableCellRenderer {
+private class RolloverBooleanRenderer(private val highlighter: HighlightListener) : JCheckBox(), TableCellRenderer {
   init {
-    setHorizontalAlignment(SwingConstants.CENTER)
-    setBorderPainted(true)
-    setRolloverEnabled(true)
-    setOpaque(true)
-    setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1))
+    horizontalAlignment = SwingConstants.CENTER
+    isBorderPainted = true
+    isRolloverEnabled = true
+    isOpaque = true
+    border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
   }
 
   override fun getTableCellRendererComponent(
@@ -165,14 +156,14 @@ class RolloverBooleanRenderer(private val highlighter: HighlightListener) : JChe
     row: Int,
     column: Int
   ): Component {
-    getModel().setRollover(highlighter.isHighlightedCell(row, column))
+    getModel().isRollover = highlighter.isHighlightedCell(row, column)
 
     if (isSelected) {
-      setForeground(table.getSelectionForeground())
-      super.setBackground(table.getSelectionBackground())
+      foreground = table.selectionForeground
+      super.setBackground(table.selectionBackground)
     } else {
-      setForeground(table.getForeground())
-      setBackground(table.getBackground())
+      foreground = table.foreground
+      background = table.background
       // setBackground(row % 2 == 0 ? table.getBackground() : Color.WHITE); // Nimbus
     }
     setSelected(value == true)
@@ -183,8 +174,8 @@ class RolloverBooleanRenderer(private val highlighter: HighlightListener) : JChe
   override fun isOpaque(): Boolean {
     val o = SwingUtilities.getAncestorOfClass(JTable::class.java, this)
     return (o as? JTable)?.let { table ->
-      val back = getBackground()
-      val colorMatch = back != null && back == table.getBackground() && table.isOpaque()
+      val back = background
+      val colorMatch = back != null && back == table.background && table.isOpaque
       !colorMatch && super.isOpaque()
     } ?: super.isOpaque()
   }
@@ -237,7 +228,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

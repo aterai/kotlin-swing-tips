@@ -11,11 +11,12 @@ fun makeUI(): Component {
     arrayOf("aaa", 12, true),
     arrayOf("bbb", 5, false),
     arrayOf("CCC", 92, true),
-    arrayOf("DDD", 0, false))
+    arrayOf("DDD", 0, false)
+  )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
-  val table: JTable = object : JTable(model) {
+  val table = object : JTable(model) {
     override fun getToolTipText(e: MouseEvent): String {
       val row = convertRowIndexToModel(rowAtPoint(e.point))
       val m = getModel()
@@ -23,6 +24,7 @@ fun makeUI(): Component {
     }
   }
   table.autoCreateRowSorter = true
+
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(table))
     it.preferredSize = Dimension(320, 240)

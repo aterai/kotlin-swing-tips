@@ -14,14 +14,14 @@ private val data = arrayOf(
   arrayOf(3, 33, ES, ES, "C", ES, ES, ES),
   arrayOf(4, 1, ES, ES, ES, "D", ES, ES),
   arrayOf(5, 55, ES, ES, ES, ES, "E", ES),
-  arrayOf(6, 66, ES, ES, ES, ES, ES, "F"))
+  arrayOf(6, 66, ES, ES, ES, ES, ES, "F")
+)
 private val columnNames = arrayOf("fixed 1", "fixed 2", "A", "B", "C", "D", "E", "F")
 private val model = object : DefaultTableModel(data, columnNames) {
   override fun getColumnClass(column: Int) = if (column < FIXED_RANGE) Number::class.java else Any::class.java
 }
 
-@Transient
-private val sorter = TableRowSorter<DefaultTableModel>(model)
+@Transient private val sorter = TableRowSorter<DefaultTableModel>(model)
 private val addButton = JButton("add")
 
 fun makeUI(): Component {

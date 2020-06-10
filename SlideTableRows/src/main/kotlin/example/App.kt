@@ -15,7 +15,8 @@ val data = arrayOf(
   arrayOf("aaa", 12, true),
   arrayOf("bbb", 5, false),
   arrayOf("CCC", 92, true),
-  arrayOf("DDD", 0, false))
+  arrayOf("DDD", 0, false)
+)
 val model = object : DefaultTableModel(data, columnNames) {
   override fun getColumnClass(column: Int) = when (column) {
     0 -> String::class.java
@@ -37,17 +38,17 @@ val deleteAction = object : AbstractAction("delete") {
 }
 
 fun makeUI(): Component {
-  table.setFillsViewportHeight(true)
-  table.setAutoCreateRowSorter(true)
-  table.setRowHeight(START_HEIGHT)
-  for (i in 0 until model.getRowCount()) {
+  table.fillsViewportHeight = true
+  table.autoCreateRowSorter = true
+  table.rowHeight = START_HEIGHT
+  for (i in 0 until model.rowCount) {
     table.setRowHeight(i, END_HEIGHT)
   }
 
   val popup = object : JPopupMenu() {
     override fun show(c: Component, x: Int, y: Int) {
       val table = c as? JTable ?: return
-      deleteAction.setEnabled(table.getSelectedRowCount() > 0)
+      deleteAction.isEnabled = table.selectedRowCount > 0
       super.show(table, x, y)
     }
   }
@@ -56,32 +57,32 @@ fun makeUI(): Component {
   popup.add(deleteAction)
 
   val scroll = JScrollPane(table)
-  scroll.setComponentPopupMenu(popup)
-  table.setInheritsPopupMenu(true)
+  scroll.componentPopupMenu = popup
+  table.inheritsPopupMenu = true
   return JPanel(BorderLayout()).also {
     it.add(scroll)
     it.add(JButton(createAction), BorderLayout.SOUTH)
-    it.setPreferredSize(Dimension(320, 240))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
 fun createActionPerformed() {
-  model.addRow(arrayOf("New name", model.getRowCount(), false))
+  model.addRow(arrayOf("New name", model.rowCount, false))
   Timer(DELAY, object : ActionListener {
-    private val index = table.convertRowIndexToView(model.getRowCount() - 1)
+    private val index = table.convertRowIndexToView(model.rowCount - 1)
     private var height = START_HEIGHT
     override fun actionPerformed(e: ActionEvent) {
       if (height < END_HEIGHT) {
         table.setRowHeight(index, height++)
       } else {
-        (e.getSource() as? Timer)?.stop()
+        (e.source as? Timer)?.stop()
       }
     }
   }).start()
 }
 
 fun deleteActionPerformed() {
-  val selection = table.getSelectedRows()
+  val selection = table.selectedRows
   if (selection.isEmpty()) {
     return
   }
@@ -94,7 +95,7 @@ fun deleteActionPerformed() {
           table.setRowHeight(selection[i], height)
         }
       } else {
-        (e.getSource() as? Timer)?.stop()
+        (e.source as? Timer)?.stop()
         for (i in selection.indices.reversed()) {
           model.removeRow(table.convertRowIndexToModel(selection[i]))
         }
