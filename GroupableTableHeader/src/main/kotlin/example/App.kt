@@ -229,9 +229,9 @@ private class ColumnGroup(text: String) {
     // return emptyList<Any>()
     return when {
       list.contains(c) -> g
-      else -> list.filterIsInstance<ColumnGroup>()
-        .map { it.getColumnGroupList(c, ArrayList(g)) }
-        .firstOrNull { it.isNotEmpty() }.orEmpty()
+      else -> list.filterIsInstance<ColumnGroup>().map {
+        it.getColumnGroupList(c, ArrayList(g))
+      }.firstOrNull { it.isNotEmpty() }.orEmpty()
     }
   }
 
