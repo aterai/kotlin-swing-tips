@@ -8,7 +8,6 @@ import java.awt.image.FilteredImageSource
 import java.awt.image.RGBImageFilter
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.ColorUIResource
-import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableModel
@@ -144,16 +143,11 @@ private class FileListTable(model: TableModel) : JTable(model) {
     autoCreateRowSorter = true
     fillsViewportHeight = true
 
-    setDefaultRenderer(Any::class.java, object : DefaultTableCellRenderer() {
-      override fun getTableCellRendererComponent(
-        table: JTable,
-        value: Any?,
-        isSelected: Boolean,
-        hasFocus: Boolean,
-        row: Int,
-        column: Int
-      ) = super.getTableCellRendererComponent(table, value, false, false, row, column)
-    })
+    val r = getDefaultRenderer(Any::class.java)
+    val renderer = TableCellRenderer { table, value, _, _, row, column ->
+      r.getTableCellRendererComponent(table, value, false, false, row, column)
+    }
+    setDefaultRenderer(Any::class.java, renderer)
 
     var col = getColumnModel().getColumn(0)
     col.cellRenderer = FileNameRenderer(this)
