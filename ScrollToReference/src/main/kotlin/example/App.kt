@@ -29,14 +29,15 @@ fun makeUI(): Component {
   val htmlEditorKit = HTMLEditorKit()
   editor.isEditable = false
   editor.editorKit = htmlEditorKit
-  editor.text = """
+  editor.text =
+    """
     <html>
       <body>
         <p id='main'></p>
         <p id='bottom'>id=bottom</p>
       </body>
     </html>
-  """.trimIndent()
+    """
 
   val model = makeModel()
   (editor.document as? HTMLDocument)?.also { doc ->
@@ -56,7 +57,24 @@ fun makeUI(): Component {
         }
     }
   }
+  val tree = makeTree(model)
 
+  val button = JButton("bottom")
+  button.addActionListener { scrollToId(editor, "bottom") }
+  EventQueue.invokeLater { scrollToId(editor, "main") }
+  val sp = JSplitPane()
+  sp.leftComponent = JScrollPane(tree)
+  sp.rightComponent = JScrollPane(editor)
+  sp.resizeWeight = .5
+
+  return JPanel(BorderLayout(2, 2)).also {
+    it.add(sp)
+    it.add(button, BorderLayout.SOUTH)
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private fun makeTree(model: DefaultTreeModel): JTree {
   val tree = RowSelectionTree()
   tree.model = model
   tree.rowHeight = 32
@@ -74,19 +92,7 @@ fun makeUI(): Component {
       editor.scrollToReference(ref)
     }
   }
-  val button = JButton("bottom")
-  button.addActionListener { scrollToId(editor, "bottom") }
-  EventQueue.invokeLater { scrollToId(editor, "main") }
-  val sp = JSplitPane()
-  sp.leftComponent = JScrollPane(tree)
-  sp.rightComponent = JScrollPane(editor)
-  sp.resizeWeight = .5
-
-  return JPanel(BorderLayout(2, 2)).also {
-    it.add(sp)
-    it.add(button, BorderLayout.SOUTH)
-    it.preferredSize = Dimension(320, 240)
-  }
+  return tree
 }
 
 private fun scrollToId(editor: JEditorPane, id: String) {

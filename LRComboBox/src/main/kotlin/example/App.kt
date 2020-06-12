@@ -45,14 +45,17 @@ fun makeUI(): Component {
 
 private data class PairItem(val leftText: String, val rightText: String) {
   private val htmlText: String
-    get() = """<html>
-  <table width='290'>
-    <tr>
-      <td align='left'>$leftText</td>
-      <td align='right'>$rightText</td>
-    </tr>
-  </table>
-</html>"""
+    get() =
+      """
+      <html>
+        <table width='290'>
+          <tr>
+            <td align='left'>$leftText</td>
+            <td align='right'>$rightText</td>
+          </tr>
+        </table>
+      </html>
+      """
 
   override fun toString() = htmlText
 }

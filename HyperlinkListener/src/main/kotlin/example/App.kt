@@ -10,11 +10,14 @@ import javax.swing.text.View
 import javax.swing.text.html.HTMLDocument
 
 private const val LINK = "https://ateraimemo.com/"
-private const val HTML = """
-      <html><body>
-        html tag: <br /><a href='$LINK'>$LINK</a>
-      </body></html>
-    """
+private const val HTML =
+  """
+  <html>
+    <body>
+      html tag: <br /><a href='$LINK'>$LINK</a>
+    </body>
+  </html>
+  """
 private var tooltip: String? = null
 
 fun makeUI() = JSplitPane(JSplitPane.VERTICAL_SPLIT).also {

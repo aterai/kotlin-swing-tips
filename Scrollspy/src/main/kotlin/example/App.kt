@@ -30,7 +30,8 @@ class MainPanel : JPanel(BorderLayout(2, 2)) {
     val htmlEditorKit = HTMLEditorKit()
     editor.isEditable = false
     editor.editorKit = htmlEditorKit
-    editor.text = """
+    editor.text =
+      """
       <html>
         <body>
           <h1>Scrollspy</h1>
@@ -38,7 +39,7 @@ class MainPanel : JPanel(BorderLayout(2, 2)) {
           <p id='bottom'>id=bottom</p>
         </body>
       </html>
-    """.trimIndent()
+      """
     val doc = editor.document as HTMLDocument
     val element = doc.getElement("main")
     val model = makeModel()

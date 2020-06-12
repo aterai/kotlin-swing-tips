@@ -13,29 +13,25 @@ import javax.swing.event.ChangeListener
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    add(JTabbedPane().also {
-      val l = TabTitleEditListener(it)
-      it.addChangeListener(l)
-      it.addMouseListener(l)
-      it.addTab("Shortcuts", JTextArea(INFO))
-      it.addTab("JLabel", JLabel("label"))
-      it.addTab("JTree", JScrollPane(JTree()))
-      it.addTab("JButton", JButton("button"))
-    })
-    setPreferredSize(Dimension(320, 240))
-  }
+private val INFO =
+  """
+  Start editing: Double-Click, Enter-Key
+  Commit rename: field-focusLost, Enter-Key
+  Cancel editing: Esc-Key, title.isEmpty
+  """.trimIndent()
 
-  companion object {
-    private const val INFO = """ Start editing: Double-Click, Enter-Key
- Commit rename: field-focusLost, Enter-Key
-Cancel editing: Esc-Key, title.isEmpty
-"""
-  }
+fun makeUI() = JTabbedPane().also {
+  val l = TabTitleEditListener(it)
+  it.addChangeListener(l)
+  it.addMouseListener(l)
+  it.addTab("Shortcuts", JTextArea(INFO))
+  it.addTab("JLabel", JLabel("label"))
+  it.addTab("JTree", JScrollPane(JTree()))
+  it.addTab("JButton", JButton("button"))
+  it.preferredSize = Dimension(320, 240)
 }
 
-class TabTitleEditListener(val tabbedPane: JTabbedPane) : MouseAdapter(), ChangeListener, DocumentListener {
+private class TabTitleEditListener(val tabbedPane: JTabbedPane) : MouseAdapter(), ChangeListener, DocumentListener {
   private val editor = JTextField()
   private var editingIdx = -1
   private var len = -1
@@ -43,21 +39,21 @@ class TabTitleEditListener(val tabbedPane: JTabbedPane) : MouseAdapter(), Change
   private var tabComponent: Component? = null
   private val startEditing = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      editingIdx = tabbedPane.getSelectedIndex()
+      editingIdx = tabbedPane.selectedIndex
       tabComponent = tabbedPane.getTabComponentAt(editingIdx)
       tabbedPane.setTabComponentAt(editingIdx, editor)
-      editor.setVisible(true)
-      editor.setText(tabbedPane.getTitleAt(editingIdx))
+      editor.isVisible = true
+      editor.text = tabbedPane.getTitleAt(editingIdx)
       editor.selectAll()
       editor.requestFocusInWindow()
-      len = editor.getText().length
-      dim = editor.getPreferredSize()
-      editor.setMinimumSize(dim)
+      len = editor.text.length
+      dim = editor.preferredSize
+      editor.minimumSize = dim
     }
   }
   private val renameTabTitle = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      val title = editor.getText().trim()
+      val title = editor.text.trim()
       if (editingIdx >= 0 && title.isNotEmpty()) {
         tabbedPane.setTitleAt(editingIdx, title)
       }
@@ -68,32 +64,32 @@ class TabTitleEditListener(val tabbedPane: JTabbedPane) : MouseAdapter(), Change
     override fun actionPerformed(e: ActionEvent) {
       if (editingIdx >= 0) {
         tabbedPane.setTabComponentAt(editingIdx, tabComponent)
-        editor.setVisible(false)
+        editor.isVisible = false
         editingIdx = -1
         len = -1
         tabComponent = null
-        editor.setPreferredSize(null)
+        editor.preferredSize = null
         tabbedPane.requestFocusInWindow()
       }
     }
   }
 
   init {
-    editor.setBorder(BorderFactory.createEmptyBorder())
+    editor.border = BorderFactory.createEmptyBorder()
     editor.addFocusListener(object : FocusAdapter() {
       override fun focusLost(e: FocusEvent) {
         renameTabTitle.actionPerformed(ActionEvent(tabbedPane, ActionEvent.ACTION_PERFORMED, RENAME))
       }
     })
     val im = editor.getInputMap(JComponent.WHEN_FOCUSED)
-    val am = editor.getActionMap()
+    val am = editor.actionMap
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), CANCEL)
     am.put(CANCEL, cancelEditing)
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), RENAME)
     am.put(RENAME, renameTabTitle)
-    editor.getDocument().addDocumentListener(this)
+    editor.document.addDocumentListener(this)
     tabbedPane.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), START)
-    tabbedPane.getActionMap().put(START, startEditing)
+    tabbedPane.actionMap.put(START, startEditing)
   }
 
   override fun stateChanged(e: ChangeEvent) {
@@ -108,12 +104,13 @@ class TabTitleEditListener(val tabbedPane: JTabbedPane) : MouseAdapter(), Change
     updateTabSize()
   }
 
-  override fun changedUpdate(e: DocumentEvent) { /* not needed */ }
+  override fun changedUpdate(e: DocumentEvent) { /* not needed */
+  }
 
   override fun mouseClicked(e: MouseEvent) {
-    val r = tabbedPane.getBoundsAt(tabbedPane.getSelectedIndex())
-    val isDoubleClick = e.getClickCount() >= 2
-    if (isDoubleClick && r.contains(e.getPoint())) {
+    val r = tabbedPane.getBoundsAt(tabbedPane.selectedIndex)
+    val isDoubleClick = e.clickCount >= 2
+    if (isDoubleClick && r.contains(e.point)) {
       startEditing.actionPerformed(ActionEvent(tabbedPane, ActionEvent.ACTION_PERFORMED, START))
     } else {
       renameTabTitle.actionPerformed(ActionEvent(tabbedPane, ActionEvent.ACTION_PERFORMED, RENAME))
@@ -121,7 +118,7 @@ class TabTitleEditListener(val tabbedPane: JTabbedPane) : MouseAdapter(), Change
   }
 
   private fun updateTabSize() {
-    editor.setPreferredSize(if (editor.getText().length > len) null else dim)
+    editor.preferredSize = if (editor.text.length > len) null else dim
     tabbedPane.revalidate()
   }
 
@@ -142,7 +139,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

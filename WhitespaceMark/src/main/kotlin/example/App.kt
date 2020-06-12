@@ -21,7 +21,9 @@ import javax.swing.text.View
 import javax.swing.text.ViewFactory
 
 private const val TAB_TXT = "\n1\taaa\n12\taaa\n123\taaa\n1234\taaa\t\t\t\t\t\t\n"
-private const val IDEOGRAPHIC_SPACE_TXT = """123456789012
+private const val IDEOGRAPHIC_SPACE_TXT =
+"""
+123456789012
 bbb2Å@Å@1 3 ccc3
 
 

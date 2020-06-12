@@ -38,16 +38,18 @@ private fun makeUI(): Component {
   editorPane.selectedTextColor = Color.WHITE
   editorPane.background = Color(0x0, true) // Nimbus
   editorPane.selectionColor = SELECTION
-  editorPane.text = """<html><pre>
+  editorPane.text =
+    """
+    <html><pre>
 private static void createAndShowGui() {
-    <span class='highlight'>JFrame</span> frame = new JFrame();
-    frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-    frame.getContentPane().add(new MainPanel());
-    frame.pack();
-    frame.setLocationRelativeTo(null);
-    frame.setVisible(true);
+  <span class='highlight'>JFrame</span> frame = new JFrame();
+  frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+  frame.getContentPane().add(new MainPanel());
+  frame.pack();
+  frame.setLocationRelativeTo(null);
+  frame.setVisible(true);
 }
-"""
+    """
 
   val highlightPainter: HighlightPainter = DefaultHighlightPainter(HIGHLIGHT)
   val button = JToggleButton("highlight")

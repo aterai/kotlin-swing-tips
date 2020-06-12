@@ -7,64 +7,64 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val a = JTextArea(INFO)
-    a.setEditable(false)
-    val tabbedPane = EditableTabbedPane().also {
-      it.addTab("Shortcuts", JScrollPane(a))
-      it.addTab("JLabel", JLabel("label"))
-      it.addTab("JTree", JScrollPane(JTree()))
-      it.addTab("JButton", JButton("button"))
-    }
-    add(tabbedPane)
-    setPreferredSize(Dimension(320, 240))
-  }
+private val INFO =
+  """
+  Start editing: Double-Click, Enter-Key
+  Commit rename: field-focusLost, Enter-Key
+  Cancel editing: Esc-Key, title.isEmpty
+  """.trimIndent()
 
-  companion object {
-    private const val INFO = """Start editing: Double-Click, Enter-Key
-Commit rename: field-focusLost, Enter-Key
-Cancel editing: Esc-Key, title.isEmpty
-"""
+fun makeUI(): Component {
+  val a = JTextArea(INFO)
+  a.isEditable = false
+  val tabbedPane = EditableTabbedPane().also {
+    it.addTab("Shortcuts", JScrollPane(a))
+    it.addTab("JLabel", JLabel("label"))
+    it.addTab("JTree", JScrollPane(JTree()))
+    it.addTab("JButton", JButton("button"))
+  }
+  return JPanel(BorderLayout()).also {
+    it.add(tabbedPane)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class EditableTabbedPane : JTabbedPane() {
+private class EditableTabbedPane : JTabbedPane() {
   private val glassPane = EditorGlassPane()
   private val editor = JTextField()
   private val startEditing = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      getRootPane().setGlassPane(glassPane)
-      val rect = getBoundsAt(getSelectedIndex())
-      val p = SwingUtilities.convertPoint(this@EditableTabbedPane, rect.getLocation(), glassPane)
-      rect.setLocation(p)
+      rootPane.glassPane = glassPane
+      val rect = getBoundsAt(selectedIndex)
+      val p = SwingUtilities.convertPoint(this@EditableTabbedPane, rect.location, glassPane)
+      rect.location = p
       rect.grow(-2, -2)
-      editor.setBounds(rect)
-      editor.setText(getTitleAt(getSelectedIndex()))
+      editor.bounds = rect
+      editor.text = getTitleAt(selectedIndex)
       editor.selectAll()
       glassPane.add(editor)
-      glassPane.setVisible(true)
+      glassPane.isVisible = true
       editor.requestFocusInWindow()
     }
   }
   private val cancelEditing = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      glassPane.setVisible(false)
+      glassPane.isVisible = false
     }
   }
   val renameTab = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      if (editor.getText().trim().isNotEmpty()) {
-        setTitleAt(getSelectedIndex(), editor.getText())
-        getTabComponentAt(getSelectedIndex())?.revalidate()
+      if (editor.text.trim().isNotEmpty()) {
+        setTitleAt(selectedIndex, editor.text)
+        getTabComponentAt(selectedIndex)?.revalidate()
       }
-      glassPane.setVisible(false)
+      glassPane.isVisible = false
     }
   }
 
   init {
-    editor.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3))
-    val am = editor.getActionMap()
+    editor.border = BorderFactory.createEmptyBorder(0, 3, 0, 3)
+    val am = editor.actionMap
     val im = editor.getInputMap(JComponent.WHEN_FOCUSED)
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "rename-tab")
     am.put("rename-tab", renameTab)
@@ -74,26 +74,26 @@ class EditableTabbedPane : JTabbedPane() {
 
     addMouseListener(object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
-        val isDoubleClick = e.getClickCount() >= 2
+        val isDoubleClick = e.clickCount >= 2
         if (isDoubleClick) {
-          startEditing.actionPerformed(ActionEvent(e.getComponent(), ActionEvent.ACTION_PERFORMED, ""))
+          startEditing.actionPerformed(ActionEvent(e.component, ActionEvent.ACTION_PERFORMED, ""))
         }
       }
     })
     getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "start-editing")
-    getActionMap().put("start-editing", startEditing)
+    actionMap.put("start-editing", startEditing)
   }
 
   private inner class EditorGlassPane : JComponent() {
     init {
-      setOpaque(false)
-      setFocusTraversalPolicy(object : DefaultFocusTraversalPolicy() {
+      isOpaque = false
+      focusTraversalPolicy = object : DefaultFocusTraversalPolicy() {
         override fun accept(c: Component) = c == editor
-      })
+      }
       addMouseListener(object : MouseAdapter() {
         override fun mouseClicked(e: MouseEvent) {
-          if (!editor.getBounds().contains(e.getPoint())) {
-            renameTab.actionPerformed(ActionEvent(e.getComponent(), ActionEvent.ACTION_PERFORMED, ""))
+          if (!editor.bounds.contains(e.point)) {
+            renameTab.actionPerformed(ActionEvent(e.component, ActionEvent.ACTION_PERFORMED, ""))
           }
         }
       })
@@ -101,8 +101,8 @@ class EditableTabbedPane : JTabbedPane() {
 
     override fun setVisible(flag: Boolean) {
       super.setVisible(flag)
-      setFocusTraversalPolicyProvider(flag)
-      setFocusCycleRoot(flag)
+      isFocusTraversalPolicyProvider = flag
+      isFocusCycleRoot = flag
     }
   }
 }
@@ -117,7 +117,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

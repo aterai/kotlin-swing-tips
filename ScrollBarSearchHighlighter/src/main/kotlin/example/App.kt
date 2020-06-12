@@ -10,9 +10,11 @@ import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.text.JTextComponent
 
 private val HIGHLIGHT = DefaultHighlightPainter(Color.YELLOW)
-private const val INIT_TXT = """Trail: Creating a GUI with JFC/Swing
+private const val INIT_TXT =
+"""
+Trail: Creating a GUI with JFC/Swing
 https://docs.oracle.com/javase/tutorial/uiswing/learn/index.html
-Lesson: Learning Swing by Example
+ Lesson: Learning Swing by Example
   This lesson explains the concepts you need to
   use Swing components in building a user interface.
   First we examine the simplest Swing application you can write.
@@ -24,7 +26,6 @@ Lesson: Learning Swing by Example
   This lesson ends with a set of questions and exercises
   so you can test yourself on what you've learned.
   https://docs.oracle.com/javase/tutorial/uiswing/learn/index.html
-
 """
 
 fun makeUI(): Component {
