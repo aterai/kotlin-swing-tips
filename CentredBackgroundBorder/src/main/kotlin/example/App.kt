@@ -17,16 +17,16 @@ fun makeUI(): Component {
   area.lineWrap = true
   area.isOpaque = false
   area.text =
-"""
-private static void createAndShowGui() {
-  JFrame frame = new JFrame();
-  frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-  frame.getContentPane().add(new MainPanel());
-  frame.pack();
-  frame.setLocationRelativeTo(null);
-  frame.setVisible(true);
-}
-""".trimIndent()
+    """
+    private static void createAndShowGui() {
+      JFrame frame = new JFrame();
+      frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+      frame.getContentPane().add(new MainPanel());
+      frame.pack();
+      frame.setLocationRelativeTo(null);
+      frame.setVisible(true);
+    }
+    """.trimIndent()
 
   val cl = Thread.currentThread().contextClassLoader
   val bi = getFilteredImage(cl.getResource("example/tokeidai.jpg"))
