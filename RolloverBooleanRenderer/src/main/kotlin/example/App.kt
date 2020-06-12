@@ -102,7 +102,9 @@ private class HighlightListener : MouseAdapter() {
   }
 }
 
-private open class RolloverDefaultTableCellRenderer(private val highlighter: HighlightListener) : DefaultTableCellRenderer() {
+private open class RolloverDefaultTableCellRenderer(
+  private val highlighter: HighlightListener
+) : DefaultTableCellRenderer() {
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
