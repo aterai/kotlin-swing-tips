@@ -6,7 +6,8 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.html.HTMLEditorKit
 import javax.swing.text.html.StyleSheet
 
-private const val TEST_HTML = """
+private const val TEST_HTML =
+  """
   <html>
     <body>
       <div>JTextPane#setCaretColor(null)</div>
@@ -14,7 +15,7 @@ private const val TEST_HTML = """
       <div>2222222222</div>
     </body>
   </html>
-"""
+  """
 
 fun makeUI(): Component {
   // UIManager.put("TextPane.caretForeground", Color.ORANGE)
@@ -22,38 +23,35 @@ fun makeUI(): Component {
   styleSheet.addRule("body {font-size: 12pt}")
   styleSheet.addRule(".highlight {color: red; background: green}")
   val htmlEditorKit = HTMLEditorKit()
-  htmlEditorKit.setStyleSheet(styleSheet)
+  htmlEditorKit.styleSheet = styleSheet
   val editor = JEditorPane()
-  // editor.setEditable(false);
-  editor.setEditorKit(htmlEditorKit)
-  editor.setText(TEST_HTML)
-  editor.setCaretColor(null)
+  editor.editorKit = htmlEditorKit
+  editor.text = TEST_HTML
+  editor.caretColor = null
 
   val field = JTextField("JTextField")
-  field.setBackground(Color.GRAY)
-  field.setForeground(Color.WHITE)
+  field.background = Color.GRAY
+  field.foreground = Color.WHITE
 
   val r1 = JRadioButton("RED")
   r1.addItemListener { e ->
-    if (e.getStateChange() == ItemEvent.SELECTED) {
-      field.setCaretColor(Color.RED)
-      // editor.setCaretColor(Color.RED);
+    if (e.stateChange == ItemEvent.SELECTED) {
+      field.caretColor = Color.RED
     }
   }
 
   val r2 = JRadioButton("null")
   r2.addItemListener { e ->
-    if (e.getStateChange() == ItemEvent.SELECTED) {
-      field.setCaretColor(null)
-      // editor.setCaretColor(null);
+    if (e.stateChange == ItemEvent.SELECTED) {
+      field.caretColor = null
     }
   }
 
   val r3 = JRadioButton("Lnf default", true)
   r3.addItemListener { e ->
-    if (e.getStateChange() == ItemEvent.SELECTED) {
+    if (e.stateChange == ItemEvent.SELECTED) {
       val c = UIManager.getLookAndFeelDefaults().getColor("TextField.caretForeground")
-      field.setCaretColor(c)
+      field.caretColor = c
       // c = UIManager.getLookAndFeelDefaults().getColor("TextPane.caretForeground")
       // println(c)
       // editor.setCaretColor(c)
@@ -71,19 +69,19 @@ fun makeUI(): Component {
 
   UIManager.put("TextArea.caretForeground", Color.ORANGE)
   val area = JTextArea("TextArea.caretForeground: ORANGE")
-  // area.setBackground(Color.GREEN);
-  // area.setFont(area.getFont().deriveFont(15.0f));
-  // area.setCaretColor(Color.RED);
+  // area.background = Color.GREEN
+  // area.font = area.font.deriveFont(15.0f)
+  // area.caretColor = Color.RED
 
   val p = JPanel(GridLayout(2, 1, 2, 2))
   p.add(JScrollPane(area))
   p.add(JScrollPane(editor))
 
   return JPanel(BorderLayout(5, 5)).also {
-    it.setBorder(BorderFactory.createTitledBorder("JTextComponent#setCaretColor(...)"))
+    it.border = BorderFactory.createTitledBorder("JTextComponent#setCaretColor(...)")
     it.add(box, BorderLayout.NORTH)
     it.add(p)
-    it.setPreferredSize(Dimension(320, 240))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 

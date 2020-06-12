@@ -8,9 +8,14 @@ import javax.swing.text.AttributeSet
 import javax.swing.text.html.HTML
 import javax.swing.text.html.HTMLEditorKit
 
-private const val HTML_TEXT = """<html><body>
-<a href='https://ateraimemo.com/Swing.html' title='Title: JST'>Java Swing Tips</a>
-</body></html>"""
+private const val HTML_TEXT =
+  """
+  <html>
+    <body>
+      <a href='https://ateraimemo.com/Swing.html' title='Title: JST'>Java Swing Tips</a>
+    </body>
+  </html>
+  """
 
 fun makeUI(): Component {
   val hint = JEditorPane()
@@ -57,7 +62,7 @@ fun makeUI(): Component {
           ?.also {
             val title = it.getAttribute(HTML.Attribute.TITLE).toString()
             val url = e.url.toString()
-            hint.text = """<html>$title: <a href="$url">$url</a>"""
+            hint.text = "<html>$title: <a href='$url'>$url</a>"
             popup.pack()
           }
       }

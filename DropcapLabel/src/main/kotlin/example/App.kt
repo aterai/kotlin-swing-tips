@@ -8,24 +8,27 @@ import java.awt.geom.AffineTransform
 import java.text.AttributedString
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val text = """
-      This lesson provides an introduction to Graphical User Interface (GUI) programming with Swing
-       and the NetBeans IDE. As you learned in the "Hello World!" lesson, the NetBeans IDE is a free,
-       open-source, cross-platform integrated development environment with built-in support for
-       the Java programming language.
-    """.trimIndent()
-    val label = DropcapLabel(text)
-    label.font = Font(Font.SERIF, Font.PLAIN, 17)
-    label.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-    add(label)
-    border = BorderFactory.createLineBorder(Color(100, 200, 200, 100), 10)
-    preferredSize = Dimension(320, 240)
+private val text =
+  """
+  This lesson provides an introduction to Graphical User Interface (GUI) programming with Swing
+   and the NetBeans IDE. As you learned in the "Hello World!" lesson, the NetBeans IDE is a free,
+   open-source, cross-platform integrated development environment with built-in support for
+   the Java programming language.
+  """.trimIndent()
+
+fun makeUI(): Component {
+  val label = DropcapLabel(text)
+  label.font = Font(Font.SERIF, Font.PLAIN, 17)
+  label.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+
+  return JPanel(BorderLayout()).also {
+    it.add(label)
+    it.border = BorderFactory.createLineBorder(Color(100, 200, 200, 100), 10)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class DropcapLabel(text: String) : JLabel(text) {
+private class DropcapLabel(text: String) : JLabel(text) {
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.paint = background
@@ -85,7 +88,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

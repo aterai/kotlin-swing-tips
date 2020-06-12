@@ -11,10 +11,12 @@ import javax.swing.border.AbstractBorder
 import javax.swing.border.Border
 import javax.swing.border.TitledBorder
 
-private const val HELP = """Start editing: Double-Click
-Commit rename: field-focusLost, Enter-Key
-Cancel editing: Esc-Key, title.isEmpty
-"""
+private val HELP =
+  """
+    Start editing: Double-Click
+    Commit rename: field-focusLost, Enter-Key
+    Cancel editing: Esc-Key, title.isEmpty
+  """.trimIndent()
 
 fun makeUI(): Component {
   val l1 = JScrollPane(JTree())

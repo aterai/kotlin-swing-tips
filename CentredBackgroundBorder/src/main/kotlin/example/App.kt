@@ -16,7 +16,9 @@ fun makeUI(): Component {
   area.background = Color(0x0, true) // Nimbus
   area.lineWrap = true
   area.isOpaque = false
-  area.text = """private static void createAndShowGui() {
+  area.text =
+"""
+private static void createAndShowGui() {
   JFrame frame = new JFrame();
   frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
   frame.getContentPane().add(new MainPanel());
@@ -24,7 +26,7 @@ fun makeUI(): Component {
   frame.setLocationRelativeTo(null);
   frame.setVisible(true);
 }
-"""
+""".trimIndent()
 
   val cl = Thread.currentThread().contextClassLoader
   val bi = getFilteredImage(cl.getResource("example/tokeidai.jpg"))
