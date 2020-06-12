@@ -38,8 +38,10 @@ fun makeUI(): Component {
   }
 
   val root = DefaultMutableTreeNode("JTree")
-  listOf("aaa", "bbb bb bb", "ccc", "dd dd dd", "eee eee", "ff ff ff fff",
-    "ggg ggg", "hhh hh", "ii ii", "jjj jjj jj jj").forEach {
+  listOf(
+    "aaa", "bbb bb bb", "ccc", "dd dd dd", "eee eee",
+    "ff ff ff fff", "ggg ggg", "hhh hh", "ii ii", "jjj jjj jj jj"
+  ).forEach {
     val isSelected = it.length % 2 == 0
     val c = JCheckBox(it, isSelected)
     c.alignmentX = Component.LEFT_ALIGNMENT
@@ -104,7 +106,8 @@ private class CheckBoxList<E : CheckBoxNode>(model: ListModel<E>) : JList<E>(mod
       val ev = MouseEvent(
         e.component, MouseEvent.MOUSE_EXITED, e.getWhen(), e.modifiersEx,
         e.x, e.y, e.xOnScreen, e.yOnScreen, e.clickCount,
-        e.isPopupTrigger, MouseEvent.NOBUTTON)
+        e.isPopupTrigger, MouseEvent.NOBUTTON
+      )
       super.processMouseEvent(ev)
     } else {
       super.processMouseMotionEvent(e)

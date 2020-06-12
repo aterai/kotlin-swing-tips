@@ -6,30 +6,31 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.MouseInputAdapter
 import javax.swing.event.MouseInputListener
 
-fun makeUI(): Component {
-  val model = DefaultListModel<String>()
-  model.addElement("11\n1")
-  model.addElement("222222222222222\n222222222222222")
-  model.addElement("3333333333333333333\n33333333333333333333\n33333333333333333")
-  model.addElement("444")
-  return JPanel(BorderLayout()).also {
-    it.add(JScrollPane(object : JList<String>(model) {
-      @Transient
-      private var handler: MouseInputListener? = null
+fun makeUI() = JPanel(BorderLayout()).also {
+  val model = makeModel()
+  val list = object : JList<String>(model) {
+    @Transient private var handler: MouseInputListener? = null
 
-      override fun updateUI() {
-        removeMouseListener(handler)
-        removeMouseMotionListener(handler)
-        super.updateUI()
-        fixedCellHeight = -1
-        handler = CellButtonsMouseListener(this)
-        addMouseListener(handler)
-        addMouseMotionListener(handler)
-        cellRenderer = ButtonsRenderer(model)
-      }
-    }))
-    it.preferredSize = Dimension(320, 240)
+    override fun updateUI() {
+      removeMouseListener(handler)
+      removeMouseMotionListener(handler)
+      super.updateUI()
+      fixedCellHeight = -1
+      handler = CellButtonsMouseListener(this)
+      addMouseListener(handler)
+      addMouseMotionListener(handler)
+      cellRenderer = ButtonsRenderer(model)
+    }
   }
+  it.add(JScrollPane(list))
+  it.preferredSize = Dimension(320, 240)
+}
+
+fun makeModel() = DefaultListModel<String>().also {
+  it.addElement("11\n1")
+  it.addElement("222222222222222\n222222222222222")
+  it.addElement("3333333333333333333\n33333333333333333333\n33333333333333333")
+  it.addElement("444")
 }
 
 private class CellButtonsMouseListener<E>(private val list: JList<E>) : MouseInputAdapter() {

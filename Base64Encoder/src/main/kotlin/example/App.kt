@@ -10,19 +10,21 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.filechooser.FileNameExtensionFilter
 
 private val textArea = JTextArea().also {
-  it.setEditable(false)
-  it.setLineWrap(true)
+  it.isEditable = false
+  it.lineWrap = true
 }
 private val label = JLabel(" ", SwingConstants.CENTER)
 
 fun makeUI(): Component {
+  val sp1 = JScrollPane(textArea)
+  sp1.border = BorderFactory.createTitledBorder("File -> String")
+
+  val sp2 = JScrollPane(label)
+  sp2.border = BorderFactory.createTitledBorder("JTextArea -> ImageIcon")
+
   val p = JPanel(GridLayout(2, 1, 5, 5))
-  p.add(JScrollPane(textArea).also {
-    it.setBorder(BorderFactory.createTitledBorder("File -> String"))
-  })
-  p.add(JScrollPane(label).also {
-    it.setBorder(BorderFactory.createTitledBorder("JTextArea -> ImageIcon"))
-  })
+  p.add(sp1)
+  p.add(sp2)
 
   val encode = JButton("encode")
   encode.addActionListener {
@@ -30,33 +32,33 @@ fun makeUI(): Component {
     chooser.addChoosableFileFilter(FileNameExtensionFilter("PNG (*.png)", "png"))
     val retValue = chooser.showOpenDialog(encode)
     if (retValue == JFileChooser.APPROVE_OPTION) {
-      val path = chooser.getSelectedFile().toPath()
+      val path = chooser.selectedFile.toPath()
       runCatching {
-        textArea.setText(Base64.getEncoder().encodeToString(Files.readAllBytes(path)))
+        textArea.text = Base64.getEncoder().encodeToString(Files.readAllBytes(path))
       }.onFailure {
-        textArea.setText(it.message)
+        textArea.text = it.message
       }
     }
   }
 
   val decode = JButton("decode")
   decode.addActionListener {
-    val b64 = textArea.getText()
+    val b64 = textArea.text
     if (b64.isNotEmpty()) {
       runCatching {
         val dec = Base64.getDecoder().decode(b64.toByteArray(StandardCharsets.ISO_8859_1))
         ByteArrayInputStream(dec).use {
-          label.setIcon(ImageIcon(ImageIO.read(it)))
+          label.icon = ImageIcon(ImageIO.read(it))
         }
       }.onFailure {
-        label.setIcon(null)
-        label.setText(it.message)
+        label.icon = null
+        label.text = it.message
       }
     }
   }
 
   val box = JPanel(GridLayout(1, 2, 5, 5)).also {
-    it.setBorder(BorderFactory.createTitledBorder("java.util.Base64"))
+    it.border = BorderFactory.createTitledBorder("java.util.Base64")
     it.add(encode)
     it.add(decode)
   }
@@ -64,8 +66,8 @@ fun makeUI(): Component {
   return JPanel(BorderLayout()).also {
     it.add(box, BorderLayout.NORTH)
     it.add(p)
-    it.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-    it.setPreferredSize(Dimension(320, 240))
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
