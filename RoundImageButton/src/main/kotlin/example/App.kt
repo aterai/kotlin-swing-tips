@@ -5,56 +5,59 @@ import java.awt.event.ItemEvent
 import java.awt.geom.Ellipse2D
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val box = Box.createHorizontalBox()
-    box.setOpaque(true)
-    box.setBackground(Color(120, 120, 160))
-    box.add(Box.createHorizontalGlue())
-    box.setBorder(BorderFactory.createEmptyBorder(60, 10, 60, 10))
+fun makeUI(): Component {
+  val box = Box.createHorizontalBox()
+  box.isOpaque = true
+  box.background = Color(120, 120, 160)
+  box.add(Box.createHorizontalGlue())
+  box.border = BorderFactory.createEmptyBorder(60, 10, 60, 10)
 
-    val buttons = listOf(
-      RoundButton(ImageIcon(javaClass.getResource("005.png")), "005d.png", "005g.png"),
-      RoundButton(ImageIcon(javaClass.getResource("003.png")), "003d.png", "003g.png"),
-      RoundButton(ImageIcon(javaClass.getResource("001.png")), "001d.png", "001g.png"),
-      RoundButton(ImageIcon(javaClass.getResource("002.png")), "002d.png", "002g.png"),
-      RoundButton(ImageIcon(javaClass.getResource("004.png")), "004d.png", "004g.png"))
-    // TEST: buttons = makeButtonArray2(getClass()); // Set ButtonUI
-    buttons.forEach {
-      box.add(it)
-      box.add(Box.createHorizontalStrut(5))
+  val cl = Thread.currentThread().contextClassLoader
+  val buttons = listOf(
+    RoundButton(ImageIcon(cl.getResource("example/005.png")), "005d.png", "005g.png"),
+    RoundButton(ImageIcon(cl.getResource("example/003.png")), "003d.png", "003g.png"),
+    RoundButton(ImageIcon(cl.getResource("example/001.png")), "001d.png", "001g.png"),
+    RoundButton(ImageIcon(cl.getResource("example/002.png")), "002d.png", "002g.png"),
+    RoundButton(ImageIcon(cl.getResource("example/004.png")), "004d.png", "004g.png")
+  )
+  // TEST: buttons = makeButtonArray2(getClass()); // Set ButtonUI
+  buttons.forEach {
+    box.add(it)
+    box.add(Box.createHorizontalStrut(5))
+  }
+  box.add(Box.createHorizontalGlue())
+
+  val check = JCheckBox("ButtonBorder Color")
+  check.addActionListener { e ->
+    val f = (e.source as? JCheckBox)?.isSelected ?: false
+    val bgc = if (f) Color.WHITE else Color.BLACK
+    buttons.forEach { it.background = bgc }
+    box.repaint()
+  }
+
+  val p = JPanel()
+  p.add(check)
+
+  val alignmentsChoices = JComboBox(ButtonAlignments.values())
+  alignmentsChoices.addItemListener { e ->
+    val item = e.item
+    if (e.stateChange == ItemEvent.SELECTED && item is ButtonAlignments) {
+      buttons.forEach { it.alignmentY = item.alignment }
+      box.revalidate()
     }
-    box.add(Box.createHorizontalGlue())
-    add(box, BorderLayout.NORTH)
+  }
+  alignmentsChoices.selectedIndex = 1
+  p.add(alignmentsChoices)
+  p.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
 
-    val check = JCheckBox("ButtonBorder Color")
-    check.addActionListener { e ->
-      val f = (e.getSource() as? JCheckBox)?.isSelected() ?: false
-      val bgc = if (f) Color.WHITE else Color.BLACK
-      buttons.forEach { it.setBackground(bgc) }
-      box.repaint()
-    }
-
-    val p = JPanel()
-    p.add(check)
-
-    val alignmentsChoices = JComboBox(ButtonAlignments.values())
-    alignmentsChoices.addItemListener { e ->
-      val item = e.getItem()
-      if (e.getStateChange() == ItemEvent.SELECTED && item is ButtonAlignments) {
-        buttons.forEach { it.setAlignmentY(item.alignment) }
-        box.revalidate()
-      }
-    }
-    alignmentsChoices.setSelectedIndex(1)
-    p.add(alignmentsChoices)
-    p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10))
-    add(p, BorderLayout.SOUTH)
-    setPreferredSize(Dimension(320, 240))
+  return JPanel(BorderLayout()).also {
+    it.add(box, BorderLayout.NORTH)
+    it.add(p, BorderLayout.SOUTH)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class RoundButton : JButton {
+private class RoundButton : JButton {
   private var shape: Shape? = null
   private var base: Shape? = null
 
@@ -69,31 +72,31 @@ class RoundButton : JButton {
   constructor(text: String, icon: Icon) : super(text, icon)
 
   constructor(icon: Icon, i2: String, i3: String) : super(icon) {
-    setPressedIcon(ImageIcon(javaClass.getResource(i2)))
-    setRolloverIcon(ImageIcon(javaClass.getResource(i3)))
+    pressedIcon = ImageIcon(javaClass.getResource(i2))
+    rolloverIcon = ImageIcon(javaClass.getResource(i3))
   }
 
   override fun updateUI() {
     super.updateUI()
-    setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1))
-    setBackground(Color.BLACK)
-    setContentAreaFilled(false)
-    setFocusPainted(false)
-    setAlignmentY(Component.TOP_ALIGNMENT)
+    border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
+    background = Color.BLACK
+    isContentAreaFilled = false
+    isFocusPainted = false
+    alignmentY = Component.TOP_ALIGNMENT
     initShape()
   }
 
   override fun getPreferredSize() = super.getPreferredSize()?.also {
-    val icon = getIcon()
-    val i = getInsets()
-    val iw = maxOf(icon.getIconWidth(), icon.getIconHeight())
+    val icon = icon
+    val i = insets
+    val iw = maxOf(icon.iconWidth, icon.iconHeight)
     it.setSize(iw + i.right + i.left, iw + i.top + i.bottom)
   }
 
   private fun initShape() {
-    if (getBounds() != base) {
-      val s = getPreferredSize() ?: Dimension(32, 32)
-      base = getBounds()
+    if (bounds != base) {
+      val s = preferredSize ?: Dimension(32, 32)
+      base = bounds
       shape = Ellipse2D.Double(0.0, 0.0, s.width - 1.0, s.height - 1.0)
     }
   }
@@ -102,7 +105,7 @@ class RoundButton : JButton {
     initShape()
     val g2 = g.create() as Graphics2D
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    g2.setPaint(getBackground())
+    g2.paint = background
     g2.draw(shape)
     g2.dispose()
   }
@@ -131,7 +134,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
