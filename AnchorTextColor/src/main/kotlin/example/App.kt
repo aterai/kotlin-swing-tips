@@ -8,16 +8,19 @@ private const val SITE = "https://ateraimemo.com/"
 private const val HREF = "<html><a href='$SITE'>$SITE</a>"
 
 fun makeUI(): Component {
-  val p = JPanel(GridLayout(3, 1))
-  p.add(makeUrlPanel("Default", HREF))
   val kit = HTMLEditorKit()
   val styleSheet = kit.styleSheet
   styleSheet.addRule("a{color:#FF0000;}")
-  p.add(makeUrlPanel("styleSheet.addRule(\"a{color:#FF0000;}\")", HREF))
-  p.add(makeUrlPanel(
+
+  val p1 = makeUrlPanel("Default", HREF)
+  val p2 = makeUrlPanel("styleSheet.addRule(\"a{color:#FF0000;}\")", HREF)
+  val p3 = makeUrlPanel(
     "<a style='color:#00FF00'...",
     "<html><a style='color:#00FF00' href='$SITE'>$SITE</a>"
-  ))
+  )
+
+  val p = JPanel(GridLayout(3, 1))
+  listOf(p1, p2, p3).forEach { p.add(it) }
   p.preferredSize = Dimension(320, 240)
   return p
 }

@@ -23,20 +23,22 @@ fun makeUI(): Component {
   logger.addHandler(TextAreaHandler(TextAreaOutputStream(textArea)))
 
   val field = JTextField(20)
-  field.actionMap.put("beep", object : AbstractAction() {
+  val a1 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent?) {
       Toolkit.getDefaultToolkit().beep()
     }
-  })
+  }
+  field.actionMap.put("beep", a1)
   field.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_B, InputEvent.SHIFT_DOWN_MASK), "beep")
-  field.addKeyListener(object : KeyAdapter() {
+  val listener = object : KeyAdapter() {
     override fun keyPressed(e: KeyEvent) {
       val shiftActive = e.modifiersEx and InputEvent.SHIFT_DOWN_MASK != 0
       if (e.keyCode == KeyEvent.VK_N && shiftActive) {
         Toolkit.getDefaultToolkit().beep()
       }
     }
-  })
+  }
+  field.addKeyListener(listener)
 
   val button = JButton("TEST: ActionEvent#getModifiers()")
   button.addActionListener { e ->
@@ -52,11 +54,13 @@ fun makeUI(): Component {
   val menuBar = JMenuBar()
   val menu = menuBar.add(JMenu("Test"))
   menu.mnemonic = KeyEvent.VK_T
-  val item = menu.add(object : AbstractAction("beep") {
+
+  val a2 = object : AbstractAction("beep") {
     override fun actionPerformed(e: ActionEvent) {
       Toolkit.getDefaultToolkit().beep()
     }
-  })
+  }
+  val item = menu.add(a2)
   item.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.SHIFT_DOWN_MASK)
   item.mnemonic = KeyEvent.VK_I
   item.addActionListener { e ->

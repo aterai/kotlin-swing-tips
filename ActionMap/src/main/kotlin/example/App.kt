@@ -24,7 +24,7 @@ fun makeUI(): Component {
     }
   }
   pf2.actionMap = pf2.actionMap.also {
-    it.put(DefaultEditorKit.pasteAction, object : AbstractAction() {
+    val a = object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
         val c = e.source as? JComponent ?: return
         EventQueue.invokeLater {
@@ -37,7 +37,8 @@ fun makeUI(): Component {
           )
         }
       }
-    })
+    }
+    it.put(DefaultEditorKit.pasteAction, a)
   }
 
   val box = Box.createVerticalBox()

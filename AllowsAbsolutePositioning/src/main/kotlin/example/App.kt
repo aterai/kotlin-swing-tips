@@ -50,42 +50,44 @@ fun makeUI(): Component {
 }
 
 private class AbsolutePositioningWindowsScrollBarUI : WindowsScrollBarUI() {
-  override fun createTrackListener(): TrackListener {
-    return object : BasicScrollBarUI.TrackListener() {
-      override fun mousePressed(e: MouseEvent) {
-        if (SwingUtilities.isLeftMouseButton(e)) {
-          super.mousePressed(MouseEvent(
+  override fun createTrackListener() = object : BasicScrollBarUI.TrackListener() {
+    override fun mousePressed(e: MouseEvent) {
+      if (SwingUtilities.isLeftMouseButton(e)) {
+        super.mousePressed(
+          MouseEvent(
             e.component, e.id, e.getWhen(),
             InputEvent.BUTTON2_DOWN_MASK xor InputEvent.BUTTON2_MASK, // e.getModifiers(),
             e.x, e.y,
             e.xOnScreen, e.yOnScreen,
             e.clickCount,
             e.isPopupTrigger,
-            MouseEvent.BUTTON2))
-        } else {
-          super.mousePressed(e)
-        }
+            MouseEvent.BUTTON2
+          )
+        )
+      } else {
+        super.mousePressed(e)
       }
     }
   }
 }
 
 private class AbsolutePositioningBasicScrollBarUI : BasicScrollBarUI() {
-  override fun createTrackListener(): TrackListener {
-    return object : BasicScrollBarUI.TrackListener() {
-      override fun mousePressed(e: MouseEvent) {
-        if (SwingUtilities.isLeftMouseButton(e)) {
-          super.mousePressed(MouseEvent(
+  override fun createTrackListener() = object : BasicScrollBarUI.TrackListener() {
+    override fun mousePressed(e: MouseEvent) {
+      if (SwingUtilities.isLeftMouseButton(e)) {
+        super.mousePressed(
+          MouseEvent(
             e.component, e.id, e.getWhen(),
             InputEvent.BUTTON2_DOWN_MASK xor InputEvent.BUTTON2_MASK,
             e.x, e.y,
             e.xOnScreen, e.yOnScreen,
             e.clickCount,
             e.isPopupTrigger,
-            MouseEvent.BUTTON2))
-        } else {
-          super.mousePressed(e)
-        }
+            MouseEvent.BUTTON2
+          )
+        )
+      } else {
+        super.mousePressed(e)
       }
     }
   }

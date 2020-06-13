@@ -43,32 +43,34 @@ private fun makeTitledPanel(title: String, c: Component): Component {
 
 private fun makeDefaultTreeModel(): DefaultTreeModel {
   val root = DefaultMutableTreeNode("Root")
-  root.add(DefaultMutableTreeNode("colors").also {
+  val n1 = DefaultMutableTreeNode("colors").also {
     it.add(DefaultMutableTreeNode("blue", false))
     it.add(DefaultMutableTreeNode("violet", false))
     it.add(DefaultMutableTreeNode("red", false))
     it.add(DefaultMutableTreeNode("yellow", false))
-  })
-  root.add(DefaultMutableTreeNode("sports").also {
+  }
+  root.add(n1)
+  val n2 = DefaultMutableTreeNode("sports").also {
     it.add(DefaultMutableTreeNode("basketball", false))
     it.add(DefaultMutableTreeNode("soccer", false))
     it.add(DefaultMutableTreeNode("football", false))
     it.add(DefaultMutableTreeNode("hockey", false))
-  })
-  root.add(DefaultMutableTreeNode("food").also {
+  }
+  root.add(n2)
+  val n3 = DefaultMutableTreeNode("food").also {
     it.add(DefaultMutableTreeNode("hot dogs", false))
     it.add(DefaultMutableTreeNode("pizza", false))
     it.add(DefaultMutableTreeNode("ravioli", false))
     it.add(DefaultMutableTreeNode("bananas", false))
-  })
+  }
+  root.add(n3)
   root.add(DefaultMutableTreeNode("test"))
   return DefaultTreeModel(root)
 }
 
 private class TreePopupMenu : JPopupMenu() {
   private val textField = object : JTextField(24) {
-    @Transient
-    private var listener: AncestorListener? = null
+    @Transient private var listener: AncestorListener? = null
 
     override fun updateUI() {
       removeAncestorListener(listener)
