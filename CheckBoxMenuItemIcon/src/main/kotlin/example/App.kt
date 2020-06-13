@@ -26,10 +26,11 @@ fun createMenuBar(): JMenuBar {
   menu.add(JCheckBoxMenuItem("checkIcon test"))
   UIManager.put(key, defIcon)
 
-  val menu2 = JMenu("JMenu2")
-  menu2.add(JCheckBoxMenuItem("setIcon").also {
+  val check = JCheckBoxMenuItem("setIcon").also {
     it.icon = CheckIcon()
-  })
+  }
+  val menu2 = JMenu("JMenu2")
+  menu2.add(check)
   menuBar.add(menu)
   menuBar.add(menu2)
   return menuBar

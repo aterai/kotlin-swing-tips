@@ -5,45 +5,42 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val p1 = JPanel(GridLayout(1, 0, 2, 2)).also {
-    it.setBorder(BorderFactory.createTitledBorder("GridLayout"))
+    it.border = BorderFactory.createTitledBorder("GridLayout")
     it.add(JScrollPane(JTable(6, 3)))
     it.add(JScrollPane(JTree()))
     it.add(JScrollPane(JTextArea("JTextArea")))
   }
 
   val p2 = JPanel(GridBagLayout()).also {
-    it.setBorder(BorderFactory.createTitledBorder("GridBagLayout"))
+    it.border = BorderFactory.createTitledBorder("GridBagLayout")
     val c = GridBagConstraints()
     c.insets = Insets(5, 5, 5, 0)
     c.fill = GridBagConstraints.BOTH
     c.weightx = 1.0
     c.weighty = 1.0
-    // c.gridx = RELATIVE
-    // c.gridx = 0
     it.add(JScrollPane(JTable(6, 3)), c)
-    // c.gridx = 1
     it.add(JScrollPane(JTree()), c)
-    // c.gridx = 2
     it.add(JScrollPane(JTextArea("JTextArea")), c)
   }
 
   val p = JPanel(BorderLayout())
 
   val button = JButton("rotate")
-  button.setFocusable(false)
+  button.isFocusable = false
   button.addActionListener {
     // p1.setComponentZOrder(p1.getComponent(p1.getComponentCount() - 1), 0)
-    p1.setComponentZOrder(p1.getComponents().last(), 0)
-    p2.setComponentZOrder(p2.getComponents().last(), 0)
+    p1.setComponentZOrder(p1.components.last(), 0)
+    p2.setComponentZOrder(p2.components.last(), 0)
     p.revalidate()
   }
 
-  p.add(JPanel(GridLayout(2, 1)).also {
+  val pp = JPanel(GridLayout(2, 1)).also {
     it.add(p1)
     it.add(p2)
-  })
+  }
+  p.add(pp)
   p.add(button, BorderLayout.SOUTH)
-  p.setPreferredSize(Dimension(320, 240))
+  p.preferredSize = Dimension(320, 240)
   return p
 }
 
