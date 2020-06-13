@@ -10,74 +10,74 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val columnNames = arrayOf("user", "rwx")
-    val data = arrayOf(
-      arrayOf("owner", EnumSet.allOf(Permissions::class.java)),
-      arrayOf("group", EnumSet.of(Permissions.READ)),
-      arrayOf("other", EnumSet.noneOf(Permissions::class.java))
-    )
-    val model = object : DefaultTableModel(data, columnNames) {
-      override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
+fun makeUI(): Component {
+  val columnNames = arrayOf("user", "rwx")
+  val data = arrayOf(
+    arrayOf("owner", EnumSet.allOf(Permissions::class.java)),
+    arrayOf("group", EnumSet.of(Permissions.READ)),
+    arrayOf("other", EnumSet.noneOf(Permissions::class.java))
+  )
+  val model = object : DefaultTableModel(data, columnNames) {
+    override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
+  }
+  val table = object : JTable(model) {
+    override fun updateUI() {
+      super.updateUI()
+      val c = getColumnModel().getColumn(1)
+      c.cellRenderer = CheckBoxesRenderer()
+      c.cellEditor = CheckBoxesEditor()
     }
-    val table = object : JTable(model) {
-      override fun updateUI() {
-        super.updateUI()
-        val c = getColumnModel().getColumn(1)
-        c.cellRenderer = CheckBoxesRenderer()
-        c.cellEditor = CheckBoxesEditor()
+  }
+  table.putClientProperty("terminateEditOnFocusLost", true)
+  val map = EnumMap<Permissions, Int>(Permissions::class.java)
+  map[Permissions.READ] = 1 shl 2
+  map[Permissions.WRITE] = 1 shl 1
+  map[Permissions.EXECUTE] = 1
+  val label = JLabel()
+  val button = JButton("ls -l (chmod)")
+  button.addActionListener {
+    val numBuf = StringBuilder(3)
+    val buf = StringBuilder(9)
+    for (i in 0 until model.rowCount) {
+      var flg = 0
+      val v = model.getValueAt(i, 1) as? Set<*> ?: continue
+      if (v.contains(Permissions.READ)) {
+        flg = flg or (map[Permissions.READ] ?: 0)
+        buf.append('r')
+      } else {
+        buf.append('-')
       }
-    }
-    table.putClientProperty("terminateEditOnFocusLost", true)
-    val map = EnumMap<Permissions, Int>(Permissions::class.java)
-    map[Permissions.READ] = 1 shl 2
-    map[Permissions.WRITE] = 1 shl 1
-    map[Permissions.EXECUTE] = 1
-    val label = JLabel()
-    val button = JButton("ls -l (chmod)")
-    button.addActionListener {
-      val numBuf = StringBuilder(3)
-      val buf = StringBuilder(9)
-      for (i in 0 until model.rowCount) {
-        var flg = 0
-        val v = model.getValueAt(i, 1) as? Set<*> ?: continue
-        if (v.contains(Permissions.READ)) {
-          flg = flg or (map[Permissions.READ] ?: 0)
-          buf.append('r')
-        } else {
-          buf.append('-')
-        }
-        if (v.contains(Permissions.WRITE)) {
-          flg = flg or (map[Permissions.WRITE] ?: 0)
-          buf.append('w')
-        } else {
-          buf.append('-')
-        }
-        if (v.contains(Permissions.EXECUTE)) {
-          flg = flg or (map[Permissions.EXECUTE] ?: 0)
-          buf.append('x')
-        } else {
-          buf.append('-')
-        }
-        numBuf.append(flg)
+      if (v.contains(Permissions.WRITE)) {
+        flg = flg or (map[Permissions.WRITE] ?: 0)
+        buf.append('w')
+      } else {
+        buf.append('-')
       }
-      label.text = " $numBuf -$buf"
+      if (v.contains(Permissions.EXECUTE)) {
+        flg = flg or (map[Permissions.EXECUTE] ?: 0)
+        buf.append('x')
+      } else {
+        buf.append('-')
+      }
+      numBuf.append(flg)
     }
-    val p = JPanel(BorderLayout())
-    p.add(label)
-    p.add(button, BorderLayout.EAST)
-    add(JScrollPane(table))
-    add(p, BorderLayout.SOUTH)
-    preferredSize = Dimension(320, 240)
+    label.text = " $numBuf -$buf"
+  }
+  val p = JPanel(BorderLayout())
+  p.add(label)
+  p.add(button, BorderLayout.EAST)
+  return JPanel(BorderLayout()).also {
+    it.add(JScrollPane(table))
+    it.add(p, BorderLayout.SOUTH)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-enum class Permissions {
+private enum class Permissions {
   EXECUTE, WRITE, READ
 }
 
-class CheckBoxesPanel : JPanel() {
+private class CheckBoxesPanel : JPanel() {
   val titles = arrayOf("r", "w", "x")
   private val buttons = titles.map { makeCheckBox(it) }
   private val alphaZero = Color(0x0, true)
@@ -134,7 +134,7 @@ class CheckBoxesPanel : JPanel() {
   }
 }
 
-class CheckBoxesRenderer : TableCellRenderer {
+private class CheckBoxesRenderer : TableCellRenderer {
   private val renderer = CheckBoxesPanel()
   override fun getTableCellRendererComponent(
     table: JTable,
@@ -149,7 +149,7 @@ class CheckBoxesRenderer : TableCellRenderer {
   }
 }
 
-class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
+private class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
   private val renderer = CheckBoxesPanel()
   override fun getTableCellEditorComponent(
     table: JTable,
@@ -167,12 +167,13 @@ class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
   init {
     val am = renderer.actionMap
     renderer.titles.forEach {
-      am.put(it, object : AbstractAction(it) {
+      val a = object : AbstractAction(it) {
         override fun actionPerformed(e: ActionEvent) {
           renderer.doClickCheckBox(it)
           fireEditingStopped()
         }
-      })
+      }
+      am.put(it, a)
     }
     val im = renderer.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_R, 0), renderer.titles[0])
@@ -191,7 +192,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

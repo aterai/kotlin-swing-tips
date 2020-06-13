@@ -17,12 +17,6 @@ fun makeUI(): Component {
   val label2 = JLabel()
   p.add(label2)
 
-  // val image = try {
-  //   ImageIO.read(javaClass.getResource("duke.gif"))
-  // } catch (ex: IOException) {
-  //   ex.printStackTrace()
-  //   makeMissingImage()
-  // }
   val cl = Thread.currentThread().contextClassLoader
   val image = runCatching { ImageIO.read(cl.getResource("example/duke.gif")) }
     .onFailure { it.printStackTrace() }
@@ -56,10 +50,11 @@ fun makeUI(): Component {
             (it as? JLabel)?.also { label ->
               label.icon = ColorIcon(value.color)
               label.toolTipText = "index: ${value.index}"
-              label.border = BorderFactory.createLineBorder(when {
+              val bc = when {
                 value.isTransparentPixel -> Color.RED
                 else -> Color.WHITE
-              })
+              }
+              label.border = BorderFactory.createLineBorder(bc)
             }
           }
         }

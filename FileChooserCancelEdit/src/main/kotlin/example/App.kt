@@ -75,7 +75,8 @@ fun makeUI(): Component {
 
 private fun setViewTypeDetails(fileChooser: JFileChooser) {
   fileChooser.actionMap.get("viewTypeDetails")?.actionPerformed(
-    ActionEvent(fileChooser, ActionEvent.ACTION_PERFORMED, "viewTypeDetails"))
+    ActionEvent(fileChooser, ActionEvent.ACTION_PERFORMED, "viewTypeDetails")
+  )
 }
 
 private fun append(log: JTextArea, str: String) {

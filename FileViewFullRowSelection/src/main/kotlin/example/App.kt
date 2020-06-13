@@ -22,7 +22,8 @@ fun makeUI(): Component {
     UIManager.put("FileView.fullRowSelection", flg)
     val chooser = JFileChooser()
     chooser.actionMap["viewTypeDetails"]?.actionPerformed(
-      ActionEvent(e.source, e.id, "viewTypeDetails"))
+      ActionEvent(e.source, e.id, "viewTypeDetails")
+    )
 
     descendants(chooser)
       .filterIsInstance<JTable>()
