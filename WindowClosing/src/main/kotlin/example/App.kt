@@ -80,9 +80,12 @@ private class SaveHandler(private val frame: JFrame) : WindowAdapter(), Document
     }
     Toolkit.getDefaultToolkit().beep()
     val options = arrayOf("Save", "Discard", "Cancel")
+    val msg = "<html>Save: Exit & Save Changes<br>Discard: Exit & Discard Changes<br>Cancel: Continue</html>"
     val retValue = JOptionPane.showOptionDialog(
-      frame, "<html>Save: Exit & Save Changes<br>Discard: Exit & Discard Changes<br>Cancel: Continue</html>",
-      "Exit Options", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0])
+      frame, msg, "Exit Options",
+      JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE,
+      null, options, options[0]
+    )
     when (retValue) {
       JOptionPane.YES_OPTION -> {
         println("exit")
