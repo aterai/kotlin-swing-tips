@@ -91,11 +91,12 @@ private class TextAreaCellEditor : AbstractCellEditor(), TableCellEditor {
     // Java 10: int modifiers = Toolkit.getDefaultToolkit().menuShortcutKeyMaskEx
     val enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, modifiers)
     textArea.getInputMap(JComponent.WHEN_FOCUSED).put(enter, KEY)
-    textArea.actionMap.put(KEY, object : AbstractAction() {
+    val action = object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
         stopCellEditing()
       }
-    })
+    }
+    textArea.actionMap.put(KEY, action)
   }
 }
 

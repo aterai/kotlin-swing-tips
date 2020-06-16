@@ -14,11 +14,12 @@ fun makeUI(): Component {
 
   val field2 = WatermarkTextField()
   val amKey = "clearGlobalFocus"
-  field2.actionMap.put(amKey, object : AbstractAction(amKey) {
+  val action = object : AbstractAction(amKey) {
     override fun actionPerformed(e: ActionEvent) {
       KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner()
     }
-  })
+  }
+  field2.actionMap.put(amKey, action)
   val modifiers = Toolkit.getDefaultToolkit().menuShortcutKeyMask
   val im = field2.getInputMap(JComponent.WHEN_FOCUSED)
   im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, modifiers), amKey)

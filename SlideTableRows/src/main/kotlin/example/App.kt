@@ -68,7 +68,7 @@ fun makeUI(): Component {
 
 fun createActionPerformed() {
   model.addRow(arrayOf("New name", model.rowCount, false))
-  Timer(DELAY, object : ActionListener {
+  val listener = object : ActionListener {
     private val index = table.convertRowIndexToView(model.rowCount - 1)
     private var height = START_HEIGHT
     override fun actionPerformed(e: ActionEvent) {
@@ -78,7 +78,8 @@ fun createActionPerformed() {
         (e.source as? Timer)?.stop()
       }
     }
-  }).start()
+  }
+  Timer(DELAY, listener).start()
 }
 
 fun deleteActionPerformed() {
@@ -86,7 +87,7 @@ fun deleteActionPerformed() {
   if (selection.isEmpty()) {
     return
   }
-  Timer(DELAY, object : ActionListener {
+  val listener = object : ActionListener {
     private var height = END_HEIGHT
     override fun actionPerformed(e: ActionEvent) {
       height--
@@ -101,7 +102,8 @@ fun deleteActionPerformed() {
         }
       }
     }
-  }).start()
+  }
+  Timer(DELAY, listener).start()
 }
 
 fun main() {

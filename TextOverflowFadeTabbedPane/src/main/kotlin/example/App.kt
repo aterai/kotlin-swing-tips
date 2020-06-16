@@ -8,36 +8,39 @@ import javax.swing.plaf.synth.SynthConstants
 import javax.swing.plaf.synth.SynthContext
 import javax.swing.plaf.synth.SynthLookAndFeel
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val list = listOf(makeTabbedPane(ClippedTitleTabbedPane()), makeTabbedPane(TextOverflowFadeTabbedPane()))
+fun makeUI(): Component {
+  val list = listOf(
+    makeTabbedPane(ClippedTitleTabbedPane()),
+    makeTabbedPane(TextOverflowFadeTabbedPane())
+  )
 
-    val p = JPanel(GridLayout(list.size, 1))
-    list.forEach { p.add(it) }
+  val p = JPanel(GridLayout(list.size, 1))
+  list.forEach { p.add(it) }
 
-    val check = JCheckBox("LEFT")
-    check.addActionListener { e ->
-      val b = (e.getSource() as? JCheckBox)?.isSelected() ?: false
-      val tabPlacement = if (b) JTabbedPane.LEFT else JTabbedPane.TOP
-      list.forEach { it.setTabPlacement(tabPlacement) }
-    }
-
-    add(check, BorderLayout.NORTH)
-    add(p)
-    setPreferredSize(Dimension(320, 240))
+  val check = JCheckBox("LEFT")
+  check.addActionListener { e ->
+    val b = (e.source as? JCheckBox)?.isSelected ?: false
+    val tabPlacement = if (b) JTabbedPane.LEFT else JTabbedPane.TOP
+    list.forEach { it.tabPlacement = tabPlacement }
   }
 
-  private fun makeTabbedPane(tabbedPane: JTabbedPane) = tabbedPane.also {
-    it.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT)
-    it.addTab("1111111111111111111", ColorIcon(Color.RED), JScrollPane(JTree()))
-    it.addTab("2", ColorIcon(Color.GREEN), JLabel("bbbbbbbbb"))
-    it.addTab("33333333333333", ColorIcon(Color.BLUE), JScrollPane(JTree()))
-    it.addTab("444444444444444", ColorIcon(Color.ORANGE), JLabel("dddddddddd"))
-    it.addTab("55555555555555555555555555555555", ColorIcon(Color.CYAN), JLabel("e"))
+  return JPanel(BorderLayout()).also {
+    it.add(check, BorderLayout.NORTH)
+    it.add(p)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-open class ClippedTitleTabbedPane : JTabbedPane {
+private fun makeTabbedPane(tabbedPane: JTabbedPane) = tabbedPane.also {
+  it.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
+  it.addTab("1111111111111111111", ColorIcon(Color.RED), JScrollPane(JTree()))
+  it.addTab("2", ColorIcon(Color.GREEN), JLabel("22222"))
+  it.addTab("33333333333333", ColorIcon(Color.BLUE), JScrollPane(JTree()))
+  it.addTab("444444444444444", ColorIcon(Color.ORANGE), JLabel("33333"))
+  it.addTab("55555555555555555555555555555555", ColorIcon(Color.CYAN), JLabel("e"))
+}
+
+private open class ClippedTitleTabbedPane : JTabbedPane() {
   private val tabInsets = UIManager.getInsets("TabbedPane.tabInsets") ?: getSynthTabInsets()
   private val tabAreaInsets = UIManager.getInsets("TabbedPane.tabAreaInsets") ?: getSynthTabAreaInsets()
 
@@ -53,21 +56,19 @@ open class ClippedTitleTabbedPane : JTabbedPane {
     return style.getInsets(context, null)
   }
 
-  constructor() : super()
-
-  constructor(tabPlacement: Int) : super(tabPlacement)
+  // constructor(tabPlacement: Int) : super(tabPlacement)
 
   override fun doLayout() {
-    val tabCount = getTabCount()
-    if (tabCount == 0 || !isVisible()) {
+    val tabCount = tabCount
+    if (tabCount == 0 || !isVisible) {
       super.doLayout()
       return
     }
     val tabInsets = tabInsets
     val tabAreaInsets = tabAreaInsets
-    val insets = getInsets()
+    val insets = insets
     val tabPlacement = getTabPlacement()
-    val areaWidth = getWidth() - tabAreaInsets.left - tabAreaInsets.right - insets.left - insets.right
+    val areaWidth = width - tabAreaInsets.left - tabAreaInsets.right - insets.left - insets.right
     val isSide = tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT
     var tabWidth = if (isSide) areaWidth / 4 else areaWidth / tabCount
     val gap = if (isSide) 0 else areaWidth - tabWidth * tabCount
@@ -87,49 +88,48 @@ open class ClippedTitleTabbedPane : JTabbedPane {
   private fun updateAllTabWidth(tabWidth: Int, gap: Int) {
     val dim = Dimension()
     var rest = gap
-    for (i in 0 until getTabCount()) {
+    for (i in 0 until tabCount) {
       val tab = getTabComponentAt(i) as? JComponent ?: continue
-      val a = if (i == getTabCount() - 1) rest else 1
+      val a = if (i == tabCount - 1) rest else 1
       val w = if (rest > 0) tabWidth + a else tabWidth
-      dim.setSize(w, tab.getPreferredSize().height)
-      tab.setPreferredSize(dim)
+      dim.setSize(w, tab.preferredSize.height)
+      tab.preferredSize = dim
       rest -= a
     }
   }
 }
 
-open class TextOverflowFadeTabbedPane : ClippedTitleTabbedPane {
-  constructor() : super()
-
-  constructor(tabPlacement: Int) : super(tabPlacement)
+private open class TextOverflowFadeTabbedPane : ClippedTitleTabbedPane() {
+  // constructor(tabPlacement: Int) : super(tabPlacement)
 
   override fun insertTab(title: String, icon: Icon, component: Component, tip: String?, index: Int) {
     super.insertTab(title, icon, component, tip ?: title, index)
-    setTabComponentAt(index, JPanel(BorderLayout(2, 0)).also {
-      it.setOpaque(false)
+    val c = JPanel(BorderLayout(2, 0)).also {
+      it.isOpaque = false
       it.add(JLabel(icon), BorderLayout.WEST)
       it.add(TextOverflowFadeLabel(title))
-    })
+    }
+    setTabComponentAt(index, c)
   }
 }
 
-internal class TextOverflowFadeLabel(text: String) : JLabel(text) {
+private class TextOverflowFadeLabel(text: String) : JLabel(text) {
   override fun paintComponent(g: Graphics) {
-    val i = getInsets()
-    val w = getWidth() - i.left - i.right
-    val h = getHeight() - i.top - i.bottom
+    val i = insets
+    val w = width - i.left - i.right
+    val h = height - i.top - i.bottom
     val rect = Rectangle(i.left, i.top, w - LENGTH, h)
 
     val g2 = g.create() as Graphics2D
-    g2.setFont(g.getFont())
-    g2.setPaint(getForeground())
+    g2.font = g.font
+    g2.paint = foreground
 
     // val frc = g2.getFontRenderContext()
-    val tl = TextLayout(getText(), getFont(), g2.getFontRenderContext())
+    val tl = TextLayout(text, font, g2.fontRenderContext)
     val baseline = getBaseline(w, h).toFloat()
     val fx = i.left.toFloat()
 
-    g2.setClip(rect)
+    g2.clip = rect
     tl.draw(g2, fx, baseline)
 
     rect.width = 1
@@ -137,8 +137,8 @@ internal class TextOverflowFadeLabel(text: String) : JLabel(text) {
     (w - LENGTH until w).forEach {
       rect.x = it
       alpha = maxOf(0f, alpha - DIFF)
-      g2.setComposite(AlphaComposite.SrcOver.derive(alpha))
-      g2.setClip(rect)
+      g2.composite = AlphaComposite.SrcOver.derive(alpha)
+      g2.clip = rect
       tl.draw(g2, fx, baseline)
     }
     g2.dispose()
@@ -150,12 +150,12 @@ internal class TextOverflowFadeLabel(text: String) : JLabel(text) {
   }
 }
 
-internal class ColorIcon(private val color: Color) : Icon {
+private class ColorIcon(private val color: Color) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as Graphics2D
     g2.translate(x, y)
-    g2.setPaint(color)
-    g2.fillRect(1, 2, getIconWidth() - 2, getIconHeight() - 2)
+    g2.paint = color
+    g2.fillRect(1, 2, iconWidth - 2, iconHeight - 2)
     g2.dispose()
   }
 
@@ -174,7 +174,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
