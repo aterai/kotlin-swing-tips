@@ -7,84 +7,84 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.JTableHeader
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
+fun makeUI(): Component {
+  val listModel = DefaultListModel<String>()
+  val model = RowDataModel(listModel)
+  model.addRowData(RowData("Name 1", "comment"))
+  model.addRowData(RowData("Name 2", "test"))
+  model.addRowData(RowData("Name d", "ee"))
+  model.addRowData(RowData("Name c", "test cc"))
+  model.addRowData(RowData("Name b", "test bb"))
+  model.addRowData(RowData("Name a", "ff"))
+  model.addRowData(RowData("Name 0", "test aa"))
+  model.addRowData(RowData("Name 0", "gg"))
 
-    val listModel = DefaultListModel<String>()
-    val model = RowDataModel(listModel)
-    model.addRowData(RowData("Name 1", "comment"))
-    model.addRowData(RowData("Name 2", "test"))
-    model.addRowData(RowData("Name d", "ee"))
-    model.addRowData(RowData("Name c", "test cc"))
-    model.addRowData(RowData("Name b", "test bb"))
-    model.addRowData(RowData("Name a", "ff"))
-    model.addRowData(RowData("Name 0", "test aa"))
-    model.addRowData(RowData("Name 0", "gg"))
+  val table = JTable(model)
+  table.cellSelectionEnabled = true
 
-    val table = JTable(model)
-    table.setCellSelectionEnabled(true)
-
-    val header = table.getTableHeader()
-    header.addMouseListener(object : MouseAdapter() {
-      override fun mousePressed(e: MouseEvent) {
-        if (table.isEditing()) {
-          table.getCellEditor().stopCellEditing()
-        }
-        val col = header.columnAtPoint(e.getPoint())
-        table.changeSelection(0, col, false, false)
-        table.changeSelection(table.getRowCount() - 1, col, false, true)
+  val header = table.tableHeader
+  header.addMouseListener(object : MouseAdapter() {
+    override fun mousePressed(e: MouseEvent) {
+      if (table.isEditing) {
+        table.cellEditor.stopCellEditing()
       }
-    })
-
-    val rowHeader = RowHeaderList<String>(listModel, table)
-    rowHeader.setFixedCellWidth(50)
-
-    val scroll = JScrollPane(table)
-    scroll.setRowHeaderView(rowHeader)
-    scroll.getRowHeader().addChangeListener { e ->
-      val vport = e.getSource() as? JViewport ?: return@addChangeListener
-      scroll.getVerticalScrollBar().setValue(vport.getViewPosition().y)
+      val col = header.columnAtPoint(e.point)
+      table.changeSelection(0, col, false, false)
+      table.changeSelection(table.rowCount - 1, col, false, true)
     }
-    scroll.setComponentPopupMenu(TablePopupMenu())
-    table.setInheritsPopupMenu(true)
+  })
 
-    rowHeader.setBackground(Color.BLUE)
-    scroll.setBackground(Color.RED)
-    scroll.getViewport().setBackground(Color.GREEN)
+  val rowHeader = RowHeaderList<String>(listModel, table)
+  rowHeader.fixedCellWidth = 50
 
-    add(scroll)
-    setPreferredSize(Dimension(320, 240))
+  val scroll = JScrollPane(table)
+  scroll.setRowHeaderView(rowHeader)
+  scroll.rowHeader.addChangeListener { e ->
+    (e.source as? JViewport)?.also {
+      scroll.verticalScrollBar.value = it.viewPosition.y
+    }
+  }
+  scroll.componentPopupMenu = TablePopupMenu()
+  table.inheritsPopupMenu = true
+
+  rowHeader.background = Color.BLUE
+  scroll.background = Color.RED
+  scroll.viewport.background = Color.GREEN
+
+  return JPanel(BorderLayout()).also {
+    it.add(scroll)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class RowHeaderList<E>(model: ListModel<E>, private val table: JTable) : JList<E>(model) {
+private class RowHeaderList<E>(model: ListModel<E>, private val table: JTable) : JList<E>(model) {
   private val tableSelection: ListSelectionModel
   private val listSelection: ListSelectionModel
   private var rollOverRowIndex = -1
   private var pressedRowIndex = -1
 
   init {
-    setFixedCellHeight(table.getRowHeight())
-    setCellRenderer(RowHeaderRenderer<E>(table.getTableHeader()))
+    fixedCellHeight = table.rowHeight
+    cellRenderer = RowHeaderRenderer<E>(table.tableHeader)
     // setSelectionModel(table.getSelectionModel())
     val rol = RollOverListener()
     addMouseListener(rol)
     addMouseMotionListener(rol)
     // setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY.brighter()))
 
-    tableSelection = table.getSelectionModel()
-    listSelection = getSelectionModel()
+    tableSelection = table.selectionModel
+    listSelection = selectionModel
   }
 
   inner class RowHeaderRenderer<E2>(private val header: JTableHeader) : JLabel(), ListCellRenderer<E2> {
     init {
-      this.setOpaque(true)
+      this.isOpaque = true
       // this.setBorder(UIManager.getBorder("TableHeader.cellBorder"))
-      this.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 2, Color.GRAY.brighter()))
-      this.setHorizontalAlignment(SwingConstants.CENTER)
-      this.setForeground(header.getForeground())
-      this.setBackground(header.getBackground())
-      this.setFont(header.getFont())
+      this.border = BorderFactory.createMatteBorder(0, 0, 1, 2, Color.GRAY.brighter())
+      this.horizontalAlignment = SwingConstants.CENTER
+      this.foreground = header.foreground
+      this.background = header.background
+      this.font = header.font
     }
 
     override fun getListCellRendererComponent(
@@ -99,11 +99,11 @@ class RowHeaderList<E>(model: ListModel<E>, private val table: JTable) : JList<E
         index == rollOverRowIndex -> setBackground(Color.WHITE)
         isSelected -> setBackground(Color.GRAY.brighter())
         else -> {
-          setForeground(header.getForeground())
-          setBackground(header.getBackground())
+          foreground = header.foreground
+          setBackground(header.background)
         }
       }
-      setText(value?.toString() ?: "")
+      text = value?.toString() ?: ""
       return this
     }
   }
@@ -117,7 +117,7 @@ class RowHeaderList<E>(model: ListModel<E>, private val table: JTable) : JList<E
     }
 
     override fun mouseMoved(e: MouseEvent) {
-      val row = locationToIndex(e.getPoint())
+      val row = locationToIndex(e.point)
       if (row != rollOverRowIndex) {
         rollOverRowIndex = row
         repaint()
@@ -126,7 +126,7 @@ class RowHeaderList<E>(model: ListModel<E>, private val table: JTable) : JList<E
 
     override fun mouseDragged(e: MouseEvent) {
       if (pressedRowIndex >= 0) {
-        val row = locationToIndex(e.getPoint())
+        val row = locationToIndex(e.point)
         val start = minOf(row, pressedRowIndex)
         val end = maxOf(row, pressedRowIndex)
         tableSelection.clearSelection()
@@ -138,13 +138,13 @@ class RowHeaderList<E>(model: ListModel<E>, private val table: JTable) : JList<E
     }
 
     override fun mousePressed(e: MouseEvent) {
-      val row = locationToIndex(e.getPoint())
+      val row = locationToIndex(e.point)
       if (row == pressedRowIndex) {
         return
       }
       listSelection.clearSelection()
       table.changeSelection(row, 0, false, false)
-      table.changeSelection(row, table.getColumnModel().getColumnCount() - 1, false, true)
+      table.changeSelection(row, table.columnModel.columnCount - 1, false, true)
       pressedRowIndex = row
     }
 
@@ -157,7 +157,7 @@ class RowHeaderList<E>(model: ListModel<E>, private val table: JTable) : JList<E
   }
 }
 
-class RowDataModel(private val rowListModel: DefaultListModel<String>) : DefaultTableModel() {
+private class RowDataModel(private val rowListModel: DefaultListModel<String>) : DefaultTableModel() {
   private var number = 0
 
   fun addRowData(t: RowData) {
@@ -185,37 +185,42 @@ class RowDataModel(private val rowListModel: DefaultListModel<String>) : Default
   companion object {
     private val COLUMN_ARRAY = arrayOf(
       ColumnContext("Name", String::class.java, false),
-      ColumnContext("Comment", String::class.java, false))
+      ColumnContext("Comment", String::class.java, false)
+    )
   }
 }
 
-data class RowData(val name: String, val comment: String)
+private data class RowData(val name: String, val comment: String)
 
-class TablePopupMenu : JPopupMenu() {
+private class TablePopupMenu : JPopupMenu() {
   private val delete: JMenuItem
 
   init {
     add("add").addActionListener {
-      val table = getInvoker() as? JTable ?: return@addActionListener
-      val model = table.getModel() as? RowDataModel ?: return@addActionListener
-      model.addRowData(RowData("New row", ""))
-      table.scrollRectToVisible(table.getCellRect(model.getRowCount() - 1, 0, true))
+      val table = invoker as? JTable
+      val model = table?.model as? RowDataModel
+      if (model != null) {
+        model.addRowData(RowData("New row", ""))
+        table.scrollRectToVisible(table.getCellRect(model.rowCount - 1, 0, true))
+      }
     }
     addSeparator()
     delete = add("delete")
     delete.addActionListener {
-      val table = getInvoker() as? JTable ?: return@addActionListener
-      val model = table.getModel() as? DefaultTableModel ?: return@addActionListener
-      val selection = table.getSelectedRows()
-      for (i in selection.indices.reversed()) {
-        model.removeRow(table.convertRowIndexToModel(selection[i]))
+      val table = invoker as? JTable
+      val model = table?.model as? DefaultTableModel
+      if (model != null) {
+        val selection = table.selectedRows
+        for (i in selection.indices.reversed()) {
+          model.removeRow(table.convertRowIndexToModel(selection[i]))
+        }
       }
     }
   }
 
   override fun show(c: Component, x: Int, y: Int) {
     (c as? JTable)?.also {
-      delete.setEnabled(it.getSelectedRowCount() > 0)
+      delete.isEnabled = it.selectedRowCount > 0
       super.show(it, x, y)
     }
   }
@@ -231,7 +236,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
