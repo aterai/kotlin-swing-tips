@@ -13,25 +13,27 @@ fun makeUI(): Component {
   val slider2 = JSlider(0, 1000, 500)
   setSliderUI(slider2)
 
-  val p = JPanel(BorderLayout())
-  p.add(Box.createHorizontalBox().also {
+  val box = Box.createHorizontalBox().also {
     it.border = BorderFactory.createEmptyBorder(20, 20, 20, 20)
     it.add(JSlider(SwingConstants.VERTICAL, 0, 1000, 100))
     it.add(Box.createHorizontalStrut(20))
     it.add(slider1)
     it.add(Box.createHorizontalGlue())
-  }, BorderLayout.WEST)
+  }
 
-  p.add(Box.createVerticalBox().also {
+  val p = Box.createVerticalBox().also {
     it.border = BorderFactory.createEmptyBorder(20, 0, 20, 20)
     it.add(makeTitledPanel("Default", JSlider(0, 100, 100)))
     it.add(Box.createVerticalStrut(20))
     it.add(makeTitledPanel("Jump to clicked position", slider2))
     it.add(Box.createVerticalGlue())
-  })
-  // setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 10));
-  p.preferredSize = Dimension(320, 240)
-  return p
+  }
+
+  return JPanel(BorderLayout()).also {
+    it.add(box, BorderLayout.WEST)
+    it.add(p)
+    it.preferredSize = Dimension(320, 240)
+  }
 }
 
 private fun setSliderUI(slider: JSlider) {

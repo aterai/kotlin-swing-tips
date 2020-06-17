@@ -13,13 +13,14 @@ import javax.swing.plaf.metal.MetalSliderUI
 private val TEXTURE = TextureUtils.createCheckerTexture(6, Color(200, 150, 100, 50))
 
 fun makeUI(): Component {
-  UIManager.put("Slider.horizontalThumbIcon", object : Icon {
+  val icon = object : Icon {
     override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) { /* Empty icon */ }
 
     override fun getIconWidth() = 15
 
     override fun getIconHeight() = 64
-  })
+  }
+  UIManager.put("Slider.horizontalThumbIcon", icon)
   // println(UIManager.get("Slider.trackWidth"))
   // println(UIManager.get("Slider.majorTickLength"))
   // println(UIManager.getInt("Slider.trackWidth"))
