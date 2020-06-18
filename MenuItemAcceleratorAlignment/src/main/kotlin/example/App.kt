@@ -1,14 +1,14 @@
 package example
 
 import com.sun.java.swing.plaf.windows.WindowsMenuItemUI
+import sun.swing.MenuItemLayoutHelper
+import sun.swing.MenuItemLayoutHelper.LayoutResult
+import sun.swing.SwingUtilities2
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicMenuItemUI
-import sun.swing.MenuItemLayoutHelper
-import sun.swing.MenuItemLayoutHelper.LayoutResult
-import sun.swing.SwingUtilities2
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
