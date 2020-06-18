@@ -66,10 +66,12 @@ private class BlurJButton(label: String) : JButton(label) {
   }
 
   companion object {
-    private val CONVOLVE_OP = ConvolveOp(Kernel(3, 3, floatArrayOf(
+    private val DATA = floatArrayOf(
       .05f, .05f, .05f,
       .05f, .60f, .05f,
-      .05f, .05f, .05f)))
+      .05f, .05f, .05f
+    )
+    private val CONVOLVE_OP = ConvolveOp(Kernel(3, 3, DATA))
   }
 }
 
@@ -95,10 +97,12 @@ private class BlurButton(label: String) : JButton(label) {
   }
 
   companion object {
-    private val CONVOLVE_OP = ConvolveOp(Kernel(3, 3, floatArrayOf(
+    private val DATA = floatArrayOf(
       .05f, .05f, .05f,
       .05f, .60f, .05f,
-      .05f, .05f, .05f)), ConvolveOp.EDGE_NO_OP, null)
+      .05f, .05f, .05f
+    )
+    private val CONVOLVE_OP = ConvolveOp(Kernel(3, 3, DATA), ConvolveOp.EDGE_NO_OP, null)
   }
 }
 
