@@ -15,42 +15,46 @@ fun makeUI(): Component {
   val jtp = JTextPane()
   jtp.text = "Shift+Tab: open EditorComboPopup\n"
 
-  val combo = JComboBox(
-    arrayOf(
-      "public", "protected", "private",
-      "final", "transient", "super", "this", "return", "class"
-    )
+  val model = arrayOf(
+    "public", "protected", "private",
+    "final", "transient", "super", "this", "return", "class"
   )
+  val combo = JComboBox(model)
 
   val popup = EditorComboPopup(jtp, combo)
   val am = popup.actionMap
-  am.put("myUp", object : AbstractAction() {
+  val a1 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val i = combo.selectedIndex
       combo.selectedIndex = if (i == 0) combo.itemCount - 1 else i - 1
     }
-  })
-  am.put("myDown", object : AbstractAction() {
+  }
+  am.put("myUp", a1)
+
+  val a2 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val i = combo.selectedIndex
       combo.selectedIndex = if (i == combo.itemCount - 1) 0 else i + 1
     }
-  })
-  am.put("myEnt", object : AbstractAction() {
+  }
+  am.put("myDown", a2)
+
+  val a3 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       combo.getItemAt(combo.selectedIndex)?.also {
         popup.hide()
         TextEditorUtils.append(jtp, it)
       }
     }
-  })
+  }
+  am.put("myEnt", a3)
 
   val im = popup.inputMap
   im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "myUp")
   im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "myDown")
   im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "myEnt")
 
-  jtp.actionMap.put("myPop", object : AbstractAction() {
+  val a4 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       runCatching {
         val rect = jtp.modelToView(jtp.caretPosition)
@@ -65,7 +69,8 @@ fun makeUI(): Component {
         UIManager.getLookAndFeel().provideErrorFeedback(jtp)
       }
     }
-  })
+  }
+  jtp.actionMap.put("myPop", a4)
   jtp.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK), "myPop")
 
   return JPanel(BorderLayout()).also {
@@ -75,8 +80,7 @@ fun makeUI(): Component {
 }
 
 private class EditorComboPopup(private val textArea: JTextComponent, cb: JComboBox<*>) : BasicComboPopup(cb) {
-  @Transient
-  private var listener: MouseListener? = null
+  @Transient private var listener: MouseListener? = null
 
   override fun installListListeners() {
     super.installListListeners()
