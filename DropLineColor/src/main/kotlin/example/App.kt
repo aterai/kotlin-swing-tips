@@ -185,8 +185,8 @@ private class ListItemTransferHandler : TransferHandler() {
   }
 
   override fun canImport(info: TransferSupport) = info.isDrop &&
-      info.isDataFlavorSupported(localObjectFlavor) &&
-      info.dropLocation is JList.DropLocation
+    info.isDataFlavorSupported(localObjectFlavor) &&
+    info.dropLocation is JList.DropLocation
 
   override fun getSourceActions(c: JComponent) = MOVE // COPY_OR_MOVE
 
@@ -367,8 +367,8 @@ private class TreeTransferHandler : TransferHandler() {
   override fun getSourceActions(c: JComponent) = MOVE
 
   override fun canImport(support: TransferSupport) = support.isDrop &&
-      support.isDataFlavorSupported(FLAVOR) &&
-      support.component != source
+    support.isDataFlavorSupported(FLAVOR) &&
+    support.component != source
 
   override fun importData(support: TransferSupport): Boolean {
     val nodes = runCatching {
