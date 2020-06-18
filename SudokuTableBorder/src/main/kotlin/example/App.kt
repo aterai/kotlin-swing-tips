@@ -20,7 +20,8 @@ fun makeUI(): Component {
     arrayOf<Number>(7, 0, 0, 0, 2, 0, 0, 0, 6),
     arrayOf<Number>(0, 6, 0, 0, 0, 0, 2, 8, 0),
     arrayOf<Number>(0, 0, 0, 4, 1, 9, 0, 0, 5),
-    arrayOf<Number>(0, 0, 0, 0, 8, 0, 0, 7, 9))
+    arrayOf<Number>(0, 0, 0, 0, 8, 0, 0, 7, 9)
+  )
 
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = Number::class.java
@@ -30,28 +31,28 @@ fun makeUI(): Component {
   val table = object : JTable(model) {
     override fun getPreferredScrollableViewportSize() = super.getPreferredSize()
   }
-  for (i in 0 until table.getRowCount()) {
+  for (i in 0 until table.rowCount) {
     val a = if ((i + 1) % 3 == 0) BORDER_WIDTH2 else BORDER_WIDTH1
     table.setRowHeight(i, CELL_SIZE + a)
   }
 
-  table.setCellSelectionEnabled(true)
+  table.cellSelectionEnabled = true
   table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
-  table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF)
-  table.getTableHeader().setReorderingAllowed(false)
-  table.setBorder(BorderFactory.createEmptyBorder())
+  table.autoResizeMode = JTable.AUTO_RESIZE_OFF
+  table.tableHeader.reorderingAllowed = false
+  table.border = BorderFactory.createEmptyBorder()
 
-  table.setShowVerticalLines(false)
-  table.setShowHorizontalLines(false)
+  table.showVerticalLines = false
+  table.showHorizontalLines = false
 
-  table.setIntercellSpacing(Dimension())
-  table.setRowMargin(0)
-  table.getColumnModel().setColumnMargin(0)
+  table.intercellSpacing = Dimension()
+  table.rowMargin = 0
+  table.columnModel.columnMargin = 0
 
   val editor = JTextField()
-  editor.setHorizontalAlignment(SwingConstants.CENTER)
+  editor.horizontalAlignment = SwingConstants.CENTER
   // editor.setBorder(BorderFactory.createLineBorder(Color.RED));
-  table.setDefaultEditor(Number::class.java, object : DefaultCellEditor(editor) {
+  val cellEditor = object : DefaultCellEditor(editor) {
     override fun getTableCellEditorComponent(
       table: JTable,
       value: Any?,
@@ -64,45 +65,48 @@ fun makeUI(): Component {
     }
 
     override fun getCellEditorValue(): Any {
-      return if (editor.getText().isEmpty()) 0 else super.getCellEditorValue()
+      return if (editor.text.isEmpty()) 0 else super.getCellEditorValue()
     }
-  })
+  }
+  table.setDefaultEditor(Number::class.java, cellEditor)
   table.setDefaultRenderer(Number::class.java, SudokuCellRenderer(data))
 
-  val m = table.getColumnModel()
-  m.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
-  for (i in 0 until m.getColumnCount()) {
+  val m = table.columnModel
+  m.selectionModel.selectionMode = ListSelectionModel.SINGLE_SELECTION
+  for (i in 0 until m.columnCount) {
     val col = m.getColumn(i)
     val a = if ((i + 1) % 3 == 0) BORDER_WIDTH2 else BORDER_WIDTH1
-    col.setPreferredWidth(CELL_SIZE + a)
-    col.setResizable(false)
+    col.preferredWidth = CELL_SIZE + a
+    col.resizable = false
   }
 
   val scroll = JScrollPane(table).also {
-    it.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER)
-    it.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
-    it.setBorder(BorderFactory.createEmptyBorder())
-    it.setViewportBorder(BorderFactory.createMatteBorder(BORDER_WIDTH2, BORDER_WIDTH2, 0, 0, Color.BLACK))
-    it.setColumnHeader(JViewport())
-    it.getColumnHeader().setVisible(false)
+    it.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
+    it.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+    it.border = BorderFactory.createEmptyBorder()
+    it.viewportBorder = BorderFactory.createMatteBorder(BORDER_WIDTH2, BORDER_WIDTH2, 0, 0, Color.BLACK)
+    it.columnHeader = JViewport()
+    it.columnHeader.isVisible = false
   }
 
   return JPanel(GridBagLayout()).also {
     it.add(scroll)
-    it.setPreferredSize(Dimension(320, 240))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
 private class SudokuCellRenderer(src: Array<Array<Number>>) : DefaultTableCellRenderer() {
-  private val bold = getFont().deriveFont(Font.BOLD)
+  private val bold = font.deriveFont(Font.BOLD)
   private val b0 = BorderFactory.createMatteBorder(0, 0, BORDER_WIDTH1, BORDER_WIDTH1, Color.GRAY)
   private val b1 = BorderFactory.createMatteBorder(0, 0, BORDER_WIDTH2, BORDER_WIDTH2, Color.BLACK)
   private val b2 = BorderFactory.createCompoundBorder(
     BorderFactory.createMatteBorder(0, 0, BORDER_WIDTH2, 0, Color.BLACK),
-    BorderFactory.createMatteBorder(0, 0, 0, BORDER_WIDTH1, Color.GRAY))
+    BorderFactory.createMatteBorder(0, 0, 0, BORDER_WIDTH1, Color.GRAY)
+  )
   private val b3 = BorderFactory.createCompoundBorder(
     BorderFactory.createMatteBorder(0, 0, 0, BORDER_WIDTH2, Color.BLACK),
-    BorderFactory.createMatteBorder(0, 0, BORDER_WIDTH1, 0, Color.GRAY))
+    BorderFactory.createMatteBorder(0, 0, BORDER_WIDTH1, 0, Color.GRAY)
+  )
   private val mask: Array<Array<Number>>
 
   init {
@@ -127,18 +131,18 @@ private class SudokuCellRenderer(src: Array<Array<Number>>) : DefaultTableCellRe
     val isEditable = mask[row][column] == 0
     super.getTableCellRendererComponent(table, value, isEditable && isSelected, hasFocus, row, column)
     if (isEditable && value == 0) {
-      this.setText(" ")
+      this.text = " "
     }
-    setFont(if (isEditable) font else bold)
-    setHorizontalAlignment(SwingConstants.CENTER)
+    font = if (isEditable) font else bold
+    horizontalAlignment = SwingConstants.CENTER
     val rf = (row + 1) % 3 == 0
     val cf = (column + 1) % 3 == 0
-    setBorder(when {
+    border = when {
       rf && cf -> b1
       rf -> b2
       cf -> b3
       else -> b0
-    })
+    }
     return this
   }
 }
