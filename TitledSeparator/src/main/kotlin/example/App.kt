@@ -41,10 +41,11 @@ class TitledSeparator(
 
   private fun updateBorder() {
     val icon = TitledSeparatorIcon()
-    setBorder(BorderFactory.createTitledBorder(
-      BorderFactory.createMatteBorder(separatorHeight, 0, 0, 0, icon), title,
-      TitledBorder.DEFAULT_JUSTIFICATION, titlePosition
-    ))
+    val b = BorderFactory.createTitledBorder(
+      BorderFactory.createMatteBorder(separatorHeight, 0, 0, 0, icon),
+      title, TitledBorder.DEFAULT_JUSTIFICATION, titlePosition
+    )
+    setBorder(b)
   }
 
   override fun getMaximumSize() = Dimension(Short.MAX_VALUE.toInt(), super.getPreferredSize().height)

@@ -6,8 +6,7 @@ import javax.swing.plaf.BorderUIResource
 
 class MainPanel : JPanel(BorderLayout()) {
   init {
-    val tree = JTree()
-    tree.setComponentPopupMenu(TranslucentPopupMenu().also {
+    val popup = TranslucentPopupMenu().also {
       it.add("Undo")
       it.add("Redo")
       it.addSeparator()
@@ -15,7 +14,9 @@ class MainPanel : JPanel(BorderLayout()) {
       it.add("Copy")
       it.add("Paste")
       it.add("Delete")
-    })
+    }
+    val tree = JTree()
+    tree.setComponentPopupMenu(popup)
     add(JScrollPane(tree))
     setPreferredSize(Dimension(320, 240))
   }
