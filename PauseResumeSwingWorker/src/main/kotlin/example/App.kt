@@ -3,12 +3,12 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-private const val pauseTxt = "pause"
+private const val PAUSE = "pause"
 private val area = JTextArea()
 private val statusPanel = JPanel(BorderLayout())
 private val runButton = JButton("run")
 private val cancelButton = JButton("cancel")
-private val pauseButton = JButton(pauseTxt)
+private val pauseButton = JButton(PAUSE)
 private val bar1 = JProgressBar()
 private val bar2 = JProgressBar()
 @Transient private var worker: BackgroundTask? = null
@@ -33,8 +33,8 @@ fun makeUI(): Component {
     (e.source as? JButton)?.also { b ->
       b.text = worker?.let {
         it.isPaused = it.isPaused xor true
-        if (it.isCancelled || it.isPaused) pauseTxt else "resume"
-      } ?: pauseTxt
+        if (it.isCancelled || it.isPaused) PAUSE else "resume"
+      } ?: PAUSE
     }
   }
 
@@ -42,7 +42,7 @@ fun makeUI(): Component {
   cancelButton.addActionListener {
     worker?.takeUnless { it.isDone }?.cancel(true)
     worker = null
-    pauseButton.text = pauseTxt
+    pauseButton.text = PAUSE
     pauseButton.isEnabled = false
   }
 
