@@ -33,7 +33,7 @@ fun makeUI(): Component {
   }
 }
 
-open class CheckBoxesPanel : JPanel() {
+private open class CheckBoxesPanel : JPanel() {
   private val bgc = Color(0x0, true)
   protected val titles = arrayOf("r", "w", "x")
   val buttons = mutableListOf<JCheckBox>()
@@ -73,7 +73,7 @@ open class CheckBoxesPanel : JPanel() {
   }
 }
 
-class CheckBoxesRenderer : CheckBoxesPanel(), TableCellRenderer {
+private class CheckBoxesRenderer : CheckBoxesPanel(), TableCellRenderer {
   override fun updateUI() {
     super.updateUI()
     name = "Table.cellRenderer"
@@ -93,7 +93,7 @@ class CheckBoxesRenderer : CheckBoxesPanel(), TableCellRenderer {
   // public static class UIResource extends CheckBoxesRenderer implements UIResource {}
 }
 
-class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
+private class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
   private val panel = object : CheckBoxesPanel() {
     override fun updateUI() {
       super.updateUI()
@@ -101,12 +101,13 @@ class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
         val am = actionMap
         for (i in buttons.indices) {
           val t = titles[i]
-          am.put(t, object : AbstractAction(t) {
+          val a = object : AbstractAction(t) {
             override fun actionPerformed(e: ActionEvent) {
               buttons.firstOrNull { it.text == t }?.doClick()
               fireEditingStopped()
             }
-          })
+          }
+          am.put(t, a)
         }
         val im = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_R, 0), titles[0])

@@ -27,12 +27,14 @@ fun makeUI(): Component {
   table.cellSelectionEnabled = true
 
   val actionMapKey = "clear-selection"
-  table.actionMap.put(actionMapKey, object : AbstractAction(actionMapKey) {
+  val action = object : AbstractAction(actionMapKey) {
     override fun actionPerformed(e: ActionEvent) {
       table.clearSelection()
       table.requestFocusInWindow()
     }
-  })
+  }
+  table.actionMap.put(actionMapKey, action)
+
   val im = table.getInputMap(JComponent.WHEN_FOCUSED)
   im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), actionMapKey)
 

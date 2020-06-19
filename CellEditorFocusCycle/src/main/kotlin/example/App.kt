@@ -148,12 +148,13 @@ private class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
   init {
     val am = renderer.actionMap
     renderer.titles.forEach { title ->
-      am.put(title, object : AbstractAction(title) {
+      val a = object : AbstractAction(title) {
         override fun actionPerformed(e: ActionEvent) {
           renderer.buttons.firstOrNull { it.text.trim() == title }?.doClick()
           // fireEditingStopped();
         }
-      })
+      }
+      am.put(title, a)
     }
 
     val im = renderer.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)

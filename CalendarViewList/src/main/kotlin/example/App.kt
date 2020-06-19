@@ -109,7 +109,7 @@ private fun installActions() {
   im.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "selectPreviousIndex")
 
   val am = monthList.actionMap
-  am.put("selectPreviousIndex", object : AbstractAction() {
+  val a1 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val index = monthList.leadSelectionIndex
       if (index > 0) {
@@ -120,8 +120,10 @@ private fun installActions() {
         monthList.setSelectedValue(d, false)
       }
     }
-  })
-  am.put("selectNextIndex", object : AbstractAction() {
+  }
+  am.put("selectPreviousIndex", a1)
+
+  val a2 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val index = monthList.leadSelectionIndex
       if (index < monthList.model.size - 1) {
@@ -132,9 +134,11 @@ private fun installActions() {
         monthList.setSelectedValue(d, false)
       }
     }
-  })
+  }
+  am.put("selectNextIndex", a2)
+
   val selectPreviousRow = am.get("selectPreviousRow")
-  am.put("selectPreviousRow", object : AbstractAction() {
+  val a3 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val index = monthList.leadSelectionIndex
       val weekLength = DayOfWeek.values().size // 7
@@ -146,9 +150,11 @@ private fun installActions() {
         selectPreviousRow.actionPerformed(e)
       }
     }
-  })
+  }
+  am.put("selectPreviousRow", a3)
+
   val selectNextRow = am.get("selectNextRow")
-  am.put("selectNextRow", object : AbstractAction() {
+  val a4 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val index = monthList.leadSelectionIndex
       val weekLength = DayOfWeek.values().size // 7
@@ -160,7 +166,8 @@ private fun installActions() {
         selectNextRow.actionPerformed(e)
       }
     }
-  })
+  }
+  am.put("selectNextRow", a4)
 }
 
 fun updateMonthView(localDate: LocalDate) {
