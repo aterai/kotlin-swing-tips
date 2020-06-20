@@ -17,12 +17,15 @@ fun makeUI(): Component {
 
   val north = JPanel(GridLayout(0, 2, 5, 5))
   north.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-  north.add(JButton(object : AbstractAction("Min:DividerLocation") {
+
+  val minDividerAction = object : AbstractAction("Min:DividerLocation") {
     override fun actionPerformed(e: ActionEvent) {
       splitPane.dividerLocation = 0
     }
-  }))
-  north.add(JButton(object : AbstractAction("Max:DividerLocation") {
+  }
+  north.add(JButton(minDividerAction))
+
+  val maxDividerAction = object : AbstractAction("Max:DividerLocation") {
     override fun actionPerformed(e: ActionEvent) {
       val ins = splitPane.insets
       if (splitPane.orientation == JSplitPane.VERTICAL_SPLIT) {
@@ -31,7 +34,8 @@ fun makeUI(): Component {
         splitPane.dividerLocation = splitPane.width - (ins?.right ?: 0)
       }
     }
-  }))
+  }
+  north.add(JButton(maxDividerAction))
 
   val minAction = object : AbstractAction("selectMin") {
     override fun actionPerformed(e: ActionEvent) {

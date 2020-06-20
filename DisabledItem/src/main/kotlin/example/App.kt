@@ -56,7 +56,7 @@ fun makeUI(): Component {
   initDisableIndex(disableIndexSet)
 
   val am = list.actionMap
-  am.put("selectNextRow", object : AbstractAction() {
+  val a1 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val index = list.selectedIndex
       for (i in index + 1 until list.model.size) {
@@ -66,8 +66,10 @@ fun makeUI(): Component {
         }
       }
     }
-  })
-  am.put("selectPreviousRow", object : AbstractAction() {
+  }
+  am.put("selectNextRow", a1)
+
+  val a2 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val index = list.selectedIndex
       for (i in index - 1 downTo 0) {
@@ -77,7 +79,8 @@ fun makeUI(): Component {
         }
       }
     }
-  })
+  }
+  am.put("selectPreviousRow", a2)
 
   val button = JButton("init")
   button.addActionListener {

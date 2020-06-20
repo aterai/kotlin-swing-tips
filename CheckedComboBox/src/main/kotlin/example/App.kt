@@ -75,8 +75,7 @@ private data class CheckableItem(val title: String, val isSelected: Boolean) {
 private class CheckedComboBox(model: ComboBoxModel<CheckableItem>) : JComboBox<CheckableItem>(model) {
   private var keepOpen = false
 
-  @Transient
-  private var listener: ActionListener? = null
+  @Transient private var listener: ActionListener? = null
 
   override fun getPreferredSize() = Dimension(200, 20)
 
@@ -115,13 +114,14 @@ private class CheckedComboBox(model: ComboBoxModel<CheckableItem>) : JComboBox<C
       KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0),
       "checkbox-select"
     )
-    actionMap.put("checkbox-select", object : AbstractAction() {
+    val action = object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
         (getAccessibleContext().getAccessibleChild(0) as? ComboPopup)?.also {
           updateItem(it.list.selectedIndex)
         }
       }
-    })
+    }
+    actionMap.put("checkbox-select", action)
   }
 
   private fun getCheckedItemString(model: ListModel<out CheckableItem>): String {

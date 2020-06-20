@@ -15,14 +15,17 @@ fun makeUI(): Component {
   val desktop = JDesktopPane()
   val im = desktop.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
   im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "escape")
-  val am = desktop.actionMap
-  am.put("escape", object : AbstractAction() {
+
+  val action = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       desktop.selectedFrame?.also {
         desktop.desktopManager.closeFrame(it)
       }
     }
-  })
+  }
+  val am = desktop.actionMap
+  am.put("escape", action)
+
   return JPanel(BorderLayout()).also {
     it.add(desktop)
     it.add(createToolBar(desktop), BorderLayout.NORTH)

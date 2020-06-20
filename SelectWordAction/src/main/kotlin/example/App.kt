@@ -15,7 +15,7 @@ private const val TEXT = "AA-BB_CC\nAA-bb_CC\naa1-bb2_cc3\naa_(bb)_cc;\n11-22_33
 
 fun makeUI(): Component {
   val textArea = JTextArea(TEXT)
-  textArea.actionMap.put(DefaultEditorKit.selectWordAction, object : TextAction(DefaultEditorKit.selectWordAction) {
+  val action = object : TextAction(DefaultEditorKit.selectWordAction) {
     override fun actionPerformed(e: ActionEvent) {
       getTextComponent(e)?.also { target ->
         runCatching {
@@ -29,7 +29,8 @@ fun makeUI(): Component {
         }
       }
     }
-  })
+  }
+  textArea.actionMap.put(DefaultEditorKit.selectWordAction, action)
   val split = JSplitPane()
   split.resizeWeight = .5
   split.leftComponent = makeTitledPanel("Default", JTextArea(TEXT))
