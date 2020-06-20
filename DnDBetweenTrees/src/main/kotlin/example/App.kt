@@ -12,40 +12,39 @@ import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.MutableTreeNode
 import javax.swing.tree.TreeSelectionModel
 
-class MainPanel : JPanel(GridLayout(1, 2)) {
-  init {
-    val handler = TreeTransferHandler()
-    add(JScrollPane(makeTree(handler)))
-    add(JScrollPane(makeTree(handler)))
-    preferredSize = Dimension(320, 240)
-  }
+fun makeUI() = JPanel(GridLayout(1, 2)).also {
+  val handler = TreeTransferHandler()
+  it.add(JScrollPane(makeTree(handler)))
+  it.add(JScrollPane(makeTree(handler)))
+  it.preferredSize = Dimension(320, 240)
+}
 
-  private fun makeTree(handler: TransferHandler): JTree {
-    val tree = JTree()
-    tree.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-    tree.isRootVisible = false
-    tree.dragEnabled = true
-    tree.transferHandler = handler
-    tree.dropMode = DropMode.INSERT
-    tree.selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
-    // Disable node Cut action
-    tree.actionMap.put(TransferHandler.getCutAction().getValue(Action.NAME), object : AbstractAction() {
-      override fun actionPerformed(e: ActionEvent) {
-        /* Dummy action */
-      }
-    })
-    expandTree(tree)
-    return tree
-  }
-
-  private fun expandTree(tree: JTree) {
-    for (i in 0 until tree.rowCount) {
-      tree.expandRow(i)
+private fun makeTree(handler: TransferHandler): JTree {
+  val tree = JTree()
+  tree.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+  tree.isRootVisible = false
+  tree.dragEnabled = true
+  tree.transferHandler = handler
+  tree.dropMode = DropMode.INSERT
+  tree.selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
+  // Disable node Cut action
+  val dummy = object : AbstractAction() {
+    override fun actionPerformed(e: ActionEvent) {
+      /* Dummy action */
     }
+  }
+  tree.actionMap.put(TransferHandler.getCutAction().getValue(Action.NAME), dummy)
+  expandTree(tree)
+  return tree
+}
+
+private fun expandTree(tree: JTree) {
+  for (i in 0 until tree.rowCount) {
+    tree.expandRow(i)
   }
 }
 
-class TreeTransferHandler : TransferHandler() {
+private class TreeTransferHandler : TransferHandler() {
   private var source: JTree? = null
   override fun createTransferable(c: JComponent): Transferable? {
     source = c as? JTree
@@ -149,7 +148,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

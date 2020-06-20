@@ -21,14 +21,16 @@ fun makeUI(): Component {
   slider2.addMouseMotionListener(ma)
   slider2.addMouseListener(ma)
 
-  val p = JPanel(BorderLayout())
-  p.add(Box.createVerticalBox().also {
+  val box = Box.createVerticalBox().also {
     it.add(Box.createVerticalStrut(5))
     it.add(makeTitledPanel("Default", slider1))
     it.add(Box.createVerticalStrut(25))
     it.add(makeTitledPanel("Show ToolTip", slider2))
     it.add(Box.createVerticalGlue())
-  }, BorderLayout.NORTH)
+  }
+
+  val p = JPanel(BorderLayout())
+  p.add(box, BorderLayout.NORTH)
   p.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   p.preferredSize = Dimension(320, 240)
   return p

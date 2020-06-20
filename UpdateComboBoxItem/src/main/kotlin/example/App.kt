@@ -22,9 +22,12 @@ fun makeUI(): Component {
   c.weightx = 0.0
   c.anchor = GridBagConstraints.WEST
   listOf(
-    "setSelectedIndex(-1/idx):", "contentsChanged(...):", "repaint():",
-    "(remove/insert)ItemAt(...):", "fireContentsChanged(...):")
-    .map { JLabel(it) }
+    "setSelectedIndex(-1/idx):",
+    "contentsChanged(...):",
+    "repaint():",
+    "(remove/insert)ItemAt(...):",
+    "fireContentsChanged(...):"
+  ).map { JLabel(it) }
     .forEach {
       p.add(it, c)
       c.gridy += 1
@@ -109,8 +112,8 @@ private class CheckBoxCellRenderer<E : CheckableItem> : ListCellRenderer<E> {
 
 private open class CheckedComboBox<E : CheckableItem>(model: ComboBoxModel<E>) : JComboBox<E>(model) {
   private var keepOpen = false
-  @Transient
-  private var listener: ActionListener? = null
+
+  @Transient private var listener: ActionListener? = null
 
   // constructor() : super()
 
@@ -128,16 +131,19 @@ private open class CheckedComboBox<E : CheckableItem>(model: ComboBoxModel<E>) :
     }
     setRenderer(CheckBoxCellRenderer<CheckableItem>())
     addActionListener(listener)
-    getInputMap(JComponent.WHEN_FOCUSED)
-      .put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "checkbox-select")
-    actionMap.put("checkbox-select", object : AbstractAction() {
+
+    val im = getInputMap(JComponent.WHEN_FOCUSED)
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "checkbox-select")
+
+    val action = object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
         val a = getAccessibleContext().getAccessibleChild(0)
         if (a is ComboPopup) {
           updateItem(a.list.selectedIndex)
         }
       }
-    })
+    }
+    actionMap.put("checkbox-select", action)
   }
 
   open fun updateItem(index: Int) {
