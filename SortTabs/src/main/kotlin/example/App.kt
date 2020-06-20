@@ -7,29 +7,28 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val tabbedPane = EditableTabbedPane()
-    tabbedPane.addTab("Title", JLabel("Tab1"))
-    tabbedPane.addTab("aaa", JLabel("Tab2"))
-    tabbedPane.addTab("000", JLabel("Tab3"))
-    tabbedPane.componentPopupMenu = TabbedPanePopupMenu()
+fun makeUI() = JPanel(BorderLayout()).also {
+  val tabbedPane = EditableTabbedPane()
+  tabbedPane.addTab("Title", JLabel("Tab1"))
+  tabbedPane.addTab("aaa", JLabel("Tab2"))
+  tabbedPane.addTab("000", JLabel("Tab3"))
+  tabbedPane.componentPopupMenu = TabbedPanePopupMenu()
 
-    add(tabbedPane)
-    preferredSize = Dimension(320, 240)
-  }
+  it.add(tabbedPane)
+  it.preferredSize = Dimension(320, 240)
 }
 
-data class ComparableTab(val title: String, val component: Component)
+private data class ComparableTab(val title: String, val component: Component)
 
-class EditableTabbedPane : JTabbedPane() {
+private class EditableTabbedPane : JTabbedPane() {
   private val glassPane = EditorGlassPane()
   private val editor = JTextField()
   private val startEditing = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       rootPane.glassPane = glassPane
       val rect = getBoundsAt(selectedIndex)
-      val p = SwingUtilities.convertPoint(this@EditableTabbedPane, rect.location, glassPane)
+      val source = this@EditableTabbedPane
+      val p = SwingUtilities.convertPoint(source, rect.location, glassPane)
       // rect.setBounds(p.x + 2, p.y + 2, rect.width - 4, rect.height - 4)
       rect.location = p
       rect.grow(-2, -2)
@@ -53,7 +52,7 @@ class EditableTabbedPane : JTabbedPane() {
     val am = editor.actionMap
     val renameKey = "rename-tab"
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), renameKey)
-    am.put(renameKey, object : AbstractAction() {
+    val renameAction = object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
         if (editor.text.trim().isNotEmpty()) {
           setTitleAt(selectedIndex, editor.text)
@@ -61,11 +60,12 @@ class EditableTabbedPane : JTabbedPane() {
         }
         glassPane.isVisible = false
       }
-    })
+    }
+    am.put(renameKey, renameAction)
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancel-editing")
     am.put("cancel-editing", cancelEditing)
 
-    addMouseListener(object : MouseAdapter() {
+    val clickHandler = object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
         val isDoubleClick = e.clickCount >= 2
         if (isDoubleClick) {
@@ -73,7 +73,8 @@ class EditableTabbedPane : JTabbedPane() {
           startEditing.actionPerformed(ActionEvent(c, ActionEvent.ACTION_PERFORMED, ""))
         }
       }
-    })
+    }
+    addMouseListener(clickHandler)
     getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "start-editing")
     actionMap.put("start-editing", startEditing)
   }
@@ -115,19 +116,21 @@ class TabbedPanePopupMenu : JPopupMenu() {
 
   init {
     add("New tab").addActionListener {
-      val tabs = invoker as? JTabbedPane ?: return@addActionListener
-      tabs.addTab("Title: $count", JLabel("Tab: $count"))
-      tabs.selectedIndex = tabs.tabCount - 1
-      count++
+      (invoker as? JTabbedPane)?.also {
+        it.addTab("Title: $count", JLabel("Tab: $count"))
+        it.selectedIndex = it.tabCount - 1
+        count++
+      }
     }
     sortTabs = add("Sort")
     sortTabs.addActionListener {
-      val tabs = invoker as? JTabbedPane ?: return@addActionListener
-      val list = (0 until tabs.tabCount)
-        .map { ComparableTab(tabs.getTitleAt(it), tabs.getComponentAt(it)) }
-        .sortedWith(compareBy(ComparableTab::title))
-      tabs.removeAll()
-      list.forEach { tabs.addTab(it.title, it.component) }
+      (invoker as? JTabbedPane)?.also { tabs ->
+        val list = (0 until tabs.tabCount)
+          .map { ComparableTab(tabs.getTitleAt(it), tabs.getComponentAt(it)) }
+          .sortedWith(compareBy(ComparableTab::title))
+        tabs.removeAll()
+        list.forEach { tabs.addTab(it.title, it.component) }
+      }
     }
     addSeparator()
     closePage = add("Close")
@@ -173,7 +176,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -46,26 +46,29 @@ private fun makeSlider(title: String) = JSlider(0, 100, 50).also {
 
 private fun initSlider(slider: JSlider) {
   slider.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "RIGHT_ARROW")
-  slider.actionMap.put("RIGHT_ARROW", object : AbstractAction() {
+  val a1 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val s = e.source as? JSlider ?: return
       s.value = s.value + s.majorTickSpacing
     }
-  })
+  }
+  slider.actionMap.put("RIGHT_ARROW", a1)
   slider.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false), "LEFT_ARROW")
-  slider.actionMap.put("LEFT_ARROW", object : AbstractAction() {
+  val a2 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val s = e.source as? JSlider ?: return
       s.value = s.value - s.majorTickSpacing
     }
-  })
+  }
+  slider.actionMap.put("LEFT_ARROW", a2)
   slider.addMouseWheelListener { e ->
-    val s = e.component as? JSlider ?: return@addMouseWheelListener
-    val hasMinorTickSpacing = s.minorTickSpacing > 0
-    val tickSpacing = if (hasMinorTickSpacing) s.minorTickSpacing else s.majorTickSpacing
-    val v = s.value - e.wheelRotation * tickSpacing
-    val m = s.model
-    s.value = minOf(m.maximum, maxOf(v, m.minimum))
+    (e.component as? JSlider)?.also {
+      val hasMinorTickSpacing = it.minorTickSpacing > 0
+      val tickSpacing = if (hasMinorTickSpacing) it.minorTickSpacing else it.majorTickSpacing
+      val v = it.value - e.wheelRotation * tickSpacing
+      val m = it.model
+      it.value = minOf(m.maximum, maxOf(v, m.minimum))
+    }
   }
   if (slider.ui is WindowsSliderUI) {
     slider.ui = WindowsSnapToTicksDragSliderUI(slider)
