@@ -12,12 +12,13 @@ fun makeUI(): Component {
   val dh = RearrangingHandler()
   box.addMouseListener(dh)
   box.addMouseMotionListener(dh)
-  for ((i, c) in listOf<Component>(
+  val list = listOf<Component>(
     JLabel("<html>1<br>11<br>111"),
     JButton("22"),
     JCheckBox("333"),
     JScrollPane(JTextArea(4, 12))
-  ).withIndex()) {
+  )
+  for ((i, c) in list.withIndex()) {
     box.add(createSortablePanel(i, c))
   }
   return JPanel(BorderLayout()).also {

@@ -265,20 +265,32 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
     }
 
     lowerLeft?.setBounds(
-      if (leftToRight) rowHeadR.x else vsbR.x, hsbR.y,
-      if (leftToRight) rowHeadR.width else vsbR.width, hsbR.height)
+      if (leftToRight) rowHeadR.x else vsbR.x,
+      hsbR.y,
+      if (leftToRight) rowHeadR.width else vsbR.width,
+      hsbR.height
+    )
 
     lowerRight?.setBounds(
-      if (leftToRight) vsbR.x else rowHeadR.x, hsbR.y,
-      if (leftToRight) vsbR.width else rowHeadR.width, hsbR.height)
+      if (leftToRight) vsbR.x else rowHeadR.x,
+      hsbR.y,
+      if (leftToRight) vsbR.width else rowHeadR.width,
+      hsbR.height
+    )
 
     upperLeft?.setBounds(
-      if (leftToRight) rowHeadR.x else vsbR.x, colHeadR.y,
-      if (leftToRight) rowHeadR.width else vsbR.width, colHeadR.height)
+      if (leftToRight) rowHeadR.x else vsbR.x,
+      colHeadR.y,
+      if (leftToRight) rowHeadR.width else vsbR.width,
+      colHeadR.height
+    )
 
     upperRight?.setBounds(
-      if (leftToRight) vsbR.x else rowHeadR.x, colHeadR.y,
-      if (leftToRight) vsbR.width else rowHeadR.width, colHeadR.height)
+      if (leftToRight) vsbR.x else rowHeadR.x,
+      colHeadR.y,
+      if (leftToRight) vsbR.width else rowHeadR.width,
+      colHeadR.height
+    )
   }
 
   private fun adjustForVsb(

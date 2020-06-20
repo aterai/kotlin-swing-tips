@@ -45,10 +45,11 @@ private fun makeMenuBar() = JMenuBar().also {
   it.add(JMenu("Test")).also { menu ->
     menu.add("JMenuItem1")
     menu.add("JMenuItem2")
-    menu.add(JMenu("JMenu").also { sub ->
+    val m1 = JMenu("JMenu").also { sub ->
       sub.add("JMenuItem4")
       sub.add("JMenuItem5")
-    })
+    }
+    menu.add(m1)
     menu.add("JMenuItem3")
   }
 

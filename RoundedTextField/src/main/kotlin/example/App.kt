@@ -75,11 +75,12 @@ class MainPanel : JPanel(BorderLayout()) {
       bg.add(it)
       box.add(it)
     }
-    add(JPanel(GridLayout(2, 1, 5, 5)).also {
+    val p = JPanel(GridLayout(2, 1, 5, 5)).also {
       it.setOpaque(false)
       it.add(makeTitledPanel("Override: JTextField#paintComponent(...)", textField01))
       it.add(makeTitledPanel("setBorder(new RoundedCornerBorder())", textField02))
-    })
+    }
+    add(p)
     add(box, BorderLayout.NORTH)
     setBorder(BorderFactory.createEmptyBorder(2, 20, 20, 20))
     setPreferredSize(Dimension(320, 240))

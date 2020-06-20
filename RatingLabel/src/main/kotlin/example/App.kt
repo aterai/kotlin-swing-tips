@@ -32,14 +32,15 @@ fun makeUI(): Component {
     makeStarImageIcon(ip, SelectedImageFilter(.8f, .4f, .2f)),
     makeStarImageIcon(ip, SelectedImageFilter(1f, .1f, .1f))
   )
-  p.add(makeStarRatingPanel("gap=1+1", object : LevelBar(defaultIcon, list2, 1) {
+  val p2 = object : LevelBar(defaultIcon, list2, 1) {
     override fun repaintIcon(index: Int) {
       for (i in labelList.indices) {
         labelList[i].icon = if (i <= index) iconList[index] else defaultIcon
       }
       repaint()
     }
-  }))
+  }
+  p.add(makeStarRatingPanel("gap=1+1", p2))
 
   val list3 = listOf(
     makeStarImageIcon(ip, SelectedImageFilter(.6f, .6f, 0f)),

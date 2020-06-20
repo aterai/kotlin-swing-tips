@@ -52,10 +52,11 @@ fun makeUI(): Component {
 
   return JPanel(BorderLayout()).also {
     it.add(slider, BorderLayout.NORTH)
-    it.add(JPanel(GridLayout(1, 2)).also { p ->
+    val pnl = JPanel(GridLayout(1, 2)).also { p ->
       p.add(progress1)
       p.add(progress2)
-    })
+    }
+    it.add(pnl)
     it.add(button, BorderLayout.SOUTH)
     it.preferredSize = Dimension(320, 240)
   }

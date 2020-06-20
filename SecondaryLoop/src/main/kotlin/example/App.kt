@@ -10,8 +10,8 @@ private val logger = JTextArea()
 private val cancel = JButton("cancel")
 private val button = JButton("Stop 5sec")
 private val layerUI = DisableInputLayerUI<JComponent>()
-@Transient
-private var worker: Thread? = null
+
+@Transient private var worker: Thread? = null
 
 fun makeUI(): Component {
   cancel.isEnabled = false
@@ -80,9 +80,11 @@ internal class DisableInputLayerUI<V : JComponent> : LayerUI<V>() {
     super.installUI(c)
     val layer = c as? JLayer<*> ?: return
     layer.glassPane.cursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)
-    layer.layerEventMask = (AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
-      or AWTEvent.MOUSE_WHEEL_EVENT_MASK or AWTEvent.KEY_EVENT_MASK
-      or AWTEvent.FOCUS_EVENT_MASK or AWTEvent.COMPONENT_EVENT_MASK)
+    layer.layerEventMask = (
+      AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
+        or AWTEvent.MOUSE_WHEEL_EVENT_MASK or AWTEvent.KEY_EVENT_MASK
+        or AWTEvent.FOCUS_EVENT_MASK or AWTEvent.COMPONENT_EVENT_MASK
+      )
   }
 
   override fun uninstallUI(c: JComponent) {

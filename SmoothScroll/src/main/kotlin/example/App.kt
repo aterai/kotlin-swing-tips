@@ -41,7 +41,7 @@ private fun startScroll() {
     val elem = root.getElement(ln - 1)
     val dest = textArea.modelToView(elem.startOffset)
     val current = scroll.viewport.viewRect
-    Timer(20, ActionListener { e ->
+    val listener = ActionListener { e ->
       (e.source as? Timer)?.also { animator ->
         when {
           dest.y < current.y && animator.isRunning -> {
@@ -60,7 +60,8 @@ private fun startScroll() {
           }
         }
       }
-    }).start()
+    }
+    Timer(20, listener).start()
   }.onFailure {
     UIManager.getLookAndFeel().provideErrorFeedback(textArea)
   }
@@ -141,7 +142,8 @@ private class LineNumberView(private val textArea: JTextArea) : JComponent() {
     val i = textArea.insets
     border = BorderFactory.createCompoundBorder(
       BorderFactory.createMatteBorder(0, 0, 0, 1, Color.GRAY),
-      BorderFactory.createEmptyBorder(i.top, MARGIN, i.bottom, MARGIN - 1))
+      BorderFactory.createEmptyBorder(i.top, MARGIN, i.bottom, MARGIN - 1)
+    )
     isOpaque = true
     background = Color.WHITE
     setFont(font)

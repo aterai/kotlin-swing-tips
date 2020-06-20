@@ -9,31 +9,31 @@ fun makeUI(): Component {
   val check = JCheckBox("JMenu: hover(show popup automatically) on cursor", true)
   val handler = object : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
-      if (check.isSelected()) {
-        (e.getComponent() as? AbstractButton)?.doClick()
+      if (check.isSelected) {
+        (e.component as? AbstractButton)?.doClick()
       }
     }
 
     override fun mouseEntered(e: MouseEvent) {
-      if (check.isSelected()) {
-        (e.getComponent() as? AbstractButton)?.doClick()
+      if (check.isSelected) {
+        (e.component as? AbstractButton)?.doClick()
       }
     }
   }
   val menuBar = makeMenuBar()
-  menuBar.getSubElements()
+  menuBar.subElements
     .filterIsInstance<JMenu>()
     .forEach { it.addMouseListener(handler) }
 
   val p = JPanel(BorderLayout()).also {
     it.add(check, BorderLayout.SOUTH)
-    it.setPreferredSize(Dimension(320, 240))
+    it.preferredSize = Dimension(320, 240)
   }
-  EventQueue.invokeLater { p.getRootPane().setJMenuBar(menuBar) }
+  EventQueue.invokeLater { p.rootPane.jMenuBar = menuBar }
   return p
 }
 
-fun makeMenuBar() = JMenuBar().also {
+private fun makeMenuBar() = JMenuBar().also {
   it.add(JMenu("File")).also { menu ->
     menu.add("Open")
     menu.add("Save")
@@ -53,10 +53,11 @@ fun makeMenuBar() = JMenuBar().also {
   it.add(JMenu("Test")).also { menu ->
     menu.add("JMenuItem1")
     menu.add("JMenuItem2")
-    menu.add(JMenu("JMenu").also { sub ->
+    val m1 = JMenu("JMenu").also { sub ->
       sub.add("JMenuItem4")
       sub.add("JMenuItem5")
-    })
+    }
+    menu.add(m1)
     menu.add("JMenuItem3")
   }
 }
