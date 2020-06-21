@@ -72,7 +72,7 @@ private class ComboKeyHandler(private val comboBox: JComboBox<String>) : KeyAdap
 
   override fun keyTyped(e: KeyEvent) {
     EventQueue.invokeLater {
-      val text = (e.component as? JTextField)?.text ?: return@invokeLater
+      val text = (e.component as? JTextField)?.text ?: ""
       if (text.isEmpty()) {
         val m = DefaultComboBoxModel(list.toTypedArray())
         setSuggestionModel(comboBox, m, "")

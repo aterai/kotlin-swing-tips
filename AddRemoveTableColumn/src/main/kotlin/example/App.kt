@@ -47,8 +47,7 @@ private class TableHeaderPopupMenu(table: JTable) : JPopupMenu() {
       val name = tableColumn.headerValue?.toString() ?: ""
       val item = JCheckBoxMenuItem(name, true)
       item.addItemListener { e ->
-        val check = e.itemSelectable as? AbstractButton ?: return@addItemListener
-        if (check.isSelected) {
+        if ((e.itemSelectable as? AbstractButton)?.isSelected == true) {
           columnModel.addColumn(tableColumn)
         } else {
           columnModel.removeColumn(tableColumn)
