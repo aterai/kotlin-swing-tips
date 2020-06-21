@@ -10,81 +10,82 @@ import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreeNode
 import javax.swing.tree.TreePath
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val field = JTextField("asd", 10)
-    val tree = JTree(makeModel())
-    val findNextAction = object : AbstractAction("Find Next") {
-      private val rollOverPathLists = mutableListOf<TreePath>()
-      override fun actionPerformed(e: ActionEvent) {
-        val selectedPath = tree.getSelectionPath()
-        tree.clearSelection()
-        rollOverPathLists.clear()
-        TreeUtil.searchTree(tree, tree.getPathForRow(0), field.getText(), rollOverPathLists)
-        if (rollOverPathLists.isNotEmpty()) {
-          val nextIdx = getNextIndex(rollOverPathLists, selectedPath)
-          val p = rollOverPathLists[nextIdx]
-          tree.addSelectionPath(p)
-          tree.scrollPathToVisible(p)
-        }
+fun makeUI(): Component {
+  val field = JTextField("asd", 10)
+  val tree = JTree(makeModel())
+  val findNextAction = object : AbstractAction("Find Next") {
+    private val rollOverPathLists = mutableListOf<TreePath>()
+    override fun actionPerformed(e: ActionEvent) {
+      val selectedPath = tree.selectionPath
+      tree.clearSelection()
+      rollOverPathLists.clear()
+      TreeUtil.searchTree(tree, tree.getPathForRow(0), field.text, rollOverPathLists)
+      if (rollOverPathLists.isNotEmpty()) {
+        val nextIdx = getNextIndex(rollOverPathLists, selectedPath)
+        val p = rollOverPathLists[nextIdx]
+        tree.addSelectionPath(p)
+        tree.scrollPathToVisible(p)
       }
     }
-    val button = JButton()
-    button.setAction(findNextAction)
-    button.setFocusable(false)
-    field.getActionMap().put("find-next", findNextAction)
-    field.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "find-next")
-    val controls = JPanel()
-    val layout = ControlPanelLayout(controls, 5, 5)
-    controls.setLayout(layout)
-    controls.setBorder(BorderFactory.createTitledBorder("Search down"))
-    controls.add(JLabel("Find what:"), BorderLayout.WEST)
-    controls.add(field)
-    controls.add(button, BorderLayout.EAST)
-    val showHideButton = JButton()
-    showHideButton.setAction(layout.showHideAction)
-    showHideButton.setFocusable(false)
-    val modifiers = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()
+  }
+  val button = JButton()
+  button.action = findNextAction
+  button.isFocusable = false
+  field.actionMap.put("find-next", findNextAction)
+  field.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "find-next")
+  val controls = JPanel()
+  val layout = ControlPanelLayout(controls, 5, 5)
+  controls.layout = layout
+  controls.border = BorderFactory.createTitledBorder("Search down")
+  controls.add(JLabel("Find what:"), BorderLayout.WEST)
+  controls.add(field)
+  controls.add(button, BorderLayout.EAST)
+  val showHideButton = JButton()
+  showHideButton.action = layout.showHideAction
+  showHideButton.isFocusable = false
+
+  return JPanel(BorderLayout()).also {
+    val modifiers = Toolkit.getDefaultToolkit().menuShortcutKeyMask
     // Java 10: val modifiers = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()
-    val im = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+    val im = it.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F, modifiers), "open-search-box")
-    getActionMap().put("open-search-box", layout.showHideAction)
-    add(controls, BorderLayout.NORTH)
-    add(JScrollPane(tree))
-    add(showHideButton, BorderLayout.SOUTH)
-    setPreferredSize(Dimension(320, 240))
-  }
-
-  private fun getNextIndex(list: List<TreePath>, selected: TreePath?): Int {
-    for ((i, tp) in list.withIndex()) {
-      if (tp == selected) {
-        return if (i + 1 < list.size) i + 1 else 0
-      }
-    }
-    return 0
-  }
-
-  private fun makeModel(): DefaultTreeModel {
-    val set1 = DefaultMutableTreeNode("Set 001")
-    set1.add(DefaultMutableTreeNode("111111111"))
-    set1.add(DefaultMutableTreeNode("22222222222"))
-    set1.add(DefaultMutableTreeNode("33333"))
-    val set2 = DefaultMutableTreeNode("Set 002")
-    set2.add(DefaultMutableTreeNode("asd fas df as"))
-    set2.add(DefaultMutableTreeNode("as df"))
-    val set3 = DefaultMutableTreeNode("Set 003")
-    set3.add(DefaultMutableTreeNode("asd fas dfa sdf"))
-    set3.add(DefaultMutableTreeNode("qwe rqw er"))
-    set3.add(DefaultMutableTreeNode("zvx cvz xcv zxz xcv zx cv"))
-    val root = DefaultMutableTreeNode("Root")
-    root.add(set1)
-    root.add(set2)
-    set2.add(set3)
-    return DefaultTreeModel(root)
+    it.actionMap.put("open-search-box", layout.showHideAction)
+    it.add(controls, BorderLayout.NORTH)
+    it.add(JScrollPane(tree))
+    it.add(showHideButton, BorderLayout.SOUTH)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class ControlPanelLayout(private val controls: Container, hgap: Int, vgap: Int) : BorderLayout(hgap, vgap) {
+private fun getNextIndex(list: List<TreePath>, selected: TreePath?): Int {
+  for ((i, tp) in list.withIndex()) {
+    if (tp == selected) {
+      return if (i + 1 < list.size) i + 1 else 0
+    }
+  }
+  return 0
+}
+
+private fun makeModel(): DefaultTreeModel {
+  val set1 = DefaultMutableTreeNode("Set 001")
+  set1.add(DefaultMutableTreeNode("111111111"))
+  set1.add(DefaultMutableTreeNode("22222222222"))
+  set1.add(DefaultMutableTreeNode("33333"))
+  val set2 = DefaultMutableTreeNode("Set 002")
+  set2.add(DefaultMutableTreeNode("asd fas df as"))
+  set2.add(DefaultMutableTreeNode("as df"))
+  val set3 = DefaultMutableTreeNode("Set 003")
+  set3.add(DefaultMutableTreeNode("asd fas dfa sdf"))
+  set3.add(DefaultMutableTreeNode("qwe rqw er"))
+  set3.add(DefaultMutableTreeNode("zvx cvz xcv zxz xcv zx cv"))
+  val root = DefaultMutableTreeNode("Root")
+  root.add(set1)
+  root.add(set2)
+  set2.add(set3)
+  return DefaultTreeModel(root)
+}
+
+private class ControlPanelLayout(private val controls: Container, hgap: Int, vgap: Int) : BorderLayout(hgap, vgap) {
   private var isHidden = true
   private val animator = Timer(5, null)
   private var controlsHeight = 0
@@ -101,13 +102,13 @@ class ControlPanelLayout(private val controls: Container, hgap: Int, vgap: Int) 
     // synchronized (target.getTreeLock()) {
     val ps = super.preferredLayoutSize(target)
     val controlsPreferredHeight = ps.height
-    if (animator.isRunning()) {
+    if (animator.isRunning) {
       if (isHidden) {
-        if (controls.getHeight() < controlsPreferredHeight) {
+        if (controls.height < controlsPreferredHeight) {
           controlsHeight += 5
         }
       } else {
-        if (controls.getHeight() > 0) {
+        if (controls.height > 0) {
           controlsHeight -= 5
         }
       }
@@ -128,13 +129,13 @@ class ControlPanelLayout(private val controls: Container, hgap: Int, vgap: Int) 
   }
 }
 
-object TreeUtil {
+private object TreeUtil {
   fun searchTree(tree: JTree, path: TreePath, q: String, rollOverPathLists: MutableList<TreePath>) {
-    val node = path.getLastPathComponent()
+    val node = path.lastPathComponent
     if (node is TreeNode) {
       if (node.toString().startsWith(q)) {
         rollOverPathLists.add(path)
-        tree.expandPath(path.getParentPath())
+        tree.expandPath(path.parentPath)
       }
       if (!node.isLeaf) {
         node.children().toList()
@@ -154,7 +155,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
