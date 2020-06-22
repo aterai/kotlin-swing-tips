@@ -32,7 +32,7 @@ fun makeUI(): Component {
   table.putClientProperty("terminateEditOnFocusLost", true)
 
   val al = ActionListener { e ->
-    val rb = e.source as? JRadioButton ?: return@ActionListener
+    val rb = e.source
     table.putClientProperty("JTable.autoStartsEdit", rb != r1 && rb != r3)
     val cc = if (rb == r2 || rb == r3) Int.MAX_VALUE else 2
     (table.getDefaultEditor(Any::class.java) as? DefaultCellEditor)?.clickCountToStart = cc
