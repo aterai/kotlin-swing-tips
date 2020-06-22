@@ -4,45 +4,46 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  val label: JLabel = object : JLabel() {
+  val label = object : JLabel() {
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
       val g2 = g.create() as? Graphics2D ?: return
-      val w = getWidth().toFloat()
-      val h = getHeight().toFloat()
-      g2.setPaint(GradientPaint(0f, 0f, Color.ORANGE, w, h, Color.WHITE, true))
-      g2.fillRect(0, 0, getWidth(), getHeight())
+      val w = width.toFloat()
+      val h = height.toFloat()
+      g2.paint = GradientPaint(0f, 0f, Color.ORANGE, w, h, Color.WHITE, true)
+      g2.fillRect(0, 0, width, height)
       g2.dispose()
     }
 
     override fun getPreferredSize() = Dimension(640, 640)
   }
-  label.setBorder(BorderFactory.createTitledBorder("Horizontal scroll: CTRL + Wheel"))
+  label.border = BorderFactory.createTitledBorder("Horizontal scroll: CTRL + Wheel")
   label.addMouseWheelListener { e ->
-    val c = e.getComponent()
+    val c = e.component
     (SwingUtilities.getAncestorOfClass(JScrollPane::class.java, c) as? JScrollPane)?.also {
-      val sb = if (e.isControlDown()) it.getHorizontalScrollBar() else it.getVerticalScrollBar()
+      val sb = if (e.isControlDown) it.horizontalScrollBar else it.verticalScrollBar
       sb.dispatchEvent(SwingUtilities.convertMouseEvent(c, e, sb))
     }
   }
   val scroll = JScrollPane(label)
-  scroll.getVerticalScrollBar().setUnitIncrement(10)
-  val hsb = scroll.getHorizontalScrollBar()
-  hsb.setUnitIncrement(10)
+  scroll.verticalScrollBar.unitIncrement = 10
+
+  val hsb = scroll.horizontalScrollBar
+  hsb.unitIncrement = 10
   hsb.addMouseWheelListener { e ->
-    val sb = e.getComponent() as? JScrollBar ?: return@addMouseWheelListener
-    (SwingUtilities.getAncestorOfClass(JScrollPane::class.java, sb) as? JScrollPane)?.also {
-      val vport = it.getViewport()
-      val vp = vport.getViewPosition()
-      val d = hsb.getUnitIncrement() * e.getWheelRotation()
+    (SwingUtilities.getAncestorOfClass(JScrollPane::class.java, e.component) as? JScrollPane)?.also {
+      val vport = it.viewport
+      val vp = vport.viewPosition
+      val d = hsb.unitIncrement * e.wheelRotation
       vp.translate(d, 0)
-      (SwingUtilities.getUnwrappedView(vport) as? JComponent)?.scrollRectToVisible(Rectangle(vp, vport.getSize()))
+      (SwingUtilities.getUnwrappedView(vport) as? JComponent)?.scrollRectToVisible(Rectangle(vp, vport.size))
     }
   }
-  val p = JPanel(BorderLayout())
-  p.add(scroll)
-  p.setPreferredSize(Dimension(320, 240))
-  return p
+
+  return JPanel(BorderLayout()).also {
+    it.add(scroll)
+    it.preferredSize = Dimension(320, 240)
+  }
 }
 
 fun main() {
