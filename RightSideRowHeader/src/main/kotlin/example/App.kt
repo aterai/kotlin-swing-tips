@@ -61,8 +61,9 @@ fun makeUI(): Component {
   scroll.rowHeader.background = Color.WHITE
 
   scroll.rowHeader.addChangeListener { e ->
-    val viewport = e.source as? JViewport ?: return@addChangeListener
-    scroll.verticalScrollBar.value = viewport.viewPosition.y
+    (e.source as? JViewport)?.also {
+      scroll.verticalScrollBar.value = it.viewPosition.y
+    }
   }
 
   addButton.addActionListener {
