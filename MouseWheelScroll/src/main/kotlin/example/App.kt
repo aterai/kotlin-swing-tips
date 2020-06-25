@@ -42,23 +42,7 @@ fun makeUI(): Component {
   listOf(zeroVerticalBar, zeroHorizontalBar, verticalBar, horizontalBar)
     .forEach { it.unitIncrement = 25 }
 
-  val im = scroll.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_SHIFT, InputEvent.SHIFT_DOWN_MASK, false),"pressed")
-  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_SHIFT, 0, true), "released")
-
-  val am = scroll.actionMap
-  val a1 = object : AbstractAction() {
-    override fun actionPerformed(e: ActionEvent) {
-      isShiftPressed = true
-    }
-  }
-  am.put("pressed", a1)
-  val a2 = object : AbstractAction() {
-    override fun actionPerformed(e: ActionEvent) {
-      isShiftPressed = false
-    }
-  }
-  am.put("released", a2)
+  initActionMap(scroll)
 
   val r0 = JRadioButton("PreferredSize: 0, shift pressed: Horizontal WheelScrolling", true)
   r0.addItemListener { e ->
@@ -104,6 +88,26 @@ fun makeUI(): Component {
     it.add(scroll)
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+private fun initActionMap(scroll: JScrollPane) {
+  val im = scroll.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_SHIFT, InputEvent.SHIFT_DOWN_MASK, false), "pressed")
+  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_SHIFT, 0, true), "released")
+
+  val am = scroll.actionMap
+  val a1 = object : AbstractAction() {
+    override fun actionPerformed(e: ActionEvent) {
+      isShiftPressed = true
+    }
+  }
+  am.put("pressed", a1)
+  val a2 = object : AbstractAction() {
+    override fun actionPerformed(e: ActionEvent) {
+      isShiftPressed = false
+    }
+  }
+  am.put("released", a2)
 }
 
 private class DragScrollListener : MouseAdapter() {
