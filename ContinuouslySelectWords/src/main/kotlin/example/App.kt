@@ -9,51 +9,51 @@ import javax.swing.text.JTextComponent
 import javax.swing.text.Position.Bias
 import javax.swing.text.Utilities
 
-class MainPanel : JPanel(GridLayout(2, 1)) {
-  init {
-    val text = "The quick brown fox jumps over the lazy dog.\n".repeat(3)
-    val textArea = object : JTextArea("setCaret\n$text") {
-      override fun updateUI() {
-        setCaret(null)
-        super.updateUI()
-        val oldCaret = getCaret()
-        val blinkRate = oldCaret.getBlinkRate()
-        val caret = SelectWordCaret()
-        caret.setBlinkRate(blinkRate)
-        setCaret(caret)
-      }
+fun makeUI(): Component {
+  val text = "The quick brown fox jumps over the lazy dog.\n".repeat(3)
+  val textArea = object : JTextArea("setCaret\n$text") {
+    override fun updateUI() {
+      caret = null
+      super.updateUI()
+      val oldCaret = caret
+      val blinkRate = oldCaret.blinkRate
+      val caret = SelectWordCaret()
+      caret.blinkRate = blinkRate
+      setCaret(caret)
     }
-    add(JScrollPane(JTextArea("default\n$text")))
-    add(JScrollPane(textArea))
-    setPreferredSize(Dimension(320, 240))
+  }
+  return JPanel(GridLayout(2, 1)).also {
+    it.add(JScrollPane(JTextArea("default\n$text")))
+    it.add(JScrollPane(textArea))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-enum class SelectingMode {
+private enum class SelectingMode {
   CHAR, WORD, ROW
 }
 
-class SelectWordCaret : DefaultCaret() {
+private class SelectWordCaret : DefaultCaret() {
   private var selectingMode = SelectingMode.CHAR
   private var p0 = 0
   private var p1 = 0
 
   override fun mousePressed(e: MouseEvent) {
     super.mousePressed(e)
-    val clickCount = e.getClickCount()
-    if (SwingUtilities.isLeftMouseButton(e) && !e.isConsumed()) {
+    val clickCount = e.clickCount
+    if (SwingUtilities.isLeftMouseButton(e) && !e.isConsumed) {
       if (clickCount == 2) {
         selectingMode = SelectingMode.WORD
-        p0 = minOf(getDot(), getMark())
-        p1 = maxOf(getDot(), getMark())
+        p0 = minOf(dot, mark)
+        p1 = maxOf(dot, mark)
       } else if (clickCount >= 3) {
         selectingMode = SelectingMode.ROW
-        val target = getComponent()
-        val offs = target.getCaretPosition()
+        val target = component
+        val offs = target.caretPosition
         runCatching {
           p0 = Utilities.getRowStart(target, offs)
           p1 = Utilities.getRowEnd(target, offs)
-          setDot(p0)
+          dot = p0
           moveDot(p1)
         }.onFailure {
           UIManager.getLookAndFeel().provideErrorFeedback(target)
@@ -65,7 +65,7 @@ class SelectWordCaret : DefaultCaret() {
   }
 
   override fun mouseDragged(e: MouseEvent) {
-    if (!e.isConsumed() && SwingUtilities.isLeftMouseButton(e)) {
+    if (!e.isConsumed && SwingUtilities.isLeftMouseButton(e)) {
       when (selectingMode) {
         SelectingMode.WORD -> continuouslySelectWords(e)
         SelectingMode.ROW -> continuouslySelectRows(e)
@@ -77,7 +77,7 @@ class SelectWordCaret : DefaultCaret() {
   }
 
   private fun getCaretPositionByLocation(c: JTextComponent, pt: Point, biasRet: Array<Bias?>): Int {
-    val pos = c.getUI().viewToModel(c, pt, biasRet)
+    val pos = c.ui.viewToModel(c, pt, biasRet)
     if (biasRet[0] == null) {
       biasRet[0] = Bias.Forward
     }
@@ -86,20 +86,20 @@ class SelectWordCaret : DefaultCaret() {
 
   private fun continuouslySelectWords(e: MouseEvent) {
     val biasRet = arrayOfNulls<Bias>(1)
-    val c = getComponent()
-    val pos = getCaretPositionByLocation(c, e.getPoint(), biasRet)
+    val c = component
+    val pos = getCaretPositionByLocation(c, e.point, biasRet)
     runCatching {
       when {
         pos in p0 until p1 -> {
-          setDot(p0)
+          dot = p0
           moveDot(p1, biasRet[0])
         }
         p1 < pos -> {
-          setDot(p0)
+          dot = p0
           moveDot(Utilities.getWordEnd(c, pos), biasRet[0])
         }
         p0 > pos -> {
-          setDot(p1)
+          dot = p1
           moveDot(Utilities.getWordStart(c, pos), biasRet[0])
         }
       }
@@ -110,20 +110,20 @@ class SelectWordCaret : DefaultCaret() {
 
   private fun continuouslySelectRows(e: MouseEvent) {
     val biasRet = arrayOfNulls<Bias>(1)
-    val c = getComponent()
-    val pos = getCaretPositionByLocation(c, e.getPoint(), biasRet)
+    val c = component
+    val pos = getCaretPositionByLocation(c, e.point, biasRet)
     runCatching {
       when {
         pos in p0 until p1 -> {
-          setDot(p0)
+          dot = p0
           moveDot(p1, biasRet[0])
         }
         p1 < pos -> {
-          setDot(p0)
+          dot = p0
           moveDot(Utilities.getRowEnd(c, pos), biasRet[0])
         }
         p0 > pos -> {
-          setDot(p1)
+          dot = p1
           moveDot(Utilities.getRowStart(c, pos), biasRet[0])
         }
       }
@@ -155,7 +155,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
