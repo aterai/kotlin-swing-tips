@@ -11,65 +11,66 @@ import java.beans.PropertyChangeListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicProgressBarUI
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val progress1 = object : JProgressBar(0, 200) {
-      override fun updateUI() {
-        super.updateUI()
-        setUI(SolidGaugeUI(maximum - minimum, 180.0))
-      }
+fun makeUI(): Component {
+  val progress1 = object : JProgressBar(0, 200) {
+    override fun updateUI() {
+      super.updateUI()
+      setUI(SolidGaugeUI(maximum - minimum, 180.0))
     }
-    val progress2 = object : JProgressBar(0, 200) {
-      override fun updateUI() {
-        super.updateUI()
-        setUI(SolidGaugeUI(maximum - minimum, 160.0))
-      }
+  }
+  val progress2 = object : JProgressBar(0, 200) {
+    override fun updateUI() {
+      super.updateUI()
+      setUI(SolidGaugeUI(maximum - minimum, 160.0))
     }
-    listOf(progress1, progress2).forEach {
-      it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-      it.font = it.font.deriveFont(18f)
-      it.isStringPainted = true
-    }
-    val slider = JSlider(0, 200, 0)
-    slider.putClientProperty("Slider.paintThumbArrowShape", true)
-    progress1.model = slider.model
-    val button = JButton("start")
-    button.addActionListener { e ->
-      val b = e.source as? JButton ?: return@addActionListener
-      b.isEnabled = false
-      val lengthOfTask = progress2.maximum - progress2.minimum
-      val worker: SwingWorker<String, Void> = object : SwingWorker<String, Void>() {
-        @Throws(InterruptedException::class)
-        public override fun doInBackground(): String {
-          var current = 0
-          while (current <= lengthOfTask && !isCancelled) {
-            Thread.sleep(10) // dummy task
-            progress = 100 * current / lengthOfTask
-            current++
-          }
-          return "Done"
-        }
+  }
+  listOf(progress1, progress2).forEach {
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    it.font = it.font.deriveFont(18f)
+    it.isStringPainted = true
+  }
+  val slider = JSlider(0, 200, 0)
+  slider.putClientProperty("Slider.paintThumbArrowShape", true)
+  progress1.model = slider.model
 
-        public override fun done() {
-          if (b.isDisplayable) {
-            b.isEnabled = true
-          }
+  val button = JButton("start")
+  button.addActionListener {
+    button.isEnabled = false
+    val lengthOfTask = progress2.maximum - progress2.minimum
+    val worker = object : SwingWorker<String, Void>() {
+      @Throws(InterruptedException::class)
+      override fun doInBackground(): String {
+        var current = 0
+        while (current <= lengthOfTask && !isCancelled) {
+          Thread.sleep(10) // dummy task
+          progress = 100 * current / lengthOfTask
+          current++
+        }
+        return "Done"
+      }
+
+      override fun done() {
+        if (button.isDisplayable) {
+          button.isEnabled = true
         }
       }
-      worker.addPropertyChangeListener(ProgressListener(progress2))
-      worker.execute()
     }
-    val p = JPanel(GridLayout(2, 1))
-    p.add(progress1)
-    p.add(progress2)
-    add(slider, BorderLayout.NORTH)
-    add(p)
-    add(button, BorderLayout.SOUTH)
-    preferredSize = Dimension(320, 240)
+    worker.addPropertyChangeListener(ProgressListener(progress2))
+    worker.execute()
+  }
+  val p = JPanel(GridLayout(2, 1))
+  p.add(progress1)
+  p.add(progress2)
+
+  return JPanel(BorderLayout()).also {
+    it.add(slider, BorderLayout.NORTH)
+    it.add(p)
+    it.add(button, BorderLayout.SOUTH)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class SolidGaugeUI(range: Int, extent: Double) : BasicProgressBarUI() {
+private class SolidGaugeUI(range: Int, extent: Double) : BasicProgressBarUI() {
   private val pallet: IntArray
   private val extent: Double
   override fun paint(g: Graphics, c: JComponent) {
@@ -160,7 +161,7 @@ class SolidGaugeUI(range: Int, extent: Double) : BasicProgressBarUI() {
   }
 }
 
-class ProgressListener(private val progressBar: JProgressBar) : PropertyChangeListener {
+private class ProgressListener(private val progressBar: JProgressBar) : PropertyChangeListener {
   override fun propertyChange(e: PropertyChangeEvent) {
     val strPropertyName = e.propertyName
     val nv = e.newValue
@@ -187,7 +188,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
