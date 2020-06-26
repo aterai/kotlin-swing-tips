@@ -9,8 +9,8 @@ fun makeUI(): Component {
   val pf1 = makePasswordField()
   val b1 = JCheckBox("show passwords")
   b1.addActionListener { e ->
-    val c = e.source as? AbstractButton ?: return@addActionListener
-    pf1.echoChar = if (c.isSelected) '\u0000' else getUIEchoChar()
+    val b = (e.source as? AbstractButton)?.isSelected == true
+    pf1.echoChar = if (b) '\u0000' else getUIEchoChar()
   }
   val p1 = JPanel(BorderLayout())
   p1.add(pf1)
@@ -19,8 +19,8 @@ fun makeUI(): Component {
   val pf2 = makePasswordField()
   val b2 = JToggleButton()
   b2.addActionListener { e ->
-    val c = e.source as? AbstractButton ?: return@addActionListener
-    pf2.echoChar = if (c.isSelected) '\u0000' else getUIEchoChar()
+    val b = (e.source as? AbstractButton)?.isSelected == true
+    pf2.echoChar = if (b) '\u0000' else getUIEchoChar()
   }
   initEyeButton(b2)
   val p2 = makeOverlayLayoutPanel()
@@ -43,8 +43,8 @@ fun makeUI(): Component {
   p3.add(tf3, PasswordField.SHOW.toString())
   val b3 = JToggleButton()
   b3.addActionListener { e ->
-    val c = e.source as? AbstractButton ?: return@addActionListener
-    val s = if (c.isSelected) PasswordField.SHOW else PasswordField.HIDE
+    val b = (e.source as? AbstractButton)?.isSelected == true
+    val s = if (b) PasswordField.SHOW else PasswordField.HIDE
     cardLayout.show(p3, s.toString())
   }
   initEyeButton(b3)
