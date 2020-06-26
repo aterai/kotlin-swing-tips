@@ -69,12 +69,9 @@ class MainPanel : JPanel(BorderLayout(2, 2)) {
     }
     tree.selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
     tree.addTreeSelectionListener { e ->
-      if (!tree.isEnabled) {
-        return@addTreeSelectionListener
-      }
-      (e.newLeadSelectionPath.lastPathComponent as? DefaultMutableTreeNode)?.also {
-        val ref = it.userObject.toString()
-        editor.scrollToReference(ref)
+      val n = e.newLeadSelectionPath.lastPathComponent
+      if (tree.isEnabled && n is DefaultMutableTreeNode) {
+        editor.scrollToReference(n.userObject.toString())
       }
     }
 
@@ -85,14 +82,12 @@ class MainPanel : JPanel(BorderLayout(2, 2)) {
     scroll.verticalScrollBar.model.addChangeListener {
       val itr = doc.getIterator(HTML.Tag.A)
       while (itr.isValid) {
-        runCatching {
-          val r = editor.modelToView(itr.startOffset)
-          if (r != null && editor.visibleRect.contains(r.location)) {
-            searchTreeNode(tree, itr.attributes.getAttribute(HTML.Attribute.NAME))
-            return@addChangeListener
-          }
-        }.onFailure {
-          UIManager.getLookAndFeel().provideErrorFeedback(editor)
+        val r = runCatching {
+          editor.modelToView(itr.startOffset)
+        }.getOrNull()
+        if (r != null && editor.visibleRect.contains(r.location)) {
+          searchTreeNode(tree, itr.attributes.getAttribute(HTML.Attribute.NAME))
+          break
         }
         itr.next()
       }
