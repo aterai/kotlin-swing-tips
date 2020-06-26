@@ -13,76 +13,73 @@ import java.awt.geom.Point2D
 import java.text.AttributedString
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(GridLayout(0, 1)) {
-  init {
-    val textArea = object : JTextArea(TEXT) {
-      override fun updateUI() {
-        super.updateUI()
-        setEditable(false)
-        setLineWrap(true)
-        setWrapStyleWord(true)
-        setOpaque(false)
-        setBackground(Color(0x0, true))
-      }
+private const val TEXT = "The quick brown fox jumps over the lazy dog."
+
+fun makeUI(): Component {
+  val textArea = object : JTextArea(TEXT) {
+    override fun updateUI() {
+      super.updateUI()
+      isEditable = false
+      lineWrap = true
+      wrapStyleWord = true
+      isOpaque = false
+      background = Color(0x0, true)
     }
-    val lbl1 = WrappedLabel(TEXT)
-    val lbl2 = WrappingLabel(TEXT)
-
-    val b = BorderFactory.createLineBorder(Color.GRAY, 5)
-    textArea.setBorder(BorderFactory.createTitledBorder(b, "JTextArea(condensed: 0.9)"))
-    lbl1.setBorder(BorderFactory.createTitledBorder(b, "GlyphVector(condensed: 0.9)"))
-    lbl2.setBorder(BorderFactory.createTitledBorder(b, "LineBreakMeasurer(condensed: 0.9)"))
-
-    val font = Font(Font.MONOSPACED, Font.PLAIN, 18).deriveFont(AffineTransform.getScaleInstance(.9, 1.0))
-    listOf<JComponent>(textArea, lbl1, lbl2)
-      .forEach {
-        it.setFont(font)
-        add(it)
-      }
-    setPreferredSize(Dimension(320, 240))
   }
+  val lbl1 = WrappedLabel(TEXT)
+  val lbl2 = WrappingLabel(TEXT)
 
-  companion object {
-    private const val TEXT = "The quick brown fox jumps over the lazy dog."
-  }
+  val b = BorderFactory.createLineBorder(Color.GRAY, 5)
+  textArea.border = BorderFactory.createTitledBorder(b, "JTextArea(condensed: 0.9)")
+  lbl1.border = BorderFactory.createTitledBorder(b, "GlyphVector(condensed: 0.9)")
+  lbl2.border = BorderFactory.createTitledBorder(b, "LineBreakMeasurer(condensed: 0.9)")
+
+  val p = JPanel(GridLayout(0, 1))
+  val font = Font(Font.MONOSPACED, Font.PLAIN, 18).deriveFont(AffineTransform.getScaleInstance(.9, 1.0))
+  listOf<JComponent>(textArea, lbl1, lbl2)
+    .forEach {
+      it.font = font
+      p.add(it)
+    }
+  p.preferredSize = Dimension(320, 240)
+  return p
 }
 
-class WrappingLabel(text: String?) : JLabel(text) {
+private class WrappingLabel(text: String?) : JLabel(text) {
   private val rect = Rectangle()
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    g2.setPaint(getForeground())
-    g2.setFont(getFont())
+    g2.paint = foreground
+    g2.font = font
     val w = SwingUtilities.calculateInnerArea(this, rect).width
     val x = rect.x.toFloat()
     var y = rect.y.toFloat()
     val attr = AttributedString(text)
-    attr.addAttribute(TextAttribute.FONT, getFont())
-    val aci = attr.getIterator()
-    val frc = g2.getFontRenderContext()
+    attr.addAttribute(TextAttribute.FONT, font)
+    val aci = attr.iterator
+    val frc = g2.fontRenderContext
     val lbm = LineBreakMeasurer(aci, frc)
-    while (lbm.getPosition() < aci.getEndIndex()) {
+    while (lbm.position < aci.endIndex) {
       val tl = lbm.nextLayout(w.toFloat())
-      tl.draw(g2, x, y + tl.getAscent())
-      y += tl.getDescent() + tl.getLeading() + tl.getAscent()
+      tl.draw(g2, x, y + tl.ascent)
+      y += tl.descent + tl.leading + tl.ascent
     }
     g2.dispose()
   }
 }
 
-class WrappedLabel(str: String?) : JLabel(str) {
-  @Transient
-  private var gvText: GlyphVector? = null
+private class WrappedLabel(str: String?) : JLabel(str) {
+  @Transient private var gvText: GlyphVector? = null
   private var prevWidth = -1
   private val rect = Rectangle()
 
   override fun doLayout() {
     val w = SwingUtilities.calculateInnerArea(this, rect).width
     if (w != prevWidth) {
-      val fm = getFontMetrics(getFont())
-      val frc = fm.getFontRenderContext()
-      gvText = getWrappedGlyphVector(text, w.toDouble(), getFont(), frc)
+      val fm = getFontMetrics(font)
+      val frc = fm.fontRenderContext
+      gvText = getWrappedGlyphVector(text, w.toDouble(), font, frc)
       prevWidth = w
     }
     super.doLayout()
@@ -90,9 +87,9 @@ class WrappedLabel(str: String?) : JLabel(str) {
 
   override fun paintComponent(g: Graphics) {
     if (gvText != null) {
-      val i = getInsets()
+      val i = insets
       val g2 = g.create() as? Graphics2D ?: return
-      g2.drawGlyphVector(gvText, i.left.toFloat(), font.getSize2D() + i.top)
+      g2.drawGlyphVector(gvText, i.left.toFloat(), font.size2D + i.top)
       g2.dispose()
     } else {
       super.paintComponent(g)
@@ -136,7 +133,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
