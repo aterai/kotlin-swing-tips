@@ -16,12 +16,12 @@ var texture: TexturePaint? = null
 fun makeUI(): Component {
   val p = object : JPanel() {
     override fun paintComponent(g: Graphics) {
+      val g2 = g.create() as? Graphics2D ?: return
       texture?.also {
-        val g2 = g.create() as? Graphics2D ?: return@also
         g2.paint = it
         g2.fillRect(0, 0, width, height)
-        g2.dispose()
       }
+      g2.dispose()
       super.paintComponent(g)
     }
   }

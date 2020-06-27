@@ -59,8 +59,8 @@ private fun makeCheckBox(idx: Int): JCheckBox {
   val l = BigInteger.ONE.shiftLeft(idx)
   val c = JCheckBox((idx + 1).toString(), status.and(l) != BigInteger.ZERO)
   c.addActionListener { e ->
-    val cb = e.source as? JCheckBox ?: return@addActionListener
-    val newValue = if (cb.isSelected) status.or(l) else status.xor(l)
+    val cb = e.source as? JCheckBox
+    val newValue = if (cb?.isSelected == true) status.or(l) else status.xor(l)
     undoSupport.postEdit(StatusEdit(status, newValue))
     status = newValue
     label.text = print(status)

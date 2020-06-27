@@ -125,10 +125,10 @@ private class RowSelectionTree : JTree() {
     UIManager.put("Tree.repaintWholeRow", true)
     val r = getCellRenderer()
     setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-      val c = r.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
-      c.background = if (selected) SELECTED_COLOR else tree.background
-      (c as? JComponent)?.isOpaque = true
-      return@setCellRenderer c
+      r.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus).also {
+        it.background = if (selected) SELECTED_COLOR else tree.background
+        (it as? JComponent)?.isOpaque = true
+      }
     }
     isOpaque = false
     isRootVisible = false
