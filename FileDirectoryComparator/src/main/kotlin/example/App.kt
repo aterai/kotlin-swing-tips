@@ -13,73 +13,75 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val columnNames = arrayOf("Name", "Size", "Full Path")
-    val model = object : DefaultTableModel(null, columnNames) {
-      override fun getColumnClass(column: Int) = File::class.java
-    }
-    val table = JTable(model)
-    table.putClientProperty("Table.isFileList", true)
-    table.setCellSelectionEnabled(true)
-    table.setIntercellSpacing(Dimension())
-    table.setComponentPopupMenu(TablePopupMenu())
-    table.setShowGrid(false)
-    table.setFillsViewportHeight(true)
-    // table.setAutoCreateRowSorter(true)
-    table.setDropMode(DropMode.INSERT_ROWS)
-    table.setTransferHandler(FileTransferHandler())
-    table.setDefaultRenderer(Any::class.java, FileIconTableCellRenderer(FileSystemView.getFileSystemView()))
+fun makeUI(): Component {
+  val table = makeTable()
+  val sorter = TableRowSorter<TableModel>(table.model)
+  table.rowSorter = sorter
+  setDefaultComparator(sorter)
 
-    // val sorter = table.getRowSorter() as TableRowSorter<out TableModel>
-    val sorter = TableRowSorter<TableModel>(table.getModel())
-    table.setRowSorter(sorter)
-    // IntStream.range(0, 3).forEach { i -> sorter.setComparator(i, DefaultFileComparator(i)) }
-    for (i in 0 until 3) {
-      sorter.setComparator(i, DefaultFileComparator(i))
+  val check1 = JRadioButton("Default", true)
+  check1.addItemListener { e ->
+    if (e.stateChange == ItemEvent.SELECTED) {
+      setDefaultComparator(sorter)
     }
-
-    val check1 = JRadioButton("Default", true)
-    check1.addItemListener { e ->
-      if (e.getStateChange() == ItemEvent.SELECTED) {
-        // IntStream.range(0, 3).forEach { i -> sorter.setComparator(i, DefaultFileComparator(i)) }
-        for (i in 0 until 3) {
-          sorter.setComparator(i, DefaultFileComparator(i))
-        }
+  }
+  val check2 = JRadioButton("Directory < File", false)
+  check2.addItemListener { e ->
+    if (e.stateChange == ItemEvent.SELECTED) {
+      for (i in 0 until 3) {
+        sorter.setComparator(i, FileComparator(i))
       }
     }
-    val check2 = JRadioButton("Directory < File", false)
-    check2.addItemListener { e ->
-      if (e.getStateChange() == ItemEvent.SELECTED) {
-        // IntStream.range(0, 3).forEach { i -> sorter.setComparator(i, FileComparator(i)) }
-        for (i in 0 until 3) {
-          sorter.setComparator(i, FileComparator(i))
-        }
+  }
+  val check3 = JRadioButton("Group Sorting", false)
+  check3.addItemListener { e ->
+    if (e.stateChange == ItemEvent.SELECTED) {
+      for (i in 0 until 3) {
+        sorter.setComparator(i, FileGroupComparator(table, i))
       }
     }
-    val check3 = JRadioButton("Group Sorting", false)
-    check3.addItemListener { e ->
-      if (e.getStateChange() == ItemEvent.SELECTED) {
-        // IntStream.range(0, 3).forEach { i -> sorter.setComparator(i, FileGroupComparator(table, i)) }
-        for (i in 0 until 3) {
-          sorter.setComparator(i, FileGroupComparator(table, i))
-        }
-      }
-    }
+  }
 
-    val p = JPanel()
-    val bg = ButtonGroup()
-    listOf(check1, check2, check3).forEach {
-      bg.add(it)
-      p.add(it)
-    }
-    add(p, BorderLayout.NORTH)
-    add(JScrollPane(table))
-    setPreferredSize(Dimension(320, 240))
+  val p = JPanel()
+  val bg = ButtonGroup()
+  listOf(check1, check2, check3).forEach {
+    bg.add(it)
+    p.add(it)
+  }
+
+  return JPanel(BorderLayout()).also {
+    it.add(p, BorderLayout.NORTH)
+    it.add(JScrollPane(table))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class FileIconTableCellRenderer(private val fileSystemView: FileSystemView) : DefaultTableCellRenderer() {
+private fun setDefaultComparator(sorter: TableRowSorter<TableModel>) {
+  for (i in 0 until 3) {
+    sorter.setComparator(i, DefaultFileComparator(i))
+  }
+}
+
+private fun makeTable(): JTable {
+  val columnNames = arrayOf("Name", "Size", "Full Path")
+  val model = object : DefaultTableModel(null, columnNames) {
+    override fun getColumnClass(column: Int) = File::class.java
+  }
+  val table = JTable(model)
+  table.putClientProperty("Table.isFileList", true)
+  table.cellSelectionEnabled = true
+  table.intercellSpacing = Dimension()
+  table.componentPopupMenu = TablePopupMenu()
+  table.setShowGrid(false)
+  table.fillsViewportHeight = true
+  // table.setAutoCreateRowSorter(true)
+  table.dropMode = DropMode.INSERT_ROWS
+  table.transferHandler = FileTransferHandler()
+  table.setDefaultRenderer(Any::class.java, FileIconTableCellRenderer(FileSystemView.getFileSystemView()))
+  return table
+}
+
+private class FileIconTableCellRenderer(private val fileSystemView: FileSystemView) : DefaultTableCellRenderer() {
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -90,18 +92,18 @@ class FileIconTableCellRenderer(private val fileSystemView: FileSystemView) : De
   ): Component {
     val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     if (c is JLabel && value is File) {
-      c.setHorizontalAlignment(SwingConstants.LEFT)
-      c.setIcon(null)
+      c.horizontalAlignment = SwingConstants.LEFT
+      c.icon = null
       when (table.convertColumnIndexToModel(column)) {
         0 -> {
-          c.setIcon(fileSystemView.getSystemIcon(value))
-          c.setText(fileSystemView.getSystemDisplayName(value))
+          c.icon = fileSystemView.getSystemIcon(value)
+          c.text = fileSystemView.getSystemDisplayName(value)
         }
         1 -> {
-          c.setHorizontalAlignment(SwingConstants.RIGHT)
-          c.setText(if (value.isDirectory()) null else value.length().toString())
+          c.horizontalAlignment = SwingConstants.RIGHT
+          c.text = if (value.isDirectory) null else value.length().toString()
         }
-        2 -> c.setText(value.getAbsolutePath())
+        2 -> c.text = value.absolutePath
         else -> error("Should never happened.")
       }
     }
@@ -109,12 +111,12 @@ class FileIconTableCellRenderer(private val fileSystemView: FileSystemView) : De
   }
 }
 
-class FileTransferHandler : TransferHandler() {
+private class FileTransferHandler : TransferHandler() {
   override fun importData(support: TransferSupport): Boolean {
     val list = runCatching {
-      support.getTransferable().getTransferData(DataFlavor.javaFileListFlavor) as? List<*>
+      support.transferable.getTransferData(DataFlavor.javaFileListFlavor) as? List<*>
     }.getOrNull().orEmpty()
-    val model = (support.getComponent() as? JTable)?.getModel() as? DefaultTableModel ?: return false
+    val model = (support.component as? JTable)?.model as? DefaultTableModel ?: return false
     list.filterIsInstance<File>()
       .map { file -> (0..2).map { file }.toTypedArray() }
       .forEach { model.addRow(it) }
@@ -126,11 +128,11 @@ class FileTransferHandler : TransferHandler() {
   override fun getSourceActions(component: JComponent) = COPY
 }
 
-open class DefaultFileComparator(protected val column: Int) : Comparator<File>, Serializable {
+private open class DefaultFileComparator(protected val column: Int) : Comparator<File>, Serializable {
   override fun compare(a: File, b: File) = when (column) {
-    0 -> a.getName().compareTo(b.getName(), ignoreCase = true)
+    0 -> a.name.compareTo(b.name, ignoreCase = true)
     1 -> a.length().compareTo(b.length())
-    else -> a.getAbsolutePath().compareTo(b.getAbsolutePath(), ignoreCase = true)
+    else -> a.absolutePath.compareTo(b.absolutePath, ignoreCase = true)
   }
 
   companion object {
@@ -138,10 +140,10 @@ open class DefaultFileComparator(protected val column: Int) : Comparator<File>, 
   }
 }
 
-class FileComparator(column: Int) : DefaultFileComparator(column) {
+private class FileComparator(column: Int) : DefaultFileComparator(column) {
   override fun compare(a: File, b: File) = when {
-    a.isDirectory() && !b.isDirectory() -> -1
-    !a.isDirectory() && b.isDirectory() -> 1
+    a.isDirectory && !b.isDirectory -> -1
+    !a.isDirectory && b.isDirectory -> 1
     else -> super.compare(a, b)
   }
 
@@ -152,14 +154,14 @@ class FileComparator(column: Int) : DefaultFileComparator(column) {
 
 // > dir /O:GN
 // > ls --group-directories-first
-class FileGroupComparator(private val table: JTable, column: Int) : DefaultFileComparator(column) {
+private class FileGroupComparator(private val table: JTable, column: Int) : DefaultFileComparator(column) {
   override fun compare(a: File, b: File): Int {
-    val flag = table.getRowSorter().getSortKeys().firstOrNull()
-      ?.takeIf { it.getColumn() == column && it.getSortOrder() == SortOrder.DESCENDING }
+    val flag = table.rowSorter.sortKeys.firstOrNull()
+      ?.takeIf { it.column == column && it.sortOrder == SortOrder.DESCENDING }
       ?.let { -1 } ?: 1
     return when {
-      a.isDirectory() && !b.isDirectory() -> -1 * flag
-      !a.isDirectory() && b.isDirectory() -> 1 * flag
+      a.isDirectory && !b.isDirectory -> -1 * flag
+      !a.isDirectory && b.isDirectory -> 1 * flag
       else -> super.compare(a, b)
     }
   }
@@ -169,23 +171,25 @@ class FileGroupComparator(private val table: JTable, column: Int) : DefaultFileC
   }
 }
 
-class TablePopupMenu : JPopupMenu() {
+private class TablePopupMenu : JPopupMenu() {
   private val delete = add("delete")
 
   init {
     delete.addActionListener {
-      val table = getInvoker() as? JTable ?: return@addActionListener
-      val model = table.getModel() as? DefaultTableModel ?: return@addActionListener
-      val selection = table.getSelectedRows()
-      for (i in selection.indices.reversed()) {
-        model.removeRow(table.convertRowIndexToModel(selection[i]))
+      val table = invoker as? JTable
+      val model = table?.model
+      if (model is DefaultTableModel) {
+        val selection = table.selectedRows
+        for (i in selection.indices.reversed()) {
+          model.removeRow(table.convertRowIndexToModel(selection[i]))
+        }
       }
     }
   }
 
   override fun show(c: Component, x: Int, y: Int) {
     val table = c as? JTable ?: return
-    delete.setEnabled(table.getSelectedRowCount() > 0)
+    delete.isEnabled = table.selectedRowCount > 0
     super.show(table, x, y)
   }
 }
@@ -200,7 +204,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

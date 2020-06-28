@@ -4,7 +4,6 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.geom.Ellipse2D
 import java.awt.image.BufferedImage
 import java.io.File
-import java.io.IOException
 import java.util.Collections
 import javax.imageio.IIOImage
 import javax.imageio.ImageIO
@@ -44,59 +43,9 @@ fun makeUI(): Component {
   // File file = new File(System.getProperty("user.dir"), "anime.gif");
   val button = JButton("make")
   button.addActionListener {
-    val image = BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB)
-    val ite = ImageIO.getImageWritersByFormatName("gif")
-    try {
-      val writer = ite.next() ?: return@addActionListener
-      val file = File.createTempFile("anime", ".gif")
-      file.deleteOnExit()
-      val stream = ImageIO.createImageOutputStream(file)
-      writer.output = stream
-      writer.prepareWriteSequence(null)
-
-      val gce = IIOMetadataNode("GraphicControlExtension")
-      gce.setAttribute("disposalMethod", "none")
-      gce.setAttribute("userInputFlag", "FALSE")
-      gce.setAttribute("transparentColorFlag", "FALSE")
-      gce.setAttribute("transparentColorIndex", "0")
-      gce.setAttribute("delayTime", DELAY.toString())
-
-      val ae = IIOMetadataNode("ApplicationExtension")
-      ae.setAttribute("applicationID", "NETSCAPE")
-      ae.setAttribute("authenticationCode", "2.0")
-      // last two bytes is an unsigned short (little endian) that
-      // indicates the the number of times to loop.
-      // 0 means loop forever.
-      ae.userObject = byteArrayOf(0x1, 0x0, 0x0)
-
-      val aes = IIOMetadataNode("ApplicationExtensions")
-      aes.appendChild(ae)
-
-      // Create animated GIF using imageio | Oracle Community
-      // https://community.oracle.com/thread/1264385
-      val iwp = writer.defaultWriteParam
-      val metadata = writer.getDefaultImageMetadata(ImageTypeSpecifier(image), iwp)
-      val metaFormat = metadata.nativeMetadataFormatName
-      val root = metadata.getAsTree(metaFormat)
-      root.appendChild(gce)
-      root.appendChild(aes)
-      metadata.setFromTree(metaFormat, root)
-
-      // make frame
-      (0 until list.size * DELAY).forEach { _ ->
-        paintFrame(image, list)
-        Collections.rotate(list, 1)
-        writer.writeToSequence(IIOImage(image, null, metadata), null)
-        // metadata = null
-      }
-      writer.endWriteSequence()
-      stream.close()
-
-      val path = file.absolutePath
-      label.text = path
-      label.icon = ImageIcon(path)
-    } catch (ex: IOException) {
-      ex.printStackTrace()
+    makeAnimatedGif()?.absolutePath?.also {
+      label.text = it
+      label.icon = ImageIcon(it)
     }
   }
 
@@ -106,6 +55,57 @@ fun makeUI(): Component {
     it.preferredSize = Dimension(320, 240)
   }
 }
+
+private fun makeAnimatedGif() = runCatching {
+  val image = BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB)
+  val ite = ImageIO.getImageWritersByFormatName("gif")
+  val writer = ite.next() ?: return null
+  val file = File.createTempFile("anime", ".gif")
+  file.deleteOnExit()
+  val stream = ImageIO.createImageOutputStream(file)
+  writer.output = stream
+  writer.prepareWriteSequence(null)
+
+  val gce = IIOMetadataNode("GraphicControlExtension")
+  gce.setAttribute("disposalMethod", "none")
+  gce.setAttribute("userInputFlag", "FALSE")
+  gce.setAttribute("transparentColorFlag", "FALSE")
+  gce.setAttribute("transparentColorIndex", "0")
+  gce.setAttribute("delayTime", DELAY.toString())
+
+  val ae = IIOMetadataNode("ApplicationExtension")
+  ae.setAttribute("applicationID", "NETSCAPE")
+  ae.setAttribute("authenticationCode", "2.0")
+  // last two bytes is an unsigned short (little endian) that
+  // indicates the the number of times to loop.
+  // 0 means loop forever.
+  ae.userObject = byteArrayOf(0x1, 0x0, 0x0)
+
+  val aes = IIOMetadataNode("ApplicationExtensions")
+  aes.appendChild(ae)
+
+  // Create animated GIF using imageio | Oracle Community
+  // https://community.oracle.com/thread/1264385
+  val iwp = writer.defaultWriteParam
+  val metadata = writer.getDefaultImageMetadata(ImageTypeSpecifier(image), iwp)
+  val metaFormat = metadata.nativeMetadataFormatName
+  val root = metadata.getAsTree(metaFormat)
+  root.appendChild(gce)
+  root.appendChild(aes)
+  metadata.setFromTree(metaFormat, root)
+
+  // make frame
+  (0 until list.size * DELAY).forEach { _ ->
+    paintFrame(image, list)
+    Collections.rotate(list, 1)
+    writer.writeToSequence(IIOImage(image, null, metadata), null)
+    // metadata = null
+  }
+  writer.endWriteSequence()
+  stream.close()
+
+  file
+}.getOrNull()
 
 private fun paintFrame(image: BufferedImage, list: List<Shape>) {
   val g2 = image.createGraphics()
