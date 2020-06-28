@@ -7,8 +7,7 @@ import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.MouseInputAdapter
 
-@Transient
-private val defaultModel = arrayOf(
+@Transient private val defaultModel = arrayOf(
   ListItem("red", Color.RED),
   ListItem("green", Color.GREEN),
   ListItem("blue", Color.BLUE),
@@ -25,8 +24,7 @@ private val defaultModel = arrayOf(
 )
 private val model = DefaultListModel<ListItem>()
 private val list = object : JList<ListItem>(model) {
-  @Transient
-  private var handler: MouseInputAdapter? = null
+  @Transient private var handler: MouseInputAdapter? = null
   override fun updateUI() {
     removeMouseListener(handler)
     selectionForeground = null
@@ -44,8 +42,7 @@ private val list = object : JList<ListItem>(model) {
     addMouseListener(handler)
   }
 }
-@Transient
-private var comparator: Comparator<ListItem>? = null
+@Transient private var comparator: Comparator<ListItem>? = null
 private val ascending = JRadioButton("ascending", true)
 private val descending = JRadioButton("descending")
 private val directionList = listOf(ascending, descending)
@@ -179,7 +176,7 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   }
 }
 
-private class ListItem(val title: String, val color: Color) {
+private data class ListItem(val title: String, val color: Color) {
   val icon = ColorIcon(color)
 }
 
