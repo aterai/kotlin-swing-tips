@@ -9,114 +9,27 @@ private val UNSELECTED_BG = Color(255, 50, 0)
 
 fun makeUI(): Component {
   UIManager.put("TabbedPane.tabInsets", Insets(5, 10, 5, 10))
-  // UIManager.put("TabbedPane.selectedTabPadInsets", new Insets(2, 3, 2, 2));
+  // UIManager.put("TabbedPane.selectedTabPadInsets", new Insets(2, 3, 2, 2))
   UIManager.put("TabbedPane.contentBorderInsets", Insets(5, 5, 5, 5))
   UIManager.put("TabbedPane.tabAreaInsets", Insets(0, 0, 0, 0))
 
   UIManager.put("TabbedPane.selectedLabelShift", 0)
   UIManager.put("TabbedPane.labelShift", 0)
 
-  // UIManager.put("TabbedPane.foreground", Color.WHITE);
-  // UIManager.put("TabbedPane.selectedForeground", Color.WHITE);
-  // UIManager.put("TabbedPane.unselectedBackground", UNSELECTED_BG);
-  // UIManager.put("TabbedPane.tabAreaBackground", UNSELECTED_BG);
+  // UIManager.put("TabbedPane.foreground", Color.WHITE)
+  // UIManager.put("TabbedPane.selectedForeground", Color.WHITE)
+  // UIManager.put("TabbedPane.unselectedBackground", UNSELECTED_BG)
+  // UIManager.put("TabbedPane.tabAreaBackground", UNSELECTED_BG)
 
   val tabs = object : JTabbedPane() {
     override fun updateUI() {
       super.updateUI()
-      setUI(object : BasicTabbedPaneUI() {
-        override fun paintFocusIndicator(
-          g: Graphics,
-          tabPlacement: Int,
-          rects: Array<Rectangle>,
-          tabIndex: Int,
-          iconRect: Rectangle?,
-          textRect: Rectangle?,
-          isSelected: Boolean
-        ) { /* Do not paint anything */ }
-
-        override fun paintTabBorder(
-          g: Graphics,
-          tabPlacement: Int,
-          tabIndex: Int,
-          x: Int,
-          y: Int,
-          w: Int,
-          h: Int,
-          isSelected: Boolean
-        ) { /* Do not paint anything */ }
-
-        override fun paintTabBackground(
-          g: Graphics,
-          tabPlacement: Int,
-          tabIndex: Int,
-          x: Int,
-          y: Int,
-          w: Int,
-          h: Int,
-          isSelected: Boolean
-        ) {
-          g.setColor(if (isSelected) SELECTED_BG else UNSELECTED_BG)
-          g.fillRect(x, y, w, h)
-        }
-
-        override fun paintContentBorderTopEdge(
-          g: Graphics,
-          tabPlacement: Int,
-          selectedIndex: Int,
-          x: Int,
-          y: Int,
-          w: Int,
-          h: Int
-        ) {
-          g.setColor(SELECTED_BG)
-          g.fillRect(x, y, w, h)
-        }
-
-        override fun paintContentBorderRightEdge(
-          g: Graphics,
-          tabPlacement: Int,
-          selectedIndex: Int,
-          x: Int,
-          y: Int,
-          w: Int,
-          h: Int
-        ) {
-          g.setColor(SELECTED_BG)
-          g.fillRect(x, y, w, h)
-        }
-
-        override fun paintContentBorderBottomEdge(
-          g: Graphics,
-          tabPlacement: Int,
-          selectedIndex: Int,
-          x: Int,
-          y: Int,
-          w: Int,
-          h: Int
-        ) {
-          g.setColor(SELECTED_BG)
-          g.fillRect(x, y, w, h)
-        }
-
-        override fun paintContentBorderLeftEdge(
-          g: Graphics,
-          tabPlacement: Int,
-          selectedIndex: Int,
-          x: Int,
-          y: Int,
-          w: Int,
-          h: Int
-        ) {
-          g.setColor(SELECTED_BG)
-          g.fillRect(x, y, w, h)
-        }
-      })
-      setOpaque(true)
-      setForeground(Color.WHITE)
-      setBackground(UNSELECTED_BG)
+      setUI(FlatTabbedPaneUI())
+      isOpaque = true
+      foreground = Color.WHITE
+      background = UNSELECTED_BG
       setTabPlacement(SwingConstants.LEFT)
-      setTabLayoutPolicy(SCROLL_TAB_LAYOUT)
+      tabLayoutPolicy = SCROLL_TAB_LAYOUT
     }
   }
 
@@ -128,7 +41,97 @@ fun makeUI(): Component {
 
   return JPanel(BorderLayout()).also {
     it.add(tabs)
-    it.setPreferredSize(Dimension(320, 240))
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private class FlatTabbedPaneUI : BasicTabbedPaneUI() {
+  override fun paintFocusIndicator(
+    g: Graphics,
+    tabPlacement: Int,
+    rects: Array<Rectangle>,
+    tabIndex: Int,
+    iconRect: Rectangle?,
+    textRect: Rectangle?,
+    isSelected: Boolean
+  ) { /* Do not paint anything */ }
+
+  override fun paintTabBorder(
+    g: Graphics,
+    tabPlacement: Int,
+    tabIndex: Int,
+    x: Int,
+    y: Int,
+    w: Int,
+    h: Int,
+    isSelected: Boolean
+  ) { /* Do not paint anything */ }
+
+  override fun paintTabBackground(
+    g: Graphics,
+    tabPlacement: Int,
+    tabIndex: Int,
+    x: Int,
+    y: Int,
+    w: Int,
+    h: Int,
+    isSelected: Boolean
+  ) {
+    g.color = if (isSelected) SELECTED_BG else UNSELECTED_BG
+    g.fillRect(x, y, w, h)
+  }
+
+  override fun paintContentBorderTopEdge(
+    g: Graphics,
+    tabPlacement: Int,
+    selectedIndex: Int,
+    x: Int,
+    y: Int,
+    w: Int,
+    h: Int
+  ) {
+    paintContentBorder(g, x, y, w, h)
+  }
+
+  override fun paintContentBorderRightEdge(
+    g: Graphics,
+    tabPlacement: Int,
+    selectedIndex: Int,
+    x: Int,
+    y: Int,
+    w: Int,
+    h: Int
+  ) {
+    paintContentBorder(g, x, y, w, h)
+  }
+
+  override fun paintContentBorderBottomEdge(
+    g: Graphics,
+    tabPlacement: Int,
+    selectedIndex: Int,
+    x: Int,
+    y: Int,
+    w: Int,
+    h: Int
+  ) {
+    paintContentBorder(g, x, y, w, h)
+  }
+
+  override fun paintContentBorderLeftEdge(
+    g: Graphics,
+    tabPlacement: Int,
+    selectedIndex: Int,
+    x: Int,
+    y: Int,
+    w: Int,
+    h: Int
+  ) {
+    paintContentBorder(g, x, y, w, h)
+  }
+
+  private fun paintContentBorder(g: Graphics, x: Int, y: Int, w: Int, h: Int) {
+    g.color = SELECTED_BG
+    g.fillRect(x, y, w, h)
   }
 }
 
