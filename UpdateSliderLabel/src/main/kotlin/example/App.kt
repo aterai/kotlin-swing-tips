@@ -23,7 +23,7 @@ fun makeUI(): Component {
 }
 
 private fun makeSlider(): JSlider {
-  val slider = JSlider(0, 10000)
+  val slider = JSlider(0, 10_000)
   slider.putClientProperty("Slider.paintThumbArrowShape", true)
   slider.majorTickSpacing = 2500
   slider.minorTickSpacing = 500
