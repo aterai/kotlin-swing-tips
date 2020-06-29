@@ -54,19 +54,18 @@ class MainPanel : JPanel(BorderLayout()) {
     val decButton = JButton("XMLDecoder")
     decButton.addActionListener {
       val text = textArea.text
-      if (text.isEmpty()) {
-        return@addActionListener
-      }
-      val bytes = text.toByteArray(StandardCharsets.UTF_8)
-      XMLDecoder(BufferedInputStream(ByteArrayInputStream(bytes))).use { xd ->
-        @Suppress("UNCHECKED_CAST")
-        val keys = xd.readObject() as List<RowSorter.SortKey>
-        val model = xd.readObject() as DefaultTableModel
-        table.model = model
-        table.autoCreateRowSorter = true
-        table.rowSorter.sortKeys = keys
-        val cm = xd.readObject() as DefaultTableColumnModel
-        table.columnModel = cm
+      if (text.isNotEmpty()) {
+        val bytes = text.toByteArray(StandardCharsets.UTF_8)
+        XMLDecoder(BufferedInputStream(ByteArrayInputStream(bytes))).use { xd ->
+          @Suppress("UNCHECKED_CAST")
+          val keys = xd.readObject() as List<RowSorter.SortKey>
+          val model = xd.readObject() as DefaultTableModel
+          table.model = model
+          table.autoCreateRowSorter = true
+          table.rowSorter.sortKeys = keys
+          val cm = xd.readObject() as DefaultTableColumnModel
+          table.columnModel = cm
+        }
       }
     }
     val clearButton = JButton("clear")
@@ -140,19 +139,20 @@ class TableHeaderPopupMenu : JPopupMenu() {
     val textField = JTextField()
     textField.addAncestorListener(FocusAncestorListener())
     add("Edit: setHeaderValue").addActionListener {
-      val header = invoker as? JTableHeader ?: return@addActionListener
-      val column = header.columnModel.getColumn(index)
-      val name = column.headerValue.toString()
-      textField.text = name
-      val p = header.rootPane
-      val ret = JOptionPane.showConfirmDialog(
-        p, textField, "edit", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
-      )
-      if (ret == JOptionPane.OK_OPTION) {
-        val str = textField.text.trim()
-        if (str != name) {
-          column.headerValue = str
-          header.repaint(header.getHeaderRect(index))
+      (invoker as? JTableHeader)?.also {
+        val column = it.columnModel.getColumn(index)
+        val name = column.headerValue.toString()
+        textField.text = name
+        val p = it.rootPane
+        val ret = JOptionPane.showConfirmDialog(
+          p, textField, "edit", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
+        )
+        if (ret == JOptionPane.OK_OPTION) {
+          val str = textField.text.trim()
+          if (str != name) {
+            column.headerValue = str
+            it.repaint(it.getHeaderRect(index))
+          }
         }
       }
     }

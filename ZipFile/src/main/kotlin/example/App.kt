@@ -20,10 +20,10 @@ import java.util.zip.ZipOutputStream
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 private val logger = Logger.getLogger(MethodHandles.lookup().lookupClass().name)
+private val textArea = JTextArea()
 
 fun makeUI(): Component {
   logger.useParentHandlers = false
-  val textArea = JTextArea()
   textArea.isEditable = false
   logger.addHandler(TextAreaHandler(TextAreaOutputStream(textArea)))
   val p = JPanel(GridLayout(2, 1, 10, 10))
@@ -47,31 +47,10 @@ private fun makeZipPanel(): Component {
       field.text = fileChooser.selectedFile.absolutePath
     }
   }
+
   val button1 = JButton("zip")
-  button1.addActionListener {
-    val str = field.text
-    val path = Paths.get(str)
-    // if (str.isEmpty() || Files.notExists(path)) { // noticeably poor performance in JDK 8
-    if (str.isEmpty() || !path.toFile().exists()) {
-      return@addActionListener
-    }
-    val name = path.fileName.toString() + ".zip"
-    val tgt = path.resolveSibling(name)
-    // if (Files.exists(tgt)) { // noticeably poor performance in JDK 8
-    if (tgt.toFile().exists()) {
-      val m = "<html>$tgt already exists.<br>Do you want to overwrite it?"
-      val rv = JOptionPane.showConfirmDialog(button1.rootPane, m, "Zip", JOptionPane.YES_NO_OPTION)
-      if (rv != JOptionPane.YES_OPTION) {
-        return@addActionListener
-      }
-    }
-    runCatching {
-      ZipUtil.zip(path, tgt)
-    }.onFailure {
-      logger.info { "Cant zip! : $path" }
-      Toolkit.getDefaultToolkit().beep()
-    }
-  }
+  button1.addActionListener { zip(field.text) }
+
   val p = JPanel(BorderLayout(5, 2))
   p.border = BorderFactory.createTitledBorder("Zip")
   p.add(field)
@@ -91,35 +70,61 @@ private fun makeUnzipPanel(): Component {
     }
   }
   val button1 = JButton("unzip")
-  button1.addActionListener {
-    val str = field.text
-    makeDestDirPath(str)?.also { destDir ->
-      val path = Paths.get(str)
-      runCatching {
-        // if (Files.exists(destDir)) { // noticeably poor performance in JDK 8
-        if (destDir.toFile().exists()) {
-          val m = "<html>$destDir already exists.<br>Do you want to overwrite it?"
-          val rv = JOptionPane.showConfirmDialog(button.rootPane, m, "Unzip", JOptionPane.YES_NO_OPTION)
-          if (rv != JOptionPane.YES_OPTION) {
-            return@addActionListener
-          }
-        } else {
-          logger.info { "mkdir0: $destDir" }
-          Files.createDirectories(destDir)
-        }
-        ZipUtil.unzip(path, destDir)
-      }.onFailure {
-        logger.info { "Cant unzip! : $path" }
-        Toolkit.getDefaultToolkit().beep()
-      }
-    }
-  }
+  button1.addActionListener { unzip(field.text) }
+
   val p = JPanel(BorderLayout(5, 2))
   p.border = BorderFactory.createTitledBorder("Unzip")
   p.add(field)
   p.add(button, BorderLayout.EAST)
   p.add(button1, BorderLayout.SOUTH)
   return p
+}
+
+private fun zip(str: String) {
+  val path = Paths.get(str)
+  // if (str.isEmpty() || Files.notExists(path)) { // noticeably poor performance in JDK 8
+  if (str.isEmpty() || !path.toFile().exists()) {
+    return
+  }
+  val name = path.fileName.toString() + ".zip"
+  val tgt = path.resolveSibling(name)
+  // if (Files.exists(tgt)) { // noticeably poor performance in JDK 8
+  if (tgt.toFile().exists()) {
+    val m = "<html>$tgt already exists.<br>Do you want to overwrite it?"
+    val rv = JOptionPane.showConfirmDialog(textArea.rootPane, m, "Zip", JOptionPane.YES_NO_OPTION)
+    if (rv != JOptionPane.YES_OPTION) {
+      return
+    }
+  }
+  runCatching {
+    ZipUtil.zip(path, tgt)
+  }.onFailure {
+    logger.info { "Cant zip! : $path" }
+    Toolkit.getDefaultToolkit().beep()
+  }
+}
+
+private fun unzip(str: String) {
+  makeDestDirPath(str)?.also { destDir ->
+    val path = Paths.get(str)
+    runCatching {
+      // if (Files.exists(destDir)) { // noticeably poor performance in JDK 8
+      if (destDir.toFile().exists()) {
+        val m = "<html>$destDir already exists.<br>Do you want to overwrite it?"
+        val rv = JOptionPane.showConfirmDialog(textArea.rootPane, m, "Unzip", JOptionPane.YES_NO_OPTION)
+        if (rv != JOptionPane.YES_OPTION) {
+          return
+        }
+      } else {
+        logger.info { "mkdir0: $destDir" }
+        Files.createDirectories(destDir)
+      }
+      ZipUtil.unzip(path, destDir)
+    }.onFailure {
+      logger.info { "Cant unzip! : $path" }
+      Toolkit.getDefaultToolkit().beep()
+    }
+  }
 }
 
 private fun makeDestDirPath(text: String): Path? {
