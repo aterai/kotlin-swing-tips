@@ -3,17 +3,19 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
+private const val KEY = "TabbedPane:TabbedPaneTabArea.contentMargins"
+
 fun makeUI(): Component {
   val tabbedPane = makeTabbedPane()
   val d = UIDefaults()
-  d.put("TabbedPane:TabbedPaneTabArea.contentMargins", Insets(3, 30, 4, 30))
+  d[KEY] = Insets(3, 30, 4, 30)
   tabbedPane.putClientProperty("Nimbus.Overrides", d)
   tabbedPane.putClientProperty("Nimbus.Overrides.InheritDefaults", true)
 
   return JPanel(GridLayout(2, 1)).also {
     it.add(makeTabbedPane())
     it.add(tabbedPane)
-    it.setPreferredSize(Dimension(320, 240))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
@@ -35,8 +37,8 @@ fun main() {
       // d.put("TabbedPane:TabbedPaneContent.contentMargins", new Insets(0, 5, 5, 5));
       // d.put("TabbedPane:TabbedPaneTab.contentMargins", new Insets(2, 8, 3, 8));
       // d.put("TabbedPane:TabbedPaneTabArea.contentMargins", new Insets(3, 10, 4, 10));
-      val i = d.getInsets("TabbedPane:TabbedPaneTabArea.contentMargins")
-      d.put("TabbedPane:TabbedPaneTabArea.contentMargins", Insets(i.top, 0, i.bottom, 0))
+      val i = d.getInsets(KEY)
+      d.put(KEY, Insets(i.top, 0, i.bottom, 0))
     }.onFailure {
       it.printStackTrace()
       Toolkit.getDefaultToolkit().beep()
