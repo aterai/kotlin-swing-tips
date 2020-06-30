@@ -70,30 +70,33 @@ private class TablePopupMenu : JPopupMenu() {
 
   init {
     select.addActionListener {
-      val table = invoker as? JTable ?: return@addActionListener
-      for (row in table.selectedRows) {
-        for (col in table.selectedColumns) {
-          table.setValueAt(true, row, col)
-        }
+      (invoker as? JTable)?.also {
+        tableSetBooleanAll(it, true)
       }
     }
 
     clear.addActionListener {
-      val table = invoker as? JTable ?: return@addActionListener
-      for (row in table.selectedRows) {
-        for (col in table.selectedColumns) {
-          table.setValueAt(false, row, col)
-        }
+      (invoker as? JTable)?.also {
+        tableSetBooleanAll(it, false)
       }
     }
 
     toggle.addActionListener {
-      val table = invoker as? JTable ?: return@addActionListener
-      for (row in table.selectedRows) {
-        for (col in table.selectedColumns) {
-          val b = table.getValueAt(row, col) as? Boolean ?: continue
-          table.setValueAt(!b, row, col)
+      (invoker as? JTable)?.also {
+        for (row in it.selectedRows) {
+          for (col in it.selectedColumns) {
+            val b = it.getValueAt(row, col) as? Boolean ?: continue
+            it.setValueAt(!b, row, col)
+          }
         }
+      }
+    }
+  }
+
+  private fun tableSetBooleanAll(table: JTable, b: Boolean) {
+    for (row in table.selectedRows) {
+      for (col in table.selectedColumns) {
+        table.setValueAt(b, row, col)
       }
     }
   }

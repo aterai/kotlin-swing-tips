@@ -9,37 +9,38 @@ import javax.swing.text.html.HTMLEditorKit
 
 fun makeUI(): Component {
   val logger = JTextArea()
-  logger.setEditable(false)
+  logger.isEditable = false
 
   val editor = JEditorPane().also {
     val kit = HTMLEditorKit()
-    kit.setAutoFormSubmission(false)
-    it.setEditorKit(kit)
-    it.setEditable(false)
+    kit.isAutoFormSubmission = false
+    it.editorKit = kit
+    it.isEditable = false
   }
 
   val form = "<form action='#'><input type='text' name='word' value='12345' /></form>"
-  editor.setText("<html><h1>Form test</h1>$form")
+  editor.text = "<html><h1>Form test</h1>$form"
   editor.addHyperlinkListener { e ->
-    // if (e is FormSubmitEvent) {
-    val data = (e as? FormSubmitEvent)?.getData() ?: return@addHyperlinkListener
-    logger.append(data + "\n")
+    val data = (e as? FormSubmitEvent)?.data
+    if (data != null) {
+      logger.append(data + "\n")
 
-    val charset = Charset.defaultCharset().toString()
-    logger.append("default charset: $charset\n")
+      val charset = Charset.defaultCharset().toString()
+      logger.append("default charset: $charset\n")
 
-    runCatching {
-      logger.append(URLDecoder.decode(data, charset) + "\n")
-    }.onFailure {
-      logger.append(it.message + "\n")
+      runCatching {
+        logger.append(URLDecoder.decode(data, charset) + "\n")
+      }.onFailure {
+        logger.append(it.message + "\n")
+      }
     }
   }
 
   return JPanel(GridLayout(2, 1, 5, 5)).also {
-    it.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.add(JScrollPane(editor))
     it.add(JScrollPane(logger))
-    it.setPreferredSize(Dimension(320, 240))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
