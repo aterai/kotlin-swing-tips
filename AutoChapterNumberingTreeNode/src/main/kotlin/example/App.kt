@@ -7,6 +7,8 @@ import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreeModel
 
 private const val MARK = "\u00a7" // "Åò"
+private const val CHAPTER = "Chapter"
+private const val SECTION = "Section"
 
 fun makeUI(): Component {
   val tree = object : JTree(makeModel()) {
@@ -44,11 +46,11 @@ private fun makeModel(): TreeModel {
 }
 
 private fun makePart(): DefaultMutableTreeNode {
-  val c1 = DefaultMutableTreeNode("Chapter")
-  c1.add(DefaultMutableTreeNode("Section"))
-  c1.add(DefaultMutableTreeNode("Section"))
-  c1.add(DefaultMutableTreeNode("Section"))
-  val c2 = DefaultMutableTreeNode("Chapter")
+  val c1 = DefaultMutableTreeNode(CHAPTER)
+  c1.add(DefaultMutableTreeNode(SECTION))
+  c1.add(DefaultMutableTreeNode(SECTION))
+  c1.add(DefaultMutableTreeNode(SECTION))
+  val c2 = DefaultMutableTreeNode(CHAPTER)
   c2.add(DefaultMutableTreeNode("aaa aaa aaa"))
   c2.add(DefaultMutableTreeNode("bb bb"))
   c2.add(DefaultMutableTreeNode("cc"))
