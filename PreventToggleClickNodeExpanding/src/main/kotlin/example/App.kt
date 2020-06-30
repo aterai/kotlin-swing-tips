@@ -14,75 +14,75 @@ import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.ExpandVetoException
 import javax.swing.tree.TreePath
 
-class MainPanel : JPanel(GridLayout(1, 2, 4, 4)) {
-  init {
-    val dir = File(".")
-    val root = DefaultMutableTreeNode(dir)
-    val treeModel = DefaultTreeModel(root)
-    createChildren(dir, root)
+fun makeUI(): Component {
+  val dir = File(".")
+  val root = DefaultMutableTreeNode(dir)
+  val treeModel = DefaultTreeModel(root)
+  createChildren(dir, root)
 
-    val tree1 = JTree(treeModel)
-    tree1.addTreeWillExpandListener(FileExpandVetoListener())
+  val tree1 = JTree(treeModel)
+  tree1.addTreeWillExpandListener(FileExpandVetoListener())
 
-    val tree2 = JTree(treeModel)
-    tree2.setUI(object : MetalTreeUI() {
-      override fun isToggleEvent(e: MouseEvent): Boolean {
-        val file = getFileFromTreePath(tree.getSelectionPath())
-        return file == null && super.isToggleEvent(e)
-      }
-    })
-
-    setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-    add(JScrollPane(initTree(tree1)))
-    add(JScrollPane(initTree(tree2)))
-    setPreferredSize(Dimension(320, 240))
-  }
-
-  private fun initTree(tree: JTree): JTree {
-    tree.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4))
-    tree.setCellRenderer(FileTreeCellRenderer())
-    tree.addMouseListener(object : MouseAdapter() {
-      override fun mouseClicked(e: MouseEvent) {
-        if (e.getClickCount() == 2) {
-          val file = getFileFromTreePath(tree.getSelectionPath())
-          println(file)
-        }
-      }
-    })
-    // tree.setToggleClickCount(0)
-    tree.expandRow(0)
-    return tree
-  }
-
-  private fun createChildren(parent: File, node: DefaultMutableTreeNode) {
-    parent.listFiles()?.forEach { file ->
-      val child = DefaultMutableTreeNode(file)
-      node.add(child)
-      if (file.isDirectory()) {
-        createChildren(file, child)
-      } else if (file.getName() == "App.kt") {
-        child.add(DefaultMutableTreeNode("FileExpandVetoListener()"))
-        child.add(DefaultMutableTreeNode("FileTreeCellRenderer()"))
-        child.add(DefaultMutableTreeNode("MainPanel()"))
-        child.add(DefaultMutableTreeNode("main()"))
-      }
+  val tree2 = JTree(treeModel)
+  tree2.ui = object : MetalTreeUI() {
+    override fun isToggleEvent(e: MouseEvent): Boolean {
+      val file = getFileFromTreePath(tree.selectionPath)
+      return file == null && super.isToggleEvent(e)
     }
   }
 
-  private fun getFileFromTreePath(path: TreePath?): File? {
-    val node = path?.getLastPathComponent() as? DefaultMutableTreeNode ?: return null
-    return (node.getUserObject() as? File)?.takeIf { it.isFile() }
+  return JPanel(GridLayout(1, 2, 4, 4)).also {
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    it.add(JScrollPane(initTree(tree1)))
+    it.add(JScrollPane(initTree(tree2)))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class FileExpandVetoListener : TreeWillExpandListener {
+private fun initTree(tree: JTree): JTree {
+  tree.border = BorderFactory.createEmptyBorder(4, 4, 4, 4)
+  tree.cellRenderer = FileTreeCellRenderer()
+  tree.addMouseListener(object : MouseAdapter() {
+    override fun mouseClicked(e: MouseEvent) {
+      if (e.clickCount == 2) {
+        val file = getFileFromTreePath(tree.selectionPath)
+        println(file)
+      }
+    }
+  })
+  // tree.setToggleClickCount(0)
+  tree.expandRow(0)
+  return tree
+}
+
+private fun createChildren(parent: File, node: DefaultMutableTreeNode) {
+  parent.listFiles()?.forEach { file ->
+    val child = DefaultMutableTreeNode(file)
+    node.add(child)
+    if (file.isDirectory) {
+      createChildren(file, child)
+    } else if (file.name == "App.kt") {
+      child.add(DefaultMutableTreeNode("FileExpandVetoListener()"))
+      child.add(DefaultMutableTreeNode("FileTreeCellRenderer()"))
+      child.add(DefaultMutableTreeNode("MainPanel()"))
+      child.add(DefaultMutableTreeNode("main()"))
+    }
+  }
+}
+
+private fun getFileFromTreePath(path: TreePath?): File? {
+  val node = path?.lastPathComponent as? DefaultMutableTreeNode ?: return null
+  return (node.userObject as? File)?.takeIf { it.isFile }
+}
+
+private class FileExpandVetoListener : TreeWillExpandListener {
   @Throws(ExpandVetoException::class)
   override fun treeWillExpand(e: TreeExpansionEvent) {
-    val path = e.getPath()
-    val o = path.getLastPathComponent()
+    val path = e.path
+    val o = path.lastPathComponent
     if (o is DefaultMutableTreeNode) {
-      val file = o.getUserObject() as? File
-      if (file == null || file.isFile()) {
+      val file = o.userObject as? File
+      if (file == null || file.isFile) {
         throw ExpandVetoException(e, "Tree expansion cancelled")
       }
     }
@@ -93,7 +93,7 @@ class FileExpandVetoListener : TreeWillExpandListener {
   }
 }
 
-class FileTreeCellRenderer : DefaultTreeCellRenderer() {
+private class FileTreeCellRenderer : DefaultTreeCellRenderer() {
   override fun getTreeCellRendererComponent(
     tree: JTree,
     value: Any?,
@@ -106,19 +106,19 @@ class FileTreeCellRenderer : DefaultTreeCellRenderer() {
     val c = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
     if (c is JLabel) {
       if (selected) {
-        c.setOpaque(false)
+        c.isOpaque = false
         c.setForeground(getTextSelectionColor())
       } else {
-        c.setOpaque(true)
+        c.isOpaque = true
         c.setForeground(getTextNonSelectionColor())
         c.setBackground(getBackgroundNonSelectionColor())
       }
       (value as? DefaultMutableTreeNode)?.also {
-        (it.getUserObject() as? File)?.also { file ->
+        (it.userObject as? File)?.also { file ->
           val txt = runCatching {
-            file.getCanonicalFile().getName()
+            file.canonicalFile.name
           }.getOrElse { "error" }
-          c.setText(txt)
+          c.text = txt
         }
       }
     }
@@ -136,7 +136,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
