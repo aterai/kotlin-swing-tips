@@ -62,8 +62,7 @@ fun makeUI(): Component {
   val layerUI = DividerLocationDragLayerUI()
   val check = JCheckBox("Paint divider")
   check.addActionListener { e ->
-    val c = e.source as? JCheckBox ?: return@addActionListener
-    layerUI.setPaintDividerEnabled(c.isSelected)
+    layerUI.setPaintDividerEnabled((e.source as? JCheckBox)?.isSelected == true)
   }
 
   return JPanel(BorderLayout()).also {
