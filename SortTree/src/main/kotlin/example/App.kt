@@ -18,7 +18,7 @@ private val reset = JRadioButton("reset")
 fun makeUI(): Component {
   val box = JPanel(GridLayout(2, 2))
   val listener = ActionListener { e ->
-    val check = e.source as? JRadioButton ?: return@ActionListener
+    val check = e.source as? JRadioButton
     if (check == reset) {
       tree.model = DefaultTreeModel(root)
     } else {
@@ -31,7 +31,7 @@ fun makeUI(): Component {
         sort2 -> TreeUtil.sortTree2(r)
         else -> TreeUtil.sortTree3(r)
       }
-      log(check.text)
+      log(check?.text ?: "")
       tree.model = DefaultTreeModel(r)
     }
     TreeUtil.expandAll(tree)
@@ -162,27 +162,27 @@ private object TreeUtil {
     set1.add(DefaultMutableTreeNode("222222222"))
 
     val set2 = DefaultMutableTreeNode("Set 002")
-    set2.add(DefaultMutableTreeNode("eeeeeeeeeeeee"))
-    set2.add(DefaultMutableTreeNode("bbbbbbbbbbbb"))
+    set2.add(DefaultMutableTreeNode("eee eee eee ee"))
+    set2.add(DefaultMutableTreeNode("bbb bbb bbb"))
 
     val set3 = DefaultMutableTreeNode("Set 003")
-    set3.add(DefaultMutableTreeNode("zzzzzzz"))
-    set3.add(DefaultMutableTreeNode("aaaaaaaaaaaa"))
-    set3.add(DefaultMutableTreeNode("ccccccccc"))
+    set3.add(DefaultMutableTreeNode("zzz zzz"))
+    set3.add(DefaultMutableTreeNode("aaa aaa aaa aaa"))
+    set3.add(DefaultMutableTreeNode("ccc ccc ccc"))
 
     set4.add(DefaultMutableTreeNode("22222222222"))
-    set4.add(DefaultMutableTreeNode("eeeeeeeeeeeee"))
-    set4.add(DefaultMutableTreeNode("bbbbbbbbbbbb"))
-    set4.add(DefaultMutableTreeNode("zzzzzzz"))
+    set4.add(DefaultMutableTreeNode("eee eee eee ee ee"))
+    set4.add(DefaultMutableTreeNode("bbb bbb bbb bbb"))
+    set4.add(DefaultMutableTreeNode("zzz zzz"))
 
     val root = DefaultMutableTreeNode("Root")
-    root.add(DefaultMutableTreeNode("xxxxxxxxxxxxx"))
+    root.add(DefaultMutableTreeNode("xxx xxx xxx xx xx"))
     root.add(set3)
-    root.add(DefaultMutableTreeNode("eeeeeeeeeeeee"))
+    root.add(DefaultMutableTreeNode("eee eee eee ee ee"))
     root.add(set1)
     root.add(set2)
     root.add(DefaultMutableTreeNode("222222222222"))
-    root.add(DefaultMutableTreeNode("bbbbbbbbbbbb"))
+    root.add(DefaultMutableTreeNode("bbb bbb bbb bbb"))
     return root
   }
 
