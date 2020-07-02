@@ -97,10 +97,10 @@ private class KineticScrollingListener1(private val label: JComponent) : MouseAd
   init {
     this.scroller = Timer(DELAY) { e ->
       val src = e.source
-      val vport = SwingUtilities.getUnwrappedParent(label) as? JViewport ?: return@Timer
-      val vp = vport.viewPosition
+      val vport = SwingUtilities.getUnwrappedParent(label) as? JViewport
+      val vp = vport?.viewPosition ?: Point()
       vp.translate(-delta.x, -delta.y)
-      label.scrollRectToVisible(Rectangle(vp, vport.size))
+      label.scrollRectToVisible(Rectangle(vp, vport?.size ?: Dimension()))
       if (abs(delta.x) > 0 || abs(delta.y) > 0) {
         delta.setLocation((delta.x * D).toInt(), (delta.y * D).toInt())
       } else if (src is Timer) {
@@ -150,29 +150,30 @@ private class KineticScrollingListener2(private val label: JComponent) : MouseAd
   private val startPt = Point()
   private val delta = Point()
   private val inside = Timer(DELAY) { e ->
-    val vport = SwingUtilities.getUnwrappedParent(label) as? JViewport ?: return@Timer
-    val vp = vport.viewPosition
+    val c = SwingUtilities.getUnwrappedParent(label)
+    val vport = c as? JViewport
+    val vp = vport?.viewPosition ?: Point()
     vp.translate(-delta.x, -delta.y)
-    vport.viewPosition = vp
+    vport?.viewPosition = vp
     if (abs(delta.x) > 0 || abs(delta.y) > 0) {
       delta.setLocation((delta.x * D).toInt(), (delta.y * D).toInt())
       // Outside
-      if (vp.x < 0 || vp.x + vport.width - label.width > 0) {
+      if (vp.x < 0 || vp.x + c.width - label.width > 0) {
         delta.x = (delta.x * D).toInt()
       }
-      if (vp.y < 0 || vp.y + vport.height - label.height > 0) {
+      if (vp.y < 0 || vp.y + c.height - label.height > 0) {
         delta.y = (delta.y * D).toInt()
       }
     } else {
       (e.source as? Timer)?.stop() // inside.stop()
-      if (!isInside(vport, label)) {
+      if (vport != null && !isInside(vport, label)) {
         outside.start()
       }
     }
   }
   private val outside = Timer(DELAY) { e ->
-    val vport = SwingUtilities.getUnwrappedParent(label) as? JViewport ?: return@Timer
-    val vp = vport.viewPosition
+    val vport = SwingUtilities.getUnwrappedParent(label)
+    val vp = (vport as? JViewport)?.viewPosition ?: Point()
     if (vp.x < 0) {
       vp.x = (vp.x * D).toInt()
     }
@@ -185,8 +186,8 @@ private class KineticScrollingListener2(private val label: JComponent) : MouseAd
     if (vp.y + vport.height > label.height) {
       vp.y = (vp.y - (vp.y + vport.height - label.height) * (1.0 - D)).toInt()
     }
-    vport.viewPosition = vp
-    if (isInside(vport, label)) {
+    (vport as? JViewport)?.viewPosition = vp
+    if (vport is JViewport && isInside(vport, label)) {
       (e.source as? Timer)?.stop() // outside.stop()
     }
   }
