@@ -104,20 +104,24 @@ private class TablePopupMenu : JPopupMenu() {
 
   init {
     add("add").addActionListener {
-      val table = invoker as? JTable ?: return@addActionListener
-      val model = table.model as? RowDataModel ?: return@addActionListener
-      model.addRowData(RowData("New row", ""))
-      val r = table.getCellRect(model.rowCount - 1, 0, true)
-      table.scrollRectToVisible(r)
+      val table = invoker as? JTable
+      val model = table?.model
+      if (model is RowDataModel) {
+        model.addRowData(RowData("New row", ""))
+        val r = table.getCellRect(model.rowCount - 1, 0, true)
+        table.scrollRectToVisible(r)
+      }
     }
     addSeparator()
     delete = add("delete")
     delete.addActionListener {
-      val table = invoker as? JTable ?: return@addActionListener
-      val model = table.model as? RowDataModel ?: return@addActionListener
-      val selection = table.selectedRows
-      for (i in selection.indices.reversed()) {
-        model.removeRow(table.convertRowIndexToModel(selection[i]))
+      val table = invoker as? JTable
+      val model = table?.model
+      if (model is RowDataModel) {
+        val selection = table.selectedRows
+        for (i in selection.indices.reversed()) {
+          model.removeRow(table.convertRowIndexToModel(selection[i]))
+        }
       }
     }
   }
