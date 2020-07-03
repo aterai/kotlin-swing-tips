@@ -23,8 +23,8 @@ private const val SCALE = .15
 
 val engine = createEngine()
 val editor = JEditorPane().also {
-  it.setSelectedTextColor(null)
-  it.setSelectionColor(Color(0x64_88_AA_AA, true))
+  it.selectedTextColor = null
+  it.selectionColor = Color(0x64_88_AA_AA, true)
   // TEST: it.setSelectionColor(null);
 }
 val scroll = JScrollPane(editor)
@@ -44,23 +44,23 @@ val label = object : JLabel() {
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     val vport = SwingUtilities.getAncestorOfClass(JViewport::class.java, editor) as? JViewport ?: return
-    val vrect = vport.getBounds() // scroll.getViewportBorderBounds();
-    val erect = editor.getBounds()
+    val vrect = vport.bounds // scroll.getViewportBorderBounds();
+    val erect = editor.bounds
     val crect = SwingUtilities.calculateInnerArea(this, Rectangle())
 
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     val sy = crect.getHeight() / erect.getHeight()
     val at = AffineTransform.getScaleInstance(1.0, sy)
 
     // paint Thumb
     val thumbRect = Rectangle(vrect)
-    thumbRect.y = vport.getViewPosition().y
-    val r = at.createTransformedShape(thumbRect).getBounds()
+    thumbRect.y = vport.viewPosition.y
+    val r = at.createTransformedShape(thumbRect).bounds
     val y = crect.y + r.y
-    g2.setColor(THUMB_COLOR)
+    g2.color = THUMB_COLOR
     g2.fillRect(0, y, crect.width, r.height)
-    g2.setColor(THUMB_COLOR.darker())
+    g2.color = THUMB_COLOR.darker()
     g2.drawRect(0, y, crect.width - 1, r.height - 1)
     g2.dispose()
   }
@@ -76,12 +76,12 @@ private open class MiniMapHandler : MouseInputAdapter() {
   }
 
   fun processMiniMapMouseEvent(e: MouseEvent) {
-    val pt = e.getPoint()
-    val c = e.getComponent()
-    val m = scroll.getVerticalScrollBar().getModel()
-    val vsm = m.getMaximum() - m.getMinimum()
-    val v = .5 - m.getExtent() * .5 + pt.y * vsm / c.getHeight().toDouble()
-    m.setValue(v.toInt())
+    val pt = e.point
+    val c = e.component
+    val m = scroll.verticalScrollBar.model
+    val vsm = m.maximum - m.minimum
+    val v = .5 - m.extent * .5 + pt.y * vsm / c.height.toDouble()
+    m.value = v.toInt()
   }
 }
 val p = object : JPanel() {
@@ -104,57 +104,57 @@ fun makeUI(): Component {
   }
 
   val htmlEditorKit = HTMLEditorKit()
-  htmlEditorKit.setStyleSheet(styleSheet)
+  htmlEditorKit.styleSheet = styleSheet
 
-  editor.setEditorKit(htmlEditorKit)
-  editor.setEditable(false)
-  editor.setBackground(Color(0xEE_EE_EE))
-  editor.setSelectedTextColor(null)
-  editor.setSelectionColor(Color(0x64_88_AA_AA, true))
+  editor.editorKit = htmlEditorKit
+  editor.isEditable = false
+  editor.background = Color(0xEE_EE_EE)
+  editor.selectedTextColor = null
+  editor.selectionColor = Color(0x64_88_AA_AA, true)
 
   val button = JButton("open")
   button.addActionListener {
     val fileChooser = JFileChooser()
-    val ret = fileChooser.showOpenDialog(button.getRootPane())
+    val ret = fileChooser.showOpenDialog(button.rootPane)
     if (ret == JFileChooser.APPROVE_OPTION) {
-      loadFile(fileChooser.getSelectedFile().getAbsolutePath())
+      loadFile(fileChooser.selectedFile.absolutePath)
       EventQueue.invokeLater {
-        label.setIcon(makeMiniMap(editor))
+        label.icon = makeMiniMap(editor)
         p.revalidate()
         p.repaint()
       }
     }
   }
 
-  scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
-  scroll.getVerticalScrollBar().getModel().addChangeListener { label.repaint() }
+  scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+  scroll.verticalScrollBar.model.addChangeListener { label.repaint() }
 
   val pp = JPanel(BorderLayout(0, 0))
   pp.add(label, BorderLayout.NORTH)
   val minimap = JScrollPane(pp)
-  minimap.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER)
-  minimap.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
+  minimap.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
+  minimap.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
 
   val box = Box.createHorizontalBox()
-  box.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
+  box.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
   box.add(Box.createHorizontalGlue())
   box.add(button)
 
-  p.setLayout(object : BorderLayout(0, 0) {
+  p.layout = object : BorderLayout(0, 0) {
     override fun layoutContainer(parent: Container) {
-      synchronized(parent.getTreeLock()) {
-        val insets = parent.getInsets()
-        val width = parent.getWidth()
-        val height = parent.getHeight()
+      synchronized(parent.treeLock) {
+        val insets = parent.insets
+        val width = parent.width
+        val height = parent.height
         val top = insets.top
         val bottom = height - insets.bottom
         val left = insets.left
         val right = width - insets.right
         val ec = getLayoutComponent(parent, EAST)
         if (Objects.nonNull(ec)) {
-          val d = ec.getPreferredSize()
-          val vsb = scroll.getVerticalScrollBar()
-          val vsw = if (vsb.isVisible()) vsb.getSize().width else 0
+          val d = ec.preferredSize
+          val vsb = scroll.verticalScrollBar
+          val vsw = if (vsb.isVisible) vsb.size.width else 0
           ec.setBounds(right - d.width - vsw, top, d.width, bottom - top)
         }
         val cc = getLayoutComponent(parent, CENTER)
@@ -163,13 +163,13 @@ fun makeUI(): Component {
         }
       }
     }
-  })
+  }
   p.add(minimap, BorderLayout.EAST)
   p.add(scroll)
   return JPanel(BorderLayout()).also {
     it.add(p)
     it.add(box, BorderLayout.SOUTH)
-    it.setPreferredSize(Dimension(320, 240))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
@@ -182,8 +182,8 @@ fun loadFile(path: String) {
     onSuccess = { prettify(engine, it) },
     onFailure = { it.message }
   )
-  editor.setText("<pre>$html\n</pre>")
-  editor.setCaretPosition(0)
+  editor.text = "<pre>$html\n</pre>"
+  editor.caretPosition = 0
 }
 
 fun createEngine(): ScriptEngine? {
@@ -204,7 +204,7 @@ fun prettify(engine: ScriptEngine?, src: String) = runCatching {
 }.getOrNull() ?: "error"
 
 private fun makeMiniMap(c: Component): Icon {
-  val d = c.getSize()
+  val d = c.size
   val newW = (d.width * SCALE).toInt()
   val newH = (d.height * SCALE).toInt()
   val image = BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB)
