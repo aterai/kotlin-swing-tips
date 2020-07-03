@@ -50,13 +50,12 @@ fun makeUI(): Component {
   editor.text = HTML_TEXT
   editor.isEditable = false
   editor.addHyperlinkListener { e ->
-    val editorPane = e.source as? JEditorPane ?: return@addHyperlinkListener
     when (e.eventType) {
       HyperlinkEvent.EventType.ACTIVATED -> JOptionPane.showMessageDialog(
-        editorPane, "You click the link with the URL " + e.url
+        editor, "You click the link with the URL " + e.url
       )
       HyperlinkEvent.EventType.ENTERED -> {
-        editorPane.toolTipText = ""
+        editor.toolTipText = ""
         e.sourceElement
           ?.let { it.attributes.getAttribute(HTML.Tag.A) as? AttributeSet }
           ?.also {
@@ -66,7 +65,7 @@ fun makeUI(): Component {
             popup.pack()
           }
       }
-      HyperlinkEvent.EventType.EXITED -> editorPane.toolTipText = null
+      HyperlinkEvent.EventType.EXITED -> editor.toolTipText = null
     }
   }
 

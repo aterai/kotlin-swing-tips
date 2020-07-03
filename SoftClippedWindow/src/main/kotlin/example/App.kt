@@ -22,24 +22,22 @@ fun makeUI(): Component {
 
   val button1 = JButton("clipped window")
   button1.addActionListener { e ->
-    val b = e.source as? AbstractButton ?: return@addActionListener
     JWindow().also {
       it.contentPane.add(makePanel(image))
       it.shape = shape
       it.pack()
-      it.setLocationRelativeTo(b.rootPane)
+      it.setLocationRelativeTo((e.source as? JComponent)?.rootPane)
       it.isVisible = true
     }
   }
 
   val button2 = JButton("soft clipped window")
   button2.addActionListener { e ->
-    val b = e.source as? AbstractButton ?: return@addActionListener
     JWindow().also {
       it.contentPane.add(makePanel(clippedImage))
       it.background = Color(0x0, true)
       it.pack()
-      it.setLocationRelativeTo(b.rootPane)
+      it.setLocationRelativeTo((e.source as? JComponent)?.rootPane)
       it.isVisible = true
     }
   }
