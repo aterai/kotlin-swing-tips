@@ -4,50 +4,50 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.tree.DefaultMutableTreeNode
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val tree = object : JTree() {
-      override fun updateUI() {
-        setCellRenderer(null)
-        setCellEditor(null)
-        super.updateUI()
-        // ???#1: JDK 1.6.0 bug??? Nimbus LnF
-        setCellRenderer(CheckBoxNodeRenderer())
-        setCellEditor(CheckBoxNodeEditor())
+fun makeUI(): Component {
+  val tree = object : JTree() {
+    override fun updateUI() {
+      setCellRenderer(null)
+      setCellEditor(null)
+      super.updateUI()
+      // ???#1: JDK 1.6.0 bug??? Nimbus LnF
+      setCellRenderer(CheckBoxNodeRenderer())
+      setCellEditor(CheckBoxNodeEditor())
+    }
+  }
+  val model = tree.model
+  (model.root as? DefaultMutableTreeNode)?.also { root ->
+    root.breadthFirstEnumeration().toList()
+      .filterIsInstance<DefaultMutableTreeNode>()
+      .forEach {
+        val title = it.userObject?.toString() ?: ""
+        it.userObject = CheckBoxNode(title, Status.DESELECTED)
       }
-    }
-    val model = tree.getModel()
-    (model.getRoot() as? DefaultMutableTreeNode)?.also { root ->
-      root.breadthFirstEnumeration().toList()
-        .filterIsInstance<DefaultMutableTreeNode>()
-        .forEach {
-          val title = it.getUserObject()?.toString() ?: ""
-          it.setUserObject(CheckBoxNode(title, Status.DESELECTED))
-        }
-    }
+  }
 
-    model.addTreeModelListener(CheckBoxStatusUpdateListener())
+  model.addTreeModelListener(CheckBoxStatusUpdateListener())
 
-    tree.setEditable(true)
-    tree.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4))
+  tree.isEditable = true
+  tree.border = BorderFactory.createEmptyBorder(4, 4, 4, 4)
 
-    tree.expandRow(0)
+  tree.expandRow(0)
 
-    setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-    add(JScrollPane(tree))
-    setPreferredSize(Dimension(320, 240))
+  return JPanel(BorderLayout()).also {
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    it.add(JScrollPane(tree))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
 open class TriStateCheckBox : JCheckBox() {
   override fun updateUI() {
-    val currentIcon = getIcon()
-    setIcon(null)
+    val currentIcon = icon
+    icon = null
     super.updateUI()
     currentIcon?.also {
-      setIcon(IndeterminateIcon())
+      icon = IndeterminateIcon()
     }
-    setOpaque(false)
+    isOpaque = false
   }
 }
 
@@ -58,14 +58,14 @@ class IndeterminateIcon : Icon {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     icon.paintIcon(c, g2, 0, 0)
-    g2.setPaint(FOREGROUND)
-    g2.fillRect(SIDE_MARGIN, (getIconHeight() - HEIGHT) / 2, getIconWidth() - SIDE_MARGIN - SIDE_MARGIN, HEIGHT)
+    g2.paint = FOREGROUND
+    g2.fillRect(SIDE_MARGIN, (iconHeight - HEIGHT) / 2, iconWidth - SIDE_MARGIN - SIDE_MARGIN, HEIGHT)
     g2.dispose()
   }
 
-  override fun getIconWidth() = icon.getIconWidth()
+  override fun getIconWidth() = icon.iconWidth
 
-  override fun getIconHeight() = icon.getIconHeight()
+  override fun getIconHeight() = icon.iconHeight
 
   companion object {
     private val FOREGROUND = Color(0xC8_32_14_FF.toInt(), true)
@@ -84,7 +84,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
