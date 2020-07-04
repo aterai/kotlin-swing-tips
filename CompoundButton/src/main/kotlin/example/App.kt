@@ -6,26 +6,24 @@ import java.awt.geom.Area
 import java.awt.geom.Ellipse2D
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel() {
-  init {
-    val d = Dimension(64, 64)
-    add(CompoundButton(d, ButtonLocation.NORTH))
-    add(CompoundButton(d, ButtonLocation.SOUTH))
-    add(CompoundButton(d, ButtonLocation.EAST))
-    add(CompoundButton(d, ButtonLocation.WEST))
-    add(CompoundButton(d, ButtonLocation.CENTER))
-    add(CompoundButtonPanel(d))
-    setPreferredSize(Dimension(320, 240))
-  }
+fun makeUI() = JPanel().also {
+  val d = Dimension(64, 64)
+  it.add(CompoundButton(d, ButtonLocation.NORTH))
+  it.add(CompoundButton(d, ButtonLocation.SOUTH))
+  it.add(CompoundButton(d, ButtonLocation.EAST))
+  it.add(CompoundButton(d, ButtonLocation.WEST))
+  it.add(CompoundButton(d, ButtonLocation.CENTER))
+  it.add(CompoundButtonPanel(d))
+  it.preferredSize = Dimension(320, 240)
 }
 
-class CompoundButtonPanel(private val dim: Dimension) : JComponent() {
+private class CompoundButtonPanel(private val dim: Dimension) : JComponent() {
   override fun getPreferredSize() = dim
 
   override fun isOptimizedDrawingEnabled() = false
 
   init {
-    setLayout(OverlayLayout(this))
+    layout = OverlayLayout(this)
     add(CompoundButton(dim, ButtonLocation.CENTER))
     add(CompoundButton(dim, ButtonLocation.NORTH))
     add(CompoundButton(dim, ButtonLocation.SOUTH))
@@ -34,7 +32,7 @@ class CompoundButtonPanel(private val dim: Dimension) : JComponent() {
   }
 }
 
-enum class ButtonLocation(val startAngle: Double) {
+private enum class ButtonLocation(val startAngle: Double) {
   CENTER(0.0),
   NORTH(45.0),
   EAST(135.0),
@@ -42,11 +40,9 @@ enum class ButtonLocation(val startAngle: Double) {
   WEST(-45.0)
 }
 
-class CompoundButton(private val dim: Dimension, private val bl: ButtonLocation) : JButton() {
-  @Transient
-  private var shape: Shape? = null
-  @Transient
-  private var base: Shape? = null
+private class CompoundButton(private val dim: Dimension, private val bl: ButtonLocation) : JButton() {
+  @Transient private var shape: Shape? = null
+  @Transient private var base: Shape? = null
 
   override fun getPreferredSize() = dim
 
@@ -70,9 +66,9 @@ class CompoundButton(private val dim: Dimension, private val bl: ButtonLocation)
   }
 
   private fun paintFocusAndRollover(g2: Graphics2D, color: Color) {
-    g2.setPaint(GradientPaint(0f, 0f, color, width - 1f, height - 1f, color.brighter(), true))
+    g2.paint = GradientPaint(0f, 0f, color, width - 1f, height - 1f, color.brighter(), true)
     g2.fill(shape)
-    g2.setPaint(getBackground())
+    g2.paint = background
   }
 
   override fun paintComponent(g: Graphics) {
@@ -83,7 +79,7 @@ class CompoundButton(private val dim: Dimension, private val bl: ButtonLocation)
   override fun paintBorder(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    g2.setPaint(Color.GRAY)
+    g2.paint = Color.GRAY
     g2.draw(shape)
     g2.dispose()
   }
@@ -103,15 +99,15 @@ class CompoundButton(private val dim: Dimension, private val bl: ButtonLocation)
       ) {
         val g2 = g.create() as? Graphics2D ?: return
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-        if (getModel().isArmed()) {
-          g2.setPaint(ac)
+        if (getModel().isArmed) {
+          g2.paint = ac
           g2.fill(shape)
-        } else if (isRolloverEnabled() && getModel().isRollover()) {
+        } else if (isRolloverEnabled && getModel().isRollover) {
           paintFocusAndRollover(g2, rc)
         } else if (hasFocus()) {
           paintFocusAndRollover(g2, fc)
         } else {
-          g2.setPaint(getBackground())
+          g2.paint = background
           g2.fill(shape)
         }
         g2.dispose()
@@ -121,9 +117,9 @@ class CompoundButton(private val dim: Dimension, private val bl: ButtonLocation)
 
       override fun getIconHeight() = dim.height
     }
-    setFocusPainted(false)
-    setContentAreaFilled(false)
-    setBackground(Color(0xFA_FA_FA))
+    isFocusPainted = false
+    isContentAreaFilled = false
+    background = Color(0xFA_FA_FA)
     initShape()
   }
 }
@@ -138,7 +134,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
