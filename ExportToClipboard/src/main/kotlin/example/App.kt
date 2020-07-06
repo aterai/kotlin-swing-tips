@@ -6,49 +6,50 @@ import java.awt.datatransfer.Transferable
 import java.awt.datatransfer.UnsupportedFlavorException
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val p = JPanel(GridLayout(1, 2, 10, 0))
-    val h = ListItemTransferHandler()
-    p.border = BorderFactory.createTitledBorder("Drag & Drop(Copy, Cut, Paste) between JLists")
-    p.add(JScrollPane(makeList(h)))
-    p.add(JScrollPane(makeList(h)))
-    add(p)
-    border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-    preferredSize = Dimension(320, 240)
-  }
+fun makeUI(): Component {
+  val p = JPanel(GridLayout(1, 2, 10, 0))
+  val h = ListItemTransferHandler()
+  p.border = BorderFactory.createTitledBorder("Drag & Drop(Copy, Cut, Paste) between JLists")
+  p.add(JScrollPane(makeList(h)))
+  p.add(JScrollPane(makeList(h)))
 
-  private fun makeList(handler: TransferHandler): JList<Color> {
-    val listModel = DefaultListModel<Color>().also {
-      it.addElement(Color.RED)
-      it.addElement(Color.BLUE)
-      it.addElement(Color.GREEN)
-      it.addElement(Color.CYAN)
-      it.addElement(Color.ORANGE)
-      it.addElement(Color.PINK)
-      it.addElement(Color.MAGENTA)
-    }
-    return object : JList<Color>(listModel) {
-      override fun updateUI() {
-        cellRenderer = null
-        super.updateUI()
-        selectionModel.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
-        dropMode = DropMode.INSERT
-        dragEnabled = true
-        transferHandler = handler
-        componentPopupMenu = ListPopupMenu(this)
-        val renderer = cellRenderer
-        setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-          val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-          c.foreground = value
-          c
+  return JPanel(BorderLayout()).also {
+    it.add(p)
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private fun makeList(handler: TransferHandler): JList<Color> {
+  val listModel = DefaultListModel<Color>().also {
+    it.addElement(Color.RED)
+    it.addElement(Color.BLUE)
+    it.addElement(Color.GREEN)
+    it.addElement(Color.CYAN)
+    it.addElement(Color.ORANGE)
+    it.addElement(Color.PINK)
+    it.addElement(Color.MAGENTA)
+  }
+  return object : JList<Color>(listModel) {
+    override fun updateUI() {
+      cellRenderer = null
+      super.updateUI()
+      selectionModel.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
+      dropMode = DropMode.INSERT
+      dragEnabled = true
+      transferHandler = handler
+      componentPopupMenu = ListPopupMenu(this)
+      val renderer = cellRenderer
+      setCellRenderer { list, value, index, isSelected, cellHasFocus ->
+        renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
+          it.foreground = value
         }
       }
     }
   }
 }
 
-class ListPopupMenu(list: JList<*>) : JPopupMenu() {
+private class ListPopupMenu(list: JList<*>) : JPopupMenu() {
   private val cutItem: JMenuItem
   private val copyItem: JMenuItem
   override fun show(c: Component, x: Int, y: Int) {
@@ -79,7 +80,7 @@ class ListPopupMenu(list: JList<*>) : JPopupMenu() {
   }
 }
 
-class ListItemTransferHandler : TransferHandler() {
+private class ListItemTransferHandler : TransferHandler() {
   private var source: JList<*>? = null
   private val selectedIndices = mutableListOf<Int>()
   private var addIndex = -1 // Location where items were added
@@ -88,7 +89,7 @@ class ListItemTransferHandler : TransferHandler() {
   override fun createTransferable(c: JComponent): Transferable? {
     val src = c as? JList<*> ?: return null
     source = src
-    src.getSelectedIndices().forEach { selectedIndices.add(it) }
+    src.selectedIndices.forEach { selectedIndices.add(it) }
     val transferredObjects = src.selectedValuesList
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(FLAVOR)
@@ -119,11 +120,12 @@ class ListItemTransferHandler : TransferHandler() {
     }.getOrNull().orEmpty()
 
     @Suppress("UNCHECKED_CAST")
-    val listModel = target.getModel() as DefaultListModel<Any>
-    for (o in values) {
-      val i = index++
-      listModel.add(i, o)
-      target.addSelectionInterval(i, i)
+    (target.model as? DefaultListModel<Any>)?.also {
+      for (o in values) {
+        val i = index++
+        it.add(i, o)
+        target.addSelectionInterval(i, i)
+      }
     }
     addCount = if (target == source) values.size else 0
     return values.isNotEmpty()
@@ -141,7 +143,7 @@ class ListItemTransferHandler : TransferHandler() {
         addCount > 0 -> selectedIndices.map { if (it >= addIndex) it + addCount else it }
         else -> selectedIndices.toList()
       }
-      ((c as? JList<*>)?.getModel() as? DefaultListModel<*>)?.also { model ->
+      ((c as? JList<*>)?.model as? DefaultListModel<*>)?.also { model ->
         for (i in selectedList.indices.reversed()) {
           model.remove(selectedList[i])
         }
@@ -153,7 +155,7 @@ class ListItemTransferHandler : TransferHandler() {
   }
 
   private fun getIndex(info: TransferSupport): Int {
-    val target = info.component as JList<*>
+    val target = info.component as? JList<*> ?: return -1
     var index = if (info.isDrop) { // Mouse Drag & Drop
       val tdl = info.dropLocation
       if (tdl is JList.DropLocation) {
@@ -164,8 +166,7 @@ class ListItemTransferHandler : TransferHandler() {
     } else { // Keyboard Copy & Paste
       target.selectedIndex
     }
-    val listModel = target.model as DefaultListModel<*>
-    val max = listModel.size
+    val max = (target.model as? DefaultListModel<*>)?.size ?: -1
     index = if (index < 0) max else index
     index = index.coerceAtMost(max)
     return index
@@ -186,7 +187,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
