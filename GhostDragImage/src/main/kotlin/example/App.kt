@@ -15,44 +15,44 @@ import javax.swing.border.Border
 import javax.swing.event.MouseInputAdapter
 import javax.swing.event.MouseInputListener
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val model = DefaultListModel<ListItem>().also {
-      // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
-      it.addElement(ListItem("wi0009-32", "wi0009-32.png"))
-      it.addElement(ListItem("12345", "wi0054-32.png"))
-      it.addElement(ListItem("wi0062-32.png", "wi0062-32.png"))
-      it.addElement(ListItem("test", "wi0063-32.png"))
-      it.addElement(ListItem("32.png", "wi0064-32.png"))
-      it.addElement(ListItem("wi0096-32.png", "wi0096-32.png"))
-      it.addElement(ListItem("6896", "wi0111-32.png"))
-      it.addElement(ListItem("t467467est", "wi0122-32.png"))
-      it.addElement(ListItem("test123", "wi0124-32.png"))
-      it.addElement(ListItem("test(1)", "wi0126-32.png"))
-    }
-    val list = ReorderingList(model)
+fun makeUI(): Component {
+  val model = DefaultListModel<ListItem>().also {
+    // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
+    it.addElement(ListItem("wi0009-32", "wi0009-32.png"))
+    it.addElement(ListItem("12345", "wi0054-32.png"))
+    it.addElement(ListItem("wi0062-32.png", "wi0062-32.png"))
+    it.addElement(ListItem("test", "wi0063-32.png"))
+    it.addElement(ListItem("32.png", "wi0064-32.png"))
+    it.addElement(ListItem("wi0096-32.png", "wi0096-32.png"))
+    it.addElement(ListItem("6896", "wi0111-32.png"))
+    it.addElement(ListItem("t467467est", "wi0122-32.png"))
+    it.addElement(ListItem("test123", "wi0124-32.png"))
+    it.addElement(ListItem("test(1)", "wi0126-32.png"))
+  }
+  val list = ReorderingList(model)
 
-    val check = object : JCheckBox("Compact drag image mode") {
-      override fun updateUI() {
-        super.updateUI()
-        isSelected = false
-      }
+  val check = object : JCheckBox("Compact drag image mode") {
+    override fun updateUI() {
+      super.updateUI()
+      isSelected = false
     }
-    check.addActionListener { e ->
-      if ((e.source as? JCheckBox)?.isSelected == true) {
-        list.setTransferHandler(CompactListItemTransferHandler())
-      } else {
-        list.setTransferHandler(ListItemTransferHandler())
-      }
+  }
+  check.addActionListener { e ->
+    if ((e.source as? JCheckBox)?.isSelected == true) {
+      list.transferHandler = CompactListItemTransferHandler()
+    } else {
+      list.transferHandler = ListItemTransferHandler()
     }
+  }
 
-    add(check, BorderLayout.NORTH)
-    add(JScrollPane(list))
-    preferredSize = Dimension(320, 240)
+  return JPanel(BorderLayout()).also {
+    it.add(check, BorderLayout.NORTH)
+    it.add(JScrollPane(list))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-data class ListItem(val title: String, val iconFile: String) {
+private data class ListItem(val title: String, val iconFile: String) {
   val icon = ImageIcon(javaClass.getResource(iconFile))
   val selectedIcon: ImageIcon
 
@@ -62,7 +62,7 @@ data class ListItem(val title: String, val iconFile: String) {
   }
 }
 
-class ReorderingList(model: ListModel<ListItem>) : JList<ListItem>(model) {
+private class ReorderingList(model: ListModel<ListItem>) : JList<ListItem>(model) {
   private var rbl: MouseInputListener? = null
   private var rubberBandColor: Color? = null
   private val rubberBand = Path2D.Double()
@@ -81,7 +81,7 @@ class ReorderingList(model: ListModel<ListItem>) : JList<ListItem>(model) {
     fixedCellWidth = 62
     fixedCellHeight = 62
     border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
-    setCellRenderer(ListItemListCellRenderer())
+    cellRenderer = ListItemListCellRenderer()
 
     rbl = RubberBandingListener()
     addMouseMotionListener(rbl)
@@ -111,8 +111,8 @@ class ReorderingList(model: ListModel<ListItem>) : JList<ListItem>(model) {
     private val srcPoint = Point()
 
     override fun mouseDragged(e: MouseEvent) {
-      val l = (e.getComponent() as? JList<*>)?.takeUnless { it.getDragEnabled() } ?: return
-      val destPoint = e.getPoint()
+      val l = (e.component as? JList<*>)?.takeUnless { it.dragEnabled } ?: return
+      val destPoint = e.point
       rubberBand.reset()
       rubberBand.moveTo(srcPoint.getX(), srcPoint.getY())
       rubberBand.lineTo(destPoint.getX(), srcPoint.getY())
@@ -122,7 +122,7 @@ class ReorderingList(model: ListModel<ListItem>) : JList<ListItem>(model) {
 
       val indices = (0 until l.model.size)
         .filter { rubberBand.intersects(l.getCellBounds(it, it)) }.toIntArray()
-      l.setSelectedIndices(indices)
+      l.selectedIndices = indices
       l.repaint()
     }
 
@@ -172,12 +172,12 @@ class ReorderingList(model: ListModel<ListItem>) : JList<ListItem>(model) {
   }
 }
 
-class SelectedImageFilter : RGBImageFilter() {
+private class SelectedImageFilter : RGBImageFilter() {
   override fun filterRGB(x: Int, y: Int, argb: Int) =
     argb and 0xFF_FF_FF_00.toInt() or (argb and 0xFF shr 1)
 }
 
-class ListItemListCellRenderer : ListCellRenderer<ListItem> {
+private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   private val renderer = JPanel(BorderLayout())
   private val icon = JLabel(null as? Icon?, SwingConstants.CENTER)
   private val label = JLabel("", SwingConstants.CENTER)
@@ -224,7 +224,7 @@ class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   }
 }
 
-open class ListItemTransferHandler : TransferHandler() {
+private open class ListItemTransferHandler : TransferHandler() {
   private val selectedIndices = mutableListOf<Int>()
   private var addIndex = -1 // Location where items were added
   private var addCount = 0 // Number of items added.
@@ -240,7 +240,7 @@ open class ListItemTransferHandler : TransferHandler() {
   override fun createTransferable(c: JComponent): Transferable? {
     val source = c as? JList<*> ?: return null
     c.getRootPane().glassPane.isVisible = true
-    source.getSelectedIndices().forEach { selectedIndices.add(it) }
+    source.selectedIndices.forEach { selectedIndices.add(it) }
     val transferredObjects = source.selectedValuesList
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(FLAVOR)
@@ -273,13 +273,13 @@ open class ListItemTransferHandler : TransferHandler() {
   }
 
   override fun importData(info: TransferSupport): Boolean {
-    val dl = info.getDropLocation()
-    val target = info.getComponent()
+    val dl = info.dropLocation
+    val target = info.component
     if (dl !is JList.DropLocation || target !is JList<*>) {
       return false
     }
     @Suppress("UNCHECKED_CAST")
-    val listModel = target.getModel() as DefaultListModel<Any>
+    val listModel = target.model as DefaultListModel<Any>
     val max = listModel.size
     var index = dl.index.takeIf { it in 0 until max } ?: max
     addIndex = index
@@ -308,7 +308,7 @@ open class ListItemTransferHandler : TransferHandler() {
         addCount > 0 -> selectedIndices.map { if (it >= addIndex) it + addCount else it }
         else -> selectedIndices.toList()
       }
-      ((c as? JList<*>)?.getModel() as? DefaultListModel<*>)?.also { model ->
+      ((c as? JList<*>)?.model as? DefaultListModel<*>)?.also { model ->
         for (i in selectedList.indices.reversed()) {
           model.remove(selectedList[i])
         }
@@ -346,7 +346,7 @@ open class ListItemTransferHandler : TransferHandler() {
   }
 }
 
-class CompactListItemTransferHandler : ListItemTransferHandler() {
+private class CompactListItemTransferHandler : ListItemTransferHandler() {
   override fun getSourceActions(c: JComponent): Int {
     println("getSourceActions")
     val glassPane = c.rootPane.glassPane
@@ -376,7 +376,7 @@ class CompactListItemTransferHandler : ListItemTransferHandler() {
     val isMoreThanOneItemSelected = selectedCount > 1
     if (isMoreThanOneItemSelected) {
       LABEL.text = selectedCount.toString()
-      val d = LABEL.getPreferredSize()
+      val d = LABEL.preferredSize
       SwingUtilities.paintComponent(
         g2,
         LABEL,
@@ -403,7 +403,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
