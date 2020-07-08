@@ -6,37 +6,37 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val toolbar = JToolBar("ToolBarButton")
-    toolbar.setFloatable(false)
-    val dh = DragHandler()
-    toolbar.addMouseListener(dh)
-    toolbar.addMouseMotionListener(dh)
-    toolbar.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 0))
-    val list = listOf(
-      "Copy24.gif", "Cut24.gif", "Paste24.gif",
-      "Delete24.gif", "Undo24.gif", "Redo24.gif",
-      "Help24.gif", "Open24.gif", "Save24.gif"
-    )
-    list.map { createToolBarButton(it) }.forEach { toolbar.add(it) }
-    add(toolbar, BorderLayout.NORTH)
-    add(JScrollPane(JTree()))
-    setPreferredSize(Dimension(320, 240))
-  }
+private const val PATH = "toolbarButtonGraphics/general/"
 
-  private fun createToolBarButton(name: String): Component {
-    val b = JLabel(ImageIcon(javaClass.getResource(PATH + name)))
-    b.setOpaque(false)
-    return b
-  }
+fun makeUI(): Component {
+  val toolbar = JToolBar("ToolBarButton")
+  toolbar.isFloatable = false
+  val dh = DragHandler()
+  toolbar.addMouseListener(dh)
+  toolbar.addMouseMotionListener(dh)
+  toolbar.border = BorderFactory.createEmptyBorder(2, 2, 2, 0)
+  val list = listOf(
+    "Copy24.gif", "Cut24.gif", "Paste24.gif",
+    "Delete24.gif", "Undo24.gif", "Redo24.gif",
+    "Help24.gif", "Open24.gif", "Save24.gif"
+  )
+  list.map { createToolBarButton(it) }.forEach { toolbar.add(it) }
 
-  companion object {
-    private const val PATH = "/toolbarButtonGraphics/general/"
+  return JPanel(BorderLayout()).also {
+    it.add(toolbar, BorderLayout.NORTH)
+    it.add(JScrollPane(JTree()))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class DragHandler : MouseAdapter() {
+private fun createToolBarButton(name: String): Component {
+  val cl = Thread.currentThread().contextClassLoader
+  val b = JLabel(ImageIcon(cl.getResource(PATH + name)))
+  b.isOpaque = false
+  return b
+}
+
+private class DragHandler : MouseAdapter() {
   private val window = JWindow()
   private val gap = Box.createHorizontalStrut(24)
   private val startPt = Point()
@@ -45,10 +45,10 @@ class DragHandler : MouseAdapter() {
   private var index = -1
 
   override fun mousePressed(e: MouseEvent) {
-    val parent = e.getComponent() as? Container ?: return
-    if (parent.getComponentCount() > 0) {
-      startPt.setLocation(e.getPoint())
-      window.setBackground(Color(0x0, true))
+    val parent = e.component as? Container ?: return
+    if (parent.componentCount > 0) {
+      startPt.location = e.point
+      window.background = Color(0x0, true)
     }
   }
 
@@ -62,26 +62,26 @@ class DragHandler : MouseAdapter() {
     swapComponentLocation(parent, c, gap, index)
     window.add(c)
     window.pack()
-    val d = c.getPreferredSize()
+    val d = c.preferredSize
     val p = Point(pt.x - d.width / 2, pt.y - d.height / 2)
     SwingUtilities.convertPointToScreen(p, parent)
-    window.setLocation(p)
-    window.setVisible(true)
+    window.location = p
+    window.isVisible = true
   }
 
   override fun mouseDragged(e: MouseEvent) {
-    val pt = e.getPoint()
-    val parent = e.getComponent() as? Container ?: return
-    if (!window.isVisible() || draggingComponent == null) {
+    val pt = e.point
+    val parent = e.component as? Container ?: return
+    if (!window.isVisible || draggingComponent == null) {
       if (startPt.distance(pt) > gestureMotionThreshold) {
         startDragging(parent, pt)
       }
       return
     }
-    val d = draggingComponent?.getPreferredSize() ?: Dimension()
+    val d = draggingComponent?.preferredSize ?: Dimension()
     val p = Point(pt.x - d.width / 2, pt.y - d.height / 2)
     SwingUtilities.convertPointToScreen(p, parent)
-    window.setLocation(p)
+    window.location = p
     if (!searchAndSwap(parent, gap, pt)) {
       parent.remove(gap)
       parent.revalidate()
@@ -89,25 +89,25 @@ class DragHandler : MouseAdapter() {
   }
 
   override fun mouseReleased(e: MouseEvent) {
-    val parent = e.getComponent() as? Container
-    if (parent == null || !window.isVisible() || draggingComponent == null) {
+    val parent = e.component as? Container
+    if (parent == null || !window.isVisible || draggingComponent == null) {
       return
     }
-    window.setVisible(false)
-    val pt = e.getPoint()
+    window.isVisible = false
+    val pt = e.point
     val cmp = draggingComponent
     draggingComponent = null
 
     if (!searchAndSwap(parent, cmp, pt)) {
-      val idx = if (parent.getParent().getBounds().contains(pt)) parent.getComponentCount() else index
+      val idx = if (parent.parent.bounds.contains(pt)) parent.componentCount else index
       swapComponentLocation(parent, gap, cmp, idx)
     }
   }
 
   private fun searchAndSwap(parent: Container, cmp: Component?, pt: Point): Boolean {
     var find = false
-    for ((i, c) in parent.getComponents().withIndex()) {
-      val r = c.getBounds()
+    for ((i, c) in parent.components.withIndex()) {
+      val r = c.bounds
       val wd2 = r.width / 2
       PREV_AREA.setBounds(r.x, r.y, wd2, r.height)
       NEXT_AREA.setBounds(r.x + wd2, r.y, wd2, r.height)
@@ -148,7 +148,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
