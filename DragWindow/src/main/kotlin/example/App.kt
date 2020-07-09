@@ -12,7 +12,7 @@ fun start(frame: JFrame) {
   val img = ImageIcon(cl.getResource("example/splash.png"))
   val splashScreen = createSplashScreen(frame, img)
   splashScreen.isVisible = true
-  Thread(Runnable {
+  val r = Runnable {
     runCatching {
       Thread.sleep(6_000)
       EventQueue.invokeAndWait {
@@ -24,7 +24,8 @@ fun start(frame: JFrame) {
       splashScreen.isVisible = false
       splashScreen.dispose()
     }
-  }).start()
+  }
+  Thread(r).start()
 }
 
 private fun makeUI(): Component {
