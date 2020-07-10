@@ -21,30 +21,7 @@ fun makeUI(): Component {
   val combo0 = JComboBox(makeModel())
   val combo1 = JComboBox(makeModel())
   val combo2 = JComboBox(makeModel())
-
-  combo0.border = RoundedCornerBorder()
-  combo1.border = KamabokoBorder()
-  combo2.border = KamabokoBorder()
-  if (combo2.ui is WindowsComboBoxUI) {
-    combo2.ui = object : WindowsComboBoxUI() {
-      override fun createArrowButton(): JButton {
-        val b = JButton(ArrowIcon(Color.BLACK, Color.BLUE)) // .createArrowButton();
-        b.isContentAreaFilled = false
-        b.isFocusPainted = false
-        b.border = BorderFactory.createEmptyBorder()
-        return b
-      }
-    }
-  }
-
-  val box0 = Box.createVerticalBox()
-  box0.add(makeTitledPanel("RoundRectangle2D:", combo0, null))
-  box0.add(Box.createVerticalStrut(5))
-  box0.add(makeTitledPanel("Path2D:", combo1, null))
-  box0.add(Box.createVerticalStrut(5))
-  box0.add(makeTitledPanel("WindowsComboBoxUI#createArrowButton():", combo2, null))
-  box0.add(Box.createVerticalStrut(5))
-  box0.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+  val box0 = makeBox0(combo0, combo1, combo2)
 
   // UIManager.put("TitledBorder.titleColor", FOREGROUND)
   // UIManager.put("TitledBorder.border", BorderFactory.createEmptyBorder())
@@ -68,7 +45,59 @@ fun makeUI(): Component {
 
   UIManager.put("ComboBox.border", KamabokoBorder())
   val combo02 = JComboBox(makeModel())
+  val box1 = makeBox1(combo00, combo01, combo02)
 
+  val tabbedPane = JTabbedPane()
+  tabbedPane.addTab("Basic, Metal", makeTitledPanel(null, box1, BACKGROUND))
+  tabbedPane.addTab("Windows", makeTitledPanel(null, box0, null))
+
+  val check = JCheckBox("editable")
+  check.addActionListener { e ->
+    val f = (e.source as? JCheckBox)?.isSelected ?: false
+    listOf(combo00, combo01, combo02, combo0, combo1, combo2).forEach { it.setEditable(f) }
+    tabbedPane.rootPane.repaint()
+  }
+
+  return JPanel(BorderLayout()).also {
+    it.add(tabbedPane)
+    it.add(check, BorderLayout.SOUTH)
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private fun makeBox0(
+  combo0: JComboBox<String>,
+  combo1: JComboBox<String>,
+  combo2: JComboBox<String>
+) = Box.createVerticalBox().also {
+  combo0.border = RoundedCornerBorder()
+  combo1.border = KamabokoBorder()
+  combo2.border = KamabokoBorder()
+  if (combo2.ui is WindowsComboBoxUI) {
+    combo2.ui = object : WindowsComboBoxUI() {
+      override fun createArrowButton(): JButton {
+        val b = JButton(ArrowIcon(Color.BLACK, Color.BLUE)) // .createArrowButton();
+        b.isContentAreaFilled = false
+        b.isFocusPainted = false
+        b.border = BorderFactory.createEmptyBorder()
+        return b
+      }
+    }
+  }
+  it.add(makeTitledPanel("RoundRectangle2D:", combo0, null))
+  it.add(Box.createVerticalStrut(5))
+  it.add(makeTitledPanel("Path2D:", combo1, null))
+  it.add(Box.createVerticalStrut(5))
+  it.add(makeTitledPanel("WindowsComboBoxUI#createArrowButton():", combo2, null))
+  it.add(Box.createVerticalStrut(5))
+  it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+}
+
+private fun makeBox1(
+  combo00: JComboBox<String>,
+  combo01: JComboBox<String>,
+  combo02: JComboBox<String>
+) = Box.createVerticalBox().also {
   combo00.ui = MetalComboBoxUI()
   combo01.ui = BasicComboBoxUI()
   combo02.ui = object : BasicComboBoxUI() {
@@ -90,30 +119,12 @@ fun makeUI(): Component {
   (combo02.accessibleContext.getAccessibleChild(0) as? JComponent)?.border =
     BorderFactory.createMatteBorder(0, 1, 1, 1, FOREGROUND)
 
-  val box1 = Box.createVerticalBox()
-  box1.add(makeTitledPanel("MetalComboBoxUI:", combo00, BACKGROUND))
-  box1.add(Box.createVerticalStrut(10))
-  box1.add(makeTitledPanel("BasicComboBoxUI:", combo01, BACKGROUND))
-  box1.add(Box.createVerticalStrut(10))
-  box1.add(makeTitledPanel("BasicComboBoxUI#createArrowButton():", combo02, BACKGROUND))
-  box1.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-
-  val tabbedPane = JTabbedPane()
-  tabbedPane.addTab("Basic, Metal", makeTitledPanel(null, box1, BACKGROUND))
-  tabbedPane.addTab("Windows", makeTitledPanel(null, box0, null))
-
-  val check = JCheckBox("editable")
-  check.addActionListener { e ->
-    val f = (e.source as? JCheckBox)?.isSelected ?: false
-    listOf(combo00, combo01, combo02, combo0, combo1, combo2).forEach { it.setEditable(f) }
-    tabbedPane.rootPane.repaint()
-  }
-
-  return JPanel(BorderLayout()).also {
-    it.add(tabbedPane)
-    it.add(check, BorderLayout.SOUTH)
-    it.preferredSize = Dimension(320, 240)
-  }
+  it.add(makeTitledPanel("MetalComboBoxUI:", combo00, BACKGROUND))
+  it.add(Box.createVerticalStrut(10))
+  it.add(makeTitledPanel("BasicComboBoxUI:", combo01, BACKGROUND))
+  it.add(Box.createVerticalStrut(10))
+  it.add(makeTitledPanel("BasicComboBoxUI#createArrowButton():", combo02, BACKGROUND))
+  it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
 }
 
 private fun makeTitledPanel(title: String?, cmp: Container, bgc: Color?): Component {
