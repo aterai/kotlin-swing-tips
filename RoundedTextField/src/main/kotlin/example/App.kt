@@ -99,7 +99,6 @@ fun makeUI(): Component {
   return panel
 }
 
-
 private fun makeTitledPanel(title: String, cmp: Component): Component {
   val p = JPanel(GridBagLayout())
   p.border = BorderFactory.createTitledBorder(title)
