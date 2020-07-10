@@ -69,7 +69,7 @@ private class FolderSelectionListener(private val fileSystemView: FileSystemView
     val model = tree?.model as? DefaultTreeModel
     val node = e.path.lastPathComponent as? DefaultMutableTreeNode
     val parent = node?.userObject as? File
-    if (model == null || parent == null || !parent.isDirectory || !node.isLeaf) {
+    if (model == null || parent?.isDirectory != true || !node.isLeaf) {
       return
     }
 
