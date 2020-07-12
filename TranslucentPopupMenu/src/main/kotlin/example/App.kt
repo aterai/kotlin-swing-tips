@@ -4,47 +4,48 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.BorderUIResource
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val popup = TranslucentPopupMenu().also {
-      it.add("Undo")
-      it.add("Redo")
-      it.addSeparator()
-      it.add("Cut")
-      it.add("Copy")
-      it.add("Paste")
-      it.add("Delete")
-    }
-    val tree = JTree()
-    tree.setComponentPopupMenu(popup)
-    add(JScrollPane(tree))
-    setPreferredSize(Dimension(320, 240))
+fun makeUI(): Component {
+  val popup = TranslucentPopupMenu().also {
+    it.add("Undo")
+    it.add("Redo")
+    it.addSeparator()
+    it.add("Cut")
+    it.add("Copy")
+    it.add("Paste")
+    it.add("Delete")
+  }
+  val tree = JTree()
+  tree.componentPopupMenu = popup
+
+  return JPanel(BorderLayout()).also {
+    it.add(JScrollPane(tree))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class TranslucentPopupMenu : JPopupMenu() {
+private class TranslucentPopupMenu : JPopupMenu() {
   override fun isOpaque() = false
 
   override fun updateUI() {
     super.updateUI()
     UIManager.getBorder("PopupMenu.border")?.also {
-      setBorder(BorderUIResource(BorderFactory.createLineBorder(Color.GRAY)))
+      border = BorderUIResource(BorderFactory.createLineBorder(Color.GRAY))
     }
   }
 
   override fun add(c: Component): Component {
-    (c as? JComponent)?.setOpaque(false)
+    (c as? JComponent)?.isOpaque = false
     return c
   }
 
   override fun add(menuItem: JMenuItem): JMenuItem {
-    menuItem.setOpaque(false)
+    menuItem.isOpaque = false
     return super.add(menuItem)
   }
 
   override fun show(c: Component, x: Int, y: Int) {
     EventQueue.invokeLater {
-      val p = getTopLevelAncestor()
+      val p = topLevelAncestor
       if (p is JWindow) {
         println("Heavy weight")
         p.setBackground(ALPHA_ZERO)
@@ -57,10 +58,10 @@ class TranslucentPopupMenu : JPopupMenu() {
 
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setPaint(POPUP_LEFT)
-    g2.fillRect(0, 0, LEFT_WIDTH, getHeight())
-    g2.setPaint(POPUP_BACK)
-    g2.fillRect(LEFT_WIDTH, 0, getWidth(), getHeight())
+    g2.paint = POPUP_LEFT
+    g2.fillRect(0, 0, LEFT_WIDTH, height)
+    g2.paint = POPUP_BACK
+    g2.fillRect(LEFT_WIDTH, 0, width, height)
     g2.dispose()
   }
 
@@ -82,7 +83,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
