@@ -9,85 +9,86 @@ import javax.swing.border.Border
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
-class MainPanel : JPanel(BorderLayout(5, 5)) {
-  @Transient
-  private val defaultModel = arrayOf(
-    ListItem("wi0009-32.png"),
-    ListItem("wi0054-32.png"),
-    ListItem("wi0062-32.png"),
-    ListItem("wi0063-32.png"),
-    ListItem("wi0064-32.png"),
-    ListItem("wi0096-32.png"),
-    ListItem("wi0111-32.png"),
-    ListItem("wi0122-32.png"),
-    ListItem("wi0124-32.png"),
-    ListItem("wi0126-32.png")
-  )
-  private val model = DefaultListModel<ListItem>()
-  private val list = object : JList<ListItem>(model) {
-    override fun updateUI() {
-      selectionForeground = null // Nimbus
-      selectionBackground = null // Nimbus
-      cellRenderer = null
-      super.updateUI()
-      layoutOrientation = HORIZONTAL_WRAP
-      visibleRowCount = 0
-      fixedCellWidth = 82
-      fixedCellHeight = 64
-      border = BorderFactory.createEmptyBorder(5, 10, 5, 10)
-      setCellRenderer(ListItemListCellRenderer())
-      selectionModel.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
+@Transient private val defaultModel = arrayOf(
+  ListItem("wi0009-32.png"),
+  ListItem("wi0054-32.png"),
+  ListItem("wi0062-32.png"),
+  ListItem("wi0063-32.png"),
+  ListItem("wi0064-32.png"),
+  ListItem("wi0096-32.png"),
+  ListItem("wi0111-32.png"),
+  ListItem("wi0122-32.png"),
+  ListItem("wi0124-32.png"),
+  ListItem("wi0126-32.png")
+)
+private val model = DefaultListModel<ListItem>()
+private val list = object : JList<ListItem>(model) {
+  override fun updateUI() {
+    selectionForeground = null // Nimbus
+    selectionBackground = null // Nimbus
+    cellRenderer = null
+    super.updateUI()
+    layoutOrientation = HORIZONTAL_WRAP
+    visibleRowCount = 0
+    fixedCellWidth = 82
+    fixedCellHeight = 64
+    border = BorderFactory.createEmptyBorder(5, 10, 5, 10)
+    cellRenderer = ListItemListCellRenderer()
+    selectionModel.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
+  }
+}
+private val field = JTextField(15)
+
+fun makeUI(): Component {
+  for (item in defaultModel) {
+    model.addElement(item)
+  }
+  val listener = object : DocumentListener {
+    override fun insertUpdate(e: DocumentEvent) {
+      filter()
+    }
+
+    override fun removeUpdate(e: DocumentEvent) {
+      filter()
+    }
+
+    override fun changedUpdate(e: DocumentEvent) {
+      /* not needed */
     }
   }
-  private val field = JTextField(15)
+  field.document.addDocumentListener(listener)
 
-  init {
-    for (item in defaultModel) {
-      model.addElement(item)
-    }
-    field.document.addDocumentListener(object : DocumentListener {
-      override fun insertUpdate(e: DocumentEvent) {
-        filter()
-      }
+  return JPanel(BorderLayout(5, 5)).also {
+    it.add(field, BorderLayout.NORTH)
+    it.add(JScrollPane(list))
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    it.preferredSize = Dimension(320, 240)
+  }
+}
 
-      override fun removeUpdate(e: DocumentEvent) {
-        filter()
-      }
-
-      override fun changedUpdate(e: DocumentEvent) {
-        /* not needed */
-      }
-    })
-    add(field, BorderLayout.NORTH)
-    add(JScrollPane(list))
-    border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-    preferredSize = Dimension(320, 240)
+private fun getPattern() = field.text
+  ?.takeIf { it.isNotEmpty() }
+  ?.let {
+    runCatching {
+      Pattern.compile(it)
+    }.getOrNull()
   }
 
-  private fun getPattern() = field.text
-    ?.takeIf { it.isNotEmpty() }
-    ?.let {
-      runCatching {
-        Pattern.compile(it)
-      }.getOrNull()
-    }
-
-  private fun filter() {
-    getPattern()?.also { pattern ->
-      // val selected = list.selectedValuesList
-      model.clear()
-      defaultModel
-        .filter { item -> pattern.matcher(item.title).find() }
-        .forEach { element -> model.addElement(element) }
-      for (item in list.selectedValuesList) {
-        val i = model.indexOf(item)
-        list.addSelectionInterval(i, i)
-      }
+private fun filter() {
+  getPattern()?.also { pattern ->
+    // val selected = list.selectedValuesList
+    model.clear()
+    defaultModel
+      .filter { item -> pattern.matcher(item.title).find() }
+      .forEach { element -> model.addElement(element) }
+    for (item in list.selectedValuesList) {
+      val i = model.indexOf(item)
+      list.addSelectionInterval(i, i)
     }
   }
 }
 
-data class ListItem(val iconFile: String) {
+private data class ListItem(val iconFile: String) {
   val icon = ImageIcon(javaClass.getResource(iconFile))
   val selectedIcon: ImageIcon
   val title: String
@@ -99,12 +100,12 @@ data class ListItem(val iconFile: String) {
   }
 }
 
-class SelectedImageFilter : RGBImageFilter() {
+private class SelectedImageFilter : RGBImageFilter() {
   override fun filterRGB(x: Int, y: Int, argb: Int) =
     argb and 0xFF_FF_FF_00.toInt() or (argb and 0xFF shr 1)
 }
 
-class ListItemListCellRenderer : ListCellRenderer<ListItem> {
+private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   private val renderer = JPanel(BorderLayout())
   private val icon = JLabel(null as Icon?, SwingConstants.CENTER)
   private val label = JLabel("", SwingConstants.CENTER)
@@ -161,7 +162,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
