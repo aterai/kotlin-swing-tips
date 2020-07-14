@@ -11,39 +11,41 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableModel
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val columnNames = arrayOf("String", "Integer", "Boolean")
-    val data = arrayOf(arrayOf("aaa", -1, true))
-    val model = object : DefaultTableModel(data, columnNames) {
-      override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
-    }
-    for (i in 0 until 20) {
-      model.addRow(arrayOf("Name: $i", i, i % 2 == 0))
-    }
-    val table = FishEyeTable(model)
-    table.setRowSelectionInterval(0, 0)
-    val scroll = JScrollPane(table)
-    scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER)
-    scroll.setPreferredSize(Dimension(320, 240))
-    add(scroll, BorderLayout.NORTH)
+fun makeUI(): Component {
+  val columnNames = arrayOf("String", "Integer", "Boolean")
+  val data = arrayOf(arrayOf("aaa", -1, true))
+  val model = object : DefaultTableModel(data, columnNames) {
+    override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
+  }
+  for (i in 0 until 20) {
+    model.addRow(arrayOf("Name: $i", i, i % 2 == 0))
+  }
+  val table = FishEyeTable(model)
+  table.setRowSelectionInterval(0, 0)
+
+  val scroll = JScrollPane(table)
+  scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
+  scroll.preferredSize = Dimension(320, 240)
+
+  return JPanel(BorderLayout()).also {
+    it.add(scroll, BorderLayout.NORTH)
   }
 }
 
-internal class FishEyeRowContext(val height: Int, val font: Font, val color: Color) : Serializable {
+private class FishEyeRowContext(val height: Int, val font: Font, val color: Color) : Serializable {
   companion object {
     private const val serialVersionUID = 1L
   }
 }
 
-internal class FishEyeTable(m: TableModel) : JTable(m) {
+private class FishEyeTable(m: TableModel) : JTable(m) {
   private val fishEyeRowList: List<FishEyeRowContext>
   private val minFont: Font
-  @Transient
-  private var handler: FishEyeTableHandler? = null
+
+  @Transient private var handler: FishEyeTableHandler? = null
 
   init {
-    val font = getFont()
+    val font = font
     minFont = font.deriveFont(8f)
     val font12 = font.deriveFont(10f)
     val font18 = font.deriveFont(16f)
@@ -70,9 +72,9 @@ internal class FishEyeTable(m: TableModel) : JTable(m) {
     removeMouseMotionListener(handler)
     getSelectionModel().removeListSelectionListener(handler)
     super.updateUI()
-    setColumnSelectionAllowed(false)
+    columnSelectionAllowed = false
     setRowSelectionAllowed(true)
-    setFillsViewportHeight(true)
+    fillsViewportHeight = true
 
     handler = FishEyeTableHandler()
     addMouseListener(handler)
@@ -85,7 +87,7 @@ internal class FishEyeTable(m: TableModel) : JTable(m) {
     var prevHeight = 0
 
     override fun mouseMoved(e: MouseEvent) {
-      val row = rowAtPoint(e.getPoint())
+      val row = rowAtPoint(e.point)
       if (prevRow == row) {
         return
       }
@@ -94,12 +96,7 @@ internal class FishEyeTable(m: TableModel) : JTable(m) {
     }
 
     override fun mouseDragged(e: MouseEvent) {
-      val row = rowAtPoint(e.getPoint())
-      if (prevRow == row) {
-        return
-      }
-      initRowHeight(prevHeight, row)
-      prevRow = row
+      mouseMoved(e)
     }
 
     override fun mousePressed(e: MouseEvent) {
@@ -107,10 +104,10 @@ internal class FishEyeTable(m: TableModel) : JTable(m) {
     }
 
     override fun valueChanged(e: ListSelectionEvent) {
-      if (e.getValueIsAdjusting()) {
+      if (e.valueIsAdjusting) {
         return
       }
-      val row = getSelectedRow()
+      val row = selectedRow
       if (prevRow == row) {
         return
       }
@@ -122,17 +119,17 @@ internal class FishEyeTable(m: TableModel) : JTable(m) {
   override fun doLayout() {
     super.doLayout()
     val p = SwingUtilities.getAncestorOfClass(JViewport::class.java, this) as? JViewport ?: return
-    val h = p.getExtentSize().height
+    val h = p.extentSize.height
     if (h == handler?.prevHeight) {
       return
     }
-    initRowHeight(h, getSelectedRow())
+    initRowHeight(h, selectedRow)
     handler?.prevHeight = h
   }
 
   override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int): Component {
     val c = super.prepareRenderer(renderer, row, column)
-    val rowCount = getModel().getRowCount()
+    val rowCount = model.rowCount
     var color = Color.WHITE
     var font = minFont
     val ccRow = handler?.prevRow ?: -1
@@ -148,14 +145,14 @@ internal class FishEyeTable(m: TableModel) : JTable(m) {
         index++
       }
     }
-    c.setFont(font)
-    c.setBackground(if (isRowSelected(row)) getSelectionBackground() else color)
+    c.font = font
+    c.background = if (isRowSelected(row)) getSelectionBackground() else color
     return c
   }
 
   private fun getViewableColoredRowCount(idx: Int): Int {
     val rd2 = (fishEyeRowList.size - 1) / 2
-    val rc = getModel().getRowCount()
+    val rc = model.rowCount
     return if (rd2 - idx > 0 && idx < rd2) {
       rd2 + 1 + idx
     } else if (idx > rc - 1 - rd2 && idx < rc - 1 + rd2) {
@@ -168,7 +165,7 @@ internal class FishEyeTable(m: TableModel) : JTable(m) {
   @Suppress("LoopWithTooManyJumpStatements")
   private fun initRowHeight(height: Int, ccRow: Int) {
     val rd2 = (fishEyeRowList.size - 1) / 2
-    val rowCount = getModel().getRowCount()
+    val rowCount = model.rowCount
     val viewRc = getViewableColoredRowCount(ccRow)
     // var viewH = 0
     // for (i in 0 until viewRc) {
@@ -210,7 +207,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
