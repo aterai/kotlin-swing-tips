@@ -18,11 +18,10 @@ fun makeUI() = JPanel().also {
 
 private class ImageCaptionLabel(caption: String, icon: Icon) : JLabel() {
   private val textArea = object : JTextArea() {
-    @Transient
-    private var listener: MouseListener? = null
+    @Transient private var listener: MouseListener? = null
 
     override fun paintComponent(g: Graphics) {
-      val g2 = g.create() as Graphics2D
+      val g2 = g.create() as? Graphics2D ?: return
       g2.paint = background
       g2.fillRect(0, 0, width, height)
       g2.dispose()
@@ -90,7 +89,7 @@ private class ImageCaptionLabel(caption: String, icon: Icon) : JLabel() {
   }
 }
 
-internal class LabelHandler(private val textArea: Component) : MouseAdapter(), HierarchyListener {
+private class LabelHandler(private val textArea: Component) : MouseAdapter(), HierarchyListener {
   private val animator = Timer(5) { updateTextAreaLocation() }
   var textAreaHeight = 0
     private set
@@ -151,12 +150,6 @@ internal class LabelHandler(private val textArea: Component) : MouseAdapter(), H
 private object AnimationUtil {
   private const val N = 3
 
-  // http://www.anima-entertainment.de/math-easein-easeout-easeinout-and-bezier-curves
-  // Math: EaseIn EaseOut, EaseInOut and Bezier Curves | Anima Entertainment GmbH
-  // fun easeIn(t: Double) = t.pow(N.toDouble()) // range: 0.0 <= t <= 1.0
-
-  // fun easeOut(t: Double) = (t - 1.0).pow(N.toDouble()) + 1.0
-
   fun easeInOut(t: Double): Double {
     val isFirstHalf = t < .5
     return if (isFirstHalf) {
@@ -166,10 +159,6 @@ private object AnimationUtil {
     }
   }
 
-  // http://d.hatena.ne.jp/pcl/20120617/p1
-  // http://d.hatena.ne.jp/rexpit/20110328/1301305266
-  // http://c2.com/cgi/wiki?IntegerPowerAlgorithm
-  // http://www.osix.net/modules/article/?id=696
   fun intPow(da: Double, ib: Int): Double {
     var b = ib
     require(b >= 0) { "B must be a positive integer or zero" }
@@ -184,7 +173,7 @@ private object AnimationUtil {
     }
     return d
   }
-} /* Singleton */
+}
 
 fun main() {
   EventQueue.invokeLater {
