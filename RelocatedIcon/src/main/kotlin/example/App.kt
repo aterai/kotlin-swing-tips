@@ -3,7 +3,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
-import java.beans.PropertyVetoException
 import java.util.concurrent.atomic.AtomicInteger
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
@@ -16,7 +15,7 @@ fun makeUI(): Component {
       if (!check.isSelected) {
         return
       }
-      doReIconify(e.component as JDesktopPane)
+      doReIconify(e.component as? JDesktopPane)
     }
   })
   val button = JButton("relocate")
@@ -48,8 +47,8 @@ fun makeUI(): Component {
   }
 }
 
-fun doReIconify(desktop: JDesktopPane) {
-  val dm = desktop.desktopManager
+fun doReIconify(desktop: JDesktopPane?) {
+  val dm = desktop?.desktopManager
   if (dm is ReIconifyDesktopManager) {
     for (f in desktop.allFrames) {
       if (f.isIcon) {
@@ -69,10 +68,8 @@ fun createFrame(t: String?, x: Int, y: Int): JInternalFrame {
 
 fun addIconifiedFrame(desktop: JDesktopPane, f: JInternalFrame) {
   desktop.add(f)
-  try {
+  runCatching {
     f.isIcon = true
-  } catch (ex: PropertyVetoException) {
-    throw IllegalStateException(ex)
   }
 }
 
