@@ -359,7 +359,6 @@ class TabTransferHandler : TransferHandler() {
     support.dropAction = MOVE
     val tdl = support.dropLocation
     val pt = tdl.dropPoint
-    // val target = support.getComponent() as DnDTabbedPane
     target.autoScrollTest(pt)
     val dl = target.tabDropLocationForPoint(pt)
     val idx = dl.index
@@ -463,7 +462,7 @@ private class DropLocationLayerUI : LayerUI<DnDTabbedPane>() {
     super.paint(g, c)
     val tabbedPane = (c as? JLayer<*>)?.view as? DnDTabbedPane ?: return
     tabbedPane.dropLocation?.takeIf { it.index >= 0 }?.also {
-      val g2 = g.create() as Graphics2D
+      val g2 = g.create() as? Graphics2D ?: return
       g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f)
       g2.paint = Color.RED
       initLineRect(tabbedPane, it)
@@ -550,7 +549,7 @@ private class TabButton : JButton() {
 
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.stroke = BasicStroke(2f)
     g2.paint = Color.BLACK
     if (getModel().isRollover) {
