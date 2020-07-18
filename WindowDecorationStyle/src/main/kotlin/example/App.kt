@@ -5,7 +5,6 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseMotionListener
 import java.awt.event.WindowEvent
-import java.beans.PropertyVetoException
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicInternalFrameUI
 
@@ -61,25 +60,22 @@ private class DragWindowListener : MouseAdapter() {
 private class DraggableInternalFrame(title: String?) : JInternalFrame(title) {
   override fun updateUI() {
     super.updateUI()
-    val ui = getUI() as BasicInternalFrameUI
-    val titleBar: Component = ui.northPane
-    for (l in titleBar.getListeners(MouseMotionListener::class.java)) {
-      titleBar.removeMouseMotionListener(l)
+    (getUI() as? BasicInternalFrameUI)?.northPane?.also { titleBar ->
+      for (l in titleBar.getListeners(MouseMotionListener::class.java)) {
+        titleBar.removeMouseMotionListener(l)
+      }
+      val dwl = DragWindowListener()
+      titleBar.addMouseListener(dwl)
+      titleBar.addMouseMotionListener(dwl)
     }
-    val dwl = DragWindowListener()
-    titleBar.addMouseListener(dwl)
-    titleBar.addMouseMotionListener(dwl)
   }
 
   init {
     val focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager()
     focusManager.addPropertyChangeListener { e ->
-      val prop = e.propertyName
-      if ("activeWindow" == prop) {
-        try {
+      if ("activeWindow" == e.propertyName) {
+        runCatching {
           setSelected(e.newValue != null)
-        } catch (ex: PropertyVetoException) {
-          throw IllegalStateException(ex)
         }
       }
     }
