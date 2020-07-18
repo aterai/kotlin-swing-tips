@@ -6,23 +6,22 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val combo = object : JComboBox<String>(makeModel()) {
-    @Transient
-    private var handler: MouseWheelListener? = null
+    @Transient private var handler: MouseWheelListener? = null
     override fun updateUI() {
       removeMouseWheelListener(handler)
       super.updateUI()
       handler = MouseWheelListener { e ->
-        val c = e.getComponent()
+        val c = e.component
         if (c is JComboBox<*> && c.hasFocus()) {
-          val idx = c.getSelectedIndex() + e.getWheelRotation()
-          c.setSelectedIndex(idx.coerceIn(0 until c.getItemCount()))
+          val idx = c.selectedIndex + e.wheelRotation
+          c.selectedIndex = idx.coerceIn(0 until c.itemCount)
         }
       }
       addMouseWheelListener(handler)
     }
   }
   val p = JPanel(GridBagLayout())
-  p.setBorder(BorderFactory.createTitledBorder("JComboBox"))
+  p.border = BorderFactory.createTitledBorder("JComboBox")
   val c = GridBagConstraints()
   c.gridx = 0
   c.insets = Insets(5, 5, 5, 0)
@@ -38,7 +37,7 @@ fun makeUI(): Component {
   val panel = JPanel(BorderLayout())
   panel.add(p, BorderLayout.NORTH)
   panel.add(JScrollPane(JTextArea("dummy")))
-  panel.setPreferredSize(Dimension(320, 240))
+  panel.preferredSize = Dimension(320, 240)
   return panel
 }
 
