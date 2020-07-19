@@ -11,157 +11,161 @@ import javax.swing.event.InternalFrameEvent
 import javax.swing.plaf.basic.BasicInternalFrameUI
 import javax.swing.text.DefaultEditorKit
 
-class MainPanel : JPanel(BorderLayout()) {
-  private val desktop = JDesktopPane()
-  private val menuBar = JMenuBar()
-  private val dummyBar = JMenuBar()
+private val desktop = JDesktopPane()
+private val menuBar = JMenuBar()
+private val sampleBar = JMenuBar()
 
-  init {
-    val button = JButton(ModalInternalFrameAction3("Show"))
-    button.mnemonic = KeyEvent.VK_S
+fun makeUI(): Component {
+  val button = JButton(ModalInternalFrameAction3("Show"))
+  button.mnemonic = KeyEvent.VK_S
 
-    val internal = JInternalFrame("Button")
-    internal.contentPane.add(button)
-    internal.setSize(100, 100)
-    internal.setLocation(20, 20)
-    internal.isVisible = true
-    desktop.add(internal)
+  val internal = JInternalFrame("Button")
+  internal.contentPane.add(button)
+  internal.setSize(100, 100)
+  internal.setLocation(20, 20)
+  internal.isVisible = true
+  desktop.add(internal)
 
-    dummyBar.add(JMenu("Frame"))
-    add(dummyBar, BorderLayout.NORTH)
-    dummyBar.isVisible = false
+  sampleBar.add(JMenu("Frame"))
+  sampleBar.isVisible = false
 
-    val menu = JMenu("Frame")
-    menu.mnemonic = KeyEvent.VK_F
-    menuBar.add(menu)
+  val menu = JMenu("Frame")
+  menu.mnemonic = KeyEvent.VK_F
+  menuBar.add(menu)
 
-    var menuItem = JMenuItem(object : AbstractAction("New Frame") {
-      private var openFrameCount = 0
-      override fun actionPerformed(e: ActionEvent) {
-        val frame = JInternalFrame("title", true, true, true, true)
-        frame.setSize(130, 100)
-        frame.setLocation(30 * openFrameCount, 30 * openFrameCount)
-        desktop.add(frame)
-        frame.isVisible = true
-        openFrameCount++
-      }
-    })
-    menuItem.mnemonic = KeyEvent.VK_N
-    menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.ALT_DOWN_MASK)
-    menu.add(menuItem)
-
-    menu.addSeparator()
-
-    menuItem = menu.add(ModalInternalFrameAction1("InternalMessageDialog(Normal)"))
-    menuItem.mnemonic = KeyEvent.VK_1
-    menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.ALT_DOWN_MASK)
-
-    menuItem = menu.add(ModalInternalFrameAction2("InternalMessageDialog"))
-    menuItem.mnemonic = KeyEvent.VK_2
-    menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_2, InputEvent.ALT_DOWN_MASK)
-
-    menuItem = menu.add(ModalInternalFrameAction3("InternalMessageDialog(Print)"))
-    menuItem.mnemonic = KeyEvent.VK_3
-    menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_3, InputEvent.ALT_DOWN_MASK)
-
-    val b = JButton(DefaultEditorKit.BeepAction())
-    b.mnemonic = KeyEvent.VK_B
-    add(b, BorderLayout.SOUTH)
-    add(desktop)
-    EventQueue.invokeLater { rootPane.jMenuBar = menuBar }
-    preferredSize = Dimension(320, 240)
-  }
-
-  // menuItem = new JMenuItem(new ModalInternalFrameAction1("InternalMessageDialog(Normal)"))
-  // menuItem.setMnemonic(KeyEvent.VK_1)
-  inner class ModalInternalFrameAction1(label: String) : AbstractAction(label) {
+  var menuItem = JMenuItem(object : AbstractAction("New Frame") {
+    private var openFrameCount = 0
     override fun actionPerformed(e: ActionEvent) {
-      setJMenuEnabled(false)
-      JOptionPane.showInternalMessageDialog(desktop, "information", "modal1", JOptionPane.INFORMATION_MESSAGE)
-      setJMenuEnabled(true)
+      val frame = JInternalFrame("title", true, true, true, true)
+      frame.setSize(130, 100)
+      frame.setLocation(30 * openFrameCount, 30 * openFrameCount)
+      desktop.add(frame)
+      frame.isVisible = true
+      openFrameCount++
     }
-  }
+  })
+  menuItem.mnemonic = KeyEvent.VK_N
+  menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.ALT_DOWN_MASK)
+  menu.add(menuItem)
 
-  // menuItem = new JMenuItem(new ModalInternalFrameAction2("InternalMessageDialog"));
-  // menuItem.setMnemonic(KeyEvent.VK_2);
-  inner class ModalInternalFrameAction2(label: String) : AbstractAction(label) {
-    private val glass = MyGlassPane()
+  menu.addSeparator()
 
-    init {
-      glass.isOpaque = false
-      glass.isVisible = false
-      desktop.add(glass, JLayeredPane.MODAL_LAYER)
-    }
+  menuItem = menu.add(ModalInternalFrameAction1("InternalMessageDialog(Normal)"))
+  menuItem.mnemonic = KeyEvent.VK_1
+  menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.ALT_DOWN_MASK)
 
-    override fun actionPerformed(e: ActionEvent) {
-      setJMenuEnabled(false)
-      val w = SwingUtilities.getWindowAncestor(desktop)
-      val screen = w.graphicsConfiguration.bounds
-      glass.setSize(screen.width, screen.height)
-      glass.isVisible = true
-      JOptionPane.showInternalMessageDialog(desktop, "information", "modal2", JOptionPane.INFORMATION_MESSAGE)
-      glass.isVisible = false
-      setJMenuEnabled(true)
-    }
-  }
+  menuItem = menu.add(ModalInternalFrameAction2("InternalMessageDialog"))
+  menuItem.mnemonic = KeyEvent.VK_2
+  menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_2, InputEvent.ALT_DOWN_MASK)
 
-  // menuItem = new JMenuItem(new ModalInternalFrameAction3("Modal"));
-  // menuItem.setMnemonic(KeyEvent.VK_3);
-  // Creating Modal Internal Frames -- Approach 1 and Approach 2
-  // http://java.sun.com/developer/JDCTechTips/2001/tt1220.html
-  inner class ModalInternalFrameAction3(label: String) : AbstractAction(label) {
-    private val glass = PrintGlassPane()
+  menuItem = menu.add(ModalInternalFrameAction3("InternalMessageDialog(Print)"))
+  menuItem.mnemonic = KeyEvent.VK_3
+  menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_3, InputEvent.ALT_DOWN_MASK)
 
-    init {
-      glass.isVisible = false
-    }
+  val b = JButton(DefaultEditorKit.BeepAction())
+  b.mnemonic = KeyEvent.VK_B
 
-    override fun actionPerformed(e: ActionEvent) {
-      val optionPane = JOptionPane()
-      // TEST: UIManager.put("InternalFrame.titleButtonToolTipsOn", false)
-      val modal = optionPane.createInternalFrame(desktop, "modal3")
-      // TEST: UIManager.put("InternalFrame.titleButtonToolTipsOn", true)
-      optionPane.message = "Hello, World"
-      optionPane.messageType = JOptionPane.INFORMATION_MESSAGE
-      removeSystemMenuListener(modal)
-      modal.addInternalFrameListener(object : InternalFrameAdapter() {
-        override fun internalFrameClosed(e: InternalFrameEvent) {
-          glass.removeAll()
-          glass.isVisible = false
-        }
-      })
-      glass.add(modal)
-      modal.pack()
-      // val screen = desktop.getBounds();
-      // modal.setLocation(screen.x + screen.width / 2 - modal.getSize().width / 2,
-      //                   screen.y + screen.height / 2 - modal.getSize().height / 2)
-      rootPane.glassPane = glass
-      glass.isVisible = true
-      modal.isVisible = true
-    }
-  }
-
-  private fun setJMenuEnabled(flag: Boolean) {
-    val bar = rootPane.jMenuBar
-    bar.isVisible = flag
-    dummyBar.isVisible = !flag
-  }
-
-  private fun removeSystemMenuListener(modal: JInternalFrame) {
-    val ui = modal.ui as? BasicInternalFrameUI ?: return
-    ui.northPane.components
-      .filter { it is JLabel || "InternalFrameTitlePane.menuButton" == it.name }
-      .forEach { removeComponentMouseListener(it) }
-  }
-
-  private fun removeComponentMouseListener(c: Component) {
-    for (ml in c.mouseListeners) {
-      (c as? JComponent)?.removeMouseListener(ml)
-    }
+  return JPanel(BorderLayout()).also {
+    it.add(sampleBar, BorderLayout.NORTH)
+    it.add(b, BorderLayout.SOUTH)
+    it.add(desktop)
+    EventQueue.invokeLater { it.rootPane.jMenuBar = menuBar }
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class MyGlassPane : JDesktopPane() {
+// menuItem = new JMenuItem(new ModalInternalFrameAction1("InternalMessageDialog(Normal)"))
+// menuItem.setMnemonic(KeyEvent.VK_1)
+private class ModalInternalFrameAction1(label: String) : AbstractAction(label) {
+  override fun actionPerformed(e: ActionEvent) {
+    setJMenuEnabled(false)
+    JOptionPane.showInternalMessageDialog(desktop, "information", "modal1", JOptionPane.INFORMATION_MESSAGE)
+    setJMenuEnabled(true)
+  }
+}
+
+// menuItem = new JMenuItem(new ModalInternalFrameAction2("InternalMessageDialog"));
+// menuItem.setMnemonic(KeyEvent.VK_2);
+private class ModalInternalFrameAction2(label: String) : AbstractAction(label) {
+  private val glass = MyGlassPane()
+
+  init {
+    glass.isOpaque = false
+    glass.isVisible = false
+    desktop.add(glass, JLayeredPane.MODAL_LAYER)
+  }
+
+  override fun actionPerformed(e: ActionEvent) {
+    setJMenuEnabled(false)
+    val w = SwingUtilities.getWindowAncestor(desktop)
+    val screen = w.graphicsConfiguration.bounds
+    glass.setSize(screen.width, screen.height)
+    glass.isVisible = true
+    JOptionPane.showInternalMessageDialog(desktop, "information", "modal2", JOptionPane.INFORMATION_MESSAGE)
+    glass.isVisible = false
+    setJMenuEnabled(true)
+  }
+}
+
+// menuItem = new JMenuItem(new ModalInternalFrameAction3("Modal"));
+// menuItem.setMnemonic(KeyEvent.VK_3);
+// Creating Modal Internal Frames -- Approach 1 and Approach 2
+// http://java.sun.com/developer/JDCTechTips/2001/tt1220.html
+private class ModalInternalFrameAction3(label: String) : AbstractAction(label) {
+  private val glassPane = PrintGlassPane()
+  private var originalGlassPane: Component? = null
+
+  init {
+    glassPane.isVisible = false
+  }
+
+  override fun actionPerformed(e: ActionEvent) {
+    val optionPane = JOptionPane()
+    // TEST: UIManager.put("InternalFrame.titleButtonToolTipsOn", false)
+    val modal = optionPane.createInternalFrame(desktop, "modal3")
+    // TEST: UIManager.put("InternalFrame.titleButtonToolTipsOn", true)
+    optionPane.message = "Hello, World"
+    optionPane.messageType = JOptionPane.INFORMATION_MESSAGE
+    removeSystemMenuListener(modal)
+    modal.addInternalFrameListener(object : InternalFrameAdapter() {
+      override fun internalFrameClosed(e: InternalFrameEvent) {
+        glassPane.removeAll()
+        glassPane.isVisible = false
+        desktop.rootPane.glassPane = originalGlassPane
+      }
+    })
+    glassPane.add(modal)
+    modal.pack()
+    // val screen = desktop.getBounds();
+    // modal.setLocation(screen.x + screen.width / 2 - modal.getSize().width / 2,
+    //                   screen.y + screen.height / 2 - modal.getSize().height / 2)
+    originalGlassPane = desktop.rootPane.glassPane
+    desktop.rootPane.glassPane = glassPane
+    glassPane.isVisible = true
+    modal.isVisible = true
+  }
+}
+
+private fun setJMenuEnabled(flag: Boolean) {
+  val bar = desktop.rootPane.jMenuBar
+  bar.isVisible = flag
+  sampleBar.isVisible = !flag
+}
+
+private fun removeSystemMenuListener(modal: JInternalFrame) {
+  val ui = modal.ui as? BasicInternalFrameUI ?: return
+  ui.northPane.components
+    .filter { it is JLabel || "InternalFrameTitlePane.menuButton" == it.name }
+    .forEach { removeComponentMouseListener(it) }
+}
+
+private fun removeComponentMouseListener(c: Component) {
+  for (ml in c.mouseListeners) {
+    (c as? JComponent)?.removeMouseListener(ml)
+  }
+}
+
+private class MyGlassPane : JDesktopPane() {
   override fun updateUI() {
     super.updateUI()
     focusTraversalPolicy = object : DefaultFocusTraversalPolicy() {
@@ -181,7 +185,7 @@ class MyGlassPane : JDesktopPane() {
   }
 }
 
-class PrintGlassPane : JDesktopPane() {
+private class PrintGlassPane : JDesktopPane() {
   override fun setVisible(isVisible: Boolean) {
     val oldVisible = isVisible()
     super.setVisible(isVisible)
@@ -205,7 +209,7 @@ class PrintGlassPane : JDesktopPane() {
   }
 }
 
-object TextureUtils {
+private object TextureUtils {
   private val DEFAULT_COLOR = Color(100, 100, 100, 100)
 
   @JvmOverloads
@@ -229,7 +233,7 @@ object TextureUtils {
     g2.dispose()
     return TexturePaint(img, Rectangle(size, size))
   }
-} /* HideUtilityClassConstructor */
+}
 
 fun main() {
   EventQueue.invokeLater {
@@ -241,7 +245,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
