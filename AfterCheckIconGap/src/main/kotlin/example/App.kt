@@ -4,8 +4,11 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI() = JPanel(BorderLayout()).also {
+  EventQueue.invokeLater {
+    it.rootPane.jMenuBar = createMenuBar()
+  }
   it.add(JScrollPane(JTextArea()))
-  it.setPreferredSize(Dimension(320, 240))
+  it.preferredSize = Dimension(320, 240)
 }
 
 fun createMenuBar(): JMenuBar {
@@ -14,13 +17,13 @@ fun createMenuBar(): JMenuBar {
   println("minimumTextOffset: " + UIManager.get("CheckBoxMenuItem.minimumTextOffset"))
   println("evenHeight: " + UIManager.get("CheckBoxMenuItem.evenHeight"))
 
-  // UIManager.put("MenuItem.checkIconOffset", 20);
-  // UIManager.put("MenuItem.afterCheckIconGap", 20);
+  // UIManager.put("MenuItem.checkIconOffset", 20)
+  // UIManager.put("MenuItem.afterCheckIconGap", 20)
   UIManager.put("MenuItem.minimumTextOffset", 20 + 20 + 31 - 9)
 
   UIManager.put("CheckBoxMenuItem.afterCheckIconGap", 20)
   UIManager.put("CheckBoxMenuItem.checkIconOffset", 20)
-  // UIManager.put("CheckBoxMenuItem.minimumTextOffset", 100);
+  // UIManager.put("CheckBoxMenuItem.minimumTextOffset", 100)
 
   val menuBar = JMenuBar()
   val menu = makeMenu("JMenu")
@@ -41,13 +44,13 @@ fun makeMenu(title: String): JMenu {
   menu.add(JCheckBoxMenuItem("JCheckBoxMenuItem 1"))
   menu.add(JCheckBoxMenuItem("JCheckBoxMenuItem 2"))
 
-  val rbmi1 = JRadioButtonMenuItem("JRadioButtonMenuItem 1")
-  val rbmi2 = JRadioButtonMenuItem("JRadioButtonMenuItem 2")
+  val rmi1 = JRadioButtonMenuItem("JRadioButtonMenuItem 1")
+  val rmi2 = JRadioButtonMenuItem("JRadioButtonMenuItem 2")
   val bg = ButtonGroup()
-  bg.add(rbmi1)
-  bg.add(rbmi2)
-  menu.add(rbmi1)
-  menu.add(rbmi2)
+  bg.add(rmi1)
+  bg.add(rmi2)
+  menu.add(rmi1)
+  menu.add(rmi2)
   return menu
 }
 
@@ -63,7 +66,6 @@ fun main() {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
       contentPane.add(makeUI())
-      setJMenuBar(createMenuBar())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
