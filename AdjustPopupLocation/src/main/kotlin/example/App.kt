@@ -5,10 +5,9 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val check = JCheckBox("Adjust JPopupMenu location", true)
-  // check.setFocusPainted(false)
-  val popup: JPopupMenu = object : JPopupMenu() {
+  val popup = object : JPopupMenu() {
     override fun show(c: Component, x: Int, y: Int) {
-      if (check.isSelected()) {
+      if (check.isSelected) {
         val p = Point(x, y)
         val r = c.bounds
         val d = preferredSize
@@ -28,14 +27,15 @@ fun makeUI(): Component {
   popup.add("222222")
   popup.add("33")
   val label = JLabel("JLabel")
-  label.setOpaque(true)
-  label.setComponentPopupMenu(popup)
-  val p = JPanel(BorderLayout())
-  p.add(check, BorderLayout.NORTH)
-  p.add(label)
-  p.setBorder(BorderFactory.createLineBorder(Color.RED, 10))
-  p.setPreferredSize(Dimension(320, 240))
-  return p
+  label.isOpaque = true
+  label.componentPopupMenu = popup
+
+  return JPanel(BorderLayout()).also {
+    it.add(check, BorderLayout.NORTH)
+    it.add(label)
+    it.border = BorderFactory.createLineBorder(Color.RED, 10)
+    it.preferredSize = Dimension(320, 240)
+  }
 }
 
 fun main() {
