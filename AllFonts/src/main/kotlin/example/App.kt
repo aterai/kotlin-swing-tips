@@ -12,15 +12,15 @@ fun makeUI(): Component {
     override fun getColumnClass(column: Int) = String::class.java
   }
   val table = JTable(model)
-  table.setAutoCreateRowSorter(true)
+  table.autoCreateRowSorter = true
 
-  GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()
-    .map { arrayOf(it.getFamily(), it.getName(), it.getPSName()) }
+  GraphicsEnvironment.getLocalGraphicsEnvironment().allFonts
+    .map { arrayOf(it.family, it.name, it.psName) }
     .forEach { model.addRow(it) }
 
   val p = JPanel(BorderLayout())
   p.add(JScrollPane(table))
-  p.setPreferredSize(Dimension(320, 240))
+  p.preferredSize = Dimension(320, 240)
   return p
 }
 
