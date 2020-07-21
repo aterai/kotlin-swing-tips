@@ -21,79 +21,74 @@ fun makeUI(): Component {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
   val table0 = JTable(model)
-  table0.setAutoCreateRowSorter(true)
+  table0.autoCreateRowSorter = true
   table0.putClientProperty("terminateEditOnFocusLost", true)
 
   val table1 = makeTable(model)
-  table1.setAutoCreateRowSorter(true)
+  table1.autoCreateRowSorter = true
   table1.putClientProperty("terminateEditOnFocusLost", true)
 
-  val sp = JSplitPane(JSplitPane.VERTICAL_SPLIT)
-  sp.setTopComponent(JScrollPane(table0))
-  sp.setBottomComponent(JScrollPane(table1))
-  sp.setResizeWeight(.5)
-  sp.setPreferredSize(Dimension(320, 240))
-  return sp
+  return JSplitPane(JSplitPane.VERTICAL_SPLIT).also {
+    it.topComponent = JScrollPane(table0)
+    it.bottomComponent = JScrollPane(table1)
+    it.resizeWeight = .5
+    it.preferredSize = Dimension(320, 240)
+  }
 }
 
-private fun makeTable(model: TableModel): JTable {
-  return object : JTable(model) {
-    override fun updateUI() {
-      setSelectionForeground(ColorUIResource(Color.RED))
-      setSelectionBackground(ColorUIResource(Color.RED))
-      super.updateUI()
-      updateRenderer()
-      val checkBox = makeBooleanEditor(this)
-      setDefaultEditor(java.lang.Boolean::class.java, DefaultCellEditor(checkBox))
-    }
+private fun makeTable(model: TableModel) = object : JTable(model) {
+  override fun updateUI() {
+    setSelectionForeground(ColorUIResource(Color.RED))
+    setSelectionBackground(ColorUIResource(Color.RED))
+    super.updateUI()
+    updateRenderer()
+    val checkBox = makeBooleanEditor(this)
+    setDefaultEditor(java.lang.Boolean::class.java, DefaultCellEditor(checkBox))
+  }
 
-    private fun updateRenderer() {
-      val m = getModel()
-      for (i in 0 until m.getColumnCount()) {
-        (getDefaultRenderer(m.getColumnClass(i)) as? Component)?.also {
-          SwingUtilities.updateComponentTreeUI(it)
-        }
+  private fun updateRenderer() {
+    val m = getModel()
+    for (i in 0 until m.columnCount) {
+      (getDefaultRenderer(m.getColumnClass(i)) as? Component)?.also {
+        SwingUtilities.updateComponentTreeUI(it)
       }
-    }
-
-    override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int): Component {
-      val c = super.prepareEditor(editor, row, column)
-      if (c is JCheckBox) {
-        c.setBackground(getSelectionBackground())
-        c.setBorderPainted(true)
-      }
-      return c
     }
   }
+
+  override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int) =
+    super.prepareEditor(editor, row, column).also {
+      it.background = getSelectionBackground()
+      (it as? JCheckBox)?.isBorderPainted = true
+    }
 }
 
 private fun makeBooleanEditor(table: JTable): JCheckBox {
   val checkBox = JCheckBox()
-  checkBox.setHorizontalAlignment(SwingConstants.CENTER)
-  checkBox.setBorderPainted(true)
-  checkBox.setOpaque(true)
+  checkBox.horizontalAlignment = SwingConstants.CENTER
+  checkBox.isBorderPainted = true
+  checkBox.isOpaque = true
   checkBox.addMouseListener(object : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
-      (e.getComponent() as? JCheckBox)?.also { cb ->
-        val m = cb.getModel()
-        val editingRow = table.getEditingRow()
-        if (m.isPressed() && table.isRowSelected(editingRow) && e.isControlDown()) {
+      (e.component as? JCheckBox)?.also { cb ->
+        val m = cb.model
+        val editingRow = table.editingRow
+        if (m.isPressed && table.isRowSelected(editingRow) && e.isControlDown) {
           if (editingRow % 2 == 0) {
-            cb.setOpaque(false)
+            cb.isOpaque = false
           } else {
-            cb.setOpaque(true)
-            cb.setBackground(UIManager.getColor("Table.alternateRowColor"))
+            cb.isOpaque = true
+            cb.background = UIManager.getColor("Table.alternateRowColor")
           }
         } else {
-          cb.setBackground(table.getSelectionBackground())
-          cb.setOpaque(true)
+          cb.background = table.selectionBackground
+          cb.isOpaque = true
         }
       }
     }
 
     override fun mouseExited(e: MouseEvent) {
-      if (table.isEditing() && !table.getCellEditor().stopCellEditing()) {
-        table.getCellEditor().cancelCellEditing()
+      if (table.isEditing && !table.cellEditor.stopCellEditing()) {
+        table.cellEditor.cancelCellEditing()
       }
     }
   })
