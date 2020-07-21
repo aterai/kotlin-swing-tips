@@ -73,32 +73,14 @@ private fun setTableHeaderColumnRatio(table: JTable, text: String) {
 }
 
 private fun getWidthRatio(text: String, length: Int) = runCatching {
-  (text.split(":").toList().map { it.trim() }.filter { it.isNotEmpty() }.map { it.toInt() } + generateSequence(1) { it }.take(length).toList()).take(length)
+  val a = text.split(":").toList().filter { it.trim().isNotEmpty() }.map { it.toInt() }
+  val b = generateSequence(1) { it }.take(length).toList()
+  (a + b).take(length)
 }.onFailure {
   Toolkit.getDefaultToolkit().beep()
   val msg = "invalid value. ${it.message}"
   JOptionPane.showMessageDialog(null, msg, "Error", JOptionPane.ERROR_MESSAGE)
 }.getOrNull() ?: generateSequence(1) { it }.take(length).toList()
-
-
-//
-//    Stream.concat(
-//      text.split(":").toList().map { it.trim() }.filter { it.isNotEmpty() }
-//        .map { it.toInt() },
-//
-//      Stream.generate { 1 }.limit(length.toLong())
-//    ).limit(length.toLong()).collect(Collectors.toList())
-//  }.onFu  {
-//    Toolkit.getDefaultToolkit().beep()
-//    JOptionPane.showMessageDialog(
-//      null, """
-//   invalid value.
-//   ${it.message}
-//   """.trimIndent(), "Error", JOptionPane.ERROR_MESSAGE
-//    )
-//    listOf(1).limit(length.toLong())
-//      .collect(Collectors.toList())
-//  }
 
 fun main() {
   EventQueue.invokeLater {
