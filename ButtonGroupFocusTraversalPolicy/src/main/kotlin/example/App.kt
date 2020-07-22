@@ -5,39 +5,43 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val box = Box.createVerticalBox()
-  box.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
+  box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   box.add(JTextField("Another focusable component"))
   box.add(Box.createVerticalStrut(5))
+
   val bg1 = ButtonGroup()
   box.add(makeButtonGroupPanel("Default", bg1))
   box.add(Box.createVerticalStrut(5))
+
   val bg2 = ButtonGroup()
   val buttons = makeButtonGroupPanel("FocusTraversalPolicy", bg2)
-  buttons.setFocusTraversalPolicyProvider(true)
-  buttons.setFocusTraversalPolicy(object : LayoutFocusTraversalPolicy() {
+  buttons.isFocusTraversalPolicyProvider = true
+  buttons.focusTraversalPolicy = object : LayoutFocusTraversalPolicy() {
     override fun getDefaultComponent(focusCycleRoot: Container): Component {
-      val selection = bg2.getSelection()
-      return focusCycleRoot.getComponents().first {
-        (it as? JRadioButton)?.getModel() == selection
+      val selection = bg2.selection
+      return focusCycleRoot.components.first {
+        (it as? JRadioButton)?.model == selection
       } ?: super.getDefaultComponent(focusCycleRoot)
     }
-  })
+  }
   box.add(buttons)
   box.add(Box.createVerticalStrut(5))
+
   val clear = JButton("clear selection")
   clear.addActionListener {
     bg1.clearSelection()
     bg2.clearSelection()
   }
+
   val b = Box.createHorizontalBox()
   b.add(Box.createHorizontalGlue())
   b.add(clear)
   box.add(b)
 
-  val p = JPanel(BorderLayout())
-  p.add(box, BorderLayout.NORTH)
-  p.setPreferredSize(Dimension(320, 240))
-  return p
+  return JPanel(BorderLayout()).also {
+    it.add(box, BorderLayout.NORTH)
+    it.preferredSize = Dimension(320, 240)
+  }
 }
 
 private fun makeButtonGroupPanel(title: String, bg: ButtonGroup): Container {
@@ -47,7 +51,7 @@ private fun makeButtonGroupPanel(title: String, bg: ButtonGroup): Container {
     bg.add(rb)
     p.add(rb)
   }
-  p.setBorder(BorderFactory.createTitledBorder(title))
+  p.border = BorderFactory.createTitledBorder(title)
   return p
 }
 
