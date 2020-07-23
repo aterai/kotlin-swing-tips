@@ -23,7 +23,7 @@ fun makeUI(): Component {
   val columnNames = arrayOf("fixed 1", "fixed 2", "A", "B", "C", "D", "E", "F")
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) =
-      if (column < FIXED_COLUMN_RANGE) Int::class.java else Any::class.java
+      if (column < FIXED_COLUMN_RANGE) Number::class.java else Any::class.java
   }
   val sorter = TableRowSorter(model)
   val fixedTable = JTable(model)
