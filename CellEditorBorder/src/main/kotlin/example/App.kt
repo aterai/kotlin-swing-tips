@@ -16,31 +16,30 @@ fun makeUI(): Component {
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = when (column) {
       0 -> String::class.java
-      1 -> Int::class.java
-      2 -> Boolean::class.java
+      1 -> Integer::class.java
+      2 -> java.lang.Boolean::class.java
       else -> super.getColumnClass(column)
     }
   }
   val table = object : JTable(model) {
-    override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int): Component {
-      val c = super.prepareEditor(editor, row, column)
-      if (c is JCheckBox) {
-        c.isBorderPainted = true
-        c.background = getSelectionBackground()
-        // } else if (c instanceof JComponent && convertColumnIndexToModel(column) == 1) {
-      } else if (c is JComponent && Number::class.java.isAssignableFrom(getColumnClass(column))) {
-        c.border = BorderFactory.createLineBorder(Color.GREEN, 2)
+    override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int) =
+      super.prepareEditor(editor, row, column).also {
+        if (it is JCheckBox) {
+          it.isBorderPainted = true
+          it.background = getSelectionBackground()
+        } else if (it is JComponent && Number::class.java.isAssignableFrom(getColumnClass(column))) {
+          it.border = BorderFactory.createLineBorder(Color.GREEN, 2)
+        }
       }
-      return c
-    }
   }
+  table.autoCreateRowSorter = true
+  table.fillsViewportHeight = true
+  table.componentPopupMenu = TablePopupMenu()
+
   val field = JTextField()
   field.border = BorderFactory.createLineBorder(Color.RED, 2)
   table.setDefaultEditor(Any::class.java, DefaultCellEditor(field))
 
-  table.autoCreateRowSorter = true
-  table.fillsViewportHeight = true
-  table.componentPopupMenu = TablePopupMenu()
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(table))
     it.preferredSize = Dimension(320, 240)
@@ -58,20 +57,24 @@ private class TablePopupMenu : JPopupMenu() {
 
   init {
     add("add").addActionListener {
-      val table = invoker as JTable
-      val model = table.model as DefaultTableModel
-      model.addRow(arrayOf<Any>("New row", model.rowCount, false))
-      val r = table.getCellRect(model.rowCount - 1, 0, true)
-      table.scrollRectToVisible(r)
+      val table = invoker as? JTable
+      val model = table?.model as? DefaultTableModel
+      if (model != null) {
+        model.addRow(arrayOf("New row", model.rowCount, false))
+        val r = table.getCellRect(model.rowCount - 1, 0, true)
+        table.scrollRectToVisible(r)
+      }
     }
     addSeparator()
     delete = add("delete")
     delete.addActionListener {
-      val table = invoker as JTable
-      val model = table.model as DefaultTableModel
-      val selection = table.selectedRows
-      for (i in selection.indices.reversed()) {
-        model.removeRow(table.convertRowIndexToModel(selection[i]))
+      val table = invoker as? JTable
+      val model = table?.model as? DefaultTableModel
+      if (model != null) {
+        val selection = table.selectedRows
+        for (i in selection.indices.reversed()) {
+          model.removeRow(table.convertRowIndexToModel(selection[i]))
+        }
       }
     }
   }
