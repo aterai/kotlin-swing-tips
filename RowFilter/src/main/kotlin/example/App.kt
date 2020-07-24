@@ -31,11 +31,13 @@ private class TablePopupMenu : JPopupMenu() {
     addSeparator()
     deleteMenuItem = add("delete")
     deleteMenuItem.addActionListener {
-      val tbl = invoker as JTable
-      val m = tbl.model as DefaultTableModel
-      val selection = tbl.selectedRows
-      for (i in selection.indices.reversed()) {
-        m.removeRow(tbl.convertRowIndexToModel(selection[i]))
+      val tbl = invoker as? JTable
+      val m = tbl?.model as? DefaultTableModel
+      if (m != null) {
+        val selection = tbl.selectedRows
+        for (i in selection.indices.reversed()) {
+          m.removeRow(tbl.convertRowIndexToModel(selection[i]))
+        }
       }
     }
   }
@@ -101,7 +103,7 @@ fun makeUI(): Component {
 private class RowDataModel : DefaultTableModel() {
   private var number = 0
   fun addRowData(t: RowData) {
-    val obj = arrayOf<Any>(number, t.name, t.comment)
+    val obj = arrayOf(number, t.name, t.comment)
     super.addRow(obj)
     number++
   }
