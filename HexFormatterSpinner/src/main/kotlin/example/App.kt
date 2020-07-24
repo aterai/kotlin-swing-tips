@@ -131,7 +131,7 @@ private fun makeFFactory(): DefaultFormatterFactory {
     @Throws(ParseException::class)
     override fun valueToString(value: Any?) = "%06X".format(value as? Int)
   }
-  formatter.valueClass = Int::class.java
+  formatter.valueClass = Integer::class.java
   formatter.overwriteMode = true
   return DefaultFormatterFactory(formatter)
 }
