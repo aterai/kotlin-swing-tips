@@ -8,7 +8,6 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardWatchEventKinds
 import java.nio.file.WatchEvent
-import java.nio.file.WatchKey
 import java.nio.file.WatchService
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
@@ -90,13 +89,11 @@ fun makeUI(): Component {
 private fun processEvents(dir: Path, watcher: WatchService) {
   while (true) {
     // wait for key to be signaled
-    val key: WatchKey
-    try {
-      key = watcher.take()
-    } catch (ex: InterruptedException) {
+    val key = runCatching {
+      watcher.take()
+    }.onFailure {
       EventQueue.invokeLater { append("Interrupted") }
-      return
-    }
+    }.getOrNull() ?: return
 
     for (event in key.pollEvents()) {
       val kind = event.kind()
