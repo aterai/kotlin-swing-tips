@@ -21,9 +21,8 @@ private val monthTable = object : JTable() {
     val defaultRowHeight = height / rowCount
     var remainder = height % rowCount
     for (i in 0 until rowCount) {
-      val a = if (i == rowCount - 1) 0.coerceAtLeast(remainder) else 1
+      val a = 1.coerceAtMost(0.coerceAtLeast(remainder--))
       setRowHeight(i, defaultRowHeight + a)
-      remainder--
     }
   }
 

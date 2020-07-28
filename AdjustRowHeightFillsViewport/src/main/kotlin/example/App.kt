@@ -20,17 +20,16 @@ private val table = object : JTable(model) {
   private var prevHeight = -1
   private var prevCount = -1
 
-  private fun updateRowsHeight(vport: JViewport) {
-    val height = vport.extentSize.height
+  private fun updateRowsHeight(viewPort: JViewport) {
+    val height = viewPort.extentSize.height
     val rowCount = model.rowCount
     val defaultRowHeight = height / rowCount
     if ((height != prevHeight || rowCount != prevCount) && defaultRowHeight > 0) {
       // var remainder = height - rowCount * defaultRowHeight
       var remainder = height % rowCount
       for (i in 0 until rowCount) {
-        val a = if (remainder > 0) if (i == rowCount - 1) remainder else 1 else 0
+        val a = 1.coerceAtMost(0.coerceAtLeast(remainder--))
         setRowHeight(i, defaultRowHeight + a)
-        remainder--
       }
     }
     prevHeight = height
