@@ -96,13 +96,13 @@ private fun getDayOfWeekColor(dow: DayOfWeek) = when (dow) {
   else -> Color.WHITE
 }
 
-internal class CalendarViewTableModel(date: LocalDate) : DefaultTableModel() {
+private class CalendarViewTableModel(date: LocalDate) : DefaultTableModel() {
   private val startDate: LocalDate
   private val weekFields = WeekFields.of(Locale.getDefault())
 
   init {
     val firstDayOfMonth = YearMonth.from(date).atDay(1)
-    // int minusDays = firstDayOfMonth.get(WeekFields.SUNDAY_START.dayOfWeek()) - 1;
+    // val minusDays = firstDayOfMonth.get(WeekFields.SUNDAY_START.dayOfWeek()) - 1
     val minusDays = firstDayOfMonth.get(weekFields.dayOfWeek()) - 1
     startDate = firstDayOfMonth.minusDays(minusDays.toLong())
   }

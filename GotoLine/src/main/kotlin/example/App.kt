@@ -26,7 +26,7 @@ fun makeUI(): Component {
       rect.setSize(10, vr.height)
       textArea.scrollRectToVisible(rect)
       textArea.caretPosition = elem.startOffset
-      // textArea.requestFocus();
+      // textArea.requestFocus()
     }.onFailure {
       UIManager.getLookAndFeel().provideErrorFeedback(textArea)
     }
@@ -44,7 +44,7 @@ fun makeUI(): Component {
   }
 }
 
-internal class LineNumberView(private val textArea: JTextArea) : JComponent() {
+private class LineNumberView(private val textArea: JTextArea) : JComponent() {
   private val fontMetrics: FontMetrics
   private val fontAscent: Int
   private val fontHeight: Int

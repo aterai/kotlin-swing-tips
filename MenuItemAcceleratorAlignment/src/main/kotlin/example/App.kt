@@ -10,76 +10,74 @@ import java.awt.event.KeyEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicMenuItemUI
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    EventQueue.invokeLater { rootPane.jMenuBar = createMenuBar() }
-    add(JScrollPane(JTextArea()))
-    preferredSize = Dimension(320, 240)
-  }
-
-  private fun createMenuBar(): JMenuBar {
-    val menuBar = JMenuBar()
-    val menu0 = JMenu("Default")
-    val menu1 = JMenu("RightAcc")
-    menu0.mnemonic = KeyEvent.VK_D
-    menu1.mnemonic = KeyEvent.VK_R
-    menuBar.add(menu0)
-    menuBar.add(menu1)
-
-    val list = mutableListOf<JMenuItem>()
-    var menuItem = JMenuItem("mi")
-    menuItem.mnemonic = KeyEvent.VK_N
-    menuItem.accelerator = KeyStroke.getKeyStroke(
-      KeyEvent.VK_N,
-      InputEvent.ALT_DOWN_MASK
-    )
-    list.add(menuItem)
-    menuItem = JMenuItem("aaa")
-    menuItem.mnemonic = KeyEvent.VK_1
-    menuItem.accelerator = KeyStroke.getKeyStroke(
-      KeyEvent.VK_ESCAPE,
-      InputEvent.ALT_DOWN_MASK
-    )
-    list.add(menuItem)
-    menuItem = JMenuItem("bb")
-    menuItem.mnemonic = KeyEvent.VK_2
-
-    val msk2 = InputEvent.ALT_DOWN_MASK or InputEvent.CTRL_DOWN_MASK
-    menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, msk2)
-    list.add(menuItem)
-    menuItem = JMenuItem("c")
-    menuItem.mnemonic = KeyEvent.VK_3
-
-    val msk3 = InputEvent.ALT_DOWN_MASK or InputEvent.CTRL_DOWN_MASK or InputEvent.SHIFT_DOWN_MASK
-    menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, msk3)
-    list.add(menuItem)
-
-    for (mi in list) {
-      menu0.add(mi)
-      menu1.add(makeMenuItem(mi))
-    }
-    return menuBar
-  }
-
-  private fun makeMenuItem(mi: JMenuItem): JMenuItem {
-    val menuItem = object : JMenuItem(mi.text) {
-      override fun updateUI() {
-        super.updateUI()
-        if (getUI() is WindowsMenuItemUI) {
-          setUI(RaaWindowsMenuItemUI())
-        } else {
-          setUI(RaaBasicMenuItemUI())
-        }
-        // XXX: setLocale(Locale.JAPAN)
-      }
-    }
-    menuItem.mnemonic = mi.mnemonic
-    menuItem.accelerator = mi.accelerator
-    return menuItem
-  }
+fun makeUI() = JPanel(BorderLayout()).also {
+  EventQueue.invokeLater { it.rootPane.jMenuBar = createMenuBar() }
+  it.add(JScrollPane(JTextArea()))
+  it.preferredSize = Dimension(320, 240)
 }
 
-object MenuItemHelper {
+private fun createMenuBar(): JMenuBar {
+  val menuBar = JMenuBar()
+  val menu0 = JMenu("Default")
+  val menu1 = JMenu("RightAcc")
+  menu0.mnemonic = KeyEvent.VK_D
+  menu1.mnemonic = KeyEvent.VK_R
+  menuBar.add(menu0)
+  menuBar.add(menu1)
+
+  val list = mutableListOf<JMenuItem>()
+  var menuItem = JMenuItem("mi")
+  menuItem.mnemonic = KeyEvent.VK_N
+  menuItem.accelerator = KeyStroke.getKeyStroke(
+    KeyEvent.VK_N,
+    InputEvent.ALT_DOWN_MASK
+  )
+  list.add(menuItem)
+  menuItem = JMenuItem("aaa")
+  menuItem.mnemonic = KeyEvent.VK_1
+  menuItem.accelerator = KeyStroke.getKeyStroke(
+    KeyEvent.VK_ESCAPE,
+    InputEvent.ALT_DOWN_MASK
+  )
+  list.add(menuItem)
+  menuItem = JMenuItem("bb")
+  menuItem.mnemonic = KeyEvent.VK_2
+
+  val msk2 = InputEvent.ALT_DOWN_MASK or InputEvent.CTRL_DOWN_MASK
+  menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, msk2)
+  list.add(menuItem)
+  menuItem = JMenuItem("c")
+  menuItem.mnemonic = KeyEvent.VK_3
+
+  val msk3 = InputEvent.ALT_DOWN_MASK or InputEvent.CTRL_DOWN_MASK or InputEvent.SHIFT_DOWN_MASK
+  menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, msk3)
+  list.add(menuItem)
+
+  for (mi in list) {
+    menu0.add(mi)
+    menu1.add(makeMenuItem(mi))
+  }
+  return menuBar
+}
+
+private fun makeMenuItem(mi: JMenuItem): JMenuItem {
+  val menuItem = object : JMenuItem(mi.text) {
+    override fun updateUI() {
+      super.updateUI()
+      if (getUI() is WindowsMenuItemUI) {
+        setUI(RaaWindowsMenuItemUI())
+      } else {
+        setUI(RaaBasicMenuItemUI())
+      }
+      // XXX: setLocale(Locale.JAPAN)
+    }
+  }
+  menuItem.mnemonic = mi.mnemonic
+  menuItem.accelerator = mi.accelerator
+  return menuItem
+}
+
+private object MenuItemHelper {
   fun paintIcon(
     g: Graphics,
     lh: MenuItemLayoutHelper,
@@ -200,7 +198,7 @@ object MenuItemHelper {
   }
 }
 
-class RaaWindowsMenuItemUI : WindowsMenuItemUI() {
+private class RaaWindowsMenuItemUI : WindowsMenuItemUI() {
   override fun paintMenuItem(
     g: Graphics,
     c: JComponent,
@@ -244,7 +242,7 @@ class RaaWindowsMenuItemUI : WindowsMenuItemUI() {
   }
 }
 
-class RaaBasicMenuItemUI : BasicMenuItemUI() {
+private class RaaBasicMenuItemUI : BasicMenuItemUI() {
   override fun paintMenuItem(
     g: Graphics,
     c: JComponent,
@@ -298,7 +296,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
