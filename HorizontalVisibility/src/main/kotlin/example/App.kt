@@ -8,101 +8,102 @@ import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.plaf.basic.BasicScrollBarUI
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val textField1 = JTextField(TEXT)
-    val textField2 = JTextField(TEXT)
+private val TEXT = listOf(
+  "javascript:(function(){var l=location,m=l.href.match('^(https?://)(.+)(api[^+]+|technotes[^+]+)');",
+  "if(m)l.href=m[1]+'docs.oracle.com/javase/8/docs/'",
+  "+decodeURIComponent(m[3]).replace(/\\+.*$/,'').replace(/\\[\\]/g,':A').replace(/, |\\(|\\)/g,'-');}());"
+).joinToString(separator = "")
 
-    val scroller1 = JScrollBar(Adjustable.HORIZONTAL)
-    scroller1.model = textField1.horizontalVisibility
-    val handler = EmptyThumbHandler(textField1, scroller1)
+private val textField1 = JTextField(TEXT)
+private val scroller1 = JScrollBar(Adjustable.HORIZONTAL)
 
-    val scroller2 = object : JScrollBar(Adjustable.HORIZONTAL) {
-      override fun updateUI() {
-        super.updateUI()
-        setUI(ArrowButtonlessScrollBarUI())
-      }
-
-      override fun getPreferredSize(): Dimension {
-        val d = super.getPreferredSize()
-        d.height = 10
-        return d
-      }
-    }
-    scroller2.model = textField2.horizontalVisibility
-
-    val check = JCheckBox("add EmptyThumbHandler")
-    check.addActionListener { e ->
-      if ((e.source as? JCheckBox)?.isSelected == true) {
-        textField1.addComponentListener(handler)
-        textField1.document.addDocumentListener(handler)
-      } else {
-        textField1.removeComponentListener(handler)
-        textField1.document.removeDocumentListener(handler)
-      }
-    }
-
-    val caretButton = JButton("setCaretPosition: 0")
-    caretButton.addActionListener {
-      textField1.requestFocusInWindow()
-      textField1.caretPosition = 0
-      scroller1.revalidate()
-      textField2.requestFocusInWindow()
-      textField2.caretPosition = 0
-      scroller2.revalidate()
-    }
-
-    val offsetButton = JButton("setScrollOffset: 0")
-    offsetButton.addActionListener {
-      textField1.scrollOffset = 0
-      scroller1.revalidate()
-      textField2.scrollOffset = 0
-      scroller2.revalidate()
-    }
-
-    val scroll = JScrollPane(JTextField(TEXT))
-    scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
-    scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS
-
-    val p = Box.createVerticalBox()
-    p.add(JLabel("JScrollPane + VERTICAL_SCROLLBAR_NEVER"))
-    p.add(scroll)
-    p.add(Box.createVerticalStrut(5))
-    p.add(JLabel("BoundedRangeModel: textField.getHorizontalVisibility()"))
-    p.add(textField1)
-    p.add(Box.createVerticalStrut(2))
-    p.add(scroller1)
-    p.add(Box.createVerticalStrut(2))
-    p.add(check)
-    p.add(Box.createVerticalStrut(5))
-    p.add(JLabel("BoundedRangeModel+textField.ArrowButtonlessScrollBarUI"))
-    p.add(textField2)
-    p.add(Box.createVerticalStrut(2))
-    p.add(scroller2)
-    p.add(Box.createVerticalStrut(5))
-
-    val box = Box.createHorizontalBox()
-    box.add(Box.createHorizontalGlue())
-    box.add(caretButton)
-    box.add(Box.createHorizontalStrut(5))
-    box.add(offsetButton)
-
-    add(p, BorderLayout.NORTH)
-    add(box, BorderLayout.SOUTH)
-    border = BorderFactory.createEmptyBorder(20, 5, 5, 5)
-    preferredSize = Dimension(320, 240)
+private val textField2 = JTextField(TEXT)
+private val scroller2 = object : JScrollBar(Adjustable.HORIZONTAL) {
+  override fun updateUI() {
+    super.updateUI()
+    setUI(ArrowButtonlessScrollBarUI())
   }
 
-  companion object {
-    private val TEXT = listOf(
-      "javascript:(function(){var l=location,m=l.href.match('^(https?://)(.+)(api[^+]+|technotes[^+]+)');",
-      "if(m)l.href=m[1]+'docs.oracle.com/javase/8/docs/'",
-      "+decodeURIComponent(m[3]).replace(/\\+.*$/,'').replace(/\\[\\]/g,':A').replace(/, |\\(|\\)/g,'-');}());"
-    ).joinToString(separator = "")
+  override fun getPreferredSize(): Dimension {
+    val d = super.getPreferredSize()
+    d.height = 10
+    return d
   }
 }
 
-class EmptyThumbHandler(
+fun makeUI(): Component {
+  scroller1.model = textField1.horizontalVisibility
+  val handler = EmptyThumbHandler(textField1, scroller1)
+
+  scroller2.model = textField2.horizontalVisibility
+
+  val check = JCheckBox("add EmptyThumbHandler")
+  check.addActionListener { e ->
+    if ((e.source as? JCheckBox)?.isSelected == true) {
+      textField1.addComponentListener(handler)
+      textField1.document.addDocumentListener(handler)
+    } else {
+      textField1.removeComponentListener(handler)
+      textField1.document.removeDocumentListener(handler)
+    }
+  }
+
+  val caretButton = JButton("setCaretPosition: 0")
+  caretButton.addActionListener {
+    textField1.requestFocusInWindow()
+    textField1.caretPosition = 0
+    scroller1.revalidate()
+    textField2.requestFocusInWindow()
+    textField2.caretPosition = 0
+    scroller2.revalidate()
+  }
+
+  val offsetButton = JButton("setScrollOffset: 0")
+  offsetButton.addActionListener {
+    textField1.scrollOffset = 0
+    scroller1.revalidate()
+    textField2.scrollOffset = 0
+    scroller2.revalidate()
+  }
+
+  val scroll = JScrollPane(JTextField(TEXT))
+  scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
+  scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS
+
+  val p = Box.createVerticalBox()
+  p.add(JLabel("JScrollPane + VERTICAL_SCROLLBAR_NEVER"))
+  p.add(scroll)
+  p.add(Box.createVerticalStrut(5))
+  p.add(JLabel("BoundedRangeModel: textField.getHorizontalVisibility()"))
+  p.add(textField1)
+  p.add(Box.createVerticalStrut(2))
+  p.add(scroller1)
+  p.add(Box.createVerticalStrut(2))
+  p.add(check)
+  p.add(Box.createVerticalStrut(5))
+  p.add(JLabel("BoundedRangeModel+textField.ArrowButtonlessScrollBarUI"))
+  p.add(textField2)
+  p.add(Box.createVerticalStrut(2))
+  p.add(scroller2)
+  p.add(Box.createVerticalStrut(5))
+
+  return JPanel(BorderLayout()).also {
+    it.add(p, BorderLayout.NORTH)
+    it.add(makeBox(listOf(caretButton, offsetButton)), BorderLayout.SOUTH)
+    it.border = BorderFactory.createEmptyBorder(20, 5, 5, 5)
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private fun makeBox(list: List<JButton>) = Box.createHorizontalBox().also {
+  it.add(Box.createHorizontalGlue())
+  list.forEach { button ->
+    it.add(button)
+    it.add(Box.createHorizontalStrut(5))
+  }
+}
+
+private class EmptyThumbHandler(
   private val textField: JTextField,
   private val scroller: JScrollBar
 ) : ComponentAdapter(), DocumentListener {
@@ -136,11 +137,11 @@ class EmptyThumbHandler(
   }
 }
 
-class ZeroSizeButton : JButton() {
+private class ZeroSizeButton : JButton() {
   override fun getPreferredSize() = Dimension()
 }
 
-class ArrowButtonlessScrollBarUI : BasicScrollBarUI() {
+private class ArrowButtonlessScrollBarUI : BasicScrollBarUI() {
   override fun createDecreaseButton(orientation: Int) = ZeroSizeButton()
 
   override fun createIncreaseButton(orientation: Int) = ZeroSizeButton()
@@ -190,7 +191,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
