@@ -74,12 +74,12 @@ private class CalendarTableRenderer : TableCellRenderer {
   }
 
   override fun getTableCellRendererComponent(
-      table: JTable,
-      value: Any?,
-      selected: Boolean,
-      focused: Boolean,
-      row: Int,
-      column: Int
+    table: JTable,
+    value: Any?,
+    selected: Boolean,
+    focused: Boolean,
+    row: Int,
+    column: Int
   ): Component {
     renderer.isOpaque = true
     renderer.removeAll()
@@ -156,15 +156,15 @@ private class CalendarViewTableModel(date: LocalDate) : DefaultTableModel() {
   override fun getColumnClass(column: Int) = LocalDate::class.java
 
   override fun getColumnName(column: Int): String =
-      weekFields.firstDayOfWeek.plus(column.toLong())
-          .getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault())
+    weekFields.firstDayOfWeek.plus(column.toLong())
+      .getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault())
 
   override fun getRowCount() = 6
 
   override fun getColumnCount() = 7
 
   override fun getValueAt(row: Int, column: Int): Any =
-      startDate.plusDays(row.toLong() * columnCount + column)
+    startDate.plusDays(row.toLong() * columnCount + column)
 
   override fun isCellEditable(row: Int, column: Int) = false
 
