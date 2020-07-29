@@ -5,8 +5,8 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val split = JSplitPane()
-  split.setContinuousLayout(true)
-  split.setResizeWeight(.5)
+  split.isContinuousLayout = true
+  split.resizeWeight = .5
 
   val check = JCheckBox("setXORMode(Color.BLUE)", true)
   check.addActionListener { split.repaint() }
@@ -17,36 +17,36 @@ fun makeUI(): Component {
   val beforeCanvas = object : JComponent() {
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
-      g.drawImage(icon.getImage(), 0, 0, icon.getIconWidth(), icon.getIconHeight(), this)
+      g.drawImage(icon.image, 0, 0, icon.iconWidth, icon.iconHeight, this)
     }
   }
-  split.setLeftComponent(beforeCanvas)
+  split.leftComponent = beforeCanvas
 
   val afterCanvas = object : JComponent() {
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
       val g2 = g.create() as? Graphics2D ?: return
-      val iw = icon.getIconWidth()
-      val ih = icon.getIconHeight()
-      if (check.isSelected()) {
-        g2.setColor(getBackground())
+      val iw = icon.iconWidth
+      val ih = icon.iconHeight
+      if (check.isSelected) {
+        g2.color = background
         g2.setXORMode(Color.BLUE)
       } else {
         g2.setPaintMode()
       }
-      val pt = getLocation()
-      g2.translate(-pt.x + split.getInsets().left, 0)
-      g2.drawImage(icon.getImage(), 0, 0, iw, ih, this)
+      val pt = location
+      g2.translate(-pt.x + split.insets.left, 0)
+      g2.drawImage(icon.image, 0, 0, iw, ih, this)
       g2.dispose()
     }
   }
-  split.setRightComponent(afterCanvas)
+  split.rightComponent = afterCanvas
 
   return JPanel(BorderLayout()).also {
     it.add(split)
     it.add(check, BorderLayout.SOUTH)
-    it.setOpaque(false)
-    it.setPreferredSize(Dimension(320, 240))
+    it.isOpaque = false
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
