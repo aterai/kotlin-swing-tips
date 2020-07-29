@@ -10,40 +10,40 @@ import javax.swing.tree.TreePath
 
 fun makeUI(): Component {
   val tree = JTree(makeModel())
-  tree.setRootVisible(false)
+  tree.isRootVisible = false
   tree.addTreeWillExpandListener(object : TreeWillExpandListener {
     private var isAdjusting = false
     // @Throws(ExpandVetoException::class)
     override fun treeWillExpand(e: TreeExpansionEvent) {
-      // collapseAll(tree); // StackOverflowError when collapsing nodes below 2nd level
+      // collapseAll(tree) // StackOverflowError when collapsing nodes below 2nd level
       if (isAdjusting) {
         return
       }
       isAdjusting = true
       collapseFirstHierarchy(tree)
-      tree.setSelectionPath(e.getPath())
+      tree.selectionPath = e.path
       isAdjusting = false
     }
 
     // @Throws(ExpandVetoException::class)
     override fun treeWillCollapse(e: TreeExpansionEvent) {
-      // throw new ExpandVetoException(e, "Tree collapse cancelled");
+      // throw ExpandVetoException(e, "Tree collapse cancelled")
     }
   })
 
   val scroll = object : JScrollPane(tree) {
     override fun updateUI() {
-      setViewportBorder(null)
+      viewportBorder = null
       super.updateUI()
       EventQueue.invokeLater {
-        val bgc = getViewport().getView().getBackground()
-        setViewportBorder(BorderFactory.createLineBorder(bgc, 5))
+        val bgc = getViewport().view.background
+        viewportBorder = BorderFactory.createLineBorder(bgc, 5)
       }
     }
   }
   return JPanel(BorderLayout()).also {
     it.add(scroll)
-    it.setPreferredSize(Dimension(320, 240))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
@@ -74,13 +74,13 @@ fun makeModel(): DefaultTreeModel {
 }
 
 fun collapseFirstHierarchy(tree: JTree) {
-  val root = tree.getModel().getRoot() as? DefaultMutableTreeNode ?: return
+  val root = tree.model.root as? DefaultMutableTreeNode ?: return
   root.breadthFirstEnumeration().toList()
-    .filterIsInstance<DefaultMutableTreeNode>()
-    .takeWhile { it.getLevel() <= 1 }
-    .dropWhile { it.isRoot() || it.isLeaf() }
-    .map { TreePath(it.getPath()) }
-    .forEach { tree.collapsePath(it) }
+      .filterIsInstance<DefaultMutableTreeNode>()
+      .takeWhile { it.level <= 1 }
+      .dropWhile { it.isRoot || it.isLeaf }
+      .map { TreePath(it.path) }
+      .forEach { tree.collapsePath(it) }
 }
 
 fun main() {
