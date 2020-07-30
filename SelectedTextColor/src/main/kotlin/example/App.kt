@@ -14,9 +14,9 @@ import javax.swing.text.html.StyleSheet
 
 val editor1 = JEditorPane()
 val editor2 = JEditorPane().also {
-  it.setSelectedTextColor(null)
-  it.setSelectionColor(Color(0x64_88_AA_AA, true))
-  // TEST: it.setSelectionColor(null);
+  it.selectedTextColor = null
+  it.selectionColor = Color(0x64_88_AA_AA, true)
+  // TEST: it.setSelectionColor(null)
 }
 val engine = createEngine()
 
@@ -36,26 +36,26 @@ fun makeUI(): Component {
   }
 
   val htmlEditorKit = HTMLEditorKit()
-  htmlEditorKit.setStyleSheet(styleSheet)
+  htmlEditorKit.styleSheet = styleSheet
 
   listOf(editor1, editor2).forEach {
-    it.setEditorKit(htmlEditorKit)
-    it.setEditable(false)
-    // it.setSelectionColor(new Color(0x64_88_AA_AA, true));
-    it.setBackground(Color(0xEE_EE_EE))
+    it.editorKit = htmlEditorKit
+    it.isEditable = false
+    // it.selectionColor = Color(0x64_88_AA_AA, true)
+    it.background = Color(0xEE_EE_EE)
   }
 
   val button = JButton("open")
   button.addActionListener {
     val fileChooser = JFileChooser()
-    val ret = fileChooser.showOpenDialog(button.getRootPane())
+    val ret = fileChooser.showOpenDialog(button.rootPane)
     if (ret == JFileChooser.APPROVE_OPTION) {
-      loadFile(fileChooser.getSelectedFile().getAbsolutePath())
+      loadFile(fileChooser.selectedFile.absolutePath)
     }
   }
 
   val box = Box.createHorizontalBox().also {
-    it.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
+    it.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
     it.add(Box.createHorizontalGlue())
     it.add(button)
   }
@@ -67,25 +67,11 @@ fun makeUI(): Component {
   return JPanel(BorderLayout()).also {
     it.add(p)
     it.add(box, BorderLayout.SOUTH)
-    it.setPreferredSize(Dimension(320, 240))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
 fun loadFile(path: String) {
-  // try {
-  //   // val txt = Files.lines(Paths.get(path), StandardCharsets.UTF_8).map {
-  //   //   it.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-  //   // }.collect(Collectors.joining("\n"))
-  //   // By default uses UTF-8 charset.
-  //   val txt = File(path).useLines { it.toList() }.map {
-  //     it.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-  //   }.joinToString("\n")
-  //   val html = "<pre>${prettify(engine, txt)}\n</pre>"
-  //   editor1.setText(html)
-  //   editor2.setText(html)
-  // } catch (ex: IOException) {
-  //   ex.printStackTrace()
-  // }
   val html = runCatching {
     File(path).useLines { it.toList() }.joinToString("\n") {
       it.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
@@ -94,23 +80,12 @@ fun loadFile(path: String) {
     onSuccess = { prettify(engine, it) },
     onFailure = { it.message }
   )
-  editor1.setText("<pre>$html\n</pre>")
-  editor2.setText("<pre>$html\n</pre>")
+  editor1.text = "<pre>$html\n</pre>"
+  editor2.text = "<pre>$html\n</pre>"
 }
 
 fun createEngine(): ScriptEngine? {
-  // val manager = ScriptEngineManager()
   val engine = ScriptEngineManager().getEngineByName("JavaScript")
-  // String p = "https://raw.githubusercontent.com/google/code-prettify/" +
-  //            "f5ad44e3253f1bc8e288477a36b2ce5972e8e161/src/prettify.js";
-  // URL url = new URL(p);
-
-  // Files.newBufferedReader(path, StandardCharsets.UTF_8).use { r ->
-  //   engine.eval("var window={}, navigator=null;")
-  //   engine.eval(r)
-  //   return engine
-  // }
-
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/prettify.js") ?: return null
   return runCatching {
@@ -120,19 +95,6 @@ fun createEngine(): ScriptEngine? {
     }
     engine
   }.onFailure { it.printStackTrace() }.getOrNull()
-
-  // try {
-  //   BufferedReader(InputStreamReader(url.openStream(), StandardCharsets.UTF_8)).use { r ->
-  //     engine.eval("var window={}, navigator=null;")
-  //     engine.eval(r)
-  //     return engine
-  //   }
-  // } catch (ex: IOException) {
-  //   ex.printStackTrace()
-  // } catch (ex: ScriptException) {
-  //   ex.printStackTrace()
-  // }
-  // return null
 }
 
 fun prettify(engine: ScriptEngine?, src: String) = runCatching {
