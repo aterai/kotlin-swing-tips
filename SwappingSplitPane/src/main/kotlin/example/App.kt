@@ -5,37 +5,34 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val sp = JSplitPane().also {
-    it.setLeftComponent(JScrollPane(JTree()))
-    it.setRightComponent(JScrollPane(JTable(6, 3)))
-    it.setResizeWeight(.4)
+    it.leftComponent = JScrollPane(JTree())
+    it.rightComponent = JScrollPane(JTable(6, 3))
+    it.resizeWeight = .4
   }
 
   val check = JCheckBox("Keep DividerLocation", true)
 
   val button = JButton("swap")
-  button.setFocusable(false)
+  button.isFocusable = false
   button.addActionListener {
-    val left = sp.getLeftComponent()
-    val right = sp.getRightComponent()
+    val left = sp.leftComponent
+    val right = sp.rightComponent
+    val loc = sp.dividerLocation
 
-    // sp.removeAll(); // Divider is also removed
     sp.remove(left)
     sp.remove(right)
-    // or:
-    // sp.setLeftComponent(null);
-    // sp.setRightComponent(null);
 
-    sp.setLeftComponent(right)
-    sp.setRightComponent(left)
+    sp.leftComponent = right
+    sp.rightComponent = left
 
-    sp.setResizeWeight(1.0 - sp.getResizeWeight())
-    if (check.isSelected()) {
-      sp.setDividerLocation(sp.getDividerLocation())
+    sp.resizeWeight = 1.0 - sp.resizeWeight
+    if (check.isSelected) {
+      sp.dividerLocation = loc
     }
   }
 
   val box = Box.createHorizontalBox().also {
-    it.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5))
+    it.border = BorderFactory.createEmptyBorder(2, 5, 2, 5)
     it.add(check)
     it.add(Box.createHorizontalGlue())
     it.add(button)
@@ -44,7 +41,7 @@ fun makeUI(): Component {
   return JPanel(BorderLayout()).also {
     it.add(sp)
     it.add(box, BorderLayout.SOUTH)
-    it.setPreferredSize(Dimension(320, 240))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
