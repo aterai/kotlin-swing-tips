@@ -26,31 +26,31 @@ fun makeUI(): Component {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
   val table = JTable(model)
-  table.setFillsViewportHeight(true)
+  table.fillsViewportHeight = true
   // XXX: sorter.setSortsOnUpdates(true)
 
   val filter = object : RowFilter<TableModel, Int>() {
     override fun include(entry: Entry<out TableModel, out Int>): Boolean {
-      val idx = table.convertRowIndexToView(entry.getIdentifier().toInt())
+      val idx = table.convertRowIndexToView(entry.identifier.toInt())
       return idx < USER_SPECIFIED_NUMBER_OF_ROWS
     }
   }
   val sorter = object : TableRowSorter<TableModel>(model) {
     override fun toggleSortOrder(column: Int) {
       super.toggleSortOrder(column)
-      if (check1.isSelected()) {
+      if (check1.isSelected) {
         model.fireTableDataChanged()
         sort() // allRowsChanged()
       }
     }
   }
 
-  table.setRowSorter(sorter)
-  sorter.setSortKeys(listOf(RowSorter.SortKey(1, SortOrder.DESCENDING)))
+  table.rowSorter = sorter
+  sorter.sortKeys = listOf(RowSorter.SortKey(1, SortOrder.DESCENDING))
 
   val check2 = JCheckBox("viewRowIndex < $USER_SPECIFIED_NUMBER_OF_ROWS")
   check2.addActionListener {
-    sorter.setRowFilter((it.getSource() as? JCheckBox)?.isSelected()?.let { filter })
+    sorter.rowFilter = (it.source as? JCheckBox)?.isSelected?.let { filter }
   }
 
   val box = Box.createHorizontalBox()
@@ -60,7 +60,7 @@ fun makeUI(): Component {
   return JPanel(BorderLayout()).also {
     it.add(box, BorderLayout.NORTH)
     it.add(JScrollPane(table))
-    it.setPreferredSize(Dimension(320, 240))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
