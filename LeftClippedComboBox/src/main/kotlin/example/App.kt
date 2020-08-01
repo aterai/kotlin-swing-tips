@@ -8,16 +8,16 @@ fun makeUI() = JPanel(BorderLayout()).also {
   val combo = JComboBox(model)
   initComboBoxRenderer(combo)
 
-  it.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
+  it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   it.add(makeTitledPanel("Left Clip JComboBox", combo), BorderLayout.NORTH)
   it.add(makeTitledPanel("Default JComboBox", JComboBox(model)), BorderLayout.SOUTH)
-  it.setPreferredSize(Dimension(320, 240))
+  it.preferredSize = Dimension(320, 240)
 }
 
-private fun getArrowButton(c: Container) = c.getComponents().filterIsInstance<JButton>().firstOrNull()
+private fun getArrowButton(c: Container) = c.components.filterIsInstance<JButton>().firstOrNull()
 
 private fun makeTitledPanel(title: String, c: Component) = Box.createVerticalBox().also {
-  it.setBorder(BorderFactory.createTitledBorder(title))
+  it.border = BorderFactory.createTitledBorder(title)
   it.add(Box.createVerticalStrut(2))
   it.add(c)
 }
@@ -34,32 +34,32 @@ private fun makeComboBoxModel() = DefaultComboBoxModel<String>().also {
 private fun initComboBoxRenderer(combo: JComboBox<String>) {
   combo.setRenderer(object : DefaultListCellRenderer() {
     override fun getListCellRendererComponent(
-      list: JList<*>,
-      value: Any?,
-      index: Int,
-      isSelected: Boolean,
-      cellHasFocus: Boolean
+        list: JList<*>,
+        value: Any?,
+        index: Int,
+        isSelected: Boolean,
+        cellHasFocus: Boolean
     ): Component {
       super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
       val width = getAvailableWidth(combo, index)
-      setText(getLeftClippedText(value?.toString() ?: "", getFontMetrics(getFont()), width))
+      text = getLeftClippedText(value?.toString() ?: "", getFontMetrics(font), width)
       return this
     }
 
     private fun getAvailableWidth(combo: JComboBox<String>, index: Int): Int {
       var itb = 0
       var ilr = 0
-      var insets = getInsets()
+      var insets = insets
       itb += insets.top + insets.bottom
       ilr += insets.left + insets.right
-      insets = combo.getInsets()
+      insets = combo.insets
       itb += insets.top + insets.bottom
       ilr += insets.left + insets.right
-      var availableWidth = combo.getWidth() - ilr
+      var availableWidth = combo.width - ilr
       if (index < 0) {
         // @see BasicComboBoxUI#rectangleForCurrentValue
-        availableWidth -= getArrowButton(combo)?.getWidth() ?: combo.getHeight() - itb
-        (combo.getEditor().getEditorComponent() as? JTextField)?.getMargin()?.also {
+        availableWidth -= getArrowButton(combo)?.width ?: combo.height - itb
+        (combo.editor.editorComponent as? JTextField)?.margin?.also {
           availableWidth -= it.left + it.right
         }
       }
