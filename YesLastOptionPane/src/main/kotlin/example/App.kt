@@ -10,17 +10,17 @@ fun makeUI(): Component {
   val defaultButton = JButton("$KEY: false(default)")
   defaultButton.addActionListener {
     UIManager.put(KEY, false)
-    val str = JOptionPane.showInputDialog(log.getRootPane(), "$KEY: false")
-    log.setText(str)
+    val str = JOptionPane.showInputDialog(log.rootPane, "$KEY: false")
+    log.text = str
   }
   val yesLastButton = JButton("$KEY: true")
   yesLastButton.addActionListener {
     UIManager.put(KEY, true)
-    val str = JOptionPane.showInputDialog(log.getRootPane(), "$KEY: true")
-    log.setText(str)
+    val str = JOptionPane.showInputDialog(log.rootPane, "$KEY: true")
+    log.text = str
   }
   val p = JPanel(GridLayout(0, 1, 5, 5))
-  p.setBorder(BorderFactory.createTitledBorder("JOptionPane"))
+  p.border = BorderFactory.createTitledBorder("JOptionPane")
   p.add(defaultButton)
   p.add(yesLastButton)
 
@@ -34,7 +34,7 @@ fun makeUI(): Component {
   }
   panel.add(p, BorderLayout.NORTH)
   panel.add(JScrollPane(log))
-  panel.setPreferredSize(Dimension(320, 240))
+  panel.preferredSize = Dimension(320, 240)
   return panel
 }
 
