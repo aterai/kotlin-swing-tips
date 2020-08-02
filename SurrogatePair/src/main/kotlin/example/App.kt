@@ -2,6 +2,7 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.io.BufferedInputStream
+import java.io.IOException
 import java.io.InputStreamReader
 import java.net.URL
 import java.nio.charset.StandardCharsets
@@ -15,22 +16,23 @@ fun makeUI(): Component {
   val styleSheet = StyleSheet()
   // styleSheet.addRule("body {font-size: 24pt; font-family: IPAexGothic;}")
   val htmlEditorKit = HTMLEditorKit()
-  htmlEditorKit.setStyleSheet(styleSheet)
+  htmlEditorKit.styleSheet = styleSheet
   val editor1 = JEditorPane()
-  editor1.setEditorKit(htmlEditorKit)
+  editor1.editorKit = htmlEditorKit
 
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/SurrogatePair.html")
   runCatching {
+    if (url == null) throw IOException()
     InputStreamReader(url.openStream(), StandardCharsets.UTF_8).use { editor1.read(it, "html") }
   }.onFailure {
-    editor1.setText("<html><p>(&#xD85B;&#xDE40;) (&#x26E40;)<br />(&#xD842;&#xDF9F;) (&#x00020B9F;)</p></html>")
+    editor1.text = "<html><p>(&#xD85B;&#xDE40;) (&#x26E40;)<br />(&#xD842;&#xDF9F;) (&#x00020B9F;)</p></html>"
   }
 
   val editor2 = JEditorPane()
   // editor2.setFont(new Font("IPAexGothic", Font.PLAIN, 24))
   editor2.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true)
-  editor2.setText("(\uD85B\uDE40) (\u26E40)\n(\uD842\uDF9F) (\u20B9F)")
+  editor2.text = "(\uD85B\uDE40) (\u26E40)\n(\uD842\uDF9F) (\u20B9F)"
   // editor2.setText("(𦹀) (𦹀)\n(𠮟) (𠮟)")
 
   val p = JPanel(GridLayout(0, 1))
@@ -43,12 +45,12 @@ fun makeUI(): Component {
   return JPanel(BorderLayout()).also {
     it.add(p)
     it.add(button, BorderLayout.SOUTH)
-    it.setPreferredSize(Dimension(320, 240))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun browseCacheFile(url: URL) {
-  if (Desktop.isDesktopSupported()) {
+private fun browseCacheFile(url: URL?) {
+  if (url != null && Desktop.isDesktopSupported()) {
     runCatching {
       BufferedInputStream(url.openStream()).use {
         val path = Files.createTempFile("_tmp", ".html")
@@ -63,7 +65,7 @@ private fun browseCacheFile(url: URL) {
 }
 
 fun makeTitledPanel(title: String, c: Component) = JScrollPane(c).also {
-  it.setBorder(BorderFactory.createTitledBorder(title))
+  it.border = BorderFactory.createTitledBorder(title)
 }
 
 fun main() {
