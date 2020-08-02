@@ -10,18 +10,18 @@ fun makeUI(): Component {
   println(mode)
   val allWindows = "allWindows"
   val radio1 = JRadioButton(allWindows, allWindows == mode)
-  radio1.setToolTipText("ToolTip: $allWindows")
+  radio1.toolTipText = "ToolTip: $allWindows"
   radio1.addItemListener {
     UIManager.put(TOOLTIP_MODE, allWindows)
   }
   val activeApplication = "activeApplication"
   val radio2 = JRadioButton(activeApplication, activeApplication == mode)
-  radio2.setToolTipText("ToolTip: $activeApplication")
+  radio2.toolTipText = "ToolTip: $activeApplication"
   radio2.addItemListener {
     UIManager.put(TOOLTIP_MODE, activeApplication)
   }
   val panel = JPanel()
-  panel.setBorder(BorderFactory.createTitledBorder(TOOLTIP_MODE))
+  panel.border = BorderFactory.createTitledBorder(TOOLTIP_MODE)
   val group = ButtonGroup()
   listOf(radio1, radio2).forEach {
     group.add(it)
@@ -30,20 +30,20 @@ fun makeUI(): Component {
   val p = JPanel()
   p.add(panel, BorderLayout.NORTH)
   p.add(makePanel())
-  p.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-  p.setPreferredSize(Dimension(320, 240))
+  p.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+  p.preferredSize = Dimension(320, 240)
   return p
 }
 
 private fun makePanel(): Component {
   val label = JLabel("label")
-  label.setToolTipText("JLabel")
+  label.toolTipText = "JLabel"
   val field = JTextField(20)
-  field.setToolTipText("JTextField")
+  field.toolTipText = "JTextField"
   val button = JButton("button")
-  button.setToolTipText("JButton")
+  button.toolTipText = "JButton"
   val p = JPanel()
-  p.setBorder(BorderFactory.createTitledBorder("test: $TOOLTIP_MODE"))
+  p.border = BorderFactory.createTitledBorder("test: $TOOLTIP_MODE")
   p.add(label)
   p.add(field)
   p.add(button)
