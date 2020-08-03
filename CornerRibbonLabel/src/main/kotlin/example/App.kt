@@ -7,6 +7,7 @@ import java.awt.geom.AffineTransform
 import java.awt.geom.Rectangle2D
 import java.awt.geom.RoundRectangle2D
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import kotlin.math.sqrt
 
 fun makeUI(): Component {
   val informationIcon = UIManager.getIcon("OptionPane.informationIcon")
@@ -59,21 +60,26 @@ private class BadgeLabel : JLabel {
     if (ribbonText != null) {
       val d = size
       val fontSize = 10.0
-      val cx = (d.width - fontSize.toInt()) / 2.0
+      val cx = (d.width - fontSize) / 2.0
       val theta = Math.toRadians(45.0)
+
       val font = g2.font.deriveFont(fontSize.toFloat())
       g2.font = font
       val frc = FontRenderContext(null, true, true)
-      val ribbon: Shape = Rectangle2D.Double(cx, -fontSize, d.width.toDouble(), fontSize)
-      val at1 = AffineTransform.getRotateInstance(theta, cx, 0.0)
-      g2.paint = ribbonColor
-      g2.fill(at1.createTransformedShape(ribbon))
 
-      val tx = AffineTransform.getTranslateInstance(cx + fontSize / 2.0, 0.0)
-      val beta = TextLayout(ribbonText, font, frc).getOutline(tx)
+      val ribbon = Rectangle2D.Double(cx, -fontSize, d.width.toDouble(), fontSize)
+      val at = AffineTransform.getRotateInstance(theta, cx, 0.0)
+      g2.paint = ribbonColor
+      g2.fill(at.createTransformedShape(ribbon))
+
+      val tl = TextLayout(ribbonText, font, frc)
       g2.paint = Color.WHITE
-      val at2 = AffineTransform.getRotateInstance(theta, cx, beta.bounds.height.toDouble())
-      g2.fill(at2.createTransformedShape(beta))
+      val r = tl.getOutline(null).bounds2D
+      val dx = cx + (d.width - cx) / sqrt(2.0) - r.width / 2.0
+      val dy = fontSize / 2.0 + r.y
+      val tx = AffineTransform.getTranslateInstance(dx, dy)
+      val s = tl.getOutline(tx)
+      g2.fill(at.createTransformedShape(s))
     }
     g2.dispose()
   }
