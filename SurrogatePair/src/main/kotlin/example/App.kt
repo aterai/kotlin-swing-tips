@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.io.BufferedInputStream
-import java.io.IOException
 import java.io.InputStreamReader
 import java.net.URL
 import java.nio.charset.StandardCharsets
@@ -22,10 +21,7 @@ fun makeUI(): Component {
 
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/SurrogatePair.html")
-  runCatching {
-    if (url == null) throw IOException()
-    InputStreamReader(url.openStream(), StandardCharsets.UTF_8).use { editor1.read(it, "html") }
-  }.onFailure {
+  if (url == null || !read(editor1, url)) {
     editor1.text = "<html><p>(&#xD85B;&#xDE40;) (&#x26E40;)<br />(&#xD842;&#xDF9F;) (&#x00020B9F;)</p></html>"
   }
 
@@ -48,6 +44,10 @@ fun makeUI(): Component {
     it.preferredSize = Dimension(320, 240)
   }
 }
+
+private fun read(editor: JEditorPane, url: URL) = runCatching {
+  InputStreamReader(url.openStream(), StandardCharsets.UTF_8).use { editor.read(it, "html") }
+}.isSuccess
 
 private fun browseCacheFile(url: URL?) {
   if (url != null && Desktop.isDesktopSupported()) {
