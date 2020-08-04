@@ -31,21 +31,21 @@ fun makeUI(): Component {
   }
 
   val htmlEditorKit = HTMLEditorKit()
-  htmlEditorKit.setStyleSheet(styleSheet)
-  editor.setEditorKit(htmlEditorKit)
-  editor.setEditable(false)
+  htmlEditorKit.styleSheet = styleSheet
+  editor.editorKit = htmlEditorKit
+  editor.isEditable = false
 
   val button = JButton("open")
   button.addActionListener {
     val fileChooser = JFileChooser()
-    val ret = fileChooser.showOpenDialog(button.getRootPane())
+    val ret = fileChooser.showOpenDialog(button.rootPane)
     if (ret == JFileChooser.APPROVE_OPTION) {
-      loadFile(fileChooser.getSelectedFile().getAbsolutePath())
+      loadFile(fileChooser.selectedFile.absolutePath)
     }
   }
 
   val box = Box.createHorizontalBox().also {
-    it.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
+    it.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
     it.add(Box.createHorizontalGlue())
     it.add(button)
   }
@@ -53,7 +53,7 @@ fun makeUI(): Component {
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(editor))
     it.add(box, BorderLayout.SOUTH)
-    it.setPreferredSize(Dimension(320, 240))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
@@ -66,13 +66,13 @@ fun loadFile(path: String) {
     onSuccess = { prettify(engine, it) },
     onFailure = { it.message }
   )
-  editor.setText("<pre>$html\n</pre>")
+  editor.text = "<pre>$html\n</pre>"
 }
 
 fun createEngine(): ScriptEngine? {
   val engine = ScriptEngineManager().getEngineByName("JavaScript")
   val cl = Thread.currentThread().contextClassLoader
-  val url = cl.getResource("example/prettify.js")
+  val url = cl.getResource("example/prettify.js") ?: return null
   return runCatching {
     BufferedReader(InputStreamReader(url.openStream(), StandardCharsets.UTF_8)).use { r ->
       engine.eval("var window={}, navigator=null;")
