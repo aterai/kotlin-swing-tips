@@ -29,25 +29,25 @@ fun makeUI(): Component {
       super.updateUI()
       val r = DefaultTreeCellRenderer()
       setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-        val c = r.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
-        if (c is JLabel) {
-          if (selected) {
-            c.isOpaque = false
-            c.setForeground(r.textSelectionColor)
-          } else {
-            c.isOpaque = true
-            c.setForeground(r.textNonSelectionColor)
-            c.setBackground(r.backgroundNonSelectionColor)
-          }
-          if (value is DefaultMutableTreeNode) {
-            (value.userObject as? File)?.also {
-              c.icon = fileSystemView.getSystemIcon(it)
-              c.text = fileSystemView.getSystemDisplayName(it)
-              c.toolTipText = it.path
+        r.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus).also { c ->
+          if (c is JLabel) {
+            if (selected) {
+              c.isOpaque = false
+              c.foreground = r.textSelectionColor
+            } else {
+              c.isOpaque = true
+              c.foreground = r.textNonSelectionColor
+              c.background = r.backgroundNonSelectionColor
+            }
+            if (value is DefaultMutableTreeNode) {
+              (value.userObject as? File)?.also {
+                c.icon = fileSystemView.getSystemIcon(it)
+                c.text = fileSystemView.getSystemDisplayName(it)
+                c.toolTipText = it.path
+              }
             }
           }
         }
-        c
       }
     }
   }
