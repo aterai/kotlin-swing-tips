@@ -29,14 +29,14 @@ fun makeUI(): Component {
   p.add(object : JCheckBox("JCheckBox+BorderPainted") {
     override fun updateUI() {
       super.updateUI()
-      setBorderPainted(true)
+      isBorderPainted = true
     }
   })
   p.add(JCheckBox(PAD + "JCheckBox+td.padding"))
 
   p.add(JRadioButton("JRadioButton"))
   p.add(JRadioButton(PAD + "JRadioButton+td.padding"))
-  p.setPreferredSize(Dimension(320, 240))
+  p.preferredSize = Dimension(320, 240)
   return p
 }
 

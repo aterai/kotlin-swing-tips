@@ -34,11 +34,11 @@ private fun makeComboBoxModel() = DefaultComboBoxModel<String>().also {
 private fun initComboBoxRenderer(combo: JComboBox<String>) {
   combo.setRenderer(object : DefaultListCellRenderer() {
     override fun getListCellRendererComponent(
-        list: JList<*>,
-        value: Any?,
-        index: Int,
-        isSelected: Boolean,
-        cellHasFocus: Boolean
+      list: JList<*>,
+      value: Any?,
+      index: Int,
+      isSelected: Boolean,
+      cellHasFocus: Boolean
     ): Component {
       super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
       val width = getAvailableWidth(combo, index)

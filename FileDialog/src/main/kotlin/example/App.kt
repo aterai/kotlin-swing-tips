@@ -17,27 +17,27 @@ fun makeUI(): Component {
     // Frame frame = null
     val fd = FileDialog(frame, "title")
     // fd.setLocation(500, 500)
-    fd.setTitle("FileDialog(Frame frame, String title)")
-    fd.setDirectory(System.getProperty("user.home"))
+    fd.title = "FileDialog(Frame frame, String title)"
+    fd.directory = System.getProperty("user.home")
     // frame.addWindowListener(new WindowAdapter() {
     fd.addWindowListener(object : WindowAdapter() {
       override fun windowOpened(e: WindowEvent) {
         append("windowOpened")
-        val w = e.getWindow()
-        append("FileDialog: " + fd.getLocation())
-        append("Window: " + w.getLocation())
-        fd.setTitle("windowOpened")
+        val w = e.window
+        append("FileDialog: " + fd.location)
+        append("Window: " + w.location)
+        fd.title = "windowOpened"
         // fd.setLocation(500, 500)
         val d = SwingUtilities.getRoot(fd) as? Dialog ?: return
         append("fd == SwingUtilities.getRoot(fd): " + (d == fd))
         append("fd == w: " + (w == fd))
       }
     })
-    fd.setVisible(true)
-    if (fd.getFile() != null) {
+    fd.isVisible = true
+    if (fd.file != null) {
       // append(fd.getDirectory() + fd.getFile())
-      val file = File(fd.getDirectory(), fd.getFile())
-      append(file.getAbsolutePath())
+      val file = File(fd.directory, fd.file)
+      append(file.absolutePath)
     }
   }
 
@@ -46,26 +46,26 @@ fun makeUI(): Component {
     val dialog = Dialog(SwingUtilities.getWindowAncestor(button2))
     val fd = FileDialog(dialog, "FileDialog(Dialog dialog, String title)")
     // fd.setDirectory(System.getProperty("user.home"))
-    fd.setVisible(true)
-    if (fd.getFile() != null) {
-      val file = File(fd.getDirectory(), fd.getFile())
-      append(file.getAbsolutePath())
+    fd.isVisible = true
+    if (fd.file != null) {
+      val file = File(fd.directory, fd.file)
+      append(file.absolutePath)
     }
   }
 
   val p = JPanel().also {
-    it.setBorder(BorderFactory.createTitledBorder("FileDialog"))
+    it.border = BorderFactory.createTitledBorder("FileDialog")
     it.add(button1)
     it.add(button2)
   }
   return JPanel(BorderLayout()).also {
     it.add(p, BorderLayout.NORTH)
     it.add(JScrollPane(log))
-    it.setPreferredSize(Dimension(320, 240))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-fun append(str: String) {
+private fun append(str: String) {
   log.append(str + "\n")
 }
 

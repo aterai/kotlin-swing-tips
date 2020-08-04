@@ -5,8 +5,8 @@ import java.awt.image.BufferedImage
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI() = JPanel().also {
-  EventQueue.invokeLater { it.getRootPane().setJMenuBar(createMenuBar()) }
-  it.setPreferredSize(Dimension(320, 240))
+  EventQueue.invokeLater { it.rootPane.jMenuBar = createMenuBar() }
+  it.preferredSize = Dimension(320, 240)
 }
 
 fun createMenuBar(): JMenuBar {
@@ -16,12 +16,12 @@ fun createMenuBar(): JMenuBar {
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
       val g2 = g.create() as? Graphics2D ?: return
-      g2.setPaint(texture)
-      g2.fillRect(0, 0, getWidth(), getHeight())
+      g2.paint = texture
+      g2.fillRect(0, 0, width, height)
       g2.dispose()
     }
   }
-  mb.setOpaque(false)
+  mb.isOpaque = false
   for (key in arrayOf("File", "Edit", "Help")) {
     mb.add(createMenu(key))
   }
@@ -32,27 +32,23 @@ fun createMenu(key: String): JMenu {
   val menu = object : JMenu(key) {
     override fun fireStateChanged() {
       val m = getModel()
-      if (m.isPressed() && m.isArmed()) {
-        setOpaque(true)
-      } else if (m.isSelected()) {
-        setOpaque(true)
-      } else if (isRolloverEnabled() && m.isRollover()) {
-        setOpaque(true)
-      } else {
-        setOpaque(false)
-      }
+      isOpaque = if (m.isPressed && m.isArmed) {
+        true
+      } else if (m.isSelected) {
+        true
+      } else isRolloverEnabled && m.isRollover
       super.fireStateChanged()
     }
 
     override fun updateUI() {
       super.updateUI()
-      setOpaque(false) // Motif lnf
+      isOpaque = false // Motif lnf
     }
   }
-  // System.out.println(System.getProperty("os.name"));
-  // System.out.println(System.getProperty("os.version"));
+  // println(System.getProperty("os.name"))
+  // println(System.getProperty("os.version"))
   if ("Windows XP" == System.getProperty("os.name")) {
-    menu.setBackground(Color(0x0, true)) // XXX Windows XP lnf?
+    menu.background = Color(0x0, true) // XXX Windows XP lnf?
   }
   menu.add("dummy1")
   menu.add("dummy2")
@@ -65,7 +61,7 @@ fun makeCheckerTexture(): TexturePaint {
   val sz = cs * cs
   val img = BufferedImage(sz, sz, BufferedImage.TYPE_INT_ARGB)
   val g2 = img.createGraphics()
-  g2.setPaint(Color(200, 150, 100, 50))
+  g2.paint = Color(200, 150, 100, 50)
   g2.fillRect(0, 0, sz, sz)
   var i = 0
   while (i * cs < sz) {
