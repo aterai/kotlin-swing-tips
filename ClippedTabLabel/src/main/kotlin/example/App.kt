@@ -36,7 +36,7 @@ private fun makeTestTabbedPane(tabbedPane: JTabbedPane) = tabbedPane.also {
   it.addTab("55555555555555555555555555555555", ColorIcon(Color.CYAN), JLabel("e"))
 }
 
-private class ClippedTitleTabbedPane : JTabbedPane {
+private class ClippedTitleTabbedPane : JTabbedPane() {
   private val tabInsets = UIManager.getInsets("TabbedPane.tabInsets") ?: getSynthTabInsets()
   private val tabAreaInsets = UIManager.getInsets("TabbedPane.tabAreaInsets") ?: getSynthTabAreaInsets()
 
@@ -51,10 +51,6 @@ private class ClippedTitleTabbedPane : JTabbedPane {
     val context = SynthContext(this, Region.TABBED_PANE_TAB_AREA, style, SynthConstants.ENABLED)
     return style.getInsets(context, null)
   }
-
-  constructor() : super()
-
-  constructor(tabPlacement: Int) : super(tabPlacement)
 
   override fun doLayout() {
     val tabCount = tabCount
