@@ -31,8 +31,8 @@ fun makeUI(): Component {
   val t = JTabbedPane()
 
   val table = JTable(model)
-  table.setAutoCreateRowSorter(true)
-  table.setFillsViewportHeight(true)
+  table.autoCreateRowSorter = true
+  table.fillsViewportHeight = true
   t.addTab("JTable", JScrollPane(table))
 
   val list = JList(listModel)
@@ -44,20 +44,20 @@ fun makeUI(): Component {
   timer.addActionListener {
     val date = LocalDateTime.now(ZoneId.systemDefault())
     // JTable
-    model.addRow(arrayOf(date.toString(), model.getRowCount(), false))
-    val i = table.convertRowIndexToView(model.getRowCount() - 1)
+    model.addRow(arrayOf(date.toString(), model.rowCount, false))
+    val i = table.convertRowIndexToView(model.rowCount - 1)
     val r = table.getCellRect(i, 0, true)
     table.scrollRectToVisible(r)
     // JList
     listModel.addElement(date)
-    val index = listModel.getSize() - 1
+    val index = listModel.size - 1
     list.ensureIndexIsVisible(index)
     // JTree
-    (tree.getModel() as? DefaultTreeModel)?.also { treeModel ->
-      (treeModel.getRoot() as? DefaultMutableTreeNode)?.also { parent ->
+    (tree.model as? DefaultTreeModel)?.also { treeModel ->
+      (treeModel.root as? DefaultMutableTreeNode)?.also { parent ->
         val newChild = DefaultMutableTreeNode(date)
-        treeModel.insertNodeInto(newChild, parent, parent.getChildCount())
-        tree.scrollPathToVisible(TreePath(newChild.getPath()))
+        treeModel.insertNodeInto(newChild, parent, parent.childCount)
+        tree.scrollPathToVisible(TreePath(newChild.path))
       }
     }
   }
@@ -68,8 +68,8 @@ fun makeUI(): Component {
       removeHierarchyListener(hierarchyListener)
       super.updateUI()
       hierarchyListener = HierarchyListener { e ->
-        val isDisplayableChanged = e.getChangeFlags() and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L
-        if (isDisplayableChanged && !e.getComponent().isDisplayable()) {
+        val isDisplayableChanged = e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L
+        if (isDisplayableChanged && !e.component.isDisplayable) {
           println("case DISPOSE_ON_CLOSE: hierarchyChanged")
           timer.stop()
         }
@@ -78,7 +78,7 @@ fun makeUI(): Component {
     }
   }
   p.add(t)
-  p.setPreferredSize(Dimension(320, 240))
+  p.preferredSize = Dimension(320, 240)
   return p
 }
 
