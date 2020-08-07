@@ -10,20 +10,20 @@ fun makeUI(): Component {
   val field = JTextField("111111111")
   field.addFocusListener(object : FocusAdapter() {
     override fun focusGained(e: FocusEvent) {
-      (e.getComponent() as? JTextComponent)?.selectAll()
+      (e.component as? JTextComponent)?.selectAll()
     }
   })
   val p = JPanel(GridLayout(2, 1))
   p.add(makeTitledPanel("focusGained: selectAll", field))
   p.add(makeTitledPanel("default", JTextField("22222222")))
-  p.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5))
-  p.setPreferredSize(Dimension(320, 240))
+  p.border = BorderFactory.createEmptyBorder(10, 5, 10, 5)
+  p.preferredSize = Dimension(320, 240)
   return p
 }
 
 private fun makeTitledPanel(title: String, cmp: Component): Component {
   val p = JPanel(GridBagLayout())
-  p.setBorder(BorderFactory.createTitledBorder(title))
+  p.border = BorderFactory.createTitledBorder(title)
   val c = GridBagConstraints()
   c.weightx = 1.0
   c.fill = GridBagConstraints.HORIZONTAL
