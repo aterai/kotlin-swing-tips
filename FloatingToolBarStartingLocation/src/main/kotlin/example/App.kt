@@ -10,9 +10,9 @@ fun makeUI(): Component {
   toolbar.add(JTextField(10))
   val p = JPanel(BorderLayout())
   EventQueue.invokeLater {
-    (p.getTopLevelAncestor() as? Window)?.also { w ->
-      (toolbar.getUI() as? BasicToolBarUI)?.also {
-        val pt = w.getLocation()
+    (p.topLevelAncestor as? Window)?.also { w ->
+      (toolbar.ui as? BasicToolBarUI)?.also {
+        val pt = w.location
         it.setFloatingLocation(pt.x + 120, pt.y + 160)
         it.setFloating(true, null)
       }
@@ -22,7 +22,7 @@ fun makeUI(): Component {
   p.add(Box.createHorizontalStrut(0), BorderLayout.WEST)
   p.add(Box.createHorizontalStrut(0), BorderLayout.EAST)
   p.add(JScrollPane(JTree()))
-  p.setPreferredSize(Dimension(320, 240))
+  p.preferredSize = Dimension(320, 240)
   return p
 }
 
