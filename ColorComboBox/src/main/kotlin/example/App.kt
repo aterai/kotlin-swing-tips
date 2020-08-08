@@ -77,7 +77,7 @@ private class AlternateRowColorComboBox<E>(model: ComboBoxModel<E>) : JComboBox<
         if (cb.isEditable) {
           (cb.editor.editorComponent as? JTextField)?.background = rc
         } else {
-          cb.setBackground(rc)
+          cb.background = rc
         }
       }
     }
