@@ -26,8 +26,8 @@ private val model = object : DefaultTableModel(data, columnNames) {
 }
 private val table = object : JTable(model) {
   override fun updateUI() {
-    setSelectionForeground(ColorUIResource(Color.RED))
-    setSelectionBackground(ColorUIResource(Color.RED))
+    selectionForeground = ColorUIResource(Color.RED)
+    selectionBackground = ColorUIResource(Color.RED)
     super.updateUI()
     val m = model
     for (i in 0 until m.columnCount) {
@@ -41,13 +41,11 @@ private val table = object : JTable(model) {
     editor: TableCellEditor,
     row: Int,
     column: Int
-  ): Component {
-    val c = super.prepareEditor(editor, row, column)
-    if (c is JCheckBox) {
-      c.setBackground(getSelectionBackground())
-      c.isBorderPainted = true
+  ) = super.prepareEditor(editor, row, column).also {
+    if (it is JCheckBox) {
+      it.background = selectionBackground
+      it.isBorderPainted = true
     }
-    return c
   }
 }
 
