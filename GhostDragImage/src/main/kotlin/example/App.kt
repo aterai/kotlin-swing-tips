@@ -239,7 +239,7 @@ private open class ListItemTransferHandler : TransferHandler() {
 
   override fun createTransferable(c: JComponent): Transferable? {
     val source = c as? JList<*> ?: return null
-    c.getRootPane().glassPane.isVisible = true
+    c.rootPane.glassPane.isVisible = true
     source.selectedIndices.forEach { selectedIndices.add(it) }
     val transferredObjects = source.selectedValuesList
     return object : Transferable {
