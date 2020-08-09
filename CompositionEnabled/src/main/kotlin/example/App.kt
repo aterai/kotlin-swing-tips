@@ -18,7 +18,8 @@ fun makeUI(): Component {
         println("tab or enter typed")
         return super.processKeyBinding(ks, e, condition, pressed)
       }
-      if (inputContext.isCompositionEnabled && !isEditing && !pressed && !ks.isOnKeyRelease) {
+      val editingOrPressed = isEditing || pressed
+      if (inputContext.isCompositionEnabled && !ks.isOnKeyRelease && !editingOrPressed) {
         val selectedRow = selectedRow
         val selectedColumn = selectedColumn
         if (selectedRow != -1 && selectedColumn != -1) {
