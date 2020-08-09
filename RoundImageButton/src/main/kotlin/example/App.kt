@@ -57,21 +57,11 @@ fun makeUI(): Component {
   }
 }
 
-private class RoundButton : JButton {
+private class RoundButton(icon: Icon, i2: String, i3: String) : JButton(icon) {
   private var shape: Shape? = null
   private var base: Shape? = null
 
-  constructor() : super()
-
-  constructor(icon: Icon) : super(icon)
-
-  constructor(text: String) : super(text)
-
-  constructor(a: Action) : super(a)
-
-  constructor(text: String, icon: Icon) : super(text, icon)
-
-  constructor(icon: Icon, i2: String, i3: String) : super(icon) {
+  init {
     pressedIcon = ImageIcon(javaClass.getResource(i2))
     rolloverIcon = ImageIcon(javaClass.getResource(i3))
   }
