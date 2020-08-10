@@ -8,13 +8,13 @@ fun makeUI(): Component {
   combo.selectedIndex = -1
 
   val b1 = JButton("setSelectedIndex(0)")
-  b1.addActionListener { combo.setSelectedIndex(0) }
+  b1.addActionListener { combo.selectedIndex = 0 }
 
   val b2 = JButton("setSelectedIndex(-1)")
-  b2.addActionListener { combo.setSelectedIndex(-1) }
+  b2.addActionListener { combo.selectedIndex = -1 }
 
   val b3 = JButton("setSelectedItem(null)")
-  b3.addActionListener { combo.setSelectedItem(null) }
+  b3.addActionListener { combo.selectedItem = null }
 
   val box = JPanel(GridLayout(0, 1, 10, 10))
   listOf<JComponent>(b1, b2, b3, combo).forEach { box.add(it) }
