@@ -16,43 +16,44 @@ import javax.swing.text.StyledEditorKit
 import javax.swing.text.View
 import javax.swing.text.ViewFactory
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val attr: MutableAttributeSet = SimpleAttributeSet()
-    StyleConstants.setForeground(attr, Color.RED)
-    StyleConstants.setFontSize(attr, 32)
-    val a: MutableAttributeSet = SimpleAttributeSet()
-    StyleConstants.setLineSpacing(a, .5f)
+fun makeUI(): Component {
+  val attr: MutableAttributeSet = SimpleAttributeSet()
+  StyleConstants.setForeground(attr, Color.RED)
+  StyleConstants.setFontSize(attr, 32)
+  val a: MutableAttributeSet = SimpleAttributeSet()
+  StyleConstants.setLineSpacing(a, .5f)
 
-    val editor1 = JTextPane()
-    editor1.setParagraphAttributes(a, false)
-    setDummyText(editor1, attr)
+  val editor1 = JTextPane()
+  editor1.setParagraphAttributes(a, false)
+  setSampleText(editor1, attr)
 
-    val editor2 = JTextPane()
-    editor2.editorKit = BottomInsetEditorKit()
-    setDummyText(editor2, attr)
-    val sp = JSplitPane(JSplitPane.VERTICAL_SPLIT)
-    sp.topComponent = JScrollPane(editor1)
-    sp.bottomComponent = JScrollPane(editor2)
-    sp.resizeWeight = .5
-    add(sp)
-    preferredSize = Dimension(320, 240)
-  }
+  val editor2 = JTextPane()
+  editor2.editorKit = BottomInsetEditorKit()
+  setSampleText(editor2, attr)
+  val sp = JSplitPane(JSplitPane.VERTICAL_SPLIT)
+  sp.topComponent = JScrollPane(editor1)
+  sp.bottomComponent = JScrollPane(editor2)
+  sp.resizeWeight = .5
 
-  private fun setDummyText(textPane: JTextPane, attr: MutableAttributeSet) {
-    textPane.text = "12341234\n1234 567890 5555 66666 77777\n88 999999 "
-    runCatching {
-      val doc = textPane.styledDocument
-      doc.insertString(doc.length, "134500698\n", attr)
-    }
+  return JPanel(BorderLayout()).also {
+    it.add(sp)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class BottomInsetEditorKit : StyledEditorKit() {
+private fun setSampleText(textPane: JTextPane, attr: MutableAttributeSet) {
+  textPane.text = "12341234\n1234 567890 5555 66666 77777\n88 999999 "
+  runCatching {
+    val doc = textPane.styledDocument
+    doc.insertString(doc.length, "134500698\n", attr)
+  }
+}
+
+private class BottomInsetEditorKit : StyledEditorKit() {
   override fun getViewFactory() = BottomInsetViewFactory()
 }
 
-class BottomInsetViewFactory : ViewFactory {
+private class BottomInsetViewFactory : ViewFactory {
   override fun create(elem: Element) = when (elem.name) {
     AbstractDocument.ParagraphElementName -> object : ParagraphView(elem) {
       override fun getBottomInset(): Short = 5
@@ -74,7 +75,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
