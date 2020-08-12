@@ -82,7 +82,7 @@ private class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
   ) {
     super.paintContentBorderTopEdge(g, tabPlacement, selectedIndex, x, y, w, h)
     val selRect = getTabBounds(selectedIndex, calcRect)
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.color = selectedTabColor
     g2.drawLine(selRect.x - ADJ2 + 1, y, selRect.x + selRect.width + ADJ2 - 1, y)
     g2.dispose()
