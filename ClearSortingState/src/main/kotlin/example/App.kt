@@ -15,18 +15,20 @@ fun makeUI(): Component {
     arrayOf("CCC", 92, true),
     arrayOf("DDD", 0, false)
   )
+
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
+
   val table = JTable(model)
   table.autoCreateRowSorter = true
   table.tableHeader.addMouseListener(object : MouseAdapter() {
     override fun mouseClicked(e: MouseEvent) {
       val sorter = table.rowSorter
-      if (sorter == null || sorter.sortKeys.isEmpty()) {
+      val h = e.component as? JTableHeader
+      if (h == null || sorter == null || sorter.sortKeys.isEmpty()) {
         return
       }
-      val h = e.component as JTableHeader
       val columnModel = h.columnModel
       val viewColumn = columnModel.getColumnIndexAtX(e.x)
       if (viewColumn < 0) {
@@ -38,10 +40,12 @@ fun makeUI(): Component {
       }
     }
   })
+
   val col = table.columnModel.getColumn(0)
   col.minWidth = 60
   col.maxWidth = 60
   col.resizable = false
+
   return JPanel(BorderLayout()).also {
     it.add(JLabel("Shift + Click -> Clear Sorting State"), BorderLayout.NORTH)
     it.add(JScrollPane(table))
