@@ -60,12 +60,16 @@ private open class ColorRadioButton(text: String?) : JRadioButton(text) {
 
   override fun fireStateChanged() {
     val model = getModel()
-    foreground = if (model.isEnabled) when {
-      model.isPressed && model.isArmed -> DefaultIcon.PRESSED_COLOR
-      model.isSelected -> DefaultIcon.SELECTED_COLOR
-      isRolloverEnabled && model.isRollover -> DefaultIcon.ROLLOVER_COLOR
-      else -> DefaultIcon.DEFAULT_COLOR
-    } else Color.GRAY
+    foreground = if (model.isEnabled) {
+      when {
+        model.isPressed && model.isArmed -> DefaultIcon.PRESSED_COLOR
+        model.isSelected -> DefaultIcon.SELECTED_COLOR
+        isRolloverEnabled && model.isRollover -> DefaultIcon.ROLLOVER_COLOR
+        else -> DefaultIcon.DEFAULT_COLOR
+      }
+    } else {
+      Color.GRAY
+    }
     super.fireStateChanged()
   }
 }
