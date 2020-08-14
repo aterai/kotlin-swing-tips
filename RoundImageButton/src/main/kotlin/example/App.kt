@@ -100,9 +100,9 @@ private class RoundButton(icon: Icon, i2: String, i3: String) : JButton(icon) {
     g2.dispose()
   }
 
-  override fun contains(x: Int, y: Int) = let {
+  override fun contains(x: Int, y: Int): Boolean {
     initShape()
-    shape?.contains(x.toDouble(), y.toDouble()) ?: false
+    return shape?.contains(x.toDouble(), y.toDouble()) ?: false
   }
 }
 
