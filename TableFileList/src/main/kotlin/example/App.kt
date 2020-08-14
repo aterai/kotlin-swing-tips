@@ -7,6 +7,7 @@ import java.awt.geom.Path2D
 import java.awt.image.FilteredImageSource
 import java.awt.image.RGBImageFilter
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.border.Border
 import javax.swing.plaf.ColorUIResource
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
@@ -50,10 +51,7 @@ private class FileNameRenderer(table: JTable) : TableCellRenderer {
   private val textLabel = JLabel(" ")
   private val iconLabel: JLabel
   private val focusBorder = UIManager.getBorder("Table.focusCellHighlightBorder")
-  private val noFocusBorder = UIManager.getBorder("Table.noFocusBorder") ?: let {
-    val i = focusBorder.getBorderInsets(textLabel)
-    BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
-  }
+  private val noFocusBorder = UIManager.getBorder("Table.noFocusBorder") ?: makeNoFocusBorder()
   private val icon: ImageIcon
   private val selectedIcon: ImageIcon
 
@@ -80,6 +78,11 @@ private class FileNameRenderer(table: JTable) : TableCellRenderer {
     val d = iconLabel.preferredSize
     dim.size = d
     table.rowHeight = d.height
+  }
+
+  private fun makeNoFocusBorder(): Border {
+    val i = focusBorder.getBorderInsets(textLabel)
+    return BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
   }
 
   override fun getTableCellRendererComponent(
@@ -219,7 +222,7 @@ private class FileListTable(model: TableModel) : JTable(model) {
 
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.paint = bandColor
     g2.draw(rubberBand)
     g2.composite = ALPHA
