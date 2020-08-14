@@ -31,6 +31,13 @@ console-reports:
   #  - 'FindingsReport'
      - 'FileBasedFindingsReport'
 
+output-reports:
+  active: true
+  exclude:
+  # - 'TxtOutputReport'
+  # - 'XmlOutputReport'
+  # - 'HtmlOutputReport'
+
 comments:
   active: true
   excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**']
@@ -186,6 +193,7 @@ exceptions:
     active: true
   ThrowingExceptionsWithoutMessageOrCause:
     active: true
+    excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**']
     exceptions:
      - IllegalArgumentException
      - IllegalStateException
@@ -466,6 +474,8 @@ potential-bugs:
     active: true
   MissingWhenCase:
     active: true
+  NullableToStringCall:
+    active: true
   RedundantElseInWhen:
     active: true
   UnconditionalJumpStatementInLoop:
@@ -529,6 +539,8 @@ style:
     excludedFunctions: 'describeContents'
     excludeAnnotatedFunction: ['dagger.Provides']
   LibraryCodeMustSpecifyReturnType:
+    active: true
+  LibraryEntitiesShouldNotBePublic:
     active: true
   LoopWithTooManyJumpStatements:
     active: true
@@ -631,6 +643,8 @@ style:
     active: true
     excludeAnnotatedClasses: []
     allowVars: false
+  UseEmptyCounterpart:
+    active: true
   UseIfInsteadOfWhen:
     active: false
   UseRequire:
