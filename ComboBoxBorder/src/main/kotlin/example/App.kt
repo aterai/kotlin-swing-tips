@@ -38,26 +38,25 @@ fun makeUI(): Component {
     }
   }
   combo02.addMouseListener(object : MouseAdapter() {
-    private fun getButtonModel(e: MouseEvent): ButtonModel {
-      val cb = e.component as JComboBox<*>
-      val b = cb.getComponent(0) as JButton
-      return b.model
+    private fun getButtonModel(e: MouseEvent): ButtonModel? {
+      val b = (e.component as? JComboBox<*>)?.getComponent(0)
+      return (b as? JButton)?.model
     }
 
     override fun mouseEntered(e: MouseEvent) {
-      getButtonModel(e).isRollover = true
+      getButtonModel(e)?.isRollover = true
     }
 
     override fun mouseExited(e: MouseEvent) {
-      getButtonModel(e).isRollover = false
+      getButtonModel(e)?.isRollover = false
     }
 
     override fun mousePressed(e: MouseEvent) {
-      getButtonModel(e).isPressed = true
+      getButtonModel(e)?.isPressed = true
     }
 
     override fun mouseReleased(e: MouseEvent) {
-      getButtonModel(e).isPressed = false
+      getButtonModel(e)?.isPressed = false
     }
   })
   val o02 = combo02.accessibleContext.getAccessibleChild(0)
