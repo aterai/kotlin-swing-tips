@@ -58,15 +58,15 @@ open class RoundedCornerButton : JButton {
   protected var border: Shape? = null
   protected var base: Shape? = null
 
-  constructor() : super()
+  // constructor() : super()
 
   constructor(icon: Icon) : super(icon)
 
   constructor(text: String) : super(text)
 
-  constructor(a: Action) : super(a)
+  // constructor(a: Action) : super(a)
 
-  constructor(text: String, icon: Icon) : super(text, icon)
+  // constructor(text: String, icon: Icon) : super(text, icon)
   // {
   //   // setModel(new DefaultButtonModel());
   //   // init(text, icon);
@@ -130,13 +130,9 @@ open class RoundedCornerButton : JButton {
     g2.dispose()
   }
 
-  // override fun contains(x: Int, y: Int): Boolean {
-  //   initShape()
-  //   return shape?.contains(x.toDouble(), y.toDouble()) ?: false
-  // }
-  override fun contains(x: Int, y: Int) = let {
+  override fun contains(x: Int, y: Int): Boolean {
     initShape()
-    shape?.contains(x.toDouble(), y.toDouble()) ?: false
+    return shape?.contains(x.toDouble(), y.toDouble()) ?: false
   }
 
   companion object {
@@ -147,15 +143,15 @@ open class RoundedCornerButton : JButton {
 }
 
 open class RoundButton : RoundedCornerButton {
-  constructor() : super()
+  // constructor() : super()
 
   constructor(icon: Icon) : super(icon)
 
   constructor(text: String) : super(text)
 
-  constructor(a: Action) : super(a)
+  // constructor(a: Action) : super(a)
 
-  constructor(text: String, icon: Icon) : super(text, icon)
+  // constructor(text: String, icon: Icon) : super(text, icon)
   // {
   //   // setModel(DefaultButtonModel())
   //   // init(text, icon);
