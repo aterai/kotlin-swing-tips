@@ -5,43 +5,51 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
-import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter
 
 private const val BUTTON_COLUMN = 3
 
 fun makeUI(): Component {
-  val model = RowDataModel()
-  model.addRowData(RowData("Name 1", "Comment..."))
-  model.addRowData(RowData("Name 2", "Test"))
-  model.addRowData(RowData("Name d", "ee"))
-  model.addRowData(RowData("Name c", "Test cc"))
-  model.addRowData(RowData("Name b", "Test bb"))
-  model.addRowData(RowData("Name a", "ff"))
-  model.addRowData(RowData("Name 0", "Test aa"))
-  model.addRowData(RowData("Name 0", "gg"))
+  val model = RowDataModel().also {
+    it.addRowData(RowData("Name 1", "Comment..."))
+    it.addRowData(RowData("Name 2", "Test"))
+    it.addRowData(RowData("Name d", "ee"))
+    it.addRowData(RowData("Name c", "Test cc"))
+    it.addRowData(RowData("Name b", "Test bb"))
+    it.addRowData(RowData("Name a", "ff"))
+    it.addRowData(RowData("Name 0", "Test aa"))
+    it.addRowData(RowData("Name 0", "gg"))
+  }
+
   val table = object : JTable(model) {
     override fun updateUI() {
       super.updateUI()
-      var col = getColumnModel().getColumn(0)
-      col.minWidth = 60
-      col.maxWidth = 60
-      col.resizable = false
-      col = getColumnModel().getColumn(BUTTON_COLUMN)
-      col.cellRenderer = DeleteButtonRenderer()
-      col.cellEditor = DeleteButtonEditor()
-      col.minWidth = 20
-      col.maxWidth = 20
-      col.resizable = false
+      val cm = columnModel
+      cm.getColumn(0).also {
+        it.minWidth = 60
+        it.maxWidth = 60
+        it.resizable = false
+      }
+      cm.getColumn(BUTTON_COLUMN).also {
+        it.cellRenderer = DeleteButtonRenderer()
+        it.cellEditor = DeleteButtonEditor()
+        it.minWidth = 20
+        it.maxWidth = 20
+        it.resizable = false
+      }
     }
   }
-  val sorter: TableRowSorter<out TableModel> = TableRowSorter(model)
+
+  // val sorter: TableRowSorter<out TableModel> = TableRowSorter(model)
+  val sorter = TableRowSorter(model)
   table.rowSorter = sorter
   sorter.setSortable(BUTTON_COLUMN, false)
+
   val button = JButton("add")
   button.addActionListener {
     model.addRowData(RowData("Test", "************"))
   }
+
   return JPanel(BorderLayout()).also {
     it.add(button, BorderLayout.SOUTH)
     it.add(JScrollPane(table))
