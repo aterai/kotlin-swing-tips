@@ -6,21 +6,15 @@ import java.awt.font.TextLayout
 import java.awt.geom.AffineTransform
 import java.awt.geom.Ellipse2D
 import java.awt.geom.Point2D
-import java.util.concurrent.ConcurrentHashMap
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val text = "1234567890"
-
-  val attr1: MutableMap<TextAttribute, Any?> = ConcurrentHashMap()
-  attr1[TextAttribute.TRACKING] = TextAttribute.TRACKING_TIGHT
   val l1 = JLabel("$text TRACKING_TIGHT (-.04f)")
-  l1.font = l1.font.deriveFont(attr1)
+  l1.font = l1.font.deriveFont(hashMapOf(TextAttribute.TRACKING to TextAttribute.TRACKING_TIGHT))
 
-  val attr2: MutableMap<TextAttribute, Any?> = ConcurrentHashMap()
-  attr2[TextAttribute.TRACKING] = TextAttribute.TRACKING_LOOSE
   val l2 = JLabel("$text TRACKING_LOOSE (.04f)")
-  l2.font = l2.font.deriveFont(attr2)
+  l2.font = l2.font.deriveFont(hashMapOf(TextAttribute.TRACKING to TextAttribute.TRACKING_LOOSE))
 
   val p0 = JPanel(GridLayout(0, 1, 5, 5))
   p0.border = BorderFactory.createTitledBorder("TextAttribute.TRACKING")
@@ -63,8 +57,7 @@ private open class BadgeIcon(val value: Int, val badgeFgc: Color, val badgeBgc: 
 
   open fun getTextShape(g2: Graphics2D): Shape {
     val txt = text
-    val attr: MutableMap<TextAttribute, Any?> = ConcurrentHashMap()
-    attr[TextAttribute.TRACKING] = -.1f
+    val attr = hashMapOf(TextAttribute.TRACKING to -.1f)
     val font = if (txt.length < 3) g2.font else g2.font.deriveFont(attr)
     val frc = g2.fontRenderContext
     return TextLayout(txt, font, frc).getOutline(null)
