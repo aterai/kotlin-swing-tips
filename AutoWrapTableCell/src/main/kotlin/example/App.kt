@@ -31,11 +31,11 @@ fun makeUI(): Component {
     }
 
     override fun updateUI() {
-      getColumnModel().getColumn(AUTO_WRAP_COLUMN).cellRenderer = null
+      columnModel.getColumn(AUTO_WRAP_COLUMN).cellRenderer = null
       super.updateUI()
       isEnabled = false
       setShowGrid(false)
-      getColumnModel().getColumn(AUTO_WRAP_COLUMN).cellRenderer = TextAreaCellRenderer()
+      columnModel.getColumn(AUTO_WRAP_COLUMN).cellRenderer = TextAreaCellRenderer()
     }
   }
   val scroll = JScrollPane(table)
