@@ -1,0 +1,128 @@
+package example
+
+import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.font.TextAttribute
+import java.awt.font.TextLayout
+import java.awt.geom.AffineTransform
+import java.awt.geom.Ellipse2D
+import java.awt.geom.Point2D
+import java.util.concurrent.ConcurrentHashMap
+import javax.swing.* // ktlint-disable no-wildcard-imports
+
+fun makeUI(): Component {
+  val text = "1234567890"
+
+  val attr1: MutableMap<TextAttribute, Any?> = ConcurrentHashMap()
+  attr1[TextAttribute.TRACKING] = TextAttribute.TRACKING_TIGHT
+  val l1 = JLabel("$text TRACKING_TIGHT (-.04f)")
+  l1.font = l1.font.deriveFont(attr1)
+
+  val attr2: MutableMap<TextAttribute, Any?> = ConcurrentHashMap()
+  attr2[TextAttribute.TRACKING] = TextAttribute.TRACKING_LOOSE
+  val l2 = JLabel("$text TRACKING_LOOSE (.04f)")
+  l2.font = l2.font.deriveFont(attr2)
+
+  val p0 = JPanel(GridLayout(0, 1, 5, 5))
+  p0.border = BorderFactory.createTitledBorder("TextAttribute.TRACKING")
+  listOf(JLabel("$text Default"), l1, l2).forEach { p0.add(it) }
+
+  val l3 = JLabel(BadgeIcon(128, Color.WHITE, Color(-0x5500cdce, true)))
+  val l4 = JLabel(BadgeIcon(256, Color.BLACK, Color(-0x559b009c, true)))
+  val l5 = JLabel(BadgeIcon(1024, Color.WHITE, Color(-0x55cdcd01, true)))
+  val p1 = JPanel()
+  p1.border = BorderFactory.createTitledBorder("Tracking: -0.1")
+  listOf(l3, l4, l5).forEach { p1.add(it) }
+
+  val l6 = JLabel(BadgeIcon2(128, Color.WHITE, Color(-0x5500cdce, true)))
+  val l7 = JLabel(BadgeIcon2(256, Color.BLACK, Color(-0x559b009c, true)))
+  val l8 = JLabel(BadgeIcon2(1024, Color.WHITE, Color(-0x55cdcd01, true)))
+  val p2 = JPanel()
+  p2.border = BorderFactory.createTitledBorder("Scaled along the X axis direction: 0.95")
+  listOf(l6, l7, l8).forEach { p2.add(it) }
+
+  val box = Box.createVerticalBox()
+  box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+  box.add(p0)
+  box.add(Box.createVerticalStrut(10))
+  box.add(p2)
+  box.add(Box.createVerticalStrut(10))
+  box.add(p1)
+
+  return JPanel(BorderLayout()).also {
+    it.add(box, BorderLayout.NORTH)
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private open class BadgeIcon(val value: Int, val badgeFgc: Color, val badgeBgc: Color) : Icon {
+  val text: String
+    get() = if (value > 999) "1K+" else value.toString()
+
+  val badgeShape: Shape
+    get() = Ellipse2D.Double(0.0, 0.0, iconWidth - 1.0, iconHeight - 1.0)
+
+  open fun getTextShape(g2: Graphics2D): Shape {
+    val txt = text
+    val attr: MutableMap<TextAttribute, Any?> = ConcurrentHashMap()
+    attr[TextAttribute.TRACKING] = -.1f
+    val font = if (txt.length < 3) g2.font else g2.font.deriveFont(attr)
+    val frc = g2.fontRenderContext
+    return TextLayout(txt, font, frc).getOutline(null)
+  }
+
+  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+    if (value <= 0) {
+      return
+    }
+    val w = iconWidth
+    val h = iconHeight
+    val g2 = g.create() as? Graphics2D ?: return
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
+    g2.translate(x, y)
+
+    val badge = badgeShape
+    g2.paint = badgeBgc
+    g2.fill(badge)
+
+    g2.paint = badgeFgc
+    val shape = getTextShape(g2)
+    val b = shape.bounds
+    val p = Point2D.Double(b.getX() + b.getWidth() / 2.0, b.getY() + b.getHeight() / 2.0)
+    val at = AffineTransform.getTranslateInstance(w / 2.0 - p.x - 1.0, h / 2.0 - p.y - 1.0)
+    g2.fill(at.createTransformedShape(shape))
+    g2.dispose()
+  }
+
+  override fun getIconWidth() = 24
+
+  override fun getIconHeight() = 24
+}
+
+private class BadgeIcon2(value: Int, fgc: Color, bgc: Color) : BadgeIcon(value, fgc, bgc) {
+  override fun getTextShape(g2: Graphics2D): Shape {
+    val txt = text
+    val at = if (txt.length < 3) null else AffineTransform.getScaleInstance(.95, 1.0)
+    val font = g2.font.deriveFont(at)
+    val frc = g2.fontRenderContext
+    return TextLayout(txt, font, frc).getOutline(null)
+  }
+}
+
+fun main() {
+  EventQueue.invokeLater {
+    runCatching {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+    }.onFailure {
+      it.printStackTrace()
+      Toolkit.getDefaultToolkit().beep()
+    }
+    JFrame().apply {
+      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+      contentPane.add(makeUI())
+      pack()
+      setLocationRelativeTo(null)
+      isVisible = true
+    }
+  }
+}
