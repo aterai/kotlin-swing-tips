@@ -20,16 +20,20 @@ fun makeUI(): Component {
   p0.border = BorderFactory.createTitledBorder("TextAttribute.TRACKING")
   listOf(JLabel("$text Default"), l1, l2).forEach { p0.add(it) }
 
-  val l3 = JLabel(BadgeIcon(128, Color.WHITE, Color(-0x5500cdce, true)))
-  val l4 = JLabel(BadgeIcon(256, Color.BLACK, Color(-0x559b009c, true)))
-  val l5 = JLabel(BadgeIcon(1024, Color.WHITE, Color(-0x55cdcd01, true)))
+  val c1 = Color(0xAA_FF_32_32.toInt(), true)
+  val c2 = Color(0xAA_64_FF_64.toInt(), true)
+  val c3 = Color(0xAA_32_32_FF.toInt(), true)
+
+  val l3 = JLabel(BadgeIcon(128, Color.WHITE, c1))
+  val l4 = JLabel(BadgeIcon(256, Color.BLACK, c2))
+  val l5 = JLabel(BadgeIcon(1024, Color.WHITE, c3))
   val p1 = JPanel()
   p1.border = BorderFactory.createTitledBorder("Tracking: -0.1")
   listOf(l3, l4, l5).forEach { p1.add(it) }
 
-  val l6 = JLabel(BadgeIcon2(128, Color.WHITE, Color(-0x5500cdce, true)))
-  val l7 = JLabel(BadgeIcon2(256, Color.BLACK, Color(-0x559b009c, true)))
-  val l8 = JLabel(BadgeIcon2(1024, Color.WHITE, Color(-0x55cdcd01, true)))
+  val l6 = JLabel(BadgeIcon2(128, Color.WHITE, c1))
+  val l7 = JLabel(BadgeIcon2(256, Color.BLACK, c2))
+  val l8 = JLabel(BadgeIcon2(1024, Color.WHITE, c3))
   val p2 = JPanel()
   p2.border = BorderFactory.createTitledBorder("Scaled along the X axis direction: 0.95")
   listOf(l6, l7, l8).forEach { p2.add(it) }
