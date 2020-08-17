@@ -64,16 +64,16 @@ fun makeUI(): Component {
 
 private class FolderSelectionListener(private val fileSystemView: FileSystemView) : TreeSelectionListener {
   override fun valueChanged(e: TreeSelectionEvent) {
+    val tree = e.source
     val node = e.path.lastPathComponent
-    if (node !is DefaultMutableTreeNode || !node.isLeaf) {
+    if (tree !is JTree || node !is DefaultMutableTreeNode || !node.isLeaf) {
       return
     }
+    val model = tree.model
     val parent = node.userObject
-    if (parent !is File || !parent.isDirectory) {
+    if (model !is DefaultTreeModel || parent !is File || !parent.isDirectory) {
       return
     }
-    val tree = e.source as JTree
-    val model = tree.model as DefaultTreeModel
     val worker = object : BackgroundTask(fileSystemView, parent) {
       override fun process(chunks: List<File>) {
         if (isCancelled) {
