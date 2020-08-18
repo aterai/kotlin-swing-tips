@@ -35,35 +35,40 @@ open class BasicTabViewButtonUI : TabViewButtonUI() {
     val f = c.getFont()
     g.font = f
 
-    val i = c.getInsets()
-    b.getSize(size)
-    viewRect.x = i.left
-    viewRect.y = i.top
-    viewRect.width = size.width - i.right - viewRect.x
-    viewRect.height = size.height - i.bottom - viewRect.y
-    iconRect.setBounds(0, 0, 0, 0) // .x = iconRect.y = iconRect.width = iconRect.height = 0;
-    textRect.setBounds(0, 0, 0, 0) // .x = textRect.y = textRect.width = textRect.height = 0;
+    // val i = c.getInsets()
+    // b.getSize(size)
+    // viewRect.x = i.left
+    // viewRect.y = i.top
+    // viewRect.width = size.width - i.right - viewRect.x
+    // viewRect.height = size.height - i.bottom - viewRect.y
+    SwingUtilities.calculateInnerArea(b, viewRect)
+    iconRect.setBounds(0, 0, 0, 0)
+    textRect.setBounds(0, 0, 0, 0)
 
     val text = SwingUtilities.layoutCompoundLabel(
-      c, c.getFontMetrics(f), b.text, null, // altIcon != null ? altIcon : getDefaultIcon(),
-      b.verticalAlignment, b.horizontalAlignment,
-      b.verticalTextPosition, b.horizontalTextPosition,
-      viewRect, iconRect, textRect,
+      c,
+      c.getFontMetrics(f),
+      b.text, null,
+      b.verticalAlignment,
+      b.horizontalAlignment,
+      b.verticalTextPosition,
+      b.horizontalTextPosition,
+      viewRect,
+      iconRect,
+      textRect,
       0
-    ) // b.getText() == null ? 0 : b.getIconTextGap());
+    )
 
     g.color = b.background
     g.fillRect(0, 0, size.width, size.height)
 
     val model = b.model
-    if (model.isSelected || model.isArmed) {
-      g.color = Color.WHITE
-    } else {
-      g.color = Color(220, 220, 220)
-    }
+    g.color = if (model.isSelected || model.isArmed) Color.WHITE else Color(220, 220, 220)
     g.fillRect(
-      viewRect.x, viewRect.y,
-      viewRect.x + viewRect.width, viewRect.y + viewRect.height
+      viewRect.x,
+      viewRect.y,
+      viewRect.x + viewRect.width,
+      viewRect.y + viewRect.height
     )
 
     val color = Color(255, 120, 40)
@@ -82,8 +87,8 @@ open class BasicTabViewButtonUI : TabViewButtonUI() {
       g.color = color
       g.drawLine(viewRect.x + 0, viewRect.y + 2, viewRect.x + viewRect.width - 0, viewRect.y + 2)
     }
-    val v = c.getClientProperty(BasicHTML.propertyKey) as? View
-    if (v != null) {
+    val v = c.getClientProperty(BasicHTML.propertyKey)
+    if (v is View) {
       v.paint(g, textRect)
     } else {
       if (model.isSelected) {

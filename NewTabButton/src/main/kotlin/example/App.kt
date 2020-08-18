@@ -30,6 +30,7 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
   private val contentsPanel = JPanel(cardLayout)
   private val bg = ButtonGroup()
   private val button = JButton(PlusIcon())
+  private var count = 0
 
   // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
   private val icons = listOf(
@@ -70,23 +71,21 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
     add(contentsPanel)
 
     button.border = BorderFactory.createEmptyBorder()
-    button.addActionListener(object : ActionListener {
-      private var count = 0
-      override fun actionPerformed(e: ActionEvent) {
-        addTab("new tab:$count", JLabel("xxx:$count"))
-        count++
-      }
-    })
+    button.addActionListener {
+      addTab("new tab:$count", JLabel("xxx:$count"))
+      count++
+    }
   }
 
   private fun createTabComponent(title: String, comp: Component): Component {
     val tab = TabButton(title)
-    tab.addMouseListener(object : MouseAdapter() {
+    val handler = object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
         (e.component as? AbstractButton)?.isSelected = true
         cardLayout.show(contentsPanel, title)
       }
-    })
+    }
+    tab.addMouseListener(handler)
     tab.icon = icons.random()
     tab.layout = BorderLayout()
     val close = object : JButton(CloseTabIcon(Color.GRAY)) {
