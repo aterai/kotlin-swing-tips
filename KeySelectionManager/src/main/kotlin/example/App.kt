@@ -33,12 +33,7 @@ private fun makeTitledPanel(title: String, c: Component): Component {
   return p
 }
 
-private fun makeModel(): ComboBoxModel<String> {
-  val data = arrayOf(
-    "a", "ab", "abc", "b1", "b2", "b3"
-  )
-  return DefaultComboBoxModel(data)
-}
+private fun makeModel() = DefaultComboBoxModel(arrayOf("a", "ab", "abc", "b1", "b2", "b3"))
 
 fun main() {
   EventQueue.invokeLater {

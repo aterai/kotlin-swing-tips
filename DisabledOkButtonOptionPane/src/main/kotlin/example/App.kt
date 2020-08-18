@@ -32,7 +32,11 @@ private fun makeButton1(log: JTextArea): JButton {
   button1.addActionListener {
     val p1: Component = log.rootPane
     val ret = JOptionPane.showConfirmDialog(
-      p1, field1, "Input text", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
+      p1,
+      field1,
+      "Input text",
+      JOptionPane.OK_CANCEL_OPTION,
+      JOptionPane.PLAIN_MESSAGE
     )
     if (ret == JOptionPane.OK_OPTION) {
       log.text = field1.text
@@ -102,7 +106,11 @@ private fun makeButton2(log: JTextArea): JButton {
       }
     }
     val ret = JOptionPane.showConfirmDialog(
-      p2, panel2, "Input text", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
+      p2,
+      panel2,
+      "Input text",
+      JOptionPane.OK_CANCEL_OPTION,
+      JOptionPane.PLAIN_MESSAGE
     )
     if (ret == JOptionPane.OK_OPTION) {
       log.text = field2.text

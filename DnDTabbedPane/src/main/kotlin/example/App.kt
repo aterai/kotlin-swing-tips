@@ -132,7 +132,9 @@ private class DnDTabbedPane : JTabbedPane() {
     glassPane.name = "GlassPane"
     DropTarget(glassPane, DnDConstants.ACTION_COPY_OR_MOVE, TabDropTargetListener(), true)
     DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(
-      this, DnDConstants.ACTION_COPY_OR_MOVE, TabDragGestureListener()
+      this,
+      DnDConstants.ACTION_COPY_OR_MOVE,
+      TabDragGestureListener()
     )
   }
 

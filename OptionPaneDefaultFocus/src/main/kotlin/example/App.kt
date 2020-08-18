@@ -37,7 +37,11 @@ private fun makeButton(field: JTextField, textArea: JTextArea): JButton {
   button.addActionListener {
     val p = textArea.rootPane
     val ret = JOptionPane.showConfirmDialog(
-      p, field, "Input Text", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
+      p,
+      field,
+      "Input Text",
+      JOptionPane.OK_CANCEL_OPTION,
+      JOptionPane.PLAIN_MESSAGE
     )
     if (ret == JOptionPane.OK_OPTION) {
       textArea.text = field.text

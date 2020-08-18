@@ -6,8 +6,12 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val icons = listOf(
-    "wi0009-16.png", "wi0054-16.png", "wi0062-16.png",
-    "wi0063-16.png", "wi0124-16.png", "wi0126-16.png"
+    "wi0009-16.png",
+    "wi0054-16.png",
+    "wi0062-16.png",
+    "wi0063-16.png",
+    "wi0124-16.png",
+    "wi0126-16.png"
   )
   val tabbedPane = JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT)
   val cl = Thread.currentThread().contextClassLoader

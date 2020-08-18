@@ -38,16 +38,15 @@ private fun makeDnDTable(handler: TableRowTransferHandler): JTable {
     arrayOf("GGG", 92, true),
     arrayOf("ggg", 0, false)
   )
-  val table = JTable(object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int): Class<*> {
-      return when (column) {
-        0 -> String::class.java
-        1 -> Number::class.java
-        2 -> Boolean::class.java
-        else -> super.getColumnClass(column)
-      }
+  val model = object : DefaultTableModel(data, columnNames) {
+    override fun getColumnClass(column: Int) = when (column) {
+      0 -> String::class.java
+      1 -> Number::class.java
+      2 -> Boolean::class.java
+      else -> super.getColumnClass(column)
     }
-  })
+  }
+  val table = JTable(model)
   table.selectionModel.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
   table.transferHandler = handler
   table.dropMode = DropMode.INSERT_ROWS

@@ -49,8 +49,11 @@ private class TablePopupMenu(columnNames: Array<String>) : JPopupMenu() {
       val name = column.headerValue.toString()
       textField.text = name
       val result = JOptionPane.showConfirmDialog(
-        header.table, textField, "Edit: setHeaderValue",
-        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
+        header.table,
+        textField,
+        "Edit: setHeaderValue",
+        JOptionPane.OK_CANCEL_OPTION,
+        JOptionPane.PLAIN_MESSAGE
       )
       if (result == JOptionPane.OK_OPTION) {
         val str = textField.text.trim()
@@ -67,8 +70,11 @@ private class TablePopupMenu(columnNames: Array<String>) : JPopupMenu() {
       val name = table.getColumnName(index)
       textField.text = name
       val result = JOptionPane.showConfirmDialog(
-        table, textField, "Edit: setColumnIdentifiers",
-        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
+        table,
+        textField,
+        "Edit: setColumnIdentifiers",
+        JOptionPane.OK_CANCEL_OPTION,
+        JOptionPane.PLAIN_MESSAGE
       )
       if (result == JOptionPane.OK_OPTION) {
         val str = textField.text.trim { it <= ' ' }

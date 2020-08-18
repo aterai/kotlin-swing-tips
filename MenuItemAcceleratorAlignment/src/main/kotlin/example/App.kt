@@ -148,7 +148,9 @@ private object MenuItemHelper {
         g.color = acceleratorForeground
       }
       drawString(
-        menuItem, g, text,
+        menuItem,
+        g,
+        text,
         viewRect.x + viewRect.width - menuItem.iconTextGap - accRect.width,
         accRect.y + ascent
       )
