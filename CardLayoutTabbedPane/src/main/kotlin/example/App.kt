@@ -310,18 +310,33 @@ class OperaTabViewButtonUI : BasicTabViewButtonUI() {
     val r2 = Rectangle(r.x, r.y + r.height / 2, r.width, r.height / 2)
     val r3 = Rectangle(r.x, r.y + r.height / 2 - 2, r.width, r.height / 4)
     g2.paint = GradientPaint(
-      0f, r1.y.toFloat(), Color(0x84A2B4),
-      0f, (r1.y + r1.height).toFloat(), Color(0x678598), true
+      0f,
+      r1.y.toFloat(),
+      Color(0x84_A2_B4),
+      0f,
+      (r1.y + r1.height).toFloat(),
+      Color(0x67_85_98),
+      true
     )
     g2.fill(r1)
     g2.paint = GradientPaint(
-      0f, r2.y.toFloat(), Color(0x324954),
-      0f, (r2.y + r2.height).toFloat(), Color(0x3C5665), true
+      0f,
+      r2.y.toFloat(),
+      Color(0x32_49_54),
+      0f,
+      (r2.y + r2.height).toFloat(),
+      Color(0x3C_56_65),
+      true
     )
     g2.fill(r2)
     g2.paint = GradientPaint(
-      0f, r3.y.toFloat(), Color(0, 0, 0, 30),
-      0f, (r3.y + r3.height).toFloat(), Color(0, 0, 0, 5), true
+      0f,
+      r3.y.toFloat(),
+      Color(0, 0, 0, 30),
+      0f,
+      (r3.y + r3.height).toFloat(),
+      Color(0, 0, 0, 5),
+      true
     )
     g2.fill(r3)
     g2.paint = Color(39, 56, 67) // g2.setPaint(Color.GREEN);

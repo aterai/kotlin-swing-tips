@@ -116,7 +116,11 @@ private class TreePopupMenu : JPopupMenu() {
       if (node is DefaultMutableTreeNode && tree is JTree) {
         textField.text = node.userObject?.toString()
         val ret = JOptionPane.showConfirmDialog(
-          tree, textField, "edit", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
+          tree,
+          textField,
+          "edit",
+          JOptionPane.OK_CANCEL_OPTION,
+          JOptionPane.PLAIN_MESSAGE
         )
         if (ret == JOptionPane.OK_OPTION) {
           tree.model.valueForPathChanged(path, textField.text)

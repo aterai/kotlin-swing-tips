@@ -125,9 +125,12 @@ private class BalloonToolTip : JToolTip() {
     triangle.addPoint(i.left + v + v + v, v)
     val area = Area(
       RoundRectangle2D.Float(
-        0f, v.toFloat(),
-        w.toFloat(), (h - i.bottom - v).toFloat(),
-        i.top.toFloat(), i.top.toFloat()
+        0f,
+        v.toFloat(),
+        w.toFloat(),
+        (h - i.bottom - v).toFloat(),
+        i.top.toFloat(),
+        i.top.toFloat()
       )
     )
     area.add(Area(triangle))

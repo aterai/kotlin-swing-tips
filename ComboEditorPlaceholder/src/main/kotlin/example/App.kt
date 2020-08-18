@@ -41,7 +41,8 @@ fun makeUI(): Component {
     }
   }
   combo2.border = BorderFactory.createCompoundBorder(
-    combo2.border, BorderFactory.createEmptyBorder(0, 2, 0, 0)
+    combo2.border,
+    BorderFactory.createEmptyBorder(0, 2, 0, 0)
   )
 
   val p = JPanel(GridLayout(4, 1, 5, 5))

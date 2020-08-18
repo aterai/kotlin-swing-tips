@@ -107,7 +107,8 @@ private enum class Side(
   val resize: BiFunction<Rectangle, Point, Rectangle>
 ) {
   N(
-    Cursor.N_RESIZE_CURSOR, Dimension(0, 4),
+    Cursor.N_RESIZE_CURSOR,
+    Dimension(0, 4),
     BiFunction { r, d ->
       r.y += d.y
       r.height -= d.y
@@ -115,7 +116,8 @@ private enum class Side(
     }
   ),
   W(
-    Cursor.W_RESIZE_CURSOR, Dimension(4, 0),
+    Cursor.W_RESIZE_CURSOR,
+    Dimension(4, 0),
     BiFunction { r, d ->
       r.x += d.x
       r.width -= d.x
@@ -123,21 +125,24 @@ private enum class Side(
     }
   ),
   E(
-    Cursor.E_RESIZE_CURSOR, Dimension(4, 0),
+    Cursor.E_RESIZE_CURSOR,
+    Dimension(4, 0),
     BiFunction { r, d ->
       r.width += d.x
       r
     }
   ),
   S(
-    Cursor.S_RESIZE_CURSOR, Dimension(0, 4),
+    Cursor.S_RESIZE_CURSOR,
+    Dimension(0, 4),
     BiFunction { r, d ->
       r.height += d.y
       r
     }
   ),
   NW(
-    Cursor.NW_RESIZE_CURSOR, Dimension(4, 4),
+    Cursor.NW_RESIZE_CURSOR,
+    Dimension(4, 4),
     BiFunction { r, d ->
       r.y += d.y
       r.height -= d.y
@@ -147,7 +152,8 @@ private enum class Side(
     }
   ),
   NE(
-    Cursor.NE_RESIZE_CURSOR, Dimension(4, 4),
+    Cursor.NE_RESIZE_CURSOR,
+    Dimension(4, 4),
     BiFunction { r, d ->
       r.y += d.y
       r.height -= d.y
@@ -156,7 +162,8 @@ private enum class Side(
     }
   ),
   SW(
-    Cursor.SW_RESIZE_CURSOR, Dimension(4, 4),
+    Cursor.SW_RESIZE_CURSOR,
+    Dimension(4, 4),
     BiFunction { r, d ->
       r.height += d.y
       r.x += d.x
@@ -165,7 +172,8 @@ private enum class Side(
     }
   ),
   SE(
-    Cursor.SE_RESIZE_CURSOR, Dimension(4, 4),
+    Cursor.SE_RESIZE_CURSOR,
+    Dimension(4, 4),
     BiFunction { r, d ->
       r.height += d.y
       r.width += d.x

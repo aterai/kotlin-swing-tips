@@ -7,7 +7,14 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val array = arrayOf(
-    "111", "1111222", "111122233", "111122233444", "1234", "12567", "2221", "22212"
+    "111",
+    "1111222",
+    "111122233",
+    "111122233444",
+    "1234",
+    "12567",
+    "2221",
+    "22212"
   )
   val combo = JComboBox(array)
   combo.isEditable = true

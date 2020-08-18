@@ -17,7 +17,10 @@ fun makeUI(): Component {
 
   val cc = JColorChooser()
   val dialog = JColorChooser.createDialog(
-    null, "JST ColorChooserSwatchSize", true, cc,
+    null,
+    "JST ColorChooserSwatchSize",
+    true,
+    cc,
     { println("ok") }
   ) { println("cancel") }
   val button2 = JButton("JColorChooser.createDialog(...).setVisible(true)")

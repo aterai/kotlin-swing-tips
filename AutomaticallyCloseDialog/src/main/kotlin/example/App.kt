@@ -17,7 +17,11 @@ fun makeUI(): Component {
     val p = label.rootPane
     val title = "Automatically close dialog"
     val r = JOptionPane.showConfirmDialog(
-      p, label, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE
+      p,
+      label,
+      title,
+      JOptionPane.OK_CANCEL_OPTION,
+      JOptionPane.INFORMATION_MESSAGE
     )
     when (r) {
       JOptionPane.OK_OPTION -> textArea.append("OK\n")
