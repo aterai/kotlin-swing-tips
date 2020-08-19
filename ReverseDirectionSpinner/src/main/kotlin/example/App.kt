@@ -15,9 +15,28 @@ fun makeUI(): Component {
   box.add(Box.createVerticalStrut(10))
 
   val scale = arrayOf(
-    "AAA", "AA+", "AA", "AA-", "A+", "A", "A-",
-    "BBB+", "BBB", "BBB-", "BB+", "BB", "BB-", "B+", "B", "B-",
-    "CCC+", "CCC", "CCC-", "CC", "R", "D"
+    "AAA",
+    "AA+",
+    "AA",
+    "AA-",
+    "A+",
+    "A",
+    "A-",
+    "BBB+",
+    "BBB",
+    "BBB-",
+    "BB+",
+    "BB",
+    "BB-",
+    "B+",
+    "B",
+    "B-",
+    "CCC+",
+    "CCC",
+    "CCC-",
+    "CC",
+    "R",
+    "D"
   )
   val spinner2 = JSpinner(SpinnerListModel(scale))
   box.add(makeTitledPanel("SpinnerListModel", spinner2))

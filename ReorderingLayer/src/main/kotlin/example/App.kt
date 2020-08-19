@@ -10,9 +10,9 @@ import kotlin.math.roundToInt
 fun makeUI(): Component {
   val box = Box.createVerticalBox()
   box.border = BorderFactory.createMatteBorder(10, 5, 5, 5, Color.GREEN)
-  listOf<Component>(
-    JLabel("<html>000<br>00<br>00"), JButton("1"), JCheckBox("2"), JTextField("3")
-  ).forEach { addDraggablePanel(box, it) }
+  listOf<Component>(JLabel("<html>000<br>00<br>00"), JButton("1"), JCheckBox("2"), JTextField("3")).forEach {
+    addDraggablePanel(box, it)
+  }
   return JPanel(BorderLayout()).also {
     it.add(JLayer(box, ReorderingLayerUI<JComponent>()), BorderLayout.NORTH)
     it.preferredSize = Dimension(320, 240)

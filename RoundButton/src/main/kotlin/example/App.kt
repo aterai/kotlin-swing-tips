@@ -88,9 +88,12 @@ open class RoundedCornerButton : JButton {
       base = bounds
       shape = RoundRectangle2D.Double(0.0, 0.0, width - 1.0, height - 1.0, ARC_WIDTH, ARC_HEIGHT)
       border = RoundRectangle2D.Double(
-        FOCUS_STROKE, FOCUS_STROKE,
-        width - 1 - FOCUS_STROKE * 2, height - 1 - FOCUS_STROKE * 2,
-        ARC_WIDTH, ARC_HEIGHT
+        FOCUS_STROKE,
+        FOCUS_STROKE,
+        width - 1 - FOCUS_STROKE * 2,
+        height - 1 - FOCUS_STROKE * 2,
+        ARC_WIDTH,
+        ARC_HEIGHT
       )
     }
   }

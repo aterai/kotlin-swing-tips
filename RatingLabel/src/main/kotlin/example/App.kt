@@ -77,9 +77,7 @@ private open class LevelBar(
   protected val iconList: List<ImageIcon>,
   private val gap: Int
 ) : JPanel(GridLayout(1, 5, gap * 2, gap * 2)) {
-  protected val labelList = listOf(
-    JLabel(), JLabel(), JLabel(), JLabel(), JLabel()
-  )
+  protected val labelList = listOf(JLabel(), JLabel(), JLabel(), JLabel(), JLabel())
   private var clicked = -1
   private var handler: MouseAdapter? = null
 
