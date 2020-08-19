@@ -44,7 +44,9 @@ private class TitledSeparator(
     val icon = TitledSeparatorIcon()
     val b = BorderFactory.createTitledBorder(
       BorderFactory.createMatteBorder(separatorHeight, 0, 0, 0, icon),
-      title, TitledBorder.DEFAULT_JUSTIFICATION, titlePosition
+      title,
+      TitledBorder.DEFAULT_JUSTIFICATION,
+      titlePosition
     )
     border = b
   }

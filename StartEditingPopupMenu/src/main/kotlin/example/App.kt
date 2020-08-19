@@ -55,7 +55,11 @@ class TreePopupMenu : JPopupMenu() {
         field.text = node.userObject.toString()
         (invoker as? JTree)?.also { tree ->
           val ret = JOptionPane.showConfirmDialog(
-            tree, field, "Rename", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
+            tree,
+            field,
+            "Rename",
+            JOptionPane.OK_CANCEL_OPTION,
+            JOptionPane.PLAIN_MESSAGE
           )
           if (ret == JOptionPane.OK_OPTION) {
             tree.model.valueForPathChanged(path, field.text)

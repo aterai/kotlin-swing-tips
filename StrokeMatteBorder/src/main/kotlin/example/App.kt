@@ -22,9 +22,7 @@ fun makeLabelTable(row: Int, column: Int): Component {
     c.gridx = 0
     while (c.gridx < column) {
       val l = makeLabel(String.format(Locale.ENGLISH, "%d%d", c.gridx, c.gridy))
-      l.border = BorderFactory.createCompoundBorder(
-        dashed, BorderFactory.createEmptyBorder(1, 1, 0, 0)
-      )
+      l.border = BorderFactory.createCompoundBorder(dashed, BorderFactory.createEmptyBorder(1, 1, 0, 0))
       p.add(l, c)
       c.gridx++
     }

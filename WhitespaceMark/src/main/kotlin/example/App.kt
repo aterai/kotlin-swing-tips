@@ -144,7 +144,12 @@ private class WhitespaceLabelView(elem: Element) : LabelView(elem) {
     private const val IDEOGRAPHIC_SPACE = "Å@" // \u3000
     private val MARK_COLOR = Color(0x78_82_6E)
     private val DASHED = BasicStroke(
-      1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10f, floatArrayOf(1f), 0f
+      1f,
+      BasicStroke.CAP_BUTT,
+      BasicStroke.JOIN_MITER,
+      10f,
+      floatArrayOf(1f),
+      0f
     )
   }
 }

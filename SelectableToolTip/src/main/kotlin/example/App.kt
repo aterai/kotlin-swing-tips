@@ -52,7 +52,8 @@ fun makeUI(): Component {
   editor.addHyperlinkListener { e ->
     when (e.eventType) {
       HyperlinkEvent.EventType.ACTIVATED -> JOptionPane.showMessageDialog(
-        editor, "You click the link with the URL " + e.url
+        editor,
+        "You click the link with the URL " + e.url
       )
       HyperlinkEvent.EventType.ENTERED -> {
         editor.toolTipText = ""

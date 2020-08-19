@@ -7,51 +7,54 @@ import javax.swing.tree.DefaultTreeCellRenderer
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreeModel
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val tree: JTree = object : JTree(makeModel()) {
-      override fun getScrollableTracksViewportWidth() = true
+fun makeUI(): Component {
+  val tree = object : JTree(makeModel()) {
+    override fun getScrollableTracksViewportWidth() = true
 
-      override fun updateUI() {
-        super.updateUI()
-        setCellRenderer(TableOfContentsTreeCellRenderer())
-        border = BorderFactory.createTitledBorder("TreeCellRenderer")
-      }
+    override fun updateUI() {
+      super.updateUI()
+      setCellRenderer(TableOfContentsTreeCellRenderer())
+      border = BorderFactory.createTitledBorder("TreeCellRenderer")
     }
-    tree.isRootVisible = false
-    val tree2: JTree = TableOfContentsTree(makeModel())
-    tree2.isRootVisible = false
-    val sp = JSplitPane()
-    sp.resizeWeight = .5
-    sp.leftComponent = JScrollPane(tree)
-    sp.rightComponent = JScrollPane(tree2)
-    add(sp)
-    preferredSize = Dimension(320, 240)
   }
+  tree.isRootVisible = false
 
-  private fun makeModel(): DefaultTreeModel {
-    val root = DefaultMutableTreeNode("root")
-    val s0 = DefaultMutableTreeNode(TableOfContents("1. Introduction", 1))
-    root.add(s0)
-    val s1 = DefaultMutableTreeNode(TableOfContents("2. Chapter", 1))
-    s1.add(DefaultMutableTreeNode(TableOfContents("2.1. Section", 2)))
-    s1.add(DefaultMutableTreeNode(TableOfContents("2.2. Section", 4)))
-    s1.add(DefaultMutableTreeNode(TableOfContents("2.3. Section", 8)))
-    root.add(s1)
-    val s2 = DefaultMutableTreeNode(TableOfContents("3. Chapter", 10))
-    s2.add(DefaultMutableTreeNode(TableOfContents("ddd", 12)))
-    s2.add(DefaultMutableTreeNode(TableOfContents("eee", 24)))
-    s2.add(DefaultMutableTreeNode(TableOfContents("fff", 38)))
-    root.add(s2)
-    return DefaultTreeModel(root)
+  val tree2 = TableOfContentsTree(makeModel())
+  tree2.isRootVisible = false
+
+  val sp = JSplitPane()
+  sp.resizeWeight = .5
+  sp.leftComponent = JScrollPane(tree)
+  sp.rightComponent = JScrollPane(tree2)
+
+  return JPanel(BorderLayout()).also {
+    it.add(sp)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-data class TableOfContents(val title: String, val page: Int) {
+private fun makeModel(): DefaultTreeModel {
+  val root = DefaultMutableTreeNode("root")
+  val s0 = DefaultMutableTreeNode(TableOfContents("1. Introduction", 1))
+  root.add(s0)
+  val s1 = DefaultMutableTreeNode(TableOfContents("2. Chapter", 1))
+  s1.add(DefaultMutableTreeNode(TableOfContents("2.1. Section", 2)))
+  s1.add(DefaultMutableTreeNode(TableOfContents("2.2. Section", 4)))
+  s1.add(DefaultMutableTreeNode(TableOfContents("2.3. Section", 8)))
+  root.add(s1)
+  val s2 = DefaultMutableTreeNode(TableOfContents("3. Chapter", 10))
+  s2.add(DefaultMutableTreeNode(TableOfContents("ddd", 12)))
+  s2.add(DefaultMutableTreeNode(TableOfContents("eee", 24)))
+  s2.add(DefaultMutableTreeNode(TableOfContents("fff", 38)))
+  root.add(s2)
+  return DefaultTreeModel(root)
+}
+
+private data class TableOfContents(val title: String, val page: Int) {
   override fun toString() = title
 }
 
-class TableOfContentsTreeCellRenderer : DefaultTreeCellRenderer() {
+private class TableOfContentsTreeCellRenderer : DefaultTreeCellRenderer() {
   private var pn = -1
   private val pnPt = Point()
   private var rxs = 0
@@ -118,12 +121,17 @@ class TableOfContentsTreeCellRenderer : DefaultTreeCellRenderer() {
 
   companion object {
     private val READER = BasicStroke(
-      1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1f, floatArrayOf(1f), 0f
+      1f,
+      BasicStroke.CAP_BUTT,
+      BasicStroke.JOIN_MITER,
+      1f,
+      floatArrayOf(1f),
+      0f
     )
   }
 }
 
-class TableOfContentsTree(model: TreeModel?) : JTree(model) {
+private class TableOfContentsTree(model: TreeModel?) : JTree(model) {
   private var isSynth = false
   override fun updateUI() {
     super.updateUI()
@@ -171,9 +179,7 @@ class TableOfContentsTree(model: TreeModel?) : JTree(model) {
   }
 
   companion object {
-    private val READER = BasicStroke(
-      1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1f, floatArrayOf(1f), 0f
-    )
+    private val READER = BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1f, floatArrayOf(1f), 0f)
   }
 }
 
@@ -187,7 +193,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

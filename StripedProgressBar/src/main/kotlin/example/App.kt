@@ -42,7 +42,11 @@ class MainPanel : JPanel(BorderLayout()), HierarchyListener {
     progress4.ui = StripedProgressBarUI(dir = false, slope = false)
 
     val list = listOf(
-      JProgressBar(model), progress1, progress2, progress3, progress4
+      JProgressBar(model),
+      progress1,
+      progress2,
+      progress3,
+      progress4
     )
 
     val p = JPanel(GridLayout(5, 1))

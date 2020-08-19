@@ -8,8 +8,10 @@ import javax.swing.plaf.basic.BasicToolBarUI
 
 fun makeUI(): Component {
   val list = listOf<JComponent>(
-    JMenuItem("Open(dummy)"), JMenuItem("Save(dummy)"),
-    JSeparator(), JMenuItem(ExitAction())
+    JMenuItem("Open(dummy)"),
+    JMenuItem("Save(dummy)"),
+    JSeparator(),
+    JMenuItem(ExitAction())
   )
 
   val popup = JPopupMenu()
