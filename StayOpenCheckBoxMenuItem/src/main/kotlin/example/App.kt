@@ -11,79 +11,86 @@ import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 import javax.swing.plaf.basic.BasicCheckBoxMenuItemUI
 
-class MainPanel : JPanel() {
-  init {
-    // Java 9
-    // UIManager.put("CheckBoxMenuItem.doNotCloseOnMouseClick", true)
-    val button = JToggleButton("JPopupMenu Test")
-    val popup = JPopupMenu()
-    val handler = TogglePopupHandler(popup, button)
-    popup.addPopupMenuListener(handler)
-    button.addActionListener(handler)
-    // Java 9
-    // JCheckBoxMenuItem checkMenuItem = new JCheckBoxMenuItem("doNotCloseOnMouseClick")
-    // checkMenuItem.putClientProperty("CheckBoxMenuItem.doNotCloseOnMouseClick", true)
-    // popup.add(checkMenuItem)
-    popup.add(object : JCheckBox("JCheckBox") {
-      override fun updateUI() {
-        super.updateUI()
-        isFocusPainted = false
-      }
+fun makeUI(): Component {
+  // Java 9
+  // UIManager.put("CheckBoxMenuItem.doNotCloseOnMouseClick", true)
 
-      override fun getMinimumSize(): Dimension {
-        val d = preferredSize
-        d.width = Short.MAX_VALUE.toInt()
-        return d
-      }
-    })
-    popup.add(makeStayOpenCheckBoxMenuItem(JMenuItem("JMenuItem + JCheckBox")))
-    popup.add(JCheckBoxMenuItem("JCheckBoxMenuItem"))
-    popup.add(JCheckBoxMenuItem("keeping open #1")).addActionListener { e ->
-      println("ActionListener")
-      val c = SwingUtilities.getAncestorOfClass(JPopupMenu::class.java, e.source as? Component)
-      (c as? JPopupMenu)?.isVisible = true
+  val button = JToggleButton("JPopupMenu Test")
+  val popup = JPopupMenu()
+  val handler = TogglePopupHandler(popup, button)
+  popup.addPopupMenuListener(handler)
+  button.addActionListener(handler)
+
+  // Java 9
+  // JCheckBoxMenuItem checkMenuItem = new JCheckBoxMenuItem("doNotCloseOnMouseClick")
+  // checkMenuItem.putClientProperty("CheckBoxMenuItem.doNotCloseOnMouseClick", true)
+  // popup.add(checkMenuItem)
+
+  val check = object : JCheckBox("JCheckBox") {
+    override fun updateUI() {
+      super.updateUI()
+      isFocusPainted = false
     }
-    popup.add(object : JCheckBoxMenuItem("keeping open #2") {
-      override fun updateUI() {
-        super.updateUI()
-        setUI(object : BasicCheckBoxMenuItemUI() {
-          override fun doClick(msm: MenuSelectionManager) {
-            println("MenuSelectionManager: doClick")
-            menuItem.doClick(0)
-          }
-        })
-      }
-    })
-    isOpaque = true
-    componentPopupMenu = popup
-    add(button)
-    preferredSize = Dimension(320, 240)
+
+    override fun getMinimumSize(): Dimension {
+      val d = preferredSize
+      d.width = Short.MAX_VALUE.toInt()
+      return d
+    }
+  }
+  popup.add(check)
+  popup.add(makeStayOpenCheckBoxMenuItem(JMenuItem("JMenuItem + JCheckBox")))
+  popup.add(JCheckBoxMenuItem("JCheckBoxMenuItem"))
+  popup.add(JCheckBoxMenuItem("keeping open #1")).addActionListener { e ->
+    println("ActionListener")
+    val c = SwingUtilities.getAncestorOfClass(JPopupMenu::class.java, e.source as? Component)
+    (c as? JPopupMenu)?.isVisible = true
   }
 
-  private fun makeStayOpenCheckBoxMenuItem(mi: JMenuItem): JMenuItem {
-    val text = mi.text
-    mi.text = " "
-    mi.layout = BorderLayout()
-    mi.add(object : JCheckBox(text) {
-      @Transient
-      private var handler: MouseInputListener? = null
-
-      override fun updateUI() {
-        removeMouseListener(handler)
-        removeMouseMotionListener(handler)
-        super.updateUI()
-        handler = DispatchParentHandler()
-        addMouseListener(handler)
-        addMouseMotionListener(handler)
-        isFocusable = false
-        isOpaque = false
+  val mi = object : JCheckBoxMenuItem("keeping open #2") {
+    override fun updateUI() {
+      super.updateUI()
+      val ui = object : BasicCheckBoxMenuItemUI() {
+        override fun doClick(msm: MenuSelectionManager) {
+          println("MenuSelectionManager: doClick")
+          menuItem.doClick(0)
+        }
       }
-    })
-    return mi
+      setUI(ui)
+    }
+  }
+  popup.add(mi)
+
+  return JPanel().also {
+    it.isOpaque = true
+    it.componentPopupMenu = popup
+    it.add(button)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class DispatchParentHandler : MouseInputAdapter() {
+private fun makeStayOpenCheckBoxMenuItem(mi: JMenuItem): JMenuItem {
+  val text = mi.text
+  mi.text = " "
+  mi.layout = BorderLayout()
+  mi.add(object : JCheckBox(text) {
+    @Transient private var handler: MouseInputListener? = null
+
+    override fun updateUI() {
+      removeMouseListener(handler)
+      removeMouseMotionListener(handler)
+      super.updateUI()
+      handler = DispatchParentHandler()
+      addMouseListener(handler)
+      addMouseMotionListener(handler)
+      isFocusable = false
+      isOpaque = false
+    }
+  })
+  return mi
+}
+
+private class DispatchParentHandler : MouseInputAdapter() {
   private fun dispatchEvent(e: MouseEvent) {
     val src = e.component
     val tgt = SwingUtilities.getUnwrappedParent(src)
@@ -107,7 +114,7 @@ class DispatchParentHandler : MouseInputAdapter() {
   }
 }
 
-class TogglePopupHandler(
+private class TogglePopupHandler(
   private val popup: JPopupMenu,
   private val button: AbstractButton
 ) : PopupMenuListener, ActionListener {
@@ -148,7 +155,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
