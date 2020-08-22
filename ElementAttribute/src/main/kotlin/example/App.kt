@@ -18,14 +18,18 @@ import javax.swing.text.html.HTMLEditorKit
 
 private val cl = Thread.currentThread().contextClassLoader
 private val src = cl.getResource("example/favicon.png")
-private val HTML_TEXT = """
-  <html><body>
-  span tag: <span style='background:#88ff88;' title='tooltip: span[@title]'>span span span</span><br />
-  <div title='tooltip: div[@title]'>div tag: div div div div</div>
-  <div style='padding: 2 24;'><img src='$src' alt='16x16 favicon' />&nbsp;
-  <a href='https://ateraimemo.com/' title='Title: JST'>Java Swing Tips</a></div>
-  </body></html>
-"""
+private val HTML_TEXT =
+  """
+  <html>
+    <body>
+      span tag: <span style='background:#88ff88;' title='tooltip: span[@title]'>span span span</span><br />
+      <div title='tooltip: div[@title]'>div tag: div div div div</div>
+      <div style='padding: 2 24;'><img src='$src' alt='16x16 favicon' />&nbsp;
+        <a href='https://ateraimemo.com/' title='Title: JST'>Java Swing Tips</a>
+      </div>
+    </body>
+  </html>
+  """.trimIndent()
 private var tooltip: String? = null
 
 fun makeUI(): Component {
@@ -124,8 +128,8 @@ private class TooltipEditorKit : HTMLEditorKit() {
       if (o is HTML.Tag && o === HTML.Tag.DIV) {
         return object : BlockView(elem, Y_AXIS) {
           override fun getToolTipText(x: Float, y: Float, allocation: Shape) =
-            super.getToolTipText(x, y, allocation) ?:
-            element?.attributes?.getAttribute(HTML.Attribute.TITLE)?.toString()
+            super.getToolTipText(x, y, allocation)
+              ?: element?.attributes?.getAttribute(HTML.Attribute.TITLE)?.toString()
         }
       }
       return super.create(elem)
