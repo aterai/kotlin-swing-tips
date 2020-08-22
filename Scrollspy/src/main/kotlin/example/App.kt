@@ -14,24 +14,23 @@ import javax.swing.tree.ExpandVetoException
 import javax.swing.tree.TreePath
 import javax.swing.tree.TreeSelectionModel
 
-class MainPanel : JPanel(BorderLayout(2, 2)) {
-  private val editor = JEditorPane()
+private val editor = JEditorPane()
 
-  init {
-    val emptyIcon = EmptyIcon()
-    UIManager.put("Tree.openIcon", emptyIcon)
-    UIManager.put("Tree.closedIcon", emptyIcon)
-    UIManager.put("Tree.leafIcon", emptyIcon)
-    UIManager.put("Tree.expandedIcon", emptyIcon)
-    UIManager.put("Tree.collapsedIcon", emptyIcon)
-    UIManager.put("Tree.leftChildIndent", 10)
-    UIManager.put("Tree.rightChildIndent", 0)
-    UIManager.put("Tree.paintLines", false)
-    val htmlEditorKit = HTMLEditorKit()
-    editor.isEditable = false
-    editor.editorKit = htmlEditorKit
-    editor.text =
-      """
+fun makeUI(): Component {
+  val emptyIcon = EmptyIcon()
+  UIManager.put("Tree.openIcon", emptyIcon)
+  UIManager.put("Tree.closedIcon", emptyIcon)
+  UIManager.put("Tree.leafIcon", emptyIcon)
+  UIManager.put("Tree.expandedIcon", emptyIcon)
+  UIManager.put("Tree.collapsedIcon", emptyIcon)
+  UIManager.put("Tree.leftChildIndent", 10)
+  UIManager.put("Tree.rightChildIndent", 0)
+  UIManager.put("Tree.paintLines", false)
+  val htmlEditorKit = HTMLEditorKit()
+  editor.isEditable = false
+  editor.editorKit = htmlEditorKit
+  editor.text =
+    """
       <html>
         <body>
           <h1>Scrollspy</h1>
@@ -40,103 +39,102 @@ class MainPanel : JPanel(BorderLayout(2, 2)) {
         </body>
       </html>
       """
-    val doc = editor.document as HTMLDocument
-    val element = doc.getElement("main")
-    val model = makeModel()
-    val root = model.root as DefaultMutableTreeNode
-    root.preorderEnumeration().toList()
-      .filterIsInstance<DefaultMutableTreeNode>()
-      .filterNot { it.isRoot }
-      .map { it.userObject }
-      .forEach {
-        runCatching {
-          val tag = "<a name='$it' href='#'>$it</a>" + "<br />".repeat(8)
-          doc.insertBeforeEnd(element, tag)
-        }.onFailure {
-          UIManager.getLookAndFeel().provideErrorFeedback(editor)
-        }
-      }
-
-    val tree = RowSelectionTree()
-    tree.model = model
-    tree.rowHeight = 32
-    tree.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
-
-    // https://ateraimemo.com/Swing/ExpandAllNodes.html
-    var row = 0
-    while (row < tree.rowCount) {
-      tree.expandRow(row++)
-    }
-    tree.selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
-    tree.addTreeSelectionListener { e ->
-      val n = e.newLeadSelectionPath.lastPathComponent
-      if (tree.isEnabled && n is DefaultMutableTreeNode) {
-        editor.scrollToReference(n.userObject.toString())
+  val doc = editor.document as HTMLDocument
+  val element = doc.getElement("main")
+  val model = makeModel()
+  val root = model.root as DefaultMutableTreeNode
+  root.preorderEnumeration().toList()
+    .filterIsInstance<DefaultMutableTreeNode>()
+    .filterNot { it.isRoot }
+    .map { it.userObject }
+    .forEach {
+      runCatching {
+        val tag = "<a name='$it' href='#'>$it</a>" + "<br />".repeat(8)
+        doc.insertBeforeEnd(element, tag)
+      }.onFailure {
+        UIManager.getLookAndFeel().provideErrorFeedback(editor)
       }
     }
 
-    // scroll to top of page
-    EventQueue.invokeLater { editor.scrollRectToVisible(editor.bounds) }
+  val tree = RowSelectionTree()
+  tree.model = model
+  tree.rowHeight = 32
+  tree.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
 
-    val scroll = JScrollPane(editor)
-    scroll.verticalScrollBar.model.addChangeListener {
-      val itr = doc.getIterator(HTML.Tag.A)
-      while (itr.isValid) {
-        val r = runCatching {
-          editor.modelToView(itr.startOffset)
-        }.getOrNull()
-        if (r != null && editor.visibleRect.contains(r.location)) {
-          searchTreeNode(tree, itr.attributes.getAttribute(HTML.Attribute.NAME))
-          break
-        }
-        itr.next()
-      }
+  // https://ateraimemo.com/Swing/ExpandAllNodes.html
+  var row = 0
+  while (row < tree.rowCount) {
+    tree.expandRow(row++)
+  }
+  tree.selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
+  tree.addTreeSelectionListener { e ->
+    val n = e.newLeadSelectionPath.lastPathComponent
+    if (tree.isEnabled && n is DefaultMutableTreeNode) {
+      editor.scrollToReference(n.userObject.toString())
     }
-    val sp = JSplitPane()
-    sp.leftComponent = JScrollPane(tree)
-    sp.rightComponent = scroll
-    sp.resizeWeight = .5
-    add(sp)
-    preferredSize = Dimension(320, 240)
   }
 
-  private fun searchTreeNode(tree: JTree, name: Any) {
-    val model = tree.model
-    val root = model.root as DefaultMutableTreeNode
-    root.preorderEnumeration().toList()
-      .filterIsInstance<DefaultMutableTreeNode>()
-      .firstOrNull { name == it.userObject.toString() }
-      ?.also {
-        tree.isEnabled = false
-        val path = TreePath(it.path)
-        tree.selectionPath = path
-        tree.scrollPathToVisible(path)
-        tree.isEnabled = true
+  // scroll to top of page
+  EventQueue.invokeLater { editor.scrollRectToVisible(editor.bounds) }
+
+  val scroll = JScrollPane(editor)
+  scroll.verticalScrollBar.model.addChangeListener {
+    val itr = doc.getIterator(HTML.Tag.A)
+    while (itr.isValid) {
+      val r = runCatching {
+        editor.modelToView(itr.startOffset)
+      }.getOrNull()
+      if (r != null && editor.visibleRect.contains(r.location)) {
+        searchTreeNode(tree, itr.attributes.getAttribute(HTML.Attribute.NAME))
+        break
       }
+      itr.next()
+    }
   }
 
-  private fun makeModel(): DefaultTreeModel {
-    val root = DefaultMutableTreeNode("root")
-    val c1 = DefaultMutableTreeNode("1. Introduction")
-    root.add(c1)
-    val c2 = DefaultMutableTreeNode("2. Chapter")
-    c2.add(DefaultMutableTreeNode("2.1. Section"))
-    c2.add(DefaultMutableTreeNode("2.2. Section"))
-    c2.add(DefaultMutableTreeNode("2.3. Section"))
-    root.add(c2)
-    val c3 = DefaultMutableTreeNode("3. Chapter")
-    c3.add(DefaultMutableTreeNode("3.1. Section"))
-    c3.add(DefaultMutableTreeNode("3.2. Section"))
-    c3.add(DefaultMutableTreeNode("3.3. Section"))
-    c3.add(DefaultMutableTreeNode("3.4. Section"))
-    root.add(c3)
-    return DefaultTreeModel(root)
+  return JSplitPane().also {
+    it.leftComponent = JScrollPane(tree)
+    it.rightComponent = scroll
+    it.resizeWeight = .5
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class RowSelectionTree : JTree() {
-  @Transient
-  private var listener: TreeWillExpandListener? = null
+private fun searchTreeNode(tree: JTree, name: Any) {
+  val model = tree.model
+  val root = model.root as DefaultMutableTreeNode
+  root.preorderEnumeration().toList()
+    .filterIsInstance<DefaultMutableTreeNode>()
+    .firstOrNull { name == it.userObject.toString() }
+    ?.also {
+      tree.isEnabled = false
+      val path = TreePath(it.path)
+      tree.selectionPath = path
+      tree.scrollPathToVisible(path)
+      tree.isEnabled = true
+    }
+}
+
+private fun makeModel(): DefaultTreeModel {
+  val root = DefaultMutableTreeNode("root")
+  val c1 = DefaultMutableTreeNode("1. Introduction")
+  root.add(c1)
+  val c2 = DefaultMutableTreeNode("2. Chapter")
+  c2.add(DefaultMutableTreeNode("2.1. Section"))
+  c2.add(DefaultMutableTreeNode("2.2. Section"))
+  c2.add(DefaultMutableTreeNode("2.3. Section"))
+  root.add(c2)
+  val c3 = DefaultMutableTreeNode("3. Chapter")
+  c3.add(DefaultMutableTreeNode("3.1. Section"))
+  c3.add(DefaultMutableTreeNode("3.2. Section"))
+  c3.add(DefaultMutableTreeNode("3.3. Section"))
+  c3.add(DefaultMutableTreeNode("3.4. Section"))
+  root.add(c3)
+  return DefaultTreeModel(root)
+}
+
+private class RowSelectionTree : JTree() {
+  @Transient private var listener: TreeWillExpandListener? = null
 
   override fun paintComponent(g: Graphics) {
     val sr = selectionRows
@@ -164,7 +162,7 @@ class RowSelectionTree : JTree() {
     setCellRenderer(null)
     removeTreeWillExpandListener(listener)
     super.updateUI()
-    setUI(object : BasicTreeUI() {
+    val treeUI = object : BasicTreeUI() {
       override fun getPathBounds(tree: JTree?, path: TreePath?): Rectangle? {
         return if (tree != null && treeState != null) {
           getPathBounds(path, tree.insets, Rectangle())
@@ -179,7 +177,8 @@ class RowSelectionTree : JTree() {
         }
         return rect
       }
-    })
+    }
+    setUI(treeUI)
     UIManager.put("Tree.repaintWholeRow", true)
     val r = getCellRenderer()
     setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
@@ -209,7 +208,7 @@ class RowSelectionTree : JTree() {
   }
 }
 
-class EmptyIcon : Icon {
+private class EmptyIcon : Icon {
   override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
     /* Empty icon */
   }
@@ -229,7 +228,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
