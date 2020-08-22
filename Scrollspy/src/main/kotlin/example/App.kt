@@ -14,6 +14,16 @@ import javax.swing.tree.ExpandVetoException
 import javax.swing.tree.TreePath
 import javax.swing.tree.TreeSelectionModel
 
+private const val HTML_TEXT =
+  """
+  <html>
+    <body>
+      <h1>Scrollspy</h1>
+      <p id='main'></p>
+      <p id='bottom'>id=bottom</p>
+    </body>
+  </html>
+  """
 private val editor = JEditorPane()
 
 fun makeUI(): Component {
@@ -29,44 +39,25 @@ fun makeUI(): Component {
   val htmlEditorKit = HTMLEditorKit()
   editor.isEditable = false
   editor.editorKit = htmlEditorKit
-  editor.text =
-    """
-      <html>
-        <body>
-          <h1>Scrollspy</h1>
-          <p id='main'></p>
-          <p id='bottom'>id=bottom</p>
-        </body>
-      </html>
-      """
-  val doc = editor.document as HTMLDocument
-  val element = doc.getElement("main")
+  editor.text = HTML_TEXT
+  val doc = editor.document as? HTMLDocument
+  val element = doc?.getElement("main")
   val model = makeModel()
-  val root = model.root as DefaultMutableTreeNode
-  root.preorderEnumeration().toList()
-    .filterIsInstance<DefaultMutableTreeNode>()
-    .filterNot { it.isRoot }
-    .map { it.userObject }
-    .forEach {
+  (model.root as? DefaultMutableTreeNode)?.preorderEnumeration()?.toList()
+    ?.filterIsInstance<DefaultMutableTreeNode>()
+    ?.filterNot { it.isRoot }
+    ?.map { it.userObject }
+    ?.forEach {
       runCatching {
         val tag = "<a name='$it' href='#'>$it</a>" + "<br />".repeat(8)
-        doc.insertBeforeEnd(element, tag)
+        doc?.insertBeforeEnd(element, tag)
       }.onFailure {
         UIManager.getLookAndFeel().provideErrorFeedback(editor)
       }
     }
 
-  val tree = RowSelectionTree()
+  val tree = makeTree()
   tree.model = model
-  tree.rowHeight = 32
-  tree.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
-
-  // https://ateraimemo.com/Swing/ExpandAllNodes.html
-  var row = 0
-  while (row < tree.rowCount) {
-    tree.expandRow(row++)
-  }
-  tree.selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
   tree.addTreeSelectionListener { e ->
     val n = e.newLeadSelectionPath.lastPathComponent
     if (tree.isEnabled && n is DefaultMutableTreeNode) {
@@ -79,8 +70,8 @@ fun makeUI(): Component {
 
   val scroll = JScrollPane(editor)
   scroll.verticalScrollBar.model.addChangeListener {
-    val itr = doc.getIterator(HTML.Tag.A)
-    while (itr.isValid) {
+    val itr = doc?.getIterator(HTML.Tag.A)
+    while (itr?.isValid == true) {
       val r = runCatching {
         editor.modelToView(itr.startOffset)
       }.getOrNull()
@@ -98,6 +89,20 @@ fun makeUI(): Component {
     it.resizeWeight = .5
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+fun makeTree(): JTree {
+  val tree = RowSelectionTree()
+  tree.rowHeight = 32
+  tree.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
+
+  // https://ateraimemo.com/Swing/ExpandAllNodes.html
+  var row = 0
+  while (row < tree.rowCount) {
+    tree.expandRow(row++)
+  }
+  tree.selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
+  return tree
 }
 
 private fun searchTreeNode(tree: JTree, name: Any) {
