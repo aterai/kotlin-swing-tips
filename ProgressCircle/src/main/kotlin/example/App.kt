@@ -13,14 +13,14 @@ import javax.swing.plaf.basic.BasicProgressBarUI
 private val progress1 = object : JProgressBar() {
   override fun updateUI() {
     super.updateUI()
-    setUI(ProgressCircleUI())
+    ui = ProgressCircleUI()
     border = BorderFactory.createEmptyBorder(25, 25, 25, 25)
   }
 }
 private val progress2 = object : JProgressBar() {
   override fun updateUI() {
     super.updateUI()
-    setUI(ProgressCircleUI())
+    ui = ProgressCircleUI()
     border = BorderFactory.createEmptyBorder(25, 25, 25, 25)
   }
 }

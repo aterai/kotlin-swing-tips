@@ -11,7 +11,7 @@ fun makeUI(): Component {
       super.updateUI()
       UIManager.put("TabbedPane.highlight", Color.GRAY)
       tabLayoutPolicy = SCROLL_TAB_LAYOUT
-      setUI(IsoscelesTrapezoidTabbedPaneUI())
+      ui = IsoscelesTrapezoidTabbedPaneUI()
     }
   }
   tabs.addTab("JTextArea", JScrollPane(JTextArea()))

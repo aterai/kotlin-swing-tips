@@ -23,8 +23,8 @@ private fun createMenuBar(): JMenuBar {
   val menu1 = object : JMenu("DisableRightClick") {
     override fun updateUI() {
       super.updateUI()
-      if (getUI() is WindowsMenuUI) {
-        setUI(CustomWindowsMenuUI())
+      if (ui is WindowsMenuUI) {
+        ui = CustomWindowsMenuUI()
       }
     }
 
@@ -32,8 +32,8 @@ private fun createMenuBar(): JMenuBar {
       val item = object : JMenuItem(s) {
         override fun updateUI() {
           super.updateUI()
-          if (getUI() is WindowsMenuItemUI) {
-            setUI(CustomWindowsMenuItemUI())
+          if (ui is WindowsMenuItemUI) {
+            ui = CustomWindowsMenuItemUI()
           }
         }
       }

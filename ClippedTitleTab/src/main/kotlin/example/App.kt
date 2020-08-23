@@ -15,10 +15,10 @@ fun makeUI(): Component {
 
     override fun updateUI() {
       super.updateUI()
-      if (getUI() is WindowsTabbedPaneUI) {
-        setUI(WindowsClippedTitleTabbedPaneUI())
+      ui = if (ui is WindowsTabbedPaneUI) {
+        WindowsClippedTitleTabbedPaneUI()
       } else {
-        setUI(BasicClippedTitleTabbedPaneUI())
+        BasicClippedTitleTabbedPaneUI()
       }
     }
   }

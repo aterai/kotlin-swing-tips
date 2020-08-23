@@ -22,10 +22,10 @@ fun makeUI(): Component {
     val fileChooser = object : JFileChooser() {
       override fun updateUI() {
         super.updateUI()
-        if (getUI() is WindowsFileChooserUI) {
-          setUI(RightAlignmentWindowsFileChooserUI(this))
+        ui = if (ui is WindowsFileChooserUI) {
+          RightAlignmentWindowsFileChooserUI(this)
         } else {
-          setUI(RightAlignmentMetalFileChooserUI(this))
+          RightAlignmentMetalFileChooserUI(this)
         }
       }
     }

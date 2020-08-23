@@ -67,7 +67,7 @@ private fun makeEditorPane(editable: Boolean) = JEditorPane().also {
 private class HyperlinkButton : JButton {
   override fun updateUI() {
     super.updateUI()
-    setUI(BasicLinkViewButtonUI())
+    ui = BasicLinkViewButtonUI()
     foreground = Color.BLUE
     border = BorderFactory.createEmptyBorder(0, 0, 2, 0)
     cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)

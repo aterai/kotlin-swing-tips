@@ -37,13 +37,12 @@ private fun <E> makeComboBox(model: ComboBoxModel<E>) = object : JComboBox<E>(mo
   override fun updateUI() {
     super.updateUI()
     border = BorderFactory.createEmptyBorder()
-    val ui = object : BasicComboBoxUI() {
+    ui = object : BasicComboBoxUI() {
       override fun createArrowButton() = super.createArrowButton().also {
         it.isContentAreaFilled = false
         it.border = BorderFactory.createEmptyBorder()
       }
     }
-    setUI(ui)
   }
 }
 

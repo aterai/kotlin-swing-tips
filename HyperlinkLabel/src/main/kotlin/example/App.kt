@@ -80,10 +80,10 @@ private class UrlLabel(h: String?) : JLabel("<html><a href='$h'>$h") {
 private class HyperlinkButton(text: String? = null, icon: Icon? = null) : JButton(text, icon) {
   override fun updateUI() {
     super.updateUI()
-    if (UIManager.get(UI_CLASS_ID) != null) {
-      setUI(UIManager.getUI(this) as? LinkViewButtonUI)
+    ui = if (UIManager.get(UI_CLASS_ID) != null) {
+      UIManager.getUI(this) as? LinkViewButtonUI
     } else {
-      setUI(BasicLinkViewButtonUI())
+      BasicLinkViewButtonUI()
     }
     foreground = Color.BLUE
     border = BorderFactory.createEmptyBorder(0, 0, 2, 0)

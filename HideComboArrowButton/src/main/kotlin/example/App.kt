@@ -13,13 +13,12 @@ private fun makePanel(): Component {
       super.updateUI()
       UIManager.put("ComboBox.squareButton", false)
       UIManager.put("ComboBox.background", p.background)
-      val ui = object : BasicComboBoxUI() {
+      ui = object : BasicComboBoxUI() {
         override fun createArrowButton() = JButton().also {
           it.border = BorderFactory.createEmptyBorder()
           it.isVisible = false
         }
       }
-      setUI(ui)
       val r = getRenderer()
       setRenderer { list, value, index, isSelected, cellHasFocus ->
         r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {

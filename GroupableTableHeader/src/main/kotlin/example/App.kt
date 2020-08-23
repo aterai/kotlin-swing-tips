@@ -60,7 +60,7 @@ private class GroupableTableHeader(model: TableColumnModel) : JTableHeader(model
 
   override fun updateUI() {
     super.updateUI()
-    setUI(GroupableTableHeaderUI())
+    ui = GroupableTableHeaderUI()
   }
 
   // [java] BooleanGetMethodName: Don't report bad method names on @Override #97

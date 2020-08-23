@@ -17,10 +17,10 @@ fun makeUI(): Component {
   scroll.verticalScrollBar = object : JScrollBar(Adjustable.VERTICAL) {
     override fun updateUI() {
       super.updateUI()
-      if (getUI() is WindowsScrollBarUI) {
-        setUI(AbsolutePositioningWindowsScrollBarUI())
+      ui = if (ui is WindowsScrollBarUI) {
+        AbsolutePositioningWindowsScrollBarUI()
       } else {
-        setUI(AbsolutePositioningBasicScrollBarUI())
+        AbsolutePositioningBasicScrollBarUI()
       }
       putClientProperty("JScrollBar.fastWheelScrolling", true)
     }
@@ -29,10 +29,10 @@ fun makeUI(): Component {
   scroll.horizontalScrollBar = object : JScrollBar(Adjustable.HORIZONTAL) {
     override fun updateUI() {
       super.updateUI()
-      if (getUI() is WindowsScrollBarUI) {
-        setUI(AbsolutePositioningWindowsScrollBarUI())
+      ui = if (ui is WindowsScrollBarUI) {
+        AbsolutePositioningWindowsScrollBarUI()
       } else {
-        setUI(AbsolutePositioningBasicScrollBarUI())
+        AbsolutePositioningBasicScrollBarUI()
       }
       putClientProperty("JScrollBar.fastWheelScrolling", true)
     }

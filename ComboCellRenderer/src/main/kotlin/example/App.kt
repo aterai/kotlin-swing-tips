@@ -53,13 +53,12 @@ private fun <E> makeComboBox(model: ComboBoxModel<E>) = object : JComboBox<E>(mo
   override fun updateUI() {
     super.updateUI()
     border = BorderFactory.createEmptyBorder()
-    val ui = object : BasicComboBoxUI() {
+    ui = object : BasicComboBoxUI() {
       override fun createArrowButton() = super.createArrowButton().also {
         it.isContentAreaFilled = false
         it.border = BorderFactory.createEmptyBorder()
       }
     }
-    setUI(ui)
   }
 }
 
@@ -69,14 +68,13 @@ private class ComboCellRenderer : TableCellRenderer {
     override fun updateUI() {
       super.updateUI()
       border = BorderFactory.createEmptyBorder()
-      val ui = object : BasicComboBoxUI() {
+      ui = object : BasicComboBoxUI() {
         override fun createArrowButton() = super.createArrowButton().also {
           button = it
           it.isContentAreaFilled = false
           it.border = BorderFactory.createEmptyBorder()
         }
       }
-      setUI(ui)
     }
 
     override fun isOpaque(): Boolean {
