@@ -115,9 +115,9 @@ class DropdownTableComboBox<E : List<Any>>(private val list: List<E>, model: Def
   override fun updateUI() {
     super.updateUI()
     EventQueue.invokeLater {
-      setUI(object : MetalComboBoxUI() {
+      ui = object : MetalComboBoxUI() {
         override fun createPopup() = ComboTablePopup(comboBox, table)
-      })
+      }
       setEditable(false)
     }
   }

@@ -50,13 +50,12 @@ fun makeUI(): Component {
   val mi = object : JCheckBoxMenuItem("keeping open #2") {
     override fun updateUI() {
       super.updateUI()
-      val ui = object : BasicCheckBoxMenuItemUI() {
+      ui = object : BasicCheckBoxMenuItemUI() {
         override fun doClick(msm: MenuSelectionManager) {
           println("MenuSelectionManager: doClick")
           menuItem.doClick(0)
         }
       }
-      setUI(ui)
     }
   }
   popup.add(mi)
@@ -73,7 +72,7 @@ private fun makeStayOpenCheckBoxMenuItem(mi: JMenuItem): JMenuItem {
   val text = mi.text
   mi.text = " "
   mi.layout = BorderLayout()
-  mi.add(object : JCheckBox(text) {
+  val check = object : JCheckBox(text) {
     @Transient private var handler: MouseInputListener? = null
 
     override fun updateUI() {
@@ -86,7 +85,8 @@ private fun makeStayOpenCheckBoxMenuItem(mi: JMenuItem): JMenuItem {
       isFocusable = false
       isOpaque = false
     }
-  })
+  }
+  mi.add(check)
   return mi
 }
 

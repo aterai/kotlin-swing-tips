@@ -11,16 +11,16 @@ fun makeUI(): Component {
   val tabbedPane = object : JTabbedPane() {
     override fun updateUI() {
       super.updateUI()
-      if (getUI() is WindowsTabbedPaneUI) {
-        setUI(object : WindowsTabbedPaneUI() {
+      ui = if (ui is WindowsTabbedPaneUI) {
+        object : WindowsTabbedPaneUI() {
           override fun calculateTabWidth(tabPlacement: Int, tabIndex: Int, metrics: FontMetrics) =
             MIN_TAB_WIDTH.coerceAtLeast(super.calculateTabWidth(tabPlacement, tabIndex, metrics))
-        })
+        }
       } else {
-        setUI(object : BasicTabbedPaneUI() {
+        object : BasicTabbedPaneUI() {
           override fun calculateTabWidth(tabPlacement: Int, tabIndex: Int, metrics: FontMetrics) =
             MIN_TAB_WIDTH.coerceAtLeast(super.calculateTabWidth(tabPlacement, tabIndex, metrics))
-        })
+        }
       }
     }
   }

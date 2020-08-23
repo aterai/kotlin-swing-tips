@@ -14,8 +14,8 @@ fun makeUI(): Component {
   val toolbar = object : JToolBar("toolbar") {
     override fun updateUI() {
       super.updateUI()
-      if (getUI() is WindowsToolBarUI) {
-        setUI(object : WindowsToolBarUI() {
+      ui = if (ui is WindowsToolBarUI) {
+        object : WindowsToolBarUI() {
           override fun setFloating(b: Boolean, p: Point?) {
             if (detachable.isSelected) {
               super.setFloating(b, p)
@@ -23,9 +23,9 @@ fun makeUI(): Component {
               super.setFloating(false, p)
             }
           }
-        })
+        }
       } else {
-        setUI(object : BasicToolBarUI() {
+        object : BasicToolBarUI() {
           override fun setFloating(b: Boolean, p: Point?) {
             if (detachable.isSelected) {
               super.setFloating(b, p)
@@ -33,7 +33,7 @@ fun makeUI(): Component {
               super.setFloating(false, p)
             }
           }
-        })
+        }
       }
     }
   }

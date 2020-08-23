@@ -12,25 +12,25 @@ import javax.swing.plaf.basic.BasicComboPopup
 
 fun makeUI(): Component {
   val combo1 = makeComboBox(5)
-  if (combo1.ui is WindowsComboBoxUI) {
-    combo1.setUI(object : WindowsComboBoxUI() {
+  combo1.ui = if (combo1.ui is WindowsComboBoxUI) {
+    object : WindowsComboBoxUI() {
       override fun createPopup() = BasicComboPopup2(comboBox)
-    })
+    }
   } else {
-    combo1.setUI(object : BasicComboBoxUI() {
+    object : BasicComboBoxUI() {
       override fun createPopup() = BasicComboPopup2(comboBox)
-    })
+    }
   }
 
   val combo2 = makeComboBox(20)
-  if (combo2.ui is WindowsComboBoxUI) {
-    combo2.setUI(object : WindowsComboBoxUI() {
+  combo2.ui = if (combo2.ui is WindowsComboBoxUI) {
+    object : WindowsComboBoxUI() {
       override fun createPopup() = BasicComboPopup3(comboBox)
-    })
+    }
   } else {
-    combo2.setUI(object : BasicComboBoxUI() {
+    object : BasicComboBoxUI() {
       override fun createPopup() = BasicComboPopup3(comboBox)
-    })
+    }
   }
 
   val box = Box.createVerticalBox()
@@ -42,6 +42,7 @@ fun makeUI(): Component {
   box.add(Box.createVerticalStrut(5))
   box.add(makeTitledPanel("disable right click and scroll in drop-down list:", combo2))
   box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+
   return JPanel(BorderLayout()).also {
     it.add(box, BorderLayout.NORTH)
     it.preferredSize = Dimension(320, 240)

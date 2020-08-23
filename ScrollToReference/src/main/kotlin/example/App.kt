@@ -159,7 +159,7 @@ private class RowSelectionTree : JTree() {
     setCellRenderer(null)
     removeTreeWillExpandListener(listener)
     super.updateUI()
-    setUI(object : BasicTreeUI() {
+    ui = object : BasicTreeUI() {
       override fun getPathBounds(tree: JTree?, path: TreePath?): Rectangle? {
         return if (tree != null && treeState != null) {
           getPathBounds(path, tree.insets, Rectangle())
@@ -174,14 +174,14 @@ private class RowSelectionTree : JTree() {
         }
         return rect
       }
-    })
+    }
     UIManager.put("Tree.repaintWholeRow", true)
     val r = getCellRenderer()
     setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-      val c = r.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
-      c.background = if (selected) SELECTED_COLOR else tree.background
-      (c as? JComponent)?.isOpaque = true
-      c
+      r.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus).also {
+        it.background = if (selected) SELECTED_COLOR else tree.background
+        (it as? JComponent)?.isOpaque = true
+      }
     }
     isOpaque = false
     isRootVisible = false

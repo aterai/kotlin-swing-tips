@@ -14,16 +14,16 @@ fun makeUI(): Component {
   val tabbedPane = object : JTabbedPane() {
     override fun updateUI() {
       super.updateUI()
-      if (getUI() is WindowsTabbedPaneUI) {
-        setUI(object : WindowsTabbedPaneUI() {
+      ui = if (ui is WindowsTabbedPaneUI) {
+        object : WindowsTabbedPaneUI() {
           override fun shouldRotateTabRuns(tabPlacement: Int) = false
-        })
+        }
       } else {
-        setUI(object : MetalTabbedPaneUI() {
+        object : MetalTabbedPaneUI() {
           override fun shouldRotateTabRuns(tabPlacement: Int) = false
 
           override fun shouldRotateTabRuns(tabPlacement: Int, selectedRun: Int) = false
-        })
+        }
       }
     }
   }

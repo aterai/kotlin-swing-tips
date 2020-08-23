@@ -33,7 +33,7 @@ fun makeUI(): Component {
     override fun updateUI() {
       UIManager.put(KEY, BorderFactory.createLineBorder(FOREGROUND))
       super.updateUI()
-      setUI(BasicComboBoxUI())
+      ui = BasicComboBoxUI()
       (getAccessibleContext().getAccessibleChild(0) as? JComponent)?.also {
         it.border = BorderFactory.createLineBorder(FOREGROUND)
         it.foreground = FOREGROUND
@@ -49,7 +49,7 @@ fun makeUI(): Component {
       removePopupMenuListener(listener)
       UIManager.put(KEY, RoundedCornerBorder())
       super.updateUI()
-      setUI(BasicComboBoxUI())
+      ui = BasicComboBoxUI()
       listener = HeavyWeightContainerListener()
       addPopupMenuListener(listener)
       (getAccessibleContext().getAccessibleChild(0) as? JComponent)?.also {
@@ -63,15 +63,14 @@ fun makeUI(): Component {
     @Transient
     private var handler: MouseListener? = null
 
-    @Transient
-    private var listener: PopupMenuListener? = null
+    @Transient private var listener: PopupMenuListener? = null
 
     override fun updateUI() {
       removeMouseListener(handler)
       removePopupMenuListener(listener)
       UIManager.put(KEY, TopRoundedCornerBorder())
       super.updateUI()
-      setUI(object : BasicComboBoxUI() {
+      ui = object : BasicComboBoxUI() {
         override fun createArrowButton(): JButton {
           val b = JButton(ArrowIcon(BACKGROUND, FOREGROUND))
           b.isContentAreaFilled = false
@@ -79,7 +78,7 @@ fun makeUI(): Component {
           b.border = BorderFactory.createEmptyBorder()
           return b
         }
-      })
+      }
       handler = ComboRolloverHandler()
       addMouseListener(handler)
       listener = HeavyWeightContainerListener()

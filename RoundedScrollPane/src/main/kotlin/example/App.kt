@@ -66,7 +66,7 @@ fun makeUI(): Component {
       removePopupMenuListener(listener)
       UIManager.put(KEY, TopRoundedCornerBorder())
       super.updateUI()
-      setUI(object : BasicComboBoxUI() {
+      ui = object : BasicComboBoxUI() {
         override fun createArrowButton() = JButton(ArrowIcon(BACKGROUND, FOREGROUND)).also {
           it.isContentAreaFilled = false
           it.isFocusPainted = false
@@ -86,7 +86,7 @@ fun makeUI(): Component {
             it.horizontalScrollBar = null
           }
         }
-      })
+      }
       handler = ComboRolloverHandler()
       addMouseListener(handler)
       listener = HeavyWeightContainerListener()

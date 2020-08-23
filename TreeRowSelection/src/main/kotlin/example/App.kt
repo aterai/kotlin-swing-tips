@@ -34,7 +34,7 @@ private class RowSelectionTree : JTree() {
   override fun updateUI() {
     setCellRenderer(null)
     super.updateUI()
-    setUI(object : BasicTreeUI() {
+    ui = object : BasicTreeUI() {
       override fun getPathBounds(tree: JTree?, path: TreePath?) =
         if (tree != null && treeState != null) { getPathBounds(path, tree.insets, Rectangle()) } else null
 
@@ -43,7 +43,7 @@ private class RowSelectionTree : JTree() {
           it.width = tree.width
           it.y += insets.top
         }
-    })
+    }
     UIManager.put("Tree.repaintWholeRow", true)
     val renderer = getCellRenderer()
     setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
