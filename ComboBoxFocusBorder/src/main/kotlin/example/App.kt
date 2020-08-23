@@ -67,7 +67,7 @@ private open class FocusComboBox<E> constructor(model: ComboBoxModel<E>) : JComb
   }
 
   val isWindowsLnF
-    get() = getUI().javaClass.name.contains("WindowsComboBoxUI")
+    get() = ui.javaClass.name.contains("WindowsComboBoxUI")
 }
 
 fun main() {

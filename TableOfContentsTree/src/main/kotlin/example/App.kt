@@ -84,7 +84,7 @@ private class TableOfContentsTreeCellRenderer : DefaultTreeCellRenderer() {
 
   override fun updateUI() {
     super.updateUI()
-    isSynth = getUI().javaClass.name.contains("Synth")
+    isSynth = ui.javaClass.name.contains("Synth")
     if (isSynth) {
       setBackgroundSelectionColor(Color(0x0, true))
     }
@@ -136,7 +136,7 @@ private class TableOfContentsTree(model: TreeModel?) : JTree(model) {
   override fun updateUI() {
     super.updateUI()
     border = BorderFactory.createTitledBorder("JTree#paintComponent(...)")
-    isSynth = getUI().javaClass.name.contains("Synth")
+    isSynth = ui.javaClass.name.contains("Synth")
   }
 
   override fun paintComponent(g: Graphics) {

@@ -17,7 +17,7 @@ private fun createFrame(t: String, x: Int, y: Int): JInternalFrame {
       if (!check.isSelected) {
         return super.getPreferredSize()
       }
-      return if (getUI().javaClass.name.contains("MotifDesktopIconUI")) {
+      return if (ui.javaClass.name.contains("MotifDesktopIconUI")) {
         Dimension(64, 64 + 32)
       } else {
         ICON_SIZE

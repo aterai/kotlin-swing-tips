@@ -284,7 +284,7 @@ private class TabButton : JButton() {
   }
 
   init {
-    setUI(BasicButtonUI())
+    ui = BasicButtonUI()
     toolTipText = "close this tab"
     isContentAreaFilled = false
     isFocusable = false

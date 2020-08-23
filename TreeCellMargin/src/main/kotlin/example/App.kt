@@ -142,7 +142,7 @@ private class CompoundTreeCellRenderer : DefaultTreeCellRenderer() {
   private val outsideBorder = BorderFactory.createEmptyBorder(1, 1, 1, 1)
   private val emptyBorder: Border = BorderFactory.createCompoundBorder(outsideBorder, insideBorder)
   private var compoundFocusBorder: Border? = null
-  private val isSynth = getUI().javaClass.name.contains("Synth")
+  private val isSynth = ui.javaClass.name.contains("Synth")
 
   override fun getTreeCellRendererComponent(
     tree: JTree,

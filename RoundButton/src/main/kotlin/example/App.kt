@@ -12,22 +12,23 @@ import kotlin.math.sin
 private val button = object : JButton("RoundedCornerButtonUI") {
   override fun updateUI() {
     // IGNORE LnF change: super.updateUI()
-    setUI(RoundedCornerButtonUI())
+    ui = RoundedCornerButtonUI()
   }
 }
 
 fun makeUI() = JPanel().also {
   it.add(JButton("Default JButton"))
-  // button.setUI(RoundedCornerButtonUI())
+  // button.ui = RoundedCornerButtonUI()
   it.add(button)
   it.add(RoundedCornerButton("Rounded Corner Button"))
   val cl = Thread.currentThread().contextClassLoader
-  it.add(object : RoundButton(ImageIcon(cl.getResource("example/16x16.png"))) {
+  val button = object : RoundButton(ImageIcon(cl.getResource("example/16x16.png"))) {
     override fun getPreferredSize() = super.getPreferredSize()?.also { d ->
       val r = 16 + (FOCUS_STROKE.toInt() + 4) * 2 // test margin = 4
       d.setSize(r, r)
     }
-  })
+  }
+  it.add(button)
   it.add(ShapeButton(makeStar(25, 30, 20)))
   it.add(RoundButton("Round Button"))
   it.preferredSize = Dimension(320, 240)

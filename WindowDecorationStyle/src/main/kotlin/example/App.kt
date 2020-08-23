@@ -60,7 +60,7 @@ private class DragWindowListener : MouseAdapter() {
 private class DraggableInternalFrame(title: String?) : JInternalFrame(title) {
   override fun updateUI() {
     super.updateUI()
-    (getUI() as? BasicInternalFrameUI)?.northPane?.also { titleBar ->
+    (ui as? BasicInternalFrameUI)?.northPane?.also { titleBar ->
       for (l in titleBar.getListeners(MouseMotionListener::class.java)) {
         titleBar.removeMouseMotionListener(l)
       }

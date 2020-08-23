@@ -259,7 +259,7 @@ class DnDTabbedPane : JTabbedPane() {
         val th = src.transferHandler
         val idx = src.indexAtLocation(tabPt.x, tabPt.y)
         val selIdx = src.selectedIndex
-        val isRotate = src.getUI() !is MetalTabbedPaneUI && src.tabLayoutPolicy == WRAP_TAB_LAYOUT && idx != selIdx
+        val isRotate = src.ui !is MetalTabbedPaneUI && src.tabLayoutPolicy == WRAP_TAB_LAYOUT && idx != selIdx
         dragTabIndex = if (isRotate) selIdx else idx
         th.exportAsDrag(src, e, TransferHandler.MOVE)
         startPt = null
@@ -569,7 +569,7 @@ private class TabButton : JButton() {
   }
 
   init {
-    setUI(BasicButtonUI())
+    ui = BasicButtonUI()
     toolTipText = "close this tab"
     isContentAreaFilled = false
     isFocusable = false
