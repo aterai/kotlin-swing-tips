@@ -50,16 +50,15 @@ fun makeUI(): Component {
   val centerBox = Box.createVerticalBox()
   val southBox = Box.createVerticalBox()
   val panelList = makeList()
-  val rl = object : ExpansionListener {
-    override fun expansionStateChanged(e: ExpansionEvent) {
-      val source = e.source as? Component ?: return
-      source.isVisible = false
+  val rl = ExpansionListener { e ->
+    (e.source as? Component)?.also { s ->
+      s.isVisible = false
       centerBox.removeAll()
       northBox.removeAll()
       southBox.removeAll()
       var insertSouth = false
       for (exp in panelList) {
-        if (source == exp && exp.isExpanded) {
+        if (s == exp && exp.isExpanded) {
           centerBox.add(exp)
           insertSouth = true
           continue
@@ -71,29 +70,26 @@ fun makeUI(): Component {
           northBox.add(exp)
         }
       }
-      source.isVisible = true
+      s.isVisible = true
     }
   }
-  panelList.forEach { exp: AbstractExpansionPanel ->
-    northBox.add(exp)
-    exp.addExpansionListener(rl)
+  panelList.forEach {
+    northBox.add(it)
+    it.addExpansionListener(rl)
   }
-  val panel: JPanel = object : JPanel(BorderLayout()) {
-    override fun getMinimumSize(): Dimension {
-      val d = super.getMinimumSize()
-      d.width = 120
-      return d
+
+  val panel = object : JPanel(BorderLayout()) {
+    override fun getMinimumSize() = super.getMinimumSize()?.also {
+      it.width = 120
     }
   }
   panel.add(northBox, BorderLayout.NORTH)
   panel.add(centerBox)
   panel.add(southBox, BorderLayout.SOUTH)
-  val sp = JSplitPane()
-  sp.leftComponent = panel
-  sp.rightComponent = JScrollPane(JTree())
 
-  return JPanel(BorderLayout()).also {
-    it.add(sp)
+  return JSplitPane().also {
+    it.leftComponent = panel
+    it.rightComponent = JScrollPane(JTree())
     it.preferredSize = Dimension(320, 240)
   }
 }
@@ -160,7 +156,7 @@ private class ExpansionEvent(source: Any?) : EventObject(source) {
   }
 }
 
-private interface ExpansionListener : EventListener {
+private fun interface ExpansionListener : EventListener {
   fun expansionStateChanged(e: ExpansionEvent)
 }
 
