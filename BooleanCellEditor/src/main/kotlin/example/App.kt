@@ -67,7 +67,7 @@ private fun makeBooleanEditor(table: JTable): JCheckBox {
   checkBox.horizontalAlignment = SwingConstants.CENTER
   checkBox.isBorderPainted = true
   checkBox.isOpaque = true
-  checkBox.addMouseListener(object : MouseAdapter() {
+  val ml = object : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
       (e.component as? JCheckBox)?.also { cb ->
         val m = cb.model
@@ -91,7 +91,8 @@ private fun makeBooleanEditor(table: JTable): JCheckBox {
         table.cellEditor.cancelCellEditing()
       }
     }
-  })
+  }
+  checkBox.addMouseListener(ml)
   return checkBox
 }
 

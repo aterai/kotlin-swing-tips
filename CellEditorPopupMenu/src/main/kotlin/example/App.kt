@@ -56,7 +56,7 @@ private class TextComponentPopupMenu(tc: JTextComponent) : JPopupMenu() {
     val redoAction = RedoAction(manager)
     add(redoAction)
 
-    tc.addAncestorListener(object : AncestorListener {
+    val al = object : AncestorListener {
       override fun ancestorAdded(e: AncestorEvent) {
         manager.discardAllEdits()
         e.component.requestFocusInWindow()
@@ -69,7 +69,8 @@ private class TextComponentPopupMenu(tc: JTextComponent) : JPopupMenu() {
       override fun ancestorRemoved(e: AncestorEvent) {
         /* not needed */
       }
-    })
+    }
+    tc.addAncestorListener(al)
     tc.document.addUndoableEditListener(manager)
     tc.actionMap.put("undo", undoAction)
     tc.actionMap.put("redo", redoAction)
@@ -78,7 +79,7 @@ private class TextComponentPopupMenu(tc: JTextComponent) : JPopupMenu() {
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, msk), "undo")
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, msk), "redo")
 
-    addPopupMenuListener(object : PopupMenuListener {
+    val pml = object : PopupMenuListener {
       override fun popupMenuCanceled(e: PopupMenuEvent) {
         /* not needed */
       }
@@ -97,7 +98,8 @@ private class TextComponentPopupMenu(tc: JTextComponent) : JPopupMenu() {
         undoAction.isEnabled = manager.canUndo()
         redoAction.isEnabled = manager.canRedo()
       }
-    })
+    }
+    addPopupMenuListener(pml)
   }
 }
 

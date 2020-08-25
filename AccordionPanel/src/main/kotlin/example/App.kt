@@ -82,11 +82,12 @@ abstract class AbstractExpansionPanel(private val title: String) : JPanel(Border
         super.paintComponent(g)
       }
     }
-    l.addMouseListener(object : MouseAdapter() {
+    val ml = object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
         initPanel()
       }
-    })
+    }
+    l.addMouseListener(ml)
     l.foreground = Color.BLUE
     l.border = BorderFactory.createEmptyBorder(2, 5, 2, 2)
     add(l, BorderLayout.NORTH)

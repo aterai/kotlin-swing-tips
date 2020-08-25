@@ -17,7 +17,7 @@ fun makeUI(): Component {
   table.rowHeight = 20
   table.columnModel.getColumn(0).cellEditor = DefaultCellEditor(JComboBox(model))
   val comboBox = JComboBox(model)
-  comboBox.addAncestorListener(object : AncestorListener {
+  val al = object : AncestorListener {
     override fun ancestorAdded(e: AncestorEvent) {
       println("ancestorAdded")
       val c = e.component
@@ -35,7 +35,8 @@ fun makeUI(): Component {
     override fun ancestorMoved(e: AncestorEvent) {
       /* not needed */
     }
-  })
+  }
+  comboBox.addAncestorListener(al)
   table.columnModel.getColumn(1).cellEditor = DefaultCellEditor(comboBox)
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(table))

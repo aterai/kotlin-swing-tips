@@ -8,35 +8,36 @@ import javax.swing.plaf.basic.BasicButtonUI
 import javax.swing.plaf.basic.BasicHTML
 import javax.swing.text.View
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val tab1 = JTabbedPane()
-    tab1.addTab("JTree", JScrollPane(JTree()))
-    tab1.addTab("JLabel", JLabel("JLabel 1"))
-    tab1.addTab("JSplitPane", JSplitPane())
-    tab1.addTab("JButton 1", JButton("JButton 1"))
+fun makeUI(): Component {
+  val tab1 = JTabbedPane()
+  tab1.addTab("JTree", JScrollPane(JTree()))
+  tab1.addTab("JLabel", JLabel("JLabel 1"))
+  tab1.addTab("JSplitPane", JSplitPane())
+  tab1.addTab("JButton 1", JButton("JButton 1"))
 
-    val tab2 = CardLayoutTabbedPane()
-    tab2.addTab("JTabbedPane: default", tab1)
-    tab2.addTab("JTree", JScrollPane(JTree()))
-    tab2.addTab("JSplitPane", JSplitPane())
-    tab2.addTab("JLabel", JLabel("JLabel 2"))
-    tab2.addTab("JButton 2", JButton("JButton 2"))
-    add(tab2)
+  val tab2 = CardLayoutTabbedPane()
+  tab2.addTab("JTabbedPane: default", tab1)
+  tab2.addTab("JTree", JScrollPane(JTree()))
+  tab2.addTab("JSplitPane", JSplitPane())
+  tab2.addTab("JLabel", JLabel("JLabel 2"))
+  tab2.addTab("JButton 2", JButton("JButton 2"))
 
-    // UIManager.put("example.TabButton", "TabViewButtonUI")
-    // UIManager.put("TabViewButtonUI", "example.OperaTabViewButtonUI")
-    // val tab3 = CardLayoutTabbedPane()
-    // tab3.addTab("9999", JScrollPane(JTree()))
-    // tab3.addTab("000000000", JLabel("JLabel 5"))
-    // tab3.addTab("1111", JLabel("JLabel 6"))
-    // tab3.addTab("222", JButton("JButton 3"))
-    // add(tab3)
-    preferredSize = Dimension(320, 240)
+  // UIManager.put("example.TabButton", "TabViewButtonUI")
+  // UIManager.put("TabViewButtonUI", "example.OperaTabViewButtonUI")
+  // val tab3 = CardLayoutTabbedPane()
+  // tab3.addTab("9999", JScrollPane(JTree()))
+  // tab3.addTab("000000000", JLabel("JLabel 5"))
+  // tab3.addTab("1111", JLabel("JLabel 6"))
+  // tab3.addTab("222", JButton("JButton 3"))
+
+  return JPanel(BorderLayout()).also {
+    it.add(tab2)
+    // it.add(tab3)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class CardLayoutTabbedPane : JPanel(BorderLayout()) {
+private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
   private val cardLayout = CardLayout()
   private val tabPanel = JPanel(GridLayout(1, 0, 0, 0))
   private val wrapPanel = JPanel(BorderLayout())
@@ -45,12 +46,13 @@ class CardLayoutTabbedPane : JPanel(BorderLayout()) {
 
   private fun createTabComponent(title: String): Component {
     val tab = TabButton(title)
-    tab.addMouseListener(object : MouseAdapter() {
+    val ml = object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
         (e.component as? AbstractButton)?.isSelected = true
         cardLayout.show(contentsPanel, title)
       }
-    })
+    }
+    tab.addMouseListener(ml)
     tab.layout = BorderLayout()
     val close = object : JButton(CloseTabIcon(Color.GRAY)) {
       override fun getPreferredSize() = Dimension(12, 12)
@@ -90,7 +92,7 @@ class CardLayoutTabbedPane : JPanel(BorderLayout()) {
   }
 }
 
-class TabButton(text: String?) : JRadioButton(text, null) {
+private class TabButton(text: String?) : JRadioButton(text, null) {
   var textColor: Color? = null
   var pressedTextColor: Color? = null
   var rolloverTextColor: Color? = null
@@ -98,12 +100,12 @@ class TabButton(text: String?) : JRadioButton(text, null) {
   var selectedTextColor: Color? = null
 
   override fun updateUI() {
-    // if (UIManager.get(uiClassID) != null) {
-    //   setUI(UIManager.getUI(this) as? TabViewButtonUI)
+    // ui = if (UIManager.get(uiClassID) != null) {
+    //   UIManager.getUI(this) as? TabViewButtonUI
     // } else {
-    //   setUI(BasicTabViewButtonUI())
+    //   BasicTabViewButtonUI()
     // }
-    setUI(OperaTabViewButtonUI())
+    ui = OperaTabViewButtonUI()
   }
 
   override fun getUIClassID() = UI_CLASS_ID
@@ -133,7 +135,7 @@ class TabButton(text: String?) : JRadioButton(text, null) {
   }
 }
 
-class CloseTabIcon(private val color: Color) : Icon {
+private class CloseTabIcon(private val color: Color) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
@@ -152,27 +154,9 @@ class CloseTabIcon(private val color: Color) : Icon {
   override fun getIconHeight() = 12
 }
 
-fun main() {
-  EventQueue.invokeLater {
-    runCatching {
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
-    }.onFailure {
-      it.printStackTrace()
-      Toolkit.getDefaultToolkit().beep()
-    }
-    JFrame().apply {
-      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
-      pack()
-      setLocationRelativeTo(null)
-      isVisible = true
-    }
-  }
-}
+private open class TabViewButtonUI : BasicButtonUI() { /* ButtonUI */ }
 
-open class TabViewButtonUI : BasicButtonUI() { /* ButtonUI */ }
-
-open class BasicTabViewButtonUI : TabViewButtonUI() {
+private open class BasicTabViewButtonUI : TabViewButtonUI() {
   private val viewRect = Rectangle()
   private val iconRect = Rectangle()
   private val textRect = Rectangle()
@@ -250,7 +234,7 @@ open class BasicTabViewButtonUI : TabViewButtonUI() {
   // }
 }
 
-class OperaTabViewButtonUI : BasicTabViewButtonUI() {
+private class OperaTabViewButtonUI : BasicTabViewButtonUI() {
   private val viewRect = Rectangle()
   private val iconRect = Rectangle()
   private val textRect = Rectangle()
@@ -355,5 +339,23 @@ class OperaTabViewButtonUI : BasicTabViewButtonUI() {
     // fun createUI(c: JComponent): ComponentUI {
     //   return OperaTabViewButtonUI()
     // }
+  }
+}
+
+fun main() {
+  EventQueue.invokeLater {
+    runCatching {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+    }.onFailure {
+      it.printStackTrace()
+      Toolkit.getDefaultToolkit().beep()
+    }
+    JFrame().apply {
+      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+      contentPane.add(makeUI())
+      pack()
+      setLocationRelativeTo(null)
+      isVisible = true
+    }
   }
 }

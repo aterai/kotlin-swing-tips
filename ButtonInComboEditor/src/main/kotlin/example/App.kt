@@ -65,7 +65,7 @@ private class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: Image
     add(feedButton)
     add(favicon)
 
-    (getEditor().editorComponent as? JTextField)?.addFocusListener(object : FocusListener {
+    val fl = object : FocusListener {
       override fun focusGained(e: FocusEvent) {
         // field.setBorder(BorderFactory.createEmptyBorder(0, 16 + 4, 0, 0));
         feedButton.isVisible = false
@@ -81,7 +81,8 @@ private class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: Image
           selectedIndex = 0
         }
       }
-    })
+    }
+    (getEditor().editorComponent as? JTextField)?.addFocusListener(fl)
 
     addItemListener { e ->
       if (e.stateChange == ItemEvent.SELECTED) {
@@ -114,7 +115,7 @@ private class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: Image
     val label = JLabel()
     label.cursor = Cursor.getDefaultCursor()
     label.border = BorderFactory.createEmptyBorder(0, 1, 0, 2)
-    label.addMouseListener(object : MouseAdapter() {
+    val ml = object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
         EventQueue.invokeLater {
           (editor.editorComponent as? JTextField)?.also {
@@ -123,7 +124,8 @@ private class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: Image
           }
         }
       }
-    })
+    }
+    label.addMouseListener(ml)
     return label
   }
 
