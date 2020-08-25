@@ -117,7 +117,7 @@ class DateEditor : AbstractCellEditor(), TableCellEditor {
     spinner.editor = editor
     setArrowButtonEnabled(false)
     editor.textField.horizontalAlignment = SwingConstants.LEFT
-    editor.textField.addFocusListener(object : FocusListener {
+    val fl = object : FocusListener {
       override fun focusLost(e: FocusEvent) {
         setArrowButtonEnabled(false)
       }
@@ -132,7 +132,8 @@ class DateEditor : AbstractCellEditor(), TableCellEditor {
           }
         }
       }
-    })
+    }
+    editor.textField.addFocusListener()
     spinner.border = BorderFactory.createEmptyBorder()
   }
 }

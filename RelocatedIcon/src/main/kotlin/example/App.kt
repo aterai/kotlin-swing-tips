@@ -10,14 +10,15 @@ fun makeUI(): Component {
   val check = JCheckBox("Icons should be relocated", true)
   val desktop = JDesktopPane()
   desktop.desktopManager = ReIconifyDesktopManager()
-  desktop.addComponentListener(object : ComponentAdapter() {
+  val cmpListener = object : ComponentAdapter() {
     override fun componentResized(e: ComponentEvent) {
       if (!check.isSelected) {
         return
       }
       doReIconify(e.component as? JDesktopPane)
     }
-  })
+  }
+  desktop.addComponentListener(cmpListener)
   val button = JButton("relocate")
   button.addActionListener { doReIconify(desktop) }
 

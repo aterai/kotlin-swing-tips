@@ -42,14 +42,15 @@ fun makeUI(): Component {
 private fun initTree(tree: JTree): JTree {
   tree.border = BorderFactory.createEmptyBorder(4, 4, 4, 4)
   tree.cellRenderer = FileTreeCellRenderer()
-  tree.addMouseListener(object : MouseAdapter() {
+  val ml = object : MouseAdapter() {
     override fun mouseClicked(e: MouseEvent) {
       if (e.clickCount == 2) {
         val file = getFileFromTreePath(tree.selectionPath)
         println(file)
       }
     }
-  })
+  }
+  tree.addMouseListener(ml)
   // tree.setToggleClickCount(0)
   tree.expandRow(0)
   return tree

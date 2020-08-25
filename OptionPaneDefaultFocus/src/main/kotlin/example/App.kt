@@ -55,11 +55,12 @@ private fun makeButton2(textField: JTextField, textArea: JTextArea): JButton {
   button.addActionListener {
     val pane = JOptionPane(textField, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION)
     val dialog = pane.createDialog(textArea.rootPane, "Input Text")
-    dialog.addWindowListener(object : WindowAdapter() {
+    val wl = object : WindowAdapter() {
       override fun windowOpened(e: WindowEvent) {
         textField.requestFocusInWindow()
       }
-    })
+    }
+    dialog.addWindowListener(wl)
     dialog.isVisible = true
     val selectedValue = pane.value
     var result = JOptionPane.CLOSED_OPTION

@@ -62,7 +62,7 @@ private class SpinnerCellEditor : AbstractCellEditor(), TableCellEditor {
     spinner.border = BorderFactory.createEmptyBorder()
     setArrowButtonEnabled(false)
     editor.textField.horizontalAlignment = SwingConstants.LEFT
-    editor.textField.addFocusListener(object : FocusListener {
+    val fl = object : FocusListener {
       override fun focusLost(e: FocusEvent) {
         setArrowButtonEnabled(false)
       }
@@ -77,7 +77,8 @@ private class SpinnerCellEditor : AbstractCellEditor(), TableCellEditor {
           }
         }
       }
-    })
+    }
+    editor.textField.addFocusListener(fl)
   }
 }
 

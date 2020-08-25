@@ -32,39 +32,40 @@ fun makeUI(): Component {
         }
         log.append("WindowStateListener: $ws\n")
       }
-
-      c.addWindowListener(object : WindowListener {
-        override fun windowOpened(e: WindowEvent) {
-          log.append("windowOpened\n")
-        }
-
-        override fun windowClosing(e: WindowEvent) {
-          log.append("windowClosing\n")
-        }
-
-        override fun windowClosed(e: WindowEvent) {
-          log.append("windowClosed\n")
-        }
-
-        override fun windowIconified(e: WindowEvent) {
-          log.append("windowIconified\n")
-        }
-
-        override fun windowDeiconified(e: WindowEvent) {
-          log.append("windowDeiconified\n")
-        }
-
-        override fun windowActivated(e: WindowEvent) {
-          log.append("windowActivated\n")
-        }
-
-        override fun windowDeactivated(e: WindowEvent) {
-          log.append("windowDeactivated\n")
-        }
-      })
+      c.addWindowListener(TestWindowListener(log))
     }
   }
   return p
+}
+
+private class TestWindowListener(private val log: JTextArea): WindowListener {
+  override fun windowOpened(e: WindowEvent) {
+    log.append("windowOpened\n")
+  }
+
+  override fun windowClosing(e: WindowEvent) {
+    log.append("windowClosing\n")
+  }
+
+  override fun windowClosed(e: WindowEvent) {
+    log.append("windowClosed\n")
+  }
+
+  override fun windowIconified(e: WindowEvent) {
+    log.append("windowIconified\n")
+  }
+
+  override fun windowDeiconified(e: WindowEvent) {
+    log.append("windowDeiconified\n")
+  }
+
+  override fun windowActivated(e: WindowEvent) {
+    log.append("windowActivated\n")
+  }
+
+  override fun windowDeactivated(e: WindowEvent) {
+    log.append("windowDeactivated\n")
+  }
 }
 
 fun main() {
