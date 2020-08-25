@@ -27,7 +27,7 @@ private fun makeComboBox(isEnterSelectable: Boolean): JComboBox<String> {
   // UIManager.put("ComboBox.isEnterSelectablePopup", Boolean.TRUE)
   val combo = JComboBox(arrayOf("aaa", "bbb", "CCC", "DDD"))
   combo.isEditable = true
-  combo.addPopupMenuListener(object : PopupMenuListener {
+  val pml = object : PopupMenuListener {
     override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
       UIManager.put("ComboBox.isEnterSelectablePopup", isEnterSelectable)
       val b = UIManager.getBoolean("ComboBox.isEnterSelectablePopup")
@@ -41,7 +41,8 @@ private fun makeComboBox(isEnterSelectable: Boolean): JComboBox<String> {
     override fun popupMenuCanceled(e: PopupMenuEvent) {
       /* not needed */
     }
-  })
+  }
+  combo.addPopupMenuListener(pml)
   combo.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
       append("ItemListener: " + e.item)

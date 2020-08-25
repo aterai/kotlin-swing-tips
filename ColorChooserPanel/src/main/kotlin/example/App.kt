@@ -33,11 +33,12 @@ fun makeUI(): Component {
         }
       }
       val dialog = JColorChooser.createDialog(p.rootPane, "JColorChooser", true, cc, null, null)
-      dialog.addComponentListener(object : ComponentAdapter() {
+      val cmpListener = object : ComponentAdapter() {
         override fun componentHidden(e: ComponentEvent) {
           (e.component as? Window)?.dispose()
         }
-      })
+      }
+      dialog.addComponentListener(cmpListener)
       dialog.isVisible = true // blocks until user brings dialog down...
       color = cc.color
     }

@@ -18,12 +18,13 @@ fun makeUI(): Component {
     EventQueue.invokeLater {
       val root = it.rootPane
       root.jMenuBar = createMenuBar()
-      root.addMouseListener(object : MouseAdapter() {
+      val ml = object : MouseAdapter() {
         override fun mouseClicked(e: MouseEvent) {
           println("clicked")
           KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner()
         }
-      })
+      }
+      root.addMouseListener(ml)
     }
     it.preferredSize = Dimension(320, 240)
   }

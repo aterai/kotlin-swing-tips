@@ -34,7 +34,7 @@ fun makeUI(): Component {
   table.cellSelectionEnabled = true
   val check = JCheckBox("Header click: Select all cells in a column", true)
   val header = table.tableHeader
-  header.addMouseListener(object : MouseAdapter() {
+  val ml = object : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
       if (!check.isSelected) {
         return
@@ -46,7 +46,8 @@ fun makeUI(): Component {
       table.changeSelection(0, col, false, false)
       table.changeSelection(table.rowCount - 1, col, false, true)
     }
-  })
+  }
+  header.addMouseListener(ml)
 
   val button = JButton("clear selection")
   button.addActionListener { table.clearSelection() }

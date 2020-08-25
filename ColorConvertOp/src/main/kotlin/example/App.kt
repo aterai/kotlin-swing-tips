@@ -36,13 +36,14 @@ fun makeUI(): Component {
 
 private fun makeLabel(image: ImageIcon, orgImage: ImageIcon, str: String): JLabel {
   val label = JLabel(str, image, SwingConstants.LEFT)
-  label.addMouseListener(object : MouseAdapter() {
+  val ml = object : MouseAdapter() {
     private var isGray = false
     override fun mouseClicked(e: MouseEvent) {
       (e.component as? JLabel)?.icon = if (isGray) image else orgImage
       isGray = isGray xor true
     }
-  })
+  }
+  label.addMouseListener(ml)
   return label
 }
 

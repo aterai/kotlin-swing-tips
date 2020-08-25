@@ -51,7 +51,7 @@ private fun makeTrayIcon(frame: JFrame): TrayIcon {
   StarIcon().paintIcon(null, g, 0, 0)
   g.dispose()
   val icon = TrayIcon(image, "Click Test", popup)
-  icon.addMouseListener(object : MouseAdapter() {
+  val ml = object : MouseAdapter() {
     override fun mouseClicked(e: MouseEvent) {
       val isDoubleClick = e.button == MouseEvent.BUTTON1 && e.clickCount >= 2
       if (isDoubleClick) {
@@ -61,7 +61,8 @@ private fun makeTrayIcon(frame: JFrame): TrayIcon {
         frame.toFront()
       }
     }
-  })
+  }
+  icon.addMouseListener(ml)
   return icon
 }
 

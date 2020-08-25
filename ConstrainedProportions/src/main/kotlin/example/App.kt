@@ -15,11 +15,12 @@ fun makeUI(): Component {
     val frame = checkbox.topLevelAncestor
     if (frame is JFrame) {
       frame.minimumSize = Dimension(MW, MH)
-      frame.addComponentListener(object : ComponentAdapter() {
+      val cmpListener = object : ComponentAdapter() {
         override fun componentResized(e: ComponentEvent) {
           initFrameSize(frame)
         }
-      })
+      }
+      frame.addComponentListener(cmpListener)
     }
   }
   checkbox.addActionListener {
@@ -30,7 +31,7 @@ fun makeUI(): Component {
   }
 
   val label = JLabel()
-  label.addComponentListener(object : ComponentAdapter() {
+  val cmpListener = object : ComponentAdapter() {
     override fun componentResized(e: ComponentEvent) {
       (e.component as? JLabel)?.also {
         val c = it.topLevelAncestor
@@ -39,7 +40,8 @@ fun makeUI(): Component {
         }
       }
     }
-  })
+  }
+  label.addComponentListener(cmpListener)
 
   Toolkit.getDefaultToolkit().setDynamicLayout(false)
   val check = JCheckBox("Toolkit.getDefaultToolkit().setDynamicLayout: ")

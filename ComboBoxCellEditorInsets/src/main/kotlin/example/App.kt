@@ -132,11 +132,12 @@ private class ComboBoxCellEditor : AbstractCellEditor(), TableCellEditor {
 
   init {
     panel.comboBox.addActionListener { fireEditingStopped() }
-    panel.addMouseListener(object : MouseAdapter() {
+    val ml = object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
         fireEditingStopped()
       }
-    })
+    }
+    panel.addMouseListener(ml)
   }
 }
 

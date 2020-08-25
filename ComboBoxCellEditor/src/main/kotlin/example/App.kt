@@ -26,7 +26,7 @@ fun makeUI(): Component {
   tree.cellRenderer = PluginCellRenderer(JComboBox())
   tree.cellEditor = PluginCellEditor(JComboBox())
   val textArea = JTextArea(5, 1)
-  tree.model.addTreeModelListener(object : TreeModelListener {
+  val tml = object : TreeModelListener {
     override fun treeNodesChanged(e: TreeModelEvent) {
       val node = e.children?.takeIf { it.size == 1 }?.firstOrNull()
       (node as? DefaultMutableTreeNode)
@@ -47,7 +47,9 @@ fun makeUI(): Component {
     override fun treeStructureChanged(e: TreeModelEvent) {
       /* not needed */
     }
-  })
+  }
+  tree.model.addTreeModelListener(tml)
+
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(tree))
     it.add(JScrollPane(textArea), BorderLayout.SOUTH)

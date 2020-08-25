@@ -37,7 +37,7 @@ fun makeUI(): Component {
       return b
     }
   }
-  combo02.addMouseListener(object : MouseAdapter() {
+  val ml2 = object : MouseAdapter() {
     private fun getButtonModel(e: MouseEvent): ButtonModel? {
       val b = (e.component as? JComboBox<*>)?.getComponent(0)
       return (b as? JButton)?.model
@@ -58,7 +58,8 @@ fun makeUI(): Component {
     override fun mouseReleased(e: MouseEvent) {
       getButtonModel(e)?.isPressed = false
     }
-  })
+  }
+  combo02.addMouseListener(ml2)
   val o02 = combo02.accessibleContext.getAccessibleChild(0)
   (o02 as? JComponent)?.border = BorderFactory.createMatteBorder(0, 1, 1, 1, Color.WHITE)
   val box = Box.createVerticalBox()

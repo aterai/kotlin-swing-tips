@@ -22,7 +22,7 @@ fun makeUI(): Component {
 
   val table = JTable(model)
   table.autoCreateRowSorter = true
-  table.tableHeader.addMouseListener(object : MouseAdapter() {
+  val ml = object : MouseAdapter() {
     override fun mouseClicked(e: MouseEvent) {
       val sorter = table.rowSorter
       val h = e.component as? JTableHeader
@@ -39,7 +39,8 @@ fun makeUI(): Component {
         EventQueue.invokeLater { sorter.setSortKeys(null) }
       }
     }
-  })
+  }
+  table.tableHeader.addMouseListener(ml)
 
   val col = table.columnModel.getColumn(0)
   col.minWidth = 60
