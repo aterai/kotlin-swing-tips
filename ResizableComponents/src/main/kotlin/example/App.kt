@@ -27,19 +27,21 @@ fun makeUI(): Component {
   popup.add("tree").addActionListener { createTree() }
   layeredPane.componentPopupMenu = popup
 
-  toolbar.add(object : AbstractAction("add table") {
+  val a1 = object : AbstractAction("add table") {
     override fun actionPerformed(e: ActionEvent) {
       pt.setLocation(pt.x + 20, pt.y + 20)
       createTable()
     }
-  })
+  }
+  toolbar.add(a1)
   toolbar.addSeparator()
-  toolbar.add(object : AbstractAction("add tree") {
+  val a2 = object : AbstractAction("add tree") {
     override fun actionPerformed(e: ActionEvent) {
       pt.setLocation(pt.x + 20, pt.y + 20)
       createTree()
     }
-  })
+  }
+  toolbar.add(a2)
 
   return JPanel(BorderLayout()).also {
     it.add(layeredPane)

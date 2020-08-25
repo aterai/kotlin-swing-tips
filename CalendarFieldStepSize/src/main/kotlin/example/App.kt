@@ -28,7 +28,7 @@ fun makeUI(): Component {
     Calendar.MILLISECOND to 500
   )
 
-  val spinner2 = JSpinner(object : SpinnerDateModel(d, null, null, Calendar.SECOND) {
+  val m2 = object : SpinnerDateModel(d, null, null, Calendar.SECOND) {
     override fun getPreviousValue(): Any {
       val cal = Calendar.getInstance()
       cal.time = date
@@ -46,7 +46,8 @@ fun makeUI(): Component {
       cal.add(calendarField, stepSize)
       return cal.time
     }
-  })
+  }
+  val spinner2 = JSpinner(m2)
   (spinner2.editor as? JSpinner.DefaultEditor)?.textField?.formatterFactory = factory
 
   return JPanel(GridLayout(2, 1)).also {

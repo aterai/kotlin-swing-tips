@@ -8,8 +8,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 fun makeUI(): Component {
   val font = Font(Font.MONOSPACED, Font.BOLD, 200)
   val at = AffineTransform.getScaleInstance(-1.0, 1.0)
-  val p = JPanel(BorderLayout())
-  p.add(object : JComponent() {
+  val c = object : JComponent() {
     override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
@@ -24,9 +23,12 @@ fun makeUI(): Component {
       g2.fill(toCenterAtf.createTransformedShape(copyleft))
       g2.dispose()
     }
-  })
-  p.preferredSize = Dimension(320, 240)
-  return p
+  }
+
+  return JPanel(BorderLayout()).also {
+    it.add(c)
+    it.preferredSize = Dimension(320, 240)
+  }
 }
 
 fun main() {

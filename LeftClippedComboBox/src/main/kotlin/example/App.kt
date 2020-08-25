@@ -32,7 +32,7 @@ private fun makeComboBoxModel() = DefaultComboBoxModel<String>().also {
 }
 
 private fun initComboBoxRenderer(combo: JComboBox<String>) {
-  combo.setRenderer(object : DefaultListCellRenderer() {
+  combo.renderer = object : DefaultListCellRenderer() {
     override fun getListCellRendererComponent(
       list: JList<*>,
       value: Any?,
@@ -90,7 +90,7 @@ private fun initComboBoxRenderer(combo: JComboBox<String>) {
       }
       return dots + String(acp, j, acp.size - j)
     }
-  })
+  }
 }
 
 fun main() {

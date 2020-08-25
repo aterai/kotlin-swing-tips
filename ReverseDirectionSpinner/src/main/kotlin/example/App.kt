@@ -42,11 +42,12 @@ fun makeUI(): Component {
   box.add(makeTitledPanel("SpinnerListModel", spinner2))
   box.add(Box.createVerticalStrut(10))
 
-  val spinner3 = JSpinner(object : SpinnerListModel(scale) {
+  val m3 = object : SpinnerListModel(scale) {
     override fun getNextValue() = super.getPreviousValue()
 
     override fun getPreviousValue() = super.getNextValue()
-  })
+  }
+  val spinner3 = JSpinner(m3)
   box.add(makeTitledPanel("Reverse direction SpinnerListModel", spinner3))
 
   return JPanel(BorderLayout()).also {

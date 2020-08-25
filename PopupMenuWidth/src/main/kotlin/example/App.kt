@@ -7,31 +7,38 @@ import javax.swing.plaf.basic.DefaultMenuLayout
 
 fun makeUI(): Component {
   val mb = JMenuBar()
-  var menu = makeMenu(mb.add(JMenu("Default")))
-  println(menu.popupMenu.preferredSize)
-  menu = makeMenu(mb.add(JMenu("BoxHStrut")))
-  menu.add(Box.createHorizontalStrut(200))
-  menu = makeMenu(mb.add(JMenu("Override")))
-  menu.add(object : JMenuItem("PreferredSize") {
-    override fun getPreferredSize(): Dimension {
-      val d = super.getPreferredSize()
-      d.width = 200
-      return d
+  val mm = makeMenu(mb.add(JMenu("Default")))
+  println(mm.popupMenu.preferredSize)
+
+  makeMenu(mb.add(JMenu("BoxHStrut"))).also {
+    it.add(Box.createHorizontalStrut(200))
+  }
+
+  makeMenu(mb.add(JMenu("Override"))).also { m ->
+    val item = object : JMenuItem("PreferredSize") {
+      override fun getPreferredSize() = super.getPreferredSize()?.also {
+        it.width = 200
+      }
     }
-  })
-  menu = makeMenu(mb.add(JMenu("Layout")))
-  val popup = menu.popupMenu
-  popup.layout = object : DefaultMenuLayout(popup, BoxLayout.Y_AXIS) {
-    override fun preferredLayoutSize(target: Container): Dimension {
-      val d = super.preferredLayoutSize(target)
-      d.width = 200.coerceAtLeast(d.width)
-      return d
+    m.add(item)
+  }
+
+  makeMenu(mb.add(JMenu("Layout"))).also {
+    val popup = it.popupMenu
+    popup.layout = object : DefaultMenuLayout(popup, BoxLayout.Y_AXIS) {
+      override fun preferredLayoutSize(target: Container): Dimension {
+        val d = super.preferredLayoutSize(target)
+        d.width = 200.coerceAtLeast(d.width)
+        return d
+      }
     }
   }
-  menu = mb.add(JMenu("Html"))
-  val item = menu.add("<html><table cellpadding='0' cellspacing='0' style='width:200'>Table")
-  item.mnemonic = KeyEvent.VK_T
-  makeMenu(menu)
+
+  makeMenu(mb.add(JMenu("Html"))).also {
+    val item = it.add("<html><table cellpadding='0' cellspacing='0' style='width:200'>Table")
+    item.mnemonic = KeyEvent.VK_T
+  }
+
   return JPanel(BorderLayout()).also {
     it.add(mb, BorderLayout.NORTH)
     it.preferredSize = Dimension(320, 240)

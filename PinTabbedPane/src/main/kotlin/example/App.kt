@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.ActionEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
@@ -26,26 +25,28 @@ fun makeUI(): Component {
 }
 
 private class PinTabPopupMenu : JPopupMenu() {
-  private val pinTabMenuItem = JCheckBoxMenuItem(object : AbstractAction("pin tab") {
-    override fun actionPerformed(e: ActionEvent) {
-      val t = invoker as JTabbedPane
-      val check = e.source as JCheckBoxMenuItem
-      val idx = t.selectedIndex
-      val cmp = t.getComponentAt(idx)
-      val tab = t.getTabComponentAt(idx)
-      val icon = t.getIconAt(idx)
-      val tip = t.getToolTipTextAt(idx)
-      val flg = t.isEnabledAt(idx)
-      val i = searchNewSelectedIndex(t, idx, check.isSelected)
-      t.remove(idx)
-      t.insertTab(if (check.isSelected) "" else tip, icon, cmp, tip, i)
-      t.setTabComponentAt(i, tab)
-      t.setEnabledAt(i, flg)
-      if (flg) {
-        t.selectedIndex = i
+  private val pinTabMenuItem = JCheckBoxMenuItem("pin tab").also {
+    it.addActionListener { e ->
+      val t = invoker
+      val check = e.source
+      if (t is JTabbedPane && check is JCheckBoxMenuItem) {
+        val idx = t.selectedIndex
+        val cmp = t.getComponentAt(idx)
+        val tab = t.getTabComponentAt(idx)
+        val icon = t.getIconAt(idx)
+        val tip = t.getToolTipTextAt(idx)
+        val flg = t.isEnabledAt(idx)
+        val i = searchNewSelectedIndex(t, idx, check.isSelected)
+        t.remove(idx)
+        t.insertTab(if (check.isSelected) "" else tip, icon, cmp, tip, i)
+        t.setTabComponentAt(i, tab)
+        t.setEnabledAt(i, flg)
+        if (flg) {
+          t.selectedIndex = i
+        }
       }
     }
-  })
+  }
 
   override fun show(c: Component, x: Int, y: Int) {
     if (c is JTabbedPane) {

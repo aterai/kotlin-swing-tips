@@ -26,12 +26,14 @@ fun makeUI(): Component {
   p.add(JToggleButton("JToggleButton"))
   p.add(Box.createHorizontalStrut(32))
   p.add(JCheckBox("JCheckBox"))
-  p.add(object : JCheckBox("JCheckBox+BorderPainted") {
+
+  val check = object : JCheckBox("JCheckBox+BorderPainted") {
     override fun updateUI() {
       super.updateUI()
       isBorderPainted = true
     }
-  })
+  }
+  p.add(check)
   p.add(JCheckBox(PAD + "JCheckBox+td.padding"))
 
   p.add(JRadioButton("JRadioButton"))

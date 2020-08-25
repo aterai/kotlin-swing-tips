@@ -14,7 +14,7 @@ private val showHideButton = JButton()
 private var animator: Timer? = null
 private var isHidden = true
 
-private val controls = JPanel(object : BorderLayout(5, 5) {
+private val layout = object : BorderLayout(5, 5) {
   private var controlsHeight = 0
   private var controlsPreferredHeight = 0
 
@@ -42,7 +42,8 @@ private val controls = JPanel(object : BorderLayout(5, 5) {
     ps.height = controlsHeight
     return ps
   }
-})
+}
+private val controls = JPanel(layout)
 
 fun makeUI(): Component {
   button.isFocusable = false

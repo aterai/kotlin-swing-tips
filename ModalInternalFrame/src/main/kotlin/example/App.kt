@@ -14,6 +14,7 @@ import javax.swing.text.DefaultEditorKit
 private val desktop = JDesktopPane()
 private val menuBar = JMenuBar()
 private val sampleBar = JMenuBar()
+private var openFrameCount = 0
 
 fun makeUI(): Component {
   val button = JButton(ModalInternalFrameAction3("Show"))
@@ -33,9 +34,10 @@ fun makeUI(): Component {
   menu.mnemonic = KeyEvent.VK_F
   menuBar.add(menu)
 
-  var menuItem = JMenuItem(object : AbstractAction("New Frame") {
-    private var openFrameCount = 0
-    override fun actionPerformed(e: ActionEvent) {
+  menu.add("New Frame").also {
+    it.mnemonic = KeyEvent.VK_N
+    it.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.ALT_DOWN_MASK)
+    it.addActionListener {
       val frame = JInternalFrame("title", true, true, true, true)
       frame.setSize(130, 100)
       frame.setLocation(30 * openFrameCount, 30 * openFrameCount)
@@ -43,24 +45,24 @@ fun makeUI(): Component {
       frame.isVisible = true
       openFrameCount++
     }
-  })
-  menuItem.mnemonic = KeyEvent.VK_N
-  menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.ALT_DOWN_MASK)
-  menu.add(menuItem)
+  }
 
   menu.addSeparator()
 
-  menuItem = menu.add(ModalInternalFrameAction1("InternalMessageDialog(Normal)"))
-  menuItem.mnemonic = KeyEvent.VK_1
-  menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.ALT_DOWN_MASK)
+  menu.add(ModalInternalFrameAction1("InternalMessageDialog(Normal)")).also {
+    it.mnemonic = KeyEvent.VK_1
+    it.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.ALT_DOWN_MASK)
+  }
 
-  menuItem = menu.add(ModalInternalFrameAction2("InternalMessageDialog"))
-  menuItem.mnemonic = KeyEvent.VK_2
-  menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_2, InputEvent.ALT_DOWN_MASK)
+  menu.add(ModalInternalFrameAction2("InternalMessageDialog")).also {
+    it.mnemonic = KeyEvent.VK_2
+    it.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_2, InputEvent.ALT_DOWN_MASK)
+  }
 
-  menuItem = menu.add(ModalInternalFrameAction3("InternalMessageDialog(Print)"))
-  menuItem.mnemonic = KeyEvent.VK_3
-  menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_3, InputEvent.ALT_DOWN_MASK)
+  menu.add(ModalInternalFrameAction3("InternalMessageDialog(Print)")).also {
+    it.mnemonic = KeyEvent.VK_3
+    it.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_3, InputEvent.ALT_DOWN_MASK)
+  }
 
   val b = JButton(DefaultEditorKit.BeepAction())
   b.mnemonic = KeyEvent.VK_B
@@ -127,13 +129,14 @@ private class ModalInternalFrameAction3(label: String) : AbstractAction(label) {
     optionPane.message = "Hello, World"
     optionPane.messageType = JOptionPane.INFORMATION_MESSAGE
     removeSystemMenuListener(modal)
-    modal.addInternalFrameListener(object : InternalFrameAdapter() {
+    val ifl = object : InternalFrameAdapter() {
       override fun internalFrameClosed(e: InternalFrameEvent) {
         glassPane.removeAll()
         glassPane.isVisible = false
         desktop.rootPane.glassPane = originalGlassPane
       }
-    })
+    }
+    modal.addInternalFrameListener(ifl)
     glassPane.add(modal)
     modal.pack()
     // val screen = desktop.getBounds();

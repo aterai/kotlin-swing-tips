@@ -90,7 +90,7 @@ private fun makeUI2(): Component {
   }
 
   val box = makeCenterBox(button1, button2)
-  val panel = JPanel(object : BorderLayout(0, 0) {
+  val layout = object : BorderLayout(0, 0) {
     override fun layoutContainer(target: Container) {
       synchronized(target.treeLock) {
         val insets = target.insets
@@ -116,7 +116,8 @@ private fun makeUI2(): Component {
         getLayoutComponent(WEST)?.setBounds(left, top, ww, bottom - top)
       }
     }
-  })
+  }
+  val panel = JPanel(layout)
   panel.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   panel.add(lsp, BorderLayout.WEST)
   panel.add(box, BorderLayout.CENTER)

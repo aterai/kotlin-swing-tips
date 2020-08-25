@@ -24,16 +24,17 @@ fun makeUI(): Component {
   UIManager.put("ScrollBar.track", trackColor)
 
   val txt = "*****************\n".repeat(100)
+  val scroll = object : JScrollPane(JTextArea(txt)) {
+    override fun updateUI() {
+      super.updateUI()
+      getVerticalScrollBar().ui = WithoutArrowButtonScrollBarUI()
+      getHorizontalScrollBar().ui = WithoutArrowButtonScrollBarUI()
+    }
+  }
 
   return JPanel(GridLayout(1, 0)).also {
     it.add(JScrollPane(JTextArea(txt)))
-    it.add(object : JScrollPane(JTextArea(txt)) {
-      override fun updateUI() {
-        super.updateUI()
-        getVerticalScrollBar().ui = WithoutArrowButtonScrollBarUI()
-        getHorizontalScrollBar().ui = WithoutArrowButtonScrollBarUI()
-      }
-    })
+    it.add(scroll)
     it.preferredSize = Dimension(320, 240)
   }
 }
