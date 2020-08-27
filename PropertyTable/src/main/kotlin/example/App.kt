@@ -133,7 +133,7 @@ class DateEditor : AbstractCellEditor(), TableCellEditor {
         }
       }
     }
-    editor.textField.addFocusListener()
+    editor.textField.addFocusListener(fl)
     spinner.border = BorderFactory.createEmptyBorder()
   }
 }

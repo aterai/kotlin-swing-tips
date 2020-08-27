@@ -62,7 +62,7 @@ private fun makeComboBox1(model: ComboBoxModel<Icon>, proto: Icon): JComboBox<Ic
 }
 
 private fun makeComboBox2(model: ComboBoxModel<Icon>, proto: Icon): JComboBox<Icon> {
-  val combo: JComboBox<Icon> = object : JComboBox<Icon>(model) {
+  val combo = object : JComboBox<Icon>(model) {
     override fun getPreferredSize(): Dimension {
       val i = insets
       val w = proto.iconWidth
@@ -92,7 +92,7 @@ private fun makeComboBox2(model: ComboBoxModel<Icon>, proto: Icon): JComboBox<Ic
       list.fixedCellHeight = proto.iconHeight
     }
   }
-  combo.addPopupMenuListener(object : PopupMenuListener {
+  val pl = object : PopupMenuListener {
     private var adjusting = false
     override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
       val comboBox = e.source as? JComboBox<*> ?: return
@@ -118,7 +118,8 @@ private fun makeComboBox2(model: ComboBoxModel<Icon>, proto: Icon): JComboBox<Ic
     override fun popupMenuCanceled(e: PopupMenuEvent) {
       /* not needed */
     }
-  })
+  }
+  combo.addPopupMenuListener(pl)
   return combo
 }
 

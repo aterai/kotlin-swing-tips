@@ -25,13 +25,14 @@ fun makeUI(): Component {
   val check = JCheckBox("ComponentListener#componentResized(...)", true)
 
   val scrollPane = JScrollPane(table)
-  scrollPane.addComponentListener(object : ComponentAdapter() {
+  val cmpListener = object : ComponentAdapter() {
     override fun componentResized(e: ComponentEvent) {
       if (check.isSelected) {
         setTableHeaderColumnRatio(table, field.text.trim())
       }
     }
-  })
+  }
+  scrollPane.addComponentListener(cmpListener)
 
   val button = JButton("revalidate")
   button.addActionListener {
