@@ -34,7 +34,7 @@ fun makeUI(): Component {
   val textField4 = combo4.editor.editorComponent
   (textField4 as? JComponent)?.componentPopupMenu = popup2
   textField4.name = "textField4"
-  textField4.addMouseListener(object : MouseAdapter() {
+  val ml4 = object : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
       println("Close all JPopupMenu(excludes dropdown list of own JComboBox)")
       for (m in MenuSelectionManager.defaultManager().selectedPath) {
@@ -45,7 +45,8 @@ fun makeUI(): Component {
         }
       }
     }
-  })
+  }
+  textField4.addMouseListener(ml4)
 
   val box = Box.createVerticalBox()
   listOf<Component>(textField1, textField2, combo3, combo4).forEach {
@@ -73,11 +74,13 @@ private fun makePopupMenu(): JPopupMenu {
   popup1.add(cutAction)
   popup1.add(copyAction)
   popup1.add(pasteAction)
-  popup1.addPopupMenuListener(object : PopupMenuListener {
-    override fun popupMenuCanceled(e: PopupMenuEvent) { /* not needed */
+  val pml1 = object : PopupMenuListener {
+    override fun popupMenuCanceled(e: PopupMenuEvent) {
+      /* not needed */
     }
 
-    override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) { /* not needed */
+    override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
+      /* not needed */
     }
 
     override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
@@ -92,7 +95,8 @@ private fun makePopupMenu(): JPopupMenu {
         copyAction.isEnabled = hasSelectedText
       }
     }
-  })
+  }
+  popup1.addPopupMenuListener(pml1)
   return popup1
 }
 

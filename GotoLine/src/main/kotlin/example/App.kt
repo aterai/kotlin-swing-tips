@@ -67,7 +67,7 @@ private class LineNumberView(private val textArea: JTextArea) : JComponent() {
     fontLeading = fontMetrics.leading
     // topInset = textArea.getInsets().top;
 
-    textArea.document.addDocumentListener(object : DocumentListener {
+    val dl = object : DocumentListener {
       override fun insertUpdate(e: DocumentEvent) {
         repaint()
       }
@@ -78,13 +78,15 @@ private class LineNumberView(private val textArea: JTextArea) : JComponent() {
 
       override fun changedUpdate(e: DocumentEvent) { /* not needed */
       }
-    })
-    textArea.addComponentListener(object : ComponentAdapter() {
+    }
+    textArea.document.addDocumentListener(dl)
+    val cmpListener = object : ComponentAdapter() {
       override fun componentResized(e: ComponentEvent) {
         revalidate()
         repaint()
       }
-    })
+    }
+    textArea.addComponentListener(cmpListener)
     val i = textArea.insets
     border = BorderFactory.createCompoundBorder(
       BorderFactory.createMatteBorder(0, 0, 0, 1, Color.GRAY),

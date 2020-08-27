@@ -30,14 +30,15 @@ fun makeUI(): Component {
   val spinner3 = JSpinner(SpinnerDateModel(date, start, null, Calendar.DAY_OF_MONTH))
   val editor = DateEditor(spinner3, dateFormat)
   spinner3.editor = editor
-  editor.textField.addFocusListener(object : FocusAdapter() {
+  val fl3 = object : FocusAdapter() {
     override fun focusGained(e: FocusEvent) {
       EventQueue.invokeLater {
         val i = dateFormat.lastIndexOf("dd")
         editor.textField.select(i, i + 2)
       }
     }
-  })
+  }
+  editor.textField.addFocusListener(fl3)
 
   return JPanel(GridLayout(3, 1)).also {
     it.add(makeTitledPanel("Calendar.DAY_OF_MONTH", spinner1))

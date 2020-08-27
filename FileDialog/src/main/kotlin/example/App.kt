@@ -19,8 +19,8 @@ fun makeUI(): Component {
     // fd.setLocation(500, 500)
     fd.title = "FileDialog(Frame frame, String title)"
     fd.directory = System.getProperty("user.home")
-    // frame.addWindowListener(new WindowAdapter() {
-    fd.addWindowListener(object : WindowAdapter() {
+
+    val wl = object : WindowAdapter() {
       override fun windowOpened(e: WindowEvent) {
         append("windowOpened")
         val w = e.window
@@ -32,7 +32,8 @@ fun makeUI(): Component {
         append("fd == SwingUtilities.getRoot(fd): " + (d == fd))
         append("fd == w: " + (w == fd))
       }
-    })
+    }
+    fd.addWindowListener(wl)
     fd.isVisible = true
     if (fd.file != null) {
       // append(fd.getDirectory() + fd.getFile())
