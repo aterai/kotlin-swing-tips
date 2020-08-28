@@ -8,11 +8,12 @@ import javax.swing.text.JTextComponent
 
 fun makeUI(): Component {
   val field = JTextField("111111111")
-  field.addFocusListener(object : FocusAdapter() {
+  val fl = object : FocusAdapter() {
     override fun focusGained(e: FocusEvent) {
       (e.component as? JTextComponent)?.selectAll()
     }
-  })
+  }
+  field.addFocusListener(fl)
   val p = JPanel(GridLayout(2, 1))
   p.add(makeTitledPanel("focusGained: selectAll", field))
   p.add(makeTitledPanel("default", JTextField("22222222")))

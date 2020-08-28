@@ -75,7 +75,7 @@ private class LineFocusTable(model: TableModel) : JTable(model) {
     checkBox.horizontalAlignment = SwingConstants.CENTER
     checkBox.isBorderPainted = true
     checkBox.isOpaque = true
-    checkBox.addMouseListener(object : MouseAdapter() {
+    val ml = object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
         val cb = e.component as? JCheckBox ?: return
         val m = cb.model
@@ -99,7 +99,8 @@ private class LineFocusTable(model: TableModel) : JTable(model) {
           getCellEditor().cancelCellEditing()
         }
       }
-    })
+    }
+    checkBox.addMouseListener(ml)
     setDefaultEditor(java.lang.Boolean::class.java, DefaultCellEditor(checkBox))
   }
 

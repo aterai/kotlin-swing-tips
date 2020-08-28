@@ -54,7 +54,7 @@ fun makeUI(): Component {
 
   val pf4 = makePasswordField()
   val b4 = JButton()
-  b4.addMouseListener(object : MouseAdapter() {
+  val ml4 = object : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
       pf4.echoChar = '\u0000'
     }
@@ -62,7 +62,8 @@ fun makeUI(): Component {
     override fun mouseReleased(e: MouseEvent) {
       pf4.echoChar = getUIEchoChar()
     }
-  })
+  }
+  b4.addMouseListener(ml4)
   initEyeButton(b4)
   val p4 = makeOverlayLayoutPanel()
   p4.add(b4)

@@ -85,7 +85,7 @@ private class EditableTabbedPane : JTabbedPane() {
       focusTraversalPolicy = object : DefaultFocusTraversalPolicy() {
         override fun accept(c: Component) = c == editor
       }
-      addMouseListener(object : MouseAdapter() {
+      val ml = object : MouseAdapter() {
         override fun mouseClicked(e: MouseEvent) {
           val tabEditor = editor
           val cmd = "rename-tab"
@@ -96,7 +96,8 @@ private class EditableTabbedPane : JTabbedPane() {
               it.actionPerformed(ActionEvent(c, ActionEvent.ACTION_PERFORMED, cmd))
             }
         }
-      })
+      }
+      addMouseListener(ml)
     }
 
     override fun setVisible(flag: Boolean) {

@@ -54,7 +54,7 @@ private fun makeSlider(): JSlider {
 }
 
 private fun setCurrentLabelListener(slider: JSlider) {
-  slider.model.addChangeListener(object : ChangeListener {
+  val cl = object : ChangeListener {
     private var prev = -1
 
     private fun resetForeground(o: Any?, c: Color) {
@@ -73,7 +73,8 @@ private fun setCurrentLabelListener(slider: JSlider) {
         prev = i
       }
     }
-  })
+  }
+  slider.model.addChangeListener(cl)
 }
 
 private fun makeTitledPanel(title: String, c: Component): Component {

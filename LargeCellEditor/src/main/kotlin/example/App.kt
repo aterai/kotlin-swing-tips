@@ -165,11 +165,12 @@ private class IconTable(model: TableModel?, list: ListModel<IconItem>) : JTable(
     }
     editor.addMouseListener(ml2)
 
-    glassPane.addMouseListener(object : MouseAdapter() {
+    val ml = object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
         cancelEditing()
       }
-    })
+    }
+    glassPane.addMouseListener(ml)
     glassPane.focusTraversalPolicy = object : DefaultFocusTraversalPolicy() {
       public override fun accept(c: Component) = c == editor
     }
