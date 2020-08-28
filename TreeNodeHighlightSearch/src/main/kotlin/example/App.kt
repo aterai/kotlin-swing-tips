@@ -13,7 +13,7 @@ private val field = JTextField("foo")
 private val renderer = HighlightTreeCellRenderer()
 
 fun makeUI(): Component {
-  field.document.addDocumentListener(object : DocumentListener {
+  val dl = object : DocumentListener {
     override fun insertUpdate(e: DocumentEvent) {
       fireDocumentChangeEvent()
     }
@@ -25,7 +25,8 @@ fun makeUI(): Component {
     override fun changedUpdate(e: DocumentEvent) {
       /* not needed */
     }
-  })
+  }
+  field.document.addDocumentListener(dl)
   val box = JPanel(BorderLayout())
   box.add(field)
   box.border = BorderFactory.createTitledBorder("Highlight Search")

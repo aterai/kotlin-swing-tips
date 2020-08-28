@@ -76,11 +76,12 @@ private class TabTitleEditListener(val tabbedPane: JTabbedPane) : MouseAdapter()
 
   init {
     editor.border = BorderFactory.createEmptyBorder()
-    editor.addFocusListener(object : FocusAdapter() {
+    val fl = object : FocusAdapter() {
       override fun focusLost(e: FocusEvent) {
         renameTabTitle.actionPerformed(ActionEvent(tabbedPane, ActionEvent.ACTION_PERFORMED, RENAME))
       }
-    })
+    }
+    editor.addFocusListener(fl)
     val im = editor.getInputMap(JComponent.WHEN_FOCUSED)
     val am = editor.actionMap
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), CANCEL)

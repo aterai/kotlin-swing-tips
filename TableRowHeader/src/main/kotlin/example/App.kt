@@ -23,7 +23,7 @@ fun makeUI(): Component {
   table.cellSelectionEnabled = true
 
   val header = table.tableHeader
-  header.addMouseListener(object : MouseAdapter() {
+  val ml = object : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
       if (table.isEditing) {
         table.cellEditor.stopCellEditing()
@@ -32,7 +32,8 @@ fun makeUI(): Component {
       table.changeSelection(0, col, false, false)
       table.changeSelection(table.rowCount - 1, col, false, true)
     }
-  })
+  }
+  header.addMouseListener(ml)
 
   val rowHeader = RowHeaderList<String>(listModel, table)
   rowHeader.fixedCellWidth = 50

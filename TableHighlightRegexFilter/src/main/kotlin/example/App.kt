@@ -35,7 +35,8 @@ fun makeUI(): Component {
   table.fillsViewportHeight = true
   table.rowSorter = sorter
   table.setDefaultRenderer(String::class.java, renderer)
-  field.document.addDocumentListener(object : DocumentListener {
+
+  val dl = object : DocumentListener {
     override fun insertUpdate(e: DocumentEvent) {
       fireDocumentChangeEvent()
     }
@@ -46,7 +47,8 @@ fun makeUI(): Component {
 
     override fun changedUpdate(e: DocumentEvent) { /* not needed */
     }
-  })
+  }
+  field.document.addDocumentListener(dl)
   fireDocumentChangeEvent()
 
   val sp = JPanel(BorderLayout(5, 5))

@@ -11,7 +11,7 @@ import javax.swing.tree.TreePath
 fun makeUI(): Component {
   val tree = JTree(makeModel())
   tree.isRootVisible = false
-  tree.addTreeWillExpandListener(object : TreeWillExpandListener {
+  val handler = object : TreeWillExpandListener {
     private var isAdjusting = false
     // @Throws(ExpandVetoException::class)
     override fun treeWillExpand(e: TreeExpansionEvent) {
@@ -29,7 +29,8 @@ fun makeUI(): Component {
     override fun treeWillCollapse(e: TreeExpansionEvent) {
       // throw ExpandVetoException(e, "Tree collapse cancelled")
     }
-  })
+  }
+  tree.addTreeWillExpandListener(handler)
 
   val scroll = object : JScrollPane(tree) {
     override fun updateUI() {
