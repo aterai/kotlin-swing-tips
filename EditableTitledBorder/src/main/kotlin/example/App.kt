@@ -196,13 +196,14 @@ private class EditableTitledBorder(
       focusTraversalPolicy = object : DefaultFocusTraversalPolicy() {
         public override fun accept(c: Component) = c == editorTextField
       }
-      addMouseListener(object : MouseAdapter() {
+      val ml = object : MouseAdapter() {
         override fun mouseClicked(e: MouseEvent) {
           if (!editorTextField.bounds.contains(e.point)) {
             renameTitle.actionPerformed(ActionEvent(e.component, ActionEvent.ACTION_PERFORMED, ""))
           }
         }
-      })
+      }
+      addMouseListener(ml)
     }
   }
 

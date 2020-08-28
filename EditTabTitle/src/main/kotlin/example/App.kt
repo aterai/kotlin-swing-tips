@@ -72,14 +72,15 @@ private class EditableTabbedPane : JTabbedPane() {
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancel-editing")
     am.put("cancel-editing", cancelEditing)
 
-    addMouseListener(object : MouseAdapter() {
+    val ml = object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
         val isDoubleClick = e.clickCount >= 2
         if (isDoubleClick) {
           startEditing.actionPerformed(ActionEvent(e.component, ActionEvent.ACTION_PERFORMED, ""))
         }
       }
-    })
+    }
+    addMouseListener(ml)
     getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "start-editing")
     actionMap.put("start-editing", startEditing)
   }
@@ -90,13 +91,14 @@ private class EditableTabbedPane : JTabbedPane() {
       focusTraversalPolicy = object : DefaultFocusTraversalPolicy() {
         override fun accept(c: Component) = c == editor
       }
-      addMouseListener(object : MouseAdapter() {
+      val ml = object : MouseAdapter() {
         override fun mouseClicked(e: MouseEvent) {
           if (!editor.bounds.contains(e.point)) {
             renameTab.actionPerformed(ActionEvent(e.component, ActionEvent.ACTION_PERFORMED, ""))
           }
         }
-      })
+      }
+      addMouseListener(ml)
     }
 
     override fun setVisible(flag: Boolean) {
