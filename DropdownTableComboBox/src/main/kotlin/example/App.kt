@@ -137,12 +137,13 @@ class ComboTablePopup(combo: JComboBox<*>, private val table: JTable) : BasicCom
       }
     }
 
-    table.addMouseListener(object : MouseAdapter() {
+    val ml = object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
         combo.selectedIndex = table.rowAtPoint(e.point)
         isVisible = false
       }
-    })
+    }
+    table.addMouseListener(ml)
 
     scroll = JScrollPane(table)
     border = BorderFactory.createEmptyBorder()

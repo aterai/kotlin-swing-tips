@@ -7,11 +7,12 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val label = JLabel("", SwingConstants.CENTER)
-  label.addComponentListener(object : ComponentAdapter() {
+  val cmpListener = object : ComponentAdapter() {
     override fun componentResized(e: ComponentEvent) {
       label.text = label.size.toString()
     }
-  })
+  }
+  label.addComponentListener(cmpListener)
   Toolkit.getDefaultToolkit().setDynamicLayout(true)
 
   val check = JCheckBox("DynamicLayout", true)

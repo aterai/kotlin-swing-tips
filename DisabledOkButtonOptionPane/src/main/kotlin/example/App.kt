@@ -69,7 +69,7 @@ private fun makeButton2(log: JTextArea): JButton {
       EventQueue.invokeLater { c.requestFocusInWindow() }
     }
   }
-  field2.document.addDocumentListener(object : DocumentListener {
+  val dl2 = object : DocumentListener {
     private fun update() {
       val verified = field2.text.isNotEmpty()
       val b = field2.rootPane.defaultButton
@@ -95,7 +95,9 @@ private fun makeButton2(log: JTextArea): JButton {
     override fun changedUpdate(e: DocumentEvent) {
       update()
     }
-  })
+  }
+  field2.document.addDocumentListener(dl2)
+
   val button2 = JButton("show")
   button2.addActionListener {
     val p2: Component = log.rootPane

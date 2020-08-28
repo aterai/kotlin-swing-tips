@@ -3,17 +3,25 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.awt.event.MouseListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicSplitPaneUI
 
 fun makeUI(): Component {
-  val splitPane = JSplitPane()
-  (splitPane.ui as? BasicSplitPaneUI)?.divider?.addMouseListener(object : MouseAdapter() {
-    override fun mousePressed(e: MouseEvent) {
-      super.mousePressed(e)
-      splitPane.requestFocusInWindow()
+  val splitPane = object : JSplitPane() {
+    private var handler: MouseListener? = null
+    override fun updateUI() {
+      (ui as? BasicSplitPaneUI)?.divider?.removeMouseListener(handler)
+      super.updateUI()
+      handler = object : MouseAdapter() {
+        override fun mousePressed(e: MouseEvent) {
+          super.mousePressed(e)
+          requestFocusInWindow()
+        }
+      }
+      (ui as? BasicSplitPaneUI)?.divider?.addMouseListener(handler)
     }
-  })
+  }
   return JPanel(GridLayout(2, 1)).also {
     it.add(makeTitledPanel("Default", JSplitPane()))
     it.add(makeTitledPanel("Divider.addMouseListener", splitPane))

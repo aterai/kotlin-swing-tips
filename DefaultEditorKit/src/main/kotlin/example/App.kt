@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.ActionEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.DefaultEditorKit.CopyAction
 import javax.swing.text.DefaultEditorKit.CutAction
@@ -47,17 +46,13 @@ private class TextFieldPopupMenu : JPopupMenu() {
     add(CutAction())
     add(CopyAction())
     add(PasteAction())
-    add(object : AbstractAction("delete") {
-      override fun actionPerformed(e: ActionEvent) {
-        (invoker as? JTextComponent)?.replaceSelection(null)
-      }
-    })
+    add("delete").addActionListener {
+      (invoker as? JTextComponent)?.replaceSelection(null)
+    }
     addSeparator()
-    add(object : AbstractAction("cut2") {
-      override fun actionPerformed(e: ActionEvent) {
-        (invoker as? JTextComponent)?.cut()
-      }
-    })
+    add("cut2").addActionListener {
+      (invoker as? JTextComponent)?.cut()
+    }
   }
 }
 
