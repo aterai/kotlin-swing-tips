@@ -150,13 +150,13 @@ private abstract class AbstractExpansionPanel(title: String?) : JPanel(BorderLay
   }
 }
 
-private class ExpansionEvent(source: Any?) : EventObject(source) {
+class ExpansionEvent(source: Any?) : EventObject(source) {
   companion object {
     private const val serialVersionUID = 1L
   }
 }
 
-private fun interface ExpansionListener : EventListener {
+fun interface ExpansionListener : EventListener {
   fun expansionStateChanged(e: ExpansionEvent)
 }
 
