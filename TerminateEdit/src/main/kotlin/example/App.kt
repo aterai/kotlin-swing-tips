@@ -44,7 +44,7 @@ fun makeUI(): Component {
   val table = makeTable()
   val focusCheck = JCheckBox("DefaultCellEditor:focusLost", true)
   (table.getDefaultEditor(Object::class.java) as? DefaultCellEditor)?.also {
-    it.component.addFocusListener(object : FocusAdapter() {
+    val fl = object : FocusAdapter() {
       override fun focusLost(e: FocusEvent) {
         if (!focusCheck.isSelected) {
           return
@@ -53,12 +53,13 @@ fun makeUI(): Component {
           table.cellEditor.stopCellEditing()
         }
       }
-    })
+    }
+    it.component.addFocusListener(fl)
   }
   table.autoResizeMode = JTable.AUTO_RESIZE_OFF
 
   val headerCheck = JCheckBox("TableHeader:mousePressed", true)
-  table.tableHeader.addMouseListener(object : MouseAdapter() {
+  val ml = object : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
       if (!headerCheck.isSelected) {
         return
@@ -67,7 +68,8 @@ fun makeUI(): Component {
         table.cellEditor.stopCellEditing()
       }
     }
-  })
+  }
+  table.tableHeader.addMouseListener(ml)
 
   val comboBox = JComboBox(AutoResizeMode.values())
   comboBox.addItemListener { e ->

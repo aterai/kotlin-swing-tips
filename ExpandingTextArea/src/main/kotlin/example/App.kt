@@ -26,7 +26,7 @@ private fun makeExpandingTextArea1(): Component {
   val p = JPanel(BorderLayout())
   val textArea = JTextArea(TEXT, 1, 10)
   textArea.lineWrap = true
-  textArea.addFocusListener(object : FocusListener {
+  val fl = object : FocusListener {
     override fun focusGained(e: FocusEvent) {
       (e.component as? JTextArea)?.rows = 3
       p.revalidate()
@@ -36,7 +36,8 @@ private fun makeExpandingTextArea1(): Component {
       (e.component as? JTextArea)?.rows = 1
       p.revalidate()
     }
-  })
+  }
+  textArea.addFocusListener(fl)
   val scroll = JScrollPane(textArea)
   // scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
   scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
@@ -74,26 +75,30 @@ private fun makeExpandingTextArea2(): Component {
 
   val keyCollapse = "TextField"
   val keyExpand = "TextArea"
-  textArea.addFocusListener(object : FocusAdapter() {
+  val fl1 = object : FocusAdapter() {
     override fun focusLost(e: FocusEvent) {
       val text = textArea.text
       // textField.text = if (text.isEmpty()) " " else text
       textField.text = text.takeIf { it.isNotEmpty() } ?: " "
       cardLayout.show(cp, keyCollapse)
     }
-  })
-  textField.addFocusListener(object : FocusAdapter() {
+  }
+  textArea.addFocusListener(fl1)
+
+  val fl2 = object : FocusAdapter() {
     override fun focusGained(e: FocusEvent) {
       cardLayout.show(cp, keyExpand)
       textArea.requestFocusInWindow()
     }
-  })
-  textField.addMouseListener(object : MouseAdapter() {
+  }
+  textField.addFocusListener(fl2)
+  val ml2 = object : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
       cardLayout.show(cp, keyExpand)
       textArea.requestFocusInWindow()
     }
-  })
+  }
+  textField.addMouseListener(ml2)
   val panel = JPanel(BorderLayout())
   panel.add(textField, BorderLayout.NORTH)
   val scroll = JScrollPane(textArea)
