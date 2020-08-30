@@ -7,17 +7,16 @@ import java.awt.event.MouseListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.Timer
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val toolbar = JToolBar("toolbar")
-    toolbar.add(PressAndHoldButton(ImageIcon(javaClass.getResource("ei0021-16.png"))))
-    add(toolbar, BorderLayout.NORTH)
-    add(JLabel("press and hold the button for 1000 milliseconds"))
-    preferredSize = Dimension(320, 240)
-  }
+fun makeUI() = JPanel(BorderLayout()).also {
+  val cl = Thread.currentThread().contextClassLoader
+  val toolbar = JToolBar("toolbar")
+  toolbar.add(PressAndHoldButton(ImageIcon(cl.getResource("example/ei0021-16.png"))))
+  it.add(toolbar, BorderLayout.NORTH)
+  it.add(JLabel("press and hold the button for 1000 milliseconds"))
+  it.preferredSize = Dimension(320, 240)
 }
 
-class PressAndHoldButton(icon: Icon?) : JButton(icon) {
+private class PressAndHoldButton(icon: Icon?) : JButton(icon) {
   private var handler: PressAndHoldHandler? = null
   override fun updateUI() {
     removeMouseListener(handler)
@@ -50,7 +49,7 @@ class PressAndHoldButton(icon: Icon?) : JButton(icon) {
   }
 }
 
-class PressAndHoldHandler : AbstractAction(), MouseListener {
+private class PressAndHoldHandler : AbstractAction(), MouseListener {
   val pop = JPopupMenu()
   private val bg = ButtonGroup()
   private var arrowButton: AbstractButton? = null
@@ -141,9 +140,9 @@ class PressAndHoldHandler : AbstractAction(), MouseListener {
   }
 }
 
-data class MenuContext(val command: String, val color: Color)
+private data class MenuContext(val command: String, val color: Color)
 
-class MenuArrowIcon : Icon {
+private class MenuArrowIcon : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
@@ -169,7 +168,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
