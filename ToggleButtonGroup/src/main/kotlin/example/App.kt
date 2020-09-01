@@ -3,32 +3,33 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val box = Box.createVerticalBox()
-    box.add(Box.createVerticalStrut(5))
-    box.add(makeTitledPanel("Default ButtonGroup", ButtonGroup()))
-    box.add(Box.createVerticalStrut(5))
-    box.add(makeTitledPanel("Custom ButtonGroup(clears the selection)", ToggleButtonGroup()))
-    box.add(Box.createVerticalGlue())
-    add(box)
-    border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-    preferredSize = Dimension(320, 240)
-  }
+fun makeUI(): Component {
+  val box = Box.createVerticalBox()
+  box.add(Box.createVerticalStrut(5))
+  box.add(makeTitledPanel("Default ButtonGroup", ButtonGroup()))
+  box.add(Box.createVerticalStrut(5))
+  box.add(makeTitledPanel("Custom ButtonGroup(clears the selection)", ToggleButtonGroup()))
+  box.add(Box.createVerticalGlue())
 
-  private fun makeTitledPanel(title: String, bg: ButtonGroup): Component {
-    val p = JPanel()
-    p.border = BorderFactory.createTitledBorder(title)
-    listOf("aaa", "bbb", "ccc")
-      .map { JToggleButton(it) }.forEach {
-        p.add(it)
-        bg.add(it)
-      }
-    return p
+  return JPanel(BorderLayout()).also {
+    it.add(box)
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class ToggleButtonGroup : ButtonGroup() {
+private fun makeTitledPanel(title: String, bg: ButtonGroup): Component {
+  val p = JPanel()
+  p.border = BorderFactory.createTitledBorder(title)
+  listOf("aaa", "bbb", "ccc")
+    .map { JToggleButton(it) }.forEach {
+      p.add(it)
+      bg.add(it)
+    }
+  return p
+}
+
+private class ToggleButtonGroup : ButtonGroup() {
   private var prevModel: ButtonModel? = null
   private var isAdjusting = false
   override fun setSelected(m: ButtonModel, b: Boolean) {
@@ -57,7 +58,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
