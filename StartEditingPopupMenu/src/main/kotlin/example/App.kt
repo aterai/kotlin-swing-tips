@@ -11,20 +11,19 @@ import javax.swing.tree.DefaultTreeCellEditor
 import javax.swing.tree.DefaultTreeCellRenderer
 import javax.swing.tree.TreePath
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    val tree = JTree()
-    tree.cellEditor = object : DefaultTreeCellEditor(tree, tree.cellRenderer as? DefaultTreeCellRenderer) {
-      override fun isCellEditable(e: EventObject?) = e !is MouseEvent && super.isCellEditable(e)
-    }
-    tree.isEditable = true
-    tree.componentPopupMenu = TreePopupMenu()
-    add(JScrollPane(tree))
-    preferredSize = Dimension(320, 240)
+fun makeUI(): Component {
+  val tree = JTree()
+  tree.cellEditor = object : DefaultTreeCellEditor(tree, tree.cellRenderer as? DefaultTreeCellRenderer) {
+    override fun isCellEditable(e: EventObject?) = e !is MouseEvent && super.isCellEditable(e)
+  }
+  tree.isEditable = true
+  tree.componentPopupMenu = TreePopupMenu()
+  return JScrollPane(tree).also {
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class TreePopupMenu : JPopupMenu() {
+private class TreePopupMenu : JPopupMenu() {
   private var path: TreePath? = null
   private val editItem: JMenuItem
   private val editDialogItem: JMenuItem
@@ -71,7 +70,7 @@ class TreePopupMenu : JPopupMenu() {
   }
 }
 
-class FocusAncestorListener : AncestorListener {
+private class FocusAncestorListener : AncestorListener {
   override fun ancestorAdded(e: AncestorEvent) {
     e.component.requestFocusInWindow()
   }
@@ -95,7 +94,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
