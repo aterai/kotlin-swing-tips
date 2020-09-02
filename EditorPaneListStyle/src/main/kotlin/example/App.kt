@@ -14,14 +14,15 @@ private fun makeEditorPane(): JEditorPane {
 fun makeUI(): Component {
   val html = "<html><h2>H2</h2>text<ul><li>list: %s</li></ul></html>"
   val editor0 = makeEditorPane()
-  editor0.text = String.format(html, "Default")
+  editor0.text = html.format("Default")
 
   val cl = Thread.currentThread().contextClassLoader
-  val url = cl.getResource("example/bullet.png")?.toString()
+  val url = cl.getResource("example/bullet.png")
   val editor1 = makeEditorPane()
-  (editor1.editorKit as? HTMLEditorKit)?.also {
-    val styleSheet = it.styleSheet
-    styleSheet.addRule(String.format("ul{list-style-image:url(%s);margin:0px 20px;}", url))
+  val kit1 = editor1.editorKit
+  if (url != null && kit1 is HTMLEditorKit) {
+    val styleSheet = kit1.styleSheet
+    styleSheet.addRule("ul{list-style-image:url($url);margin:0px 20px;}")
     // styleSheet.addRule("ul{list-style-type:circle;margin:0px 20px;}")
     // styleSheet.addRule("ul{list-style-type:disc;margin:0px 20px;}")
     // styleSheet.addRule("ul{list-style-type:square;margin:0px 20px;}")
@@ -30,7 +31,7 @@ fun makeUI(): Component {
     // Pseudo element is not supported in javax.swing.text.html.CSS
     // styleSheet.addRule("ul{list-style-type:none;margin:0px 20px;}")
     // styleSheet.addRule("ul li:before{content: "\u00BB";}")
-    editor1.text = String.format(html, "bullet.png")
+    editor1.text = html.format("bullet.png")
   }
 
   return JPanel(GridLayout(2, 1)).also {
