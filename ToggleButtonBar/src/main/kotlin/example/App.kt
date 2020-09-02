@@ -5,46 +5,43 @@ import java.awt.geom.Area
 import java.awt.geom.Path2D
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel() {
-  init {
-    val roundIcon = ToggleButtonBarCellIcon()
-    val rectIcon = CellIcon()
-    add(makeToggleButtonBar(0xFF_74_00, roundIcon))
-    add(makeToggleButtonBar(0x55_55_55, rectIcon))
-    add(makeToggleButtonBar(0x00_64_00, roundIcon))
-    add(makeToggleButtonBar(0x8B_00_00, rectIcon))
-    add(makeToggleButtonBar(0x00_1E_43, roundIcon))
-    preferredSize = Dimension(320, 240)
-  }
-
-  private fun makeButton(title: String): AbstractButton {
-    val b = JRadioButton(title)
-    b.horizontalTextPosition = SwingConstants.CENTER
-    b.border = BorderFactory.createEmptyBorder()
-    b.isContentAreaFilled = false
-    b.isFocusPainted = false
-    b.foreground = Color.WHITE
-    return b
-  }
-
-  private fun makeToggleButtonBar(cc: Int, icon: Icon): Component {
-    val bg = ButtonGroup()
-    val p = JPanel(GridLayout(1, 0, 0, 0))
-    p.border = BorderFactory.createTitledBorder("Color: #%06X".format(cc))
-    val color = Color(cc)
-    listOf("left", "center", "right")
-      .map { makeButton(it) }
-      .forEach {
-        it.background = color
-        it.icon = icon
-        bg.add(it)
-        p.add(it)
-      }
-    return p
-  }
+fun makeUI() = JPanel().also {
+  val roundIcon = ToggleButtonBarCellIcon()
+  val rectIcon = CellIcon()
+  it.add(makeToggleButtonBar(0xFF_74_00, roundIcon))
+  it.add(makeToggleButtonBar(0x55_55_55, rectIcon))
+  it.add(makeToggleButtonBar(0x00_64_00, roundIcon))
+  it.add(makeToggleButtonBar(0x8B_00_00, rectIcon))
+  it.add(makeToggleButtonBar(0x00_1E_43, roundIcon))
+  it.preferredSize = Dimension(320, 240)
 }
 
-class CellIcon : Icon {
+private fun makeButton(title: String) = JRadioButton(title).also {
+  it.horizontalTextPosition = SwingConstants.CENTER
+  it.border = BorderFactory.createEmptyBorder()
+  it.isContentAreaFilled = false
+  it.isFocusPainted = false
+  it.foreground = Color.WHITE
+}
+
+private fun makeToggleButtonBar(cc: Int, icon: Icon): Component {
+  val p = JPanel(GridLayout(1, 0, 0, 0))
+  p.border = BorderFactory.createTitledBorder("Color: #%06X".format(cc))
+
+  val bg = ButtonGroup()
+  val color = Color(cc)
+  listOf("left", "center", "right")
+    .map { makeButton(it) }
+    .forEach {
+      it.background = color
+      it.icon = icon
+      bg.add(it)
+      p.add(it)
+    }
+  return p
+}
+
+private class CellIcon : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
@@ -161,7 +158,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
