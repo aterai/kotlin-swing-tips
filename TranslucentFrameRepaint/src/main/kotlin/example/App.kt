@@ -13,72 +13,72 @@ import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.Timer
 
-class MainPanel : JPanel(BorderLayout()) {
-
-  private fun repaintWindowAncestor(c: JComponent) {
-    c.rootPane?.also {
-      it.repaint(SwingUtilities.convertRectangle(c, c.bounds, it))
+fun makeUI(): Component {
+  val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+  val label = JLabel(LocalTime.now(ZoneId.systemDefault()).format(formatter), SwingConstants.CENTER)
+  val timer = Timer(100, null)
+  timer.addActionListener {
+    label.text = LocalTime.now(ZoneId.systemDefault()).format(formatter)
+    val parent = SwingUtilities.getUnwrappedParent(label)
+    if (parent != null && parent.isOpaque) {
+      repaintWindowAncestor(label)
     }
   }
+  val cl = Thread.currentThread().contextClassLoader
+  val ttf = cl.getResource("example/YournameS7ScientificHalf.ttf")
+  val tp = TextureUtil.makeTexturePanel(label, ttf)
+  val digitalClock = JFrame()
+  digitalClock.contentPane.add(tp)
+  digitalClock.isUndecorated = true
+  digitalClock.background = Color(0x0, true)
+  digitalClock.defaultCloseOperation = WindowConstants.HIDE_ON_CLOSE
+  digitalClock.pack()
+  digitalClock.setLocationRelativeTo(null)
+  val combo = object : JComboBox<TexturePaints>(TexturePaints.values()) {
+    override fun getPreferredSize(): Dimension {
+      val d = super.getPreferredSize()
+      d.width = 150.coerceAtLeast(d.width)
+      return d
+    }
+  }
+  combo.addItemListener { e ->
+    val item = e.item
+    if (e.stateChange == ItemEvent.SELECTED && item is TexturePaints) {
+      tp.setTexturePaint(item.texturePaint)
+      repaintWindowAncestor(tp)
+    }
+  }
+  val button = JToggleButton("timer")
+  button.addActionListener { e ->
+    if ((e.source as? AbstractButton)?.isSelected == true) {
+      val t = combo.getItemAt(combo.selectedIndex)
+      tp.setTexturePaint(t.texturePaint)
+      timer.start()
+      digitalClock.isVisible = true
+    } else {
+      timer.stop()
+      digitalClock.isVisible = false
+    }
+  }
+  val p = JPanel()
+  p.add(combo)
+  p.add(button)
 
-  init {
-    val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
-    val label = JLabel(LocalTime.now(ZoneId.systemDefault()).format(formatter), SwingConstants.CENTER)
-    val timer = Timer(100, null)
-    timer.addActionListener {
-      label.text = LocalTime.now(ZoneId.systemDefault()).format(formatter)
-      val parent = SwingUtilities.getUnwrappedParent(label)
-      if (parent != null && parent.isOpaque) {
-        repaintWindowAncestor(label)
-      }
-    }
-    val tp = TextureUtil.makeTexturePanel(label, javaClass.getResource("YournameS7ScientificHalf.ttf"))
-    val digitalClock = JFrame()
-    digitalClock.contentPane.add(tp)
-    digitalClock.isUndecorated = true
-    digitalClock.background = Color(0x0, true)
-    digitalClock.defaultCloseOperation = WindowConstants.HIDE_ON_CLOSE
-    digitalClock.pack()
-    digitalClock.setLocationRelativeTo(null)
-    val combo = object : JComboBox<TexturePaints>(TexturePaints.values()) {
-      override fun getPreferredSize(): Dimension {
-        val d = super.getPreferredSize()
-        d.width = 150.coerceAtLeast(d.width)
-        return d
-      }
-    }
-    combo.addItemListener { e ->
-      val item = e.item
-      if (e.stateChange == ItemEvent.SELECTED && item is TexturePaints) {
-        tp.setTexturePaint(item.texturePaint)
-        repaintWindowAncestor(tp)
-      }
-    }
-    val button = JToggleButton("timer")
-    button.addActionListener { e ->
-      if ((e.source as? AbstractButton)?.isSelected == true) {
-        val t = combo.getItemAt(combo.selectedIndex)
-        tp.setTexturePaint(t.texturePaint)
-        timer.start()
-        digitalClock.isVisible = true
-      } else {
-        timer.stop()
-        digitalClock.isVisible = false
-      }
-    }
-    val p = JPanel()
-    p.add(combo)
-    p.add(button)
-    add(p, BorderLayout.NORTH)
-    add(JScrollPane(JTree()))
-    preferredSize = Dimension(320, 240)
+  return JPanel(BorderLayout()).also {
+    it.add(p, BorderLayout.NORTH)
+    it.add(JScrollPane(JTree()))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class TexturePanel(lm: LayoutManager) : JPanel(lm) {
-  @Transient
-  private var texture: Paint? = null
+private fun repaintWindowAncestor(c: JComponent) {
+  c.rootPane?.also {
+    it.repaint(SwingUtilities.convertRectangle(c, c.bounds, it))
+  }
+}
 
+private class TexturePanel(lm: LayoutManager) : JPanel(lm) {
+  @Transient private var texture: Paint? = null
   fun setTexturePaint(texturePaint: Paint?) {
     texture = texturePaint
     isOpaque = texturePaint == null
@@ -95,7 +95,7 @@ class TexturePanel(lm: LayoutManager) : JPanel(lm) {
   }
 }
 
-enum class TexturePaints(private val description: String) {
+private enum class TexturePaints(private val description: String) {
   NULL("Color(.5f, .8f, .5f, .5f)"),
   IMAGE("Image TexturePaint"),
   CHECKER("Checker TexturePaint");
@@ -110,9 +110,8 @@ enum class TexturePaints(private val description: String) {
   override fun toString() = description
 }
 
-object TextureUtil {
+private object TextureUtil {
   fun makeImageTexture(): TexturePaint {
-    // unkaku_w.png http://www.viva-edo.com/komon/edokomon.html
     val bi = runCatching { ImageIO.read(javaClass.getResource("unkaku_w.png")) }
       .onFailure { it.printStackTrace() }
       .getOrNull() ?: makeMissingImage()
@@ -152,9 +151,7 @@ object TextureUtil {
     return TexturePaint(bi, Rectangle(sz, sz))
   }
 
-  fun makeTexturePanel(label: JLabel, url: URL): TexturePanel {
-    // http://www.yourname.jp/soft/digitalfonts-20090306.shtml
-    // Digital display font: Copyright (c) Yourname, Inc.
+  fun makeTexturePanel(label: JLabel, url: URL?): TexturePanel {
     val font = makeFont(url) ?: label.font
     label.font = font.deriveFont(80f)
     label.background = Color(0x0, true)
@@ -170,14 +167,14 @@ object TextureUtil {
     return p
   }
 
-  private fun makeFont(url: URL): Font? = runCatching {
-    url.openStream().use {
+  private fun makeFont(url: URL?): Font? = runCatching {
+    url?.openStream().use {
       Font.createFont(Font.TRUETYPE_FONT, it).deriveFont(12f)
     }
   }.getOrNull()
 }
 
-class DragWindowListener : MouseAdapter() {
+private class DragWindowListener : MouseAdapter() {
   private val startPt = Point()
   override fun mousePressed(e: MouseEvent) {
     if (SwingUtilities.isLeftMouseButton(e)) {
@@ -204,7 +201,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
