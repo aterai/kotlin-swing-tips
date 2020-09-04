@@ -15,49 +15,50 @@ import java.util.logging.SimpleFormatter
 import java.util.logging.StreamHandler
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  companion object {
-    val LOGGER_NAME: String = MethodHandles.lookup().lookupClass().name
-    private val LOGGER = Logger.getLogger(LOGGER_NAME)
-  }
+private val LOGGER_NAME = MethodHandles.lookup().lookupClass().name
+private val LOGGER = Logger.getLogger(LOGGER_NAME)
 
-  init {
-    val textArea = JTextArea()
-    // TEST: textArea.getDocument().addDocumentListener(FIFODocumentListener(textArea))
-    textArea.isEditable = false
-    LOGGER.useParentHandlers = false
-    LOGGER.level = Level.ALL
-    LOGGER.addHandler(TextAreaHandler(TextAreaOutputStream(textArea)))
-    LOGGER.info { "test, TEST" }
+fun makeUI(): Component {
+  val textArea = JTextArea()
+  textArea.isEditable = false
 
-    val button = JButton("Clear")
-    button.addActionListener { textArea.text = "" }
-    val textField = JTextField("aaa")
-    val box = Box.createHorizontalBox()
-    box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-    box.add(Box.createHorizontalGlue())
-    box.add(textField)
-    box.add(Box.createHorizontalStrut(5))
-    box.add(JButton(EnterAction(textField)))
-    box.add(Box.createHorizontalStrut(5))
-    box.add(button)
-    add(JScrollPane(textArea))
-    add(box, BorderLayout.SOUTH)
-    preferredSize = Dimension(320, 240)
+  LOGGER.useParentHandlers = false
+  LOGGER.level = Level.ALL
+  LOGGER.addHandler(TextAreaHandler(TextAreaOutputStream(textArea)))
+  LOGGER.info { "test, TEST" }
+
+  val button = JButton("Clear")
+  button.addActionListener { textArea.text = "" }
+
+  val textField = JTextField("aaa")
+
+  val box = Box.createHorizontalBox()
+  box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+  box.add(Box.createHorizontalGlue())
+  box.add(textField)
+  box.add(Box.createHorizontalStrut(5))
+  box.add(JButton(EnterAction(textField)))
+  box.add(Box.createHorizontalStrut(5))
+  box.add(button)
+
+  return JPanel(BorderLayout()).also {
+    it.add(JScrollPane(textArea))
+    it.add(box, BorderLayout.SOUTH)
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
-class EnterAction(private val textField: JTextField) : AbstractAction("Enter") {
+private class EnterAction(private val textField: JTextField) : AbstractAction("Enter") {
   override fun actionPerformed(e: ActionEvent) {
     LOGGER.info { "%s%n  %s%n".format(LocalDateTime.now(ZoneId.systemDefault()), textField.text) }
   }
 
   companion object {
-    private val LOGGER = Logger.getLogger(MainPanel.LOGGER_NAME)
+    private val LOGGER = Logger.getLogger(LOGGER_NAME)
   }
 }
 
-class TextAreaOutputStream(private val textArea: JTextArea) : OutputStream() {
+private class TextAreaOutputStream(private val textArea: JTextArea) : OutputStream() {
   private val buffer = ByteArrayOutputStream()
 
   @Throws(IOException::class)
@@ -75,7 +76,7 @@ class TextAreaOutputStream(private val textArea: JTextArea) : OutputStream() {
   }
 }
 
-class TextAreaHandler(os: OutputStream) : StreamHandler() {
+private class TextAreaHandler(os: OutputStream) : StreamHandler() {
   private fun configure() {
     formatter = SimpleFormatter()
     runCatching {
@@ -110,7 +111,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
