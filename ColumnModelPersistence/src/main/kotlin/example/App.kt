@@ -65,16 +65,13 @@ fun makeUI(): Component {
         table.model = model
         table.autoCreateRowSorter = true
         table.rowSorter.sortKeys = keys
-        val cm = xd.readObject() as DefaultTableColumnModel
-        table.columnModel = cm
+        table.columnModel = xd.readObject() as? DefaultTableColumnModel
       }
     }
   }
 
   val clearButton = JButton("clear")
-  clearButton.addActionListener {
-    table.model = DefaultTableModel()
-  }
+  clearButton.addActionListener { table.model = DefaultTableModel() }
 
   val p = JPanel()
   p.add(encButton)
@@ -90,10 +87,10 @@ fun makeUI(): Component {
 
 private class DefaultTableModelPersistenceDelegate : DefaultPersistenceDelegate() {
   override fun initialize(
-      type: Class<*>,
-      oldInstance: Any,
-      newInstance: Any,
-      encoder: Encoder
+    type: Class<*>,
+    oldInstance: Any,
+    newInstance: Any,
+    encoder: Encoder
   ) {
     super.initialize(type, oldInstance, newInstance, encoder)
     (oldInstance as? DefaultTableModel)?.also { m ->
@@ -109,10 +106,10 @@ private class DefaultTableModelPersistenceDelegate : DefaultPersistenceDelegate(
 
 private class DefaultTableColumnModelPersistenceDelegate : DefaultPersistenceDelegate() {
   override fun initialize(
-      type: Class<*>,
-      oldInstance: Any,
-      newInstance: Any,
-      encoder: Encoder
+    type: Class<*>,
+    oldInstance: Any,
+    newInstance: Any,
+    encoder: Encoder
   ) {
     super.initialize(type, oldInstance, newInstance, encoder)
     (oldInstance as? DefaultTableColumnModel)?.also { m ->
@@ -148,11 +145,11 @@ private class TableHeaderPopupMenu : JPopupMenu() {
         textField.text = name
         val p = it.rootPane
         val ret = JOptionPane.showConfirmDialog(
-            p,
-            textField,
-            "edit",
-            JOptionPane.OK_CANCEL_OPTION,
-            JOptionPane.PLAIN_MESSAGE
+          p,
+          textField,
+          "edit",
+          JOptionPane.OK_CANCEL_OPTION,
+          JOptionPane.PLAIN_MESSAGE
         )
         if (ret == JOptionPane.OK_OPTION) {
           val str = textField.text.trim()
