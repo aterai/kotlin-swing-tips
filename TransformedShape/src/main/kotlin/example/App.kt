@@ -7,14 +7,12 @@ import java.awt.font.TextLayout
 import java.awt.geom.AffineTransform
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class MainPanel : JPanel(BorderLayout()) {
-  init {
-    add(FontRotateAnimation("A"))
-    preferredSize = Dimension(320, 240)
-  }
+fun makeUI() = JPanel(BorderLayout()).also {
+  it.add(FontRotateAnimation("A"))
+  it.preferredSize = Dimension(320, 240)
 }
 
-class FontRotateAnimation(str: String) : JComponent() {
+private class FontRotateAnimation(str: String) : JComponent() {
   private var rotate = 0.0
   private var shape: Shape
   private val animator = Timer(10, null)
@@ -47,7 +45,7 @@ class FontRotateAnimation(str: String) : JComponent() {
       val s1 = at.createTransformedShape(outline)
       shape = toCenterAtf.createTransformedShape(s1)
       repaint(shape.bounds)
-      // rotate = rotate >= 360 ? 0 : rotate + 2;
+      // rotate = if (rotate >= 360.0) 0.0 else rotate + 2.0
       rotate = (rotate + 2.0) % 360.0
     }
     animator.start()
@@ -64,7 +62,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(MainPanel())
+      contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
