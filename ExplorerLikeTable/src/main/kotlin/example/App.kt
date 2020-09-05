@@ -42,7 +42,7 @@ fun makeUI(): Component {
   im.put(stab, im[KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK)])
   val orgColor = table.selectionBackground
   val tflColor = scroll.background
-  table.addFocusListener(object : FocusListener {
+  val fl = object : FocusListener {
     override fun focusGained(e: FocusEvent) {
       table.selectionForeground = Color.WHITE
       table.selectionBackground = orgColor
@@ -52,7 +52,8 @@ fun makeUI(): Component {
       table.selectionForeground = Color.BLACK
       table.selectionBackground = tflColor
     }
-  })
+  }
+  table.addFocusListener(fl)
   table.componentPopupMenu = TablePopupMenu()
 
   return JPanel(BorderLayout()).also {
