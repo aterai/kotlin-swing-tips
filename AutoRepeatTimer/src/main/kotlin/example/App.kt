@@ -11,18 +11,15 @@ import javax.swing.Timer
 import javax.swing.text.JTextComponent
 
 fun makeUI(): Component {
-  val field: JTextField = object : JTextField("0") {
-    override fun getMaximumSize(): Dimension {
-      return preferredSize
-    }
+  val field = object : JTextField("0") {
+    override fun getMaximumSize() = preferredSize
 
-    override fun getPreferredSize(): Dimension {
-      return Dimension(100, 50)
-    }
+    override fun getPreferredSize() = Dimension(100, 50)
   }
   field.horizontalAlignment = SwingConstants.CENTER
   field.font = field.font.deriveFont(30f)
   field.isEditable = false
+
   val box = Box.createHorizontalBox()
   box.add(Box.createHorizontalGlue())
   box.add(makeButton(-5, field))
@@ -31,18 +28,17 @@ fun makeUI(): Component {
   box.add(makeButton(+1, field))
   box.add(makeButton(+5, field))
   box.add(Box.createHorizontalGlue())
-  val p = JPanel(GridBagLayout())
-  p.add(box)
-  p.preferredSize = Dimension(320, 240)
-  return p
+
+  return JPanel(GridBagLayout()).also {
+    it.add(box)
+    it.preferredSize = Dimension(320, 240)
+  }
 }
 
 private fun makeButton(extent: Int, view: JTextField): JButton {
   val title = "%+d".format(extent)
-  val button: JButton = object : JButton(title) {
-    override fun getMaximumSize(): Dimension {
-      return Dimension(50, 50)
-    }
+  val button = object : JButton(title) {
+    override fun getMaximumSize() = Dimension(50, 50)
   }
   val handler = AutoRepeatHandler(extent, view)
   button.addActionListener(handler)

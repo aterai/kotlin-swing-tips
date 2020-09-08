@@ -33,6 +33,7 @@ fun makeUI(): Component {
       intercellSpacing = Dimension()
     }
   }
+
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(table))
     it.preferredSize = Dimension(320, 240)
@@ -41,7 +42,7 @@ fun makeUI(): Component {
 
 private class AlignDecimalCellRenderer : TableCellRenderer {
   private val panel = JPanel(BorderLayout())
-  private val textPane: JTextPane = object : JTextPane() {
+  private val textPane = object : JTextPane() {
     override fun getPreferredSize() = super.getPreferredSize().also {
       it.width = 60
     }
