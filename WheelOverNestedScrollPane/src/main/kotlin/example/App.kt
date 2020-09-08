@@ -5,7 +5,6 @@ import java.awt.event.MouseWheelEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.LayerUI
 import javax.swing.table.DefaultTableModel
-import javax.swing.text.JTextComponent
 
 private const val TEXT = "aaa\na\na\na\na\naaa\na\na\na\naaa\n"
 
@@ -34,7 +33,7 @@ fun makeUI(): Component {
   val textPane = JTextPane()
   textPane.isEditable = false
   textPane.margin = Insets(5, 10, 5, 5)
-  val c: JTextComponent = JTextArea(TEXT)
+  val c = JTextArea(TEXT)
   c.isEditable = false
   val doc = textPane.document
   runCatching {

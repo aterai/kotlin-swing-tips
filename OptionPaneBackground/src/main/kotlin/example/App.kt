@@ -37,9 +37,8 @@ fun makeUI(): Component {
 }
 
 fun showMessageDialog(parent: Component?, message: Any, title: String, messageType: Int) {
-  val pane: JOptionPane = object : JOptionPane(message, messageType, DEFAULT_OPTION, null, null, null) {
-    @Transient
-    private var texture: Paint? = null
+  val pane = object : JOptionPane(message, messageType, DEFAULT_OPTION, null, null, null) {
+    @Transient private var texture: Paint? = null
     override fun updateUI() {
       super.updateUI()
       texture = TextureUtils.createCheckerTexture(16, Color(0x64AAAAAA, true))

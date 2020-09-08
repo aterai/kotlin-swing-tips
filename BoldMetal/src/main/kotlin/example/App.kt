@@ -65,9 +65,8 @@ private class TreePopupMenu : JPopupMenu() {
   }
 
   init {
-    val textField: JTextField = object : JTextField(24) {
-      @Transient
-      private var listener: AncestorListener? = null
+    val textField = object : JTextField(24) {
+      @Transient private var listener: AncestorListener? = null
 
       override fun updateUI() {
         removeAncestorListener(listener)
