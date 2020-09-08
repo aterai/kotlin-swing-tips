@@ -5,7 +5,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.DefaultCaret
 
 fun makeUI(): Component {
-  val textArea: JTextArea = HighlightCursorTextArea()
+  val textArea = HighlightCursorTextArea()
   textArea.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
   textArea.text = "Highlight Cursor Test\n\n**************************************"
   val check = JCheckBox("LineWrap")

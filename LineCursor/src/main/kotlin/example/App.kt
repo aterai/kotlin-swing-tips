@@ -5,7 +5,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.DefaultCaret
 
 fun makeUI(): Component {
-  val textArea: JTextArea = LineCursorTextArea("Line Cursor Test\n\n*******")
+  val textArea = LineCursorTextArea("Line Cursor Test\n\n*******")
   val check = JCheckBox("LineWrap")
   check.addActionListener { e ->
     textArea.lineWrap = (e.source as? JCheckBox)?.isSelected == true

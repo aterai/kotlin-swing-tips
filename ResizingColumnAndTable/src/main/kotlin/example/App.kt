@@ -4,7 +4,7 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  val table: JTable = object : JTable(100, 3) {
+  val table = object : JTable(100, 3) {
     // https://stackoverflow.com/questions/16368343/jtable-resize-only-selected-column-when-container-size-changes
     // https://stackoverflow.com/questions/23201818/jtable-columns-doesnt-resize-probably-when-jframe-resize
     override fun doLayout() {

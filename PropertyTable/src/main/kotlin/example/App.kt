@@ -82,7 +82,7 @@ class PropertyTable(model: TableModel) : JTable(model) {
 }
 
 class DateEditor : AbstractCellEditor(), TableCellEditor {
-  private val spinner: JSpinner = JSpinner(SpinnerDateModel())
+  private val spinner = JSpinner(SpinnerDateModel())
   private fun setArrowButtonEnabled(flag: Boolean) {
     for (c in spinner.components) {
       (c as? JButton)?.isEnabled = flag

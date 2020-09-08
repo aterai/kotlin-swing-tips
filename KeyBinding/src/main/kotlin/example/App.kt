@@ -71,7 +71,7 @@ private fun loadBindingMap(focusType: Int, im: InputMap, am: ActionMap) {
 }
 
 fun makeUI(): Component {
-  val table: JTable = object : JTable(model) {
+  val table = object : JTable(model) {
     private val evenColor = Color(0xFAFAFA)
     override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
       val c = super.prepareRenderer(tcr, row, column)

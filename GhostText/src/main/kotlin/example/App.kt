@@ -62,7 +62,7 @@ private class PlaceholderFocusListener(tf: JTextComponent) : FocusListener {
 }
 
 private class PlaceholderLayerUI<V : JTextComponent>(hintMessage: String) : LayerUI<V>() {
-  private val hint: JLabel = object : JLabel() {
+  private val hint = object : JLabel() {
     override fun updateUI() {
       super.updateUI()
       foreground = UIManager.getColor("TextField.inactiveForeground")
