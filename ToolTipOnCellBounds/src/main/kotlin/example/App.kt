@@ -99,7 +99,7 @@ private open class CellRendererTooltipList<E>(m: ListModel<E>) : JList<E>(m) {
   }
 
   override fun createToolTip(): JToolTip {
-    val tip: JToolTip = object : JToolTip() {
+    val tip = object : JToolTip() {
       override fun getPreferredSize(): Dimension {
         val i = insets
         val d = label.preferredSize

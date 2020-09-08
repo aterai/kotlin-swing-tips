@@ -246,7 +246,7 @@ private class ButtonTabComponent(pane: JTabbedPane) : JPanel(BorderLayout()) {
     }
     add(label)
     label.border = BorderFactory.createEmptyBorder(0, 0, 0, 5)
-    val button: JButton = TabButton()
+    val button = TabButton()
     val handler = TabButtonHandler()
     button.addActionListener(handler)
     button.addMouseListener(handler)

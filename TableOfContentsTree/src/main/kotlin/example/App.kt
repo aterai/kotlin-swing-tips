@@ -60,7 +60,7 @@ private class TableOfContentsTreeCellRenderer : DefaultTreeCellRenderer() {
   private var rxs = 0
   private var rxe = 0
   private var isSynth = false
-  private val renderer: JPanel = object : JPanel(BorderLayout()) {
+  private val renderer = object : JPanel(BorderLayout()) {
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
       if (pn >= 0) {

@@ -32,9 +32,8 @@ private class LabelWithToolBox(image: Icon?) : JLabel(image) {
   private var isHidden = false
   private var counter = 0
   private var yy = 0
-  private val toolBox: JToolBar = object : JToolBar() {
-    @Transient
-    private var listener: MouseListener? = null
+  private val toolBox = object : JToolBar() {
+    @Transient private var listener: MouseListener? = null
 
     override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
