@@ -13,7 +13,7 @@ import javax.swing.table.TableCellRenderer
 private fun makeUrl(path: String): URL? = runCatching { URL(path) }.getOrNull()
 
 private fun makeTable(model: DefaultTableModel): JTable {
-  val table: JTable = object : JTable(model) {
+  val table = object : JTable(model) {
     private val evenColor = Color(0xFA_FA_FA)
     override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
       val c = super.prepareRenderer(tcr, row, column)
@@ -28,6 +28,7 @@ private fun makeTable(model: DefaultTableModel): JTable {
   table.setShowGrid(false)
   table.putClientProperty("terminateEditOnFocusLost", java.lang.Boolean.TRUE)
   table.autoCreateRowSorter = true
+
   val col = table.columnModel.getColumn(0)
   col.minWidth = 50
   col.maxWidth = 50

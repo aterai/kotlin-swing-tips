@@ -82,7 +82,7 @@ private class CustomComponentCellEditor(private val field: JTextField) : Default
   override fun getComponent() = panel
 
   init {
-    val button: JButton = object : JButton() {
+    val button = object : JButton() {
       override fun getPreferredSize(): Dimension {
         val d = super.getPreferredSize()
         d.width = 25

@@ -81,9 +81,9 @@ private class CloseableTabbedPane : JTabbedPane() {
 }
 
 private class CloseableTabbedPaneLayerUI : LayerUI<JTabbedPane>() {
-  private val rubberStamp: Container = JPanel()
+  private val rubberStamp = JPanel()
   private val pt = Point()
-  private val button: JButton = object : JButton(CloseTabIcon()) {
+  private val button = object : JButton(CloseTabIcon()) {
     override fun updateUI() {
       super.updateUI()
       border = BorderFactory.createEmptyBorder()
