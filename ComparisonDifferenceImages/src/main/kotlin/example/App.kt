@@ -36,7 +36,7 @@ fun makeUI(): Component {
   val p = JPanel()
   val source = MemoryImageSource(w, h, pixelsA, 0, w)
   val rr = JRadioButton("diff")
-  rr.addItemListener { e: ItemEvent ->
+  rr.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
       label.icon = ImageIcon(p.createImage(source))
     }
