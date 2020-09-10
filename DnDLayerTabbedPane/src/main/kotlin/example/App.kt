@@ -318,7 +318,7 @@ private data class DnDTabData(val tabbedPane: DnDTabbedPane)
 class TabTransferHandler : TransferHandler() {
   private val localObjectFlavor = DataFlavor(DnDTabData::class.java, "DnDTabData")
   private var source: DnDTabbedPane? = null
-  private val label: JLabel = object : JLabel() {
+  private val label = object : JLabel() {
     override fun contains(x: Int, y: Int) = false
   }
   private val dialog = JWindow()
@@ -514,7 +514,7 @@ private class ButtonTabComponent(private val tabbedPane: JTabbedPane) : JPanel(F
 
   init {
     isOpaque = false
-    val label: JLabel = object : JLabel() {
+    val label = object : JLabel() {
       override fun getText(): String? {
         val i = tabbedPane.indexOfTabComponent(this@ButtonTabComponent)
         return if (i != -1) {
@@ -531,7 +531,7 @@ private class ButtonTabComponent(private val tabbedPane: JTabbedPane) : JPanel(F
     }
     add(label)
     label.border = BorderFactory.createEmptyBorder(0, 0, 0, 5)
-    val button: JButton = TabButton()
+    val button = TabButton()
     val handler = TabButtonHandler()
     button.addActionListener(handler)
     button.addMouseListener(handler)

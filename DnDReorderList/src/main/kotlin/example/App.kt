@@ -27,7 +27,7 @@ private fun makeList(): JList<Color> {
   listModel.addElement(Color.ORANGE)
   listModel.addElement(Color.PINK)
   listModel.addElement(Color.MAGENTA)
-  val list: JList<Color> = object : JList<Color>(listModel) {
+  val list = object : JList<Color>(listModel) {
     override fun updateUI() {
       selectionBackground = null // Nimbus
       cellRenderer = null
