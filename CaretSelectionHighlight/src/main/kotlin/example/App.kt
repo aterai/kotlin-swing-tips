@@ -3,7 +3,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.FocusEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.text.Caret
 import javax.swing.text.DefaultCaret
 import javax.swing.text.DefaultHighlighter
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
@@ -18,7 +17,7 @@ private fun makeInternalFrame(title: String, p: Point, c: Component): JInternalF
 }
 
 private fun makeTextArea(flag: Boolean): Component {
-  val textArea: JTextArea = object : JTextArea() {
+  val textArea = object : JTextArea() {
     override fun updateUI() {
       caret = null
       super.updateUI()
@@ -26,7 +25,7 @@ private fun makeTextArea(flag: Boolean): Component {
         val oldCaret = caret
         val blinkRate = oldCaret.blinkRate
         // int blinkRate = UIManager.getInt("TextField.caretBlinkRate")
-        val caret: Caret = FocusCaret()
+        val caret = FocusCaret()
         caret.blinkRate = blinkRate
         setCaret(caret)
         caret.isSelectionVisible = true

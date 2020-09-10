@@ -16,7 +16,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 val cellSize = Dimension(40, 26)
 private val yearMonthLabel = JLabel("", SwingConstants.CENTER)
-val monthList: JList<LocalDate> = object : JList<LocalDate>() {
+val monthList = object : JList<LocalDate>() {
   override fun updateUI() {
     cellRenderer = null
     super.updateUI()
@@ -29,7 +29,7 @@ val monthList: JList<LocalDate> = object : JList<LocalDate>() {
   }
 }
 val realLocalDate: LocalDate = LocalDate.now(ZoneId.systemDefault())
-private var currentLocalDate: LocalDate = realLocalDate
+private var currentLocalDate = realLocalDate
 
 fun makeUI(): Component {
   installActions()
