@@ -48,11 +48,9 @@ fun updateMonthView(localDate: LocalDate?) {
 
 private class CalendarTableRenderer : TableCellRenderer {
   private val renderer = JPanel(FlowLayout(FlowLayout.LEADING))
-  private val label: JLabel = object : JLabel("", SwingConstants.CENTER) {
-    override fun getPreferredSize(): Dimension {
-      val d = super.getPreferredSize()
-      d.width = 18
-      return d
+  private val label = object : JLabel("", SwingConstants.CENTER) {
+    override fun getPreferredSize() = super.getPreferredSize()?.also {
+      it.width = 18
     }
 
     override fun paintComponent(g: Graphics) {

@@ -24,7 +24,7 @@ private fun initModel(e: PropertyChangeEvent?) {
 }
 
 fun makeUI(): Component {
-  val table: JTable = object : JTable(model) {
+  val table = object : JTable(model) {
     override fun isCellEditable(row: Int, column: Int) = false
   }
   table.autoCreateRowSorter = true

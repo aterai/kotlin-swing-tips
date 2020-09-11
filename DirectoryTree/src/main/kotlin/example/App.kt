@@ -23,7 +23,8 @@ fun makeUI(): Component {
         .map { DefaultMutableTreeNode(it) }
         .forEach { node.add(it) }
     }
-  val tree: JTree = object : JTree(treeModel) {
+
+  val tree = object : JTree(treeModel) {
     override fun updateUI() {
       setCellRenderer(null)
       super.updateUI()
@@ -55,6 +56,7 @@ fun makeUI(): Component {
   tree.isRootVisible = false
   tree.addTreeSelectionListener(FolderSelectionListener(fileSystemView))
   tree.expandRow(0)
+
   return JPanel(BorderLayout()).also {
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.add(JScrollPane(tree))
