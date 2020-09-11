@@ -1,62 +1,68 @@
 package example
 
+import com.sun.java.swing.plaf.windows.WindowsSliderUI
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
-import java.util.Calendar
-import java.util.Date
+import java.awt.event.FocusListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.JSpinner.DateEditor
 
 fun makeUI(): Component {
-  val dateFormat = "yyyy/MM/dd"
-  val date = Date()
-  val spinner1 = JSpinner(SpinnerDateModel(date, date, null, Calendar.DAY_OF_MONTH))
-  spinner1.editor = DateEditor(spinner1, dateFormat)
+  val slider1 = JSlider(0, 100, 0)
+  initSlider(slider1)
 
-  val today = Calendar.getInstance()
-  today.clear(Calendar.MILLISECOND)
-  today.clear(Calendar.SECOND)
-  today.clear(Calendar.MINUTE)
-  today[Calendar.HOUR_OF_DAY] = 0
+  val slider2 = object : JSlider(0, 100, 0) {
+    @Transient private var listener: FocusListener? = null
+    override fun updateUI() {
+      removeFocusListener(listener)
+      super.updateUI()
+      val bgc = background
+      listener = object : FocusListener {
+        override fun focusGained(e: FocusEvent) {
+          background = bgc.brighter()
+        }
 
-  val start = today.time
-  println(date)
-  println(start)
+        override fun focusLost(e: FocusEvent) {
+          background = bgc
+        }
+      }
+      addFocusListener(listener)
 
-  val spinner2 = JSpinner(SpinnerDateModel(date, start, null, Calendar.DAY_OF_MONTH))
-  spinner2.editor = DateEditor(spinner2, dateFormat)
-
-  val spinner3 = JSpinner(SpinnerDateModel(date, start, null, Calendar.DAY_OF_MONTH))
-  val editor = DateEditor(spinner3, dateFormat)
-  spinner3.editor = editor
-  val fl3 = object : FocusAdapter() {
-    override fun focusGained(e: FocusEvent) {
-      EventQueue.invokeLater {
-        val i = dateFormat.lastIndexOf("dd")
-        editor.textField.select(i, i + 2)
+      if (getUI() is WindowsSliderUI) {
+        val wui = object : WindowsSliderUI(this) {
+          override fun paintFocus(g: Graphics) {
+            // empty paint
+          }
+        }
+        setUI(wui)
       }
     }
   }
-  editor.textField.addFocusListener(fl3)
+  initSlider(slider2)
 
-  return JPanel(GridLayout(3, 1)).also {
-    it.add(makeTitledPanel("Calendar.DAY_OF_MONTH", spinner1))
-    it.add(makeTitledPanel("min: set(Calendar.HOUR_OF_DAY, 0)", spinner2))
-    it.add(makeTitledPanel("JSpinner.DateEditor + FocusListener", spinner3))
-    it.border = BorderFactory.createEmptyBorder(10, 5, 10, 5)
+  val box = Box.createVerticalBox()
+  box.add(Box.createVerticalStrut(20))
+  box.add(makeTitledPanel("Default", slider1))
+  box.add(Box.createVerticalStrut(20))
+  box.add(makeTitledPanel("Override SliderUI#paintFocus(...)", slider2))
+  box.add(Box.createVerticalGlue())
+
+  return JPanel(BorderLayout()).also {
+    it.add(box, BorderLayout.NORTH)
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeTitledPanel(title: String, cmp: Component): Component {
-  val p = JPanel(GridBagLayout())
+private fun initSlider(slider: JSlider) {
+  slider.majorTickSpacing = 10
+  slider.minorTickSpacing = 5
+  slider.paintTicks = true
+}
+
+private fun makeTitledPanel(title: String, c: Component): Component {
+  val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
-  val c = GridBagConstraints()
-  c.weightx = 1.0
-  c.fill = GridBagConstraints.HORIZONTAL
-  c.insets = Insets(5, 5, 5, 5)
-  p.add(cmp, c)
+  p.add(c)
   return p
 }
 
