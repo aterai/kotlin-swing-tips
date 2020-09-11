@@ -80,9 +80,11 @@ fun makeUI(): Component {
   }
 }
 
-class DropdownTableComboBox<E : List<Any>>(private val list: List<E>, model: DefaultTableModel) : JComboBox<E>() {
-  @Transient
-  private val highlighter = HighlightListener()
+private class DropdownTableComboBox<E : List<Any>>(
+  private val list: List<E>,
+  model: DefaultTableModel
+) : JComboBox<E>() {
+  @Transient private val highlighter = HighlightListener()
   private val table = object : JTable() {
     override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int) =
       super.prepareRenderer(renderer, row, column).also {
@@ -109,7 +111,7 @@ class DropdownTableComboBox<E : List<Any>>(private val list: List<E>, model: Def
   init {
     table.model = model
     list.forEach { this.addItem(it) }
-    list.forEach { v -> model.addRow(v.toTypedArray()) }
+    list.forEach { model.addRow(it.toTypedArray()) }
   }
 
   override fun updateUI() {
@@ -123,7 +125,7 @@ class DropdownTableComboBox<E : List<Any>>(private val list: List<E>, model: Def
   }
 }
 
-class ComboTablePopup(combo: JComboBox<*>, private val table: JTable) : BasicComboPopup(combo) {
+private class ComboTablePopup(combo: JComboBox<*>, private val table: JTable) : BasicComboPopup(combo) {
   private val scroll: JScrollPane
 
   init {
@@ -170,7 +172,7 @@ class ComboTablePopup(combo: JComboBox<*>, private val table: JTable) : BasicCom
   }
 }
 
-class HighlightListener : MouseAdapter() {
+private class HighlightListener : MouseAdapter() {
   private var viewRowIndex = -1
 
   fun isHighlightedRow(row: Int) = this.viewRowIndex == row
