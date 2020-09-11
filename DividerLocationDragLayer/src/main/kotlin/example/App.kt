@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.ActionEvent
 import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.LayerUI
@@ -13,9 +12,9 @@ fun makeUI(): Component {
   splitPane.leftComponent = makeTestBox()
   splitPane.rightComponent = makeTestBox()
   val check = JCheckBox("VERTICAL")
-  check.addActionListener { e: ActionEvent ->
-    val c = e.source as JCheckBox
-    splitPane.orientation = if (c.isSelected) JSplitPane.VERTICAL_SPLIT else JSplitPane.HORIZONTAL_SPLIT
+  check.addActionListener { e ->
+    val b = (e.source as? JCheckBox)?.isSelected == true
+    splitPane.orientation = if (b) JSplitPane.VERTICAL_SPLIT else JSplitPane.HORIZONTAL_SPLIT
   }
 
   return JPanel(BorderLayout()).also {

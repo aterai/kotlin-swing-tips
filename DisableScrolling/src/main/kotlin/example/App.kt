@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.ActionEvent
 import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
@@ -33,7 +32,7 @@ fun makeUI(): Component {
   table.componentPopupMenu = TablePopupMenu()
 
   val check = JCheckBox("Disable Scrolling")
-  check.addActionListener { e: ActionEvent ->
+  check.addActionListener { e ->
     table.clearSelection()
     val isSelected = (e.source as? JCheckBox)?.isSelected == true
     scroll.verticalScrollBar.isEnabled = !isSelected

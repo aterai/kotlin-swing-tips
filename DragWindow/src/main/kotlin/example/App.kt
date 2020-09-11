@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.ActionEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.WindowEvent
@@ -38,7 +37,7 @@ private fun makeUI(): Component {
   label.background = Color.BLUE
   label.border = BorderFactory.createEmptyBorder(5, 16 + 5, 5, 2)
   val button = JButton("Exit")
-  button.addActionListener { e: ActionEvent ->
+  button.addActionListener { e ->
     val c = e.source as? JComponent
     val frame = c?.topLevelAncestor as? JFrame
     frame?.dispatchEvent(WindowEvent(frame, WindowEvent.WINDOW_CLOSING))
