@@ -60,7 +60,7 @@ private fun makeList(handler: TransferHandler): JList<Color> {
   return list
 }
 
-class ListItemTransferHandler : TransferHandler() {
+private class ListItemTransferHandler : TransferHandler() {
   private var source: JList<*>? = null
   private val selectedIndices = mutableListOf<Int>()
   private var addIndex = -1 // Location where items were added

@@ -132,7 +132,7 @@ private fun makeButton(title: String) = JButton(title).also {
   it.border = BorderFactory.createEmptyBorder(2, 8, 2, 8)
 }
 
-class ArrayListModel<E> : AbstractListModel<E>() {
+private class ArrayListModel<E> : AbstractListModel<E>() {
   private val delegate = ArrayList<E>()
 
   fun add(element: E) {
@@ -168,7 +168,7 @@ class ArrayListModel<E> : AbstractListModel<E>() {
   override fun getSize() = delegate.size
 }
 
-object SpringLayoutUtil {
+private object SpringLayoutUtil {
   private fun setScaleAndAdd(parent: Container, layout: SpringLayout, child: Component, r: Rectangle2D.Float) {
     val pnlWidth = layout.getConstraint(SpringLayout.WIDTH, parent)
     val pnlHeight = layout.getConstraint(SpringLayout.HEIGHT, parent)
@@ -204,7 +204,7 @@ object SpringLayoutUtil {
     setScaleAndAdd(p, layout, spr, Rectangle2D.Float(.55f, .05f, .40f, .90f))
     return p
   }
-} /* Singleton */
+}
 
 fun main() {
   EventQueue.invokeLater {

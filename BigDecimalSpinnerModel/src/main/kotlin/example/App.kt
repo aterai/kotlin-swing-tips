@@ -10,6 +10,7 @@ fun makeUI(): Component {
   box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   box.add(JLabel("SpinnerNumberModel(double, ...)"))
   box.add(Box.createVerticalStrut(2))
+
   val p1 = JPanel(GridLayout(1, 2, 5, 5)).also {
     it.add(JSpinner(SpinnerNumberModel(2.01, 2.00, 3.02, .01)))
     it.add(JSpinner(SpinnerNumberModel(29.7, 29.6, 30.2, .1)))
@@ -38,7 +39,7 @@ fun makeUI(): Component {
   }
 }
 
-class BigDecimalSpinnerModel(
+private class BigDecimalSpinnerModel(
   value: Double,
   minimum: Double,
   maximum: Double,
