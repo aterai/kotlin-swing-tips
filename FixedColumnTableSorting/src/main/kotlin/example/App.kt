@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.event.ChangeEvent
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableRowSorter
 
@@ -55,7 +54,7 @@ fun makeUI(): Component {
 
   // https://tips4java.wordpress.com/2008/11/05/fixed-column-table/
   // @author Rob Camick
-  scroll.rowHeader.addChangeListener { e: ChangeEvent ->
+  scroll.rowHeader.addChangeListener { e ->
     (e.source as? JViewport)?.also {
       scroll.verticalScrollBar.value = it.viewPosition.y
     }
