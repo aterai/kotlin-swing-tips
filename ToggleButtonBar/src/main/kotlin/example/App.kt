@@ -80,7 +80,7 @@ private class CellIcon : Icon {
   }
 }
 
-class ToggleButtonBarCellIcon : Icon {
+private class ToggleButtonBarCellIcon : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val parent = c.parent ?: return
     val r = 8f
