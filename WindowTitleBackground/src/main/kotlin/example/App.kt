@@ -54,7 +54,7 @@ fun makeUI(): Component {
   val table = JTable(model)
   table.setDefaultRenderer(Color::class.java, ColorRenderer())
   table.setDefaultEditor(Color::class.java, ColorEditor())
-  model.addTableModelListener { e: TableModelEvent ->
+  model.addTableModelListener { e ->
     if (e.type == TableModelEvent.UPDATE && e.column == COLOR_COL) {
       val row = e.firstRow
       val key = model.getValueAt(row, KEY_COL).toString()
