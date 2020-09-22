@@ -264,7 +264,7 @@ private class TabButton : JButton() {
 
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
-    val g2: Graphics2D = g.create() as Graphics2D
+    val g2 = g.create() as Graphics2D
     g2.stroke = BasicStroke(2f)
     g2.paint = Color.BLACK
     if (getModel().isRollover) {
@@ -296,7 +296,7 @@ private class TabButton : JButton() {
 
 private class ColorIcon(private val color: Color) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-    val g2: Graphics2D = g.create() as? Graphics2D ?: return
+    val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = color
     g2.fillRect(1, 1, iconWidth - 2, iconHeight - 2)
