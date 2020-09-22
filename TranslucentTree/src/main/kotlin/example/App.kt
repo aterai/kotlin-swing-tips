@@ -79,7 +79,7 @@ private class TransparentRootPane : JRootPane() {
       val cs = 6
       val sz = cs * cs
       val img = BufferedImage(sz, sz, BufferedImage.TYPE_INT_ARGB)
-      val g2: Graphics2D = img.createGraphics()
+      val g2 = img.createGraphics()
       g2.paint = Color(0xDC_DC_DC)
       g2.fillRect(0, 0, sz, sz)
       g2.paint = Color(0xC8_C8_C8_C8.toInt(), true)
