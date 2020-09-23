@@ -498,17 +498,11 @@ private class ButtonTabComponent(private val tabbedPane: JTabbedPane) : JPanel(F
     }
 
     override fun mouseEntered(e: MouseEvent) {
-      val component: Component = e.component
-      if (component is AbstractButton) {
-        component.isBorderPainted = true
-      }
+      (e.component as? AbstractButton)?.isBorderPainted = true
     }
 
     override fun mouseExited(e: MouseEvent) {
-      val component: Component = e.component
-      if (component is AbstractButton) {
-        component.isBorderPainted = false
-      }
+      (e.component as? AbstractButton)?.isBorderPainted = false
     }
   }
 
