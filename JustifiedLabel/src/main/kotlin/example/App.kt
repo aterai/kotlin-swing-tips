@@ -4,12 +4,11 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.font.GlyphVector
 import java.awt.geom.Point2D
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.border.Border
 
 fun makeUI(): Component {
   val p = JPanel(GridBagLayout())
   val inside = BorderFactory.createEmptyBorder(10, 5 + 2, 10, 10 + 2)
-  val outside: Border = BorderFactory.createTitledBorder("JLabel text-align:justify")
+  val outside = BorderFactory.createTitledBorder("JLabel text-align:justify")
   p.border = BorderFactory.createCompoundBorder(outside, inside)
   val c = GridBagConstraints()
   c.insets = Insets(5, 5, 5, 0)

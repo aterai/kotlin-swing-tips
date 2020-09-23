@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.border.Border
 
 fun makeUI(): Component {
   // GroupLayout
@@ -28,7 +27,7 @@ fun makeUI(): Component {
   // GridBagLayout
   val p2 = JPanel(GridBagLayout())
   val inside = BorderFactory.createEmptyBorder(10, 5 + 2, 10, 10 + 2)
-  val outside: Border = BorderFactory.createTitledBorder("GridBagLayout")
+  val outside = BorderFactory.createTitledBorder("GridBagLayout")
   p2.border = BorderFactory.createCompoundBorder(outside, inside)
   val c = GridBagConstraints()
   c.insets = Insets(5, 5, 5, 0)

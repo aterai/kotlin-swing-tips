@@ -3,7 +3,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
-import javax.swing.table.TableModel
 
 fun makeUI(): Component {
   val columnNames = arrayOf("String", "Integer", "Boolean")
@@ -13,7 +12,7 @@ fun makeUI(): Component {
     arrayOf("CCC", 92, true),
     arrayOf("DDD", 0, false)
   )
-  val model: TableModel = object : DefaultTableModel(data, columnNames) {
+  val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
   val table = JTable(model)

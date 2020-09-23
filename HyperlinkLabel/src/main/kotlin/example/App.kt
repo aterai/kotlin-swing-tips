@@ -7,7 +7,6 @@ import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.net.URI
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.border.Border
 import javax.swing.event.HyperlinkEvent
 import javax.swing.plaf.basic.BasicButtonUI
 import javax.swing.plaf.basic.BasicHTML
@@ -55,7 +54,7 @@ fun makeUI(): Component {
     p.add(v, c)
   }
   val inside = BorderFactory.createEmptyBorder(2, 5 + 2, 2, 5 + 2)
-  val outside: Border = BorderFactory.createTitledBorder("HyperlinkLabel")
+  val outside = BorderFactory.createTitledBorder("HyperlinkLabel")
   p.border = BorderFactory.createCompoundBorder(outside, inside)
   p.preferredSize = Dimension(320, 240)
   return p
