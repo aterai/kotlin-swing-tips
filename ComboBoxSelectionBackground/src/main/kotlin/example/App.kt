@@ -12,11 +12,9 @@ fun makeUI(): Component {
   val combo1 = object : JComboBox<String>(model) {
     override fun updateUI() {
       super.updateUI()
-      val o: Any = getAccessibleContext().getAccessibleChild(0)
-      if (o is ComboPopup) {
-        val list = o.list
-        list.selectionForeground = Color.WHITE
-        list.selectionBackground = Color.ORANGE
+      (getAccessibleContext().getAccessibleChild(0) as? ComboPopup)?.list?.also {
+        it.selectionForeground = Color.WHITE
+        it.selectionBackground = Color.ORANGE
       }
     }
   }
