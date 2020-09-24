@@ -49,7 +49,7 @@ fun makeUI(): Component {
     cardLayout.next(cards)
     cards.repaint()
   }
-  val box: Box = Box.createHorizontalBox()
+  val box = Box.createHorizontalBox()
   box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   box.add(prevButton)
   box.add(Box.createHorizontalGlue())

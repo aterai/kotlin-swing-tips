@@ -58,7 +58,7 @@ fun makeUI(): Component {
 private fun getData(imageIcon: ImageIcon, w: Int, h: Int): IntArray {
   val img = imageIcon.image
   val image = BufferedImage(w, h, BufferedImage.TYPE_INT_RGB)
-  val g: Graphics = image.createGraphics()
+  val g = image.createGraphics()
   g.drawImage(img, 0, 0, null)
   g.dispose()
   return (image.raster.dataBuffer as DataBufferInt).data

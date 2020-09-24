@@ -46,7 +46,7 @@ private fun makeTrayIcon(frame: JFrame): TrayIcon {
   val popup = PopupMenu()
   popup.add(open)
   popup.add(exit)
-  val image: Image = BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
+  val image = BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
   val g = image.graphics
   StarIcon().paintIcon(null, g, 0, 0)
   g.dispose()
