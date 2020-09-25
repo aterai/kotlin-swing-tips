@@ -47,7 +47,7 @@ private class EditableTitledBorder(
   private val editorTextField = JTextField()
   private val dummy = JLabel()
   private val rect = Rectangle()
-  private val startEditing: Action = object : AbstractAction() {
+  private val startEditing = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       (comp as? JComponent)?.rootPane?.glassPane = glassPane
       glassPane.removeAll()

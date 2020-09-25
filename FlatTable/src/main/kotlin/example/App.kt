@@ -99,7 +99,7 @@ private fun makeTranslucentScrollBar(c: JTable): JScrollPane {
 }
 
 private class CellBorder(top: Int, left: Int, bottom: Int, right: Int) : EmptyBorder(top, left, bottom, right) {
-  private var startCell: Boolean = false
+  private var startCell = false
 
   override fun paintBorder(
     c: Component,
