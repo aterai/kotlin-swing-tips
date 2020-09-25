@@ -80,7 +80,7 @@ private fun getDefaultTreeModel2(): TreeModel {
 private class MultiLineCellRenderer : JPanel(BorderLayout()), TreeCellRenderer {
   private var renderer = DefaultTreeCellRenderer()
   private val icon = JLabel()
-  private val text: JTextArea = CellTextArea2()
+  private val text = CellTextArea2()
   override fun getTreeCellRendererComponent(
     tree: JTree,
     value: Any?,

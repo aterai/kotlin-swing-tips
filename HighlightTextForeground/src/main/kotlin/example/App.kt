@@ -191,7 +191,7 @@ private fun scrollToCenter(tc: JTextComponent, pos: Int) {
 }
 
 private class PlaceholderLayerUI<V : JTextComponent?> : LayerUI<V>() {
-  val hint: JLabel = object : JLabel() {
+  val hint = object : JLabel() {
     override fun updateUI() {
       super.updateUI()
       foreground = UIManager.getColor("TextField.inactiveForeground")
