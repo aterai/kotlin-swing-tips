@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.Timer
@@ -51,14 +50,15 @@ fun makeUI(): Component {
   controls.add(JLabel("Find what:"), BorderLayout.WEST)
   controls.add(field)
   controls.add(button, BorderLayout.EAST)
-  val act: Action = object : AbstractAction("Show/Hide Search Box") {
+  val act = object : AbstractAction("Show/Hide Search Box") {
     override fun actionPerformed(ev: ActionEvent) {
       if (animator?.isRunning == true) {
         return
       }
       isHidden = controls.height == 0
-      animator = Timer(5, ActionListener { controls.revalidate() })
-      animator!!.start()
+      animator = Timer(5) { controls.revalidate() }.also {
+        it.start()
+      }
     }
   }
   showHideButton.action = act
