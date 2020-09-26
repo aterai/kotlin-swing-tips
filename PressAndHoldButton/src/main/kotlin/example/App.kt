@@ -31,13 +31,8 @@ private class PressAndHoldButton(icon: Icon?) : JButton(icon) {
 
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
-    // val dim = size
-    // val ins = insets
     val r = SwingUtilities.calculateInnerArea(this, null)
-    val x = r.x // dim.width - ins.right
-    val y = r.y + (r.height - ARROW_ICON.iconHeight) / 2
-    //   ins.top + (dim.height - ins.top - ins.bottom - ARROW_ICON.iconHeight) / 2
-    ARROW_ICON.paintIcon(this, g, x, y)
+    ARROW_ICON.paintIcon(this, g, r.x + r.width, r.y + (r.height - ARROW_ICON.iconHeight) / 2)
   }
 
   companion object {
@@ -53,7 +48,17 @@ private class PressAndHoldHandler : AbstractAction(), MouseListener {
   val pop = JPopupMenu()
   private val bg = ButtonGroup()
   private var arrowButton: AbstractButton? = null
-  private val holdTimer = Timer(1000, null)
+  private val holdTimer = Timer(1000) { e ->
+    println("InitialDelay(1000)")
+    arrowButton?.also {
+      val timer = e.source as? Timer
+      if (it.model.isPressed && timer?.isRunning == true) {
+        timer.stop()
+        pop.show(it, 0, it.height)
+        pop.requestFocusInWindow()
+      }
+    }
+  }
   private fun makeMenuList() = listOf(
     MenuContext("BLACK", Color.BLACK),
     MenuContext("BLUE", Color.BLUE),
@@ -116,16 +121,6 @@ private class PressAndHoldHandler : AbstractAction(), MouseListener {
 
   init {
     holdTimer.initialDelay = 1000
-    holdTimer.addActionListener {
-      println("InitialDelay(1000)")
-      arrowButton?.also {
-        if (it.model.isPressed && holdTimer.isRunning) {
-          holdTimer.stop()
-          pop.show(it, 0, it.height)
-          pop.requestFocusInWindow()
-        }
-      }
-    }
     pop.layout = GridLayout(0, 3, 5, 5)
     makeMenuList()
       .map { makeMenuButton(it) }
