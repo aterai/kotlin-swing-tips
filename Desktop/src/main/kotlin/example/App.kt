@@ -1,63 +1,39 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.FocusAdapter
-import java.awt.event.FocusEvent
-import java.util.Calendar
-import java.util.Date
+import java.net.URI
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.JSpinner.DateEditor
+import javax.swing.event.HyperlinkEvent
+
+private const val SITE = "https://ateraimemo.com/"
 
 fun makeUI(): Component {
-  val dateFormat = "yyyy/MM/dd"
-  val date = Date()
-  val spinner1 = JSpinner(SpinnerDateModel(date, date, null, Calendar.DAY_OF_MONTH))
-  spinner1.editor = DateEditor(spinner1, dateFormat)
-
-  val today = Calendar.getInstance()
-  today.clear(Calendar.MILLISECOND)
-  today.clear(Calendar.SECOND)
-  today.clear(Calendar.MINUTE)
-  today[Calendar.HOUR_OF_DAY] = 0
-
-  val start = today.time
-  println(date)
-  println(start)
-
-  val spinner2 = JSpinner(SpinnerDateModel(date, start, null, Calendar.DAY_OF_MONTH))
-  spinner2.editor = DateEditor(spinner2, dateFormat)
-
-  val spinner3 = JSpinner(SpinnerDateModel(date, start, null, Calendar.DAY_OF_MONTH))
-  val editor = DateEditor(spinner3, dateFormat)
-  spinner3.editor = editor
-  val fl = object : FocusAdapter() {
-    override fun focusGained(e: FocusEvent) {
-      EventQueue.invokeLater {
-        val i = dateFormat.lastIndexOf("dd")
-        editor.textField.select(i, i + 2)
+  val textArea = JTextArea()
+  val editor = JEditorPane("text/html", "<html><a href='$SITE'>$SITE</a>")
+  editor.isOpaque = false
+  editor.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true)
+  editor.isEditable = false
+  editor.addHyperlinkListener { e ->
+    if (Desktop.isDesktopSupported() && e.eventType == HyperlinkEvent.EventType.ACTIVATED) {
+      runCatching {
+        Desktop.getDesktop().browse(URI(SITE))
+      }.onFailure {
+        it.printStackTrace()
+        textArea.text = it.message
       }
+      textArea.text = e.toString()
     }
   }
-  editor.textField.addFocusListener(fl)
 
-  return JPanel(GridLayout(3, 1)).also {
-    it.add(makeTitledPanel("Calendar.DAY_OF_MONTH", spinner1))
-    it.add(makeTitledPanel("min: set(Calendar.HOUR_OF_DAY, 0)", spinner2))
-    it.add(makeTitledPanel("JSpinner.DateEditor + FocusListener", spinner3))
-    it.border = BorderFactory.createEmptyBorder(10, 5, 10, 5)
+  val p = JPanel()
+  p.add(editor)
+  p.border = BorderFactory.createTitledBorder("Desktop.getDesktop().browse(URI)")
+
+  return JPanel(BorderLayout()).also {
+    it.add(p, BorderLayout.NORTH)
+    it.add(JScrollPane(textArea))
     it.preferredSize = Dimension(320, 240)
   }
-}
-
-private fun makeTitledPanel(title: String, cmp: Component): Component {
-  val p = JPanel(GridBagLayout())
-  p.border = BorderFactory.createTitledBorder(title)
-  val c = GridBagConstraints()
-  c.weightx = 1.0
-  c.fill = GridBagConstraints.HORIZONTAL
-  c.insets = Insets(5, 5, 5, 5)
-  p.add(cmp, c)
-  return p
 }
 
 fun main() {
