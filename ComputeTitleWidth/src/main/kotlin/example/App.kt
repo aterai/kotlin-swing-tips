@@ -1,69 +1,94 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.FocusAdapter
-import java.awt.event.FocusEvent
-import java.util.Calendar
-import java.util.Date
+import java.awt.event.ActionEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.JSpinner.DateEditor
+import javax.swing.JInternalFrame.JDesktopIcon
 
 fun makeUI(): Component {
-  val dateFormat = "yyyy/MM/dd"
-  val date = Date()
-  val spinner1 = JSpinner(SpinnerDateModel(date, date, null, Calendar.DAY_OF_MONTH))
-  spinner1.editor = DateEditor(spinner1, dateFormat)
-
-  val today = Calendar.getInstance()
-  today.clear(Calendar.MILLISECOND)
-  today.clear(Calendar.SECOND)
-  today.clear(Calendar.MINUTE)
-  today[Calendar.HOUR_OF_DAY] = 0
-
-  val start = today.time
-  println(date)
-  println(start)
-
-  val spinner2 = JSpinner(SpinnerDateModel(date, start, null, Calendar.DAY_OF_MONTH))
-  spinner2.editor = DateEditor(spinner2, dateFormat)
-
-  val spinner3 = JSpinner(SpinnerDateModel(date, start, null, Calendar.DAY_OF_MONTH))
-  val editor = DateEditor(spinner3, dateFormat)
-  spinner3.editor = editor
-  val fl = object : FocusAdapter() {
-    override fun focusGained(e: FocusEvent) {
-      EventQueue.invokeLater {
-        val i = dateFormat.lastIndexOf("dd")
-        editor.textField.select(i, i + 2)
-      }
+  val desktop = JDesktopPane()
+  desktop.desktopManager = object : DefaultDesktopManager() {
+    override fun iconifyFrame(f: JInternalFrame) {
+      val r = getBoundsForIconOf(f)
+      r.width = f.desktopIcon.preferredSize.width
+      f.desktopIcon.bounds = r
+      super.iconifyFrame(f)
     }
   }
-  editor.textField.addFocusListener(fl)
+  desktop.add(createFrame("looooooooooooong title #", 1))
+  desktop.add(createFrame("#", 0))
 
-  return JPanel(GridLayout(3, 1)).also {
-    it.add(makeTitledPanel("Calendar.DAY_OF_MONTH", spinner1))
-    it.add(makeTitledPanel("min: set(Calendar.HOUR_OF_DAY, 0)", spinner2))
-    it.add(makeTitledPanel("JSpinner.DateEditor + FocusListener", spinner3))
-    it.border = BorderFactory.createEmptyBorder(10, 5, 10, 5)
+  val act = object : AbstractAction("add") {
+    private var num = 2
+    override fun actionPerformed(e: ActionEvent) {
+      val f = createFrame("#", num)
+      desktop.add(f)
+      desktop.desktopManager.activateFrame(f)
+      num++
+    }
+  }
+  val button = JButton(act)
+
+  return JPanel(BorderLayout()).also {
+    it.add(desktop)
+    it.add(button, BorderLayout.SOUTH)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeTitledPanel(title: String, cmp: Component): Component {
-  val p = JPanel(GridBagLayout())
-  p.border = BorderFactory.createTitledBorder(title)
-  val c = GridBagConstraints()
-  c.weightx = 1.0
-  c.fill = GridBagConstraints.HORIZONTAL
-  c.insets = Insets(5, 5, 5, 5)
-  p.add(cmp, c)
-  return p
+fun createFrame(t: String, i: Int): JInternalFrame {
+  val f = JInternalFrame(t + i, true, true, true, true)
+  f.desktopIcon = object : JDesktopIcon(f) {
+    override fun getPreferredSize(): Dimension {
+      val d = super.getPreferredSize()
+      val title = f.title
+      val font = font
+      if (font != null) {
+        testWidth()
+        var buttonsW = 22
+        if (f.isClosable) {
+          buttonsW += 19
+        }
+        if (f.isMaximizable) {
+          buttonsW += 19
+        }
+        if (f.isIconifiable) {
+          buttonsW += 19
+        }
+        val fm = getFontMetrics(font)
+        val titleW = SwingUtilities.computeStringWidth(fm, title)
+        val ins = insets
+        d.width = buttonsW + ins.left + ins.right + titleW + 2 + 2 + 2 // 2: Magic number of gap between icons
+        d.height = 27.coerceAtMost(d.height) // 27: Magic number for NimbusLookAndFeel
+        println("BasicInternalFrameTitlePane: " + d.width)
+      }
+      return d
+    }
+
+    private fun testWidth() {
+      val dim = layout.minimumLayoutSize(this)
+      println("minimumLayoutSize: " + dim.width)
+      val buttonsW = descendants(this)
+        .filterIsInstance<AbstractButton>()
+        .map { it.preferredSize.width }
+        .sum()
+      println("Total width of all buttons: $buttonsW")
+    }
+  }
+  f.setSize(200, 100)
+  f.isVisible = true
+  f.setLocation(5 + 40 * i, 5 + 50 * i)
+  return f
 }
+
+fun descendants(parent: Container): List<Component> = parent.components
+  .filterIsInstance<Container>()
+  .flatMap { listOf(it) + descendants(it) }
 
 fun main() {
   EventQueue.invokeLater {
     runCatching {
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+      UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
     }.onFailure {
       it.printStackTrace()
       Toolkit.getDefaultToolkit().beep()
