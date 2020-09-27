@@ -102,6 +102,8 @@ complexity:
   NestedBlockDepth:
     active: true
     threshold: 4
+  ReplaceSafeCallChainWithRun:
+    active: true
   StringLiteralDuplication:
     active: true
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**']
@@ -127,6 +129,8 @@ coroutines:
     active: false
   RedundantSuspendModifier:
     active: false
+  SuspendFunWithFlowReturnType:
+    active: true
 
 empty-blocks:
   active: true
@@ -227,6 +231,12 @@ formatting:
   android: false
   autoCorrect: true
   AnnotationOnSeparateLine:
+    active: true
+    autoCorrect: true
+  AnnotationSpacing:
+    active: true
+    autoCorrect: true
+  ArgumentListWrapping:
     active: true
     autoCorrect: true
   ChainWrapping:
@@ -501,6 +511,8 @@ potential-bugs:
 
 style:
   active: true
+  ClassOrdering:
+    active: false
   CollapsibleIfStatements:
     active: true
   DataClassContainsFunctions:
