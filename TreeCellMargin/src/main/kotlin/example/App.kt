@@ -140,7 +140,7 @@ private class CompoundTreeCellRenderer : DefaultTreeCellRenderer() {
   private val text = JLabel()
   private val insideBorder = BorderFactory.createEmptyBorder(1, 2, 1, 2)
   private val outsideBorder = BorderFactory.createEmptyBorder(1, 1, 1, 1)
-  private val emptyBorder: Border = BorderFactory.createCompoundBorder(outsideBorder, insideBorder)
+  private val emptyBorder = BorderFactory.createCompoundBorder(outsideBorder, insideBorder)
   private var compoundFocusBorder: Border? = null
   private val isSynth = ui.javaClass.name.contains("Synth")
 

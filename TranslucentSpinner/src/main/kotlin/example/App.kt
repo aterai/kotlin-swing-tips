@@ -52,7 +52,7 @@ fun makeUI(): Component {
   d["Spinner:\"Spinner.nextButton\"[Focused].backgroundPainter"] = painter3
   d["Spinner:\"Spinner.nextButton\"[MouseOver].backgroundPainter"] = painter3
   d["Spinner:\"Spinner.nextButton\"[Pressed].backgroundPainter"] = painter4
-  val model: SpinnerModel = SpinnerNumberModel(0, 0, 100, 5)
+  val model = SpinnerNumberModel(0, 0, 100, 5)
   val spinner1 = JSpinner(model)
   (spinner1.editor as? DefaultEditor)?.textField?.putClientProperty("Nimbus.Overrides", d)
   configureSpinnerButtons(spinner1, d)
