@@ -9,7 +9,7 @@ fun makeUI(): Component {
   val animator = Timer(5, null)
   val cl = Thread.currentThread().contextClassLoader
   val icon = ImageIcon(cl.getResource("example/test.png"))
-  val wipe: Component = object : JComponent() {
+  val wipe = object : JComponent() {
     private var ww = 0
     override fun paintComponent(g: Graphics) {
       g.color = background

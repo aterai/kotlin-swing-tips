@@ -69,7 +69,7 @@ private class ZoomAndPanePanel(@field:Transient private val img: Image) : JPanel
   }
 
   private inner class ZoomHandler : MouseAdapter() {
-    private val zoomRange: BoundedRangeModel = DefaultBoundedRangeModel(
+    private val zoomRange = DefaultBoundedRangeModel(
       0,
       EXTENT,
       MIN_ZOOM,

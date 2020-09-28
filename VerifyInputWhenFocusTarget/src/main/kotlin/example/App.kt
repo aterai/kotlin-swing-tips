@@ -28,7 +28,7 @@ fun makeUI(): Component {
   button2.addActionListener(al)
   button2.verifyInputWhenFocusTarget = false
 
-  val verifier: InputVerifier = IntegerInputVerifier()
+  val verifier = IntegerInputVerifier()
   listOf(field0, field1, field2).forEach {
     it.horizontalAlignment = SwingConstants.RIGHT
     it.inputVerifier = verifier

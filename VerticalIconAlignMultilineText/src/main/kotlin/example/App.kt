@@ -61,13 +61,11 @@ private object HtmlViewUtil {
   fun getFirstLineCenterY(text: String?, c: AbstractButton, iconRect: Rectangle): Int {
     var y = 0
     if (text != null && c.verticalTextPosition == SwingConstants.TOP) {
-      val v = c.getClientProperty(BasicHTML.propertyKey) as? View
-      if (v != null) {
+      (c.getClientProperty(BasicHTML.propertyKey) as? View)?.also {
         runCatching {
-          val e = v.element.getElement(0)
-          var s: Shape = Rectangle()
+          val e = it.element.getElement(0)
           val b = Bias.Forward
-          s = v.modelToView(e.startOffset, b, e.endOffset, b, s)
+          val s = it.modelToView(e.startOffset, Bias.Forward, e.endOffset, b, Rectangle())
           y = (abs(s.bounds.height - iconRect.height) / 2f).roundToInt()
         }
       }
