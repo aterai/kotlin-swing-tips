@@ -1,63 +1,42 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.FocusAdapter
-import java.awt.event.FocusEvent
-import java.util.Calendar
-import java.util.Date
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.JSpinner.DateEditor
+import javax.swing.table.DefaultTableModel
+import javax.swing.table.TableModel
+import javax.swing.table.TableRowSorter
 
 fun makeUI(): Component {
-  val dateFormat = "yyyy/MM/dd"
-  val date = Date()
-  val spinner1 = JSpinner(SpinnerDateModel(date, date, null, Calendar.DAY_OF_MONTH))
-  spinner1.editor = DateEditor(spinner1, dateFormat)
-
-  val today = Calendar.getInstance()
-  today.clear(Calendar.MILLISECOND)
-  today.clear(Calendar.SECOND)
-  today.clear(Calendar.MINUTE)
-  today[Calendar.HOUR_OF_DAY] = 0
-
-  val start = today.time
-  println(date)
-  println(start)
-
-  val spinner2 = JSpinner(SpinnerDateModel(date, start, null, Calendar.DAY_OF_MONTH))
-  spinner2.editor = DateEditor(spinner2, dateFormat)
-
-  val spinner3 = JSpinner(SpinnerDateModel(date, start, null, Calendar.DAY_OF_MONTH))
-  val editor = DateEditor(spinner3, dateFormat)
-  spinner3.editor = editor
-  val fl3 = object : FocusAdapter() {
-    override fun focusGained(e: FocusEvent) {
-      EventQueue.invokeLater {
-        val i = dateFormat.lastIndexOf("dd")
-        editor.textField.select(i, i + 2)
-      }
-    }
+  val columnNames = arrayOf("String", "Integer", "Boolean")
+  val data = arrayOf(
+    arrayOf("AAA", 0, true),
+    arrayOf("BBB", 1, false),
+    arrayOf("CCC", 2, true),
+    arrayOf("DDD", 3, true),
+    arrayOf("EEE", 4, true),
+    arrayOf("FFF", 5, false)
+  )
+  val model = object : DefaultTableModel(data, columnNames) {
+    override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
-  editor.textField.addFocusListener(fl3)
+  val table = JTable(model)
+  val sorter = object : TableRowSorter<TableModel>(model) {
+    override fun isSortable(column: Int) = false
+  }
+  sorter.rowFilter = object : RowFilter<TableModel, Int>() {
+    override fun include(entry: Entry<out TableModel?, out Int>) = entry.identifier % 2 == 0
+  }
 
-  return JPanel(GridLayout(3, 1)).also {
-    it.add(makeTitledPanel("Calendar.DAY_OF_MONTH", spinner1))
-    it.add(makeTitledPanel("min: set(Calendar.HOUR_OF_DAY, 0)", spinner2))
-    it.add(makeTitledPanel("JSpinner.DateEditor + FocusListener", spinner3))
-    it.border = BorderFactory.createEmptyBorder(10, 5, 10, 5)
+  val check = JCheckBox("filter: idx%2==0")
+  check.addActionListener { e ->
+    table.rowSorter = if ((e.source as? JCheckBox)?.isSelected == true) sorter else null
+  }
+
+  return JPanel(BorderLayout()).also {
+    it.add(check, BorderLayout.NORTH)
+    it.add(JScrollPane(table))
     it.preferredSize = Dimension(320, 240)
   }
-}
-
-private fun makeTitledPanel(title: String, cmp: Component): Component {
-  val p = JPanel(GridBagLayout())
-  p.border = BorderFactory.createTitledBorder(title)
-  val c = GridBagConstraints()
-  c.weightx = 1.0
-  c.fill = GridBagConstraints.HORIZONTAL
-  c.insets = Insets(5, 5, 5, 5)
-  p.add(cmp, c)
-  return p
 }
 
 fun main() {
