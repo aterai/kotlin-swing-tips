@@ -6,7 +6,6 @@ import java.awt.event.FocusListener
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.awt.image.FilteredImageSource
-import java.awt.image.ImageProducer
 import java.awt.image.RGBImageFilter
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.Border
@@ -123,7 +122,7 @@ private class FileNameRenderer(table: JTable) : TableCellRenderer {
     // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
     val cl = Thread.currentThread().contextClassLoader
     icon = ImageIcon(cl.getResource("example/wi0063-16.png"))
-    val ip: ImageProducer = FilteredImageSource(icon.image.source, SelectedImageFilter())
+    val ip = FilteredImageSource(icon.image.source, SelectedImageFilter())
     selectedIcon = ImageIcon(p.createImage(ip))
     iconLabel = JLabel(icon)
     iconLabel.border = BorderFactory.createEmptyBorder()

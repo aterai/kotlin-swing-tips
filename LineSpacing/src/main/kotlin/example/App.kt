@@ -17,10 +17,10 @@ import javax.swing.text.View
 import javax.swing.text.ViewFactory
 
 fun makeUI(): Component {
-  val attr: MutableAttributeSet = SimpleAttributeSet()
+  val attr = SimpleAttributeSet()
   StyleConstants.setForeground(attr, Color.RED)
   StyleConstants.setFontSize(attr, 32)
-  val a: MutableAttributeSet = SimpleAttributeSet()
+  val a = SimpleAttributeSet()
   StyleConstants.setLineSpacing(a, .5f)
 
   val editor1 = JTextPane()

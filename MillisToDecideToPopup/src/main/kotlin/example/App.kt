@@ -53,8 +53,8 @@ fun makeUI(): Component {
   val runButton = JButton("run")
   runButton.addActionListener {
     val w = SwingUtilities.getWindowAncestor(runButton)
-    val toDecideToPopup: Int = millisToDecide.number.toInt()
-    val toPopup: Int = millisToPopup.number.toInt()
+    val toDecideToPopup = millisToDecide.number.toInt()
+    val toPopup = millisToPopup.number.toInt()
     val monitor = ProgressMonitor(w, "message", "note", 0, 100)
     monitor.millisToDecideToPopup = toDecideToPopup
     monitor.millisToPopup = toPopup
