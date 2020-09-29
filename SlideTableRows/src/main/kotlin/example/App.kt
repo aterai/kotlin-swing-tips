@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 
@@ -68,18 +67,15 @@ fun makeUI(): Component {
 
 fun createActionPerformed() {
   model.addRow(arrayOf("New name", model.rowCount, false))
-  val listener = object : ActionListener {
-    private val index = table.convertRowIndexToView(model.rowCount - 1)
-    private var height = START_HEIGHT
-    override fun actionPerformed(e: ActionEvent) {
-      if (height < END_HEIGHT) {
-        table.setRowHeight(index, height++)
-      } else {
-        (e.source as? Timer)?.stop()
-      }
+  val index = table.convertRowIndexToView(model.rowCount - 1)
+  var height = START_HEIGHT
+  Timer(DELAY) { e ->
+    if (height < END_HEIGHT) {
+      table.setRowHeight(index, height++)
+    } else {
+      (e.source as? Timer)?.stop()
     }
-  }
-  Timer(DELAY, listener).start()
+  }.start()
 }
 
 fun deleteActionPerformed() {
@@ -87,23 +83,20 @@ fun deleteActionPerformed() {
   if (selection.isEmpty()) {
     return
   }
-  val listener = object : ActionListener {
-    private var height = END_HEIGHT
-    override fun actionPerformed(e: ActionEvent) {
-      height--
-      if (height > START_HEIGHT) {
-        for (i in selection.indices.reversed()) {
-          table.setRowHeight(selection[i], height)
-        }
-      } else {
-        (e.source as? Timer)?.stop()
-        for (i in selection.indices.reversed()) {
-          model.removeRow(table.convertRowIndexToModel(selection[i]))
-        }
+  var height = END_HEIGHT
+  Timer(DELAY) { e ->
+    height--
+    if (height > START_HEIGHT) {
+      for (i in selection.indices.reversed()) {
+        table.setRowHeight(selection[i], height)
+      }
+    } else {
+      (e.source as? Timer)?.stop()
+      for (i in selection.indices.reversed()) {
+        model.removeRow(table.convertRowIndexToModel(selection[i]))
       }
     }
-  }
-  Timer(DELAY, listener).start()
+  }.start()
 }
 
 fun main() {

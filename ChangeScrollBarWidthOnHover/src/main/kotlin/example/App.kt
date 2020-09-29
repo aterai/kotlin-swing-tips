@@ -13,7 +13,7 @@ import javax.swing.plaf.basic.BasicScrollBarUI
 private const val MIN_WIDTH = 6
 private var willExpand = false
 private val controls = JPanel()
-private val animator = Timer(10, ActionListener { controls.revalidate() })
+private val animator = Timer(10) { controls.revalidate() }
 
 fun makeUI(): Component {
   val scroll = JScrollPane(makeList())
