@@ -32,6 +32,12 @@ private class Arrow(start: Point, end: Point) {
   private val end = Point()
   private val arrowHead: Path2D
 
+  init {
+    this.start.location = start
+    this.end.location = end
+    arrowHead = makeArrowHead(Dimension(8, 8))
+  }
+
   fun makeArrowHead(size: Dimension): Path2D {
     val path: Path2D = Path2D.Double()
     val t = size.height.toDouble()
@@ -50,12 +56,6 @@ private class Arrow(start: Point, end: Point) {
     arrowHead.transform(at)
     g2.fill(arrowHead)
     g2.draw(arrowHead)
-  }
-
-  init {
-    this.start.location = start
-    this.end.location = end
-    arrowHead = makeArrowHead(Dimension(8, 8))
   }
 }
 

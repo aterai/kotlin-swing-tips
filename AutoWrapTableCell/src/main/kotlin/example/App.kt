@@ -52,6 +52,12 @@ private class TextAreaCellRenderer : TableCellRenderer {
   private val renderer = JTextArea()
   private val rowAndCellHeights: MutableList<MutableList<Int>> = ArrayList()
 
+  init {
+    renderer.lineWrap = true
+    renderer.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
+    renderer.name = "Table.cellRenderer"
+  }
+
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -90,12 +96,6 @@ private class TextAreaCellRenderer : TableCellRenderer {
   }
 
   private fun <E> createMutableList(initialCapacity: Int) = ArrayList<E>(initialCapacity)
-
-  init {
-    renderer.lineWrap = true
-    renderer.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
-    renderer.name = "Table.cellRenderer"
-  }
 }
 
 fun main() {

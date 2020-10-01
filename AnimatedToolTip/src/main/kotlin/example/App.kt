@@ -54,6 +54,13 @@ fun makeUI(): Component {
 }
 
 private class AnimatedToolTip(private val iconLabel: JLabel?) : JToolTip() {
+  init {
+    LookAndFeel.installColorsAndFont(iconLabel, "ToolTip.background", "ToolTip.foreground", "ToolTip.font")
+    iconLabel?.isOpaque = true
+    layout = BorderLayout()
+    add(iconLabel)
+  }
+
   override fun getPreferredSize(): Dimension? = layout.preferredLayoutSize(this)
 
   override fun setTipText(tipText: String) {
@@ -63,31 +70,13 @@ private class AnimatedToolTip(private val iconLabel: JLabel?) : JToolTip() {
   }
 
   override fun getTipText() = iconLabel?.text ?: ""
-
-  init {
-    LookAndFeel.installColorsAndFont(iconLabel, "ToolTip.background", "ToolTip.foreground", "ToolTip.font")
-    iconLabel?.isOpaque = true
-    layout = BorderLayout()
-    add(iconLabel)
-  }
 }
 
 private class AnimatedLabel(title: String?) : JLabel(title) {
-  @Transient
-  private val icon = AnimeIcon()
+  @Transient private val icon = AnimeIcon()
   private val animator = Timer(100) {
     icon.next()
     repaint()
-  }
-
-  private fun startAnimation() {
-    icon.setRunning(true)
-    animator.start()
-  }
-
-  private fun stopAnimation() {
-    icon.setRunning(false)
-    animator.stop()
   }
 
   init {
@@ -102,6 +91,16 @@ private class AnimatedLabel(title: String?) : JLabel(title) {
         }
       }
     }
+  }
+
+  private fun startAnimation() {
+    icon.setRunning(true)
+    animator.start()
+  }
+
+  private fun stopAnimation() {
+    icon.setRunning(false)
+    animator.stop()
   }
 }
 

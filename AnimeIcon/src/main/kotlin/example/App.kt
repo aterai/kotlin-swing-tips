@@ -109,6 +109,10 @@ private open class BackgroundTask : SwingWorker<String, String?>() {
 }
 
 private class ProgressListener(private val progressBar: JProgressBar) : PropertyChangeListener {
+  init {
+    progressBar.value = 0
+  }
+
   override fun propertyChange(e: PropertyChangeEvent) {
     val strPropertyName = e.propertyName
     if ("progress" == strPropertyName) {
@@ -117,18 +121,22 @@ private class ProgressListener(private val progressBar: JProgressBar) : Property
       progressBar.value = progress
     }
   }
-
-  init {
-    progressBar.value = 0
-  }
 }
 
 private class LoadingLabel : JLabel() {
-  @Transient
-  private val icon = AnimeIcon()
+  @Transient private val icon = AnimeIcon()
   private val animator = Timer(100) {
     icon.next()
     repaint()
+  }
+
+  init {
+    setIcon(icon)
+    addHierarchyListener { e ->
+      if (e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L && !e.component.isDisplayable) {
+        animator.stop()
+      }
+    }
   }
 
   fun startAnimation() {
@@ -140,15 +148,6 @@ private class LoadingLabel : JLabel() {
     icon.setRunning(false)
     animator.stop()
   }
-
-  init {
-    setIcon(icon)
-    addHierarchyListener { e ->
-      if (e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L && !e.component.isDisplayable) {
-        animator.stop()
-      }
-    }
-  }
 }
 
 private class AnimeIcon : Icon {
@@ -156,9 +155,18 @@ private class AnimeIcon : Icon {
   private val dim: Dimension
   private var running = false
   private var rotate = 45.0
-  override fun getIconWidth() = dim.width
 
-  override fun getIconHeight() = dim.height
+  init {
+    val r = 4.0
+    val s = Ellipse2D.Double(0.0, 0.0, 2.0 * r, 2.0 * r)
+    for (i in 0..7) {
+      val at = AffineTransform.getRotateInstance(i * 2 * Math.PI / 8)
+      at.concatenate(AffineTransform.getTranslateInstance(r, r))
+      list.add(at.createTransformedShape(s))
+    }
+    val d = (r * 2 * (1 + 3)).toInt()
+    dim = Dimension(d, d)
+  }
 
   override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
@@ -179,6 +187,10 @@ private class AnimeIcon : Icon {
     g2.dispose()
   }
 
+  override fun getIconWidth() = dim.width
+
+  override fun getIconHeight() = dim.height
+
   operator fun next() {
     if (running) {
       rotate = (rotate + 45.0) % 360.0 // 45 = 360 / 8
@@ -191,18 +203,6 @@ private class AnimeIcon : Icon {
 
   companion object {
     private val ELLIPSE_COLOR = Color(0xE6_B3_B3)
-  }
-
-  init {
-    val r = 4.0
-    val s = Ellipse2D.Double(0.0, 0.0, 2.0 * r, 2.0 * r)
-    for (i in 0..7) {
-      val at = AffineTransform.getRotateInstance(i * 2 * Math.PI / 8)
-      at.concatenate(AffineTransform.getTranslateInstance(r, r))
-      list.add(at.createTransformedShape(s))
-    }
-    val d = (r * 2 * (1 + 3)).toInt()
-    dim = Dimension(d, d)
   }
 }
 

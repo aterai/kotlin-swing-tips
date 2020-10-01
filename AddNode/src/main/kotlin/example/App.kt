@@ -19,16 +19,6 @@ fun makeUI(): Component {
 private class TreePopupMenu : JPopupMenu() {
   private var path: TreePath? = null
 
-  override fun show(c: Component?, x: Int, y: Int) {
-    (c as? JTree)?.also { tree ->
-      path = tree.getPathForLocation(x, y)
-      path?.also { treePath ->
-        c.selectionPath = treePath
-        super.show(c, x, y)
-      }
-    }
-  }
-
   init {
     val textField = object : JTextField(24) {
       @Transient private var listener: AncestorListener? = null
@@ -87,6 +77,16 @@ private class TreePopupMenu : JPopupMenu() {
         (invoker as? JTree)?.also { tree ->
           (tree.model as? DefaultTreeModel)?.removeNodeFromParent(node)
         }
+      }
+    }
+  }
+
+  override fun show(c: Component?, x: Int, y: Int) {
+    (c as? JTree)?.also { tree ->
+      path = tree.getPathForLocation(x, y)
+      path?.also { treePath ->
+        c.selectionPath = treePath
+        super.show(c, x, y)
       }
     }
   }

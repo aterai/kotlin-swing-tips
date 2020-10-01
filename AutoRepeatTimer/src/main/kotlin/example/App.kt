@@ -46,13 +46,15 @@ private fun makeButton(extent: Int, view: JTextField): JButton {
   return button
 }
 
-private class AutoRepeatHandler(
-  extent: Int,
-  private val view: JTextComponent
-) : MouseAdapter(), ActionListener {
+private class AutoRepeatHandler(extent: Int, private val view: JTextComponent) : MouseAdapter(), ActionListener {
   private val autoRepeatTimer = Timer(60, this)
   private val extent = BigInteger.valueOf(extent.toLong())
   private var arrowButton: JButton? = null
+
+  init {
+    autoRepeatTimer.initialDelay = 300
+  }
+
   override fun actionPerformed(e: ActionEvent) {
     val o = e.source
     if (o is Timer) {
@@ -84,10 +86,6 @@ private class AutoRepeatHandler(
     if (autoRepeatTimer.isRunning) {
       autoRepeatTimer.stop()
     }
-  }
-
-  init {
-    autoRepeatTimer.initialDelay = 300
   }
 }
 

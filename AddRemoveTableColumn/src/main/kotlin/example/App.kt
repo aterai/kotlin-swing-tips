@@ -16,6 +16,23 @@ fun makeUI(): Component {
 }
 
 private class TableHeaderPopupMenu(table: JTable) : JPopupMenu() {
+  init {
+    val columnModel = table.columnModel
+    columnModel.columns.toList().forEach { tableColumn ->
+      val name = tableColumn.headerValue?.toString() ?: ""
+      val item = JCheckBoxMenuItem(name, true)
+      item.addItemListener { e ->
+        if ((e.itemSelectable as? AbstractButton)?.isSelected == true) {
+          columnModel.addColumn(tableColumn)
+        } else {
+          columnModel.removeColumn(tableColumn)
+        }
+        updateMenuItems(columnModel)
+      }
+      add(item)
+    }
+  }
+
   override fun show(c: Component, x: Int, y: Int) {
     (c as? JTableHeader)?.also {
       it.draggedColumn = null
@@ -40,23 +57,6 @@ private class TableHeaderPopupMenu(table: JTable) : JPopupMenu() {
 
   private fun descendants(me: MenuElement): List<MenuElement> =
     me.subElements.flatMap { listOf(it) + descendants(it) }
-
-  init {
-    val columnModel = table.columnModel
-    columnModel.columns.toList().forEach { tableColumn ->
-      val name = tableColumn.headerValue?.toString() ?: ""
-      val item = JCheckBoxMenuItem(name, true)
-      item.addItemListener { e ->
-        if ((e.itemSelectable as? AbstractButton)?.isSelected == true) {
-          columnModel.addColumn(tableColumn)
-        } else {
-          columnModel.removeColumn(tableColumn)
-        }
-        updateMenuItems(columnModel)
-      }
-      add(item)
-    }
-  }
 }
 
 fun main() {
