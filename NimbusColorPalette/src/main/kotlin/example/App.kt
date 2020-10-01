@@ -21,7 +21,7 @@ fun makeUI(): Component {
   }
   d["ProgressBar[Enabled].foregroundPainter"] = painter
   d["ProgressBar[Enabled+Finished].foregroundPainter"] = painter
-  val model: BoundedRangeModel = DefaultBoundedRangeModel(0, 0, 0, 100)
+  val model = DefaultBoundedRangeModel(0, 0, 0, 100)
   val progressBar1 = JProgressBar(model)
   val progressBar2 = JProgressBar(model)
   progressBar2.putClientProperty("Nimbus.Overrides", d)

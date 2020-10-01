@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionListener
-import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.AbstractDocument
@@ -18,7 +17,7 @@ import javax.swing.text.View
 import javax.swing.text.ViewFactory
 
 private var text: String? = null
-private val threadPool: ExecutorService = Executors.newCachedThreadPool().also {
+private val threadPool = Executors.newCachedThreadPool().also {
   it.execute {
     text = "a".repeat(1024 * 1024 - 2) + "x\n"
   }
