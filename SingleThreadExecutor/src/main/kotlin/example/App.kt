@@ -4,7 +4,6 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.HierarchyEvent
 import java.util.TreeSet
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableCellRenderer
@@ -15,8 +14,8 @@ import javax.swing.table.TableRowSorter
 private val model = WorkerModel()
 private val table = JTable(model)
 private val sorter = TableRowSorter(model)
-private val deleteRowSet: MutableSet<Int> = TreeSet()
-private val executor: ExecutorService = Executors.newSingleThreadExecutor()
+private val deleteRowSet = TreeSet<Int> ()
+private val executor = Executors.newSingleThreadExecutor()
 
 fun makeUI(): Component {
   table.rowSorter = sorter

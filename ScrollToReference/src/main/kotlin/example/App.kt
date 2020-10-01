@@ -5,7 +5,6 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.TreeExpansionEvent
 import javax.swing.event.TreeWillExpandListener
 import javax.swing.plaf.basic.BasicTreeUI
-import javax.swing.text.Element
 import javax.swing.text.html.HTMLDocument
 import javax.swing.text.html.HTMLEditorKit
 import javax.swing.tree.DefaultMutableTreeNode
@@ -97,7 +96,7 @@ private fun makeTree(model: DefaultTreeModel): JTree {
 
 private fun scrollToId(editor: JEditorPane, id: String) {
   val d = editor.document as? HTMLDocument ?: return
-  val element: Element = d.getElement(id)
+  val element = d.getElement(id)
   runCatching {
     val pos = element.startOffset
     val r = editor.modelToView(pos)

@@ -5,7 +5,6 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
-import javax.swing.table.TableModel
 
 fun makeUI(): Component {
   val columnNames = arrayOf("Integer", "Integer", "Boolean")
@@ -16,7 +15,7 @@ fun makeUI(): Component {
     arrayOf(20, 20, true),
     arrayOf(99, 99, false)
   )
-  val model: TableModel = object : DefaultTableModel(data, columnNames) {
+  val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
 
     override fun isCellEditable(row: Int, column: Int) = column != 0
