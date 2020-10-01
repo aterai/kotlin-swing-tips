@@ -1,8 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
 import java.awt.image.BufferedImage
 import java.awt.image.DataBufferInt
 import java.net.URL
@@ -36,10 +34,7 @@ private fun makeImage(url: URL?): BufferedImage {
   return img
 }
 
-private class RandomDissolve(
-  private val image1: BufferedImage,
-  private val image2: BufferedImage
-) : JComponent(), ActionListener {
+private class RandomDissolve(private val image1: BufferedImage, private val image2: BufferedImage) : JComponent() {
   private val animator: Timer
   private var buf: BufferedImage
   private var mode = true
@@ -91,14 +86,6 @@ private class RandomDissolve(
     g2.dispose()
   }
 
-  override fun actionPerformed(e: ActionEvent) {
-    if (nextStage()) {
-      repaint()
-    } else {
-      animator.stop()
-    }
-  }
-
   companion object {
     private const val STAGES = 16
     private fun copyImage(image: BufferedImage): BufferedImage {
@@ -120,7 +107,13 @@ private class RandomDissolve(
 
   init {
     buf = copyImage(if (mode) image2 else image1)
-    animator = Timer(10, this)
+    animator = Timer(10) { e ->
+      if (nextStage()) {
+        repaint()
+      } else {
+        (e.source as? Timer)?.stop()
+      }
+    }
   }
 }
 

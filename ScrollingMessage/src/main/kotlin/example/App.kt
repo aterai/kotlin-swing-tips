@@ -1,8 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
 import java.awt.event.HierarchyEvent
 import java.awt.font.FontRenderContext
 import java.awt.font.GlyphVector
@@ -15,13 +13,18 @@ fun makeUI() = JPanel(BorderLayout()).also {
   it.preferredSize = Dimension(320, 240)
 }
 
-private class MarqueePanel : JComponent(), ActionListener {
-  private val animator = Timer(10, this)
+private class MarqueePanel : JComponent() {
+  private val animator = Timer(10) {
+    xx = if (width + gv.visualBounds.width - xx > 0) xx + 2f else 0f
+    baseline = height / 2f
+    repaint()
+  }
   private val gv: GlyphVector
   private val lm: LineMetrics
   private val corpusSize: Float // the x-height
   private var xx = 0f
   private var baseline = 0f
+
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     val w = width.toFloat()
@@ -47,12 +50,6 @@ private class MarqueePanel : JComponent(), ActionListener {
     g2.paint = Color.BLACK
     g2.drawGlyphVector(gv, w - xx, baseline)
     g2.dispose()
-  }
-
-  override fun actionPerformed(e: ActionEvent) {
-    xx = if (width + gv.visualBounds.width - xx > 0) xx + 2f else 0f
-    baseline = height / 2f
-    repaint()
   }
 
   init {
