@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.ActionListener
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
@@ -41,7 +40,7 @@ private fun startScroll() {
     val elem = root.getElement(ln - 1)
     val dest = textArea.modelToView(elem.startOffset)
     val current = scroll.viewport.viewRect
-    val listener = ActionListener { e ->
+    Timer(20) { e ->
       (e.source as? Timer)?.also { animator ->
         when {
           dest.y < current.y && animator.isRunning -> {
@@ -60,8 +59,7 @@ private fun startScroll() {
           }
         }
       }
-    }
-    Timer(20, listener).start()
+    }.start()
   }.onFailure {
     UIManager.getLookAndFeel().provideErrorFeedback(textArea)
   }
