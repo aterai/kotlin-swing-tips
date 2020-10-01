@@ -59,7 +59,7 @@ private class MyPasswordFieldUI : BasicPasswordFieldUI() {
 }
 
 private class StarIcon : Icon {
-  private val star: Shape = makeStar(6, 3, 8)
+  private val star = makeStar(6, 3, 8)
   fun makeStar(r1: Int, r2: Int, vc: Int): Path2D {
     val or = r1.coerceAtLeast(r2).toDouble()
     val ir = r1.coerceAtMost(r2).toDouble()

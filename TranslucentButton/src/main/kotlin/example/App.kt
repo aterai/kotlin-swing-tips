@@ -142,7 +142,7 @@ private class TranslucentButton(text: String?, icon: Icon?) : JButton(text, icon
     val h = height.toFloat()
     val g2 = g.create() as Graphics2D
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    val area: Shape = RoundRectangle2D.Float(x, y, w - 1f, h - 1f, R, R)
+    val area = RoundRectangle2D.Float(x, y, w - 1f, h - 1f, R, R)
     var ssc = TL
     var bgc = BR
     val m = getModel()
