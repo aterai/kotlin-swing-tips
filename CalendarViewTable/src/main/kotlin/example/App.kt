@@ -14,8 +14,8 @@ import javax.swing.event.ListSelectionListener
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 
-private val realLocalDate: LocalDate = LocalDate.now(ZoneId.systemDefault())
-private var currentLocalDate: LocalDate = realLocalDate
+private val realLocalDate = LocalDate.now(ZoneId.systemDefault())
+private var currentLocalDate = realLocalDate
 private val dateLabel = JLabel(realLocalDate.toString(), SwingConstants.CENTER)
 private val monthLabel = JLabel("", SwingConstants.CENTER)
 private val monthTable = object : JTable() {
