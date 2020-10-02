@@ -47,7 +47,7 @@ private fun getFilteredImage(url: URL?): BufferedImage {
   val dest = BufferedImage(image.width, image.height, BufferedImage.TYPE_INT_RGB)
   val b = ByteArray(256)
   for (i in b.indices) {
-    b[i] = (i * .2f).toByte()
+    b[i] = (i * .2f).toInt().toByte()
   }
   val op = LookupOp(ByteLookupTable(0, b), null)
   op.filter(image, dest)
