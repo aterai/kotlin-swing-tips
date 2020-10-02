@@ -77,6 +77,10 @@ private class UrlLabel(h: String?) : JLabel("<html><a href='$h'>$h") {
 }
 
 private class HyperlinkButton(text: String? = null, icon: Icon? = null) : JButton(text, icon) {
+  constructor(a: Action?) : this() {
+    super.setAction(a)
+  }
+
   override fun updateUI() {
     super.updateUI()
     ui = if (UIManager.get(UI_CLASS_ID) != null) {
@@ -90,10 +94,6 @@ private class HyperlinkButton(text: String? = null, icon: Icon? = null) : JButto
   }
 
   override fun getUI() = BasicLinkViewButtonUI()
-
-  constructor(a: Action?) : this() {
-    super.setAction(a)
-  }
 
   companion object {
     private const val UI_CLASS_ID = "LinkViewButtonUI"

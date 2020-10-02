@@ -66,7 +66,6 @@ fun makeUI(): Component {
 
 private class HeaderRenderer(header: JTableHeader, private val pop: JPopupMenu) : JButton(), TableCellRenderer {
   private var rolloverIndex = -1
-
   @Transient
   private val handler = object : MouseInputAdapter() {
     override fun mouseClicked(e: MouseEvent) {
@@ -99,6 +98,11 @@ private class HeaderRenderer(header: JTableHeader, private val pop: JPopupMenu) 
       val mci = table.convertColumnIndexToModel(vci)
       rolloverIndex = mci
     }
+  }
+
+  init {
+    header.addMouseListener(handler)
+    header.addMouseMotionListener(handler)
   }
 
   override fun updateUI() {
@@ -142,11 +146,6 @@ private class HeaderRenderer(header: JTableHeader, private val pop: JPopupMenu) 
   companion object {
     const val BUTTON_WIDTH = 16
     val BUTTON_BGC = Color(0x64C8C8C8, true)
-  }
-
-  init {
-    header.addMouseListener(handler)
-    header.addMouseMotionListener(handler)
   }
 }
 

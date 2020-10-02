@@ -27,6 +27,11 @@ fun makeUI(): Component {
 
 private class VerticalTitledBorder(title: String?) : TitledBorder(title) {
   private val label = JLabel(title)
+  init {
+    this.label.isOpaque = true
+    // this.label.putClientProperty(BasicHTML.propertyKey, null);
+  }
+
   override fun paintBorder(
     c: Component,
     g: Graphics,
@@ -125,11 +130,6 @@ private class VerticalTitledBorder(title: String?) : TitledBorder(title) {
       }
       return ins
     }
-  }
-
-  init {
-    this.label.isOpaque = true
-    // this.label.putClientProperty(BasicHTML.propertyKey, null);
   }
 }
 

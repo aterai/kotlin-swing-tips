@@ -65,14 +65,6 @@ private fun makeEditorPane(editable: Boolean) = JEditorPane().also {
 }
 
 private class HyperlinkButton : JButton {
-  override fun updateUI() {
-    super.updateUI()
-    ui = BasicLinkViewButtonUI()
-    foreground = Color.BLUE
-    border = BorderFactory.createEmptyBorder(0, 0, 2, 0)
-    cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
-  }
-
   constructor(text: String?, icon: Icon?) : super(text, icon)
 
   constructor(text: String?) : this(text, null)
@@ -82,6 +74,14 @@ private class HyperlinkButton : JButton {
   // constructor(a: Action) : this(null, null) {
   //   super.setAction(a)
   // }
+
+  override fun updateUI() {
+    super.updateUI()
+    ui = BasicLinkViewButtonUI()
+    foreground = Color.BLUE
+    border = BorderFactory.createEmptyBorder(0, 0, 2, 0)
+    cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
+  }
 }
 
 private open class LinkViewButtonUI : BasicButtonUI()

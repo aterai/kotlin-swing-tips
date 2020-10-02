@@ -46,6 +46,10 @@ private fun makeTitledPanel(title: String, c: Component): Component {
 private class WatermarkTextField : JTextField(), FocusListener {
   private val image = ImageIcon(javaClass.getResource("watermark.png"))
   private var showWatermark = true
+  init {
+    addFocusListener(this)
+  }
+
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     if (showWatermark) {
@@ -66,14 +70,14 @@ private class WatermarkTextField : JTextField(), FocusListener {
     showWatermark = text.trim().isEmpty()
     repaint()
   }
-
-  init {
-    addFocusListener(this)
-  }
 }
 
 private class GhostFocusListener(tf: JTextComponent) : FocusListener {
   private val ghostMessage = tf.text
+  init {
+    tf.foreground = INACTIVE_COLOR
+  }
+
   override fun focusGained(e: FocusEvent) {
     (e.component as? JTextComponent)?.also {
       if (ghostMessage == it.text && INACTIVE_COLOR == it.foreground) {
@@ -95,10 +99,6 @@ private class GhostFocusListener(tf: JTextComponent) : FocusListener {
   companion object {
     private val INACTIVE_COLOR = UIManager.getColor("TextField.inactiveForeground")
     private val ORIGINAL_COLOR = UIManager.getColor("TextField.foreground")
-  }
-
-  init {
-    tf.foreground = INACTIVE_COLOR
   }
 }
 

@@ -94,6 +94,25 @@ private class ColorEditor : AbstractCellEditor(), TableCellEditor, ActionListene
   private val colorChooser: JColorChooser
   private val dialog: JDialog
   private var currentColor: Color? = null
+  init {
+    // Set up the editor (from the table's point of view),
+    // which is a button.
+    // This button brings up the color chooser dialog,
+    // which is the editor from the user's point of view.
+    button.actionCommand = EDIT
+    button.addActionListener(this)
+    // button.setBorderPainted(false);
+    button.isContentAreaFilled = false
+    button.isFocusPainted = false
+    button.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
+    button.isOpaque = false
+    button.horizontalAlignment = SwingConstants.LEFT
+    button.horizontalTextPosition = SwingConstants.RIGHT
+
+    // Set up the dialog that the button brings up.
+    colorChooser = JColorChooser()
+    dialog = JColorChooser.createDialog(button, "Pick a Color", true, colorChooser, this, null)
+  }
 
   /**
    * Handles events from the editor button and from
@@ -135,26 +154,6 @@ private class ColorEditor : AbstractCellEditor(), TableCellEditor, ActionListene
 
   companion object {
     private const val EDIT = "edit"
-  }
-
-  init {
-    // Set up the editor (from the table's point of view),
-    // which is a button.
-    // This button brings up the color chooser dialog,
-    // which is the editor from the user's point of view.
-    button.actionCommand = EDIT
-    button.addActionListener(this)
-    // button.setBorderPainted(false);
-    button.isContentAreaFilled = false
-    button.isFocusPainted = false
-    button.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
-    button.isOpaque = false
-    button.horizontalAlignment = SwingConstants.LEFT
-    button.horizontalTextPosition = SwingConstants.RIGHT
-
-    // Set up the dialog that the button brings up.
-    colorChooser = JColorChooser()
-    dialog = JColorChooser.createDialog(button, "Pick a Color", true, colorChooser, this, null)
   }
 }
 

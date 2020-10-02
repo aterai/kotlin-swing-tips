@@ -58,6 +58,17 @@ private class DragWindowListener : MouseAdapter() {
 }
 
 private class DraggableInternalFrame(title: String?) : JInternalFrame(title) {
+  init {
+    val focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager()
+    focusManager.addPropertyChangeListener { e ->
+      if ("activeWindow" == e.propertyName) {
+        runCatching {
+          setSelected(e.newValue != null)
+        }
+      }
+    }
+  }
+
   override fun updateUI() {
     super.updateUI()
     (ui as? BasicInternalFrameUI)?.northPane?.also { titleBar ->
@@ -67,17 +78,6 @@ private class DraggableInternalFrame(title: String?) : JInternalFrame(title) {
       val dwl = DragWindowListener()
       titleBar.addMouseListener(dwl)
       titleBar.addMouseMotionListener(dwl)
-    }
-  }
-
-  init {
-    val focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager()
-    focusManager.addPropertyChangeListener { e ->
-      if ("activeWindow" == e.propertyName) {
-        runCatching {
-          setSelected(e.newValue != null)
-        }
-      }
     }
   }
 }

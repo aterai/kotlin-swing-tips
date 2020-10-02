@@ -27,6 +27,14 @@ fun makeUI(): Component {
 }
 
 private class WavyLineSeparator(orientation: Int = SwingConstants.HORIZONTAL) : JSeparator(orientation) {
+  init {
+    border = if (orientation == SwingConstants.HORIZONTAL) {
+      BorderFactory.createEmptyBorder(2, 1, 2, 1)
+    } else {
+      BorderFactory.createEmptyBorder(1, 2, 1, 2)
+    }
+  }
+
   override fun paintComponent(g: Graphics) {
     var pos: Int
     val i = insets
@@ -92,14 +100,6 @@ private class WavyLineSeparator(orientation: Int = SwingConstants.HORIZONTAL) : 
     private const val ICON_WIDTH = 3
     private val WAVY_HORIZONTAL_ICON: Icon = WavyLineIcon()
     private val WAVY_VERTICAL_ICON: Icon = WavyLineIcon(SwingConstants.VERTICAL)
-  }
-
-  init {
-    border = if (orientation == SwingConstants.HORIZONTAL) {
-      BorderFactory.createEmptyBorder(2, 1, 2, 1)
-    } else {
-      BorderFactory.createEmptyBorder(1, 2, 1, 2)
-    }
   }
 }
 

@@ -127,6 +127,10 @@ private class BackgroundTask : SwingWorker<String, Void>() {
 }
 
 private class ProgressListener(private val progressBar: JProgressBar) : PropertyChangeListener {
+  init {
+    progressBar.value = 0
+  }
+
   override fun propertyChange(e: PropertyChangeEvent) {
     val strPropertyName = e.propertyName
     if ("progress" == strPropertyName) {
@@ -134,10 +138,6 @@ private class ProgressListener(private val progressBar: JProgressBar) : Property
       val progress = e.newValue as? Int ?: 0
       progressBar.value = progress
     }
-  }
-
-  init {
-    progressBar.value = 0
   }
 }
 
