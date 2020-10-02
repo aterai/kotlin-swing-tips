@@ -26,8 +26,10 @@ private fun makeUI(): Component {
     val sc = if ((e.source as? JCheckBox)?.isSelected == true) SELECTION else null
     editorPane.selectionColor = sc
   }
+
   val styleSheet = StyleSheet()
   styleSheet.addRule(".highlight {color: blue; background: #FF5533; opacity: 0.5;}")
+
   val htmlEditorKit = HTMLEditorKit()
   htmlEditorKit.styleSheet = styleSheet
   editorPane.editorKit = htmlEditorKit
@@ -41,17 +43,17 @@ private fun makeUI(): Component {
   editorPane.text =
     """
     <html><pre>
-private static void createAndShowGui() {
-  <span class='highlight'>JFrame</span> frame = new JFrame();
-  frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-  frame.getContentPane().add(new MainPanel());
-  frame.pack();
-  frame.setLocationRelativeTo(null);
-  frame.setVisible(true);
-}
-    """
+    private static void createAndShowGui() {
+      <span class='highlight'>JFrame</span> frame = new JFrame();
+      frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+      frame.getContentPane().add(new MainPanel());
+      frame.pack();
+      frame.setLocationRelativeTo(null);
+      frame.setVisible(true);
+    }
+    """.trimIndent()
 
-  val highlightPainter: HighlightPainter = DefaultHighlightPainter(HIGHLIGHT)
+  val highlightPainter = DefaultHighlightPainter(HIGHLIGHT)
   val button = JToggleButton("highlight")
   button.addActionListener { e ->
     if ((e.source as? JToggleButton)?.isSelected == true) {
@@ -60,9 +62,11 @@ private static void createAndShowGui() {
       editorPane.highlighter.removeAllHighlights()
     }
   }
+
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/tokeidai.jpg")
   val bi = getFilteredImage(url)
+
   val scroll = JScrollPane(editorPane)
   scroll.viewport.isOpaque = false
   scroll.viewportBorder = CentredBackgroundBorder(bi)
@@ -86,7 +90,7 @@ private fun getFilteredImage(url: URL?): BufferedImage {
   val dst = BufferedImage(src.width, src.height, BufferedImage.TYPE_INT_RGB)
   val b = ByteArray(256)
   for (i in b.indices) {
-    b[i] = (i * .2f).toByte()
+    b[i] = (i * .2f).toInt().toByte()
   }
   LookupOp(ByteLookupTable(0, b), null).filter(src, dst)
   return dst

@@ -57,7 +57,7 @@ fun makeUI(): Component {
     desktopPane.add(f)
     val icon = f.frameIcon
     val title = f.title
-    val c: Component = JScrollPane(JTextArea(title))
+    val c = JScrollPane(JTextArea(title))
     if (desktopPane.isShowing) {
       f.add(c)
     } else {

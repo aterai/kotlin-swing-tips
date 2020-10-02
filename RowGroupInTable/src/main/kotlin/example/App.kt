@@ -61,7 +61,7 @@ private fun addRowData(model: DefaultTableModel, data: RowData) {
 private data class RowData(val group: String, val name: String, val count: Int)
 
 private class RowDataRenderer : TableCellRenderer {
-  private val renderer: TableCellRenderer = DefaultTableCellRenderer()
+  private val renderer = DefaultTableCellRenderer()
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -69,10 +69,9 @@ private class RowDataRenderer : TableCellRenderer {
     hasFocus: Boolean,
     row: Int,
     column: Int
-  ): Component {
-    val c = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
-    if (c is JLabel && value is RowData) {
-      c.horizontalAlignment = SwingConstants.LEFT
+  ): Component = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column).also {
+    if (it is JLabel && value is RowData) {
+      it.horizontalAlignment = SwingConstants.LEFT
       when (table.convertColumnIndexToModel(column)) {
         0 -> {
           val str = value.group
@@ -81,16 +80,15 @@ private class RowDataRenderer : TableCellRenderer {
           } else {
             null
           }
-          c.text = if (str == prev) " " else "+ $str"
+          it.text = if (str == prev) " " else "+ $str"
         }
-        1 -> c.text = value.name
+        1 -> it.text = value.name
         2 -> {
-          c.horizontalAlignment = SwingConstants.RIGHT
-          c.text = value.count.toString()
+          it.horizontalAlignment = SwingConstants.RIGHT
+          it.text = value.count.toString()
         }
       }
     }
-    return c
   }
 }
 
