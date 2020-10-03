@@ -16,14 +16,6 @@ private class FontRotateAnimation(str: String) : JComponent() {
   private var rotate = 0.0
   private var shape: Shape
   private val animator = Timer(10, null)
-  override fun paintComponent(g: Graphics) {
-    val g2 = g.create() as? Graphics2D ?: return
-    // g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    g2.paint = Color.BLACK
-    g2.fill(shape)
-    g2.dispose()
-  }
 
   init {
     addHierarchyListener { e ->
@@ -49,6 +41,15 @@ private class FontRotateAnimation(str: String) : JComponent() {
       rotate = (rotate + 2.0) % 360.0
     }
     animator.start()
+  }
+
+  override fun paintComponent(g: Graphics) {
+    val g2 = g.create() as? Graphics2D ?: return
+    // g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.paint = Color.BLACK
+    g2.fill(shape)
+    g2.dispose()
   }
 }
 

@@ -9,6 +9,11 @@ import javax.swing.event.MouseInputListener
 fun makeUI() = object : JPanel() {
   @Transient private var handler: MouseInputListener? = null
 
+  init {
+    add(JLabel("mouseDragged: Show JToolTip"))
+    preferredSize = Dimension(320, 240)
+  }
+
   override fun updateUI() {
     removeMouseMotionListener(handler)
     removeMouseListener(handler)
@@ -16,11 +21,6 @@ fun makeUI() = object : JPanel() {
     handler = ToolTipLocationHandler()
     addMouseMotionListener(handler)
     addMouseListener(handler)
-  }
-
-  init {
-    add(JLabel("mouseDragged: Show JToolTip"))
-    preferredSize = Dimension(320, 240)
   }
 }
 

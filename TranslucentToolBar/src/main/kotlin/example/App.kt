@@ -26,8 +26,6 @@ fun makeUI(): Component {
 
 private class LabelWithToolBox(image: Icon?) : JLabel(image) {
   private val animator = Timer(DELAY, null)
-
-  @Transient
   private var handler: ToolBoxHandler? = null
   private var isHidden = false
   private var counter = 0
@@ -54,6 +52,37 @@ private class LabelWithToolBox(image: Icon?) : JLabel(image) {
       foreground = Color.WHITE
       border = BorderFactory.createEmptyBorder(2, 4, 4, 4)
     }
+  }
+
+  init {
+    animator.addActionListener {
+      val height = toolBox.preferredSize.height
+      val h = height.toDouble()
+      if (isHidden) {
+        val a = AnimationUtil.easeInOut(++counter / h)
+        yy = (.5 + a * h).toInt()
+        toolBox.background = Color(0f, 0f, 0f, (.6 * a).toFloat())
+        if (yy >= height) {
+          yy = height
+          animator.stop()
+        }
+      } else {
+        val a = AnimationUtil.easeInOut(--counter / h)
+        yy = (.5 + a * h).toInt()
+        toolBox.background = Color(0f, 0f, 0f, (.6 * a).toFloat())
+        if (yy <= 0) {
+          yy = 0
+          animator.stop()
+        }
+      }
+      toolBox.revalidate()
+    }
+    toolBox.add(Box.createGlue())
+    // http://chrfb.deviantart.com/art/quot-ecqlipse-2-quot-PNG-59941546
+    toolBox.add(makeToolButton("ATTACHMENT_16x16-32.png"))
+    toolBox.add(Box.createHorizontalStrut(2))
+    toolBox.add(makeToolButton("RECYCLE BIN - EMPTY_16x16-32.png"))
+    add(toolBox)
   }
 
   override fun updateUI() {
@@ -126,37 +155,6 @@ private class LabelWithToolBox(image: Icon?) : JLabel(image) {
       g2.dispose()
       return ImageIcon(op.filter(img, null))
     }
-  }
-
-  init {
-    animator.addActionListener {
-      val height = toolBox.preferredSize.height
-      val h = height.toDouble()
-      if (isHidden) {
-        val a = AnimationUtil.easeInOut(++counter / h)
-        yy = (.5 + a * h).toInt()
-        toolBox.background = Color(0f, 0f, 0f, (.6 * a).toFloat())
-        if (yy >= height) {
-          yy = height
-          animator.stop()
-        }
-      } else {
-        val a = AnimationUtil.easeInOut(--counter / h)
-        yy = (.5 + a * h).toInt()
-        toolBox.background = Color(0f, 0f, 0f, (.6 * a).toFloat())
-        if (yy <= 0) {
-          yy = 0
-          animator.stop()
-        }
-      }
-      toolBox.revalidate()
-    }
-    toolBox.add(Box.createGlue())
-    // http://chrfb.deviantart.com/art/quot-ecqlipse-2-quot-PNG-59941546
-    toolBox.add(makeToolButton("ATTACHMENT_16x16-32.png"))
-    toolBox.add(Box.createHorizontalStrut(2))
-    toolBox.add(makeToolButton("RECYCLE BIN - EMPTY_16x16-32.png"))
-    add(toolBox)
   }
 }
 

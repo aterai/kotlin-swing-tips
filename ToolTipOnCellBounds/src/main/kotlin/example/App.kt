@@ -77,6 +77,11 @@ private open class TooltipList<E>(m: ListModel<E>) : JList<E>(m) {
 
 private open class CellRendererTooltipList<E>(m: ListModel<E>) : JList<E>(m) {
   private val label = JLabel()
+
+  init {
+    label.border = BorderFactory.createLineBorder(Color.GRAY, 1)
+  }
+
   override fun getToolTipLocation(e: MouseEvent): Point? {
     val p = e.point
     val i = locationToIndex(p)
@@ -113,10 +118,6 @@ private open class CellRendererTooltipList<E>(m: ListModel<E>) : JList<E>(m) {
     tip.add(label)
     return tip
   }
-
-  init {
-    label.border = BorderFactory.createLineBorder(Color.GRAY, 1)
-  }
 }
 
 private open class TooltipListCellRenderer<E> : ListCellRenderer<E> {
@@ -142,6 +143,10 @@ private open class TooltipListCellRenderer<E> : ListCellRenderer<E> {
 }
 
 private class RendererIcon(private val renderer: Component, private val rect: Rectangle) : Icon {
+  init {
+    rect.setLocation(0, 0)
+  }
+
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     if (c is Container) {
       val g2 = g.create() as? Graphics2D ?: return
@@ -154,10 +159,6 @@ private class RendererIcon(private val renderer: Component, private val rect: Re
   override fun getIconWidth() = renderer.preferredSize.width
 
   override fun getIconHeight() = renderer.preferredSize.height
-
-  init {
-    rect.setLocation(0, 0)
-  }
 }
 
 fun main() {

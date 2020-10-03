@@ -174,6 +174,13 @@ private class TranslucentButtonIcon(c: JComponent) : Icon {
   private var width = 100
   private var height = 20
 
+  init {
+    val i = c.insets
+    val d = c.preferredSize
+    width = d.width - i.left - i.right
+    height = d.height - i.top - i.bottom
+  }
+
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     if (c is AbstractButton) {
       // val i = c.insets
@@ -208,13 +215,6 @@ private class TranslucentButtonIcon(c: JComponent) : Icon {
   override fun getIconWidth() = width.coerceAtLeast(100)
 
   override fun getIconHeight() = height.coerceAtLeast(20)
-
-  init {
-    val i = c.insets
-    val d = c.preferredSize
-    width = d.width - i.left - i.right
-    height = d.height - i.top - i.bottom
-  }
 
   companion object {
     private val TL = Color(1f, 1f, 1f, .2f)

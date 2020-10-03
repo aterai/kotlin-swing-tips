@@ -15,11 +15,15 @@ import javax.swing.plaf.synth.SynthContext
 import javax.swing.plaf.synth.SynthLookAndFeel
 
 fun makeUI(): Component {
-  val tabbedPane = JTabbedPane(SwingConstants.LEFT)
-  if (tabbedPane.ui is WindowsTabbedPaneUI) {
-    tabbedPane.ui = LeftAlignmentWindowsTabbedPaneUI()
-  } else {
-    tabbedPane.ui = LeftAlignmentTabbedPaneUI()
+  val tabbedPane = object : JTabbedPane(SwingConstants.LEFT) {
+    override fun updateUI() {
+      super.updateUI()
+      ui = if (ui is WindowsTabbedPaneUI) {
+        LeftAlignmentWindowsTabbedPaneUI()
+      } else {
+        LeftAlignmentTabbedPaneUI()
+      }
+    }
   }
 
   val list = listOf(
@@ -34,7 +38,7 @@ fun makeUI(): Component {
   val check = JCheckBox("TOP")
   check.addActionListener { e ->
     val b = (e.source as? JCheckBox)?.isSelected == true
-    list.forEach { it.tabPlacement = if (b) SwingConstants.LEFT else SwingConstants.TOP }
+    list.forEach { it.tabPlacement = if (b) SwingConstants.TOP else SwingConstants.LEFT }
   }
 
   return JPanel(BorderLayout()).also {
@@ -54,17 +58,17 @@ private fun makeTestTabbedPane(tabbedPane: JTabbedPane) = tabbedPane.also {
 }
 
 private class ClippedTitleTabbedPane(tabPlacement: Int) : JTabbedPane(tabPlacement) {
-  private fun getSynthInsets(region: Region): Insets {
-    val style = SynthLookAndFeel.getStyle(this, region)
-    val context = SynthContext(this, region, style, SynthConstants.ENABLED)
-    return style.getInsets(context, null)
-  }
-
   private val tabInsets: Insets
     get() = UIManager.getInsets("TabbedPane.tabInsets") ?: getSynthInsets(Region.TABBED_PANE_TAB)
 
   private val tabAreaInsets: Insets
     get() = UIManager.getInsets("TabbedPane.tabAreaInsets") ?: getSynthInsets(Region.TABBED_PANE_TAB_AREA)
+
+  private fun getSynthInsets(region: Region): Insets {
+    val style = SynthLookAndFeel.getStyle(this, region)
+    val context = SynthContext(this, region, style, SynthConstants.ENABLED)
+    return style.getInsets(context, null)
+  }
 
   override fun doLayout() {
     val tabCount = tabCount
@@ -256,15 +260,23 @@ private class ButtonTabComponent(pane: JTabbedPane) : JPanel(BorderLayout()) {
 }
 
 private class TabButton : JButton() {
-  override fun getPreferredSize() = Dimension(SIZE, SIZE)
-
   override fun updateUI() {
     // we don't want to update UI for this button
+    // super.updateUI()
+    ui = BasicButtonUI()
+    toolTipText = "close this tab"
+    isContentAreaFilled = false
+    isFocusable = false
+    border = BorderFactory.createEtchedBorder()
+    isBorderPainted = false
+    isRolloverEnabled = true
   }
+
+  override fun getPreferredSize() = Dimension(SIZE, SIZE)
 
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.stroke = BasicStroke(2f)
     g2.paint = Color.BLACK
     if (getModel().isRollover) {
@@ -279,18 +291,8 @@ private class TabButton : JButton() {
   }
 
   companion object {
-    private const val SIZE: Int = 17
-    private const val DELTA: Int = 6
-  }
-
-  init {
-    ui = BasicButtonUI()
-    toolTipText = "close this tab"
-    isContentAreaFilled = false
-    isFocusable = false
-    border = BorderFactory.createEtchedBorder()
-    isBorderPainted = false
-    isRolloverEnabled = true
+    private const val SIZE = 17
+    private const val DELTA = 6
   }
 }
 

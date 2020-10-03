@@ -41,16 +41,6 @@ private fun updateLabel(path: TreePath) {
 }
 
 private class TreePopupMenu : JPopupMenu() {
-  override fun show(c: Component, x: Int, y: Int) {
-    if (c is JTree && c.selectionCount > 0) {
-      super.show(c, x, y)
-    }
-  }
-
-  companion object {
-    private const val NODE_MAXIMUM_LEVELS = 2
-  }
-
   init {
     add("path").addActionListener {
       val tree = invoker as? JTree
@@ -73,6 +63,16 @@ private class TreePopupMenu : JPopupMenu() {
         JOptionPane.showMessageDialog(tree, message, "add node", JOptionPane.ERROR_MESSAGE)
       }
     }
+  }
+
+  override fun show(c: Component, x: Int, y: Int) {
+    if (c is JTree && c.selectionCount > 0) {
+      super.show(c, x, y)
+    }
+  }
+
+  companion object {
+    private const val NODE_MAXIMUM_LEVELS = 2
   }
 }
 

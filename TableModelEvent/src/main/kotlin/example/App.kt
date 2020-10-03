@@ -129,21 +129,6 @@ private enum class Status {
 
 private class TablePopupMenu : JPopupMenu() {
   private val delete: JMenuItem
-  override fun show(c: Component, x: Int, y: Int) {
-    if (c is JTable) {
-      delete.isEnabled = c.selectedRowCount > 0
-      super.show(c, x, y)
-    }
-  }
-
-  private fun addRowActionPerformed(isSelected: Boolean) {
-    val table = invoker as? JTable
-    val model = table?.model
-    if (model is DefaultTableModel) {
-      model.addRow(arrayOf(isSelected, 0, ""))
-      table.scrollRectToVisible(table.getCellRect(model.rowCount - 1, 0, true))
-    }
-  }
 
   init {
     add("add(true)").addActionListener { addRowActionPerformed(true) }
@@ -159,6 +144,22 @@ private class TablePopupMenu : JPopupMenu() {
           model.removeRow(table.convertRowIndexToModel(selection[i]))
         }
       }
+    }
+  }
+
+  override fun show(c: Component, x: Int, y: Int) {
+    if (c is JTable) {
+      delete.isEnabled = c.selectedRowCount > 0
+      super.show(c, x, y)
+    }
+  }
+
+  private fun addRowActionPerformed(isSelected: Boolean) {
+    val table = invoker as? JTable
+    val model = table?.model
+    if (model is DefaultTableModel) {
+      model.addRow(arrayOf(isSelected, 0, ""))
+      table.scrollRectToVisible(table.getCellRect(model.rowCount - 1, 0, true))
     }
   }
 }

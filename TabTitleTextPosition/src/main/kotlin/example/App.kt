@@ -31,17 +31,17 @@ private fun addTab(tabbedPane: JTabbedPane, title: String, icon: Icon, c: Compon
 }
 
 private class ClippedTitleTabbedPane : JTabbedPane() {
-  private fun getSynthInsets(region: Region): Insets {
-    val style = SynthLookAndFeel.getStyle(this, region)
-    val context = SynthContext(this, region, style, SynthConstants.ENABLED)
-    return style.getInsets(context, null)
-  }
-
   private val tabInsets: Insets
     get() = UIManager.getInsets("TabbedPane.tabInsets") ?: getSynthInsets(Region.TABBED_PANE_TAB)
 
   private val tabAreaInsets: Insets
     get() = UIManager.getInsets("TabbedPane.tabAreaInsets") ?: getSynthInsets(Region.TABBED_PANE_TAB_AREA)
+
+  private fun getSynthInsets(region: Region): Insets {
+    val style = SynthLookAndFeel.getStyle(this, region)
+    val context = SynthContext(this, region, style, SynthConstants.ENABLED)
+    return style.getInsets(context, null)
+  }
 
   override fun doLayout() {
     val tabCount = tabCount
