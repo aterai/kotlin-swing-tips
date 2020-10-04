@@ -43,6 +43,17 @@ private class RandomDissolve(private val image1: BufferedImage, private val imag
   private var dst: IntArray? = null
   private var step: IntArray? = null
 
+  init {
+    buf = copyImage(if (mode) image2 else image1)
+    animator = Timer(10) { e ->
+      if (nextStage()) {
+        repaint()
+      } else {
+        (e.source as? Timer)?.stop()
+      }
+    }
+  }
+
   private fun nextStage(): Boolean {
     val s = src
     val d = dst
@@ -86,34 +97,24 @@ private class RandomDissolve(private val image1: BufferedImage, private val imag
     g2.dispose()
   }
 
-  companion object {
-    private const val STAGES = 16
-    private fun copyImage(image: BufferedImage): BufferedImage {
-      val w = image.width
-      val h = image.height
-      val result = BufferedImage(w, h, BufferedImage.TYPE_INT_RGB)
-      val g2 = result.createGraphics()
-      g2.drawRenderedImage(image, null)
-      g2.dispose()
-      return result
-    }
-
-    private fun getData(image: BufferedImage): IntArray {
-      val wr = image.raster
-      val dbi = wr.dataBuffer as DataBufferInt
-      return dbi.data
-    }
+  private fun copyImage(image: BufferedImage): BufferedImage {
+    val w = image.width
+    val h = image.height
+    val result = BufferedImage(w, h, BufferedImage.TYPE_INT_RGB)
+    val g2 = result.createGraphics()
+    g2.drawRenderedImage(image, null)
+    g2.dispose()
+    return result
   }
 
-  init {
-    buf = copyImage(if (mode) image2 else image1)
-    animator = Timer(10) { e ->
-      if (nextStage()) {
-        repaint()
-      } else {
-        (e.source as? Timer)?.stop()
-      }
-    }
+  private fun getData(image: BufferedImage): IntArray {
+    val wr = image.raster
+    val dbi = wr.dataBuffer as DataBufferInt
+    return dbi.data
+  }
+
+  companion object {
+    private const val STAGES = 16
   }
 }
 

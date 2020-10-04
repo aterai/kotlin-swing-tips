@@ -43,6 +43,11 @@ private class RadioButtonsPanel : JPanel() {
   val buttons = ArrayList<JRadioButton>(answer.size)
   var bg = ButtonGroup()
 
+  init {
+    layout = BoxLayout(this, BoxLayout.X_AXIS)
+    initButtons()
+  }
+
   private fun initButtons() {
     buttons.clear()
     removeAll()
@@ -75,11 +80,6 @@ private class RadioButtonsPanel : JPanel() {
       return b
     }
   }
-
-  init {
-    layout = BoxLayout(this, BoxLayout.X_AXIS)
-    initButtons()
-  }
 }
 
 private class RadioButtonsRenderer : TableCellRenderer {
@@ -99,6 +99,13 @@ private class RadioButtonsRenderer : TableCellRenderer {
 
 private class RadioButtonsEditor : AbstractCellEditor(), TableCellEditor {
   private val renderer = RadioButtonsPanel()
+  init {
+    val al = ActionListener { fireEditingStopped() }
+    for (b in renderer.buttons) {
+      b.addActionListener(al)
+    }
+  }
+
   override fun getTableCellEditorComponent(
     table: JTable,
     value: Any?,
@@ -111,13 +118,6 @@ private class RadioButtonsEditor : AbstractCellEditor(), TableCellEditor {
   }
 
   override fun getCellEditorValue() = Answer.valueOf(renderer.bg.selection.actionCommand)
-
-  init {
-    val al = ActionListener { fireEditingStopped() }
-    for (b in renderer.buttons) {
-      b.addActionListener(al)
-    }
-  }
 }
 
 fun main() {

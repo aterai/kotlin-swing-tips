@@ -29,17 +29,6 @@ private class RotateIcon(icon: Icon, rotate: Int) : Icon {
   private val dim = Dimension()
   private val image: Image
   private var trans: AffineTransform? = null
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-    val g2 = g.create() as Graphics2D
-    g2.translate(x, y)
-    g2.drawImage(image, trans, c)
-    g2.dispose()
-  }
-
-  override fun getIconWidth() = dim.width
-
-  override fun getIconHeight() = dim.height
-
   init {
     require(rotate % 90 == 0) { "$rotate: Rotate must be (rotate % 90 == 0)" }
     dim.setSize(icon.iconWidth, icon.iconHeight)
@@ -62,6 +51,17 @@ private class RotateIcon(icon: Icon, rotate: Int) : Icon {
     }
     trans?.quadrantRotate(numQuadrants)
   }
+
+  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+    val g2 = g.create() as Graphics2D
+    g2.translate(x, y)
+    g2.drawImage(image, trans, c)
+    g2.dispose()
+  }
+
+  override fun getIconWidth() = dim.width
+
+  override fun getIconHeight() = dim.height
 }
 
 // private enum class QuadrantRotate(val numQuadrants: Int) {

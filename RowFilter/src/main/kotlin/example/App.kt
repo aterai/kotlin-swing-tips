@@ -14,14 +14,6 @@ private fun canAddRow() = !check1.isSelected && !check2.isSelected
 private class TablePopupMenu : JPopupMenu() {
   private val addMenuItem = add("add")
   private val deleteMenuItem: JMenuItem
-  override fun show(c: Component, x: Int, y: Int) {
-    if (c is JTable) {
-      addMenuItem.isEnabled = canAddRow()
-      deleteMenuItem.isEnabled = c.selectedRowCount > 0
-      super.show(c, x, y)
-    }
-  }
-
   init {
     addMenuItem.addActionListener {
       (invoker as? JTable)?.also {
@@ -39,6 +31,14 @@ private class TablePopupMenu : JPopupMenu() {
           m.removeRow(tbl.convertRowIndexToModel(selection[i]))
         }
       }
+    }
+  }
+
+  override fun show(c: Component, x: Int, y: Int) {
+    if (c is JTable) {
+      addMenuItem.isEnabled = canAddRow()
+      deleteMenuItem.isEnabled = c.selectedRowCount > 0
+      super.show(c, x, y)
     }
   }
 }
