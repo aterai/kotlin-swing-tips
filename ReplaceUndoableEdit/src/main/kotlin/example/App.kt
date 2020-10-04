@@ -18,42 +18,50 @@ fun makeUI(): Component {
   val undoManager0 = UndoManager()
   val textField0 = JTextField("default")
   textField0.document.addUndoableEditListener(undoManager0)
+
   val undoManager1 = UndoManager()
   val textField1 = JTextField()
   textField1.document = CustomUndoPlainDocument()
   textField1.text = "111111111111111111"
   textField1.document.addUndoableEditListener(undoManager1)
+
   val undoManager2 = DocumentFilterUndoManager()
   val textField2 = JTextField()
   textField2.text = "2222222222222222"
+
   val doc = textField2.document
   if (doc is AbstractDocument) {
     doc.addUndoableEditListener(undoManager2)
     doc.documentFilter = undoManager2.documentFilter
   }
+
   val button = JButton("setText(LocalDateTime.now(...))")
   button.addActionListener {
     val str = LocalDateTime.now(ZoneId.systemDefault()).toString()
     listOf(textField0, textField1, textField2).forEach { it.text = str }
   }
-  val undoAction: Action = object : AbstractAction("undo") {
+
+  val undoAction = object : AbstractAction("undo") {
     override fun actionPerformed(e: ActionEvent) {
       listOf(undoManager0, undoManager1, undoManager2)
         .filter { it.canUndo() }
         .forEach { it.undo() }
     }
   }
-  val redoAction: Action = object : AbstractAction("redo") {
+
+  val redoAction = object : AbstractAction("redo") {
     override fun actionPerformed(e: ActionEvent) {
       listOf(undoManager0, undoManager1, undoManager2)
         .filter { it.canRedo() }
         .forEach { it.redo() }
     }
   }
+
   val p = JPanel()
   p.add(JButton(undoAction))
   p.add(JButton(redoAction))
   p.add(button)
+
   val box = Box.createVerticalBox()
   box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   box.add(makeTitledPanel("Default", textField0))
@@ -61,6 +69,7 @@ fun makeUI(): Component {
   box.add(makeTitledPanel("Document#replace()+AbstractDocument#fireUndoableEditUpdate()", textField1))
   box.add(Box.createVerticalStrut(10))
   box.add(makeTitledPanel("DocumentFilter#replace()+UndoableEditListener#undoableEditHappened()", textField2))
+
   return JPanel(BorderLayout()).also {
     it.add(box, BorderLayout.NORTH)
     it.add(p, BorderLayout.SOUTH)
@@ -101,8 +110,8 @@ private class CustomUndoPlainDocument : PlainDocument() {
 }
 
 private class DocumentFilterUndoManager : UndoManager() {
-  var compoundEdit: CompoundEdit? = null
-  @Transient val documentFilter: DocumentFilter = object : DocumentFilter() {
+  private var compoundEdit: CompoundEdit? = null
+  @Transient val documentFilter = object : DocumentFilter() {
     @Throws(BadLocationException::class)
     override fun replace(
       fb: FilterBypass,
