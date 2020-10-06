@@ -39,15 +39,15 @@ private fun makeVerticalToolBar() = JToolBar(SwingConstants.VERTICAL).also {
 }
 
 private class ColorPanel(color: Color) : JPanel() {
+  init {
+    background = color
+  }
+
   override fun getPreferredSize() = Dimension(ICON_SIZE, ICON_SIZE)
 
   override fun getMinimumSize() = preferredSize
 
   override fun getMaximumSize() = preferredSize
-
-  init {
-    background = color
-  }
 }
 
 fun main() {

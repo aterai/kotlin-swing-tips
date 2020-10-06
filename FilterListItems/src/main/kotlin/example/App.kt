@@ -111,6 +111,24 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   private val label = JLabel("", SwingConstants.CENTER)
   private val focusBorder = UIManager.getBorder("List.focusCellHighlightBorder")
   private val noFocusBorder: Border
+
+  init {
+    var b = UIManager.getBorder("List.noFocusBorder")
+    if (b == null) { // Nimbus???
+      val i = focusBorder.getBorderInsets(label)
+      b = BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
+    }
+    noFocusBorder = b
+    icon.isOpaque = false
+    label.foreground = renderer.foreground
+    label.background = renderer.background
+    label.border = noFocusBorder
+    renderer.isOpaque = false
+    renderer.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
+    renderer.add(icon)
+    renderer.add(label, BorderLayout.SOUTH)
+  }
+
   override fun getListCellRendererComponent(
     list: JList<out ListItem>,
     value: ListItem?,
@@ -132,23 +150,6 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
       label.isOpaque = false
     }
     return renderer
-  }
-
-  init {
-    var b = UIManager.getBorder("List.noFocusBorder")
-    if (b == null) { // Nimbus???
-      val i = focusBorder.getBorderInsets(label)
-      b = BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
-    }
-    noFocusBorder = b
-    icon.isOpaque = false
-    label.foreground = renderer.foreground
-    label.background = renderer.background
-    label.border = noFocusBorder
-    renderer.isOpaque = false
-    renderer.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
-    renderer.add(icon)
-    renderer.add(label, BorderLayout.SOUTH)
   }
 }
 
