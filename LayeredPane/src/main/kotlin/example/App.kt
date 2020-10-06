@@ -56,14 +56,14 @@ private class MyInternalFrame : JInternalFrame(
   true,
   true
 ) {
-  companion object {
-    private const val OFFSET = 30
-    private val OPEN_FRAME_COUNT = AtomicInteger()
-  }
-
   init {
     setSize(180, 100)
     setLocation(OFFSET * OPEN_FRAME_COUNT.toInt(), OFFSET * OPEN_FRAME_COUNT.toInt())
+  }
+
+  companion object {
+    private const val OFFSET = 30
+    private val OPEN_FRAME_COUNT = AtomicInteger()
   }
 }
 

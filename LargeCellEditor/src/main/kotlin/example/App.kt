@@ -98,43 +98,6 @@ private class IconTable(model: TableModel?, list: ListModel<IconItem>) : JTable(
     }
   }
 
-  fun initCellSize(size: Int) {
-    setRowHeight(size)
-    val tableHeader = getTableHeader()
-    tableHeader.resizingAllowed = false
-    tableHeader.reorderingAllowed = false
-    val m = getColumnModel()
-    for (i in 0 until m.columnCount) {
-      val col = m.getColumn(i)
-      col.minWidth = size
-      col.maxWidth = size
-    }
-    border = BorderFactory.createLineBorder(Color.BLACK)
-  }
-
-  fun startEditing() {
-    rootPane.glassPane = glassPane
-    val d = editor.preferredSize
-    editor.size = d
-    val sr = selectedRow
-    val sc = selectedColumn
-    val r = getCellRect(sr, sc, true)
-    val p = SwingUtilities.convertPoint(this, r.location, glassPane)
-    p.translate((r.width - d.width) / 2, (r.height - d.height) / 2)
-    editor.location = p
-    glassPane.isVisible = true
-    editor.setSelectedValue(getValueAt(sr, sc), true)
-    editor.requestFocusInWindow()
-  }
-
-  fun cancelEditing() {
-    glassPane.isVisible = false
-  }
-
-  companion object {
-    private const val OFFSET = 4
-  }
-
   init {
     setDefaultRenderer(Any::class.java, IconTableCellRenderer())
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
@@ -177,12 +140,58 @@ private class IconTable(model: TableModel?, list: ListModel<IconItem>) : JTable(
     glassPane.add(editor)
     glassPane.isVisible = false
   }
+
+  fun initCellSize(size: Int) {
+    setRowHeight(size)
+    val tableHeader = getTableHeader()
+    tableHeader.resizingAllowed = false
+    tableHeader.reorderingAllowed = false
+    val m = getColumnModel()
+    for (i in 0 until m.columnCount) {
+      val col = m.getColumn(i)
+      col.minWidth = size
+      col.maxWidth = size
+    }
+    border = BorderFactory.createLineBorder(Color.BLACK)
+  }
+
+  fun startEditing() {
+    rootPane.glassPane = glassPane
+    val d = editor.preferredSize
+    editor.size = d
+    val sr = selectedRow
+    val sc = selectedColumn
+    val r = getCellRect(sr, sc, true)
+    val p = SwingUtilities.convertPoint(this, r.location, glassPane)
+    p.translate((r.width - d.width) / 2, (r.height - d.height) / 2)
+    editor.location = p
+    glassPane.isVisible = true
+    editor.setSelectedValue(getValueAt(sr, sc), true)
+    editor.requestFocusInWindow()
+  }
+
+  fun cancelEditing() {
+    glassPane.isVisible = false
+  }
+
+  companion object {
+    private const val OFFSET = 4
+  }
 }
 
 private class EditorFromList(model: ListModel<IconItem>) : JList<IconItem>(model) {
   @Transient private var handler: RollOverListener? = null
   private var rollOverRowIndex = -1
   private val dim: Dimension
+
+  init {
+    val icon = model.getElementAt(0)!!.small
+    val iw = INS + icon.iconWidth
+    val ih = INS + icon.iconHeight
+    dim = Dimension(iw * 3 + INS, ih * 3 + INS)
+    fixedCellWidth = iw
+    fixedCellHeight = ih
+  }
 
   override fun getPreferredSize() = dim
 
@@ -228,15 +237,6 @@ private class EditorFromList(model: ListModel<IconItem>) : JList<IconItem>(model
 
   companion object {
     private const val INS = 2
-  }
-
-  init {
-    val icon = model.getElementAt(0)!!.small
-    val iw = INS + icon.iconWidth
-    val ih = INS + icon.iconHeight
-    dim = Dimension(iw * 3 + INS, ih * 3 + INS)
-    fixedCellWidth = iw
-    fixedCellHeight = ih
   }
 }
 
