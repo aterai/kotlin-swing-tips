@@ -6,9 +6,7 @@ import java.awt.event.FocusEvent
 import java.awt.event.InputEvent
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
-import java.awt.event.KeyListener
 import java.awt.event.MouseAdapter
-import java.awt.event.MouseListener
 import java.beans.PropertyChangeEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.LayerUI
@@ -35,9 +33,9 @@ fun makeUI(): Component {
   p1.add(JLayer(makeButton("JLayer"), layerUI))
 
   val p2 = JPanel()
-  p2.border = BorderFactory.createTitledBorder("Focus dummy")
+  p2.border = BorderFactory.createTitledBorder("Focus test")
   p2.add(JTextField(16))
-  p2.add(JButton("dummy"))
+  p2.add(JButton("JButton"))
 
   val panel = JPanel(GridLayout(2, 1))
   panel.add(p1)
@@ -67,16 +65,15 @@ private fun makeButton(title: String): JButton {
 }
 
 private class DisableInputLayerUI<V : AbstractButton> : LayerUI<V>() {
-  @Transient private val dmyMouseListener: MouseListener = object : MouseAdapter() { /* Dummy listener */ }
-
-  @Transient private val dmyKeyListener: KeyListener = object : KeyAdapter() { /* Dummy listener */ }
+  @Transient private val dummyMouseListener = object : MouseAdapter() { /* to nothing */ }
+  @Transient private val dummyKeyListener = object : KeyAdapter() { /* to nothing */ }
   private var isBlocking = false
   override fun installUI(c: JComponent) {
     super.installUI(c)
     if (c is JLayer<*>) {
       if (DEBUG_POPUP_BLOCK) {
-        c.glassPane.addMouseListener(dmyMouseListener)
-        c.glassPane.addKeyListener(dmyKeyListener)
+        c.glassPane.addMouseListener(dummyMouseListener)
+        c.glassPane.addKeyListener(dummyKeyListener)
       }
       c.layerEventMask = (
         AWTEvent.MOUSE_EVENT_MASK
@@ -93,8 +90,8 @@ private class DisableInputLayerUI<V : AbstractButton> : LayerUI<V>() {
     if (c is JLayer<*>) {
       c.layerEventMask = 0
       if (DEBUG_POPUP_BLOCK) {
-        c.glassPane.removeMouseListener(dmyMouseListener)
-        c.glassPane.removeKeyListener(dmyKeyListener)
+        c.glassPane.removeMouseListener(dummyMouseListener)
+        c.glassPane.removeKeyListener(dummyKeyListener)
       }
     }
     super.uninstallUI(c)

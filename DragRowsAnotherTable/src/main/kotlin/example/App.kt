@@ -53,9 +53,9 @@ private fun makeDnDTable(handler: TableRowTransferHandler): JTable {
   table.dragEnabled = true
   table.fillsViewportHeight = true
   val am = table.actionMap
-  val dummy: Action = object : AbstractAction() {
+  val dummy = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      /* Dummy action */
+      /* do nothing */
     }
   }
   am.put(TransferHandler.getCutAction().getValue(Action.NAME), dummy)
