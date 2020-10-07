@@ -10,6 +10,16 @@ class TabButton : JRadioButton {
   var rolloverSelectedTextColor: Color? = null // = Color.WHITE;
   var selectedTextColor: Color? = null // = Color.WHITE;
 
+  constructor() : super(null, null)
+
+  constructor(icon: Icon) : super(null, icon)
+
+  constructor(text: String) : super(text, null)
+
+  constructor(a: Action) : super(a)
+
+  constructor(text: String, icon: Icon) : super(text, icon)
+
   override fun updateUI() {
     // "Accidental override" reported when a @JvmStatic method in a Kotlin class has
     //   the same signature as a static method in a Java base class : KT-12993
@@ -25,16 +35,6 @@ class TabButton : JRadioButton {
   override fun getUIClassID() = "TabViewButtonUI"
 
   override fun getUI() = ui as? TabViewButtonUI
-
-  constructor() : super(null, null)
-
-  constructor(icon: Icon) : super(null, icon)
-
-  constructor(text: String) : super(text, null)
-
-  constructor(a: Action) : super(a)
-
-  constructor(text: String, icon: Icon) : super(text, icon)
 
   override fun fireStateChanged() {
     val model = getModel()

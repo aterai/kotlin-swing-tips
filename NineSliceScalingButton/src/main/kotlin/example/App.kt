@@ -73,6 +73,12 @@ private fun makeFilteredImage(src: BufferedImage, filter: ImageFilter): Buffered
 }
 
 private class ScalingButton(title: String?, @field:Transient private val image: BufferedImage) : JButton() {
+  init {
+    setModel(DefaultButtonModel())
+    init(title, null)
+    isContentAreaFilled = false
+  }
+
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
@@ -82,15 +88,15 @@ private class ScalingButton(title: String?, @field:Transient private val image: 
     g2.dispose()
     super.paintComponent(g)
   }
+}
 
+private class NineSliceScalingButton(title: String?, @field:Transient private val image: BufferedImage) : JButton() {
   init {
     setModel(DefaultButtonModel())
     init(title, null)
     isContentAreaFilled = false
   }
-}
 
-private class NineSliceScalingButton(title: String?, @field:Transient private val image: BufferedImage) : JButton() {
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
@@ -113,12 +119,6 @@ private class NineSliceScalingButton(title: String?, @field:Transient private va
     g2.drawImage(image.getSubimage(iw - rw, ih - bh, rw, bh), ww - rw, hh - bh, this)
     g2.dispose()
     super.paintComponent(g)
-  }
-
-  init {
-    setModel(DefaultButtonModel())
-    init(title, null)
-    isContentAreaFilled = false
   }
 }
 
