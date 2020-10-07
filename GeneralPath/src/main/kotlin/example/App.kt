@@ -92,19 +92,6 @@ private class StarPanel3 : JPanel() {
 
 private class StarIcon0 : Icon {
   private val path = GeneralPath()
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-    val g2 = g.create() as? Graphics2D ?: return
-    g2.translate(x, y)
-    g2.paint = Color.YELLOW
-    g2.fill(path)
-    g2.paint = Color.BLACK
-    g2.draw(path)
-    g2.dispose()
-  }
-
-  override fun getIconWidth() = 80
-
-  override fun getIconHeight() = 80
 
   init {
     // http://gihyo.jp/dev/serial/01/javafx/0009?page=2
@@ -120,10 +107,38 @@ private class StarIcon0 : Icon {
     path.lineTo(38.197 * .8, 38.196 * .8)
     path.closePath()
   }
+
+  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+    val g2 = g.create() as? Graphics2D ?: return
+    g2.translate(x, y)
+    g2.paint = Color.YELLOW
+    g2.fill(path)
+    g2.paint = Color.BLACK
+    g2.draw(path)
+    g2.dispose()
+  }
+
+  override fun getIconWidth() = 80
+
+  override fun getIconHeight() = 80
 }
 
 private class StarIcon1 : Icon {
   private val star: Shape
+
+  init {
+    var agl = 0.0
+    val add = 2.0 * Math.PI / 5.0
+    val p = Path2D.Double()
+    p.moveTo(R.toDouble(), 0.0)
+    for (i in 0..4) {
+      p.lineTo(R * cos(agl), R * sin(agl))
+      agl += add + add
+    }
+    p.closePath()
+    val at = AffineTransform.getRotateInstance(-Math.PI / 2.0, R.toDouble(), 0.0)
+    star = Path2D.Double(p, at)
+  }
 
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
@@ -142,24 +157,25 @@ private class StarIcon1 : Icon {
   companion object {
     private const val R = 40
   }
-
-  init {
-    var agl = 0.0
-    val add = 2.0 * Math.PI / 5.0
-    val p = Path2D.Double()
-    p.moveTo(R.toDouble(), 0.0)
-    for (i in 0..4) {
-      p.lineTo(R * cos(agl), R * sin(agl))
-      agl += add + add
-    }
-    p.closePath()
-    val at = AffineTransform.getRotateInstance(-Math.PI / 2.0, R.toDouble(), 0.0)
-    star = Path2D.Double(p, at)
-  }
 }
 
 private class StarIcon2 : Icon {
   private val star: Shape
+
+  init {
+    var agl = 0.0
+    val add = Math.PI / VC
+    val p = Path2D.Double()
+    p.moveTo(R2.toDouble(), 0.0)
+    for (i in 0 until VC * 2 - 1) {
+      agl += add
+      val r = if (i % 2 == 0) R1 else R2
+      p.lineTo(r * cos(agl), r * sin(agl))
+    }
+    p.closePath()
+    val at = AffineTransform.getRotateInstance(-Math.PI / 2.0, R2.toDouble(), 0.0)
+    star = Path2D.Double(p, at)
+  }
 
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
@@ -179,21 +195,6 @@ private class StarIcon2 : Icon {
     private const val R2 = 40
     private const val R1 = 20
     private const val VC = 5 // 16
-  }
-
-  init {
-    var agl = 0.0
-    val add = Math.PI / VC
-    val p = Path2D.Double()
-    p.moveTo(R2.toDouble(), 0.0)
-    for (i in 0 until VC * 2 - 1) {
-      agl += add
-      val r = if (i % 2 == 0) R1 else R2
-      p.lineTo(r * cos(agl), r * sin(agl))
-    }
-    p.closePath()
-    val at = AffineTransform.getRotateInstance(-Math.PI / 2.0, R2.toDouble(), 0.0)
-    star = Path2D.Double(p, at)
   }
 }
 

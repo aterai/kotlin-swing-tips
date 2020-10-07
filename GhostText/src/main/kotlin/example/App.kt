@@ -35,6 +35,11 @@ private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()
 
 private class PlaceholderFocusListener(tf: JTextComponent) : FocusListener {
   private val hintMessage = tf.text
+
+  init {
+    tf.foreground = INACTIVE
+  }
+
   override fun focusGained(e: FocusEvent) {
     val tf = e.component as JTextComponent
     if (hintMessage == tf.text && INACTIVE == tf.foreground) {
@@ -55,13 +60,13 @@ private class PlaceholderFocusListener(tf: JTextComponent) : FocusListener {
   companion object {
     private val INACTIVE = UIManager.getColor("TextField.inactiveForeground")
   }
-
-  init {
-    tf.foreground = INACTIVE
-  }
 }
 
 private class PlaceholderLayerUI<V : JTextComponent>(hintMessage: String) : LayerUI<V>() {
+  init {
+    hint.text = hintMessage
+  }
+
   private val hint = object : JLabel() {
     override fun updateUI() {
       super.updateUI()
@@ -95,10 +100,6 @@ private class PlaceholderLayerUI<V : JTextComponent>(hintMessage: String) : Laye
 
   override fun processFocusEvent(e: FocusEvent, l: JLayer<out V>) {
     l.view.repaint()
-  }
-
-  init {
-    hint.text = hintMessage
   }
 }
 
