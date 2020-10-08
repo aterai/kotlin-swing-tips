@@ -83,6 +83,32 @@ class PropertyTable(model: TableModel) : JTable(model) {
 
 class DateEditor : AbstractCellEditor(), TableCellEditor {
   private val spinner = JSpinner(SpinnerDateModel())
+
+  init {
+    val editor = JSpinner.DateEditor(spinner, "yyyy/MM/dd")
+    spinner.editor = editor
+    setArrowButtonEnabled(false)
+    editor.textField.horizontalAlignment = SwingConstants.LEFT
+    val fl = object : FocusListener {
+      override fun focusLost(e: FocusEvent) {
+        setArrowButtonEnabled(false)
+      }
+
+      override fun focusGained(e: FocusEvent) {
+        setArrowButtonEnabled(true)
+        EventQueue.invokeLater {
+          (e.component as? JTextField)?.also {
+            it.caretPosition = 8
+            it.selectionStart = 8
+            it.selectionEnd = 10
+          }
+        }
+      }
+    }
+    editor.textField.addFocusListener(fl)
+    spinner.border = BorderFactory.createEmptyBorder()
+  }
+
   private fun setArrowButtonEnabled(flag: Boolean) {
     for (c in spinner.components) {
       (c as? JButton)?.isEnabled = flag
@@ -111,31 +137,6 @@ class DateEditor : AbstractCellEditor(), TableCellEditor {
     }
     return super.stopCellEditing()
   }
-
-  init {
-    val editor = JSpinner.DateEditor(spinner, "yyyy/MM/dd")
-    spinner.editor = editor
-    setArrowButtonEnabled(false)
-    editor.textField.horizontalAlignment = SwingConstants.LEFT
-    val fl = object : FocusListener {
-      override fun focusLost(e: FocusEvent) {
-        setArrowButtonEnabled(false)
-      }
-
-      override fun focusGained(e: FocusEvent) {
-        setArrowButtonEnabled(true)
-        EventQueue.invokeLater {
-          (e.component as? JTextField)?.also {
-            it.caretPosition = 8
-            it.selectionStart = 8
-            it.selectionEnd = 10
-          }
-        }
-      }
-    }
-    editor.textField.addFocusListener(fl)
-    spinner.border = BorderFactory.createEmptyBorder()
-  }
 }
 
 class ColorRenderer : DefaultTableCellRenderer() {
@@ -161,6 +162,19 @@ class ColorEditor : AbstractCellEditor(), TableCellEditor, ActionListener {
   private val colorChooser: JColorChooser
   private val dialog: JDialog
   private var currentColor = Color.WHITE
+
+  init {
+    button.actionCommand = EDIT
+    button.addActionListener(this)
+    button.isContentAreaFilled = false
+    button.isFocusPainted = false
+    button.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
+    button.isOpaque = false
+    button.horizontalAlignment = SwingConstants.LEFT
+    button.horizontalTextPosition = SwingConstants.RIGHT
+    colorChooser = JColorChooser()
+    dialog = JColorChooser.createDialog(button, "Pick a Color", true, colorChooser, this, null)
+  }
 
   override fun actionPerformed(e: ActionEvent) {
     if (EDIT == e.actionCommand) {
@@ -194,19 +208,6 @@ class ColorEditor : AbstractCellEditor(), TableCellEditor, ActionListener {
 
   companion object {
     private const val EDIT = "edit"
-  }
-
-  init {
-    button.actionCommand = EDIT
-    button.addActionListener(this)
-    button.isContentAreaFilled = false
-    button.isFocusPainted = false
-    button.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
-    button.isOpaque = false
-    button.horizontalAlignment = SwingConstants.LEFT
-    button.horizontalTextPosition = SwingConstants.RIGHT
-    colorChooser = JColorChooser()
-    dialog = JColorChooser.createDialog(button, "Pick a Color", true, colorChooser, this, null)
   }
 }
 

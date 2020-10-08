@@ -18,6 +18,11 @@ fun makeUI() = JPanel(BorderLayout()).also {
 
 private class PressAndHoldButton(icon: Icon?) : JButton(icon) {
   private var handler: PressAndHoldHandler? = null
+
+  init {
+    action.putValue(Action.SMALL_ICON, icon)
+  }
+
   override fun updateUI() {
     removeMouseListener(handler)
     super.updateUI()
@@ -38,10 +43,6 @@ private class PressAndHoldButton(icon: Icon?) : JButton(icon) {
   companion object {
     private val ARROW_ICON: Icon = MenuArrowIcon()
   }
-
-  init {
-    action.putValue(Action.SMALL_ICON, icon)
-  }
 }
 
 private class PressAndHoldHandler : AbstractAction(), MouseListener {
@@ -59,6 +60,22 @@ private class PressAndHoldHandler : AbstractAction(), MouseListener {
       }
     }
   }
+
+  init {
+    holdTimer.initialDelay = 1000
+    pop.layout = GridLayout(0, 3, 5, 5)
+    makeMenuList()
+      .map { makeMenuButton(it) }
+      .forEach {
+        it.addActionListener {
+          println(bg.selection.actionCommand)
+          pop.isVisible = false
+        }
+        pop.add(it)
+        bg.add(it)
+      }
+  }
+
   private fun makeMenuList() = listOf(
     MenuContext("BLACK", Color.BLACK),
     MenuContext("BLUE", Color.BLUE),
@@ -117,21 +134,6 @@ private class PressAndHoldHandler : AbstractAction(), MouseListener {
       b.border = BorderFactory.createEmptyBorder()
       return b
     }
-  }
-
-  init {
-    holdTimer.initialDelay = 1000
-    pop.layout = GridLayout(0, 3, 5, 5)
-    makeMenuList()
-      .map { makeMenuButton(it) }
-      .forEach {
-        it.addActionListener {
-          println(bg.selection.actionCommand)
-          pop.isVisible = false
-        }
-        pop.add(it)
-        bg.add(it)
-      }
   }
 }
 

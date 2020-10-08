@@ -48,6 +48,20 @@ private class PinTabPopupMenu : JPopupMenu() {
     }
   }
 
+  init {
+    add(pinTabMenuItem)
+    addSeparator()
+    add("close all").addActionListener {
+      (invoker as? JTabbedPane)?.also {
+        for (i in it.tabCount - 1 downTo 0) {
+          if (!isEmpty(it.getTitleAt(i))) {
+            it.removeTabAt(i)
+          }
+        }
+      }
+    }
+  }
+
   override fun show(c: Component, x: Int, y: Int) {
     if (c is JTabbedPane) {
       val idx = c.indexAtLocation(x, y)
@@ -83,20 +97,6 @@ private class PinTabPopupMenu : JPopupMenu() {
     idx == t.selectedIndex && isEmpty(t.getTitleAt(idx))
 
   private fun isEmpty(s: String?) = s == null || s.isEmpty()
-
-  init {
-    add(pinTabMenuItem)
-    addSeparator()
-    add("close all").addActionListener {
-      (invoker as? JTabbedPane)?.also {
-        for (i in it.tabCount - 1 downTo 0) {
-          if (!isEmpty(it.getTitleAt(i))) {
-            it.removeTabAt(i)
-          }
-        }
-      }
-    }
-  }
 }
 
 fun main() {
