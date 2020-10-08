@@ -32,14 +32,15 @@ private class ButtonPanel : JPanel() {
   val b1 = ColorButton(ColorIcon(Color.RED))
   val b2 = ColorButton(ColorIcon(Color.GREEN))
   val b3 = ColorButton(ColorIcon(Color.BLUE))
+
+  init {
+    isOpaque = false
+  }
+
   fun remakePanel(c: Component): Component {
     removeAll()
     listOf(b1, b2, b3, c).forEach { add(it) }
     return this
-  }
-
-  init {
-    isOpaque = false
   }
 }
 
@@ -61,6 +62,22 @@ private class ButtonCellRenderer : TreeCellRenderer {
 
 private class ButtonCellEditor : AbstractCellEditor(), TreeCellEditor {
   private val panel = ButtonPanel()
+
+  init {
+    panel.b1.addActionListener {
+      println("b1: " + panel.renderer.text)
+      stopCellEditing()
+    }
+    panel.b2.addActionListener {
+      println("b2: " + panel.renderer.text)
+      stopCellEditing()
+    }
+    panel.b3.addActionListener {
+      println("b3: " + panel.renderer.text)
+      stopCellEditing()
+    }
+  }
+
   override fun getTreeCellEditorComponent(
     tree: JTree,
     value: Any?,
@@ -96,21 +113,6 @@ private class ButtonCellEditor : AbstractCellEditor(), TreeCellEditor {
       SwingUtilities.getDeepestComponentAt(c, p.x, p.y) is JButton
     } else {
       false
-    }
-  }
-
-  init {
-    panel.b1.addActionListener {
-      println("b1: " + panel.renderer.text)
-      stopCellEditing()
-    }
-    panel.b2.addActionListener {
-      println("b2: " + panel.renderer.text)
-      stopCellEditing()
-    }
-    panel.b3.addActionListener {
-      println("b3: " + panel.renderer.text)
-      stopCellEditing()
     }
   }
 }

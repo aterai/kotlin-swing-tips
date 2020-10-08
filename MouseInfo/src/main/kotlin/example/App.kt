@@ -51,6 +51,10 @@ fun makeUI(): Component {
 private class Racket(private val parentSize: Dimension) : Serializable {
   private var centerPos: Int
 
+  init {
+    centerPos = parentSize.width / 2
+  }
+
   fun draw(g: Graphics) {
     g.color = Color.RED
     g.fillRect(
@@ -74,10 +78,6 @@ private class Racket(private val parentSize: Dimension) : Serializable {
     private const val serialVersionUID = 1L
     private const val WIDTH = 80
     private const val HEIGHT = 5
-  }
-
-  init {
-    centerPos = parentSize.width / 2
   }
 }
 

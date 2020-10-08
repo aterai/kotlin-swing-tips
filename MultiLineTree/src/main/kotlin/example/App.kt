@@ -81,6 +81,20 @@ private class MultiLineCellRenderer : JPanel(BorderLayout()), TreeCellRenderer {
   private var renderer = DefaultTreeCellRenderer()
   private val icon = JLabel()
   private val text = CellTextArea2()
+
+  init {
+    text.isOpaque = true
+    text.font = icon.font
+    text.border = BorderFactory.createEmptyBorder()
+    icon.isOpaque = true
+    icon.border = BorderFactory.createEmptyBorder(1, 1, 1, 2)
+    icon.verticalAlignment = SwingConstants.TOP
+    isOpaque = false
+    border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
+    add(icon, BorderLayout.WEST)
+    add(text)
+  }
+
   override fun getTreeCellRendererComponent(
     tree: JTree,
     value: Any?,
@@ -114,19 +128,6 @@ private class MultiLineCellRenderer : JPanel(BorderLayout()), TreeCellRenderer {
   override fun updateUI() {
     super.updateUI()
     renderer = DefaultTreeCellRenderer()
-  }
-
-  init {
-    text.isOpaque = true
-    text.font = icon.font
-    text.border = BorderFactory.createEmptyBorder()
-    icon.isOpaque = true
-    icon.border = BorderFactory.createEmptyBorder(1, 1, 1, 2)
-    icon.verticalAlignment = SwingConstants.TOP
-    isOpaque = false
-    border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
-    add(icon, BorderLayout.WEST)
-    add(text)
   }
 }
 

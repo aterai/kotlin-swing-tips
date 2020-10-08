@@ -44,6 +44,16 @@ private class DraggableImageMouseListener(ii: ImageIcon) : MouseAdapter() {
   private var startRadian = 0.0 // drag start radian
   private var moverHover = false
   private var rotatorHover = false
+
+  init {
+    val width = ii.iconWidth
+    val height = ii.iconHeight
+    imageSz = Dimension(width, height)
+    border = RoundRectangle2D.Double(0.0, 0.0, width.toDouble(), height.toDouble(), 10.0, 10.0)
+    polaroid = Rectangle2D.Double(-2.0, -2.0, width + 4.0, height + 20.0)
+    setCirclesLocation(centerPt)
+  }
+
   private fun setCirclesLocation(center: Point2D) {
     val cx = center.x
     val cy = center.y
@@ -133,15 +143,6 @@ private class DraggableImageMouseListener(ii: ImageIcon) : MouseAdapter() {
     private val HOVER_COLOR = Color(0x64_64_FF_C8, true)
     private const val IR = 40.0
     private const val OR = IR * 3.0
-  }
-
-  init {
-    val width = ii.iconWidth
-    val height = ii.iconHeight
-    imageSz = Dimension(width, height)
-    border = RoundRectangle2D.Double(0.0, 0.0, width.toDouble(), height.toDouble(), 10.0, 10.0)
-    polaroid = Rectangle2D.Double(-2.0, -2.0, width + 4.0, height + 20.0)
-    setCirclesLocation(centerPt)
   }
 }
 

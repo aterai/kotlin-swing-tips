@@ -107,6 +107,10 @@ private open class BackgroundTask(private val lengthOfTask: Int) : SwingWorker<S
 }
 
 private class ProgressListener(private val monitor: ProgressMonitor) : PropertyChangeListener {
+  init {
+    monitor.setProgress(0)
+  }
+
   override fun propertyChange(e: PropertyChangeEvent) {
     if ("progress" == e.propertyName) {
       monitor.setProgress(e.newValue as Int)
@@ -114,10 +118,6 @@ private class ProgressListener(private val monitor: ProgressMonitor) : PropertyC
         it.isDone || monitor.isCanceled
       }?.cancel(true)
     }
-  }
-
-  init {
-    monitor.setProgress(0)
   }
 }
 
