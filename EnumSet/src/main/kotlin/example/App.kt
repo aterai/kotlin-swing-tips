@@ -151,18 +151,6 @@ private class CheckBoxesRenderer : TableCellRenderer {
 
 private class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
   private val renderer = CheckBoxesPanel()
-  override fun getTableCellEditorComponent(
-    table: JTable,
-    value: Any?,
-    isSelected: Boolean,
-    row: Int,
-    column: Int
-  ): Component {
-    renderer.updateButtons(value)
-    return renderer
-  }
-
-  override fun getCellEditorValue() = renderer.getPermissionsValue()
 
   init {
     val am = renderer.actionMap
@@ -180,6 +168,19 @@ private class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), renderer.titles[1])
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, 0), renderer.titles[2])
   }
+
+  override fun getTableCellEditorComponent(
+    table: JTable,
+    value: Any?,
+    isSelected: Boolean,
+    row: Int,
+    column: Int
+  ): Component {
+    renderer.updateButtons(value)
+    return renderer
+  }
+
+  override fun getCellEditorValue() = renderer.getPermissionsValue()
 }
 
 fun main() {

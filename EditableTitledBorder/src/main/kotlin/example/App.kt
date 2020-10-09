@@ -76,6 +76,16 @@ private class EditableTitledBorder(
     }
   }
 
+  init {
+    comp.addMouseListener(this)
+    val im = editorTextField.getInputMap(JComponent.WHEN_FOCUSED)
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "rename-title")
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancel-editing")
+    val am = editorTextField.actionMap
+    am.put("rename-title", renameTitle)
+    am.put("cancel-editing", cancelEditing)
+  }
+
   constructor(title: String, c: Component) : this(null, title, LEADING, DEFAULT_POSITION, null, null, c)
 
   constructor(
@@ -185,12 +195,6 @@ private class EditableTitledBorder(
   }
 
   private inner class EditorGlassPane : JComponent() {
-    override fun setVisible(flag: Boolean) {
-      super.setVisible(flag)
-      isFocusTraversalPolicyProvider = flag
-      isFocusCycleRoot = flag
-    }
-
     init {
       isOpaque = false
       focusTraversalPolicy = object : DefaultFocusTraversalPolicy() {
@@ -204,6 +208,12 @@ private class EditableTitledBorder(
         }
       }
       addMouseListener(ml)
+    }
+
+    override fun setVisible(flag: Boolean) {
+      super.setVisible(flag)
+      isFocusTraversalPolicyProvider = flag
+      isFocusCycleRoot = flag
     }
   }
 
@@ -220,16 +230,6 @@ private class EditableTitledBorder(
       }
       return ins
     }
-  }
-
-  init {
-    comp.addMouseListener(this)
-    val im = editorTextField.getInputMap(JComponent.WHEN_FOCUSED)
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "rename-title")
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancel-editing")
-    val am = editorTextField.actionMap
-    am.put("rename-title", renameTitle)
-    am.put("cancel-editing", cancelEditing)
   }
 }
 

@@ -56,6 +56,13 @@ private class ComboCellRenderer : TableCellRenderer {
 
 private class ComboCellEditor : AbstractCellEditor(), TableCellEditor {
   private val combo = JComboBox<String>()
+
+  init {
+    combo.putClientProperty("JComboBox.isTableCellEditor", true)
+    combo.isEditable = true
+    combo.addActionListener { fireEditingStopped() }
+  }
+
   override fun getTableCellEditorComponent(
     table: JTable,
     value: Any?,
@@ -80,12 +87,6 @@ private class ComboCellEditor : AbstractCellEditor(), TableCellEditor {
       }
     }
     return m
-  }
-
-  init {
-    combo.putClientProperty("JComboBox.isTableCellEditor", true)
-    combo.isEditable = true
-    combo.addActionListener { fireEditingStopped() }
   }
 }
 

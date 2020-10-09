@@ -52,14 +52,6 @@ private fun makeList(handler: TransferHandler): JList<Color> {
 private class ListPopupMenu(list: JList<*>) : JPopupMenu() {
   private val cutItem: JMenuItem
   private val copyItem: JMenuItem
-  override fun show(c: Component, x: Int, y: Int) {
-    if (c is JList<*>) {
-      val isSelected = !c.isSelectionEmpty
-      cutItem.isEnabled = isSelected
-      copyItem.isEnabled = isSelected
-      super.show(c, x, y)
-    }
-  }
 
   init {
     val clipboard = Toolkit.getDefaultToolkit().systemClipboard
@@ -77,6 +69,15 @@ private class ListPopupMenu(list: JList<*>) : JPopupMenu() {
     }
     addSeparator()
     add("clearSelection").addActionListener { list.clearSelection() }
+  }
+
+  override fun show(c: Component, x: Int, y: Int) {
+    if (c is JList<*>) {
+      val isSelected = !c.isSelectionEmpty
+      cutItem.isEnabled = isSelected
+      copyItem.isEnabled = isSelected
+      super.show(c, x, y)
+    }
   }
 }
 

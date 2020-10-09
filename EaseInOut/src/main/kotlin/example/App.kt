@@ -53,6 +53,14 @@ private class ImageCaptionLabel(caption: String, icon: Icon) : JLabel() {
   }
   @Transient private val handler = LabelHandler(textArea)
 
+  init {
+    setIcon(icon)
+    textArea.text = caption
+    add(textArea)
+    addMouseListener(handler)
+    addHierarchyListener(handler)
+  }
+
   private fun dispatchMouseEvent(e: MouseEvent) {
     val src = e.component
     this.dispatchEvent(SwingUtilities.convertMouseEvent(src, e, this))
@@ -78,14 +86,6 @@ private class ImageCaptionLabel(caption: String, icon: Icon) : JLabel() {
         c.setBounds(x, height - tah, width, c.preferredSize.height)
       }
     }
-  }
-
-  init {
-    setIcon(icon)
-    textArea.text = caption
-    add(textArea)
-    addMouseListener(handler)
-    addHierarchyListener(handler)
   }
 }
 

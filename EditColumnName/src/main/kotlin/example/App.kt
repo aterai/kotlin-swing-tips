@@ -30,15 +30,6 @@ fun makeUI(): Component {
 
 private class TablePopupMenu(columnNames: Array<String>) : JPopupMenu() {
   private var index = -1
-  override fun show(c: Component, x: Int, y: Int) {
-    (c as? JTableHeader)?.also { header ->
-      header.draggedColumn = null
-      header.repaint()
-      header.table.repaint()
-      index = header.columnAtPoint(Point(x, y))
-      super.show(c, x, y)
-    }
-  }
 
   init {
     val textField = JTextField()
@@ -83,6 +74,16 @@ private class TablePopupMenu(columnNames: Array<String>) : JPopupMenu() {
           model.setColumnIdentifiers(columnNames)
         }
       }
+    }
+  }
+
+  override fun show(c: Component, x: Int, y: Int) {
+    (c as? JTableHeader)?.also { header ->
+      header.draggedColumn = null
+      header.repaint()
+      header.table.repaint()
+      index = header.columnAtPoint(Point(x, y))
+      super.show(c, x, y)
     }
   }
 }

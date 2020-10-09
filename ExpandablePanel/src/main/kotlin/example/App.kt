@@ -111,6 +111,20 @@ private abstract class AbstractExpansionPanel(title: String?) : JPanel(BorderLay
       }
     }
 
+  init {
+    scroll.also {
+      it.setViewportView(makePanel())
+      it.verticalScrollBar.unitIncrement = 25
+    }
+    button.also {
+      it.addActionListener {
+        isExpanded = !isExpanded
+        fireExpansionEvent()
+      }
+      add(it, BorderLayout.NORTH)
+    }
+  }
+
   fun addExpansionListener(l: ExpansionListener) {
     listenerList.add(ExpansionListener::class.java, l)
   }
@@ -132,20 +146,6 @@ private abstract class AbstractExpansionPanel(title: String?) : JPanel(BorderLay
         (listeners[i + 1] as? ExpansionListener)?.expansionStateChanged(ee)
       }
       i -= 2
-    }
-  }
-
-  init {
-    scroll.also {
-      it.setViewportView(makePanel())
-      it.verticalScrollBar.unitIncrement = 25
-    }
-    button.also {
-      it.addActionListener {
-        isExpanded = !isExpanded
-        fireExpansionEvent()
-      }
-      add(it, BorderLayout.NORTH)
     }
   }
 }

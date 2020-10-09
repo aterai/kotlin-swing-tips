@@ -79,6 +79,32 @@ private class FileNameRenderer(table: JTable) : TableCellRenderer {
   private val noFocusBorder: Border
   private val icon: ImageIcon
   private val selectedIcon: ImageIcon
+
+  init {
+    noFocusBorder = UIManager.getBorder("Table.noFocusBorder") ?: focusBorder.getBorderInsets(textLabel).let {
+      BorderFactory.createEmptyBorder(it.top, it.left, it.bottom, it.right)
+    }
+    val p = object : JPanel(BorderLayout()) {
+      override fun getPreferredSize() = dim
+    }
+    p.isOpaque = false
+    renderer.isOpaque = false
+
+    // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
+    val cl = Thread.currentThread().contextClassLoader
+    icon = ImageIcon(cl.getResource("example/wi0063-16.png"))
+    val ip = FilteredImageSource(icon.image.source, SelectedImageFilter())
+    selectedIcon = ImageIcon(p.createImage(ip))
+    iconLabel = JLabel(icon)
+    iconLabel.border = BorderFactory.createEmptyBorder()
+    p.add(iconLabel, BorderLayout.WEST)
+    p.add(textLabel)
+    renderer.add(p, BorderLayout.WEST)
+    val d = iconLabel.preferredSize
+    dim.size = d
+    table.rowHeight = d.height
+  }
+
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -108,31 +134,6 @@ private class FileNameRenderer(table: JTable) : TableCellRenderer {
     }
     return renderer
   }
-
-  init {
-    noFocusBorder = UIManager.getBorder("Table.noFocusBorder") ?: focusBorder.getBorderInsets(textLabel).let {
-      BorderFactory.createEmptyBorder(it.top, it.left, it.bottom, it.right)
-    }
-    val p = object : JPanel(BorderLayout()) {
-      override fun getPreferredSize() = dim
-    }
-    p.isOpaque = false
-    renderer.isOpaque = false
-
-    // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
-    val cl = Thread.currentThread().contextClassLoader
-    icon = ImageIcon(cl.getResource("example/wi0063-16.png"))
-    val ip = FilteredImageSource(icon.image.source, SelectedImageFilter())
-    selectedIcon = ImageIcon(p.createImage(ip))
-    iconLabel = JLabel(icon)
-    iconLabel.border = BorderFactory.createEmptyBorder()
-    p.add(iconLabel, BorderLayout.WEST)
-    p.add(textLabel)
-    renderer.add(p, BorderLayout.WEST)
-    val d = iconLabel.preferredSize
-    dim.size = d
-    table.rowHeight = d.height
-  }
 }
 
 private class FileListTable(model: TableModel) : JTable(model) {
@@ -161,12 +162,6 @@ private class FileListTable(model: TableModel) : JTable(model) {
 
 private class TablePopupMenu : JPopupMenu() {
   private val delete: JMenuItem
-  override fun show(c: Component, x: Int, y: Int) {
-    if (c is JTable) {
-      delete.isEnabled = c.selectedRowCount > 0
-      super.show(c, x, y)
-    }
-  }
 
   init {
     add("add").addActionListener {
@@ -190,6 +185,13 @@ private class TablePopupMenu : JPopupMenu() {
           model.removeRow(table.convertRowIndexToModel(selection[i]))
         }
       }
+    }
+  }
+
+  override fun show(c: Component, x: Int, y: Int) {
+    if (c is JTable) {
+      delete.isEnabled = c.selectedRowCount > 0
+      super.show(c, x, y)
     }
   }
 }
