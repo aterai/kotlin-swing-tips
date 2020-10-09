@@ -21,15 +21,6 @@ private class TextComponentPopupMenu : JPopupMenu() {
   private val cutAction = CutAction()
   private val copyAction = CopyAction()
   private val deleteItem: JMenuItem
-  override fun show(c: Component, x: Int, y: Int) {
-    if (c is JTextComponent) {
-      val hasSelectedText = c.selectedText != null
-      cutAction.isEnabled = hasSelectedText
-      copyAction.isEnabled = hasSelectedText
-      deleteItem.isEnabled = hasSelectedText
-      super.show(c, x, y)
-    }
-  }
 
   init {
     add(cutAction)
@@ -43,6 +34,16 @@ private class TextComponentPopupMenu : JPopupMenu() {
     addSeparator()
     add(DefaultEditorKit.selectAllAction).addActionListener {
       (invoker as? JTextComponent)?.selectAll()
+    }
+  }
+
+  override fun show(c: Component, x: Int, y: Int) {
+    if (c is JTextComponent) {
+      val hasSelectedText = c.selectedText != null
+      cutAction.isEnabled = hasSelectedText
+      copyAction.isEnabled = hasSelectedText
+      deleteItem.isEnabled = hasSelectedText
+      super.show(c, x, y)
     }
   }
 }

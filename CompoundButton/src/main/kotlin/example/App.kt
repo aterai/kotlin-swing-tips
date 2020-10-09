@@ -18,10 +18,6 @@ fun makeUI() = JPanel().also {
 }
 
 private class CompoundButtonPanel(private val dim: Dimension) : JComponent() {
-  override fun getPreferredSize() = dim
-
-  override fun isOptimizedDrawingEnabled() = false
-
   init {
     layout = OverlayLayout(this)
     add(CompoundButton(dim, ButtonLocation.CENTER))
@@ -30,6 +26,10 @@ private class CompoundButtonPanel(private val dim: Dimension) : JComponent() {
     add(CompoundButton(dim, ButtonLocation.EAST))
     add(CompoundButton(dim, ButtonLocation.WEST))
   }
+
+  override fun getPreferredSize() = dim
+
+  override fun isOptimizedDrawingEnabled() = false
 }
 
 private enum class ButtonLocation(val startAngle: Double) {
@@ -43,6 +43,43 @@ private enum class ButtonLocation(val startAngle: Double) {
 private class CompoundButton(private val dim: Dimension, private val bl: ButtonLocation) : JButton() {
   @Transient private var shape: Shape? = null
   @Transient private var base: Shape? = null
+
+  init {
+    icon = object : Icon {
+      private val fc = Color(100, 150, 255, 200)
+      private val ac = Color(230, 230, 230)
+      private val rc = Color.ORANGE
+      override fun paintIcon(
+        c: Component?,
+        g: Graphics,
+        x: Int,
+        y: Int
+      ) {
+        val g2 = g.create() as? Graphics2D ?: return
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+        if (getModel().isArmed) {
+          g2.paint = ac
+          g2.fill(shape)
+        } else if (isRolloverEnabled && getModel().isRollover) {
+          paintFocusAndRollover(g2, rc)
+        } else if (hasFocus()) {
+          paintFocusAndRollover(g2, fc)
+        } else {
+          g2.paint = background
+          g2.fill(shape)
+        }
+        g2.dispose()
+      }
+
+      override fun getIconWidth() = dim.width
+
+      override fun getIconHeight() = dim.height
+    }
+    isFocusPainted = false
+    isContentAreaFilled = false
+    background = Color(0xFA_FA_FA)
+    initShape()
+  }
 
   override fun getPreferredSize() = dim
 
@@ -85,43 +122,6 @@ private class CompoundButton(private val dim: Dimension, private val bl: ButtonL
   }
 
   override fun contains(x: Int, y: Int) = shape?.contains(x.toDouble(), y.toDouble()) ?: false
-
-  init {
-    icon = object : Icon {
-      private val fc = Color(100, 150, 255, 200)
-      private val ac = Color(230, 230, 230)
-      private val rc = Color.ORANGE
-      override fun paintIcon(
-        c: Component?,
-        g: Graphics,
-        x: Int,
-        y: Int
-      ) {
-        val g2 = g.create() as? Graphics2D ?: return
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-        if (getModel().isArmed) {
-          g2.paint = ac
-          g2.fill(shape)
-        } else if (isRolloverEnabled && getModel().isRollover) {
-          paintFocusAndRollover(g2, rc)
-        } else if (hasFocus()) {
-          paintFocusAndRollover(g2, fc)
-        } else {
-          g2.paint = background
-          g2.fill(shape)
-        }
-        g2.dispose()
-      }
-
-      override fun getIconWidth() = dim.width
-
-      override fun getIconHeight() = dim.height
-    }
-    isFocusPainted = false
-    isContentAreaFilled = false
-    background = Color(0xFA_FA_FA)
-    initShape()
-  }
 }
 
 fun main() {

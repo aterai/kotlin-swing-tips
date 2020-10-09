@@ -20,15 +20,6 @@ fun makeUI(): Component {
 private class CustomCellEditor(field: JTextField) : DefaultCellEditor(field) {
   private val button = JButton()
 
-  override fun getComponent(): Component {
-    SwingUtilities.updateComponentTreeUI(button)
-    return super.getComponent()
-  }
-
-  companion object {
-    private const val BUTTON_WIDTH = 20
-  }
-
   init {
     field.border = BorderFactory.createEmptyBorder(0, 2, 0, BUTTON_WIDTH)
     field.addHierarchyListener { e ->
@@ -46,10 +37,33 @@ private class CustomCellEditor(field: JTextField) : DefaultCellEditor(field) {
       }
     }
   }
+
+  override fun getComponent(): Component {
+    SwingUtilities.updateComponentTreeUI(button)
+    return super.getComponent()
+  }
+
+  companion object {
+    private const val BUTTON_WIDTH = 20
+  }
 }
 
 private class CustomComponentCellEditor(private val field: JTextField) : DefaultCellEditor(field) {
   private val panel = JPanel(BorderLayout())
+
+  init {
+    val button = object : JButton() {
+      override fun getPreferredSize(): Dimension {
+        val d = super.getPreferredSize()
+        d.width = 25
+        return d
+      }
+    }
+    field.border = BorderFactory.createEmptyBorder(0, 2, 0, 0)
+    panel.add(field)
+    panel.add(button, BorderLayout.EAST)
+    panel.isFocusable = false
+  }
 
   override fun getTableCellEditorComponent(
     table: JTable,
@@ -80,24 +94,17 @@ private class CustomComponentCellEditor(private val field: JTextField) : Default
   }
 
   override fun getComponent() = panel
-
-  init {
-    val button = object : JButton() {
-      override fun getPreferredSize(): Dimension {
-        val d = super.getPreferredSize()
-        d.width = 25
-        return d
-      }
-    }
-    field.border = BorderFactory.createEmptyBorder(0, 2, 0, 0)
-    panel.add(field)
-    panel.add(button, BorderLayout.EAST)
-    panel.isFocusable = false
-  }
 }
 
 private class CustomComponent : JPanel(BorderLayout()) {
   val field = JTextField()
+
+  init {
+    // this.setFocusable(false);
+    this.add(field)
+    val button = JButton()
+    this.add(button, BorderLayout.EAST)
+  }
 
   override fun processKeyBinding(
     ks: KeyStroke,
@@ -113,14 +120,7 @@ private class CustomComponent : JPanel(BorderLayout()) {
     }
     return super.processKeyBinding(ks, e, condition, pressed)
     // field.requestFocusInWindow();
-// return field.processKeyBinding(ks, e, condition, pressed);
-  }
-
-  init {
-    // this.setFocusable(false);
-    this.add(field)
-    val button = JButton()
-    this.add(button, BorderLayout.EAST)
+    // return field.processKeyBinding(ks, e, condition, pressed);
   }
 }
 

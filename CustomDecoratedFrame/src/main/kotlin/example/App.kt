@@ -187,15 +187,15 @@ private enum class Side(
 }
 
 private class SideLabel(private val side: Side) : JLabel() {
+  init {
+    cursor = Cursor.getPredefinedCursor(side.cursor)
+  }
+
   override fun getPreferredSize() = side.size
 
   override fun getMinimumSize() = preferredSize
 
   override fun getMaximumSize() = preferredSize
-
-  init {
-    cursor = Cursor.getPredefinedCursor(side.cursor)
-  }
 }
 
 private class ResizeWindowListener : MouseInputAdapter() {

@@ -41,12 +41,6 @@ fun makeUI(): Component {
 
 private class TablePopupMenu : JPopupMenu() {
   private val delete: JMenuItem
-  override fun show(c: Component, x: Int, y: Int) {
-    (c as? JTable)?.also {
-      delete.isEnabled = it.selectedRowCount > 0
-      super.show(it, x, y)
-    }
-  }
 
   init {
     add("add").addActionListener {
@@ -69,6 +63,13 @@ private class TablePopupMenu : JPopupMenu() {
           model.removeRow(table.convertRowIndexToModel(selection[i]))
         }
       }
+    }
+  }
+
+  override fun show(c: Component, x: Int, y: Int) {
+    (c as? JTable)?.also {
+      delete.isEnabled = it.selectedRowCount > 0
+      super.show(it, x, y)
     }
   }
 }

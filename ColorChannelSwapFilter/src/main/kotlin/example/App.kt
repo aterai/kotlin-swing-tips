@@ -125,16 +125,16 @@ private class BackgroundTask : SwingWorker<String, Void>() {
 }
 
 private class ProgressListener(private val progressBar: JProgressBar) : PropertyChangeListener {
+  init {
+    progressBar.value = 0
+  }
+
   override fun propertyChange(e: PropertyChangeEvent) {
     val nv = e.newValue
     if ("progress" == e.propertyName && nv is Int) {
       progressBar.isIndeterminate = false
       progressBar.value = nv
     }
-  }
-
-  init {
-    progressBar.value = 0
   }
 }
 

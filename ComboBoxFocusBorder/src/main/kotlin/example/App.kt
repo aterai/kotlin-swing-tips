@@ -51,6 +51,9 @@ fun makeUI(): Component {
 }
 
 private open class FocusComboBox<E> constructor(model: ComboBoxModel<E>) : JComboBox<E>(model) {
+  val isWindowsLnF
+    get() = ui.javaClass.name.contains("WindowsComboBoxUI")
+
   override fun updateUI() {
     setRenderer(null)
     super.updateUI()
@@ -65,9 +68,6 @@ private open class FocusComboBox<E> constructor(model: ComboBoxModel<E>) : JComb
       }
     }
   }
-
-  val isWindowsLnF
-    get() = ui.javaClass.name.contains("WindowsComboBoxUI")
 }
 
 fun main() {
