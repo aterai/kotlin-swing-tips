@@ -90,6 +90,20 @@ private class MenuToggleButton(text: String? = "", icon: Icon? = null) : JToggle
     }
   }
 
+  init {
+    val action = object : AbstractAction(text) {
+      override fun actionPerformed(e: ActionEvent) {
+        (e.source as? Component)?.also {
+          popup?.show(it, 0, it.height)
+        }
+      }
+    }
+    action.putValue(Action.SMALL_ICON, icon)
+    setAction(action)
+    isFocusable = false
+    border = BorderFactory.createEmptyBorder(4, 4, 4, 4 + ARROW_ICON.iconWidth)
+  }
+
   fun setPopupMenu(pop: JPopupMenu) {
     popup = pop
     pop.addPopupMenuListener(handler)
@@ -106,20 +120,6 @@ private class MenuToggleButton(text: String? = "", icon: Icon? = null) : JToggle
 
   companion object {
     private val ARROW_ICON: Icon = MenuArrowIcon()
-  }
-
-  init {
-    val action = object : AbstractAction(text) {
-      override fun actionPerformed(e: ActionEvent) {
-        (e.source as? Component)?.also {
-          popup?.show(it, 0, it.height)
-        }
-      }
-    }
-    action.putValue(Action.SMALL_ICON, icon)
-    setAction(action)
-    isFocusable = false
-    border = BorderFactory.createEmptyBorder(4, 4, 4, 4 + ARROW_ICON.iconWidth)
   }
 }
 

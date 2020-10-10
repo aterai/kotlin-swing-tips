@@ -11,6 +11,13 @@ fun makeUI() = JPanel().also {
 
 private class DockingListener(private val frame1: JFrame, f2: JFrame) : ComponentListener {
   private val frame2: JFrame
+
+  init {
+    frame1.addComponentListener(this)
+    frame2 = f2
+    frame2.addComponentListener(this)
+  }
+
   override fun componentResized(e: ComponentEvent) {
     positionFrames(e)
   }
@@ -41,12 +48,6 @@ private class DockingListener(private val frame1: JFrame, f2: JFrame) : Componen
       frame1.setLocation(x, y)
       frame1.addComponentListener(this)
     }
-  }
-
-  init {
-    frame1.addComponentListener(this)
-    frame2 = f2
-    frame2.addComponentListener(this)
   }
 }
 

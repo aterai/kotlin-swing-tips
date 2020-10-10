@@ -125,6 +125,11 @@ private class TextAreaOutputStream(private val textArea: JTextArea) : OutputStre
 }
 
 private class TextAreaHandler(os: OutputStream) : StreamHandler() {
+  init {
+    configure()
+    setOutputStream(os)
+  }
+
   private fun configure() {
     formatter = SimpleFormatter()
     runCatching {
@@ -144,11 +149,6 @@ private class TextAreaHandler(os: OutputStream) : StreamHandler() {
   @Synchronized
   override fun close() {
     flush()
-  }
-
-  init {
-    configure()
-    setOutputStream(os)
   }
 }
 

@@ -41,6 +41,14 @@ private class ComponentTitledBorder(
   container: Container,
   private val border: Border
 ) : MouseAdapter(), Border, SwingConstants {
+  init {
+    if (comp is JComponent) {
+      comp.isOpaque = true
+    }
+    container.addMouseListener(this)
+    container.addMouseMotionListener(this)
+  }
+
   override fun isBorderOpaque() = true
 
   override fun paintBorder(
@@ -106,14 +114,6 @@ private class ComponentTitledBorder(
 
   companion object {
     private const val OFFSET = 5
-  }
-
-  init {
-    if (comp is JComponent) {
-      comp.isOpaque = true
-    }
-    container.addMouseListener(this)
-    container.addMouseMotionListener(this)
   }
 }
 

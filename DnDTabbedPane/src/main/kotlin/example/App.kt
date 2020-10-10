@@ -94,6 +94,16 @@ private class DnDTabbedPane : JTabbedPane() {
   var rectBackward = Rectangle()
   var rectForward = Rectangle()
 
+  init {
+    glassPane.name = "GlassPane"
+    DropTarget(glassPane, DnDConstants.ACTION_COPY_OR_MOVE, TabDropTargetListener(), true)
+    DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(
+      this,
+      DnDConstants.ACTION_COPY_OR_MOVE,
+      TabDragGestureListener()
+    )
+  }
+
   private fun clickArrowButton(actionKey: String) {
     var scrollForwardButton: JButton? = null
     var scrollBackwardButton: JButton? = null
@@ -126,16 +136,6 @@ private class DnDTabbedPane : JTabbedPane() {
     } else if (rectForward.contains(glassPt)) {
       clickArrowButton("scrollTabsForwardAction")
     }
-  }
-
-  init {
-    glassPane.name = "GlassPane"
-    DropTarget(glassPane, DnDConstants.ACTION_COPY_OR_MOVE, TabDropTargetListener(), true)
-    DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(
-      this,
-      DnDConstants.ACTION_COPY_OR_MOVE,
-      TabDragGestureListener()
-    )
   }
 
   fun getTargetTabIndex(glassPt: Point): Int {

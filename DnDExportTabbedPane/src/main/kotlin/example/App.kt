@@ -89,22 +89,6 @@ private class DnDTabbedPane : JTabbedPane() {
   var dragTabIndex = -1
   @Transient var dropLocation: DropLocation? = null
 
-  fun getDropLineRect(): Rectangle {
-    val index = dropLocation?.index ?: -1
-    if (index < 0) {
-      RECT_LINE.setBounds(0, 0, 0, 0)
-      return RECT_LINE
-    }
-    val a = minOf(index, 1)
-    val r = getBoundsAt(a * (index - 1))
-    if (isTopBottomTabPlacement(getTabPlacement())) {
-      RECT_LINE.setBounds(r.x - LINE_SIZE / 2 + r.width * a, r.y, LINE_SIZE, r.height)
-    } else {
-      RECT_LINE.setBounds(r.x, r.y - LINE_SIZE / 2 + r.height * a, r.width, LINE_SIZE)
-    }
-    return RECT_LINE
-  }
-
   val tabAreaBounds: Rectangle
     get() {
       val tabbedRect = bounds
@@ -128,6 +112,29 @@ private class DnDTabbedPane : JTabbedPane() {
     }
 
   class DropLocation(pt: Point, val index: Int) : TransferHandler.DropLocation(pt)
+
+  init {
+    val h = Handler()
+    addMouseListener(h)
+    addMouseMotionListener(h)
+    addPropertyChangeListener(h)
+  }
+
+  fun getDropLineRect(): Rectangle {
+    val index = dropLocation?.index ?: -1
+    if (index < 0) {
+      RECT_LINE.setBounds(0, 0, 0, 0)
+      return RECT_LINE
+    }
+    val a = minOf(index, 1)
+    val r = getBoundsAt(a * (index - 1))
+    if (isTopBottomTabPlacement(getTabPlacement())) {
+      RECT_LINE.setBounds(r.x - LINE_SIZE / 2 + r.width * a, r.y, LINE_SIZE, r.height)
+    } else {
+      RECT_LINE.setBounds(r.x, r.y - LINE_SIZE / 2 + r.height * a, r.width, LINE_SIZE)
+    }
+    return RECT_LINE
+  }
 
   private fun clickArrowButton(actionKey: String) {
     var scrollForwardButton: JButton? = null
@@ -158,13 +165,6 @@ private class DnDTabbedPane : JTabbedPane() {
     } else if (RECT_FORWARD.contains(pt)) {
       clickArrowButton("scrollTabsForwardAction")
     }
-  }
-
-  init {
-    val h = Handler()
-    addMouseListener(h)
-    addMouseMotionListener(h)
-    addPropertyChangeListener(h)
   }
 
   fun tabDropLocationForPoint(p: Point): DropLocation {
