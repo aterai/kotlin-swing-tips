@@ -73,6 +73,12 @@ fun makeUI(): Component {
 private class SolidGaugeUI(range: Int, extent: Double) : BasicProgressBarUI() {
   private val pallet: IntArray
   private val extent: Double
+
+  init {
+    pallet = makeGradientPallet(range)
+    this.extent = extent
+  }
+
   override fun paint(g: Graphics, c: JComponent) {
     val rect = SwingUtilities.calculateInnerArea(progressBar, null)
     if (rect.isEmpty) {
@@ -154,14 +160,13 @@ private class SolidGaugeUI(range: Int, extent: Double) : BasicProgressBarUI() {
     val index = i.coerceAtLeast(0).coerceAtMost(max)
     return Color(pallet[index] and 0x00_FF_FF_FF)
   }
-
-  init {
-    pallet = makeGradientPallet(range)
-    this.extent = extent
-  }
 }
 
 private class ProgressListener(private val progressBar: JProgressBar) : PropertyChangeListener {
+  init {
+    progressBar.value = progressBar.minimum
+  }
+
   override fun propertyChange(e: PropertyChangeEvent) {
     val strPropertyName = e.propertyName
     val nv = e.newValue
@@ -171,10 +176,6 @@ private class ProgressListener(private val progressBar: JProgressBar) : Property
       val iv = (range * .01 * nv).toInt()
       progressBar.value = iv
     }
-  }
-
-  init {
-    progressBar.value = progressBar.minimum
   }
 }
 

@@ -42,6 +42,23 @@ fun makeUI(): Component {
 private class TextAreaCellEditor : AbstractCellEditor(), TableCellEditor {
   private val textArea = JTextArea()
   private val scroll = JScrollPane(textArea)
+
+  init {
+    scroll.border = BorderFactory.createEmptyBorder()
+    textArea.lineWrap = true
+    textArea.border = BorderFactory.createEmptyBorder(2, 4, 2, 4)
+    val modifiers = Toolkit.getDefaultToolkit().menuShortcutKeyMask
+    // Java 10: int modifiers = Toolkit.getDefaultToolkit().menuShortcutKeyMaskEx
+    val enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, modifiers)
+    textArea.getInputMap(JComponent.WHEN_FOCUSED).put(enter, KEY)
+    val action = object : AbstractAction() {
+      override fun actionPerformed(e: ActionEvent) {
+        stopCellEditing()
+      }
+    }
+    textArea.actionMap.put(KEY, action)
+  }
+
   override fun getCellEditorValue(): Any = textArea.text
 
   override fun getTableCellEditorComponent(
@@ -82,26 +99,16 @@ private class TextAreaCellEditor : AbstractCellEditor(), TableCellEditor {
   companion object {
     private const val KEY = "Stop-Cell-Editing"
   }
-
-  init {
-    scroll.border = BorderFactory.createEmptyBorder()
-    textArea.lineWrap = true
-    textArea.border = BorderFactory.createEmptyBorder(2, 4, 2, 4)
-    val modifiers = Toolkit.getDefaultToolkit().menuShortcutKeyMask
-    // Java 10: int modifiers = Toolkit.getDefaultToolkit().menuShortcutKeyMaskEx
-    val enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, modifiers)
-    textArea.getInputMap(JComponent.WHEN_FOCUSED).put(enter, KEY)
-    val action = object : AbstractAction() {
-      override fun actionPerformed(e: ActionEvent) {
-        stopCellEditing()
-      }
-    }
-    textArea.actionMap.put(KEY, action)
-  }
 }
 
 private class TextAreaCellRenderer : TableCellRenderer {
   private val textArea = JTextArea()
+
+  init {
+    textArea.lineWrap = true
+    textArea.border = BorderFactory.createEmptyBorder(2, 4, 2, 4)
+  }
+
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -120,11 +127,6 @@ private class TextAreaCellRenderer : TableCellRenderer {
     textArea.font = table.font
     textArea.text = value?.toString() ?: ""
     return textArea
-  }
-
-  init {
-    textArea.lineWrap = true
-    textArea.border = BorderFactory.createEmptyBorder(2, 4, 2, 4)
   }
 }
 

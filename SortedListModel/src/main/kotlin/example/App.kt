@@ -143,6 +143,18 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
       BorderFactory.createEmptyBorder(it.top, it.left, it.bottom, it.right)
     }
 
+  init {
+    label.verticalTextPosition = SwingConstants.BOTTOM
+    label.horizontalTextPosition = SwingConstants.CENTER
+    label.foreground = renderer.foreground
+    label.background = renderer.background
+    label.border = noFocusBorder
+    label.isOpaque = false
+    renderer.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
+    renderer.add(label)
+    renderer.isOpaque = true
+  }
+
   override fun getListCellRendererComponent(
     list: JList<out ListItem>,
     value: ListItem,
@@ -161,18 +173,6 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
       renderer.background = list.background
     }
     return renderer
-  }
-
-  init {
-    label.verticalTextPosition = SwingConstants.BOTTOM
-    label.horizontalTextPosition = SwingConstants.CENTER
-    label.foreground = renderer.foreground
-    label.background = renderer.background
-    label.border = noFocusBorder
-    label.isOpaque = false
-    renderer.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
-    renderer.add(label)
-    renderer.isOpaque = true
   }
 }
 

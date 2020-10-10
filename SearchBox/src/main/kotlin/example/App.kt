@@ -98,6 +98,10 @@ private class ControlPanelLayout(private val controls: Container, hgap: Int, vga
     }
   }
 
+  init {
+    animator.addActionListener { controls.revalidate() }
+  }
+
   override fun preferredLayoutSize(target: Container): Dimension {
     // synchronized (target.getTreeLock()) {
     val ps = super.preferredLayoutSize(target)
@@ -122,10 +126,6 @@ private class ControlPanelLayout(private val controls: Container, hgap: Int, vga
     }
     ps.height = controlsHeight
     return ps
-  }
-
-  init {
-    animator.addActionListener { controls.revalidate() }
   }
 }
 

@@ -80,37 +80,6 @@ private class LineNumberView(private val textArea: JTextArea) : JComponent() {
       return maxDigits * fontMetrics.stringWidth("0") + i.left + i.right
     }
 
-  private fun getLineAtPoint(y: Int): Int {
-    val root = textArea.document.defaultRootElement
-    val pos = textArea.viewToModel(Point(0, y))
-    return root.getElementIndex(pos)
-  }
-
-  override fun getPreferredSize() = Dimension(componentWidth, textArea.height)
-
-  override fun paintComponent(g: Graphics) {
-    g.color = background
-    val clip = g.clipBounds
-    g.fillRect(clip.x, clip.y, clip.width, clip.height)
-    g.color = foreground
-    val base = clip.y
-    val start = getLineAtPoint(base)
-    val end = getLineAtPoint(base + clip.height)
-    var y = start * fontHeight
-    val rmg = insets.right
-    for (i in start..end) {
-      val text = (i + 1).toString()
-      val x = componentWidth - rmg - fontMetrics.stringWidth(text)
-      y += fontAscent
-      g.drawString(text, x, y)
-      y += fontDescent + fontLeading
-    }
-  }
-
-  companion object {
-    private const val MARGIN = 5
-  }
-
   init {
     val font = textArea.font
     fontMetrics = getFontMetrics(font)
@@ -147,6 +116,37 @@ private class LineNumberView(private val textArea: JTextArea) : JComponent() {
     isOpaque = true
     background = Color.WHITE
     setFont(font)
+  }
+
+  private fun getLineAtPoint(y: Int): Int {
+    val root = textArea.document.defaultRootElement
+    val pos = textArea.viewToModel(Point(0, y))
+    return root.getElementIndex(pos)
+  }
+
+  override fun getPreferredSize() = Dimension(componentWidth, textArea.height)
+
+  override fun paintComponent(g: Graphics) {
+    g.color = background
+    val clip = g.clipBounds
+    g.fillRect(clip.x, clip.y, clip.width, clip.height)
+    g.color = foreground
+    val base = clip.y
+    val start = getLineAtPoint(base)
+    val end = getLineAtPoint(base + clip.height)
+    var y = start * fontHeight
+    val rmg = insets.right
+    for (i in start..end) {
+      val text = (i + 1).toString()
+      val x = componentWidth - rmg - fontMetrics.stringWidth(text)
+      y += fontAscent
+      g.drawString(text, x, y)
+      y += fontDescent + fontLeading
+    }
+  }
+
+  companion object {
+    private const val MARGIN = 5
   }
 }
 

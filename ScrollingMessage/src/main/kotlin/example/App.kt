@@ -25,6 +25,22 @@ private class MarqueePanel : JComponent() {
   private var xx = 0f
   private var baseline = 0f
 
+  init {
+    addHierarchyListener { e ->
+      if (e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L && !e.component.isDisplayable) {
+        animator.stop()
+      }
+    }
+    val text = "abcdefghijklmnopqrstuvwxyzABDEFGHIJKLMNOPQRSTUVWXYZ"
+    val font = Font(Font.SERIF, Font.PLAIN, 100)
+    val frc = FontRenderContext(null, true, true)
+    gv = font.createGlyphVector(frc, text)
+    lm = font.getLineMetrics(text, frc)
+    val xgm = gv.getGlyphMetrics(23)
+    corpusSize = xgm.bounds2D.height.toFloat()
+    animator.start()
+  }
+
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     val w = width.toFloat()
@@ -50,22 +66,6 @@ private class MarqueePanel : JComponent() {
     g2.paint = Color.BLACK
     g2.drawGlyphVector(gv, w - xx, baseline)
     g2.dispose()
-  }
-
-  init {
-    addHierarchyListener { e ->
-      if (e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L && !e.component.isDisplayable) {
-        animator.stop()
-      }
-    }
-    val text = "abcdefghijklmnopqrstuvwxyzABDEFGHIJKLMNOPQRSTUVWXYZ"
-    val font = Font(Font.SERIF, Font.PLAIN, 100)
-    val frc = FontRenderContext(null, true, true)
-    gv = font.createGlyphVector(frc, text)
-    lm = font.getLineMetrics(text, frc)
-    val xgm = gv.getGlyphMetrics(23)
-    corpusSize = xgm.bounds2D.height.toFloat()
-    animator.start()
   }
 }
 

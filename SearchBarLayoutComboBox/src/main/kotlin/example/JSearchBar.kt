@@ -4,6 +4,11 @@ import java.awt.event.FocusEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 open class JSearchBar<E : SearchEngine> : JComboBox<E> {
+  constructor(model: ComboBoxModel<E>) : super(model)
+
+  @SafeVarargs
+  constructor(vararg items: E) : super(items)
+
   override fun getUIClassID() = UI_CLASS_ID
 
   override fun getUI() = ui as? SearchBarComboBoxUI
@@ -28,11 +33,6 @@ open class JSearchBar<E : SearchEngine> : JComboBox<E> {
       (getComponent(0) as? JButton)?.icon = it.favicon
     }
   }
-
-  constructor(model: ComboBoxModel<E>) : super(model)
-
-  @SafeVarargs
-  constructor(vararg items: E) : super(items)
 
   override fun processFocusEvent(e: FocusEvent) {
     println("processFocusEvent")

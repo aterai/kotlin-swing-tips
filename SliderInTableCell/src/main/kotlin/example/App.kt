@@ -62,21 +62,6 @@ private class SliderRenderer : TableCellRenderer {
 private class SliderEditor : AbstractCellEditor(), TableCellEditor {
   private val renderer = JSlider()
   private var prev = 0
-  override fun getTableCellEditorComponent(
-    table: JTable,
-    value: Any?,
-    isSelected: Boolean,
-    row: Int,
-    column: Int
-  ): Component {
-    if (value is Int) {
-      renderer.value = value
-    }
-    renderer.background = table.selectionBackground
-    return renderer
-  }
-
-  override fun getCellEditorValue() = renderer.value
 
   init {
     renderer.isOpaque = true
@@ -92,6 +77,22 @@ private class SliderEditor : AbstractCellEditor(), TableCellEditor {
       }
     }
   }
+
+  override fun getTableCellEditorComponent(
+    table: JTable,
+    value: Any?,
+    isSelected: Boolean,
+    row: Int,
+    column: Int
+  ): Component {
+    if (value is Int) {
+      renderer.value = value
+    }
+    renderer.background = table.selectionBackground
+    return renderer
+  }
+
+  override fun getCellEditorValue() = renderer.value
 }
 
 fun main() {
