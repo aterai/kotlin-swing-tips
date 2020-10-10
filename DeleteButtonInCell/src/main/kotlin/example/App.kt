@@ -115,15 +115,6 @@ private class DeleteButtonRenderer : TableCellRenderer {
 
 private class DeleteButtonEditor : AbstractCellEditor(), TableCellEditor {
   private val renderer = DeleteButton()
-  override fun getTableCellEditorComponent(
-    table: JTable,
-    value: Any?,
-    isSelected: Boolean,
-    row: Int,
-    column: Int
-  ) = renderer
-
-  override fun getCellEditorValue() = ""
 
   init {
     renderer.addActionListener {
@@ -134,6 +125,16 @@ private class DeleteButtonEditor : AbstractCellEditor(), TableCellEditor {
       }
     }
   }
+
+  override fun getTableCellEditorComponent(
+    table: JTable,
+    value: Any?,
+    isSelected: Boolean,
+    row: Int,
+    column: Int
+  ) = renderer
+
+  override fun getCellEditorValue() = ""
 }
 
 fun main() {

@@ -99,7 +99,6 @@ private abstract class AbstractExpansionPanel(title: String?) : JPanel(BorderLay
   private val scroll = JScrollPane()
   private val button = JButton(title)
   private var openFlag = false
-  abstract fun makePanel(): Container?
   var isExpanded: Boolean
     get() = openFlag
     set(flg) {
@@ -124,6 +123,8 @@ private abstract class AbstractExpansionPanel(title: String?) : JPanel(BorderLay
       add(it, BorderLayout.NORTH)
     }
   }
+
+  abstract fun makePanel(): Container?
 
   fun addExpansionListener(l: ExpansionListener) {
     listenerList.add(ExpansionListener::class.java, l)

@@ -40,22 +40,6 @@ fun makeUI(): Component {
 private class SpinnerCellEditor : AbstractCellEditor(), TableCellEditor {
   private val spinner = JSpinner(SpinnerDateModel())
 
-  fun setArrowButtonEnabled(flag: Boolean) {
-    for (c in spinner.components) {
-      (c as? JButton)?.isEnabled = flag
-    }
-  }
-
-  override fun getTableCellEditorComponent(
-    table: JTable,
-    value: Any?,
-    isSelected: Boolean,
-    row: Int,
-    column: Int
-  ) = spinner.also { it.value = value }
-
-  override fun getCellEditorValue(): Any = spinner.value
-
   init {
     val editor = DateEditor(spinner, "yyyy/MM/dd")
     spinner.editor = editor
@@ -80,6 +64,22 @@ private class SpinnerCellEditor : AbstractCellEditor(), TableCellEditor {
     }
     editor.textField.addFocusListener(fl)
   }
+
+  fun setArrowButtonEnabled(flag: Boolean) {
+    for (c in spinner.components) {
+      (c as? JButton)?.isEnabled = flag
+    }
+  }
+
+  override fun getTableCellEditorComponent(
+    table: JTable,
+    value: Any?,
+    isSelected: Boolean,
+    row: Int,
+    column: Int
+  ) = spinner.also { it.value = value }
+
+  override fun getCellEditorValue(): Any = spinner.value
 }
 
 fun main() {

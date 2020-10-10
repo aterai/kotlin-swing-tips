@@ -23,6 +23,12 @@ fun makeUI(): Component {
 private class SplitPaneWrapper(private val splitPane: JSplitPane) : JPanel(BorderLayout()) {
   private var flag = true
   private var prevState = Frame.NORMAL
+
+  init {
+    add(splitPane)
+    EventQueue.invokeLater { splitPane.setDividerLocation(.5) }
+  }
+
   fun setTestFlag(f: Boolean) {
     flag = f
   }
@@ -49,11 +55,6 @@ private class SplitPaneWrapper(private val splitPane: JSplitPane) : JPanel(Borde
   companion object {
     private fun getOrientedSize(sp: JSplitPane) =
       if (sp.orientation == JSplitPane.VERTICAL_SPLIT) sp.height - sp.dividerSize else sp.width - sp.dividerSize
-  }
-
-  init {
-    add(splitPane)
-    EventQueue.invokeLater { splitPane.setDividerLocation(.5) }
   }
 }
 

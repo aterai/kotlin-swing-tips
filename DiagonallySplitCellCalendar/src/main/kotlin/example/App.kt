@@ -134,6 +134,13 @@ fun makeUI(): Component {
 private class CalendarViewTableModel(date: LocalDate) : DefaultTableModel() {
   private val startDate: LocalDate
   private val weekFields = WeekFields.of(Locale.getDefault())
+
+  init {
+    val firstDayOfMonth = YearMonth.from(date).atDay(1)
+    val v = firstDayOfMonth[weekFields.dayOfWeek()] - 1
+    startDate = firstDayOfMonth.minusDays(v.toLong())
+  }
+
   override fun getColumnClass(column: Int) = LocalDate::class.java
 
   override fun getColumnName(column: Int): String =
@@ -148,12 +155,6 @@ private class CalendarViewTableModel(date: LocalDate) : DefaultTableModel() {
     startDate.plusDays(row.toLong() * columnCount + column)
 
   override fun isCellEditable(row: Int, column: Int) = false
-
-  init {
-    val firstDayOfMonth = YearMonth.from(date).atDay(1)
-    val v = firstDayOfMonth[weekFields.dayOfWeek()] - 1
-    startDate = firstDayOfMonth.minusDays(v.toLong())
-  }
 }
 
 private class DiagonallySplitCellLayerUI : LayerUI<JPanel>() {

@@ -28,6 +28,19 @@ fun makeUI(): Component {
 }
 
 private class TextFieldPopupMenu : JPopupMenu() {
+  init {
+    add(CutAction())
+    add(CopyAction())
+    add(PasteAction())
+    add("delete").addActionListener {
+      (invoker as? JTextComponent)?.replaceSelection(null)
+    }
+    addSeparator()
+    add("cut2").addActionListener {
+      (invoker as? JTextComponent)?.cut()
+    }
+  }
+
   override fun show(c: Component, x: Int, y: Int) {
     if (c is JTextComponent) {
       val hasSelectedText = c.selectedText == null
@@ -39,19 +52,6 @@ private class TextFieldPopupMenu : JPopupMenu() {
         m.isEnabled = hasSelectedText
       }
       super.show(c, x, y)
-    }
-  }
-
-  init {
-    add(CutAction())
-    add(CopyAction())
-    add(PasteAction())
-    add("delete").addActionListener {
-      (invoker as? JTextComponent)?.replaceSelection(null)
-    }
-    addSeparator()
-    add("cut2").addActionListener {
-      (invoker as? JTextComponent)?.cut()
     }
   }
 }
