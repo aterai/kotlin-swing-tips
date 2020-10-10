@@ -68,6 +68,13 @@ private data class PluginNode(
 private class PluginPanel(val comboBox: JComboBox<String>) : JPanel() {
   val pluginName = JLabel()
 
+  init {
+    comboBox.prototypeDisplayValue = "Debug mode x"
+    isOpaque = false
+    add(pluginName)
+    add(comboBox)
+  }
+
   fun extractNode(value: Any?): PluginNode? {
     if (value is DefaultMutableTreeNode) {
       (value.userObject as? PluginNode)?.also { node ->
@@ -87,13 +94,6 @@ private class PluginPanel(val comboBox: JComboBox<String>) : JPanel() {
       }
     }
     return null
-  }
-
-  init {
-    comboBox.prototypeDisplayValue = "Debug mode x"
-    isOpaque = false
-    add(pluginName)
-    add(comboBox)
   }
 }
 

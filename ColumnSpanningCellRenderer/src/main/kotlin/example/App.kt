@@ -52,6 +52,31 @@ private class ColumnSpanningCellRenderer : JPanel(BorderLayout()), TableCellRend
   private val label = JLabel()
   private val iconLabel = JLabel()
   private val scroll = JScrollPane(textArea)
+
+  init {
+    scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
+    scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+    scroll.border = BorderFactory.createEmptyBorder()
+    scroll.viewportBorder = BorderFactory.createEmptyBorder()
+    scroll.isOpaque = false
+    scroll.viewport.isOpaque = false
+    textArea.border = BorderFactory.createEmptyBorder()
+    textArea.margin = Insets(0, 0, 0, 0)
+    textArea.foreground = Color.RED
+    textArea.isEditable = false
+    textArea.isFocusable = false
+    textArea.isOpaque = false
+    iconLabel.border = BorderFactory.createEmptyBorder(0, 4, 0, 4)
+    iconLabel.isOpaque = false
+    val b1 = BorderFactory.createEmptyBorder(2, 2, 2, 2)
+    val b2 = BorderFactory.createMatteBorder(0, 0, 1, 1, Color.GRAY)
+    label.border = BorderFactory.createCompoundBorder(b2, b1)
+    background = textArea.background
+    isOpaque = true
+    add(label, BorderLayout.NORTH)
+    add(scroll)
+  }
+
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -89,30 +114,6 @@ private class ColumnSpanningCellRenderer : JPanel(BorderLayout()), TableCellRend
 
   companion object {
     private const val TARGET_IDX = 0
-  }
-
-  init {
-    scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
-    scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
-    scroll.border = BorderFactory.createEmptyBorder()
-    scroll.viewportBorder = BorderFactory.createEmptyBorder()
-    scroll.isOpaque = false
-    scroll.viewport.isOpaque = false
-    textArea.border = BorderFactory.createEmptyBorder()
-    textArea.margin = Insets(0, 0, 0, 0)
-    textArea.foreground = Color.RED
-    textArea.isEditable = false
-    textArea.isFocusable = false
-    textArea.isOpaque = false
-    iconLabel.border = BorderFactory.createEmptyBorder(0, 4, 0, 4)
-    iconLabel.isOpaque = false
-    val b1 = BorderFactory.createEmptyBorder(2, 2, 2, 2)
-    val b2 = BorderFactory.createMatteBorder(0, 0, 1, 1, Color.GRAY)
-    label.border = BorderFactory.createCompoundBorder(b2, b1)
-    background = textArea.background
-    isOpaque = true
-    add(label, BorderLayout.NORTH)
-    add(scroll)
   }
 }
 

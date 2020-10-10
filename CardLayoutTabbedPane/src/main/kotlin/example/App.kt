@@ -44,6 +44,17 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
   private val contentsPanel = JPanel(cardLayout)
   private val bg = ButtonGroup()
 
+  init {
+    val left = 1
+    val right = 3
+    tabPanel.border = BorderFactory.createEmptyBorder(1, left, 0, right)
+    contentsPanel.border = BorderFactory.createEmptyBorder(4, left, 2, right)
+    wrapPanel.add(tabPanel)
+    wrapPanel.add(JLabel("test:"), BorderLayout.WEST)
+    add(wrapPanel, BorderLayout.NORTH)
+    add(contentsPanel)
+  }
+
   private fun createTabComponent(title: String): Component {
     val tab = TabButton(title)
     val ml = object : MouseAdapter() {
@@ -78,17 +89,6 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
     tabPanel.add(createTabComponent(title))
     contentsPanel.add(comp, title)
     cardLayout.show(contentsPanel, title)
-  }
-
-  init {
-    val left = 1
-    val right = 3
-    tabPanel.border = BorderFactory.createEmptyBorder(1, left, 0, right)
-    contentsPanel.border = BorderFactory.createEmptyBorder(4, left, 2, right)
-    wrapPanel.add(tabPanel)
-    wrapPanel.add(JLabel("test:"), BorderLayout.WEST)
-    add(wrapPanel, BorderLayout.NORTH)
-    add(contentsPanel)
   }
 }
 

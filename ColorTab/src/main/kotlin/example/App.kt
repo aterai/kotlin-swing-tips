@@ -37,14 +37,6 @@ private class TabbedPanePopupMenu : JPopupMenu() {
   private val closePage: JMenuItem
   private val closeAll: JMenuItem
   private val closeAllButActive: JMenuItem
-  override fun show(c: Component, x: Int, y: Int) {
-    (c as? JTabbedPane)?.also {
-      closePage.isEnabled = it.indexAtLocation(x, y) >= 0
-      closeAll.isEnabled = it.tabCount > 0
-      closeAllButActive.isEnabled = it.tabCount > 0
-      super.show(c, x, y)
-    }
-  }
 
   init {
     add("New tab").addActionListener {
@@ -75,6 +67,15 @@ private class TabbedPanePopupMenu : JPopupMenu() {
         it.removeAll()
         it.addTab(title, cmp)
       }
+    }
+  }
+
+  override fun show(c: Component, x: Int, y: Int) {
+    (c as? JTabbedPane)?.also {
+      closePage.isEnabled = it.indexAtLocation(x, y) >= 0
+      closeAll.isEnabled = it.tabCount > 0
+      closeAllButActive.isEnabled = it.tabCount > 0
+      super.show(c, x, y)
     }
   }
 }

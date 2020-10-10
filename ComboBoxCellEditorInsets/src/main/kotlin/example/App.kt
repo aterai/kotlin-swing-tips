@@ -101,6 +101,17 @@ private class ComboBoxCellRenderer : TableCellRenderer {
 
 private class ComboBoxCellEditor : AbstractCellEditor(), TableCellEditor {
   private val panel = ComboBoxPanel()
+
+  init {
+    panel.comboBox.addActionListener { fireEditingStopped() }
+    val ml = object : MouseAdapter() {
+      override fun mousePressed(e: MouseEvent) {
+        fireEditingStopped()
+      }
+    }
+    panel.addMouseListener(ml)
+  }
+
   override fun getTableCellEditorComponent(
     table: JTable,
     value: Any?,
@@ -128,16 +139,6 @@ private class ComboBoxCellEditor : AbstractCellEditor(), TableCellEditor {
     }
     fireEditingStopped()
     return true
-  }
-
-  init {
-    panel.comboBox.addActionListener { fireEditingStopped() }
-    val ml = object : MouseAdapter() {
-      override fun mousePressed(e: MouseEvent) {
-        fireEditingStopped()
-      }
-    }
-    panel.addMouseListener(ml)
   }
 }
 
