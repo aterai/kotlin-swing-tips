@@ -9,7 +9,7 @@ fun makeUI(): Component {
   val tabbedPane1 = object : JTabbedPane() {
     override fun updateUI() {
       super.updateUI()
-      ui = if (ui is WindowsTabbedPaneUI) {
+      val tmp = if (ui is WindowsTabbedPaneUI) {
         object : WindowsTabbedPaneUI() {
           override fun shouldPadTabRun(tabPlacement: Int, run: Int) = false
         }
@@ -18,12 +18,13 @@ fun makeUI(): Component {
           override fun shouldPadTabRun(tabPlacement: Int, run: Int) = false
         }
       }
+      setUI(tmp)
     }
   }
   val tabbedPane2 = object : JTabbedPane() {
     override fun updateUI() {
       super.updateUI()
-      ui = if (ui is WindowsTabbedPaneUI) {
+      val tmp = if (ui is WindowsTabbedPaneUI) {
         object : WindowsTabbedPaneUI() {
           override fun shouldPadTabRun(tabPlacement: Int, run: Int) = true
         }
@@ -32,6 +33,7 @@ fun makeUI(): Component {
           override fun shouldPadTabRun(tabPlacement: Int, run: Int) = true
         }
       }
+      setUI(tmp)
     }
   }
 

@@ -117,9 +117,10 @@ private class DropdownTableComboBox<E : List<Any>>(
   override fun updateUI() {
     super.updateUI()
     EventQueue.invokeLater {
-      ui = object : MetalComboBoxUI() {
+      val tmp = object : MetalComboBoxUI() {
         override fun createPopup() = ComboTablePopup(comboBox, table)
       }
+      setUI(tmp)
       setEditable(false)
     }
   }

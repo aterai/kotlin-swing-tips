@@ -100,12 +100,12 @@ private class TabButton(text: String?) : JRadioButton(text, null) {
   var selectedTextColor: Color? = null
 
   override fun updateUI() {
-    // ui = if (UIManager.get(uiClassID) != null) {
+    // val tmp = if (UIManager.get(uiClassID) != null) {
     //   UIManager.getUI(this) as? TabViewButtonUI
     // } else {
     //   BasicTabViewButtonUI()
     // }
-    ui = OperaTabViewButtonUI()
+    setUI(OperaTabViewButtonUI())
   }
 
   override fun getUIClassID() = UI_CLASS_ID

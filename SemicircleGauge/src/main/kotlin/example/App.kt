@@ -15,13 +15,13 @@ fun makeUI(): Component {
   val progress1 = object : JProgressBar(0, 200) {
     override fun updateUI() {
       super.updateUI()
-      ui = SolidGaugeUI(maximum - minimum, 180.0)
+      setUI(SolidGaugeUI(maximum - minimum, 180.0))
     }
   }
   val progress2 = object : JProgressBar(0, 200) {
     override fun updateUI() {
       super.updateUI()
-      ui = SolidGaugeUI(maximum - minimum, 160.0)
+      setUI(SolidGaugeUI(maximum - minimum, 160.0))
     }
   }
   listOf(progress1, progress2).forEach {

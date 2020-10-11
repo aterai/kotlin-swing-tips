@@ -11,7 +11,7 @@ fun makeUI(): Component {
   val tabbedPane = object : JTabbedPane() {
     override fun updateUI() {
       super.updateUI()
-      ui = if (ui is WindowsTabbedPaneUI) {
+      val tmp = if (ui is WindowsTabbedPaneUI) {
         object : WindowsTabbedPaneUI() {
           override fun calculateTabWidth(tabPlacement: Int, tabIndex: Int, metrics: FontMetrics) =
             MIN_TAB_WIDTH.coerceAtLeast(super.calculateTabWidth(tabPlacement, tabIndex, metrics))
@@ -22,6 +22,7 @@ fun makeUI(): Component {
             MIN_TAB_WIDTH.coerceAtLeast(super.calculateTabWidth(tabPlacement, tabIndex, metrics))
         }
       }
+      setUI(tmp)
     }
   }
   val p = JPanel(GridLayout(2, 1, 0, 10))

@@ -64,11 +64,12 @@ private fun makeMenuItem(mi: JMenuItem): JMenuItem {
   val menuItem = object : JMenuItem(mi.text) {
     override fun updateUI() {
       super.updateUI()
-      ui = if (ui is WindowsMenuItemUI) {
+      val tmp = if (ui is WindowsMenuItemUI) {
         RaaWindowsMenuItemUI()
       } else {
         RaaBasicMenuItemUI()
       }
+      setUI(tmp)
       // XXX: setLocale(Locale.JAPAN)
     }
   }

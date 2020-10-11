@@ -10,7 +10,7 @@ fun makeUI(): Component {
   val progress = object : JProgressBar() {
     override fun updateUI() {
       super.updateUI()
-      ui = OneDirectionIndeterminateProgressBarUI()
+      setUI(OneDirectionIndeterminateProgressBarUI())
     }
   }
 

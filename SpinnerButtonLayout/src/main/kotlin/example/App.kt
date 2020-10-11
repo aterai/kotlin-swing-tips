@@ -14,9 +14,10 @@ fun makeUI(): Component {
   val spinner2 = object : JSpinner(model) {
     override fun updateUI() {
       super.updateUI()
-      ui = object : BasicSpinnerUI() {
+      val tmp = object : BasicSpinnerUI() {
         override fun createLayout() = SpinnerLayout()
       }
+      setUI(tmp)
     }
   }
   box.add(makeTitledPanel("L(Prev), R(Next)", spinner2))

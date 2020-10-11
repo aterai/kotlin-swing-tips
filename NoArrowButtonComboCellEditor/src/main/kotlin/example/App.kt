@@ -82,7 +82,7 @@ private class LocalDateTimeTableCellEditor : AbstractCellEditor(), TableCellEdit
       border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
       isOpaque = false
       setRenderer(LocalDateTimeCellRenderer())
-      ui = ZeroSizeButtonUI()
+      setUI(ZeroSizeButtonUI())
     }
   }
   private var selectedDate: LocalDateTime? = null

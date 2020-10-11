@@ -21,7 +21,7 @@ private val textField2 = JTextField(TEXT)
 private val scroller2 = object : JScrollBar(Adjustable.HORIZONTAL) {
   override fun updateUI() {
     super.updateUI()
-    ui = ArrowButtonlessScrollBarUI()
+    setUI(ArrowButtonlessScrollBarUI())
   }
 
   override fun getPreferredSize(): Dimension {

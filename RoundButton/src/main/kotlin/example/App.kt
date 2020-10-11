@@ -12,7 +12,7 @@ import kotlin.math.sin
 private val button = object : JButton("RoundedCornerButtonUI") {
   override fun updateUI() {
     // IGNORE LnF change: super.updateUI()
-    ui = RoundedCornerButtonUI()
+    setUI(RoundedCornerButtonUI())
   }
 }
 

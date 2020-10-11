@@ -15,11 +15,12 @@ fun makeUI(): Component {
 
     override fun updateUI() {
       super.updateUI()
-      ui = if (ui is WindowsTabbedPaneUI) {
+      val tmp = if (ui is WindowsTabbedPaneUI) {
         WindowsClippedTitleTabbedPaneUI()
       } else {
         BasicClippedTitleTabbedPaneUI()
       }
+      setUI(tmp)
     }
   }
   val list = listOf(makeTabbedPane(JTabbedPane()), makeTabbedPane(tabbedPane))

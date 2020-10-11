@@ -15,9 +15,10 @@ fun makeUI(): Component {
   val f1 = object : JInternalFrame("basic", true, true, true, true) {
     override fun updateUI() {
       super.updateUI()
-      ui = object : BasicInternalFrameUI(this) {
+      val tmp = object : BasicInternalFrameUI(this) {
         override fun createNorthPane(w: JInternalFrame) = BumpsFreeInternalFrameTitlePane(w)
       }
+      setUI(tmp)
     }
   }
   f1.setSize(240, 100)

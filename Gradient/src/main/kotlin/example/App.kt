@@ -61,8 +61,8 @@ private class GradientSeparator : JSeparator {
 
   override fun updateUI() {
     super.updateUI()
-    // ui = GradientSeparatorUI.createUI(this)
-    ui = GradientSeparatorUI()
+    // setUI(GradientSeparatorUI.createUI(this))
+    setUI(GradientSeparatorUI())
   }
 }
 

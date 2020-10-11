@@ -24,7 +24,7 @@ fun makeUI(): Component {
   val tabs = object : JTabbedPane() {
     override fun updateUI() {
       super.updateUI()
-      ui = FlatTabbedPaneUI()
+      setUI(FlatTabbedPaneUI())
       isOpaque = true
       foreground = Color.WHITE
       background = UNSELECTED_BG

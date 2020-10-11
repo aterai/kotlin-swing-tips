@@ -83,11 +83,12 @@ private class HyperlinkButton(text: String? = null, icon: Icon? = null) : JButto
 
   override fun updateUI() {
     super.updateUI()
-    ui = if (UIManager.get(UI_CLASS_ID) != null) {
+    val tmp = if (UIManager.get(UI_CLASS_ID) != null) {
       UIManager.getUI(this) as? LinkViewButtonUI
     } else {
       BasicLinkViewButtonUI()
     }
+    setUI(tmp)
     foreground = Color.BLUE
     border = BorderFactory.createEmptyBorder(0, 0, 2, 0)
     cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)

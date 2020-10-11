@@ -16,7 +16,7 @@ fun makeUI(): Component {
   val slider1 = object : JSlider() {
     override fun updateUI() {
       super.updateUI()
-      ui = if (ui is WindowsSliderUI) {
+      val tmp = if (ui is WindowsSliderUI) {
         object : WindowsSliderUI(this) {
           override fun createTrackListener(slider: JSlider) = object : TrackListener() {
             override fun shouldScroll(direction: Int) = false
@@ -29,6 +29,7 @@ fun makeUI(): Component {
           }
         }
       }
+      setUI(tmp)
     }
   }
   slider1.putClientProperty(key, true)

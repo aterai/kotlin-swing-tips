@@ -13,7 +13,7 @@ fun makeUI(): Component {
     val fileChooser = object : JFileChooser() {
       override fun updateUI() {
         super.updateUI()
-        ui = EncodingFileChooserUI(this)
+        setUI(EncodingFileChooserUI(this))
         resetChoosableFileFilters()
       }
     }
@@ -31,7 +31,7 @@ fun makeUI(): Component {
     val fileChooser = object : JFileChooser() {
       override fun updateUI() {
         super.updateUI()
-        ui = object : WindowsFileChooserUI(this) {
+        val tmp = object : WindowsFileChooserUI(this) {
           override fun installComponents(fc: JFileChooser) {
             super.installComponents(fc)
             SwingUtils.descendants(bottomPanel)
@@ -42,6 +42,7 @@ fun makeUI(): Component {
               }
           }
         }
+        setUI(tmp)
         resetChoosableFileFilters()
       }
     }

@@ -16,7 +16,7 @@ fun makeUI(): Component {
   val pf2: JPasswordField = object : JPasswordField() {
     override fun updateUI() {
       super.updateUI()
-      ui = MyPasswordFieldUI.createUI(this)
+      setUI(MyPasswordFieldUI.createUI(this))
     }
   }
   return JPanel(GridLayout(2, 1)).also {

@@ -19,11 +19,12 @@ fun makeUI(): Component {
   val check2 = object : JCheckBox(TEXT) {
     override fun updateUI() {
       super.updateUI()
-      ui = if (ui is WindowsCheckBoxUI) {
+      val tmp = if (ui is WindowsCheckBoxUI) {
         WindowsVerticalAlignmentCheckBoxUI()
       } else {
         BasicVerticalAlignmentCheckBoxUI()
       }
+      setUI(tmp)
       verticalTextPosition = SwingConstants.TOP
     }
   }

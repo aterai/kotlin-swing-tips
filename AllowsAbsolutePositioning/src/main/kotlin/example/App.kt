@@ -17,11 +17,12 @@ fun makeUI(): Component {
   scroll.verticalScrollBar = object : JScrollBar(Adjustable.VERTICAL) {
     override fun updateUI() {
       super.updateUI()
-      ui = if (ui is WindowsScrollBarUI) {
+      val tmp = if (ui is WindowsScrollBarUI) {
         AbsolutePositioningWindowsScrollBarUI()
       } else {
         AbsolutePositioningBasicScrollBarUI()
       }
+      setUI(tmp)
       putClientProperty("JScrollBar.fastWheelScrolling", true)
     }
   }
@@ -29,11 +30,12 @@ fun makeUI(): Component {
   scroll.horizontalScrollBar = object : JScrollBar(Adjustable.HORIZONTAL) {
     override fun updateUI() {
       super.updateUI()
-      ui = if (ui is WindowsScrollBarUI) {
+      val tmp = if (ui is WindowsScrollBarUI) {
         AbsolutePositioningWindowsScrollBarUI()
       } else {
         AbsolutePositioningBasicScrollBarUI()
       }
+      setUI(tmp)
       putClientProperty("JScrollBar.fastWheelScrolling", true)
     }
   }

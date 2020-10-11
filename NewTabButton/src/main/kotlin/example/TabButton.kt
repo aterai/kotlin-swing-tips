@@ -24,12 +24,13 @@ class TabButton : JRadioButton {
     // "Accidental override" reported when a @JvmStatic method in a Kotlin class has
     //   the same signature as a static method in a Java base class : KT-12993
     // https://youtrack.jetbrains.com/issue/KT-12993
-    // ui = if (UIManager.get(getUIClassID()) != null) {
+    // val tmp = if (UIManager.get(getUIClassID()) != null) {
     //   UIManager.getUI(this)
     // } else {
     //   BasicTabViewButtonUI()
     // }
-    ui = OperaTabViewButtonUI()
+    // setUI(tmp)
+    setUI(OperaTabViewButtonUI())
   }
 
   override fun getUIClassID() = "TabViewButtonUI"

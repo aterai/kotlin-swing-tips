@@ -24,7 +24,7 @@ private fun createMenuBar(): JMenuBar {
     override fun updateUI() {
       super.updateUI()
       if (ui is WindowsMenuUI) {
-        ui = CustomWindowsMenuUI()
+        setUI(CustomWindowsMenuUI())
       }
     }
 
@@ -33,7 +33,7 @@ private fun createMenuBar(): JMenuBar {
         override fun updateUI() {
           super.updateUI()
           if (ui is WindowsMenuItemUI) {
-            ui = CustomWindowsMenuItemUI()
+            setUI(CustomWindowsMenuItemUI())
           }
         }
       }

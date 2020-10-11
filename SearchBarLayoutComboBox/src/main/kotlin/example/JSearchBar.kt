@@ -23,9 +23,9 @@ open class JSearchBar<E : SearchEngine> : JComboBox<E> {
     // https://youtrack.jetbrains.com/issue/KT-12993
     // super.updateUI()
     // if (UIManager.get(getUIClassID()) != null) {
-    //   ui = UIManager.getUI(this) as SearchBarComboBoxUI
+    //   setUI(UIManager.getUI(this) as SearchBarComboBoxUI)
     // } else {
-    ui = BasicSearchBarComboBoxUI()
+    setUI(BasicSearchBarComboBoxUI())
     // }
     UIManager.put("ComboBox.font", font) // XXX: ???
     getItemAt(0)?.also {

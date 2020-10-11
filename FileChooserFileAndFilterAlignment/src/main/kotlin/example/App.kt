@@ -22,11 +22,12 @@ fun makeUI(): Component {
     val fileChooser = object : JFileChooser() {
       override fun updateUI() {
         super.updateUI()
-        ui = if (ui is WindowsFileChooserUI) {
+        val tmp = if (ui is WindowsFileChooserUI) {
           RightAlignmentWindowsFileChooserUI(this)
         } else {
           RightAlignmentMetalFileChooserUI(this)
         }
+        setUI(tmp)
       }
     }
     val retValue = fileChooser.showOpenDialog(log.rootPane)

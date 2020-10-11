@@ -50,12 +50,13 @@ fun makeUI(): Component {
   val mi = object : JCheckBoxMenuItem("keeping open #2") {
     override fun updateUI() {
       super.updateUI()
-      ui = object : BasicCheckBoxMenuItemUI() {
+      val tmp = object : BasicCheckBoxMenuItemUI() {
         override fun doClick(msm: MenuSelectionManager) {
           println("MenuSelectionManager: doClick")
           menuItem.doClick(0)
         }
       }
+      setUI(tmp)
     }
   }
   popup.add(mi)
