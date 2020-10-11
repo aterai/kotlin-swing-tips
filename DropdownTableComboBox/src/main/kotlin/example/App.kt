@@ -106,13 +106,13 @@ private class DropdownTableComboBox<E : List<Any>>(
     }
   }
 
-  fun getSelectedRow() = list[selectedIndex]
-
   init {
     table.model = model
     list.forEach { this.addItem(it) }
     list.forEach { model.addRow(it.toTypedArray()) }
   }
+
+  fun getSelectedRow() = list[selectedIndex]
 
   override fun updateUI() {
     super.updateUI()

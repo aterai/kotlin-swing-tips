@@ -28,17 +28,6 @@ private class TreePopupMenu : JPopupMenu() {
   private val editItem: JMenuItem
   private val editDialogItem: JMenuItem
 
-  override fun show(c: Component, x: Int, y: Int) {
-    (c as? JTree)?.also { tree ->
-      val tsp = tree.selectionPaths
-      path = tree.getPathForLocation(x, y)
-      val isEditable = tsp != null && tsp.size == 1 && tsp[0] == path
-      editItem.isEnabled = isEditable
-      editDialogItem.isEnabled = isEditable
-      super.show(c, x, y)
-    }
-  }
-
   init {
     val field = JTextField()
     field.addAncestorListener(FocusAncestorListener())
@@ -67,6 +56,17 @@ private class TreePopupMenu : JPopupMenu() {
       }
     }
     add("dummy")
+  }
+
+  override fun show(c: Component, x: Int, y: Int) {
+    (c as? JTree)?.also { tree ->
+      val tsp = tree.selectionPaths
+      path = tree.getPathForLocation(x, y)
+      val isEditable = tsp != null && tsp.size == 1 && tsp[0] == path
+      editItem.isEnabled = isEditable
+      editDialogItem.isEnabled = isEditable
+      super.show(c, x, y)
+    }
   }
 }
 

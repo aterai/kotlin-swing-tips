@@ -125,6 +125,10 @@ open class BackgroundTask : SwingWorker<String, String>() {
 }
 
 private class ProgressListener(private val progressBar: JProgressBar) : PropertyChangeListener {
+  init {
+    progressBar.value = 0
+  }
+
   override fun propertyChange(e: PropertyChangeEvent) {
     val source = e.source
     if (!progressBar.isDisplayable && source is SwingWorker<*, *>) {
@@ -137,18 +141,22 @@ private class ProgressListener(private val progressBar: JProgressBar) : Property
       progressBar.value = e.newValue as Int
     }
   }
-
-  init {
-    progressBar.value = 0
-  }
 }
 
 private class LoadingLabel : JLabel() {
-  @Transient
-  private val icon = LoadingIcon()
+  @Transient private val icon = LoadingIcon()
   private val animator = Timer(100) {
     icon.next()
     repaint()
+  }
+
+  init {
+    setIcon(icon)
+    addHierarchyListener { e ->
+      if (e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L && !e.component.isDisplayable) {
+        animator.stop()
+      }
+    }
   }
 
   fun startAnimation() {
@@ -159,15 +167,6 @@ private class LoadingLabel : JLabel() {
   fun stopAnimation() {
     icon.setRunning(false)
     animator.stop()
-  }
-
-  init {
-    setIcon(icon)
-    addHierarchyListener { e ->
-      if (e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L && !e.component.isDisplayable) {
-        animator.stop()
-      }
-    }
   }
 }
 

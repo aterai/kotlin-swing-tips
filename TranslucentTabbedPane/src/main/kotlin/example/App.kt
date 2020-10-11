@@ -63,12 +63,12 @@ fun makeUI(): Component {
 }
 
 private class AlphaContainer(private val component: JComponent) : JPanel(BorderLayout()) {
-  override fun isOpaque() = false
-
   init {
     component.isOpaque = false
     add(component)
   }
+
+  override fun isOpaque() = false
 
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)

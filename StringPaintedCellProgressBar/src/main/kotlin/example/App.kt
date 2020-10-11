@@ -90,6 +90,15 @@ private class TablePopupMenu : JPopupMenu() {
   private val cancelMenuItem: JMenuItem
   private val deleteMenuItem: JMenuItem
 
+  init {
+    add("add").addActionListener { addActionPerformed() }
+    addSeparator()
+    cancelMenuItem = add("cancel")
+    cancelMenuItem.addActionListener { cancelActionPerformed() }
+    deleteMenuItem = add("delete")
+    deleteMenuItem.addActionListener { deleteActionPerformed() }
+  }
+
   override fun show(c: Component, x: Int, y: Int) {
     val table = c as? JTable ?: return
     val flag = table.selectedRowCount > 0
@@ -124,15 +133,6 @@ private class TablePopupMenu : JPopupMenu() {
       getSwingWorker(mi)?.takeUnless { it.isDone }?.cancel(true)
     }
     table.repaint()
-  }
-
-  init {
-    add("add").addActionListener { addActionPerformed() }
-    addSeparator()
-    cancelMenuItem = add("cancel")
-    cancelMenuItem.addActionListener { cancelActionPerformed() }
-    deleteMenuItem = add("delete")
-    deleteMenuItem.addActionListener { deleteActionPerformed() }
   }
 }
 
