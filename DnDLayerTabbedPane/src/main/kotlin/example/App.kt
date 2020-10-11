@@ -99,8 +99,7 @@ private fun makeCheckBoxPanel(tabs: JTabbedPane): Component {
 
 class DnDTabbedPane : JTabbedPane() {
   var dragTabIndex = -1
-  @Transient
-  var dropLocation: DropLocation? = null
+  @Transient var dropLocation: DropLocation? = null
 
   val tabAreaBounds: Rectangle
     get() {
@@ -124,6 +123,14 @@ class DnDTabbedPane : JTabbedPane() {
       // tabbedRect.grow(2, 2)
       return tabbedRect
     }
+
+
+  init {
+    val h = Handler()
+    addMouseListener(h)
+    addMouseMotionListener(h)
+    addPropertyChangeListener(h)
+  }
 
   class DropLocation(pt: Point, val index: Int) : TransferHandler.DropLocation(pt)
 
@@ -158,13 +165,6 @@ class DnDTabbedPane : JTabbedPane() {
     } else if (RECT_FORWARD.contains(pt)) {
       clickArrowButton("scrollTabsForwardAction")
     }
-  }
-
-  init {
-    val h = Handler()
-    addMouseListener(h)
-    addMouseMotionListener(h)
-    addPropertyChangeListener(h)
   }
 
   fun tabDropLocationForPoint(p: Point): DropLocation {
@@ -324,6 +324,17 @@ class TabTransferHandler : TransferHandler() {
   private val dialog = JWindow()
   private var mode = DragImageMode.LIGHTWEIGHT
 
+  init {
+    println("TabTransferHandler")
+    dialog.add(label)
+    dialog.opacity = .5f
+    DragSource.getDefaultDragSource().addDragSourceMotionListener { e ->
+      val pt = e.location
+      pt.translate(5, 5) // offset
+      dialog.location = pt
+    }
+  }
+
   fun setDragImageMode(mode: DragImageMode) {
     this.mode = mode
     dragImage = null
@@ -444,17 +455,6 @@ class TabTransferHandler : TransferHandler() {
       dialog.isVisible = false
     }
   }
-
-  init {
-    println("TabTransferHandler")
-    dialog.add(label)
-    dialog.opacity = .5f
-    DragSource.getDefaultDragSource().addDragSourceMotionListener { e ->
-      val pt = e.location
-      pt.translate(5, 5) // offset
-      dialog.location = pt
-    }
-  }
 }
 
 private class DropLocationLayerUI : LayerUI<DnDTabbedPane>() {
@@ -539,6 +539,13 @@ private class TabButton : JButton() {
 
   override fun updateUI() {
     // we don't want to update UI for this button
+    setUI(BasicButtonUI())
+    toolTipText = "close this tab"
+    isContentAreaFilled = false
+    isFocusable = false
+    border = BorderFactory.createEtchedBorder()
+    isBorderPainted = false
+    isRolloverEnabled = true
   }
 
   override fun paintComponent(g: Graphics) {
@@ -546,10 +553,10 @@ private class TabButton : JButton() {
     val g2 = g.create() as? Graphics2D ?: return
     g2.stroke = BasicStroke(2f)
     g2.paint = Color.BLACK
-    if (getModel().isRollover) {
+    if (model.isRollover) {
       g2.paint = Color.ORANGE
     }
-    if (getModel().isPressed) {
+    if (model.isPressed) {
       g2.paint = Color.BLUE
     }
     g2.drawLine(DELTA, DELTA, width - DELTA - 1, height - DELTA - 1)
@@ -560,16 +567,6 @@ private class TabButton : JButton() {
   companion object {
     private const val SIZE = 17
     private const val DELTA = 6
-  }
-
-  init {
-    ui = BasicButtonUI()
-    toolTipText = "close this tab"
-    isContentAreaFilled = false
-    isFocusable = false
-    border = BorderFactory.createEtchedBorder()
-    isBorderPainted = false
-    isRolloverEnabled = true
   }
 }
 

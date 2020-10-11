@@ -18,11 +18,12 @@ fun makeUI(): Component {
   val tabbedPane = object : JTabbedPane(SwingConstants.LEFT) {
     override fun updateUI() {
       super.updateUI()
-      ui = if (ui is WindowsTabbedPaneUI) {
+      val tmp = if (getUI() is WindowsTabbedPaneUI) {
         LeftAlignmentWindowsTabbedPaneUI()
       } else {
         LeftAlignmentTabbedPaneUI()
       }
+      setUI(tmp)
     }
   }
 
@@ -263,7 +264,7 @@ private class TabButton : JButton() {
   override fun updateUI() {
     // we don't want to update UI for this button
     // super.updateUI()
-    ui = BasicButtonUI()
+    setUI(BasicButtonUI())
     toolTipText = "close this tab"
     isContentAreaFilled = false
     isFocusable = false
@@ -279,10 +280,10 @@ private class TabButton : JButton() {
     val g2 = g.create() as? Graphics2D ?: return
     g2.stroke = BasicStroke(2f)
     g2.paint = Color.BLACK
-    if (getModel().isRollover) {
+    if (model.isRollover) {
       g2.paint = Color.ORANGE
     }
-    if (getModel().isPressed) {
+    if (model.isPressed) {
       g2.paint = Color.BLUE
     }
     g2.drawLine(DELTA, DELTA, width - DELTA - 1, height - DELTA - 1)
