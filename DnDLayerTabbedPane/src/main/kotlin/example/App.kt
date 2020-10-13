@@ -124,7 +124,6 @@ class DnDTabbedPane : JTabbedPane() {
       return tabbedRect
     }
 
-
   init {
     val h = Handler()
     addMouseListener(h)
