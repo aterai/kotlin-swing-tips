@@ -27,17 +27,15 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeButton(text: String, border: Border): JButton {
-  return object : JButton("<html>JButton<br>+ $text") {
-    override fun updateUI() {
-      super.updateUI()
-      isOpaque = true
-      foreground = Color.WHITE
-      background = Color(0x5B9BD5)
-      isFocusPainted = false
-      isContentAreaFilled = false
-      setBorder(border)
-    }
+private fun makeButton(text: String, btnBorder: Border) = object : JButton("<html>JButton<br>+ $text") {
+  override fun updateUI() {
+    super.updateUI()
+    isOpaque = true
+    foreground = Color.WHITE
+    background = Color(0x5B_9B_D5)
+    isFocusPainted = false
+    isContentAreaFilled = false
+    border = btnBorder
   }
 }
 
