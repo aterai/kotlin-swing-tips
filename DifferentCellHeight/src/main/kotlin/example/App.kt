@@ -47,16 +47,12 @@ private class TextAreaRenderer<E> : JTextArea(), ListCellRenderer<E> {
     text = value?.toString() ?: ""
     if (isSelected) {
       background = Color(list.selectionBackground.rgb) // Nimbus
-      setForeground(list.selectionForeground)
+      foreground = list.selectionForeground
     } else {
       background = if (index % 2 == 0) EVEN_COLOR else list.background
-      setForeground(list.foreground)
+      foreground = list.foreground
     }
-    if (cellHasFocus) {
-      setBorder(focusBorder)
-    } else {
-      setBorder(noFocusBorder)
-    }
+    border = if (cellHasFocus) focusBorder else noFocusBorder
     return this
   }
 
