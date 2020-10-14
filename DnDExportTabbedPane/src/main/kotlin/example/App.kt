@@ -194,7 +194,7 @@ private class DnDTabbedPane : JTabbedPane() {
     val isEnabled = isEnabledAt(dragIndex)
     val tab = getTabComponentAt(dragIndex)
     // // ButtonTabComponent
-    // if (tab instanceof ButtonTabComponent) {
+    // if (tab is ButtonTabComponent) {
     //   tab = new ButtonTabComponent(target)
     // }
 
@@ -220,13 +220,9 @@ private class DnDTabbedPane : JTabbedPane() {
     remove(prev)
     insertTab(title, icon, cmp, tip, tgtIndex)
     setEnabledAt(tgtIndex, isEnabled)
-    // When you drag'n'drop a disabled tab, it finishes enabled and selected.
-    // pointed out by dlorde
     if (isEnabled) {
       selectedIndex = tgtIndex
     }
-    // I have a component in all tabs (JLabel with an X to close the tab) and when I move a tab the component disappear.
-    // pointed out by Daniel Dario Morales Salas
     setTabComponentAt(tgtIndex, tab)
   }
 
@@ -317,14 +313,6 @@ private class TabDropTargetAdapter : DropTargetAdapter() {
     val c = dtde.dropTargetContext.component
     println("DropTargetListener#dragEnter: ${c.name}")
   }
-
-  // override fun dragOver(dtde: DropTargetDragEvent) {
-  //   println("dragOver")
-  // }
-
-  // override fun dropActionChanged(dtde: DropTargetDragEvent) {
-  //   println("dropActionChanged")
-  // }
 }
 
 private data class DnDTabData(val tabbedPane: DnDTabbedPane)
@@ -380,7 +368,7 @@ private class TabTransferHandler : TransferHandler() {
     val cursor = if (canDrop) DragSource.DefaultMoveDrop else DragSource.DefaultMoveNoDrop
     val glassPane = target.rootPane.glassPane
     glassPane.cursor = cursor
-    target.setCursor(cursor)
+    target.cursor = cursor
 
     support.setShowDropLocation(canDrop)
     // dl.canDrop = canDrop
