@@ -55,7 +55,7 @@ fun makeUI(): Component {
   val button = JButton("clear")
   button.addActionListener {
     combo1.selectedIndex = -1
-    combo2.setModel(DefaultComboBoxModel())
+    combo2.model = DefaultComboBoxModel()
   }
 
   return JPanel(BorderLayout()).also {
