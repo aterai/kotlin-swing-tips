@@ -380,7 +380,7 @@ class TabTransferHandler : TransferHandler() {
       source?.let { !it.isAncestorOf(target) } ?: false && isAreaContains
     }
 
-    target.setCursor(if (canDrop) DragSource.DefaultMoveDrop else DragSource.DefaultMoveNoDrop)
+    target.cursor = if (canDrop) DragSource.DefaultMoveDrop else DragSource.DefaultMoveNoDrop
 
     support.setShowDropLocation(canDrop)
     // dl.canDrop = canDrop
