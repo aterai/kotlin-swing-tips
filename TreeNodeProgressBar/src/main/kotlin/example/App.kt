@@ -6,7 +6,11 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicProgressBarUI
-import javax.swing.tree.*
+import javax.swing.tree.DefaultMutableTreeNode
+import javax.swing.tree.DefaultTreeCellRenderer
+import javax.swing.tree.DefaultTreeModel
+import javax.swing.tree.TreeNode
+import javax.swing.tree.TreePath
 
 fun makeUI(): Component {
   val tree = object : JTree(DefaultTreeModel(makeTreeRoot())) {
@@ -131,7 +135,6 @@ private class NodeProgressWorker(
       Toolkit.getDefaultToolkit().beep()
     }
   }
-
 }
 
 private class ProgressBarRenderer : DefaultTreeCellRenderer() {
@@ -193,7 +196,6 @@ private class ProgressBarRenderer : DefaultTreeCellRenderer() {
 private data class ProgressObject(val title: String, val value: Int) {
   override fun toString() = title
 }
-
 
 fun main() {
   EventQueue.invokeLater {
