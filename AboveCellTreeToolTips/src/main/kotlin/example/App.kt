@@ -141,7 +141,7 @@ private class RendererIcon(private val renderer: Component, private val rect: Re
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     (c as? Container)?.also {
       val g2 = g.create() as? Graphics2D ?: return
-      g2.clearRect(0, 0, c.getWidth(), c.getHeight())
+      g2.clearRect(0, 0, c.width, c.height)
       // g2.translate(x, y)
       SwingUtilities.paintComponent(g2, renderer, it, rect)
       g2.dispose()
