@@ -11,7 +11,6 @@ import javax.swing.plaf.LayerUI
 import javax.swing.text.BadLocationException
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.text.JTextComponent
-import kotlin.math.roundToInt
 
 private val WARNING_COLOR = Color(0xFF_C8_C8)
 private val INIT_TXT =
@@ -168,9 +167,9 @@ private fun scrollToCenter(tc: JTextComponent, pos: Int) {
   // Java 9: val rect = tc.modelToView2D(pos).getBounds()
   val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, tc)
   if (rect != null && c is JViewport) {
-    rect.x = (rect.x - c.width / 2f).roundToInt()
+    rect.x = rect.x - c.width / 2
     rect.width = c.width
-    rect.height = (c.height / 2f).roundToInt()
+    rect.height = c.height / 2
     tc.scrollRectToVisible(rect)
   }
 }

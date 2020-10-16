@@ -55,7 +55,7 @@ fun makeUI(): Component {
   val doc = textPane.styledDocument
   val def = doc.getStyle(StyleContext.DEFAULT_STYLE)
   val htf = doc.addStyle("highlight-text-foreground", def)
-  StyleConstants.setForeground(htf, Color(0xFFDDFF))
+  StyleConstants.setForeground(htf, Color(0xFF_DD_FF))
   field.document.addDocumentListener(handler)
   listOf(prevButton, nextButton, checkCase, checkWord).forEach {
     it.isFocusable = false
