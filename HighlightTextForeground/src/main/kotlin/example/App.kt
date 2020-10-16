@@ -13,7 +13,6 @@ import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.text.JTextComponent
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
-import kotlin.math.roundToInt
 
 private const val TEXT = """
 Trail: Creating a GUI with JFC/Swing
@@ -183,9 +182,9 @@ private fun scrollToCenter(tc: JTextComponent, pos: Int) {
   // Java 9: val rect = tc.modelToView2D(pos).getBounds()
   val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, tc)
   if (rect != null && c is JViewport) {
-    rect.x = (rect.x - c.getWidth() / 2f).roundToInt()
-    rect.width = c.getWidth()
-    rect.height = (c.getHeight() / 2f).roundToInt()
+    rect.x = rect.x - c.width / 2
+    rect.width = c.width
+    rect.height = c.height / 2
     tc.scrollRectToVisible(rect)
   }
 }
