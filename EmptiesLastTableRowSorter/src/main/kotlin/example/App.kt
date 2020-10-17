@@ -1,18 +1,19 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import java.io.Serializable
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter
 
 fun makeUI(): Component {
-  val empty = arrayOf("", "", "")
-  val columnNames = arrayOf("A", "B", "C")
+  val empty = arrayOf("", "")
+  val columnNames = arrayOf("DefaultTableRowSorter", "EmptiesLastTableRowSorter")
   val data = arrayOf(
-    arrayOf("aaa", "fff", "ggg"), arrayOf("jjj", "ppp", "ooo"),
-    arrayOf("bbb", "eee", "hhh"), arrayOf("kkk", "qqq", "nnn"),
-    arrayOf("ccc", "ddd", "iii"), arrayOf("lll", "rrr", "mmm"),
+    arrayOf("aaa", "aaa"), arrayOf("ddd", "ddd"),
+    arrayOf("bbb", "bbb"), arrayOf("eee", "eee"),
+    arrayOf("ccc", "ccc"), arrayOf("fff", "fff"),
     empty, empty, empty, empty, empty, empty, empty
   )
   val model = object : DefaultTableModel(data, columnNames) {
@@ -20,16 +21,17 @@ fun makeUI(): Component {
   }
   val table = JTable(model)
   table.autoCreateRowSorter = true
-  (table.rowSorter as? TableRowSorter<out TableModel>)?.also { sorter ->
-    for (i in 0 until 3) { sorter.setComparator(i, RowComparator(table, i)) }
+  (table.rowSorter as? TableRowSorter<out TableModel>)?.also {
+    it.setComparator(1, RowComparator(table, 1))
   }
+
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(table))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private class RowComparator(private val table: JTable, private val column: Int) : Comparator<String> {
+private class RowComparator(private val table: JTable, private val column: Int) : Comparator<String>, Serializable {
   override fun compare(a: String, b: String): Int {
     var flag = 1
     val keys = table.rowSorter.sortKeys
@@ -46,6 +48,10 @@ private class RowComparator(private val table: JTable, private val column: Int) 
     } else {
       a.compareTo(b)
     }
+  }
+
+  companion object {
+    private const val serialVersionUID = 1L
   }
 }
 
