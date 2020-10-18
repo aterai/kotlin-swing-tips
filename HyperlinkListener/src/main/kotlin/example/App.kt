@@ -93,7 +93,7 @@ private class BasicLinkViewButtonUI : LinkViewButtonUI() {
 
   override fun paint(g: Graphics, c: JComponent) {
     val b = c as? AbstractButton ?: return
-    val f = c.getFont()
+    val f = c.font
     g.font = f
 
     SwingUtilities.calculateInnerArea(c, viewRect)
@@ -109,7 +109,7 @@ private class BasicLinkViewButtonUI : LinkViewButtonUI() {
 
     if (c.isOpaque()) {
       g.color = b.background
-      g.fillRect(0, 0, c.getWidth(), c.getHeight())
+      g.fillRect(0, 0, c.width, c.height)
     }
 
     if (b.isRolloverEnabled && b.model.isRollover) {
