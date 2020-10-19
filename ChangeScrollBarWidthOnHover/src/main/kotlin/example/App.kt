@@ -44,23 +44,21 @@ private fun makeList(): Component {
   return JList(m)
 }
 
-private fun makeTranslucentScrollBar(c: Component): JScrollPane {
-  return object : JScrollPane(c) {
-    override fun isOptimizedDrawingEnabled() = false // JScrollBar is overlap
+private fun makeTranslucentScrollBar(c: Component) = object : JScrollPane(c) {
+  override fun isOptimizedDrawingEnabled() = false // JScrollBar is overlap
 
-    override fun updateUI() {
-      super.updateUI()
-      EventQueue.invokeLater {
-        getVerticalScrollBar().ui = TranslucentScrollBarUI()
-        setComponentZOrder(getVerticalScrollBar(), 0)
-        setComponentZOrder(getViewport(), 1)
-        getVerticalScrollBar().isOpaque = false
-        getVerticalScrollBar().preferredSize = Dimension(6, 0)
-      }
-      setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS)
-      setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
-      layout = TranslucentScrollPaneLayout()
+  override fun updateUI() {
+    super.updateUI()
+    EventQueue.invokeLater {
+      getVerticalScrollBar().ui = TranslucentScrollBarUI()
+      setComponentZOrder(getVerticalScrollBar(), 0)
+      setComponentZOrder(getViewport(), 1)
+      getVerticalScrollBar().isOpaque = false
+      getVerticalScrollBar().preferredSize = Dimension(6, 0)
     }
+    setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS)
+    setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
+    layout = TranslucentScrollPaneLayout()
   }
 }
 
@@ -142,10 +140,10 @@ private class HoverLayer : LayerUI<JPanel>() {
 private class TranslucentScrollPaneLayout : ScrollPaneLayout() {
   override fun layoutContainer(parent: Container) {
     if (parent is JScrollPane) {
-      val availR = parent.getBounds()
+      val availR = parent.bounds
       availR.setLocation(0, 0) // availR.x = availR.y = 0;
 
-      val insets = parent.getInsets()
+      val insets = parent.insets
       availR.x = insets.left
       availR.y = insets.top
       availR.width -= insets.left + insets.right
