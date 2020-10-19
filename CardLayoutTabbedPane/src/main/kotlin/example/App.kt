@@ -113,13 +113,13 @@ private class TabButton(text: String?) : JRadioButton(text, null) {
   override fun getUI() = ui as? TabViewButtonUI
 
   override fun fireStateChanged() {
-    val model = getModel()
-    foreground = if (model.isEnabled) {
-      if (model.isPressed && model.isArmed) {
+    val m = getModel()
+    foreground = if (m.isEnabled) {
+      if (m.isPressed && m.isArmed) {
         pressedTextColor
-      } else if (model.isSelected) {
+      } else if (m.isSelected) {
         selectedTextColor
-      } else if (isRolloverEnabled && model.isRollover) {
+      } else if (isRolloverEnabled && m.isRollover) {
         rolloverTextColor
       } else {
         textColor
@@ -193,7 +193,7 @@ private open class BasicTabViewButtonUI : TabViewButtonUI() {
       0
     )
     g.color = b.background
-    g.fillRect(0, 0, c.getWidth(), c.getHeight())
+    g.fillRect(0, 0, c.width, c.height)
     val model = b.model
     g.color = if (model.isSelected || model.isArmed) Color.WHITE else Color(0xDC_DC_DC)
     g.fillRect(viewRect.x, viewRect.y, viewRect.x + viewRect.width, viewRect.y + viewRect.height)
@@ -284,7 +284,7 @@ private class OperaTabViewButtonUI : BasicTabViewButtonUI() {
     val model = b.model
     if (!model.isSelected && !model.isArmed && !model.isRollover) {
       g2.paint = Color(0x64_00_00_00, true)
-      g2.fillRect(0, 0, c.getWidth(), c.getHeight())
+      g2.fillRect(0, 0, c.width, c.height)
     }
     g2.dispose()
   }
