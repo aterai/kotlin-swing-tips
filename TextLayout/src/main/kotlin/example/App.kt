@@ -14,7 +14,7 @@ fun makeUI() = JPanel(GridLayout(2, 1)).also {
 
 private class TextLayoutPanel : JComponent() {
   override fun paintComponent(g: Graphics) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     val w = width.toFloat()
     val baseline = height / 2f
     g2.paint = Color.RED

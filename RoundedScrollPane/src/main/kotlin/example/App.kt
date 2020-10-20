@@ -177,7 +177,7 @@ private class ComboRolloverHandler : MouseAdapter() {
 
 private class ArrowIcon(private val color: Color, private val rollover: Color) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.paint = color
     var shift = 0
     if (c is AbstractButton) {
@@ -204,7 +204,7 @@ private class ArrowIcon(private val color: Color, private val rollover: Color) :
 
 private open class RoundedCornerBorder : AbstractBorder() {
   override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     val dr = ARC.toDouble()
     val dx = x.toDouble()

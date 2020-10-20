@@ -7,7 +7,7 @@ import javax.swing.border.CompoundBorder
 
 class TriangleArrowButton : JButton() {
   override fun paintComponent(g: Graphics) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     if (getModel().isArmed) {
       g2.paint = Color(0xDC_DC_DC)
@@ -51,7 +51,7 @@ class TriangleArrowButton : JButton() {
 
 class TriangleIcon : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = Color.GRAY
     g2.drawLine(2, 3, 6, 3)

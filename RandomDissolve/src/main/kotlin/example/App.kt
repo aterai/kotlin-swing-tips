@@ -90,7 +90,7 @@ private class RandomDissolve(private val image1: BufferedImage, private val imag
 
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.paint = background
     g2.fillRect(0, 0, width, height)
     g2.drawImage(buf, 0, 0, buf.width, buf.height, this)

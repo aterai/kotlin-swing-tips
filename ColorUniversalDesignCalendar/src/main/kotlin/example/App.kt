@@ -55,7 +55,7 @@ private class CalendarTableRenderer : TableCellRenderer {
 
     override fun paintComponent(g: Graphics) {
       if (background != Color.WHITE) {
-        val g2 = g.create() as Graphics2D
+        val g2 = g.create() as? Graphics2D ?: return
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
         g2.paint = background
         g2.fill(getShape())

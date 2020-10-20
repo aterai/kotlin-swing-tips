@@ -27,7 +27,7 @@ fun makeUI(): Component {
 
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
-      val g2 = g.create() as Graphics2D
+      val g2 = g.create() as? Graphics2D ?: return
       g2.transform = zoomAndPanHandler?.coordAndZoomTransform
       icon.paintIcon(this, g2, 0, 0)
       g2.dispose()

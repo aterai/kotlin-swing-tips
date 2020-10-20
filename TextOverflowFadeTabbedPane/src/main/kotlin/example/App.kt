@@ -120,7 +120,7 @@ private class TextOverflowFadeLabel(text: String) : JLabel(text) {
     val h = height - i.top - i.bottom
     val rect = Rectangle(i.left, i.top, w - LENGTH, h)
 
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.font = g.font
     g2.paint = foreground
 
@@ -152,7 +152,7 @@ private class TextOverflowFadeLabel(text: String) : JLabel(text) {
 
 private class ColorIcon(private val color: Color) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = color
     g2.fillRect(1, 2, iconWidth - 2, iconHeight - 2)
