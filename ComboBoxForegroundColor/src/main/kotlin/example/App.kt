@@ -76,10 +76,10 @@ private class ComboForegroundRenderer(private val combo: JComboBox<ColorItem>) :
         list.selectionBackground = selectedBackground
       }
     }
-    val l = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus) as JLabel
-    l.foreground = ic
-    l.background = if (isSelected) selectedBackground else list.background
-    return l
+    val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+    c.foreground = ic
+    c.background = if (isSelected) selectedBackground else list.background
+    return c
   }
 }
 
