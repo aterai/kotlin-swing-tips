@@ -40,9 +40,7 @@ fun makeUI(): Component {
     cmpList.forEach { it.isEnabled = flg }
   }
   combo3.isEditable = true
-
-  val editor = combo3.editor.editorComponent as JTextField
-  editor.disabledTextColor = Color.PINK
+  (combo3.editor.editorComponent as? JTextField)?.disabledTextColor = Color.PINK
 
   val box = Box.createVerticalBox()
   box.border = BorderFactory.createEmptyBorder(5, 15, 5, 5)

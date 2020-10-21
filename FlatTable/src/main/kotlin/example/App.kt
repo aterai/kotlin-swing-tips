@@ -37,9 +37,9 @@ fun makeUI(): Component {
       row: Int,
       column: Int
     ): Component {
-      val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column) as JLabel
+      val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
       border.setStartCell(column == 0)
-      c.border = border
+      (c as? JComponent)?.border = border
       return c
     }
   }
@@ -56,13 +56,13 @@ fun makeUI(): Component {
       hasFocus: Boolean,
       row: Int,
       column: Int
-    ): Component {
-      val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column) as JLabel
-      border.setStartCell(column == 0)
-      c.horizontalAlignment = SwingConstants.CENTER
-      c.border = border
-      c.background = table.gridColor
-      return c
+    ) = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column).also {
+      if (it is JLabel) {
+        border.setStartCell(column == 0)
+        it.horizontalAlignment = SwingConstants.CENTER
+        it.border = border
+        it.background = table.gridColor
+      }
     }
   }
 
