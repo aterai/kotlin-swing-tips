@@ -59,8 +59,9 @@ private class ToolTipHeaderRenderer : TableCellRenderer {
     row: Int,
     column: Int
   ): Component {
-    val renderer = table.tableHeader.defaultRenderer
-    val l = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column) as JLabel
+    val r = table.tableHeader.defaultRenderer
+    val c = r.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    val l = c as? JLabel ?: return c
     val i = l.insets
     val rect = table.getCellRect(row, column, false)
     rect.width -= i.left + i.right
