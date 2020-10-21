@@ -9,8 +9,7 @@ fun makeUI(): Component {
   val combo1 = object : JComboBox<String?>(items) {
     override fun updateUI() {
       super.updateUI()
-      val r = getRenderer() as JLabel
-      r.preferredSize = Dimension(0, 32)
+      (getRenderer() as? Component)?.preferredSize = Dimension(0, 32)
     }
   }
   p.add(makeTitledPanel("setPreferredSize", combo1))

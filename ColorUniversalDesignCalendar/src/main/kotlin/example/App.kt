@@ -125,7 +125,7 @@ fun makeUI(): Component {
   val header = monthTable.tableHeader
   header.resizingAllowed = false
   header.reorderingAllowed = false
-  (header.defaultRenderer as JLabel).horizontalAlignment = SwingConstants.CENTER
+  (header.defaultRenderer as? JLabel)?.horizontalAlignment = SwingConstants.CENTER
   updateMonthView(realLocalDate)
   val prev = JButton("<")
   prev.addActionListener {
