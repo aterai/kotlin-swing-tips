@@ -50,9 +50,9 @@ fun makeUI(): Component {
   box.add(Box.createVerticalStrut(10))
   box.add(makeTitledPanel("JLayer + Slider.onlyLeftMouseButtonDrag: false", layer))
   box.add(Box.createVerticalGlue())
-  for (c in box.components) {
-    (c as JComponent).alignmentX = 0f
-  }
+  box.components.toList()
+    .filterIsInstance<JComponent>()
+    .forEach { it.alignmentX = 0f }
 
   return JPanel(BorderLayout()).also {
     it.add(box, BorderLayout.NORTH)
