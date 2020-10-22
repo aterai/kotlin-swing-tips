@@ -38,7 +38,7 @@ private class ExitAction : AbstractAction("Exit") {
     val root = if (parent is JPopupMenu) {
       SwingUtilities.getRoot(parent.invoker)
     } else if (parent is JToolBar) {
-      if ((parent.ui as BasicToolBarUI).isFloating) {
+      if ((parent.ui as? BasicToolBarUI)?.isFloating == true) {
         SwingUtilities.getWindowAncestor(parent).owner
       } else {
         SwingUtilities.getRoot(parent)
