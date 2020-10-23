@@ -115,7 +115,7 @@ private class ArrowToggleButtonBarCellIcon : Icon {
     if (c is AbstractButton) {
       val m = c.model
       if (m.isSelected || m.isRollover) {
-        bgc = c.getBackground()
+        bgc = c.background
         borderColor = Color.GRAY
       }
     }

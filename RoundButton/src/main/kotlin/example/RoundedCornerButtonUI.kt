@@ -74,7 +74,7 @@ class RoundedCornerButtonUI : BasicButtonUI() {
       } else if (c.hasFocus()) {
         paintFocusAndRollover(g2, c, fc)
       } else {
-        g2.paint = c.getBackground()
+        g2.paint = c.background
         g2.fill(shape)
       }
     }

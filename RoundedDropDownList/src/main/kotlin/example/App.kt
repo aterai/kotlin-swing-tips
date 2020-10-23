@@ -206,7 +206,7 @@ private open class RoundedCornerBorder : AbstractBorder() {
     val dh = height.toDouble()
     val round = Area(RoundRectangle2D.Double(dx, dy, dw - 1.0, dh - 1.0, r, r))
     if (c is JPopupMenu) {
-      g2.paint = c.getBackground()
+      g2.paint = c.background
       g2.fill(round)
     } else {
       c.parent?.also {
