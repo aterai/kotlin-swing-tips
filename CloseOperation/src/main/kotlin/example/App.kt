@@ -17,7 +17,7 @@ fun makeUI(): Component {
 
     val c = (e.source as? JComponent)?.topLevelAncestor
     if (c is Window) {
-      val pt = c.getLocation()
+      val pt = c.location
       f.setLocation(pt.x, pt.y + f.size.height)
     }
     f.isVisible = true

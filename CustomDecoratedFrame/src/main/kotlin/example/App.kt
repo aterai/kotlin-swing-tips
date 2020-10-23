@@ -227,7 +227,7 @@ private class DragWindowListener : MouseInputAdapter() {
   override fun mouseDragged(e: MouseEvent) {
     val c = SwingUtilities.getRoot(e.component)
     if (c is Window && SwingUtilities.isLeftMouseButton(e)) {
-      val pt = c.getLocation()
+      val pt = c.location
       c.setLocation(pt.x - startPt.x + e.x, pt.y - startPt.y + e.y)
     }
   }
