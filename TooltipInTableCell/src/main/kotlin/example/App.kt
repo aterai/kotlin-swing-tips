@@ -35,7 +35,7 @@ private val table = object : JTable(model) {
       val c = prepareRenderer(getCellRenderer(row, column), row, column)
       if (c is JPanel) {
         val r = getCellRect(row, column, true)
-        c.setBounds(r)
+        c.bounds = r
         // @see https://stackoverflow.com/questions/10854831/tool-tip-in-jpanel-in-jtable-not-working
         c.doLayout()
         pt.translate(-r.x, -r.y)

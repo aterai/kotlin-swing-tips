@@ -202,7 +202,7 @@ class DnDTabbedPane : JTabbedPane() {
     target.setTabComponentAt(targetIndex, tab)
     target.selectedIndex = targetIndex
     if (tab is JComponent) {
-      tab.scrollRectToVisible(tab.getBounds())
+      tab.scrollRectToVisible(tab.bounds)
     }
   }
 

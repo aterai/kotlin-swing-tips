@@ -230,7 +230,7 @@ private class ResizeMouseListener : MouseInputAdapter() {
     val border = (c as? JComponent)?.border as? ResizableBorder ?: return
     cursor = border.getResizeCursor(e)
     startPos.location = SwingUtilities.convertPoint(c, e.x, e.y, null)
-    startingBounds.bounds = c.getBounds()
+    startingBounds.bounds = c.bounds
     (SwingUtilities.getAncestorOfClass(JLayeredPane::class.java, c) as? JLayeredPane)?.moveToFront(c)
   }
 

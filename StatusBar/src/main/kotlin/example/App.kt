@@ -39,7 +39,7 @@ private class ResizeWindowListener : MouseInputAdapter() {
     val p = SwingUtilities.getRoot(e.component)
     if (p is Window) {
       startPt.location = e.point
-      rect.bounds = p.getBounds()
+      rect.bounds = p.bounds
     }
   }
 
@@ -49,7 +49,7 @@ private class ResizeWindowListener : MouseInputAdapter() {
       val pt = e.point
       rect.width += pt.x - startPt.x
       rect.height += pt.y - startPt.y
-      p.setBounds(rect)
+      p.bounds = rect
     }
   }
 }
