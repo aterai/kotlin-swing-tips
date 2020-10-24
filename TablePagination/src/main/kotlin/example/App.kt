@@ -156,7 +156,7 @@ private class LinkViewRadioButtonUI : BasicRadioButtonUI() {
 
     val b = c as? AbstractButton ?: return
     val text = SwingUtilities.layoutCompoundLabel(
-      b, c.getFontMetrics(c.getFont()), b.text, null, b.verticalAlignment,
+      b, c.getFontMetrics(c.font), b.text, null, b.verticalAlignment,
       b.horizontalAlignment, b.verticalTextPosition, b.horizontalTextPosition,
       viewRect, iconRect, textRect, 0
     )

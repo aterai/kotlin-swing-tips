@@ -32,8 +32,7 @@ open class BasicTabViewButtonUI : TabViewButtonUI() {
 
   override fun paint(g: Graphics, c: JComponent) {
     val b = c as? AbstractButton ?: return
-    val f = c.getFont()
-    g.font = f
+    g.font = c.font
 
     // val i = c.getInsets()
     // b.getSize(size)
@@ -47,7 +46,7 @@ open class BasicTabViewButtonUI : TabViewButtonUI() {
 
     val text = SwingUtilities.layoutCompoundLabel(
       c,
-      c.getFontMetrics(f),
+      c.getFontMetrics(c.font),
       b.text, null,
       b.verticalAlignment,
       b.horizontalAlignment,

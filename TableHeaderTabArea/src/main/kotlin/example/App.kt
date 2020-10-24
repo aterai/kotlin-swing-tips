@@ -195,14 +195,13 @@ private class BasicTabViewButtonUI : TabViewButtonUI() {
     if (c !is AbstractButton) {
       return
     }
-    val f = c.getFont()
-    g.font = f
+    g.font = c.font
     SwingUtilities.calculateInnerArea(c, viewRect)
     iconRect.setBounds(0, 0, 0, 0)
     textRect.setBounds(0, 0, 0, 0)
     val text = SwingUtilities.layoutCompoundLabel(
       c,
-      c.getFontMetrics(f),
+      c.getFontMetrics(c.font),
       c.text,
       null,
       c.verticalAlignment,
@@ -215,7 +214,7 @@ private class BasicTabViewButtonUI : TabViewButtonUI() {
       0
     )
     g.color = c.background
-    g.fillRect(0, 0, c.getWidth(), c.getHeight())
+    g.fillRect(0, 0, c.width, c.height)
     val model = c.model
     g.color = if (model.isSelected || model.isArmed) Color.WHITE else Color(0xDC_DC_DC)
     g.fillRect(viewRect.x, viewRect.y, viewRect.x + viewRect.width, viewRect.y + viewRect.height)
