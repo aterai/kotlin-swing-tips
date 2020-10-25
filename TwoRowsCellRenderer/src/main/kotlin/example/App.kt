@@ -55,7 +55,7 @@ private class TwoRowsCellRenderer : JPanel(GridLayout(2, 1, 0, 0)), TableCellRen
     val text = value?.toString() ?: ""
     var first = text
     var second = ""
-    val columnWidth = table.getCellRect(0, column, false).getWidth()
+    val columnWidth = table.getCellRect(0, column, false).width
     var textWidth = 0
     var i = 0
     while (i < text.length) {

@@ -32,7 +32,7 @@ class OperaTabViewButtonUI : BasicTabViewButtonUI() {
     val b = c as? AbstractButton ?: return
     g.font = c.font
 
-    val i = c.getInsets()
+    val i = c.insets
     b.getSize(size)
     viewRect.x = i.left
     viewRect.y = i.top
