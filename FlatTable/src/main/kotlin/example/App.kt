@@ -134,11 +134,11 @@ private class OverlapScrollPaneLayout : ScrollPaneLayout() {
     val availR = scrollPane.bounds
     availR.setLocation(0, 0) // availR.x = availR.y = 0;
 
-    val insets = parent.getInsets()
-    availR.x = insets.left
-    availR.y = insets.top
-    availR.width -= insets.left + insets.right
-    availR.height -= insets.top + insets.bottom
+    val ins = parent.insets
+    availR.x = ins.left
+    availR.y = ins.top
+    availR.width -= ins.left + ins.right
+    availR.height -= ins.top + ins.bottom
 
     val colHeadR = Rectangle(0, availR.y, 0, 0)
     if (colHead != null && colHead.isVisible) {

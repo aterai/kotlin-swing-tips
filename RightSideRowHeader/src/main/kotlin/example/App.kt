@@ -92,11 +92,11 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
     availR.x = 0
     availR.y = 0
 
-    val insets = parent.getInsets()
-    availR.x = insets.left
-    availR.y = insets.top
-    availR.width -= insets.left + insets.right
-    availR.height -= insets.top + insets.bottom
+    val ins = parent.insets
+    availR.x = ins.left
+    availR.y = ins.top
+    availR.width -= ins.left + ins.right
+    availR.height -= ins.top + ins.bottom
 
     // val leftToRight = SwingUtilities.isLeftToRight(scrollPane)
     val leftToRight = scrollPane.componentOrientation.isLeftToRight
@@ -124,12 +124,12 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
     }
 
     val vpbInsets = scrollPane.viewportBorder?.let {
-      val ins = it.getBorderInsets(parent)
-      availR.x += ins.left
-      availR.y += ins.top
-      availR.width -= ins.left + ins.right
-      availR.height -= ins.top + ins.bottom
-      ins
+      val i = it.getBorderInsets(parent)
+      availR.x += i.left
+      availR.y += i.top
+      availR.width -= i.left + i.right
+      availR.height -= i.top + i.bottom
+      i
     } ?: Insets(0, 0, 0, 0)
 
     val view = viewport?.view
