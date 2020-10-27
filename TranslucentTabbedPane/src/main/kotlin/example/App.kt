@@ -54,7 +54,7 @@ fun makeUI(): Component {
 
   val mb = JMenuBar()
   mb.add(LookAndFeelUtil.createLookAndFeelMenu())
-  SwingUtilities.invokeLater { p.rootPane.jMenuBar = mb }
+  EventQueue.invokeLater { p.rootPane.jMenuBar = mb }
 
   p.add(tabs)
   p.border = BorderFactory.createEmptyBorder(20, 20, 20, 20)

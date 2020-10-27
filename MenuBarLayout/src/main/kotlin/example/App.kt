@@ -5,7 +5,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val p = JPanel()
-  SwingUtilities.invokeLater { p.rootPane.jMenuBar = createMenuBar() }
+  EventQueue.invokeLater { p.rootPane.jMenuBar = createMenuBar() }
   p.add(JScrollPane(JTextArea()))
   p.preferredSize = Dimension(320, 240)
   return p

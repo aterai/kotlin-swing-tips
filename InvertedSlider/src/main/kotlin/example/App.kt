@@ -48,7 +48,7 @@ fun makeUI(): Component {
     it.add(check, BorderLayout.SOUTH)
     val mb = JMenuBar()
     mb.add(LookAndFeelUtil.createLookAndFeelMenu())
-    SwingUtilities.invokeLater { it.rootPane.jMenuBar = mb }
+    EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.preferredSize = Dimension(320, 240)
   }
 }

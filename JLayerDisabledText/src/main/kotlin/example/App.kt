@@ -47,7 +47,7 @@ fun makeUI(): Component {
   return JPanel().also {
     it.add(panel)
     it.add(check)
-    SwingUtilities.invokeLater { it.rootPane.jMenuBar = mb }
+    EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.preferredSize = Dimension(320, 240)
   }
 }

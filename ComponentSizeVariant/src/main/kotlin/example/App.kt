@@ -34,7 +34,7 @@ fun makeUI(): Component {
   return JPanel(BorderLayout()).also {
     val mb = JMenuBar()
     mb.add(createSizeVariantMenu())
-    SwingUtilities.invokeLater { it.rootPane.jMenuBar = mb }
+    EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.add(JSlider(), BorderLayout.NORTH)
     it.add(p1)
     it.add(p2, BorderLayout.SOUTH)

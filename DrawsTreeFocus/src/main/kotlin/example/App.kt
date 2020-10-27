@@ -33,7 +33,7 @@ fun makeUI(): Component {
 
   val mb = JMenuBar()
   mb.add(LookAndFeelUtil.createLookAndFeelMenu())
-  SwingUtilities.invokeLater { np.rootPane.jMenuBar = mb }
+  EventQueue.invokeLater { np.rootPane.jMenuBar = mb }
 
   val p = object : JPanel(BorderLayout()) {
     override fun updateUI() {

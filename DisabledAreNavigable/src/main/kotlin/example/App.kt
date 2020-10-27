@@ -23,7 +23,7 @@ fun makeUI(): Component {
   }
 
   return JPanel().also {
-    SwingUtilities.invokeLater { it.rootPane.jMenuBar = MenuBarUtil.createMenuBar() }
+    EventQueue.invokeLater { it.rootPane.jMenuBar = MenuBarUtil.createMenuBar() }
     val popup = JPopupMenu()
     MenuBarUtil.initMenu(popup)
     it.componentPopupMenu = popup

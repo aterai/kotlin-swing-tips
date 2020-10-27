@@ -38,7 +38,7 @@ fun makeUI(): Component {
 
   val mb = JMenuBar()
   mb.add(LookAndFeelUtil.createLookAndFeelMenu())
-  SwingUtilities.invokeLater { box1.rootPane.jMenuBar = mb }
+  EventQueue.invokeLater { box1.rootPane.jMenuBar = mb }
 
   return JPanel(BorderLayout()).also {
     it.add(box1, BorderLayout.WEST)

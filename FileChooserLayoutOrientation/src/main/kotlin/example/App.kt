@@ -43,7 +43,7 @@ fun makeUI(): Component {
   return JPanel(BorderLayout()).also {
     val mb = JMenuBar()
     mb.add(LookAndFeelUtil.createLookAndFeelMenu())
-    SwingUtilities.invokeLater { it.rootPane.jMenuBar = mb }
+    EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.add(p, BorderLayout.NORTH)
     it.add(JScrollPane(log))
     it.preferredSize = Dimension(320, 240)

@@ -57,7 +57,7 @@ fun makeUI(): Component {
   mb.add(LookAndFeelUtil.createLookAndFeelMenu())
 
   return JPanel(BorderLayout()).also {
-    SwingUtilities.invokeLater { it.rootPane.jMenuBar = mb }
+    EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.add(box, BorderLayout.NORTH)
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.preferredSize = Dimension(320, 240)
