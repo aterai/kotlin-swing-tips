@@ -16,18 +16,23 @@ fun makeUI(): Component {
   fileChooser.addChoosableFileFilter(filter)
   fileChooser.fileFilter = filter
 
+  val log = JTextArea()
   val button = JButton("showOpenDialog")
   button.addActionListener {
     val retValue = fileChooser.showOpenDialog(button.rootPane)
-    println(retValue)
+    if (retValue == JFileChooser.APPROVE_OPTION) {
+      log.append("${fileChooser.selectedFile}\n")
+    }
   }
+
   val p = JPanel(GridBagLayout())
   p.border = BorderFactory.createTitledBorder("JFileChooser#showOpenDialog(...)")
   p.add(button)
 
-  return JPanel(BorderLayout()).also {
-    it.add(p)
-    it.border = BorderFactory.createEmptyBorder(20, 20, 20, 20)
+  return JPanel(BorderLayout(5, 5)).also {
+    it.add(p, BorderLayout.NORTH)
+    it.add(JScrollPane(log))
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.preferredSize = Dimension(320, 240)
   }
 }
