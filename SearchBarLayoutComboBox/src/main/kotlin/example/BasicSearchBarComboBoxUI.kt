@@ -75,9 +75,9 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
   override fun configureEditor() {
     // super.configureEditor()
     // Should be in the same state as the comboBox
-    editor.setEnabled(comboBox.isEnabled())
-    editor.setFocusable(comboBox.isFocusable())
-    editor.setFont(comboBox.getFont())
+    editor.setEnabled(comboBox.isEnabled)
+    editor.setFocusable(comboBox.isFocusable)
+    editor.setFont(comboBox.font)
     // editor.addFocusListener(getHandler())
     // comboBox.getEditor().addActionListener(getHandler())
     (editor as? JComponent)?.also {
