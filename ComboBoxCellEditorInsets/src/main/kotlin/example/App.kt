@@ -61,7 +61,7 @@ fun makeComboTableCellRenderer(combo: JComboBox<String>) = TableCellRenderer { t
         editor.foreground = table.foreground
         editor.background = table.background
       }
-      it.addItem(Objects.toString(value, ""))
+      it.addItem(value?.toString() ?: "")
     }
   }
 }
