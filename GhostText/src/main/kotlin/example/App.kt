@@ -41,8 +41,8 @@ private class PlaceholderFocusListener(tf: JTextComponent) : FocusListener {
   }
 
   override fun focusGained(e: FocusEvent) {
-    val tf = e.component as JTextComponent
-    if (hintMessage == tf.text && INACTIVE == tf.foreground) {
+    val tf = e.component
+    if (tf is JTextComponent && hintMessage == tf.text && INACTIVE == tf.foreground) {
       tf.foreground = UIManager.getColor("TextField.foreground")
       tf.text = ""
     }
@@ -63,15 +63,15 @@ private class PlaceholderFocusListener(tf: JTextComponent) : FocusListener {
 }
 
 private class PlaceholderLayerUI<V : JTextComponent>(hintMessage: String) : LayerUI<V>() {
-  init {
-    hint.text = hintMessage
-  }
-
   private val hint = object : JLabel() {
     override fun updateUI() {
       super.updateUI()
       foreground = UIManager.getColor("TextField.inactiveForeground")
     }
+  }
+
+  init {
+    hint.text = hintMessage
   }
 
   override fun paint(g: Graphics, c: JComponent) {
