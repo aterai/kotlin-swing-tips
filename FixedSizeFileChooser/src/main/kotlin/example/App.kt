@@ -4,6 +4,8 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
+private val log = JTextArea()
+
 fun makeUI(): Component {
   val p1 = JPanel()
   p1.border = BorderFactory.createTitledBorder("JFileChooser setResizable")
@@ -14,9 +16,14 @@ fun makeUI(): Component {
   p2.border = BorderFactory.createTitledBorder("JFileChooser setMinimumSize")
   p2.add(JButton(MinimumSizeFileChooserAction()))
 
-  return JPanel(GridLayout(2, 1)).also {
-    it.add(p1)
-    it.add(p2)
+  val panel = JPanel(GridLayout(2, 1))
+  panel.add(p1)
+  panel.add(p2)
+
+  return JPanel(BorderLayout(2, 2)).also {
+    it.add(panel, BorderLayout.NORTH)
+    it.add(JScrollPane(log))
+    it.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
     it.preferredSize = Dimension(320, 240)
   }
 }
@@ -25,7 +32,9 @@ private class DefaultFileChooserAction : AbstractAction("Default") {
   override fun actionPerformed(e: ActionEvent) {
     val fileChooser = JFileChooser()
     val retValue = fileChooser.showOpenDialog((e.source as? JComponent)?.rootPane)
-    println(retValue)
+    if (retValue == JFileChooser.APPROVE_OPTION) {
+      log.append(fileChooser.selectedFile.toString() + "\n")
+    }
   }
 }
 
@@ -37,7 +46,9 @@ private class FixedSizeFileChooserAction : AbstractAction("Resizable(false)") {
       }
     }
     val retValue = fileChooser.showOpenDialog((e.source as? JComponent)?.rootPane)
-    println(retValue)
+    if (retValue == JFileChooser.APPROVE_OPTION) {
+      log.append(fileChooser.selectedFile.toString() + "\n")
+    }
   }
 }
 
@@ -49,7 +60,9 @@ private class MinimumSizeFileChooserAction : AbstractAction("MinimumSize(640, 48
       }
     }
     val retValue = fileChooser.showOpenDialog((e.source as? JComponent)?.rootPane)
-    println(retValue)
+    if (retValue == JFileChooser.APPROVE_OPTION) {
+      log.append(fileChooser.selectedFile.toString() + "\n")
+    }
   }
 }
 
