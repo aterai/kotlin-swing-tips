@@ -100,8 +100,8 @@ private class ButtonCellEditor : AbstractCellEditor(), TreeCellEditor {
     val p = e.point
     val path = tree.getPathForLocation(p.x, p.y)
     val r = tree.getPathBounds(path)
-    return if (path != null && r != null && r.contains(p)) {
-      val node = path.lastPathComponent as TreeNode
+    val node = path?.lastPathComponent
+    return if (node is TreeNode && r != null && r.contains(p)) {
       val row = tree.getRowForLocation(p.x, p.y)
       val renderer = tree.cellRenderer
       val c = renderer.getTreeCellRendererComponent(tree, " ", true, true, node.isLeaf, row, true)
