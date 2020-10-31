@@ -15,10 +15,12 @@ fun makeUI(): Component {
   val splitPane = object : JSplitPane(VERTICAL_SPLIT) {
     override fun updateUI() {
       super.updateUI()
-      (getUI() as? BasicSplitPaneUI)?.divider?.also {
-        it.background = Color.ORANGE
-        for (c in it.components) {
-          (c as? JButton)?.background = Color.ORANGE
+      EventQueue.invokeLater {
+        (ui as? BasicSplitPaneUI)?.divider?.also {
+          it.background = Color.ORANGE
+          for (c in it.components) {
+            (c as? JButton)?.background = Color.ORANGE
+          }
         }
       }
     }
@@ -28,11 +30,12 @@ fun makeUI(): Component {
   splitPane.dividerSize = 32
   splitPane.isOneTouchExpandable = true
 
-  val divider = (splitPane.ui as BasicSplitPaneUI).divider
-  divider.background = Color.ORANGE
-  for (c in divider.components) {
-    (c as? JButton)?.background = Color.ORANGE
-  }
+  // (splitPane.ui as? BasicSplitPaneUI)?.divider?.also {
+  //   it.background = Color.ORANGE
+  //   for (c in it.components) {
+  //     (c as? JButton)?.background = Color.ORANGE
+  //   }
+  // }
 
   return JPanel(BorderLayout()).also {
     it.add(splitPane)
