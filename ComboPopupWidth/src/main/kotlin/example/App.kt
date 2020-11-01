@@ -51,7 +51,7 @@ private fun makeComboBox(): JComboBox<String> {
 private class WidePopupMenuListener : PopupMenuListener {
   private var adjusting = false
   override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-    val combo = e.source as JComboBox<*>
+    val combo = e.source as? JComboBox<*> ?: return
     val size = combo.size
     if (size.width >= POPUP_MIN_WIDTH) {
       return
