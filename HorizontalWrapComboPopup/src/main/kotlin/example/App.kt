@@ -84,12 +84,12 @@ private fun makeComboBox2(model: ComboBoxModel<Icon>, proto: Icon): JComboBox<Ic
           }
         }
       }
-      val popup = getAccessibleContext().getAccessibleChild(0) as ComboPopup
-      val list = popup.list
-      list.layoutOrientation = JList.HORIZONTAL_WRAP
-      list.visibleRowCount = 3
-      list.fixedCellWidth = proto.iconWidth
-      list.fixedCellHeight = proto.iconHeight
+      (getAccessibleContext().getAccessibleChild(0) as? ComboPopup)?.list?.also {
+        it.layoutOrientation = JList.HORIZONTAL_WRAP
+        it.visibleRowCount = 3
+        it.fixedCellWidth = proto.iconWidth
+        it.fixedCellHeight = proto.iconHeight
+      }
     }
   }
   val pl = object : PopupMenuListener {
