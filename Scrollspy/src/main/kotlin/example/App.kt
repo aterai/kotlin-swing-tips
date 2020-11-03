@@ -107,7 +107,7 @@ fun makeTree(): JTree {
 
 private fun searchTreeNode(tree: JTree, name: Any) {
   val model = tree.model
-  val root = model.root as DefaultMutableTreeNode
+  val root = model.root as? DefaultMutableTreeNode ?: return
   root.preorderEnumeration().toList()
     .filterIsInstance<DefaultMutableTreeNode>()
     .firstOrNull { name == it.userObject.toString() }
