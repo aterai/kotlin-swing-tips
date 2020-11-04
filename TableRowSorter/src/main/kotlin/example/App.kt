@@ -21,13 +21,13 @@ fun makeUI(): Component {
   table.rowSorter = TableRowSorter(model)
   val renderer = TableCellRenderer { tbl, value, isSelected, hasFocus, row, column ->
     val r = tbl.tableHeader.defaultRenderer
-    val l = r.getTableCellRendererComponent(tbl, value, isSelected, hasFocus, row, column) as JLabel
-    val rs = tbl.rowSorter
-    if (rs is DefaultRowSorter<*, *>) {
-      val cmi = tbl.convertColumnIndexToModel(column)
-      l.foreground = if (rs.isSortable(cmi)) Color.BLACK else Color.GRAY
+    r.getTableCellRendererComponent(tbl, value, isSelected, hasFocus, row, column).also {
+      val rs = tbl.rowSorter
+      if (rs is DefaultRowSorter<*, *>) {
+        val cmi = tbl.convertColumnIndexToModel(column)
+        it.foreground = if (rs.isSortable(cmi)) Color.BLACK else Color.GRAY
+      }
     }
-    l
   }
   val columns = table.columnModel
   for (i in 0 until columns.columnCount) {
