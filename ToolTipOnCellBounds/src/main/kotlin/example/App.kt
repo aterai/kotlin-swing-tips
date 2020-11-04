@@ -129,16 +129,16 @@ private open class TooltipListCellRenderer<E> : ListCellRenderer<E> {
     index: Int,
     isSelected: Boolean,
     cellHasFocus: Boolean
-  ): Component {
-    val l = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus) as JLabel
-    val i = l.insets
-    val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
-    val rect = c.bounds
-    rect.width -= i.left + i.right
-    val fm = l.getFontMetrics(l.font)
-    val str = value?.toString() ?: ""
-    l.toolTipText = if (fm.stringWidth(str) > rect.width) str else null
-    return l
+  ): Component = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
+    if (it is JLabel) {
+      val i = it.insets
+      val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
+      val rect = c.bounds
+      rect.width -= i.left + i.right
+      val fm = it.getFontMetrics(it.font)
+      val str = value?.toString() ?: ""
+      it.toolTipText = if (fm.stringWidth(str) > rect.width) str else null
+    }
   }
 }
 
