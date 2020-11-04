@@ -13,12 +13,12 @@ fun makeUI(): Component {
 
   val spinner = JSpinner()
   spinner.toolTipText = "JSpinner#setColumns(20)"
-  (spinner.editor as DefaultEditor).textField.columns = 20
+  (spinner.editor as? DefaultEditor)?.textField?.columns = 20
 
   val combo1 = JComboBox<String>()
   combo1.isEditable = true
   combo1.toolTipText = "JComboBox setEditable(true), setColumns(20)"
-  (combo1.editor.editorComponent as JTextField).columns = 20
+  (combo1.editor.editorComponent as? JTextField)?.columns = 20
 
   val combo2 = JComboBox<String>()
   combo2.toolTipText = "JComboBox setEditable(true), default"
