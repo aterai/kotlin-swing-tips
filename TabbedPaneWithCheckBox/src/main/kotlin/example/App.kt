@@ -15,11 +15,11 @@ fun makeUI(): Component {
   check.isFocusPainted = false
   check.addMouseListener(object : MouseAdapter() {
     override fun mouseClicked(e: MouseEvent) {
-      (e.component as AbstractButton).doClick()
+      (e.component as? AbstractButton)?.doClick()
     }
   })
   check.addActionListener { e ->
-    if ((e.source as JCheckBox).isSelected) {
+    if ((e.source as? JCheckBox)?.isSelected == true) {
       tabs.addTab("Preferences", panel)
       tabs.selectedComponent = panel
     } else {
