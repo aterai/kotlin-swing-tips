@@ -23,7 +23,7 @@ private val p = object : JPanel(BorderLayout()) {
     var i = listeners.size - 2
     while (i >= 0) {
       if (listeners[i] === FontChangeListener::class.java) {
-        (listeners[i + 1] as FontChangeListener).fontStateChanged(e)
+        (listeners[i + 1] as? FontChangeListener)?.fontStateChanged(e)
       }
       i -= 2
     }
