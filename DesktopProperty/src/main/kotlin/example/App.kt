@@ -16,9 +16,9 @@ private fun initModel(e: PropertyChangeEvent?) {
   }
   model.rowCount = 0
   val tk = Toolkit.getDefaultToolkit()
-  for (s in tk.getDesktopProperty("win.propNames") as Array<*>) {
-    val o = tk.getDesktopProperty(s.toString())
-    val row = arrayOf(s, o.javaClass, o)
+  (tk.getDesktopProperty("win.propNames") as? Array<*>)?.forEach {
+    val o = tk.getDesktopProperty(it.toString())
+    val row = arrayOf(it, o.javaClass, o)
     model.addRow(row)
   }
 }
