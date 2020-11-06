@@ -37,9 +37,9 @@ fun makeUI(): Component {
         override fun actionPerformed(e: ActionEvent) {
           val isPopupVisible = isPopupVisible
           setPopupVisible(false)
-          val m = getModel() as DefaultComboBoxModel<String>
+          val m = getModel()
           val str = getEditor()?.item?.toString() ?: ""
-          if (m.getIndexOf(str) < 0) {
+          if (m is DefaultComboBoxModel<String> && m.getIndexOf(str) < 0) {
             m.removeElement(str)
             m.insertElementAt(str, 0)
             if (m.size > MAX_HISTORY) {
