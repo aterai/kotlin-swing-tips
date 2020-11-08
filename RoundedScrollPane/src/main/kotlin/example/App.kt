@@ -151,28 +151,23 @@ private class HeavyWeightContainerListener : PopupMenuListener {
 
 private class ComboRolloverHandler : MouseAdapter() {
   override fun mouseEntered(e: MouseEvent) {
-    getButtonModel(e).isRollover = true
+    getButtonModel(e)?.isRollover = true
   }
 
   override fun mouseExited(e: MouseEvent) {
-    getButtonModel(e).isRollover = false
+    getButtonModel(e)?.isRollover = false
   }
 
   override fun mousePressed(e: MouseEvent) {
-    getButtonModel(e).isPressed = true
+    getButtonModel(e)?.isPressed = true
   }
 
   override fun mouseReleased(e: MouseEvent) {
-    getButtonModel(e).isPressed = false
+    getButtonModel(e)?.isPressed = false
   }
 
-  companion object {
-    private fun getButtonModel(e: MouseEvent): ButtonModel {
-      val c = e.component as Container
-      val b = c.getComponent(0) as JButton
-      return b.model
-    }
-  }
+  private fun getButtonModel(e: MouseEvent) =
+    ((e.component as? Container)?.getComponent(0) as? JButton)?.model
 }
 
 private class ArrowIcon(private val color: Color, private val rollover: Color) : Icon {
