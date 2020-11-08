@@ -212,7 +212,7 @@ private class ClearSelectionListener : MouseInputAdapter() {
   }
 
   override fun mouseDragged(e: MouseEvent) {
-    val list = e.component as JList<*>
+    val list = e.component as? JList<*> ?: return
     if (contains(list, e.point)) {
       startOutside = false
     } else if (startOutside) {
