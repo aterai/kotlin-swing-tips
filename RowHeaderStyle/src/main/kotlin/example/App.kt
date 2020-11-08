@@ -89,17 +89,14 @@ private class RowHeaderRenderer : MouseAdapter(), TableCellRenderer {
   }
 
   override fun mouseExited(e: MouseEvent) {
-    val table = e.component as JTable
-    val pt = e.point
-    val col = table.columnAtPoint(pt)
-    val column = table.convertColumnIndexToModel(col)
-    if (column != 0) {
-      return
+    val table = e.component as? JTable ?: return
+    val col = table.columnAtPoint(e.point)
+    if (table.convertColumnIndexToModel(col) == 0) {
+      if (rollOverRowIndex >= 0) {
+        table.repaint(table.getCellRect(rollOverRowIndex, col, false))
+      }
+      rollOverRowIndex = -1
     }
-    if (rollOverRowIndex >= 0) {
-      table.repaint(table.getCellRect(rollOverRowIndex, col, false))
-    }
-    rollOverRowIndex = -1
   }
 }
 
