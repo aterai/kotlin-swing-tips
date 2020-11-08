@@ -88,19 +88,18 @@ private class LayoutAnimator(private val component: JComponent) : BorderLayout()
   private var yy = 0
   private var counter = 0
   override fun actionPerformed(e: ActionEvent) {
-    val animator = e.source as Timer
     val height = component.preferredSize.height
     if (isDirectionOfShowing) {
       yy = (.5 + AnimationUtil.easeInOut(++counter / height.toDouble()) * height).toInt()
       if (yy >= height) {
         yy = height
-        animator.stop()
+        (e.source as? Timer)?.stop()
       }
     } else {
       yy = (.5 + AnimationUtil.easeInOut(--counter / height.toDouble()) * height).toInt()
       if (yy <= 0) {
         yy = 0
-        animator.stop()
+        (e.source as? Timer)?.stop()
         component.isVisible = false
       }
     }
