@@ -38,9 +38,28 @@ private class ImageIconPanel(private val icon: ImageIcon) : JPanel() {
     val x = (dim.width - iw) / 2
     val y = (dim.height - ih) / 2
     g.drawImage(icon.image, x, y, iw, ih, this)
+
+    g2.paint = Color.RED
+    g2.fillOval(10, 10, 32, 32)
+
+    g2.paint = Color.GREEN
+    g2.fillOval(50, 10, 32, 32)
+
+    g2.paint = Color.BLUE
+    g2.fillOval(90, 10, 32, 32)
+
+    g2.paint = Color.PINK
+    g2.fillOval(130, 10, 32, 32)
+
+    g2.paint = Color.CYAN
+    g2.fillOval(170, 10, 32, 32)
+
     g2.paint = Color.ORANGE
+    g2.fillOval(210, 10, 32, 32)
+
     g2.setXORMode(Color.PINK)
     g2.fill(rubberBand)
+
     g2.setPaintMode()
     g2.stroke = stroke
     g2.paint = Color.WHITE
