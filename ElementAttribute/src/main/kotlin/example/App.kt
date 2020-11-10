@@ -98,14 +98,14 @@ private class CustomTooltipEditorPane : JEditorPane() {
 
   override fun getToolTipText(e: MouseEvent): String? {
     val title = super.getToolTipText(e)
-    val editor = e.component as JEditorPane
-    if (!editor.isEditable) {
+    val editor = e.component
+    if (editor is JEditorPane && !editor.isEditable) {
       var pos = editor.ui.viewToModel(editor, e.point, bias)
       if (bias[0] == Bias.Backward && pos > 0) {
         pos--
       }
-      if (pos >= 0 && editor.document is HTMLDocument) {
-        val doc = editor.document as HTMLDocument
+      val doc = editor.document
+      if (pos >= 0 && doc is HTMLDocument) {
         return getSpanTitleAttribute(doc, pos) ?: title
       }
     }
