@@ -58,7 +58,7 @@ private fun <E> makeComboBox(model: ComboBoxModel<E>): JComboBox<E> {
   val selectPrevKey = "selectPrevious3"
   val a1 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      val cb = e.source as JComboBox<*>
+      val cb = e.source as? JComboBox<*> ?: return
       val index = cb.selectedIndex
       if (index == 0) {
         return
@@ -77,7 +77,7 @@ private fun <E> makeComboBox(model: ComboBoxModel<E>): JComboBox<E> {
   val selectNextKey = "selectNext3"
   val a2 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      val cb = e.source as JComboBox<*>
+      val cb = e.source as? JComboBox<*> ?: return
       val index = cb.selectedIndex
       if (index == cb.itemCount - 1) {
         return
