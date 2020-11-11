@@ -14,10 +14,8 @@ fun makeUI(): Component {
   box.add(Box.createHorizontalGlue())
   box.add(JLabel("Flip: "))
 
-  val cl = Thread.currentThread().contextClassLoader
-  val image = runCatching { ImageIO.read(cl.getResource("example/test.jpg")) }
-    .onFailure { it.printStackTrace() }
-    .getOrNull() ?: makeMissingImage()
+  val url = Thread.currentThread().contextClassLoader.getResource("example/test.jpg")
+  val image = url?.openStream().use(ImageIO::read) ?: makeMissingImage()
 
   val p = object : JPanel() {
     override fun paintComponent(g: Graphics) {
