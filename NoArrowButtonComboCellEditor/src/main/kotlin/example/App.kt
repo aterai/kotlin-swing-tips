@@ -104,9 +104,10 @@ private class LocalDateTimeTableCellEditor : AbstractCellEditor(), TableCellEdit
         override fun getSelectedItem() = selectedDate
 
         override fun setSelectedItem(anItem: Any) {
-          selectedDate = anItem as LocalDateTime
+          selectedDate = anItem as? LocalDateTime
         }
       }
+      comboBox.model.selectedItem = value
     }
     comboBox.border = UIManager.getBorder("Table.focusCellHighlightBorder")
     return comboBox
