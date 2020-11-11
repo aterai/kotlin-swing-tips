@@ -42,8 +42,7 @@ fun makeUI(): Component {
 }
 
 private fun getFilteredImage(url: URL?): BufferedImage {
-  val image = runCatching { ImageIO.read(url) }
-    .getOrNull() ?: makeMissingImage()
+  val image = url?.openStream().use(ImageIO::read) ?: makeMissingImage()
   val dest = BufferedImage(image.width, image.height, BufferedImage.TYPE_INT_RGB)
   val b = ByteArray(256)
   for (i in b.indices) {
