@@ -8,11 +8,9 @@ import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  val cl = Thread.currentThread().contextClassLoader
-  val bi = runCatching {
-    ImageIO.read(cl.getResource("example/duke.gif"))
-  }.getOrNull() ?: makeMissingImage()
-
+  val path = "example/duke.gif"
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  val bi = url?.openStream().use(ImageIO::read) ?: makeMissingImage()
   val icon = makeLabelIcon(bi)
   icon.cursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR)
   icon.size = icon.preferredSize
