@@ -17,10 +17,8 @@ fun makeUI(): Component {
   val label2 = JLabel()
   p.add(label2)
 
-  val cl = Thread.currentThread().contextClassLoader
-  val image = runCatching { ImageIO.read(cl.getResource("example/duke.gif")) }
-    .onFailure { it.printStackTrace() }
-    .getOrNull() ?: makeMissingImage()
+  val url = Thread.currentThread().contextClassLoader.getResource("example/duke.gif")
+  val image = url?.openStream().use(ImageIO::read) ?: makeMissingImage()
 
   label1.icon = ImageIcon(image)
 
