@@ -9,15 +9,12 @@ import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  val cl = Thread.currentThread().contextClassLoader
-  val image = runCatching {
-    ImageIO.read(cl.getResource("example/test.jpg"))
-  }.getOrNull() ?: makeMissingImage()
-
+  val path = "example/test.jpg"
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  val image = url?.openStream().use(ImageIO::read) ?: makeMissingImage()
   val width = image.width
   val height = image.height
   val shape = RoundRectangle2D.Float(0f, 0f, width / 2f, height / 2f, 50f, 50f)
-
   val clippedImage = makeClippedImage(image, shape)
 
   val button1 = JButton("clipped window")
