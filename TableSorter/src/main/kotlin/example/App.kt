@@ -1,0 +1,408 @@
+package example
+
+import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
+import java.awt.event.MouseListener
+import java.io.Serializable
+import java.util.Comparator
+import java.util.Objects
+import java.util.concurrent.ConcurrentHashMap
+import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.event.TableModelEvent
+import javax.swing.event.TableModelListener
+import javax.swing.table.*
+import kotlin.math.pow
+
+fun makeUI(): Component {
+  val columnNames = arrayOf("String", "Integer", "Boolean")
+  val data = arrayOf(
+    arrayOf("aaa", 12, true),
+    arrayOf("bbb", 5, false),
+    arrayOf(null, 15, true),
+    arrayOf("", null, false),
+    arrayOf("CCC", 92, true),
+    arrayOf("DDD", 0, false)
+  )
+  val model = object : DefaultTableModel(data, columnNames) {
+    override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
+  }
+  val sorter = TableSorter(model)
+  val table = object : JTable(sorter) {
+    private val evenColor = Color(0xFA_FA_FA)
+    override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
+      val c = super.prepareRenderer(tcr, row, column)
+      if (isRowSelected(row)) {
+        c.foreground = getSelectionForeground()
+        c.background = getSelectionBackground()
+      } else {
+        c.foreground = foreground
+        c.background = if (row % 2 == 0) evenColor else background
+      }
+      return c
+    }
+
+    override fun updateUI() {
+      sorter.setTableHeader(null)
+      super.updateUI()
+      EventQueue.invokeLater {
+        val h = getTableHeader()
+        sorter.setTableHeader(h)
+        h.repaint()
+      }
+    }
+  }
+
+  return JPanel(BorderLayout()).also {
+    it.add(JScrollPane(table))
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private class TableSorter() : AbstractTableModel() {
+  private var tableModel: TableModel? = null
+  private val viewToModel = mutableListOf<Row>()
+  private val modelToView = mutableListOf<Int>()
+  private val sortingColumns = mutableListOf<Directive>()
+  private var tableHeader: JTableHeader? = null
+  @Transient
+  private val columnComparators: MutableMap<Class<*>, Comparator<*>> = ConcurrentHashMap()
+  @Transient
+  private val rowComparator = RowComparator()
+  @Transient
+  private var mouseListener: MouseListener
+  @Transient
+  private var tableModelListener: TableModelListener
+
+//  fun readObject() {
+//    mouseListener = MouseHandler()
+//    tableModelListener = TableModelHandler()
+//  }
+
+  fun readResolve(): Any {
+    mouseListener = MouseHandler()
+    tableModelListener = TableModelHandler()
+    return this
+  }
+
+  constructor(tableModel: TableModel?) : this() {
+    setTableModel(tableModel)
+  }
+
+//  constructor(tableModel: TableModel?, tableHeader: JTableHeader?) : this() {
+//    setTableHeader(tableHeader)
+//    setTableModel(tableModel)
+//  }
+
+  fun clearSortingState() {
+    viewToModel.clear()
+    modelToView.clear()
+  }
+
+  fun setTableModel(tableModel: TableModel?) {
+    this.tableModel?.removeTableModelListener(tableModelListener)
+    this.tableModel = tableModel
+    this.tableModel?.addTableModelListener(tableModelListener)
+    EventQueue.invokeLater {
+      clearSortingState()
+      fireTableStructureChanged()
+    }
+  }
+
+  fun setTableHeader(tableHeader: JTableHeader?) {
+    this.tableHeader?.also { header ->
+      header.removeMouseListener(mouseListener)
+      (header.defaultRenderer as? SortableHeaderRenderer)?.also {
+        header.defaultRenderer = it.cellRenderer
+      }
+    }
+    this.tableHeader = tableHeader
+    this.tableHeader?.also {
+      it.addMouseListener(mouseListener)
+      it.defaultRenderer = SortableHeaderRenderer(it.defaultRenderer)
+    }
+  }
+
+  val isSorting: Boolean
+    get() = sortingColumns.isNotEmpty()
+
+  private fun getDirective(column: Int) =
+    sortingColumns.firstOrNull { it.column == column } ?: EMPTY_DIRECTIVE
+
+  fun getSortingStatus(column: Int) = getDirective(column).direction
+
+  private fun sortingStatusChanged() {
+    clearSortingState()
+    fireTableDataChanged()
+    tableHeader?.repaint()
+  }
+
+  fun setSortingStatus(column: Int, status: Int) {
+    getDirective(column).takeIf { it != EMPTY_DIRECTIVE }.also {
+      sortingColumns.remove(it)
+    }
+    if (status != NOT_SORTED) {
+      sortingColumns.add(Directive(column, status))
+    }
+    sortingStatusChanged()
+  }
+
+  fun getHeaderRendererIcon(column: Int, size: Int): Icon? {
+    val directive = getDirective(column)
+    return if (EMPTY_DIRECTIVE == directive) {
+      null
+    } else Arrow(directive.direction == DESCENDING, size, sortingColumns.indexOf(directive))
+  }
+
+  fun cancelSorting() {
+    sortingColumns.clear()
+    sortingStatusChanged()
+  }
+
+//  fun setColumnComparator(type: Class<*>, comparator: Comparator<*>?) {
+//    if (comparator == null) {
+//      columnComparators.remove(type)
+//    } else {
+//      columnComparators[type] = comparator
+//    }
+//  }
+
+  fun getComparator(column: Int): Comparator<*> {
+    val columnType = tableModel?.getColumnClass(column)
+    return columnComparators[columnType] ?: LEXICAL_COMPARATOR
+  }
+
+  private fun getViewToModel(): List<Row> {
+    val rc = tableModel?.rowCount ?: 0
+    if (viewToModel.isEmpty() && tableModel != null) {
+      for (i in 0 until rc) {
+        viewToModel.add(Row(i))
+      }
+      if (isSorting) {
+        viewToModel.sortWith(rowComparator)
+      }
+    }
+    return viewToModel
+  }
+
+  fun modelIndex(viewIndex: Int) = getViewToModel()[viewIndex].modelIndex
+
+  private fun getModelToView(): List<Int> {
+    if (modelToView.isEmpty()) {
+      for (i in getViewToModel().indices) {
+        modelToView.add(modelIndex(i))
+      }
+    }
+    return modelToView
+  }
+
+  override fun getRowCount() = tableModel?.rowCount ?: 0
+
+  override fun getColumnCount() = tableModel?.columnCount ?: 0
+
+  override fun getColumnName(column: Int) = tableModel?.getColumnName(column)
+
+  override fun getColumnClass(column: Int) = tableModel?.getColumnClass(column)
+
+  override fun isCellEditable(row: Int, column: Int) =
+    tableModel?.isCellEditable(modelIndex(row), column) ?: false
+
+  override fun getValueAt(row: Int, column: Int) =
+    tableModel?.getValueAt(modelIndex(row), column)
+
+  override fun setValueAt(value: Any, row: Int, column: Int) {
+    tableModel?.setValueAt(value, modelIndex(row), column)
+  }
+
+  // Helper classes
+  private inner class RowComparator : Comparator<Row> {
+    override fun compare(r1: Row, r2: Row): Int {
+      val row1 = r1.modelIndex
+      val row2 = r2.modelIndex
+      for (directive in sortingColumns) {
+        val column = directive.column
+        val o1 = tableModel?.getValueAt(row1, column)
+        val o2 = tableModel?.getValueAt(row2, column)
+        val comparator = getComparator(column) as? Comparator<in Any?>
+        val comparison = Objects.compare(o1, o2, Comparator.nullsFirst(comparator))
+        if (comparison != 0) {
+          return if (directive.direction == DESCENDING) comparison.inv() + 1 else comparison
+        }
+      }
+      return row1 - row2
+    }
+  }
+
+  private inner class TableModelHandler : TableModelListener {
+    override fun tableChanged(e: TableModelEvent) {
+      // If we're not sorting by anything, just pass the event along.
+      if (!isSorting) {
+        clearSortingState()
+        fireTableChanged(e)
+        return
+      }
+
+      if (e.firstRow == TableModelEvent.HEADER_ROW) {
+        cancelSorting()
+        fireTableChanged(e)
+        return
+      }
+
+      val column = e.column
+      val fr = e.firstRow
+      val lr = e.lastRow
+      if (fr == lr && column != TableModelEvent.ALL_COLUMNS && getSortingStatus(column) == NOT_SORTED) {
+        val viewIndex = getModelToView()[fr]
+        fireTableChanged(TableModelEvent(this@TableSorter, viewIndex, viewIndex, column, e.type))
+        return
+      }
+
+      clearSortingState()
+      fireTableDataChanged()
+    }
+  }
+
+  private inner class MouseHandler : MouseAdapter() {
+    override fun mouseClicked(e: MouseEvent) {
+      val h = e.component as JTableHeader
+      val columnModel = h.columnModel
+      val viewColumn = columnModel.getColumnIndexAtX(e.x)
+      if (viewColumn < 0) {
+        return
+      }
+      val column = columnModel.getColumn(viewColumn).modelIndex
+      if (column != -1) {
+        var status = getSortingStatus(column) + if (e.isShiftDown) -1 else 1
+        if (!e.isControlDown) {
+          cancelSorting()
+        }
+        status = (status + 4) % 3 - 1
+        setSortingStatus(column, status)
+      }
+    }
+  }
+
+  companion object {
+    const val DESCENDING = -1
+    const val NOT_SORTED = 0
+    // const val ASCENDING = 1
+    private val EMPTY_DIRECTIVE = Directive(-1, NOT_SORTED)
+    val LEXICAL_COMPARATOR: Comparator<Any> = LexicalComparator()
+  }
+
+  init {
+    mouseListener = MouseHandler()
+    tableModelListener = TableModelHandler()
+  }
+}
+
+private class SortableHeaderRenderer(val cellRenderer: TableCellRenderer) : TableCellRenderer {
+  override fun getTableCellRendererComponent(
+    table: JTable,
+    value: Any?,
+    isSelected: Boolean,
+    hasFocus: Boolean,
+    row: Int,
+    column: Int
+  ): Component {
+    val l = cellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column) as JLabel
+    (table.model as? TableSorter)?.also {
+      val modelColumn = table.convertColumnIndexToModel(column)
+      l.icon = it.getHeaderRendererIcon(modelColumn, l.font.size)
+      l.horizontalTextPosition = SwingConstants.LEFT
+    }
+    return l
+  }
+}
+
+private class LexicalComparator : Comparator<Any>, Serializable {
+  override fun compare(o1: Any, o2: Any) = o1.toString().compareTo(o2.toString())
+
+  companion object {
+    private const val serialVersionUID = 1L
+  }
+}
+
+private class Arrow(
+  private val descending: Boolean,
+  private val size: Int,
+  private val priority: Int
+) : Icon, Serializable {
+  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+    val color1 = c?.background ?: Color.GRAY
+    val color2: Color
+    // In a compound sort, make each successive triangle 20%
+    // smaller than the previous one.
+    val dx = (size / 2.0 * .8.pow(priority.toDouble())).toInt()
+    val dy: Int
+    val d: Int
+    val shift: Int
+    if (descending) {
+      color2 = color1.darker().darker()
+      shift = 1
+      dy = dx
+      d = -dy // Align icon (roughly) with font baseline.
+    } else {
+      color2 = color1.brighter().brighter()
+      shift = -1
+      dy = -dx
+      d = 0 // Align icon (roughly) with font baseline.
+    }
+    val ty = y + 5 * size / 6 + d
+    g.translate(x, ty)
+
+    // Right diagonal.
+    g.color = color1.darker()
+    g.drawLine(dx / 2, dy, 0, 0)
+    g.drawLine(dx / 2, dy + shift, 0, shift)
+
+    // Left diagonal.
+    g.color = color1.brighter()
+    g.drawLine(dx / 2, dy, dx, 0)
+    g.drawLine(dx / 2, dy + shift, dx, shift)
+
+    // Horizontal line.
+    g.color = color1
+    g.drawLine(dx, 0, 0, 0)
+    g.color = color2
+    g.translate(-x, -ty)
+  }
+
+  override fun getIconWidth() = size
+
+  override fun getIconHeight() = size
+
+  companion object {
+    private const val serialVersionUID = 1L
+  }
+}
+
+private class Directive(val column: Int, val direction: Int) : Serializable {
+  companion object {
+    private const val serialVersionUID = 1L
+  }
+}
+
+private class Row(val modelIndex: Int) : Serializable {
+  companion object {
+    private const val serialVersionUID = 1L
+  }
+}
+
+fun main() {
+  EventQueue.invokeLater {
+    runCatching {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+    }.onFailure {
+      it.printStackTrace()
+      Toolkit.getDefaultToolkit().beep()
+    }
+    JFrame().apply {
+      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+      contentPane.add(makeUI())
+      pack()
+      setLocationRelativeTo(null)
+      isVisible = true
+    }
+  }
+}
