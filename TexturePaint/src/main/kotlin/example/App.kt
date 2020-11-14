@@ -6,10 +6,9 @@ import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  val cl = Thread.currentThread().contextClassLoader
-  val bi = runCatching { ImageIO.read(cl.getResource("example/16x16.png")) }
-    .onFailure { it.printStackTrace() }
-    .getOrNull() ?: makeMissingImage()
+  val path = "example/16x16.png"
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  val bi = url?.openStream().use(ImageIO::read) ?: makeMissingImage()
   val texture = TexturePaint(bi, Rectangle(bi.width, bi.height))
 
   val p = object : JPanel(BorderLayout()) {
