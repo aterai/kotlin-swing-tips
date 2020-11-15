@@ -10,10 +10,9 @@ import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  val cl = Thread.currentThread().contextClassLoader
-  val img = runCatching { ImageIO.read(cl.getResource("example/CRW_3857_JFR.jpg")) }
-    .onFailure { it.printStackTrace() }
-    .getOrNull() ?: makeMissingImage()
+  val path = "example/CRW_3857_JFR.jpg"
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  val img = url?.openStream().use(ImageIO::read) ?: makeMissingImage()
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(ZoomAndPanePanel(img)))
     it.preferredSize = Dimension(320, 240)
