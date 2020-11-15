@@ -11,7 +11,11 @@ import java.util.concurrent.ConcurrentHashMap
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.TableModelEvent
 import javax.swing.event.TableModelListener
-import javax.swing.table.*
+import javax.swing.table.AbstractTableModel
+import javax.swing.table.DefaultTableModel
+import javax.swing.table.JTableHeader
+import javax.swing.table.TableCellRenderer
+import javax.swing.table.TableModel
 import kotlin.math.pow
 
 fun makeUI(): Component {
@@ -74,25 +78,33 @@ private class TableSorter() : AbstractTableModel() {
   @Transient
   private var tableModelListener: TableModelListener
 
-//  fun readObject() {
-//    mouseListener = MouseHandler()
-//    tableModelListener = TableModelHandler()
-//  }
+  val isSorting: Boolean
+    get() = sortingColumns.isNotEmpty()
 
-  fun readResolve(): Any {
+  init {
     mouseListener = MouseHandler()
     tableModelListener = TableModelHandler()
-    return this
   }
 
   constructor(tableModel: TableModel?) : this() {
     setTableModel(tableModel)
   }
 
-//  constructor(tableModel: TableModel?, tableHeader: JTableHeader?) : this() {
-//    setTableHeader(tableHeader)
-//    setTableModel(tableModel)
-//  }
+  // constructor(tableModel: TableModel?, tableHeader: JTableHeader?) : this() {
+  //   setTableHeader(tableHeader)
+  //   setTableModel(tableModel)
+  // }
+
+  // fun readObject() {
+  //   mouseListener = MouseHandler()
+  //   tableModelListener = TableModelHandler()
+  // }
+
+  fun readResolve(): Any {
+    mouseListener = MouseHandler()
+    tableModelListener = TableModelHandler()
+    return this
+  }
 
   fun clearSortingState() {
     viewToModel.clear()
@@ -122,9 +134,6 @@ private class TableSorter() : AbstractTableModel() {
       it.defaultRenderer = SortableHeaderRenderer(it.defaultRenderer)
     }
   }
-
-  val isSorting: Boolean
-    get() = sortingColumns.isNotEmpty()
 
   private fun getDirective(column: Int) =
     sortingColumns.firstOrNull { it.column == column } ?: EMPTY_DIRECTIVE
@@ -236,29 +245,28 @@ private class TableSorter() : AbstractTableModel() {
   private inner class TableModelHandler : TableModelListener {
     override fun tableChanged(e: TableModelEvent) {
       // If we're not sorting by anything, just pass the event along.
-      if (!isSorting) {
-        clearSortingState()
-        fireTableChanged(e)
-        return
+      when {
+        !isSorting -> {
+          clearSortingState()
+          fireTableChanged(e)
+        }
+        e.firstRow == TableModelEvent.HEADER_ROW -> {
+          cancelSorting()
+          fireTableChanged(e)
+        }
+        else -> {
+          val column = e.column
+          val fr = e.firstRow
+          val lr = e.lastRow
+          if (fr == lr && column != TableModelEvent.ALL_COLUMNS && getSortingStatus(column) == NOT_SORTED) {
+            val viewIndex = getModelToView()[fr]
+            fireTableChanged(TableModelEvent(this@TableSorter, viewIndex, viewIndex, column, e.type))
+            return
+          }
+          clearSortingState()
+          fireTableDataChanged()
+        }
       }
-
-      if (e.firstRow == TableModelEvent.HEADER_ROW) {
-        cancelSorting()
-        fireTableChanged(e)
-        return
-      }
-
-      val column = e.column
-      val fr = e.firstRow
-      val lr = e.lastRow
-      if (fr == lr && column != TableModelEvent.ALL_COLUMNS && getSortingStatus(column) == NOT_SORTED) {
-        val viewIndex = getModelToView()[fr]
-        fireTableChanged(TableModelEvent(this@TableSorter, viewIndex, viewIndex, column, e.type))
-        return
-      }
-
-      clearSortingState()
-      fireTableDataChanged()
     }
   }
 
@@ -288,11 +296,6 @@ private class TableSorter() : AbstractTableModel() {
     // const val ASCENDING = 1
     private val EMPTY_DIRECTIVE = Directive(-1, NOT_SORTED)
     val LEXICAL_COMPARATOR: Comparator<Any> = LexicalComparator()
-  }
-
-  init {
-    mouseListener = MouseHandler()
-    tableModelListener = TableModelHandler()
   }
 }
 
