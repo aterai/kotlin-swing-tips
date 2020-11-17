@@ -139,6 +139,7 @@ private class TitledBorder2 @JvmOverloads constructor(
 
   constructor(title: String?) : this(null, title, LEADING, DEFAULT_POSITION, null, null)
 
+  @Suppress("ComplexMethod", "LongMethod")
   override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
     val b = getBorder()
     val str = title
