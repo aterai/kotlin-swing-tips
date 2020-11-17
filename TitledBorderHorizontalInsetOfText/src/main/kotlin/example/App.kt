@@ -83,12 +83,12 @@ private class ComponentTitledBorder(
 }
 
 private class TitledBorder2 @JvmOverloads constructor(
-  border: Border? = null,
-  title: String? = "",
+  private var border: Border? = null,
+  private var title: String? = "",
   titleJustification: Int = LEADING,
   titlePosition: Int = DEFAULT_POSITION,
-  titleFont: Font? = null,
-  titleColor: Color? = null
+  private var titleFont: Font? = null,
+  private var titleColor: Color? = null
 ) : AbstractBorder() {
   var titlePosition = 0
     set(titlePosition) {
@@ -113,46 +113,26 @@ private class TitledBorder2 @JvmOverloads constructor(
         return position
       }
       val value = UIManager.get("TitledBorder.position")
-      if (value is Int) {
-        if (0 < value && value <= 6) {
-          return value
-        }
-      } else if (value is String) {
-        if ("ABOVE_TOP".equals(value, ignoreCase = true)) {
-          return ABOVE_TOP
-        }
-        if ("TOP".equals(value, ignoreCase = true)) {
-          return TOP
-        }
-        if ("BELOW_TOP".equals(value, ignoreCase = true)) {
-          return BELOW_TOP
-        }
-        if ("ABOVE_BOTTOM".equals(value, ignoreCase = true)) {
-          return ABOVE_BOTTOM
-        }
-        if ("BOTTOM".equals(value, ignoreCase = true)) {
-          return BOTTOM
-        }
-        if ("BELOW_BOTTOM".equals(value, ignoreCase = true)) {
-          return BELOW_BOTTOM
+      return if (value is Int && DEFAULT_POSITION < value && value <= BELOW_BOTTOM) {
+        value
+      } else {
+        when ((value as? String)?.toUpperCase()) {
+          "ABOVE_TOP" -> ABOVE_TOP
+          "TOP" -> TOP
+          "BELOW_TOP" -> BELOW_TOP
+          "ABOVE_BOTTOM" -> ABOVE_BOTTOM
+          "BOTTOM" -> BOTTOM
+          "BELOW_BOTTOM" -> BELOW_BOTTOM
+          else -> TOP
         }
       }
-      return TOP
     }
-  private var border: Border?
-  private var title: String?
-  private var titleFont: Font?
-  private var titleColor: Color?
   private val label = JLabel().also {
     it.isOpaque = false
     it.putClientProperty(BasicHTML.propertyKey, null)
   }
 
   init {
-    this.border = border
-    this.title = title
-    this.titleFont = titleFont
-    this.titleColor = titleColor
     this.titleJustification = titleJustification
     this.titlePosition = titlePosition
   }
@@ -278,33 +258,33 @@ private class TitledBorder2 @JvmOverloads constructor(
 
   fun getTitleColor(): Color? = titleColor ?: UIManager.getColor("TitledBorder.titleColor")
 
-  fun setBorder(border: Border?) {
-    this.border = border
-  }
-
-  fun setTitleFont(titleFont: Font?) {
-    this.titleFont = titleFont
-  }
-
-  fun setTitleColor(titleColor: Color?) {
-    this.titleColor = titleColor
-  }
-
-  fun getMinimumSize(c: Component): Dimension {
-    val insets = getBorderInsets(c)
-    val minSize = Dimension(insets.right + insets.left, insets.top + insets.bottom)
-    val str = title
-    if (str?.isNotEmpty() == true) {
-      val size = getLabel(c).preferredSize
-      val pos = position
-      if (pos != ABOVE_TOP && pos != BELOW_BOTTOM) {
-        minSize.width += size.width
-      } else if (minSize.width < size.width) {
-        minSize.width += size.width
-      }
-    }
-    return minSize
-  }
+//  fun setBorder(border: Border?) {
+//    this.border = border
+//  }
+//
+//  fun setTitleFont(titleFont: Font?) {
+//    this.titleFont = titleFont
+//  }
+//
+//  fun setTitleColor(titleColor: Color?) {
+//    this.titleColor = titleColor
+//  }
+//
+//  fun getMinimumSize(c: Component): Dimension {
+//    val insets = getBorderInsets(c)
+//    val minSize = Dimension(insets.right + insets.left, insets.top + insets.bottom)
+//    val str = title
+//    if (str?.isNotEmpty() == true) {
+//      val size = getLabel(c).preferredSize
+//      val pos = position
+//      if (pos != ABOVE_TOP && pos != BELOW_BOTTOM) {
+//        minSize.width += size.width
+//      } else if (minSize.width < size.width) {
+//        minSize.width += size.width
+//      }
+//    }
+//    return minSize
+//  }
 
   override fun getBaseline(c: Component?, width: Int, height: Int): Int {
     require(c != null) { "Must supply non-null component" }
