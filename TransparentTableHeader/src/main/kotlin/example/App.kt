@@ -32,13 +32,13 @@ fun makeUI(): Component {
     override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int) =
       super.prepareRenderer(renderer, row, column).also { it.foreground = Color.BLACK }
   }
-  // table.setAutoCreateRowSorter(true);
+  // table.autoCreateRowSorter = true
   table.rowSelectionAllowed = true
   table.fillsViewportHeight = true
   table.showVerticalLines = false
-  // table.setShowHorizontalLines(false);
+  // table.showHorizontalLines = false
   table.isFocusable = false
-  // table.setCellSelectionEnabled(false);
+  // table.cellSelectionEnabled = false
   table.intercellSpacing = Dimension(0, 1)
   table.rowHeight = 24
   table.selectionForeground = table.foreground
@@ -59,7 +59,7 @@ fun makeUI(): Component {
   table.setDefaultRenderer(java.lang.Boolean::class.java, TranslucentBooleanRenderer())
   table.isOpaque = false
   table.background = alphaZero
-  // table.setGridColor(alphaZero);
+  // table.gridColor = alphaZero
   table.tableHeader.defaultRenderer = TransparentHeader()
   table.tableHeader.isOpaque = false
   table.tableHeader.background = alphaZero
@@ -97,11 +97,10 @@ fun makeUI(): Component {
 }
 
 private fun makeImageTexture(): TexturePaint {
-  val cl = Thread.currentThread().contextClassLoader
   // unkaku_w.png http://www.viva-edo.com/komon/edokomon.html
-  val bi = runCatching {
-    ImageIO.read(cl.getResource("example/unkaku_w.png"))
-  }.getOrNull() ?: makeMissingImage()
+  val path = "example/unkaku_w.png"
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  val bi = url?.openStream().use(ImageIO::read) ?: makeMissingImage()
   return TexturePaint(bi, Rectangle(bi.width, bi.height))
 }
 
