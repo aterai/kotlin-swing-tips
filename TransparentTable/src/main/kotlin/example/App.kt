@@ -83,11 +83,10 @@ fun makeUI(): Component {
 }
 
 private fun makeImageTexture(): TexturePaint {
-  val cl = Thread.currentThread().contextClassLoader
   // unkaku_w.png http://www.viva-edo.com/komon/edokomon.html
-  val bi = runCatching {
-    ImageIO.read(cl.getResource("example/unkaku_w.png"))
-  }.getOrNull() ?: makeMissingImage()
+  val path = "example/unkaku_w.png"
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  val bi = url?.openStream().use(ImageIO::read) ?: makeMissingImage()
   return TexturePaint(bi, Rectangle(bi.width, bi.height))
 }
 
