@@ -335,14 +335,14 @@ private class TitledBorder2 @JvmOverloads constructor(
     } else justification
   }
 
-  fun getFont(c: Component?) = getTitleFont() ?: c?.font ?: Font(Font.DIALOG, Font.PLAIN, 12)
+  // fun getFont(c: Component?) = getTitleFont() ?: c?.font ?: Font(Font.DIALOG, Font.PLAIN, 12)
 
-  private fun getColor(c: Component?) = getTitleColor() ?: c?.foreground
+  // private fun getColor(c: Component?) = getTitleColor() ?: c?.foreground
 
   private fun getLabel(c: Component): JLabel {
     label.text = title
-    label.font = getFont(c)
-    label.foreground = getColor(c)
+    label.font = getTitleFont() ?: c.font ?: Font(Font.DIALOG, Font.PLAIN, 12)
+    label.foreground = getTitleColor() ?: c.foreground
     label.componentOrientation = c.componentOrientation
     label.isEnabled = c.isEnabled
     return label
