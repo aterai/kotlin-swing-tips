@@ -35,43 +35,45 @@ private class TablePopupMenu(columnNames: Array<String>) : JPopupMenu() {
     val textField = JTextField()
     textField.addAncestorListener(FocusAncestorListener())
     add("Edit: setHeaderValue").addActionListener {
-      val header = invoker as JTableHeader
-      val column = header.columnModel.getColumn(index)
-      val name = column.headerValue.toString()
-      textField.text = name
-      val result = JOptionPane.showConfirmDialog(
-        header.table,
-        textField,
-        "Edit: setHeaderValue",
-        JOptionPane.OK_CANCEL_OPTION,
-        JOptionPane.PLAIN_MESSAGE
-      )
-      if (result == JOptionPane.OK_OPTION) {
-        val str = textField.text.trim()
-        if (str != name) {
-          column.headerValue = str
-          header.repaint(header.getHeaderRect(index))
+      (invoker as? JTableHeader)?.also { header ->
+        val column = header.columnModel.getColumn(index)
+        val name = column.headerValue.toString()
+        textField.text = name
+        val result = JOptionPane.showConfirmDialog(
+          header.table,
+          textField,
+          "Edit: setHeaderValue",
+          JOptionPane.OK_CANCEL_OPTION,
+          JOptionPane.PLAIN_MESSAGE
+        )
+        if (result == JOptionPane.OK_OPTION) {
+          val str = textField.text.trim()
+          if (str != name) {
+            column.headerValue = str
+            header.repaint(header.getHeaderRect(index))
+          }
         }
       }
     }
     add("Edit: setColumnIdentifiers").addActionListener {
-      val header = invoker as JTableHeader
-      val table = header.table
-      val model = table.model as DefaultTableModel
-      val name = table.getColumnName(index)
-      textField.text = name
-      val result = JOptionPane.showConfirmDialog(
-        table,
-        textField,
-        "Edit: setColumnIdentifiers",
-        JOptionPane.OK_CANCEL_OPTION,
-        JOptionPane.PLAIN_MESSAGE
-      )
-      if (result == JOptionPane.OK_OPTION) {
-        val str = textField.text.trim { it <= ' ' }
-        if (str != name) {
-          columnNames[table.convertColumnIndexToModel(index)] = str
-          model.setColumnIdentifiers(columnNames)
+      (invoker as? JTableHeader)?.also { header ->
+        val table = header.table
+        val model = table.model as? DefaultTableModel
+        val name = table.getColumnName(index)
+        textField.text = name
+        val result = JOptionPane.showConfirmDialog(
+          table,
+          textField,
+          "Edit: setColumnIdentifiers",
+          JOptionPane.OK_CANCEL_OPTION,
+          JOptionPane.PLAIN_MESSAGE
+        )
+        if (result == JOptionPane.OK_OPTION) {
+          val str = textField.text.trim()
+          if (str != name) {
+            columnNames[table.convertColumnIndexToModel(index)] = str
+            model?.setColumnIdentifiers(columnNames)
+          }
         }
       }
     }
