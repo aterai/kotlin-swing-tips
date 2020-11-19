@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import javax.swing.* // ktlint-disable no-wildcard-imports
@@ -23,31 +22,23 @@ fun makeUI(): Component {
 
   val button = JButton("start")
   button.addActionListener { e ->
-    val b = e.source as JButton
-    b.isEnabled = false
+    (e.source as? JButton)?.isEnabled = false
     val executor = Executors.newCachedThreadPool()
     object : SwingWorker<Boolean, Void?>() {
       @Throws(InterruptedException::class)
       override fun doInBackground(): Boolean {
-        val model = tree.model as DefaultTreeModel
-        val root = model.root as DefaultMutableTreeNode
+        val model = tree.model as? DefaultTreeModel
+        val root = model?.root as? DefaultMutableTreeNode ?: return false
         root.breadthFirstEnumeration().toList()
           .filterIsInstance<DefaultMutableTreeNode>()
           .filter { root != it && !model.isLeaf(it) }
-          .forEach { executor.execute(makeWorker(tree, it)) }
+          .forEach { executor.execute(NodeProgressWorker(tree, it)) }
         executor.shutdown()
         return executor.awaitTermination(1, TimeUnit.MINUTES)
       }
 
-      private fun makeWorker(
-        tree: JTree,
-        node: DefaultMutableTreeNode
-      ): SwingWorker<TreeNode, Int> {
-        return NodeProgressWorker(tree, node)
-      }
-
       override fun done() {
-        b.isEnabled = true
+        (e.source as? JButton)?.isEnabled = true
       }
     }.execute()
   }
@@ -98,7 +89,7 @@ private class NodeProgressWorker(
   private val treeNode: DefaultMutableTreeNode
 ) : SwingWorker<TreeNode, Int>() {
   private val lengthOfTask = 120
-  private val model = tree.model as DefaultTreeModel
+  private val model = tree.model
 
   @Throws(InterruptedException::class)
   override fun doInBackground(): TreeNode {
@@ -120,18 +111,15 @@ private class NodeProgressWorker(
     val i = c[c.size - 1]
     val o = ProgressObject(title, i)
     treeNode.userObject = o
-    model.nodeChanged(treeNode)
+    (model as? DefaultTreeModel)?.nodeChanged(treeNode)
   }
 
   override fun done() {
-    try {
-      val n = get()
-      tree.expandPath(TreePath(model.getPathToRoot(n)))
-    } catch (ex: InterruptedException) {
-      Toolkit.getDefaultToolkit().beep()
-      Thread.currentThread().interrupt()
-    } catch (ex: ExecutionException) {
-      ex.printStackTrace()
+    runCatching {
+      val m = model as? DefaultTreeModel ?: return
+      tree.expandPath(TreePath(m.getPathToRoot(get())))
+    }.onFailure {
+      // ex.printStackTrace()
       Toolkit.getDefaultToolkit().beep()
     }
   }
