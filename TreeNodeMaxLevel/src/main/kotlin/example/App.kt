@@ -52,9 +52,9 @@ private class TreePopupMenu : JPopupMenu() {
     add("add").addActionListener {
       val tree = invoker as? JTree
       val path = tree?.selectionPath
-      if (path != null && path.pathCount <= NODE_MAXIMUM_LEVELS) {
-        val model = tree.model as DefaultTreeModel
-        val self = path.lastPathComponent as DefaultMutableTreeNode
+      val model = tree?.model
+      val self = path?.lastPathComponent
+      if (model is DefaultTreeModel && self is DefaultMutableTreeNode && path.pathCount <= NODE_MAXIMUM_LEVELS) {
         val child = DefaultMutableTreeNode("New child node")
         self.add(child)
         model.reload(self)
