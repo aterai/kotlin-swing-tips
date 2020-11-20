@@ -6,12 +6,12 @@ import javax.swing.text.html.HTMLEditorKit
 
 fun makeUI(): Component {
   val editor = JEditorPane("text/html", "")
-  val htmlEditorKit = editor.editorKit as HTMLEditorKit
-  val styles = htmlEditorKit.styleSheet
-  styles.addRule(".number {font-size: 14}")
-  styles.addRule(".pt {font-size: 14pt}")
-  styles.addRule(".em {font-size: 1.2em}")
-  styles.addRule(".percentage {font-size: 120%}")
+  (editor.editorKit as? HTMLEditorKit)?.styleSheet?.also {
+    it.addRule(".number {font-size: 14}")
+    it.addRule(".pt {font-size: 14pt}")
+    it.addRule(".em {font-size: 1.2em}")
+    it.addRule(".percentage {font-size: 120%}")
+  }
   val html =
     """
       <html>
