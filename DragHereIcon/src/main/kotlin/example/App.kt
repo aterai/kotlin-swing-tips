@@ -93,14 +93,14 @@ private class FileDropTargetAdapter : DropTargetAdapter() {
     runCatching {
       if (e.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
         e.acceptDrop(DnDConstants.ACTION_COPY)
-        val t = e.transferable
-        val list = t.getTransferData(DataFlavor.javaFileListFlavor) as List<*>
-        for (o in list) {
-          if (o is File) {
-            println(o.absolutePath)
+        (e.transferable.getTransferData(DataFlavor.javaFileListFlavor) as? List<*>)?.also {
+          for (o in it) {
+            if (o is File) {
+              println(o.absolutePath)
+            }
           }
-        }
-        e.dropComplete(true)
+          e.dropComplete(true)
+        } ?: e.rejectDrop()
       } else {
         e.rejectDrop()
       }
