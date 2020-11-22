@@ -76,24 +76,22 @@ private class PluginPanel(val comboBox: JComboBox<String>) : JPanel() {
   }
 
   fun extractNode(value: Any?): PluginNode? {
-    if (value is DefaultMutableTreeNode) {
-      (value.userObject as? PluginNode)?.also { node ->
-        pluginName.text = node.toString()
-        val model = comboBox.model as DefaultComboBoxModel<String>
+    val model = comboBox.model
+    return if (value is DefaultMutableTreeNode && model is DefaultComboBoxModel<String>) {
+      (value.userObject as? PluginNode)?.also {
+        pluginName.text = it.toString()
         model.removeAllElements()
-        if (node.plugins.isEmpty()) {
+        if (it.plugins.isEmpty()) {
           remove(comboBox)
         } else {
           add(comboBox)
-          for (s in node.plugins) {
+          for (s in it.plugins) {
             model.addElement(s)
           }
-          comboBox.setSelectedIndex(node.selectedIndex)
+          comboBox.setSelectedIndex(it.selectedIndex)
         }
-        return node
       }
-    }
-    return null
+    } else null
   }
 }
 
