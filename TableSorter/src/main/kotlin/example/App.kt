@@ -273,10 +273,9 @@ private class TableSorter() : AbstractTableModel() {
 
   private inner class MouseHandler : MouseAdapter() {
     override fun mouseClicked(e: MouseEvent) {
-      val h = e.component as JTableHeader
-      val columnModel = h.columnModel
-      val viewColumn = columnModel.getColumnIndexAtX(e.x)
-      if (viewColumn < 0) {
+      val columnModel = (e.component as? JTableHeader)?.columnModel
+      val viewColumn = columnModel?.getColumnIndexAtX(e.x) ?: -1
+      if (columnModel == null || viewColumn < 0) {
         return
       }
       val column = columnModel.getColumn(viewColumn).modelIndex
@@ -308,14 +307,12 @@ private class SortableHeaderRenderer(val cellRenderer: TableCellRenderer) : Tabl
     hasFocus: Boolean,
     row: Int,
     column: Int
-  ): Component {
-    val l = cellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column) as JLabel
-    (table.model as? TableSorter)?.also {
-      val modelColumn = table.convertColumnIndexToModel(column)
-      l.icon = it.getHeaderRendererIcon(modelColumn, l.font.size)
-      l.horizontalTextPosition = SwingConstants.LEFT
+  ): Component = cellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column).also {
+    val sorter = table.model
+    if (it is JLabel && sorter is TableSorter) {
+      it.icon = sorter.getHeaderRendererIcon(table.convertColumnIndexToModel(column), it.font.size)
+      it.horizontalTextPosition = SwingConstants.LEFT
     }
-    return l
   }
 }
 
