@@ -113,7 +113,7 @@ private class ProgressListener(private val monitor: ProgressMonitor) : PropertyC
 
   override fun propertyChange(e: PropertyChangeEvent) {
     if ("progress" == e.propertyName) {
-      monitor.setProgress(e.newValue as Int)
+      monitor.setProgress(e.newValue as? Int ?: 0)
       (e.source as? SwingWorker<*, *>)?.takeIf {
         it.isDone || monitor.isCanceled
       }?.cancel(true)
