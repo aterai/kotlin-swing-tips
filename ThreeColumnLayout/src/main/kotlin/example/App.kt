@@ -15,7 +15,7 @@ fun makeUI(): Component {
 
 private fun makeUI1(): Component {
   val model = DefaultListModel<String>()
-  model.addElement("loooooooooooooooooooooooooooooooooooong")
+  model.addElement("l${"o".repeat(40)}ng")
   for (i in 0 until 5000) {
     model.addElement(i.toString())
   }
@@ -67,7 +67,7 @@ private fun makeUI1(): Component {
 
 private fun makeUI2(): Component {
   val model = DefaultListModel<String>()
-  model.addElement("loooooooooooooooooooooooooooooooooooong")
+  model.addElement("l${"o".repeat(40)}ng")
   for (i in 0 until 5000) {
     model.addElement(i.toString())
   }
@@ -98,17 +98,17 @@ private fun makeUI2(): Component {
         val bottom = target.height - insets.bottom
         val left = insets.left
         val right = target.width - insets.right
-        val hgap = hgap
+        val gap = hgap
         var wc = right - left
         var we = wc / 2
         var ww = wc - we
 
         getLayoutComponent(CENTER)?.also {
           val d = it.preferredSize
-          wc -= d.width + hgap + hgap
+          wc -= d.width + gap + gap
           we = wc / 2
           ww = wc - we
-          it.setBounds(left + hgap + ww, top, wc, bottom - top)
+          it.setBounds(left + gap + ww, top, wc, bottom - top)
         }
 
         getLayoutComponent(EAST)?.setBounds(right - we, top, we, bottom - top)
@@ -128,9 +128,12 @@ private fun makeUI2(): Component {
 private fun <E> move(from: JList<E>, to: JList<E>) {
   val sm = from.selectionModel
   val selectedIndices = from.selectedIndices
-  val fromModel = from.model as DefaultListModel<E>
-  val toModel = to.model as DefaultListModel<E>
-  val unselectedValues: MutableList<E> = ArrayList()
+  val fromModel = from.model as? DefaultListModel<E>
+  val toModel = to.model as? DefaultListModel<E>
+  if (fromModel == null || toModel == null) {
+    return
+  }
+  val unselectedValues = mutableListOf<E>()
   for (i in 0 until fromModel.size) {
     if (!sm.isSelectedIndex(i)) {
       unselectedValues.add(fromModel.getElementAt(i))
