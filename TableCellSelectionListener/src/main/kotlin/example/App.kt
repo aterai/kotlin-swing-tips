@@ -50,19 +50,20 @@ fun makeUI(): Component {
   table2.selectionModel.addListSelectionListener { e ->
     if (!e.valueIsAdjusting) {
       textArea.append("row first, last: ${e.firstIndex}, ${e.lastIndex}\n")
-      val m = e.source as ListSelectionModel
-      val msg = "row anchor->lead: ${m.anchorSelectionIndex}->${m.leadSelectionIndex}\n"
-      textArea.append(msg)
+      (e.source as? ListSelectionModel)?.also {
+        val msg = "row anchor->lead: ${it.anchorSelectionIndex}->${it.leadSelectionIndex}\n"
+        textArea.append(msg)
+      }
       textArea.caretPosition = textArea.document.length
     }
   }
   table2.columnModel.selectionModel.addListSelectionListener { e ->
     if (!e.valueIsAdjusting) {
       textArea.append("column first, last: ${e.firstIndex}, ${e.lastIndex}\n")
-      val m = e.source as ListSelectionModel
-      val asi = m.anchorSelectionIndex
-      val lsi = m.leadSelectionIndex
-      textArea.append("column anchor->lead: $asi->$lsi\n")
+      (e.source as? ListSelectionModel)?.also {
+        val msg = "column anchor->lead: ${it.anchorSelectionIndex}->${it.leadSelectionIndex}\n"
+        textArea.append(msg)
+      }
       textArea.caretPosition = textArea.document.length
     }
   }
