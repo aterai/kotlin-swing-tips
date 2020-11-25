@@ -13,11 +13,11 @@ fun makeUI() = JDesktopPane().also {
 private fun addFrame(desktop: JDesktopPane, idx: Int) {
   val titleAlignment = if (idx == 0) "CENTER" else "LEADING"
   val frame = JInternalFrame("title: $titleAlignment", true, true, true, true)
-  val ui = frame.ui as BasicInternalFrameUI
-  val titleBar = ui.northPane
-  val d = UIDefaults()
-  d["InternalFrame:InternalFrameTitlePane.titleAlignment"] = titleAlignment
-  titleBar.putClientProperty("Nimbus.Overrides", d)
+  (frame.ui as? BasicInternalFrameUI)?.northPane?.also {
+    val d = UIDefaults()
+    d["InternalFrame:InternalFrameTitlePane.titleAlignment"] = titleAlignment
+    it.putClientProperty("Nimbus.Overrides", d)
+  }
   frame.add(makePanel())
   frame.setSize(240, 100)
   frame.isVisible = true
