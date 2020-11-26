@@ -27,9 +27,9 @@ fun makeUI(): Component {
     }
   }
   combo1.addItemListener { e ->
-    if (e.stateChange == ItemEvent.SELECTED) {
-      val idx = (e.itemSelectable as JComboBox<*>).selectedIndex
-      combo2.model = DefaultComboBoxModel(arrays[idx])
+    val c = e.itemSelectable
+    if (e.stateChange == ItemEvent.SELECTED && c is JComboBox<*>) {
+      combo2.model = DefaultComboBoxModel(arrays[c.selectedIndex])
       combo2.selectedIndex = -1
     }
   }
