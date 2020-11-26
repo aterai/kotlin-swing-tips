@@ -15,7 +15,6 @@ import java.util.Date
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.JSpinner.DateEditor
 import javax.swing.JSpinner.DefaultEditor
-import javax.swing.text.DefaultFormatter
 import javax.swing.text.DefaultFormatterFactory
 import javax.swing.text.InternationalFormatter
 
@@ -174,10 +173,11 @@ private class LocalDateTimeEditor(spinner: JSpinner, dateFormatPattern: String?)
   }
 
   init {
-    require(spinner.model is SpinnerLocalDateTimeModel) { "model not a SpinnerLocalDateTimeModel" }
+    val m = spinner.model
+    require(m is SpinnerLocalDateTimeModel) { "model not a SpinnerLocalDateTimeModel" }
     dateTimeFormatter = DateTimeFormatter.ofPattern(dateFormatPattern)
-    model = spinner.model as SpinnerLocalDateTimeModel
-    val formatter: DefaultFormatter = LocalDateTimeFormatter()
+    model = m
+    val formatter = LocalDateTimeFormatter()
     EventQueue.invokeLater {
       formatter.valueClass = LocalDateTime::class.java
       val ftf = textField
