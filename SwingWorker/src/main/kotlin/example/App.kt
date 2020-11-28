@@ -135,10 +135,9 @@ private class ProgressListener(private val progressBar: JProgressBar) : Property
       println("progress: DISPOSE_ON_CLOSE")
       source.cancel(true)
     }
-    val strPropertyName = e.propertyName
-    if ("progress" == strPropertyName) {
+    if ("progress" == e.propertyName) {
       progressBar.isIndeterminate = false
-      progressBar.value = e.newValue as Int
+      progressBar.value = e.newValue as? Int ?: 0
     }
   }
 }
