@@ -33,13 +33,12 @@ fun makeTable(model: TableModel) = object : JTable(model) {
     return c
   }
 
-  override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int): Component {
-    val c = super.prepareRenderer(renderer, row, column)
-    val isChecked = model.getValueAt(convertRowIndexToModel(row), BOOLEAN_COLUMN) as Boolean
-    c.foreground = foreground
-    c.background = if (isChecked) Color.ORANGE else background
-    return c
-  }
+  override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int) =
+    super.prepareRenderer(renderer, row, column).also {
+      val b = model.getValueAt(convertRowIndexToModel(row), BOOLEAN_COLUMN) as? Boolean
+      it.background = if (b == true) Color.ORANGE else background
+      it.foreground = foreground
+    }
 }
 
 fun makeUI(): Component {
