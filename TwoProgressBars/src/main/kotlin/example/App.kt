@@ -76,8 +76,8 @@ private class ProgressTask : BackgroundTask() {
     }
     chunks.forEach {
       when (it.componentType) {
-        ComponentType.TOTAL -> bar1.value = it.value as Int
-        ComponentType.FILE -> bar2.value = it.value as Int
+        ComponentType.TOTAL -> bar1.value = it.value as? Int ?: 0
+        ComponentType.FILE -> bar2.value = it.value as? Int ?: 0
         ComponentType.LOG -> logger.append(it.value.toString())
       }
     }
