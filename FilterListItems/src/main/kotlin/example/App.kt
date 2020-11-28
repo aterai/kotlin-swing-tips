@@ -107,7 +107,7 @@ private class SelectedImageFilter : RGBImageFilter() {
 
 private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   private val renderer = JPanel(BorderLayout())
-  private val icon = JLabel(null as Icon?, SwingConstants.CENTER)
+  private val icon = JLabel(null, null, SwingConstants.CENTER)
   private val label = JLabel("", SwingConstants.CENTER)
   private val focusBorder = UIManager.getBorder("List.focusCellHighlightBorder")
   private val noFocusBorder: Border
