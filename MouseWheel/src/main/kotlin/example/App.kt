@@ -11,25 +11,30 @@ fun makeUI(): Component {
   slider.paintTicks = true
   slider.paintLabels = true
   slider.addChangeListener { e ->
-    val source = e.source as JSlider
-    spinner.value = source.value * 10
+    (e.source as? JSlider)?.also {
+      spinner.value = it.value * 10
+    }
   }
   slider.addMouseWheelListener { e ->
-    val source = e.component as JSlider
-    slider.value = source.value - e.wheelRotation
+    (e.source as? JSlider)?.also {
+      slider.value = it.value - e.wheelRotation
+    }
   }
   spinner.addChangeListener { e ->
-    val source = e.source as JSpinner
-    val newValue = source.value as Int
-    slider.value = newValue / 10
+    (e.source as? JSpinner)?.also {
+      val iv = it.value as? Int ?: 0
+      slider.value = iv / 10
+    }
   }
   spinner.addMouseWheelListener { e ->
-    val source = e.component as JSpinner
-    val model = source.model as SpinnerNumberModel
-    val oldValue = source.value as Int
-    val intValue = oldValue - (e.preciseWheelRotation * model.stepSize.toInt()).toInt()
-    if (intValue in model.minimum..model.maximum) {
-      source.value = intValue
+    (e.component as? JSpinner)?.also {
+      (it.model as? SpinnerNumberModel)?.also { m ->
+        val iv = it.value as? Int ?: 0
+        val v = iv - (e.preciseWheelRotation * m.stepSize.toInt()).toInt()
+        if (v in m.minimum..m.maximum) {
+          it.value = v
+        }
+      }
     }
   }
 
