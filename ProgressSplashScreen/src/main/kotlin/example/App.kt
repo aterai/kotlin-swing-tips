@@ -64,7 +64,7 @@ fun main() {
   }
   worker.addPropertyChangeListener { e ->
     if ("progress" == e.propertyName) {
-      progress.value = (e.newValue as? Int ?: 0)
+      progress.value = e.newValue as? Int ?: 0
     }
   }
   worker.execute()
