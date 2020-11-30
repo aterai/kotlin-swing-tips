@@ -11,7 +11,8 @@ fun makeUI(): Component {
   val editor1 = JTextPane()
   editor1.font = font
   editor1.text = "Default\n$TEST"
-  val editor2: JTextPane = object : JTextPane() {
+
+  val editor2 = object : JTextPane() {
     private val rect = Rectangle()
     private var fontSize = 0f
     override fun doLayout() {
@@ -26,10 +27,12 @@ fun makeUI(): Component {
   }
   editor2.font = font
   editor2.text = "doLayout + deriveFont\n$TEST"
+
   val sp = JSplitPane(JSplitPane.VERTICAL_SPLIT)
   sp.topComponent = editor1
   sp.bottomComponent = editor2
   sp.resizeWeight = .5
+
   return JPanel(BorderLayout()).also {
     it.add(sp)
     it.preferredSize = Dimension(320, 240)
