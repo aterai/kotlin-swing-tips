@@ -50,14 +50,14 @@ private class BigDecimalSpinnerModel(
   override fun getNextValue() = incrValue2(+1)
 
   private fun incrValue2(dir: Int): Number? {
-    val value = BigDecimal.valueOf(number as Double)
-    val stepSize = BigDecimal.valueOf(stepSize as Double)
+    val value = BigDecimal.valueOf(number.toDouble())
+    val stepSize = BigDecimal.valueOf(stepSize.toDouble())
     val newValue = if (dir > 0) value.add(stepSize) else value.subtract(stepSize)
-    val maximum = BigDecimal.valueOf(maximum as Double)
+    val maximum = BigDecimal.valueOf(maximum as? Double ?: 0.0)
     if (maximum < newValue) {
       return null
     }
-    val minimum = BigDecimal.valueOf(minimum as Double)
+    val minimum = BigDecimal.valueOf(minimum as? Double ?: 0.0)
     return if (minimum > newValue) null else newValue
   }
 }
