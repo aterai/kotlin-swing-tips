@@ -26,10 +26,10 @@ private fun createMenuBar(): JMenuBar {
 }
 
 private fun makePopupMenu(): JPopupMenu {
-  val menu: JMenu = TransparentMenu("Test")
+  val menu = TransparentMenu("Test")
   menu.add("Undo")
   menu.add("Redo")
-  val popup: JPopupMenu = TranslucentPopupMenu()
+  val popup = TranslucentPopupMenu()
   popup.add(menu)
   popup.addSeparator()
   popup.add("Cut")
@@ -40,14 +40,14 @@ private fun makePopupMenu(): JPopupMenu {
 }
 
 private fun createMenu(key: String): JMenu {
-  val menu: JMenu = TransparentMenu(key)
+  val menu = TransparentMenu(key)
   menu.isOpaque = false // Motif lnf
-  val sub: JMenu = TransparentMenu("Submenu")
+  val sub = TransparentMenu("Submenu")
   sub.add("JMenuItem")
-  sub.add("Looooooooooooooooooooong")
+  sub.add("L${"o".repeat(20)}ng")
   menu.add(sub)
-  menu.add("dummy1")
-  menu.add("dummy2")
+  menu.add("JMenuItem1")
+  menu.add("JMenuItem12")
   return menu
 }
 
@@ -95,8 +95,8 @@ private class TranslucentPopupMenu : JPopupMenu() {
 
   companion object {
     private val ALPHA_ZERO = Color(0x0, true)
-    private val POPUP_BACK: Paint = Color(250, 250, 250, 200)
-    private val POPUP_LEFT: Paint = Color(230, 230, 230, 200)
+    private val POPUP_BACK = Color(250, 250, 250, 200)
+    private val POPUP_LEFT = Color(230, 230, 230, 200)
     private const val LEFT_WIDTH = 24
   }
 }
@@ -155,10 +155,7 @@ private class TransparentMenu(title: String?) : JMenu(title) {
     popup.insert(JPopupMenu.Separator(), index)
   }
 
-  override fun isPopupMenuVisible(): Boolean {
-    val popup = ensurePopupMenuCreated2()
-    return popup.isVisible
-  }
+  override fun isPopupMenuVisible() = ensurePopupMenuCreated2().isVisible
 }
 
 private class TranslucentPopupFactory : PopupFactory() {

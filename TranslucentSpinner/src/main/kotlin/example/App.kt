@@ -6,16 +6,6 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.JSpinner.DefaultEditor
 
 private val TEXTURE = TextureUtils.createCheckerTexture(4, Color(0xEE_EE_EE))
-private fun configureSpinnerButtons(comp: Container, d: UIDefaults) {
-  for (c in comp.components) {
-    val name = c.name
-    if (c is JButton && name?.endsWith("Button") == true) {
-      c.putClientProperty("Nimbus.Overrides", d)
-    } else if (c is Container) {
-      configureSpinnerButtons(c, d)
-    }
-  }
-}
 
 fun makeUI(): Component {
   val d = UIDefaults()
@@ -23,6 +13,7 @@ fun makeUI(): Component {
     g.color = Color(100, 100, 100, 100)
     g.fillRect(0, 0, w, h)
   }
+
   val painter2 = Painter<Component> { g, _, w, h ->
     g.color = Color(100, 200, 200, 100)
     g.fillRect(0, 0, w, h)
@@ -30,12 +21,12 @@ fun makeUI(): Component {
   d["Spinner:Panel:\"Spinner.formattedTextField\"[Enabled].backgroundPainter"] = painter1
   d["Spinner:Panel:\"Spinner.formattedTextField\"[Focused].backgroundPainter"] = painter2
   d["Spinner:Panel:\"Spinner.formattedTextField\"[Selected].backgroundPainter"] = painter2
-  // d.put("Spinner:Panel:\"Spinner.formattedTextField\"[Focused+Selected].backgroundPainter", painter2);
-  // d.put("Spinner:Panel:\"Spinner.formattedTextField\"[Disabled].backgroundPainter", painter);
+
   val painter3 = Painter<Component> { g, _, w, h ->
     g.color = Color(100, 100, 200, 100)
     g.fillRect(0, 0, w, h)
   }
+
   val painter4 = Painter<Component> { g, _, w, h ->
     g.color = Color(120, 120, 120, 100)
     g.fillRect(0, 0, w, h)
@@ -52,14 +43,16 @@ fun makeUI(): Component {
   d["Spinner:\"Spinner.nextButton\"[Focused].backgroundPainter"] = painter3
   d["Spinner:\"Spinner.nextButton\"[MouseOver].backgroundPainter"] = painter3
   d["Spinner:\"Spinner.nextButton\"[Pressed].backgroundPainter"] = painter4
+
   val model = SpinnerNumberModel(0, 0, 100, 5)
   val spinner1 = JSpinner(model)
   (spinner1.editor as? DefaultEditor)?.textField?.putClientProperty("Nimbus.Overrides", d)
   configureSpinnerButtons(spinner1, d)
-  val spinner2: JSpinner = object : JSpinner(model) {
+
+  val spinner2 = object : JSpinner(model) {
     override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
-      g2.paint = Color(0x64FF0000, true)
+      g2.paint = Color(0x64_FF_00_00, true)
       g2.fillRect(0, 0, width, height)
       g2.dispose()
       super.paintComponent(g)
@@ -68,11 +61,13 @@ fun makeUI(): Component {
   spinner2.isOpaque = false
   spinner2.editor.isOpaque = false
   (spinner2.editor as? DefaultEditor)?.textField?.isOpaque = false
+
   val p = JPanel(GridLayout(0, 1, 20, 20))
   p.isOpaque = false
   p.add(JSpinner(model))
   p.add(spinner1)
   p.add(spinner2)
+
   val pp = object : JPanel(BorderLayout()) {
     public override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
@@ -85,6 +80,17 @@ fun makeUI(): Component {
   pp.border = BorderFactory.createEmptyBorder(20, 10, 10, 10)
   pp.preferredSize = Dimension(320, 240)
   return pp
+}
+
+private fun configureSpinnerButtons(comp: Container, d: UIDefaults) {
+  for (c in comp.components) {
+    val name = c.name
+    if (c is JButton && name?.endsWith("Button") == true) {
+      c.putClientProperty("Nimbus.Overrides", d)
+    } else if (c is Container) {
+      configureSpinnerButtons(c, d)
+    }
+  }
 }
 
 private object TextureUtils {
