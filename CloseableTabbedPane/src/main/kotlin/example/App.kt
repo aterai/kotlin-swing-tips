@@ -8,7 +8,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.LayerUI
 
 fun makeUI(): Component {
-  val tabbedPane0: JTabbedPane = CloseableTabbedPane()
+  val tabbedPane0 = CloseableTabbedPane()
   val tabbedPane1 = JTabbedPane()
   listOf(tabbedPane0, tabbedPane1).forEach {
     it.addTab("1111111111111111111111111", JLabel("111"))

@@ -27,13 +27,13 @@ private fun makeLabel(): JLabel {
 }
 
 fun makeUI(): Component {
-  val p1: JPanel = TestPanel()
+  val p1 = TestPanel()
   p1.layout = BoxLayout(p1, BoxLayout.X_AXIS)
   p1.add(Box.createHorizontalGlue())
   p1.add(makeLabel())
   p1.add(Box.createHorizontalGlue())
 
-  val p2: JPanel = TestPanel()
+  val p2 = TestPanel()
   p2.layout = BoxLayout(p2, BoxLayout.Y_AXIS)
   p2.add(Box.createVerticalGlue())
   p2.add(makeLabel())
