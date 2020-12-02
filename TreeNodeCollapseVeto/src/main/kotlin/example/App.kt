@@ -15,7 +15,7 @@ fun makeUI() = JPanel(GridLayout(1, 2, 5, 5)).also {
 }
 
 private fun makeTree(): JTree {
-  val emptyIcon: Icon = EmptyIcon()
+  val emptyIcon = EmptyIcon()
   UIManager.put("Tree.expandedIcon", IconUIResource(emptyIcon))
   UIManager.put("Tree.collapsedIcon", IconUIResource(emptyIcon))
 

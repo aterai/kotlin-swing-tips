@@ -98,8 +98,8 @@ private class WavyLineSeparator(orientation: Int = SwingConstants.HORIZONTAL) : 
 
   companion object {
     private const val ICON_WIDTH = 3
-    private val WAVY_HORIZONTAL_ICON: Icon = WavyLineIcon()
-    private val WAVY_VERTICAL_ICON: Icon = WavyLineIcon(SwingConstants.VERTICAL)
+    private val WAVY_HORIZONTAL_ICON = WavyLineIcon()
+    private val WAVY_VERTICAL_ICON = WavyLineIcon(SwingConstants.VERTICAL)
   }
 }
 
