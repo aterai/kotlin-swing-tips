@@ -6,7 +6,6 @@ import java.awt.event.MouseEvent
 import java.awt.event.WindowEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.MouseInputAdapter
-import javax.swing.event.MouseInputListener
 import javax.swing.plaf.LayerUI
 import javax.swing.plaf.basic.BasicComboBoxUI
 
@@ -82,7 +81,7 @@ fun makeFrame(str: String): JFrame {
   }
   title.add(close, BorderLayout.EAST)
 
-  val rwl: MouseInputListener = ResizeWindowListener()
+  val rwl = ResizeWindowListener()
   listOf(left, right, top, bottom, topLeft, topRight, bottomLeft, bottomRight).forEach {
     it.addMouseListener(rwl)
     it.addMouseMotionListener(rwl)

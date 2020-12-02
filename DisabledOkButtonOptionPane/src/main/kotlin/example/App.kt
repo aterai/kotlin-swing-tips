@@ -30,7 +30,7 @@ private fun makeButton1(log: JTextArea): JButton {
   val field1 = JTextField()
   val button1 = JButton("show")
   button1.addActionListener {
-    val p1: Component = log.rootPane
+    val p1 = log.rootPane
     val ret = JOptionPane.showConfirmDialog(
       p1,
       field1,
@@ -100,7 +100,7 @@ private fun makeButton2(log: JTextArea): JButton {
 
   val button2 = JButton("show")
   button2.addActionListener {
-    val p2: Component = log.rootPane
+    val p2 = log.rootPane
     EventQueue.invokeLater {
       val b = field2.rootPane.defaultButton
       if (b != null && field2.text.isEmpty()) {
