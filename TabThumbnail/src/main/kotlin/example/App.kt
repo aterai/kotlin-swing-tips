@@ -11,7 +11,7 @@ fun makeUI(): Component {
   ToolTipManager.sharedInstance().dismissDelay = Int.MAX_VALUE
   val cl = Thread.currentThread().contextClassLoader
   val icon = ImageIcon(cl.getResource("example/wi0124-48.png"))
-  val tabbedPane: JTabbedPane = TabThumbnailTabbedPane()
+  val tabbedPane = TabThumbnailTabbedPane()
   tabbedPane.addTab("wi0124-48.png", null, JLabel(icon), "wi0124-48")
   addImageTab(tabbedPane, cl.getResource("example/tokeidai.jpg"))
   addImageTab(tabbedPane, cl.getResource("example/CRW_3857_JFR.jpg"))
