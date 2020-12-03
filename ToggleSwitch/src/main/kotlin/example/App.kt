@@ -31,7 +31,7 @@ fun makeUI(): Component {
 }
 
 private fun makeToggleSlider(d: UIDefaults?): JSlider {
-  val slider: JSlider = object : JSlider(0, 1, 0) {
+  val slider = object : JSlider(0, 1, 0) {
     override fun getPreferredSize(): Dimension {
       return Dimension(100, 40)
     }
