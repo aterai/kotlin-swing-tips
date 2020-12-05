@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.border.Border
 import javax.swing.plaf.InsetsUIResource
 
 private val log = JTextArea()
@@ -16,7 +15,7 @@ fun makeUI(): Component {
 
   val field2 = JTextField("2222222222222")
   val b1 = BorderFactory.createEmptyBorder(0, 20, 0, 0)
-  val b2: Border = BorderFactory.createCompoundBorder(field2.border, b1)
+  val b2 = BorderFactory.createCompoundBorder(field2.border, b1)
   field2.border = b2
 
   val box = Box.createVerticalBox()
