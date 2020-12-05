@@ -76,7 +76,6 @@ private class RollOverList<E>(model: ListModel<E>) : JList<E>(model) {
   }
 }
 
-
 fun main() {
   EventQueue.invokeLater {
     runCatching {
