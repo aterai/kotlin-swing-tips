@@ -38,8 +38,8 @@ private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()
 }
 
 private class LineStyleTreeUI : BasicTreeUI() {
-  private val horizontalLine: Stroke = BasicStroke(2f)
-  private val verticalLine: Stroke = BasicStroke(5f)
+  private val horizontalLine = BasicStroke(2f)
+  private val verticalLine = BasicStroke(5f)
 
   public override fun getHashColor(): Color = Color.BLUE
 
