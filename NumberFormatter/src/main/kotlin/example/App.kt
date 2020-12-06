@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.text.DecimalFormat
-import java.text.NumberFormat
 import java.text.ParseException
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.JSpinner.DefaultEditor
@@ -72,7 +71,7 @@ private class WarningSpinner(model: SpinnerNumberModel) : JSpinner(model) {
 
   companion object {
     private fun makeFFactory(m: SpinnerNumberModel): DefaultFormatterFactory {
-      val format: NumberFormat = DecimalFormat("####0")
+      val format = DecimalFormat("####0")
       val editFormatter: NumberFormatter = object : NumberFormatter(format) {
         @Throws(ParseException::class)
         override fun stringToValue(text: String): Any {
