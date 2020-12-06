@@ -7,11 +7,10 @@ import javax.swing.text.AttributeSet
 import javax.swing.text.BadLocationException
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.text.DocumentFilter
-import javax.swing.text.Highlighter.HighlightPainter
 
 fun makeUI(): Component {
   val maskRange = 2
-  val highlightPainter: HighlightPainter = DefaultHighlightPainter(Color.GRAY)
+  val highlightPainter = DefaultHighlightPainter(Color.GRAY)
   val textArea = JTextArea()
   textArea.text = "1234567890987654321\naaa bbb ccc ddd eee\n1234567890\n1234567890987654321"
   (textArea.document as? AbstractDocument)?.documentFilter = NonEditableLineDocumentFilter(maskRange)
