@@ -114,7 +114,7 @@ private object TextureUtil {
   fun makeImageTexture(): TexturePaint {
     val path = "example/unkaku_w.png"
     val url = Thread.currentThread().contextClassLoader.getResource(path)
-    val bi = url?.openStream().use(ImageIO::read) ?: makeMissingImage()
+    val bi = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
     return TexturePaint(bi, Rectangle(bi.width, bi.height))
   }
 

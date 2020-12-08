@@ -8,7 +8,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 fun makeUI(): Component {
   val path = "example/16x16.png"
   val url = Thread.currentThread().contextClassLoader.getResource(path)
-  val bi = url?.openStream().use(ImageIO::read) ?: makeMissingImage()
+  val bi = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
   val texture = TexturePaint(bi, Rectangle(bi.width, bi.height))
 
   val p = object : JPanel(BorderLayout()) {

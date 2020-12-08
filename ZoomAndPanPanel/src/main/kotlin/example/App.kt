@@ -12,7 +12,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 fun makeUI(): Component {
   val path = "example/CRW_3857_JFR.jpg"
   val url = Thread.currentThread().contextClassLoader.getResource(path)
-  val img = url?.openStream().use(ImageIO::read) ?: makeMissingImage()
+  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(ZoomAndPanePanel(img)))
     it.preferredSize = Dimension(320, 240)

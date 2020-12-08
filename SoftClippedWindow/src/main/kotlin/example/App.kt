@@ -11,7 +11,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 fun makeUI(): Component {
   val path = "example/test.jpg"
   val url = Thread.currentThread().contextClassLoader.getResource(path)
-  val image = url?.openStream().use(ImageIO::read) ?: makeMissingImage()
+  val image = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
   val width = image.width
   val height = image.height
   val shape = RoundRectangle2D.Float(0f, 0f, width / 2f, height / 2f, 50f, 50f)

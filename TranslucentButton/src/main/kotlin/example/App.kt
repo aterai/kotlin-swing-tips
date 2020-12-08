@@ -37,7 +37,7 @@ private fun makeButton(title: String): AbstractButton {
 }
 
 private fun getFilteredImage(url: URL?): BufferedImage {
-  val img = url?.openStream().use(ImageIO::read) ?: makeMissingImage()
+  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
   val dest = BufferedImage(img.width, img.height, BufferedImage.TYPE_INT_RGB)
   val b = ByteArray(256)
   for (i in b.indices) {

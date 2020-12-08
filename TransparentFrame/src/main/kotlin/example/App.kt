@@ -39,7 +39,7 @@ fun makeUI(): Component {
 
   val path = "example/tokeidai.jpg"
   val url = Thread.currentThread().contextClassLoader.getResource(path)
-  val image = url?.openStream().use(ImageIO::read) ?: makeMissingImage()
+  val image = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
   desktop.border = CentredBackgroundBorder(image)
 
   return JPanel(BorderLayout()).also {
