@@ -10,7 +10,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 fun makeUI(): Component {
   val path = "example/duke.gif"
   val url = Thread.currentThread().contextClassLoader.getResource(path)
-  val bi = url?.openStream().use(ImageIO::read) ?: makeMissingImage()
+  val bi = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
   val icon = makeLabelIcon(bi)
   icon.cursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR)
   icon.size = icon.preferredSize

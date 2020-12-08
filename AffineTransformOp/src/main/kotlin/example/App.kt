@@ -15,7 +15,7 @@ fun makeUI(): Component {
   box.add(JLabel("Flip: "))
 
   val url = Thread.currentThread().contextClassLoader.getResource("example/test.jpg")
-  val image = url?.openStream().use(ImageIO::read) ?: makeMissingImage()
+  val image = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
 
   val p = object : JPanel() {
     override fun paintComponent(g: Graphics) {
