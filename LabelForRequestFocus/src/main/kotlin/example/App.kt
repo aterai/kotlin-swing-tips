@@ -15,19 +15,19 @@ fun makeUI(): Component {
   val label1 = JLabel("Mail Address:", SwingConstants.RIGHT)
   label1.addMouseListener(focusHandler)
   label1.setDisplayedMnemonic('M')
-  val textField1: Component = JTextField(12)
+  val textField1 = JTextField(12)
   label1.labelFor = textField1
 
   val label2 = JLabel("Password:", SwingConstants.RIGHT)
   label2.addMouseListener(focusHandler)
   label2.setDisplayedMnemonic('P')
-  val textField2: Component = JPasswordField(12)
+  val textField2 = JPasswordField(12)
   label2.labelFor = textField2
 
   val label3 = JLabel("TextArea:", SwingConstants.RIGHT)
   label3.addMouseListener(focusHandler)
   label3.setDisplayedMnemonic('T')
-  val textField3: Component = JTextArea(6, 12)
+  val textField3 = JTextArea(6, 12)
   label3.labelFor = textField3
 
   val p = JPanel(GridBagLayout())
