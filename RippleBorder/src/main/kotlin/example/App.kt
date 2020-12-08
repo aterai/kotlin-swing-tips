@@ -30,12 +30,30 @@ private fun makeLabel(str: String) = JLabel(str).also {
 private class RippleBorder(c: Component, size: Int) : EmptyBorder(size, size, size, size) {
   private val animator: Timer
   private var count = 1f
+
+  init {
+    animator = Timer(80) {
+      c.repaint()
+      count += .9f
+    }
+    c.addMouseListener(object : MouseAdapter() {
+      override fun mouseEntered(e: MouseEvent) {
+        e.component.foreground = Color.RED
+        animator.start()
+      }
+
+      override fun mouseExited(e: MouseEvent) {
+        e.component.foreground = Color.BLACK
+      }
+    })
+  }
+
   override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, w: Int, h: Int) {
     if (!animator.isRunning) {
       super.paintBorder(c, g, x, y, w, h)
       return
     }
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.paint = Color.WHITE
     var a = 1f / count
     val shouldBeHidden = .12f - a > 1.0e-2
@@ -55,23 +73,6 @@ private class RippleBorder(c: Component, size: Int) : EmptyBorder(size, size, si
       animator.stop()
     }
     g2.dispose()
-  }
-
-  init {
-    animator = Timer(80) {
-      c.repaint()
-      count += .9f
-    }
-    c.addMouseListener(object : MouseAdapter() {
-      override fun mouseEntered(e: MouseEvent) {
-        e.component.foreground = Color.RED
-        animator.start()
-      }
-
-      override fun mouseExited(e: MouseEvent) {
-        e.component.foreground = Color.BLACK
-      }
-    })
   }
 }
 
