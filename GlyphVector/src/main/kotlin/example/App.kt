@@ -15,9 +15,9 @@ private const val TEXT = "あいうえお かきくけこ さしすせそ たち
 fun makeUI(): Component {
   val lbl1 = JLabel(TEXT)
   lbl1.border = makeTitledColorBorder("JLabel", Color.YELLOW)
-  val lbl2: JLabel = WrappedLabel(TEXT)
+  val lbl2 = WrappedLabel(TEXT)
   lbl2.border = makeTitledColorBorder("GlyphVector", Color.GREEN)
-  val lbl3: JLabel = WrappingLabel(TEXT)
+  val lbl3 = WrappingLabel(TEXT)
   lbl3.border = makeTitledColorBorder("LineBreakMeasurer", Color.CYAN)
   val lbl4 = JTextArea(TEXT)
   lbl4.border = makeTitledColorBorder("JTextArea", Color.ORANGE)
