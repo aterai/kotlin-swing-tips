@@ -119,7 +119,7 @@ private class MenuToggleButton(text: String? = "", icon: Icon? = null) : JToggle
   }
 
   companion object {
-    private val ARROW_ICON: Icon = MenuArrowIcon()
+    private val ARROW_ICON = MenuArrowIcon()
   }
 }
 
