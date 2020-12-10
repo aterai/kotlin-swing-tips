@@ -153,7 +153,7 @@ private class DefaultResizableBorder : ResizableBorder, SwingConstants {
       }
     );
 
-    val cursor: Cursor = Cursor.getPredefinedCursor(cursor)
+    val cursor = Cursor.getPredefinedCursor(cursor)
 
     fun getPoint(r: Rectangle) = location.apply(r)
   }
