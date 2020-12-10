@@ -16,7 +16,7 @@ fun makeUI(): Component {
       val renderer = getCellRenderer()
       setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
         renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus).also {
-          (it as? JLabel)?.toolTipText = value?.toString()
+          (it as? JComponent)?.toolTipText = value?.toString()
         }
       }
     }
@@ -94,7 +94,7 @@ private class TooltipTree(model: TreeModel) : JTree(model) {
     val renderer = getCellRenderer()
     setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
       renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus).also {
-        (it as? JLabel)?.toolTipText = value?.toString()
+        (it as? JComponent)?.toolTipText = value?.toString()
       }
     }
   }
