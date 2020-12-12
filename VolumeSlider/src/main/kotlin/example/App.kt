@@ -14,11 +14,11 @@ fun makeUI(): Component {
 
   val slider2 = JSlider(0, 100, 0)
   slider2.ui = object : MetalSliderUI() {
-    override fun paintHorizontalLabel(g: Graphics, v: Int, l: Component) {
+    override fun paintHorizontalLabel(g: Graphics, value: Int, label: Component) {
       // [JDK-5099681] Windows/Motif L&F: JSlider should use foreground color for ticks. - Java Bug System
       // https://bugs.openjdk.java.net/browse/JDK-5099681
-      (l as? JLabel)?.foreground = Color.GREEN
-      super.paintHorizontalLabel(g, v, l)
+      label.foreground = Color.GREEN
+      super.paintHorizontalLabel(g, value, label)
     }
   }
   // slider2.setBackground(Color.BLACK);
