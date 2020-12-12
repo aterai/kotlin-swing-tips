@@ -122,7 +122,7 @@ private class HeaderRenderer(header: JTableHeader, private val pop: JPopupMenu) 
   ): Component {
     val r = table.tableHeader.defaultRenderer
     val c = r.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
-    (c as? JLabel)?.also {
+    (c as? JComponent)?.also {
       icon = MenuArrowIcon()
       it.removeAll()
       val mci = table.convertColumnIndexToModel(column)
