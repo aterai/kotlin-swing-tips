@@ -52,7 +52,7 @@ private class AlternateRowColorComboBox<E>(model: ComboBoxModel<E>) : JComboBox<
     super.setEditable(flag)
     if (flag) {
       val editor = getEditor().editorComponent
-      (editor as? JTextField)?.isOpaque = true
+      (editor as? JComponent)?.isOpaque = true
       editor.background = getAlternateRowColor(selectedIndex)
     }
   }
@@ -64,7 +64,7 @@ private class AlternateRowColorComboBox<E>(model: ComboBoxModel<E>) : JComboBox<
     val renderer = getRenderer()
     setRenderer { list, value, index, isSelected, cellHasFocus ->
       renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
-        (it as? JLabel)?.isOpaque = true
+        (it as? JComponent)?.isOpaque = true
         if (!isSelected) {
           it.background = getAlternateRowColor(index)
         }
@@ -75,7 +75,7 @@ private class AlternateRowColorComboBox<E>(model: ComboBoxModel<E>) : JComboBox<
       if (e.stateChange == ItemEvent.SELECTED && cb is JComboBox<*>) {
         val rc = getAlternateRowColor(cb.selectedIndex)
         if (cb.isEditable) {
-          (cb.editor.editorComponent as? JTextField)?.background = rc
+          cb.editor.editorComponent.background = rc
         } else {
           cb.background = rc
         }
@@ -83,7 +83,7 @@ private class AlternateRowColorComboBox<E>(model: ComboBoxModel<E>) : JComboBox<
     }
     addItemListener(itemColorListener)
     EventQueue.invokeLater {
-      (getEditor().editorComponent as? JTextField)?.also {
+      (getEditor().editorComponent as? JComponent)?.also {
         it.isOpaque = true
         it.background = getAlternateRowColor(selectedIndex)
       }
