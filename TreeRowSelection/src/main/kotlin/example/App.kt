@@ -50,7 +50,7 @@ private class RowSelectionTree : JTree() {
     setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
       renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus).also {
         it.background = if (selected) SELECTED_COLOR else tree.background
-        (it as? JLabel)?.isOpaque = true
+        (it as? JComponent)?.isOpaque = true
       }
     }
     isOpaque = false
