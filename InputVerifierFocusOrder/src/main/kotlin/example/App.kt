@@ -3,61 +3,82 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
-import java.util.Calendar
-import java.util.Date
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.JSpinner.DateEditor
+import javax.swing.text.JTextComponent
+
+private const val MAX_LEN = 6
 
 fun makeUI(): Component {
-  val dateFormat = "yyyy/MM/dd"
-  val date = Date()
-  val spinner1 = JSpinner(SpinnerDateModel(date, date, null, Calendar.DAY_OF_MONTH))
-  spinner1.editor = DateEditor(spinner1, dateFormat)
+  val button = JButton("Next")
+  button.isEnabled = false
 
-  val today = Calendar.getInstance()
-  today.clear(Calendar.MILLISECOND)
-  today.clear(Calendar.SECOND)
-  today.clear(Calendar.MINUTE)
-  today[Calendar.HOUR_OF_DAY] = 0
+  val p = JPanel(BorderLayout())
+  p.focusTraversalPolicy = object : LayoutFocusTraversalPolicy() {
+    override fun getComponentAfter(focusCycleRoot: Container, cmp: Component): Component {
+      println("getComponentAfter")
+      button.isEnabled = isAllValid(p)
+      return super.getComponentAfter(focusCycleRoot, cmp)
+    }
 
-  val start = today.time
-  println(date)
-  println(start)
-
-  val spinner2 = JSpinner(SpinnerDateModel(date, start, null, Calendar.DAY_OF_MONTH))
-  spinner2.editor = DateEditor(spinner2, dateFormat)
-
-  val spinner3 = JSpinner(SpinnerDateModel(date, start, null, Calendar.DAY_OF_MONTH))
-  val editor = DateEditor(spinner3, dateFormat)
-  spinner3.editor = editor
-  val fl3 = object : FocusAdapter() {
-    override fun focusGained(e: FocusEvent) {
-      EventQueue.invokeLater {
-        val i = dateFormat.lastIndexOf("dd")
-        editor.textField.select(i, i + 2)
-      }
+    override fun getComponentBefore(focusCycleRoot: Container, cmp: Component): Component {
+      println("getComponentBefore")
+      button.isEnabled = isAllValid(p)
+      return super.getComponentBefore(focusCycleRoot, cmp)
     }
   }
-  editor.textField.addFocusListener(fl3)
+  p.isFocusCycleRoot = true
 
-  return JPanel(GridLayout(3, 1)).also {
-    it.add(makeTitledPanel("Calendar.DAY_OF_MONTH", spinner1))
-    it.add(makeTitledPanel("min: set(Calendar.HOUR_OF_DAY, 0)", spinner2))
-    it.add(makeTitledPanel("JSpinner.DateEditor + FocusListener", spinner3))
-    it.border = BorderFactory.createEmptyBorder(10, 5, 10, 5)
-    it.preferredSize = Dimension(320, 240)
+  val check = JCheckBox("use FocusTraversalPolicy", true)
+  check.addActionListener { e -> p.isFocusCycleRoot = (e.source as? JCheckBox)?.isSelected == true }
+
+  val box = Box.createVerticalBox()
+  box.add(check)
+  box.border = BorderFactory.createTitledBorder("Max text length: $MAX_LEN")
+  listOf(makeTextField(button, p), makeTextField(button, p)).forEach {
+    box.add(Box.createVerticalStrut(10))
+    box.add(it)
   }
+
+  val pnl = JPanel(FlowLayout(FlowLayout.RIGHT))
+  pnl.add(button)
+
+  p.add(box, BorderLayout.NORTH)
+  p.add(pnl, BorderLayout.SOUTH)
+  p.preferredSize = Dimension(320, 240)
+  return p
 }
 
-private fun makeTitledPanel(title: String, cmp: Component): Component {
-  val p = JPanel(GridBagLayout())
-  p.border = BorderFactory.createTitledBorder(title)
-  val c = GridBagConstraints()
-  c.weightx = 1.0
-  c.fill = GridBagConstraints.HORIZONTAL
-  c.insets = Insets(5, 5, 5, 5)
-  p.add(cmp, c)
-  return p
+fun isAllValid(c: Container) = c.components
+  .filterIsInstance<JTextField>()
+  .all { it.inputVerifier.verify(it) }
+
+fun makeTextField(button: JButton, root: Container): JTextField {
+  val textField = JTextField(24)
+  textField.inputVerifier = object : InputVerifier() {
+    override fun verify(c: JComponent): Boolean {
+      if (c is JTextComponent) {
+        val str = c.text.trim()
+        return str.isNotEmpty() && MAX_LEN - str.length >= 0
+      }
+      return false
+    }
+
+    override fun shouldYieldFocus(input: JComponent): Boolean {
+      println("shouldYieldFocus")
+      button.isEnabled = isAllValid(root)
+      return super.shouldYieldFocus(input)
+    }
+  }
+  textField.addFocusListener(object : FocusAdapter() {
+    override fun focusLost(e: FocusEvent) {
+      if (e.isTemporary) {
+        return
+      }
+      println("focusLost")
+      button.isEnabled = isAllValid(root)
+    }
+  })
+  return textField
 }
 
 fun main() {
