@@ -70,7 +70,7 @@ private class TooltipListCellRenderer<E> : ListCellRenderer<E> {
     cellHasFocus: Boolean
   ): Component {
     val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-    (c as? JLabel)?.toolTipText = value?.toString()
+    (c as? JComponent)?.toolTipText = value?.toString()
     return c
   }
 }
