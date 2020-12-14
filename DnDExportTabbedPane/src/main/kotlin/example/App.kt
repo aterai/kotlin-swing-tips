@@ -321,9 +321,9 @@ private class TabTransferHandler : TransferHandler() {
   private val localObjectFlavor = DataFlavor(DnDTabData::class.java, "DnDTabData")
   private var source: DnDTabbedPane? = null
 
-  override fun createTransferable(c: JComponent): Transferable? {
+  override fun createTransferable(c: JComponent): Transferable {
     println("createTransferable")
-    val src: DnDTabbedPane? = c as? DnDTabbedPane
+    val src = c as? DnDTabbedPane
     source = src
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(localObjectFlavor)
