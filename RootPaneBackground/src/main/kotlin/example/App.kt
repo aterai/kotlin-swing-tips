@@ -30,7 +30,7 @@ fun makeUI(): Component {
   frame.isOpaque = false
   frame.isVisible = true
 
-  val desktop: JDesktopPane = object : JDesktopPane() {
+  val desktop = object : JDesktopPane() {
     override fun updateUI() {
       super.updateUI()
       isOpaque = false
@@ -74,7 +74,7 @@ private object ImageUtil {
     val menu = TransparentMenu(key)
     menu.foreground = Color(200, 200, 200)
     menu.isOpaque = false // Motif lnf
-    val sub: JMenu = TransparentMenu("Submenu")
+    val sub = TransparentMenu("Submenu")
     sub.add("JMenuItem")
     sub.add("L${"o".repeat(20)}ng")
     menu.add(sub)
@@ -152,8 +152,10 @@ private class TranslucentPopupMenu : JPopupMenu() {
     (c as? JComponent)?.isOpaque = false
   }
 
-  override fun add(menuItem: JMenuItem): JMenuItem = super.add(menuItem).also {
-    menuItem.isOpaque = false
+  override fun add(menuItem: JMenuItem): JMenuItem {
+    return super.add(menuItem).also {
+      it.isOpaque = false
+    }
   }
 
   override fun paintComponent(g: Graphics) {
