@@ -13,7 +13,7 @@ import kotlin.math.sin
 fun makeUI(): Component {
   val pf1 = JPasswordField()
   pf1.echoChar = 'Åö'
-  val pf2: JPasswordField = object : JPasswordField() {
+  val pf2 = object : JPasswordField() {
     override fun updateUI() {
       super.updateUI()
       setUI(MyPasswordFieldUI.createUI(this))
