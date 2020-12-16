@@ -62,7 +62,7 @@ fun makeUI(): Component {
 }
 
 private fun makeProgressBar1(model: BoundedRangeModel): Component {
-  val progressBar: JProgressBar = TextLabelProgressBar(model)
+  val progressBar = TextLabelProgressBar(model)
   progressBar.orientation = SwingConstants.VERTICAL
   progressBar.isStringPainted = false
   return progressBar
