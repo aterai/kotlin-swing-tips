@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.text.MutableAttributeSet
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
 import javax.swing.text.TabSet
@@ -19,7 +18,7 @@ fun makeUI(): Component {
     tabs[j] = TabStop((j + 1) * tabWidth)
   }
   val tabSet = TabSet(tabs)
-  val attributes: MutableAttributeSet = textPane.getStyle(StyleContext.DEFAULT_STYLE)
+  val attributes = textPane.getStyle(StyleContext.DEFAULT_STYLE)
   StyleConstants.setTabSet(attributes, tabSet)
   textPane.setParagraphAttributes(attributes, false)
   textPane.text = "JTextPane\n0123\n\t4567\n\t\t89ab\n"
