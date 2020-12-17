@@ -8,7 +8,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.Border
 
 private val tabs = JTabbedPane()
-private val panel: Component = JLabel("Preferences")
+private val panel = JLabel("Preferences")
 
 fun makeUI(): Component {
   val check = JCheckBox("Details")
@@ -42,7 +42,7 @@ private class TabbedPaneWithCompBorder(
   private val checkBox: JCheckBox,
   private val tab: JTabbedPane
 ) : Border, MouseListener, SwingConstants {
-  private val rubberStamp: Container = JPanel()
+  private val rubberStamp = JPanel()
   private val rect = Rectangle()
 
   override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
