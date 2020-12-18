@@ -41,7 +41,7 @@ private class PressAndHoldButton(icon: Icon?) : JButton(icon) {
   }
 
   companion object {
-    private val ARROW_ICON: Icon = MenuArrowIcon()
+    private val ARROW_ICON = MenuArrowIcon()
   }
 }
 
