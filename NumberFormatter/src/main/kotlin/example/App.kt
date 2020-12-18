@@ -72,7 +72,7 @@ private class WarningSpinner(model: SpinnerNumberModel) : JSpinner(model) {
   companion object {
     private fun makeFFactory(m: SpinnerNumberModel): DefaultFormatterFactory {
       val format = DecimalFormat("####0")
-      val editFormatter: NumberFormatter = object : NumberFormatter(format) {
+      val editFormatter = object : NumberFormatter(format) {
         @Throws(ParseException::class)
         override fun stringToValue(text: String): Any {
           runCatching {
