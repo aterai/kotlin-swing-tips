@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.border.Border
 
 fun makeUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
@@ -39,9 +38,9 @@ fun makeUI(): Component {
       }
       tip.component = this
       val b1 = tip.border
-      val b2: Border = BorderFactory.createMatteBorder(0, icon.iconWidth, 0, 0, icon)
+      val b2 = BorderFactory.createMatteBorder(0, icon.iconWidth, 0, 0, icon)
       val b3 = BorderFactory.createEmptyBorder(1, 1, 1, 1)
-      val b4: Border = BorderFactory.createCompoundBorder(b3, b2)
+      val b4 = BorderFactory.createCompoundBorder(b3, b2)
       tip.border = BorderFactory.createCompoundBorder(b1, b4)
       return tip
     }
@@ -49,7 +48,7 @@ fun makeUI(): Component {
   l2.toolTipText = "Test2"
 
   val l3 = JLabel("ToolTip icon using HTML tags")
-  l3.toolTipText = "<html><img src='%s'>Test3</img></html>".format(url)
+  l3.toolTipText = "<html><img src='$url'>Test3</img></html>"
 
   val box = Box.createVerticalBox()
   box.add(l1)
