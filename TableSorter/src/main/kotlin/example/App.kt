@@ -79,8 +79,7 @@ private class TableSorter() : AbstractTableModel() {
   @Transient
   private var tableModelListener: TableModelListener
 
-  val isSorting: Boolean
-    get() = sortingColumns.isNotEmpty()
+  val isSorting get() = sortingColumns.isNotEmpty()
 
   init {
     mouseListener = MouseHandler()
@@ -233,6 +232,7 @@ private class TableSorter() : AbstractTableModel() {
         val column = directive.column
         val o1 = tableModel?.getValueAt(row1, column)
         val o2 = tableModel?.getValueAt(row2, column)
+        @Suppress("UNCHECKED_CAST")
         val comparator = getComparator(column) as? Comparator<in Any?>
         val comparison = Objects.compare(o1, o2, Comparator.nullsFirst(comparator))
         if (comparison != 0) {
