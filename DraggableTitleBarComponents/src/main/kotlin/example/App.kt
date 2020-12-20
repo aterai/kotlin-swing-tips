@@ -38,8 +38,7 @@ private val resizePanel = object : JPanel(BorderLayout()) {
     g2.dispose()
   }
 }
-val mainContentPane: Container
-  get() = contentPanel
+val mainContentPane get() = contentPanel
 
 fun makeUI() = JPanel(BorderLayout()).also {
   it.add(JScrollPane(JTree()))
