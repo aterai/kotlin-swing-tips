@@ -234,8 +234,7 @@ private enum class Side(private val cursor: Int, private val width: Int, private
     }
   };
 
-  val size: Dimension
-    get() = Dimension(width, height)
+  val size get() = Dimension(width, height)
 
   fun getCursor(): Cursor = Cursor.getPredefinedCursor(cursor)
 
