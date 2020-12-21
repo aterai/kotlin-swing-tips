@@ -53,11 +53,9 @@ fun makeUI(): Component {
 }
 
 private open class BadgeIcon(val value: Int, val badgeFgc: Color, val badgeBgc: Color) : Icon {
-  val text: String
-    get() = if (value > 999) "1K+" else value.toString()
+  val text get() = if (value > 999) "1K+" else value.toString()
 
-  val badgeShape: Shape
-    get() = Ellipse2D.Double(0.0, 0.0, iconWidth - 1.0, iconHeight - 1.0)
+  val badgeShape get() = Ellipse2D.Double(0.0, 0.0, iconWidth - 1.0, iconHeight - 1.0)
 
   open fun getTextShape(g2: Graphics2D): Shape {
     val txt = text
