@@ -33,7 +33,7 @@ private fun makeTabbedPane(tabbedPane: JTabbedPane): JTabbedPane {
 private class CloseableTabbedPane : JTabbedPane() {
   private var eventListenerList: EventListenerList? = null
   private var handler: CloseableTabIconHandler? = null
-  val headerViewPosition: Point
+  val headerViewPosition
     get() = components
       .filterIsInstance<JViewport>()
       .firstOrNull { "TabbedPane.scrollableViewport" == it.name }
@@ -288,8 +288,7 @@ private class CloseTabIcon(private val fileIcon: Icon?) : Icon {
   private val height = 16
   var mouseOver = false
   var mousePressed = false
-  val bounds: Rectangle
-    get() = Rectangle(xp, yp, width, height)
+  val bounds get() = Rectangle(xp, yp, width, height)
 
   override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
     xp = x
@@ -431,8 +430,7 @@ private class JTabbedPaneWithCloseIcons : JTabbedPane() {
 private class SimpleCloseTabIcon(private val fileIcon: Icon?) : Icon {
   private val dim = Dimension(16, 16)
   private val pos = Point()
-  val bounds: Rectangle
-    get() = Rectangle(pos, dim)
+  val bounds get() = Rectangle(pos, dim)
 
   override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
     pos.setLocation(x, y)
