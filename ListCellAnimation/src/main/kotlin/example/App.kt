@@ -42,8 +42,7 @@ private class AnimeListCellRenderer<E>(
   private val animator: Timer
   private var running = false
   private var animateIndex = -1
-  private val isAnimatingCell: Boolean
-    get() = running && animateIndex == list.selectedIndex
+  private val isAnimatingCell get() = running && animateIndex == list.selectedIndex
 
   init {
     animator = Timer(80) {
