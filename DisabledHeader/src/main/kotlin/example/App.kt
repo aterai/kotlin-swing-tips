@@ -5,7 +5,6 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.io.Serializable
 import java.util.Objects
-import java.util.concurrent.ConcurrentHashMap
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.JTableHeader
@@ -117,8 +116,9 @@ private class ColumnComparator(val index: Int, val ascending: Boolean) : Compara
 private class SortButtonRenderer(private val header: JTableHeader) : JButton(), TableCellRenderer {
   private var iconSize: Dimension? = null
   private var pushedColumn = -1
-  private val state: MutableMap<Int, Int> = ConcurrentHashMap()
-  private val dirMap: MutableMap<Int, Boolean> = ConcurrentHashMap()
+  private val state = mutableMapOf<Int, Int>()
+  private val dirMap = mutableMapOf<Int, Boolean>()
+
   override fun updateUI() {
     super.updateUI()
     val i = UIManager.getIcon("Table.ascendingSortIcon")
@@ -136,7 +136,7 @@ private class SortButtonRenderer(private val header: JTableHeader) : JButton(), 
     row: Int,
     column: Int
   ): Component {
-    text = Objects.toString(value, "")
+    text = value?.toString() ?: ""
     icon = iconSize?.let { EmptyIcon(it) }
     val modelColumn = table.convertColumnIndexToModel(column)
     if (!isEnabledAt(modelColumn)) {
@@ -145,12 +145,10 @@ private class SortButtonRenderer(private val header: JTableHeader) : JButton(), 
     }
     getModel().isEnabled = true
     val iv = state[modelColumn]
-    if (iv != null) {
-      if (iv == DOWN) {
-        icon = UIManager.getIcon("Table.ascendingSortIcon")
-      } else if (iv == UP) {
-        icon = UIManager.getIcon("Table.descendingSortIcon")
-      }
+    if (iv == DOWN) {
+      icon = UIManager.getIcon("Table.ascendingSortIcon")
+    } else if (iv == UP) {
+      icon = UIManager.getIcon("Table.descendingSortIcon")
     }
     val isPressed = modelColumn == pushedColumn
     getModel().isPressed = isPressed
