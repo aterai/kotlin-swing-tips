@@ -147,12 +147,11 @@ private class BindingMapModel : DefaultTableModel() {
 }
 
 private data class Binding(private val focusType: Int, val actionName: String, val keyDescription: String) {
-  val focusTypeName: String
-    get() = when (focusType) {
-      JComponent.WHEN_FOCUSED -> "WHEN_FOCUSED"
-      JComponent.WHEN_IN_FOCUSED_WINDOW -> "WHEN_IN_FOCUSED_WINDOW"
-      else -> "WHEN_ANCESTOR_OF_FOCUSED_COMPONENT"
-    }
+  val focusTypeName get() = when (focusType) {
+    JComponent.WHEN_FOCUSED -> "WHEN_FOCUSED"
+    JComponent.WHEN_IN_FOCUSED_WINDOW -> "WHEN_IN_FOCUSED_WINDOW"
+    else -> "WHEN_ANCESTOR_OF_FOCUSED_COMPONENT"
+  }
 }
 
 fun main() {
