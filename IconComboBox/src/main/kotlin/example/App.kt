@@ -4,7 +4,7 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import kotlin.math.roundToInt
 
-fun makeUI(): Component {
+fun makeUI() = JPanel(BorderLayout()).also {
   val cl = Thread.currentThread().contextClassLoader
   val image = ImageIcon(cl.getResource("example/16x16.png"))
 
@@ -72,8 +72,8 @@ private fun makeTitledPanel(title: String, vararg list: Component): Component {
   return p
 }
 
-fun initIconComboBorder1(comboBox: JComboBox<*>, icon: ImageIcon) {
-  val comp = comboBox.editor.editorComponent as? JTextField ?: return
+private fun initIconComboBorder1(comboBox: JComboBox<*>, icon: ImageIcon) {
+  val c = comboBox.editor.editorComponent as? JTextField ?: return
   val wrappedIcon = object : Icon {
     override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
       val g2 = g.create() as? Graphics2D ?: return
@@ -86,15 +86,15 @@ fun initIconComboBorder1(comboBox: JComboBox<*>, icon: ImageIcon) {
 
     override fun getIconWidth() = icon.iconWidth
 
-    override fun getIconHeight() = comp.preferredSize.height - comp.insets.top - comp.insets.bottom
+    override fun getIconHeight() = c.preferredSize.height - c.insets.top - c.insets.bottom
   }
   val b1 = BorderFactory.createMatteBorder(0, icon.iconWidth, 0, 0, wrappedIcon)
   val b2 = BorderFactory.createEmptyBorder(0, 5, 0, 0)
   val b3 = BorderFactory.createCompoundBorder(b1, b2)
-  comp.border = BorderFactory.createCompoundBorder(comp.border, b3)
+  c.border = BorderFactory.createCompoundBorder(c.border, b3)
 }
 
-fun initIconComboBorder2(comboBox: JComboBox<*>, icon: ImageIcon) {
+private fun initIconComboBorder2(comboBox: JComboBox<*>, icon: ImageIcon) {
   EventQueue.invokeLater {
     val margin = BorderFactory.createEmptyBorder(0, icon.iconWidth + 2, 0, 2)
     (comboBox.editor.editorComponent as? JTextField)?.also {
@@ -112,9 +112,9 @@ fun initIconComboBorder2(comboBox: JComboBox<*>, icon: ImageIcon) {
   }
 }
 
-fun <E> initComboBoxRenderer(combo: JComboBox<E>, icon: ImageIcon?) {
+private fun <E> initComboBoxRenderer(combo: JComboBox<E>, icon: ImageIcon) {
   val renderer = combo.renderer
-  combo.renderer = ListCellRenderer { list, value, index, isSelected, cellHasFocus ->
+  combo.setRenderer { list, value, index, isSelected, cellHasFocus ->
     renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
       (it as? JLabel)?.icon = icon
     }
