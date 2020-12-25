@@ -8,7 +8,6 @@ import javax.swing.plaf.basic.BasicButtonUI
 import javax.swing.plaf.basic.BasicHTML
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.JTableHeader
-import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableColumn
 import javax.swing.table.TableColumnModel
 import javax.swing.text.View
@@ -101,7 +100,7 @@ private class TableHeaderTabbedPane : JPanel(BorderLayout()) {
     header.addMouseListener(handler)
     header.addMouseMotionListener(handler)
     val l = TabButton()
-    header.defaultRenderer = TableCellRenderer { _, value, _, _, _, column ->
+    header.setDefaultRenderer { _, value, _, _, _, column ->
       l.also {
         it.text = value?.toString() ?: ""
         it.isSelected = value == selectedColumn || column == rolloverColumn
