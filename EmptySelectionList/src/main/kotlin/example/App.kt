@@ -15,7 +15,7 @@ fun makeUI(): Component {
 
   val list3 = JList(makeModel())
   val renderer = list3.cellRenderer
-  list3.cellRenderer = ListCellRenderer { list, value, index, _, _ ->
+  list3.setCellRenderer { list, value, index, _, _ ->
     renderer.getListCellRendererComponent(list, value, index, false, false)
   }
 
