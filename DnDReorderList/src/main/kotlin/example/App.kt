@@ -33,10 +33,10 @@ private fun makeList(): JList<Color> {
       cellRenderer = null
       super.updateUI()
       val renderer = cellRenderer
-      cellRenderer = ListCellRenderer { list, value, index, isSelected, cellHasFocus ->
-        val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-        c.foreground = value
-        c
+      setCellRenderer { list, value, index, isSelected, cellHasFocus ->
+        renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
+          it.foreground = value
+        }
       }
       // setVisibleRowCount(-1)
       selectionModel.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
