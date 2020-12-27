@@ -17,16 +17,16 @@ fun makeUI(): Component {
       cellRenderer = null
       super.updateUI()
       val r = cellRenderer
-      cellRenderer = ListCellRenderer { list, value, index, isSelected, cellHasFocus ->
-        val c = r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-        if (isSelected) {
-          c.foreground = list.selectionForeground
-          c.background = list.selectionBackground
-        } else {
-          c.foreground = list.foreground
-          c.background = if (index % 2 == 0) EVEN_BACKGROUND else list.background
+      setCellRenderer { list, value, index, isSelected, cellHasFocus ->
+        r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
+          if (isSelected) {
+            it.foreground = list.selectionForeground
+            it.background = list.selectionBackground
+          } else {
+            it.foreground = list.foreground
+            it.background = if (index % 2 == 0) EVEN_BACKGROUND else list.background
+          }
         }
-        c
       }
     }
   }
