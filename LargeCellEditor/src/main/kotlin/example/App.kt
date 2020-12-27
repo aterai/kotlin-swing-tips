@@ -206,7 +206,7 @@ private class EditorFromList(model: ListModel<IconItem>) : JList<IconItem>(model
     layoutOrientation = HORIZONTAL_WRAP
     visibleRowCount = 0
     val selectedColor = Color(0xC8_C8_FF)
-    cellRenderer = ListCellRenderer { _, value, index, isSelected, _ ->
+    setCellRenderer { _, value, index, isSelected, _ ->
       JLabel().also {
         it.isOpaque = true
         it.horizontalAlignment = SwingConstants.CENTER
