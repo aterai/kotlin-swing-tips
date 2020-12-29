@@ -146,11 +146,10 @@ private class FileListTable(model: TableModel) : JTable(model) {
     autoCreateRowSorter = true
     fillsViewportHeight = true
 
-    val r = getDefaultRenderer(Any::class.java)
-    val renderer = TableCellRenderer { table, value, _, _, row, column ->
-      r.getTableCellRendererComponent(table, value, false, false, row, column)
+    val renderer = getDefaultRenderer(Any::class.java)
+    setDefaultRenderer(Any::class.java) { table, value, _, _, row, column ->
+      renderer.getTableCellRendererComponent(table, value, false, false, row, column)
     }
-    setDefaultRenderer(Any::class.java, renderer)
 
     var col = getColumnModel().getColumn(0)
     col.cellRenderer = FileNameRenderer(this)
