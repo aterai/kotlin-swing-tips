@@ -67,7 +67,8 @@ private fun initSlider(slider: JSlider) {
       val tickSpacing = if (hasMinorTickSpacing) it.minorTickSpacing else it.majorTickSpacing
       val v = it.value - e.wheelRotation * tickSpacing
       val m = it.model
-      it.value = minOf(m.maximum, maxOf(v, m.minimum))
+      // it.value = minOf(m.maximum, maxOf(v, m.minimum))
+      it.value = v.coerceIn(m.minimum, m.maximum)
     }
   }
   if (slider.ui is WindowsSliderUI) {
