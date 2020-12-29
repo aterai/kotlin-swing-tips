@@ -107,9 +107,8 @@ class GradientPalletProgressBarUI : BasicProgressBarUI() {
 
   private fun getColorFromPallet(pallet: IntArray, x: Float): Color {
     require(x in 0f..1f) { "Parameter outside of expected range" }
-    val i = (pallet.size * x).toInt()
     val max = pallet.size - 1
-    val index = minOf(maxOf(i, 0), max)
+    val index = (pallet.size * x).toInt().coerceIn(0, max)
     return Color(pallet[index] and 0x00_FF_FF_FF)
     // translucent
     // val pix = pallet[index] & 0x00_FF_FF_FF | (0x64 << 24)
