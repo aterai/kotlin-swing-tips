@@ -87,7 +87,7 @@ fun makeUI(): Component {
   }
   table.autoCreateRowSorter = true
   val renderer = JLabel()
-  componentChoices.renderer = ListCellRenderer { list, value, index, isSelected, _ ->
+  componentChoices.setRenderer { list, value, index, isSelected, _ ->
     renderer.isOpaque = index >= 0
     renderer.text = value.javaClass.name
     if (isSelected) {
