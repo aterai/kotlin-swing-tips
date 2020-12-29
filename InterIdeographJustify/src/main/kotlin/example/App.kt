@@ -40,7 +40,7 @@ fun makeUI(): Component {
   val renderer = JustifiedLabel()
   table.columnModel.getColumn(0).also {
     it.minWidth = 100
-    it.cellRenderer = TableCellRenderer { _, value, _, _, _, _ ->
+    it.setCellRenderer { _, value, _, _, _, _ ->
       renderer.also { lbl ->
         lbl.border = BorderFactory.createEmptyBorder(0, 5, 0, 5)
         lbl.text = value?.toString() ?: ""
