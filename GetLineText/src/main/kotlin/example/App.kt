@@ -48,7 +48,8 @@ private class LineNumberView(private val textArea: JTextArea) : JComponent() {
   private val componentWidth: Int
     get() {
       val lineCount = textArea.lineCount
-      val maxDigits = 3.coerceAtLeast(lineCount.toString().length)
+      // val maxDigits = 3.coerceAtLeast(lineCount.toString().length)
+      val maxDigits = maxOf(3, lineCount.toString().length)
       val i = insets
       return maxDigits * fontMetrics.stringWidth("0") + i.left + i.right
     }
