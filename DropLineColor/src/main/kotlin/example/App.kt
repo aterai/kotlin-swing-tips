@@ -200,7 +200,8 @@ private class ListItemTransferHandler : TransferHandler() {
     val listModel = target.model as DefaultListModel<Any>
     val max = listModel.size
     // var index = minOf(maxOf(0, dl.getIndex()), max)
-    var index = dl.index.takeIf { it in 0 until max } ?: max
+    // var index = dl.index.coerceIn(0, max)
+    var index = dl.index.takeIf { it in 0 until max } ?: max // -1 -> max
     addIndex = index
     val values = runCatching {
       info.transferable.getTransferData(localObjectFlavor) as? List<*>
