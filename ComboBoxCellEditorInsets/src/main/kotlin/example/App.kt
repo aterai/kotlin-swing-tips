@@ -26,12 +26,30 @@ fun makeUI(): Component {
       super.updateUI()
       setRowHeight(36)
       autoCreateRowSorter = true
-      var column = getColumnModel().getColumn(0)
-      column.cellRenderer = makeComboTableCellRenderer(makeComboBox())
-      column.cellEditor = DefaultCellEditor(makeComboBox())
-      column = getColumnModel().getColumn(1)
-      column.cellRenderer = ComboBoxCellRenderer()
-      column.cellEditor = ComboBoxCellEditor()
+      val combo = makeComboBox()
+      getColumnModel().getColumn(0).also {
+        it.setCellRenderer { table, value, isSelected, _, _, _ ->
+          combo.removeAllItems()
+          (combo.editor.editorComponent as? JComponent)?.also { editor ->
+            editor.isOpaque = true
+            if (isSelected) {
+              editor.foreground = table.selectionForeground
+              editor.background = table.selectionBackground
+            } else {
+              editor.foreground = table.foreground
+              editor.background = table.background
+            }
+            combo.addItem(value?.toString() ?: "")
+          }
+          combo
+        }
+        it.cellEditor = DefaultCellEditor(makeComboBox())
+      }
+
+      getColumnModel().getColumn(1).also {
+        it.cellRenderer = ComboBoxCellRenderer()
+        it.cellEditor = ComboBoxCellEditor()
+      }
     }
   }
 
@@ -47,23 +65,6 @@ fun makeComboBox(): JComboBox<String> {
   c.isEditable = true
   c.border = BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10), c.border)
   return c
-}
-
-fun makeComboTableCellRenderer(combo: JComboBox<String>) = TableCellRenderer { table, value, isSelected, _, _, _ ->
-  combo.also {
-    it.removeAllItems()
-    (it.editor.editorComponent as? JComponent)?.also { editor ->
-      editor.isOpaque = true
-      if (isSelected) {
-        editor.foreground = table.selectionForeground
-        editor.background = table.selectionBackground
-      } else {
-        editor.foreground = table.foreground
-        editor.background = table.background
-      }
-      it.addItem(value?.toString() ?: "")
-    }
-  }
 }
 
 private class ComboBoxPanel : JPanel(GridBagLayout()) {
