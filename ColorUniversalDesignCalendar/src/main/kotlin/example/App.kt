@@ -111,8 +111,8 @@ private class CalendarTableRenderer : TableCellRenderer {
   }
 
   private fun getDayOfWeekColor(dow: DayOfWeek) = when (dow) {
-    DayOfWeek.SUNDAY -> Color(0xFFDCDC)
-    DayOfWeek.SATURDAY -> Color(0xDCDCFF)
+    DayOfWeek.SUNDAY -> Color(0xFF_DC_DC)
+    DayOfWeek.SATURDAY -> Color(0xDC_DC_FF)
     else -> Color.WHITE
   }
 }
