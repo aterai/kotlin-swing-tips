@@ -10,19 +10,11 @@ fun makeUI(): Component {
   val table0 = makeTable()
   (table0.tableHeader.defaultRenderer as? JLabel)?.horizontalAlignment = SwingConstants.CENTER
 
+  val renderer = DefaultTableCellRenderer()
   val table1 = makeTable()
-  table1.tableHeader.defaultRenderer = object : DefaultTableCellRenderer() {
-    override fun getTableCellRendererComponent(
-      table: JTable,
-      value: Any?,
-      isSelected: Boolean,
-      hasFocus: Boolean,
-      row: Int,
-      column: Int
-    ): Component {
-      super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
-      horizontalAlignment = SwingConstants.CENTER
-      return this
+  table1.tableHeader.setDefaultRenderer { table, value, isSelected, hasFocus, row, column ->
+    (renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column) as? JLabel)?.also {
+      it.horizontalAlignment = SwingConstants.CENTER
     }
   }
 
