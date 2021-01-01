@@ -27,36 +27,20 @@ fun makeUI(): Component {
   table.intercellSpacing = Dimension(0, 1)
   table.border = BorderFactory.createEmptyBorder()
 
-  val renderer = object : DefaultTableCellRenderer() {
-    private val border = CellBorder(2, 2, 1, 2)
-    override fun getTableCellRendererComponent(
-      table: JTable,
-      value: Any?,
-      isSelected: Boolean,
-      hasFocus: Boolean,
-      row: Int,
-      column: Int
-    ): Component {
-      val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+  val border = CellBorder(2, 2, 1, 2)
+  val renderer = DefaultTableCellRenderer()
+  table.setDefaultRenderer(Any::class.java) { tbl, value, isSelected, hasFocus, row, column ->
+    renderer.getTableCellRendererComponent(tbl, value, isSelected, hasFocus, row, column).also {
       border.setStartCell(column == 0)
-      (c as? JComponent)?.border = border
-      return c
+      (it as? JComponent)?.border = border
     }
   }
-  table.setDefaultRenderer(Any::class.java, renderer)
 
   val header = table.tableHeader
   header.border = BorderFactory.createEmptyBorder()
-  header.defaultRenderer = object : DefaultTableCellRenderer() {
-    private val border = CellBorder(2, 2, 1, 2)
-    override fun getTableCellRendererComponent(
-      table: JTable,
-      value: Any?,
-      isSelected: Boolean,
-      hasFocus: Boolean,
-      row: Int,
-      column: Int
-    ) = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column).also {
+  val headerRenderer = DefaultTableCellRenderer()
+  header.setDefaultRenderer { tbl, value, isSelected, hasFocus, row, column ->
+    headerRenderer.getTableCellRendererComponent(tbl, value, isSelected, hasFocus, row, column).also {
       if (it is JLabel) {
         border.setStartCell(column == 0)
         it.horizontalAlignment = SwingConstants.CENTER
@@ -111,9 +95,13 @@ private class CellBorder(top: Int, left: Int, bottom: Int, right: Int) : EmptyBo
   ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
-    g2.paint = (SwingUtilities.getAncestorOfClass(JTable::class.java, c) as? JTable)?.gridColor
-      ?: (SwingUtilities.getAncestorOfClass(JTableHeader::class.java, c) as? JTableHeader)?.table?.gridColor
-      ?: Color.RED
+    val c1 = SwingUtilities.getAncestorOfClass(JTable::class.java, c)
+    val c2 = SwingUtilities.getAncestorOfClass(JTableHeader::class.java, c)
+    g2.paint = when {
+      c1 is JTable -> c1.gridColor
+      c2 is JTableHeader && c2.table != null -> c2.table.gridColor
+      else -> Color.RED
+    }
     if (!isStartCell()) {
       g2.drawLine(0, 0, 0, h - 1) // Left line
     }
