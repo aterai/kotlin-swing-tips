@@ -30,12 +30,10 @@ fun makeUI(): Component {
 
   val animator = Timer(50, null)
   animator.addActionListener {
-    if (mode == Crossfade.IN && alpha.get() < 10) {
-      alpha.incrementAndGet()
-    } else if (mode == Crossfade.OUT && alpha.get() > 0) {
-      alpha.decrementAndGet()
-    } else {
-      animator.stop()
+    when {
+      mode == Crossfade.IN && alpha.get() < 10 -> alpha.incrementAndGet()
+      mode == Crossfade.OUT && alpha.get() > 0 -> alpha.decrementAndGet()
+      else -> animator.stop()
     }
     crossfade.repaint()
   }
