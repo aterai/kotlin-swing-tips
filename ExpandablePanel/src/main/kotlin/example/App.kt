@@ -98,16 +98,14 @@ private abstract class AbstractExpansionPanel(title: String?) : JPanel(BorderLay
   private var expansionEvent: ExpansionEvent? = null
   private val scroll = JScrollPane()
   private val button = JButton(title)
-  private var openFlag = false
-  var isExpanded: Boolean
-    get() = openFlag
-    set(flg) {
-      openFlag = flg
+  var isExpanded = false
+    set(openFlag) {
       if (openFlag) {
         add(scroll)
       } else {
         remove(scroll)
       }
+      field = openFlag
     }
 
   init {
