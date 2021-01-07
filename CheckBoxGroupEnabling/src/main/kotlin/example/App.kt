@@ -50,7 +50,7 @@ fun makeUI(): Component {
   val verticalBox = Box.createVerticalBox()
   val map = mutableMapOf<String, Component>()
   val model = tree.model
-  (model.root as? DefaultMutableTreeNode )?.preorderEnumeration()?.toList()
+  (model.root as? DefaultMutableTreeNode)?.preorderEnumeration()?.toList()
     ?.filterIsInstance<DefaultMutableTreeNode>()
     ?.forEach {
       val title = it.userObject?.toString() ?: ""
@@ -94,7 +94,7 @@ private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()
   it.add(c)
 }
 
-private class CheckBoxNode(val text: String, val selected: Boolean, val enabled: Boolean) {
+private data class CheckBoxNode(val text: String, val selected: Boolean, val enabled: Boolean) {
   override fun toString() = text
 }
 
