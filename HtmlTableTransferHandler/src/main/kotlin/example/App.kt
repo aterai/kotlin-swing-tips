@@ -163,7 +163,7 @@ private class ColorRenderer : DefaultTableCellRenderer() {
     val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     if (value is Color && c is JLabel) {
       c.icon = ColorIcon(value)
-      c.text = String.format("(%d, %d, %d)", value.red, value.green, value.blue)
+      c.text = "(${value.red}, ${value.green}, ${value.blue})"
     }
     return c
   }
@@ -252,7 +252,7 @@ private class HtmlTableTransferHandler : TransferHandler() {
   }
 
   override fun createTransferable(c: JComponent): Transferable? {
-    if (canStartDrag(c) && c is JTable) {
+    return if (canStartDrag(c) && c is JTable) {
       val rows = getSelectedRows(c)
       val cols = getSelectedColumns(c)
       if (rows.isEmpty() || cols.isEmpty()) {
@@ -275,9 +275,10 @@ private class HtmlTableTransferHandler : TransferHandler() {
 
       plainBuf.deleteCharAt(plainBuf.length - 1)
       htmlBuf.append("</table>\n</body>\n</html>")
-      return BasicTransferable(plainBuf.toString(), htmlBuf.toString())
+      BasicTransferable(plainBuf.toString(), htmlBuf.toString())
+    } else {
+      null
     }
-    return null
   }
 
   override fun getSourceActions(c: JComponent) = COPY
@@ -315,30 +316,24 @@ private class BasicTransferable(
   private var plainData: String,
   private var htmlData: String
 ) : Transferable {
-  private lateinit var htmlFlavors: Array<DataFlavor>
-  private lateinit var stringFlavors: Array<DataFlavor>
-  private lateinit var plainFlavors: Array<DataFlavor>
-
-  init {
-    runCatching {
-      htmlFlavors = arrayOf(
-        DataFlavor("text/html;class=java.lang.String"),
-        DataFlavor("text/html;class=java.io.Reader"),
-        DataFlavor("text/html;charset=unicode;class=java.io.InputStream")
-      )
-      plainFlavors = arrayOf(
-        DataFlavor("text/plain;class=java.lang.String"),
-        DataFlavor("text/plain;class=java.io.Reader"),
-        DataFlavor("text/plain;charset=unicode;class=java.io.InputStream")
-      )
-      stringFlavors = arrayOf(
-        DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + ";class=java.lang.String"),
-        DataFlavor.stringFlavor
-      )
-    }.onFailure {
-      println("error initializing javax.swing.plaf.basic.BasicTransferable")
-    }
-  }
+  private val htmlFlavors = arrayOf(
+    DataFlavor("text/html;class=java.lang.String"),
+    DataFlavor("text/html;class=java.io.Reader"),
+    DataFlavor("text/html;charset=unicode;class=java.io.InputStream")
+  )
+  private val plainFlavors = arrayOf(
+    DataFlavor("text/plain;class=java.lang.String"),
+    DataFlavor("text/plain;class=java.io.Reader"),
+    DataFlavor("text/plain;charset=unicode;class=java.io.InputStream")
+  )
+  private val stringFlavors = arrayOf(
+    DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + ";class=java.lang.String"),
+    DataFlavor.stringFlavor
+  )
+  private val getRicherData get() = null
+  private val richerFlavors: Array<DataFlavor> get() = arrayOf()
+  private val isHtmlSupported = true
+  private val isPlainSupported = true
 
   fun getTextCharset(flavor: DataFlavor): String =
     flavor.getParameter("charset") ?: Charset.defaultCharset().name()
@@ -360,30 +355,16 @@ private class BasicTransferable(
   @Throws(UnsupportedFlavorException::class, IOException::class)
   override fun getTransferData(flavor: DataFlavor): Any? {
     return when {
-      isRicherFlavor(flavor) -> getRicherData()
-      isHtmlFlavor(flavor) -> getHtmlTransferData(flavor)
-      isPlainFlavor(flavor) -> getPlaneTransferData(flavor)
-      isStringFlavor(flavor) -> plainData
+      richerFlavors.any { it.equals(flavor) } -> getRicherData
+      htmlFlavors.any { it.equals(flavor) } -> getHtmlTransferData(flavor)
+      plainFlavors.any { it.equals(flavor) } -> getPlaneTransferData(flavor)
+      stringFlavors.any { it.equals(flavor) } -> plainData
       else -> UnsupportedFlavorException(flavor)
     }
   }
 
-  @Throws(IOException::class, UnsupportedFlavorException::class)
-  private fun createInputStream(flavor: DataFlavor, data: String): InputStream {
-    val cs = getTextCharset(flavor) // ?: UnsupportedFlavorException(flavor)
-    return ByteArrayInputStream(data.toByteArray(charset(cs)))
-  }
-
-  fun isRicherFlavor(flavor: DataFlavor?) = richerFlavors.any { it.equals(flavor) }
-
-  private val richerFlavors: Array<DataFlavor>
-    get() = arrayOf()
-
-  private fun getRicherData() = null
-
-  private fun isHtmlFlavor(flavor: DataFlavor?) = htmlFlavors.any { it.equals(flavor) }
-
-  private val isHtmlSupported = true
+  private fun createInputStream(flavor: DataFlavor, data: String) =
+    ByteArrayInputStream(data.toByteArray(charset(getTextCharset(flavor))))
 
   @Throws(IOException::class, UnsupportedFlavorException::class)
   private fun getHtmlTransferData(flavor: DataFlavor): Any = when (flavor.representationClass) {
@@ -393,10 +374,6 @@ private class BasicTransferable(
     else -> UnsupportedFlavorException(flavor)
   }
 
-  private fun isPlainFlavor(flavor: DataFlavor) = plainFlavors.any { it.equals(flavor) }
-
-  private val isPlainSupported = true
-
   @Throws(IOException::class, UnsupportedFlavorException::class)
   fun getPlaneTransferData(flavor: DataFlavor): Any = when (flavor.representationClass) {
     String::class.java -> plainData
@@ -405,7 +382,13 @@ private class BasicTransferable(
     else -> UnsupportedFlavorException(flavor)
   }
 
-  private fun isStringFlavor(flavor: DataFlavor) = stringFlavors.any { it.equals(flavor) }
+  // private fun isRicherFlavor(flavor: DataFlavor) = richerFlavors.any { it.equals(flavor) }
+
+  // private fun isHtmlFlavor(flavor: DataFlavor) = htmlFlavors.any { it.equals(flavor) }
+
+  // private fun isPlainFlavor(flavor: DataFlavor) = plainFlavors.any { it.equals(flavor) }
+
+  // private fun isStringFlavor(flavor: DataFlavor) = stringFlavors.any { it.equals(flavor) }
 }
 
 fun main() {
