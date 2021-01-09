@@ -51,7 +51,7 @@ private class TreeTransferHandler : TransferHandler() {
     val paths = source?.selectionPaths ?: return null // , "SelectionPaths is null")
     val nodes = arrayOfNulls<DefaultMutableTreeNode>(paths.size)
     for (i in paths.indices) {
-      nodes[i] = paths[i].lastPathComponent as DefaultMutableTreeNode
+      nodes[i] = paths[i].lastPathComponent as? DefaultMutableTreeNode
     }
     return object : Transferable {
       override fun getTransferDataFlavors(): Array<DataFlavor> {
@@ -83,13 +83,13 @@ private class TreeTransferHandler : TransferHandler() {
     val nodes = runCatching {
       support.transferable?.getTransferData(FLAVOR) as? Array<DefaultMutableTreeNode>
     }.getOrNull().orEmpty()
-    val dl = support.dropLocation
-    if (dl is JTree.DropLocation) {
+    val dl = support.dropLocation as? JTree.DropLocation
+    val dest = dl?.path
+    val parent = dest?.lastPathComponent
+    val tree = support.component as? JTree
+    val model = tree?.model
+    if (dl != null && model is DefaultTreeModel && parent is DefaultMutableTreeNode) {
       val childIndex = dl.childIndex
-      val dest = dl.path
-      val parent = dest.lastPathComponent as DefaultMutableTreeNode
-      val tree = support.component as JTree
-      val model = tree.model as DefaultTreeModel
       val idx = AtomicInteger(if (childIndex < 0) parent.childCount else childIndex)
       nodes.forEach {
         val clone = DefaultMutableTreeNode(it.userObject)
@@ -105,13 +105,12 @@ private class TreeTransferHandler : TransferHandler() {
   }
 
   override fun exportDone(src: JComponent, data: Transferable, action: Int) {
-    if (action == MOVE && src is JTree) {
-      val model = src.model as DefaultTreeModel
-      val selectionPaths = src.selectionPaths
-      if (selectionPaths != null) {
-        for (path in selectionPaths) {
-          model.removeNodeFromParent(path.lastPathComponent as MutableTreeNode)
-        }
+    val tree = src as? JTree
+    val model = tree?.model
+    val selectionPaths = tree?.selectionPaths
+    if (action == MOVE && model is DefaultTreeModel && selectionPaths != null) {
+      for (path in selectionPaths) {
+        model.removeNodeFromParent(path.lastPathComponent as? MutableTreeNode)
       }
     }
   }
