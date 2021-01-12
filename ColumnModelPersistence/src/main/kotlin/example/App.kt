@@ -60,12 +60,14 @@ fun makeUI(): Component {
       val bytes = text.toByteArray(StandardCharsets.UTF_8)
       XMLDecoder(BufferedInputStream(ByteArrayInputStream(bytes))).use { xd ->
         @Suppress("UNCHECKED_CAST")
-        val keys = xd.readObject() as List<RowSorter.SortKey>
-        val model = xd.readObject() as DefaultTableModel
-        table.model = model
-        table.autoCreateRowSorter = true
-        table.rowSorter.sortKeys = keys
-        table.columnModel = xd.readObject() as? DefaultTableColumnModel
+        val keys = xd.readObject() as? List<RowSorter.SortKey>
+        val model = xd.readObject() as? DefaultTableModel
+        if (keys != null && model != null) {
+          table.model = model
+          table.autoCreateRowSorter = true
+          table.rowSorter.sortKeys = keys
+          table.columnModel = xd.readObject() as? DefaultTableColumnModel
+        }
       }
     }
   }
