@@ -93,11 +93,11 @@ private class ListItemTransferHandler : TransferHandler() {
   override fun importData(info: TransferSupport): Boolean {
     val dl = info.dropLocation
     val target = info.component
-    if (dl !is JList.DropLocation || target !is JList<*>) {
+    @Suppress("UNCHECKED_CAST")
+    val listModel = (target as? JList<Any>)?.model as? DefaultListModel<Any>
+    if (dl !is JList.DropLocation || listModel == null) {
       return false
     }
-    @Suppress("UNCHECKED_CAST")
-    val listModel = target.model as DefaultListModel<Any>
     val max = listModel.size
     // var index = if (dl.index in 0 until max) dl.index else max
     var index = dl.index.takeIf { it in 0 until max } ?: max
