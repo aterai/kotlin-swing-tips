@@ -38,29 +38,7 @@ fun makeUI(): Component {
     worker?.takeUnless { it.isDone }?.cancel(true)
     worker = null
   }
-  openButton.addActionListener {
-    fileChooser.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
-    fileChooser.selectedFile = File(dirCombo.editor.item.toString())
-    val title = "title"
-    when (fileChooser.showOpenDialog(statusPanel.rootPane)) {
-      JFileChooser.CANCEL_OPTION -> println("Cancel")
-      JFileChooser.APPROVE_OPTION -> {
-        val file = fileChooser.selectedFile
-        if (file == null || !file.isDirectory) {
-          val obj = arrayOf("Please select directory.")
-          Toolkit.getDefaultToolkit().beep()
-          JOptionPane.showMessageDialog(statusPanel.rootPane, obj, title, JOptionPane.ERROR_MESSAGE)
-        } else {
-          addItem(dirCombo, file.absolutePath, 4)
-          statusPanel.rootPane.repaint()
-        }
-      }
-      else -> {
-        Toolkit.getDefaultToolkit().beep()
-        JOptionPane.showMessageDialog(statusPanel.rootPane, arrayOf("Error."), title, JOptionPane.ERROR_MESSAGE)
-      }
-    }
-  }
+  initOpenButton()
 
   val box1 = JPanel(BorderLayout(5, 5)).also {
     it.add(JLabel("Search folder:"), BorderLayout.WEST)
@@ -90,6 +68,32 @@ fun makeUI(): Component {
   }
 }
 
+private fun initOpenButton() {
+  openButton.addActionListener {
+    fileChooser.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+    fileChooser.selectedFile = File(dirCombo.editor.item.toString())
+    val title = "title"
+    when (fileChooser.showOpenDialog(statusPanel.rootPane)) {
+      JFileChooser.CANCEL_OPTION -> println("Cancel")
+      JFileChooser.APPROVE_OPTION -> {
+        val file = fileChooser.selectedFile
+        if (file == null || !file.isDirectory) {
+          val obj = arrayOf("Please select directory.")
+          Toolkit.getDefaultToolkit().beep()
+          JOptionPane.showMessageDialog(statusPanel.rootPane, obj, title, JOptionPane.ERROR_MESSAGE)
+        } else {
+          addItem(dirCombo, file.absolutePath, 4)
+          statusPanel.rootPane.repaint()
+        }
+      }
+      else -> {
+        Toolkit.getDefaultToolkit().beep()
+        JOptionPane.showMessageDialog(statusPanel.rootPane, arrayOf("Error."), title, JOptionPane.ERROR_MESSAGE)
+      }
+    }
+  }
+}
+
 private open class FileSearchTask(dir: File) : RecursiveFileSearchTask(dir) {
   override fun process(chunks: List<Message>) {
     if (isCancelled) {
@@ -110,11 +114,15 @@ private open class FileSearchTask(dir: File) : RecursiveFileSearchTask(dir) {
     }
     updateComponentStatus(false)
     appendLine("----------------")
-    val text = if (isCancelled) "Cancelled" else runCatching {
-      get()
-    }.onFailure {
-      Thread.currentThread().interrupt()
-    }.getOrNull() ?: "Interrupted"
+    val text = if (isCancelled) {
+      "Cancelled"
+    } else {
+      runCatching {
+        get()
+      }.onFailure {
+        Thread.currentThread().interrupt()
+      }.getOrNull() ?: "Interrupted"
+    }
     appendLine(text)
   }
 }
@@ -176,20 +184,23 @@ private fun addItem(dirCombo: JComboBox<String>, str: String?, max: Int = 4) {
   dirCombo.isVisible = true
 }
 
-
 private open class RecursiveFileSearchTask(private val dir: File) : SwingWorker<String, Message>() {
   protected var counter = 0
 
   @Throws(InterruptedException::class)
-  override fun doInBackground(): String {
-    if (!dir.exists()) {
-      publish(Message("The directory does not exist.", true))
-      return "Error"
-    }
+  override fun doInBackground() = if (!dir.exists()) {
+    publish(Message("The directory does not exist.", true))
+    "Error"
+  } else {
+    fileSearchInBackground(dir.toPath())
+  }
+
+  @Throws(InterruptedException::class)
+  private fun fileSearchInBackground(path: Path): String {
     val list = mutableListOf<Path>()
     runCatching {
       counter = 0
-      recursiveSearch(dir.toPath(), list)
+      recursiveSearch(path, list)
     }.onFailure {
       publish(Message("The search was canceled", true))
       return "Interrupted1"
@@ -222,7 +233,7 @@ private open class RecursiveFileSearchTask(private val dir: File) : SwingWorker<
       @Throws(IOException::class)
       override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
         if (Thread.interrupted()) {
-          throw IOException()
+          throw IOException("Interrupted2")
         }
         if (attrs.isRegularFile) {
           counter++
