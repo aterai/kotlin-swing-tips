@@ -19,21 +19,23 @@ import javax.swing.table.DefaultTableColumnModel
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.JTableHeader
 
+private val columnNames = arrayOf("A", "B")
+private val data = arrayOf(arrayOf("aaa", "ccc ccc"), arrayOf("bbb", "☀☁☂☃"))
+private val table = JTable(DefaultTableModel(data, columnNames)).also {
+  it.autoCreateRowSorter = true
+  it.tableHeader.componentPopupMenu = TableHeaderPopupMenu()
+}
+private val textArea = JTextArea()
+private val sp = JSplitPane(JSplitPane.VERTICAL_SPLIT).also {
+  it.resizeWeight = .5
+  it.topComponent = JScrollPane(table)
+  it.bottomComponent = JScrollPane(textArea)
+}
+private val encButton = JButton("XMLEncoder")
+private val decButton = JButton("XMLDecoder")
+private val clearButton = JButton("clear")
+
 fun makeUI(): Component {
-  val columnNames = arrayOf("A", "B")
-  val data = arrayOf(arrayOf("aaa", "ccc ccc"), arrayOf("bbb", "☀☁☂☃"))
-  val table = JTable(DefaultTableModel(data, columnNames))
-  table.autoCreateRowSorter = true
-  table.tableHeader.componentPopupMenu = TableHeaderPopupMenu()
-
-  val textArea = JTextArea()
-
-  val sp = JSplitPane(JSplitPane.VERTICAL_SPLIT)
-  sp.resizeWeight = .5
-  sp.topComponent = JScrollPane(table)
-  sp.bottomComponent = JScrollPane(textArea)
-
-  val encButton = JButton("XMLEncoder")
   encButton.addActionListener {
     runCatching {
       val file = File.createTempFile("output", ".xml")
@@ -53,7 +55,6 @@ fun makeUI(): Component {
     }
   }
 
-  val decButton = JButton("XMLDecoder")
   decButton.addActionListener {
     val text = textArea.text
     if (text.isNotEmpty()) {
@@ -72,7 +73,6 @@ fun makeUI(): Component {
     }
   }
 
-  val clearButton = JButton("clear")
   clearButton.addActionListener { table.model = DefaultTableModel() }
 
   val p = JPanel()
