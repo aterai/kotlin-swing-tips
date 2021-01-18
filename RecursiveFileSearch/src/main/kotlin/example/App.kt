@@ -229,7 +229,7 @@ private open class RecursiveFileSearchTask(private val dir: File) : SwingWorker<
 
   @Throws(IOException::class)
   private fun recursiveSearch(dirPath: Path, list: MutableList<Path>) {
-    Files.walkFileTree(dirPath, object : SimpleFileVisitor<Path>() {
+    val visitor = object : SimpleFileVisitor<Path>() {
       @Throws(IOException::class)
       override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
         if (Thread.interrupted()) {
@@ -244,7 +244,8 @@ private open class RecursiveFileSearchTask(private val dir: File) : SwingWorker<
         }
         return FileVisitResult.CONTINUE
       }
-    })
+    }
+    Files.walkFileTree(dirPath, visitor)
   }
 }
 
