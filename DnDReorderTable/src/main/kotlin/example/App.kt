@@ -102,12 +102,12 @@ private class TableRowTransferHandler : TransferHandler() {
   override fun getSourceActions(c: JComponent) = MOVE
 
   override fun importData(info: TransferSupport): Boolean {
-    val dl = info.dropLocation
-    val target = info.component
-    if (dl !is JTable.DropLocation || target !is JTable) {
+    val dl = info.dropLocation as? JTable.DropLocation
+    val target = info.component as? JTable
+    val model = target?.model as? DefaultTableModel
+    if (dl == null || model == null) {
       return false
     }
-    val model = target.model as DefaultTableModel
     val max = model.rowCount
     var index = dl.row.takeIf { it in 0 until max } ?: max
     addIndex = index
