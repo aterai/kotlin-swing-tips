@@ -34,42 +34,29 @@ private fun makeTree(handler: TransferHandler): JTree {
     }
   }
   tree.actionMap.put(TransferHandler.getCutAction().getValue(Action.NAME), dummy)
-  expandTree(tree)
-  return tree
-}
-
-private fun expandTree(tree: JTree) {
   for (i in 0 until tree.rowCount) {
     tree.expandRow(i)
   }
+  return tree
 }
 
 private class TreeTransferHandler : TransferHandler() {
   private var source: JTree? = null
   override fun createTransferable(c: JComponent): Transferable? {
     source = c as? JTree
-    val paths = source?.selectionPaths ?: return null // , "SelectionPaths is null")
+    val paths = source?.selectionPaths ?: return null
     val nodes = arrayOfNulls<DefaultMutableTreeNode>(paths.size)
     for (i in paths.indices) {
       nodes[i] = paths[i].lastPathComponent as? DefaultMutableTreeNode
     }
     return object : Transferable {
-      override fun getTransferDataFlavors(): Array<DataFlavor> {
-        return arrayOf(FLAVOR)
-      }
+      override fun getTransferDataFlavors() = arrayOf(FLAVOR)
 
-      override fun isDataFlavorSupported(flavor: DataFlavor): Boolean {
-        return FLAVOR == flavor
-      }
+      override fun isDataFlavorSupported(flavor: DataFlavor) = FLAVOR == flavor
 
       @Throws(UnsupportedFlavorException::class)
-      override fun getTransferData(flavor: DataFlavor): Any {
-        return if (isDataFlavorSupported(flavor)) {
-          nodes
-        } else {
-          throw UnsupportedFlavorException(flavor)
-        }
-      }
+      override fun getTransferData(flavor: DataFlavor) =
+        nodes.takeIf { isDataFlavorSupported(flavor) } ?: throw UnsupportedFlavorException(flavor)
     }
   }
 
