@@ -69,9 +69,8 @@ private fun createPanel(layerPane: JLayeredPane, i: Int): JPanel {
 private class DragMouseListener(private val parent: JLayeredPane) : MouseAdapter() {
   private val origin = Point()
   override fun mousePressed(e: MouseEvent) {
-    val panel = e.component as JComponent
     origin.location = e.point
-    parent.moveToFront(panel)
+    parent.moveToFront(e.component)
   }
 
   override fun mouseDragged(e: MouseEvent) {
