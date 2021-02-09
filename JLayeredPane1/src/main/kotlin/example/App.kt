@@ -17,10 +17,10 @@ private val COLORS = intArrayOf(
 )
 
 fun makeUI(): Component {
-  val cl: ClassLoader = Thread.currentThread().contextClassLoader
+  val cl = Thread.currentThread().contextClassLoader
   val layerPane = BackImageLayeredPane(ImageIcon(cl.getResource("example/tokeidai.jpg")).image)
-  for (i in 0..6) {
-    val p = createPanel(layerPane, i)
+  for ((i, c) in COLORS.withIndex()) {
+    val p = createPanel(layerPane, i, c)
     p.setLocation(i * 70 + 20, i * 50 + 15)
     layerPane.add(p, BACK_LAYER)
   }
@@ -37,13 +37,13 @@ private fun getColor(i: Int, f: Float): Color {
   return Color(r, g, b)
 }
 
-private fun createPanel(layerPane: JLayeredPane, i: Int): JPanel {
-  val s = "<html><font color=#333333>Header:$i</font></html>"
+private fun createPanel(layerPane: JLayeredPane, idx: Int, cc: Int): JPanel {
+  val s = "<html><font color=#333333>Header:$idx</font></html>"
   val label = JLabel(s).also {
     it.font = FONT
     it.isOpaque = true
     it.horizontalAlignment = SwingConstants.CENTER
-    it.background = getColor(COLORS[i], .85f)
+    it.background = getColor(cc, .85f)
     it.border = BorderFactory.createEmptyBorder(4, 4, 4, 4)
   }
 
@@ -60,8 +60,8 @@ private fun createPanel(layerPane: JLayeredPane, i: Int): JPanel {
     it.add(label, BorderLayout.NORTH)
     it.add(text)
     it.isOpaque = true
-    it.background = Color(COLORS[i])
-    it.border = BorderFactory.createLineBorder(getColor(COLORS[i], .5f), 1)
+    it.background = Color(cc)
+    it.border = BorderFactory.createLineBorder(getColor(cc, .5f), 1)
     it.size = Dimension(120, 100)
   }
 }
@@ -74,12 +74,9 @@ private class DragMouseListener(private val parent: JLayeredPane) : MouseAdapter
   }
 
   override fun mouseDragged(e: MouseEvent) {
-    (e.component as? JComponent)?.also {
-      val dx = e.x - origin.x
-      val dy = e.y - origin.y
-      val pt = it.location
-      it.setLocation(pt.x + dx, pt.y + dy)
-    }
+    val c = e.component
+    val pt = c.location
+    c.setLocation(pt.x + e.x - origin.x, pt.y + e.y - origin.y)
   }
 }
 
