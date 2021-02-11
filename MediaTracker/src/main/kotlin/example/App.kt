@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicInteger
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 
-
 private val imageId = AtomicInteger(0)
 private val model = FileModel()
 private val table = JTable(model)
@@ -109,67 +108,33 @@ fun addImage(path: Path) {
 }
 
 private class FileModel : DefaultTableModel() {
+  private val columnList = listOf(
+    ColumnContext("No.", Number::class.java, false),
+    ColumnContext("Name", String::class.java, false),
+    ColumnContext("Full Path", String::class.java, false),
+    ColumnContext("Width", Number::class.java, false),
+    ColumnContext("Height", Number::class.java, false)
+  )
+
+  override fun isCellEditable(row: Int, col: Int) = columnList[col].isEditable
+
+  override fun getColumnClass(column: Int) = columnList[column].columnClass
+
+  override fun getColumnCount() = columnList.size
+
+  override fun getColumnName(column: Int) = columnList[column].columnName
+
   fun addRowData(t: RowData) {
-    val obj = arrayOf<Any>(
-      t.id, t.name, t.absolutePath, t.width, t.height
-    )
-    super.addRow(obj)
-  }
-
-  override fun isCellEditable(row: Int, col: Int): Boolean {
-    return COLUMN_LIST[col].isEditable
-  }
-
-  override fun getColumnClass(column: Int): Class<*> {
-    return COLUMN_LIST[column].columnClass
-  }
-
-  override fun getColumnCount(): Int {
-    return COLUMN_LIST.size
-  }
-
-  override fun getColumnName(column: Int): String {
-    return COLUMN_LIST[column].columnName
-  }
-
-  private class ColumnContext(val columnName: String, val columnClass: Class<*>, val isEditable: Boolean)
-  companion object {
-    private val COLUMN_LIST = listOf(
-      ColumnContext("No.", Int::class.java, false),
-      ColumnContext("Name", String::class.java, false),
-      ColumnContext("Full Path", String::class.java, false),
-      ColumnContext("Width", Int::class.java, false),
-      ColumnContext("Height", Int::class.java, false)
-    )
+    super.addRow(arrayOf(t.id, t.name, t.absolutePath, t.width, t.height))
   }
 }
+
+private data class ColumnContext(val columnName: String, val columnClass: Class<*>, val isEditable: Boolean)
 
 private data class RowData(val id: Int, val path: Path, val width: Int, val height: Int) {
   val name get() = path.fileName.toString()
   val absolutePath get() = path.toAbsolutePath().toString()
 }
-//{
-//  private val name = Objects.toString(path.fileName)
-//  private val absolutePath = Objects.toString(path.toAbsolutePath())
-//  private val width = width
-//  private val height = height
-//  fun getName(): String {
-//    return name
-//  }
-//
-//  fun getAbsolutePath(): String {
-//    return absolutePath
-//  }
-//
-//  fun getWidth(): Int {
-//    return width
-//  }
-//
-//  fun getHeight(): Int {
-//    return height
-//  }
-//
-//}
 
 private class TablePopupMenu : JPopupMenu() {
   private val delete = add("Remove from list")
