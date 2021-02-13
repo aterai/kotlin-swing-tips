@@ -114,9 +114,9 @@ private class TableRowTransferHandler : TransferHandler() {
     val values = runCatching {
       info.transferable.getTransferData(FLAVOR) as? List<*>
     }.getOrNull().orEmpty()
-    for (o in values) {
+    values.filterIsInstance<List<*>>().forEach {
       val i = index++
-      model.insertRow(i, (o as List<*>).toTypedArray())
+      model.insertRow(i, it.toTypedArray())
       target.selectionModel.addSelectionInterval(i, i)
     }
     addCount = values.size
