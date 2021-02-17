@@ -79,7 +79,7 @@ private open class CellRendererTooltipList<E>(m: ListModel<E>) : JList<E>(m) {
   private val label = JLabel()
 
   init {
-    label.border = BorderFactory.createLineBorder(Color.GRAY, 1)
+    label.border = BorderFactory.createLineBorder(Color.GRAY)
   }
 
   override fun getToolTipLocation(e: MouseEvent): Point? {

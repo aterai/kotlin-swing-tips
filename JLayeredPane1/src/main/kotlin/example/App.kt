@@ -61,7 +61,7 @@ private fun createPanel(layerPane: JLayeredPane, idx: Int, cc: Int): JPanel {
     it.add(text)
     it.isOpaque = true
     it.background = Color(cc)
-    it.border = BorderFactory.createLineBorder(getColor(cc, .5f), 1)
+    it.border = BorderFactory.createLineBorder(getColor(cc, .5f))
     it.size = Dimension(120, 100)
   }
 }

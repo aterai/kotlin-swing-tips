@@ -20,7 +20,7 @@ fun makeUI(): Component {
 
     override fun updateUI() {
       super.updateUI()
-      border = BorderFactory.createLineBorder(Color.GRAY, 1)
+      border = BorderFactory.createLineBorder(Color.GRAY)
       alignmentY = BOTTOM_ALIGNMENT
     }
   }
@@ -31,7 +31,7 @@ fun makeUI(): Component {
 
     override fun updateUI() {
       super.updateUI()
-      border = BorderFactory.createLineBorder(Color.GRAY, 1)
+      border = BorderFactory.createLineBorder(Color.GRAY)
       alignmentY = BOTTOM_ALIGNMENT
     }
   }

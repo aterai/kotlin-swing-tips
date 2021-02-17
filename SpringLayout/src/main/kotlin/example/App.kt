@@ -11,7 +11,7 @@ fun makeUI(): Component {
   val l1 = JLabel("label: 5%, 5%, 90%, 55%", SwingConstants.CENTER)
   l1.isOpaque = true
   l1.background = Color.ORANGE
-  l1.border = BorderFactory.createLineBorder(Color.RED, 1)
+  l1.border = BorderFactory.createLineBorder(Color.RED)
   val l2 = JButton("button: 50%, 65%, 40%, 30%")
   setScaleAndAdd(panel, layout, l1, Rectangle2D.Float(.05f, .05f, .90f, .55f))
   setScaleAndAdd(panel, layout, l2, Rectangle2D.Float(.50f, .65f, .40f, .30f))

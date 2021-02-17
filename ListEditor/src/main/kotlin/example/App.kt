@@ -27,7 +27,7 @@ fun makeUI(): Component {
   }
   val list = EditableList(model)
   return JPanel(BorderLayout()).also {
-    it.add(list)
+    it.add(JScrollPane(list))
     it.preferredSize = Dimension(320, 240)
   }
 }
@@ -37,7 +37,7 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
       if (SELECTED_COLOR == background) {
-        val g2 = g.create() as Graphics2D
+        val g2 = g.create() as? Graphics2D ?: return
         g2.paint = SELECTED_COLOR
         g2.fillRect(0, 0, width, height)
         g2.dispose()
@@ -154,20 +154,20 @@ private class EditableList(model: DefaultListModel<ListItem>) : JList<ListItem>(
   private var handler: MouseInputAdapter? = null
   private val glassPane = EditorGlassPane()
   private val editor = JTextField()
-  private val startEditing: Action = object : AbstractAction() {
+  private val startEditing = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       rootPane.glassPane = glassPane
       val idx = selectedIndex
-      val item: ListItem? = selectedValue
+      val item = selectedValue ?: return
       val rect = getCellBounds(idx, idx)
       val p = SwingUtilities.convertPoint(this@EditableList, rect.location, glassPane)
       rect.location = p
       val h = editor.preferredSize.height
-      rect.y = rect.y + rect.height - h - 1
+      rect.y += rect.height - h - 1
       rect.height = h
       rect.grow(-2, 0)
       editor.bounds = rect
-      editor.text = item!!.title
+      editor.text = item.title
       editor.selectAll()
       glassPane.add(editor)
       glassPane.isVisible = true
@@ -185,34 +185,32 @@ private class EditableList(model: DefaultListModel<ListItem>) : JList<ListItem>(
       val title = editor.text.trim()
       val index = selectedIndex
       val item = m.getElementAt(index)
-      if (title.isNotEmpty() && item != null) {
-        (m as? DefaultListModel<ListItem>)?.also {
-          it.remove(index)
-          it.add(index, ListItem(editor.text, item.icon))
-          selectedIndex = index
-        }
+      if (title.isNotEmpty() && index >= 0 && m is DefaultListModel<ListItem>) {
+        m.remove(index)
+        m.add(index, ListItem(editor.text, item.icon))
+        selectedIndex = index
       }
       glassPane.isVisible = false
     }
   }
 
   init {
-    editor.border = BorderFactory.createLineBorder(Color.BLACK, 1)
+    editor.border = BorderFactory.createLineBorder(Color.BLACK)
     editor.horizontalAlignment = SwingConstants.CENTER
     // editor.setOpaque(false)
     // editor.setLineWrap(true)
     val im = editor.getInputMap(WHEN_FOCUSED)
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "rename-title")
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancel-editing")
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), RENAME)
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), CANCEL)
     val am = editor.actionMap
-    am.put("rename-title", renameTitle)
-    am.put("cancel-editing", cancelEditing)
+    am.put(RENAME, renameTitle)
+    am.put(CANCEL, cancelEditing)
     addMouseListener(object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
         val idx = selectedIndex
         val rect = getCellBounds(idx, idx) ?: return
         val h = editor.preferredSize.height
-        rect.y = rect.y + rect.height - h
+        rect.y += rect.height - h
         rect.height = h
         val isDoubleClick = e.clickCount >= 2
         if (isDoubleClick && rect.contains(e.point)) {
@@ -220,8 +218,8 @@ private class EditableList(model: DefaultListModel<ListItem>) : JList<ListItem>(
         }
       }
     })
-    getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "start-editing")
-    actionMap.put("start-editing", startEditing)
+    getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), EDITING)
+    actionMap.put(EDITING, startEditing)
   }
 
   override fun updateUI() {
@@ -233,7 +231,7 @@ private class EditableList(model: DefaultListModel<ListItem>) : JList<ListItem>(
     layoutOrientation = HORIZONTAL_WRAP
     selectionModel.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
     visibleRowCount = 0
-    fixedCellWidth = 56
+    fixedCellWidth = 64
     fixedCellHeight = 56
     border = BorderFactory.createEmptyBorder(5, 10, 5, 10)
     cellRenderer = ListItemListCellRenderer()
@@ -261,6 +259,12 @@ private class EditableList(model: DefaultListModel<ListItem>) : JList<ListItem>(
       isFocusTraversalPolicyProvider = flag
       isFocusCycleRoot = flag
     }
+  }
+
+  companion object {
+    const val RENAME = "rename-title"
+    const val CANCEL = "cancel-editing"
+    const val EDITING = "start-editing"
   }
 }
 
