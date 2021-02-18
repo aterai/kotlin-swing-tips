@@ -71,7 +71,7 @@ private class CloseableTabbedPane : JTabbedPane() {
 
   fun fireCloseTab(tabIndexToClose: Int): Boolean {
     var close = true
-    val listeners = eventListenerList!!.listenerList
+    val listeners = eventListenerList?.listenerList ?: return false
     for (o in listeners) {
       if (o is CloseableTabbedPaneListener && !o.closeTab(tabIndexToClose)) {
         close = false
