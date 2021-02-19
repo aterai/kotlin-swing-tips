@@ -185,7 +185,7 @@ private class EditorFromList(model: ListModel<IconItem>) : JList<IconItem>(model
   private val dim: Dimension
 
   init {
-    val icon = model.getElementAt(0)!!.small
+    val icon = model.getElementAt(0).small
     val iw = INS + icon.iconWidth
     val ih = INS + icon.iconHeight
     dim = Dimension(iw * 3 + INS, ih * 3 + INS)

@@ -28,10 +28,10 @@ fun makeUI(): Component {
 
   val listener = ItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      label.verticalAlignment = getSelectedItem(verticalAlignment)!!.alignment
-      label.verticalTextPosition = getSelectedItem(verticalTextPosition)!!.alignment
-      label.horizontalAlignment = getSelectedItem(horizontalAlignment)!!.alignment
-      label.horizontalTextPosition = getSelectedItem(horizontalTextPosition)!!.alignment
+      label.verticalAlignment = getSelectedItem(verticalAlignment).alignment
+      label.verticalTextPosition = getSelectedItem(verticalTextPosition).alignment
+      label.horizontalAlignment = getSelectedItem(horizontalAlignment).alignment
+      label.horizontalTextPosition = getSelectedItem(horizontalTextPosition).alignment
       label.repaint()
     }
   }
