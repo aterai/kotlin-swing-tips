@@ -26,10 +26,11 @@ private class PressAndHoldButton(icon: Icon?) : JButton(icon) {
   override fun updateUI() {
     removeMouseListener(handler)
     super.updateUI()
-    handler = PressAndHoldHandler()
-    SwingUtilities.updateComponentTreeUI(handler!!.pop)
-    action = handler
-    addMouseListener(handler)
+    handler = PressAndHoldHandler().also {
+      SwingUtilities.updateComponentTreeUI(it.pop)
+      action = it
+      addMouseListener(it)
+    }
     isFocusable = false
     border = BorderFactory.createEmptyBorder(4, 4, 4, 4 + ARROW_ICON.iconWidth)
   }
