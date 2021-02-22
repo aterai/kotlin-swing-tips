@@ -674,7 +674,7 @@ style:
   UseIfInsteadOfWhen:
     active: false
   UseRequire:
-    active: false
+    active: true
   UseRequireNotNull:
     active: true
   UselessCallOnNotNull:
@@ -682,7 +682,7 @@ style:
   UtilityClassWithPublicConstructor:
     active: true
   VarCouldBeVal:
-    active: false
+    active: true
   WildcardImport:
     active: true
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**']
