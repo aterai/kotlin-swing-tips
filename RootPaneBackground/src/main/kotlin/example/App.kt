@@ -177,63 +177,58 @@ private class TranslucentPopupMenu : JPopupMenu() {
 private class TransparentMenu(title: String?) : JMenu(title) {
   private var popupMenu: JPopupMenu? = null
 
-  private fun ensurePopupMenuCreated2() {
-    if (popupMenu == null) {
-      this.popupMenu = TranslucentPopupMenu().also {
-        it.invoker = this
-        popupListener = createWinListener(it)
-      }
+  private fun ensurePopupMenuCreated2(): JPopupMenu {
+    val popup = popupMenu ?: TranslucentPopupMenu().also {
+      it.invoker = this
     }
+    popupListener = createWinListener(popup)
+    popupMenu = popup
+    return popup
   }
 
-  override fun getPopupMenu(): JPopupMenu {
-    ensurePopupMenuCreated2()
-    return popupMenu!!
-  }
+  override fun getPopupMenu() = popupMenu ?: ensurePopupMenuCreated2()
 
   override fun add(menuItem: JMenuItem): JMenuItem {
-    ensurePopupMenuCreated2()
     menuItem.isOpaque = false
-    return popupMenu!!.add(menuItem)
+    val popup = ensurePopupMenuCreated2()
+    return popup.add(menuItem)
   }
 
   override fun add(c: Component): Component {
-    ensurePopupMenuCreated2()
-    if (c is JComponent) {
-      c.isOpaque = false
-    }
-    popupMenu!!.add(c)
+    (c as? JComponent)?.isOpaque = false
+    val popup = ensurePopupMenuCreated2()
+    popup.add(c)
     return c
   }
 
   override fun addSeparator() {
-    ensurePopupMenuCreated2()
-    popupMenu!!.addSeparator()
+    ensurePopupMenuCreated2().addSeparator()
+  }
+
+  private fun checkIndex(pos: Int) {
+    require(pos >= 0) { "index less than zero." }
   }
 
   override fun insert(s: String, pos: Int) {
-    require(pos >= 0) { "index less than zero." }
-    ensurePopupMenuCreated2()
-    popupMenu!!.insert(JMenuItem(s), pos)
+    checkIndex(pos)
+    val popup = ensurePopupMenuCreated2()
+    popup.insert(JMenuItem(s), pos)
   }
 
   override fun insert(mi: JMenuItem, pos: Int): JMenuItem {
-    require(pos >= 0) { "index less than zero." }
-    ensurePopupMenuCreated2()
-    popupMenu!!.insert(mi, pos)
+    checkIndex(pos)
+    val popup = ensurePopupMenuCreated2()
+    popup.insert(mi, pos)
     return mi
   }
 
   override fun insertSeparator(index: Int) {
-    require(index >= 0) { "Separator index less than zero." }
-    ensurePopupMenuCreated2()
-    popupMenu!!.insert(JPopupMenu.Separator(), index)
+    checkIndex(index)
+    val popup = ensurePopupMenuCreated2()
+    popup.insert(JPopupMenu.Separator(), index)
   }
 
-  override fun isPopupMenuVisible(): Boolean {
-    ensurePopupMenuCreated2()
-    return popupMenu!!.isVisible
-  }
+  override fun isPopupMenuVisible() = ensurePopupMenuCreated2().isVisible
 }
 
 private class TranslucentPopupFactory : PopupFactory() {
