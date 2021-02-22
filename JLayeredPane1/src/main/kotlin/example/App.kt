@@ -18,7 +18,7 @@ private val COLORS = intArrayOf(
 
 fun makeUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
-  val layerPane = BackImageLayeredPane(ImageIcon(cl.getResource("example/tokeidai.jpg")).image)
+  val layerPane = BackImageLayeredPane(ImageIcon(cl.getResource("example/GIANT_TCR1_2013.jpg")).image)
   for ((i, c) in COLORS.withIndex()) {
     val p = createPanel(layerPane, i, c)
     p.setLocation(i * 70 + 20, i * 50 + 15)

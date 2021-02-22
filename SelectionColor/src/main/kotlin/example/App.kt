@@ -64,7 +64,7 @@ private fun makeUI(): Component {
   }
 
   val cl = Thread.currentThread().contextClassLoader
-  val url = cl.getResource("example/tokeidai.jpg")
+  val url = cl.getResource("example/GIANT_TCR1_2013.jpg")
   val bi = getFilteredImage(url)
 
   val scroll = JScrollPane(editorPane)

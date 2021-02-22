@@ -13,7 +13,7 @@ fun makeUI(): Component {
   val icon = ImageIcon(cl.getResource("example/wi0124-48.png"))
   val tabbedPane = TabThumbnailTabbedPane()
   tabbedPane.addTab("wi0124-48.png", null, JLabel(icon), "wi0124-48")
-  addImageTab(tabbedPane, cl.getResource("example/tokeidai.jpg"))
+  addImageTab(tabbedPane, cl.getResource("example/GIANT_TCR1_2013.jpg"))
   addImageTab(tabbedPane, cl.getResource("example/CRW_3857_JFR.jpg"))
 
   return JPanel(BorderLayout()).also {

@@ -37,7 +37,7 @@ fun makeUI(): Component {
   desktop.add(createFrame(p2))
   desktop.add(createFrame(p3))
 
-  val path = "example/tokeidai.jpg"
+  val path = "example/GIANT_TCR1_2013.jpg"
   val url = Thread.currentThread().contextClassLoader.getResource(path)
   val image = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
   desktop.border = CentredBackgroundBorder(image)

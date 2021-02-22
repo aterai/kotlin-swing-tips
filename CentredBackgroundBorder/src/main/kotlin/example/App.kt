@@ -29,7 +29,7 @@ fun makeUI(): Component {
     """.trimIndent()
 
   val cl = Thread.currentThread().contextClassLoader
-  val bi = getFilteredImage(cl.getResource("example/tokeidai.jpg"))
+  val bi = getFilteredImage(cl.getResource("example/GIANT_TCR1_2013.jpg"))
   val scroll = JScrollPane(area)
   scroll.viewport.isOpaque = false
   scroll.viewportBorder = CentredBackgroundBorder(bi)
