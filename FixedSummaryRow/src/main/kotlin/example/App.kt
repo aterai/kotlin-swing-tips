@@ -32,7 +32,7 @@ fun makeUI(): Component {
   val table = JTable(model)
   val filter = object : RowFilter<TableModel, Int>() {
     override fun include(entry: Entry<out TableModel, out Int>) =
-      0 != table.convertRowIndexToView(entry.identifier!!)
+      0 != table.convertRowIndexToView(entry.identifier)
   }
   val s = object : TableRowSorter<TableModel>(model) {
     override fun toggleSortOrder(column: Int) {
