@@ -672,7 +672,7 @@ style:
   UseIfEmptyOrIfBlank:
     active: true
   UseIfInsteadOfWhen:
-    active: false
+    active: true
   UseRequire:
     active: true
   UseRequireNotNull:

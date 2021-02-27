@@ -148,10 +148,12 @@ private class ReorderingList(model: ListModel<ListItem>) : JList<ListItem>(model
       val r = c.red
       val g = c.green
       val b = c.blue
-      return when {
-        r > g -> if (r > b) Color(r, 0, 0) else Color(0, 0, b)
-        else -> if (g > b) Color(0, g, 0) else Color(0, 0, b)
+      val v = when (val max = maxOf(r, g, b)) {
+        r -> max shl 8
+        g -> max shl 4
+        else -> max
       }
+      return Color(v)
     }
   }
 }

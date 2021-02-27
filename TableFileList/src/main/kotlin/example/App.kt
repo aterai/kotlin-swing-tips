@@ -120,7 +120,7 @@ private class FileNameRenderer(table: JTable) : TableCellRenderer {
 
 private class FileListTable(model: TableModel) : JTable(model) {
   private val bandColor = SystemColor.activeCaption
-  private val rectColor = makeColor(bandColor)
+  private val rectColor = makeRubberBandColor(bandColor)
   private val rubberBand = Path2D.Double()
 
   @Transient
@@ -241,14 +241,16 @@ private class FileListTable(model: TableModel) : JTable(model) {
     return cellBounds
   }
 
-  private fun makeColor(c: Color): Color {
+  private fun makeRubberBandColor(c: Color): Color {
     val r = c.red
     val g = c.green
     val b = c.blue
-    return when {
-      r > g -> if (r > b) Color(r, 0, 0) else Color(0, 0, b)
-      else -> if (g > b) Color(0, g, 0) else Color(0, 0, b)
+    val v = when (val max = maxOf(r, g, b)) {
+      r -> max shl 8
+      g -> max shl 4
+      else -> max
     }
+    return Color(v)
   }
 
   companion object {
