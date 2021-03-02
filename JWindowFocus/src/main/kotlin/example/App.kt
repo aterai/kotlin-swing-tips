@@ -37,7 +37,8 @@ fun makeUI(): Component {
       resetEditor(editor, it)
       val window = JFrame()
       window.isUndecorated = true
-      window.isAlwaysOnTop = true
+      // window.isAlwaysOnTop = true
+      window.modalExclusionType = Dialog.ModalExclusionType.APPLICATION_EXCLUDE
       window.add(editor)
       window.pack()
       window.location = getWindowLocation(it)
@@ -51,7 +52,8 @@ fun makeUI(): Component {
       resetEditor(editor, it)
       val window = JWindow()
       window.focusableWindowState = true
-      window.isAlwaysOnTop = true
+      // window.isAlwaysOnTop = true
+      window.modalExclusionType = Dialog.ModalExclusionType.APPLICATION_EXCLUDE
       window.add(editor)
       window.pack()
       window.location = getWindowLocation(it)
@@ -65,7 +67,8 @@ fun makeUI(): Component {
       resetEditor(editor, it)
       val window = JWindow(SwingUtilities.getWindowAncestor(it))
       window.focusableWindowState = true
-      window.isAlwaysOnTop = true
+      // window.isAlwaysOnTop = true
+      window.modalExclusionType = Dialog.ModalExclusionType.APPLICATION_EXCLUDE
       window.add(editor)
       window.pack()
       window.location = getWindowLocation(it)
