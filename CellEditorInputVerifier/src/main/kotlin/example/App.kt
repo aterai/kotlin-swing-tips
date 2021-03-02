@@ -43,9 +43,10 @@ fun makeUI(): Component {
     override fun stopCellEditing(): Boolean {
       val editor = component as? JComponent ?: return super.stopCellEditing()
       val isEditValid = editor.inputVerifier.verify(editor)
-      editor.border = when {
-        isEditValid -> BorderFactory.createEmptyBorder(1, 1, 1, 1)
-        else -> BorderFactory.createLineBorder(Color.RED)
+      editor.border = if (isEditValid) {
+        BorderFactory.createEmptyBorder(1, 1, 1, 1)
+      } else {
+        BorderFactory.createLineBorder(Color.RED)
       }
       return isEditValid && super.stopCellEditing()
     }
@@ -54,9 +55,10 @@ fun makeUI(): Component {
     override fun stopCellEditing(): Boolean {
       val editor = component as? JFormattedTextField ?: return super.stopCellEditing()
       val isEditValid = editor.isEditValid
-      editor.border = when {
-        isEditValid -> BorderFactory.createEmptyBorder(1, 1, 1, 1)
-        else -> BorderFactory.createLineBorder(Color.RED)
+      editor.border = if (isEditValid) {
+        BorderFactory.createEmptyBorder(1, 1, 1, 1)
+      } else {
+        BorderFactory.createLineBorder(Color.RED)
       }
       return isEditValid && super.stopCellEditing()
     }

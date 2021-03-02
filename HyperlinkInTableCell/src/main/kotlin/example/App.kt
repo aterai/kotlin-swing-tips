@@ -113,14 +113,13 @@ private class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMoti
     if (isSameCell || isNotRollover) {
       return
     }
-    val r = when {
-      isRollover -> {
-        val r = table.getCellRect(viewRowIndex, viewColumnIndex, false)
-        if (prevRollover) r.union(table.getCellRect(prevRow, prevCol, false)) else r
-      }
-      else -> table.getCellRect(prevRow, prevCol, false)
+    val rect = if (isRollover) {
+      val r = table.getCellRect(viewRowIndex, viewColumnIndex, false)
+      if (prevRollover) r.union(table.getCellRect(prevRow, prevCol, false)) else r
+    } else {
+      table.getCellRect(prevRow, prevCol, false)
     }
-    table.repaint(r)
+    table.repaint(rect)
   }
 
   override fun mouseExited(e: MouseEvent) {

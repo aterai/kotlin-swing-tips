@@ -198,9 +198,10 @@ private class CalendarListRenderer : ListCellRenderer<LocalDate> {
     return l
   }
 
-  private fun getForegroundColor(ld: LocalDate) = when {
-    ld.isEqual(realLocalDate) -> Color(0x64_FF_64)
-    else -> getDayOfWeekColor(ld.dayOfWeek)
+  private fun getForegroundColor(ld: LocalDate) = if (ld.isEqual(realLocalDate)) {
+    Color(0x64_FF_64)
+  } else {
+    getDayOfWeekColor(ld.dayOfWeek)
   }
 
   private fun getDayOfWeekColor(dow: DayOfWeek) = when (dow) {

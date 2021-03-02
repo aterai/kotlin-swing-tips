@@ -54,10 +54,10 @@ fun makeUI(): Component {
 
   val check = JCheckBox("HORIZONTAL_SCROLLBAR_NEVER", true)
   check.addActionListener { e ->
-    val flag = (e.source as? JCheckBox)?.isSelected ?: false
-    scroll.horizontalScrollBarPolicy = when {
-      flag -> ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
-      else -> ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
+    scroll.horizontalScrollBarPolicy = if ((e.source as? JCheckBox)?.isSelected == true) {
+      ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+    } else {
+      ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
     }
   }
 
@@ -100,7 +100,7 @@ private fun createEngine(): ScriptEngine? {
   }.onFailure { it.printStackTrace() }.getOrNull()
 }
 
-private fun prettify(engine: ScriptEngine?, src: String) = runCatching {
+fun prettify(engine: ScriptEngine?, src: String) = runCatching {
   (engine as? Invocable)?.invokeMethod(engine.get("window"), "prettyPrintOne", src) as? String
 }.getOrNull() ?: "error"
 

@@ -34,9 +34,10 @@ private val monthTable = object : JTable() {
           it.text = value.dayOfMonth.toString()
           val flg = YearMonth.from(value) == YearMonth.from(currentLocalDate)
           it.foreground = if (flg) Color.BLACK else Color.GRAY
-          it.background = when {
-            value.isEqual(realLocalDate) -> Color(0xDC_FF_DC)
-            else -> getDayOfWeekColor(value.dayOfWeek)
+          it.background = if (value.isEqual(realLocalDate)) {
+            Color(0xDC_FF_DC)
+          } else {
+            getDayOfWeekColor(value.dayOfWeek)
           }
         }
       }

@@ -48,10 +48,7 @@ fun makeUI(): Component {
             (it as? JLabel)?.also { label ->
               label.icon = ColorIcon(value.color)
               label.toolTipText = "index: ${value.index}"
-              val bc = when {
-                value.isTransparentPixel -> Color.RED
-                else -> Color.WHITE
-              }
+              val bc = if (value.isTransparentPixel) Color.RED else Color.WHITE
               label.border = BorderFactory.createLineBorder(bc)
             }
           }

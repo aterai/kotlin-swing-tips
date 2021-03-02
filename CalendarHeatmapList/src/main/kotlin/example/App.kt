@@ -31,9 +31,10 @@ private val weekList = object : JList<Contribution>(CalendarViewListModel(curren
     val renderer = cellRenderer
     setCellRenderer { list, value, index, isSelected, cellHasFocus ->
       renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
-        (it as? JLabel)?.icon = when {
-          value.date.isAfter(currentLocalDate) -> ContributionIcon(Color.WHITE)
-          else -> activityIcons[value.activity]
+        (it as? JLabel)?.icon = if (value.date.isAfter(currentLocalDate)) {
+          ContributionIcon(Color.WHITE)
+        } else {
+          activityIcons[value.activity]
         }
       }
     }
@@ -87,7 +88,7 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeWeekCalendar(list: JList<*>, font: Font) = JScrollPane(list).also {
+fun makeWeekCalendar(list: JList<*>, font: Font) = JScrollPane(list).also {
   val loc = Locale.getDefault()
   it.border = BorderFactory.createEmptyBorder()
   it.setColumnHeaderView(makeColumnHeader(loc))

@@ -22,22 +22,22 @@ fun makeUI(): Component {
   val table = object : JTable(model) {
     override fun createDefaultTableHeader(): JTableHeader {
       val cm = getColumnModel()
-      val gname = ColumnGroup("Name")
-      gname.add(cm.getColumn(1))
-      gname.add(cm.getColumn(2))
+      val groupName = ColumnGroup("Name")
+      groupName.add(cm.getColumn(1))
+      groupName.add(cm.getColumn(2))
 
-      val glang = ColumnGroup("Language")
-      glang.add(cm.getColumn(3))
+      val groupLang = ColumnGroup("Language")
+      groupLang.add(cm.getColumn(3))
 
-      val gother = ColumnGroup("Others")
-      gother.add(cm.getColumn(4))
-      gother.add(cm.getColumn(5))
+      val groupOther = ColumnGroup("Others")
+      groupOther.add(cm.getColumn(4))
+      groupOther.add(cm.getColumn(5))
 
-      glang.add(gother)
+      groupLang.add(groupOther)
 
       val header = GroupableTableHeader(cm)
-      header.addColumnGroup(gname)
-      header.addColumnGroup(glang)
+      header.addColumnGroup(groupName)
+      header.addColumnGroup(groupLang)
       return header
     }
   }
@@ -126,8 +126,7 @@ private class GroupableTableHeaderUI : BasicTableHeaderUI() {
       cellRect.setSize(tc.width, headerHeight)
 
       var groupHeight = 0
-      val cglist = (header as? GroupableTableHeader)?.getColumnGroups(tc).orEmpty()
-      for (o in cglist) {
+      for (o in (header as? GroupableTableHeader)?.getColumnGroups(tc).orEmpty()) {
         val cg = o as? ColumnGroup ?: continue
         val groupRect = map[cg] ?: Rectangle(cellRect.location, cg.getSize(header)).also {
           map[cg] = it
@@ -171,8 +170,7 @@ private class GroupableTableHeaderUI : BasicTableHeaderUI() {
       val tc = columnModel.getColumn(column)
       val comp = getHeaderRenderer(column)
       var rendererHeight = comp.preferredSize.height
-      val cglist = (header as? GroupableTableHeader)?.getColumnGroups(tc).orEmpty()
-      for (o in cglist) {
+      for (o in (header as? GroupableTableHeader)?.getColumnGroups(tc).orEmpty()) {
         val cg = o as? ColumnGroup ?: continue
         rendererHeight += cg.getSize(header).height
       }
@@ -214,23 +212,13 @@ private class ColumnGroup(text: String) {
     obj?.also { list.add(it) }
   }
 
-  fun getColumnGroupList(c: TableColumn, g: MutableList<Any>): List<*> {
-    g.add(this)
-    // if (list.contains(c)) {
-    //   return g
-    // }
-    // for (obj in list) {
-    //   val cg = obj as? ColumnGroup ?: continue
-    //   val groups = cg.getColumnGroupList(c, MutableList<Any>(g))
-    //   if (!groups.isEmpty()) {
-    //     return groups
-    //   }
-    // }
-    // return emptyList<Any>()
-    return when {
-      list.contains(c) -> g
-      else -> list.filterIsInstance<ColumnGroup>().map {
-        it.getColumnGroupList(c, ArrayList(g))
+  fun getColumnGroupList(column: TableColumn, groups: MutableList<Any>): List<*> {
+    groups.add(this)
+    return if (list.contains(column)) {
+      groups
+    } else {
+      list.filterIsInstance<ColumnGroup>().map {
+        it.getColumnGroupList(column, ArrayList(groups))
       }.firstOrNull { it.isNotEmpty() }.orEmpty()
     }
   }
