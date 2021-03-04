@@ -297,7 +297,7 @@ private class EditableList(model: DefaultListModel<ListItem>) : JList<ListItem>(
     }
 
     override fun mousePressed(e: MouseEvent) {
-      val list = e.component as JList<*>
+      val list = e.component as? JList<*> ?: return
       startOutside = !contains(list, e.point)
       if (window != null && window?.isVisible == true && editingIndex >= 0) {
         renameTitle.actionPerformed(ActionEvent(editor, ActionEvent.ACTION_PERFORMED, ""))
@@ -311,7 +311,7 @@ private class EditableList(model: DefaultListModel<ListItem>) : JList<ListItem>(
     }
 
     override fun mouseDragged(e: MouseEvent) {
-      val list = e.component as JList<*>
+      val list = e.component as? JList<*> ?: return
       if (contains(list, e.point)) {
         startOutside = false
       } else if (startOutside) {
