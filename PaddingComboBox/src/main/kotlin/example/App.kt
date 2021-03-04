@@ -30,7 +30,7 @@ fun makeUI(): Component {
   }
 }
 
-private fun layoutComboBoxPanel(p2: JPanel, list: List<JComboBox<*>>) {
+fun layoutComboBoxPanel(p2: JPanel, list: List<JComboBox<*>>) {
   p2.removeAll()
   p2.layout = GridBagLayout()
   val inside = BorderFactory.createEmptyBorder(10, 5 + 2, 10, 10 + 2)
@@ -66,31 +66,35 @@ private fun initComboBoxes(isColor: Boolean): List<JComboBox<*>> {
   // ---- 01 ----
   val combo01 = list[1]
   combo01.isEditable = true
-  val editor01 = combo01.editor.editorComponent as JTextField
-  editor01.border = BorderFactory.createCompoundBorder(editor01.border, getPaddingBorder(isColor))
+  (combo01.editor.editorComponent as? JTextField)?.also {
+    it.border = BorderFactory.createCompoundBorder(it.border, getPaddingBorder(isColor))
+  }
   combo01.toolTipText = "editor.setBorder(BorderFactory.createCompoundBorder(editor.getBorder(), padding));"
 
   // ---- 02 ----
   val combo02 = list[2]
   combo02.isEditable = true
-  val editor02 = combo02.editor.editorComponent as JTextField
-  editor02.border = getPaddingBorder(isColor)
+  (combo02.editor.editorComponent as? JTextField)?.also {
+    it.border = getPaddingBorder(isColor)
+  }
   combo02.toolTipText = "editor.setBorder(padding);"
 
   // ---- 03 ----
   val combo03 = list[3]
   combo03.isEditable = true
-  val editor03 = combo03.editor.editorComponent as JTextField
-  val i = editor03.insets
-  editor03.margin = Insets(i.top, i.left + 5, i.bottom, i.right)
+  (combo03.editor.editorComponent as? JTextField)?.also {
+    val i = it.insets
+    it.margin = Insets(i.top, i.left + 5, i.bottom, i.right)
+  }
   combo03.toolTipText = "Insets i = editor.getInsets(); editor.setMargin(new Insets(i.top, i.left + 5, ...));"
 
   // ---- 04 ----
   val combo04 = list[4]
   combo04.isEditable = true
-  val editor04 = combo04.editor.editorComponent as JTextField
-  val m = editor04.margin
-  editor04.margin = Insets(m.top, m.left + 5, m.bottom, m.right)
+  (combo04.editor.editorComponent as? JTextField)?.also {
+    val m = it.margin
+    it.margin = Insets(m.top, m.left + 5, m.bottom, m.right)
+  }
   combo04.toolTipText = "Insets m = editor.getMargin(); editor.setMargin(new Insets(m.top, m.left + 5, ...));"
 
   // ---- 05 ----
@@ -109,9 +113,10 @@ private fun initComboBoxes(isColor: Boolean): List<JComboBox<*>> {
     for (cb in list) {
       cb.isOpaque = true
       cb.background = c
-      val editor = cb.editor.editorComponent as JTextField
-      editor.isOpaque = true
-      editor.background = c
+      (cb.editor.editorComponent as? JTextField)?.also {
+        it.isOpaque = true
+        it.background = c
+      }
     }
   }
   return list
