@@ -88,10 +88,6 @@ private class TableRowTransferHandler : TransferHandler() {
   override fun createTransferable(c: JComponent): Transferable {
     c.rootPane.glassPane.isVisible = true
     source = c
-    val table = c as JTable
-    val model = table.model as DefaultTableModel
-    table.selectedRows.forEach { selectedIndices.add(it) }
-    val transferredObjects = table.selectedRows.map { model.dataVector[it] }
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(FLAVOR)
 
@@ -99,8 +95,11 @@ private class TableRowTransferHandler : TransferHandler() {
 
       @Throws(UnsupportedFlavorException::class)
       override fun getTransferData(flavor: DataFlavor): Any {
-        return if (isDataFlavorSupported(flavor)) {
-          transferredObjects
+        val table = c as? JTable
+        val model = table?.model
+        return if (isDataFlavorSupported(flavor) && model is DefaultTableModel) {
+          table.selectedRows.forEach { selectedIndices.add(it) }
+          table.selectedRows.map { model.dataVector[it] }
         } else {
           throw UnsupportedFlavorException(flavor)
         }
@@ -145,11 +144,11 @@ private class TableRowTransferHandler : TransferHandler() {
 
   override fun importData(info: TransferSupport): Boolean {
     val tdl = info.dropLocation
-    val target = info.component
-    if (tdl !is JTable.DropLocation || target !is JTable) {
+    val target = info.component as? JTable
+    val model = target?.model
+    if (tdl !is JTable.DropLocation || model !is DefaultTableModel) {
       return false
     }
-    val model = target.model as DefaultTableModel
     val max = model.rowCount
     var index = tdl.row
     index = if (index in 0 until max) index else max
