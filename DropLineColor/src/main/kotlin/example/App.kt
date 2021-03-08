@@ -224,9 +224,10 @@ private class ListItemTransferHandler : TransferHandler() {
       // If we are moving items around in the same list, we
       // need to adjust the indices accordingly, since those
       // after the insertion point have moved.
-      val selectedList = when {
-        addCount > 0 -> selectedIndices.map { if (it >= addIndex) it + addCount else it }
-        else -> selectedIndices.toList()
+      val selectedList = if (addCount > 0) {
+        selectedIndices.map { if (it >= addIndex) it + addCount else it }
+      } else {
+        selectedIndices.toList()
       }
       ((c as? JList<*>)?.model as? DefaultListModel<*>)?.also { model ->
         for (i in selectedList.indices.reversed()) {
@@ -317,9 +318,10 @@ private class TableRowTransferHandler : TransferHandler() {
   private fun cleanup(c: JComponent, remove: Boolean) {
     c.rootPane.glassPane.isVisible = false
     if (remove && selectedIndices.isNotEmpty()) {
-      val selectedList = when {
-        addCount > 0 -> selectedIndices.map { if (it >= addIndex) it + addCount else it }
-        else -> selectedIndices.toList()
+      val selectedList = if (addCount > 0) {
+        selectedIndices.map { if (it >= addIndex) it + addCount else it }
+      } else {
+        selectedIndices.toList()
       }
       ((c as? JTable)?.model as? DefaultTableModel)?.also { model ->
         for (i in selectedList.indices.reversed()) {
