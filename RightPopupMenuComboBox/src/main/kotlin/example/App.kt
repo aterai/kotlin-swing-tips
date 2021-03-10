@@ -3,7 +3,6 @@ package example
 import com.sun.java.swing.plaf.windows.WindowsComboBoxUI
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.image.BufferedImage
-import java.awt.image.BufferedImageOp
 import java.awt.image.RescaleOp
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.PopupMenuEvent
@@ -92,7 +91,7 @@ private class RightPopupWindowsComboBoxUI : WindowsComboBoxUI() {
     srcIcon.paintIcon(null, g2, 0, 0)
     val scaleFactors = floatArrayOf(1.2f, 1.2f, 1.2f, 1f)
     val offsets = floatArrayOf(0f, 0f, 0f, 0f)
-    val op: BufferedImageOp = RescaleOp(scaleFactors, offsets, g2.renderingHints)
+    val op = RescaleOp(scaleFactors, offsets, g2.renderingHints)
     g2.dispose()
     return ImageIcon(op.filter(img, null))
   }

@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.border.Border
 
 private val panel = JPanel()
 private val check = JCheckBox("color")
@@ -34,7 +33,7 @@ fun layoutComboBoxPanel(p2: JPanel, list: List<JComboBox<*>>) {
   p2.removeAll()
   p2.layout = GridBagLayout()
   val inside = BorderFactory.createEmptyBorder(10, 5 + 2, 10, 10 + 2)
-  val outside: Border = BorderFactory.createTitledBorder("JComboBox Padding Test")
+  val outside = BorderFactory.createTitledBorder("JComboBox Padding Test")
   p2.border = BorderFactory.createCompoundBorder(outside, inside)
   val c = GridBagConstraints()
   c.insets = Insets(5, 5, 5, 0)
@@ -124,7 +123,7 @@ private fun initComboBoxes(isColor: Boolean): List<JComboBox<*>> {
 
 private fun makeLabel(num: Int) = JLabel("$num:")
 
-private fun getPaddingBorder(isColor: Boolean): Border = if (isColor) {
+private fun getPaddingBorder(isColor: Boolean) = if (isColor) {
   BorderFactory.createMatteBorder(0, 5, 0, 0, Color(1f, .8f, .8f, .5f))
 } else {
   BorderFactory.createEmptyBorder(0, 5, 0, 0)

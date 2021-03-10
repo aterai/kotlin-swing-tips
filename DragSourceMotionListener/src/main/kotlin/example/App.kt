@@ -8,7 +8,6 @@ import java.awt.datatransfer.UnsupportedFlavorException
 import java.awt.dnd.DragSource
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.awt.event.MouseListener
 import java.io.IOException
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
@@ -30,7 +29,7 @@ fun makeUI() {
   p1.add(JLabel(UIManager.getIcon("OptionPane.errorIcon")))
   p1.add(JLabel("Text"))
 
-  val handler: MouseListener = Handler()
+  val handler = Handler()
   p1.addMouseListener(handler)
   p2.addMouseListener(handler)
 
