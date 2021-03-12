@@ -99,7 +99,7 @@ private class CloseableTabIconHandler : MouseAdapter() {
       val selIndex = tabbedPane.selectedIndex
       if (tabbedPane.fireCloseTab(selIndex)) {
         if (selIndex > 0) {
-          val rec: Rectangle = tabbedPane.getBoundsAt(selIndex - 1)
+          val rec = tabbedPane.getBoundsAt(selIndex - 1)
           val event = MouseEvent(
             e.component, e.id + 1,
             System.currentTimeMillis(), e.modifiersEx,

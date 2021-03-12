@@ -61,7 +61,7 @@ private class SilhouetteIcon(
     val sy = iconHeight - r.height
     val at = AffineTransform.getTranslateInstance(-r.x + sx / 2.0, -r.y + sy / 2.0)
     val shapeCentered = at.createTransformedShape(shape)
-    val silhouette: Shape = getOuterShape(shapeCentered)
+    val silhouette = getOuterShape(shapeCentered)
     g2.stroke = BasicStroke(3f)
     g2.paint = c.foreground
     g2.draw(silhouette)

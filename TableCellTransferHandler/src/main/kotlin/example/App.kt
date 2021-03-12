@@ -40,7 +40,7 @@ fun makeUI(): Component {
 
   // Disable row Cut, Copy, Paste
   val map = table.actionMap
-  val dummy: Action = object : AbstractAction() {
+  val dummy = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       /* Dummy action */
     }
