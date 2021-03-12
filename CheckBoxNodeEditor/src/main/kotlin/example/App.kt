@@ -4,7 +4,7 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.tree.DefaultMutableTreeNode
 
-fun makeUI(): Component {
+private fun makeUI(): Component {
   val tree = object : JTree() {
     override fun updateUI() {
       setCellRenderer(null)

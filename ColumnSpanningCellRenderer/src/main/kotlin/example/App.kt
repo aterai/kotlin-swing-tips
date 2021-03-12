@@ -6,7 +6,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 
-fun makeUI(): Component {
+private fun makeUI(): Component {
   val see = "See Also: Constant Field Values"
   val columnNames = arrayOf("AAA", "BBB")
   val data = arrayOf(
@@ -117,7 +117,7 @@ private class ColumnSpanningCellRenderer : JPanel(BorderLayout()), TableCellRend
   }
 }
 
-data class OptionPaneDescription(val title: String, val icon: Icon?, val text: String)
+private data class OptionPaneDescription(val title: String, val icon: Icon?, val text: String)
 
 fun main() {
   EventQueue.invokeLater {

@@ -24,7 +24,7 @@ import javax.swing.tree.TreeCellRenderer
 
 private val textArea = JTextArea()
 
-fun makeUI(): Component {
+private fun makeUI(): Component {
   val tree = makeTree()
 
   val save = JButton("save")
@@ -143,7 +143,7 @@ enum class Status {
   SELECTED, DESELECTED, INDETERMINATE
 }
 
-data class CheckBoxNode(val label: String, val status: Status) {
+private data class CheckBoxNode(val label: String, val status: Status) {
   override fun toString() = label
 }
 

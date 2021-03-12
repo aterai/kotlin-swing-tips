@@ -15,7 +15,7 @@ private val textArea = JTextArea()
 private val runButton = JButton("Load")
 private var monitor: ProgressMonitor? = null
 
-fun makeUI(): Component {
+private fun makeUI(): Component {
   textArea.isEditable = false
   runButton.addActionListener { e -> executeWorker(e) }
 
@@ -126,7 +126,7 @@ private fun getCharset(urlConnection: URLConnection): Charset {
   }
 }
 
-data class Chunk(val line: String, val note: String)
+private data class Chunk(val line: String, val note: String)
 
 private open class BackgroundTask(
   protected val pms: ProgressMonitorInputStream,
