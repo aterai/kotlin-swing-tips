@@ -61,7 +61,7 @@ private class TabPanel(pane: JTabbedPane, title: String?, content: Component?) :
 
   init {
     isOpaque = false
-    val label: JLabel = object : JLabel() {
+    val label = object : JLabel() {
       override fun getPreferredSize(): Dimension {
         val dim = super.getPreferredSize()
         val bw = if (button.isVisible) button.preferredSize.width else 0
