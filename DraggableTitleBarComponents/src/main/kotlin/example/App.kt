@@ -272,7 +272,7 @@ private class ResizeWindowListener : MouseInputAdapter() {
   }
 }
 
-private class TitleBarDragLayerUI : LayerUI<JComponent?>() {
+private class TitleBarDragLayerUI : LayerUI<JComponent>() {
   private val startPt = Point()
 
   override fun installUI(c: JComponent) {
@@ -285,13 +285,13 @@ private class TitleBarDragLayerUI : LayerUI<JComponent?>() {
     super.uninstallUI(c)
   }
 
-  override fun processMouseEvent(e: MouseEvent, l: JLayer<out JComponent?>) {
+  override fun processMouseEvent(e: MouseEvent, l: JLayer<out JComponent>) {
     if (e.id == MouseEvent.MOUSE_PRESSED && SwingUtilities.isLeftMouseButton(e)) {
       startPt.location = e.point
     }
   }
 
-  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out JComponent?>) {
+  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out JComponent>) {
     val c = SwingUtilities.getRoot(e.component)
     if (e.id == MouseEvent.MOUSE_DRAGGED && c is Window && SwingUtilities.isLeftMouseButton(e)) {
       val pt = c.getLocation()

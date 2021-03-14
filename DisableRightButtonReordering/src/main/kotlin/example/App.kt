@@ -42,7 +42,7 @@ private fun makeTitledPanel(title: String, c: Component): Component {
   return p
 }
 
-private class DisableRightButtonSwapLayerUI : LayerUI<JScrollPane?>() {
+private class DisableRightButtonSwapLayerUI : LayerUI<JScrollPane>() {
   override fun installUI(c: JComponent) {
     super.installUI(c)
     (c as? JLayer<*>)?.layerEventMask = AWTEvent.MOUSE_MOTION_EVENT_MASK
@@ -53,7 +53,7 @@ private class DisableRightButtonSwapLayerUI : LayerUI<JScrollPane?>() {
     super.uninstallUI(c)
   }
 
-  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out JScrollPane?>) {
+  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out JScrollPane>) {
     val id = e.id
     val c = e.component
     if (c is JTableHeader && id == MouseEvent.MOUSE_DRAGGED && SwingUtilities.isRightMouseButton(e)) {

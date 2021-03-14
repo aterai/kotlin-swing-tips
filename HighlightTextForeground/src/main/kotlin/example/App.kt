@@ -189,7 +189,7 @@ private fun scrollToCenter(tc: JTextComponent, pos: Int) {
   }
 }
 
-private class PlaceholderLayerUI<V : JTextComponent?> : LayerUI<V>() {
+private class PlaceholderLayerUI<V : JTextComponent> : LayerUI<V>() {
   val hint = object : JLabel() {
     override fun updateUI() {
       super.updateUI()
