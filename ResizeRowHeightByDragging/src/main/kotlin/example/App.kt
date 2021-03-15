@@ -32,11 +32,13 @@ private class RowHeightResizeLayer : LayerUI<JScrollPane>() {
   }
 
   override fun processMouseEvent(e: MouseEvent, l: JLayer<out JScrollPane>) {
-    val table = e.component as? JTable ?: return
-    resizingRow = getResizeTargetRow(table, e.point)
-    if (e.id == MouseEvent.MOUSE_PRESSED && resizingRow >= 0) {
-      mouseYOffset = e.y - table.getRowHeight(resizingRow)
-      e.consume()
+    val table = e.component
+    if (table is JTable && e.id == MouseEvent.MOUSE_PRESSED) {
+      resizingRow = getResizeTargetRow(table, e.point)
+      if (resizingRow >= 0) {
+        mouseYOffset = e.y - table.getRowHeight(resizingRow)
+        e.consume()
+      }
     }
   }
 
@@ -52,9 +54,9 @@ private class RowHeightResizeLayer : LayerUI<JScrollPane>() {
           otherCursor = tmp
         }
       }
-      MouseEvent.MOUSE_DRAGGED -> if (resizingRow >= 0) {
+      MouseEvent.MOUSE_DRAGGED -> {
         val newHeight = e.y - mouseYOffset
-        if (newHeight > MIN_ROW_HEIGHT) {
+        if (newHeight > MIN_ROW_HEIGHT && resizingRow >= 0) {
           table.setRowHeight(resizingRow, newHeight)
         }
         e.consume()
