@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.io.Serializable
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
@@ -90,18 +89,14 @@ private class RowDataModel : DefaultTableModel() {
 
   companion object {
     private val COLUMN_ARRAY = arrayOf(
-      ColumnContext("No.", Int::class.java, false),
+      ColumnContext("No.", Number::class.java, false),
       ColumnContext("Name", String::class.java, true),
       ColumnContext("Comment", String::class.java, true)
     )
   }
 }
 
-private data class RowData(val name: String, val comment: String) : Serializable {
-  companion object {
-    private const val serialVersionUID = 1L
-  }
-}
+private data class RowData(val name: String, val comment: String)
 
 fun main() {
   EventQueue.invokeLater {

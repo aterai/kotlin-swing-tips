@@ -15,7 +15,7 @@ fun makeUI(): Component {
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = when (column) {
-      0 -> Int::class.java
+      0 -> Number::class.java
       1 -> String::class.java
       2 -> Boolean::class.java
       else -> super.getColumnClass(column)
