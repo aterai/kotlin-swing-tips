@@ -29,7 +29,7 @@ fun makeUI(): Component {
 
   val columnNames = arrayOf("Default", "DocumentFilter", "InputVerifier", "JFormattedTextField")
   val model = object : DefaultTableModel(columnNames, 10) {
-    override fun getColumnClass(column: Int) = Integer::class.java
+    override fun getColumnClass(column: Int) = Number::class.java
   }
   val table = object : JTable(model) {
     override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int): Component {

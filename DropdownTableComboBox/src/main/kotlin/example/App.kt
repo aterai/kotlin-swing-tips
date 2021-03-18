@@ -30,7 +30,7 @@ fun makeUI(): Component {
 
   val model = object : DefaultTableModel(null, columns) {
     override fun getColumnClass(column: Int) =
-      if (column == 1 || column == 2) Integer::class.java else String::class.java
+      if (column == 1 || column == 2) Number::class.java else String::class.java
 
     override fun isCellEditable(row: Int, column: Int) = false
   }
