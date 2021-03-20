@@ -137,9 +137,9 @@ complexity:
 coroutines:
   active: true
   GlobalCoroutineUsage:
-    active: false
+    active: true
   RedundantSuspendModifier:
-    active: false
+    active: true
   SleepInsteadOfDelay:
     active: true
   SuspendFunWithFlowReturnType:
