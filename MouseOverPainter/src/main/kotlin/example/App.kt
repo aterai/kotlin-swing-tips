@@ -45,14 +45,14 @@ private class HighlightCursorTextArea : JTextArea() {
   private inner class RollOverListener : MouseInputAdapter() {
     override fun mouseExited(e: MouseEvent) {
       rollOverRowIndex = -1
-      repaint()
+      e.component.repaint()
     }
 
     override fun mouseMoved(e: MouseEvent) {
       val row = getLineAtPoint(e.point)
       if (row != rollOverRowIndex) {
         rollOverRowIndex = row
-        repaint()
+        e.component.repaint()
       }
     }
 
