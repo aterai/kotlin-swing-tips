@@ -87,32 +87,28 @@ private class FishEyeTable(m: TableModel) : JTable(m) {
     var prevHeight = 0
 
     override fun mouseMoved(e: MouseEvent) {
-      val row = rowAtPoint(e.point)
-      if (prevRow == row) {
-        return
-      }
-      initRowHeight(prevHeight, row)
-      prevRow = row
+      update(rowAtPoint(e.point))
     }
 
     override fun mouseDragged(e: MouseEvent) {
-      mouseMoved(e)
+      update(rowAtPoint(e.point))
     }
 
     override fun mousePressed(e: MouseEvent) {
-      repaint()
+      e.component.repaint()
     }
 
     override fun valueChanged(e: ListSelectionEvent) {
-      if (e.valueIsAdjusting) {
-        return
+      if (!e.valueIsAdjusting) {
+        update(selectedRow)
       }
-      val row = selectedRow
-      if (prevRow == row) {
-        return
+    }
+
+    private fun update(row: Int) {
+      if (prevRow != row) {
+        initRowHeight(prevHeight, row)
+        prevRow = row
       }
-      initRowHeight(prevHeight, row)
-      prevRow = row
     }
   }
 
@@ -153,7 +149,7 @@ private class FishEyeTable(m: TableModel) : JTable(m) {
   private fun getViewableColoredRowCount(idx: Int): Int {
     val rd2 = (fishEyeRowList.size - 1) / 2
     val rc = model.rowCount
-    return if (rd2 - idx > 0 && idx < rd2) {
+    return if (rd2 - idx > 0) {
       rd2 + 1 + idx
     } else if (idx > rc - 1 - rd2 && idx < rc - 1 + rd2) {
       rc - idx + rd2
