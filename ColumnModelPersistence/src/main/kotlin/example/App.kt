@@ -60,8 +60,7 @@ fun makeUI(): Component {
     if (text.isNotEmpty()) {
       val bytes = text.toByteArray(StandardCharsets.UTF_8)
       XMLDecoder(BufferedInputStream(ByteArrayInputStream(bytes))).use { xd ->
-        @Suppress("UNCHECKED_CAST")
-        val keys = xd.readObject() as? List<RowSorter.SortKey>
+        val keys = (xd.readObject() as? List<*>)?.filterIsInstance<RowSorter.SortKey>()
         val model = xd.readObject() as? DefaultTableModel
         if (keys != null && model != null) {
           table.model = model
