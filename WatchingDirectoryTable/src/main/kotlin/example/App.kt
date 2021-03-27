@@ -105,14 +105,12 @@ private fun processEvents(dir: Path, watcher: WatchService) {
         continue
       }
 
-      // The filename is the context of the event.
-      @Suppress("UNCHECKED_CAST") val ev = event as WatchEvent<Path>
-      val filename = ev.context()
-
-      val child = dir.resolve(filename)
-      EventQueue.invokeLater {
-        append("$kind: $child")
-        updateTable(kind, child)
+      (event.context() as? Path)?.also {
+        val child = dir.resolve(it)
+        EventQueue.invokeLater {
+          append("$kind: $child")
+          updateTable(kind, child)
+        }
       }
     }
 
