@@ -4,6 +4,7 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionListener
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.awt.event.MouseListener
 import java.util.EventObject
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.tree.DefaultMutableTreeNode
@@ -16,7 +17,7 @@ fun makeUI(): Component {
   val list1 = Box.createVerticalBox()
 
   val model = DefaultListModel<CheckBoxNode>()
-  val list2 = CheckBoxList<CheckBoxNode>(model)
+  val list2 = CheckBoxList(model)
 
   val list3 = object : JTree() {
     override fun updateUI() {
@@ -63,21 +64,35 @@ private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()
   it.add(c)
 }
 
-private open class CheckBoxNode(val text: String, val selected: Boolean) {
+private data class CheckBoxNode(val text: String, val selected: Boolean) {
   override fun toString() = text
 }
 
-private class CheckBoxList<E : CheckBoxNode>(model: ListModel<E>) : JList<E>(model) {
-  private var renderer: CheckBoxCellRenderer<E>? = null
+private class CheckBoxList(model: ListModel<CheckBoxNode>) : JList<CheckBoxNode>(model) {
+  private var renderer: CheckBoxCellRenderer? = null
+  private var handler: MouseListener? = null
 
   override fun updateUI() {
     foreground = null
     background = null
     selectionForeground = null
     selectionBackground = null
+    removeMouseListener(handler)
     removeMouseListener(renderer)
     removeMouseMotionListener(renderer)
     super.updateUI()
+    handler = object : MouseAdapter() {
+      override fun mouseClicked(e: MouseEvent) {
+        val index = locationToIndex(e.point)
+        val m = model
+        if (e.button == MouseEvent.BUTTON1 && index >= 0 && m is DefaultListModel<CheckBoxNode>) {
+          val n = m.get(index)
+          m.set(index, CheckBoxNode(n.text, !n.selected))
+          repaint(getCellBounds(index, index))
+        }
+      }
+    }
+    addMouseListener(handler)
     renderer = CheckBoxCellRenderer()
     cellRenderer = renderer
     addMouseListener(renderer)
@@ -115,12 +130,12 @@ private class CheckBoxList<E : CheckBoxNode>(model: ListModel<E>) : JList<E>(mod
   }
 }
 
-private class CheckBoxCellRenderer<E : CheckBoxNode> : MouseAdapter(), ListCellRenderer<E> {
+private class CheckBoxCellRenderer : MouseAdapter(), ListCellRenderer<CheckBoxNode> {
   private val checkBox = JCheckBox()
   private var rollOverRowIndex = -1
   override fun getListCellRendererComponent(
-    list: JList<out E>,
-    value: E,
+    list: JList<out CheckBoxNode>,
+    value: CheckBoxNode,
     index: Int,
     isSelected: Boolean,
     cellHasFocus: Boolean
@@ -144,21 +159,6 @@ private class CheckBoxCellRenderer<E : CheckBoxNode> : MouseAdapter(), ListCellR
       val l = e.component as? JList<*> ?: return
       l.repaint(l.getCellBounds(rollOverRowIndex, rollOverRowIndex))
       rollOverRowIndex = -1
-    }
-  }
-
-  override fun mouseClicked(e: MouseEvent) {
-    @Suppress("UNCHECKED_CAST")
-    val l = e.component as? JList<CheckBoxNode> ?: return
-    if (e.button == MouseEvent.BUTTON1) {
-      val p = e.point
-      val index = l.locationToIndex(p)
-      val m = l.model
-      if (index >= 0 && m is DefaultListModel<CheckBoxNode>) {
-        val n = m.get(index)
-        m.set(index, CheckBoxNode(n.text, !n.selected))
-        l.repaint(l.getCellBounds(index, index))
-      }
     }
   }
 
