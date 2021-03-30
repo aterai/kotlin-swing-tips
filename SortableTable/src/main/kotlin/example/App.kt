@@ -129,13 +129,12 @@ private open class SortableTableModel : DefaultTableModel() {
 }
 
 private class ColumnComparator(val index: Int, val ascending: Boolean) : Comparator<Any>, Serializable {
-  @Suppress("UNCHECKED_CAST")
   override fun compare(one: Any, two: Any): Int {
-    if (one is List<*> && two is List<*>) {
-      val o1 = one[index] as? Comparable<Any>
-      val o2 = two[index] as? Comparable<Any>
+    val one1 = (one as? List<*>)?.filterIsInstance<Comparable<Any>>()
+    val two1 = (two as? List<*>)?.filterIsInstance<Comparable<Any>>()
+    if (one1?.isNotEmpty() == true && two1?.isNotEmpty() == true) {
       val cp = Comparator.nullsFirst(Comparator.naturalOrder<Comparable<Any>>())
-      val c = Objects.compare<Comparable<Any>>(o1, o2, cp)
+      val c = Objects.compare(one1[index], two1[index], cp)
       return c * if (ascending) 1 else -1
     }
     return 0
