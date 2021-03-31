@@ -63,12 +63,12 @@ private class WatermarkTextField : JTextField(), FocusListener {
 
   override fun focusGained(e: FocusEvent) {
     showWatermark = false
-    repaint()
+    e.component.repaint()
   }
 
   override fun focusLost(e: FocusEvent) {
     showWatermark = text.trim().isEmpty()
-    repaint()
+    e.component.repaint()
   }
 }
 
