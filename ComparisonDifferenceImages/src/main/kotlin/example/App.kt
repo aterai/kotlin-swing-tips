@@ -61,7 +61,7 @@ private fun getData(imageIcon: ImageIcon, w: Int, h: Int): IntArray {
   val g = image.createGraphics()
   g.drawImage(img, 0, 0, null)
   g.dispose()
-  return (image.raster.dataBuffer as DataBufferInt).data
+  return (image.raster.dataBuffer as? DataBufferInt)?.data ?: IntArray(0)
 }
 
 fun main() {
