@@ -72,7 +72,7 @@ private class RadialGradientButton(title: String) : JButton(title) {
 
       override fun mouseMoved(e: MouseEvent) {
         pt.location = e.point
-        repaint()
+        e.component.repaint()
       }
 
       override fun mouseDragged(e: MouseEvent) {
@@ -194,7 +194,7 @@ private class RadialGradientPaintButton(title: String) : JButton(title) {
 
       override fun mouseMoved(e: MouseEvent) {
         pt.location = e.point
-        repaint()
+        e.component.repaint()
       }
 
       override fun mouseDragged(e: MouseEvent) {

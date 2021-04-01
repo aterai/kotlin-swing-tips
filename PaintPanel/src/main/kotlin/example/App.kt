@@ -27,12 +27,12 @@ private class PaintPanel : JPanel() {
           it.moveTo(e.x.toDouble(), e.y.toDouble())
           list.add(it)
         }
-        repaint()
+        e.component.repaint()
       }
 
       override fun mouseDragged(e: MouseEvent) {
         path?.lineTo(e.x.toDouble(), e.y.toDouble())
-        repaint()
+        e.component.repaint()
       }
     }
     addMouseMotionListener(handler)

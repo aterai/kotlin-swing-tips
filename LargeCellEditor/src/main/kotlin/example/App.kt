@@ -223,14 +223,14 @@ private class EditorFromList(model: ListModel<IconItem>) : JList<IconItem>(model
   private inner class RollOverListener : MouseAdapter() {
     override fun mouseExited(e: MouseEvent) {
       rollOverRowIndex = -1
-      repaint()
+      e.component.repaint()
     }
 
     override fun mouseMoved(e: MouseEvent) {
       val row = locationToIndex(e.point)
       if (row != rollOverRowIndex) {
         rollOverRowIndex = row
-        repaint()
+        e.component.repaint()
       }
     }
   }
