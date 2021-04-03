@@ -113,7 +113,7 @@ private class RowHeaderList<E>(model: ListModel<E>, private val table: JTable) :
     override fun mouseExited(e: MouseEvent) {
       if (pressedRowIndex < 0) {
         rollOverRowIndex = -1
-        repaint()
+        e.component.repaint()
       }
     }
 
@@ -121,7 +121,7 @@ private class RowHeaderList<E>(model: ListModel<E>, private val table: JTable) :
       val row = locationToIndex(e.point)
       if (row != rollOverRowIndex) {
         rollOverRowIndex = row
-        repaint()
+        e.component.repaint()
       }
     }
 
@@ -134,7 +134,7 @@ private class RowHeaderList<E>(model: ListModel<E>, private val table: JTable) :
         listSelection.clearSelection()
         tableSelection.addSelectionInterval(start, end)
         listSelection.addSelectionInterval(start, end)
-        repaint()
+        e.component.repaint()
       }
     }
 
@@ -153,7 +153,7 @@ private class RowHeaderList<E>(model: ListModel<E>, private val table: JTable) :
       listSelection.clearSelection()
       pressedRowIndex = -1
       rollOverRowIndex = -1
-      repaint()
+      e.component.repaint()
     }
   }
 }
