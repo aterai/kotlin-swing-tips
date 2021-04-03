@@ -192,12 +192,12 @@ private class ListItemTransferHandler : TransferHandler() {
 
   override fun importData(info: TransferSupport): Boolean {
     val dl = info.dropLocation
-    val target = info.component
-    if (dl !is JList.DropLocation || target !is JList<*>) {
+    val target = info.component as? JList<*>
+    @Suppress("UNCHECKED_CAST")
+    val listModel = target?.model as? DefaultListModel<Any>
+    if (dl !is JList.DropLocation || listModel == null) {
       return false
     }
-    @Suppress("UNCHECKED_CAST")
-    val listModel = target.model as DefaultListModel<Any>
     val max = listModel.size
     // var index = minOf(maxOf(0, dl.getIndex()), max)
     // var index = dl.index.coerceIn(0, max)
@@ -249,10 +249,6 @@ private class TableRowTransferHandler : TransferHandler() {
 
   override fun createTransferable(c: JComponent): Transferable {
     c.rootPane.glassPane.isVisible = true
-    val table = c as JTable
-    val model = table.model as DefaultTableModel
-    table.selectedRows.forEach { selectedIndices.add(it) }
-    val transferredObjects = table.selectedRows.map { model.dataVector[it] }
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(FLAVOR)
 
@@ -260,8 +256,11 @@ private class TableRowTransferHandler : TransferHandler() {
 
       @Throws(UnsupportedFlavorException::class)
       override fun getTransferData(flavor: DataFlavor): Any {
-        return if (isDataFlavorSupported(flavor)) {
-          transferredObjects
+        val table = c as? JTable
+        val model = table?.model as? DefaultTableModel
+        return if (isDataFlavorSupported(flavor) && model != null) {
+          table.selectedRows.forEach { selectedIndices.add(it) }
+          table.selectedRows.map { model.dataVector[it] }
         } else {
           throw UnsupportedFlavorException(flavor)
         }
@@ -281,11 +280,11 @@ private class TableRowTransferHandler : TransferHandler() {
 
   override fun importData(info: TransferSupport): Boolean {
     val tdl = info.dropLocation
-    val target = info.component
-    if (tdl !is JTable.DropLocation || target !is JTable) {
+    val target = info.component as? JTable
+    val model = target?.model as? DefaultTableModel
+    if (tdl !is JTable.DropLocation || model == null) {
       return false
     }
-    val model = target.model as DefaultTableModel
     val max = model.rowCount
     var index = tdl.row
     index = if (index in 0 until max) index else max
@@ -377,20 +376,22 @@ private class TreeTransferHandler : TransferHandler() {
     val nodes = runCatching {
       support.transferable.getTransferData(FLAVOR) as? Array<*>
     }.getOrNull()?.filterIsInstance<DefaultMutableTreeNode>() ?: return false // .orEmpty()
-
-    return (support.dropLocation as? JTree.DropLocation)?.let { dl ->
+    val dl = support.dropLocation as? JTree.DropLocation
+    val dest = dl?.path
+    val parent = dest?.lastPathComponent
+    val tree = support.component as? JTree
+    val model = tree?.model
+    return if (dl != null && model is DefaultTreeModel && parent is DefaultMutableTreeNode) {
       val childIndex = dl.childIndex
-      val dest = dl.path
-      val parent = dest.lastPathComponent as DefaultMutableTreeNode
-      val tree = support.component as JTree
-      val model = tree.model as DefaultTreeModel
       val idx = AtomicInteger(if (childIndex < 0) parent.childCount else childIndex)
       nodes.forEach {
         val clone = DefaultMutableTreeNode(it.userObject)
         model.insertNodeInto(deepCopyTreeNode(it, clone), parent, idx.incrementAndGet())
       }
       true
-    } ?: false
+    } else {
+      false
+    }
   }
 
   override fun exportDone(src: JComponent?, data: Transferable?, action: Int) {
