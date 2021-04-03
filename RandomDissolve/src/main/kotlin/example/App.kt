@@ -108,9 +108,7 @@ private class RandomDissolve(private val image1: BufferedImage, private val imag
   }
 
   private fun getData(image: BufferedImage): IntArray {
-    val wr = image.raster
-    val dbi = wr.dataBuffer as DataBufferInt
-    return dbi.data
+    return (image.raster.dataBuffer as? DataBufferInt)?.data ?: IntArray(0)
   }
 
   companion object {

@@ -27,7 +27,7 @@ fun makeUI(): Component {
   button.rolloverIcon = animatedIcon
   button.pressedIcon = object : Icon {
     override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-      val g2 = g.create() as Graphics2D
+      val g2 = g.create() as? Graphics2D ?: return
       g2.paint = Color.BLACK
       g2.fillRect(x, y, iconWidth, iconHeight)
       g2.dispose()
