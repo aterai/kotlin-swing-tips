@@ -107,9 +107,7 @@ private class RandomDissolve(private val image1: BufferedImage, private val imag
     return result
   }
 
-  private fun getData(image: BufferedImage): IntArray {
-    return (image.raster.dataBuffer as? DataBufferInt)?.data ?: IntArray(0)
-  }
+  private fun getData(image: BufferedImage) = (image.raster.dataBuffer as? DataBufferInt)?.data ?: IntArray(0)
 
   companion object {
     private const val STAGES = 16
