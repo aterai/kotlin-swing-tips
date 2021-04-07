@@ -10,10 +10,8 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 private val label = JLabel()
 private val cl = Thread.currentThread().contextClassLoader
-private val u1 = cl.getResource("example/i03-04.gif")
-private val u2 = cl.getResource("example/i03-10.gif")
-private val i1 = ImageIcon(u1)
-private val i2 = ImageIcon(u2)
+private val i1 = ImageIcon(cl.getResource("example/i03-04.gif"))
+private val i2 = ImageIcon(cl.getResource("example/i03-10.gif"))
 
 private var file: File? = null
   set(file) {
@@ -82,7 +80,7 @@ fun makeUI(): Component {
   val clearButton = JButton("Clear")
   clearButton.addActionListener {
     file = null
-    label.rootPane.repaint()
+    label.repaint()
   }
 
   val box = Box.createHorizontalBox()
