@@ -15,7 +15,7 @@ fun makeUI(): Component {
     override fun getColumnClass(column: Int) = when (column) {
       0 -> String::class.java
       1 -> Number::class.java
-      2 -> Boolean::class.java
+      2 -> java.lang.Boolean::class.java
       else -> super.getColumnClass(column)
     }
   }
