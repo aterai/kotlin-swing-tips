@@ -23,25 +23,29 @@ fun makeUI(): Component {
     it.add(JScrollPane(JTextArea("JTextArea")), c)
   }
 
-  val p = JPanel(BorderLayout())
-
   val button = JButton("rotate")
   button.isFocusable = false
   button.addActionListener {
-    // p1.setComponentZOrder(p1.getComponent(p1.getComponentCount() - 1), 0)
-    p1.setComponentZOrder(p1.components.last(), 0)
-    p2.setComponentZOrder(p2.components.last(), 0)
-    p.revalidate()
+    rotateChildComponent(p1)
+    rotateChildComponent(p2)
   }
 
-  val pp = JPanel(GridLayout(2, 1)).also {
+  val p = JPanel(GridLayout(2, 1)).also {
     it.add(p1)
     it.add(p2)
   }
-  p.add(pp)
-  p.add(button, BorderLayout.SOUTH)
-  p.preferredSize = Dimension(320, 240)
-  return p
+
+  return JPanel(BorderLayout()).also {
+    it.add(p)
+    it.add(button, BorderLayout.SOUTH)
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
+fun rotateChildComponent(p: Container) {
+  // p.setComponentZOrder(p.getComponent(p.componentCount - 1), 0)
+  p.setComponentZOrder(p.components.last(), 0)
+  p.revalidate()
 }
 
 fun main() {
