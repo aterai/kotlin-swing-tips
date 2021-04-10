@@ -29,7 +29,7 @@ private class ClippedTitleTabbedPane(tabPlacement: Int) : JTabbedPane(tabPlaceme
       val w = newWidth.coerceIn(MIN_WIDTH, width - MIN_WIDTH)
       if (field != w) {
         field = w
-        doLayout()
+        revalidate()
       }
     }
   private val tabInsets = UIManager.getInsets("TabbedPane.tabInsets") ?: getSynthTabInsets()
