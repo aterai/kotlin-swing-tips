@@ -1,6 +1,7 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.event.ItemEvent
 import java.awt.geom.AffineTransform
 import java.awt.image.AffineTransformOp
 import java.awt.image.BufferedImage
@@ -60,9 +61,11 @@ fun makeUI(): Component {
 
 private fun makeRadioButton(f: Flip): JRadioButton {
   val rb = JRadioButton(f.toString(), f === Flip.NONE)
-  rb.addActionListener {
-    mode = f
-    rb.rootPane.repaint()
+  rb.addItemListener { e ->
+    if (e.stateChange == ItemEvent.SELECTED) {
+      mode = f
+      rb.rootPane.repaint()
+    }
   }
   return rb
 }
