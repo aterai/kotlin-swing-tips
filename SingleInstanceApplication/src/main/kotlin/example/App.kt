@@ -21,7 +21,7 @@ fun main() {
     }
     val loop = Toolkit.getDefaultToolkit().systemEventQueue.createSecondaryLoop()
     runCatching {
-      ServerSocket(38765).use {
+      ServerSocket(38_765).use {
         val frame = JFrame().apply {
           defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
           isResizable = false
