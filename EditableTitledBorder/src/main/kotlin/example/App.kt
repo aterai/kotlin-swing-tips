@@ -13,9 +13,9 @@ import javax.swing.border.TitledBorder
 
 private val HELP =
   """
-    Start editing: Double-Click
-    Commit rename: field-focusLost, Enter-Key
-    Cancel editing: Esc-Key, title.isEmpty
+  Start editing: Double-Click
+  Commit rename: field-focusLost, Enter-Key
+  Cancel editing: Esc-Key, title.isEmpty
   """.trimIndent()
 
 fun makeUI(): Component {

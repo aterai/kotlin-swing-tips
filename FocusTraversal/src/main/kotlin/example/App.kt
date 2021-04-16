@@ -86,10 +86,10 @@ fun debugPrint() {
 
 private fun debugString(label: String, c: Container) =
   """
-    ---- $label ----
-      isFocusCycleRoot: ${c.isFocusCycleRoot}
-      isFocusTraversalPolicySet: ${c.isFocusTraversalPolicySet}
-      isFocusTraversalPolicyProvider: ${c.isFocusTraversalPolicyProvider}
+  ---- $label ----
+    isFocusCycleRoot: ${c.isFocusCycleRoot}
+    isFocusTraversalPolicySet: ${c.isFocusTraversalPolicySet}
+    isFocusTraversalPolicyProvider: ${c.isFocusTraversalPolicyProvider}
   """.trimIndent()
 
 private class CustomFocusTraversalPolicy(private val order: List<Component>) : FocusTraversalPolicy() {
