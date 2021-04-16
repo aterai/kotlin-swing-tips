@@ -6,8 +6,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.text.JTextComponent
 
-private const val TEXT =
-"""
+private const val TEXT = """
 Trail: Creating a GUI with JFC/Swing
  Lesson: Learning Swing by Example
  This lesson explains the concepts you need to

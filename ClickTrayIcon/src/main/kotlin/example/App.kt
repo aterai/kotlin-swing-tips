@@ -10,8 +10,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import kotlin.math.cos
 import kotlin.math.sin
 
-private val TEXT =
-  """
+private val TEXT = """
   icon.addMouseListener(new MouseAdapter() {
     public void mouseClicked(MouseEvent e) {
       boolean isDoubleClick = e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() >= 2;
@@ -23,7 +22,7 @@ private val TEXT =
       }
     }
   });
-  """.trimIndent()
+""".trimIndent()
 
 fun makeUI() = JPanel(BorderLayout()).also {
   it.add(JScrollPane(JTextArea(TEXT)))

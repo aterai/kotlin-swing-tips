@@ -9,21 +9,21 @@ import javax.swing.text.DefaultHighlighter
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 
 private val WARNING_COLOR = Color(0xFF_C8_C8)
-private const val TEXT =
-"""Trail: Creating a GUI with JFC/Swing
-Lesson: Learning Swing by Example
-  This lesson explains the concepts you need to
- use Swing components in building a user interface.
- First we examine the simplest Swing application you can write.
- Then we present several progressively complicated examples of creating
- user interfaces using components in the javax.swing package.
- We cover several Swing components, such as buttons, labels, and text areas.
- The handling of events is also discussed,
- as are layout management and accessibility.
- This lesson ends with a set of questions and exercises
- so you can test yourself on what you've learned.
-https://docs.oracle.com/javase/tutorial/uiswing/learn/index.html
-"""
+private const val TEXT = """
+  Trail: Creating a GUI with JFC/Swing
+  Lesson: Learning Swing by Example
+   This lesson explains the concepts you need to
+  use Swing components in building a user interface.
+  First we examine the simplest Swing application you can write.
+  Then we present several progressively complicated examples of creating
+  user interfaces using components in the javax.swing package.
+  We cover several Swing components, such as buttons, labels, and text areas.
+  The handling of events is also discussed,
+  as are layout management and accessibility.
+  This lesson ends with a set of questions and exercises
+  so you can test yourself on what you've learned.
+  https://docs.oracle.com/javase/tutorial/uiswing/learn/index.html
+""".trimIndent()
 private val highlightPainter = DefaultHighlightPainter(Color.YELLOW)
 private val field = JTextField("Swing")
 private val textArea = JTextArea(TEXT)

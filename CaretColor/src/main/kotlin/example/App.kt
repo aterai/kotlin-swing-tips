@@ -6,16 +6,15 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.html.HTMLEditorKit
 import javax.swing.text.html.StyleSheet
 
-private const val TEST_HTML =
-  """
-  <html>
-    <body>
-      <div>JTextPane#setCaretColor(null)</div>
-      <div class='highlight'>1111111111</div>
-      <div>2222222222</div>
-    </body>
-  </html>
-  """
+private const val TEST_HTML = """
+<html>
+  <body>
+    <div>JTextPane#setCaretColor(null)</div>
+    <div class='highlight'>1111111111</div>
+    <div>2222222222</div>
+  </body>
+</html>
+"""
 
 fun makeUI(): Component {
   // UIManager.put("TextPane.caretForeground", Color.ORANGE)

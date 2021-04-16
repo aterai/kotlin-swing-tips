@@ -16,8 +16,7 @@ fun makeUI(): Component {
   area.background = Color(0x0, true) // Nimbus
   area.lineWrap = true
   area.isOpaque = false
-  area.text =
-    """
+  area.text = """
     private static void createAndShowGui() {
       JFrame frame = new JFrame();
       frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -26,7 +25,7 @@ fun makeUI(): Component {
       frame.setLocationRelativeTo(null);
       frame.setVisible(true);
     }
-    """.trimIndent()
+  """.trimIndent()
 
   val cl = Thread.currentThread().contextClassLoader
   val bi = getFilteredImage(cl.getResource("example/GIANT_TCR1_2013.jpg"))
