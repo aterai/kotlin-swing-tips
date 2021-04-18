@@ -14,8 +14,7 @@ import javax.swing.tree.ExpandVetoException
 import javax.swing.tree.TreePath
 import javax.swing.tree.TreeSelectionModel
 
-private const val HTML_TEXT =
-  """
+private const val HTML_TEXT = """
   <html>
     <body>
       <h1>Scrollspy</h1>
@@ -23,7 +22,7 @@ private const val HTML_TEXT =
       <p id='bottom'>id=bottom</p>
     </body>
   </html>
-  """
+"""
 private val editor = JEditorPane()
 
 fun makeUI(): Component {

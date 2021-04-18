@@ -10,8 +10,7 @@ import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.text.JTextComponent
 
 private val HIGHLIGHT = DefaultHighlightPainter(Color.YELLOW)
-private const val INIT_TXT =
-"""
+private const val INIT_TXT = """
 Trail: Creating a GUI with JFC/Swing
 https://docs.oracle.com/javase/tutorial/uiswing/learn/index.html
  Lesson: Learning Swing by Example

@@ -40,8 +40,7 @@ private fun makeUI(): Component {
   editorPane.selectedTextColor = Color.WHITE
   editorPane.background = Color(0x0, true) // Nimbus
   editorPane.selectionColor = SELECTION
-  editorPane.text =
-    """
+  editorPane.text = """
     <html><pre>
     private static void createAndShowGui() {
       <span class='highlight'>JFrame</span> frame = new JFrame();
@@ -51,7 +50,7 @@ private fun makeUI(): Component {
       frame.setLocationRelativeTo(null);
       frame.setVisible(true);
     }
-    """.trimIndent()
+  """.trimIndent()
 
   val highlightPainter = DefaultHighlightPainter(HIGHLIGHT)
   val button = JToggleButton("highlight")

@@ -13,12 +13,11 @@ import javax.swing.event.ChangeListener
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
-private val INFO =
-  """
+private val INFO = """
   Start editing: Double-Click, Enter-Key
   Commit rename: field-focusLost, Enter-Key
   Cancel editing: Esc-Key, title.isEmpty
-  """.trimIndent()
+""".trimIndent()
 
 fun makeUI() = JTabbedPane().also {
   val l = TabTitleEditListener(it)

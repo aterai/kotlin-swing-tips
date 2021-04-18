@@ -28,15 +28,14 @@ fun makeUI(): Component {
   val htmlEditorKit = HTMLEditorKit()
   editor.isEditable = false
   editor.editorKit = htmlEditorKit
-  editor.text =
-    """
+  editor.text = """
     <html>
       <body>
         <p id='main'></p>
         <p id='bottom'>id=bottom</p>
       </body>
     </html>
-    """
+  """
 
   val model = makeModel()
   (editor.document as? HTMLDocument)?.also { doc ->

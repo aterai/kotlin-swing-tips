@@ -5,8 +5,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.html.HTMLEditorKit
 import javax.swing.text.html.StyleSheet
 
-private const val TEST_HTML =
-  """
+private const val TEST_HTML = """
   <html>
     <body>
       <div>0000000</div>
@@ -14,7 +13,7 @@ private const val TEST_HTML =
       <div>2222222222</div>
     </body>
   </html>
-  """
+"""
 
 fun makeUI(): Component {
   val styleSheet = StyleSheet().also {

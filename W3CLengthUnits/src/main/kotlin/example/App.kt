@@ -12,16 +12,15 @@ fun makeUI(): Component {
     it.addRule(".em {font-size: 1.2em}")
     it.addRule(".percentage {font-size: 120%}")
   }
-  val html =
-    """
-      <html>
-        <h3>h3 {font-size: medium}</h3>
-        <h3 class='number'>h3 {font-size: 14}</h3>
-        <h3 class='pt'>h3 {font-size: 14pt}</h3>
-        <h3 class='em'>h3 {font-size: 1.2em}</h3>
-        <h3 class='percentage'>h3 {font-size: 120%}</h3>
-      </html>
-      """
+  val html = """
+    <html>
+      <h3>h3 {font-size: medium}</h3>
+      <h3 class='number'>h3 {font-size: 14}</h3>
+      <h3 class='pt'>h3 {font-size: 14pt}</h3>
+      <h3 class='em'>h3 {font-size: 1.2em}</h3>
+      <h3 class='percentage'>h3 {font-size: 120%}</h3>
+    </html>
+  """
   editor.text = html
 
   val check = JCheckBox("JEditorPane.W3C_LENGTH_UNITS")
