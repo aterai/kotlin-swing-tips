@@ -36,7 +36,7 @@ fun makeUI(): Component {
         <div>3: StyleSheet, body{font-size:24pt; font-family:Burnstown Dam;}</div>
       </body>
     </html>
-    """
+  """
 
   val editor2 = JEditorPane()
   editor2.font = font

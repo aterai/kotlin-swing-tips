@@ -111,10 +111,11 @@ private class HeaderRenderer : TableCellRenderer {
   }
 
   companion object {
-    private const val INPUT = """<html>
-<table cellpadding='0' cellspacing='0'>
-<td><input type='checkbox'><td>&nbsp;Check All
-"""
+    private const val INPUT = """
+      <html>
+        <table cellpadding='0' cellspacing='0'>
+        <td><input type='checkbox'><td>&nbsp;Check All
+    """
   }
 }
 

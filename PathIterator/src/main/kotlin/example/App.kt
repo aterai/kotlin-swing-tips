@@ -123,12 +123,12 @@ private object SvgUtils {
     }
     val path = sb.toString()
     return """
-     <?xml version="1.0" encoding="UTF-8"?>
-     <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-     <svg width="$sz" height="$sz" xmlns="http://www.w3.org/2000/svg">
-       <desc>$desc</desc>
-       <path d="$path" style="$style" />
-     </svg>
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+      <svg width="$sz" height="$sz" xmlns="http://www.w3.org/2000/svg">
+        <desc>$desc</desc>
+        <path d="$path" style="$style" />
+      </svg>
     """.trimIndent()
   }
 

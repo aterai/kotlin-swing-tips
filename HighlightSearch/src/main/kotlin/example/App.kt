@@ -13,8 +13,7 @@ import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.text.JTextComponent
 
 private val WARNING_COLOR = Color(0xFF_C8_C8)
-private val INIT_TXT =
-  """
+private val INIT_TXT = """
   Trail: Creating a GUI with JFC/Swing
   https://docs.oracle.com/javase/tutorial/uiswing/learn/index.html
   Lesson: Learning Swing by Example
@@ -29,7 +28,7 @@ private val INIT_TXT =
    This lesson ends with a set of questions and exercises
    so you can test yourself on what you've learned.
    https://docs.oracle.com/javase/tutorial/uiswing/learn/index.html
-  """.trimIndent()
+""".trimIndent()
 
 @Transient private val currentPainter = DefaultHighlightPainter(Color.ORANGE)
 @Transient private val highlightPainter = DefaultHighlightPainter(Color.YELLOW)

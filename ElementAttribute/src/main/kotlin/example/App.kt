@@ -18,18 +18,17 @@ import javax.swing.text.html.HTMLEditorKit
 
 private val cl = Thread.currentThread().contextClassLoader
 private val src = cl.getResource("example/favicon.png")
-private val HTML_TEXT =
-  """
-  <html>
-    <body>
-      span tag: <span style='background:#88ff88;' title='tooltip: span[@title]'>span span span</span><br />
-      <div title='tooltip: div[@title]'>div tag: div div div div</div>
-      <div style='padding: 2 24;'><img src='$src' alt='16x16 favicon' />&nbsp;
-        <a href='https://ateraimemo.com/' title='Title: JST'>Java Swing Tips</a>
-      </div>
-    </body>
-  </html>
-  """.trimIndent()
+private val HTML_TEXT = """
+<html>
+  <body>
+    span tag: <span style='background:#88ff88;' title='tooltip: span[@title]'>span span span</span><br />
+    <div title='tooltip: div[@title]'>div tag: div div div div</div>
+    <div style='padding: 2 24;'><img src='$src' alt='16x16 favicon' />&nbsp;
+      <a href='https://ateraimemo.com/' title='Title: JST'>Java Swing Tips</a>
+    </div>
+  </body>
+</html>
+"""
 private var tooltip: String? = null
 
 fun makeUI(): Component {

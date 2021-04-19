@@ -3,8 +3,7 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-private const val TEXT =
-"""
+private const val TEXT = """
 
 Trail: Creating a GUI with JFC/Swing
 Lesson: Learning Swing by Example

@@ -45,8 +45,7 @@ fun makeUI(): Component {
 
 private data class PairItem(val leftText: String, val rightText: String) {
   private val htmlText: String
-    get() =
-      """
+    get() = """
       <html>
         <table width='290'>
           <tr>
@@ -55,7 +54,7 @@ private data class PairItem(val leftText: String, val rightText: String) {
           </tr>
         </table>
       </html>
-      """
+    """
 
   override fun toString() = htmlText
 }

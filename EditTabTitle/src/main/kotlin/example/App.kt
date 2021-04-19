@@ -7,12 +7,11 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-private val INFO =
-  """
+private val INFO = """
   Start editing: Double-Click, Enter-Key
   Commit rename: field-focusLost, Enter-Key
   Cancel editing: Esc-Key, title.isEmpty
-  """.trimIndent()
+""".trimIndent()
 
 fun makeUI(): Component {
   val a = JTextArea(INFO)

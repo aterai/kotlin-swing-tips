@@ -84,13 +84,12 @@ fun debugPrint() {
   textArea.text = builder.toString()
 }
 
-private fun debugString(label: String, c: Container) =
-  """
+private fun debugString(label: String, c: Container) = """
   ---- $label ----
     isFocusCycleRoot: ${c.isFocusCycleRoot}
     isFocusTraversalPolicySet: ${c.isFocusTraversalPolicySet}
     isFocusTraversalPolicyProvider: ${c.isFocusTraversalPolicyProvider}
-  """.trimIndent()
+""".trimIndent()
 
 private class CustomFocusTraversalPolicy(private val order: List<Component>) : FocusTraversalPolicy() {
   override fun getFirstComponent(focusCycleRoot: Container) = order[0]

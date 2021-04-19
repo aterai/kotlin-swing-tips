@@ -11,12 +11,11 @@ import javax.swing.border.AbstractBorder
 import javax.swing.border.Border
 import javax.swing.border.TitledBorder
 
-private val HELP =
-  """
+private val HELP = """
   Start editing: Double-Click
   Commit rename: field-focusLost, Enter-Key
   Cancel editing: Esc-Key, title.isEmpty
-  """.trimIndent()
+""".trimIndent()
 
 fun makeUI(): Component {
   val l1 = JScrollPane(JTree())
