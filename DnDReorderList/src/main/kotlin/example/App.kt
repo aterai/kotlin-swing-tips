@@ -64,22 +64,19 @@ private class ListItemTransferHandler : TransferHandler() {
   private var addIndex = -1 // Location where items were added
   private var addCount = 0 // Number of items added.
 
-  override fun createTransferable(c: JComponent): Transferable? {
-    val src = c as? JList<*> ?: return null
-    src.selectedIndices.forEach { selectedIndices.add(it) }
-    val transferredObjects = src.selectedValuesList
-    return object : Transferable {
-      override fun getTransferDataFlavors() = arrayOf(FLAVOR)
+  override fun createTransferable(c: JComponent) = object : Transferable {
+    override fun getTransferDataFlavors() = arrayOf(FLAVOR)
 
-      override fun isDataFlavorSupported(flavor: DataFlavor) = FLAVOR == flavor
+    override fun isDataFlavorSupported(flavor: DataFlavor) = FLAVOR == flavor
 
-      @Throws(UnsupportedFlavorException::class)
-      override fun getTransferData(flavor: DataFlavor): Any {
-        return if (isDataFlavorSupported(flavor)) {
-          transferredObjects
-        } else {
-          throw UnsupportedFlavorException(flavor)
-        }
+    @Throws(UnsupportedFlavorException::class)
+    override fun getTransferData(flavor: DataFlavor): Any {
+      val src = c as? JList<*>
+      return if (isDataFlavorSupported(flavor) && src != null) {
+        src.selectedIndices.forEach { selectedIndices.add(it) }
+        src.selectedValuesList
+      } else {
+        throw UnsupportedFlavorException(flavor)
       }
     }
   }

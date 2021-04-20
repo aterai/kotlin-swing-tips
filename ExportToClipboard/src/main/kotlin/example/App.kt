@@ -91,7 +91,6 @@ private class ListItemTransferHandler : TransferHandler() {
     val src = c as? JList<*> ?: return null
     source = src
     src.selectedIndices.forEach { selectedIndices.add(it) }
-    val transferredObjects = src.selectedValuesList
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(FLAVOR)
 
@@ -100,7 +99,7 @@ private class ListItemTransferHandler : TransferHandler() {
       @Throws(UnsupportedFlavorException::class)
       override fun getTransferData(flavor: DataFlavor): Any {
         return if (isDataFlavorSupported(flavor)) {
-          transferredObjects
+          src.selectedValuesList
         } else {
           throw UnsupportedFlavorException(flavor)
         }

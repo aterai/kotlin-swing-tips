@@ -69,12 +69,10 @@ private class TableRowTransferHandler : TransferHandler() {
   private var addIndex = -1 // Location where items were added
   private var addCount = 0 // Number of items added.
 
-  override fun createTransferable(c: JComponent): Transferable? {
+  override fun createTransferable(c: JComponent): Transferable {
     c.rootPane.glassPane.isVisible = true
     val table = c as? JTable
-    val model = table?.model as? DefaultTableModel ?: return null
-    table.selectedRows.forEach { selectedIndices.add(it) }
-    val transferredObjects = table.selectedRows.map { model.dataVector[it] }.toList()
+    val model = table?.model as? DefaultTableModel
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(FLAVOR)
 
@@ -82,8 +80,9 @@ private class TableRowTransferHandler : TransferHandler() {
 
       @Throws(UnsupportedFlavorException::class)
       override fun getTransferData(flavor: DataFlavor): Any {
-        return if (isDataFlavorSupported(flavor)) {
-          transferredObjects
+        return if (isDataFlavorSupported(flavor) && model != null) {
+          table.selectedRows.forEach { selectedIndices.add(it) }
+          table.selectedRows.map { model.dataVector[it] }.toList()
         } else {
           throw UnsupportedFlavorException(flavor)
         }
