@@ -226,7 +226,7 @@ class DnDTabbedPane : JTabbedPane() {
 
   private inner class Handler : MouseAdapter(), PropertyChangeListener { // , BeforeDrag
     private var startPt: Point? = null
-    private val gestureMotionThreshold = DragSource.getDragThreshold()
+    private val dragThreshold = DragSource.getDragThreshold()
 
     // PropertyChangeListener
     override fun propertyChange(e: PropertyChangeEvent) {
@@ -254,7 +254,7 @@ class DnDTabbedPane : JTabbedPane() {
     override fun mouseDragged(e: MouseEvent) {
       val tabPt = e.point // e.getDragOrigin()
       val src = e.component
-      if (tabPt.distance(startPt) > gestureMotionThreshold && src is DnDTabbedPane) {
+      if (src is DnDTabbedPane && startPt != null && tabPt.distance(startPt) > dragThreshold) {
         val th = src.transferHandler
         val idx = src.indexAtLocation(tabPt.x, tabPt.y)
         val selIdx = src.selectedIndex
@@ -339,9 +339,9 @@ class TabTransferHandler : TransferHandler() {
     dragImage = null
   }
 
-  override fun createTransferable(c: JComponent): Transferable? {
+  override fun createTransferable(c: JComponent): Transferable {
     println("createTransferable")
-    val src: DnDTabbedPane? = c as? DnDTabbedPane
+    val src = c as? DnDTabbedPane
     source = src
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(localObjectFlavor)
