@@ -38,7 +38,7 @@ fun makeUI(): Component {
   b3.addActionListener {
     val file = File(deviceName)
     if (!file.isFile) {
-      val obj = arrayOf<Any>(file.absolutePath + " is not a file.")
+      val obj = arrayOf(file.absolutePath + " is not a file.")
       JOptionPane.showMessageDialog(p.rootPane, obj, "Error3", JOptionPane.INFORMATION_MESSAGE)
     }
   }

@@ -58,8 +58,7 @@ private class RowDataModel : DefaultTableModel() {
   private val list = mutableListOf<RowData>()
   private var number = 0
   fun addRowData(t: RowData) {
-    val obj = arrayOf<Any>(number, t.name, t.comment)
-    super.addRow(obj)
+    super.addRow(arrayOf(number, t.name, t.comment))
     number++
     list.add(t)
   }
@@ -81,8 +80,7 @@ private class RowDataModel : DefaultTableModel() {
         continue
       }
       val t = list[i]
-      val obj = arrayOf<Any>(i, t.name, t.comment)
-      addRow(convertToVector(obj))
+      addRow(convertToVector(arrayOf(i, t.name, t.comment)))
     }
     fireTableDataChanged()
   }

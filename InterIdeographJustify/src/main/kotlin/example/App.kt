@@ -14,7 +14,7 @@ fun makeUI(): Component {
     arrayOf("電話番号", ""),
     arrayOf("設立", ""),
     arrayOf("代表取締役", ""),
-    arrayOf<Any>("事業内容", "")
+    arrayOf("事業内容", "")
   )
   val model = DefaultTableModel(data, columnNames)
   val table = object : JTable(model) {

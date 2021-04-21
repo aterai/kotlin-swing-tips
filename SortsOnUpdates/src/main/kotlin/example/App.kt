@@ -68,7 +68,7 @@ private class TablePopupMenu : JPopupMenu() {
       val model = table?.model
       if (model is DefaultTableModel) {
         val i = model.rowCount
-        model.addRow(arrayOf<Any>(i, "", i % 2 == 0))
+        model.addRow(arrayOf(i, "", i % 2 == 0))
         val r = table.getCellRect(table.convertRowIndexToView(i - 1), 0, true)
         table.scrollRectToVisible(r)
       }
