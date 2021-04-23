@@ -39,7 +39,7 @@ fun makeUI(): Component {
 
 private class LocalDateTimeTableCellRenderer : DefaultTableCellRenderer() {
   @Transient
-  private val dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN)
+  private val dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN)
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -56,7 +56,7 @@ private class LocalDateTimeTableCellRenderer : DefaultTableCellRenderer() {
   }
 
   companion object {
-    private const val DATE_FORMAT_PATTERN = "yyyy/MM/dd"
+    private const val DATE_PATTERN = "yyyy/MM/dd"
   }
 }
 
@@ -135,7 +135,7 @@ private class LocalDateTimeTableCellEditor : AbstractCellEditor(), TableCellEdit
 
 private class LocalDateTimeCellRenderer : JLabel(), ListCellRenderer<LocalDateTime> {
   @Transient
-  private val dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT_PATTERN)
+  private val dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN)
   override fun getListCellRendererComponent(
     list: JList<out LocalDateTime>,
     value: LocalDateTime?,
@@ -158,7 +158,7 @@ private class LocalDateTimeCellRenderer : JLabel(), ListCellRenderer<LocalDateTi
   }
 
   companion object {
-    private const val DATE_FORMAT_PATTERN = "yyyy/MM/dd"
+    private const val DATE_PATTERN = "yyyy/MM/dd"
   }
 }
 

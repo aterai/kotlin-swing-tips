@@ -48,7 +48,7 @@ fun makeUI(): Component {
             (it as? JLabel)?.also { label ->
               label.icon = ColorIcon(value.color)
               label.toolTipText = "index: ${value.index}"
-              val bc = if (value.isTransparentPixel) Color.RED else Color.WHITE
+              val bc = if (value.isTransparent) Color.RED else Color.WHITE
               label.border = BorderFactory.createLineBorder(bc)
             }
           }
@@ -95,7 +95,7 @@ private fun makeMissingImage(): BufferedImage {
   return bi
 }
 
-private data class IndexedColor(val index: Int, val color: Color, val isTransparentPixel: Boolean)
+private data class IndexedColor(val index: Int, val color: Color, val isTransparent: Boolean)
 
 private class PaletteListModel(private val model: IndexColorModel) : AbstractListModel<IndexedColor>() {
   override fun getSize() = model.mapSize
