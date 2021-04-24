@@ -92,8 +92,8 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
     close.addActionListener {
       tabPanel.remove(tab)
       contentsPanel.remove(comp)
-      val isMoreThanOne = tabPanel.componentCount > 1
-      if (isMoreThanOne) {
+      val oneOrMore = tabPanel.componentCount > 1
+      if (oneOrMore) {
         tabPanel.revalidate()
         (tabPanel.getComponent(0) as? TabButton)?.isSelected = true
         cardLayout.first(contentsPanel)

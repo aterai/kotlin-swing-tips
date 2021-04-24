@@ -375,8 +375,8 @@ private class CompactListItemTransferHandler : ListItemTransferHandler() {
     val rect = source.getCellBounds(idx, idx)
     SwingUtilities.paintComponent(g2, c, source, 0, 0, rect.width, rect.height)
     val selectedCount = selectedIndices.size
-    val isMoreThanOneItemSelected = selectedCount > 1
-    if (isMoreThanOneItemSelected) {
+    val oneOrMore = selectedCount > 1
+    if (oneOrMore) {
       LABEL.text = selectedCount.toString()
       val d = LABEL.preferredSize
       SwingUtilities.paintComponent(

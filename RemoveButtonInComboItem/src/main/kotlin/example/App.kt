@@ -143,8 +143,8 @@ private class ButtonsRenderer<E>(comboBox: RemoveButtonComboBox<E>) : ListCellRe
   init {
     deleteButton.addActionListener {
       val m = comboBox.model
-      val isMoreThanOneItem = m.size > 1
-      if (isMoreThanOneItem && m is MutableComboBoxModel<*>) {
+      val oneOrMore = m.size > 1
+      if (oneOrMore && m is MutableComboBoxModel<*>) {
         m.removeElementAt(targetIndex)
         comboBox.selectedIndex = -1
         comboBox.showPopup()

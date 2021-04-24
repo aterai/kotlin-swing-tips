@@ -142,9 +142,9 @@ private class DnDTable(model: TableModel?) : JTable(model), DragGestureListener,
 
   // Interface: DragGestureListener
   override fun dragGestureRecognized(e: DragGestureEvent) {
-    val isMoreThanOneRowSelected = selectedRowCount > 1
+    val oneOrMore = selectedRowCount > 1
     draggedIndex = rowAtPoint(e.dragOrigin)
-    if (isMoreThanOneRowSelected || draggedIndex < 0) {
+    if (oneOrMore || draggedIndex < 0) {
       return
     }
     runCatching {

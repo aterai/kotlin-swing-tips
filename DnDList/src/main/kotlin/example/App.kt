@@ -94,9 +94,9 @@ private class DnDList<E> : JList<E>(), DragGestureListener, Transferable {
 
   // Interface: DragGestureListener
   override fun dragGestureRecognized(e: DragGestureEvent) {
-    val isMoreThanOneItemSelected = selectedIndices.size > 1
+    val oneOrMore = selectedIndices.size > 1
     draggedIndex = locationToIndex(e.dragOrigin)
-    if (isMoreThanOneItemSelected || draggedIndex < 0) {
+    if (oneOrMore || draggedIndex < 0) {
       return
     }
     runCatching {
