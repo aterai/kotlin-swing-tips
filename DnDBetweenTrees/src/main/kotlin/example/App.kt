@@ -42,21 +42,27 @@ private fun makeTree(handler: TransferHandler): JTree {
 
 private class TreeTransferHandler : TransferHandler() {
   private var source: JTree? = null
-  override fun createTransferable(c: JComponent): Transferable? {
-    source = c as? JTree
-    val paths = source?.selectionPaths ?: return null
-    val nodes = arrayOfNulls<DefaultMutableTreeNode>(paths.size)
-    for (i in paths.indices) {
-      nodes[i] = paths[i].lastPathComponent as? DefaultMutableTreeNode
-    }
+  override fun createTransferable(c: JComponent): Transferable {
+    val src = c as? JTree
+    source = src
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(FLAVOR)
 
       override fun isDataFlavorSupported(flavor: DataFlavor) = FLAVOR == flavor
 
       @Throws(UnsupportedFlavorException::class)
-      override fun getTransferData(flavor: DataFlavor) =
-        nodes.takeIf { isDataFlavorSupported(flavor) } ?: throw UnsupportedFlavorException(flavor)
+      override fun getTransferData(flavor: DataFlavor): Any {
+        val paths = src?.selectionPaths
+        return if (isDataFlavorSupported(flavor) && paths != null) {
+          val nodes = arrayOfNulls<DefaultMutableTreeNode>(paths.size)
+          for (i in paths.indices) {
+            nodes[i] = paths[i].lastPathComponent as? DefaultMutableTreeNode
+          }
+          nodes
+        } else {
+          throw UnsupportedFlavorException(flavor)
+        }
+      }
     }
   }
 

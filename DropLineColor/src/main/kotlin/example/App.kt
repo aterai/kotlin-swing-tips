@@ -163,11 +163,9 @@ private class ListItemTransferHandler : TransferHandler() {
   private var addIndex = -1 // Location where items were added
   private var addCount = 0 // Number of items added.
 
-  override fun createTransferable(c: JComponent): Transferable? {
-    val src = c as? JList<*> ?: return null
+  override fun createTransferable(c: JComponent): Transferable {
+    val src = c as? JList<*>
     source = src
-    src.selectedIndices.forEach { selectedIndices.add(it) }
-    val transferObjects = src.selectedValuesList
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(localObjectFlavor)
 
@@ -175,8 +173,9 @@ private class ListItemTransferHandler : TransferHandler() {
 
       @Throws(UnsupportedFlavorException::class, IOException::class)
       override fun getTransferData(flavor: DataFlavor): Any {
-        return if (isDataFlavorSupported(flavor)) {
-          transferObjects
+        return if (isDataFlavorSupported(flavor) && src != null) {
+          src.selectedIndices.forEach { selectedIndices.add(it) }
+          src.selectedValuesList
         } else {
           throw UnsupportedFlavorException(flavor)
         }
@@ -340,16 +339,9 @@ private class TableRowTransferHandler : TransferHandler() {
 
 private class TreeTransferHandler : TransferHandler() {
   private var source: JTree? = null
-  override fun createTransferable(c: JComponent): Transferable? {
-    if (c !is JTree || c.selectionModel == null) {
-      return null
-    }
-    source = c
-    val paths = c.selectionPaths
-    val nodes = arrayOfNulls<DefaultMutableTreeNode?>(paths?.size ?: 0)
-    paths?.indices?.forEach {
-      nodes[it] = paths[it].lastPathComponent as? DefaultMutableTreeNode
-    }
+  override fun createTransferable(c: JComponent): Transferable {
+    val src = c as? JTree
+    source = src
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(FLAVOR)
 
@@ -357,7 +349,12 @@ private class TreeTransferHandler : TransferHandler() {
 
       @Throws(UnsupportedFlavorException::class)
       override fun getTransferData(flavor: DataFlavor): Any {
-        return if (isDataFlavorSupported(flavor)) {
+        val paths = src?.selectionPaths
+        return if (isDataFlavorSupported(flavor) && paths != null) {
+          val nodes = arrayOfNulls<DefaultMutableTreeNode?>(paths.size)
+          paths.indices.forEach {
+            nodes[it] = paths[it].lastPathComponent as? DefaultMutableTreeNode
+          }
           nodes
         } else {
           throw UnsupportedFlavorException(flavor)
