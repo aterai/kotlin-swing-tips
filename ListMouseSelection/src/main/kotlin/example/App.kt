@@ -67,10 +67,9 @@ private class SingleMouseClickSelectList<E>(model: ListModel<E>) : JList<E>(mode
 }
 
 private class SingleClickSelectList<E>(model: ListModel<E>) : JList<E>(model) {
-  @Transient
   private var listener: SelectionHandler? = null
   private var isDragging = false
-  private var isCellInsideDragging = false
+  private var isInsideDragging = false
   private var startOutside = false
   private var startIndex = -1
 
@@ -91,13 +90,13 @@ private class SingleClickSelectList<E>(model: ListModel<E>) : JList<E>(model) {
     if (anchor == lead && lead >= 0) {
       if (isDragging) {
         addSelectionInterval(anchor, anchor)
-      } else if (!isCellInsideDragging) {
+      } else if (!isInsideDragging) {
         if (isSelectedIndex(anchor)) {
           removeSelectionInterval(anchor, anchor)
         } else {
           addSelectionInterval(anchor, anchor)
         }
-        isCellInsideDragging = true
+        isInsideDragging = true
       }
     } else {
       super.setSelectionInterval(anchor, lead)
@@ -114,8 +113,7 @@ private class SingleClickSelectList<E>(model: ListModel<E>) : JList<E>(model) {
 
   private fun cellsContains(pt: Point): Boolean {
     for (i in 0 until model.size) {
-      val r = getCellBounds(i, i)
-      if (r.contains(pt)) {
+      if (getCellBounds(i, i).contains(pt)) {
         return true
       }
     }
@@ -134,16 +132,16 @@ private class SingleClickSelectList<E>(model: ListModel<E>) : JList<E>(model) {
     override fun mouseReleased(e: MouseEvent) {
       startOutside = false
       isDragging = false
-      isCellInsideDragging = false
+      isInsideDragging = false
       startIndex = -1
     }
 
     override fun mouseDragged(e: MouseEvent) {
       if (!isDragging && startIndex == locationToIndex(e.point)) {
-        isCellInsideDragging = true
+        isInsideDragging = true
       } else {
         isDragging = true
-        isCellInsideDragging = false
+        isInsideDragging = false
       }
       if (cellsContains(e.point)) {
         startOutside = false
