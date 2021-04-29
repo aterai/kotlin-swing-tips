@@ -9,16 +9,16 @@ fun makeUI() = JPanel(GridLayout(2, 1)).also {
   it.preferredSize = Dimension(320, 240)
 }
 
-fun makePanel(prototypeCellValue: String?, visibleRowCount: Int): Component {
+fun makePanel(prototypeValue: String?, visibleRowCount: Int): Component {
   val model1 = (0 until 20).map { it.toString() }.toTypedArray()
   val list1 = JList(model1)
   list1.visibleRowCount = visibleRowCount
-  list1.prototypeCellValue = prototypeCellValue
+  list1.prototypeCellValue = prototypeValue
 
   val model2 = arrayOf("looooooooooooooong")
   val list2 = JList(model2)
   list2.visibleRowCount = visibleRowCount
-  list2.prototypeCellValue = prototypeCellValue
+  list2.prototypeCellValue = prototypeValue
 
   val list3 = object : JList<String>(model2) {
     override fun getPreferredScrollableViewportSize(): Dimension {
@@ -28,7 +28,7 @@ fun makePanel(prototypeCellValue: String?, visibleRowCount: Int): Component {
     }
   }
   list3.visibleRowCount = visibleRowCount
-  list3.prototypeCellValue = prototypeCellValue
+  list3.prototypeCellValue = prototypeValue
 
   val p = JPanel(GridBagLayout())
   val c = GridBagConstraints()
