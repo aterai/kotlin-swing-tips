@@ -105,18 +105,18 @@ private class DnDTabbedPane : JTabbedPane() {
   }
 
   private fun clickArrowButton(actionKey: String) {
-    var scrollForwardButton: JButton? = null
-    var scrollBackwardButton: JButton? = null
+    var forwardButton: JButton? = null
+    var backwardButton: JButton? = null
     for (c in components) {
       if (c is JButton) {
-        if (scrollForwardButton == null) {
-          scrollForwardButton = c
-        } else if (scrollBackwardButton == null) {
-          scrollBackwardButton = c
+        if (forwardButton == null) {
+          forwardButton = c
+        } else if (backwardButton == null) {
+          backwardButton = c
         }
       }
     }
-    val button = if ("scrollTabsForwardAction" == actionKey) scrollForwardButton else scrollBackwardButton
+    val button = if ("scrollTabsForwardAction" == actionKey) forwardButton else backwardButton
     button?.takeIf { it.isEnabled }?.doClick()
   }
 
@@ -189,8 +189,8 @@ private class DnDTabbedPane : JTabbedPane() {
   }
 
   fun initTargetLine(next: Int) {
-    val isLeftOrRightNeighbor = next < 0 || dragTabIndex == next || next - dragTabIndex == 1
-    if (isLeftOrRightNeighbor) {
+    val isSideNeighbor = next < 0 || dragTabIndex == next || next - dragTabIndex == 1
+    if (isSideNeighbor) {
       glassPane.setTargetRect(0, 0, 0, 0)
       return
     }

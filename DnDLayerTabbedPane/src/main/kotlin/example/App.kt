@@ -54,13 +54,13 @@ fun makeUI(handler: TransferHandler, layerUI: LayerUI<DnDTabbedPane>): Component
   sub.name = "JTabbedPane#sub1"
   sub2.name = "JTabbedPane#sub2"
 
-  val dropTargetListener = TabDropTargetAdapter()
+  val listener = TabDropTargetAdapter()
   // val handler = TabTransferHandler()
   listOf(tabbedPane, sub, sub2).forEach { tp ->
     tp.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
     tp.transferHandler = handler
     runCatching {
-      tp.dropTarget.addDropTargetListener(dropTargetListener)
+      tp.dropTarget.addDropTargetListener(listener)
     }.onFailure { ex ->
       ex.printStackTrace()
       getDefaultToolkit().beep()
@@ -134,17 +134,17 @@ class DnDTabbedPane : JTabbedPane() {
   class DropLocation(pt: Point, val index: Int) : TransferHandler.DropLocation(pt)
 
   private fun clickArrowButton(actionKey: String) {
-    var scrollForwardButton: JButton? = null
-    var scrollBackwardButton: JButton? = null
+    var forwardButton: JButton? = null
+    var backwardButton: JButton? = null
     for (c in components) {
       val b = c as? JButton ?: continue
-      if (scrollForwardButton == null) {
-        scrollForwardButton = b
-      } else if (scrollBackwardButton == null) {
-        scrollBackwardButton = b
+      if (forwardButton == null) {
+        forwardButton = b
+      } else if (backwardButton == null) {
+        backwardButton = b
       }
     }
-    val button = if ("scrollTabsForwardAction" == actionKey) scrollForwardButton else scrollBackwardButton
+    val button = if ("scrollTabsForwardAction" == actionKey) forwardButton else backwardButton
     button?.takeIf { it.isEnabled }?.doClick()
   }
 
