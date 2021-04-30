@@ -41,14 +41,14 @@ private class WavyLineSeparator(orientation: Int = SwingConstants.HORIZONTAL) : 
     if (orientation == SwingConstants.HORIZONTAL) {
       pos = i.left
       while (width - pos > 0) {
-        WAVY_HORIZONTAL_ICON.paintIcon(this, g, pos, i.top)
-        pos += WAVY_HORIZONTAL_ICON.iconWidth
+        HORIZONTAL_ICON.paintIcon(this, g, pos, i.top)
+        pos += HORIZONTAL_ICON.iconWidth
       }
     } else {
       pos = i.top
       while (height - pos > 0) {
-        WAVY_VERTICAL_ICON.paintIcon(this, g, i.left, pos)
-        pos += WAVY_VERTICAL_ICON.iconHeight
+        VERTICAL_ICON.paintIcon(this, g, i.left, pos)
+        pos += VERTICAL_ICON.iconHeight
       }
     }
   }
@@ -98,8 +98,8 @@ private class WavyLineSeparator(orientation: Int = SwingConstants.HORIZONTAL) : 
 
   companion object {
     private const val ICON_WIDTH = 3
-    private val WAVY_HORIZONTAL_ICON = WavyLineIcon()
-    private val WAVY_VERTICAL_ICON = WavyLineIcon(SwingConstants.VERTICAL)
+    private val HORIZONTAL_ICON = WavyLineIcon()
+    private val VERTICAL_ICON = WavyLineIcon(SwingConstants.VERTICAL)
   }
 }
 
