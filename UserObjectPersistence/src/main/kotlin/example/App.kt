@@ -31,9 +31,9 @@ private fun makeUI(): Component {
   save.addActionListener {
     runCatching {
       val file = File.createTempFile("output", ".xml")
-      val constructorPropertyNames = arrayOf("label", "status")
+      val d = DefaultPersistenceDelegate(arrayOf("label", "status"))
       XMLEncoder(BufferedOutputStream(Files.newOutputStream(file.toPath()))).use { xe ->
-        xe.setPersistenceDelegate(CheckBoxNode::class.java, DefaultPersistenceDelegate(constructorPropertyNames))
+        xe.setPersistenceDelegate(CheckBoxNode::class.java, d)
         xe.writeObject(tree.model)
       }
       Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8).use {

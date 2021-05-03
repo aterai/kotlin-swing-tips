@@ -31,8 +31,8 @@ fun makeUI(): Component {
     runCatching {
       val file = File.createTempFile("output", ".xml")
       XMLEncoder(BufferedOutputStream(Files.newOutputStream(file.toPath()))).use { xe ->
-        val constructorPropertyNames = arrayOf("column", "sortOrder")
-        xe.setPersistenceDelegate(RowSorter.SortKey::class.java, DefaultPersistenceDelegate(constructorPropertyNames))
+        val d = DefaultPersistenceDelegate(arrayOf("column", "sortOrder"))
+        xe.setPersistenceDelegate(RowSorter.SortKey::class.java, d)
         xe.writeObject(table.rowSorter.sortKeys)
         xe.setPersistenceDelegate(DefaultTableModel::class.java, DefaultTableModelPersistenceDelegate())
         xe.writeObject(table.model)
