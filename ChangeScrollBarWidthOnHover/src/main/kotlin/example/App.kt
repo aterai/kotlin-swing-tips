@@ -11,29 +11,25 @@ import javax.swing.plaf.LayerUI
 import javax.swing.plaf.basic.BasicScrollBarUI
 
 private const val MIN_WIDTH = 6
-private var willExpand = false
-private val controls = JPanel()
-private val animator = Timer(10) { controls.revalidate() }
+private val scrollBar = JPanel()
+private val expand = Timer(10) { scrollBar.revalidate() }
+private val collapse = Timer(10) { scrollBar.revalidate() }
 
-fun makeUI(): Component {
+fun makeUI() = JPanel(GridLayout(1, 2)).also {
+  it.add(makeScrollBarOnHoverScrollPane())
+  it.add(JLayer(makeTranslucentScrollBar(makeList()), ScrollBarOnHoverLayerUI()))
+  it.preferredSize = Dimension(320, 240)
+}
+
+private fun makeScrollBarOnHoverScrollPane(): Component {
   val scroll = JScrollPane(makeList())
   scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
-
-  controls.layout = HoverLayout()
-  controls.add(scroll.verticalScrollBar)
-
-  val p = JPanel(BorderLayout())
-  p.add(controls, BorderLayout.EAST)
-  p.add(scroll)
-
-  val pp = JPanel(GridLayout(1, 2))
-  pp.add(JLayer(p, HoverLayer()))
-  pp.add(JLayer(makeTranslucentScrollBar(makeList()), ScrollBarOnHoverLayerUI()))
-
-  return JPanel(BorderLayout()).also {
-    it.add(pp)
-    it.preferredSize = Dimension(320, 240)
-  }
+  scrollBar.layout = HoverLayout()
+  scrollBar.add(scroll.verticalScrollBar)
+  val wrap = JPanel(BorderLayout())
+  wrap.add(scrollBar, BorderLayout.EAST)
+  wrap.add(scroll)
+  return JLayer(wrap, HoverLayer())
 }
 
 private fun makeList(): Component {
@@ -64,25 +60,21 @@ private fun makeTranslucentScrollBar(c: Component) = object : JScrollPane(c) {
 
 private class HoverLayout : BorderLayout(0, 0) {
   private var controlsWidth = MIN_WIDTH
+
   override fun preferredLayoutSize(target: Container): Dimension {
     val ps = super.preferredLayoutSize(target)
-    val controlsPreferredWidth = ps.width
-    if (animator.isRunning) {
-      if (willExpand) {
-        if (controls.width < controlsPreferredWidth) {
-          controlsWidth += 1
-        }
-      } else {
-        if (controls.width > MIN_WIDTH) {
-          controlsWidth -= 1
-        }
+    val barInitWidth = ps.width
+    if (expand.isRunning && scrollBar.width < barInitWidth) {
+      controlsWidth += 1
+      if (controlsWidth >= barInitWidth) {
+        controlsWidth = barInitWidth
+        expand.stop()
       }
+    } else if (collapse.isRunning && scrollBar.width > MIN_WIDTH) {
+      controlsWidth -= 1
       if (controlsWidth <= MIN_WIDTH) {
         controlsWidth = MIN_WIDTH
-        animator.stop()
-      } else if (controlsWidth >= controlsPreferredWidth) {
-        controlsWidth = controlsPreferredWidth
-        animator.stop()
+        collapse.stop()
       }
     }
     ps.width = controlsWidth
@@ -113,22 +105,19 @@ private class HoverLayer : LayerUI<JPanel>() {
   override fun processMouseEvent(e: MouseEvent, l: JLayer<out JPanel>) {
     if (e.component is JScrollBar) {
       when (e.id) {
-        MouseEvent.MOUSE_ENTERED -> if (!animator.isRunning && !isDragging) {
-          willExpand = true
-          animator.initialDelay = 0
-          animator.start()
+        MouseEvent.MOUSE_ENTERED -> if (!expand.isRunning && !isDragging) {
+          expand.initialDelay = 0
+          expand.start()
         }
-        MouseEvent.MOUSE_EXITED -> if (!animator.isRunning && !isDragging) {
-          willExpand = false
-          animator.initialDelay = 500
-          animator.start()
+        MouseEvent.MOUSE_EXITED -> if (!collapse.isRunning && !isDragging) {
+          collapse.initialDelay = 500
+          collapse.start()
         }
         MouseEvent.MOUSE_RELEASED -> {
           isDragging = false
-          if (!animator.isRunning && !e.component.bounds.contains(e.point)) {
-            willExpand = false
-            animator.initialDelay = 500
-            animator.start()
+          if (!collapse.isRunning && !e.component.bounds.contains(e.point)) {
+            collapse.initialDelay = 500
+            collapse.start()
           }
         }
       }
@@ -209,8 +198,6 @@ private class TranslucentScrollBarUI : BasicScrollBarUI() {
 
 private class ScrollBarOnHoverLayerUI : LayerUI<JScrollPane>() {
   private val timer = Timer(2000, null)
-
-  @Transient
   private var listener: ActionListener? = null
 
   override fun installUI(c: JComponent) {
