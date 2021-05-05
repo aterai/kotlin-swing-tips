@@ -22,7 +22,7 @@ fun makeUI(): Component {
       actionMap.put(ENTER_PRESSED, null)
       super.updateUI()
       val cb = this
-      val defaultEnterPressedAction = actionMap.get(ENTER_PRESSED)
+      val defaultAction = actionMap.get(ENTER_PRESSED)
       val action = object : AbstractAction() {
         override fun actionPerformed(e: ActionEvent) {
           val isPopupVisible = isPopupVisible
@@ -38,7 +38,7 @@ fun makeUI(): Component {
             selectedIndex = 0
             setPopupVisible(isPopupVisible)
           } else {
-            defaultEnterPressedAction?.actionPerformed(e)
+            defaultAction?.actionPerformed(e)
           }
         }
       }

@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 private const val OFFSET = 30
-private val OPEN_FRAME_COUNTER = AtomicInteger()
+private val OPEN_COUNTER = AtomicInteger()
 
 fun makeUI(): Component {
   val desktop = JDesktopPane()
@@ -59,11 +59,11 @@ fun makeUI(): Component {
 }
 
 private fun createInternalFrame(): JInternalFrame {
-  val title = "Document #${OPEN_FRAME_COUNTER.getAndIncrement()}"
+  val title = "Document #${OPEN_COUNTER.getAndIncrement()}"
   val f = JInternalFrame(title, true, true, true, true)
   f.contentPane.add(JScrollPane(JTree()))
   f.setSize(160, 100)
-  f.setLocation(OFFSET * OPEN_FRAME_COUNTER.toInt(), OFFSET * OPEN_FRAME_COUNTER.toInt())
+  f.setLocation(OFFSET * OPEN_COUNTER.toInt(), OFFSET * OPEN_FRAME_COUNTER.toInt())
   return f
 }
 

@@ -158,8 +158,8 @@ private class CheckBoxStatusUpdateListener : TreeModelListener {
     adjusting = true
     val node: DefaultMutableTreeNode?
     val c: CheckBoxNode?
-    val isNotRootAndOnlyOneNodeChanged = children != null && children.size == 1
-    if (isNotRootAndOnlyOneNodeChanged) {
+    val isNotRoot = children != null && children.size == 1
+    if (isNotRoot) {
       node = children[0] as? DefaultMutableTreeNode
       c = node?.userObject as? CheckBoxNode
       val parent = e.treePath
