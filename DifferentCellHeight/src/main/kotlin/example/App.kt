@@ -10,26 +10,20 @@ fun makeUI(): Component {
   m.addElement("111\n222222")
   m.addElement("111\n222222\n333333333")
   m.addElement("111\n222222\n333333333\n444444444444")
-  return JPanel(GridLayout(1, 0)).also {
-    it.add(JScrollPane(makeList(m, false)))
-    it.add(JScrollPane(makeList(m, true)))
-    it.preferredSize = Dimension(320, 240)
-  }
-}
-
-private fun <E> makeList(model: ListModel<E>, hasTextAreaRenderer: Boolean): JList<E> {
-  return object : JList<E>(model) {
+  val list = object : JList<String>(m) {
     override fun updateUI() {
       cellRenderer = null
       super.updateUI()
-      if (hasTextAreaRenderer) {
-        cellRenderer = TextAreaRenderer<E>()
-        if (fixedCellHeight != -1) {
-          println(fixedCellHeight)
-          fixedCellHeight = -1
-        }
+      cellRenderer = TextAreaRenderer()
+      if (fixedCellHeight != -1) {
+        fixedCellHeight = -1
       }
     }
+  }
+  return JPanel(GridLayout(1, 0)).also {
+    it.add(JScrollPane(JList(m)))
+    it.add(JScrollPane(list))
+    it.preferredSize = Dimension(320, 240)
   }
 }
 
