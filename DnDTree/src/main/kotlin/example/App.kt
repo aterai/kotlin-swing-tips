@@ -57,7 +57,7 @@ private fun makeModel(): DefaultTreeModel {
 }
 
 private class DnDTree : JTree() {
-  private var dragGestureRecognizer: DragGestureRecognizer? = null
+  private var dragGestureHandler: DragGestureRecognizer? = null
   private var treeDropTarget: DropTarget? = null
   private var dropTargetNode: TreeNode? = null
   private var draggedNode: TreeNode? = null
@@ -66,8 +66,8 @@ private class DnDTree : JTree() {
     setCellRenderer(null)
     super.updateUI()
     setCellRenderer(DnDTreeCellRenderer())
-    if (dragGestureRecognizer == null || treeDropTarget == null) {
-      dragGestureRecognizer = DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(
+    if (dragGestureHandler == null || treeDropTarget == null) {
+      dragGestureHandler = DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(
         this, DnDConstants.ACTION_MOVE, NodeDragGestureListener()
       )
       treeDropTarget = DropTarget(this, NodeDropTargetListener())
