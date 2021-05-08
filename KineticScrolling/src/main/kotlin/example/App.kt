@@ -6,6 +6,8 @@ import java.awt.event.HierarchyListener
 import java.awt.event.ItemEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import kotlin.math.abs
 
@@ -15,32 +17,33 @@ fun makeUI(): Component {
     it.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
   }
 
-  // val heavyweightLightweightMixing = false
   // val viewport = scroll.getViewport() // Java 6
   val viewport = object : JViewport() { // Java 7
-    // private val HEAVYWEIGHT_LIGHTWEIGHT_MIXING = false
+    val middleWeight = false
     private var adjusting = false
     override fun revalidate() {
-      // if (!heavyweightLightweightMixing && adjusting) {
-      if (adjusting) {
+      if (!middleWeight && adjusting) {
         return
       }
       super.revalidate()
     }
 
     override fun setViewPosition(p: Point) {
-      // if (heavyweightLightweightMixing) {
-      //   super.setViewPosition(p)
-      // } else {
-      adjusting = true
-      super.setViewPosition(p)
-      adjusting = false
+      if (middleWeight) {
+        super.setViewPosition(p)
+      } else {
+        adjusting = true
+        super.setViewPosition(p)
+        adjusting = false
+      }
     }
   }
   scroll.viewport = viewport
 
   val cl = Thread.currentThread().contextClassLoader
-  val label = JLabel(ImageIcon(cl.getResource("example/CRW_3857_JFR.jpg")))
+  val url = cl.getResource("example/GIANT_TCR1_2013.jpg")
+  val image = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+  val label = JLabel(ImageIcon(image))
   viewport.add(label)
   val l1 = KineticScrollingListener1(label)
   val l2 = KineticScrollingListener2(label)
@@ -87,6 +90,17 @@ fun makeUI(): Component {
   }
 }
 
+private fun makeMissingImage(): BufferedImage {
+  val missingIcon = MissingIcon()
+  val w = missingIcon.iconWidth
+  val h = missingIcon.iconHeight
+  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, 0, 0)
+  g2.dispose()
+  return bi
+}
+
 private class KineticScrollingListener1(private val label: JComponent) : MouseAdapter(), HierarchyListener {
   private val dc = label.cursor
   private val hc = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
@@ -97,10 +111,10 @@ private class KineticScrollingListener1(private val label: JComponent) : MouseAd
   init {
     this.scroller = Timer(DELAY) { e ->
       val src = e.source
-      val vport = SwingUtilities.getUnwrappedParent(label) as? JViewport
-      val vp = vport?.viewPosition ?: Point()
+      val viewport = SwingUtilities.getUnwrappedParent(label) as? JViewport
+      val vp = viewport?.viewPosition ?: Point()
       vp.translate(-delta.x, -delta.y)
-      label.scrollRectToVisible(Rectangle(vp, vport?.size ?: Dimension()))
+      label.scrollRectToVisible(Rectangle(vp, viewport?.size ?: Dimension()))
       if (abs(delta.x) > 0 || abs(delta.y) > 0) {
         delta.setLocation((delta.x * D).toInt(), (delta.y * D).toInt())
       } else if (src is Timer) {
@@ -117,11 +131,11 @@ private class KineticScrollingListener1(private val label: JComponent) : MouseAd
 
   override fun mouseDragged(e: MouseEvent) {
     val pt = e.point
-    val vport = e.component as? JViewport ?: return
-    val vp = vport.viewPosition // = SwingUtilities.convertPoint(vport, 0, 0, label)
+    val viewport = e.component as? JViewport ?: return
+    val vp = viewport.viewPosition // = SwingUtilities.convertPoint(viewport, 0, 0, label)
     vp.translate(startPt.x - pt.x, startPt.y - pt.y)
     delta.setLocation(SPEED * (pt.x - startPt.x), SPEED * (pt.y - startPt.y))
-    label.scrollRectToVisible(Rectangle(vp, vport.size))
+    label.scrollRectToVisible(Rectangle(vp, viewport.size))
     startPt.location = pt
   }
 
@@ -151,10 +165,10 @@ private class KineticScrollingListener2(private val label: JComponent) : MouseAd
   private val delta = Point()
   private val inside = Timer(DELAY) { e ->
     val c = SwingUtilities.getUnwrappedParent(label)
-    val vport = c as? JViewport
-    val vp = vport?.viewPosition ?: Point()
+    val viewport = c as? JViewport
+    val vp = viewport?.viewPosition ?: Point()
     vp.translate(-delta.x, -delta.y)
-    vport?.viewPosition = vp
+    viewport?.viewPosition = vp
     if (abs(delta.x) > 0 || abs(delta.y) > 0) {
       delta.setLocation((delta.x * D).toInt(), (delta.y * D).toInt())
       // Outside
@@ -166,28 +180,28 @@ private class KineticScrollingListener2(private val label: JComponent) : MouseAd
       }
     } else {
       (e.source as? Timer)?.stop() // inside.stop()
-      if (vport != null && !isInside(vport, label)) {
+      if (viewport != null && !isInside(viewport, label)) {
         outside.start()
       }
     }
   }
   private val outside = Timer(DELAY) { e ->
-    val vport = SwingUtilities.getUnwrappedParent(label)
-    val vp = (vport as? JViewport)?.viewPosition ?: Point()
+    val viewport = SwingUtilities.getUnwrappedParent(label)
+    val vp = (viewport as? JViewport)?.viewPosition ?: Point()
     if (vp.x < 0) {
       vp.x = (vp.x * D).toInt()
     }
     if (vp.y < 0) {
       vp.y = (vp.y * D).toInt()
     }
-    if (vp.x + vport.width - label.width > 0) {
-      vp.x = (vp.x - (vp.x + vport.width - label.width) * (1.0 - D)).toInt()
+    if (vp.x + viewport.width - label.width > 0) {
+      vp.x = (vp.x - (vp.x + viewport.width - label.width) * (1.0 - D)).toInt()
     }
-    if (vp.y + vport.height > label.height) {
-      vp.y = (vp.y - (vp.y + vport.height - label.height) * (1.0 - D)).toInt()
+    if (vp.y + viewport.height > label.height) {
+      vp.y = (vp.y - (vp.y + viewport.height - label.height) * (1.0 - D)).toInt()
     }
-    (vport as? JViewport)?.viewPosition = vp
-    if (vport is JViewport && isInside(vport, label)) {
+    (viewport as? JViewport)?.viewPosition = vp
+    if (viewport is JViewport && isInside(viewport, label)) {
       (e.source as? Timer)?.stop() // outside.stop()
     }
   }
@@ -201,18 +215,18 @@ private class KineticScrollingListener2(private val label: JComponent) : MouseAd
 
   override fun mouseDragged(e: MouseEvent) {
     val pt = e.point
-    val vport = SwingUtilities.getUnwrappedParent(label) as? JViewport ?: return
-    val vp = vport.viewPosition
+    val viewport = SwingUtilities.getUnwrappedParent(label) as? JViewport ?: return
+    val vp = viewport.viewPosition
     vp.translate(startPt.x - pt.x, startPt.y - pt.y)
-    vport.viewPosition = vp
+    viewport.viewPosition = vp
     delta.setLocation(SPEED * (pt.x - startPt.x), SPEED * (pt.y - startPt.y))
     startPt.location = pt
   }
 
   override fun mouseReleased(e: MouseEvent) {
     e.component.cursor = dc
-    val vport = SwingUtilities.getUnwrappedParent(label) as? JViewport ?: return
-    if (isInside(vport, label)) {
+    val viewport = SwingUtilities.getUnwrappedParent(label) as? JViewport ?: return
+    if (isInside(viewport, label)) {
       inside.start()
     } else {
       outside.start()
@@ -227,9 +241,9 @@ private class KineticScrollingListener2(private val label: JComponent) : MouseAd
     }
   }
 
-  private fun isInside(vport: JViewport, comp: JComponent) = vport.viewPosition.let {
-    val ww = it.x >= 0 && it.x + vport.width - comp.width <= 0
-    val hh = it.y >= 0 && it.y + vport.height - comp.height <= 0
+  private fun isInside(viewport: JViewport, comp: JComponent) = viewport.viewPosition.let {
+    val ww = it.x >= 0 && it.x + viewport.width - comp.width <= 0
+    val hh = it.y >= 0 && it.y + viewport.height - comp.height <= 0
     ww && hh
   }
 
@@ -256,4 +270,24 @@ fun main() {
       isVisible = true
     }
   }
+}
+
+private class MissingIcon : Icon {
+  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+    val g2 = g.create() as? Graphics2D ?: return
+    val w = iconWidth
+    val h = iconHeight
+    val gap = w / 5
+    g2.color = Color.WHITE
+    g2.fillRect(x, y, w, h)
+    g2.color = Color.RED
+    g2.stroke = BasicStroke(w / 8f)
+    g2.drawLine(x + gap, y + gap, x + w - gap, y + h - gap)
+    g2.drawLine(x + gap, y + gap, x + w - gap, y + gap)
+    g2.dispose()
+  }
+
+  override fun getIconWidth() = 2014
+
+  override fun getIconHeight() = 2014
 }
