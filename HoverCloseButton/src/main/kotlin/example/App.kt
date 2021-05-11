@@ -65,7 +65,7 @@ private class TabPanel(pane: JTabbedPane, title: String?, content: Component?) :
       override fun getPreferredSize(): Dimension {
         val dim = super.getPreferredSize()
         val bw = if (button.isVisible) button.preferredSize.width else 0
-        return Dimension(PREFERRED_TAB_WIDTH - bw, dim.height)
+        return Dimension(TAB_WIDTH - bw, dim.height)
       }
     }
     label.text = title
@@ -86,7 +86,7 @@ private class TabPanel(pane: JTabbedPane, title: String?, content: Component?) :
   }
 
   companion object {
-    private const val PREFERRED_TAB_WIDTH = 80
+    private const val TAB_WIDTH = 80
   }
 }
 

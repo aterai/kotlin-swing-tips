@@ -103,10 +103,10 @@ private class DnDTree : JTree() {
 
     override fun dragOver(e: DropTargetDragEvent) {
       val f = e.currentDataFlavors
-      val isDataFlavorSupported = f[0].humanPresentableName == TreeNodeTransferable.NAME
+      val isSupported = f[0].humanPresentableName == TreeNodeTransferable.NAME
       val pt = e.location
       val path = getPathForLocation(pt.x, pt.y)
-      if (!isDataFlavorSupported || path == null) {
+      if (!isSupported || path == null) {
         rejectDrag(e)
         return
       }
