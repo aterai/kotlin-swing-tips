@@ -1,25 +1,14 @@
 package example
 
-import java.awt.BasicStroke
-import java.awt.BorderLayout
-import java.awt.Color
-import java.awt.Dimension
-import java.awt.EventQueue
-import java.awt.Graphics
-import java.awt.Graphics2D
-import java.awt.RenderingHints
-import java.awt.Toolkit
+import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.event.HierarchyEvent
+import java.awt.event.HierarchyListener
 import java.awt.geom.AffineTransform
 import java.awt.geom.Ellipse2D
 import java.awt.geom.Line2D
 import java.time.LocalTime
 import java.time.ZoneId
-import javax.swing.JFrame
-import javax.swing.JPanel
-import javax.swing.SwingUtilities
-import javax.swing.Timer
-import javax.swing.UIManager
-import javax.swing.WindowConstants
+import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI() = JPanel(BorderLayout()).also {
   it.add(AnalogClock())
@@ -36,6 +25,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+      // defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
       contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
@@ -45,13 +35,26 @@ fun main() {
 }
 
 private class AnalogClock : JPanel() {
+  private var listener: HierarchyListener? = null
   private var time = LocalTime.now(ZoneId.systemDefault())
+  private var timer = Timer(200) {
+    time = LocalTime.now(ZoneId.systemDefault())
+    repaint()
+  }
 
-  init {
-    Timer(200) {
-      time = LocalTime.now(ZoneId.systemDefault())
-      repaint()
-    }.start()
+  override fun updateUI() {
+    removeHierarchyListener(listener)
+    super.updateUI()
+    listener = HierarchyListener { e ->
+      if (e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L) {
+        if (e.component.isShowing) {
+          timer.start()
+        } else {
+          timer.stop()
+        }
+      }
+    }
+    addHierarchyListener(listener)
   }
 
   override fun paintComponent(g: Graphics) {
@@ -80,7 +83,7 @@ private class AnalogClock : JPanel() {
     }
 
     // Drawing the hour hand
-    val hourHandLen = radius / 3f
+    val hourHandLen = 1.5f * radius / 3f
     val hourHand = Line2D.Float(0f, 0f, 0f, -hourHandLen)
     val minuteRot = time.minute * Math.PI / 30.0
     val hourRot = time.hour * Math.PI / 6.0 + minuteRot / 12.0
