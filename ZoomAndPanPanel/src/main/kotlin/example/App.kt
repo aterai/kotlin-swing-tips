@@ -84,7 +84,7 @@ private class ZoomAndPanePanel(@field:Transient private val img: Image) : JPanel
         val p = SwingUtilities.getAncestorOfClass(JViewport::class.java, c)
         if (p is JViewport) {
           val ovr = p.viewRect
-          val s = if (dir > 0) 1.0 / ZOOM_MULTIPLICATION_FACTOR else ZOOM_MULTIPLICATION_FACTOR
+          val s = if (dir > 0) 1.0 / ZOOM_FACTOR else ZOOM_FACTOR
           zoomTransform.scale(s, s)
           val nvr = AffineTransform.getScaleInstance(s, s).createTransformedShape(ovr).bounds
           val vp = nvr.location
@@ -98,7 +98,7 @@ private class ZoomAndPanePanel(@field:Transient private val img: Image) : JPanel
   }
 
   companion object {
-    private const val ZOOM_MULTIPLICATION_FACTOR = 1.2
+    private const val ZOOM_FACTOR = 1.2
     private const val MIN_ZOOM = -10
     private const val MAX_ZOOM = 10
     private const val EXTENT = 1

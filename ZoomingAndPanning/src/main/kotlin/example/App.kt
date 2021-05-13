@@ -67,7 +67,7 @@ private class ZoomAndPanHandler : MouseAdapter() {
     // Point p = e.getPoint();
     val p = Point(r.x + r.width / 2, r.y + r.height / 2)
     val p1 = transformPoint(p)
-    val scale = if (dir > 0) 1 / ZOOM_MULTIPLICATION_FACTOR else ZOOM_MULTIPLICATION_FACTOR
+    val scale = if (dir > 0) 1 / ZOOM_FACTOR else ZOOM_FACTOR
     coordAndZoomTransform.scale(scale, scale)
     val p2 = transformPoint(p)
     coordAndZoomTransform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY())
@@ -85,7 +85,7 @@ private class ZoomAndPanHandler : MouseAdapter() {
   }
 
   companion object {
-    private const val ZOOM_MULTIPLICATION_FACTOR = 1.2
+    private const val ZOOM_FACTOR = 1.2
     private const val MIN_ZOOM = -10
     private const val MAX_ZOOM = 10
     private const val EXTENT = 1
