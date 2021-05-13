@@ -66,7 +66,7 @@ private class AnalogClock : JPanel() {
     val radius = rect.width.coerceAtMost(rect.height) / 2f - 10f
     g2.translate(rect.centerX, rect.centerY)
 
-    // Drawing the hour markers
+    // Drawing the hour and minute markers
     val hourMarkerLen = radius / 6f - 10f
     val hourMarker = Line2D.Float(0f, hourMarkerLen - radius, 0f, -radius)
     val minuteMarker = Line2D.Float(0f, hourMarkerLen / 2f - radius, 0f, -radius)
@@ -83,7 +83,7 @@ private class AnalogClock : JPanel() {
     }
 
     // Drawing the hour hand
-    val hourHandLen = 1.5f * radius / 3f
+    val hourHandLen = radius / 2f
     val hourHand = Line2D.Float(0f, 0f, 0f, -hourHandLen)
     val minuteRot = time.minute * Math.PI / 30.0
     val hourRot = time.hour * Math.PI / 6.0 + minuteRot / 12.0
