@@ -54,12 +54,12 @@ private class TreePopupMenu : JPopupMenu() {
       val path = tree?.selectionPath
       val model = tree?.model
       val self = path?.lastPathComponent
-      if (model is DefaultTreeModel && self is DefaultMutableTreeNode && path.pathCount <= NODE_MAXIMUM_LEVELS) {
+      if (model is DefaultTreeModel && self is DefaultMutableTreeNode && path.pathCount <= MAX_NODE_LEVELS) {
         val child = DefaultMutableTreeNode("New child node")
         self.add(child)
         model.reload(self)
       } else {
-        val message = "ERROR: Maximum levels of $NODE_MAXIMUM_LEVELS exceeded."
+        val message = "ERROR: Maximum levels of $MAX_NODE_LEVELS exceeded."
         JOptionPane.showMessageDialog(tree, message, "add node", JOptionPane.ERROR_MESSAGE)
       }
     }
@@ -72,7 +72,7 @@ private class TreePopupMenu : JPopupMenu() {
   }
 
   companion object {
-    private const val NODE_MAXIMUM_LEVELS = 2
+    private const val MAX_NODE_LEVELS = 2
   }
 }
 
