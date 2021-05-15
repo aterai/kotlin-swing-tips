@@ -57,6 +57,8 @@ comments:
     active: false
   CommentOverPrivateProperty:
     active: false
+  DeprecatedBlockTag:
+    active: true
   EndOfSentenceFormat:
     active: false
     endOfSentenceFormat: '([.?!][ \t\n\r\f<])|([.?!:]$)'
@@ -87,7 +89,7 @@ complexity:
     ignoreSingleWhenExpression: false
     ignoreSimpleWhenEntries: false
     ignoreNestingFunctions: false
-    nestingFunctions: [run, let, apply, with, also, use, forEach, isNotNull, ifNull]
+    nestingFunctions: ['run', 'let', 'apply', 'with', 'also', 'use', 'forEach', 'isNotNull', 'ifNull']
   LabeledExpression:
     active: true
     ignoredLabels: []
@@ -254,6 +256,8 @@ formatting:
   ArgumentListWrapping:
     active: true
     autoCorrect: true
+    indentSize: 4
+    maxLineLength: 120
   ChainWrapping:
     active: true
     autoCorrect: true
@@ -272,7 +276,7 @@ formatting:
   ImportOrdering:
     active: true
     autoCorrect: true
-    layout: 'idea'
+    layout: '*,java.**,javax.**,kotlin.**,^'
   Indentation:
     active: true
     autoCorrect: true
@@ -281,6 +285,7 @@ formatting:
   MaximumLineLength:
     active: true
     maxLineLength: 120
+    ignoreBackTickedIdentifier: false
   ModifierOrdering:
     active: true
     autoCorrect: true
@@ -329,6 +334,7 @@ formatting:
     active: true
     autoCorrect: true
     indentSize: 4
+    maxLineLength: 120
   SpacingAroundAngleBrackets:
     active: true
     autoCorrect: true
@@ -481,6 +487,8 @@ potential-bugs:
   Deprecation:
     active: true
   DontDowncastCollectionTypes:
+    active: true
+  DoubleMutabilityForCollection:
     active: true
   DuplicateCaseInWhenExpression:
     active: true
@@ -638,6 +646,8 @@ style:
   NewLineAtEndOfFile:
     active: true
   NoTabs:
+    active: true
+  ObjectLiteralToLambda:
     active: true
   OptionalAbstractKeyword:
     active: true
