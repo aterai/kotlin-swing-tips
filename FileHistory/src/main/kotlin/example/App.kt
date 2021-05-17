@@ -20,7 +20,7 @@ import javax.swing.plaf.basic.BasicToolBarUI
 private const val MAX_HISTORY = 3
 // private val BAR_FACTORY = BarFactory("resources.Main")
 private val BAR_FACTORY = BarFactory("example.Main")
-private val FILE_HISTORY_CACHE = mutableListOf<Path>()
+private val RECENT_FILES = mutableListOf<Path>()
 private val noFile = JMenuItem("(Empty)")
 private var fileHistoryMenu: JMenu? = null
 
@@ -54,13 +54,13 @@ private fun initHistory() {
     }
   }
   fileHistoryMenu = fhm
-  if (FILE_HISTORY_CACHE.isEmpty()) {
+  if (RECENT_FILES.isEmpty()) {
     noFile.isEnabled = false
     fhm.add(noFile)
   } else {
     fm.remove(noFile)
-    for (i in FILE_HISTORY_CACHE.indices) {
-      val mi = makeHistoryMenuItem(FILE_HISTORY_CACHE[i], i)
+    for (i in RECENT_FILES.indices) {
+      val mi = makeHistoryMenuItem(RECENT_FILES[i], i)
       fhm.add(mi)
     }
   }
@@ -69,13 +69,13 @@ private fun initHistory() {
 fun updateHistory(path: Path) {
   fileHistoryMenu?.also {
     it.removeAll()
-    FILE_HISTORY_CACHE.remove(path)
-    FILE_HISTORY_CACHE.add(0, path)
-    if (FILE_HISTORY_CACHE.size > MAX_HISTORY) {
-      FILE_HISTORY_CACHE.removeAt(FILE_HISTORY_CACHE.size - 1)
+    RECENT_FILES.remove(path)
+    RECENT_FILES.add(0, path)
+    if (RECENT_FILES.size > MAX_HISTORY) {
+      RECENT_FILES.removeAt(RECENT_FILES.size - 1)
     }
-    for (i in FILE_HISTORY_CACHE.indices) {
-      val mi = makeHistoryMenuItem(FILE_HISTORY_CACHE[i], i)
+    for (i in RECENT_FILES.indices) {
+      val mi = makeHistoryMenuItem(RECENT_FILES[i], i)
       it.add(mi, i)
     }
   }
