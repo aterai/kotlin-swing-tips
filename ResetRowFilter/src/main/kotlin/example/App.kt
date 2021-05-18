@@ -6,7 +6,7 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter
 
-private const val USER_SPECIFIED_NUMBER_OF_ROWS = 5
+private const val MAXIMUM_ROW_COUNT = 5
 
 fun makeUI(): Component {
   val check1 = JCheckBox("Custom Sorting")
@@ -32,7 +32,7 @@ fun makeUI(): Component {
   val filter = object : RowFilter<TableModel, Int>() {
     override fun include(entry: Entry<out TableModel, out Int>): Boolean {
       val idx = table.convertRowIndexToView(entry.identifier.toInt())
-      return idx < USER_SPECIFIED_NUMBER_OF_ROWS
+      return idx < MAXIMUM_ROW_COUNT
     }
   }
   val sorter = object : TableRowSorter<TableModel>(model) {
@@ -48,7 +48,7 @@ fun makeUI(): Component {
   table.rowSorter = sorter
   sorter.sortKeys = listOf(RowSorter.SortKey(1, SortOrder.DESCENDING))
 
-  val check2 = JCheckBox("viewRowIndex < $USER_SPECIFIED_NUMBER_OF_ROWS")
+  val check2 = JCheckBox("viewRowIndex < $MAXIMUM_ROW_COUNT")
   check2.addActionListener {
     sorter.rowFilter = (it.source as? JCheckBox)?.isSelected?.let { filter }
   }
