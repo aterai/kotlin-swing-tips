@@ -44,7 +44,7 @@ fun showMessageDialogAndPlayAudio(p: Component, msg: String, audioResource: Stri
   val cl = Thread.currentThread().contextClassLoader
   AudioSystem.getAudioInputStream(cl.getResource(audioResource)).use { soundStream ->
     (AudioSystem.getLine(DataLine.Info(Clip::class.java, soundStream.format)) as? Clip)?.use { clip ->
-      val loop = Toolkit.getDefaultToolkit().systemEventQueue.createSecondaryLoop()
+      val loop = p.toolkit.systemEventQueue.createSecondaryLoop()
       clip.addLineListener { e ->
         when (e.type) {
           LineEvent.Type.STOP, LineEvent.Type.CLOSE -> loop.exit()

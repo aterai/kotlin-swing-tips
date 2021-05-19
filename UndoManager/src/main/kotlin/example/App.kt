@@ -46,8 +46,8 @@ private fun initUndoRedo(tc: JTextComponent) {
   tc.document.addUndoableEditListener(manager)
   tc.actionMap.put("undo", UndoAction(manager))
   tc.actionMap.put("redo", RedoAction(manager))
-  val modifiers = Toolkit.getDefaultToolkit().menuShortcutKeyMask
-  // Java 10: val modifiers = Toolkit.getDefaultToolkit().menuShortcutKeyMaskEx()
+  val modifiers = tc.toolkit.menuShortcutKeyMask
+  // Java 10: val modifiers = tc.toolkit.menuShortcutKeyMaskEx
   val im = tc.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
   im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, modifiers), "undo")
   im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, modifiers or InputEvent.SHIFT_MASK), "redo")

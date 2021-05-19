@@ -100,9 +100,9 @@ private class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: Image
 
   private fun makeRssButton(rss: ImageIcon) = JButton(rss).also {
     val ip = FilteredImageSource(rss.image.source, SelectedImageFilter())
-    it.rolloverIcon = ImageIcon(Toolkit.getDefaultToolkit().createImage(ip))
-    // it.setRolloverIcon(makeFilteredImage(rss));
-    // it.setRolloverIcon(makeFilteredImage2(rss));
+    it.rolloverIcon = ImageIcon(it.toolkit.createImage(ip))
+    // it.setRolloverIcon(makeFilteredImage(rss))
+    // it.setRolloverIcon(makeFilteredImage2(rss))
     it.addActionListener { println("clicked...") }
     it.isFocusPainted = false
     it.isBorderPainted = false
