@@ -85,7 +85,7 @@ private class HighlightTreeCellRenderer : DefaultTreeCellRenderer() {
   }
 
   override fun getBackgroundNonSelectionColor(): Color? =
-    if (rollOver) ROLLOVER_ROW_COLOR else super.getBackgroundNonSelectionColor()
+    if (rollOver) HIGHLIGHT_ROW_BGC else super.getBackgroundNonSelectionColor()
 
   override fun getTreeCellRendererComponent(
     tree: JTree,
@@ -108,7 +108,7 @@ private class HighlightTreeCellRenderer : DefaultTreeCellRenderer() {
   }
 
   companion object {
-    private val ROLLOVER_ROW_COLOR = Color(0xDC_F0_FF)
+    private val HIGHLIGHT_ROW_BGC = Color(0xDC_F0_FF)
   }
 }
 
