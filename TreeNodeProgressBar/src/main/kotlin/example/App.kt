@@ -119,8 +119,7 @@ private class NodeProgressWorker(
       val m = model as? DefaultTreeModel ?: return
       tree.expandPath(TreePath(m.getPathToRoot(get())))
     }.onFailure {
-      // ex.printStackTrace()
-      Toolkit.getDefaultToolkit().beep()
+      UIManager.getLookAndFeel().provideErrorFeedback(tree)
     }
   }
 }

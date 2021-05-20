@@ -108,7 +108,7 @@ private class UndoAction(private val undoManager: UndoManager) : AbstractAction(
     runCatching {
       undoManager.undo()
     }.onFailure {
-      Toolkit.getDefaultToolkit().beep()
+      UIManager.getLookAndFeel().provideErrorFeedback(e.source as? Component)
     }
   }
 }
@@ -118,7 +118,7 @@ private class RedoAction(private val undoManager: UndoManager) : AbstractAction(
     runCatching {
       undoManager.redo()
     }.onFailure {
-      Toolkit.getDefaultToolkit().beep()
+      UIManager.getLookAndFeel().provideErrorFeedback(e.source as? Component)
     }
   }
 }
