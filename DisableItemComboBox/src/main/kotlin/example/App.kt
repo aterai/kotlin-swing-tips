@@ -111,9 +111,7 @@ private class DisableItemComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(mod
 
   fun setDisableIndex(set: Set<Int>) {
     disableIndexSet.clear()
-    for (i in set) {
-      disableIndexSet.add(i)
-    }
+    disableIndexSet.addAll(set)
   }
 
   override fun setPopupVisible(v: Boolean) {
