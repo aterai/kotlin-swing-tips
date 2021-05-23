@@ -82,20 +82,19 @@ private object LookAndFeelUtil {
     }
   }
 
-  private fun createLookAndFeelItem(lafName: String, lafClassName: String, lafRadioGroup: ButtonGroup): JMenuItem {
+  private fun createLookAndFeelItem(lafName: String, lafClassName: String, lafGroup: ButtonGroup): JMenuItem {
     val lafItem = JRadioButtonMenuItem(lafName, lafClassName == lookAndFeel)
     lafItem.actionCommand = lafClassName
     lafItem.hideActionText = true
-    lafItem.addActionListener {
-      val m = lafRadioGroup.selection
+    lafItem.addActionListener { e ->
+      val m = lafGroup.selection
       runCatching {
         setLookAndFeel(m.actionCommand)
       }.onFailure {
-        it.printStackTrace()
-        Toolkit.getDefaultToolkit().beep()
+        UIManager.getLookAndFeel().provideErrorFeedback(e.source as? Component)
       }
     }
-    lafRadioGroup.add(lafItem)
+    lafGroup.add(lafItem)
     return lafItem
   }
 

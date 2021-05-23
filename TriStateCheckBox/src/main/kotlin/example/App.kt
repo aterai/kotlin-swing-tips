@@ -221,13 +221,12 @@ private object LookAndFeelUtil {
     val lafItem = JRadioButtonMenuItem(lafName, lafClassName == lookAndFeel)
     lafItem.actionCommand = lafClassName
     lafItem.hideActionText = true
-    lafItem.addActionListener {
+    lafItem.addActionListener { e ->
       val m = lafGroup.selection
       runCatching {
         setLookAndFeel(m.actionCommand)
       }.onFailure {
-        it.printStackTrace()
-        Toolkit.getDefaultToolkit().beep()
+        UIManager.getLookAndFeel().provideErrorFeedback(e.source as? Component)
       }
     }
     lafGroup.add(lafItem)
