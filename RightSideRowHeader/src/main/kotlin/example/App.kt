@@ -136,12 +136,12 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
     val viewPrefSize = view?.preferredSize ?: Dimension()
     var extentSize = viewport?.toViewCoordinates(availR.size) ?: Dimension()
 
-    var viewTracksViewportWidth = false
-    var viewTracksViewportHeight = false
+    var scrollableWidth = false
+    var scrollableHeight = false
     val isEmpty = availR.width < 0 || availR.height < 0
     val sv = if (!isEmpty && view is Scrollable) {
-      viewTracksViewportWidth = view.scrollableTracksViewportWidth
-      viewTracksViewportHeight = view.scrollableTracksViewportHeight
+      scrollableWidth = view.scrollableTracksViewportWidth
+      scrollableHeight = view.scrollableTracksViewportHeight
       view
     } else {
       null
@@ -151,7 +151,7 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
     var vsbNeeded = when (vsbPolicy) {
       ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS -> true
       ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER -> false
-      else -> !viewTracksViewportHeight && viewPrefSize.height > extentSize.height
+      else -> !scrollableHeight && viewPrefSize.height > extentSize.height
     }
 
     if (vsb != null && vsbNeeded) {
@@ -163,7 +163,7 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
     var hsbNeeded = when (hsbPolicy) {
       ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS -> true
       ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER -> false
-      else -> !viewTracksViewportWidth && viewPrefSize.width > extentSize.width
+      else -> !scrollableWidth && viewPrefSize.width > extentSize.width
     }
 
     if (hsb != null && hsbNeeded) {
@@ -188,10 +188,10 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
 
         val oldHsbNeeded = hsbNeeded
         val oldVsbNeeded = vsbNeeded
-        viewTracksViewportWidth = sv.scrollableTracksViewportWidth
-        viewTracksViewportHeight = sv.scrollableTracksViewportHeight
+        scrollableWidth = sv.scrollableTracksViewportWidth
+        scrollableHeight = sv.scrollableTracksViewportHeight
         if (vsb != null && vsbPolicy == ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED) {
-          val newVsbNeeded = !viewTracksViewportHeight && viewPrefSize.height > extentSize.height
+          val newVsbNeeded = !scrollableHeight && viewPrefSize.height > extentSize.height
           if (newVsbNeeded != vsbNeeded) {
             vsbNeeded = newVsbNeeded
             // adjustForVsb(vsbNeeded, availR, vsbR, vpbInsets, leftToRight);
@@ -200,7 +200,7 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
           }
         }
         if (hsb != null && hsbPolicy == ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
-          val newHsbNeeded = !viewTracksViewportWidth && viewPrefSize.width > extentSize.width
+          val newHsbNeeded = !scrollableWidth && viewPrefSize.width > extentSize.width
           if (newHsbNeeded != hsbNeeded) {
             hsbNeeded = newHsbNeeded
             adjustForHsb(hsbNeeded, availR, hsbR, vpbInsets)
