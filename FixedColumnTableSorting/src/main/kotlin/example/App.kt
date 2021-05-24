@@ -5,7 +5,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableRowSorter
 
-private const val FIXED_COLUMN_RANGE = 2
+private const val FIXED_RANGE = 2
 private const val ES = ""
 
 fun makeUI(): Component {
@@ -22,14 +22,14 @@ fun makeUI(): Component {
   val columnNames = arrayOf("fixed 1", "fixed 2", "A", "B", "C", "D", "E", "F")
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) =
-      if (column < FIXED_COLUMN_RANGE) Number::class.java else Any::class.java
+      if (column < FIXED_RANGE) Number::class.java else Any::class.java
   }
   val sorter = TableRowSorter(model)
   val fixedTable = JTable(model)
   val table = JTable(model)
   fixedTable.selectionModel = table.selectionModel
   for (i in model.columnCount - 1 downTo 0) {
-    if (i < FIXED_COLUMN_RANGE) {
+    if (i < FIXED_RANGE) {
       table.removeColumn(table.columnModel.getColumn(i))
       fixedTable.columnModel.getColumn(i).resizable = false
     } else {
