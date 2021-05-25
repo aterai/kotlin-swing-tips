@@ -7,22 +7,22 @@ fun makeUI(): Component {
   val key = "Menu.preserveTopLevelSelection"
   val b = UIManager.getBoolean(key)
   println("$key: $b")
-  val preserveTopLevelSelectionCheck = object : JCheckBox(key, b) {
+  val keepTopLvlSel = object : JCheckBox(key, b) {
     override fun updateUI() {
       super.updateUI()
       isSelected = UIManager.getLookAndFeelDefaults().getBoolean(key)
       UIManager.put(key, isSelected)
     }
   }
-  preserveTopLevelSelectionCheck.addActionListener { e ->
+  keepTopLvlSel.addActionListener { e ->
     UIManager.put(key, (e.source as? JCheckBox)?.isSelected == true)
   }
-  val p = JPanel()
-  p.add(preserveTopLevelSelectionCheck)
-  p.preferredSize = Dimension(320, 240)
 
-  EventQueue.invokeLater { p.rootPane.jMenuBar = makeMenuBar() }
-  return p
+  return JPanel(BorderLayout()).also {
+    EventQueue.invokeLater { it.rootPane.jMenuBar = makeMenuBar() }
+    it.add(keepTopLvlSel)
+    it.preferredSize = Dimension(320, 240)
+  }
 }
 
 private fun makeMenuBar() = JMenuBar().also {
