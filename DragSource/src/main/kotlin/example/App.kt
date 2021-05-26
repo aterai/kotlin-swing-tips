@@ -65,15 +65,16 @@ fun makeUI(): Component {
   label.addMouseListener(ml)
 
   val button = JButton("Create Temp File")
-  button.addActionListener {
+  button.addActionListener { e ->
     file = runCatching {
       File.createTempFile("test", ".tmp").also {
         it.deleteOnExit()
       }
     }.onFailure {
-      Toolkit.getDefaultToolkit().beep()
+      val c = e.source as? JComponent
+      UIManager.getLookAndFeel().provideErrorFeedback(c)
       val msg = "Could not create file."
-      JOptionPane.showMessageDialog(label.rootPane, msg, "Error", JOptionPane.ERROR_MESSAGE)
+      JOptionPane.showMessageDialog(c?.rootPane, msg, "Error", JOptionPane.ERROR_MESSAGE)
     }.getOrNull()
   }
 

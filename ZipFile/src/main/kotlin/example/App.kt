@@ -100,7 +100,7 @@ private fun zip(str: String) {
     ZipUtil.zip(path, tgt)
   }.onFailure {
     logger.info { "Cant zip! : $path" }
-    Toolkit.getDefaultToolkit().beep()
+    UIManager.getLookAndFeel().provideErrorFeedback(textArea)
   }
 }
 
@@ -122,7 +122,7 @@ private fun unzip(str: String) {
       ZipUtil.unzip(path, destDir)
     }.onFailure {
       logger.info { "Cant unzip! : $path" }
-      Toolkit.getDefaultToolkit().beep()
+      UIManager.getLookAndFeel().provideErrorFeedback(textArea)
     }
   }
 }
