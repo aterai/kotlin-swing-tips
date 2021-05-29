@@ -163,7 +163,7 @@ private class ChangeLookAndFeelAction(
       UIManager.setLookAndFeel(lnf)
     }.onFailure {
       it.printStackTrace()
-      Toolkit.getDefaultToolkit().beep()
+      UIManager.getLookAndFeel().provideErrorFeedback(e.source as? Component)
       println("Failed loading L&F: $lnf")
     }
     for (f in Frame.getFrames()) {
