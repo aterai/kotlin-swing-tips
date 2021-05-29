@@ -7,7 +7,6 @@ import java.awt.datatransfer.UnsupportedFlavorException
 import java.awt.dnd.DnDConstants
 import java.awt.dnd.DragGestureEvent
 import java.awt.dnd.DragGestureListener
-import java.awt.dnd.DragGestureRecognizer
 import java.awt.dnd.DragSource
 import java.awt.dnd.DragSourceDragEvent
 import java.awt.dnd.DragSourceDropEvent
@@ -57,7 +56,6 @@ private fun makeModel(): DefaultTreeModel {
 }
 
 private class DnDTree : JTree() {
-  private var dragGestureHandler: DragGestureRecognizer? = null
   private var treeDropTarget: DropTarget? = null
   private var dropTargetNode: TreeNode? = null
   private var draggedNode: TreeNode? = null
@@ -66,10 +64,10 @@ private class DnDTree : JTree() {
     setCellRenderer(null)
     super.updateUI()
     setCellRenderer(DnDTreeCellRenderer())
-    if (dragGestureHandler == null || treeDropTarget == null) {
-      dragGestureHandler = DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(
-        this, DnDConstants.ACTION_MOVE, NodeDragGestureListener()
-      )
+    DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(
+      this, DnDConstants.ACTION_MOVE, NodeDragGestureListener()
+    )
+    if (treeDropTarget == null) {
       treeDropTarget = DropTarget(this, NodeDropTargetListener())
     }
   }
