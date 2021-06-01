@@ -73,13 +73,13 @@ private class TableSorter() : AbstractTableModel() {
   private val columnComparators: MutableMap<Class<*>, Comparator<*>> = ConcurrentHashMap()
   private val rowComparator = RowComparator()
   private var mouseListener: MouseListener
-  private var tableModelListener: TableModelListener
+  private var modelListener: TableModelListener
 
   val isSorting get() = sortingColumns.isNotEmpty()
 
   init {
     mouseListener = MouseHandler()
-    tableModelListener = TableModelHandler()
+    modelListener = TableModelHandler()
   }
 
   constructor(tableModel: TableModel?) : this() {
@@ -93,12 +93,12 @@ private class TableSorter() : AbstractTableModel() {
 
   // fun readObject() {
   //   mouseListener = MouseHandler()
-  //   tableModelListener = TableModelHandler()
+  //   modelListener = TableModelHandler()
   // }
 
   fun readResolve(): Any {
     mouseListener = MouseHandler()
-    tableModelListener = TableModelHandler()
+    modelListener = TableModelHandler()
     return this
   }
 
@@ -108,9 +108,9 @@ private class TableSorter() : AbstractTableModel() {
   }
 
   fun setTableModel(tableModel: TableModel?) {
-    this.tableModel?.removeTableModelListener(tableModelListener)
+    this.tableModel?.removeTableModelListener(modelListener)
     this.tableModel = tableModel
-    this.tableModel?.addTableModelListener(tableModelListener)
+    this.tableModel?.addTableModelListener(modelListener)
     EventQueue.invokeLater {
       clearSortingState()
       fireTableStructureChanged()
@@ -174,7 +174,7 @@ private class TableSorter() : AbstractTableModel() {
 
   fun getComparator(column: Int): Comparator<*> {
     val columnType = tableModel?.getColumnClass(column)
-    return columnComparators[columnType] ?: LEXICAL_COMPARATOR
+    return columnComparators[columnType] ?: LEXICAL_COMP
   }
 
   private fun getViewToModel(): List<Row> {
@@ -311,7 +311,7 @@ private class TableSorter() : AbstractTableModel() {
     const val NOT_SORTED = 0
     // const val ASCENDING = 1
     private val EMPTY_DIRECTIVE = Directive(-1, NOT_SORTED)
-    val LEXICAL_COMPARATOR: Comparator<Any> = LexicalComparator()
+    val LEXICAL_COMP: Comparator<Any> = LexicalComparator()
   }
 }
 
