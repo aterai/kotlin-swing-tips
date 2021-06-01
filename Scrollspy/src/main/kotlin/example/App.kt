@@ -94,14 +94,17 @@ fun makeTree(): JTree {
   val tree = RowSelectionTree()
   tree.rowHeight = 32
   tree.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
+  tree.selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
+  expandAllNodes(tree)
+  return tree
+}
 
-  // https://ateraimemo.com/Swing/ExpandAllNodes.html
+// https://ateraimemo.com/Swing/ExpandAllNodes.html
+private fun expandAllNodes(tree: JTree) {
   var row = 0
   while (row < tree.rowCount) {
     tree.expandRow(row++)
   }
-  tree.selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
-  return tree
 }
 
 private fun searchTreeNode(tree: JTree, name: Any) {
