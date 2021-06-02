@@ -30,13 +30,9 @@ fun makeToolBar(parent: JComponent): JToolBar {
 fun makeUI(): Component {
   val button = JButton("Dialog")
   button.addActionListener {
-    Toolkit.getDefaultToolkit().beep()
-    JOptionPane.showMessageDialog(
-      button.rootPane,
-      "MessageDialog",
-      "Change All Font Size",
-      JOptionPane.ERROR_MESSAGE
-    )
+    val c = button.rootPane
+    UIManager.getLookAndFeel().provideErrorFeedback(c)
+    JOptionPane.showMessageDialog(c, "Error message", "title", JOptionPane.ERROR_MESSAGE)
   }
   val panel = JPanel(GridBagLayout())
   val c = GridBagConstraints()
