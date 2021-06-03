@@ -52,7 +52,7 @@ fun makeUI(): Component {
 }
 
 private class TreeComboBox<E : TreeNode?> : JComboBox<E>() {
-  private var isNotSelectableIndex = false
+  private var notSelectable = false
   private val up = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val si = selectedIndex
@@ -107,8 +107,8 @@ private class TreeComboBox<E : TreeNode?> : JComboBox<E>() {
   }
 
   override fun setPopupVisible(v: Boolean) {
-    if (!v && isNotSelectableIndex) {
-      isNotSelectableIndex = false
+    if (!v && notSelectable) {
+      notSelectable = false
     } else {
       super.setPopupVisible(v)
     }
@@ -119,7 +119,7 @@ private class TreeComboBox<E : TreeNode?> : JComboBox<E>() {
     if (node != null && node.isLeaf) {
       super.setSelectedIndex(index)
     } else {
-      isNotSelectableIndex = true
+      notSelectable = true
     }
   }
 }
