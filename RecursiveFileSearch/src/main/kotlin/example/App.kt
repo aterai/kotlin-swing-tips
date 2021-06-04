@@ -72,23 +72,24 @@ private fun initOpenButton() {
   openButton.addActionListener {
     fileChooser.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
     fileChooser.selectedFile = File(dirCombo.editor.item.toString())
+    val c = dirCombo.rootPane
     val title = "title"
-    when (fileChooser.showOpenDialog(statusPanel.rootPane)) {
+    when (fileChooser.showOpenDialog(c)) {
       JFileChooser.CANCEL_OPTION -> println("Cancel")
       JFileChooser.APPROVE_OPTION -> {
         val file = fileChooser.selectedFile
         if (file == null || !file.isDirectory) {
           val obj = arrayOf("Please select directory.")
-          Toolkit.getDefaultToolkit().beep()
-          JOptionPane.showMessageDialog(statusPanel.rootPane, obj, title, JOptionPane.ERROR_MESSAGE)
+          UIManager.getLookAndFeel().provideErrorFeedback(c)
+          JOptionPane.showMessageDialog(c, obj, title, JOptionPane.ERROR_MESSAGE)
         } else {
           addItem(dirCombo, file.absolutePath, 4)
-          statusPanel.rootPane.repaint()
+          statusPanel.repaint()
         }
       }
       else -> {
-        Toolkit.getDefaultToolkit().beep()
-        JOptionPane.showMessageDialog(statusPanel.rootPane, arrayOf("Error."), title, JOptionPane.ERROR_MESSAGE)
+        UIManager.getLookAndFeel().provideErrorFeedback(c)
+        JOptionPane.showMessageDialog(c, arrayOf("Error."), title, JOptionPane.ERROR_MESSAGE)
       }
     }
   }
