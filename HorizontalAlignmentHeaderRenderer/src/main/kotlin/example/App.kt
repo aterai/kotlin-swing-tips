@@ -55,7 +55,7 @@ private fun makeTable(): JTable {
   return table
 }
 
-private class HorizontalAlignmentHeaderRenderer(private val horizontalAlignment: Int) : TableCellRenderer {
+private class HorizontalAlignmentHeaderRenderer(private val horAlignment: Int) : TableCellRenderer {
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -66,7 +66,7 @@ private class HorizontalAlignmentHeaderRenderer(private val horizontalAlignment:
   ): Component {
     val r = table.tableHeader.defaultRenderer
     val c = r.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
-    (c as? JLabel)?.horizontalAlignment = horizontalAlignment
+    (c as? JLabel)?.horizontalAlignment = horAlignment
     return c
   }
 }

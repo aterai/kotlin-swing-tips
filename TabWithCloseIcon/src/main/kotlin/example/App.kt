@@ -182,10 +182,10 @@ interface CloseableTabbedPaneListener : EventListener {
 }
 
 private class CloseableWindowsTabbedPaneUI : WindowsTabbedPaneUI() {
-  private var horizontalTextPosition = LEFT
+  private var horTextPosition = LEFT
 
-  // constructor(horizontalTextPosition: Int) : super() {
-  //   this.horizontalTextPosition = horizontalTextPosition
+  // constructor(horTextPosition: Int) : super() {
+  //   this.horTextPosition = horTextPosition
   // }
 
   override fun layoutLabel(
@@ -211,7 +211,7 @@ private class CloseableWindowsTabbedPaneUI : WindowsTabbedPaneUI() {
       CENTER,
       CENTER,
       CENTER, // SwingConstants.TRAILING,
-      horizontalTextPosition,
+      horTextPosition,
       tabRect,
       iconRect,
       textRect,
@@ -232,10 +232,10 @@ private class CloseableWindowsTabbedPaneUI : WindowsTabbedPaneUI() {
 }
 
 private class CloseableTabbedPaneUI : BasicTabbedPaneUI() {
-  private var horizontalTextPosition = LEFT
+  private var horTextPosition = LEFT
 
-  // constructor(horizontalTextPosition: Int) : super() {
-  //   this.horizontalTextPosition = horizontalTextPosition
+  // constructor(horTextPosition: Int) : super() {
+  //   this.horTextPosition = horTextPosition
   // }
 
   override fun layoutLabel(
@@ -261,7 +261,7 @@ private class CloseableTabbedPaneUI : BasicTabbedPaneUI() {
       CENTER,
       CENTER,
       CENTER, // SwingConstants.TRAILING,
-      horizontalTextPosition,
+      horTextPosition,
       tabRect,
       iconRect,
       textRect,
@@ -333,16 +333,7 @@ private class JTabbedPaneWithCloseButton : JTabbedPane() {
 }
 
 private class CloseButtonTabbedPaneUI(val closeButtons: MutableList<JButton>) : BasicTabbedPaneUI() {
-  override fun createLayoutManager() = CloseButtonTabbedPaneLayout()
-
-  override fun getTabInsets(tabPlacement: Int, tabIndex: Int) =
-    (super.getTabInsets(tabPlacement, tabIndex).clone() as? Insets)?.also {
-      it.right += 40
-      it.top += 2
-      it.bottom += 2
-    }
-
-  private inner class CloseButtonTabbedPaneLayout : TabbedPaneLayout() {
+  override fun createLayoutManager() = object : TabbedPaneLayout() {
     override fun layoutContainer(parent: Container?) {
       super.layoutContainer(parent)
       while (tabPane.tabCount > closeButtons.size) {
@@ -368,6 +359,13 @@ private class CloseButtonTabbedPaneUI(val closeButtons: MutableList<JButton>) : 
       }
     }
   }
+
+  override fun getTabInsets(tabPlacement: Int, tabIndex: Int) =
+    (super.getTabInsets(tabPlacement, tabIndex).clone() as? Insets)?.also {
+      it.right += 40
+      it.top += 2
+      it.bottom += 2
+    }
 
   companion object {
     fun createTabCloseButton(tabbedPane: JTabbedPane, index: Int) = CloseButton(tabbedPane, index)

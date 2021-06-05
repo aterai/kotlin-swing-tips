@@ -58,8 +58,8 @@ fun makeUI(): Component {
   }
 }
 
-private class StringAlignmentProgressBar(model: BoundedRangeModel, horizontalAlignment: Int) : JProgressBar(model) {
-  private val label = JLabel(string, horizontalAlignment)
+private class StringAlignmentProgressBar(model: BoundedRangeModel, horAlignment: Int) : JProgressBar(model) {
+  private val label = JLabel(string, horAlignment)
 
   override fun updateUI() {
     removeAll()

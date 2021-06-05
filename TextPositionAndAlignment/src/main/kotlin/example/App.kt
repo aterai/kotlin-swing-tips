@@ -14,29 +14,29 @@ fun makeUI(): Component {
   label.isOpaque = true
   label.background = Color.WHITE
 
-  val verticalAlignment = JComboBox(Vertical.values())
-  verticalAlignment.selectedItem = Vertical.CENTER
+  val vertAlignment = JComboBox(Vertical.values())
+  vertAlignment.selectedItem = Vertical.CENTER
 
-  val verticalTextPosition = JComboBox(Vertical.values())
-  verticalTextPosition.selectedItem = Vertical.CENTER
+  val vertTextPosition = JComboBox(Vertical.values())
+  vertTextPosition.selectedItem = Vertical.CENTER
 
-  val horizontalAlignment = JComboBox(Horizontal.values())
-  horizontalAlignment.selectedItem = Horizontal.CENTER
+  val horAlignment = JComboBox(Horizontal.values())
+  horAlignment.selectedItem = Horizontal.CENTER
 
-  val horizontalTextPosition = JComboBox(Horizontal.values())
-  horizontalTextPosition.selectedItem = Horizontal.TRAILING
+  val horTextPosition = JComboBox(Horizontal.values())
+  horTextPosition.selectedItem = Horizontal.TRAILING
 
   val listener = ItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      label.verticalAlignment = getSelectedItem(verticalAlignment).alignment
-      label.verticalTextPosition = getSelectedItem(verticalTextPosition).alignment
-      label.horizontalAlignment = getSelectedItem(horizontalAlignment).alignment
-      label.horizontalTextPosition = getSelectedItem(horizontalTextPosition).alignment
+      label.verticalAlignment = getSelectedItem(vertAlignment).alignment
+      label.verticalTextPosition = getSelectedItem(vertTextPosition).alignment
+      label.horizontalAlignment = getSelectedItem(horAlignment).alignment
+      label.horizontalTextPosition = getSelectedItem(horTextPosition).alignment
       label.repaint()
     }
   }
 
-  listOf(verticalAlignment, verticalTextPosition, horizontalAlignment, horizontalTextPosition)
+  listOf(vertAlignment, vertTextPosition, horAlignment, horTextPosition)
     .forEach { it.addItemListener(listener) }
 
   val p1 = JPanel(BorderLayout())
@@ -56,10 +56,10 @@ fun makeUI(): Component {
   c.gridx = 1
   c.weightx = 1.0
   c.fill = GridBagConstraints.HORIZONTAL
-  p2.add(verticalAlignment, c)
-  p2.add(verticalTextPosition, c)
-  p2.add(horizontalAlignment, c)
-  p2.add(horizontalTextPosition, c)
+  p2.add(vertAlignment, c)
+  p2.add(vertTextPosition, c)
+  p2.add(horAlignment, c)
+  p2.add(horTextPosition, c)
 
   return JPanel(BorderLayout()).also {
     it.add(p1)
