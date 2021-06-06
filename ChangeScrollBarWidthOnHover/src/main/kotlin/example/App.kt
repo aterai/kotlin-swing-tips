@@ -105,23 +105,28 @@ private class HoverLayer : LayerUI<JPanel>() {
   override fun processMouseEvent(e: MouseEvent, l: JLayer<out JPanel>) {
     if (e.component is JScrollBar) {
       when (e.id) {
-        MouseEvent.MOUSE_ENTERED -> if (!expand.isRunning && !isDragging) {
-          expand.initialDelay = 0
-          expand.start()
-        }
-        MouseEvent.MOUSE_EXITED -> if (!collapse.isRunning && !isDragging) {
-          collapse.initialDelay = 500
-          collapse.start()
-        }
+        MouseEvent.MOUSE_ENTERED -> expandStart(isDragging)
+        MouseEvent.MOUSE_EXITED -> collapseStart(isDragging)
         MouseEvent.MOUSE_RELEASED -> {
           isDragging = false
-          if (!collapse.isRunning && !e.component.bounds.contains(e.point)) {
-            collapse.initialDelay = 500
-            collapse.start()
-          }
+          collapseStart(!e.component.bounds.contains(e.point))
         }
       }
       l.view.repaint()
+    }
+  }
+
+  private fun expandStart(dragging: Boolean) {
+    if (!expand.isRunning && !dragging) {
+      expand.initialDelay = 0
+      expand.start()
+    }
+  }
+
+  private fun collapseStart(dragging: Boolean) {
+    if (!collapse.isRunning && !dragging) {
+      collapse.initialDelay = 500
+      collapse.start()
     }
   }
 }
