@@ -93,11 +93,7 @@ private class TableUpdateTask(max: Int, itemsPerPage: Int) : LoadTask(max, items
       cancel(true)
       return
     }
-    for (list in chunks) {
-      for (o in list) {
-        model.addRow(o)
-      }
-    }
+    chunks.forEach { it.forEach(model::addRow) }
     val rowCount = model.rowCount
     maxPageIndex = rowCount / ITEMS_PER_PAGE + if (rowCount % ITEMS_PER_PAGE == 0) 0 else 1
     initFilterAndButtons()

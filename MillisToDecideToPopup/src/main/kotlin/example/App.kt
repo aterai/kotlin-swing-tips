@@ -18,9 +18,7 @@ private fun executeWorker(
         cancel(true)
         return
       }
-      for (message in chunks) {
-        monitor.note = message
-      }
+      chunks.forEach(monitor::setNote)
     }
 
     public override fun done() {

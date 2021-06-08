@@ -67,7 +67,7 @@ private class ProgressTask : BackgroundTask() {
       cancel(true)
       return
     }
-    processChunks(chunks)
+    chunks.forEach { processChunks(it) }
   }
 
   override fun done() {
@@ -93,15 +93,13 @@ fun updateComponentDone() {
   statusPanel.revalidate()
 }
 
-private fun processChunks(chunks: List<Progress>) {
-  for (s in chunks) {
-    when (s.component) {
-      ProgressType.TOTAL -> bar1.value = s.value as? Int ?: 0
-      ProgressType.FILE -> bar2.value = s.value as? Int ?: 0
-      ProgressType.LOG -> area.append(s.value.toString())
-      ProgressType.PAUSE -> textProgress(s.value as? Boolean ?: false)
-      // else -> throw AssertionError("Unknown Progress")
-    }
+private fun processChunks(progress: Progress) {
+  when (progress.component) {
+    ProgressType.TOTAL -> bar1.value = progress.value as? Int ?: 0
+    ProgressType.FILE -> bar2.value = progress.value as? Int ?: 0
+    ProgressType.LOG -> area.append(progress.value.toString())
+    ProgressType.PAUSE -> textProgress(progress.value as? Boolean ?: false)
+    // else -> throw AssertionError("Unknown Progress")
   }
 }
 

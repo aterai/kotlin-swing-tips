@@ -105,7 +105,7 @@ private open class FileSearchTask(dir: File) : RecursiveFileSearchTask(dir) {
       cancel(true)
       return
     }
-    processChunks(chunks)
+    chunks.forEach { processChunks(it) }
   }
 
   override fun done() {
@@ -155,13 +155,11 @@ private fun executeWorker() {
   }
 }
 
-private fun processChunks(chunks: List<Message>) {
-  chunks.forEach {
-    if (it.append) {
-      appendLine(it.text)
-    } else {
-      textArea.text = "${it.text}\n"
-    }
+private fun processChunks(message: Message) {
+  if (message.append) {
+    appendLine(message.text)
+  } else {
+    textArea.text = "${message.text}\n"
   }
 }
 

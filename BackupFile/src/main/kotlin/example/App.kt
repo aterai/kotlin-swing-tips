@@ -78,9 +78,7 @@ private fun addActionPerformed() {
         cancel(true)
         return
       }
-      for (m in chunks) {
-        append(m)
-      }
+      chunks.forEach { append(it) }
     }
 
     override fun done() {

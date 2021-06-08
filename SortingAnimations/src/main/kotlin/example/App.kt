@@ -22,8 +22,8 @@ private var fax = 0.0
 private var fay = 0.0
 
 private var worker: SwingWorker<String, Rectangle>? = null
-private val distributionsChoices = JComboBox(GenerateInputs.values())
-private val algorithmsChoices = JComboBox(SortAlgorithms.values())
+private val distributionsCmb = JComboBox(GenerateInputs.values())
+private val algorithmsCmb = JComboBox(SortAlgorithms.values())
 private val model = SpinnerNumberModel(number, MIN_NUM, MAX_NUM, 10)
 private val spinner = JSpinner(model)
 private val startButton = JButton("Start")
@@ -50,8 +50,8 @@ fun makeUI(): Component {
       panel.repaint()
     }
   }
-  distributionsChoices.addItemListener(il)
-  algorithmsChoices.addItemListener(il)
+  distributionsCmb.addItemListener(il)
+  algorithmsCmb.addItemListener(il)
   panel.background = BACK_COLOR
 
   val box1 = Box.createHorizontalBox().also {
@@ -59,13 +59,13 @@ fun makeUI(): Component {
     it.add(JLabel(" Number:"))
     it.add(spinner)
     it.add(JLabel(" Input:"))
-    it.add(distributionsChoices)
+    it.add(distributionsCmb)
   }
 
   val box2 = Box.createHorizontalBox().also {
     it.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
     it.add(JLabel(" Algorithm:"))
-    it.add(algorithmsChoices)
+    it.add(algorithmsCmb)
     it.add(startButton)
     it.add(cancelButton)
   }
@@ -96,15 +96,15 @@ fun setComponentEnabled(flag: Boolean) {
   cancelButton.isEnabled = !flag
   startButton.isEnabled = flag
   spinner.isEnabled = flag
-  distributionsChoices.isEnabled = flag
-  algorithmsChoices.isEnabled = flag
+  distributionsCmb.isEnabled = flag
+  algorithmsCmb.isEnabled = flag
 }
 
 fun genArray(n: Int) {
   array.clear()
   fax = (MAX_X - MIN_X) / n.toDouble()
   fay = MAX_Y.toDouble() - MIN_Y
-  distributionsChoices.getItemAt(distributionsChoices.selectedIndex).generate(array, n)
+  distributionsCmb.getItemAt(distributionsCmb.selectedIndex).generate(array, n)
 }
 
 fun workerExecute() {
@@ -113,7 +113,7 @@ fun workerExecute() {
     number = tmp
     genArray(number)
   }
-  val sa = algorithmsChoices.getItemAt(algorithmsChoices.selectedIndex)
+  val sa = algorithmsCmb.getItemAt(algorithmsCmb.selectedIndex)
   val paintArea = Rectangle(MIN_X, MIN_Y, MAX_X - MIN_X, MAX_Y - MIN_Y)
   worker = object : SortingTask(sa, number, array, paintArea, fax, fay) {
     override fun process(chunks: List<Rectangle>) {
@@ -121,9 +121,7 @@ fun workerExecute() {
         cancel(true)
         return
       }
-      for (r in chunks) {
-        panel.repaint(r)
-      }
+      chunks.forEach(panel::repaint)
     }
 
     override fun done() {

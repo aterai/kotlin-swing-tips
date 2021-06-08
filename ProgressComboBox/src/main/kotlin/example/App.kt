@@ -42,9 +42,7 @@ private class ComboTask : BackgroundTask() {
       cancel(true)
       return
     }
-    for (i in chunks) {
-      counter = i
-    }
+    chunks.forEach { counter = it }
     combo.selectedIndex = -1
     combo.repaint()
   }

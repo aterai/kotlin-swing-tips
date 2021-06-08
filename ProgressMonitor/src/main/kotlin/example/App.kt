@@ -17,9 +17,7 @@ fun makeUI(): Component {
     monitor.setProgress(0)
     val worker: SwingWorker<String, String> = object : BackgroundTask() {
       override fun process(chunks: List<String>) {
-        for (message in chunks) {
-          monitor.note = message
-        }
+        chunks.forEach(monitor::setNote)
       }
 
       override fun done() {
