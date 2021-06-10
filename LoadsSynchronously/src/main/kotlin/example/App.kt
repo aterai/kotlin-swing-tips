@@ -88,7 +88,7 @@ private fun saveImage(c: JComponent) {
     } catch (ex: IOException) {
       ex.printStackTrace()
       label.icon = null
-      Toolkit.getDefaultToolkit().beep()
+      UIManager.getLookAndFeel().provideErrorFeedback(c)
     }
   }
 }

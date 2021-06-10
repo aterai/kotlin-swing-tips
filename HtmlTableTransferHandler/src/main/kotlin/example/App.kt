@@ -144,7 +144,7 @@ private class DateEditor : AbstractCellEditor(), TableCellEditor {
     runCatching {
       spinner.commitEdit()
     }.onFailure {
-      Toolkit.getDefaultToolkit().beep()
+      UIManager.getLookAndFeel().provideErrorFeedback(spinner)
       return false
     }
     return super.stopCellEditing()

@@ -89,7 +89,7 @@ private class SpinnerEditor : AbstractCellEditor(), TableCellEditor {
     renderer.spinner.commitEdit()
     true
   }.onFailure {
-    Toolkit.getDefaultToolkit().beep()
+    UIManager.getLookAndFeel().provideErrorFeedback(renderer.spinner)
   }.getOrNull() ?: super.stopCellEditing()
 }
 
