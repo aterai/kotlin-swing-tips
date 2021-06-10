@@ -3,52 +3,51 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
+val tabbedPane1 = object : JTabbedPane() {
+  override fun removeTabAt(index: Int) {
+    if (tabCount > 0) {
+      selectedIndex = 0
+      super.removeTabAt(index)
+      selectedIndex = index - 1
+    } else {
+      super.removeTabAt(index)
+    }
+  }
+}
+
+val tabbedPane2 = object : JTabbedPane() {
+  private fun getScrollableViewport(): Component? {
+    var cmp: Component? = null
+    for (c in components) {
+      if ("TabbedPane.scrollableViewport" == c.name) {
+        cmp = c
+        break
+      }
+    }
+    return cmp
+  }
+
+  private fun resetViewportPosition(idx: Int) {
+    if (tabCount <= 0) {
+      return
+    }
+    val viewport = getScrollableViewport() as? JViewport ?: return
+    (viewport.view as? JComponent)?.scrollRectToVisible(getBoundsAt(idx))
+  }
+
+  override fun removeTabAt(index: Int) {
+    if (tabCount > 0) {
+      resetViewportPosition(0)
+      super.removeTabAt(index)
+      resetViewportPosition(index - 1)
+    } else {
+      super.removeTabAt(index)
+    }
+  }
+}
+
 fun makeUI(): Component {
   val p = JPanel(GridLayout(0, 1, 0, 2))
-
-  val tabbedPane1 = object : JTabbedPane() {
-    override fun removeTabAt(index: Int) {
-      if (tabCount > 0) {
-        selectedIndex = 0
-        super.removeTabAt(index)
-        selectedIndex = index - 1
-      } else {
-        super.removeTabAt(index)
-      }
-    }
-  }
-
-  val tabbedPane2 = object : JTabbedPane() {
-    private fun getScrollableViewport(): Component? {
-      var cmp: Component? = null
-      for (c in components) {
-        if ("TabbedPane.scrollableViewport" == c.name) {
-          cmp = c
-          break
-        }
-      }
-      return cmp
-    }
-
-    private fun resetViewportPosition(idx: Int) {
-      if (tabCount <= 0) {
-        return
-      }
-      val viewport = getScrollableViewport() as? JViewport ?: return
-      (viewport.view as? JComponent)?.scrollRectToVisible(getBoundsAt(idx))
-    }
-
-    override fun removeTabAt(index: Int) {
-      if (tabCount > 0) {
-        resetViewportPosition(0)
-        super.removeTabAt(index)
-        resetViewportPosition(index - 1)
-      } else {
-        super.removeTabAt(index)
-      }
-    }
-  }
-
   val list = listOf(JTabbedPane(), tabbedPane1, tabbedPane2)
   list.forEach {
     it.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
