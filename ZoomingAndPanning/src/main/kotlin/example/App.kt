@@ -92,8 +92,7 @@ private class ZoomAndPanHandler : MouseAdapter() {
   // https://community.oracle.com/thread/1263955
   // How to implement Zoom & Pan in Java using Graphics2D
   private fun transformPoint(p1: Point): Point {
-    val inverse = runCatching { coordAndZoomAtf.createInverse() }
-        .getOrNull() ?: coordAndZoomAtf
+    val inverse = runCatching { coordAndZoomAtf.createInverse() }.getOrNull() ?: coordAndZoomAtf
     val p2 = Point()
     inverse.transform(p1, p2)
     return p2
@@ -109,10 +108,10 @@ private class ZoomAndPanHandler : MouseAdapter() {
 
 private class MissingIcon : Icon {
   override fun paintIcon(
-      c: Component?,
-      g: Graphics,
-      x: Int,
-      y: Int
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int
   ) {
     val g2 = g.create() as? Graphics2D ?: return
     val w = iconWidth
