@@ -102,36 +102,41 @@ private class StripedProgressBarUI(private val dir: Boolean, private val slope: 
     if (boxRect != null) {
       val w = 10
       val x = animationIndex
-      val p = GeneralPath()
-      if (dir) {
-        p.moveTo(boxRect.minX, boxRect.minY)
-        p.lineTo(boxRect.minX + w * .5f, boxRect.maxY)
-        p.lineTo(boxRect.minX + w.toFloat(), boxRect.maxY)
-      } else {
-        p.moveTo(boxRect.minX, boxRect.maxY)
-        p.lineTo(boxRect.minX + w * .5f, boxRect.maxY)
-        p.lineTo(boxRect.minX + w.toFloat(), boxRect.minY)
-      }
-      p.lineTo(boxRect.minX + w * .5f, boxRect.minY)
-      p.closePath()
+      val s = makeIndeterminateBox(w)
       val g2 = g.create() as? Graphics2D ?: return
       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
       g2.paint = progressBar.foreground
       if (slope) {
         var i = boxRect.width + x
         while (i > -w) {
-          g2.fill(AffineTransform.getTranslateInstance(i.toDouble(), 0.0).createTransformedShape(p))
+          g2.fill(AffineTransform.getTranslateInstance(i.toDouble(), 0.0).createTransformedShape(s))
           i -= w
         }
       } else {
         var i = -x
         while (i < boxRect.width) {
-          g2.fill(AffineTransform.getTranslateInstance(i.toDouble(), 0.0).createTransformedShape(p))
+          g2.fill(AffineTransform.getTranslateInstance(i.toDouble(), 0.0).createTransformedShape(s))
           i += w
         }
       }
       g2.dispose()
     }
+  }
+
+  fun makeIndeterminateBox(w: Int): Shape {
+    val p = GeneralPath()
+    if (dir) {
+      p.moveTo(boxRect.x.toFloat(), boxRect.y.toFloat())
+      p.lineTo((boxRect.x + w * .5f).toDouble(), boxRect.maxY)
+      p.lineTo((boxRect.x + w.toFloat()).toDouble(), boxRect.maxY)
+    } else {
+      p.moveTo(boxRect.x.toDouble(), boxRect.maxY)
+      p.lineTo((boxRect.x + w * .5f).toDouble(), boxRect.maxY)
+      p.lineTo(boxRect.x + w.toFloat(), boxRect.y.toFloat())
+    }
+    p.lineTo(boxRect.x + w * .5f, boxRect.y.toFloat())
+    p.closePath()
+    return p
   }
 }
 
