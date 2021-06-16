@@ -141,12 +141,21 @@ private fun checkId(element: Element) {
   }
   textArea.append("$tag\n")
   if (tag.isBlock) { // block
-    attrs.getAttribute(HTML.Attribute.ID)?.also {
-      textArea.append("block: id=$it\n")
-      addHighlight(element, true)
-    }
+    blockHighlight(element, attrs)
   } else { // inline
-    attrs.attributeNames.toList()
+    inlineHighlight(element, attrs)
+  }
+}
+
+private fun blockHighlight(element: Element, attrs: AttributeSet) {
+  attrs.getAttribute(HTML.Attribute.ID)?.also {
+    textArea.append("block: id=$it\n")
+    addHighlight(element, true)
+  }
+}
+
+private fun inlineHighlight(element: Element, attrs: AttributeSet) {
+  attrs.attributeNames.toList()
       .map { attrs.getAttribute(it) }
       .filterIsInstance<AttributeSet>()
       .mapNotNull { it.getAttribute(HTML.Attribute.ID) }
@@ -154,7 +163,6 @@ private fun checkId(element: Element) {
         textArea.append("inline: id=$it\n")
         addHighlight(element, false)
       }
-  }
 }
 
 fun main() {
