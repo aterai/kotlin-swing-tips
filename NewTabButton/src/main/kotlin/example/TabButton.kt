@@ -5,10 +5,10 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class TabButton : JRadioButton {
   var textColor: Color? = null // = Color.WHITE;
-  var pressedTextColor: Color? = null // = Color.WHITE.darker();
-  var rolloverTextColor: Color? = null // = Color.WHITE;
-  var rolloverSelectedTextColor: Color? = null // = Color.WHITE;
-  var selectedTextColor: Color? = null // = Color.WHITE;
+  var pressedTc: Color? = null // = Color.WHITE.darker();
+  var rolloverTc: Color? = null // = Color.WHITE;
+  var rolloverSelTc: Color? = null // = Color.WHITE;
+  var selectedTc: Color? = null // = Color.WHITE;
 
   constructor() : super(null, null)
 
@@ -41,11 +41,11 @@ class TabButton : JRadioButton {
     val model = getModel()
     foreground = if (model.isEnabled) {
       if (model.isPressed && model.isArmed) {
-        pressedTextColor
+        pressedTc
       } else if (model.isSelected) {
-        selectedTextColor
+        selectedTc
       } else if (isRolloverEnabled && model.isRollover) {
-        rolloverTextColor
+        rolloverTc
       } else {
         textColor
       }

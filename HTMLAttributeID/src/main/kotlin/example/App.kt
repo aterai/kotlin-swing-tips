@@ -156,13 +156,13 @@ private fun blockHighlight(element: Element, attrs: AttributeSet) {
 
 private fun inlineHighlight(element: Element, attrs: AttributeSet) {
   attrs.attributeNames.toList()
-      .map { attrs.getAttribute(it) }
-      .filterIsInstance<AttributeSet>()
-      .mapNotNull { it.getAttribute(HTML.Attribute.ID) }
-      .forEach {
-        textArea.append("inline: id=$it\n")
-        addHighlight(element, false)
-      }
+    .map { attrs.getAttribute(it) }
+    .filterIsInstance<AttributeSet>()
+    .mapNotNull { it.getAttribute(HTML.Attribute.ID) }
+    .forEach {
+      textArea.append("inline: id=$it\n")
+      addHighlight(element, false)
+    }
 }
 
 fun main() {

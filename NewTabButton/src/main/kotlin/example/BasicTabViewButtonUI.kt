@@ -16,10 +16,10 @@ open class BasicTabViewButtonUI : TabViewButtonUI() {
     b.border = BorderFactory.createCompoundBorder(outer, inner)
     (b as? TabButton)?.also {
       it.textColor = Color(100, 100, 100)
-      it.pressedTextColor = Color.GRAY
-      it.rolloverTextColor = Color.BLACK
-      it.rolloverSelectedTextColor = Color.GRAY
-      it.selectedTextColor = Color.BLACK
+      it.pressedTc = Color.GRAY
+      it.rolloverTc = Color.BLACK
+      it.rolloverSelTc = Color.GRAY
+      it.selectedTc = Color.BLACK
     }
   }
 

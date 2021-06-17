@@ -17,10 +17,10 @@ class OperaTabViewButtonUI : BasicTabViewButtonUI() {
     b.foreground = Color.WHITE
     (b as? TabButton)?.also {
       it.textColor = Color(230, 245, 255)
-      it.pressedTextColor = Color.WHITE.darker()
-      it.rolloverTextColor = Color.WHITE
-      it.rolloverSelectedTextColor = Color.WHITE
-      it.selectedTextColor = Color.WHITE
+      it.pressedTc = Color.WHITE.darker()
+      it.rolloverTc = Color.WHITE
+      it.rolloverSelTc = Color.WHITE
+      it.selectedTc = Color.WHITE
     }
   }
 

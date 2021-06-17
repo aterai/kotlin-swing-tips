@@ -122,10 +122,10 @@ private class TableHeaderTabbedPane : JPanel(BorderLayout()) {
 
 private class TabButton : JRadioButton(null, null) {
   var textColor: Color? = null
-  var pressedTextColor: Color? = null
-  var rolloverTextColor: Color? = null
-  var rolloverSelectedTextColor: Color? = null
-  var selectedTextColor: Color? = null
+  var pressedTc: Color? = null
+  var rolloverTc: Color? = null
+  var rolloverSelTc: Color? = null
+  var selectedTc: Color? = null
 
   override fun updateUI() {
     if (UIManager.get(uiClassID) != null) {
@@ -140,14 +140,14 @@ private class TabButton : JRadioButton(null, null) {
   override fun getUI() = ui as? TabViewButtonUI
 
   override fun fireStateChanged() {
-    val model = getModel()
-    foreground = if (model.isEnabled) {
-      if (model.isPressed && model.isArmed) {
-        pressedTextColor
-      } else if (model.isSelected) {
-        selectedTextColor
-      } else if (isRolloverEnabled && model.isRollover) {
-        rolloverTextColor
+    val m = getModel()
+    foreground = if (m.isEnabled) {
+      if (m.isPressed && m.isArmed) {
+        pressedTc
+      } else if (m.isSelected) {
+        selectedTc
+      } else if (isRolloverEnabled && m.isRollover) {
+        rolloverTc
       } else {
         textColor
       }
@@ -167,9 +167,10 @@ private open class TabViewButtonUI : BasicButtonUI() {
 }
 
 private class BasicTabViewButtonUI : TabViewButtonUI() {
-  /**
-   * {@inheritDoc}
-   */
+  private val viewRect = Rectangle()
+  private val iconRect = Rectangle()
+  private val textRect = Rectangle()
+
   override fun installDefaults(b: AbstractButton) {
     super.installDefaults(b)
     b.preferredSize = Dimension(0, 24)
@@ -180,16 +181,13 @@ private class BasicTabViewButtonUI : TabViewButtonUI() {
     b.border = BorderFactory.createCompoundBorder(out, inb)
     if (b is TabButton) {
       b.textColor = Color(0x64_64_64)
-      b.pressedTextColor = Color.GRAY
-      b.rolloverTextColor = Color.BLACK
-      b.rolloverSelectedTextColor = Color.GRAY
-      b.selectedTextColor = Color.BLACK
+      b.pressedTc = Color.GRAY
+      b.rolloverTc = Color.BLACK
+      b.rolloverSelTc = Color.GRAY
+      b.selectedTc = Color.BLACK
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   override fun paint(g: Graphics, c: JComponent) {
     if (c !is AbstractButton) {
       return
@@ -244,10 +242,6 @@ private class BasicTabViewButtonUI : TabViewButtonUI() {
   }
 
   companion object {
-    private val viewRect = Rectangle()
-    private val iconRect = Rectangle()
-    private val textRect = Rectangle()
-
     // fun createUI(c: JComponent?): ComponentUI {
     //   return BasicTabViewButtonUI()
     // }
