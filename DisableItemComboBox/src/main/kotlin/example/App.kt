@@ -7,18 +7,18 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val field = JTextField("1, 2, 5")
-
-  val combo = DisableItemComboBox(makeModel())
-  combo.setDisableIndex(getDisableIndexFromTextField(field))
-
-  val button = JButton("init")
-  button.addActionListener { combo.setDisableIndex(getDisableIndexFromTextField(field)) }
-
-  val box = Box.createHorizontalBox()
-  box.add(JLabel("Disabled Item Index:"))
-  box.add(field)
-  box.add(Box.createHorizontalStrut(2))
-  box.add(button)
+  val combo = DisableItemComboBox(makeModel()).also {
+    it.setDisableIndexSet(getDisableIndexFromTextField(field))
+  }
+  val button = JButton("init").also {
+    it.addActionListener { combo.setDisableIndexSet(getDisableIndexFromTextField(field)) }
+  }
+  val box = Box.createHorizontalBox().also {
+    it.add(JLabel("Disabled Item Index:"))
+    it.add(field)
+    it.add(Box.createHorizontalStrut(2))
+    it.add(button)
+  }
   return JPanel(BorderLayout()).also {
     it.add(box, BorderLayout.SOUTH)
     it.add(combo, BorderLayout.NORTH)
@@ -45,8 +45,8 @@ private fun getDisableIndexFromTextField(field: JTextField) = runCatching {
     .toSet()
 }.onFailure {
   Toolkit.getDefaultToolkit().beep()
-  val root = field.rootPane
-  JOptionPane.showMessageDialog(root, "invalid value.\n${it.message}", "Error", JOptionPane.ERROR_MESSAGE)
+  val p = field.rootPane
+  JOptionPane.showMessageDialog(p, "invalid value.\n${it.message}", "Error", JOptionPane.ERROR_MESSAGE)
 }.getOrNull().orEmpty()
 
 private class DisableItemComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(model) {
@@ -54,9 +54,8 @@ private class DisableItemComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(mod
   private var isDisableIndex = false
   private val up = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      val si = selectedIndex
-      for (i in si - 1 downTo 0) {
-        if (!disableIndexSet.contains(i)) {
+      for (i in selectedIndex - 1 downTo 0) {
+        if (isEnabledIndex(i)) {
           selectedIndex = i
           break
         }
@@ -65,9 +64,8 @@ private class DisableItemComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(mod
   }
   private val down = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      val si = selectedIndex
-      for (i in si + 1 until getModel().size) {
-        if (!disableIndexSet.contains(i)) {
+      for (i in selectedIndex + 1 until getModel().size) {
+        if (isEnabledIndex(i)) {
           selectedIndex = i
           break
         }
@@ -85,14 +83,9 @@ private class DisableItemComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(mod
     super.updateUI()
     val renderer = getRenderer()
     setRenderer { list, value, index, isSelected, cellHasFocus ->
-      if (disableIndexSet.contains(index)) {
-        renderer.getListCellRendererComponent(list, value, index, false, false).also {
-          it.isEnabled = false
-        }
-      } else {
-        renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
-          it.isEnabled = true
-        }
+      val f = isEnabledIndex(index)
+      renderer.getListCellRendererComponent(list, value, index, isSelected and f, cellHasFocus and f).also {
+        it.isEnabled = f
       }
     }
     EventQueue.invokeLater {
@@ -109,11 +102,6 @@ private class DisableItemComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(mod
     }
   }
 
-  fun setDisableIndex(set: Set<Int>) {
-    disableIndexSet.clear()
-    disableIndexSet.addAll(set)
-  }
-
   override fun setPopupVisible(v: Boolean) {
     if (!v && isDisableIndex) {
       isDisableIndex = false
@@ -123,12 +111,19 @@ private class DisableItemComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(mod
   }
 
   override fun setSelectedIndex(index: Int) {
-    if (disableIndexSet.contains(index)) {
-      isDisableIndex = true
-    } else {
+    if (isEnabledIndex(index)) {
       // isDisableIndex = false
       super.setSelectedIndex(index)
+    } else {
+      isDisableIndex = true
     }
+  }
+
+  fun isEnabledIndex(idx: Int) = !disableIndexSet.contains(idx)
+
+  fun setDisableIndexSet(set: Set<Int>) {
+    disableIndexSet.clear()
+    disableIndexSet.addAll(set)
   }
 }
 
