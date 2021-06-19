@@ -32,19 +32,17 @@ fun makeUI(): Component {
   }
 }
 
-@Suppress("LongParameterList")
 private class EditableTitledBorder(
   border: Border?,
   title: String,
   justification: Int,
   pos: Int,
   font: Font?,
-  color: Color?,
   var comp: Component
-) : TitledBorder(border, title, justification, pos, font, color), MouseListener {
+) : TitledBorder(border, title, justification, pos, font), MouseListener {
   private val glassPane = EditorGlassPane()
   private val editorTextField = JTextField()
-  private val dummy = JLabel()
+  private val renderer = JLabel()
   private val rect = Rectangle()
   private val startEditing = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
@@ -85,7 +83,7 @@ private class EditableTitledBorder(
     am.put("cancel-editing", cancelEditing)
   }
 
-  constructor(title: String, c: Component) : this(null, title, LEADING, DEFAULT_POSITION, null, null, c)
+  constructor(title: String, c: Component) : this(null, title, LEADING, DEFAULT_POSITION, null, c)
 
   constructor(
     border: Border?,
@@ -93,19 +91,19 @@ private class EditableTitledBorder(
     justification: Int,
     pos: Int,
     c: Component
-  ) : this(border, title, justification, pos, null, null, c)
+  ) : this(border, title, justification, pos, null, c)
 
   override fun isBorderOpaque() = true
 
-  private fun getLabel(c: Component): JLabel {
-    dummy.text = getTitle()
-    dummy.font = getFont(c)
-    dummy.componentOrientation = c.componentOrientation
-    dummy.isEnabled = c.isEnabled
-    return dummy
-  }
+  // private fun getLabel2(c: Component): JLabel {
+  //   renderer.text = getTitle()
+  //   renderer.font = getFont(c)
+  //   renderer.componentOrientation = c.componentOrientation
+  //   renderer.isEnabled = c.isEnabled
+  //   return renderer
+  // }
 
-  private fun getJustification(c: Component): Int {
+  private fun getJustification2(c: Component): Int {
     val justification = getTitleJustification()
     if (justification == LEADING || justification == DEFAULT_JUSTIFICATION) {
       return if (c.componentOrientation.isLeftToRight) LEFT else RIGHT
@@ -115,62 +113,71 @@ private class EditableTitledBorder(
     } else justification
   }
 
-  private fun getTitleBounds(c: Component, width: Int, height: Int): Rectangle {
+  private fun getTitleBounds(c: Component): Rectangle {
     // if (getTitle()?.isNotEmpty() == true) {
     val border = getBorder()
     val edge = if (border is TitledBorder) 0 else EDGE_SPACING
-    val label = getLabel(c)
+    val i = getBorderInsets(border, c)
+    val label = renderer.also {
+      it.text = getTitle()
+      it.font = getFont(c)
+      it.componentOrientation = c.componentOrientation
+      it.isEnabled = c.isEnabled
+    }
     val size = label.preferredSize
-    val insets = makeBorderInsets(border, c, Insets(0, 0, 0, 0))
-    var labelY = 0
-    val labelH = size.height
+    val r = Rectangle(c.width - i.left - i.right, size.height)
+    calcLabelPosition(c, edge, i, r)
+    calcLabelJustification(c, size, i, r)
+    return r
+  }
+
+  private fun calcLabelPosition(c: Component, edge: Int, insets: Insets, lblR: Rectangle) {
     when (getTitlePosition()) {
       ABOVE_TOP -> {
         insets.left = 0
         insets.right = 0
       }
       TOP -> {
-        insets.top = edge + insets.top / 2 - labelH / 2
+        insets.top = edge + insets.top / 2 - lblR.height / 2
         if (insets.top >= edge) {
-          labelY += insets.top
+          lblR.y += insets.top
         }
       }
-      BELOW_TOP -> labelY += insets.top + edge
-      ABOVE_BOTTOM -> labelY += height - labelH - insets.bottom - edge
+      BELOW_TOP -> lblR.y += insets.top + edge
+      ABOVE_BOTTOM -> lblR.y += c.height - lblR.height - insets.bottom - edge
       BOTTOM -> {
-        labelY += height - labelH
-        insets.bottom = edge + (insets.bottom - labelH) / 2
+        lblR.y += c.height - lblR.height
+        insets.bottom = edge + (insets.bottom - lblR.height) / 2
         if (insets.bottom >= edge) {
-          labelY -= insets.bottom
+          lblR.y -= insets.bottom
         }
       }
       BELOW_BOTTOM -> {
         insets.left = 0
         insets.right = 0
-        labelY += height - labelH
+        lblR.y += c.height - lblR.height
       }
     }
     insets.left += edge + TEXT_INSET_H
     insets.right += edge + TEXT_INSET_H
-    var labelX = 0
-    var labelW = width - insets.left - insets.right
-    if (labelW > size.width) {
-      labelW = size.width
+  }
+
+  private fun calcLabelJustification(c: Component, size: Dimension, insets: Insets, lblR: Rectangle) {
+    if (lblR.width > size.width) {
+      lblR.width = size.width
     }
-    when (getJustification(c)) {
-      LEFT -> labelX += insets.left
-      RIGHT -> labelX += width - insets.right - labelW
-      CENTER -> labelX += (width - labelW) / 2
+    when (getJustification2(c)) {
+      LEFT -> lblR.x += insets.left
+      RIGHT -> lblR.x += c.width - insets.right - lblR.width
+      CENTER -> lblR.x += (c.width - lblR.width) / 2
     }
-    return Rectangle(labelX, labelY, labelW, labelH)
   }
 
   override fun mouseClicked(e: MouseEvent) {
     val isDoubleClick = e.clickCount >= 2
     if (isDoubleClick) {
       val src = e.component
-      val dim = src.size
-      rect.bounds = getTitleBounds(src, dim.width, dim.height)
+      rect.bounds = getTitleBounds(src)
       if (rect.contains(e.point)) {
         startEditing.actionPerformed(ActionEvent(src, ActionEvent.ACTION_PERFORMED, ""))
       }
@@ -217,8 +224,8 @@ private class EditableTitledBorder(
   }
 
   companion object {
-    private fun makeBorderInsets(border: Border?, c: Component, insets: Insets): Insets {
-      var ins = insets
+    private fun getBorderInsets(border: Border?, c: Component): Insets {
+      var ins = Insets(0, 0, 0, 0)
       when (border) {
         null -> ins.set(0, 0, 0, 0)
         is AbstractBorder -> ins = border.getBorderInsets(c, ins)
