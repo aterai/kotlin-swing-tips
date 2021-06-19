@@ -43,13 +43,13 @@ private object NimbusTabbedPanePainterUtils {
     d["TabbedPane:TabbedPaneTab[Enabled+MouseOver].backgroundPainter"] = tabPainter
     d["TabbedPane:TabbedPaneTab[Enabled+Pressed].backgroundPainter"] = tabPainter
     d["TabbedPane:TabbedPaneTab[Enabled].backgroundPainter"] = tabPainter
-    val selectedTabPainter = TabPainter(true)
-    d["TabbedPane:TabbedPaneTab[Focused+MouseOver+Selected].backgroundPainter"] = selectedTabPainter
-    d["TabbedPane:TabbedPaneTab[Focused+Pressed+Selected].backgroundPainter"] = selectedTabPainter
-    d["TabbedPane:TabbedPaneTab[Focused+Selected].backgroundPainter"] = selectedTabPainter
-    d["TabbedPane:TabbedPaneTab[MouseOver+Selected].backgroundPainter"] = selectedTabPainter
-    d["TabbedPane:TabbedPaneTab[Selected].backgroundPainter"] = selectedTabPainter
-    d["TabbedPane:TabbedPaneTab[Pressed+Selected].backgroundPainter"] = selectedTabPainter
+    val selTabPainter = TabPainter(true)
+    d["TabbedPane:TabbedPaneTab[Focused+MouseOver+Selected].backgroundPainter"] = selTabPainter
+    d["TabbedPane:TabbedPaneTab[Focused+Pressed+Selected].backgroundPainter"] = selTabPainter
+    d["TabbedPane:TabbedPaneTab[Focused+Selected].backgroundPainter"] = selTabPainter
+    d["TabbedPane:TabbedPaneTab[MouseOver+Selected].backgroundPainter"] = selTabPainter
+    d["TabbedPane:TabbedPaneTab[Selected].backgroundPainter"] = selTabPainter
+    d["TabbedPane:TabbedPaneTab[Pressed+Selected].backgroundPainter"] = selTabPainter
   }
 
   class TabPainter(private val selected: Boolean) : Painter<JComponent> {

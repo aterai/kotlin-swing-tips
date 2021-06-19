@@ -21,7 +21,7 @@ import javax.swing.text.View
 import javax.swing.text.ViewFactory
 
 private const val TAB_TXT = "\n1\taaa\n12\taaa\n123\taaa\n1234\taaa\t\t\t\t\t\t\n"
-private const val IDEOGRAPHIC_SPACE_TXT = """
+private const val IDEOGRAPHIC_SPACE = """
 123456789012
 bbb2Å@Å@1 3 ccc3
 
@@ -34,7 +34,7 @@ fun makeUI(): Component {
   val editor = JTextPane()
   editor.font = Font(Font.MONOSPACED, Font.PLAIN, 12)
   editor.editorKit = CustomEditorKit()
-  editor.text = IDEOGRAPHIC_SPACE_TXT + TAB_TXT
+  editor.text = IDEOGRAPHIC_SPACE + TAB_TXT
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(editor))
     it.preferredSize = Dimension(320, 240)

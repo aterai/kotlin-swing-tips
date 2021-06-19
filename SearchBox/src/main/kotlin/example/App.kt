@@ -105,10 +105,10 @@ private class ControlPanelLayout(private val controls: Container, hgap: Int, vga
   override fun preferredLayoutSize(target: Container): Dimension {
     // synchronized (target.getTreeLock()) {
     val ps = super.preferredLayoutSize(target)
-    val controlsPreferredHeight = ps.height
+    val defaultHeight = ps.height
     if (animator.isRunning) {
       if (isHidden) {
-        if (controls.height < controlsPreferredHeight) {
+        if (controls.height < defaultHeight) {
           controlsHeight += 5
         }
       } else {
@@ -119,8 +119,8 @@ private class ControlPanelLayout(private val controls: Container, hgap: Int, vga
       if (controlsHeight <= 0) {
         controlsHeight = 0
         animator.stop()
-      } else if (controlsHeight >= controlsPreferredHeight) {
-        controlsHeight = controlsPreferredHeight
+      } else if (controlsHeight >= defaultHeight) {
+        controlsHeight = defaultHeight
         animator.stop()
       }
     }

@@ -15,14 +15,14 @@ private var isHidden = true
 
 private val layout = object : BorderLayout(5, 5) {
   private var controlsHeight = 0
-  private var controlsPreferredHeight = 0
+  private var defaultHeight = 0
 
   override fun preferredLayoutSize(target: Container): Dimension {
     val ps = super.preferredLayoutSize(target)
-    controlsPreferredHeight = ps.height
+    defaultHeight = ps.height
     animator?.also {
       if (isHidden) {
-        if (target.height < controlsPreferredHeight) {
+        if (target.height < defaultHeight) {
           controlsHeight += 5
         }
       } else {
@@ -33,8 +33,8 @@ private val layout = object : BorderLayout(5, 5) {
       if (controlsHeight <= 0) {
         controlsHeight = 0
         it.stop()
-      } else if (controlsHeight >= controlsPreferredHeight) {
-        controlsHeight = controlsPreferredHeight
+      } else if (controlsHeight >= defaultHeight) {
+        controlsHeight = defaultHeight
         it.stop()
       }
     }

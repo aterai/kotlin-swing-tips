@@ -56,7 +56,7 @@ fun makeUI(): Component {
   val a1 = object : AbstractAction("Show/Hide Search Box") {
     override fun actionPerformed(e: ActionEvent) {
       if (!animator.isRunning) {
-        handler.isDirectionOfShowing = !searchBox.isVisible
+        handler.isShowing = !searchBox.isVisible
         searchBox.isVisible = true
         animator.start()
       }
@@ -67,7 +67,7 @@ fun makeUI(): Component {
   val a2 = object : AbstractAction("Hide Search Box") {
     override fun actionPerformed(e: ActionEvent) {
       if (!animator.isRunning) {
-        handler.isDirectionOfShowing = false
+        handler.isShowing = false
         animator.start()
       }
     }
@@ -84,12 +84,12 @@ fun makeUI(): Component {
 }
 
 private class LayoutAnimator(private val component: JComponent) : BorderLayout(), ActionListener {
-  var isDirectionOfShowing = true
+  var isShowing = true
   private var yy = 0
   private var counter = 0
   override fun actionPerformed(e: ActionEvent) {
     val height = component.preferredSize.height
-    if (isDirectionOfShowing) {
+    if (isShowing) {
       yy = (.5 + AnimationUtil.easeInOut(++counter / height.toDouble()) * height).toInt()
       if (yy >= height) {
         yy = height

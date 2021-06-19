@@ -48,8 +48,8 @@ private class ScrollableWrapPanel(layout: LayoutManager) : JPanel(layout), Scrol
   override fun getScrollableTracksViewportHeight() = false
 }
 
-private class ScrollableWrapLayout(align: Int, hgap: Int, vgap: Int) : FlowLayout(align, hgap, vgap) {
-  private val fixedHgap = hgap
+private class ScrollableWrapLayout(align: Int, horGap: Int, verGap: Int) : FlowLayout(align, horGap, verGap) {
+  private val fixedHorGap = horGap
   private fun getPreferredHorizontalGap(target: Container): Int {
     val insets = target.insets
     var columns = 0
@@ -57,19 +57,19 @@ private class ScrollableWrapLayout(align: Int, hgap: Int, vgap: Int) : FlowLayou
     if (target.parent is JViewport) {
       width = target.parent.bounds.width
     }
-    width -= insets.left + insets.right + fixedHgap * 2
+    width -= insets.left + insets.right + fixedHorGap * 2
     for (i in 0 until target.componentCount) {
       val m = target.getComponent(i)
       if (m.isVisible) {
         val d = m.preferredSize
-        if (width - d.width - fixedHgap < 0) {
+        if (width - d.width - fixedHorGap < 0) {
           columns = i
           break
         }
-        width -= d.width + fixedHgap
+        width -= d.width + fixedHorGap
       }
     }
-    return fixedHgap + width / columns
+    return fixedHorGap + width / columns
   }
 
   override fun layoutContainer(target: Container) {
