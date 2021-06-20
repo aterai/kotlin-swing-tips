@@ -5,10 +5,10 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val log = JTextArea()
-  val useSystemExtensionHiding = "FileChooser.useSystemExtensionHiding"
+  val key = "FileChooser.useSystemExtensionHiding"
   val button1 = JButton("false")
   button1.addActionListener {
-    UIManager.put(useSystemExtensionHiding, false)
+    UIManager.put(key, false)
     val fileChooser = JFileChooser()
     val retValue = fileChooser.showOpenDialog(button1.rootPane)
     if (retValue == JFileChooser.APPROVE_OPTION) {
@@ -18,7 +18,7 @@ fun makeUI(): Component {
 
   val button2 = JButton("true")
   button2.addActionListener {
-    UIManager.put(useSystemExtensionHiding, true)
+    UIManager.put(key, true)
     val fileChooser = JFileChooser()
     val retValue = fileChooser.showOpenDialog(button2.rootPane)
     if (retValue == JFileChooser.APPROVE_OPTION) {
@@ -27,7 +27,7 @@ fun makeUI(): Component {
   }
 
   val box = Box.createHorizontalBox().also {
-    it.border = BorderFactory.createTitledBorder(useSystemExtensionHiding)
+    it.border = BorderFactory.createTitledBorder(key)
     it.add(Box.createHorizontalGlue())
     it.add(button1)
     it.add(Box.createHorizontalStrut(5))

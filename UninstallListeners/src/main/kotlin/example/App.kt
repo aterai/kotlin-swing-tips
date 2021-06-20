@@ -27,18 +27,18 @@ fun makeUI(): Component {
       val pa = PrivilegedAction<Void> {
         kotlin.runCatching {
           val uiClass = BasicSliderUI::class.java
-          val uninstallListeners = uiClass.getDeclaredMethod(
+          val uninstall = uiClass.getDeclaredMethod(
             "uninstallListeners",
             JSlider::class.java
           )
-          uninstallListeners.isAccessible = true
-          uninstallListeners.invoke(getUI(), slider)
-          val uninstallKeyboardActions = uiClass.getDeclaredMethod(
+          uninstall.isAccessible = true
+          uninstall.invoke(getUI(), slider)
+          val uninstallKbdActs = uiClass.getDeclaredMethod(
             "uninstallKeyboardActions",
             JSlider::class.java
           )
-          uninstallKeyboardActions.isAccessible = true
-          uninstallKeyboardActions.invoke(getUI(), slider)
+          uninstallKbdActs.isAccessible = true
+          uninstallKbdActs.invoke(getUI(), slider)
         }
         null
       }

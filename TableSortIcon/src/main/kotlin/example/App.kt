@@ -37,8 +37,8 @@ fun makeUI(): Component {
 
 private fun makeRadioPane(table: JTable): Box {
   val cl = Thread.currentThread().contextClassLoader
-  val customAscendingSortIcon = ImageIcon(cl.getResource("example/ascending.png"))
-  val customDescendingSortIcon = ImageIcon(cl.getResource("example/descending.png"))
+  val ascendingPath = cl.getResource("example/ascending.png")
+  val descendingPath = cl.getResource("example/descending.png")
   val r0 = JRadioButton("Default", true)
   val r1 = JRadioButton("Empty")
   val r2 = JRadioButton("Custom")
@@ -55,8 +55,8 @@ private fun makeRadioPane(table: JTable): Box {
         descending = IconUIResource(EMPTY_ICON)
       }
       else -> {
-        ascending = IconUIResource(customAscendingSortIcon)
-        descending = IconUIResource(customDescendingSortIcon)
+        ascending = IconUIResource(ImageIcon(ascendingPath))
+        descending = IconUIResource(ImageIcon(descendingPath))
       }
     }
     UIManager.put("Table.ascendingSortIcon", ascending)
