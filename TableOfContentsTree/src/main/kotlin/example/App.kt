@@ -22,10 +22,11 @@ fun makeUI(): Component {
   val tree2 = TableOfContentsTree(makeModel())
   tree2.isRootVisible = false
 
-  val sp = JSplitPane()
-  sp.resizeWeight = .5
-  sp.leftComponent = JScrollPane(tree)
-  sp.rightComponent = JScrollPane(tree2)
+  val sp = JSplitPane().also {
+    it.resizeWeight = .5
+    it.leftComponent = JScrollPane(tree)
+    it.rightComponent = JScrollPane(tree2)
+  }
 
   return JPanel(BorderLayout()).also {
     it.add(sp)
@@ -37,15 +38,17 @@ private fun makeModel(): DefaultTreeModel {
   val root = DefaultMutableTreeNode("root")
   val s0 = DefaultMutableTreeNode(TableOfContents("1. Introduction", 1))
   root.add(s0)
-  val s1 = DefaultMutableTreeNode(TableOfContents("2. Chapter", 1))
-  s1.add(DefaultMutableTreeNode(TableOfContents("2.1. Section", 2)))
-  s1.add(DefaultMutableTreeNode(TableOfContents("2.2. Section", 4)))
-  s1.add(DefaultMutableTreeNode(TableOfContents("2.3. Section", 8)))
+  val s1 = DefaultMutableTreeNode(TableOfContents("2. Chapter", 1)).also {
+    it.add(DefaultMutableTreeNode(TableOfContents("2.1. Section", 2)))
+    it.add(DefaultMutableTreeNode(TableOfContents("2.2. Section", 4)))
+    it.add(DefaultMutableTreeNode(TableOfContents("2.3. Section", 8)))
+  }
   root.add(s1)
-  val s2 = DefaultMutableTreeNode(TableOfContents("3. Chapter", 10))
-  s2.add(DefaultMutableTreeNode(TableOfContents("ddd", 12)))
-  s2.add(DefaultMutableTreeNode(TableOfContents("eee", 24)))
-  s2.add(DefaultMutableTreeNode(TableOfContents("fff", 38)))
+  val s2 = DefaultMutableTreeNode(TableOfContents("3. Chapter", 10)).also {
+    it.add(DefaultMutableTreeNode(TableOfContents("ddd", 12)))
+    it.add(DefaultMutableTreeNode(TableOfContents("eee", 24)))
+    it.add(DefaultMutableTreeNode(TableOfContents("fff", 38)))
+  }
   root.add(s2)
   return DefaultTreeModel(root)
 }
@@ -148,23 +151,16 @@ private class TableOfContentsTree(model: TreeModel?) : JTree(model) {
     val pageNumMaxWidth = fm.stringWidth("000")
     val ins = insets
     val rect = visibleRect // getVisibleRowsRect()
+    val tcr = getCellRenderer() as? DefaultTreeCellRenderer
     for (i in 0 until rowCount) {
       val r = getRowBounds(i)
       if (rect.intersects(r)) {
-        val path = getPathForRow(i)
-        val tcr = getCellRenderer()
-        if (isSynth && isRowSelected(i)) {
-          (tcr as? DefaultTreeCellRenderer)?.also {
-            g2.paint = it.textSelectionColor
-          }
-        } else {
-          g2.paint = foreground
-        }
-        val node = path.lastPathComponent as? DefaultMutableTreeNode
+        g2.paint = if (isSynth && isRowSelected(i) && tcr != null) tcr.textSelectionColor else foreground
+        val node = getPathForRow(i).lastPathComponent as? DefaultMutableTreeNode
         (node?.userObject as? TableOfContents)?.also {
           val pn = it.page.toString()
           val x = width - 1 - fm.stringWidth(pn) - ins.right
-          val y = r.y + ((tcr as? Component)?.getBaseline(r.width, r.height) ?: 0)
+          val y = r.y + (tcr?.getBaseline(r.width, r.height) ?: 0)
           g2.drawString(pn, x, y)
           val gap = 5
           val x2 = width - 1 - pageNumMaxWidth - ins.right
@@ -179,7 +175,14 @@ private class TableOfContentsTree(model: TreeModel?) : JTree(model) {
   }
 
   companion object {
-    private val READER = BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1f, floatArrayOf(1f), 0f)
+    private val READER = BasicStroke(
+      1f,
+      BasicStroke.CAP_BUTT,
+      BasicStroke.JOIN_MITER,
+      1f,
+      floatArrayOf(1f),
+      0f
+    )
   }
 }
 
