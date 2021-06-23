@@ -40,16 +40,16 @@ private fun makeTitledPanel(title: String, c: Component): Component {
 }
 
 private class MarginTreeCellRenderer : DefaultTreeCellRenderer() {
-  private var drawsFocusBorderAroundIcon = false
-  private var drawDashedFocusIndicator = false
+  private var drawsFocusBorder = false
+  private var drawDashedFocus = false
   private var fillBackground = false
   private var treeBgsColor: Color? = null
   private var focusBgsColor: Color? = null
 
   override fun updateUI() {
     super.updateUI()
-    drawsFocusBorderAroundIcon = UIManager.getBoolean("Tree.drawsFocusBorderAroundIcon")
-    drawDashedFocusIndicator = UIManager.getBoolean("Tree.drawDashedFocusIndicator")
+    drawsFocusBorder = UIManager.getBoolean("Tree.drawsFocusBorderAroundIcon")
+    drawDashedFocus = UIManager.getBoolean("Tree.drawDashedFocusIndicator")
     fillBackground = UIManager.getBoolean("Tree.rendererFillBackground")
     isOpaque = fillBackground
   }
@@ -88,7 +88,7 @@ private class MarginTreeCellRenderer : DefaultTreeCellRenderer() {
     }
     super.paint(g)
     if (hasFocus) {
-      if (drawsFocusBorderAroundIcon) {
+      if (drawsFocusBorder) {
         imageOffset = 0
       } else if (imageOffset == -1) {
         imageOffset = getLabelStartPosition()
@@ -109,12 +109,12 @@ private class MarginTreeCellRenderer : DefaultTreeCellRenderer() {
     notColor: Color
   ) {
     val bsColor = getBorderSelectionColor()
-    val b = selected || !drawDashedFocusIndicator
+    val b = selected || !drawDashedFocus
     if (bsColor != null && b) {
       g.color = bsColor
       g.drawRect(x, y, w - 1, h - 1)
     }
-    if (drawDashedFocusIndicator) {
+    if (drawDashedFocus) {
       if (notColor != treeBgsColor) {
         treeBgsColor = notColor
         focusBgsColor = Color(notColor.rgb.inv())
@@ -141,22 +141,21 @@ private class CompoundTreeCellRenderer : DefaultTreeCellRenderer() {
   private val insideBorder = BorderFactory.createEmptyBorder(1, 2, 1, 2)
   private val outsideBorder = BorderFactory.createEmptyBorder(1, 1, 1, 1)
   private val emptyBorder = BorderFactory.createCompoundBorder(outsideBorder, insideBorder)
-  private var compoundFocusBorder: Border? = null
+  private var focusBorder: Border? = null
   private val isSynth = ui.javaClass.name.contains("Synth")
 
   init {
-    if (isSynth) {
-      compoundFocusBorder = emptyBorder
+    focusBorder = if (isSynth) {
+      emptyBorder
     } else {
       val bsColor = getBorderSelectionColor()
       val drawDashedFocusIndicator = UIManager.getBoolean("Tree.drawDashedFocusIndicator")
-      val b: Border
-      b = if (drawDashedFocusIndicator) {
+      val b = if (drawDashedFocusIndicator) {
         DotBorder(Color(getBackgroundSelectionColor().rgb.inv()), bsColor)
       } else {
         BorderFactory.createLineBorder(bsColor)
       }
-      compoundFocusBorder = BorderFactory.createCompoundBorder(b, insideBorder)
+      BorderFactory.createCompoundBorder(b, insideBorder)
     }
     icon.border = BorderFactory.createEmptyBorder(0, 0, 0, 2)
     text.border = emptyBorder
@@ -188,7 +187,7 @@ private class CompoundTreeCellRenderer : DefaultTreeCellRenderer() {
     }
     text.foreground = fgColor
     text.background = bgColor
-    text.border = if (hasFocus) compoundFocusBorder else emptyBorder
+    text.border = if (hasFocus) focusBorder else emptyBorder
     (super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus) as? JLabel)?.also {
       text.text = it.text
       icon.icon = it.icon
