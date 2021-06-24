@@ -83,11 +83,6 @@ private fun addActionPerformed() {
     }
 
     override fun done() {
-      if (!table.isDisplayable) {
-        println("done: DISPOSE_ON_CLOSE")
-        cancel(true)
-        return
-      }
       var i = -1
       val message = runCatching {
         i = get()
