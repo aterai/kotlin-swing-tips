@@ -74,10 +74,6 @@ private fun append(s: String, o: Any) {
 
 private fun getLayoutCompoundLabelBounds(): Rectangle {
   val viewR = Rectangle()
-  viewR.x = 0
-  viewR.y = 0
-  viewR.height = Short.MAX_VALUE.toInt()
-  viewR.width = viewR.height
   val iconR = Rectangle()
   val textR = Rectangle()
   SwingUtilities.layoutCompoundLabel(
