@@ -63,8 +63,8 @@ private fun initSlider(slider: JSlider) {
   slider.actionMap.put("LEFT_ARROW", a2)
   slider.addMouseWheelListener { e ->
     (e.component as? JSlider)?.also {
-      val hasMinorTickSpacing = it.minorTickSpacing > 0
-      val tickSpacing = if (hasMinorTickSpacing) it.minorTickSpacing else it.majorTickSpacing
+      val hasMinorTickSp = it.minorTickSpacing > 0
+      val tickSpacing = if (hasMinorTickSp) it.minorTickSpacing else it.majorTickSpacing
       val v = it.value - e.wheelRotation * tickSpacing
       val m = it.model
       // it.value = minOf(m.maximum, maxOf(v, m.minimum))
@@ -97,12 +97,12 @@ private class WindowsSnapToTicksDragSliderUI(slider: JSlider) : WindowsSliderUI(
           pos >= trackRight -> trackRight
           else -> {
             offset = 0
-            val possibleTickPositions = slider.maximum - slider.minimum
+            val possibleTickPos = slider.maximum - slider.minimum
             val hasMinorTick = slider.minorTickSpacing > 0
             val tickSpacing = if (hasMinorTick) slider.minorTickSpacing else slider.majorTickSpacing
-            val actualPixelsForOneTick = trackLength * tickSpacing / possibleTickPositions.toFloat()
+            val tickPixels = trackLength * tickSpacing / possibleTickPos.toFloat()
             val px = pos - trackLeft
-            ((px / actualPixelsForOneTick).roundToInt() * actualPixelsForOneTick).roundToInt() + trackLeft
+            ((px / tickPixels).roundToInt() * tickPixels).roundToInt() + trackLeft
           }
         }
         e.translatePoint(snappedPos - pos, 0)
@@ -131,12 +131,12 @@ private class MetalSnapToTicksDragSliderUI : MetalSliderUI() {
           pos >= trackRight -> trackRight
           else -> {
             offset = 0
-            val possibleTickPositions = slider.maximum - slider.minimum
+            val possibleTickPos = slider.maximum - slider.minimum
             val hasMinorTick = slider.minorTickSpacing > 0
             val tickSpacing = if (hasMinorTick) slider.minorTickSpacing else slider.majorTickSpacing
-            val actualPixelsForOneTick = trackLength * tickSpacing / possibleTickPositions.toFloat()
+            val tickPixels = trackLength * tickSpacing / possibleTickPos.toFloat()
             val px = pos - trackLeft
-            ((px / actualPixelsForOneTick).roundToInt() * actualPixelsForOneTick).roundToInt() + trackLeft
+            ((px / tickPixels).roundToInt() * tickPixels).roundToInt() + trackLeft
           }
         }
         e.translatePoint(snappedPos - pos, 0)
