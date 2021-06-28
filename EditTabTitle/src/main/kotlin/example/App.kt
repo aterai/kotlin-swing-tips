@@ -51,13 +51,17 @@ private class EditableTabbedPane : JTabbedPane() {
       glassPane.isVisible = false
     }
   }
-  val renameTab = object : AbstractAction() {
+  private val renameTab = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      if (editor.text.trim().isNotEmpty()) {
-        setTitleAt(selectedIndex, editor.text)
-        getTabComponentAt(selectedIndex)?.revalidate()
-      }
       glassPane.isVisible = false
+      val str = editor.text
+      for (element in str) {
+        if (!Character.isWhitespace(element)) {
+          setTitleAt(selectedIndex, str.trim())
+          getTabComponentAt(selectedIndex)?.revalidate()
+          return
+        }
+      }
     }
   }
 

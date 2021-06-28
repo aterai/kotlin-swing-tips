@@ -45,6 +45,19 @@ private class EditableTabbedPane : JTabbedPane() {
       glassPane.isVisible = false
     }
   }
+  private val renameTab = object : AbstractAction() {
+    override fun actionPerformed(e: ActionEvent) {
+      glassPane.isVisible = false
+      val str = editor.text
+      for (element in str) {
+        if (!Character.isWhitespace(element)) {
+          setTitleAt(selectedIndex, str.trim())
+          getTabComponentAt(selectedIndex)?.revalidate()
+          return
+        }
+      }
+    }
+  }
 
   init {
     editor.border = BorderFactory.createEmptyBorder(0, 3, 0, 3)
@@ -52,16 +65,7 @@ private class EditableTabbedPane : JTabbedPane() {
     val am = editor.actionMap
     val renameKey = "rename-tab"
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), renameKey)
-    val renameAction = object : AbstractAction() {
-      override fun actionPerformed(e: ActionEvent) {
-        if (editor.text.trim().isNotEmpty()) {
-          setTitleAt(selectedIndex, editor.text)
-          getTabComponentAt(selectedIndex)?.revalidate()
-        }
-        glassPane.isVisible = false
-      }
-    }
-    am.put(renameKey, renameAction)
+    am.put(renameKey, renameTab)
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancel-editing")
     am.put("cancel-editing", cancelEditing)
 
