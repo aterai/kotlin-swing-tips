@@ -72,18 +72,14 @@ fun makeUI(): Component {
   r2.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
       comparator = Comparator.comparing { item: ListItem -> item.title }
-      if (descending.isSelected) {
-        comparator = comparator?.reversed()
-      }
+      reversed()
       sort()
     }
   }
   r3.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
       comparator = Comparator.comparing { item: ListItem -> item.color.rgb }
-      if (descending.isSelected) {
-        comparator = comparator?.reversed()
-      }
+      reversed()
       sort()
     }
   }
@@ -97,6 +93,12 @@ fun makeUI(): Component {
     it.add(p, BorderLayout.NORTH)
     it.add(JScrollPane(list))
     it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private fun reversed() {
+  if (descending.isSelected) {
+    comparator = comparator?.reversed()
   }
 }
 
