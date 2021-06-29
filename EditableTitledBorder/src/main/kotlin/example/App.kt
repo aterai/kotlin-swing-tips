@@ -66,14 +66,11 @@ private class EditableTitledBorder(
   }
   private val renameTitle = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      glassPane.isVisible = false
-      val str = editorTextField.text
-      for (element in str) {
-        if (!Character.isWhitespace(element)) {
-          setTitle(str.trim())
-          return
-        }
+      val str = editorTextField.text.trim()
+      if (str.isNotEmpty()) {
+        setTitle(str)
       }
+      glassPane.isVisible = false
     }
   }
 
