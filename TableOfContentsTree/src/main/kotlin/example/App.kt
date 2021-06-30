@@ -146,32 +146,39 @@ private class TableOfContentsTree(model: TreeModel?) : JTree(model) {
     g.color = background
     g.fillRect(0, 0, width, height)
     super.paintComponent(g)
-    val g2 = g.create() as? Graphics2D ?: return
-    val fm = g.fontMetrics
-    val pageNumMaxWidth = fm.stringWidth("000")
-    val ins = insets
-    val rect = visibleRect // getVisibleRowsRect()
+    val g2 = g.create() as? Graphics2D
+    val pageNumMaxWidth = g.fontMetrics.stringWidth("000")
+    val maxX = SwingUtilities.calculateInnerArea(this, null).maxX
+    val rect = visibleRect
     val tcr = getCellRenderer() as? DefaultTreeCellRenderer
+    if (g2 == null || tcr == null) {
+      return
+    }
     for (i in 0 until rowCount) {
       val r = getRowBounds(i)
       if (rect.intersects(r)) {
-        g2.paint = if (isSynth && isRowSelected(i) && tcr != null) tcr.textSelectionColor else foreground
-        val node = getPathForRow(i).lastPathComponent as? DefaultMutableTreeNode
-        (node?.userObject as? TableOfContents)?.also {
-          val pn = it.page.toString()
-          val x = width - 1 - fm.stringWidth(pn) - ins.right
-          val y = r.y + (tcr?.getBaseline(r.width, r.height) ?: 0)
-          g2.drawString(pn, x, y)
-          val gap = 5
-          val x2 = width - 1 - pageNumMaxWidth - ins.right
-          val s = g2.stroke
-          g2.stroke = READER
-          g2.drawLine(r.x + r.width + gap, y, x2 - gap, y)
-          g2.stroke = s
-        }
+        drawReader(g2, tcr, pageNumMaxWidth, maxX.toInt(), i)
       }
     }
     g2.dispose()
+  }
+
+  private fun drawReader(g2: Graphics2D, tcr: DefaultTreeCellRenderer, pageNumMaxWidth: Int, maxX: Int, i: Int) {
+    val node = getPathForRow(i).lastPathComponent as? DefaultMutableTreeNode
+    val r = getRowBounds(i)
+    (node?.userObject as? TableOfContents)?.also {
+      val pn = it.page.toString()
+      g2.paint = if (isSynth && isRowSelected(i)) tcr.textSelectionColor else foreground
+      val x1 = maxX - g2.fontMetrics.stringWidth(pn)
+      val y = r.y + ((tcr as? Component)?.getBaseline(r.width, r.height) ?: 0)
+      g2.drawString(pn, x1, y)
+      val gap = 5
+      val x2 = maxX - pageNumMaxWidth
+      val s = g2.stroke
+      g2.stroke = READER
+      g2.drawLine(r.x + r.width + gap, y, x2 - gap, y)
+      g2.stroke = s
+    }
   }
 
   companion object {
