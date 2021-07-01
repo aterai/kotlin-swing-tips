@@ -59,7 +59,6 @@ private class TableNextMatchKeyHandler : KeyAdapter() {
     if (max == 0 || e.isAltDown || isNavigationKey(e)) {
       return
     }
-    val startingFromSelection = !src.selectionModel.isSelectionEmpty
     val c = e.keyChar
     val increment = if (e.isShiftDown) -1 else 1
     val time = e.getWhen()
@@ -77,25 +76,23 @@ private class TableNextMatchKeyHandler : KeyAdapter() {
       prefix = typedString
     }
     lastTime = time
-    scrollNextMatch(src, max, e, prefix, startIndex, startingFromSelection)
+    scrollNextMatch(src, max, e, prefix, startIndex)
   }
 
-  @Suppress("LongParameterList")
   private fun scrollNextMatch(
     src: JTable,
     max: Int,
     e: KeyEvent,
     prf: String,
     startIdx: Int,
-    startSelection: Boolean
   ) {
     var start = startIdx
-    var startingFromSelection = startSelection
+    var fromSelection = !src.selectionModel.isSelectionEmpty
     if (start < 0 || start >= max) {
       if (e.isShiftDown) {
         start = max - 1
       } else {
-        startingFromSelection = false
+        fromSelection = false
         start = 0
       }
     }
@@ -104,7 +101,7 @@ private class TableNextMatchKeyHandler : KeyAdapter() {
     if (index >= 0) {
       src.selectionModel.setSelectionInterval(index, index)
       src.scrollRectToVisible(src.getCellRect(index, TARGET_COLUMN, true))
-    } else if (startingFromSelection) { // wrap
+    } else if (fromSelection) { // wrap
       index = getNextMatch(src, prf, 0, bias)
       if (index >= 0) {
         src.selectionModel.setSelectionInterval(index, index)
