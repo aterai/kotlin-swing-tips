@@ -3,6 +3,7 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.HierarchyEvent
 import javax.sound.midi.MidiSystem
+import javax.sound.midi.Sequencer
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 private const val END_OF_TRACK: Byte = 0x2F
@@ -28,23 +29,7 @@ fun makeUI(): Component {
               publish(0L)
             }
           }
-          EventQueue.invokeLater {
-            start.addActionListener {
-              sequencer.tickPosition = tickPos
-              sequencer.start()
-              initButtons(false)
-            }
-            pause.addActionListener {
-              publish(sequencer.tickPosition)
-              sequencer.stop()
-              initButtons(true)
-            }
-            reset.addActionListener {
-              sequencer.stop()
-              tickPos = 0
-              initButtons(true)
-            }
-          }
+          addListener(sequencer)
           while (sequencer.isOpen) {
             if (sequencer.isRunning) {
               publish(sequencer.tickPosition)
@@ -56,6 +41,26 @@ fun makeUI(): Component {
         publish(0L)
       }
       return null
+    }
+
+    private fun addListener(sequencer: Sequencer) {
+      EventQueue.invokeLater {
+        start.addActionListener {
+          sequencer.tickPosition = tickPos
+          sequencer.start()
+          initButtons(false)
+        }
+        pause.addActionListener {
+          publish(sequencer.tickPosition)
+          sequencer.stop()
+          initButtons(true)
+        }
+        reset.addActionListener {
+          sequencer.stop()
+          tickPos = 0
+          initButtons(true)
+        }
+      }
     }
 
     override fun process(chunks: List<Long>) {
