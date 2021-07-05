@@ -186,7 +186,8 @@ private class GroupableTableHeaderUI : BasicTableHeaderUI() {
   // }
 
   override fun getPreferredSize(c: JComponent?): Dimension {
-    val width = header.columnModel.columns.toList().map { it.preferredWidth.toLong() }.sum()
+    // val width = header.columnModel.columns.toList().map { it.preferredWidth.toLong() }.sum()
+    val width = header.columnModel.columns.toList().sumOf { it.preferredWidth.toLong() }
     return Dimension(minOf(width, Integer.MAX_VALUE.toLong()).toInt(), getHeaderHeight())
     // return createHeaderSize(width)
   }
