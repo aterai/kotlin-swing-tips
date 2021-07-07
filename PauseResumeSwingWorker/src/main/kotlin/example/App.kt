@@ -126,7 +126,7 @@ private fun createRightAlignButtonBox4(vararg list: Component): Component {
   val layout = SpringLayout()
   val p = object : JPanel(layout) {
     override fun getPreferredSize(): Dimension {
-      val maxHeight = list.map { it.preferredSize.height }.max() ?: 0
+      val maxHeight = list.map { it.preferredSize.height }.maxOrNull() ?: 0
       return Dimension(buttonWidth * list.size + gap + gap, maxHeight + gap + gap)
     }
   }

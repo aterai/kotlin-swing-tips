@@ -56,7 +56,7 @@ fun createRightAlignBox4(list: List<Component>, width: Int, gap: Int): Component
   val layout = SpringLayout()
   val p = object : JPanel(layout) {
     override fun getPreferredSize(): Dimension {
-      val maxHeight = list.map { it.preferredSize.height }.max() ?: 0
+      val maxHeight = list.map { it.preferredSize.height }.maxOrNull() ?: 0
       return Dimension(width * list.size + gap + gap, maxHeight + gap + gap)
     }
   }
@@ -80,7 +80,7 @@ fun createRightAlignBox3(list: List<Component>, width: Int, gap: Int): Component
   val layout = SpringLayout()
   val p = object : JPanel(layout) {
     override fun getPreferredSize(): Dimension {
-      val maxHeight = list.map { it.preferredSize.height }.max() ?: 0
+      val maxHeight = list.map { it.preferredSize.height }.maxOrNull() ?: 0
       return Dimension(width * list.size + gap + gap, maxHeight + gap + gap)
     }
   }
@@ -114,7 +114,7 @@ fun createRightAlignBox2(list: List<Component>, width: Int, gap: Int): Component
       list.forEach { it.preferredSize = null }
       super.updateUI()
       EventQueue.invokeLater {
-        val maxHeight = list.map { it.preferredSize.height }.max() ?: 0
+        val maxHeight = list.map { it.preferredSize.height }.maxOrNull() ?: 0
         val d = Dimension(width, maxHeight)
         list.forEach { it.preferredSize = d }
         revalidate()

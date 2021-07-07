@@ -89,7 +89,7 @@ private class TextAreaCellRenderer : TableCellRenderer {
       list.add(0)
     }
     list[column] = preferredHeight
-    val max = list.max() ?: 0
+    val max = list.maxOrNull() ?: 0
     if (table.getRowHeight(row) != max) {
       table.setRowHeight(row, max)
     }
