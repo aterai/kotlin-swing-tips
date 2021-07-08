@@ -209,7 +209,7 @@ private class RaaWindowsMenuItemUI : WindowsMenuItemUI() {
     arrowIcon: Icon,
     background: Color,
     foreground: Color,
-    defaultTextIconGap: Int
+    textIconGap: Int
   ) { // // Save original graphics font and color
     val g2 = g.create() as? Graphics2D ?: return
     val mi = c as? JMenuItem ?: return
@@ -217,7 +217,7 @@ private class RaaWindowsMenuItemUI : WindowsMenuItemUI() {
     val viewRect = Rectangle(mi.width, mi.height)
     MenuItemHelper.applyInsets(viewRect, mi.insets)
     val lh = MenuItemLayoutHelper(
-      mi, checkIcon, arrowIcon, viewRect, defaultTextIconGap, "+",
+      mi, checkIcon, arrowIcon, viewRect, textIconGap, "+",
       true, mi.font, acceleratorFont,
       MenuItemLayoutHelper.useCheckAndArrow(menuItem), propertyPrefix
     )
@@ -253,7 +253,7 @@ private class RaaBasicMenuItemUI : BasicMenuItemUI() {
     arrowIcon: Icon,
     background: Color,
     foreground: Color,
-    defaultTextIconGap: Int
+    textIconGap: Int
   ) {
     val g2 = g.create() as? Graphics2D ?: return
     val mi = c as? JMenuItem ?: return
@@ -261,7 +261,7 @@ private class RaaBasicMenuItemUI : BasicMenuItemUI() {
     val viewRect = Rectangle(mi.width, mi.height)
     MenuItemHelper.applyInsets(viewRect, mi.insets)
     val lh = MenuItemLayoutHelper(
-      mi, checkIcon, arrowIcon, viewRect, defaultTextIconGap, "+",
+      mi, checkIcon, arrowIcon, viewRect, textIconGap, "+",
       true, mi.font, acceleratorFont,
       MenuItemLayoutHelper.useCheckAndArrow(menuItem), propertyPrefix
     )
@@ -269,12 +269,12 @@ private class RaaBasicMenuItemUI : BasicMenuItemUI() {
     paintBackground(g2, mi, background)
     MenuItemHelper.paintCheckIcon(g2, lh, lr, g.color, foreground)
     MenuItemHelper.paintIcon(g2, lh, lr)
-    paintText(g2, lh, lr)
+    paintMenuText(g2, lh, lr)
     MenuItemHelper.paintAccText(g2, lh, lr, disabledForeground, acceleratorForeground, acceleratorSelectionForeground)
     MenuItemHelper.paintArrowIcon(g2, lh, lr, foreground)
   }
 
-  private fun paintText(
+  private fun paintMenuText(
     g: Graphics,
     lh: MenuItemLayoutHelper,
     lr: LayoutResult
