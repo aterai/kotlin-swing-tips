@@ -158,7 +158,7 @@ class BarFactory(base: String) {
   private fun createMenu(key: String): JMenu? {
     val miText = getResourceString(key + LABEL_SUFFIX) ?: return null
     val menu = JMenu(miText)
-    getResourceString(key + MNE_SUFFIX)?.toUpperCase(Locale.ENGLISH)?.trim()
+    getResourceString(key + MNE_SUFFIX)?.uppercase(Locale.ENGLISH)?.trim()
       ?.takeIf { it.isNotEmpty() }
       ?.also {
         if (!miText.contains(it)) {
@@ -184,7 +184,7 @@ class BarFactory(base: String) {
       mi.horizontalTextPosition = SwingConstants.RIGHT
       mi.icon = ImageIcon(it)
     }
-    getResourceString(cmd + MNE_SUFFIX)?.toUpperCase(Locale.ENGLISH)?.trim()
+    getResourceString(cmd + MNE_SUFFIX)?.uppercase(Locale.ENGLISH)?.trim()
       ?.takeIf { it.isNotEmpty() }
       ?.also {
         if (!miText.contains(it)) {

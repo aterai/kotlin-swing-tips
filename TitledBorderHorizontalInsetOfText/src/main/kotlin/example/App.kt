@@ -3,6 +3,7 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.Component.BaselineResizeBehavior
 import java.awt.geom.Path2D
+import java.util.Locale
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.AbstractBorder
 import javax.swing.border.Border
@@ -122,7 +123,7 @@ private class TitledBorder2 @JvmOverloads constructor(
       return if (value is Int && DEFAULT_POSITION < value && value <= BELOW_BOTTOM) {
         value
       } else {
-        when ((value as? String)?.toUpperCase()) {
+        when ((value as? String)?.uppercase(Locale.ENGLISH)) {
           "ABOVE_TOP" -> ABOVE_TOP
           "TOP" -> TOP
           "BELOW_TOP" -> BELOW_TOP

@@ -37,7 +37,7 @@ private class FirstCharToUpperCaseDocumentFilter(private val textField: JTextCom
   override fun remove(fb: FilterBypass, offset: Int, length: Int) {
     val doc = fb.document
     if (offset == 0 && doc.length - length > 0) {
-      fb.replace(length, 1, doc.getText(length, 1).toUpperCase(Locale.ENGLISH), null)
+      fb.replace(length, 1, doc.getText(length, 1).uppercase(Locale.ENGLISH), null)
       textField.caretPosition = offset
     }
     fb.remove(offset, length)
@@ -46,7 +46,7 @@ private class FirstCharToUpperCaseDocumentFilter(private val textField: JTextCom
   @Throws(BadLocationException::class)
   override fun replace(fb: FilterBypass, offset: Int, length: Int, text: String?, attrs: AttributeSet?) {
     val str = if (offset == 0 && text?.isNotEmpty() == true) {
-      text.substring(0, 1).toUpperCase(Locale.ENGLISH) + text.substring(1)
+      text.substring(0, 1).uppercase(Locale.ENGLISH) + text.substring(1)
     } else {
       text
     }

@@ -37,7 +37,7 @@ fun makeUI() = JPanel(BorderLayout()).also {
 }
 
 private fun makeSystemColorPanel(color: Color, text: String) = JPanel(BorderLayout()).also {
-  val hex = Integer.toHexString(color.rgb).toUpperCase(Locale.ENGLISH)
+  val hex = Integer.toHexString(color.rgb).uppercase(Locale.ENGLISH)
   val field = JTextField("$text: 0x$hex")
   field.isEditable = false
   it.add(JLabel(ColorIcon(color)), BorderLayout.EAST)

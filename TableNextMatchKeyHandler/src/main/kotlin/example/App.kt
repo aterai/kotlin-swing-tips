@@ -122,7 +122,7 @@ private class TableNextMatchKeyHandler : KeyAdapter() {
     ): Int {
       val max = table.rowCount
       require(!(startingRow < 0 || startingRow >= max)) { "(0 <= startingRow < max) is false" }
-      val casePrefix = prefix.toUpperCase(Locale.ENGLISH)
+      val casePrefix = prefix.uppercase(Locale.ENGLISH)
       // start search from the next/previous element from the
       // selected element
       val increment = if (bias == Bias.Forward) 1 else -1
@@ -130,7 +130,7 @@ private class TableNextMatchKeyHandler : KeyAdapter() {
       do {
         val value = table.getValueAt(row, TARGET_COLUMN)
         val text = value.toString()
-        if (text.toUpperCase(Locale.ENGLISH).startsWith(casePrefix)) {
+        if (text.uppercase(Locale.ENGLISH).startsWith(casePrefix)) {
           return row
         }
         row = (row + increment + max) % max
