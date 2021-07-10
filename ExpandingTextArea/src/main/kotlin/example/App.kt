@@ -77,9 +77,10 @@ private fun makeExpandingTextArea2(): Component {
   val keyExpand = "TextArea"
   val fl1 = object : FocusAdapter() {
     override fun focusLost(e: FocusEvent) {
-      val text = textArea.text
+      // val text = textArea.text
       // textField.text = if (text.isEmpty()) " " else text
-      textField.text = text.takeIf { it.isNotEmpty() } ?: " "
+      // textField.text = text.takeIf { it.isNotEmpty() } ?: " "
+      textField.text = textArea.text.ifEmpty { " " }
       cardLayout.show(cp, keyCollapse)
     }
   }

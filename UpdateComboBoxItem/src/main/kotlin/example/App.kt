@@ -81,9 +81,10 @@ private class CheckBoxCellRenderer<E : CheckableItem> : ListCellRenderer<E> {
     cellHasFocus: Boolean
   ): Component {
     if (index < 0) {
-      val txt = getCheckedItemString(list.model)
+      // val txt = getCheckedItemString(list.model)
       // label.setText(if (txt.isEmpty()) " " else txt)
-      label.text = txt.takeUnless { it.isEmpty() } ?: " "
+      // label.text = txt.takeUnless { it.isEmpty() } ?: " "
+      label.text = getCheckedItemString(list.model).ifEmpty { " " }
       return label
     } else {
       check.text = value.toString()
