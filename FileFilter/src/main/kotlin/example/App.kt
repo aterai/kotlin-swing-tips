@@ -39,14 +39,14 @@ fun makeUI(): Component {
 
 private class PngFileFilter : FileFilter() {
   override fun accept(file: File) =
-    file.isDirectory || file.name.toLowerCase(Locale.ENGLISH).endsWith(".png")
+    file.isDirectory || file.name.lowercase(Locale.ENGLISH).endsWith(".png")
 
   override fun getDescription() = "PNG(*.png)"
 }
 
 private class JpgFileFilter : FileFilter() {
   override fun accept(file: File) =
-    file.isDirectory || file.name.toLowerCase(Locale.ENGLISH).endsWith(".jpg")
+    file.isDirectory || file.name.lowercase(Locale.ENGLISH).endsWith(".jpg")
 
   override fun getDescription() = "JPEG(*.jpg)"
 }

@@ -119,7 +119,7 @@ private fun getCharset(urlConnection: URLConnection): Charset {
 //    if (list.isNotEmpty()) {
 //      val str = list.toList()
 //        .first {
-//          it.isNotEmpty() && it.toLowerCase(Locale.ENGLISH).startsWith("charset=")
+//          it.isNotEmpty() && it.lowercase(Locale.ENGLISH).startsWith("charset=")
 //        }.substring("charset=".length)
 //      if (str.isNotEmpty()) Charset.forName(str) else StandardCharsets.UTF_8
 //    } else StandardCharsets.UTF_8
