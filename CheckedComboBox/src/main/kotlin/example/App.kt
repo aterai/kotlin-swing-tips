@@ -4,10 +4,29 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.ComboPopup
 
 fun makeUI(): Component {
+  val p = JPanel(GridLayout(0, 1))
+  p.border = BorderFactory.createEmptyBorder(5, 20, 5, 20)
+  p.add(JLabel("Default:"))
+  p.add(JComboBox(makeModel()))
+  p.add(Box.createVerticalStrut(20))
+  p.add(JLabel("CheckedComboBox:"))
+  p.add(CheckedComboBox(makeModel()))
+  p.add(Box.createVerticalStrut(20))
+  p.add(JLabel("CheckedComboBox(Windows):"))
+  p.add(WindowsCheckedComboBox(makeModel()))
+  return JPanel(BorderLayout()).also {
+    it.add(p, BorderLayout.NORTH)
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private fun makeModel(): ComboBoxModel<CheckableItem> {
   val m = arrayOf(
     CheckableItem("aaa", false),
     CheckableItem("bb", true),
@@ -16,100 +35,60 @@ fun makeUI(): Component {
     CheckableItem("2222", true),
     CheckableItem("c", false)
   )
-  val p = JPanel(GridLayout(0, 1))
-  p.border = BorderFactory.createEmptyBorder(5, 20, 5, 20)
-  p.add(JLabel("Default:"))
-  p.add(JComboBox(m))
-  p.add(Box.createVerticalStrut(20))
-  p.add(JLabel("CheckedComboBox:"))
-  p.add(CheckedComboBox(DefaultComboBoxModel(m)))
-  return JPanel(BorderLayout()).also {
-    it.add(p, BorderLayout.NORTH)
-    it.preferredSize = Dimension(320, 240)
-  }
+  return DefaultComboBoxModel(m)
 }
 
 private data class CheckableItem(val title: String, val isSelected: Boolean) {
   override fun toString() = title
 }
 
-// class CheckBoxCellRenderer : ListCellRenderer<CheckableItem> {
-//  private val label = JLabel(" ")
-//  private val check = JCheckBox(" ")
-//  override fun getListCellRendererComponent(
-//    list: JList<out CheckableItem>,
-//    value: CheckableItem?,
-//    index: Int,
-//    isSelected: Boolean,
-//    cellHasFocus: Boolean
-//  ): Component {
-//    return if (index < 0) {
-//      val txt = getCheckedItemString(list.model)
-//      label.text = if (txt.isEmpty()) " " else txt
-//      label
-//    } else {
-//      check.text = value?.toString() ?: ""
-//      check.isSelected = value?.isSelected == true
-//      if (isSelected) {
-//        check.background = list.selectionBackground
-//        check.foreground = list.selectionForeground
-//      } else {
-//        check.background = list.background
-//        check.foreground = list.foreground
-//      }
-//      check
-//    }
-//  }
-//
-//  private fun getCheckedItemString(model: ListModel<out CheckableItem>): String {
-//    return (0 until model.size)
-//      .asSequence()
-//      .map { model.getElementAt(it) }
-//      .filter { it.isSelected }
-//      .map { it.toString() }
-//      .sorted()
-//      .joinToString { "," }
-//  }
-// }
-
-private class CheckedComboBox(model: ComboBoxModel<CheckableItem>) : JComboBox<CheckableItem>(model) {
-  private var keepOpen = false
-
-  @Transient private var listener: ActionListener? = null
+private open class CheckedComboBox(model: ComboBoxModel<CheckableItem>) : JComboBox<CheckableItem>(model) {
+  protected var keepOpen = false
+  private val panel = JPanel(BorderLayout())
 
   override fun getPreferredSize() = Dimension(200, 20)
 
   override fun updateUI() {
     setRenderer(null)
-    removeActionListener(listener)
     super.updateUI()
-    listener = ActionListener { e ->
-      if (e.modifiers.toLong() and AWTEvent.MOUSE_EVENT_MASK != 0L) {
-        updateItem(selectedIndex)
-        keepOpen = true
-      }
-    }
-    val label = JLabel(" ")
-    val check = JCheckBox(" ")
-    setRenderer { list, value, index, isSelected, _ ->
-      if (index < 0) {
-        val txt = getCheckedItemString(list.model)
-        label.text = if (txt.isEmpty()) " " else txt
-        label
-      } else {
-        check.text = value?.toString() ?: ""
-        check.isSelected = value?.isSelected == true
-        if (isSelected) {
-          check.background = list.selectionBackground
-          check.foreground = list.selectionForeground
-        } else {
-          check.background = list.background
-          check.foreground = list.foreground
+    val a = getAccessibleContext().getAccessibleChild(0)
+    if (a is ComboPopup) {
+      a.list.addMouseListener(object : MouseAdapter() {
+        override fun mousePressed(e: MouseEvent) {
+          val list = e.component as? JList<*> ?: return
+          if (SwingUtilities.isLeftMouseButton(e)) {
+            keepOpen = true
+            updateItem(list.locationToIndex(e.point))
+          }
         }
-        check
-      }
+      })
     }
-    addActionListener(listener)
+    val renderer = DefaultListCellRenderer()
+    val check = JCheckBox()
+    check.isOpaque = false
+    setRenderer { list, value, index, isSelected, cellHasFocus ->
+      panel.removeAll()
+      val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+      if (index < 0) {
+        (c as? JLabel)?.also {
+          it.text = getCheckedItemString(list.model).ifEmpty { " " }
+          it.isOpaque = false
+          it.foreground = list.foreground
+        }
+        panel.isOpaque = false
+      } else {
+        check.isSelected = value.isSelected
+        panel.add(check, BorderLayout.WEST)
+        panel.isOpaque = true
+        panel.background = c.background
+      }
+      panel.add(c)
+      panel
+    }
+    initActionMap()
+  }
+
+  protected fun initActionMap() {
     getInputMap(JComponent.WHEN_FOCUSED).put(
       KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0),
       "checkbox-select"
@@ -124,17 +103,7 @@ private class CheckedComboBox(model: ComboBoxModel<CheckableItem>) : JComboBox<C
     actionMap.put("checkbox-select", action)
   }
 
-  private fun getCheckedItemString(model: ListModel<out CheckableItem>): String {
-    return (0 until model.size)
-      .asSequence()
-      .map { model.getElementAt(it) }
-      .filter { it.isSelected }
-      .map { it.toString() }
-      .sorted()
-      .joinToString()
-  }
-
-  private fun updateItem(index: Int) {
+  protected fun updateItem(index: Int) {
     val item = getItemAt(index)
     if (isPopupVisible && item != null) {
       removeItemAt(index)
@@ -149,6 +118,52 @@ private class CheckedComboBox(model: ComboBoxModel<CheckableItem>) : JComboBox<C
     } else {
       super.setPopupVisible(v)
     }
+  }
+
+  protected fun getCheckedItemString(model: ListModel<out CheckableItem>) = (0 until model.size)
+    .asSequence()
+    .map { model.getElementAt(it) }
+    .filter { it.isSelected }
+    .map { it.toString() }
+    .sorted()
+    .joinToString()
+}
+
+private class WindowsCheckedComboBox(model: ComboBoxModel<CheckableItem>) : CheckedComboBox(model) {
+  private var listener: ActionListener? = null
+
+  override fun updateUI() {
+    setRenderer(null)
+    removeActionListener(listener)
+    super.updateUI()
+    listener = ActionListener { e ->
+      if (e.modifiers.toLong() and AWTEvent.MOUSE_EVENT_MASK != 0L) {
+        updateItem(selectedIndex)
+        keepOpen = true
+      }
+    }
+    addActionListener(listener)
+
+    val label = JLabel(" ")
+    val check = JCheckBox(" ")
+    setRenderer { list, value, index, isSelected, _ ->
+      if (index < 0) {
+        label.text = getCheckedItemString(list.model).ifEmpty { " " }
+        label
+      } else {
+        check.text = value?.toString() ?: ""
+        check.isSelected = value?.isSelected == true
+        if (isSelected) {
+          check.background = list.selectionBackground
+          check.foreground = list.selectionForeground
+        } else {
+          check.background = list.background
+          check.foreground = list.foreground
+        }
+        check
+      }
+    }
+    initActionMap()
   }
 }
 
