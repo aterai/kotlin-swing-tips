@@ -51,7 +51,7 @@ private class DirectoryExpandVetoListener : TreeWillExpandListener {
     if (o is DefaultMutableTreeNode) {
       (o.userObject as? File)?.also { file ->
         val name = file.name
-        if (name.isNotEmpty() && name.codePointAt(0) == '.'.toInt()) {
+        if (name.isNotEmpty() && name.codePointAt(0) == '.'.code) {
           throw ExpandVetoException(e, "Tree expansion cancelled")
         }
       }

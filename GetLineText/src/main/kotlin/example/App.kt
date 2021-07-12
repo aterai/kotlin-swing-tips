@@ -7,7 +7,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
-private const val SHARP = '#'.toInt()
+private const val SHARP = '#'.code
 
 fun makeUI(): Component {
   val sb = StringBuilder()
