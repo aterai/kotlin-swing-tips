@@ -11,7 +11,8 @@ fun makeUI(): Component {
   }
   val btnSetMnemonic = JButton("setMnemonic(...)")
   btnSetMnemonic.addActionListener {
-    val str = textField.text.trim().takeUnless { it.isEmpty() } ?: button.text
+    // val str = textField.text.trim().takeUnless { it.isEmpty() } ?: button.text
+    val str = textField.text.trim().ifEmpty { button.text }
     button.mnemonic = str.codePointAt(0)
   }
   val btnClearMnemonic = JButton("clear Mnemonic")
