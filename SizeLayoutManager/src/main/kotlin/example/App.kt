@@ -36,16 +36,15 @@ private fun makeUI2(): Component {
           return
         }
         val insets = target.insets
-        val hgap = hgap
         val rowHeight = target.height
         var x = insets.left + hgap
-        target.getComponents()
+        target.components
           .filterIsInstance<AbstractButton>()
           .filter { it.isVisible }
           .forEach {
             val v = if (it.isSelected) 80 else 50
             val d = Dimension(v, v)
-            it.setSize(d)
+            it.size = d
             val y = (rowHeight - v) / 2
             it.setLocation(x, y)
             x += d.width + hgap
