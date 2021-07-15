@@ -64,9 +64,7 @@ fun makeUI(): Component {
       return super.getTableCellEditorComponent(table, v, isSelected, row, column)
     }
 
-    override fun getCellEditorValue(): Any {
-      return if (editor.text.isEmpty()) 0 else super.getCellEditorValue()
-    }
+    override fun getCellEditorValue() = if (editor.text.isEmpty()) 0 else super.getCellEditorValue()
   }
   table.setDefaultEditor(Number::class.java, cellEditor)
   table.setDefaultRenderer(Number::class.java, SudokuCellRenderer(data))
@@ -107,18 +105,17 @@ private class SudokuCellRenderer(src: Array<Array<Number>>) : DefaultTableCellRe
     BorderFactory.createMatteBorder(0, 0, 0, BORDER_WIDTH2, Color.BLACK),
     BorderFactory.createMatteBorder(0, 0, BORDER_WIDTH1, 0, Color.GRAY)
   )
-  private val mask: Array<Array<Number>>
+  private val mask = Array(src.size) { i -> Array(src[i].size) { j -> src[i][j] } }
 
-  init {
-    // // val dest = Array<Array<Int?>>(src.size) { arrayOfNulls(src[0].size) }
-    // val dest = Array(src.size, { Array(src[0].size, { 0 }) })
-    // for (i in src.indices) {
-    //   System.arraycopy(src[i], 0, dest[i], 0, src[0].size)
-    // }
-    // this.mask = dest
-    // this.mask = Array(src.size, { i -> Array(src[i].size, { j -> src[i][j] }) })
-    this.mask = Array(src.size) { i -> Array(src[i].size) { j -> src[i][j] } }
-  }
+  // init {
+  //   // val dest = Array<Array<Int?>>(src.size) { arrayOfNulls(src[0].size) }
+  //   val dest = Array(src.size, { Array(src[0].size, { 0 }) })
+  //   for (i in src.indices) {
+  //     System.arraycopy(src[i], 0, dest[i], 0, src[0].size)
+  //   }
+  //   this.mask = dest
+  //   this.mask = Array(src.size, { i -> Array(src[i].size, { j -> src[i][j] }) })
+  // }
 
   override fun getTableCellRendererComponent(
     table: JTable,
