@@ -34,6 +34,40 @@ private class TableHeaderTabbedPane : JPanel(BorderLayout()) {
   private var selectedColumn: Any? = null
   private var rolloverColumn = -1
 
+  init {
+    val left = 1
+    val right = 3
+    val tabPanel = JPanel(GridLayout(1, 0, 0, 0))
+    tabPanel.border = BorderFactory.createEmptyBorder(1, left, 0, right)
+    contentsPanel.border = BorderFactory.createEmptyBorder(4, left, 2, right)
+
+    val table = JTable(DefaultTableModel(null, arrayOf<String>()))
+    header = table.tableHeader
+    model = header.columnModel
+
+    val handler = TableHeaderMouseInputHandler()
+    header.addMouseListener(handler)
+    header.addMouseMotionListener(handler)
+    val l = TabButton()
+    header.setDefaultRenderer { _, value, _, _, _, column ->
+      l.also {
+        it.text = value?.toString() ?: ""
+        it.isSelected = value == selectedColumn || column == rolloverColumn
+      }
+    }
+
+    val vp = object : JViewport() {
+      override fun getPreferredSize() = Dimension()
+    }
+    vp.view = table
+
+    val sp = JScrollPane()
+    sp.viewport = vp
+
+    add(sp, BorderLayout.NORTH)
+    add(contentsPanel)
+  }
+
   fun addTab(title: String, comp: Component) {
     contentsPanel.add(comp, title)
     val tc = TableColumn(model.columnCount, 75, header.defaultRenderer, null)
@@ -83,40 +117,6 @@ private class TableHeaderTabbedPane : JPanel(BorderLayout()) {
         }
       }
     }
-  }
-
-  init {
-    val left = 1
-    val right = 3
-    val tabPanel = JPanel(GridLayout(1, 0, 0, 0))
-    tabPanel.border = BorderFactory.createEmptyBorder(1, left, 0, right)
-    contentsPanel.border = BorderFactory.createEmptyBorder(4, left, 2, right)
-
-    val table = JTable(DefaultTableModel(null, arrayOf<String>()))
-    header = table.tableHeader
-    model = header.columnModel
-
-    val handler = TableHeaderMouseInputHandler()
-    header.addMouseListener(handler)
-    header.addMouseMotionListener(handler)
-    val l = TabButton()
-    header.setDefaultRenderer { _, value, _, _, _, column ->
-      l.also {
-        it.text = value?.toString() ?: ""
-        it.isSelected = value == selectedColumn || column == rolloverColumn
-      }
-    }
-
-    val vp = object : JViewport() {
-      override fun getPreferredSize() = Dimension()
-    }
-    vp.view = table
-
-    val sp = JScrollPane()
-    sp.viewport = vp
-
-    add(sp, BorderLayout.NORTH)
-    add(contentsPanel)
   }
 }
 

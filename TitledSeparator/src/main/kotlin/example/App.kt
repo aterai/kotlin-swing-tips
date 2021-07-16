@@ -33,6 +33,10 @@ private class TitledSeparator(
   private val separatorHeight: Int,
   private val titlePosition: Int
 ) : JLabel() {
+  init {
+    updateBorder()
+  }
+
   constructor(title: String, height: Int, titlePosition: Int) : this(
     title,
     null,
@@ -87,10 +91,6 @@ private class TitledSeparator(
     override fun getIconWidth() = 200 // dummy width
 
     override fun getIconHeight() = separatorHeight
-  }
-
-  init {
-    updateBorder()
   }
 }
 
