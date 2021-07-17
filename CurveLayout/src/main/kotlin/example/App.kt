@@ -12,14 +12,13 @@ fun makeUI(): Component {
     // protected val A2 = 4.0
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
-      val i = insets
       val g2 = g.create() as? Graphics2D ?: return
-      g2.translate(i.left, i.top)
+      val r = SwingUtilities.calculateInnerArea(this, null)
+      g2.translate(r.x, r.y)
       g2.paint = Color.RED
-      val w = width - i.left - i.right
       var px = 0
       var py = 0
-      for (x in 0 until w) {
+      for (x in 0 until r.width) {
         val y = (x / a2).pow(2.0).toInt()
         g2.drawLine(px, py, x, y)
         px = x
@@ -33,17 +32,15 @@ fun makeUI(): Component {
       layout = object : FlowLayout() {
         override fun layoutContainer(target: Container) {
           synchronized(target.treeLock) {
-            val nmembers = target.componentCount
-            if (nmembers <= 0) {
+            val num = target.componentCount
+            if (num <= 0) {
               return
             }
-            val insets = target.insets
-            val vgap = vgap
-            val hgap = hgap
-            val rh = (target.height - insets.top - insets.bottom - vgap * 2) / nmembers
-            var x = insets.left + hgap
-            var y = insets.top + vgap
-            for (i in 0 until nmembers) {
+            val r = SwingUtilities.calculateInnerArea(target as? JComponent, null)
+            val rh = (r.height - vgap * 2) / num
+            var x = r.x + hgap
+            var y = r.y + vgap
+            for (i in 0 until num) {
               val m = target.getComponent(i)
               if (m.isVisible) {
                 val d = m.preferredSize
