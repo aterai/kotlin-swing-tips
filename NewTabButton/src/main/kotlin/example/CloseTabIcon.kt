@@ -27,14 +27,8 @@ class PlusIcon : Icon {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
 
-    val i = (c as? JComponent)?.insets ?: Insets(0, 0, 0, 0)
-    val size = c.size
-
-    viewRect.x = i.left
-    viewRect.y = i.top
-    viewRect.width = size.width - i.right - viewRect.x
-    viewRect.height = size.height - i.bottom - viewRect.y
-    OperaTabViewButtonUI.tabPainter(g2, viewRect)
+    viewRect.bounds = c.bounds
+    OperaTabViewButtonUI.tabPainter(g2, SwingUtilities.calculateInnerArea(c as? JComponent, viewRect))
 
     g2.paint = Color.WHITE
     var w = viewRect.width

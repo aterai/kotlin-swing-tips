@@ -139,10 +139,8 @@ private class NineSliceScalingIcon(
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    if (c !is JComponent) {
-      return
-    }
-    SwingUtilities.calculateInnerArea(c, RECT)
+    RECT.bounds = c.bounds
+    SwingUtilities.calculateInnerArea(c as? JComponent, RECT)
     width = RECT.width
     height = RECT.height
     val iw = image.getWidth(c)
