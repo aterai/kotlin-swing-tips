@@ -1,16 +1,18 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import java.util.Objects
 import java.util.concurrent.atomic.AtomicInteger
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.Timer
 
 private var mode = Crossfade.IN
 
 fun makeUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
   val check = JCheckBox("Crossfade Type?", true)
-  val icon1 = ImageIcon(cl.getResource("example/test.png"))
-  val icon2 = ImageIcon(cl.getResource("example/test.jpg"))
+  val icon1 = ImageIcon(Objects.requireNonNull(cl.getResource("example/test.png")))
+  val icon2 = ImageIcon(Objects.requireNonNull(cl.getResource("example/test.jpg")))
   val button = JButton("change")
   val alpha = AtomicInteger(10)
   val crossfade = object : JComponent() {
@@ -21,9 +23,9 @@ fun makeUI(): Component {
       if (check.isSelected) {
         g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f - alpha.get() * .1f)
       }
-      g2.drawImage(icon1.image, 0, 0, icon1.iconWidth, icon1.iconHeight, this)
+      icon1.paintIcon(this, g2, 0, 0)
       g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha.get() * .1f)
-      g2.drawImage(icon2.image, 0, 0, icon2.iconWidth, icon2.iconHeight, this)
+      icon2.paintIcon(this, g2, 0, 0)
       g2.dispose()
     }
   }

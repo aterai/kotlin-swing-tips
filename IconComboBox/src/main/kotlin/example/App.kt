@@ -1,12 +1,14 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import java.util.Objects
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import kotlin.math.roundToInt
 
 fun makeUI() = JPanel(BorderLayout()).also {
+  val path = "example/16x16.png"
   val cl = Thread.currentThread().contextClassLoader
-  val image = ImageIcon(cl.getResource("example/16x16.png"))
+  val image = ImageIcon(Objects.requireNonNull(cl.getResource(path)))
 
   val combo02 = JComboBox(makeModel())
   initComboBoxRenderer(combo02, image)
@@ -80,7 +82,7 @@ private fun initIconComboBorder1(comboBox: JComboBox<*>, icon: ImageIcon) {
       val ih = icon.iconHeight
       val ch = iconHeight
       val yy = ((ch - ih) / 2f).roundToInt().coerceAtLeast(0)
-      g2.drawImage(icon.image, 0, yy, c)
+      icon.paintIcon(c, g2, 0, yy)
       g2.dispose()
     }
 

@@ -1,6 +1,8 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
@@ -22,8 +24,9 @@ fun makeUI(): Component {
   popup.add(openItem)
   popup.add(exitItem)
 
+  val path = "example/16x16.png"
   val cl = Thread.currentThread().contextClassLoader
-  val image = ImageIcon(cl.getResource("example/16x16.png")).image
+  val image = cl.getResource(path)?.openStream()?.use(ImageIO::read) ?: makeDefaultTrayImage()
   runCatching {
     SystemTray.getSystemTray().add(TrayIcon(image, "TRAY", popup))
   }
@@ -46,6 +49,17 @@ fun makeUI(): Component {
     it.add(JScrollPane(JTextArea()))
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+private fun makeDefaultTrayImage(): BufferedImage {
+  val icon = UIManager.getIcon("InternalFrame.icon")
+  val w = icon.iconWidth
+  val h = icon.iconHeight
+  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  icon.paintIcon(null, g2, 0, 0)
+  g2.dispose()
+  return bi
 }
 
 fun main() {
