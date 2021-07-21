@@ -4,6 +4,8 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
@@ -40,8 +42,9 @@ private fun initPopupMenu(frame: JFrame) {
   val dummy = JDialog()
   dummy.isUndecorated = true
   val cl = Thread.currentThread().contextClassLoader
-  val image = ImageIcon(cl.getResource("example/16x16.png")).image
-  val icon = TrayIcon(image, "TRAY", null)
+  val path = "example/16x16.png"
+  val img = cl.getResource(path)?.openStream()?.use(ImageIO::read) ?: makeDefaultTrayImage()
+  val icon = TrayIcon(img, "TRAY", null)
   icon.addMouseListener(TrayIconPopupMenuHandler(popup, dummy))
   runCatching {
     SystemTray.getSystemTray().add(icon)
@@ -76,6 +79,17 @@ private fun initPopupMenu(frame: JFrame) {
       f.dispose()
     }
   }
+}
+
+private fun makeDefaultTrayImage(): Image {
+  val icon = UIManager.getIcon("InternalFrame.icon")
+  val w = icon.iconWidth
+  val h = icon.iconHeight
+  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  icon.paintIcon(null, g2, 0, 0)
+  g2.dispose()
+  return bi
 }
 
 private object TrayIconPopupMenuUtil {
