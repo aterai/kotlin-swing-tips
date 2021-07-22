@@ -9,21 +9,22 @@ import java.awt.geom.Line2D
 import java.awt.geom.Path2D
 import java.awt.image.BufferedImage
 import java.awt.image.ColorConvertOp
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.LayerUI
 
 fun makeUI(): Component {
-  val split = JSplitPane()
-  split.isContinuousLayout = true
-  split.resizeWeight = .5
-  split.dividerSize = 0
+  val split = JSplitPane().also {
+    it.isContinuousLayout = true
+    it.resizeWeight = .5
+    it.dividerSize = 0
+  }
 
   val cl = Thread.currentThread().contextClassLoader
-  val icon = ImageIcon(cl.getResource("example/test.png"))
-
-  val source = BufferedImage(icon.iconWidth, icon.iconHeight, BufferedImage.TYPE_INT_ARGB)
+  val url = cl.getResource("example/test.png")
+  val source = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
   val g = source.createGraphics()
-  g.drawImage(icon.image, 0, 0, null)
+  g.drawImage(source, 0, 0, null)
   g.dispose()
   val colorConvert = ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null)
   val destination = colorConvert.filter(source, null)
@@ -31,12 +32,12 @@ fun makeUI(): Component {
   val beforeCanvas = object : JComponent() {
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
-      val iw = icon.iconWidth
-      val ih = icon.iconHeight
+      val iw = source.width
+      val ih = source.height
       val dim = split.size
       val x = (dim.width - iw) / 2
       val y = (dim.height - ih) / 2
-      g.drawImage(icon.image, x, y, iw, ih, this)
+      g.drawImage(source, x, y, iw, ih, this)
     }
   }
   split.leftComponent = beforeCanvas
@@ -71,6 +72,17 @@ fun makeUI(): Component {
     it.isOpaque = false
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+private fun makeMissingImage(): BufferedImage {
+  val missingIcon = MissingIcon()
+  val w = missingIcon.iconWidth
+  val h = missingIcon.iconHeight
+  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, 0, 0)
+  g2.dispose()
+  return bi
 }
 
 private class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
@@ -186,6 +198,26 @@ private class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
   companion object {
     private const val R = 25.0
   }
+}
+
+private class MissingIcon : Icon {
+  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+    val g2 = g.create() as Graphics2D
+    val w = iconWidth
+    val h = iconHeight
+    val gap = w / 5
+    g2.color = Color.ORANGE
+    g2.fillRect(x, y, w, h)
+    g2.color = Color.CYAN
+    g2.stroke = BasicStroke(w / 8f)
+    g2.drawLine(x + gap, y + gap, x + w - gap, y + h - gap)
+    g2.drawLine(x + gap, y + h - gap, x + w - gap, y + gap)
+    g2.dispose()
+  }
+
+  override fun getIconWidth() = 320
+
+  override fun getIconHeight() = 240
 }
 
 fun main() {
