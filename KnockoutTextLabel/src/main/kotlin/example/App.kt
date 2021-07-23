@@ -48,7 +48,7 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeMissingImage(): BufferedImage {
+private fun makeMissingImage(): Image {
   val missingIcon = UIManager.getIcon("OptionPane.errorIcon")
   val w = missingIcon.iconWidth
   val h = missingIcon.iconHeight

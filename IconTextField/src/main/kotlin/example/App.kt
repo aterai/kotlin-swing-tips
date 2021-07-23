@@ -1,26 +1,30 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
+  val path = "example/16x16.png"
   val cl = Thread.currentThread().contextClassLoader
-  val image = ImageIcon(cl.getResource("example/16x16.png"))
-  val label1 = JLabel(image)
+  val img = cl.getResource(path)?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+  val icon = ImageIcon(img)
+  val label1 = JLabel(icon)
   val field1 = object : JTextField("1111111111111111") {
     override fun updateUI() {
       super.updateUI()
       add(label1)
     }
   }
-  val w = image.iconWidth
+  val w = icon.iconWidth
   var m = field1.margin
   field1.margin = Insets(m.top, m.left + w, m.bottom, m.right)
   label1.cursor = Cursor.getDefaultCursor()
   label1.border = BorderFactory.createEmptyBorder()
-  label1.setBounds(m.left, m.top, w, image.iconHeight)
+  label1.setBounds(m.left, m.top, w, icon.iconHeight)
 
-  val label2 = JLabel(image)
+  val label2 = JLabel(icon)
   label2.cursor = Cursor.getDefaultCursor()
   label2.border = BorderFactory.createEmptyBorder()
   val field2 = object : JTextField("2222222222222222222222222222222222222") {
@@ -58,6 +62,17 @@ fun makeUI(): Component {
 private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
   it.border = BorderFactory.createTitledBorder(title)
   it.add(c)
+}
+
+private fun makeMissingImage(): Image {
+  val missingIcon = UIManager.getIcon("html.missingImage")
+  val w = missingIcon.iconWidth
+  val h = missingIcon.iconHeight
+  val bi = BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, 8 - w / 2, 8 - h / 2)
+  g2.dispose()
+  return bi
 }
 
 fun main() {

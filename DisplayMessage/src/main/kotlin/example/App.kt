@@ -51,7 +51,7 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeDefaultTrayImage(): BufferedImage {
+private fun makeDefaultTrayImage(): Image {
   val icon = UIManager.getIcon("InternalFrame.icon")
   val w = icon.iconWidth
   val h = icon.iconHeight
