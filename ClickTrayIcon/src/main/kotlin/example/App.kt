@@ -45,10 +45,9 @@ private fun makeTrayIcon(frame: JFrame): TrayIcon {
   val popup = PopupMenu()
   popup.add(open)
   popup.add(exit)
-  val image = BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
-  val g = image.graphics
-  StarIcon().paintIcon(null, g, 0, 0)
-  g.dispose()
+
+  val d = SystemTray.getSystemTray().trayIconSize
+  val image = makePreferredSizeImage(StarIcon(), d.width, d.height)
   val icon = TrayIcon(image, "Click Test", popup)
   val ml = object : MouseAdapter() {
     override fun mouseClicked(e: MouseEvent) {
@@ -63,6 +62,14 @@ private fun makeTrayIcon(frame: JFrame): TrayIcon {
   }
   icon.addMouseListener(ml)
   return icon
+}
+
+private fun makePreferredSizeImage(icon: Icon, w: Int, h: Int): Image {
+  val image = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+  val g2 = image.createGraphics()
+  icon.paintIcon(null, g2, (w - icon.iconWidth) / 2, (h - icon.iconHeight) / 2)
+  g2.dispose()
+  return image
 }
 
 private class StarIcon : Icon {

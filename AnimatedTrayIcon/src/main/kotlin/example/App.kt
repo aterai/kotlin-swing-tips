@@ -1,20 +1,23 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.Timer
 
 private val dialog = JDialog()
 private val animator = Timer(100, null)
-private val cl = Thread.currentThread().contextClassLoader
-private val images = arrayOf(
-  ImageIcon(cl.getResource("example/16x16.png")).image,
-  ImageIcon(cl.getResource("example/16x16l.png")).image,
-  ImageIcon(cl.getResource("example/16x16.png")).image,
-  ImageIcon(cl.getResource("example/16x16r.png")).image
-)
 private var idx = 0
 
-private fun makeTrayPopupMenu(icon: TrayIcon, p: JComponent): PopupMenu {
+private fun makeTrayIcon(p: JComponent): TrayIcon {
+  val images = arrayOf(
+    makeImage("example/16x16.png"),
+    makeImage("example/16x16l.png"),
+    makeImage("example/16x16.png"),
+    makeImage("example/16x16r.png")
+  )
+
   val item1 = MenuItem("Open:Frame")
   item1.addActionListener {
     val c = p.topLevelAncestor
@@ -30,7 +33,7 @@ private fun makeTrayPopupMenu(icon: TrayIcon, p: JComponent): PopupMenu {
   val item4 = MenuItem("Animation:Stop")
   item4.addActionListener {
     animator.stop()
-    icon.image = images[0]
+    SystemTray.getSystemTray().trayIcons.forEach { it.image = images[0] }
   }
 
   val item5 = MenuItem("Exit")
@@ -49,7 +52,29 @@ private fun makeTrayPopupMenu(icon: TrayIcon, p: JComponent): PopupMenu {
   popup.add(item4)
   popup.addSeparator()
   popup.add(item5)
-  return popup
+
+  val icon = TrayIcon(images[0], "TRAY", popup)
+  animator.addActionListener {
+    icon.image = images[idx]
+    idx = (idx + 1) % images.size
+  }
+  return icon
+}
+
+private fun makeImage(path: String): Image {
+  val cl = Thread.currentThread().contextClassLoader
+  return cl.getResource(path)?.openStream()?.use(ImageIO::read) ?: makeDefaultTrayImage()
+}
+
+private fun makeDefaultTrayImage(): Image {
+  val icon = UIManager.getIcon("InternalFrame.icon")
+  val w = icon.iconWidth
+  val h = icon.iconHeight
+  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  icon.paintIcon(null, g2, 0, 0)
+  g2.dispose()
+  return bi
 }
 
 fun makeUI(): Component {
@@ -65,12 +90,7 @@ fun makeUI(): Component {
   dialog.setLocationRelativeTo(null)
   dialog.title = "TEST: JDialog"
 
-  val icon = TrayIcon(images[0], "TRAY", null)
-  icon.popupMenu = makeTrayPopupMenu(icon, p)
-  animator.addActionListener {
-    icon.image = images[idx]
-    idx = (idx + 1) % images.size
-  }
+  val icon = makeTrayIcon(p)
   runCatching {
     SystemTray.getSystemTray().add(icon)
   }
