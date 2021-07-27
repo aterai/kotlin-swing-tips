@@ -7,12 +7,18 @@ import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.geom.Ellipse2D
+import java.awt.image.BufferedImage
 import java.util.Collections
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.Timer
 
 fun makeUI() = JPanel(GridLayout(1, 2)).also {
+  val cl = Thread.currentThread().contextClassLoader
+  val url = cl.getResource("example/test.png")
+  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
   EventQueue.invokeLater {
-    it.rootPane.glassPane = LightboxGlassPane()
+    it.rootPane.glassPane = LightboxGlassPane(img)
     it.rootPane.glassPane.isVisible = false
   }
   val button = JButton("Open")
@@ -20,6 +26,17 @@ fun makeUI() = JPanel(GridLayout(1, 2)).also {
   it.add(makeDummyPanel())
   it.add(button)
   it.preferredSize = Dimension(320, 240)
+}
+
+private fun makeMissingImage(): BufferedImage {
+  val missingIcon = MissingIcon()
+  val w = missingIcon.iconWidth
+  val h = missingIcon.iconHeight
+  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, 0, 0)
+  g2.dispose()
+  return bi
 }
 
 private fun makeDummyPanel(): JPanel {
@@ -35,18 +52,16 @@ private fun makeDummyPanel(): JPanel {
   return p
 }
 
-private class LightboxGlassPane : JPanel() {
-  private val img = ImageIcon(LightboxGlassPane::class.java.getResource("test.png"))
-  @Transient private val animatedIcon = LoadingIcon()
+private class LightboxGlassPane(private val img: BufferedImage) : JPanel() {
+  private val animatedIcon = LoadingIcon()
   private var alpha = 0f
-  private var curImgWidth = 0
-  private var curImgHeight = 0
+  private val currentSize = Dimension()
   private val rect = Rectangle()
   private val animator = Timer(10) {
     animatedIcon.next()
     repaint()
   }
-  @Transient private var handler: Handler? = null
+  private var handler: Handler? = null
 
   override fun updateUI() {
     removeMouseListener(handler)
@@ -77,8 +92,7 @@ private class LightboxGlassPane : JPanel() {
     super.setVisible(b)
     rootPane?.takeUnless { b == oldVisible }?.layeredPane?.isVisible = !b
     if (b && !animator.isRunning) {
-      curImgWidth = 40
-      curImgHeight = 40
+      currentSize.setSize(40, 40)
       alpha = 0f
       animator.start()
     } else {
@@ -92,14 +106,14 @@ private class LightboxGlassPane : JPanel() {
     super.paintComponent(g)
 
     when {
-      curImgHeight < img.iconHeight + BW + BW ->
-        curImgHeight += img.iconHeight / 16
-      curImgWidth < img.iconWidth + BW + BW -> {
-        curImgHeight = img.iconHeight + BW + BW
-        curImgWidth += img.iconWidth / 16
+      currentSize.height < img.height + BW + BW ->
+        currentSize.height += img.height / 16
+      currentSize.width < img.width + BW + BW -> {
+        currentSize.height = img.height + BW + BW
+        currentSize.width += img.width / 16
       }
       1f - alpha > 0 -> {
-        curImgWidth = img.iconWidth + BW + BW
+        currentSize.width = img.width + BW + BW
         alpha += .1f
       }
       else -> {
@@ -107,7 +121,7 @@ private class LightboxGlassPane : JPanel() {
         animator.stop()
       }
     }
-    rect.setSize(curImgWidth, curImgHeight)
+    rect.size = currentSize
     val screen = bounds
     val centerPt = Point(screen.x + screen.width / 2, screen.y + screen.height / 2)
     rect.setLocation(centerPt.x - rect.width / 2, centerPt.y - rect.height / 2)
@@ -120,7 +134,7 @@ private class LightboxGlassPane : JPanel() {
 
     if (alpha > 0) {
       g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha.coerceAtMost(1f))
-      g2.drawImage(img.image, rect.x + BW, rect.y + BW, img.iconWidth, img.iconHeight, this)
+      g2.drawImage(img, rect.x + BW, rect.y + BW, img.width, img.height, this)
     } else {
       val cx = centerPt.x - animatedIcon.iconWidth / 2
       val cy = centerPt.y - animatedIcon.iconHeight / 2
@@ -186,6 +200,24 @@ private class LoadingIcon : Icon {
     private const val WIDTH = (R * 8 + SX * 2).toInt()
     private const val HEIGHT = (R * 8 + SY * 2).toInt()
   }
+}
+
+private class MissingIcon : Icon {
+  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+    val g2 = g.create() as? Graphics2D ?: return
+    val w = iconWidth
+    val h = iconHeight
+    val gap = w / 5
+    g2.color = Color.RED
+    g2.stroke = BasicStroke(w / 8f)
+    g2.drawLine(x + gap, y + gap, x + w - gap, y + h - gap)
+    g2.drawLine(x + gap, y + h - gap, x + w - gap, y + gap)
+    g2.dispose()
+  }
+
+  override fun getIconWidth() = 240
+
+  override fun getIconHeight() = 180
 }
 
 fun main() {
