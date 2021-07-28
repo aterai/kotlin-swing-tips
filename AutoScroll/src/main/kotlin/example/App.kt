@@ -6,11 +6,15 @@ import java.awt.event.HierarchyEvent
 import java.awt.event.HierarchyListener
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
-  val label = JLabel(ImageIcon(cl.getResource("example/CRW_3857_JFR.jpg")))
+  val url = cl.getResource("example/CRW_3857_JFR.jpg")
+  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+  val label = JLabel(ImageIcon(img))
   val scroll = JScrollPane(label).also {
     it.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
     it.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
@@ -25,6 +29,17 @@ fun makeUI(): Component {
 
   scroll.preferredSize = Dimension(320, 240)
   return scroll
+}
+
+private fun makeMissingImage(): Image {
+  val missingIcon = MissingIcon()
+  val w = missingIcon.iconWidth
+  val h = missingIcon.iconHeight
+  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, 0, 0)
+  g2.dispose()
+  return bi
 }
 
 private class ViewportDragScrollListener : MouseAdapter(), HierarchyListener {
@@ -44,14 +59,14 @@ private class ViewportDragScrollListener : MouseAdapter(), HierarchyListener {
   }
 
   override fun mouseDragged(e: MouseEvent) {
-    val vport = e.component as? JViewport ?: return
-    val c = vport.view as? JComponent ?: return
+    val viewport = e.component as? JViewport ?: return
+    val c = viewport.view as? JComponent ?: return
     val pt = e.point
     val dx = startPt.x - pt.x
     val dy = startPt.y - pt.y
-    val vp = vport.viewPosition
+    val vp = viewport.viewPosition
     vp.translate(dx, dy)
-    c.scrollRectToVisible(Rectangle(vp, vport.size))
+    c.scrollRectToVisible(Rectangle(vp, viewport.size))
     move.setLocation(SPEED * dx, SPEED * dy)
     startPt.location = pt
   }
@@ -67,12 +82,12 @@ private class ViewportDragScrollListener : MouseAdapter(), HierarchyListener {
   override fun mouseReleased(e: MouseEvent) {
     val c = e.component
     c.cursor = DC
-    val vport = c as? JViewport ?: return
-    val label = vport.view as? JComponent ?: return
+    val viewport = c as? JViewport ?: return
+    val label = viewport.view as? JComponent ?: return
     listener = ActionListener {
-      val vp = vport.viewPosition
+      val vp = viewport.viewPosition
       vp.translate(move.x, move.y)
-      label.scrollRectToVisible(Rectangle(vp, vport.size))
+      label.scrollRectToVisible(Rectangle(vp, viewport.size))
     }
     scroller.addActionListener(listener)
     scroller.start()
@@ -113,13 +128,13 @@ private class ViewportDragScrollListener : MouseAdapter(), HierarchyListener {
 //     scroller.stop()
 //     scroller.removeActionListener(listener)
 //     val jc = e.component as? JComponent ?: return
-//     val vport = SwingUtilities.getAncestorOfClass(JViewport::class.java, jc) as? JViewport ?: return
-//     val cp = SwingUtilities.convertPoint(jc, e.point, vport)
+//     val viewport = SwingUtilities.getAncestorOfClass(JViewport::class.java, jc) as? JViewport ?: return
+//     val cp = SwingUtilities.convertPoint(jc, e.point, viewport)
 //     val dx = startPt.x - cp.x
 //     val dy = startPt.y - cp.y
-//     val vp = vport.viewPosition
+//     val vp = viewport.viewPosition
 //     vp.translate(dx, dy)
-//     jc.scrollRectToVisible(Rectangle(vp, vport.size))
+//     jc.scrollRectToVisible(Rectangle(vp, viewport.size))
 //     move.setLocation(SPEED * dx, SPEED * dy)
 //     startPt.location = cp
 //   }
@@ -139,10 +154,10 @@ private class ViewportDragScrollListener : MouseAdapter(), HierarchyListener {
 //     val c = e.component
 //     c.cursor = DC
 //     listener = ActionListener {
-//       val vport = SwingUtilities.getUnwrappedParent(c) as? JViewport ?: return@ActionListener
-//       val vp = vport.viewPosition
+//       val viewport = SwingUtilities.getUnwrappedParent(c) as? JViewport ?: return@ActionListener
+//       val vp = viewport.viewPosition
 //       vp.translate(move.x, move.y)
-//       (c as? JComponent)?.scrollRectToVisible(Rectangle(vp, vport.size))
+//       (c as? JComponent)?.scrollRectToVisible(Rectangle(vp, viewport.size))
 //     }
 //     scroller.addActionListener(listener)
 //     scroller.start()
@@ -162,6 +177,26 @@ private class ViewportDragScrollListener : MouseAdapter(), HierarchyListener {
 //     private val HC = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
 //   }
 // }
+
+private class MissingIcon : Icon {
+  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+    val g2 = g.create() as? Graphics2D ?: return
+    val w = iconWidth
+    val h = iconHeight
+    val gap = w / 5
+    g2.paint = Color.WHITE
+    g2.fillRect(x, y, w, h)
+    g2.paint = Color.RED
+    g2.stroke = BasicStroke(w / 8f)
+    g2.drawLine(x + gap, y + gap, x + w - gap, y + h - gap)
+    g2.drawLine(x + gap, y + h - gap, x + w - gap, y + gap)
+    g2.dispose()
+  }
+
+  override fun getIconWidth() = 1000
+
+  override fun getIconHeight() = 1000
+}
 
 fun main() {
   EventQueue.invokeLater {
