@@ -61,7 +61,7 @@ private fun makeCheckBoxes(textArea: JTextArea): Component {
     print(textArea, e, c.javaClass, b, ac)
   }
 
-  val list: MutableList<AbstractButton> = ArrayList(7)
+  val list = mutableListOf<AbstractButton>()
   val p = Box.createHorizontalBox()
   DayOfWeek.values().map { JCheckBox(it.toString()) }.forEach {
     list.add(it)

@@ -149,7 +149,7 @@ private class LoadingLabel : JLabel() {
 }
 
 private class AnimeIcon : Icon {
-  private val list: MutableList<Shape> = ArrayList()
+  private val list = mutableListOf<Shape>()
   private val dim: Dimension
   private var running = false
   private var rotate = 45.0

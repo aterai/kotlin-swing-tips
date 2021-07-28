@@ -42,7 +42,7 @@ fun makeUI(): Component {
 
 private class SaveHandler(private val frame: JFrame) : WindowAdapter(), DocumentListener, ActionListener {
   private val title = frame.title
-  private val list: MutableList<JComponent> = ArrayList()
+  private val list = mutableListOf<JComponent>()
 
   // WindowAdapter
   override fun windowClosing(e: WindowEvent) {

@@ -50,7 +50,7 @@ fun makeUI(): Component {
 
 private class TextAreaCellRenderer : TableCellRenderer {
   private val renderer = JTextArea()
-  private val rowAndCellHeights: MutableList<MutableList<Int>> = ArrayList()
+  private val rowAndCellHeights = mutableListOf<MutableList<Int>>()
 
   init {
     renderer.lineWrap = true

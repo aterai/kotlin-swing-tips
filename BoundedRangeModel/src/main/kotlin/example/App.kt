@@ -9,8 +9,7 @@ import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 import kotlin.math.roundToInt
 
-@Transient
-private val emphasisIndices: MutableList<Int> = ArrayList()
+private val emphasisIndices = mutableListOf<Int>()
 private val model = DefaultTableModel(0, 2)
 private val table = object : JTable(model) {
   override fun updateUI() {
@@ -18,13 +17,13 @@ private val table = object : JTable(model) {
     super.updateUI()
     val renderer = DefaultTableCellRenderer()
     setDefaultRenderer(Any::class.java) { tbl, value, isSelected, hasFocus, row, column ->
-      val c = renderer.getTableCellRendererComponent(tbl, value, isSelected, hasFocus, row, column)
-      if (emphasisIndices.contains(row)) {
-        c.background = Color.YELLOW
-      } else {
-        c.background = if (isSelected) tbl.selectionBackground else tbl.background
+      renderer.getTableCellRendererComponent(tbl, value, isSelected, hasFocus, row, column).also {
+        if (emphasisIndices.contains(row)) {
+          it.background = Color.YELLOW
+        } else {
+          it.background = if (isSelected) tbl.selectionBackground else tbl.background
+        }
       }
-      c
     }
     fillsViewportHeight = true
   }
@@ -61,8 +60,8 @@ private fun updateHighlighter() {
 
 private class HighlightIcon : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-    val vport = SwingUtilities.getAncestorOfClass(JViewport::class.java, table) as? JViewport ?: return
-    val viewRect = vport.bounds
+    val viewport = SwingUtilities.getAncestorOfClass(JViewport::class.java, table) as? JViewport ?: return
+    val viewRect = viewport.bounds
     val tableRect = table.bounds
     val cellRect = SwingUtilities.calculateInnerArea(label, label.bounds)
 
@@ -83,7 +82,7 @@ private class HighlightIcon : Icon {
     // paint Thumb
     if (scrollbar.isVisible) {
       val thumbRect = Rectangle(viewRect)
-      thumbRect.y = vport.viewPosition.y
+      thumbRect.y = viewport.viewPosition.y
       g.color = THUMB_COLOR
       val r = at.createTransformedShape(thumbRect).bounds
       g.fillRect(x, cellRect.y + r.y, iconWidth, r.height)

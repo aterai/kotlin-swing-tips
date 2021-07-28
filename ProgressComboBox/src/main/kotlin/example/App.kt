@@ -105,7 +105,7 @@ private open class BackgroundTask : SwingWorker<Array<String>, Int>() {
   @Throws(InterruptedException::class)
   public override fun doInBackground(): Array<String> {
     var current = 0
-    val list: MutableList<String> = ArrayList()
+    val list = mutableListOf<String>()
     while (current <= MAX && !isCancelled) {
       Thread.sleep(50)
       val iv = 100 * current / MAX
