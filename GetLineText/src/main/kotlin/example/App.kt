@@ -26,9 +26,9 @@ fun makeUI(): Component {
   textArea.border = BorderFactory.createEmptyBorder(0, 2, 0, 0)
   val button = JButton("count commented lines: startsWith(\"#\")")
   button.addActionListener {
-    val count = textArea.text.split("\n").filter {
+    val count = textArea.text.split("\n").count {
       it.takeUnless { it.isEmpty() }?.codePointAt(0) == SHARP
-    }.count()
+    }
     JOptionPane.showMessageDialog(scroll, "commented lines: $count", "title", JOptionPane.INFORMATION_MESSAGE)
   }
   EventQueue.invokeLater { button.rootPane.defaultButton = button }
