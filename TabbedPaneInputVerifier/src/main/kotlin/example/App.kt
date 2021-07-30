@@ -37,13 +37,8 @@ fun makeUI(): Component {
   val p = JPanel(BorderLayout())
   p.add(box, BorderLayout.NORTH)
   p.inputVerifier = object : InputVerifier() {
-    override fun verify(c: JComponent): Boolean {
-      return if (c.isShowing) {
-        list.stream().allMatch { tf: JTextField ->
-          tf.inputVerifier.verify(tf)
-        }
-      } else true
-    }
+    override fun verify(c: JComponent) =
+      !c.isShowing || list.all { it.inputVerifier.verify(it) }
   }
 
   val tabbedPane = JTabbedPane()
