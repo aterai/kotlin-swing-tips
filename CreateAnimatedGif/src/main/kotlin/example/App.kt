@@ -40,7 +40,7 @@ fun makeLabel() = JLabel().also {
 fun makeUI(): Component {
   val label = makeLabel()
 
-  // File file = new File(System.getProperty("user.dir"), "anime.gif");
+  // val file = File(System.getProperty("user.dir"), "anime.gif")
   val button = JButton("make")
   button.addActionListener {
     makeAnimatedGif()?.absolutePath?.also {
@@ -62,48 +62,47 @@ private fun makeAnimatedGif() = runCatching {
   val writer = ite.next() ?: return null
   val file = File.createTempFile("anime", ".gif")
   file.deleteOnExit()
-  val stream = ImageIO.createImageOutputStream(file)
-  writer.output = stream
-  writer.prepareWriteSequence(null)
+  ImageIO.createImageOutputStream(file).use {
+    writer.output = it
+    writer.prepareWriteSequence(null)
 
-  val gce = IIOMetadataNode("GraphicControlExtension")
-  gce.setAttribute("disposalMethod", "none")
-  gce.setAttribute("userInputFlag", "FALSE")
-  gce.setAttribute("transparentColorFlag", "FALSE")
-  gce.setAttribute("transparentColorIndex", "0")
-  gce.setAttribute("delayTime", DELAY.toString())
+    val gce = IIOMetadataNode("GraphicControlExtension")
+    gce.setAttribute("disposalMethod", "none")
+    gce.setAttribute("userInputFlag", "FALSE")
+    gce.setAttribute("transparentColorFlag", "FALSE")
+    gce.setAttribute("transparentColorIndex", "0")
+    gce.setAttribute("delayTime", DELAY.toString())
 
-  val ae = IIOMetadataNode("ApplicationExtension")
-  ae.setAttribute("applicationID", "NETSCAPE")
-  ae.setAttribute("authenticationCode", "2.0")
-  // last two bytes is an unsigned short (little endian) that
-  // indicates the the number of times to loop.
-  // 0 means loop forever.
-  ae.userObject = byteArrayOf(0x1, 0x0, 0x0)
+    val ae = IIOMetadataNode("ApplicationExtension")
+    ae.setAttribute("applicationID", "NETSCAPE")
+    ae.setAttribute("authenticationCode", "2.0")
+    // last two bytes is an unsigned short (little endian) that
+    // indicates the number of times to loop.
+    // 0 means loop forever.
+    ae.userObject = byteArrayOf(0x1, 0x0, 0x0)
 
-  val aes = IIOMetadataNode("ApplicationExtensions")
-  aes.appendChild(ae)
+    val aes = IIOMetadataNode("ApplicationExtensions")
+    aes.appendChild(ae)
 
-  // Create animated GIF using imageio | Oracle Community
-  // https://community.oracle.com/thread/1264385
-  val iwp = writer.defaultWriteParam
-  val metadata = writer.getDefaultImageMetadata(ImageTypeSpecifier(image), iwp)
-  val metaFormat = metadata.nativeMetadataFormatName
-  val root = metadata.getAsTree(metaFormat)
-  root.appendChild(gce)
-  root.appendChild(aes)
-  metadata.setFromTree(metaFormat, root)
+    // Create animated GIF using imageio | Oracle Community
+    // https://community.oracle.com/thread/1264385
+    val iwp = writer.defaultWriteParam
+    val metadata = writer.getDefaultImageMetadata(ImageTypeSpecifier(image), iwp)
+    val metaFormat = metadata.nativeMetadataFormatName
+    val root = metadata.getAsTree(metaFormat)
+    root.appendChild(gce)
+    root.appendChild(aes)
+    metadata.setFromTree(metaFormat, root)
 
-  // make frame
-  (0 until list.size * DELAY).forEach { _ ->
-    paintFrame(image, list)
-    Collections.rotate(list, 1)
-    writer.writeToSequence(IIOImage(image, null, metadata), null)
-    // metadata = null
+    // make frame
+    (0 until list.size * DELAY).forEach { _ ->
+      paintFrame(image, list)
+      Collections.rotate(list, 1)
+      writer.writeToSequence(IIOImage(image, null, metadata), null)
+      // metadata = null
+    }
+    writer.endWriteSequence()
   }
-  writer.endWriteSequence()
-  stream.close()
-
   file
 }.getOrNull()
 
