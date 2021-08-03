@@ -71,14 +71,14 @@ fun makeUI(): Component {
   }
   r2.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      comparator = Comparator.comparing { item: ListItem -> item.title }
+      comparator = Comparator.comparing(ListItem::title)
       reversed()
       sort()
     }
   }
   r3.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      comparator = Comparator.comparing { item: ListItem -> item.color.rgb }
+      comparator = Comparator.comparing { it.color.rgb }
       reversed()
       sort()
     }

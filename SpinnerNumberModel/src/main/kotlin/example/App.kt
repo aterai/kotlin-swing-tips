@@ -30,12 +30,8 @@ fun makeUI(): Component {
 
 private fun makeJSpinnerListPanel(list: List<SpinnerNumberModel>): Box {
   val box = Box.createVerticalBox()
-  list.stream().map { model: SpinnerNumberModel? ->
-    JSpinner(
-      model
-    )
-  }.forEach { spinner: JSpinner? ->
-    box.add(spinner)
+  list.map { JSpinner(it) }.forEach {
+    box.add(it)
     box.add(Box.createVerticalStrut(2))
   }
   return box
