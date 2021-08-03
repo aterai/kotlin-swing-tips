@@ -57,7 +57,6 @@ fun makeUI(): Component {
 }
 
 private fun makeAnimatedGif() = runCatching {
-  val image = BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB)
   val ite = ImageIO.getImageWritersByFormatName("gif")
   val writer = ite.next() ?: return null
   val file = File.createTempFile("anime", ".gif")
@@ -86,6 +85,7 @@ private fun makeAnimatedGif() = runCatching {
 
     // Create animated GIF using imageio | Oracle Community
     // https://community.oracle.com/thread/1264385
+    val image = BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB)
     val iwp = writer.defaultWriteParam
     val metadata = writer.getDefaultImageMetadata(ImageTypeSpecifier(image), iwp)
     val metaFormat = metadata.nativeMetadataFormatName
@@ -109,7 +109,7 @@ private fun makeAnimatedGif() = runCatching {
 fun paintFrame(image: BufferedImage, list: List<Shape>) {
   val g2 = image.createGraphics()
   g2.paint = Color.WHITE
-  g2.fillRect(0, 0, WIDTH, HEIGHT)
+  g2.fillRect(0, 0, image.width, image.height)
   g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
   g2.paint = ellipseColor
   val size = list.size
