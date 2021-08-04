@@ -3,7 +3,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
-import java.util.stream.Collectors
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
@@ -18,29 +17,11 @@ fun makeUI(): Component {
 
   val button = JButton("open JColorChooser")
   button.addActionListener {
-    val selected = list.stream()
-      .filter { obj: JCheckBox -> obj.isSelected }
-      .map { obj: JCheckBox -> obj.text }
-      .collect(Collectors.toList())
-    val color: Color
-    if (selected.isEmpty()) { // use default JColorChooser
-      color = JColorChooser.showDialog(p.rootPane, "JColorChooser", null)
+    val selected = list.filter { it.isSelected }.map { it.text }
+    val color = if (selected.isEmpty()) { // use default JColorChooser
+      JColorChooser.showDialog(p.rootPane, "JColorChooser", null)
     } else {
-      val cc = JColorChooser()
-      for (pnl in cc.chooserPanels) {
-        if (!selected.contains(pnl.displayName)) {
-          cc.removeChooserPanel(pnl)
-        }
-      }
-      val dialog = JColorChooser.createDialog(p.rootPane, "JColorChooser", true, cc, null, null)
-      val cmpListener = object : ComponentAdapter() {
-        override fun componentHidden(e: ComponentEvent) {
-          (e.component as? Window)?.dispose()
-        }
-      }
-      dialog.addComponentListener(cmpListener)
-      dialog.isVisible = true // blocks until user brings dialog down...
-      color = cc.color
+      showColorChooserDialog(p.rootPane, "JColorChooser", selected)
     }
     println(color)
   }
@@ -56,6 +37,23 @@ fun makeUI(): Component {
   p.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
   p.preferredSize = Dimension(320, 240)
   return p
+}
+
+fun showColorChooserDialog(p: Component, title: String, selected: List<String>): Color? {
+  val cc = JColorChooser()
+  for (pnl in cc.chooserPanels) {
+    if (!selected.contains(pnl.displayName)) {
+      cc.removeChooserPanel(pnl)
+    }
+  }
+  val dialog = JColorChooser.createDialog(p, title, true, cc, null, null)
+  dialog.addComponentListener(object : ComponentAdapter() {
+    override fun componentHidden(e: ComponentEvent) {
+      (e.component as? Window)?.dispose()
+    }
+  })
+  dialog.isVisible = true // blocks until user brings dialog down...
+  return cc.color
 }
 
 fun main() {
