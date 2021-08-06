@@ -3,6 +3,7 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.HierarchyEvent
 import java.awt.geom.Ellipse2D
+import java.util.Collections
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.Timer
 
@@ -120,7 +121,7 @@ private class AnimeIcon : Icon {
   operator fun next() {
     if (running) {
       // list.add(list.remove(0));
-      java.util.Collections.rotate(list, 1)
+      Collections.rotate(list, 1)
     }
   }
 
