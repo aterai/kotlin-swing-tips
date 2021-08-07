@@ -54,12 +54,12 @@ fun makeUI(): Component {
 
   val menuBar = JMenuBar()
   menuBar.add(menu)
+  EventQueue.invokeLater { p.rootPane.jMenuBar = menuBar }
 
   val panel = JPanel()
   panel.add(label)
   panel.add(combo)
   panel.add(button)
-  p.add(menuBar, BorderLayout.NORTH)
   p.add(panel)
   p.preferredSize = Dimension(320, 240)
   return p

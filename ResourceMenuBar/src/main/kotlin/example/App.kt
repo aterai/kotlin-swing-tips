@@ -17,19 +17,16 @@ import javax.swing.plaf.basic.BasicToolBarUI
 // private val BAR_FACTORY = BarFactory("resources.Main")
 private val BAR_FACTORY = BarFactory("example.Main")
 
-private fun makeUI(): Component {
+private fun makeUI() = JPanel(BorderLayout()).also {
   initActions(actions.toList())
-  val menuPanel = JPanel(BorderLayout())
   val menuBar = BAR_FACTORY.createMenuBar()
-  menuPanel.add(menuBar, BorderLayout.NORTH)
-  BAR_FACTORY.createToolBar()?.also {
-    menuPanel.add(it, BorderLayout.SOUTH)
+  EventQueue.invokeLater { it.rootPane.jMenuBar = menuBar }
+  val toolBar = BAR_FACTORY.createToolBar()
+  if (toolBar != null) {
+    it.add(toolBar, BorderLayout.NORTH)
   }
-  return JPanel(BorderLayout()).also {
-    it.add(menuPanel, BorderLayout.NORTH)
-    it.add(JScrollPane(JTextArea()))
-    it.preferredSize = Dimension(320, 240)
-  }
+  it.add(JScrollPane(JTextArea()))
+  it.preferredSize = Dimension(320, 240)
 }
 
 fun initActions(list: List<Action>) {

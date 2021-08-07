@@ -24,20 +24,17 @@ private val RECENT_FILES = mutableListOf<Path>()
 private val noFile = JMenuItem("(Empty)")
 private var fileHistoryMenu: JMenu? = null
 
-private fun makeUI(): Component {
+private fun makeUI() = JPanel(BorderLayout()).also {
   initActions(actions.toList())
-  val menuPanel = JPanel(BorderLayout())
   val menuBar = BAR_FACTORY.createMenuBar()
-  menuPanel.add(menuBar, BorderLayout.NORTH)
+  EventQueue.invokeLater { it.rootPane.jMenuBar = menuBar }
   initHistory()
-  BAR_FACTORY.createToolBar()?.also {
-    menuPanel.add(it, BorderLayout.SOUTH)
+  val toolBar = BAR_FACTORY.createToolBar()
+  if (toolBar != null) {
+    it.add(toolBar, BorderLayout.NORTH)
   }
-  return JPanel(BorderLayout()).also {
-    it.add(menuPanel, BorderLayout.NORTH)
-    it.add(JScrollPane(JTextArea()))
-    it.preferredSize = Dimension(320, 240)
-  }
+  it.add(JScrollPane(JTextArea()))
+  it.preferredSize = Dimension(320, 240)
 }
 
 private fun initHistory() {
