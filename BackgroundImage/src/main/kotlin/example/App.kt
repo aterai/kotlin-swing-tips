@@ -4,9 +4,9 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
+  val cl = Thread.currentThread().contextClassLoader
+  val icon = ImageIcon(cl.getResource("example/16x16.png"))
   val p = object : JPanel(BorderLayout()) {
-    private val icon = ImageIcon(javaClass.getResource("16x16.png"))
-
     override fun paintComponent(g: Graphics) {
       val d = size
       val w = icon.iconWidth
