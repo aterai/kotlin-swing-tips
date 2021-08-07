@@ -4,6 +4,7 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.HierarchyEvent
 import java.awt.event.HierarchyListener
 import java.awt.geom.Ellipse2D
+import java.util.Collections
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
@@ -138,7 +139,7 @@ private class AnimeListCellRenderer<E>(
           g2.fill(s)
           alpha += .1f
         }
-        java.util.Collections.rotate(flipbookFrames, 1)
+        Collections.rotate(flipbookFrames, 1)
       } else {
         g2.paint = Color(0x99_99_99)
         for (s in flipbookFrames) {
