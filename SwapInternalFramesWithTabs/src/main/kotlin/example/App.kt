@@ -44,14 +44,14 @@ fun makeUI(): Component {
       tabbedPane.addTab(title, icon, c)
     }
   }
-  val toolbar = JToolBar("toolbar")
-  toolbar.isFloatable = false
-  toolbar.add(addButton)
-  toolbar.add(Box.createGlue())
-  toolbar.add(swapButton)
+  val toolBar = JToolBar()
+  toolBar.isFloatable = false
+  toolBar.add(addButton)
+  toolBar.add(Box.createGlue())
+  toolBar.add(swapButton)
   return JPanel(BorderLayout()).also {
     it.add(panel)
-    it.add(toolbar, BorderLayout.NORTH)
+    it.add(toolBar, BorderLayout.NORTH)
     it.preferredSize = Dimension(320, 240)
   }
 }

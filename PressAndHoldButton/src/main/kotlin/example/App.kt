@@ -9,9 +9,9 @@ import javax.swing.Timer
 
 fun makeUI() = JPanel(BorderLayout()).also {
   val cl = Thread.currentThread().contextClassLoader
-  val toolbar = JToolBar("toolbar")
-  toolbar.add(PressAndHoldButton(ImageIcon(cl.getResource("example/ei0021-16.png"))))
-  it.add(toolbar, BorderLayout.NORTH)
+  val toolBar = JToolBar()
+  toolBar.add(PressAndHoldButton(ImageIcon(cl.getResource("example/ei0021-16.png"))))
+  it.add(toolBar, BorderLayout.NORTH)
   it.add(JLabel("press and hold the button for 1000 milliseconds"))
   it.preferredSize = Dimension(320, 240)
 }

@@ -31,19 +31,19 @@ fun makeUI(): Component {
     desktop.desktopManager.activateFrame(f)
   }
 
-  val toolbar = JToolBar("toolbar")
-  toolbar.isFloatable = false
-  toolbar.add(addButton)
-  toolbar.addSeparator()
-  toolbar.add(button)
-  toolbar.addSeparator()
-  toolbar.add(check)
+  val toolBar = JToolBar()
+  toolBar.isFloatable = false
+  toolBar.add(addButton)
+  toolBar.addSeparator()
+  toolBar.add(button)
+  toolBar.addSeparator()
+  toolBar.add(check)
   addIconifiedFrame(desktop, createFrame("Frame", 30, 10))
   addIconifiedFrame(desktop, createFrame("Frame", 50, 30))
 
   return JPanel(BorderLayout()).also {
     it.add(desktop)
-    it.add(toolbar, BorderLayout.NORTH)
+    it.add(toolBar, BorderLayout.NORTH)
     it.preferredSize = Dimension(320, 240)
   }
 }

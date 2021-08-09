@@ -11,7 +11,7 @@ fun makeUI(): Component {
   val button = JButton("button")
   button.isFocusable = false
 
-  val toolbar = object : JToolBar("toolbar") {
+  val toolBar = object : JToolBar() {
     override fun updateUI() {
       super.updateUI()
       val tmp = if (ui is WindowsToolBarUI) {
@@ -38,22 +38,22 @@ fun makeUI(): Component {
       setUI(tmp)
     }
   }
-  toolbar.add(JLabel("label"))
-  toolbar.add(Box.createRigidArea(Dimension(5, 5)))
-  toolbar.add(button)
-  toolbar.add(Box.createRigidArea(Dimension(5, 5)))
-  toolbar.add(JComboBox(makeModel()))
-  toolbar.add(Box.createGlue())
+  toolBar.add(JLabel("label"))
+  toolBar.add(Box.createRigidArea(Dimension(5, 5)))
+  toolBar.add(button)
+  toolBar.add(Box.createRigidArea(Dimension(5, 5)))
+  toolBar.add(JComboBox(makeModel()))
+  toolBar.add(Box.createGlue())
 
   val movable = JCheckBox("Floatable(movable)", true)
-  movable.addActionListener { e -> toolbar.isFloatable = (e.source as? JCheckBox)?.isSelected == true }
+  movable.addActionListener { e -> toolBar.isFloatable = (e.source as? JCheckBox)?.isSelected == true }
 
   val p = JPanel()
   p.add(movable)
   p.add(detachable)
 
   return JPanel(BorderLayout()).also {
-    it.add(toolbar, BorderLayout.NORTH)
+    it.add(toolBar, BorderLayout.NORTH)
     it.add(p)
     it.preferredSize = Dimension(320, 240)
   }

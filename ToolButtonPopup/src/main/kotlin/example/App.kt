@@ -23,7 +23,7 @@ fun makeUI(): Component {
   val url = cl.getResource("example/ei0021-16.png")
   val rigid = Box.createRigidArea(Dimension(5, 5))
 
-  val toolbar = JToolBar("toolbar").also {
+  val toolBar = JToolBar().also {
     it.add(makeButton(pop1, "Text", null))
     it.add(rigid)
     it.add(makeButton(pop2, "", ImageIcon(url)))
@@ -32,7 +32,7 @@ fun makeUI(): Component {
     it.add(Box.createGlue())
   }
   return JPanel(BorderLayout()).also {
-    it.add(toolbar, BorderLayout.NORTH)
+    it.add(toolBar, BorderLayout.NORTH)
     it.preferredSize = Dimension(320, 240)
   }
 }

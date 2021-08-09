@@ -6,31 +6,31 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
-  var url1 = cl.getResource("toolbarButtonGraphics/general/Copy24.gif")
-  var url2 = cl.getResource("toolbarButtonGraphics/general/Cut24.gif")
-  var url3 = cl.getResource("toolbarButtonGraphics/general/Help24.gif")
+  var url1 = cl.getResource("toolBarButtonGraphics/general/Copy24.gif")
+  var url2 = cl.getResource("toolBarButtonGraphics/general/Cut24.gif")
+  var url3 = cl.getResource("toolBarButtonGraphics/general/Help24.gif")
   if (url1 == null) {
     url1 = cl.getResource("example/Copy24.gif")
     url2 = cl.getResource("example/Cut24.gif")
     url3 = cl.getResource("example/Help24.gif")
   }
 
-  val toolbar1 = JToolBar("ToolBarButton")
-  toolbar1.add(JButton(ImageIcon(url1)))
-  toolbar1.add(JButton(ImageIcon(url2)))
-  toolbar1.add(Box.createGlue())
-  toolbar1.add(JButton(ImageIcon(url3)))
+  val toolBar1 = JToolBar("ToolBarButton")
+  toolBar1.add(JButton(ImageIcon(url1)))
+  toolBar1.add(JButton(ImageIcon(url2)))
+  toolBar1.add(Box.createGlue())
+  toolBar1.add(JButton(ImageIcon(url3)))
 
-  val toolbar2 = JToolBar("JButton")
-  toolbar2.add(createToolBarButton(url1))
-  toolbar2.add(createToolBarButton(url2))
-  toolbar2.add(Box.createGlue())
-  toolbar2.add(createToolBarButton(url3))
+  val toolBar2 = JToolBar("JButton")
+  toolBar2.add(createToolBarButton(url1))
+  toolBar2.add(createToolBarButton(url2))
+  toolBar2.add(Box.createGlue())
+  toolBar2.add(createToolBarButton(url3))
 
   val p = JPanel(BorderLayout())
-  p.add(toolbar1, BorderLayout.NORTH)
+  p.add(toolBar1, BorderLayout.NORTH)
   p.add(JScrollPane(JTextArea()))
-  p.add(toolbar2, BorderLayout.SOUTH)
+  p.add(toolBar2, BorderLayout.SOUTH)
   p.preferredSize = Dimension(320, 240)
   return p
 }

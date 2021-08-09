@@ -13,7 +13,7 @@ import javax.swing.event.MouseInputListener
 private val layeredPane = object : JLayeredPane() {
   override fun isOptimizedDrawingEnabled() = false
 }
-private val toolbar = JToolBar("Resizable Components")
+private val toolBar = JToolBar("Resizable Components")
 private val pt = Point()
 
 fun makeUI(): Component {
@@ -33,19 +33,19 @@ fun makeUI(): Component {
       createTable()
     }
   }
-  toolbar.add(a1)
-  toolbar.addSeparator()
+  toolBar.add(a1)
+  toolBar.addSeparator()
   val a2 = object : AbstractAction("add tree") {
     override fun actionPerformed(e: ActionEvent) {
       pt.setLocation(pt.x + 20, pt.y + 20)
       createTree()
     }
   }
-  toolbar.add(a2)
+  toolBar.add(a2)
 
   return JPanel(BorderLayout()).also {
     it.add(layeredPane)
-    it.add(toolbar, BorderLayout.NORTH)
+    it.add(toolBar, BorderLayout.NORTH)
     it.preferredSize = Dimension(320, 240)
   }
 }

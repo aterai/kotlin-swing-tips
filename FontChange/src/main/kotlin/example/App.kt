@@ -17,14 +17,14 @@ fun makeToolBar(parent: JComponent): JToolBar {
   val tgb32 = JToggleButton("32")
   tgb32.addActionListener { updateFont(FONT32, parent) }
 
-  val toolbar = JToolBar()
+  val toolBar = JToolBar()
   val bg = ButtonGroup()
   listOf(tgb12, tgb24, tgb32).forEach {
     it.isFocusPainted = false
     bg.add(it)
-    toolbar.add(it)
+    toolBar.add(it)
   }
-  return toolbar
+  return toolBar
 }
 
 fun makeUI(): Component {

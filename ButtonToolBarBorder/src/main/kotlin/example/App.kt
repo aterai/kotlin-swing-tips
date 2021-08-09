@@ -7,8 +7,8 @@ fun makeUI(): Component {
   UIManager.put("Button.disabledToolBarBorderBackground", Color.RED)
   UIManager.put("Button.toolBarBorderBackground", Color.GREEN)
 
-  // TEST: JPanel toolbar = new JPanel();
-  val toolbar = JToolBar()
+  // TEST: JPanel toolBar = new JPanel();
+  val toolBar = JToolBar()
 
   val tg1 = JToggleButton("Tg1")
   tg1.isEnabled = false
@@ -22,15 +22,15 @@ fun makeUI(): Component {
   val bg = ButtonGroup()
   listOf(tg1, tg2, tg3, tg4, tg5).forEach {
     it.isFocusPainted = false
-    toolbar.add(it)
-    toolbar.add(Box.createRigidArea(dim))
+    toolBar.add(it)
+    toolBar.add(Box.createRigidArea(dim))
     bg.add(it)
   }
 
-  toolbar.add(JButton("Button"))
+  toolBar.add(JButton("Button"))
 
   return JPanel(BorderLayout()).also {
-    it.add(toolbar, BorderLayout.NORTH)
+    it.add(toolBar, BorderLayout.NORTH)
     it.add(JScrollPane(JTree()))
     it.preferredSize = Dimension(320, 240)
   }

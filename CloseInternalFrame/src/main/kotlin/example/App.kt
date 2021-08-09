@@ -34,8 +34,8 @@ fun makeUI(): Component {
 }
 
 private fun createToolBar(desktop: JDesktopPane): JToolBar {
-  val toolbar = JToolBar("toolbar")
-  toolbar.isFloatable = false
+  val toolBar = JToolBar()
+  toolBar.isFloatable = false
   val cl = Thread.currentThread().contextClassLoader
   var b = JButton(ImageIcon(cl.getResource("example/icon_new-file.png")))
   b.addActionListener {
@@ -49,14 +49,14 @@ private fun createToolBar(desktop: JDesktopPane): JToolBar {
     }
   }
   b.toolTipText = "create new InternalFrame"
-  toolbar.add(b)
-  toolbar.add(Box.createGlue())
+  toolBar.add(b)
+  toolBar.add(Box.createGlue())
   b = JButton(CloseIcon(Color.RED))
   b.addActionListener {
     desktop.selectedFrame?.dispose()
   }
   b.toolTipText = "f.dispose();"
-  toolbar.add(b)
+  toolBar.add(b)
   b = JButton(CloseIcon(Color.GREEN))
   b.addActionListener {
     desktop.selectedFrame?.also {
@@ -64,13 +64,13 @@ private fun createToolBar(desktop: JDesktopPane): JToolBar {
     }
   }
   b.toolTipText = "desktop.getDesktopManager().closeFrame(f);"
-  toolbar.add(b)
+  toolBar.add(b)
   b = JButton(CloseIcon(Color.BLUE))
   b.addActionListener {
     desktop.selectedFrame?.doDefaultCloseAction()
   }
   b.toolTipText = "f.doDefaultCloseAction();"
-  toolbar.add(b)
+  toolBar.add(b)
   b = JButton(CloseIcon(Color.YELLOW))
   b.addActionListener {
     desktop.selectedFrame?.also {
@@ -80,8 +80,8 @@ private fun createToolBar(desktop: JDesktopPane): JToolBar {
     }
   }
   b.toolTipText = "f.setClosed(true);"
-  toolbar.add(b)
-  return toolbar
+  toolBar.add(b)
+  return toolBar
 }
 
 private fun makeInternalFrame(desktop: JDesktopPane): JInternalFrame {

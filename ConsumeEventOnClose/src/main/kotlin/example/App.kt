@@ -39,9 +39,9 @@ fun makeUI(): Component {
     UIManager.put(key, (e.source as? JCheckBox)?.isSelected == true)
   }
 
-  val toolbar = JToolBar("toolbar")
-  toolbar.add(b)
-  toolbar.add(Box.createGlue())
+  val toolBar = JToolBar()
+  toolBar.add(b)
+  toolBar.add(Box.createGlue())
 
   val p = JPanel()
   p.add(beep)
@@ -51,7 +51,7 @@ fun makeUI(): Component {
 
   return JPanel(BorderLayout()).also {
     it.componentPopupMenu = popup
-    it.add(toolbar, BorderLayout.NORTH)
+    it.add(toolBar, BorderLayout.NORTH)
     it.add(p)
     it.add(check, BorderLayout.SOUTH)
     it.preferredSize = Dimension(320, 240)

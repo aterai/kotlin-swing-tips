@@ -6,24 +6,24 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-private const val PATH = "toolbarButtonGraphics/general/"
+private const val PATH = "toolBarButtonGraphics/general/"
 
 fun makeUI(): Component {
-  val toolbar = JToolBar("ToolBarButton")
-  toolbar.isFloatable = false
+  val toolBar = JToolBar("ToolBarButton")
+  toolBar.isFloatable = false
   val dh = DragHandler()
-  toolbar.addMouseListener(dh)
-  toolbar.addMouseMotionListener(dh)
-  toolbar.border = BorderFactory.createEmptyBorder(2, 2, 2, 0)
+  toolBar.addMouseListener(dh)
+  toolBar.addMouseMotionListener(dh)
+  toolBar.border = BorderFactory.createEmptyBorder(2, 2, 2, 0)
   val list = listOf(
     "Copy24.gif", "Cut24.gif", "Paste24.gif",
     "Delete24.gif", "Undo24.gif", "Redo24.gif",
     "Help24.gif", "Open24.gif", "Save24.gif"
   )
-  list.map { createToolBarButton(it) }.forEach { toolbar.add(it) }
+  list.map { createToolBarButton(it) }.forEach { toolBar.add(it) }
 
   return JPanel(BorderLayout()).also {
-    it.add(toolbar, BorderLayout.NORTH)
+    it.add(toolBar, BorderLayout.NORTH)
     it.add(JScrollPane(JTree()))
     it.preferredSize = Dimension(320, 240)
   }

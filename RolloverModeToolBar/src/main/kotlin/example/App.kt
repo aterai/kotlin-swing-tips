@@ -4,9 +4,9 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  val toolbar = JToolBar()
-  println(toolbar.isRollover)
-  EventQueue.invokeLater { println(toolbar.isRollover) }
+  val toolBar = JToolBar()
+  println(toolBar.isRollover)
+  EventQueue.invokeLater { println(toolBar.isRollover) }
 
   val tg1 = JToggleButton("Tg1")
   val tg2 = JToggleButton("Tg2")
@@ -17,15 +17,15 @@ fun makeUI(): Component {
   val bg = ButtonGroup()
   listOf(tg1, tg2, tg3, button, radio).forEach {
     it.isFocusPainted = false
-    toolbar.add(it)
-    toolbar.add(Box.createRigidArea(d))
+    toolBar.add(it)
+    toolBar.add(Box.createRigidArea(d))
     bg.add(it)
   }
 
   val check = JCheckBox("setRollover")
-  check.addActionListener { e -> toolbar.isRollover = (e.source as? AbstractButton)?.isSelected == true }
-  toolbar.add(Box.createGlue())
-  toolbar.add(check)
+  check.addActionListener { e -> toolBar.isRollover = (e.source as? AbstractButton)?.isSelected == true }
+  toolBar.add(Box.createGlue())
+  toolBar.add(check)
 
   val box = Box.createHorizontalBox()
   box.add(JLabel("setRolloverEnabled(false)"))
@@ -36,7 +36,7 @@ fun makeUI(): Component {
   }
 
   return JPanel(BorderLayout()).also {
-    it.add(toolbar, BorderLayout.NORTH)
+    it.add(toolBar, BorderLayout.NORTH)
     it.add(JScrollPane(JTree()))
     it.add(box, BorderLayout.SOUTH)
     it.preferredSize = Dimension(320, 240)

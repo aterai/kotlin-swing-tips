@@ -102,20 +102,20 @@ class BarFactory(base: String) {
 
   fun createToolBar(): JToolBar? {
     val tmp = getResourceString("toolbar") ?: return null
-    val toolbar = JToolBar()
-    toolbar.isRollover = true
-    toolbar.isFloatable = false
+    val toolBar = JToolBar()
+    toolBar.isRollover = true
+    toolBar.isFloatable = false
     for (key in tokenize(tmp)) {
       if ("-" == key) {
-        toolbar.add(Box.createHorizontalStrut(5))
-        toolbar.addSeparator()
-        toolbar.add(Box.createHorizontalStrut(5))
+        toolBar.add(Box.createHorizontalStrut(5))
+        toolBar.addSeparator()
+        toolBar.add(Box.createHorizontalStrut(5))
       } else {
-        toolbar.add(createToolBarButton(key))
+        toolBar.add(createToolBarButton(key))
       }
     }
-    toolbar.add(Box.createHorizontalGlue())
-    return toolbar
+    toolBar.add(Box.createHorizontalGlue())
+    return toolBar
   }
 
   // private fun createTool(key: String) = createToolBarButton(key)

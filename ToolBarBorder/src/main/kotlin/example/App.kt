@@ -5,7 +5,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.metal.MetalBorders
 
 fun makeUI(): Component {
-  val toolbar1 = object : JToolBar("Customized ToolBarBorder") {
+  val toolBar1 = object : JToolBar("Customized ToolBarBorder") {
     override fun updateUI() {
       super.updateUI()
       border = ToolBarDragBorder()
@@ -17,7 +17,7 @@ fun makeUI(): Component {
     it.add(JToggleButton("JToggleButton"))
   }
 
-  val toolbar2 = JToolBar("default").also {
+  val toolBar2 = JToolBar("default").also {
     it.add(JLabel("<- Default Border"))
     it.addSeparator()
     it.add(JCheckBox("JCheckBox"))
@@ -25,8 +25,8 @@ fun makeUI(): Component {
   }
 
   return JPanel(BorderLayout()).also {
-    it.add(toolbar1, BorderLayout.NORTH)
-    it.add(toolbar2, BorderLayout.SOUTH)
+    it.add(toolBar1, BorderLayout.NORTH)
+    it.add(toolBar2, BorderLayout.SOUTH)
     it.add(JScrollPane(JTextArea()))
     val mb = JMenuBar()
     mb.add(LookAndFeelUtil.createLookAndFeelMenu())

@@ -15,7 +15,7 @@ fun makeUI() = JPanel(BorderLayout()).also {
   it.preferredSize = Dimension(320, 240)
 }
 
-private fun makeToolBar() = JToolBar("toolbar").also {
+private fun makeToolBar() = JToolBar().also {
   it.add(JLabel("label"))
   it.add(Box.createRigidArea(Dimension(5, 5)))
 
