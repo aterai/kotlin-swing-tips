@@ -2,6 +2,7 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.border.Border
 
 fun makeUI(): Component {
   val menu1 = JMenu("File")
@@ -11,7 +12,9 @@ fun makeUI(): Component {
   menu1.add("Exit")
 
   val menu2 = LookAndFeelUtil.createLookAndFeelMenu()
-  menu2.popupMenu.layout = GridLayout(0, 2, 2, 0)
+  val pop = menu2.popupMenu
+  pop.layout = GridLayout(0, 2, 8, 0)
+  pop.border = BorderFactory.createCompoundBorder(pop.border, ColumnRulesBorder())
 
   val mb = JMenuBar()
   mb.add(menu1)
@@ -21,6 +24,27 @@ fun makeUI(): Component {
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+private class ColumnRulesBorder : Border {
+  private val insets = Insets(0, 0, 0, 0)
+  private val separator = JSeparator(SwingConstants.VERTICAL)
+  override fun paintBorder(c: Component?, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
+    if (c is JComponent) {
+      val r = SwingUtilities.calculateInnerArea(c, null)
+      val sw = separator.preferredSize.width
+      val sh = r.height
+      val sx = (r.centerX - sw / 2.0).toInt()
+      val sy = r.minY.toInt()
+      val g2 = g.create() as Graphics2D
+      SwingUtilities.paintComponent(g2, separator, c, sx, sy, sw, sh)
+      g2.dispose()
+    }
+  }
+
+  override fun getBorderInsets(c: Component?) = insets
+
+  override fun isBorderOpaque() = true
 }
 
 private object LookAndFeelUtil {
