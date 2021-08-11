@@ -34,8 +34,8 @@ fun makeUI(): Component {
   desktop.addComponentListener(handler)
 
   return JPanel(BorderLayout()).also {
+    EventQueue.invokeLater { it.rootPane.jMenuBar = createMenuBar() }
     it.add(desktop)
-    it.add(createMenuBar(), BorderLayout.NORTH)
     it.preferredSize = Dimension(320, 240)
   }
 }

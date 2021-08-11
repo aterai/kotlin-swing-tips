@@ -20,7 +20,7 @@ fun makeUI(): Component {
   val p2 = object : JPanel() {
     override fun paintComponent(g: Graphics) {
       // super.paintComponent(g)
-      g.color = Color(0x64643232, true)
+      g.color = Color(0x64_64_32_32, true)
       g.fillRect(0, 0, width, height)
     }
   }
@@ -43,8 +43,8 @@ fun makeUI(): Component {
   desktop.border = CentredBackgroundBorder(image)
 
   return JPanel(BorderLayout()).also {
+    EventQueue.invokeLater { it.rootPane.jMenuBar = createMenuBar() }
     it.add(desktop)
-    it.add(createMenuBar(), BorderLayout.NORTH)
     it.preferredSize = Dimension(320, 240)
   }
 }
