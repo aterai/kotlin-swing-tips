@@ -42,24 +42,23 @@ fun makeUI(): Component {
   val image = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
   desktop.border = CentredBackgroundBorder(image)
 
-  return JPanel(BorderLayout()).also {
-    EventQueue.invokeLater { it.rootPane.jMenuBar = createMenuBar() }
-    it.add(desktop)
-    it.preferredSize = Dimension(320, 240)
-  }
-}
-
-private fun createMenuBar(): JMenuBar {
   val menu = JMenu("Frame")
   menu.mnemonic = KeyEvent.VK_D
+
   val menuItem = menu.add("New Frame")
   menuItem.mnemonic = KeyEvent.VK_N
   menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.ALT_DOWN_MASK)
   menuItem.actionCommand = "new"
-  menuItem.addActionListener { createFrame(null) }
+  menuItem.addActionListener { desktop.add(createFrame(null)) }
+
   val menuBar = JMenuBar()
   menuBar.add(menu)
-  return menuBar
+
+  return JPanel(BorderLayout()).also {
+    EventQueue.invokeLater { it.rootPane.jMenuBar = menuBar }
+    it.add(desktop)
+    it.preferredSize = Dimension(320, 240)
+  }
 }
 
 private fun createFrame(c: JComponent?): JInternalFrame {
@@ -73,7 +72,7 @@ private fun createFrame(c: JComponent?): JInternalFrame {
   frame.setSize(160, 100)
   frame.setLocation(30 * openFrameCount, 30 * openFrameCount)
   frame.isOpaque = false
-  frame.isVisible = true
+  EventQueue.invokeLater { frame.isVisible = true }
   return frame
 }
 
