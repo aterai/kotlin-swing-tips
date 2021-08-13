@@ -197,7 +197,7 @@ private class ButtonsRenderer<E>(model: DefaultListModel<E>) : JPanel(BorderLayo
   }
 
   companion object {
-    private val EVEN_COLOR = Color(0xE6FFE6)
+    private val EVEN_COLOR = Color(0xE6_FF_E6)
   }
 }
 

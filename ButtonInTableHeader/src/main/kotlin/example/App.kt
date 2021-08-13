@@ -145,7 +145,7 @@ private class HeaderRenderer(header: JTableHeader, private val pop: JPopupMenu) 
 
   companion object {
     const val BUTTON_WIDTH = 16
-    val BUTTON_BGC = Color(0x64C8C8C8, true)
+    val BUTTON_BGC = Color(0x64_C8_C8_C8, true)
   }
 }
 

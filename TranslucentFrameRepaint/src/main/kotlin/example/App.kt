@@ -134,7 +134,7 @@ private object TextureUtil {
     val sz = cs * cs
     val bi = BufferedImage(sz, sz, BufferedImage.TYPE_INT_ARGB)
     val g2 = bi.createGraphics()
-    g2.paint = Color(0x32C89664, true)
+    g2.paint = Color(0x32_C8_96_64, true)
     g2.fillRect(0, 0, sz, sz)
     var i = 0
     while (i * cs < sz) {

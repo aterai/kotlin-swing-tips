@@ -41,7 +41,7 @@ fun showMessageDialog(parent: Component?, message: Any, title: String, messageTy
     @Transient private var texture: Paint? = null
     override fun updateUI() {
       super.updateUI()
-      texture = TextureUtils.createCheckerTexture(16, Color(0x64AAAAAA, true))
+      texture = TextureUtils.createCheckerTexture(16, Color(0x64_AA_AA_AA, true))
     }
 
     override fun paintComponent(g: Graphics) {

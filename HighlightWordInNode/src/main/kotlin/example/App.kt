@@ -107,7 +107,7 @@ private class HighlightTreeCellRenderer : JTextField(), TreeCellRenderer {
   }
 
   companion object {
-    private val BACKGROUND_SELECTION_COLOR = Color(0xDCF0FF)
+    private val BACKGROUND_SELECTION_COLOR = Color(0xDC_F0_FF)
     private val HIGHLIGHT = DefaultHighlightPainter(Color.YELLOW)
   }
 }
