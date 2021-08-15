@@ -6,15 +6,16 @@ import java.awt.event.FocusListener
 import java.awt.event.ItemEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.awt.image.BufferedImage
 import java.awt.image.FilteredImageSource
 import java.awt.image.RGBImageFilter
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  val cl = Thread.currentThread().contextClassLoader
-  val image1 = ImageIcon(cl.getResource("example/favicon.png"))
-  val image2 = ImageIcon(cl.getResource("example/16x16.png"))
-  val rss = ImageIcon(cl.getResource("example/feed-icon-14x14.png")) // http://feedicons.com/
+  val image1 = makeImageIcon("example/favicon.png")
+  val image2 = makeImageIcon("example/16x16.png")
+  val rss = makeImageIcon("example/feed-icon-14x14.png") // http://feedicons.com/
 
   val combo01 = JComboBox(makeModel(image1, image2))
   initComboBox(combo01)
@@ -36,6 +37,23 @@ fun makeUI(): Component {
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+private fun makeImageIcon(path: String): ImageIcon {
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+  return ImageIcon(img)
+}
+
+private fun makeMissingImage(): BufferedImage {
+  val missingIcon = UIManager.getIcon("html.missingImage")
+  val iw = missingIcon.iconWidth
+  val ih = missingIcon.iconHeight
+  val bi = BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, (16 - iw) / 2, (16 - ih) / 2)
+  g2.dispose()
+  return bi
 }
 
 private fun makeModel(i1: Icon, i2: Icon) = DefaultComboBoxModel<SiteItem>().also {
