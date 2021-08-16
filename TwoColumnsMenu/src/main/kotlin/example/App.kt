@@ -29,6 +29,8 @@ fun makeUI(): Component {
 private class ColumnRulesBorder : Border {
   private val insets = Insets(0, 0, 0, 0)
   private val separator = JSeparator(SwingConstants.VERTICAL)
+  private val renderer = JPanel()
+
   override fun paintBorder(c: Component?, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
     if (c is JComponent) {
       val r = SwingUtilities.calculateInnerArea(c, null)
@@ -36,8 +38,8 @@ private class ColumnRulesBorder : Border {
       val sh = r.height
       val sx = (r.centerX - sw / 2.0).toInt()
       val sy = r.minY.toInt()
-      val g2 = g.create() as Graphics2D
-      SwingUtilities.paintComponent(g2, separator, c, sx, sy, sw, sh)
+      val g2 = g.create() as? Graphics2D ?: return
+      SwingUtilities.paintComponent(g2, separator, renderer, sx, sy, sw, sh)
       g2.dispose()
     }
   }
