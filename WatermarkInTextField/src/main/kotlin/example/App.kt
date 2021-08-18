@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
 import java.awt.event.KeyEvent
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.JTextComponent
 
@@ -44,9 +45,12 @@ private fun makeTitledPanel(title: String, c: Component): Component {
 }
 
 private class WatermarkTextField : JTextField(), FocusListener {
-  private val image = ImageIcon(javaClass.getResource("watermark.png"))
+  private val icon: Icon
   private var showWatermark = true
   init {
+    val cl = Thread.currentThread().contextClassLoader
+    val url = cl.getResource("example/watermark.png")
+    icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) } ?: UIManager.getIcon("html.missingImage")
     addFocusListener(this)
   }
 
@@ -55,8 +59,8 @@ private class WatermarkTextField : JTextField(), FocusListener {
     if (showWatermark) {
       val g2 = g.create() as? Graphics2D ?: return
       val i = insets
-      val yy = (height - image.iconHeight) / 2
-      g2.drawImage(image.image, i.left, yy, this)
+      val yy = (height - icon.iconHeight) / 2
+      icon.paintIcon(this, g2, i.left, yy)
       g2.dispose()
     }
   }
