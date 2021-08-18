@@ -4,12 +4,15 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.WindowEvent
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun start(frame: JFrame) {
   val cl = Thread.currentThread().contextClassLoader
-  val img = ImageIcon(cl.getResource("example/splash.png"))
-  val splashScreen = createSplashScreen(frame, img)
+  val url = cl.getResource("example/splash.png")
+  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+  val splashScreen = createSplashScreen(frame, ImageIcon(img))
   splashScreen.isVisible = true
   val r = Runnable {
     runCatching {
@@ -70,6 +73,37 @@ fun showFrame(frame: JFrame) {
   frame.setSize(320, 240)
   frame.setLocationRelativeTo(null)
   frame.isVisible = true
+}
+
+private fun makeMissingImage(): Image {
+  val missingIcon = MissingIcon()
+  val w = missingIcon.iconWidth
+  val h = missingIcon.iconHeight
+  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, 0, 0)
+  g2.dispose()
+  return bi
+}
+
+private class MissingIcon : Icon {
+  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+    val g2 = g.create() as? Graphics2D ?: return
+    val w = iconWidth
+    val h = iconHeight
+    val gap = w / 5
+    g2.paint = Color.WHITE
+    g2.fillRect(x, y, w, h)
+    g2.paint = Color.RED
+    g2.stroke = BasicStroke(w / 8f)
+    g2.drawLine(x + gap, y + gap, x + w - gap, y + h - gap)
+    g2.drawLine(x + gap, y + h - gap, x + w - gap, y + gap)
+    g2.dispose()
+  }
+
+  override fun getIconWidth() = 320
+
+  override fun getIconHeight() = 240
 }
 
 private class DragWindowListener : MouseAdapter() {
