@@ -8,12 +8,13 @@ import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.awt.image.BufferedImage
 import java.awt.image.RescaleOp
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.Timer
 
 fun makeUI(): Component {
-  val cl = Thread.currentThread().contextClassLoader
-  val label = LabelWithToolBox(ImageIcon(cl.getResource("example/test.png")))
+  val imageIcon = makeImageIcon("example/test.png", Dimension(240, 180))
+  val label = LabelWithToolBox(imageIcon)
   label.border = BorderFactory.createCompoundBorder(
     BorderFactory.createLineBorder(Color(0xDE_DE_DE)),
     BorderFactory.createLineBorder(Color.WHITE, 4)
@@ -79,9 +80,9 @@ private class LabelWithToolBox(image: Icon?) : JLabel(image) {
     }
     toolBox.add(Box.createGlue())
     // http://chrfb.deviantart.com/art/quot-ecqlipse-2-quot-PNG-59941546
-    toolBox.add(makeToolButton("ATTACHMENT_16x16-32.png"))
+    toolBox.add(makeToolButton("example/ATTACHMENT_16x16-32.png"))
     toolBox.add(Box.createHorizontalStrut(2))
-    toolBox.add(makeToolButton("RECYCLE BIN - EMPTY_16x16-32.png"))
+    toolBox.add(makeToolButton("example/RECYCLE BIN - EMPTY_16x16-32.png"))
     add(toolBox)
   }
 
@@ -129,7 +130,7 @@ private class LabelWithToolBox(image: Icon?) : JLabel(image) {
   }
 
   private fun makeToolButton(name: String): JButton {
-    val icon = ImageIcon(javaClass.getResource(name))
+    val icon = makeImageIcon(name, Dimension(16, 16))
     val b = JButton()
     b.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
     b.icon = makeRolloverIcon(icon)
@@ -156,6 +157,23 @@ private class LabelWithToolBox(image: Icon?) : JLabel(image) {
       return ImageIcon(op.filter(img, null))
     }
   }
+}
+
+private fun makeImageIcon(path: String, d: Dimension): ImageIcon {
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage(d)
+  return ImageIcon(img)
+}
+
+private fun makeMissingImage(d: Dimension): BufferedImage {
+  val missingIcon = UIManager.getIcon("html.missingImage")
+  val iw = missingIcon.iconWidth
+  val ih = missingIcon.iconHeight
+  val bi = BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, (d.width - iw) / 2, (d.height - ih) / 2)
+  g2.dispose()
+  return bi
 }
 
 private class ParentDispatchMouseListener : MouseAdapter() {
