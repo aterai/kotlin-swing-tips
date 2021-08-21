@@ -45,18 +45,19 @@ private fun makeRadioPane(table: JTable): Box {
   val al = ActionListener { e ->
     val ascending: Icon
     val descending: Icon
-    when (e.source as? JRadioButton) {
-      r0 -> {
-        ascending = UIManager.getLookAndFeelDefaults().getIcon("Table.ascendingSortIcon")
-        descending = UIManager.getLookAndFeelDefaults().getIcon("Table.descendingSortIcon")
+    val r = e.source as? JRadioButton
+    when {
+      r == r2 && ascendingPath != null && descendingPath != null -> {
+        ascending = IconUIResource(ImageIcon(ascendingPath))
+        descending = IconUIResource(ImageIcon(descendingPath))
       }
-      r1 -> {
+      r == r1 -> {
         ascending = IconUIResource(EMPTY_ICON)
         descending = IconUIResource(EMPTY_ICON)
       }
       else -> {
-        ascending = IconUIResource(ImageIcon(ascendingPath))
-        descending = IconUIResource(ImageIcon(descendingPath))
+        ascending = UIManager.getLookAndFeelDefaults().getIcon("Table.ascendingSortIcon")
+        descending = UIManager.getLookAndFeelDefaults().getIcon("Table.descendingSortIcon")
       }
     }
     UIManager.put("Table.ascendingSortIcon", ascending)
