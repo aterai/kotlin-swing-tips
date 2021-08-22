@@ -6,17 +6,17 @@ import java.awt.image.RescaleOp
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  val p = JPanel()
   val b1 = JButton("button")
-  val b2 = JButton()
-  val cl = Thread.currentThread().contextClassLoader
-  val rss = ImageIcon(cl.getResource("example/feed-icon-14x14.png")) // http://feedicons.com/
-  b2.icon = rss
-  b2.rolloverIcon = makeRolloverIcon(rss)
-  p.add(b1)
-  p.add(b2)
-  p.border = BorderFactory.createEmptyBorder(20, 10, 20, 10)
+
+  val icon = UIManager.getIcon("InternalFrame.icon")
+  val b2 = JButton(icon)
+  // b2.icon = icon
+  b2.rolloverIcon = makeRolloverIcon(icon)
+
   val list = listOf(b1, b2)
+  val p = JPanel()
+  p.border = BorderFactory.createEmptyBorder(20, 10, 20, 10)
+  list.forEach { p.add(it) }
 
   val focusPainted = JCheckBox("setFocusPainted", true)
   focusPainted.addActionListener { e ->
@@ -60,7 +60,7 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeRolloverIcon(srcIcon: ImageIcon): ImageIcon {
+private fun makeRolloverIcon(srcIcon: Icon): Icon {
   val w = srcIcon.iconWidth
   val h = srcIcon.iconHeight
   val img = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
