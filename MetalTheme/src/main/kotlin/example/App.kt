@@ -38,10 +38,10 @@ private fun addFrame(desktop: JDesktopPane, idx: Int) {
   }
   frame.add(makePanel())
   frame.setSize(240, 100)
-  frame.isVisible = true
   frame.setLocation(10 + 60 * idx, 5 + 105 * idx)
   desktop.add(frame)
-  desktop.desktopManager.activateFrame(frame)
+  EventQueue.invokeLater { frame.isVisible = true }
+  // desktop.desktopManager.activateFrame(frame)
 }
 
 private fun makePanel() = JPanel().also {
