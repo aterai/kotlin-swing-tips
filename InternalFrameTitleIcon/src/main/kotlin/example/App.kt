@@ -6,10 +6,9 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 fun makeUI(): Component {
   val desktop = JDesktopPane()
   for ((idx, c) in listOf(Color.RED, Color.GREEN, Color.BLUE).withIndex()) {
-    val f = makeInternalFrame(c, idx + 1)
-    desktop.add(f)
-    f.isVisible = true
+    desktop.add(makeInternalFrame(c, idx + 1))
   }
+  EventQueue.invokeLater { desktop.allFrames.forEach { it.isVisible = true } }
   desktop.preferredSize = Dimension(320, 240)
   return desktop
 }

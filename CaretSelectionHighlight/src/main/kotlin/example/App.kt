@@ -8,6 +8,20 @@ import javax.swing.text.DefaultHighlighter
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.text.Highlighter.HighlightPainter
 
+fun makeUI(): Component {
+  val desktop = JDesktopPane()
+  desktop.add(makeInternalFrame("DefaultCaret", Point(10, 10), makeTextArea(false)))
+  desktop.add(makeInternalFrame("FocusCaret", Point(50, 50), makeTextArea(true)))
+  desktop.add(makeInternalFrame("FocusCaret", Point(90, 90), makeTextArea(true)))
+  EventQueue.invokeLater {
+    desktop.allFrames.forEach { it.isVisible = true }
+  }
+  return JPanel(BorderLayout()).also {
+    it.add(desktop)
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
 private fun makeInternalFrame(title: String, p: Point, c: Component): JInternalFrame {
   val f = JInternalFrame(title, true, true, true, true)
   f.add(c)
@@ -35,22 +49,6 @@ private fun makeTextArea(flag: Boolean): Component {
   textArea.text = "aaa\nbbb bbb\nccc ccc ccc ccc\n"
   textArea.selectAll()
   return JScrollPane(textArea)
-}
-
-fun makeUI(): Component {
-  val desktop = JDesktopPane()
-  desktop.add(makeInternalFrame("DefaultCaret", Point(10, 10), makeTextArea(false)))
-  desktop.add(makeInternalFrame("FocusCaret", Point(50, 50), makeTextArea(true)))
-  desktop.add(makeInternalFrame("FocusCaret", Point(90, 90), makeTextArea(true)))
-  EventQueue.invokeLater {
-    for (f in desktop.allFrames) {
-      f.isVisible = true
-    }
-  }
-  return JPanel(BorderLayout()).also {
-    it.add(desktop)
-    it.preferredSize = Dimension(320, 240)
-  }
 }
 
 private class FocusCaret : DefaultCaret() {

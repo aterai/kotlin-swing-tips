@@ -28,7 +28,7 @@ fun makeUI(): Component {
     val n = count.getAndIncrement()
     val f = createFrame("#$n", n * 10, n * 10)
     desktop.add(f)
-    desktop.desktopManager.activateFrame(f)
+    // desktop.desktopManager.activateFrame(f)
   }
 
   val toolBar = JToolBar()
@@ -51,11 +51,7 @@ fun makeUI(): Component {
 fun doReIconify(desktop: JDesktopPane?) {
   val dm = desktop?.desktopManager
   if (dm is ReIconifyDesktopManager) {
-    for (f in desktop.allFrames) {
-      if (f.isIcon) {
-        dm.reIconifyFrame(f)
-      }
-    }
+    desktop.allFrames.filter { it.isIcon }.forEach { dm.reIconifyFrame(it) }
   }
 }
 
@@ -63,7 +59,7 @@ fun createFrame(t: String?, x: Int, y: Int): JInternalFrame {
   val f = JInternalFrame(t, false, true, true, true)
   f.setSize(200, 100)
   f.setLocation(x, y)
-  f.isVisible = true
+  EventQueue.invokeLater { f.isVisible = true }
   return f
 }
 
