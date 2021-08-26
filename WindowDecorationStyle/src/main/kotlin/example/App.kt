@@ -26,7 +26,7 @@ fun makeUI(): Component {
   val f = DraggableInternalFrame("title")
   f.contentPane.add(p)
   f.jMenuBar = mb
-  f.isVisible = true
+  EventQueue.invokeLater { f.isVisible = true }
 
   return object : JPanel(BorderLayout()) {
     override fun updateUI() {

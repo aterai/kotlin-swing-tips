@@ -33,9 +33,8 @@ fun makeUI(): Component {
 private fun addInternalFrame(desktop: JDesktopPane, idx: Int) {
   val f = JInternalFrame("#$idx", true, true, true, true)
   f.setBounds(idx * 10, idx * 10, 200, 100)
-  f.isVisible = true
   desktop.add(f)
-  desktop.desktopManager.activateFrame(f)
+  EventQueue.invokeLater { f.isVisible = true }
 }
 
 fun main() {

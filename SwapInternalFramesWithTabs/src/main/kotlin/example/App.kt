@@ -62,8 +62,8 @@ private fun createInternalFrame(): JInternalFrame {
   row += 1
   f.setSize(240, 120)
   f.setLocation(20 * row + 20 * col, 20 * row)
-  f.isVisible = true
   EventQueue.invokeLater {
+    f.isVisible = true
     val rect = desktopPane.bounds
     rect.setLocation(0, 0)
     if (!rect.contains(f.bounds)) {

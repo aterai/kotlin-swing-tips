@@ -11,8 +11,6 @@ import javax.swing.plaf.synth.SynthPainter
 import javax.swing.plaf.synth.SynthStyle
 import javax.swing.plaf.synth.SynthStyleFactory
 
-private val desktop = JDesktopPane()
-
 fun makeUI(): Component {
   val p1 = JPanel()
   p1.isOpaque = false
@@ -25,8 +23,10 @@ fun makeUI(): Component {
   }
   p2.isOpaque = false
 
-  createFrame(initContainer(p1), 0)
-  createFrame(initContainer(p2), 1)
+  val desktop = JDesktopPane()
+  desktop.add(createFrame(initContainer(p1), 0))
+  desktop.add(createFrame(initContainer(p2), 1))
+
   return JPanel(BorderLayout()).also {
     it.add(desktop)
     it.preferredSize = Dimension(320, 240)
@@ -34,16 +34,15 @@ fun makeUI(): Component {
 }
 
 private fun createFrame(panel: Container, idx: Int): JInternalFrame {
-  val frame = MyInternalFrame()
+  val frame = JInternalFrame("title", true, true, true, true)
   // frame.putClientProperty("Nimbus.Overrides", d)
   // // frame.putClientProperty("Nimbus.Overrides.InheritDefaults", false)
   frame.contentPane = panel
   frame.rootPane.isOpaque = false
   frame.isOpaque = false
-  frame.isVisible = true
+  frame.setSize(160, 100)
   frame.setLocation(10 + 60 * idx, 10 + 40 * idx)
-  desktop.add(frame)
-  desktop.desktopManager.activateFrame(frame)
+  EventQueue.invokeLater { frame.isVisible = true }
   return frame
 }
 
@@ -51,12 +50,6 @@ private fun initContainer(p: Container): Container {
   p.add(JLabel("label"))
   p.add(JButton("button"))
   return p
-}
-
-private class MyInternalFrame : JInternalFrame("title", true, true, true, true) {
-  init {
-    setSize(160, 100)
-  }
 }
 
 private class MySynthStyleFactory(private val wrappedFactory: SynthStyleFactory) : SynthStyleFactory() {

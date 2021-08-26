@@ -28,21 +28,16 @@ fun makeUI(): Component {
   frame.setSize(160, 80)
   frame.setLocation(10, 10)
   frame.isOpaque = false
-  frame.isVisible = true
 
   val desktop = object : JDesktopPane() {
     override fun updateUI() {
       super.updateUI()
       isOpaque = false
-    } // @Override protected void paintComponent(Graphics g) {
-    //   super.paintComponent(g);
-    //   Graphics2D g2 = (Graphics2D) g.create();
-    //   g2.setPaint(new Color(100, 100, 100, 100));
-    //   g2.fillRect(0, 0, getWidth(), getHeight());
-    //   g2.dispose();
-    // }
+    }
   }
   desktop.add(frame)
+  EventQueue.invokeLater { frame.isVisible = true }
+
   return JPanel(BorderLayout()).also {
     it.add(desktop)
     it.isOpaque = false

@@ -9,14 +9,15 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 private val desktop = JDesktopPane()
 
 fun makeUI(): Component {
-  EventQueue.invokeLater { desktop.rootPane.jMenuBar = createMenuBar() }
   val frame = JInternalFrame("AlwaysOnTop", true, false, true, true)
   frame.setSize(180, 180)
   val layer = JLayeredPane.MODAL_LAYER + 1
   val position = 0
   desktop.add(frame, layer, position)
-  frame.isVisible = true
-
+  EventQueue.invokeLater {
+    frame.isVisible = true
+    desktop.rootPane.jMenuBar = createMenuBar()
+  }
   return JPanel(BorderLayout()).also {
     it.add(desktop)
     it.preferredSize = Dimension(320, 240)
