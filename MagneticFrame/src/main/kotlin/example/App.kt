@@ -45,11 +45,19 @@ private class MagneticDesktopManager : DefaultDesktopManager() {
     }
   }
 
-  private fun getX(e: Int, w: Int) =
-    if (e < w) if (isNear(e)) 0 else e else if (isNear(w)) w + e else e
+  private fun getX(east: Int, west: Int) =
+    if (east < west) {
+      if (isNear(east)) 0 else east
+    } else {
+      if (isNear(west)) west + east else east
+    }
 
-  private fun getY(n: Int, s: Int) =
-    if (n < s) if (isNear(n)) 0 else n else if (isNear(s)) s + n else n
+  private fun getY(north: Int, south: Int) =
+    if (north < south) {
+      if (isNear(north)) 0 else north
+    } else {
+      if (isNear(south)) south + north else north
+    }
 
   private fun isNear(c: Int) = abs(c) < 10
 }
