@@ -10,31 +10,6 @@ private val info = "JDesktopIcon: ${ICON_SIZE.width}x${ICON_SIZE.height}"
 private val check = JCheckBox(info)
 private var num = 0
 
-private fun createFrame(t: String, x: Int, y: Int): JInternalFrame {
-  val f = JInternalFrame(t, true, true, true, true)
-  f.desktopIcon = object : JDesktopIcon(f) {
-    override fun getPreferredSize(): Dimension {
-      if (!check.isSelected) {
-        return super.getPreferredSize()
-      }
-      return if (ui.javaClass.name.contains("MotifDesktopIconUI")) {
-        Dimension(64, 64 + 32)
-      } else {
-        ICON_SIZE
-      }
-    }
-  }
-  f.setSize(200, 100)
-  f.setLocation(x, y)
-  f.isVisible = true
-  return f
-}
-
-private fun addIconifiedFrame(desktop: JDesktopPane, f: JInternalFrame) {
-  desktop.add(f)
-  runCatching { f.isIcon = true }
-}
-
 fun makeUI(): Component {
   check.isOpaque = false
   val desktop = JDesktopPane()
@@ -48,9 +23,7 @@ fun makeUI(): Component {
 
   val button = JButton("add")
   button.addActionListener {
-    val f = createFrame("#$num", num * 10, num * 10)
-    desktop.add(f)
-    desktop.desktopManager.activateFrame(f)
+    desktop.add(createFrame("#$num", num * 10, num * 10))
     num++
   }
 
@@ -67,6 +40,26 @@ fun makeUI(): Component {
     it.add(mb, BorderLayout.NORTH)
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+private fun createFrame(t: String, x: Int, y: Int): JInternalFrame {
+  val f = JInternalFrame(t, true, true, true, true)
+  f.desktopIcon = object : JDesktopIcon(f) {
+    override fun getPreferredSize() = when {
+      !check.isSelected -> super.getPreferredSize()
+      ui.javaClass.name.contains("MotifDesktopIconUI") -> Dimension(64, 64 + 32)
+      else -> ICON_SIZE
+    }
+  }
+  f.setSize(200, 100)
+  f.setLocation(x, y)
+  EventQueue.invokeLater { f.isVisible = true }
+  return f
+}
+
+private fun addIconifiedFrame(desktop: JDesktopPane, f: JInternalFrame) {
+  desktop.add(f)
+  runCatching { f.isIcon = true }
 }
 
 private object LookAndFeelUtil {

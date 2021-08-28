@@ -27,8 +27,8 @@ fun makeUI(): Component {
 private fun createFrame(i: Int): JInternalFrame {
   val f = JInternalFrame("title: $i", true, true, true, true)
   f.setSize(160, 120)
-  f.isVisible = true
   f.setLocation(10 + 20 * i, 10 + 20 * i)
+  EventQueue.invokeLater { f.isVisible = true }
   return f
 }
 
