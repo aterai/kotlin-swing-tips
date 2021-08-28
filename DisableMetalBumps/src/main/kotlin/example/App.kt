@@ -10,7 +10,6 @@ fun makeUI(): Component {
   val f0 = JInternalFrame("metal(default)", true, true, true, true)
   f0.setSize(240, 100)
   f0.setLocation(20, 10)
-  f0.isVisible = true
 
   val f1 = object : JInternalFrame("basic", true, true, true, true) {
     override fun updateUI() {
@@ -23,11 +22,13 @@ fun makeUI(): Component {
   }
   f1.setSize(240, 100)
   f1.setLocation(40, 120)
-  f1.isVisible = true
 
   return JDesktopPane().also {
     it.add(f0)
     it.add(f1)
+    EventQueue.invokeLater {
+      it.allFrames.forEach { f -> f.isVisible = true }
+    }
     it.preferredSize = Dimension(320, 240)
   }
 }

@@ -12,6 +12,7 @@ private val OPEN_COUNTER = AtomicInteger()
 
 fun makeUI(): Component {
   val desktop = JDesktopPane()
+  desktop.add(createInternalFrame())
 
   val r1 = JRadioButton("LIVE_DRAG_MODE", true)
   r1.addItemListener { e ->
@@ -41,11 +42,7 @@ fun makeUI(): Component {
   menuItem.mnemonic = KeyEvent.VK_N
   menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.ALT_DOWN_MASK)
   menuItem.actionCommand = "new"
-  menuItem.addActionListener {
-    val frame = createInternalFrame()
-    desktop.add(frame)
-    frame.isVisible = true
-  }
+  menuItem.addActionListener { desktop.add(createInternalFrame()) }
 
   val menuBar = JMenuBar()
   menuBar.add(menu)
@@ -63,7 +60,8 @@ private fun createInternalFrame(): JInternalFrame {
   val f = JInternalFrame(title, true, true, true, true)
   f.contentPane.add(JScrollPane(JTree()))
   f.setSize(160, 100)
-  f.setLocation(OFFSET * OPEN_COUNTER.toInt(), OFFSET * OPEN_FRAME_COUNTER.toInt())
+  f.setLocation(OFFSET * OPEN_COUNTER.toInt(), OFFSET * OPEN_COUNTER.toInt())
+  EventQueue.invokeLater { f.isVisible = true }
   return f
 }
 
