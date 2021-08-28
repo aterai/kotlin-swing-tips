@@ -21,10 +21,7 @@ fun makeUI(): Component {
   val act = object : AbstractAction("add") {
     private var num = 2
     override fun actionPerformed(e: ActionEvent) {
-      val f = createFrame("#", num)
-      desktop.add(f)
-      desktop.desktopManager.activateFrame(f)
-      num++
+      desktop.add(createFrame("#", num++))
     }
   }
   val button = JButton(act)
@@ -68,16 +65,13 @@ fun createFrame(t: String, i: Int): JInternalFrame {
     private fun testWidth() {
       val dim = layout.minimumLayoutSize(this)
       println("minimumLayoutSize: " + dim.width)
-      val buttonsW = descendants(this)
-        .filterIsInstance<AbstractButton>()
-        .map { it.preferredSize.width }
-        .sum()
-      println("Total width of all buttons: $buttonsW")
+      val bw = descendants(this).filterIsInstance<AbstractButton>().sumOf { it.preferredSize.width }
+      println("Total width of all buttons: $bw")
     }
   }
   f.setSize(200, 100)
-  f.isVisible = true
   f.setLocation(5 + 40 * i, 5 + 50 * i)
+  EventQueue.invokeLater { f.isVisible = true }
   return f
 }
 
