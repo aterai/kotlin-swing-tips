@@ -30,9 +30,9 @@ private fun addFrame(desktop: JDesktopPane, idx: Int, resizable: Boolean) {
   val frame = JInternalFrame("resizable: $resizable", resizable, true, true, true)
   frame.add(makePanel())
   frame.setSize(240, 100)
-  frame.isVisible = true
   frame.setLocation(10 + 60 * idx, 10 + 120 * idx)
   desktop.add(frame)
+  EventQueue.invokeLater { frame.isVisible = true }
 }
 
 private fun makePanel() = JPanel().also {

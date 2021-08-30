@@ -10,24 +10,23 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 
 fun makeUI(): Component {
-  val p = JDesktopPane()
+  val dp = JDesktopPane()
   val handler = TableRowTransferHandler()
   val f1 = JInternalFrame("11111111", true, true, true, true)
   f1.add(JScrollPane(makeDnDTable(handler)))
   f1.isOpaque = false
-  p.add(f1, 1, 1)
+  dp.add(f1, 1, 1)
   f1.setBounds(0, 0, 240, 160)
-  f1.isVisible = true
 
   val f2 = JInternalFrame("22222222", true, true, true, true)
   f2.add(JScrollPane(makeDnDTable(handler)))
-  p.add(f2, 1, 0)
+  dp.add(f2, 1, 0)
   f2.setBounds(50, 50, 240, 160)
-  f2.isVisible = true
   f2.isOpaque = false
 
+  EventQueue.invokeLater { dp.allFrames.forEach { it.isVisible = true } }
   return JPanel(BorderLayout()).also {
-    it.add(p)
+    it.add(dp)
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.preferredSize = Dimension(320, 240)
   }
