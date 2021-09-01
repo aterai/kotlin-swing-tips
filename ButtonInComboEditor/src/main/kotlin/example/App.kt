@@ -85,7 +85,6 @@ private class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: Image
 
     val fl = object : FocusListener {
       override fun focusGained(e: FocusEvent) {
-        // field.setBorder(BorderFactory.createEmptyBorder(0, 16 + 4, 0, 0));
         feedButton.isVisible = false
       }
 
@@ -107,13 +106,13 @@ private class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: Image
         updateFavicon(model, favicon)
       }
     }
-    updateFavicon(model, favicon)
+    EventQueue.invokeLater {
+      updateFavicon(model, favicon)
+    }
   }
 
   private fun updateFavicon(model: ComboBoxModel<SiteItem>, label: JLabel) {
-    EventQueue.invokeLater {
-      getSiteItemFromModel(model, selectedItem)?.also { label.icon = it.favicon }
-    }
+    getSiteItemFromModel(model, selectedItem)?.also { label.icon = it.favicon }
   }
 
   private fun makeRssButton(rss: ImageIcon) = JButton(rss).also {
@@ -157,10 +156,12 @@ private class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: Image
 }
 
 private class SiteComboBoxLayout(private val favicon: JLabel?, private val feedButton: JButton?) : LayoutManager {
-  override fun addLayoutComponent(name: String, comp: Component) { /* not needed */
+  override fun addLayoutComponent(name: String, comp: Component) {
+    /* not needed */
   }
 
-  override fun removeLayoutComponent(comp: Component) { /* not needed */
+  override fun removeLayoutComponent(comp: Component) {
+    /* not needed */
   }
 
   override fun preferredLayoutSize(parent: Container): Dimension? = parent.preferredSize
