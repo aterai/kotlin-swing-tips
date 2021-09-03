@@ -64,7 +64,7 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
       if (SELECTED_COLOR == background) {
-        val g2 = g.create() as Graphics2D
+        val g2 = g.create() as? Graphics2D ?: return
         g2.paint = SELECTED_COLOR
         g2.fillRect(0, 0, width, height)
         g2.dispose()

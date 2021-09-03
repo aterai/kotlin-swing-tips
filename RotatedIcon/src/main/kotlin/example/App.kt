@@ -72,7 +72,7 @@ private class RotateIcon(icon: Icon, rotate: Int) : Icon {
 //   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
 //     val w = icon.iconWidth
 //     val h = icon.iconHeight
-//     val g2 = g.create() as Graphics2D
+//     val g2 = g.create() as? Graphics2D ?: return
 //     g2.translate(x, y)
 //     when (rotate) {
 //       QuadrantRotate.CLOCKWISE -> g2.translate(h, 0)

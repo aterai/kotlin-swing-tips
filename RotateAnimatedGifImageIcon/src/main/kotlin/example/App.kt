@@ -17,7 +17,7 @@ fun makeUI(): Component {
   val label2 = object : JPanel() {
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
-      val g2 = g.create() as Graphics2D
+      val g2 = g.create() as? Graphics2D ?: return
       val x = width / 2.0
       val y = height / 2.0
       g2.transform = AffineTransform.getQuadrantRotateInstance(1, x, y)
@@ -32,7 +32,7 @@ fun makeUI(): Component {
   val icon3 = object : ImageIcon(url) {
     @Synchronized
     override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-      val g2 = g.create() as Graphics2D
+      val g2 = g.create() as? Graphics2D ?: return
       g2.translate(x + iconHeight, y)
       g2.transform(AffineTransform.getQuadrantRotateInstance(1))
       super.paintIcon(c, g2, 0, 0)
@@ -57,7 +57,7 @@ fun makeUI(): Component {
 
 private class ClockwiseRotateIcon(private val icon: Icon) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x + icon.iconHeight, y)
     g2.transform(AffineTransform.getQuadrantRotateInstance(1))
     icon.paintIcon(c, g2, 0, 0)

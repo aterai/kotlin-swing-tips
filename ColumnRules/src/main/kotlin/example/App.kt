@@ -68,7 +68,7 @@ private class ColumnRulesBorder : Border {
       val sh = r.height
       val sx = (r.centerX - sw / 2.0).toInt()
       val sy = r.minY.toInt()
-      val g2 = g.create() as Graphics2D
+      val g2 = g.create() as? Graphics2D ?: return
       SwingUtilities.paintComponent(g2, separator, renderer, sx, sy, sw, sh)
       g2.dispose()
     }
@@ -92,7 +92,7 @@ private class ColumnRulesLayerUI : LayerUI<JComponent>() {
       val sh = r.height
       val sx = (r.centerX - sw / 2.0).toInt()
       val sy = r.minY.toInt()
-      val g2 = g.create() as Graphics2D
+      val g2 = g.create() as? Graphics2D ?: return
       SwingUtilities.paintComponent(g2, separator, renderer, sx, sy, sw, sh)
       g2.dispose()
     }
