@@ -17,8 +17,9 @@ import javax.swing.table.TableColumn
 
 fun makeUI(): Component {
   val sp = makeSplitPane(false)
-  val divider = (sp.ui as BasicSplitPaneUI).divider
-  divider.cursor = Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR)
+  (sp.ui as? BasicSplitPaneUI)?.divider?.also {
+    it.cursor = Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR)
+  }
 
   return JPanel(GridLayout(0, 1)).also {
     it.add(makeSplitPane(false))
