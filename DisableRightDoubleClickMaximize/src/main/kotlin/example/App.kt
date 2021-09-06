@@ -32,7 +32,7 @@ fun makeUI(): Component {
   tabs.add("JPopupMenu", desktop1)
   tabs.add("WindowsInternalFrameUI", desktop2)
   tabs.add("JLayer", JLayer(desktop3, DesktopLayerUI()))
-
+  // tabs.setComponentPopupMenu(new TabbedPanePopupMenu());
   return JPanel(GridLayout(0, 1)).also {
     it.add(tabs)
     it.preferredSize = Dimension(320, 240)
@@ -114,8 +114,8 @@ private class DesktopLayerUI : LayerUI<JDesktopPane>() {
       val p = SwingUtilities.getAncestorOfClass(BasicInternalFrameTitlePane::class.java, c)
       val id = e.id
       val b1 = c is BasicInternalFrameTitlePane || p is BasicInternalFrameTitlePane
-      val b2 = c is JDesktopIcon
-      if (b1 && id == MouseEvent.MOUSE_CLICKED || b2 && id == MouseEvent.MOUSE_PRESSED) {
+      val b2 = c is JDesktopIcon && id == MouseEvent.MOUSE_PRESSED
+      if (b1 && id == MouseEvent.MOUSE_CLICKED || b2) {
         e.consume()
       }
     }
@@ -129,7 +129,6 @@ private class DesktopLayerUI : LayerUI<JDesktopPane>() {
     }
   }
 }
-
 
 fun main() {
   EventQueue.invokeLater {
