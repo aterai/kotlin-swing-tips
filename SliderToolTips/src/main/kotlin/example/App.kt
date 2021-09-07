@@ -157,9 +157,7 @@ private class SliderMouseWheelListener : MouseWheelListener {
   override fun mouseWheelMoved(e: MouseWheelEvent) {
     val s = e.component as? JSlider ?: return
     s.value = s.value - e.wheelRotation
-    // val i = s.getValue().toInt() - e.getWheelRotation()
-    // val m = s.getModel()
-    // s.setValue(minOf(maxOf(i, m.getMinimum()), m.getMaximum()))
+    // s.value = (s.value - e.wheelRotation).coerceIn(s.model.minimum, s.model.maximum)
   }
 }
 
