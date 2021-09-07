@@ -58,7 +58,7 @@ fun makeUI(): Component {
 
   val desktop = JDesktopPane()
   desktop.add(frame)
-  frame.isVisible = true
+  EventQueue.invokeLater { frame.isVisible = true }
 
   val sp = JSplitPane(JSplitPane.VERTICAL_SPLIT)
   sp.topComponent = desktop
