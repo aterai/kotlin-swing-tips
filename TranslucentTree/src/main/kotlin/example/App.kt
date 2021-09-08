@@ -116,7 +116,7 @@ private open class TransparentTreeCellRenderer : DefaultTreeCellRenderer() {
     return c
   }
 
-  override fun getBackgroundNonSelectionColor() = ALPHA_OF_ZERO
+  override fun getBackgroundNonSelectionColor() = getBackgroundSelectionColor()
 
   override fun getBackgroundSelectionColor() = ALPHA_OF_ZERO
 
