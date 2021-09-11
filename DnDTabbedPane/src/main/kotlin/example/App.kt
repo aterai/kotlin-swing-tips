@@ -183,7 +183,8 @@ private class DnDTabbedPane : JTabbedPane() {
     if (isEnabled) {
       selectedIndex = tgtIndex
     }
-    // I have a component in all tabs (JLabel with an X to close the tab) and when i move a tab the component disappear.
+    // I have a component in all tabs (JLabel with an X to close the tab)
+    // and when i move a tab the component disappear.
     // pointed out by Daniel Dario Morales Salas
     setTabComponentAt(tgtIndex, tab)
   }
@@ -285,6 +286,8 @@ private class TabDragSourceListener : DragSourceListener {
 }
 
 private class TabDragGestureListener : DragGestureListener {
+  private val handler = TabDragSourceListener()
+
   override fun dragGestureRecognized(e: DragGestureEvent) {
     (e.component as? DnDTabbedPane)?.takeIf { it.tabCount > 1 }?.also {
       val tabPt = e.dragOrigin
@@ -296,7 +299,7 @@ private class TabDragGestureListener : DragGestureListener {
       if (it.dragTabIndex >= 0 && it.isEnabledAt(it.dragTabIndex)) {
         it.initGlassPane(tabPt)
         runCatching {
-          e.startDrag(DragSource.DefaultMoveDrop, TabTransferable(it), TabDragSourceListener())
+          e.startDrag(DragSource.DefaultMoveDrop, TabTransferable(it), handler)
         }.onFailure {
           UIManager.getLookAndFeel().provideErrorFeedback(e.component)
         }
