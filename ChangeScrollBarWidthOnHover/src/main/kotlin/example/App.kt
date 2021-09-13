@@ -134,23 +134,18 @@ private class HoverLayer : LayerUI<JPanel>() {
 private class TranslucentScrollPaneLayout : ScrollPaneLayout() {
   override fun layoutContainer(parent: Container) {
     if (parent is JScrollPane) {
-      val availR = parent.bounds
-      availR.setLocation(0, 0) // availR.x = availR.y = 0;
-
-      val insets = parent.insets
-      availR.x = insets.left
-      availR.y = insets.top
-      availR.width -= insets.left + insets.right
-      availR.height -= insets.top + insets.bottom
-      val vsbR = Rectangle()
-      vsbR.width = 12
-      vsbR.height = availR.height
-      vsbR.x = availR.x + availR.width - vsbR.width
-      vsbR.y = availR.y
+      val availR = SwingUtilities.calculateInnerArea(parent, null)
       viewport?.bounds = availR
-      vsb?.isVisible = true
-      vsb?.bounds = vsbR
+      vsb?.also {
+        it.setLocation(availR.x + availR.width - BAR_SIZE, availR.y)
+        it.setSize(BAR_SIZE, availR.height)
+        vsb.isVisible = true
+      }
     }
+  }
+
+  companion object {
+    private const val BAR_SIZE = 12
   }
 }
 

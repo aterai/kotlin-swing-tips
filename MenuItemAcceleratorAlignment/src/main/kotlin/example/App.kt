@@ -190,15 +190,6 @@ private object MenuItemHelper {
       }
     }
   }
-
-  fun applyInsets(rect: Rectangle, insets: Insets?) {
-    insets?.also { i ->
-      rect.x += i.left
-      rect.y += i.top
-      rect.width -= i.right + rect.x
-      rect.height -= i.bottom + rect.y
-    }
-  }
 }
 
 private class RaaWindowsMenuItemUI : WindowsMenuItemUI() {
@@ -214,8 +205,7 @@ private class RaaWindowsMenuItemUI : WindowsMenuItemUI() {
     val g2 = g.create() as? Graphics2D ?: return
     val mi = c as? JMenuItem ?: return
     g2.font = mi.font
-    val viewRect = Rectangle(mi.width, mi.height)
-    MenuItemHelper.applyInsets(viewRect, mi.insets)
+    val viewRect = SwingUtilities.calculateInnerArea(mi, null)
     val lh = MenuItemLayoutHelper(
       mi, checkIcon, arrowIcon, viewRect, textIconGap, "+",
       true, mi.font, acceleratorFont,
@@ -258,8 +248,7 @@ private class RaaBasicMenuItemUI : BasicMenuItemUI() {
     val g2 = g.create() as? Graphics2D ?: return
     val mi = c as? JMenuItem ?: return
     g2.font = mi.font
-    val viewRect = Rectangle(mi.width, mi.height)
-    MenuItemHelper.applyInsets(viewRect, mi.insets)
+    val viewRect = SwingUtilities.calculateInnerArea(mi, null)
     val lh = MenuItemLayoutHelper(
       mi, checkIcon, arrowIcon, viewRect, textIconGap, "+",
       true, mi.font, acceleratorFont,

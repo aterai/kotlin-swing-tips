@@ -40,26 +40,17 @@ private fun makeTranslucentScrollBar(c: Component) = object : JScrollPane(c) {
 private class TranslucentScrollPaneLayout : ScrollPaneLayout() {
   override fun layoutContainer(parent: Container) {
     val scrollPane = parent as? JScrollPane ?: return
-    val availR = scrollPane.bounds
-    availR.setLocation(0, 0) // availR.x = availR.y = 0;
-
-    val ins = parent.insets
-    availR.x = ins.left
-    availR.y = ins.top
-    availR.width -= ins.left + ins.right
-    availR.height -= ins.top + ins.bottom
-
-    val vsbR = Rectangle()
-    vsbR.width = 12
-    vsbR.height = availR.height
-    vsbR.x = availR.x + availR.width - vsbR.width
-    vsbR.y = availR.y
-
+    val availR = SwingUtilities.calculateInnerArea(scrollPane, null)
     viewport?.bounds = availR
     vsb?.also {
-      it.isVisible = true
-      it.bounds = vsbR
+      it.setLocation(availR.x + availR.width - BAR_SIZE, availR.y)
+      it.setSize(BAR_SIZE, availR.height - BAR_SIZE)
+      // it.isVisible = true
     }
+  }
+
+  companion object {
+    private const val BAR_SIZE = 12
   }
 }
 

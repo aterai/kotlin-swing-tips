@@ -118,15 +118,7 @@ private class CellBorder(top: Int, left: Int, bottom: Int, right: Int) : EmptyBo
 private class OverlapScrollPaneLayout : ScrollPaneLayout() {
   override fun layoutContainer(parent: Container) {
     val scrollPane = parent as? JScrollPane ?: return
-
-    val availR = scrollPane.bounds
-    availR.setLocation(0, 0) // availR.x = availR.y = 0;
-
-    val ins = parent.insets
-    availR.x = ins.left
-    availR.y = ins.top
-    availR.width -= ins.left + ins.right
-    availR.height -= ins.top + ins.bottom
+    val availR = SwingUtilities.calculateInnerArea(scrollPane, null)
 
     val colHeadR = Rectangle(0, availR.y, 0, 0)
     if (colHead != null && colHead.isVisible) {
@@ -134,32 +126,21 @@ private class OverlapScrollPaneLayout : ScrollPaneLayout() {
       colHeadR.height = colHeadHeight
       availR.y += colHeadHeight
       availR.height -= colHeadHeight
+      colHeadR.width = availR.width
+      colHeadR.x = availR.x
+      colHead.bounds = colHeadR
     }
-
-    colHeadR.width = availR.width
-    colHeadR.x = availR.x
-    colHead?.bounds = colHeadR
-
-    val hsbR = Rectangle()
-    hsbR.height = BAR_SIZE
-    hsbR.width = availR.width - hsbR.height
-    hsbR.x = availR.x
-    hsbR.y = availR.y + availR.height - hsbR.height
-
-    val vsbR = Rectangle()
-    vsbR.width = BAR_SIZE
-    vsbR.height = availR.height - vsbR.width
-    vsbR.x = availR.x + availR.width - vsbR.width
-    vsbR.y = availR.y
 
     viewport?.bounds = availR
+
     vsb?.also {
-      it.isVisible = true
-      it.bounds = vsbR
+      it.setLocation(availR.x + availR.width - BAR_SIZE, availR.y)
+      it.setSize(BAR_SIZE, availR.height)
     }
+
     hsb?.also {
-      it.isVisible = true
-      it.bounds = hsbR
+      it.setLocation(availR.x, availR.y + availR.height - BAR_SIZE)
+      it.setSize(availR.width - BAR_SIZE, BAR_SIZE)
     }
   }
 
@@ -194,9 +175,7 @@ private class OverlappedScrollBarUI : BasicScrollBarUI() {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     g2.paint = color
-    g2.fillRoundRect(r.x, r.y, r.width - 1, r.height - 1, 8, 8)
-    g2.paint = Color.WHITE
-    g2.drawRoundRect(r.x, r.y, r.width - 1, r.height - 1, 8, 8)
+    g2.fill(r)
     g2.dispose()
   }
 

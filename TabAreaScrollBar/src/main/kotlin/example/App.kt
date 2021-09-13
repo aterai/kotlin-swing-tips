@@ -1,48 +1,14 @@
 package example
 
-import java.awt.AWTEvent
-import java.awt.BorderLayout
-import java.awt.CardLayout
-import java.awt.Color
-import java.awt.Component
-import java.awt.Container
-import java.awt.Dimension
-import java.awt.EventQueue
-import java.awt.FlowLayout
-import java.awt.Graphics
-import java.awt.Graphics2D
-import java.awt.Rectangle
-import java.awt.RenderingHints
-import java.awt.Toolkit
+import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseWheelEvent
-import javax.swing.AbstractButton
-import javax.swing.BorderFactory
-import javax.swing.ButtonGroup
-import javax.swing.Icon
-import javax.swing.JButton
-import javax.swing.JCheckBox
-import javax.swing.JComponent
-import javax.swing.JFrame
-import javax.swing.JLabel
-import javax.swing.JLayer
-import javax.swing.JPanel
-import javax.swing.JPopupMenu
-import javax.swing.JRadioButton
-import javax.swing.JScrollPane
-import javax.swing.JSplitPane
-import javax.swing.JTable
-import javax.swing.JTextArea
-import javax.swing.JToggleButton
-import javax.swing.JTree
-import javax.swing.ScrollPaneLayout
-import javax.swing.SwingConstants
-import javax.swing.SwingUtilities
-import javax.swing.UIManager
-import javax.swing.WindowConstants
+import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.LayerUI
 import javax.swing.plaf.basic.BasicScrollBarUI
+
+private const val TABAREA_SIZE = 28
 
 fun makeUI(): Component {
   val tabs = CardLayoutTabbedPane()
@@ -95,9 +61,25 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
 
     override fun getPreferredSize(): Dimension {
       val d = super.getPreferredSize()
-      d.height = 18 + 6
+      d.height = TABAREA_SIZE
       return d
     }
+  }
+
+  init {
+    border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
+    background = Color(16, 16, 16)
+    tabPanel.inheritsPopupMenu = true
+    hiddenTabs.font = hiddenTabs.font.deriveFont(8f)
+    hiddenTabs.border = BorderFactory.createEmptyBorder(2, 8, 2, 8)
+    hiddenTabs.isOpaque = false
+    hiddenTabs.isFocusable = false
+    hiddenTabs.isContentAreaFilled = false
+    val header = JPanel(BorderLayout())
+    header.add(JLayer(tabArea, HorizontalScrollLayerUI()))
+    header.add(hiddenTabs, BorderLayout.EAST)
+    add(header, BorderLayout.NORTH)
+    add(contentsPanel)
   }
 
   override fun doLayout() {
@@ -145,22 +127,6 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
     cardLayout.show(contentsPanel, title)
     EventQueue.invokeLater { tabPanel.scrollRectToVisible(tab.bounds) }
   }
-
-  init {
-    border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
-    background = Color(16, 16, 16)
-    tabPanel.inheritsPopupMenu = true
-    hiddenTabs.font = hiddenTabs.font.deriveFont(8f)
-    hiddenTabs.border = BorderFactory.createEmptyBorder(2, 8, 2, 8)
-    hiddenTabs.isOpaque = false
-    hiddenTabs.isFocusable = false
-    hiddenTabs.isContentAreaFilled = false
-    val header = JPanel(BorderLayout())
-    header.add(JLayer(tabArea, HorizontalScrollLayerUI()))
-    header.add(hiddenTabs, BorderLayout.EAST)
-    add(header, BorderLayout.NORTH)
-    add(contentsPanel)
-  }
 }
 
 private class TabButton : JToggleButton() {
@@ -182,10 +148,16 @@ private class TabButton : JToggleButton() {
     isOpaque = true
   }
 
+  override fun getPreferredSize(): Dimension {
+    val d = super.getPreferredSize()
+    d.height = TABAREA_SIZE
+    return d
+  }
+
   override fun fireStateChanged() {
     val model = getModel()
     if (model.isEnabled) {
-      if (model.isPressed && model.isArmed) {
+      if (model.isPressed || model.isArmed) {
         background = pressedColor
         border = selectedBorder
       } else if (isSelected) {
@@ -300,8 +272,8 @@ private class HorizontalScrollLayerUI : LayerUI<JScrollPane>() {
   private var isDragging = false
   override fun installUI(c: JComponent) {
     super.installUI(c)
-    (c as? JLayer<*>)?.layerEventMask = (AWTEvent.MOUSE_EVENT_MASK
-        or AWTEvent.MOUSE_MOTION_EVENT_MASK or AWTEvent.MOUSE_WHEEL_EVENT_MASK)
+    (c as? JLayer<*>)?.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or
+      AWTEvent.MOUSE_MOTION_EVENT_MASK or AWTEvent.MOUSE_WHEEL_EVENT_MASK
   }
 
   override fun uninstallUI(c: JComponent) {
