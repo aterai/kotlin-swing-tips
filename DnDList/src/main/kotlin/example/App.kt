@@ -34,10 +34,11 @@ fun makeUI() = JPanel(BorderLayout()).also {
   it.preferredSize = Dimension(320, 240)
 }
 
-private class DnDList<E> : JList<E>(), DragGestureListener, DragSourceListener, Transferable {
+private class DnDList<E> : JList<E>(), DragGestureListener, Transferable {
   private val targetLine = Rectangle()
   private var draggedIndex = -1
   private var targetIndex = -1
+  private val dsl = ListDragSourceListener()
 
   init {
     DropTarget(this, DnDConstants.ACTION_COPY_OR_MOVE, CDropTargetListener(), true)
@@ -100,29 +101,8 @@ private class DnDList<E> : JList<E>(), DragGestureListener, DragSourceListener, 
       return
     }
     runCatching {
-      e.startDrag(DragSource.DefaultMoveDrop, this, this)
+      e.startDrag(DragSource.DefaultMoveDrop, this, dsl)
     }
-  }
-
-  // Interface: DragSourceListener
-  override fun dragEnter(e: DragSourceDragEvent) {
-    e.dragSourceContext.cursor = DragSource.DefaultMoveDrop
-  }
-
-  override fun dragExit(e: DragSourceEvent) {
-    e.dragSourceContext.cursor = DragSource.DefaultMoveNoDrop
-  }
-
-  override fun dragOver(e: DragSourceDragEvent) {
-    /* not needed */
-  }
-
-  override fun dropActionChanged(e: DragSourceDragEvent) {
-    /* not needed */
-  }
-
-  override fun dragDropEnd(e: DragSourceDropEvent) {
-    /* not needed */
   }
 
   // Interface: Transferable
@@ -201,6 +181,28 @@ private class DnDList<E> : JList<E>(), DragGestureListener, DragSourceListener, 
     private const val NAME = "test"
     private val FLAVOR = DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, NAME)
     private val EVEN_BACKGROUND = Color(0xF0_F0_F0)
+  }
+}
+
+private class ListDragSourceListener : DragSourceListener {
+  override fun dragEnter(e: DragSourceDragEvent) {
+    e.dragSourceContext.cursor = DragSource.DefaultMoveDrop
+  }
+
+  override fun dragExit(e: DragSourceEvent) {
+    e.dragSourceContext.cursor = DragSource.DefaultMoveNoDrop
+  }
+
+  override fun dragOver(e: DragSourceDragEvent) {
+    /* not needed */
+  }
+
+  override fun dropActionChanged(e: DragSourceDragEvent) {
+    /* not needed */
+  }
+
+  override fun dragDropEnd(e: DragSourceDropEvent) {
+    /* not needed */
   }
 }
 

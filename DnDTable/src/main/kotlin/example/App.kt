@@ -86,10 +86,11 @@ private class TablePopupMenu : JPopupMenu() {
   }
 }
 
-private class DnDTable(model: TableModel?) : JTable(model), DragGestureListener, DragSourceListener, Transferable {
+private class DnDTable(model: TableModel?) : JTable(model), DragGestureListener, Transferable {
   private val targetLine = Rectangle()
   private var draggedIndex = -1
   private var targetIndex = -1
+  private val dsl = TableDragSourceListener()
 
   init {
     DropTarget(this, DnDConstants.ACTION_COPY_OR_MOVE, CDropTargetListener(), true)
@@ -148,29 +149,8 @@ private class DnDTable(model: TableModel?) : JTable(model), DragGestureListener,
       return
     }
     runCatching {
-      e.startDrag(DragSource.DefaultMoveDrop, this, this)
+      e.startDrag(DragSource.DefaultMoveDrop, this, dsl)
     }
-  }
-
-  // Interface: DragSourceListener
-  override fun dragEnter(e: DragSourceDragEvent) {
-    e.dragSourceContext.cursor = DragSource.DefaultMoveDrop
-  }
-
-  override fun dragExit(e: DragSourceEvent) {
-    e.dragSourceContext.cursor = DragSource.DefaultMoveNoDrop
-  }
-
-  override fun dragOver(e: DragSourceDragEvent) {
-    /* not needed */
-  }
-
-  override fun dropActionChanged(e: DragSourceDragEvent) {
-    /* not needed */
-  }
-
-  override fun dragDropEnd(e: DragSourceDropEvent) {
-    // e.getDragSourceContext().setCursor(Cursor.getDefaultCursor());
   }
 
   // Interface: Transferable
@@ -245,6 +225,28 @@ private class DnDTable(model: TableModel?) : JTable(model), DragGestureListener,
     private const val NAME = "test"
     private val FLAVOR = DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, NAME)
     private val EVEN_BACKGROUND = Color(0xF0_F0_F0)
+  }
+}
+
+private class TableDragSourceListener : DragSourceListener {
+  override fun dragEnter(e: DragSourceDragEvent) {
+    e.dragSourceContext.cursor = DragSource.DefaultMoveDrop
+  }
+
+  override fun dragExit(e: DragSourceEvent) {
+    e.dragSourceContext.cursor = DragSource.DefaultMoveNoDrop
+  }
+
+  override fun dragOver(e: DragSourceDragEvent) {
+    /* not needed */
+  }
+
+  override fun dropActionChanged(e: DragSourceDragEvent) {
+    /* not needed */
+  }
+
+  override fun dragDropEnd(e: DragSourceDropEvent) {
+    // e.getDragSourceContext().setCursor(Cursor.getDefaultCursor());
   }
 }
 
