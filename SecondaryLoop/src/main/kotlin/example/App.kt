@@ -78,13 +78,12 @@ private class DisableInputLayerUI<V : JComponent> : LayerUI<V>() {
 
   override fun installUI(c: JComponent) {
     super.installUI(c)
-    val layer = c as? JLayer<*> ?: return
-    layer.glassPane.cursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)
-    layer.layerEventMask = (
-      AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
-        or AWTEvent.MOUSE_WHEEL_EVENT_MASK or AWTEvent.KEY_EVENT_MASK
-        or AWTEvent.FOCUS_EVENT_MASK or AWTEvent.COMPONENT_EVENT_MASK
-      )
+    (c as? JLayer<*>)?.also {
+      it.glassPane.cursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)
+      it.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK or
+        AWTEvent.MOUSE_WHEEL_EVENT_MASK or AWTEvent.KEY_EVENT_MASK or
+        AWTEvent.FOCUS_EVENT_MASK or AWTEvent.COMPONENT_EVENT_MASK
+    }
   }
 
   override fun uninstallUI(c: JComponent) {

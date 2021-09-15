@@ -74,10 +74,8 @@ private class DisableInputLayerUI<V : Component> : LayerUI<V>() {
     super.installUI(c)
     (c as? JLayer<*>)?.also {
       it.glassPane.addMouseListener(mouseBlocker)
-      it.layerEventMask = (
-        AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
-          or AWTEvent.MOUSE_WHEEL_EVENT_MASK or AWTEvent.KEY_EVENT_MASK
-        )
+      it.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK or
+        AWTEvent.MOUSE_WHEEL_EVENT_MASK or AWTEvent.KEY_EVENT_MASK
     }
   }
 

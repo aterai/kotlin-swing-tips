@@ -53,19 +53,17 @@ private class DisableInputLayerUI<V : Component> : LayerUI<V>() {
 
   override fun installUI(c: JComponent) {
     super.installUI(c)
-    if (c is JLayer<*>) {
-      c.glassPane.addMouseListener(dmyMouseListener)
-      c.layerEventMask = (
-        AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
-          or AWTEvent.MOUSE_WHEEL_EVENT_MASK or AWTEvent.KEY_EVENT_MASK
-        )
+    (c as? JLayer<*>)?.also {
+      it.glassPane.addMouseListener(dmyMouseListener)
+      it.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK or
+        AWTEvent.MOUSE_WHEEL_EVENT_MASK or AWTEvent.KEY_EVENT_MASK
     }
   }
 
   override fun uninstallUI(c: JComponent) {
-    if (c is JLayer<*>) {
-      c.layerEventMask = 0
-      c.glassPane.removeMouseListener(dmyMouseListener)
+    (c as? JLayer<*>)?.also {
+      it.layerEventMask = 0
+      it.glassPane.removeMouseListener(dmyMouseListener)
     }
     super.uninstallUI(c)
   }
