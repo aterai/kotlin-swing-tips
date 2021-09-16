@@ -8,22 +8,16 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 fun makeUI(): Component {
   val p1 = JPanel()
   p1.border = BorderFactory.createTitledBorder("left")
-  p1.add(JTextField(16))
-  p1.add(JTextField(16))
-  p1.add(JTextField(16))
-  p1.add(JTextField(16))
-  p1.add(JTextField(16))
-  p1.add(JTextField(16))
+  repeat(6) {
+    p1.add(JTextField(16))
+  }
   p1.isFocusCycleRoot = true
 
   val p2 = JPanel()
   p2.border = BorderFactory.createTitledBorder("right")
-  p2.add(JTextField(16))
-  p2.add(JTextField(16))
-  p2.add(JTextField(16))
-  p2.add(JTextField(16))
-  p2.add(JTextField(16))
-  p2.add(JTextField(16))
+  repeat(6) {
+    p2.add(JTextField(16))
+  }
   p2.isFocusTraversalPolicyProvider = true
   p2.isFocusCycleRoot = true
   p2.setFocusTraversalKeys(
