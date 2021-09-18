@@ -91,10 +91,8 @@ private class StripedProgressBarUI(private val dir: Boolean, private val slope: 
     g: Graphics,
     c: JComponent
   ) {
-    val b = progressBar.insets // area for border
-    val barRectWidth = progressBar.width - b.right - b.left
-    val barRectHeight = progressBar.height - b.top - b.bottom
-    if (barRectWidth <= 0 || barRectHeight <= 0) {
+    val barRect = SwingUtilities.calculateInnerArea(progressBar, null)
+    if (barRect.isEmpty) {
       return
     }
     // Paint the striped box.
