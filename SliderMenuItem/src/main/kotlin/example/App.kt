@@ -24,6 +24,7 @@ fun makeUI(): Component {
   addCheckBoxMenuItemAndSlider(menu)
 
   val mb = JMenuBar()
+  mb.add(LookAndFeelUtil.createLookAndFeelMenu())
   mb.add(menu)
 
   return JPanel(BorderLayout()).also {
@@ -83,6 +84,7 @@ private fun addCheckBoxMenuItemAndSlider(popup: JComponent) {
 }
 
 private fun makeSlider(): JSlider {
+  UIManager.put("Slider.paintValue", false) // GTKLookAndFeel
   UIManager.put("Slider.focus", UIManager.get("Slider.background"))
   val slider = JSlider()
   slider.addMouseWheelListener { e ->
@@ -136,6 +138,53 @@ private class DispatchParentHandler : MouseInputAdapter() {
 
   override fun mouseDragged(e: MouseEvent) {
     dispatchEvent(e)
+  }
+}
+
+private object LookAndFeelUtil {
+  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
+  fun createLookAndFeelMenu() = JMenu("LookAndFeel").also {
+    val lafRadioGroup = ButtonGroup()
+    for (lafInfo in UIManager.getInstalledLookAndFeels()) {
+      it.add(createLookAndFeelItem(lafInfo.name, lafInfo.className, lafRadioGroup))
+    }
+  }
+
+  private fun createLookAndFeelItem(lafName: String, lafClassName: String, lafGroup: ButtonGroup): JMenuItem {
+    val lafItem = JRadioButtonMenuItem(lafName, lafClassName == lookAndFeel)
+    lafItem.actionCommand = lafClassName
+    lafItem.hideActionText = true
+    lafItem.addActionListener { e ->
+      val m = lafGroup.selection
+      runCatching {
+        setLookAndFeel(m.actionCommand)
+      }.onFailure {
+        UIManager.getLookAndFeel().provideErrorFeedback(e.source as? Component)
+      }
+    }
+    lafGroup.add(lafItem)
+    return lafItem
+  }
+
+  @Throws(
+    ClassNotFoundException::class,
+    InstantiationException::class,
+    IllegalAccessException::class,
+    UnsupportedLookAndFeelException::class
+  )
+  private fun setLookAndFeel(lookAndFeel: String) {
+    val oldLookAndFeel = LookAndFeelUtil.lookAndFeel
+    if (oldLookAndFeel != lookAndFeel) {
+      UIManager.setLookAndFeel(lookAndFeel)
+      LookAndFeelUtil.lookAndFeel = lookAndFeel
+      updateLookAndFeel()
+    }
+  }
+
+  private fun updateLookAndFeel() {
+    for (window in Window.getWindows()) {
+      SwingUtilities.updateComponentTreeUI(window)
+    }
   }
 }
 
