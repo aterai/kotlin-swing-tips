@@ -4,6 +4,7 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.HyperlinkEvent
 import javax.swing.table.DefaultTableModel
+import javax.swing.table.TableModel
 
 private const val PLACEHOLDER = "<html>No data! <a href='dummy'>Input hint(beep)</a></html>"
 
@@ -27,7 +28,7 @@ fun makeUI(): Component {
     }
   }
   model.addTableModelListener { e ->
-    (e.source as? DefaultTableModel)?.also {
+    (e.source as? TableModel)?.also {
       editor.isVisible = it.rowCount == 0
     }
   }
