@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.text.NumberFormat
-import java.util.Objects
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellEditor
@@ -118,13 +117,13 @@ private class IntegerDocumentFilter : DocumentFilter() {
   }
 
   @Throws(BadLocationException::class)
-  override fun replace(fb: FilterBypass, offset: Int, length: Int, text: String, attrs: AttributeSet?) {
+  override fun replace(fb: FilterBypass, offset: Int, length: Int, text: String?, attrs: AttributeSet?) {
     val doc = fb.document
     val currentLength = doc.length
     val currentContent = doc.getText(0, currentLength)
     val before = currentContent.substring(0, offset)
     val after = currentContent.substring(length + offset, currentLength)
-    val newValue = before + Objects.toString(text, "") + after
+    val newValue = before + (text ?: "") + after
     if (newValue.isEmpty()) {
       return
     }
