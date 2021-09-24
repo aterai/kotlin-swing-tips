@@ -8,7 +8,6 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
-import java.util.Objects
 import javax.script.Invocable
 import javax.script.ScriptEngine
 import javax.script.ScriptEngineManager
@@ -150,17 +149,13 @@ fun makeUI(): Component {
         val bottom = height - insets.bottom
         val left = insets.left
         val right = width - insets.right
-        val ec = getLayoutComponent(parent, EAST)
-        if (Objects.nonNull(ec)) {
-          val d = ec.preferredSize
+        getLayoutComponent(parent, EAST)?.also {
+          val d = it.preferredSize
           val vsb = scroll.verticalScrollBar
           val vsw = if (vsb.isVisible) vsb.size.width else 0
-          ec.setBounds(right - d.width - vsw, top, d.width, bottom - top)
+          it.setBounds(right - d.width - vsw, top, d.width, bottom - top)
         }
-        val cc = getLayoutComponent(parent, CENTER)
-        if (Objects.nonNull(cc)) {
-          cc.setBounds(left, top, right - left, bottom - top)
-        }
+        getLayoutComponent(parent, CENTER)?.setBounds(left, top, right - left, bottom - top)
       }
     }
   }
