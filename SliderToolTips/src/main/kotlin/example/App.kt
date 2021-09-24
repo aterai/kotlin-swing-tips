@@ -4,12 +4,8 @@ import com.sun.java.swing.plaf.windows.WindowsSliderUI
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.awt.event.MouseWheelEvent
-import java.awt.event.MouseWheelListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.metal.MetalSliderUI
-
-private const val KEY = "Slider.onlyLeftMouseButtonDrag"
 
 fun makeUI(): Component {
   val slider1 = makeSlider()
@@ -38,11 +34,14 @@ fun makeUI(): Component {
 
 private fun makeSlider(): JSlider {
   val slider = JSlider(0, 100, 0)
+  slider.paintTicks = true
   slider.majorTickSpacing = 10
   slider.minorTickSpacing = 5
-  slider.paintTicks = true
-  // slider.setPaintLabels(true)
-  slider.addMouseWheelListener(SliderMouseWheelListener())
+  slider.addMouseWheelListener { e ->
+    (e.component as? JSlider)?.also {
+      it.value -= e.wheelRotation
+    }
+  }
   return slider
 }
 
@@ -65,7 +64,7 @@ private class WindowsTooltipSliderUI(slider: JSlider) : WindowsSliderUI(slider) 
   override fun createTrackListener(slider: JSlider?): TrackListener {
     return object : TrackListener() {
       override fun mousePressed(e: MouseEvent) {
-        if (UIManager.getBoolean(KEY) && SwingUtilities.isLeftMouseButton(e)) {
+        if (SwingUtilities.isLeftMouseButton(e)) {
           (e.component as? JSlider)?.also {
             if (it.orientation == SwingConstants.VERTICAL) {
               it.value = valueForYPosition(e.y)
@@ -89,7 +88,7 @@ private class MetalTooltipSliderUI : MetalSliderUI() {
   override fun createTrackListener(slider: JSlider?): TrackListener {
     return object : TrackListener() {
       override fun mousePressed(e: MouseEvent) {
-        if (UIManager.getBoolean(KEY) && SwingUtilities.isLeftMouseButton(e)) {
+        if (SwingUtilities.isLeftMouseButton(e)) {
           (e.component as? JSlider)?.also {
             if (it.orientation == SwingConstants.VERTICAL) {
               it.value = valueForYPosition(e.y)
@@ -111,16 +110,21 @@ private class MetalTooltipSliderUI : MetalSliderUI() {
 
 private class SliderPopupListener : MouseAdapter() {
   private val toolTip = JWindow()
-  private val label = JLabel("", SwingConstants.CENTER)
-  private val size = Dimension(30, 20)
+  private val label = object : JLabel(" ", SwingConstants.CENTER) {
+    override fun getPreferredSize(): Dimension {
+      val d = super.getPreferredSize()
+      d.width = 32
+      return d
+    }
+  }
   private var prevValue = -1
 
   init {
-    label.isOpaque = false
+    label.isOpaque = true
     label.background = UIManager.getColor("ToolTip.background")
     label.border = UIManager.getBorder("ToolTip.border")
     toolTip.add(label)
-    toolTip.size = size
+    toolTip.pack()
   }
 
   private fun updateToolTip(e: MouseEvent) {
@@ -129,9 +133,11 @@ private class SliderPopupListener : MouseAdapter() {
     if (prevValue != intValue) {
       label.text = "%03d".format(slider.value)
       val pt = e.point
-      pt.y = -size.height
+      pt.y = SwingUtilities.calculateInnerArea(slider, null).centerY.toInt()
       SwingUtilities.convertPointToScreen(pt, e.component)
-      pt.translate(-size.width / 2, 0)
+      val h2 = slider.preferredSize.height / 2
+      val d = label.preferredSize
+      pt.translate(-d.width / 2, -d.height - h2)
       toolTip.location = pt
     }
     prevValue = intValue
@@ -142,7 +148,7 @@ private class SliderPopupListener : MouseAdapter() {
   }
 
   override fun mousePressed(e: MouseEvent) {
-    if (UIManager.getBoolean(KEY) && SwingUtilities.isLeftMouseButton(e)) {
+    if (SwingUtilities.isLeftMouseButton(e)) {
       toolTip.isVisible = true
       updateToolTip(e)
     }
@@ -150,14 +156,6 @@ private class SliderPopupListener : MouseAdapter() {
 
   override fun mouseReleased(e: MouseEvent) {
     toolTip.isVisible = false
-  }
-}
-
-private class SliderMouseWheelListener : MouseWheelListener {
-  override fun mouseWheelMoved(e: MouseWheelEvent) {
-    val s = e.component as? JSlider ?: return
-    s.value = s.value - e.wheelRotation
-    // s.value = (s.value - e.wheelRotation).coerceIn(s.model.minimum, s.model.maximum)
   }
 }
 
