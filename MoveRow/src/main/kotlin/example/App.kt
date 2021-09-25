@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.io.Serializable
-import java.util.Objects
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.JTableHeader
@@ -241,8 +240,9 @@ private class ColumnComparator(val index: Int, val ascending: Boolean) : Compara
     val one1 = (one as? List<*>)?.filterIsInstance<Comparable<Any>>()
     val two1 = (two as? List<*>)?.filterIsInstance<Comparable<Any>>()
     if (one1?.isNotEmpty() == true && two1?.isNotEmpty() == true) {
-      val cp = Comparator.nullsFirst(Comparator.naturalOrder<Comparable<Any>>())
-      val c = Objects.compare(one1[index], two1[index], cp)
+      // val cp = Comparator.nullsFirst(Comparator.naturalOrder<Comparable<Any>>())
+      // val c = Objects.compare(one1[index], two1[index], cp)
+      val c = compareValuesBy(one1, two1) { it[index] }
       return c * if (ascending) 1 else -1
     }
     return 0
