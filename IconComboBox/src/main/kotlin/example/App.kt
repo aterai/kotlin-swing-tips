@@ -1,21 +1,23 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.util.Objects
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import kotlin.math.roundToInt
 
 fun makeUI() = JPanel(BorderLayout()).also {
   val path = "example/16x16.png"
   val cl = Thread.currentThread().contextClassLoader
-  val image = ImageIcon(Objects.requireNonNull(cl.getResource(path)))
+  val img = cl.getResource(path)?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+  val icon = ImageIcon(img)
 
   val combo02 = JComboBox(makeModel())
-  initComboBoxRenderer(combo02, image)
+  initComboBoxRenderer(combo02, icon)
 
   val combo03 = JComboBox(makeModel())
   combo03.isEditable = true
-  initComboBoxRenderer(combo03, image)
+  initComboBoxRenderer(combo03, icon)
 
   val combo05 = object : JComboBox<String>(makeModel()) {
     override fun updateUI() {
@@ -23,8 +25,8 @@ fun makeUI() = JPanel(BorderLayout()).also {
       setRenderer(null)
       super.updateUI()
       setEditable(true)
-      initComboBoxRenderer(this, image)
-      initIconComboBorder1(this, image)
+      initComboBoxRenderer(this, icon)
+      initIconComboBorder1(this, icon)
     }
   }
 
@@ -34,8 +36,8 @@ fun makeUI() = JPanel(BorderLayout()).also {
       setRenderer(null)
       super.updateUI()
       setEditable(true)
-      initComboBoxRenderer(this, image)
-      initIconComboBorder2(this, image)
+      initComboBoxRenderer(this, icon)
+      initIconComboBorder2(this, icon)
     }
   }
 
@@ -74,7 +76,7 @@ private fun makeTitledPanel(title: String, vararg list: Component): Component {
   return p
 }
 
-private fun initIconComboBorder1(comboBox: JComboBox<*>, icon: ImageIcon) {
+private fun initIconComboBorder1(comboBox: JComboBox<*>, icon: Icon) {
   val c = comboBox.editor.editorComponent as? JTextField ?: return
   val wrappedIcon = object : Icon {
     override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
@@ -96,7 +98,7 @@ private fun initIconComboBorder1(comboBox: JComboBox<*>, icon: ImageIcon) {
   c.border = BorderFactory.createCompoundBorder(c.border, b3)
 }
 
-private fun initIconComboBorder2(comboBox: JComboBox<*>, icon: ImageIcon) {
+private fun initIconComboBorder2(comboBox: JComboBox<*>, icon: Icon) {
   EventQueue.invokeLater {
     val margin = BorderFactory.createEmptyBorder(0, icon.iconWidth + 2, 0, 2)
     (comboBox.editor.editorComponent as? JTextField)?.also {
@@ -114,13 +116,24 @@ private fun initIconComboBorder2(comboBox: JComboBox<*>, icon: ImageIcon) {
   }
 }
 
-private fun <E> initComboBoxRenderer(combo: JComboBox<E>, icon: ImageIcon) {
+private fun <E> initComboBoxRenderer(combo: JComboBox<E>, icon: Icon) {
   val renderer = combo.renderer
   combo.setRenderer { list, value, index, isSelected, cellHasFocus ->
     renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
       (it as? JLabel)?.icon = icon
     }
   }
+}
+
+private fun makeMissingImage(): Image {
+  val missingIcon = UIManager.getIcon("html.missingImage")
+  val w = missingIcon.iconWidth
+  val h = missingIcon.iconHeight
+  val bi = BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, 8 - w / 2, 8 - h / 2)
+  g2.dispose()
+  return bi
 }
 
 fun main() {
