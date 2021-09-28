@@ -9,7 +9,6 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.time.LocalTime
 import java.time.ZoneId
-import java.util.Objects
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.synth.Region
 import javax.swing.plaf.synth.SynthConstants
@@ -144,9 +143,7 @@ private open class ClippedTitleTabbedPane : JTabbedPane() {
   }
 }
 
-private class ButtonTabComponent(tabbedPane: JTabbedPane) : JPanel(BorderLayout()) {
-  private val tabbedPane = Objects.requireNonNull(tabbedPane, "TabbedPane is null")
-
+private class ButtonTabComponent(val tabbedPane: JTabbedPane) : JPanel(BorderLayout()) {
   private inner class TabButtonHandler : MouseAdapter(), ActionListener {
     override fun actionPerformed(e: ActionEvent) {
       val i = tabbedPane.indexOfTabComponent(this@ButtonTabComponent)
