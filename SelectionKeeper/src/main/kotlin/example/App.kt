@@ -6,8 +6,6 @@ import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.io.Serializable
 import java.util.Comparator
-import java.util.Objects
-import java.util.concurrent.ConcurrentHashMap
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.TableModelEvent
 import javax.swing.event.TableModelListener
@@ -70,7 +68,7 @@ private class TableSorter() : AbstractTableModel() {
   private val modelToView = mutableListOf<Int>()
   private val sortingColumns = mutableListOf<Directive>()
   private var tableHeader: JTableHeader? = null
-  private val columnComparators: MutableMap<Class<*>, Comparator<*>> = ConcurrentHashMap()
+  // private val columnComparators: MutableMap<Class<*>, Comparator<*>> = ConcurrentHashMap()
   private val rowComparator = RowComparator()
   private var mouseListener: MouseListener
   private var modelListener: TableModelListener
@@ -164,18 +162,18 @@ private class TableSorter() : AbstractTableModel() {
     sortingStatusChanged()
   }
 
-//  fun setColumnComparator(type: Class<*>, comparator: Comparator<*>?) {
-//    if (comparator == null) {
-//      columnComparators.remove(type)
-//    } else {
-//      columnComparators[type] = comparator
-//    }
-//  }
+  // fun setColumnComparator(type: Class<*>, comparator: Comparator<*>?) {
+  //   if (comparator == null) {
+  //     columnComparators.remove(type)
+  //   } else {
+  //     columnComparators[type] = comparator
+  //   }
+  // }
 
-  fun getComparator(column: Int): Comparator<*> {
-    val columnType = tableModel?.getColumnClass(column)
-    return columnComparators[columnType] ?: LEXICAL_COMP
-  }
+  // fun getComparator(column: Int): Comparator<*> {
+  //   val columnType = tableModel?.getColumnClass(column)
+  //   return columnComparators[columnType] ?: LEXICAL_COMP
+  // }
 
   private fun getViewToModel(): List<Row> {
     val rc = tableModel?.rowCount ?: 0
@@ -226,13 +224,11 @@ private class TableSorter() : AbstractTableModel() {
       val row2 = r2.modelIndex
       for (directive in sortingColumns) {
         val column = directive.column
-        val o1 = tableModel?.getValueAt(row1, column)
-        val o2 = tableModel?.getValueAt(row2, column)
-        @Suppress("UNCHECKED_CAST")
-        val comparator = getComparator(column) as? Comparator<in Any?>
-        val comparison = Objects.compare(o1, o2, Comparator.nullsFirst(comparator))
-        if (comparison != 0) {
-          return if (directive.direction == DESCENDING) comparison.inv() + 1 else comparison
+        val o1 = tableModel?.getValueAt(row1, column) as? Comparable<*>
+        val o2 = tableModel?.getValueAt(row2, column) as? Comparable<*>
+        val c = compareValues(o1, o2)
+        if (c != 0) {
+          return if (directive.direction == DESCENDING) c.inv() + 1 else c
         }
       }
       return row1 - row2
@@ -311,7 +307,7 @@ private class TableSorter() : AbstractTableModel() {
     const val NOT_SORTED = 0
     // const val ASCENDING = 1
     private val EMPTY_DIRECTIVE = Directive(-1, NOT_SORTED)
-    val LEXICAL_COMP: Comparator<Any> = LexicalComparator()
+    // val LEXICAL_COMP: Comparator<Any> = LexicalComparator()
   }
 }
 
@@ -332,13 +328,13 @@ private class SortableHeaderRenderer(val cellRenderer: TableCellRenderer) : Tabl
   }
 }
 
-private class LexicalComparator : Comparator<Any>, Serializable {
-  override fun compare(o1: Any, o2: Any) = o1.toString().compareTo(o2.toString())
-
-  companion object {
-    private const val serialVersionUID = 1L
-  }
-}
+// private class LexicalComparator : Comparator<Any>, Serializable {
+//   override fun compare(o1: Any, o2: Any) = o1.toString().compareTo(o2.toString())
+//
+//   companion object {
+//     private const val serialVersionUID = 1L
+//   }
+// }
 
 private class Arrow(
   private val descending: Boolean,
