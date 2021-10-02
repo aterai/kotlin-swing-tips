@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.util.Comparator
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.TableColumnModelEvent
 import javax.swing.table.DefaultTableColumnModel
@@ -27,7 +26,7 @@ fun makeUI(): Component {
 
 private class SortableTableColumnModel : DefaultTableColumnModel() {
   fun restoreColumnOrder() {
-    tableColumns.sortWith(Comparator.comparingInt { it.modelIndex })
+    tableColumns.sortWith(compareBy { it.modelIndex })
     fireColumnMoved(TableColumnModelEvent(this, 0, tableColumns.size))
   }
 }
