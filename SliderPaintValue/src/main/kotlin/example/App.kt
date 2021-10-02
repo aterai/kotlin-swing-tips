@@ -1,25 +1,9 @@
 package example
 
-import java.awt.BorderLayout
-import java.awt.Color
-import java.awt.Component
-import java.awt.Dimension
-import java.awt.EventQueue
-import java.awt.Toolkit
+import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import javax.swing.BorderFactory
-import javax.swing.Box
-import javax.swing.JFrame
-import javax.swing.JLabel
-import javax.swing.JPanel
-import javax.swing.JSlider
-import javax.swing.JWindow
-import javax.swing.SwingConstants
-import javax.swing.SwingUtilities
-import javax.swing.UIManager
-import javax.swing.WindowConstants
-
+import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   UIManager.put("Slider.onlyLeftMouseButtonDrag", true)
@@ -91,7 +75,7 @@ private class SliderPopupListener : MouseAdapter() {
 
   fun updateToolTip(e: MouseEvent) {
     val slider = e.component as? JSlider ?: return
-    label.text = String.format("%03d", slider.value)
+    label.text = "%03d".format(slider.value)
     val pt = e.point
     pt.y = SwingUtilities.calculateInnerArea(slider, null).centerY.toInt()
     SwingUtilities.convertPointToScreen(pt, e.component)
