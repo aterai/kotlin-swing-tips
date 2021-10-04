@@ -9,7 +9,7 @@ import javax.swing.Timer
 fun makeUI(): Component {
   val c1 = JPanel(GridLayout(10, 10))
   val c2 = JPanel(GridLayout(10, 10))
-  val intRange = (0..255)
+  val intRange = 0..255
   val timer = Timer(16, null)
   for (i in 0 until 100) {
     c1.add(Tile1(intRange))
