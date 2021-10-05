@@ -64,8 +64,16 @@ fun makeUI(): Component {
       popup.show(b, (b.width - d.width) / 2, -d.height)
     }
 
+    override fun mouseEntered(e: MouseEvent) {
+      if (!popup.isVisible) {
+        ToolTipManager.sharedInstance().isEnabled = true
+      }
+    }
+
     override fun mouseExited(e: MouseEvent) {
-      ToolTipManager.sharedInstance().isEnabled = true
+      if (!popup.isVisible) {
+        ToolTipManager.sharedInstance().isEnabled = true
+      }
     }
   })
   popup.addPopupMenuListener(object : PopupMenuListener {
