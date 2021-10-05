@@ -15,7 +15,7 @@ fun makeUI(): Component {
   runButton.addActionListener {
     runButton.isEnabled = false
     monitor.setProgress(0)
-    val worker: SwingWorker<String, String> = object : BackgroundTask() {
+    val worker = object : BackgroundTask() {
       override fun process(chunks: List<String>) {
         chunks.forEach(monitor::setNote)
       }
@@ -24,13 +24,13 @@ fun makeUI(): Component {
         runButton.isEnabled = true
         monitor.close()
         runCatching {
-          if (isCancelled) {
-            area.append("Cancelled\n")
-          } else {
-            area.append(get())
-          }
+          val msg = if (isCancelled) "Cancelled" else get()
+          area.append("$msg\n")
         }.onFailure {
-          area.append("ExecutionException\n")
+          if (it is InterruptedException) {
+            Thread.currentThread().interrupt()
+          }
+          area.append("Error: ${it.message}\n")
         }
         area.caretPosition = area.document.length
       }
