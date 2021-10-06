@@ -6,7 +6,6 @@ import java.awt.geom.Ellipse2D
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 import java.util.Collections
-import java.util.concurrent.ExecutionException
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.Timer
 
@@ -41,16 +40,15 @@ private class AnimationTask : BackgroundTask() {
       return
     }
     updateComponentDone()
-    val msg = try {
-      if (isCancelled) "Cancelled" else get()
-    } catch (ex: InterruptedException) {
-      Thread.currentThread().interrupt()
-      "Interrupted"
-    } catch (ex: ExecutionException) {
-      ex.printStackTrace()
-      "Error: " + ex.message
+    runCatching {
+      val msg = if (isCancelled) "Cancelled" else get()
+      appendText("$msg\n")
+    }.onFailure {
+      if (it is InterruptedException) {
+        Thread.currentThread().interrupt()
+      }
+      appendText("Error: ${it.message}\n")
     }
-    appendText(msg + "\n")
   }
 }
 

@@ -4,7 +4,6 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ItemEvent
 import java.awt.event.ItemListener
 import java.util.Collections
-import java.util.concurrent.ExecutionException
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 private const val MIN_X = 5
@@ -130,15 +129,15 @@ fun workerExecute() {
         return
       }
       setComponentEnabled(true)
-      val text = try {
-        if (isCancelled) "Cancelled" else get()
-      } catch (ex: InterruptedException) {
-        Thread.currentThread().interrupt()
-        "Interrupted"
-      } catch (ex: ExecutionException) {
-        "Error: " + ex.message
+      runCatching {
+        val msg = if (isCancelled) "Cancelled" else get()
+        println(msg)
+      }.onFailure {
+        if (it is InterruptedException) {
+          Thread.currentThread().interrupt()
+        }
+        println("Error: ${it.message}\n")
       }
-      println(text)
       panel.repaint()
     }
   }.also { it.execute() }
