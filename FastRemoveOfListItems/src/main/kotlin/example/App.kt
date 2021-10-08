@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.geom.Rectangle2D
-import java.util.ArrayList
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI() = JTabbedPane().also {
@@ -86,7 +85,7 @@ private fun <E> move1(from: JList<E>, to: JList<E>) {
 
   val fromModel = from.model as? DefaultListModel<E> ?: return
   val toModel = to.model as? DefaultListModel<E> ?: return
-  val unselectedValues = ArrayList<E>()
+  val unselectedValues = mutableListOf<E>()
   for (i in 0 until fromModel.size) {
     if (!sm.isSelectedIndex(i)) {
       unselectedValues.add(fromModel.getElementAt(i))
@@ -133,7 +132,7 @@ private fun makeButton(title: String) = JButton(title).also {
 }
 
 private class ArrayListModel<E> : AbstractListModel<E>() {
-  private val delegate = ArrayList<E>()
+  private val delegate = mutableListOf<E>()
 
   fun add(element: E) {
     val index = delegate.size
