@@ -5,7 +5,6 @@ import java.awt.datatransfer.DataFlavor
 import java.awt.event.ItemEvent
 import java.io.File
 import java.io.Serializable
-import java.util.Comparator
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.filechooser.FileSystemView
 import javax.swing.table.DefaultTableCellRenderer
@@ -15,7 +14,7 @@ import javax.swing.table.TableRowSorter
 
 fun makeUI(): Component {
   val table = makeTable()
-  val sorter = TableRowSorter<TableModel>(table.model)
+  val sorter = TableRowSorter(table.model)
   table.rowSorter = sorter
   setDefaultComparator(sorter)
 
