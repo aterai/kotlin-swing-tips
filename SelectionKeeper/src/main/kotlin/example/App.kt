@@ -5,7 +5,6 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.io.Serializable
-import java.util.Comparator
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.TableModelEvent
 import javax.swing.event.TableModelListener
