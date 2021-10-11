@@ -39,7 +39,7 @@ private fun executeWorker() {
       chunks.forEach { appendLine(it) }
     }
 
-    public override fun done() {
+    override fun done() {
       if (!runButton.isDisplayable) {
         cancel(true)
         return
@@ -53,8 +53,10 @@ private fun executeWorker() {
       runCatching {
         appendLine(if (isCancelled) "Cancelled" else get())
       }.onFailure {
+        if (it is InterruptedException) {
+          Thread.currentThread().interrupt()
+        }
         appendLine("Interrupted")
-        Thread.currentThread().interrupt()
       }
       appendLine("\n\n")
     }
@@ -92,7 +94,7 @@ fun makeUI(): Component {
 
 private open class BackgroundTask : SwingWorker<String, String?>() {
   @Throws(InterruptedException::class)
-  public override fun doInBackground(): String {
+  override fun doInBackground(): String {
     Thread.sleep(1000)
     var current = 0
     val lengthOfTask = 120 // list.size();
