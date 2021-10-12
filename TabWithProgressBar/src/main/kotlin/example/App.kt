@@ -65,7 +65,9 @@ private class ProgressJTabbedPane : JTabbedPane() {
           setComponentAt(currentIndex, content)
           get()
         }.onFailure {
-          Thread.currentThread().interrupt()
+          if (it is InterruptedException) {
+            Thread.currentThread().interrupt()
+          }
         }.getOrNull() ?: "Exception"
         println(txt)
       }

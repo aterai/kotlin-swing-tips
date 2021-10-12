@@ -108,7 +108,9 @@ private class TableUpdateTask(max: Int, itemsPerPage: Int) : LoadTask(max, items
     val text = kotlin.runCatching {
       get()
     }.onFailure {
-      Thread.currentThread().interrupt()
+      if (it is InterruptedException) {
+        Thread.currentThread().interrupt()
+      }
     }.getOrNull() ?: "Interrupted"
     println(text)
     table.isEnabled = true

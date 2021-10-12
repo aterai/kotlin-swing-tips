@@ -96,7 +96,9 @@ fun main() {
             frame.addWindowListener(windowListener)
           }
         }.onFailure {
-          Thread.currentThread().interrupt()
+          if (it is InterruptedException) {
+            Thread.currentThread().interrupt()
+          }
           it.printStackTrace()
           Toolkit.getDefaultToolkit().beep()
         }

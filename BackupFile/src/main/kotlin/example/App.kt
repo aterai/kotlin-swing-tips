@@ -90,8 +90,10 @@ private fun addActionPerformed() {
           else -> append(makeMessage(nf.name + "‚Ì¶¬‚É¸”s‚µ‚Ü‚µ‚½B", MessageType.ERROR))
         }
       }.onFailure {
+        if (it is InterruptedException) {
+          Thread.currentThread().interrupt()
+        }
         append(makeMessage(it.message, MessageType.ERROR))
-        Thread.currentThread().interrupt()
       }
       append(makeMessage("----------------------------------", MessageType.REGULAR))
     }

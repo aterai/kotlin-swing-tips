@@ -121,7 +121,9 @@ private open class FileSearchTask(dir: File) : RecursiveFileSearchTask(dir) {
       runCatching {
         get()
       }.onFailure {
-        Thread.currentThread().interrupt()
+        if (it is InterruptedException) {
+          Thread.currentThread().interrupt()
+        }
       }.getOrNull() ?: "Interrupted"
     }
     appendLine(text)
