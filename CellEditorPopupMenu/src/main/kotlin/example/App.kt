@@ -56,7 +56,7 @@ private class TextComponentPopupMenu(tc: JTextComponent) : JPopupMenu() {
     val redoAction = RedoAction(manager)
     add(redoAction)
 
-    val al = object : AncestorListener {
+    tc.addAncestorListener(object : AncestorListener {
       override fun ancestorAdded(e: AncestorEvent) {
         manager.discardAllEdits()
         e.component.requestFocusInWindow()
@@ -69,8 +69,7 @@ private class TextComponentPopupMenu(tc: JTextComponent) : JPopupMenu() {
       override fun ancestorRemoved(e: AncestorEvent) {
         /* not needed */
       }
-    }
-    tc.addAncestorListener(al)
+    })
     tc.document.addUndoableEditListener(manager)
     tc.actionMap.put("undo", undoAction)
     tc.actionMap.put("redo", redoAction)
