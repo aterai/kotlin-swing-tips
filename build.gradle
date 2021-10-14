@@ -1,2 +1,13 @@
+description 'Kotlin Swing Tips'
+
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+}
+
 allprojects {
+  repositories {
+    mavenCentral()
+  }
 }
