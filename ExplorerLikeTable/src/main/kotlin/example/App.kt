@@ -8,7 +8,6 @@ import java.awt.event.KeyEvent
 import java.awt.image.FilteredImageSource
 import java.awt.image.RGBImageFilter
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.border.Border
 import javax.swing.plaf.ColorUIResource
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
@@ -27,12 +26,11 @@ fun makeUI(): Component {
     arrayOf("5555555555555", ""),
     arrayOf("test1.jpg", "")
   )
-  val model = object : DefaultTableModel(data, columnNames) {
+  val table = FileListTable(object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
 
     override fun isCellEditable(row: Int, column: Int) = false
-  }
-  val table = FileListTable(model)
+  })
   val scroll = JScrollPane(table)
   val tab = KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0)
   val stab = KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK)
@@ -65,8 +63,7 @@ private class SelectedImageFilter : RGBImageFilter() {
   override fun filterRGB(x: Int, y: Int, argb: Int): Int {
     val r = argb shr 16 and 0xFF
     val g = argb shr 8 and 0xFF
-    return argb and -0xffff01 or (r shr 1 shl 16) or (g shr 1 shl 8)
-    // return (argb & 0xFF_FF_FF_00) | ((argb & 0xFF) >> 1);
+    return argb and 0xFF_FF_FF_00.toInt() or (r shr 1 shl 16) or (g shr 1 shl 8)
   }
 }
 
@@ -76,14 +73,14 @@ private class FileNameRenderer(table: JTable) : TableCellRenderer {
   private val textLabel = JLabel(" ")
   private val iconLabel: JLabel
   private val focusBorder = UIManager.getBorder("Table.focusCellHighlightBorder")
-  private val noFocusBorder: Border
+  private val noFocusBorder =
+    UIManager.getBorder("Table.noFocusBorder") ?: focusBorder.getBorderInsets(textLabel).let {
+      BorderFactory.createEmptyBorder(it.top, it.left, it.bottom, it.right)
+    }
   private val icon: ImageIcon
   private val selectedIcon: ImageIcon
 
   init {
-    noFocusBorder = UIManager.getBorder("Table.noFocusBorder") ?: focusBorder.getBorderInsets(textLabel).let {
-      BorderFactory.createEmptyBorder(it.top, it.left, it.bottom, it.right)
-    }
     val p = object : JPanel(BorderLayout()) {
       override fun getPreferredSize() = dim
     }
