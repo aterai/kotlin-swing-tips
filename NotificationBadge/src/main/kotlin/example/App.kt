@@ -29,7 +29,7 @@ fun makeUI(): Component {
 
   val ui2 = BadgeLayerUI2()
   listOf(informationIcon, errorIcon, questionIcon, warningIcon).map {
-    BadgeLabel(it, BadgePosition.SOUTH_EAST, 999)
+    BadgeLabel(it, BadgePosition.SOUTH_EAST, 128)
   }.forEach {
     it.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
     p.add(JLayer(it, ui2))
@@ -81,7 +81,7 @@ private open class BadgeLayerUI : LayerUI<BadgeLabel>() {
   }
 
   open fun getBadgeIcon(count: Int) =
-    BadgeIcon(count, Color.WHITE, Color(-0x5500e9ea, true))
+    BadgeIcon(count, Color.WHITE, Color(0xAA_FF_16_16.toInt(), true))
 
   protected fun getBadgeLocation(pos: BadgePosition?, icon: Icon): Point {
     var x = 0
@@ -114,7 +114,7 @@ private open class BadgeLayerUI : LayerUI<BadgeLabel>() {
 
 private class BadgeLayerUI2 : BadgeLayerUI() {
   override fun getBadgeIcon(count: Int) =
-    object : BadgeIcon(count, Color.WHITE, Color(-0x55e9e9ea, true)) {
+    object : BadgeIcon(count, Color.WHITE, Color(0xAA_16_16_16.toInt(), true)) {
       override val badgeShape: Shape
         get() = RoundRectangle2D.Double(0.0, 0.0, iconWidth.toDouble(), iconHeight.toDouble(), 5.0, 5.0)
     }

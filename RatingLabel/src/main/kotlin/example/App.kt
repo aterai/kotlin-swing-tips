@@ -152,7 +152,6 @@ class SelectedImageFilter(rf: Float, gf: Float, bf: Float) : RGBImageFilter() {
     val r = ((argb shr 16 and 0xFF) * rf).toInt()
     val g = ((argb shr 8 and 0xFF) * gf).toInt()
     val b = ((argb and 0xFF) * bf).toInt()
-    // return argb and -0x1000000 or (r shl 16) or (g shl 8) or b
     return argb and 0xFF_00_00_00.toInt() or (r shl 16) or (g shl 8) or b
   }
 }

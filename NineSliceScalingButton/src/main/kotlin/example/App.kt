@@ -168,7 +168,7 @@ private class NineSliceScalingIcon(
 private class PressedImageFilter : RGBImageFilter() {
   override fun filterRGB(x: Int, y: Int, argb: Int): Int {
     val r = ((argb shr 16 and 0xFF) * .6f).roundToInt()
-    return argb and -0xff0001 or (r shl 16)
+    return argb and 0xFF_00_FF_FF.toInt() or (r shl 16)
   }
 }
 
