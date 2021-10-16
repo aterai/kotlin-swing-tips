@@ -55,13 +55,13 @@ fun makeUI(): Component {
   button.toolTipText = ""
   button.addMouseListener(object : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
-      if (!button.isEnabled) {
+      val btn = e.component
+      if (!btn.isEnabled) {
         slider.value = 80
-        button.isEnabled = true
+        btn.isEnabled = true
       }
-      val b = e.source as Component
       val d = popup.preferredSize
-      popup.show(b, (b.width - d.width) / 2, -d.height)
+      popup.show(btn, (btn.width - d.width) / 2, -d.height)
     }
 
     override fun mouseEntered(e: MouseEvent) {
