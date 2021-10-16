@@ -1,14 +1,11 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.AlphaComposite
-import java.awt.Toolkit.getDefaultToolkit
 import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
 import java.awt.datatransfer.UnsupportedFlavorException
 import java.awt.dnd.DragSource
 import java.awt.dnd.DropTargetAdapter
-import java.awt.dnd.DropTargetDragEvent
 import java.awt.dnd.DropTargetDropEvent
 import java.awt.dnd.DropTargetEvent
 import java.awt.event.ActionEvent
@@ -41,7 +38,6 @@ fun makeUI(handler: TransferHandler, layerUI: LayerUI<DnDTabbedPane>): Component
     it.addTab("JTabbedPane 06", sub)
     it.addTab("Title 000000000000000007", JScrollPane(JTree()))
   }
-  // ButtonTabComponent
   (0 until tabbedPane.tabCount).forEach { setTabComponent(tabbedPane, it) }
 
   val sub2 = DnDTabbedPane().also {
@@ -61,9 +57,9 @@ fun makeUI(handler: TransferHandler, layerUI: LayerUI<DnDTabbedPane>): Component
     tp.transferHandler = handler
     runCatching {
       tp.dropTarget.addDropTargetListener(listener)
-    }.onFailure { ex ->
-      ex.printStackTrace()
-      getDefaultToolkit().beep()
+    }.onFailure {
+      it.printStackTrace()
+      Toolkit.getDefaultToolkit().beep()
     }
   }
 
@@ -150,8 +146,6 @@ class DnDTabbedPane : JTabbedPane() {
 
   fun autoScrollTest(pt: Point) {
     val r = tabAreaBounds
-    // int tabPlacement = getTabPlacement()
-    // if (tabPlacement == TOP || tabPlacement == BOTTOM) {
     if (isTopBottomTabPlacement(getTabPlacement())) {
       RECT_BACKWARD.setBounds(r.x, r.y, SCROLL_SIZE, r.height)
       RECT_FORWARD.setBounds(r.x + r.width - SCROLL_SIZE - BUTTON_SIZE, r.y, SCROLL_SIZE + BUTTON_SIZE, r.height)
@@ -167,7 +161,6 @@ class DnDTabbedPane : JTabbedPane() {
   }
 
   fun tabDropLocationForPoint(p: Point): DropLocation {
-    // check(dropMode == DropMode.INSERT) { "Unexpected drop mode" }
     for (i in 0 until tabCount) {
       if (getBoundsAt(i).contains(p)) {
         return DropLocation(p, i)
@@ -186,37 +179,35 @@ class DnDTabbedPane : JTabbedPane() {
   }
 
   fun exportTab(dragIndex: Int, target: JTabbedPane, targetIndex: Int) {
-    println("exportTab")
     val cmp = getComponentAt(dragIndex)
     val title = getTitleAt(dragIndex)
     val icon = getIconAt(dragIndex)
-    val tip = getToolTipTextAt(dragIndex)
+    val toolTipText = getToolTipTextAt(dragIndex)
     val isEnabled = isEnabledAt(dragIndex)
     var tab = getTabComponentAt(dragIndex)
     if (tab is ButtonTabComponent) {
       tab = ButtonTabComponent(target)
     }
     remove(dragIndex)
-    target.insertTab(title, icon, cmp, tip, targetIndex)
+    target.insertTab(title, icon, cmp, toolTipText, targetIndex)
     target.setEnabledAt(targetIndex, isEnabled)
     target.setTabComponentAt(targetIndex, tab)
     target.selectedIndex = targetIndex
-    if (tab is JComponent) {
-      tab.scrollRectToVisible(tab.bounds)
+    (tab as? JComponent)?.also {
+      it.scrollRectToVisible(it.bounds)
     }
   }
 
   fun convertTab(prev: Int, next: Int) {
-    println("convertTab")
     val cmp = getComponentAt(prev)
     val tab = getTabComponentAt(prev)
     val title = getTitleAt(prev)
     val icon = getIconAt(prev)
-    val tip = getToolTipTextAt(prev)
+    val toolTipText = getToolTipTextAt(prev)
     val isEnabled = isEnabledAt(prev)
     val tgtIndex = if (prev > next) next else next - 1
     remove(prev)
-    insertTab(title, icon, cmp, tip, tgtIndex)
+    insertTab(title, icon, cmp, toolTipText, tgtIndex)
     setEnabledAt(tgtIndex, isEnabled)
     if (isEnabled) {
       selectedIndex = tgtIndex
@@ -232,7 +223,6 @@ class DnDTabbedPane : JTabbedPane() {
     override fun propertyChange(e: PropertyChangeEvent) {
       val propertyName = e.propertyName
       if ("dropLocation" == propertyName) {
-        // println("propertyChange: dropLocation")
         repaint()
       }
     }
@@ -279,29 +269,24 @@ class DnDTabbedPane : JTabbedPane() {
 
 enum class DragImageMode { HEAVYWEIGHT, LIGHTWEIGHT }
 
-class TabDropTargetAdapter : DropTargetAdapter() {
+private class TabDropTargetAdapter : DropTargetAdapter() {
   private fun clearDropLocationPaint(c: Component) {
     val t = c as? DnDTabbedPane ?: return
     t.updateTabDropLocation(null, false)
     t.cursor = Cursor.getDefaultCursor()
   }
 
-  override fun drop(dtde: DropTargetDropEvent) {
-    val c = dtde.dropTargetContext.component
-    println("DropTargetListener#drop: ${c.name}")
-    clearDropLocationPaint(c)
+  override fun drop(e: DropTargetDropEvent) {
+    clearDropLocationPaint(e.dropTargetContext.component)
   }
 
-  override fun dragExit(dte: DropTargetEvent) {
-    val c = dte.dropTargetContext.component
-    println("DropTargetListener#dragExit: ${c.name}")
-    clearDropLocationPaint(c)
+  override fun dragExit(e: DropTargetEvent) {
+    clearDropLocationPaint(e.dropTargetContext.component)
   }
 
-  override fun dragEnter(dtde: DropTargetDragEvent) {
-    val c = dtde.dropTargetContext.component
-    println("DropTargetListener#dragEnter: ${c.name}")
-  }
+  // override fun dragEnter(e: DropTargetDragEvent) {
+  //   println("DropTargetListener#dragEnter: ${e.dropTargetContext.component.name}")
+  // }
 
   // override dragOver(e: DropTargetDragEvent) {
   //   println("dragOver")
@@ -314,7 +299,7 @@ class TabDropTargetAdapter : DropTargetAdapter() {
 
 private data class DnDTabData(val tabbedPane: DnDTabbedPane)
 
-class TabTransferHandler : TransferHandler() {
+private class TabTransferHandler : TransferHandler() {
   private val localObjectFlavor = DataFlavor(DnDTabData::class.java, "DnDTabData")
   private var source: DnDTabbedPane? = null
   private val label = object : JLabel() {
@@ -324,7 +309,6 @@ class TabTransferHandler : TransferHandler() {
   private var mode = DragImageMode.LIGHTWEIGHT
 
   init {
-    println("TabTransferHandler")
     dialog.add(label)
     dialog.opacity = .5f
     DragSource.getDefaultDragSource().addDragSourceMotionListener { e ->
@@ -340,7 +324,6 @@ class TabTransferHandler : TransferHandler() {
   }
 
   override fun createTransferable(c: JComponent): Transferable {
-    println("createTransferable")
     val src = c as? DnDTabbedPane
     source = src
     return object : Transferable {
@@ -360,10 +343,8 @@ class TabTransferHandler : TransferHandler() {
   }
 
   override fun canImport(support: TransferSupport): Boolean {
-    // System.out.println("canImport")
     val target = support.component
     if (!support.isDrop || !support.isDataFlavorSupported(localObjectFlavor) || target !is DnDTabbedPane) {
-      println("canImport: ${support.isDrop} ${support.isDataFlavorSupported(localObjectFlavor)}")
       return false
     }
     support.dropAction = MOVE
@@ -410,7 +391,6 @@ class TabTransferHandler : TransferHandler() {
   }
 
   override fun getSourceActions(c: JComponent): Int {
-    println("getSourceActions")
     val src = c as? DnDTabbedPane ?: return NONE
     return if (src.dragTabIndex < 0) {
       NONE
@@ -427,7 +407,6 @@ class TabTransferHandler : TransferHandler() {
   }
 
   override fun importData(support: TransferSupport): Boolean {
-    println("importData")
     val target = support.component
     val data = runCatching {
       support.transferable.getTransferData(localObjectFlavor) as? DnDTabData
@@ -446,7 +425,6 @@ class TabTransferHandler : TransferHandler() {
   }
 
   override fun exportDone(c: JComponent?, data: Transferable?, action: Int) {
-    println("exportDone")
     val src = c as? DnDTabbedPane ?: return
     src.updateTabDropLocation(null, false)
     src.repaint()
@@ -575,7 +553,7 @@ fun main() {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
     }.onFailure {
       it.printStackTrace()
-      getDefaultToolkit().beep()
+      Toolkit.getDefaultToolkit().beep()
     }
     val handler = TabTransferHandler()
     val check = JCheckBoxMenuItem("Ghost image: Heavyweight")

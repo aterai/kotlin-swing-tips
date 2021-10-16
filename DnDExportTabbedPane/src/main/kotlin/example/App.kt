@@ -6,7 +6,6 @@ import java.awt.datatransfer.Transferable
 import java.awt.datatransfer.UnsupportedFlavorException
 import java.awt.dnd.DragSource
 import java.awt.dnd.DropTargetAdapter
-import java.awt.dnd.DropTargetDragEvent
 import java.awt.dnd.DropTargetDropEvent
 import java.awt.dnd.DropTargetEvent
 import java.awt.event.MouseAdapter
@@ -53,8 +52,8 @@ fun makeUI(): Component {
     tp.transferHandler = handler
     runCatching {
       tp.dropTarget.addDropTargetListener(listener)
-    }.onFailure { ex -> // catch (ex: TooManyListenersException) {
-      ex.printStackTrace()
+    }.onFailure {
+      it.printStackTrace()
       Toolkit.getDefaultToolkit().beep()
     }
   }
@@ -85,7 +84,7 @@ private fun makeCheckBoxPanel(tabs: JTabbedPane): Component {
   }
 }
 
-private class DnDTabbedPane : JTabbedPane() {
+class DnDTabbedPane : JTabbedPane() {
   var dragTabIndex = -1
   @Transient var dropLocation: DropLocation? = null
 
@@ -186,20 +185,14 @@ private class DnDTabbedPane : JTabbedPane() {
   }
 
   fun exportTab(dragIndex: Int, target: JTabbedPane, targetIndex: Int) {
-    println("exportTab")
     val cmp = getComponentAt(dragIndex)
     val title = getTitleAt(dragIndex)
     val icon = getIconAt(dragIndex)
-    val tip = getToolTipTextAt(dragIndex)
+    val toolTipText = getToolTipTextAt(dragIndex)
     val isEnabled = isEnabledAt(dragIndex)
     val tab = getTabComponentAt(dragIndex)
-    // // ButtonTabComponent
-    // if (tab is ButtonTabComponent) {
-    //   tab = new ButtonTabComponent(target)
-    // }
-
     remove(dragIndex)
-    target.insertTab(title, icon, cmp, tip, targetIndex)
+    target.insertTab(title, icon, cmp, toolTipText, targetIndex)
     target.setEnabledAt(targetIndex, isEnabled)
     target.setTabComponentAt(targetIndex, tab)
     target.selectedIndex = targetIndex
@@ -209,16 +202,15 @@ private class DnDTabbedPane : JTabbedPane() {
   }
 
   fun convertTab(prev: Int, next: Int) {
-    println("convertTab")
     val cmp = getComponentAt(prev)
     val tab = getTabComponentAt(prev)
     val title = getTitleAt(prev)
     val icon = getIconAt(prev)
-    val tip = getToolTipTextAt(prev)
+    val toolTipText = getToolTipTextAt(prev)
     val isEnabled = isEnabledAt(prev)
     val tgtIndex = if (prev > next) next else next - 1
     remove(prev)
-    insertTab(title, icon, cmp, tip, tgtIndex)
+    insertTab(title, icon, cmp, toolTipText, tgtIndex)
     setEnabledAt(tgtIndex, isEnabled)
     if (isEnabled) {
       selectedIndex = tgtIndex
@@ -267,7 +259,7 @@ private class DnDTabbedPane : JTabbedPane() {
         val idx = src.indexAtLocation(tabPt.x, tabPt.y)
         val selIdx = src.selectedIndex
         val isTabRunsRotated = src.ui !is MetalTabbedPaneUI &&
-          src.tabLayoutPolicy == WRAP_TAB_LAYOUT && idx != selIdx
+            src.tabLayoutPolicy == WRAP_TAB_LAYOUT && idx != selIdx
         dragTabIndex = if (isTabRunsRotated) selIdx else idx
         th.exportAsDrag(src, e, TransferHandler.MOVE)
         RECT_LINE.setBounds(0, 0, 0, 0)
@@ -297,22 +289,25 @@ private class TabDropTargetAdapter : DropTargetAdapter() {
     t.cursor = Cursor.getDefaultCursor()
   }
 
-  override fun drop(dtde: DropTargetDropEvent) {
-    val c = dtde.dropTargetContext.component
-    println("DropTargetListener#drop: ${c.name}")
-    clearDropLocationPaint(c)
+  override fun drop(e: DropTargetDropEvent) {
+    clearDropLocationPaint(e.dropTargetContext.component)
   }
 
-  override fun dragExit(dte: DropTargetEvent) {
-    val c = dte.dropTargetContext.component
-    println("DropTargetListener#dragExit: ${c.name}")
-    clearDropLocationPaint(c)
+  override fun dragExit(e: DropTargetEvent) {
+    clearDropLocationPaint(e.dropTargetContext.component)
   }
 
-  override fun dragEnter(dtde: DropTargetDragEvent) {
-    val c = dtde.dropTargetContext.component
-    println("DropTargetListener#dragEnter: ${c.name}")
-  }
+  // override fun dragEnter(e: DropTargetDragEvent) {
+  //   println("DropTargetListener#dragEnter: ${e.dropTargetContext.component.name}")
+  // }
+
+  // override dragOver(e: DropTargetDragEvent) {
+  //   println("dragOver")
+  // }
+
+  // override dropActionChanged(e: DropTargetDragEvent) {
+  //   println("dropActionChanged")
+  // }
 }
 
 private data class DnDTabData(val tabbedPane: DnDTabbedPane)
@@ -322,7 +317,6 @@ private class TabTransferHandler : TransferHandler() {
   private var source: DnDTabbedPane? = null
 
   override fun createTransferable(c: JComponent): Transferable {
-    println("createTransferable")
     val src = c as? DnDTabbedPane
     source = src
     return object : Transferable {
@@ -342,16 +336,13 @@ private class TabTransferHandler : TransferHandler() {
   }
 
   override fun canImport(support: TransferSupport): Boolean {
-    // println("canImport")
     val target = support.component
     if (!support.isDrop || !support.isDataFlavorSupported(localObjectFlavor) || target !is DnDTabbedPane) {
-      println("canImport: ${support.isDrop} ${support.isDataFlavorSupported(localObjectFlavor)}")
       return false
     }
     support.dropAction = MOVE
     val tdl = support.dropLocation
     val pt = tdl.dropPoint
-    // val target = support.getComponent() as? DnDTabbedPane
     target.autoScrollTest(pt)
     val dl = target.tabDropLocationForPoint(pt)
     val idx = dl.index
@@ -398,7 +389,6 @@ private class TabTransferHandler : TransferHandler() {
   }
 
   override fun getSourceActions(c: JComponent): Int {
-    println("getSourceActions")
     val src = c as? DnDTabbedPane ?: return NONE
     src.rootPane.glassPane = GhostGlassPane(src)
     return if (src.dragTabIndex < 0) {
@@ -411,7 +401,6 @@ private class TabTransferHandler : TransferHandler() {
   }
 
   override fun importData(support: TransferSupport): Boolean {
-    println("importData")
     val target = support.component
     val data = runCatching {
       support.transferable.getTransferData(localObjectFlavor) as? DnDTabData
@@ -430,7 +419,6 @@ private class TabTransferHandler : TransferHandler() {
   }
 
   override fun exportDone(c: JComponent?, data: Transferable?, action: Int) {
-    println("exportDone")
     val src = c as? DnDTabbedPane ?: return
     src.rootPane.glassPane.isVisible = false
     src.updateTabDropLocation(null, false)
