@@ -258,9 +258,10 @@ class DnDTabbedPane : JTabbedPane() {
         val th = src.transferHandler
         val idx = src.indexAtLocation(tabPt.x, tabPt.y)
         val selIdx = src.selectedIndex
-        val isTabRunsRotated = src.ui !is MetalTabbedPaneUI &&
-            src.tabLayoutPolicy == WRAP_TAB_LAYOUT && idx != selIdx
-        dragTabIndex = if (isTabRunsRotated) selIdx else idx
+        val isWrapTabLayout = src.tabLayoutPolicy == WRAP_TAB_LAYOUT
+        val isNotMetal = src.ui !is MetalTabbedPaneUI
+        val isTabRunsRotated = isNotMetal && isWrapTabLayout && idx != selIdx
+        dragTabIndex = if (isTabRunsRotated && idx != selIdx) selIdx else idx
         th.exportAsDrag(src, e, TransferHandler.MOVE)
         RECT_LINE.setBounds(0, 0, 0, 0)
         src.rootPane.glassPane.isVisible = true
