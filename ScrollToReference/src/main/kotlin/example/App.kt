@@ -58,8 +58,8 @@ fun makeUI(): Component {
   val tree = makeTree(model)
 
   val button = JButton("bottom")
-  button.addActionListener { scrollToId(editor, "bottom") }
-  EventQueue.invokeLater { scrollToId(editor, "main") }
+  button.addActionListener { scrollToId("bottom") }
+  EventQueue.invokeLater { scrollToId("main") }
   val sp = JSplitPane()
   sp.leftComponent = JScrollPane(tree)
   sp.rightComponent = JScrollPane(editor)
@@ -93,7 +93,7 @@ private fun makeTree(model: DefaultTreeModel): JTree {
   return tree
 }
 
-private fun scrollToId(editor: JEditorPane, id: String) {
+private fun scrollToId(id: String) {
   val d = editor.document as? HTMLDocument ?: return
   val element = d.getElement(id)
   runCatching {
