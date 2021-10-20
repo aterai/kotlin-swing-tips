@@ -85,7 +85,8 @@ private class CompoundTreeCellRenderer : DefaultTreeCellRenderer() {
     text.foreground = fgColor
     text.background = bgColor
     text.border = if (hasFocus) compoundFocusBorder else emptyBorder
-    (super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus) as? JLabel)?.also {
+    val c = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+    (c as? JLabel)?.also {
       text.text = it.text
       icon.icon = it.icon
     }
