@@ -14,11 +14,10 @@ class SearchEngineListCellRenderer<E : SearchEngine> : ListCellRenderer<E> {
     cellHasFocus: Boolean
   ): Component {
     val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-    val l = c as? JLabel ?: return c
-    value?.also {
-      l.setIcon(it.favicon)
-      l.setToolTipText(it.url)
+    if (c is JLabel && value != null) {
+      c.icon = value.favicon
+      c.toolTipText = value.url
     }
-    return l
+    return c
   }
 }
