@@ -70,10 +70,10 @@ private open class CheckedComboBox(model: ComboBoxModel<CheckableItem>) : JCombo
       panel.removeAll()
       val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
       if (index < 0) {
+        c.foreground = list.foreground
         (c as? JLabel)?.also {
           it.text = getCheckedItemString(list.model).ifEmpty { " " }
           it.isOpaque = false
-          it.foreground = list.foreground
         }
         panel.isOpaque = false
       } else {
