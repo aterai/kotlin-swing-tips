@@ -61,7 +61,7 @@ private open class FocusComboBox<E> constructor(model: ComboBoxModel<E>) : JComb
       val renderer = getRenderer()
       setRenderer { list, value, index, isSelected, cellHasFocus ->
         renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
-          if (index < 0 && it is JLabel) {
+          if (index < 0 && it is JComponent) {
             it.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
           }
         }
