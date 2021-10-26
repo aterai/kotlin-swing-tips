@@ -6,14 +6,12 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val model = DefaultListModel<String>()
-  model.addElement("ABC DEF GHI JKL MNO PQR STU VW XYZ")
-  model.addElement("aaa")
-  model.addElement("aaa bbb")
-  model.addElement("aaa bbb cc")
-  model.addElement("1234567890abc def ghi jkl mno pqr stu vw xyz")
-  model.addElement("bbb1")
-  model.addElement("bbb12")
-  model.addElement("1234567890-+*/=ABC DEF GHI JKL MNO PQR STU VW XYZ")
+  model.addElement("1111")
+  model.addElement("1111222")
+  model.addElement("111122233")
+  model.addElement("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+  model.addElement("1234567890abcdefghijklmnopqrstuvwxyz")
+  model.addElement("1234567890-+*/=ABCDEFGHIJKLMNOPQRSTUVWXYZ")
   model.addElement("bbb123")
 
   val list1 = object : TooltipList<String>(model) {
@@ -130,11 +128,9 @@ private open class TooltipListCellRenderer<E> : ListCellRenderer<E> {
     isSelected: Boolean,
     cellHasFocus: Boolean
   ): Component = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
-    if (it is JLabel) {
-      val i = it.insets
+    if (it is JComponent) {
       val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
-      val rect = c.bounds
-      rect.width -= i.left + i.right
+      val rect = (c as? JViewport)?.viewRect ?: c.bounds
       val fm = it.getFontMetrics(it.font)
       val str = value?.toString() ?: ""
       it.toolTipText = if (fm.stringWidth(str) > rect.width) str else null
