@@ -166,9 +166,15 @@ private class LinkViewRadioButtonUI : BasicRadioButtonUI() {
     val isRollover = b.isRolloverEnabled && m.isRollover
     val isNotAimed = !m.isSelected && !m.isPressed && !m.isArmed
     if (isNotAimed && isRollover) {
-      g.drawLine(viewRect.x, viewRect.y + viewRect.height, viewRect.x + viewRect.width, viewRect.y + viewRect.height)
+      g.drawLine(
+        viewRect.x,
+        viewRect.y + viewRect.height,
+        viewRect.x + viewRect.width,
+        viewRect.y + viewRect.height
+      )
     }
-    (b.getClientProperty(BasicHTML.propertyKey) as? View)?.paint(g, textRect) ?: paintText(g, b, textRect, text)
+    (b.getClientProperty(BasicHTML.propertyKey) as? View)?.paint(g, textRect)
+      ?: paintText(g, b, textRect, text)
   }
 }
 

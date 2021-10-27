@@ -121,9 +121,8 @@ private class BasicLinkViewButtonUI : LinkViewButtonUI() {
       )
     }
 
-    (c.getClientProperty(BasicHTML.propertyKey) as? View)?.also {
-      it.paint(g, textRect)
-    } ?: paintText(g, b, textRect, text)
+    (c.getClientProperty(BasicHTML.propertyKey) as? View)?.paint(g, textRect)
+      ?: paintText(g, c, textRect, text)
   }
 }
 

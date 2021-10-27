@@ -54,9 +54,15 @@ private class LinkViewButtonUI : BasicButtonUI() {
     val model = c.model
     if (c.isRolloverEnabled && model.isRollover) {
       g.color = Color.BLUE
-      g.drawLine(viewRect.x, viewRect.y + viewRect.height, viewRect.x + viewRect.width, viewRect.y + viewRect.height)
+      g.drawLine(
+        viewRect.x,
+        viewRect.y + viewRect.height,
+        viewRect.x + viewRect.width,
+        viewRect.y + viewRect.height
+      )
     }
-    (c.getClientProperty(BasicHTML.propertyKey) as? View)?.paint(g, textRect) ?: paintText(g, c, textRect, text)
+    (c.getClientProperty(BasicHTML.propertyKey) as? View)?.paint(g, textRect)
+      ?: paintText(g, c, textRect, text)
   }
 
   companion object {

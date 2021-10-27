@@ -104,7 +104,8 @@ private class WindowsVerticalAlignmentCheckBoxUI : WindowsCheckBoxUI() {
 
     // Draw the Text
     text?.also {
-      (c.getClientProperty(BasicHTML.propertyKey) as? View)?.paint(g, textRect) ?: paintText(g, c, textRect, text)
+      (c.getClientProperty(BasicHTML.propertyKey) as? View)?.paint(g, textRect)
+        ?: paintText(g, c, textRect, text)
       if (c.hasFocus() && c.isFocusPainted) {
         paintFocus(g, textRect, c.size)
       }
@@ -147,7 +148,8 @@ private class BasicVerticalAlignmentCheckBoxUI : BasicCheckBoxUI() {
 
     // Draw the Text
     text?.also {
-      (c.getClientProperty(BasicHTML.propertyKey) as? View)?.paint(g, textRect) ?: paintText(g, c, textRect, text)
+      (c.getClientProperty(BasicHTML.propertyKey) as? View)?.paint(g, textRect)
+        ?: paintText(g, c, textRect, text)
       if (c.hasFocus() && c.isFocusPainted) {
         paintFocus(g, textRect, c.size)
       }

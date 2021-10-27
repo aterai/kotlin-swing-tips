@@ -129,7 +129,12 @@ private class BasicLinkViewButtonUI : LinkViewButtonUI() {
     val m = b.model
     if (!m.isSelected && !m.isPressed && m.isRollover) {
       g.color = Color.BLUE
-      g.drawLine(viewRect.x, viewRect.y + viewRect.height, viewRect.x + viewRect.width, viewRect.y + viewRect.height)
+      g.drawLine(
+        viewRect.x,
+        viewRect.y + viewRect.height,
+        viewRect.x + viewRect.width,
+        viewRect.y + viewRect.height
+      )
     }
     (b.getClientProperty(BasicHTML.propertyKey) as? View)?.paint(g, textRect)
       ?: paintText(g, b, textRect, text)
