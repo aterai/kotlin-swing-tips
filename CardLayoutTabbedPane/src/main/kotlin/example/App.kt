@@ -276,8 +276,8 @@ private class OperaTabViewButtonUI : BasicTabViewButtonUI() {
       viewRect, iconRect, textRect,
       if (b.text != null) b.iconTextGap else 0
     )
-    val v = c.getClientProperty(BasicHTML.propertyKey) as? View
-    if (v != null) {
+    val v = c.getClientProperty(BasicHTML.propertyKey)
+    if (v is View) {
       v.paint(g, textRect)
     } else {
       textRect.x += 4
