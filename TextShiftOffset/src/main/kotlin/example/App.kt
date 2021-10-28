@@ -44,10 +44,9 @@ fun makeUI(): Component {
 
 private class TextShiftOffsetAction(private val offset: Int) : AbstractAction(" $offset ") {
   override fun actionPerformed(e: ActionEvent) {
-    val o = e.source
-    if (o is JComponent) {
-      UIManager.put("Button.textShiftOffset", offset)
-      SwingUtilities.updateComponentTreeUI(o.topLevelAncestor)
+    UIManager.put("Button.textShiftOffset", offset)
+    (e.source as? JComponent)?.also {
+      SwingUtilities.updateComponentTreeUI(it.topLevelAncestor)
     }
   }
 }

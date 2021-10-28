@@ -90,10 +90,8 @@ private class HeaderRenderer : TableCellRenderer {
   ): Component {
     val hr = table.tableHeader.defaultRenderer
     val c = hr.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
-    if (c is JLabel) {
-      c.horizontalAlignment = SwingConstants.CENTER
-      c.font = FONT
-    }
+    c.font = FONT
+    (c as? JLabel)?.horizontalAlignment = SwingConstants.CENTER
     return c
   }
 
