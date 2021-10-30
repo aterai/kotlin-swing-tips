@@ -18,34 +18,34 @@ class SearchBarLayout : LayoutManager {
 
   override fun layoutContainer(parent: Container) {
     val cb = parent as? JComboBox<*> ?: return
-    val width = cb.width
-    val height = cb.height
-    val insets = cb.insets
-    val buttonHeight = height - insets.top - insets.bottom
-    var buttonWidth = buttonHeight
+    val r = SwingUtilities.calculateInnerArea(cb, null)
 
+    // ArrowButton
+    var arrowSize = 0
     (cb.getComponent(0) as? JButton)?.also {
       val arrowInsets = it.insets
-      buttonWidth = it.preferredSize.width + arrowInsets.left + arrowInsets.right
-      it.setBounds(insets.left, insets.top, buttonWidth, buttonHeight)
+      val bw = it.preferredSize.width + arrowInsets.left + arrowInsets.right
+      it.setBounds(r.x, r.y, bw, r.height)
+      arrowSize = bw
     }
 
+    // LoupeButton
     var loupeButton: JButton? = null
+    var loupeSize = 0
     for (c in cb.components) {
       if ("ComboBox.loupeButton" == c.name) {
         loupeButton = c as? JButton
         break
       }
     }
-    loupeButton?.setBounds(width - insets.right - buttonHeight, insets.top, buttonHeight, buttonHeight)
+    if (loupeButton != null) {
+      loupeSize = r.height
+      loupeButton.setBounds(r.x + r.width - loupeSize, r.y, loupeSize, r.height)
+    }
 
+    // ComboBox Editor
     (cb.editor.editorComponent as? JTextField)?.also {
-      it.setBounds(
-        insets.left + buttonWidth,
-        insets.top,
-        width - insets.left - insets.right - buttonWidth - buttonHeight,
-        height - insets.top - insets.bottom
-      )
+      it.setBounds(r.x + arrowSize, r.y, r.width - arrowSize - loupeSize, r.height)
     }
   }
 }
