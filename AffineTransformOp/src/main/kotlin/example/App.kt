@@ -96,7 +96,7 @@ private class MissingIcon : Icon {
     g2.color = Color.RED
     g2.stroke = BasicStroke(w / 8f)
     g2.drawLine(x + gap, y + gap, x + w - gap, y + h - gap)
-    g2.drawLine(x + gap, y + gap, x + w - gap, y + gap)
+    g2.drawLine(x + gap, y + h - gap, x + w - gap, y + gap)
     g2.dispose()
   }
 
