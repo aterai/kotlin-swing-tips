@@ -78,18 +78,19 @@ private class TreeComboBox<E : TreeNode?> : JComboBox<E>() {
 
   override fun updateUI() {
     super.updateUI()
-    val renderer = getRenderer()
+    val r = getRenderer()
     setRenderer { list, value, index, isSelected, cellHasFocus ->
-      renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
-        (it as? JComponent)?.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
-        if (index >= 0 && value is DefaultMutableTreeNode) {
-          val indent = 0.coerceAtLeast(value.level - 1) * 16
-          (it as? JComponent)?.border = BorderFactory.createEmptyBorder(1, indent + 1, 1, 1)
-          if (!value.isLeaf()) {
-            it.foreground = Color.WHITE
-            it.background = Color.GRAY.darker()
-          }
+      r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
+        if (value != null && !value.isLeaf) {
+          it.foreground = Color.WHITE
+          it.background = Color.GRAY.darker()
         }
+        val indent = if (index >= 0 && value is DefaultMutableTreeNode) {
+          0.coerceAtLeast(value.level - 1) * 16
+        } else {
+          0
+        }
+        (it as? JComponent)?.border = BorderFactory.createEmptyBorder(1, indent + 1, 1, 1)
       }
     }
     EventQueue.invokeLater {
