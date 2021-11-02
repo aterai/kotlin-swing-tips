@@ -4,14 +4,18 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ItemEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  // val weightMixing = false
   val cl = Thread.currentThread().contextClassLoader
   // CRW_3857_JFR.jpg: http://sozai-free.com/
-  val label = JLabel(ImageIcon(cl.getResource("example/CRW_3857_JFR.jpg")))
-  val vport = object : JViewport() {
+  val url = cl.getResource("example/CRW_3857_JFR.jpg")
+  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+  val label = JLabel(ImageIcon(img))
+
+  val viewport = object : JViewport() {
     private var isAdjusting = false
     override fun revalidate() {
       // if (!weightMixing && isAdjusting) {
@@ -31,14 +35,14 @@ fun makeUI(): Component {
       // }
     }
   }
-  vport.add(label)
+  viewport.add(label)
 
   val scroll = JScrollPane() // new JScrollPane(label);
-  scroll.viewport = vport
+  scroll.viewport = viewport
 
   val hsl1 = HandScrollListener()
-  vport.addMouseMotionListener(hsl1)
-  vport.addMouseListener(hsl1)
+  viewport.addMouseMotionListener(hsl1)
+  viewport.addMouseListener(hsl1)
 
   val radio = JRadioButton("scrollRectToVisible", true)
   radio.addItemListener { e ->
@@ -64,6 +68,17 @@ fun makeUI(): Component {
   }
 }
 
+private fun makeMissingImage(): Image {
+  val missingIcon = MissingIcon()
+  val w = missingIcon.iconWidth
+  val h = missingIcon.iconHeight
+  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, 0, 0)
+  g2.dispose()
+  return bi
+}
+
 private class HandScrollListener : MouseAdapter() {
   private val defCursor = Cursor.getDefaultCursor()
   private val hndCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
@@ -71,15 +86,15 @@ private class HandScrollListener : MouseAdapter() {
   var withinRangeMode = true
 
   override fun mouseDragged(e: MouseEvent) {
-    val vport = e.component as? JViewport ?: return
+    val viewport = e.component as? JViewport ?: return
     val cp = e.point
-    val vp = vport.viewPosition // = SwingUtilities.convertPoint(vport, 0, 0, label)
+    val vp = viewport.viewPosition
     vp.translate(pp.x - cp.x, pp.y - cp.y)
-    if (withinRangeMode) {
-      (SwingUtilities.getUnwrappedView(vport) as? JComponent)
-        ?.scrollRectToVisible(Rectangle(vp, vport.size))
+    val c = SwingUtilities.getUnwrappedView(viewport)
+    if (withinRangeMode && c is JComponent) {
+      c.scrollRectToVisible(Rectangle(vp, viewport.size))
     } else {
-      vport.viewPosition = vp
+      viewport.viewPosition = vp
     }
     pp.location = cp
   }
@@ -92,6 +107,26 @@ private class HandScrollListener : MouseAdapter() {
   override fun mouseReleased(e: MouseEvent) {
     e.component.cursor = defCursor
   }
+}
+
+private class MissingIcon : Icon {
+  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+    val g2 = g.create() as? Graphics2D ?: return
+    val w = iconWidth
+    val h = iconHeight
+    val gap = w / 5
+    g2.paint = Color.WHITE
+    g2.fillRect(x, y, w, h)
+    g2.paint = Color.RED
+    g2.stroke = BasicStroke(w / 8f)
+    g2.drawLine(x + gap, y + gap, x + w - gap, y + h - gap)
+    g2.drawLine(x + gap, y + h - gap, x + w - gap, y + gap)
+    g2.dispose()
+  }
+
+  override fun getIconWidth() = 1000
+
+  override fun getIconHeight() = 1000
 }
 
 fun main() {
