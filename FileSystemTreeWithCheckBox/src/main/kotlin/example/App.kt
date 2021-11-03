@@ -154,28 +154,27 @@ private class CheckBoxNodeEditor(private val fileSystemView: FileSystemView) : A
 
   override fun getTreeCellEditorComponent(
     tree: JTree,
-    value: Any,
+    value: Any?,
     selected: Boolean,
     expanded: Boolean,
     leaf: Boolean,
     row: Int
   ): Component {
     val c = renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, false)
-    val l = c as? JLabel ?: return c
-    l.font = tree.font
-    return if (value is DefaultMutableTreeNode) {
+    c.font = tree.font
+    return if (value is DefaultMutableTreeNode && c is JLabel) {
       checkBox.isEnabled = tree.isEnabled
       checkBox.font = tree.font
       (value.userObject as? CheckBoxNode)?.also {
         checkBox.icon = if (it.status == Status.INDETERMINATE) IndeterminateIcon() else null
         file = it.file
-        l.icon = fileSystemView.getSystemIcon(file)
-        l.text = fileSystemView.getSystemDisplayName(file)
+        c.icon = fileSystemView.getSystemIcon(file)
+        c.text = fileSystemView.getSystemDisplayName(file)
         checkBox.isSelected = it.status == Status.SELECTED
       }
-      panel.add(l)
+      panel.add(c)
       panel
-    } else l
+    } else c
   }
 
   override fun getCellEditorValue(): Any {
