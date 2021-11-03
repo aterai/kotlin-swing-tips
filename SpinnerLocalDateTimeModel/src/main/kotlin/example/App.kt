@@ -132,7 +132,7 @@ private class SpinnerLocalDateTimeModel(
 
   override fun getValue() = localDateTime
 
-  override fun setValue(value: Any) {
+  override fun setValue(value: Any?) {
     require(value is ChronoLocalDateTime<*>) { "illegal value" }
     if (value != localDateTime) {
       localDateTime = value
@@ -148,7 +148,7 @@ private class LocalDateTimeEditor(spinner: JSpinner, dateFormatPattern: String?)
   val model: SpinnerLocalDateTimeModel
 
   inner class LocalDateTimeFormatter : InternationalFormatter(dateTimeFormatter.toFormat()) {
-    override fun valueToString(value: Any): String =
+    override fun valueToString(value: Any?): String =
       (value as? TemporalAccessor)?.let { dateTimeFormatter.format(it) } ?: ""
 
     @Throws(ParseException::class)

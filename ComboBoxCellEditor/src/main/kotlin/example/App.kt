@@ -119,7 +119,7 @@ private class PluginCellEditor(comboBox: JComboBox<String>) : DefaultCellEditor(
 
   override fun getTreeCellEditorComponent(
     tree: JTree,
-    value: Any,
+    value: Any?,
     isSelected: Boolean,
     expanded: Boolean,
     leaf: Boolean,

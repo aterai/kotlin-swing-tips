@@ -56,7 +56,7 @@ private class MarginTreeCellRenderer : DefaultTreeCellRenderer() {
 
   override fun getTreeCellRendererComponent(
     tree: JTree,
-    value: Any,
+    value: Any?,
     selected: Boolean,
     expanded: Boolean,
     leaf: Boolean,

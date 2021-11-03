@@ -89,7 +89,7 @@ class CheckBoxNodeRenderer : TreeCellRenderer {
 
   override fun getTreeCellRendererComponent(
     tree: JTree,
-    value: Any,
+    value: Any?,
     selected: Boolean,
     expanded: Boolean,
     leaf: Boolean,
@@ -138,7 +138,7 @@ class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
 
   override fun getTreeCellEditorComponent(
     tree: JTree,
-    value: Any,
+    value: Any?,
     selected: Boolean,
     expanded: Boolean,
     leaf: Boolean,

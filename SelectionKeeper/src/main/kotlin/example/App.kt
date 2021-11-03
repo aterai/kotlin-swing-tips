@@ -212,7 +212,7 @@ private class TableSorter() : AbstractTableModel() {
   override fun getValueAt(row: Int, column: Int) =
     tableModel?.getValueAt(modelIndex(row), column)
 
-  override fun setValueAt(value: Any, row: Int, column: Int) {
+  override fun setValueAt(value: Any?, row: Int, column: Int) {
     tableModel?.setValueAt(value, modelIndex(row), column)
   }
 

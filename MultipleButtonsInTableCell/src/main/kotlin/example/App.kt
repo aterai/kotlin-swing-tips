@@ -70,7 +70,7 @@ private class ButtonsRenderer : TableCellRenderer {
 
   override fun getTableCellRendererComponent(
     table: JTable,
-    value: Any,
+    value: Any?,
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
@@ -126,7 +126,7 @@ private class ButtonsEditor(private val table: JTable) : AbstractCellEditor(), T
     panel.addMouseListener(handler)
   }
 
-  override fun getTableCellEditorComponent(tbl: JTable, value: Any, isSelected: Boolean, row: Int, column: Int) =
+  override fun getTableCellEditorComponent(tbl: JTable, value: Any?, isSelected: Boolean, row: Int, column: Int) =
     panel.also { it.background = tbl.selectionBackground }
 
   override fun getCellEditorValue() = ""

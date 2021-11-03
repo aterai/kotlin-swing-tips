@@ -86,15 +86,12 @@ private class RadioButtonsRenderer : TableCellRenderer {
   private val renderer = RadioButtonsPanel()
   override fun getTableCellRendererComponent(
     table: JTable,
-    value: Any,
+    value: Any?,
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
     column: Int
-  ): Component {
-    renderer.updateSelectedButton(value)
-    return renderer
-  }
+  ): Component = renderer.also { it.updateSelectedButton(value) }
 }
 
 private class RadioButtonsEditor : AbstractCellEditor(), TableCellEditor {
@@ -112,10 +109,7 @@ private class RadioButtonsEditor : AbstractCellEditor(), TableCellEditor {
     isSelected: Boolean,
     row: Int,
     column: Int
-  ): Component {
-    renderer.updateSelectedButton(value)
-    return renderer
-  }
+  ): Component = renderer.also { it.updateSelectedButton(value) }
 
   override fun getCellEditorValue() = Answer.valueOf(renderer.bg.selection.actionCommand)
 }
