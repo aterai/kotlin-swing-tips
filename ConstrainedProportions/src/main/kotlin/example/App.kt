@@ -8,30 +8,30 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 private const val MW = 300
 private const val MH = 200
 
-private val checkbox = JCheckBox("Fixed aspect ratio, Minimum size: $MW*$MH")
-
 fun makeUI(): Component {
+  val checkbox = JCheckBox("Fixed aspect ratio, Minimum size: $MW*$MH")
   EventQueue.invokeLater {
     val frame = checkbox.topLevelAncestor
-    if (frame is JFrame) {
+    if (frame is Window) {
       frame.minimumSize = Dimension(MW, MH)
-      val cmpListener = object : ComponentAdapter() {
+      frame.addComponentListener(object : ComponentAdapter() {
         override fun componentResized(e: ComponentEvent) {
-          initFrameSize(frame)
+          if (checkbox.isSelected) {
+            initFrameSize(frame)
+          }
         }
-      }
-      frame.addComponentListener(cmpListener)
+      })
     }
   }
   checkbox.addActionListener {
     val c = checkbox.topLevelAncestor
-    if (c is JFrame) {
+    if (c is Window && checkbox.isSelected) {
       initFrameSize(c)
     }
   }
 
   val label = JLabel()
-  val cmpListener = object : ComponentAdapter() {
+  label.addComponentListener(object : ComponentAdapter() {
     override fun componentResized(e: ComponentEvent) {
       (e.component as? JLabel)?.also {
         val c = it.topLevelAncestor
@@ -40,8 +40,7 @@ fun makeUI(): Component {
         }
       }
     }
-  }
-  label.addComponentListener(cmpListener)
+  })
 
   Toolkit.getDefaultToolkit().setDynamicLayout(false)
   val check = JCheckBox("Toolkit.getDefaultToolkit().setDynamicLayout: ")
@@ -60,10 +59,7 @@ fun makeUI(): Component {
   }
 }
 
-fun initFrameSize(frame: JFrame) {
-  if (!checkbox.isSelected) {
-    return
-  }
+fun initFrameSize(frame: Window) {
   val fw = frame.size.width
   val fh = MH * fw / MW
   frame.setSize(MW.coerceAtLeast(fw), MH.coerceAtLeast(fh))
