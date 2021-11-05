@@ -19,9 +19,8 @@ fun makeUI(): Component {
   log.append(fmt.format("BOTH", tk.isFrameStateSupported(Frame.MAXIMIZED_BOTH)))
 
   EventQueue.invokeLater {
-    val c = p.topLevelAncestor
-    if (c is JFrame) {
-      c.addWindowStateListener { e ->
+    (p.topLevelAncestor as? Frame)?.also {
+      it.addWindowStateListener { e ->
         val ws = when (e.newState) {
           Frame.NORMAL -> "NORMAL"
           Frame.ICONIFIED -> "ICONIFIED"
@@ -32,7 +31,7 @@ fun makeUI(): Component {
         }
         log.append("WindowStateListener: $ws\n")
       }
-      c.addWindowListener(TestWindowListener(log))
+      it.addWindowListener(TestWindowListener(log))
     }
   }
   return p

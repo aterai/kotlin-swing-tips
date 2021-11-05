@@ -27,9 +27,8 @@ fun makeUI(): Component {
 
   return JPanel(BorderLayout()).also {
     EventQueue.invokeLater {
-      val c = it.topLevelAncestor
-      if (c is JFrame) {
-        initPopupMenu(c)
+      (it.topLevelAncestor as? Frame)?.also { frame ->
+        initPopupMenu(frame)
       }
     }
     it.add(JLabel("SystemTray.isSupported(): " + SystemTray.isSupported()), BorderLayout.NORTH)
@@ -38,7 +37,7 @@ fun makeUI(): Component {
   }
 }
 
-private fun initPopupMenu(frame: JFrame) {
+private fun initPopupMenu(frame: Frame) {
   val dummy = JDialog()
   dummy.isUndecorated = true
   val cl = Thread.currentThread().contextClassLoader
