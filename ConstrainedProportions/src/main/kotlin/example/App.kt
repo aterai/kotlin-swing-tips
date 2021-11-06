@@ -35,7 +35,7 @@ fun makeUI(): Component {
     override fun componentResized(e: ComponentEvent) {
       (e.component as? JLabel)?.also {
         val c = it.topLevelAncestor
-        if (c is JFrame) {
+        if (c is Window) {
           it.text = c.size.toString()
         }
       }
