@@ -25,9 +25,8 @@ fun makeUI(): Component {
   }
 
   EventQueue.invokeLater {
-    val c = textField0.topLevelAncestor
-    if (c is JFrame) {
-      c.transferHandler = object : TransferHandler() {
+    (textField0.topLevelAncestor as? JFrame)?.also {
+      it.transferHandler = object : TransferHandler() {
         override fun canImport(info: TransferSupport) = true
 
         override fun importData(support: TransferSupport) = true

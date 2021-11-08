@@ -33,17 +33,13 @@ fun createFrame(title: String?): JFrame {
   val frame = JFrame(title ?: "Frame #$COUNTER")
   frame.defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
   COUNTER.getAndIncrement()
-  val wl = object : WindowAdapter() {
+  frame.addWindowListener(object : WindowAdapter() {
     override fun windowClosing(e: WindowEvent) {
       if (COUNTER.getAndDecrement() == 0) {
-        val w = e.window
-        if (w is JFrame) {
-          w.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-        }
+        (e.window as? JFrame)?.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
       }
     }
-  }
-  frame.addWindowListener(wl)
+  })
   return frame
 }
 
