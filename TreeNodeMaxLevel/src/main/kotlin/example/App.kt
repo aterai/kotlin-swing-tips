@@ -44,10 +44,11 @@ private class TreePopupMenu : JPopupMenu() {
   init {
     add("path").addActionListener {
       val tree = invoker as? JTree
-      tree?.selectionPath?.also {
-        updateLabel(it)
+      val path = tree?.selectionPath
+      if (path != null) {
+        updateLabel(path)
+        JOptionPane.showMessageDialog(tree, path, "path", JOptionPane.INFORMATION_MESSAGE)
       }
-      JOptionPane.showMessageDialog(tree, tree?.selectionPaths, "path", JOptionPane.INFORMATION_MESSAGE)
     }
     add("add").addActionListener {
       val tree = invoker as? JTree

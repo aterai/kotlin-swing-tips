@@ -20,8 +20,10 @@ fun makeUI(): Component {
 private class TreePopupMenu : JPopupMenu() {
   init {
     add("path").addActionListener {
-      (invoker as? JTree)?.also {
-        JOptionPane.showMessageDialog(it, it.selectionPaths, "path", JOptionPane.INFORMATION_MESSAGE)
+      val tree = invoker as? JTree
+      val path = tree?.selectionPath
+      if (path != null) {
+        JOptionPane.showMessageDialog(tree, path, "path", JOptionPane.INFORMATION_MESSAGE)
       }
     }
     add("dummy")
