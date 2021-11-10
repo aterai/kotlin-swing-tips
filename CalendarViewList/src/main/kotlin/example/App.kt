@@ -188,14 +188,15 @@ private class CalendarListRenderer : ListCellRenderer<LocalDate> {
     cellHasFocus: Boolean
   ): Component {
     val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-    val l = c as? JLabel ?: return c
-    l.isOpaque = true
-    l.horizontalAlignment = SwingConstants.CENTER
-    l.text = value.dayOfMonth.toString()
     val isSameMonth = YearMonth.from(value) == YearMonth.from(currentLocalDate)
     val fgc = if (isSameMonth) getForegroundColor(value) else Color.GRAY
-    l.foreground = if (isSelected) l.foreground else fgc
-    return l
+    c.foreground = if (isSelected) c.foreground else fgc
+    if (c is JLabel) {
+      c.isOpaque = true
+      c.horizontalAlignment = SwingConstants.CENTER
+      c.text = value.dayOfMonth.toString()
+    }
+    return c
   }
 
   private fun getForegroundColor(ld: LocalDate) = if (ld.isEqual(realLocalDate)) {

@@ -85,32 +85,33 @@ private class UrlRenderer : MouseAdapter(), TableCellRenderer {
     column: Int
   ): Component {
     val c = renderer.getTableCellRendererComponent(table, value, isSelected, false, row, column)
-    val label = c as? JLabel ?: return c
-    val cm = table.columnModel
-    val i = renderer.insets
-    CELL_RECT.x = i.left
-    CELL_RECT.y = i.top
-    CELL_RECT.width = cm.getColumn(column).width - cm.columnMargin - i.right - CELL_RECT.x
-    CELL_RECT.height = table.getRowHeight(row) - table.rowMargin - i.bottom - CELL_RECT.y
-    ICON_RECT.setBounds(0, 0, 0, 0)
-    TEXT_RECT.setBounds(0, 0, 0, 0)
+    if (c is JLabel) {
+      val cm = table.columnModel
+      val i = renderer.insets
+      CELL_RECT.x = i.left
+      CELL_RECT.y = i.top
+      CELL_RECT.width = cm.getColumn(column).width - cm.columnMargin - i.right - CELL_RECT.x
+      CELL_RECT.height = table.getRowHeight(row) - table.rowMargin - i.bottom - CELL_RECT.y
+      ICON_RECT.setBounds(0, 0, 0, 0)
+      TEXT_RECT.setBounds(0, 0, 0, 0)
 
-    val str = SwingUtilities.layoutCompoundLabel(
-      label,
-      label.getFontMetrics(label.font),
-      value?.toString() ?: "",
-      label.icon,
-      label.verticalAlignment,
-      label.horizontalAlignment,
-      label.verticalTextPosition,
-      label.horizontalTextPosition,
-      CELL_RECT,
-      ICON_RECT,
-      TEXT_RECT,
-      label.iconTextGap
-    )
-    label.text = if (isRolloverCell(table, row, column)) "<html><u><font color='blue'>$str" else str
-    return label
+      val str = SwingUtilities.layoutCompoundLabel(
+        c,
+        c.getFontMetrics(c.font),
+        value?.toString() ?: "",
+        c.icon,
+        c.verticalAlignment,
+        c.horizontalAlignment,
+        c.verticalTextPosition,
+        c.horizontalTextPosition,
+        CELL_RECT,
+        ICON_RECT,
+        TEXT_RECT,
+        c.iconTextGap
+      )
+      c.text = if (isRolloverCell(table, row, column)) "<html><u><font color='blue'>$str" else str
+    }
+    return c
   }
 
   private fun isRolloverCell(table: JTable, row: Int, column: Int) =

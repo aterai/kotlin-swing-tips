@@ -103,23 +103,28 @@ private class TableOfContentsTreeCellRenderer : DefaultTreeCellRenderer() {
     hasFocus: Boolean
   ): Component {
     val c = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
-    val l = c as? JLabel ?: return c
-    return ((value as? DefaultMutableTreeNode)?.userObject as? TableOfContents)
-      ?.let { toc ->
-        renderer.removeAll()
-        renderer.add(l, BorderLayout.WEST)
-        if (isSynth) {
-          renderer.foreground = l.foreground
-        }
-        val gap = l.iconTextGap
-        val d = l.preferredSize
-        pnPt.setLocation(tree.width - gap, l.getBaseline(d.width, d.height))
-        pn = toc.page
-        rxs = d.width + gap
-        rxe = tree.width - tree.insets.right - gap
-        renderer.isOpaque = false
-        renderer
-      } ?: l.also { pn = -1 }
+    val toc = (value as? DefaultMutableTreeNode)?.userObject
+    return if (c is JLabel && toc is TableOfContents) getTocRenderer(c, tree, toc) else c
+  }
+
+  private fun getTocRenderer(
+    c: JLabel,
+    tree: JTree,
+    toc: TableOfContents
+  ): Component {
+    renderer.removeAll()
+    renderer.add(c, BorderLayout.WEST)
+    if (isSynth) {
+      renderer.foreground = c.foreground
+    }
+    val gap = c.iconTextGap
+    val d = c.preferredSize
+    pnPt.setLocation(tree.width - gap, c.getBaseline(d.width, d.height))
+    pn = toc.page
+    rxs = d.width + gap
+    rxe = tree.width - tree.insets.right - gap
+    renderer.isOpaque = false
+    return renderer
   }
 
   companion object {
