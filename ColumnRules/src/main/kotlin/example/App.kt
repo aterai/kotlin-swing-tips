@@ -85,7 +85,7 @@ private class ColumnRulesLayerUI : LayerUI<JComponent>() {
 
   override fun paint(g: Graphics, c: JComponent) {
     super.paint(g, c)
-    val tc = (c as? JLayer<*>)?.view as? JComponent
+    val tc = (c as? JLayer<*>)?.view
     if (tc is JComponent) {
       val r = SwingUtilities.calculateInnerArea(tc, null)
       val sw = separator.preferredSize.width
