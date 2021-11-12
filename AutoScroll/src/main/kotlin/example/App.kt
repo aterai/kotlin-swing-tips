@@ -59,14 +59,16 @@ private class ViewportDragScrollListener : MouseAdapter(), HierarchyListener {
   }
 
   override fun mouseDragged(e: MouseEvent) {
-    val viewport = e.component as? JViewport ?: return
-    val c = viewport.view as? JComponent ?: return
     val pt = e.point
     val dx = startPt.x - pt.x
     val dy = startPt.y - pt.y
-    val vp = viewport.viewPosition
-    vp.translate(dx, dy)
-    c.scrollRectToVisible(Rectangle(vp, viewport.size))
+    val viewport = e.component as? JViewport
+    val c = viewport?.view
+    if (c is JComponent) {
+      val vp = viewport.viewPosition
+      vp.translate(dx, dy)
+      c.scrollRectToVisible(Rectangle(vp, viewport.size))
+    }
     move.setLocation(SPEED * dx, SPEED * dy)
     startPt.location = pt
   }
@@ -82,15 +84,17 @@ private class ViewportDragScrollListener : MouseAdapter(), HierarchyListener {
   override fun mouseReleased(e: MouseEvent) {
     val c = e.component
     c.cursor = DC
-    val viewport = c as? JViewport ?: return
-    val label = viewport.view as? JComponent ?: return
-    listener = ActionListener {
-      val vp = viewport.viewPosition
-      vp.translate(move.x, move.y)
-      label.scrollRectToVisible(Rectangle(vp, viewport.size))
+    val viewport = c as? JViewport
+    val label = viewport?.view
+    if (label is JComponent) {
+      listener = ActionListener {
+        val vp = viewport.viewPosition
+        vp.translate(move.x, move.y)
+        label.scrollRectToVisible(Rectangle(vp, viewport.size))
+      }
+      scroller.addActionListener(listener)
+      scroller.start()
     }
-    scroller.addActionListener(listener)
-    scroller.start()
   }
 
   override fun mouseExited(e: MouseEvent) {
