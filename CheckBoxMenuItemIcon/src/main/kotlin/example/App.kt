@@ -38,10 +38,9 @@ fun createMenuBar(): JMenuBar {
 
 private class CheckIcon : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-    val m = (c as? AbstractButton)?.model ?: return
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
-    g2.paint = if (m.isSelected) Color.ORANGE else Color.GRAY
+    g2.paint = if ((c as? AbstractButton)?.isSelected == true) Color.ORANGE else Color.GRAY
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     g2.fillOval(1, 1, iconWidth - 2, iconHeight - 2)
     g2.dispose()
