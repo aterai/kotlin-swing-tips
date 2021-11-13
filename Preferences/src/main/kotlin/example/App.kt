@@ -36,10 +36,10 @@ fun makeUI(): Component {
   }
 
   EventQueue.invokeLater {
-    (box.topLevelAncestor as? JFrame)?.also {
+    (box.topLevelAncestor as? Window)?.also {
       it.addWindowListener(handler)
       it.addComponentListener(handler)
-      handler.initFrameSizeAndLocation(it)
+      handler.initWindowSizeAndLocation(it)
     }
   }
 
@@ -58,17 +58,17 @@ private class WindowPreferencesHandler : WindowAdapter(), ComponentListener {
   val dim = Dimension(320, 240)
   val pos = Point()
 
-  fun initFrameSizeAndLocation(frame: JFrame) {
-    val wdim = prefs.getInt(PREFIX + "dimw", dim.width)
-    val hdim = prefs.getInt(PREFIX + "dimh", dim.height)
-    dim.setSize(wdim, hdim)
+  fun initWindowSizeAndLocation(frame: Window) {
+    val w = prefs.getInt(PREFIX + "dimw", dim.width)
+    val h = prefs.getInt(PREFIX + "dimh", dim.height)
+    dim.setSize(w, h)
     // setPreferredSize(dim);
     frame.pack()
     val screen = frame.graphicsConfiguration.bounds
     pos.setLocation(screen.x + screen.width / 2 - dim.width / 2, screen.y + screen.height / 2 - dim.height / 2)
-    val xpos = prefs.getInt(PREFIX + "locx", pos.x)
-    val ypos = prefs.getInt(PREFIX + "locy", pos.y)
-    pos.setLocation(xpos, ypos)
+    val x = prefs.getInt(PREFIX + "locx", pos.x)
+    val y = prefs.getInt(PREFIX + "locy", pos.y)
+    pos.setLocation(x, y)
     frame.setLocation(pos.x, pos.y)
   }
 
@@ -89,7 +89,7 @@ private class WindowPreferencesHandler : WindowAdapter(), ComponentListener {
   }
 
   override fun componentMoved(e: ComponentEvent) {
-    val frame = e.component as? JFrame
+    val frame = e.component as? Frame
     if (frame?.extendedState == Frame.NORMAL) {
       val pt = frame.locationOnScreen
       if (pt.x < 0 || pt.y < 0) {
