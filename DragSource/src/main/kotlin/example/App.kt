@@ -38,11 +38,7 @@ fun makeUI(): Component {
 
     override fun createTransferable(c: JComponent): Transferable? {
       val tmpFile = file
-      return if (tmpFile != null) {
-        TempFileTransferable(tmpFile)
-      } else {
-        null
-      }
+      return if (tmpFile != null) TempFileTransferable(tmpFile) else null
     }
 
     override fun exportDone(c: JComponent, data: Transferable, action: Int) {
@@ -56,13 +52,12 @@ fun makeUI(): Component {
       }
     }
   }
-  val ml = object : MouseAdapter() {
+  label.addMouseListener(object : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
-      val c = e.component as? JComponent ?: return
-      c.transferHandler.exportAsDrag(c, e, TransferHandler.COPY)
+      val c = e.component
+      (c as? JComponent)?.transferHandler?.exportAsDrag(c, e, TransferHandler.COPY)
     }
-  }
-  label.addMouseListener(ml)
+  })
 
   val button = JButton("Create Temp File")
   button.addActionListener { e ->
