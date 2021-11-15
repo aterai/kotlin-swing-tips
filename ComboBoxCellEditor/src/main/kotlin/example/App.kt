@@ -25,15 +25,16 @@ fun makeUI(): Component {
   tree.isEditable = true
   tree.cellRenderer = PluginCellRenderer(JComboBox())
   tree.cellEditor = PluginCellEditor(JComboBox())
+
   val textArea = JTextArea(5, 1)
-  val tml = object : TreeModelListener {
+
+  tree.model.addTreeModelListener(object : TreeModelListener {
     override fun treeNodesChanged(e: TreeModelEvent) {
       val node = e.children?.takeIf { it.size == 1 }?.firstOrNull()
       (node as? DefaultMutableTreeNode)
         ?.let { it.userObject as? PluginNode }
-        ?.also {
-          textArea.append("%s %s%n".format(it, it.plugins[it.selectedIndex]))
-        }
+        ?.let { "%s %s%n".format(it, it.plugins[it.selectedIndex]) }
+        ?.also { textArea.append(it) }
     }
 
     override fun treeNodesInserted(e: TreeModelEvent) {
@@ -47,8 +48,7 @@ fun makeUI(): Component {
     override fun treeStructureChanged(e: TreeModelEvent) {
       /* not needed */
     }
-  }
-  tree.model.addTreeModelListener(tml)
+  })
 
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(tree))
@@ -60,7 +60,7 @@ fun makeUI(): Component {
 private data class PluginNode(
   private val name: String,
   val plugins: List<String> = emptyList(),
-  val selectedIndex: Int = -1
+  val selectedIndex: Int = 0
 ) {
   override fun toString() = name
 }
