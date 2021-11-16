@@ -63,7 +63,7 @@ private class TablePopupMenu : JPopupMenu() {
     delete.addActionListener {
       val table = invoker as? JTable
       val model = table?.model
-      if (table is JTable && model is DefaultTableModel) {
+      if (model is DefaultTableModel) {
         val selection = table.selectedRows
         for (i in selection.indices.reversed()) {
           model.removeRow(table.convertRowIndexToModel(selection[i]))
@@ -73,9 +73,10 @@ private class TablePopupMenu : JPopupMenu() {
   }
 
   override fun show(c: Component, x: Int, y: Int) {
-    val table = c as? JTable ?: return
-    delete.isEnabled = table.selectedRowCount > 0
-    super.show(table, x, y)
+    if (c is JTable) {
+      delete.isEnabled = c.selectedRowCount > 0
+      super.show(c, x, y)
+    }
   }
 }
 
