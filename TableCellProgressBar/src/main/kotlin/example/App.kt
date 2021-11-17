@@ -109,11 +109,12 @@ private class TablePopupMenu : JPopupMenu() {
   }
 
   override fun show(c: Component, x: Int, y: Int) {
-    val table = c as? JTable ?: return
-    val flag = table.selectedRowCount > 0
-    cancelMenuItem.isEnabled = flag
-    deleteMenuItem.isEnabled = flag
-    super.show(table, x, y)
+    if (c is JTable) {
+      val flag = c.selectedRowCount > 0
+      cancelMenuItem.isEnabled = flag
+      deleteMenuItem.isEnabled = flag
+      super.show(c, x, y)
+    }
   }
 
   private fun getSwingWorker(identifier: Int) = model.getValueAt(identifier, 3) as? SwingWorker<*, *>
