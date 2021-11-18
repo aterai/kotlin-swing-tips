@@ -10,17 +10,19 @@ fun makeUI(): Component {
 
   val up = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      val c = e.source as? JComboBox<*> ?: return
-      val i = c.selectedIndex
-      c.selectedIndex = if (i == 0) c.itemCount - 1 else i - 1
+      (e.source as? JComboBox<*>)?.also {
+        val i = it.selectedIndex
+        it.selectedIndex = if (i == 0) it.itemCount - 1 else i - 1
+      }
     }
   }
 
   val down = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      val c = e.source as? JComboBox<*> ?: return
-      val i = c.selectedIndex
-      c.selectedIndex = if (i == c.itemCount - 1) 0 else i + 1
+      (e.source as? JComboBox<*>)?.also {
+        val i = it.selectedIndex
+        it.selectedIndex = if (i == it.itemCount - 1) 0 else i + 1
+      }
     }
   }
 

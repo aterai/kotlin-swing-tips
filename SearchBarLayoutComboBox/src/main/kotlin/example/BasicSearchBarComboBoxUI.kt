@@ -45,16 +45,19 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
       popupMenuListener = object : PopupMenuListener {
         private var str: String? = null
         override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-          val combo = e.source as? JComboBox<*> ?: return
-          str = combo.editor.item.toString()
+          (e.source as? JComboBox<*>)?.also {
+            str = it.editor.item.toString()
+          }
         }
 
         override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
-          val combo = e.source as? JComboBox<*> ?: return
-          val se = listBox.getSelectedValue() as? SearchEngine ?: return
-          arrowButton.setIcon(se.favicon)
-          arrowButton.setRolloverIcon(makeRolloverIcon(se.favicon))
-          combo.editor.item = str
+          val combo = e.source
+          val se = listBox.getSelectedValue()
+          if (combo is JComboBox<*> && se is SearchEngine) {
+            arrowButton.setIcon(se.favicon)
+            arrowButton.setRolloverIcon(makeRolloverIcon(se.favicon))
+            combo.editor.item = str
+          }
         }
 
         override fun popupMenuCanceled(e: PopupMenuEvent) { /* not needed */ }
