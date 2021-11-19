@@ -55,7 +55,6 @@ private fun makeTitledPanel(title: String, list: List<Component>): Component {
 }
 
 private class RemoveButtonComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(model) {
-  @Transient
   private var handler: CellButtonsMouseListener? = null
 
   private fun getList() = (getAccessibleContext().getAccessibleChild(0) as? ComboPopup)?.list
@@ -102,8 +101,7 @@ private class CellButtonsMouseListener : MouseAdapter() {
   }
 
   override fun mouseExited(e: MouseEvent) {
-    val list = e.component as? JList<*> ?: return
-    (list.cellRenderer as? ButtonsRenderer<*>)?.rolloverIndex = -1
+    ((e.component as? JList<*>)?.cellRenderer as? ButtonsRenderer<*>)?.rolloverIndex = -1
   }
 
   private fun <E> getButton(list: JList<E>, pt: Point, index: Int): JButton? {
