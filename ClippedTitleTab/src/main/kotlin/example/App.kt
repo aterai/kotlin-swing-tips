@@ -70,9 +70,14 @@ private class BasicClippedTitleTabbedPaneUI : BasicTabbedPaneUI() {
     textRect: Rectangle,
     isSelected: Boolean
   ) {
-    val fw = font.size
     val tabRect = rects[tabIndex]
-    var rect = Rectangle(textRect.x + fw / 2, textRect.y, tabRect.width - fw, textRect.height)
+    val x = textRect.x + tabInsets.left
+    val y = textRect.y
+    val w = tabRect.width - tabInsets.left - tabInsets.right
+    val h = textRect.height
+    val viewR = Rectangle(x, y, w, h)
+    val iconR = Rectangle()
+    val textR = Rectangle(x, y, w, h)
     val clippedText = SwingUtilities.layoutCompoundLabel(
       metrics,
       title,
@@ -81,17 +86,12 @@ private class BasicClippedTitleTabbedPaneUI : BasicTabbedPaneUI() {
       SwingConstants.CENTER,
       SwingConstants.CENTER,
       SwingConstants.TRAILING,
-      rect,
-      Rectangle(),
-      rect,
+      viewR,
+      iconR,
+      textR,
       0
     )
-    if (title == clippedText) {
-      super.paintText(g, tabPlacement, font, metrics, tabIndex, title, textRect, isSelected)
-    } else {
-      rect = Rectangle(textRect.x + fw / 2, textRect.y, tabRect.width - fw, textRect.height)
-      super.paintText(g, tabPlacement, font, metrics, tabIndex, clippedText, rect, isSelected)
-    }
+    super.paintText(g, tabPlacement, font, metrics, tabIndex, clippedText, textRect, isSelected)
   }
 }
 
@@ -116,9 +116,14 @@ private class WindowsClippedTitleTabbedPaneUI : WindowsTabbedPaneUI() {
     textRect: Rectangle,
     isSelected: Boolean
   ) {
-    val fw = font.size
     val tabRect = rects[tabIndex]
-    var rect = Rectangle(textRect.x + fw / 2, textRect.y, tabRect.width - fw, textRect.height)
+    val x = textRect.x + tabInsets.left
+    val y = textRect.y
+    val w = tabRect.width - tabInsets.left - tabInsets.right
+    val h = textRect.height
+    val viewR = Rectangle(x, y, w, h)
+    val iconR = Rectangle()
+    val textR = Rectangle(x, y, w, h)
     val clippedText = SwingUtilities.layoutCompoundLabel(
       metrics,
       title,
@@ -127,17 +132,12 @@ private class WindowsClippedTitleTabbedPaneUI : WindowsTabbedPaneUI() {
       SwingConstants.CENTER,
       SwingConstants.CENTER,
       SwingConstants.TRAILING,
-      rect,
-      Rectangle(),
-      rect,
+      viewR,
+      iconR,
+      textR,
       0
     )
-    if (title == clippedText) {
-      super.paintText(g, tabPlacement, font, metrics, tabIndex, title, textRect, isSelected)
-    } else {
-      rect = Rectangle(textRect.x + fw / 2, textRect.y, tabRect.width - fw, textRect.height)
-      super.paintText(g, tabPlacement, font, metrics, tabIndex, clippedText, rect, isSelected)
-    }
+    super.paintText(g, tabPlacement, font, metrics, tabIndex, clippedText, textRect, isSelected)
   }
 }
 
