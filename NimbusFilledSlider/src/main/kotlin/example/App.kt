@@ -13,42 +13,43 @@ fun makeUI(): Component {
       val trackWidth = w - 2
       val fillTop = 4
       val fillLeft = 1
+
       g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
       g.stroke = BasicStroke(1.5f)
       g.color = Color.GRAY
       g.fillRoundRect(fillLeft, fillTop, trackWidth, trackHeight, arc, arc)
+
       val fillBottom = fillTop + trackHeight
-      val fillRight =
-        getXPositionForValue(c, Rectangle(fillLeft, fillTop, trackWidth, fillBottom - fillTop))
+      val r = Rectangle(fillLeft, fillTop, trackWidth, fillBottom - fillTop)
+      val fillRight = getXPositionForValue(c, r)
       g.color = Color.ORANGE
       g.fillRect(fillLeft + 1, fillTop + 1, fillRight - fillLeft, fillBottom - fillTop)
+
       g.color = Color.WHITE
       g.drawRoundRect(fillLeft, fillTop, trackWidth, trackHeight, arc, arc)
     }
 
     // @see javax/swing/plaf/basic/BasicSliderUI#xPositionForValue(int value)
     private fun getXPositionForValue(slider: JSlider, trackRect: Rectangle): Int {
-      val value = slider.value
-      val min = slider.minimum
-      val max = slider.maximum
-      val trackLength = trackRect.width
-      val valueRange = max.toFloat() - min.toFloat()
-      val pixelsPerValue = trackLength.toFloat() / valueRange
+      val value = slider.value.toFloat()
+      val min = slider.minimum.toFloat()
+      val max = slider.maximum.toFloat()
+      val pixelsPerValue = trackRect.width / (max - min)
       val trackLeft = trackRect.x
       val trackRight = trackRect.x + trackRect.width - 1
-      return (trackLeft + (pixelsPerValue * (value.toFloat() - min)).roundToInt()).coerceIn(trackLeft, trackRight)
+      return (trackLeft + (pixelsPerValue * (value - min)).roundToInt()).coerceIn(trackLeft, trackRight)
     }
   }
-
   val slider = JSlider()
   slider.putClientProperty("Nimbus.Overrides", d)
 
-  val box = Box.createVerticalBox()
-  box.add(Box.createVerticalStrut(5))
-  box.add(makeTitledPanel("Default", JSlider()))
-  box.add(Box.createVerticalStrut(5))
-  box.add(makeTitledPanel("Nimbus JSlider.isFilled", slider))
-  box.add(Box.createVerticalGlue())
+  val box = Box.createVerticalBox().also {
+    it.add(Box.createVerticalStrut(5))
+    it.add(makeTitledPanel("Default", JSlider()))
+    it.add(Box.createVerticalStrut(5))
+    it.add(makeTitledPanel("Nimbus JSlider.isFilled", slider))
+    it.add(Box.createVerticalGlue())
+  }
 
   return JPanel(BorderLayout()).also {
     it.add(box)
