@@ -34,10 +34,10 @@ private open class LoadSaveTask(val windowState: WindowState) :
       loadWindowState(service, codebase, windowState)
       object : WindowAdapter() {
         override fun windowClosing(e: WindowEvent) {
-          val f = e.component as? JFrame
-          if (f != null && f.extendedState == Frame.NORMAL) {
-            windowState.size = f.size
-            windowState.location = f.locationOnScreen
+          val frame = e.component
+          if (frame is Frame && frame.extendedState == Frame.NORMAL) {
+            windowState.size = frame.size
+            windowState.location = frame.locationOnScreen
           }
           saveWindowState(service, codebase, windowState)
         }
