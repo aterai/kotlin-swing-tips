@@ -41,9 +41,9 @@ private fun makeUI(): Component {
   label.border = BorderFactory.createEmptyBorder(5, 16 + 5, 5, 2)
   val button = JButton("Exit")
   button.addActionListener { e ->
-    val c = e.source as? JComponent
-    val frame = c?.topLevelAncestor as? JFrame
-    frame?.dispatchEvent(WindowEvent(frame, WindowEvent.WINDOW_CLOSING))
+    // val window = SwingUtilities.getWindowAncestor(e.source as? Component)
+    val window = (e.source as? JComponent)?.topLevelAncestor as? Window
+    window?.dispatchEvent(WindowEvent(window, WindowEvent.WINDOW_CLOSING))
   }
   val box = Box.createHorizontalBox()
   box.add(Box.createHorizontalGlue())
