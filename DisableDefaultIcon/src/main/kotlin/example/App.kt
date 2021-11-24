@@ -12,21 +12,21 @@ fun makeUI(): Component {
   val r1 = JRadioButton("img=null")
   r1.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      (r1.topLevelAncestor as? JFrame)?.iconImage = null
+      (r1.topLevelAncestor as? Frame)?.iconImage = null
     }
   }
 
   val r2 = JRadioButton("img=new ImageIcon(\"\").getImage()")
   r2.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      (r2.topLevelAncestor as? JFrame)?.iconImage = ImageIcon("").image // JDK 1.5
+      (r2.topLevelAncestor as? Frame)?.iconImage = ImageIcon("").image // JDK 1.5
     }
   }
 
   val r3 = JRadioButton("img=new BufferedImage(1, 1, TYPE_INT_ARGB)")
   r3.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      (r3.topLevelAncestor as? JFrame)?.iconImage =
+      (r3.topLevelAncestor as? Frame)?.iconImage =
         BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB) // size=(1x1)
     }
   }
@@ -34,12 +34,12 @@ fun makeUI(): Component {
   val r4 = JRadioButton("img=toolkit.createImage(url_16x16transparent)", true)
   r4.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      (r4.topLevelAncestor as? JFrame)?.iconImage =
+      (r4.topLevelAncestor as? Frame)?.iconImage =
         Toolkit.getDefaultToolkit().createImage(url) // 16x16transparent.png
     }
   }
   EventQueue.invokeLater {
-    (r4.topLevelAncestor as? JFrame)?.iconImage = Toolkit.getDefaultToolkit().createImage(url)
+    (r4.topLevelAncestor as? Frame)?.iconImage = Toolkit.getDefaultToolkit().createImage(url)
   }
 
   val box = Box.createVerticalBox()

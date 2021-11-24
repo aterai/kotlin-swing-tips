@@ -14,7 +14,7 @@ fun makeUI(): Component {
   val exitButton = JButton(SaveHandler.CMD_EXIT)
   val saveButton = JButton(SaveHandler.CMD_SAVE)
   EventQueue.invokeLater {
-    (textArea.topLevelAncestor as? JFrame)?.also { frame ->
+    (textArea.topLevelAncestor as? Frame)?.also { frame ->
       val handler = SaveHandler(frame)
       handler.addEnabledFlagComponent(saveButton)
       frame.addWindowListener(handler)
@@ -40,7 +40,7 @@ fun makeUI(): Component {
   }
 }
 
-private class SaveHandler(private val frame: JFrame) : WindowAdapter(), DocumentListener, ActionListener {
+private class SaveHandler(private val frame: Frame) : WindowAdapter(), DocumentListener, ActionListener {
   private val title = frame.title
   private val list = mutableListOf<JComponent>()
 

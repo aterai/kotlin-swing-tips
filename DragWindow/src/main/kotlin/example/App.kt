@@ -55,7 +55,7 @@ private fun makeUI(): Component {
   return p
 }
 
-fun createSplashScreen(frame: JFrame?, img: ImageIcon?): JWindow {
+fun createSplashScreen(frame: Frame?, img: ImageIcon?): JWindow {
   val dwl = DragWindowListener()
   val label = JLabel(img)
   label.addMouseListener(dwl)

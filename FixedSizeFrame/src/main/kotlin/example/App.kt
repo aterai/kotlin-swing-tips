@@ -6,7 +6,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 fun makeUI() = JPanel(BorderLayout()).also {
   val checkbox = JCheckBox("setResizable:", true)
   checkbox.addActionListener {
-    (checkbox.topLevelAncestor as? JFrame)?.isResizable = checkbox.isSelected
+    (checkbox.topLevelAncestor as? Frame)?.isResizable = checkbox.isSelected
   }
 
   val p = JPanel()
