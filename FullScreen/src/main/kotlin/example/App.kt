@@ -34,7 +34,7 @@ fun makeUI(): Component {
   val a2 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       println("ESC KeyEvent:")
-      (p.topLevelAncestor as? JDialog)?.also {
+      (p.topLevelAncestor as? Window)?.also {
         it.dispatchEvent(WindowEvent(it, WindowEvent.WINDOW_CLOSING))
       }
     }
@@ -48,7 +48,7 @@ fun makeUI(): Component {
 }
 
 fun toggleFullScreenWindow(c: JComponent) {
-  (c.topLevelAncestor as? JDialog)?.also {
+  (c.topLevelAncestor as? Dialog)?.also {
     val graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().defaultScreenDevice
     if (graphicsDevice.fullScreenWindow == null) {
       it.dispose() // destroy the native resources
