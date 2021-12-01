@@ -116,7 +116,7 @@ private class TextComponentPopupMenu : JPopupMenu() {
     val tc = c as? JTextComponent ?: return
     tc.requestFocusInWindow()
     var hasSelectedText = tc.selectedText != null
-    if (tc is JTextField && !tc.isFocusOwner() && !hasSelectedText) {
+    if (tc is JTextComponent && !tc.isFocusOwner() && !hasSelectedText) {
       tc.selectAll()
       hasSelectedText = true
     }
