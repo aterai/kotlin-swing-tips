@@ -5,7 +5,8 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.TitledBorder
 
 fun makeUI(): Component {
-  val b1 = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), "TitledBorder")
+  val b0 = BorderFactory.createLineBorder(Color.GRAY)
+  val b1 = BorderFactory.createTitledBorder(b0, "TitledBorder")
   b1.titleJustification = TitledBorder.CENTER
   val p1 = JPanel()
   p1.border = b1
