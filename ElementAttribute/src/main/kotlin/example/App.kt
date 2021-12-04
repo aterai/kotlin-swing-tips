@@ -43,15 +43,15 @@ fun makeUI(): Component {
   editor2.text = HTML_TEXT
   editor2.isEditable = false
   editor2.addHyperlinkListener { e ->
-    (e.source as? JEditorPane)?.also { editorPane ->
+    (e.source as? JEditorPane)?.also {
       when (e.eventType) {
         HyperlinkEvent.EventType.ACTIVATED ->
-          JOptionPane.showMessageDialog(editorPane, "You click the link with the URL " + e.url)
+          JOptionPane.showMessageDialog(it, "You click the link with the URL " + e.url)
         HyperlinkEvent.EventType.ENTERED -> {
-          tooltip = editorPane.toolTipText
-          editorPane.toolTipText = e.url?.toExternalForm()
+          tooltip = it.toolTipText
+          it.toolTipText = e.url?.toExternalForm()
         }
-        HyperlinkEvent.EventType.EXITED -> editorPane.toolTipText = tooltip
+        HyperlinkEvent.EventType.EXITED -> it.toolTipText = tooltip
       }
     }
   }
@@ -66,10 +66,7 @@ fun makeUI(): Component {
 }
 
 private class CustomTooltipEditorPane : JEditorPane() {
-  @Transient
   private val bias = arrayOfNulls<Bias>(1)
-
-  @Transient
   private var listener: HyperlinkListener? = null
 
   override fun updateUI() {
