@@ -96,15 +96,11 @@ private class InternalFrameTitlePanePopupMenu : JPopupMenu() {
 private class DesktopLayerUI : LayerUI<JDesktopPane>() {
   override fun installUI(c: JComponent) {
     super.installUI(c)
-    if (c is JLayer<*>) {
-      c.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
-    }
+    (c as? JLayer<*>)?.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
   }
 
   override fun uninstallUI(c: JComponent) {
-    if (c is JLayer<*>) {
-      c.layerEventMask = 0
-    }
+    (c as? JLayer<*>)?.layerEventMask = 0
     super.uninstallUI(c)
   }
 
