@@ -116,7 +116,7 @@ private class FileTreeCellRenderer(
     hasFocus: Boolean
   ): Component {
     val c = renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
-    if (c is JLabel) {
+    if (c is JLabel && value is DefaultMutableTreeNode) {
       if (selected) {
         c.isOpaque = false
         c.setForeground(getTextSelectionColor())
@@ -125,13 +125,11 @@ private class FileTreeCellRenderer(
         c.setForeground(getTextNonSelectionColor())
         c.setBackground(getBackgroundNonSelectionColor())
       }
-      (value as? DefaultMutableTreeNode)?.also {
-        (it.userObject as? File)?.also { file ->
-          c.icon = fileSystemView.getSystemIcon(file)
-          c.text = fileSystemView.getSystemDisplayName(file)
-          c.toolTipText = file.path
-          c.setEnabled(!file.name.startsWith("."))
-        }
+      (value.userObject as? File)?.also {
+        c.icon = fileSystemView.getSystemIcon(it)
+        c.text = fileSystemView.getSystemDisplayName(it)
+        c.toolTipText = it.path
+        c.setEnabled(!it.name.startsWith("."))
       }
     }
     return c
