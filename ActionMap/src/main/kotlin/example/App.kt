@@ -26,11 +26,10 @@ fun makeUI(): Component {
   pf2.actionMap = pf2.actionMap.also {
     val a = object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
-        val c = e.source as? JComponent ?: return
         EventQueue.invokeLater {
           Toolkit.getDefaultToolkit().beep()
           JOptionPane.showMessageDialog(
-            c.rootPane,
+            (e.source as? JComponent)?.rootPane,
             "paste is disabled",
             "title",
             JOptionPane.ERROR_MESSAGE
