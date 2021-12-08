@@ -3,9 +3,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.DefaultEditorKit
-import javax.swing.text.DefaultEditorKit.CopyAction
-import javax.swing.text.DefaultEditorKit.CutAction
-import javax.swing.text.DefaultEditorKit.PasteAction
 import javax.swing.text.JTextComponent
 
 fun makeUI(): Component {
@@ -18,14 +15,14 @@ fun makeUI(): Component {
 }
 
 private class TextComponentPopupMenu : JPopupMenu() {
-  private val cutAction = CutAction()
-  private val copyAction = CopyAction()
+  private val cutAction = DefaultEditorKit.CutAction()
+  private val copyAction = DefaultEditorKit.CopyAction()
   private val deleteItem: JMenuItem
 
   init {
     add(cutAction)
     add(copyAction)
-    add(PasteAction())
+    add(DefaultEditorKit.PasteAction())
     addSeparator()
     deleteItem = add("delete")
     deleteItem.addActionListener {
