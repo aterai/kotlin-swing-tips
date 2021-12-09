@@ -3,10 +3,10 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ItemEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.text.DefaultEditorKit.PasteAction
+import javax.swing.text.DefaultEditorKit
 
 fun makeUI(): Component {
-  val pasteAction = PasteAction()
+  val pasteAction = DefaultEditorKit.PasteAction()
   pasteAction.putValue(Action.LARGE_ICON_KEY, ColorIcon(Color.GREEN))
 
   val button = JButton("text")

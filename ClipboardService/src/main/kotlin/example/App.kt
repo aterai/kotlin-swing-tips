@@ -8,9 +8,7 @@ import java.awt.event.KeyEvent
 import javax.jnlp.ClipboardService
 import javax.jnlp.ServiceManager
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.text.DefaultEditorKit.CopyAction
-import javax.swing.text.DefaultEditorKit.CutAction
-import javax.swing.text.DefaultEditorKit.PasteAction
+import javax.swing.text.DefaultEditorKit
 import javax.swing.text.JTextComponent
 import javax.swing.undo.UndoManager
 
@@ -66,8 +64,8 @@ private fun makeTitledPanel(title: String, c: Component): Component {
 }
 
 private class TextComponentPopupMenu(textComponent: JTextComponent) : JPopupMenu() {
-  private val cutAction = CutAction()
-  private val copyAction = CopyAction()
+  private val cutAction = DefaultEditorKit.CutAction()
+  private val copyAction = DefaultEditorKit.CopyAction()
   private val deleteAction = object : AbstractAction("delete") {
     override fun actionPerformed(e: ActionEvent) {
       (invoker as? JTextComponent)?.replaceSelection(null)
@@ -77,7 +75,7 @@ private class TextComponentPopupMenu(textComponent: JTextComponent) : JPopupMenu
   init {
     add(cutAction)
     add(copyAction)
-    add(PasteAction())
+    add(DefaultEditorKit.PasteAction())
     add(deleteAction)
     addSeparator()
     val manager = UndoManager()

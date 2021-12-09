@@ -2,9 +2,7 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.text.DefaultEditorKit.CopyAction
-import javax.swing.text.DefaultEditorKit.CutAction
-import javax.swing.text.DefaultEditorKit.PasteAction
+import javax.swing.text.DefaultEditorKit
 import javax.swing.text.JTextComponent
 
 fun makeUI(): Component {
@@ -29,9 +27,9 @@ fun makeUI(): Component {
 
 private class TextFieldPopupMenu : JPopupMenu() {
   init {
-    add(CutAction())
-    add(CopyAction())
-    add(PasteAction())
+    add(DefaultEditorKit.CutAction())
+    add(DefaultEditorKit.CopyAction())
+    add(DefaultEditorKit.PasteAction())
     add("delete").addActionListener {
       (invoker as? JTextComponent)?.replaceSelection(null)
     }
@@ -46,7 +44,7 @@ private class TextFieldPopupMenu : JPopupMenu() {
       val hasSelectedText = c.selectedText == null
       for (menuElement in subElements) {
         val m = menuElement.component
-        if (m is JMenuItem && m.action is PasteAction) {
+        if (m is JMenuItem && m.action is DefaultEditorKit.PasteAction) {
           continue
         }
         m.isEnabled = hasSelectedText
