@@ -1,6 +1,7 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicTabbedPaneUI
 
@@ -34,15 +35,21 @@ fun makeUI(): Component {
   }
 
   // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
-  tabs.addTab("A", ImageIcon(tabs.javaClass.getResource("wi0009-32.png")), JScrollPane(JTree()))
-  tabs.addTab("B", ImageIcon(tabs.javaClass.getResource("wi0054-32.png")), JScrollPane(JTextArea()))
-  tabs.addTab("C", ImageIcon(tabs.javaClass.getResource("wi0062-32.png")), JScrollPane(JTree()))
-  tabs.addTab("D", ImageIcon(tabs.javaClass.getResource("wi0063-32.png")), JScrollPane(JTextArea()))
+  tabs.addTab("A", makeIcon("example/wi0009-32.png"), JScrollPane(JTree()))
+  tabs.addTab("B", makeIcon("example/wi0054-32.png"), JScrollPane(JTextArea()))
+  tabs.addTab("C", makeIcon("example/wi0062-32.png"), JScrollPane(JTree()))
+  tabs.addTab("D", makeIcon("example/wi0063-32.png"), JScrollPane(JTextArea()))
 
   return JPanel(BorderLayout()).also {
     it.add(tabs)
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+private fun makeIcon(path: String): Icon {
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  return url?.openStream()?.use(ImageIO::read)?.let(::ImageIcon)
+    ?: UIManager.getIcon("OptionPane.errorIcon")
 }
 
 private class FlatTabbedPaneUI : BasicTabbedPaneUI() {
