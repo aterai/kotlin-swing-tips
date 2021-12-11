@@ -4,8 +4,10 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.geom.Path2D
+import java.awt.image.BufferedImage
 import java.awt.image.FilteredImageSource
 import java.awt.image.RGBImageFilter
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.Border
 import javax.swing.plaf.ColorUIResource
@@ -62,7 +64,10 @@ private class FileNameRenderer(table: JTable) : TableCellRenderer {
     renderer.isOpaque = false
 
     // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
-    icon = ImageIcon(javaClass.getResource("wi0063-16.png"))
+    val path = "example/wi0063-16.png"
+    val url = Thread.currentThread().contextClassLoader.getResource(path)
+    val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+    icon = ImageIcon(img)
 
     val ip = FilteredImageSource(icon.image.source, SelectedImageFilter())
     selectedIcon = ImageIcon(p.createImage(ip))
@@ -77,6 +82,17 @@ private class FileNameRenderer(table: JTable) : TableCellRenderer {
     val d = iconLabel.preferredSize
     dim.size = d
     table.rowHeight = d.height
+  }
+
+  private fun makeMissingImage(): BufferedImage {
+    val missingIcon = UIManager.getIcon("html.missingImage")
+    val iw = missingIcon.iconWidth
+    val ih = missingIcon.iconHeight
+    val bi = BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
+    val g2 = bi.createGraphics()
+    missingIcon.paintIcon(null, g2, (16 - iw) / 2, (16 - ih) / 2)
+    g2.dispose()
+    return bi
   }
 
   private fun makeNoFocusBorder(): Border {
