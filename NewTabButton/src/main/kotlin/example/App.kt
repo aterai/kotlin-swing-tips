@@ -4,6 +4,7 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.io.Serializable
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
@@ -32,16 +33,16 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
 
   // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
   private val icons = listOf(
-    ImageIcon(javaClass.getResource("wi0009-16.png")),
-    ImageIcon(javaClass.getResource("wi0054-16.png")),
-    ImageIcon(javaClass.getResource("wi0062-16.png")),
-    ImageIcon(javaClass.getResource("wi0063-16.png")),
-    ImageIcon(javaClass.getResource("wi0064-16.png")),
-    ImageIcon(javaClass.getResource("wi0096-16.png")),
-    ImageIcon(javaClass.getResource("wi0111-16.png")),
-    ImageIcon(javaClass.getResource("wi0122-16.png")),
-    ImageIcon(javaClass.getResource("wi0124-16.png")),
-    ImageIcon(javaClass.getResource("wi0126-16.png"))
+    makeIcon("example/wi0009-16.png"),
+    makeIcon("example/wi0054-16.png"),
+    makeIcon("example/wi0062-16.png"),
+    makeIcon("example/wi0063-16.png"),
+    makeIcon("example/wi0064-16.png"),
+    makeIcon("example/wi0096-16.png"),
+    makeIcon("example/wi0111-16.png"),
+    makeIcon("example/wi0122-16.png"),
+    makeIcon("example/wi0124-16.png"),
+    makeIcon("example/wi0126-16.png")
   )
 
   init {
@@ -185,6 +186,12 @@ private class TabLayout : LayoutManager, Serializable {
     private const val serialVersionUID = 1L
     private const val TAB_WIDTH = 100
   }
+}
+
+private fun makeIcon(path: String): Icon {
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  return url?.openStream()?.use(ImageIO::read)?.let(::ImageIcon)
+    ?: UIManager.getIcon("html.missingImage")
 }
 
 fun main() {

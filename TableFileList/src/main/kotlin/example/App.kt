@@ -69,7 +69,7 @@ private class FileNameRenderer(table: JTable) : TableCellRenderer {
     val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
     icon = ImageIcon(img)
 
-    val ip = FilteredImageSource(icon.image.source, SelectedImageFilter())
+    val ip = FilteredImageSource(img.source, SelectedImageFilter())
     selectedIcon = ImageIcon(p.createImage(ip))
 
     iconLabel = JLabel(icon)
