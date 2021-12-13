@@ -108,25 +108,22 @@ private class TreeTransferHandler : TransferHandler() {
     }
   }
 
+  private fun deepCopyTreeNode(src: MutableTreeNode, tgt: DefaultMutableTreeNode): DefaultMutableTreeNode {
+    src.children().toList()
+      .filterIsInstance<DefaultMutableTreeNode>()
+      .forEach {
+        val clone = DefaultMutableTreeNode(it.userObject)
+        tgt.add(clone)
+        if (!it.isLeaf) {
+          deepCopyTreeNode(it, clone)
+        }
+      }
+    return tgt
+  }
+
   companion object {
     private const val NAME = "Array of DefaultMutableTreeNode"
     private val FLAVOR = DataFlavor(Array<DefaultMutableTreeNode>::class.java, NAME)
-
-    private fun deepCopyTreeNode(
-      src: DefaultMutableTreeNode,
-      tgt: DefaultMutableTreeNode
-    ): DefaultMutableTreeNode { // Java 9: Collections.list(src.children()).stream()
-      src.children().toList()
-        .filterIsInstance<DefaultMutableTreeNode>()
-        .forEach {
-          val clone = DefaultMutableTreeNode(it.userObject)
-          tgt.add(clone)
-          if (!it.isLeaf) {
-            deepCopyTreeNode(it, clone)
-          }
-        }
-      return tgt
-    }
   }
 }
 
