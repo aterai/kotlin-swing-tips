@@ -10,6 +10,7 @@ import java.awt.geom.Path2D
 import java.awt.image.BufferedImage
 import java.awt.image.FilteredImageSource
 import java.awt.image.RGBImageFilter
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.Border
 import javax.swing.event.MouseInputAdapter
@@ -53,13 +54,30 @@ fun makeUI(): Component {
 }
 
 private data class ListItem(val title: String, val iconFile: String) {
-  val icon = ImageIcon(javaClass.getResource(iconFile))
+  val icon = makeImageIcon(iconFile)
   val selectedIcon: ImageIcon
 
   init {
     val ip = FilteredImageSource(icon.image.source, SelectedImageFilter())
     selectedIcon = ImageIcon(Toolkit.getDefaultToolkit().createImage(ip))
   }
+}
+
+private fun makeImageIcon(path: String): ImageIcon {
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+  return ImageIcon(img)
+}
+
+private fun makeMissingImage(): BufferedImage {
+  val missingIcon = UIManager.getIcon("OptionPane.errorIcon")
+  val iw = missingIcon.iconWidth
+  val ih = missingIcon.iconHeight
+  val bi = BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, (32 - iw) / 2, (32 - ih) / 2)
+  g2.dispose()
+  return bi
 }
 
 private class ReorderingList(model: ListModel<ListItem>) : JList<ListItem>(model) {
