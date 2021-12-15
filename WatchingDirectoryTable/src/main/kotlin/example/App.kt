@@ -83,7 +83,7 @@ fun makeUI(): Component {
   }
 }
 
-// Watching a Directory for Changes (The Java? Tutorials > Essential Classes > Basic I/O)
+// Watching a Directory for Changes (The Java™ Tutorials > Essential Classes > Basic I/O)
 // https://docs.oracle.com/javase/tutorial/essential/io/notification.html
 // Process all events for keys queued to the watcher
 private fun processEvents(dir: Path, watcher: WatchService) {

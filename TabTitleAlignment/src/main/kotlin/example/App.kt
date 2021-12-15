@@ -208,7 +208,7 @@ private class LeftAlignmentTabbedPaneUI : MetalTabbedPaneUI() {
   }
 }
 
-// How to Use Tabbed Panes (The Java? Tutorials > Creating a GUI With JFC/Swing > Using Swing Components)
+// How to Use Tabbed Panes (The Java™ Tutorials > Creating a GUI With JFC/Swing > Using Swing Components)
 // https://docs.oracle.com/javase/tutorial/uiswing/components/tabbedpane.html
 private class ButtonTabComponent(pane: JTabbedPane) : JPanel(BorderLayout()) {
   private val tabs = pane

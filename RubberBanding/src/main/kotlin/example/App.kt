@@ -34,7 +34,7 @@ private data class ListItem(val title: String, val iconFile: String) {
 
   init {
     val ip = FilteredImageSource(icon.image.source, SelectedImageFilter())
-    this.selectedIcon = ImageIcon(Toolkit.getDefaultToolkit().createImage(ip))
+    selectedIcon = ImageIcon(Toolkit.getDefaultToolkit().createImage(ip))
   }
 }
 

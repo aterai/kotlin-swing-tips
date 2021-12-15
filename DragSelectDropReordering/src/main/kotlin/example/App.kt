@@ -7,8 +7,10 @@ import java.awt.datatransfer.UnsupportedFlavorException
 import java.awt.dnd.DragSource
 import java.awt.event.MouseEvent
 import java.awt.geom.Path2D
+import java.awt.image.BufferedImage
 import java.awt.image.FilteredImageSource
 import java.awt.image.RGBImageFilter
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.Border
 import javax.swing.event.MouseInputAdapter
@@ -17,16 +19,16 @@ import javax.swing.event.MouseInputListener
 fun makeUI(): Component {
   val model = DefaultListModel<ListItem>().also {
     // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
-    it.addElement(ListItem("wi0009-32", "wi0009-32.png"))
-    it.addElement(ListItem("12345", "wi0054-32.png"))
-    it.addElement(ListItem("wi0062-32.png", "wi0062-32.png"))
-    it.addElement(ListItem("test", "wi0063-32.png"))
-    it.addElement(ListItem("32.png", "wi0064-32.png"))
-    it.addElement(ListItem("wi0096-32.png", "wi0096-32.png"))
-    it.addElement(ListItem("6896", "wi0111-32.png"))
-    it.addElement(ListItem("t467467est", "wi0122-32.png"))
-    it.addElement(ListItem("test123", "wi0124-32.png"))
-    it.addElement(ListItem("test(1)", "wi0126-32.png"))
+    it.addElement(ListItem("wi0009-32", "example/wi0009-32.png"))
+    it.addElement(ListItem("12345", "example/wi0054-32.png"))
+    it.addElement(ListItem("wi0062-32.png", "example/wi0062-32.png"))
+    it.addElement(ListItem("test", "example/wi0063-32.png"))
+    it.addElement(ListItem("32.png", "example/wi0064-32.png"))
+    it.addElement(ListItem("wi0096-32.png", "example/wi0096-32.png"))
+    it.addElement(ListItem("6896", "example/wi0111-32.png"))
+    it.addElement(ListItem("t467467est", "example/wi0122-32.png"))
+    it.addElement(ListItem("test123", "example/wi0124-32.png"))
+    it.addElement(ListItem("test(1)", "example/wi0126-32.png"))
   }
   val list = ReorderingList(model)
   list.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
@@ -37,13 +39,30 @@ fun makeUI(): Component {
 }
 
 private data class ListItem(val title: String, val iconFile: String) {
-  val icon = ImageIcon(javaClass.getResource(iconFile))
+  val icon = makeImageIcon(iconFile)
   val selectedIcon: ImageIcon
 
   init {
     val ip = FilteredImageSource(icon.image.source, SelectedImageFilter())
     selectedIcon = ImageIcon(Toolkit.getDefaultToolkit().createImage(ip))
   }
+}
+
+private fun makeImageIcon(path: String): ImageIcon {
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+  return ImageIcon(img)
+}
+
+private fun makeMissingImage(): BufferedImage {
+  val missingIcon = UIManager.getIcon("OptionPane.errorIcon")
+  val iw = missingIcon.iconWidth
+  val ih = missingIcon.iconHeight
+  val bi = BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, (32 - iw) / 2, (32 - ih) / 2)
+  g2.dispose()
+  return bi
 }
 
 private class ReorderingList(model: ListModel<ListItem>) : JList<ListItem>(model) {
@@ -210,7 +229,7 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   }
 }
 
-// Demo - BasicDnD (The Java邃｢ Tutorials > Creating a GUI With JFC/Swing > Drag and Drop and Data Transfer)
+// Demo - BasicDnD (The Java™ Tutorials > Creating a GUI With JFC/Swing > Drag and Drop and Data Transfer)
 // https://docs.oracle.com/javase/tutorial/uiswing/dnd/basicdemo.html
 private class ListItemTransferHandler : TransferHandler() {
   private val selectedIndices = mutableListOf<Int>()
@@ -218,7 +237,6 @@ private class ListItemTransferHandler : TransferHandler() {
   private var addCount = 0 // Number of items added.
 
   override fun createTransferable(c: JComponent): Transferable {
-    val source = c as? JList<*>
     c.rootPane.glassPane.isVisible = true
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(FLAVOR)
@@ -227,9 +245,10 @@ private class ListItemTransferHandler : TransferHandler() {
 
       @Throws(UnsupportedFlavorException::class)
       override fun getTransferData(flavor: DataFlavor): Any {
-        return if (isDataFlavorSupported(flavor) && source != null) {
-          source.selectedIndices.forEach { selectedIndices.add(it) }
-          source.selectedValuesList
+        val src = c as? JList<*>
+        return if (isDataFlavorSupported(flavor) && src != null) {
+          src.selectedIndices.forEach { selectedIndices.add(it) }
+          src.selectedValuesList
         } else {
           throw UnsupportedFlavorException(flavor)
         }
