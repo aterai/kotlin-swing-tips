@@ -65,7 +65,7 @@ private class WindowPreferencesHandler : WindowAdapter(), ComponentListener {
     // setPreferredSize(dim);
     frame.pack()
     val screen = frame.graphicsConfiguration.bounds
-    pos.setLocation(screen.x + screen.width / 2 - dim.width / 2, screen.y + screen.height / 2 - dim.height / 2)
+    pos.setLocation(screen.centerX - dim.width / 2, screen.centerY - dim.height / 2)
     val x = prefs.getInt(PREFIX + "locx", pos.x)
     val y = prefs.getInt(PREFIX + "locy", pos.y)
     pos.setLocation(x, y)
