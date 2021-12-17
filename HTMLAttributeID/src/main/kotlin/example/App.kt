@@ -7,6 +7,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.AbstractDocument
 import javax.swing.text.AttributeSet
 import javax.swing.text.DefaultHighlighter
+import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.text.Element
 import javax.swing.text.MutableAttributeSet
 import javax.swing.text.StyleConstants
@@ -15,7 +16,7 @@ import javax.swing.text.html.HTMLDocument
 import javax.swing.text.html.HTMLEditorKit.ParserCallback
 import javax.swing.text.html.parser.ParserDelegator
 
-private val highlightPainter = DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW)
+private val highlightPainter = DefaultHighlightPainter(Color.YELLOW)
 private val textArea = JTextArea()
 private val editorPane = JEditorPane()
 private val field = JTextField("3")
@@ -134,11 +135,7 @@ private fun checkId(element: Element) {
   val attrs = element.attributes
   val elementName = attrs.getAttribute(AbstractDocument.ElementNameAttribute)
   val name = if (elementName == null) attrs.getAttribute(StyleConstants.NameAttribute) else null
-  val tag = if (name is HTML.Tag) {
-    name
-  } else {
-    return
-  }
+  val tag = if (name is HTML.Tag) name else return
   textArea.append("$tag\n")
   if (tag.isBlock) { // block
     blockHighlight(element, attrs)
