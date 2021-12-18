@@ -42,8 +42,8 @@ fun makeUI() = JPanel(GridLayout(0, 1, 5, 5)).also {
   it.preferredSize = Dimension(320, 240)
 }
 
-private fun makeComp(str: String, border: Border) = JLabel().also {
-  it.border = border
+private fun makeComp(str: String, bdr: Border) = JLabel().also {
+  it.border = bdr
   it.putClientProperty("html.disable", true)
   it.text = str
 }
@@ -147,86 +147,86 @@ private class TitledBorder2 @JvmOverloads constructor(
   constructor(title: String?) : this(null, title, LEADING, DEFAULT_POSITION, null, null)
 
   override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
-    val b = getBorder()
+    val bdr = getBorder()
     val str = title
     if (str?.isNotEmpty() == true) {
-      val edge = if (b is TitledBorder2) 0 else EDGE_SPACING
-      val bdr = Rectangle()
-      bdr.x = x + edge
-      bdr.y = y + edge
-      bdr.width = width - edge - edge
-      bdr.height = height - edge - edge
-      val lbl = Rectangle()
-      lbl.y = y
+      val edge = if (bdr is TitledBorder2) 0 else EDGE_SPACING
+      val br = Rectangle()
+      br.x = x + edge
+      br.y = y + edge
+      br.width = width - edge - edge
+      br.height = height - edge - edge
+      val lr = Rectangle()
+      lr.y = y
       val size = getLabel(c).preferredSize
-      lbl.height = size.height
-      val insets = makeBorderInsets(b, c, Insets(0, 0, 0, 0))
+      lr.height = size.height
+      val insets = makeBorderInsets(bdr, c, Insets(0, 0, 0, 0))
 
-      initPositionRect(height, edge, insets, bdr, lbl)
+      initPositionRect(height, edge, insets, br, lr)
       insets.left += edge + TEXT_INSET_H
       insets.right += edge + TEXT_INSET_H
 
       val just = getJustification(c, titleJust)
-      lbl.x = x
-      lbl.width = width - insets.left - insets.right
-      if (lbl.width > size.width) {
-        lbl.width = size.width
+      lr.x = x
+      lr.width = width - insets.left - insets.right
+      if (lr.width > size.width) {
+        lr.width = size.width
       }
       when (just) {
-        LEFT -> lbl.x += insets.left
-        RIGHT -> lbl.x += width - insets.right - lbl.width
-        CENTER -> lbl.x += (width - lbl.width) / 2
+        LEFT -> lr.x += insets.left
+        RIGHT -> lr.x += width - insets.right - lr.width
+        CENTER -> lr.x += (width - lr.width) / 2
       }
 
-      paintWrapBorder(c, g, position, bdr, lbl)
-      g.translate(lbl.x, lbl.y)
-      label.setSize(lbl.width, lbl.height)
+      paintWrapBorder(c, bdr, g, position, br, lr)
+      g.translate(lr.x, lr.y)
+      label.setSize(lr.width, lr.height)
       label.paint(g)
-      g.translate(-lbl.x, -lbl.y)
+      g.translate(-lr.x, -lr.y)
     } else {
       border?.paintBorder(c, g, x, y, width, height)
     }
   }
 
-  private fun initPositionRect(height: Int, edge: Int, ins: Insets, bdr: Rectangle, lbl: Rectangle) {
+  private fun initPositionRect(height: Int, edge: Int, ins: Insets, br: Rectangle, lr: Rectangle) {
     when (position) {
       ABOVE_TOP -> {
         ins.left = 0
         ins.right = 0
-        bdr.y += lbl.height - edge
-        bdr.height -= lbl.height - edge
+        br.y += lr.height - edge
+        br.height -= lr.height - edge
       }
       TOP -> {
-        ins.top = edge + ins.top / 2 - lbl.height / 2
+        ins.top = edge + ins.top / 2 - lr.height / 2
         if (ins.top < edge) {
-          bdr.y -= ins.top
-          bdr.height += ins.top
+          br.y -= ins.top
+          br.height += ins.top
         } else {
-          lbl.y += ins.top
+          lr.y += ins.top
         }
       }
-      BELOW_TOP -> lbl.y += ins.top + edge
-      ABOVE_BOTTOM -> lbl.y += height - lbl.height - ins.bottom - edge
+      BELOW_TOP -> lr.y += ins.top + edge
+      ABOVE_BOTTOM -> lr.y += height - lr.height - ins.bottom - edge
       BOTTOM -> {
-        lbl.y += height - lbl.height
-        ins.bottom = edge + (ins.bottom - lbl.height) / 2
+        lr.y += height - lr.height
+        ins.bottom = edge + (ins.bottom - lr.height) / 2
         if (ins.bottom < edge) {
-          bdr.height += ins.bottom
+          br.height += ins.bottom
         } else {
-          lbl.y -= ins.bottom
+          lr.y -= ins.bottom
         }
       }
       BELOW_BOTTOM -> {
         ins.left = 0
         ins.right = 0
-        lbl.y += height - lbl.height
-        bdr.height -= lbl.height - edge
+        lr.y += height - lr.height
+        br.height -= lr.height - edge
       }
     }
   }
 
-  private fun paintWrapBorder(c: Component, g: Graphics, position: Int, b: Rectangle, l: Rectangle) {
-    border?.also {
+  private fun paintWrapBorder(c: Component, bdr: Border?, g: Graphics, position: Int, b: Rectangle, l: Rectangle) {
+    bdr?.also {
       if (position == TOP || position == BOTTOM) {
         val tsp = TEXT_SPACING
         val p = Path2D.Float()
@@ -384,12 +384,12 @@ private class TitledBorder2 @JvmOverloads constructor(
       if (c.componentOrientation.isLeftToRight) RIGHT else LEFT
     } else just
 
-    private fun makeBorderInsets(border: Border?, c: Component, insets: Insets): Insets {
-      when (border) {
+    private fun makeBorderInsets(bdr: Border?, c: Component, insets: Insets): Insets {
+      when (bdr) {
         null -> insets[0, 0, 0] = 0
-        is AbstractBorder -> border.getBorderInsets(c, insets)
+        is AbstractBorder -> bdr.getBorderInsets(c, insets)
         else -> {
-          val i = border.getBorderInsets(c)
+          val i = bdr.getBorderInsets(c)
           insets[i.top, i.left, i.bottom] = i.right
         }
       }
