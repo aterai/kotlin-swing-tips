@@ -1,9 +1,10 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.Component.BaselineResizeBehavior
 import java.awt.geom.Path2D
-import java.util.Locale
+import java.beans.PropertyChangeEvent
+import java.beans.PropertyChangeListener
+import java.lang.ref.WeakReference
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.AbstractBorder
 import javax.swing.border.Border
@@ -83,113 +84,77 @@ private class ComponentTitledBorder(
   }
 }
 
-private class TitledBorder2 @JvmOverloads constructor(
-  private var border: Border? = null,
-  private var title: String? = "",
-  titleJust: Int = LEADING,
-  titlePosition: Int = DEFAULT_POSITION,
-  titleFont: Font? = null,
-  titleColor: Color? = null
-) : AbstractBorder() {
-  var titlePosition = 0
-    set(titlePosition) {
-      field = when (titlePosition) {
-        ABOVE_TOP, TOP, BELOW_TOP, ABOVE_BOTTOM, BOTTOM, BELOW_BOTTOM, DEFAULT_POSITION -> titlePosition
-        else -> throw IllegalArgumentException("$titlePosition is not a valid title position.")
-      }
-    }
-  var titleJust = 0
-    set(titleJust) {
-      field = when (titleJust) {
-        DEFAULT_JUST, LEFT, CENTER, RIGHT, LEADING, TRAILING -> titleJust
-        else -> throw IllegalArgumentException("$titleJust is not a valid title justification.")
-      }
-    }
-  var titleFont = titleFont
-    set(titleFont) {
-      field = titleFont ?: UIManager.getFont("TitledBorder.font")
-    }
-  var titleColor = titleColor
-    set(titleColor) {
-      field = titleColor ?: UIManager.getColor("TitledBorder.titleColor")
-    }
-  private val position: Int
+private class TitledBorder2(title: String?) : TitledBorder(title) {
+  private val label2 = JLabel()
+
+  private val position2: Int
     get() {
-      val position = titlePosition
+      val position = getTitlePosition()
       if (position != DEFAULT_POSITION) {
         return position
       }
       val value = UIManager.get("TitledBorder.position")
-      return if (value is Int && DEFAULT_POSITION < value && value <= BELOW_BOTTOM) {
-        value
-      } else {
-        when ((value as? String)?.uppercase(Locale.ENGLISH)) {
-          "ABOVE_TOP" -> ABOVE_TOP
-          "TOP" -> TOP
-          "BELOW_TOP" -> BELOW_TOP
-          "ABOVE_BOTTOM" -> ABOVE_BOTTOM
-          "BOTTOM" -> BOTTOM
-          "BELOW_BOTTOM" -> BELOW_BOTTOM
-          else -> TOP
+      if (value is Int) {
+        if (value in 1..6) {
+          return value
         }
+      } else if (value is String) {
+        return TitledBorderUtil.getPositionByString(value)
       }
+      return TOP
     }
-  private val label = JLabel().also {
-    it.isOpaque = false
-    it.putClientProperty(BasicHTML.propertyKey, null)
-  }
 
   init {
-    this.titleJust = titleJust
-    this.titlePosition = titlePosition
+    label2.isOpaque = false
+    label2.putClientProperty(BasicHTML.propertyKey, null)
+    installPropertyChangeListeners()
   }
-
-  constructor(title: String?) : this(null, title, LEADING, DEFAULT_POSITION, null, null)
 
   override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
     val bdr = getBorder()
-    val str = title
-    if (str?.isNotEmpty() == true) {
+    if (bdr != null && getTitle()?.isNotEmpty() == true) {
       val edge = if (bdr is TitledBorder2) 0 else EDGE_SPACING
-      val br = Rectangle()
-      br.x = x + edge
-      br.y = y + edge
-      br.width = width - edge - edge
-      br.height = height - edge - edge
+      val br = Rectangle(x, y, width, height)
+      br.grow(-edge, -edge)
+
       val lr = Rectangle()
       lr.y = y
-      val size = getLabel(c).preferredSize
+      val size = getLabel2(c).preferredSize
       lr.height = size.height
-      val insets = makeBorderInsets(bdr, c, Insets(0, 0, 0, 0))
 
-      initPositionRect(height, edge, insets, br, lr)
-      insets.left += edge + TEXT_INSET_H
-      insets.right += edge + TEXT_INSET_H
+      val ins = TitledBorderUtil.getBorderInsets(bdr, c)
+      initPositionRect(height, edge, ins, br, lr)
+      ins.left += edge + TEXT_INSET_H2
+      ins.right += edge + TEXT_INSET_H2
 
-      val just = getJustification(c, titleJust)
-      lr.x = x
-      lr.width = width - insets.left - insets.right
-      if (lr.width > size.width) {
-        lr.width = size.width
-      }
-      when (just) {
-        LEFT -> lr.x += insets.left
-        RIGHT -> lr.x += width - insets.right - lr.width
-        CENTER -> lr.x += (width - lr.width) / 2
-      }
+      initJustificationRect(c, x, width, lr, ins)
 
-      paintWrapBorder(c, bdr, g, position, br, lr)
+      paintWrapBorder(c, bdr, g, br, lr)
       g.translate(lr.x, lr.y)
-      label.setSize(lr.width, lr.height)
-      label.paint(g)
+      label2.setSize(lr.width, lr.height)
+      label2.paint(g)
       g.translate(-lr.x, -lr.y)
     } else {
-      border?.paintBorder(c, g, x, y, width, height)
+      super.paintBorder(c, g, x, y, width, height)
+    }
+  }
+
+  private fun initJustificationRect(c: Component, x: Int, width: Int, lr: Rectangle, ins: Insets) {
+    val sz = getLabel2(c).preferredSize
+    lr.x = x
+    lr.width = width - ins.left - ins.right
+    if (lr.width > sz.width) {
+      lr.width = sz.width
+    }
+    when (getJustification2(c)) {
+      LEFT -> lr.x += ins.left
+      RIGHT -> lr.x += width - ins.right - lr.width
+      CENTER -> lr.x += (width - lr.width) / 2
     }
   }
 
   private fun initPositionRect(height: Int, edge: Int, ins: Insets, br: Rectangle, lr: Rectangle) {
-    when (position) {
+    when (position2) {
       ABOVE_TOP -> {
         ins.left = 0
         ins.right = 0
@@ -225,10 +190,10 @@ private class TitledBorder2 @JvmOverloads constructor(
     }
   }
 
-  private fun paintWrapBorder(c: Component, bdr: Border?, g: Graphics, position: Int, b: Rectangle, l: Rectangle) {
+  private fun paintWrapBorder(c: Component, bdr: Border?, g: Graphics, b: Rectangle, l: Rectangle) {
     bdr?.also {
-      if (position == TOP || position == BOTTOM) {
-        val tsp = TEXT_SPACING
+      if (position2 == TOP || position2 == BOTTOM) {
+        val tsp = TEXT_SPACING2
         val p = Path2D.Float()
         p.append(Rectangle(b.x, b.y, b.width, l.y - b.y), false)
         p.append(Rectangle(b.x, l.y, l.x - b.x - TEXT_SPACING, l.height), false)
@@ -244,157 +209,102 @@ private class TitledBorder2 @JvmOverloads constructor(
     }
   }
 
-  override fun getBorderInsets(c: Component, insets: Insets): Insets {
-    var ins = insets
-    val b = getBorder()
-    ins = makeBorderInsets(b, c, ins)
-    val str = title
-    if (str?.isNotEmpty() == true) {
-      val edge = if (b is TitledBorder2) 0 else EDGE_SPACING
-      val size = getLabel(c).preferredSize
-      when (position) {
-        ABOVE_TOP -> ins.top += size.height - edge
-        TOP -> if (ins.top < size.height) {
-          ins.top = size.height - edge
-        }
-        BELOW_TOP -> ins.top += size.height
-        ABOVE_BOTTOM -> ins.bottom += size.height
-        BOTTOM -> if (ins.bottom < size.height) {
-          ins.bottom = size.height - edge
-        }
-        BELOW_BOTTOM -> ins.bottom += size.height - edge
-      }
-      ins.top += edge + TEXT_SPACING
-      ins.left += edge + TEXT_SPACING
-      ins.right += edge + TEXT_SPACING
-      ins.bottom += edge + TEXT_SPACING
+  override fun getBorderInsets(c: Component?, insets: Insets): Insets {
+    return if (getTitle()?.isNotEmpty() == true) {
+      val edge = if (getBorder() is TitledBorder2) 0 else EDGE_SPACING
+      val size = getLabel2(c).preferredSize
+      TitledBorderUtil.initInsets(insets, position2, edge, size)
+      insets.top += edge + TEXT_SPACING2
+      insets.left += edge + TEXT_SPACING2
+      insets.right += edge + TEXT_SPACING2
+      insets.bottom += edge + TEXT_SPACING2
+      insets
+    } else {
+      super.getBorderInsets(c, insets)
     }
-    return ins
   }
 
-  override fun isBorderOpaque() = true
+  private fun getJustification2(c: Component): Int {
+    val justification = getTitleJustification()
+    if (justification == LEADING || justification == DEFAULT_JUSTIFICATION) {
+      return if (c.componentOrientation.isLeftToRight) LEFT else RIGHT
+    }
+    return if (justification == TRAILING) {
+      if (c.componentOrientation.isLeftToRight) RIGHT else LEFT
+    } else justification
+  }
 
-  fun getBorder(): Border? = border ?: UIManager.getBorder("TitledBorder.border")
+  private fun getLabel2(c: Component?): JLabel {
+    if (c != null) {
+      label2.text = getTitle()
+      label2.font = getFont(c)
+      label2.foreground = titleColor ?: c.foreground
+      label2.componentOrientation = c.componentOrientation
+      label2.isEnabled = c.isEnabled
+    }
+    return label2
+  }
 
-  // fun getTitleFont(): Font? = titleFont ?: UIManager.getFont("TitledBorder.font")
-
-  // fun getTitleColor(): Color? = titleColor ?: UIManager.getColor("TitledBorder.titleColor")
-
-//  fun setBorder(border: Border?) {
-//    this.border = border
-//  }
-//
-//  fun setTitleFont(titleFont: Font?) {
-//    this.titleFont = titleFont
-//  }
-//
-//  fun setTitleColor(titleColor: Color?) {
-//    this.titleColor = titleColor
-//  }
-//
-//  fun getMinimumSize(c: Component): Dimension {
-//    val insets = getBorderInsets(c)
-//    val minSize = Dimension(insets.right + insets.left, insets.top + insets.bottom)
-//    val str = title
-//    if (str?.isNotEmpty() == true) {
-//      val size = getLabel(c).preferredSize
-//      val pos = position
-//      if (pos != ABOVE_TOP && pos != BELOW_BOTTOM) {
-//        minSize.width += size.width
-//      } else if (minSize.width < size.width) {
-//        minSize.width += size.width
-//      }
-//    }
-//    return minSize
-//  }
-
-  override fun getBaseline(c: Component?, width: Int, height: Int): Int {
-    require(c != null) { "Must supply non-null component" }
-    require(width >= 0) { "Width must be >= 0" }
-    require(height >= 0) { "Height must be >= 0" }
-    val b = getBorder()
-    val str = title
-    if (str?.isNotEmpty() == true) {
-      val edge = if (b is TitledBorder2) 0 else EDGE_SPACING
-      val size = getLabel(c).preferredSize
-      val i = makeBorderInsets(b, c, Insets(0, 0, 0, 0))
-      val baseline = getLabel(c).getBaseline(size.width, size.height)
-      return when (position) {
-        ABOVE_TOP -> baseline
-        TOP -> {
-          i.top = edge + (i.top - size.height) / 2
-          if (i.top < edge) baseline else baseline + i.top
+  private fun installPropertyChangeListeners() {
+    val weakReference = WeakReference(this)
+    val listener = object : PropertyChangeListener {
+      override fun propertyChange(e: PropertyChangeEvent) {
+        if (weakReference.get() == null) {
+          UIManager.removePropertyChangeListener(this)
+          UIManager.getDefaults().removePropertyChangeListener(this)
+        } else {
+          val prop = e.propertyName
+          if ("lookAndFeel" == prop || "LabelUI" == prop) {
+            label2.updateUI()
+          }
         }
-        BELOW_TOP -> baseline + i.top + edge
-        ABOVE_BOTTOM -> baseline + height - size.height - i.bottom - edge
-        BOTTOM -> {
-          i.bottom = edge + (i.bottom - size.height) / 2
-          if (i.bottom < edge) baseline + height - size.height else baseline + height - size.height + i.bottom
-        }
-        BELOW_BOTTOM -> baseline + height - size.height
-        else -> -1
       }
     }
-    return -1
-  }
-
-  override fun getBaselineResizeBehavior(c: Component): BaselineResizeBehavior {
-    super.getBaselineResizeBehavior(c)
-    return when (position) {
-      ABOVE_TOP, TOP, BELOW_TOP -> BaselineResizeBehavior.CONSTANT_ASCENT
-      ABOVE_BOTTOM, BOTTOM, BELOW_BOTTOM -> BaselineResizeBehavior.CONSTANT_DESCENT
-      else -> BaselineResizeBehavior.OTHER
-    }
-  }
-
-  // fun getFont(c: Component?) = getTitleFont() ?: c?.font ?: Font(Font.DIALOG, Font.PLAIN, 12)
-
-  // private fun getColor(c: Component?) = getTitleColor() ?: c?.foreground
-
-  private fun getLabel(c: Component): JLabel {
-    label.text = title
-    label.font = titleFont ?: c.font ?: Font(Font.DIALOG, Font.PLAIN, 12)
-    label.foreground = titleColor ?: c.foreground
-    label.componentOrientation = c.componentOrientation
-    label.isEnabled = c.isEnabled
-    return label
+    UIManager.addPropertyChangeListener(listener)
+    UIManager.getDefaults().addPropertyChangeListener(listener)
   }
 
   companion object {
-    const val DEFAULT_POSITION = 0
-    const val ABOVE_TOP = 1
-    const val TOP = 2
-    const val BELOW_TOP = 3
-    const val ABOVE_BOTTOM = 4
-    const val BOTTOM = 5
-    const val BELOW_BOTTOM = 6
-    const val DEFAULT_JUST = 0
-    const val LEFT = 1
-    const val CENTER = 2
-    const val RIGHT = 3
-    const val LEADING = 4
-    const val TRAILING = 5
-    const val EDGE_SPACING = 2
-    const val TEXT_SPACING = 5 // 2
-    const val TEXT_INSET_H = 10 // 5
+    const val TEXT_SPACING2 = 5
+    const val TEXT_INSET_H2 = 11 // TEXT_SPACING2 * 2 + 1;
+  }
+}
 
-    private fun getJustification(c: Component, just: Int) = if (just == LEADING || just == DEFAULT_JUST) {
-      if (c.componentOrientation.isLeftToRight) LEFT else RIGHT
-    } else if (just == TRAILING) {
-      if (c.componentOrientation.isLeftToRight) RIGHT else LEFT
-    } else just
-
-    private fun makeBorderInsets(bdr: Border?, c: Component, insets: Insets): Insets {
-      when (bdr) {
-        null -> insets[0, 0, 0] = 0
-        is AbstractBorder -> bdr.getBorderInsets(c, insets)
-        else -> {
-          val i = bdr.getBorderInsets(c)
-          insets[i.top, i.left, i.bottom] = i.right
-        }
-      }
-      return insets
+private object TitledBorderUtil {
+  fun getBorderInsets(bdr: Border?, c: Component?): Insets {
+    var insets = Insets(0, 0, 0, 0)
+    if (bdr is AbstractBorder) {
+      insets = bdr.getBorderInsets(c, insets)
+    } else if (bdr != null) {
+      val i = bdr.getBorderInsets(c)
+      insets[i.top, i.left, i.bottom] = i.right
     }
+    return insets
+  }
+
+  fun initInsets(insets: Insets, position: Int?, edge: Int, size: Dimension) {
+    when (position) {
+      TitledBorder.ABOVE_TOP -> insets.top += size.height - edge
+      TitledBorder.TOP -> if (insets.top < size.height) {
+        insets.top = size.height - edge
+      }
+      TitledBorder.BELOW_TOP -> insets.top += size.height
+      TitledBorder.ABOVE_BOTTOM -> insets.bottom += size.height
+      TitledBorder.BOTTOM -> if (insets.bottom < size.height) {
+        insets.bottom = size.height - edge
+      }
+      TitledBorder.BELOW_BOTTOM -> insets.bottom += size.height - edge
+    }
+  }
+
+  fun getPositionByString(value: String) = when (value.uppercase()) {
+    "ABOVE_TOP" -> TitledBorder.ABOVE_TOP
+    "TOP" -> TitledBorder.ABOVE_TOP
+    "BELOW_TOP" -> TitledBorder.BELOW_TOP
+    "ABOVE_BOTTOM" -> TitledBorder.ABOVE_BOTTOM
+    "BOTTOM" -> TitledBorder.BOTTOM
+    "BELOW_BOTTOM" -> TitledBorder.BELOW_BOTTOM
+    else -> TitledBorder.TOP
   }
 }
 
