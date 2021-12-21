@@ -1,68 +1,117 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.MouseWheelListener
+import java.awt.geom.AffineTransform
+import java.awt.geom.Area
+import java.awt.image.BufferedImage
+import java.awt.image.ImageObserver
+import java.awt.image.MemoryImageSource
+import java.awt.image.PixelGrabber
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
-  val icon = ImageIcon(cl.getResource("example/test.png"))
-  val zoom = ZoomImage(icon.image)
+  val url = cl.getResource("example/screenshot.png")
+  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
 
-  val button1 = JButton("Zoom In")
-  button1.addActionListener { zoom.changeScale(-5) }
+  val icon = ImageIcon(img)
+  val width = icon.iconWidth
+  val height = icon.iconHeight
+  val bi = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
 
-  val button2 = JButton("Zoom Out")
-  button2.addActionListener { zoom.changeScale(5) }
+  val cardLayout = CardLayout()
+  val p = JPanel(cardLayout)
+  makeRoundedMemoryImageSource(img, width, height)?.also {
+    val g = bi.createGraphics()
+    g.drawImage(p.createImage(it), 0, 0, p)
+    g.dispose()
+  }
 
-  val button3 = JButton("Original size")
-  button3.addActionListener { zoom.initScale() }
+  p.add(JLabel(ImageIcon(img)), "original")
+  p.add(JLabel(ImageIcon(bi)), "rounded")
 
-  val box = Box.createHorizontalBox()
-  box.add(Box.createHorizontalGlue())
-  box.add(button1)
-  box.add(button2)
-  box.add(button3)
+  val check = JCheckBox("transparency at the rounded windows corners")
+  check.addActionListener {
+    cardLayout.show(p, if (check.isSelected) "rounded" else "original")
+  }
 
   return JPanel(BorderLayout()).also {
-    it.add(zoom)
-    it.add(box, BorderLayout.SOUTH)
+    it.add(check, BorderLayout.NORTH)
+    it.add(p)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private class ZoomImage(@field:Transient private val image: Image) : JPanel() {
-  @Transient
-  private var handler: MouseWheelListener? = null
-  private val iw = image.getWidth(this)
-  private val ih = image.getHeight(this)
-  private var scale = 1.0
+fun makeMissingImage(): BufferedImage {
+  val missingIcon = MissingIcon()
+  val w = missingIcon.iconWidth
+  val h = missingIcon.iconHeight
+  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, 0, 0)
+  g2.dispose()
+  return bi
+}
 
-  override fun updateUI() {
-    removeMouseWheelListener(handler)
-    super.updateUI()
-    handler = MouseWheelListener { e -> changeScale(e.wheelRotation) }
-    addMouseWheelListener(handler)
-  }
-
-  override fun paintComponent(g: Graphics) {
-    super.paintComponent(g)
+private class MissingIcon : Icon {
+  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.scale(scale, scale)
-    g2.drawImage(image, 0, 0, iw, ih, this)
+    val w = iconWidth
+    val h = iconHeight
+    val gap = w / 5
+    g2.paint = Color.GRAY
+    g2.fillRect(x, y, w, h)
+    g2.paint = Color.RED
+    g2.stroke = BasicStroke(w / 8f)
+    g2.drawLine(x + gap, y + gap, x + w - gap, y + h - gap)
+    g2.drawLine(x + gap, y + h - gap, x + w - gap, y + gap)
     g2.dispose()
   }
 
-  fun initScale() {
-    scale = 1.0
-    repaint()
+  override fun getIconWidth() = 240
+
+  override fun getIconHeight() = 160
+}
+
+private fun makeNorthWestCorner() = Area().also {
+  it.add(Area(Rectangle(0, 0, 5, 1)))
+  it.add(Area(Rectangle(0, 1, 3, 1)))
+  it.add(Area(Rectangle(0, 2, 2, 1)))
+  it.add(Area(Rectangle(0, 3, 1, 2)))
+}
+
+private fun makeRoundedMemoryImageSource(img: Image, w: Int, h: Int): MemoryImageSource? {
+  val pix = IntArray(h * w)
+  val pg = PixelGrabber(img, 0, 0, w, h, pix, 0, w)
+  val ret = runCatching {
+    pg.grabPixels()
+  }.getOrNull() ?: false
+  if (!ret || pg.status and ImageObserver.ABORT != 0) {
+    System.err.println("image fetch aborted or error")
+    return null
   }
 
-  fun changeScale(iv: Int) {
-    // scale = maxOf(.05, minOf(5.0, scale - iv * .05))
-    scale = (scale - iv * .05).coerceIn(.05, 5.0)
-    repaint()
+  val area = makeNorthWestCorner()
+  val r = area.bounds
+  for (y in 0 until r.height) {
+    for (x in 0 until r.width) {
+      if (area.contains(x.toDouble(), y.toDouble())) {
+        pix[x + y * w] = 0x0
+      }
+    }
   }
+  val at = AffineTransform.getScaleInstance(-1.0, 1.0)
+  at.translate(-w.toDouble(), 0.0)
+  val s2 = at.createTransformedShape(area) // NE
+  for (y in 0 until r.height) {
+    for (x in w - r.width until w) {
+      if (s2.contains(x.toDouble(), y.toDouble())) {
+        pix[x + y * w] = 0x0
+      }
+    }
+  }
+  return MemoryImageSource(w, h, pix, 0, w)
 }
 
 fun main() {
