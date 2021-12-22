@@ -42,6 +42,7 @@ fun makeUI(): Component {
   println(d)
   println(s)
   println(e)
+
   val spinner1 = JSpinner(SpinnerDateModel(toDate(d), toDate(s), toDate(e), Calendar.DAY_OF_MONTH))
   spinner1.editor = DateEditor(spinner1, dateFormat)
 
@@ -75,19 +76,12 @@ private class SpinnerLocalDateTimeModel(
   end: Comparable<ChronoLocalDateTime<*>?>,
   temporalUnit: TemporalUnit
 ) : AbstractSpinnerModel() {
-  @Transient
   var start: Comparable<ChronoLocalDateTime<*>>
     private set
-
-  @Transient
   var end: Comparable<ChronoLocalDateTime<*>>
     private set
-
-  @Transient
   var localDateTime: ChronoLocalDateTime<*>
     private set
-
-  @Transient
   private var temporalUnit: TemporalUnit
 
   init {
@@ -96,29 +90,6 @@ private class SpinnerLocalDateTimeModel(
     this.end = end
     this.temporalUnit = temporalUnit
   }
-
-//  fun setStart(start: Comparable<ChronoLocalDateTime<*>?>) {
-//    if (start != this.start) {
-//      this.start = start
-//      fireStateChanged()
-//    }
-//  }
-//
-//  fun setEnd(end: Comparable<ChronoLocalDateTime<*>?>) {
-//    if (end != this.end) {
-//      this.end = end
-//      fireStateChanged()
-//    }
-//  }
-//
-//  fun setTemporalUnit(temporalUnit: TemporalUnit) {
-//    if (temporalUnit !== this.temporalUnit) {
-//      this.temporalUnit = temporalUnit
-//      fireStateChanged()
-//    }
-//  }
-//
-//  fun getTemporalUnit() = temporalUnit
 
   override fun getNextValue(): Any? {
     val next = localDateTime.plus(1, temporalUnit)
@@ -142,41 +113,15 @@ private class SpinnerLocalDateTimeModel(
 }
 
 private class LocalDateTimeEditor(spinner: JSpinner, dateFormatPattern: String?) : DefaultEditor(spinner) {
-  @Transient
   val dateTimeFormatter: DateTimeFormatter
-
-  val model: SpinnerLocalDateTimeModel
-
-  inner class LocalDateTimeFormatter : InternationalFormatter(dateTimeFormatter.toFormat()) {
-    override fun valueToString(value: Any?): String =
-      (value as? TemporalAccessor)?.let { dateTimeFormatter.format(it) } ?: ""
-
-    @Throws(ParseException::class)
-    override fun stringToValue(text: String): Any {
-      val m = model
-      return runCatching {
-        val ta = dateTimeFormatter.parse(text)
-        var value = m.localDateTime
-        for (field in ChronoField.values()) {
-          if (field.isSupportedBy(value) && ta.isSupported(field)) {
-            value = field.adjustInto(value, ta.getLong(field))
-          }
-        }
-        val min = m.start
-        val max = m.end
-        if (min > value || max < value) {
-          throw ParseException("$text is out of range", 0)
-        }
-        value
-      }
-    }
-  }
+  val model = spinner.model as? SpinnerLocalDateTimeModel
+    ?: throw IllegalArgumentException("model not a SpinnerLocalDateTimeModel")
 
   init {
-    val m = spinner.model
-    require(m is SpinnerLocalDateTimeModel) { "model not a SpinnerLocalDateTimeModel" }
+    // val m = spinner.model
+    // require(m is SpinnerLocalDateTimeModel) { "model not a SpinnerLocalDateTimeModel" }
+    // model = m
     dateTimeFormatter = DateTimeFormatter.ofPattern(dateFormatPattern)
-    model = m
     val formatter = LocalDateTimeFormatter()
     EventQueue.invokeLater {
       formatter.valueClass = LocalDateTime::class.java
@@ -191,6 +136,29 @@ private class LocalDateTimeEditor(spinner: JSpinner, dateFormatPattern: String?)
       ftf.horizontalAlignment = SwingConstants.LEFT
       ftf.isEditable = true
       ftf.formatterFactory = DefaultFormatterFactory(formatter)
+    }
+  }
+
+  private inner class LocalDateTimeFormatter : InternationalFormatter(dateTimeFormatter.toFormat()) {
+    override fun valueToString(value: Any?): String =
+      (value as? TemporalAccessor)?.let { dateTimeFormatter.format(it) } ?: ""
+
+    @Throws(ParseException::class)
+    override fun stringToValue(text: String): Any {
+      val m = model
+      return runCatching {
+        val ta = dateTimeFormatter.parse(text)
+        var value = m.localDateTime
+        for (field in ChronoField.values()) {
+          if (field.isSupportedBy(value) && ta.isSupported(field)) {
+            value = field.adjustInto(value, ta.getLong(field))
+          }
+        }
+        if (m.start > value || m.end < value) {
+          throw ParseException("$text is out of range", 0)
+        }
+        value
+      }
     }
   }
 }
