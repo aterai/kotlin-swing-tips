@@ -1,25 +1,27 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.image.BufferedImage
 import java.awt.image.FilteredImageSource
 import java.awt.image.RGBImageFilter
 import java.util.regex.Pattern
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.Border
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
 @Transient private val defaultModel = arrayOf(
-  ListItem("wi0009-32.png"),
-  ListItem("wi0054-32.png"),
-  ListItem("wi0062-32.png"),
-  ListItem("wi0063-32.png"),
-  ListItem("wi0064-32.png"),
-  ListItem("wi0096-32.png"),
-  ListItem("wi0111-32.png"),
-  ListItem("wi0122-32.png"),
-  ListItem("wi0124-32.png"),
-  ListItem("wi0126-32.png")
+  ListItem("example/wi0009-32.png"),
+  ListItem("example/wi0054-32.png"),
+  ListItem("example/wi0062-32.png"),
+  ListItem("example/wi0063-32.png"),
+  ListItem("example/wi0064-32.png"),
+  ListItem("example/wi0096-32.png"),
+  ListItem("example/wi0111-32.png"),
+  ListItem("example/wi0122-32.png"),
+  ListItem("example/wi0124-32.png"),
+  ListItem("example/wi0126-32.png")
 )
 private val model = DefaultListModel<ListItem>()
 private val list = object : JList<ListItem>(model) {
@@ -89,15 +91,32 @@ private fun filter() {
 }
 
 private data class ListItem(val iconFile: String) {
-  val icon = ImageIcon(javaClass.getResource(iconFile))
+  val icon = makeImageIcon(iconFile)
   val selectedIcon: ImageIcon
   val title: String
 
   init {
     val ip = FilteredImageSource(icon.image.source, SelectedImageFilter())
     selectedIcon = ImageIcon(Toolkit.getDefaultToolkit().createImage(ip))
-    title = iconFile
+    title = iconFile.split("/").last()
   }
+}
+
+private fun makeImageIcon(path: String): ImageIcon {
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+  return ImageIcon(img)
+}
+
+private fun makeMissingImage(): BufferedImage {
+  val missingIcon = UIManager.getIcon("OptionPane.errorIcon")
+  val iw = missingIcon.iconWidth
+  val ih = missingIcon.iconHeight
+  val bi = BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, (32 - iw) / 2, (32 - ih) / 2)
+  g2.dispose()
+  return bi
 }
 
 private class SelectedImageFilter : RGBImageFilter() {
