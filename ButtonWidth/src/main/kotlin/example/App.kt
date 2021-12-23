@@ -11,11 +11,11 @@ fun makeUI(): Component {
     it.add(JButton("a"))
     it.border = BorderFactory.createEmptyBorder(5, 0, 5, 5)
   }
-  val b2 = createRightAlignBox2(listOf(JButton("getPreferredSize"), JButton("xxx")), 120, 5)
-  val b3 = createRightAlignBox3(listOf(JButton("Spring+Box"), JButton("Layout")), 100, 5)
-  val b4 = createRightAlignBox4(listOf(JButton("SpringLayout"), JButton("gap:2")), 120, 2)
-  val b5 = createRightAlignBox5(listOf(JButton("GridLayout+Box"), JButton("gap:3")), 3)
-  val b6 = createRightAlignBox6(listOf(JButton("GridBugLayout"), JButton("gap:2")), 120, 2)
+  val b2 = createRightAlignBox2(120, 5, "getPreferredSize", "xxx")
+  val b3 = createRightAlignBox3(100, 5, "Spring+Box", "Layout")
+  val b4 = createRightAlignBox4(120, 2, "SpringLayout", "gap:2")
+  val b5 = createRightAlignBox5(3, "GridLayout+Box", "gap:3")
+  val b6 = createRightAlignBox6(120, 2, "GridBugLayout", "gap:2")
 
   val box = Box.createVerticalBox()
   listOf(b6, b5, b4, b3, b2, b1).forEach {
@@ -28,11 +28,11 @@ fun makeUI(): Component {
   }
 }
 
-fun createRightAlignBox6(list: List<Component>, width: Int, gap: Int): Component {
+fun createRightAlignBox6(width: Int, gap: Int, vararg titles: String): Component {
   val p = JPanel(GridBagLayout())
   val c = GridBagConstraints()
   c.insets = Insets(0, gap, 0, 0)
-  list.forEach {
+  titles.map { JButton(it) }.forEach {
     c.ipadx = width - it.preferredSize.width
     p.add(it, c)
   }
@@ -40,7 +40,8 @@ fun createRightAlignBox6(list: List<Component>, width: Int, gap: Int): Component
   return JPanel(BorderLayout()).also { it.add(p, BorderLayout.EAST) }
 }
 
-fun createRightAlignBox5(list: List<Component>, gap: Int): Component {
+fun createRightAlignBox5(gap: Int, vararg titles: String): Component {
+  val list = titles.map { JButton(it) }
   val p = object : JPanel(GridLayout(1, list.size, gap, gap)) {
     override fun getMaximumSize() = super.getPreferredSize()
   }
@@ -52,11 +53,12 @@ fun createRightAlignBox5(list: List<Component>, gap: Int): Component {
   }
 }
 
-fun createRightAlignBox4(list: List<Component>, width: Int, gap: Int): Component {
+fun createRightAlignBox4(width: Int, gap: Int, vararg titles: String): Component {
+  val list = titles.map { JButton(it) }
   val layout = SpringLayout()
   val p = object : JPanel(layout) {
     override fun getPreferredSize(): Dimension {
-      val maxHeight = list.map { it.preferredSize.height }.maxOrNull() ?: 0
+      val maxHeight = list.maxOfOrNull { it.preferredSize.height } ?: 0
       return Dimension(width * list.size + gap + gap, maxHeight + gap + gap)
     }
   }
@@ -76,11 +78,12 @@ fun createRightAlignBox4(list: List<Component>, width: Int, gap: Int): Component
   return p
 }
 
-fun createRightAlignBox3(list: List<Component>, width: Int, gap: Int): Component {
+fun createRightAlignBox3(width: Int, gap: Int, vararg titles: String): Component {
+  val list = titles.map { JButton(it) }
   val layout = SpringLayout()
   val p = object : JPanel(layout) {
     override fun getPreferredSize(): Dimension {
-      val maxHeight = list.map { it.preferredSize.height }.maxOrNull() ?: 0
+      val maxHeight = list.maxOfOrNull { it.preferredSize.height } ?: 0
       return Dimension(width * list.size + gap + gap, maxHeight + gap + gap)
     }
   }
@@ -108,13 +111,14 @@ fun createRightAlignBox3(list: List<Component>, width: Int, gap: Int): Component
   }
 }
 
-fun createRightAlignBox2(list: List<Component>, width: Int, gap: Int): Component {
+fun createRightAlignBox2(width: Int, gap: Int, vararg titles: String): Component {
+  val list = titles.map { JButton(it) }
   val box = object : JPanel() {
     override fun updateUI() {
       list.forEach { it.preferredSize = null }
       super.updateUI()
       EventQueue.invokeLater {
-        val maxHeight = list.map { it.preferredSize.height }.maxOrNull() ?: 0
+        val maxHeight = list.maxOfOrNull { it.preferredSize.height } ?: 0
         val d = Dimension(width, maxHeight)
         list.forEach { it.preferredSize = d }
         revalidate()
