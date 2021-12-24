@@ -39,8 +39,7 @@ private class WindowsCustomScrollBarUI : WindowsScrollBarUI() {
     val range = sb.maximum - min
     val value = sb.value.toFloat()
     var thumbH = if (range <= 0) getMaximumThumbSize().height else (trackH * (extent / range)).toInt()
-    thumbH = thumbH.coerceAtLeast(getMinimumThumbSize().height)
-    thumbH = thumbH.coerceAtMost(getMaximumThumbSize().height)
+    thumbH = thumbH.coerceIn(getMinimumThumbSize().height, getMaximumThumbSize().height)
     var thumbY = incrButtonY - incrGap - thumbH
     if (value < sb.maximum - sb.visibleAmount) {
       val thumbRange = trackH - thumbH
@@ -67,12 +66,7 @@ private class WindowsCustomScrollBarUI : WindowsScrollBarUI() {
     if (thumbH >= trackH) {
       setThumbBounds(0, 0, 0, 0)
     } else {
-      if (thumbY + thumbH > decrButtonY - decrGap) {
-        thumbY = decrButtonY - decrGap - thumbH
-      }
-      if (thumbY < 0) {
-        thumbY = 1
-      }
+      thumbY = thumbY.coerceIn(0, decrButtonY - decrGap - thumbH)
       setThumbBounds(itemX, thumbY, itemW, thumbH)
     }
   }
@@ -94,8 +88,7 @@ private class MetalCustomScrollBarUI : MetalScrollBarUI() {
     val range = sb.maximum - min
     val value = sb.value.toFloat()
     var thumbH = if (range <= 0) getMaximumThumbSize().height else (trackH * (extent / range)).toInt()
-    thumbH = thumbH.coerceAtLeast(getMinimumThumbSize().height)
-    thumbH = thumbH.coerceAtMost(getMaximumThumbSize().height)
+    thumbH = thumbH.coerceIn(getMinimumThumbSize().height, getMaximumThumbSize().height)
     var thumbY = incrButtonY - incrGap - thumbH
     if (value < sb.maximum - sb.visibleAmount) {
       val thumbRange = trackH - thumbH
@@ -122,12 +115,13 @@ private class MetalCustomScrollBarUI : MetalScrollBarUI() {
     if (thumbH >= trackH) {
       setThumbBounds(0, 0, 0, 0)
     } else {
-      if (thumbY + thumbH > decrButtonY - decrGap) {
-        thumbY = decrButtonY - decrGap - thumbH
-      }
-      if (thumbY < 0) {
-        thumbY = 1
-      }
+      // if (thumbY + thumbH > decrButtonY - decrGap) {
+      //   thumbY = decrButtonY - decrGap - thumbH
+      // }
+      // if (thumbY < 0) {
+      //   thumbY = 1
+      // }
+      thumbY = thumbY.coerceIn(0, decrButtonY - decrGap - thumbH)
       setThumbBounds(itemX, thumbY, itemW, thumbH)
     }
   }
