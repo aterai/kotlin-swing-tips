@@ -1,28 +1,30 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.util.Dictionary
-import java.util.Hashtable
+import java.util.concurrent.atomic.AtomicInteger
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.event.ChangeEvent
-import javax.swing.event.ChangeListener
 
 fun makeUI(): Component {
   val slider1 = makeSlider()
   setCurrentLabelListener(slider1)
 
-  val labelTable: Dictionary<Int, Component> = Hashtable()
-  listOf("A", "B", "C", "D", "E").map { JLabel(it) }
-    .forEachIndexed { i, c -> labelTable.put(i, c) }
-
-  val slider2 = JSlider(0, 4, 0)
+  val list2 = listOf("A", "B", "C", "D", "E")
+  val slider2 = JSlider(0, list2.size - 1, 0)
   setCurrentLabelListener(slider2)
-  slider2.labelTable = labelTable
   slider2.snapToTicks = true
   slider2.paintTicks = true
   slider2.paintLabels = true
+  slider2.majorTickSpacing = 1
+  val labelTable = slider2.labelTable
+  if (labelTable is Map<*, *>) {
+    labelTable.forEach { key, value ->
+      if (key is Int && value is JLabel) {
+        updateLabel(list2, slider2, key, value)
+      }
+    }
+  }
+  slider2.labelTable = labelTable
 
-  labelTable[0].foreground = Color.RED
   val box = Box.createVerticalBox()
   box.add(Box.createVerticalStrut(5))
   box.add(makeTitledPanel("Default", makeSlider()))
@@ -53,28 +55,31 @@ private fun makeSlider(): JSlider {
   return slider
 }
 
+private fun updateLabel(list: List<String>, slider: JSlider, i: Int, l: JLabel) {
+  l.text = list[i]
+  if (slider.value == i) {
+    l.foreground = Color.RED
+  }
+}
+
 private fun setCurrentLabelListener(slider: JSlider) {
-  val cl = object : ChangeListener {
-    private var prev = -1
-
-    private fun resetForeground(o: Any?, c: Color) {
-      (o as? Component)?.foreground = c
-    }
-
-    override fun stateChanged(e: ChangeEvent) {
-      val m = e.source as? BoundedRangeModel ?: return
-      val i = m.value
-      if ((slider.majorTickSpacing == 0 || i % slider.majorTickSpacing == 0) && i != prev) {
-        val dictionary = slider.labelTable
-        resetForeground(dictionary[i], Color.RED)
-        // if (prev >= 0) {
-        resetForeground(dictionary[prev], Color.BLACK)
-        slider.repaint()
-        prev = i
+  val prev = AtomicInteger(-1)
+  slider.model.addChangeListener { e ->
+    val i = (e.source as? BoundedRangeModel)?.value ?: prev.get()
+    if ((slider.majorTickSpacing == 0 || i % slider.majorTickSpacing == 0) && i != prev.get()) {
+      val labelTable = slider.labelTable
+      if (labelTable is Map<*, *>) {
+        resetForeground(labelTable[i], Color.RED)
+        resetForeground(labelTable[prev.get()], Color.BLACK)
       }
+      slider.repaint()
+      prev.set(i)
     }
   }
-  slider.model.addChangeListener(cl)
+}
+
+private fun resetForeground(o: Any?, c: Color) {
+  (o as? Component)?.foreground = c
 }
 
 private fun makeTitledPanel(title: String, c: Component): Component {
