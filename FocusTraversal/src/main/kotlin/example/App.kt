@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.ActionEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.JTextComponent
 
@@ -25,26 +24,37 @@ fun makeUI(): Component {
   panel.add(eb, BorderLayout.EAST)
 
   p.isFocusTraversalPolicyProvider = true
+
   val policy0 = p.focusTraversalPolicy
+  val r0 = JRadioButton("Default", true)
+  r0.addActionListener {
+    p.focusTraversalPolicy = policy0
+    debugPrint()
+  }
+
   val policy1 = CustomFocusTraversalPolicy(listOf(eb, wb, sb, nb))
+  val r1 = JRadioButton("Custom")
+  r1.addActionListener {
+    p.focusTraversalPolicy = policy1
+    debugPrint()
+  }
+
   val policy2 = object : LayoutFocusTraversalPolicy() {
     override fun accept(c: Component) = if (c is JTextComponent) c.isEditable else super.accept(c)
+  }
+  val r2 = JRadioButton("Layout")
+  r2.addActionListener {
+    p.focusTraversalPolicy = policy2
+    debugPrint()
   }
 
   val bg = ButtonGroup()
   box.border = BorderFactory.createTitledBorder("FocusTraversalPolicy")
-  listOf(
-    FocusTraversalPolicyChangeAction("Default", policy0),
-    FocusTraversalPolicyChangeAction("Custom", policy1),
-    FocusTraversalPolicyChangeAction("Layout", policy2)
-  )
-    .map { JRadioButton(it) }
-    .forEach {
-      bg.add(it)
-      box.add(it)
-      box.add(Box.createHorizontalStrut(3))
-    }
-  bg.elements.nextElement().isSelected = true
+  listOf(r0, r1, r2).forEach {
+    bg.add(it)
+    box.add(it)
+    box.add(Box.createHorizontalStrut(3))
+  }
   box.add(Box.createHorizontalGlue())
   check.horizontalAlignment = SwingConstants.RIGHT
   check.addActionListener {
@@ -58,16 +68,6 @@ fun makeUI(): Component {
   p.preferredSize = Dimension(320, 240)
   EventQueue.invokeLater { debugPrint() }
   return p
-}
-
-private class FocusTraversalPolicyChangeAction(
-  name: String,
-  private val policy: FocusTraversalPolicy
-) : AbstractAction(name) {
-  override fun actionPerformed(e: ActionEvent) {
-    p.focusTraversalPolicy = policy
-    debugPrint()
-  }
 }
 
 fun debugPrint() {
