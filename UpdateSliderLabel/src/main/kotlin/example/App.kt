@@ -32,11 +32,11 @@ private fun makeSlider(): JSlider {
   slider.snapToTicks = true
 
   val labelTable = slider.labelTable
-  labelTable.keys().toList()
-    .filterIsInstance<Int>()
-    .forEach {
-      (labelTable[it] as? JLabel)?.text = (it / 100).toString()
+  (labelTable as? Map<*, *>)?.forEach { (key, value) ->
+    if (key is Int && value is JLabel) {
+      value.text = (key / 100).toString()
     }
+  }
   return slider
 }
 

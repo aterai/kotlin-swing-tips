@@ -30,13 +30,15 @@ private fun makeSlider(title: String): JSlider {
   slider.majorTickSpacing = 10
   slider.paintTicks = true
   slider.paintLabels = true
-  slider.labelTable?.elements()
-    ?.toList()
-    ?.filterIsInstance<JLabel>()
-    ?.filterNot { it.text.toInt() in MINI..MAXI }
-    ?.forEach {
-      it.foreground = Color.RED
+  // slider.labelTable?.elements()?.toList()
+  //   ?.filterIsInstance<JLabel>()
+  //   ?.filterNot { it.text.toInt() in MINI..MAXI }
+  //   ?.forEach { it.foreground = Color.RED }
+  (slider.labelTable as? Map<*, *>)?.forEach { (_, value) ->
+    if (value is JLabel && value.text.toInt() !in MINI..MAXI) {
+      value.foreground = Color.RED
     }
+  }
   slider.model.addChangeListener { e ->
     (e.source as? BoundedRangeModel)?.also {
       it.value = it.value.coerceIn(MINI, MAXI)
