@@ -25,7 +25,7 @@ fun makeUI(): Component {
   table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
   table.intercellSpacing = Dimension()
   table.setShowGrid(false)
-  table.putClientProperty("terminateEditOnFocusLost", java.lang.Boolean.TRUE)
+  table.putClientProperty("terminateEditOnFocusLost", true)
 
   val tableHeader = table.tableHeader
   tableHeader.reorderingAllowed = false

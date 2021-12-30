@@ -50,7 +50,7 @@ private object ImageUtil {
     UIManager.put("Menu.background", Color(200, 0, 0, 0))
     UIManager.put("Menu.selectionBackground", Color(100, 100, 255, 100))
     UIManager.put("Menu.selectionForeground", Color(200, 200, 200))
-    UIManager.put("Menu.useMenuBarBackgroundForTopLevel", java.lang.Boolean.TRUE)
+    UIManager.put("Menu.useMenuBarBackgroundForTopLevel", true)
     val mb = object : JMenuBar() {
       override fun paintComponent(g: Graphics) {
         val g2 = g.create() as? Graphics2D ?: return

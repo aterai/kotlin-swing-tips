@@ -33,7 +33,7 @@ private fun makeUI(): Component {
   val htmlEditorKit = HTMLEditorKit()
   htmlEditorKit.styleSheet = styleSheet
   editorPane.editorKit = htmlEditorKit
-  editorPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, java.lang.Boolean.TRUE)
+  editorPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true)
   editorPane.font = Font(Font.SANS_SERIF, Font.PLAIN, 12)
   editorPane.isOpaque = false
   editorPane.foreground = Color(0xC8_C8_C8)

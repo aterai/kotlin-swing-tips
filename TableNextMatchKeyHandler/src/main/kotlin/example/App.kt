@@ -22,7 +22,7 @@ fun makeUI(): Component {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
   val table = JTable(model)
-  table.putClientProperty("JTable.autoStartsEdit", java.lang.Boolean.FALSE)
+  table.putClientProperty("JTable.autoStartsEdit", false)
   table.autoCreateRowSorter = true
   table.addKeyListener(TableNextMatchKeyHandler())
   return JPanel(BorderLayout()).also {

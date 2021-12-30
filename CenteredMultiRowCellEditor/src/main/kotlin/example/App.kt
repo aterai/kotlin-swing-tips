@@ -192,7 +192,7 @@ private class EditableList(model: DefaultListModel<ListItem>) : JList<ListItem>(
   init {
     editor.border = BorderFactory.createLineBorder(Color.GRAY)
     editor.editorKit = WrapEditorKit()
-    editor.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, java.lang.Boolean.TRUE)
+    editor.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true)
     editor.font = UIManager.getFont("TextField.font")
     // editor.setHorizontalAlignment(SwingConstants.CENTER) // JTextField
     // editor.setLineWrap(true) // JTextArea

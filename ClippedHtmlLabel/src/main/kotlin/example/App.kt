@@ -26,7 +26,7 @@ private fun makeTable(model: DefaultTableModel): JTable {
   table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
   table.intercellSpacing = Dimension()
   table.setShowGrid(false)
-  table.putClientProperty("terminateEditOnFocusLost", java.lang.Boolean.TRUE)
+  table.putClientProperty("terminateEditOnFocusLost", true)
   table.autoCreateRowSorter = true
 
   val col = table.columnModel.getColumn(0)

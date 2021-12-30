@@ -62,7 +62,7 @@ fun makeUI(): Component {
   table.rowSorter = sorter
   table.componentPopupMenu = TablePopupMenu()
   table.fillsViewportHeight = true
-  table.putClientProperty("terminateEditOnFocusLost", java.lang.Boolean.TRUE)
+  table.putClientProperty("terminateEditOnFocusLost", true)
   val filters: MutableCollection<RowFilter<in RowDataModel, in Int>> = HashSet(2)
   val filter1: RowFilter<RowDataModel, Int> = object : RowFilter<RowDataModel, Int>() {
     override fun include(entry: Entry<out RowDataModel, out Int>): Boolean {

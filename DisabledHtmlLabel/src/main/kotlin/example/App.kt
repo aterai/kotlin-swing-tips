@@ -36,7 +36,7 @@ fun makeUI(): Component {
   val editor2 = JEditorPane("text/html", HTML_TEXT)
   editor2.isOpaque = false
   editor2.isEditable = false
-  editor2.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, java.lang.Boolean.TRUE)
+  editor2.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true)
   editor2.font = UIManager.getFont("Label.font")
   p.add(initTitledBorder("JEditorPane+", editor2))
 

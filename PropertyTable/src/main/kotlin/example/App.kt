@@ -21,7 +21,7 @@ fun makeUI(): Component {
     arrayOf("Date", Date()),
     arrayOf("Integer", 12),
     arrayOf("Double", 3.45),
-    arrayOf("Boolean", java.lang.Boolean.TRUE),
+    arrayOf("Boolean", true),
     arrayOf("Color", Color.RED)
   )
   val model = object : DefaultTableModel(data, columnNames) {
