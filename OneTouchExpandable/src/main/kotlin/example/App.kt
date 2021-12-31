@@ -1,9 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.lang.Boolean.TYPE
-import java.security.AccessController
-import java.security.PrivilegedAction
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicSplitPaneUI
 
@@ -20,16 +17,13 @@ fun makeUI(): Component {
   splitPane.bottomComponent = s2
   splitPane.isOneTouchExpandable = true
   if (splitPane.ui is BasicSplitPaneUI) {
-    val pa = PrivilegedAction<Void?> {
-      runCatching {
-        splitPane.dividerLocation = 0
-        val m = BasicSplitPaneUI::class.java.getDeclaredMethod("setKeepHidden", TYPE)
-        m.isAccessible = true
-        m.invoke(splitPane.ui, true)
-      }
-      null
+    runCatching {
+      splitPane.dividerLocation = 0
+      val type = java.lang.Boolean.TYPE
+      val m = BasicSplitPaneUI::class.java.getDeclaredMethod("setKeepHidden", type)
+      m.isAccessible = true
+      m.invoke(splitPane.ui, true)
     }
-    AccessController.doPrivileged(pa)
   }
 
   return JPanel(BorderLayout()).also {
