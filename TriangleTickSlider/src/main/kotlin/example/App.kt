@@ -4,13 +4,13 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  val box = Box.createVerticalBox()
-  box.add(Box.createVerticalStrut(5))
-  box.add(makeTitledPanel("Default", makeSlider(false)))
-  box.add(Box.createVerticalStrut(5))
-  box.add(makeTitledPanel("Triangle Tick", makeSlider(true)))
-  box.add(Box.createVerticalGlue())
-
+  val box = Box.createVerticalBox().also {
+    it.add(Box.createVerticalStrut(5))
+    it.add(makeTitledPanel("Default", makeSlider(false)))
+    it.add(Box.createVerticalStrut(5))
+    it.add(makeTitledPanel("Triangle Tick", makeSlider(true)))
+    it.add(Box.createVerticalGlue())
+  }
   return JPanel(BorderLayout(5, 5)).also {
     it.add(box)
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
@@ -24,22 +24,21 @@ fun makeSlider(icon: Boolean): JSlider {
   slider.minorTickSpacing = 5
   slider.paintLabels = true
   slider.snapToTicks = true
-  slider.putClientProperty("Slider.paintThumbArrowShape", java.lang.Boolean.TRUE)
-  if (icon) {
-    slider.labelTable?.also { dictionary ->
-      val tick = TickIcon()
-      dictionary.elements().toList()
-        .filterIsInstance<JLabel>()
-        .forEach { label ->
-          label.border = BorderFactory.createEmptyBorder(1, 0, 0, 0)
-          label.icon = tick
-          label.iconTextGap = 0
-          label.verticalAlignment = SwingConstants.TOP
-          label.verticalTextPosition = SwingConstants.BOTTOM
-          label.horizontalAlignment = SwingConstants.CENTER
-          label.horizontalTextPosition = SwingConstants.CENTER
-          label.foreground = Color.RED
-        }
+  slider.putClientProperty("Slider.paintThumbArrowShape", true)
+  val labelTable = slider.labelTable
+  if (icon && labelTable is Map<*, *>) {
+    val tick = TickIcon()
+    labelTable.forEach { (_, value) ->
+      if (value is JLabel) {
+        value.border = BorderFactory.createEmptyBorder(1, 0, 0, 0)
+        value.icon = tick
+        value.iconTextGap = 0
+        value.verticalAlignment = SwingConstants.TOP
+        value.verticalTextPosition = SwingConstants.BOTTOM
+        value.horizontalAlignment = SwingConstants.CENTER
+        value.horizontalTextPosition = SwingConstants.CENTER
+        value.foreground = Color.RED
+      }
     }
   } else {
     slider.paintTicks = true
