@@ -38,17 +38,19 @@ private val clearButton = JButton("clear")
 fun makeUI(): Component {
   encButton.addActionListener {
     runCatching {
-      val file = File.createTempFile("output", ".xml")
-      XMLEncoder(BufferedOutputStream(Files.newOutputStream(file.toPath()))).use { xe ->
-        val d = DefaultPersistenceDelegate(arrayOf("column", "sortOrder"))
-        xe.setPersistenceDelegate(RowSorter.SortKey::class.java, d)
+      val path = File.createTempFile("output", ".xml").toPath()
+      XMLEncoder(BufferedOutputStream(Files.newOutputStream(path))).use { xe ->
+        val d1 = DefaultPersistenceDelegate(arrayOf("column", "sortOrder"))
+        xe.setPersistenceDelegate(RowSorter.SortKey::class.java, d1)
         xe.writeObject(table.rowSorter.sortKeys)
-        xe.setPersistenceDelegate(DefaultTableModel::class.java, DefaultTableModelPersistenceDelegate())
+        val d2 = DefaultTableModelPersistenceDelegate()
+        xe.setPersistenceDelegate(DefaultTableModel::class.java, d2)
         xe.writeObject(table.model)
-        xe.setPersistenceDelegate(DefaultTableColumnModel::class.java, DefaultTableColumnModelPersistenceDelegate())
+        val d3 = DefaultTableColumnModelPersistenceDelegate()
+        xe.setPersistenceDelegate(DefaultTableColumnModel::class.java, d3)
         xe.writeObject(table.columnModel)
       }
-      Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8).use { r -> textArea.read(r, "temp") }
+      Files.newBufferedReader(path, StandardCharsets.UTF_8).use { r -> textArea.read(r, "temp") }
     }.onFailure {
       it.printStackTrace()
       textArea.text = it.message

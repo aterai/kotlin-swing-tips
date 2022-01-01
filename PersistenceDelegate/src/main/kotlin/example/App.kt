@@ -29,12 +29,13 @@ fun makeUI(): Component {
   val encodeButton = JButton("XMLEncoder")
   encodeButton.addActionListener {
     runCatching {
-      val file = File.createTempFile("output", ".xml")
-      XMLEncoder(BufferedOutputStream(Files.newOutputStream(file.toPath()))).use { xe ->
-        xe.setPersistenceDelegate(DefaultTableModel::class.java, DefaultTableModelPersistenceDelegate())
+      val path = File.createTempFile("output", ".xml").toPath()
+      XMLEncoder(BufferedOutputStream(Files.newOutputStream(path))).use { xe ->
+        val d = DefaultTableModelPersistenceDelegate()
+        xe.setPersistenceDelegate(DefaultTableModel::class.java, d)
         xe.writeObject(table.model)
       }
-      Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8).use { r -> textArea.read(r, "temp") }
+      Files.newBufferedReader(path, StandardCharsets.UTF_8).use { r -> textArea.read(r, "temp") }
     }.onFailure {
       textArea.text = it.message
     }
