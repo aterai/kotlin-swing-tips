@@ -16,16 +16,16 @@ val AUDITORY_CUES = arrayOf(
 )
 
 fun makeUI(): Component {
-  val button1 = JButton("showMessageDialog1")
-  button1.addActionListener {
+  val b1 = JButton("showMessageDialog1")
+  b1.addActionListener {
     UIManager.put(KEY, AUDITORY_CUES)
-    JOptionPane.showMessageDialog(button1.rootPane, "showMessageDialog1")
+    JOptionPane.showMessageDialog(b1.rootPane, "showMessageDialog1")
   }
 
-  val button2 = JButton("showMessageDialog2")
-  button2.addActionListener {
+  val b2 = JButton("showMessageDialog2")
+  b2.addActionListener {
     UIManager.put(KEY, UIManager.get("AuditoryCues.noAuditoryCues"))
-    showMessageDialogAndPlayAudio(button2.rootPane, "showMessageDialog2", "example/notice2.wav")
+    showMessageDialogAndPlayAudio(b2.rootPane, "showMessageDialog2", "example/notice2.wav")
   }
 
   return JPanel(GridLayout(2, 1, 5, 5)).also {
@@ -34,24 +34,24 @@ fun makeUI(): Component {
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
 
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-    it.add(makeTitledPanel("Look&Feel Default", button1))
-    it.add(makeTitledPanel("notice2.wav", button2))
+    it.add(makeTitledPanel("Look&Feel Default", b1))
+    it.add(makeTitledPanel("notice2.wav", b2))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
 fun showMessageDialogAndPlayAudio(p: Component, msg: String, audioResource: String) {
-  val cl = Thread.currentThread().contextClassLoader
-  AudioSystem.getAudioInputStream(cl.getResource(audioResource)).use { soundStream ->
-    (AudioSystem.getLine(DataLine.Info(Clip::class.java, soundStream.format)) as? Clip)?.use { clip ->
+  val url = Thread.currentThread().contextClassLoader.getResource(audioResource) ?: return
+  AudioSystem.getAudioInputStream(url).use { stream ->
+    (AudioSystem.getLine(DataLine.Info(Clip::class.java, stream.format)) as? Clip)?.use {
       val loop = p.toolkit.systemEventQueue.createSecondaryLoop()
-      clip.addLineListener { e ->
+      it.addLineListener { e ->
         when (e.type) {
           LineEvent.Type.STOP, LineEvent.Type.CLOSE -> loop.exit()
         }
       }
-      clip.open(soundStream)
-      clip.start()
+      it.open(stream)
+      it.start()
       JOptionPane.showMessageDialog(p, msg)
       loop.enter()
     }
@@ -72,7 +72,11 @@ private object LookAndFeelUtil {
     }
   }
 
-  private fun createLookAndFeelItem(lafName: String, lafClassName: String, lafGroup: ButtonGroup): JMenuItem {
+  private fun createLookAndFeelItem(
+    lafName: String,
+    lafClassName: String,
+    lafGroup: ButtonGroup
+  ): JMenuItem {
     val lafItem = JRadioButtonMenuItem(lafName, lafClassName == lookAndFeel)
     lafItem.actionCommand = lafClassName
     lafItem.hideActionText = true
