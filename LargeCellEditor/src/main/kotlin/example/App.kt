@@ -103,37 +103,35 @@ private class IconTable(model: TableModel?, list: ListModel<IconItem>) : JTable(
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
     initCellSize(50)
 
-    val ml1 = object : MouseAdapter() {
+    addMouseListener(object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
         startEditing()
       }
-    }
-    addMouseListener(ml1)
+    })
 
-    editor.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancel-editing")
-    val a1 = object : AbstractAction() {
+    val cmd = "cancel-editing"
+    val ks = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0)
+    editor.getInputMap(JComponent.WHEN_FOCUSED).put(ks, cmd)
+    editor.actionMap.put(cmd, object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
         cancelEditing()
       }
-    }
-    editor.actionMap.put("cancel-editing", a1)
+    })
 
-    val ml2 = object : MouseAdapter() {
+    editor.addMouseListener(object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
         val p = e.point
         val item = editor.model.getElementAt(editor.locationToIndex(p))
         setValueAt(item, selectedRow, selectedColumn)
         cancelEditing()
       }
-    }
-    editor.addMouseListener(ml2)
+    })
 
-    val ml = object : MouseAdapter() {
+    glassPane.addMouseListener(object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
         cancelEditing()
       }
-    }
-    glassPane.addMouseListener(ml)
+    })
     glassPane.focusTraversalPolicy = object : DefaultFocusTraversalPolicy() {
       public override fun accept(c: Component) = c == editor
     }

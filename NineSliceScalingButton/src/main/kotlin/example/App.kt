@@ -72,7 +72,7 @@ private fun makeFilteredImage(src: BufferedImage, filter: ImageFilter): Buffered
   return bi
 }
 
-private class ScalingButton(title: String?, @field:Transient private val image: BufferedImage) : JButton() {
+private class ScalingButton(title: String?, private val image: BufferedImage) : JButton() {
   init {
     setModel(DefaultButtonModel())
     init(title, null)
@@ -90,7 +90,7 @@ private class ScalingButton(title: String?, @field:Transient private val image: 
   }
 }
 
-private class NineSliceScalingButton(title: String?, @field:Transient private val image: BufferedImage) : JButton() {
+private class NineSliceScalingButton(title: String?, private val img: BufferedImage) : JButton() {
   init {
     setModel(DefaultButtonModel())
     init(title, null)
@@ -100,23 +100,32 @@ private class NineSliceScalingButton(title: String?, @field:Transient private va
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    val iw = image.getWidth(this)
-    val ih = image.getHeight(this)
+    val iw = img.getWidth(this)
+    val ih = img.getHeight(this)
     val ww = width
     val hh = height
     val lw = 37
     val rw = 36
     val th = 36
     val bh = 36
-    g2.drawImage(image.getSubimage(lw, th, iw - lw - rw, ih - th - bh), lw, th, ww - lw - rw, hh - th - bh, this)
-    g2.drawImage(image.getSubimage(lw, 0, iw - lw - rw, th), lw, 0, ww - lw - rw, th, this)
-    g2.drawImage(image.getSubimage(lw, ih - bh, iw - lw - rw, bh), lw, hh - bh, ww - lw - rw, bh, this)
-    g2.drawImage(image.getSubimage(0, th, lw, ih - th - bh), 0, th, lw, hh - th - bh, this)
-    g2.drawImage(image.getSubimage(iw - rw, th, rw, ih - th - bh), ww - rw, th, rw, hh - th - bh, this)
-    g2.drawImage(image.getSubimage(0, 0, lw, th), 0, 0, this)
-    g2.drawImage(image.getSubimage(iw - rw, 0, rw, th), ww - rw, 0, this)
-    g2.drawImage(image.getSubimage(0, ih - bh, lw, bh), 0, hh - bh, this)
-    g2.drawImage(image.getSubimage(iw - rw, ih - bh, rw, bh), ww - rw, hh - bh, this)
+    val sub1 = img.getSubimage(lw, th, iw - lw - rw, ih - th - bh)
+    g2.drawImage(sub1, lw, th, ww - lw - rw, hh - th - bh, this)
+    val sub2 = img.getSubimage(lw, 0, iw - lw - rw, th)
+    g2.drawImage(sub2, lw, 0, ww - lw - rw, th, this)
+    val sub3 = img.getSubimage(lw, ih - bh, iw - lw - rw, bh)
+    g2.drawImage(sub3, lw, hh - bh, ww - lw - rw, bh, this)
+    val sub4 = img.getSubimage(0, th, lw, ih - th - bh)
+    g2.drawImage(sub4, 0, th, lw, hh - th - bh, this)
+    val sub5 = img.getSubimage(iw - rw, th, rw, ih - th - bh)
+    g2.drawImage(sub5, ww - rw, th, rw, hh - th - bh, this)
+    val sub6 = img.getSubimage(0, 0, lw, th)
+    g2.drawImage(sub6, 0, 0, this)
+    val sub7 = img.getSubimage(iw - rw, 0, rw, th)
+    g2.drawImage(sub7, ww - rw, 0, this)
+    val sub8 = img.getSubimage(0, ih - bh, lw, bh)
+    g2.drawImage(sub8, 0, hh - bh, this)
+    val sub9 = img.getSubimage(iw - rw, ih - bh, rw, bh)
+    g2.drawImage(sub9, ww - rw, hh - bh, this)
     g2.dispose()
     super.paintComponent(g)
   }
@@ -145,17 +154,26 @@ private class NineSliceScalingIcon(
     height = RECT.height
     val iw = image.getWidth(c)
     val ih = image.getHeight(c)
-    g2.drawImage(image.getSubimage(lw, th, iw - lw - rw, ih - th - bh), lw, th, width - lw - rw, height - th - bh, c)
+    val sub = image.getSubimage(lw, th, iw - lw - rw, ih - th - bh)
+    g2.drawImage(sub, lw, th, width - lw - rw, height - th - bh, c)
     // if (lw > 0 && rw > 0 && th > 0 && bh > 0) {
     if (listOf(lw, rw, th, bh).filterNot { it > 0 }.isEmpty()) {
-      g2.drawImage(image.getSubimage(lw, 0, iw - lw - rw, th), lw, 0, width - lw - rw, th, c)
-      g2.drawImage(image.getSubimage(lw, ih - bh, iw - lw - rw, bh), lw, height - bh, width - lw - rw, bh, c)
-      g2.drawImage(image.getSubimage(0, th, lw, ih - th - bh), 0, th, lw, height - th - bh, c)
-      g2.drawImage(image.getSubimage(iw - rw, th, rw, ih - th - bh), width - rw, th, rw, height - th - bh, c)
-      g2.drawImage(image.getSubimage(0, 0, lw, th), 0, 0, c)
-      g2.drawImage(image.getSubimage(iw - rw, 0, rw, th), width - rw, 0, c)
-      g2.drawImage(image.getSubimage(0, ih - bh, lw, bh), 0, height - bh, c)
-      g2.drawImage(image.getSubimage(iw - rw, ih - bh, rw, bh), width - rw, height - bh, c)
+      val sub1 = image.getSubimage(lw, 0, iw - lw - rw, th)
+      g2.drawImage(sub1, lw, 0, width - lw - rw, th, c)
+      val sub2 = image.getSubimage(lw, ih - bh, iw - lw - rw, bh)
+      g2.drawImage(sub2, lw, height - bh, width - lw - rw, bh, c)
+      val sub3 = image.getSubimage(0, th, lw, ih - th - bh)
+      g2.drawImage(sub3, 0, th, lw, height - th - bh, c)
+      val sub4 = image.getSubimage(iw - rw, th, rw, ih - th - bh)
+      g2.drawImage(sub4, width - rw, th, rw, height - th - bh, c)
+      val sub5 = image.getSubimage(0, 0, lw, th)
+      g2.drawImage(sub5, 0, 0, c)
+      val sub6 = image.getSubimage(iw - rw, 0, rw, th)
+      g2.drawImage(sub6, width - rw, 0, c)
+      val sub7 = image.getSubimage(0, ih - bh, lw, bh)
+      g2.drawImage(sub7, 0, height - bh, c)
+      val sub8 = image.getSubimage(iw - rw, ih - bh, rw, bh)
+      g2.drawImage(sub8, width - rw, height - bh, c)
     }
     g2.dispose()
   }
@@ -173,7 +191,7 @@ private class PressedImageFilter : RGBImageFilter() {
 }
 
 private class RolloverImageFilter : RGBImageFilter() {
-  override fun filterRGB(x: Int, y: Int, argb: Int): Int { // int r = (argb >> 16) & 0xFF;
+  override fun filterRGB(x: Int, y: Int, argb: Int): Int {
     val g = 0xFF.coerceAtMost(((argb shr 8 and 0xFF) * 1.5f).roundToInt())
     val b = 0xFF.coerceAtMost(((argb and 0xFF) * 1.5f).roundToInt())
     return argb and 0xFF_FF_00_00.toInt() or (g shl 8) or b
