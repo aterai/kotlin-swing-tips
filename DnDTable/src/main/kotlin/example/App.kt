@@ -94,7 +94,8 @@ private class DnDTable(model: TableModel?) : JTable(model), DragGestureListener,
 
   init {
     DropTarget(this, DnDConstants.ACTION_COPY_OR_MOVE, CDropTargetListener(), true)
-    DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_COPY_OR_MOVE, this)
+    val ds = DragSource.getDefaultDragSource()
+    ds.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_COPY_OR_MOVE, this)
   }
 
   override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component =
@@ -215,9 +216,11 @@ private class DnDTable(model: TableModel?) : JTable(model), DragGestureListener,
       repaint()
     }
 
-    private fun isDragAcceptable(e: DropTargetDragEvent) = isDataFlavorSupported(e.currentDataFlavors[0])
+    private fun isDragAcceptable(e: DropTargetDragEvent) =
+      isDataFlavorSupported(e.currentDataFlavors[0])
 
-    private fun isDropAcceptable(e: DropTargetDropEvent) = isDataFlavorSupported(e.transferable.transferDataFlavors[0])
+    private fun isDropAcceptable(e: DropTargetDropEvent) =
+      isDataFlavorSupported(e.transferable.transferDataFlavors[0])
   }
 
   companion object {

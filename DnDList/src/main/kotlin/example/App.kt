@@ -42,7 +42,9 @@ private class DnDList<E> : JList<E>(), DragGestureListener, Transferable {
 
   init {
     DropTarget(this, DnDConstants.ACTION_COPY_OR_MOVE, CDropTargetListener(), true)
-    DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_COPY_OR_MOVE, this)
+    DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(
+      this, DnDConstants.ACTION_COPY_OR_MOVE, this
+    )
   }
 
   override fun updateUI() {
@@ -171,9 +173,11 @@ private class DnDList<E> : JList<E>(), DragGestureListener, Transferable {
       repaint()
     }
 
-    private fun isDragAcceptable(e: DropTargetDragEvent) = isDataFlavorSupported(e.currentDataFlavors[0])
+    private fun isDragAcceptable(e: DropTargetDragEvent) =
+      isDataFlavorSupported(e.currentDataFlavors[0])
 
-    private fun isDropAcceptable(e: DropTargetDropEvent) = isDataFlavorSupported(e.transferable.transferDataFlavors[0])
+    private fun isDropAcceptable(e: DropTargetDropEvent) =
+      isDataFlavorSupported(e.transferable.transferDataFlavors[0])
   }
 
   companion object {

@@ -29,21 +29,6 @@ fun makeUI(): Component {
   }
   slider1.labelTable = labelTable1
 
-
-
-//  val labelTable2 = Hashtable<Int, Component>(11)
-//  listOf("—ë", "ˆë", "“ó", "Q", "ãæ", "ŒŞ", "—¤", "½", "J", "‹è", "E")
-//    .map { JLabel(it) }
-//    .forEachIndexed { i, label ->
-//      label.foreground = Color(250, 100 - i * 10, 10)
-//      labelTable2[i] = label
-//    }
-//
-//  val slider2 = JSlider(0, 10, 0)
-//  slider2.snapToTicks = true
-//  slider2.labelTable = labelTable2
-//  slider2.paintTicks = true
-//  slider2.paintLabels = true
   val list2 = arrayOf("—ë", "ˆë", "“ó", "Q", "ãæ", "ŒŞ", "—¤", "½", "J", "‹è", "E")
   val slider2 = JSlider(0, list2.size - 1, 0)
   // slider2.setForeground(Color.BLUE);

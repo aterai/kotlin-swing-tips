@@ -40,9 +40,13 @@ private fun makeModel(index: Int) = DefaultListModel<String>().also {
   it.addElement("$index - ****")
 }
 
-private class DnDList<E>(model: ListModel<E>) : JList<E>(model), DragGestureListener, DragSourceListener, Transferable {
+private class DnDList<E>(
+  model: ListModel<E>
+) : JList<E>(model), DragGestureListener, DragSourceListener, Transferable {
   init {
-    DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, this)
+    DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(
+      this, DnDConstants.ACTION_MOVE, this
+    )
   }
 
   // Interface: DragGestureListener
@@ -76,7 +80,8 @@ private class DnDList<E>(model: ListModel<E>) : JList<E>(model), DragGestureList
   // Interface: Transferable
   override fun getTransferData(flavor: DataFlavor) = this
 
-  override fun getTransferDataFlavors() = arrayOf(DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, NAME))
+  override fun getTransferDataFlavors() =
+    arrayOf(DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, NAME))
 
   override fun isDataFlavorSupported(flavor: DataFlavor) = flavor.humanPresentableName == NAME
 
@@ -153,7 +158,8 @@ private class TabTitleDropTargetListener : DropTargetListener {
           break
         }
       }
-      return targetTabIndex >= 0 && targetTabIndex != tabs.selectedIndex && t.isDataFlavorSupported(f[0])
+      val b = targetTabIndex >= 0 && targetTabIndex != tabs.selectedIndex
+      return b && t.isDataFlavorSupported(f[0])
     }
     return false
   }

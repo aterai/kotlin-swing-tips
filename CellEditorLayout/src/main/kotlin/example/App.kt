@@ -24,7 +24,8 @@ private class CustomCellEditor(field: JTextField) : DefaultCellEditor(field) {
     field.border = BorderFactory.createEmptyBorder(0, 2, 0, BUTTON_WIDTH)
     field.addHierarchyListener { e ->
       val c = e.component
-      if (e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L && c is JTextField && c.isShowing()) {
+      val b = e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L
+      if (b && c is JTextField && c.isShowing()) {
         c.removeAll()
         c.add(button)
         val r = c.bounds
@@ -48,7 +49,9 @@ private class CustomCellEditor(field: JTextField) : DefaultCellEditor(field) {
   }
 }
 
-private class CustomComponentCellEditor(private val field: JTextField) : DefaultCellEditor(field) {
+private class CustomComponentCellEditor(
+  private val field: JTextField
+) : DefaultCellEditor(field) {
   private val panel = JPanel(BorderLayout())
 
   init {
@@ -124,7 +127,9 @@ private class CustomComponent : JPanel(BorderLayout()) {
   }
 }
 
-private class CustomComponentCellEditor2(private val component: CustomComponent) : DefaultCellEditor(component.field) {
+private class CustomComponentCellEditor2(
+  private val component: CustomComponent
+) : DefaultCellEditor(component.field) {
   override fun getTableCellEditorComponent(
     table: JTable,
     value: Any?,

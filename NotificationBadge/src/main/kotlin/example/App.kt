@@ -83,7 +83,7 @@ private open class BadgeLayerUI : LayerUI<BadgeLabel>() {
   open fun getBadgeIcon(count: Int) =
     BadgeIcon(count, Color.WHITE, Color(0xAA_FF_16_16.toInt(), true))
 
-  protected fun getBadgeLocation(pos: BadgePosition?, icon: Icon): Point {
+  protected fun getBadgeLocation(pos: BadgePosition, icon: Icon): Point {
     var x = 0
     var y = 0
     when (pos) {
@@ -120,7 +120,11 @@ private class BadgeLayerUI2 : BadgeLayerUI() {
     }
 }
 
-private open class BadgeIcon(private val value: Int, private val badgeFgc: Color, private val badgeBgc: Color) : Icon {
+private open class BadgeIcon(
+  private val value: Int,
+  private val badgeFgc: Color,
+  private val badgeBgc: Color
+) : Icon {
   open val badgeShape: Shape
     get() = Ellipse2D.Double(0.0, 0.0, iconWidth.toDouble(), iconHeight.toDouble())
 

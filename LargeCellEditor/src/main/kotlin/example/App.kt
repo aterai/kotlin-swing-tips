@@ -103,20 +103,22 @@ private class IconTable(model: TableModel?, list: ListModel<IconItem>) : JTable(
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
     initCellSize(50)
 
-    addMouseListener(object : MouseAdapter() {
+    val ma = object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
         startEditing()
       }
-    })
+    }
+    addMouseListener(ma)
 
     val cmd = "cancel-editing"
     val ks = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0)
     editor.getInputMap(JComponent.WHEN_FOCUSED).put(ks, cmd)
-    editor.actionMap.put(cmd, object : AbstractAction() {
+    val action = object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
         cancelEditing()
       }
-    })
+    }
+    editor.actionMap.put(cmd, action)
 
     editor.addMouseListener(object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
@@ -178,7 +180,7 @@ private class IconTable(model: TableModel?, list: ListModel<IconItem>) : JTable(
 }
 
 private class EditorFromList(model: ListModel<IconItem>) : JList<IconItem>(model) {
-  @Transient private var handler: RollOverListener? = null
+  private var handler: RollOverListener? = null
   private var rollOverRowIndex = -1
   private val dim: Dimension
 
