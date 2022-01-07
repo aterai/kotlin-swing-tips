@@ -4,7 +4,6 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionEvent
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
-import java.lang.StringBuilder
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.AbstractDocument
 import javax.swing.text.AttributeSet
@@ -167,7 +166,8 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
     return endOfToken + 1
   }
 
-  private fun isDelimiter(character: String) = Character.isWhitespace(character[0]) || OPERANDS.contains(character)
+  private fun isDelimiter(character: String) =
+    Character.isWhitespace(character[0]) || OPERANDS.contains(character)
 
   companion object {
     private const val LB = '\n'

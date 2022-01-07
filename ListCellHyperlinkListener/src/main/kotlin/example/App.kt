@@ -3,7 +3,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.lang.StringBuilder
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.HyperlinkEvent
 
@@ -63,7 +62,7 @@ private class SiteListItemRenderer : JEditorPane(), ListCellRenderer<SiteItem> {
     cellHasFocus: Boolean
   ): Component {
     val buf = StringBuilder(100)
-    buf.append("<html><h1>").append(item.name).append("</h1><table>")
+    buf.append("<html><h1>${item.name}</h1><table>")
     for (c in item.link.indices) {
       val url = item.link[c]
       buf.append("<tr><td><a href='$url'>$url</a></td></tr>")

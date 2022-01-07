@@ -13,7 +13,6 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.Reader
 import java.io.StringReader
-import java.lang.StringBuilder
 import java.nio.charset.Charset
 import java.util.Date
 import javax.swing.* // ktlint-disable no-wildcard-imports
@@ -83,11 +82,12 @@ private class PropertyTable(model: TableModel?) : JTable(model) {
       super.getCellEditor(row, column)
     }
 
-  override fun getColumnClass(column: Int) = if (convertColumnIndexToModel(column) == TARGET_COL_IDX) {
-    editingClass
-  } else {
-    super.getColumnClass(column)
-  }
+  override fun getColumnClass(column: Int): Class<*>? =
+    if (convertColumnIndexToModel(column) == TARGET_COL_IDX) {
+      editingClass
+    } else {
+      super.getColumnClass(column)
+    }
 
   companion object {
     private const val TARGET_COL_IDX = 1
@@ -246,7 +246,11 @@ private class HtmlTableTransferHandler : TransferHandler() {
   fun appendTag(buf: StringBuilder, o: Any?) {
     when (o) {
       is Date -> buf.append("  <td><time>").append(o.toString()).append("</time></td>\n")
-      is Color -> buf.append("  <td style='background-color:#%06X'>&nbsp;</td>%n".format(o.rgb and 0xFF_FF_FF))
+      is Color -> buf.append(
+        "  <td style='background-color:#%06X'>&nbsp;</td>%n".format(
+          o.rgb and 0xFF_FF_FF
+        )
+      )
       else -> buf.append("  <td>").append(o?.toString() ?: "").append("</td>\n")
     }
   }
@@ -350,7 +354,9 @@ private class BasicTransferable(
     return flavors.toTypedArray()
   }
 
-  override fun isDataFlavorSupported(flavor: DataFlavor) = transferDataFlavors.any { it.equals(flavor) }
+  override fun isDataFlavorSupported(flavor: DataFlavor) = transferDataFlavors.any {
+    it.equals(flavor)
+  }
 
   @Throws(UnsupportedFlavorException::class, IOException::class)
   override fun getTransferData(flavor: DataFlavor): Any? {
