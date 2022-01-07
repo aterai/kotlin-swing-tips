@@ -36,7 +36,11 @@ private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()
   it.add(c)
 }
 
-private open class ComboItem(var isEnabled: Boolean = false, var isEditable: Boolean = false, var text: String? = "")
+private open class ComboItem(
+  var isEnabled: Boolean = false,
+  var isEditable: Boolean = false,
+  var text: String? = ""
+)
 
 private class CheckComboBoxRenderer<E : ComboItem> : ListCellRenderer<E> {
   private val bgc = Color(100, 200, 255)
@@ -72,7 +76,8 @@ private class CheckComboBoxEditor : ComboBoxEditor {
 
   override fun setItem(anObject: Any) {
     EventQueue.invokeLater {
-      (SwingUtilities.getAncestorOfClass(JComboBox::class.java, editorComponent) as? JComboBox<*>)?.also {
+      val c = SwingUtilities.getAncestorOfClass(JComboBox::class.java, editorComponent)
+      (c as? JComboBox<*>)?.also {
         val idx = it.selectedIndex
         if (idx >= 0 && idx != editor.editingIndex) {
           println("setItem: $idx")

@@ -251,7 +251,9 @@ private class Utf8ResourceBundleControl : ResourceBundle.Control() {
         stream = cl.getResourceAsStream(resourceName)
       }
       stream?.also {
-        BufferedReader(InputStreamReader(it, StandardCharsets.UTF_8)).use { r -> bundle = PropertyResourceBundle(r) }
+        BufferedReader(InputStreamReader(it, StandardCharsets.UTF_8)).use { r ->
+          bundle = PropertyResourceBundle(r)
+        }
       }
     }
     return bundle

@@ -49,10 +49,14 @@ private fun makeJCheckBoxMenuItem(title: String, d: UIDefaults) = JCheckBoxMenuI
 
 private fun createMenuBar(): JMenuBar {
   val d = UIDefaults()
-  d["CheckBoxMenuItem[Enabled].checkIconPainter"] = MyCheckBoxMenuItemPainter(CheckIcon.ENABLED)
-  d["CheckBoxMenuItem[MouseOver].checkIconPainter"] = MyCheckBoxMenuItemPainter(CheckIcon.MOUSEOVER)
-  d["CheckBoxMenuItem[Enabled+Selected].checkIconPainter"] = MyCheckBoxMenuItemPainter(CheckIcon.ENABLED_SELECTED)
-  d["CheckBoxMenuItem[MouseOver+Selected].checkIconPainter"] = MyCheckBoxMenuItemPainter(CheckIcon.SELECTED_MOUSEOVER)
+  d["CheckBoxMenuItem[Enabled].checkIconPainter"] =
+    MyCheckBoxMenuItemPainter(CheckIcon.ENABLED)
+  d["CheckBoxMenuItem[MouseOver].checkIconPainter"] =
+    MyCheckBoxMenuItemPainter(CheckIcon.MOUSEOVER)
+  d["CheckBoxMenuItem[Enabled+Selected].checkIconPainter"] =
+    MyCheckBoxMenuItemPainter(CheckIcon.ENABLED_SELECTED)
+  d["CheckBoxMenuItem[MouseOver+Selected].checkIconPainter"] =
+    MyCheckBoxMenuItemPainter(CheckIcon.SELECTED_MOUSEOVER)
 
   val menuBar = JMenuBar()
   val menu = JMenu("Menu")
@@ -115,8 +119,12 @@ private class MyCheckBoxMenuItemPainter(private val state: CheckIcon) : Abstract
 
 private class MultiLineTableCellRenderer : JTextArea(), TableCellRenderer {
   private val rowColHeight = mutableListOf<MutableList<Int>>()
-  @Transient private var fhb: Border? = null
-  @Transient private var epb: Border? = null
+
+  @Transient
+  private var fhb: Border? = null
+
+  @Transient
+  private var epb: Border? = null
 
   override fun updateUI() {
     border = null

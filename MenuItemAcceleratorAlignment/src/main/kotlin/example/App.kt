@@ -216,7 +216,9 @@ private class RaaWindowsMenuItemUI : WindowsMenuItemUI() {
     MenuItemHelper.paintCheckIcon(g2, lh, lr, g.color, foreground)
     MenuItemHelper.paintIcon(g2, lh, lr)
     paintText(g2, lh, lr)
-    MenuItemHelper.paintAccText(g2, lh, lr, disabledForeground, acceleratorForeground, acceleratorSelectionForeground)
+    MenuItemHelper.paintAccText(
+      g2, lh, lr, disabledForeground, acceleratorForeground, acceleratorSelectionForeground
+    )
     MenuItemHelper.paintArrowIcon(g2, lh, lr, foreground)
   }
 
@@ -259,7 +261,9 @@ private class RaaBasicMenuItemUI : BasicMenuItemUI() {
     MenuItemHelper.paintCheckIcon(g2, lh, lr, g.color, foreground)
     MenuItemHelper.paintIcon(g2, lh, lr)
     paintMenuText(g2, lh, lr)
-    MenuItemHelper.paintAccText(g2, lh, lr, disabledForeground, acceleratorForeground, acceleratorSelectionForeground)
+    MenuItemHelper.paintAccText(
+      g2, lh, lr, disabledForeground, acceleratorForeground, acceleratorSelectionForeground
+    )
     MenuItemHelper.paintArrowIcon(g2, lh, lr, foreground)
   }
 

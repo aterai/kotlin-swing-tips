@@ -43,8 +43,8 @@ fun makeUI(): Component {
 
   return JPanel(BorderLayout()).also {
     it.addHierarchyListener { e ->
-      val isDisplayableChanged = e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L
-      if (isDisplayableChanged && !e.component.isDisplayable) {
+      val b = e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L
+      if (b && !e.component.isDisplayable) {
         worker?.cancel(true)
         worker = null
       }
@@ -115,7 +115,14 @@ private class IndeterminateRegionPainter : AbstractRegionPainter() {
   private val ctx = PaintContext(Insets(5, 5, 5, 5), Dimension(29, 19), false)
   private var rect: Rectangle2D = Rectangle2D.Float()
   private var path: Path2D = Path2D.Float()
-  public override fun doPaint(g: Graphics2D, c: JComponent, width: Int, height: Int, extendedCacheKeys: Array<Any>?) {
+
+  public override fun doPaint(
+    g: Graphics2D,
+    c: JComponent,
+    width: Int,
+    height: Int,
+    extendedCacheKeys: Array<Any>?
+  ) {
     path = decodePath1()
     g.paint = color17
     g.fill(path)

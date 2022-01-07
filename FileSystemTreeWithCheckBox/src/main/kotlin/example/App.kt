@@ -75,7 +75,7 @@ private class IndeterminateIcon : Icon {
     g2.translate(x, y)
     icon.paintIcon(c, g2, 0, 0)
     g2.paint = FOREGROUND
-    g2.fillRect(SIDE_MARGIN, (iconHeight - HEIGHT) / 2, iconWidth - SIDE_MARGIN - SIDE_MARGIN, HEIGHT)
+    g2.fillRect(MARGIN, (iconHeight - HEIGHT) / 2, iconWidth - MARGIN - MARGIN, HEIGHT)
     g2.dispose()
   }
 
@@ -85,7 +85,7 @@ private class IndeterminateIcon : Icon {
 
   companion object {
     private val FOREGROUND = Color(0xC8_32_14_FF.toInt(), true)
-    private const val SIDE_MARGIN = 4
+    private const val MARGIN = 4
     private const val HEIGHT = 2
   }
 }
@@ -98,7 +98,9 @@ private data class CheckBoxNode(val file: File, val status: Status) {
   override fun toString() = file.name ?: ""
 }
 
-private class FileTreeCellRenderer(private val fileSystemView: FileSystemView) : TreeCellRenderer {
+private class FileTreeCellRenderer(
+  private val fileSystemView: FileSystemView
+) : TreeCellRenderer {
   private val checkBox = TriStateCheckBox().also { it.isOpaque = false }
   private val renderer = DefaultTreeCellRenderer()
   private val panel = JPanel(BorderLayout()).also {
@@ -117,7 +119,9 @@ private class FileTreeCellRenderer(private val fileSystemView: FileSystemView) :
     row: Int,
     hasFocus: Boolean
   ): Component {
-    val c = renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+    val c = renderer.getTreeCellRendererComponent(
+      tree, value, selected, expanded, leaf, row, hasFocus
+    )
     val l = c as? JLabel ?: return c
     l.font = tree.font
     return if (value is DefaultMutableTreeNode) {
@@ -137,7 +141,9 @@ private class FileTreeCellRenderer(private val fileSystemView: FileSystemView) :
   }
 }
 
-private class CheckBoxNodeEditor(private val fileSystemView: FileSystemView) : AbstractCellEditor(), TreeCellEditor {
+private class CheckBoxNodeEditor(
+  private val fileSystemView: FileSystemView
+) : AbstractCellEditor(), TreeCellEditor {
   private val checkBox = TriStateCheckBox().also {
     it.isOpaque = false
     it.isFocusable = false
@@ -160,7 +166,9 @@ private class CheckBoxNodeEditor(private val fileSystemView: FileSystemView) : A
     leaf: Boolean,
     row: Int
   ): Component {
-    val c = renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, false)
+    val c = renderer.getTreeCellRendererComponent(
+      tree, value, selected, expanded, leaf, row, false
+    )
     c.font = tree.font
     return if (value is DefaultMutableTreeNode && c is JLabel) {
       checkBox.isEnabled = tree.isEnabled
@@ -196,7 +204,9 @@ private class CheckBoxNodeEditor(private val fileSystemView: FileSystemView) : A
   }
 }
 
-private class FolderSelectionListener(val fileSystemView: FileSystemView) : TreeSelectionListener {
+private class FolderSelectionListener(
+  val fileSystemView: FileSystemView
+) : TreeSelectionListener {
   override fun valueChanged(e: TreeSelectionEvent) {
     val node = e.path.lastPathComponent
     if (node !is DefaultMutableTreeNode || !node.isLeaf) {

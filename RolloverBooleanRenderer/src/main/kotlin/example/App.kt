@@ -20,7 +20,8 @@ private val model = object : DefaultTableModel(data, columnNames) {
   override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
 }
 private val table = object : JTable(model) {
-  @Transient private var highlighter: HighlightListener? = null
+  @Transient
+  private var highlighter: HighlightListener? = null
 
   override fun updateUI() {
     addMouseListener(highlighter)
@@ -82,12 +83,12 @@ private class HighlightListener : MouseAdapter() {
     }
   }
 
-  private fun getRepaintRect(table: JTable, prevRow: Int, prevCol: Int): Rectangle {
+  private fun getRepaintRect(table: JTable, pr: Int, pc: Int): Rectangle {
     return if (viewRowIndex >= 0 && viewColumnIndex >= 0) {
       val r = table.getCellRect(viewRowIndex, viewColumnIndex, false)
-      if (prevRow >= 0 && prevCol >= 0) r.union(table.getCellRect(prevRow, prevCol, false)) else r
+      if (pr >= 0 && pc >= 0) r.union(table.getCellRect(pr, pc, false)) else r
     } else {
-      table.getCellRect(prevRow, prevCol, false)
+      table.getCellRect(pr, pc, false)
     }
   }
 
@@ -117,8 +118,8 @@ private open class RolloverDefaultTableCellRenderer(
     val str = value?.toString() ?: ""
     val isHighlightedCell = highlighter.isHighlightedCell(row, column)
     foreground = when {
-      isSelected -> table.selectionForeground
-      !isSelected && isHighlightedCell -> HIGHLIGHT
+      isSelected && isHighlightedCell -> HIGHLIGHT
+      isSelected && !isHighlightedCell -> table.selectionForeground
       else -> table.foreground
     }
     background = when {
@@ -135,13 +136,17 @@ private open class RolloverDefaultTableCellRenderer(
   }
 }
 
-private class RolloverNumberRenderer(highlighter: HighlightListener) : RolloverDefaultTableCellRenderer(highlighter) {
+private class RolloverNumberRenderer(
+  highlighter: HighlightListener
+) : RolloverDefaultTableCellRenderer(highlighter) {
   init {
     horizontalAlignment = SwingConstants.RIGHT
   }
 }
 
-private class RolloverBooleanRenderer(private val highlighter: HighlightListener) : JCheckBox(), TableCellRenderer {
+private class RolloverBooleanRenderer(
+  private val highlighter: HighlightListener
+) : JCheckBox(), TableCellRenderer {
   init {
     horizontalAlignment = SwingConstants.CENTER
     isBorderPainted = true

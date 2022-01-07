@@ -18,6 +18,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicToolBarUI
 
 private const val MAX_HISTORY = 3
+
 // private val BAR_FACTORY = BarFactory("resources.Main")
 private val BAR_FACTORY = BarFactory("example.Main")
 private val RECENT_FILES = mutableListOf<Path>()
@@ -94,7 +95,9 @@ private class HistoryAction(private val path: Path) : AbstractAction() {
       "This example do nothing\n",
       " and move the file to the beginning of the history."
     )
-    JOptionPane.showMessageDialog(c.rootPane, obj, VersionAction.APP_NAME, JOptionPane.INFORMATION_MESSAGE)
+    JOptionPane.showMessageDialog(
+      c.rootPane, obj, VersionAction.APP_NAME, JOptionPane.INFORMATION_MESSAGE
+    )
     updateHistory(path)
   }
 }
@@ -115,7 +118,9 @@ private class NewAction : AbstractAction("new") {
       "This example do nothing\n",
       " and pretend to generate an appropriate file name and open it."
     )
-    JOptionPane.showMessageDialog(c.rootPane, obj, VersionAction.APP_NAME, JOptionPane.INFORMATION_MESSAGE)
+    JOptionPane.showMessageDialog(
+      c.rootPane, obj, VersionAction.APP_NAME, JOptionPane.INFORMATION_MESSAGE
+    )
     val fileName = "C:/tmp/dummy.jpg.$counter~"
     updateHistory(Paths.get(fileName))
     counter++
@@ -152,7 +157,9 @@ private class VersionAction : AbstractAction("version") {
   override fun actionPerformed(e: ActionEvent) {
     val c = e.source as? JComponent ?: return
     val obj = arrayOf("$APP_NAME - Version $VERSION.$RELEASE", COPYRIGHT)
-    JOptionPane.showMessageDialog(c.rootPane, obj, APP_NAME, JOptionPane.INFORMATION_MESSAGE)
+    JOptionPane.showMessageDialog(
+      c.rootPane, obj, APP_NAME, JOptionPane.INFORMATION_MESSAGE
+    )
   }
 
   companion object {
@@ -331,7 +338,9 @@ private class Utf8ResourceBundleControl : ResourceBundle.Control() {
         stream = cl.getResourceAsStream(resourceName)
       }
       stream?.also {
-        BufferedReader(InputStreamReader(it, StandardCharsets.UTF_8)).use { r -> bundle = PropertyResourceBundle(r) }
+        BufferedReader(InputStreamReader(it, StandardCharsets.UTF_8)).use { r ->
+          bundle = PropertyResourceBundle(r)
+        }
       }
     }
     return bundle

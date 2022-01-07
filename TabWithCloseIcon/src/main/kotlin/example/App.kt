@@ -84,7 +84,11 @@ private class CloseableTabbedPane : JTabbedPane() {
 
 private class CloseableTabIconHandler : MouseAdapter() {
   private val drawRect = Rectangle()
-  private fun isCloseTabIconRollover(tabbedPane: CloseableTabbedPane, icon: CloseTabIcon, e: MouseEvent): Boolean {
+  private fun isCloseTabIconRollover(
+    tabbedPane: CloseableTabbedPane,
+    icon: CloseTabIcon,
+    e: MouseEvent
+  ): Boolean {
     val rect = icon.bounds
     val pos = tabbedPane.headerViewPosition
     drawRect.setBounds(rect.x - pos.x, rect.y - pos.y, rect.width, rect.height)
@@ -332,23 +336,25 @@ private class JTabbedPaneWithCloseButton : JTabbedPane() {
   }
 }
 
-private class CloseButtonTabbedPaneUI(val closeButtons: MutableList<JButton>) : BasicTabbedPaneUI() {
+private class CloseButtonTabbedPaneUI(
+  val closeButtons: MutableList<JButton>
+) : BasicTabbedPaneUI() {
   override fun createLayoutManager() = object : TabbedPaneLayout() {
     override fun layoutContainer(parent: Container?) {
       super.layoutContainer(parent)
       while (tabPane.tabCount > closeButtons.size) {
         closeButtons.add(createTabCloseButton(tabPane, closeButtons.size))
       }
-      var rect = Rectangle()
-      val tabPlacement = tabPane.tabPlacement
+      var r = Rectangle()
+      val placement = tabPane.tabPlacement
       var i = 0
       while (i < tabPane.tabCount) {
-        rect = getTabBounds(i, rect)
+        r = getTabBounds(i, r)
         val closeButton = closeButtons[i]
         val d = closeButton.preferredSize
         val isSelected = i == tabPane.selectedIndex
-        val x = getTabLabelShiftX(tabPlacement, i, isSelected) + rect.x + rect.width - d.width - 2
-        val y = getTabLabelShiftY(tabPlacement, i, isSelected) + rect.y + (rect.height - d.height) / 2
+        val x = getTabLabelShiftX(placement, i, isSelected) + r.x + r.width - d.width - 2
+        val y = getTabLabelShiftY(placement, i, isSelected) + r.y + (r.height - d.height) / 2
         closeButton.setBounds(x, y, d.width, d.height)
         tabPane.add(closeButton)
         i++
@@ -372,7 +378,10 @@ private class CloseButtonTabbedPaneUI(val closeButtons: MutableList<JButton>) : 
   }
 }
 
-private class CloseButton(tabPane: JTabbedPane, index: Int) : JButton(CloseButtonAction(tabPane, index)), UIResource {
+private class CloseButton(
+  tabPane: JTabbedPane,
+  index: Int
+) : JButton(CloseButtonAction(tabPane, index)), UIResource {
   init {
     toolTipText = "Close this tab"
     border = BorderFactory.createEmptyBorder()
@@ -395,7 +404,10 @@ private class CloseButton(tabPane: JTabbedPane, index: Int) : JButton(CloseButto
   override fun getPreferredSize() = Dimension(16, 16)
 }
 
-private class CloseButtonAction(private val tabPane: JTabbedPane, private val index: Int) : AbstractAction("x") {
+private class CloseButtonAction(
+  private val tabPane: JTabbedPane,
+  private val index: Int
+) : AbstractAction("x") {
   override fun actionPerformed(e: ActionEvent?) {
     tabPane.remove(index)
   }
@@ -409,9 +421,12 @@ private class JTabbedPaneWithCloseIcons : JTabbedPane() {
         if (index < 0) {
           return
         }
-        (getIconAt(index) as? SimpleCloseTabIcon)?.bounds?.takeIf { it.contains(e.x, e.y) }?.also {
-          removeTabAt(index)
-        }
+        (getIconAt(index) as? SimpleCloseTabIcon)
+          ?.bounds
+          ?.takeIf { it.contains(e.x, e.y) }
+          ?.also {
+            removeTabAt(index)
+          }
       }
     })
   }
