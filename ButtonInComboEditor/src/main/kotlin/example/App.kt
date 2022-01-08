@@ -75,7 +75,10 @@ private fun initComboBox(combo: JComboBox<SiteItem>) {
   }
 }
 
-private class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: ImageIcon) : JComboBox<SiteItem>(model) {
+private class SiteItemComboBox(
+  model: DefaultComboBoxModel<SiteItem>,
+  rss: ImageIcon
+) : JComboBox<SiteItem>(model) {
   init {
     val feedButton = makeRssButton(rss)
     val favicon = makeLabel()
@@ -155,7 +158,10 @@ private class SiteItemComboBox(model: DefaultComboBoxModel<SiteItem>, rss: Image
   }
 }
 
-private class SiteComboBoxLayout(private val favicon: JLabel?, private val feedButton: JButton?) : LayoutManager {
+private class SiteComboBoxLayout(
+  private val favicon: JLabel?,
+  private val feedButton: JButton?
+) : LayoutManager {
   override fun addLayoutComponent(name: String, comp: Component) {
     /* not needed */
   }

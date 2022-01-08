@@ -49,13 +49,14 @@ fun createSizeVariantMenu() = JMenu("Resizing a Component").also { menu ->
   }
 }
 
-private fun createSizeVariantItem(key: String, bg: ButtonGroup) = JRadioButtonMenuItem(key, "regular" == key).also {
-  it.addActionListener {
-    setSizeVariant(bg.selection.actionCommand)
+private fun createSizeVariantItem(key: String, bg: ButtonGroup) =
+  JRadioButtonMenuItem(key, "regular" == key).also {
+    it.addActionListener {
+      setSizeVariant(bg.selection.actionCommand)
+    }
+    it.actionCommand = key
+    bg.add(it)
   }
-  it.actionCommand = key
-  bg.add(it)
-}
 
 private fun setSizeVariant(key: String) {
   Window.getWindows().forEach {

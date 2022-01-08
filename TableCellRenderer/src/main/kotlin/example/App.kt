@@ -103,7 +103,12 @@ private open class WrappedLabel(str: String? = "") : JLabel(str) {
   }
 
   companion object {
-    private fun getWrappedGlyphVector(str: String, width: Double, font: Font, frc: FontRenderContext): GlyphVector {
+    private fun getWrappedGlyphVector(
+      str: String,
+      width: Double,
+      font: Font,
+      frc: FontRenderContext
+    ): GlyphVector {
       val gmPos = Point2D.Float()
       val gv = font.createGlyphVector(frc, str)
       val lineHeight = gv.logicalBounds.height.toFloat()

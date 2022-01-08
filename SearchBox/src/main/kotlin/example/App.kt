@@ -32,7 +32,9 @@ fun makeUI(): Component {
   button.action = findNextAction
   button.isFocusable = false
   field.actionMap.put("find-next", findNextAction)
-  field.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "find-next")
+  val imap = field.getInputMap(JComponent.WHEN_FOCUSED)
+  imap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "find-next")
+
   val controls = JPanel()
   val layout = ControlPanelLayout(controls, 5, 5)
   controls.layout = layout
@@ -85,7 +87,11 @@ private fun makeModel(): DefaultTreeModel {
   return DefaultTreeModel(root)
 }
 
-private class ControlPanelLayout(private val controls: Container, hgap: Int, vgap: Int) : BorderLayout(hgap, vgap) {
+private class ControlPanelLayout(
+  private val controls: Container,
+  horizontalGap: Int,
+  verticalGap: Int
+) : BorderLayout(horizontalGap, verticalGap) {
   private var isHidden = true
   private val animator = Timer(5, null)
   private var controlsHeight = 0
@@ -130,7 +136,12 @@ private class ControlPanelLayout(private val controls: Container, hgap: Int, vga
 }
 
 private object TreeUtil {
-  fun searchTree(tree: JTree, path: TreePath, q: String, rollOverPathLists: MutableList<TreePath>) {
+  fun searchTree(
+    tree: JTree,
+    path: TreePath,
+    q: String,
+    rollOverPathLists: MutableList<TreePath>
+  ) {
     val node = path.lastPathComponent
     if (node is TreeNode) {
       if (node.toString().startsWith(q)) {
@@ -138,8 +149,9 @@ private object TreeUtil {
         tree.expandPath(path.parentPath)
       }
       if (!node.isLeaf) {
-        node.children().toList()
-          .forEach { searchTree(tree, path.pathByAddingChild(it), q, rollOverPathLists) }
+        node.children().toList().forEach {
+          searchTree(tree, path.pathByAddingChild(it), q, rollOverPathLists)
+        }
       }
     }
   }
