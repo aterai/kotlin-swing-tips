@@ -189,9 +189,9 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
 
   private fun makeRadioMenuItem(c: Container, i: Int): JMenuItem? {
     val tab = c.getComponent(i)
-    val vp = SwingUtilities.getAncestorOfClass(JViewport::class.java, c)
-    val rect = SwingUtilities.convertRectangle(c, tab.bounds, vp)
-    if (tab !is JToggleButton || vp !is JViewport || vp.bounds.contains(rect)) {
+    val viewport = tabArea.viewport
+    val r = tab.bounds
+    if (tab !is JToggleButton || viewport.viewRect.contains(r)) {
       return null
     }
     val title = (tab.getComponent(0) as? JLabel)?.text ?: ""
@@ -199,7 +199,7 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
     mi.addActionListener {
       tab.isSelected = true
       cardLayout.show(contentsPanel, title)
-      tab.scrollRectToVisible(rect)
+      viewport.scrollRectToVisible(SwingUtilities.convertRectangle(c, r, viewport))
     }
     return mi
   }
