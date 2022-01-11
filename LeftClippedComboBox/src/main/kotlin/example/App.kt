@@ -23,12 +23,12 @@ private fun makeTitledPanel(title: String, c: Component) = Box.createVerticalBox
 }
 
 private fun makeComboBoxModel() = DefaultComboBoxModel<String>().also {
-  it.addElement("1234567890123456789012/3456789012345678901234567890123/456789012345678901234567890.jpg")
+  it.addElement("1234567890123456789012/3456789012345678901234567890/12345678901234567890.jpg")
   it.addElement("abc.tif")
   it.addElement("\\0123456789\\0123456789\\0123456789.avi")
   it.addElement("0123456789.pdf")
-  it.addElement("c:/b12312343245/643667345624523451/324513/41234125/134513451345135125123412341bb1.mpg")
-  it.addElement("http://localhost/1234567890123456789/345678901234567890123456789/456789012345678901234567890.jpg")
+  it.addElement("c:/b12312343245/643667345624523451/324513/41234125/134513451345135125.mpg")
+  it.addElement("http://localhost/1234567890123456789/3456789012345/678901234567894567890.jpg")
 }
 
 private fun initComboBoxRenderer(combo: JComboBox<String>) {
@@ -58,7 +58,7 @@ private fun initComboBoxRenderer(combo: JComboBox<String>) {
       var availableWidth = combo.width - ilr
       if (index < 0) {
         // @see BasicComboBoxUI#rectangleForCurrentValue
-        availableWidth -= getArrowButton(combo)?.width ?: combo.height - itb
+        availableWidth -= getArrowButton(combo)?.width ?: (combo.height - itb)
         (combo.editor.editorComponent as? JTextField)?.margin?.also {
           availableWidth -= it.left + it.right
         }
