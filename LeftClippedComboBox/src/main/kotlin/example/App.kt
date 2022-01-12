@@ -58,7 +58,8 @@ private fun initComboBoxRenderer(combo: JComboBox<String>) {
       var availableWidth = combo.width - ilr
       if (index < 0) {
         // @see BasicComboBoxUI#rectangleForCurrentValue
-        availableWidth -= getArrowButton(combo)?.width ?: (combo.height - itb)
+        val maxButtonHeight = combo.height - itb
+        availableWidth -= getArrowButton(combo)?.width ?: maxButtonHeight
         (combo.editor.editorComponent as? JTextField)?.margin?.also {
           availableWidth -= it.left + it.right
         }

@@ -105,7 +105,12 @@ private class IntegerInputVerifier : InputVerifier() {
 // Validating with a Document Filter
 private class IntegerDocumentFilter : DocumentFilter() {
   @Throws(BadLocationException::class)
-  override fun insertString(fb: FilterBypass, offset: Int, text: String?, attr: AttributeSet) {
+  override fun insertString(
+    fb: FilterBypass,
+    offset: Int,
+    text: String?,
+    attr: AttributeSet
+  ) {
     if (text != null) {
       replace(fb, offset, 0, text, attr)
     }
@@ -117,7 +122,13 @@ private class IntegerDocumentFilter : DocumentFilter() {
   }
 
   @Throws(BadLocationException::class)
-  override fun replace(fb: FilterBypass, offset: Int, length: Int, text: String?, attrs: AttributeSet?) {
+  override fun replace(
+    fb: FilterBypass,
+    offset: Int,
+    length: Int,
+    text: String?,
+    attrs: AttributeSet?
+  ) {
     val doc = fb.document
     val currentLength = doc.length
     val currentContent = doc.getText(0, currentLength)
@@ -135,9 +146,13 @@ private class IntegerDocumentFilter : DocumentFilter() {
   }
 }
 
-// How to Use Formatted Text Fields (The Java™ Tutorials > Creating a GUI With JFC/Swing > Using Swing Components)
+// How to Use Formatted Text Fields (The Java™ Tutorials > ... > Using Swing Components)
 // https://docs.oracle.com/javase/tutorial/uiswing/components/formattedtextfield.html
-private class NumberFormatterFactory : DefaultFormatterFactory(numberFormatter, numberFormatter, numberFormatter) {
+private class NumberFormatterFactory : DefaultFormatterFactory(
+  numberFormatter,
+  numberFormatter,
+  numberFormatter
+) {
   companion object {
     private val numberFormatter = NumberFormatter()
 

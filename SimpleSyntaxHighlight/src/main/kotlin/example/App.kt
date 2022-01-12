@@ -102,7 +102,8 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
     return endOfToken + 1
   }
 
-  private fun isDelimiter(character: String) = Character.isWhitespace(character[0]) || OPERANDS.contains(character)
+  private fun isDelimiter(character: String) =
+    Character.isWhitespace(character[0]) || OPERANDS.contains(character)
 
   companion object {
     private const val LB = '\n'

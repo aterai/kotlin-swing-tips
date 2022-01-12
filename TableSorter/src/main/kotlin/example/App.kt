@@ -67,6 +67,7 @@ private class TableSorter() : AbstractTableModel() {
   private val modelToView = mutableListOf<Int>()
   private val sortingColumns = mutableListOf<Directive>()
   private var tableHeader: JTableHeader? = null
+
   // private val columnComparators: MutableMap<Class<*>, Comparator<*>> = ConcurrentHashMap()
   private val rowComparator = RowComparator()
   private var mouseListener: MouseListener
@@ -250,9 +251,11 @@ private class TableSorter() : AbstractTableModel() {
           val column = e.column
           val fr = e.firstRow
           val lr = e.lastRow
-          if (fr == lr && column != TableModelEvent.ALL_COLUMNS && getSortingStatus(column) == NOT_SORTED) {
+          val b = getSortingStatus(column) == NOT_SORTED
+          if (fr == lr && column != TableModelEvent.ALL_COLUMNS && b) {
             val viewIndex = getModelToView()[fr]
-            fireTableChanged(TableModelEvent(this@TableSorter, viewIndex, viewIndex, column, e.type))
+            val src = this@TableSorter
+            fireTableChanged(TableModelEvent(src, viewIndex, viewIndex, column, e.type))
             return
           }
           clearSortingState()
@@ -284,6 +287,7 @@ private class TableSorter() : AbstractTableModel() {
   companion object {
     const val DESCENDING = -1
     const val NOT_SORTED = 0
+
     // const val ASCENDING = 1
     private val EMPTY_DIRECTIVE = Directive(-1, NOT_SORTED)
     // val LEXICAL_COMP: Comparator<Any> = LexicalComparator()
@@ -298,10 +302,18 @@ private class SortableHeaderRenderer(val cellRenderer: TableCellRenderer) : Tabl
     hasFocus: Boolean,
     row: Int,
     column: Int
-  ): Component = cellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column).also {
+  ): Component = cellRenderer.getTableCellRendererComponent(
+    table,
+    value,
+    isSelected,
+    hasFocus,
+    row,
+    column
+  ).also {
     val sorter = table.model
     if (it is JLabel && sorter is TableSorter) {
-      it.icon = sorter.getHeaderRendererIcon(table.convertColumnIndexToModel(column), it.font.size)
+      val mi = table.convertColumnIndexToModel(column)
+      it.icon = sorter.getHeaderRendererIcon(mi, it.font.size)
       it.horizontalTextPosition = SwingConstants.LEFT
     }
   }

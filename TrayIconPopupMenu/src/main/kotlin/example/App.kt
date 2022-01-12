@@ -132,7 +132,10 @@ private object TrayIconPopupMenuUtil {
   }
 }
 
-private class TrayIconPopupMenuHandler(private val popup: JPopupMenu, private val dummy: Window) : MouseAdapter() {
+private class TrayIconPopupMenuHandler(
+  private val popup: JPopupMenu,
+  private val dummy: Window
+) : MouseAdapter() {
   private fun showJPopupMenu(e: MouseEvent) {
     if (e.isPopupTrigger) {
       val p = TrayIconPopupMenuUtil.adjustPopupLocation(popup, e.x, e.y)

@@ -85,7 +85,11 @@ private fun makeCheckBoxPanel(tabs: JTabbedPane): Component {
   }
   val sc = JCheckBox("SCROLL_TAB_LAYOUT", true)
   sc.addActionListener {
-    tabs.tabLayoutPolicy = if (sc.isSelected) JTabbedPane.SCROLL_TAB_LAYOUT else JTabbedPane.WRAP_TAB_LAYOUT
+    tabs.tabLayoutPolicy = if (sc.isSelected) {
+      JTabbedPane.SCROLL_TAB_LAYOUT
+    } else {
+      JTabbedPane.WRAP_TAB_LAYOUT
+    }
   }
   return JPanel(FlowLayout(FlowLayout.LEFT)).also {
     it.add(tc)
@@ -95,7 +99,9 @@ private fun makeCheckBoxPanel(tabs: JTabbedPane): Component {
 
 class DnDTabbedPane : JTabbedPane() {
   var dragTabIndex = -1
-  @Transient var dropLocation: DropLocation? = null
+
+  @Transient
+  var dropLocation: DropLocation? = null
 
   val tabAreaBounds: Rectangle
     get() {
@@ -147,11 +153,23 @@ class DnDTabbedPane : JTabbedPane() {
   fun autoScrollTest(pt: Point) {
     val r = tabAreaBounds
     if (isTopBottomTabPlacement(getTabPlacement())) {
-      RECT_BACKWARD.setBounds(r.x, r.y, SCROLL_SIZE, r.height)
-      RECT_FORWARD.setBounds(r.x + r.width - SCROLL_SIZE - BUTTON_SIZE, r.y, SCROLL_SIZE + BUTTON_SIZE, r.height)
+      RECT_BACKWARD.setBounds(
+        r.x, r.y, SCROLL_SIZE, r.height
+      )
+      RECT_FORWARD.setBounds(
+        r.x + r.width - SCROLL_SIZE - BUTTON_SIZE,
+        r.y,
+        SCROLL_SIZE + BUTTON_SIZE,
+        r.height
+      )
     } else { // if (tabPlacement == LEFT || tabPlacement == RIGHT) {
       RECT_BACKWARD.setBounds(r.x, r.y, r.width, SCROLL_SIZE)
-      RECT_FORWARD.setBounds(r.x, r.y + r.height - SCROLL_SIZE - BUTTON_SIZE, r.width, SCROLL_SIZE + BUTTON_SIZE)
+      RECT_FORWARD.setBounds(
+        r.x,
+        r.y + r.height - SCROLL_SIZE - BUTTON_SIZE,
+        r.width,
+        SCROLL_SIZE + BUTTON_SIZE
+      )
     }
     if (RECT_BACKWARD.contains(pt)) {
       clickArrowButton("scrollTabsBackwardAction")
@@ -248,8 +266,8 @@ class DnDTabbedPane : JTabbedPane() {
         val th = src.transferHandler
         val idx = src.indexAtLocation(tabPt.x, tabPt.y)
         val selIdx = src.selectedIndex
-        val isRotate = src.ui !is MetalTabbedPaneUI && src.tabLayoutPolicy == WRAP_TAB_LAYOUT && idx != selIdx
-        dragTabIndex = if (isRotate) selIdx else idx
+        val isRotate = src.tabLayoutPolicy == WRAP_TAB_LAYOUT && idx != selIdx
+        dragTabIndex = if (src.ui !is MetalTabbedPaneUI && isRotate) selIdx else idx
         th.exportAsDrag(src, e, TransferHandler.MOVE)
         startPt = null
       }
@@ -344,7 +362,8 @@ private class TabTransferHandler : TransferHandler() {
 
   override fun canImport(support: TransferSupport): Boolean {
     val target = support.component
-    if (!support.isDrop || !support.isDataFlavorSupported(localObjectFlavor) || target !is DnDTabbedPane) {
+    val b = !support.isDrop || !support.isDataFlavorSupported(localObjectFlavor)
+    if (b || target !is DnDTabbedPane) {
       return false
     }
     support.dropAction = MOVE
@@ -448,11 +467,11 @@ private class DropLocationLayerUI : LayerUI<DnDTabbedPane>() {
     }
   }
 
-  private fun initLineRect(tabbedPane: JTabbedPane, loc: DnDTabbedPane.DropLocation) {
+  private fun initLineRect(tabs: JTabbedPane, loc: DnDTabbedPane.DropLocation) {
     val index = loc.index
     val a = minOf(index, 1)
-    val r = tabbedPane.getBoundsAt(a * (index - 1))
-    if (tabbedPane.tabPlacement == JTabbedPane.TOP || tabbedPane.tabPlacement == JTabbedPane.BOTTOM) {
+    val r = tabs.getBoundsAt(a * (index - 1))
+    if (tabs.tabPlacement == JTabbedPane.TOP || tabs.tabPlacement == JTabbedPane.BOTTOM) {
       RECT_LINE.setBounds(r.x - LINE_SIZE / 2 + r.width * a, r.y, LINE_SIZE, r.height)
     } else {
       RECT_LINE.setBounds(r.x, r.y - LINE_SIZE / 2 + r.height * a, r.width, LINE_SIZE)
@@ -465,7 +484,9 @@ private class DropLocationLayerUI : LayerUI<DnDTabbedPane>() {
   }
 }
 
-private class ButtonTabComponent(private val tabbedPane: JTabbedPane) : JPanel(FlowLayout(FlowLayout.LEFT, 0, 0)) {
+private class ButtonTabComponent(
+  private val tabbedPane: JTabbedPane
+) : JPanel(FlowLayout(FlowLayout.LEFT, 0, 0)) {
   private inner class TabButtonHandler : MouseAdapter(), ActionListener {
     override fun actionPerformed(e: ActionEvent) {
       val i = tabbedPane.indexOfTabComponent(this@ButtonTabComponent)
