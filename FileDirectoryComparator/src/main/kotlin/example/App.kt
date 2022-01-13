@@ -76,11 +76,16 @@ private fun makeTable(): JTable {
   // table.setAutoCreateRowSorter(true)
   table.dropMode = DropMode.INSERT_ROWS
   table.transferHandler = FileTransferHandler()
-  table.setDefaultRenderer(Any::class.java, FileIconTableCellRenderer(FileSystemView.getFileSystemView()))
+  table.setDefaultRenderer(
+    Any::class.java,
+    FileIconTableCellRenderer(FileSystemView.getFileSystemView())
+  )
   return table
 }
 
-private class FileIconTableCellRenderer(private val fileSystemView: FileSystemView) : DefaultTableCellRenderer() {
+private class FileIconTableCellRenderer(
+  private val fileSystemView: FileSystemView
+) : DefaultTableCellRenderer() {
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -122,12 +127,15 @@ private class FileTransferHandler : TransferHandler() {
     return list.isNotEmpty()
   }
 
-  override fun canImport(ts: TransferSupport) = ts.isDataFlavorSupported(DataFlavor.javaFileListFlavor)
+  override fun canImport(ts: TransferSupport) =
+    ts.isDataFlavorSupported(DataFlavor.javaFileListFlavor)
 
   override fun getSourceActions(component: JComponent) = COPY
 }
 
-private open class DefaultFileComparator(protected val column: Int) : Comparator<File>, Serializable {
+private open class DefaultFileComparator(
+  protected val column: Int
+) : Comparator<File>, Serializable {
   override fun compare(a: File, b: File) = when (column) {
     0 -> a.name.compareTo(b.name, ignoreCase = true)
     1 -> a.length().compareTo(b.length())
@@ -153,7 +161,10 @@ private class FileComparator(column: Int) : DefaultFileComparator(column) {
 
 // > dir /O:GN
 // > ls --group-directories-first
-private class FileGroupComparator(private val table: JTable, column: Int) : DefaultFileComparator(column) {
+private class FileGroupComparator(
+  private val table: JTable,
+  column: Int
+) : DefaultFileComparator(column) {
   override fun compare(a: File, b: File): Int {
     val flag = table.rowSorter.sortKeys.firstOrNull()
       ?.takeIf { it.column == column && it.sortOrder == SortOrder.DESCENDING }

@@ -89,7 +89,6 @@ private class ViewAction(private val table: JTable) : AbstractAction("view") {
 
 private class EditAction(private val table: JTable) : AbstractAction("edit") {
   override fun actionPerformed(e: ActionEvent) {
-    // Object o = table.getModel().getValueAt(table.getSelectedRow(), 0);
     val row = table.convertRowIndexToModel(table.editingRow)
     val o = table.model.getValueAt(row, 0)
     JOptionPane.showMessageDialog(table, "Editing: $o")
@@ -102,12 +101,16 @@ private class ButtonsEditor(private val table: JTable) : AbstractCellEditor(), T
   private inner class EditingStopHandler : MouseAdapter(), ActionListener {
     override fun mousePressed(e: MouseEvent) {
       when (val o = e.source) {
-        is TableCellEditor -> actionPerformed(ActionEvent(o, ActionEvent.ACTION_PERFORMED, ""))
-        is JButton -> if (o.model.isPressed && table.isRowSelected(table.editingRow) && e.isControlDown) {
+        is TableCellEditor -> actionPerformed(makeActionEvent(o))
+        is JButton -> if (o.model.isPressed && e.isControlDown && isInEditor()) {
           panel.background = table.background
         }
       }
     }
+
+    private fun isInEditor() = table.isRowSelected(table.editingRow)
+
+    private fun makeActionEvent(o: Any?) = ActionEvent(o, ActionEvent.ACTION_PERFORMED, "")
 
     override fun actionPerformed(e: ActionEvent) {
       EventQueue.invokeLater { fireEditingStopped() }
@@ -126,8 +129,13 @@ private class ButtonsEditor(private val table: JTable) : AbstractCellEditor(), T
     panel.addMouseListener(handler)
   }
 
-  override fun getTableCellEditorComponent(tbl: JTable, value: Any?, isSelected: Boolean, row: Int, column: Int) =
-    panel.also { it.background = tbl.selectionBackground }
+  override fun getTableCellEditorComponent(
+    tbl: JTable,
+    value: Any?,
+    isSelected: Boolean,
+    row: Int,
+    column: Int
+  ) = panel.also { it.background = tbl.selectionBackground }
 
   override fun getCellEditorValue() = ""
 }

@@ -64,9 +64,11 @@ fun makeUI(): Component {
   }
 }
 
-private class HeaderRenderer(header: JTableHeader, private val pop: JPopupMenu) : JButton(), TableCellRenderer {
+private class HeaderRenderer(
+  header: JTableHeader,
+  private val pop: JPopupMenu
+) : JButton(), TableCellRenderer {
   private var rolloverIndex = -1
-  @Transient
   private val handler = object : MouseInputAdapter() {
     override fun mouseClicked(e: MouseEvent) {
       val h = e.component as? JTableHeader ?: return
@@ -74,7 +76,9 @@ private class HeaderRenderer(header: JTableHeader, private val pop: JPopupMenu) 
       val columnModel = table.columnModel
       val vci = columnModel.getColumnIndexAtX(e.x)
       val r = h.getHeaderRect(vci)
-      val c = getTableCellRendererComponent(table, "", isSelected = true, hasFocus = true, row = -1, column = vci)
+      val c = getTableCellRendererComponent(
+        table, "", isSelected = true, hasFocus = true, row = -1, column = vci
+      )
       (c as? Container)?.also {
         r.translate(r.width - BUTTON_WIDTH, 0)
         r.setSize(BUTTON_WIDTH, r.height)

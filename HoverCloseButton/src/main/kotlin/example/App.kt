@@ -18,7 +18,9 @@ fun makeUI(): Component {
   }
 }
 
-private class HoverCloseButtonTabbedPane(tabPlacement: Int = TOP) : JTabbedPane(tabPlacement, SCROLL_TAB_LAYOUT) {
+private class HoverCloseButtonTabbedPane(
+  tabPlacement: Int = TOP
+) : JTabbedPane(tabPlacement, SCROLL_TAB_LAYOUT) {
   private var hoverHandler: MouseMotionListener? = null
   override fun updateUI() {
     removeMouseMotionListener(hoverHandler)
@@ -46,7 +48,11 @@ private class HoverCloseButtonTabbedPane(tabPlacement: Int = TOP) : JTabbedPane(
   }
 }
 
-private class TabPanel(pane: JTabbedPane, title: String?, content: Component?) : JPanel(BorderLayout()) {
+private class TabPanel(
+  pane: JTabbedPane,
+  title: String?,
+  content: Component?
+) : JPanel(BorderLayout()) {
   private val button = object : JButton(CloseTabIcon()) {
     override fun updateUI() {
       super.updateUI()
@@ -112,6 +118,7 @@ private class CloseTabIcon : Icon {
 private class TabbedPanePopupMenu : JPopupMenu() {
   private var count = 0
   private val closeAll: JMenuItem
+
   init {
     add("Add").addActionListener {
       (invoker as? JTabbedPane)?.also {

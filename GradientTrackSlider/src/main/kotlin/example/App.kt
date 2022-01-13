@@ -14,7 +14,9 @@ private val TEXTURE = TextureUtils.createCheckerTexture(6, Color(200, 150, 100, 
 
 fun makeUI(): Component {
   val icon = object : Icon {
-    override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) { /* Empty icon */ }
+    override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+      /* Empty icon */
+    }
 
     override fun getIconWidth() = 15
 
@@ -81,14 +83,11 @@ private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()
 }
 
 private class GradientPalletSliderUI : MetalSliderUI() {
-  private var controlDarkShadow = Color(0x64_64_64) // MetalLookAndFeel.getControlDarkShadow()
-  private var controlHighlight = Color(0xC8_FF_C8) // MetalLookAndFeel.getControlHighlight()
-  private var controlShadow = Color(0x00_64_00) // MetalLookAndFeel.getControlShadow()
+  private var controlDarkShadow = Color(0x64_64_64)
+  private var controlHighlight = Color(0xC8_FF_C8)
+  private var controlShadow = Color(0x00_64_00)
 
   override fun paintTrack(g: Graphics) {
-    // val trackColor = if (!slider.isEnabled()) MetalLookAndFeel.getControlShadow() else slider.getForeground()
-    // val leftToRight = MetalUtils.isLeftToRight(slider)
-
     g.translate(trackRect.x, trackRect.y)
 
     var trackLeft = 0
@@ -122,7 +121,13 @@ private class GradientPalletSliderUI : MetalSliderUI() {
     g.translate(-trackRect.x, -trackRect.y)
   }
 
-  private fun paintTrackBase(g: Graphics, trackTop: Int, trackLeft: Int, trackBottom: Int, trackRight: Int) {
+  private fun paintTrackBase(
+    g: Graphics,
+    trackTop: Int,
+    trackLeft: Int,
+    trackBottom: Int,
+    trackRight: Int
+  ) {
     if (slider.isEnabled) {
       g.color = controlDarkShadow
       g.drawRect(trackLeft, trackTop, trackRight - trackLeft - 1, trackBottom - trackTop - 1)
@@ -140,7 +145,13 @@ private class GradientPalletSliderUI : MetalSliderUI() {
     }
   }
 
-  private fun paintTrackFill(g: Graphics, trackTop: Int, trackLeft: Int, trackBottom: Int, trackRight: Int) {
+  private fun paintTrackFill(
+    g: Graphics,
+    trackTop: Int,
+    trackLeft: Int,
+    trackBottom: Int,
+    trackRight: Int
+  ) {
     var middleOfThumb: Int
     val fillTop: Int
     val fillLeft: Int
@@ -173,7 +184,13 @@ private class GradientPalletSliderUI : MetalSliderUI() {
     }
   }
 
-  private fun paintTrackHighlight(g: Graphics, trackTop: Int, trackLeft: Int, trackBottom: Int, trackRight: Int) {
+  private fun paintTrackHighlight(
+    g: Graphics,
+    trackTop: Int,
+    trackLeft: Int,
+    trackBottom: Int,
+    trackRight: Int
+  ) {
     var yy = trackTop + (trackBottom - trackTop) / 2
     for (i in 10 downTo 0) {
       g.color = makeColor(i * .07f)
