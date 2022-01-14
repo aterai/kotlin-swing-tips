@@ -42,9 +42,9 @@ fun makeUI(): Component {
         fixedCellHeight = CELL_SIZE.height
         selectionModel.selectionMode = ListSelectionModel.SINGLE_INTERVAL_SELECTION
         border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
-        val renderer = cellRenderer
+        val r = cellRenderer
         setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-          renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
+          r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
             (it as? JLabel)?.also { label ->
               label.icon = ColorIcon(value.color)
               label.toolTipText = "index: ${value.index}"
@@ -68,7 +68,13 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTestImage(dataBuffer: DataBuffer, colorModel: ColorModel, w: Int, h: Int, transIdx: Int): Image {
+private fun makeTestImage(
+  dataBuffer: DataBuffer,
+  colorModel: ColorModel,
+  w: Int,
+  h: Int,
+  transIdx: Int
+): Image {
   val buf = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
   for (y in 0 until h) {
     for (x in 0 until w) {
@@ -95,12 +101,21 @@ private fun makeMissingImage(): BufferedImage {
   return bi
 }
 
-private data class IndexedColor(val index: Int, val color: Color, val isTransparent: Boolean)
+private data class IndexedColor(
+  val index: Int,
+  val color: Color,
+  val isTransparent: Boolean
+)
 
-private class PaletteListModel(private val model: IndexColorModel) : AbstractListModel<IndexedColor>() {
+private class PaletteListModel(
+  private val model: IndexColorModel
+) : AbstractListModel<IndexedColor>() {
   override fun getSize() = model.mapSize
 
-  override fun getElementAt(i: Int) = IndexedColor(i, Color(model.getRGB(i)), i == model.transparentPixel)
+  override fun getElementAt(i: Int): IndexedColor {
+    val isTransparent = i == model.transparentPixel
+    return IndexedColor(i, Color(model.getRGB(i)), isTransparent)
+  }
 }
 
 private class ColorIcon(private val color: Color) : Icon {

@@ -38,7 +38,7 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeWheelTabbedPane() = object : JTabbedPane(SwingConstants.TOP, SCROLL_TAB_LAYOUT) {
+private fun makeWheelTabbedPane() = object : JTabbedPane(TOP, SCROLL_TAB_LAYOUT) {
   @Transient private var handler: MouseWheelListener? = null
   override fun updateUI() {
     removeMouseWheelListener(handler)
@@ -87,7 +87,10 @@ private fun isTopBottomTabPlacement(tabPlacement: Int) =
   tabPlacement == SwingConstants.TOP || tabPlacement == SwingConstants.BOTTOM
 
 private enum class TabPlacements(val tabPlacement: Int) {
-  TOP(SwingConstants.TOP), BOTTOM(SwingConstants.BOTTOM), LEFT(SwingConstants.LEFT), RIGHT(SwingConstants.RIGHT);
+  TOP(SwingConstants.TOP),
+  BOTTOM(SwingConstants.BOTTOM),
+  LEFT(SwingConstants.LEFT),
+  RIGHT(SwingConstants.RIGHT);
 }
 
 fun main() {

@@ -59,8 +59,8 @@ fun makeUI(): Component {
 
   val panel = JPanel(BorderLayout())
   panel.addHierarchyListener { e ->
-    val isDisplayableChanged = e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L
-    if (isDisplayableChanged && !e.component.isDisplayable && worker != null) {
+    val b = e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L
+    if (b && !e.component.isDisplayable && worker != null) {
       println("DISPOSE_ON_CLOSE")
       worker?.cancel(true)
       worker = null
@@ -83,7 +83,10 @@ private fun makePanel(cmp: Component): Component {
   return p
 }
 
-private class StripedProgressBarUI(private val dir: Boolean, private val slope: Boolean) : BasicProgressBarUI() {
+private class StripedProgressBarUI(
+  private val dir: Boolean,
+  private val slope: Boolean
+) : BasicProgressBarUI() {
   override fun getBoxLength(availableLength: Int, otherDimension: Int) = availableLength
   // (availableLength / 6.0).roundToInt()
 
@@ -107,13 +110,15 @@ private class StripedProgressBarUI(private val dir: Boolean, private val slope: 
       if (slope) {
         var i = boxRect.width + x
         while (i > -w) {
-          g2.fill(AffineTransform.getTranslateInstance(i.toDouble(), 0.0).createTransformedShape(s))
+          val at = AffineTransform.getTranslateInstance(i.toDouble(), 0.0)
+          g2.fill(at.createTransformedShape(s))
           i -= w
         }
       } else {
         var i = -x
         while (i < boxRect.width) {
-          g2.fill(AffineTransform.getTranslateInstance(i.toDouble(), 0.0).createTransformedShape(s))
+          val at = AffineTransform.getTranslateInstance(i.toDouble(), 0.0)
+          g2.fill(at.createTransformedShape(s))
           i += w
         }
       }

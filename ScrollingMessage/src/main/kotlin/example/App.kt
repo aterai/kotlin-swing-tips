@@ -27,7 +27,8 @@ private class MarqueePanel : JComponent() {
 
   init {
     addHierarchyListener { e ->
-      if (e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L && !e.component.isDisplayable) {
+      val b = e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L
+      if (b && !e.component.isDisplayable) {
         animator.stop()
       }
     }

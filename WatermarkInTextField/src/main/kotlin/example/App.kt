@@ -47,10 +47,12 @@ private fun makeTitledPanel(title: String, c: Component): Component {
 private class WatermarkTextField : JTextField(), FocusListener {
   private val icon: Icon
   private var showWatermark = true
+
   init {
     val cl = Thread.currentThread().contextClassLoader
     val url = cl.getResource("example/watermark.png")
-    icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) } ?: UIManager.getIcon("html.missingImage")
+    icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) }
+      ?: UIManager.getIcon("html.missingImage")
     addFocusListener(this)
   }
 
@@ -78,6 +80,7 @@ private class WatermarkTextField : JTextField(), FocusListener {
 
 private class GhostFocusListener(tf: JTextComponent) : FocusListener {
   private val ghostMessage = tf.text
+
   init {
     tf.foreground = INACTIVE_COLOR
   }

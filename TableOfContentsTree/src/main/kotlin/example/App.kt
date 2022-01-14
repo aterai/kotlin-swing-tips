@@ -102,7 +102,9 @@ private class TableOfContentsTreeCellRenderer : DefaultTreeCellRenderer() {
     row: Int,
     hasFocus: Boolean
   ): Component {
-    val c = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+    val c = super.getTreeCellRendererComponent(
+      tree, value, selected, expanded, leaf, row, hasFocus
+    )
     val toc = (value as? DefaultMutableTreeNode)?.userObject
     return if (c is JLabel && toc is TableOfContents) getTocRenderer(c, tree, toc) else c
   }
@@ -168,7 +170,13 @@ private class TableOfContentsTree(model: TreeModel?) : JTree(model) {
     g2.dispose()
   }
 
-  private fun drawReader(g2: Graphics2D, tcr: DefaultTreeCellRenderer, pageNumMaxWidth: Int, maxX: Int, i: Int) {
+  private fun drawReader(
+    g2: Graphics2D,
+    tcr: DefaultTreeCellRenderer,
+    pageNumMaxWidth: Int,
+    maxX: Int,
+    i: Int
+  ) {
     val node = getPathForRow(i).lastPathComponent as? DefaultMutableTreeNode
     val r = getRowBounds(i)
     (node?.userObject as? TableOfContents)?.also {
