@@ -12,9 +12,9 @@ fun makeUI(): Component {
   p.add(JLabel("SearchBar JComboBox"))
 
   val m = SearchEngineComboBoxModel<example.SearchEngine>()
-  m.addElement(SearchEngine("Google", "http://www.google.com/", makeIcon("example/google.png")))
-  m.addElement(SearchEngine("Yahoo!", "http://www.yahoo.com/", makeIcon("example/yahoo.png")))
-  m.addElement(SearchEngine("Bing", "http://www.bing.com/", makeIcon("example/bing.png")))
+  m.addElement(SearchEngine("Google", "https://www.google.com/", makeIcon("google")))
+  m.addElement(SearchEngine("Yahoo!", "https://www.yahoo.com/", makeIcon("yahoo")))
+  m.addElement(SearchEngine("Bing", "https://www.bing.com/", makeIcon("bing")))
 
   val combo = JSearchBar(m)
   combo.getEditor().setItem("java swing")
@@ -28,10 +28,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeIcon(path: String): ImageIcon {
+private fun makeIcon(name: String): ImageIcon {
+  val path = "example/$name.png"
   val url = Thread.currentThread().contextClassLoader.getResource(path)
-  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
-  return ImageIcon(img)
+  return if (url == null) ImageIcon(makeMissingImage()) else ImageIcon(url)
 }
 
 private fun makeMissingImage(): BufferedImage {

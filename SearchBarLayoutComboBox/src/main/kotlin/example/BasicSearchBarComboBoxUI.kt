@@ -138,7 +138,13 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
 
   private fun createLoupeButton(): JButton {
     val button = JButton(loupeAction)
-    val loupe = ImageIcon(BasicSearchBarComboBoxUI::class.java.getResource("loupe.png"))
+    val cl = Thread.currentThread().contextClassLoader
+    val url = cl.getResource("example/loupe.png")
+    val loupe = if (url == null) {
+      UIManager.getIcon("html.missingImage")
+    } else {
+      ImageIcon(url)
+    }
     button.icon = loupe
     button.rolloverIcon = makeRolloverIcon(loupe)
     return button
