@@ -2,6 +2,7 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.GroupLayout.Alignment
 
 fun makeUI(): Component {
   // GroupLayout
@@ -20,8 +21,12 @@ fun makeUI(): Component {
   hgp.addGroup(layout.createParallelGroup().addComponent(tf1).addComponent(tf2))
   layout.setHorizontalGroup(hgp)
   val vgp = layout.createSequentialGroup()
-  vgp.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(label1).addComponent(tf1))
-  vgp.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(label2).addComponent(tf2))
+  vgp.addGroup(
+    layout.createParallelGroup(Alignment.BASELINE).addComponent(label1).addComponent(tf1)
+  )
+  vgp.addGroup(
+    layout.createParallelGroup(Alignment.BASELINE).addComponent(label2).addComponent(tf2)
+  )
   layout.setVerticalGroup(vgp)
 
   // GridBagLayout

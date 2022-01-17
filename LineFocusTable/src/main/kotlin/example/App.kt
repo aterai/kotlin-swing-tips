@@ -51,7 +51,8 @@ private class LineFocusTable(model: TableModel) : JTable(model) {
   private val emptyBorder = BorderFactory.createEmptyBorder(2, 2, 2, 2)
 
   override fun updateUI() {
-    // [JDK-6788475] Changing to Nimbus LAF and back doesn't reset look and feel of JTable completely - Java Bug System
+    // [JDK-6788475] Changing to Nimbus LAF and back doesn't reset look
+    //   and feel of JTable completely - Java Bug System
     // https://bugs.openjdk.java.net/browse/JDK-6788475
     // XXX: set dummy ColorUIResource
     setSelectionForeground(ColorUIResource(Color.RED))
@@ -144,7 +145,12 @@ private enum class Type {
   START, END
 }
 
-private class DotBorder(top: Int, left: Int, bottom: Int, right: Int) : EmptyBorder(top, left, bottom, right) {
+private class DotBorder(
+  top: Int,
+  left: Int,
+  bottom: Int,
+  right: Int
+) : EmptyBorder(top, left, bottom, right) {
   val type: MutableSet<Type> = EnumSet.noneOf(Type::class.java)
 
   override fun isBorderOpaque() = true
@@ -171,7 +177,14 @@ private class DotBorder(top: Int, left: Int, bottom: Int, right: Int) : EmptyBor
   }
 
   companion object {
-    private val DASHED = BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10f, floatArrayOf(1f), 0f)
+    private val DASHED = BasicStroke(
+      1f,
+      BasicStroke.CAP_BUTT,
+      BasicStroke.JOIN_MITER,
+      10f,
+      floatArrayOf(1f),
+      0f
+    )
     private val DOT_COLOR = Color(0xC8_96_96)
   }
 }

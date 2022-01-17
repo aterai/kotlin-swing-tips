@@ -4,7 +4,9 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.KeyEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-private const val HELP = "FORWARD_TRAVERSAL_KEYS: TAB, RIGHT, DOWN\nBACKWARD_TRAVERSAL_KEYS: SHIFT+TAB, LEFT, UP"
+private const val HELP = """FORWARD_TRAVERSAL_KEYS: TAB, RIGHT, DOWN
+BACKWARD_TRAVERSAL_KEYS: SHIFT+TAB, LEFT, UP
+"""
 
 fun makeUI(): Component {
   val button = JButton("showOptionDialog")

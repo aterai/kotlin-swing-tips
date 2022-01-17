@@ -75,7 +75,12 @@ private class RowDataModel : SortableTableModel() {
 
   override fun getColumnName(column: Int) = COLUMN_ARRAY[column].columnName
 
-  private data class ColumnContext(val columnName: String, val columnClass: Class<*>, val isEditable: Boolean)
+  private data class ColumnContext(
+    val columnName: String,
+    val columnClass: Class<*>,
+    val isEditable: Boolean
+  )
+
   companion object {
     private val COLUMN_ARRAY = arrayOf(
       ColumnContext("No.", Number::class.java, false),
@@ -94,7 +99,10 @@ private open class SortableTableModel : DefaultTableModel() {
   }
 }
 
-private class ColumnComparator(val index: Int, val ascending: Boolean) : Comparator<Any>, Serializable {
+private class ColumnComparator(
+  val index: Int,
+  val ascending: Boolean
+) : Comparator<Any>, Serializable {
   override fun compare(one: Any, two: Any): Int {
     val one1 = (one as? List<*>)?.filterIsInstance<Comparable<Any>>()
     val two1 = (two as? List<*>)?.filterIsInstance<Comparable<Any>>()
@@ -112,7 +120,9 @@ private class ColumnComparator(val index: Int, val ascending: Boolean) : Compara
   }
 }
 
-private class SortButtonRenderer(private val header: JTableHeader) : JButton(), TableCellRenderer {
+private class SortButtonRenderer(
+  private val header: JTableHeader
+) : JButton(), TableCellRenderer {
   private var iconSize: Dimension? = null
   private var pushedColumn = -1
   private val state = mutableMapOf<Int, Int>()
@@ -204,7 +214,9 @@ private class HeaderMouseListener : MouseAdapter() {
       if (table.isEditing) {
         table.cellEditor.stopCellEditing()
       }
-      (table.model as? SortableTableModel)?.sortByColumn(column, SortButtonRenderer.DOWN == tcr.getState(column))
+      (table.model as? SortableTableModel)?.sortByColumn(
+        column, SortButtonRenderer.DOWN == tcr.getState(column)
+      )
     }
   }
 

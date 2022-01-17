@@ -76,7 +76,11 @@ private fun makeCheckBoxPanel(tabs: JTabbedPane): Component {
   }
   val sc = JCheckBox("SCROLL_TAB_LAYOUT", true)
   sc.addActionListener {
-    tabs.tabLayoutPolicy = if (sc.isSelected) JTabbedPane.SCROLL_TAB_LAYOUT else JTabbedPane.WRAP_TAB_LAYOUT
+    tabs.tabLayoutPolicy = if (sc.isSelected) {
+      JTabbedPane.SCROLL_TAB_LAYOUT
+    } else {
+      JTabbedPane.WRAP_TAB_LAYOUT
+    }
   }
   return JPanel(FlowLayout(FlowLayout.LEFT)).also {
     it.add(tc)
@@ -86,7 +90,9 @@ private fun makeCheckBoxPanel(tabs: JTabbedPane): Component {
 
 class DnDTabbedPane : JTabbedPane() {
   var dragTabIndex = -1
-  @Transient var dropLocation: DropLocation? = null
+
+  @Transient
+  var dropLocation: DropLocation? = null
 
   val tabAreaBounds: Rectangle
     get() {
@@ -154,10 +160,20 @@ class DnDTabbedPane : JTabbedPane() {
     val r = tabAreaBounds
     if (isTopBottomTabPlacement(getTabPlacement())) {
       RECT_BACKWARD.setBounds(r.x, r.y, SCROLL_SIZE, r.height)
-      RECT_FORWARD.setBounds(r.x + r.width - SCROLL_SIZE - BUTTON_SIZE, r.y, SCROLL_SIZE + BUTTON_SIZE, r.height)
+      RECT_FORWARD.setBounds(
+        r.x + r.width - SCROLL_SIZE - BUTTON_SIZE,
+        r.y,
+        SCROLL_SIZE + BUTTON_SIZE,
+        r.height
+      )
     } else { // if (tabPlacement == LEFT || tabPlacement == RIGHT) {
       RECT_BACKWARD.setBounds(r.x, r.y, r.width, SCROLL_SIZE)
-      RECT_FORWARD.setBounds(r.x, r.y + r.height - SCROLL_SIZE - BUTTON_SIZE, r.width, SCROLL_SIZE + BUTTON_SIZE)
+      RECT_FORWARD.setBounds(
+        r.x,
+        r.y + r.height - SCROLL_SIZE - BUTTON_SIZE,
+        r.width,
+        SCROLL_SIZE + BUTTON_SIZE
+      )
     }
     if (RECT_BACKWARD.contains(pt)) {
       clickArrowButton("scrollTabsBackwardAction")
@@ -260,7 +276,7 @@ class DnDTabbedPane : JTabbedPane() {
         val selIdx = src.selectedIndex
         val isWrapTabLayout = src.tabLayoutPolicy == WRAP_TAB_LAYOUT
         val isNotMetal = src.ui !is MetalTabbedPaneUI
-        val isTabRunsRotated = isNotMetal && isWrapTabLayout && idx != selIdx
+        val isTabRunsRotated = isNotMetal && isWrapTabLayout
         dragTabIndex = if (isTabRunsRotated && idx != selIdx) selIdx else idx
         th.exportAsDrag(src, e, TransferHandler.MOVE)
         RECT_LINE.setBounds(0, 0, 0, 0)
@@ -337,34 +353,35 @@ private class TabTransferHandler : TransferHandler() {
   }
 
   override fun canImport(support: TransferSupport): Boolean {
-    val target = support.component
-    if (!support.isDrop || !support.isDataFlavorSupported(localObjectFlavor) || target !is DnDTabbedPane) {
+    val tgt = support.component as? DnDTabbedPane
+    if (!support.isDrop || !support.isDataFlavorSupported(localObjectFlavor) || tgt == null) {
       return false
     }
     support.dropAction = MOVE
     val tdl = support.dropLocation
     val pt = tdl.dropPoint
-    target.autoScrollTest(pt)
-    val dl = target.tabDropLocationForPoint(pt)
+    tgt.autoScrollTest(pt)
+    val dl = tgt.tabDropLocationForPoint(pt)
     val idx = dl.index
 
-    val isAreaContains = target.tabAreaBounds.contains(pt) && idx >= 0
-    val canDrop = if (target == source) {
-      isAreaContains && idx != target.dragTabIndex && idx != target.dragTabIndex + 1
+    val isAreaContains = tgt.tabAreaBounds.contains(pt) && idx >= 0
+    val canDrop = if (tgt == source) {
+      isAreaContains && idx != tgt.dragTabIndex && idx != tgt.dragTabIndex + 1
     } else {
-      source?.let { !it.isAncestorOf(target) } ?: false && isAreaContains
+      source?.let { !it.isAncestorOf(tgt) } ?: false && isAreaContains
     }
 
-    // [JDK-6700748] Cursor flickering during D&D when using CellRendererPane with validation - Java Bug System
+    // [JDK-6700748]
+    // Cursor flickering during D&D when using CellRendererPane with validation - Java Bug System
     // https://bugs.openjdk.java.net/browse/JDK-6700748
     val cursor = if (canDrop) DragSource.DefaultMoveDrop else DragSource.DefaultMoveNoDrop
-    val glassPane = target.rootPane.glassPane
+    val glassPane = tgt.rootPane.glassPane
     glassPane.cursor = cursor
-    target.cursor = cursor
+    tgt.cursor = cursor
 
     support.setShowDropLocation(canDrop)
     // dl.canDrop = canDrop
-    target.updateTabDropLocation(dl, canDrop)
+    tgt.updateTabDropLocation(dl, canDrop)
     return canDrop
   }
 
