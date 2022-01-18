@@ -5,7 +5,6 @@ import java.awt.font.TextAttribute
 import java.awt.font.TextLayout
 import java.awt.geom.AffineTransform
 import java.awt.geom.Ellipse2D
-import java.awt.geom.Point2D
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
@@ -55,7 +54,7 @@ fun makeUI(): Component {
 private open class BadgeIcon(val value: Int, val badgeFgc: Color, val badgeBgc: Color) : Icon {
   val text get() = if (value > 999) "1K+" else value.toString()
 
-  val badgeShape get() = Ellipse2D.Double(0.0, 0.0, iconWidth - 1.0, iconHeight - 1.0)
+  val badgeShape get() = Ellipse2D.Double(0.0, 0.0, iconWidth.toDouble(), iconHeight.toDouble())
 
   open fun getTextShape(g2: Graphics2D): Shape {
     val txt = text
@@ -69,8 +68,6 @@ private open class BadgeIcon(val value: Int, val badgeFgc: Color, val badgeBgc: 
     if (value <= 0) {
       return
     }
-    val w = iconWidth
-    val h = iconHeight
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
@@ -83,9 +80,10 @@ private open class BadgeIcon(val value: Int, val badgeFgc: Color, val badgeBgc: 
     g2.paint = badgeFgc
     val shape = getTextShape(g2)
     val b = shape.bounds
-    val p = Point2D.Double(b.getX() + b.getWidth() / 2.0, b.getY() + b.getHeight() / 2.0)
-    val at = AffineTransform.getTranslateInstance(w / 2.0 - p.x - 1.0, h / 2.0 - p.y - 1.0)
-    g2.fill(at.createTransformedShape(shape))
+    val tx = iconWidth / 2.0 - b.centerX
+    val ty = iconHeight / 2.0 - b.centerY
+    val toCenterAt = AffineTransform.getTranslateInstance(tx, ty)
+    g2.fill(toCenterAt.createTransformedShape(shape))
     g2.dispose()
   }
 

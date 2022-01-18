@@ -4,7 +4,6 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.font.TextLayout
 import java.awt.geom.AffineTransform
 import java.awt.geom.Ellipse2D
-import java.awt.geom.Point2D
 import java.awt.geom.RoundRectangle2D
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.LayerUI
@@ -132,8 +131,6 @@ private open class BadgeIcon(
     if (value <= 0) {
       return
     }
-    val w = iconWidth.toDouble()
-    val h = iconHeight.toDouble()
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     val badge = badgeShape
@@ -148,8 +145,9 @@ private open class BadgeIcon(
     val at = if (txt.length < 3) null else AffineTransform.getScaleInstance(.66, 1.0)
     val shape = TextLayout(txt, g2.font, frc).getOutline(at)
     val b = shape.bounds
-    val p = Point2D.Double(b.x + b.width / 2.0, b.y + b.height / 2.0)
-    val toCenterAT = AffineTransform.getTranslateInstance(w / 2.0 - p.x, h / 2.0 - p.y)
+    val tx = iconWidth / 2.0 - b.centerX
+    val ty = iconHeight / 2.0 - b.centerY
+    val toCenterAT = AffineTransform.getTranslateInstance(tx, ty)
     g2.fill(toCenterAT.createTransformedShape(shape))
     g2.dispose()
   }
