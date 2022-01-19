@@ -100,7 +100,7 @@ private class SpinnerLayout : LayoutManager {
     val previousD = preferredSize(previousButton)
     val editorD = preferredSize(editor)
 
-    // Force the editors height to be a multiple of 2
+    // Force the editors' height to be a multiple of 2
     editorD.height = (editorD.height + 1) / 2 * 2
     val size = Dimension(editorD.width, editorD.height)
     size.width += nextD.width.coerceAtLeast(previousD.width)
@@ -113,26 +113,27 @@ private class SpinnerLayout : LayoutManager {
   override fun minimumLayoutSize(parent: Container) = preferredLayoutSize(parent)
 
   override fun layoutContainer(parent: Container) {
-    val width = parent.width
-    val height = parent.height
-    val ins = parent.insets
-    if (nextButton == null && previousButton == null) {
-      setBounds(editor, ins.left, ins.top, width - ins.left - ins.right, height - ins.top - ins.bottom)
+    val r = SwingUtilities.calculateInnerArea(parent as? JComponent, null)
+    if (r != null && nextButton == null && previousButton == null) {
+      setBounds(editor, r.x, r.y, r.width, r.height)
       return
     }
 
     // Dimension nextD = preferredSize(nextButton);
     // Dimension previousD = preferredSize(previousButton);
     val buttonsWidth = 100 // Math.max(nextD.width, previousD.width);
-    val editorHeight = height - (ins.top + ins.bottom)
+    val editorHeight = r?.height ?: parent.height
 
     // The arrowButtonInsets value is used instead of the JSpinner's
     // insets if not null. Defining this to be (0, 0, 0, 0) causes the
     // buttons to be aligned with the outer edge of the spinner's
     // border, and leaving it as "null" places the buttons completely
     // inside the spinner's border.
-    val buttonInsets = UIManager.getInsets("Spinner.arrowButtonInsets") ?: ins
+    val buttonInsets = UIManager.getInsets("Spinner.arrowButtonInsets") ?: parent.insets
 
+    val width = parent.width
+    val height = parent.height
+    val ins = parent.insets
     // Deal with the spinner's componentOrientation property.
     val editorX: Int
     val editorWidth: Int
@@ -173,7 +174,11 @@ private object LookAndFeelUtil {
     }
   }
 
-  private fun createLookAndFeelItem(lafName: String, lafClassName: String, lafGroup: ButtonGroup): JMenuItem {
+  private fun createLookAndFeelItem(
+    lafName: String,
+    lafClassName: String,
+    lafGroup: ButtonGroup
+  ): JMenuItem {
     val lafItem = JRadioButtonMenuItem(lafName, lafClassName == lookAndFeel)
     lafItem.actionCommand = lafClassName
     lafItem.hideActionText = true
