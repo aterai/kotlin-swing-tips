@@ -53,8 +53,13 @@ private class SplitPaneWrapper(private val splitPane: JSplitPane) : JPanel(Borde
   }
 
   companion object {
-    private fun getOrientedSize(sp: JSplitPane) =
-      if (sp.orientation == JSplitPane.VERTICAL_SPLIT) sp.height - sp.dividerSize else sp.width - sp.dividerSize
+    private fun getOrientedSize(sp: JSplitPane): Int {
+      return if (sp.orientation == JSplitPane.VERTICAL_SPLIT) {
+        sp.height - sp.dividerSize
+      } else {
+        sp.width - sp.dividerSize
+      }
+    }
   }
 }
 

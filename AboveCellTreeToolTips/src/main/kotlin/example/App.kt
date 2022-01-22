@@ -13,9 +13,9 @@ fun makeUI(): Component {
       setCellRenderer(null)
       super.updateUI()
       // rowHeight = 24
-      val renderer = getCellRenderer()
+      val r = getCellRenderer()
       setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-        renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus).also {
+        r.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus).also {
           (it as? JComponent)?.toolTipText = value?.toString()
         }
       }
@@ -91,9 +91,9 @@ private class TooltipTree(model: TreeModel) : JTree(model) {
     setCellRenderer(null)
     super.updateUI()
     // rowHeight = 24
-    val renderer = getCellRenderer()
+    val r = getCellRenderer()
     setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-      renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus).also {
+      r.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus).also {
         (it as? JComponent)?.toolTipText = value?.toString()
       }
     }
@@ -109,7 +109,9 @@ private class TooltipTree(model: TreeModel) : JTree(model) {
       val hasFocus = hasFocus() && tsm.leadSelectionRow == i
       val isLeaf = model.isLeaf(node)
       val r = getCellRenderer()
-      val tcr = r.getTreeCellRendererComponent(this, node, isRowSelected(i), isExpanded(i), isLeaf, i, hasFocus)
+      val tcr = r.getTreeCellRendererComponent(
+        this, node, isRowSelected(i), isExpanded(i), isLeaf, i, hasFocus
+      )
       if ((tcr as? JComponent)?.toolTipText != null) {
         val pt = cellBounds.location
         val ins = label.insets

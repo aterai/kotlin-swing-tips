@@ -56,7 +56,15 @@ private class SelectionColorTreeCellRenderer : DefaultTreeCellRenderer() {
     leaf: Boolean,
     row: Int,
     hasFocus: Boolean
-  ): Component = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus).also {
+  ): Component = super.getTreeCellRendererComponent(
+    tree,
+    value,
+    selected,
+    expanded,
+    leaf,
+    row,
+    hasFocus
+  ).also {
     if (selected) {
       setParticularCondition(value)
       it.foreground = getTextSelectionColor()

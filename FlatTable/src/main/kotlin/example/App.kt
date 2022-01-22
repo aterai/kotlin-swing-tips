@@ -28,9 +28,9 @@ fun makeUI(): Component {
   table.border = BorderFactory.createEmptyBorder()
 
   val border = CellBorder(2, 2, 1, 2)
-  val renderer = DefaultTableCellRenderer()
+  val r = DefaultTableCellRenderer()
   table.setDefaultRenderer(Any::class.java) { tbl, value, isSelected, hasFocus, row, column ->
-    renderer.getTableCellRendererComponent(tbl, value, isSelected, hasFocus, row, column).also {
+    r.getTableCellRendererComponent(tbl, value, isSelected, hasFocus, row, column).also {
       border.setStartCell(column == 0)
       (it as? JComponent)?.border = border
     }
@@ -38,9 +38,9 @@ fun makeUI(): Component {
 
   val header = table.tableHeader
   header.border = BorderFactory.createEmptyBorder()
-  val headerRenderer = DefaultTableCellRenderer()
+  val hr = DefaultTableCellRenderer()
   header.setDefaultRenderer { tbl, value, isSelected, hasFocus, row, column ->
-    headerRenderer.getTableCellRendererComponent(tbl, value, isSelected, hasFocus, row, column).also {
+    hr.getTableCellRendererComponent(tbl, value, isSelected, hasFocus, row, column).also {
       if (it is JLabel) {
         border.setStartCell(column == 0)
         it.horizontalAlignment = SwingConstants.CENTER
@@ -82,7 +82,12 @@ private fun makeTranslucentScrollBar(c: JTable): JScrollPane {
   }
 }
 
-private class CellBorder(top: Int, left: Int, bottom: Int, right: Int) : EmptyBorder(top, left, bottom, right) {
+private class CellBorder(
+  top: Int,
+  left: Int,
+  bottom: Int,
+  right: Int
+) : EmptyBorder(top, left, bottom, right) {
   private var startCell = false
 
   override fun paintBorder(

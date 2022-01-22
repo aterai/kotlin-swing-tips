@@ -75,7 +75,9 @@ fun makeUI(): Component {
   return JPanel().also {
     it.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
     it.add(box)
-    val msg = "<html>warning: ShellFolder is internal proprietary API<br>and may be removed in a future release"
+    val msg = """<html>warning: ShellFolder is internal proprietary API<br>
+      and may be removed in a future release
+    """.trimIndent()
     it.add(JLabel(msg))
     it.dropTarget = DropTarget(it, DnDConstants.ACTION_COPY, dtl, true)
     it.preferredSize = Dimension(320, 240)

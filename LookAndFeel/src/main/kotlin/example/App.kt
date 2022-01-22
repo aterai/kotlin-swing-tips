@@ -83,7 +83,12 @@ private object LookAndFeelUtil {
     return lafMenu
   }
 
-  private fun createLafMenuItem(menu: JMenu, lafMenuGroup: ButtonGroup, label: String, laf: String): JMenuItem {
+  private fun createLafMenuItem(
+    menu: JMenu,
+    lafMenuGroup: ButtonGroup,
+    label: String,
+    laf: String
+  ): JMenuItem {
     val mi = menu.add(JRadioButtonMenuItem(label))
     lafMenuGroup.add(mi)
     mi.addActionListener(ChangeLookAndFeelAction(laf))
@@ -92,7 +97,8 @@ private object LookAndFeelUtil {
   }
 
   private fun isAvailableLookAndFeel(laf: String) = runCatching {
-    (Class.forName(laf).getConstructor().newInstance() as? LookAndFeel)?.isSupportedLookAndFeel == true
+    val o = Class.forName(laf).getConstructor().newInstance()
+    (o as? LookAndFeel)?.isSupportedLookAndFeel == true
   }.getOrElse { false }
 
   fun setLookAndFeel(laf: String) {

@@ -11,7 +11,9 @@ fun makeUI(): Component {
 
   val check1 = JCheckBox(SHOW_POPUP_NAVI)
   check1.isFocusable = false
-  check1.addActionListener { e -> UIManager.put(SHOW_POPUP_NAVI, (e.source as? JCheckBox)?.isSelected == true) }
+  check1.addActionListener { e ->
+    UIManager.put(SHOW_POPUP_NAVI, (e.source as? JCheckBox)?.isSelected == true)
+  }
 
   val combo = object : JComboBox<String>(makeModel()) {
     override fun updateUI() {
@@ -26,7 +28,9 @@ fun makeUI(): Component {
 
   val check2 = JCheckBox("isEditable")
   check2.isFocusable = false
-  check2.addActionListener { e -> combo.isEditable = (e.source as? JCheckBox)?.isSelected == true }
+  check2.addActionListener { e ->
+    combo.isEditable = (e.source as? JCheckBox)?.isSelected == true
+  }
 
   val mb = JMenuBar()
   mb.add(LookAndFeelUtil.createLookAndFeelMenu())
@@ -66,7 +70,11 @@ private object LookAndFeelUtil {
     }
   }
 
-  private fun createLookAndFeelItem(lafName: String, lafClassName: String, lafGroup: ButtonGroup): JMenuItem {
+  private fun createLookAndFeelItem(
+    lafName: String,
+    lafClassName: String,
+    lafGroup: ButtonGroup
+  ): JMenuItem {
     val lafItem = JRadioButtonMenuItem(lafName, lafClassName == lookAndFeel)
     lafItem.actionCommand = lafClassName
     lafItem.hideActionText = true

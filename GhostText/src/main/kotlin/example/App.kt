@@ -20,7 +20,8 @@ fun makeUI(): Component {
   box.add(Box.createVerticalStrut(10))
   box.add(makeTitledPanel("Search", field2))
   box.add(Box.createVerticalStrut(10))
-  box.add(makeTitledPanel("JLayer", JLayer(JTextField(), PlaceholderLayerUI<JTextComponent>("JLayer version"))))
+  val ui = PlaceholderLayerUI<JTextComponent>("JLayer version")
+  box.add(makeTitledPanel("JLayer", JLayer(JTextField(), ui)))
 
   return JPanel(BorderLayout()).also {
     it.add(box, BorderLayout.NORTH)
