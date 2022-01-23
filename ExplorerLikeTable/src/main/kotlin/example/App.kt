@@ -5,9 +5,12 @@ import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
+import java.awt.image.BufferedImage
 import java.awt.image.FilteredImageSource
 import java.awt.image.RGBImageFilter
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.border.Border
 import javax.swing.plaf.ColorUIResource
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
@@ -63,20 +66,17 @@ private class SelectedImageFilter : RGBImageFilter() {
   override fun filterRGB(x: Int, y: Int, argb: Int): Int {
     val r = argb shr 16 and 0xFF
     val g = argb shr 8 and 0xFF
-    return argb and 0xFF_FF_FF_00.toInt() or (r shr 1 shl 16) or (g shr 1 shl 8)
+    return argb and 0xFF_00_00_FF.toInt() or (r shr 1 shl 16) or (g shr 1 shl 8)
   }
 }
 
 private class FileNameRenderer(table: JTable) : TableCellRenderer {
-  val dim = Dimension()
+  private val dim = Dimension()
   private val renderer = JPanel(BorderLayout())
   private val textLabel = JLabel(" ")
   private val iconLabel: JLabel
   private val focusBorder = UIManager.getBorder("Table.focusCellHighlightBorder")
-  private val noFocusBorder =
-    UIManager.getBorder("Table.noFocusBorder") ?: focusBorder.getBorderInsets(textLabel).let {
-      BorderFactory.createEmptyBorder(it.top, it.left, it.bottom, it.right)
-    }
+  private val noFocusBorder = UIManager.getBorder("Table.noFocusBorder") ?: makeNoFocusBorder()
   private val icon: ImageIcon
   private val selectedIcon: ImageIcon
 
@@ -88,18 +88,40 @@ private class FileNameRenderer(table: JTable) : TableCellRenderer {
     renderer.isOpaque = false
 
     // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
-    val cl = Thread.currentThread().contextClassLoader
-    icon = ImageIcon(cl.getResource("example/wi0063-16.png"))
-    val ip = FilteredImageSource(icon.image.source, SelectedImageFilter())
+    val path = "example/wi0063-16.png"
+    val url = Thread.currentThread().contextClassLoader.getResource(path)
+    val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+    icon = ImageIcon(img)
+
+    val ip = FilteredImageSource(img.source, SelectedImageFilter())
     selectedIcon = ImageIcon(p.createImage(ip))
+
     iconLabel = JLabel(icon)
     iconLabel.border = BorderFactory.createEmptyBorder()
+
     p.add(iconLabel, BorderLayout.WEST)
     p.add(textLabel)
     renderer.add(p, BorderLayout.WEST)
+
     val d = iconLabel.preferredSize
     dim.size = d
     table.rowHeight = d.height
+  }
+
+  private fun makeMissingImage(): BufferedImage {
+    val missingIcon = UIManager.getIcon("html.missingImage")
+    val iw = missingIcon.iconWidth
+    val ih = missingIcon.iconHeight
+    val bi = BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
+    val g2 = bi.createGraphics()
+    missingIcon.paintIcon(null, g2, (16 - iw) / 2, (16 - ih) / 2)
+    g2.dispose()
+    return bi
+  }
+
+  private fun makeNoFocusBorder(): Border {
+    val i = focusBorder.getBorderInsets(textLabel)
+    return BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
   }
 
   override fun getTableCellRendererComponent(
@@ -113,11 +135,13 @@ private class FileNameRenderer(table: JTable) : TableCellRenderer {
     textLabel.font = table.font
     textLabel.text = value?.toString() ?: ""
     textLabel.border = if (hasFocus) focusBorder else noFocusBorder
+
     val fm = table.getFontMetrics(table.font)
     val i = textLabel.insets
-    val width = iconLabel.preferredSize.width + fm.stringWidth(textLabel.text) + i.left + i.right
-    val colWidth = table.columnModel.getColumn(column).width
-    dim.width = width.coerceAtMost(colWidth)
+    val sw = iconLabel.preferredSize.width + fm.stringWidth(textLabel.text) + i.left + i.right
+    val cw = table.columnModel.getColumn(column).width
+    dim.width = minOf(sw, cw)
+
     if (isSelected) {
       textLabel.isOpaque = true
       textLabel.foreground = table.selectionForeground
