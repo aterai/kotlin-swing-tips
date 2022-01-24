@@ -4,14 +4,15 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.HierarchyEvent
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val pt = Point()
-  val cl = Thread.currentThread().contextClassLoader
   val tk = Toolkit.getDefaultToolkit()
   val list = listOf("00", "01", "02").map {
-    tk.createCustomCursor(tk.createImage(cl.getResource("example/$it.png")), pt, it)
+    tk.createCustomCursor(makeImage(it), pt, it)
   }
 
   val animator = Timer(100, null)
@@ -29,7 +30,8 @@ fun makeUI(): Component {
     }
   }
   button.addHierarchyListener { e ->
-    if (e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L && !e.component.isDisplayable) {
+    val b = e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L
+    if (b && !e.component.isDisplayable) {
       animator.stop()
     }
   }
@@ -44,6 +46,23 @@ fun makeUI(): Component {
     it.border = BorderFactory.createTitledBorder("delay=100ms")
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+private fun makeImage(name: String): Image {
+  val path = "example/$name.pmg"
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  return url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+}
+
+private fun makeMissingImage(): Image {
+  val missingIcon = UIManager.getIcon("html.missingImage")
+  val iw = missingIcon.iconWidth
+  val ih = missingIcon.iconHeight
+  val bi = BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, (32 - iw) / 2, (32 - ih) / 2)
+  g2.dispose()
+  return bi
 }
 
 private class CursorActionListener(
