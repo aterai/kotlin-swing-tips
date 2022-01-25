@@ -69,7 +69,14 @@ private class RowDataRenderer : TableCellRenderer {
     hasFocus: Boolean,
     row: Int,
     column: Int
-  ): Component = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column).also {
+  ): Component = renderer.getTableCellRendererComponent(
+    table,
+    value,
+    isSelected,
+    hasFocus,
+    row,
+    column
+  ).also {
     if (it is JLabel && value is RowData) {
       it.horizontalAlignment = SwingConstants.LEFT
       when (table.convertColumnIndexToModel(column)) {

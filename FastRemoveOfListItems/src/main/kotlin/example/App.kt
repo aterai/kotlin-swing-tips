@@ -67,9 +67,9 @@ private fun makeUI2(): Component {
 
 private fun <E> move0(from: JList<E>, to: JList<E>) {
   val selectedIndices = from.selectedIndices
-  val fromModel = from.model
-  val toModel = to.model
-  if (selectedIndices.isNotEmpty() && fromModel is DefaultListModel<E> && toModel is DefaultListModel<E>) {
+  val fromModel = from.model as? DefaultListModel<E>
+  val toModel = to.model as? DefaultListModel<E>
+  if (selectedIndices.isNotEmpty() && fromModel != null && toModel != null) {
     for (i in selectedIndices) {
       toModel.addElement(fromModel[i])
     }
@@ -168,7 +168,12 @@ private class ArrayListModel<E> : AbstractListModel<E>() {
 }
 
 private object SpringLayoutUtil {
-  private fun setScaleAndAdd(parent: Container, layout: SpringLayout, child: Component, r: Rectangle2D.Float) {
+  private fun setScaleAndAdd(
+    parent: Container,
+    layout: SpringLayout,
+    child: Component,
+    r: Rectangle2D.Float
+  ) {
     val pnlWidth = layout.getConstraint(SpringLayout.WIDTH, parent)
     val pnlHeight = layout.getConstraint(SpringLayout.HEIGHT, parent)
 
@@ -181,7 +186,12 @@ private object SpringLayoutUtil {
     parent.add(child)
   }
 
-  fun makePanel(leftList: JList<*>, rightList: JList<*>, l2rButton: JButton, r2lButton: JButton): Component {
+  fun makePanel(
+    leftList: JList<*>,
+    rightList: JList<*>,
+    l2rButton: JButton,
+    r2lButton: JButton
+  ): Component {
     val box = Box.createVerticalBox()
     box.border = BorderFactory.createEmptyBorder(0, 2, 0, 2)
     box.add(Box.createVerticalGlue())

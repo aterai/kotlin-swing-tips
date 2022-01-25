@@ -10,10 +10,7 @@ import javax.swing.undo.UndoableEditSupport
 
 private const val BIT_LENGTH = 72
 private val ZERO_PAD = "0".repeat(BIT_LENGTH)
-
 private var status = BitSet.valueOf(longArrayOf(java.lang.Long.valueOf("111000111", 2)))
-
-@Transient
 private val undoSupport = UndoableEditSupport()
 private val label = JLabel(print(status))
 private val panel = JPanel(GridLayout(0, 8))
@@ -81,7 +78,10 @@ fun updateCheckBoxes(value: BitSet) {
   label.text = print(status)
 }
 
-private class StatusEdit(private val oldValue: BitSet, private val newValue: BitSet) : AbstractUndoableEdit() {
+private class StatusEdit(
+  private val oldValue: BitSet,
+  private val newValue: BitSet
+) : AbstractUndoableEdit() {
   override fun undo() { // throws CannotUndoException {
     super.undo()
     updateCheckBoxes(oldValue)

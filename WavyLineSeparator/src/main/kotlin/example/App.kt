@@ -26,9 +26,9 @@ fun makeUI(): Component {
   }
 }
 
-private class WavyLineSeparator(orientation: Int = SwingConstants.HORIZONTAL) : JSeparator(orientation) {
+private class WavyLineSeparator(orientation: Int = HORIZONTAL) : JSeparator(orientation) {
   init {
-    border = if (orientation == SwingConstants.HORIZONTAL) {
+    border = if (orientation == HORIZONTAL) {
       BorderFactory.createEmptyBorder(2, 1, 2, 1)
     } else {
       BorderFactory.createEmptyBorder(1, 2, 1, 2)
@@ -38,7 +38,7 @@ private class WavyLineSeparator(orientation: Int = SwingConstants.HORIZONTAL) : 
   override fun paintComponent(g: Graphics) {
     var pos: Int
     val i = insets
-    if (orientation == SwingConstants.HORIZONTAL) {
+    if (orientation == HORIZONTAL) {
       pos = i.left
       while (width - pos > 0) {
         HORIZONTAL_ICON.paintIcon(this, g, pos, i.top)
@@ -55,10 +55,10 @@ private class WavyLineSeparator(orientation: Int = SwingConstants.HORIZONTAL) : 
 
   override fun getPreferredSize(): Dimension {
     val i = insets
-    return if (orientation == SwingConstants.HORIZONTAL) {
-      Dimension(30, ICON_WIDTH + i.top + i.bottom)
+    return if (orientation == HORIZONTAL) {
+      Dimension(30, ICON_SZ + i.top + i.bottom)
     } else {
-      Dimension(ICON_WIDTH + i.left + i.right, 30)
+      Dimension(ICON_SZ + i.left + i.right, 30)
     }
   }
 
@@ -67,7 +67,7 @@ private class WavyLineSeparator(orientation: Int = SwingConstants.HORIZONTAL) : 
     private val orientation: Int
 
     constructor() {
-      orientation = SwingConstants.HORIZONTAL
+      orientation = HORIZONTAL
     }
 
     constructor(orientation: Int) {
@@ -77,7 +77,7 @@ private class WavyLineSeparator(orientation: Int = SwingConstants.HORIZONTAL) : 
     override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.paint = sfc
-      if (orientation == SwingConstants.VERTICAL) {
+      if (orientation == VERTICAL) {
         g2.translate(x + iconWidth, y)
         g2.rotate(Math.PI / 2)
       } else {
@@ -91,15 +91,15 @@ private class WavyLineSeparator(orientation: Int = SwingConstants.HORIZONTAL) : 
       g2.dispose()
     }
 
-    override fun getIconWidth() = if (orientation == SwingConstants.HORIZONTAL) ICON_WIDTH * 2 else ICON_WIDTH
+    override fun getIconWidth() = if (orientation == HORIZONTAL) ICON_SZ * 2 else ICON_SZ
 
-    override fun getIconHeight() = if (orientation == SwingConstants.HORIZONTAL) ICON_WIDTH else ICON_WIDTH * 2
+    override fun getIconHeight() = if (orientation == HORIZONTAL) ICON_SZ else ICON_SZ * 2
   }
 
   companion object {
-    private const val ICON_WIDTH = 3
+    private const val ICON_SZ = 3
     private val HORIZONTAL_ICON = WavyLineIcon()
-    private val VERTICAL_ICON = WavyLineIcon(SwingConstants.VERTICAL)
+    private val VERTICAL_ICON = WavyLineIcon(VERTICAL)
   }
 }
 

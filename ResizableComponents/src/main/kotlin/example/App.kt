@@ -75,7 +75,8 @@ private fun createTable() {
 }
 
 private class JResizer(layout: LayoutManager) : JPanel(layout) {
-  @Transient private var resizeListener: MouseInputListener? = null
+  @Transient
+  private var resizeListener: MouseInputListener? = null
 
   override fun updateUI() {
     removeMouseListener(resizeListener)
@@ -231,7 +232,8 @@ private class ResizeMouseListener : MouseInputAdapter() {
     cursor = border.getResizeCursor(e)
     startPos.location = SwingUtilities.convertPoint(c, e.x, e.y, null)
     startingBounds.bounds = c.bounds
-    (SwingUtilities.getAncestorOfClass(JLayeredPane::class.java, c) as? JLayeredPane)?.moveToFront(c)
+    val lp = SwingUtilities.getAncestorOfClass(JLayeredPane::class.java, c)
+    (lp as? JLayeredPane)?.moveToFront(c)
   }
 
   override fun mouseReleased(e: MouseEvent) {
@@ -368,7 +370,10 @@ private enum class Directions(private val cursor: Int) {
       parentBounds: Rectangle,
       deltaX: Int,
       deltaY: Int
-    ) = Point(getDeltaX(deltaX, parentBounds, startingBounds), getDeltaY(deltaY, parentBounds, startingBounds))
+    ) = Point(
+      getDeltaX(deltaX, parentBounds, startingBounds),
+      getDeltaY(deltaY, parentBounds, startingBounds)
+    )
 
     override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
       rect.x,

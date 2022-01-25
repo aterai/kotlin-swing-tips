@@ -88,7 +88,8 @@ fun makeUI(): Component {
 
 private fun addHierarchyListener(it: JPanel, worker: SwingWorker<Void, Long>) {
   it.addHierarchyListener { e ->
-    if (e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L && !e.component.isDisplayable) {
+    val b = e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L
+    if (b && !e.component.isDisplayable) {
       worker.cancel(true)
     }
   }
@@ -109,7 +110,11 @@ private fun initButtons(flg: Boolean) {
 }
 
 private fun makeTitle(bgc: Color): Component {
-  val label = JTextArea("Wolfgang Amadeus Mozart\nPiano Sonata No. 11 in A major, K 331\n(Turkish Rondo)")
+  val txt = """Wolfgang Amadeus Mozart
+    Piano Sonata No. 11 in A major, K 331
+    (Turkish Rondo)
+    """.trimMargin()
+  val label = JTextArea(txt)
   label.border = BorderFactory.createTitledBorder("MIDI")
   label.isEditable = false
   label.background = bgc

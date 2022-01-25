@@ -72,7 +72,6 @@ fun makeUI(): Component {
 // }
 
 private class JustifiedLabel(str: String? = null) : JLabel(str ?: "") {
-  @Transient
   private var layout: TextLayout? = null
   private var prevWidth = -1
   override fun setText(text: String) {
@@ -93,7 +92,7 @@ private class JustifiedLabel(str: String? = null) : JLabel(str ?: "") {
     g2.paint = background
     g2.fillRect(0, 0, d.width, d.height)
     g2.paint = foreground
-    // int baseline = getBaseline(d.width, d.height);
+    // val baseline = getBaseline(d.width, d.height)
     val baseline = ins.top + font.size2D
     layout?.draw(g2, ins.left.toFloat(), baseline)
     g2.dispose()
