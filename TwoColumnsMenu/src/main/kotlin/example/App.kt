@@ -58,7 +58,11 @@ private object LookAndFeelUtil {
     }
   }
 
-  private fun createLookAndFeelItem(lafName: String, lafClassName: String, lafGroup: ButtonGroup): JMenuItem {
+  private fun createLookAndFeelItem(
+    lafName: String,
+    lafClassName: String,
+    lafGroup: ButtonGroup
+  ): JMenuItem {
     val lafItem = JRadioButtonMenuItem(lafName, lafClassName == lookAndFeel)
     lafItem.actionCommand = lafClassName
     lafItem.hideActionText = true
