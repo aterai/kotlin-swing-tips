@@ -37,8 +37,9 @@ var currentLocalDate: LocalDate = LocalDate.of(2020, 8, 1)
   private set
 
 fun updateMonthView(localDate: LocalDate) {
+  val pattern = DateTimeFormatter.ofPattern("yyyy / MM").withLocale(Locale.getDefault())
   currentLocalDate = localDate
-  monthLabel.text = localDate.format(DateTimeFormatter.ofPattern("yyyy / MM").withLocale(Locale.getDefault()))
+  monthLabel.text = localDate.format(pattern)
   monthTable.model = CalendarViewTableModel(localDate)
 }
 

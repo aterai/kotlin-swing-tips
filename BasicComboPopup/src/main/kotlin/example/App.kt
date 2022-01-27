@@ -79,8 +79,11 @@ fun makeUI(): Component {
   }
 }
 
-private class EditorComboPopup(private val textArea: JTextComponent, cb: JComboBox<*>) : BasicComboPopup(cb) {
-  @Transient private var listener: MouseListener? = null
+private class EditorComboPopup(
+  private val textArea: JTextComponent,
+  comboBox: JComboBox<*>
+) : BasicComboPopup(comboBox) {
+  private var listener: MouseListener? = null
 
   override fun installListListeners() {
     super.installListListeners()

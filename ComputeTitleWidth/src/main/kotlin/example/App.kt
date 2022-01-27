@@ -55,8 +55,10 @@ fun createFrame(t: String, i: Int): JInternalFrame {
         val fm = getFontMetrics(font)
         val titleW = SwingUtilities.computeStringWidth(fm, title)
         val ins = insets
-        d.width = buttonsW + ins.left + ins.right + titleW + 2 + 2 + 2 // 2: Magic number of gap between icons
-        d.height = 27.coerceAtMost(d.height) // 27: Magic number for NimbusLookAndFeel
+        // 2: Magic number of gap between icons
+        d.width = buttonsW + ins.left + ins.right + titleW + 2 + 2 + 2
+        // 27: Magic number for NimbusLookAndFeel
+        d.height = 27.coerceAtMost(d.height)
         println("BasicInternalFrameTitlePane: " + d.width)
       }
       return d
@@ -65,7 +67,9 @@ fun createFrame(t: String, i: Int): JInternalFrame {
     private fun testWidth() {
       val dim = layout.minimumLayoutSize(this)
       println("minimumLayoutSize: " + dim.width)
-      val bw = descendants(this).filterIsInstance<AbstractButton>().sumOf { it.preferredSize.width }
+      val bw = descendants(this).filterIsInstance<AbstractButton>().sumOf {
+        it.preferredSize.width
+      }
       println("Total width of all buttons: $bw")
     }
   }
