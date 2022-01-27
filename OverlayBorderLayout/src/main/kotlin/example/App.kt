@@ -75,7 +75,8 @@ fun makeUI(): Component {
   p.actionMap.put("close-search-box", a2)
 
   field.actionMap.put("find-next", findNextAction)
-  field.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "find-next")
+  val im2 = field.getInputMap(JComponent.WHEN_FOCUSED)
+  im2.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "find-next")
 
   return JPanel(BorderLayout()).also {
     it.add(p)
@@ -141,7 +142,10 @@ private class FocusAncestorListener : AncestorListener {
   }
 }
 
-private class FindNextAction(private val tree: JTree, private val field: JTextField) : AbstractAction() {
+private class FindNextAction(
+  private val tree: JTree,
+  private val field: JTextField
+) : AbstractAction() {
   private val rollOverPathLists = mutableListOf<TreePath>()
   override fun actionPerformed(e: ActionEvent) {
     val selectedPath = tree.selectionPath
@@ -163,22 +167,25 @@ private class FindNextAction(private val tree: JTree, private val field: JTextFi
     tree.addSelectionPath(p)
     tree.scrollPathToVisible(p)
   }
+}
 
-  companion object {
-    private fun searchTree(tree: JTree, path: TreePath, q: String, rollOverPathLists: MutableList<TreePath>) {
-      (path.lastPathComponent as? TreeNode)?.also { node ->
-        if (node.toString().startsWith(q)) {
-          rollOverPathLists.add(path)
-          tree.expandPath(path.parentPath)
+private fun searchTree(
+  tree: JTree,
+  path: TreePath,
+  q: String,
+  rollOverPathLists: MutableList<TreePath>
+) {
+  (path.lastPathComponent as? TreeNode)?.also { node ->
+    if (node.toString().startsWith(q)) {
+      rollOverPathLists.add(path)
+      tree.expandPath(path.parentPath)
+    }
+    if (!node.isLeaf) {
+      node.children()
+        .toList()
+        .forEach {
+          searchTree(tree, path.pathByAddingChild(it), q, rollOverPathLists)
         }
-        if (!node.isLeaf) {
-          node.children()
-            .toList()
-            .forEach {
-              searchTree(tree, path.pathByAddingChild(it), q, rollOverPathLists)
-            }
-        }
-      }
     }
   }
 }

@@ -70,7 +70,11 @@ private class FileModel : DefaultTableModel() {
 
   override fun getColumnName(column: Int) = COLUMN_ARRAY[column].columnName
 
-  private data class ColumnContext(val columnName: String, val columnClass: Class<*>, val isEditable: Boolean)
+  private data class ColumnContext(
+    val columnName: String,
+    val columnClass: Class<*>,
+    val isEditable: Boolean
+  )
 
   companion object {
     private val COLUMN_ARRAY = arrayOf(

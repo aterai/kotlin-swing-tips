@@ -15,10 +15,15 @@ private val box = Box.createHorizontalBox()
 private val group = ButtonGroup()
 private val columnNames = arrayOf("Year", "String", "Comment")
 private val model = object : DefaultTableModel(null, columnNames) {
-  override fun getColumnClass(column: Int) = if (column == 0) Number::class.java else Any::class.java
+  override fun getColumnClass(column: Int) = if (column == 0) {
+    Number::class.java
+  } else {
+    Any::class.java
+  }
 }
 
-@Transient private val sorter = TableRowSorter<DefaultTableModel>(model)
+@Transient
+private val sorter = TableRowSorter<DefaultTableModel>(model)
 private val table = JTable(model)
 private var linkViewRadioButtonUI: LinkViewRadioButtonUI? = null
 
@@ -80,9 +85,9 @@ private fun initLinkBoxLayout(
   box.removeAll()
   group.elements.toList().forEach { group.remove(it) }
 
-  addButton(makePrevNextRadioButton(itemsPerPage, 1, "|<", currentPageIndex > 1))
-
-  addButton(makePrevNextRadioButton(itemsPerPage, currentPageIndex - 1, "<", currentPageIndex > 1))
+  val flg1 = currentPageIndex > 1
+  addButton(makePrevNextButton(itemsPerPage, 1, "|<", flg1))
+  addButton(makePrevNextButton(itemsPerPage, currentPageIndex - 1, "<", flg1))
 
   box.add(Box.createHorizontalGlue())
   for (i in startPageIndex..endPageIndex) {
@@ -90,9 +95,9 @@ private fun initLinkBoxLayout(
   }
   box.add(Box.createHorizontalGlue())
 
-  addButton(makePrevNextRadioButton(itemsPerPage, currentPageIndex + 1, ">", currentPageIndex < maxPageIndex))
-
-  addButton(makePrevNextRadioButton(itemsPerPage, maxPageIndex, ">|", currentPageIndex < maxPageIndex))
+  val flg2 = currentPageIndex < maxPageIndex
+  addButton(makePrevNextButton(itemsPerPage, currentPageIndex + 1, ">", flg2))
+  addButton(makePrevNextButton(itemsPerPage, maxPageIndex, ">|", flg2))
 }
 
 private fun addButton(button: AbstractButton) {
@@ -126,13 +131,17 @@ private fun makeRadioButton(itemsPerPage: Int, current: Int, target: Int): JRadi
   return radio
 }
 
-private fun makePrevNextRadioButton(itemsPerPage: Int, target: Int, title: String, flag: Boolean) =
-  JRadioButton(title).also {
-    it.foreground = Color.BLUE
-    it.ui = linkViewRadioButtonUI
-    it.isEnabled = flag
-    it.addActionListener { initLinkBox(itemsPerPage, target) }
-  }
+private fun makePrevNextButton(
+  itemsPerPage: Int,
+  target: Int,
+  title: String,
+  flag: Boolean
+) = JRadioButton(title).also {
+  it.foreground = Color.BLUE
+  it.ui = linkViewRadioButtonUI
+  it.isEnabled = flag
+  it.addActionListener { initLinkBox(itemsPerPage, target) }
+}
 
 private class LinkViewRadioButtonUI : BasicRadioButtonUI() {
   private val viewRect = Rectangle()

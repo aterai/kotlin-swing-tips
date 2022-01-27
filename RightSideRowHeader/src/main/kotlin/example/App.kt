@@ -18,10 +18,15 @@ private val data = arrayOf(
 )
 private val columnNames = arrayOf("fixed 1", "fixed 2", "A", "B", "C", "D", "E", "F")
 private val model = object : DefaultTableModel(data, columnNames) {
-  override fun getColumnClass(column: Int) = if (column < FIXED_RANGE) Number::class.java else Any::class.java
+  override fun getColumnClass(column: Int) = if (column < FIXED_RANGE) {
+    Number::class.java
+  } else {
+    Any::class.java
+  }
 }
 
-@Transient private val sorter = TableRowSorter<DefaultTableModel>(model)
+@Transient
+private val sorter = TableRowSorter<DefaultTableModel>(model)
 private val addButton = JButton("add")
 
 fun makeUI(): Component {
@@ -194,7 +199,7 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
           val newVsbNeeded = !scrollableHeight && viewPrefSize.height > extentSize.height
           if (newVsbNeeded != vsbNeeded) {
             vsbNeeded = newVsbNeeded
-            // adjustForVsb(vsbNeeded, availR, vsbR, vpbInsets, leftToRight);
+            // adjustForVsb(vsbNeeded, availR, vsbR, vpbInsets, leftToRight)
             adjustForVsb(vsbNeeded, rowHeadR, vsbR, vpbInsets, leftToRight)
             extentSize = viewport.toViewCoordinates(availR.size)
           }
@@ -210,7 +215,7 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
               vsbNeeded = viewPrefSize.height > extentSize.height
 
               if (vsbNeeded) {
-                // adjustForVsb(true, availR, vsbR, vpbInsets, leftToRight);
+                // adjustForVsb(true, availR, vsbR, vpbInsets, leftToRight)
                 adjustForVsb(true, rowHeadR, vsbR, vpbInsets, leftToRight)
               }
             }
@@ -237,8 +242,8 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
       if (vsbNeeded) {
         // if (colHead != null && UIManager.getBoolean("ScrollPane.fillUpperCorner")) {
         //   if (leftToRight && upperRight != null || !leftToRight && upperLeft != null) {
-        //     vsbR.y = colHeadR.y;
-        //     vsbR.height += colHeadR.height;
+        //     vsbR.y = colHeadR.y
+        //     vsbR.height += colHeadR.height
         //   }
         // }
         vsb.isVisible = true
@@ -253,9 +258,9 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
         // if (rowHead != null && UIManager.getBoolean("ScrollPane.fillLowerCorner")) {
         //   if (leftToRight && lowerLeft != null || !leftToRight && lowerRight != null) {
         //     if (leftToRight) {
-        //       hsbR.x = rowHeadR.x;
+        //       hsbR.x = rowHeadR.x
         //     }
-        //     hsbR.width += rowHeadR.width;
+        //     hsbR.width += rowHeadR.width
         //   }
         // }
         hsb.isVisible = true
@@ -318,7 +323,12 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
     }
   }
 
-  private fun adjustForHsb(wantsHsb: Boolean, available: Rectangle, hsbR: Rectangle, vpbInsets: Insets) {
+  private fun adjustForHsb(
+    wantsHsb: Boolean,
+    available: Rectangle,
+    hsbR: Rectangle,
+    vpbInsets: Insets
+  ) {
     val oldHeight = hsbR.height
     if (wantsHsb) {
       val hsbHeight = available.height.coerceIn(0, hsb.preferredSize.height)

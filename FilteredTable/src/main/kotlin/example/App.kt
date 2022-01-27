@@ -71,7 +71,11 @@ private class RowDataModel : DefaultTableModel() {
 
   override fun getColumnName(column: Int) = COLUMN_ARRAY[column].columnName
 
-  private data class ColumnContext(val columnName: String, val columnClass: Class<*>, val isEditable: Boolean)
+  private data class ColumnContext(
+    val columnName: String,
+    val columnClass: Class<*>,
+    val isEditable: Boolean
+  )
 
   fun filterRows(flg: Boolean) {
     rowCount = 0

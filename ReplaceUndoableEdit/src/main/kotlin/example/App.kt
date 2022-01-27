@@ -16,20 +16,20 @@ import javax.swing.undo.UndoManager
 
 fun makeUI(): Component {
   val undoManager0 = UndoManager()
-  val textField0 = JTextField("default")
-  textField0.document.addUndoableEditListener(undoManager0)
+  val field0 = JTextField("default")
+  field0.document.addUndoableEditListener(undoManager0)
 
   val undoManager1 = UndoManager()
-  val textField1 = JTextField()
-  textField1.document = CustomUndoPlainDocument()
-  textField1.text = "111111111111111111"
-  textField1.document.addUndoableEditListener(undoManager1)
+  val field1 = JTextField()
+  field1.document = CustomUndoPlainDocument()
+  field1.text = "111111111111111111"
+  field1.document.addUndoableEditListener(undoManager1)
 
   val undoManager2 = DocumentFilterUndoManager()
-  val textField2 = JTextField()
-  textField2.text = "2222222222222222"
+  val field2 = JTextField()
+  field2.text = "2222222222222222"
 
-  val doc = textField2.document
+  val doc = field2.document
   if (doc is AbstractDocument) {
     doc.addUndoableEditListener(undoManager2)
     doc.documentFilter = undoManager2.documentFilter
@@ -38,7 +38,7 @@ fun makeUI(): Component {
   val button = JButton("setText(LocalDateTime.now(...))")
   button.addActionListener {
     val str = LocalDateTime.now(ZoneId.systemDefault()).toString()
-    listOf(textField0, textField1, textField2).forEach { it.text = str }
+    listOf(field0, field1, field2).forEach { it.text = str }
   }
 
   val undoAction = object : AbstractAction("undo") {
@@ -64,11 +64,13 @@ fun makeUI(): Component {
 
   val box = Box.createVerticalBox()
   box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-  box.add(makeTitledPanel("Default", textField0))
+  box.add(makeTitledPanel("Default", field0))
   box.add(Box.createVerticalStrut(10))
-  box.add(makeTitledPanel("Document#replace()+AbstractDocument#fireUndoableEditUpdate()", textField1))
+  val title1 = "Document#replace()+AbstractDocument#fireUndoableEditUpdate()"
+  box.add(makeTitledPanel(title1, field1))
   box.add(Box.createVerticalStrut(10))
-  box.add(makeTitledPanel("DocumentFilter#replace()+UndoableEditListener#undoableEditHappened()", textField2))
+  val title2 = "DocumentFilter#replace()+UndoableEditListener#undoableEditHappened()"
+  box.add(makeTitledPanel(title2, field2))
 
   return JPanel(BorderLayout()).also {
     it.add(box, BorderLayout.NORTH)

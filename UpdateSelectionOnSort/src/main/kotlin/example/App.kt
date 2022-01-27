@@ -21,7 +21,9 @@ fun makeUI(): Component {
   table.autoCreateRowSorter = true
 
   val check1 = JCheckBox("UpdateSelectionOnSort", true)
-  check1.addActionListener { e -> table.updateSelectionOnSort = (e.source as? JCheckBox)?.isSelected == true }
+  check1.addActionListener { e ->
+    table.updateSelectionOnSort = (e.source as? JCheckBox)?.isSelected == true
+  }
 
   val check2 = JCheckBox("ClearSelectionOnSort", false)
   val ml = object : MouseAdapter() {

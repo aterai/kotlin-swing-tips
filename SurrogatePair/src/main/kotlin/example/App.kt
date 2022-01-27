@@ -22,7 +22,10 @@ fun makeUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/SurrogatePair.html")
   if (url == null || !read(editor1, url)) {
-    editor1.text = "<html><p>(&#xD85B;&#xDE40;) (&#x26E40;)<br />(&#xD842;&#xDF9F;) (&#x00020B9F;)</p></html>"
+    editor1.text = """<html><p>
+        (&#xD85B;&#xDE40;) (&#x26E40;)<br />
+        (&#xD842;&#xDF9F;) (&#x00020B9F;)
+      </p></html>""".trimMargin()
   }
 
   val editor2 = JEditorPane()

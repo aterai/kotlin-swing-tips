@@ -52,7 +52,9 @@ private fun initContainer(p: Container): Container {
   return p
 }
 
-private class MySynthStyleFactory(private val wrappedFactory: SynthStyleFactory) : SynthStyleFactory() {
+private class MySynthStyleFactory(
+  private val wrappedFactory: SynthStyleFactory
+) : SynthStyleFactory() {
   override fun getStyle(c: JComponent, id: Region): SynthStyle {
     var s = wrappedFactory.getStyle(c, id)
     // if (id == Region.INTERNAL_FRAME_TITLE_PANE || id == Region.INTERNAL_FRAME) {
@@ -65,20 +67,26 @@ private class MySynthStyleFactory(private val wrappedFactory: SynthStyleFactory)
 
 @Suppress("TooManyFunctions")
 private class TranslucentSynthStyle(private val style: SynthStyle) : SynthStyle() {
-  override operator fun get(context: SynthContext?, key: Any): Any? = style.get(context, key)
+  override operator fun get(context: SynthContext?, key: Any): Any? =
+    style.get(context, key)
 
   override fun getBoolean(context: SynthContext?, key: Any, defaultValue: Boolean) =
     style.getBoolean(context, key, defaultValue)
 
-  override fun getColor(context: SynthContext?, type: ColorType): Color? = style.getColor(context, type)
+  override fun getColor(context: SynthContext?, type: ColorType): Color? =
+    style.getColor(context, type)
 
-  override fun getFont(context: SynthContext?): Font? = style.getFont(context)
+  override fun getFont(context: SynthContext?): Font? =
+    style.getFont(context)
 
-  override fun getGraphicsUtils(context: SynthContext?): SynthGraphicsUtils? = style.getGraphicsUtils(context)
+  override fun getGraphicsUtils(context: SynthContext?): SynthGraphicsUtils? =
+    style.getGraphicsUtils(context)
 
-  override fun getIcon(context: SynthContext?, key: Any): Icon? = style.getIcon(context, key)
+  override fun getIcon(context: SynthContext?, key: Any): Icon? =
+    style.getIcon(context, key)
 
-  override fun getInsets(context: SynthContext?, insets: Insets?): Insets? = style.getInsets(context, insets)
+  override fun getInsets(context: SynthContext?, insets: Insets?): Insets? =
+    style.getInsets(context, insets)
 
   override fun getInt(context: SynthContext?, key: Any, defaultValue: Int) =
     style.getInt(context, key, defaultValue)
@@ -110,9 +118,9 @@ private class TranslucentSynthStyle(private val style: SynthStyle) : SynthStyle(
   override fun isOpaque(context: SynthContext) =
     context.region !== Region.INTERNAL_FRAME && style.isOpaque(context)
 
-  override fun getColorForState(context: SynthContext, type: ColorType) = null // Color.RED
+  override fun getColorForState(context: SynthContext, type: ColorType) = null
 
-  override fun getFontForState(context: SynthContext) = null // Font(Font.MONOSPACED, Font.ITALIC, 24)
+  override fun getFontForState(context: SynthContext) = null
 }
 
 fun main() {

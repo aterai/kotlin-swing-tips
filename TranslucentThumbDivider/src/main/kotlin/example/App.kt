@@ -97,7 +97,8 @@ private class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
 
   override fun installUI(c: JComponent) {
     super.installUI(c)
-    (c as? JLayer<*>)?.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
+    val l = c as? JLayer<*>
+    l?.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
   }
 
   override fun uninstallUI(c: JComponent) {
@@ -158,7 +159,7 @@ private class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
       MouseEvent.MOUSE_RELEASED -> isDragging = false
       MouseEvent.MOUSE_PRESSED -> {
         val c = e.component
-        if (isDraggableComponent(splitPane, c)) {
+        if (isDraggable(splitPane, c)) {
           val pt = SwingUtilities.convertPoint(c, e.point, splitPane)
           isDragging = thumb.contains(pt)
           startPt.location = SwingUtilities.convertPoint(c, e.point, splitPane)
@@ -176,13 +177,17 @@ private class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
     val pt = SwingUtilities.convertPoint(c, e.point, splitPane)
     if (e.id == MouseEvent.MOUSE_MOVED) {
       splitPane.cursor = if (thumb.contains(e.point)) wc else dc
-    } else if (isDragging && isDraggableComponent(splitPane, c) && e.id == MouseEvent.MOUSE_DRAGGED) {
-      val d = if (splitPane.orientation == JSplitPane.HORIZONTAL_SPLIT) pt.x - startPt.x else pt.y - startPt.y
+    } else if (isDragging && isDraggable(splitPane, c) && e.id == MouseEvent.MOUSE_DRAGGED) {
+      val d = if (splitPane.orientation == JSplitPane.HORIZONTAL_SPLIT) {
+        pt.x - startPt.x
+      } else {
+        pt.y - startPt.y
+      }
       splitPane.dividerLocation = maxOf(0, dividerLocation + d)
     }
   }
 
-  private fun isDraggableComponent(splitPane: JSplitPane, c: Component) =
+  private fun isDraggable(splitPane: JSplitPane, c: Component) =
     splitPane == c || splitPane == SwingUtilities.getUnwrappedParent(c)
 
   private fun updateThumbLocation(c: Component, thumb: Ellipse2D) {

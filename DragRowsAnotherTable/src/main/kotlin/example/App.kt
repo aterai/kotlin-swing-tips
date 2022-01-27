@@ -94,7 +94,11 @@ private class TableRowTransferHandler : TransferHandler() {
   override fun canImport(info: TransferSupport): Boolean {
     val canDrop = info.isDrop && info.isDataFlavorSupported(FLAVOR)
     (info.component as? JComponent)?.also {
-      it.rootPane.glassPane.cursor = if (canDrop) DragSource.DefaultMoveDrop else DragSource.DefaultMoveNoDrop
+      it.rootPane.glassPane.cursor = if (canDrop) {
+        DragSource.DefaultMoveDrop
+      } else {
+        DragSource.DefaultMoveNoDrop
+      }
     }
     return canDrop
   }

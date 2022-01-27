@@ -36,19 +36,25 @@ private fun makePanel(box: JPanel): Component {
 }
 
 private class ScrollableWrapPanel(layout: LayoutManager) : JPanel(layout), Scrollable {
-  override fun getPreferredScrollableViewportSize(): Dimension? =
-    (SwingUtilities.getUnwrappedParent(this) as? JViewport)?.size ?: super.getPreferredSize()
+  override fun getPreferredScrollableViewportSize(): Dimension? {
+    val o = SwingUtilities.getUnwrappedParent(this)
+    return (o as? JViewport)?.size ?: super.getPreferredSize()
+  }
 
-  override fun getScrollableUnitIncrement(visibleRect: Rectangle, orientation: Int, direction: Int) = 32
+  override fun getScrollableUnitIncrement(visible: Rectangle, orientation: Int, dir: Int) = 32
 
-  override fun getScrollableBlockIncrement(visibleRect: Rectangle, orientation: Int, direction: Int) = 32
+  override fun getScrollableBlockIncrement(visible: Rectangle, orientation: Int, dir: Int) = 32
 
   override fun getScrollableTracksViewportWidth() = true
 
   override fun getScrollableTracksViewportHeight() = false
 }
 
-private class ScrollableWrapLayout(align: Int, horGap: Int, verGap: Int) : FlowLayout(align, horGap, verGap) {
+private class ScrollableWrapLayout(
+  align: Int,
+  horGap: Int,
+  verGap: Int
+) : FlowLayout(align, horGap, verGap) {
   private val fixedHorGap = horGap
   private fun getPreferredHorizontalGap(target: Container): Int {
     val insets = target.insets
