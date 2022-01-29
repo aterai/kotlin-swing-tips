@@ -91,21 +91,21 @@ private fun filter() {
 }
 
 private data class ListItem(val iconFile: String) {
-  val icon = makeImageIcon(iconFile)
+  val img = makeImage(iconFile)
+  val icon = ImageIcon(img)
   val selectedIcon: ImageIcon
   val title: String
 
   init {
-    val ip = FilteredImageSource(icon.image.source, SelectedImageFilter())
+    val ip = FilteredImageSource(img.source, SelectedImageFilter())
     selectedIcon = ImageIcon(Toolkit.getDefaultToolkit().createImage(ip))
     title = iconFile.split("/").last()
   }
 }
 
-private fun makeImageIcon(path: String): ImageIcon {
+private fun makeImage(path: String): Image {
   val url = Thread.currentThread().contextClassLoader.getResource(path)
-  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
-  return ImageIcon(img)
+  return url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
 }
 
 private fun makeMissingImage(): BufferedImage {
@@ -126,18 +126,12 @@ private class SelectedImageFilter : RGBImageFilter() {
 
 private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   private val renderer = JPanel(BorderLayout())
-  private val icon = JLabel(null, null, SwingConstants.CENTER)
+  private val icon = JLabel(null as? Icon?, SwingConstants.CENTER)
   private val label = JLabel("", SwingConstants.CENTER)
   private val focusBorder = UIManager.getBorder("List.focusCellHighlightBorder")
-  private val noFocusBorder: Border
+  private val noFocusBorder = UIManager.getBorder("List.noFocusBorder") ?: getNimbusNoFocusBorder()
 
   init {
-    var b = UIManager.getBorder("List.noFocusBorder")
-    if (b == null) { // Nimbus???
-      val i = focusBorder.getBorderInsets(label)
-      b = BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
-    }
-    noFocusBorder = b
     icon.isOpaque = false
     label.foreground = renderer.foreground
     label.background = renderer.background
@@ -148,6 +142,11 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
     renderer.add(label, BorderLayout.SOUTH)
   }
 
+  private fun getNimbusNoFocusBorder(): Border {
+    val i = focusBorder.getBorderInsets(label)
+    return BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
+  }
+
   override fun getListCellRendererComponent(
     list: JList<out ListItem>,
     value: ListItem?,
@@ -155,18 +154,20 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
     isSelected: Boolean,
     cellHasFocus: Boolean
   ): Component {
-    label.text = value?.title
-    label.border = if (cellHasFocus) focusBorder else noFocusBorder
-    if (isSelected) {
-      icon.icon = value?.selectedIcon
-      label.foreground = list.selectionForeground
-      label.background = list.selectionBackground
-      label.isOpaque = true
-    } else {
-      icon.icon = value?.icon
-      label.foreground = list.foreground
-      label.background = list.background
-      label.isOpaque = false
+    if (value != null) {
+      label.text = value.title
+      label.border = if (cellHasFocus) focusBorder else noFocusBorder
+      if (isSelected) {
+        icon.icon = value.selectedIcon
+        label.foreground = list.selectionForeground
+        label.background = list.selectionBackground
+        label.isOpaque = true
+      } else {
+        icon.icon = value.icon
+        label.foreground = list.foreground
+        label.background = list.background
+        label.isOpaque = false
+      }
     }
     return renderer
   }
