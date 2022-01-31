@@ -28,6 +28,7 @@ fun makeUI(): Component {
       (f as? JInternalFrame)?.desktopPane?.dragMode = JDesktopPane.LIVE_DRAG_MODE
       if (!rubberBand.isEmpty) {
         super.resizeFrame(f, rubberBand.x, rubberBand.y, rubberBand.width, rubberBand.height)
+        rubberBand.setBounds(0, 0, 0, 0)
       }
       super.endResizingFrame(f)
     }
