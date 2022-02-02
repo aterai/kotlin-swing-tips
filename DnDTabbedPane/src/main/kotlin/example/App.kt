@@ -178,13 +178,13 @@ private class DnDTabbedPane : JTabbedPane() {
     remove(prev)
     insertTab(title, icon, cmp, tip, tgtIndex)
     setEnabledAt(tgtIndex, isEnabled)
-    // When you drag'n'drop a disabled tab, it finishes enabled and selected.
+    // When you drag and drop a disabled tab, it finishes enabled and selected.
     // pointed out by dlorde
     if (isEnabled) {
       selectedIndex = tgtIndex
     }
     // I have a component in all tabs (JLabel with an X to close the tab)
-    // and when i move a tab the component disappear.
+    // and when I move a tab the component disappear.
     // pointed out by Daniel Dario Morales Salas
     setTabComponentAt(tgtIndex, tab)
   }
@@ -242,7 +242,8 @@ private class DnDTabbedPane : JTabbedPane() {
     return tabbedRect
   }
 
-  private fun isTopBottomTabPlacement(tabPlacement: Int) = tabPlacement == TOP || tabPlacement == BOTTOM
+  private fun isTopBottomTabPlacement(tabPlacement: Int) =
+    tabPlacement == TOP || tabPlacement == BOTTOM
 
   companion object {
     private const val LINE_SIZE = 3
@@ -278,7 +279,8 @@ private class TabDragSourceListener : DragSourceListener {
   }
 
   override fun dragDropEnd(e: DragSourceDropEvent) {
-    /* not needed */
+    val gp = (e.dragSourceContext.component as? JComponent)?.rootPane?.glassPane ?: return
+    gp.isVisible = false
   }
 
   override fun dropActionChanged(e: DragSourceDragEvent) { /* not needed */
@@ -293,8 +295,8 @@ private class TabDragGestureListener : DragGestureListener {
       val tabPt = e.dragOrigin
       val idx = it.indexAtLocation(tabPt.x, tabPt.y)
       val selIdx = it.selectedIndex
-      val isTabRunsRotated = it.ui !is MetalTabbedPaneUI &&
-        it.tabLayoutPolicy == JTabbedPane.WRAP_TAB_LAYOUT && idx != selIdx
+      val isWrapLayout = it.tabLayoutPolicy == JTabbedPane.WRAP_TAB_LAYOUT
+      val isTabRunsRotated = it.ui !is MetalTabbedPaneUI && isWrapLayout && idx != selIdx
       it.dragTabIndex = if (isTabRunsRotated) selIdx else idx
       if (it.dragTabIndex >= 0 && it.isEnabledAt(it.dragTabIndex)) {
         it.initGlassPane(tabPt)
@@ -383,7 +385,8 @@ private class GhostGlassPane(val tabbedPane: DnDTabbedPane) : JComponent() {
 
   init {
     isOpaque = false
-    // [JDK-6700748] Cursor flickering during D&D when using CellRendererPane with validation - Java Bug System
+    // [JDK-6700748]
+    // Cursor flickering during D&D when using CellRendererPane with validation - Java Bug System
     // https://bugs.openjdk.java.net/browse/JDK-6700748
     // setCursor(null)
   }
@@ -411,7 +414,8 @@ private class GhostGlassPane(val tabbedPane: DnDTabbedPane) : JComponent() {
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.composite = ALPHA
-    if (tabbedPane.isPaintScrollArea && tabbedPane.tabLayoutPolicy == JTabbedPane.SCROLL_TAB_LAYOUT) {
+    val policy = tabbedPane.tabLayoutPolicy
+    if (tabbedPane.isPaintScrollArea && policy == JTabbedPane.SCROLL_TAB_LAYOUT) {
       g2.paint = Color.RED
       g2.fill(tabbedPane.rectBackward)
       g2.fill(tabbedPane.rectForward)
