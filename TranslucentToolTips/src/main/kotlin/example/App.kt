@@ -17,7 +17,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 val CELL_SIZE = Dimension(10, 10)
 val currentLocalDate: LocalDate = LocalDate.now(ZoneId.systemDefault())
 private val weekList = object : JList<Contribution>(CalendarViewListModel(currentLocalDate)) {
-  @Transient private var tip: JToolTip? = null
+  private var tip: JToolTip? = null
 
   override fun updateUI() {
     cellRenderer = null
@@ -130,7 +130,7 @@ private class ContributionListRenderer : ListCellRenderer<Contribution> {
   }
 }
 
-private fun makeWeekCalendar(list: JList<*>, font: Font) = JScrollPane(list).also {
+fun makeWeekCalendar(list: JList<*>, font: Font) = JScrollPane(list).also {
   val loc = Locale.getDefault()
   it.border = BorderFactory.createEmptyBorder()
   it.setColumnHeaderView(makeColumnHeader(loc))
@@ -149,7 +149,8 @@ private fun makeRowHeader(loc: Locale, font: Font): Component {
     if (isEven) {
       weekModel.add(i, "")
     } else {
-      weekModel.add(i, firstDayOfWeek.plus(i.toLong()).getDisplayName(TextStyle.SHORT_STANDALONE, loc))
+      val week = firstDayOfWeek.plus(i.toLong())
+      weekModel.add(i, week.getDisplayName(TextStyle.SHORT_STANDALONE, loc))
     }
   }
   return JList(weekModel).also {
@@ -201,7 +202,9 @@ private class CalendarViewListModel(date: LocalDate) : AbstractListModel<Contrib
     val dow = date.get(WeekFields.of(Locale.getDefault()).dayOfWeek())
     this.startDate = date.minusWeeks((WEEK_VIEW - 1).toLong()).minusDays((dow - 1).toLong())
     this.displayDays = DayOfWeek.values().size * (WEEK_VIEW - 1) + dow
-    (0 until displayDays).forEach { contributionActivity[startDate.plusDays(it.toLong())] = (0..4).random() }
+    (0 until displayDays).forEach {
+      contributionActivity[startDate.plusDays(it.toLong())] = (0..4).random()
+    }
   }
 
   override fun getSize() = displayDays

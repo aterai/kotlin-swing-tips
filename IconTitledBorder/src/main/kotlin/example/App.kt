@@ -11,7 +11,7 @@ fun makeUI(): Component {
   val path = url?.toString() ?: "html.missingImage"
   val icon = url?.let { ImageIcon(it) } ?: UIManager.getIcon(path)
   val title1 = "<html><img src='$path' />test"
-  val title2 = "<html><table cellpadding='0'><tr><td><img src='$path'></td><td>test</td></tr></table></html>"
+  val title2 = "<html><table cellpadding='0'><tr><td><img src='$path'></td><td>test"
 
   val border3 = object : TitledBorder("  test") {
     override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {

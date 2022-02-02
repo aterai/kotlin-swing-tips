@@ -8,7 +8,9 @@ fun makeUI(): Component {
   tree.isEditable = true
 
   val check = JCheckBox("InvokesStopCellEditing")
-  check.addActionListener { e -> tree.invokesStopCellEditing = (e.source as? JCheckBox)?.isSelected == true }
+  check.addActionListener { e ->
+    tree.invokesStopCellEditing = (e.source as? JCheckBox)?.isSelected == true
+  }
 
   return JPanel(BorderLayout(5, 5)).also {
     it.add(check, BorderLayout.NORTH)

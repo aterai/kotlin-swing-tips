@@ -10,7 +10,12 @@ import kotlin.math.roundToInt
 fun makeUI(): Component {
   val box = Box.createVerticalBox()
   box.border = BorderFactory.createMatteBorder(10, 5, 5, 5, Color.GREEN)
-  listOf<Component>(JLabel("<html>000<br>00<br>00"), JButton("1"), JCheckBox("2"), JTextField("3")).forEach {
+  listOf<Component>(
+    JLabel("<html>000<br>00<br>00"),
+    JButton("1"),
+    JCheckBox("2"),
+    JTextField("3")
+  ).forEach {
     addDraggablePanel(box, it)
   }
   return JPanel(BorderLayout()).also {
@@ -52,7 +57,8 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
 
   override fun installUI(c: JComponent) {
     super.installUI(c)
-    (c as? JLayer<*>)?.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
+    (c as? JLayer<*>)?.layerEventMask =
+      AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
   }
 
   override fun uninstallUI(c: JComponent) {
@@ -102,8 +108,7 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
     val x = r.x
     val y = pt.y - dragOffset.y
     val h = DRAGGING_RECT.height
-    val yy: Int
-    yy = if (y < i.top) {
+    val yy = if (y < i.top) {
       i.top
     } else {
       if (r.contains(x, y + h)) y else r.height + i.top - h
@@ -159,7 +164,12 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
     }
   }
 
-  private fun replaceComponents(parent: Container, remove: Component?, insert: Component?, idx: Int) {
+  private fun replaceComponents(
+    parent: Container,
+    remove: Component?,
+    insert: Component?,
+    idx: Int
+  ) {
     if (insert == null) {
       return
     }

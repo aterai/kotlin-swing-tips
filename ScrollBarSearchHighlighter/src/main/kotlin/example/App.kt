@@ -100,7 +100,10 @@ private fun setHighlight(jtc: JTextComponent, pattern: String) {
   jtc.rootPane.repaint()
 }
 
-private class HighlightIcon(private val textArea: JTextComponent, private val scrollbar: JScrollBar) : Icon {
+private class HighlightIcon(
+  private val textArea: JTextComponent,
+  private val scrollbar: JScrollBar
+) : Icon {
   private val thumbRect = Rectangle()
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val top = scrollbar.insets.top
@@ -146,7 +149,9 @@ private class HighlightIcon(private val textArea: JTextComponent, private val sc
   }
 }
 
-private class WindowsHighlightScrollBarUI(private val textArea: JTextComponent) : WindowsScrollBarUI() {
+private class WindowsHighlightScrollBarUI(
+  private val textArea: JTextComponent
+) : WindowsScrollBarUI() {
   override fun paintTrack(g: Graphics, c: JComponent, trackBounds: Rectangle) {
     super.paintTrack(g, c, trackBounds)
     val rect = textArea.bounds
@@ -165,7 +170,9 @@ private class WindowsHighlightScrollBarUI(private val textArea: JTextComponent) 
   }
 }
 
-private class MetalHighlightScrollBarUI(private val textArea: JTextComponent) : MetalScrollBarUI() {
+private class MetalHighlightScrollBarUI(
+  private val textArea: JTextComponent
+) : MetalScrollBarUI() {
   override fun paintTrack(g: Graphics, c: JComponent, trackBounds: Rectangle) {
     super.paintTrack(g, c, trackBounds)
     val rect = textArea.bounds

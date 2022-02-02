@@ -50,7 +50,8 @@ private object TextUtils {
   // @see javax.swing.text.Utilities.getWordStart(...)
   @Throws(BadLocationException::class)
   fun getWordStart(c: JTextComponent, offs: Int): Int {
-    val line = Utilities.getParagraphElement(c, offs) ?: throw BadLocationException("No word at $offs", offs)
+    val line = Utilities.getParagraphElement(c, offs)
+      ?: throw BadLocationException("No word at $offs", offs)
     val doc = c.document
     val lineStart = line.startOffset
     val lineEnd = line.endOffset.coerceAtMost(doc.length)
@@ -86,7 +87,8 @@ private object TextUtils {
   // @see javax.swing.text.Utilities.getWordEnd(...)
   @Throws(BadLocationException::class)
   fun getWordEnd(c: JTextComponent, offs: Int): Int {
-    val line = Utilities.getParagraphElement(c, offs) ?: throw BadLocationException("No word at $offs", offs)
+    val line = Utilities.getParagraphElement(c, offs)
+      ?: throw BadLocationException("No word at $offs", offs)
     val doc = c.document
     val lineStart = line.startOffset
     val lineEnd = line.endOffset.coerceAtMost(doc.length)

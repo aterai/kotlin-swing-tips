@@ -7,7 +7,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 private val disableIndexSet: MutableSet<Int> = HashSet()
 private val field = JTextField("1, 2, 5")
 
-private fun initDisableIndex(set: MutableSet<Int>) {
+fun initDisableIndex(set: MutableSet<Int>) {
   set.clear()
   runCatching {
     set.addAll(
@@ -19,11 +19,12 @@ private fun initDisableIndex(set: MutableSet<Int>) {
     )
   }.onFailure {
     Toolkit.getDefaultToolkit().beep()
-    JOptionPane.showMessageDialog(field, "invalid value.\n" + it.message, "Error", JOptionPane.ERROR_MESSAGE)
+    val msg = "invalid value.\n" + it.message
+    JOptionPane.showMessageDialog(field, msg, "Error", JOptionPane.ERROR_MESSAGE)
   }
 }
 
-private fun makeList(disableIndexSet: Set<Int>): JList<String> {
+fun makeList(disableIndexSet: Set<Int>): JList<String> {
   val model = DefaultListModel<String>()
   model.addElement("11111111111")
   model.addElement("222222222222222222")

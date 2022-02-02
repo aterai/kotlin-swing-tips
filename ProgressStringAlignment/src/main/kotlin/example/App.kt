@@ -37,8 +37,8 @@ fun makeUI(): Component {
   p.add(progressBar1)
   p.add(progressBar2)
   p.addHierarchyListener { e ->
-    val isDisplayableChanged = e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L
-    if (isDisplayableChanged && !e.component.isDisplayable) {
+    val b = e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L
+    if (b && !e.component.isDisplayable) {
       worker?.cancel(true)
       worker = null
     }
@@ -58,7 +58,10 @@ fun makeUI(): Component {
   }
 }
 
-private class StringAlignmentProgressBar(model: BoundedRangeModel, horAlignment: Int) : JProgressBar(model) {
+private class StringAlignmentProgressBar(
+  model: BoundedRangeModel,
+  horAlignment: Int
+) : JProgressBar(model) {
   private val label = JLabel(string, horAlignment)
 
   override fun updateUI() {
@@ -95,7 +98,9 @@ private open class BackgroundTask : SwingWorker<String, Void>() {
   }
 }
 
-private class ProgressListener(private val progressBar: JProgressBar) : PropertyChangeListener {
+private class ProgressListener(
+  private val progressBar: JProgressBar
+) : PropertyChangeListener {
   init {
     progressBar.value = 0
   }

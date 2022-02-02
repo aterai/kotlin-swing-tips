@@ -32,11 +32,12 @@ fun makeUI(): Component {
   hsb.unitIncrement = 10
   hsb.addMouseWheelListener { e ->
     (SwingUtilities.getAncestorOfClass(JScrollPane::class.java, e.component) as? JScrollPane)?.also {
-      val vport = it.viewport
-      val vp = vport.viewPosition
+      val viewport = it.viewport
+      val vp = viewport.viewPosition
       val d = hsb.unitIncrement * e.wheelRotation
       vp.translate(d, 0)
-      (SwingUtilities.getUnwrappedView(vport) as? JComponent)?.scrollRectToVisible(Rectangle(vp, vport.size))
+      val view = SwingUtilities.getUnwrappedView(viewport)
+      (view as? JComponent)?.scrollRectToVisible(Rectangle(vp, viewport.size))
     }
   }
 
