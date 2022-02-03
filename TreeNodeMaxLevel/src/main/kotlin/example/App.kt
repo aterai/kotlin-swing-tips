@@ -17,7 +17,9 @@ fun makeUI(): Component {
   }
 
   val check = JCheckBox("JTree#setRootVisible(...)", true)
-  check.addActionListener { tree.isRootVisible = (it.source as? JCheckBox)?.isSelected == true }
+  check.addActionListener {
+    tree.isRootVisible = (it.source as? JCheckBox)?.isSelected == true
+  }
 
   val p = JPanel(GridLayout(0, 1, 2, 2))
   p.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
@@ -53,9 +55,9 @@ private class TreePopupMenu : JPopupMenu() {
     add("add").addActionListener {
       val tree = invoker as? JTree
       val path = tree?.selectionPath
-      val model = tree?.model
-      val self = path?.lastPathComponent
-      if (model is DefaultTreeModel && self is DefaultMutableTreeNode && path.pathCount <= MAX_NODE_LEVELS) {
+      val model = tree?.model as? DefaultTreeModel
+      val self = path?.lastPathComponent as? DefaultMutableTreeNode
+      if (model != null && self != null && path.pathCount <= MAX_NODE_LEVELS) {
         val child = DefaultMutableTreeNode("New child node")
         self.add(child)
         model.reload(self)

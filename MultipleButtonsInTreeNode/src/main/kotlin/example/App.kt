@@ -55,7 +55,15 @@ private class ButtonCellRenderer : TreeCellRenderer {
     row: Int,
     hasFocus: Boolean
   ): Component {
-    val c = panel.renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+    val c = panel.renderer.getTreeCellRendererComponent(
+      tree,
+      value,
+      selected,
+      expanded,
+      leaf,
+      row,
+      hasFocus
+    )
     return panel.remakePanel(c)
   }
 }
@@ -86,7 +94,15 @@ private class ButtonCellEditor : AbstractCellEditor(), TreeCellEditor {
     leaf: Boolean,
     row: Int
   ): Component {
-    val c = panel.renderer.getTreeCellRendererComponent(tree, value, true, expanded, leaf, row, true)
+    val c = panel.renderer.getTreeCellRendererComponent(
+      tree,
+      value,
+      true,
+      expanded,
+      leaf,
+      row,
+      true
+    )
     return panel.remakePanel(c)
   }
 
@@ -104,7 +120,15 @@ private class ButtonCellEditor : AbstractCellEditor(), TreeCellEditor {
     return if (node is TreeNode && r != null && r.contains(p)) {
       val row = tree.getRowForLocation(p.x, p.y)
       val renderer = tree.cellRenderer
-      val c = renderer.getTreeCellRendererComponent(tree, " ", true, true, node.isLeaf, row, true)
+      val c = renderer.getTreeCellRendererComponent(
+        tree,
+        " ",
+        true,
+        true,
+        node.isLeaf,
+        row,
+        true
+      )
       c.bounds = r
       c.setLocation(0, 0)
       // tree.doLayout()

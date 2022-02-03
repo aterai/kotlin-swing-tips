@@ -24,19 +24,23 @@ private val table = object : JTable(model) {
         val current = value.progress
         val lengthOfTask = value.lengthOfTask
         c = when {
-          current < 0 ->
-            renderer.getTableCellRendererComponent(tbl, "Canceled", isSelected, hasFocus, row, column)
+          current < 0 -> renderer.getTableCellRendererComponent(
+            tbl, "Canceled", isSelected, hasFocus, row, column
+          )
           current < lengthOfTask -> {
             progress.value = current * 100 / lengthOfTask
             progress.isStringPainted = true
             progress.string = "$current/$lengthOfTask"
             progress
           }
-          else ->
-            renderer.getTableCellRendererComponent(tbl, "Done", isSelected, hasFocus, row, column)
+          else -> renderer.getTableCellRendererComponent(
+            tbl, "Done", isSelected, hasFocus, row, column
+          )
         }
       } else {
-        c = renderer.getTableCellRendererComponent(tbl, "Waiting...", isSelected, hasFocus, row, column)
+        c = renderer.getTableCellRendererComponent(
+          tbl, "Waiting...", isSelected, hasFocus, row, column
+        )
       }
       c
     }
@@ -77,7 +81,8 @@ fun addActionPerformed() {
       println("$key:$message(${i}ms)")
     }
   }
-  addProgressValue("example(max: $lengthOfTask)", ProgressValue(lengthOfTask, 0), worker)
+  val value = ProgressValue(lengthOfTask, 0)
+  addProgressValue("example(max: $lengthOfTask)", value, worker)
   worker.execute()
 }
 
@@ -103,7 +108,8 @@ private class TablePopupMenu : JPopupMenu() {
     }
   }
 
-  private fun getSwingWorker(identifier: Int) = model.getValueAt(identifier, 3) as? SwingWorker<*, *>
+  private fun getSwingWorker(identifier: Int) =
+    model.getValueAt(identifier, 3) as? SwingWorker<*, *>
 
   private fun deleteActionPerformed() {
     val selection = table.selectedRows
@@ -115,10 +121,12 @@ private class TablePopupMenu : JPopupMenu() {
       deletedRowSet.add(mi)
       getSwingWorker(mi)?.takeUnless { it.isDone }?.cancel(true)
     }
-    val sorter = table.rowSorter
-    (sorter as? TableRowSorter<out TableModel>)?.rowFilter = object : RowFilter<TableModel, Int>() {
-      override fun include(entry: Entry<out TableModel, out Int>) = !deletedRowSet.contains(entry.identifier)
+    val filter = object : RowFilter<TableModel, Int>() {
+      override fun include(entry: Entry<out TableModel, out Int>): Boolean {
+        return !deletedRowSet.contains(entry.identifier)
+      }
     }
+    (table.rowSorter as? TableRowSorter<out TableModel>)?.rowFilter = filter
     table.clearSelection()
     table.repaint()
   }
@@ -158,7 +166,9 @@ fun makeUI(): Component {
   }
 }
 
-private open class BackgroundTask(private val lengthOfTask: Int) : SwingWorker<Int, ProgressValue>() {
+private open class BackgroundTask(
+  private val lengthOfTask: Int
+) : SwingWorker<Int, ProgressValue>() {
   private val sleepDummy = (1..49).random()
 
   @Throws(InterruptedException::class)

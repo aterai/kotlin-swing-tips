@@ -117,7 +117,8 @@ private class TablePopupMenu : JPopupMenu() {
     }
   }
 
-  private fun getSwingWorker(identifier: Int) = model.getValueAt(identifier, 3) as? SwingWorker<*, *>
+  private fun getSwingWorker(identifier: Int) =
+    model.getValueAt(identifier, 3) as? SwingWorker<*, *>
 
   private fun deleteActionPerformed() {
     val selection = table.selectedRows
@@ -129,10 +130,12 @@ private class TablePopupMenu : JPopupMenu() {
       deletedRowSet.add(mi)
       getSwingWorker(mi)?.takeUnless { it.isDone }?.cancel(true)
     }
-    val sorter = table.rowSorter
-    (sorter as? TableRowSorter<out TableModel>)?.rowFilter = object : RowFilter<TableModel, Int>() {
-      override fun include(entry: Entry<out TableModel, out Int>) = !deletedRowSet.contains(entry.identifier)
+    val filter = object : RowFilter<TableModel, Int>() {
+      override fun include(entry: Entry<out TableModel, out Int>): Boolean {
+        return !deletedRowSet.contains(entry.identifier)
+      }
     }
+    (table.rowSorter as? TableRowSorter<out TableModel>)?.rowFilter = filter
     table.clearSelection()
     table.repaint()
   }

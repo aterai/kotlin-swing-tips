@@ -42,7 +42,8 @@ fun makeUI(): Component {
       super.updateUI()
       val m = getModel()
       for (i in 0 until m.columnCount) {
-        SwingUtilities.updateComponentTreeUI(getDefaultRenderer(m.getColumnClass(i)) as? Component)
+        val r = getDefaultRenderer(m.getColumnClass(i))
+        SwingUtilities.updateComponentTreeUI(r as? Component)
       }
       getColumnModel().getColumn(CHECKBOX_COLUMN).also {
         it.headerRenderer = HeaderRenderer()
@@ -159,7 +160,8 @@ private class TablePopupMenu : JPopupMenu() {
     val model = table?.model
     if (model is DefaultTableModel) {
       model.addRow(arrayOf(isSelected, 0, ""))
-      table.scrollRectToVisible(table.getCellRect(model.rowCount - 1, 0, true))
+      val rect = table.getCellRect(model.rowCount - 1, 0, true)
+      table.scrollRectToVisible(rect)
     }
   }
 }
@@ -170,13 +172,13 @@ private class HeaderCheckBoxHandler(
 ) : MouseAdapter(), TableModelListener {
   override fun tableChanged(e: TableModelEvent) {
     val vci = table.convertColumnIndexToView(targetColumnIndex)
-    val column = table.columnModel.getColumn(vci)
-    val status = column.headerValue
+    val col = table.columnModel.getColumn(vci)
+    val hv = col.headerValue
     val m = table.model
     val repaint = when (e.type) {
-      TableModelEvent.DELETE -> fireDeleteEvent(m, column, status)
-      TableModelEvent.INSERT -> status !== Status.INDETERMINATE && fireInsertEvent(m, column, status, e)
-      TableModelEvent.UPDATE -> e.column == targetColumnIndex && fireUpdateEvent(m, column, status)
+      TableModelEvent.DELETE -> fireDeleteEvent(m, col, hv)
+      TableModelEvent.INSERT -> hv !== Status.INDETERMINATE && fireInsertEvent(m, col, hv, e)
+      TableModelEvent.UPDATE -> e.column == targetColumnIndex && fireUpdateEvent(m, col, hv)
       else -> false
     }
     if (repaint) {
@@ -204,7 +206,12 @@ private class HeaderCheckBoxHandler(
     return true
   }
 
-  private fun fireInsertEvent(m: TableModel, column: TableColumn, status: Any, e: TableModelEvent): Boolean {
+  private fun fireInsertEvent(
+    m: TableModel,
+    column: TableColumn,
+    status: Any,
+    e: TableModelEvent
+  ): Boolean {
     var selected = status === Status.DESELECTED
     var deselected = status === Status.SELECTED
     for (i in e.firstRow..e.lastRow) {
