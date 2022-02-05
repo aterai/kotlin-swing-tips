@@ -9,7 +9,7 @@ import javax.swing.event.MouseInputListener
 fun makeUI() = JPanel(BorderLayout()).also {
   val model = makeModel()
   val list = object : JList<String>(model) {
-    @Transient private var handler: MouseInputListener? = null
+    private var handler: MouseInputListener? = null
 
     override fun updateUI() {
       removeMouseListener(handler)
@@ -120,7 +120,9 @@ private class CellButtonsMouseListener<E>(private val list: JList<E>) : MouseInp
   }
 }
 
-private class ButtonsRenderer<E>(model: DefaultListModel<E>) : JPanel(BorderLayout()), ListCellRenderer<E> {
+private class ButtonsRenderer<E>(
+  model: DefaultListModel<E>
+) : JPanel(BorderLayout()), ListCellRenderer<E> {
   private val textArea = JTextArea()
   private val deleteButton = JButton("delete")
   private val copyButton = JButton("copy")

@@ -5,13 +5,13 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.TitledBorder
 
 fun makeUI(): Component {
-  val fileNameLabel = AlignedLabel("File Name:")
-  val filesOfTypeLabel = AlignedLabel("Files of Type:")
-  val hostLabel = AlignedLabel("Host:")
-  val portLabel = AlignedLabel("Port:")
-  val userLabel = AlignedLabel("User Name:")
-  val passwordLabel = AlignedLabel("Password:")
-  AlignedLabel.groupLabels(fileNameLabel, filesOfTypeLabel, hostLabel, portLabel, userLabel, passwordLabel)
+  val fileName = AlignedLabel("File Name:")
+  val filesOfType = AlignedLabel("Files of Type:")
+  val host = AlignedLabel("Host:")
+  val port = AlignedLabel("Port:")
+  val user = AlignedLabel("User Name:")
+  val password = AlignedLabel("Password:")
+  AlignedLabel.groupLabels(fileName, filesOfType, host, port, user, password)
 
   val innerBorder = BorderFactory.createEmptyBorder(5, 2, 5, 5)
 
@@ -19,21 +19,21 @@ fun makeUI(): Component {
   val border1 = BorderFactory.createTitledBorder("FileChooser")
   border1.titlePosition = TitledBorder.ABOVE_TOP
   box1.border = BorderFactory.createCompoundBorder(border1, innerBorder)
-  box1.add(makeLabeledBox(fileNameLabel, JTextField()))
+  box1.add(makeLabeledBox(fileName, JTextField()))
   box1.add(Box.createVerticalStrut(5))
-  box1.add(makeLabeledBox(filesOfTypeLabel, JComboBox<String>()))
+  box1.add(makeLabeledBox(filesOfType, JComboBox<String>()))
 
   val box2 = Box.createVerticalBox()
   val border2 = BorderFactory.createTitledBorder("HTTP Proxy")
   border2.titlePosition = TitledBorder.ABOVE_TOP
   box2.border = BorderFactory.createCompoundBorder(border2, innerBorder)
-  box2.add(makeLabeledBox(hostLabel, JTextField()))
+  box2.add(makeLabeledBox(host, JTextField()))
   box2.add(Box.createVerticalStrut(5))
-  box2.add(makeLabeledBox(portLabel, JTextField()))
+  box2.add(makeLabeledBox(port, JTextField()))
   box2.add(Box.createVerticalStrut(5))
-  box2.add(makeLabeledBox(userLabel, JTextField()))
+  box2.add(makeLabeledBox(user, JTextField()))
   box2.add(Box.createVerticalStrut(5))
-  box2.add(makeLabeledBox(passwordLabel, JPasswordField()))
+  box2.add(makeLabeledBox(password, JPasswordField()))
 
   val box = Box.createVerticalBox()
   box.add(box1)

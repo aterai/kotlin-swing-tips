@@ -56,7 +56,12 @@ fun makeUI(): Component {
 
 private class AnimatedToolTip(private val iconLabel: JLabel?) : JToolTip() {
   init {
-    LookAndFeel.installColorsAndFont(iconLabel, "ToolTip.background", "ToolTip.foreground", "ToolTip.font")
+    LookAndFeel.installColorsAndFont(
+      iconLabel,
+      "ToolTip.background",
+      "ToolTip.foreground",
+      "ToolTip.font"
+    )
     iconLabel?.isOpaque = true
     layout = BorderLayout()
     add(iconLabel)
@@ -74,7 +79,7 @@ private class AnimatedToolTip(private val iconLabel: JLabel?) : JToolTip() {
 }
 
 private class AnimatedLabel(title: String?) : JLabel(title) {
-  @Transient private val icon = AnimeIcon()
+  private val icon = AnimeIcon()
   private val animator = Timer(100) {
     icon.next()
     repaint()

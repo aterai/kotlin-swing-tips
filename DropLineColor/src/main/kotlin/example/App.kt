@@ -192,6 +192,7 @@ private class ListItemTransferHandler : TransferHandler() {
   override fun importData(info: TransferSupport): Boolean {
     val dl = info.dropLocation
     val target = info.component as? JList<*>
+
     @Suppress("UNCHECKED_CAST")
     val listModel = target?.model as? DefaultListModel<Any>
     if (dl !is JList.DropLocation || listModel == null) {
@@ -403,7 +404,10 @@ private class TreeTransferHandler : TransferHandler() {
     }
   }
 
-  private fun deepCopyTreeNode(src: MutableTreeNode, tgt: DefaultMutableTreeNode): DefaultMutableTreeNode {
+  private fun deepCopyTreeNode(
+    src: MutableTreeNode,
+    tgt: DefaultMutableTreeNode
+  ): DefaultMutableTreeNode {
     src.children().toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .forEach {

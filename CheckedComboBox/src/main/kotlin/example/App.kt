@@ -42,7 +42,9 @@ private data class CheckableItem(val title: String, val isSelected: Boolean) {
   override fun toString() = title
 }
 
-private open class CheckedComboBox(model: ComboBoxModel<CheckableItem>) : JComboBox<CheckableItem>(model) {
+private open class CheckedComboBox(
+  model: ComboBoxModel<CheckableItem>
+) : JComboBox<CheckableItem>(model) {
   protected var keepOpen = false
   private val panel = JPanel(BorderLayout())
 
@@ -129,7 +131,9 @@ private open class CheckedComboBox(model: ComboBoxModel<CheckableItem>) : JCombo
     .joinToString()
 }
 
-private class WindowsCheckedComboBox(model: ComboBoxModel<CheckableItem>) : CheckedComboBox(model) {
+private class WindowsCheckedComboBox(
+  model: ComboBoxModel<CheckableItem>
+) : CheckedComboBox(model) {
   private var listener: ActionListener? = null
 
   override fun updateUI() {

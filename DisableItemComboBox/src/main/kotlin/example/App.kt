@@ -11,7 +11,9 @@ fun makeUI(): Component {
     it.setDisableIndexSet(getDisableIndexFromTextField(field))
   }
   val button = JButton("init").also {
-    it.addActionListener { combo.setDisableIndexSet(getDisableIndexFromTextField(field)) }
+    it.addActionListener {
+      combo.setDisableIndexSet(getDisableIndexFromTextField(field))
+    }
   }
   val box = Box.createHorizontalBox().also {
     it.add(JLabel("Disabled Item Index:"))
@@ -46,7 +48,8 @@ private fun getDisableIndexFromTextField(field: JTextField) = runCatching {
 }.onFailure {
   Toolkit.getDefaultToolkit().beep()
   val p = field.rootPane
-  JOptionPane.showMessageDialog(p, "invalid value.\n${it.message}", "Error", JOptionPane.ERROR_MESSAGE)
+  val msg = "invalid value.\n${it.message}"
+  JOptionPane.showMessageDialog(p, msg, "Error", JOptionPane.ERROR_MESSAGE)
 }.getOrNull().orEmpty()
 
 private class DisableItemComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(model) {
@@ -84,7 +87,9 @@ private class DisableItemComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(mod
     val renderer = getRenderer()
     setRenderer { list, value, index, isSelected, cellHasFocus ->
       val f = isEnabledIndex(index)
-      renderer.getListCellRendererComponent(list, value, index, isSelected and f, cellHasFocus and f).also {
+      renderer.getListCellRendererComponent(
+        list, value, index, isSelected and f, cellHasFocus and f
+      ).also {
         it.isEnabled = f
       }
     }

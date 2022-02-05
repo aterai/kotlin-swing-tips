@@ -51,7 +51,8 @@ private class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
   private val startPt = Point()
   override fun installUI(c: JComponent) {
     super.installUI(c)
-    (c as? JLayer<*>)?.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
+    (c as? JLayer<*>)?.layerEventMask =
+      AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
   }
 
   override fun uninstallUI(c: JComponent) {
@@ -73,7 +74,11 @@ private class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
     val c = e.component
     if (isDraggableComponent(sp, c) && e.id == MouseEvent.MOUSE_DRAGGED) {
       val pt = SwingUtilities.convertPoint(c, e.point, sp)
-      val delta = if (sp.orientation == JSplitPane.HORIZONTAL_SPLIT) pt.x - startPt.x else pt.y - startPt.y
+      val delta = if (sp.orientation == JSplitPane.HORIZONTAL_SPLIT) {
+        pt.x - startPt.x
+      } else {
+        pt.y - startPt.y
+      }
       sp.dividerLocation = 0.coerceAtLeast(dividerLocation + delta)
     }
   }

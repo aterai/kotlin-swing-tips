@@ -30,7 +30,9 @@ fun makeUI(): Component {
       super.updateUI()
       val r = DefaultTreeCellRenderer()
       setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-        r.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus).also { c ->
+        r.getTreeCellRendererComponent(
+          tree, value, selected, expanded, leaf, row, hasFocus
+        ).also { c ->
           if (c is JLabel) {
             if (selected) {
               c.isOpaque = false
@@ -64,7 +66,9 @@ fun makeUI(): Component {
   }
 }
 
-private class FolderSelectionListener(private val fileSystemView: FileSystemView) : TreeSelectionListener {
+private class FolderSelectionListener(
+  private val fileSystemView: FileSystemView
+) : TreeSelectionListener {
   override fun valueChanged(e: TreeSelectionEvent) {
     val tree = e.source
     val node = e.path.lastPathComponent

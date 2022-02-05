@@ -108,7 +108,10 @@ private class TreeTransferHandler : TransferHandler() {
     }
   }
 
-  private fun deepCopyTreeNode(src: MutableTreeNode, tgt: DefaultMutableTreeNode): DefaultMutableTreeNode {
+  private fun deepCopyTreeNode(
+    src: MutableTreeNode,
+    tgt: DefaultMutableTreeNode
+  ): DefaultMutableTreeNode {
     src.children().toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .forEach {

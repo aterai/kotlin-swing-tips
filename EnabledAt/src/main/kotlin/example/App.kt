@@ -8,7 +8,9 @@ fun makeUI(): Component {
   val tabs = JTabbedPane()
 
   val check = JCheckBox("Enable Advanced")
-  check.addActionListener { e -> tabs.setEnabledAt(tgtIndex, (e.source as? JCheckBox)?.isSelected == true) }
+  check.addActionListener { e ->
+    tabs.setEnabledAt(tgtIndex, (e.source as? JCheckBox)?.isSelected == true)
+  }
 
   tabs.addTab("Preferences", check)
   tabs.addTab("Advanced", JScrollPane(JTree()))
