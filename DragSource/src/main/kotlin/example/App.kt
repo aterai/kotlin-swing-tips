@@ -6,12 +6,12 @@ import java.awt.datatransfer.Transferable
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.io.File
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 private val label = JLabel()
-private val cl = Thread.currentThread().contextClassLoader
-private val i1 = ImageIcon(cl.getResource("example/i03-04.gif"))
-private val i2 = ImageIcon(cl.getResource("example/i03-10.gif"))
+private val i1 = makeIcon("example/i03-04.gif", "OptionPane.errorIcon")
+private val i2 = makeIcon("example/i03-10.gif", "OptionPane.warningIcon")
 
 private var file: File? = null
   set(file) {
@@ -55,7 +55,9 @@ fun makeUI(): Component {
   label.addMouseListener(object : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
       val c = e.component
-      (c as? JComponent)?.transferHandler?.exportAsDrag(c, e, TransferHandler.COPY)
+      if (c is JComponent && file != null) {
+        c.transferHandler.exportAsDrag(c, e, TransferHandler.COPY)
+      }
     }
   })
 
@@ -91,6 +93,12 @@ fun makeUI(): Component {
     it.add(box, BorderLayout.SOUTH)
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+private fun makeIcon(path: String, key: String): Icon {
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  return url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) }
+    ?: UIManager.getIcon(key)
 }
 
 private class TempFileTransferable(private val file: File?) : Transferable {
