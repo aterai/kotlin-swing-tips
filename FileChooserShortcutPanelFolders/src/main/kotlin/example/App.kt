@@ -1,6 +1,5 @@
 package example
 
-import sun.awt.shell.ShellFolder
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.HierarchyEvent
 import java.io.File
@@ -30,7 +29,7 @@ fun makeUI(): Component {
     val chooser = JFileChooser()
     chooser.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
     val fsv = chooser.fileSystemView
-    val files = ShellFolder.get("fileChooserShortcutPanelFolders") as? Array<*>
+    val files = sun.awt.shell.ShellFolder.get("fileChooserShortcutPanelFolders") as? Array<*>
     chooser.addHierarchyListener { e ->
       val c = e.component
       val b = e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L
