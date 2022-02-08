@@ -72,8 +72,8 @@ fun makeUI(): Component {
 
   return JPanel(BorderLayout()).also {
     it.addHierarchyListener { e ->
-      val isDisplayableChanged = e.changeFlags.toInt() and HierarchyEvent.DISPLAYABILITY_CHANGED != 0
-      if (isDisplayableChanged && !e.component.isDisplayable) {
+      val b = e.changeFlags.toInt() and HierarchyEvent.DISPLAYABILITY_CHANGED != 0
+      if (b && !e.component.isDisplayable) {
         worker.interrupt()
       }
     }
@@ -137,7 +137,8 @@ private fun updateTable(kind: WatchEvent.Kind<*>, child: Path) {
       }
     }
     sorter.rowFilter = object : RowFilter<TableModel, Int>() {
-      override fun include(entry: Entry<out TableModel, out Int>) = !deleteRowSet.contains(entry.identifier)
+      override fun include(entry: Entry<out TableModel, out Int>) =
+        !deleteRowSet.contains(entry.identifier)
     }
   }
 }

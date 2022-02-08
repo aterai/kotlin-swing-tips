@@ -56,7 +56,7 @@ private class WindowsJumpToClickedPositionSliderUI(slider: JSlider) : WindowsSli
   override fun createTrackListener(slider: JSlider?): TrackListener {
     return object : TrackListener() {
       override fun mousePressed(e: MouseEvent) {
-        if (UIManager.getBoolean("Slider.onlyLeftMouseButtonDrag") && SwingUtilities.isLeftMouseButton(e)) {
+        if (SwingUtilities.isLeftMouseButton(e)) {
           val s = e.component as? JSlider ?: return
           when (s.orientation) {
             SwingConstants.VERTICAL -> s.value = valueForYPosition(e.y)
@@ -79,7 +79,7 @@ private class MetalJumpToClickedPositionSliderUI : MetalSliderUI() {
   override fun createTrackListener(slider: JSlider?): TrackListener {
     return object : TrackListener() {
       override fun mousePressed(e: MouseEvent) {
-        if (UIManager.getBoolean("Slider.onlyLeftMouseButtonDrag") && SwingUtilities.isLeftMouseButton(e)) {
+        if (SwingUtilities.isLeftMouseButton(e)) {
           val s = e.component as? JSlider ?: return
           when (s.orientation) {
             SwingConstants.VERTICAL -> s.value = valueForYPosition(e.y)

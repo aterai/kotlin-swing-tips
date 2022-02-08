@@ -129,7 +129,11 @@ private class FileModel : DefaultTableModel() {
   }
 }
 
-private data class ColumnContext(val columnName: String, val columnClass: Class<*>, val isEditable: Boolean)
+private data class ColumnContext(
+  val columnName: String,
+  val columnClass: Class<*>,
+  val isEditable: Boolean
+)
 
 private data class RowData(val id: Int, val path: Path, val width: Int, val height: Int) {
   val name get() = path.fileName.toString()

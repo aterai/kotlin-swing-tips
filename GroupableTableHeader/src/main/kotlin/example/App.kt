@@ -152,15 +152,16 @@ private class GroupableTableHeaderUI : BasicTableHeaderUI() {
   }
 
   // Copied from javax/swing/plaf/basic/BasicTableHeaderUI.java
-  private fun paintCell(g: Graphics, cellRect: Rectangle, columnIndex: Int) {
+  private fun paintCell(g: Graphics, rect: Rectangle, columnIndex: Int) {
     val c = getHeaderRenderer(columnIndex)
-    rendererPane.paintComponent(g, c, header, cellRect.x, cellRect.y, cellRect.width, cellRect.height, true)
+    rendererPane.paintComponent(g, c, header, rect.x, rect.y, rect.width, rect.height, true)
   }
 
-  private fun paintCellGroup(g: Graphics, cellRect: Rectangle, columnGroup: ColumnGroup) {
+  private fun paintCellGroup(g: Graphics, rect: Rectangle, columnGroup: ColumnGroup) {
     val r = header.defaultRenderer
-    val c = r.getTableCellRendererComponent(header.table, columnGroup.headerValue, false, false, -1, -1)
-    rendererPane.paintComponent(g, c, header, cellRect.x, cellRect.y, cellRect.width, cellRect.height, true)
+    val v = columnGroup.headerValue
+    val c = r.getTableCellRendererComponent(header.table, v, false, false, -1, -1)
+    rendererPane.paintComponent(g, c, header, rect.x, rect.y, rect.width, rect.height, true)
   }
 
   private fun getHeaderHeight(): Int {

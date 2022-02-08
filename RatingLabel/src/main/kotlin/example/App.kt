@@ -59,7 +59,10 @@ fun makeUI(): Component {
   return p
 }
 
-private fun makeStarRatingPanel(title: String, label: LevelBar) = JPanel(FlowLayout(FlowLayout.LEFT)).also {
+private fun makeStarRatingPanel(
+  title: String,
+  label: LevelBar
+) = JPanel(FlowLayout(FlowLayout.LEFT)).also {
   val button = JButton("clear")
   button.addActionListener { label.clear() }
   it.border = BorderFactory.createTitledBorder(title)

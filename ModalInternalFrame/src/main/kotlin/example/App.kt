@@ -76,17 +76,22 @@ fun makeUI(): Component {
   }
 }
 
-// menuItem = new JMenuItem(new ModalInternalFrameAction1("InternalMessageDialog(Normal)"))
+// menuItem = JMenuItem(ModalInternalFrameAction1("InternalMessageDialog(Normal)"))
 // menuItem.setMnemonic(KeyEvent.VK_1)
 private class ModalInternalFrameAction1(label: String) : AbstractAction(label) {
   override fun actionPerformed(e: ActionEvent) {
     setJMenuEnabled(false)
-    JOptionPane.showInternalMessageDialog(desktop, "information", "modal1", JOptionPane.INFORMATION_MESSAGE)
+    JOptionPane.showInternalMessageDialog(
+      desktop,
+      "information",
+      "modal1",
+      JOptionPane.INFORMATION_MESSAGE
+    )
     setJMenuEnabled(true)
   }
 }
 
-// menuItem = new JMenuItem(new ModalInternalFrameAction2("InternalMessageDialog"));
+// menuItem = JMenuItem(ModalInternalFrameAction2("InternalMessageDialog"))
 // menuItem.setMnemonic(KeyEvent.VK_2);
 private class ModalInternalFrameAction2(label: String) : AbstractAction(label) {
   private val glass = MyGlassPane()
@@ -103,7 +108,12 @@ private class ModalInternalFrameAction2(label: String) : AbstractAction(label) {
     val screen = w.graphicsConfiguration.bounds
     glass.setSize(screen.width, screen.height)
     glass.isVisible = true
-    JOptionPane.showInternalMessageDialog(desktop, "information", "modal2", JOptionPane.INFORMATION_MESSAGE)
+    JOptionPane.showInternalMessageDialog(
+      desktop,
+      "information",
+      "modal2",
+      JOptionPane.INFORMATION_MESSAGE
+    )
     glass.isVisible = false
     setJMenuEnabled(true)
   }

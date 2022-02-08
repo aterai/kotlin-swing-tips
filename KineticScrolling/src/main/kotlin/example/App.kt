@@ -101,7 +101,9 @@ private fun makeMissingImage(): BufferedImage {
   return bi
 }
 
-private class KineticScrollingListener1(private val label: JComponent) : MouseAdapter(), HierarchyListener {
+private class KineticScrollingListener1(
+  private val label: JComponent
+) : MouseAdapter(), HierarchyListener {
   private val dc = label.cursor
   private val hc = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
   private val scroller: Timer
@@ -158,7 +160,9 @@ private class KineticScrollingListener1(private val label: JComponent) : MouseAd
   }
 }
 
-private class KineticScrollingListener2(private val label: JComponent) : MouseAdapter(), HierarchyListener {
+private class KineticScrollingListener2(
+  private val label: JComponent
+) : MouseAdapter(), HierarchyListener {
   private val dc = label.cursor
   private val hc = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
   private val startPt = Point()
