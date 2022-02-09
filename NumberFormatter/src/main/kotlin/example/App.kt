@@ -62,7 +62,9 @@ private class WarningSpinner(model: SpinnerNumberModel) : JSpinner(model) {
         }
 
         private fun updateEditValid() {
-          EventQueue.invokeLater { ftf.background = if (ftf.isEditValid) Color.WHITE else errorBackground }
+          EventQueue.invokeLater {
+            ftf.background = if (ftf.isEditValid) Color.WHITE else errorBackground
+          }
         }
       }
       ftf.document.addDocumentListener(dl)

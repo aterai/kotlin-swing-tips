@@ -81,7 +81,10 @@ private class CellButtonsMouseListener : MouseAdapter() {
     val list = e.component as? JList<*> ?: return
     val pt = e.point
     val idx = list.locationToIndex(pt)
-    (list.cellRenderer as? ButtonsRenderer<*>)?.rolloverIndex = getButton(list, pt, idx)?.let { idx } ?: -1
+    val r = list.cellRenderer
+    if (r is ButtonsRenderer<*>) {
+      r.rolloverIndex = getButton(list, pt, idx)?.let { idx } ?: -1
+    }
     list.repaint()
   }
 

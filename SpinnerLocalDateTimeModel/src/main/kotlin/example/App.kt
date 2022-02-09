@@ -112,7 +112,10 @@ private class SpinnerLocalDateTimeModel(
   }
 }
 
-private class LocalDateTimeEditor(spinner: JSpinner, dateFormatPattern: String?) : DefaultEditor(spinner) {
+private class LocalDateTimeEditor(
+  spinner: JSpinner,
+  dateFormatPattern: String?
+) : DefaultEditor(spinner) {
   val dateTimeFormatter: DateTimeFormatter
   val model = spinner.model as? SpinnerLocalDateTimeModel
     ?: throw IllegalArgumentException("model not a SpinnerLocalDateTimeModel")
@@ -139,7 +142,9 @@ private class LocalDateTimeEditor(spinner: JSpinner, dateFormatPattern: String?)
     }
   }
 
-  private inner class LocalDateTimeFormatter : InternationalFormatter(dateTimeFormatter.toFormat()) {
+  private inner class LocalDateTimeFormatter : InternationalFormatter(
+    dateTimeFormatter.toFormat()
+  ) {
     override fun valueToString(value: Any?): String =
       (value as? TemporalAccessor)?.let { dateTimeFormatter.format(it) } ?: ""
 

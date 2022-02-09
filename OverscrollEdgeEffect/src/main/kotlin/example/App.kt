@@ -39,7 +39,9 @@ private fun makeMissingImage(): Image {
   return bi
 }
 
-private class KineticScrollingListener(private val label: JComponent) : MouseAdapter(), HierarchyListener {
+private class KineticScrollingListener(
+  private val label: JComponent
+) : MouseAdapter(), HierarchyListener {
   private val dc = label.cursor
   private val hc = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
   private val scroller: Timer
@@ -123,7 +125,8 @@ private class OverscrollEdgeEffectLayerUI : LayerUI<JScrollPane>() {
 
   override fun installUI(c: JComponent) {
     super.installUI(c)
-    (c as? JLayer<*>)?.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
+    (c as? JLayer<*>)?.layerEventMask =
+      AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
   }
 
   override fun uninstallUI(c: JComponent) {

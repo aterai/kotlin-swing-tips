@@ -64,7 +64,8 @@ private open class TooltipList<E>(m: ListModel<E>) : JList<E>(m) {
       val lsm = selectionModel
       val hasFocus = hasFocus() && lsm.leadSelectionIndex == i
       val value = model.getElementAt(i)
-      val renderer = r.getListCellRendererComponent(this, value, i, lsm.isSelectedIndex(i), hasFocus)
+      val selectedIndex = lsm.isSelectedIndex(i)
+      val renderer = r.getListCellRendererComponent(this, value, i, selectedIndex, hasFocus)
       if (renderer is JComponent && renderer.toolTipText != null) {
         return cellBounds.location
       }
@@ -89,7 +90,8 @@ private open class CellRendererTooltipList<E>(m: ListModel<E>) : JList<E>(m) {
       val lsm = selectionModel
       val str = model.getElementAt(i)
       val hasFocus = hasFocus() && lsm.leadSelectionIndex == i
-      val renderer = r.getListCellRendererComponent(this, str, i, lsm.isSelectedIndex(i), hasFocus)
+      val selectedIndex = lsm.isSelectedIndex(i)
+      val renderer = r.getListCellRendererComponent(this, str, i, selectedIndex, hasFocus)
       if (renderer is JComponent && renderer.toolTipText != null) {
         val pt = cellBounds.location
         val ins = label.insets
@@ -127,7 +129,13 @@ private open class TooltipListCellRenderer<E> : ListCellRenderer<E> {
     index: Int,
     isSelected: Boolean,
     cellHasFocus: Boolean
-  ): Component = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
+  ): Component = renderer.getListCellRendererComponent(
+    list,
+    value,
+    index,
+    isSelected,
+    cellHasFocus
+  ).also {
     if (it is JComponent) {
       val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
       val rect = (c as? JViewport)?.viewRect ?: c.bounds
@@ -138,7 +146,10 @@ private open class TooltipListCellRenderer<E> : ListCellRenderer<E> {
   }
 }
 
-private class RendererIcon(private val renderer: Component, private val rect: Rectangle) : Icon {
+private class RendererIcon(
+  private val renderer: Component,
+  private val rect: Rectangle
+) : Icon {
   init {
     rect.setLocation(0, 0)
   }

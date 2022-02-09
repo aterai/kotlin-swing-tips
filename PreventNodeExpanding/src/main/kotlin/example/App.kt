@@ -63,7 +63,9 @@ private class DirectoryExpandVetoListener : TreeWillExpandListener {
   }
 }
 
-private class FolderSelectionListener(private val fileSystemView: FileSystemView) : TreeSelectionListener {
+private class FolderSelectionListener(
+  private val fileSystemView: FileSystemView
+) : TreeSelectionListener {
   override fun valueChanged(e: TreeSelectionEvent) {
     val tree = e.source as? JTree
     val model = tree?.model as? DefaultTreeModel
@@ -115,7 +117,9 @@ private class FileTreeCellRenderer(
     row: Int,
     hasFocus: Boolean
   ): Component {
-    val c = renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+    val c = renderer.getTreeCellRendererComponent(
+      tree, value, selected, expanded, leaf, row, hasFocus
+    )
     if (c is JLabel && value is DefaultMutableTreeNode) {
       if (selected) {
         c.isOpaque = false
