@@ -66,22 +66,22 @@ private class EditableTabbedPane : JTabbedPane() {
     editor.border = BorderFactory.createEmptyBorder(0, 3, 0, 3)
     val am = editor.actionMap
     val im = editor.getInputMap(JComponent.WHEN_FOCUSED)
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "rename-tab")
+    val enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)
+    im.put(enterKey, "rename-tab")
     am.put("rename-tab", renameTab)
 
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancel-editing")
     am.put("cancel-editing", cancelEditing)
 
-    val ml = object : MouseAdapter() {
+    addMouseListener(object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
         val isDoubleClick = e.clickCount >= 2
         if (isDoubleClick) {
           startEditing.actionPerformed(ActionEvent(e.component, ActionEvent.ACTION_PERFORMED, ""))
         }
       }
-    }
-    addMouseListener(ml)
-    getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "start-editing")
+    })
+    getInputMap(JComponent.WHEN_FOCUSED).put(enterKey, "start-editing")
     actionMap.put("start-editing", startEditing)
   }
 

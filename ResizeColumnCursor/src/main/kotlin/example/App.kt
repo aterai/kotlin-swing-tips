@@ -96,12 +96,17 @@ private object ResizeCursorUtils {
     }
   }
 
-  private fun getResizeColumn(r: Rectangle, header: JTableHeader, p: Point, column: Int): TableColumn? {
-    val midPoint = r.x + r.width / 2
+  private fun getResizeColumn(
+    rect: Rectangle,
+    header: JTableHeader,
+    pt: Point,
+    column: Int
+  ): TableColumn? {
+    val midPoint = rect.x + rect.width / 2
     val columnIndex = if (header.componentOrientation.isLeftToRight) {
-      if (p.x < midPoint) column - 1 else column
+      if (pt.x < midPoint) column - 1 else column
     } else {
-      if (p.x < midPoint) column else column - 1
+      if (pt.x < midPoint) column else column - 1
     }
     return if (columnIndex == -1) null else header.columnModel.getColumn(columnIndex)
   }
@@ -115,7 +120,11 @@ private class MyWindowsTableHeaderUI : WindowsTableHeaderUI() {
       override fun mouseMoved(e: MouseEvent) {
         super.mouseMoved(e)
         if (header.isEnabled) {
-          header.cursor = if (ResizeCursorUtils.canResize(header, e.point)) resizeCursor else defaultCursor
+          header.cursor = if (ResizeCursorUtils.canResize(header, e.point)) {
+            resizeCursor
+          } else {
+            defaultCursor
+          }
         }
       }
     }
@@ -130,7 +139,11 @@ private class MySynthTableHeaderUI : SynthTableHeaderUI() {
       override fun mouseMoved(e: MouseEvent) {
         super.mouseMoved(e)
         if (header.isEnabled) {
-          header.cursor = if (ResizeCursorUtils.canResize(header, e.point)) resizeCursor else defaultCursor
+          header.cursor = if (ResizeCursorUtils.canResize(header, e.point)) {
+            resizeCursor
+          } else {
+            defaultCursor
+          }
         }
       }
     }
@@ -145,14 +158,22 @@ private class MyBasicTableHeaderUI : BasicTableHeaderUI() {
       override fun mouseMoved(e: MouseEvent) {
         super.mouseMoved(e)
         if (header.isEnabled) {
-          header.cursor = if (ResizeCursorUtils.canResize(header, e.point)) resizeCursor else defaultCursor
+          header.cursor = if (ResizeCursorUtils.canResize(header, e.point)) {
+            resizeCursor
+          } else {
+            defaultCursor
+          }
         }
       }
     }
   }
 }
 
-private class ShapeIcon(private val shape: Shape, private val width: Int, private val height: Int) : Icon {
+private class ShapeIcon(
+  private val shape: Shape,
+  private val width: Int,
+  private val height: Int
+) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)

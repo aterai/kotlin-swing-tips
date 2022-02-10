@@ -42,7 +42,12 @@ private fun makeKeyboardPanel() = JPanel(GridBagLayout()).also {
     for (key in keys[row]) {
       val len = key.length
       c.gridwidth = getKeyButtonColumnGridWidth(len)
-      it.add(if (key.isEmpty()) Box.createHorizontalStrut(KeyButton.SIZE) else KeyButton(key, len <= 2), c)
+      val b = if (key.isEmpty()) {
+        Box.createHorizontalStrut(KeyButton.SIZE)
+      } else {
+        KeyButton(key, len <= 2)
+      }
+      it.add(b, c)
       c.gridx += c.gridwidth
     }
   }

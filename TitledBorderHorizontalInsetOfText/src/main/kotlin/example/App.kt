@@ -193,11 +193,11 @@ private class TitledBorder2(title: String?) : TitledBorder(title) {
   private fun paintWrapBorder(c: Component, bdr: Border?, g: Graphics, b: Rectangle, l: Rectangle) {
     bdr?.also {
       if (position2 == TOP || position2 == BOTTOM) {
-        val tsp = TEXT_SPACING2
+        val xx = l.x + l.width + TEXT_SPACING2
         val p = Path2D.Float()
         p.append(Rectangle(b.x, b.y, b.width, l.y - b.y), false)
         p.append(Rectangle(b.x, l.y, l.x - b.x - TEXT_SPACING, l.height), false)
-        p.append(Rectangle(l.x + l.width + tsp, l.y, b.x - l.x + b.width - l.width - tsp, l.height), false)
+        p.append(Rectangle(xx, l.y, b.x + b.width - xx, l.height), false)
         p.append(Rectangle(b.x, l.y + l.height, b.width, b.y - l.y + b.height - l.height), false)
         val g2 = g.create() as? Graphics2D ?: return
         g2.clip(p)
