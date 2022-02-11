@@ -13,7 +13,7 @@ import javax.swing.text.TextAction
 fun makeUI(): Component {
   val field = JTextField(12)
   (field.document as? AbstractDocument)?.documentFilter = SizeFilter()
-  // ((AbstractDocument) field.getDocument()).setDocumentFilter(new DocumentSizeFilter(5));
+  // ((AbstractDocument) field.getDocument()).setDocumentFilter(new DocumentSizeFilter(5))
   val am = field.actionMap
   var key = DefaultEditorKit.deletePrevCharAction // "delete-previous";
   am.put(key, SilentDeleteTextAction(key, am[key]))
@@ -38,7 +38,10 @@ private fun makeTitledPanel(title: String, cmp: Component): Component {
   return p
 }
 
-private class SilentDeleteTextAction(name: String?, private val deleteAction: Action) : TextAction(name) {
+private class SilentDeleteTextAction(
+  name: String?,
+  private val deleteAction: Action
+) : TextAction(name) {
   override fun actionPerformed(e: ActionEvent) {
     val target = getTextComponent(e)
     if (target != null && target.isEditable) {

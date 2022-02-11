@@ -78,7 +78,8 @@ private class RowHeaderRenderer : MouseAdapter(), TableCellRenderer {
     if (rollOverRowIndex == prevRow) {
       return
     }
-    val repaintRect = if (rollOverRowIndex >= 0) {
+    val repaintRect: Rectangle
+    repaintRect = if (rollOverRowIndex >= 0) {
       val r = table.getCellRect(rollOverRowIndex, col, false)
       if (prevRow >= 0) r.union(table.getCellRect(prevRow, col, false)) else r
     } else {

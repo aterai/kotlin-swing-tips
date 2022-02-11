@@ -36,7 +36,9 @@ private class RowSelectionTree : JTree() {
     super.updateUI()
     val tmp = object : BasicTreeUI() {
       override fun getPathBounds(tree: JTree?, path: TreePath?) =
-        if (tree != null && treeState != null) { getPathBounds(path, tree.insets, Rectangle()) } else null
+        if (tree != null && treeState != null) {
+          getPathBounds(path, tree.insets, Rectangle())
+        } else null
 
       private fun getPathBounds(path: TreePath?, insets: Insets, bounds: Rectangle) =
         treeState.getBounds(path, bounds)?.also {
@@ -48,7 +50,9 @@ private class RowSelectionTree : JTree() {
     UIManager.put("Tree.repaintWholeRow", true)
     val renderer = getCellRenderer()
     setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-      renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus).also {
+      renderer.getTreeCellRendererComponent(
+        tree, value, selected, expanded, leaf, row, hasFocus
+      ).also {
         it.background = if (selected) SELECTED_COLOR else tree.background
         (it as? JComponent)?.isOpaque = true
       }

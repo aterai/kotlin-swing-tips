@@ -41,7 +41,9 @@ private fun makeTextField(text: String) = JTextField(text, 32).also {
   it.isOpaque = false
 }
 
-private class AnimatedBorder(c: JComponent) : EmptyBorder(BORDER, BORDER, BORDER + BOTTOM_SPACE, BORDER) {
+private class AnimatedBorder(
+  c: JComponent
+) : EmptyBorder(BORDER, BORDER, BORDER + BOTTOM_SPACE, BORDER) {
   private val animator = Timer(10, null)
   private val stroke = BasicStroke(BORDER.toFloat())
   private val bottomStroke = BasicStroke(BORDER / 2f)
@@ -137,7 +139,12 @@ private class AnimatedBorder(c: JComponent) : EmptyBorder(BORDER, BORDER, BORDER
     }
   }
 
-  private fun ticking(points: MutableList<Point2D>, prev: Point2D, pt: Point2D, delta: Double = 0.02) {
+  private fun ticking(
+    points: MutableList<Point2D>,
+    prev: Point2D,
+    pt: Point2D,
+    delta: Double = 0.02
+  ) {
     var fraction = delta
     val distance = prev.distance(pt)
     var p = interpolate(prev, pt, fraction)

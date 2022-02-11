@@ -45,7 +45,11 @@ fun makeUI(): Component {
   }
 }
 
-private class ScaledIcon(private val icon: Icon, private val width: Int, private val height: Int) : Icon {
+private class ScaledIcon(
+  private val icon: Icon,
+  private val width: Int,
+  private val height: Int
+) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)

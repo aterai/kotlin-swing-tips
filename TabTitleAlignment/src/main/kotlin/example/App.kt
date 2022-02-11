@@ -60,10 +60,12 @@ private fun makeTestTabbedPane(tabbedPane: JTabbedPane) = tabbedPane.also {
 
 private class ClippedTitleTabbedPane(tabPlacement: Int) : JTabbedPane(tabPlacement) {
   private val tabInsets: Insets
-    get() = UIManager.getInsets("TabbedPane.tabInsets") ?: getSynthInsets(Region.TABBED_PANE_TAB)
+    get() = UIManager.getInsets("TabbedPane.tabInsets")
+      ?: getSynthInsets(Region.TABBED_PANE_TAB)
 
   private val tabAreaInsets: Insets
-    get() = UIManager.getInsets("TabbedPane.tabAreaInsets") ?: getSynthInsets(Region.TABBED_PANE_TAB_AREA)
+    get() = UIManager.getInsets("TabbedPane.tabAreaInsets")
+      ?: getSynthInsets(Region.TABBED_PANE_TAB_AREA)
 
   private fun getSynthInsets(region: Region): Insets {
     val style = SynthLookAndFeel.getStyle(this, region)
@@ -208,7 +210,7 @@ private class LeftAlignmentTabbedPaneUI : MetalTabbedPaneUI() {
   }
 }
 
-// How to Use Tabbed Panes (The Java™ Tutorials > Creating a GUI With JFC/Swing > Using Swing Components)
+// How to Use Tabbed Panes (The Java™ Tutorials > ... > Using Swing Components)
 // https://docs.oracle.com/javase/tutorial/uiswing/components/tabbedpane.html
 private class ButtonTabComponent(pane: JTabbedPane) : JPanel(BorderLayout()) {
   private val tabs = pane

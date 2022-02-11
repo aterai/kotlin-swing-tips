@@ -101,7 +101,8 @@ private fun deleteActionPerformed() {
     model.getSwingWorker(mi)?.takeUnless { it.isDone }?.cancel(true)
   }
   sorter.rowFilter = object : RowFilter<TableModel, Int>() {
-    override fun include(entry: Entry<out TableModel, out Int>) = !deleteRowSet.contains(entry.identifier)
+    override fun include(entry: Entry<out TableModel, out Int>) =
+      !deleteRowSet.contains(entry.identifier)
   }
   table.clearSelection()
   table.repaint()

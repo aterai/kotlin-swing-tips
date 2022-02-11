@@ -120,7 +120,9 @@ private class CheckBoxNodeRenderer : TreeCellRenderer {
       }
       return checkBox
     }
-    return renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+    return renderer.getTreeCellRendererComponent(
+      tree, value, selected, expanded, leaf, row, hasFocus
+    )
   }
 }
 
@@ -158,7 +160,8 @@ private class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
     return checkBox
   }
 
-  override fun getCellEditorValue() = CheckBoxNode(checkBox.text, checkBox.isSelected, checkBox.isEnabled)
+  override fun getCellEditorValue() =
+    CheckBoxNode(checkBox.text, checkBox.isSelected, checkBox.isEnabled)
 
   override fun isCellEditable(e: EventObject) = e is MouseEvent
 }

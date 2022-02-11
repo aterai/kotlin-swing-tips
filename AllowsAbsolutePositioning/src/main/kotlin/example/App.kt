@@ -9,8 +9,9 @@ import javax.swing.plaf.basic.BasicScrollBarUI
 
 fun makeUI(): Component {
   UIManager.put("ScrollBar.allowsAbsolutePositioning", true)
-
-  val help = "middle mouse click in the track will set the position of the track to where the mouse is.\n"
+  val h1 = "middle mouse click in the track will set"
+  val h2 = " the position of the track to where the mouse is.\n"
+  val help = h1 + h2
   val txt = help.repeat(100)
 
   val scroll = JScrollPane(JTextArea("override TrackListener#mousePressed(...)\n$txt"))

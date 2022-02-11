@@ -95,10 +95,11 @@ private class CloseableTabbedPaneLayerUI : LayerUI<JTabbedPane>() {
   }
   private val dim = button.preferredSize
   private val repaintRect = Rectangle(dim.width * 2, dim.height * 2)
-  private fun getTabButtonRect(tabbedPane: JTabbedPane, index: Int) = tabbedPane.getBoundsAt(index).also {
-    it.translate(it.width - dim.width - GAP, (it.height - dim.height) / 2)
-    it.size = dim
-  }
+  private fun getTabButtonRect(tabbedPane: JTabbedPane, index: Int) =
+    tabbedPane.getBoundsAt(index).also {
+      it.translate(it.width - dim.width - GAP, (it.height - dim.height) / 2)
+      it.size = dim
+    }
 
   override fun paint(g: Graphics, c: JComponent) {
     super.paint(g, c)
@@ -112,7 +113,8 @@ private class CloseableTabbedPaneLayerUI : LayerUI<JTabbedPane>() {
 
   override fun installUI(c: JComponent) {
     super.installUI(c)
-    (c as? JLayer<*>)?.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
+    (c as? JLayer<*>)?.layerEventMask =
+      AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
   }
 
   override fun uninstallUI(c: JComponent) {

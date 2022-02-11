@@ -75,7 +75,9 @@ private class HighlightListener : MouseAdapter() {
   }
 }
 
-private class HighlightRenderer(private val highlighter: HighlightListener) : DefaultTableCellRenderer() {
+private class HighlightRenderer(
+  private val highlighter: HighlightListener
+) : DefaultTableCellRenderer() {
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,

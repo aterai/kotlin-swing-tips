@@ -155,7 +155,12 @@ private class RearrangingHandler : MouseAdapter() {
     return find
   }
 
-  private fun swapComponentLocation(parent: Container, remove: Component?, insert: Component?, idx: Int) {
+  private fun swapComponentLocation(
+    parent: Container,
+    remove: Component?,
+    insert: Component?,
+    idx: Int
+  ) {
     if (insert == null) {
       return
     }

@@ -20,12 +20,12 @@ fun makeUI(): Component {
   table.autoCreateRowSorter = true
   val tableColumn = table.columnModel.getColumn(0)
   val font = Font(Font.SANS_SERIF, Font.PLAIN, 32)
-  tableColumn.headerRenderer =
-    TableCellRenderer { t, v, selected, focus, row, col ->
-      t.tableHeader.defaultRenderer.getTableCellRendererComponent(t, v, selected, focus, row, col)?.also {
-        it.font = font
-      }
+  tableColumn.headerRenderer = TableCellRenderer { t, v, selected, focus, row, col ->
+    val r = t.tableHeader.defaultRenderer
+    r.getTableCellRendererComponent(t, v, selected, focus, row, col)?.also {
+      it.font = font
     }
+  }
 
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(table))
