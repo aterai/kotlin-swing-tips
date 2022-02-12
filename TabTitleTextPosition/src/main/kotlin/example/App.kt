@@ -1,6 +1,7 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.synth.Region
 import javax.swing.plaf.synth.SynthConstants
@@ -8,34 +9,40 @@ import javax.swing.plaf.synth.SynthContext
 import javax.swing.plaf.synth.SynthLookAndFeel
 
 fun makeUI(): Component {
-  val cl = Thread.currentThread().contextClassLoader
-  val t = ClippedTitleTabbedPane()
-  t.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
-  addTab(t, "JTree", ImageIcon(cl.getResource("example/wi0009-32.png")), JScrollPane(JTree()))
-  addTab(t, "JTextArea", ImageIcon(cl.getResource("example/wi0054-32.png")), JScrollPane(JTextArea()))
-  addTab(t, "Preference", ImageIcon(cl.getResource("example/wi0062-32.png")), JScrollPane(JTree()))
-  addTab(t, "Help", ImageIcon(cl.getResource("example/wi0063-32.png")), JScrollPane(JTextArea()))
-
+  val tabs = ClippedTitleTabbedPane()
+  tabs.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
+  addTab(tabs, "JTree", "example/wi0009-32.png", JScrollPane(JTree()))
+  addTab(tabs, "JTextArea", "example/wi0054-32.png", JScrollPane(JTextArea()))
+  addTab(tabs, "Preference", "example/wi0062-32.png", JScrollPane(JTree()))
+  addTab(tabs, "Help", "example/wi0063-32.png", JScrollPane(JTextArea()))
   return JPanel(BorderLayout()).also {
-    it.add(t)
+    it.add(tabs)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun addTab(tabbedPane: JTabbedPane, title: String, icon: Icon, c: Component) {
+private fun addTab(tabbedPane: JTabbedPane, title: String, path: String, c: Component) {
   tabbedPane.addTab(title, c)
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  val icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) } ?: makeMissingIcon()
   val label = JLabel(title, icon, SwingConstants.CENTER)
   label.verticalTextPosition = SwingConstants.BOTTOM
   label.horizontalTextPosition = SwingConstants.CENTER
   tabbedPane.setTabComponentAt(tabbedPane.tabCount - 1, label)
 }
 
+private fun makeMissingIcon(): Icon {
+  return UIManager.getIcon("OptionPane.errorIcon")
+}
+
 private class ClippedTitleTabbedPane : JTabbedPane() {
   private val tabInsets: Insets
-    get() = UIManager.getInsets("TabbedPane.tabInsets") ?: getSynthInsets(Region.TABBED_PANE_TAB)
+    get() = UIManager.getInsets("TabbedPane.tabInsets")
+      ?: getSynthInsets(Region.TABBED_PANE_TAB)
 
   private val tabAreaInsets: Insets
-    get() = UIManager.getInsets("TabbedPane.tabAreaInsets") ?: getSynthInsets(Region.TABBED_PANE_TAB_AREA)
+    get() = UIManager.getInsets("TabbedPane.tabAreaInsets")
+      ?: getSynthInsets(Region.TABBED_PANE_TAB_AREA)
 
   private fun getSynthInsets(region: Region): Insets {
     val style = SynthLookAndFeel.getStyle(this, region)
@@ -51,10 +58,10 @@ private class ClippedTitleTabbedPane : JTabbedPane() {
     }
     val tabInsets = tabInsets
     val tabAreaInsets = tabAreaInsets
-    val insets = insets
+    val ins = insets
     val tabPlacement = getTabPlacement()
-    val areaWidth = width - tabAreaInsets.left - tabAreaInsets.right - insets.left - insets.right
-    var tabWidth: Int // = tabInsets.left + tabInsets.right + 3;
+    val areaWidth = width - tabAreaInsets.left - tabAreaInsets.right - ins.left - ins.right
+    var tabWidth: Int // = tabInsets.left + tabInsets.right + 3
     val gap: Int
     if (tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT) {
       tabWidth = areaWidth / 4
