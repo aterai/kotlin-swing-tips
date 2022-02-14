@@ -6,7 +6,7 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-private const val PATH = "toolBarButtonGraphics/general/"
+private const val PATH = "toolbarButtonGraphics/general/"
 
 fun makeUI(): Component {
   val toolBar = JToolBar("ToolBarButton")
@@ -15,12 +15,11 @@ fun makeUI(): Component {
   toolBar.addMouseListener(dh)
   toolBar.addMouseMotionListener(dh)
   toolBar.border = BorderFactory.createEmptyBorder(2, 2, 2, 0)
-  val list = listOf(
+  listOf(
     "Copy24.gif", "Cut24.gif", "Paste24.gif",
     "Delete24.gif", "Undo24.gif", "Redo24.gif",
     "Help24.gif", "Open24.gif", "Save24.gif"
-  )
-  list.map { createToolBarButton(it) }.forEach { toolBar.add(it) }
+  ).map { createToolBarButton(it) }.forEach { toolBar.add(it) }
 
   return JPanel(BorderLayout()).also {
     it.add(toolBar, BorderLayout.NORTH)
@@ -31,7 +30,9 @@ fun makeUI(): Component {
 
 private fun createToolBarButton(name: String): Component {
   val cl = Thread.currentThread().contextClassLoader
-  val b = JLabel(ImageIcon(cl.getResource(PATH + name)))
+  val url = cl.getResource(PATH + name)
+  val icon = url?.let { ImageIcon(it) } ?: UIManager.getIcon("html.missingImage")
+  val b = JLabel(icon)
   b.isOpaque = false
   return b
 }
@@ -59,7 +60,7 @@ private class DragHandler : MouseAdapter() {
       return
     }
     draggingComponent = c
-    swapComponentLocation(parent, c, gap, index)
+    swapComponent(parent, c, gap, index)
     window.add(c)
     window.pack()
     val d = c.preferredSize
@@ -100,7 +101,7 @@ private class DragHandler : MouseAdapter() {
 
     if (!searchAndSwap(parent, cmp, pt)) {
       val idx = if (parent.parent.bounds.contains(pt)) parent.componentCount else index
-      swapComponentLocation(parent, gap, cmp, idx)
+      swapComponent(parent, gap, cmp, idx)
     }
   }
 
@@ -112,10 +113,10 @@ private class DragHandler : MouseAdapter() {
       PREV_AREA.setBounds(r.x, r.y, wd2, r.height)
       NEXT_AREA.setBounds(r.x + wd2, r.y, wd2, r.height)
       if (PREV_AREA.contains(pt)) {
-        swapComponentLocation(parent, gap, cmp, if (i > 1) i else 0)
+        swapComponent(parent, gap, cmp, if (i > 1) i else 0)
         return true
       } else if (NEXT_AREA.contains(pt)) {
-        swapComponentLocation(parent, gap, cmp, i)
+        swapComponent(parent, gap, cmp, i)
         find = true
         break
       }
@@ -123,12 +124,12 @@ private class DragHandler : MouseAdapter() {
     return find
   }
 
-  private fun swapComponentLocation(parent: Container, remove: Component, insert: Component?, idx: Int) {
-    if (insert == null) {
+  private fun swapComponent(parent: Container, remove: Component, add: Component?, idx: Int) {
+    if (add == null) {
       return
     }
     parent.remove(remove)
-    parent.add(insert, idx)
+    parent.add(add, idx)
     parent.revalidate()
   }
 
