@@ -283,7 +283,8 @@ private class TabDragSourceListener : DragSourceListener {
     gp.isVisible = false
   }
 
-  override fun dropActionChanged(e: DragSourceDragEvent) { /* not needed */
+  override fun dropActionChanged(e: DragSourceDragEvent) {
+    /* not needed */
   }
 }
 
@@ -331,7 +332,8 @@ private class TabDropTargetListener : DropTargetListener {
     }
   }
 
-  override fun dropActionChanged(e: DropTargetDragEvent) { /* not needed */
+  override fun dropActionChanged(e: DropTargetDragEvent) {
+    /* not needed */
   }
 
   override fun dragOver(e: DropTargetDragEvent) {

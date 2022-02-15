@@ -1,17 +1,6 @@
 package example
 
-import java.awt.AlphaComposite
-import java.awt.BorderLayout
-import java.awt.Color
-import java.awt.Component
-import java.awt.Dimension
-import java.awt.EventQueue
-import java.awt.FlowLayout
-import java.awt.Graphics
-import java.awt.Graphics2D
-import java.awt.Point
-import java.awt.Rectangle
-import java.awt.Toolkit
+import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
 import java.awt.dnd.DnDConstants
@@ -29,22 +18,9 @@ import java.awt.dnd.DropTargetEvent
 import java.awt.dnd.DropTargetListener
 import java.awt.image.BufferedImage
 import java.io.File
-import javax.swing.JButton
-import javax.swing.JCheckBox
-import javax.swing.JComponent
-import javax.swing.JFrame
-import javax.swing.JLabel
-import javax.swing.JPanel
-import javax.swing.JScrollPane
-import javax.swing.JTabbedPane
-import javax.swing.JTable
-import javax.swing.JTextArea
-import javax.swing.JTree
-import javax.swing.SwingConstants
-import javax.swing.SwingUtilities
-import javax.swing.UIManager
-import javax.swing.WindowConstants
+import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.metal.MetalTabbedPaneUI
+
 
 fun makeUI(): Component {
   val sub = DnDTabbedPane().also {
@@ -379,7 +355,8 @@ private class TabDropTargetListener : DropTargetListener {
     }
   }
 
-  override fun dropActionChanged(e: DropTargetDragEvent) { /* not needed */
+  override fun dropActionChanged(e: DropTargetDragEvent) {
+    /* not needed */
   }
 
   override fun dragOver(e: DropTargetDragEvent) {

@@ -23,7 +23,8 @@ fun makeUI(): Component {
       .filterIsInstance<JList<*>>()
       .first().also {
         it.addHierarchyListener { e ->
-          if (e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L && e.component.isShowing) {
+          val b = e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L
+          if (b && e.component.isShowing) {
             it.putClientProperty("List.isFileList", false)
             it.layoutOrientation = JList.VERTICAL
           }

@@ -23,19 +23,34 @@ fun makeUI(): Component {
 
 private class NonEditableLineDocumentFilter : DocumentFilter() {
   @Throws(BadLocationException::class)
-  override fun insertString(fb: FilterBypass, offset: Int, text: String?, attr: AttributeSet?) {
+  override fun insertString(
+    fb: FilterBypass,
+    offset: Int,
+    text: String?,
+    attr: AttributeSet?
+  ) {
     if (text != null) {
       replace(fb, offset, 0, text, attr)
     }
   }
 
   @Throws(BadLocationException::class)
-  override fun remove(fb: FilterBypass, offset: Int, length: Int) {
+  override fun remove(
+    fb: FilterBypass,
+    offset: Int,
+    length: Int
+  ) {
     replace(fb, offset, length, "", null)
   }
 
   @Throws(BadLocationException::class)
-  override fun replace(fb: FilterBypass, offset: Int, length: Int, text: String?, attrs: AttributeSet?) {
+  override fun replace(
+    fb: FilterBypass,
+    offset: Int,
+    length: Int,
+    text: String?,
+    attrs: AttributeSet?
+  ) {
     val doc = fb.document
     val root = doc.defaultRootElement
     val count = root.elementCount

@@ -167,19 +167,34 @@ private open class LoadTask(
 
 private class IntegerDocumentFilter : DocumentFilter() {
   @Throws(BadLocationException::class)
-  override fun insertString(fb: FilterBypass, offset: Int, text: String?, attr: AttributeSet?) {
+  override fun insertString(
+    fb: FilterBypass,
+    offset: Int,
+    text: String?,
+    attr: AttributeSet?
+  ) {
     if (text != null) {
       replace(fb, offset, 0, text, attr)
     }
   }
 
   @Throws(BadLocationException::class)
-  override fun remove(fb: FilterBypass, offset: Int, length: Int) {
+  override fun remove(
+    fb: FilterBypass,
+    offset: Int,
+    length: Int
+  ) {
     replace(fb, offset, length, "", null)
   }
 
   @Throws(BadLocationException::class)
-  override fun replace(fb: FilterBypass, offset: Int, length: Int, text: String?, attrs: AttributeSet?) {
+  override fun replace(
+    fb: FilterBypass,
+    offset: Int,
+    length: Int,
+    text: String?,
+    attrs: AttributeSet?
+  ) {
     val doc = fb.document
     val currentLength = doc.length
     val currentContent = doc.getText(0, currentLength)
@@ -190,13 +205,11 @@ private class IntegerDocumentFilter : DocumentFilter() {
     fb.replace(offset, length, text, attrs)
   }
 
-  companion object {
-    @Throws(BadLocationException::class)
-    private fun checkInput(proposedValue: String) {
-      if (proposedValue.isNotEmpty()) {
-        runCatching {
-          proposedValue.toInt()
-        }
+  @Throws(BadLocationException::class)
+  private fun checkInput(proposedValue: String) {
+    if (proposedValue.isNotEmpty()) {
+      runCatching {
+        proposedValue.toInt()
       }
     }
   }

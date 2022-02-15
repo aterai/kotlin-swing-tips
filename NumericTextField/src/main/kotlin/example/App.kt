@@ -106,7 +106,7 @@ private class IntegerDocument : PlainDocument() {
       kotlin.runCatching {
         proposedValue.toInt()
       }.onFailure {
-        throw BadLocationException(proposedValue, offset) // .initCause(it) as BadLocationException
+        throw BadLocationException(proposedValue, offset)
       }
     }
   }
@@ -114,38 +114,49 @@ private class IntegerDocument : PlainDocument() {
 
 private class IntegerDocumentFilter : DocumentFilter() {
   @Throws(BadLocationException::class)
-  override fun insertString(fb: FilterBypass, offset: Int, text: String?, attr: AttributeSet?) {
+  override fun insertString(
+    fb: FilterBypass,
+    offset: Int,
+    text: String?,
+    attr: AttributeSet?
+  ) {
     if (text != null) {
       replace(fb, offset, 0, text, attr)
     }
   }
 
   @Throws(BadLocationException::class)
-  override fun remove(fb: FilterBypass, offset: Int, length: Int) {
+  override fun remove(
+    fb: FilterBypass,
+    offset: Int,
+    length: Int
+  ) {
     replace(fb, offset, length, "", null)
   }
 
   @Throws(BadLocationException::class)
-  override fun replace(fb: FilterBypass, offset: Int, length: Int, text: String?, attrs: AttributeSet?) {
+  override fun replace(
+    fb: FilterBypass,
+    offset: Int,
+    length: Int,
+    text: String?,
+    attrs: AttributeSet?
+  ) {
     val doc = fb.document
     val currentLength = doc.length
     val currentContent = doc.getText(0, currentLength)
     val before = currentContent.substring(0, offset)
     val after = currentContent.substring(length + offset, currentLength)
     val newValue = before + (text ?: "") + after
-    checkInput(newValue, offset)
+    checkInput(newValue)
     fb.replace(offset, length, text, attrs)
   }
 
-  companion object {
-    @Throws(BadLocationException::class)
-    private fun checkInput(proposedValue: String, offset: Int) {
-      if (proposedValue.isNotEmpty()) {
-        runCatching {
-          proposedValue.toInt()
-        }.onFailure {
-          throw BadLocationException(proposedValue, offset) // .initCause(it) as BadLocationException
-        }
+  @Throws(BadLocationException::class)
+  private fun checkInput(proposedValue: String) {
+    if (proposedValue.isNotEmpty()) {
+      runCatching {
+        proposedValue.toInt()
       }
     }
   }

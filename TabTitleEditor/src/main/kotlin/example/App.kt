@@ -107,7 +107,8 @@ private class TabTitleEditListener(
     updateTabSize()
   }
 
-  override fun changedUpdate(e: DocumentEvent) { /* not needed */
+  override fun changedUpdate(e: DocumentEvent) {
+    /* not needed */
   }
 
   override fun mouseClicked(e: MouseEvent) {

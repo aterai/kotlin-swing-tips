@@ -55,10 +55,14 @@ fun makeUI(): Component {
   table.autoResizeMode = JTable.AUTO_RESIZE_OFF
 
   val cb1 = JCheckBox("InheritsPopupMenu", true)
-  cb1.addActionListener { e -> table.inheritsPopupMenu = (e.source as? JCheckBox)?.isSelected == true }
+  cb1.addActionListener { e ->
+    table.inheritsPopupMenu = (e.source as? JCheckBox)?.isSelected == true
+  }
 
   val cb2 = JCheckBox("FillsViewportHeight", true)
-  cb2.addActionListener { e -> table.fillsViewportHeight = (e.source as? JCheckBox)?.isSelected == true }
+  cb2.addActionListener { e ->
+    table.fillsViewportHeight = (e.source as? JCheckBox)?.isSelected == true
+  }
 
   val box = Box.createHorizontalBox()
   box.add(cb1)

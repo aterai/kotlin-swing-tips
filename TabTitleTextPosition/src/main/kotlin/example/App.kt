@@ -24,15 +24,12 @@ fun makeUI(): Component {
 private fun addTab(tabbedPane: JTabbedPane, title: String, path: String, c: Component) {
   tabbedPane.addTab(title, c)
   val url = Thread.currentThread().contextClassLoader.getResource(path)
-  val icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) } ?: makeMissingIcon()
+  val icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) }
+    ?: UIManager.getIcon("OptionPane.errorIcon")
   val label = JLabel(title, icon, SwingConstants.CENTER)
   label.verticalTextPosition = SwingConstants.BOTTOM
   label.horizontalTextPosition = SwingConstants.CENTER
   tabbedPane.setTabComponentAt(tabbedPane.tabCount - 1, label)
-}
-
-private fun makeMissingIcon(): Icon {
-  return UIManager.getIcon("OptionPane.errorIcon")
 }
 
 private class ClippedTitleTabbedPane : JTabbedPane() {
