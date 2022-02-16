@@ -54,7 +54,7 @@ fun makeUI(): Component {
     box.add(Box.createVerticalStrut(5))
   }
 
-  val textArea = JTextArea("dummy")
+  val textArea = JTextArea("JTextArea")
   textArea.componentPopupMenu = popup2
 
   return JPanel(BorderLayout()).also {
@@ -116,7 +116,7 @@ private class TextComponentPopupMenu : JPopupMenu() {
     val tc = c as? JTextComponent ?: return
     tc.requestFocusInWindow()
     var hasSelectedText = tc.selectedText != null
-    if (tc is JTextComponent && !tc.isFocusOwner() && !hasSelectedText) {
+    if (!tc.isFocusOwner && !hasSelectedText) {
       tc.selectAll()
       hasSelectedText = true
     }
