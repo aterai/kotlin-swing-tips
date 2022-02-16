@@ -182,7 +182,9 @@ private enum class Side(
   );
 
   companion object {
-    fun getByType(cursor: Int): Side? = EnumSet.allOf(Side::class.java).first { d -> d.cursor == cursor }
+    fun getByType(cursor: Int): Side? = EnumSet.allOf(Side::class.java).first { d ->
+      d.cursor == cursor
+    }
   }
 }
 

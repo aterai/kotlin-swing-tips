@@ -126,7 +126,8 @@ private class UrlRenderer : MouseAdapter(), TableCellRenderer {
     viewRowIndex = table.rowAtPoint(pt)
     viewColumnIndex = table.columnAtPoint(pt)
     isRollover = isUrlColumn(table, viewColumnIndex) && pointInsidePrefSize(table, pt)
-    val isSameCell = viewRowIndex == prevRow && viewColumnIndex == prevCol && isRollover == prevRollover
+    val rollover = isRollover == prevRollover
+    val isSameCell = viewRowIndex == prevRow && viewColumnIndex == prevCol && rollover
     val isNotRollover = !isRollover && !prevRollover
     if (isSameCell || isNotRollover) {
       return
@@ -168,7 +169,8 @@ private class UrlRenderer : MouseAdapter(), TableCellRenderer {
     }
   }
 
-  private fun isUrlColumn(tbl: JTable, col: Int) = col >= 0 && tbl.getColumnClass(col) == URL::class.java
+  private fun isUrlColumn(tbl: JTable, col: Int) =
+    col >= 0 && tbl.getColumnClass(col) == URL::class.java
 
   // @see SwingUtilities2.pointOutsidePrefSize(...)
   private fun pointInsidePrefSize(table: JTable, p: Point): Boolean {

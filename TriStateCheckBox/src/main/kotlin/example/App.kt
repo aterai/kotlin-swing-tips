@@ -36,7 +36,8 @@ private val table = object : JTable(model) {
   protected var handler: HeaderCheckBoxHandler? = null
 
   override fun updateUI() {
-    // [JDK-6788475] Changing to Nimbus LAF and back doesn't reset look and feel of JTable completely
+    // [JDK-6788475]
+    // Changing to Nimbus LAF and back doesn't reset look and feel of JTable completely
     // https://bugs.openjdk.java.net/browse/JDK-6788475
     // XXX: set dummy ColorUIResource
     setSelectionForeground(ColorUIResource(Color.RED))
@@ -176,7 +177,7 @@ private class IndeterminateIcon : Icon {
     g2.translate(x, y)
     icon.paintIcon(c, g2, 0, 0)
     g2.paint = FOREGROUND
-    g2.fillRect(SIDE_MARGIN, (iconHeight - HEIGHT) / 2, iconWidth - SIDE_MARGIN - SIDE_MARGIN, HEIGHT)
+    g2.fillRect(MARGIN, (iconHeight - HEIGHT) / 2, iconWidth - MARGIN - MARGIN, HEIGHT)
     g2.dispose()
   }
 
@@ -185,8 +186,8 @@ private class IndeterminateIcon : Icon {
   override fun getIconHeight() = icon.iconHeight
 
   companion object {
-    private val FOREGROUND = Color.BLACK // TEST: UIManager.getColor("CheckBox.foreground");
-    private const val SIDE_MARGIN = 4
+    private val FOREGROUND = Color.BLACK // TEST: UIManager.getColor("CheckBox.foreground")
+    private const val MARGIN = 4
     private const val HEIGHT = 2
   }
 }
@@ -282,7 +283,9 @@ private class HeaderCheckBoxHandler(
       //     .map { v -> (v as Vector<*>).get(targetColumnIndex) as Boolean }
       //     .distinct()
       //     .collect(Collectors.toList())
-      val l = m.dataVector.mapNotNull { (it as? List<*>)?.get(targetColumnIndex) as? Boolean }.distinct()
+      val l = m.dataVector.mapNotNull {
+        (it as? List<*>)?.get(targetColumnIndex) as? Boolean
+      }.distinct()
       val isOnlyOneSelected = l.size == 1
       if (isOnlyOneSelected) {
         // column.setHeaderValue(if (l.get(0)) Status.SELECTED else Status.DESELECTED)

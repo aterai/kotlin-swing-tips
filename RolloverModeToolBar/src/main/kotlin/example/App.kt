@@ -23,7 +23,9 @@ fun makeUI(): Component {
   }
 
   val check = JCheckBox("setRollover")
-  check.addActionListener { e -> toolBar.isRollover = (e.source as? AbstractButton)?.isSelected == true }
+  check.addActionListener { e ->
+    toolBar.isRollover = (e.source as? AbstractButton)?.isSelected == true
+  }
   toolBar.add(Box.createGlue())
   toolBar.add(check)
 

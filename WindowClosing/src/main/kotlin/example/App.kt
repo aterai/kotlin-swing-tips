@@ -40,7 +40,9 @@ fun makeUI(): Component {
   }
 }
 
-private class SaveHandler(private val frame: Frame) : WindowAdapter(), DocumentListener, ActionListener {
+private class SaveHandler(
+  private val frame: Frame
+) : WindowAdapter(), DocumentListener, ActionListener {
   private val title = frame.title
   private val list = mutableListOf<JComponent>()
 
@@ -82,7 +84,7 @@ private class SaveHandler(private val frame: Frame) : WindowAdapter(), DocumentL
     val options = arrayOf("Save", "Discard", "Cancel")
     val retValue = JOptionPane.showOptionDialog(
       frame,
-      "<html>Save: Exit & Save Changes<br>Discard: Exit & Discard Changes<br>Cancel: Continue</html>",
+      "<html>Save: Exit & Save Changes<br>Discard: Exit & Discard Changes<br>Cancel: Continue",
       "Exit Options",
       JOptionPane.YES_NO_CANCEL_OPTION,
       JOptionPane.INFORMATION_MESSAGE,

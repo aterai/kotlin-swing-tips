@@ -21,7 +21,6 @@ import java.io.File
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.metal.MetalTabbedPaneUI
 
-
 fun makeUI(): Component {
   val sub = DnDTabbedPane().also {
     it.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT

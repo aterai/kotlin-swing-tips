@@ -13,7 +13,8 @@ import javax.swing.tree.TreePath
 
 fun makeUI(): Component {
   val tree = JTree()
-  tree.cellEditor = object : DefaultTreeCellEditor(tree, tree.cellRenderer as? DefaultTreeCellRenderer) {
+  val renderer = tree.cellRenderer as? DefaultTreeCellRenderer
+  tree.cellEditor = object : DefaultTreeCellEditor(tree, renderer) {
     override fun isCellEditable(e: EventObject?) = e !is MouseEvent && super.isCellEditable(e)
   }
   tree.isEditable = true

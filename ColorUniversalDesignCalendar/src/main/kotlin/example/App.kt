@@ -41,7 +41,8 @@ var currentLocalDate: LocalDate? = null
 
 fun updateMonthView(localDate: LocalDate?) {
   currentLocalDate = localDate?.also {
-    monthLabel.text = it.format(DateTimeFormatter.ofPattern("yyyy / MM").withLocale(Locale.getDefault()))
+    val formatter = DateTimeFormatter.ofPattern("yyyy / MM").withLocale(Locale.getDefault())
+    monthLabel.text = it.format(formatter)
     monthTable.model = CalendarViewTableModel(it)
   }
 }

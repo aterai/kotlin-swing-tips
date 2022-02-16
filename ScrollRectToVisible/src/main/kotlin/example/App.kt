@@ -68,8 +68,8 @@ fun makeUI(): Component {
       removeHierarchyListener(hierarchyListener)
       super.updateUI()
       hierarchyListener = HierarchyListener { e ->
-        val isDisplayableChanged = e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L
-        if (isDisplayableChanged && !e.component.isDisplayable) {
+        val b = e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L
+        if (b && !e.component.isDisplayable) {
           println("case DISPOSE_ON_CLOSE: hierarchyChanged")
           timer.stop()
         }

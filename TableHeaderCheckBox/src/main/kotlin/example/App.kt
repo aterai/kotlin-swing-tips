@@ -33,7 +33,8 @@ private val table = object : JTable(model) {
   private var handler: HeaderCheckBoxHandler? = null
 
   override fun updateUI() {
-    // [JDK-6788475] Changing to Nimbus LAF and back doesn't reset look and feel of JTable completely
+    // [JDK-6788475]
+    // Changing to Nimbus LAF and back doesn't reset look and feel of JTable completely
     // https://bugs.openjdk.java.net/browse/JDK-6788475
     // XXX: set dummy ColorUIResource
     setSelectionForeground(ColorUIResource(Color.RED))
@@ -129,7 +130,9 @@ private class HeaderCheckBoxHandler(
 
   private fun fireUpdateEvent(m: DefaultTableModel, column: TableColumn, status: Any): Boolean {
     return if (Status.INDETERMINATE == status) {
-      val l = m.dataVector.mapNotNull { (it as? List<*>)?.get(targetColumnIndex) as? Boolean }.distinct()
+      val l = m.dataVector.mapNotNull {
+        (it as? List<*>)?.get(targetColumnIndex) as? Boolean
+      }.distinct()
       val isOnlyOneSelected = l.size == 1
       if (isOnlyOneSelected) {
         // column.setHeaderValue(if (l.get(0)) Status.SELECTED else Status.DESELECTED)

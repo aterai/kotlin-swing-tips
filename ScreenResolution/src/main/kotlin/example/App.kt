@@ -46,7 +46,9 @@ fun makeUI(): Component {
     override fun getPreferredSize(): Dimension? {
       if (resolutionSize == null) {
         val sot = dpiScaling
-        resolutionSize = Dimension((defaultSize.width * sot).toInt(), (defaultSize.height * sot).toInt())
+        val w = (defaultSize.width * sot).toInt()
+        val h = (defaultSize.height * sot).toInt()
+        resolutionSize = Dimension(w, h)
       }
       preferredSize = resolutionSize
       return resolutionSize
