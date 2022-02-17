@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.HierarchyEvent
-// import java.awt.event.*
 import java.awt.geom.Path2D
 import java.awt.geom.Rectangle2D
 import java.beans.PropertyChangeEvent

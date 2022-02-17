@@ -110,10 +110,11 @@ private fun initButtons(flg: Boolean) {
 }
 
 private fun makeTitle(bgc: Color): Component {
-  val txt = """Wolfgang Amadeus Mozart
+  val txt = """
+    Wolfgang Amadeus Mozart
     Piano Sonata No. 11 in A major, K 331
     (Turkish Rondo)
-    """.trimMargin()
+  """.trimMargin()
   val label = JTextArea(txt)
   label.border = BorderFactory.createTitledBorder("MIDI")
   label.isEditable = false

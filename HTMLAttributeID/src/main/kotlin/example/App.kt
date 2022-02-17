@@ -74,18 +74,20 @@ private val parserAction = object : AbstractAction("ParserDelegator") {
 fun makeUI(): Component {
   editorPane.editorKit = JEditorPane.createEditorKitForContentType("text/html")
   editorPane.text = """
-<html>
-  12<span id='2'>345678</span>90
-  <p>
-    1<a href='..'>23</a>
-    45<span class='insert' id='0'>
-    6</span>
-    7<span id='1'>
-    8</span>
-    90<div class='fff' id='3'>123</div>4567890
-  </p>
-</html>
-"""
+    <html>
+      12<span id='2'>345678</span>90
+      <p>
+        1
+        <a href='..'>23</a>
+        45
+        <span class='insert' id='0'>6</span>
+        7
+        <span id='1'>8</span>
+        90
+        <div class='fff' id='3'>123</div>4567890
+      </p>
+    </html>
+  """.trimMargin()
   (editorPane.highlighter as? DefaultHighlighter)?.drawsLayeredHighlights = false
 
   val sp = JSplitPane(JSplitPane.VERTICAL_SPLIT).also {
