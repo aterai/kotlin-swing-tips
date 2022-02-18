@@ -171,9 +171,10 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
       else -> !scrollableWidth && viewPrefSize.width > extentSize.width
     }
 
+    val isVsbNever = vsbPolicy != ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
     if (hsb != null && hsbNeeded) {
       adjustForHsb(true, availR, hsbR, vpbInsets)
-      if (vsb != null && !vsbNeeded && vsbPolicy != ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER) {
+      if (vsb != null && !vsbNeeded && isVsbNever) {
 
         extentSize = viewport.toViewCoordinates(availR.size)
         vsbNeeded = viewPrefSize.height > extentSize.height
@@ -209,7 +210,7 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
           if (newHsbNeeded != hsbNeeded) {
             hsbNeeded = newHsbNeeded
             adjustForHsb(hsbNeeded, availR, hsbR, vpbInsets)
-            if (vsb != null && !vsbNeeded && vsbPolicy != ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER) {
+            if (vsb != null && !vsbNeeded && isVsbNever) {
               extentSize = viewport.toViewCoordinates(availR.size)
               vsbNeeded = viewPrefSize.height > extentSize.height
 

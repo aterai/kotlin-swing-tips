@@ -21,10 +21,11 @@ fun makeUI(): Component {
     }
   }
   textArea.addMouseListener(ml)
-
+  val scroll1 = makeScrollPane(textArea)
+  val scroll2 = makeScrollPane(JTextArea(text))
   return JPanel(GridLayout(2, 1)).also {
-    it.add(makeTitledPanel("MouseListener", makeScrollPane(textArea)))
-    it.add(makeTitledPanel("JLayer", JLayer(makeScrollPane(JTextArea(text)), ScrollBarOnHoverLayerUI())))
+    it.add(makeTitledPanel("MouseListener", scroll1))
+    it.add(makeTitledPanel("JLayer", JLayer(scroll2, ScrollBarOnHoverLayerUI())))
     it.preferredSize = Dimension(320, 240)
   }
 }

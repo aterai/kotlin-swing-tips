@@ -85,9 +85,9 @@ private fun addActionPerformed() {
       runCatching {
         val nf = get()
         when {
-          nf == null -> append(makeMessage("バックアップファイルの生成に失敗しました。", MessageType.ERROR))
-          nf.createNewFile() -> append(makeMessage(nf.name + "を生成しました。", MessageType.REGULAR))
-          else -> append(makeMessage(nf.name + "の生成に失敗しました。", MessageType.ERROR))
+          nf == null -> append(makeMessage("Backup fileの生成に失敗", MessageType.ERROR))
+          nf.createNewFile() -> append(makeMessage(nf.name + "を生成", MessageType.REGULAR))
+          else -> append(makeMessage(nf.name + "の生成に失敗", MessageType.ERROR))
         }
       }.onFailure {
         if (it is InterruptedException) {
