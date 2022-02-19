@@ -18,12 +18,10 @@ private val table = object : JTable(model) {
     val renderer = DefaultTableCellRenderer()
     val tc = getColumnModel().getColumn(2)
     tc.setCellRenderer { tbl, value, isSelected, hasFocus, row, column ->
-      val c: Component
-      progress.value = 0
       if (value is ProgressValue) {
         val current = value.progress
         val lengthOfTask = value.lengthOfTask
-        c = when {
+        when {
           current < 0 -> renderer.getTableCellRendererComponent(
             tbl, "Canceled", isSelected, hasFocus, row, column
           )
@@ -38,11 +36,10 @@ private val table = object : JTable(model) {
           )
         }
       } else {
-        c = renderer.getTableCellRendererComponent(
+        renderer.getTableCellRendererComponent(
           tbl, "Waiting...", isSelected, hasFocus, row, column
         )
       }
-      c
     }
   }
 }
