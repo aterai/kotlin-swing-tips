@@ -25,7 +25,8 @@ fun makeUI(): Component {
 
   val check = JCheckBox("JEditorPane.W3C_LENGTH_UNITS")
   check.addActionListener { e ->
-    editor.putClientProperty(JEditorPane.W3C_LENGTH_UNITS, (e.source as? JCheckBox)?.isSelected == true)
+    val b = (e.source as? JCheckBox)?.isSelected == true
+    editor.putClientProperty(JEditorPane.W3C_LENGTH_UNITS, b)
   }
 
   return JPanel(BorderLayout()).also {

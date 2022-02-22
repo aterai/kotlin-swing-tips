@@ -120,10 +120,10 @@ private class ComboKeyHandler(private val comboBox: JComboBox<String>) : KeyAdap
     }
   }
 
-  private fun setSuggestionModel(comboBox: JComboBox<String>, mdl: ComboBoxModel<String>, str: String) {
-    comboBox.model = mdl
-    comboBox.selectedIndex = -1
-    (comboBox.editor.editorComponent as? JTextField)?.text = str
+  private fun setSuggestionModel(cb: JComboBox<String>, m: ComboBoxModel<String>, txt: String) {
+    cb.model = m
+    cb.selectedIndex = -1
+    (cb.editor.editorComponent as? JTextField)?.text = txt
   }
 
   private fun getSuggestedModel(list: List<String>, text: String): ComboBoxModel<String> {

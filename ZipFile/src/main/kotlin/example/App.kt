@@ -82,16 +82,15 @@ private fun makeUnzipPanel(): Component {
 
 private fun zip(str: String) {
   val path = Paths.get(str)
-  // if (str.isEmpty() || Files.notExists(path)) { // noticeably poor performance in JDK 8
   if (str.isEmpty() || !path.toFile().exists()) {
     return
   }
   val name = path.fileName.toString() + ".zip"
   val tgt = path.resolveSibling(name)
-  // if (Files.exists(tgt)) { // noticeably poor performance in JDK 8
   if (tgt.toFile().exists()) {
     val m = "<html>$tgt already exists.<br>Do you want to overwrite it?"
-    val rv = JOptionPane.showConfirmDialog(textArea.rootPane, m, "Zip", JOptionPane.YES_NO_OPTION)
+    val c = textArea.rootPane
+    val rv = JOptionPane.showConfirmDialog(c, m, "Zip", JOptionPane.YES_NO_OPTION)
     if (rv != JOptionPane.YES_OPTION) {
       return
     }
@@ -108,10 +107,10 @@ private fun unzip(str: String) {
   makeDestDirPath(str)?.also { destDir ->
     val path = Paths.get(str)
     runCatching {
-      // if (Files.exists(destDir)) { // noticeably poor performance in JDK 8
       if (destDir.toFile().exists()) {
         val m = "<html>$destDir already exists.<br>Do you want to overwrite it?"
-        val rv = JOptionPane.showConfirmDialog(textArea.rootPane, m, "Unzip", JOptionPane.YES_NO_OPTION)
+        val c = textArea.rootPane
+        val rv = JOptionPane.showConfirmDialog(c, m, "Unzip", JOptionPane.YES_NO_OPTION)
         if (rv != JOptionPane.YES_OPTION) {
           return
         }
@@ -129,7 +128,6 @@ private fun unzip(str: String) {
 
 private fun makeDestDirPath(text: String): Path? {
   val path = Paths.get(text)
-  // if (str.isEmpty() || Files.notExists(path)) { // noticeably poor performance in JDK 8
   if (text.isEmpty() || !path.toFile().exists()) {
     return null
   }
@@ -144,7 +142,6 @@ private fun makeDestDirPath(text: String): Path? {
 private object ZipUtil {
   @Throws(IOException::class)
   fun zip(srcDir: Path, zip: Path) {
-    // try (Stream<Path> s = Files.walk(srcDir).filter(Files::isRegularFile)) { // noticeably poor performance in JDK 8
     Files.walk(srcDir)
       .filter { it.toFile().isFile }
       .use {
@@ -167,11 +164,10 @@ private object ZipUtil {
       zipFile.entries().toList().forEach { entry ->
         val name = entry.name
         val path = destDir.resolve(name)
-        if (name.endsWith("/")) { // if (Files.isDirectory(path)) {
+        if (name.endsWith("/")) {
           logger.info { "mkdir1: $path" }
           Files.createDirectories(path)
         } else {
-          // if (Files.notExists(parent)) { // noticeably poor performance in JDK 8
           path.parent?.takeUnless { it.toFile().exists() }?.also {
             logger.info { "mkdir2: $it" }
             Files.createDirectories(it)

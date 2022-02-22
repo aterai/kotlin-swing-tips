@@ -108,13 +108,13 @@ private fun makeHelpPanel(): Component {
   return p
 }
 
-private class ComboKeyHandler(private val comboBox: JComboBox<String>) : KeyAdapter() {
+private class ComboKeyHandler(private val combo: JComboBox<String>) : KeyAdapter() {
   private val list = mutableListOf<String>()
   private var shouldHide = false
 
   init {
-    for (i in 0 until comboBox.model.size) {
-      list.add(comboBox.getItemAt(i))
+    for (i in 0 until combo.model.size) {
+      list.add(combo.getItemAt(i))
     }
   }
 
@@ -123,15 +123,15 @@ private class ComboKeyHandler(private val comboBox: JComboBox<String>) : KeyAdap
       val text = (e.component as? JTextField)?.text ?: ""
       if (text.isEmpty()) {
         val m = DefaultComboBoxModel(list.toTypedArray())
-        setSuggestionModel(comboBox, m, "")
-        comboBox.hidePopup()
+        setSuggestionModel(combo, m, "")
+        combo.hidePopup()
       } else {
         val m = getSuggestedModel(list, text)
         if (m.size == 0 || shouldHide) {
-          comboBox.hidePopup()
+          combo.hidePopup()
         } else {
-          setSuggestionModel(comboBox, m, text)
-          comboBox.showPopup()
+          setSuggestionModel(combo, m, text)
+          combo.showPopup()
         }
       }
     }
@@ -152,7 +152,7 @@ private class ComboKeyHandler(private val comboBox: JComboBox<String>) : KeyAdap
         if (!list.contains(text)) {
           list.add(text)
           list.sort()
-          setSuggestionModel(comboBox, getSuggestedModel(list, text), text)
+          setSuggestionModel(combo, getSuggestedModel(list, text), text)
         }
         shouldHide = true
       }
@@ -161,10 +161,10 @@ private class ComboKeyHandler(private val comboBox: JComboBox<String>) : KeyAdap
     }
   }
 
-  private fun setSuggestionModel(comboBox: JComboBox<String>, mdl: ComboBoxModel<String>, str: String) {
-    comboBox.model = mdl
-    comboBox.selectedIndex = -1
-    (comboBox.editor.editorComponent as? JTextField)?.text = str
+  private fun setSuggestionModel(cb: JComboBox<String>, m: ComboBoxModel<String>, txt: String) {
+    cb.model = m
+    cb.selectedIndex = -1
+    (cb.editor.editorComponent as? JTextField)?.text = txt
   }
 
   private fun getSuggestedModel(list: List<String>, text: String): ComboBoxModel<String> {

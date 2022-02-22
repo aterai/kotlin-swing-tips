@@ -35,7 +35,8 @@ fun makeUI(): Component {
   lbl2.border = BorderFactory.createTitledBorder(b, "LineBreakMeasurer(condensed: 0.9)")
 
   val p = JPanel(GridLayout(0, 1))
-  val font = Font(Font.MONOSPACED, Font.PLAIN, 18).deriveFont(AffineTransform.getScaleInstance(.9, 1.0))
+  val at = AffineTransform.getScaleInstance(.9, 1.0)
+  val font = Font(Font.MONOSPACED, Font.PLAIN, 18).deriveFont(at)
   listOf<JComponent>(textArea, lbl1, lbl2)
     .forEach {
       it.font = font

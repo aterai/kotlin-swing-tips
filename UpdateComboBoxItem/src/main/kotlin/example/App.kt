@@ -113,8 +113,7 @@ private class CheckBoxCellRenderer<E : CheckableItem> : ListCellRenderer<E> {
 
 private open class CheckedComboBox<E : CheckableItem>(model: ComboBoxModel<E>) : JComboBox<E>(model) {
   private var keepOpen = false
-
-  @Transient private var listener: ActionListener? = null
+  private var listener: ActionListener? = null
 
   // constructor() : super()
 
@@ -165,7 +164,9 @@ private open class CheckedComboBox<E : CheckableItem>(model: ComboBoxModel<E>) :
   }
 }
 
-private class CheckedComboBox1<E : CheckableItem>(model: ComboBoxModel<E>) : CheckedComboBox<E>(model) {
+private class CheckedComboBox1<E : CheckableItem>(
+  model: ComboBoxModel<E>
+) : CheckedComboBox<E>(model) {
   override fun updateItem(index: Int) {
     if (isPopupVisible) {
       val item = getItemAt(index)
@@ -175,7 +176,9 @@ private class CheckedComboBox1<E : CheckableItem>(model: ComboBoxModel<E>) : Che
   }
 }
 
-private class CheckedComboBox2<E : CheckableItem>(model: ComboBoxModel<E>) : CheckedComboBox<E>(model) {
+private class CheckedComboBox2<E : CheckableItem>(
+  model: ComboBoxModel<E>
+) : CheckedComboBox<E>(model) {
   override fun updateItem(index: Int) {
     if (isPopupVisible) {
       val item = getItemAt(index)
@@ -187,7 +190,9 @@ private class CheckedComboBox2<E : CheckableItem>(model: ComboBoxModel<E>) : Che
   }
 }
 
-private class CheckedComboBox3<E : CheckableItem>(model: ComboBoxModel<E>) : CheckedComboBox<E>(model) {
+private class CheckedComboBox3<E : CheckableItem>(
+  model: ComboBoxModel<E>
+) : CheckedComboBox<E>(model) {
   override fun updateItem(index: Int) {
     if (isPopupVisible) {
       val item = getItemAt(index)
@@ -199,14 +204,17 @@ private class CheckedComboBox3<E : CheckableItem>(model: ComboBoxModel<E>) : Che
   }
 }
 
-// class CheckableComboBoxModel<E> @SafeVarargs constructor(vararg items: E) : DefaultComboBoxModel<E>(items) {
-private class CheckableComboBoxModel<E>(items: Array<E>) : DefaultComboBoxModel<E>(items) {
+private class CheckableComboBoxModel<E>(
+  items: Array<E>
+) : DefaultComboBoxModel<E>(items) {
   fun fireContentsChanged(index: Int) {
     super.fireContentsChanged(this, index, index)
   }
 }
 
-private class CheckedComboBox4<E : CheckableItem>(model: ComboBoxModel<E>) : CheckedComboBox<E>(model) {
+private class CheckedComboBox4<E : CheckableItem>(
+  model: ComboBoxModel<E>
+) : CheckedComboBox<E>(model) {
   override fun updateItem(index: Int) {
     if (isPopupVisible) {
       val item = getItemAt(index)

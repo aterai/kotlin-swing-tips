@@ -34,11 +34,11 @@ fun makeUI(): Component {
 
     override fun isCellEditable(row: Int, column: Int) = isColumnSelectable(column)
 
-    override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int) =
+    override fun prepareRenderer(r: TableCellRenderer, row: Int, column: Int) =
       if (isColumnSelectable(column)) {
-        super.prepareRenderer(renderer, row, column)
+        super.prepareRenderer(r, row, column)
       } else {
-        renderer.getTableCellRendererComponent(this, getValueAt(row, column), false, false, row, column)
+        r.getTableCellRendererComponent(this, getValueAt(row, column), false, false, row, column)
       }
   }
   table.cellSelectionEnabled = true

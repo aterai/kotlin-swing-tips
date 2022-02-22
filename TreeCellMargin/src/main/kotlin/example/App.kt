@@ -188,7 +188,9 @@ private class CompoundTreeCellRenderer : DefaultTreeCellRenderer() {
     text.foreground = fgColor
     text.background = bgColor
     text.border = if (hasFocus) focusBorder else emptyBorder
-    val c = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+    val c = super.getTreeCellRendererComponent(
+      tree, value, selected, expanded, leaf, row, hasFocus
+    )
     (c as? JLabel)?.also {
       text.text = it.text
       icon.icon = it.icon
@@ -197,7 +199,10 @@ private class CompoundTreeCellRenderer : DefaultTreeCellRenderer() {
   }
 }
 
-private class DotBorder(color: Color?, private val borderSelectionColor: Color) : LineBorder(color, 1) {
+private class DotBorder(
+  color: Color?,
+  private val borderSelectionColor: Color
+) : LineBorder(color, 1) {
   override fun isBorderOpaque() = true
 
   override fun paintBorder(
