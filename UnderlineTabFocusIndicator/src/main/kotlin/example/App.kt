@@ -1,9 +1,7 @@
 package example
 
-import com.sun.java.swing.plaf.windows.WindowsTabbedPaneUI
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.plaf.basic.BasicTabbedPaneUI
 
 fun makeUI(): Component {
   UIManager.put("TabbedPane.tabInsets", Insets(1, 4, 0, 4))
@@ -28,60 +26,31 @@ fun makeUI(): Component {
 
 private class UnderlineFocusTabbedPane : JTabbedPane() {
   override fun updateUI() {
+    UIManager.put("TabbedPane.focus", ALPHA_ZERO)
     super.updateUI()
-    // isFocusable = false
-    if (getUI() is WindowsTabbedPaneUI) {
-      setUI(object : WindowsTabbedPaneUI() {
-        override fun paintFocusIndicator(
-          g: Graphics,
-          tabPlacement: Int,
-          rects: Array<Rectangle>,
-          tabIndex: Int,
-          iconRect: Rectangle,
-          textRect: Rectangle,
-          isSelected: Boolean
-        ) {
-          super.paintFocusIndicator(g, tabPlacement, rects, tabIndex, iconRect, textRect, false)
-        }
-      })
-    } else {
-      setUI(object : BasicTabbedPaneUI() {
-        override fun paintFocusIndicator(
-          g: Graphics,
-          tabPlacement: Int,
-          rects: Array<Rectangle>,
-          tabIndex: Int,
-          iconRect: Rectangle,
-          textRect: Rectangle,
-          isSelected: Boolean
-        ) {
-          super.paintFocusIndicator(g, tabPlacement, rects, tabIndex, iconRect, textRect, false)
-        }
-      })
-    }
     addChangeListener { e ->
       (e.source as? JTabbedPane)
         ?.takeIf { it.tabCount > 0 }
         ?.also {
           val idx = it.selectedIndex
           for (i in 0 until it.tabCount) {
-            val c = it.getTabComponentAt(i)
-            if (c is JComponent) {
-              c.border = if (i == idx) SELECTED_BORDER else DEFAULT_BORDER
+            (it.getTabComponentAt(i) as? JComponent)?.also { tab ->
+              val color = if (i == idx) SELECTION_COLOR else ALPHA_ZERO
+              tab.border = BorderFactory.createMatteBorder(0, 0, 3, 0, color)
             }
           }
         }
     }
   }
 
-  override fun insertTab(title: String, icon: Icon, component: Component, tip: String, index: Int) {
+  override fun insertTab(title: String?, icon: Icon?, component: Component?, tip: String?, index: Int) {
     super.insertTab(title, icon, component, tip, index)
     setTabComponentAt(index, JLabel(title, icon, CENTER))
   }
 
   companion object {
-    private val DEFAULT_BORDER = BorderFactory.createMatteBorder(0, 0, 3, 0, Color(0x0, true))
-    private val SELECTED_BORDER = BorderFactory.createMatteBorder(0, 0, 3, 0, Color(0x00AAFF))
+    private val ALPHA_ZERO = Color(0x0, true)
+    private val SELECTION_COLOR = Color(0x00_AA_FF)
   }
 }
 
