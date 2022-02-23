@@ -32,8 +32,10 @@ private class ClippedTitleTabbedPane(tabPlacement: Int) : JTabbedPane(tabPlaceme
         revalidate()
       }
     }
-  private val tabInsets = UIManager.getInsets("TabbedPane.tabInsets") ?: getSynthTabInsets()
-  private val tabAreaInsets = UIManager.getInsets("TabbedPane.tabAreaInsets") ?: getSynthTabAreaInsets()
+  private val tabInsets = UIManager.getInsets("TabbedPane.tabInsets")
+    ?: getSynthTabInsets()
+  private val tabAreaInsets = UIManager.getInsets("TabbedPane.tabAreaInsets")
+    ?: getSynthTabAreaInsets()
 
   override fun doLayout() {
     val tabCount = tabCount
@@ -57,8 +59,8 @@ private class ClippedTitleTabbedPane(tabPlacement: Int) : JTabbedPane(tabPlaceme
     super.doLayout()
   }
 
-  override fun insertTab(title: String, icon: Icon, component: Component, tip: String?, index: Int) {
-    super.insertTab(title, icon, component, tip ?: title, index)
+  override fun insertTab(title: String?, icon: Icon?, c: Component?, tip: String?, index: Int) {
+    super.insertTab(title, icon, c, tip ?: title, index)
     setTabComponentAt(index, JLabel(title, icon, SwingConstants.LEADING))
   }
 
@@ -98,7 +100,8 @@ private class TabAreaResizeLayer : LayerUI<ClippedTitleTabbedPane>() {
 
   override fun installUI(c: JComponent) {
     super.installUI(c)
-    (c as? JLayer<*>)?.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
+    (c as? JLayer<*>)?.layerEventMask =
+      AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
   }
 
   override fun uninstallUI(c: JComponent) {

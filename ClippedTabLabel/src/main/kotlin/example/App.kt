@@ -8,7 +8,7 @@ import javax.swing.plaf.synth.SynthContext
 import javax.swing.plaf.synth.SynthLookAndFeel
 
 fun makeUI(): Component {
-  val list = listOf(makeTestTabbedPane(JTabbedPane()), makeTestTabbedPane(ClippedTitleTabbedPane()))
+  val list = listOf(makeTabbedPane(JTabbedPane()), makeTabbedPane(ClippedTitleTabbedPane()))
 
   val p = JPanel(GridLayout(list.size, 1))
   list.forEach { p.add(it) }
@@ -27,7 +27,7 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTestTabbedPane(tabbedPane: JTabbedPane) = tabbedPane.also {
+private fun makeTabbedPane(tabbedPane: JTabbedPane) = tabbedPane.also {
   it.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
   it.addTab("1111111111111111111", ColorIcon(Color.RED), JScrollPane(JTree()))
   it.addTab("2", ColorIcon(Color.GREEN), JLabel("JLabel 1"))
@@ -37,8 +37,10 @@ private fun makeTestTabbedPane(tabbedPane: JTabbedPane) = tabbedPane.also {
 }
 
 private class ClippedTitleTabbedPane : JTabbedPane() {
-  private val tabInsets = UIManager.getInsets("TabbedPane.tabInsets") ?: getSynthTabInsets()
-  private val tabAreaInsets = UIManager.getInsets("TabbedPane.tabAreaInsets") ?: getSynthTabAreaInsets()
+  private val tabInsets = UIManager.getInsets("TabbedPane.tabInsets")
+    ?: getSynthTabInsets()
+  private val tabAreaInsets = UIManager.getInsets("TabbedPane.tabAreaInsets")
+    ?: getSynthTabAreaInsets()
 
   private fun getSynthTabInsets(): Insets {
     val style = SynthLookAndFeel.getStyle(this, Region.TABBED_PANE_TAB)
@@ -74,8 +76,8 @@ private class ClippedTitleTabbedPane : JTabbedPane() {
     super.doLayout()
   }
 
-  override fun insertTab(title: String, icon: Icon, component: Component, tip: String?, index: Int) {
-    super.insertTab(title, icon, component, tip ?: title, index)
+  override fun insertTab(title: String?, icon: Icon?, c: Component?, tip: String?, index: Int) {
+    super.insertTab(title, icon, c, tip ?: title, index)
     setTabComponentAt(index, JLabel(title, icon, SwingConstants.CENTER))
   }
 

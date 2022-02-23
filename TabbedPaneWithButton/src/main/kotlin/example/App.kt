@@ -126,8 +126,8 @@ private open class ClippedTitleTabbedPane : JTabbedPane() {
     super.doLayout()
   }
 
-  override fun insertTab(title: String?, icon: Icon?, component: Component, tip: String?, index: Int) {
-    super.insertTab(title, icon, component, tip ?: title, index)
+  override fun insertTab(title: String?, icon: Icon?, c: Component?, tip: String?, index: Int) {
+    super.insertTab(title, icon, c, tip ?: title, index)
     setTabComponentAt(index, JLabel(title, icon, CENTER))
   }
 

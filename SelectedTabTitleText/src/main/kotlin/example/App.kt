@@ -61,8 +61,10 @@ private fun addTab(tabbedPane: JTabbedPane, tt: TabTitle, c: Component) {
 private data class TabTitle(val title: String, val url: URL?)
 
 private class ClippedTitleTabbedPane : JTabbedPane() {
-  private val tabInsets = UIManager.getInsets("TabbedPane.tabInsets") ?: getSynthTabInsets()
-  private val tabAreaInsets = UIManager.getInsets("TabbedPane.tabAreaInsets") ?: getSynthTabAreaInsets()
+  private val tabInsets = UIManager.getInsets("TabbedPane.tabInsets")
+    ?: getSynthTabInsets()
+  private val tabAreaInsets = UIManager.getInsets("TabbedPane.tabAreaInsets")
+    ?: getSynthTabAreaInsets()
 
   private fun getSynthTabInsets(): Insets {
     val style = SynthLookAndFeel.getStyle(this, Region.TABBED_PANE_TAB)
@@ -98,8 +100,8 @@ private class ClippedTitleTabbedPane : JTabbedPane() {
     super.doLayout()
   }
 
-  override fun insertTab(title: String?, icon: Icon?, component: Component, tip: String?, index: Int) {
-    super.insertTab(title, icon, component, tip ?: title, index)
+  override fun insertTab(title: String?, icon: Icon?, c: Component?, tip: String?, index: Int) {
+    super.insertTab(title, icon, c, tip ?: title, index)
     setTabComponentAt(index, JLabel(title, icon, SwingConstants.CENTER))
   }
 

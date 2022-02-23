@@ -83,8 +83,10 @@ fun makeUI(): Component {
 }
 
 private open class ClippedTitleTabbedPane : JTabbedPane() {
-  private val tabInsets = UIManager.getInsets("TabbedPane.tabInsets") ?: getSynthTabInsets()
-  private val tabAreaInsets = UIManager.getInsets("TabbedPane.tabAreaInsets") ?: getSynthTabAreaInsets()
+  private val tabInsets = UIManager.getInsets("TabbedPane.tabInsets")
+    ?: getSynthTabInsets()
+  private val tabAreaInsets = UIManager.getInsets("TabbedPane.tabAreaInsets")
+    ?: getSynthTabAreaInsets()
 
   private fun getSynthTabInsets(): Insets {
     val style = SynthLookAndFeel.getStyle(this, Region.TABBED_PANE_TAB)
@@ -98,8 +100,8 @@ private open class ClippedTitleTabbedPane : JTabbedPane() {
     return style.getInsets(context, null)
   }
 
-  override fun insertTab(title: String?, icon: Icon?, component: Component?, tip: String?, index: Int) {
-    super.insertTab(title, icon, component, tip ?: title, index)
+  override fun insertTab(title: String?, icon: Icon?, c: Component?, tip: String?, index: Int) {
+    super.insertTab(title, icon, c, tip ?: title, index)
     setTabComponentAt(index, ButtonTabComponent(this))
   }
 
