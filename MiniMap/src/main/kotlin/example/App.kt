@@ -28,7 +28,6 @@ val editor = JEditorPane().also {
 }
 val scroll = JScrollPane(editor)
 val label = object : JLabel() {
-  @Transient
   private var handler: MouseInputListener? = null
 
   override fun updateUI() {
@@ -42,25 +41,24 @@ val label = object : JLabel() {
 
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
-    val vport = SwingUtilities.getAncestorOfClass(JViewport::class.java, editor) as? JViewport ?: return
-    val vrect = vport.bounds // scroll.getViewportBorderBounds();
-    val erect = editor.bounds
-    val crect = SwingUtilities.calculateInnerArea(this, Rectangle())
+    val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, editor)
+    val viewport = c as? JViewport ?: return
+    val rect = SwingUtilities.calculateInnerArea(this, Rectangle())
 
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    val sy = crect.getHeight() / erect.getHeight()
+    val sy = rect.getHeight() / editor.bounds.getHeight()
     val at = AffineTransform.getScaleInstance(1.0, sy)
 
     // paint Thumb
-    val thumbRect = Rectangle(vrect)
-    thumbRect.y = vport.viewPosition.y
+    val thumbRect = Rectangle(viewport.bounds)
+    thumbRect.y = viewport.viewPosition.y
     val r = at.createTransformedShape(thumbRect).bounds
-    val y = crect.y + r.y
+    val y = rect.y + r.y
     g2.color = THUMB_COLOR
-    g2.fillRect(0, y, crect.width, r.height)
+    g2.fillRect(0, y, rect.width, r.height)
     g2.color = THUMB_COLOR.darker()
-    g2.drawRect(0, y, crect.width - 1, r.height - 1)
+    g2.drawRect(0, y, rect.width - 1, r.height - 1)
     g2.dispose()
   }
 }

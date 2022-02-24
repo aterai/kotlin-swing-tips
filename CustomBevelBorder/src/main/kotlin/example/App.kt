@@ -27,16 +27,19 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeButton(text: String, btnBorder: Border) = object : JButton("<html>JButton<br>+ $text") {
-  override fun updateUI() {
-    super.updateUI()
-    isOpaque = true
-    foreground = Color.WHITE
-    background = Color(0x5B_9B_D5)
-    isFocusPainted = false
-    isContentAreaFilled = false
-    border = btnBorder
+private fun makeButton(text: String, btnBorder: Border): JButton {
+  val button = object : JButton("<html>JButton<br>+ $text") {
+    override fun updateUI() {
+      super.updateUI()
+      isOpaque = true
+      foreground = Color.WHITE
+      background = Color(0x5B_9B_D5)
+      isFocusPainted = false
+      isContentAreaFilled = false
+    }
   }
+  button.border = btnBorder
+  return button
 }
 
 private class CustomBevelBorder(bevelType: Int) : BevelBorder(bevelType) {

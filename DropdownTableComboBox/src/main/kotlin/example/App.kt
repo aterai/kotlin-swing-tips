@@ -84,7 +84,7 @@ private class DropdownTableComboBox<E : List<Any>>(
   private val list: List<E>,
   model: DefaultTableModel
 ) : JComboBox<E>() {
-  @Transient private val highlighter = HighlightListener()
+  private val highlighter = HighlightListener()
   private val table = object : JTable() {
     override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int) =
       super.prepareRenderer(renderer, row, column).also {
@@ -126,7 +126,10 @@ private class DropdownTableComboBox<E : List<Any>>(
   }
 }
 
-private class ComboTablePopup(combo: JComboBox<*>, private val table: JTable) : BasicComboPopup(combo) {
+private class ComboTablePopup(
+  combo: JComboBox<*>,
+  private val table: JTable
+) : BasicComboPopup(combo) {
   private val scroll: JScrollPane
 
   init {

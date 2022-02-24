@@ -21,37 +21,38 @@ fun makeUI(): Component {
   }
 
   val table1 = object : JTable(model) {
-    override fun changeSelection(rowIndex: Int, columnIndex: Int, toggle: Boolean, extend: Boolean) {
-      if (convertColumnIndexToModel(columnIndex) != targetColIdx) {
+    override fun changeSelection(rowIdx: Int, colIdx: Int, toggle: Boolean, extend: Boolean) {
+      if (convertColumnIndexToModel(colIdx) != targetColIdx) {
         return
       }
-      super.changeSelection(rowIndex, columnIndex, toggle, extend)
+      super.changeSelection(rowIdx, colIdx, toggle, extend)
     }
 
     override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int) =
       if (convertColumnIndexToModel(column) != targetColIdx) {
-        renderer.getTableCellRendererComponent(this, getValueAt(row, column), false, false, row, column)
+        val value = getValueAt(row, column)
+        renderer.getTableCellRendererComponent(this, value, false, false, row, column)
       } else {
         super.prepareRenderer(renderer, row, column)
       }
   }
 
-  val table2 = object : JTable(model) {
-    override fun changeSelection(rowIndex: Int, columnIndex: Int, toggle: Boolean, extend: Boolean) {
-      if (convertColumnIndexToModel(columnIndex) != targetColIdx) {
+  val t2 = object : JTable(model) {
+    override fun changeSelection(rowIdx: Int, colIdx: Int, toggle: Boolean, extend: Boolean) {
+      if (convertColumnIndexToModel(colIdx) != targetColIdx) {
         return
       }
-      super.changeSelection(rowIndex, columnIndex, toggle, extend)
+      super.changeSelection(rowIdx, colIdx, toggle, extend)
     }
   }
-  table2.cellSelectionEnabled = true
-  table2.columnModel.selectionModel = object : DefaultListSelectionModel() {
-    override fun isSelectedIndex(index: Int) = table2.convertColumnIndexToModel(index) == targetColIdx
+  t2.cellSelectionEnabled = true
+  t2.columnModel.selectionModel = object : DefaultListSelectionModel() {
+    override fun isSelectedIndex(idx: Int) = t2.convertColumnIndexToModel(idx) == targetColIdx
   }
 
   val p = JPanel(GridLayout(0, 1))
   p.add(JScrollPane(table1))
-  p.add(JScrollPane(table2))
+  p.add(JScrollPane(t2))
 
   return JPanel(BorderLayout()).also {
     it.add(p)

@@ -34,8 +34,10 @@ fun makeUI(): Component {
 }
 
 private class BumpsFreeInternalFrameTitlePane(w: JInternalFrame) : BasicInternalFrameTitlePane(w) {
-  init {
-    border = BorderFactory.createMatteBorder(0, 0, 1, 0, MetalLookAndFeel.getPrimaryControlDarkShadow())
+  override fun updateUI() {
+    super.updateUI()
+    val bc = MetalLookAndFeel.getPrimaryControlDarkShadow()
+    border = BorderFactory.createMatteBorder(0, 0, 1, 0, bc)
   }
 
   override fun getPreferredSize(): Dimension? = super.getPreferredSize().also {

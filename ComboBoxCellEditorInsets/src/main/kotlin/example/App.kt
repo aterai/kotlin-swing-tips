@@ -63,7 +63,8 @@ fun makeUI(): Component {
 fun makeComboBox(): JComboBox<String> {
   val c = JComboBox(arrayOf("11111", "222", "3"))
   c.isEditable = true
-  c.border = BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10), c.border)
+  val outsideBorder = BorderFactory.createEmptyBorder(8, 10, 8, 10)
+  c.border = BorderFactory.createCompoundBorder(outsideBorder, c.border)
   return c
 }
 

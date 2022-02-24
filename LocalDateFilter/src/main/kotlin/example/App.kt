@@ -14,7 +14,7 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter
 
-val realLocalDate: LocalDate = LocalDate.now(ZoneId.systemDefault())
+val realDate: LocalDate = LocalDate.now(ZoneId.systemDefault())
 private val combo = JComboBox<String>()
 private val monthTable = JTable()
 var currentLocalDate: LocalDate = LocalDate.now(ZoneId.systemDefault())
@@ -31,15 +31,15 @@ fun updateMonthView(date: LocalDate) {
 }
 
 fun makeRowFilter(selected: String): RowFilter<TableModel, Int>? = when (selected) {
-  "within 3 days before" -> LocalDateFilter(realLocalDate.minusDays(3).plusDays(1), realLocalDate, 0)
-  "within 1 week before" -> LocalDateFilter(realLocalDate.minusWeeks(1).plusDays(1), realLocalDate, 0)
-  "1 week before and after" -> LocalDateFilter(realLocalDate.minusDays(3), realLocalDate.plusDays(3), 0)
-  "within 1 week after" -> LocalDateFilter(realLocalDate, realLocalDate.plusWeeks(1).minusDays(1), 0)
+  "within 3 days before" -> LocalDateFilter(realDate.minusDays(3).plusDays(1), realDate, 0)
+  "within 1 week before" -> LocalDateFilter(realDate.minusWeeks(1).plusDays(1), realDate, 0)
+  "1 week before and after" -> LocalDateFilter(realDate.minusDays(3), realDate.plusDays(3), 0)
+  "within 1 week after" -> LocalDateFilter(realDate, realDate.plusWeeks(1).minusDays(1), 0)
   else -> null
 }
 
 fun makeUI(): Component {
-  val model = CalendarViewTableModel(YearMonth.from(realLocalDate))
+  val model = CalendarViewTableModel(YearMonth.from(realDate))
   monthTable.model = model
   val sorter: TableRowSorter<out TableModel> = TableRowSorter(model)
   monthTable.rowSorter = sorter
@@ -66,7 +66,7 @@ fun makeUI(): Component {
       sorter.rowFilter = makeRowFilter(e.item.toString())
     }
   }
-  updateMonthView(realLocalDate)
+  updateMonthView(realDate)
 
   val p = JPanel(BorderLayout())
   p.add(prev, BorderLayout.WEST)
@@ -99,7 +99,7 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
       } else {
         Color.GRAY
       }
-      background = if (value.isEqual(realLocalDate)) {
+      background = if (value.isEqual(realDate)) {
         Color(0xDC_FF_DC)
       } else {
         getDayOfWeekColor(value.dayOfWeek)
@@ -115,17 +115,27 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
   }
 }
 
-private class CalendarViewTableModel(private val currentMonth: YearMonth) :
-  DefaultTableModel(currentMonth.lengthOfMonth(), 2) {
-  override fun getColumnClass(column: Int) = if (column == 0) LocalDate::class.java else Any::class.java
-
-  override fun getColumnName(column: Int): String {
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM").withLocale(Locale.getDefault())
-    return if (column == 0) currentMonth.format(formatter) else ""
+private class CalendarViewTableModel(
+  private val currentMonth: YearMonth
+) : DefaultTableModel(currentMonth.lengthOfMonth(), 2) {
+  override fun getColumnClass(column: Int) = if (column == 0) {
+    LocalDate::class.java
+  } else {
+    Any::class.java
   }
 
-  override fun getValueAt(row: Int, column: Int): Any? =
-    if (column == 0) currentMonth.atDay(1).plusDays(row.toLong()) else super.getValueAt(row, column)
+  override fun getColumnName(column: Int): String = if (column == 0) {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM")
+    currentMonth.format(formatter.withLocale(Locale.getDefault()))
+  } else {
+    ""
+  }
+
+  override fun getValueAt(row: Int, column: Int): Any? = if (column == 0) {
+    currentMonth.atDay(1).plusDays(row.toLong())
+  } else {
+    super.getValueAt(row, column)
+  }
 
   override fun isCellEditable(row: Int, column: Int) = column != 0
 }
