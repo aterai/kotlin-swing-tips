@@ -4,10 +4,9 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseEvent
 import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
-import java.io.BufferedReader
 import java.io.File
-import java.io.InputStreamReader
-import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+import java.nio.file.Paths
 import javax.script.Invocable
 import javax.script.ScriptEngine
 import javax.script.ScriptEngineManager
@@ -184,9 +183,9 @@ fun createEngine(): ScriptEngine? {
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/prettify.js") ?: return null
   return runCatching {
-    BufferedReader(InputStreamReader(url.openStream(), StandardCharsets.UTF_8)).use { r ->
+    Files.newBufferedReader(Paths.get(url.toURI())).use {
       engine.eval("var window={}, navigator=null;")
-      engine.eval(r)
+      engine.eval(it)
     }
     engine
   }.onFailure { it.printStackTrace() }.getOrNull()

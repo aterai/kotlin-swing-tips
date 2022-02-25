@@ -2,10 +2,9 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.io.BufferedInputStream
-import java.io.InputStreamReader
 import java.net.URL
-import java.nio.charset.StandardCharsets
 import java.nio.file.Files
+import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.html.HTMLEditorKit
@@ -51,7 +50,7 @@ fun makeUI(): Component {
 }
 
 private fun read(editor: JEditorPane, url: URL) = runCatching {
-  InputStreamReader(url.openStream(), StandardCharsets.UTF_8).use { editor.read(it, "html") }
+  Files.newBufferedReader(Paths.get(url.toURI())).use { editor.read(it, "html") }
 }.isSuccess
 
 private fun browseCacheFile(url: URL?) {

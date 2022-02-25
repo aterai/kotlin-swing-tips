@@ -1,9 +1,9 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.io.InputStreamReader
 import java.net.URL
-import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+import java.nio.file.Paths
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
@@ -16,8 +16,8 @@ fun makeUI(): Component {
   val url = cl.getResource("example/bar.utf8.txt")
   if (url != null) {
     runCatching {
-      InputStreamReader(url.openStream(), StandardCharsets.UTF_8).use { reader ->
-        textPane.read(reader, "text")
+      Files.newBufferedReader(Paths.get(url.toURI())).use {
+        textPane.read(it, "text")
       }
     }.onFailure {
       textPane.text = it.message
