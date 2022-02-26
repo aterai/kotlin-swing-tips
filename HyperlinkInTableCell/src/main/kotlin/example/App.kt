@@ -108,7 +108,8 @@ private class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMoti
     viewRowIndex = table.rowAtPoint(pt)
     viewColumnIndex = table.columnAtPoint(pt)
     isRollover = isUrlColumn(table, viewColumnIndex)
-    val isSameCell = viewRowIndex == prevRow && viewColumnIndex == prevCol && isRollover == prevRollover
+    val isSameView = viewRowIndex == prevRow && viewColumnIndex == prevCol
+    val isSameCell = isSameView && isRollover == prevRollover
     val isNotRollover = !isRollover && !prevRollover
     if (isSameCell || isNotRollover) {
       return

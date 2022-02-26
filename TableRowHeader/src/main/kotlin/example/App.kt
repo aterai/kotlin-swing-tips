@@ -58,7 +58,10 @@ fun makeUI(): Component {
   }
 }
 
-private class RowHeaderList<E>(model: ListModel<E>, private val table: JTable) : JList<E>(model) {
+private class RowHeaderList<E>(
+  model: ListModel<E>,
+  private val table: JTable
+) : JList<E>(model) {
   private val tableSelection: ListSelectionModel
   private val listSelection: ListSelectionModel
   private var rollOverRowIndex = -1
@@ -77,7 +80,9 @@ private class RowHeaderList<E>(model: ListModel<E>, private val table: JTable) :
     listSelection = selectionModel
   }
 
-  inner class RowHeaderRenderer<E2>(private val header: JTableHeader) : JLabel(), ListCellRenderer<E2> {
+  inner class RowHeaderRenderer<E2>(
+    private val header: JTableHeader
+  ) : JLabel(), ListCellRenderer<E2> {
     init {
       this.isOpaque = true
       // this.setBorder(UIManager.getBorder("TableHeader.cellBorder"))
@@ -158,7 +163,9 @@ private class RowHeaderList<E>(model: ListModel<E>, private val table: JTable) :
   }
 }
 
-private class RowDataModel(private val rowListModel: DefaultListModel<String>) : DefaultTableModel() {
+private class RowDataModel(
+  private val rowListModel: DefaultListModel<String>
+) : DefaultTableModel() {
   private var number = 0
 
   fun addRowData(t: RowData) {

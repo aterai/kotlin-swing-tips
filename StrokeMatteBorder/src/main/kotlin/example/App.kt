@@ -14,15 +14,16 @@ fun makeLabelTable(row: Int, column: Int): Component {
   c.weightx = 1.0
   val length = 5f
   val spacing = 5f
-  val array = floatArrayOf(length - 1f, spacing + 1f)
-  val dashedStroke = BasicStroke(1f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 2f, array, 0f)
+  val ary = floatArrayOf(length - 1f, spacing + 1f)
+  val dashedStroke = BasicStroke(1f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 2f, ary, 0f)
   val dashed = StrokeMatteBorder(0, 0, 1, 1, dashedStroke, Color.BLACK)
   c.gridy = 0
   while (c.gridy < row) {
     c.gridx = 0
+    val insideBorder = BorderFactory.createEmptyBorder(1, 1, 0, 0)
     while (c.gridx < column) {
       val l = makeLabel(String.format(Locale.ENGLISH, "%d%d", c.gridx, c.gridy))
-      l.border = BorderFactory.createCompoundBorder(dashed, BorderFactory.createEmptyBorder(1, 1, 0, 0))
+      l.border = BorderFactory.createCompoundBorder(dashed, insideBorder)
       p.add(l, c)
       c.gridx++
     }

@@ -5,8 +5,8 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 
-const val BORDER_WIDTH1 = 1
-const val BORDER_WIDTH2 = 2
+const val BW1 = 1
+const val BW2 = 2
 const val CELL_SIZE = 18
 
 fun makeUI(): Component {
@@ -32,7 +32,7 @@ fun makeUI(): Component {
     override fun getPreferredScrollableViewportSize() = super.getPreferredSize()
   }
   for (i in 0 until table.rowCount) {
-    val a = if ((i + 1) % 3 == 0) BORDER_WIDTH2 else BORDER_WIDTH1
+    val a = if ((i + 1) % 3 == 0) BW2 else BW1
     table.setRowHeight(i, CELL_SIZE + a)
   }
 
@@ -64,7 +64,11 @@ fun makeUI(): Component {
       return super.getTableCellEditorComponent(table, v, isSelected, row, column)
     }
 
-    override fun getCellEditorValue() = if (editor.text.isEmpty()) 0 else super.getCellEditorValue()
+    override fun getCellEditorValue() = if (editor.text.isEmpty()) {
+      0
+    } else {
+      super.getCellEditorValue()
+    }
   }
   table.setDefaultEditor(Number::class.java, cellEditor)
   table.setDefaultRenderer(Number::class.java, SudokuCellRenderer(data))
@@ -73,7 +77,7 @@ fun makeUI(): Component {
   m.selectionModel.selectionMode = ListSelectionModel.SINGLE_SELECTION
   for (i in 0 until m.columnCount) {
     val col = m.getColumn(i)
-    val a = if ((i + 1) % 3 == 0) BORDER_WIDTH2 else BORDER_WIDTH1
+    val a = if ((i + 1) % 3 == 0) BW2 else BW1
     col.preferredWidth = CELL_SIZE + a
     col.resizable = false
   }
@@ -82,7 +86,7 @@ fun makeUI(): Component {
     it.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
     it.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
     it.border = BorderFactory.createEmptyBorder()
-    it.viewportBorder = BorderFactory.createMatteBorder(BORDER_WIDTH2, BORDER_WIDTH2, 0, 0, Color.BLACK)
+    it.viewportBorder = BorderFactory.createMatteBorder(BW2, BW2, 0, 0, Color.BLACK)
     it.columnHeader = JViewport()
     it.columnHeader.isVisible = false
   }
@@ -95,15 +99,15 @@ fun makeUI(): Component {
 
 private class SudokuCellRenderer(src: Array<Array<Number>>) : DefaultTableCellRenderer() {
   private val bold = font.deriveFont(Font.BOLD)
-  private val b0 = BorderFactory.createMatteBorder(0, 0, BORDER_WIDTH1, BORDER_WIDTH1, Color.GRAY)
-  private val b1 = BorderFactory.createMatteBorder(0, 0, BORDER_WIDTH2, BORDER_WIDTH2, Color.BLACK)
+  private val b0 = BorderFactory.createMatteBorder(0, 0, BW1, BW1, Color.GRAY)
+  private val b1 = BorderFactory.createMatteBorder(0, 0, BW2, BW2, Color.BLACK)
   private val b2 = BorderFactory.createCompoundBorder(
-    BorderFactory.createMatteBorder(0, 0, BORDER_WIDTH2, 0, Color.BLACK),
-    BorderFactory.createMatteBorder(0, 0, 0, BORDER_WIDTH1, Color.GRAY)
+    BorderFactory.createMatteBorder(0, 0, BW2, 0, Color.BLACK),
+    BorderFactory.createMatteBorder(0, 0, 0, BW1, Color.GRAY)
   )
   private val b3 = BorderFactory.createCompoundBorder(
-    BorderFactory.createMatteBorder(0, 0, 0, BORDER_WIDTH2, Color.BLACK),
-    BorderFactory.createMatteBorder(0, 0, BORDER_WIDTH1, 0, Color.GRAY)
+    BorderFactory.createMatteBorder(0, 0, 0, BW2, Color.BLACK),
+    BorderFactory.createMatteBorder(0, 0, BW1, 0, Color.GRAY)
   )
   private val mask = Array(src.size) { i -> Array(src[i].size) { j -> src[i][j] } }
 
@@ -126,7 +130,9 @@ private class SudokuCellRenderer(src: Array<Array<Number>>) : DefaultTableCellRe
     column: Int
   ): Component {
     val isEditable = mask[row][column] == 0
-    super.getTableCellRendererComponent(table, value, isEditable && isSelected, hasFocus, row, column)
+    super.getTableCellRendererComponent(
+      table, value, isEditable && isSelected, hasFocus, row, column
+    )
     if (isEditable && value == 0) {
       this.text = " "
     }

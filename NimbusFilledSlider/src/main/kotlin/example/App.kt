@@ -37,7 +37,8 @@ fun makeUI(): Component {
       val pixelsPerValue = trackRect.width / (max - min)
       val trackLeft = trackRect.x
       val trackRight = trackRect.x + trackRect.width - 1
-      return (trackLeft + (pixelsPerValue * (value - min)).roundToInt()).coerceIn(trackLeft, trackRight)
+      val iv = trackLeft + (pixelsPerValue * (value - min)).roundToInt()
+      return iv.coerceIn(trackLeft, trackRight)
     }
   }
   val slider = JSlider()

@@ -82,7 +82,10 @@ private class ImagePreview(fc: JFileChooser) : JComponent(), PropertyChangeListe
       val newH = (tmpIcon.iconHeight * scale).roundToInt()
       val img = BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB)
       val g2 = img.createGraphics()
-      g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR)
+      g2.setRenderingHint(
+        RenderingHints.KEY_INTERPOLATION,
+        RenderingHints.VALUE_INTERPOLATION_BILINEAR
+      )
       g2.drawImage(tmpIcon.image, 0, 0, newW, newH, null)
       g2.dispose()
       ImageIcon(img)

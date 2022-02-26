@@ -41,7 +41,10 @@ private class TabThumbnailTabbedPane : JTabbedPane() {
       val newH = (d.height * SCALE).toInt()
       val image = BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB)
       val g2 = image.createGraphics()
-      g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR)
+      g2.setRenderingHint(
+        RenderingHints.KEY_INTERPOLATION,
+        RenderingHints.VALUE_INTERPOLATION_BILINEAR
+      )
       g2.scale(SCALE, SCALE)
       c.print(g2)
       g2.dispose()
@@ -69,7 +72,12 @@ private class TabThumbnailTabbedPane : JTabbedPane() {
       }
     }
     tip.component = this
-    LookAndFeel.installColorsAndFont(p, "ToolTip.background", "ToolTip.foreground", "ToolTip.font")
+    LookAndFeel.installColorsAndFont(
+      p,
+      "ToolTip.background",
+      "ToolTip.foreground",
+      "ToolTip.font"
+    )
     tip.layout = BorderLayout()
     tip.add(p)
     return tip

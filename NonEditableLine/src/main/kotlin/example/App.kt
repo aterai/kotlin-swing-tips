@@ -13,7 +13,8 @@ fun makeUI(): Component {
   val highlightPainter = DefaultHighlightPainter(Color.GRAY)
   val textArea = JTextArea()
   textArea.text = "1234567890987654321\naaa bbb ccc ddd eee\n1234567890\n1234567890987654321"
-  (textArea.document as? AbstractDocument)?.documentFilter = NonEditableLineDocumentFilter(maskRange)
+  val doc = textArea.document
+  (doc as? AbstractDocument)?.documentFilter = NonEditableLineDocumentFilter(maskRange)
   runCatching {
     val highlighter = textArea.highlighter
     val root = textArea.document.defaultRootElement
@@ -42,7 +43,13 @@ private class NonEditableLineDocumentFilter(private val maskRange: Int) : Docume
   }
 
   @Throws(BadLocationException::class)
-  override fun replace(fb: FilterBypass, offset: Int, length: Int, text: String, attrs: AttributeSet?) {
+  override fun replace(
+    fb: FilterBypass,
+    offset: Int,
+    length: Int,
+    text: String,
+    attrs: AttributeSet?
+  ) {
     if (fb.document.defaultRootElement.getElementIndex(offset) >= maskRange) {
       fb.replace(offset, length, text, attrs)
     }
