@@ -1,22 +1,21 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val tabbedPane = JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT)
-  val cl = Thread.currentThread().contextClassLoader
   // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
-  val icons = listOf(
-    "wi0009-16.png",
-    "wi0054-16.png",
-    "wi0062-16.png",
-    "wi0063-16.png",
-    "wi0124-16.png",
-    "wi0126-16.png"
-  )
-  icons.forEach { path ->
-    val icon = ImageIcon(cl.getResource("example/$path"))
+  listOf(
+    "example/wi0009-16.png",
+    "example/wi0054-16.png",
+    "example/wi0062-16.png",
+    "example/wi0063-16.png",
+    "example/wi0124-16.png",
+    "example/wi0126-16.png"
+  ).forEach { path ->
+    val icon = makeIcon(path)
     val label = ShrinkLabel(path, icon)
     tabbedPane.addTab(path, icon, JLabel(path), path)
     tabbedPane.setTabComponentAt(tabbedPane.tabCount - 1, label)
@@ -31,6 +30,12 @@ fun makeUI(): Component {
     it.add(tabbedPane)
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+private fun makeIcon(path: String): Icon {
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  return url?.openStream()?.use(ImageIO::read)?.let(::ImageIcon)
+    ?: UIManager.getIcon("html.missingImage")
 }
 
 private fun updateTabWidth(tabs: JTabbedPane) {
