@@ -70,6 +70,15 @@ fun makeUI(): Component {
 }
 
 private class HeaderRenderer : TableCellRenderer {
+  private val html = """
+    <html>
+      <table cellpadding='0' cellspacing='0'>
+        <td><input type='checkbox'></td>
+        <td>&nbsp;Check All</td>
+      </table>
+    </html>
+  """.trimIndent()
+
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -79,7 +88,7 @@ private class HeaderRenderer : TableCellRenderer {
     column: Int
   ): Component {
     val r = table.tableHeader.defaultRenderer
-    val c = r.getTableCellRendererComponent(table, INPUT, isSelected, hasFocus, row, column)
+    val c = r.getTableCellRendererComponent(table, html, isSelected, hasFocus, row, column)
     (c as? Container)?.components?.forEach {
       updateCheckBox((it as? Container)?.getComponent(0), value)
     }
@@ -108,14 +117,6 @@ private class HeaderRenderer : TableCellRenderer {
         }
       }
     }
-  }
-
-  companion object {
-    private const val INPUT = """
-      <html>
-        <table cellpadding='0' cellspacing='0'>
-        <td><input type='checkbox'><td>&nbsp;Check All
-    """
   }
 }
 
