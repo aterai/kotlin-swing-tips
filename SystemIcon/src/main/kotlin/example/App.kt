@@ -75,7 +75,8 @@ fun makeUI(): Component {
   return JPanel().also {
     it.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
     it.add(box)
-    val msg = """<html>warning: ShellFolder is internal proprietary API<br>
+    val msg = """
+      <html>warning: ShellFolder is internal proprietary API<br>
       and may be removed in a future release
     """.trimIndent()
     it.add(JLabel(msg))

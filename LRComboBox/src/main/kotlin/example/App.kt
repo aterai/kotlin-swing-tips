@@ -54,7 +54,7 @@ private data class PairItem(val leftText: String, val rightText: String) {
           </tr>
         </table>
       </html>
-    """
+    """.trimIndent()
 
   override fun toString() = htmlText
 }
