@@ -80,7 +80,9 @@ private class LabelTransferHandler : TransferHandler("Text") {
   init {
     window.add(label)
     window.background = Color(0x0, true)
-    DragSource.getDefaultDragSource().addDragSourceMotionListener { e -> window.location = e.location }
+    DragSource.getDefaultDragSource().addDragSourceMotionListener { e ->
+      window.location = e.location
+    }
   }
 
   override fun createTransferable(c: JComponent): Transferable =

@@ -19,7 +19,11 @@ fun makeUI(): Component {
     arrayOf("DDD", 0, "hhh")
   )
   val model = object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int) = if (column == 1) Number::class.java else Any::class.java
+    override fun getColumnClass(column: Int) = if (column == 1) {
+      Number::class.java
+    } else {
+      Any::class.java
+    }
 
     override fun isCellEditable(row: Int, col: Int) = col != 0 && !r4.isSelected
   }

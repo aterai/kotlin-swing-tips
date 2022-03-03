@@ -81,8 +81,12 @@ private fun makeEditButtonBar(list: List<AbstractButton>): Component {
 private fun makeButton(title: String, action: Action): AbstractButton {
   val b = JButton(action)
   b.addActionListener { e ->
-    (e.source as? Component)?.also {
-      (SwingUtilities.getAncestorOfClass(JPopupMenu::class.java, it) as? JPopupMenu)?.isVisible = false
+    val c = e.source
+    if (c is Component) {
+      val pop = SwingUtilities.getAncestorOfClass(JPopupMenu::class.java, c)
+      if (pop is JPopupMenu) {
+        pop.isVisible = false
+      }
     }
   }
   b.text = title
@@ -163,7 +167,9 @@ private class ToggleButtonBarCellIcon : Icon {
   override fun getIconHeight() = 20
 }
 
-private class EditMenuLayerUI<V : Component>(private val lastButton: AbstractButton) : LayerUI<V>() {
+private class EditMenuLayerUI<V : Component>(
+  private val lastButton: AbstractButton
+) : LayerUI<V>() {
   private var shape: Shape? = null
 
   override fun paint(g: Graphics, c: JComponent) {
@@ -178,7 +184,9 @@ private class EditMenuLayerUI<V : Component>(private val lastButton: AbstractBut
 
   override fun installUI(c: JComponent?) {
     super.installUI(c)
-    (c as? JLayer<*>)?.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
+    if (c is JLayer<*>) {
+      c.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
+    }
   }
 
   override fun uninstallUI(c: JComponent?) {

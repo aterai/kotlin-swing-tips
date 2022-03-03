@@ -14,7 +14,11 @@ fun makeUI(): Component {
   val check = JCheckBox("ComponentOrientation.RIGHT_TO_LEFT")
   check.addActionListener { e ->
     val b = (e.source as? JCheckBox)?.isSelected == true
-    val orientation = if (b) ComponentOrientation.RIGHT_TO_LEFT else ComponentOrientation.LEFT_TO_RIGHT
+    val orientation = if (b) {
+      ComponentOrientation.RIGHT_TO_LEFT
+    } else {
+      ComponentOrientation.LEFT_TO_RIGHT
+    }
     list.forEach { it.componentOrientation = orientation }
   }
 

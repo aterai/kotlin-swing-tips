@@ -29,9 +29,9 @@ fun makeUI(): Component {
     override fun updateUI() {
       cellRenderer = null
       super.updateUI()
-      val renderer = DefaultListCellRenderer()
+      val r = DefaultListCellRenderer()
       setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-        renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also { c ->
+        r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also { c ->
           (SwingUtilities.getAncestorOfClass(JViewport::class.java, list) as? JViewport)?.also {
             val rect = SwingUtilities.calculateInnerArea(it, it.bounds)
             val fm = c.getFontMetrics(c.font)
@@ -47,9 +47,9 @@ fun makeUI(): Component {
     override fun updateUI() {
       cellRenderer = null
       super.updateUI()
-      val renderer = DefaultListCellRenderer()
+      val r = DefaultListCellRenderer()
       setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-        renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also { c ->
+        r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also { c ->
           (SwingUtilities.getAncestorOfClass(JViewport::class.java, list) as? JViewport)?.also {
             val rect = SwingUtilities.calculateInnerArea(it, it.bounds)
             val fm = c.getFontMetrics(c.font)

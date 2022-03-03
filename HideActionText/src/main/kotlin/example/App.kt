@@ -42,7 +42,9 @@ fun makeUI(): Component {
   }
 
   val check = JCheckBox("setHideActionText")
-  check.addActionListener { e -> button.hideActionText = (e.source as? JCheckBox)?.isSelected == true }
+  check.addActionListener { e ->
+    button.hideActionText = (e.source as? JCheckBox)?.isSelected == true
+  }
 
   val bg = ButtonGroup()
   val box = Box.createHorizontalBox()

@@ -91,7 +91,12 @@ class MotionPathAnimationPanel : JPanel(BorderLayout()) {
     }
   }
 
-  private fun ticking(points: MutableList<Point2D>, prev: Point2D, pt: Point2D, delta: Double = 0.02) {
+  private fun ticking(
+    points: MutableList<Point2D>,
+    prev: Point2D,
+    pt: Point2D,
+    delta: Double = 0.02
+  ) {
     var fraction = delta
     val distance = prev.distance(pt)
     var p = interpolate(prev, pt, fraction)

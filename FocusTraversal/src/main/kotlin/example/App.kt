@@ -91,7 +91,9 @@ private fun debugString(label: String, c: Container) = """
     isFocusTraversalPolicyProvider: ${c.isFocusTraversalPolicyProvider}
 """.trimIndent()
 
-private class CustomFocusTraversalPolicy(private val order: List<Component>) : FocusTraversalPolicy() {
+private class CustomFocusTraversalPolicy(
+  private val order: List<Component>
+) : FocusTraversalPolicy() {
   override fun getFirstComponent(focusCycleRoot: Container) = order[0]
 
   override fun getLastComponent(focusCycleRoot: Container) = order[order.size - 1]

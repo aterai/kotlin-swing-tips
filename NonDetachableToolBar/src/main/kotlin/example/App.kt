@@ -46,7 +46,9 @@ fun makeUI(): Component {
   toolBar.add(Box.createGlue())
 
   val movable = JCheckBox("Floatable(movable)", true)
-  movable.addActionListener { e -> toolBar.isFloatable = (e.source as? JCheckBox)?.isSelected == true }
+  movable.addActionListener { e ->
+    toolBar.isFloatable = (e.source as? JCheckBox)?.isSelected == true
+  }
 
   val p = JPanel()
   p.add(movable)

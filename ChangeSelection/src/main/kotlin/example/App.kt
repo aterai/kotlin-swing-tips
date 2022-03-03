@@ -71,8 +71,9 @@ fun makeUI(): Component {
   p.add(changeSelection)
   p.add(clear)
 
+  val title = "JTable#changeSelection(int, int, boolean, boolean)"
   val panel = JPanel(BorderLayout())
-  panel.border = BorderFactory.createTitledBorder("JTable#changeSelection(int, int, boolean, boolean)")
+  panel.border = BorderFactory.createTitledBorder(title)
   panel.add(box, BorderLayout.NORTH)
   panel.add(p, BorderLayout.SOUTH)
 
