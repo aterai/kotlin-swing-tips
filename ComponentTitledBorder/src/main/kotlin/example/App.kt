@@ -15,15 +15,14 @@ fun makeUI(): Component {
   val l1 = JScrollPane(tree)
   l1.border = ComponentTitledBorder(c, l1, BorderFactory.createEtchedBorder())
 
-  val cl = Thread.currentThread().contextClassLoader
-  val icon = JLabel(ImageIcon(cl.getResource("example/16x16.png")))
-  val l2 = JLabel("<html>111111111111<br>222222222222222222")
+  val icon = JLabel(UIManager.getIcon("FileChooser.detailsViewIcon"))
+  val l2 = JLabel("<html>Icon<br>11111111111")
   l2.border = ComponentTitledBorder(icon, l2, BorderFactory.createEtchedBorder())
 
   val b = JButton("Button")
   b.isFocusPainted = false
 
-  val l3 = JLabel("33333333333333333333")
+  val l3 = JLabel("JButton")
   l3.border = ComponentTitledBorder(b, l3, BorderFactory.createEtchedBorder())
 
   return JPanel(GridLayout(3, 1, 5, 5)).also {
