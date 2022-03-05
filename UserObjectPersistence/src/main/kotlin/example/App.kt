@@ -124,7 +124,7 @@ private class IndeterminateIcon : Icon {
     g2.translate(x, y)
     icon.paintIcon(c, g2, 0, 0)
     g2.paint = FOREGROUND
-    g2.fillRect(SIDE_MARGIN, (iconHeight - HEIGHT) / 2, iconWidth - SIDE_MARGIN - SIDE_MARGIN, HEIGHT)
+    g2.fillRect(MARGIN, (iconHeight - HEIGHT) / 2, iconWidth - MARGIN - MARGIN, HEIGHT)
     g2.dispose()
   }
 
@@ -134,7 +134,7 @@ private class IndeterminateIcon : Icon {
 
   companion object {
     private val FOREGROUND = Color(0xC8_32_14_FF.toInt(), true)
-    private const val SIDE_MARGIN = 4
+    private const val MARGIN = 4
     private const val HEIGHT = 2
   }
 }
@@ -178,17 +178,17 @@ private class CheckBoxStatusUpdateListener : TreeModelListener {
     adjusting = false
   }
 
-  private fun updateParentUserObject(parent: DefaultMutableTreeNode) {
-    val list = parent.children().toList()
+  private fun updateParentUserObject(pn: DefaultMutableTreeNode) {
+    val list = pn.children().toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .map { it.userObject }
       .filterIsInstance<CheckBoxNode>()
       .map { it.status }
-    (parent.userObject as? CheckBoxNode)?.label?.also { l ->
+    (pn.userObject as? CheckBoxNode)?.label?.also { l ->
       when {
-        list.all { it == Status.DESELECTED } -> parent.userObject = CheckBoxNode(l, Status.DESELECTED)
-        list.all { it == Status.SELECTED } -> parent.userObject = CheckBoxNode(l, Status.SELECTED)
-        else -> parent.userObject = CheckBoxNode(l, Status.INDETERMINATE)
+        list.all { it == Status.DESELECTED } -> pn.userObject = CheckBoxNode(l, Status.DESELECTED)
+        list.all { it == Status.SELECTED } -> pn.userObject = CheckBoxNode(l, Status.SELECTED)
+        else -> pn.userObject = CheckBoxNode(l, Status.INDETERMINATE)
       }
     }
   }
@@ -231,7 +231,9 @@ private class CheckBoxNodeRenderer : TreeCellRenderer {
     row: Int,
     hasFocus: Boolean
   ): Component {
-    val c = renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+    val c = renderer.getTreeCellRendererComponent(
+      tree, value, selected, expanded, leaf, row, hasFocus
+    )
     c.font = tree.font
     if (value is DefaultMutableTreeNode) {
       panel.isFocusable = false

@@ -11,7 +11,7 @@ private val cancel = JButton("cancel")
 private val button = JButton("Stop 5sec")
 private val layerUI = DisableInputLayerUI<JComponent>()
 
-@Transient private var worker: Thread? = null
+private var worker: Thread? = null
 
 fun makeUI(): Component {
   cancel.isEnabled = false
@@ -22,7 +22,11 @@ fun makeUI(): Component {
     val loop = Toolkit.getDefaultToolkit().systemEventQueue.createSecondaryLoop()
     worker = object : Thread() {
       override fun run() {
-        append(runCatching { sleep(5000) }.fold(onSuccess = { "Done" }, onFailure = { "Interrupted" }))
+        val str = runCatching { sleep(5000) }.fold(
+          onSuccess = { "Done" },
+          onFailure = { "Interrupted" }
+        )
+        append(str)
         setInputBlock(false)
         loop.exit()
       }

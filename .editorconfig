@@ -9,7 +9,7 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 
 [*.{kt,kts}]
-max_line_length = 103
+max_line_length = 102
 
 [*.md]
 trim_trailing_whitespace = false

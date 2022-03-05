@@ -104,7 +104,9 @@ private class MultiLineCellRenderer : JPanel(BorderLayout()), TreeCellRenderer {
     row: Int,
     hasFocus: Boolean
   ): Component {
-    val l = renderer.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+    val l = renderer.getTreeCellRendererComponent(
+      tree, value, selected, expanded, leaf, row, hasFocus
+    )
     if (l is JLabel) {
       text.font = l.font
       text.text = l.text

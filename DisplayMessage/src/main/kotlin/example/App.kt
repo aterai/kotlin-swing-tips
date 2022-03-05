@@ -37,7 +37,8 @@ fun makeUI(): Component {
   messageButton.addActionListener {
     val icons = SystemTray.getSystemTray().trayIcons
     if (icons.isNotEmpty()) {
-      icons[0].displayMessage("caption", "text text", messageType.getItemAt(messageType.selectedIndex))
+      val type = messageType.getItemAt(messageType.selectedIndex)
+      icons[0].displayMessage("caption", "text text", type)
     }
   }
 

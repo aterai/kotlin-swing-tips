@@ -10,7 +10,8 @@ import javax.swing.text.View
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-private const val TEXT = "<html>The vertical alignment of this text gets offset when the font changes."
+private const val TEXT =
+  "<html>The vertical alignment of this text gets offset when the font changes."
 
 fun makeUI(): Component {
   val check1 = JCheckBox(TEXT)

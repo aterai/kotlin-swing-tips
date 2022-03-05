@@ -37,7 +37,8 @@ fun makeUI(): Component {
     override fun createToolTip(): JToolTip {
       val tip = super.createToolTip()
       tip.addHierarchyListener { e ->
-        if (e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L && e.component.isShowing) {
+        val b = e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L
+        if (b && e.component.isShowing) {
           panel.background = tip.background
           popup.show(tip, 0, 0)
         }

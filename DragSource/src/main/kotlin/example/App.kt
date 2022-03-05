@@ -106,7 +106,8 @@ private class TempFileTransferable(private val file: File?) : Transferable {
 
   override fun getTransferDataFlavors() = arrayOf(DataFlavor.javaFileListFlavor)
 
-  override fun isDataFlavorSupported(flavor: DataFlavor) = flavor.equals(DataFlavor.javaFileListFlavor)
+  override fun isDataFlavorSupported(flavor: DataFlavor) =
+    flavor.equals(DataFlavor.javaFileListFlavor)
 }
 
 fun main() {
