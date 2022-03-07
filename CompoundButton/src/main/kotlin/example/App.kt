@@ -40,9 +40,12 @@ private enum class ButtonLocation(val startAngle: Double) {
   WEST(-45.0)
 }
 
-private class CompoundButton(private val dim: Dimension, private val bl: ButtonLocation) : JButton() {
-  @Transient private var shape: Shape? = null
-  @Transient private var base: Shape? = null
+private class CompoundButton(
+  private val dim: Dimension,
+  private val bl: ButtonLocation
+) : JButton() {
+  private var shape: Shape? = null
+  private var base: Shape? = null
 
   init {
     icon = object : Icon {

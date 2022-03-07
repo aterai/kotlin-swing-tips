@@ -43,9 +43,9 @@ fun makeUI(): Component {
   val path = TreePath(s1.path)
   icon.imageObserver = ImageObserver { _, infoFlags, _, _, _, _ ->
     if (tree.isShowing) {
-      val cellRect = tree.getPathBounds(path)
-      if (infoFlags and (ImageObserver.FRAMEBITS or ImageObserver.ALLBITS) != 0 && cellRect != null) {
-        tree.repaint(cellRect)
+      val rect = tree.getPathBounds(path)
+      if (infoFlags and (ImageObserver.FRAMEBITS or ImageObserver.ALLBITS) != 0 && rect != null) {
+        tree.repaint(rect)
       }
       infoFlags and (ImageObserver.ALLBITS or ImageObserver.ABORT) == 0
     } else false

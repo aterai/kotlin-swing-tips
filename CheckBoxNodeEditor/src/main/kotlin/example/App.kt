@@ -59,7 +59,7 @@ class IndeterminateIcon : Icon {
     g2.translate(x, y)
     icon.paintIcon(c, g2, 0, 0)
     g2.paint = FOREGROUND
-    g2.fillRect(SIDE_MARGIN, (iconHeight - HEIGHT) / 2, iconWidth - SIDE_MARGIN - SIDE_MARGIN, HEIGHT)
+    g2.fillRect(MARGIN, (iconHeight - HEIGHT) / 2, iconWidth - MARGIN - MARGIN, HEIGHT)
     g2.dispose()
   }
 
@@ -69,7 +69,7 @@ class IndeterminateIcon : Icon {
 
   companion object {
     private val FOREGROUND = Color(0xC8_32_14_FF.toInt(), true)
-    private const val SIDE_MARGIN = 4
+    private const val MARGIN = 4
     private const val HEIGHT = 2
   }
 }
