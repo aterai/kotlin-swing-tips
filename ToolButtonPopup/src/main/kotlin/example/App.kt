@@ -21,14 +21,15 @@ fun makeUI(): Component {
   }
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/ei0021-16.png")
+  val icon = url?.let { ImageIcon(it) } ?: UIManager.getIcon("html.missingImage")
   val rigid = Box.createRigidArea(Dimension(5, 5))
 
   val toolBar = JToolBar().also {
     it.add(makeButton(pop1, "Text", null))
     it.add(rigid)
-    it.add(makeButton(pop2, "", ImageIcon(url)))
+    it.add(makeButton(pop2, "", icon))
     it.add(rigid)
-    it.add(makeButton(pop2, "Icon+Text", ImageIcon(url)))
+    it.add(makeButton(pop2, "Icon+Text", icon))
     it.add(Box.createGlue())
   }
   return JPanel(BorderLayout()).also {
@@ -37,7 +38,7 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeButton(popup: JPopupMenu, title: String, icon: ImageIcon?) =
+private fun makeButton(popup: JPopupMenu, title: String, icon: Icon?) =
   MenuToggleButton(title, icon).also { it.setPopupMenu(popup) }
 
 private class MenuArrowIcon : Icon {
