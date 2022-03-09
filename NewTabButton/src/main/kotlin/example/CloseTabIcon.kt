@@ -28,7 +28,8 @@ class PlusIcon : Icon {
     g2.translate(x, y)
 
     viewRect.bounds = c.bounds
-    OperaTabViewButtonUI.tabPainter(g2, SwingUtilities.calculateInnerArea(c as? JComponent, viewRect))
+    val r = SwingUtilities.calculateInnerArea(c as? JComponent, viewRect)
+    OperaTabViewButtonUI.tabPainter(g2, r)
 
     g2.paint = Color.WHITE
     var w = viewRect.width

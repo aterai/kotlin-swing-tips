@@ -54,9 +54,9 @@ private class DisableRightButtonSwapLayerUI : LayerUI<JScrollPane>() {
   }
 
   override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out JScrollPane>) {
-    val id = e.id
-    val c = e.component
-    if (c is JTableHeader && id == MouseEvent.MOUSE_DRAGGED && SwingUtilities.isRightMouseButton(e)) {
+    val b1 = e.component is JTableHeader
+    val b2 = e.id == MouseEvent.MOUSE_DRAGGED
+    if (b1 && b2 && SwingUtilities.isRightMouseButton(e)) {
       e.consume()
     }
   }

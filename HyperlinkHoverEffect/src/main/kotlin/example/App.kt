@@ -19,7 +19,9 @@ fun makeUI(): Component {
     when (e.eventType) {
       HyperlinkEvent.EventType.ENTERED -> setElementColor(e.sourceElement, "red")
       HyperlinkEvent.EventType.EXITED -> setElementColor(e.sourceElement, "blue")
-      HyperlinkEvent.EventType.ACTIVATED -> runCatching { Desktop.getDesktop().browse(e.url.toURI()) }
+      HyperlinkEvent.EventType.ACTIVATED -> runCatching {
+        Desktop.getDesktop().browse(e.url.toURI())
+      }
     }
     (e.source as? Component)?.also {
       it.foreground = Color.WHITE

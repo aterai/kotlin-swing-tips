@@ -70,7 +70,9 @@ private object TreeUtil {
   val COMPARE_COUNTER = AtomicInteger()
   val SWAP_COUNTER = AtomicInteger()
 
-  // // private val tnc = Comparator.comparing(Function<DefaultMutableTreeNode, Boolean> { it.isLeaf() })
+  // private val tnc = Comparator.comparing(Function<DefaultMutableTreeNode, Boolean> {
+  //   it.isLeaf()
+  // })
   // private val tnc = Comparator.comparing<DefaultMutableTreeNode, Boolean> { it.isLeaf() }
   //     .thenComparing { n -> n.getUserObject().toString() }
   private val tnc = compareBy<DefaultMutableTreeNode> { it.isLeaf }
@@ -138,7 +140,10 @@ private object TreeUtil {
       .forEach { sort3(it) }
   }
 
-  fun deepCopyTree(src: DefaultMutableTreeNode, tgt: DefaultMutableTreeNode): DefaultMutableTreeNode {
+  fun deepCopyTree(
+    src: DefaultMutableTreeNode,
+    tgt: DefaultMutableTreeNode
+  ): DefaultMutableTreeNode {
     src.children().toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .forEach {

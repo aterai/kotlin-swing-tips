@@ -20,7 +20,11 @@ private val data = arrayOf(
   arrayOf("ee", listOf(warningIcon, questionIcon))
 )
 private val model = object : DefaultTableModel(data, columnNames) {
-  override fun getColumnClass(column: Int) = if (column == 1) List::class.java else String::class.java
+  override fun getColumnClass(column: Int) = if (column == 1) {
+    List::class.java
+  } else {
+    String::class.java
+  }
 }
 private val table = object : JTable(model) {
   override fun getToolTipText(e: MouseEvent): String? {

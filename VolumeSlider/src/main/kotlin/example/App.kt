@@ -15,7 +15,7 @@ fun makeUI(): Component {
   val slider2 = JSlider(0, 100, 0)
   slider2.ui = object : MetalSliderUI() {
     override fun paintHorizontalLabel(g: Graphics, value: Int, label: Component) {
-      // [JDK-5099681] Windows/Motif L&F: JSlider should use foreground color for ticks. - Java Bug System
+      // Windows/Motif L&F: JSlider should use foreground color for ticks. - Java Bug System
       // https://bugs.openjdk.java.net/browse/JDK-5099681
       label.foreground = Color.GREEN
       super.paintHorizontalLabel(g, value, label)
@@ -85,7 +85,9 @@ private class TriSliderUI : MetalSliderUI() {
         fillLeft = if (slider.isEnabled) trackLeft + 1 else trackLeft
         fillRight = middleOfThumb
       }
-      g2.paint = GradientPaint(0f, 0f, Color(0, 100, 100), cw.toFloat(), 0f, Color(0, 255, 100), true)
+      g2.paint = GradientPaint(
+        0f, 0f, Color(0x00_64_64), cw.toFloat(), 0f, Color(0x00_FF_64), true
+      )
       g2.fillRect(0, -cy, fillRight - fillLeft, cy * 2)
       g2.paint = slider.background
       val polygon = Polygon()

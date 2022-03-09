@@ -16,7 +16,8 @@ fun makeUI(): Component {
   label2.addHierarchyListener { e ->
     val c = e.component
     val r = (c as? JComponent)?.rootPane
-    if (e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L && c.isShowing && r != null) {
+    val b = e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L
+    if (b && c.isShowing && r != null) {
       descendants(r).filterIsInstance<JButton>().firstOrNull()?.also {
         it.isFocusPainted = false
         it.text = "back2"

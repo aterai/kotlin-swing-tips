@@ -111,7 +111,11 @@ private class FocusCaret(
     isSelectionVisible = true // addHighlight
   }
 
-  override fun getSelectionPainter() = if (component.hasFocus()) selectionPainter else nonFocusPainter
+  override fun getSelectionPainter() = if (component.hasFocus()) {
+    selectionPainter
+  } else {
+    nonFocusPainter
+  }
 }
 
 private class MyEditorKit : StyledEditorKit(), ViewFactory {

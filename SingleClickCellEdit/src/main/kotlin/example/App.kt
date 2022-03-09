@@ -59,7 +59,7 @@ fun makeUI(): Component {
   }
 }
 
-private class UnderlineCellRenderer : DefaultTableCellRenderer(), MouseListener, MouseMotionListener {
+class UnderlineCellRenderer : DefaultTableCellRenderer(), MouseListener, MouseMotionListener {
   private var viewRowIndex = -1
   private var viewColumnIndex = -1
   override fun getTableCellRendererComponent(

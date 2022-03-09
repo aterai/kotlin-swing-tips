@@ -38,8 +38,12 @@ fun makeUI(): Component {
   val p = object : JPanel(BorderLayout()) {
     override fun updateUI() {
       super.updateUI()
-      fbaCheck?.isSelected = UIManager.getBoolean(TreeDraws.DRAWS_FOCUS_BORDER_AROUND_ICON.toString())
-      dfiCheck?.isSelected = UIManager.getBoolean(TreeDraws.DRAW_DASHED_FOCUS_INDICATOR.toString())
+      fbaCheck?.isSelected = UIManager.getBoolean(
+        TreeDraws.DRAWS_FOCUS_BORDER_AROUND_ICON.toString()
+      )
+      dfiCheck?.isSelected = UIManager.getBoolean(
+        TreeDraws.DRAW_DASHED_FOCUS_INDICATOR.toString()
+      )
     }
   }
   p.add(np, BorderLayout.NORTH)

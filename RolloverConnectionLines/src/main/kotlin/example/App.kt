@@ -33,15 +33,29 @@ fun makeUI(): Component {
           isExpanded: Boolean,
           hasBeenExpanded: Boolean,
           isLeaf: Boolean
-        ) = rollover && super.shouldPaintExpandControl(path, row, isExpanded, hasBeenExpanded, isLeaf)
+        ) = rollover && super.shouldPaintExpandControl(
+          path, row, isExpanded, hasBeenExpanded, isLeaf
+        )
 
-        override fun paintHorizontalLine(g: Graphics, c: JComponent, y: Int, left: Int, right: Int) {
+        override fun paintHorizontalLine(
+          g: Graphics,
+          c: JComponent,
+          y: Int,
+          left: Int,
+          right: Int
+        ) {
           if (rollover) {
             super.paintHorizontalLine(g, c, y, left, right)
           }
         }
 
-        override fun paintVerticalLine(g: Graphics, c: JComponent, x: Int, top: Int, bottom: Int) {
+        override fun paintVerticalLine(
+          g: Graphics,
+          c: JComponent,
+          x: Int,
+          top: Int,
+          bottom: Int
+        ) {
           if (rollover) {
             super.paintVerticalLine(g, c, x, top, bottom)
           }
@@ -53,7 +67,9 @@ fun makeUI(): Component {
   val sp = JSplitPane()
   sp.resizeWeight = .5
   sp.leftComponent = makeTitledPanel(JTree(), "Default")
-  sp.rightComponent = makeTitledPanel(tree, "Paint the lines that connect the nodes during rollover")
+  sp.rightComponent = makeTitledPanel(
+    tree, "Paint the lines that connect the nodes during rollover"
+  )
 
   return JPanel(BorderLayout()).also {
     it.add(sp)

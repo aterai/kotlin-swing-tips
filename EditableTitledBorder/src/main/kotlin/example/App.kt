@@ -163,7 +163,12 @@ private class EditableTitledBorder(
     insets.right += edge + TEXT_INSET_H
   }
 
-  private fun calcLabelJustification(c: Component, size: Dimension, insets: Insets, lblR: Rectangle) {
+  private fun calcLabelJustification(
+    c: Component,
+    size: Dimension,
+    insets: Insets,
+    lblR: Rectangle
+  ) {
     if (lblR.width > size.width) {
       lblR.width = size.width
     }

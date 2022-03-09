@@ -111,7 +111,9 @@ private class CheckBoxCellRenderer<E : CheckableItem> : ListCellRenderer<E> {
   }
 }
 
-private open class CheckedComboBox<E : CheckableItem>(model: ComboBoxModel<E>) : JComboBox<E>(model) {
+private open class CheckedComboBox<E : CheckableItem>(
+  model: ComboBoxModel<E>
+) : JComboBox<E>(model) {
   private var keepOpen = false
   private var listener: ActionListener? = null
 

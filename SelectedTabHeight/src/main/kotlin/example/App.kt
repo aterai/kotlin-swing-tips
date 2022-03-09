@@ -48,7 +48,11 @@ private enum class TabPlacements(val tabPlacement: Int) {
 }
 
 private class WindowsTabHeightTabbedPaneUI : WindowsTabbedPaneUI() {
-  override fun calculateTabHeight(tabPlacement: Int, tabIndex: Int, fontHeight: Int) = TAB_AREA_HEIGHT
+  override fun calculateTabHeight(
+    tabPlacement: Int,
+    tabIndex: Int,
+    fontHeight: Int
+  ) = TAB_AREA_HEIGHT
 
   override fun paintTab(
     g: Graphics,
@@ -75,7 +79,11 @@ private class WindowsTabHeightTabbedPaneUI : WindowsTabbedPaneUI() {
 }
 
 private class BasicTabHeightTabbedPaneUI : BasicTabbedPaneUI() {
-  override fun calculateTabHeight(tabPlacement: Int, tabIndex: Int, fontHeight: Int) = TAB_AREA_HEIGHT
+  override fun calculateTabHeight(
+    tabPlacement: Int,
+    tabIndex: Int,
+    fontHeight: Int
+  ) = TAB_AREA_HEIGHT
 
   override fun paintTab(
     g: Graphics,

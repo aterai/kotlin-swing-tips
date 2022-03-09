@@ -41,11 +41,17 @@ private class GridPanel(rows: Int, cols: Int) : JPanel(GridLayout(rows, cols, 0,
     return Dimension(d.width / columns, d.height / rows)
   }
 
-  override fun getScrollableUnitIncrement(visibleRect: Rectangle, orientation: Int, direction: Int) =
-    if (orientation == SwingConstants.HORIZONTAL) visibleRect.width else visibleRect.height
+  override fun getScrollableUnitIncrement(
+    visibleRect: Rectangle,
+    orientation: Int,
+    direction: Int
+  ) = if (orientation == SwingConstants.HORIZONTAL) visibleRect.width else visibleRect.height
 
-  override fun getScrollableBlockIncrement(visibleRect: Rectangle, orientation: Int, direction: Int) =
-    if (orientation == SwingConstants.HORIZONTAL) visibleRect.width else visibleRect.height
+  override fun getScrollableBlockIncrement(
+    visibleRect: Rectangle,
+    orientation: Int,
+    direction: Int
+  ) = if (orientation == SwingConstants.HORIZONTAL) visibleRect.width else visibleRect.height
 
   override fun getScrollableTracksViewportWidth() = false
 
