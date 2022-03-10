@@ -12,13 +12,12 @@ fun makeUI(): Component {
   box.add(Box.createHorizontalGlue())
   box.border = BorderFactory.createEmptyBorder(60, 10, 60, 10)
 
-  val cl = Thread.currentThread().contextClassLoader
   val buttons = listOf(
-    RoundButton(ImageIcon(cl.getResource("example/005.png")), "005d.png", "005g.png"),
-    RoundButton(ImageIcon(cl.getResource("example/003.png")), "003d.png", "003g.png"),
-    RoundButton(ImageIcon(cl.getResource("example/001.png")), "001d.png", "001g.png"),
-    RoundButton(ImageIcon(cl.getResource("example/002.png")), "002d.png", "002g.png"),
-    RoundButton(ImageIcon(cl.getResource("example/004.png")), "004d.png", "004g.png")
+    RoundButton("005.png", "005d.png", "005g.png"),
+    RoundButton("003.png", "003d.png", "003g.png"),
+    RoundButton("001.png", "001d.png", "001g.png"),
+    RoundButton("002.png", "002d.png", "002g.png"),
+    RoundButton("004.png", "004d.png", "004g.png")
   )
   // TEST: buttons = makeButtonArray2(getClass()); // Set ButtonUI
   buttons.forEach {
@@ -57,13 +56,13 @@ fun makeUI(): Component {
   }
 }
 
-private class RoundButton(icon: Icon, i2: String, i3: String) : JButton(icon) {
+private class RoundButton(i1: String, i2: String, i3: String) : JButton(makeIcon(i1)) {
   private var shape: Shape? = null
   private var base: Shape? = null
 
   init {
-    pressedIcon = ImageIcon(javaClass.getResource(i2))
-    rolloverIcon = ImageIcon(javaClass.getResource(i3))
+    pressedIcon = makeIcon(i2)
+    rolloverIcon = makeIcon(i3)
   }
 
   override fun updateUI() {
@@ -104,6 +103,11 @@ private class RoundButton(icon: Icon, i2: String, i3: String) : JButton(icon) {
     initShape()
     return shape?.contains(x.toDouble(), y.toDouble()) ?: false
   }
+}
+
+private fun makeIcon(path: String): Icon {
+  val url = Thread.currentThread().contextClassLoader.getResource("example/$path")
+  return url?.let { ImageIcon(url) } ?: UIManager.getIcon("OptionPane.errorIcon")
 }
 
 enum class ButtonAlignments(private val description: String, val alignment: Float) {
