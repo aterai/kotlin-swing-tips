@@ -216,7 +216,9 @@ internal class BreadcrumbLayerUI<V : Component?> : LayerUI<V>() {
 
   override fun installUI(c: JComponent) {
     super.installUI(c)
-    (c as? JLayer<*>)?.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
+    if (c is JLayer<*>) {
+      c.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
+    }
   }
 
   override fun uninstallUI(c: JComponent) {

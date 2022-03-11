@@ -97,8 +97,9 @@ private class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
 
   override fun installUI(c: JComponent) {
     super.installUI(c)
-    val l = c as? JLayer<*>
-    l?.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
+    if (c is JLayer<*>) {
+      c.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
+    }
   }
 
   override fun uninstallUI(c: JComponent) {
