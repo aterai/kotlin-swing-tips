@@ -19,17 +19,17 @@ fun makeUI(): Component {
 
   val p1 = JPanel(GridLayout(1, 2))
   p1.background = Color.WHITE
-  p1.add(makeLabel(makeGrayImageIcon1(image), icon, "ColorConvertOp"))
-  p1.add(makeLabel(makeGrayImageIcon2(image), icon, "TYPE_BYTE_GRAY"))
+  p1.add(makeLabel(makeGrayIcon1(image), icon, "ColorConvertOp"))
+  p1.add(makeLabel(makeGrayIcon2(image), icon, "TYPE_BYTE_GRAY"))
 
   val p3 = JPanel(GridLayout(1, 2))
-  p3.add(makeLabel(makeGrayImageIcon4(image), icon, "GrayFilter(true, 50)"))
-  p3.add(makeLabel(makeGrayImageIcon5(image), icon, "GrayImageFilter"))
+  p3.add(makeLabel(makeGrayIcon4(image), icon, "GrayFilter(true, 50)"))
+  p3.add(makeLabel(makeGrayIcon5(image), icon, "GrayImageFilter"))
   p3.background = Color.WHITE
 
   return JPanel(GridLayout(0, 1)).also {
     it.add(p1)
-    it.add(makeLabel(makeGrayImageIcon3(image), icon, "GrayFilter.createDisabledImage"))
+    it.add(makeLabel(makeGrayIcon3(image), icon, "GrayFilter.createDisabledImage"))
     it.add(p3)
     it.background = Color.WHITE
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
@@ -48,12 +48,12 @@ private fun makeMissingImage(): Image {
   return bi
 }
 
-private fun makeLabel(image: ImageIcon, orgImage: ImageIcon, str: String): JLabel {
-  val label = JLabel(str, image, SwingConstants.LEFT)
+private fun makeLabel(icon: Icon, orgIcon: Icon, str: String): JLabel {
+  val label = JLabel(str, icon, SwingConstants.LEFT)
   val ml = object : MouseAdapter() {
     private var isGray = false
     override fun mouseClicked(e: MouseEvent) {
-      (e.component as? JLabel)?.icon = if (isGray) image else orgImage
+      (e.component as? JLabel)?.icon = if (isGray) icon else orgIcon
       isGray = isGray xor true
     }
   }
@@ -61,7 +61,7 @@ private fun makeLabel(image: ImageIcon, orgImage: ImageIcon, str: String): JLabe
   return label
 }
 
-private fun makeGrayImageIcon1(img: Image): ImageIcon {
+private fun makeGrayIcon1(img: Image): Icon {
   val w = img.getWidth(null)
   val h = img.getHeight(null)
   val source = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
@@ -72,7 +72,7 @@ private fun makeGrayImageIcon1(img: Image): ImageIcon {
   return ImageIcon(ccOp.filter(source, null))
 }
 
-private fun makeGrayImageIcon2(img: Image): ImageIcon {
+private fun makeGrayIcon2(img: Image): Icon {
   val w = img.getWidth(null)
   val h = img.getHeight(null)
   val destination = BufferedImage(w, h, BufferedImage.TYPE_BYTE_GRAY)
@@ -82,14 +82,14 @@ private fun makeGrayImageIcon2(img: Image): ImageIcon {
   return ImageIcon(destination)
 }
 
-private fun makeGrayImageIcon3(img: Image) = ImageIcon(GrayFilter.createDisabledImage(img))
+private fun makeGrayIcon3(img: Image) = ImageIcon(GrayFilter.createDisabledImage(img))
 
-private fun makeGrayImageIcon4(img: Image): ImageIcon {
+private fun makeGrayIcon4(img: Image): Icon {
   val ip = FilteredImageSource(img.source, GrayFilter(true, 50))
   return ImageIcon(Toolkit.getDefaultToolkit().createImage(ip))
 }
 
-private fun makeGrayImageIcon5(img: Image): ImageIcon {
+private fun makeGrayIcon5(img: Image): Icon {
   val ip = FilteredImageSource(img.source, GrayImageFilter())
   return ImageIcon(Toolkit.getDefaultToolkit().createImage(ip))
 }
