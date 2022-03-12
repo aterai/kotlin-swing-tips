@@ -8,30 +8,44 @@ import java.awt.image.BufferedImage
 import java.awt.image.ColorConvertOp
 import java.awt.image.FilteredImageSource
 import java.awt.image.RGBImageFilter
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  val cl = Thread.currentThread().contextClassLoader
-  val orgImage = ImageIcon(cl.getResource("example/i03-10.gif"))
+  val path = "example/i03-10.gif"
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  val image = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+  val icon = ImageIcon(image)
 
   val p1 = JPanel(GridLayout(1, 2))
   p1.background = Color.WHITE
-  p1.add(makeLabel(makeGrayImageIcon1(orgImage.image), orgImage, "ColorConvertOp"))
-  p1.add(makeLabel(makeGrayImageIcon2(orgImage.image), orgImage, "TYPE_BYTE_GRAY"))
+  p1.add(makeLabel(makeGrayImageIcon1(image), icon, "ColorConvertOp"))
+  p1.add(makeLabel(makeGrayImageIcon2(image), icon, "TYPE_BYTE_GRAY"))
 
   val p3 = JPanel(GridLayout(1, 2))
-  p3.add(makeLabel(makeGrayImageIcon4(orgImage.image), orgImage, "GrayFilter(true, 50)"))
-  p3.add(makeLabel(makeGrayImageIcon5(orgImage.image), orgImage, "GrayImageFilter"))
+  p3.add(makeLabel(makeGrayImageIcon4(image), icon, "GrayFilter(true, 50)"))
+  p3.add(makeLabel(makeGrayImageIcon5(image), icon, "GrayImageFilter"))
   p3.background = Color.WHITE
 
   return JPanel(GridLayout(0, 1)).also {
     it.add(p1)
-    it.add(makeLabel(makeGrayImageIcon3(orgImage.image), orgImage, "GrayFilter.createDisabledImage"))
+    it.add(makeLabel(makeGrayImageIcon3(image), icon, "GrayFilter.createDisabledImage"))
     it.add(p3)
     it.background = Color.WHITE
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+private fun makeMissingImage(): Image {
+  val missingIcon = UIManager.getIcon("OptionPane.errorIcon")
+  val iw = missingIcon.iconWidth
+  val ih = missingIcon.iconHeight
+  val bi = BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, (32 - iw) / 2, (32 - ih) / 2)
+  g2.dispose()
+  return bi
 }
 
 private fun makeLabel(image: ImageIcon, orgImage: ImageIcon, str: String): JLabel {
