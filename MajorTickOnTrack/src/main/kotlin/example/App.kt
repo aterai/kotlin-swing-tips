@@ -44,7 +44,6 @@ fun makeUI(): Component {
 
       val fillBottom = fillTop + trackHeight
       val r = Rectangle(fillLeft, fillTop, trackWidth, fillBottom - fillTop)
-      val fillRight = getXPositionForValue(c, r, c.value.toFloat())
 
       // Paint the major tick marks on the track
       g.color = Color(0x31_A8_F8)
@@ -60,7 +59,7 @@ fun makeUI(): Component {
       }
 
       // JSlider.isFilled
-      g.color = Color(0x21_98_F6)
+      val fillRight = getXPositionForValue(c, r, c.value.toFloat())
       g.fillRoundRect(fillLeft, fillTop, fillRight - fillLeft, fillBottom - fillTop, arc, arc)
     }
 
