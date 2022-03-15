@@ -9,22 +9,13 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import kotlin.math.roundToInt
 
 fun makeUI(): Component {
-  val slider = JSlider()
-  slider.snapToTicks = true
-  slider.majorTickSpacing = 10
-  slider.addMouseMotionListener(object : MouseAdapter() {
-    override fun mouseDragged(e: MouseEvent) {
-      super.mouseDragged(e)
-      e.component.repaint()
-    }
-  })
   val d = UIDefaults()
   d["Slider.thumbWidth"] = 24
   d["Slider.thumbHeight"] = 24
   val thumbPainter = Painter { g: Graphics2D, c: JSlider, w: Int, h: Int ->
     g.paint = Color(0x21_98_F6)
     g.fillOval(0, 0, w, h)
-    val icon = NumberIcon(slider.value)
+    val icon = NumberIcon(c.value)
     val xx = (w - icon.iconWidth) / 2
     val yy = (h - icon.iconHeight) / 2
     icon.paintIcon(c, g, xx, yy)
@@ -45,16 +36,18 @@ fun makeUI(): Component {
       val trackWidth = w - thumbSize
       val fillTop = (thumbSize - trackHeight) / 2
       val fillLeft = thumbSize / 2
+
+      // Paint track
       g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
       g.color = Color(0xC6_E4_FC)
       g.fillRoundRect(fillLeft, fillTop + 2, trackWidth, trackHeight - 4, arc, arc)
+
       val fillBottom = fillTop + trackHeight
       val r = Rectangle(fillLeft, fillTop, trackWidth, fillBottom - fillTop)
       val fillRight = getXPositionForValue(c, r, c.value.toFloat())
-      g.color = Color(0x21_98_F6)
-      g.fillRoundRect(fillLeft, fillTop, fillRight - fillLeft, fillBottom - fillTop, arc, arc)
 
-      // Paints the major tick on the track
+      // Paint the major tick marks on the track
+      g.color = Color(0x31_A8_F8)
       var value = c.minimum
       while (value <= c.maximum) {
         val xpt = getXPositionForValue(c, r, value.toFloat())
@@ -65,6 +58,10 @@ fun makeUI(): Component {
         }
         value += c.majorTickSpacing
       }
+
+      // JSlider.isFilled
+      g.color = Color(0x21_98_F6)
+      g.fillRoundRect(fillLeft, fillTop, fillRight - fillLeft, fillBottom - fillTop, arc, arc)
     }
 
     private fun getXPositionForValue(slider: JSlider, trackRect: Rectangle, value: Float): Int {
@@ -74,17 +71,25 @@ fun makeUI(): Component {
       val trackLeft = trackRect.x
       val trackRight = trackRect.x + trackRect.width - 1
       val pos = trackLeft + (pixelsPerValue * (value - min)).roundToInt()
-      // return Math.max(trackLeft, Math.min(trackRight, pos))
       return pos.coerceIn(trackLeft, trackRight)
     }
   }
+  val slider = JSlider()
+  slider.snapToTicks = true
+  slider.majorTickSpacing = 10
   slider.putClientProperty("Nimbus.Overrides", d)
+  slider.addMouseMotionListener(object : MouseAdapter() {
+    override fun mouseDragged(e: MouseEvent) {
+      super.mouseDragged(e)
+      e.component.repaint()
+    }
+  })
 
   val box = Box.createVerticalBox()
   box.add(Box.createVerticalStrut(5))
   box.add(makeTitledPanel("Default", JSlider()))
   box.add(Box.createVerticalStrut(5))
-  box.add(makeTitledPanel("Nimbus JSlider.isFilled", slider))
+  box.add(makeTitledPanel("Paint major tick marks on the track", slider))
   box.add(Box.createVerticalGlue())
 
   return JPanel(GridLayout(0, 1)).also {
