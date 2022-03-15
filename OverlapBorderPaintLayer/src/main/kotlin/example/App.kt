@@ -115,7 +115,9 @@ private open class ArrowToggleButtonIcon : Icon {
       p.lineTo(w2, h2)
     }
     p.closePath()
-    return AffineTransform.getTranslateInstance(x.toDouble(), y.toDouble()).createTransformedShape(p)
+    val tx = x.toDouble()
+    val ty = y.toDouble()
+    return AffineTransform.getTranslateInstance(tx, ty).createTransformedShape(p)
   }
 
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
@@ -160,7 +162,9 @@ private class SizeIcon : ArrowToggleButtonIcon() {
     p.lineTo(w, h)
     p.lineTo(0.0, h)
     p.closePath()
-    return AffineTransform.getTranslateInstance(x.toDouble(), y.toDouble()).createTransformedShape(p)
+    val tx = x.toDouble()
+    val ty = y.toDouble()
+    return AffineTransform.getTranslateInstance(tx, ty).createTransformedShape(p)
   }
 }
 
@@ -186,7 +190,9 @@ private class RibbonToggleButtonIcon : ArrowToggleButtonIcon() {
       p.quadTo(h2, 0.0, 0.0, 0.0)
     }
     p.closePath()
-    return AffineTransform.getTranslateInstance(x.toDouble(), y.toDouble()).createTransformedShape(p)
+    val tx = x.toDouble()
+    val ty = y.toDouble()
+    return AffineTransform.getTranslateInstance(tx, ty).createTransformedShape(p)
   }
 }
 

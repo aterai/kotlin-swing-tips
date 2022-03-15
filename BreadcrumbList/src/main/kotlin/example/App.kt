@@ -112,7 +112,9 @@ private class ArrowToggleButtonBarCellIcon : Icon {
       p.lineTo(w2, h2)
     }
     p.closePath()
-    return AffineTransform.getTranslateInstance(x.toDouble(), y.toDouble()).createTransformedShape(p)
+    val tx = x.toDouble()
+    val ty = y.toDouble()
+    return AffineTransform.getTranslateInstance(tx, ty).createTransformedShape(p)
   }
 
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
