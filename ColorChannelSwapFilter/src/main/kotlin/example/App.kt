@@ -54,8 +54,8 @@ fun makeUI(): Component {
 
   return JPanel(BorderLayout()).also {
     it.addHierarchyListener { e ->
-      val isDisplayableChanged = e.changeFlags.toInt() and HierarchyEvent.DISPLAYABILITY_CHANGED != 0
-      if (isDisplayableChanged && !e.component.isDisplayable) {
+      val b = e.changeFlags.toInt() and HierarchyEvent.DISPLAYABILITY_CHANGED != 0
+      if (b && !e.component.isDisplayable) {
         println("DISPOSE_ON_CLOSE")
         worker?.cancel(true)
         worker = null

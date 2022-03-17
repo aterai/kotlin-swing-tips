@@ -54,8 +54,8 @@ fun makeUI(): Component {
   box.add(button)
   box.add(Box.createHorizontalStrut(5))
   box.addHierarchyListener { e ->
-    val isDisplayableChanged = e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L
-    if (isDisplayableChanged && !e.component.isDisplayable) {
+    val b = e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L
+    if (b && !e.component.isDisplayable) {
       worker?.cancel(true)
       worker = null
     }
