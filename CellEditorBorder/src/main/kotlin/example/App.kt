@@ -16,8 +16,8 @@ fun makeUI(): Component {
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = when (column) {
       0 -> String::class.java
-      1 -> Number::class.java
-      2 -> java.lang.Boolean::class.java
+      1 -> Int::class.javaObjectType // java.lang.Integer::class.java
+      2 -> Boolean::class.javaObjectType // java.lang.Boolean::class.java
       else -> super.getColumnClass(column)
     }
   }
@@ -27,10 +27,12 @@ fun makeUI(): Component {
         if (it is JCheckBox) {
           it.isBorderPainted = true
           it.background = getSelectionBackground()
-        } else if (it is JComponent && Number::class.java.isAssignableFrom(getColumnClass(column))) {
+        } else if (it is JComponent && isNumber(getColumnClass(column))) {
           it.border = BorderFactory.createLineBorder(Color.GREEN, 2)
         }
       }
+
+    private fun isNumber(clz: Class<*>) = Number::class.java.isAssignableFrom(clz)
   }
   table.autoCreateRowSorter = true
   table.fillsViewportHeight = true
