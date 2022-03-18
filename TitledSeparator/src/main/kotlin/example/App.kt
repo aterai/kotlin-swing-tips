@@ -55,7 +55,11 @@ private class TitledSeparator(
     border = b
   }
 
-  override fun getMaximumSize() = Dimension(Short.MAX_VALUE.toInt(), super.getPreferredSize().height)
+  override fun getMaximumSize(): Dimension? {
+    val d = super.getPreferredSize()
+    d?.width = Short.MAX_VALUE.toInt()
+    return d
+  }
 
   override fun updateUI() {
     super.updateUI()

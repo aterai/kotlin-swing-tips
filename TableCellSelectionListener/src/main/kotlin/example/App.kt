@@ -69,9 +69,9 @@ fun makeUI(): Component {
   }
 
   val table3 = object : JTable(model) {
-    override fun changeSelection(rowIndex: Int, columnIndex: Int, toggle: Boolean, extend: Boolean) {
-      super.changeSelection(rowIndex, columnIndex, toggle, extend)
-      textArea.append("changeSelection: $rowIndex, $columnIndex\n")
+    override fun changeSelection(rowIndex: Int, colIndex: Int, toggle: Boolean, extend: Boolean) {
+      super.changeSelection(rowIndex, colIndex, toggle, extend)
+      textArea.append("changeSelection: $rowIndex, $colIndex\n")
       textArea.caretPosition = textArea.document.length
     }
   }

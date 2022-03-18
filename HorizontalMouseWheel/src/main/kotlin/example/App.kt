@@ -31,7 +31,8 @@ fun makeUI(): Component {
   val hsb = scroll.horizontalScrollBar
   hsb.unitIncrement = 10
   hsb.addMouseWheelListener { e ->
-    (SwingUtilities.getAncestorOfClass(JScrollPane::class.java, e.component) as? JScrollPane)?.also {
+    val c = e.component
+    (SwingUtilities.getAncestorOfClass(JScrollPane::class.java, c) as? JScrollPane)?.also {
       val viewport = it.viewport
       val vp = viewport.viewPosition
       val d = hsb.unitIncrement * e.wheelRotation

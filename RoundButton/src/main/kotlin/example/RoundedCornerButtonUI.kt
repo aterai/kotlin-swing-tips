@@ -96,14 +96,14 @@ class RoundedCornerButtonUI : BasicButtonUI() {
   private fun initShape(c: Component) {
     if (c.bounds != base) {
       base = c.bounds
-      shape = RoundRectangle2D.Double(0.0, 0.0, c.width - 1.0, c.height - 1.0, ARC_WIDTH, ARC_HEIGHT)
+      shape = RoundRectangle2D.Double(0.0, 0.0, c.width - 1.0, c.height - 1.0, ARC, ARC)
       border = RoundRectangle2D.Double(
         FOCUS_STROKE,
         FOCUS_STROKE,
         c.width - 1 - FOCUS_STROKE * 2,
         c.height - 1 - FOCUS_STROKE * 2,
-        ARC_WIDTH,
-        ARC_HEIGHT
+        ARC,
+        ARC
       )
     }
   }
@@ -116,8 +116,7 @@ class RoundedCornerButtonUI : BasicButtonUI() {
   }
 
   companion object {
-    private const val ARC_WIDTH = 16.0
-    private const val ARC_HEIGHT = 16.0
+    private const val ARC = 16.0
     private const val FOCUS_STROKE = 2.0
   }
 }

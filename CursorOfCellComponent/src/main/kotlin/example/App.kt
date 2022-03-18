@@ -40,7 +40,8 @@ private class LinkCellList<E>(model: ListModel<E>) : JList<E>(model) {
     }
     prevIndex = i
     pt.translate(-r.x, -r.y)
-    cursor = SwingUtilities.getDeepestComponentAt(c, pt.x, pt.y)?.cursor ?: Cursor.getDefaultCursor()
+    val child = SwingUtilities.getDeepestComponentAt(c, pt.x, pt.y)
+    cursor = child?.cursor ?: Cursor.getDefaultCursor()
   }
 }
 

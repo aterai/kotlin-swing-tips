@@ -7,7 +7,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.html.HTMLDocument
 import javax.swing.text.html.HTMLEditorKit
 
-private const val HTML_TEXT = "<html><body>head<table id='log' border='1'></table>tail</body></html>"
+private const val HTML_TEXT = "<html><body>head<table id='log' border='1'></table>tail</body>"
 private const val ROW_TEXT = "<tr bgColor='%s'><td>%s</td><td>%s</td></tr>"
 
 fun makeUI(): Component {

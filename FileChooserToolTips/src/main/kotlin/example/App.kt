@@ -33,7 +33,8 @@ fun makeUI(): Component {
   button3.addActionListener { e ->
     val key = "viewTypeDetails"
     val chooser = JFileChooser()
-    chooser.actionMap[key]?.actionPerformed(ActionEvent(e.source, ActionEvent.ACTION_PERFORMED, key))
+    val src = e.source
+    chooser.actionMap[key]?.actionPerformed(ActionEvent(src, ActionEvent.ACTION_PERFORMED, key))
     descendants(chooser)
       .filterIsInstance<JTable>()
       .first().setDefaultRenderer(Any::class.java, TooltipTableCellRenderer())

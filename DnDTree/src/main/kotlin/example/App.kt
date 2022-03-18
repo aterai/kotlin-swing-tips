@@ -172,7 +172,9 @@ private class DnDTree : JTree() {
         isTargetNode = value == dropTargetNode
         isTargetNodeLeaf = isTargetNode && value.isLeaf
       }
-      return super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+      return super.getTreeCellRendererComponent(
+        tree, value, selected, expanded, leaf, row, hasFocus
+      )
     }
 
     override fun paintComponent(g: Graphics) {

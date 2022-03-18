@@ -42,7 +42,10 @@ private enum class QuadrantRotate(val numQuadrants: Int) {
   CLOCKWISE(1), HORIZONTAL_FLIP(2), COUNTER_CLOCKWISE(-1);
 }
 
-private class QuadrantRotateIcon(private val icon: Icon, private val rotate: QuadrantRotate) : Icon {
+private class QuadrantRotateIcon(
+  private val icon: Icon,
+  private val rotate: QuadrantRotate
+) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val w = icon.iconWidth
     val h = icon.iconHeight
