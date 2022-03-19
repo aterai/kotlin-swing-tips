@@ -28,10 +28,10 @@ fun makeUI(): Component {
 
   val columnNames = arrayOf("Default", "DocumentFilter", "InputVerifier", "JFormattedTextField")
   val model = object : DefaultTableModel(columnNames, 10) {
-    override fun getColumnClass(column: Int) = Number::class.java
+    override fun getColumnClass(column: Int) = Int::class.javaObjectType
   }
   val table = object : JTable(model) {
-    override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int): Component {
+    override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int): Component? {
       val c = super.prepareEditor(editor, row, column)
       (c as? JComponent)?.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
       return c
