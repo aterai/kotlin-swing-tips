@@ -2,6 +2,7 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.geom.Path2D
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
@@ -21,14 +22,13 @@ fun makeUI(): Component {
     p.add(it)
   }
 
-  val cl = Thread.currentThread().contextClassLoader
-  val r4 = makeRadioButton("test1.jpg", ImageIcon(cl.getResource("example/test1.jpg")))
+  val r4 = makeRadioButton("test1.jpg", makeIcon("example/test1.jpg"))
   r4.selectedIcon = SelectedIcon(r4.icon, Color.GREEN)
 
-  val r5 = makeRadioButton("test2.jpg", ImageIcon(cl.getResource("example/test2.jpg")))
+  val r5 = makeRadioButton("test2.jpg", makeIcon("example/test2.jpg"))
   r5.selectedIcon = SelectedIcon(r5.icon, Color.BLUE)
 
-  val r6 = makeRadioButton("test3.jpg", ImageIcon(cl.getResource("example/test3.jpg")))
+  val r6 = makeRadioButton("test3.jpg", makeIcon("example/test3.jpg"))
   r6.selectedIcon = SelectedIcon(r6.icon, Color.RED)
 
   val bg2 = ButtonGroup()
@@ -45,6 +45,12 @@ private fun makeRadioButton(text: String, icon: Icon) = JRadioButton(text, icon)
   it.verticalTextPosition = SwingConstants.BOTTOM
   it.horizontalAlignment = SwingConstants.CENTER
   it.horizontalTextPosition = SwingConstants.CENTER
+}
+
+private fun makeIcon(path: String): Icon {
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  return url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) }
+    ?: UIManager.getIcon("OptionPane.errorIcon")
 }
 
 private class ColorIcon(private val color: Color) : Icon {
