@@ -43,7 +43,7 @@ private fun makeTable(model: TableModel) = object : JTable(model) {
     super.updateUI()
     updateRenderer()
     val checkBox = makeBooleanEditor(this)
-    setDefaultEditor(java.lang.Boolean::class.java, DefaultCellEditor(checkBox))
+    setDefaultEditor(Boolean::class.javaObjectType, DefaultCellEditor(checkBox))
   }
 
   private fun updateRenderer() {

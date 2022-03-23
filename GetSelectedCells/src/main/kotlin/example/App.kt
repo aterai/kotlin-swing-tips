@@ -28,16 +28,16 @@ fun makeUI(): Component {
   )
 
   val model = object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int) = java.lang.Boolean::class.java
+    override fun getColumnClass(column: Int) = Boolean::class.javaObjectType
   }
 
   val table = object : JTable(model) {
     override fun getPreferredScrollableViewportSize() = super.getPreferredSize()
 
     override fun updateUI() {
-      setDefaultEditor(java.lang.Boolean::class.java, null)
+      setDefaultEditor(Boolean::class.javaObjectType, null)
       super.updateUI()
-      setDefaultEditor(java.lang.Boolean::class.java, BooleanEditor())
+      setDefaultEditor(Boolean::class.javaObjectType, BooleanEditor())
     }
   }
 

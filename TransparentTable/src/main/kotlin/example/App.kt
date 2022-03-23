@@ -50,7 +50,7 @@ fun makeUI(): Component {
   table.rowSelectionAllowed = true
   table.fillsViewportHeight = true
   table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
-  table.setDefaultRenderer(java.lang.Boolean::class.java, TranslucentBooleanRenderer())
+  table.setDefaultRenderer(Boolean::class.javaObjectType, TranslucentBooleanRenderer())
   table.isOpaque = false
   table.background = alphaZero
 

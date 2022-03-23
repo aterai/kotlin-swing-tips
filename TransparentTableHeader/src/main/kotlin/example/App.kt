@@ -53,10 +53,10 @@ fun makeUI(): Component {
   }
   checkBox.isOpaque = false
   checkBox.horizontalAlignment = SwingConstants.CENTER
-  table.setDefaultEditor(java.lang.Boolean::class.java, DefaultCellEditor(checkBox))
+  table.setDefaultEditor(Boolean::class.javaObjectType, DefaultCellEditor(checkBox))
 
   table.setDefaultRenderer(Any::class.java, TranslucentObjectRenderer())
-  table.setDefaultRenderer(java.lang.Boolean::class.java, TranslucentBooleanRenderer())
+  table.setDefaultRenderer(Boolean::class.javaObjectType, TranslucentBooleanRenderer())
   table.isOpaque = false
   table.background = alphaZero
   // table.gridColor = alphaZero

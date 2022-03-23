@@ -21,17 +21,19 @@ fun makeUI(): Component {
     arrayOf("fff", false)
   )
   val model = object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int) =
-      if (column == 1) java.lang.Boolean::class.java else String::class.java
-    // not work: if (column == 1) Boolean::class.java else String::class.java
+    override fun getColumnClass(column: Int) = if (column == 1) {
+      Boolean::class.javaObjectType
+    } else {
+      String::class.java
+    }
 
     override fun isCellEditable(row: Int, column: Int) = column == 1
   }
   val table = object : JTable(model) {
     override fun updateUI() {
-      setDefaultEditor(java.lang.Boolean::class.java, null)
+      setDefaultEditor(Boolean::class.javaObjectType, null)
       super.updateUI()
-      setDefaultEditor(java.lang.Boolean::class.java, CheckBoxPanelEditor())
+      setDefaultEditor(Boolean::class.javaObjectType, CheckBoxPanelEditor())
     }
   }
   table.putClientProperty("terminateEditOnFocusLost", true)

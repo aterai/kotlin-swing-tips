@@ -9,7 +9,7 @@ import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 
 private val model = object : DefaultTableModel(4, 3) {
-  override fun getColumnClass(column: Int) = java.lang.Boolean::class.java
+  override fun getColumnClass(column: Int) = Boolean::class.javaObjectType
 }
 private val table = object : JTable(model) {
   private val iconIns = Insets(4, 4, 4, 4)

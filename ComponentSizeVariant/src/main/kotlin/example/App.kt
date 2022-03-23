@@ -19,7 +19,7 @@ fun makeUI(): Component {
   val table = JTable(model)
   table.autoCreateRowSorter = true
 
-  val r = table.getDefaultRenderer(java.lang.Boolean::class.java)
+  val r = table.getDefaultRenderer(Boolean::class.javaObjectType)
   (r as? JCheckBox)?.putClientProperty("JComponent.sizeVariant", "mini")
 
   val p1 = JPanel(GridLayout(2, 1))
