@@ -28,7 +28,7 @@ private val table = object : JTable(model) {
     addMouseMotionListener(highlighter)
     setDefaultRenderer(Any::class.java, null)
     setDefaultRenderer(Number::class.java, null)
-    setDefaultRenderer(java.lang.Boolean::class.java, null)
+    setDefaultRenderer(Boolean::class.javaObjectType, null)
     super.updateUI()
     val hl = HighlightListener()
     highlighter = hl
@@ -36,7 +36,7 @@ private val table = object : JTable(model) {
     addMouseMotionListener(hl)
     setDefaultRenderer(Any::class.java, RolloverDefaultTableCellRenderer(hl))
     setDefaultRenderer(Number::class.java, RolloverNumberRenderer(hl))
-    setDefaultRenderer(java.lang.Boolean::class.java, RolloverBooleanRenderer(hl))
+    setDefaultRenderer(Boolean::class.javaObjectType, RolloverBooleanRenderer(hl))
   }
 
   override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int) =

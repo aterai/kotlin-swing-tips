@@ -23,7 +23,7 @@ fun makeUI(): Component {
   val model = object : DefaultTableModel(null, columnNames) {
     override fun getColumnClass(column: Int) = when (column) {
       0 -> Number::class.java
-      2 -> java.lang.Boolean::class.java
+      2 -> Boolean::class.javaObjectType
       else -> String::class.java
     }
   }
