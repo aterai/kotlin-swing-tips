@@ -10,7 +10,7 @@ import javax.swing.undo.UndoableEditSupport
 
 private const val BIT_LENGTH = 72
 private val ZERO_PAD = "0".repeat(BIT_LENGTH)
-private var status = BitSet.valueOf(longArrayOf(java.lang.Long.valueOf("111000111", 2)))
+private var status = BitSet.valueOf(longArrayOf("111000111".toLong(2)))
 private val undoSupport = UndoableEditSupport()
 private val label = JLabel(print(status))
 private val panel = JPanel(GridLayout(0, 8))
