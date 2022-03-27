@@ -53,12 +53,7 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeSpinnerNumberModel() = SpinnerNumberModel(
-  java.lang.Double.valueOf(10.0),
-  java.lang.Double.valueOf(0.0),
-  java.lang.Double.valueOf(100.0),
-  java.lang.Double.valueOf(1.0)
-)
+private fun makeSpinnerNumberModel() = SpinnerNumberModel(10.0, 0.0, 100.0, 1.0)
 
 private fun makeSpinner1(m: SpinnerNumberModel) = JSpinner(m).also {
   getJFormattedTextField(it)?.also { ftf ->
