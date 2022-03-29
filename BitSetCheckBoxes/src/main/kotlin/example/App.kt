@@ -96,7 +96,7 @@ private class StatusEdit(
 private fun print(bitSet: BitSet): String {
   val buf = StringBuilder()
   for (lv in bitSet.toLongArray()) {
-    buf.insert(0, java.lang.Long.toUnsignedString(lv, 2))
+    buf.insert(0, lv.toULong().toString(2))
   }
   val b = buf.toString()
   val count = bitSet.cardinality()
