@@ -19,7 +19,8 @@ fun makeUI(): Component {
   if (splitPane.ui is BasicSplitPaneUI) {
     runCatching {
       splitPane.dividerLocation = 0
-      val type = java.lang.Boolean.TYPE
+      // val type = java.lang.Boolean.TYPE
+      val type = Boolean::class.javaPrimitiveType
       val m = BasicSplitPaneUI::class.java.getDeclaredMethod("setKeepHidden", type)
       m.isAccessible = true
       m.invoke(splitPane.ui, true)
