@@ -155,17 +155,17 @@ private class ComboTablePopup(
     border = BorderFactory.createEmptyBorder()
   }
 
-  override fun show() {
-    if (isEnabled) {
+  override fun togglePopup() {
+    if (!isVisible) {
       val ins = scroll.insets
-      val tableHt = table.preferredSize.height
-      val headerHt = table.tableHeader.preferredSize.height
-      scroll.preferredSize = Dimension(240, tableHt + headerHt + ins.top + ins.bottom)
+      val tableHeight = table.preferredSize.height
+      val headerHeight = table.tableHeader.preferredSize.height
+      val scrollHeight = tableHeight + headerHeight + ins.top + ins.bottom
+      scroll.preferredSize = Dimension(240, scrollHeight)
       super.removeAll()
       super.add(scroll)
-      setRowSelection(comboBox.selectedIndex)
-      super.show(comboBox, 0, comboBox.bounds.height)
     }
+    super.togglePopup()
   }
 
   private fun setRowSelection(index: Int) {
