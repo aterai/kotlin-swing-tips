@@ -3,17 +3,21 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.awt.image.BufferedImage
 import java.awt.image.FilteredImageSource
 import java.awt.image.ImageFilter
 import java.awt.image.ImageProducer
 import java.awt.image.RGBImageFilter
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  val cl = Thread.currentThread().contextClassLoader
   // http://www.freeiconsdownload.com/Free_Downloads.asp?id=60
-  val defaultIcon = ImageIcon(cl.getResource("example/31g.png"))
-  val ip = defaultIcon.image.source
+  val path = "example/31g.png"
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+  val defaultIcon = ImageIcon(img)
+  val ip = img.source
   val p = JPanel(GridLayout(2, 2, 4, 4))
 
   val list1 = listOf(
@@ -57,6 +61,17 @@ fun makeUI(): Component {
 
   p.preferredSize = Dimension(320, 240)
   return p
+}
+
+private fun makeMissingImage(): BufferedImage {
+  val missingIcon = UIManager.getIcon("html.missingImage")
+  val iw = missingIcon.iconWidth
+  val ih = missingIcon.iconHeight
+  val bi = BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, (16 - iw) / 2, (16 - ih) / 2)
+  g2.dispose()
+  return bi
 }
 
 private fun makeStarRatingPanel(
