@@ -13,14 +13,12 @@ import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  val image1 = makeImageIcon("example/favicon.png")
-  val image2 = makeImageIcon("example/16x16.png")
-  val rss = makeImageIcon("example/feed-icon-14x14.png") // http://feedicons.com/
-
+  val image1 = makeImage("example/favicon.png")
+  val image2 = makeImage("example/16x16.png")
   val combo01 = JComboBox(makeModel(image1, image2))
   initComboBox(combo01)
 
-  val combo02 = SiteItemComboBox(makeModel(image1, image2), rss)
+  val combo02 = SiteItemComboBox(makeModel(image1, image2))
   initComboBox(combo02)
 
   val box = Box.createVerticalBox()
@@ -39,10 +37,9 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeImageIcon(path: String): ImageIcon {
+private fun makeImage(path: String): Image {
   val url = Thread.currentThread().contextClassLoader.getResource(path)
-  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
-  return ImageIcon(img)
+  return url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
 }
 
 private fun makeMissingImage(): BufferedImage {
@@ -56,7 +53,7 @@ private fun makeMissingImage(): BufferedImage {
   return bi
 }
 
-private fun makeModel(i1: Icon, i2: Icon) = DefaultComboBoxModel<SiteItem>().also {
+private fun makeModel(i1: Image, i2: Image) = DefaultComboBoxModel<SiteItem>().also {
   it.addElement(SiteItem("https://ateraimemo.com/", i1, true))
   it.addElement(SiteItem("https://ateraimemo.com/Swing.html", i1, true))
   it.addElement(SiteItem("https://ateraimemo.com/Kotlin.html", i1, true))
@@ -76,12 +73,11 @@ private fun initComboBox(combo: JComboBox<SiteItem>) {
 }
 
 private class SiteItemComboBox(
-  model: DefaultComboBoxModel<SiteItem>,
-  rss: ImageIcon
+  model: DefaultComboBoxModel<SiteItem>
 ) : JComboBox<SiteItem>(model) {
   init {
-    val feedButton = makeRssButton(rss)
     val favicon = makeLabel()
+    val feedButton = makeRssButton()
     layout = SiteComboBoxLayout(favicon, feedButton)
     add(feedButton)
     add(favicon)
@@ -118,11 +114,11 @@ private class SiteItemComboBox(
     getSiteItemFromModel(model, selectedItem)?.also { label.icon = it.favicon }
   }
 
-  private fun makeRssButton(rss: ImageIcon) = JButton(rss).also {
-    val ip = FilteredImageSource(rss.image.source, SelectedImageFilter())
+  private fun makeRssButton() = JButton().also {
+    val rss = makeImage("example/feed-icon-14x14.png") // http://feedicons.com/
+    it.icon = ImageIcon(rss)
+    val ip = FilteredImageSource(rss.source, SelectedImageFilter())
     it.rolloverIcon = ImageIcon(it.toolkit.createImage(ip))
-    // it.setRolloverIcon(makeFilteredImage(rss))
-    // it.setRolloverIcon(makeFilteredImage2(rss))
     it.addActionListener { println("clicked...") }
     it.isFocusPainted = false
     it.isBorderPainted = false
@@ -217,7 +213,9 @@ private class SiteComboBoxLayout(
   }
 }
 
-private data class SiteItem(val url: String, val favicon: Icon, val hasRss: Boolean) {
+private data class SiteItem(val url: String, val image: Image, val hasRss: Boolean) {
+  val favicon = ImageIcon(image)
+
   override fun toString() = url
 }
 
