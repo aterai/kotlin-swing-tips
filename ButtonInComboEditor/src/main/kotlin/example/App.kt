@@ -172,43 +172,33 @@ private class SiteComboBoxLayout(
 
   override fun layoutContainer(parent: Container) {
     val cb = parent as? JComboBox<*> ?: return
-    val width = cb.width
-    val height = cb.height
-    val ins = cb.insets
-    val arrowHeight = height - ins.top - ins.bottom
-    var arrowWidth = arrowHeight
-    var faviconWidth = arrowHeight
-    var feedWidth = 0
+    val r = SwingUtilities.calculateInnerArea(cb, null)
 
     // Arrow Icon JButton
+    var arrowWidth = 0
     (cb.getComponent(0) as? JButton)?.also {
-      val arrowInsets = it.insets
-      arrowWidth = it.preferredSize.width + arrowInsets.left + arrowInsets.right
-      it.setBounds(width - ins.right - arrowWidth, ins.top, arrowWidth, arrowHeight)
+      arrowWidth = it.preferredSize.width
+      it.setBounds(r.x + r.width - arrowWidth, r.y, arrowWidth, r.height)
     }
 
     // Favicon JLabel
+    var faviconWidth = 0
     favicon?.also {
-      val faviconInsets = it.insets
-      faviconWidth = it.preferredSize.width + faviconInsets.left + faviconInsets.right
-      it.setBounds(ins.left, ins.top, faviconWidth, arrowHeight)
+      faviconWidth = it.preferredSize.width
+      it.setBounds(r.x, r.y, faviconWidth, r.height)
     }
 
     // Feed Icon JButton
+    var feedWidth = 0
     feedButton?.takeIf { it.isVisible }?.also {
-      val feedInsets = it.insets
-      feedWidth = it.preferredSize.width + feedInsets.left + feedInsets.right
-      it.setBounds(width - ins.right - feedWidth - arrowWidth, ins.top, feedWidth, arrowHeight)
+      feedWidth = it.preferredSize.width
+      it.setBounds(r.x + r.width - feedWidth - arrowWidth, r.y, feedWidth, r.height)
     }
 
     // JComboBox Editor
     cb.editor.editorComponent?.also {
-      it.setBounds(
-        ins.left + faviconWidth,
-        ins.top,
-        width - ins.left - ins.right - arrowWidth - faviconWidth - feedWidth,
-        height - ins.top - ins.bottom
-      )
+      val w = r.width - arrowWidth - faviconWidth - feedWidth
+      it.setBounds(r.x + faviconWidth, r.y, w, r.height)
     }
   }
 }
