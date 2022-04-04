@@ -1,21 +1,25 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.image.BufferedImage
 import java.awt.image.FilteredImageSource
 import java.awt.image.RGBImageFilter
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val p = JPanel(GridLayout(2, 2))
   p.border = BorderFactory.createTitledBorder("ButtonGroup")
 
-  val cl = Thread.currentThread().contextClassLoader
   // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
-  val icon = ImageIcon(cl.getResource("example/wi0063-32.png"))
-  val ip = FilteredImageSource(icon.image.source, SelectedImageFilter())
-  val selectedIcon = ImageIcon(p.createImage(ip))
+  val path = "example/wi0063-32.png"
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  val image = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+  val icon = ImageIcon(image)
   val t1 = JToggleButton(icon)
   val t2 = JToggleButton(icon, true)
+  val ip = FilteredImageSource(image.source, SelectedImageFilter())
+  val selectedIcon = ImageIcon(p.createImage(ip))
   t1.selectedIcon = selectedIcon
   t2.selectedIcon = selectedIcon
 
@@ -39,6 +43,17 @@ fun makeUI(): Component {
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+private fun makeMissingImage(): BufferedImage {
+  val missingIcon = UIManager.getIcon("html.missingImage")
+  val iw = missingIcon.iconWidth
+  val ih = missingIcon.iconHeight
+  val bi = BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, (16 - iw) / 2, (16 - ih) / 2)
+  g2.dispose()
+  return bi
 }
 
 private class SelectedImageFilter : RGBImageFilter() {
