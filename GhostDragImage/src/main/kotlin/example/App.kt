@@ -19,16 +19,16 @@ import javax.swing.event.MouseInputListener
 fun makeUI(): Component {
   val model = DefaultListModel<ListItem>().also {
     // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
-    it.addElement(ListItem("wi0009-32", "wi0009-32.png"))
-    it.addElement(ListItem("12345", "wi0054-32.png"))
-    it.addElement(ListItem("wi0062-32.png", "wi0062-32.png"))
-    it.addElement(ListItem("test", "wi0063-32.png"))
-    it.addElement(ListItem("32.png", "wi0064-32.png"))
-    it.addElement(ListItem("wi0096-32.png", "wi0096-32.png"))
-    it.addElement(ListItem("6896", "wi0111-32.png"))
-    it.addElement(ListItem("t467467est", "wi0122-32.png"))
-    it.addElement(ListItem("test123", "wi0124-32.png"))
-    it.addElement(ListItem("test(1)", "wi0126-32.png"))
+    it.addElement(ListItem("wi0009-32", "example/wi0009-32.png"))
+    it.addElement(ListItem("12345", "example/wi0054-32.png"))
+    it.addElement(ListItem("wi0062-32.png", "example/wi0062-32.png"))
+    it.addElement(ListItem("test", "example/wi0063-32.png"))
+    it.addElement(ListItem("32.png", "example/wi0064-32.png"))
+    it.addElement(ListItem("wi0096-32.png", "example/wi0096-32.png"))
+    it.addElement(ListItem("6896", "example/wi0111-32.png"))
+    it.addElement(ListItem("t467467est", "example/wi0122-32.png"))
+    it.addElement(ListItem("test123", "example/wi0124-32.png"))
+    it.addElement(ListItem("test(1)", "example/wi0126-32.png"))
   }
   val list = ReorderingList(model)
 
@@ -54,19 +54,20 @@ fun makeUI(): Component {
 }
 
 private data class ListItem(val title: String, val iconFile: String) {
-  val icon = makeImageIcon(iconFile)
-  val selectedIcon: ImageIcon
+  val icon: Icon
+  val selectedIcon: Icon
 
   init {
-    val ip = FilteredImageSource(icon.image.source, SelectedImageFilter())
+    val img = makeImage(iconFile)
+    icon = ImageIcon(img)
+    val ip = FilteredImageSource(img.source, SelectedImageFilter())
     selectedIcon = ImageIcon(Toolkit.getDefaultToolkit().createImage(ip))
   }
 }
 
-private fun makeImageIcon(path: String): ImageIcon {
+private fun makeImage(path: String): Image {
   val url = Thread.currentThread().contextClassLoader.getResource(path)
-  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
-  return ImageIcon(img)
+  return url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
 }
 
 private fun makeMissingImage(): BufferedImage {
