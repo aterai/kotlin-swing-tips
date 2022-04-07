@@ -1,22 +1,24 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
+  val path = "example/16x16.png"
   val cl = Thread.currentThread().contextClassLoader
-  val icon = ImageIcon(cl.getResource("example/16x16.png"))
+  val img = cl.getResource(path)?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
   val p = object : JPanel(BorderLayout()) {
     override fun paintComponent(g: Graphics) {
       val d = size
-      val w = icon.iconWidth
-      val h = icon.iconHeight
-      val image = icon.image
+      val w = img.width
+      val h = img.height
       var i = 0
       while (i * w < d.width) {
         var j = 0
         while (j * h < d.height) {
-          g.drawImage(image, i * w, j * h, w, h, this)
+          g.drawImage(img, i * w, j * h, w, h, this)
           j++
         }
         i++
@@ -28,6 +30,17 @@ fun makeUI(): Component {
   p.isOpaque = false
   p.preferredSize = Dimension(320, 240)
   return p
+}
+
+private fun makeMissingImage(): BufferedImage {
+  val missingIcon = UIManager.getIcon("html.missingImage")
+  val iw = missingIcon.iconWidth
+  val ih = missingIcon.iconHeight
+  val bi = BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, (16 - iw) / 2, (16 - ih) / 2)
+  g2.dispose()
+  return bi
 }
 
 fun main() {

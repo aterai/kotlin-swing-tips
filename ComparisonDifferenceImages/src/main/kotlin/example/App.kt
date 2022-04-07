@@ -5,17 +5,19 @@ import java.awt.event.ItemEvent
 import java.awt.image.BufferedImage
 import java.awt.image.DataBufferInt
 import java.awt.image.MemoryImageSource
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  val cl = Thread.currentThread().contextClassLoader
-  val iia = ImageIcon(cl.getResource("example/a.png"))
-  val iib = ImageIcon(cl.getResource("example/b.png"))
-  val label = JLabel(iia)
-  val w = iia.iconWidth
-  val h = iia.iconHeight
-  val pixelsA = getData(iia, w, h)
-  val pixelsB = getData(iib, w, h)
+  val imageA = makeImage("example/a.png")
+  val imageB = makeImage("example/b.png")
+  val iconA = ImageIcon(imageA)
+  val iconB = ImageIcon(imageB)
+  val label = JLabel(iconA)
+  val w = iconA.iconWidth
+  val h = iconA.iconHeight
+  val pixelsA = getData(imageA, w, h)
+  val pixelsB = getData(imageB, w, h)
   for (i in pixelsA.indices) {
     if (pixelsA[i] == pixelsB[i]) {
       pixelsA[i] = pixelsA[i] and 0x44_FF_FF_FF
@@ -24,13 +26,13 @@ fun makeUI(): Component {
   val ra = JRadioButton("a.png", true)
   ra.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      label.icon = iia
+      label.icon = iconA
     }
   }
   val rb = JRadioButton("b.png")
   rb.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      label.icon = iib
+      label.icon = iconB
     }
   }
   val p = JPanel()
@@ -55,13 +57,28 @@ fun makeUI(): Component {
   }
 }
 
-private fun getData(imageIcon: ImageIcon, w: Int, h: Int): IntArray {
-  val img = imageIcon.image
+private fun getData(img: Image, w: Int, h: Int): IntArray {
   val image = BufferedImage(w, h, BufferedImage.TYPE_INT_RGB)
   val g = image.createGraphics()
   g.drawImage(img, 0, 0, null)
   g.dispose()
   return (image.raster.dataBuffer as? DataBufferInt)?.data ?: IntArray(0)
+}
+
+private fun makeImage(path: String): BufferedImage {
+  val cl = Thread.currentThread().contextClassLoader
+  return cl.getResource(path)?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+}
+
+private fun makeMissingImage(): BufferedImage {
+  val missingIcon = UIManager.getIcon("OptionPane.errorIcon")
+  val w = missingIcon.iconWidth
+  val h = missingIcon.iconHeight
+  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, 0, 0)
+  g2.dispose()
+  return bi
 }
 
 fun main() {
