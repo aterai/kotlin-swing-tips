@@ -33,7 +33,7 @@ private fun makeIcon(name: String): ImageIcon {
   return if (url == null) ImageIcon(makeMissingImage()) else ImageIcon(url)
 }
 
-private fun makeMissingImage(): BufferedImage {
+private fun makeMissingImage(): Image {
   val missingIcon = UIManager.getIcon("html.missingImage")
   val iw = missingIcon.iconWidth
   val ih = missingIcon.iconHeight

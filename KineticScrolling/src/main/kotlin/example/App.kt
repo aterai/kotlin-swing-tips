@@ -90,7 +90,7 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeMissingImage(): BufferedImage {
+private fun makeMissingImage(): Image {
   val missingIcon = MissingIcon()
   val w = missingIcon.iconWidth
   val h = missingIcon.iconHeight

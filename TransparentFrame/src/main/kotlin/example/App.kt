@@ -101,7 +101,7 @@ private fun makeMissingImage(): BufferedImage {
   val missingIcon = UIManager.getIcon("OptionPane.errorIcon")
   val w = missingIcon.iconWidth
   val h = missingIcon.iconHeight
-  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_RGB)
+  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
   val g2 = bi.createGraphics()
   missingIcon.paintIcon(null, g2, 0, 0)
   g2.dispose()

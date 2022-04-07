@@ -73,7 +73,7 @@ private fun makeIcon(path: String): Icon {
   return ImageIcon(image)
 }
 
-private fun makeMissingImage(): BufferedImage {
+private fun makeMissingImage(): Image {
   val missingIcon = UIManager.getIcon("html.missingImage")
   val iw = missingIcon.iconWidth
   val ih = missingIcon.iconHeight
