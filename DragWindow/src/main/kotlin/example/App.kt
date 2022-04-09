@@ -4,15 +4,15 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.WindowEvent
-import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun start(frame: JFrame) {
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/splash.png")
-  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
-  val splashScreen = createSplashScreen(frame, ImageIcon(img))
+  val image = url?.openStream()?.use(ImageIO::read)
+  val icon = image?.let { ImageIcon(it) } ?: MissingIcon()
+  val splashScreen = createSplashScreen(frame, icon)
   splashScreen.isVisible = true
   val r = Runnable {
     runCatching {
@@ -55,7 +55,7 @@ private fun makeUI(): Component {
   return p
 }
 
-fun createSplashScreen(frame: Frame?, img: ImageIcon?): JWindow {
+fun createSplashScreen(frame: Frame, img: Icon): JWindow {
   val dwl = DragWindowListener()
   val label = JLabel(img)
   label.addMouseListener(dwl)
@@ -73,17 +73,6 @@ fun showFrame(frame: JFrame) {
   frame.setSize(320, 240)
   frame.setLocationRelativeTo(null)
   frame.isVisible = true
-}
-
-private fun makeMissingImage(): Image {
-  val missingIcon = MissingIcon()
-  val w = missingIcon.iconWidth
-  val h = missingIcon.iconHeight
-  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
-  val g2 = bi.createGraphics()
-  missingIcon.paintIcon(null, g2, 0, 0)
-  g2.dispose()
-  return bi
 }
 
 private class MissingIcon : Icon {
