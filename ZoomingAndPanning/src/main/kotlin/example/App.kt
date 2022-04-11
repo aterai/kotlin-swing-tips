@@ -5,15 +5,13 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseWheelEvent
 import java.awt.geom.AffineTransform
-import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val path = "example/CRW_3857_JFR.jpg"
   val url = Thread.currentThread().contextClassLoader.getResource(path)
-  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
-  val icon = ImageIcon(img)
+  val icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) } ?: MissingIcon()
   val p = object : JPanel(BorderLayout()) {
     var zoomAndPanHandler: ZoomAndPanHandler? = null
     override fun updateUI() {
@@ -39,17 +37,6 @@ fun makeUI(): Component {
   }
   p.preferredSize = Dimension(320, 240)
   return p
-}
-
-private fun makeMissingImage(): Image {
-  val missingIcon = MissingIcon()
-  val w = missingIcon.iconWidth
-  val h = missingIcon.iconHeight
-  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
-  val g2 = bi.createGraphics()
-  missingIcon.paintIcon(null, g2, 0, 0)
-  g2.dispose()
-  return bi
 }
 
 private class ZoomAndPanHandler : MouseAdapter() {
@@ -79,7 +66,6 @@ private class ZoomAndPanHandler : MouseAdapter() {
     }
     val c = e.component
     val r = c.bounds
-    // Point p = e.getPoint();
     val p = Point(r.x + r.width / 2, r.y + r.height / 2)
     val p1 = transformPoint(p)
     val scale = if (dir > 0) 1 / ZOOM_FACTOR else ZOOM_FACTOR

@@ -5,48 +5,35 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseWheelEvent
 import java.awt.geom.AffineTransform
-import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val path = "example/CRW_3857_JFR.jpg"
   val url = Thread.currentThread().contextClassLoader.getResource(path)
-  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+  val icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) } ?: MissingIcon()
   return JPanel(BorderLayout()).also {
-    it.add(JScrollPane(ZoomAndPanePanel(img)))
+    it.add(JScrollPane(ZoomAndPanePanel(icon)))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeMissingImage(): Image {
-  val missingIcon = MissingIcon()
-  val w = missingIcon.iconWidth
-  val h = missingIcon.iconHeight
-  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
-  val g2 = bi.createGraphics()
-  missingIcon.paintIcon(null, g2, 0, 0)
-  g2.dispose()
-  return bi
-}
-
-private class ZoomAndPanePanel(@field:Transient private val img: Image) : JPanel() {
+private class ZoomAndPanePanel(@field:Transient private val icon: Icon) : JPanel() {
   private val zoomTransform = AffineTransform()
-  private val imageRect = Rectangle(img.getWidth(this), img.getHeight(this))
-
-  @Transient
+  private val imageRect = Rectangle(icon.iconWidth, icon.iconHeight)
   private var handler: ZoomHandler? = null
-
-  @Transient
   private var listener: DragScrollListener? = null
 
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     val g2 = g.create() as? Graphics2D ?: return
+    val at = g2.transform
+    at.concatenate(zoomTransform)
+    g2.transform = at
+    icon.paintIcon(this, g2, 0, 0)
     g2.paint = Color(0x55_FF_00_00, true)
     val r = Rectangle(500, 140, 150, 150)
-    g2.drawImage(img, zoomTransform, this)
-    g2.fill(zoomTransform.createTransformedShape(r))
+    g2.fill(r)
     g2.dispose()
   }
 

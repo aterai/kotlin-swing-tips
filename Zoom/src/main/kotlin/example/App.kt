@@ -2,15 +2,14 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseWheelListener
-import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  val path = "example/test.png"
   val cl = Thread.currentThread().contextClassLoader
-  val img = cl.getResource(path)?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
-  val zoom = ZoomImage(img)
+  val url = cl.getResource("example/test.png")
+  val icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) } ?: MissingIcon()
+  val zoom = ZoomImage(icon)
 
   val button1 = JButton("Zoom In")
   button1.addActionListener { zoom.changeScale(-5) }
@@ -35,17 +34,6 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeMissingImage(): Image {
-  val missingIcon = MissingIcon()
-  val w = missingIcon.iconWidth
-  val h = missingIcon.iconHeight
-  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
-  val g2 = bi.createGraphics()
-  missingIcon.paintIcon(null, g2, 0, 0)
-  g2.dispose()
-  return bi
-}
-
 private class MissingIcon : Icon {
   override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
@@ -66,10 +54,8 @@ private class MissingIcon : Icon {
   override fun getIconHeight() = 240
 }
 
-private class ZoomImage(private val image: Image) : JPanel() {
+private class ZoomImage(private val icon: Icon) : JPanel() {
   private var handler: MouseWheelListener? = null
-  private val iw = image.getWidth(this)
-  private val ih = image.getHeight(this)
   private var scale = 1.0
 
   override fun updateUI() {
@@ -83,7 +69,7 @@ private class ZoomImage(private val image: Image) : JPanel() {
     super.paintComponent(g)
     val g2 = g.create() as? Graphics2D ?: return
     g2.scale(scale, scale)
-    g2.drawImage(image, 0, 0, iw, ih, this)
+    icon.paintIcon(this, g2, 0, 0)
     g2.dispose()
   }
 
