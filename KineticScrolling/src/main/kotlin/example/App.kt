@@ -6,7 +6,6 @@ import java.awt.event.HierarchyListener
 import java.awt.event.ItemEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import kotlin.math.abs
@@ -42,8 +41,8 @@ fun makeUI(): Component {
 
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/GIANT_TCR1_2013.jpg")
-  val image = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
-  val label = JLabel(ImageIcon(image))
+  val icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) } ?: MissingIcon()
+  val label = JLabel(icon)
   viewport.add(label)
   val l1 = KineticScrollingListener1(label)
   val l2 = KineticScrollingListener2(label)
@@ -88,17 +87,6 @@ fun makeUI(): Component {
     it.add(box, BorderLayout.NORTH)
     scroll.preferredSize = Dimension(320, 240)
   }
-}
-
-private fun makeMissingImage(): Image {
-  val missingIcon = MissingIcon()
-  val w = missingIcon.iconWidth
-  val h = missingIcon.iconHeight
-  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
-  val g2 = bi.createGraphics()
-  missingIcon.paintIcon(null, g2, 0, 0)
-  g2.dispose()
-  return bi
 }
 
 private class KineticScrollingListener1(
