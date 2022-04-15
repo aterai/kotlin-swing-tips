@@ -7,14 +7,17 @@ import java.awt.event.ItemEvent
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 private var isShiftPressed = false
 
 fun makeUI(): Component {
+  val path = "example/CRW_3857_JFR.jpg"
   val cl = Thread.currentThread().contextClassLoader
-  val label = JLabel()
-  label.icon = ImageIcon(cl.getResource("example/CRW_3857_JFR.jpg"))
+  val image = cl.getResource(path)?.openStream()?.use(ImageIO::read)
+  val icon = image?.let { ImageIcon(it) } ?: MissingIcon()
+  val label = JLabel(icon)
 
   val ml = DragScrollListener()
   label.addMouseMotionListener(ml)
@@ -155,4 +158,24 @@ fun main() {
       isVisible = true
     }
   }
+}
+
+private class MissingIcon : Icon {
+  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+    val g2 = g.create() as? Graphics2D ?: return
+    val w = iconWidth
+    val h = iconHeight
+    val gap = w / 5
+    g2.color = Color.WHITE
+    g2.fillRect(x, y, w, h)
+    g2.color = Color.RED
+    g2.stroke = BasicStroke(w / 8f)
+    g2.drawLine(x + gap, y + gap, x + w - gap, y + h - gap)
+    g2.drawLine(x + gap, y + h - gap, x + w - gap, y + gap)
+    g2.dispose()
+  }
+
+  override fun getIconWidth() = 1000
+
+  override fun getIconHeight() = 1000
 }
