@@ -16,13 +16,12 @@ fun makeUI(): Component {
   l1.border = ComponentTitledBorder(c, l1, BorderFactory.createEtchedBorder())
 
   val icon = JLabel(UIManager.getIcon("FileChooser.detailsViewIcon"))
-  val l2 = JLabel("<html>Icon<br>11111111111")
+  val l2 = JLabel("<html>ComponentTitledBorder<br>+ JLabel + Icon")
   l2.border = ComponentTitledBorder(icon, l2, BorderFactory.createEtchedBorder())
 
   val b = JButton("Button")
   b.isFocusPainted = false
-
-  val l3 = JLabel("JButton")
+  val l3 = JLabel("ComponentTitledBorder + JButton")
   l3.border = ComponentTitledBorder(b, l3, BorderFactory.createEtchedBorder())
 
   return JPanel(GridLayout(3, 1, 5, 5)).also {
