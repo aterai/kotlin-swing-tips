@@ -13,12 +13,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 private var isShiftPressed = false
 
 fun makeUI(): Component {
-  val path = "example/CRW_3857_JFR.jpg"
-  val cl = Thread.currentThread().contextClassLoader
-  val image = cl.getResource(path)?.openStream()?.use(ImageIO::read)
-  val icon = image?.let { ImageIcon(it) } ?: MissingIcon()
-  val label = JLabel(icon)
-
+  val label = JLabel(getIcon())
   val ml = DragScrollListener()
   label.addMouseMotionListener(ml)
   label.addMouseListener(ml)
@@ -91,6 +86,13 @@ fun makeUI(): Component {
     it.add(scroll)
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+private fun getIcon(): Icon {
+  val path = "example/CRW_3857_JFR.jpg"
+  val cl = Thread.currentThread().contextClassLoader
+  val image = cl.getResource(path)?.openStream()?.use(ImageIO::read)
+  return image?.let { ImageIcon(it) } ?: MissingIcon()
 }
 
 private fun initActionMap(scroll: JScrollPane) {
