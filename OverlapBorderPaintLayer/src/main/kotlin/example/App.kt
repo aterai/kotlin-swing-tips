@@ -81,10 +81,9 @@ fun makeRibbonBreadcrumb(list: List<String>, color: Color, overlap: Int): JPanel
 
 private fun makeButton(title: String, icon: Icon, color: Color): AbstractButton {
   val b = object : JRadioButton(title) {
-    override fun contains(x: Int, y: Int) =
-      (getIcon() as? ArrowToggleButtonIcon)?.let {
-        it.shape?.contains(x.toDouble(), y.toDouble())
-      } ?: super.contains(x, y)
+    override fun contains(x: Int, y: Int) = (getIcon() as? ArrowToggleButtonIcon)?.let {
+      it.shape?.contains(Point(x, y))
+    } ?: super.contains(x, y)
   }
   b.icon = icon
   b.isContentAreaFilled = false

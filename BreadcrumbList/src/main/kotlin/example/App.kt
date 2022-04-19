@@ -65,10 +65,9 @@ private fun makeBreadcrumbList(list: List<String>): Component {
 
 private fun makeButton(tree: JTree?, path: TreePath, color: Color): AbstractButton {
   val b = object : JRadioButton(path.lastPathComponent.toString()) {
-    override fun contains(x: Int, y: Int) =
-      (icon as? ArrowToggleButtonBarCellIcon)?.let {
-        it.shape?.contains(x.toDouble(), y.toDouble())
-      } ?: super.contains(x, y)
+    override fun contains(x: Int, y: Int) = (icon as? ArrowToggleButtonBarCellIcon)?.let {
+      it.shape?.contains(Point(x, y))
+    } ?: super.contains(x, y)
   }
   if (tree != null) {
     b.addActionListener { e ->

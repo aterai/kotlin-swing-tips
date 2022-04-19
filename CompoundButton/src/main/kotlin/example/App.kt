@@ -124,7 +124,7 @@ private class CompoundButton(
     g2.dispose()
   }
 
-  override fun contains(x: Int, y: Int) = shape?.contains(x.toDouble(), y.toDouble()) ?: false
+  override fun contains(x: Int, y: Int) = shape?.contains(Point(x, y)) ?: false
 }
 
 fun main() {

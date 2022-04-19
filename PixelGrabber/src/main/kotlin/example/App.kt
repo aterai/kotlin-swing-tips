@@ -96,7 +96,7 @@ private fun makeRoundedMemoryImageSource(img: Image, w: Int, h: Int): MemoryImag
   val r = area.bounds
   for (y in 0 until r.height) {
     for (x in 0 until r.width) {
-      if (area.contains(x.toDouble(), y.toDouble())) {
+      if (area.contains(Point(x, y))) {
         pix[x + y * w] = 0x0
       }
     }
@@ -106,7 +106,7 @@ private fun makeRoundedMemoryImageSource(img: Image, w: Int, h: Int): MemoryImag
   val s2 = at.createTransformedShape(area) // NE
   for (y in 0 until r.height) {
     for (x in w - r.width until w) {
-      if (s2.contains(x.toDouble(), y.toDouble())) {
+      if (s2.contains(Point(x, y))) {
         pix[x + y * w] = 0x0
       }
     }

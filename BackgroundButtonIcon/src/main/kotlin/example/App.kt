@@ -15,8 +15,7 @@ private fun makeButton(title: String, color: Color, first: Boolean): AbstractBut
   val b = object : JToggleButton(title) {
     @Transient
     private val icon = ArrowToggleButtonBarCellIcon()
-    override fun contains(x: Int, y: Int) =
-      icon.shape?.contains(x.toDouble(), y.toDouble()) == true
+    override fun contains(x: Int, y: Int) = icon.shape?.contains(Point(x, y)) == true
 
     override fun getPreferredSize() = Dimension(icon.iconWidth, icon.iconHeight)
 

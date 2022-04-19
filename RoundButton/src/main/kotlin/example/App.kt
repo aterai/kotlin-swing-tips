@@ -136,7 +136,7 @@ open class RoundedCornerButton : JButton {
 
   override fun contains(x: Int, y: Int): Boolean {
     initShape()
-    return shape?.contains(x.toDouble(), y.toDouble()) ?: false
+    return shape?.contains(Point(x, y)) ?: false
   }
 
   companion object {
@@ -229,7 +229,7 @@ class ShapeButton(private val shape: Shape) : JButton() {
     g2.dispose()
   }
 
-  override fun contains(x: Int, y: Int) = shape.contains(x.toDouble(), y.toDouble())
+  override fun contains(x: Int, y: Int) = shape.contains(Point(x, y))
 }
 
 class DummySizeIcon(private val shape: Shape) : Icon {
