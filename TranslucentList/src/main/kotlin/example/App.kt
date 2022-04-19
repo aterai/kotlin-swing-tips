@@ -126,7 +126,7 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
       val l = e.component as? JList<*> ?: return
       val index = l.locationToIndex(e.point)
       val rect = l.getCellBounds(index, index)
-      if (rect.contains(e.point)) {
+      if (rect?.contains(e.point) == true) {
         l.setFocusable(true)
       } else {
         l.clearSelection()

@@ -32,12 +32,9 @@ private val weekList = object : JList<Contribution>(CalendarViewListModel(curren
   }
 
   override fun getToolTipText(e: MouseEvent): String? {
-    val p = e.point
-    val idx = locationToIndex(p)
-    val rect = getCellBounds(idx, idx)
-    if (idx < 0 || !rect.contains(p)) {
-      return null
-    }
+    val pt = e.point
+    val idx = locationToIndex(pt)
+    getCellBounds(idx, idx)?.contains(pt) ?: return null
     val value = model.getElementAt(idx)
     val act = if (value.activity == 0) "No" else value.activity.toString()
     val date = value.date.toString()
@@ -48,9 +45,8 @@ private val weekList = object : JList<Contribution>(CalendarViewListModel(curren
     val p = e.point
     val i = locationToIndex(p)
     val rect = getCellBounds(i, i)
-
     val toolTipText = getToolTipText(e)
-    if (toolTipText != null) {
+    if (toolTipText != null && rect != null) {
       val tip = createToolTip()
       tip?.tipText = toolTipText
       val d = tip?.preferredSize ?: Dimension()
