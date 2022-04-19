@@ -66,8 +66,7 @@ private open class TooltipList<E>(m: ListModel<E>?) : JList<E>(m) {
     val p1 = mousePosition
     if (p1 != null && p1 != p0) {
       val i = locationToIndex(p1)
-      val cellBounds = getCellBounds(i, i)
-      if (i >= 0 && cellBounds != null && cellBounds.contains(p1.x, p1.y)) {
+      if (getCellBounds(i, i)?.contains(p1) == true) {
         val event = MouseEvent(
           e.component,
           MouseEvent.MOUSE_MOVED,
@@ -90,7 +89,7 @@ private open class TooltipList<E>(m: ListModel<E>?) : JList<E>(m) {
     if (p1 != null && p1 != p0) {
       val i = locationToIndex(p1)
       val cellBounds = getCellBounds(i, i)
-      if (i >= 0 && cellBounds != null && cellBounds.contains(p1.x, p1.y)) {
+      if (cellBounds?.contains(p1) == true) {
         return Point(p1.x, p1.y + cellBounds.height)
       }
     }

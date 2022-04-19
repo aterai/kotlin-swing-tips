@@ -103,7 +103,7 @@ private class TooltipTree(model: TreeModel) : JTree(model) {
     val p = e.point
     val i = getRowForLocation(p.x, p.y)
     val cellBounds = getRowBounds(i)
-    if (i >= 0 && cellBounds?.contains(p.x, p.y) == true) {
+    if (cellBounds?.contains(p) == true) {
       val tsm = getSelectionModel()
       val node = getPathForRow(i).lastPathComponent
       val hasFocus = hasFocus() && tsm.leadSelectionRow == i

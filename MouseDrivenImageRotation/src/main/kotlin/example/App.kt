@@ -96,12 +96,11 @@ private class DraggableImageMouseListener(ii: ImageIcon) : MouseAdapter() {
   }
 
   override fun mouseMoved(e: MouseEvent) {
-    val dx = e.x.toDouble()
-    val dy = e.y.toDouble()
-    if (outer.contains(dx, dy) && !inner.contains(dx, dy)) {
+    val pt = e.point
+    if (outer.contains(pt) && !inner.contains(pt)) {
       moverHover = false
       rotatorHover = true
-    } else if (inner.contains(dx, dy)) {
+    } else if (inner.contains(pt)) {
       moverHover = true
       rotatorHover = false
     } else {
@@ -118,13 +117,12 @@ private class DraggableImageMouseListener(ii: ImageIcon) : MouseAdapter() {
   }
 
   override fun mousePressed(e: MouseEvent) {
-    val dx = e.x.toDouble()
-    val dy = e.y.toDouble()
-    if (outer.contains(dx, dy) && !inner.contains(dx, dy)) {
+    val pt = e.point
+    if (outer.contains(pt) && !inner.contains(pt)) {
       rotatorHover = true
       startRadian = radian - atan2(e.y - centerPt.y, e.x - centerPt.x)
       e.component.repaint()
-    } else if (inner.contains(dx, dy)) {
+    } else if (inner.contains(pt)) {
       moverHover = true
       startPt.setLocation(e.point)
       e.component.repaint()

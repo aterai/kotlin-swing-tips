@@ -423,7 +423,7 @@ private class JTabbedPaneWithCloseIcons : JTabbedPane() {
         }
         (getIconAt(index) as? SimpleCloseTabIcon)
           ?.bounds
-          ?.takeIf { it.contains(e.x, e.y) }
+          ?.takeIf { it.contains(e.point) }
           ?.also {
             removeTabAt(index)
           }

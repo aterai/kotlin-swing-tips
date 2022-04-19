@@ -62,7 +62,7 @@ private class TabbedPaneWithCompBorder(
   override fun isBorderOpaque() = true
 
   private fun dispatchEvent(e: MouseEvent) {
-    if (!rect.contains(e.x, e.y)) {
+    if (!rect.contains(e.point)) {
       return
     }
     checkBox.bounds = rect

@@ -60,7 +60,7 @@ private open class TooltipList<E>(m: ListModel<E>) : JList<E>(m) {
     val r = cellRenderer
     val i = locationToIndex(p)
     val cellBounds = getCellBounds(i, i)
-    if (i >= 0 && r != null && cellBounds?.contains(p.x, p.y) == true) {
+    if (r != null && cellBounds?.contains(p) == true) {
       val lsm = selectionModel
       val hasFocus = hasFocus() && lsm.leadSelectionIndex == i
       val value = model.getElementAt(i)
@@ -86,7 +86,7 @@ private open class CellRendererTooltipList<E>(m: ListModel<E>) : JList<E>(m) {
     val i = locationToIndex(p)
     val r = cellRenderer
     val cellBounds = getCellBounds(i, i)
-    if (i >= 0 && r != null && cellBounds?.contains(p.x, p.y) == true) {
+    if (r != null && cellBounds?.contains(p) == true) {
       val lsm = selectionModel
       val str = model.getElementAt(i)
       val hasFocus = hasFocus() && lsm.leadSelectionIndex == i

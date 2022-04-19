@@ -46,7 +46,7 @@ private val weekList = object : JList<Contribution>(CalendarViewListModel(curren
     val p = e.point
     val idx = locationToIndex(p)
     val rect = getCellBounds(idx, idx)
-    if (idx < 0 || !rect.contains(p.x, p.y)) {
+    if (idx < 0 || !rect.contains(p)) {
       return null
     }
     val value = model.getElementAt(idx)
