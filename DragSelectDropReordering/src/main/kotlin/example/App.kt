@@ -140,24 +140,24 @@ private class ReorderingList(model: ListModel<ListItem>) : JList<ListItem>(model
     }
 
     override fun mousePressed(e: MouseEvent) {
-      val l = e.component as? JList<*> ?: return
-      val index = l.locationToIndex(e.point)
-      val rect = l.getCellBounds(index, index)
-      if (rect.contains(e.point)) {
-        l.isFocusable = true
-        if (l.dragEnabled) {
+      val list = e.component as? JList<*> ?: return
+      val index = list.locationToIndex(e.point)
+      val rect = list.getCellBounds(index, index)
+      if (rect?.contains(e.point) == true) {
+        list.isFocusable = true
+        if (list.dragEnabled) {
           return
         }
-        l.setSelectedIndex(index)
+        list.setSelectedIndex(index)
       } else {
-        l.clearSelection()
-        l.selectionModel.anchorSelectionIndex = -1
-        l.selectionModel.leadSelectionIndex = -1
-        l.isFocusable = false
-        l.setDragEnabled(false)
+        list.clearSelection()
+        list.selectionModel.anchorSelectionIndex = -1
+        list.selectionModel.leadSelectionIndex = -1
+        list.isFocusable = false
+        list.setDragEnabled(false)
       }
       srcPoint.location = e.point
-      l.repaint()
+      list.repaint()
     }
   }
 
