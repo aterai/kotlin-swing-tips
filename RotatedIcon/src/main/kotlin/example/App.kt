@@ -3,18 +3,22 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-fun makeUI() = JPanel().also {
-  val cl = Thread.currentThread().contextClassLoader
-  val icon = ImageIcon(cl.getResource("example/duke.gif"))
-  // val icon = UIManager.getIcon("OptionPane.warningIcon")
-  it.add(makeLabel("Default", icon))
-  it.add(makeLabel("Rotate: 180", RotateIcon(icon, 180)))
-  it.add(makeLabel("Rotate:  90", RotateIcon(icon, 90)))
-  it.add(makeLabel("Rotate: -90", RotateIcon(icon, -90)))
-  it.border = BorderFactory.createEmptyBorder(0, 32, 0, 32)
-  it.preferredSize = Dimension(320, 240)
+fun makeUI(): Component {
+  val path = "example/duke.gif"
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  val image = url?.openStream()?.use(ImageIO::read)
+  val icon = image?.let { ImageIcon(it) } ?: UIManager.getIcon("OptionPane.warningIcon")
+  return JPanel().also {
+    it.add(makeLabel("Default", icon))
+    it.add(makeLabel("Rotate: 180", RotateIcon(icon, 180)))
+    it.add(makeLabel("Rotate:  90", RotateIcon(icon, 90)))
+    it.add(makeLabel("Rotate: -90", RotateIcon(icon, -90)))
+    it.border = BorderFactory.createEmptyBorder(0, 32, 0, 32)
+    it.preferredSize = Dimension(320, 240)
+  }
 }
 
 private fun makeLabel(title: String, icon: Icon): JLabel {
