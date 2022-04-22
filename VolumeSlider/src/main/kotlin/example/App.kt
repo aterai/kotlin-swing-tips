@@ -2,18 +2,18 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.plaf.metal.MetalSliderUI
+import javax.swing.plaf.basic.BasicSliderUI
 
 fun makeUI(): Component {
   val slider1 = JSlider(0, 100, 0)
-  slider1.ui = TriSliderUI()
+  slider1.ui = TriSliderUI(slider1)
   slider1.majorTickSpacing = 10
   slider1.minorTickSpacing = 5
   slider1.paintTicks = true
   slider1.paintLabels = true
 
   val slider2 = JSlider(0, 100, 0)
-  slider2.ui = object : MetalSliderUI() {
+  slider2.ui = object : BasicSliderUI(slider2) {
     override fun paintHorizontalLabel(g: Graphics, value: Int, label: Component) {
       // Windows/Motif L&F: JSlider should use foreground color for ticks. - Java Bug System
       // https://bugs.openjdk.java.net/browse/JDK-5099681
@@ -49,11 +49,11 @@ private fun makeTitledPanel(title: String, c: Component): Component {
   return p
 }
 
-private class TriSliderUI : MetalSliderUI() {
+private class TriSliderUI(slider: JSlider) : BasicSliderUI(slider) {
   override fun paintThumb(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    g2.fillOval(thumbRect.x, thumbRect.y, thumbRect.width, thumbRect.height)
+    g2.fillRect(thumbRect.x, thumbRect.y, thumbRect.width - 4, thumbRect.height - 4)
     g2.dispose()
   }
 

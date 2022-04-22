@@ -4,7 +4,7 @@ import com.sun.java.swing.plaf.windows.WindowsSliderUI
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.plaf.metal.MetalSliderUI
+import javax.swing.plaf.basic.BasicSliderUI
 
 private const val MAXI = 80
 private const val MINI = 40
@@ -15,7 +15,7 @@ fun makeUI(): Component {
   if (slider2.ui is WindowsSliderUI) {
     slider2.ui = WindowsDragLimitedSliderUI(slider2)
   } else {
-    slider2.ui = MetalDragLimitedSliderUI()
+    slider2.ui = BasicDragLimitedSliderUI(slider2)
   }
   return JPanel(GridLayout(2, 1, 5, 5)).also {
     it.add(slider1)
@@ -66,7 +66,7 @@ private class WindowsDragLimitedSliderUI(slider: JSlider) : WindowsSliderUI(slid
   }
 }
 
-private class MetalDragLimitedSliderUI : MetalSliderUI() {
+private class BasicDragLimitedSliderUI(slider: JSlider) : BasicSliderUI(slider) {
   override fun createTrackListener(slider: JSlider): TrackListener {
     return object : TrackListener() {
       override fun mouseDragged(e: MouseEvent) { // case HORIZONTAL:

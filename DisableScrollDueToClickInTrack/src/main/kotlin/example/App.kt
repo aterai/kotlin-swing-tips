@@ -6,7 +6,7 @@ import java.awt.event.InputEvent
 import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.LayerUI
-import javax.swing.plaf.metal.MetalSliderUI
+import javax.swing.plaf.basic.BasicSliderUI
 
 fun makeUI(): Component {
   val key = "Slider.paintThumbArrowShape"
@@ -23,7 +23,7 @@ fun makeUI(): Component {
           }
         }
       } else {
-        object : MetalSliderUI() {
+        object : BasicSliderUI(this) {
           override fun createTrackListener(slider: JSlider) = object : TrackListener() {
             override fun shouldScroll(direction: Int) = false
           }
