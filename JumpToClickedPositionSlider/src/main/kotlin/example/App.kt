@@ -40,6 +40,11 @@ private fun setSliderUI(slider: JSlider) {
   if (slider.ui is WindowsSliderUI) {
     slider.ui = WindowsJumpToClickedPositionSliderUI(slider)
   } else {
+    val icon = UIManager.getIcon("html.missingImage")
+    UIManager.put("Slider.trackWidth", 0) // Meaningless settings that are not used?
+    UIManager.put("Slider.majorTickLength", 0) // BasicSliderUI#getTickLength(): 8
+    UIManager.put("Slider.verticalThumbIcon", icon)
+    UIManager.put("Slider.horizontalThumbIcon", icon)
     slider.ui = MetalJumpToClickedPositionSliderUI()
   }
   // slider.setSnapToTicks(false);

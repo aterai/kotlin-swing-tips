@@ -17,6 +17,11 @@ fun makeUI(): Component {
       if (getUI() is WindowsSliderUI) {
         setUI(WindowsZoomLevelsSliderUI(this))
       } else {
+        val icon = UIManager.getIcon("html.missingImage")
+        UIManager.put("Slider.trackWidth", 0) // Meaningless settings that are not used?
+        UIManager.put("Slider.majorTickLength", 8) // BasicSliderUI#getTickLength(): 8
+        UIManager.put("Slider.verticalThumbIcon", icon)
+        UIManager.put("Slider.horizontalThumbIcon", icon)
         setUI(MetalZoomLevelsSliderUI())
       }
     }
