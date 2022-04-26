@@ -5,13 +5,13 @@ import java.awt.geom.Rectangle2D
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI() = JTabbedPane().also {
-  it.addTab("default remove", makeUI0())
-  it.addTab("clear + addElement", makeUI1())
-  it.addTab("addAll + remove", makeUI2())
+  it.addTab("default remove", makeCmp0())
+  it.addTab("clear + addElement", makeCmp1())
+  it.addTab("addAll + remove", makeCmp2())
   it.preferredSize = Dimension(320, 240)
 }
 
-private fun makeUI0(): Component {
+private fun makeCmp0(): Component {
   val model = DefaultListModel<String>()
   for (i in 0..5000) {
     model.addElement(i.toString())
@@ -29,7 +29,7 @@ private fun makeUI0(): Component {
   return SpringLayoutUtil.makePanel(leftList, rightList, button1, button2)
 }
 
-private fun makeUI1(): Component {
+private fun makeCmp1(): Component {
   val model = DefaultListModel<String>()
   for (i in 10_000..30_000) {
     model.addElement(i.toString())
@@ -47,7 +47,7 @@ private fun makeUI1(): Component {
   return SpringLayoutUtil.makePanel(leftList, rightList, button1, button2)
 }
 
-private fun makeUI2(): Component {
+private fun makeCmp2(): Component {
   val model = ArrayListModel<String>()
   for (i in 30_000..50_000) {
     model.add(i.toString())

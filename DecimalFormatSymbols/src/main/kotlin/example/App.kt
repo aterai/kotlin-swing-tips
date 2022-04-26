@@ -58,7 +58,7 @@ private fun makeSpinnerNumberModel() = SpinnerNumberModel(10.0, 0.0, 100.0, 1.0)
 private fun makeSpinner1(m: SpinnerNumberModel) = JSpinner(m).also {
   getJFormattedTextField(it)?.also { ftf ->
     val dfs = DecimalFormatSymbols()
-    ftf.formatterFactory = makeFFactory(dfs)
+    ftf.formatterFactory = makeFormatterFactory(dfs)
     ftf.disabledTextColor = UIManager.getColor("TextField.disabledColor")
   }
 }
@@ -67,7 +67,7 @@ private fun makeSpinner2(m: SpinnerNumberModel) = JSpinner(m).also {
   getJFormattedTextField(it)?.also { ftf ->
     val dfs = DecimalFormatSymbols()
     dfs.naN = " "
-    ftf.formatterFactory = makeFFactory(dfs)
+    ftf.formatterFactory = makeFormatterFactory(dfs)
   }
 }
 
@@ -75,7 +75,7 @@ private fun makeSpinner3(m: SpinnerNumberModel) = JSpinner(m).also {
   getJFormattedTextField(it)?.also { ftf ->
     val dfs = DecimalFormatSymbols()
     dfs.naN = "----"
-    ftf.formatterFactory = makeFFactory(dfs)
+    ftf.formatterFactory = makeFormatterFactory(dfs)
   }
 }
 
@@ -83,7 +83,7 @@ private fun getJFormattedTextField(s: JSpinner) = (s.editor as? DefaultEditor)?.
   it.textField.also { ftf -> ftf.columns = 8 }
 }
 
-private fun makeFFactory(dfs: DecimalFormatSymbols): DefaultFormatterFactory {
+private fun makeFormatterFactory(dfs: DecimalFormatSymbols): DefaultFormatterFactory {
   val format = DecimalFormat("0.00", dfs)
   val displayFormatter = NumberFormatter(format)
   displayFormatter.valueClass = Double::class.java

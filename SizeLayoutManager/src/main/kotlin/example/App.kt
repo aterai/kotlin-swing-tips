@@ -4,7 +4,7 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-private fun makeUI1(): Component {
+private fun makeCmp1(): Component {
   val p = JPanel(GridBagLayout())
   p.border = BorderFactory.createTitledBorder("Override JToggleButton#getPreferredSize(...)")
   val c = GridBagConstraints()
@@ -26,7 +26,7 @@ private fun makeUI1(): Component {
   return p
 }
 
-private fun makeUI2(): Component {
+private fun makeCmp2(): Component {
   val p = JPanel(GridBagLayout())
   p.border = BorderFactory.createTitledBorder("Override FlowLayout#layoutContainer(...)")
   p.layout = object : FlowLayout() {
@@ -66,8 +66,8 @@ private fun makeUI2(): Component {
 }
 
 fun makeUI() = JPanel(GridLayout(2, 1)).also {
-  it.add(makeUI1())
-  it.add(makeUI2())
+  it.add(makeCmp1())
+  it.add(makeCmp2())
   it.preferredSize = Dimension(320, 240)
 }
 

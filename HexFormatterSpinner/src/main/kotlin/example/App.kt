@@ -22,7 +22,7 @@ fun makeUI(): Component {
   val editor = spinner.editor as? JSpinner.NumberEditor
   editor?.textField?.also {
     it.font = Font(Font.MONOSPACED, Font.PLAIN, it.font.size)
-    it.formatterFactory = makeFFactory()
+    it.formatterFactory = makeFormatterFactory()
   }
 
   val exMi = JRadioButton("IPAexMincho")
@@ -112,7 +112,7 @@ private class GlyphPaintPanel : JPanel() {
   }
 }
 
-private fun makeFFactory(): DefaultFormatterFactory {
+private fun makeFormatterFactory(): DefaultFormatterFactory {
   val formatter = object : DefaultFormatter() {
     @Throws(ParseException::class)
     override fun stringToValue(text: String): Any {

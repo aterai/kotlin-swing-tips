@@ -5,15 +5,15 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val tabbedPane = JTabbedPane()
-  tabbedPane.addTab("SpringLayout", makeUI1())
-  tabbedPane.addTab("Custom BorderLayout", makeUI2())
+  tabbedPane.addTab("SpringLayout", makeCmp1())
+  tabbedPane.addTab("Custom BorderLayout", makeCmp2())
   return JPanel(BorderLayout()).also {
     it.add(tabbedPane)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeUI1(): Component {
+private fun makeCmp1(): Component {
   val model = DefaultListModel<String>()
   model.addElement("l${"o".repeat(40)}ng")
   for (i in 0 until 5000) {
@@ -71,7 +71,7 @@ private fun makeUI1(): Component {
   return panel
 }
 
-private fun makeUI2(): Component {
+private fun makeCmp2(): Component {
   val model = DefaultListModel<String>()
   model.addElement("l${"o".repeat(40)}ng")
   for (i in 0 until 5000) {

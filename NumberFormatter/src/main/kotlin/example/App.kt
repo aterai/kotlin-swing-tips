@@ -46,7 +46,7 @@ private class WarningSpinner(model: SpinnerNumberModel) : JSpinner(model) {
   init {
     (editor as? DefaultEditor)?.also {
       val ftf = it.textField
-      ftf.formatterFactory = makeFFactory(model)
+      ftf.formatterFactory = makeFormatterFactory(model)
       val dl = object : DocumentListener {
         private val errorBackground = Color(0xFF_C8_C8)
         override fun changedUpdate(e: DocumentEvent) {
@@ -72,7 +72,7 @@ private class WarningSpinner(model: SpinnerNumberModel) : JSpinner(model) {
   }
 
   companion object {
-    private fun makeFFactory(m: SpinnerNumberModel): DefaultFormatterFactory {
+    private fun makeFormatterFactory(m: SpinnerNumberModel): DefaultFormatterFactory {
       val format = DecimalFormat("####0")
       val editFormatter = object : NumberFormatter(format) {
         @Throws(ParseException::class)
