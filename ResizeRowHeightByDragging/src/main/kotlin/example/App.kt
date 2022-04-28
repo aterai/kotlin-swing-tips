@@ -17,7 +17,7 @@ fun makeUI(): Component {
 }
 
 private class RowHeightResizeLayer : LayerUI<JScrollPane>() {
-  private var mouseYOffset = 0
+  private var mouseOffsetY = 0
   private var resizingRow = -1
   private var otherCursor = RESIZE_CURSOR
 
@@ -38,7 +38,7 @@ private class RowHeightResizeLayer : LayerUI<JScrollPane>() {
     if (table is JTable && e.id == MouseEvent.MOUSE_PRESSED) {
       resizingRow = getResizeTargetRow(table, e.point)
       if (resizingRow >= 0) {
-        mouseYOffset = e.y - table.getRowHeight(resizingRow)
+        mouseOffsetY = e.y - table.getRowHeight(resizingRow)
         e.consume()
       }
     }
@@ -57,7 +57,7 @@ private class RowHeightResizeLayer : LayerUI<JScrollPane>() {
         }
       }
       MouseEvent.MOUSE_DRAGGED -> {
-        val newHeight = e.y - mouseYOffset
+        val newHeight = e.y - mouseOffsetY
         if (newHeight > MIN_ROW_HEIGHT && resizingRow >= 0) {
           table.setRowHeight(resizingRow, newHeight)
         }
