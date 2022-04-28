@@ -26,7 +26,7 @@ fun makeUI(): Component {
     p.add(JLayer(it, ui))
   }
 
-  val ui2 = BadgeLayerUI2()
+  val ui2 = BadgeIconLayerUI()
   listOf(informationIcon, errorIcon, questionIcon, warningIcon).map {
     BadgeLabel(it, BadgePosition.SOUTH_EAST, 128)
   }.forEach {
@@ -111,7 +111,7 @@ private open class BadgeLayerUI : LayerUI<BadgeLabel>() {
   }
 }
 
-private class BadgeLayerUI2 : BadgeLayerUI() {
+private class BadgeIconLayerUI : BadgeLayerUI() {
   override fun getBadgeIcon(count: Int) =
     object : BadgeIcon(count, Color.WHITE, Color(0xAA_16_16_16.toInt(), true)) {
       override val badgeShape: Shape

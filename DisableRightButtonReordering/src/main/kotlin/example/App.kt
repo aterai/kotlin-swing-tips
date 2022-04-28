@@ -7,15 +7,15 @@ import javax.swing.plaf.LayerUI
 import javax.swing.table.JTableHeader
 
 fun makeUI() = JPanel(BorderLayout()).also {
-  val c = JLayer(JScrollPane(makeJTable()), DisableRightButtonSwapLayerUI())
+  val c = JLayer(JScrollPane(makeTable()), DisableRightButtonSwapLayerUI())
   val p = JPanel(GridLayout(2, 1))
-  p.add(makeTitledPanel("Default", JScrollPane(makeJTable())))
+  p.add(makeTitledPanel("Default", JScrollPane(makeTable())))
   p.add(makeTitledPanel("Disable right mouse button reordering", c))
   it.add(p)
   it.preferredSize = Dimension(320, 240)
 }
 
-private fun makeJTable(): JTable {
+private fun makeTable(): JTable {
   val table = JTable(4, 3)
   table.autoCreateRowSorter = true
   val popup = object : JPopupMenu() {

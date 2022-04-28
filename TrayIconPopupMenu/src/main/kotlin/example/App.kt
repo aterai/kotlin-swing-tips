@@ -136,7 +136,7 @@ private class TrayIconPopupMenuHandler(
   private val popup: JPopupMenu,
   private val dummy: Window
 ) : MouseAdapter() {
-  private fun showJPopupMenu(e: MouseEvent) {
+  private fun showPopupMenu(e: MouseEvent) {
     if (e.isPopupTrigger) {
       val p = TrayIconPopupMenuUtil.adjustPopupLocation(popup, e.x, e.y)
       dummy.location = p
@@ -147,11 +147,11 @@ private class TrayIconPopupMenuHandler(
   }
 
   override fun mouseReleased(e: MouseEvent) {
-    showJPopupMenu(e)
+    showPopupMenu(e)
   }
 
   override fun mousePressed(e: MouseEvent) {
-    showJPopupMenu(e)
+    showPopupMenu(e)
   }
 }
 

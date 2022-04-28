@@ -8,13 +8,13 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.JTableHeader
 
 fun makeUI() = JSplitPane(JSplitPane.VERTICAL_SPLIT).also {
-  it.topComponent = JScrollPane(makeJTable())
-  it.bottomComponent = JLayer(JScrollPane(makeJTable()), TableHeaderFillerLayerUI())
+  it.topComponent = JScrollPane(makeTable())
+  it.bottomComponent = JLayer(JScrollPane(makeTable()), TableHeaderFillerLayerUI())
   it.resizeWeight = .5
   it.preferredSize = Dimension(320, 240)
 }
 
-private fun makeJTable() = JTable(4, 3).also {
+private fun makeTable() = JTable(4, 3).also {
   it.autoResizeMode = JTable.AUTO_RESIZE_OFF
   it.autoCreateRowSorter = true
 }

@@ -42,7 +42,7 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeJCheckBoxMenuItem(title: String, d: UIDefaults) = JCheckBoxMenuItem(title).also {
+private fun makeCheckBoxMenuItem(title: String, d: UIDefaults) = JCheckBoxMenuItem(title).also {
   it.putClientProperty("Nimbus.Overrides", d)
   it.putClientProperty("Nimbus.Overrides.InheritDefaults", false)
 }
@@ -62,16 +62,16 @@ private fun createMenuBar(): JMenuBar {
   val menu = JMenu("Menu")
   menuBar.add(menu)
   menu.add(JCheckBoxMenuItem("Default"))
-  menu.add(makeJCheckBoxMenuItem("Test1", d))
-  menu.add(makeJCheckBoxMenuItem("Test2", d))
-  menu.add(makeJCheckBoxMenuItem("Test3", d))
+  menu.add(makeCheckBoxMenuItem("Test1", d))
+  menu.add(makeCheckBoxMenuItem("Test2", d))
+  menu.add(makeCheckBoxMenuItem("Test3", d))
 
-  val cmi1 = makeJCheckBoxMenuItem("Test4", d)
+  val cmi1 = makeCheckBoxMenuItem("Test4", d)
   cmi1.isSelected = true
   cmi1.isEnabled = false
   menu.add(cmi1)
 
-  val cmi2 = makeJCheckBoxMenuItem("Test5", d)
+  val cmi2 = makeCheckBoxMenuItem("Test5", d)
   cmi2.isSelected = false
   cmi2.isEnabled = false
   menu.add(cmi2)

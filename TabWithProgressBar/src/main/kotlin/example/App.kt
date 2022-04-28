@@ -7,7 +7,7 @@ import java.beans.PropertyChangeListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  val tabbedPane = ProgressJTabbedPane()
+  val tabbedPane = ProgressTabbedPane()
 
   val addAction = object : AbstractAction("Add") {
     private var count = 0
@@ -34,7 +34,7 @@ fun makeUI(): Component {
   }
 }
 
-private class ProgressJTabbedPane : JTabbedPane() {
+private class ProgressTabbedPane : JTabbedPane() {
   override fun addTab(title: String, content: Component) {
     super.addTab(title, JLabel("Loading..."))
     val bar = JProgressBar()

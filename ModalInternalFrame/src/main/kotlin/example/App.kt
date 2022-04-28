@@ -80,14 +80,14 @@ fun makeUI(): Component {
 // menuItem.setMnemonic(KeyEvent.VK_1)
 private class ModalInternalFrameAction1(label: String) : AbstractAction(label) {
   override fun actionPerformed(e: ActionEvent) {
-    setJMenuEnabled(false)
+    setMenuBarEnabled(false)
     JOptionPane.showInternalMessageDialog(
       desktop,
       "information",
       "modal1",
       JOptionPane.INFORMATION_MESSAGE
     )
-    setJMenuEnabled(true)
+    setMenuBarEnabled(true)
   }
 }
 
@@ -103,7 +103,7 @@ private class ModalInternalFrameAction2(label: String) : AbstractAction(label) {
   }
 
   override fun actionPerformed(e: ActionEvent) {
-    setJMenuEnabled(false)
+    setMenuBarEnabled(false)
     val w = SwingUtilities.getWindowAncestor(desktop)
     val screen = w.graphicsConfiguration.bounds
     glass.setSize(screen.width, screen.height)
@@ -115,7 +115,7 @@ private class ModalInternalFrameAction2(label: String) : AbstractAction(label) {
       JOptionPane.INFORMATION_MESSAGE
     )
     glass.isVisible = false
-    setJMenuEnabled(true)
+    setMenuBarEnabled(true)
   }
 }
 
@@ -159,7 +159,7 @@ private class ModalInternalFrameAction3(label: String) : AbstractAction(label) {
   }
 }
 
-private fun setJMenuEnabled(flag: Boolean) {
+private fun setMenuBarEnabled(flag: Boolean) {
   val bar = desktop.rootPane.jMenuBar
   bar.isVisible = flag
   sampleBar.isVisible = !flag

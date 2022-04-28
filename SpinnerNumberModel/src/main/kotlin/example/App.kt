@@ -18,8 +18,8 @@ fun makeUI(): Component {
   )
 
   val box = Box.createVerticalBox()
-  box.add(makeTitledPanel("Byte, Short, Integer, Long", makeJSpinnerListPanel(list1)))
-  box.add(makeTitledPanel("Long.valueOf", makeJSpinnerListPanel(list2)))
+  box.add(makeTitledPanel("Byte, Short, Integer, Long", makeSpinnerListPanel(list1)))
+  box.add(makeTitledPanel("Long.valueOf", makeSpinnerListPanel(list2)))
   box.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
 
   return JPanel(BorderLayout()).also {
@@ -28,7 +28,7 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeJSpinnerListPanel(list: List<SpinnerNumberModel>): Box {
+private fun makeSpinnerListPanel(list: List<SpinnerNumberModel>): Box {
   val box = Box.createVerticalBox()
   list.map { JSpinner(it) }.forEach {
     box.add(it)
