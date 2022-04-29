@@ -50,7 +50,7 @@ private class AnimatedBorder(
   private var startTime = -1L
   private val pos = Point2D.Double()
   private val points = mutableListOf<Point2D>()
-  private var shape: Shape? = null
+  private val borderPath = Path2D.Double()
 
   init {
     animator.addActionListener { e ->
@@ -65,16 +65,15 @@ private class AnimatedBorder(
         (e.source as? Timer)?.stop()
       } else {
         pos.setLocation(points[0])
-        val border = Path2D.Double()
-        border.moveTo(pos.x, pos.y)
+        borderPath.reset()
+        borderPath.moveTo(pos.x, pos.y)
         val idx = (points.size * progress).toInt().coerceIn(0, points.size - 1)
         for (i in 0..idx) {
           pos.setLocation(points[i])
-          border.lineTo(pos.x, pos.y)
-          border.moveTo(pos.x, pos.y)
+          borderPath.lineTo(pos.x, pos.y)
+          borderPath.moveTo(pos.x, pos.y)
         }
-        border.closePath()
-        shape = border
+        borderPath.closePath()
       }
       c.repaint()
     }
@@ -94,7 +93,7 @@ private class AnimatedBorder(
 
       override fun focusLost(e: FocusEvent) {
         points.clear()
-        shape = null
+        borderPath.reset()
         c.repaint()
       }
     })
@@ -108,9 +107,7 @@ private class AnimatedBorder(
     g2.stroke = bottomStroke
     g2.drawLine(0, h - BOTTOM_SPACE, w - 1, h - BOTTOM_SPACE)
     g2.stroke = stroke
-    if (shape != null) {
-      g2.draw(shape)
-    }
+    g2.draw(borderPath)
     g2.dispose()
   }
 
@@ -120,9 +117,9 @@ private class AnimatedBorder(
     val prev = Point2D.Double()
     val threshold = 2.0
     while (!pi.isDone) {
-      val coords = DoubleArray(6)
-      val segment = pi.currentSegment(coords)
-      val pt = Point2D.Double(coords[0], coords[1])
+      val ary = DoubleArray(6)
+      val segment = pi.currentSegment(ary)
+      val pt = Point2D.Double(ary[0], ary[1])
       if (segment == PathIterator.SEG_MOVETO) {
         points.add(pt)
         prev.setLocation(pt)
