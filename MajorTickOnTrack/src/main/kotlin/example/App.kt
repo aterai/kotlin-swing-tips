@@ -49,7 +49,7 @@ fun makeUI(): Component {
       g.color = Color(0x31_A8_F8)
       var value = c.minimum
       while (value <= c.maximum) {
-        val xpt = getXPositionForValue(c, r, value.toFloat())
+        val xpt = getPositionForValue(c, r, value.toFloat())
         g.fillOval(xpt, r.centerY.toInt() - tickSize / 2, tickSize, tickSize)
         // Overflow checking
         if (Int.MAX_VALUE - c.majorTickSpacing < value) {
@@ -59,11 +59,11 @@ fun makeUI(): Component {
       }
 
       // JSlider.isFilled
-      val fillRight = getXPositionForValue(c, r, c.value.toFloat())
+      val fillRight = getPositionForValue(c, r, c.value.toFloat())
       g.fillRoundRect(fillLeft, fillTop, fillRight - fillLeft, fillBottom - fillTop, arc, arc)
     }
 
-    private fun getXPositionForValue(slider: JSlider, trackRect: Rectangle, value: Float): Int {
+    private fun getPositionForValue(slider: JSlider, trackRect: Rectangle, value: Float): Int {
       val min = slider.minimum.toFloat()
       val max = slider.maximum.toFloat()
       val pixelsPerValue = trackRect.width / (max - min)

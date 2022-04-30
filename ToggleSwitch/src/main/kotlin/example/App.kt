@@ -61,7 +61,7 @@ private fun makeSliderPainter(): UIDefaults {
       g.fillRoundRect(fillLeft, fillTop, trackWidth, trackHeight, arc, arc)
       g.paint = Color.WHITE
       g.drawString(off, w - g.fontMetrics.stringWidth(off) - fillLeft * 5, baseline)
-      val fillRight = getXPositionForValue(c, Rectangle(fillLeft, fillTop, trackWidth, trackHeight))
+      val fillRight = getPositionForValue(c, Rectangle(fillLeft, fillTop, trackWidth, trackHeight))
       g.color = Color.ORANGE
       g.fillRoundRect(fillLeft + 1, fillTop, fillRight - fillLeft, trackHeight, arc, arc)
       g.paint = Color.WHITE
@@ -90,7 +90,7 @@ private fun makeSliderPainter(): UIDefaults {
 }
 
 // @see javax/swing/plaf/basic/BasicSliderUI#xPositionForValue(int value)
-private fun getXPositionForValue(slider: JSlider, trackRect: Rectangle): Int {
+private fun getPositionForValue(slider: JSlider, trackRect: Rectangle): Int {
   val value = slider.value
   val min = slider.minimum
   val max = slider.maximum

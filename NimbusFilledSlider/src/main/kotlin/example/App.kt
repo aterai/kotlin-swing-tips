@@ -21,7 +21,7 @@ fun makeUI(): Component {
 
       val fillBottom = fillTop + trackHeight
       val r = Rectangle(fillLeft, fillTop, trackWidth, fillBottom - fillTop)
-      val fillRight = getXPositionForValue(c, r)
+      val fillRight = getPositionForValue(c, r)
       g.color = Color.ORANGE
       g.fillRect(fillLeft + 1, fillTop + 1, fillRight - fillLeft, fillBottom - fillTop)
 
@@ -30,7 +30,7 @@ fun makeUI(): Component {
     }
 
     // @see javax/swing/plaf/basic/BasicSliderUI#xPositionForValue(int value)
-    private fun getXPositionForValue(slider: JSlider, trackRect: Rectangle): Int {
+    private fun getPositionForValue(slider: JSlider, trackRect: Rectangle): Int {
       val value = slider.value.toFloat()
       val min = slider.minimum.toFloat()
       val max = slider.maximum.toFloat()
