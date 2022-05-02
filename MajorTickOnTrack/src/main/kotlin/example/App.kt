@@ -12,7 +12,7 @@ fun makeUI(): Component {
   val d = UIDefaults()
   d["Slider.thumbWidth"] = 24
   d["Slider.thumbHeight"] = 24
-  val thumbPainter = Painter { g: Graphics2D, c: JSlider, w: Int, h: Int ->
+  val thumbPainter = Painter { g, c: JSlider, w, h ->
     g.paint = Color(0x21_98_F6)
     g.fillOval(0, 0, w, h)
     val icon = NumberIcon(c.value)

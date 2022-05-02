@@ -13,7 +13,7 @@ fun makeUI(): Component {
   val def = UIManager.getLookAndFeelDefaults()
   def["nimbusOrange"] = Color(255, 220, 35, 200)
   val d = UIDefaults()
-  val painter = Painter { g, _: JComponent, w, h ->
+  val painter = Painter { g, _: Component, w, h ->
     g.color = Color(100, 250, 120, 50)
     g.fillRect(0, 0, w, h)
     g.color = Color(100, 250, 120, 150)

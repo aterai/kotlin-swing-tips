@@ -27,7 +27,7 @@ fun makeUI(): Component {
   table2.autoCreateRowSorter = true
 
   val d = UIDefaults()
-  d["TextArea.borderPainter"] = Painter { _: Graphics2D, _: JComponent, _: Int, _: Int -> }
+  d["TextArea.borderPainter"] = Painter { _, _: Component, _, _ -> }
 
   val r = MultiLineTableCellRenderer()
   r.putClientProperty("Nimbus.Overrides", d)
