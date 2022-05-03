@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.font.FontRenderContext
 import java.awt.font.GlyphMetrics
 import java.awt.font.GlyphVector
 import java.awt.font.LineBreakMeasurer
@@ -61,18 +60,18 @@ private class WrappingLabel(text: String?) : JLabel(text) {
 }
 
 private class WrappedLabel(str: String?) : JLabel(str) {
-  @Transient
   private var gvText: GlyphVector? = null
   private var prevWidth = -1
+
   override fun doLayout() {
-    val i = insets
-    val w = width - i.left - i.right
-    if (w != prevWidth) {
+    val r = SwingUtilities.calculateInnerArea(this, null)
+    if (r.width != prevWidth) {
       val font = font
       val fm = getFontMetrics(font)
       val frc = fm.fontRenderContext
-      gvText = getWrappedGlyphVector(text, w.toDouble(), font, frc)
-      prevWidth = w
+      val gv = font.createGlyphVector(frc, text)
+      gvText = getWrappedGlyphVector(gv, r.getWidth())
+      prevWidth = r.width
     }
     super.doLayout()
   }
@@ -88,34 +87,26 @@ private class WrappedLabel(str: String?) : JLabel(str) {
       super.paintComponent(g)
     }
   }
+}
 
-  companion object {
-    private fun getWrappedGlyphVector(
-      str: String,
-      width: Double,
-      font: Font,
-      frc: FontRenderContext
-    ): GlyphVector {
-      val gmPos: Point2D = Point2D.Float()
-      val gv = font.createGlyphVector(frc, str)
-      val lineHeight = gv.logicalBounds.height.toFloat()
-      var pos = 0f
-      var lineCount = 0
-      var gm: GlyphMetrics
-      for (i in 0 until gv.numGlyphs) {
-        gm = gv.getGlyphMetrics(i)
-        val advance = gm.advance
-        if (pos < width && width <= pos + advance) {
-          lineCount++
-          pos = 0f
-        }
-        gmPos.setLocation(pos.toDouble(), lineHeight * lineCount.toDouble())
-        gv.setGlyphPosition(i, gmPos)
-        pos += advance
-      }
-      return gv
+private fun getWrappedGlyphVector(gv: GlyphVector, width: Double): GlyphVector {
+  val gmPos = Point2D.Float()
+  val lineHeight = gv.logicalBounds.height.toFloat()
+  var pos = 0f
+  var lineCount = 0
+  var gm: GlyphMetrics
+  for (i in 0 until gv.numGlyphs) {
+    gm = gv.getGlyphMetrics(i)
+    val advance = gm.advance
+    if (pos < width && width <= pos + advance) {
+      lineCount++
+      pos = 0f
     }
+    gmPos.setLocation(pos.toDouble(), (lineHeight * lineCount).toDouble())
+    gv.setGlyphPosition(i, gmPos)
+    pos += advance
   }
+  return gv
 }
 
 fun main() {
