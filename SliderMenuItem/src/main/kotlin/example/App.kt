@@ -69,7 +69,7 @@ private fun addCheckBoxAndToggleSlider(popup: JComponent) {
 private fun addCheckBoxMenuItemAndSlider(popup: JComponent) {
   val slider = makeBorderLayoutMenuItem()
   slider.add(makeSlider())
-  val mi: JMenuItem = JCheckBoxMenuItem("JCheckBoxMenuItem + JSlider")
+  val mi = JCheckBoxMenuItem("JCheckBoxMenuItem + JSlider")
   mi.addActionListener { e ->
     val b = e.source as? AbstractButton
     slider.isVisible = b?.isSelected == true
