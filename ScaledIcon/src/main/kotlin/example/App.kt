@@ -13,7 +13,7 @@ private val model = object : DefaultTableModel(4, 3) {
 }
 private val table = object : JTable(model) {
   private val iconIns = Insets(4, 4, 4, 4)
-  private val checkIcon: Icon = CheckBoxIcon()
+  private val checkIcon = CheckBoxIcon()
 
   override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int): Component {
     val c = super.prepareRenderer(renderer, row, column)
