@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent
 import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.text.Caret
 import javax.swing.text.DefaultCaret
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.text.Highlighter.HighlightPainter
@@ -46,7 +45,7 @@ private fun makeTextArea(flg: Boolean): Component {
       if (flg) {
         val oldCaret = caret
         val blinkRate = oldCaret.blinkRate
-        val caret: Caret = FocusOwnerCaret()
+        val caret = FocusOwnerCaret()
         caret.blinkRate = blinkRate
         setCaret(caret)
         caret.isSelectionVisible = true
