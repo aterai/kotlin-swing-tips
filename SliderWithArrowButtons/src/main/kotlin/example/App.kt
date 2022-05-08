@@ -68,16 +68,18 @@ private fun updateSliderLabelTable(slider: JSlider) {
   if (labelTable is Map<*, *>) {
     labelTable.forEach { key, value ->
       if (key is Int && value is JLabel) {
-        value.text = when (key) {
-          0 -> "100%"
-          slider.minimum -> "10%"
-          slider.maximum -> "1000%"
-          else -> " "
-        }
+        value.text = getLabel(key, slider)
       }
     }
   }
   slider.labelTable = labelTable // Update LabelTable
+}
+
+private fun getLabel(key: Int, slider: JSlider) = when (key) {
+  0 -> "100%"
+  slider.minimum -> "10%"
+  slider.maximum -> "1000%"
+  else -> " "
 }
 
 private class AutoRepeatHandler(
