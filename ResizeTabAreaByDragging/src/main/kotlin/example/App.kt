@@ -24,7 +24,7 @@ private fun makeUI(): Component {
 }
 
 private class ClippedTitleTabbedPane(tabPlacement: Int) : JTabbedPane(tabPlacement) {
-  var tabAreaWidth: Int = 32
+  var tabAreaWidth = 32
     set(newWidth) {
       val w = newWidth.coerceIn(MIN_WIDTH, width - MIN_WIDTH)
       if (field != w) {
