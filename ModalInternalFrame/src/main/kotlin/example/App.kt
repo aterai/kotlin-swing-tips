@@ -92,7 +92,7 @@ private class ModalInternalFrameAction1(label: String) : AbstractAction(label) {
 }
 
 // menuItem = JMenuItem(ModalInternalFrameAction2("InternalMessageDialog"))
-// menuItem.setMnemonic(KeyEvent.VK_2);
+// menuItem.setMnemonic(KeyEvent.VK_2)
 private class ModalInternalFrameAction2(label: String) : AbstractAction(label) {
   private val glass = MyGlassPane()
 
@@ -119,8 +119,8 @@ private class ModalInternalFrameAction2(label: String) : AbstractAction(label) {
   }
 }
 
-// menuItem = new JMenuItem(new ModalInternalFrameAction3("Modal"));
-// menuItem.setMnemonic(KeyEvent.VK_3);
+// menuItem = JMenuItem(ModalInternalFrameAction3("Modal"))
+// menuItem.setMnemonic(KeyEvent.VK_3)
 // Creating Modal Internal Frames -- Approach 1 and Approach 2
 // http://java.sun.com/developer/JDCTechTips/2001/tt1220.html
 private class ModalInternalFrameAction3(label: String) : AbstractAction(label) {
@@ -149,7 +149,7 @@ private class ModalInternalFrameAction3(label: String) : AbstractAction(label) {
     modal.addInternalFrameListener(ifl)
     glassPane.add(modal)
     modal.pack()
-    // val screen = desktop.getBounds();
+    // val screen = desktop.getBounds()
     // modal.setLocation(screen.x + screen.width / 2 - modal.getSize().width / 2,
     //                   screen.y + screen.height / 2 - modal.getSize().height / 2)
     originalGlassPane = desktop.rootPane.glassPane

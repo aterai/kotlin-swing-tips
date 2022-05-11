@@ -149,7 +149,7 @@ private open class UrlRenderer : DefaultTableCellRenderer(), MouseListener, Mous
       val prevRollover = isRollover
       viewRowIndex = table.rowAtPoint(pt)
       viewColumnIndex = table.columnAtPoint(pt)
-      isRollover = isUrlColumn(table, viewColumnIndex) // && pointInsidePrefSize(table, pt);
+      isRollover = isUrlColumn(table, viewColumnIndex) // && pointInsidePrefSize(table, pt)
       if (viewRowIndex == prevRow && viewColumnIndex == prevCol && isRollover == prevRollover) {
         return
       }

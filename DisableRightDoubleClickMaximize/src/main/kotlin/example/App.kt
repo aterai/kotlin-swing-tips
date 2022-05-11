@@ -32,7 +32,7 @@ fun makeUI(): Component {
   tabs.add("JPopupMenu", desktop1)
   tabs.add("WindowsInternalFrameUI", desktop2)
   tabs.add("JLayer", JLayer(desktop3, DesktopLayerUI()))
-  // tabs.setComponentPopupMenu(new TabbedPanePopupMenu());
+  // tabs.setComponentPopupMenu(TabbedPanePopupMenu())
   return JPanel(GridLayout(0, 1)).also {
     it.add(tabs)
     it.preferredSize = Dimension(320, 240)

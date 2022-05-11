@@ -130,7 +130,7 @@ private class TestInternalFrameListener : InternalFrameListener {
   }
 
   override fun internalFrameActivated(e: InternalFrameEvent) {
-    // System.out.println("internalFrameActivated: " + e.getInternalFrame().getTitle());
+    // println("internalFrameActivated: " + e.getInternalFrame().getTitle())
   }
 
   override fun internalFrameDeactivated(e: InternalFrameEvent) {

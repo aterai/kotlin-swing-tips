@@ -87,7 +87,7 @@ private class CustomComponentCellEditor(
     EventQueue.invokeLater {
       if (e is KeyEvent) {
         val kc = e.keyChar
-        // int kc = ke.getKeyCode();
+        // val kc = ke.getKeyCode()
         if (Character.isUnicodeIdentifierStart(kc)) {
           field.text = field.text + kc
         }
@@ -103,7 +103,7 @@ private class CustomComponent : JPanel(BorderLayout()) {
   val field = JTextField()
 
   init {
-    // this.setFocusable(false);
+    // this.setFocusable(false)
     this.add(field)
     val button = JButton()
     this.add(button, BorderLayout.EAST)
@@ -122,8 +122,8 @@ private class CustomComponent : JPanel(BorderLayout()) {
       }
     }
     return super.processKeyBinding(ks, e, condition, pressed)
-    // field.requestFocusInWindow();
-    // return field.processKeyBinding(ks, e, condition, pressed);
+    // field.requestFocusInWindow()
+    // return field.processKeyBinding(ks, e, condition, pressed)
   }
 }
 

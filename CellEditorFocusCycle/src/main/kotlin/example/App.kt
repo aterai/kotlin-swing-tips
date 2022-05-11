@@ -151,7 +151,7 @@ private class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
       val a = object : AbstractAction(title) {
         override fun actionPerformed(e: ActionEvent) {
           renderer.buttons.firstOrNull { it.text.trim() == title }?.doClick()
-          // fireEditingStopped();
+          // fireEditingStopped()
         }
       }
       am.put(title, a)

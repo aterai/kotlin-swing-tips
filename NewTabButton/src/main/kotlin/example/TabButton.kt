@@ -4,11 +4,11 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class TabButton : JRadioButton {
-  var textColor: Color? = null // = Color.WHITE;
-  var pressedTc: Color? = null // = Color.WHITE.darker();
-  var rolloverTc: Color? = null // = Color.WHITE;
-  var rolloverSelTc: Color? = null // = Color.WHITE;
-  var selectedTc: Color? = null // = Color.WHITE;
+  var textColor: Color? = null // = Color.WHITE
+  var pressedTc: Color? = null // = Color.WHITE.darker()
+  var rolloverTc: Color? = null // = Color.WHITE
+  var rolloverSelTc: Color? = null // = Color.WHITE
+  var selectedTc: Color? = null // = Color.WHITE
 
   constructor() : super(null, null)
 

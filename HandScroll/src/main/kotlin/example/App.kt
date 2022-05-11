@@ -37,7 +37,7 @@ fun makeUI(): Component {
   }
   viewport.add(label)
 
-  val scroll = JScrollPane() // new JScrollPane(label);
+  val scroll = JScrollPane() // JScrollPane(label)
   scroll.viewport = viewport
 
   val hsl1 = HandScrollListener()

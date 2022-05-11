@@ -118,8 +118,7 @@ private class GroupableTableHeaderUI : BasicTableHeaderUI() {
     val headerHeight = cellRect.height
 
     val map = hashMapOf<ColumnGroup, Rectangle>()
-    // int columnMargin = header.getColumnModel().getColumnMargin();
-    // int columnWidth;
+    // val columnMargin = header.getColumnModel().getColumnMargin()
     for (column in colMin..colMax) {
       val tc = cm.getColumn(column)
       cellRect.y = headerY

@@ -7,7 +7,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 fun makeUI(): Component {
   val combo = object : JComboBox<PairItem>(makeModel()) {
     override fun updateUI() {
-      // setRenderer(null);
+      // setRenderer(null)
       super.updateUI()
       setRenderer(MultiColumnCellRenderer())
     }

@@ -38,8 +38,8 @@ private fun makeTrayIcon(frame: JFrame): TrayIcon {
     for (icon in tray.trayIcons) {
       tray.remove(icon)
     }
-    // frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-    // frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+    // frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+    // frame.dispatchEvent(WindowEvent(frame, WindowEvent.WINDOW_CLOSING))
     frame.dispose()
   }
   val popup = PopupMenu()

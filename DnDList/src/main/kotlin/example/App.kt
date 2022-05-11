@@ -141,9 +141,9 @@ private class DnDList<E> : JList<E>(), DragGestureListener, Transferable {
 
     override fun dropActionChanged(e: DropTargetDragEvent) {
       // if (isDragAcceptable(e)) {
-      //   e.acceptDrag(e.getDropAction());
+      //   e.acceptDrag(e.getDropAction())
       // } else {
-      //   e.rejectDrag();
+      //   e.rejectDrag()
       // }
     }
 

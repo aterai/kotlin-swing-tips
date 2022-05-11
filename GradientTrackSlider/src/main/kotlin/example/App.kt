@@ -234,7 +234,7 @@ private object GradientPalletUtils {
     // val index = minOf(maxOf(i, 0), max)
     val index = (pallet.size * x).toInt().coerceIn(0, pallet.size - 1)
     val pix = pallet[index] and 0x00_FF_FF_FF
-    // int alpha = 0x64 << 24;
+    // val alpha = 0x64 << 24
     return Color(alpha or pix, true)
   }
 }

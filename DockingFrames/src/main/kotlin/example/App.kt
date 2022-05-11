@@ -36,13 +36,13 @@ private class DockingListener(private val frame1: JFrame, f2: JFrame) : Componen
 
   private fun positionFrames(e: ComponentEvent) {
     if (e.component == frame1) {
-      val x = frame1.bounds.x // + frame1.getBounds().width;
+      val x = frame1.bounds.x // + frame1.getBounds().width
       val y = frame1.bounds.y + frame1.bounds.height
       frame2.removeComponentListener(this)
       frame2.setLocation(x, y)
       frame2.addComponentListener(this)
     } else {
-      val x = frame2.bounds.x // - frame1.getBounds().width;
+      val x = frame2.bounds.x // - frame1.getBounds().width
       val y = frame2.bounds.y - frame1.bounds.height
       frame1.removeComponentListener(this)
       frame1.setLocation(x, y)

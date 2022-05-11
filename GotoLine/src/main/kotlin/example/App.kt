@@ -65,7 +65,7 @@ private class LineNumberView(private val textArea: JTextArea) : JComponent() {
     fontAscent = fontMetrics.ascent
     fontDescent = fontMetrics.descent
     fontLeading = fontMetrics.leading
-    // topInset = textArea.getInsets().top;
+    // topInset = textArea.getInsets().top
 
     val dl = object : DocumentListener {
       override fun insertUpdate(e: DocumentEvent) {

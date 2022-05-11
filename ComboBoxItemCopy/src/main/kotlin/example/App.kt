@@ -37,8 +37,8 @@ fun makeUI(): Component {
     (c as? JComboBox<*>)?.also {
       val a = it.actionMap.get(copyKey)
       a.actionPerformed(ActionEvent(it, e.id, e.actionCommand))
-      // KeyEvent keyEvent = new KeyEvent(c, 0, 0, 0, 0, 'C');
-      // SwingUtilities.notifyAction(a, keyStroke, keyEvent, it, modifiers);
+      // val keyEvent = KeyEvent(c, 0, 0, 0, 0, 'C')
+      // SwingUtilities.notifyAction(a, keyStroke, keyEvent, it, modifiers)
     }
   }
   combo1.componentPopupMenu = popup

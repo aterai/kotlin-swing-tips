@@ -15,7 +15,7 @@ fun makeUI(): Component {
   val model = makeDefaultTreeModel()
   val tree = JTree(model)
   tree.componentPopupMenu = TreePopupMenu()
-  // model.setAsksAllowsChildren(true);
+  // model.setAsksAllowsChildren(true)
 
   val check = JCheckBox("setAsksAllowsChildren")
   check.addActionListener { e ->

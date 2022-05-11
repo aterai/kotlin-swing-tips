@@ -190,9 +190,9 @@ private class DnDTable(model: TableModel?) : JTable(model), DragGestureListener,
 
     override fun dropActionChanged(e: DropTargetDragEvent) {
       // if (isDragAcceptable(e)) {
-      //   e.acceptDrag(e.getDropAction());
+      //   e.acceptDrag(e.getDropAction())
       // } else {
-      //   e.rejectDrag();
+      //   e.rejectDrag()
       // }
     }
 
@@ -249,7 +249,7 @@ private class TableDragSourceListener : DragSourceListener {
   }
 
   override fun dragDropEnd(e: DragSourceDropEvent) {
-    // e.getDragSourceContext().setCursor(Cursor.getDefaultCursor());
+    // e.getDragSourceContext().setCursor(Cursor.getDefaultCursor())
   }
 }
 

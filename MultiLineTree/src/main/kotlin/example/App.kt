@@ -147,7 +147,7 @@ private class CellTextArea2 : JTextArea() {
     val fm = getFontMetrics(font)
     val doc = document
     val root = doc.defaultRootElement
-    val lineCount = root.elementCount // = root.getElementIndex(doc.getLength());
+    val lineCount = root.elementCount // = root.getElementIndex(doc.getLength())
     var maxWidth = 10
     runCatching {
       for (i in 0 until lineCount) {

@@ -8,7 +8,7 @@ import java.util.Locale
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  val locale = Locale.ENGLISH // Locale.getDefault();
+  val locale = Locale.ENGLISH // Locale.getDefault()
   val firstDayOfWeek = WeekFields.of(locale).firstDayOfWeek
   val weeks = DayOfWeek.values().indices
     .map { firstDayOfWeek.plus(it.toLong()) }

@@ -4,7 +4,7 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  // UIManager.put("TabbedPane.textIconGap", 4);
+  // UIManager.put("TabbedPane.textIconGap", 4)
   val tabbedPane0 = object : JTabbedPane() {
     override fun updateUI() {
       super.updateUI()

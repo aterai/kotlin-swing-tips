@@ -83,7 +83,7 @@ private class LineFocusTable(model: TableModel) : JTable(model) {
         if (m.isPressed && isRowSelected(getEditingRow()) && e.isControlDown) {
           if (getEditingRow() % 2 == 0) {
             cb.isOpaque = false
-            // cb.setBackground(getBackground());
+            // cb.setBackground(getBackground())
           } else {
             cb.isOpaque = true
             cb.background = UIManager.getColor("Table.alternateRowColor")
@@ -106,7 +106,7 @@ private class LineFocusTable(model: TableModel) : JTable(model) {
   }
 
   private fun updateBorderType(border: DotBorder, column: Int) {
-    border.type.clear() // = EnumSet.noneOf(Type.class);
+    border.type.clear() // = EnumSet.noneOf(Type.class)
     if (column == 0) {
       border.type.add(Type.START)
     }

@@ -15,9 +15,9 @@ fun makeUI(): Component {
   (field.document as? AbstractDocument)?.documentFilter = SizeFilter()
   // ((AbstractDocument) field.getDocument()).setDocumentFilter(new DocumentSizeFilter(5))
   val am = field.actionMap
-  var key = DefaultEditorKit.deletePrevCharAction // "delete-previous";
+  var key = DefaultEditorKit.deletePrevCharAction // "delete-previous"
   am.put(key, SilentDeleteTextAction(key, am[key]))
-  key = DefaultEditorKit.deleteNextCharAction // "delete-next";
+  key = DefaultEditorKit.deleteNextCharAction // "delete-next"
   am.put(key, SilentDeleteTextAction(key, am[key]))
   return JPanel(GridLayout(2, 1)).also {
     it.add(makeTitledPanel("Default", JTextField()))

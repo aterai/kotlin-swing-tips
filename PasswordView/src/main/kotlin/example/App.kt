@@ -45,7 +45,7 @@ private class MyPasswordFieldUI : BasicPasswordFieldUI() {
     override fun drawEchoCharacter(g: Graphics, x: Int, y: Int, c: Char): Int {
       val fm = g.fontMetrics
       ICON.paintIcon(null, g, x, y - fm.ascent)
-      return x + ICON.iconWidth // fm.charWidth(c);
+      return x + ICON.iconWidth // fm.charWidth(c)
     }
   }
 

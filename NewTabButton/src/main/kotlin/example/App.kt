@@ -57,14 +57,14 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
     wrapPanel.isOpaque = true
     wrapPanel.background = Color(20, 30, 50)
 
-    // contentsPanel.setOpaque(true);
-    // contentsPanel.setBackground(new Color(20, 30, 50));
+    // contentsPanel.setOpaque(true)
+    // contentsPanel.setBackground(Color(20, 30, 50))
 
     wrapPanel.add(tabPanel)
-    // TEST: wrapPanel.add(new JButton("a"), BorderLayout.WEST);
+    // TEST: wrapPanel.add(JButton("a"), BorderLayout.WEST)
 
-    // JPanel locPanel = new JPanel();
-    // wrapPanel.add(new JButton("b"), BorderLayout.SOUTH);
+    // val locPanel = JPanel()
+    // wrapPanel.add(JButton("b"), BorderLayout.SOUTH)
 
     add(wrapPanel, BorderLayout.NORTH)
     add(contentsPanel)

@@ -16,7 +16,7 @@ import kotlin.collections.LinkedHashMap
 fun makeUI(): Component {
   val siteLink = "https://ateraimemo.com/"
   val editor = JEditorPane("text/html", "<html><a href='$siteLink'>$siteLink</a>")
-  editor.isOpaque = false // editor.setBackground(getBackground());
+  editor.isOpaque = false // editor.setBackground(getBackground())
   editor.isEditable = false // REQUIRED
   editor.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true)
   editor.addHyperlinkListener { e ->

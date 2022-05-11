@@ -23,11 +23,11 @@ fun makeUI(): Component {
 
   val combo3 = JComboBox(arrayOf("JPopupMenu does not open???", "111", "222"))
   combo3.isEditable = true
-  // NOT work: combo3.setComponentPopupMenu(popup2);
+  // NOT work: combo3.setComponentPopupMenu(popup2)
   val textField3 = combo3.editor.editorComponent
   (textField3 as? JComponent)?.componentPopupMenu = popup2
   textField3.name = "textField3"
-  // TEST: textField3.putClientProperty("doNotCancelPopup", null);
+  // TEST: textField3.putClientProperty("doNotCancelPopup", null)
 
   val combo4 = JComboBox(arrayOf("addMouseListener", "111", "222"))
   combo4.isEditable = true
@@ -88,8 +88,8 @@ private fun makePopupMenu(): JPopupMenu {
       (pop.invoker as? JTextComponent)?.also {
         println("${it.javaClass.name}: ${it.name}")
         // TEST:
-        // it.requestFocusInWindow();
-        // it.selectAll();
+        // it.requestFocusInWindow()
+        // it.selectAll()
         val hasSelectedText = it.selectedText != null
         cutAction.isEnabled = hasSelectedText
         copyAction.isEnabled = hasSelectedText

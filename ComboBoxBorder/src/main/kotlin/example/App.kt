@@ -29,7 +29,7 @@ fun makeUI(): Component {
   val combo02 = makeComboBox()
   combo02.ui = object : BasicComboBoxUI() {
     override fun createArrowButton(): JButton {
-      val b = JButton(ArrowIcon()) // .createArrowButton();
+      val b = JButton(ArrowIcon()) // createArrowButton()
       b.background = Color.BLACK
       b.isContentAreaFilled = false
       b.isFocusPainted = false

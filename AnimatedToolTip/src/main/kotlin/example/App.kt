@@ -125,7 +125,7 @@ private class AnimeIcon : Icon {
   private var running = false
   operator fun next() {
     if (running) {
-      // list.add(list.remove(0));
+      // list.add(list.remove(0))
       Collections.rotate(list, 1)
     }
   }

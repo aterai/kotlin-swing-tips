@@ -47,9 +47,9 @@ private fun setSliderUI(slider: JSlider) {
     UIManager.put("Slider.horizontalThumbIcon", icon)
     slider.ui = MetalJumpToClickedPositionSliderUI()
   }
-  // slider.setSnapToTicks(false);
-  // slider.setPaintTicks(true);
-  // slider.setPaintLabels(true);
+  // slider.setSnapToTicks(false)
+  // slider.setPaintTicks(true)
+  // slider.setPaintLabels(true)
 }
 
 private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
@@ -68,7 +68,7 @@ private class WindowsJumpToClickedPositionSliderUI(slider: JSlider) : WindowsSli
             SwingConstants.HORIZONTAL -> s.value = valueForXPosition(e.x)
             else -> error("orientation must be one of: VERTICAL, HORIZONTAL")
           }
-          super.mousePressed(e) // isDragging = true;
+          super.mousePressed(e) // isDragging = true
           super.mouseDragged(e)
         } else {
           super.mousePressed(e)
@@ -91,7 +91,7 @@ private class MetalJumpToClickedPositionSliderUI : MetalSliderUI() {
             SwingConstants.HORIZONTAL -> s.value = valueForXPosition(e.x)
             else -> error("orientation must be one of: VERTICAL, HORIZONTAL")
           }
-          super.mousePressed(e) // isDragging = true;
+          super.mousePressed(e) // isDragging = true
           super.mouseDragged(e)
         } else {
           super.mousePressed(e)

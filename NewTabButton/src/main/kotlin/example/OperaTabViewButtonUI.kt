@@ -24,8 +24,8 @@ class OperaTabViewButtonUI : BasicTabViewButtonUI() {
     }
   }
 
-  // @Override public void installUI(JComponent c) {
-  //   super.installUI(c);
+  // override fun installUI(c: JComponent) {
+  //   super.installUI(c)
   // }
 
   override fun paint(g: Graphics, c: JComponent) {
@@ -38,13 +38,13 @@ class OperaTabViewButtonUI : BasicTabViewButtonUI() {
     viewRect.y = i.top
     viewRect.width = size.width - i.right - viewRect.x
     viewRect.height = size.height - i.bottom - viewRect.y
-    iconRect.setBounds(0, 0, 0, 0) // .x = iconRect.y = iconRect.width = iconRect.height = 0;
-    textRect.setBounds(0, 0, 0, 0) // .x = textRect.y = textRect.width = textRect.height = 0;
+    iconRect.setBounds(0, 0, 0, 0) // .x = iconRect.y = iconRect.width = iconRect.height = 0
+    textRect.setBounds(0, 0, 0, 0) // .x = textRect.y = textRect.width = textRect.height = 0
 
     val g2 = g.create() as? Graphics2D ?: return
-    // g2.setPaint(Color.CYAN); // c.getBackground());
-    // g2.fillRect(0, 0, size.width - 1, size.height);
-    // g2.fill(viewRect);
+    // g2.setPaint(Color.CYAN) // c.getBackground())
+    // g2.fillRect(0, 0, size.width - 1, size.height)
+    // g2.fill(viewRect)
     tabPainter(g2, viewRect)
 
     val icon = b.icon
@@ -70,7 +70,7 @@ class OperaTabViewButtonUI : BasicTabViewButtonUI() {
     if (!model.isSelected && !model.isArmed && !model.isRollover) {
       g2.paint = Color(0x64_00_00_00, true)
       g2.fillRect(0, 0, size.width, size.height)
-      // g2.fill(viewRect);
+      // g2.fill(viewRect)
     }
     g2.dispose()
   }
@@ -122,19 +122,19 @@ class OperaTabViewButtonUI : BasicTabViewButtonUI() {
       )
       g2.fill(r3)
 
-      g2.paint = Color(39, 56, 67) // g2.setPaint(Color.GREEN);
+      g2.paint = Color(39, 56, 67) // g2.setPaint(Color.GREEN)
       g2.drawLine(r.x, r.y, r.x + r.width, r.y)
 
-      g2.paint = Color(255, 255, 255, 30) // g2.setPaint(Color.RED);
+      g2.paint = Color(255, 255, 255, 30) // g2.setPaint(Color.RED)
       g2.drawLine(r.x + 1, r.y + 1, r.x + r.width, r.y + 1)
 
-      g2.paint = Color(255, 255, 255, 60) // g2.setPaint(Color.BLUE);
+      g2.paint = Color(255, 255, 255, 60) // g2.setPaint(Color.BLUE)
       g2.drawLine(r.x, r.y, r.x, r.y + r.height)
 
-      g2.paint = Color(39, 56, 67, 250) // g2.setPaint(Color.YELLOW);
+      g2.paint = Color(39, 56, 67, 250) // g2.setPaint(Color.YELLOW)
       g2.drawLine(r.x + r.width - 1, r.y, r.x + r.width - 1, r.y + r.height)
 
-      // g2.setPaint(Color.PINK);
+      // g2.setPaint(Color.PINK)
       g2.drawLine(r.x, r.y + r.height - 1, r.x + r.width - 1, r.y + r.height - 1)
     }
   }

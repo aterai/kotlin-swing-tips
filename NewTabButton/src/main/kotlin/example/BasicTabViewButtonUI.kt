@@ -100,13 +100,10 @@ open class BasicTabViewButtonUI : TabViewButtonUI() {
   }
 
   companion object {
-    // private static final TabViewButtonUI tabViewButtonUI = new BasicTabViewButtonUI();
     private val size = Dimension()
     private val viewRect = Rectangle()
     private val iconRect = Rectangle()
     private val textRect = Rectangle()
-
-    // protected TabButton tabViewButton;
 
     // "Accidental override" reported when a @JvmStatic method in a Kotlin class has
     //   the same signature as a static method in a Java base class : KT-12993

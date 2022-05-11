@@ -101,7 +101,7 @@ private fun addActionPerformed() {
 }
 
 private fun makeNorthBox(): Component {
-  // Box northBox = Box.createHorizontalBox();
+  // val northBox = Box.createHorizontalBox()
   val northBox = JPanel(GridLayout(3, 2, 5, 5))
   northBox.add(JLabel("削除しないバックアップの数:", SwingConstants.RIGHT))
   northBox.add(spinner1)

@@ -327,13 +327,13 @@ private class OperaTabViewButtonUI : BasicTabViewButtonUI() {
       true
     )
     g2.fill(r3)
-    g2.paint = Color(39, 56, 67) // g2.setPaint(Color.GREEN);
+    g2.paint = Color(39, 56, 67) // g2.setPaint(Color.GREEN)
     g2.drawLine(r.x, r.y, r.x + r.width, r.y)
-    g2.paint = Color(255, 255, 255, 30) // g2.setPaint(Color.RED);
+    g2.paint = Color(255, 255, 255, 30) // g2.setPaint(Color.RED)
     g2.drawLine(r.x + 1, r.y + 1, r.x + r.width, r.y + 1)
-    g2.paint = Color(255, 255, 255, 60) // g2.setPaint(Color.BLUE);
+    g2.paint = Color(255, 255, 255, 60) // g2.setPaint(Color.BLUE)
     g2.drawLine(r.x, r.y, r.x, r.y + r.height)
-    g2.paint = Color(39, 56, 67, 250) // g2.setPaint(Color.YELLOW);
+    g2.paint = Color(39, 56, 67, 250) // g2.setPaint(Color.YELLOW)
     g2.drawLine(r.x + r.width - 1, r.y, r.x + r.width - 1, r.y + r.height)
     g2.drawLine(r.x, r.y + r.height - 1, r.x + r.width - 1, r.y + r.height - 1)
   }

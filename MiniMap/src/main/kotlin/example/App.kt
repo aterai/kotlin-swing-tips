@@ -23,7 +23,7 @@ val engine = createEngine()
 val editor = JEditorPane().also {
   it.selectedTextColor = null
   it.selectionColor = Color(0x64_88_AA_AA, true)
-  // TEST: it.setSelectionColor(null);
+  // TEST: it.setSelectionColor(null)
 }
 val scroll = JScrollPane(editor)
 val label = object : JLabel() {

@@ -68,7 +68,7 @@ private fun setTableHeaderColumnRatio(table: JTable, text: String) {
     col.preferredWidth = colWidth
     total -= colWidth
   }
-  // m.getColumn(m.getColumnCount() - 1).setMaxWidth(total);
+  // m.getColumn(m.getColumnCount() - 1).setMaxWidth(total)
   m.getColumn(m.columnCount - 1).preferredWidth = total
   table.revalidate()
 }

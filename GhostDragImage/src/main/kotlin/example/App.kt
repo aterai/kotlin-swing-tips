@@ -287,7 +287,7 @@ private open class ListItemTransferHandler : TransferHandler() {
     if (c is JList<*>) {
       dragImage = createDragImage(c)
       c.getMousePosition()?.also { dragImageOffset = it }
-      return MOVE // TransferHandler.COPY_OR_MOVE;
+      return MOVE // TransferHandler.COPY_OR_MOVE
     }
     return NONE
   }
@@ -379,7 +379,7 @@ private class CompactListItemTransferHandler : ListItemTransferHandler() {
     val h = c.fixedCellHeight - 20
     dragImage = createCompactDragImage(c, w, h)
     dragImageOffset = Point(w / 2, h)
-    return MOVE // TransferHandler.COPY_OR_MOVE;
+    return MOVE // TransferHandler.COPY_OR_MOVE
   }
 
   private fun <E> createCompactDragImage(source: JList<E>, w: Int, h: Int): BufferedImage {

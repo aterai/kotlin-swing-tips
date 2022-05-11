@@ -7,7 +7,7 @@ fun makeUI(): Component {
   UIManager.put("Button.disabledToolBarBorderBackground", Color.RED)
   UIManager.put("Button.toolBarBorderBackground", Color.GREEN)
 
-  // TEST: JPanel toolBar = new JPanel();
+  // TEST: val toolBar = JPanel()
   val toolBar = JToolBar()
 
   val tg1 = JToggleButton("Tg1")

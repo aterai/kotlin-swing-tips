@@ -158,7 +158,7 @@ private open class BackgroundTask : SwingWorker<String, Progress>() {
   @Throws(InterruptedException::class)
   override fun doInBackground(): String {
     var current = 0
-    val lengthOfTask = 12 // fileList.size();
+    val lengthOfTask = 12 // fileList.size()
     publish(Progress(ProgressType.LOG, "Length Of Task: $lengthOfTask"))
     publish(Progress(ProgressType.LOG, "\n------------------------------\n"))
     while (current < lengthOfTask && !isCancelled) {

@@ -4,8 +4,8 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.HierarchyEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-private const val BLACK_CIRCLE = "Åú" // "\u25CF";
-private const val WHITE_CIRCLE = "Åõ" // "\u25CB";
+private const val BLACK_CIRCLE = "Åú" // "\u25CF"
+private const val WHITE_CIRCLE = "Åõ" // "\u25CB"
 
 fun makeUI(): Component {
   val label1 = JLabel(BLACK_CIRCLE, SwingConstants.CENTER)
