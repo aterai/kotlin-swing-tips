@@ -119,7 +119,7 @@ fun makeUI(): Component {
   panel.add(makeButton("44444444444444444444444444444"))
   val bi = getFilteredImage(cl.getResource("example/test.jpg"))
   panel.border = CentredBackgroundBorder(bi)
-  // setBackground(new Color(50, 50, 50));
+  // setBackground(Color(50, 50, 50))
   panel.isOpaque = false
   panel.preferredSize = Dimension(320, 240)
   return panel

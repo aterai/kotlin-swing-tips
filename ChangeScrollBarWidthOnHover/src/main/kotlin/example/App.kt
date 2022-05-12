@@ -162,7 +162,7 @@ private class TranslucentScrollBarUI : BasicScrollBarUI() {
 
   override fun paintTrack(g: Graphics, c: JComponent, r: Rectangle) {
     // val g2 = g.create() as? Graphics2D ?: return
-    // g2.setPaint(new Color(100, 100, 100, 100))
+    // g2.setPaint(Color(100, 100, 100, 100))
     // g2.fillRect(r.x, r.y, r.width - 1, r.height - 1)
     // g2.dispose()
   }

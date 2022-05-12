@@ -112,7 +112,7 @@ class GradientPalletProgressBarUI : BasicProgressBarUI() {
     return Color(pallet[index] and 0x00_FF_FF_FF)
     // translucent
     // val pix = pallet[index] & 0x00_FF_FF_FF | (0x64 << 24)
-    // return new Color(pix), true)
+    // return Color(pix, true)
   }
 
   override fun paintDeterminate(g: Graphics, c: JComponent) {

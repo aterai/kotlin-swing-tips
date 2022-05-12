@@ -97,7 +97,7 @@ private class LineNumberView(private val textArea: JTextArea) : JComponent() {
   private fun getLineAtPoint(y: Int): Int {
     val root = textArea.document.defaultRootElement
     val pos = textArea.viewToModel(Point(0, y))
-    // Java 9: val pos = textArea.viewToModel2D(new Point(0, y))
+    // Java 9: val pos = textArea.viewToModel2D(Point(0, y))
     return root.getElementIndex(pos)
   }
 

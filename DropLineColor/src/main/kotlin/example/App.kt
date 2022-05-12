@@ -20,7 +20,7 @@ fun makeUI() = JTabbedPane().also {
   it.add("JTable", makeTablePanel())
   it.add("JTree", makeTreePanel())
   // Default drop line color: UIManager.put("List.dropLineColor", null)
-  // Hide drop lines: UIManager.put("List.dropLineColor", new Color(0x0, true))
+  // Hide drop lines: UIManager.put("List.dropLineColor", Color(0x0, true))
   it.preferredSize = Dimension(320, 240)
 }
 

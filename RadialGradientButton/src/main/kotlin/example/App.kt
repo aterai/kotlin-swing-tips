@@ -111,11 +111,11 @@ private class RadialGradientButton(title: String) : JButton(title) {
   //   update();
   //   Graphics2D g2 = (Graphics2D) g.create();
   //   g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-  //   // g2.setStroke(new BasicStroke(2.5f));
+  //   // g2.setStroke(BasicStroke(2.5f));
   //   if (getModel().isArmed()) {
-  //     g2.setPaint(new Color(0x64_44_05_F7, true));
+  //     g2.setPaint(Color(0x64_44_05_F7, true));
   //   } else {
-  //     g2.setPaint(new Color(0xF7_23_59).darker());
+  //     g2.setPaint(Color(0xF7_23_59).darker());
   //   }
   //   g2.draw(shape);
   //   g2.dispose();

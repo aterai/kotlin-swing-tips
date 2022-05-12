@@ -64,10 +64,10 @@ private class TranslucentScrollBarUI : BasicScrollBarUI() {
   override fun createIncreaseButton(orientation: Int) = ZeroSizeButton()
 
   override fun paintTrack(g: Graphics, c: JComponent?, r: Rectangle) {
-    // Graphics2D g2 = (Graphics2D) g.create();
-    // g2.setPaint(new Color(100, 100, 100, 100));
-    // g2.fillRect(r.x, r.y, r.width - 1, r.height - 1);
-    // g2.dispose();
+    // val g2 = g.create() as? Graphics2D
+    // g2.setPaint(Color(100, 100, 100, 100))
+    // g2.fillRect(r.x, r.y, r.width - 1, r.height - 1)
+    // g2.dispose()
   }
 
   override fun paintThumb(g: Graphics, c: JComponent?, r: Rectangle) {
