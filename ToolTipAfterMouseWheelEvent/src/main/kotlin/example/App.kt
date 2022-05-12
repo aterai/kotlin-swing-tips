@@ -71,7 +71,7 @@ private open class TooltipList<E>(m: ListModel<E>?) : JList<E>(m) {
           e.component,
           MouseEvent.MOUSE_MOVED,
           e.getWhen(),
-          e.modifiers,
+          e.modifiersEx or e.modifiers,
           p1.x,
           p1.y,
           e.clickCount,
