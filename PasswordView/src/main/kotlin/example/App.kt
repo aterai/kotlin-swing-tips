@@ -41,7 +41,7 @@ private fun makeTitledPanel(title: String, cmp: Component): Component {
 private class MyPasswordFieldUI : BasicPasswordFieldUI() {
   override fun create(elem: Element) = MyPasswordView(elem)
 
-  private class MyPasswordView(element: Element?) : PasswordView(element) {
+  class MyPasswordView(element: Element?) : PasswordView(element) {
     override fun drawEchoCharacter(g: Graphics, x: Int, y: Int, c: Char): Int {
       val fm = g.fontMetrics
       ICON.paintIcon(null, g, x, y - fm.ascent)
