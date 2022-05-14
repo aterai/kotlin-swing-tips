@@ -9,7 +9,7 @@ import javax.swing.text.DefaultHighlighter
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 
 private val WARNING_COLOR = Color(0xFF_C8_C8)
-private const val TEXT = """
+private val TEXT = """
   Trail: Creating a GUI with JFC/Swing
   Lesson: Learning Swing by Example
    This lesson explains the concepts you need to
