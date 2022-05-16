@@ -3,13 +3,10 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-private var fbaCheck: JCheckBox? = null
-private var dfiCheck: JCheckBox? = null
-
 fun makeUI(): Component {
   val tree = JTree()
 
-  fbaCheck = JCheckBox(TreeDraws.DRAWS_FOCUS_BORDER_AROUND_ICON.toString()).also {
+  val fbaCheck = JCheckBox(TreeDraws.DRAWS_FOCUS_BORDER_AROUND_ICON.toString()).also {
     it.isSelected = UIManager.getBoolean(TreeDraws.DRAWS_FOCUS_BORDER_AROUND_ICON.toString())
     it.addActionListener { e ->
       val b = (e.source as? JCheckBox)?.isSelected == true
@@ -18,7 +15,7 @@ fun makeUI(): Component {
     }
   }
 
-  dfiCheck = JCheckBox(TreeDraws.DRAW_DASHED_FOCUS_INDICATOR.toString()).also {
+  val dfiCheck = JCheckBox(TreeDraws.DRAW_DASHED_FOCUS_INDICATOR.toString()).also {
     it.isSelected = UIManager.getBoolean(TreeDraws.DRAW_DASHED_FOCUS_INDICATOR.toString())
     it.addActionListener { e ->
       val b = (e.source as? JCheckBox)?.isSelected == true
@@ -38,10 +35,10 @@ fun makeUI(): Component {
   val p = object : JPanel(BorderLayout()) {
     override fun updateUI() {
       super.updateUI()
-      fbaCheck?.isSelected = UIManager.getBoolean(
+      fbaCheck.isSelected = UIManager.getBoolean(
         TreeDraws.DRAWS_FOCUS_BORDER_AROUND_ICON.toString()
       )
-      dfiCheck?.isSelected = UIManager.getBoolean(
+      dfiCheck.isSelected = UIManager.getBoolean(
         TreeDraws.DRAW_DASHED_FOCUS_INDICATOR.toString()
       )
     }
