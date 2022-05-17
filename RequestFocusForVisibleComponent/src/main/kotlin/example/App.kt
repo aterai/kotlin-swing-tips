@@ -70,7 +70,7 @@ private open class TabSelectionMouseListener(private val ui: BasicTabbedPaneUI) 
         val a = ActionEvent(tabPane, ActionEvent.ACTION_PERFORMED, cmd)
         EventQueue.invokeLater { tabPane.actionMap[cmd].actionPerformed(a) }
       } else if (tabPane.isRequestFocusEnabled) {
-        tabPane.requestFocus()
+        tabPane.requestFocusInWindow()
       }
     }
   }

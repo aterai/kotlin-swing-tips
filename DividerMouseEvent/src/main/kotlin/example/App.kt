@@ -52,7 +52,7 @@ fun makeUI(): Component {
 }
 
 private fun selectMinMax(splitPane: JSplitPane, cmd: String) {
-  splitPane.requestFocus()
+  splitPane.requestFocusInWindow()
   object : SwingWorker<Void?, Void?>() {
     override fun doInBackground(): Void? {
       return null

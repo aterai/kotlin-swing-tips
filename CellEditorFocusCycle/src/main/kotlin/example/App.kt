@@ -35,10 +35,7 @@ fun makeUI(): Component {
 }
 
 private fun isEditorFocusCycle(editor: Component) =
-  CheckBoxesEditor.getEditorFocusCycleAfter(editor)?.let {
-    it.requestFocus()
-    true
-  } ?: false
+  CheckBoxesEditor.getEditorFocusCycleAfter(editor)?.requestFocusInWindow() ?: false
 
 private fun makeTable(): JTable {
   val columnNames = arrayOf("user", "rwx")
@@ -189,7 +186,7 @@ private class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
 
   override fun isCellEditable(e: EventObject): Boolean {
     EventQueue.invokeLater {
-      getEditorFocusCycleAfter(e.source as? Component)?.requestFocus()
+      getEditorFocusCycleAfter(e.source as? Component)?.requestFocusInWindow()
     }
     return super.isCellEditable(e)
   }
