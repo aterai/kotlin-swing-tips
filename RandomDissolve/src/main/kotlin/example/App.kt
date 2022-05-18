@@ -4,6 +4,7 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.image.BufferedImage
 import java.awt.image.DataBufferInt
 import java.net.URL
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.Timer
 
@@ -24,7 +25,8 @@ fun makeUI(): Component {
 }
 
 private fun makeImage(url: URL?): BufferedImage {
-  val icon = ImageIcon(url)
+  val icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) }
+    ?: UIManager.getIcon("html.missingImage")
   val w = icon.iconWidth
   val h = icon.iconHeight
   val img = BufferedImage(w, h, BufferedImage.TYPE_INT_RGB)

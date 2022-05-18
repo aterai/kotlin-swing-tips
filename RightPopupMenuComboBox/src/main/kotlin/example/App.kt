@@ -4,6 +4,7 @@ import com.sun.java.swing.plaf.windows.WindowsComboBoxUI
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.image.BufferedImage
 import java.awt.image.RescaleOp
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
@@ -73,7 +74,9 @@ private class RightPopupMenuListener : PopupMenuListener {
 private class RightPopupWindowsComboBoxUI : WindowsComboBoxUI() {
   override fun createArrowButton(): JButton {
     val cl = Thread.currentThread().contextClassLoader
-    val icon = ImageIcon(cl.getResource("example/14x14.png"))
+    val url = cl.getResource("example/14x14.png")
+    val icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) }
+      ?: UIManager.getIcon("html.missingImage")
     val button = object : JButton(icon) {
       override fun getPreferredSize() = Dimension(14, 14)
     }
