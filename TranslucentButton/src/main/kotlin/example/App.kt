@@ -83,8 +83,9 @@ private fun makeCheckerTexture(): TexturePaint {
 }
 
 fun makeUI(): Component {
+  // ecqlipse 2 PNG by chrfb on DeviantArt
+  // https://www.deviantart.com/chrfb/art/ecqlipse-2-PNG-59941546
   val cl = Thread.currentThread().contextClassLoader
-  // Icon: refer to http://chrfb.deviantart.com/art/quot-ecqlipse-2-quot-PNG-59941546
   val url = cl.getResource("example/RECYCLE BIN - EMPTY_16x16-32.png")
   val panel = object : JPanel() {
     override fun paintComponent(g: Graphics) {
