@@ -6,14 +6,18 @@ import java.awt.event.HierarchyListener
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-fun makeUI() = JPanel().also {
-  val txt = "Mini-size 86Key Japanese Keyboard\n  Model No: DE-SK-86BK\n  SERIAL NO: 00000000"
+fun makeUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
-  val icon = ImageIcon(cl.getResource("example/test.png"))
-  it.add(ImageCaptionLabel(txt, icon))
-  it.preferredSize = Dimension(320, 240)
+  val url = cl.getResource("example/test.png")
+  val icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) } ?: MissingIcon()
+  val txt = "Mini-size 86Key Japanese Keyboard\n  Model No: DE-SK-86BK\n  SERIAL NO: 0000"
+  return JPanel().also {
+    it.add(ImageCaptionLabel(txt, icon))
+    it.preferredSize = Dimension(320, 240)
+  }
 }
 
 private class ImageCaptionLabel(caption: String, icon: Icon) : JLabel() {
@@ -173,6 +177,26 @@ private object AnimationUtil {
     }
     return d
   }
+}
+
+private class MissingIcon : Icon {
+  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+    val g2 = g.create() as? Graphics2D ?: return
+    val w = iconWidth
+    val h = iconHeight
+    val gap = w / 5
+    g2.color = Color.WHITE
+    g2.fillRect(x, y, w, h)
+    g2.color = Color.RED
+    g2.stroke = BasicStroke(w / 8f)
+    g2.drawLine(x + gap, y + gap, x + w - gap, y + h - gap)
+    g2.drawLine(x + gap, y + h - gap, x + w - gap, y + gap)
+    g2.dispose()
+  }
+
+  override fun getIconWidth() = 240
+
+  override fun getIconHeight() = 160
 }
 
 fun main() {
