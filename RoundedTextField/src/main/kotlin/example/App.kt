@@ -15,7 +15,7 @@ fun makeUI(): Component {
   val textField01 = object : JTextField(20) {
     // Unleash Your Creativity with Swing and the Java 2D API!
     // http://java.sun.com/products/jfc/tsc/articles/swing2d/index.html
-    // http://web.archive.org/web/20091205092230/http://java.sun.com/products/jfc/tsc/articles/swing2d/index.html
+    // https://web.archive.org/web/20091205092230/http://java.sun.com/products/jfc/tsc/articles/swing2d/index.html
     override fun paintComponent(g: Graphics) {
       if (!isOpaque) {
         val w = width - 1

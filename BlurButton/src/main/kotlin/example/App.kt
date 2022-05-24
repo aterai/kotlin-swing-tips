@@ -41,9 +41,8 @@ fun makeUI(): Component {
   }
 }
 
-// http://shop.oreilly.com/product/9780596009076.do
+// https://www.oreilly.com/library/view/swing-hacks/0596009070/
 // 9. Blur Disabled Components
-// http://code.google.com/p/filthy-rich-clients/source/browse/trunk/swing-hacks-examples-20060109/Ch01-JComponents/09/swinghacks/ch01/JComponents/hack09/BlurJButton.java?r=11
 private class BlurJButton(label: String) : JButton(label) {
   @Transient
   private var buf: BufferedImage? = null

@@ -9,7 +9,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
-  // CRW_3857_JFR.jpg: http://sozai-free.com/
+  // CRW_3857_JFR.jpg: https://sozai-free.com/
   val url = cl.getResource("example/CRW_3857_JFR.jpg")
   val image = url?.openStream()?.use(ImageIO::read)
   val icon = image?.let { ImageIcon(it) } ?: MissingIcon()
