@@ -145,7 +145,7 @@ private class LocalDateTimeEditor(
   private inner class LocalDateTimeFormatter : InternationalFormatter(
     dateTimeFormatter.toFormat()
   ) {
-    override fun valueToString(value: Any?): String =
+    override fun valueToString(value: Any?) =
       (value as? TemporalAccessor)?.let { dateTimeFormatter.format(it) } ?: ""
 
     @Throws(ParseException::class)

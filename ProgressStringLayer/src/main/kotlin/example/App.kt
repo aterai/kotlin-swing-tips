@@ -133,7 +133,7 @@ private class TextLabelProgressBar(model: BoundedRangeModel) : JProgressBar(mode
     label.text = "%03d/100".format((100 * percentComplete).toInt())
   }
 
-  override fun getPreferredSize(): Dimension = super.getPreferredSize().also {
+  override fun getPreferredSize() = super.getPreferredSize()?.also {
     val i = label.insets
     it.width = label.preferredSize.width + i.left + i.right
   }
