@@ -1,25 +1,29 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.JTextComponent
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
 
-private const val DUMMY_TEXT = "Quartz glyph job vex'd cwm finks."
+private const val TEXT = "Quartz glyph job vex'd cwm finks."
 
 fun makeUI(): Component {
   val label1 = JTextPane()
   val attr = label1.getStyle(StyleContext.DEFAULT_STYLE)
   StyleConstants.setLineSpacing(attr, -.2f)
   label1.setParagraphAttributes(attr, true)
-  label1.text = "JTextPane\n$DUMMY_TEXT"
+  label1.text = "JTextPane\n$TEXT"
 
-  val label2 = JTextArea("JTextArea\n$DUMMY_TEXT")
+  val label2 = JTextArea("JTextArea\n$TEXT")
 
   val cl = Thread.currentThread().contextClassLoader
-  val icon = ImageIcon(cl.getResource("example/wi0124-32.png"))
-  val label3 = JLabel("<html>JLabel+html<br>$DUMMY_TEXT")
+  val url = cl.getResource("example/wi0124-32.png.png")
+  val icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) }
+    ?: UIManager.getIcon("OptionPane.errorIcon")
+
+  val label3 = JLabel("<html>JLabel+html<br>$TEXT")
   label3.icon = icon
 
   return JPanel(GridLayout(3, 1)).also {
@@ -31,7 +35,7 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeLeftIcon(label: JTextComponent, icon: ImageIcon): Box {
+private fun makeLeftIcon(label: JTextComponent, icon: Icon): Box {
   label.foreground = UIManager.getColor("Label.foreground")
   label.isOpaque = false
   label.isEditable = false
