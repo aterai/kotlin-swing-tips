@@ -2,6 +2,7 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.util.concurrent.atomic.AtomicInteger
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 private var mode = Fade.IN
@@ -9,8 +10,12 @@ private var mode = Fade.IN
 fun makeUI(): Component {
   val animator = Timer(25, null)
   val alpha = AtomicInteger(10)
+
   val cl = Thread.currentThread().contextClassLoader
-  val icon = ImageIcon(cl.getResource("example/test.png"))
+  val url = cl.getResource("example/test.png")
+  val icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) }
+    ?: UIManager.getIcon("OptionPane.errorIcon")
+
   val fade = object : JComponent() {
     override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return

@@ -395,8 +395,6 @@ private class TabDropTargetListener : DropTargetListener {
   companion object {
     private val HIDDEN_POINT = Point(0, -1000)
 
-    // private fun getGhostGlassPane(c: Component?) =
-    //     c?.takeIf { it is GhostGlassPane }?.let { it as GhostGlassPane }
     private fun getGhostGlassPane(c: Component?) = c as? GhostGlassPane
   }
 }

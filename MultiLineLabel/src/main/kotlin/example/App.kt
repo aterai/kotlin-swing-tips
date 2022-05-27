@@ -19,7 +19,7 @@ fun makeUI(): Component {
   val label2 = JTextArea("JTextArea\n$TEXT")
 
   val cl = Thread.currentThread().contextClassLoader
-  val url = cl.getResource("example/wi0124-32.png.png")
+  val url = cl.getResource("example/wi0124-32.png")
   val icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) }
     ?: UIManager.getIcon("OptionPane.errorIcon")
 
