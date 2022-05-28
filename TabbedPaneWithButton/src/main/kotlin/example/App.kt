@@ -4,6 +4,7 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.synth.Region
 import javax.swing.plaf.synth.SynthConstants
@@ -12,7 +13,9 @@ import javax.swing.plaf.synth.SynthLookAndFeel
 
 fun makeUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
-  val icon = ImageIcon(cl.getResource("example/page_new.gif"))
+  val url = cl.getResource("example/page_new.gif")
+  val icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) }
+    ?: UIManager.getIcon("html.missingImage")
   val button = object : JButton(icon) {
     private var handler: MouseListener? = null
     override fun updateUI() {
