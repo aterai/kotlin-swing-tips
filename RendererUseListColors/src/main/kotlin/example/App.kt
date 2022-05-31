@@ -40,7 +40,7 @@ fun makeUI(): Component {
       )
     }
   }
-  // UIDefaults d1 = new UIDefaults();
+  // val d1 = UIDefaults();
   // d1.put("ComboBox.rendererUseListColors", true);
   // combo1.putClientProperty("Nimbus.Overrides", d1);
 

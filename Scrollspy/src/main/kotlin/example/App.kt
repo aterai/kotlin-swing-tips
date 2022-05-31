@@ -199,7 +199,7 @@ private class RowSelectionTree : JTree() {
 
     listener = object : TreeWillExpandListener {
       override fun treeWillExpand(e: TreeExpansionEvent) { // throws ExpandVetoException {
-        // throw new ExpandVetoException(e, "Tree expansion cancelled");
+        // throw ExpandVetoException(e, "Tree expansion cancelled");
       }
 
       @Throws(ExpandVetoException::class)

@@ -69,10 +69,10 @@ open class RoundedCornerButton : JButton {
 
   // constructor(text: String, icon: Icon) : super(text, icon)
   // {
-  //   // setModel(new DefaultButtonModel());
+  //   // setModel(DefaultButtonModel());
   //   // init(text, icon);
   //   // setContentAreaFilled(false);
-  //   // setBackground(new Color(250, 250, 250));
+  //   // setBackground(Color(250, 250, 250));
   //   // initShape();
   // }
 

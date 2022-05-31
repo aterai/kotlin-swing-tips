@@ -29,7 +29,7 @@ private fun makeTree(): JTree {
   val handler = object : TreeWillExpandListener {
     // @Throws(ExpandVetoException::class)
     override fun treeWillExpand(e: TreeExpansionEvent) {
-      // throw new ExpandVetoException(e, "Tree expansion cancelled");
+      // throw ExpandVetoException(e, "Tree expansion cancelled")
     }
 
     @Throws(ExpandVetoException::class)

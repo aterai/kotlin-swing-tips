@@ -293,7 +293,7 @@ private class BottomRoundedCornerBorder : RoundedCornerBorder() {
     p.quadTo(x + w, y + h, x + w, y + h - r)
     p.lineTo(x + w, y.toDouble())
     p.closePath()
-    // Area round = new Area(p)
+    // val round = Area(p)
 
     g2.paint = c.background
     g2.fill(p)

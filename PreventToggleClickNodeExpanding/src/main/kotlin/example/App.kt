@@ -90,7 +90,7 @@ private class FileExpandVetoListener : TreeWillExpandListener {
   }
 
   override fun treeWillCollapse(e: TreeExpansionEvent) { // throws ExpandVetoException {
-    // throw new ExpandVetoException(e, "Tree collapse cancelled")
+    // throw ExpandVetoException(e, "Tree collapse cancelled")
   }
 }
 

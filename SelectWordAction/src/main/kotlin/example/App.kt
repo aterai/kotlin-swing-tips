@@ -126,7 +126,7 @@ private class SegmentCache {
   //  * Creates and returns a SegmentCache.
   //  */
   // public SegmentCache() {
-  //   segments = new ArrayList<>(11);
+  //   segments = ArrayList<>(11);
   // }
 
   /**

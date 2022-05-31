@@ -140,7 +140,7 @@ private class RoundedCornerBorder : AbstractBorder() {
     val border = getBorderShape(x, y, width - 1, height - 1)
 
     g2.paint = ALPHA_ZERO
-    // val corner = new Area(border.getBounds2D())
+    // val corner = Area(border.getBounds2D())
     val dx = x.toDouble()
     val dy = y.toDouble()
     val dw = width.toDouble()

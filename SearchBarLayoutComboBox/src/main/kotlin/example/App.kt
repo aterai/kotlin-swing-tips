@@ -19,7 +19,7 @@ fun makeUI(): Component {
   combo.getEditor().setItem("java swing")
 
   p.add(combo)
-  // p.add(new SearchBarComboBox(makeModel()));
+  // p.add(SearchBarComboBox(makeModel()))
   return JPanel(BorderLayout()).also {
     it.add(p, BorderLayout.NORTH)
     it.border = BorderFactory.createEmptyBorder(5, 20, 5, 20)

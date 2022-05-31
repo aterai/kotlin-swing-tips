@@ -57,7 +57,7 @@ fun makeUI(): Component {
   }
 
   // // TEST:
-  // MouseAdapter hsl2 = new DragScrollListener()
+  // val hsl2 = DragScrollListener()
   // label.addMouseMotionListener(hsl2)
   // label.addMouseListener(hsl2)
 

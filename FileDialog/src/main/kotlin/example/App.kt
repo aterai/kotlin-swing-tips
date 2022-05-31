@@ -11,8 +11,8 @@ private val log = JTextArea()
 fun makeUI(): Component {
   val button1 = JButton("FileDialog(Frame)")
   button1.addActionListener {
-    // Window w = SwingUtilities.getWindowAncestor(button1)
-    // Frame frame = new Frame(w.getGraphicsConfiguration())
+    // val w = SwingUtilities.getWindowAncestor(button1)
+    // val frame = Frame(w.getGraphicsConfiguration())
     val frame = JOptionPane.getFrameForComponent(button1)
     // Frame frame = null
     val fd = FileDialog(frame, "title")

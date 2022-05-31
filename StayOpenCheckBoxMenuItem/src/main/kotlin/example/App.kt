@@ -22,7 +22,7 @@ fun makeUI(): Component {
   button.addActionListener(handler)
 
   // Java 9
-  // JCheckBoxMenuItem checkMenuItem = new JCheckBoxMenuItem("doNotCloseOnMouseClick")
+  // JCheckBoxMenuItem checkMenuItem = JCheckBoxMenuItem("doNotCloseOnMouseClick")
   // checkMenuItem.putClientProperty("CheckBoxMenuItem.doNotCloseOnMouseClick", true)
   // popup.add(checkMenuItem)
 

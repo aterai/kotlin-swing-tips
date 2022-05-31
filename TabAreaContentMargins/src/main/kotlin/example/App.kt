@@ -29,14 +29,14 @@ private fun makeTabbedPane() = JTabbedPane().also {
 fun main() {
   EventQueue.invokeLater {
     runCatching {
-      // UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-      // UIManager.put("TabbedPane.tabAreaInsets", new Insets(10, 10, 2, 10));
+      // UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+      // UIManager.put("TabbedPane.tabAreaInsets", Insets(10, 10, 2, 10))
 
       UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
       val d = UIManager.getLookAndFeelDefaults()
-      // d.put("TabbedPane:TabbedPaneContent.contentMargins", new Insets(0, 5, 5, 5));
-      // d.put("TabbedPane:TabbedPaneTab.contentMargins", new Insets(2, 8, 3, 8));
-      // d.put("TabbedPane:TabbedPaneTabArea.contentMargins", new Insets(3, 10, 4, 10));
+      // d.put("TabbedPane:TabbedPaneContent.contentMargins", Insets(0, 5, 5, 5))
+      // d.put("TabbedPane:TabbedPaneTab.contentMargins", Insets(2, 8, 3, 8))
+      // d.put("TabbedPane:TabbedPaneTabArea.contentMargins", Insets(3, 10, 4, 10))
       val i = d.getInsets(KEY)
       d.put(KEY, Insets(i.top, 0, i.bottom, 0))
     }.onFailure {
