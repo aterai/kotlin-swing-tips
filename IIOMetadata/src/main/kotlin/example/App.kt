@@ -12,39 +12,36 @@ import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreeNode
 
 fun makeUI(): Component {
-  var root: IIOMetadataNode?
+  val tree = JTree()
   val readers = ImageIO.getImageReadersByFormatName("jpeg")
   val reader = readers.next()
   val buf = StringBuilder()
 
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/test.jpg")
-  ImageIO.createImageInputStream(url?.openStream()).use { iis ->
-    reader.setInput(iis, true)
-    buf.append("Width: %d%n".format(reader.getWidth(0)))
-    buf.append("Height: %d%n".format(reader.getHeight(0)))
-    val meta = reader.getImageMetadata(0)
-    for (s in meta.metadataFormatNames) {
-      buf.append("MetadataFormatName: $s\n")
-    }
-    root = (meta.getAsTree("javax_imageio_jpeg_image_1.0") as? IIOMetadataNode)?.also {
-      val com = it.getElementsByTagName("com")
-      if (com.length > 0) {
-        val comment = (com.item(0) as? IIOMetadataNode)?.getAttribute("comment")
-        buf.append("Comment: $comment\n")
+  if (url != null) {
+    ImageIO.createImageInputStream(url.openStream()).use { iis ->
+      reader.setInput(iis, true)
+      buf.append("Width: %d%n".format(reader.getWidth(0)))
+      buf.append("Height: %d%n".format(reader.getHeight(0)))
+      val meta = reader.getImageMetadata(0)
+      for (s in meta.metadataFormatNames) {
+        buf.append("MetadataFormatName: $s\n")
       }
-      buf.append("------------\n")
-      print(buf, it, 0)
+      (meta.getAsTree("javax_imageio_jpeg_image_1.0") as? IIOMetadataNode)?.also {
+        val com = it.getElementsByTagName("com")
+        if (com.length > 0) {
+          val comment = (com.item(0) as? IIOMetadataNode)?.getAttribute("comment")
+          buf.append("Comment: $comment\n")
+        }
+        buf.append("------------\n")
+        print(buf, it, 0)
+        tree.model = DefaultTreeModel(XmlTreeNode(it))
+      }
     }
   }
-//  } catch (ex: IOException) {
-//    ex.printStackTrace()
-//    buf.append(String.format("%s%n", ex.message))
-//    UIManager.getLookAndFeel().provideErrorFeedback(this)
-//  }
 
   val log = JTextArea(buf.toString())
-  val tree = JTree(DefaultTreeModel(XmlTreeNode(root)))
   val tabs = JTabbedPane()
   tabs.addTab("text", JScrollPane(log))
   tabs.addTab("tree", JScrollPane(tree))
