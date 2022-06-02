@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
@@ -45,9 +46,15 @@ private fun makeIconTableModel(list: ListModel<IconItem>): TableModel {
   }
 }
 
-private data class IconItem(val str: String) {
-  val large = ImageIcon(javaClass.getResource("$str-48.png"))
-  val small = ImageIcon(javaClass.getResource("$str-24.png"))
+private data class IconItem(val name: String) {
+  val large = makeIcon("example/$name-48.png")
+  val small = makeIcon("example/$name-24.png")
+}
+
+private fun makeIcon(path: String): Icon {
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
+  return url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) }
+    ?: UIManager.getIcon("html.missingImage")
 }
 
 private class IconTableCellRenderer : DefaultTableCellRenderer() {
