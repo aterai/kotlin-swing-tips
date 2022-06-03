@@ -1,6 +1,7 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.image.BufferedImage
 import java.awt.image.ImageObserver
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.tree.DefaultMutableTreeNode
@@ -30,8 +31,7 @@ private val tree = object : JTree() {
 }
 
 fun makeUI(): Component {
-  val cl = Thread.currentThread().contextClassLoader
-  val icon = ImageIcon(cl.getResource("example/restore_to_background_color.gif"))
+  val icon = makeImageIcon("example/restore_to_background_color.gif")
   val root = DefaultMutableTreeNode("root")
   val s0 = DefaultMutableTreeNode(NodeObject("default", icon))
   val s1 = DefaultMutableTreeNode(NodeObject("setImageObserver", icon))
@@ -55,6 +55,23 @@ fun makeUI(): Component {
     it.add(JScrollPane(tree))
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+fun makeImageIcon(path: String): ImageIcon {
+  val cl = Thread.currentThread().contextClassLoader
+  return cl.getResource(path)?.let { ImageIcon(it) }
+    ?: ImageIcon(makeMissingImage())
+}
+
+private fun makeMissingImage(): Image {
+  val missingIcon = UIManager.getIcon("html.missingImage")
+  val iw = missingIcon.iconWidth
+  val ih = missingIcon.iconHeight
+  val bi = BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, (16 - iw) / 2, (16 - ih) / 2)
+  g2.dispose()
+  return bi
 }
 
 private data class NodeObject(val title: String, val icon: Icon)

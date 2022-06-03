@@ -209,13 +209,17 @@ private class DnDTabbedPane : JTabbedPane() {
   fun initGlassPane(tabPt: Point) {
     rootPane.glassPane = glassPane
     if (hasGhost) {
-      val c = getTabComponentAt(dragTabIndex) ?: JLabel(getTitleAt(dragTabIndex))
-      val d = c.preferredSize
+      val c = getTabComponentAt(dragTabIndex)
+      val copy = c ?: JLabel(getTitleAt(dragTabIndex))
+      val d = copy.preferredSize
       val image = BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_ARGB)
       val g2 = image.createGraphics()
-      SwingUtilities.paintComponent(g2, c, glassPane, 0, 0, d.width, d.height)
+      SwingUtilities.paintComponent(g2, copy, glassPane, 0, 0, d.width, d.height)
       g2.dispose()
       glassPane.setImage(image)
+      if (c != null) {
+        setTabComponentAt(dragTabIndex, c)
+      }
     }
     val glassPt = SwingUtilities.convertPoint(this, tabPt, glassPane)
     glassPane.setPoint(glassPt)
