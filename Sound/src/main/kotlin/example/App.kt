@@ -28,9 +28,9 @@ fun makeUI(): Component {
 }
 
 fun loadAndPlayAudio(path: String) {
-  val cl = Thread.currentThread().contextClassLoader
+  val url = Thread.currentThread().contextClassLoader.getResource(path) ?: return
   runCatching {
-    AudioSystem.getAudioInputStream(cl.getResource(path)).use { sound ->
+    AudioSystem.getAudioInputStream(url).use { sound ->
       val audio = AudioSystem.getLine(DataLine.Info(Clip::class.java, sound.format))
       (audio as? Clip)?.use { clip ->
         val loop = Toolkit.getDefaultToolkit().systemEventQueue.createSecondaryLoop()
