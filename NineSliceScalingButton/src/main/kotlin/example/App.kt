@@ -5,22 +5,21 @@ import java.awt.image.BufferedImage
 import java.awt.image.FilteredImageSource
 import java.awt.image.ImageFilter
 import java.awt.image.RGBImageFilter
-import java.net.URL
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import kotlin.math.roundToInt
 
 fun makeUI(): Component {
-  val cl = Thread.currentThread().contextClassLoader
   // symbol_scale_2.jpg: Real World Illustrator: Understanding 9-Slice Scaling
   // https://rwillustrator.blogspot.jp/2007/04/understanding-9-slice-scaling.html
-  val img = makeBufferedImage(cl.getResource("example/symbol_scale_2.jpg"))
+  val img = makeBufferedImage("example/symbol_scale_2.jpg")
   val b1 = ScalingButton("Scaling", img)
   val b2 = NineSliceScalingButton("9-Slice Scaling", img)
   val p1 = JPanel(GridLayout(1, 2, 5, 5))
   p1.add(b1)
   p1.add(b2)
 
-  val bi = makeBufferedImage(cl.getResource("example/blue.png"))
+  val bi = makeBufferedImage("example/blue.png")
   val b3 = JButton("Scaling Icon", NineSliceScalingIcon(bi, 0, 0, 0, 0))
   b3.isContentAreaFilled = false
   b3.border = BorderFactory.createEmptyBorder()
@@ -49,13 +48,19 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeBufferedImage(url: URL?): BufferedImage {
-  val ic = ImageIcon(url)
-  val w = ic.iconWidth
-  val h = ic.iconHeight
-  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+private fun makeBufferedImage(path: String): BufferedImage {
+  val cl = Thread.currentThread().contextClassLoader
+  return cl.getResource(path)?.openStream()?.use { ImageIO.read(it) }
+    ?: makeMissingImage()
+}
+
+private fun makeMissingImage(): BufferedImage {
+  val missingIcon = UIManager.getIcon("html.missingImage")
+  val iw = missingIcon.iconWidth
+  val ih = missingIcon.iconHeight
+  val bi = BufferedImage(124, 124, BufferedImage.TYPE_INT_ARGB)
   val g2 = bi.createGraphics()
-  ic.paintIcon(null, g2, 0, 0)
+  missingIcon.paintIcon(null, g2, (124 - iw) / 2, (124 - ih) / 2)
   g2.dispose()
   return bi
 }
