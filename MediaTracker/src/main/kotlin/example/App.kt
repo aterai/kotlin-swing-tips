@@ -37,12 +37,8 @@ fun makeUI(): Component {
 
   val cl = Thread.currentThread().contextClassLoader
   val uri = cl.getResource("example/test.png")?.toURI()
-  runCatching {
-    if (uri != null) {
-      addImage(Paths.get(uri))
-    }
-  }.onFailure {
-    UIManager.getLookAndFeel().provideErrorFeedback(table)
+  if (uri != null) {
+    runCatching { Paths.get(uri) }.onSuccess { addImage(it) }
   }
 
   return JPanel(BorderLayout()).also {
