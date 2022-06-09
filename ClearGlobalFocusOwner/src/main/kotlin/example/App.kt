@@ -20,7 +20,7 @@ fun makeUI(): Component {
       root.jMenuBar = createMenuBar()
       val ml = object : MouseAdapter() {
         override fun mouseClicked(e: MouseEvent) {
-          println("clicked")
+          // println("clicked")
           KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner()
         }
       }

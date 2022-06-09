@@ -12,11 +12,6 @@ fun makeUI() = JPanel(BorderLayout()).also {
 }
 
 fun createMenuBar(): JMenuBar {
-  println("checkIconOffset: " + UIManager.get("CheckBoxMenuItem.checkIconOffset"))
-  println("afterCheckIconGap: " + UIManager.get("CheckBoxMenuItem.afterCheckIconGap"))
-  println("minimumTextOffset: " + UIManager.get("CheckBoxMenuItem.minimumTextOffset"))
-  println("evenHeight: " + UIManager.get("CheckBoxMenuItem.evenHeight"))
-
   // UIManager.put("MenuItem.checkIconOffset", 20)
   // UIManager.put("MenuItem.afterCheckIconGap", 20)
   UIManager.put("MenuItem.minimumTextOffset", 20 + 20 + 31 - 9)

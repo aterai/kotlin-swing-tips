@@ -52,7 +52,6 @@ fun makeUI(): Component {
       val c = UIManager.getLookAndFeelDefaults().getColor("TextField.caretForeground")
       field.caretColor = c
       // c = UIManager.getLookAndFeelDefaults().getColor("TextPane.caretForeground")
-      // println(c)
       // editor.setCaretColor(c)
     }
   }

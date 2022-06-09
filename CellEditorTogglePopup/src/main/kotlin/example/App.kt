@@ -19,11 +19,11 @@ fun makeUI(): Component {
   val comboBox = JComboBox(model)
   comboBox.addAncestorListener(object : AncestorListener {
     override fun ancestorAdded(e: AncestorEvent) {
-      println("ancestorAdded")
+      // println("ancestorAdded")
       val c = e.component
       c.isEnabled = false
       EventQueue.invokeLater {
-        println("invokeLater")
+        // println("invokeLater")
         c.isEnabled = true
       }
     }

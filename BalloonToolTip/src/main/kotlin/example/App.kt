@@ -87,7 +87,6 @@ private class BalloonToolTip : JToolTip() {
       val c = e.component
       if (e.changeFlags.toInt() and HierarchyEvent.SHOWING_CHANGED != 0 && c.isShowing) {
         // (SwingUtilities.getRoot(c) as? JWindow)?.also {
-        //   println("Popup\$HeavyWeightWindow")
         //   it.setBackground(Color(0x0, true))
         // }
         (SwingUtilities.getRoot(c) as? JWindow)?.background = Color(0x0, true)
