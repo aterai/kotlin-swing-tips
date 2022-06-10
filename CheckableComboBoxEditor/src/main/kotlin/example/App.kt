@@ -80,7 +80,7 @@ private class CheckComboBoxEditor : ComboBoxEditor {
       (c as? JComboBox<*>)?.also {
         val idx = it.selectedIndex
         if (idx >= 0 && idx != editor.editingIndex) {
-          println("setItem: $idx")
+          // println("setItem: $idx")
           editor.editingIndex = idx
         }
       }
@@ -91,12 +91,12 @@ private class CheckComboBoxEditor : ComboBoxEditor {
   override fun getEditorComponent() = editor
 
   override fun addActionListener(l: ActionListener) {
-    println("addActionListener: ${l.javaClass.name}")
+    // println("addActionListener: ${l.javaClass.name}")
     editor.addActionListener(l)
   }
 
   override fun removeActionListener(l: ActionListener) {
-    println("removeActionListener: ${l.javaClass.name}")
+    // println("removeActionListener: ${l.javaClass.name}")
     editor.removeActionListener(l)
   }
 }

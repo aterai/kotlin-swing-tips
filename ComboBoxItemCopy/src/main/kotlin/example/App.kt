@@ -19,7 +19,7 @@ fun makeUI(): Component {
         val contents = StringSelection(it.toString())
         val clipboard = Toolkit.getDefaultToolkit().systemClipboard
         clipboard.setContents(contents, null)
-        println(it)
+        // println(it)
       }
     }
   }

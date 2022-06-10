@@ -16,7 +16,7 @@ fun makeUI(): Component {
   desktop.desktopManager = object : DefaultDesktopManager() {
     override fun getBoundsForIconOf(f: JInternalFrame): Rectangle {
       val r = super.getBoundsForIconOf(f)
-      println(r.size)
+      // println(r.size)
       return r
     }
   }

@@ -14,12 +14,12 @@ fun makeUI(): Component {
   val timer = Timer(DELAY, null)
   val awtEvent = AWTEventListener {
     if (timer.isRunning) {
-      println("timer.restart()")
+      // println("timer.restart()")
       timer.restart()
     }
   }
   timer.addActionListener { e ->
-    println("timeout")
+    // println("timeout")
     setTestConnected(false)
     Toolkit.getDefaultToolkit().removeAWTEventListener(awtEvent)
     (e.source as? Timer)?.stop()
