@@ -19,9 +19,10 @@ fun makeUI(): Component {
 
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/anime.gif")
+  val icon = url?.let { ImageIcon(it) } ?: UIManager.getIcon("html.missingImage")
   val l2 = object : JLabel("Gif Animated ToolTip") {
     override fun createToolTip(): JToolTip {
-      val label = JLabel("", ImageIcon(url), SwingConstants.LEFT)
+      val label = JLabel("", icon, SwingConstants.LEFT)
       val tip = AnimatedToolTip(label)
       tip.component = this
       return tip
@@ -141,9 +142,9 @@ private class AnimeIcon : Icon {
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     g2.paint = ELLIPSE_COLOR
     g2.translate(x, y)
-    val size = list.size.toFloat()
+    val size = list.size
     list.forEach {
-      val alpha = if (running) (list.indexOf(it) + 1) / size else .5f
+      val alpha = if (running) (list.indexOf(it) + 1f) / size else .5f
       g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha)
       g2.fill(it)
     }
