@@ -1,11 +1,14 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
-  val icon = ImageIcon(cl.getResource("example/duke.running.gif"))
+  val url = cl.getResource("example/duke.running.gif")
+  val icon = url?.let { ImageIcon(it) } ?: UIManager.getIcon("html.missingImage")
   val label1 = JLabel(icon)
   label1.isEnabled = false
   label1.border = BorderFactory.createTitledBorder("Default")
@@ -25,8 +28,9 @@ fun makeUI(): Component {
   val label3 = JLabel(icon)
   label3.isEnabled = false
   label3.border = BorderFactory.createTitledBorder("setDisabledIcon")
-  val i = ImageIcon(cl.getResource("example/duke.running_frame_0001.gif"))
-  label3.disabledIcon = makeDisabledIcon(i)
+  val url2 = cl.getResource("example/duke.running_frame_0001.gif")
+  val image = url2?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+  label3.disabledIcon = makeDisabledIcon(image)
 
   val check = JCheckBox("setEnabled")
   check.addActionListener { e ->
@@ -48,8 +52,18 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeDisabledIcon(icon: ImageIcon): Icon {
-  val img = icon.image
+private fun makeMissingImage(): Image {
+  val missingIcon = UIManager.getIcon("html.missingImage")
+  val iw = missingIcon.iconWidth
+  val ih = missingIcon.iconHeight
+  val bi = BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
+  val g2 = bi.createGraphics()
+  missingIcon.paintIcon(null, g2, (16 - iw) / 2, (16 - ih) / 2)
+  g2.dispose()
+  return bi
+}
+
+private fun makeDisabledIcon(img: Image): Icon {
   return ImageIcon(GrayFilter.createDisabledImage(img))
 }
 
