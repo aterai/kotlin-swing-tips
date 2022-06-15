@@ -11,8 +11,8 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 fun makeUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/duke.running.gif")
-  val label = JLabel()
-  label.icon = ImageIcon(url)
+  val icon = url?.let { ImageIcon(it) } ?: UIManager.getIcon("html.missingImage")
+  val label = JLabel(icon)
   label.border = BorderFactory.createTitledBorder("duke.running.gif")
 
   val box = Box.createHorizontalBox()
