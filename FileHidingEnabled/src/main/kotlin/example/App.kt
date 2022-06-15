@@ -5,7 +5,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val showHiddenFiles = Toolkit.getDefaultToolkit().getDesktopProperty("awt.file.showHiddenFiles")
-  println("awt.file.showHiddenFiles: $showHiddenFiles")
+  // println("awt.file.showHiddenFiles: $showHiddenFiles")
 
   val chooser = JFileChooser()
   searchPopupMenu(chooser)?.also {

@@ -18,8 +18,8 @@ fun makeUI(): Component {
 
   val beep = JButton("Beep")
   beep.addActionListener {
+    // println("Beep button clicked")
     Toolkit.getDefaultToolkit().beep()
-    println("Beep button clicked")
   }
 
   val model = arrayOf("00000", "111", "2")

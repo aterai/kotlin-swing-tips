@@ -4,8 +4,8 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  println(UIManager.getDimension("ColorChooser.swatchesRecentSwatchSize"))
-  println(UIManager.getDimension("ColorChooser.swatchesSwatchSize"))
+  // println(UIManager.getDimension("ColorChooser.swatchesRecentSwatchSize"))
+  // println(UIManager.getDimension("ColorChooser.swatchesSwatchSize"))
   UIManager.put("ColorChooser.swatchesRecentSwatchSize", Dimension(10, 8))
   UIManager.put("ColorChooser.swatchesSwatchSize", Dimension(6, 10))
 

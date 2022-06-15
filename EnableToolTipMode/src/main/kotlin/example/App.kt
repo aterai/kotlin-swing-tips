@@ -7,7 +7,7 @@ private const val TOOLTIP_MODE = "ToolTipManager.enableToolTipMode"
 
 fun makeUI(): Component {
   val mode = UIManager.getString(TOOLTIP_MODE)
-  println(mode)
+  // println(mode)
   val allWindows = "allWindows"
   val radio1 = JRadioButton(allWindows, allWindows == mode)
   radio1.toolTipText = "ToolTip: $allWindows"
