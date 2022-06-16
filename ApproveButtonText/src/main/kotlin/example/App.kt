@@ -26,18 +26,12 @@ private fun makeCustomChooserPanel(): JPanel {
   val showOpenDialog = JButton("Open:取消->キャンセル")
   showOpenDialog.addActionListener {
     val fileChooser = JFileChooser()
-    val retValue = fileChooser.showOpenDialog(p)
-    if (retValue == JFileChooser.APPROVE_OPTION) {
-      log.append(fileChooser.selectedFile.toString() + "\n")
-    }
+    appendSelectedFile(fileChooser, p)
   }
   val showSaveDialog = JButton("Save:取消->キャンセル")
   showSaveDialog.addActionListener {
     val fileChooser = JFileChooser()
-    val retValue = fileChooser.showSaveDialog(p)
-    if (retValue == JFileChooser.APPROVE_OPTION) {
-      log.append(fileChooser.selectedFile.toString() + "\n")
-    }
+    appendSelectedFile(fileChooser, p)
   }
   p.add(showOpenDialog)
   p.add(showSaveDialog)
@@ -50,21 +44,22 @@ private fun makeDefaultChooserPanel(): JPanel {
   p.border = BorderFactory.createTitledBorder("default")
   val showOpenDialog = JButton("showOpenDialog")
   showOpenDialog.addActionListener {
-    val retValue = defaultChooser.showOpenDialog(p)
-    if (retValue == JFileChooser.APPROVE_OPTION) {
-      log.append(defaultChooser.selectedFile.toString() + "\n")
-    }
+    appendSelectedFile(defaultChooser, p)
   }
   val showSaveDialog = JButton("showSaveDialog")
   showSaveDialog.addActionListener {
-    val retValue = defaultChooser.showSaveDialog(p)
-    if (retValue == JFileChooser.APPROVE_OPTION) {
-      log.append(defaultChooser.selectedFile.toString() + "\n")
-    }
+    appendSelectedFile(defaultChooser, p)
   }
   p.add(showOpenDialog)
   p.add(showSaveDialog)
   return p
+}
+
+private fun appendSelectedFile(fileChooser: JFileChooser, p: Component) {
+  val retValue = fileChooser.showOpenDialog(p)
+  if (retValue == JFileChooser.APPROVE_OPTION) {
+    log.append(fileChooser.selectedFile.toString() + "\n")
+  }
 }
 
 fun main() {
