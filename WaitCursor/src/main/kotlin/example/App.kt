@@ -13,7 +13,6 @@ fun makeUI(): Component {
     object : BackgroundTask() {
       public override fun done() {
         if (!button.isDisplayable) {
-          println("done: DISPOSE_ON_CLOSE")
           cancel(true)
         } else {
           button.rootPane.glassPane.isVisible = false
