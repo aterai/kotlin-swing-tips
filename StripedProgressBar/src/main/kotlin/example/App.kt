@@ -61,7 +61,6 @@ fun makeUI(): Component {
   panel.addHierarchyListener { e ->
     val b = e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L
     if (b && !e.component.isDisplayable && worker != null) {
-      println("DISPOSE_ON_CLOSE")
       worker?.cancel(true)
       worker = null
     }

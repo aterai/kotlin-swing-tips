@@ -68,7 +68,6 @@ fun makeUI(): Component {
     val f = object : RowFilter<TableModel, Int>() {
       override fun include(entry: Entry<out TableModel, out Int>): Boolean {
         val o = entry.model.getValueAt(entry.identifier, 1)
-        println(model.contains(o))
         return model.isEmpty || model.contains(o)
       }
     }
