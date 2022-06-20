@@ -12,10 +12,7 @@ private val SIZE = Dimension(50, 50)
 private val FONT = Font(Font.SANS_SERIF, Font.PLAIN, SIZE.width)
 
 fun makeUI(): Component {
-  val pieces = arrayOf(
-    "?", "?", "?", "?", "?", "?",
-    "?", "?", "?", "?", "?", "?",
-  )
+  val pieces = arrayOf("♔", "♕", "♖", "♗", "♘", "♙", "♚", "♛", "♜", "♝", "♞", "♟")
   return JPanel(GridLayout(4, 6, 0, 0)).also {
     for (i in pieces.indices) {
       it.add(initLabel(JLabel(pieces[i]), i))
