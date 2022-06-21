@@ -39,7 +39,7 @@ private fun initPopupMenu(p: JPopupMenu) {
 
 private class DropShadowPopupMenu : JPopupMenu() {
   private val dim = Dimension()
-  @Transient private var shadow: BufferedImage? = null
+  private var shadow: BufferedImage? = null
 
   override fun updateUI() {
     border = null

@@ -4,7 +4,7 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 private val field = JTextField("1f, 1f, 5f, 1f")
-@Transient var dashedStroke = makeStroke(field)
+var dashedStroke = makeStroke(field)
 
 private fun getDashArray(field: JTextField): FloatArray {
   val strArray = tokenize(field.text.trim())

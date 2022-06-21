@@ -113,7 +113,7 @@ private class CustomUndoPlainDocument : PlainDocument() {
 
 private class DocumentFilterUndoManager : UndoManager() {
   private var compoundEdit: CompoundEdit? = null
-  @Transient val documentFilter = object : DocumentFilter() {
+  val documentFilter = object : DocumentFilter() {
     @Throws(BadLocationException::class)
     override fun replace(
       fb: FilterBypass,

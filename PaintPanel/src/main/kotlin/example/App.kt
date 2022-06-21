@@ -13,8 +13,8 @@ fun makeUI() = JPanel(BorderLayout()).also {
 }
 
 private class PaintPanel : JPanel() {
-  @Transient private var handler: MouseInputListener? = null
-  @Transient private val list = ArrayList<Shape>()
+  private var handler: MouseInputListener? = null
+  private val list = ArrayList<Shape>()
 
   override fun updateUI() {
     removeMouseMotionListener(handler)

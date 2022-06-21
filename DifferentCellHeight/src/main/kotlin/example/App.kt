@@ -28,8 +28,8 @@ fun makeUI(): Component {
 }
 
 private class TextAreaRenderer<E> : JTextArea(), ListCellRenderer<E> {
-  @Transient private var noFocusBorder: Border? = null
-  @Transient private var focusBorder: Border? = null
+  private var noFocusBorder: Border? = null
+  private var focusBorder: Border? = null
 
   override fun getListCellRendererComponent(
     list: JList<out E>,

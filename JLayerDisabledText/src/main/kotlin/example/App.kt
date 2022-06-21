@@ -65,8 +65,8 @@ private fun makeButton(title: String): JButton {
 }
 
 private class DisableInputLayerUI<V : AbstractButton> : LayerUI<V>() {
-  @Transient private val dummyMouseListener = object : MouseAdapter() { /* to nothing */ }
-  @Transient private val dummyKeyListener = object : KeyAdapter() { /* to nothing */ }
+  private val dummyMouseListener = object : MouseAdapter() { /* to nothing */ }
+  private val dummyKeyListener = object : KeyAdapter() { /* to nothing */ }
   private var isBlocking = false
   override fun installUI(c: JComponent) {
     super.installUI(c)

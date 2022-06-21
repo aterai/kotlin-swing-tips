@@ -30,8 +30,8 @@ private val INIT_TXT = """
    https://docs.oracle.com/javase/tutorial/uiswing/learn/index.html
 """.trimIndent()
 
-@Transient private val currentPainter = DefaultHighlightPainter(Color.ORANGE)
-@Transient private val highlightPainter = DefaultHighlightPainter(Color.YELLOW)
+private val currentPainter = DefaultHighlightPainter(Color.ORANGE)
+private val highlightPainter = DefaultHighlightPainter(Color.YELLOW)
 private val textArea = JTextArea(INIT_TXT)
 private val field = JTextField("Swing")
 private val checkCase = JCheckBox("Match case")

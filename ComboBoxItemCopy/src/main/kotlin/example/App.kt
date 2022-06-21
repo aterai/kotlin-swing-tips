@@ -78,9 +78,9 @@ private fun makeModel(start: Int) = DefaultComboBoxModel<String>().also {
 }
 
 private class TextFieldPopupMenu : JPopupMenu() {
+  // private val pasteAction = DefaultEditorKit.PasteAction()
   private val cutAction = DefaultEditorKit.CutAction()
   private val copyAction = DefaultEditorKit.CopyAction()
-  // private val pasteAction = DefaultEditorKit.PasteAction()
   private val deleteAction = object : AbstractAction("delete") {
     override fun actionPerformed(e: ActionEvent) {
       (invoker as? JTextComponent)?.replaceSelection(null)

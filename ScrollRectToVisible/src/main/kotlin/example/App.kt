@@ -24,7 +24,6 @@ private val model = object : DefaultTableModel(data, columnNames) {
 }
 private val listModel = DefaultListModel<LocalDateTime>()
 private val timer = Timer(100, null)
-@Transient
 private var hierarchyListener: HierarchyListener? = null
 
 fun makeUI(): Component {

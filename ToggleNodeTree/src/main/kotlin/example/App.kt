@@ -13,6 +13,7 @@ fun makeUI(): Component {
   tree.isRootVisible = false
   val handler = object : TreeWillExpandListener {
     private var isAdjusting = false
+
     // @Throws(ExpandVetoException::class)
     override fun treeWillExpand(e: TreeExpansionEvent) {
       // collapseAll(tree) // StackOverflowError when collapsing nodes below 2nd level

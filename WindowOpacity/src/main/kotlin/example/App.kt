@@ -6,11 +6,8 @@ import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-@Transient
 val imageTexture = makeImageTexture()
-@Transient
 val checkerTexture = makeCheckerTexture()
-@Transient
 var texture: TexturePaint? = null
 
 fun makeUI(): Component {

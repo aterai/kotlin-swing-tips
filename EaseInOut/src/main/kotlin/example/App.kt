@@ -55,7 +55,7 @@ private class ImageCaptionLabel(caption: String, icon: Icon) : JLabel() {
 
     // override fun contains(x: Int, y: Int) = false
   }
-  @Transient private val handler = LabelHandler(textArea)
+  private val handler = LabelHandler(textArea)
 
   init {
     setIcon(icon)

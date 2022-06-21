@@ -42,7 +42,7 @@ private val list = object : JList<ListItem>(model) {
     addMouseListener(handler)
   }
 }
-@Transient private var comparator: Comparator<ListItem>? = null
+private var comparator: Comparator<ListItem>? = null
 private val ascending = JRadioButton("ascending", true)
 private val descending = JRadioButton("descending")
 private val directionList = listOf(ascending, descending)

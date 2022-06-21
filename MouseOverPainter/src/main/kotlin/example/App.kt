@@ -18,7 +18,7 @@ fun makeUI() = JPanel(BorderLayout()).also {
 
 private class HighlightCursorTextArea : JTextArea() {
   var rollOverRowIndex = -1
-  @Transient private var rolloverHandler: MouseInputListener? = null
+  private var rolloverHandler: MouseInputListener? = null
 
   override fun updateUI() {
     removeMouseMotionListener(rolloverHandler)

@@ -11,7 +11,7 @@ private val cancelButton = JButton("cancel")
 private val pauseButton = JButton(PAUSE)
 private val bar1 = JProgressBar()
 private val bar2 = JProgressBar()
-@Transient private var worker: BackgroundTask? = null
+private var worker: BackgroundTask? = null
 
 fun makeUI(): Component {
   area.isEditable = false
