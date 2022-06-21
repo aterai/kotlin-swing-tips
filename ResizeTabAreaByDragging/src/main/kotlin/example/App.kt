@@ -9,7 +9,7 @@ import javax.swing.plaf.synth.SynthConstants
 import javax.swing.plaf.synth.SynthContext
 import javax.swing.plaf.synth.SynthLookAndFeel
 
-private fun makeUI(): Component {
+fun makeUI(): Component {
   val tabbedPane = ClippedTitleTabbedPane(SwingConstants.LEFT).also {
     it.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
     it.addTab("1111111111111111111", ColorIcon(Color.RED), JScrollPane(JTree()))

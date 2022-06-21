@@ -6,7 +6,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicSplitPaneUI
 import javax.swing.table.DefaultTableModel
 
-private fun makeUI(): Component {
+fun makeUI(): Component {
   val m1 = DefaultTableModel(100, 256)
   val table = JTable(m1)
   table.autoResizeMode = JTable.AUTO_RESIZE_OFF

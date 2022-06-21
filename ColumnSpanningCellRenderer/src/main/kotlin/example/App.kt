@@ -6,7 +6,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 
-private fun makeUI(): Component {
+fun makeUI(): Component {
   val see = "See Also: Constant Field Values"
   val columnNames = arrayOf("AAA", "BBB")
   val data = arrayOf(

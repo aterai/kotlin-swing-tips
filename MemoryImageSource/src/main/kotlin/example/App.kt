@@ -10,7 +10,7 @@ import java.awt.image.MemoryImageSource
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import kotlin.math.abs
 
-private fun makeUI() = PaintPanel().also {
+fun makeUI() = PaintPanel().also {
   it.preferredSize = Dimension(320, 240)
 }
 

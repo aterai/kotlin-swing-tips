@@ -6,7 +6,7 @@ import javax.swing.plaf.basic.BasicToolBarUI
 
 private const val ICON_SIZE = 32
 
-private fun makeUI() = JPanel(BorderLayout()).also {
+fun makeUI() = JPanel(BorderLayout()).also {
   it.add(Box.createHorizontalStrut(10), BorderLayout.NORTH)
   it.add(Box.createHorizontalStrut(10), BorderLayout.SOUTH)
   it.add(makeVerticalToolBar(), BorderLayout.EAST)
