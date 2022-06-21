@@ -175,7 +175,6 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
     if (hsb != null && hsbNeeded) {
       adjustForHsb(true, availR, hsbR, vpbInsets)
       if (vsb != null && !vsbNeeded && isVsbNever) {
-
         extentSize = viewport.toViewCoordinates(availR.size)
         vsbNeeded = viewPrefSize.height > extentSize.height
 
