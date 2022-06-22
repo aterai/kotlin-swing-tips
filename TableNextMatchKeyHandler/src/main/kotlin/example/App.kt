@@ -84,7 +84,7 @@ private class TableNextMatchKeyHandler : KeyAdapter() {
     max: Int,
     e: KeyEvent,
     prf: String,
-    startIdx: Int,
+    startIdx: Int
   ) {
     var start = startIdx
     var fromSelection = !src.selectionModel.isSelectionEmpty
