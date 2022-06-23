@@ -4,8 +4,11 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  val showHiddenFiles = Toolkit.getDefaultToolkit().getDesktopProperty("awt.file.showHiddenFiles")
-  // println("awt.file.showHiddenFiles: $showHiddenFiles")
+  val log = JTextArea()
+  val tk = Toolkit.getDefaultToolkit()
+  val key = "awt.file.showHiddenFiles"
+  val showHiddenFiles = tk.getDesktopProperty(key)
+  log.text = "$key: $showHiddenFiles"
 
   val chooser = JFileChooser()
   searchPopupMenu(chooser)?.also {
@@ -18,7 +21,6 @@ fun makeUI(): Component {
     it.add(mi)
   }
 
-  val log = JTextArea()
   val button = JButton("showOpenDialog")
   button.addActionListener {
     val retValue = chooser.showOpenDialog(log.rootPane)
