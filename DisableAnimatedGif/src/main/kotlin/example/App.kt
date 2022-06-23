@@ -63,9 +63,7 @@ private fun makeMissingImage(): Image {
   return bi
 }
 
-private fun makeDisabledIcon(img: Image): Icon {
-  return ImageIcon(GrayFilter.createDisabledImage(img))
-}
+private fun makeDisabledIcon(img: Image) = ImageIcon(GrayFilter.createDisabledImage(img))
 
 fun main() {
   EventQueue.invokeLater {
