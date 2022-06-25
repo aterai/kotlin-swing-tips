@@ -107,11 +107,11 @@ private class TooltipTree(model: TreeModel) : JTree(model) {
       val tsm = getSelectionModel()
       val node = getPathForRow(i).lastPathComponent
       val hasFocus = hasFocus() && tsm.leadSelectionRow == i
-      val isLeaf = model.isLeaf(node)
+      val leaf = model.isLeaf(node)
       val r = getCellRenderer()
-      val tcr = r.getTreeCellRendererComponent(
-        this, node, isRowSelected(i), isExpanded(i), isLeaf, i, hasFocus
-      )
+      val selected = isRowSelected(i)
+      val expanded = isExpanded(i)
+      val tcr = r.getTreeCellRendererComponent(this, node, selected, expanded, leaf, i, hasFocus)
       if ((tcr as? JComponent)?.toolTipText != null) {
         val pt = cellBounds.location
         val ins = label.insets
