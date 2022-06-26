@@ -85,9 +85,9 @@ private class TriSliderUI(slider: JSlider) : BasicSliderUI(slider) {
         fillLeft = if (slider.isEnabled) trackLeft + 1 else trackLeft
         fillRight = middleOfThumb
       }
-      g2.paint = GradientPaint(
-        0f, 0f, Color(0x00_64_64), cw.toFloat(), 0f, Color(0x00_FF_64), true
-      )
+      val c1 = Color(0x00_64_64)
+      val c2 = Color(0x00_FF_64)
+      g2.paint = GradientPaint(0f, 0f, c1, cw.toFloat(), 0f, c2, true)
       g2.fillRect(0, -cy, fillRight - fillLeft, cy * 2)
       g2.paint = slider.background
       val polygon = Polygon()
