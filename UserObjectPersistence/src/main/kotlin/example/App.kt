@@ -221,7 +221,7 @@ private class CheckBoxStatusUpdateListener : TreeModelListener {
 private class CheckBoxNodeRenderer : TreeCellRenderer {
   private val panel = JPanel(BorderLayout())
   private val checkBox = TriStateCheckBox()
-  private val renderer = DefaultTreeCellRenderer()
+  private val tcr = DefaultTreeCellRenderer()
   override fun getTreeCellRendererComponent(
     tree: JTree,
     value: Any?,
@@ -231,9 +231,7 @@ private class CheckBoxNodeRenderer : TreeCellRenderer {
     row: Int,
     hasFocus: Boolean
   ): Component {
-    val c = renderer.getTreeCellRendererComponent(
-      tree, value, selected, expanded, leaf, row, hasFocus
-    )
+    val c = tcr.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
     c.font = tree.font
     if (value is DefaultMutableTreeNode) {
       panel.isFocusable = false
@@ -275,7 +273,7 @@ private class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
       addActionListener(handler)
     }
   }
-  private val renderer = DefaultTreeCellRenderer()
+  private val tcr = DefaultTreeCellRenderer()
   private var str: String? = null
   override fun getTreeCellEditorComponent(
     tree: JTree,
@@ -285,7 +283,7 @@ private class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
     leaf: Boolean,
     row: Int
   ): Component {
-    val c = renderer.getTreeCellRendererComponent(tree, value, true, expanded, leaf, row, true)
+    val c = tcr.getTreeCellRendererComponent(tree, value, true, expanded, leaf, row, true)
     c.font = tree.font
     if (value is DefaultMutableTreeNode) {
       panel.isFocusable = false
