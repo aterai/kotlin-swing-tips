@@ -153,9 +153,7 @@ class DnDTabbedPane : JTabbedPane() {
   fun autoScrollTest(pt: Point) {
     val r = tabAreaBounds
     if (isTopBottomTabPlacement(getTabPlacement())) {
-      RECT_BACKWARD.setBounds(
-        r.x, r.y, SCROLL_SIZE, r.height
-      )
+      RECT_BACKWARD.setBounds(r.x, r.y, SCROLL_SIZE, r.height)
       RECT_FORWARD.setBounds(
         r.x + r.width - SCROLL_SIZE - BUTTON_SIZE,
         r.y,

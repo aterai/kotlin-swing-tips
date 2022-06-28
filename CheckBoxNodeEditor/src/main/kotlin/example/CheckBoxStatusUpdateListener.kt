@@ -85,7 +85,7 @@ class CheckBoxStatusUpdateListener : TreeModelListener {
 class CheckBoxNodeRenderer : TreeCellRenderer {
   private val panel = JPanel(BorderLayout())
   private val checkBox = TriStateCheckBox()
-  private val renderer = DefaultTreeCellRenderer()
+  private val tcr = DefaultTreeCellRenderer()
 
   override fun getTreeCellRendererComponent(
     tree: JTree,
@@ -96,9 +96,7 @@ class CheckBoxNodeRenderer : TreeCellRenderer {
     row: Int,
     hasFocus: Boolean
   ): Component {
-    val c = renderer.getTreeCellRendererComponent(
-      tree, value, selected, expanded, leaf, row, hasFocus
-    )
+    val c = tcr.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
     c.font = tree.font
 
     val treeNode = value as? DefaultMutableTreeNode ?: return c

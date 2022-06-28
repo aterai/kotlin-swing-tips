@@ -31,9 +31,8 @@ fun makeUI(): Component {
   p1.add(JLabel("right", SwingConstants.CENTER), c)
 
   val p2 = JPanel(GridLayout(0, 2, 5, 5))
-  p2.border = BorderFactory.createCompoundBorder(
-    BorderFactory.createEmptyBorder(5, 5, 5, 5), ColumnRulesBorder()
-  )
+  val b2 = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+  p2.border = BorderFactory.createCompoundBorder(b2, ColumnRulesBorder())
 
   val p3 = JPanel(GridLayout(0, 2, 5, 5))
   p3.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)

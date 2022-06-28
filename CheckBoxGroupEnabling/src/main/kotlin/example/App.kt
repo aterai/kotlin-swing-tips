@@ -100,7 +100,7 @@ private data class CheckBoxNode(val text: String, val selected: Boolean, val ena
 
 private class CheckBoxNodeRenderer : TreeCellRenderer {
   private val checkBox = JCheckBox()
-  private val renderer = DefaultTreeCellRenderer()
+  private val tcr = DefaultTreeCellRenderer()
   override fun getTreeCellRendererComponent(
     tree: JTree,
     value: Any?,
@@ -120,9 +120,7 @@ private class CheckBoxNodeRenderer : TreeCellRenderer {
       }
       return checkBox
     }
-    return renderer.getTreeCellRendererComponent(
-      tree, value, selected, expanded, leaf, row, hasFocus
-    )
+    return tcr.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
   }
 }
 

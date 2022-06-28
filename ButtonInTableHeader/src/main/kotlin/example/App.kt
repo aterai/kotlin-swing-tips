@@ -71,19 +71,19 @@ private class HeaderRenderer(
   private var rolloverIndex = -1
   private val handler = object : MouseInputAdapter() {
     override fun mouseClicked(e: MouseEvent) {
-      val h = e.component as? JTableHeader ?: return
-      val table = h.table
+      val hdr = e.component as? JTableHeader ?: return
+      val table = hdr.table
       val columnModel = table.columnModel
       val vci = columnModel.getColumnIndexAtX(e.x)
-      val r = h.getHeaderRect(vci)
-      val c = getTableCellRendererComponent(
-        table, "", isSelected = true, hasFocus = true, row = -1, column = vci
-      )
+      val r = hdr.getHeaderRect(vci)
+      val isSelected = true
+      val hasFocus = true
+      val c = getTableCellRendererComponent(table, "", isSelected, hasFocus, -1, vci)
       (c as? Container)?.also {
         r.translate(r.width - BUTTON_WIDTH, 0)
         r.setSize(BUTTON_WIDTH, r.height)
         if (it.componentCount > 0 && r.contains(e.point)) {
-          pop.show(h, r.x, r.height)
+          pop.show(hdr, r.x, r.height)
           (it.getComponent(0) as? JButton)?.doClick()
           e.consume()
         }
