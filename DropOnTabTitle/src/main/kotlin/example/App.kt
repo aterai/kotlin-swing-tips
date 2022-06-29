@@ -45,7 +45,9 @@ private class DnDList<E>(
 ) : JList<E>(model), DragGestureListener, DragSourceListener, Transferable {
   init {
     DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(
-      this, DnDConstants.ACTION_MOVE, this
+      this,
+      DnDConstants.ACTION_MOVE,
+      this
     )
   }
 

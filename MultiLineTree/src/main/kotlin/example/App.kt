@@ -78,7 +78,7 @@ private fun getDefaultTreeModel2(): TreeModel {
 }
 
 private class MultiLineCellRenderer : JPanel(BorderLayout()), TreeCellRenderer {
-  private var renderer = DefaultTreeCellRenderer()
+  private var tcr = DefaultTreeCellRenderer()
   private val icon = JLabel()
   private val text = CellTextArea2()
 
@@ -104,9 +104,7 @@ private class MultiLineCellRenderer : JPanel(BorderLayout()), TreeCellRenderer {
     row: Int,
     hasFocus: Boolean
   ): Component {
-    val l = renderer.getTreeCellRendererComponent(
-      tree, value, selected, expanded, leaf, row, hasFocus
-    )
+    val l = tcr.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
     if (l is JLabel) {
       text.font = l.font
       text.text = l.text
@@ -115,11 +113,11 @@ private class MultiLineCellRenderer : JPanel(BorderLayout()), TreeCellRenderer {
     val bgColor: Color
     val fgColor: Color
     if (selected) {
-      bgColor = renderer.backgroundSelectionColor
-      fgColor = renderer.textSelectionColor
+      bgColor = tcr.backgroundSelectionColor
+      fgColor = tcr.textSelectionColor
     } else {
-      bgColor = renderer.backgroundNonSelectionColor ?: renderer.background
-      fgColor = renderer.textNonSelectionColor ?: renderer.foreground
+      bgColor = tcr.backgroundNonSelectionColor ?: tcr.background
+      fgColor = tcr.textNonSelectionColor ?: tcr.foreground
     }
     text.foreground = fgColor
     text.background = bgColor
@@ -129,7 +127,7 @@ private class MultiLineCellRenderer : JPanel(BorderLayout()), TreeCellRenderer {
 
   override fun updateUI() {
     super.updateUI()
-    renderer = DefaultTreeCellRenderer()
+    tcr = DefaultTreeCellRenderer()
   }
 }
 

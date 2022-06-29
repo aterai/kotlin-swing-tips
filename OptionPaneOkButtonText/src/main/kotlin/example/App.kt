@@ -38,8 +38,11 @@ fun makeUI(): Component {
       (e.source as? JComponent)?.rootPane,
       "Would you like green eggs and ham?",
       "A Silly Question",
-      JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE,
-      null, options, options[0]
+      JOptionPane.OK_OPTION,
+      JOptionPane.PLAIN_MESSAGE,
+      null,
+      options,
+      options[0]
     )
   }
 

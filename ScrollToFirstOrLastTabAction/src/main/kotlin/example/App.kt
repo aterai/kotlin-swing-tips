@@ -40,8 +40,10 @@ private class ScrollTabsAction(
         action.actionPerformed(
           ActionEvent(
             tabbedPane,
-            ActionEvent.ACTION_PERFORMED, null,
-            e.getWhen(), e.modifiers
+            ActionEvent.ACTION_PERFORMED,
+            null,
+            e.getWhen(),
+            e.modifiers
           )
         )
       }

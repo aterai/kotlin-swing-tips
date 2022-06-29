@@ -130,9 +130,8 @@ private class SudokuCellRenderer(src: Array<Array<Number>>) : DefaultTableCellRe
     column: Int
   ): Component {
     val isEditable = mask[row][column] == 0
-    super.getTableCellRendererComponent(
-      table, value, isEditable && isSelected, hasFocus, row, column
-    )
+    val b = isEditable && isSelected
+    super.getTableCellRendererComponent(table, value, b, hasFocus, row, column)
     if (isEditable && value == 0) {
       this.text = " "
     }

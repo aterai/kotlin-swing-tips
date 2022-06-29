@@ -232,9 +232,8 @@ private class HeaderMouseListener : MouseAdapter() {
       if (table.isEditing) {
         table.cellEditor.stopCellEditing()
       }
-      (table.model as? SortableTableModel)?.sortByColumn(
-        column, SortButtonRenderer.DOWN == tcr.getState(column)
-      )
+      val isAscent = SortButtonRenderer.DOWN == tcr.getState(column)
+      (table.model as? SortableTableModel)?.sortByColumn(column, isAscent)
     }
   }
 

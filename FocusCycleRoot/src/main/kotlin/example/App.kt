@@ -20,9 +20,7 @@ fun makeUI(): Component {
   }
   p2.isFocusTraversalPolicyProvider = true
   p2.isFocusCycleRoot = true
-  p2.setFocusTraversalKeys(
-    KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, emptySet()
-  )
+  p2.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, emptySet())
   p2.setFocusTraversalKeys(
     KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,
     HashSet(listOf(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK)))

@@ -105,7 +105,7 @@ private open class BackgroundTask(
 }
 
 private class FileTreeCellRenderer(
-  private val renderer: TreeCellRenderer,
+  private val tcr: TreeCellRenderer,
   private val fileSystemView: FileSystemView
 ) : DefaultTreeCellRenderer() {
   override fun getTreeCellRendererComponent(
@@ -117,9 +117,7 @@ private class FileTreeCellRenderer(
     row: Int,
     hasFocus: Boolean
   ): Component {
-    val c = renderer.getTreeCellRendererComponent(
-      tree, value, selected, expanded, leaf, row, hasFocus
-    )
+    val c = tcr.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
     if (c is JLabel && value is DefaultMutableTreeNode) {
       if (selected) {
         c.isOpaque = false
