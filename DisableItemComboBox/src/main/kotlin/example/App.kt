@@ -84,13 +84,13 @@ private class DisableItemComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(mod
 
   override fun updateUI() {
     super.updateUI()
-    val renderer = getRenderer()
+    val r = getRenderer()
     setRenderer { list, value, index, isSelected, cellHasFocus ->
-      val f = isEnabledIndex(index)
-      renderer.getListCellRendererComponent(
-        list, value, index, isSelected and f, cellHasFocus and f
-      ).also {
-        it.isEnabled = f
+      val isEditable = isEnabledIndex(index)
+      val selected = isSelected and isEditable
+      val hasFoucs = cellHasFocus and isEditable
+      r.getListCellRendererComponent(list, value, index, selected, hasFoucs).also {
+        it.isEnabled = isEditable
       }
     }
     EventQueue.invokeLater {

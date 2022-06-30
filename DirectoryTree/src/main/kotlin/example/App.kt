@@ -31,7 +31,13 @@ fun makeUI(): Component {
       val r = DefaultTreeCellRenderer()
       setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
         r.getTreeCellRendererComponent(
-          tree, value, selected, expanded, leaf, row, hasFocus
+          tree,
+          value,
+          selected,
+          expanded,
+          leaf,
+          row,
+          hasFocus
         ).also { c ->
           if (c is JLabel) {
             if (selected) {

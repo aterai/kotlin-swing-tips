@@ -11,8 +11,14 @@ import javax.swing.text.Highlighter
 
 fun makeUI(): Component {
   val list = listOf(
-    "1111", "1111222", "111122233", "111122233444",
-    "12345", "67890", "55551", "555512"
+    "1111",
+    "1111222",
+    "111122233",
+    "111122233444",
+    "12345",
+    "67890",
+    "55551",
+    "555512"
   )
   val combo = makeComboBox(list)
   combo.isEditable = true

@@ -102,7 +102,7 @@ private class FileTreeCellRenderer(
   private val fileSystemView: FileSystemView
 ) : TreeCellRenderer {
   private val checkBox = TriStateCheckBox().also { it.isOpaque = false }
-  private val renderer = DefaultTreeCellRenderer()
+  private val tcr = DefaultTreeCellRenderer()
   private val panel = JPanel(BorderLayout()).also {
     it.isFocusable = false
     it.isRequestFocusEnabled = false
@@ -119,9 +119,7 @@ private class FileTreeCellRenderer(
     row: Int,
     hasFocus: Boolean
   ): Component {
-    val c = renderer.getTreeCellRendererComponent(
-      tree, value, selected, expanded, leaf, row, hasFocus
-    )
+    val c = tcr.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
     val l = c as? JLabel ?: return c
     l.font = tree.font
     return if (value is DefaultMutableTreeNode) {
@@ -149,7 +147,7 @@ private class CheckBoxNodeEditor(
     it.isFocusable = false
     it.addActionListener { stopCellEditing() }
   }
-  private val renderer = DefaultTreeCellRenderer()
+  private val tcr = DefaultTreeCellRenderer()
   private val panel = JPanel(BorderLayout()).also {
     it.isFocusable = false
     it.isRequestFocusEnabled = false
@@ -166,9 +164,7 @@ private class CheckBoxNodeEditor(
     leaf: Boolean,
     row: Int
   ): Component {
-    val c = renderer.getTreeCellRendererComponent(
-      tree, value, selected, expanded, leaf, row, false
-    )
+    val c = tcr.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, false)
     c.font = tree.font
     return if (value is DefaultMutableTreeNode && c is JLabel) {
       checkBox.isEnabled = tree.isEnabled

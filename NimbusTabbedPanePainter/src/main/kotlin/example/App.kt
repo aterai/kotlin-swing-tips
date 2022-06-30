@@ -68,10 +68,7 @@ private object NimbusTabbedPanePainterUtils {
       // Paint tab shadow
       if (selected) {
         g2.paint = Color(0, 0, 0, 20)
-        val rect: RoundRectangle2D = RoundRectangle2D.Double(
-          0.0, 0.0, w, h,
-          r.toDouble(), r.toDouble()
-        )
+        val rect = RoundRectangle2D.Double(0.0, 0.0, w, h, r.toDouble(), r.toDouble())
         var i = 0
         while (i < x) {
           rect.setFrame(x - i, y - i, w + i + i, h)
