@@ -67,9 +67,8 @@ fun makeUI(): Component {
   val sp = JSplitPane()
   sp.resizeWeight = .5
   sp.leftComponent = makeTitledPanel(JTree(), "Default")
-  sp.rightComponent = makeTitledPanel(
-    tree, "Paint the lines that connect the nodes during rollover"
-  )
+  val title = "Paint the lines that connect the nodes during rollover"
+  sp.rightComponent = makeTitledPanel(tree, title)
 
   return JPanel(BorderLayout()).also {
     it.add(sp)

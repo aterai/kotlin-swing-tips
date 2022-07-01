@@ -20,8 +20,8 @@ fun makeUI(): Component {
 
 private object NimbusTabbedPanePainterUtils {
   const val OVER_PAINT = 6
-  const val STROKE_SIZE = 2f
-  const val ARC = 10
+  const val STROKE_SIZE = 2.0
+  const val ARC = 10.0
   val CONTENT_BACKGROUND: Color = Color.LIGHT_GRAY
   val CONTENT_BORDER: Color = Color.ORANGE // Color.GRAY
   val TAB_TABAREA_MASK: Color = Color.GREEN // CONTENT_BACKGROUND
@@ -82,19 +82,14 @@ private object NimbusTabbedPanePainterUtils {
       g2.fill(RoundRectangle2D.Double(x, y, w - 1.0, h + a, r.toDouble(), r.toDouble()))
       if (selected) {
         // Draw a border
-        g2.stroke = BasicStroke(STROKE_SIZE)
+        g2.stroke = BasicStroke(STROKE_SIZE.toFloat())
         g2.paint = TABAREA_BORDER
         g2.draw(RoundRectangle2D.Double(x, y, w - 1.0, h + a, r.toDouble(), r.toDouble()))
 
         // Over paint the overexposed area with the background color
         g2.color = TAB_TABAREA_MASK
-        g2.fill(
-          Rectangle2D.Double(
-            0.0,
-            (height + STROKE_SIZE).toDouble(),
-            width.toDouble(), OVER_PAINT.toDouble()
-          )
-        )
+        val yy = height + STROKE_SIZE
+        g2.fill(Rectangle2D.Double(0.0, yy, width.toDouble(), OVER_PAINT.toDouble()))
       }
       g2.dispose()
     }
@@ -105,16 +100,13 @@ private object NimbusTabbedPanePainterUtils {
       val g2 = g.create(0, 0, w, h) as? Graphics2D ?: return
       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
       val dy = (h - OVER_PAINT).toDouble()
-      val r = RoundRectangle2D.Double(
-        0.0, dy,
-        (w - STROKE_SIZE).toDouble(),
-        (h - STROKE_SIZE).toDouble(),
-        ARC.toDouble(), ARC.toDouble()
-      )
+      val ww = w - STROKE_SIZE
+      val hh = h - STROKE_SIZE
+      val r = RoundRectangle2D.Double(0.0, dy, ww, hh, ARC, ARC)
       g2.paint = TABAREA_BACKGROUND
       g2.fill(r)
       g2.color = TABAREA_BORDER
-      g2.stroke = BasicStroke(STROKE_SIZE)
+      g2.stroke = BasicStroke(STROKE_SIZE.toFloat())
       g2.draw(r)
       g2.dispose()
     }
@@ -125,16 +117,13 @@ private object NimbusTabbedPanePainterUtils {
       val g2 = g.create(0, 0, w, h) as? Graphics2D ?: return
       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
       g2.translate(0, -OVER_PAINT)
-      val r = RoundRectangle2D.Double(
-        0.0, 0.0,
-        (w - STROKE_SIZE).toDouble(),
-        (h - STROKE_SIZE + OVER_PAINT).toDouble(),
-        ARC.toDouble(), ARC.toDouble()
-      )
+      val ww = w - STROKE_SIZE
+      val hh = h - STROKE_SIZE + OVER_PAINT
+      val r = RoundRectangle2D.Double(0.0, 0.0, ww, hh, ARC, ARC)
       g2.paint = CONTENT_BACKGROUND
       g2.fill(r)
       g2.color = CONTENT_BORDER
-      g2.stroke = BasicStroke(STROKE_SIZE)
+      g2.stroke = BasicStroke(STROKE_SIZE.toFloat())
       g2.draw(r)
       g2.dispose()
     }

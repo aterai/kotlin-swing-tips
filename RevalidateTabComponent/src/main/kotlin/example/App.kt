@@ -125,7 +125,11 @@ private class TabTitleRenamePopupMenu : JPopupMenu() {
         val title = it.getTitleAt(idx)
         textField.text = title
         val ret = JOptionPane.showConfirmDialog(
-          it, textField, "Rename", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
+          it,
+          textField,
+          "Rename",
+          JOptionPane.OK_CANCEL_OPTION,
+          JOptionPane.PLAIN_MESSAGE
         )
         if (ret == JOptionPane.OK_OPTION) {
           val str = textField.text.trim()
