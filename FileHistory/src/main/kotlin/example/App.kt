@@ -96,7 +96,10 @@ private class HistoryAction(private val path: Path) : AbstractAction() {
       " and move the file to the beginning of the history."
     )
     JOptionPane.showMessageDialog(
-      c.rootPane, obj, VersionAction.APP_NAME, JOptionPane.INFORMATION_MESSAGE
+      c.rootPane,
+      obj,
+      VersionAction.APP_NAME,
+      JOptionPane.INFORMATION_MESSAGE
     )
     updateHistory(path)
   }
@@ -119,7 +122,10 @@ private class NewAction : AbstractAction("new") {
       " and pretend to generate an appropriate file name and open it."
     )
     JOptionPane.showMessageDialog(
-      c.rootPane, obj, VersionAction.APP_NAME, JOptionPane.INFORMATION_MESSAGE
+      c.rootPane,
+      obj,
+      VersionAction.APP_NAME,
+      JOptionPane.INFORMATION_MESSAGE
     )
     val fileName = "C:/tmp/dummy.jpg.$counter~"
     updateHistory(Paths.get(fileName))

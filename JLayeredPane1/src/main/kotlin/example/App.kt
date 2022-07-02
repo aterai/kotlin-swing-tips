@@ -15,7 +15,13 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 private const val BACK_LAYER = 1
 private val FONT = Font(Font.MONOSPACED, Font.PLAIN, 12)
 private val COLORS = intArrayOf(
-  0xDD_DD_DD, 0xAA_AA_FF, 0xFF_AA_AA, 0xAA_FF_AA, 0xFF_FF_AA, 0xFF_AA_FF, 0xAA_FF_FF
+  0xDD_DD_DD,
+  0xAA_AA_FF,
+  0xFF_AA_AA,
+  0xAA_FF_AA,
+  0xFF_FF_AA,
+  0xFF_AA_FF,
+  0xAA_FF_FF
 )
 
 fun makeUI(): Component {

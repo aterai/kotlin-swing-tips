@@ -58,7 +58,11 @@ private class InternalFramePopupMenu : JPopupMenu() {
       if (frame is JInternalFrame) {
         field.text = frame.title
         val ret = JOptionPane.showConfirmDialog(
-          frame.desktopPane, field, cmd, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
+          frame.desktopPane,
+          field,
+          cmd,
+          JOptionPane.OK_CANCEL_OPTION,
+          JOptionPane.PLAIN_MESSAGE
         )
         if (ret == JOptionPane.OK_OPTION) {
           renameInternalFrameTitle(frame, field.text.trim())

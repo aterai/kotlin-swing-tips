@@ -89,7 +89,13 @@ private class CompoundTreeCellRenderer : DefaultTreeCellRenderer() {
     text.background = bgColor
     text.border = if (hasFocus) compoundFocusBorder else emptyBorder
     val c = super.getTreeCellRendererComponent(
-      tree, value, selected, expanded, leaf, row, hasFocus
+      tree,
+      value,
+      selected,
+      expanded,
+      leaf,
+      row,
+      hasFocus
     )
     (c as? JLabel)?.also {
       text.text = it.text
