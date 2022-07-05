@@ -116,7 +116,12 @@ private class BadgeIconLayerUI : BadgeLayerUI() {
     object : BadgeIcon(count, Color.WHITE, Color(0xAA_16_16_16.toInt(), true)) {
       override val badgeShape: Shape
         get() = RoundRectangle2D.Double(
-          0.0, 0.0, iconWidth.toDouble(), iconHeight.toDouble(), 5.0, 5.0
+          0.0,
+          0.0,
+          iconWidth.toDouble(),
+          iconHeight.toDouble(),
+          5.0,
+          5.0
         )
     }
 }
