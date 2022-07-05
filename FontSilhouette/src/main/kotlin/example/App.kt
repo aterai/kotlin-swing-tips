@@ -80,15 +80,13 @@ private class SilhouetteIcon(
     val area = Area()
     val path = Path2D.Double()
     val pi = shape.getPathIterator(null)
-    val coords = DoubleArray(6)
+    val cd = DoubleArray(6)
     while (!pi.isDone) {
-      when (val pathSegmentType = pi.currentSegment(coords)) {
-        PathIterator.SEG_MOVETO -> path.moveTo(coords[0], coords[1])
-        PathIterator.SEG_LINETO -> path.lineTo(coords[0], coords[1])
-        PathIterator.SEG_QUADTO -> path.quadTo(coords[0], coords[1], coords[2], coords[3])
-        PathIterator.SEG_CUBICTO -> path.curveTo(
-          coords[0], coords[1], coords[2], coords[3], coords[4], coords[5]
-        )
+      when (val pathSegmentType = pi.currentSegment(cd)) {
+        PathIterator.SEG_MOVETO -> path.moveTo(cd[0], cd[1])
+        PathIterator.SEG_LINETO -> path.lineTo(cd[0], cd[1])
+        PathIterator.SEG_QUADTO -> path.quadTo(cd[0], cd[1], cd[2], cd[3])
+        PathIterator.SEG_CUBICTO -> path.curveTo(cd[0], cd[1], cd[2], cd[3], cd[4], cd[5])
         PathIterator.SEG_CLOSE -> {
           path.closePath()
           area.add(createArea(path))

@@ -36,7 +36,11 @@ fun makeUI(): Component {
       cellHasFocus: Boolean
     ): Component {
       return super.getListCellRendererComponent(
-        list, "TEST0: $value", index, isSelected, cellHasFocus
+        list,
+        "TEST0: $value",
+        index,
+        isSelected,
+        cellHasFocus
       )
     }
   }
@@ -54,7 +58,11 @@ fun makeUI(): Component {
       cellHasFocus: Boolean
     ): Component {
       return super.getListCellRendererComponent(
-        list, "TEST1: $value", index, isSelected, cellHasFocus
+        list,
+        "TEST1: $value",
+        index,
+        isSelected,
+        cellHasFocus
       )
     }
   }
