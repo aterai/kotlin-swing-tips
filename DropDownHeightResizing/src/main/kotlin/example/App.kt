@@ -56,6 +56,12 @@ fun makeUI(): Component {
       }
       addPopupMenuListener(handler)
     }
+
+    override fun getPreferredSize(): Dimension {
+      val d = super.getPreferredSize()
+      d.width = minOf(d.width, 240)
+      return d
+    }
   }
   combo.maximumRowCount = 1
 
