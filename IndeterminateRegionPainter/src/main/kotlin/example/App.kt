@@ -139,24 +139,36 @@ private class IndeterminateRegionPainter : AbstractRegionPainter() {
     path.reset()
     path.moveTo(decodeX(1f).toDouble(), decodeY(.21111111f).toDouble())
     path.curveTo(
-      decodeAnchorX(1f, -2f).toDouble(), decodeAnchorY(.21111111f, 0f).toDouble(),
-      decodeAnchorX(.21111111f, 0f).toDouble(), decodeAnchorY(1f, -2f).toDouble(),
-      decodeX(.21111111f).toDouble(), decodeY(1f).toDouble()
+      decodeAnchorX(1f, -2f).toDouble(),
+      decodeAnchorY(.21111111f, 0f).toDouble(),
+      decodeAnchorX(.21111111f, 0f).toDouble(),
+      decodeAnchorY(1f, -2f).toDouble(),
+      decodeX(.21111111f).toDouble(),
+      decodeY(1f).toDouble()
     )
     path.curveTo(
-      decodeAnchorX(.21111111f, 0f).toDouble(), decodeAnchorY(1f, 2f).toDouble(),
-      decodeAnchorX(.21111111f, 0f).toDouble(), decodeAnchorY(2f, -2f).toDouble(),
-      decodeX(.21111111f).toDouble(), decodeY(2f).toDouble()
+      decodeAnchorX(.21111111f, 0f).toDouble(),
+      decodeAnchorY(1f, 2f).toDouble(),
+      decodeAnchorX(.21111111f, 0f).toDouble(),
+      decodeAnchorY(2f, -2f).toDouble(),
+      decodeX(.21111111f).toDouble(),
+      decodeY(2f).toDouble()
     )
     path.curveTo(
-      decodeAnchorX(.21111111f, 0f).toDouble(), decodeAnchorY(2f, 2f).toDouble(),
-      decodeAnchorX(1f, -2f).toDouble(), decodeAnchorY(2.8222225f, 0f).toDouble(),
-      decodeX(1f).toDouble(), decodeY(2.8222225f).toDouble()
+      decodeAnchorX(.21111111f, 0f).toDouble(),
+      decodeAnchorY(2f, 2f).toDouble(),
+      decodeAnchorX(1f, -2f).toDouble(),
+      decodeAnchorY(2.8222225f, 0f).toDouble(),
+      decodeX(1f).toDouble(),
+      decodeY(2.8222225f).toDouble()
     )
     path.curveTo(
-      decodeAnchorX(1f, 2f).toDouble(), decodeAnchorY(2.8222225f, 0f).toDouble(),
-      decodeAnchorX(3f, 0f).toDouble(), decodeAnchorY(2.8222225f, 0f).toDouble(),
-      decodeX(3f).toDouble(), decodeY(2.8222225f).toDouble()
+      decodeAnchorX(1f, 2f).toDouble(),
+      decodeAnchorY(2.8222225f, 0f).toDouble(),
+      decodeAnchorX(3f, 0f).toDouble(),
+      decodeAnchorY(2.8222225f, 0f).toDouble(),
+      decodeX(3f).toDouble(),
+      decodeY(2.8222225f).toDouble()
     )
     path.lineTo(decodeX(3f).toDouble(), decodeY(2.3333333f).toDouble())
     path.lineTo(decodeX(.6666667f).toDouble(), decodeY(2.3333333f).toDouble())
@@ -164,9 +176,12 @@ private class IndeterminateRegionPainter : AbstractRegionPainter() {
     path.lineTo(decodeX(3f).toDouble(), decodeY(.6666667f).toDouble())
     path.lineTo(decodeX(3f).toDouble(), decodeY(.2f).toDouble())
     path.curveTo(
-      decodeAnchorX(3f, 0f).toDouble(), decodeAnchorY(.2f, 0f).toDouble(),
-      decodeAnchorX(1f, 2f).toDouble(), decodeAnchorY(.21111111f, 0f).toDouble(),
-      decodeX(1f).toDouble(), decodeY(.21111111f).toDouble()
+      decodeAnchorX(3f, 0f).toDouble(),
+      decodeAnchorY(.2f, 0f).toDouble(),
+      decodeAnchorX(1f, 2f).toDouble(),
+      decodeAnchorY(.21111111f, 0f).toDouble(),
+      decodeX(1f).toDouble(),
+      decodeY(.21111111f).toDouble()
     )
     path.closePath()
     return path
