@@ -23,7 +23,12 @@ private val table = object : JTable(model) {
         val lengthOfTask = value.lengthOfTask
         when {
           current < 0 -> renderer.getTableCellRendererComponent(
-            tbl, "Canceled", isSelected, hasFocus, row, column
+            tbl,
+            "Canceled",
+            isSelected,
+            hasFocus,
+            row,
+            column
           )
           current < lengthOfTask -> {
             progress.value = current * 100 / lengthOfTask
@@ -32,12 +37,22 @@ private val table = object : JTable(model) {
             progress
           }
           else -> renderer.getTableCellRendererComponent(
-            tbl, "Done", isSelected, hasFocus, row, column
+            tbl,
+            "Done",
+            isSelected,
+            hasFocus,
+            row,
+            column
           )
         }
       } else {
         renderer.getTableCellRendererComponent(
-          tbl, "Waiting...", isSelected, hasFocus, row, column
+          tbl,
+          "Waiting...",
+          isSelected,
+          hasFocus,
+          row,
+          column
         )
       }
     }
