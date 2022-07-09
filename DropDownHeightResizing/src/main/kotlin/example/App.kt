@@ -19,9 +19,7 @@ fun makeUI(): Component {
 
   val popup = JPopupMenu()
   popup.border = BorderFactory.createEmptyBorder()
-  popup.preferredSize = Dimension(240, 120)
-  popup.pack()
-  popup.setSize(240, 120)
+  popup.setPopupSize(240, 120)
 
   val m2 = DefaultComboBoxModel<String>()
   fonts.map { it.fontName }.forEach { m2.addElement(it) }
@@ -33,17 +31,8 @@ fun makeUI(): Component {
       handler = object : PopupMenuListener {
         override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
           val c = e.source as? JComboBox<*> ?: return
-          EventQueue.invokeLater {
-            list.selectedIndex = c.selectedIndex
-            popup.preferredSize = popup.size
-            val p = c.location
-            p.y += c.height
-            SwingUtilities.convertPointToScreen(p, c.parent)
-            popup.location = p
-            popup.isVisible = true
-            popup.requestFocusInWindow()
-            EventQueue.invokeLater { list.requestFocusInWindow() }
-          }
+          list.selectedIndex = c.selectedIndex
+          EventQueue.invokeLater { popup.show(c, 0, c.height) }
         }
 
         override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
@@ -85,7 +74,7 @@ fun makeUI(): Component {
   scroll.viewportBorder = BorderFactory.createEmptyBorder()
 
   val bottom = JLabel("", DotIcon(), SwingConstants.CENTER)
-  val rwl = ResizeWindowListener()
+  val rwl = ResizeWindowListener(popup)
   bottom.addMouseListener(rwl)
   bottom.addMouseMotionListener(rwl)
   bottom.cursor = Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR)
@@ -100,44 +89,31 @@ fun makeUI(): Component {
   resizePanel.border = BorderFactory.createLineBorder(Color(0x64_64_64))
   popup.add(resizePanel)
 
-  EventQueue.invokeLater {
-    val frame = SwingUtilities.getWindowAncestor(combo)
-    frame.addMouseListener(object : MouseAdapter() {
-      override fun mousePressed(e: MouseEvent) {
-        popup.isVisible = false
-      }
-    })
-    frame.addComponentListener(object : ComponentAdapter() {
-      override fun componentResized(e: ComponentEvent) {
-        popup.isVisible = false
-      }
-
-      override fun componentMoved(e: ComponentEvent) {
-        componentResized(e)
-      }
-    })
-  }
-
   return JPanel(FlowLayout(FlowLayout.LEADING)).also {
     it.add(combo)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private class ResizeWindowListener : MouseInputAdapter() {
+private class ResizeWindowListener(private val popup: JPopupMenu) : MouseInputAdapter() {
   private val rect = Rectangle()
+  private val startPt = Point()
+  private val startDim = Dimension()
+
   override fun mousePressed(e: MouseEvent) {
-    val w = SwingUtilities.getWindowAncestor(e.component)
-    if (w != null) {
-      rect.size = w.size
-    }
+    rect.size = popup.size
+    startDim.size = popup.size
+    startPt.location = e.component.locationOnScreen
   }
 
   override fun mouseDragged(e: MouseEvent) {
-    val w = SwingUtilities.getWindowAncestor(e.component)
-    if (!rect.isEmpty && w != null) {
-      rect.height += e.y
-      w.setSize(rect.width, rect.height)
+    rect.height = startDim.height + e.locationOnScreen.y - startPt.y
+    popup.preferredSize = rect.size
+    val p = popup.topLevelAncestor
+    if (p is JWindow) {
+      p.setSize(rect.width, rect.height)
+    } else {
+      popup.pack()
     }
   }
 }
