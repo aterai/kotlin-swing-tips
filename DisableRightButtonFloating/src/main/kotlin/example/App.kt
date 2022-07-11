@@ -11,9 +11,8 @@ import javax.swing.plaf.basic.BasicToolBarUI
 fun makeUI(): Component {
   val toolBar = makeToolBar("Override createDockingListener()")
   toolBar.ui = object : BasicToolBarUI() {
-    override fun createDockingListener(): MouseInputListener {
-      return DockingListener2(toolBar, super.createDockingListener())
-    }
+    override fun createDockingListener() =
+      DockingListener2(toolBar, super.createDockingListener())
   }
 
   val p = JPanel(BorderLayout()).also {
@@ -46,9 +45,8 @@ private class DockingListener2(
   private val toolBar: JToolBar,
   private val listener: MouseInputListener
 ) : MouseInputAdapter() {
-  private fun cancelDrag(e: MouseEvent): Boolean {
-    return !toolBar.isEnabled || !SwingUtilities.isLeftMouseButton(e)
-  }
+  private fun cancelDrag(e: MouseEvent) =
+    !toolBar.isEnabled || !SwingUtilities.isLeftMouseButton(e)
 
   override fun mousePressed(e: MouseEvent) {
     if (cancelDrag(e)) {
