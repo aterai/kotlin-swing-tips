@@ -111,8 +111,7 @@ private class TextComponentPopupMenu : JPopupMenu() {
     add(pasteAction)
   }
 
-  override fun show(c: Component, x: Int, y: Int) {
-    println("${c.javaClass.name}: ${c.name}")
+  override fun show(c: Component?, x: Int, y: Int) {
     val tc = c as? JTextComponent ?: return
     tc.requestFocusInWindow()
     var hasSelectedText = tc.selectedText != null
