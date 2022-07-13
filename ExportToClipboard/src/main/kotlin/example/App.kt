@@ -71,7 +71,7 @@ private class ListPopupMenu(list: JList<*>) : JPopupMenu() {
     add("clearSelection").addActionListener { list.clearSelection() }
   }
 
-  override fun show(c: Component, x: Int, y: Int) {
+  override fun show(c: Component?, x: Int, y: Int) {
     if (c is JList<*>) {
       val isSelected = !c.isSelectionEmpty
       cutItem.isEnabled = isSelected

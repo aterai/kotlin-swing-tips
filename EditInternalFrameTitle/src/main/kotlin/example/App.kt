@@ -71,7 +71,7 @@ private class InternalFramePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component, x: Int, y: Int) {
+  override fun show(c: Component?, x: Int, y: Int) {
     if (getInternalFrame(c) is JInternalFrame) {
       super.show(c, x, y)
     }
@@ -83,7 +83,7 @@ private class InternalFramePopupMenu : JPopupMenu() {
     }
   }
 
-  private fun getInternalFrame(c: Component) = if (c is JInternalFrame.JDesktopIcon) {
+  private fun getInternalFrame(c: Component?) = if (c is JInternalFrame.JDesktopIcon) {
     c.internalFrame
   } else {
     c as? JInternalFrame ?: SwingUtilities.getAncestorOfClass(JInternalFrame::class.java, c)

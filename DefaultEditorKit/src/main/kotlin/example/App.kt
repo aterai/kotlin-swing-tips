@@ -39,7 +39,7 @@ private class TextFieldPopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component, x: Int, y: Int) {
+  override fun show(c: Component?, x: Int, y: Int) {
     if (c is JTextComponent) {
       val hasSelectedText = c.selectedText == null
       for (menuElement in subElements) {

@@ -76,7 +76,7 @@ private class TablePopupMenu(private val table: JTable) : JPopupMenu() {
     add(downAction)
   }
 
-  override fun show(c: Component, x: Int, y: Int) {
+  override fun show(c: Component?, x: Int, y: Int) {
     val row = table.rowAtPoint(Point(x, y))
     if (row > 0 && !table.selectedRows.any { it == row }) {
       table.setRowSelectionInterval(row, row)

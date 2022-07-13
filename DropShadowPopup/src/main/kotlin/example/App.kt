@@ -59,7 +59,7 @@ private class DropShadowPopupMenu : JPopupMenu() {
     g2.dispose()
   }
 
-  override fun show(c: Component, x: Int, y: Int) {
+  override fun show(c: Component?, x: Int, y: Int) {
     val d = preferredSize
     val w = d.width
     val h = d.height

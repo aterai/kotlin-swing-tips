@@ -33,7 +33,7 @@ fun makeUI(): Component {
   }
 
   val popup = object : JPopupMenu() {
-    override fun show(c: Component, x: Int, y: Int) {
+    override fun show(c: Component?, x: Int, y: Int) {
       delete.isEnabled = table.selectedRowCount > 0
       super.show(c, x, y)
     }

@@ -43,7 +43,7 @@ private class TranslucentPopupMenu : JPopupMenu() {
     return super.add(menuItem)
   }
 
-  override fun show(c: Component, x: Int, y: Int) {
+  override fun show(c: Component?, x: Int, y: Int) {
     EventQueue.invokeLater {
       val p = topLevelAncestor
       if (p is JWindow) {

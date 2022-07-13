@@ -105,7 +105,7 @@ private class TablePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component, x: Int, y: Int) {
+  override fun show(c: Component?, x: Int, y: Int) {
     if (c is JTable) {
       val isSelected = c.selectedRowCount > 0
       select.isEnabled = isSelected

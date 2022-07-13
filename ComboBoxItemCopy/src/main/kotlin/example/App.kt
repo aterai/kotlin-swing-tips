@@ -94,7 +94,7 @@ private class TextFieldPopupMenu : JPopupMenu() {
     add(deleteAction)
   }
 
-  override fun show(c: Component, x: Int, y: Int) {
+  override fun show(c: Component?, x: Int, y: Int) {
     if (c is JTextComponent) {
       val hasSelectedText = c.selectedText != null
       cutAction.isEnabled = hasSelectedText

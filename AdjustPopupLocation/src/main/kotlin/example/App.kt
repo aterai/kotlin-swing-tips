@@ -6,7 +6,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 fun makeUI(): Component {
   val check = JCheckBox("Adjust JPopupMenu location", true)
   val popup = object : JPopupMenu() {
-    override fun show(c: Component, x: Int, y: Int) {
+    override fun show(c: Component?, x: Int, y: Int) {
       if (check.isSelected) {
         val p = Point(x, y)
         val r = c.bounds

@@ -19,7 +19,7 @@ private fun makeTable(): JTable {
   val table = JTable(4, 3)
   table.autoCreateRowSorter = true
   val popup = object : JPopupMenu() {
-    override fun show(c: Component, x: Int, y: Int) {
+    override fun show(c: Component?, x: Int, y: Int) {
       (c as? JTableHeader)?.also { header ->
         header.draggedColumn = null
         header.repaint()

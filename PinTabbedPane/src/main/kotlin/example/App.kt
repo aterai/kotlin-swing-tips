@@ -62,7 +62,7 @@ private class PinTabPopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component, x: Int, y: Int) {
+  override fun show(c: Component?, x: Int, y: Int) {
     if (c is JTabbedPane) {
       val idx = c.indexAtLocation(x, y)
       pinTabMenuItem.isEnabled = idx >= 0

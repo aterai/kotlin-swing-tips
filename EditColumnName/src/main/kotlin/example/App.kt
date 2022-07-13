@@ -79,7 +79,7 @@ private class TablePopupMenu(columnNames: Array<String>) : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component, x: Int, y: Int) {
+  override fun show(c: Component?, x: Int, y: Int) {
     (c as? JTableHeader)?.also { header ->
       header.draggedColumn = null
       header.repaint()

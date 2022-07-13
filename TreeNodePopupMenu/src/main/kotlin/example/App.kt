@@ -29,7 +29,7 @@ private class TreePopupMenu : JPopupMenu() {
     add("dummy")
   }
 
-  override fun show(c: Component, x: Int, y: Int) {
+  override fun show(c: Component?, x: Int, y: Int) {
     (c as? JTree)?.also {
       val path = it.getPathForLocation(x, y)
       if (it.selectionPaths?.contains(path) == true) {

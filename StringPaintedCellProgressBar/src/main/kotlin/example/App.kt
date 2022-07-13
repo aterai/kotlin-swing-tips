@@ -111,7 +111,7 @@ private class TablePopupMenu : JPopupMenu() {
     deleteMenuItem.addActionListener { deleteActionPerformed() }
   }
 
-  override fun show(c: Component, x: Int, y: Int) {
+  override fun show(c: Component?, x: Int, y: Int) {
     if (c is JTable) {
       val flag = c.selectedRowCount > 0
       cancelMenuItem.isEnabled = flag

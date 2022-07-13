@@ -68,7 +68,7 @@ private class TreePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component, x: Int, y: Int) {
+  override fun show(c: Component?, x: Int, y: Int) {
     if (c is JTree && c.selectionCount > 0) {
       super.show(c, x, y)
     }

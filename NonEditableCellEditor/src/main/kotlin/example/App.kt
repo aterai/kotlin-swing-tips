@@ -55,7 +55,7 @@ private class TextComponentPopupMenu : JPopupMenu() {
     add(copyAction)
   }
 
-  override fun show(c: Component, x: Int, y: Int) {
+  override fun show(c: Component?, x: Int, y: Int) {
     if (c is JTextComponent) {
       copyAction.isEnabled = c.selectedText != null
       super.show(c, x, y)

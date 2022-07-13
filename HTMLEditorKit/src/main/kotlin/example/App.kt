@@ -69,7 +69,7 @@ private class HtmlColorPopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component, x: Int, y: Int) {
+  override fun show(c: Component?, x: Int, y: Int) {
     (c as? JTextPane)?.also {
       val start = it.selectionStart
       val end = it.selectionEnd

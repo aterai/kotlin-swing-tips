@@ -86,7 +86,7 @@ private class InternalFrameTitlePanePopupMenu : JPopupMenu() {
     add("test2")
   }
 
-  override fun show(c: Component, x: Int, y: Int) {
+  override fun show(c: Component?, x: Int, y: Int) {
     if (c is BasicInternalFrameTitlePane) {
       super.show(c, x, y)
     }

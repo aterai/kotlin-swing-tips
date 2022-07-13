@@ -69,7 +69,7 @@ private class TabbedPanePopupMenu : JPopupMenu() {
     closeAll.addActionListener { (invoker as? JTabbedPane)?.removeAll() }
   }
 
-  override fun show(c: Component, x: Int, y: Int) {
+  override fun show(c: Component?, x: Int, y: Int) {
     if (c is JTabbedPane) {
       closeAll.isEnabled = c.tabCount > 0
       super.show(c, x, y)
