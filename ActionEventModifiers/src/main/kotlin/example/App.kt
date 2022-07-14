@@ -24,7 +24,7 @@ fun makeUI(): Component {
 
   val field = JTextField(20)
   val a1 = object : AbstractAction() {
-    override fun actionPerformed(e: ActionEvent?) {
+    override fun actionPerformed(e: ActionEvent) {
       Toolkit.getDefaultToolkit().beep()
     }
   }
@@ -118,7 +118,7 @@ private class TextAreaHandler(os: OutputStream) : StreamHandler() {
   }
 
   @Synchronized
-  override fun publish(record: LogRecord?) {
+  override fun publish(record: LogRecord) {
     super.publish(record)
     flush()
   }
