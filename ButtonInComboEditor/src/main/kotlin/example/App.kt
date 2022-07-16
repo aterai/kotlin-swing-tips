@@ -119,7 +119,7 @@ private class SiteItemComboBox(
     it.icon = ImageIcon(rss)
     val ip = FilteredImageSource(rss.source, SelectedImageFilter())
     it.rolloverIcon = ImageIcon(it.toolkit.createImage(ip))
-    it.addActionListener { println("clicked...") }
+    it.addActionListener { Toolkit.getDefaultToolkit().beep() }
     it.isFocusPainted = false
     it.isBorderPainted = false
     it.isContentAreaFilled = false

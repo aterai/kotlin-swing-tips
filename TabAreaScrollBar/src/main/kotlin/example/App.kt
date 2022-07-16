@@ -35,7 +35,7 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
   private val cardLayout = CardLayout()
   private val tabPanel = JPanel(FlowLayout(FlowLayout.LEADING, 0, 0))
   private val contentsPanel = JPanel(cardLayout)
-  private val hiddenTabs = JButton("V")
+  private val hiddenTabs = JButton("⊽")
   private val group = ButtonGroup()
   val tabArea = object : JScrollPane(tabPanel) {
     override fun isOptimizedDrawingEnabled() = false // JScrollBar is overlap
@@ -88,7 +88,7 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
     super.doLayout()
   }
 
-  fun createTabComponent(title: String, icon: Icon): JComponent {
+  private fun createTabComponent(title: String, icon: Icon, comp: Component): Component {
     val tab = TabButton()
     tab.inheritsPopupMenu = true
     group.add(tab)
@@ -108,7 +108,17 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
     val close = object : JButton(CloseTabIcon(Color(0xB0_B0_B0))) {
       override fun getPreferredSize() = Dimension(12, 12)
     }
-    close.addActionListener { println("test: close button") }
+    close.addActionListener {
+      tabPanel.remove(tab)
+      contentsPanel.remove(comp)
+      val oneOrMore = tabPanel.componentCount > 1
+      if (oneOrMore) {
+        tabPanel.revalidate()
+        (tabPanel.getComponent(0) as? TabButton)?.isSelected = true
+        cardLayout.first(contentsPanel)
+      }
+      tabPanel.revalidate()
+    }
     close.border = BorderFactory.createEmptyBorder()
     close.isFocusable = false
     close.isOpaque = false
@@ -121,7 +131,7 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
   }
 
   fun addTab(title: String, icon: Icon, comp: Component) {
-    val tab = createTabComponent(title, icon)
+    val tab = createTabComponent(title, icon, comp)
     tabPanel.add(tab)
     contentsPanel.add(comp, title)
     cardLayout.show(contentsPanel, title)

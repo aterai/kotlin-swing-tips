@@ -55,7 +55,7 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
     add(contentsPanel)
   }
 
-  private fun createTabComponent(title: String): Component {
+  private fun createTabComponent(title: String, comp: Component): Component {
     val tab = TabButton(title)
     val ml = object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
@@ -68,7 +68,17 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
     val close = object : JButton(CloseTabIcon(Color.GRAY)) {
       override fun getPreferredSize() = Dimension(12, 12)
     }
-    close.addActionListener { println("dummy action: close button") }
+    close.addActionListener {
+      tabPanel.remove(tab)
+      contentsPanel.remove(comp)
+      val oneOrMore = tabPanel.componentCount > 1
+      if (oneOrMore) {
+        tabPanel.revalidate()
+        (tabPanel.getComponent(0) as? TabButton)?.isSelected = true
+        cardLayout.first(contentsPanel)
+      }
+      tabPanel.revalidate()
+    }
     close.border = BorderFactory.createEmptyBorder()
     close.isFocusPainted = false
     close.isContentAreaFilled = false
@@ -86,7 +96,7 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
   }
 
   fun addTab(title: String, comp: Component) {
-    tabPanel.add(createTabComponent(title))
+    tabPanel.add(createTabComponent(title, comp))
     contentsPanel.add(comp, title)
     cardLayout.show(contentsPanel, title)
   }

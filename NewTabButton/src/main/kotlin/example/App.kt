@@ -110,6 +110,7 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
     val p = JPanel(BorderLayout())
     p.isOpaque = false
     p.add(close, BorderLayout.NORTH)
+
     tab.add(p, BorderLayout.EAST)
     bg.add(tab)
     tab.isSelected = true
