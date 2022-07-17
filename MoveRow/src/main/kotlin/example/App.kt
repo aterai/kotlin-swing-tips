@@ -91,7 +91,7 @@ private class TablePopupMenu(private val table: JTable) : JPopupMenu() {
 }
 
 private class RowDataCreateAction(str: String, private val table: JTable) : AbstractAction(str) {
-  override fun actionPerformed(e: ActionEvent?) {
+  override fun actionPerformed(e: ActionEvent) {
     if (table.isEditing) {
       table.cellEditor.stopCellEditing()
     }
@@ -104,7 +104,7 @@ private class RowDataCreateAction(str: String, private val table: JTable) : Abst
 }
 
 private class DeleteAction(str: String, private val table: JTable) : AbstractAction(str) {
-  override fun actionPerformed(e: ActionEvent?) {
+  override fun actionPerformed(e: ActionEvent) {
     if (table.isEditing) {
       table.cellEditor.stopCellEditing()
     }
@@ -171,7 +171,7 @@ private class DownAction(str: String, private val table: JTable) : AbstractActio
 }
 
 private class InitAction(str: String, private val table: JTable) : AbstractAction(str) {
-  override fun actionPerformed(e: ActionEvent?) {
+  override fun actionPerformed(e: ActionEvent) {
     val model = table.model
     val row = table.rowCount
     if (row <= 0 || model !is RowDataModel) {

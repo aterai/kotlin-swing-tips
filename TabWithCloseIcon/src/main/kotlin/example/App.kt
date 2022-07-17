@@ -408,7 +408,7 @@ private class CloseButtonAction(
   private val tabPane: JTabbedPane,
   private val index: Int
 ) : AbstractAction("x") {
-  override fun actionPerformed(e: ActionEvent?) {
+  override fun actionPerformed(e: ActionEvent) {
     tabPane.remove(index)
   }
 }

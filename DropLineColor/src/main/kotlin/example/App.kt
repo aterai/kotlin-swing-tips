@@ -48,7 +48,7 @@ private fun makeListPanel(): Component {
   // Disable row Cut, Copy, Paste
   val map = list.actionMap
   val dummy = object : AbstractAction() {
-    override fun actionPerformed(e: ActionEvent?) {
+    override fun actionPerformed(e: ActionEvent) {
       /* Dummy action */
     }
   }
@@ -130,7 +130,7 @@ private fun makeTree(handler: TransferHandler): JTree {
 
   // Disable node Cut action
   val dummy = object : AbstractAction() {
-    override fun actionPerformed(e: ActionEvent?) {
+    override fun actionPerformed(e: ActionEvent) {
       /* Dummy action */
     }
   }
