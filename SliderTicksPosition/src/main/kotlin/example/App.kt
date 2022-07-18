@@ -147,34 +147,11 @@ internal class UpArrowThumbSliderUI(slider: JSlider?) : BasicSliderUI(slider) {
   }
 
   override fun paintThumb(g: Graphics) {
-    val arrowShape = slider.getClientProperty("Slider.paintThumbArrowShape") as? Boolean
-    val isArrow = slider.paintTicks && java.lang.Boolean.FALSE != arrowShape
-    if (isArrow && slider.orientation == SwingConstants.HORIZONTAL) {
-      val bc = slider.background
-      g.color = if (slider.isEnabled) bc else bc.darker()
-      val knobBounds = thumbRect
+    if (slider.orientation == SwingConstants.HORIZONTAL) {
       val g2 = g.create() as? Graphics2D ?: return
-      g2.translate(knobBounds.x, knobBounds.y + knobBounds.height)
+      g2.translate(0, contentRect.y + contentRect.height + thumbRect.height)
       g2.scale(1.0, -1.0)
-      val w = knobBounds.width
-      val h = knobBounds.height
-      val cw = w / 2
-      g2.fillRect(1, 1, w - 3, h - 1 - cw)
-      val p = Polygon()
-      p.addPoint(1, h - cw)
-      p.addPoint(cw - 1, h - 1)
-      p.addPoint(w - 2, h - 1 - cw)
-      g2.fillPolygon(p)
-      g2.color = Color.WHITE
-      g2.drawLine(0, 0, w - 2, 0)
-      g2.drawLine(0, 1, 0, h - 1 - cw)
-      g2.drawLine(0, h - cw, cw - 1, h - 1)
-      g2.color = Color.BLACK
-      g2.drawLine(w - 1, 0, w - 1, h - 2 - cw)
-      g2.drawLine(w - 1, h - 1 - cw, w - 1 - cw, h - 1)
-      g2.color = Color.GRAY
-      g2.drawLine(w - 2, 1, w - 2, h - 2 - cw)
-      g2.drawLine(w - 2, h - 1 - cw, w - 1 - cw, h - 2)
+      super.paintThumb(g2)
       g2.dispose()
     } else {
       super.paintThumb(g)
