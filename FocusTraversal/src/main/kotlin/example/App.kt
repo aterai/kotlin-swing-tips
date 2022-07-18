@@ -74,13 +74,20 @@ fun debugPrint() {
   val w = p.topLevelAncestor
   val builder = StringBuilder()
   builder
-    .append(debugString("JFrame", w)).append("\n")
-    .append(debugString("this", p)).append("\n")
-    .append(debugString("JPanel", panel)).append("\n")
-    .append(debugString("Box", box)).append("\n")
-    .append(debugString("JScrollPane", scroll)).append("\n")
-    .append(debugString("JTextArea", textArea)).append("\n")
-    .append(debugString("eb", eb)).append("\n")
+    .append(debugString("JFrame", w))
+    .append("\n")
+    .append(debugString("this", p))
+    .append("\n")
+    .append(debugString("JPanel", panel))
+    .append("\n")
+    .append(debugString("Box", box))
+    .append("\n")
+    .append(debugString("JScrollPane", scroll))
+    .append("\n")
+    .append(debugString("JTextArea", textArea))
+    .append("\n")
+    .append(debugString("eb", eb))
+    .append("\n")
   textArea.text = builder.toString()
 }
 

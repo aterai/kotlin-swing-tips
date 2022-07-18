@@ -125,7 +125,8 @@ private class TableRowTransferHandler : TransferHandler() {
           } else {
             false
           }
-        } ?: false
+        }
+        ?: false
     }
     return true
   }

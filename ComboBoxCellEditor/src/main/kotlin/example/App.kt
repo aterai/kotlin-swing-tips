@@ -136,7 +136,8 @@ private class PluginCellEditor(comboBox: JComboBox<String>) : DefaultCellEditor(
         val idx = (panel.comboBox.model as? DefaultComboBoxModel<String>)?.getIndexOf(o) ?: -1
         val pn = PluginNode(panel.pluginName.text, it.plugins, idx)
         pn
-      } ?: o
+      }
+      ?: o
   }
 
   override fun isCellEditable(e: EventObject): Boolean {

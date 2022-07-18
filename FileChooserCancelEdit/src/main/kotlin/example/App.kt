@@ -24,7 +24,8 @@ fun makeUI(): Component {
     //     .findFirst()
     //     .ifPresent { append(log, "isEditing: ${it.isEditing()}") }
     descendants(fileChooser0).filterIsInstance<JTable>()
-      .firstOrNull()?.also { append(log, "isEditing: ${it.isEditing}") }
+      .firstOrNull()
+      ?.also { append(log, "isEditing: ${it.isEditing}") }
 
     val retValue = fileChooser0.showOpenDialog(log.rootPane)
     if (retValue == JFileChooser.APPROVE_OPTION) {
@@ -52,8 +53,7 @@ fun makeUI(): Component {
     //   // .ifPresent { it.removeEditor() }
     //   .ifPresent(JTable::removeEditor)
 
-    descendants(fileChooser1).filterIsInstance<JTable>()
-      .firstOrNull()?.removeEditor()
+    descendants(fileChooser1).filterIsInstance<JTable>().firstOrNull()?.removeEditor()
 
     val retValue = fileChooser1.showOpenDialog(log.rootPane)
     if (retValue == JFileChooser.APPROVE_OPTION) {

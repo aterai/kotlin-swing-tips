@@ -23,7 +23,8 @@ fun makeUI(): Component {
     act?.actionPerformed(ActionEvent(e.source, ActionEvent.ACTION_PERFORMED, "viewTypeDetails"))
     descendants(chooser)
       .filterIsInstance<JTable>()
-      .first().also {
+      .first()
+      .also {
         it.autoResizeMode = JTable.AUTO_RESIZE_LAST_COLUMN
         val retValue = chooser.showOpenDialog(log.rootPane)
         if (retValue == JFileChooser.APPROVE_OPTION) {

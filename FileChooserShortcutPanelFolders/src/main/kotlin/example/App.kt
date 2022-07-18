@@ -38,7 +38,8 @@ fun makeUI(): Component {
           .filterIsInstance<JToggleButton>()
           .first { rb ->
             fsv.getSystemDisplayName(files[3] as? File) == rb.text
-          }.doClick()
+          }
+          .doClick()
       }
     }
     chooser.showOpenDialog(button2.rootPane)

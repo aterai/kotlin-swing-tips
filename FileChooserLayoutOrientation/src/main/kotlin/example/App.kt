@@ -21,7 +21,8 @@ fun makeUI(): Component {
     val chooser = JFileChooser()
     descendants(chooser)
       .filterIsInstance<JList<*>>()
-      .first().also {
+      .first()
+      .also {
         it.addHierarchyListener { e ->
           val b = e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L
           if (b && e.component.isShowing) {

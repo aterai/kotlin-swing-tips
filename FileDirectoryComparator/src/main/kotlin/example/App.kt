@@ -166,9 +166,10 @@ private class FileGroupComparator(
   column: Int
 ) : DefaultFileComparator(column) {
   override fun compare(a: File, b: File): Int {
-    val flag = table.rowSorter.sortKeys.firstOrNull()
-      ?.takeIf { it.column == column && it.sortOrder == SortOrder.DESCENDING }
-      ?.let { -1 } ?: 1
+    val key = table.rowSorter.sortKeys.firstOrNull()
+    val flag = key?.takeIf {
+      it.column == column && it.sortOrder == SortOrder.DESCENDING
+    }?.let { -1 } ?: 1
     return when {
       a.isDirectory && !b.isDirectory -> -1 * flag
       !a.isDirectory && b.isDirectory -> 1 * flag

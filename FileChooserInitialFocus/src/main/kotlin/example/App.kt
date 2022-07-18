@@ -25,7 +25,8 @@ fun makeUI(): Component {
       EventQueue.invokeLater {
         descendants(fileChooser)
           .filterIsInstance<JTextField>()
-          .first().also {
+          .first()
+          .also {
             it.selectAll()
             it.requestFocusInWindow()
           }

@@ -40,9 +40,9 @@ fun executeWorker(e: ActionEvent) {
   val path = "https://docs.oracle.com/javase/8/docs/api/index-files/index-$idx.html"
   append(path)
   val urlConnection = runCatching { URL(path).openConnection() }
-    .onFailure {
-      textArea.text = "error: " + it.message
-    }.getOrNull() ?: return
+    .onFailure { textArea.text = "error: " + it.message }
+    .getOrNull()
+    ?: return
   append("urlConnection.getContentEncoding(): " + urlConnection.contentEncoding)
   append("urlConnection.getContentType(): " + urlConnection.contentType)
   val cs = getCharset(urlConnection)

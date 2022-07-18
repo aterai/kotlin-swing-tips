@@ -15,22 +15,19 @@ fun makeUI(): Component {
   val depthFirst = JButton("<html>depthFirst<br>postorder")
   depthFirst.addActionListener {
     textArea.text = ""
-    root.depthFirstEnumeration()
-      .toList().forEach { append(textArea, it) }
+    root.depthFirstEnumeration().toList().forEach { append(textArea, it) }
   }
 
   val breadthFirst = JButton("breadthFirst")
   breadthFirst.addActionListener {
     textArea.text = ""
-    root.breadthFirstEnumeration()
-      .toList().forEach { append(textArea, it) }
+    root.breadthFirstEnumeration().toList().forEach { append(textArea, it) }
   }
 
   val preorder = JButton("preorder")
   preorder.addActionListener {
     textArea.text = ""
-    root.preorderEnumeration()
-      .toList().forEach { append(textArea, it) }
+    root.preorderEnumeration().toList().forEach { append(textArea, it) }
   }
 
   val p = JPanel(GridLayout(0, 1, 5, 5))

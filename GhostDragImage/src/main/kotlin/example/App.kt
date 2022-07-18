@@ -140,7 +140,8 @@ private class ReorderingList(model: ListModel<ListItem>) : JList<ListItem>(model
       rubberBand.closePath()
 
       val indices = (0 until l.model.size)
-        .filter { rubberBand.intersects(l.getCellBounds(it, it)) }.toIntArray()
+        .filter { rubberBand.intersects(l.getCellBounds(it, it)) }
+        .toIntArray()
       l.selectedIndices = indices
       l.repaint()
     }

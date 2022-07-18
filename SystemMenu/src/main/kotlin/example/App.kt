@@ -8,7 +8,8 @@ fun makeUI(): Component {
   EventQueue.invokeLater {
     val menu = descendants(log.rootPane)
       .filterIsInstance<JMenu>()
-      .firstOrNull() ?: JMenu(" ")
+      .firstOrNull()
+      ?: JMenu(" ")
     menu.add("added to the SystemMenu")
     log.append("${menu.preferredSize}\n")
     menu.icon = UIManager.getIcon("InternalFrame.icon")

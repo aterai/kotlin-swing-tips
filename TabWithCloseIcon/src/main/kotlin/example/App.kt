@@ -37,7 +37,8 @@ private class CloseableTabbedPane : JTabbedPane() {
     get() = components
       .filterIsInstance<JViewport>()
       .firstOrNull { "TabbedPane.scrollableViewport" == it.name }
-      ?.viewPosition ?: Point()
+      ?.viewPosition
+      ?: Point()
 
   override fun updateUI() {
     removeMouseListener(handler)

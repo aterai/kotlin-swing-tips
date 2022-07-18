@@ -87,7 +87,8 @@ private class IntegerInputVerifier : InputVerifier() {
       }
       val iv = runCatching { Integer.parseInt(txt) }
         .onFailure { UIManager.getLookAndFeel().provideErrorFeedback(c) }
-        .getOrNull() ?: -1
+        .getOrNull()
+        ?: -1
       verified = iv >= 0
       // try {
       //   val iv = Integer.parseInt(txt)

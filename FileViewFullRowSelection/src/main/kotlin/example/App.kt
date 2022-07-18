@@ -27,7 +27,8 @@ fun makeUI(): Component {
 
     descendants(chooser)
       .filterIsInstance<JTable>()
-      .firstOrNull()?.putClientProperty("Table.isFileList", !flg)
+      .firstOrNull()
+      ?.putClientProperty("Table.isFileList", !flg)
 
     val retValue = chooser.showOpenDialog(button.rootPane)
     if (retValue == JFileChooser.APPROVE_OPTION) {

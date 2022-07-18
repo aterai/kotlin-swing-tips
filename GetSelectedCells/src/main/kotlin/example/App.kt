@@ -163,7 +163,9 @@ private class BooleanEditor : AbstractCellEditor(), TableCellEditor {
   override fun getCellEditorValue() = checkBox.isSelected
 
   override fun isCellEditable(e: EventObject) = (e as? MouseEvent)
-    ?.takeUnless { e.isShiftDown || e.isControlDown }?.let { true } ?: super.isCellEditable(e)
+    ?.takeUnless { e.isShiftDown || e.isControlDown }
+    ?.let { true }
+    ?: super.isCellEditable(e)
 
   private inner class CheckBoxHandler : MouseAdapter(), ActionListener {
     override fun actionPerformed(e: ActionEvent) {

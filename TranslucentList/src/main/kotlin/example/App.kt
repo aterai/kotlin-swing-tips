@@ -110,7 +110,8 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
       rubberBand.closePath()
 
       val indices = (0 until l.model.size)
-        .filter { rubberBand.intersects(l.getCellBounds(it, it)) }.toIntArray()
+        .filter { rubberBand.intersects(l.getCellBounds(it, it)) }
+        .toIntArray()
       l.selectedIndices = indices
       l.repaint()
     }

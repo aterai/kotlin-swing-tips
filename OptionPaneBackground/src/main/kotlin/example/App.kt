@@ -19,7 +19,8 @@ fun makeUI(): Component {
     val c = e.component
     if (e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L && c.isShowing) {
       descendants(SwingUtilities.getAncestorOfClass(JOptionPane::class.java, c))
-        .filterIsInstance<JPanel>().forEach { it.isOpaque = false }
+        .filterIsInstance<JPanel>()
+        .forEach { it.isOpaque = false }
     }
   }
   val b2 = JButton("background")

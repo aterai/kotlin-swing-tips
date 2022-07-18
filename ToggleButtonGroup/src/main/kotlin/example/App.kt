@@ -22,7 +22,8 @@ private fun makeTitledPanel(title: String, bg: ButtonGroup): Component {
   val p = JPanel()
   p.border = BorderFactory.createTitledBorder(title)
   listOf("aaa", "bbb", "ccc")
-    .map { JToggleButton(it) }.forEach {
+    .map { JToggleButton(it) }
+    .forEach {
       p.add(it)
       bg.add(it)
     }

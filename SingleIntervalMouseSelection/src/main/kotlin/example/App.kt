@@ -97,7 +97,8 @@ fun makeUI(): Component {
         val from = model.getElementAt(it.minSelectionIndex)
         val to = model.getElementAt(it.maxSelectionIndex)
         Period.between(from, to).toString()
-      } ?: " "
+      }
+      ?: " "
   }
 
   val box = Box.createVerticalBox()
