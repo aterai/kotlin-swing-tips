@@ -30,7 +30,7 @@ fun makeUI(): Component {
   }
 }
 
-private class DisableInputLayerUI<V : Component?> : LayerUI<V>() {
+private class DisableInputLayerUI<V : Component> : LayerUI<V>() {
   private var running = false
   fun start() {
     if (running) {
@@ -81,7 +81,7 @@ private class DisableInputLayerUI<V : Component?> : LayerUI<V>() {
   override fun applyPropertyChange(e: PropertyChangeEvent, l: JLayer<out V>) {
     if (CMD_REPAINT == e.propertyName) {
       l.glassPane.isVisible = e.newValue as? Boolean == true
-      l.repaint()
+      l.view.repaint()
     }
   }
 
