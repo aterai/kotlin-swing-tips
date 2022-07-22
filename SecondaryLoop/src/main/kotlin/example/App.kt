@@ -105,7 +105,6 @@ private class DisableInputLayerUI<V : JComponent> : LayerUI<V>() {
   override fun applyPropertyChange(e: PropertyChangeEvent, l: JLayer<out V>) {
     if (e.propertyName == CMD_REPAINT) {
       l.glassPane.isVisible = e.newValue as? Boolean ?: false
-      l.repaint()
     }
   }
 
