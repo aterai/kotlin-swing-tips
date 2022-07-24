@@ -46,11 +46,9 @@ private class TranslucentPopupMenu : JPopupMenu() {
   override fun show(c: Component?, x: Int, y: Int) {
     EventQueue.invokeLater {
       val p = topLevelAncestor
-      if (p is JWindow) {
-        println("Heavy weight")
+      if (p is JWindow && p.type == Window.Type.POPUP) {
+        // Heavy weight
         p.setBackground(ALPHA_ZERO)
-      } else {
-        println("Light weight")
       }
     }
     super.show(c, x, y)
