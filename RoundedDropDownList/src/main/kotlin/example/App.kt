@@ -120,11 +120,9 @@ private class HeavyWeightContainerListener : PopupMenuListener {
   override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
     EventQueue.invokeLater {
       val c = e.source as? JComboBox<*>
-      (c?.ui?.getAccessibleChild(c, 0) as? JPopupMenu)?.also {
-        (it.topLevelAncestor as? JWindow)?.also { top ->
-          println("HeavyWeightContainer")
-          top.background = Color(0x0, true)
-        }
+      val top = (c?.ui?.getAccessibleChild(c, 0) as? JPopupMenu)?.topLevelAncestor
+      if (top is JWindow && top.type == Window.Type.POPUP) {
+        top.background = Color(0x0, true)
       }
     }
   }
