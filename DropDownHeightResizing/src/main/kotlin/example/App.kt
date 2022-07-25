@@ -107,8 +107,8 @@ private class ResizeWindowListener(private val popup: JPopupMenu) : MouseInputAd
   override fun mouseDragged(e: MouseEvent) {
     rect.height = startDim.height + e.locationOnScreen.y - startPt.y
     popup.preferredSize = rect.size
-    val p = popup.topLevelAncestor
-    if (p is JWindow) {
+    val p = SwingUtilities.getWindowAncestor(popup)
+    if (p != null && p.type == Window.Type.POPUP) {
       p.setSize(rect.width, rect.height)
     } else {
       popup.pack()
