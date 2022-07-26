@@ -22,23 +22,6 @@ private val SELECTION_FOREGROUND = Color.BLUE
 private val THUMB = Color(0xCD_CD_CD)
 private const val KEY = "ComboBox.border"
 
-private fun makeModel(): DefaultComboBoxModel<String> {
-  val model = DefaultComboBoxModel<String>()
-  model.addElement("333333")
-  model.addElement("aaa")
-  model.addElement("1234555")
-  model.addElement("555555555555")
-  model.addElement("666666")
-  model.addElement("bbb")
-  model.addElement("444444444")
-  model.addElement("1234")
-  model.addElement("000000000000000")
-  model.addElement("2222222222")
-  model.addElement("ccc")
-  model.addElement("111111111111111111")
-  return model
-}
-
 fun makeUI(): Component {
   UIManager.put("ScrollBar.width", 10)
   UIManager.put("ScrollBar.thumbHeight", 20) // GTKLookAndFeel, SynthLookAndFeel, NimbusLookAndFeel
@@ -56,11 +39,9 @@ fun makeUI(): Component {
   UIManager.put("ComboBox.buttonHighlight", FOREGROUND)
   UIManager.put("ComboBox.buttonShadow", FOREGROUND)
   val combo = object : JComboBox<String>(makeModel()) {
-    @Transient
     private var handler: MouseListener? = null
-
-    @Transient
     private var listener: PopupMenuListener? = null
+
     override fun updateUI() {
       removeMouseListener(handler)
       removePopupMenuListener(listener)
@@ -130,12 +111,34 @@ fun makeUI(): Component {
   }
 }
 
+private fun makeModel(): DefaultComboBoxModel<String> {
+  val model = DefaultComboBoxModel<String>()
+  model.addElement("1234")
+  model.addElement("5555555555555555555555")
+  model.addElement("6789000000000")
+  model.addElement("aaa")
+  model.addElement("999999999")
+  model.addElement("1234555")
+  model.addElement("555555555555")
+  model.addElement("666666")
+  model.addElement("bbb")
+  model.addElement("444444444")
+  model.addElement("1234")
+  model.addElement("000000000000000")
+  model.addElement("2222222222")
+  model.addElement("ccc")
+  model.addElement("111111111111111111")
+  return model
+}
+
 private class HeavyWeightContainerListener : PopupMenuListener {
   override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
+    val c = e.source as? JComboBox<*> ?: return
     EventQueue.invokeLater {
-      (e.source as? JComboBox<*>)?.also {
-        val w = (it.ui.getAccessibleChild(it, 0) as? JPopupMenu)?.topLevelAncestor
-        (w as? JWindow)?.background = Color(0x0, true)
+      val pop = c.getUI().getAccessibleChild(c, 0)
+      val top = (pop as? JPopupMenu)?.topLevelAncestor
+      if (top is JWindow && top.type == Window.Type.POPUP) {
+        top.background = Color(0x0, true)
       }
     }
   }
@@ -251,9 +254,9 @@ private class TopRoundedCornerBorder : RoundedCornerBorder() {
     val b = round.bounds
     b.setBounds(b.x, b.y + ARC, b.width, b.height - ARC)
     round.add(Area(b))
-    val parent = c.parent
-    if (parent != null) {
-      g2.paint = parent.background
+
+    c.parent?.also {
+      g2.paint = it.background
       val corner = Area(Rectangle2D.Double(dx, dy, dw, dh))
       corner.subtract(round)
       g2.fill(corner)
@@ -271,6 +274,7 @@ private class BottomRoundedCornerBorder : RoundedCornerBorder() {
     val r = ARC.toDouble()
     val w = width - 1.0
     val h = height - 1.0
+
     val p = Path2D.Double()
     p.moveTo(x.toDouble(), y.toDouble())
     p.lineTo(x.toDouble(), y + h - r)
@@ -279,8 +283,10 @@ private class BottomRoundedCornerBorder : RoundedCornerBorder() {
     p.quadTo(x + w, y + h, x + w, y + h - r)
     p.lineTo(x + w, y.toDouble())
     p.closePath()
+
     g2.paint = c.background
     g2.fill(p)
+
     g2.paint = c.foreground
     g2.draw(p)
     g2.paint = c.background
@@ -326,12 +332,6 @@ private class WithoutArrowButtonScrollBarUI : BasicScrollBarUI() {
 
 fun main() {
   EventQueue.invokeLater {
-    runCatching {
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
-    }.onFailure {
-      it.printStackTrace()
-      Toolkit.getDefaultToolkit().beep()
-    }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
       contentPane.add(makeUI())

@@ -42,7 +42,6 @@ fun makeUI(): Component {
     }
   }
   val combo1 = object : JComboBox<String>(makeModel()) {
-    @Transient
     private var listener: PopupMenuListener? = null
 
     override fun updateUI() {
@@ -59,11 +58,10 @@ fun makeUI(): Component {
       }
     }
   }
-  val combo2 = object : JComboBox<String>(makeModel()) {
-    @Transient
-    private var handler: MouseListener? = null
 
-    @Transient private var listener: PopupMenuListener? = null
+  val combo2 = object : JComboBox<String>(makeModel()) {
+    private var handler: MouseListener? = null
+    private var listener: PopupMenuListener? = null
 
     override fun updateUI() {
       removeMouseListener(handler)
@@ -91,6 +89,7 @@ fun makeUI(): Component {
       }
     }
   }
+
   val p = JPanel(GridLayout(0, 1, 15, 15))
   p.isOpaque = true
   p.background = PANEL_BACKGROUND
@@ -118,9 +117,10 @@ private fun makeModel(): DefaultComboBoxModel<String> {
 
 private class HeavyWeightContainerListener : PopupMenuListener {
   override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
+    val c = e.source as? JComboBox<*> ?: return
     EventQueue.invokeLater {
-      val c = e.source as? JComboBox<*>
-      val top = (c?.ui?.getAccessibleChild(c, 0) as? JPopupMenu)?.topLevelAncestor
+      val pop = c.getUI().getAccessibleChild(c, 0)
+      val top = (pop as? JPopupMenu)?.topLevelAncestor
       if (top is JWindow && top.type == Window.Type.POPUP) {
         top.background = Color(0x0, true)
       }
@@ -153,10 +153,8 @@ private class ComboRolloverHandler : MouseAdapter() {
     getButtonModel(e)?.isRollover = false
   }
 
-  private fun getButtonModel(e: MouseEvent): ButtonModel? {
-    val c = e.component as? Container ?: return null
-    return (c.getComponent(0) as? JButton)?.model
-  }
+  private fun getButtonModel(e: MouseEvent) =
+    ((e.component as? Container)?.getComponent(0) as? JButton)?.model
 }
 
 private class ArrowIcon(private val color: Color, private val rollover: Color) : Icon {
@@ -187,22 +185,15 @@ private class ArrowIcon(private val color: Color, private val rollover: Color) :
 }
 
 private open class RoundedCornerBorder : AbstractBorder() {
-  override fun paintBorder(
-    c: Component,
-    g: Graphics,
-    x: Int,
-    y: Int,
-    width: Int,
-    height: Int
-  ) {
+  override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    val r = ARC.toDouble()
+    val dr = ARC.toDouble()
     val dx = x.toDouble()
     val dy = y.toDouble()
     val dw = width.toDouble()
     val dh = height.toDouble()
-    val round = Area(RoundRectangle2D.Double(dx, dy, dw - 1.0, dh - 1.0, r, r))
+    val round = Area(RoundRectangle2D.Double(dx, dy, dw - 1, dh - 1, dr, dr))
     if (c is JPopupMenu) {
       g2.paint = c.background
       g2.fill(round)
@@ -221,9 +212,8 @@ private open class RoundedCornerBorder : AbstractBorder() {
 
   override fun getBorderInsets(c: Component) = Insets(4, 8, 4, 8)
 
-  override fun getBorderInsets(c: Component, insets: Insets): Insets {
-    insets.set(4, 8, 4, 8)
-    return insets
+  override fun getBorderInsets(c: Component, insets: Insets) = insets.also {
+    it.set(4, 8, 4, 8)
   }
 
   companion object {
@@ -233,25 +223,18 @@ private open class RoundedCornerBorder : AbstractBorder() {
 
 private class TopRoundedCornerBorder : RoundedCornerBorder() {
   // https://ateraimemo.com/Swing/RoundedComboBox.html
-  override fun paintBorder(
-    c: Component,
-    g: Graphics,
-    x: Int,
-    y: Int,
-    width: Int,
-    height: Int
-  ) {
+  override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     if (c is JPopupMenu) {
       g2.clearRect(x, y, width, height)
     }
-    val r = ARC.toDouble()
+    val dr = ARC.toDouble()
     val dx = x.toDouble()
     val dy = y.toDouble()
     val dw = width.toDouble()
     val dh = height.toDouble()
-    val round = Area(RoundRectangle2D.Double(dx, dy, dw - 1.0, dh - 1.0, r, r))
+    val round = Area(RoundRectangle2D.Double(dx, dy, dw - 1.0, dh - 1.0, dr, dr))
     val b = round.bounds
     b.setBounds(b.x, b.y + ARC, b.width, b.height - ARC)
     round.add(Area(b))
@@ -269,14 +252,7 @@ private class TopRoundedCornerBorder : RoundedCornerBorder() {
 }
 
 private class BottomRoundedCornerBorder : RoundedCornerBorder() {
-  override fun paintBorder(
-    c: Component,
-    g: Graphics,
-    x: Int,
-    y: Int,
-    width: Int,
-    height: Int
-  ) {
+  override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     val r = ARC.toDouble()
@@ -291,7 +267,6 @@ private class BottomRoundedCornerBorder : RoundedCornerBorder() {
     p.quadTo(x + w, y + h, x + w, y + h - r)
     p.lineTo(x + w, y.toDouble())
     p.closePath()
-    // val round = Area(p)
 
     g2.paint = c.background
     g2.fill(p)
@@ -306,12 +281,6 @@ private class BottomRoundedCornerBorder : RoundedCornerBorder() {
 
 fun main() {
   EventQueue.invokeLater {
-    runCatching {
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
-    }.onFailure {
-      it.printStackTrace()
-      Toolkit.getDefaultToolkit().beep()
-    }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
       contentPane.add(makeUI())
