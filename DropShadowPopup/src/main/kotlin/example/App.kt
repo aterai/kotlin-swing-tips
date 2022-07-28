@@ -34,9 +34,12 @@ private fun initPopupMenu(p: JPopupMenu) {
   listOf("Open", "Save", "Close").forEach { p.add("$it(test)") }
   p.addSeparator()
   p.add("Exit").addActionListener { e ->
-    val m = e.source as? JMenuItem
-    val pop = SwingUtilities.getUnwrappedParent(m) as? JPopupMenu
-    (SwingUtilities.getRoot(pop?.invoker) as? Window)?.dispose()
+    val m = e.source
+    if (m is JMenuItem) {
+      (SwingUtilities.getUnwrappedParent(m) as? JPopupMenu)?.invoker?.also {
+        SwingUtilities.getWindowAncestor(it)?.dispose()
+      }
+    }
   }
 }
 
