@@ -75,8 +75,8 @@ private class FocusOwnerCaret : DefaultCaret() {
 
   override fun getSelectionPainter(): HighlightPainter {
     val c = component
-    val w = c.topLevelAncestor
-    val isActive = w is Window && w.isActive
+    val w = SwingUtilities.getWindowAncestor(c)
+    val isActive = w?.isActive == true
     return if (c.hasFocus() && isActive) super.getSelectionPainter() else NO_FOCUS_PAINTER
   }
 
