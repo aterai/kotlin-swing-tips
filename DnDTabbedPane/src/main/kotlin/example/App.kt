@@ -28,15 +28,25 @@ fun makeUI(): Component {
     it.addTab("Title cc", JScrollPane(JTextArea("123412341234\n46746745\n245342\n")))
   }
 
+  val p = JPanel(BorderLayout()).also {
+    val check = JCheckBox()
+    check.isOpaque = false
+    check.isSelected = true
+    it.isOpaque = false
+    it.add(check, BorderLayout.WEST)
+    it.add(JLabel("JTree 00"))
+  }
+
   val tab = DnDTabbedPane().also {
     it.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
     it.addTab("JTree 00", JScrollPane(JTree()))
-    it.addTab("JLabel 01", JLabel("Test"))
-    it.addTab("JTable 02", JScrollPane(JTable(20, 3)))
-    it.addTab("JTextArea 03", JScrollPane(JTextArea("111111111\n2222222222\n")))
-    it.addTab("JLabel 04", JLabel("<html>33333333333333<br>13412341234123446745"))
-    it.addTab("null 05", null)
-    it.addTab("JTabbedPane 06", sub)
+    it.setTabComponentAt(0, p)
+    it.addTab("JLabel 01", ColorIcon(Color.RED), JLabel("Test"))
+    it.addTab("JTable 02", ColorIcon(Color.GREEN), JScrollPane(JTable(20, 3)))
+    it.addTab("JTabbedPane 03", ColorIcon(Color.BLUE), sub)
+    it.addTab("JTextArea 04", JScrollPane(JTextArea("1\n22\n")))
+    it.addTab("JLabel 05", JLabel("<html>33333333333<br>13412341234123446745"))
+    it.addTab("null 06", null)
     it.addTab("Title 000000000000000007", JScrollPane(JTree()))
   }
 
@@ -210,7 +220,12 @@ private class DnDTabbedPane : JTabbedPane() {
     rootPane.glassPane = glassPane
     if (hasGhost) {
       val c = getTabComponentAt(dragTabIndex)
-      val copy = c ?: JLabel(getTitleAt(dragTabIndex))
+      val copy = c ?: JLabel().also {
+        it.text = getTitleAt(dragTabIndex)
+        it.icon = getIconAt(dragTabIndex)
+        it.iconTextGap = UIManager.getInt("TabbedPane.textIconGap")
+        it.horizontalAlignment = LEADING
+      }
       val d = copy.preferredSize
       val image = BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_ARGB)
       val g2 = image.createGraphics()
@@ -437,6 +452,22 @@ private class GhostGlassPane(val tabbedPane: DnDTabbedPane) : JComponent() {
   companion object {
     private val ALPHA = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f)
   }
+}
+
+private class ColorIcon(private val color: Color) : Icon {
+  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+    val g2 = g.create() as? Graphics2D ?: return
+    g2.translate(x, y)
+    g2.paint = color
+    g2.fillRect(2, 2, iconWidth - 4, iconHeight - 4)
+    g2.paint = Color.BLACK
+    g2.drawRect(2, 2, iconWidth - 4, iconHeight - 4)
+    g2.dispose()
+  }
+
+  override fun getIconWidth() = 16
+
+  override fun getIconHeight() = 16
 }
 
 fun main() {
