@@ -80,16 +80,12 @@ private fun saveImage(c: JComponent) {
     g2.scale(s.toDouble(), s.toDouble())
     c.print(g2)
     g2.dispose()
-    try {
+    label.icon = runCatching {
       val tmp = File.createTempFile("jst_tmp", ".jpg")
       tmp.deleteOnExit()
       ImageIO.write(image, "jpeg", tmp)
-      label.icon = ImageIcon(tmp.absolutePath)
-    } catch (ex: IOException) {
-      ex.printStackTrace()
-      label.icon = null
-      UIManager.getLookAndFeel().provideErrorFeedback(c)
-    }
+      ImageIcon(tmp.absolutePath)
+    }.getOrNull()
   }
 }
 
