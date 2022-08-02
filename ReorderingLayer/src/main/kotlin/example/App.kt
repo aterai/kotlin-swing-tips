@@ -25,8 +25,7 @@ fun makeUI(): Component {
 }
 
 private fun addDraggablePanel(parent: Container, c: Component) {
-  val idx = parent.componentCount
-  val l = JLabel(" %04d ".format(idx))
+  val l = JLabel(" %04d ".format(parent.componentCount))
   l.isOpaque = true
   l.background = Color.RED
   val p = JPanel(BorderLayout())
@@ -71,7 +70,7 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
     when (e.id) {
       MouseEvent.MOUSE_PRESSED -> if (parent.componentCount > 0) {
         startPt.location = e.point
-        l.repaint()
+        parent.repaint()
       }
       MouseEvent.MOUSE_RELEASED -> if (draggingComponent != null) {
         // swap the dragging panel and the dummy filler
@@ -98,7 +97,7 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
       }
       // update the dragging panel location
       updateDraggingPanelLocation(parent, pt, dragOffset)
-      l.repaint()
+      parent.repaint()
     }
   }
 
