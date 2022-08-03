@@ -18,11 +18,23 @@ private val HELP = """
 """.trimIndent()
 
 fun makeUI(): Component {
-  val l1 = JScrollPane(JTree())
-  l1.border = EditableTitledBorder("JTree 111111111111111", l1)
+  val l1 = object : JScrollPane(JTree()) {
+    override fun updateUI() {
+      val title = (border as? TitledBorder)?.title ?: "JTree 111111111111111"
+      border = null
+      super.updateUI()
+      border = EditableTitledBorder(title, this)
+    }
+  }
 
-  val l2 = JScrollPane(JTextArea(HELP))
-  l2.border = EditableTitledBorder(null, "JTextArea", TitledBorder.RIGHT, TitledBorder.BOTTOM, l2)
+  val l2 = object : JScrollPane(JTextArea(HELP)) {
+    override fun updateUI() {
+      val title = (border as? TitledBorder)?.title ?: "JTextArea"
+      border = null
+      super.updateUI()
+      border = EditableTitledBorder(null, title, TitledBorder.RIGHT, TitledBorder.BOTTOM, this)
+    }
+  }
 
   return JPanel(GridLayout(0, 1, 5, 5)).also {
     it.add(l1)
@@ -39,7 +51,7 @@ private class EditableTitledBorder(
   pos: Int,
   font: Font?,
   var comp: Component
-) : TitledBorder(border, title, justification, pos, font), MouseListener {
+) : TitledBorder(border, title, justification, pos, font) {
   private val glassPane = EditorGlassPane()
   private val editorTextField = JTextField()
   private val renderer = JLabel()
@@ -75,7 +87,18 @@ private class EditableTitledBorder(
   }
 
   init {
-    comp.addMouseListener(this)
+    comp.addMouseListener(object : MouseAdapter() {
+      override fun mouseClicked(e: MouseEvent) {
+        val isDoubleClick = e.clickCount >= 2
+        if (isDoubleClick) {
+          val src = e.component
+          rect.bounds = getTitleBounds(src)
+          if (rect.contains(e.point)) {
+            startEditing.actionPerformed(ActionEvent(src, ActionEvent.ACTION_PERFORMED, ""))
+          }
+        }
+      }
+    })
     val im = editorTextField.getInputMap(JComponent.WHEN_FOCUSED)
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "rename-title")
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancel-editing")
@@ -177,33 +200,6 @@ private class EditableTitledBorder(
       RIGHT -> lblR.x += c.width - insets.right - lblR.width
       CENTER -> lblR.x += (c.width - lblR.width) / 2
     }
-  }
-
-  override fun mouseClicked(e: MouseEvent) {
-    val isDoubleClick = e.clickCount >= 2
-    if (isDoubleClick) {
-      val src = e.component
-      rect.bounds = getTitleBounds(src)
-      if (rect.contains(e.point)) {
-        startEditing.actionPerformed(ActionEvent(src, ActionEvent.ACTION_PERFORMED, ""))
-      }
-    }
-  }
-
-  override fun mouseEntered(e: MouseEvent) {
-    /* not needed */
-  }
-
-  override fun mouseExited(e: MouseEvent) {
-    /* not needed */
-  }
-
-  override fun mousePressed(e: MouseEvent) {
-    /* not needed */
-  }
-
-  override fun mouseReleased(e: MouseEvent) {
-    /* not needed */
   }
 
   private inner class EditorGlassPane : JComponent() {
