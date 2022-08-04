@@ -22,8 +22,7 @@ fun makeUI(): Component {
       cellHasFocus: Boolean
     ): Component {
       val str = value?.toString() ?: "- Select category -"
-      super.getListCellRendererComponent(list, str, index, isSelected, cellHasFocus)
-      return this
+      return super.getListCellRendererComponent(list, str, index, isSelected, cellHasFocus)
     }
   }
   combo1.addItemListener { e ->
@@ -43,8 +42,7 @@ fun makeUI(): Component {
       cellHasFocus: Boolean
     ): Component {
       val str = value?.toString() ?: "- Select type -"
-      super.getListCellRendererComponent(list, str, index, isSelected, cellHasFocus)
-      return this
+      return super.getListCellRendererComponent(list, str, index, isSelected, cellHasFocus)
     }
   }
 

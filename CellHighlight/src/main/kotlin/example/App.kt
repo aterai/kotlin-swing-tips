@@ -86,13 +86,15 @@ private class HighlightRenderer(
     row: Int,
     column: Int
   ): Component {
-    super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
-    horizontalAlignment = if (value is Number) SwingConstants.RIGHT else SwingConstants.LEFT
-    background = table.background
-    highlighter.getCellHighlightColor(row, column)?.also {
-      background = it
+    val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    if (c is JLabel) {
+      c.horizontalAlignment = if (value is Number) SwingConstants.RIGHT else SwingConstants.LEFT
+      c.background = table.background
+      highlighter.getCellHighlightColor(row, column)?.also {
+        c.background = it
+      }
     }
-    return this
+    return c
   }
 }
 
