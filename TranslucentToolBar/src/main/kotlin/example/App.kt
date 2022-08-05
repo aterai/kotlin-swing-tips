@@ -79,7 +79,7 @@ private class LabelWithToolBox(image: Icon?) : JLabel(image) {
       toolBox.revalidate()
     }
     toolBox.add(Box.createGlue())
-    // http://chrfb.deviantart.com/art/quot-ecqlipse-2-quot-PNG-59941546
+    // https://www.deviantart.com/chrfb/art/ecqlipse-2-PNG-59941546
     toolBox.add(makeToolButton("example/ATTACHMENT_16x16-32.png"))
     toolBox.add(Box.createHorizontalStrut(2))
     toolBox.add(makeToolButton("example/RECYCLE BIN - EMPTY_16x16-32.png"))

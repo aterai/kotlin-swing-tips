@@ -22,7 +22,7 @@ fun visitAll(tree: JTree, parent: TreePath, expand: Boolean) {
 }
 
 // Expand or collapse a JTree - Real's Java How-to
-// http://www.rgagnon.com/javadetails/java-0210.html
+// https://www.rgagnon.com/javadetails/java-0210.html
 fun expandAll(tree: JTree) {
   var row = 0
   while (row < tree.rowCount) {
