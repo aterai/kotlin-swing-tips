@@ -84,14 +84,14 @@ private class UrlRenderer1 : UrlRenderer() {
     row: Int,
     column: Int
   ): Component {
-    super.getTableCellRendererComponent(table, value, isSelected, false, row, column)
+    val c = super.getTableCellRendererComponent(table, value, isSelected, false, row, column)
     val str = value?.toString() ?: ""
-    text = when {
+    (c as? JLabel)?.text = when {
       isRolloverCell(table, row, column) -> "<html><u><font color='blue'>$str"
       hasFocus -> "<html><font color='blue'>$str"
       else -> str
     }
-    return this
+    return c
   }
 }
 
@@ -107,35 +107,37 @@ private open class UrlRenderer : DefaultTableCellRenderer(), MouseListener, Mous
     row: Int,
     column: Int
   ): Component {
-    super.getTableCellRendererComponent(table, value, isSelected, false, row, column)
-    val cm = table.columnModel
-    val i = this.insets
-    CELL_RECT.x = i.left
-    CELL_RECT.y = i.top
-    CELL_RECT.width = cm.getColumn(column).width - cm.columnMargin - i.right - CELL_RECT.x
-    CELL_RECT.height = table.getRowHeight(row) - table.rowMargin - i.bottom - CELL_RECT.y
-    ICON_RECT.setBounds(0, 0, 0, 0)
-    TEXT_RECT.setBounds(0, 0, 0, 0)
-    val str = SwingUtilities.layoutCompoundLabel(
-      this,
-      getFontMetrics(font),
-      value?.toString() ?: "",
-      this.icon,
-      verticalAlignment,
-      horizontalAlignment,
-      verticalTextPosition,
-      horizontalTextPosition,
-      CELL_RECT,
-      ICON_RECT,
-      TEXT_RECT,
-      iconTextGap
-    )
-    text = when {
-      isRolloverCell(table, row, column) -> "<html><u><font color='blue'>$str"
-      hasFocus -> "<html><font color='blue'>$str"
-      else -> str
+    val c = super.getTableCellRendererComponent(table, value, isSelected, false, row, column)
+    if (c is JLabel) {
+      val cm = table.columnModel
+      val i = this.insets
+      CELL_RECT.x = i.left
+      CELL_RECT.y = i.top
+      CELL_RECT.width = cm.getColumn(column).width - cm.columnMargin - i.right - CELL_RECT.x
+      CELL_RECT.height = table.getRowHeight(row) - table.rowMargin - i.bottom - CELL_RECT.y
+      ICON_RECT.setBounds(0, 0, 0, 0)
+      TEXT_RECT.setBounds(0, 0, 0, 0)
+      val str = SwingUtilities.layoutCompoundLabel(
+        c,
+        c.getFontMetrics(font),
+        value?.toString() ?: "",
+        c.icon,
+        c.verticalAlignment,
+        c.horizontalAlignment,
+        c.verticalTextPosition,
+        c.horizontalTextPosition,
+        CELL_RECT,
+        ICON_RECT,
+        TEXT_RECT,
+        c.iconTextGap
+      )
+      text = when {
+        isRolloverCell(table, row, column) -> "<html><u><font color='blue'>$str"
+        hasFocus -> "<html><font color='blue'>$str"
+        else -> str
+      }
     }
-    return this
+    return c
   }
 
   fun isRolloverCell(table: JTable, row: Int, column: Int) =
