@@ -7,8 +7,6 @@ import javax.swing.plaf.basic.BasicSplitPaneUI
 fun makeUI(): Component {
   UIManager.put("SplitPane.oneTouchButtonSize", 32)
   UIManager.put("SplitPane.oneTouchButtonOffset", 50)
-  UIManager.put("SplitPane.centerOneTouchButtons", true)
-
   UIManager.put("SplitPaneDivider.border", BorderFactory.createLineBorder(Color.RED, 10))
   UIManager.put("SplitPaneDivider.draggingColor", Color(0x64_FF_64_64, true))
 
@@ -29,13 +27,6 @@ fun makeUI(): Component {
   splitPane.bottomComponent = JScrollPane(JTree())
   splitPane.dividerSize = 32
   splitPane.isOneTouchExpandable = true
-
-  // (splitPane.ui as? BasicSplitPaneUI)?.divider?.also {
-  //   it.background = Color.ORANGE
-  //   for (c in it.components) {
-  //     (c as? JButton)?.background = Color.ORANGE
-  //   }
-  // }
 
   return JPanel(BorderLayout()).also {
     it.add(splitPane)
