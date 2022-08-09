@@ -66,9 +66,12 @@ private class IconTableCellRenderer : DefaultTableCellRenderer() {
     row: Int,
     column: Int
   ): Component {
-    icon = (value as? IconItem)?.large
-    horizontalAlignment = SwingConstants.CENTER
-    return this
+    val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    if (c is JLabel && value is IconItem) {
+      c.icon = value.large
+      c.horizontalAlignment = SwingConstants.CENTER
+    }
+    return c
   }
 }
 
