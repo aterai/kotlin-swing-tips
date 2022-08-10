@@ -83,14 +83,16 @@ private class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMoti
     row: Int,
     column: Int
   ): Component {
-    super.getTableCellRendererComponent(table, value, isSelected, false, row, column)
-    val str = value?.toString() ?: ""
-    text = when {
-      isRolloverCell(table, row, column) -> "<html><u><font color='blue'>$str"
-      hasFocus -> "<html><font color='blue'>$str"
-      else -> str
+    val c = super.getTableCellRendererComponent(table, value, isSelected, false, row, column)
+    if (c is JLabel) {
+      val str = value?.toString() ?: ""
+      c.text = when {
+        isRolloverCell(table, row, column) -> "<html><u><font color='blue'>$str"
+        hasFocus -> "<html><font color='blue'>$str"
+        else -> str
+      }
     }
-    return this
+    return c
   }
 
   private fun isRolloverCell(table: JTable, row: Int, column: Int) =

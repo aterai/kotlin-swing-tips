@@ -110,7 +110,7 @@ private open class UrlRenderer : DefaultTableCellRenderer(), MouseListener, Mous
     val c = super.getTableCellRendererComponent(table, value, isSelected, false, row, column)
     if (c is JLabel) {
       val cm = table.columnModel
-      val i = this.insets
+      val i = c.insets
       CELL_RECT.x = i.left
       CELL_RECT.y = i.top
       CELL_RECT.width = cm.getColumn(column).width - cm.columnMargin - i.right - CELL_RECT.x
@@ -131,7 +131,7 @@ private open class UrlRenderer : DefaultTableCellRenderer(), MouseListener, Mous
         TEXT_RECT,
         c.iconTextGap
       )
-      text = when {
+      c.text = when {
         isRolloverCell(table, row, column) -> "<html><u><font color='blue'>$str"
         hasFocus -> "<html><font color='blue'>$str"
         else -> str
