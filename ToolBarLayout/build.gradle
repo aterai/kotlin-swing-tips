@@ -24,7 +24,6 @@ repositories {
 
 dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-  implementation fileTree(dir: 'lib', include: ['*.jar'])
   testImplementation 'junit:junit:4.11'
   testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 }
@@ -42,4 +41,5 @@ compileTestKotlin {
 jar {
   manifest { attributes 'Main-Class': "$mainClassName" }
   from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
