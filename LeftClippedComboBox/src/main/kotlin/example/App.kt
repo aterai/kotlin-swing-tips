@@ -27,7 +27,7 @@ private fun makeComboBoxModel() = DefaultComboBoxModel<String>().also {
   it.addElement("abc.tif")
   it.addElement("\\0123456789\\0123456789\\0123456789.avi")
   it.addElement("0123456789.pdf")
-  it.addElement("c:/b12312343245/643667345624523451/324513/41234125/134513451345135125.mpg")
+  it.addElement("c:/12312343245/643667345624523451/324513/41234125/134513451345135125.mpg")
   it.addElement("http://localhost/1234567890123456789/3456789012345/678901234567894567890.jpg")
 }
 
@@ -40,10 +40,12 @@ private fun initComboBoxRenderer(combo: JComboBox<String>) {
       isSelected: Boolean,
       cellHasFocus: Boolean
     ): Component {
-      super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-      val width = getAvailableWidth(combo, index)
-      text = getLeftClippedText(value?.toString() ?: "", getFontMetrics(font), width)
-      return this
+      val c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+      if (c is JLabel) {
+        val width = getAvailableWidth(combo, index)
+        c.text = getLeftClippedText(value?.toString() ?: "", c.getFontMetrics(c.font), width)
+      }
+      return c
     }
 
     private fun getAvailableWidth(combo: JComboBox<String>, index: Int): Int {
