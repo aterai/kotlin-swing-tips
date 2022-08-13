@@ -87,7 +87,7 @@ private class UrlRenderer : MouseAdapter(), TableCellRenderer {
     val c = renderer.getTableCellRendererComponent(table, value, isSelected, false, row, column)
     if (c is JLabel) {
       val cm = table.columnModel
-      val i = renderer.insets
+      val i = c.insets
       CELL_RECT.x = i.left
       CELL_RECT.y = i.top
       CELL_RECT.width = cm.getColumn(column).width - cm.columnMargin - i.right - CELL_RECT.x
@@ -159,7 +159,7 @@ private class UrlRenderer : MouseAdapter(), TableCellRenderer {
       val row = table.rowAtPoint(pt)
       val url = table.getValueAt(row, col) as? URL ?: return
       println(url)
-      if (Desktop.isDesktopSupported()) { // JDK 1.6.0
+      if (Desktop.isDesktopSupported()) {
         runCatching {
           Desktop.getDesktop().browse(url.toURI())
         }.onFailure {
