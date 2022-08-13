@@ -90,22 +90,22 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
     row: Int,
     column: Int
   ): Component {
-    super.getTableCellRendererComponent(table, value, selected, focused, row, column)
-    horizontalAlignment = CENTER
-    if (value is LocalDate) {
-      text = value.dayOfMonth.toString()
-      foreground = if (YearMonth.from(value) == YearMonth.from(currentLocalDate)) {
+    val c = super.getTableCellRendererComponent(table, value, selected, focused, row, column)
+    if (value is LocalDate && c is JLabel) {
+      c.text = value.dayOfMonth.toString()
+      c.horizontalAlignment = CENTER
+      c.foreground = if (YearMonth.from(value) == YearMonth.from(currentLocalDate)) {
         Color.BLACK
       } else {
         Color.GRAY
       }
-      background = if (value.isEqual(realDate)) {
+      c.background = if (value.isEqual(realDate)) {
         Color(0xDC_FF_DC)
       } else {
         getDayOfWeekColor(value.dayOfWeek)
       }
     }
-    return this
+    return c
   }
 
   private fun getDayOfWeekColor(dow: DayOfWeek) = when (dow) {
