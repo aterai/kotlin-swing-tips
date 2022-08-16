@@ -70,14 +70,13 @@ class UnderlineCellRenderer : DefaultTableCellRenderer(), MouseListener, MouseMo
     row: Int,
     column: Int
   ): Component {
-    super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
-    val str = value?.toString() ?: ""
-    text = if (!table.isEditing && viewRowIndex == row && viewColumnIndex == column) {
-      "<html><u>$str"
-    } else {
-      str
+    val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    if (c is JLabel) {
+      val str = value?.toString() ?: ""
+      val b = !table.isEditing && viewRowIndex == row && viewColumnIndex == column
+      c.text = if (b) "<html><u>$str" else str
     }
-    return this
+    return c
   }
 
   override fun mouseMoved(e: MouseEvent) {
