@@ -43,16 +43,18 @@ private class StripeTableRenderer : DefaultTableCellRenderer() {
     row: Int,
     column: Int
   ): Component {
-    super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     if (isSelected) {
-      foreground = table.selectionForeground
-      background = table.selectionBackground
+      c.foreground = table.selectionForeground
+      c.background = table.selectionBackground
     } else {
-      foreground = table.foreground
-      background = if (row % 2 == 0) EVEN_COLOR else table.background
+      c.foreground = table.foreground
+      c.background = if (row % 2 == 0) EVEN_COLOR else table.background
     }
-    horizontalAlignment = if (value is Number) SwingConstants.RIGHT else SwingConstants.LEFT
-    return this
+    if (c is JLabel) {
+      c.horizontalAlignment = if (value is Number) SwingConstants.RIGHT else SwingConstants.LEFT
+    }
+    return c
   }
 
   companion object {
