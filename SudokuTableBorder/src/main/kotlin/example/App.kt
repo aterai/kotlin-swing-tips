@@ -98,7 +98,6 @@ fun makeUI(): Component {
 }
 
 private class SudokuCellRenderer(src: Array<Array<Number>>) : DefaultTableCellRenderer() {
-  private val bold = font.deriveFont(Font.BOLD)
   private val b0 = BorderFactory.createMatteBorder(0, 0, BW1, BW1, Color.GRAY)
   private val b1 = BorderFactory.createMatteBorder(0, 0, BW2, BW2, Color.BLACK)
   private val b2 = BorderFactory.createCompoundBorder(
@@ -111,16 +110,6 @@ private class SudokuCellRenderer(src: Array<Array<Number>>) : DefaultTableCellRe
   )
   private val mask = Array(src.size) { i -> Array(src[i].size) { j -> src[i][j] } }
 
-  // init {
-  //   // val dest = Array<Array<Int?>>(src.size) { arrayOfNulls(src[0].size) }
-  //   val dest = Array(src.size, { Array(src[0].size, { 0 }) })
-  //   for (i in src.indices) {
-  //     System.arraycopy(src[i], 0, dest[i], 0, src[0].size)
-  //   }
-  //   this.mask = dest
-  //   this.mask = Array(src.size, { i -> Array(src[i].size, { j -> src[i][j] }) })
-  // }
-
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -131,21 +120,25 @@ private class SudokuCellRenderer(src: Array<Array<Number>>) : DefaultTableCellRe
   ): Component {
     val isEditable = mask[row][column] == 0
     val b = isEditable && isSelected
-    super.getTableCellRendererComponent(table, value, b, hasFocus, row, column)
-    if (isEditable && value == 0) {
-      this.text = " "
+    val c = super.getTableCellRendererComponent(table, value, b, hasFocus, row, column)
+    if (!isEditable) {
+      c.font = c.font.deriveFont(Font.BOLD)
     }
-    font = if (isEditable) font else bold
-    horizontalAlignment = SwingConstants.CENTER
-    val rf = (row + 1) % 3 == 0
-    val cf = (column + 1) % 3 == 0
-    border = when {
-      rf && cf -> b1
-      rf -> b2
-      cf -> b3
-      else -> b0
+    if (c is JLabel) {
+      if (isEditable && value == 0) {
+        c.text = " "
+      }
+      c.horizontalAlignment = SwingConstants.CENTER
+      val rf = (row + 1) % 3 == 0
+      val cf = (column + 1) % 3 == 0
+      c.border = when {
+        rf && cf -> b1
+        rf -> b2
+        cf -> b3
+        else -> b0
+      }
     }
-    return this
+    return c
   }
 }
 
