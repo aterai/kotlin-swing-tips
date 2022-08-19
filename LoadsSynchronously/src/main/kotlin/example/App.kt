@@ -41,7 +41,7 @@ fun makeUI(): Component {
   tabs.addTab("<img width='%d' ...", JScrollPane(editor1))
 
   // [JDK-8223384] ImageView incorrectly calculates size when synchronously loaded - Java Bug System
-  // https://bugs.openjdk.java.net/browse/JDK-8223384
+  // https://bugs.openjdk.org/browse/JDK-8223384
   val editor2 = JEditorPane()
   editor2.editorKit = ImageLoadSynchronouslyHtmlEditorKit()
   tabs.addTab("LoadsSynchronously", JScrollPane(editor2))

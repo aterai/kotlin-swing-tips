@@ -373,7 +373,7 @@ private class TabTransferHandler : TransferHandler() {
 
     // [JDK-6700748]
     // Cursor flickering during D&D when using CellRendererPane with validation - Java Bug System
-    // https://bugs.openjdk.java.net/browse/JDK-6700748
+    // https://bugs.openjdk.org/browse/JDK-6700748
     val cursor = if (canDrop) DragSource.DefaultMoveDrop else DragSource.DefaultMoveNoDrop
     val glassPane = tgt.rootPane.glassPane
     glassPane.cursor = cursor

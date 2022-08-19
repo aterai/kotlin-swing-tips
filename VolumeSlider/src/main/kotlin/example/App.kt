@@ -16,7 +16,7 @@ fun makeUI(): Component {
   slider2.ui = object : BasicSliderUI(slider2) {
     override fun paintHorizontalLabel(g: Graphics, value: Int, label: Component) {
       // Windows/Motif L&F: JSlider should use foreground color for ticks. - Java Bug System
-      // https://bugs.openjdk.java.net/browse/JDK-5099681
+      // https://bugs.openjdk.org/browse/JDK-5099681
       label.foreground = Color.GREEN
       super.paintHorizontalLabel(g, value, label)
     }
