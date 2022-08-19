@@ -13,11 +13,11 @@ fun makeUI(): Component {
     tabs.addTab("title$i", JLabel("label$i"))
   }
 
+  val am = tabs.actionMap
   val forward = "scrollTabsForwardAction"
-  tabs.actionMap.put(forward, ScrollTabsAction(tabs, forward))
-
+  am.put(forward, ScrollTabsAction(tabs, am[forward]))
   val backward = "scrollTabsBackwardAction"
-  tabs.actionMap.put(backward, ScrollTabsAction(tabs, backward))
+  am.put(backward, ScrollTabsAction(tabs, am[backward]))
 
   return JPanel(BorderLayout()).also {
     it.add(tabs)
@@ -27,12 +27,17 @@ fun makeUI(): Component {
 
 private class ScrollTabsAction(
   private val tabbedPane: JTabbedPane,
-  private val direction: String
+  private val action: Action?
 ) : AbstractAction() {
-  private val index = if ("scrollTabsForwardAction" == direction) tabbedPane.tabCount - 1 else 0
+  private val index: Int
+
+  init {
+    val name = action?.getValue(NAME)
+    val forward = "scrollTabsForwardAction"
+    index = if (name == forward) tabbedPane.tabCount - 1 else 0
+  }
 
   override fun actionPerformed(e: ActionEvent) {
-    val action = tabbedPane.actionMap[direction]
     if (action?.isEnabled == true) {
       if (e.modifiers and ActionEvent.CTRL_MASK != 0) {
         scrollTabAt(tabbedPane, index)
