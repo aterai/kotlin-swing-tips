@@ -188,9 +188,8 @@ class DnDTabbedPane : JTabbedPane() {
         return DropLocation(p, i)
       }
     }
-    return if (tabAreaBounds.contains(p)) {
-      DropLocation(p, tabCount)
-    } else DropLocation(p, -1)
+    val idx = if (tabAreaBounds.contains(p)) tabCount else -1
+    return DropLocation(p, idx)
   }
 
   fun updateTabDropLocation(location: DropLocation?, forDrop: Boolean): Any? {

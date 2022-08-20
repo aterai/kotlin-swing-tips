@@ -49,16 +49,12 @@ private class ButtonTabComponent(
     val label = object : JLabel() {
       override fun getText(): String? {
         val i = tabbedPane.indexOfTabComponent(this@ButtonTabComponent)
-        return if (i != -1) {
-          tabbedPane.getTitleAt(i)
-        } else null
+        return if (i != -1) tabbedPane.getTitleAt(i) else null
       }
 
       override fun getIcon(): Icon? {
         val i = tabbedPane.indexOfTabComponent(this@ButtonTabComponent)
-        return if (i != -1) {
-          tabbedPane.getIconAt(i)
-        } else null
+        return if (i != -1) tabbedPane.getIconAt(i) else null
       }
     }
     add(label)

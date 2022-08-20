@@ -182,9 +182,8 @@ class DnDTabbedPane : JTabbedPane() {
         return DropLocation(p, i)
       }
     }
-    return if (tabAreaBounds.contains(p)) {
-      DropLocation(p, tabCount)
-    } else DropLocation(p, -1)
+    val idx = if (tabAreaBounds.contains(p)) tabCount else -1
+    return DropLocation(p, idx)
   }
 
   fun updateTabDropLocation(location: DropLocation?, forDrop: Boolean): Any? {
@@ -507,16 +506,12 @@ private class ButtonTabComponent(
     val label = object : JLabel() {
       override fun getText(): String? {
         val i = tabbedPane.indexOfTabComponent(this@ButtonTabComponent)
-        return if (i != -1) {
-          tabbedPane.getTitleAt(i)
-        } else null
+        return if (i != -1) tabbedPane.getTitleAt(i) else null
       }
 
       override fun getIcon(): Icon? {
         val i = tabbedPane.indexOfTabComponent(this@ButtonTabComponent)
-        return if (i != -1) {
-          tabbedPane.getIconAt(i)
-        } else null
+        return if (i != -1) tabbedPane.getIconAt(i) else null
       }
     }
     add(label)

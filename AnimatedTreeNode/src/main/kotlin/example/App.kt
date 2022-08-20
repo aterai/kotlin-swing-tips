@@ -48,7 +48,9 @@ fun makeUI(): Component {
         tree.repaint(rect)
       }
       infoFlags and (ImageObserver.ALLBITS or ImageObserver.ABORT) == 0
-    } else false
+    } else {
+      false
+    }
   }
 
   return JPanel(BorderLayout()).also {

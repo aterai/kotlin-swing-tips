@@ -40,7 +40,9 @@ private class HighlightListener : MouseAdapter() {
       } else {
         HIGHLIGHT2
       }
-    } else null
+    } else {
+      null
+    }
   }
 
   private fun setHighlightTableCell(e: MouseEvent) {

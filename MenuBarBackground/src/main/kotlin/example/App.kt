@@ -32,11 +32,11 @@ fun createMenu(key: String): JMenu {
   val menu = object : JMenu(key) {
     override fun fireStateChanged() {
       val m = getModel()
-      isOpaque = if (m.isPressed && m.isArmed) {
-        true
-      } else if (m.isSelected) {
-        true
-      } else isRolloverEnabled && m.isRollover
+      isOpaque = when {
+        m.isPressed && m.isArmed -> true
+        m.isSelected -> true
+        else -> isRolloverEnabled && m.isRollover
+      }
       super.fireStateChanged()
     }
 
