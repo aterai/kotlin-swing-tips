@@ -1,18 +1,6 @@
 package example
 
-import java.awt.BasicStroke
-import java.awt.BorderLayout
-import java.awt.Color
-import java.awt.Component
-import java.awt.Dimension
-import java.awt.EventQueue
-import java.awt.Font
-import java.awt.Graphics
-import java.awt.Graphics2D
-import java.awt.Point
-import java.awt.RenderingHints
-import java.awt.Shape
-import java.awt.Toolkit
+import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.HierarchyEvent
 import java.awt.event.HierarchyListener
 import java.awt.font.FontRenderContext
@@ -24,13 +12,7 @@ import java.awt.geom.Line2D
 import java.time.LocalTime
 import java.time.ZoneId
 import java.util.concurrent.ConcurrentHashMap
-import javax.swing.JCheckBox
-import javax.swing.JFrame
-import javax.swing.JPanel
-import javax.swing.SwingUtilities
-import javax.swing.Timer
-import javax.swing.UIManager
-import javax.swing.WindowConstants
+import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val clock = AnalogClock()
@@ -134,11 +116,10 @@ private class AnalogClock : JPanel() {
     }
 
     // Drawing the clock numbers
-    val hourHandLen = radius / 2f
     paintClockNumbers(g2, radius, hourMarkerLen)
 
     // Drawing the hour hand
-    // val hourHandLen = radius / 2f
+    val hourHandLen = radius / 2f
     val hourHand = Line2D.Float(0f, 0f, 0f, -hourHandLen)
     val minuteRot = time.minute * Math.PI / 30.0
     val hourRot = time.hour * Math.PI / 6.0 + minuteRot / 12.0
@@ -179,8 +160,8 @@ private class AnalogClock : JPanel() {
     } else {
       val ptSrc = Point()
       for (i in 0..11) {
-        val ty = hourMarkerLen - radius + font.size2D * .6
-        val at2 = AffineTransform.getTranslateInstance(0.0, ty)
+        val ty = radius - hourMarkerLen - font.size2D * .6
+        val at2 = AffineTransform.getTranslateInstance(0.0, -ty)
         val pt = at.transform(at2.transform(ptSrc, null), null)
         val txt = if (i == 0) "12" else "$i"
         val r = getOutline(txt, font, frc).bounds
@@ -192,9 +173,9 @@ private class AnalogClock : JPanel() {
     }
   }
 
-  private fun moveTo12o(s: Shape, radius: Double, tick: Double): Shape {
+  private fun moveTo12o(s: Shape, radius: Double, hourMarkerLen: Double): Shape {
     val r = s.bounds2D
-    val ty = radius - tick * 2.0 - r.height
+    val ty = radius - hourMarkerLen * 2.0 - r.height
     val at = AffineTransform.getTranslateInstance(-r.centerX, -ty)
     return at.createTransformedShape(s)
   }
