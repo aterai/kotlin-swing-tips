@@ -1,0 +1,204 @@
+package example
+
+import java.awt.BasicStroke
+import java.awt.BorderLayout
+import java.awt.Color
+import java.awt.Component
+import java.awt.Dimension
+import java.awt.EventQueue
+import java.awt.Font
+import java.awt.Graphics
+import java.awt.Graphics2D
+import java.awt.Point
+import java.awt.RenderingHints
+import java.awt.Shape
+import java.awt.Toolkit
+import java.awt.event.HierarchyEvent
+import java.awt.event.HierarchyListener
+import java.awt.font.FontRenderContext
+import java.awt.font.TextAttribute
+import java.awt.font.TextLayout
+import java.awt.geom.AffineTransform
+import java.awt.geom.Ellipse2D
+import java.awt.geom.Line2D
+import java.time.LocalTime
+import java.time.ZoneId
+import java.util.concurrent.ConcurrentHashMap
+import javax.swing.JCheckBox
+import javax.swing.JFrame
+import javax.swing.JPanel
+import javax.swing.SwingUtilities
+import javax.swing.Timer
+import javax.swing.UIManager
+import javax.swing.WindowConstants
+
+fun makeUI(): Component {
+  val clock = AnalogClock()
+  val attr = ConcurrentHashMap<TextAttribute, Any>()
+  attr[TextAttribute.TRACKING] = -.08f
+  clock.font = clock.font.deriveFont(20f).deriveFont(attr)
+
+  val check = JCheckBox("roman", true)
+  check.addActionListener { e ->
+    clock.isRomanNumerals = (e.source as? JCheckBox)?.isSelected == true
+    clock.repaint()
+  }
+
+  return JPanel(BorderLayout()).also {
+    it.add(clock)
+    it.add(check, BorderLayout.SOUTH)
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
+fun main() {
+  EventQueue.invokeLater {
+    runCatching {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+    }.onFailure {
+      it.printStackTrace()
+      Toolkit.getDefaultToolkit().beep()
+    }
+    JFrame().apply {
+      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+      // defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
+      contentPane.add(makeUI())
+      pack()
+      setLocationRelativeTo(null)
+      isVisible = true
+    }
+  }
+}
+
+private class AnalogClock : JPanel() {
+  private val romanNumerals = arrayOf(
+    "XII",
+    "I",
+    "II",
+    "III",
+    "IIII",
+    "V",
+    "VI",
+    "VII",
+    "VIII",
+    "IX",
+    "X",
+    "XI"
+  )
+  private var listener: HierarchyListener? = null
+  private var time = LocalTime.now(ZoneId.systemDefault())
+  private var timer = Timer(200) {
+    time = LocalTime.now(ZoneId.systemDefault())
+    repaint()
+  }
+  var isRomanNumerals = true
+
+  override fun updateUI() {
+    removeHierarchyListener(listener)
+    super.updateUI()
+    listener = HierarchyListener { e ->
+      if (e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L) {
+        if (e.component.isShowing) {
+          timer.start()
+        } else {
+          timer.stop()
+        }
+      }
+    }
+    addHierarchyListener(listener)
+  }
+
+  override fun paintComponent(g: Graphics) {
+    val g2 = g.create() as? Graphics2D ?: return
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    val rect = SwingUtilities.calculateInnerArea(this, null)
+    g2.color = Color.BLACK
+    g2.fill(rect)
+    val radius = rect.width.coerceAtMost(rect.height) / 2f - 10f
+    g2.translate(rect.centerX, rect.centerY)
+
+    // Drawing the hour and minute markers
+    val hourMarkerLen = radius / 6f - 10f
+    val hourMarker = Line2D.Float(0f, hourMarkerLen - radius, 0f, -radius)
+    val minuteMarker = Line2D.Float(0f, hourMarkerLen / 2f - radius, 0f, -radius)
+    val at = AffineTransform.getRotateInstance(0.0)
+    g2.stroke = BasicStroke(2f)
+    g2.color = Color.WHITE
+    for (i in 0 until 60) {
+      if (i % 5 == 0) {
+        g2.draw(at.createTransformedShape(hourMarker))
+      } else {
+        g2.draw(at.createTransformedShape(minuteMarker))
+      }
+      at.rotate(Math.PI / 30.0)
+    }
+
+    // Drawing the clock numbers
+    val hourHandLen = radius / 2f
+    paintClockNumbers(g2, radius, hourMarkerLen)
+
+    // Drawing the hour hand
+    // val hourHandLen = radius / 2f
+    val hourHand = Line2D.Float(0f, 0f, 0f, -hourHandLen)
+    val minuteRot = time.minute * Math.PI / 30.0
+    val hourRot = time.hour * Math.PI / 6.0 + minuteRot / 12.0
+    g2.stroke = BasicStroke(8f)
+    g2.paint = Color.LIGHT_GRAY
+    g2.draw(AffineTransform.getRotateInstance(hourRot).createTransformedShape(hourHand))
+
+    // Drawing the minute hand
+    val minuteHandLen = 5f * radius / 6f
+    val minuteHand = Line2D.Float(0f, 0f, 0f, -minuteHandLen)
+    g2.stroke = BasicStroke(4f)
+    g2.paint = Color.WHITE
+    g2.draw(AffineTransform.getRotateInstance(minuteRot).createTransformedShape(minuteHand))
+
+    // Drawing the second hand
+    val r = radius / 6f
+    val secondHandLen = radius - r
+    val secondHand = Line2D.Float(0f, r, 0f, -secondHandLen)
+    val secondRot = time.second * Math.PI / 30.0
+    g2.paint = Color.RED
+    g2.stroke = BasicStroke(1f)
+    g2.draw(AffineTransform.getRotateInstance(secondRot).createTransformedShape(secondHand))
+    g2.fill(Ellipse2D.Float(-r / 4f, -r / 4f, r / 2f, r / 2f))
+    g2.dispose()
+  }
+
+  private fun paintClockNumbers(g2: Graphics2D, radius: Float, hourMarkerLen: Float) {
+    val at = AffineTransform.getRotateInstance(0.0)
+    g2.color = Color.WHITE
+    val font = g2.font
+    val frc = g2.fontRenderContext
+    if (isRomanNumerals) {
+      for (txt in romanNumerals) {
+        val s = moveTo12o(getOutline(txt, font, frc), radius.toDouble(), hourMarkerLen.toDouble())
+        g2.fill(at.createTransformedShape(s))
+        at.rotate(Math.PI / 6.0)
+      }
+    } else {
+      val ptSrc = Point()
+      for (i in 0..11) {
+        val ty = hourMarkerLen - radius + font.size2D * .6
+        val at2 = AffineTransform.getTranslateInstance(0.0, ty)
+        val pt = at.transform(at2.transform(ptSrc, null), null)
+        val txt = if (i == 0) "12" else "$i"
+        val r = getOutline(txt, font, frc).bounds
+        val dx = pt.x - r.centerX
+        val dy = pt.y - r.centerY
+        g2.drawString(txt, dx.toFloat(), dy.toFloat())
+        at.rotate(Math.PI / 6.0)
+      }
+    }
+  }
+
+  private fun moveTo12o(s: Shape, radius: Double, tick: Double): Shape {
+    val r = s.bounds2D
+    val ty = radius - tick * 2.0 - r.height
+    val at = AffineTransform.getTranslateInstance(-r.centerX, -ty)
+    return at.createTransformedShape(s)
+  }
+
+  private fun getOutline(txt: String, font: Font, frc: FontRenderContext) =
+    TextLayout(txt, font, frc).getOutline(null)
+}
