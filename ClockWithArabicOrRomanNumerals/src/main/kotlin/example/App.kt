@@ -9,6 +9,7 @@ import java.awt.font.TextLayout
 import java.awt.geom.AffineTransform
 import java.awt.geom.Ellipse2D
 import java.awt.geom.Line2D
+import java.awt.geom.Point2D
 import java.time.LocalTime
 import java.time.ZoneId
 import java.util.concurrent.ConcurrentHashMap
@@ -53,6 +54,20 @@ fun main() {
 }
 
 private class AnalogClock : JPanel() {
+  private val arabicNumerals = arrayOf(
+    "12",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11"
+  )
   private val romanNumerals = arrayOf(
     "XII",
     "I",
@@ -153,31 +168,28 @@ private class AnalogClock : JPanel() {
     val frc = g2.fontRenderContext
     if (isRomanNumerals) {
       for (txt in romanNumerals) {
-        val s = moveTo12o(getOutline(txt, font, frc), radius.toDouble(), hourMarkerLen.toDouble())
-        g2.fill(at.createTransformedShape(s))
+        val s = getOutline(txt, font, frc)
+        val r = s.bounds2D
+        val tx = r.centerX
+        val ty = radius - hourMarkerLen - r.height + r.centerY
+        val t = AffineTransform.getTranslateInstance(-tx, -ty).createTransformedShape(s)
+        g2.fill(at.createTransformedShape(t))
         at.rotate(Math.PI / 6.0)
       }
     } else {
-      val ptSrc = Point()
-      for (i in 0..11) {
-        val ty = radius - hourMarkerLen - font.size2D * .6
-        val at2 = AffineTransform.getTranslateInstance(0.0, -ty)
-        val pt = at.transform(at2.transform(ptSrc, null), null)
-        val txt = if (i == 0) "12" else "$i"
-        val r = getOutline(txt, font, frc).bounds
+      val ptSrc = Point2D.Double()
+      for (txt in arabicNumerals) {
+        val s = getOutline(txt, font, frc)
+        val r = s.bounds2D
+        val ty = radius - hourMarkerLen - r.height
+        ptSrc.setLocation(0.0, -ty)
+        val pt = at.transform(ptSrc, null)
         val dx = pt.x - r.centerX
         val dy = pt.y - r.centerY
-        g2.drawString(txt, dx.toFloat(), dy.toFloat())
+        g2.fill(AffineTransform.getTranslateInstance(dx, dy).createTransformedShape(s))
         at.rotate(Math.PI / 6.0)
       }
     }
-  }
-
-  private fun moveTo12o(s: Shape, radius: Double, hourMarkerLen: Double): Shape {
-    val r = s.bounds2D
-    val ty = radius - hourMarkerLen * 2.0 - r.height
-    val at = AffineTransform.getTranslateInstance(-r.centerX, -ty)
-    return at.createTransformedShape(s)
   }
 
   private fun getOutline(txt: String, font: Font, frc: FontRenderContext) =
