@@ -38,8 +38,6 @@ fun makeUI(): Component {
 }
 
 private class LocalDateTimeTableCellRenderer : DefaultTableCellRenderer() {
-  @Transient
-  private val dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN)
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -48,11 +46,11 @@ private class LocalDateTimeTableCellRenderer : DefaultTableCellRenderer() {
     row: Int,
     column: Int
   ): Component {
-    super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
-    if (value is TemporalAccessor) {
-      text = dateTimeFormatter.format(value)
+    val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    if (c is JLabel && value is TemporalAccessor) {
+      text = DateTimeFormatter.ofPattern(DATE_PATTERN).format(value)
     }
-    return this
+    return c
   }
 
   companion object {
@@ -133,9 +131,10 @@ private class LocalDateTimeTableCellEditor : AbstractCellEditor(), TableCellEdit
   override fun isCellEditable(e: EventObject) = true
 }
 
-private class LocalDateTimeCellRenderer : JLabel(), ListCellRenderer<LocalDateTime> {
-  @Transient
+private class LocalDateTimeCellRenderer : ListCellRenderer<LocalDateTime> {
   private val dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN)
+  private val renderer = DefaultListCellRenderer()
+
   override fun getListCellRendererComponent(
     list: JList<out LocalDateTime>,
     value: LocalDateTime?,
@@ -143,18 +142,19 @@ private class LocalDateTimeCellRenderer : JLabel(), ListCellRenderer<LocalDateTi
     isSelected: Boolean,
     cellHasFocus: Boolean
   ): Component {
-    if (value != null) {
-      text = dateTimeFormatter.format(value)
+    val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+    if (c is JLabel && value != null) {
+      c.isOpaque = true
+      c.text = dateTimeFormatter.format(value)
     }
-    isOpaque = true
     if (isSelected) {
-      background = list.selectionBackground
-      foreground = list.selectionForeground
+      c.background = list.selectionBackground
+      c.foreground = list.selectionForeground
     } else {
-      background = list.background
-      foreground = list.foreground
+      c.background = list.background
+      c.foreground = list.foreground
     }
-    return this
+    return c
   }
 
   companion object {
