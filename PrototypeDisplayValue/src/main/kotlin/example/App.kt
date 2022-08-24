@@ -24,16 +24,31 @@ fun makeUI(): Component {
   )
   val model2 = DefaultComboBoxModel(arrayOfWebSites)
 
-  val combo4 = JComboBox(model2)
-  combo4.renderer = SiteListCellRenderer()
+  val combo4 = object : JComboBox<WebSite>(model2) {
+    override fun updateUI() {
+      setRenderer(null)
+      super.updateUI()
+      setRenderer(SiteListCellRenderer<WebSite>())
+    }
+  }
 
-  val combo5 = JComboBox(model2)
-  combo5.renderer = SiteListCellRenderer()
-  combo5.prototypeDisplayValue = WebSite(TITLE, ColorIcon(Color.GRAY))
+  val combo5 = object : JComboBox<WebSite>(model2) {
+    override fun updateUI() {
+      setRenderer(null)
+      super.updateUI()
+      setRenderer(SiteListCellRenderer<WebSite>())
+      prototypeDisplayValue = WebSite(TITLE, ColorIcon(Color.GRAY))
+    }
+  }
 
-  val combo6 = JComboBox<WebSite>()
-  combo6.renderer = SiteListCellRenderer()
-  combo6.prototypeDisplayValue = WebSite(TITLE, ColorIcon(Color.GRAY))
+  val combo6 = object : JComboBox<WebSite>() {
+    override fun updateUI() {
+      setRenderer(null)
+      super.updateUI()
+      setRenderer(SiteListCellRenderer<WebSite>())
+      prototypeDisplayValue = WebSite(TITLE, ColorIcon(Color.GRAY))
+    }
+  }
 
   return JPanel().also {
     val layout = SpringLayout()
@@ -76,7 +91,8 @@ private class ColorIcon(private val color: Color) : Icon {
   override fun getIconHeight() = 24
 }
 
-private class SiteListCellRenderer<E : WebSite> : JLabel(), ListCellRenderer<E> {
+private class SiteListCellRenderer<E : WebSite> : ListCellRenderer<E> {
+  private val renderer = DefaultListCellRenderer();
   override fun getListCellRendererComponent(
     list: JList<out E>,
     value: E?,
@@ -84,21 +100,22 @@ private class SiteListCellRenderer<E : WebSite> : JLabel(), ListCellRenderer<E> 
     isSelected: Boolean,
     cellHasFocus: Boolean
   ): Component {
-    isOpaque = index >= 0
-    isEnabled = list.isEnabled
-    font = list.font
-    if (value != null) {
-      text = value.title
-      icon = value.favicon
+    val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+    c.isEnabled = list.isEnabled
+    c.font = list.font
+    if (c is JLabel && value != null) {
+      c.isOpaque = index >= 0
+      c.text = value.title
+      c.icon = value.favicon
     }
     if (isSelected) {
-      background = list.selectionBackground
-      setForeground(list.selectionForeground)
+      c.background = list.selectionBackground
+      c.setForeground(list.selectionForeground)
     } else {
-      background = list.background
-      setForeground(list.foreground)
+      c.background = list.background
+      c.setForeground(list.foreground)
     }
-    return this
+    return c
   }
 }
 
