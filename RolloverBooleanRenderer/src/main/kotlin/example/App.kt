@@ -114,21 +114,21 @@ private open class RolloverDefaultTableCellRenderer(
     row: Int,
     column: Int
   ): Component {
-    super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     val str = value?.toString() ?: ""
     val isHighlightedCell = highlighter.isHighlightedCell(row, column)
-    foreground = when {
+    c.foreground = when {
       isSelected && isHighlightedCell -> HIGHLIGHT
       isSelected && !isHighlightedCell -> table.selectionForeground
       else -> table.foreground
     }
-    background = when {
+    c.background = when {
       isSelected && isHighlightedCell -> table.selectionBackground.darker()
       isSelected && !isHighlightedCell -> table.selectionBackground
       else -> table.background
     }
-    text = if (isHighlightedCell) "<html><u>$str" else str
-    return this
+    (c as? JLabel)?.text = if (isHighlightedCell) "<html><u>$str" else str
+    return c
   }
 
   companion object {
@@ -146,13 +146,62 @@ private class RolloverNumberRenderer(
 
 private class RolloverBooleanRenderer(
   private val highlighter: HighlightListener
-) : JCheckBox(), TableCellRenderer {
-  init {
-    horizontalAlignment = SwingConstants.CENTER
-    isBorderPainted = true
-    isRolloverEnabled = true
-    isOpaque = true
-    border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
+) : TableCellRenderer {
+  private final val check = object : JCheckBox() {
+    override fun updateUI() {
+      super.updateUI()
+      // horizontalAlignment = SwingConstants.CENTER
+      isBorderPainted = true
+      isRolloverEnabled = true
+      isOpaque = true
+      border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
+    }
+
+    // Overridden for performance reasons. ---->
+    override fun isOpaque(): Boolean {
+      val o = SwingUtilities.getAncestorOfClass(JTable::class.java, this)
+      return (o as? JTable)?.let { table ->
+        val back = background
+        val colorMatch = back != null && back == table.background && table.isOpaque
+        !colorMatch && super.isOpaque()
+      } ?: super.isOpaque()
+    }
+
+    override fun firePropertyChange(propertyName: String, oldValue: Any?, newValue: Any?) {
+      // if (propertyName == "border" ||
+      //     ((propertyName == "font" || propertyName == "foreground") && oldValue != newValue)) {
+      //   super.firePropertyChange(propertyName, oldValue, newValue)
+      // }
+    }
+
+    override fun firePropertyChange(propertyName: String, oldValue: Boolean, newValue: Boolean) {
+      // Overridden for performance reasons.
+    }
+
+    override fun repaint(tm: Long, x: Int, y: Int, width: Int, height: Int) {
+      // Overridden for performance reasons.
+    }
+
+    override fun repaint(r: Rectangle) {
+      // Overridden for performance reasons.
+    }
+
+    override fun repaint() {
+      // Overridden for performance reasons.
+    }
+
+    override fun invalidate() {
+      // Overridden for performance reasons.
+    }
+
+    override fun validate() {
+      // Overridden for performance reasons.
+    }
+
+    override fun revalidate() {
+      // Overridden for performance reasons.
+    }
+    // <---- Overridden for performance reasons.
   }
 
   override fun getTableCellRendererComponent(
@@ -163,66 +212,19 @@ private class RolloverBooleanRenderer(
     row: Int,
     column: Int
   ): Component {
-    getModel().isRollover = highlighter.isHighlightedCell(row, column)
-
+    check.horizontalAlignment = SwingConstants.CENTER
+    check.getModel().isRollover = highlighter.isHighlightedCell(row, column)
     if (isSelected) {
-      foreground = table.selectionForeground
-      super.setBackground(table.selectionBackground)
+      check.foreground = table.selectionForeground
+      check.setBackground(table.selectionBackground)
     } else {
-      foreground = table.foreground
-      background = table.background
-      // setBackground(row % 2 == 0 ? table.getBackground() : Color.WHITE); // Nimbus
+      check.foreground = table.foreground
+      check.background = table.background
+      // check.background = if (row % 2 == 0) table.background else Color.WHITE // Nimbus
     }
-    setSelected(value == true)
-    return this
+    check.setSelected(value == true)
+    return check
   }
-
-  // Overridden for performance reasons. ---->
-  override fun isOpaque(): Boolean {
-    val o = SwingUtilities.getAncestorOfClass(JTable::class.java, this)
-    return (o as? JTable)?.let { table ->
-      val back = background
-      val colorMatch = back != null && back == table.background && table.isOpaque
-      !colorMatch && super.isOpaque()
-    } ?: super.isOpaque()
-  }
-
-  override fun firePropertyChange(propertyName: String, oldValue: Any?, newValue: Any?) {
-    // System.out.println(propertyName);
-    // if (propertyName == "border" ||
-    //     ((propertyName == "font" || propertyName == "foreground") && oldValue != newValue)) {
-    //   super.firePropertyChange(propertyName, oldValue, newValue);
-    // }
-  }
-
-  override fun firePropertyChange(propertyName: String, oldValue: Boolean, newValue: Boolean) {
-    // Overridden for performance reasons.
-  }
-
-  override fun repaint(tm: Long, x: Int, y: Int, width: Int, height: Int) {
-    // Overridden for performance reasons.
-  }
-
-  override fun repaint(r: Rectangle) {
-    // Overridden for performance reasons.
-  }
-
-  override fun repaint() {
-    // Overridden for performance reasons.
-  }
-
-  override fun invalidate() {
-    // Overridden for performance reasons.
-  }
-
-  override fun validate() {
-    // Overridden for performance reasons.
-  }
-
-  override fun revalidate() {
-    // Overridden for performance reasons.
-  }
-  // <---- Overridden for performance reasons.
 }
 
 fun main() {
