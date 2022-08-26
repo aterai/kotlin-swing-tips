@@ -10,7 +10,6 @@ import java.beans.PropertyChangeListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.LayerUI
 
-@Transient
 private var worker: SwingWorker<String, Void>? = null
 
 fun makeUI(): Component {
@@ -94,7 +93,7 @@ private class BlockedColorLayerUI<V : Component> : LayerUI<V>() {
       super.paint(g2, c)
       g2.dispose()
       val image = c.createImage(FilteredImageSource(buffer.source, RedGreenChannelSwapFilter()))
-      g.drawImage(image, 0, 0, null)
+      g.drawImage(image, 0, 0, c.view)
     } else {
       super.paint(g, c)
     }

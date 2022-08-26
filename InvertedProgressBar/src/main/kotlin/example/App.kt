@@ -9,7 +9,7 @@ import java.beans.PropertyChangeListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.LayerUI
 
-@Transient private var worker: SwingWorker<String, Void>? = null
+private var worker: SwingWorker<String, Void>? = null
 
 fun makeUI(): Component {
   val m = DefaultBoundedRangeModel()
@@ -154,7 +154,7 @@ private open class VerticalFlipLayerUI<V : Component> : LayerUI<V>() {
       super.paint(g2, c)
       g2.dispose()
       buf = bi
-      g.drawImage(buf, 0, 0, null)
+      g.drawImage(buf, 0, 0, c.view)
     } else {
       super.paint(g, c)
     }

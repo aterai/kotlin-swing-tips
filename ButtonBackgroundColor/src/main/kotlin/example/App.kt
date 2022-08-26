@@ -98,7 +98,7 @@ private class ImageFilterLayerUI<V : Component>(private val filter: ImageFilter)
       super.paint(g2, c)
       g2.dispose()
       val image = c.createImage(FilteredImageSource(b.source, filter))
-      g.drawImage(image, 0, 0, null)
+      g.drawImage(image, 0, 0, c.view)
     } else {
       super.paint(g, c)
     }
