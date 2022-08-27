@@ -21,6 +21,7 @@ fun makeUI(): Component {
 
   val table = JTable(model)
   table.cellSelectionEnabled = true
+  table.rowHeight = 20
 
   val header = table.tableHeader
   val ml = object : MouseAdapter() {
@@ -82,15 +83,17 @@ private class RowHeaderList<E>(
 
   inner class RowHeaderRenderer<E2>(
     private val header: JTableHeader
-  ) : JLabel(), ListCellRenderer<E2> {
+  ) : ListCellRenderer<E2> {
+    private val renderer = JLabel()
+
     init {
-      this.isOpaque = true
-      // this.setBorder(UIManager.getBorder("TableHeader.cellBorder"))
-      this.border = BorderFactory.createMatteBorder(0, 0, 1, 2, Color.GRAY.brighter())
-      this.horizontalAlignment = SwingConstants.CENTER
-      this.foreground = header.foreground
-      this.background = header.background
-      this.font = header.font
+      renderer.isOpaque = true
+      // renderer.setBorder(UIManager.getBorder("TableHeader.cellBorder"))
+      renderer.border = BorderFactory.createMatteBorder(0, 0, 1, 2, Color.GRAY.brighter())
+      renderer.horizontalAlignment = SwingConstants.CENTER
+      // renderer.foreground = header.foreground
+      // renderer.background = header.background
+      // renderer.font = header.font
     }
 
     override fun getListCellRendererComponent(
@@ -100,17 +103,18 @@ private class RowHeaderList<E>(
       isSelected: Boolean,
       cellHasFocus: Boolean
     ): Component {
+      renderer.font = header.font
+      renderer.text = value?.toString() ?: ""
       when {
-        index == pressedRowIndex -> setBackground(Color.GRAY)
-        index == rollOverRowIndex -> setBackground(Color.WHITE)
-        isSelected -> setBackground(Color.GRAY.brighter())
+        index == pressedRowIndex -> renderer.background = Color.GRAY
+        index == rollOverRowIndex -> renderer.background = Color.WHITE
+        isSelected -> renderer.background = Color.GRAY.brighter()
         else -> {
-          foreground = header.foreground
-          setBackground(header.background)
+          renderer.foreground = header.foreground
+          renderer.background = header.background
         }
       }
-      text = value?.toString() ?: ""
-      return this
+      return renderer
     }
   }
 
