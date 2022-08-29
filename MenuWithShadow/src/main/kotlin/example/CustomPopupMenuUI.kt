@@ -10,9 +10,10 @@ class CustomPopupMenuUI : BasicPopupMenuUI() {
   override fun getPopup(popup: JPopupMenu?, x: Int, y: Int): Popup? {
     val pp = super.getPopup(popup, x, y)
     if (pp != null) {
-      println(pp)
       EventQueue.invokeLater {
-        (SwingUtilities.getWindowAncestor(popup) as? JWindow)?.background = Color(0x0, true)
+        (SwingUtilities.getWindowAncestor(popup) as? JWindow)
+          ?.takeIf { it.type == Window.Type.POPUP }
+          ?.background = Color(0x0, true)
       }
       (SwingUtilities.getUnwrappedParent(popup) as? JComponent)?.also {
         it.border = ShadowBorderInPanel()
