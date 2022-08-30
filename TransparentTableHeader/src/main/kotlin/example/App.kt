@@ -115,12 +115,13 @@ private fun makeMissingImage(): BufferedImage {
   return bi
 }
 
-private class TransparentHeader : JLabel(), TableCellRenderer {
+private class TransparentHeader : TableCellRenderer {
   private val border = BorderFactory.createCompoundBorder(
     BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
     BorderFactory.createEmptyBorder(2, 2, 1, 2)
   )
   private val alphaZero = Color(0x0, true)
+  private val renderer = DefaultTableCellRenderer()
 
   override fun getTableCellRendererComponent(
     table: JTable,
@@ -130,13 +131,17 @@ private class TransparentHeader : JLabel(), TableCellRenderer {
     row: Int,
     column: Int
   ): Component {
-    this.text = value?.toString() ?: ""
-    this.horizontalAlignment = SwingConstants.CENTER
-    this.isOpaque = false
-    this.background = alphaZero
-    this.foreground = Color.BLACK
-    this.setBorder(border)
-    return this
+    val c = renderer.getTableCellRendererComponent(
+      table, value, isSelected, hasFocus, row, column)
+    if (c is JLabel) {
+      c.text = value?.toString() ?: ""
+      c.horizontalAlignment = SwingConstants.CENTER
+      c.isOpaque = false
+      c.background = alphaZero
+      c.foreground = Color.BLACK
+      c.setBorder(border)
+    }
+    return c
   }
 }
 
