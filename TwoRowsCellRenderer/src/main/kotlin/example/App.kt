@@ -16,23 +16,30 @@ fun makeUI(): Component {
 
     override fun getColumnClass(column: Int) = String::class.java
   }
-  val table = JTable(model)
+  val table = object : JTable(model) {
+    override fun updateUI() {
+      selectionForeground = null
+      selectionBackground = null
+      super.updateUI()
+      setDefaultRenderer(String::class.java, TwoRowsCellRenderer())
+    }
+  }
   table.autoCreateRowSorter = true
   table.rowHeight = table.rowHeight * 2
-  table.setDefaultRenderer(String::class.java, TwoRowsCellRenderer())
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(table))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private class TwoRowsCellRenderer : JPanel(GridLayout(2, 1, 0, 0)), TableCellRenderer {
+private class TwoRowsCellRenderer : TableCellRenderer {
   private val top = JLabel()
   private val bottom = JLabel()
+  private val renderer = JPanel(GridLayout(2, 1, 0, 0))
 
   init {
-    add(top)
-    add(bottom)
+    renderer.add(top)
+    renderer.add(bottom)
   }
 
   override fun getTableCellRendererComponent(
@@ -44,13 +51,16 @@ private class TwoRowsCellRenderer : JPanel(GridLayout(2, 1, 0, 0)), TableCellRen
     column: Int
   ): Component {
     if (isSelected) {
-      foreground = table.selectionForeground
-      background = table.selectionBackground
+      top.foreground = table.selectionForeground
+      bottom.foreground = table.selectionForeground
+      renderer.background = table.selectionBackground
     } else {
-      foreground = table.foreground
-      background = table.background
+      top.foreground = table.foreground
+      bottom.foreground = table.foreground
+      renderer.background = table.background
     }
-    font = table.font
+    top.font = table.font
+    bottom.font = table.font
     val fm = top.getFontMetrics(top.font)
     val text = value?.toString() ?: ""
     var first = text
@@ -70,7 +80,7 @@ private class TwoRowsCellRenderer : JPanel(GridLayout(2, 1, 0, 0)), TableCellRen
     }
     top.text = first
     bottom.text = second
-    return this
+    return renderer
   }
 }
 
