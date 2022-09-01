@@ -6,6 +6,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val p = JPanel(GridLayout(3, 1, 10, 10))
+  val log = JTextArea()
 
   val deviceName = "con.txt"
   val b1 = JButton("c:/$deviceName")
@@ -13,9 +14,9 @@ fun makeUI(): Component {
     val file = File(deviceName)
     runCatching {
       if (file.createNewFile()) {
-        println("the named file does not exist and was successfully created.")
+        log.append("the named file does not exist and was successfully created.\n")
       } else {
-        println("the named file already exists.")
+        log.append("the named file already exists.\n")
       }
     }.onFailure {
       val obj = arrayOf(it.message)
@@ -49,6 +50,7 @@ fun makeUI(): Component {
   p.add(p3)
   return JPanel(BorderLayout(10, 10)).also {
     it.add(p, BorderLayout.NORTH)
+    it.add(JScrollPane(log))
     it.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
     it.preferredSize = Dimension(320, 240)
   }
@@ -56,7 +58,7 @@ fun makeUI(): Component {
 
 // Before 1.5: file.canonicalPath == null
 fun isCanonicalPath(file: File?) = runCatching {
-  if (file == null || file.canonicalPath == null) {
+  if (file == null || file.canonicalPath == null || !file.isFile) {
     return false
   }
 }.isSuccess
