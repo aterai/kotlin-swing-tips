@@ -121,7 +121,7 @@ private class TransparentHeader : TableCellRenderer {
     BorderFactory.createEmptyBorder(2, 2, 1, 2)
   )
   private val alphaZero = Color(0x0, true)
-  private val renderer = DefaultTableCellRenderer()
+  private val cr = DefaultTableCellRenderer()
 
   override fun getTableCellRendererComponent(
     table: JTable,
@@ -131,8 +131,7 @@ private class TransparentHeader : TableCellRenderer {
     row: Int,
     column: Int
   ): Component {
-    val c = renderer.getTableCellRendererComponent(
-      table, value, isSelected, hasFocus, row, column)
+    val c = cr.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     if (c is JLabel) {
       c.text = value?.toString() ?: ""
       c.horizontalAlignment = SwingConstants.CENTER
