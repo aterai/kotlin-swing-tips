@@ -92,7 +92,7 @@ private class ColorIcon(private val color: Color) : Icon {
 }
 
 private class SiteListCellRenderer<E : WebSite> : ListCellRenderer<E> {
-  private val renderer = DefaultListCellRenderer();
+  private val renderer = DefaultListCellRenderer()
   override fun getListCellRendererComponent(
     list: JList<out E>,
     value: E?,
