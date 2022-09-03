@@ -231,7 +231,9 @@ private class TitledBorder2(title: String?) : TitledBorder(title) {
     }
     return if (justification == TRAILING) {
       if (c.componentOrientation.isLeftToRight) RIGHT else LEFT
-    } else justification
+    } else {
+      justification
+    }
   }
 
   private fun getLabel2(c: Component?): JLabel {

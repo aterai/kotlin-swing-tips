@@ -133,7 +133,9 @@ private class EditableTitledBorder(
     }
     return if (justification == TRAILING) {
       if (c.componentOrientation.isLeftToRight) RIGHT else LEFT
-    } else justification
+    } else {
+      justification
+    }
   }
 
   private fun getTitleBounds(c: Component): Rectangle {

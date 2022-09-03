@@ -151,10 +151,12 @@ private class TableSorter() : AbstractTableModel() {
   }
 
   fun getHeaderRendererIcon(column: Int, size: Int): Icon? {
-    val directive = getDirective(column)
-    return if (EMPTY_DIRECTIVE == directive) {
+    val dir = getDirective(column)
+    return if (EMPTY_DIRECTIVE == dir) {
       null
-    } else Arrow(directive.direction == DESCENDING, size, sortingColumns.indexOf(directive))
+    } else {
+      Arrow(dir.direction == DESCENDING, size, sortingColumns.indexOf(dir))
+    }
   }
 
   fun cancelSorting() {
