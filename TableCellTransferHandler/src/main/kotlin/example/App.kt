@@ -112,12 +112,8 @@ private class CellIconTransferHandler : TransferHandler() {
     return null
   }
 
-  override fun canImport(info: TransferSupport): Boolean {
-    val c = info.component
-    return if (c is JList<*>) {
-      info.isDrop && info.isDataFlavorSupported(ICON_FLAVOR)
-    } else false
-  }
+  override fun canImport(info: TransferSupport) =
+    info.component is JList<*> && info.isDrop && info.isDataFlavorSupported(ICON_FLAVOR)
 
   override fun getSourceActions(c: JComponent) = COPY
 
