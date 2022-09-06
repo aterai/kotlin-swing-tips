@@ -27,9 +27,19 @@ fun makeUI(): Component {
   }
 }
 
-private class TextAreaRenderer<E> : JTextArea(), ListCellRenderer<E> {
+private class TextAreaRenderer<E> : ListCellRenderer<E> {
   private var noFocusBorder: Border? = null
   private var focusBorder: Border? = null
+  private val renderer = object : JTextArea() {
+    override fun updateUI() {
+      super.updateUI()
+      focusBorder = UIManager.getBorder("List.focusCellHighlightBorder")?.also {
+        val i = it.getBorderInsets(this)
+        noFocusBorder = UIManager.getBorder("List.noFocusBorder")
+          ?: BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
+      }
+    }
+  }
 
   override fun getListCellRendererComponent(
     list: JList<out E>,
@@ -38,25 +48,16 @@ private class TextAreaRenderer<E> : JTextArea(), ListCellRenderer<E> {
     isSelected: Boolean,
     cellHasFocus: Boolean
   ): Component {
-    text = value?.toString() ?: ""
+    renderer.text = value?.toString() ?: ""
     if (isSelected) {
-      background = Color(list.selectionBackground.rgb) // Nimbus
-      foreground = list.selectionForeground
+      renderer.background = Color(list.selectionBackground.rgb) // Nimbus
+      renderer.foreground = list.selectionForeground
     } else {
-      background = if (index % 2 == 0) EVEN_COLOR else list.background
-      foreground = list.foreground
+      renderer.background = if (index % 2 == 0) EVEN_COLOR else list.background
+      renderer.foreground = list.foreground
     }
-    border = if (cellHasFocus) focusBorder else noFocusBorder
-    return this
-  }
-
-  override fun updateUI() {
-    super.updateUI()
-    focusBorder = UIManager.getBorder("List.focusCellHighlightBorder")?.also {
-      val i = it.getBorderInsets(this)
-      noFocusBorder = UIManager.getBorder("List.noFocusBorder")
-        ?: BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
-    }
+    renderer.border = if (cellHasFocus) focusBorder else noFocusBorder
+    return renderer
   }
 
   companion object {
