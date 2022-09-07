@@ -111,13 +111,13 @@ private class AnalogClock : JPanel() {
     val rect = SwingUtilities.calculateInnerArea(this, null)
     g2.color = Color.BLACK
     g2.fill(rect)
-    val radius = rect.width.coerceAtMost(rect.height) / 2f - 10f
+    val radius = rect.width.coerceAtMost(rect.height) / 2.0 - 10.0
     g2.translate(rect.centerX, rect.centerY)
 
     // Drawing the hour and minute markers
-    val hourMarkerLen = radius / 6f - 10f
-    val hourMarker = Line2D.Float(0f, hourMarkerLen - radius, 0f, -radius)
-    val minuteMarker = Line2D.Float(0f, hourMarkerLen / 2f - radius, 0f, -radius)
+    val hourMarkerLen = radius / 6.0 - 10.0
+    val hourMarker = Line2D.Double(0.0, hourMarkerLen - radius, 0.0, -radius)
+    val minuteMarker = Line2D.Double(0.0, hourMarkerLen / 2.0 - radius, 0.0, -radius)
     val at = AffineTransform.getRotateInstance(0.0)
     g2.stroke = BasicStroke(2f)
     g2.color = Color.WHITE
@@ -133,35 +133,37 @@ private class AnalogClock : JPanel() {
     // Drawing the clock numbers
     paintClockNumbers(g2, radius, hourMarkerLen)
 
-    // Drawing the hour hand
-    val hourHandLen = radius / 2f
-    val hourHand = Line2D.Float(0f, 0f, 0f, -hourHandLen)
-    val minuteRot = time.minute * Math.PI / 30.0
+    // Calculate the angle of rotation
+    val secondRot = time.second * Math.PI / 30.0
+    val minuteRot = time.minute * Math.PI / 30.0 + secondRot / 60.0
     val hourRot = time.hour * Math.PI / 6.0 + minuteRot / 12.0
+
+    // Drawing the hour hand
+    val hourHandLen = radius / 2.0
+    val hourHand = Line2D.Double(0.0, 0.0, 0.0, -hourHandLen)
     g2.stroke = BasicStroke(8f)
     g2.paint = Color.LIGHT_GRAY
     g2.draw(AffineTransform.getRotateInstance(hourRot).createTransformedShape(hourHand))
 
     // Drawing the minute hand
-    val minuteHandLen = 5f * radius / 6f
-    val minuteHand = Line2D.Float(0f, 0f, 0f, -minuteHandLen)
+    val minuteHandLen = 5.0 * radius / 6.0
+    val minuteHand = Line2D.Double(0.0, 0.0, 0.0, -minuteHandLen)
     g2.stroke = BasicStroke(4f)
     g2.paint = Color.WHITE
     g2.draw(AffineTransform.getRotateInstance(minuteRot).createTransformedShape(minuteHand))
 
     // Drawing the second hand
-    val r = radius / 6f
+    val r = radius / 6.0
     val secondHandLen = radius - r
-    val secondHand = Line2D.Float(0f, r, 0f, -secondHandLen)
-    val secondRot = time.second * Math.PI / 30.0
+    val secondHand = Line2D.Double(0.0, r, 0.0, -secondHandLen)
     g2.paint = Color.RED
     g2.stroke = BasicStroke(1f)
     g2.draw(AffineTransform.getRotateInstance(secondRot).createTransformedShape(secondHand))
-    g2.fill(Ellipse2D.Float(-r / 4f, -r / 4f, r / 2f, r / 2f))
+    g2.fill(Ellipse2D.Double(-r / 4.0, -r / 4.0, r / 2.0, r / 2.0))
     g2.dispose()
   }
 
-  private fun paintClockNumbers(g2: Graphics2D, radius: Float, hourMarkerLen: Float) {
+  private fun paintClockNumbers(g2: Graphics2D, radius: Double, hourMarkerLen: Double) {
     val at = AffineTransform.getRotateInstance(0.0)
     g2.color = Color.WHITE
     val font = g2.font
