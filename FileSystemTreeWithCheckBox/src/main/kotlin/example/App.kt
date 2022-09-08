@@ -120,22 +120,21 @@ private class FileTreeCellRenderer(
     hasFocus: Boolean
   ): Component {
     val c = tcr.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
-    val l = c as? JLabel ?: return c
-    l.font = tree.font
-    return if (value is DefaultMutableTreeNode) {
+    c.font = tree.font
+    val uo = (value as? DefaultMutableTreeNode)?.userObject
+    if (c is JLabel && uo is CheckBoxNode) {
       checkBox.isEnabled = tree.isEnabled
       checkBox.font = tree.font
-      (value.userObject as? CheckBoxNode)?.also {
-        checkBox.icon = if (it.status == Status.INDETERMINATE) IndeterminateIcon() else null
-        val file = it.file
-        l.icon = fileSystemView.getSystemIcon(file)
-        l.text = fileSystemView.getSystemDisplayName(file)
-        l.toolTipText = file.path
-        checkBox.isSelected = it.status == Status.SELECTED
-      }
-      panel.add(l)
-      panel
-    } else l
+      checkBox.icon = if (uo.status == Status.INDETERMINATE) IndeterminateIcon() else null
+      val file = uo.file
+      c.icon = fileSystemView.getSystemIcon(file)
+      c.text = fileSystemView.getSystemDisplayName(file)
+      c.toolTipText = file.path
+      checkBox.isSelected = uo.status == Status.SELECTED
+      panel.add(c)
+      return panel
+    }
+    return c
   }
 }
 
@@ -166,19 +165,19 @@ private class CheckBoxNodeEditor(
   ): Component {
     val c = tcr.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, false)
     c.font = tree.font
-    return if (value is DefaultMutableTreeNode && c is JLabel) {
+    val uo = (value as? DefaultMutableTreeNode)?.userObject
+    if (c is JLabel && uo is CheckBoxNode) {
       checkBox.isEnabled = tree.isEnabled
       checkBox.font = tree.font
-      (value.userObject as? CheckBoxNode)?.also {
-        checkBox.icon = if (it.status == Status.INDETERMINATE) IndeterminateIcon() else null
-        file = it.file
-        c.icon = fileSystemView.getSystemIcon(file)
-        c.text = fileSystemView.getSystemDisplayName(file)
-        checkBox.isSelected = it.status == Status.SELECTED
-      }
+      checkBox.icon = if (uo.status == Status.INDETERMINATE) IndeterminateIcon() else null
+      file = uo.file
+      c.icon = fileSystemView.getSystemIcon(file)
+      c.text = fileSystemView.getSystemDisplayName(file)
+      checkBox.isSelected = uo.status == Status.SELECTED
       panel.add(c)
-      panel
-    } else c
+      return panel
+    }
+    return c
   }
 
   override fun getCellEditorValue(): Any {
