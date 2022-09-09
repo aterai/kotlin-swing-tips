@@ -36,12 +36,12 @@ private class RowSelectionTree : JTree() {
     super.updateUI()
     val tmp = object : BasicTreeUI() {
       override fun getPathBounds(tree: JTree?, path: TreePath?) =
-        if (tree != null && treeState != null) {
-          getPathBounds(path, tree.insets, Rectangle())
-        } else null
+        tree?.let {
+          getPathBounds(path, it.insets, Rectangle())
+        }
 
       private fun getPathBounds(path: TreePath?, insets: Insets, bounds: Rectangle) =
-        treeState.getBounds(path, bounds)?.also {
+        treeState?.getBounds(path, bounds)?.also {
           it.width = tree.width
           it.y += insets.top
         }
