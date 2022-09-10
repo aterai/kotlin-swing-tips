@@ -124,7 +124,9 @@ private class CellIconTransferHandler : TransferHandler() {
       @Suppress("UNCHECKED_CAST")
       (model as? DefaultListModel<Icon>)?.addElement(icon)
       true
-    } else false
+    } else {
+      false
+    }
   }.isSuccess
 
   companion object {
