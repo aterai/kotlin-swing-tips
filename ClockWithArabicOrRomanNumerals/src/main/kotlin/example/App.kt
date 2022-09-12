@@ -169,21 +169,22 @@ private class AnalogClock : JPanel() {
     val font = g2.font
     val frc = g2.fontRenderContext
     if (isRomanNumerals) {
+      val si = AffineTransform.getScaleInstance(1.0, 2.0)
       for (txt in romanNumerals) {
-        val s = getOutline(txt, font, frc)
+        val s = getTextLayout(txt, font, frc).getOutline(si)
         val r = s.bounds2D
         val tx = r.centerX
-        val ty = radius - hourMarkerLen - r.height + r.centerY
+        val ty = radius - hourMarkerLen - r.height + r.centerY * .5
         val t = AffineTransform.getTranslateInstance(-tx, -ty).createTransformedShape(s)
         g2.fill(at.createTransformedShape(t))
         at.rotate(Math.PI / 6.0)
       }
     } else {
-      val ptSrc = Point2D.Double()
+      val ptSrc: Point2D = Point2D.Double()
       for (txt in arabicNumerals) {
-        val s = getOutline(txt, font, frc)
+        val s = getTextLayout(txt, font, frc).getOutline(null)
         val r = s.bounds2D
-        val ty = radius - hourMarkerLen - r.height
+        val ty = radius - hourMarkerLen - r.height - r.centerY * .5
         ptSrc.setLocation(0.0, -ty)
         val pt = at.transform(ptSrc, null)
         val dx = pt.x - r.centerX
@@ -194,6 +195,6 @@ private class AnalogClock : JPanel() {
     }
   }
 
-  private fun getOutline(txt: String, font: Font, frc: FontRenderContext) =
-    TextLayout(txt, font, frc).getOutline(null)
+  private fun getTextLayout(txt: String, font: Font, frc: FontRenderContext) =
+    TextLayout(txt, font, frc)
 }
