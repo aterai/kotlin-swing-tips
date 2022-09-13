@@ -6,6 +6,7 @@ import java.awt.font.GlyphMetrics
 import java.awt.font.GlyphVector
 import java.awt.geom.Point2D
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 
@@ -27,12 +28,16 @@ fun makeUI(): Component {
   }
   val table = object : JTable(model) {
     override fun updateUI() {
+      setSelectionForeground(null)
+      setSelectionBackground(null)
+      getColumnModel().getColumn(0).cellRenderer = null
       getColumnModel().getColumn(1).cellRenderer = null
       getColumnModel().getColumn(2).cellRenderer = null
       super.updateUI()
       setRowSelectionAllowed(true)
       setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
       setRowHeight(50)
+      getColumnModel().getColumn(0).cellRenderer = DefaultTableCellRenderer()
       getColumnModel().getColumn(1).cellRenderer = TestRenderer()
       getColumnModel().getColumn(2).cellRenderer = TextAreaCellRenderer()
     }
@@ -46,11 +51,13 @@ fun makeUI(): Component {
   }
 }
 
-private class TestRenderer : WrappedLabel(), TableCellRenderer {
-  override fun updateUI() {
-    super.updateUI()
-    isOpaque = true
-    border = BorderFactory.createEmptyBorder(0, 5, 0, 5)
+private class TestRenderer : TableCellRenderer {
+  private val renderer = object : WrappedLabel() {
+    override fun updateUI() {
+      super.updateUI()
+      isOpaque = true
+      border = BorderFactory.createEmptyBorder(0, 5, 0, 5)
+    }
   }
 
   override fun getTableCellRendererComponent(
@@ -62,16 +69,17 @@ private class TestRenderer : WrappedLabel(), TableCellRenderer {
     column: Int
   ): Component {
     if (isSelected) {
-      foreground = table.selectionForeground
-      background = table.selectionBackground
+      renderer.foreground = table.selectionForeground
+      renderer.background = table.selectionBackground
     } else {
-      foreground = table.foreground
-      background = table.background
+      renderer.foreground = table.foreground
+      renderer.background = table.background
     }
-    horizontalAlignment = if (value is Number) RIGHT else LEFT
-    font = table.font
-    text = value?.toString() ?: ""
-    return this
+    val b = if (value is Number) SwingConstants.RIGHT else SwingConstants.LEFT
+    renderer.horizontalAlignment = b
+    renderer.font = table.font
+    renderer.text = value?.toString() ?: ""
+    return renderer
   }
 }
 
