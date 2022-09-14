@@ -7,8 +7,10 @@ fun makeUI() = JPanel(BorderLayout(5, 5)).also { panel ->
   val selectedLabelShift = "TabbedPane.selectedLabelShift"
   val labelShift = "TabbedPane.labelShift"
 
-  println(UIManager.getLookAndFeelDefaults()[selectedLabelShift])
-  println(UIManager.getLookAndFeelDefaults()[labelShift])
+  val log = JTextArea()
+  val d = UIManager.getLookAndFeelDefaults()
+  log.append("$selectedLabelShift: ${d[selectedLabelShift]}\n")
+  log.append("$labelShift: ${d[labelShift]}\n")
 
   val sls = UIManager.getLookAndFeelDefaults().getInt(selectedLabelShift)
   val slsModel = SpinnerNumberModel(sls, -5, 5, 1)
@@ -45,7 +47,7 @@ fun makeUI() = JPanel(BorderLayout(5, 5)).also { panel ->
   p.add(box2)
 
   val tabbedPane = JTabbedPane()
-  tabbedPane.addTab("title 0", ColorIcon(Color.RED), JScrollPane(JTree()))
+  tabbedPane.addTab("title 0", ColorIcon(Color.RED), JScrollPane(log))
   tabbedPane.addTab("title 1", ColorIcon(Color.GREEN), JButton("button"))
   tabbedPane.addTab("title 2", ColorIcon(Color.BLUE), JLabel("label"))
   tabbedPane.addTab("title 3", JPanel())
