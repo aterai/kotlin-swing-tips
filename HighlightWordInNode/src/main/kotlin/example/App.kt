@@ -9,9 +9,17 @@ import javax.swing.tree.TreeCellRenderer
 import javax.swing.tree.TreeNode
 import javax.swing.tree.TreePath
 
-private val tree = JTree()
 private val field = JTextField("foo")
-private val renderer = HighlightTreeCellRenderer()
+private var renderer: HighlightTreeCellRenderer? = null
+private val tree = object : JTree() {
+  override fun updateUI() {
+    setCellRenderer(null)
+    super.updateUI()
+    renderer = HighlightTreeCellRenderer()
+    setCellRenderer(renderer)
+    EventQueue.invokeLater { fireDocumentChangeEvent() }
+  }
+}
 
 fun makeUI(): Component {
   val dl = object : DocumentListener {
@@ -32,8 +40,7 @@ fun makeUI(): Component {
   n.add(field)
   n.border = BorderFactory.createTitledBorder("Search")
   tree.cellRenderer = renderer
-  renderer.setQuery(field.text)
-  fireDocumentChangeEvent()
+
   return JPanel(BorderLayout()).also {
     it.add(n, BorderLayout.NORTH)
     it.add(JScrollPane(tree))
@@ -43,7 +50,7 @@ fun makeUI(): Component {
 
 private fun fireDocumentChangeEvent() {
   val q = field.text
-  renderer.setQuery(q)
+  renderer?.setQuery(q)
   val root = tree.getPathForRow(0)
   collapseAll(tree, root)
   if (q.isNotEmpty()) {
@@ -71,15 +78,17 @@ private fun collapseAll(tree: JTree, parent: TreePath) {
   tree.collapsePath(parent)
 }
 
-private class HighlightTreeCellRenderer : JTextField(), TreeCellRenderer {
+private class HighlightTreeCellRenderer : TreeCellRenderer {
   private var query: String? = null
-  override fun updateUI() {
-    super.updateUI()
-    isOpaque = true
-    border = BorderFactory.createEmptyBorder()
-    foreground = Color.BLACK
-    background = Color.WHITE
-    isEditable = false
+  private val renderer = object : JTextField() {
+    override fun updateUI() {
+      super.updateUI()
+      isOpaque = true
+      border = BorderFactory.createEmptyBorder()
+      foreground = Color.BLACK
+      background = Color.WHITE
+      isEditable = false
+    }
   }
 
   fun setQuery(query: String?) {
@@ -96,14 +105,14 @@ private class HighlightTreeCellRenderer : JTextField(), TreeCellRenderer {
     hasFocus: Boolean
   ): Component {
     val txt = value?.toString() ?: ""
-    highlighter.removeAllHighlights()
-    text = txt
-    background = if (selected) BACKGROUND_SELECTION_COLOR else Color.WHITE
+    renderer.highlighter.removeAllHighlights()
+    renderer.text = txt
+    renderer.background = if (selected) BACKGROUND_SELECTION_COLOR else Color.WHITE
     val q = query ?: ""
     if (q.isNotEmpty() && txt.startsWith(q)) {
-      runCatching { highlighter.addHighlight(0, q.length, HIGHLIGHT) }
+      runCatching { renderer.highlighter.addHighlight(0, q.length, HIGHLIGHT) }
     }
-    return this
+    return renderer
   }
 
   companion object {
