@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.JSpinner.DefaultEditor
 
 fun makeUI(): Component {
   val spinner0 = JSpinner()
@@ -10,17 +9,24 @@ fun makeUI(): Component {
 
   val spinner1 = JSpinner()
   spinner1.isEnabled = false
-  (spinner1.editor as? DefaultEditor)?.also {
+  (spinner1.editor as? JSpinner.DefaultEditor)?.also {
     it.isOpaque = false
     it.textField.isOpaque = false
   }
 
-  println(UIManager.getColor("TextField.shadow"))
-  println(UIManager.getColor("TextField.darkShadow"))
-  println(UIManager.getColor("TextField.light"))
-  println(UIManager.getColor("TextField.highlight"))
-  println(UIManager.getBorder("Spinner.border"))
-  println(UIManager.getBoolean("Spinner.editorBorderPainted"))
+  // JSpinner s2 = new JSpinner();
+  // Color bgc2 = UIManager.getColor("FormattedTextField.inactiveBackground");
+  // s2.setBorder(BorderFactory.createCompoundBorder(
+  //   BorderFactory.createLineBorder(new Color(127, 157, 185)),
+  //   BorderFactory.createLineBorder(bgc2, 2)));
+
+  val info = JTextArea()
+  info.append("TextField.shadow: ${UIManager.getColor("TextField.shadow")}\n")
+  info.append("TextField.darkShadow: ${UIManager.getColor("TextField.darkShadow")}\n")
+  info.append("TextField.light: ${UIManager.getColor("TextField.light")}\n")
+  info.append("TextField.highlight: ${UIManager.getColor("TextField.highlight")}\n")
+  info.append("Spinner.border: ${UIManager.getBorder("Spinner.border")}\n")
+  info.append("editorBorderPainted: ${UIManager.getBoolean("TextField.editorBorderPainted")}\n")
 
   val spinner2 = object : JSpinner() {
     override fun updateUI() {
@@ -54,6 +60,7 @@ fun makeUI(): Component {
   return JPanel(BorderLayout(5, 5)).also {
     it.border = BorderFactory.createEmptyBorder(2, 20, 2, 20)
     it.add(box, BorderLayout.NORTH)
+    it.add(JScrollPane(info))
     it.add(check, BorderLayout.SOUTH)
     it.preferredSize = Dimension(320, 240)
   }
