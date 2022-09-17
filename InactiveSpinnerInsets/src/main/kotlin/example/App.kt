@@ -21,12 +21,12 @@ fun makeUI(): Component {
   //   BorderFactory.createLineBorder(bgc2, 2)));
 
   val info = JTextArea()
-  info.append("TextField.shadow: ${UIManager.getColor("TextField.shadow")}\n")
-  info.append("TextField.darkShadow: ${UIManager.getColor("TextField.darkShadow")}\n")
-  info.append("TextField.light: ${UIManager.getColor("TextField.light")}\n")
-  info.append("TextField.highlight: ${UIManager.getColor("TextField.highlight")}\n")
-  info.append("Spinner.border: ${UIManager.getBorder("Spinner.border")}\n")
-  info.append("editorBorderPainted: ${UIManager.getBoolean("TextField.editorBorderPainted")}\n")
+  append(info, "TextField.shadow")
+  append(info, "TextField.darkShadow")
+  append(info, "TextField.light")
+  append(info, "TextField.highlight")
+  append(info, "Spinner.border")
+  append(info, "Spinner.editorBorderPainted")
 
   val spinner2 = object : JSpinner() {
     override fun updateUI() {
@@ -72,6 +72,10 @@ private fun addTestSpinner(box: Box, spinner: JSpinner, title: String) {
   p.border = BorderFactory.createTitledBorder(title)
   box.add(p)
   box.add(Box.createVerticalStrut(2))
+}
+
+private fun append(info: JTextArea, key: String) {
+  info.append("%s: %s%n".format(key, UIManager.get(key)))
 }
 
 private class SimpleBorderSpinner : JSpinner() {
