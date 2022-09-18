@@ -5,16 +5,19 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.HyperlinkEvent
+import javax.swing.event.HyperlinkListener
 
 fun makeUI(): Component {
   val m = DefaultListModel<SiteItem>()
   m.addElement(SiteItem("aterai", listOf("https://ateraimemo.com", "https://github.com/aterai")))
   m.addElement(SiteItem("example", listOf("http://www.example.com", "https://www.example.com")))
-
-  val list = JList(m)
-  list.fixedCellHeight = 120
-  list.cellRenderer = SiteListItemRenderer()
-
+  val list = object : JList<SiteItem>(m) {
+    override fun updateUI() {
+      super.updateUI()
+      fixedCellHeight = 120
+      cellRenderer = SiteListItemRenderer()
+    }
+  }
   val ml = object : MouseAdapter() {
     override fun mouseClicked(e: MouseEvent) {
       val pt = e.point
@@ -42,15 +45,21 @@ fun makeUI(): Component {
 
 private data class SiteItem(val name: String, val link: List<String>)
 
-private class SiteListItemRenderer : JEditorPane(), ListCellRenderer<SiteItem> {
-  init {
-    this.contentType = "text/html"
-    this.isEditable = false
-    addHyperlinkListener { e ->
-      if (e.eventType == HyperlinkEvent.EventType.ACTIVATED) {
-        println("You click the link with the URL " + e.url)
-        // UIManager.getLookAndFeel().provideErrorFeedback(e.source as? Component)
+private class SiteListItemRenderer : ListCellRenderer<SiteItem> {
+  private val renderer = object : JEditorPane("text/html", "") {
+    private var listener : HyperlinkListener? = null;
+    override fun updateUI() {
+      removeHyperlinkListener(listener)
+      super.updateUI()
+      this.contentType = "text/html"
+      this.isEditable = false
+      listener = HyperlinkListener() { e ->
+        if (e.eventType == HyperlinkEvent.EventType.ACTIVATED) {
+          println("You click the link with the URL " + e.url)
+          // UIManager.getLookAndFeel().provideErrorFeedback(e.source as? Component)
+        }
       }
+      addHyperlinkListener(listener)
     }
   }
 
@@ -68,9 +77,9 @@ private class SiteListItemRenderer : JEditorPane(), ListCellRenderer<SiteItem> {
       buf.append("<tr><td><a href='$url'>$url</a></td></tr>")
     }
     buf.append("</table></html>")
-    this.text = buf.toString()
-    background = if (isSelected) Color.LIGHT_GRAY else Color.WHITE
-    return this
+    renderer.text = buf.toString()
+    renderer.background = if (isSelected) Color.LIGHT_GRAY else Color.WHITE
+    return renderer
   }
 }
 
