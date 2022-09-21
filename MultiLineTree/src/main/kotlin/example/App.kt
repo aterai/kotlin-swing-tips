@@ -9,12 +9,21 @@ import javax.swing.tree.TreeCellRenderer
 import javax.swing.tree.TreeModel
 
 fun makeUI(): Component {
-  val tree = makeTree(getDefaultTreeModel2())
-  tree.cellRenderer = MultiLineCellRenderer()
+  val tree1 = JTree(getDefaultTreeModel())
+  tree1.rowHeight = 0
+
+  val tree2 = object : JTree(getDefaultTreeModel2()) {
+    override fun updateUI() {
+      setCellRenderer(null)
+      super.updateUI()
+      setRowHeight(0)
+      setCellRenderer(MultiLineCellRenderer())
+    }
+  }
 
   return JPanel(GridLayout(1, 2)).also {
-    it.add(makeTitledPanel("Html", makeTree(getDefaultTreeModel())))
-    it.add(makeTitledPanel("TextAreaRenderer", tree))
+    it.add(makeTitledPanel("Html", expandRow(tree1)))
+    it.add(makeTitledPanel("TextAreaRenderer", expandRow(tree2)))
     it.preferredSize = Dimension(320, 240)
   }
 }
@@ -24,11 +33,11 @@ private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()
   it.add(JScrollPane(c))
 }
 
-private fun makeTree(model: TreeModel) = JTree(model).also {
-  it.rowHeight = 0
-  for (i in 0 until it.rowCount) {
-    it.expandRow(i)
+private fun expandRow(tree: JTree) : JTree {
+  for (i in 0 until tree.rowCount) {
+    tree.expandRow(i)
   }
+  return tree
 }
 
 private fun getDefaultTreeModel(): TreeModel {
@@ -77,10 +86,11 @@ private fun getDefaultTreeModel2(): TreeModel {
   return DefaultTreeModel(root)
 }
 
-private class MultiLineCellRenderer : JPanel(BorderLayout()), TreeCellRenderer {
-  private var tcr = DefaultTreeCellRenderer()
+private class MultiLineCellRenderer : TreeCellRenderer {
+  private val tcr = DefaultTreeCellRenderer()
   private val icon = JLabel()
   private val text = CellTextArea2()
+  private val panel = JPanel(BorderLayout())
 
   init {
     text.isOpaque = true
@@ -89,10 +99,10 @@ private class MultiLineCellRenderer : JPanel(BorderLayout()), TreeCellRenderer {
     icon.isOpaque = true
     icon.border = BorderFactory.createEmptyBorder(1, 1, 1, 2)
     icon.verticalAlignment = SwingConstants.TOP
-    isOpaque = false
-    border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
-    add(icon, BorderLayout.WEST)
-    add(text)
+    panel.isOpaque = false
+    panel.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
+    panel.add(icon, BorderLayout.WEST)
+    panel.add(text)
   }
 
   override fun getTreeCellRendererComponent(
@@ -104,12 +114,6 @@ private class MultiLineCellRenderer : JPanel(BorderLayout()), TreeCellRenderer {
     row: Int,
     hasFocus: Boolean
   ): Component {
-    val l = tcr.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
-    if (l is JLabel) {
-      text.font = l.font
-      text.text = l.text
-      icon.icon = l.icon
-    }
     val bgColor: Color
     val fgColor: Color
     if (selected) {
@@ -122,12 +126,13 @@ private class MultiLineCellRenderer : JPanel(BorderLayout()), TreeCellRenderer {
     text.foreground = fgColor
     text.background = bgColor
     icon.background = bgColor
-    return this
-  }
-
-  override fun updateUI() {
-    super.updateUI()
-    tcr = DefaultTreeCellRenderer()
+    val l = tcr.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+    if (l is JLabel) {
+      text.font = l.font
+      text.text = l.text
+      icon.icon = l.icon
+    }
+    return panel
   }
 }
 
