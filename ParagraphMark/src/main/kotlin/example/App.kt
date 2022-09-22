@@ -1,63 +1,74 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.FocusAdapter
-import java.awt.event.FocusEvent
-import java.util.Calendar
-import java.util.Date
+import java.awt.event.InputEvent
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.JSpinner.DateEditor
+import javax.swing.text.AbstractDocument
+import javax.swing.text.BadLocationException
+import javax.swing.text.BoxView
+import javax.swing.text.ComponentView
+import javax.swing.text.Element
+import javax.swing.text.IconView
+import javax.swing.text.LabelView
+import javax.swing.text.ParagraphView
+import javax.swing.text.Position
+import javax.swing.text.StyleConstants
+import javax.swing.text.StyledEditorKit
+import javax.swing.text.View
+import javax.swing.text.ViewFactory
 
 fun makeUI(): Component {
-  val dateFormat = "yyyy/MM/dd"
-  val date = Date()
-  val spinner1 = JSpinner(SpinnerDateModel(date, date, null, Calendar.DAY_OF_MONTH))
-  spinner1.editor = DateEditor(spinner1, dateFormat)
+  val editor = JEditorPane()
+  editor.editorKit = MyEditorKit()
+  editor.text = "1234123541341234123423\n12374612340\n213441324\n\n645206345437820"
 
-  val today = Calendar.getInstance()
-  today.clear(Calendar.MILLISECOND)
-  today.clear(Calendar.SECOND)
-  today.clear(Calendar.MINUTE)
-  today[Calendar.HOUR_OF_DAY] = 0
-
-  val start = today.time
-  println(date)
-  println(start)
-
-  val spinner2 = JSpinner(SpinnerDateModel(date, start, null, Calendar.DAY_OF_MONTH))
-  spinner2.editor = DateEditor(spinner2, dateFormat)
-
-  val spinner3 = JSpinner(SpinnerDateModel(date, start, null, Calendar.DAY_OF_MONTH))
-  val editor = DateEditor(spinner3, dateFormat)
-  spinner3.editor = editor
-  val fl3 = object : FocusAdapter() {
-    override fun focusGained(e: FocusEvent) {
-      EventQueue.invokeLater {
-        val i = dateFormat.lastIndexOf("dd")
-        editor.textField.select(i, i + 2)
-      }
-    }
-  }
-  editor.textField.addFocusListener(fl3)
-
-  return JPanel(GridLayout(3, 1)).also {
-    it.add(makeTitledPanel("Calendar.DAY_OF_MONTH", spinner1))
-    it.add(makeTitledPanel("min: set(Calendar.HOUR_OF_DAY, 0)", spinner2))
-    it.add(makeTitledPanel("JSpinner.DateEditor + FocusListener", spinner3))
-    it.border = BorderFactory.createEmptyBorder(10, 5, 10, 5)
+  return JPanel(BorderLayout()).also {
+    it.add(JScrollPane(editor))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeTitledPanel(title: String, cmp: Component): Component {
-  val p = JPanel(GridBagLayout())
-  p.border = BorderFactory.createTitledBorder(title)
-  val c = GridBagConstraints()
-  c.weightx = 1.0
-  c.fill = GridBagConstraints.HORIZONTAL
-  c.insets = Insets(5, 5, 5, 5)
-  p.add(cmp, c)
-  return p
+private class MyEditorKit : StyledEditorKit() {
+  override fun getViewFactory() = MyViewFactory()
+}
+
+private class MyViewFactory : ViewFactory {
+  override fun create(elem: Element) = when (elem.name) {
+    AbstractDocument.ParagraphElementName -> ParagraphWithEopmView(elem)
+    AbstractDocument.SectionElementName -> BoxView(elem, View.Y_AXIS)
+    StyleConstants.ComponentElementName -> ComponentView(elem)
+    StyleConstants.IconElementName -> IconView(elem)
+    else -> LabelView(elem)
+  }
+}
+
+private class ParagraphWithEopmView(elem: Element?) : ParagraphView(elem) {
+  override fun paint(g: Graphics, allocation: Shape) {
+    super.paint(g, allocation)
+    paintCustomParagraph(g, allocation)
+  }
+
+  private fun paintCustomParagraph(g: Graphics, a: Shape) {
+    runCatching {
+      val paragraph = modelToView(endOffset, a, Position.Bias.Backward)
+      val r = paragraph?.bounds ?: a.bounds
+      val x = r.x
+      val y = r.y
+      val h = r.height
+      val g2 = g.create() as? Graphics2D ?: return
+      g2.paint = MARK_COLOR
+      g2.drawLine(x + 1, y + h / 2, x + 1, y + h - 4)
+      g2.drawLine(x + 2, y + h / 2, x + 2, y + h - 5)
+      g2.drawLine(x + 3, y + h - 6, x + 3, y + h - 6)
+      g2.dispose()
+    }
+  }
+
+  companion object {
+    private val MARK_COLOR = Color(0x78_82_6E)
+  }
 }
 
 fun main() {
