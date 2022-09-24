@@ -1,63 +1,63 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.FocusAdapter
-import java.awt.event.FocusEvent
-import java.util.Calendar
-import java.util.Date
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.JSpinner.DateEditor
+import javax.swing.event.DocumentEvent
+import javax.swing.event.DocumentListener
 
 fun makeUI(): Component {
-  val dateFormat = "yyyy/MM/dd"
-  val date = Date()
-  val spinner1 = JSpinner(SpinnerDateModel(date, date, null, Calendar.DAY_OF_MONTH))
-  spinner1.editor = DateEditor(spinner1, dateFormat)
+  val log = JTextArea()
 
-  val today = Calendar.getInstance()
-  today.clear(Calendar.MILLISECOND)
-  today.clear(Calendar.SECOND)
-  today.clear(Calendar.MINUTE)
-  today[Calendar.HOUR_OF_DAY] = 0
+  val button = JButton("JButton")
+  button.addActionListener { append(log, "JButton clicked") }
 
-  val start = today.time
-  println(date)
-  println(start)
+  val check = JCheckBox("setDefaultButton")
+  check.addActionListener { button.rootPane.defaultButton = button }
 
-  val spinner2 = JSpinner(SpinnerDateModel(date, start, null, Calendar.DAY_OF_MONTH))
-  spinner2.editor = DateEditor(spinner2, dateFormat)
-
-  val spinner3 = JSpinner(SpinnerDateModel(date, start, null, Calendar.DAY_OF_MONTH))
-  val editor = DateEditor(spinner3, dateFormat)
-  spinner3.editor = editor
-  val fl3 = object : FocusAdapter() {
-    override fun focusGained(e: FocusEvent) {
-      EventQueue.invokeLater {
-        val i = dateFormat.lastIndexOf("dd")
-        editor.textField.select(i, i + 2)
-      }
+  val textField1 = JTextField("addDocumentListener")
+  textField1.document.addDocumentListener(object : DocumentListener {
+    override fun insertUpdate(e: DocumentEvent) {
+      append(log, "insertUpdate")
     }
-  }
-  editor.textField.addFocusListener(fl3)
 
-  return JPanel(GridLayout(3, 1)).also {
-    it.add(makeTitledPanel("Calendar.DAY_OF_MONTH", spinner1))
-    it.add(makeTitledPanel("min: set(Calendar.HOUR_OF_DAY, 0)", spinner2))
-    it.add(makeTitledPanel("JSpinner.DateEditor + FocusListener", spinner3))
-    it.border = BorderFactory.createEmptyBorder(10, 5, 10, 5)
+    override fun removeUpdate(e: DocumentEvent) {
+      append(log, "removeUpdate")
+    }
+
+    override fun changedUpdate(e: DocumentEvent) {
+      /* not needed */
+    }
+  })
+
+  val textField2 = JTextField("addActionListener")
+  textField2.addActionListener { e ->
+    val str = (e.source as? JTextField)?.text ?: ""
+    append(log, str)
+  }
+
+  val box = Box.createVerticalBox()
+  box.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
+  box.add(JTextField("dummy"))
+  box.add(Box.createVerticalStrut(10))
+  box.add(textField1)
+  box.add(Box.createVerticalStrut(10))
+  box.add(textField2)
+
+  val p = JPanel(FlowLayout(FlowLayout.RIGHT))
+  p.add(check)
+  p.add(button)
+
+  return JPanel(BorderLayout()).also {
+    it.add(box, BorderLayout.NORTH)
+    it.add(JScrollPane(log))
+    it.add(p, BorderLayout.SOUTH)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeTitledPanel(title: String, cmp: Component): Component {
-  val p = JPanel(GridBagLayout())
-  p.border = BorderFactory.createTitledBorder(title)
-  val c = GridBagConstraints()
-  c.weightx = 1.0
-  c.fill = GridBagConstraints.HORIZONTAL
-  c.insets = Insets(5, 5, 5, 5)
-  p.add(cmp, c)
-  return p
+fun append(log: JTextArea, text: String) {
+  log.append("$text\n")
+  log.caretPosition = log.document.length
 }
 
 fun main() {
