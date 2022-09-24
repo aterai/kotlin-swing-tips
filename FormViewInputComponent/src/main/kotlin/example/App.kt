@@ -103,6 +103,12 @@ private fun makeHtml(): String {
         <div>file:
           <input type='file' id='file1' name='file1'>
         </div>
+        <div>
+          <isindex id='search1' name='search1' action='#'>
+        </div>
+        <div>
+          <isindex id='search2' name='search2' prompt='search: ' action='#'>
+        </div>
       </form>
       <br />
       <hr />
