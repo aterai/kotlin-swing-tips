@@ -6,10 +6,10 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 fun makeUI(): Component {
   val key = "ColorChooser.showPreviewPanelText"
   val log = JTextArea()
-  val check = object : JCheckBox(key, UIManager.getBoolean(key)) {
+  val check = object : JCheckBox(key, getBoolean(UIManager.get(key))) {
     override fun updateUI() {
       super.updateUI()
-      val b = UIManager.getLookAndFeelDefaults().getBoolean(key)
+      val b = getBoolean(UIManager.getLookAndFeelDefaults().get(key))
       isSelected = b
       val laf = UIManager.getLookAndFeel()
       log.append("%s%n  %s: %s%n".format(laf, key, b))
@@ -38,6 +38,12 @@ fun makeUI(): Component {
     it.add(JScrollPane(log))
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+fun getBoolean(o: Any?) = when {
+  o is Boolean -> o
+  o == null -> true
+  else -> false
 }
 
 private object LookAndFeelUtil {
