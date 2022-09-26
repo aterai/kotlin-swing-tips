@@ -49,9 +49,9 @@ fun makeUI(): Component {
   val p4 = makeLabelTitledBorderPanel("OverlayLayout + JLabel", p)
 
   return JPanel(GridLayout(0, 1, 5, 5)).also {
-    it.add(init(JPanel(), "Default TitleBorder"))
-    it.add(init(p1, "Transparent TitleBorder"))
-    it.add(init(p2, "Paint TitleBorder background"))
+    it.add(init(JPanel(), "Default TitledBorder"))
+    it.add(init(p1, "Transparent TitledBorder"))
+    it.add(init(p2, "Paint TitledBorder background"))
     it.add(p3)
     it.add(p4)
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
