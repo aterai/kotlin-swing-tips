@@ -47,7 +47,7 @@ private data class SiteItem(val name: String, val link: List<String>)
 
 private class SiteListItemRenderer : ListCellRenderer<SiteItem> {
   private val renderer = object : JEditorPane("text/html", "") {
-    private var listener : HyperlinkListener? = null;
+    private var listener: HyperlinkListener? = null
     override fun updateUI() {
       removeHyperlinkListener(listener)
       super.updateUI()
