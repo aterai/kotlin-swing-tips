@@ -33,7 +33,7 @@ private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()
   it.add(JScrollPane(c))
 }
 
-private fun expandRow(tree: JTree) : JTree {
+private fun expandRow(tree: JTree): JTree {
   for (i in 0 until tree.rowCount) {
     tree.expandRow(i)
   }
