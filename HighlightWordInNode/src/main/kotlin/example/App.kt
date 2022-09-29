@@ -10,13 +10,11 @@ import javax.swing.tree.TreeNode
 import javax.swing.tree.TreePath
 
 private val field = JTextField("foo")
-private var renderer: HighlightTreeCellRenderer? = null
 private val tree = object : JTree() {
   override fun updateUI() {
     setCellRenderer(null)
     super.updateUI()
-    renderer = HighlightTreeCellRenderer()
-    setCellRenderer(renderer)
+    setCellRenderer(HighlightTreeCellRenderer())
     EventQueue.invokeLater { fireDocumentChangeEvent() }
   }
 }
@@ -39,7 +37,6 @@ fun makeUI(): Component {
   val n = JPanel(BorderLayout())
   n.add(field)
   n.border = BorderFactory.createTitledBorder("Search")
-  tree.cellRenderer = renderer
 
   return JPanel(BorderLayout()).also {
     it.add(n, BorderLayout.NORTH)
@@ -50,11 +47,13 @@ fun makeUI(): Component {
 
 private fun fireDocumentChangeEvent() {
   val q = field.text
-  renderer?.setQuery(q)
-  val root = tree.getPathForRow(0)
-  collapseAll(tree, root)
-  if (q.isNotEmpty()) {
-    searchTree(tree, root, q)
+  (tree.cellRenderer as? HighlightTreeCellRenderer)?.also {
+    it.setQuery(q)
+    val root = tree.getPathForRow(0)
+    collapseAll(tree, root)
+    if (q.isNotEmpty()) {
+      searchTree(tree, root, q)
+    }
   }
 }
 
