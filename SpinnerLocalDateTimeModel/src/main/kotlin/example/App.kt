@@ -29,9 +29,11 @@ fun makeUI(): Component {
   val start = cal.time
   cal.add(Calendar.DATE, 9)
   val end = cal.time
-  println(date)
-  println(start)
-  println(end)
+
+  val info = JTextArea()
+  info.append("$date\n")
+  info.append("$start\n")
+  info.append("$end\n")
 
   val dateFormat = "yyyy/MM/dd"
   val spinner0 = JSpinner(SpinnerDateModel(date, start, end, Calendar.DAY_OF_MONTH))
@@ -39,9 +41,10 @@ fun makeUI(): Component {
   val d = LocalDateTime.now(ZoneId.systemDefault())
   val s = d.minus(2, ChronoUnit.DAYS)
   val e = d.plus(7, ChronoUnit.DAYS)
-  println(d)
-  println(s)
-  println(e)
+
+  info.append("$d\n")
+  info.append("$s\n")
+  info.append("$e\n")
 
   val spinner1 = JSpinner(SpinnerDateModel(toDate(d), toDate(s), toDate(e), Calendar.DAY_OF_MONTH))
   spinner1.editor = DateEditor(spinner1, dateFormat)
@@ -49,11 +52,15 @@ fun makeUI(): Component {
   val spinner2 = JSpinner(SpinnerLocalDateTimeModel(d, s, e, ChronoUnit.DAYS))
   spinner2.editor = LocalDateTimeEditor(spinner2, dateFormat)
 
-  return JPanel(GridLayout(0, 1)).also {
-    it.add(makeTitledPanel("SpinnerDateModel", spinner0))
-    it.add(makeTitledPanel("SpinnerDateModel / toInstant", spinner1))
-    it.add(makeTitledPanel("SpinnerLocalDateTimeModel", spinner2))
-    it.border = BorderFactory.createEmptyBorder(10, 5, 10, 5)
+  val p = JPanel(GridLayout(0, 1))
+  p.add(makeTitledPanel("SpinnerDateModel", spinner0))
+  p.add(makeTitledPanel("SpinnerDateModel / toInstant", spinner1))
+  p.add(makeTitledPanel("SpinnerLocalDateTimeModel", spinner2))
+
+  return JPanel(BorderLayout()).also {
+    it.add(p, BorderLayout.NORTH)
+    it.add(JScrollPane(info))
+    it.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
     it.preferredSize = Dimension(320, 240)
   }
 }
