@@ -23,7 +23,6 @@ private class AnimationTask : BackgroundTask() {
       return
     }
     if (!area.isDisplayable) {
-      println("process: DISPOSE_ON_CLOSE")
       cancel(true)
       return
     }
@@ -31,9 +30,7 @@ private class AnimationTask : BackgroundTask() {
   }
 
   public override fun done() {
-    println("done() is EDT?: " + EventQueue.isDispatchThread())
     if (!area.isDisplayable) {
-      println("done: DISPOSE_ON_CLOSE")
       cancel(true)
       return
     }
@@ -51,7 +48,6 @@ private class AnimationTask : BackgroundTask() {
 }
 
 private fun executeWorker() {
-  println("actionPerformed() is EDT?: " + EventQueue.isDispatchThread())
   runButton.isEnabled = false
   cancelButton.isEnabled = true
   loadingLabel.startAnimation()
@@ -104,7 +100,6 @@ fun makeUI(): Component {
 open class BackgroundTask : SwingWorker<String, String>() {
   @Throws(InterruptedException::class)
   public override fun doInBackground(): String {
-    println("doInBackground() is EDT?: " + EventQueue.isDispatchThread())
     Thread.sleep(2000)
     var current = 0
     val lengthOfTask = 120 // list.size();
@@ -128,7 +123,6 @@ private class ProgressListener(private val progressBar: JProgressBar) : Property
   override fun propertyChange(e: PropertyChangeEvent) {
     val source = e.source
     if (!progressBar.isDisplayable && source is SwingWorker<*, *>) {
-      println("progress: DISPOSE_ON_CLOSE")
       source.cancel(true)
     }
     if ("progress" == e.propertyName) {
