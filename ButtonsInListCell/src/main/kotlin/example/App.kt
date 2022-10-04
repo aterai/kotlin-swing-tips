@@ -120,24 +120,29 @@ private class CellButtonsMouseListener<E>(private val list: JList<E>) : MouseInp
   }
 }
 
-private class ButtonsRenderer<E>(
-  model: DefaultListModel<E>
-) : JPanel(BorderLayout()), ListCellRenderer<E> {
+private class ButtonsRenderer<E>(model: DefaultListModel<E>) : ListCellRenderer<E> {
   private val textArea = JTextArea()
   private val deleteButton = JButton("delete")
   private val copyButton = JButton("copy")
   private val buttons = listOf(deleteButton, copyButton)
+  private val renderer = object : JPanel(BorderLayout()) {
+    override fun getPreferredSize(): Dimension {
+      val d = super.getPreferredSize()
+      d.width = 0 // VerticalScrollBar as needed
+      return d
+    }
+  }
   private var targetIndex = 0
   var pressedIndex = -1
   var rolloverIndex = -1
   var button: JButton? = null
 
   init {
-    border = BorderFactory.createEmptyBorder(5, 5, 5, 0)
-    isOpaque = true
+    renderer.border = BorderFactory.createEmptyBorder(5, 5, 5, 0)
+    renderer.isOpaque = true
     textArea.lineWrap = true
     textArea.isOpaque = false
-    add(textArea)
+    renderer.add(textArea)
     deleteButton.addActionListener {
       // val isMoreThanOneItem = model.size > 1
       model.takeIf { it.size > 1 }?.remove(targetIndex)
@@ -152,13 +157,7 @@ private class ButtonsRenderer<E>(
       box.add(it)
       box.add(Box.createHorizontalStrut(5))
     }
-    add(box, BorderLayout.EAST)
-  }
-
-  override fun getPreferredSize(): Dimension {
-    val d = super.getPreferredSize()
-    d.width = 0 // VerticalScrollBar as needed
-    return d
+    renderer.add(box, BorderLayout.EAST)
   }
 
   override fun getListCellRendererComponent(
@@ -171,10 +170,10 @@ private class ButtonsRenderer<E>(
     textArea.text = value?.toString() ?: ""
     targetIndex = index
     if (isSelected) {
-      background = list.selectionBackground
+      renderer.background = list.selectionBackground
       textArea.foreground = list.selectionForeground
     } else {
-      background = if (index % 2 == 0) EVEN_COLOR else list.background
+      renderer.background = if (index % 2 == 0) EVEN_COLOR else list.background
       textArea.foreground = list.foreground
     }
     buttons.forEach { resetButtonStatus(it) }
@@ -187,7 +186,7 @@ private class ButtonsRenderer<E>(
         it.model.isRollover = true
       }
     }
-    return this
+    return renderer
   }
 
   private fun resetButtonStatus(button: AbstractButton) {
