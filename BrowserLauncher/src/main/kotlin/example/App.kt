@@ -35,7 +35,7 @@ fun makeUI(): Component {
 // December 10, 2005
 // Supports: Mac OS X, GNU/Linux, Unix, Windows XP
 // Example Usage:
-//   String url = "http://www.centerkey.com/";
+//   String url = "https://centerkey.com/";
 //   BareBonesBrowserLaunch.openUrl(url);
 // Public Domain Software -- Free to Use as You Like
 private object BrowserLauncher {
