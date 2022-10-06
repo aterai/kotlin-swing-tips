@@ -12,7 +12,6 @@ import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  // http://www.freeiconsdownload.com/Free_Downloads.asp?id=60
   val path = "example/31g.png"
   val url = Thread.currentThread().contextClassLoader.getResource(path)
   val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
