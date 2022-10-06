@@ -42,14 +42,14 @@ private class ImgBaselineHtmlEditorKit : HTMLEditorKit() {
   override fun getViewFactory(): ViewFactory {
     return object : HTMLFactory() {
       override fun create(elem: Element): View {
-        val view = super.create(elem)
-        if (view is LabelView) {
-          println("debug: " + view.getAlignment(View.Y_AXIS))
-        }
+        // val view = super.create(elem)
+        // if (view is LabelView) {
+        //   println("debug: " + view.getAlignment(View.Y_AXIS))
+        // }
         val attrs = elem.attributes
         val elementName = attrs.getAttribute(AbstractDocument.ElementNameAttribute)
         val o = if (elementName != null) null else attrs.getAttribute(StyleConstants.NameAttribute)
-        return if (o is HTML.Tag && o === HTML.Tag.IMG) createImageView(elem) else view
+        return if (o is HTML.Tag && o === HTML.Tag.IMG) createImageView(elem) else super.create(elem)
       }
     }
   }
