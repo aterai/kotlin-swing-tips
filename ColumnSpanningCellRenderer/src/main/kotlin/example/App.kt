@@ -18,7 +18,24 @@ fun makeUI(): Component {
   val model = object : DefaultTableModel(data, columnNames) {
     override fun isCellEditable(row: Int, column: Int) = false
   }
-  val table = JTable(model)
+  val table = object : JTable(model) {
+    override fun updateUI() {
+      setColumnCellRenderer(null)
+      super.updateUI()
+      val r = ColumnSpanningCellRenderer()
+      setColumnCellRenderer(r)
+    }
+
+    private fun setColumnCellRenderer(renderer: TableCellRenderer?) {
+      val cm = getColumnModel()
+      for (i in 0 until cm.columnCount) {
+        val c = cm.getColumn(i)
+        c.cellRenderer = renderer
+        c.minWidth = 50
+      }
+    }
+  }
+
   table.autoCreateRowSorter = true
   table.tableHeader.reorderingAllowed = false
   table.rowSelectionAllowed = true
@@ -47,11 +64,12 @@ private fun makeOptionPaneDescription(type: String): OptionPaneDescription {
   return OptionPaneDescription(key, icon, msg)
 }
 
-private class ColumnSpanningCellRenderer : JPanel(BorderLayout()), TableCellRenderer {
+private class ColumnSpanningCellRenderer : TableCellRenderer {
   private val textArea = JTextArea(2, 999_999)
   private val label = JLabel()
   private val iconLabel = JLabel()
   private val scroll = JScrollPane(textArea)
+  private val renderer = JPanel(BorderLayout())
 
   init {
     scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
@@ -71,10 +89,10 @@ private class ColumnSpanningCellRenderer : JPanel(BorderLayout()), TableCellRend
     val b1 = BorderFactory.createEmptyBorder(2, 2, 2, 2)
     val b2 = BorderFactory.createMatteBorder(0, 0, 1, 1, Color.GRAY)
     label.border = BorderFactory.createCompoundBorder(b2, b1)
-    background = textArea.background
-    isOpaque = true
-    add(label, BorderLayout.NORTH)
-    add(scroll)
+    renderer.background = textArea.background
+    renderer.isOpaque = true
+    renderer.add(label, BorderLayout.NORTH)
+    renderer.add(scroll)
   }
 
   override fun getTableCellRendererComponent(
@@ -88,7 +106,7 @@ private class ColumnSpanningCellRenderer : JPanel(BorderLayout()), TableCellRend
     val d: OptionPaneDescription
     if (value is OptionPaneDescription) {
       d = value
-      add(iconLabel, BorderLayout.WEST)
+      renderer.add(iconLabel, BorderLayout.WEST)
     } else {
       val title = value?.toString() ?: ""
       val mri = table.convertRowIndexToModel(row)
@@ -98,7 +116,7 @@ private class ColumnSpanningCellRenderer : JPanel(BorderLayout()), TableCellRend
       } else {
         OptionPaneDescription(title, null, "")
       }
-      remove(iconLabel)
+      renderer.remove(iconLabel)
     }
     label.text = d.title
     textArea.text = d.text
@@ -108,8 +126,10 @@ private class ColumnSpanningCellRenderer : JPanel(BorderLayout()), TableCellRend
       cr.x -= iconLabel.preferredSize.width
     }
     scroll.viewport.viewPosition = cr.location
-    background = if (isSelected) Color.ORANGE else Color.WHITE
-    return this
+    val bgc = if (isSelected) Color.ORANGE else Color.WHITE
+    renderer.background = bgc
+    textArea.background = bgc
+    return renderer
   }
 
   companion object {
