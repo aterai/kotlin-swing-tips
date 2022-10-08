@@ -29,22 +29,31 @@ fun makeUI(): Component {
   }
   p.add(makeTitledPanel("Override getPreferredSize()", scroll))
 
+  val info = JTextField()
+  info.isEditable = false
+
   val button = JButton("addColumn")
   button.addActionListener {
-    listOf(table1, table2).forEach {
-      it.columnModel.addColumn(TableColumn())
-      val h = it.tableHeader
-      val d = h.preferredSize
-      println(d)
-    }
+    table1.columnModel.addColumn(TableColumn())
+    table2.columnModel.addColumn(TableColumn())
+    info.text = "%s - %s".format(getDim(table1), getDim(table2))
   }
+
+  val box = Box.createHorizontalBox()
+  box.add(button)
+  box.add(info)
 
   return JPanel(BorderLayout()).also {
     it.add(p)
-    it.add(button, BorderLayout.SOUTH)
+    it.add(box, BorderLayout.SOUTH)
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+private fun getDim(t: JTable): String {
+  val d = t.tableHeader.preferredSize
+  return "%dx%d".format(d.width, d.height)
 }
 
 private fun makeTable() = JTable(DefaultTableModel(2, 20)).also {
