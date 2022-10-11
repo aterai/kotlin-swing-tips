@@ -4,19 +4,7 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  // UIManager.put("TabbedPane.textIconGap", 4)
-  val tabbedPane0 = object : JTabbedPane() {
-    override fun updateUI() {
-      super.updateUI()
-      println(UIManager.getInt("TabbedPane.textIconGap"))
-      // val d = UIDefaults()
-      // d.put("TabbedPane.textIconGap", 4)
-      // putClientProperty("Nimbus.Overrides", d)
-      // putClientProperty("Nimbus.Overrides.InheritDefaults", true)
-    }
-  }
-
-  val tabbedPane1 = object : JTabbedPane() {
+  val tabbedPane = object : JTabbedPane() {
     override fun insertTab(title: String?, icon: Icon?, c: Component?, tip: String?, index: Int) {
       super.insertTab(title, icon, c, tip, index)
       val label = JLabel(title, icon, LEADING)
@@ -24,12 +12,13 @@ fun makeUI(): Component {
     }
   }
 
+  val mb = JMenuBar()
+  mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+
   return JPanel(GridLayout(2, 1)).also {
-    val mb = JMenuBar()
-    mb.add(LookAndFeelUtil.createLookAndFeelMenu())
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
-    it.add(makeTitledPanel("Default addTab(title, icon, c)", initTabbedPane(tabbedPane0)))
-    it.add(makeTitledPanel("TabComponent + JLabel + LEADING", initTabbedPane(tabbedPane1)))
+    it.add(makeTitledPanel("Default addTab(title, icon, c)", initTabbedPane(JTabbedPane())))
+    it.add(makeTitledPanel("TabComponent + JLabel + LEADING", initTabbedPane(tabbedPane)))
     it.preferredSize = Dimension(320, 240)
   }
 }
