@@ -4,7 +4,6 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.AbstractDocument
 import javax.swing.text.Element
-import javax.swing.text.LabelView
 import javax.swing.text.StyleConstants
 import javax.swing.text.View
 import javax.swing.text.ViewFactory
@@ -49,7 +48,11 @@ private class ImgBaselineHtmlEditorKit : HTMLEditorKit() {
         val attrs = elem.attributes
         val elementName = attrs.getAttribute(AbstractDocument.ElementNameAttribute)
         val o = if (elementName != null) null else attrs.getAttribute(StyleConstants.NameAttribute)
-        return if (o is HTML.Tag && o === HTML.Tag.IMG) createImageView(elem) else super.create(elem)
+        return if (o is HTML.Tag && o === HTML.Tag.IMG) {
+          createImageView(elem)
+        } else {
+          super.create(elem)
+        }
       }
     }
   }
