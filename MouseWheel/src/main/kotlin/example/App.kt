@@ -31,7 +31,9 @@ fun makeUI(): Component {
       (it.model as? SpinnerNumberModel)?.also { m ->
         val iv = it.value as? Int ?: 0
         val v = iv - (e.preciseWheelRotation * m.stepSize.toInt()).toInt()
-        if (v in m.minimum..m.maximum) {
+        val min = m.minimum as? Int ?: 0
+        val max = m.maximum as? Int ?: 0
+        if (v in min..max) {
           it.value = v
         }
       }
