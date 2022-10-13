@@ -18,13 +18,13 @@ fun makeUI(): Component {
   desktop.add(createFrame("looooooooooooong title #", 1))
   desktop.add(createFrame("#", 0))
 
-  val act = object : AbstractAction("add") {
+  val button = JButton("add")
+  button.action = object : AbstractAction("add") {
     private var num = 2
     override fun actionPerformed(e: ActionEvent) {
       desktop.add(createFrame("#", num++))
     }
   }
-  val button = JButton(act)
 
   return JPanel(BorderLayout()).also {
     it.add(desktop)
@@ -41,7 +41,6 @@ fun createFrame(t: String, i: Int): JInternalFrame {
       val title = f.title
       val font = font
       if (font != null) {
-        testWidth()
         var buttonsW = 22
         if (f.isClosable) {
           buttonsW += 19
@@ -59,18 +58,8 @@ fun createFrame(t: String, i: Int): JInternalFrame {
         d.width = buttonsW + ins.left + ins.right + titleW + 2 + 2 + 2
         // 27: Magic number for NimbusLookAndFeel
         d.height = 27.coerceAtMost(d.height)
-        println("BasicInternalFrameTitlePane: " + d.width)
       }
       return d
-    }
-
-    private fun testWidth() {
-      val dim = layout.minimumLayoutSize(this)
-      println("minimumLayoutSize: " + dim.width)
-      val bw = descendants(this).filterIsInstance<AbstractButton>().sumOf {
-        it.preferredSize.width
-      }
-      println("Total width of all buttons: $bw")
     }
   }
   f.setSize(200, 100)
@@ -78,10 +67,6 @@ fun createFrame(t: String, i: Int): JInternalFrame {
   EventQueue.invokeLater { f.isVisible = true }
   return f
 }
-
-fun descendants(parent: Container): List<Component> = parent.components
-  .filterIsInstance<Container>()
-  .flatMap { listOf(it) + descendants(it) }
 
 fun main() {
   EventQueue.invokeLater {
