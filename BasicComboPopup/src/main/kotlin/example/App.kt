@@ -12,16 +12,39 @@ import javax.swing.plaf.basic.BasicComboPopup
 import javax.swing.text.JTextComponent
 
 fun makeUI(): Component {
-  val jtp = JTextPane()
-  jtp.text = "Shift+Tab: open EditorComboPopup\n"
+  val textPane = JTextPane()
+  textPane.text = "Shift+Tab: open EditorComboPopup\n"
 
-  val model = arrayOf(
+  val model = arrayOf<Any>(
     "public", "protected", "private",
     "final", "transient", "super", "this", "return", "class"
   )
-  val combo = JComboBox(model)
+  val combo: JComboBox<Any> = JComboBox(model)
 
-  val popup = EditorComboPopup(jtp, combo)
+  val popup = object : BasicComboPopup(combo) {
+    private var listener: MouseListener? = null
+
+    override fun installListListeners() {
+      super.installListListeners()
+      listener = object : MouseAdapter() {
+        override fun mouseClicked(e: MouseEvent) {
+          hide()
+          TextEditorUtils.append(textPane, comboBox.selectedItem?.toString() ?: "")
+        }
+      }
+      list?.addMouseListener(listener)
+    }
+
+    override fun uninstallingUI() {
+      if (listener != null) {
+        list.removeMouseListener(listener)
+        listener = null
+      }
+      super.uninstallingUI()
+    }
+
+    override fun isFocusable() = true
+  }
   val am = popup.actionMap
   val a1 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
@@ -43,7 +66,7 @@ fun makeUI(): Component {
     override fun actionPerformed(e: ActionEvent) {
       combo.getItemAt(combo.selectedIndex)?.also {
         popup.hide()
-        TextEditorUtils.append(jtp, it)
+        TextEditorUtils.append(textPane, it.toString())
       }
     }
   }
@@ -57,54 +80,27 @@ fun makeUI(): Component {
   val a4 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       runCatching {
-        val rect = jtp.modelToView(jtp.caretPosition)
+        val rect = textPane.modelToView(textPane.caretPosition)
         // Java 9: val rect = jtp.modelToView2D(jtp.caretPosition).bounds
-        popup.show(jtp, rect.x, rect.maxY.toInt())
+        popup.show(textPane, rect.x, rect.maxY.toInt())
         EventQueue.invokeLater {
           (popup.topLevelAncestor as? Window)?.toFront()
           popup.requestFocusInWindow()
         }
       }.onFailure { // should never happen
         it.printStackTrace()
-        UIManager.getLookAndFeel().provideErrorFeedback(jtp)
+        UIManager.getLookAndFeel().provideErrorFeedback(textPane)
       }
     }
   }
-  jtp.actionMap.put("myPop", a4)
-  jtp.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK), "myPop")
+  textPane.actionMap.put("myPop", a4)
+  val keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK)
+  textPane.inputMap.put(keyStroke, "myPop")
 
   return JPanel(BorderLayout()).also {
-    it.add(JScrollPane(jtp))
+    it.add(JScrollPane(textPane))
     it.preferredSize = Dimension(320, 240)
   }
-}
-
-private class EditorComboPopup(
-  private val textArea: JTextComponent,
-  comboBox: JComboBox<*>
-) : BasicComboPopup(comboBox) {
-  private var listener: MouseListener? = null
-
-  override fun installListListeners() {
-    super.installListListeners()
-    listener = object : MouseAdapter() {
-      override fun mouseClicked(e: MouseEvent) {
-        hide()
-        TextEditorUtils.append(textArea, comboBox.selectedItem?.toString() ?: "")
-      }
-    }
-    list?.addMouseListener(listener)
-  }
-
-  override fun uninstallingUI() {
-    if (listener != null) {
-      list.removeMouseListener(listener)
-      listener = null
-    }
-    super.uninstallingUI()
-  }
-
-  override fun isFocusable() = true
 }
 
 private object TextEditorUtils {
