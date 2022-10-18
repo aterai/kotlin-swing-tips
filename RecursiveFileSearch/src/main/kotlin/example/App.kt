@@ -73,23 +73,22 @@ private fun initOpenButton() {
     fileChooser.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
     fileChooser.selectedFile = File(dirCombo.editor.item.toString())
     val c = dirCombo.rootPane
-    val title = "title"
-    when (fileChooser.showOpenDialog(c)) {
-      JFileChooser.CANCEL_OPTION -> println("Cancel")
+    textArea.text = when (fileChooser.showOpenDialog(c)) {
+      JFileChooser.CANCEL_OPTION -> "JFileChooser cancelled."
       JFileChooser.APPROVE_OPTION -> {
         val file = fileChooser.selectedFile
         if (file == null || !file.isDirectory) {
-          val obj = arrayOf("Please select directory.")
-          UIManager.getLookAndFeel().provideErrorFeedback(c)
-          JOptionPane.showMessageDialog(c, obj, title, JOptionPane.ERROR_MESSAGE)
+          "Please select directory."
         } else {
-          addItem(dirCombo, file.absolutePath, 4)
+          val path = file.absolutePath
+          addItem(dirCombo, path, 4)
           statusPanel.repaint()
+          path
         }
       }
       else -> {
         UIManager.getLookAndFeel().provideErrorFeedback(c)
-        JOptionPane.showMessageDialog(c, arrayOf("Error."), title, JOptionPane.ERROR_MESSAGE)
+        "JFileChooser error."
       }
     }
   }
@@ -101,7 +100,6 @@ private open class FileSearchTask(dir: File) : RecursiveFileSearchTask(dir) {
       return
     }
     if (!statusPanel.isDisplayable) {
-      println("process: DISPOSE_ON_CLOSE")
       cancel(true)
       return
     }
