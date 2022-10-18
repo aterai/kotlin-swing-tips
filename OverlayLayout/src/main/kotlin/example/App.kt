@@ -4,7 +4,7 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI() = JPanel(GridLayout(2, 1)).also {
-  it.add(JButton("Dummy"))
+  it.add(JButton("JButton"))
   it.add(makeOverlayLayoutButton())
   it.preferredSize = Dimension(320, 240)
 }
@@ -16,7 +16,7 @@ private fun makeOverlayLayoutButton(): Component {
 
   val i = b1.insets
   b1.border = BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, 4)
-  val b2 = object : JButton("Å•") {
+  val b2 = object : JButton("‚ñº") {
     private val dim = Dimension(120, 24)
     override fun getPreferredSize() = dim
 
@@ -24,7 +24,7 @@ private fun makeOverlayLayoutButton(): Component {
 
     override fun getMinimumSize() = preferredSize
   }
-  b2.addActionListener { println("sub") }
+  b2.addActionListener { JOptionPane.showMessageDialog(b2, "‚ñº:sub") }
   b2.alignmentX = Component.RIGHT_ALIGNMENT
   b2.alignmentY = Component.BOTTOM_ALIGNMENT
   b1.add(b2)
