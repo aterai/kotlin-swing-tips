@@ -3,7 +3,7 @@ package example
 import java.awt.Component
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-class SearchEngineListCellRenderer<E : SearchEngine> : ListCellRenderer<E> {
+class SearchEngineListCellRenderer<E> : ListCellRenderer<E> {
   private val renderer = DefaultListCellRenderer()
 
   override fun getListCellRendererComponent(
@@ -14,7 +14,7 @@ class SearchEngineListCellRenderer<E : SearchEngine> : ListCellRenderer<E> {
     cellHasFocus: Boolean
   ): Component {
     val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-    if (c is JLabel && value != null) {
+    if (c is JLabel && value is SearchEngine) {
       c.icon = value.favicon
       c.toolTipText = value.url
     }

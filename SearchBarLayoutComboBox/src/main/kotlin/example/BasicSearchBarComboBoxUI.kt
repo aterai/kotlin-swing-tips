@@ -21,7 +21,6 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
     }
   }
 
-  // protected boolean isEditable = true;
   override fun installDefaults() {
     super.installDefaults()
     // comboBox.setEditable(true)
@@ -60,7 +59,9 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
           }
         }
 
-        override fun popupMenuCanceled(e: PopupMenuEvent) { /* not needed */ }
+        override fun popupMenuCanceled(e: PopupMenuEvent) {
+          /* not needed */
+        }
       }
     }
     return popupMenuListener
@@ -163,7 +164,7 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
     loupeButton?.action = null
   }
 
-  override fun createRenderer() = SearchEngineListCellRenderer<SearchEngine>()
+  override fun createRenderer() = SearchEngineListCellRenderer<Any>()
 
   override fun createLayoutManager() = SearchBarLayout()
 
