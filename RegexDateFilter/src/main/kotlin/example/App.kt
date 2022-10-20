@@ -13,6 +13,9 @@ import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter
 
 fun makeUI(): Component {
+  val log = JTextArea()
+  log.isEditable = false
+
   val cal = Calendar.getInstance().also {
     it.set(2002, Calendar.DECEMBER, 31, 10, 30, 15)
   }
@@ -21,7 +24,7 @@ fun makeUI(): Component {
   val start = cal.time
   cal.add(Calendar.DATE, 9)
   val end = cal.time
-  println(date.toString()) // --> Tue Dec 31 10:30:15 JST 2002
+  log.append(date.toString() + "\n") // -> Tue Dec 31 10:30:15 JST 2002
 
   val data = arrayOf(arrayOf(date), arrayOf(start), arrayOf(end))
   val model = object : DefaultTableModel(data, arrayOf("Date")) {
@@ -36,16 +39,22 @@ fun makeUI(): Component {
 
   // RowFilter.regexFilter
   val m1 = Pattern.compile("12").matcher(date.toString())
-  println(m1.find()) // --> false
+  log.append("String 12 find -> ${m1.find()}\n") // false
+
   val m2 = Pattern.compile("Dec").matcher(date.toString())
-  println(m2.find()) // --> true
+  log.append("String Dec find -> ${m2.find()}\n") // true
+
   // a customized RegexFilter
   val m3 = Pattern.compile("12").matcher(DateFormat.getDateInstance().format(date))
-  println(m3.find()) // --> true
+  log.append("DateFormat 12 find -> ${m3.find()}\n") // true
+
+  val p = JPanel(GridLayout(2, 1))
+  p.add(JScrollPane(table))
+  p.add(JScrollPane(log))
 
   return JPanel(BorderLayout()).also {
     it.add(makeBox(sorter), BorderLayout.NORTH)
-    it.add(JScrollPane(table))
+    it.add(p)
     it.preferredSize = Dimension(320, 240)
   }
 }
