@@ -19,11 +19,11 @@ fun makeUI() = JSplitPane().also {
 private fun makeTabbedPane(): Component {
   val tabs = JTabbedPane()
   tabs.addChangeListener {
-    requestFocusForVisibleComponent(tabs)
+    requestFocusForVisibleCmp(tabs)
   }
   tabs.addFocusListener(object : FocusAdapter() {
     override fun focusGained(e: FocusEvent) {
-      requestFocusForVisibleComponent(tabs)
+      requestFocusForVisibleCmp(tabs)
     }
   })
   tabs.add("Custom", makeTextArea(true))
@@ -31,7 +31,7 @@ private fun makeTabbedPane(): Component {
   return tabs
 }
 
-fun requestFocusForVisibleComponent(tabs: JTabbedPane) {
+fun requestFocusForVisibleCmp(tabs: JTabbedPane) {
   val cmd = "requestFocusForVisibleComponent"
   val a = ActionEvent(tabs, ActionEvent.ACTION_PERFORMED, cmd)
   EventQueue.invokeLater { tabs.actionMap[cmd].actionPerformed(a) }
@@ -60,15 +60,15 @@ private fun makeTextArea(flg: Boolean): Component {
 private class FocusOwnerCaret : DefaultCaret() {
   override fun focusLost(e: FocusEvent) {
     super.focusLost(e)
-    updateSelectionHighlightPainter()
+    updateHighlight()
   }
 
   override fun focusGained(e: FocusEvent) {
     super.focusGained(e)
-    updateSelectionHighlightPainter()
+    updateHighlight()
   }
 
-  private fun updateSelectionHighlightPainter() {
+  private fun updateHighlight() {
     isSelectionVisible = false // removeHighlight
     isSelectionVisible = true // addHighlight
   }
