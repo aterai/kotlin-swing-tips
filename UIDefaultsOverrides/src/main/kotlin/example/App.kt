@@ -87,31 +87,31 @@ private class MyCheckBoxMenuItemPainter(private val state: CheckIcon) : Abstract
   private val ctx = PaintContext(Insets(5, 5, 5, 5), Dimension(9, 10), false, null, 1.0, 1.0)
   override fun doPaint(g: Graphics2D, c: JComponent, width: Int, height: Int, keys: Array<Any>?) {
     when (state) {
-      CheckIcon.ENABLED -> paintCheckIconEnabled(g)
-      CheckIcon.MOUSEOVER -> paintCheckIconMouseOver(g)
-      CheckIcon.ENABLED_SELECTED -> paintCheckIconEnabledAndSelected(g)
-      CheckIcon.SELECTED_MOUSEOVER -> paintCheckIconSelectedAndMouseOver(g)
+      CheckIcon.ENABLED -> paintIconEnabled(g)
+      CheckIcon.MOUSEOVER -> paintIconMouseOver(g)
+      CheckIcon.ENABLED_SELECTED -> paintIconEnabledAndSelected(g)
+      CheckIcon.SELECTED_MOUSEOVER -> paintIconSelectedAndMouseOver(g)
     }
   }
 
   override fun getPaintContext() = ctx
 
-  private fun paintCheckIconEnabled(g: Graphics2D) {
+  private fun paintIconEnabled(g: Graphics2D) {
     g.paint = Color.GREEN
     g.drawOval(0, 0, 10, 10)
   }
 
-  private fun paintCheckIconMouseOver(g: Graphics2D) {
+  private fun paintIconMouseOver(g: Graphics2D) {
     g.paint = Color.PINK
     g.drawOval(0, 0, 10, 10)
   }
 
-  private fun paintCheckIconEnabledAndSelected(g: Graphics2D) {
+  private fun paintIconEnabledAndSelected(g: Graphics2D) {
     g.paint = Color.ORANGE
     g.fillOval(0, 0, 10, 10)
   }
 
-  private fun paintCheckIconSelectedAndMouseOver(g: Graphics2D) {
+  private fun paintIconSelectedAndMouseOver(g: Graphics2D) {
     g.paint = Color.CYAN
     g.fillOval(0, 0, 10, 10)
   }
@@ -119,11 +119,7 @@ private class MyCheckBoxMenuItemPainter(private val state: CheckIcon) : Abstract
 
 private class MultiLineTableCellRenderer : JTextArea(), TableCellRenderer {
   private val rowColHeight = mutableListOf<MutableList<Int>>()
-
-  @Transient
   private var fhb: Border? = null
-
-  @Transient
   private var epb: Border? = null
 
   override fun updateUI() {
