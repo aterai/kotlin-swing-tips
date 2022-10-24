@@ -9,7 +9,6 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 
-@Suppress("TooManyFunctions")
 class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
   private var popupMenuListener: PopupMenuListener? = null
   private var loupeButton: JButton? = null

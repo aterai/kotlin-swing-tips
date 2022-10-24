@@ -33,7 +33,6 @@ fun makeUI(): Component {
   }
 }
 
-@Suppress("TooManyFunctions")
 private class ComponentTitledBorder(
   private val comp: Component,
   container: Container,

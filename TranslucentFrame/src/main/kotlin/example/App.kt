@@ -65,7 +65,6 @@ private class MySynthStyleFactory(
   }
 }
 
-@Suppress("TooManyFunctions")
 private class TranslucentSynthStyle(private val style: SynthStyle) : SynthStyle() {
   override operator fun get(context: SynthContext?, key: Any): Any? =
     style.get(context, key)
