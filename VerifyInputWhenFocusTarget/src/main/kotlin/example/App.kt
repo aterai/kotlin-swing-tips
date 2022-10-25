@@ -10,10 +10,11 @@ private val field1 = JTextField("1111111111111111")
 private val field2 = JTextField("9876543210987654")
 
 fun makeUI(): Component {
+  val log = JTextArea();
   EventQueue.invokeLater { field0.requestFocusInWindow() }
   val al = ActionListener {
     val c = KeyboardFocusManager.getCurrentKeyboardFocusManager().focusOwner
-    println(c)
+    log.append("$c\n")
     listOf(field0, field1, field2).forEach { it.text = "" }
   }
   val button0 = JButton("Default")
@@ -76,6 +77,7 @@ fun makeUI(): Component {
 
   return JPanel(BorderLayout(5, 5)).also {
     it.add(box, BorderLayout.NORTH)
+    it.add(JScrollPane(log))
     it.add(p, BorderLayout.SOUTH)
     it.preferredSize = Dimension(320, 240)
   }
@@ -92,7 +94,7 @@ private class IntegerInputVerifier : InputVerifier() {
         c.text.toInt()
         verified = true
       }.onFailure {
-        println("InputVerifier#verify: false")
+        // println("InputVerifier#verify: false")
         UIManager.getLookAndFeel().provideErrorFeedback(c)
       }
     }
