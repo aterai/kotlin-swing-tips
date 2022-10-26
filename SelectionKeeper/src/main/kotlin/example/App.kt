@@ -60,7 +60,6 @@ fun makeUI(): Component {
   }
 }
 
-@Suppress("TooManyFunctions")
 private class TableSorter() : AbstractTableModel() {
   private var tableModel: TableModel? = null
   private val viewToModel = mutableListOf<Row>()
