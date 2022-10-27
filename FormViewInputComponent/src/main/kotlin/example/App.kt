@@ -53,7 +53,8 @@ fun makeUI(): Component {
     if (e is FormSubmitEvent) {
       val charset = Charset.defaultCharset().toString()
       runCatching {
-        println(URLDecoder.decode(e.data, charset))
+        val para = URLDecoder.decode(e.data, charset)
+        JOptionPane.showMessageDialog(editor.rootPane, para)
       }.onFailure {
         UIManager.getLookAndFeel().provideErrorFeedback(editor)
       }
