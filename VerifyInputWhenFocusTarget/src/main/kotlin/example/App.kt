@@ -8,9 +8,9 @@ import javax.swing.text.JTextComponent
 private val field0 = JTextField("9999999999999999")
 private val field1 = JTextField("1111111111111111")
 private val field2 = JTextField("9876543210987654")
+private val log = JTextArea();
 
 fun makeUI(): Component {
-  val log = JTextArea();
   EventQueue.invokeLater { field0.requestFocusInWindow() }
   val al = ActionListener {
     val c = KeyboardFocusManager.getCurrentKeyboardFocusManager().focusOwner
@@ -60,7 +60,6 @@ fun makeUI(): Component {
   box.add(field1)
   box.add(Box.createVerticalStrut(5))
   box.add(field2)
-  box.add(Box.createVerticalStrut(5))
   box.add(Box.createVerticalGlue())
 
   val p1 = JPanel()
