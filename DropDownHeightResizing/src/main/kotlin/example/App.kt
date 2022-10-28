@@ -72,7 +72,7 @@ fun makeUI(): Component {
   scroll.viewportBorder = BorderFactory.createEmptyBorder()
 
   val bottom = JLabel("", DotIcon(), SwingConstants.CENTER)
-  val rwl = ResizeWindowListener(popup)
+  val rwl = ResizePopupMeneListener()
   bottom.addMouseListener(rwl)
   bottom.addMouseMotionListener(rwl)
   bottom.cursor = Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR)
@@ -93,12 +93,13 @@ fun makeUI(): Component {
   }
 }
 
-private class ResizeWindowListener(private val popup: JPopupMenu) : MouseInputAdapter() {
+private class ResizePopupMeneListener : MouseInputAdapter() {
   private val rect = Rectangle()
   private val startPt = Point()
   private val startDim = Dimension()
 
   override fun mousePressed(e: MouseEvent) {
+    val popup = SwingUtilities.getAncestorOfClass(JPopupMenu::class.java, e.component)
     rect.size = popup.size
     startDim.size = popup.size
     startPt.location = e.component.locationOnScreen
@@ -106,12 +107,16 @@ private class ResizeWindowListener(private val popup: JPopupMenu) : MouseInputAd
 
   override fun mouseDragged(e: MouseEvent) {
     rect.height = startDim.height + e.locationOnScreen.y - startPt.y
-    popup.preferredSize = rect.size
-    val p = SwingUtilities.getWindowAncestor(popup)
-    if (p != null && p.type == Window.Type.POPUP) {
-      p.setSize(rect.width, rect.height)
-    } else {
-      popup.pack()
+    val c = SwingUtilities.getAncestorOfClass(JPopupMenu::class.java, e.component)
+    if (c is JPopupMenu) {
+      val popup = c
+      popup.preferredSize = rect.size
+      val w = SwingUtilities.getWindowAncestor(popup)
+      if (w != null && w.type == Window.Type.POPUP) {
+        w.setSize(rect.width, rect.height)
+      } else {
+        popup.pack()
+      }
     }
   }
 }
