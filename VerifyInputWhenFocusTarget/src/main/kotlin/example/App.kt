@@ -8,7 +8,7 @@ import javax.swing.text.JTextComponent
 private val field0 = JTextField("9999999999999999")
 private val field1 = JTextField("1111111111111111")
 private val field2 = JTextField("9876543210987654")
-private val log = JTextArea();
+private val log = JTextArea()
 
 fun makeUI(): Component {
   EventQueue.invokeLater { field0.requestFocusInWindow() }

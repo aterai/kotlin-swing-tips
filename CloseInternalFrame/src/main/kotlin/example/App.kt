@@ -104,38 +104,36 @@ private fun makeInternalFrame(desktop: JDesktopPane): JInternalFrame {
       col += 1
     }
   }
-  f.addInternalFrameListener(TestInternalFrameListener())
+  f.addInternalFrameListener(object : InternalFrameListener {
+    override fun internalFrameClosing(e: InternalFrameEvent) {
+      println("internalFrameClosing: " + e.internalFrame.title)
+    }
+
+    override fun internalFrameClosed(e: InternalFrameEvent) {
+      println("internalFrameClosed: " + e.internalFrame.title)
+    }
+
+    override fun internalFrameOpened(e: InternalFrameEvent) {
+      println("internalFrameOpened: " + e.internalFrame.title)
+    }
+
+    override fun internalFrameIconified(e: InternalFrameEvent) {
+      println("internalFrameIconified: " + e.internalFrame.title)
+    }
+
+    override fun internalFrameDeiconified(e: InternalFrameEvent) {
+      println("internalFrameDeiconified: " + e.internalFrame.title)
+    }
+
+    override fun internalFrameActivated(e: InternalFrameEvent) {
+      // println("internalFrameActivated: " + e.getInternalFrame().getTitle())
+    }
+
+    override fun internalFrameDeactivated(e: InternalFrameEvent) {
+      println("internalFrameDeactivated: " + e.internalFrame.title)
+    }
+  })
   return f
-}
-
-private class TestInternalFrameListener : InternalFrameListener {
-  override fun internalFrameClosing(e: InternalFrameEvent) {
-    println("internalFrameClosing: " + e.internalFrame.title)
-  }
-
-  override fun internalFrameClosed(e: InternalFrameEvent) {
-    println("internalFrameClosed: " + e.internalFrame.title)
-  }
-
-  override fun internalFrameOpened(e: InternalFrameEvent) {
-    println("internalFrameOpened: " + e.internalFrame.title)
-  }
-
-  override fun internalFrameIconified(e: InternalFrameEvent) {
-    println("internalFrameIconified: " + e.internalFrame.title)
-  }
-
-  override fun internalFrameDeiconified(e: InternalFrameEvent) {
-    println("internalFrameDeiconified: " + e.internalFrame.title)
-  }
-
-  override fun internalFrameActivated(e: InternalFrameEvent) {
-    // println("internalFrameActivated: " + e.getInternalFrame().getTitle())
-  }
-
-  override fun internalFrameDeactivated(e: InternalFrameEvent) {
-    println("internalFrameDeactivated: " + e.internalFrame.title)
-  }
 }
 
 private class CloseIcon(private val color: Color) : Icon {

@@ -27,13 +27,13 @@ private fun makeLabel(): JLabel {
 }
 
 fun makeUI(): Component {
-  val p1 = TestPanel()
+  val p1 = CenterLinePanel()
   p1.layout = BoxLayout(p1, BoxLayout.X_AXIS)
   p1.add(Box.createHorizontalGlue())
   p1.add(makeLabel())
   p1.add(Box.createHorizontalGlue())
 
-  val p2 = TestPanel()
+  val p2 = CenterLinePanel()
   p2.layout = BoxLayout(p2, BoxLayout.Y_AXIS)
   p2.add(Box.createVerticalGlue())
   p2.add(makeLabel())
@@ -66,7 +66,7 @@ fun makeUI(): Component {
   }
 }
 
-private class TestPanel : JPanel() {
+private class CenterLinePanel : JPanel() {
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     g.drawLine(0, height / 2, width, height / 2)

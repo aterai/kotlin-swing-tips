@@ -38,7 +38,7 @@ fun makeUI(): Component {
       setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
       setRowHeight(50)
       getColumnModel().getColumn(0).cellRenderer = DefaultTableCellRenderer()
-      getColumnModel().getColumn(1).cellRenderer = TestRenderer()
+      getColumnModel().getColumn(1).cellRenderer = WrappedLabelRenderer()
       getColumnModel().getColumn(2).cellRenderer = TextAreaCellRenderer()
     }
   }
@@ -51,7 +51,7 @@ fun makeUI(): Component {
   }
 }
 
-private class TestRenderer : TableCellRenderer {
+private class WrappedLabelRenderer : TableCellRenderer {
   private val renderer = object : WrappedLabel() {
     override fun updateUI() {
       super.updateUI()
