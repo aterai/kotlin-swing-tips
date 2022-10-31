@@ -7,7 +7,7 @@ private const val SHOW_POPUP_NAVI = "ComboBox.showPopupOnNavigation"
 
 fun makeUI(): Component {
   val help = JLabel("This setting only responds to the upwards arrow key↑")
-  help.alignmentX = 0f
+  help.alignmentX = Component.LEFT_ALIGNMENT
 
   val check1 = JCheckBox(SHOW_POPUP_NAVI)
   check1.isFocusable = false
@@ -24,7 +24,7 @@ fun makeUI(): Component {
     }
   }
   combo.selectedIndex = 5
-  combo.alignmentX = 0f
+  combo.alignmentX = Component.LEFT_ALIGNMENT
 
   val check2 = JCheckBox("isEditable")
   check2.isFocusable = false

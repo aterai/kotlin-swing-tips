@@ -52,7 +52,7 @@ fun makeUI(): Component {
   box.add(Box.createVerticalGlue())
   box.components.toList()
     .filterIsInstance<JComponent>()
-    .forEach { it.alignmentX = 0f }
+    .forEach { it.alignmentX = Component.LEFT_ALIGNMENT }
 
   return JPanel(BorderLayout()).also {
     it.add(box, BorderLayout.NORTH)
