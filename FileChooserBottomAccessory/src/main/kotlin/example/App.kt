@@ -37,7 +37,7 @@ fun makeUI(): Component {
             SwingUtils.descendants(bottomPanel)
               .filterIsInstance<JLabel>()
               .forEach {
-                it.alignmentX = 1f
+                it.alignmentX = Component.RIGHT_ALIGNMENT
                 it.horizontalAlignment = SwingConstants.RIGHT
               }
           }

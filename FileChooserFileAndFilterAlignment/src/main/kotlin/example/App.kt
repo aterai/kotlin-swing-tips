@@ -65,7 +65,7 @@ private class RightAlignmentWindowsFileChooserUI(fc: JFileChooser?) : WindowsFil
     super.installComponents(fc)
     descendants(bottomPanel)
       .filterIsInstance<JLabel>()
-      .forEach { it.alignmentX = 1f }
+      .forEach { it.alignmentX = Component.RIGHT_ALIGNMENT }
   }
 }
 
