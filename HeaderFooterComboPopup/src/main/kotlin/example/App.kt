@@ -46,9 +46,9 @@ private class HeaderFooterComboPopup(combo: JComboBox<*>?) : BasicComboPopup(com
 
   private fun configureHeader() {
     header = JLabel("History").also {
-      it.border = BorderFactory.createEmptyBorder(4, 5, 4, 0)
-      it.maximumSize = Dimension(Short.MAX_VALUE.toInt(), 20)
-      it.alignmentX = 1f
+      it.border = BorderFactory.createEmptyBorder(5, 0, 5, 0)
+      it.maximumSize = Dimension(Short.MAX_VALUE.toInt(), 24)
+      it.alignmentX = Component.CENTER_ALIGNMENT
     }
   }
 
