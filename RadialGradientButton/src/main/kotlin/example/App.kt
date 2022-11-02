@@ -107,19 +107,20 @@ private class RadialGradientButton(title: String) : JButton(title) {
     return shape?.contains(Point(x, y)) ?: false
   }
 
-  // @Override protected void paintBorder(Graphics g) {
-  //   update();
-  //   Graphics2D g2 = (Graphics2D) g.create();
-  //   g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-  //   // g2.setStroke(BasicStroke(2.5f));
+  // override fun paintBorder(g: Graphics) {
+  //   update()
+  //   val g2 = g.create() as? Graphics2D ?: return
+  //   g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+  //   // g2.setStroke(BasicStroke(2.5f))
   //   if (getModel().isArmed()) {
-  //     g2.setPaint(Color(0x64_44_05_F7, true));
+  //     g2.paint = Color(0x64_44_05_F7, true)
   //   } else {
-  //     g2.setPaint(Color(0xF7_23_59).darker());
+  //     g2.paint = Color(0xF7_23_59).darker()
   //   }
-  //   g2.draw(shape);
-  //   g2.dispose();
+  //   g2.draw(shape)
+  //   g2.dispose()
   // }
+
 
   override fun paintComponent(g: Graphics) {
     update()

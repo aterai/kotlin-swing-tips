@@ -132,7 +132,7 @@ private fun updateTable(kind: WatchEvent.Kind<*>, child: Path) {
       val path = model.getValueAt(i, 2)?.toString() ?: ""
       if (path == child.toString()) {
         deleteRowSet.add(i)
-        // model.removeRow(i);
+        // model.removeRow(i)
         break
       }
     }

@@ -122,7 +122,7 @@ private class SaveHandler(
   }
 
   companion object {
-    // public static final String ASTERISK_TITLE_BAR = "unsaved";
+    // const val ASTERISK_TITLE_BAR = "unsaved"
     const val CMD_SAVE = "save"
     const val CMD_EXIT = "exit"
   }

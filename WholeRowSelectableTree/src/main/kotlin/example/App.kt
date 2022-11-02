@@ -78,7 +78,7 @@ private class WholeRowSelectableTreeUI : BasicTreeUI() {
 
       // Draw the connecting lines and controls.
       // Find each parent and have them draw a line to their last child
-      // boolean rootVisible = tree.isRootVisible();
+      // val rootVisible = tree.isRootVisible()
       var parentPath = initialPath
       parentPath = parentPath.parentPath
       while (parentPath != null) {

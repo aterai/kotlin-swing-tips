@@ -101,7 +101,7 @@ private class ColorEditor : AbstractCellEditor(), TableCellEditor, ActionListene
     // which is the editor from the user's point of view.
     button.actionCommand = EDIT
     button.addActionListener(this)
-    // button.setBorderPainted(false);
+    // button.setBorderPainted(false)
     button.isContentAreaFilled = false
     button.isFocusPainted = false
     button.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
