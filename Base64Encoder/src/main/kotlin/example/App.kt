@@ -2,7 +2,6 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.io.ByteArrayInputStream
-import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.util.Base64
 import javax.imageio.ImageIO
@@ -46,7 +45,8 @@ fun makeUI(): Component {
     val b64 = textArea.text
     if (b64.isNotEmpty()) {
       runCatching {
-        val dec = Base64.getDecoder().decode(b64.toByteArray(StandardCharsets.ISO_8859_1))
+        // val dec = Base64.getDecoder().decode(b64.toByteArray(StandardCharsets.ISO_8859_1))
+        val dec = Base64.getDecoder().decode(b64)
         ByteArrayInputStream(dec).use {
           label.icon = ImageIcon(ImageIO.read(it))
         }
