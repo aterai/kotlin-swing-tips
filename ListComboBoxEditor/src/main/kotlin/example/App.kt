@@ -180,7 +180,7 @@ private fun makeModel(): ListModel<ListItem> {
   model.addElement(ListItem("orange", ColorIcon(Color.ORANGE)))
   model.addElement(ListItem("pink", ColorIcon(Color.PINK)))
   model.addElement(ListItem("yellow", ColorIcon(Color.YELLOW)))
-  // model.addElement(new ListItem("black", new ColorIcon(Color.BLACK)));
+  // model.addElement(ListItem("black", ColorIcon(Color.BLACK)))
   model.addElement(ListItem("white", ColorIcon(Color.WHITE)))
   return model
 }

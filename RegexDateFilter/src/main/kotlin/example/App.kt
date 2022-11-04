@@ -86,7 +86,7 @@ private fun makeBox(sorter: TableRowSorter<TableModel>): Component {
 
   val p2 = JPanel()
   val bg = ButtonGroup()
-  val box = Box.createVerticalBox() // JPanel(new GridLayout(2, 1, 5, 5));
+  val box = Box.createVerticalBox() // JPanel(GridLayout(2, 1, 5, 5))
   box.border = BorderFactory.createEmptyBorder(5, 2, 5, 2)
   listOf(r0, r1, r2).forEach {
     bg.add(it)
