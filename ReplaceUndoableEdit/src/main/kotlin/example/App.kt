@@ -98,7 +98,7 @@ private class CustomUndoPlainDocument : PlainDocument() {
     text: String,
     attrs: AttributeSet?
   ) {
-    if (length == 0) { // System.out.println("insert");
+    if (length == 0) { // println("insert")
       super.replace(offset, length, text, attrs)
     } else {
       val ce = CompoundEdit()

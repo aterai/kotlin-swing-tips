@@ -107,7 +107,7 @@ private open class BackgroundTask : SwingWorker<String, Progress>() {
   @Throws(InterruptedException::class)
   override fun doInBackground(): String {
     var current = 0
-    val numOfFiles = 12 // fileList.size();
+    val numOfFiles = 12 // fileList.size()
     publish(Progress(ComponentType.LOG, "Total number of files: $numOfFiles"))
     publish(Progress(ComponentType.LOG, "\n------------------------------\n"))
     while (current < numOfFiles && !isCancelled) {

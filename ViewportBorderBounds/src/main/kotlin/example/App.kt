@@ -123,7 +123,7 @@ private class ScrollPaneLayerUI : LayerUI<JScrollPane>() {
       for (i in 0 until shd) {
         g2.fillRect(i, 0, shd - i, h)
       }
-      // g2.setPaint(Color.RED);
+      // g2.setPaint(Color.RED)
       g2.fillRect(shd - 2, 0, 2, h) // Make the edge a bit darker
       g2.dispose()
     }

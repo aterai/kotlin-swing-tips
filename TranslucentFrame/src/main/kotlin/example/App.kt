@@ -16,7 +16,7 @@ fun makeUI(): Component {
   p1.isOpaque = false
   val p2 = object : JPanel() {
     override fun paintComponent(g: Graphics) {
-      // super.paintComponent(g);
+      // super.paintComponent(g)
       g.color = Color(100, 50, 50, 100)
       g.fillRect(0, 0, width, height)
     }

@@ -31,12 +31,12 @@ fun makeUI(): Component {
 
   val list2 = arrayOf("—ë", "ˆë", "“ó", "Q", "ãæ", "ŒŞ", "—¤", "½", "J", "‹è", "E")
   val slider2 = JSlider(0, list2.size - 1, 0)
-  // slider2.setForeground(Color.BLUE);
-  // slider2.setForeground(Color.BLUE);
+  // slider2.setForeground(Color.BLUE)
+  // slider2.setForeground(Color.BLUE)
   slider2.majorTickSpacing = 1
   slider2.snapToTicks = true
-  // slider2.setLabelTable(labelTable2);
-  // slider2.setLabelTable(labelTable2);
+  // slider2.setLabelTable(labelTable2)
+  // slider2.setLabelTable(labelTable2)
   slider2.paintTicks = true
   slider2.paintLabels = true
   val labelTable2 = slider2.labelTable

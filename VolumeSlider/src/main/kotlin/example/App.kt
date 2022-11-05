@@ -21,7 +21,7 @@ fun makeUI(): Component {
       super.paintHorizontalLabel(g, value, label)
     }
   }
-  // slider2.setBackground(Color.BLACK);
+  // slider2.setBackground(Color.BLACK)
   slider2.foreground = Color.BLUE
   slider2.majorTickSpacing = 10
   slider2.minorTickSpacing = 5
@@ -60,7 +60,6 @@ private class TriSliderUI(slider: JSlider) : BasicSliderUI(slider) {
   override fun paintTrack(g: Graphics) {
     val cy: Int
     val cw: Int
-    // int pad;
     val trackBounds = trackRect
     if (slider.orientation == SwingConstants.HORIZONTAL) {
       val g2 = g.create() as? Graphics2D ?: return

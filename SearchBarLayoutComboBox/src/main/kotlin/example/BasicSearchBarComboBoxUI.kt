@@ -105,7 +105,7 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
   }
 
   override fun installComponents() {
-    // super.installComponents();
+    // super.installComponents()
     arrowButton = createArrowButton()
     comboBox.add(arrowButton)
     configureArrowButton()

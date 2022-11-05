@@ -268,7 +268,7 @@ private class TitledBorder2(title: String?) : TitledBorder(title) {
 
   companion object {
     const val TEXT_SPACING2 = 5
-    const val TEXT_INSET_H2 = 11 // TEXT_SPACING2 * 2 + 1;
+    const val TEXT_INSET_H2 = 11 // TEXT_SPACING2 * 2 + 1
   }
 }
 

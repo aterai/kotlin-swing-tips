@@ -25,7 +25,7 @@ fun makeUI(): Component {
     }
   }
 
-  // UIManager.put("ComboBox.rendererUseListColors", Boolean.TRUE);
+  // UIManager.put("ComboBox.rendererUseListColors", Boolean.TRUE)
   val combo1 = JComboBox(model)
   combo1.renderer = object : DefaultListCellRenderer() {
     override fun getListCellRendererComponent(
@@ -44,9 +44,9 @@ fun makeUI(): Component {
       )
     }
   }
-  // val d1 = UIDefaults();
-  // d1.put("ComboBox.rendererUseListColors", true);
-  // combo1.putClientProperty("Nimbus.Overrides", d1);
+  // val d1 = UIDefaults()
+  // d1.put("ComboBox.rendererUseListColors", true)
+  // combo1.putClientProperty("Nimbus.Overrides", d1)
 
   val combo2 = JComboBox(model)
   combo2.renderer = object : BasicComboBoxRenderer() {
@@ -66,7 +66,7 @@ fun makeUI(): Component {
       )
     }
   }
-  // combo2.putClientProperty("Nimbus.Overrides", d1);
+  // combo2.putClientProperty("Nimbus.Overrides", d1)
 
   val combo3 = object : JComboBox<String>(model) {
     override fun updateUI() {

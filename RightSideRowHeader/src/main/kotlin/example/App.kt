@@ -179,7 +179,7 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
         vsbNeeded = viewPrefSize.height > extentSize.height
 
         if (vsbNeeded) {
-          // adjustForVsb(true, availR, vsbR, vpbInsets, leftToRight);
+          // adjustForVsb(true, availR, vsbR, vpbInsets, leftToRight)
           adjustForVsb(true, rowHeadR, vsbR, vpbInsets, leftToRight)
         }
       }

@@ -19,7 +19,7 @@ fun makeUI(): Component {
     RoundButton("002.png", "002d.png", "002g.png"),
     RoundButton("004.png", "004d.png", "004g.png")
   )
-  // TEST: buttons = makeButtonArray2(getClass()); // Set ButtonUI
+  // TEST: buttons = makeButtonArray2(getClass()) // Set ButtonUI
   buttons.forEach {
     box.add(it)
     box.add(Box.createHorizontalStrut(5))

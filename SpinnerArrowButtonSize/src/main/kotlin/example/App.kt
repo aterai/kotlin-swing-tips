@@ -119,9 +119,9 @@ private class SpinnerLayout : LayoutManager {
       return
     }
 
-    // Dimension nextD = preferredSize(nextButton);
-    // Dimension previousD = preferredSize(previousButton);
-    val buttonsWidth = 100 // Math.max(nextD.width, previousD.width);
+    // val nextD = preferredSize(nextButton)
+    // val previousD = preferredSize(previousButton)
+    val buttonsWidth = 100 // Math.max(nextD.width, previousD.width)
     val editorHeight = r?.height ?: parent.height
 
     // The arrowButtonInsets value is used instead of the JSpinner's

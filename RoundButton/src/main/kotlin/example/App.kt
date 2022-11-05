@@ -69,11 +69,11 @@ open class RoundedCornerButton : JButton {
 
   // constructor(text: String, icon: Icon) : super(text, icon)
   // {
-  //   // setModel(DefaultButtonModel());
-  //   // init(text, icon);
-  //   // setContentAreaFilled(false);
-  //   // setBackground(Color(250, 250, 250));
-  //   // initShape();
+  //   // setModel(DefaultButtonModel())
+  //   // init(text, icon)
+  //   // setContentAreaFilled(false)
+  //   // setBackground(Color(250, 250, 250))
+  //   // initShape()
   // }
 
   override fun updateUI() {
@@ -158,7 +158,7 @@ open class RoundButton : RoundedCornerButton {
   // constructor(text: String, icon: Icon) : super(text, icon)
   // {
   //   // setModel(DefaultButtonModel())
-  //   // init(text, icon);
+  //   // init(text, icon)
   // }
 
   override fun getPreferredSize() = super.getPreferredSize()?.also {

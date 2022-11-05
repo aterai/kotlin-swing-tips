@@ -121,7 +121,7 @@ private class HighlightIcon(
       for (hh in highlighter.highlights) {
         val r = textArea.modelToView(hh.startOffset)
         val s = at.createTransformedShape(r).bounds
-        val h = 2 // Math.max(2, s.height - 2);
+        val h = 2 // Math.max(2, s.height - 2)
         g2.fillRect(0, top + s.y, iconWidth, h)
       }
     }
@@ -129,7 +129,7 @@ private class HighlightIcon(
     // paint Thumb
     if (scrollbar.isVisible) {
       thumbRect.height = range.extent
-      thumbRect.y = range.value // vport.getViewPosition().y;
+      thumbRect.y = range.value // vport.getViewPosition().y
       g2.color = THUMB_COLOR
       val s = at.createTransformedShape(thumbRect).bounds
       g2.fillRect(0, top + s.y, iconWidth, s.height)

@@ -112,7 +112,7 @@ private class UpArrowThumbSliderUI(slider: JSlider) : BasicSliderUI(slider) {
   override fun calculateTickRect() {
     if (slider.orientation == SwingConstants.HORIZONTAL) {
       tickRect.x = trackRect.x
-      // tickRect.y = trackRect.y + trackRect.height;
+      // tickRect.y = trackRect.y + trackRect.height
       tickRect.y = trackRect.y
       tickRect.width = trackRect.width
       tickRect.height = if (slider.paintTicks) tickLength else 0
@@ -134,7 +134,7 @@ private class UpArrowThumbSliderUI(slider: JSlider) : BasicSliderUI(slider) {
     } else {
       if (slider.orientation == SwingConstants.HORIZONTAL) {
         labelRect.x = tickRect.x
-        labelRect.y = tickRect.y // + tickRect.height;
+        labelRect.y = tickRect.y // + tickRect.height
         labelRect.width = tickRect.width
         labelRect.height = 0
       } else {

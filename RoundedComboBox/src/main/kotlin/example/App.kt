@@ -13,8 +13,8 @@ import javax.swing.border.AbstractBorder
 import javax.swing.plaf.basic.BasicComboBoxUI
 import javax.swing.plaf.metal.MetalComboBoxUI
 
-private val BACKGROUND = Color.BLACK // RED;
-private val FOREGROUND = Color.WHITE // YELLOW;
+private val BACKGROUND = Color.BLACK // RED
+private val FOREGROUND = Color.WHITE // YELLOW
 private val SELECTION_FOREGROUND = Color.CYAN
 
 fun makeUI(): Component {
@@ -36,8 +36,8 @@ fun makeUI(): Component {
   UIManager.put("ComboBox.buttonHighlight", FOREGROUND)
   UIManager.put("ComboBox.buttonShadow", FOREGROUND)
 
-  // UIManager.put("ComboBox.border", BorderFactory.createLineBorder(Color.WHITE));
-  // UIManager.put("ComboBox.editorBorder", BorderFactory.createLineBorder(Color.GREEN));
+  // UIManager.put("ComboBox.border", BorderFactory.createLineBorder(Color.WHITE))
+  // UIManager.put("ComboBox.editorBorder", BorderFactory.createLineBorder(Color.GREEN))
   UIManager.put("ComboBox.border", KamabokoBorder())
 
   val combo00 = JComboBox(makeModel())
@@ -76,7 +76,7 @@ private fun makeBox0(
   if (combo2.ui is WindowsComboBoxUI) {
     combo2.ui = object : WindowsComboBoxUI() {
       override fun createArrowButton(): JButton {
-        val b = JButton(ArrowIcon(Color.BLACK, Color.BLUE)) // .createArrowButton();
+        val b = JButton(ArrowIcon(Color.BLACK, Color.BLUE)) // .createArrowButton()
         b.isContentAreaFilled = false
         b.isFocusPainted = false
         b.border = BorderFactory.createEmptyBorder()

@@ -102,7 +102,7 @@ open class BackgroundTask : SwingWorker<String, String>() {
   public override fun doInBackground(): String {
     Thread.sleep(2000)
     var current = 0
-    val lengthOfTask = 120 // list.size();
+    val lengthOfTask = 120 // list.size()
     publish("Length Of Task: $lengthOfTask")
     publish("\n------------------------------\n")
     while (current < lengthOfTask && !isCancelled) {

@@ -21,7 +21,7 @@ fun makeUI(): Component {
   UIManager.put("TabbedPane.selected", fgc)
   UIManager.put("TabbedPane.selectHighlight", fgc)
 
-  // UIManager.put("TabbedPane.borderHighlightColor", fgc); // Do not work
+  // UIManager.put("TabbedPane.borderHighlightColor", fgc) // Do not work
   // Maybe "TabbedPane.borderHightlightColor" is a typo,
   // but this is defined in MetalTabbedPaneUI
   UIManager.put("TabbedPane.borderHightlightColor", fgc)

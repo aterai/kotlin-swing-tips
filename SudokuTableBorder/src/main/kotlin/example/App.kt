@@ -51,7 +51,7 @@ fun makeUI(): Component {
 
   val editor = JTextField()
   editor.horizontalAlignment = SwingConstants.CENTER
-  // editor.setBorder(BorderFactory.createLineBorder(Color.RED));
+  // editor.setBorder(BorderFactory.createLineBorder(Color.RED))
   val cellEditor = object : DefaultCellEditor(editor) {
     override fun getTableCellEditorComponent(
       table: JTable,

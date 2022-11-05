@@ -64,7 +64,7 @@ private class MarginTreeCellRenderer : DefaultTreeCellRenderer() {
     hasFocus: Boolean
   ): Component {
     super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, false)
-    // this.tree = tree;
+    // this.tree = tree
     this.hasFocus = hasFocus
     this.selected = selected
     return this

@@ -29,7 +29,7 @@ private class VerticalTitledBorder(title: String?) : TitledBorder(title) {
   private val label = JLabel(title)
   init {
     this.label.isOpaque = true
-    // this.label.putClientProperty(BasicHTML.propertyKey, null);
+    // this.label.putClientProperty(BasicHTML.propertyKey, null)
   }
 
   override fun paintBorder(

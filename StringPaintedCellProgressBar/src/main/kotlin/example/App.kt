@@ -78,7 +78,7 @@ fun addActionPerformed() {
       if (!table.isDisplayable) {
         println("process: DISPOSE_ON_CLOSE")
         cancel(true)
-        // executor.shutdown();
+        // executor.shutdown()
         return
       }
       c.forEach { model.setValueAt(it, key, 2) }

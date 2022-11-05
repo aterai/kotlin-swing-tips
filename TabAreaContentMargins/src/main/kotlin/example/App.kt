@@ -20,7 +20,7 @@ fun makeUI(): Component {
 }
 
 private fun makeTabbedPane() = JTabbedPane().also {
-  // it.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+  // it.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT)
   it.addTab("JTree", JScrollPane(JTree()))
   it.addTab("JSplitPane", JSplitPane())
   it.addTab("JTextArea", JScrollPane(JTextArea()))

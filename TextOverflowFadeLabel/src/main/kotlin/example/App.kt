@@ -104,7 +104,7 @@ private class FadingOutLabel(text: String) : JLabel(text) {
   private var buffer: Image? = null
 
   override fun paintComponent(g: Graphics) {
-    // super.paintComponent(g);
+    // super.paintComponent(g)
     val w = width
     val h = height
     if (buffer == null || dim.width != w || dim.height != h) {

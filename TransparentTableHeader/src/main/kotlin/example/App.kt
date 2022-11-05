@@ -153,7 +153,7 @@ private class TranslucentObjectRenderer : DefaultTableCellRenderer() {
     row: Int,
     column: Int
   ) = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)?.also {
-    // it.setOpaque(true);
+    // it.setOpaque(true)
     (it as? JComponent)?.border = BorderFactory.createEmptyBorder(8, 8, 8, 8)
   }
 }

@@ -112,7 +112,7 @@ private class CellButtonsMouseListener : MouseAdapter() {
     val c = list.cellRenderer.getListCellRendererComponent(list, proto, index, false, false)
     val r = list.getCellBounds(index, index)
     c.bounds = r
-    // c.doLayout(); // may be needed for other layout managers (eg. FlowLayout)
+    // c.doLayout() // may be needed for other layout managers (eg. FlowLayout)
     pt.translate(-r.x, -r.y)
     return SwingUtilities.getDeepestComponentAt(c, pt.x, pt.y) as? JButton
   }
