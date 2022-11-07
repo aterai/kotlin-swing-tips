@@ -3,11 +3,22 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionEvent
 import java.awt.event.ItemEvent
+import java.awt.event.MouseWheelEvent
 import java.awt.event.MouseWheelListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
+private val check = JCheckBox("scroll tabs")
+
 fun makeUI(): Component {
-  val tabbedPane = makeWheelTabbedPane()
+  val tabbedPane = object : JTabbedPane(TOP, SCROLL_TAB_LAYOUT) {
+    private var handler: MouseWheelListener? = null
+    override fun updateUI() {
+      removeMouseWheelListener(handler)
+      super.updateUI()
+      handler = TabWheelHandler()
+      addMouseWheelListener(handler)
+    }
+  }
   tabbedPane.addTab("JLabel1", JLabel("JLabel1"))
   tabbedPane.addTab("JLabel2", JLabel("JLabel2"))
   tabbedPane.addTab("JLabel(disabled)", JLabel("JLabel"))
@@ -16,6 +27,11 @@ fun makeUI(): Component {
   tabbedPane.addTab("JPanel", JLabel("JPanel"))
   tabbedPane.addTab("JTree", JScrollPane(JTree()))
   tabbedPane.addTab("JTextArea", JScrollPane(JTextArea("JTextArea")))
+  for (i in 0 until 20) {
+    val title = "title$i"
+    tabbedPane.addTab(title, JScrollPane(JLabel(title)))
+  }
+
   val comboBox = JComboBox(TabPlacements.values())
   comboBox.addItemListener { e ->
     val item = e.item
@@ -26,6 +42,7 @@ fun makeUI(): Component {
 
   val box = Box.createHorizontalBox()
   box.add(Box.createHorizontalGlue())
+  box.add(check)
   box.add(JLabel("TabPlacement: "))
   box.add(Box.createHorizontalStrut(2))
   box.add(comboBox)
@@ -38,27 +55,21 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeWheelTabbedPane() = object : JTabbedPane(TOP, SCROLL_TAB_LAYOUT) {
-  @Transient private var handler: MouseWheelListener? = null
-  override fun updateUI() {
-    removeMouseWheelListener(handler)
-    super.updateUI()
-    handler = MouseWheelListener { e ->
-      val source = e.component
-      if (source is JTabbedPane && getTabAreaBounds(source).contains(e.point)) {
-        val dir = (if (e.isControlDown) -1 else 1) * e.preciseWheelRotation
-        val key = if (dir > 0) "navigateNext" else "navigatePrevious"
-        val ae = ActionEvent(
-          source,
-          ActionEvent.ACTION_PERFORMED,
-          "",
-          e.getWhen(),
-          e.modifiersEx
-        )
-        source.actionMap[key].actionPerformed(ae)
-      }
+private class TabWheelHandler : MouseWheelListener {
+  override fun mouseWheelMoved(e: MouseWheelEvent) {
+    val src = e.component as? JTabbedPane
+    if (src == null || !getTabAreaBounds(src).contains(e.point)) {
+      return
     }
-    addMouseWheelListener(handler)
+    val dir = (if (e.isControlDown) -1 else 1) * e.preciseWheelRotation > 0
+    val id = ActionEvent.ACTION_PERFORMED
+    val cmd = if (check.isSelected()) {
+      if (dir) "scrollTabsForwardAction" else "scrollTabsBackwardAction"
+    } else {
+      if (dir) "navigateNext" else "navigatePrevious"
+    }
+    val event = ActionEvent(src, id, cmd, e.getWhen(), e.modifiersEx)
+    src.actionMap[cmd].actionPerformed(event)
   }
 }
 

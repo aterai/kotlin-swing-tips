@@ -121,7 +121,6 @@ private class RadialGradientButton(title: String) : JButton(title) {
   //   g2.dispose()
   // }
 
-
   override fun paintComponent(g: Graphics) {
     update()
     val g2 = g.create() as? Graphics2D ?: return
