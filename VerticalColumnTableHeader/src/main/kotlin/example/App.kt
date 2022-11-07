@@ -97,8 +97,8 @@ private class VerticalTableHeaderRenderer : TableCellRenderer {
     return c
   }
 
-  private fun makeVerticalHeaderIcon(label: Component): Icon? {
-    val d = label.preferredSize
+  private fun makeVerticalHeaderIcon(c: Component): Icon? {
+    val d = c.preferredSize
     val w = d.height
     val h = d.width
     val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
@@ -106,7 +106,7 @@ private class VerticalTableHeaderRenderer : TableCellRenderer {
     val at = AffineTransform.getTranslateInstance(0.0, h.toDouble())
     at.quadrantRotate(-1)
     g2.transform = at
-    SwingUtilities.paintComponent(g2, label, intermediate, 0, 0, h, w)
+    SwingUtilities.paintComponent(g2, c, intermediate, 0, 0, h, w)
     g2.dispose()
     return ImageIcon(bi)
   }
