@@ -3,7 +3,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.image.BufferedImage
 import java.io.File
-import java.io.IOException
 import java.net.URI
 import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
@@ -135,16 +134,14 @@ fun getIconUri(icon: Icon, c: Component): URI? {
   val g2 = img.createGraphics()
   icon.paintIcon(c, g2, 0, 0)
   g2.dispose()
-  try {
+  return runCatching {
     val tmp = File.createTempFile("icon", ".png")
     tmp.deleteOnExit()
     ImageIO.write(img, "png", tmp)
-    return tmp.toURI()
-  } catch (ex: IOException) {
+    tmp.toURI()
+  }.onFailure {
     UIManager.getLookAndFeel().provideErrorFeedback(c)
-    ex.printStackTrace()
-  }
-  return null
+  }.getOrNull()
 }
 
 private object LookAndFeelUtil {
