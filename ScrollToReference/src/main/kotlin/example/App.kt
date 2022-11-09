@@ -35,7 +35,7 @@ fun makeUI(): Component {
         <p id='bottom'>id=bottom</p>
       </body>
     </html>
-  """
+  """.trimIndent()
 
   val model = makeModel()
   (editor.document as? HTMLDocument)?.also { doc ->

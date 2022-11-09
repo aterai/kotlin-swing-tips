@@ -28,7 +28,7 @@ private val HTML_TEXT = """
     </div>
   </body>
 </html>
-"""
+""".trimIndent()
 private var tooltip: String? = null
 
 fun makeUI(): Component {
