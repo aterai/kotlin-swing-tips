@@ -58,8 +58,8 @@ private open class LoadSaveTask(val windowState: WindowState) :
           }
         }
       }.onFailure {
-        val size = runCatching { ps.create(codebase, 64_000) }.getOrElse { 0 }
-        println("Cache created - size: $size")
+        runCatching { ps.create(codebase, 64_000) }
+        // println("Cache created - size: $size")
       }
     }
 
