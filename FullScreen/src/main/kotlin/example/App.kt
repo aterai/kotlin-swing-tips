@@ -7,9 +7,24 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
+import java.io.ByteArrayOutputStream
+import java.io.IOException
+import java.io.OutputStream
+import java.lang.invoke.MethodHandles
+import java.util.logging.LogRecord
+import java.util.logging.Logger
+import java.util.logging.SimpleFormatter
+import java.util.logging.StreamHandler
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
+private val logger = Logger.getLogger(MethodHandles.lookup().lookupClass().name)
+
 fun makeUI(): Component {
+  val textArea = JTextArea()
+  textArea.isEditable = false
+  logger.useParentHandlers = false
+  logger.addHandler(TextAreaHandler(TextAreaOutputStream(textArea)))
+
   val p = JPanel(BorderLayout())
   p.isFocusable = true
   val ml = object : MouseAdapter() {
@@ -41,7 +56,11 @@ fun makeUI(): Component {
   }
   p.actionMap.put("close", a2)
 
-  p.add(JLabel("<html>F11 or Double Click: toggle full-screen<br>ESC: exit"), BorderLayout.NORTH)
+  val label = JLabel("<html>F11 or Double Click: toggle full-screen<br>ESC: exit")
+  label.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+
+  p.add(label, BorderLayout.NORTH)
+  p.add(JScrollPane(textArea))
   p.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   p.preferredSize = Dimension(320, 240)
   return p
@@ -64,6 +83,47 @@ fun toggleFullScreenWindow(c: JComponent) {
     }
   }
   c.requestFocusInWindow() // for Ubuntu
+}
+
+private class TextAreaOutputStream(private val textArea: JTextArea) : OutputStream() {
+  private val buffer = ByteArrayOutputStream()
+
+  @Throws(IOException::class)
+  override fun flush() {
+    textArea.append(buffer.toString("UTF-8"))
+    buffer.reset()
+  }
+
+  override fun write(b: Int) {
+    buffer.write(b)
+  }
+}
+
+private class TextAreaHandler(os: OutputStream) : StreamHandler() {
+  init {
+    configure()
+    setOutputStream(os)
+  }
+
+  private fun configure() {
+    formatter = SimpleFormatter()
+    runCatching {
+      encoding = "UTF-8"
+    }.onFailure {
+      encoding = null
+    }
+  }
+
+  @Synchronized
+  override fun publish(record: LogRecord) {
+    super.publish(record)
+    flush()
+  }
+
+  @Synchronized
+  override fun close() {
+    flush()
+  }
 }
 
 fun main() {
