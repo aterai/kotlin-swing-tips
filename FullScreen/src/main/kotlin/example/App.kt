@@ -48,7 +48,7 @@ fun makeUI(): Component {
   p.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "close")
   val a2 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      println("ESC KeyEvent:")
+      logger.info { "ESC KeyEvent:" }
       (p.topLevelAncestor as? Window)?.also {
         it.dispatchEvent(WindowEvent(it, WindowEvent.WINDOW_CLOSING))
       }
@@ -136,13 +136,13 @@ fun main() {
     }
     val wl = object : WindowAdapter() {
       override fun windowClosing(e: WindowEvent) {
-        println("windowClosing:")
-        println("  triggered only when you click on the X")
-        println("  or on the close menu item in the window's system menu.'")
+        logger.info { "windowClosing:" }
+        logger.info { "  triggered only when you click on the X" }
+        logger.info { "  or on the close menu item in the window's system menu.'" }
       }
 
       override fun windowClosed(e: WindowEvent) {
-        println("windowClosed & rebuild:")
+        logger.info { "windowClosed & rebuild:" }
       }
     }
     JDialog().apply {

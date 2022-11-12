@@ -2,10 +2,16 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.image.BufferedImage
+import java.lang.invoke.MethodHandles
+import java.util.logging.ConsoleHandler
+import java.util.logging.Logger
 import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
+private val logger = Logger.getLogger(MethodHandles.lookup().lookupClass().name)
+
 fun makeUI(): Component {
+  logger.addHandler(ConsoleHandler())
   runCatching {
     Thread.sleep(5000)
   }
@@ -56,7 +62,7 @@ fun main() {
 
   val splashScreen = JWindow()
   EventQueue.invokeLater {
-    println("splashScreen show start / EDT: " + EventQueue.isDispatchThread())
+    logger.info { "splashScreen show start / EDT: " + EventQueue.isDispatchThread() }
     val cl = Thread.currentThread().contextClassLoader
     val url = cl.getResource("example/splash.png")
     val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
@@ -64,9 +70,9 @@ fun main() {
     splashScreen.pack()
     splashScreen.setLocationRelativeTo(null)
     splashScreen.isVisible = true
-    println("splashScreen show end")
+    logger.info { "splashScreen show end" }
   }
-  println("createGUI start / EDT: " + EventQueue.isDispatchThread())
+  logger.info { "createGUI start / EDT: " + EventQueue.isDispatchThread() }
 
   val frame = JFrame().apply {
     defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
@@ -75,14 +81,14 @@ fun main() {
     setLocationRelativeTo(null)
     // isVisible = true
   }
-  println("createGUI end")
+  logger.info { "createGUI end" }
 
   EventQueue.invokeLater {
-    println("  splashScreen dispose start / EDT: " + EventQueue.isDispatchThread())
+    logger.info { "  splashScreen dispose start / EDT: " + EventQueue.isDispatchThread() }
     splashScreen.dispose()
-    println("  splashScreen dispose end")
-    println("  frame show start / EDT: " + EventQueue.isDispatchThread())
+    logger.info { "  splashScreen dispose end" }
+    logger.info { "  frame show start / EDT: " + EventQueue.isDispatchThread() }
     frame.isVisible = true
-    println("  frame show end")
+    logger.info { "  frame show end" }
   }
 }
