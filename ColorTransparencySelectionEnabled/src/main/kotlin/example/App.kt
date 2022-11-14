@@ -48,7 +48,7 @@ fun makeUI(): Component {
     dialog.isVisible = true // blocks until user brings dialog down...
     val color = ok.color
     if (color != null) {
-      EventQueue.invokeLater { label.background = color }
+      label.background = color
     }
   }
 

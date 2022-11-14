@@ -1,6 +1,8 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
@@ -16,21 +18,27 @@ fun makeUI(): Component {
   val button1 = JButton("JColorChooser.showDialog(...)")
   button1.addActionListener {
     val color = JColorChooser.showDialog(null, "JColorChooser", null)
-    log.append("color: $color\n")
+    if (color != null) {
+      log.append("color: $color\n")
+    }
   }
 
   val cc = JColorChooser()
+  val ok = ColorTracker(cc)
   val dialog = JColorChooser.createDialog(
     null,
     "JST ColorChooserSwatchSize",
     true,
     cc,
-    { log.append("ok\n") }
+    ok
   ) { log.append("cancel\n") }
   val button2 = JButton("JColorChooser.createDialog(...).setVisible(true)")
   button2.addActionListener {
     dialog.isVisible = true
-    log.append("color: ${cc.color}\n")
+    val color = ok.color
+    if (color != null) {
+      log.append("color: $color\n")
+    }
   }
 
   val p = JPanel()
@@ -39,6 +47,15 @@ fun makeUI(): Component {
   p.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
   p.preferredSize = Dimension(320, 240)
   return p
+}
+
+private class ColorTracker(private val chooser: JColorChooser) : ActionListener {
+  var color: Color? = null
+    private set
+
+  override fun actionPerformed(e: ActionEvent) {
+    color = chooser.color
+  }
 }
 
 fun main() {
