@@ -45,8 +45,9 @@ fun makeUI(): Component {
   button.addActionListener {
     val bgc = scroll.viewport.background
     val color = JColorChooser.showDialog(scroll.rootPane, "background color", bgc)
-    scroll.viewport.background = color
-    scroll.repaint()
+    if (color != null) {
+      scroll.viewport.background = color
+    }
   }
 
   val pnl = JPanel()
