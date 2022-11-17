@@ -49,18 +49,16 @@ private class ProgressTabbedPane : JTabbedPane() {
     val worker = object : BackgroundTask() {
       override fun process(dummy: List<Int>) {
         if (!isDisplayable) {
-          println("process: DISPOSE_ON_CLOSE")
           cancel(true)
         }
       }
 
       override fun done() {
         if (!isDisplayable) {
-          println("done: DISPOSE_ON_CLOSE")
           cancel(true)
           return
         }
-        val txt = runCatching {
+        label.toolTipText = runCatching {
           setTabComponentAt(currentIndex, label)
           setComponentAt(currentIndex, content)
           get()
@@ -69,7 +67,6 @@ private class ProgressTabbedPane : JTabbedPane() {
             Thread.currentThread().interrupt()
           }
         }.getOrNull() ?: "Exception"
-        println(txt)
       }
     }
     worker.addPropertyChangeListener(ProgressListener(bar))
