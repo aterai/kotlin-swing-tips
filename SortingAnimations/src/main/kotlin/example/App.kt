@@ -38,6 +38,7 @@ fun makeUI(): Component {
   genArray(number)
   startButton.addActionListener {
     setComponentEnabled(false)
+    panel.toolTipText = null
     workerExecute()
   }
   cancelButton.addActionListener {
@@ -46,6 +47,7 @@ fun makeUI(): Component {
   val il = ItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
       genArray(number)
+      panel.toolTipText = null
       panel.repaint()
     }
   }
@@ -129,15 +131,14 @@ fun workerExecute() {
         return
       }
       setComponentEnabled(true)
-      runCatching {
-        val msg = if (isCancelled) "Cancelled" else get()
-        println(msg)
+      panel.toolTipText = runCatching {
+        if (isCancelled) "Cancelled" else get()
       }.onFailure {
         if (it is InterruptedException) {
           Thread.currentThread().interrupt()
         }
-        println("Error: ${it.message}\n")
-      }
+        "Error: ${it.message}"
+      }.getOrNull()
       panel.repaint()
     }
   }.also { it.execute() }
