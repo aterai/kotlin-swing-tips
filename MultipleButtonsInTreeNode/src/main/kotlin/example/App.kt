@@ -72,18 +72,9 @@ private class ButtonCellEditor : AbstractCellEditor(), TreeCellEditor {
   private val panel = ButtonPanel()
 
   init {
-    panel.b1.addActionListener {
-      println("b1: " + panel.renderer.text)
-      stopCellEditing()
-    }
-    panel.b2.addActionListener {
-      println("b2: " + panel.renderer.text)
-      stopCellEditing()
-    }
-    panel.b3.addActionListener {
-      println("b3: " + panel.renderer.text)
-      stopCellEditing()
-    }
+    panel.b1.addActionListener { stopCellEditing() }
+    panel.b2.addActionListener { stopCellEditing() }
+    panel.b3.addActionListener { stopCellEditing() }
   }
 
   override fun getTreeCellEditorComponent(
@@ -108,17 +99,14 @@ private class ButtonCellEditor : AbstractCellEditor(), TreeCellEditor {
 
   override fun getCellEditorValue(): Any = panel.renderer.text
 
-  override fun isCellEditable(e: EventObject): Boolean {
-    val tree = e.source
-    if (tree !is JTree || e !is MouseEvent) {
-      return false
-    }
-    val p = e.point
-    val path = tree.getPathForLocation(p.x, p.y)
+  override fun isCellEditable(e: EventObject?): Boolean {
+    val tree = (e as? MouseEvent)?.component as? JTree ?: return false
+    val pt = e.point
+    val path = tree.getPathForLocation(pt.x, pt.y)
     val r = tree.getPathBounds(path)
     val node = path?.lastPathComponent
-    return if (node is TreeNode && r != null && r.contains(p)) {
-      val row = tree.getRowForLocation(p.x, p.y)
+    return if (node is TreeNode && r != null && r.contains(pt)) {
+      val row = tree.getRowForLocation(pt.x, pt.y)
       val renderer = tree.cellRenderer
       val c = renderer.getTreeCellRendererComponent(
         tree,
@@ -133,8 +121,8 @@ private class ButtonCellEditor : AbstractCellEditor(), TreeCellEditor {
       c.setLocation(0, 0)
       // tree.doLayout()
       tree.revalidate()
-      p.translate(-r.x, -r.y)
-      SwingUtilities.getDeepestComponentAt(c, p.x, p.y) is JButton
+      pt.translate(-r.x, -r.y)
+      SwingUtilities.getDeepestComponentAt(c, pt.x, pt.y) is JButton
     } else {
       false
     }

@@ -161,7 +161,7 @@ private class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
   override fun getCellEditorValue() =
     CheckBoxNode(checkBox.text, checkBox.isSelected, checkBox.isEnabled)
 
-  override fun isCellEditable(e: EventObject) = e is MouseEvent
+  override fun isCellEditable(e: EventObject?) = e is MouseEvent
 }
 
 private class CheckBoxStatusUpdateListener : TreeModelListener {

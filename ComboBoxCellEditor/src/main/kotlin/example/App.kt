@@ -111,8 +111,6 @@ private class PluginCellRenderer(comboBox: JComboBox<String>) : TreeCellRenderer
 
 private class PluginCellEditor(comboBox: JComboBox<String>) : DefaultCellEditor(comboBox) {
   private val panel = PluginPanel(comboBox)
-
-  @Transient
   private var node: PluginNode? = null
 
   override fun getTreeCellEditorComponent(
@@ -138,7 +136,7 @@ private class PluginCellEditor(comboBox: JComboBox<String>) : DefaultCellEditor(
       ?: o
   }
 
-  override fun isCellEditable(e: EventObject): Boolean {
+  override fun isCellEditable(e: EventObject?): Boolean {
     if (e is MouseEvent) {
       showComboPopup(e.component, e.point)
     }

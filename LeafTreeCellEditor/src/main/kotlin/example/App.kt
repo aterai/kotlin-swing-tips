@@ -14,7 +14,7 @@ fun makeUI(): Component {
   val tree2 = JTree()
   (tree2.cellRenderer as? DefaultTreeCellRenderer)?.also {
     tree2.cellEditor = object : DefaultTreeCellEditor(tree2, it) {
-      override fun isCellEditable(e: EventObject): Boolean {
+      override fun isCellEditable(e: EventObject?): Boolean {
         val o = tree.lastSelectedPathComponent
         return super.isCellEditable(e) && o is TreeNode && o.isLeaf
       }

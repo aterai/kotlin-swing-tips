@@ -101,7 +101,7 @@ private class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
 
   override fun getCellEditorValue() = CheckBoxNode(checkBox.text, checkBox.isSelected)
 
-  override fun isCellEditable(e: EventObject) = (e as? MouseEvent)
+  override fun isCellEditable(e: EventObject?) = (e as? MouseEvent)
     ?.let { it.component as? JTree }
     ?.getPathForLocation(e.x, e.y)
     ?.let { it.lastPathComponent as? TreeNode }

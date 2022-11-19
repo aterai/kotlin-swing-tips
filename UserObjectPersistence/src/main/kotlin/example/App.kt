@@ -312,8 +312,8 @@ private class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
   override fun getCellEditorValue() =
     CheckBoxNode(str ?: "", if (checkBox.isSelected) Status.SELECTED else Status.DESELECTED)
 
-  override fun isCellEditable(e: EventObject) =
-    (e.source as? JTree)?.let { e is MouseEvent && pathContainsPoint(it, e.point) } ?: false
+  override fun isCellEditable(e: EventObject?) =
+    ((e as? MouseEvent)?.component as? JTree)?.let { pathContainsPoint(it, e.point) } ?: false
 
   private fun pathContainsPoint(tree: JTree, p: Point) =
     tree.getPathBounds(tree.getPathForLocation(p.x, p.y))?.let {
