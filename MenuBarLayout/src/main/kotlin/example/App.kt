@@ -4,7 +4,7 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  val p = JPanel()
+  val p = JPanel(BorderLayout())
   EventQueue.invokeLater { p.rootPane.jMenuBar = createMenuBar() }
   p.add(JScrollPane(JTextArea()))
   p.preferredSize = Dimension(320, 240)
@@ -25,11 +25,9 @@ private fun createMenuBar(): JMenuBar {
         var height = vgap
         var rowWidth = hgap
         var rowHeight = 0
-        val nmembers = target.componentCount
-        for (i in 0 until nmembers) {
-          val m = target.getComponent(i)
-          if (m.isVisible) {
-            val d = m.preferredSize
+        target.components.forEach {
+          if (it.isVisible) {
+            val d = it.preferredSize
             if (rowWidth + d.width > maxWidth) {
               height += rowHeight
               rowWidth = hgap
