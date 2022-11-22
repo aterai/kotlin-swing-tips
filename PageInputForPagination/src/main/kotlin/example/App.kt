@@ -89,7 +89,6 @@ private class TableUpdateTask(max: Int, itemsPerPage: Int) : LoadTask(max, items
       return
     }
     if (!table.isDisplayable) {
-      println("process: DISPOSE_ON_CLOSE")
       cancel(true)
       return
     }
@@ -101,7 +100,6 @@ private class TableUpdateTask(max: Int, itemsPerPage: Int) : LoadTask(max, items
 
   override fun done() {
     if (!table.isDisplayable) {
-      println("done: DISPOSE_ON_CLOSE")
       cancel(true)
       return
     }
@@ -112,7 +110,7 @@ private class TableUpdateTask(max: Int, itemsPerPage: Int) : LoadTask(max, items
         Thread.currentThread().interrupt()
       }
     }.getOrNull() ?: "Interrupted"
-    println(text)
+    label.toolTipText = text
     table.isEnabled = true
     field.isEditable = true
   }
