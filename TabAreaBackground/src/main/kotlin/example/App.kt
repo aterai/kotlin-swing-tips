@@ -38,6 +38,8 @@ fun makeUI(): Component {
   p.add(combo, c)
 
   val tabs = makeTabbedPane()
+  EventQueue.invokeLater { updateTabColor(tabs, tabs.selectedIndex, -1) }
+
   opaque.addActionListener { e ->
     tabs.isOpaque = (e.source as? JCheckBox)?.isSelected == true
     tabs.repaint()
@@ -66,25 +68,25 @@ fun makeUI(): Component {
 private fun makeTabbedPane(): JTabbedPane {
   val tabs = JTabbedPane()
   tabs.isOpaque = true
-  tabs.addChangeListener {
-    val si = tabs.selectedIndex
-    for (i in 0 until tabs.tabCount) {
-      tabs.setForegroundAt(i, if (i == si) Color.BLACK else Color.WHITE)
-    }
-  }
-  val ml = object : MouseAdapter() {
+  tabs.addChangeListener { updateTabColor(tabs, tabs.selectedIndex, -1) }
+  tabs.addMouseMotionListener(object : MouseAdapter() {
     override fun mouseMoved(e: MouseEvent) {
-      val si = tabs.selectedIndex
-      val tgt = tabs.indexAtLocation(e.x, e.y)
-      for (i in 0 until tabs.tabCount) {
-        if (i != si) {
-          tabs.setForegroundAt(i, if (i == tgt) Color.ORANGE else Color.WHITE)
-        }
-      }
+      updateTabColor(tabs, tabs.selectedIndex, tabs.indexAtLocation(e.x, e.y))
     }
-  }
-  tabs.addMouseMotionListener(ml)
+  })
   return tabs
+}
+
+private fun updateTabColor(t: JTabbedPane, si: Int, tgt: Int) {
+  for (i in 0 until t.tabCount) {
+    t.setForegroundAt(i, getTabTabForeground(i, si, tgt))
+  }
+}
+
+private fun getTabTabForeground(i: Int, selected: Int, cursor: Int) = when (i) {
+  selected -> Color.BLACK
+  cursor -> Color.ORANGE
+  else -> Color.WHITE
 }
 
 private fun makeComboBox(map: Map<String, Color>): JComboBox<String> {
