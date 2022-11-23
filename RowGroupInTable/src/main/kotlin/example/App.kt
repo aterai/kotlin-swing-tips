@@ -80,15 +80,7 @@ private class RowDataRenderer : TableCellRenderer {
     if (it is JLabel && value is RowData) {
       it.horizontalAlignment = SwingConstants.LEFT
       when (table.convertColumnIndexToModel(column)) {
-        0 -> {
-          val str = value.group
-          val prev = if (row > 0) {
-            (table.getValueAt(row - 1, column) as? RowData)?.group
-          } else {
-            null
-          }
-          it.text = if (str == prev) " " else "+ $str"
-        }
+        0 -> it.text = getGroupText(value, row, table, column)
         1 -> it.text = value.name
         2 -> {
           it.horizontalAlignment = SwingConstants.RIGHT
@@ -96,6 +88,16 @@ private class RowDataRenderer : TableCellRenderer {
         }
       }
     }
+  }
+
+  private fun getGroupText(value: RowData, row: Int, table: JTable, column: Int): String {
+    val str = value.group
+    val prev = if (row > 0) {
+      (table.getValueAt(row - 1, column) as? RowData)?.group
+    } else {
+      null
+    }
+    return if (str == prev) " " else "+ $str"
   }
 }
 
