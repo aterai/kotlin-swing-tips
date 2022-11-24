@@ -33,23 +33,29 @@ private fun <E> makeComboBox(model: ComboBoxModel<E>) = object : JComboBox<E>(mo
     val combo = this
     val arrowButton = getArrowButton(combo)
     setRenderer { list, value, index, isSelected, cellHasFocus ->
-      val r = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-      (r as? JComponent)?.also { c ->
+      (renderer.getListCellRendererComponent(
+        list,
+        value,
+        index,
+        isSelected,
+        cellHasFocus
+      ) as? JComponent)?.also { c ->
         val rect = SwingUtilities.calculateInnerArea(combo, null)
         val i = c.insets
         var availableWidth = rect.width - i.top - i.bottom
         val str = value?.toString() ?: ""
         val fm = c.getFontMetrics(c.font)
-        c.toolTipText = if (fm.stringWidth(str) > availableWidth) str else null
+        val toolTipTxt = if (fm.stringWidth(str) > availableWidth) str else null
+        c.toolTipText = toolTipTxt
         if (index < 0) {
           val buttonSize = arrowButton?.width ?: rect.height
           availableWidth -= buttonSize
           (combo.getEditor().editorComponent as? JTextField)?.also {
             availableWidth -= it.margin.left + it.margin.right
-            combo.setToolTipText(if (fm.stringWidth(str) > availableWidth) str else null)
+            combo.toolTipText = toolTipTxt
           }
         }
-      } ?: r
+      }
     }
   }
 
