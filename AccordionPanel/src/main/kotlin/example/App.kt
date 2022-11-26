@@ -78,8 +78,6 @@ abstract class AbstractExpansionPanel(private val title: String) : JPanel(Border
   }
   private val panel: JPanel
 
-  abstract fun makePanel(): JPanel
-
   init {
     val ml = object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
@@ -95,12 +93,13 @@ abstract class AbstractExpansionPanel(private val title: String) : JPanel(Border
     panel.isVisible = false
     panel.isOpaque = true
     panel.background = Color(0xF0_F0_FF)
-    val outBorder = BorderFactory.createMatteBorder(0, 2, 2, 2, Color.WHITE)
-    val inBorder = BorderFactory.createEmptyBorder(10, 10, 10, 10)
-    val border = BorderFactory.createCompoundBorder(outBorder, inBorder)
-    panel.border = border
+    val outsideBorder = BorderFactory.createMatteBorder(0, 2, 2, 2, Color.WHITE)
+    val insideBorder = BorderFactory.createEmptyBorder(10, 10, 10, 10)
+    panel.border = BorderFactory.createCompoundBorder(outsideBorder, insideBorder)
     add(panel)
   }
+
+  abstract fun makePanel(): JPanel
 
   override fun getPreferredSize(): Dimension? = titleBar.preferredSize?.also {
     panel.takeIf { it.isVisible }?.also { p ->
