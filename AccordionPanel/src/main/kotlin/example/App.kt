@@ -24,7 +24,8 @@ fun makeUI(): Component {
   split.resizeWeight = .5
   split.dividerSize = 2
   split.leftComponent = scroll
-  split.rightComponent = JLabel("Dummy")
+  split.rightComponent = JPanel()
+
   return JPanel(BorderLayout()).also {
     it.add(split)
     it.preferredSize = Dimension(320, 240)
@@ -65,52 +66,46 @@ private fun makeExpansionPanelList() = listOf(
 )
 
 abstract class AbstractExpansionPanel(private val title: String) : JPanel(BorderLayout()) {
-  private var label: JLabel? = null
-  private var panel: JPanel? = null
+  private val titleBar = object : JLabel("▼ $title") {
+    private val bgc = Color(0xC8_C8_FF)
+    override fun paintComponent(g: Graphics) {
+      val g2 = g.create() as? Graphics2D ?: return
+      g2.paint = GradientPaint(50f, 0f, Color.WHITE, width.toFloat(), height.toFloat(), bgc)
+      g2.fillRect(0, 0, width, height)
+      g2.dispose()
+      super.paintComponent(g)
+    }
+  }
+  private val panel: JPanel
 
   abstract fun makePanel(): JPanel
 
-  override fun updateUI() {
-    super.updateUI()
-    val l = object : JLabel("▼ $title") {
-      private val bgc = Color(0xC8_C8_FF)
-      override fun paintComponent(g: Graphics) {
-        val g2 = g.create() as? Graphics2D ?: return
-        g2.paint = GradientPaint(50f, 0f, Color.WHITE, width.toFloat(), height.toFloat(), bgc)
-        g2.fillRect(0, 0, width, height)
-        g2.dispose()
-        super.paintComponent(g)
-      }
-    }
+  init {
     val ml = object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
         initPanel()
       }
     }
-    l.addMouseListener(ml)
-    l.foreground = Color.BLUE
-    l.border = BorderFactory.createEmptyBorder(2, 5, 2, 2)
-    add(l, BorderLayout.NORTH)
+    titleBar.addMouseListener(ml)
+    titleBar.foreground = Color.BLUE
+    titleBar.border = BorderFactory.createEmptyBorder(2, 5, 2, 2)
+    add(titleBar, BorderLayout.NORTH)
 
-    val p = makePanel()
-    p.isVisible = false
-    p.isOpaque = true
-    p.background = Color(0xF0_F0_FF)
+    panel = makePanel()
+    panel.isVisible = false
+    panel.isOpaque = true
+    panel.background = Color(0xF0_F0_FF)
     val outBorder = BorderFactory.createMatteBorder(0, 2, 2, 2, Color.WHITE)
     val inBorder = BorderFactory.createEmptyBorder(10, 10, 10, 10)
     val border = BorderFactory.createCompoundBorder(outBorder, inBorder)
-    p.border = border
-    add(p)
-
-    label = l
-    panel = p
+    panel.border = border
+    add(panel)
   }
 
-  override fun getPreferredSize(): Dimension? = label?.preferredSize?.also {
-    panel?.takeIf { it.isVisible }
-      ?.also { panel ->
-        it.height += panel.preferredSize.height
-      }
+  override fun getPreferredSize(): Dimension? = titleBar.preferredSize?.also {
+    panel.takeIf { it.isVisible }?.also { p ->
+      it.height += p.preferredSize.height
+    }
   }
 
   override fun getMaximumSize() = preferredSize?.also {
@@ -118,12 +113,11 @@ abstract class AbstractExpansionPanel(private val title: String) : JPanel(Border
   }
 
   protected fun initPanel() {
-    panel?.also {
+    panel.also {
       it.isVisible = !it.isVisible
       val mark = if (it.isVisible) "△" else "▼"
-      label?.text = "$mark $title"
+      titleBar.text = "$mark $title"
       revalidate()
-      // fireExpansionEvent()
       EventQueue.invokeLater { it.scrollRectToVisible(it.bounds) }
     }
   }
