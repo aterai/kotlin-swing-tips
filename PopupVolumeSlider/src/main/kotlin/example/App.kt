@@ -71,9 +71,7 @@ fun makeUI(): Component {
     }
 
     override fun mouseExited(e: MouseEvent) {
-      if (!popup.isVisible) {
-        ToolTipManager.sharedInstance().isEnabled = true
-      }
+      mouseEntered(e)
     }
   })
   popup.addPopupMenuListener(object : PopupMenuListener {
