@@ -174,20 +174,19 @@ private class FishEyeTable(m: TableModel) : JTable(m) {
     val restRh = maxOf(1, restH / restRc)
     var restGap = restH - restRh * restRc
     var index = -1
+    val range = ccRow - rd2..ccRow + rd2
     for (i in -rd2 until rowCount) {
-      val crh: Int
-      if (ccRow - rd2 <= i && i <= ccRow + rd2) {
+      val crh = if (range.contains(i)) {
         index++
         if (i < 0) {
           continue
         }
-        crh = fishEyeRowList[index].height
+        fishEyeRowList[index].height
       } else {
         if (i < 0) {
           continue
         }
-        crh = restRh + if (restGap > 0) 1 else 0
-        restGap--
+        restRh + if (restGap-- > 0) 1 else 0
       }
       setRowHeight(i, crh)
     }
