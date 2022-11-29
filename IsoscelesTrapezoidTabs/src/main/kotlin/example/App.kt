@@ -32,8 +32,7 @@ private class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
     // copied from BasicTabbedPaneUI#paintTabArea(...)
     for (i in runCount - 1 downTo 0) {
       val start = tabRuns[i]
-      val next = tabRuns[if (i == runCount - 1) 0 else i + 1]
-      val end = if (next == 0) tabCount - 1 else next - 1
+      val end = getTabRunsEnd(i, tabCount)
       // https://stackoverflow.com/questions/41566659/tabs-rendering-order-in-custom-jtabbedpane
       for (j in end downTo start) {
         if (j != selectedIndex && rects[j].intersects(clipRect)) {
@@ -44,6 +43,11 @@ private class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
     if (selectedIndex >= 0 && rects[selectedIndex].intersects(clipRect)) {
       paintTab(g, tabPlacement, rects, selectedIndex, iconRect, textRect)
     }
+  }
+
+  private fun getTabRunsEnd(i: Int, tabCount: Int): Int {
+    val next = tabRuns[if (i == runCount - 1) 0 else i + 1]
+    return if (next == 0) tabCount - 1 else next - 1
   }
 
   override fun paintTabBorder(
