@@ -175,11 +175,16 @@ private class TabLayout : LayoutManager, Serializable {
       var gap = width - w * numCols
       var x = insets.left
       val y = insets.top
-      for (i in 0 until componentCount) {
+      parent.components.forEachIndexed { i, c ->
         val cw = if (i == numCols) lastWidth else w + if (gap-- > 0) 1 else 0
-        parent.getComponent(i).setBounds(x, y, cw, h)
+        c.setBounds(x, y, cw, h)
         x += cw
       }
+      // for (i in 0 until componentCount) {
+      //   val cw = if (i == numCols) lastWidth else w + if (gap-- > 0) 1 else 0
+      //   parent.getComponent(i).setBounds(x, y, cw, h)
+      //   x += cw
+      // }
     }
   }
 
