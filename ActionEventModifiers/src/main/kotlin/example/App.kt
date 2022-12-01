@@ -51,6 +51,24 @@ fun makeUI(): Component {
     }
   }
 
+  val p = JPanel(GridLayout(2, 1, 5, 5))
+  p.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+  p.add(field)
+  p.add(button)
+
+  return JPanel(BorderLayout()).also {
+    EventQueue.invokeLater {
+      val root = it.rootPane
+      root.jMenuBar = makeManuBar()
+      root.defaultButton = button
+    }
+    it.add(p, BorderLayout.NORTH)
+    it.add(JScrollPane(textArea))
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private fun makeManuBar(): JMenuBar {
   val menuBar = JMenuBar()
   val menu = menuBar.add(JMenu("Test"))
   menu.mnemonic = KeyEvent.VK_T
@@ -70,22 +88,7 @@ fun makeUI(): Component {
       logger.info { "JMenuItem: Mouse event mask" }
     }
   }
-
-  val p = JPanel(GridLayout(2, 1, 5, 5))
-  p.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-  p.add(field)
-  p.add(button)
-
-  return JPanel(BorderLayout()).also {
-    EventQueue.invokeLater {
-      val root = it.rootPane
-      root.jMenuBar = menuBar
-      root.defaultButton = button
-    }
-    it.add(p, BorderLayout.NORTH)
-    it.add(JScrollPane(textArea))
-    it.preferredSize = Dimension(320, 240)
-  }
+  return menuBar
 }
 
 private class TextAreaOutputStream(private val textArea: JTextArea) : OutputStream() {
