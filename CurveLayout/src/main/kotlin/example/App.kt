@@ -40,15 +40,12 @@ fun makeUI(): Component {
             val rh = (r.height - vgap * 2) / num
             var x = r.x + hgap
             var y = r.y + vgap
-            for (i in 0 until num) {
-              val m = target.getComponent(i)
-              if (m.isVisible) {
-                val d = m.preferredSize
-                m.setSize(d.width, d.height)
-                m.setLocation(x, y)
-                y += vgap + minOf(rh, d.height)
-                x = (a2 * sqrt(y.toDouble())).toInt()
-              }
+            target.components.filter { it.isVisible }.forEach {
+              val d = it.preferredSize
+              it.setSize(d.width, d.height)
+              it.setLocation(x, y)
+              y += vgap + minOf(rh, d.height)
+              x = (a2 * sqrt(y.toDouble())).toInt()
             }
           }
         }
