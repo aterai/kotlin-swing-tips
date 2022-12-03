@@ -33,7 +33,7 @@ fun makeUI(): Component {
 }
 
 private class WholeRowSelectableTreeUI : BasicTreeUI() {
-  @Suppress("LongMethod", "ComplexMethod", "NestedBlockDepth")
+  @Suppress("LongMethod", "ComplexMethod", "NestedBlockDepth", "CognitiveComplexMethod")
   override fun paint(g: Graphics, c: JComponent) {
     val paintBounds = g.clipBounds
     val insets = tree.insets

@@ -85,7 +85,7 @@ fun makeUI(): Component {
   }
 }
 
-@Suppress("LargeClass")
+@Suppress("LargeClass", "CognitiveComplexMethod")
 private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
   @Suppress("LongMethod", "ComplexMethod", "NestedBlockDepth")
   override fun layoutContainer(parent: Container) {
