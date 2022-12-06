@@ -19,7 +19,7 @@ fun makeUI(): Component {
     "public", "protected", "private",
     "final", "transient", "super", "this", "return", "class"
   )
-  val combo: JComboBox<Any> = JComboBox(model)
+  val combo = JComboBox(model)
 
   val popup = object : BasicComboPopup(combo) {
     private var listener: MouseListener? = null
