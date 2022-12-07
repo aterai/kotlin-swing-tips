@@ -7,7 +7,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 fun makeUI(): Component {
   val log = JTextArea()
   val key = "FileView.fullRowSelection"
-  println(UIManager.getLookAndFeelDefaults().getBoolean(key))
+  // println(UIManager.getLookAndFeelDefaults().getBoolean(key))
 
   val check = object : JCheckBox(key) {
     override fun updateUI() {

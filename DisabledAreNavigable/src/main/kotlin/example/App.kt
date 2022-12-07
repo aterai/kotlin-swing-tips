@@ -9,8 +9,7 @@ import javax.swing.plaf.basic.BasicToolBarUI
 fun makeUI(): Component {
   val key = "MenuItem.disabledAreNavigable"
   val b = UIManager.getBoolean(key)
-  println("$key: $b")
-
+  // println("$key: $b")
   val check = object : JCheckBox(key, b) {
     override fun updateUI() {
       super.updateUI()

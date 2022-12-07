@@ -63,7 +63,6 @@ private class ProgressTask : BackgroundTask() {
       return
     }
     if (!area.isDisplayable) {
-      println("process: DISPOSE_ON_CLOSE")
       cancel(true)
       return
     }
@@ -72,7 +71,6 @@ private class ProgressTask : BackgroundTask() {
 
   override fun done() {
     if (!area.isDisplayable) {
-      println("done: DISPOSE_ON_CLOSE")
       cancel(true)
       return
     }

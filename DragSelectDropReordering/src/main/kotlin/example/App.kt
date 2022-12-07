@@ -262,7 +262,6 @@ private class ListItemTransferHandler : TransferHandler() {
     info.isDrop && info.isDataFlavorSupported(FLAVOR)
 
   override fun getSourceActions(c: JComponent): Int {
-    println("getSourceActions")
     c.rootPane.glassPane.cursor = DragSource.DefaultMoveDrop
     return MOVE // COPY_OR_MOVE
   }
@@ -292,7 +291,6 @@ private class ListItemTransferHandler : TransferHandler() {
   }
 
   override fun exportDone(c: JComponent, data: Transferable, action: Int) {
-    println("exportDone")
     val glassPane = c.rootPane.glassPane
     glassPane.isVisible = false
     cleanup(c, action == MOVE)

@@ -7,8 +7,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 fun makeUI(): Component {
   val key = "Menu.crossMenuMnemonic"
   val b = UIManager.getBoolean(key)
-  println("$key: $b")
-
+  // println("$key: $b")
   val check = object : JCheckBox(key, b) {
     override fun updateUI() {
       super.updateUI()

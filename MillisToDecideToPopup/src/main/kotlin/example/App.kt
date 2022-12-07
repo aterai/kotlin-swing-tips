@@ -14,7 +14,6 @@ private fun executeWorker(
   val worker = object : BackgroundTask(lengthOfTask) {
     override fun process(chunks: List<String>) {
       if (!area.isDisplayable) {
-        println("process: DISPOSE_ON_CLOSE")
         cancel(true)
         return
       }
@@ -23,7 +22,6 @@ private fun executeWorker(
 
     public override fun done() {
       if (!area.isDisplayable) {
-        println("done: DISPOSE_ON_CLOSE")
         cancel(true)
         return
       }

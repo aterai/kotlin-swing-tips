@@ -10,7 +10,6 @@ fun makeUI(): Component {
   val defaultButton = JButton("Default")
   defaultButton.addActionListener {
     val iv = UIManager.getLookAndFeelDefaults().getInt(key)
-    println(iv)
     UIManager.put(key, iv)
     val str = JOptionPane.showInputDialog(log.rootPane, "Default")
     log.text = str

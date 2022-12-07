@@ -128,7 +128,7 @@ private class UpAction(str: String, private val table: JTable) : AbstractAction(
       table.cellEditor.stopCellEditing()
     }
     val isShiftDown = e.modifiers and ActionEvent.SHIFT_MASK != 0
-    println(isShiftDown)
+    // println(isShiftDown)
     if (isShiftDown) { // Jump to the top
       model.moveRow(pos[0], pos[pos.size - 1], 0)
       table.setRowSelectionInterval(0, pos.size - 1)

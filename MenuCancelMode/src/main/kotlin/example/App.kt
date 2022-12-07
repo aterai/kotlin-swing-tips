@@ -9,7 +9,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 fun makeUI(): Component {
   val key = "Menu.cancelMode"
   val cancelMode = UIManager.getString(key)
-  println("$key: $cancelMode")
+  // println("$key: $cancelMode")
   val defaultMode = "hideMenuTree" == cancelMode
   val hideMenuTreeRadio = makeRadioButton("hideMenuTree", defaultMode)
   val hideLastSubmenuRadio = makeRadioButton("hideLastSubmenu", !defaultMode)

@@ -6,7 +6,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 fun makeUI(): Component {
   val key = "Spinner.disableOnBoundaryValues"
   val flg = UIManager.getLookAndFeelDefaults().getBoolean(key)
-  println(flg)
+  // println(flg)
 
   val model = SpinnerNumberModel(0, 0, 10, 1)
   val spinner1 = JSpinner(model)
