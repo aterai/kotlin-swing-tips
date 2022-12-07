@@ -54,9 +54,7 @@ private class ToolTipLocationHandler : MouseInputAdapter() {
       popup?.hide()
       popup = factory.getPopup(e.component, tip, p.x, p.y).also {
         val c = tip.topLevelAncestor
-        if (c is JWindow && c.type == Window.Type.POPUP) {
-          println("Popup\$HeavyWeightWindow")
-        } else {
+        if (c !is JWindow || c.type != Window.Type.POPUP) {
           it.show()
         }
       }

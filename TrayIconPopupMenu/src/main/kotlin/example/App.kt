@@ -180,7 +180,7 @@ private class ChangeLookAndFeelAction(
     }.onFailure {
       it.printStackTrace()
       UIManager.getLookAndFeel().provideErrorFeedback(e.source as? Component)
-      println("Failed loading L&F: $lnf")
+      // println("Failed loading L&F: $lnf")
     }
     for (f in Frame.getFrames()) {
       SwingUtilities.updateComponentTreeUI(f)

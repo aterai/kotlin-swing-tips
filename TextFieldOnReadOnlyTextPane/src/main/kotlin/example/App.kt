@@ -32,7 +32,7 @@ private fun insertQuestion(textPane: JTextPane, str: String) {
   runCatching {
     doc.insertString(doc.length, str, null)
     val pos = doc.length
-    println(pos)
+    // println(pos)
     val field = object : JTextField(4) {
       override fun getMaximumSize() = preferredSize
     }
