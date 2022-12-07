@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.image.BufferedImage
 import java.io.IOException
 import javax.imageio.ImageIO
 import javax.imageio.ImageReader
@@ -33,16 +32,13 @@ fun makeUI(): Component {
 }
 
 @Throws(IOException::class)
-private fun loadFromStream(imageStream: ImageInputStream): List<BufferedImage> {
-  val reader = ImageIO.getImageReaders(imageStream).asSequence().first { checkGifFormat(it) }
+private fun loadFromStream(stream: ImageInputStream): List<Image> {
+  val reader = ImageIO.getImageReaders(stream).asSequence().first { checkGifFormat(it) }
     ?: throw IOException("Can not read image format!")
-  reader.setInput(imageStream, false, false)
-  val list = ArrayList<BufferedImage>()
+  reader.setInput(stream, false, false)
+  val list = ArrayList<Image>()
   for (i in 0 until reader.getNumImages(true)) {
-    val frame = reader.readAll(i, null)
-    (frame.renderedImage as? BufferedImage)?.also {
-      list.add(it)
-    }
+    (reader.readAll(i, null).renderedImage as? Image)?.also { list.add(it) }
   }
   reader.dispose()
   return list
