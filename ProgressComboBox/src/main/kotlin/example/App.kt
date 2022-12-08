@@ -38,7 +38,6 @@ private class ComboTask : BackgroundTask() {
       return
     }
     if (!combo.isDisplayable) {
-      println("process: DISPOSE_ON_CLOSE")
       cancel(true)
       return
     }
@@ -49,7 +48,6 @@ private class ComboTask : BackgroundTask() {
 
   public override fun done() {
     if (!combo.isDisplayable) {
-      println("done: DISPOSE_ON_CLOSE")
       cancel(true)
       return
     }

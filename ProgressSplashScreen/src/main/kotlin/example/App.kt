@@ -69,7 +69,6 @@ private open class BackgroundTask : SwingWorker<Void, Void>() {
 }
 
 fun main() {
-  println("main start / EDT: " + EventQueue.isDispatchThread())
   runCatching {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
   }.onFailure {
@@ -80,7 +79,6 @@ fun main() {
   val frame = JFrame()
   val splashScreen = JDialog(frame, Dialog.ModalityType.DOCUMENT_MODAL)
   val progress = JProgressBar()
-  println(splashScreen.modalityType)
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/splash.png")
   EventQueue.invokeLater {
@@ -109,5 +107,4 @@ fun main() {
   frame.pack()
   frame.setLocationRelativeTo(null)
   EventQueue.invokeLater { frame.isVisible = true }
-  println("main end")
 }

@@ -158,7 +158,6 @@ private class UrlRenderer : MouseAdapter(), TableCellRenderer {
     if (isUrlColumn(table, col) && pointInsidePrefSize(table, pt)) {
       val row = table.rowAtPoint(pt)
       val url = table.getValueAt(row, col) as? URL ?: return
-      println(url)
       if (Desktop.isDesktopSupported()) {
         runCatching {
           Desktop.getDesktop().browse(url.toURI())

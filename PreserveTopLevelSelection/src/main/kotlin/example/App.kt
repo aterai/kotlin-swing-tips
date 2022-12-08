@@ -6,7 +6,6 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 fun makeUI(): Component {
   val key = "Menu.preserveTopLevelSelection"
   val b = UIManager.getBoolean(key)
-  println("$key: $b")
   val keepTopLvlSel = object : JCheckBox(key, b) {
     override fun updateUI() {
       super.updateUI()
