@@ -111,7 +111,7 @@ private object LookAndFeelUtil {
       updateLookAndFeel()
     }.onFailure {
       Toolkit.getDefaultToolkit().beep()
-      println("Failed loading L&F: $currentLaf")
+      // println("Failed loading L&F: $currentLaf")
     }
   }
 

@@ -75,7 +75,6 @@ private fun addActionPerformed() {
         return
       }
       if (!table.isDisplayable) {
-        println("process: DISPOSE_ON_CLOSE")
         cancel(true)
         return
       }

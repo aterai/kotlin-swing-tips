@@ -22,13 +22,13 @@ private val textArea = object : JTextArea(1, 1) {
     // i.e. layout cannot be computed until the component has been sized.
     // The component does not have to be visible or painted.
     size = super.getPreferredSize() // looks like ugly hack...
-    println(super.getPreferredSize())
+    // println(super.getPreferredSize())
     rows = runCatching {
       val r = modelToView(t.length)
       // Java 9: val r = modelToView2D(t.length).bounds
       (r.maxY.toFloat() / rowHeight).roundToInt()
     }.getOrDefault(1)
-    println(super.getPreferredSize())
+    // println(super.getPreferredSize())
     val isOnlyOneColumn = rows == 1
     if (isOnlyOneColumn) {
       size = preferredSize

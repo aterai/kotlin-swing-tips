@@ -86,7 +86,7 @@ private fun makePopupMenu(): JPopupMenu {
     override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
       val pop = e.source as? JPopupMenu ?: return
       (pop.invoker as? JTextComponent)?.also {
-        println("${it.javaClass.name}: ${it.name}")
+        // println("${it.javaClass.name}: ${it.name}")
         // TEST:
         // it.requestFocusInWindow()
         // it.selectAll()

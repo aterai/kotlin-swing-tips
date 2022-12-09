@@ -5,8 +5,8 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val toolBar = JToolBar()
-  println(toolBar.isRollover)
-  EventQueue.invokeLater { println(toolBar.isRollover) }
+  // println(toolBar.isRollover)
+  // EventQueue.invokeLater { println(toolBar.isRollover) }
 
   val tg1 = JToggleButton("Tg1")
   val tg2 = JToggleButton("Tg2")
