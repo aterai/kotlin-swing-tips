@@ -73,7 +73,7 @@ private fun addActionPerformed() {
         i = get()
         if (i >= 0) "Done" else "Disposed"
       }.getOrNull() ?: "Interrupted"
-      println("$key:$message(${i}ms)")
+      table.setValueAt("$message(${i}ms)", key, 2)
       // executor.remove(this)
     }
   }
@@ -196,19 +196,20 @@ private class ProgressRenderer : DefaultTableCellRenderer() {
     row: Int,
     column: Int
   ): Component {
-    val i = value as? Int ?: -1
-    var text = "Done"
-    if (i < 0) {
-      text = "Canceled"
-    } else if (i < progress.maximum && renderer != null) { // < 100
-      progress.value = i
-      renderer.add(progress)
-      renderer.isOpaque = false
-      renderer.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
-      return renderer
+    var text = value
+    if (value is Int) {
+      text = "Done(0ms)"
+      if (value < 0) {
+        text = "Canceled"
+      } else if (value < progress.maximum && renderer != null) { // < 100
+        progress.value = value
+        renderer.add(progress)
+        renderer.isOpaque = false
+        renderer.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
+        return renderer
+      }
     }
-    super.getTableCellRendererComponent(table, text, isSelected, hasFocus, row, column)
-    return this
+    return super.getTableCellRendererComponent(table, text, isSelected, hasFocus, row, column)
   }
 
   override fun updateUI() {

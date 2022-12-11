@@ -15,7 +15,7 @@ fun makeUI(): Component {
       pressed: Boolean
     ): Boolean {
       if (!check.isSelected || isTabOrEnterKey(ks)) {
-        println("tab or enter typed")
+        // println("tab or enter typed")
         return super.processKeyBinding(ks, e, condition, pressed)
       }
       val editingOrPressed = isEditing || pressed
@@ -23,8 +23,9 @@ fun makeUI(): Component {
         val selectedRow = selectedRow
         val selectedColumn = selectedColumn
         if (selectedRow != -1 && selectedColumn != -1) {
-          val b = editCellAt(selectedRow, selectedColumn)
-          println("editCellAt: $b")
+          editCellAt(selectedRow, selectedColumn)
+          // val b = editCellAt(selectedRow, selectedColumn)
+          // println("editCellAt: $b")
         }
       }
       return super.processKeyBinding(ks, e, condition, pressed)
