@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.ActionEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.image.BufferedImage
@@ -15,13 +14,15 @@ private val popup = JPopupMenu()
 fun makeUI(): Component {
   val group = ButtonGroup()
   val box = Box.createVerticalBox()
-  LookAndFeelEnum.values().toList()
-    .map { ChangeLookAndFeelAction(it, listOf(popup)) }
-    .map { JRadioButton(it) }
-    .forEach {
-      group.add(it)
-      box.add(it)
+  for (info in UIManager.getInstalledLookAndFeels()) {
+    val b = JRadioButton(info.name)
+    LookAndFeelUtil.initLookAndFeelAction(info, b)
+    b.addActionListener {
+      EventQueue.invokeLater { SwingUtilities.updateComponentTreeUI(popup) }
     }
+    group.add(b)
+    box.add(b)
+  }
   box.add(Box.createVerticalGlue())
   box.border = BorderFactory.createEmptyBorder(5, 25, 5, 25)
 
@@ -155,48 +156,36 @@ private class TrayIconPopupMenuHandler(
   }
 }
 
-private enum class LookAndFeelEnum(val className: String) {
-  METAL("javax.swing.plaf.metal.MetalLookAndFeel"),
-  MAC("com.sun.java.swing.plaf.mac.MacLookAndFeel"),
-  MOTIF("com.sun.java.swing.plaf.motif.MotifLookAndFeel"),
-  WINDOWS("com.sun.java.swing.plaf.windows.WindowsLookAndFeel"),
-  GTK("com.sun.java.swing.plaf.gtk.GTKLookAndFeel"),
-  NIMBUS("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-}
+private object LookAndFeelUtil {
+  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
-private class ChangeLookAndFeelAction(
-  lookAndFeel: LookAndFeelEnum,
-  private val list: List<Component>
-) : AbstractAction(lookAndFeel.toString()) {
-  private val lnf = lookAndFeel.className
-
-  init {
-    this.isEnabled = isAvailableLookAndFeel(lnf)
+  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+    val cmd = info.className
+    b.text = info.name
+    b.actionCommand = cmd
+    b.hideActionText = true
+    b.addActionListener { setLookAndFeel(cmd) }
   }
 
-  override fun actionPerformed(e: ActionEvent) {
-    runCatching {
-      UIManager.setLookAndFeel(lnf)
-    }.onFailure {
-      it.printStackTrace()
-      UIManager.getLookAndFeel().provideErrorFeedback(e.source as? Component)
-      // println("Failed loading L&F: $lnf")
+  @Throws(
+    ClassNotFoundException::class,
+    InstantiationException::class,
+    IllegalAccessException::class,
+    UnsupportedLookAndFeelException::class
+  )
+  private fun setLookAndFeel(newLookAndFeel: String) {
+    val oldLookAndFeel = lookAndFeel
+    if (oldLookAndFeel != newLookAndFeel) {
+      UIManager.setLookAndFeel(newLookAndFeel)
+      lookAndFeel = newLookAndFeel
+      updateLookAndFeel()
     }
-    for (f in Frame.getFrames()) {
-      SwingUtilities.updateComponentTreeUI(f)
-      f.pack()
-    }
-    list.forEach { SwingUtilities.updateComponentTreeUI(it) }
   }
 
-  companion object {
-    private fun isAvailableLookAndFeel(laf: String) =
-      runCatching {
-        val lnfClass = Class.forName(laf)
-        val newLnF = lnfClass.getConstructor().newInstance() as? LookAndFeel
-        newLnF?.isSupportedLookAndFeel
-        true
-      }.getOrNull() ?: false
+  private fun updateLookAndFeel() {
+    for (window in Window.getWindows()) {
+      SwingUtilities.updateComponentTreeUI(window)
+    }
   }
 }
 
