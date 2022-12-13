@@ -73,7 +73,7 @@ private fun addActionPerformed() {
         i = get()
         if (i >= 0) "Done" else "Disposed"
       }.getOrNull() ?: "Interrupted"
-      table.setValueAt("$message(${i}ms)", key, 2)
+      model.setValueAt("$message(${i}ms)", key, 2)
       // executor.remove(this)
     }
   }
@@ -134,7 +134,7 @@ private open class BackgroundTask : SwingWorker<Int, Int>() {
   private val sleepDummy = (1..50).random()
 
   @Throws(InterruptedException::class)
-  override fun doInBackground(): Int? {
+  override fun doInBackground(): Int {
     val lengthOfTask = 120
     var current = 0
     while (current <= lengthOfTask && !isCancelled) {
