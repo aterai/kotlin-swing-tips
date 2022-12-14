@@ -55,39 +55,33 @@ private fun makeMenuBar(): JMenuBar {
   sub.add("JMenuItem5")
   menu.add(sub)
   menu.add("JMenuItem3")
-  bar.add(LookAndFeelUtil.createLookAndFeelMenu())
+  val laf = LookAndFeelUtil.createLookAndFeelMenu()
+  laf.mnemonic = KeyEvent.VK_L
+  bar.add(laf)
   return bar
 }
 
-// @see https://java.net/projects/swingset3/sources/svn/content/trunk/SwingSet3/src/com/sun/swingset3/SwingSet3.java
 private object LookAndFeelUtil {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
-  fun createLookAndFeelMenu() = JMenu("LookAndFeel").also {
-    it.mnemonic = KeyEvent.VK_L
-    val lafRadioGroup = ButtonGroup()
-    for (lafInfo in UIManager.getInstalledLookAndFeels()) {
-      it.add(createLookAndFeelItem(lafInfo.name, lafInfo.className, lafRadioGroup))
+
+  fun createLookAndFeelMenu(): JMenu {
+    val menu = JMenu("LookAndFeel")
+    val buttonGroup = ButtonGroup()
+    for (info in UIManager.getInstalledLookAndFeels()) {
+      val b = JRadioButtonMenuItem(info.name, info.className == lookAndFeel)
+      initLookAndFeelAction(info, b)
+      menu.add(b)
+      buttonGroup.add(b)
     }
+    return menu
   }
 
-  private fun createLookAndFeelItem(
-    lafName: String,
-    lafClassName: String,
-    lafGroup: ButtonGroup
-  ): JMenuItem {
-    val lafItem = JRadioButtonMenuItem(lafName, lafClassName == lookAndFeel)
-    lafItem.actionCommand = lafClassName
-    lafItem.hideActionText = true
-    lafItem.addActionListener { e ->
-      val m = lafGroup.selection
-      runCatching {
-        setLookAndFeel(m.actionCommand)
-      }.onFailure {
-        UIManager.getLookAndFeel().provideErrorFeedback(e.source as? Component)
-      }
-    }
-    lafGroup.add(lafItem)
-    return lafItem
+  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+    val cmd = info.className
+    b.text = info.name
+    b.actionCommand = cmd
+    b.hideActionText = true
+    b.addActionListener { setLookAndFeel(cmd) }
   }
 
   @Throws(
@@ -96,18 +90,17 @@ private object LookAndFeelUtil {
     IllegalAccessException::class,
     UnsupportedLookAndFeelException::class
   )
-  private fun setLookAndFeel(lookAndFeel: String) {
-    val oldLookAndFeel = LookAndFeelUtil.lookAndFeel
-    if (oldLookAndFeel != lookAndFeel) {
-      UIManager.setLookAndFeel(lookAndFeel)
-      LookAndFeelUtil.lookAndFeel = lookAndFeel
+  private fun setLookAndFeel(newLookAndFeel: String) {
+    val oldLookAndFeel = lookAndFeel
+    if (oldLookAndFeel != newLookAndFeel) {
+      UIManager.setLookAndFeel(newLookAndFeel)
+      lookAndFeel = newLookAndFeel
       updateLookAndFeel()
-      // firePropertyChange("lookAndFeel", oldLookAndFeel, lookAndFeel)
     }
   }
 
   private fun updateLookAndFeel() {
-    for (window in Frame.getWindows()) {
+    for (window in Window.getWindows()) {
       SwingUtilities.updateComponentTreeUI(window)
     }
   }

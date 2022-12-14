@@ -206,60 +206,6 @@ private enum class Status {
   SELECTED, DESELECTED, INDETERMINATE
 }
 
-private object LookAndFeelUtil {
-  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
-
-  fun createLookAndFeelMenu(): JMenu {
-    val menu = JMenu("LookAndFeel")
-    val lafGroup = ButtonGroup()
-    for (lafInfo in UIManager.getInstalledLookAndFeels()) {
-      menu.add(createLookAndFeelItem(lafInfo.name, lafInfo.className, lafGroup))
-    }
-    return menu
-  }
-
-  private fun createLookAndFeelItem(
-    lafName: String,
-    lafClassName: String,
-    lafGroup: ButtonGroup
-  ): JMenuItem {
-    val lafItem = JRadioButtonMenuItem(lafName, lafClassName == lookAndFeel)
-    lafItem.actionCommand = lafClassName
-    lafItem.hideActionText = true
-    lafItem.addActionListener { e ->
-      val m = lafGroup.selection
-      runCatching {
-        setLookAndFeel(m.actionCommand)
-      }.onFailure {
-        UIManager.getLookAndFeel().provideErrorFeedback(e.source as? Component)
-      }
-    }
-    lafGroup.add(lafItem)
-    return lafItem
-  }
-
-  @Throws(
-    ClassNotFoundException::class,
-    InstantiationException::class,
-    IllegalAccessException::class,
-    UnsupportedLookAndFeelException::class
-  )
-  private fun setLookAndFeel(lookAndFeel: String) {
-    val oldLookAndFeel = LookAndFeelUtil.lookAndFeel
-    if (oldLookAndFeel != lookAndFeel) {
-      UIManager.setLookAndFeel(lookAndFeel)
-      LookAndFeelUtil.lookAndFeel = lookAndFeel
-      updateLookAndFeel()
-    }
-  }
-
-  private fun updateLookAndFeel() {
-    for (window in Window.getWindows()) {
-      SwingUtilities.updateComponentTreeUI(window)
-    }
-  }
-}
-
 private class HeaderCheckBoxHandler(
   val table: JTable,
   val targetColumnIndex: Int
@@ -315,6 +261,51 @@ private class HeaderCheckBoxHandler(
       }
       column.headerValue = if (b) Status.SELECTED else Status.DESELECTED
       // header.repaint()
+    }
+  }
+}
+
+private object LookAndFeelUtil {
+  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
+
+  fun createLookAndFeelMenu(): JMenu {
+    val menu = JMenu("LookAndFeel")
+    val buttonGroup = ButtonGroup()
+    for (info in UIManager.getInstalledLookAndFeels()) {
+      val b = JRadioButtonMenuItem(info.name, info.className == lookAndFeel)
+      initLookAndFeelAction(info, b)
+      menu.add(b)
+      buttonGroup.add(b)
+    }
+    return menu
+  }
+
+  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+    val cmd = info.className
+    b.text = info.name
+    b.actionCommand = cmd
+    b.hideActionText = true
+    b.addActionListener { setLookAndFeel(cmd) }
+  }
+
+  @Throws(
+    ClassNotFoundException::class,
+    InstantiationException::class,
+    IllegalAccessException::class,
+    UnsupportedLookAndFeelException::class
+  )
+  private fun setLookAndFeel(newLookAndFeel: String) {
+    val oldLookAndFeel = lookAndFeel
+    if (oldLookAndFeel != newLookAndFeel) {
+      UIManager.setLookAndFeel(newLookAndFeel)
+      lookAndFeel = newLookAndFeel
+      updateLookAndFeel()
+    }
+  }
+
+  private fun updateLookAndFeel() {
+    for (window in Window.getWindows()) {
+      SwingUtilities.updateComponentTreeUI(window)
     }
   }
 }
