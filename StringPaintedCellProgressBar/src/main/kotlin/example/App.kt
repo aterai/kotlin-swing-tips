@@ -48,7 +48,7 @@ private val table = object : JTable(model) {
       } else {
         renderer.getTableCellRendererComponent(
           tbl,
-          "Waiting...",
+          value?.toString() ?: "",
           isSelected,
           hasFocus,
           row,
@@ -89,7 +89,7 @@ fun addActionPerformed() {
         i = get()
         if (i >= 0) "Done" else "Disposed"
       }.getOrNull() ?: "Interrupted"
-      println("$key:$message(${i}ms)")
+      model.setValueAt("$message(${i}ms)", key, 2)
     }
   }
   val value = ProgressValue(lengthOfTask, 0)
