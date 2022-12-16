@@ -18,23 +18,25 @@ private val reset = JRadioButton("reset")
 fun makeUI(): Component {
   val box = JPanel(GridLayout(2, 2))
   val listener = ActionListener { e ->
-    val check = e.source as? JRadioButton
-    if (check == reset) {
-      tree.model = DefaultTreeModel(root)
-    } else {
-      TreeUtil.COMPARE_COUNTER.set(0)
-      TreeUtil.SWAP_COUNTER.set(0)
-      // val r = TreeUtil.deepCopyTree(root, root.clone() as DefaultMutableTreeNode)
-      val r = TreeUtil.deepCopyTree(root, DefaultMutableTreeNode(root.userObject))
-      when (check) {
-        sort1 -> TreeUtil.sortTree1(r)
-        sort2 -> TreeUtil.sortTree2(r)
-        else -> TreeUtil.sortTree3(r)
+    val check = e.source
+    if (check is JRadioButton) {
+      if (check == reset) {
+        tree.model = DefaultTreeModel(root)
+      } else {
+        TreeUtil.COMPARE_COUNTER.set(0)
+        TreeUtil.SWAP_COUNTER.set(0)
+        // val r = TreeUtil.deepCopyTree(root, root.clone() as DefaultMutableTreeNode)
+        val r = TreeUtil.deepCopyTree(root, DefaultMutableTreeNode(root.userObject))
+        when (check) {
+          sort1 -> TreeUtil.sortTree1(r)
+          sort2 -> TreeUtil.sortTree2(r)
+          else -> TreeUtil.sortTree3(r)
+        }
+        swapCounter(check)
+        tree.model = DefaultTreeModel(r)
       }
-      log(check?.text ?: "")
-      tree.model = DefaultTreeModel(r)
+      TreeUtil.expandAll(tree)
     }
-    TreeUtil.expandAll(tree)
   }
   val bg = ButtonGroup()
   listOf(reset, sort1, sort2, sort3).forEach {
@@ -55,14 +57,15 @@ fun makeUI(): Component {
   }
 }
 
-private fun log(title: String) {
+private fun swapCounter(radio: JRadioButton) {
+  val title = radio.text
   if (TreeUtil.SWAP_COUNTER.get() == 0) {
     val cc = TreeUtil.COMPARE_COUNTER.get()
-    println("%-24s - compare: %3d, swap: ---%n".format(title, cc))
+    radio.toolTipText = "%-24s - compare: %3d, swap: ---%n".format(title, cc)
   } else {
     val cc = TreeUtil.COMPARE_COUNTER.get()
     val sc = TreeUtil.SWAP_COUNTER.get()
-    println("%-24s - compare: %3d, swap: %3d%n".format(title, cc, sc))
+    radio.toolTipText = "%-24s - compare: %3d, swap: %3d%n".format(title, cc, sc)
   }
 }
 
