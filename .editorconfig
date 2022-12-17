@@ -10,8 +10,9 @@ trim_trailing_whitespace = true
 
 [*.{kt,kts}]
 max_line_length = 100
-ktlint_trailing-comma-on-declaration-site = disabled
-ktlint_trailing-comma-on-call-site = disabled
+ktlint_standard_trailing-comma-on-declaration-site = disabled
+ktlint_standard_trailing-comma-on-call-site = disabled
+ktlint_standard_no-semi = disabled
 
 [*.md]
 trim_trailing_whitespace = false
