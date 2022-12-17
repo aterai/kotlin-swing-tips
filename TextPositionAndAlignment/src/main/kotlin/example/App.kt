@@ -72,7 +72,7 @@ fun makeUI(): Component {
 private fun <E> getSelectedItem(combo: JComboBox<E>) = combo.getItemAt(combo.selectedIndex)
 
 private enum class Vertical(val alignment: Int) {
-  TOP(SwingConstants.TOP), CENTER(SwingConstants.CENTER), BOTTOM(SwingConstants.BOTTOM);
+  TOP(SwingConstants.TOP), CENTER(SwingConstants.CENTER), BOTTOM(SwingConstants.BOTTOM)
 }
 
 private enum class Horizontal(val alignment: Int) {
@@ -80,7 +80,7 @@ private enum class Horizontal(val alignment: Int) {
   CENTER(SwingConstants.CENTER),
   RIGHT(SwingConstants.RIGHT),
   LEADING(SwingConstants.LEADING),
-  TRAILING(SwingConstants.TRAILING);
+  TRAILING(SwingConstants.TRAILING)
 }
 
 private class StarburstIcon : Icon {

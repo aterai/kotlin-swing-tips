@@ -39,7 +39,7 @@ private fun makeLabel(title: String, icon: Icon): JLabel {
 }
 
 private enum class QuadrantRotate(val numQuadrants: Int) {
-  CLOCKWISE(1), HORIZONTAL_FLIP(2), COUNTER_CLOCKWISE(-1);
+  CLOCKWISE(1), HORIZONTAL_FLIP(2), COUNTER_CLOCKWISE(-1)
 }
 
 private class QuadrantRotateIcon(
