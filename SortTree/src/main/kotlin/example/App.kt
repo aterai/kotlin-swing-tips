@@ -8,8 +8,8 @@ import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.MutableTreeNode
 
-private val root = TreeUtil.makeTreeRoot()
-private val tree = JTree(DefaultTreeModel(TreeUtil.makeTreeRoot()))
+private val root = TreeUtils.makeTreeRoot()
+private val tree = JTree(DefaultTreeModel(TreeUtils.makeTreeRoot()))
 private val sort1 = JRadioButton("1: bubble sort")
 private val sort2 = JRadioButton("2: selection sort")
 private val sort3 = JRadioButton("3: TimSort") // JDK 1.7.0
@@ -23,19 +23,19 @@ fun makeUI(): Component {
       if (check == reset) {
         tree.model = DefaultTreeModel(root)
       } else {
-        TreeUtil.COMPARE_COUNTER.set(0)
-        TreeUtil.SWAP_COUNTER.set(0)
-        // val r = TreeUtil.deepCopyTree(root, root.clone() as DefaultMutableTreeNode)
-        val r = TreeUtil.deepCopyTree(root, DefaultMutableTreeNode(root.userObject))
+        TreeUtils.COMPARE_COUNTER.set(0)
+        TreeUtils.SWAP_COUNTER.set(0)
+        // val r = TreeUtils.deepCopyTree(root, root.clone() as DefaultMutableTreeNode)
+        val r = TreeUtils.deepCopyTree(root, DefaultMutableTreeNode(root.userObject))
         when (check) {
-          sort1 -> TreeUtil.sortTree1(r)
-          sort2 -> TreeUtil.sortTree2(r)
-          else -> TreeUtil.sortTree3(r)
+          sort1 -> TreeUtils.sortTree1(r)
+          sort2 -> TreeUtils.sortTree2(r)
+          else -> TreeUtils.sortTree3(r)
         }
         swapCounter(check)
         tree.model = DefaultTreeModel(r)
       }
-      TreeUtil.expandAll(tree)
+      TreeUtils.expandAll(tree)
     }
   }
   val bg = ButtonGroup()
@@ -52,24 +52,24 @@ fun makeUI(): Component {
     p.border = BorderFactory.createTitledBorder("Sort JTree")
     p.add(JScrollPane(tree))
     it.add(p)
-    TreeUtil.expandAll(tree)
+    TreeUtils.expandAll(tree)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
 private fun swapCounter(radio: JRadioButton) {
   val title = radio.text
-  if (TreeUtil.SWAP_COUNTER.get() == 0) {
-    val cc = TreeUtil.COMPARE_COUNTER.get()
+  if (TreeUtils.SWAP_COUNTER.get() == 0) {
+    val cc = TreeUtils.COMPARE_COUNTER.get()
     radio.toolTipText = "%-24s - compare: %3d, swap: ---%n".format(title, cc)
   } else {
-    val cc = TreeUtil.COMPARE_COUNTER.get()
-    val sc = TreeUtil.SWAP_COUNTER.get()
+    val cc = TreeUtils.COMPARE_COUNTER.get()
+    val sc = TreeUtils.SWAP_COUNTER.get()
     radio.toolTipText = "%-24s - compare: %3d, swap: %3d%n".format(title, cc, sc)
   }
 }
 
-private object TreeUtil {
+private object TreeUtils {
   val COMPARE_COUNTER = AtomicInteger()
   val SWAP_COUNTER = AtomicInteger()
 

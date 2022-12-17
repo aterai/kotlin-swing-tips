@@ -10,7 +10,7 @@ import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.Border
 
-val TEXTURE = ImageUtil.makeCheckerTexture()
+val TEXTURE = ImageUtils.makeCheckerTexture()
 
 fun makeUI(): Component {
   val p = object : JPanel() {
@@ -45,7 +45,7 @@ fun makeUI(): Component {
   }
 }
 
-private object ImageUtil {
+private object ImageUtils {
   fun createMenuBar(): JMenuBar {
     UIManager.put("Menu.background", Color(200, 0, 0, 0))
     UIManager.put("Menu.selectionBackground", Color(100, 100, 255, 100))
@@ -286,7 +286,7 @@ fun main() {
           super.updateUI()
           val cl = Thread.currentThread().contextClassLoader
           val url = cl.getResource("example/test.jpg")
-          val bi = ImageUtil.getFilteredImage(url)
+          val bi = ImageUtils.getFilteredImage(url)
           border = CentredBackgroundBorder(bi)
           isOpaque = false
         }
@@ -294,7 +294,7 @@ fun main() {
     }
     val contentPane = frame.contentPane
     (contentPane as? JComponent)?.isOpaque = false
-    frame.jMenuBar = ImageUtil.createMenuBar()
+    frame.jMenuBar = ImageUtils.createMenuBar()
     frame.contentPane.add(makeUI())
     frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
     frame.pack()

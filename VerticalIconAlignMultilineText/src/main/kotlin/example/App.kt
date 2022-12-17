@@ -59,7 +59,7 @@ private fun makeTitledPanel(title: String, c: Component): Component {
   return p
 }
 
-private object HtmlViewUtil {
+private object HtmlViewUtils {
   fun getFirstLineCenterY(text: String?, c: AbstractButton, iconRect: Rectangle): Int {
     var y = 0
     if (text != null && c.verticalTextPosition == SwingConstants.TOP) {
@@ -100,7 +100,7 @@ private class WindowsVerticalAlignmentCheckBoxUI : WindowsCheckBoxUI() {
     )
 
     // Paint the radio button
-    val y = HtmlViewUtil.getFirstLineCenterY(text, c, iconRect)
+    val y = HtmlViewUtils.getFirstLineCenterY(text, c, iconRect)
     defaultIcon.paintIcon(c, g, iconRect.x, iconRect.y + y)
 
     // Draw the Text
@@ -144,7 +144,7 @@ private class BasicVerticalAlignmentCheckBoxUI : BasicCheckBoxUI() {
     )
 
     // Paint the radio button
-    val y = HtmlViewUtil.getFirstLineCenterY(text, c, iconRect)
+    val y = HtmlViewUtils.getFirstLineCenterY(text, c, iconRect)
     defaultIcon.paintIcon(c, g, iconRect.x, iconRect.y + y)
 
     // Draw the Text

@@ -73,7 +73,7 @@ private val table = object : JTable(model) {
 
 fun makeUI() = JTabbedPane().also {
   val mb = JMenuBar()
-  mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
 
   val p = JPanel()
@@ -265,7 +265,7 @@ private class HeaderCheckBoxHandler(
   }
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

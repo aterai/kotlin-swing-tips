@@ -28,7 +28,7 @@ fun makeUI(): Component {
   }
 
   val mb = JMenuBar()
-  mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   mb.add(button)
   mb.add(Box.createHorizontalGlue())
   mb.add(check)
@@ -62,7 +62,7 @@ private fun addIconifiedFrame(desktop: JDesktopPane, f: JInternalFrame) {
   runCatching { f.isIcon = true }
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

@@ -22,9 +22,9 @@ fun makeUI(): Component {
   }
 
   return JPanel().also {
-    EventQueue.invokeLater { it.rootPane.jMenuBar = MenuBarUtil.createMenuBar() }
+    EventQueue.invokeLater { it.rootPane.jMenuBar = MenuBarUtils.createMenuBar() }
     val popup = JPopupMenu()
-    MenuBarUtil.initMenu(popup)
+    MenuBarUtils.initMenu(popup)
     it.componentPopupMenu = popup
     it.add(check)
     it.preferredSize = Dimension(320, 240)
@@ -51,7 +51,7 @@ private class ExitAction : AbstractAction("Exit") {
   }
 }
 
-private object MenuBarUtil {
+private object MenuBarUtils {
   fun createMenuBar(): JMenuBar {
     val mb = JMenuBar()
     val file = JMenu("File")
@@ -62,7 +62,7 @@ private object MenuBarUtil {
     listOf("Cut", "Copy", "Paste", "Delete").map { edit.add(it) }.forEach { it.isEnabled = false }
     mb.add(edit)
 
-    mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+    mb.add(LookAndFeelUtils.createLookAndFeelMenu())
     mb.add(Box.createGlue())
 
     val help = JMenu("Help")
@@ -83,7 +83,7 @@ private object MenuBarUtil {
   }
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

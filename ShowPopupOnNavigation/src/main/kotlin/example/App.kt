@@ -33,7 +33,7 @@ fun makeUI(): Component {
   }
 
   val mb = JMenuBar()
-  mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   EventQueue.invokeLater { combo.rootPane.jMenuBar = mb }
 
   val box = Box.createVerticalBox().also {
@@ -61,7 +61,7 @@ private fun makeModel(): ComboBoxModel<String> {
   return model
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

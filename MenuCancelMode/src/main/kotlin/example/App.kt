@@ -55,13 +55,13 @@ private fun makeMenuBar(): JMenuBar {
   sub.add("JMenuItem5")
   menu.add(sub)
   menu.add("JMenuItem3")
-  val laf = LookAndFeelUtil.createLookAndFeelMenu()
+  val laf = LookAndFeelUtils.createLookAndFeelMenu()
   laf.mnemonic = KeyEvent.VK_L
   bar.add(laf)
   return bar
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

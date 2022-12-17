@@ -29,7 +29,7 @@ fun makeUI(): Component {
     it.add(toolBar2, BorderLayout.SOUTH)
     it.add(JScrollPane(JTextArea()))
     val mb = JMenuBar()
-    mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+    mb.add(LookAndFeelUtils.createLookAndFeelMenu())
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.preferredSize = Dimension(320, 240)
   }
@@ -72,7 +72,7 @@ private class ToolBarDragIcon : Icon {
   override fun getIconHeight() = 16
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

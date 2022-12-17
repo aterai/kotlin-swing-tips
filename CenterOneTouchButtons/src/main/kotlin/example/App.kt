@@ -28,7 +28,7 @@ fun makeUI(): Component {
   }
 
   val mb = JMenuBar()
-  mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   mb.add(Box.createHorizontalStrut(2))
   mb.add(check)
 
@@ -45,7 +45,7 @@ fun updateCenterOneTouchButtons(splitPane: JSplitPane?, b: Boolean) {
   SwingUtilities.updateComponentTreeUI(splitPane)
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

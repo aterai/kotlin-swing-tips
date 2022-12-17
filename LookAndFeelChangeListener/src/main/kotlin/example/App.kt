@@ -24,7 +24,7 @@ fun makeUI(): Component {
       }
     }
     val menuBar = JMenuBar()
-    menuBar.add(LookAndFeelUtil.createLookAndFeelMenu())
+    menuBar.add(LookAndFeelUtils.createLookAndFeelMenu())
     textArea.rootPane.jMenuBar = menuBar
     descendants(menuBar)
       .filterIsInstance<JRadioButtonMenuItem>()
@@ -88,7 +88,7 @@ private class ActionCommandCheckBox(key: TreeDraws) : JCheckBox(key.toString()) 
   }
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

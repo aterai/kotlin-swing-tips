@@ -5,7 +5,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val mb = JMenuBar()
-  mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   return JPanel(BorderLayout()).also {
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.add(JScrollPane(JTree()))
@@ -14,7 +14,7 @@ fun makeUI(): Component {
 }
 
 // @see SwingSet3/src/com/sun/swingset3/SwingSet3.java
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

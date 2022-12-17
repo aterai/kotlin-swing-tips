@@ -29,7 +29,7 @@ fun makeUI(): Component {
   np.add(dfiCheck)
 
   val mb = JMenuBar()
-  mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   EventQueue.invokeLater { np.rootPane.jMenuBar = mb }
 
   val p = object : JPanel(BorderLayout()) {
@@ -56,7 +56,7 @@ private enum class TreeDraws(private val key: String) {
   override fun toString() = key
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

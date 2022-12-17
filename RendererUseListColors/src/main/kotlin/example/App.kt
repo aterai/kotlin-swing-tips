@@ -95,7 +95,7 @@ fun makeUI(): Component {
   p1.add(grid, BorderLayout.NORTH)
 
   val mb = JMenuBar()
-  mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   EventQueue.invokeLater { p1.rootPane.jMenuBar = mb }
 
   val tabs = JTabbedPane()
@@ -111,7 +111,7 @@ private fun makeTitledPanel(title: String, c: Component): Component {
   return p
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

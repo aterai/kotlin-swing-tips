@@ -290,7 +290,7 @@ private object TextureUtils {
     g2.dispose()
     return TexturePaint(img, Rectangle(size, size))
   }
-} /* HideUtilityClassConstructor */
+} /* HideUtilsityClassConstructor */
 
 fun main() {
   EventQueue.invokeLater {

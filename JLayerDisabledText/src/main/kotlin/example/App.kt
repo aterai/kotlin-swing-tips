@@ -42,7 +42,7 @@ fun makeUI(): Component {
   panel.add(p2)
 
   val mb = JMenuBar()
-  mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
 
   return JPanel().also {
     it.add(panel)
@@ -132,7 +132,7 @@ private class DisableInputLayerUI<V : AbstractButton> : LayerUI<V>() {
   }
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

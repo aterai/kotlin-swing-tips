@@ -51,7 +51,7 @@ fun makeUI(): Component {
     it.add(box2)
     it.add(check, BorderLayout.SOUTH)
     val mb = JMenuBar()
-    mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+    mb.add(LookAndFeelUtils.createLookAndFeelMenu())
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.preferredSize = Dimension(320, 240)
   }
@@ -62,7 +62,7 @@ private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()
   it.add(c)
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

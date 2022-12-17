@@ -41,14 +41,14 @@ fun makeUI(): Component {
 
   return JPanel(BorderLayout()).also {
     val mb = JMenuBar()
-    mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+    mb.add(LookAndFeelUtils.createLookAndFeelMenu())
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.add(p)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

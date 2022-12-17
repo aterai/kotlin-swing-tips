@@ -56,7 +56,7 @@ fun makeUI(): Component {
   }
 
   val mb = JMenuBar()
-  mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   EventQueue.invokeLater { p.rootPane.jMenuBar = mb }
 
   p.add(tabs)
@@ -111,7 +111,7 @@ private class MissingIcon : Icon {
   override fun getIconHeight() = 240
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

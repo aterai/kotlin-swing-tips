@@ -22,7 +22,7 @@ fun makeUI(): Component {
   }
 
   val mb = JMenuBar()
-  mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
 
   return JPanel(GridLayout(1, 0)).also {
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
@@ -267,7 +267,7 @@ private class WholeRowSelectableTreeUI : BasicTreeUI() {
     if (c is DefaultTreeCellRenderer) c.backgroundSelectionColor else Color.LIGHT_GRAY
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

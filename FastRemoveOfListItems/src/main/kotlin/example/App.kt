@@ -26,7 +26,7 @@ private fun makeCmp0(): Component {
   val button2 = makeButton("<")
   button2.addActionListener { move0(rightList, leftList) }
 
-  return SpringLayoutUtil.makePanel(leftList, rightList, button1, button2)
+  return SpringLayoutUtils.makePanel(leftList, rightList, button1, button2)
 }
 
 private fun makeCmp1(): Component {
@@ -44,7 +44,7 @@ private fun makeCmp1(): Component {
   val button2 = makeButton("<")
   button2.addActionListener { move1(rightList, leftList) }
 
-  return SpringLayoutUtil.makePanel(leftList, rightList, button1, button2)
+  return SpringLayoutUtils.makePanel(leftList, rightList, button1, button2)
 }
 
 private fun makeCmp2(): Component {
@@ -62,7 +62,7 @@ private fun makeCmp2(): Component {
   val button2 = makeButton("<")
   button2.addActionListener { move2(rightList, leftList) }
 
-  return SpringLayoutUtil.makePanel(leftList, rightList, button1, button2)
+  return SpringLayoutUtils.makePanel(leftList, rightList, button1, button2)
 }
 
 private fun <E> move0(from: JList<E>, to: JList<E>) {
@@ -167,7 +167,7 @@ private class ArrayListModel<E> : AbstractListModel<E>() {
   override fun getSize() = delegate.size
 }
 
-private object SpringLayoutUtil {
+private object SpringLayoutUtils {
   private fun setScaleAndAdd(
     parent: Container,
     layout: SpringLayout,

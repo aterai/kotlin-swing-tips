@@ -13,7 +13,7 @@ fun makeUI(): Component {
   addFrame(desktop, 1)
 
   val menuBar = JMenuBar()
-  menuBar.add(LookAndFeelUtil.createLookAndFeelMenu())
+  menuBar.add(LookAndFeelUtils.createLookAndFeelMenu())
 
   return JPanel(BorderLayout()).also {
     EventQueue.invokeLater {
@@ -49,7 +49,7 @@ private fun makePanel() = JPanel().also {
   it.add(JButton("button"))
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

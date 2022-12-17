@@ -23,7 +23,7 @@ fun makeUI(): Component {
   table.autoCreateRowSorter = true
 
   val mb = JMenuBar()
-  mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
 
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(table))
@@ -32,7 +32,7 @@ fun makeUI(): Component {
   }
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

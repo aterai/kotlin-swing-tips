@@ -45,7 +45,7 @@ fun makeUI(): Component {
   box.border = BorderFactory.createEmptyBorder(15, 15, 15, 15)
 
   val mb = JMenuBar()
-  mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
 
   return JPanel(BorderLayout()).also {
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
@@ -67,7 +67,7 @@ private fun makeComboBox(): JComboBox<String> {
   return JComboBox(model)
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

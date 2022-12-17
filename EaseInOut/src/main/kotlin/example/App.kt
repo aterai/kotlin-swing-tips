@@ -102,7 +102,7 @@ private class LabelHandler(private val textArea: Component) : MouseAdapter(), Hi
 
   private fun updateTextAreaLocation() {
     val height = textArea.preferredSize.getHeight()
-    val a = AnimationUtil.easeInOut(count / height)
+    val a = AnimationUtils.easeInOut(count / height)
     count += direction
     textAreaHeight = (.5 + a * height).toInt()
     textArea.background = Color(0f, 0f, 0f, (.6 * a).toFloat())
@@ -151,7 +151,7 @@ private class LabelHandler(private val textArea: Component) : MouseAdapter(), Hi
   }
 }
 
-private object AnimationUtil {
+private object AnimationUtils {
   private const val N = 3
 
   fun easeInOut(t: Double): Double {

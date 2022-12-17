@@ -96,7 +96,7 @@ private fun zip(str: String) {
     }
   }
   runCatching {
-    ZipUtil.zip(path, tgt)
+    ZipUtils.zip(path, tgt)
   }.onFailure {
     logger.info { "Cant zip! : $path" }
     UIManager.getLookAndFeel().provideErrorFeedback(textArea)
@@ -118,7 +118,7 @@ private fun unzip(str: String) {
         logger.info { "mkdir0: $destDir" }
         Files.createDirectories(destDir)
       }
-      ZipUtil.unzip(path, destDir)
+      ZipUtils.unzip(path, destDir)
     }.onFailure {
       logger.info { "Cant unzip! : $path" }
       UIManager.getLookAndFeel().provideErrorFeedback(textArea)
@@ -139,7 +139,7 @@ private fun makeDestDirPath(text: String): Path? {
   return path.resolveSibling(name)
 }
 
-private object ZipUtil {
+private object ZipUtils {
   @Throws(IOException::class)
   fun zip(srcDir: Path, zip: Path) {
     Files.walk(srcDir)

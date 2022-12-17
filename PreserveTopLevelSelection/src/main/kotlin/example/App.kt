@@ -52,10 +52,10 @@ private fun makeMenuBar() = JMenuBar().also {
     menu.add("JMenuItem3")
   }
 
-  it.add(LookAndFeelUtil.createLookAndFeelMenu())
+  it.add(LookAndFeelUtils.createLookAndFeelMenu())
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

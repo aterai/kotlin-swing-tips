@@ -73,9 +73,9 @@ private class SlideInNotification : PropertyChangeListener, HierarchyListener {
     listener = ActionListener {
       val v = count.addAndGet(STEP) / d.height.toDouble()
       val a = when (slideInAnimation) {
-        SlideInAnimation.EASE_IN -> AnimationUtil.easeIn(v)
-        SlideInAnimation.EASE_OUT -> AnimationUtil.easeOut(v)
-        else -> AnimationUtil.easeInOut(v)
+        SlideInAnimation.EASE_IN -> AnimationUtils.easeIn(v)
+        SlideInAnimation.EASE_OUT -> AnimationUtils.easeOut(v)
+        else -> AnimationUtils.easeInOut(v)
       }
       var visibleHeight = (.5 + a * d.height).toInt()
       if (visibleHeight >= d.height) {
@@ -129,7 +129,7 @@ private enum class SlideInAnimation {
   EASE_IN, EASE_OUT, EASE_IN_OUT
 }
 
-private object AnimationUtil {
+private object AnimationUtils {
   private const val N = 3
 
   fun easeIn(t: Double) = t.pow(N.toDouble())

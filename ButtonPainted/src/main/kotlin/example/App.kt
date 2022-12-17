@@ -51,7 +51,7 @@ fun makeUI(): Component {
 
   return JPanel(BorderLayout()).also {
     val mb = JMenuBar()
-    mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+    mb.add(LookAndFeelUtils.createLookAndFeelMenu())
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.add(box, BorderLayout.NORTH)
     it.add(p)
@@ -73,7 +73,7 @@ private fun makeRolloverIcon(srcIcon: Icon): Icon {
   return ImageIcon(op.filter(img, null))
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

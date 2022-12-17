@@ -11,7 +11,7 @@ fun makeUI(): Component {
   menu1.addSeparator()
   menu1.add("Exit")
 
-  val menu2 = LookAndFeelUtil.createLookAndFeelMenu()
+  val menu2 = LookAndFeelUtils.createLookAndFeelMenu()
   val pop = menu2.popupMenu
   pop.layout = GridLayout(0, 2, 8, 0)
   pop.border = BorderFactory.createCompoundBorder(pop.border, ColumnRulesBorder())
@@ -49,7 +49,7 @@ private class ColumnRulesBorder : Border {
   override fun isBorderOpaque() = true
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

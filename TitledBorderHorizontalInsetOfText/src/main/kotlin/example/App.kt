@@ -99,7 +99,7 @@ private class TitledBorder2(title: String?) : TitledBorder(title) {
           return value
         }
       } else if (value is String) {
-        return TitledBorderUtil.getPositionByString(value)
+        return TitledBorderUtils.getPositionByString(value)
       }
       return TOP
     }
@@ -122,7 +122,7 @@ private class TitledBorder2(title: String?) : TitledBorder(title) {
       val size = getLabel2(c).preferredSize
       lr.height = size.height
 
-      val ins = TitledBorderUtil.getBorderInsets(bdr, c)
+      val ins = TitledBorderUtils.getBorderInsets(bdr, c)
       initPositionRect(height, edge, ins, br, lr)
       ins.left += edge + TEXT_INSET_H2
       ins.right += edge + TEXT_INSET_H2
@@ -213,7 +213,7 @@ private class TitledBorder2(title: String?) : TitledBorder(title) {
     return if (getTitle()?.isNotEmpty() == true) {
       val edge = if (getBorder() is TitledBorder2) 0 else EDGE_SPACING
       val size = getLabel2(c).preferredSize
-      TitledBorderUtil.initInsets(insets, position2, edge, size)
+      TitledBorderUtils.initInsets(insets, position2, edge, size)
       insets.top += edge + TEXT_SPACING2
       insets.left += edge + TEXT_SPACING2
       insets.right += edge + TEXT_SPACING2
@@ -272,7 +272,7 @@ private class TitledBorder2(title: String?) : TitledBorder(title) {
   }
 }
 
-private object TitledBorderUtil {
+private object TitledBorderUtils {
   fun getBorderInsets(bdr: Border?, c: Component?): Insets {
     var insets = Insets(0, 0, 0, 0)
     if (bdr is AbstractBorder) {

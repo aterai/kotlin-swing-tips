@@ -30,7 +30,7 @@ fun makeUI(): Component {
 
   return JPanel(GridLayout(2, 1, 5, 5)).also {
     val mb = JMenuBar()
-    mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+    mb.add(LookAndFeelUtils.createLookAndFeelMenu())
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
 
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
@@ -63,7 +63,7 @@ private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()
   it.add(c)
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

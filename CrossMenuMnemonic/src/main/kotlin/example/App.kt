@@ -22,19 +22,19 @@ fun makeUI(): Component {
 
   return JPanel().also {
     EventQueue.invokeLater {
-      it.rootPane.jMenuBar = MenuBarUtil.createMenuBar()
+      it.rootPane.jMenuBar = MenuBarUtils.createMenuBar()
     }
     it.add(check)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private object MenuBarUtil {
+private object MenuBarUtils {
   fun createMenuBar(): JMenuBar {
     val mb = JMenuBar()
     mb.add(createFileMenu())
     mb.add(createEditMenu())
-    mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+    mb.add(LookAndFeelUtils.createLookAndFeelMenu())
     mb.add(Box.createGlue())
     mb.add(createHelpMenu())
     return mb
@@ -67,7 +67,7 @@ private object MenuBarUtil {
   }
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

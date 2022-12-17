@@ -7,7 +7,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 fun makeUI(): Component {
   return JPanel(BorderLayout()).also {
     val menuBar = JMenuBar()
-    menuBar.add(LookAndFeelUtil.createLookAndFeelMenu())
+    menuBar.add(LookAndFeelUtils.createLookAndFeelMenu())
     EventQueue.invokeLater { it.rootPane.jMenuBar = menuBar }
     it.add(JScrollPane(makeTestBox()))
     it.preferredSize = Dimension(320, 240)
@@ -61,7 +61,7 @@ private fun makeSystemColor(color: Color, text: String): Component {
   return p
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private const val MAC = "com.sun.java.swing.plaf.mac.MacLookAndFeel"
   private const val METAL = "javax.swing.plaf.metal.MetalLookAndFeel"
   private const val MOTIF = "com.sun.java.swing.plaf.motif.MotifLookAndFeel"

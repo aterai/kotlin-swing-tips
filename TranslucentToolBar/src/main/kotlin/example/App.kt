@@ -60,7 +60,7 @@ private class LabelWithToolBox(image: Icon?) : JLabel(image) {
       val height = toolBox.preferredSize.height
       val h = height.toDouble()
       if (isHidden) {
-        val a = AnimationUtil.easeInOut(++counter / h)
+        val a = AnimationUtils.easeInOut(++counter / h)
         yy = (.5 + a * h).toInt()
         toolBox.background = Color(0f, 0f, 0f, (.6 * a).toFloat())
         if (yy >= height) {
@@ -68,7 +68,7 @@ private class LabelWithToolBox(image: Icon?) : JLabel(image) {
           animator.stop()
         }
       } else {
-        val a = AnimationUtil.easeInOut(--counter / h)
+        val a = AnimationUtils.easeInOut(--counter / h)
         yy = (.5 + a * h).toInt()
         toolBox.background = Color(0f, 0f, 0f, (.6 * a).toFloat())
         if (yy <= 0) {
@@ -194,7 +194,7 @@ private class ParentDispatchMouseListener : MouseAdapter() {
   }
 }
 
-private object AnimationUtil {
+private object AnimationUtils {
   private const val N = 3
 
   fun easeInOut(t: Double): Double {

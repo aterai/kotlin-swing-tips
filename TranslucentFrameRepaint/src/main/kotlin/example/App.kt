@@ -26,7 +26,7 @@ fun makeUI(): Component {
   }
   val cl = Thread.currentThread().contextClassLoader
   val ttf = cl.getResource("example/YournameS7ScientificHalf.ttf")
-  val tp = TextureUtil.makeTexturePanel(label, ttf)
+  val tp = TextureUtils.makeTexturePanel(label, ttf)
   val digitalClock = JFrame()
   digitalClock.contentPane.add(tp)
   digitalClock.isUndecorated = true
@@ -102,15 +102,15 @@ private enum class TexturePaints(private val description: String) {
 
   val texturePaint
     get() = when (this) {
-      IMAGE -> TextureUtil.makeImageTexture()
-      CHECKER -> TextureUtil.makeCheckerTexture()
+      IMAGE -> TextureUtils.makeImageTexture()
+      CHECKER -> TextureUtils.makeCheckerTexture()
       NULL -> null
     }
 
   override fun toString() = description
 }
 
-private object TextureUtil {
+private object TextureUtils {
   fun makeImageTexture(): TexturePaint {
     val path = "example/unkaku_w.png"
     val url = Thread.currentThread().contextClassLoader.getResource(path)

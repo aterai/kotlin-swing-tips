@@ -21,7 +21,7 @@ fun makeUI(): Component {
   p.add(button, BorderLayout.SOUTH)
 
   val mb = JMenuBar()
-  mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
 
   val f = DraggableInternalFrame("title")
   f.contentPane.add(p)
@@ -82,7 +82,7 @@ private class DraggableInternalFrame(title: String?) : JInternalFrame(title) {
   }
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

@@ -41,7 +41,7 @@ fun makeUI(): Component {
   button.addActionListener { sorter.setSortKeys(null) }
 
   val mb = JMenuBar()
-  mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
 
   return JPanel(BorderLayout()).also {
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
@@ -180,7 +180,7 @@ private class RotateIcon(icon: Icon, rotate: Int) : Icon {
   override fun getIconHeight() = dim.height
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

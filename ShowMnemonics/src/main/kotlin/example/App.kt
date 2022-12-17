@@ -33,7 +33,7 @@ fun makeUI(): Component {
 private fun createMenuBar() = JMenuBar().also {
   it.add(createMenu("File", listOf("Open", "Save", "Exit")))
   it.add(createMenu("Edit", listOf("Cut", "Copy", "Paste", "Delete")))
-  it.add(LookAndFeelUtil.createLookAndFeelMenu())
+  it.add(LookAndFeelUtils.createLookAndFeelMenu())
   it.add(Box.createGlue())
   it.add(createMenu("Help", listOf("Version", "About")))
 }
@@ -45,7 +45,7 @@ private fun createMenu(title: String, list: List<String>) = JMenu(title).also {
   }
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

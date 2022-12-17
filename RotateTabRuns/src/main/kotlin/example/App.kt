@@ -31,7 +31,7 @@ fun makeUI(): Component {
 
   return JPanel(GridLayout(2, 1, 5, 5)).also {
     val mb = JMenuBar()
-    mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+    mb.add(LookAndFeelUtils.createLookAndFeelMenu())
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
 
     it.add(makeTabbedPane(JTabbedPane()))
@@ -61,7 +61,7 @@ private class ColorIcon(private val color: Color) : Icon {
   override fun getIconHeight() = 12
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

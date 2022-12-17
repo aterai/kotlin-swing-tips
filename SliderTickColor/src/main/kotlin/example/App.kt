@@ -18,7 +18,7 @@ fun makeUI(): Component {
   p.add(makeSlider(slider))
 
   val mb = JMenuBar()
-  mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
 
   return JPanel(BorderLayout()).also {
     EventQueue.invokeLater { it.rootPane.setJMenuBar(mb) }
@@ -36,7 +36,7 @@ private fun makeSlider(slider: JSlider): JSlider {
   return slider
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

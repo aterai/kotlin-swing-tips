@@ -16,7 +16,7 @@ fun makeUI(): Component {
   val box = Box.createVerticalBox()
   for (info in UIManager.getInstalledLookAndFeels()) {
     val b = JRadioButton(info.name)
-    LookAndFeelUtil.initLookAndFeelAction(info, b)
+    LookAndFeelUtils.initLookAndFeelAction(info, b)
     b.addActionListener {
       EventQueue.invokeLater { SwingUtilities.updateComponentTreeUI(popup) }
     }
@@ -92,7 +92,7 @@ private fun makeDefaultTrayImage(): Image {
   return bi
 }
 
-private object TrayIconPopupMenuUtil {
+private object TrayIconPopupMenuUtils {
   // Try to find GraphicsConfiguration, that includes mouse pointer position
   private fun getGraphicsConfiguration(p: Point): GraphicsConfiguration? {
     var gc: GraphicsConfiguration? = null
@@ -139,7 +139,7 @@ private class TrayIconPopupMenuHandler(
 ) : MouseAdapter() {
   private fun showPopupMenu(e: MouseEvent) {
     if (e.isPopupTrigger) {
-      val p = TrayIconPopupMenuUtil.adjustPopupLocation(popup, e.x, e.y)
+      val p = TrayIconPopupMenuUtils.adjustPopupLocation(popup, e.x, e.y)
       dummy.location = p
       dummy.isVisible = true
       // dummy.toFront()
@@ -156,7 +156,7 @@ private class TrayIconPopupMenuHandler(
   }
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {

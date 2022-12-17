@@ -29,7 +29,7 @@ fun makeUI(): Component {
   list.forEach { p.add(it) }
 
   val mb = JMenuBar()
-  mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   EventQueue.invokeLater { p.rootPane.jMenuBar = mb }
 
   return JPanel(BorderLayout()).also {
@@ -48,7 +48,7 @@ private fun makeTabbedPane(): JTabbedPane {
   return tabs
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

@@ -21,7 +21,7 @@ fun makeUI(): Component {
 
   return JPanel(BorderLayout()).also {
     val mb = JMenuBar()
-    mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+    mb.add(LookAndFeelUtils.createLookAndFeelMenu())
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.add(check, BorderLayout.NORTH)
     it.add(scroll)
@@ -29,7 +29,7 @@ fun makeUI(): Component {
   }
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

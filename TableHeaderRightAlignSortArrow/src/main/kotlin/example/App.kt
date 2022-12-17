@@ -36,7 +36,7 @@ fun makeUI(): Component {
   }
 
   val mb = JMenuBar()
-  mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   mb.add(Box.createHorizontalGlue())
   mb.add(check)
 
@@ -53,7 +53,7 @@ fun updateSortAlign(table: JTable, key: String?, b: Boolean) {
   SwingUtilities.updateComponentTreeUI(table)
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

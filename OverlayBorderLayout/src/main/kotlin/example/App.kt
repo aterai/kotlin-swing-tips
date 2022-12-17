@@ -91,13 +91,13 @@ private class LayoutAnimator(private val component: JComponent) : BorderLayout()
   override fun actionPerformed(e: ActionEvent) {
     val height = component.preferredSize.height
     if (isShowing) {
-      yy = (.5 + AnimationUtil.easeInOut(++counter / height.toDouble()) * height).toInt()
+      yy = (.5 + AnimationUtils.easeInOut(++counter / height.toDouble()) * height).toInt()
       if (yy >= height) {
         yy = height
         (e.source as? Timer)?.stop()
       }
     } else {
-      yy = (.5 + AnimationUtil.easeInOut(--counter / height.toDouble()) * height).toInt()
+      yy = (.5 + AnimationUtils.easeInOut(--counter / height.toDouble()) * height).toInt()
       if (yy <= 0) {
         yy = 0
         (e.source as? Timer)?.stop()
@@ -190,7 +190,7 @@ private fun searchTree(
   }
 }
 
-private object AnimationUtil {
+private object AnimationUtils {
   private const val N = 3
   fun easeInOut(t: Double): Double {
     val ret: Double

@@ -24,7 +24,7 @@ fun makeUI(): Component {
   addCheckBoxMenuItemAndSlider(menu)
 
   val mb = JMenuBar()
-  mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   mb.add(menu)
 
   return JPanel(BorderLayout()).also {
@@ -141,7 +141,7 @@ private class DispatchParentHandler : MouseInputAdapter() {
   }
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

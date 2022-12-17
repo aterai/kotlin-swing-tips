@@ -25,7 +25,7 @@ fun makeUI(): Component {
   }
 
   val mb = JMenuBar()
-  mb.add(LookAndFeelUtil.createLookAndFeelMenu())
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   EventQueue.invokeLater { log.getRootPane().setJMenuBar(mb) }
 
   val p = JPanel(GridLayout(2, 1, 10, 10))
@@ -46,7 +46,7 @@ fun getBoolean(o: Any?) = when {
   else -> false
 }
 
-private object LookAndFeelUtil {
+private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
   fun createLookAndFeelMenu(): JMenu {

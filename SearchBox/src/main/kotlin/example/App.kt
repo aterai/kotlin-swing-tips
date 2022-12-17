@@ -19,7 +19,7 @@ fun makeUI(): Component {
       val selectedPath = tree.selectionPath
       tree.clearSelection()
       rollOverPathLists.clear()
-      TreeUtil.searchTree(tree, tree.getPathForRow(0), field.text, rollOverPathLists)
+      TreeUtils.searchTree(tree, tree.getPathForRow(0), field.text, rollOverPathLists)
       if (rollOverPathLists.isNotEmpty()) {
         val nextIdx = getNextIndex(rollOverPathLists, selectedPath)
         val p = rollOverPathLists[nextIdx]
@@ -135,7 +135,7 @@ private class ControlPanelLayout(
   }
 }
 
-private object TreeUtil {
+private object TreeUtils {
   fun searchTree(
     tree: JTree,
     path: TreePath,
