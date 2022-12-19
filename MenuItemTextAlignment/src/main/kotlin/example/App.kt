@@ -52,7 +52,7 @@ fun makeUI(): Component {
 private fun makeMenu(title: String, item: Component) = JMenu(title).also {
   it.add(item)
   it.addSeparator()
-  it.add("JMenuItem").addActionListener { println("actionPerformed") }
+  it.add("JMenuItem") // .addActionListener { println("actionPerformed") }
   it.add("JMenuItem + Icon").icon = ColorIcon(Color.RED)
   it.add("1234567878909758457546734564562346432")
 }

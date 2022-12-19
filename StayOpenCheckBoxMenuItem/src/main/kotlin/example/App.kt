@@ -42,7 +42,7 @@ fun makeUI(): Component {
   popup.add(makeStayOpenCheckBoxMenuItem(JMenuItem("JMenuItem + JCheckBox")))
   popup.add(JCheckBoxMenuItem("JCheckBoxMenuItem"))
   popup.add(JCheckBoxMenuItem("keeping open #1")).addActionListener { e ->
-    println("ActionListener")
+    // println("ActionListener")
     val c = SwingUtilities.getAncestorOfClass(JPopupMenu::class.java, e.source as? Component)
     (c as? JPopupMenu)?.isVisible = true
   }
@@ -52,7 +52,7 @@ fun makeUI(): Component {
       super.updateUI()
       val tmp = object : BasicCheckBoxMenuItemUI() {
         override fun doClick(msm: MenuSelectionManager) {
-          println("MenuSelectionManager: doClick")
+          // println("MenuSelectionManager: doClick")
           menuItem.doClick(0)
         }
       }
