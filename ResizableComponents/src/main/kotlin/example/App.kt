@@ -55,7 +55,7 @@ private fun createTree() {
   tree.visibleRowCount = 8
   val c = JScrollPane(tree)
   val d = c.preferredSize
-  val resizer = JResizer(BorderLayout())
+  val resizer = ResizablePanel(BorderLayout())
   resizer.add(c)
   resizer.setBounds(pt.x, pt.y, d.width, d.height)
   layeredPane.add(resizer)
@@ -67,14 +67,14 @@ private fun createTable() {
   table.preferredScrollableViewportSize = Dimension(160, 160)
   val c = JScrollPane(table)
   val d = c.preferredSize
-  val resizer = JResizer(BorderLayout())
+  val resizer = ResizablePanel(BorderLayout())
   resizer.add(c)
   resizer.setBounds(pt.x, pt.y, d.width, d.height)
   layeredPane.add(resizer)
   layeredPane.moveToFront(resizer)
 }
 
-private class JResizer(layout: LayoutManager) : JPanel(layout) {
+private class ResizablePanel(layout: LayoutManager) : JPanel(layout) {
   @Transient
   private var resizeListener: MouseInputListener? = null
 

@@ -14,7 +14,7 @@ fun makeUI(): Component {
 
   val p1 = JPanel()
   p1.border = BorderFactory.createTitledBorder("Blurred JButton1")
-  val b1 = BlurJButton("Blurred JButton1")
+  val b1 = BlurredButton("Blurred JButton1")
   p1.add(b1)
 
   val p2 = JPanel()
@@ -43,7 +43,7 @@ fun makeUI(): Component {
 
 // https://www.oreilly.com/library/view/swing-hacks/0596009070/
 // 9. Blur Disabled Components
-private class BlurJButton(label: String) : JButton(label) {
+private class BlurredButton(label: String) : JButton(label) {
   @Transient
   private var buf: BufferedImage? = null
 
