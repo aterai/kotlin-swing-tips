@@ -3,7 +3,7 @@ package example
 import java.awt.event.FocusEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-open class JSearchBar<E : SearchEngine> : JComboBox<E> {
+open class SearchBarComboBox<E : SearchEngine> : JComboBox<E> {
   constructor(model: ComboBoxModel<E>) : super(model)
 
   @SafeVarargs

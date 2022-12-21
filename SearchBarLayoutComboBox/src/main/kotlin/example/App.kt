@@ -15,7 +15,7 @@ fun makeUI(): Component {
   m.addElement(SearchEngine("Yahoo!", "https://www.yahoo.com/", makeIcon("yahoo")))
   m.addElement(SearchEngine("Bing", "https://www.bing.com/", makeIcon("bing")))
 
-  val combo = JSearchBar(m)
+  val combo = SearchBarComboBox(m)
   combo.getEditor().setItem("java swing")
 
   p.add(combo)
