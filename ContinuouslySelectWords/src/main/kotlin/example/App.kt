@@ -41,12 +41,13 @@ private class SelectWordCaret : DefaultCaret() {
   override fun mousePressed(e: MouseEvent) {
     super.mousePressed(e)
     val clickCount = e.clickCount
-    if (SwingUtilities.isLeftMouseButton(e) && !e.isConsumed) {
-      if (clickCount == 2) {
+    if (SwingUtilities.isLeftMouseButton(e) && !e.isConsumed && clickCount > 1) {
+      val isDoubleClicked = clickCount == 2
+      if (isDoubleClicked) {
         selectingMode = SelectingMode.WORD
         p0 = minOf(dot, mark)
         p1 = maxOf(dot, mark)
-      } else if (clickCount >= 3) {
+      } else {
         selectingMode = SelectingMode.ROW
         val target = component
         val offs = target.caretPosition
