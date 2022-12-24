@@ -62,7 +62,7 @@ fun makeUI(): Component {
 
 private class TableSorter() : AbstractTableModel() {
   private var tableModel: TableModel? = null
-  private val viewToModel = mutableListOf<Row>()
+  private val viewToModel = mutableListOf<TableRow>()
   private val modelToView = mutableListOf<Int>()
   private val sortingColumns = mutableListOf<Directive>()
   private var tableHeader: JTableHeader? = null
@@ -176,11 +176,11 @@ private class TableSorter() : AbstractTableModel() {
   //   return columnComparators[columnType] ?: LEXICAL_COMP
   // }
 
-  private fun getViewToModel(): List<Row> {
+  private fun getViewToModel(): List<TableRow> {
     val rc = tableModel?.rowCount ?: 0
     if (viewToModel.isEmpty() && tableModel != null) {
       for (i in 0 until rc) {
-        viewToModel.add(Row(i))
+        viewToModel.add(TableRow(i))
       }
       if (isSorting) {
         viewToModel.sortWith(rowComparator)
@@ -219,8 +219,8 @@ private class TableSorter() : AbstractTableModel() {
   }
 
   // Helper classes
-  private inner class RowComparator : Comparator<Row> {
-    override fun compare(r1: Row, r2: Row): Int {
+  private inner class RowComparator : Comparator<TableRow> {
+    override fun compare(r1: TableRow, r2: TableRow): Int {
       val row1 = r1.modelIndex
       val row2 = r2.modelIndex
       for (directive in sortingColumns) {
@@ -249,14 +249,14 @@ private class TableSorter() : AbstractTableModel() {
           fireTableChanged(e)
         }
         else -> {
-          val col = e.column
+          val column = e.column
           val fr = e.firstRow
           val lr = e.lastRow
-          val b = getSortingStatus(col) == NOT_SORTED
-          if (fr == lr && col != TableModelEvent.ALL_COLUMNS && b) {
+          val b = getSortingStatus(column) == NOT_SORTED
+          if (fr == lr && column != TableModelEvent.ALL_COLUMNS && b) {
             val viewIndex = getModelToView()[fr]
             val src = this@TableSorter
-            fireTableChanged(TableModelEvent(src, viewIndex, viewIndex, col, e.type))
+            fireTableChanged(TableModelEvent(src, viewIndex, viewIndex, column, e.type))
             return
           }
           clearSortingState()
@@ -268,8 +268,7 @@ private class TableSorter() : AbstractTableModel() {
 
   private inner class MouseHandler : MouseAdapter() {
     override fun mouseClicked(e: MouseEvent) {
-      val h = e.component as? JTableHeader
-      val columnModel = h?.columnModel
+      val columnModel = (e.component as? JTableHeader)?.columnModel
       val viewColumn = columnModel?.getColumnIndexAtX(e.x) ?: -1
       if (columnModel == null || viewColumn < 0) {
         return
@@ -334,7 +333,8 @@ private class SortableHeaderRenderer(val cellRenderer: TableCellRenderer) : Tabl
   ).also {
     val sorter = table.model
     if (it is JLabel && sorter is TableSorter) {
-      it.icon = sorter.getHeaderRendererIcon(table.convertColumnIndexToModel(column), it.font.size)
+      val mi = table.convertColumnIndexToModel(column)
+      it.icon = sorter.getHeaderRendererIcon(mi, it.font.size)
       it.horizontalTextPosition = SwingConstants.LEFT
     }
   }
@@ -408,7 +408,7 @@ private class Directive(val column: Int, val direction: Int) : Serializable {
   }
 }
 
-private class Row(val modelIndex: Int) : Serializable {
+private class TableRow(val modelIndex: Int) : Serializable {
   companion object {
     private const val serialVersionUID = 1L
   }
