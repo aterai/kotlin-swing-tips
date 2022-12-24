@@ -18,12 +18,13 @@ fun makeUI(): Component {
       super.approveSelection()
     }
   }
+
+  val log = JTextArea()
   val button = JButton("Override JFileChooser#approveSelection()")
   button.addActionListener {
-    val ret = fileChooser.showSaveDialog(button.rootPane)
+    val ret = fileChooser.showSaveDialog(log.rootPane)
     if (ret == JFileChooser.APPROVE_OPTION) {
-      val file = fileChooser.selectedFile
-      println(file)
+      log.append("${fileChooser.selectedFile}\n")
     }
   }
   val p = JPanel(GridBagLayout())
@@ -32,8 +33,12 @@ fun makeUI(): Component {
     BorderFactory.createTitledBorder("JFileChooser#showSaveDialog(...)")
   )
   p.add(button)
-  p.preferredSize = Dimension(320, 240)
-  return p
+
+  return JPanel(BorderLayout()).also {
+    it.add(p, BorderLayout.NORTH)
+    it.add(JScrollPane(log))
+    it.preferredSize = Dimension(320, 240)
+  }
 }
 
 fun main() {
