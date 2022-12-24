@@ -13,8 +13,8 @@ import javax.swing.plaf.UIResource
 import javax.swing.plaf.basic.BasicTabbedPaneUI
 
 fun makeUI(): Component {
-  val tab1 = JTabbedPaneWithCloseButton()
-  val tab2 = JTabbedPaneWithCloseIcons()
+  val tab1 = TabbedPaneWithCloseButton()
+  val tab2 = TabbedPaneWithCloseIcons()
   val tab3 = CloseableTabbedPane()
   val p = JPanel(GridLayout(3, 1))
   listOf(tab1, tab2, tab3).forEach { p.add(makeTabbedPane(it)) }
@@ -323,7 +323,7 @@ private class CloseTabIcon(private val fileIcon: Icon?) : Icon {
   override fun getIconHeight() = height
 }
 
-private class JTabbedPaneWithCloseButton : JTabbedPane() {
+private class TabbedPaneWithCloseButton : JTabbedPane() {
   private var closeButtons: MutableList<JButton>? = null
   override fun updateUI() {
     closeButtons?.forEach {
@@ -414,7 +414,7 @@ private class CloseButtonAction(
   }
 }
 
-private class JTabbedPaneWithCloseIcons : JTabbedPane() {
+private class TabbedPaneWithCloseIcons : JTabbedPane() {
   init {
     addMouseListener(object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
