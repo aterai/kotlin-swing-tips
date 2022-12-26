@@ -11,16 +11,16 @@ import javax.swing.table.DefaultTableModel
 
 fun makeUI() = JPanel(BorderLayout()).also {
   val p = JPanel(GridLayout(2, 1))
-  val h = TableRowTransferHandler()
+  val handler = TableRowTransferHandler()
   p.border = BorderFactory.createTitledBorder("Drag & Drop JTable")
-  p.add(JScrollPane(makeDnDTable(h)))
-  p.add(JScrollPane(makeDnDTable(h)))
+  p.add(JScrollPane(makeDragAndDropTable(handler)))
+  p.add(JScrollPane(makeDragAndDropTable(handler)))
   it.add(p)
   it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   it.preferredSize = Dimension(320, 240)
 }
 
-private fun makeDnDTable(handler: TableRowTransferHandler): JTable {
+private fun makeDragAndDropTable(handler: TableRowTransferHandler): JTable {
   val columnNames = arrayOf("String", "Integer", "Boolean")
   val data = arrayOf(
     arrayOf("AAA", 12, true),

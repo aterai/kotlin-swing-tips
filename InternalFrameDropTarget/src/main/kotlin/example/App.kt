@@ -13,13 +13,13 @@ fun makeUI(): Component {
   val dp = JDesktopPane()
   val handler = TableRowTransferHandler()
   val f1 = JInternalFrame("11111111", true, true, true, true)
-  f1.add(JScrollPane(makeDnDTable(handler)))
+  f1.add(JScrollPane(makeDragAndDropTable(handler)))
   f1.isOpaque = false
   dp.add(f1, 1, 1)
   f1.setBounds(0, 0, 240, 160)
 
   val f2 = JInternalFrame("22222222", true, true, true, true)
-  f2.add(JScrollPane(makeDnDTable(handler)))
+  f2.add(JScrollPane(makeDragAndDropTable(handler)))
   dp.add(f2, 1, 0)
   f2.setBounds(50, 50, 240, 160)
   f2.isOpaque = false
@@ -32,7 +32,7 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeDnDTable(handler: TransferHandler): JTable {
+private fun makeDragAndDropTable(handler: TransferHandler): JTable {
   val columnNames = arrayOf("String", "Integer", "Boolean")
   val data = arrayOf(
     arrayOf("AAA", 12, true),
