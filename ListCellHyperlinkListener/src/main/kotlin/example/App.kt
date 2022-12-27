@@ -55,8 +55,8 @@ private class SiteListItemRenderer : ListCellRenderer<SiteItem> {
       this.isEditable = false
       listener = HyperlinkListener() { e ->
         if (e.eventType == HyperlinkEvent.EventType.ACTIVATED) {
-          println("You click the link with the URL " + e.url)
-          // UIManager.getLookAndFeel().provideErrorFeedback(e.source as? Component)
+          val c = (e.source as? JComponent)?.rootPane
+          JOptionPane.showMessageDialog(c, "You click the link with the URL " + e.url)
         }
       }
       addHyperlinkListener(listener)
