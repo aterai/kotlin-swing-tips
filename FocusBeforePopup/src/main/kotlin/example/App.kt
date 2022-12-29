@@ -10,13 +10,15 @@ import javax.swing.text.DefaultEditorKit
 import javax.swing.text.JTextComponent
 
 fun makeUI(): Component {
-  val popup1 = makePopupMenu()
+  val log = JTextArea("")
+  val popup1 = makePopupMenu(log)
 
   val textField1 = JTextField("Default setComponentPopupMenu")
   textField1.componentPopupMenu = popup1
   textField1.name = "textField1"
 
   val popup2 = TextComponentPopupMenu()
+  log.componentPopupMenu = popup2
   val textField2 = JTextField("Override JPopupMenu#show(...)")
   textField2.componentPopupMenu = popup2
   textField2.name = "textField2"
@@ -36,7 +38,7 @@ fun makeUI(): Component {
   textField4.name = "textField4"
   val ml4 = object : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
-      println("Close all JPopupMenu(excludes dropdown list of own JComboBox)")
+      log.append("Close all JPopupMenu(excludes dropdown list of own JComboBox)\n")
       for (m in MenuSelectionManager.defaultManager().selectedPath) {
         if (combo4.isPopupVisible) {
           continue
@@ -54,18 +56,15 @@ fun makeUI(): Component {
     box.add(Box.createVerticalStrut(5))
   }
 
-  val textArea = JTextArea("JTextArea")
-  textArea.componentPopupMenu = popup2
-
   return JPanel(BorderLayout()).also {
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.add(box, BorderLayout.NORTH)
-    it.add(JScrollPane(textArea))
+    it.add(JScrollPane(log))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makePopupMenu(): JPopupMenu {
+private fun makePopupMenu(log: JTextArea): JPopupMenu {
   val cutAction = DefaultEditorKit.CutAction()
   val copyAction = DefaultEditorKit.CopyAction()
   val pasteAction = DefaultEditorKit.PasteAction()
@@ -86,7 +85,7 @@ private fun makePopupMenu(): JPopupMenu {
     override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
       val pop = e.source as? JPopupMenu ?: return
       (pop.invoker as? JTextComponent)?.also {
-        // println("${it.javaClass.name}: ${it.name}")
+        log.append("${it.javaClass.name}: ${it.name}\n")
         // TEST:
         // it.requestFocusInWindow()
         // it.selectAll()
