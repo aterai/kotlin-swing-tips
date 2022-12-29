@@ -7,8 +7,7 @@ import javax.swing.plaf.basic.DefaultMenuLayout
 
 fun makeUI(): Component {
   val mb = JMenuBar()
-  val mm = makeMenu(mb.add(JMenu("Default")))
-  println(mm.popupMenu.preferredSize)
+  makeMenu(mb.add(JMenu("Default")))
 
   makeMenu(mb.add(JMenu("BoxHStrut"))).also {
     it.add(Box.createHorizontalStrut(200))
