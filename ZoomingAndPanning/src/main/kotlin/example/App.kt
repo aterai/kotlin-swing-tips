@@ -5,6 +5,7 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseWheelEvent
 import java.awt.geom.AffineTransform
+import java.awt.geom.Point2D
 import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
@@ -29,6 +30,7 @@ fun makeUI(): Component {
 
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
+      g.clearRect(0, 0, width, height)
       val g2 = g.create() as? Graphics2D ?: return
       g2.transform = zoomAndPanHandler?.coordAndZoomAtf
       icon.paintIcon(this, g2, 0, 0)
@@ -61,18 +63,19 @@ private class ZoomAndPanHandler : MouseAdapter() {
     val dir = e.wheelRotation
     val z = zoomRange.value
     zoomRange.value = z + EXTENT * if (dir > 0) -1 else 1
-    if (z == zoomRange.value) {
-      return
+    if (z != zoomRange.value) {
+      val pt = if (e.isControlDown) {
+        val r = e.component.bounds
+        Point2D.Double(r.centerX, r.centerY)
+      } else {
+        transformPoint(e.point)
+      }
+      val scale = if (dir > 0) 1 / ZOOM_FACTOR else ZOOM_FACTOR
+      coordAndZoomAtf.translate(pt.x, pt.y)
+      coordAndZoomAtf.scale(scale, scale)
+      coordAndZoomAtf.translate(-pt.x, -pt.y)
+      e.component.repaint()
     }
-    val c = e.component
-    val r = c.bounds
-    val p = Point(r.x + r.width / 2, r.y + r.height / 2)
-    val p1 = transformPoint(p)
-    val scale = if (dir > 0) 1 / ZOOM_FACTOR else ZOOM_FACTOR
-    coordAndZoomAtf.scale(scale, scale)
-    val p2 = transformPoint(p)
-    coordAndZoomAtf.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY())
-    c.repaint()
   }
 
   // https://community.oracle.com/thread/1263955
