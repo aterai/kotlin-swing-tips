@@ -52,7 +52,7 @@ fun makeUI(): Component {
     val file = File(field.text.trim())
     val fc = fc1
     val b = !fc.fileSystemView.isParent(fc.currentDirectory, file)
-    println("isAbsolute: ${file.isAbsolute}, isParent: $b\n")
+    log.append("isAbsolute: ${file.isAbsolute}, isParent: $b\n")
     fc.selectedFile = file
     val retValue = fc.showOpenDialog(p)
     if (retValue == JFileChooser.APPROVE_OPTION) {
