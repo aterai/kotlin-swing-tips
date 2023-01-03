@@ -174,7 +174,7 @@ class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
     CheckBoxNode(str ?: "", if (checkBox.isSelected) Status.SELECTED else Status.DESELECTED)
 
   override fun isCellEditable(e: EventObject?): Boolean {
-    val tree = e.source
+    val tree = e?.source
     if (e is MouseEvent && tree is JTree) {
       val p = e.point
       val path = tree.getPathForLocation(p.x, p.y)
