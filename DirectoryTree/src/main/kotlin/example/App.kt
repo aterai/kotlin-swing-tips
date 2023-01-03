@@ -51,7 +51,7 @@ fun makeUI(): Component {
           ((value as? DefaultMutableTreeNode)?.userObject as? File)?.also { file ->
             it.icon = fileSystemView.getSystemIcon(file)
             it.text = fileSystemView.getSystemDisplayName(file)
-            it.toolTipText = it.path
+            it.toolTipText = file.path
           }
         }
       }
