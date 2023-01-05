@@ -100,7 +100,7 @@ private class NoPopupComboBoxUI : BasicComboBoxUI() {
 
   override fun createPopup() = object : BasicComboPopup(comboBox) {
     override fun show() {
-      println("togglePopup")
+      // println("disable togglePopup")
     }
   }
 }

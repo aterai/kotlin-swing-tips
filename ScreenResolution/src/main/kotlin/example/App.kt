@@ -28,7 +28,7 @@ fun makeUI(): Component {
       super.updateUI()
       if (isFixedRowHeight) {
         setRowHeight((getRowHeight() * dpiScaling).toInt())
-        println("Tree.rowHeight: " + getRowHeight())
+        // println("Tree.rowHeight: " + getRowHeight())
       }
     }
   }
