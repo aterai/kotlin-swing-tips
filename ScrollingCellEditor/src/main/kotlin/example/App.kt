@@ -68,13 +68,13 @@ private class TextAreaCellEditor : AbstractCellEditor(), TableCellEditor {
     row: Int,
     column: Int
   ): Component {
-    println("getTableCellEditorComponent")
+    // println("getTableCellEditorComponent")
     textArea.font = table.font
     textArea.text = value?.toString() ?: ""
     EventQueue.invokeLater {
       textArea.caretPosition = textArea.text.length
       textArea.requestFocusInWindow()
-      println("invokeLater: getTableCellEditorComponent")
+      // println("invokeLater: getTableCellEditorComponent")
     }
     return scroll
   }
@@ -83,13 +83,13 @@ private class TextAreaCellEditor : AbstractCellEditor(), TableCellEditor {
     if (e is MouseEvent) {
       return e.clickCount >= 2
     }
-    println("isCellEditable")
+    // println("isCellEditable")
     EventQueue.invokeLater {
       if (e is KeyEvent) {
         val kc = e.keyChar
         if (Character.isUnicodeIdentifierStart(kc)) {
           textArea.text = textArea.text + kc
-          println("invokeLater: isCellEditable")
+          // println("invokeLater: isCellEditable")
         }
       }
     }
