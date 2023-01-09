@@ -6,16 +6,16 @@ import java.awt.event.MouseEvent
 import java.awt.geom.Path2D
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-private const val sideLength = 100.0
+private const val SIDE_LENGTH = 100.0
 private val cube = listOf(
-  Vertex(sideLength, sideLength, sideLength),
-  Vertex(sideLength, sideLength, -sideLength),
-  Vertex(-sideLength, sideLength, -sideLength),
-  Vertex(-sideLength, sideLength, sideLength),
-  Vertex(sideLength, -sideLength, sideLength),
-  Vertex(sideLength, -sideLength, -sideLength),
-  Vertex(-sideLength, -sideLength, -sideLength),
-  Vertex(-sideLength, -sideLength, sideLength)
+  Vertex(SIDE_LENGTH, SIDE_LENGTH, SIDE_LENGTH),
+  Vertex(SIDE_LENGTH, SIDE_LENGTH, -SIDE_LENGTH),
+  Vertex(-SIDE_LENGTH, SIDE_LENGTH, -SIDE_LENGTH),
+  Vertex(-SIDE_LENGTH, SIDE_LENGTH, SIDE_LENGTH),
+  Vertex(SIDE_LENGTH, -SIDE_LENGTH, SIDE_LENGTH),
+  Vertex(SIDE_LENGTH, -SIDE_LENGTH, -SIDE_LENGTH),
+  Vertex(-SIDE_LENGTH, -SIDE_LENGTH, -SIDE_LENGTH),
+  Vertex(-SIDE_LENGTH, -SIDE_LENGTH, SIDE_LENGTH)
 )
 
 fun makeUI(): Component {
