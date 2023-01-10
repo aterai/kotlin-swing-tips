@@ -229,22 +229,15 @@ private class WholeRowSelectableTreeUI : BasicTreeUI() {
         super.mouseDragged(convertMouseEvent(e))
       }
 
-      @Suppress("ReturnCount")
       private fun convertMouseEvent(e: MouseEvent): MouseEvent {
-        if (!tree.isEnabled || !SwingUtilities.isLeftMouseButton(e) || e.isConsumed) {
-          return e
-        }
-        val x = e.x
-        val y = e.y
-        val path = getClosestPathForLocation(tree, x, y)
-        if (path == null || isLocationInExpandControl(path, x, y)) {
-          return e
-        }
+        val path = getClosestPathForLocation(tree, e.x, e.y)
         val bounds = getPathBounds(tree, path)
         val newX = bounds.centerX.toInt()
+        val b1 = !tree.isEnabled || !SwingUtilities.isLeftMouseButton(e) || e.isConsumed
+        val b2 = path == null || isLocationInExpandControl(path, e.x, e.y)
         bounds.x = 0
         bounds.width = tree.width
-        return if (bounds.contains(e.point)) {
+        return if (!b1 && !b2 && bounds.contains(e.point)) {
           MouseEvent(
             e.component,
             e.id,
