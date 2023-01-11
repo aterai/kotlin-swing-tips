@@ -21,8 +21,9 @@ fun makeUI(): Component {
   today[Calendar.HOUR_OF_DAY] = 0
 
   val start = today.time
-  println(date)
-  println(start)
+  val log = JTextArea()
+  log.append("$date\n")
+  log.append("$start\n")
 
   val spinner2 = JSpinner(SpinnerDateModel(date, start, null, Calendar.DAY_OF_MONTH))
   spinner2.editor = DateEditor(spinner2, dateFormat)
@@ -40,11 +41,15 @@ fun makeUI(): Component {
   }
   editor.textField.addFocusListener(fl3)
 
-  return JPanel(GridLayout(3, 1)).also {
+  val p = JPanel(GridLayout(3, 1)).also {
     it.add(makeTitledPanel("Calendar.DAY_OF_MONTH", spinner1))
     it.add(makeTitledPanel("min: set(Calendar.HOUR_OF_DAY, 0)", spinner2))
     it.add(makeTitledPanel("JSpinner.DateEditor + FocusListener", spinner3))
-    it.border = BorderFactory.createEmptyBorder(10, 5, 10, 5)
+  }
+
+  return JPanel(BorderLayout()).also {
+    it.add(p, BorderLayout.NORTH)
+    it.add(JScrollPane(log))
     it.preferredSize = Dimension(320, 240)
   }
 }
