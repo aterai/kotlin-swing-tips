@@ -85,9 +85,9 @@ private fun addActionPerformed() {
       runCatching {
         val nf = get()
         when {
-          nf == null -> append(makeMessage("Backup fileの生成に失敗", MessageType.ERROR))
-          nf.createNewFile() -> append(makeMessage(nf.name + "を生成", MessageType.REGULAR))
-          else -> append(makeMessage(nf.name + "の生成に失敗", MessageType.ERROR))
+          nf == null -> append(makeMessage("Failed to create backup file.", MessageType.ERROR))
+          nf.createNewFile() -> append(makeMessage("Generated ${nf.name}.", MessageType.REGULAR))
+          else -> append(makeMessage("Failed to generate ${nf.name}.", MessageType.ERROR))
         }
       }.onFailure {
         if (it is InterruptedException) {
@@ -103,11 +103,11 @@ private fun addActionPerformed() {
 private fun makeNorthBox(): Component {
   // val northBox = Box.createHorizontalBox()
   val northBox = JPanel(GridLayout(3, 2, 5, 5))
-  northBox.add(JLabel("削除しないバックアップの数:", SwingConstants.RIGHT))
+  northBox.add(JLabel("Number of backups to keep:", SwingConstants.RIGHT))
   northBox.add(spinner1)
-  northBox.add(JLabel("順に削除するバックアップの数:", SwingConstants.RIGHT))
+  northBox.add(JLabel("Number of backups to delete in order:", SwingConstants.RIGHT))
   northBox.add(spinner2)
-  northBox.add(JLabel("合計バックアップ数:", SwingConstants.RIGHT))
+  northBox.add(JLabel("Total number of backups:", SwingConstants.RIGHT))
   northBox.add(label)
   return northBox
 }
@@ -179,7 +179,7 @@ private open class BackgroundTask(
     if (testFile != null && simpleRename) {
       val path = file.toPath()
       return runCatching {
-        publish(makeMessage("古い同名ファイルをリネーム", MessageType.REGULAR))
+        publish(makeMessage("Rename the older file", MessageType.REGULAR))
         publish(makeMessage("  %s -> %s".format(file.name, testFile.name), MessageType.BLUE))
         Files.move(path, path.resolveSibling(testFile.name))
         File(newFileName)
@@ -193,7 +193,7 @@ private open class BackgroundTask(
   @Suppress("ReturnCount")
   private fun renameAndShiftBackup(file: File): Boolean {
     val tmpFile3 = File(file.parentFile, makeBackupFileName(file.name, oldIndex + 1))
-    publish(makeMessage("古いバックアップファイルを削除", MessageType.REGULAR))
+    publish(makeMessage("Delete old backup file", MessageType.REGULAR))
     publish(makeMessage("  del:" + tmpFile3.absolutePath, MessageType.BLUE))
     runCatching {
       Files.delete(tmpFile3.toPath())
@@ -211,11 +211,11 @@ private open class BackgroundTask(
         publish(makeMessage(it.message, MessageType.ERROR))
         return false
       }
-      publish(makeMessage("古いバックアップファイルの番号を更新", MessageType.REGULAR))
+      publish(makeMessage("Update old backup file numbers", MessageType.REGULAR))
       publish(makeMessage("  " + tmpFile1.name + " -> " + tmpFile2.name, MessageType.BLUE))
     }
     val tmpFile = File(file.parentFile, makeBackupFileName(file.name, oldIndex + newIndex))
-    publish(makeMessage("古い同名ファイルをリネーム", MessageType.REGULAR))
+    publish(makeMessage("Rename the older file", MessageType.REGULAR))
     publish(makeMessage("  " + file.name + " -> " + tmpFile.name, MessageType.BLUE))
     val path = file.toPath()
     return runCatching {
