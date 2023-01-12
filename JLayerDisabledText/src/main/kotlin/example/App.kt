@@ -1,11 +1,8 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.ComponentEvent
-import java.awt.event.FocusEvent
 import java.awt.event.InputEvent
 import java.awt.event.KeyAdapter
-import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.beans.PropertyChangeEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
@@ -65,15 +62,15 @@ private fun makeButton(title: String): JButton {
 }
 
 private class DisableInputLayerUI<V : AbstractButton> : LayerUI<V>() {
-  private val dummyMouseListener = object : MouseAdapter() { /* to nothing */ }
-  private val dummyKeyListener = object : KeyAdapter() { /* to nothing */ }
+  private val emptyMouseListener = object : MouseAdapter() { /* do nothing */ }
+  private val emptyKeyListener = object : KeyAdapter() { /* do nothing */ }
   private var isBlocking = false
   override fun installUI(c: JComponent) {
     super.installUI(c)
     if (c is JLayer<*>) {
       if (DEBUG_POPUP_BLOCK) {
-        c.glassPane.addMouseListener(dummyMouseListener)
-        c.glassPane.addKeyListener(dummyKeyListener)
+        c.glassPane.addMouseListener(emptyMouseListener)
+        c.glassPane.addKeyListener(emptyKeyListener)
       }
       c.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK or
         AWTEvent.MOUSE_WHEEL_EVENT_MASK or AWTEvent.KEY_EVENT_MASK or
@@ -85,23 +82,11 @@ private class DisableInputLayerUI<V : AbstractButton> : LayerUI<V>() {
     if (c is JLayer<*>) {
       c.layerEventMask = 0
       if (DEBUG_POPUP_BLOCK) {
-        c.glassPane.removeMouseListener(dummyMouseListener)
-        c.glassPane.removeKeyListener(dummyKeyListener)
+        c.glassPane.removeMouseListener(emptyMouseListener)
+        c.glassPane.removeKeyListener(emptyKeyListener)
       }
     }
     super.uninstallUI(c)
-  }
-
-  override fun processComponentEvent(e: ComponentEvent, l: JLayer<out V>) {
-    println("processComponentEvent")
-  }
-
-  override fun processKeyEvent(e: KeyEvent, l: JLayer<out V>) {
-    println("processKeyEvent")
-  }
-
-  override fun processFocusEvent(e: FocusEvent, l: JLayer<out V>) {
-    println("processFocusEvent")
   }
 
   override fun eventDispatched(e: AWTEvent, l: JLayer<out V>) {
