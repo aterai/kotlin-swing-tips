@@ -8,10 +8,13 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 private const val PAD = "<html><table><td style='padding:1'>"
 
 fun makeUI(): Component {
-  println(UIManager.getInt("Button.dashedRectGapX"))
-  println(UIManager.getInt("Button.dashedRectGapY"))
-  println(UIManager.getInt("Button.dashedRectGapHeight"))
-  println(UIManager.getInt("Button.dashedRectGapWidth"))
+  val log = JTextArea()
+  log.font = log.font.deriveFont(10f)
+  log.append(info("Button.dashedRectGapX"))
+  log.append(info("Button.dashedRectGapY"))
+  log.append(info("Button.dashedRectGapHeight"))
+  log.append(info("Button.dashedRectGapWidth"))
+
   UIManager.put("Button.dashedRectGapX", 5)
   UIManager.put("Button.dashedRectGapY", 5)
   UIManager.put("Button.dashedRectGapHeight", 10)
@@ -20,6 +23,7 @@ fun makeUI(): Component {
   UIManager.put("ToggleButton.margin", Insets(8, 8, 8, 8))
   UIManager.put("RadioButton.margin", Insets(8, 8, 8, 8))
   UIManager.put("CheckBox.margin", Insets(8, 8, 8, 8))
+
   val p = JPanel()
   p.add(JButton("JButton"))
   p.add(Box.createHorizontalStrut(32))
@@ -38,9 +42,15 @@ fun makeUI(): Component {
 
   p.add(JRadioButton("JRadioButton"))
   p.add(JRadioButton(PAD + "JRadioButton+td.padding"))
-  p.preferredSize = Dimension(320, 240)
-  return p
+
+  return JPanel(BorderLayout(5, 5)).also {
+    it.add(p)
+    it.add(JScrollPane(log), BorderLayout.SOUTH)
+    it.preferredSize = Dimension(320, 240)
+  }
 }
+
+private fun info(key: String) = "%s: %d%n".format(key, UIManager.getInt(key))
 
 fun main() {
   EventQueue.invokeLater {
