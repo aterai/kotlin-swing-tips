@@ -203,19 +203,19 @@ private object AnimationUtils {
     return ret
   }
 
-  fun intPow(da: Double, ib: Int): Double {
-    var b = ib
-    require(b >= 0) { "B must be a positive integer or zero" }
-    var a = da
-    var d = 1.0
-    while (b > 0) {
-      if (b and 1 != 0) {
-        d *= a
+  fun intPow(base0: Double, exp0: Int): Double {
+    require(exp0 >= 0) { "exp0 must be a positive integer or zero" }
+    var base = base0
+    var exp = exp0
+    var result = 1.0
+    while (exp > 0) {
+      if (exp and 1 != 0) {
+        result *= base
       }
-      a *= a
-      b = b ushr 1
+      base *= base
+      exp = exp ushr 1
     }
-    return d
+    return result
   }
 }
 
