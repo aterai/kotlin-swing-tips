@@ -40,21 +40,22 @@ private class DigitalClock : JPanel() {
     background = DigitalNumber.BGC
     var x = SIZE * 3.0
     val y = SIZE * 8.0
-    val gap = SIZE * 2.0
+    val gap = SIZE * 1.5
     h1 = DigitalNumber(x, y, SIZE)
-    x += h1.bounds.width + gap
+    val r = h1.bounds
+    x += r.width + gap
     h2 = DigitalNumber(x, y, SIZE)
-    x += h2.bounds.width + gap / 2
+    x += r.width.toDouble()
     val sz = SIZE * 1.5
-    dot1 = Ellipse2D.Double(x, y - gap * 1.5, sz, sz)
-    dot2 = Ellipse2D.Double(x, y + gap, sz, sz)
+    dot1 = Ellipse2D.Double(x, r.centerY.toFloat() - gap, sz, sz)
+    dot2 = Ellipse2D.Double(x, r.centerY.toFloat() + gap, sz, sz)
     x += sz + gap
     m1 = DigitalNumber(x, y, SIZE)
-    x += m1.bounds.width + gap
+    x += r.width + gap
     m2 = DigitalNumber(x, y, SIZE)
-    x += m2.bounds.width + gap
+    x += r.width + gap
     val hs = SIZE / 2.0
-    val y2 = y + h1.bounds.height / 2.0
+    val y2 = y + h1.bounds.height / 4.0
     s1 = DigitalNumber(x, y2, hs)
     x += s1.bounds.width + gap / 2.0
     s2 = DigitalNumber(x, y2, hs)
@@ -150,8 +151,8 @@ private class DigitalNumber(
   init {
     width = 2.0 * isosceles
     height = width + isosceles
-    bounds.setLocation(dx.toInt(), dy.toInt())
-    bounds.setSize((width + 3 * isosceles).toInt(), (height * 2).toInt())
+    bounds.setLocation((dx - isosceles).toInt(), (dy - height * 2.0).toInt())
+    bounds.setSize((width + 4.0 * isosceles).toInt(), (height * 4.0).toInt())
   }
 
   fun setNumber(num: Int) {
@@ -188,14 +189,14 @@ private enum class Seg {
   },
   B {
     override fun getShape(x: Double, y: Double, w: Double, h: Double, i: Double): Shape {
-      val at = AffineTransform.getTranslateInstance(x + h + i, y)
+      val at = AffineTransform.getTranslateInstance(x + w + i * 2, y)
       at.scale(-1.0, 1.0)
       return at.createTransformedShape(vert(h, i))
     }
   },
   C {
     override fun getShape(x: Double, y: Double, w: Double, h: Double, i: Double): Shape {
-      val at = AffineTransform.getTranslateInstance(x + h + i, y)
+      val at = AffineTransform.getTranslateInstance(x + w + i * 2, y)
       at.scale(-1.0, -1.0)
       return at.createTransformedShape(vert(h, i))
     }
