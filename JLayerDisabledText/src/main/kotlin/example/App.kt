@@ -62,15 +62,15 @@ private fun makeButton(title: String): JButton {
 }
 
 private class DisableInputLayerUI<V : AbstractButton> : LayerUI<V>() {
-  private val emptyMouseListener = object : MouseAdapter() { /* do nothing */ }
-  private val emptyKeyListener = object : KeyAdapter() { /* do nothing */ }
+  private val mouseBlocker = object : MouseAdapter() { /* do nothing */ }
+  private val keyBlocker = object : KeyAdapter() { /* do nothing */ }
   private var isBlocking = false
   override fun installUI(c: JComponent) {
     super.installUI(c)
     if (c is JLayer<*>) {
       if (DEBUG_POPUP_BLOCK) {
-        c.glassPane.addMouseListener(emptyMouseListener)
-        c.glassPane.addKeyListener(emptyKeyListener)
+        c.glassPane.addMouseListener(mouseBlocker)
+        c.glassPane.addKeyListener(keyBlocker)
       }
       c.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK or
         AWTEvent.MOUSE_WHEEL_EVENT_MASK or AWTEvent.KEY_EVENT_MASK or
@@ -82,8 +82,8 @@ private class DisableInputLayerUI<V : AbstractButton> : LayerUI<V>() {
     if (c is JLayer<*>) {
       c.layerEventMask = 0
       if (DEBUG_POPUP_BLOCK) {
-        c.glassPane.removeMouseListener(emptyMouseListener)
-        c.glassPane.removeKeyListener(emptyKeyListener)
+        c.glassPane.removeMouseListener(mouseBlocker)
+        c.glassPane.removeKeyListener(keyBlocker)
       }
     }
     super.uninstallUI(c)
