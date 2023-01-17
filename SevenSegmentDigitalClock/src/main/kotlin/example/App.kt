@@ -283,13 +283,15 @@ private class HelpPanel : JPanel() {
     g2.paint = Color.RED
     g2.font = font.deriveFont(32f)
     val r = help.bounds
-    g2.drawString("A", r.x + r.width / 3f, r.y - r.height / 1.5f)
-    g2.drawString("B", r.x + r.width / 1.5f, r.y - r.height / 3f)
-    g2.drawString("C", r.x + r.width / 1.5f, r.y + r.height / 2f)
-    g2.drawString("D", r.x + r.width / 3f, r.y + r.height / 1.1f)
-    g2.drawString("E", r.x.toFloat(), r.y + r.height / 2f)
-    g2.drawString("F", r.x.toFloat(), r.y - r.height / 3f)
-    g2.drawString("G", r.x + r.width / 3f, r.y.toFloat())
+    val fw = r.width.toFloat()
+    val fh = r.height.toFloat()
+    g2.drawString("A", r.x + fw * .5f, r.y.toFloat())
+    g2.drawString("B", r.x + fw * .75f, r.y + fh * .25f)
+    g2.drawString("C", r.x + fw * .75f, r.y + fh * .75f)
+    g2.drawString("D", r.x + fw * .5f, r.y + fh)
+    g2.drawString("E", r.x.toFloat(), r.y + fh * .75f)
+    g2.drawString("F", r.x.toFloat(), r.y + fh * .25f)
+    g2.drawString("G", r.x + fw * .5f, r.y + fh * .5f)
     g2.dispose()
   }
 
