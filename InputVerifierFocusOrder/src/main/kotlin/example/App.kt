@@ -15,13 +15,13 @@ fun makeUI(): Component {
   val p = JPanel(BorderLayout())
   p.focusTraversalPolicy = object : LayoutFocusTraversalPolicy() {
     override fun getComponentAfter(focusCycleRoot: Container, cmp: Component): Component {
-      println("getComponentAfter")
+      // println("getComponentAfter")
       button.isEnabled = isAllValid(p)
       return super.getComponentAfter(focusCycleRoot, cmp)
     }
 
     override fun getComponentBefore(focusCycleRoot: Container, cmp: Component): Component {
-      println("getComponentBefore")
+      // println("getComponentBefore")
       button.isEnabled = isAllValid(p)
       return super.getComponentBefore(focusCycleRoot, cmp)
     }
@@ -64,7 +64,7 @@ fun makeTextField(button: JButton, root: Container): JTextField {
     }
 
     override fun shouldYieldFocus(input: JComponent): Boolean {
-      println("shouldYieldFocus")
+      // println("shouldYieldFocus")
       button.isEnabled = isAllValid(root)
       return super.shouldYieldFocus(input)
     }
@@ -74,7 +74,7 @@ fun makeTextField(button: JButton, root: Container): JTextField {
       if (e.isTemporary) {
         return
       }
-      println("focusLost")
+      // println("focusLost")
       button.isEnabled = isAllValid(root)
     }
   })
