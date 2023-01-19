@@ -12,8 +12,6 @@ private val stop = JButton("Stop")
 private val textArea0 = JTextArea()
 private val textArea1 = JTextArea()
 private val textArea2 = JTextArea()
-
-@Transient
 private var worker: SwingWorker<String, String>? = null
 
 fun makeUI(): Component {

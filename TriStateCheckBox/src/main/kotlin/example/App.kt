@@ -32,7 +32,6 @@ private val model = object : DefaultTableModel(data, columnNames) {
   override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
 }
 private val table = object : JTable(model) {
-  @Transient
   protected var handler: HeaderCheckBoxHandler? = null
 
   override fun updateUI() {

@@ -138,7 +138,6 @@ private class FileListTable(model: TableModel) : JTable(model) {
   private val rectColor = makeRubberBandColor(bandColor)
   private val rubberBand = Path2D.Double()
 
-  @Transient
   private var rbl: RubberBandingListener? = null
 
   override fun updateUI() {

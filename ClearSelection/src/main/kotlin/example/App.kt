@@ -22,7 +22,6 @@ private fun makeModel() = DefaultListModel<String>().also {
 
 private fun <E> makeList(model: ListModel<E>): JList<E> {
   return object : JList<E>(model) {
-    @Transient
     private var listener: MouseInputListener? = null
 
     override fun updateUI() {

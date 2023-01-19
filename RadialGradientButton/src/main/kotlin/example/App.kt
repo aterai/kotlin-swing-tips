@@ -164,7 +164,6 @@ private class RadialGradientPaintButton(title: String) : JButton(title) {
   private var shape: Shape? = null
   private var base: Rectangle? = null
 
-  @Transient
   private var buf: BufferedImage? = null
 
   init {

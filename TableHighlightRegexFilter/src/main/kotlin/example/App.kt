@@ -27,7 +27,6 @@ private val model = object : DefaultTableModel(data, columnNames) {
   override fun getColumnClass(column: Int) = String::class.java
 }
 
-@Transient
 private val sorter = TableRowSorter<TableModel>(model)
 private val table = JTable(model)
 
@@ -82,7 +81,6 @@ private fun fireDocumentChangeEvent() {
 }
 
 private class HighlightTableCellRenderer : JTextField(), TableCellRenderer {
-  @Transient
   private val highlightPainter = DefaultHighlightPainter(Color.YELLOW)
   private var pattern = ""
   private var prev: String? = null

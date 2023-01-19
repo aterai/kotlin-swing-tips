@@ -25,7 +25,6 @@ private val model = object : DefaultTableModel(data, columnNames) {
   }
 }
 
-@Transient
 private val sorter = TableRowSorter<DefaultTableModel>(model)
 private val addButton = JButton("add")
 

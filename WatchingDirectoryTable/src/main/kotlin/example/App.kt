@@ -16,8 +16,6 @@ import javax.swing.table.TableRowSorter
 
 private val logger = JTextArea()
 private val model = FileModel()
-
-@Transient
 private val sorter = TableRowSorter(model)
 val deleteRowSet = mutableSetOf<Int>()
 

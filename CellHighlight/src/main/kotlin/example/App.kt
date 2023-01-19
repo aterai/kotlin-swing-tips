@@ -9,7 +9,6 @@ import javax.swing.table.DefaultTableModel
 
 fun makeUI(): Component {
   val table = object : JTable(DefaultTableModel(10, 10)) {
-    @Transient
     private var highlighter: HighlightListener? = null
     override fun updateUI() {
       removeMouseListener(highlighter)

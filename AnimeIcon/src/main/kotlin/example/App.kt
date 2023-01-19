@@ -16,7 +16,6 @@ private val runButton = JButton("run")
 private val cancelButton = JButton("cancel")
 private val loadingLabel = LoadingLabel()
 
-@Transient
 private var worker: BackgroundTask? = null
 
 private fun executeWorker() {

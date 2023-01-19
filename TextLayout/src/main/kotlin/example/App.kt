@@ -46,10 +46,7 @@ private class TextLayoutPanel : JComponent() {
 }
 
 private class GlyphVectorPanel : JComponent() {
-  @Transient
   private val gv = FONT.createGlyphVector(FRC, TEXT)
-
-  @Transient
   private val lm = FONT.getLineMetrics(TEXT, FRC)
 
   override fun paintComponent(g: Graphics) {

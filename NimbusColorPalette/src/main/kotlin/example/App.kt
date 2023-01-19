@@ -6,7 +6,6 @@ import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
-@Transient
 private var worker: SwingWorker<String, Void>? = null
 
 fun makeUI(): Component {

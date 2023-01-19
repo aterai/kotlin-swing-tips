@@ -50,7 +50,6 @@ fun makeUI(): Component {
 
 private class CheckBoxPanelEditor : AbstractCellEditor(), TableCellEditor {
   private val renderer = object : JPanel(GridBagLayout()) {
-    @Transient
     private var listener: MouseListener? = null
 
     override fun updateUI() {
@@ -66,7 +65,6 @@ private class CheckBoxPanelEditor : AbstractCellEditor(), TableCellEditor {
     }
   }
   private val checkBox = object : JCheckBox() {
-    @Transient
     private var handler: CellEditorHandler? = null
 
     override fun updateUI() {

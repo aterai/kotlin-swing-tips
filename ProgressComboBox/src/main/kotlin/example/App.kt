@@ -10,8 +10,6 @@ private val combo = object : JComboBox<String>() {
   }
 }
 private val button = JButton("load")
-
-@Transient
 private var worker: SwingWorker<Array<String>, Int>? = null
 private var counter = 0
 

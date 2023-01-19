@@ -66,8 +66,6 @@ private class ScrollAction(
   private val vec: Point
 ) : AbstractAction(name) {
   private val scroller = Timer(5, null)
-
-  @Transient
   private var listener: ActionListener? = null
   private var count = 0
 

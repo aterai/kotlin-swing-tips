@@ -39,7 +39,6 @@ private fun makeModel() = DefaultComboBoxModel<String>().also {
 }
 
 private class AlternateRowColorComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(model) {
-  @Transient
   private var itemColorListener: ItemListener? = null
 
   // constructor() : super()

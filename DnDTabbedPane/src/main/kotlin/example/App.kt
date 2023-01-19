@@ -398,8 +398,6 @@ private class GhostGlassPane(val tabbedPane: DnDTabbedPane) : JComponent() {
   private val lineRect = Rectangle()
   private val lineColor = Color(0, 100, 255)
   private val locPt = Point()
-
-  @Transient
   private var draggingGhost: BufferedImage? = null
 
   init {

@@ -22,7 +22,6 @@ private val model = object : DefaultTableModel(null, columnNames) {
   }
 }
 
-@Transient
 private val sorter = TableRowSorter<DefaultTableModel>(model)
 private val table = JTable(model)
 private var linkViewRadioButtonUI: LinkViewRadioButtonUI? = null

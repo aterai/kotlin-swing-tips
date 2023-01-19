@@ -84,7 +84,6 @@ private class WrappedLabelRenderer : TableCellRenderer {
 }
 
 private open class WrappedLabel(str: String? = "") : JLabel(str) {
-  @Transient
   private var gvText: GlyphVector? = null
   override fun doLayout() {
     val i = insets

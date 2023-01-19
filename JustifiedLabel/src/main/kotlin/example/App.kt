@@ -37,7 +37,6 @@ fun makeUI(): Component {
 }
 
 private class JustifiedLabel(str: String? = null) : JLabel(str) {
-  @Transient
   private var gvText: GlyphVector? = null
   private var prevWidth = -1
   override fun setText(text: String) {

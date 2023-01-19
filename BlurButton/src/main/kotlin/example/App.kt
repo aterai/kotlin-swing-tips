@@ -44,7 +44,6 @@ fun makeUI(): Component {
 // https://www.oreilly.com/library/view/swing-hacks/0596009070/
 // 9. Blur Disabled Components
 private class BlurredButton(label: String) : JButton(label) {
-  @Transient
   private var buf: BufferedImage? = null
 
   override fun paintComponent(g: Graphics) {
@@ -75,7 +74,6 @@ private class BlurredButton(label: String) : JButton(label) {
 }
 
 private class BlurButton(label: String) : JButton(label) {
-  @Transient
   private var buf: BufferedImage? = null
 
   override fun paintComponent(g: Graphics) {

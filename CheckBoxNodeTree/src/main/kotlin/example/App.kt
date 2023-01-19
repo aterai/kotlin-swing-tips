@@ -71,7 +71,6 @@ private class CheckBoxNodeRenderer : TreeCellRenderer {
 
 private class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
   private val checkBox = object : JCheckBox() {
-    @Transient
     private var handler: ActionListener? = null
 
     override fun updateUI() {

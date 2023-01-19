@@ -99,8 +99,6 @@ private class TextOverflowFadeLabel(text: String) : JLabel(text) {
 
 private class FadingOutLabel(text: String) : JLabel(text) {
   private val dim = Dimension()
-
-  @Transient
   private var buffer: Image? = null
 
   override fun paintComponent(g: Graphics) {

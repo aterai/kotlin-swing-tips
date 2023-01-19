@@ -16,7 +16,6 @@ fun makeUI(): Component {
   val s3 = makeSpinner3(makeSpinnerNumberModel())
 
   val act = object : AbstractAction("setEnabled") {
-    @Transient
     private var old: Any? = null
     override fun actionPerformed(e: ActionEvent) {
       val flg = (e.source as? JCheckBox)?.isSelected == true

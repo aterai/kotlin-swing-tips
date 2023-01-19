@@ -90,10 +90,7 @@ private fun makeCheckBoxPanel(tabs: JTabbedPane): Component {
 
 class DnDTabbedPane : JTabbedPane() {
   var dragTabIndex = -1
-
-  @Transient
   var dropLocation: DropLocation? = null
-
   val tabAreaBounds: Rectangle
     get() {
       val tabbedRect = bounds

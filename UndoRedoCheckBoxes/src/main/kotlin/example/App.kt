@@ -11,10 +11,7 @@ import javax.swing.undo.UndoableEditSupport
 private const val BIT_LENGTH = 50
 private val ONE_PAD = "1".repeat(BIT_LENGTH)
 private val ZERO_PAD = "0".repeat(BIT_LENGTH)
-
 private var status = BigInteger("111000111", 2)
-
-@Transient
 private val undoSupport = UndoableEditSupport()
 private val label = JLabel(print(status))
 private val panel = JPanel()

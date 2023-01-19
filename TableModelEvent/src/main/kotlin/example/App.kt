@@ -32,7 +32,6 @@ fun makeUI(): Component {
   val table = object : JTable(model) {
     private val CHECKBOX_COLUMN = 0
 
-    @Transient
     private var handler: HeaderCheckBoxHandler? = null
     override fun updateUI() {
       setSelectionForeground(ColorUIResource(Color.RED))

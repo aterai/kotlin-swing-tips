@@ -80,7 +80,6 @@ private fun makeModel(): DefaultTreeModel {
 
 // https://ateraimemo.com/Swing/TreeRowSelection.html
 private class RowSelectionTree : JTree() {
-  @Transient
   private var listener: TreeWillExpandListener? = null
 
   override fun paintComponent(g: Graphics) {

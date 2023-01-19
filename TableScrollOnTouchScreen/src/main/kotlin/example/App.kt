@@ -20,7 +20,6 @@ fun makeUI(): Component {
   }
 
   val table = object : JTable(model) {
-    @Transient
     private var handler: TableTouchScreenHandler? = null
 
     override fun updateUI() {

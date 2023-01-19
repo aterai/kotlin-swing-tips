@@ -26,7 +26,6 @@ fun makeUI(): Component {
   logger.useParentHandlers = false
   logger.addHandler(TextAreaHandler(TextAreaOutputStream(log)))
   val textArea = object : JTextArea("012345 67890 123456789") {
-    @Transient
     private var handler: CopyOnSelectListener? = null
 
     override fun updateUI() {

@@ -75,7 +75,6 @@ private fun createTable() {
 }
 
 private class ResizablePanel(layout: LayoutManager) : JPanel(layout) {
-  @Transient
   private var resizeListener: MouseInputListener? = null
 
   override fun updateUI() {
