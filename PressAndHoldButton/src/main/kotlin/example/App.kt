@@ -91,7 +91,7 @@ private class PressAndHoldButton(icon: Icon?, popupMenu: JPopupMenu?) : JButton(
     Companion.ARROW_ICON.paintIcon(this, g, r.x + r.width, r.y + cy)
   }
 
-  private inner class PressAndHoldHandler: AbstractAction(), MouseListener {
+  private inner class PressAndHoldHandler : AbstractAction(), MouseListener {
     private val holdTimer = Timer(1000) { e ->
       val timer = e.source as Timer
       if (popupMenu != null && getModel().isPressed && timer.isRunning) {
