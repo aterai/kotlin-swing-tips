@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
+import java.lang.invoke.MethodHandles
+import java.util.logging.Logger
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
@@ -43,6 +45,7 @@ fun makeUI(): Component {
 private class SaveHandler(
   private val frame: Frame
 ) : WindowAdapter(), DocumentListener, ActionListener {
+  private val logger = Logger.getLogger(MethodHandles.lookup().lookupClass().name)
   private val title = frame.title
   private val list = mutableListOf<JComponent>()
 
@@ -52,6 +55,7 @@ private class SaveHandler(
     maybeExit()
   }
 
+  // ActionListener
   override fun actionPerformed(e: ActionEvent) {
     val cmd = e.actionCommand
     if (CMD_EXIT == cmd) {
@@ -76,7 +80,7 @@ private class SaveHandler(
 
   private fun maybeExit() {
     if (title == frame.title) {
-      println("The document has already been saved, exit without doing anything.")
+      logger.info { "The document has already been saved, exit without doing anything." }
       frame.dispose()
       return
     }
@@ -94,14 +98,14 @@ private class SaveHandler(
     )
     when (retValue) {
       JOptionPane.YES_OPTION -> {
-        println("exit")
+        logger.info { "exit" }
         frame.dispose()
       }
       JOptionPane.NO_OPTION -> {
-        println("Exit without save")
+        logger.info { "Exit without save" }
         frame.dispose()
       }
-      JOptionPane.CANCEL_OPTION -> println("Cancel exit")
+      JOptionPane.CANCEL_OPTION -> logger.info { "Cancel exit" }
     }
   }
 
