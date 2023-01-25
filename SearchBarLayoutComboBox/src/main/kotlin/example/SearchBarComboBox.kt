@@ -35,7 +35,7 @@ open class SearchBarComboBox<E : SearchEngine> : JComboBox<E> {
   }
 
   override fun processFocusEvent(e: FocusEvent) {
-    println("processFocusEvent")
+    // println("processFocusEvent")
   }
 
   companion object {

@@ -16,7 +16,8 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
     override fun actionPerformed(e: ActionEvent) {
       comboBox.setPopupVisible(false)
       val o = listBox.getSelectedValue() ?: comboBox.getItemAt(0)
-      println("$o: ${comboBox.getEditor().getItem()}")
+      val msg = "$o: ${comboBox.getEditor().getItem()}"
+      JOptionPane.showMessageDialog(comboBox.getRootPane(), msg)
     }
   }
 
