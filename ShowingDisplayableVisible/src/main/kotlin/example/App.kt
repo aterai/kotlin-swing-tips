@@ -2,9 +2,13 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.HierarchyEvent
+import java.lang.invoke.MethodHandles
 import java.time.LocalTime
 import java.time.ZoneId
+import java.util.logging.Logger
 import javax.swing.* // ktlint-disable no-wildcard-imports
+
+private val logger = Logger.getLogger(MethodHandles.lookup().lookupClass().name)
 
 fun makeUI(): Component {
   val button = JButton("JButton JButton")
@@ -70,10 +74,14 @@ fun makeUI(): Component {
 }
 
 fun printInfo(c: Component, str: String) {
-  println(c.javaClass.name + ": " + str)
-  println("  isDisplayable:" + c.isDisplayable)
-  println("  isShowing:" + c.isShowing)
-  println("  isVisible:" + c.isVisible)
+  logger.info {
+    """
+      ${c.javaClass.name}: $str
+        isDisplayable: ${c.isDisplayable}
+        isShowing: ${c.isShowing}
+        isVisible: ${c.isVisible}
+    """.trimIndent()
+  }
 }
 
 fun main() {
