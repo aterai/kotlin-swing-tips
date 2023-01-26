@@ -51,7 +51,7 @@ private class SaveHandler(
 
   // WindowAdapter
   override fun windowClosing(e: WindowEvent) {
-    println("windowClosing")
+    logger.info { "windowClosing" }
     maybeExit()
   }
 

@@ -60,7 +60,7 @@ private class TableTouchScreenHandler(table: JTable) : MouseAdapter(), ListSelec
   private val delta = Point()
 
   override fun mousePressed(e: MouseEvent) {
-    println("mousePressed: $delta")
+    // println("mousePressed: $delta")
     val c = e.component
     c.cursor = hc
     // table.isEnabled = false
@@ -85,7 +85,7 @@ private class TableTouchScreenHandler(table: JTable) : MouseAdapter(), ListSelec
   }
 
   override fun mouseReleased(e: MouseEvent) {
-    println("mouseReleased: $delta")
+    // println("mouseReleased: $delta")
     val table = e.component as? JTable ?: return
     table.cursor = dc
     // table.isEnabled = true
@@ -97,9 +97,9 @@ private class TableTouchScreenHandler(table: JTable) : MouseAdapter(), ListSelec
   }
 
   override fun valueChanged(e: ListSelectionEvent) {
-    println("\nvalueChanged: " + e.valueIsAdjusting)
+    // println("\nvalueChanged: " + e.valueIsAdjusting)
     if (scroller.isRunning) {
-      println("isRunning")
+      // println("isRunning")
       delta.setLocation(0, 0)
     }
     scroller.stop()
