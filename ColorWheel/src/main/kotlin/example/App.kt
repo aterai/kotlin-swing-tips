@@ -14,16 +14,10 @@ fun makeUI() = JPanel(BorderLayout()).also {
 }
 
 private class ColorWheel : JPanel() {
-  @Transient private val image: BufferedImage
-
-  init {
-    image = updateImage()
-    preferredSize = Dimension(320, 240)
-  }
+  private val image = makeColorWheelImage()
 
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
-
     val s = SIZE
     val g2 = g.create() as? Graphics2D ?: return
 
@@ -48,7 +42,7 @@ private class ColorWheel : JPanel() {
   // https://javagraphics.blogspot.com/2007/04/jcolorchooser-making-alternative.html
   //   https://javagraphics.java.net/
   //   http://www.javased.com/index.php?source_dir=SPREAD/src/colorpicker/swing/ColorPickerPanel.java
-  private fun updateImage(): BufferedImage {
+  private fun makeColorWheelImage(): BufferedImage {
     val image = BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB)
     val row = IntArray(SIZE)
     val size = SIZE.toFloat()
