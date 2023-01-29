@@ -2,6 +2,8 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionListener
+import java.io.Serializable
+import java.util.Objects
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
@@ -40,7 +42,23 @@ private open class ComboItem(
   var isEnabled: Boolean = false,
   var isEditable: Boolean = false,
   var text: String? = ""
-)
+) : Serializable {
+  override fun hashCode(): Int {
+    return Objects.hashCode(this)
+  }
+
+  override fun equals(other: Any?): Boolean {
+    return other is ComboItem && other.text == text
+  }
+
+  override fun toString(): String {
+    return "%s: %b, %b".format(text, isEnabled, isEditable)
+  }
+
+  companion object {
+    private const val serialVersionUID = 1L
+  }
+}
 
 private class CheckComboBoxRenderer<E : ComboItem> : ListCellRenderer<E> {
   private val bgc = Color(100, 200, 255)
