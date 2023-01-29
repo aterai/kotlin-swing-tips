@@ -43,17 +43,11 @@ private open class ComboItem(
   var isEditable: Boolean = false,
   var text: String? = ""
 ) : Serializable {
-  override fun hashCode(): Int {
-    return Objects.hashCode(this)
-  }
+  override fun hashCode() = Objects.hashCode(this)
 
-  override fun equals(other: Any?): Boolean {
-    return other is ComboItem && other.text == text
-  }
+  override fun equals(other: Any?) = other is ComboItem && other.text == text
 
-  override fun toString(): String {
-    return "%s: %b, %b".format(text, isEnabled, isEditable)
-  }
+  override fun toString() = "%s: %b, %b".format(text, isEnabled, isEditable)
 
   companion object {
     private const val serialVersionUID = 1L
