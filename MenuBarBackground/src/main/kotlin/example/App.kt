@@ -11,7 +11,7 @@ fun makeUI() = JPanel().also {
 
 fun createMenuBar(): JMenuBar {
   val mb = object : JMenuBar() {
-    @Transient private val texture = makeCheckerTexture()
+    private val texture = makeCheckerTexture()
 
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)

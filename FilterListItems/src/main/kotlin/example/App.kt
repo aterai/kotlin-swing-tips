@@ -11,7 +11,7 @@ import javax.swing.border.Border
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
-@Transient private val defaultModel = arrayOf(
+private val defaultModel = arrayOf(
   ListItem("example/wi0009-32.png"),
   ListItem("example/wi0054-32.png"),
   ListItem("example/wi0062-32.png"),

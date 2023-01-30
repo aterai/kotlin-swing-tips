@@ -7,7 +7,7 @@ import java.awt.event.MouseEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.MouseInputAdapter
 
-@Transient private val defaultModel = arrayOf(
+private val defaultModel = arrayOf(
   ListItem("red", Color.RED),
   ListItem("green", Color.GREEN),
   ListItem("blue", Color.BLUE),

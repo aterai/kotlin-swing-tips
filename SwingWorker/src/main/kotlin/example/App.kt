@@ -133,7 +133,7 @@ private class ProgressListener(private val progressBar: JProgressBar) : Property
 }
 
 private class LoadingLabel : JLabel() {
-  @Transient private val icon = LoadingIcon()
+  private val icon = LoadingIcon()
   private val animator = Timer(100) {
     icon.next()
     repaint()

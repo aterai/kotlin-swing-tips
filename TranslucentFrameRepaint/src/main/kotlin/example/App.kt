@@ -78,7 +78,8 @@ private fun repaintWindowAncestor(c: JComponent) {
 }
 
 private class TexturePanel(lm: LayoutManager) : JPanel(lm) {
-  @Transient private var texture: Paint? = null
+  private var texture: Paint? = null
+
   fun setTexturePaint(texturePaint: Paint?) {
     texture = texturePaint
     isOpaque = texturePaint == null

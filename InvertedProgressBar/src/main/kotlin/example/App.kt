@@ -141,7 +141,8 @@ private class ProgressListener(private val progressBar: JProgressBar) : Property
 }
 
 private open class VerticalFlipLayerUI<V : Component> : LayerUI<V>() {
-  @Transient private var buf: BufferedImage? = null
+  private var buf: BufferedImage? = null
+
   override fun paint(g: Graphics, c: JComponent) {
     if (c is JLayer<*>) {
       val d = c.view.size
@@ -153,7 +154,7 @@ private open class VerticalFlipLayerUI<V : Component> : LayerUI<V>() {
       super.paint(g2, c)
       g2.dispose()
       buf = bi
-      g.drawImage(buf, 0, 0, c.view)
+      g.drawImage(bi, 0, 0, c.view)
     } else {
       super.paint(g, c)
     }

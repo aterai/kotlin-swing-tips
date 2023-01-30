@@ -33,7 +33,7 @@ private class TabChangeListener : ChangeListener {
 }
 
 private class TabbedPanePopupMenu : JPopupMenu() {
-  @Transient private var count = 0
+  private var count = 0
   private val closePage: JMenuItem
   private val closeAll: JMenuItem
   private val closeAllButActive: JMenuItem
