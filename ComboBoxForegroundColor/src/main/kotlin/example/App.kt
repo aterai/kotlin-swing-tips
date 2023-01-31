@@ -2,6 +2,7 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.io.Serializable
+import java.util.Objects
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
@@ -52,6 +53,19 @@ private fun makeTitledPanel(title: String, c: Component): Component {
 }
 
 private data class ColorItem(val color: Color, val description: String) : Serializable {
+  override fun hashCode() = Objects.hash(color, description)
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) {
+      return true
+    }
+    return if (other is ColorItem) {
+      other.color == color && other.toString() == description
+    } else {
+      false
+    }
+  }
+
   override fun toString() = description
 
   companion object {

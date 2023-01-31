@@ -43,9 +43,10 @@ private open class ComboItem(
   var isEditable: Boolean = false,
   var text: String? = ""
 ) : Serializable {
-  override fun hashCode() = Objects.hashCode(this)
+  override fun hashCode() = Objects.hash(text)
 
-  override fun equals(other: Any?) = other is ComboItem && other.text == text
+  override fun equals(other: Any?) =
+    if (this === other) true else other is ComboItem && other.text == text
 
   override fun toString() = "%s: %b, %b".format(text, isEnabled, isEditable)
 
