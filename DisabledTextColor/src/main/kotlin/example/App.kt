@@ -9,7 +9,7 @@ fun makeUI(): Component {
   UIManager.put("Button.disabledText", Color.YELLOW)
   UIManager.put("Label.disabledForeground", Color.ORANGE)
   val cbx1 = JCheckBox("default", true)
-  val cbx2 = JCheckBox("<html>html tag</html>", true)
+  val cbx2 = JCheckBox("<html>html <span style='color:red'>tag", true)
   val label = JLabel("label disabledForeground")
   val button = JButton("button disabledText")
 
