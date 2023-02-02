@@ -8,11 +8,17 @@ import javax.swing.plaf.LayerUI
 import javax.swing.text.JTextComponent
 
 fun makeUI(): Component {
-  val field1 = JTextField("Please enter your E-mail address")
-  field1.addFocusListener(PlaceholderFocusListener(field1))
+  val hint1 = "Please enter your E-mail address"
+  val field1 = JTextField()
+  val listener1 = PlaceholderFocusListener(hint1)
+  field1.addFocusListener(listener1)
+  listener1.update(field1)
 
-  val field2 = JTextField("History Search")
-  field2.addFocusListener(PlaceholderFocusListener(field2))
+  val hint2 = "History Search"
+  val field2 = JTextField()
+  val listener2 = PlaceholderFocusListener(hint2)
+  field2.addFocusListener(listener2)
+  listener2.update(field2)
 
   val box = Box.createVerticalBox()
   box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
@@ -34,32 +40,28 @@ private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()
   it.add(c)
 }
 
-private class PlaceholderFocusListener(tf: JTextComponent) : FocusListener {
-  private val hintMessage = tf.text
-
-  init {
-    tf.foreground = INACTIVE
-  }
-
+private class PlaceholderFocusListener(private val hintMessage: String) : FocusListener {
   override fun focusGained(e: FocusEvent) {
-    val tf = e.component
-    if (tf is JTextComponent && hintMessage == tf.text && INACTIVE == tf.foreground) {
-      tf.foreground = UIManager.getColor("TextField.foreground")
-      tf.text = ""
-    }
+    update(e.component)
   }
 
   override fun focusLost(e: FocusEvent) {
-    (e.component as? JTextComponent)
-      ?.takeIf { it.text.trim().isEmpty() }
-      ?.also {
-        it.foreground = INACTIVE
-        it.text = hintMessage
-      }
+    update(e.component)
   }
 
-  companion object {
-    private val INACTIVE = UIManager.getColor("TextField.inactiveForeground")
+  fun update(c: Component?) {
+    (c as? JTextComponent)?.also {
+      val txt = it.text.trim()
+      if (txt.isEmpty()) {
+        it.foreground = UIManager.getColor("TextField.inactiveForeground")
+        it.text = hintMessage
+      } else {
+        it.foreground = UIManager.getColor("TextField.foreground")
+        if (txt == hintMessage) {
+          it.text = ""
+        }
+      }
+    }
   }
 }
 
@@ -82,9 +84,10 @@ private class PlaceholderLayerUI<V : JTextComponent>(hintMessage: String) : Laye
       ?.also {
         val g2 = g.create() as? Graphics2D ?: return
         g2.paint = hint.background
-        val i = it.insets
+        val r = SwingUtilities.calculateInnerArea(it, null)
         val d = hint.preferredSize
-        SwingUtilities.paintComponent(g2, hint, it, i.left, i.top, d.width, d.height)
+        val yy = (r.centerY - d.height / 2.0).toInt()
+        SwingUtilities.paintComponent(g2, hint, it, r.x, yy, d.width, d.height)
         g2.dispose()
       }
   }
