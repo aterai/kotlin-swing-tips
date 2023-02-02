@@ -53,6 +53,9 @@ fun makeUI(): Component {
   )
 
   return JPanel(BorderLayout()).also {
+    val mb = JMenuBar()
+    mb.add(LookAndFeelUtils.createLookAndFeelMenu())
+    EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.add(box, BorderLayout.NORTH)
     it.preferredSize = Dimension(320, 240)
   }
@@ -87,7 +90,8 @@ private class ImageFilterLayerUI<V : Component>(private val filter: ImageFilter)
 
   override fun paint(g: Graphics, c: JComponent) {
     if (c is JLayer<*>) {
-      val d = c.view.size
+      val view = c.view
+      val d = view.size
       val b = buf?.takeIf { it.width == d.width && it.height == d.height } ?: BufferedImage(
         d.width,
         d.height,
@@ -95,10 +99,10 @@ private class ImageFilterLayerUI<V : Component>(private val filter: ImageFilter)
       )
       buf = b
       val g2 = b.createGraphics()
-      super.paint(g2, c)
+      view.paint(g2)
       g2.dispose()
       val image = c.createImage(FilteredImageSource(b.source, filter))
-      g.drawImage(image, 0, 0, c.view)
+      g.drawImage(image, 0, 0, view)
     } else {
       super.paint(g, c)
     }
@@ -111,6 +115,51 @@ private class ColorFilter : RGBImageFilter() {
     val g = argb shr 8 and 0xFF
     val b = argb and 0xFF
     return argb and 0xFF_00_00_00.toInt() or (r shl 16) or (g shl 8) or b
+  }
+}
+
+private object LookAndFeelUtils {
+  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
+
+  fun createLookAndFeelMenu(): JMenu {
+    val menu = JMenu("LookAndFeel")
+    val buttonGroup = ButtonGroup()
+    for (info in UIManager.getInstalledLookAndFeels()) {
+      val b = JRadioButtonMenuItem(info.name, info.className == lookAndFeel)
+      initLookAndFeelAction(info, b)
+      menu.add(b)
+      buttonGroup.add(b)
+    }
+    return menu
+  }
+
+  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+    val cmd = info.className
+    b.text = info.name
+    b.actionCommand = cmd
+    b.hideActionText = true
+    b.addActionListener { setLookAndFeel(cmd) }
+  }
+
+  @Throws(
+    ClassNotFoundException::class,
+    InstantiationException::class,
+    IllegalAccessException::class,
+    UnsupportedLookAndFeelException::class
+  )
+  private fun setLookAndFeel(newLookAndFeel: String) {
+    val oldLookAndFeel = lookAndFeel
+    if (oldLookAndFeel != newLookAndFeel) {
+      UIManager.setLookAndFeel(newLookAndFeel)
+      lookAndFeel = newLookAndFeel
+      updateLookAndFeel()
+    }
+  }
+
+  private fun updateLookAndFeel() {
+    for (window in Window.getWindows()) {
+      SwingUtilities.updateComponentTreeUI(window)
+    }
   }
 }
 
