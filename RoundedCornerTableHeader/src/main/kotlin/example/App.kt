@@ -27,6 +27,17 @@ private val monthTable = object : JTable() {
     }
   }
 
+  override fun updateUI() {
+    super.updateUI()
+    fillsViewportHeight = true
+    setBackground(Color.WHITE)
+    setShowVerticalLines(false)
+    setShowHorizontalLines(true)
+    intercellSpacing = Dimension(0, 1)
+    font = font.deriveFont(Font.BOLD)
+    setDefaultRenderer(LocalDate::class.java, CalendarTableRenderer())
+  }
+
   override fun doLayout() {
     super.doLayout()
     (SwingUtilities.getAncestorOfClass(JViewport::class.java, this) as? JViewport)?.also {
@@ -45,15 +56,6 @@ var currentLocalDate: LocalDate = LocalDate.of(2021, 6, 21)
   private set
 
 fun makeUI(): Component {
-  monthTable.also {
-    it.font = it.font.deriveFont(Font.BOLD)
-    it.setDefaultRenderer(LocalDate::class.java, CalendarTableRenderer())
-    it.fillsViewportHeight = true
-    it.background = Color.WHITE
-    it.showVerticalLines = false
-    it.intercellSpacing = Dimension(0, 1)
-  }
-
   monthTable.tableHeader.also {
     it.foreground = Color.WHITE
     it.isOpaque = false
