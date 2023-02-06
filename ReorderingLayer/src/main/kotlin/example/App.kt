@@ -86,8 +86,7 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
     if (e.id == MouseEvent.MOUSE_DRAGGED) {
       val parent = l.view
       val pt = e.point
-      val c = e.component
-      if (c is JLayer<*>) {
+      (e.component as? JLayer<*>)?.also {
         if (draggingComponent == null) { // MotionThreshold
           if (startPt.distance(pt) > gestureMotionThreshold) {
             startDragging(parent, e)
