@@ -16,7 +16,7 @@ fun makeUI(): Component {
   val scroll1 = JScrollPane(textArea)
   scroll1.setRowHeaderView(LineNumberView(textArea))
   textArea.border = BorderFactory.createEmptyBorder(0, 2, 0, 0)
-  textArea.isEditable = false
+  // textArea.isEditable = false
 
   val table = JTable(500, 3)
   val scroll2 = JScrollPane(table)
@@ -63,7 +63,7 @@ private class ScrollBackToTopIcon : Icon {
   override fun getIconHeight() = 32
 }
 
-private class ScrollBackToTopLayerUI : LayerUI<JScrollPane>() {
+private class ScrollBackToTopLayerUI<V : JScrollPane> : LayerUI<V>() {
   private val rubberStamp = JPanel()
   private val mousePt = Point()
   private val button = object : JButton(ScrollBackToTopIcon()) {
@@ -92,6 +92,7 @@ private class ScrollBackToTopLayerUI : LayerUI<JScrollPane>() {
     super.installUI(c)
     if (c is JLayer<*>) {
       c.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
+      c.glassPane.cursor = Cursor.getDefaultCursor()
     }
   }
 
@@ -100,7 +101,7 @@ private class ScrollBackToTopLayerUI : LayerUI<JScrollPane>() {
     super.uninstallUI(c)
   }
 
-  override fun processMouseEvent(e: MouseEvent, l: JLayer<out JScrollPane>) {
+  override fun processMouseEvent(e: MouseEvent, l: JLayer<out V>) {
     val scroll = l.view
     val r = scroll.viewport.viewRect
     val p = SwingUtilities.convertPoint(e.component, e.point, scroll)
@@ -115,9 +116,10 @@ private class ScrollBackToTopLayerUI : LayerUI<JScrollPane>() {
     }
   }
 
-  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out JScrollPane>) {
+  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out V>) {
     val p = SwingUtilities.convertPoint(e.component, e.point, l.view)
     mousePt.location = p
+    l.glassPane.isVisible = buttonRect.contains(mousePt)
     l.repaint(buttonRect)
   }
 
