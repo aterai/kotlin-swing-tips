@@ -30,12 +30,17 @@ fun makeUI(): Component {
   c.fill = GridBagConstraints.BOTH
   p1.add(JLabel("right", SwingConstants.CENTER), c)
 
-  val p2 = JPanel(GridLayout(0, 2, 5, 5))
-  val b2 = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-  p2.border = BorderFactory.createCompoundBorder(b2, ColumnRulesBorder())
+  val p2 = object : JPanel(GridLayout(0, 2, 5, 5)) {
+    override fun updateUI() {
+      super.updateUI()
+      val b = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+      border = BorderFactory.createCompoundBorder(b, ColumnRulesBorder())
+    }
+  }
 
-  val p3 = JPanel(GridLayout(0, 2, 5, 5))
-  p3.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+  val p3 = JPanel(GridLayout(0, 2, 5, 5)).also {
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+  }
 
   listOf(p2, p3).forEach {
     it.add(JLabel("left", SwingConstants.CENTER))
@@ -81,6 +86,11 @@ private class ColumnRulesBorder : Border {
 private class ColumnRulesLayerUI : LayerUI<JComponent>() {
   private val separator = JSeparator(SwingConstants.VERTICAL)
   private val renderer = JPanel()
+
+  override fun updateUI(l: JLayer<out JComponent>) {
+    super.updateUI(l)
+    SwingUtilities.updateComponentTreeUI(separator)
+  }
 
   override fun paint(g: Graphics, c: JComponent) {
     super.paint(g, c)
