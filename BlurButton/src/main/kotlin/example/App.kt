@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.awt.event.ActionEvent
 import java.awt.image.BufferedImage
 import java.awt.image.ConvolveOp
 import java.awt.image.Kernel
@@ -24,15 +23,15 @@ fun makeUI(): Component {
   val b3 = JButton("<html>Blurred <font color='blue'>JLayer")
   p.add(JLayer(b3, BlurLayerUI()))
 
-  val button = JCheckBox("setEnabled", true)
-  button.addActionListener { e ->
-    val f = (e.source as? AbstractButton)?.isSelected ?: false
-    listOf(b0, b1, b2, b3).forEach { it.isEnabled = !f }
+  val check = JCheckBox("setEnabled", true)
+  check.addActionListener { e ->
+    val f = (e.source as? JCheckBox)?.isSelected ?: false
+    listOf(b0, b1, b2, b3).forEach { it.isEnabled = f }
   }
 
   val box = Box.createHorizontalBox()
   box.add(Box.createHorizontalGlue())
-  box.add(button)
+  box.add(check)
 
   return JPanel(BorderLayout(10, 10)).also {
     val mb = JMenuBar()
@@ -108,6 +107,7 @@ private class BlurButton(label: String) : JButton(label) {
 
 private class BlurLayerUI<V : AbstractButton?> : LayerUI<V>() {
   private var buf: BufferedImage? = null
+
   override fun paint(g: Graphics, c: JComponent) {
     if (c is JLayer<*>) {
       val view = c.view
@@ -120,22 +120,19 @@ private class BlurLayerUI<V : AbstractButton?> : LayerUI<V>() {
         val g2 = img.createGraphics()
         view.paint(g2)
         g2.dispose()
-        g.drawImage(CONVOLVE_OP.filter(buf, null), 0, 0, c)
+        g.drawImage(CONVOLVE_OP.filter(img, null), 0, 0, c)
         buf = img
       }
     }
   }
 
   companion object {
-    private val CONVOLVE_OP = ConvolveOp(
-      Kernel(
-        3, 3, floatArrayOf(
-          .05f, .05f, .05f,
-          .05f, .60f, .05f,
-          .05f, .05f, .05f
-        )
-      ), ConvolveOp.EDGE_NO_OP, null
+    private val DATA = floatArrayOf(
+      .05f, .05f, .05f,
+      .05f, .60f, .05f,
+      .05f, .05f, .05f
     )
+    private val CONVOLVE_OP = ConvolveOp(Kernel(3, 3, DATA), ConvolveOp.EDGE_NO_OP, null)
   }
 }
 
