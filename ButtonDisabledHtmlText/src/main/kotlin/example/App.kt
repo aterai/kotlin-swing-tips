@@ -33,13 +33,14 @@ fun makeUI(): Component {
   box.add(Box.createHorizontalGlue())
   box.add(check)
 
+  val mb = JMenuBar()
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
+
   return JPanel(BorderLayout()).also {
-    val mb = JMenuBar()
-    mb.add(LookAndFeelUtils.createLookAndFeelMenu())
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.add(p, BorderLayout.NORTH)
     it.add(box, BorderLayout.SOUTH)
-    it.border = BorderFactory.createEmptyBorder(8, 8, 8, 8)
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.preferredSize = Dimension(320, 240)
   }
 }
@@ -48,7 +49,7 @@ private fun makeButton(title: String): JButton {
   val pop = JPopupMenu()
   pop.add(title)
   val button = JButton(title)
-  if (title.length > 0) {
+  if (title.isNotEmpty()) {
     button.mnemonic = title.codePointAt(0)
   }
   button.icon = UIManager.getIcon("FileView.directoryIcon")
@@ -86,11 +87,10 @@ private class DisableInputLayerUI<V : AbstractButton> : LayerUI<V>() {
 
   override fun uninstallUI(c: JComponent) {
     if (c is JLayer<*>) {
-      val layer = c
-      layer.layerEventMask = 0
+      c.layerEventMask = 0
       if (DEBUG_POPUP_BLOCK) {
-        layer.glassPane.removeMouseListener(mouseBlocker)
-        layer.glassPane.removeKeyListener(keyBlocker)
+        c.glassPane.removeMouseListener(mouseBlocker)
+        c.glassPane.removeKeyListener(keyBlocker)
       }
     }
     super.uninstallUI(c)
@@ -109,8 +109,8 @@ private class DisableInputLayerUI<V : AbstractButton> : LayerUI<V>() {
   }
 
   override fun applyPropertyChange(e: PropertyChangeEvent, l: JLayer<out V>) {
-    val b = l.view
-    if (CMD_BLOCKING == e.propertyName && b is AbstractButton) {
+    if (CMD_BLOCKING == e.propertyName) {
+      val b = l.view
       b.isFocusable = !isBlocking
       b.mnemonic = if (isBlocking) 0 else b.text.codePointAt(0)
       b.foreground = if (isBlocking) Color.RED else Color.BLACK
@@ -123,16 +123,17 @@ private class DisableInputLayerUI<V : AbstractButton> : LayerUI<V>() {
       val view = c.view
       if (isBlocking) {
         val d = view.size
-        val buffer = buf?.takeIf { it.width == d.width && it.height == d.height }
+        val img = buf?.takeIf { it.width == d.width && it.height == d.height }
           ?: BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_ARGB)
-        buf = buffer
-        val g2 = buffer.createGraphics()
+        val g2 = img.createGraphics()
         g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .25f)
-        super.paint(g2, view as? JComponent)
+        view.paint(g2)
         g2.dispose()
-        g.drawImage(buf, 0, 0, c)
+        g.drawImage(img, 0, 0, c)
+        buf = img
       } else {
-        super.paint(g, view as? JComponent)
+        // super.paint(g, view as? JComponent)
+        view.paint(g)
       }
     }
   }
@@ -155,7 +156,7 @@ private class DisabledHtmlTextLayerUI<V : AbstractButton> : LayerUI<V>() {
   override fun paint(g: Graphics, c: JComponent) {
     if (c is JLayer<*>) {
       val view = c.view
-      super.paint(g, view as? JComponent)
+      view.paint(g)
       if (!view.isEnabled()) {
         paintDisabledText(g, view)
       }
