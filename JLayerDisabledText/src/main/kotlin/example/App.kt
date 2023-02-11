@@ -4,6 +4,7 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.InputEvent
 import java.awt.event.KeyAdapter
 import java.awt.event.MouseAdapter
+import java.awt.image.BufferedImage
 import java.beans.PropertyChangeEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.LayerUI
@@ -12,7 +13,9 @@ fun makeUI(): Component {
   UIManager.put("Button.disabledText", Color.RED)
   val button1 = makeButton("Default")
   val button2 = makeButton("setForeground")
-  val layerUI = DisableInputLayerUI<AbstractButton>()
+  val layer3 = DisableInputLayerUI<AbstractButton>()
+  val button4 = makeButton("<html>html <font color='red'>tag")
+  val layer5 = DisableInputLayerUI<AbstractButton>()
 
   val check = JCheckBox("setEnabled", true)
   check.addActionListener { e ->
@@ -20,31 +23,38 @@ fun makeUI(): Component {
     button1.isEnabled = isSelected
     button2.isEnabled = isSelected
     button2.foreground = if (isSelected) Color.BLACK else Color.RED
-    layerUI.setLocked(!isSelected)
+    layer3.setLocked(!isSelected)
+    button4.isEnabled = isSelected
+    layer5.setLocked(!isSelected)
   }
 
   val p1 = JPanel()
   p1.border = BorderFactory.createTitledBorder("setEnabled")
   p1.add(button1)
   p1.add(button2)
-  p1.add(JLayer(makeButton("JLayer"), layerUI))
+  p1.add(JLayer(makeButton("JLayer"), layer3))
 
   val p2 = JPanel()
-  p2.border = BorderFactory.createTitledBorder("Focus test")
-  p2.add(JTextField(16))
-  p2.add(JButton("JButton"))
+  p2.border = BorderFactory.createTitledBorder("html")
+  p2.add(button4)
+  p2.add(JLayer(makeButton("<html>JLayer <font color='#0000ff'>html"), layer5))
 
   val panel = JPanel(GridLayout(2, 1))
   panel.add(p1)
   panel.add(p2)
 
+  val box = Box.createHorizontalBox()
+  box.add(Box.createHorizontalGlue())
+  box.add(check)
+
   val mb = JMenuBar()
   mb.add(LookAndFeelUtils.createLookAndFeelMenu())
 
-  return JPanel().also {
-    it.add(panel)
-    it.add(check)
+  return JPanel(BorderLayout()).also {
+    it.add(panel, BorderLayout.NORTH)
+    it.add(box, BorderLayout.SOUTH)
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.preferredSize = Dimension(320, 240)
   }
 }
@@ -65,6 +75,8 @@ private class DisableInputLayerUI<V : AbstractButton> : LayerUI<V>() {
   private val mouseBlocker = object : MouseAdapter() { /* do nothing */ }
   private val keyBlocker = object : KeyAdapter() { /* do nothing */ }
   private var isBlocking = false
+  private var buf: BufferedImage? = null
+
   override fun installUI(c: JComponent) {
     super.installUI(c)
     if (c is JLayer<*>) {
@@ -73,8 +85,8 @@ private class DisableInputLayerUI<V : AbstractButton> : LayerUI<V>() {
         c.glassPane.addKeyListener(keyBlocker)
       }
       c.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK or
-        AWTEvent.MOUSE_WHEEL_EVENT_MASK or AWTEvent.KEY_EVENT_MASK or
-        AWTEvent.FOCUS_EVENT_MASK or AWTEvent.COMPONENT_EVENT_MASK
+          AWTEvent.MOUSE_WHEEL_EVENT_MASK or AWTEvent.KEY_EVENT_MASK or
+          AWTEvent.FOCUS_EVENT_MASK or AWTEvent.COMPONENT_EVENT_MASK
     }
   }
 
@@ -108,6 +120,25 @@ private class DisableInputLayerUI<V : AbstractButton> : LayerUI<V>() {
       b.mnemonic = if (isBlocking) 0 else b.text.codePointAt(0)
       b.foreground = if (isBlocking) Color.RED else Color.BLACK
       l.glassPane.isVisible = e.newValue as? Boolean == true
+    }
+  }
+
+  override fun paint(g: Graphics, c: JComponent) {
+    if (c is JLayer<*>) {
+      val view = c.view
+      if (isBlocking) {
+        val d = view.size
+        val img = buf?.takeIf { it.width == d.width && it.height == d.height }
+          ?: BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_ARGB)
+        val g2 = img.createGraphics()
+        g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .25f)
+        view.paint(g2)
+        g2.dispose()
+        g.drawImage(img, 0, 0, c)
+        buf = img
+      } else {
+        view.paint(g)
+      }
     }
   }
 
