@@ -18,8 +18,25 @@ fun makeUI(): Component {
     arrayOf("basketball", "soccer", "football", "hockey"),
     arrayOf("hot dogs", "pizza", "ravioli", "bananas")
   )
-  val combo2 = JComboBox<String>()
-  combo2.isEditable = true
+  val combo2 = object : JComboBox<String>() {
+    override fun updateUI() {
+      super.updateUI()
+      isEditable = true
+      editor = object : BasicComboBoxEditor() {
+        private var editorComponent: Component? = null
+
+        override fun getEditorComponent(): Component? {
+          (super.getEditorComponent() as? JTextComponent)?.also {
+            editorComponent = editorComponent ?: JLayer(it, PlaceholderLayerUI("- Select type -"))
+          }
+          return editorComponent
+        }
+      }
+      val b1 = UIManager.getLookAndFeelDefaults().getBorder("ComboBox.border")
+      val b2 = BorderFactory.createEmptyBorder(0, 2, 0, 0)
+      border = BorderFactory.createCompoundBorder(b1, b2)
+    }
+  }
 
   combo1.addItemListener { e ->
     val combo = e.itemSelectable
@@ -29,21 +46,6 @@ fun makeUI(): Component {
       combo2.selectedIndex = -1
     }
   }
-
-  combo2.editor = object : BasicComboBoxEditor() {
-    private var editorComponent: Component? = null
-
-    override fun getEditorComponent(): Component? {
-      (super.getEditorComponent() as? JTextComponent)?.also {
-        editorComponent = editorComponent ?: JLayer(it, PlaceholderLayerUI("- Select type -"))
-      }
-      return editorComponent
-    }
-  }
-  combo2.border = BorderFactory.createCompoundBorder(
-    combo2.border,
-    BorderFactory.createEmptyBorder(0, 2, 0, 0)
-  )
 
   val p = JPanel(GridLayout(4, 1, 5, 5))
   p.border = BorderFactory.createEmptyBorder(5, 20, 5, 20)
@@ -79,11 +81,10 @@ private class PlaceholderLayerUI<E : JTextComponent>(hintMessage: String) : Laye
       if (tc.text.isEmpty() && !tc.hasFocus()) {
         val g2 = g.create() as? Graphics2D ?: return
         g2.paint = INACTIVE
-        // println("getInsets: ${tc.getInsets()}")
-        // println("getMargin: ${tc.getMargin()}")
-        val i = tc.margin
+        val r = SwingUtilities.calculateInnerArea(tc, null)
         val d = hint.preferredSize
-        SwingUtilities.paintComponent(g2, hint, tc, i.left, i.top, d.width, d.height)
+        val yy = (r.y + (r.height - d.height) / 2.0).toInt()
+        SwingUtilities.paintComponent(g2, hint, tc, r.x, yy, d.width, d.height)
         g2.dispose()
       }
     }
