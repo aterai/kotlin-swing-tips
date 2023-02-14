@@ -124,6 +124,7 @@ private class TextLabelProgressBar(model: BoundedRangeModel) : JProgressBar(mode
     super.updateUI()
     layout = BorderLayout()
     EventQueue.invokeLater {
+      SwingUtilities.updateComponentTreeUI(label)
       add(label)
       label.border = BorderFactory.createEmptyBorder(0, 4, 0, 4)
     }
@@ -141,6 +142,12 @@ private class TextLabelProgressBar(model: BoundedRangeModel) : JProgressBar(mode
 
 private class ProgressBarLayerUI(private val label: JLabel) : LayerUI<JProgressBar>() {
   private val rubberStamp = JPanel()
+
+  override fun updateUI(l: JLayer<out JProgressBar>?) {
+    super.updateUI(l)
+    SwingUtilities.updateComponentTreeUI(label)
+  }
+
   override fun paint(g: Graphics, c: JComponent) {
     super.paint(g, c)
     val progress = (c as? JLayer<*>)?.view
