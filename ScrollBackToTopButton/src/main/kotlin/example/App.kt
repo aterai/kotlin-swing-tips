@@ -8,6 +8,7 @@ import java.awt.geom.Path2D
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
+import javax.swing.plaf.ColorUIResource
 import javax.swing.plaf.LayerUI
 
 fun makeUI(): Component {
@@ -16,9 +17,17 @@ fun makeUI(): Component {
   val scroll1 = JScrollPane(textArea)
   scroll1.setRowHeaderView(LineNumberView(textArea))
   textArea.border = BorderFactory.createEmptyBorder(0, 2, 0, 0)
-  // textArea.isEditable = false
 
-  val table = JTable(500, 3)
+  val table = object : JTable(500, 3) {
+    override fun updateUI() {
+      val reset = ColorUIResource(Color.RED)
+      setSelectionForeground(reset)
+      setSelectionBackground(reset)
+      super.updateUI()
+      val showGrid = UIManager.getLookAndFeelDefaults().get("Table.showGrid")
+      setShowGrid(showGrid as? Boolean ?: true)
+    }
+  }
   val scroll2 = JScrollPane(table)
   SwingUtilities.invokeLater { table.scrollRectToVisible(table.getCellRect(500, 0, true)) }
 
@@ -88,6 +97,11 @@ private class ScrollBackToTopLayerUI<V : JScrollPane> : LayerUI<V>() {
     }
   }
 
+  override fun updateUI(l: JLayer<out V>) {
+    super.updateUI(l)
+    SwingUtilities.updateComponentTreeUI(button)
+  }
+
   override fun installUI(c: JComponent) {
     super.installUI(c)
     if (c is JLayer<*>) {
@@ -151,25 +165,14 @@ private class ScrollBackToTopLayerUI<V : JScrollPane> : LayerUI<V>() {
 }
 
 private class LineNumberView(private val textArea: JTextArea) : JComponent() {
-  private val fontMetrics: FontMetrics
-  private val fontAscent: Int
-  private val fontHeight: Int
-  private val fontDescent: Int
-  private val fontLeading: Int
-
   private val componentWidth: Int
     get() {
       val maxDigits = 3.coerceAtLeast(textArea.lineCount.toString().length)
+      val fontMetrics = textArea.getFontMetrics(textArea.font)
       return maxDigits * fontMetrics.stringWidth("0") + insets.left + insets.right
     }
 
   init {
-    val font = textArea.font
-    fontMetrics = getFontMetrics(font)
-    fontHeight = fontMetrics.height
-    fontAscent = fontMetrics.ascent
-    fontDescent = fontMetrics.descent
-    fontLeading = fontMetrics.leading
     val dl = object : DocumentListener {
       override fun insertUpdate(e: DocumentEvent) {
         repaint()
@@ -208,12 +211,22 @@ private class LineNumberView(private val textArea: JTextArea) : JComponent() {
     return root.getElementIndex(pos)
   }
 
+  override fun updateUI() {
+    super.updateUI()
+    SwingUtilities.updateComponentTreeUI(textArea)
+  }
+
   override fun getPreferredSize() = Dimension(componentWidth, textArea.height)
 
   override fun paintComponent(g: Graphics) {
     g.color = background
     val clip = g.clipBounds
     g.fillRect(clip.x, clip.y, clip.width, clip.height)
+    val fontMetrics = textArea.getFontMetrics(textArea.font)
+    val fontHeight = fontMetrics.height
+    val fontAscent = fontMetrics.ascent
+    val fontDescent = fontMetrics.descent
+    val fontLeading = fontMetrics.leading
     g.color = foreground
     val base = clip.y
     val start = getLineAtPoint(base)
