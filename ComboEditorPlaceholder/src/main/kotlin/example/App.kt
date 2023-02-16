@@ -21,7 +21,6 @@ fun makeUI(): Component {
   val combo2 = object : JComboBox<String>() {
     override fun updateUI() {
       super.updateUI()
-      isEditable = true
       editor = object : BasicComboBoxEditor() {
         private var editorComponent: Component? = null
 
@@ -37,6 +36,7 @@ fun makeUI(): Component {
       border = BorderFactory.createCompoundBorder(b1, b2)
     }
   }
+  combo2.isEditable = true
 
   combo1.addItemListener { e ->
     val combo = e.itemSelectable
@@ -68,10 +68,17 @@ fun makeUI(): Component {
 }
 
 private class PlaceholderLayerUI<E : JTextComponent>(hintMessage: String) : LayerUI<E>() {
-  private val hint = JLabel(hintMessage)
+  private val hint = object : JLabel(hintMessage) {
+    override fun updateUI() {
+      super.updateUI()
+      val inactive = "TextField.inactiveForeground"
+      foreground = UIManager.getLookAndFeelDefaults().getColor(inactive)
+    }
+  }
 
-  init {
-    hint.foreground = INACTIVE
+  override fun updateUI(l: JLayer<out E>?) {
+    super.updateUI(l)
+    SwingUtilities.updateComponentTreeUI(hint)
   }
 
   override fun paint(g: Graphics, c: JComponent) {
@@ -80,7 +87,7 @@ private class PlaceholderLayerUI<E : JTextComponent>(hintMessage: String) : Laye
       val tc = it.view as? JTextComponent ?: return
       if (tc.text.isEmpty() && !tc.hasFocus()) {
         val g2 = g.create() as? Graphics2D ?: return
-        g2.paint = INACTIVE
+        g2.paint = hint.foreground
         val r = SwingUtilities.calculateInnerArea(tc, null)
         val d = hint.preferredSize
         val yy = (r.y + (r.height - d.height) / 2.0).toInt()
@@ -90,22 +97,18 @@ private class PlaceholderLayerUI<E : JTextComponent>(hintMessage: String) : Laye
     }
   }
 
-  override fun installUI(c: JComponent?) {
+  override fun installUI(c: JComponent) {
     super.installUI(c)
     (c as? JLayer<*>)?.layerEventMask = AWTEvent.FOCUS_EVENT_MASK
   }
 
-  override fun uninstallUI(c: JComponent?) {
+  override fun uninstallUI(c: JComponent) {
     super.uninstallUI(c)
     (c as? JLayer<*>)?.layerEventMask = 0
   }
 
   override fun processFocusEvent(e: FocusEvent, l: JLayer<out E>) {
     l.view.repaint()
-  }
-
-  companion object {
-    private val INACTIVE = UIManager.getColor("TextField.inactiveForeground")
   }
 }
 
