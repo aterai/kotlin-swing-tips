@@ -14,21 +14,26 @@ import javax.swing.text.View
 import kotlin.collections.LinkedHashMap
 
 fun makeUI(): Component {
-  val siteLink = "https://ateraimemo.com/"
-  val editor = JEditorPane("text/html", "<html><a href='$siteLink'>$siteLink</a>")
-  editor.isOpaque = false // editor.setBackground(getBackground())
-  editor.isEditable = false // REQUIRED
-  editor.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true)
+  val link = "https://ateraimemo.com/"
+  val editor = object : JEditorPane("text/html", "<html><a href='$link'>$link</a>") {
+    override fun updateUI() {
+      super.updateUI()
+      isOpaque = false // editor.setBackground(getBackground())
+      isEditable = false // REQUIRED
+      background = Color(0x0, true)
+      putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true)
+    }
+  }
   editor.addHyperlinkListener { e ->
     if (e.eventType == HyperlinkEvent.EventType.ACTIVATED) {
       UIManager.getLookAndFeel().provideErrorFeedback(e.source as? Component)
     }
   }
-  val browseAction = object : AbstractAction(siteLink) {
+  val browseAction = object : AbstractAction(link) {
     override fun actionPerformed(e: ActionEvent) {
       runCatching {
         if (Desktop.isDesktopSupported()) {
-          Desktop.getDesktop().browse(URI(siteLink))
+          Desktop.getDesktop().browse(URI(link))
         }
         Toolkit.getDefaultToolkit().beep()
       }.onFailure {
@@ -37,7 +42,7 @@ fun makeUI(): Component {
     }
   }
   val map = LinkedHashMap<String, Component>(4)
-  map["JLabel+MouseListener: "] = UrlLabel(siteLink)
+  map["JLabel+MouseListener: "] = UrlLabel(link)
   map["JButton: "] = JButton(browseAction)
   map["JButton+ButtonUI: "] = HyperlinkButton(browseAction)
   map["JEditorPane+HyperlinkListener: "] = editor
