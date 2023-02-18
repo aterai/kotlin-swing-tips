@@ -201,7 +201,7 @@ private class LineNumberView(private val textArea: JTextArea) : JComponent() {
     )
     isOpaque = true
     background = Color.WHITE
-    setFont(font)
+    font = textArea.font
   }
 
   private fun getLineAtPoint(y: Int): Int {
