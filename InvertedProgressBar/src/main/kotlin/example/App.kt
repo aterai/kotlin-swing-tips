@@ -145,16 +145,17 @@ private open class VerticalFlipLayerUI<V : Component> : LayerUI<V>() {
 
   override fun paint(g: Graphics, c: JComponent) {
     if (c is JLayer<*>) {
-      val d = c.view.size
+      val view = c.view
+      val d = view.size
       val bi = buf?.takeIf { it.width == d.width && it.height == d.height }
         ?: BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_ARGB)
       val g2 = bi.createGraphics()
       g2.scale(1.0, -1.0)
       g2.translate(0, -d.height)
-      super.paint(g2, c)
+      view.paint(g2)
       g2.dispose()
+      g.drawImage(bi, 0, 0, view)
       buf = bi
-      g.drawImage(bi, 0, 0, c.view)
     } else {
       super.paint(g, c)
     }
