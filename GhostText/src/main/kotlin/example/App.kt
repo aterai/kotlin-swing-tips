@@ -8,11 +8,18 @@ import javax.swing.plaf.LayerUI
 import javax.swing.text.JTextComponent
 
 fun makeUI(): Component {
-  val hint1 = "Please enter your E-mail address"
-  val field1 = JTextField()
-  val listener1 = PlaceholderFocusListener(hint1)
-  field1.addFocusListener(listener1)
-  listener1.update(field1)
+  val field1 = object : JTextField() {
+    private var listener: PlaceholderFocusListener? = null
+
+    override fun updateUI() {
+      removeFocusListener(listener)
+      super.updateUI()
+      val hint = "Please enter your E-mail address"
+      listener = PlaceholderFocusListener(hint)
+      addFocusListener(listener)
+      EventQueue.invokeLater { listener!!.update(this) }
+    }
+  }
 
   val hint2 = "History Search"
   val field2 = JTextField()
@@ -75,6 +82,11 @@ private class PlaceholderLayerUI<V : JTextComponent>(hintMessage: String) : Laye
 
   init {
     hint.text = hintMessage
+  }
+
+  override fun updateUI(l: JLayer<out V?>) {
+    super.updateUI(l)
+    SwingUtilities.updateComponentTreeUI(hint)
   }
 
   override fun paint(g: Graphics, c: JComponent) {
