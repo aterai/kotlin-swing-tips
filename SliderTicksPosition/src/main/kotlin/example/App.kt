@@ -8,40 +8,56 @@ import javax.swing.plaf.LayerUI
 import javax.swing.plaf.basic.BasicSliderUI
 
 fun makeUI(): Component {
-  val slider1 = makeSlider(SwingConstants.VERTICAL)
-  slider1.componentOrientation = ComponentOrientation.RIGHT_TO_LEFT
+  val slider1 = JSlider(SwingConstants.VERTICAL)
+  initSliderTicks(slider1)
 
-  val slider2 = makeSlider(SwingConstants.HORIZONTAL)
+  val slider2 = JSlider(SwingConstants.VERTICAL)
+  slider2.componentOrientation = ComponentOrientation.RIGHT_TO_LEFT
+  initSliderTicks(slider2)
 
-  val slider3 = makeSlider(SwingConstants.HORIZONTAL)
-  slider3.paintLabels = true
-  slider3.ui = BasicSliderUI(slider3)
+  val slider3 = JSlider(SwingConstants.HORIZONTAL)
+  initSliderTicks(slider3)
 
-  val slider4 = makeSlider(SwingConstants.HORIZONTAL)
-  slider4.paintLabels = true
-  slider4.ui = UpArrowThumbSliderUI(slider4)
+  val slider4 = JSlider(SwingConstants.HORIZONTAL)
+  initSliderTicks(slider4)
+
+  val slider5 = object : JSlider(HORIZONTAL) {
+    override fun updateUI() {
+      super.updateUI()
+      setUI(BasicSliderUI(this))
+    }
+  }
+  initSliderTicks(slider5)
+  slider5.paintLabels = true
+
+  val slider6 = object : JSlider(HORIZONTAL) {
+    override fun updateUI() {
+      super.updateUI()
+      setUI(UpArrowThumbSliderUI(this))
+    }
+  }
+  initSliderTicks(slider6)
+  slider6.paintLabels = true
 
   val p = JPanel(BorderLayout())
-  p.add(slider3, BorderLayout.NORTH)
-  p.add(slider4, BorderLayout.SOUTH)
+  p.add(slider5, BorderLayout.NORTH)
+  p.add(slider6, BorderLayout.SOUTH)
 
   return JPanel(BorderLayout()).also {
-    it.add(makeSlider(SwingConstants.HORIZONTAL), BorderLayout.NORTH)
-    it.add(makeSlider(SwingConstants.VERTICAL), BorderLayout.WEST)
-    it.add(slider1, BorderLayout.EAST)
-    it.add(JLayer(slider2, VerticalFlipLayerUI()), BorderLayout.SOUTH)
+    it.add(slider1, BorderLayout.WEST)
+    it.add(slider2, BorderLayout.EAST)
+    it.add(slider3, BorderLayout.NORTH)
+    it.add(JLayer(slider4, VerticalFlipLayerUI()), BorderLayout.SOUTH)
     it.add(p)
     it.border = BorderFactory.createEmptyBorder(5, 10, 5, 10)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeSlider(orientation: Int): JSlider {
-  val slider = JSlider(orientation)
+private fun initSliderTicks(slider: JSlider) {
   slider.majorTickSpacing = 20
   slider.minorTickSpacing = 10
   slider.paintTicks = true
-  return slider
 }
 
 private class VerticalFlipLayerUI : LayerUI<JComponent>() {
