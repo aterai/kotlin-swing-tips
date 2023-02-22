@@ -182,15 +182,16 @@ private class PlaceholderLayerUI<V : JTextComponent> : LayerUI<V>() {
     }
   }
 
-  override fun updateUI(l: JLayer<out V?>) {
+  override fun updateUI(l: JLayer<out V>) {
     super.updateUI(l)
     SwingUtilities.updateComponentTreeUI(hint)
   }
 
   override fun paint(g: Graphics, c: JComponent) {
     super.paint(g, c)
-    val tc = (c as? JLayer<*>)?.view as? JTextComponent ?: return
-    if (tc.text.isNotEmpty()) {
+    val layer = c as? JLayer<*>
+    val tc = layer?.view
+    if (tc is JTextComponent && tc.text.isNotEmpty()) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.paint = hint.foreground
       val d = hint.preferredSize

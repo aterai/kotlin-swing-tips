@@ -46,10 +46,10 @@ fun makeUI(): Component {
   textPane.isEditable = false
   textPane.text = TEXT
 
-  val prevButton = JButton("?")
+  val prevButton = JButton("⋀")
   prevButton.actionCommand = "prev"
 
-  val nextButton = JButton("?")
+  val nextButton = JButton("⋁")
   nextButton.actionCommand = "next"
 
   val doc = textPane.styledDocument
@@ -198,6 +198,11 @@ private class PlaceholderLayerUI<V : JTextComponent> : LayerUI<V>() {
     }
   }
 
+  override fun updateUI(l: JLayer<out V>) {
+    super.updateUI(l)
+    SwingUtilities.updateComponentTreeUI(hint)
+  }
+
   override fun paint(g: Graphics, c: JComponent) {
     super.paint(g, c)
     val layer = c as? JLayer<*>
@@ -205,10 +210,10 @@ private class PlaceholderLayerUI<V : JTextComponent> : LayerUI<V>() {
     if (tc is JTextComponent && tc.text.isNotEmpty()) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.paint = hint.foreground
-      val i = tc.insets
       val d = hint.preferredSize
-      val x = tc.width - i.right - d.width - 2
-      val y = (tc.height - d.height) / 2
+      val r = SwingUtilities.calculateInnerArea(tc, null)
+      val x = r.x + r.width - d.width - 1
+      val y = r.y + (r.height - d.height) / 2
       SwingUtilities.paintComponent(g2, hint, tc, x, y, d.width, d.height)
       g2.dispose()
     }
