@@ -83,21 +83,20 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
   }
 
   override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out V>) {
-    if (e.id == MouseEvent.MOUSE_DRAGGED) {
+    if (e.id == MouseEvent.MOUSE_DRAGGED && e.component is JLayer<*>) {
       val parent = l.view
       val pt = e.point
-      (e.component as? JLayer<*>)?.also {
-        if (draggingComponent == null) { // MotionThreshold
-          if (startPt.distance(pt) > gestureMotionThreshold) {
-            startDragging(parent, e)
-          }
-          return
+      if (draggingComponent == null) { // MotionThreshold
+        if (startPt.distance(pt) > gestureMotionThreshold) {
+          startDragging(parent, e)
         }
-        // update the filler panel location
-        if (!PREV_RECT.contains(pt)) {
-          updateFillerLocation(parent, fillerComponent, pt)
-        }
+        return
       }
+      // update the filler panel location
+      if (!PREV_RECT.contains(pt)) {
+        updateFillerLocation(parent, fillerComponent, pt)
+      }
+
       // update the dragging panel location
       updateDraggingPanelLocation(parent, e, dragOffset)
       parent.repaint()
