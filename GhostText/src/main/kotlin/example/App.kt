@@ -8,33 +8,35 @@ import javax.swing.plaf.LayerUI
 import javax.swing.text.JTextComponent
 
 fun makeUI(): Component {
-  val field1 = object : JTextField() {
+  val field1 = JTextField().also {
+    val hint = "Please enter your E-mail address"
+    val listener = PlaceholderFocusListener(hint)
+    it.addFocusListener(listener)
+    listener.update(it)
+  }
+
+  val field2 = object : JTextField() {
     private var listener: PlaceholderFocusListener? = null
 
     override fun updateUI() {
       removeFocusListener(listener)
       super.updateUI()
-      val hint = "Please enter your E-mail address"
+      val hint = "History Search"
       listener = PlaceholderFocusListener(hint)
       addFocusListener(listener)
       EventQueue.invokeLater { listener!!.update(this) }
     }
   }
 
-  val hint2 = "History Search"
-  val field2 = JTextField()
-  val listener2 = PlaceholderFocusListener(hint2)
-  field2.addFocusListener(listener2)
-  listener2.update(field2)
-
-  val box = Box.createVerticalBox()
-  box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-  box.add(makeTitledPanel("E-mail", field1))
-  box.add(Box.createVerticalStrut(10))
-  box.add(makeTitledPanel("Search", field2))
-  box.add(Box.createVerticalStrut(10))
-  val ui = PlaceholderLayerUI<JTextComponent>("JLayer version")
-  box.add(makeTitledPanel("JLayer", JLayer(JTextField(), ui)))
+  val box = Box.createVerticalBox().also {
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    it.add(makeTitledPanel("E-mail", field1))
+    it.add(Box.createVerticalStrut(10))
+    it.add(makeTitledPanel("Search", field2))
+    it.add(Box.createVerticalStrut(10))
+    val ui = PlaceholderLayerUI<JTextComponent>("JLayer version")
+    it.add(makeTitledPanel("JLayer", JLayer(JTextField(), ui)))
+  }
 
   return JPanel(BorderLayout()).also {
     it.add(box, BorderLayout.NORTH)
