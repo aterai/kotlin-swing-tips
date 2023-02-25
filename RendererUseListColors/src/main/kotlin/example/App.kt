@@ -29,8 +29,8 @@ fun makeUI(): Component {
   val combo1 = JComboBox(model)
   combo1.renderer = object : DefaultListCellRenderer() {
     override fun getListCellRendererComponent(
-      list: JList<*>?,
-      value: Any,
+      list: JList<*>,
+      value: Any?,
       index: Int,
       isSelected: Boolean,
       cellHasFocus: Boolean
@@ -51,8 +51,8 @@ fun makeUI(): Component {
   val combo2 = JComboBox(model)
   combo2.renderer = object : BasicComboBoxRenderer() {
     override fun getListCellRendererComponent(
-      list: JList<*>?,
-      value: Any,
+      list: JList<*>,
+      value: Any?,
       index: Int,
       isSelected: Boolean,
       cellHasFocus: Boolean
