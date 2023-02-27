@@ -92,17 +92,14 @@ private class ImageFilterLayerUI<V : Component>(private val filter: ImageFilter)
     if (c is JLayer<*>) {
       val view = c.view
       val d = view.size
-      val b = buf?.takeIf { it.width == d.width && it.height == d.height } ?: BufferedImage(
-        d.width,
-        d.height,
-        BufferedImage.TYPE_INT_ARGB
-      )
-      buf = b
-      val g2 = b.createGraphics()
+      val img = buf?.takeIf { it.width == d.width && it.height == d.height }
+        ?: BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_ARGB)
+      val g2 = img.createGraphics()
       view.paint(g2)
       g2.dispose()
-      val image = c.createImage(FilteredImageSource(b.source, filter))
+      val image = c.createImage(FilteredImageSource(img.source, filter))
       g.drawImage(image, 0, 0, view)
+      buf = img
     } else {
       super.paint(g, c)
     }

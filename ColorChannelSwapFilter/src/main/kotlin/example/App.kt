@@ -85,15 +85,17 @@ private class BlockedColorLayerUI<V : Component> : LayerUI<V>() {
 
   override fun paint(g: Graphics, c: JComponent) {
     if (isPreventing && c is JLayer<*>) {
-      val d = c.view.size
-      val buffer = buf?.takeIf { it.width == d.width && it.height == d.height }
+      val view = c.view
+      val d = view.size
+      val img = buf?.takeIf { it.width == d.width && it.height == d.height }
         ?: BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_ARGB)
-      buf = buffer
-      val g2 = buffer.createGraphics()
-      super.paint(g2, c)
+      val g2 = img.createGraphics()
+      // super.paint(g2, c)
+      view.paint(g2)
       g2.dispose()
-      val image = c.createImage(FilteredImageSource(buffer.source, RedGreenChannelSwapFilter()))
-      g.drawImage(image, 0, 0, c.view)
+      val image = c.createImage(FilteredImageSource(img.source, RedGreenChannelSwapFilter()))
+      g.drawImage(image, 0, 0, view)
+      buf = img
     } else {
       super.paint(g, c)
     }
