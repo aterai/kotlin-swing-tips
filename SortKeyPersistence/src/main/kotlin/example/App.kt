@@ -73,7 +73,7 @@ fun makeUI(): Component {
 }
 
 class DefaultTableModelPersistenceDelegate : DefaultPersistenceDelegate() {
-  override fun initialize(type: Class<*>?, oldInstance: Any, newInstance: Any, encoder: Encoder) {
+  override fun initialize(type: Class<*>, oldInstance: Any, newInstance: Any, encoder: Encoder) {
     super.initialize(type, oldInstance, newInstance, encoder)
     val m = oldInstance as? DefaultTableModel ?: return
     for (row in 0 until m.rowCount) {
