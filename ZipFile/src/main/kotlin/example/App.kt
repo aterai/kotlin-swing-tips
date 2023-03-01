@@ -13,11 +13,11 @@ import java.util.logging.LogRecord
 import java.util.logging.Logger
 import java.util.logging.SimpleFormatter
 import java.util.logging.StreamHandler
-import java.util.stream.Collectors
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import java.util.zip.ZipOutputStream
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import kotlin.streams.toList
 
 private val logger = Logger.getLogger(MethodHandles.lookup().lookupClass().name)
 private val textArea = JTextArea()
@@ -145,7 +145,7 @@ private object ZipUtils {
     Files.walk(srcDir)
       .filter { it.toFile().isFile }
       .use {
-        val files = it.collect(Collectors.toList())
+        val files = it.toList() // it.collect(Collectors.toList())
         ZipOutputStream(Files.newOutputStream(zip)).use { zos ->
           for (path in files) {
             val relativePath = srcDir.relativize(path).toString().replace('\\', '/')
