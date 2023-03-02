@@ -180,12 +180,9 @@ private fun searchTree(
       rollOverPathLists.add(path)
       tree.expandPath(path.parentPath)
     }
-    if (!node.isLeaf) {
-      node.children()
-        .toList()
-        .forEach {
-          searchTree(tree, path.pathByAddingChild(it), q, rollOverPathLists)
-        }
+    // if (!node.isLeaf) {
+    for (c in node.children()) {
+      searchTree(tree, path.pathByAddingChild(c), q, rollOverPathLists)
     }
   }
 }
