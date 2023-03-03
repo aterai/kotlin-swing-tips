@@ -23,13 +23,11 @@ fun makeUI(): Component {
   buf.append("<html>JEditorPane#setFont(new Font('Serif', Font.PLAIN, 16));<br />")
   val styles = htmlEditorKit.styleSheet
   val rules = styles.styleNames
-  while (rules.hasMoreElements()) {
-    val name = rules.nextElement().toString()
+  for (r in rules) {
+    val name = r.toString()
     if ("body" == name) {
       val rule = styles.getRule(name)
-      val attrs = rule.attributeNames
-      while (attrs.hasMoreElements()) {
-        val a = attrs.nextElement()
+      for (a in rule.attributeNames) {
         buf.append("$a: ${rule.getAttribute(a)}<br />")
       }
     }
