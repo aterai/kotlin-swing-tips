@@ -18,7 +18,7 @@ fun makeUI(): Component {
 private class TableHeaderPopupMenu(table: JTable) : JPopupMenu() {
   init {
     val columnModel = table.columnModel
-    columnModel.columns.toList().forEach { tableColumn ->
+    for (tableColumn in columnModel.columns) {
       val name = tableColumn.headerValue?.toString() ?: ""
       val item = JCheckBoxMenuItem(name, true)
       item.addItemListener { e ->
