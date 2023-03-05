@@ -56,10 +56,9 @@ private object TextUtils {
     val lineStart = line.startOffset
     val lineEnd = line.endOffset.coerceAtMost(doc.length)
     var offs2 = offs
-    val seg = SegmentCache.sharedSegment
+    val seg = Segment()
     doc.getText(lineStart, lineEnd - lineStart, seg)
     if (seg.count <= 0) {
-      SegmentCache.releaseSharedSegment(seg)
       return offs2
     }
     val words = BreakIterator.getWordInstance(c.locale)
@@ -80,7 +79,6 @@ private object TextUtils {
         }
       }
     }
-    SegmentCache.releaseSharedSegment(seg)
     return offs2
   }
 
@@ -93,7 +91,7 @@ private object TextUtils {
     val lineStart = line.startOffset
     val lineEnd = line.endOffset.coerceAtMost(doc.length)
     var offs2 = offs
-    val seg = SegmentCache.sharedSegment
+    val seg = Segment()
     doc.getText(lineStart, lineEnd - lineStart, seg)
     if (seg.count > 0) {
       val words = BreakIterator.getWordInstance(c.locale)
@@ -111,87 +109,7 @@ private object TextUtils {
         }
       }
     }
-    SegmentCache.releaseSharedSegment(seg)
     return offs2
-  }
-}
-
-private class SegmentCache {
-  /**
-   * A list of the currently unused Segments.
-   */
-  private val segments: MutableList<Segment> = ArrayList(11)
-
-  // /**
-  //  * Creates and returns a SegmentCache.
-  //  */
-  // public SegmentCache() {
-  //   segments = ArrayList<>(11)
-  // }
-
-  /**
-   * Returns a `Segment`. When done, the `Segment`
-   * should be recycled by invoking `releaseSegment`.
-   */
-  val segment: Segment
-    get() {
-      synchronized(this) {
-        val size = segments.size
-        if (size > 0) {
-          return segments.removeAt(size - 1)
-        }
-      }
-      return CachedSegment()
-    }
-
-  /**
-   * Releases a Segment. You should not use a Segment after you release it,
-   * and you should NEVER release the same Segment more than once, eg:
-   * <pre>
-   * segmentCache.releaseSegment(segment);
-   * segmentCache.releaseSegment(segment);
-   * </pre>
-   * Will likely result in very bad things happening!
-   */
-  fun releaseSegment(segment: Segment) {
-    if (segment is CachedSegment) {
-      synchronized(this) {
-        segment.array = null
-        segment.count = 0
-        segments.add(segment)
-      }
-    }
-  }
-
-  /**
-   * CachedSegment is used as a tagging interface to determine if
-   * a Segment can successfully be shared.
-   */
-  private class CachedSegment : Segment()
-
-  companion object {
-    /**
-     * Returns the shared SegmentCache.
-     */
-    /**
-     * A global cache.
-     */
-    private val sharedInstance = SegmentCache()
-
-    /**
-     * A convenience method to get a Segment from the shared
-     * `SegmentCache`.
-     */
-    val sharedSegment: Segment
-      get() = sharedInstance.segment
-
-    /**
-     * A convenience method to release a Segment to the shared
-     * `SegmentCache`.
-     */
-    fun releaseSharedSegment(segment: Segment) {
-      sharedInstance.releaseSegment(segment)
-    }
   }
 }
 
