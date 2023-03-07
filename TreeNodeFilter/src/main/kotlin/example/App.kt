@@ -78,12 +78,10 @@ fun searchTree(tree: JTree, path: TreePath, q: String) {
     if (uo.status) {
       tree.expandPath(if (node.isLeaf) path.parentPath else path)
     }
-    if (!uo.status && !node.isLeaf) {
-      node.children().toList()
-        .filterIsInstance<TreeNode>()
-        .forEach {
-          searchTree(tree, path.pathByAddingChild(it), q)
-        }
+    if (!uo.status) {
+      for (c in node.children()) {
+        searchTree(tree, path.pathByAddingChild(c), q)
+      }
     }
   }
 }
@@ -91,17 +89,15 @@ fun searchTree(tree: JTree, path: TreePath, q: String) {
 fun resetAll(parent: TreePath, match: Boolean) {
   val node = parent.lastPathComponent as? DefaultMutableTreeNode ?: return
   (node.userObject as? FilterableNode)?.status = match
-  if (!node.isLeaf) {
-    node.children().toList()
-      .forEach { resetAll(parent.pathByAddingChild(it), match) }
+  for (c in node.children()) {
+    resetAll(parent.pathByAddingChild(c), match)
   }
 }
 
 fun visitAll(tree: JTree, parent: TreePath, expand: Boolean) {
   val node = parent.lastPathComponent as? TreeNode ?: return
-  if (!node.isLeaf) {
-    node.children().toList()
-      .forEach { visitAll(tree, parent.pathByAddingChild(it), expand) }
+  for (c in node.children()) {
+    visitAll(tree, parent.pathByAddingChild(c), expand)
   }
   if (expand) {
     tree.expandPath(parent)
@@ -150,9 +146,8 @@ private class FilterableStatusUpdateListener : TreeModelListener {
   private fun updateParentUserObject(parent: DefaultMutableTreeNode) {
     val uo = parent.userObject as? FilterableNode ?: return
     val children = parent.children()
-    while (children.hasMoreElements()) {
-      val node = children.nextElement() as? DefaultMutableTreeNode
-      val check = node?.userObject as? FilterableNode
+    for (node in children) {
+      val check = (node as? DefaultMutableTreeNode)?.userObject as? FilterableNode
       if (check?.status == true) {
         uo.status = true
         return
@@ -163,8 +158,8 @@ private class FilterableStatusUpdateListener : TreeModelListener {
 
   private fun updateAllChildrenUserObject(root: DefaultMutableTreeNode?, match: Boolean?) {
     val breadth = root?.breadthFirstEnumeration() ?: return
-    while (breadth.hasMoreElements()) {
-      val node = breadth.nextElement() as? DefaultMutableTreeNode
+    for (n in breadth) {
+      val node = n as? DefaultMutableTreeNode
       if (root == node) {
         continue
       }
