@@ -88,10 +88,10 @@ private fun initEyeButton(b: AbstractButton) {
   b.border = BorderFactory.createEmptyBorder(0, 0, 0, 4)
   b.alignmentX = Component.RIGHT_ALIGNMENT
   b.alignmentY = Component.CENTER_ALIGNMENT
-  b.icon = ColorIcon(Color.GREEN)
-  b.rolloverIcon = ColorIcon(Color.BLUE)
-  b.selectedIcon = ColorIcon(Color.RED)
-  b.rolloverSelectedIcon = ColorIcon(Color.ORANGE)
+  b.icon = EyeIcon(Color.BLUE)
+  b.rolloverIcon = EyeIcon(Color.DARK_GRAY)
+  b.selectedIcon = EyeIcon(Color.BLUE)
+  b.rolloverSelectedIcon = EyeIcon(Color.BLUE)
   b.toolTipText = "show/hide passwords"
 }
 
@@ -119,12 +119,28 @@ private fun makeTitledPanel(title: String, cmp: Component): Component {
 
 private enum class PasswordField { SHOW, HIDE }
 
-private class ColorIcon(private val color: Color) : Icon {
+private class EyeIcon(private val color: Color) : Icon {
   override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     g2.translate(x, y)
     g2.paint = color
-    g2.fillRect(1, 1, iconWidth - 2, iconHeight - 2)
+    val w = iconWidth.toDouble()
+    val h = iconHeight.toDouble()
+    val r = 3.0 * w / 4.0
+    val x0 = w / 2.0 - r + 1.0
+    val eye = Area(Ellipse2D.Double(x0, -r, 2.0 * r, 2.0 * r))
+    eye.intersect(Area(Ellipse2D.Double(x0, h - r, 2.0 * r, 2.0 * r)))
+    val at = AffineTransform.getScaleInstance(0.9, 1.1)
+    g2.draw(at.createTransformedShape(eye))
+    g2.draw(Ellipse2D.Double(w / 2.0 - 2.0, h / 2.0 - 2.0, 4.0, 4.0))
+    if (c is AbstractButton) {
+      val m = c.model
+      if (m.isSelected || m.isPressed) {
+        g2.stroke = BasicStroke(1.5f)
+        g2.draw(Line2D.Double(w / 6.0, 5.0 * h / 6.0, 5.0 * w / 6.0, h / 6.0))
+      }
+    }
     g2.dispose()
   }
 
