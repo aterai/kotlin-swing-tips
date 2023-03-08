@@ -3,6 +3,10 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.awt.geom.AffineTransform
+import java.awt.geom.Area
+import java.awt.geom.Ellipse2D
+import java.awt.geom.Line2D
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
@@ -69,11 +73,9 @@ fun makeUI(): Component {
   p4.add(b4)
   p4.add(pf4)
 
-  return JPanel(GridLayout(4, 1, 0, 2)).also {
-    it.add(makeTitledPanel("BorderLayout + JCheckBox", p1))
+  return JPanel(GridLayout(0, 1, 0, 2)).also {
     it.add(makeTitledPanel("OverlayLayout + JToggleButton", p2))
-    it.add(makeTitledPanel("CardLayout + JTextField(can copy) + ...", pp3))
-    it.add(makeTitledPanel("press and hold down the mouse button", p4))
+    it.add(JLabel(EyeIcon(Color.BLACK)))
     it.border = BorderFactory.createEmptyBorder(2, 5, 2, 5)
     it.preferredSize = Dimension(320, 240)
   }
@@ -125,28 +127,36 @@ private class EyeIcon(private val color: Color) : Icon {
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     g2.translate(x, y)
     g2.paint = color
-    val w = iconWidth.toDouble()
-    val h = iconHeight.toDouble()
-    val r = 3.0 * w / 4.0
-    val x0 = w / 2.0 - r + 1.0
-    val eye = Area(Ellipse2D.Double(x0, -r, 2.0 * r, 2.0 * r))
-    eye.intersect(Area(Ellipse2D.Double(x0, h - r, 2.0 * r, 2.0 * r)))
-    val at = AffineTransform.getScaleInstance(0.9, 1.1)
-    g2.draw(at.createTransformedShape(eye))
-    g2.draw(Ellipse2D.Double(w / 2.0 - 2.0, h / 2.0 - 2.0, 4.0, 4.0))
+    val iw = iconWidth
+    val ih = iconHeight
+    val s = iconWidth / 12.0
+    g2.stroke = BasicStroke(s.toFloat())
+    val w = iw - s * 2.0
+    val h = ih - s * 2.0
+    val r = w * 3.0 / 4.0 - s * 2.0
+    val x0 = w / 2.0 - r + s
+    val eye = Area(Ellipse2D.Double(x0, s * 4.0 - r, r * 2.0, r * 2.0))
+    eye.intersect(Area(Ellipse2D.Double(x0, h - r - s * 2.0, r * 2.0, r * 2.0)))
+    g2.draw(eye)
+    val rr = iw / 6.0
+    g2.draw(Ellipse2D.Double(iw / 2.0 - rr, ih / 2.0 - rr, rr * 2.0, rr * 2.0))
     if (c is AbstractButton) {
       val m = c.model
       if (m.isSelected || m.isPressed) {
-        g2.stroke = BasicStroke(1.5f)
-        g2.draw(Line2D.Double(w / 6.0, 5.0 * h / 6.0, 5.0 * w / 6.0, h / 6.0))
+        val l = Line2D.Double(iw / 6.0, ih * 5.0 / 6.0, iw * 5.0 / 6.0, ih / 6.0)
+        val at = AffineTransform.getTranslateInstance(-s, 0.0)
+        g2.paint = Color.WHITE
+        g2.draw(at.createTransformedShape(l))
+        g2.paint = color
+        g2.draw(l)
       }
     }
     g2.dispose()
   }
 
-  override fun getIconWidth() = 12
+  override fun getIconWidth() = 16
 
-  override fun getIconHeight() = 12
+  override fun getIconHeight() = 16
 }
 
 fun main() {
