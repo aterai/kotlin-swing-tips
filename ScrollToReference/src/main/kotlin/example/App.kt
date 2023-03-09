@@ -46,8 +46,8 @@ fun makeUI(): Component {
         .filterNot { it.isRoot }
         .map { it.userObject }
         .forEach {
+          val tag = "<a name='$it' href='#'>$it</a>" + "<br />".repeat(12)
           runCatching {
-            val tag = "<a name='$it' href='#'>$it</a>" + "<br />".repeat(8)
             doc.insertBeforeEnd(element, tag)
           }.onFailure {
             UIManager.getLookAndFeel().provideErrorFeedback(editor)
