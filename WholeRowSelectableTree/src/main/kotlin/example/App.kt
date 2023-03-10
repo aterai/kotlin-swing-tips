@@ -3,7 +3,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
-import java.util.Enumeration
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicTreeUI
 import javax.swing.tree.DefaultTreeCellRenderer
@@ -38,22 +37,23 @@ private class WholeRowSelectableTreeUI : BasicTreeUI() {
     val paintBounds = g.clipBounds
     val insets = tree.insets
     val initialPath = getClosestPathForLocation(tree, 0, paintBounds.y)
-    var paintingEnum: Enumeration<*>? = treeState.getVisiblePathsFrom(initialPath)
+    // var paintingEnum: Enumeration<*>? = treeState.getVisiblePathsFrom(initialPath)
     var row = treeState.getRowForPath(initialPath)
     val endY = paintBounds.y + paintBounds.height
     val treeModel = tree.model
     drawingCache.clear()
-    if (initialPath != null && paintingEnum != null) {
+    val visiblePathsFrom = treeState.getVisiblePathsFrom(initialPath)
+    if (initialPath != null && visiblePathsFrom != null) {
       // First pass, draw the rows
       var done = false
       var isExpanded: Boolean
       var hasBeenExpanded: Boolean
       var isLeaf: Boolean
       var bounds: Rectangle?
-      var path: TreePath?
-
-      while (!done && paintingEnum.hasMoreElements()) {
-        path = paintingEnum.nextElement() as? TreePath
+      for (path in visiblePathsFrom) {
+        if (done) {
+          break
+        }
         bounds = getPathBounds(tree, path)
         if (path != null && bounds != null) {
           isLeaf = treeModel.isLeaf(path.lastPathComponent)
@@ -87,9 +87,12 @@ private class WholeRowSelectableTreeUI : BasicTreeUI() {
         parentPath = parentPath.parentPath
       }
       done = false
-      paintingEnum = treeState.getVisiblePathsFrom(initialPath)
-      while (!done && paintingEnum.hasMoreElements()) {
-        path = paintingEnum.nextElement()
+      // paintingEnum = treeState.getVisiblePathsFrom(initialPath)
+      for (path in treeState.getVisiblePathsFrom(initialPath)) {
+        if (done) {
+          break
+        }
+        // path = paintingEnum.nextElement()
         bounds = getPathBounds(tree, path)
         if (path != null && bounds != null) {
           isLeaf = treeModel.isLeaf(path.lastPathComponent)
