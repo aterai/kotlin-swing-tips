@@ -47,7 +47,7 @@ private fun makeModel(): DefaultTreeModel {
 
 private class SelectionColorTreeCellRenderer : DefaultTreeCellRenderer() {
   private val pattern = Pattern.compile("^a.*", Pattern.CASE_INSENSITIVE)
-  private var color: Color? = null
+
   override fun getTreeCellRendererComponent(
     tree: JTree,
     value: Any?,
@@ -65,36 +65,35 @@ private class SelectionColorTreeCellRenderer : DefaultTreeCellRenderer() {
     row,
     hasFocus
   ).also {
-    if (selected) {
-      setParticularCondition(value)
+    if (selected && it is JComponent) {
+      it.isOpaque = false
       it.foreground = getTextSelectionColor()
       it.background = getBackgroundSelectionColor()
-      val str = value?.toString() ?: ""
-      if (leaf && pattern.matcher(str).matches()) {
-        (it as? JComponent)?.isOpaque = true
-        it.background = Color.RED
-      } else {
-        (it as? JComponent)?.isOpaque = false
-        it.background = getBackgroundSelectionColor()
-      }
+      setUserObjectColor(value, it)
+      setPatternColor(value, it, leaf)
     } else {
       it.foreground = getTextNonSelectionColor()
       it.background = getBackgroundNonSelectionColor()
     }
   }
 
-  private fun setParticularCondition(value: Any?) {
+  private fun setUserObjectColor(value: Any?, c: JComponent) {
     if (value is DefaultMutableTreeNode) {
       val uo = value.userObject
       if (uo is Color) {
-        color = uo
-        return
+        c.isOpaque = true
+        c.background = uo
       }
     }
-    color = null
   }
 
-  override fun getBackgroundSelectionColor(): Color? = color ?: super.getBackgroundSelectionColor()
+  private fun setPatternColor(value: Any?, c: JComponent, leaf: Boolean) {
+    val str = value?.toString() ?: ""
+    if (leaf && pattern.matcher(str).matches()) {
+      c.isOpaque = true
+      c.background = Color.RED
+    }
+  }
 }
 
 fun main() {
