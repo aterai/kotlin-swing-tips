@@ -95,24 +95,21 @@ private class MarginTreeCellRenderer : DefaultTreeCellRenderer() {
       }
       g.color = bgColor
       g.fillRect(imageOffset - MARGIN, y, MARGIN + 1, height)
-      paintFocusRect(g, imageOffset - MARGIN, y, width + MARGIN - imageOffset, height, bgColor)
+      val r = Rectangle(imageOffset - MARGIN, y, width + MARGIN - imageOffset, height)
+      paintFocusRect(g, r, bgColor)
     }
   }
 
-  @Suppress("LongParameterList")
   private fun paintFocusRect(
     g: Graphics,
-    x: Int,
-    y: Int,
-    w: Int,
-    h: Int,
+    r: Rectangle,
     notColor: Color
   ) {
     val bsColor = getBorderSelectionColor()
     val b = selected || !drawDashedFocus
     if (bsColor != null && b) {
       g.color = bsColor
-      g.drawRect(x, y, w - 1, h - 1)
+      g.drawRect(r.x, r.y, r.width - 1, r.height - 1)
     }
     if (drawDashedFocus) {
       if (notColor != treeBgsColor) {
@@ -120,7 +117,7 @@ private class MarginTreeCellRenderer : DefaultTreeCellRenderer() {
         focusBgsColor = Color(notColor.rgb.inv())
       }
       g.color = focusBgsColor
-      BasicGraphicsUtils.drawDashedRect(g, x, y, w, h)
+      BasicGraphicsUtils.drawDashedRect(g, r.x, r.y, r.width, r.height)
     }
   }
 
