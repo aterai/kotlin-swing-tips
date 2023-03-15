@@ -71,14 +71,13 @@ private fun fireDocumentChangeEvent() {
 
 fun searchTree(tree: JTree, path: TreePath, q: String) {
   val node = path.lastPathComponent as? DefaultMutableTreeNode
-  val uo = node?.userObject as? FilterableNode
-  if (uo != null) {
-    uo.status = node.toString().startsWith(q)
+  (node?.userObject as? FilterableNode)?.also {
+    it.status = node.toString().startsWith(q)
     (tree.model as? DefaultTreeModel)?.nodeChanged(node)
-    if (uo.status) {
+    if (it.status) {
       tree.expandPath(if (node.isLeaf) path.parentPath else path)
     }
-    if (!uo.status) {
+    if (!it.status) {
       for (c in node.children()) {
         searchTree(tree, path.pathByAddingChild(c), q)
       }
