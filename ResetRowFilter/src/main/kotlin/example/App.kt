@@ -29,12 +29,6 @@ fun makeUI(): Component {
   table.fillsViewportHeight = true
   // XXX: sorter.setSortsOnUpdates(true)
 
-  val filter = object : RowFilter<TableModel, Int>() {
-    override fun include(entry: Entry<out TableModel, out Int>): Boolean {
-      val idx = table.convertRowIndexToView(entry.identifier.toInt())
-      return idx < MAXIMUM_ROW_COUNT
-    }
-  }
   val sorter = object : TableRowSorter<TableModel>(model) {
     override fun toggleSortOrder(column: Int) {
       super.toggleSortOrder(column)
@@ -48,9 +42,18 @@ fun makeUI(): Component {
   table.rowSorter = sorter
   sorter.sortKeys = listOf(RowSorter.SortKey(1, SortOrder.DESCENDING))
 
+  val filter = object : RowFilter<TableModel, Int>() {
+    override fun include(entry: Entry<out TableModel, out Int>): Boolean {
+      val idx = table.convertRowIndexToView(entry.identifier.toInt())
+      return idx < MAXIMUM_ROW_COUNT
+    }
+  }
+  val defFilter = sorter.rowFilter
+
   val check2 = JCheckBox("viewRowIndex < $MAXIMUM_ROW_COUNT")
   check2.addActionListener {
-    sorter.rowFilter = (it.source as? JCheckBox)?.isSelected?.let { filter }
+    val b = (it.source as? JCheckBox)?.isSelected == true
+    sorter.rowFilter = if (b) filter else defFilter
   }
 
   val box = Box.createHorizontalBox()
