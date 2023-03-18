@@ -12,7 +12,6 @@ fun makeUI(): Component {
     override fun updateUI() {
       setCellRenderer(null)
       super.updateUI()
-      // rowHeight = 24
       val r = getCellRenderer()
       setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
         r.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus).also {
@@ -32,8 +31,9 @@ fun makeUI(): Component {
 
   return JSplitPane().also {
     it.resizeWeight = .5
+    it.dividerLocation = 160
     it.leftComponent = p
-    it.rightComponent = JLabel("dummy panel")
+    it.rightComponent = JLabel("JLabel")
     it.preferredSize = Dimension(320, 240)
   }
 }
