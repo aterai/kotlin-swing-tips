@@ -23,13 +23,15 @@ fun makeUI(): Component {
   val sorter = object : TableRowSorter<TableModel>(model) {
     override fun isSortable(column: Int) = false
   }
-  sorter.rowFilter = object : RowFilter<TableModel, Int>() {
+  table.rowSorter = sorter
+  val defFilter = sorter.rowFilter
+  val filter = object : RowFilter<TableModel, Int>() {
     override fun include(entry: Entry<out TableModel?, out Int>) = entry.identifier % 2 == 0
   }
 
   val check = JCheckBox("filter: idx%2==0")
   check.addActionListener { e ->
-    table.rowSorter = if ((e.source as? JCheckBox)?.isSelected == true) sorter else null
+    sorter.rowFilter = if ((e.source as? JCheckBox)?.isSelected == true) filter else defFilter
   }
 
   return JPanel(BorderLayout()).also {
