@@ -105,7 +105,7 @@ private class FileIconTableCellRenderer(
         }
         1 -> {
           c.horizontalAlignment = SwingConstants.RIGHT
-          c.text = if (value.isDirectory) null else value.length().toString()
+          c.text = if (value.isDirectory) "" else value.length().toString()
         }
         2 -> c.text = value.absolutePath
         else -> error("Should never happened.")
