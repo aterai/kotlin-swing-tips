@@ -157,7 +157,8 @@ private class LedDotIcon(private val led: Boolean, private val dim: Dimension) :
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    g2.translate(x, y)
+    // JList#setLayoutOrientation(VERTICAL_WRAP) + SynthLookAndFeel(Nimbus, GTK) bug???
+    // g2.translate(x, y)
     g2.paint = if (led) on else c.background
     g2.fillOval(0, 0, iconWidth - 1, iconHeight - 1)
     g2.dispose()

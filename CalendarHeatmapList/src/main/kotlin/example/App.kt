@@ -180,7 +180,8 @@ private class CalendarViewListModel(date: LocalDate) : AbstractListModel<Contrib
 private class ContributionIcon(private val color: Color) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.translate(x, y)
+    // JList#setLayoutOrientation(VERTICAL_WRAP) + SynthLookAndFeel(Nimbus, GTK) bug???
+    // g2.translate(x, y)
     g2.paint = color
     g2.fillRect(0, 0, iconWidth, iconHeight)
     g2.dispose()
