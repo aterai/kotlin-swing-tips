@@ -29,7 +29,7 @@ fun makeUI(): Component {
         val fm = c.getFontMetrics(c.font)
         val str = getValueAt(row, column)?.toString() ?: ""
         val cellTextWidth = fm.stringWidth(str)
-        c.toolTipText = if (cellTextWidth > rect.width) str else null
+        c.toolTipText = if (cellTextWidth > rect.width) str else toolTipText
       }
       return c
     }
@@ -59,19 +59,36 @@ private class ToolTipHeaderRenderer : TableCellRenderer {
     row: Int,
     column: Int
   ): Component {
-    val r = table.tableHeader.defaultRenderer
+    val header = table.tableHeader
+    val r = header.defaultRenderer
     val c = r.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     if (c is JLabel) {
       val i = c.insets
-      val rect = table.getCellRect(row, column, false)
+      val rect = header.getHeaderRect(column)
       rect.width -= i.left + i.right
-      c.icon?.also { rect.width -= it.iconWidth + c.iconTextGap }
-      val fm = c.getFontMetrics(c.font)
-      val str = value?.toString() ?: ""
-      val cellTextWidth = fm.stringWidth(str)
-      c.toolTipText = if (cellTextWidth > rect.width) str else null
+      c.toolTipText = if (isClipped(c, rect)) c.text else header.toolTipText
     }
     return c
+  }
+
+  private fun isClipped(label: JLabel, viewR: Rectangle): Boolean {
+    val iconR = Rectangle()
+    val textR = Rectangle()
+    val str = SwingUtilities.layoutCompoundLabel(
+      label,
+      label.getFontMetrics(label.font),
+      label.text,
+      label.icon,
+      label.verticalAlignment,
+      label.horizontalAlignment,
+      label.verticalTextPosition,
+      label.horizontalTextPosition,
+      viewR,
+      iconR,
+      textR,
+      label.iconTextGap
+    )
+    return label.text != str
   }
 }
 
