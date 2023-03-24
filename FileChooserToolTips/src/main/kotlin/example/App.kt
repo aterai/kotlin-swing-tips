@@ -88,16 +88,33 @@ private class TooltipTableCellRenderer : TableCellRenderer {
     column: Int
   ): Component {
     val c = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
-    (c as? JLabel)?.also { l ->
-      val i = l.insets
+    if (c is JLabel) {
+      val i = c.insets
       val rect = table.getCellRect(row, column, false)
       rect.width -= i.left + i.right
-      l.icon?.also { rect.width -= it.iconWidth + l.iconTextGap }
-      val fm = l.getFontMetrics(l.font)
-      val str = value?.toString() ?: ""
-      l.toolTipText = if (fm.stringWidth(str) > rect.width) str else null
+      c.toolTipText = if (isClipped(c, rect)) c.text else table.toolTipText
     }
     return c
+  }
+
+  private fun isClipped(label: JLabel, viewR: Rectangle): Boolean {
+    val iconR = Rectangle()
+    val textR = Rectangle()
+    val str = SwingUtilities.layoutCompoundLabel(
+      label,
+      label.getFontMetrics(label.font),
+      label.text,
+      label.icon,
+      label.verticalAlignment,
+      label.horizontalAlignment,
+      label.verticalTextPosition,
+      label.horizontalTextPosition,
+      viewR,
+      iconR,
+      textR,
+      label.iconTextGap
+    )
+    return label.text != str
   }
 }
 
