@@ -34,7 +34,7 @@ private fun makeEditorPane(editable: Boolean) = JEditorPane().also {
   it.addHyperlinkListener { e ->
     when (e.eventType) {
       HyperlinkEvent.EventType.ACTIVATED ->
-        JOptionPane.showMessageDialog(it, "You click the link with the URL " + e.url)
+        JOptionPane.showMessageDialog(it, "Clicked on the link " + e.url)
       HyperlinkEvent.EventType.ENTERED -> {
         tooltip = it.toolTipText
         it.toolTipText = e.url?.toExternalForm()
@@ -48,10 +48,8 @@ private fun makeEditorPane(editable: Boolean) = JEditorPane().also {
     val s = doc.addStyle("button", null)
     StyleConstants.setAlignment(s, StyleConstants.ALIGN_CENTER)
     val button = HyperlinkButton(LINK)
-    button.addActionListener { e ->
-      val b = (e.source as? AbstractButton)?.isSelected ?: false
-      it.background = if (b) Color.RED else Color.WHITE
-      JOptionPane.showMessageDialog(it, "You click the link with the URL $LINK")
+    button.addActionListener { _ ->
+      JOptionPane.showMessageDialog(it, "Clicked on the link $LINK")
     }
     button.toolTipText = "button: $LINK"
     button.isOpaque = false
