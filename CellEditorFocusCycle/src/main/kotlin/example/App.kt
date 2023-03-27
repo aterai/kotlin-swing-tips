@@ -34,8 +34,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun isEditorFocusCycle(editor: Component) =
-  CheckBoxesEditor.getEditorFocusCycleAfter(editor)?.requestFocusInWindow() ?: false
+private fun isEditorFocusCycle(editor: Component): Boolean {
+  val c = CheckBoxesEditor.getEditorFocusCycleAfter(editor)
+  return c != null && c.requestFocusInWindow()
+}
 
 private fun makeTable(): JTable {
   val columnNames = arrayOf("user", "rwx")
