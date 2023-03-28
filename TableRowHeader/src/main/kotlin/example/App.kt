@@ -81,9 +81,9 @@ private class RowHeaderList<E>(
     listSelection = selectionModel
   }
 
-  inner class RowHeaderRenderer<E2>(
+  inner class RowHeaderRenderer<F>(
     private val header: JTableHeader
-  ) : ListCellRenderer<E2> {
+  ) : ListCellRenderer<F> {
     private val renderer = JLabel()
 
     init {
@@ -97,8 +97,8 @@ private class RowHeaderList<E>(
     }
 
     override fun getListCellRendererComponent(
-      list: JList<out E2>,
-      value: E2?,
+      list: JList<out F>,
+      value: F?,
       index: Int,
       isSelected: Boolean,
       cellHasFocus: Boolean
