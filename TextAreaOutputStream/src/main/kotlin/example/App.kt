@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.OutputStream
 import java.lang.invoke.MethodHandles
+import java.nio.charset.StandardCharsets
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.logging.Level
@@ -76,22 +77,12 @@ private class TextAreaOutputStream(private val textArea: JTextArea) : OutputStre
   }
 }
 
-private class TextAreaHandler(os: OutputStream) : StreamHandler() {
-  init {
-    configure()
-    setOutputStream(os)
-  }
-
-  private fun configure() {
-    formatter = SimpleFormatter()
-    runCatching {
-      encoding = "UTF-8"
-    }
-  }
+private class TextAreaHandler(os: OutputStream) : StreamHandler(os, SimpleFormatter()) {
+  override fun getEncoding() = StandardCharsets.UTF_8.name()
 
   @Synchronized
-  override fun publish(record: LogRecord) {
-    super.publish(record)
+  override fun publish(logRecord: LogRecord) {
+    super.publish(logRecord)
     flush()
   }
 
