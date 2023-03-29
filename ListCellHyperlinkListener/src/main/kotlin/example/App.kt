@@ -72,8 +72,7 @@ private class SiteListItemRenderer : ListCellRenderer<SiteItem> {
   ): Component {
     val buf = StringBuilder(100)
     buf.append("<html><h1>${item.name}</h1><table>")
-    for (c in item.link.indices) {
-      val url = item.link[c]
+    for (url in item.link) {
       buf.append("<tr><td><a href='$url'>$url</a></td></tr>")
     }
     buf.append("</table></html>")
