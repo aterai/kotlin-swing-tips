@@ -2,6 +2,7 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.HierarchyEvent
+import java.awt.event.HierarchyListener
 import java.awt.geom.AffineTransform
 import java.awt.geom.Ellipse2D
 import java.beans.PropertyChangeEvent
@@ -122,30 +123,33 @@ private class ProgressListener(private val progressBar: JProgressBar) : Property
   }
 }
 
-private class LoadingLabel : JLabel() {
-  private val icon = AnimeIcon()
+private class LoadingLabel : JLabel(AnimeIcon()) {
+  private var listener: HierarchyListener? = null
   private val animator = Timer(100) {
-    icon.next()
+    (icon as? AnimeIcon)?.next()
     repaint()
   }
 
-  init {
-    setIcon(icon)
-    addHierarchyListener { e ->
+  override fun updateUI() {
+    removeHierarchyListener(listener)
+    super.updateUI()
+    isOpaque = true
+    listener = HierarchyListener { e ->
       val b = e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L
       if (b && !e.component.isDisplayable) {
         animator.stop()
       }
     }
+    addHierarchyListener(listener)
   }
 
   fun startAnimation() {
-    icon.setRunning(true)
+    (icon as? AnimeIcon)?.setRunning(true)
     animator.start()
   }
 
   fun stopAnimation() {
-    icon.setRunning(false)
+    (icon as? AnimeIcon)?.setRunning(false)
     animator.stop()
   }
 }

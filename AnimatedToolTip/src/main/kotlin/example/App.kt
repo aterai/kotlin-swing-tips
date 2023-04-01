@@ -7,6 +7,7 @@ import java.util.Collections
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.Timer
 
+
 fun makeUI(): Component {
   val l1 = object : JLabel("Timer Animated ToolTip") {
     override fun createToolTip(): JToolTip {
@@ -79,17 +80,19 @@ private class AnimatedToolTip(private val iconLabel: JLabel?) : JToolTip() {
   override fun getTipText() = iconLabel?.text ?: ""
 }
 
-private class AnimatedLabel(title: String?) : JLabel(title) {
-  private val icon = AnimeIcon()
+
+private class AnimatedLabel(title: String) : JLabel(title, AnimeIcon(), LEADING) {
+  private var listener: HierarchyListener? = null
   private val animator = Timer(100) {
-    icon.next()
+    (icon as? AnimeIcon)?.next()
     repaint()
   }
 
-  init {
+  override fun updateUI() {
+    removeHierarchyListener(listener)
+    super.updateUI()
     isOpaque = true
-    setIcon(icon)
-    addHierarchyListener { e ->
+    listener = HierarchyListener { e ->
       if (e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L) {
         if (e.component.isShowing) {
           startAnimation()
@@ -98,15 +101,16 @@ private class AnimatedLabel(title: String?) : JLabel(title) {
         }
       }
     }
+    addHierarchyListener(listener)
   }
 
   private fun startAnimation() {
-    icon.setRunning(true)
+    (icon as? AnimeIcon)?.setRunning(true)
     animator.start()
   }
 
   private fun stopAnimation() {
-    icon.setRunning(false)
+    (icon as? AnimeIcon)?.setRunning(false)
     animator.stop()
   }
 }
