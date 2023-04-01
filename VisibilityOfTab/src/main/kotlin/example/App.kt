@@ -16,25 +16,6 @@ val tabbedPane1 = object : JTabbedPane() {
 }
 
 val tabbedPane2 = object : JTabbedPane() {
-  private fun getScrollableViewport(): Component? {
-    var cmp: Component? = null
-    for (c in components) {
-      if ("TabbedPane.scrollableViewport" == c.name) {
-        cmp = c
-        break
-      }
-    }
-    return cmp
-  }
-
-  private fun resetViewportPosition(idx: Int) {
-    if (tabCount <= 0) {
-      return
-    }
-    val viewport = getScrollableViewport() as? JViewport ?: return
-    (viewport.view as? JComponent)?.scrollRectToVisible(getBoundsAt(idx))
-  }
-
   override fun removeTabAt(index: Int) {
     if (tabCount > 0) {
       resetViewportPosition(0)
@@ -43,6 +24,15 @@ val tabbedPane2 = object : JTabbedPane() {
     } else {
       super.removeTabAt(index)
     }
+  }
+
+  private fun resetViewportPosition(idx: Int) {
+    if (tabCount <= 0) {
+      return
+    }
+    val name = "TabbedPane.scrollableViewport"
+    val viewport = components.filter { c -> name == c.name }.firstOrNull()
+    (viewport as? JComponent)?.scrollRectToVisible(getBoundsAt(idx))
   }
 }
 

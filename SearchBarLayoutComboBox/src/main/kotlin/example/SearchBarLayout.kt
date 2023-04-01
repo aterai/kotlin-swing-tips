@@ -30,15 +30,9 @@ class SearchBarLayout : LayoutManager {
     }
 
     // LoupeButton
-    var loupeButton: JButton? = null
+    var loupeButton = cb.components.filter { c -> "ComboBox.loupeButton" == c.name }.firstOrNull()
     var loupeSize = 0
-    for (c in cb.components) {
-      if ("ComboBox.loupeButton" == c.name) {
-        loupeButton = c as? JButton
-        break
-      }
-    }
-    if (loupeButton != null) {
+    if (loupeButton is JButton) {
       loupeSize = r.height
       loupeButton.setBounds(r.x + r.width - loupeSize, r.y, loupeSize, r.height)
     }
