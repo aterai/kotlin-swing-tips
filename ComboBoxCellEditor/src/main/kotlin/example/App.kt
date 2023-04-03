@@ -70,10 +70,11 @@ private class PluginPanel(val comboBox: JComboBox<String>) : JPanel() {
 
   init {
     comboBox.prototypeDisplayValue = "Debug mode x"
-    isOpaque = false
     add(pluginName)
     add(comboBox)
   }
+
+  override fun isOpaque() = false
 
   fun extractNode(value: Any?): PluginNode? {
     val model = comboBox.model as? DefaultComboBoxModel<String>
