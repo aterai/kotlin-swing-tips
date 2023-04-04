@@ -77,10 +77,11 @@ private class ComboBoxPanel : JPanel(GridBagLayout()) {
     c.insets = Insets(0, 10, 0, 10)
     c.fill = GridBagConstraints.HORIZONTAL
     comboBox.isEditable = true
-    isOpaque = true
     add(comboBox, c)
     comboBox.selectedIndex = 0
   }
+
+  override fun isOpaque() = true
 }
 
 private class ComboBoxCellRenderer : TableCellRenderer {

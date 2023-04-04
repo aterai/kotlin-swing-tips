@@ -405,13 +405,14 @@ private class GhostGlassPane(val tabbedPane: DnDTabbedPane) : JComponent() {
   private val locPt = Point()
   private var draggingGhost: BufferedImage? = null
 
-  init {
-    isOpaque = false
-    // [JDK-6700748]
-    // Cursor flickering during D&D when using CellRendererPane with validation - Java Bug System
-    // https://bugs.openjdk.org/browse/JDK-6700748
-    // setCursor(null)
-  }
+  // init {
+  //   [JDK-6700748]
+  //   Cursor flickering during D&D when using CellRendererPane with validation - Java Bug System
+  //   https://bugs.openjdk.org/browse/JDK-6700748
+  //   setCursor(null)
+  // }
+
+  override fun isOpaque() = false
 
   fun setTargetRect(x: Int, y: Int, width: Int, height: Int) {
     lineRect.setBounds(x, y, width, height)

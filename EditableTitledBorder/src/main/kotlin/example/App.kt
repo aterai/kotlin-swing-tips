@@ -205,7 +205,6 @@ private class EditableTitledBorder(
 
   private inner class EditorGlassPane : JComponent() {
     init {
-      isOpaque = false
       focusTraversalPolicy = object : DefaultFocusTraversalPolicy() {
         public override fun accept(c: Component) = c == editorTextField
       }
@@ -218,6 +217,8 @@ private class EditableTitledBorder(
       }
       addMouseListener(ml)
     }
+
+    override fun isOpaque() = false
 
     override fun setVisible(flag: Boolean) {
       super.setVisible(flag)

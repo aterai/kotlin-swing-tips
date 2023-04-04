@@ -442,9 +442,7 @@ private class TabTransferHandler : TransferHandler() {
 }
 
 private class GhostGlassPane(private var tabbedPane: DnDTabbedPane) : JComponent() {
-  init {
-    isOpaque = false
-  }
+  override fun isOpaque() = false
 
   fun setTargetTabbedPane(tab: DnDTabbedPane) {
     tabbedPane = tab

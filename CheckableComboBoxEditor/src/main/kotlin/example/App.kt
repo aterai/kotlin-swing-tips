@@ -177,13 +177,13 @@ private class EditorPanel(private val data: ComboItem) : JPanel() {
     textField.border = BorderFactory.createEmptyBorder()
     textField.isOpaque = false
 
-    isOpaque = false
     layout = BoxLayout(this, BoxLayout.LINE_AXIS)
-
     add(enabledCheck)
     add(editableCheck)
     add(textField)
   }
+
+  override fun isOpaque() = false
 
   fun selectAll() {
     textField.requestFocusInWindow()
