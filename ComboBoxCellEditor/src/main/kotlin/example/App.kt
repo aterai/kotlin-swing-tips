@@ -128,13 +128,10 @@ private class PluginCellEditor(comboBox: JComboBox<String>) : DefaultCellEditor(
 
   override fun getCellEditorValue(): Any {
     val o = super.getCellEditorValue()
-    return node
-      ?.let {
-        val idx = (panel.comboBox.model as? DefaultComboBoxModel<String>)?.getIndexOf(o) ?: -1
-        val pn = PluginNode(panel.pluginName.text, it.plugins, idx)
-        pn
-      }
-      ?: o
+    return node?.let {
+      val idx = (panel.comboBox.model as? DefaultComboBoxModel<String>)?.getIndexOf(o) ?: -1
+      PluginNode(panel.pluginName.text, it.plugins, idx)
+    } ?: o
   }
 
   override fun isCellEditable(e: EventObject?): Boolean {
