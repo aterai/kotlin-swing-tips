@@ -7,7 +7,6 @@ import java.util.Collections
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.Timer
 
-
 fun makeUI(): Component {
   val l1 = object : JLabel("Timer Animated ToolTip") {
     override fun createToolTip(): JToolTip {
