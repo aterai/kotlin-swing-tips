@@ -44,16 +44,33 @@ private fun makeTitledPanel(title: String, c: Component): Component {
   return p
 }
 
-private class WatermarkTextField : JTextField(), FocusListener {
+private class WatermarkTextField : JTextField() {
   private val icon: Icon
   private var showWatermark = true
+  private var listener: FocusListener? = null
 
   init {
     val cl = Thread.currentThread().contextClassLoader
     val url = cl.getResource("example/watermark.png")
     icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) }
       ?: UIManager.getIcon("html.missingImage")
-    addFocusListener(this)
+  }
+
+  override fun updateUI() {
+    removeFocusListener(listener)
+    super.updateUI()
+    listener = object : FocusListener {
+      override fun focusGained(e: FocusEvent) {
+        showWatermark = false
+        e.component.repaint()
+      }
+
+      override fun focusLost(e: FocusEvent) {
+        showWatermark = text.isEmpty()
+        e.component.repaint()
+      }
+    }
+    addFocusListener(listener)
   }
 
   override fun paintComponent(g: Graphics) {
@@ -65,16 +82,6 @@ private class WatermarkTextField : JTextField(), FocusListener {
       icon.paintIcon(this, g2, i.left, yy)
       g2.dispose()
     }
-  }
-
-  override fun focusGained(e: FocusEvent) {
-    showWatermark = false
-    e.component.repaint()
-  }
-
-  override fun focusLost(e: FocusEvent) {
-    showWatermark = text.trim().isEmpty()
-    e.component.repaint()
   }
 }
 

@@ -27,12 +27,9 @@ fun makeUI(): Component {
 }
 
 private class WavyLineSeparator(orientation: Int = HORIZONTAL) : JSeparator(orientation) {
-  init {
-    border = if (orientation == HORIZONTAL) {
-      BorderFactory.createEmptyBorder(2, 1, 2, 1)
-    } else {
-      BorderFactory.createEmptyBorder(1, 2, 1, 2)
-    }
+  override fun updateUI() {
+    super.updateUI()
+    BorderFactory.createEmptyBorder(2, 2, 2, 2)
   }
 
   override fun paintComponent(g: Graphics) {
