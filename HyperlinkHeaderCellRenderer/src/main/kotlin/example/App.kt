@@ -12,9 +12,7 @@ fun makeUI(): Component {
   val columnNames = arrayOf("String0", "String111", "String22222")
   val data = arrayOf(arrayOf("a", "bb", "cc"), arrayOf("dd", "e", "ff"), arrayOf("aa", "aa", "a"))
   val model = object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int): Class<*> {
-      return getValueAt(0, column).javaClass
-    }
+    override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
   val table = JTable(model)
   table.showVerticalLines = false

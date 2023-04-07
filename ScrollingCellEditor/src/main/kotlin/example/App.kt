@@ -18,9 +18,7 @@ fun makeUI(): Component {
     arrayOf("11112222", "333\n444\n555")
   )
   val model = object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int): Class<*> {
-      return getValueAt(0, column).javaClass
-    }
+    override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
   val table = object : JTable(model) {
     override fun updateUI() {

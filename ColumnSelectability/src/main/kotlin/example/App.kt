@@ -14,9 +14,7 @@ fun makeUI(): Component {
     arrayOf("DDD", 0, false)
   )
   val model = object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int): Class<*> {
-      return getValueAt(0, column).javaClass
-    }
+    override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
   val table = object : JTable(model) {
     fun isColumnSelectable(column: Int) = convertColumnIndexToModel(column) == 0

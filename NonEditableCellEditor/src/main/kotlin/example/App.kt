@@ -16,9 +16,7 @@ fun makeUI(): Component {
     arrayOf("DDD", "ii mm nn", "hhh hhh lll")
   )
   val model = object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int): Class<*> {
-      return getValueAt(0, column).javaClass
-    }
+    override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
   val table = JTable(model)
   table.autoCreateRowSorter = true

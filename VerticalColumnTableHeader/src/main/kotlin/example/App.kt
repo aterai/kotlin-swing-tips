@@ -17,9 +17,7 @@ fun makeUI(): Component {
     arrayOf("D", 0, false)
   )
   val model = object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int): Class<*> {
-      return getValueAt(0, column).javaClass
-    }
+    override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
   val table = object : JTable(model) {
     override fun updateUI() {
