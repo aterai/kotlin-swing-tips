@@ -18,9 +18,7 @@ fun makeUI(): Component {
 
   val fc2 = JFileChooser()
   fc2.fileSystemView = object : FileSystemView() {
-    override fun createNewFolder(containingDir: File): File? {
-      return null
-    }
+    override fun createNewFolder(containingDir: File) = null
   }
   val cmd = "New Folder"
   fc2.actionMap[cmd]?.isEnabled = false
