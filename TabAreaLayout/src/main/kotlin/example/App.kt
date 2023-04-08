@@ -69,9 +69,7 @@ private fun makeOverlayTabbedPane(): Component {
       return d
     }
 
-    override fun getAlignmentY(): Float {
-      return TOP_ALIGNMENT
-    }
+    override fun getAlignmentY() = TOP_ALIGNMENT
   }
   button.addActionListener { e ->
     val b = e.source as? JButton ?: button

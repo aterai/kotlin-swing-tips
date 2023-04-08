@@ -40,9 +40,7 @@ fun makeUI(): Component {
       super.paintBorder(c, g, x, y, width, height)
     }
 
-    override fun isBorderOpaque(): Boolean {
-      return false
-    }
+    override fun isBorderOpaque() = false
   }
 
   val p = JPanel()

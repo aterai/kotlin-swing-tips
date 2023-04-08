@@ -28,9 +28,7 @@ fun makeUI(): Component {
   item3.border = BorderFactory.createEmptyBorder() // NimbusLookAndFeel
   item3.isEnabled = false
   val mi3 = object : JMenuItem("JMenuItem(disabled) with JMenuItem", STRUT) {
-    override fun contains(x: Int, y: Int): Boolean {
-      return false // disable mouse events
-    }
+    override fun contains(x: Int, y: Int) = false // disable mouse events
   }
   item3.add(mi3)
 
