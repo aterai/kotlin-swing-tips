@@ -52,9 +52,7 @@ fun makeUI(): Component {
 private fun makeButton(stepSize: Int, slider: JSlider): JButton {
   val title = if (stepSize > 0) "+" else "-"
   val button = object : JButton(title) {
-    override fun getPreferredSize(): Dimension {
-      return Dimension(24, 24)
-    }
+    override fun getPreferredSize() = Dimension(24, 24)
   }
   button.margin = Insets(4, 4, 4, 4)
   val handler = AutoRepeatHandler(stepSize, slider)

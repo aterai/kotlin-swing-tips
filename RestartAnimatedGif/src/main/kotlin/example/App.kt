@@ -33,13 +33,9 @@ fun makeUI(): Component {
       g2.dispose()
     }
 
-    override fun getIconWidth(): Int {
-      return icon9.iconWidth
-    }
+    override fun getIconWidth() = icon9.iconWidth
 
-    override fun getIconHeight(): Int {
-      return icon9.iconHeight
-    }
+    override fun getIconHeight() = icon9.iconHeight
   }
 
   val label = JLabel(animatedIcon)

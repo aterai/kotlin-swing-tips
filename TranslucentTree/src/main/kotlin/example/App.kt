@@ -138,9 +138,7 @@ fun main() {
       Toolkit.getDefaultToolkit().beep()
     }
     val frame = object : JFrame() {
-      override fun createRootPane(): JRootPane {
-        return TransparentRootPane()
-      }
+      override fun createRootPane() = TransparentRootPane()
     }
     (frame.contentPane as? JComponent)?.isOpaque = false
     frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE

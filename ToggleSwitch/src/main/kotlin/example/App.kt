@@ -32,9 +32,7 @@ fun makeUI(): Component {
 
 private fun makeToggleSlider(d: UIDefaults?): JSlider {
   val slider = object : JSlider(0, 1, 0) {
-    override fun getPreferredSize(): Dimension {
-      return Dimension(100, 40)
-    }
+    override fun getPreferredSize() = Dimension(100, 40)
   }
   slider.font = slider.font.deriveFont(Font.BOLD, 32f)
   if (d != null) {
