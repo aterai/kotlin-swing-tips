@@ -135,9 +135,8 @@ private class TablePopupMenu : JPopupMenu() {
       getSwingWorker(mi)?.takeUnless { it.isDone }?.cancel(true)
     }
     val filter = object : RowFilter<TableModel, Int>() {
-      override fun include(entry: Entry<out TableModel, out Int>): Boolean {
-        return !deletedRowSet.contains(entry.identifier)
-      }
+      override fun include(entry: Entry<out TableModel, out Int>) =
+        !deletedRowSet.contains(entry.identifier)
     }
     (table.rowSorter as? TableRowSorter<out TableModel>)?.rowFilter = filter
     table.clearSelection()
