@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
-import javax.swing.text.BadLocationException
 import javax.swing.text.Document
 import javax.swing.text.JTextComponent
 import javax.swing.text.PlainDocument
@@ -53,7 +52,7 @@ fun makeUI(): Component {
 
 private fun initActionInputMap(editor: JTextComponent) {
   val mapKey = "insert-horizontal-tab"
-  editor.actionMap.put(mapKey, object : AbstractAction() {
+  val a = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       kotlin.runCatching {
         editor.document.insertString(editor.caretPosition, "\t", null)
@@ -61,7 +60,8 @@ private fun initActionInputMap(editor: JTextComponent) {
         UIManager.getLookAndFeel().provideErrorFeedback(editor)
       }
     }
-  })
+  }
+  editor.actionMap.put(mapKey, a)
   val keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK)
   editor.getInputMap(JPanel.WHEN_FOCUSED).put(keyStroke, mapKey)
 }

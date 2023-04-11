@@ -79,7 +79,6 @@ private class AnimatedToolTip(private val iconLabel: JLabel?) : JToolTip() {
   override fun getTipText() = iconLabel?.text ?: ""
 }
 
-
 private class AnimatedLabel(title: String) : JLabel(title, AnimeIcon(), LEADING) {
   private var listener: HierarchyListener? = null
   private val animator = Timer(100) {
