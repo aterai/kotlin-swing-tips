@@ -12,13 +12,10 @@ fun makeUI(): Component {
   label.verticalAlignment = SwingConstants.CENTER
   val columnNames = arrayOf("family", "name", "postscript name", "canDisplay", "isEmpty")
   val model = object : DefaultTableModel(null, columnNames) {
-    override fun isCellEditable(row: Int, column: Int): Boolean {
-      return false
-    }
+    override fun isCellEditable(row: Int, column: Int) = false
 
-    override fun getColumnClass(column: Int): Class<*> {
-      return if (column > 2) Boolean::class.java else String::class.java
-    }
+    override fun getColumnClass(column: Int) =
+      if (column > 2) Boolean::class.javaObjectType else String::class.java
   }
   val table = JTable(model)
   val fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().allFonts
