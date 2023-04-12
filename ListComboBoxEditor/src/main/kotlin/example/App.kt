@@ -140,17 +140,13 @@ private fun makeListEditorComboBox(): JComboBox<ListItem> {
   combo.setRenderer(ListItemListCellRenderer())
   combo.isEditable = true
   combo.editor = object : ComboBoxEditor {
-    override fun getEditorComponent(): Component {
-      return scroll
-    }
+    override fun getEditorComponent() = scroll
 
     override fun setItem(anObject: Any?) {
       combo.selectedIndex = list.selectedIndex
     }
 
-    override fun getItem(): Any? {
-      return list.selectedValue
-    }
+    override fun getItem() = list.selectedValue
 
     override fun selectAll() {
       // println("selectAll")
