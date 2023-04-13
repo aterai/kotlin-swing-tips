@@ -10,38 +10,22 @@ import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
 
 fun makeUI() = JPanel(BorderLayout()).also {
-  val textPane = JTextPane(SimpleSyntaxDocument())
-  textPane.text = "red green, blue. red-green;blue."
+  val doc = SimpleSyntaxDocument()
+  val def = doc.getStyle(StyleContext.DEFAULT_STYLE)
+  StyleConstants.setForeground(doc.addStyle("red", def), Color.RED)
+  StyleConstants.setForeground(doc.addStyle("green", def), Color.GREEN)
+  StyleConstants.setForeground(doc.addStyle("blue", def), Color.BLUE)
+  val textPane = JTextPane(doc)
+  textPane.text = "red green, blue.\n  red-green;blue."
   it.add(JScrollPane(textPane))
   it.preferredSize = Dimension(320, 240)
 }
 
 private class SimpleSyntaxDocument : DefaultStyledDocument() {
-  private val def: Style? = getStyle(StyleContext.DEFAULT_STYLE)
-
-  init {
-    StyleConstants.setForeground(addStyle("red", def), Color.RED)
-    StyleConstants.setForeground(addStyle("green", def), Color.GREEN)
-    StyleConstants.setForeground(addStyle("blue", def), Color.BLUE)
-  }
-
   @Throws(BadLocationException::class)
   override fun insertString(offset: Int, text: String, a: AttributeSet?) {
-    var length = 0
-    var str = text
-    if (str.contains(LB)) {
-      val filtered = StringBuilder(str)
-      val n = filtered.length
-      for (i in 0 until n) {
-        if (filtered[i] == LB) {
-          filtered.setCharAt(i, ' ')
-        }
-      }
-      str = filtered.toString()
-      length = str.length
-    }
-    super.insertString(offset, str, a)
-    processChangedLines(offset, length)
+    super.insertString(offset, text, a)
+    processChangedLines(offset, text.length)
   }
 
   @Throws(BadLocationException::class)
@@ -69,7 +53,7 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
     val lineLength = endOffset - startOffset
     val contentLength = content.length
     endOffset = if (endOffset >= contentLength) contentLength - 1 else endOffset
-    setCharacterAttributes(startOffset, lineLength, def, true)
+    setCharacterAttributes(startOffset, lineLength, getStyle(StyleContext.DEFAULT_STYLE), true)
     checkForTokens(content, startOffset, endOffset)
   }
 
