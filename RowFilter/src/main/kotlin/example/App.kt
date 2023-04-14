@@ -68,7 +68,7 @@ fun makeUI(): Component {
     override fun include(entry: Entry<out RowDataModel, out Int>): Boolean {
       val m = entry.model
       val rd = m.getRowData(entry.identifier)
-      return rd.comment.trim().isNotEmpty()
+      return rd.comment.isNotEmpty()
     }
   }
   val filter2 = object : RowFilter<RowDataModel, Int>() {
