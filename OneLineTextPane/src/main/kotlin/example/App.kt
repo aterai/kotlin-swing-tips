@@ -32,10 +32,13 @@ fun makeUI(): Component {
 
   textPane.editorKit = NoWrapEditorKit()
   val doc = SimpleSyntaxDocument()
+  val def = doc.getStyle(StyleContext.DEFAULT_STYLE)
+  StyleConstants.setForeground(doc.addStyle("red", def), Color.RED)
+  StyleConstants.setForeground(doc.addStyle("green", def), Color.GREEN)
+  StyleConstants.setForeground(doc.addStyle("blue", def), Color.BLUE)
   textPane.document = doc
-  runCatching {
-    doc.insertString(0, str, null)
-  }
+  textPane.text = str
+
   val key = "Do-Nothing"
   val im = textPane.getInputMap(JComponent.WHEN_FOCUSED)
   im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), key)
@@ -83,13 +86,6 @@ private fun makeTitledPanel(title: String, cmp: Component) = JPanel(GridBagLayou
 }
 
 private class SimpleSyntaxDocument : DefaultStyledDocument() {
-  init {
-    val def = getStyle(StyleContext.DEFAULT_STYLE)
-    StyleConstants.setForeground(addStyle("red", def), Color.RED)
-    StyleConstants.setForeground(addStyle("green", def), Color.GREEN)
-    StyleConstants.setForeground(addStyle("blue", def), Color.BLUE)
-  }
-
   @Throws(BadLocationException::class)
   override fun insertString(offset: Int, text: String?, a: AttributeSet?) {
     var length = 0
