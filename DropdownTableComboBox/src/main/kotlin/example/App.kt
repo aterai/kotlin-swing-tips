@@ -9,38 +9,32 @@ import javax.swing.plaf.basic.BasicComboPopup
 import javax.swing.plaf.metal.MetalComboBoxUI
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
+import javax.swing.table.TableModel
 
 fun makeUI(): Component {
-  val aSeries = listOf(
-    listOf("A1", 594, 841),
-    listOf("A2", 420, 594),
-    listOf("A3", 297, 420),
-    listOf("A4", 210, 297),
-    listOf("A5", 148, 210),
-    listOf("A6", 105, 148)
-  )
-
-  val columns = arrayOf("A series", "width", "height")
-
   val wtf = JTextField(5)
   wtf.isEditable = false
 
   val htf = JTextField(5)
   htf.isEditable = false
 
+  val columns = arrayOf("A series", "width", "height")
   val model = object : DefaultTableModel(null, columns) {
     override fun getColumnClass(column: Int) =
       if (column == 1 || column == 2) Number::class.java else String::class.java
 
     override fun isCellEditable(row: Int, column: Int) = false
   }
+  for (v in PaperSize.values()) {
+    model.addRow(arrayOf(v.series, v.width, v.height))
+  }
 
-  val combo = DropdownTableComboBox(aSeries, model)
+  val combo = DropdownTableComboBox(PaperSize.values(), model)
   combo.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      val rowData = combo.getSelectedRow()
-      wtf.text = rowData[1].toString()
-      htf.text = rowData[2].toString()
+      val rowData = combo.getItemAt(combo.selectedIndex)
+      wtf.text = rowData.width.toString()
+      htf.text = rowData.height.toString()
     }
   }
   val renderer = combo.renderer
@@ -55,7 +49,7 @@ fun makeUI(): Component {
       }
       (it as? JLabel)?.also { label ->
         label.isOpaque = true
-        label.text = value?.get(0)?.toString() ?: ""
+        label.text = value?.series ?: ""
       }
     }
   }
@@ -80,10 +74,25 @@ fun makeUI(): Component {
   }
 }
 
-private class DropdownTableComboBox<E : List<Any>>(
-  private val list: List<E>,
-  model: DefaultTableModel
-) : JComboBox<E>() {
+private enum class PaperSize(
+  val series: String,
+  val width: Int,
+  val height: Int
+) {
+  A1("A1", 594, 841),
+  A2("A2", 420, 594),
+  A3("A3", 297, 420),
+  A4("A4", 210, 297),
+  A5("A5", 148, 210),
+  A6("A6", 105, 148);
+
+  override fun toString() = "%s(%dx%d)".format(series, width, height)
+}
+
+private class DropdownTableComboBox(
+  paperSizes: Array<PaperSize>,
+  tableModel: TableModel
+) : JComboBox<PaperSize>(paperSizes) {
   private val highlighter = HighlightListener()
   private val table = object : JTable() {
     override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int) =
@@ -107,12 +116,8 @@ private class DropdownTableComboBox<E : List<Any>>(
   }
 
   init {
-    table.model = model
-    list.forEach { this.addItem(it) }
-    list.forEach { model.addRow(it.toTypedArray()) }
+    table.model = tableModel
   }
-
-  fun getSelectedRow() = list[selectedIndex]
 
   override fun updateUI() {
     super.updateUI()
