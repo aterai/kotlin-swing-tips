@@ -5,7 +5,6 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.AttributeSet
 import javax.swing.text.BadLocationException
 import javax.swing.text.DefaultStyledDocument
-import javax.swing.text.Style
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
 
@@ -90,7 +89,6 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
     Character.isWhitespace(character[0]) || OPERANDS.contains(character)
 
   companion object {
-    private const val LB = '\n'
     private const val OPERANDS = ".,"
   }
 }
