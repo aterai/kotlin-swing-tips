@@ -4,8 +4,7 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  val tabs = JTabbedPane()
-  tabs.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
+  val tabs = JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT)
   for (i in 1 until 100) {
     tabs.addTab("title$i", JLabel("label$i"))
   }

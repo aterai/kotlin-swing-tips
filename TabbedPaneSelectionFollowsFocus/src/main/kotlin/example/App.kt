@@ -9,7 +9,7 @@ import javax.swing.plaf.metal.MetalTabbedPaneUI
 private var focusIdx = -1
 
 fun makeUI(): Component {
-  val tabs = object : JTabbedPane() {
+  val tabs = object : JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT) {
     override fun updateUI() {
       super.updateUI()
       if (getUI() is MetalTabbedPaneUI) {
@@ -26,7 +26,6 @@ fun makeUI(): Component {
     focusIdx = tabs.selectedIndex
     tabs.repaint()
   }
-  tabs.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
   val help1 = "SPACE: selectTabWithFocus"
   val help2 = "LEFT: navigateLeft"
   val help3 = "RIGHT: navigateRight"

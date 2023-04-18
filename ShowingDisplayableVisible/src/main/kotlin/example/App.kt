@@ -31,8 +31,7 @@ fun makeUI(): Component {
     }
   }
 
-  val tab = JTabbedPane()
-  tab.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
+  val tabs = JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT)
   button.addHierarchyListener { e ->
     if (e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L) {
       printInfo(button, "SHOWING_CHANGED")
@@ -48,9 +47,9 @@ fun makeUI(): Component {
   for (i in 0 until 15) {
     panel.add(JLabel("<html>JLabel<br>&nbsp;idx:$i"))
   }
-  tab.addTab("Main", JScrollPane(panel))
-  tab.addTab("JTree", JScrollPane(JTree()))
-  tab.addTab("JLabel", JLabel("Test"))
+  tabs.addTab("Main", JScrollPane(panel))
+  tabs.addTab("JTree", JScrollPane(JTree()))
+  tabs.addTab("JLabel", JLabel("Test"))
 
   val p1 = JPanel(FlowLayout(FlowLayout.LEFT))
   p1.add(JLabel("JButton:"))
@@ -68,7 +67,7 @@ fun makeUI(): Component {
 
   return JPanel(BorderLayout()).also {
     it.add(p, BorderLayout.NORTH)
-    it.add(tab)
+    it.add(tabs)
     it.preferredSize = Dimension(320, 240)
   }
 }

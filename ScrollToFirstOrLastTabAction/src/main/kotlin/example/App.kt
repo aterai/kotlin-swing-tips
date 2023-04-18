@@ -5,8 +5,7 @@ import java.awt.event.ActionEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
-  val tabs = JTabbedPane()
-  tabs.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
+  val tabs = JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT)
   val help = "Ctrl + ScrollButton Click: scroll to first/last tabs"
   tabs.addTab("title0", JLabel(help))
   for (i in 1 until 100) {
