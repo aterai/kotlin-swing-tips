@@ -4,7 +4,9 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.HierarchyEvent
 import java.awt.event.HierarchyListener
 import java.awt.event.ItemEvent
+import java.awt.event.ItemListener
 import java.awt.event.MouseEvent
+import java.awt.geom.AffineTransform
 import java.awt.geom.Area
 import java.awt.geom.Path2D
 import java.awt.geom.RoundRectangle2D
@@ -12,14 +14,28 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val tabbedPane = makeTabbedPane()
-  val cb = JComboBox(TabPlacement.values())
-  cb.addItemListener { e ->
+  val menu = JMenu("TabPlacement")
+  val bg = ButtonGroup()
+  val handler = ItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      tabbedPane.tabPlacement = cb.getItemAt(cb.selectedIndex).placement
+      val tp = TabPlacement.valueOf(bg.selection.actionCommand)
+      tabbedPane.tabPlacement = tp.placement
     }
   }
+  TabPlacement.values().forEach {
+    val name = it.name
+    val selected = it == TabPlacement.TOP
+    val item: JMenuItem = JRadioButtonMenuItem(name, selected)
+    item.addItemListener(handler)
+    item.actionCommand = name
+    menu.add(item)
+    bg.add(item)
+  }
   return JPanel(BorderLayout(2, 2)).also {
-    it.add(cb, BorderLayout.NORTH)
+    val mb = JMenuBar()
+    mb.add(LookAndFeelUtils.createLookAndFeelMenu())
+    mb.add(menu)
+    EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.add(tabbedPane)
     it.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
     it.preferredSize = Dimension(320, 240)
@@ -29,6 +45,7 @@ fun makeUI(): Component {
 private fun makeTabbedPane(): JTabbedPane {
   val tabs = object : JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT) {
     private var tip: BalloonToolTip? = null
+    private val label = JLabel(" ", CENTER)
 
     override fun getToolTipLocation(e: MouseEvent): Point? {
       val idx = indexAtLocation(e.x, e.y)
@@ -36,6 +53,7 @@ private fun makeTabbedPane(): JTabbedPane {
       return txt?.let {
         val tips = createToolTip()
         tips.tipText = it
+        label.text = it
         (tips as? BalloonToolTip)?.updateBalloonShape(getTabPlacement())
         getToolTipPoint(getBoundsAt(idx), tips.preferredSize)
       }
@@ -45,18 +63,30 @@ private fun makeTabbedPane(): JTabbedPane {
       LEFT -> makePoint(r.maxX, r.centerY - d.getHeight() / 2.0)
       RIGHT -> makePoint(r.minX - d.width, r.centerY - d.getHeight() / 2.0)
       BOTTOM -> makePoint(r.centerX - d.getWidth() / 2.0, r.minY - d.height)
-      else -> makePoint(r.centerX - d.getWidth() / 2.0, r.maxY)
+      else -> makePoint(r.centerX - d.getWidth() / 2.0, r.maxY + 8.0)
     }
 
     private fun makePoint(x: Double, y: Double) = Point((x + .5).toInt(), (y + .5).toInt())
 
     override fun createToolTip(): JToolTip {
       val t = tip ?: BalloonToolTip().also {
+        LookAndFeel.installColorsAndFont(
+          label,
+          "ToolTip.background",
+          "ToolTip.foreground",
+          "ToolTip.font"
+        )
+        it.add(label)
         it.updateBalloonShape(getTabPlacement())
         it.component = this
       }
       tip = t
       return t
+    }
+
+    override fun updateUI() {
+      tip = null
+      super.updateUI()
     }
   }
   tabs.addTab("000", ColorIcon(Color.RED), JScrollPane(JTree()), "00000")
@@ -75,6 +105,7 @@ private class BalloonToolTip : JToolTip() {
   override fun updateUI() {
     removeHierarchyListener(listener)
     super.updateUI()
+    layout = BorderLayout()
     listener = HierarchyListener { e ->
       val c = e.component
       if (e.changeFlags.toInt() and HierarchyEvent.SHOWING_CHANGED != 0 && c.isShowing) {
@@ -85,9 +116,15 @@ private class BalloonToolTip : JToolTip() {
     }
     addHierarchyListener(listener)
     isOpaque = false
+    border = BorderFactory.createEmptyBorder(SIZE, SIZE, SIZE, SIZE)
   }
 
-  override fun getPreferredSize() = super.getPreferredSize()?.also { it.height = 24 }
+  override fun getPreferredSize(): Dimension {
+    val d = super.getPreferredSize()
+    d.width += SIZE
+    d.height += SIZE
+    return d
+  }
 
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
@@ -97,57 +134,48 @@ private class BalloonToolTip : JToolTip() {
     g2.paint = getForeground()
     g2.draw(shape)
     g2.dispose()
-    super.paintComponent(g)
+    // super.paintComponent(g)
   }
 
   fun updateBalloonShape(placement: Int) {
-    val r = visibleRect
-    r.size = preferredSize ?: Dimension()
+    val i = insets
+    val d = preferredSize
     val tail = Path2D.Double()
-    var w = r.getWidth() - 1.0
-    var h = r.getHeight() - 1.0
-    val arc = 10.0
-    val bubble = when (placement) {
+    val w = d.getWidth() - i.left - i.right - 1.0
+    val h = d.getHeight() - i.top - i.bottom - 1.0
+    val cx = w / 2.0
+    val cy = h / 2.0
+    when (placement) {
       SwingConstants.LEFT -> {
-        border = BorderFactory.createEmptyBorder(2, 2 + SIZE, 2, 2)
-        tail.moveTo(r.minX + SIZE, r.centerY - SIZE)
-        tail.lineTo(r.minX, r.centerY)
-        tail.lineTo(r.minX + SIZE, r.centerY + SIZE)
-        w -= SIZE.toDouble()
-        RoundRectangle2D.Double(r.minX + SIZE, r.minY, w, h, arc, arc)
+        tail.moveTo(0.0, cy - SIZE)
+        tail.lineTo(-SIZE.toDouble(), cy)
+        tail.lineTo(0.0, cy + SIZE)
       }
       SwingConstants.RIGHT -> {
-        border = BorderFactory.createEmptyBorder(2, 2, 2, 2 + SIZE)
-        tail.moveTo(r.maxX - SIZE - 1.0, r.centerY - SIZE)
-        tail.lineTo(r.maxX, r.centerY)
-        tail.lineTo(r.maxX - SIZE - 1.0, r.centerY + SIZE)
-        w -= SIZE.toDouble()
-        RoundRectangle2D.Double(r.minX, r.minY, w, h, arc, arc)
+        tail.moveTo(w, cy - SIZE)
+        tail.lineTo(w + SIZE, cy)
+        tail.lineTo(w, cy + SIZE)
       }
       SwingConstants.BOTTOM -> {
-        border = BorderFactory.createEmptyBorder(2, 2, 2 + SIZE, 2)
-        tail.moveTo(r.centerX - SIZE, r.maxY - SIZE - 1.0)
-        tail.lineTo(r.centerX, r.maxY)
-        tail.lineTo(r.centerX + SIZE, r.maxY - SIZE - 1.0)
-        h -= SIZE.toDouble()
-        RoundRectangle2D.Double(r.minX, r.minY, w, h, arc, arc)
+        tail.moveTo(cx - SIZE, h)
+        tail.lineTo(cx, h + SIZE)
+        tail.lineTo(cx + SIZE, h)
       }
       else -> {
-        border = BorderFactory.createEmptyBorder(2 + SIZE, 2, 2, 2)
-        tail.moveTo(r.centerX - SIZE, r.minY + SIZE)
-        tail.lineTo(r.centerX, r.minY)
-        tail.lineTo(r.centerX + SIZE, r.minY + SIZE)
-        h -= SIZE.toDouble()
-        RoundRectangle2D.Double(r.minX, r.minY + SIZE, w, h, arc, arc)
+        tail.moveTo(cx - SIZE, 0.0)
+        tail.lineTo(cx, -SIZE.toDouble())
+        tail.lineTo(cx + SIZE, 0.0)
       }
     }
-    val area = Area(bubble)
+    val area = Area(RoundRectangle2D.Double(0.0, 0.0, w, h, ARC, ARC))
     area.add(Area(tail))
-    shape = area
+    val at = AffineTransform.getTranslateInstance(i.left.toDouble(), i.top.toDouble())
+    shape = at.createTransformedShape(area)
   }
 
   companion object {
     private const val SIZE = 4
+    private const val ARC = 4.0
   }
 }
 
@@ -170,6 +198,51 @@ private enum class TabPlacement(val placement: Int) {
   BOTTOM(SwingConstants.BOTTOM),
   LEFT(SwingConstants.LEFT),
   RIGHT(SwingConstants.RIGHT)
+}
+
+private object LookAndFeelUtils {
+  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
+
+  fun createLookAndFeelMenu(): JMenu {
+    val menu = JMenu("LookAndFeel")
+    val buttonGroup = ButtonGroup()
+    for (info in UIManager.getInstalledLookAndFeels()) {
+      val b = JRadioButtonMenuItem(info.name, info.className == lookAndFeel)
+      initLookAndFeelAction(info, b)
+      menu.add(b)
+      buttonGroup.add(b)
+    }
+    return menu
+  }
+
+  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+    val cmd = info.className
+    b.text = info.name
+    b.actionCommand = cmd
+    b.hideActionText = true
+    b.addActionListener { setLookAndFeel(cmd) }
+  }
+
+  @Throws(
+    ClassNotFoundException::class,
+    InstantiationException::class,
+    IllegalAccessException::class,
+    UnsupportedLookAndFeelException::class
+  )
+  private fun setLookAndFeel(newLookAndFeel: String) {
+    val oldLookAndFeel = lookAndFeel
+    if (oldLookAndFeel != newLookAndFeel) {
+      UIManager.setLookAndFeel(newLookAndFeel)
+      lookAndFeel = newLookAndFeel
+      updateLookAndFeel()
+    }
+  }
+
+  private fun updateLookAndFeel() {
+    for (window in Window.getWindows()) {
+      SwingUtilities.updateComponentTreeUI(window)
+    }
+  }
 }
 
 fun main() {
