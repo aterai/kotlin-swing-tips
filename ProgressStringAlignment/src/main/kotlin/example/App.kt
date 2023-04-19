@@ -62,7 +62,7 @@ private class StringAlignmentProgressBar(
   model: BoundedRangeModel,
   horAlignment: Int
 ) : JProgressBar(model) {
-  private val label = JLabel(string, horAlignment)
+  private val label = JLabel(" ", horAlignment)
 
   override fun updateUI() {
     removeAll()

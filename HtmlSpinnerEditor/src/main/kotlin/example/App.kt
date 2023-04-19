@@ -44,19 +44,24 @@ fun makeUI(): Component {
   }
 }
 
-private class HtmlListEditor(spinner: JSpinner) : JLabel(), ChangeListener {
+private class HtmlListEditor(
+  spinner: JSpinner
+) : JLabel(spinner.value.toString()), ChangeListener {
   init {
     require(spinner.model is SpinnerListModel) { "model not a SpinnerListModel" }
     spinner.addChangeListener(this)
-    text = spinner.value.toString()
-    border = BorderFactory.createEmptyBorder(0, 5, 0, 5)
-    isOpaque = true
-    background = Color.WHITE
-    inheritsPopupMenu = true
     val tipText = spinner.toolTipText
     if (tipText != null) {
       toolTipText = tipText
     }
+  }
+
+  override fun updateUI() {
+    super.updateUI()
+    border = BorderFactory.createEmptyBorder(0, 5, 0, 5)
+    isOpaque = true
+    background = Color.WHITE
+    inheritsPopupMenu = true
   }
 
   override fun stateChanged(e: ChangeEvent) {

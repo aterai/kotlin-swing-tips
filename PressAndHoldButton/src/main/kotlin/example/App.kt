@@ -27,6 +27,7 @@ fun makeUI(): Component {
 
   val icon = UIManager.getIcon("FileChooser.detailsViewIcon")
   val button = PressAndHoldButton(icon, popupMenu)
+  button.action.putValue(Action.SMALL_ICON, icon)
   button.addActionListener {
     val cmd = bg.selection?.actionCommand ?: "null"
     log.append("Selected action command: $cmd\n")
@@ -62,14 +63,8 @@ private fun makeMenuButton(m: MenuContext): AbstractButton {
   return b
 }
 
-private class PressAndHoldButton(icon: Icon?, popupMenu: JPopupMenu?) : JButton(icon) {
+private class PressAndHoldButton(icon: Icon, val popupMenu: JPopupMenu?) : JButton(icon) {
   private var handler: PressAndHoldHandler? = null
-  private val popupMenu: JPopupMenu?
-
-  init {
-    action.putValue(Action.SMALL_ICON, icon)
-    this.popupMenu = popupMenu
-  }
 
   override fun updateUI() {
     removeMouseListener(handler)

@@ -43,7 +43,7 @@ fun makeUI(): Component {
   val tabs = JTabbedPane()
   tabs.addTab("Tab 1", tab1panel)
   tabs.addTab("Tab 2", tab2panel)
-  tabs.addTab("Tab 3", AlphaContainer(tab3panel))
+  tabs.addTab("Tab 3", makeAlphaContainer(tab3panel))
 
   val url = Thread.currentThread().contextClassLoader.getResource("example/test.png")
   val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
@@ -76,19 +76,19 @@ private fun makeMissingImage(): Image {
   return bi
 }
 
-private class AlphaContainer(private val component: JComponent) : JPanel(BorderLayout()) {
-  init {
-    component.isOpaque = false
-    add(component)
-  }
+private fun makeAlphaContainer(component: JComponent): Container {
+  val c = object : JPanel(BorderLayout()) {
+    override fun isOpaque() = false
 
-  override fun isOpaque() = false
-
-  override fun paintComponent(g: Graphics) {
-    super.paintComponent(g)
-    g.color = component.background
-    g.fillRect(0, 0, width, height)
+    override fun paintComponent(g: Graphics) {
+      super.paintComponent(g)
+      g.color = component.background
+      g.fillRect(0, 0, width, height)
+    }
   }
+  component.isOpaque = false
+  c.add(component)
+  return c
 }
 
 private class MissingIcon : Icon {
