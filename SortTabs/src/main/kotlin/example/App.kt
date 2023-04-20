@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.awt.event.MouseListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI() = JPanel(BorderLayout()).also {
@@ -21,7 +22,13 @@ fun makeUI() = JPanel(BorderLayout()).also {
 private data class ComparableTab(val title: String, val component: Component)
 
 private class EditableTabbedPane : JTabbedPane() {
-  private val glassPane = EditorGlassPane()
+  private val glassPane = object : JComponent() {
+    override fun setVisible(flag: Boolean) {
+      super.setVisible(flag)
+      isFocusTraversalPolicyProvider = flag
+      isFocusCycleRoot = flag
+    }
+  }
   private val editor = JTextField()
   private val startEditing = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
@@ -29,7 +36,6 @@ private class EditableTabbedPane : JTabbedPane() {
       val rect = getBoundsAt(selectedIndex)
       val src = this@EditableTabbedPane
       val p = SwingUtilities.convertPoint(src, rect.location, glassPane)
-      // rect.setBounds(p.x + 2, p.y + 2, rect.width - 4, rect.height - 4)
       rect.location = p
       rect.grow(-2, -2)
       editor.bounds = rect
@@ -55,60 +61,59 @@ private class EditableTabbedPane : JTabbedPane() {
       glassPane.isVisible = false
     }
   }
+  private var listener: MouseListener? = null
 
   init {
     editor.border = BorderFactory.createEmptyBorder(0, 3, 0, 3)
-    val im = editor.getInputMap(JComponent.WHEN_FOCUSED)
-    val am = editor.actionMap
-
-    val renameCmd = "rename-tab"
     val enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)
-    im.put(enterKey, renameCmd)
-    am.put(renameCmd, renameTab)
+    val im = editor.getInputMap(WHEN_FOCUSED)
+    im.put(enterKey, EDIT_KEY)
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), CANCEL_KEY)
 
-    val cancelCmd = "cancel-editing"
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), cancelCmd)
-    am.put(cancelCmd, cancelEditing)
+    val am = editor.actionMap
+    am.put(EDIT_KEY, renameTab)
+    am.put(CANCEL_KEY, cancelEditing)
 
-    val startCmd = "start-editing"
-    getInputMap(JComponent.WHEN_FOCUSED).put(enterKey, startCmd)
-    actionMap.put(startCmd, startEditing)
-    addMouseListener(object : MouseAdapter() {
+    getInputMap(WHEN_FOCUSED).put(enterKey, START_EDITING)
+    actionMap.put(START_EDITING, startEditing)
+
+    glassPane.focusTraversalPolicy = object : DefaultFocusTraversalPolicy() {
+      override fun accept(c: Component) = c == editor
+    }
+    glassPane.addMouseListener(object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
-        val isDoubleClick = e.clickCount >= 2
-        if (isDoubleClick) {
-          val c = e.component
-          startEditing.actionPerformed(ActionEvent(c, ActionEvent.ACTION_PERFORMED, startCmd))
+        if (!editor.bounds.contains(e.point)) {
+          actionPerformed(e.component, renameTab, EDIT_KEY)
         }
       }
     })
   }
 
-  private inner class EditorGlassPane : JComponent() {
-    init {
-      isOpaque = false
-      focusTraversalPolicy = object : DefaultFocusTraversalPolicy() {
-        override fun accept(c: Component) = c == editor
-      }
-      addMouseListener(object : MouseAdapter() {
-        override fun mouseClicked(e: MouseEvent) {
-          val tabEditor = editor
-          val cmd = "rename-tab"
-          tabEditor.actionMap.get(cmd)
-            ?.takeUnless { tabEditor.bounds.contains(e.point) }
-            ?.also {
-              val c = e.component
-              it.actionPerformed(ActionEvent(c, ActionEvent.ACTION_PERFORMED, cmd))
-            }
+  override fun updateUI() {
+    removeMouseListener(listener)
+    super.updateUI()
+    listener = object : MouseAdapter() {
+      override fun mouseClicked(e: MouseEvent) {
+        val isDoubleClick = e.clickCount >= 2
+        if (isDoubleClick) {
+          actionPerformed(e.component, startEditing, START_EDITING)
         }
-      })
+      }
     }
+    addMouseListener(listener)
+    EventQueue.invokeLater {
+      SwingUtilities.updateComponentTreeUI(editor)
+    }
+  }
 
-    override fun setVisible(flag: Boolean) {
-      super.setVisible(flag)
-      isFocusTraversalPolicyProvider = flag
-      isFocusCycleRoot = flag
-    }
+  private fun actionPerformed(c: Component, a: Action, command: String) {
+    a.actionPerformed(ActionEvent(c, ActionEvent.ACTION_PERFORMED, command))
+  }
+
+  companion object {
+    const val EDIT_KEY = "rename-tab"
+    const val CANCEL_KEY = "cancel-editing"
+    const val START_EDITING = "start-editing"
   }
 }
 

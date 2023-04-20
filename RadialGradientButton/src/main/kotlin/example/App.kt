@@ -45,6 +45,7 @@ private class RadialGradientButton(title: String) : JButton(title) {
   private var radius = 0f
   private var shape: Shape? = null
   private var base: Rectangle? = null
+  private var listener: MouseAdapter? = null
 
   init {
     timer1.addActionListener {
@@ -55,7 +56,18 @@ private class RadialGradientButton(title: String) : JButton(title) {
       radius = maxOf(0f, radius - DELTA)
       repaint()
     }
-    val listener = object : MouseAdapter() {
+  }
+
+  override fun updateUI() {
+    removeMouseListener(listener)
+    removeMouseMotionListener(listener)
+    super.updateUI()
+    isOpaque = false
+    isContentAreaFilled = false
+    isFocusPainted = false
+    background = Color(0xF7_23_59)
+    border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
+    listener = object : MouseAdapter() {
       override fun mouseEntered(e: MouseEvent) {
         timer2.stop()
         if (!timer1.isRunning) {
@@ -83,15 +95,6 @@ private class RadialGradientButton(title: String) : JButton(title) {
     }
     addMouseListener(listener)
     addMouseMotionListener(listener)
-  }
-
-  override fun updateUI() {
-    super.updateUI()
-    isOpaque = false
-    isContentAreaFilled = false
-    isFocusPainted = false
-    background = Color(0xF7_23_59)
-    border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
     update()
   }
 
@@ -163,8 +166,8 @@ private class RadialGradientPaintButton(title: String) : JButton(title) {
   private var radius = 0f
   private var shape: Shape? = null
   private var base: Rectangle? = null
-
   private var buf: BufferedImage? = null
+  private var listener: MouseAdapter? = null
 
   init {
     timer1.addActionListener {
@@ -175,7 +178,18 @@ private class RadialGradientPaintButton(title: String) : JButton(title) {
       radius = maxOf(0f, radius - DELTA)
       repaint()
     }
-    val listener = object : MouseAdapter() {
+  }
+
+  override fun updateUI() {
+    removeMouseListener(listener)
+    removeMouseMotionListener(listener)
+    super.updateUI()
+    isOpaque = false
+    isContentAreaFilled = false
+    isFocusPainted = false
+    background = Color(0xF7_23_59)
+    border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
+    listener = object : MouseAdapter() {
       override fun mouseEntered(e: MouseEvent) {
         timer2.stop()
         if (!timer1.isRunning) {
@@ -203,15 +217,6 @@ private class RadialGradientPaintButton(title: String) : JButton(title) {
     }
     addMouseListener(listener)
     addMouseMotionListener(listener)
-  }
-
-  override fun updateUI() {
-    super.updateUI()
-    isOpaque = false
-    isContentAreaFilled = false
-    isFocusPainted = false
-    background = Color(0xF7_23_59)
-    border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
     update()
   }
 

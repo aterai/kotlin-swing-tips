@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.awt.event.MouseListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 
 private val INFO = """
@@ -29,13 +30,20 @@ fun makeUI(): Component {
 }
 
 private class EditableTabbedPane : JTabbedPane() {
-  private val glassPane = EditorGlassPane()
+  private val glassPane = object : JComponent() {
+    override fun setVisible(flag: Boolean) {
+      super.setVisible(flag)
+      isFocusTraversalPolicyProvider = flag
+      isFocusCycleRoot = flag
+    }
+  }
   private val editor = JTextField()
   private val startEditing = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       rootPane.glassPane = glassPane
       val rect = getBoundsAt(selectedIndex)
-      val p = SwingUtilities.convertPoint(this@EditableTabbedPane, rect.location, glassPane)
+      val src = this@EditableTabbedPane
+      val p = SwingUtilities.convertPoint(src, rect.location, glassPane)
       rect.location = p
       rect.grow(-2, -2)
       editor.bounds = rect
@@ -61,51 +69,59 @@ private class EditableTabbedPane : JTabbedPane() {
       glassPane.isVisible = false
     }
   }
+  private var listener: MouseListener? = null
 
   init {
     editor.border = BorderFactory.createEmptyBorder(0, 3, 0, 3)
-    val am = editor.actionMap
-    val im = editor.getInputMap(JComponent.WHEN_FOCUSED)
     val enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)
-    im.put(enterKey, "rename-tab")
-    am.put("rename-tab", renameTab)
+    val im = editor.getInputMap(WHEN_FOCUSED)
+    im.put(enterKey, EDIT_KEY)
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), CANCEL_KEY)
 
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancel-editing")
-    am.put("cancel-editing", cancelEditing)
+    val am = editor.actionMap
+    am.put(EDIT_KEY, renameTab)
+    am.put(CANCEL_KEY, cancelEditing)
 
-    addMouseListener(object : MouseAdapter() {
+    getInputMap(WHEN_FOCUSED).put(enterKey, START_EDITING)
+    actionMap.put(START_EDITING, startEditing)
+
+    glassPane.focusTraversalPolicy = object : DefaultFocusTraversalPolicy() {
+      override fun accept(c: Component) = c == editor
+    }
+    glassPane.addMouseListener(object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
-        val isDoubleClick = e.clickCount >= 2
-        if (isDoubleClick) {
-          startEditing.actionPerformed(ActionEvent(e.component, ActionEvent.ACTION_PERFORMED, ""))
+        if (!editor.bounds.contains(e.point)) {
+          actionPerformed(e.component, renameTab, EDIT_KEY)
         }
       }
     })
-    getInputMap(JComponent.WHEN_FOCUSED).put(enterKey, "start-editing")
-    actionMap.put("start-editing", startEditing)
   }
 
-  private inner class EditorGlassPane : JComponent() {
-    init {
-      isOpaque = false
-      focusTraversalPolicy = object : DefaultFocusTraversalPolicy() {
-        override fun accept(c: Component) = c == editor
-      }
-      val ml = object : MouseAdapter() {
-        override fun mouseClicked(e: MouseEvent) {
-          if (!editor.bounds.contains(e.point)) {
-            renameTab.actionPerformed(ActionEvent(e.component, ActionEvent.ACTION_PERFORMED, ""))
-          }
+  override fun updateUI() {
+    removeMouseListener(listener)
+    super.updateUI()
+    listener = object : MouseAdapter() {
+      override fun mouseClicked(e: MouseEvent) {
+        val isDoubleClick = e.clickCount >= 2
+        if (isDoubleClick) {
+          actionPerformed(e.component, startEditing, START_EDITING)
         }
       }
-      addMouseListener(ml)
     }
+    addMouseListener(listener)
+    EventQueue.invokeLater {
+      SwingUtilities.updateComponentTreeUI(editor)
+    }
+  }
 
-    override fun setVisible(flag: Boolean) {
-      super.setVisible(flag)
-      isFocusTraversalPolicyProvider = flag
-      isFocusCycleRoot = flag
-    }
+  private fun actionPerformed(c: Component, a: Action, command: String) {
+    a.actionPerformed(ActionEvent(c, ActionEvent.ACTION_PERFORMED, command))
+  }
+
+  companion object {
+    const val EDIT_KEY = "rename-tab"
+    const val CANCEL_KEY = "cancel-editing"
+    const val START_EDITING = "start-editing"
   }
 }
 
