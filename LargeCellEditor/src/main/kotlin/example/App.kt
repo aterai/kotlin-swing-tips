@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.awt.event.MouseListener
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
@@ -14,8 +15,16 @@ import javax.swing.table.TableModel
 
 fun makeUI() = JPanel(GridBagLayout()).also {
   val list = makeIconList()
+  val ins = 2
+  val icon = list.getElementAt(0).small
+  val iw = ins + icon.iconWidth
+  val ih = ins + icon.iconHeight
+  val d = Dimension(iw * 3 + ins, ih * 3 + ins)
+  val editor = EditorFromList(list, d)
+  editor.setFixedCellWidth(iw)
+  editor.setFixedCellHeight(ih)
   val model = makeIconTableModel(list)
-  val table = IconTable(model, list)
+  val table = IconTable(model, editor)
   it.add(table, GridBagConstraints())
   it.background = Color.WHITE
   it.preferredSize = Dimension(320, 240)
@@ -75,8 +84,7 @@ private class IconTableCellRenderer : DefaultTableCellRenderer() {
   }
 }
 
-private class IconTable(model: TableModel?, list: ListModel<IconItem>) : JTable(model) {
-  private val editor = EditorFromList(list)
+private class IconTable(model: TableModel?, private val editor: JList<IconItem>) : JTable(model) {
   private val glassPane = object : JComponent() {
     override fun setVisible(flag: Boolean) {
       super.setVisible(flag)
@@ -94,42 +102,23 @@ private class IconTable(model: TableModel?, list: ListModel<IconItem>) : JTable(
       g2.paint = Color.BLACK
       val r = editor.bounds
       for (i in 0 until OFFSET) {
-        g2.fillRoundRect(
-          r.x - i,
-          r.y + OFFSET,
-          r.width + i + i,
-          r.height - OFFSET + i,
-          5,
-          5
-        )
+        g2.fillRoundRect(r.x - i, r.y + OFFSET, r.width + i + i, r.height - OFFSET + i, 5, 5)
       }
       g2.dispose()
       g.drawImage(buffer, 0, 0, this)
     }
   }
+  private var handler: MouseListener? = null
 
   init {
-    setDefaultRenderer(Any::class.java, IconTableCellRenderer())
-    setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
-    initCellSize(50)
-
-    val ma = object : MouseAdapter() {
-      override fun mouseClicked(e: MouseEvent) {
-        startEditing()
-      }
-    }
-    addMouseListener(ma)
-
-    val cmd = "cancel-editing"
-    val ks = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0)
-    editor.getInputMap(JComponent.WHEN_FOCUSED).put(ks, cmd)
-    val action = object : AbstractAction() {
+    val key = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0)
+    editor.getInputMap(WHEN_FOCUSED).put(key, "cancel-editing")
+    val a = object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
         cancelEditing()
       }
     }
-    editor.actionMap.put(cmd, action)
-
+    editor.getActionMap().put("cancel-editing", a)
     editor.addMouseListener(object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
         val p = e.point
@@ -145,24 +134,36 @@ private class IconTable(model: TableModel?, list: ListModel<IconItem>) : JTable(
       }
     })
     glassPane.focusTraversalPolicy = object : DefaultFocusTraversalPolicy() {
-      public override fun accept(c: Component) = c == editor
+      override fun accept(c: Component) = c == editor
     }
     glassPane.add(editor)
     glassPane.isVisible = false
   }
 
-  fun initCellSize(size: Int) {
-    setRowHeight(size)
+  override fun updateUI() {
+    removeMouseListener(handler)
+    super.updateUI()
+    setRowHeight(CELL_SIZE)
     val tableHeader = getTableHeader()
     tableHeader.resizingAllowed = false
     tableHeader.reorderingAllowed = false
     val m = getColumnModel()
     for (i in 0 until m.columnCount) {
       val col = m.getColumn(i)
-      col.minWidth = size
-      col.maxWidth = size
+      col.minWidth = CELL_SIZE
+      col.maxWidth = CELL_SIZE
     }
     border = BorderFactory.createLineBorder(Color.BLACK)
+    setDefaultRenderer(Any::class.java, IconTableCellRenderer())
+    setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
+    handler = object : MouseAdapter() {
+      override fun mouseClicked(e: MouseEvent) {
+        if (e.button == MouseEvent.BUTTON1) {
+          startEditing()
+        }
+      }
+    }
+    addMouseListener(handler)
   }
 
   fun startEditing() {
@@ -185,23 +186,17 @@ private class IconTable(model: TableModel?, list: ListModel<IconItem>) : JTable(
   }
 
   companion object {
-    private const val OFFSET = 4
+    protected const val CELL_SIZE = 50
+    protected const val OFFSET = 4
   }
 }
 
-private class EditorFromList(model: ListModel<IconItem>) : JList<IconItem>(model) {
+private class EditorFromList(
+  model: ListModel<IconItem>,
+  private val dim: Dimension
+) : JList<IconItem>(model) {
   private var handler: RollOverListener? = null
   private var rollOverRowIndex = -1
-  private val dim: Dimension
-
-  init {
-    val icon = model.getElementAt(0).small
-    val iw = INS + icon.iconWidth
-    val ih = INS + icon.iconHeight
-    dim = Dimension(iw * 3 + INS, ih * 3 + INS)
-    fixedCellWidth = iw
-    fixedCellHeight = ih
-  }
 
   override fun getPreferredSize() = dim
 
@@ -243,10 +238,6 @@ private class EditorFromList(model: ListModel<IconItem>) : JList<IconItem>(model
         e.component.repaint()
       }
     }
-  }
-
-  companion object {
-    private const val INS = 2
   }
 }
 
