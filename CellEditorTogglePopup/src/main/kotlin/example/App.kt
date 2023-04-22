@@ -29,11 +29,11 @@ fun makeUI(): Component {
     }
 
     override fun ancestorRemoved(e: AncestorEvent) {
-      /* not needed */
+      // not needed
     }
 
     override fun ancestorMoved(e: AncestorEvent) {
-      /* not needed */
+      // not needed
     }
   })
   table.columnModel.getColumn(1).cellEditor = DefaultCellEditor(comboBox)

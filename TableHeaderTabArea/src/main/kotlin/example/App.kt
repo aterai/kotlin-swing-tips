@@ -163,7 +163,7 @@ private class TabButton : JRadioButton(null, null) {
 }
 
 private open class TabViewButtonUI : BasicButtonUI() {
-  /* ButtonUI */
+  // ButtonUI
 }
 
 private class BasicTabViewButtonUI : TabViewButtonUI() {

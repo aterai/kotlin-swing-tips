@@ -112,11 +112,11 @@ private fun makeComboBox2(model: ComboBoxModel<Icon>, proto: Icon): JComboBox<Ic
     }
 
     override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
-      /* not needed */
+      // not needed
     }
 
     override fun popupMenuCanceled(e: PopupMenuEvent) {
-      /* not needed */
+      // not needed
     }
   }
   combo.addPopupMenuListener(pl)

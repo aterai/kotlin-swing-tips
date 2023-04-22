@@ -85,23 +85,23 @@ private class PaintPanel : JPanel(), MouseMotionListener, MouseListener {
   }
 
   override fun mouseMoved(e: MouseEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun mouseExited(e: MouseEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun mouseEntered(e: MouseEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun mouseReleased(e: MouseEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun mouseClicked(e: MouseEvent) {
-    /* not needed */
+    // not needed
   }
 
   companion object {

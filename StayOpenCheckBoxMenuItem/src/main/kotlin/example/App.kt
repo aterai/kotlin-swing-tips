@@ -131,7 +131,7 @@ private class TogglePopupHandler(
   }
 
   override fun popupMenuCanceled(e: PopupMenuEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
@@ -142,7 +142,7 @@ private class TogglePopupHandler(
   }
 
   override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-    /* not needed */
+    // not needed
   }
 }
 

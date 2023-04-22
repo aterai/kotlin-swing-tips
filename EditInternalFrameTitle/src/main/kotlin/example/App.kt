@@ -96,11 +96,11 @@ private class FocusAncestorListener : AncestorListener {
   }
 
   override fun ancestorMoved(e: AncestorEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun ancestorRemoved(e: AncestorEvent) {
-    /* not needed */
+    // not needed
   }
 }
 

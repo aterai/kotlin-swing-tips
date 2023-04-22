@@ -53,7 +53,7 @@ private class EmptyIcon : Icon {
   var height = 5
 
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-    /* do nothing */
+    // do nothing
   }
 
   override fun getIconWidth() = width

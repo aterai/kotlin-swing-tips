@@ -76,7 +76,7 @@ fun makeUI(): Component {
   })
   popup.addPopupMenuListener(object : PopupMenuListener {
     override fun popupMenuCanceled(e: PopupMenuEvent) {
-      /* not needed */
+      // not needed
     }
 
     override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {

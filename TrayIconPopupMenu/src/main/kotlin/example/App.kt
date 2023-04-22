@@ -51,7 +51,7 @@ private fun initPopupMenu(frame: Frame) {
   }
   val popupMenuHandler = object : PopupMenuListener {
     override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-      /* not needed */
+      // not needed
     }
 
     override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {

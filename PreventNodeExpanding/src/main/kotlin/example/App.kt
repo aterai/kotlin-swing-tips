@@ -59,7 +59,7 @@ private class DirectoryExpandVetoListener : TreeWillExpandListener {
   }
 
   override fun treeWillCollapse(e: TreeExpansionEvent) {
-    /* not use */
+    // not use
   }
 }
 

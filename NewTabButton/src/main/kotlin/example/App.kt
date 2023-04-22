@@ -129,11 +129,11 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
 
 private class TabLayout : LayoutManager, Serializable {
   override fun addLayoutComponent(name: String, comp: Component) {
-    /* not needed */
+    // not needed
   }
 
   override fun removeLayoutComponent(comp: Component) {
-    /* not needed */
+    // not needed
   }
 
   override fun preferredLayoutSize(parent: Container): Dimension {

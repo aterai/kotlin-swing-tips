@@ -274,7 +274,7 @@ private class TabDragSourceListener : DragSourceListener {
   }
 
   override fun dragOver(e: DragSourceDragEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun dragDropEnd(e: DragSourceDropEvent) {
@@ -305,7 +305,7 @@ private class TabDragSourceListener : DragSourceListener {
   }
 
   override fun dropActionChanged(e: DragSourceDragEvent) {
-    /* not needed */
+    // not needed
   }
 }
 
@@ -355,7 +355,7 @@ private class TabDropTargetListener : DropTargetListener {
   }
 
   override fun dropActionChanged(e: DropTargetDragEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun dragOver(e: DropTargetDragEvent) {

@@ -234,7 +234,7 @@ class ShapeButton(private val shape: Shape) : JButton() {
 
 class DummySizeIcon(private val shape: Shape) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-    /* Empty icon */
+    // Empty icon
   }
 
   override fun getIconWidth() = shape.bounds.width

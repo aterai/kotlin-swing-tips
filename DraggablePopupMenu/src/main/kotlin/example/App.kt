@@ -132,11 +132,11 @@ private class MenuToggleButton(text: String = "", icon: Icon? = null) : JToggleB
     this.popup = pop
     val pml = object : PopupMenuListener {
       override fun popupMenuCanceled(e: PopupMenuEvent) {
-        /* not needed */
+        // not needed
       }
 
       override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-        /* not needed */
+        // not needed
       }
 
       override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {

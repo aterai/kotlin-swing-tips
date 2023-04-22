@@ -5,11 +5,11 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 
 class SearchBarLayout : LayoutManager {
   override fun addLayoutComponent(name: String, comp: Component) {
-    /* not needed */
+    // not needed
   }
 
   override fun removeLayoutComponent(comp: Component) {
-    /* not needed */
+    // not needed
   }
 
   override fun preferredLayoutSize(parent: Container): Dimension? = parent.preferredSize

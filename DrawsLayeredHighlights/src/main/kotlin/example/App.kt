@@ -51,7 +51,7 @@ fun makeUI(): Component {
     }
 
     override fun changedUpdate(e: DocumentEvent) {
-      /* not needed */
+      // not needed
     }
   }
   field.document.addDocumentListener(dl)

@@ -35,11 +35,11 @@ private fun makeComboBox(isEnterSelectable: Boolean): JComboBox<String> {
     }
 
     override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
-      /* not needed */
+      // not needed
     }
 
     override fun popupMenuCanceled(e: PopupMenuEvent) {
-      /* not needed */
+      // not needed
     }
   }
   combo.addPopupMenuListener(pml)

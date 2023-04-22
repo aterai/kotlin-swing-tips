@@ -124,11 +124,11 @@ private class PressAndHoldButton(icon: Icon, val popupMenu: JPopupMenu?) : JButt
     }
 
     override fun mouseEntered(e: MouseEvent) {
-      /* not needed */
+      // not needed
     }
 
     override fun mouseClicked(e: MouseEvent) {
-      /* not needed */
+      // not needed
     }
   }
 

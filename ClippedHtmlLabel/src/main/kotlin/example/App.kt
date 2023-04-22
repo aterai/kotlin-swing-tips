@@ -198,19 +198,19 @@ private open class UrlRenderer : DefaultTableCellRenderer(), MouseListener, Mous
   }
 
   override fun mouseDragged(e: MouseEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun mouseEntered(e: MouseEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun mousePressed(e: MouseEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun mouseReleased(e: MouseEvent) {
-    /* not needed */
+    // not needed
   }
 
   companion object {

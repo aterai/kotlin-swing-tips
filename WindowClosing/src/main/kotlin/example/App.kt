@@ -75,7 +75,7 @@ private class SaveHandler(
   }
 
   override fun changedUpdate(e: DocumentEvent) {
-    /* not needed */
+    // not needed
   }
 
   private fun maybeExit() {

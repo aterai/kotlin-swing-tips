@@ -85,7 +85,7 @@ private class WindowPreferencesHandler : WindowAdapter(), ComponentListener {
   }
 
   override fun componentHidden(e: ComponentEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun componentMoved(e: ComponentEvent) {
@@ -107,7 +107,7 @@ private class WindowPreferencesHandler : WindowAdapter(), ComponentListener {
   }
 
   override fun componentShown(e: ComponentEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun windowClosing(e: WindowEvent) {

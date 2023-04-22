@@ -15,7 +15,7 @@ private val TEXTURE = TextureUtils.createCheckerTexture(6, Color(200, 150, 100, 
 fun makeUI(): Component {
   val icon = object : Icon {
     override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-      /* Empty icon */
+      // Empty icon
     }
 
     override fun getIconWidth() = 15

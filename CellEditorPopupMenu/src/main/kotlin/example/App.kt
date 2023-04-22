@@ -63,11 +63,11 @@ private class TextComponentPopupMenu(tc: JTextComponent) : JPopupMenu() {
       }
 
       override fun ancestorMoved(e: AncestorEvent) {
-        /* not needed */
+        // not needed
       }
 
       override fun ancestorRemoved(e: AncestorEvent) {
-        /* not needed */
+        // not needed
       }
     })
     tc.document.addUndoableEditListener(manager)
@@ -80,7 +80,7 @@ private class TextComponentPopupMenu(tc: JTextComponent) : JPopupMenu() {
 
     val pml = object : PopupMenuListener {
       override fun popupMenuCanceled(e: PopupMenuEvent) {
-        /* not needed */
+        // not needed
       }
 
       override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {

@@ -71,7 +71,7 @@ private class WatermarkPasswordField : JPasswordField(), FocusListener, Document
   }
 
   override fun changedUpdate(e: DocumentEvent) {
-    /* not needed */
+    // not needed
   }
 
   private fun update() {

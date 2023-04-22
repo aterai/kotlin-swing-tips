@@ -22,7 +22,7 @@ fun makeUI(): Component {
   val table = JTable(model)
   table.rowSorter = object : TableRowSorter<TableModel>(model) {
     override fun toggleSortOrder(column: Int) {
-      /* Disable header click sorting */
+      // Disable header click sorting
     }
   }
   table.rowSorter.sortKeys = listOf(RowSorter.SortKey(1, SortOrder.DESCENDING))

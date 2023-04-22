@@ -50,7 +50,7 @@ private fun makeList(): JList<Color> {
   val map = list.actionMap
   val dummy = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      /* Dummy action */
+      // Dummy action
     }
   }
   map.put(TransferHandler.getCutAction().getValue(Action.NAME), dummy)

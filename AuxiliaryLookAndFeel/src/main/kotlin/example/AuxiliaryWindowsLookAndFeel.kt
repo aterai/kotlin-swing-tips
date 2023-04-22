@@ -16,7 +16,7 @@ class AuxiliaryWindowsLookAndFeel : LookAndFeel() {
   override fun getDefaults(): UIDefaults {
     val table = object : UIDefaults() {
       override fun getUIError(msg: String) {
-        /* not needed */
+        // not needed
       }
     }
     val uiDefaults = arrayOf<Any>("ComboBoxUI", "example.AuxiliaryWindowsComboBoxUI")

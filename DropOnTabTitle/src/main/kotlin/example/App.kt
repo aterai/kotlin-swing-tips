@@ -68,15 +68,15 @@ private class DnDList<E>(
   }
 
   override fun dragOver(e: DragSourceDragEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun dragDropEnd(e: DragSourceDropEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun dropActionChanged(e: DragSourceDragEvent) {
-    /* not needed */
+    // not needed
   }
 
   // Interface: Transferable

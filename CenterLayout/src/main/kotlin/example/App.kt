@@ -29,11 +29,11 @@ fun makeUI(): Component {
 
 private class CenterLayout : LayoutManager {
   override fun addLayoutComponent(name: String, comp: Component) {
-    /* not needed */
+    // not needed
   }
 
   override fun removeLayoutComponent(comp: Component) {
-    /* not needed */
+    // not needed
   }
 
   override fun preferredLayoutSize(container: Container) = container.getComponent(0)?.let {

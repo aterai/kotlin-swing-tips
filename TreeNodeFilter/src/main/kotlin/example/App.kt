@@ -26,7 +26,7 @@ fun makeUI(): Component {
     }
 
     override fun changedUpdate(e: DocumentEvent) {
-      /* not needed */
+      // not needed
     }
   }
   field.document.addDocumentListener(dl)
@@ -167,15 +167,15 @@ private class FilterableStatusUpdateListener : TreeModelListener {
   }
 
   override fun treeNodesInserted(e: TreeModelEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun treeNodesRemoved(e: TreeModelEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun treeStructureChanged(e: TreeModelEvent) {
-    /* not needed */
+    // not needed
   }
 }
 

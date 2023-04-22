@@ -84,11 +84,11 @@ private class SelectItemMenuListener : PopupMenuListener {
   }
 
   override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun popupMenuCanceled(e: PopupMenuEvent) {
-    /* not needed */
+    // not needed
   }
 }
 

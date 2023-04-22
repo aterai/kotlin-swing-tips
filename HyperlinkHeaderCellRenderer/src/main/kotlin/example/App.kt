@@ -147,19 +147,19 @@ private class HyperlinkHeaderCellRenderer : DefaultTableCellRenderer(), MouseInp
   }
 
   override fun mouseDragged(e: MouseEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun mouseEntered(e: MouseEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun mousePressed(e: MouseEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun mouseReleased(e: MouseEvent) {
-    /* not needed */
+    // not needed
   }
 }
 

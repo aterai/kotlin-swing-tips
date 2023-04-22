@@ -241,11 +241,11 @@ private class TableDragSourceListener : DragSourceListener {
   }
 
   override fun dragOver(e: DragSourceDragEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun dropActionChanged(e: DragSourceDragEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun dragDropEnd(e: DragSourceDropEvent) {

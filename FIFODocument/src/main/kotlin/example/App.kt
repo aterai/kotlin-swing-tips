@@ -69,11 +69,11 @@ private class FifoDocumentListener(private val textComponent: JTextComponent) : 
   }
 
   override fun removeUpdate(e: DocumentEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun changedUpdate(e: DocumentEvent) {
-    /* not needed */
+    // not needed
   }
 
   companion object {

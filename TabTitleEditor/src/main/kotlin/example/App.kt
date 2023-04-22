@@ -108,7 +108,7 @@ private class TabTitleEditListener(
   }
 
   override fun changedUpdate(e: DocumentEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun mouseClicked(e: MouseEvent) {

@@ -300,15 +300,15 @@ private class CheckBoxStatusUpdateListener : TreeModelListener {
   }
 
   override fun treeNodesInserted(e: TreeModelEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun treeNodesRemoved(e: TreeModelEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun treeStructureChanged(e: TreeModelEvent) {
-    /* not needed */
+    // not needed
   }
 }
 

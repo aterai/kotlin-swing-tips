@@ -86,7 +86,7 @@ private fun makeTitledPanel(title: String, c: Component): Component {
 
 private class H32Icon : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-    /* Empty icon */
+    // Empty icon
   }
 
   override fun getIconWidth() = 0

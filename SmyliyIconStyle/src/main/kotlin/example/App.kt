@@ -17,7 +17,7 @@ fun makeUI(): Component {
 
   val dl = object : DocumentListener {
     override fun changedUpdate(e: DocumentEvent) {
-      /* not needed */
+      // not needed
     }
 
     override fun insertUpdate(e: DocumentEvent) {

@@ -100,7 +100,7 @@ private class WordHighlightListener : MouseAdapter(), CaretListener, KeyListener
   }
 
   override fun keyTyped(e: KeyEvent) {
-    /* empty */
+    // empty
   }
 
   private fun fire(c: Any) {

@@ -60,7 +60,7 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
         }
 
         override fun popupMenuCanceled(e: PopupMenuEvent) {
-          /* not needed */
+          // not needed
         }
       }
     }

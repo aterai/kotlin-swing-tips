@@ -244,7 +244,7 @@ private class HeaderMouseListener : MouseAdapter() {
 
 private class EmptyIcon(private val size: Dimension) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-    /* Empty icon */
+    // Empty icon
   }
 
   override fun getIconWidth() = size.width

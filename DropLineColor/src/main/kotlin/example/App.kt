@@ -49,7 +49,7 @@ private fun makeListPanel(): Component {
   val map = list.actionMap
   val dummy = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      /* Dummy action */
+      // Dummy action
     }
   }
   map.put(TransferHandler.getCutAction().getValue(Action.NAME), dummy)
@@ -103,7 +103,7 @@ private fun makeTablePanel(): Component {
   val map = table.actionMap
   val dummy = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      /* Dummy action */
+      // Dummy action
     }
   }
   map.put(TransferHandler.getCutAction().getValue(Action.NAME), dummy)
@@ -131,7 +131,7 @@ private fun makeTree(handler: TransferHandler): JTree {
   // Disable node Cut action
   val dummy = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      /* Dummy action */
+      // Dummy action
     }
   }
   tree.actionMap.put(TransferHandler.getCutAction().getValue(Action.NAME), dummy)

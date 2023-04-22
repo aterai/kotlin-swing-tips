@@ -200,7 +200,7 @@ private object TreeUtils {
       tree.expandRow(row++)
     }
   }
-} /* Singleton */
+}
 
 fun main() {
   EventQueue.invokeLater {

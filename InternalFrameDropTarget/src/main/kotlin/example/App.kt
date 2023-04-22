@@ -69,7 +69,7 @@ private fun makeDragAndDropTable(handler: TransferHandler): JTable {
   val am = table.actionMap
   val dummy = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      /* Dummy action */
+      // Dummy action
     }
   }
   am.put(TransferHandler.getCutAction().getValue(Action.NAME), dummy)

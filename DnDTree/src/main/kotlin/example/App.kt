@@ -91,15 +91,15 @@ private class DnDTree : JTree() {
 
   private inner class NodeDropTargetListener : DropTargetListener {
     override fun dropActionChanged(dtde: DropTargetDragEvent) {
-      /* not needed */
+      // not needed
     }
 
     override fun dragEnter(dtde: DropTargetDragEvent) {
-      /* not needed */
+      // not needed
     }
 
     override fun dragExit(dte: DropTargetEvent) {
-      /* not needed */
+      // not needed
     }
 
     override fun dragOver(e: DropTargetDragEvent) {
@@ -233,11 +233,11 @@ private class NodeDragSourceListener : DragSourceListener {
   }
 
   override fun dragOver(e: DragSourceDragEvent) {
-    /* not needed */
+    // not needed
   }
 
   override fun dropActionChanged(e: DragSourceDragEvent) {
-    /* not needed */
+    // not needed
   }
 }
 

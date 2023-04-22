@@ -55,7 +55,7 @@ private fun makeDragAndDropTable(handler: TableRowTransferHandler): JTable {
   val am = table.actionMap
   val dummy = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      /* do nothing */
+      // do nothing
     }
   }
   am.put(TransferHandler.getCutAction().getValue(Action.NAME), dummy)

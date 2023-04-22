@@ -97,7 +97,7 @@ private class LineNumberView(private val textArea: JTextArea) : JComponent() {
       }
 
       override fun changedUpdate(e: DocumentEvent) {
-        /* not needed */
+        // not needed
       }
     }
     textArea.document.addDocumentListener(docListener)

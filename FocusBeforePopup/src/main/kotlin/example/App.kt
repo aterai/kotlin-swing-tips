@@ -75,11 +75,11 @@ private fun makePopupMenu(log: JTextArea): JPopupMenu {
   popup1.add(pasteAction)
   val pml1 = object : PopupMenuListener {
     override fun popupMenuCanceled(e: PopupMenuEvent) {
-      /* not needed */
+      // not needed
     }
 
     override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
-      /* not needed */
+      // not needed
     }
 
     override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
