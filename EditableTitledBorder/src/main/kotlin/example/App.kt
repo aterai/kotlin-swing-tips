@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.awt.event.MouseListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.AbstractBorder
 import javax.swing.border.Border
@@ -51,23 +52,22 @@ private class EditableTitledBorder(
   font: Font?,
   var comp: Component
 ) : TitledBorder(border, title, justification, pos, font) {
-  private val glassPane = EditorGlassPane()
-  private val editorTextField = JTextField()
+  private val editor = JTextField()
   private val renderer = JLabel()
   private val rect = Rectangle()
   private val startEditing = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       (comp as? JComponent)?.rootPane?.glassPane = glassPane
       glassPane.removeAll()
-      glassPane.add(editorTextField)
+      glassPane.add(editor)
       glassPane.isVisible = true
       val p = SwingUtilities.convertPoint(comp, rect.location, glassPane)
       rect.location = p
       rect.grow(2, 2)
-      editorTextField.bounds = rect
-      editorTextField.text = getTitle()
-      editorTextField.selectAll()
-      editorTextField.requestFocusInWindow()
+      editor.bounds = rect
+      editor.text = getTitle()
+      editor.selectAll()
+      editor.requestFocusInWindow()
     }
   }
   private val cancelEditing = object : AbstractAction() {
@@ -77,11 +77,35 @@ private class EditableTitledBorder(
   }
   private val renameTitle = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      val str = editorTextField.text.trim()
+      val str = editor.text.trim()
       if (str.isNotEmpty()) {
         setTitle(str)
       }
       glassPane.isVisible = false
+    }
+  }
+  private val glassPane: Container = object : JComponent() {
+    private var listener: MouseListener? = null
+    override fun updateUI() {
+      super.updateUI()
+      focusTraversalPolicy = object : DefaultFocusTraversalPolicy() {
+        public override fun accept(c: Component) = c == editor
+      }
+      listener = object : MouseAdapter() {
+        override fun mouseClicked(e: MouseEvent) {
+          if (!editor.bounds.contains(e.point)) {
+            renameTitle.actionPerformed(ActionEvent(e.component, ActionEvent.ACTION_PERFORMED, ""))
+          }
+        }
+      }
+      addMouseListener(listener)
+      isOpaque = false
+    }
+
+    override fun setVisible(flag: Boolean) {
+      super.setVisible(flag)
+      isFocusTraversalPolicyProvider = flag
+      isFocusCycleRoot = flag
     }
   }
 
@@ -98,10 +122,10 @@ private class EditableTitledBorder(
         }
       }
     })
-    val im = editorTextField.getInputMap(JComponent.WHEN_FOCUSED)
+    val im = editor.getInputMap(JComponent.WHEN_FOCUSED)
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "rename-title")
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancel-editing")
-    val am = editorTextField.actionMap
+    val am = editor.actionMap
     am.put("rename-title", renameTitle)
     am.put("cancel-editing", cancelEditing)
   }
@@ -203,43 +227,17 @@ private class EditableTitledBorder(
     }
   }
 
-  private inner class EditorGlassPane : JComponent() {
-    init {
-      focusTraversalPolicy = object : DefaultFocusTraversalPolicy() {
-        public override fun accept(c: Component) = c == editorTextField
+  private fun getBorderInsets(border: Border?, c: Component): Insets {
+    var ins = Insets(0, 0, 0, 0)
+    when (border) {
+      null -> ins.set(0, 0, 0, 0)
+      is AbstractBorder -> ins = border.getBorderInsets(c, ins)
+      else -> {
+        val i = border.getBorderInsets(c)
+        ins.set(i.top, i.left, i.bottom, i.right)
       }
-      val ml = object : MouseAdapter() {
-        override fun mouseClicked(e: MouseEvent) {
-          if (!editorTextField.bounds.contains(e.point)) {
-            renameTitle.actionPerformed(ActionEvent(e.component, ActionEvent.ACTION_PERFORMED, ""))
-          }
-        }
-      }
-      addMouseListener(ml)
     }
-
-    override fun isOpaque() = false
-
-    override fun setVisible(flag: Boolean) {
-      super.setVisible(flag)
-      isFocusTraversalPolicyProvider = flag
-      isFocusCycleRoot = flag
-    }
-  }
-
-  companion object {
-    private fun getBorderInsets(border: Border?, c: Component): Insets {
-      var ins = Insets(0, 0, 0, 0)
-      when (border) {
-        null -> ins.set(0, 0, 0, 0)
-        is AbstractBorder -> ins = border.getBorderInsets(c, ins)
-        else -> {
-          val i = border.getBorderInsets(c)
-          ins.set(i.top, i.left, i.bottom, i.right)
-        }
-      }
-      return ins
-    }
+    return ins
   }
 }
 
