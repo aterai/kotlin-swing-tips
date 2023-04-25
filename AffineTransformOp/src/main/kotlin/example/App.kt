@@ -22,23 +22,27 @@ fun makeUI(): Component {
     override fun paintComponent(g: Graphics) {
       g.color = background
       g.fillRect(0, 0, width, height)
-      val w = image.getWidth(this)
-      val h = image.getHeight(this)
       when (mode) {
         Flip.VERTICAL -> {
           val at = AffineTransform.getScaleInstance(1.0, -1.0)
-          at.translate(0.0, -h.toDouble())
+          at.translate(0.0, -image.getHeight(this).toDouble())
           val g2 = g.create() as? Graphics2D ?: return
           g2.drawImage(image, at, this)
           g2.dispose()
         }
         Flip.HORIZONTAL -> {
           val at = AffineTransform.getScaleInstance(-1.0, 1.0)
+          val w = image.getWidth(this)
+          val h = image.getHeight(this)
           at.translate(-w.toDouble(), 0.0)
           val atOp = AffineTransformOp(at, null)
           g.drawImage(atOp.filter(image, null), 0, 0, w, h, this)
         }
-        Flip.NONE -> g.drawImage(image, 0, 0, w, h, this)
+        Flip.NONE -> {
+          val w = image.getWidth(this)
+          val h = image.getHeight(this)
+          g.drawImage(image, 0, 0, w, h, this)
+        }
       }
     }
   }
