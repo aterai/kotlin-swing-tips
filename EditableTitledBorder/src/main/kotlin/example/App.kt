@@ -192,8 +192,14 @@ private class EditableTitledBorder(
           lblR.y += insets.top
         }
       }
-      BELOW_TOP -> lblR.y += insets.top + edge
-      ABOVE_BOTTOM -> lblR.y += c.height - lblR.height - insets.bottom - edge
+      BELOW_TOP -> {
+        val v = insets.top + edge
+        lblR.y += v
+      }
+      ABOVE_BOTTOM -> {
+        val v = insets.bottom + edge
+        lblR.y += c.height - lblR.height - v
+      }
       BOTTOM -> {
         lblR.y += c.height - lblR.height
         insets.bottom = edge + (insets.bottom - lblR.height) / 2
@@ -229,15 +235,11 @@ private class EditableTitledBorder(
 
   private fun getBorderInsets(border: Border?, c: Component): Insets {
     var ins = Insets(0, 0, 0, 0)
-    when (border) {
-      null -> ins.set(0, 0, 0, 0)
-      is AbstractBorder -> ins = border.getBorderInsets(c, ins)
-      else -> {
-        val i = border.getBorderInsets(c)
-        ins.set(i.top, i.left, i.bottom, i.right)
-      }
+    return when (border) {
+      null -> ins
+      is AbstractBorder -> border.getBorderInsets(c, ins)
+      else -> border.getBorderInsets(c)
     }
-    return ins
   }
 }
 
