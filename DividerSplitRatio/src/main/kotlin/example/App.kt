@@ -8,8 +8,11 @@ fun makeUI(): Component {
   val splitPane = JSplitPane(JSplitPane.VERTICAL_SPLIT)
   splitPane.topComponent = JScrollPane(JTextArea())
   splitPane.bottomComponent = JScrollPane(JTree())
+  EventQueue.invokeLater { splitPane.setDividerLocation(.5) }
 
-  val spw = SplitPaneWrapper(splitPane)
+  val spw = SplitPaneWrapper()
+  spw.add(splitPane);
+
   val check = JCheckBox("MAXIMIZED_BOTH: keep the same splitting ratio", true)
   check.addActionListener { spw.setTestFlag(check.isSelected) }
 
@@ -20,21 +23,17 @@ fun makeUI(): Component {
   }
 }
 
-private class SplitPaneWrapper(private val splitPane: JSplitPane) : JPanel(BorderLayout()) {
+private class SplitPaneWrapper() : JPanel(BorderLayout()) {
   private var flag = true
   private var prevState = Frame.NORMAL
-
-  init {
-    add(splitPane)
-    EventQueue.invokeLater { splitPane.setDividerLocation(.5) }
-  }
 
   fun setTestFlag(f: Boolean) {
     flag = f
   }
 
   override fun doLayout() {
-    if (flag) {
+    val splitPane = getComponent(0)
+    if (flag && splitPane is JSplitPane) {
       val size = getOrientedSize(splitPane)
       val proportionalLoc = splitPane.dividerLocation / size.toFloat()
       super.doLayout()
@@ -52,13 +51,11 @@ private class SplitPaneWrapper(private val splitPane: JSplitPane) : JPanel(Borde
     }
   }
 
-  companion object {
-    private fun getOrientedSize(sp: JSplitPane): Int {
-      return if (sp.orientation == JSplitPane.VERTICAL_SPLIT) {
-        sp.height - sp.dividerSize
-      } else {
-        sp.width - sp.dividerSize
-      }
+  private fun getOrientedSize(sp: JSplitPane): Int {
+    return if (sp.orientation == JSplitPane.VERTICAL_SPLIT) {
+      sp.height - sp.dividerSize
+    } else {
+      sp.width - sp.dividerSize
     }
   }
 }
