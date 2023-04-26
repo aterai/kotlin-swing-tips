@@ -41,19 +41,31 @@ private class RotateIcon(icon: Icon, rotate: Int) : Icon {
     icon.paintIcon(null, g, 0, 0)
     g.dispose()
     val numQuadrants = rotate / 90 % 4
+    var tx: Int
+    var ty: Int
     when (numQuadrants) {
       3, -1 -> {
-        trans = AffineTransform.getTranslateInstance(0.0, dim.width.toDouble())
+        tx = 0
+        ty = dim.width
         dim.setSize(icon.iconHeight, icon.iconWidth)
       }
       1, -3 -> {
-        trans = AffineTransform.getTranslateInstance(dim.height.toDouble(), 0.0)
+        tx = dim.height
+        ty = 0
         dim.setSize(icon.iconHeight, icon.iconWidth)
       }
-      2 -> trans = AffineTransform.getTranslateInstance(dim.width.toDouble(), dim.height.toDouble())
-      else -> trans = AffineTransform.getTranslateInstance(0.0, 0.0)
+      2 -> {
+        tx = dim.width
+        ty = dim.height
+      }
+      else -> {
+        tx = 0
+        ty = 0
+      }
     }
-    trans?.quadrantRotate(numQuadrants)
+    trans = AffineTransform.getTranslateInstance(tx.toDouble(), ty.toDouble()).also {
+      it.quadrantRotate(numQuadrants)
+    }
   }
 
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
