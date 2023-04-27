@@ -13,8 +13,10 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.Timer
 
 fun makeUI(): Component {
-  val imageIcon = makeImageIcon("example/test.png", Dimension(240, 180))
-  val label = LabelWithToolBox(imageIcon)
+  val image = makeImageIcon("example/test.png", Dimension(240, 180))
+  val toolBar = makeTranslucientToolBar()
+  val label = LabelWithToolBox(image, toolBar)
+  label.add(toolBar)
   label.border = BorderFactory.createCompoundBorder(
     BorderFactory.createLineBorder(Color(0xDE_DE_DE)),
     BorderFactory.createLineBorder(Color.WHITE, 4)
@@ -25,14 +27,9 @@ fun makeUI(): Component {
   }
 }
 
-private class LabelWithToolBox(image: Icon?) : JLabel(image) {
-  private val animator = Timer(DELAY, null)
-  private var handler: ToolBoxHandler? = null
-  private var isHidden = false
-  private var counter = 0
-  private var yy = 0
-  private val toolBox = object : JToolBar() {
-    @Transient private var listener: MouseListener? = null
+private fun makeTranslucientToolBar(): JToolBar {
+  val toolBar = object : JToolBar() {
+    private var listener: MouseListener? = null
 
     override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
@@ -54,6 +51,21 @@ private class LabelWithToolBox(image: Icon?) : JLabel(image) {
       border = BorderFactory.createEmptyBorder(2, 4, 4, 4)
     }
   }
+  toolBar.add(Box.createGlue())
+  // https://www.deviantart.com/chrfb/art/ecqlipse-2-PNG-59941546
+  toolBar.add(makeToolButton("example/ATTACHMENT_16x16-32.png"))
+  toolBar.add(Box.createHorizontalStrut(2))
+  toolBar.add(makeToolButton("example/RECYCLE BIN - EMPTY_16x16-32.png"))
+  return toolBar
+}
+
+private class LabelWithToolBox(image: Icon?, toolBox: JToolBar) : JLabel(image) {
+  private val delay = 8
+  private val animator = Timer(delay, null)
+  private var handler: ToolBoxHandler? = null
+  private var isHidden = false
+  private var counter = 0
+  private var yy = 0
 
   init {
     animator.addActionListener {
@@ -78,12 +90,6 @@ private class LabelWithToolBox(image: Icon?) : JLabel(image) {
       }
       toolBox.revalidate()
     }
-    toolBox.add(Box.createGlue())
-    // https://www.deviantart.com/chrfb/art/ecqlipse-2-PNG-59941546
-    toolBox.add(makeToolButton("example/ATTACHMENT_16x16-32.png"))
-    toolBox.add(Box.createHorizontalStrut(2))
-    toolBox.add(makeToolButton("example/RECYCLE BIN - EMPTY_16x16-32.png"))
-    add(toolBox)
   }
 
   override fun updateUI() {
@@ -129,35 +135,32 @@ private class LabelWithToolBox(image: Icon?) : JLabel(image) {
       }
     }
   }
+}
 
-  private fun makeToolButton(name: String): JButton {
-    val icon = makeImageIcon(name, Dimension(16, 16))
-    val b = JButton()
-    b.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
-    b.icon = makeRolloverIcon(icon)
-    b.rolloverIcon = icon
-    b.isContentAreaFilled = false
-    b.isFocusPainted = false
-    b.isFocusable = false
-    b.toolTipText = name
-    return b
-  }
+private fun makeToolButton(name: String): JButton {
+  val icon = makeImageIcon(name, Dimension(16, 16))
+  val b = JButton()
+  b.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
+  b.icon = makeRolloverIcon(icon)
+  b.rolloverIcon = icon
+  b.isContentAreaFilled = false
+  b.isFocusPainted = false
+  b.isFocusable = false
+  b.toolTipText = name
+  return b
+}
 
-  companion object {
-    const val DELAY = 8
-    private fun makeRolloverIcon(srcIcon: ImageIcon): ImageIcon {
-      val w = srcIcon.iconWidth
-      val h = srcIcon.iconHeight
-      val img = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
-      val g2 = img.createGraphics()
-      srcIcon.paintIcon(null, g2, 0, 0)
-      val scaleFactors = floatArrayOf(.5f, .5f, .5f, 1f)
-      val offsets = floatArrayOf(0f, 0f, 0f, 0f)
-      val op = RescaleOp(scaleFactors, offsets, g2.renderingHints)
-      g2.dispose()
-      return ImageIcon(op.filter(img, null))
-    }
-  }
+private fun makeRolloverIcon(srcIcon: ImageIcon): ImageIcon {
+  val w = srcIcon.iconWidth
+  val h = srcIcon.iconHeight
+  val img = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+  val g2 = img.createGraphics()
+  srcIcon.paintIcon(null, g2, 0, 0)
+  val scaleFactors = floatArrayOf(.5f, .5f, .5f, 1f)
+  val offsets = floatArrayOf(0f, 0f, 0f, 0f)
+  val op = RescaleOp(scaleFactors, offsets, g2.renderingHints)
+  g2.dispose()
+  return ImageIcon(op.filter(img, null))
 }
 
 private fun makeImageIcon(path: String, d: Dimension): ImageIcon {
