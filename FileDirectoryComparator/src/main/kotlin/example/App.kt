@@ -96,19 +96,28 @@ private class FileIconTableCellRenderer(
   ): Component {
     val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     if (c is JLabel && value is File) {
-      c.horizontalAlignment = SwingConstants.LEFT
-      c.icon = null
       when (table.convertColumnIndexToModel(column)) {
         0 -> {
+          c.horizontalAlignment = SwingConstants.LEFT
           c.icon = fileSystemView.getSystemIcon(value)
           c.text = fileSystemView.getSystemDisplayName(value)
         }
         1 -> {
           c.horizontalAlignment = SwingConstants.RIGHT
+          c.icon = null
           c.text = if (value.isDirectory) "" else value.length().toString()
         }
-        2 -> c.text = value.absolutePath
-        else -> error("Should never happened.")
+        2 -> {
+          c.horizontalAlignment = SwingConstants.LEFT
+          c.icon = null
+          c.text = value.absolutePath
+        }
+        else -> {
+          c.horizontalAlignment = SwingConstants.LEFT
+          c.icon = null
+          c.text = value.absolutePath
+          error("Should never happened.")
+        }
       }
     }
     return c
