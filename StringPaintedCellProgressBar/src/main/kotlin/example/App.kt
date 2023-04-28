@@ -30,12 +30,13 @@ private val table = object : JTable(model) {
             row,
             column
           )
-          current < lengthOfTask -> {
-            progress.value = current * 100 / lengthOfTask
-            progress.isStringPainted = true
-            progress.string = "$current/$lengthOfTask"
-            progress
+
+          current < lengthOfTask -> progress.also {
+            it.value = current * 100 / lengthOfTask
+            it.isStringPainted = true
+            it.string = "$current/$lengthOfTask"
           }
+
           else -> renderer.getTableCellRendererComponent(
             tbl,
             "Done",
