@@ -11,7 +11,7 @@ fun makeUI(): Component {
   EventQueue.invokeLater { splitPane.setDividerLocation(.5) }
 
   val spw = SplitPaneWrapper()
-  spw.add(splitPane);
+  spw.add(splitPane)
 
   val check = JCheckBox("MAXIMIZED_BOTH: keep the same splitting ratio", true)
   check.addActionListener { spw.setTestFlag(check.isSelected) }
@@ -23,7 +23,7 @@ fun makeUI(): Component {
   }
 }
 
-private class SplitPaneWrapper() : JPanel(BorderLayout()) {
+private class SplitPaneWrapper : JPanel(BorderLayout()) {
   private var flag = true
   private var prevState = Frame.NORMAL
 
