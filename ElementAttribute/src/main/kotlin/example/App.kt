@@ -45,8 +45,10 @@ fun makeUI(): Component {
   editor2.addHyperlinkListener { e ->
     (e.source as? JEditorPane)?.also {
       when (e.eventType) {
-        HyperlinkEvent.EventType.ACTIVATED ->
-          JOptionPane.showMessageDialog(it, "You click the link with the URL " + e.url)
+        HyperlinkEvent.EventType.ACTIVATED -> {
+          val msg = "You click the link with the URL " + e.url
+          JOptionPane.showMessageDialog(it, msg)
+        }
         HyperlinkEvent.EventType.ENTERED -> {
           tooltip = it.toolTipText
           it.toolTipText = e.url?.toExternalForm()

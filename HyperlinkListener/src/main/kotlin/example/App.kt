@@ -33,8 +33,10 @@ private fun makeEditorPane(editable: Boolean) = JEditorPane().also {
   it.text = HTML
   it.addHyperlinkListener { e ->
     when (e.eventType) {
-      HyperlinkEvent.EventType.ACTIVATED ->
-        JOptionPane.showMessageDialog(it, "Clicked on the link " + e.url)
+      HyperlinkEvent.EventType.ACTIVATED -> {
+        val msg = "Clicked on the link " + e.url
+        JOptionPane.showMessageDialog(it, msg)
+      }
       HyperlinkEvent.EventType.ENTERED -> {
         tooltip = it.toolTipText
         it.toolTipText = e.url?.toExternalForm()
