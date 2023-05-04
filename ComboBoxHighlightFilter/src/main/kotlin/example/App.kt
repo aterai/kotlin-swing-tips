@@ -148,23 +148,21 @@ private class ComboKeyHandler(private val combo: JComboBox<String>) : KeyAdapter
     val text = textField.text
     shouldHide = false
     when (e.keyCode) {
-      KeyEvent.VK_RIGHT -> for (s in list) {
-        if (s.contains(text)) {
-          textField.text = s
-          return
-        }
+      KeyEvent.VK_RIGHT -> list.first { it.contains(text) }.also {
+        textField.text = it
       }
-      KeyEvent.VK_ENTER -> {
-        if (!list.contains(text)) {
-          list.add(text)
-          list.sort()
-          setSuggestionModel(combo, getSuggestedModel(list, text), text)
-        }
-        shouldHide = true
-      }
+      KeyEvent.VK_ENTER -> enter(text)
       KeyEvent.VK_ESCAPE -> shouldHide = true
-      // else -> {}
     }
+  }
+
+  private fun enter(text: String) {
+    if (!list.contains(text)) {
+      list.add(text)
+      list.sort()
+      setSuggestionModel(combo, getSuggestedModel(list, text), text)
+    }
+    shouldHide = true
   }
 
   private fun setSuggestionModel(cb: JComboBox<String>, m: ComboBoxModel<String>, txt: String) {
