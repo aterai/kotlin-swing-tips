@@ -158,18 +158,19 @@ private class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
       MouseEvent.MOUSE_ENTERED -> isEnter = true
       MouseEvent.MOUSE_EXITED -> isEnter = false
       MouseEvent.MOUSE_RELEASED -> isDragging = false
-      MouseEvent.MOUSE_PRESSED -> {
-        val c = e.component
-        if (isDraggable(splitPane, c)) {
-          val pt = SwingUtilities.convertPoint(c, e.point, splitPane)
-          isDragging = thumb.contains(pt)
-          startPt.location = SwingUtilities.convertPoint(c, e.point, splitPane)
-          dividerLocation = splitPane.dividerLocation
-        }
-      }
-      // else -> {}
+      MouseEvent.MOUSE_PRESSED -> mousePressed(e, splitPane)
     }
     splitPane.repaint()
+  }
+
+  private fun mousePressed(e: MouseEvent, splitPane: JSplitPane) {
+    val c = e.component
+    if (isDraggable(splitPane, c)) {
+      val pt = SwingUtilities.convertPoint(c, e.point, splitPane)
+      isDragging = thumb.contains(pt)
+      startPt.location = SwingUtilities.convertPoint(c, e.point, splitPane)
+      dividerLocation = splitPane.dividerLocation
+    }
   }
 
   override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out JSplitPane>) {
