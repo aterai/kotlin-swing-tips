@@ -147,14 +147,14 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
     TOP_HALF_RECT.setBounds(r.x, r.y, r.width, ht2)
     BOTTOM_HALF_RECT.setBounds(r.x, r.y + ht2, r.width, ht2)
     return when {
-      TOP_HALF_RECT.contains(pt) -> {
+      TOP_HALF_RECT.contains(pt) -> i.also {
         PREV_RECT.bounds = TOP_HALF_RECT
-        if (i > 1) i else 0
-      }
-      BOTTOM_HALF_RECT.contains(pt) -> {
+      }.takeIf { it > 1 } ?: 0
+
+      BOTTOM_HALF_RECT.contains(pt) -> i.also {
         PREV_RECT.bounds = BOTTOM_HALF_RECT
-        i
       }
+
       else -> -1
     }
   }
