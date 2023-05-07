@@ -76,16 +76,16 @@ private class RowDataRenderer : TableCellRenderer {
     hasFocus,
     row,
     column
-  ).also {
-    if (it is JLabel && value is RowData) {
-      it.horizontalAlignment = SwingConstants.LEFT
-      when (table.convertColumnIndexToModel(column)) {
-        0 -> it.text = getGroupText(value, row, table, column)
-        1 -> it.text = value.name
-        2 -> {
-          it.horizontalAlignment = SwingConstants.RIGHT
-          it.text = value.count.toString()
+  ).also { c ->
+    if (c is JLabel && value is RowData) {
+      c.horizontalAlignment = SwingConstants.LEFT
+      c.text = when (table.convertColumnIndexToModel(column)) {
+        0 -> getGroupText(value, row, table, column)
+        1 -> value.name
+        2 -> value.count.toString().also {
+          c.horizontalAlignment = SwingConstants.RIGHT
         }
+        else -> null
       }
     }
   }
