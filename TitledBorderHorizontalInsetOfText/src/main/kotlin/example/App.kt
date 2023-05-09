@@ -170,8 +170,14 @@ private class TitledBorder2(title: String?) : TitledBorder(title) {
           lr.y += ins.top
         }
       }
-      BELOW_TOP -> lr.y += ins.top + edge
-      ABOVE_BOTTOM -> lr.y += height - lr.height - ins.bottom - edge
+      BELOW_TOP -> {
+        val a = ins.top + edge
+        lr.y += a
+      }
+      ABOVE_BOTTOM -> {
+        val a = ins.bottom + edge
+        lr.y += height - lr.height - a
+      }
       BOTTOM -> {
         lr.y += height - lr.height
         ins.bottom = edge + (ins.bottom - lr.height) / 2
