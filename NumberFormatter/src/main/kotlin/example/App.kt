@@ -22,7 +22,7 @@ fun makeUI(): Component {
   return JPanel(GridLayout(3, 1)).also {
     it.add(makeTitledPanel("Default", JSpinner(makeSpinnerNumberModel())))
     it.add(makeTitledPanel("NumberFormatter#setAllowsInvalid(false)", spinner))
-    it.add(makeTitledPanel("BackgroundColor", WarningSpinner(makeSpinnerNumberModel())))
+    it.add(makeTitledPanel("BackgroundColor", makeWarningSpinner(makeSpinnerNumberModel())))
     it.border = BorderFactory.createEmptyBorder(10, 5, 10, 5)
     it.preferredSize = Dimension(320, 240)
   }
@@ -42,59 +42,57 @@ private fun makeTitledPanel(title: String, cmp: Component): Component {
   return p
 }
 
-private class WarningSpinner(model: SpinnerNumberModel) : JSpinner(model) {
-  init {
-    (editor as? DefaultEditor)?.also {
-      val ftf = it.textField
-      ftf.formatterFactory = makeFormatterFactory(model)
-      val dl = object : DocumentListener {
-        private val errorBackground = Color(0xFF_C8_C8)
-        override fun changedUpdate(e: DocumentEvent) {
-          updateEditValid()
-        }
+private fun makeWarningSpinner(model: SpinnerNumberModel): JSpinner {
+  val spinner = JSpinner(model)
+  (spinner.editor as? DefaultEditor)?.also {
+    val ftf = it.textField
+    ftf.formatterFactory = makeFormatterFactory(model)
+    val dl = object : DocumentListener {
+      private val errorBackground = Color(0xFF_C8_C8)
+      override fun changedUpdate(e: DocumentEvent) {
+        updateEditValid()
+      }
 
-        override fun insertUpdate(e: DocumentEvent) {
-          updateEditValid()
-        }
+      override fun insertUpdate(e: DocumentEvent) {
+        updateEditValid()
+      }
 
-        override fun removeUpdate(e: DocumentEvent) {
-          updateEditValid()
-        }
+      override fun removeUpdate(e: DocumentEvent) {
+        updateEditValid()
+      }
 
-        private fun updateEditValid() {
-          EventQueue.invokeLater {
-            ftf.background = if (ftf.isEditValid) Color.WHITE else errorBackground
-          }
+      private fun updateEditValid() {
+        EventQueue.invokeLater {
+          ftf.background = if (ftf.isEditValid) Color.WHITE else errorBackground
         }
       }
-      ftf.document.addDocumentListener(dl)
     }
+    ftf.document.addDocumentListener(dl)
   }
+  return spinner
+}
 
-  companion object {
-    private fun makeFormatterFactory(m: SpinnerNumberModel): DefaultFormatterFactory {
-      val format = DecimalFormat("####0")
-      val editFormatter = object : NumberFormatter(format) {
-        @Throws(ParseException::class)
-        override fun stringToValue(text: String): Any {
-          runCatching {
-            text.toLong()
-          }
-          val lv = format.parse(text)
-          if (lv is Long) {
-            if (lv !in m.minimum..m.maximum) {
-              throw ParseException("out of bounds", 0)
-            }
-            return lv
-          }
-          throw ParseException("not Long", 0)
-        }
+private fun makeFormatterFactory(m: SpinnerNumberModel): DefaultFormatterFactory {
+  val format = DecimalFormat("####0")
+  val editFormatter = object : NumberFormatter(format) {
+    @Throws(ParseException::class)
+    override fun stringToValue(text: String): Any {
+      runCatching {
+        text.toLong()
       }
-      editFormatter.valueClass = Long::class.java
-      val displayFormatter = NumberFormatter(format)
-      return DefaultFormatterFactory(displayFormatter, displayFormatter, editFormatter)
+      val lv = format.parse(text)
+      if (lv is Long) {
+        if (lv !in m.minimum..m.maximum) {
+          throw ParseException("out of bounds", 0)
+        }
+        return lv
+      }
+      throw ParseException("not Long", 0)
     }
   }
+  editFormatter.valueClass = Long::class.java
+  val displayFormatter = NumberFormatter(format)
+  return DefaultFormatterFactory(displayFormatter, displayFormatter, editFormatter)
 }
 
 fun main() {
