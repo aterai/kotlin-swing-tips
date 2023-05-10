@@ -51,7 +51,10 @@ private class ImagePreview(fc: JFileChooser) : JComponent(), PropertyChangeListe
         file = e.newValue as? File
         true
       }
-      else -> false
+      else -> {
+        file = null
+        false
+      }
     }
     if (update) {
       thumbnail = null
