@@ -106,9 +106,18 @@ private class RowHeaderList<E>(
       renderer.font = header.font
       renderer.text = value?.toString() ?: ""
       when {
-        index == pressedRowIndex -> renderer.background = Color.GRAY
-        index == rollOverRowIndex -> renderer.background = Color.WHITE
-        isSelected -> renderer.background = Color.GRAY.brighter()
+        index == pressedRowIndex -> {
+          renderer.foreground = Color.WHITE
+          renderer.background = Color.GRAY
+        }
+        index == rollOverRowIndex -> {
+          renderer.foreground = Color.BLACK
+          renderer.background = Color.WHITE
+        }
+        isSelected -> {
+          renderer.foreground = header.foreground.brighter()
+          renderer.background = Color.GRAY.brighter()
+        }
         else -> {
           renderer.foreground = header.foreground
           renderer.background = header.background
