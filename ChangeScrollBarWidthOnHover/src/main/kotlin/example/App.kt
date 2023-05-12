@@ -105,13 +105,14 @@ private class HoverLayer : LayerUI<JPanel>() {
   }
 
   override fun processMouseEvent(e: MouseEvent, l: JLayer<out JPanel>) {
-    if (e.component is JScrollBar) {
+    val c = e.component
+    if (c is JScrollBar) {
       when (e.id) {
         MouseEvent.MOUSE_ENTERED -> expandStart(isDragging)
         MouseEvent.MOUSE_EXITED -> collapseStart(isDragging)
-        MouseEvent.MOUSE_RELEASED -> {
+        MouseEvent.MOUSE_RELEASED -> c.bounds.contains(e.point).also {
           isDragging = false
-          collapseStart(!e.component.bounds.contains(e.point))
+          collapseStart(!it)
         }
       }
       l.view.repaint()
@@ -215,12 +216,15 @@ private class ScrollBarOnHoverLayerUI : LayerUI<JScrollPane>() {
   override fun processMouseEvent(e: MouseEvent, l: JLayer<out JScrollPane>) {
     val c = e.component as? JScrollBar ?: return
     when (e.id) {
-      MouseEvent.MOUSE_ENTERED ->
-        c.preferredSize = Dimension(TranslucentScrollBarUI.MAX_WIDTH, 0)
+      MouseEvent.MOUSE_ENTERED -> {
+        val max = TranslucentScrollBarUI.MAX_WIDTH
+        c.preferredSize = Dimension(max, 0)
+      }
       MouseEvent.MOUSE_EXITED -> {
         timer.removeActionListener(listener)
         listener = ActionListener {
-          c.preferredSize = Dimension(TranslucentScrollBarUI.MIN_WIDTH, 0)
+          val min = TranslucentScrollBarUI.MIN_WIDTH
+          c.preferredSize = Dimension(min, 0)
           l.view.revalidate()
           l.view.repaint()
         }
