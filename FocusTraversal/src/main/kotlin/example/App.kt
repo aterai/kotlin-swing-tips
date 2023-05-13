@@ -96,7 +96,7 @@ private fun debugString(label: String, c: Container) = """
     isFocusCycleRoot: ${c.isFocusCycleRoot}
     isFocusTraversalPolicySet: ${c.isFocusTraversalPolicySet}
     isFocusTraversalPolicyProvider: ${c.isFocusTraversalPolicyProvider}
-  """.trimIndent()
+""".trimIndent()
 
 private class CustomFocusTraversalPolicy(
   private val order: List<Component>
