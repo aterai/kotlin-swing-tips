@@ -56,7 +56,6 @@ fun makeUI(): Component {
   }
 }
 
-
 private class TextAreaCellRenderer : TableCellRenderer {
   private val textArea = JTextArea()
 
@@ -118,7 +117,6 @@ private class RowHeaderPanel : JPanel(BorderLayout()) {
 
   override fun isOpaque() = true
 }
-
 
 private class RowHeaderRenderer : TableCellRenderer {
   private val renderer = RowHeaderPanel()
