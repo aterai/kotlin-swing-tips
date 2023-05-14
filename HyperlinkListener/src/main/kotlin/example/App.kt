@@ -41,7 +41,10 @@ private fun makeEditorPane(editable: Boolean) = JEditorPane().also {
         tooltip = it.toolTipText
         it.toolTipText = e.url?.toExternalForm()
       }
-      HyperlinkEvent.EventType.EXITED -> it.toolTipText = tooltip
+      HyperlinkEvent.EventType.EXITED -> {
+        it.toolTipText = tooltip
+        tooltip = null
+      }
     }
   }
 
