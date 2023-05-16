@@ -74,21 +74,17 @@ private fun initOpenButton() {
     fileChooser.selectedFile = File(dirCombo.editor.item.toString())
     val c = dirCombo.rootPane
     textArea.text = when (fileChooser.showOpenDialog(c)) {
-      JFileChooser.CANCEL_OPTION -> "JFileChooser cancelled."
-      JFileChooser.APPROVE_OPTION -> {
-        val file = fileChooser.selectedFile
-        if (file == null || !file.isDirectory) {
-          "Please select directory."
-        } else {
-          val path = file.absolutePath
+      JFileChooser.APPROVE_OPTION -> fileChooser.selectedFile
+        ?.takeIf { it.isDirectory }
+        ?.let {
+          val path = it.absolutePath
           addItem(dirCombo, path, 4)
           statusPanel.repaint()
           path
-        }
-      }
-      else -> {
+        } ?: "Please select directory."
+      JFileChooser.CANCEL_OPTION -> "JFileChooser cancelled."
+      else -> "JFileChooser error.".also {
         UIManager.getLookAndFeel().provideErrorFeedback(c)
-        "JFileChooser error."
       }
     }
   }
