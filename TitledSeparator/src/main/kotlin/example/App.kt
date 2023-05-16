@@ -7,11 +7,11 @@ import javax.swing.border.TitledBorder
 
 fun makeUI(): Component {
   val box = Box.createVerticalBox()
-  box.add(TitledSeparator("TitledBorder", 2, TitledBorder.DEFAULT_POSITION))
+  box.add(TitledSeparator("TitledBorder", TitledBorder.DEFAULT_POSITION))
   box.add(JCheckBox("JCheckBox 0"))
   box.add(JCheckBox("JCheckBox 1"))
   box.add(Box.createVerticalStrut(10))
-  box.add(TitledSeparator("TitledBorder ABOVE TOP", Color(0x64_B4_C8), 2, TitledBorder.ABOVE_TOP))
+  box.add(TitledSeparator("TitledBorder ABOVE TOP", Color(0x64_B4_C8), TitledBorder.ABOVE_TOP))
   box.add(JCheckBox("JCheckBox 2"))
   box.add(JCheckBox("JCheckBox 3"))
   box.add(Box.createVerticalStrut(10))
@@ -30,29 +30,23 @@ fun makeUI(): Component {
 private class TitledSeparator(
   private val title: String,
   private val target: Color?,
-  private val separatorHeight: Int,
   private val titlePosition: Int
 ) : JLabel() {
-  init {
-    updateBorder()
-  }
 
-  constructor(title: String, height: Int, titlePosition: Int) : this(
+  constructor(title: String, titlePosition: Int) : this(
     title,
     null,
-    height,
     titlePosition
   )
 
   private fun updateBorder() {
     val icon = TitledSeparatorIcon()
-    val b = BorderFactory.createTitledBorder(
-      BorderFactory.createMatteBorder(separatorHeight, 0, 0, 0, icon),
+    border = BorderFactory.createTitledBorder(
+      BorderFactory.createMatteBorder(icon.iconHeight, 0, 0, 0, icon),
       title,
       TitledBorder.DEFAULT_JUSTIFICATION,
       titlePosition
     )
-    border = b
   }
 
   override fun getMaximumSize(): Dimension? {
@@ -94,7 +88,7 @@ private class TitledSeparator(
 
     override fun getIconWidth() = 200 // dummy width
 
-    override fun getIconHeight() = separatorHeight
+    override fun getIconHeight() = 2
   }
 }
 
