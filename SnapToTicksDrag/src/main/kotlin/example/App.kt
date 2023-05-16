@@ -95,18 +95,20 @@ private class WindowsSnapToTicksDragSliderUI(slider: JSlider) : WindowsSliderUI(
         val snappedPos = when {
           pos <= trackLeft -> trackLeft
           pos >= trackRight -> trackRight
-          else -> {
-            offset = 0
-            val possibleTickPos = slider.maximum - slider.minimum
-            val hasMinorTick = slider.minorTickSpacing > 0
-            val tickSpacing = if (hasMinorTick) slider.minorTickSpacing else slider.majorTickSpacing
-            val tickPixels = trackLength * tickSpacing / possibleTickPos.toFloat()
-            val px = pos - trackLeft
-            ((px / tickPixels).roundToInt() * tickPixels).roundToInt() + trackLeft
-          }
+          else -> getSnappedPos(trackLength, pos, trackLeft)
         }
         e.translatePoint(snappedPos - pos, 0)
         super.mouseDragged(e)
+      }
+
+      private fun getSnappedPos(trackLength: Int, pos: Int, trackLeft: Int): Int {
+        offset = 0
+        val possibleTickPos = slider.maximum - slider.minimum
+        val hasMinorTick = slider.minorTickSpacing > 0
+        val tickSpacing = if (hasMinorTick) slider.minorTickSpacing else slider.majorTickSpacing
+        val tickPixels = trackLength * tickSpacing / possibleTickPos.toFloat()
+        val px = pos - trackLeft
+        return ((px / tickPixels).roundToInt() * tickPixels).roundToInt() + trackLeft
       }
     }
   }
@@ -129,18 +131,20 @@ private class MetalSnapToTicksDragSliderUI : MetalSliderUI() {
         val snappedPos = when {
           pos <= trackLeft -> trackLeft
           pos >= trackRight -> trackRight
-          else -> {
-            offset = 0
-            val possibleTickPos = slider.maximum - slider.minimum
-            val hasMinorTick = slider.minorTickSpacing > 0
-            val tickSpacing = if (hasMinorTick) slider.minorTickSpacing else slider.majorTickSpacing
-            val tickPixels = trackLength * tickSpacing / possibleTickPos.toFloat()
-            val px = pos - trackLeft
-            ((px / tickPixels).roundToInt() * tickPixels).roundToInt() + trackLeft
-          }
+          else -> getSnappedPos(trackLength, pos, trackLeft)
         }
         e.translatePoint(snappedPos - pos, 0)
         super.mouseDragged(e)
+      }
+
+      private fun getSnappedPos(trackLength: Int, pos: Int, trackLeft: Int): Int {
+        offset = 0
+        val possibleTickPos = slider.maximum - slider.minimum
+        val hasMinorTick = slider.minorTickSpacing > 0
+        val tickSpacing = if (hasMinorTick) slider.minorTickSpacing else slider.majorTickSpacing
+        val tickPixels = trackLength * tickSpacing / possibleTickPos.toFloat()
+        val px = pos - trackLeft
+        return ((px / tickPixels).roundToInt() * tickPixels).roundToInt() + trackLeft
       }
     }
   }
