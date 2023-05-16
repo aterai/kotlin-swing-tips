@@ -81,7 +81,8 @@ private fun initOpenButton() {
           addItem(dirCombo, path, 4)
           statusPanel.repaint()
           path
-        } ?: "Please select directory."
+        }
+        ?: "Please select directory."
       JFileChooser.CANCEL_OPTION -> "JFileChooser cancelled."
       else -> "JFileChooser error.".also {
         UIManager.getLookAndFeel().provideErrorFeedback(c)
