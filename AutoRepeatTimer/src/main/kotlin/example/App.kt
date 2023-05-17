@@ -64,7 +64,7 @@ private class AutoRepeatHandler(
       arrowButton?.also {
         if (!it.model.isPressed && autoRepeatTimer.isRunning) {
           autoRepeatTimer.stop()
-          arrowButton = null
+          // arrowButton = null
         }
       }
     } else if (o is JButton) {
@@ -82,7 +82,7 @@ private class AutoRepeatHandler(
 
   override fun mouseReleased(e: MouseEvent) {
     autoRepeatTimer.stop()
-    arrowButton = null
+    // arrowButton = null
   }
 
   override fun mouseExited(e: MouseEvent) {
