@@ -60,32 +60,20 @@ fun makeUI(): Component {
   }
 }
 
+fun makeComboModel() = arrayOf("11111", "222", "3")
+
 fun makeComboBox(): JComboBox<String> {
-  val c = JComboBox(arrayOf("11111", "222", "3"))
+  val c = JComboBox(makeComboModel())
   c.isEditable = true
   val outsideBorder = BorderFactory.createEmptyBorder(8, 10, 8, 10)
   c.border = BorderFactory.createCompoundBorder(outsideBorder, c.border)
   return c
 }
 
-private class ComboBoxPanel : JPanel(GridBagLayout()) {
-  val comboBox = JComboBox(arrayOf("11111", "222", "3"))
-
-  init {
-    val c = GridBagConstraints()
-    c.weightx = 1.0
-    c.insets = Insets(0, 10, 0, 10)
-    c.fill = GridBagConstraints.HORIZONTAL
-    comboBox.isEditable = true
-    add(comboBox, c)
-    comboBox.selectedIndex = 0
-  }
-
-  override fun isOpaque() = true
-}
-
 private class ComboBoxCellRenderer : TableCellRenderer {
-  private val panel = ComboBoxPanel()
+  private val comboBox = JComboBox(makeComboModel())
+  private val panel = JPanel(GridBagLayout())
+
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -94,19 +82,29 @@ private class ComboBoxCellRenderer : TableCellRenderer {
     row: Int,
     column: Int
   ): Component {
+    val c = GridBagConstraints()
+    c.weightx = 1.0
+    c.insets = Insets(0, 10, 0, 10)
+    c.fill = GridBagConstraints.HORIZONTAL
+    comboBox.isEditable = true
+    panel.removeAll()
+    panel.add(comboBox, c)
+    comboBox.selectedIndex = 0
+    panel.isOpaque = true
     panel.background = if (isSelected) table.selectionBackground else table.background
     value?.also {
-      panel.comboBox.setSelectedItem(it)
+      comboBox.setSelectedItem(it)
     }
     return panel
   }
 }
 
 private class ComboBoxCellEditor : AbstractCellEditor(), TableCellEditor {
-  private val panel = ComboBoxPanel()
+  private val comboBox = JComboBox(makeComboModel())
+  private val panel = JPanel(GridBagLayout())
 
   init {
-    panel.comboBox.addActionListener { fireEditingStopped() }
+    comboBox.addActionListener { fireEditingStopped() }
     val ml = object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
         fireEditingStopped()
@@ -122,12 +120,21 @@ private class ComboBoxCellEditor : AbstractCellEditor(), TableCellEditor {
     row: Int,
     column: Int
   ): Component {
+    val c = GridBagConstraints()
+    c.weightx = 1.0
+    c.insets = Insets(0, 10, 0, 10)
+    c.fill = GridBagConstraints.HORIZONTAL
+    comboBox.isEditable = true
+    panel.removeAll()
+    panel.add(comboBox, c)
+    comboBox.selectedIndex = 0
+    panel.isOpaque = true
     panel.background = table.selectionBackground
-    panel.comboBox.selectedItem = value
+    comboBox.selectedItem = value
     return panel
   }
 
-  override fun getCellEditorValue(): Any? = panel.comboBox.selectedItem
+  override fun getCellEditorValue(): Any? = comboBox.selectedItem
 
   override fun shouldSelectCell(anEvent: EventObject): Boolean {
     if (anEvent is MouseEvent) {
@@ -137,8 +144,8 @@ private class ComboBoxCellEditor : AbstractCellEditor(), TableCellEditor {
   }
 
   override fun stopCellEditing(): Boolean {
-    if (panel.comboBox.isEditable) {
-      panel.comboBox.actionPerformed(ActionEvent(this, 0, ""))
+    if (comboBox.isEditable) {
+      comboBox.actionPerformed(ActionEvent(this, 0, ""))
     }
     fireEditingStopped()
     return true
