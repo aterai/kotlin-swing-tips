@@ -45,13 +45,15 @@ private open class ButtonsPanel : JPanel() {
   val buttons = listOf(JButton("view"), JButton("edit"))
 
   init {
-    EventQueue.invokeLater {
-      for (b in buttons) {
-        b.isFocusable = false
-        b.isRolloverEnabled = false
-        add(b)
-      }
+    for (b in buttons) {
+      b.isFocusable = false
+      b.isRolloverEnabled = false
+      add(b)
     }
+  }
+
+  override final fun add(comp: Component?): Component {
+    return super.add(comp)
   }
 
   override fun updateUI() {
