@@ -21,7 +21,8 @@ private val src = cl.getResource("example/favicon.png")
 private val HTML_TEXT = """
 <html>
   <body>
-    span tag: <span style='background:#88ff88;' title='tooltip: span[@title]'>span span span</span><br />
+    span tag: <span style='background:#88ff88;' title='tooltip: span[@title]'>span span</span>
+    <br />
     <div title='tooltip: div[@title]'>div tag: div div div div</div>
     <div style='padding: 2 24;'><img src='$src' alt='16x16 favicon' />&nbsp;
       <a href='https://ateraimemo.com/' title='Title: JST'>Java Swing Tips</a>
@@ -82,14 +83,20 @@ private class CustomTooltipEditorPane : JEditorPane() {
       override fun hyperlinkUpdate(e: HyperlinkEvent) {
         (e.source as? JEditorPane)?.also { editor ->
           when (e.eventType) {
-            HyperlinkEvent.EventType.ACTIVATED -> JOptionPane.showMessageDialog(editor, e.url)
+            HyperlinkEvent.EventType.ACTIVATED -> {
+              val msg = e.url
+              JOptionPane.showMessageDialog(editor, msg)
+            }
             HyperlinkEvent.EventType.ENTERED -> {
               tooltip = editor.toolTipText
               (e.sourceElement?.attributes?.getAttribute(HTML.Tag.A) as? AttributeSet)?.also {
                 editor.toolTipText = it.getAttribute(HTML.Attribute.TITLE)?.toString()
               }
             }
-            HyperlinkEvent.EventType.EXITED -> editor.toolTipText = tooltip
+            HyperlinkEvent.EventType.EXITED -> {
+              editor.toolTipText = tooltip
+              tooltip = null
+            }
           }
         }
       }
