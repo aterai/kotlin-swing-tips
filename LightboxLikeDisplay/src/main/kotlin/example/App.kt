@@ -106,11 +106,14 @@ private class LightboxGlassPane(private val img: BufferedImage) : JPanel() {
     super.paintComponent(g)
 
     when {
-      currentSize.height < img.height + BW + BW ->
-        currentSize.height += img.height / 16
+      currentSize.height < img.height + BW + BW -> {
+        val dh = img.height / 16
+        currentSize.height += dh
+      }
       currentSize.width < img.width + BW + BW -> {
         currentSize.height = img.height + BW + BW
-        currentSize.width += img.width / 16
+        val dw = img.width / 16
+        currentSize.width += dw
       }
       1f - alpha > 0 -> {
         currentSize.width = img.width + BW + BW
