@@ -52,9 +52,7 @@ private open class ButtonsPanel : JPanel() {
     }
   }
 
-  override final fun add(comp: Component?): Component {
-    return super.add(comp)
-  }
+  final override fun add(comp: Component?) = super.add(comp)
 
   override fun updateUI() {
     super.updateUI()
