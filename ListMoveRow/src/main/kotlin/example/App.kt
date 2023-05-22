@@ -56,7 +56,10 @@ private fun <E> makeDownButton(list: JList<E>, m: DefaultListModel<E>) = JButton
         list.addSelectionInterval(idx, idx)
       }
       // clean
-      pos.indices.reversed().forEach { m.remove(it) }
+      pos.indices.reversed().forEach { m.remove(pos[it]) }
+      // for (i in pos.indices.reversed()) {
+      //   m.remove(pos[i])
+      // }
       val r = list.getCellBounds(index0 - pos.size, index0)
       list.scrollRectToVisible(r)
     }
@@ -91,16 +94,15 @@ private fun makeList(model: DefaultListModel<Color>) = object : JList<Color>(mod
 }
 
 private class ListItemTransferHandler : TransferHandler() {
-  private var source: JList<*>? = null
   private val selectedIndices = mutableListOf<Int>()
   private var addIndex = -1 // Location where items were added
   private var addCount = 0 // Number of items added.
 
   override fun createTransferable(c: JComponent): Transferable {
-    val src = (c as? JList<*>)?.also { s ->
+    val source = (c as? JList<*>)?.also { s ->
       s.selectedIndices.forEach { selectedIndices.add(it) }
     }
-    source = src
+    val selectedValues = source?.selectedValuesList
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(FLAVOR)
 
@@ -108,8 +110,8 @@ private class ListItemTransferHandler : TransferHandler() {
 
       @Throws(UnsupportedFlavorException::class)
       override fun getTransferData(flavor: DataFlavor): Any {
-        return if (isDataFlavorSupported(flavor) && src != null) {
-          src.selectedValuesList
+        return if (isDataFlavorSupported(flavor) && selectedValues != null) {
+          selectedValues
         } else {
           throw UnsupportedFlavorException(flavor)
         }
@@ -137,7 +139,7 @@ private class ListItemTransferHandler : TransferHandler() {
         target.addSelectionInterval(i, i)
       }
     }
-    addCount = if (target == source) values.size else 0
+    addCount = if (info.isDrop) values.size else 0
     return values.isNotEmpty()
   }
 
