@@ -1,6 +1,7 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.geom.AffineTransform
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.AbstractBorder
 import javax.swing.border.Border
@@ -65,9 +66,9 @@ private class VerticalTitledBorder(title: String?) : TitledBorder(title) {
       }
       border.paintBorder(c, g, borderX, borderY, borderW, borderH)
       val g2 = g.create() as? Graphics2D ?: return
-      g2.translate(0, (height + labelW) / 2)
-      g2.rotate(Math.toRadians(-90.0))
-      // or: g2.transform(AffineTransform.getQuadrantRotateInstance(-1))
+      g2.translate(0.0, (height + labelW) / 2.0)
+      g2.transform(AffineTransform.getQuadrantRotateInstance(-1))
+      // or: g2.rotate(-PI / 2.0)
       lbl.setSize(labelW, labelH)
       lbl.paint(g2)
       g2.dispose()
