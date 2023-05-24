@@ -9,6 +9,7 @@ import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.Timer
+import kotlin.math.PI
 
 private val area = JTextArea()
 private val bar = JProgressBar()
@@ -164,7 +165,7 @@ private class AnimeIcon : Icon {
     val r = 4.0
     val s = Ellipse2D.Double(0.0, 0.0, 2.0 * r, 2.0 * r)
     for (i in 0..7) {
-      val at = AffineTransform.getRotateInstance(i * 2 * Math.PI / 8)
+      val at = AffineTransform.getRotateInstance(i * 2 * PI / 8)
       at.concatenate(AffineTransform.getTranslateInstance(r, r))
       list.add(at.createTransformedShape(s))
     }

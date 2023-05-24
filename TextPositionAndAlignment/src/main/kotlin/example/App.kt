@@ -6,6 +6,7 @@ import java.awt.event.ItemListener
 import java.awt.geom.AffineTransform
 import java.awt.geom.Path2D
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -88,7 +89,7 @@ private class StarburstIcon : Icon {
 
   init {
     var agl = 0.0
-    val add = Math.PI / VC
+    val add = PI / VC
     val p = Path2D.Double()
     p.moveTo(R2.toDouble(), 0.0)
     for (i in 0 until VC * 2 - 1) {
@@ -97,7 +98,7 @@ private class StarburstIcon : Icon {
       p.lineTo(r * cos(agl), r * sin(agl))
     }
     p.closePath()
-    val at = AffineTransform.getRotateInstance(-Math.PI / 2.0, R2.toDouble(), 0.0)
+    val at = AffineTransform.getRotateInstance(-PI / 2.0, R2.toDouble(), 0.0)
     star = Path2D.Double(p, at)
   }
 

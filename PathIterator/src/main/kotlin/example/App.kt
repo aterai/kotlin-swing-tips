@@ -6,6 +6,7 @@ import java.awt.geom.Path2D
 import java.awt.geom.PathIterator
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.ChangeListener
+import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -136,7 +137,7 @@ private object SvgUtils {
     val or = r1.coerceAtLeast(r2).toDouble()
     val ir = r1.coerceAtMost(r2).toDouble()
     var agl = 0.0
-    val add = Math.PI / vc
+    val add = PI / vc
     val p: Path2D = Path2D.Double()
     p.moveTo(or, 0.0)
     for (i in 0 until vc * 2 - 1) {
@@ -145,7 +146,7 @@ private object SvgUtils {
       p.lineTo(r * cos(agl), r * sin(agl))
     }
     p.closePath()
-    val at = AffineTransform.getRotateInstance(-Math.PI / 2.0, or, 0.0)
+    val at = AffineTransform.getRotateInstance(-PI / 2.0, or, 0.0)
     return Path2D.Double(p, at)
   }
 }

@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage
 import java.awt.image.ImageObserver
 import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import kotlin.math.PI
 import kotlin.math.atan2
 
 fun makeUI(): Component {
@@ -46,7 +47,7 @@ private class DraggableImageMouseListener(ii: ImageIcon) : MouseAdapter() {
   private val centerPt = Point2D.Double(100.0, 100.0) // center of Image
   private val imageSz: Dimension
   private val image = ii.image
-  private var radian = 45.0 * (Math.PI / 180.0)
+  private var radian = 45.0 / 180.0 * PI // Math.toRadians(45.0)
   private var startRadian = 0.0 // drag start radian
   private var moverHover = false
   private var rotatorHover = false

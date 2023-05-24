@@ -6,6 +6,7 @@ import java.awt.geom.AffineTransform
 import java.awt.geom.GeneralPath
 import java.awt.geom.Path2D
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.sin
@@ -128,7 +129,7 @@ private class StarIcon1 : Icon {
 
   init {
     var agl = 0.0
-    val add = 2.0 * Math.PI / 5.0
+    val add = 2.0 * PI / 5.0
     val p = Path2D.Double()
     p.moveTo(R.toDouble(), 0.0)
     for (i in 0..4) {
@@ -136,7 +137,7 @@ private class StarIcon1 : Icon {
       agl += add + add
     }
     p.closePath()
-    val at = AffineTransform.getRotateInstance(-Math.PI / 2.0, R.toDouble(), 0.0)
+    val at = AffineTransform.getRotateInstance(-PI / 2.0, R.toDouble(), 0.0)
     star = Path2D.Double(p, at)
   }
 
@@ -164,7 +165,7 @@ private class StarIcon2 : Icon {
 
   init {
     var agl = 0.0
-    val add = Math.PI / VC
+    val add = PI / VC
     val p = Path2D.Double()
     p.moveTo(R2.toDouble(), 0.0)
     for (i in 0 until VC * 2 - 1) {
@@ -173,7 +174,7 @@ private class StarIcon2 : Icon {
       p.lineTo(r * cos(agl), r * sin(agl))
     }
     p.closePath()
-    val at = AffineTransform.getRotateInstance(-Math.PI / 2.0, R2.toDouble(), 0.0)
+    val at = AffineTransform.getRotateInstance(-PI / 2.0, R2.toDouble(), 0.0)
     star = Path2D.Double(p, at)
   }
 

@@ -4,6 +4,7 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.geom.Ellipse2D
 import java.awt.geom.FlatteningPathIterator
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -30,7 +31,7 @@ fun convertEllipse2Polygon(e: Ellipse2D): Polygon {
   val y0 = b.y + r2
   val v = 60
   var a = 0.0
-  val d = 2 * Math.PI / v
+  val d = 2 * PI / v
   val polygon = Polygon()
   for (i in 0 until v) {
     polygon.addPoint((r1 * cos(a) + x0).toInt(), (r2 * sin(a) + y0).toInt())

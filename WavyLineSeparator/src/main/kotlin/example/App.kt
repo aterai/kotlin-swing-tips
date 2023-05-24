@@ -2,6 +2,7 @@ package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import kotlin.math.PI
 
 fun makeUI(): Component {
   val box1 = Box.createHorizontalBox()
@@ -76,7 +77,7 @@ private class WavyLineSeparator(orientation: Int = HORIZONTAL) : JSeparator(orie
       g2.paint = sfc
       if (orientation == VERTICAL) {
         g2.translate(x + iconWidth, y)
-        g2.rotate(Math.PI / 2)
+        g2.rotate(PI / 2)
       } else {
         g2.translate(x, y)
       }

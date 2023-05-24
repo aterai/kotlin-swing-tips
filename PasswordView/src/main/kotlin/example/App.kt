@@ -7,6 +7,7 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.basic.BasicPasswordFieldUI
 import javax.swing.text.Element
 import javax.swing.text.PasswordView
+import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -64,7 +65,7 @@ private class StarIcon : Icon {
     val or = r1.coerceAtLeast(r2).toDouble()
     val ir = r1.coerceAtMost(r2).toDouble()
     var agl = 0.0
-    val add = Math.PI / vc
+    val add = PI / vc
     val p = Path2D.Double()
     p.moveTo(or, 0.0)
     for (i in 0 until vc * 2 - 1) {
@@ -73,7 +74,7 @@ private class StarIcon : Icon {
       p.lineTo(r * cos(agl), r * sin(agl))
     }
     p.closePath()
-    val at = AffineTransform.getRotateInstance(-Math.PI / 2.0, or, 0.0)
+    val at = AffineTransform.getRotateInstance(-PI / 2.0, or, 0.0)
     return Path2D.Double(p, at)
   }
 

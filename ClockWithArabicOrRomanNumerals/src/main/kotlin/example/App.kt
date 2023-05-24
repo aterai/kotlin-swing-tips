@@ -14,6 +14,7 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.util.concurrent.ConcurrentHashMap
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import kotlin.math.PI
 
 fun makeUI(): Component {
   val clock = AnalogClock()
@@ -127,16 +128,16 @@ private class AnalogClock : JPanel() {
       } else {
         g2.draw(at.createTransformedShape(minuteMarker))
       }
-      at.rotate(Math.PI / 30.0)
+      at.rotate(PI / 30.0)
     }
 
     // Drawing the clock numbers
     paintClockNumbers(g2, radius, hourMarkerLen)
 
     // Calculate the angle of rotation
-    val secondRot = time.second * Math.PI / 30.0
-    val minuteRot = time.minute * Math.PI / 30.0 + secondRot / 60.0
-    val hourRot = time.hour * Math.PI / 6.0 + minuteRot / 12.0
+    val secondRot = time.second * PI / 30.0
+    val minuteRot = time.minute * PI / 30.0 + secondRot / 60.0
+    val hourRot = time.hour * PI / 6.0 + minuteRot / 12.0
 
     // Drawing the hour hand
     val hourHandLen = radius / 2.0
@@ -177,7 +178,7 @@ private class AnalogClock : JPanel() {
         val ty = radius - hourMarkerLen - r.height + r.centerY * .5
         val t = AffineTransform.getTranslateInstance(-tx, -ty).createTransformedShape(s)
         g2.fill(at.createTransformedShape(t))
-        at.rotate(Math.PI / 6.0)
+        at.rotate(PI / 6.0)
       }
     } else {
       val ptSrc: Point2D = Point2D.Double()
@@ -190,7 +191,7 @@ private class AnalogClock : JPanel() {
         val dx = pt.x - r.centerX
         val dy = pt.y - r.centerY
         g2.fill(AffineTransform.getTranslateInstance(dx, dy).createTransformedShape(s))
-        at.rotate(Math.PI / 6.0)
+        at.rotate(PI / 6.0)
       }
     }
   }

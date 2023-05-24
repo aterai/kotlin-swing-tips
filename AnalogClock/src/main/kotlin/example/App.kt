@@ -9,6 +9,7 @@ import java.awt.geom.Line2D
 import java.time.LocalTime
 import java.time.ZoneId
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import kotlin.math.PI
 
 fun makeUI() = JPanel(BorderLayout()).also {
   it.add(AnalogClock())
@@ -79,13 +80,13 @@ private class AnalogClock : JPanel() {
       } else {
         g2.draw(at.createTransformedShape(minuteMarker))
       }
-      at.rotate(Math.PI / 30.0)
+      at.rotate(PI / 30.0)
     }
 
     // Calculate the angle of rotation
-    val secondRot = time.second * Math.PI / 30.0
-    val minuteRot = time.minute * Math.PI / 30.0 + secondRot / 60.0
-    val hourRot = time.hour * Math.PI / 6.0 + minuteRot / 12.0
+    val secondRot = time.second * PI / 30.0
+    val minuteRot = time.minute * PI / 30.0 + secondRot / 60.0
+    val hourRot = time.hour * PI / 6.0 + minuteRot / 12.0
 
     // Drawing the hour hand
     val hourHandLen = radius / 2.0
