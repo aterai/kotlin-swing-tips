@@ -30,33 +30,34 @@ private fun makeList(handler: TransferHandler): JList<Color> {
     it.addElement(Color.PINK)
     it.addElement(Color.MAGENTA)
   }
-  val list = object : JList<Color>(listModel) {
+  return object : JList<Color>(listModel) {
     override fun updateUI() {
+      selectionBackground = null // Nimbus
       cellRenderer = null
       super.updateUI()
       selectionModel.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
       dropMode = DropMode.INSERT
       dragEnabled = true
-      transferHandler = handler
       val renderer = cellRenderer
       setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-        val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-        c.foreground = value
-        c
+        renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
+          it.foreground = value
+        }
       }
+      transferHandler = handler
     }
   }
-
-  // Disable row Cut, Copy, Paste
-  val map = list.actionMap
-  val dummy = object : AbstractAction() {
-    override fun actionPerformed(e: ActionEvent) { /* Dummy action */ }
-  }
-  map.put(TransferHandler.getCutAction().getValue(Action.NAME), dummy)
-  map.put(TransferHandler.getCopyAction().getValue(Action.NAME), dummy)
-  map.put(TransferHandler.getPasteAction().getValue(Action.NAME), dummy)
-
-  return list
+  // // Disable row Cut, Copy, Paste
+  // val map = list.actionMap
+  // val dummy = object : AbstractAction() {
+  //   override fun actionPerformed(e: ActionEvent) {
+  //     // Dummy action
+  //   }
+  // }
+  // map.put(TransferHandler.getCutAction().getValue(Action.NAME), dummy)
+  // map.put(TransferHandler.getCopyAction().getValue(Action.NAME), dummy)
+  // map.put(TransferHandler.getPasteAction().getValue(Action.NAME), dummy)
+  // return list
 }
 
 private class ListItemTransferHandler : TransferHandler() {
@@ -66,8 +67,10 @@ private class ListItemTransferHandler : TransferHandler() {
   private var addCount = 0 // Number of items added.
 
   override fun createTransferable(c: JComponent): Transferable {
-    val src = c as? JList<*>
-    source = src
+    source = (c as? JList<*>)?.also { s ->
+      s.selectedIndices.forEach { selectedIndices.add(it) }
+    }
+    val selectedValues = source?.selectedValuesList
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(FLAVOR)
 
@@ -75,9 +78,8 @@ private class ListItemTransferHandler : TransferHandler() {
 
       @Throws(UnsupportedFlavorException::class)
       override fun getTransferData(flavor: DataFlavor): Any {
-        return if (isDataFlavorSupported(flavor) && src != null) {
-          src.selectedIndices.forEach { selectedIndices.add(it) }
-          src.selectedValuesList
+        return if (isDataFlavorSupported(flavor) && selectedValues != null) {
+          selectedValues
         } else {
           throw UnsupportedFlavorException(flavor)
         }
@@ -85,36 +87,32 @@ private class ListItemTransferHandler : TransferHandler() {
     }
   }
 
-  override fun canImport(info: TransferSupport) =
-    info.isDrop &&
-      info.isDataFlavorSupported(FLAVOR) &&
-      info.dropLocation is JList.DropLocation
+  override fun canImport(info: TransferSupport) = info.isDataFlavorSupported(FLAVOR)
 
-  override fun getSourceActions(c: JComponent) = MOVE
+  override fun getSourceActions(c: JComponent) = COPY_OR_MOVE
 
   override fun importData(info: TransferSupport): Boolean {
-    val dl = info.dropLocation
-    val target = info.component as? JList<*>
-
-    @Suppress("UNCHECKED_CAST")
-    val listModel = target?.model as? DefaultListModel<Any>
-    if (dl !is JList.DropLocation || listModel == null) {
-      return false
-    }
-    val max = listModel.size
-    var index = dl.index.takeIf { it in 0 until max } ?: max
+    val target = info.component as? JList<*> ?: return false
+    var index = getIndex(info)
     addIndex = index
     val values = runCatching {
       info.transferable.getTransferData(FLAVOR) as? List<*>
     }.getOrNull().orEmpty()
-    for (o in values) {
-      val i = index++
-      listModel.add(i, o)
-      target.addSelectionInterval(i, i)
+
+    @Suppress("UNCHECKED_CAST")
+    (target.model as? DefaultListModel<Any>)?.also {
+      for (o in values) {
+        val i = index++
+        it.add(i, o)
+        target.addSelectionInterval(i, i)
+      }
     }
-    addCount = if (target == source) values.size else 0
+    addCount = if (info.isDrop && target == source) values.size else 0
+    target.requestFocusInWindow()
     return values.isNotEmpty()
   }
+
+  override fun importData(comp: JComponent, t: Transferable) = importData(TransferSupport(comp, t))
 
   override fun exportDone(c: JComponent, data: Transferable, action: Int) {
     cleanup(c, action == MOVE)
@@ -139,6 +137,24 @@ private class ListItemTransferHandler : TransferHandler() {
     selectedIndices.clear()
     addCount = 0
     addIndex = -1
+  }
+
+  private fun getIndex(info: TransferSupport): Int {
+    val target = info.component as? JList<*> ?: return -1
+    var index = if (info.isDrop) { // Mouse Drag & Drop
+      val tdl = info.dropLocation
+      if (tdl is JList.DropLocation) {
+        tdl.index
+      } else {
+        target.selectedIndex
+      }
+    } else { // Keyboard Copy & Paste
+      target.selectedIndex
+    }
+    val max = (target.model as? DefaultListModel<*>)?.size ?: -1
+    index = if (index < 0) max else index
+    index = index.coerceAtMost(max)
+    return index
   }
 
   companion object {

@@ -12,7 +12,6 @@ fun makeUI(): Component {
   p.border = BorderFactory.createTitledBorder("Drag & Drop(Copy, Cut, Paste) between JLists")
   p.add(JScrollPane(makeList(h)))
   p.add(JScrollPane(makeList(h)))
-
   return JPanel(BorderLayout()).also {
     it.add(p)
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
@@ -32,19 +31,20 @@ private fun makeList(handler: TransferHandler): JList<Color> {
   }
   return object : JList<Color>(listModel) {
     override fun updateUI() {
+      selectionBackground = null // Nimbus
       cellRenderer = null
       super.updateUI()
       selectionModel.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
       dropMode = DropMode.INSERT
       dragEnabled = true
-      transferHandler = handler
-      componentPopupMenu = ListPopupMenu(this)
       val renderer = cellRenderer
       setCellRenderer { list, value, index, isSelected, cellHasFocus ->
         renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
           it.foreground = value
         }
       }
+      transferHandler = handler
+      componentPopupMenu = ListPopupMenu(this)
     }
   }
 }
@@ -129,6 +129,7 @@ private class ListItemTransferHandler : TransferHandler() {
       }
     }
     addCount = if (info.isDrop && target == source) values.size else 0
+    target.requestFocusInWindow()
     return values.isNotEmpty()
   }
 
