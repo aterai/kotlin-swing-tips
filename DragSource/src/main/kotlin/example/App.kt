@@ -36,9 +36,8 @@ fun makeUI(): Component {
   label.transferHandler = object : TransferHandler() {
     override fun getSourceActions(c: JComponent) = COPY_OR_MOVE
 
-    override fun createTransferable(c: JComponent): Transferable? {
-      val tmpFile = file
-      return if (tmpFile != null) TempFileTransferable(tmpFile) else null
+    override fun createTransferable(c: JComponent): Transferable? = file?.let {
+      TempFileTransferable(it)
     }
 
     override fun exportDone(c: JComponent, data: Transferable, action: Int) {

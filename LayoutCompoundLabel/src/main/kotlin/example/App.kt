@@ -72,11 +72,9 @@ private class IconTooltipItem(text: String?, icon: Icon?) : JMenuItem(text, icon
       TEXT_RECT,
       iconTextGap
     )
-    val tip = super.getToolTipText(e)
-    return if (tip == null) {
-      null
-    } else {
-      (if (ICON_RECT.contains(e.point)) "Icon: " else "Text: ") + tip
+    return super.getToolTipText(e)?.let {
+      val type = if (ICON_RECT.contains(e.point)) "Icon" else "Text"
+      "$type: $it"
     }
   }
 

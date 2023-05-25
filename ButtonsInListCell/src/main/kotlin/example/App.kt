@@ -69,7 +69,7 @@ private class CellButtonsMouseListener<E>(private val list: JList<E>) : MouseInp
   private fun repaintPrevButton(renderer: ButtonsRenderer<*>, index: Int) {
     renderer.rolloverIndex = -1
     val r = if (prevIndex == index) {
-      if (prevButton != null) list.getCellBounds(prevIndex, prevIndex) else null
+      prevButton?.let { list.getCellBounds(prevIndex, prevIndex) }
     } else {
       list.getCellBounds(index, index)
     }

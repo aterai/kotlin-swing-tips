@@ -137,7 +137,7 @@ private class LabelTransferable(
 
   init {
     val txt = panel?.draggingLabel?.text
-    ss = if (txt != null) StringSelection(txt.trim()) else null
+    ss = txt?.let { StringSelection(it.trim()) }
   }
 
   override fun getTransferDataFlavors() = mutableListOf<DataFlavor>().also {
