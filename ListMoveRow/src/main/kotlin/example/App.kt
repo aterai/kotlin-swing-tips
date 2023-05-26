@@ -27,7 +27,7 @@ private fun <E> makeUpButton(list: JList<E>, m: DefaultListModel<E>) = JButton("
     val pos = list.selectedIndices
     if (pos.isNotEmpty()) {
       val isShiftDown = e.modifiers and ActionEvent.SHIFT_MASK != 0
-      val index0 = if (isShiftDown) 0 else Math.max(0, pos[0] - 1)
+      val index0 = if (isShiftDown) 0 else maxOf(0, pos[0] - 1)
       var idx = index0
       for (i in pos) {
         m.add(idx, m.remove(i))
@@ -47,18 +47,18 @@ private fun <E> makeDownButton(list: JList<E>, m: DefaultListModel<E>) = JButton
     if (pos.isNotEmpty()) {
       val isShiftDown = e.modifiers and ActionEvent.SHIFT_MASK != 0
       val max = m.size
-      var index = if (isShiftDown) max else Math.min(max, pos[pos.size - 1] + 1)
+      var index = if (isShiftDown) max else minOf(max, pos[pos.size - 1] + 1)
       val index0 = index
       // copy
       for (i in pos) {
-        val idx = Math.min(m.size, ++index)
+        val idx = minOf(m.size, ++index)
         m.add(idx, m[i])
         list.addSelectionInterval(idx, idx)
       }
       // clean
-      pos.indices.reversed().forEach { m.remove(pos[it]) }
-      // for (i in pos.indices.reversed()) {
-      //   m.remove(pos[i])
+      pos.reversed().forEach { m.remove(it) }
+      // for (i in pos.reversed()) {
+      //   m.remove(i)
       // }
       val r = list.getCellBounds(index0 - pos.size, index0)
       list.scrollRectToVisible(r)
