@@ -5,6 +5,8 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.geom.Path2D
 import javax.swing.* // ktlint-disable no-wildcard-imports
+import kotlin.math.cos
+import kotlin.math.sin
 
 private const val SIDE_LENGTH = 100.0
 private val cube = listOf(
@@ -101,13 +103,13 @@ private class Vertex(private var dx: Double, private var dy: Double, private var
   }
 
   fun rotateTransformation(kx: Double, ky: Double, kz: Double) {
-    val x0 = dx * Math.cos(ky) - dz * Math.sin(ky)
+    val x0 = dx * cos(ky) - dz * sin(ky)
     val y0 = dy
-    val z0 = dx * Math.sin(ky) + dz * Math.cos(ky)
-    val y1 = y0 * Math.cos(kx) - z0 * Math.sin(kx)
-    val z1 = y0 * Math.sin(kx) + z0 * Math.cos(kx)
-    dx = x0 * Math.cos(kz) - y1 * Math.sin(kz)
-    dy = x0 * Math.sin(kz) + y1 * Math.cos(kz)
+    val z0 = dx * sin(ky) + dz * cos(ky)
+    val y1 = y0 * cos(kx) - z0 * sin(kx)
+    val z1 = y0 * sin(kx) + z0 * cos(kx)
+    dx = x0 * cos(kz) - y1 * sin(kz)
+    dy = x0 * sin(kz) + y1 * cos(kz)
     dz = z1
     projectionTransformation()
   }
