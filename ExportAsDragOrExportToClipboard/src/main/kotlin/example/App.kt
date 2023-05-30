@@ -1,13 +1,12 @@
 package example
 
-import java.awt.*
+import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.datatransfer.Clipboard
 import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
 import java.awt.datatransfer.UnsupportedFlavorException
 import java.awt.event.InputEvent
-import javax.swing.*
-
+import javax.swing.* // ktlint-disable no-wildcard-imports
 
 fun makeUI(): Component {
   val list = makeList(makeModel())
@@ -48,14 +47,14 @@ fun makeUI(): Component {
 }
 
 private fun makeModel() = DefaultListModel<Color>().also {
-    it.addElement(Color.RED)
-    it.addElement(Color.BLUE)
-    it.addElement(Color.GREEN)
-    it.addElement(Color.CYAN)
-    it.addElement(Color.ORANGE)
-    it.addElement(Color.PINK)
-    it.addElement(Color.MAGENTA)
-  }
+  it.addElement(Color.RED)
+  it.addElement(Color.BLUE)
+  it.addElement(Color.GREEN)
+  it.addElement(Color.CYAN)
+  it.addElement(Color.ORANGE)
+  it.addElement(Color.PINK)
+  it.addElement(Color.MAGENTA)
+}
 
 private fun makeList(model: ListModel<Color>): JList<Color> {
   return object : JList<Color>(model) {
