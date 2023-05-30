@@ -51,28 +51,27 @@ fun makeUI(): Component {
   editor.isEditable = false
   editor.addHyperlinkListener { e ->
     when (e.eventType) {
-      HyperlinkEvent.EventType.ACTIVATED -> JOptionPane.showMessageDialog(
-        editor,
-        "You click the link with the URL " + e.url
-      )
-      HyperlinkEvent.EventType.ENTERED -> {
-        editor.toolTipText = ""
+      HyperlinkEvent.EventType.ACTIVATED ->
+        JOptionPane.showMessageDialog(editor, "You click the link with the URL " + e.url)
+
+      HyperlinkEvent.EventType.ENTERED ->
         e.sourceElement
           ?.let { it.attributes.getAttribute(HTML.Tag.A) as? AttributeSet }
           ?.also {
+            editor.toolTipText = ""
             val title = it.getAttribute(HTML.Attribute.TITLE).toString()
             val url = e.url.toString()
             hint.text = "<html>$title: <a href='$url'>$url</a>"
             popup.pack()
           }
-      }
+
       HyperlinkEvent.EventType.EXITED -> editor.toolTipText = null
     }
   }
 
   val p = JPanel(GridLayout(2, 1))
   p.add(JScrollPane(editor))
-  p.add(JScrollPane(JTextArea("dummy")))
+  p.add(JScrollPane(JTextArea(HTML_TEXT)))
   p.preferredSize = Dimension(320, 240)
   return p
 }
