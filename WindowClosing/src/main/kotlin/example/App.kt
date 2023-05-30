@@ -96,15 +96,13 @@ private class SaveHandler(
       options,
       options[0]
     )
+    if (retValue != JOptionPane.CANCEL_OPTION) {
+      frame.dispose()
+    }
+    // debug info:
     when (retValue) {
-      JOptionPane.YES_OPTION -> {
-        logger.info { "exit" }
-        frame.dispose()
-      }
-      JOptionPane.NO_OPTION -> {
-        logger.info { "Exit without save" }
-        frame.dispose()
-      }
+      JOptionPane.YES_OPTION -> logger.info { "Exit" }
+      JOptionPane.NO_OPTION -> logger.info { "Exit without save" }
       JOptionPane.CANCEL_OPTION -> logger.info { "Cancel exit" }
     }
   }
