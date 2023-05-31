@@ -141,11 +141,13 @@ private class ListItemTransferHandler : TransferHandler() {
 
   override fun importData(info: TransferSupport): Boolean {
     // println("importData(TransferSupport)")
-    val target = info.component as? JList<*> ?: return false
-    val b = target.getClientProperty("canImportFromClipboard")
-    if (!info.isDrop && (b == null || b == false)) {
+    val target = info.component as? JList<*>
+    val v = target?.getClientProperty("canImportFromClipboard")
+    val b = !info.isDrop && (v == null || v == false)
+    if (target == null || b) {
       return false
     }
+
     var index = getIndex(info)
     addIndex = index
     val values = runCatching {
@@ -165,10 +167,7 @@ private class ListItemTransferHandler : TransferHandler() {
     return values.isNotEmpty()
   }
 
-  override fun importData(comp: JComponent?, t: Transferable?): Boolean {
-    // println("importData(JComponent, Transferable)")
-    return importData(TransferSupport(comp, t))
-  }
+  override fun importData(c: JComponent?, t: Transferable?) = importData(TransferSupport(c, t))
 
   override fun exportAsDrag(comp: JComponent, e: InputEvent?, action: Int) {
     // println("exportAsDrag")
