@@ -12,7 +12,12 @@ fun makeUI(): Component {
   val maskRange = 2
   val highlightPainter = DefaultHighlightPainter(Color.GRAY)
   val textArea = JTextArea()
-  textArea.text = "1234567890987654321\naaa bbb ccc ddd eee\n1234567890\n1234567890987654321"
+  textArea.text = """
+    1234567890987654321
+    aaa bbb ccc ddd eee
+    1234567890
+    1234567890987654321
+  """.trimIndent()
   val doc = textArea.document
   (doc as? AbstractDocument)?.documentFilter = NonEditableLineDocumentFilter(maskRange)
   runCatching {

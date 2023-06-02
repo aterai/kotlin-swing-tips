@@ -20,7 +20,20 @@ fun makeUI(): Component {
       return d
     }
   }
-  textArea.text = "1111111111\n222222222222\n\n\n\n\n\n\n\n\n\n333333333333333"
+  textArea.text = """
+    1111111111
+    222222222222
+
+
+
+
+
+
+
+
+
+    333333333333333
+  """.trimIndent()
   textArea.caretPosition = 0
   textArea.border = BorderFactory.createEmptyBorder(0, 2, 0, 0)
 
