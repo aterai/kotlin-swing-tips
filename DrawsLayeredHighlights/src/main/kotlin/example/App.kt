@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.util.regex.Pattern
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
@@ -93,13 +92,8 @@ private fun fireDocumentChangeEvent() {
   val doc = textArea.document
   runCatching {
     val text = doc.getText(0, doc.length)
-    val matcher = Pattern.compile(pattern).matcher(text)
-    var pos = 0
-    while (matcher.find(pos) && matcher.group().isNotEmpty()) {
-      val start = matcher.start()
-      val end = matcher.end()
-      highlighter.addHighlight(start, end, highlightPainter)
-      pos = end
+    pattern.toRegex().findAll(text).forEach {
+      highlighter.addHighlight(it.range.start, it.range.last + 1, highlightPainter)
     }
   }.onFailure {
     UIManager.getLookAndFeel().provideErrorFeedback(field)
