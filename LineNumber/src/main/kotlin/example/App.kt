@@ -11,7 +11,15 @@ fun makeUI(): Component {
   val textArea = JTextArea()
   val scroll = JScrollPane(textArea)
   scroll.setRowHeaderView(LineNumberView(textArea))
-  textArea.text = "aaa aaa aaa\nbbb bbb bbb bbb bbb\n\n\n\n\nccc ccc ccc ccc"
+  textArea.text = """
+    aaa aaa aaa
+    bbb bbb bbb bbb bbb
+
+
+
+
+    ccc ccc ccc ccc
+  """.trimIndent()
   textArea.border = BorderFactory.createEmptyBorder(0, 2, 0, 0)
   return JPanel(BorderLayout()).also {
     it.add(scroll)

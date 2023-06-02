@@ -52,7 +52,12 @@ private fun makeTextArea(flg: Boolean): Component {
       }
     }
   }
-  textArea.text = "FocusOwnerCaret: $flg\n111\n22222\n33333333\n"
+  textArea.text = """
+    FocusOwnerCaret: $flg
+    111
+    22222
+    33333333
+  """.trimIndent()
   textArea.selectAll()
   return JScrollPane(textArea)
 }
