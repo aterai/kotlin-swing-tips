@@ -6,7 +6,6 @@ import java.awt.font.TextLayout
 import java.awt.geom.AffineTransform
 import java.text.ParseException
 import java.util.EnumSet
-import java.util.regex.Pattern
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.DefaultFormatter
 import javax.swing.text.DefaultFormatterFactory
@@ -116,10 +115,9 @@ private fun makeFormatterFactory(): DefaultFormatterFactory {
   val formatter = object : DefaultFormatter() {
     @Throws(ParseException::class)
     override fun stringToValue(text: String): Any {
-      val pattern = Pattern.compile("^\\s*(\\p{XDigit}{1,6})\\s*$")
-      val matcher = pattern.matcher(text)
-      if (matcher.find()) {
-        val iv = Integer.valueOf(text, 16)
+      val regex = """^\s*(\p{XDigit}{1,6})\s*$""".toRegex()
+      regex.find(text)?.also {
+        val iv = Integer.valueOf(it.value, 16)
         if (iv <= Character.MAX_CODE_POINT) {
           return iv
         }
