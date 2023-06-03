@@ -92,7 +92,9 @@ private fun initStar() {
   val style = styleField.text.trim()
   val min = r1.coerceAtMost(r2)
   val max = r1.coerceAtLeast(r2)
-  val fmt = "addendum_circle_radius=\"%d\" dedendum_circle_radius =\"%d\" number_of_teeth=\"%dT\""
+  val fmt = """
+    addendum_circle_radius="%d" dedendum_circle_radius ="%d" number_of_teeth="%dT"
+  """.trimIndent()
   val desc = fmt.format(max, min, vc)
   textArea.text = SvgUtils.makeStarburstSvg(star.getPathIterator(null), max * 2, style, desc)
 }

@@ -18,8 +18,13 @@ import javax.swing.text.ViewFactory
 fun makeUI(): Component {
   val editor = JEditorPane()
   editor.editorKit = MyEditorKit()
-  editor.text = "1234123541341234123423\n12374612340\n213441324\n\n645206345437820"
+  editor.text = """
+    1234123541341234123423
+    12374612340
+    213441324
 
+    645206345437820
+  """.trimIndent()
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(editor))
     it.preferredSize = Dimension(320, 240)
