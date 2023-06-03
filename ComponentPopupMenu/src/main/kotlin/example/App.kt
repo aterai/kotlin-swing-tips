@@ -6,7 +6,13 @@ import javax.swing.text.DefaultEditorKit
 import javax.swing.text.JTextComponent
 
 fun makeUI(): Component {
-  val textArea = JTextArea("ComponentPopupMenu Test\n111111111111\n22222222\n33333333")
+  val txt = """
+    ComponentPopupMenu Test
+    111111111111
+    22222222
+    33333333
+  """.trimIndent()
+  val textArea = JTextArea(txt)
   textArea.componentPopupMenu = TextComponentPopupMenu()
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(textArea))

@@ -46,7 +46,11 @@ private fun makeTextArea(flag: Boolean): Component {
       }
     }
   }
-  textArea.text = "aaa\nbbb bbb\nccc ccc ccc ccc\n"
+  textArea.text = """
+    aaa
+    bbb bbb
+    ccc ccc ccc ccc
+  """.trimIndent()
   textArea.selectAll()
   return JScrollPane(textArea)
 }
