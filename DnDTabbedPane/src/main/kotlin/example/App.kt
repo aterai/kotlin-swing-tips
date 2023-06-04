@@ -25,7 +25,12 @@ fun makeUI(): Component {
     it.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
     it.addTab("Title aa", JLabel("aaa"))
     it.addTab("Title bb", JScrollPane(JTree()))
-    it.addTab("Title cc", JScrollPane(JTextArea("123412341234\n46746745\n245342\n")))
+    val txt = """
+      123412341234
+      46746745
+      245342
+    """.trimIndent()
+    it.addTab("Title cc", JScrollPane(JTextArea(txt)))
   }
 
   val p = JPanel(BorderLayout()).also {
