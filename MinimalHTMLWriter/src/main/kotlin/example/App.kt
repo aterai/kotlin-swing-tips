@@ -4,7 +4,6 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
 import java.awt.datatransfer.UnsupportedFlavorException
-import java.awt.event.ActionEvent
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -22,9 +21,7 @@ import javax.swing.text.DefaultStyledDocument
 import javax.swing.text.JTextComponent
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
-import javax.swing.text.html.HTMLEditorKit.ParserCallback
 import javax.swing.text.html.MinimalHTMLWriter
-import javax.swing.text.html.parser.ParserDelegator
 
 fun makeUI(): Component {
   val doc = SimpleSyntaxDocument()
@@ -55,13 +52,13 @@ private class TextComponentPopupMenu : JPopupMenu() {
       (invoker as? JTextComponent)?.replaceSelection(null)
     }
     addSeparator()
-    add("copy-html-and-text-to-clipboard").addActionListener { e: ActionEvent? ->
+    add("copy-html-and-text-to-clipboard").addActionListener {
       val c = invoker
       if (c is JTextPane) {
         copyHtmlTextToClipboard(c)
       }
     }
-    add("copy-html-to-clipboard").addActionListener { e: ActionEvent? ->
+    add("copy-html-to-clipboard").addActionListener {
       val c = invoker
       if (c is JTextPane) {
         copyHtmlToClipboard(c)
@@ -74,23 +71,16 @@ private class TextComponentPopupMenu : JPopupMenu() {
     val start = textPane.selectionStart
     val end = textPane.selectionEnd
     val length = end - start
-    val styledDocument = textPane.styledDocument
+    val doc = textPane.styledDocument
     runCatching {
       ByteArrayOutputStream().use { os ->
         OutputStreamWriter(os, StandardCharsets.UTF_8).use { writer ->
-          val w = MinimalHTMLWriter(writer, styledDocument, start, length)
+          val w = MinimalHTMLWriter(writer, doc, start, length)
           w.write()
           writer.flush()
           val contents = os.toString()
-          val delegator = ParserDelegator()
-          val plainBuf = StringBuilder()
-          val callBack = object : ParserCallback() {
-            override fun handleText(text: CharArray, pos: Int) {
-              plainBuf.append(text)
-            }
-          }
-          delegator.parse(StringReader(contents), callBack, true)
-          val transferable: Transferable = BasicTransferable(plainBuf.toString(), contents)
+          val plain = doc.getText(start, length)
+          val transferable: Transferable = BasicTransferable(plain, contents)
           clipboard.setContents(transferable, null)
         }
       }
@@ -156,8 +146,8 @@ private class BasicTransferable(
     DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + ";class=java.lang.String"),
     DataFlavor.stringFlavor
   )
-  private val getRicherData get() = null
-  private val richerFlavors: Array<DataFlavor> get() = arrayOf()
+  // private val getRicherData get() = null
+  // private val richerFlavors: Array<DataFlavor> get() = arrayOf()
   private val isHtmlSupported = true
   private val isPlainSupported = true
 
@@ -181,13 +171,13 @@ private class BasicTransferable(
   }
 
   @Throws(UnsupportedFlavorException::class, IOException::class)
-  override fun getTransferData(flavor: DataFlavor): Any? {
+  override fun getTransferData(flavor: DataFlavor): Any {
     return when {
-      richerFlavors.any { it.equals(flavor) } -> getRicherData
+      // richerFlavors.any { it.equals(flavor) } -> getRicherData
       htmlFlavors.any { it.equals(flavor) } -> getHtmlTransferData(flavor)
       plainFlavors.any { it.equals(flavor) } -> getPlaneTransferData(flavor)
       stringFlavors.any { it.equals(flavor) } -> plainData
-      else -> UnsupportedFlavorException(flavor)
+      else -> throw UnsupportedFlavorException(flavor)
     }
   }
 
@@ -195,15 +185,15 @@ private class BasicTransferable(
     ByteArrayInputStream(data.toByteArray(charset(getTextCharset(flavor))))
 
   @Throws(IOException::class, UnsupportedFlavorException::class)
-  private fun getHtmlTransferData(flavor: DataFlavor): Any = when (flavor.representationClass) {
+  private fun getHtmlTransferData(flavor: DataFlavor?): Any = when (flavor?.representationClass) {
     String::class.java -> htmlData
     Reader::class.java -> StringReader(htmlData)
     InputStream::class.java -> createInputStream(flavor, htmlData)
-    else -> UnsupportedFlavorException(flavor)
+    else -> throw UnsupportedFlavorException(flavor)
   }
 
   @Throws(IOException::class, UnsupportedFlavorException::class)
-  fun getPlaneTransferData(flavor: DataFlavor): Any = when (flavor.representationClass) {
+  fun getPlaneTransferData(flavor: DataFlavor?): Any = when (flavor?.representationClass) {
     String::class.java -> plainData
     Reader::class.java -> StringReader(plainData)
     InputStream::class.java -> createInputStream(flavor, plainData)
@@ -229,8 +219,8 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
     val root = defaultRootElement
     val content = getText(0, getLength())
     val startLine = root.getElementIndex(offset)
-    val endLine = root.getElementIndex(offset + length)
-    for (i in startLine..endLine) {
+    val endLine = root.getElementIndex(offset + length) + 1
+    for (i in startLine until endLine) {
       applyHighlighting(content, i)
     }
   }
