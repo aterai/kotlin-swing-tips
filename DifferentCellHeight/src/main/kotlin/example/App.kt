@@ -5,11 +5,17 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.Border
 
 fun makeUI(): Component {
+  val lm = listOf(
+    "111",
+    "222222",
+    "333333333",
+    "444444444444"
+  )
   val m = DefaultListModel<String>()
-  m.addElement("111")
-  m.addElement("111\n222222")
-  m.addElement("111\n222222\n333333333")
-  m.addElement("111\n222222\n333333333\n444444444444")
+  m.addElement(lm[0])
+  m.addElement(lm.slice(0..1).joinToString(separator = "\n"))
+  m.addElement(lm.slice(0..2).joinToString(separator = "\n"))
+  m.addElement(lm.joinToString(separator = "\n"))
   val list = object : JList<String>(m) {
     override fun updateUI() {
       cellRenderer = null
