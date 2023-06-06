@@ -56,7 +56,11 @@ fun makeUI(): Component {
 private fun makeEditorPane(txt: String): JEditorPane {
   val editor = JEditorPane()
   editor.editorKit = MyEditorKit()
-  editor.text = "$txt\n\n123432543543\n"
+  editor.text = """
+    $txt
+
+    123432543543
+  """.trimIndent()
   editor.selectionColor = Color(0xAA_CC_DD_FF.toInt(), true)
   editor.selectedTextColor = null
   return editor

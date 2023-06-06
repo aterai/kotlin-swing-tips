@@ -6,7 +6,18 @@ import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.LayerUI
 import javax.swing.table.DefaultTableModel
 
-private const val TEXT = "aaa\na\na\na\na\naaa\na\na\na\naaa\n"
+private val TEXT = """
+  aaa
+  a
+  a
+  a
+  a
+  aaa
+  a
+  a
+  a
+  aaa
+""".trimIndent()
 
 fun makeUI(): Component {
   val columnNames = arrayOf("String", "Integer", "Boolean")
