@@ -25,7 +25,7 @@ private fun makeTitledPanel(title: String, c: Component) = Box.createVerticalBox
 private fun makeComboBoxModel() = DefaultComboBoxModel<String>().also {
   it.addElement("1234567890123456789012/3456789012345678901234567890/12345678901234567890.jpg")
   it.addElement("abc.tif")
-  it.addElement("\\0123456789\\0123456789\\0123456789.avi")
+  it.addElement("""\0123456789\0123456789\0123456789.avi""")
   it.addElement("0123456789.pdf")
   it.addElement("c:/12312343245/643667345624523451/324513/41234125/134513451345135125.mpg")
   it.addElement("http://localhost/1234567890123456789/3456789012345/678901234567894567890.jpg")
