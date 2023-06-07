@@ -245,13 +245,13 @@ private class HtmlTableTransferHandler : TransferHandler() {
 
   fun appendTag(buf: StringBuilder, o: Any?) {
     when (o) {
-      is Date -> buf.append("  <td><time>").append(o.toString()).append("</time></td>\n")
+      is Date -> buf.append("  <td><time>").append(o.toString()).append("</time></td>")
       is Color -> buf.append(
         "  <td style='background-color:#%06X'>&nbsp;</td>%n".format(
           o.rgb and 0xFF_FF_FF
         )
       )
-      else -> buf.append("  <td>").append(o?.toString() ?: "").append("</td>\n")
+      else -> buf.append("  <td>").append(o?.toString() ?: "").append("</td>")
     }
   }
 
@@ -264,9 +264,9 @@ private class HtmlTableTransferHandler : TransferHandler() {
       }
       val plainBuf = StringBuilder()
       val htmlBuf = StringBuilder(64)
-      htmlBuf.append("<html>\n<body>\n<table border='1'>\n")
+      htmlBuf.append("<html><body><table border='1'>")
       for (row in rows) {
-        htmlBuf.append("<tr>\n")
+        htmlBuf.append("<tr>")
         for (col in cols) {
           val obj = c.getValueAt(row, col)
           val v = obj?.toString() ?: ""
@@ -274,11 +274,10 @@ private class HtmlTableTransferHandler : TransferHandler() {
           appendTag(htmlBuf, obj)
         }
         plainBuf.deleteCharAt(plainBuf.length - 1).append('\n')
-        htmlBuf.append("</tr>\n")
+        htmlBuf.append("</tr>")
       }
-
       plainBuf.deleteCharAt(plainBuf.length - 1)
-      htmlBuf.append("</table>\n</body>\n</html>")
+      htmlBuf.append("</table></body></html>")
       BasicTransferable(plainBuf.toString(), htmlBuf.toString())
     } else {
       null
