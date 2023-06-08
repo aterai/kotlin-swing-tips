@@ -11,7 +11,13 @@ import javax.swing.text.Segment
 import javax.swing.text.TextAction
 import javax.swing.text.Utilities
 
-private const val TEXT = "AA-BB_CC\nAA-bb_CC\naa1-bb2_cc3\naa_(bb)_cc;\n11-22_33"
+private val TEXT = """
+  AA-BB_CC
+  AA-bb_CC
+  aa1-bb2_cc3
+  aa_(bb)_cc;
+  11-22_33
+""".trimIndent()
 
 fun makeUI(): Component {
   val textArea = JTextArea(TEXT)
