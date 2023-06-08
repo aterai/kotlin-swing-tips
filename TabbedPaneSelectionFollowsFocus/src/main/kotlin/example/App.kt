@@ -26,10 +26,12 @@ fun makeUI(): Component {
     focusIdx = tabs.selectedIndex
     tabs.repaint()
   }
-  val help1 = "SPACE: selectTabWithFocus"
-  val help2 = "LEFT: navigateLeft"
-  val help3 = "RIGHT: navigateRight"
-  val textArea = JTextArea("$help1\n$help2\n$help3\n")
+  val help = """
+    SPACE:	selectTabWithFocus
+    LEFT:	navigateLeft
+    RIGHT:	navigateRight
+  """.trimIndent()
+  val textArea = JTextArea(help)
   textArea.isEditable = false
   tabs.addTab("help", JScrollPane(textArea))
   for (i in 0..10) {
