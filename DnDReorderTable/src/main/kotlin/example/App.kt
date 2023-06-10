@@ -5,7 +5,6 @@ import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
 import java.awt.datatransfer.UnsupportedFlavorException
 import java.awt.dnd.DragSource
-import java.awt.event.ActionEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 
@@ -13,19 +12,19 @@ fun makeUI(): Component {
   val columnNames = arrayOf("String", "Integer", "Boolean")
   val data = arrayOf(
     arrayOf("AAA", 12, true),
-    arrayOf("aaa", 1, false),
-    arrayOf("BBB", 13, true),
-    arrayOf("bbb", 2, false),
-    arrayOf("CCC", 15, true),
-    arrayOf("ccc", 3, false),
-    arrayOf("DDD", 17, true),
-    arrayOf("ddd", 4, false),
-    arrayOf("EEE", 18, true),
-    arrayOf("eee", 5, false),
-    arrayOf("FFF", 19, true),
-    arrayOf("fff", 6, false),
-    arrayOf("GGG", 92, true),
-    arrayOf("ggg", 0, false)
+    arrayOf("BBB", 1, false),
+    arrayOf("ccc", 13, true),
+    arrayOf("DDD", 2, false),
+    arrayOf("eee", 15, true),
+    arrayOf("FFF", 3, false),
+    arrayOf("GGG", 17, true),
+    arrayOf("hhh", 4, false),
+    arrayOf("III", 18, true),
+    arrayOf("jjj", 5, false),
+    arrayOf("KKK", 19, true),
+    arrayOf("LLL", 6, false),
+    arrayOf("mmm", 92, true),
+    arrayOf("nnn", 0, false)
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = when (column) {
@@ -42,16 +41,6 @@ fun makeUI(): Component {
   table.dropMode = DropMode.INSERT_ROWS
   table.dragEnabled = true
   table.fillsViewportHeight = true
-
-  val map = table.actionMap
-  val dummy = object : AbstractAction() {
-    override fun actionPerformed(e: ActionEvent) {
-      // Dummy action
-    }
-  }
-  map.put(TransferHandler.getCutAction().getValue(Action.NAME), dummy)
-  map.put(TransferHandler.getCopyAction().getValue(Action.NAME), dummy)
-  map.put(TransferHandler.getPasteAction().getValue(Action.NAME), dummy)
 
   val p = JPanel(BorderLayout())
   p.add(JScrollPane(table))
@@ -73,6 +62,14 @@ private class TableRowTransferHandler : TransferHandler() {
     c.rootPane.glassPane.isVisible = true
     val table = c as? JTable
     val model = table?.model as? DefaultTableModel
+    val transferredRows = mutableListOf<Any>()
+    selectedIndices.clear()
+    if (model != null) {
+      table.selectedRows.forEach {
+        selectedIndices.add(it)
+        transferredRows.add(model.dataVector[it])
+      }
+    }
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(FLAVOR)
 
@@ -80,9 +77,8 @@ private class TableRowTransferHandler : TransferHandler() {
 
       @Throws(UnsupportedFlavorException::class)
       override fun getTransferData(flavor: DataFlavor): Any {
-        return if (isDataFlavorSupported(flavor) && model != null) {
-          table.selectedRows.forEach { selectedIndices.add(it) }
-          table.selectedRows.map { model.dataVector[it] }.toList()
+        return if (isDataFlavorSupported(flavor)) {
+          transferredRows
         } else {
           throw UnsupportedFlavorException(flavor)
         }
@@ -98,17 +94,21 @@ private class TableRowTransferHandler : TransferHandler() {
     return canDrop
   }
 
-  override fun getSourceActions(c: JComponent) = MOVE
+  override fun getSourceActions(c: JComponent) = COPY_OR_MOVE
 
   override fun importData(info: TransferSupport): Boolean {
-    val dl = info.dropLocation as? JTable.DropLocation
     val target = info.component as? JTable
     val model = target?.model as? DefaultTableModel
-    if (dl == null || model == null) {
+    if (model == null) {
       return false
     }
     val max = model.rowCount
-    var index = dl.row.takeIf { it in 0 until max } ?: max
+    var index = if (info.isDrop) {
+      (info.dropLocation as? JTable.DropLocation)?.row ?: -1
+    } else {
+      target.selectedRow
+    }
+    index = if (index >= 0 && index < max) index else max
     addIndex = index
     val values = runCatching {
       info.transferable.getTransferData(FLAVOR) as? List<*>
@@ -117,12 +117,13 @@ private class TableRowTransferHandler : TransferHandler() {
       val i = index++
       model.insertRow(i, it.toTypedArray())
       target.selectionModel.addSelectionInterval(i, i)
+      target.requestFocusInWindow()
     }
-    addCount = values.size
+    addCount = if (info.isDrop) values.size else 0
     return values.isNotEmpty()
   }
 
-  override fun exportDone(c: JComponent, data: Transferable, action: Int) {
+  override fun exportDone(c: JComponent, data: Transferable?, action: Int) {
     cleanup(c, action == MOVE)
   }
 
