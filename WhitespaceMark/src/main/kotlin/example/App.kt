@@ -20,7 +20,12 @@ import javax.swing.text.TabStop
 import javax.swing.text.View
 import javax.swing.text.ViewFactory
 
-private const val TAB_TXT = "\n1\taaa\n12\taaa\n123\taaa\n1234\taaa\t\t\t\t\t\t\n"
+private val TAB_TXT = """
+  1	aaa
+  12	aaa
+  123	aaa
+  1234	aaa						
+""".trimIndent()
 private const val IDEOGRAPHIC_SPACE = """
 123456789012
 bbb2Å@Å@1 3 ccc3
