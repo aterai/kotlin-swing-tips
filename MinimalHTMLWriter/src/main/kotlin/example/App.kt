@@ -146,8 +146,6 @@ private class BasicTransferable(
     DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + ";class=java.lang.String"),
     DataFlavor.stringFlavor
   )
-  // private val getRicherData get() = null
-  // private val richerFlavors: Array<DataFlavor> get() = arrayOf()
   private val isHtmlSupported = true
   private val isPlainSupported = true
 
