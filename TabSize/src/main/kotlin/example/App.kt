@@ -21,14 +21,24 @@ fun makeUI(): Component {
   val attributes = textPane.getStyle(StyleContext.DEFAULT_STYLE)
   StyleConstants.setTabSet(attributes, tabSet)
   textPane.setParagraphAttributes(attributes, false)
-  textPane.text = "JTextPane\n0123\n\t4567\n\t\t89ab\n"
+  textPane.text = """
+    JTextPane
+    0123
+    	4567
+    		89ab
+  """.trimIndent()
 
   val textArea = JTextArea()
   textArea.tabSize = 4
-  textArea.text = "JTextArea\n0123\n\t4567\n\t\t89ab\n"
+  textArea.text = """
+    JTextArea
+    0123
+    	4567
+    		89ab
+  """.trimIndent()
 
-  return JPanel(BorderLayout()).also {
-    it.add(JScrollPane(textArea), BorderLayout.NORTH)
+  return JPanel(GridLayout(2, 1)).also {
+    it.add(JScrollPane(textArea))
     it.add(JScrollPane(textPane))
     it.preferredSize = Dimension(320, 240)
   }

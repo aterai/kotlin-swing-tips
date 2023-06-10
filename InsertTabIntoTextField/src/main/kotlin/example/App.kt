@@ -10,7 +10,11 @@ import javax.swing.text.JTextComponent
 import javax.swing.text.PlainDocument
 
 fun makeUI(): Component {
-  val txt1 = "\n1\taaa\n12\tbbb\n123\tccc"
+  val txt1 = """
+    1	aaa
+    12	bbb
+    123	ccc
+  """.trimIndent()
   val textPane = JTextPane()
   textPane.text = "JTextPane:$txt1"
 
