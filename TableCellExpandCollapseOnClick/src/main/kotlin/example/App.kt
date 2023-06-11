@@ -11,10 +11,30 @@ import javax.swing.table.TableCellRenderer
 
 fun makeUI(): Component {
   val columnNames = arrayOf("RowHeader", "Description")
+  val d0 = """
+    0000
+    1
+    2
+    3
+    4
+    5
+    6
+    7
+    8
+    9
+    10
+  """.trimIndent()
+  val d1 = "1111111"
+  val d2 = """
+    2222222222222
+    1
+    2
+    3
+  """.trimIndent()
   val data = arrayOf(
-    arrayOf(RowHeader("aaa", true, false), "0000\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10"),
-    arrayOf(RowHeader("bbb", false, false), "1111111"),
-    arrayOf(RowHeader("ccc", true, false), "2222222222222\n1\n2\n3")
+    arrayOf(RowHeader("aaa", true, false), d0),
+    arrayOf(RowHeader("bbb", false, false), d1),
+    arrayOf(RowHeader("ccc", true, false), d2)
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
