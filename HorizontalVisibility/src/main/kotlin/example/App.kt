@@ -9,11 +9,11 @@ import javax.swing.event.DocumentListener
 import javax.swing.plaf.basic.BasicScrollBarUI
 
 private val TEXT = listOf(
-  "javascript:(function(){",
-  "var l=location,m=l.href.match('^(https?://)(.+)(api[^+]+|technotes[^+]+)');",
-  "if(m)l.href=m[1]+'docs.oracle.com/javase/8/docs/'",
-  "+decodeURIComponent(m[3]).replace(/\\+.*$/,'').replace(/\\[\\]/g,':A')",
-  ".replace(/, |\\(|\\)/g,'-');}());"
+  """javascript:(function(){""",
+  """var%20l=location,m=l.href.match("^https?://(.+)(api[^+]+|technotes[^+]+)");""",
+  """if(m)l.href='https://docs.oracle.com/javase/8/docs/'""",
+  """+decodeURIComponent(m[2]).replace(/\+.*$/,'').replace(/\[\]/g,':A')""",
+  """.replace(/,%20|\(|\)/g,'-');}());"""
 ).joinToString(separator = "")
 
 private val textField1 = JTextField(TEXT)
