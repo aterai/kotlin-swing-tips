@@ -60,7 +60,13 @@ private fun makeEditorPane(editable: Boolean) = JEditorPane().also {
     button.isOpaque = false
     StyleConstants.setComponent(s, button)
     runCatching {
-      doc.insertString(doc.getLength(), "\n----\nJButton:\n", null)
+      val txt = """
+        
+        ----
+        JButton:
+
+      """.trimIndent()
+      doc.insertString(doc.getLength(), txt, null)
       doc.insertString(doc.getLength(), LINK + "\n", doc.getStyle("button"))
     }
   }
