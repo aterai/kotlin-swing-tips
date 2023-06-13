@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.util.regex.Pattern
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.text.JTextComponent
@@ -80,12 +79,15 @@ private fun setHighlight(jtc: JTextComponent, pattern: String) {
   runCatching {
     val doc = jtc.document
     val text = doc.getText(0, doc.length)
-    val matcher = Pattern.compile(pattern).matcher(text)
-    var pos = 0
-    while (matcher.find(pos) && matcher.group().isNotEmpty()) {
-      pos = matcher.end()
-      highlighter.addHighlight(matcher.start(), pos, HIGHLIGHT)
+    pattern.toRegex().findAll(text).map { it.range }.filterNot { it.isEmpty() }.forEach {
+      highlighter.addHighlight(it.first(), it.last() + 1, HIGHLIGHT)
     }
+    // val matcher = Pattern.compile(pattern).matcher(text)
+    // var pos = 0
+    // while (matcher.find(pos) && matcher.group().isNotEmpty()) {
+    //   pos = matcher.end()
+    //   highlighter.addHighlight(matcher.start(), pos, HIGHLIGHT)
+    // }
   }.onFailure {
     UIManager.getLookAndFeel().provideErrorFeedback(jtc)
   }
