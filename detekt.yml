@@ -689,7 +689,7 @@ style:
   SpacingBetweenPackageAndImports:
     active: true
   StringShouldBeRawString:
-    active: false
+    active: true
     maxEscapedCharacterCount: 2
     ignoredCharacters: []
   ThrowsCount:
