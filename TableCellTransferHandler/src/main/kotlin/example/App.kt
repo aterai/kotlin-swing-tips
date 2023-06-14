@@ -4,7 +4,6 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
 import java.awt.datatransfer.UnsupportedFlavorException
-import java.awt.event.ActionEvent
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableModel
@@ -38,16 +37,6 @@ fun makeUI(): Component {
   val sorter = TableRowSorter(table.model)
   table.rowSorter = sorter
 
-  // Disable row Cut, Copy, Paste
-  val map = table.actionMap
-  val dummy = object : AbstractAction() {
-    override fun actionPerformed(e: ActionEvent) {
-      // Dummy action
-    }
-  }
-  map.put(TransferHandler.getCutAction().getValue(Action.NAME), dummy)
-  map.put(TransferHandler.getCopyAction().getValue(Action.NAME), dummy)
-  map.put(TransferHandler.getPasteAction().getValue(Action.NAME), dummy)
   val model = DefaultListModel<Icon>()
   val list = JList(model)
   list.layoutOrientation = JList.HORIZONTAL_WRAP
@@ -90,30 +79,30 @@ fun makeUI(): Component {
 }
 
 private class CellIconTransferHandler : TransferHandler() {
-  override fun createTransferable(c: JComponent): Transferable? {
-    if (c is JTable) {
-      val row = c.selectedRow
-      val col = c.selectedColumn
-      if (Icon::class.java.isAssignableFrom(c.getColumnClass(col))) {
-        return object : Transferable {
-          override fun getTransferDataFlavors() = arrayOf(ICON_FLAVOR)
+  override fun createTransferable(c: JComponent): Transferable {
+    val data = (c as? JTable)?.takeIf {
+      Icon::class.java.isAssignableFrom(it.getColumnClass(it.selectedColumn))
+    }?.let {
+      it.getValueAt(it.selectedRow, it.selectedColumn)
+    }
+    return object : Transferable {
+      override fun getTransferDataFlavors() = arrayOf(ICON_FLAVOR)
 
-          override fun isDataFlavorSupported(flavor: DataFlavor) = ICON_FLAVOR == flavor
+      override fun isDataFlavorSupported(flavor: DataFlavor) = ICON_FLAVOR == flavor
 
-          @Throws(UnsupportedFlavorException::class)
-          override fun getTransferData(flavor: DataFlavor) = if (isDataFlavorSupported(flavor)) {
-            c.getValueAt(row, col)
-          } else {
-            throw UnsupportedFlavorException(flavor)
-          }
+      @Throws(UnsupportedFlavorException::class)
+      override fun getTransferData(flavor: DataFlavor): Any {
+        if (data != null && isDataFlavorSupported(flavor)) {
+          return data
+        } else {
+          throw UnsupportedFlavorException(flavor)
         }
       }
     }
-    return null
   }
 
   override fun canImport(info: TransferSupport) =
-    info.component is JList<*> && info.isDrop && info.isDataFlavorSupported(ICON_FLAVOR)
+    info.component is JList<*> && info.isDataFlavorSupported(ICON_FLAVOR)
 
   override fun getSourceActions(c: JComponent) = COPY
 
