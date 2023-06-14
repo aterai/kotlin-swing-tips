@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage
 import java.awt.image.ByteLookupTable
 import java.awt.image.LookupOp
 import java.net.URL
-import java.util.regex.Pattern
 import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.Border
@@ -112,13 +111,8 @@ fun setHighlight(jtc: JTextComponent, pattern: String, painter: HighlightPainter
   val doc = jtc.document
   runCatching {
     val text = doc.getText(0, doc.length)
-    val matcher = Pattern.compile(pattern).matcher(text)
-    var pos = 0
-    while (matcher.find(pos) && matcher.group().isNotEmpty()) {
-      val start = matcher.start()
-      val end = matcher.end()
-      highlighter.addHighlight(start, end, painter)
-      pos = end
+    pattern.toRegex().findAll(text).map { it.range }.filterNot { it.isEmpty() }.forEach {
+      highlighter.addHighlight(it.first(), it.last() + 1, painter)
     }
   }.onFailure {
     UIManager.getLookAndFeel().provideErrorFeedback(jtc)
