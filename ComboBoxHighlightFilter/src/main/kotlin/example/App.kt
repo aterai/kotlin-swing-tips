@@ -3,8 +3,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.text.Highlighter
@@ -62,7 +60,7 @@ private fun makeComboBox(model: List<String>): JComboBox<String> {
           highlighter.removeAllHighlights()
           val txt = value?.toString() ?: ""
           field.text = txt
-          addHighlight(highlighter, Pattern.compile(pattern).matcher(txt))
+          addHighlight(txt, pattern, highlighter)
           field.background = if (isSelected) Color(0xAA_64_AA_FF.toInt(), true) else Color.WHITE
           field
         } else {
@@ -71,15 +69,9 @@ private fun makeComboBox(model: List<String>): JComboBox<String> {
       }
     }
 
-    private fun addHighlight(highlighter: Highlighter, matcher: Matcher) {
-      runCatching {
-        var pos = 0
-        while (matcher.find(pos) && matcher.group().isNotEmpty()) {
-          val start = matcher.start()
-          val end = matcher.end()
-          highlighter.addHighlight(start, end, highlightPainter)
-          pos = end
-        }
+    private fun addHighlight(txt: String, pattern: String, highlighter: Highlighter) {
+      pattern.toRegex().findAll(txt).map { it.range }.filterNot { it.isEmpty() }.forEach {
+        highlighter.addHighlight(it.first(), it.last() + 1, highlightPainter)
       }
     }
   }
