@@ -35,10 +35,9 @@ private val table = object : JTable(model) {
   protected var handler: HeaderCheckBoxHandler? = null
 
   override fun updateUI() {
-    // [JDK-6788475]
     // Changing to Nimbus LAF and back doesn't reset look and feel of JTable completely
     // https://bugs.openjdk.org/browse/JDK-6788475
-    // XXX: set dummy ColorUIResource
+    // Set a temporary ColorUIResource to avoid this issue
     setSelectionForeground(ColorUIResource(Color.RED))
     setSelectionBackground(ColorUIResource(Color.RED))
     getTableHeader()?.removeMouseListener(handler)

@@ -141,9 +141,9 @@ private class FileListTable(model: TableModel) : JTable(model) {
   private var rbl: RubberBandingListener? = null
 
   override fun updateUI() {
-    // [JDK-6788475] Changing to Nimbus LAF and back doesn't reset look and feel of JTable completely - Java Bug System
+    // Changing to Nimbus LAF and back doesn't reset look and feel of JTable completely
     // https://bugs.openjdk.org/browse/JDK-6788475
-    // XXX: set dummy ColorUIResource
+    // Set a temporary ColorUIResource to avoid this issue
     setSelectionForeground(ColorUIResource(Color.RED))
     setSelectionBackground(ColorUIResource(Color.RED))
     removeMouseMotionListener(rbl)

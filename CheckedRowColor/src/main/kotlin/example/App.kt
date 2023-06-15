@@ -13,7 +13,9 @@ private const val BOOLEAN_COLUMN = 2
 
 fun makeTable(model: TableModel) = object : JTable(model) {
   override fun updateUI() {
-    // XXX: set dummy ColorUIResource
+    // Changing to Nimbus LAF and back doesn't reset look and feel of JTable completely
+    // https://bugs.openjdk.org/browse/JDK-6788475
+    // Set a temporary ColorUIResource to avoid this issue
     setSelectionForeground(ColorUIResource(Color.RED))
     setSelectionBackground(ColorUIResource(Color.RED))
     super.updateUI()
