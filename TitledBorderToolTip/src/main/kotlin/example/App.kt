@@ -28,7 +28,7 @@ fun makeUI(): Component {
     }
   }
   panel1.border = BorderFactory.createTitledBorder("Override JPanel#getToolTipText(...)")
-  panel1.toolTipText = "JPanel: dummy"
+  panel1.toolTipText = "JPanel: Sample ToolTipText"
 
   val panel2 = JPanel()
   panel2.border = BorderFactory.createTitledBorder("Default TitledBorder on JPanel")

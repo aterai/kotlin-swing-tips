@@ -86,7 +86,7 @@ private class TitledSeparator(
       g2.dispose()
     }
 
-    override fun getIconWidth() = 200 // dummy width
+    override fun getIconWidth() = 200 // sample width
 
     override fun getIconHeight() = 2
   }

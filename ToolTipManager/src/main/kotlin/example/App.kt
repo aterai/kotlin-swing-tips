@@ -23,7 +23,7 @@ fun makeUI(): Component {
   val panel = JPanel(BorderLayout())
   panel.border = BorderFactory.createTitledBorder("ToolTip Test")
   panel.add(p, BorderLayout.NORTH)
-  panel.add(JScrollPane(JTextArea("dummy")))
+  panel.add(JScrollPane(JTextArea("JTextArea")))
 
   return JPanel(BorderLayout()).also {
     it.add(makeToolPanel(), BorderLayout.NORTH)

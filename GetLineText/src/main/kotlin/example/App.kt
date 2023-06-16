@@ -11,10 +11,10 @@ private const val SHARP = '#'.code
 
 fun makeUI(): Component {
   val sb = StringBuilder()
-  val dummy = "1111111111111111\n"
+  val txt = "1111111111111111\n"
   val comment = "#comment\n"
   for (i in 0 until 200) {
-    sb.append(dummy)
+    sb.append(txt)
     if (i % 16 == 0) {
       sb.append(comment)
     }

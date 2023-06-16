@@ -51,7 +51,7 @@ fun makeUI(): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   p.add(box, BorderLayout.NORTH)
-  p.add(JScrollPane(JTextArea("Dummy")))
+  p.add(JScrollPane(JTextArea("JTextArea")))
   p.preferredSize = Dimension(320, 240)
   return p
 }

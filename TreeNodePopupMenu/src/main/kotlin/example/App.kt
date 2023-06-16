@@ -26,7 +26,7 @@ private class TreePopupMenu : JPopupMenu() {
         JOptionPane.showMessageDialog(tree, path, "path", JOptionPane.INFORMATION_MESSAGE)
       }
     }
-    add("dummy")
+    add("JMenuItem")
   }
 
   override fun show(c: Component?, x: Int, y: Int) {

@@ -8,8 +8,8 @@ import javax.swing.plaf.basic.BasicToolBarUI
 
 fun makeUI(): Component {
   val list = listOf<JComponent>(
-    JMenuItem("Open(dummy)"),
-    JMenuItem("Save(dummy)"),
+    JMenuItem("Open"),
+    JMenuItem("Save"),
     JSeparator(),
     JMenuItem(ExitAction())
   )

@@ -37,7 +37,7 @@ fun makeUI(): Component {
 
   val box = Box.createVerticalBox()
   box.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
-  box.add(JTextField("dummy"))
+  box.add(JTextField("JTextField"))
   box.add(Box.createVerticalStrut(10))
   box.add(textField1)
   box.add(Box.createVerticalStrut(10))

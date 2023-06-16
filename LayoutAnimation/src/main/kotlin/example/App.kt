@@ -8,7 +8,7 @@ import javax.swing.Timer
 
 private val tree = JTree()
 private val field = JTextField("", 10)
-private val button = JButton("Find Next(dummy)")
+private val button = JButton("Find Next")
 private val showHideButton = JButton()
 private var animator: Timer? = null
 private var isHidden = true

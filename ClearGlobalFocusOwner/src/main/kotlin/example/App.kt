@@ -32,7 +32,7 @@ fun makeUI(): Component {
 
 private fun createMenuBar() = JMenuBar().also {
   val fileMenu = JMenu("File")
-  fileMenu.add("dummy")
+  fileMenu.add("JMenuItem")
   it.add(fileMenu)
 }
 

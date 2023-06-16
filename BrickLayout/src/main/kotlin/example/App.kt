@@ -22,14 +22,14 @@ fun makeUI(): Component {
   }
   // GridBagLayout to create a board
   // https://community.oracle.com/thread/1357310
-  // <dummy-row>
+  // <guide-row>
   c.gridwidth = 1
   c.gridx = 0
   while (c.gridx <= WIDTH * X_SIZE) {
     panel.add(Box.createHorizontalStrut(24), c)
     c.gridx++
   }
-  // </dummy-row>
+  // </guide-row>
 
   panel.preferredSize = Dimension(320, 240)
   return panel

@@ -36,7 +36,7 @@ fun makeUI(): Component {
 
   val panel = JPanel(BorderLayout())
   panel.add(p, BorderLayout.NORTH)
-  panel.add(JScrollPane(JTextArea("dummy")))
+  panel.add(JScrollPane(JTextArea("JTextArea")))
   panel.preferredSize = Dimension(320, 240)
   return panel
 }

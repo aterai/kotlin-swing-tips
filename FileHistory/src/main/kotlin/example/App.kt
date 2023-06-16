@@ -127,7 +127,7 @@ private class NewAction : AbstractAction("new") {
       VersionAction.APP_NAME,
       JOptionPane.INFORMATION_MESSAGE
     )
-    val fileName = "C:/tmp/dummy.jpg.$counter~"
+    val fileName = "C:/tmp/sample.jpg.$counter~"
     updateHistory(Paths.get(fileName))
     counter++
   }
@@ -155,7 +155,7 @@ private class ExitAction : AbstractAction("exit") {
 
 private class HelpAction : AbstractAction("help") {
   override fun actionPerformed(e: ActionEvent) {
-    // dummy
+    // help
   }
 }
 

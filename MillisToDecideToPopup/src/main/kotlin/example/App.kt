@@ -43,7 +43,7 @@ private fun executeWorker(
 fun makeUI(): Component {
   val area = JTextArea()
   area.isEditable = false
-  val dmy = ProgressMonitor(null, "message dummy", "note", 0, 100)
+  val dmy = ProgressMonitor(null, "message", "note", 0, 100)
   val millisToDecide = SpinnerNumberModel(dmy.millisToDecideToPopup, 0, 5 * 1000, 100)
   val millisToPopup = SpinnerNumberModel(dmy.millisToPopup, 0, 5 * 1000, 100)
   val runButton = JButton("run")

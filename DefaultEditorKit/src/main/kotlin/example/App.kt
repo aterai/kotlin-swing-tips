@@ -20,7 +20,7 @@ fun makeUI(): Component {
   return JPanel(BorderLayout()).also {
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.add(panel, BorderLayout.NORTH)
-    it.add(JScrollPane(JTextArea("Dummy")))
+    it.add(JScrollPane(JTextArea("JTextArea")))
     it.preferredSize = Dimension(320, 240)
   }
 }

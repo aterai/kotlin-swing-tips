@@ -56,7 +56,7 @@ private class TreePopupMenu : JPopupMenu() {
         }
       }
     }
-    add("dummy")
+    add("JMenuItem")
   }
 
   override fun show(c: Component?, x: Int, y: Int) {

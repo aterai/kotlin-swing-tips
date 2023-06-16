@@ -19,7 +19,7 @@ fun makeUI(): Component {
   label2.labelFor = textField2
   addRow(label2, textField2, p, c)
 
-  val label3 = JLabel("Dummy:", SwingConstants.RIGHT)
+  val label3 = JLabel("JLabel:", SwingConstants.RIGHT)
   val textField3 = JTextField(12)
   addRow(label3, textField3, p, c)
 

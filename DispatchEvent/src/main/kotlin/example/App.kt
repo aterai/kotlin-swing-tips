@@ -63,7 +63,7 @@ private fun setTestConnected(flag: Boolean) {
 }
 
 private fun makeComboBoxModel() = DefaultComboBoxModel<String>().also {
-  it.addElement("dummy model")
+  it.addElement("000")
   it.addElement("123456")
   it.addElement("0987654321")
   it.addElement("41234123")

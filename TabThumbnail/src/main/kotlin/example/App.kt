@@ -26,7 +26,7 @@ private fun addImageTab(tabbedPane: JTabbedPane, url: URL?) {
   requireNotNull(url) { "Resource not found" }
   val scroll = JScrollPane(JLabel(ImageIcon(url)))
   val f = File(url.file)
-  tabbedPane.addTab(f.name, null, scroll, "dummy")
+  tabbedPane.addTab(f.name, null, scroll, "tooltip")
 }
 
 private class TabThumbnailTabbedPane : JTabbedPane() {

@@ -25,7 +25,7 @@ fun makeUI(): Component {
 
   return JPanel(BorderLayout()).also {
     it.add(JLayer(p, layerUI), BorderLayout.NORTH)
-    it.add(JScrollPane(JTextArea("dummy")))
+    it.add(JScrollPane(JTextArea("JTextArea")))
     it.preferredSize = Dimension(320, 240)
   }
 }

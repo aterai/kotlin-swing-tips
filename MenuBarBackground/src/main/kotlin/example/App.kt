@@ -50,9 +50,9 @@ fun createMenu(key: String): JMenu {
   if ("Windows XP" == System.getProperty("os.name")) {
     menu.background = Color(0x0, true) // XXX Windows XP lnf?
   }
-  menu.add("dummy1")
-  menu.add("dummy2")
-  menu.add("dummy3")
+  menu.add("JMenuItem1")
+  menu.add("JMenuItem2")
+  menu.add("JMenuItem3")
   return menu
 }
 

@@ -64,7 +64,7 @@ private class ExitAction : AbstractAction("exit") {
 
 private class HelpAction : AbstractAction("help") {
   override fun actionPerformed(e: ActionEvent) {
-    // dummy
+    // help
   }
 }
 

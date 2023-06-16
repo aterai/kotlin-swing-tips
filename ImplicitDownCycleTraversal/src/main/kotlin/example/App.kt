@@ -24,7 +24,7 @@ fun makeUI(): Component {
     sub.isFocusCycleRoot = (e.source as? JCheckBox)?.isSelected == true
   }
   sub.isFocusCycleRoot = true
-  sub.add(JScrollPane(JTextArea("dummy")))
+  sub.add(JScrollPane(JTextArea("JTextArea")))
   sub.add(checkFocusCycleRoot, BorderLayout.SOUTH)
 
   val box = Box.createHorizontalBox()

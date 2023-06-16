@@ -40,7 +40,7 @@ private fun makeTestPanel(title: String, sp: JSeparator, indent: Int = 10): Comp
   c.insets = Insets(2, 0, 2, 2)
   c.weightx = 0.0
   c.fill = GridBagConstraints.NONE
-  p.add(JButton("dummy"), c)
+  p.add(JButton("JButton"), c)
   return p
 }
 

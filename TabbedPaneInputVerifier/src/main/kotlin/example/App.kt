@@ -13,7 +13,7 @@ fun makeUI(): Component {
     it.horizontalAlignment = SwingConstants.RIGHT
     it.inputVerifier = IntegerInputVerifier()
   }
-  val button0 = JButton("Dummy")
+  val button0 = JButton("JButton")
 
   val button1 = JButton("setText(0)")
   button1.addActionListener {

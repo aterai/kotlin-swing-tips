@@ -73,8 +73,8 @@ private object ImageUtils {
     sub.add("JMenuItem")
     sub.add("L${"o".repeat(20)}ng")
     menu.add(sub)
-    menu.add("dummy1")
-    menu.add("dummy2")
+    menu.add("JMenuItem1")
+    menu.add("JMenuItem2")
     return menu
   }
 
