@@ -6,7 +6,6 @@ import java.awt.event.KeyEvent
 import java.awt.event.KeyListener
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.util.regex.Pattern
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.CaretEvent
 import javax.swing.event.CaretListener
@@ -135,11 +134,8 @@ fun setHighlight(tc: JTextComponent, pattern: String) {
     val highlighter = tc.highlighter
     val doc = tc.document
     val text = doc.getText(0, doc.length)
-    val matcher = Pattern.compile(pattern).matcher(text)
-    var pos = 0
-    while (matcher.find(pos) && matcher.group().isNotEmpty()) {
-      pos = matcher.end()
-      highlighter.addHighlight(matcher.start(), pos, HIGHLIGHT)
+    pattern.toRegex().findAll(text).map { it.range }.filterNot { it.isEmpty() }.forEach {
+      highlighter.addHighlight(it.first(), it.last() + 1, HIGHLIGHT)
     }
   }.onFailure {
     UIManager.getLookAndFeel().provideErrorFeedback(tc)
