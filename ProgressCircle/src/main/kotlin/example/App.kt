@@ -113,7 +113,7 @@ private open class BackgroundTask : SwingWorker<String, Unit>() {
     var current = 0
     val lengthOfTask = 100
     while (current <= lengthOfTask && !isCancelled) {
-      Thread.sleep(80) // dummy task
+      Thread.sleep(80)
       progress = 100 * current / lengthOfTask
       current++
     }

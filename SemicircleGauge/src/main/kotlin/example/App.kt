@@ -42,7 +42,7 @@ fun makeUI(): Component {
       override fun doInBackground(): String {
         var current = 0
         while (current <= lengthOfTask && !isCancelled) {
-          Thread.sleep(10) // dummy task
+          Thread.sleep(10)
           progress = 100 * current / lengthOfTask
           current++
         }

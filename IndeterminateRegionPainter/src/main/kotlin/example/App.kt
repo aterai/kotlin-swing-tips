@@ -67,7 +67,7 @@ private fun makeTitledPanel(title: String, cmp: Component) = JPanel(GridBagLayou
 private class BackgroundTask : SwingWorker<String, Void?>() {
   @Throws(InterruptedException::class)
   override fun doInBackground(): String {
-    Thread.sleep(5000) // dummy task
+    Thread.sleep(5000)
     var current = 0
     val lengthOfTask = 100
     while (current <= lengthOfTask && !isCancelled) {

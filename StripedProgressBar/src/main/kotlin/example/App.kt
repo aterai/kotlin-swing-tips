@@ -145,11 +145,11 @@ private class StripedProgressBarUI(
 private class BackgroundTask : SwingWorker<String, Void>() {
   @Throws(InterruptedException::class)
   public override fun doInBackground(): String {
-    Thread.sleep(5000) // dummy task 1
+    Thread.sleep(5000)
     var current = 0
     val lengthOfTask = 100
     while (current <= lengthOfTask && !isCancelled) {
-      Thread.sleep(50) // dummy task 2
+      Thread.sleep(50)
       progress = 100 * current / lengthOfTask
       current++
     }

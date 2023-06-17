@@ -94,7 +94,7 @@ private open class BackgroundTask : SwingWorker<String, Void>() {
 
   @Throws(InterruptedException::class)
   protected fun doSomething() {
-    Thread.sleep(50) // dummy task
+    Thread.sleep(50)
   }
 }
 
