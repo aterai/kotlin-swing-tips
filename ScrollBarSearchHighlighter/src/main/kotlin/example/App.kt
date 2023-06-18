@@ -3,7 +3,6 @@ package example
 import com.sun.java.swing.plaf.windows.WindowsScrollBarUI
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.geom.AffineTransform
-import java.util.regex.Pattern
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.plaf.metal.MetalScrollBarUI
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
@@ -86,13 +85,8 @@ private fun setHighlight(jtc: JTextComponent, pattern: String) {
   val doc = jtc.document
   runCatching {
     val text = doc.getText(0, doc.length)
-    val matcher = Pattern.compile(pattern).matcher(text)
-    var pos = 0
-    while (matcher.find(pos) && matcher.group().isNotEmpty()) {
-      val start = matcher.start()
-      val end = matcher.end()
-      highlighter.addHighlight(start, end, HIGHLIGHT)
-      pos = end
+    pattern.toRegex().findAll(text).map { it.range }.filterNot { it.isEmpty() }.forEach {
+      highlighter.addHighlight(it.first(), it.last() + 1, HIGHLIGHT)
     }
   }.onFailure {
     UIManager.getLookAndFeel().provideErrorFeedback(jtc)
