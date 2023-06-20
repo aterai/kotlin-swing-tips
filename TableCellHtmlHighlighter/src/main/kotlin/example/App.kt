@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.util.regex.Pattern
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
@@ -100,14 +99,12 @@ private class HighlightTableCellRenderer : DefaultTableCellRenderer() {
   ): Component {
     var txt = value?.toString() ?: ""
     if (pattern.isNotEmpty() && pattern != prev) {
-      val matcher = Pattern.compile(pattern).matcher(txt)
       var pos = 0
       val buf = StringBuilder("<html>")
-      while (matcher.find(pos) && matcher.group().isNotEmpty()) {
-        val start = matcher.start()
-        val end = matcher.end()
+      pattern.toRegex().findAll(txt).map { it.range }.filterNot { it.isEmpty() }.forEach {
         val span = "%s<span style='color:#000000; background-color:#FFFF00'>%s</span>"
-        buf.append(String.format(span, txt.substring(pos, start), txt.substring(start, end)))
+        val end = it.last + 1
+        buf.append(span.format(txt.substring(pos, it.first), txt.substring(it.first, end)))
         pos = end
       }
       buf.append(txt.substring(pos))
