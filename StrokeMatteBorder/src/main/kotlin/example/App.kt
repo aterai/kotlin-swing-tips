@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.util.Locale
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.EmptyBorder
 import kotlin.math.roundToInt
@@ -22,7 +21,7 @@ fun makeLabelTable(row: Int, column: Int): Component {
     c.gridx = 0
     val insideBorder = BorderFactory.createEmptyBorder(1, 1, 0, 0)
     while (c.gridx < column) {
-      val l = makeLabel(String.format(Locale.ENGLISH, "%d%d", c.gridx, c.gridy))
+      val l = makeLabel("${c.gridx}${c.gridy}")
       l.border = BorderFactory.createCompoundBorder(dashed, insideBorder)
       p.add(l, c)
       c.gridx++
