@@ -1,7 +1,6 @@
 package example
 
 import java.awt.* // ktlint-disable no-wildcard-imports
-import java.util.regex.Pattern
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeCellRenderer
@@ -46,7 +45,8 @@ private fun makeModel(): DefaultTreeModel {
 }
 
 private class SelectionColorTreeCellRenderer : DefaultTreeCellRenderer() {
-  private val pattern = Pattern.compile("^a.*", Pattern.CASE_INSENSITIVE)
+  // private val pattern = Pattern.compile("^a.*", Pattern.CASE_INSENSITIVE)
+  private val pattern = "^a.*".toRegex(RegexOption.IGNORE_CASE)
 
   override fun getTreeCellRendererComponent(
     tree: JTree,
@@ -89,7 +89,7 @@ private class SelectionColorTreeCellRenderer : DefaultTreeCellRenderer() {
 
   private fun setPatternColor(value: Any?, c: JComponent, leaf: Boolean) {
     val str = value?.toString() ?: ""
-    if (leaf && pattern.matcher(str).matches()) {
+    if (leaf && pattern.matches(str)) {
       c.isOpaque = true
       c.background = Color.RED
     }
