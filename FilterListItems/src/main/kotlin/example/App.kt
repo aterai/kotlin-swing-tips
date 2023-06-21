@@ -4,7 +4,6 @@ import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.image.BufferedImage
 import java.awt.image.FilteredImageSource
 import java.awt.image.RGBImageFilter
-import java.util.regex.Pattern
 import javax.imageio.ImageIO
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.border.Border
@@ -68,20 +67,12 @@ fun makeUI(): Component {
   }
 }
 
-private fun getPattern() = field.text
-  ?.takeIf { it.isNotEmpty() }
-  ?.let {
-    runCatching {
-      Pattern.compile(it)
-    }.getOrNull()
-  }
-
 private fun filter() {
-  getPattern()?.also { pattern ->
+  field.text?.takeIf { it.isNotEmpty() }?.toRegex()?.also { pattern ->
     // val selected = list.selectedValuesList
     model.clear()
     defaultModel
-      .filter { item -> pattern.matcher(item.title).find() }
+      .filter { item -> pattern.containsMatchIn(item.title) }
       .forEach { element -> model.addElement(element) }
     for (item in list.selectedValuesList) {
       val i = model.indexOf(item)
