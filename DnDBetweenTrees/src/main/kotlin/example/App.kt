@@ -28,12 +28,12 @@ private fun makeTree(handler: TransferHandler): JTree {
   tree.dropMode = DropMode.INSERT
   tree.selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
   // Disable node Cut action
-  val dummy = object : AbstractAction() {
+  val empty = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      // Dummy action
+      // do nothing action
     }
   }
-  tree.actionMap.put(TransferHandler.getCutAction().getValue(Action.NAME), dummy)
+  tree.actionMap.put(TransferHandler.getCutAction().getValue(Action.NAME), empty)
   for (i in 0 until tree.rowCount) {
     tree.expandRow(i)
   }

@@ -44,17 +44,6 @@ private fun makeList(): JList<Color> {
       transferHandler = ListItemTransferHandler()
     }
   }
-  // // Disable row Cut, Copy, Paste
-  // val map = list.actionMap
-  // val dummy = object : AbstractAction() {
-  //   override fun actionPerformed(e: ActionEvent) {
-  //     // Dummy action
-  //   }
-  // }
-  // map.put(TransferHandler.getCutAction().getValue(Action.NAME), dummy)
-  // map.put(TransferHandler.getCopyAction().getValue(Action.NAME), dummy)
-  // map.put(TransferHandler.getPasteAction().getValue(Action.NAME), dummy)
-  // return list
 }
 
 private class ListItemTransferHandler : TransferHandler() {
