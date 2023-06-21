@@ -9,7 +9,7 @@ import kotlin.math.pow
 fun makeUI(): Component {
   val gp = GridPanel(4, 3)
   for (i in 0 until gp.columns * gp.rows) {
-    gp.add(makeDummyComponent(i))
+    gp.add(makeSampleComponent(i))
   }
 
   val scrollPane = JScrollPane(gp)
@@ -28,7 +28,7 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeDummyComponent(idx: Int): Component =
+private fun makeSampleComponent(idx: Int): Component =
   if (idx % 2 == 0) JButton("button$idx") else JScrollPane(JTree())
 
 private class GridPanel(rows: Int, cols: Int) : JPanel(GridLayout(rows, cols, 0, 0)), Scrollable {

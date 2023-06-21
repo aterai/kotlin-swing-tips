@@ -23,7 +23,7 @@ fun makeUI() = JPanel(GridLayout(1, 2)).also {
   }
   val button = JButton("Open")
   button.addActionListener { button.rootPane.glassPane.isVisible = true }
-  it.add(makeDummyPanel())
+  it.add(makeSamplePanel())
   it.add(button)
   it.preferredSize = Dimension(320, 240)
 }
@@ -39,7 +39,7 @@ private fun makeMissingImage(): BufferedImage {
   return bi
 }
 
-private fun makeDummyPanel(): JPanel {
+private fun makeSamplePanel(): JPanel {
   val b = JButton("Button & Mnemonic")
   b.mnemonic = KeyEvent.VK_B
   val t = JTextField("TextField & ToolTip")

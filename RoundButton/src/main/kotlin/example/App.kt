@@ -188,7 +188,7 @@ class ShapeButton(private val shape: Shape) : JButton() {
 
   init {
     setModel(DefaultButtonModel())
-    init("Shape", DummySizeIcon(shape))
+    init("Shape", ShapeSizeIcon(shape))
     verticalAlignment = SwingConstants.CENTER
     verticalTextPosition = SwingConstants.CENTER
     horizontalAlignment = SwingConstants.CENTER
@@ -233,7 +233,7 @@ class ShapeButton(private val shape: Shape) : JButton() {
   override fun contains(x: Int, y: Int) = shape.contains(Point(x, y))
 }
 
-class DummySizeIcon(private val shape: Shape) : Icon {
+class ShapeSizeIcon(private val shape: Shape) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     // Empty icon
   }

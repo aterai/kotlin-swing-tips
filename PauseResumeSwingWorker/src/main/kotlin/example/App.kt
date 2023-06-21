@@ -182,7 +182,7 @@ private open class BackgroundTask : SwingWorker<String, Progress>() {
         continue
       }
       val iv = 100 * current / lengthOfTask
-      Thread.sleep(20) // dummy
+      Thread.sleep(20) // sample
       publish(Progress(ProgressType.FILE, iv + 1))
       current++
     }

@@ -9,7 +9,7 @@ private val b2 = JButton("Button2")
 
 fun makeUI() = JPanel(BorderLayout(5, 5)).also {
   it.add(makeRadioPane(), BorderLayout.NORTH)
-  it.add(makeDummyTextComponent())
+  it.add(makeSampleTextComponent())
   it.add(makeDefaultButtonPanel(), BorderLayout.SOUTH)
   it.preferredSize = Dimension(320, 240)
 }
@@ -48,9 +48,9 @@ private fun makeRadioPane(): Box {
   return box
 }
 
-private fun makeDummyTextComponent(): Component {
+private fun makeSampleTextComponent(): Component {
   val p = JPanel(BorderLayout(2, 2))
-  p.border = BorderFactory.createTitledBorder("Dummy TextComponent")
+  p.border = BorderFactory.createTitledBorder("Sample TextComponent")
   p.add(JTextField(), BorderLayout.NORTH)
   p.add(JScrollPane(JTextArea()))
   return p

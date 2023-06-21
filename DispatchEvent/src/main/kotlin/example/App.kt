@@ -38,7 +38,7 @@ fun makeUI(): Component {
   p.add(button, BorderLayout.EAST)
 
   val panel = JPanel(BorderLayout(5, 5))
-  panel.border = BorderFactory.createTitledBorder("Dummy")
+  panel.border = BorderFactory.createTitledBorder("Sample")
 
   val box = JPanel(BorderLayout(5, 5))
   box.add(textField)
