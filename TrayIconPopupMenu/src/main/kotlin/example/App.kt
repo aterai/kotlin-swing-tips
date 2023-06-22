@@ -39,13 +39,13 @@ fun makeUI(): Component {
 }
 
 private fun initPopupMenu(frame: Frame) {
-  val dummy = JDialog()
-  dummy.isUndecorated = true
+  val tmp = JDialog()
+  tmp.isUndecorated = true
   val cl = Thread.currentThread().contextClassLoader
   val path = "example/16x16.png"
   val img = cl.getResource(path)?.openStream()?.use(ImageIO::read) ?: makeDefaultTrayImage()
   val icon = TrayIcon(img, "TRAY", null)
-  icon.addMouseListener(TrayIconPopupMenuHandler(popup, dummy))
+  icon.addMouseListener(TrayIconPopupMenuHandler(popup, tmp))
   runCatching {
     SystemTray.getSystemTray().add(icon)
   }
@@ -55,11 +55,11 @@ private fun initPopupMenu(frame: Frame) {
     }
 
     override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
-      dummy.isVisible = false
+      tmp.isVisible = false
     }
 
     override fun popupMenuCanceled(e: PopupMenuEvent) {
-      dummy.isVisible = false
+      tmp.isVisible = false
     }
   }
   popup.addPopupMenuListener(popupMenuHandler)
@@ -135,15 +135,15 @@ private object TrayIconPopupMenuUtils {
 
 private class TrayIconPopupMenuHandler(
   private val popup: JPopupMenu,
-  private val dummy: Window
+  private val tmp: Window
 ) : MouseAdapter() {
   private fun showPopupMenu(e: MouseEvent) {
     if (e.isPopupTrigger) {
       val p = TrayIconPopupMenuUtils.adjustPopupLocation(popup, e.x, e.y)
-      dummy.location = p
-      dummy.isVisible = true
-      // dummy.toFront()
-      popup.show(dummy, 0, 0)
+      tmp.location = p
+      tmp.isVisible = true
+      // tmp.toFront()
+      popup.show(tmp, 0, 0)
     }
   }
 
