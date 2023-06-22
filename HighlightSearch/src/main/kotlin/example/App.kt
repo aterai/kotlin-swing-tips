@@ -3,7 +3,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import java.util.regex.Pattern
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
@@ -109,16 +108,10 @@ private fun changeHighlight() {
   val highlighter = textArea.highlighter
   highlighter.removeAllHighlights()
   val doc = textArea.document
-  getPattern()?.also { pattern: Pattern ->
-    runCatching {
-      val matcher = pattern.matcher(doc.getText(0, doc.length))
-      var pos = 0
-      while (matcher.find(pos) && matcher.group().isNotEmpty()) {
-        val start = matcher.start()
-        val end = matcher.end()
-        highlighter.addHighlight(start, end, highlightPainter)
-        pos = end
-      }
+  val text = doc.getText(0, doc.length)
+  getRegex()?.also { pattern ->
+    pattern.findAll(text).map { it.range }.filterNot { it.isEmpty() }.forEach {
+      highlighter.addHighlight(it.first(), it.last() + 1, highlightPainter)
     }
   }
   val label = layerUI.hint
@@ -144,20 +137,15 @@ private fun changeHighlight() {
   field.repaint()
 }
 
-private fun getPattern(): Pattern? {
+private fun getRegex(): Regex? {
   val text = field.text
   if (text == null || text.isEmpty()) {
     return null
   }
   val cw = if (checkWord.isSelected) "\\b" else ""
   val pattern = "%s%s%s".format(cw, text, cw)
-  val flags =
-    if (checkCase.isSelected) 0 else Pattern.CASE_INSENSITIVE or Pattern.UNICODE_CASE
-  return runCatching {
-    Pattern.compile(pattern, flags)
-  }.onFailure {
-    field.background = WARNING_COLOR
-  }.getOrNull()
+  val op = if (checkCase.isSelected) emptySet<RegexOption>() else setOf(RegexOption.IGNORE_CASE)
+  return pattern.toRegex(op)
 }
 
 @Throws(BadLocationException::class)
