@@ -44,7 +44,7 @@ fun makeUI(): Component {
 }
 
 private class DisableInputLayerUI<V : Component> : LayerUI<V>() {
-  private val dmyMouseListener = object : MouseAdapter() { /* Dummy listener */ }
+  private val emptyMouseAdapter = object : MouseAdapter() { /* do nothing listener */ }
   private var isBlocking = false
   fun setLocked(flag: Boolean) {
     firePropertyChange(CMD_REPAINT, isBlocking, flag)
@@ -54,7 +54,7 @@ private class DisableInputLayerUI<V : Component> : LayerUI<V>() {
   override fun installUI(c: JComponent) {
     super.installUI(c)
     (c as? JLayer<*>)?.also {
-      it.glassPane.addMouseListener(dmyMouseListener)
+      it.glassPane.addMouseListener(emptyMouseAdapter)
       it.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK or
         AWTEvent.MOUSE_WHEEL_EVENT_MASK or AWTEvent.KEY_EVENT_MASK
     }
@@ -63,7 +63,7 @@ private class DisableInputLayerUI<V : Component> : LayerUI<V>() {
   override fun uninstallUI(c: JComponent) {
     (c as? JLayer<*>)?.also {
       it.layerEventMask = 0
-      it.glassPane.removeMouseListener(dmyMouseListener)
+      it.glassPane.removeMouseListener(emptyMouseAdapter)
     }
     super.uninstallUI(c)
   }

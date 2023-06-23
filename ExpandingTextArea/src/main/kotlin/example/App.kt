@@ -18,7 +18,7 @@ fun makeUI() = JPanel(BorderLayout()).also {
   box.add(makeExpandingTextArea2())
 
   it.add(box, BorderLayout.NORTH)
-  it.add(JButton("focus dummy"), BorderLayout.SOUTH)
+  it.add(JButton("focus test"), BorderLayout.SOUTH)
   it.preferredSize = Dimension(320, 240)
 }
 
