@@ -3,7 +3,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import java.util.regex.Pattern
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
@@ -84,16 +83,16 @@ fun makeUI(): Component {
   }
 }
 
-private fun getPattern(): Pattern? {
+private fun getRegex(): Regex? {
   val text = field.text
   if (text.isEmpty()) {
     return null
   }
   val cw = if (checkWord.isSelected) "\\b" else ""
   val pattern = "%s%s%s".format(cw, text, cw)
-  val flags = if (checkCase.isSelected) 0 else Pattern.CASE_INSENSITIVE or Pattern.UNICODE_CASE
+  val op = if (checkCase.isSelected) emptySet() else setOf(RegexOption.IGNORE_CASE)
   return runCatching {
-    Pattern.compile(pattern, flags)
+    pattern.toRegex(op)
   }.onFailure {
     field.background = WARNING_COLOR
   }.getOrNull()
@@ -113,16 +112,10 @@ fun changeHighlight(index: Int): Int {
   highlighter.removeAllHighlights()
   // doc.setCharacterAttributes(0, doc.getLength(), def, true)
   // match highlighting:
-  getPattern()?.also {
-    runCatching {
-      val matcher = it.matcher(doc.getText(0, doc.length))
-      var pos = 0
-      while (matcher.find(pos) && matcher.group().isNotEmpty()) {
-        val start = matcher.start()
-        val end = matcher.end()
-        highlighter.addHighlight(start, end, highlightPainter)
-        pos = end
-      }
+  val text = doc.getText(0, doc.length)
+  getRegex()?.also { pattern ->
+    pattern.findAll(text).map { it.range }.filterNot { it.isEmpty() }.forEach {
+      highlighter.addHighlight(it.first(), it.last() + 1, highlightPainter)
     }
   }
   val label = layerUI.hint
