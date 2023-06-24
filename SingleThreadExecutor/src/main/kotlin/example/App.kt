@@ -3,7 +3,6 @@ package example
 import java.awt.* // ktlint-disable no-wildcard-imports
 import java.awt.event.HierarchyEvent
 import java.util.TreeSet
-import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableCellRenderer
@@ -147,7 +146,7 @@ private open class BackgroundTask : SwingWorker<Int, Int>() {
 }
 
 private open class WorkerModel : DefaultTableModel() {
-  private val workerMap = ConcurrentHashMap<Int, SwingWorker<Int, Int>>()
+  private val workerMap = mutableMapOf<Int, SwingWorker<Int, Int>>()
   private var number = 0
 
   fun addProgressValue(name: String, iv: Int, worker: SwingWorker<Int, Int>?) {
