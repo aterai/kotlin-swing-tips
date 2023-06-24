@@ -12,15 +12,15 @@ import java.awt.geom.Line2D
 import java.awt.geom.Point2D
 import java.time.LocalTime
 import java.time.ZoneId
-import java.util.concurrent.ConcurrentHashMap
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import kotlin.math.PI
 import kotlin.math.abs
 
 fun makeUI(): Component {
   val clock = AnalogClock()
-  val attr = ConcurrentHashMap<TextAttribute, Any>()
-  attr[TextAttribute.TRACKING] = TextAttribute.TRACKING_TIGHT
+  val attr = mapOf<TextAttribute, Any>(
+    Pair(TextAttribute.TRACKING, TextAttribute.TRACKING_TIGHT)
+  )
   clock.font = clock.font.deriveFont(32f).deriveFont(attr)
 
   val check = JCheckBox("rotate", true)
