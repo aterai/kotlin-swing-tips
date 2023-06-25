@@ -59,6 +59,7 @@ private object LookAndFeelUtils {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd
+    b.toolTipText = cmd
     b.hideActionText = true
     b.addActionListener { setLookAndFeel(cmd) }
   }
