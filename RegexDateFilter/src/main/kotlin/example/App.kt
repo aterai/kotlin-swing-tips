@@ -6,7 +6,6 @@ import java.awt.event.MouseEvent
 import java.text.DateFormat
 import java.util.Calendar
 import java.util.Date
-import java.util.regex.Pattern
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableModel
@@ -38,15 +37,15 @@ fun makeUI(): Component {
   table.rowSorter = sorter
 
   // RowFilter.regexFilter
-  val m1 = Pattern.compile("12").matcher(date.toString())
-  log.append("String 12 find -> ${m1.find()}\n") // false
+  val m1 = "12".toRegex().containsMatchIn(date.toString())
+  log.append("String 12 find -> ${m1}\n") // false
 
-  val m2 = Pattern.compile("Dec").matcher(date.toString())
-  log.append("String Dec find -> ${m2.find()}\n") // true
+  val m2 = "Dec".toRegex().containsMatchIn(date.toString())
+  log.append("String Dec find -> ${m2}\n") // true
 
   // a customized RegexFilter
-  val m3 = Pattern.compile("12").matcher(DateFormat.getDateInstance().format(date))
-  log.append("DateFormat 12 find -> ${m3.find()}\n") // true
+  val m3 = "12".toRegex().containsMatchIn(DateFormat.getDateInstance().format(date))
+  log.append("DateFormat 12 find -> ${m3}\n") // true
 
   val p = JPanel(GridLayout(2, 1))
   p.add(JScrollPane(table))
@@ -76,7 +75,7 @@ private fun makeBox(sorter: TableRowSorter<TableModel>): Component {
   val r2 = JRadioButton("new RowFilter()")
   r2.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      sorter.rowFilter = RegexDateFilter(Pattern.compile(field.text))
+      sorter.rowFilter = RegexDateFilter(field.text.toRegex())
     }
   }
 
@@ -97,18 +96,16 @@ private fun makeBox(sorter: TableRowSorter<TableModel>): Component {
   return box
 }
 
-private class RegexDateFilter(pattern: Pattern) : RowFilter<TableModel?, Int?>() {
-  private val matcher = pattern.matcher("")
-
+private class RegexDateFilter(private val pattern: Regex?) : RowFilter<TableModel?, Int?>() {
   override fun include(entry: Entry<out TableModel?, out Int?>): Boolean {
     for (i in entry.valueCount - 1 downTo 0) {
       val v = entry.getValue(i)
-      if (v is Date) {
-        matcher.reset(DateFormat.getDateInstance().format(v))
+      val b = if (v is Date) {
+        pattern?.containsMatchIn(DateFormat.getDateInstance().format(v))
       } else {
-        matcher.reset(entry.getStringValue(i))
+        pattern?.containsMatchIn(entry.getStringValue(i))
       }
-      if (matcher.find()) {
+      if (b == true) {
         return true
       }
     }
