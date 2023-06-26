@@ -180,17 +180,17 @@ fun makeUI(): Component {
 private open class BackgroundTask(
   private val lengthOfTask: Int
 ) : SwingWorker<Int, ProgressValue>() {
-  private val sleepDummy = (1..49).random()
+  private val randomSleep = (1..49).random()
 
   @Throws(InterruptedException::class)
   override fun doInBackground(): Int {
     var current = 0
     while (current <= lengthOfTask && !isCancelled) {
       publish(ProgressValue(lengthOfTask, current))
-      Thread.sleep(sleepDummy.toLong())
+      Thread.sleep(randomSleep.toLong())
       current++
     }
-    return sleepDummy * lengthOfTask
+    return randomSleep * lengthOfTask
   }
 }
 

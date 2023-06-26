@@ -153,7 +153,7 @@ private class TablePopupMenu : JPopupMenu() {
 }
 
 private open class BackgroundTask : SwingWorker<Int, Int>() {
-  private val sleepDummy = (1..50).random()
+  private val randomSleep = (1..50).random()
 
   @Throws(InterruptedException::class)
   override fun doInBackground(): Int {
@@ -161,10 +161,10 @@ private open class BackgroundTask : SwingWorker<Int, Int>() {
     var current = 0
     while (current <= lengthOfTask && !isCancelled) {
       publish(100 * current / lengthOfTask)
-      Thread.sleep(sleepDummy.toLong())
+      Thread.sleep(randomSleep.toLong())
       current++
     }
-    return sleepDummy * lengthOfTask
+    return randomSleep * lengthOfTask
   }
 }
 

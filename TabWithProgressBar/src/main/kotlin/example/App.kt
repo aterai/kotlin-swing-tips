@@ -47,7 +47,7 @@ private class ProgressTabbedPane : JTabbedPane() {
     bar.preferredSize = Dimension(w, dim.height - tabInsets.top - 1)
     setTabComponentAt(currentIndex, bar)
     val worker = object : BackgroundTask() {
-      override fun process(dummy: List<Int>) {
+      override fun process(c: List<Int>) {
         if (!isDisplayable) {
           cancel(true)
         }
