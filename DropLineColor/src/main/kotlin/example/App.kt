@@ -6,7 +6,6 @@ import java.awt.datatransfer.Transferable
 import java.awt.datatransfer.UnsupportedFlavorException
 import java.awt.dnd.DragSource
 import java.awt.event.ActionEvent
-import java.io.IOException
 import java.util.concurrent.atomic.AtomicInteger
 import javax.swing.* // ktlint-disable no-wildcard-imports
 import javax.swing.table.DefaultTableModel
@@ -45,16 +44,6 @@ private fun makeListPanel(): Component {
   list.dropMode = DropMode.INSERT
   list.dragEnabled = true
 
-  // Disable row Cut, Copy, Paste
-  val map = list.actionMap
-  val dummy = object : AbstractAction() {
-    override fun actionPerformed(e: ActionEvent) {
-      // Dummy action
-    }
-  }
-  map.put(TransferHandler.getCutAction().getValue(Action.NAME), dummy)
-  map.put(TransferHandler.getCopyAction().getValue(Action.NAME), dummy)
-  map.put(TransferHandler.getPasteAction().getValue(Action.NAME), dummy)
   val box = Box.createHorizontalBox()
   box.add(Box.createHorizontalGlue())
   box.add(makeColorChooserButton("List.dropLineColor"))
@@ -99,16 +88,6 @@ private fun makeTablePanel(): Component {
   table.dragEnabled = true
   table.fillsViewportHeight = true
 
-  // Disable row Cut, Copy, Paste
-  val map = table.actionMap
-  val dummy = object : AbstractAction() {
-    override fun actionPerformed(e: ActionEvent) {
-      // Dummy action
-    }
-  }
-  map.put(TransferHandler.getCutAction().getValue(Action.NAME), dummy)
-  map.put(TransferHandler.getCopyAction().getValue(Action.NAME), dummy)
-  map.put(TransferHandler.getPasteAction().getValue(Action.NAME), dummy)
   val box = Box.createHorizontalBox()
   box.add(Box.createHorizontalGlue())
   box.add(makeColorChooserButton("Table.dropLineColor"))
@@ -129,12 +108,12 @@ private fun makeTree(handler: TransferHandler): JTree {
   tree.selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
 
   // Disable node Cut action
-  val dummy = object : AbstractAction() {
+  val empty = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      // Dummy action
+      // do nothing action
     }
   }
-  tree.actionMap.put(TransferHandler.getCutAction().getValue(Action.NAME), dummy)
+  tree.actionMap.put(TransferHandler.getCutAction().getValue(Action.NAME), empty)
 
   for (i in 0 until tree.rowCount) {
     tree.expandRow(i)
@@ -157,25 +136,24 @@ private fun makeTreePanel(): Component {
 }
 
 private class ListItemTransferHandler : TransferHandler() {
-  private val localObjectFlavor = DataFlavor(List::class.java, "List of items")
-  private var source: JList<*>? = null
   private val selectedIndices = mutableListOf<Int>()
   private var addIndex = -1 // Location where items were added
   private var addCount = 0 // Number of items added.
 
   override fun createTransferable(c: JComponent): Transferable {
-    val src = c as? JList<*>
-    source = src
+    val source = (c as? JList<*>)?.also { s ->
+      s.selectedIndices.forEach { selectedIndices.add(it) }
+    }
+    val selectedValues = source?.selectedValuesList
     return object : Transferable {
-      override fun getTransferDataFlavors() = arrayOf(localObjectFlavor)
+      override fun getTransferDataFlavors() = arrayOf(FLAVOR)
 
-      override fun isDataFlavorSupported(flavor: DataFlavor) = localObjectFlavor == flavor
+      override fun isDataFlavorSupported(flavor: DataFlavor) = FLAVOR == flavor
 
-      @Throws(UnsupportedFlavorException::class, IOException::class)
+      @Throws(UnsupportedFlavorException::class)
       override fun getTransferData(flavor: DataFlavor): Any {
-        return if (isDataFlavorSupported(flavor) && src != null) {
-          src.selectedIndices.forEach { selectedIndices.add(it) }
-          src.selectedValuesList
+        return if (isDataFlavorSupported(flavor) && selectedValues != null) {
+          selectedValues
         } else {
           throw UnsupportedFlavorException(flavor)
         }
@@ -183,37 +161,32 @@ private class ListItemTransferHandler : TransferHandler() {
     }
   }
 
-  override fun canImport(info: TransferSupport) = info.isDrop &&
-    info.isDataFlavorSupported(localObjectFlavor) &&
-    info.dropLocation is JList.DropLocation
+  override fun canImport(info: TransferSupport) = info.isDataFlavorSupported(FLAVOR)
 
-  override fun getSourceActions(c: JComponent) = MOVE // COPY_OR_MOVE
+  override fun getSourceActions(c: JComponent) = COPY_OR_MOVE
 
   override fun importData(info: TransferSupport): Boolean {
-    val dl = info.dropLocation
-    val target = info.component as? JList<*>
-
-    @Suppress("UNCHECKED_CAST")
-    val listModel = target?.model as? DefaultListModel<Any>
-    if (dl !is JList.DropLocation || listModel == null) {
-      return false
-    }
-    val max = listModel.size
-    // var index = minOf(maxOf(0, dl.getIndex()), max)
-    // var index = dl.index.coerceIn(0, max)
-    var index = dl.index.takeIf { it in 0 until max } ?: max // -1 -> max
+    val target = info.component as? JList<*> ?: return false
+    var index = getIndex(info)
     addIndex = index
     val values = runCatching {
-      info.transferable.getTransferData(localObjectFlavor) as? List<*>
+      info.transferable.getTransferData(FLAVOR) as? List<*>
     }.getOrNull().orEmpty()
-    for (o in values) {
-      val i = index++
-      listModel.add(i, o)
-      target.addSelectionInterval(i, i)
+
+    @Suppress("UNCHECKED_CAST")
+    (target.model as? DefaultListModel<Any>)?.also {
+      for (o in values) {
+        val i = index++
+        it.add(i, o)
+        target.addSelectionInterval(i, i)
+      }
     }
-    addCount = if (target == source) values.size else 0
+    addCount = if (info.isDrop) values.size else 0
+    // target.requestFocusInWindow()
     return values.isNotEmpty()
   }
+
+  override fun importData(comp: JComponent, t: Transferable) = importData(TransferSupport(comp, t))
 
   override fun exportDone(c: JComponent, data: Transferable, action: Int) {
     cleanup(c, action == MOVE)
@@ -239,16 +212,47 @@ private class ListItemTransferHandler : TransferHandler() {
     addCount = 0
     addIndex = -1
   }
+
+  private fun getIndex(info: TransferSupport): Int {
+    val target = info.component as? JList<*> ?: return -1
+    var index = if (info.isDrop) { // Mouse Drag & Drop
+      val tdl = info.dropLocation
+      if (tdl is JList.DropLocation) {
+        tdl.index
+      } else {
+        target.selectedIndex
+      }
+    } else { // Keyboard Copy & Paste
+      target.selectedIndex
+    }
+    val max = (target.model as? DefaultListModel<*>)?.size ?: -1
+    index = if (index < 0) max else index
+    index = index.coerceAtMost(max)
+    return index
+  }
+
+  companion object {
+    private val FLAVOR = DataFlavor(MutableList::class.java, "List of items")
+  }
 }
 
 private class TableRowTransferHandler : TransferHandler() {
-  // private var indices: IntArray? = null
   private val selectedIndices = mutableListOf<Int>()
   private var addIndex = -1 // Location where items were added
   private var addCount = 0 // Number of items added.
 
   override fun createTransferable(c: JComponent): Transferable {
     c.rootPane.glassPane.isVisible = true
+    val table = c as? JTable
+    val model = table?.model as? DefaultTableModel
+    val transferredRows = mutableListOf<Any>()
+    selectedIndices.clear()
+    if (model != null) {
+      table.selectedRows.forEach {
+        selectedIndices.add(it)
+        transferredRows.add(model.dataVector[it])
+      }
+    }
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(FLAVOR)
 
@@ -256,11 +260,8 @@ private class TableRowTransferHandler : TransferHandler() {
 
       @Throws(UnsupportedFlavorException::class)
       override fun getTransferData(flavor: DataFlavor): Any {
-        val table = c as? JTable
-        val model = table?.model as? DefaultTableModel
-        return if (isDataFlavorSupported(flavor) && model != null) {
-          table.selectedRows.forEach { selectedIndices.add(it) }
-          table.selectedRows.map { model.dataVector[it] }
+        return if (isDataFlavorSupported(flavor)) {
+          transferredRows
         } else {
           throw UnsupportedFlavorException(flavor)
         }
@@ -269,48 +270,43 @@ private class TableRowTransferHandler : TransferHandler() {
   }
 
   override fun canImport(info: TransferSupport): Boolean {
-    val c = info.component as? JComponent ?: return false
-    val glassPane = c.rootPane.glassPane
     val canDrop = info.isDrop && info.isDataFlavorSupported(FLAVOR)
-    glassPane.cursor = if (canDrop) DragSource.DefaultMoveDrop else DragSource.DefaultMoveNoDrop
+    (info.component as? JComponent)?.rootPane?.glassPane?.also {
+      it.cursor = if (canDrop) DragSource.DefaultMoveDrop else DragSource.DefaultMoveNoDrop
+    }
     return canDrop
   }
 
-  override fun getSourceActions(c: JComponent?) = MOVE
+  override fun getSourceActions(c: JComponent) = COPY_OR_MOVE
 
   override fun importData(info: TransferSupport): Boolean {
-    val tdl = info.dropLocation
     val target = info.component as? JTable
     val model = target?.model as? DefaultTableModel
-    if (tdl !is JTable.DropLocation || model == null) {
+    if (model == null) {
       return false
     }
     val max = model.rowCount
-    var index = tdl.row
-    index = if (index in 0 until max) index else max
+    var index = if (info.isDrop) {
+      (info.dropLocation as? JTable.DropLocation)?.row ?: -1
+    } else {
+      target.selectedRow
+    }
+    index = if (index >= 0 && index < max) index else max
     addIndex = index
     val values = runCatching {
       info.transferable.getTransferData(FLAVOR) as? List<*>
     }.getOrNull().orEmpty()
-    addCount = values.size
-    for (o in values) {
-      val row = index++
-      val list = o as? List<*> ?: continue
-      val array = arrayOfNulls<Any?>(list.size)
-      for ((i, v) in list.withIndex()) {
-        array[i] = v
-      }
-      model.insertRow(row, array)
-      target.selectionModel.addSelectionInterval(row, row)
+    values.filterIsInstance<List<*>>().forEach {
+      val i = index++
+      model.insertRow(i, it.toTypedArray())
+      target.selectionModel.addSelectionInterval(i, i)
+      target.requestFocusInWindow()
     }
+    addCount = if (info.isDrop) values.size else 0
     return values.isNotEmpty()
   }
 
-  override fun exportDone(
-    c: JComponent,
-    data: Transferable?,
-    action: Int
-  ) {
+  override fun exportDone(c: JComponent, data: Transferable?, action: Int) {
     cleanup(c, action == MOVE)
   }
 
