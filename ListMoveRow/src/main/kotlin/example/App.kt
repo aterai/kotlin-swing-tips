@@ -186,7 +186,7 @@ private class ListItemTransferHandler : TransferHandler() {
   }
 
   companion object {
-    private val FLAVOR = DataFlavor(MutableList::class.java, "List of items")
+    private val FLAVOR = DataFlavor(List::class.java, "List of items")
   }
 }
 
