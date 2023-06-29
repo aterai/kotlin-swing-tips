@@ -18,7 +18,7 @@ fun makeUI(): Component {
   }
 }
 
-private class ZoomAndPanePanel(@field:Transient private val icon: Icon) : JPanel() {
+private class ZoomAndPanePanel(private val icon: Icon) : JPanel() {
   private val zoomTransform = AffineTransform()
   private val imageRect = Rectangle(icon.iconWidth, icon.iconHeight)
   private var handler: ZoomHandler? = null
