@@ -20,8 +20,9 @@ fun makeUI() = JPanel(BorderLayout()).also {
   it.preferredSize = Dimension(320, 240)
 }
 
-private open class LoadSaveTask(val windowState: WindowState) :
-  SwingWorker<WindowListener?, Void?>() {
+private open class LoadSaveTask(
+  val windowState: WindowState
+) : SwingWorker<WindowListener?, Void?>() {
   public override fun doInBackground(): WindowListener? {
     val service: PersistenceService? = runCatching {
       ServiceManager.lookup("javax.jnlp.PersistenceService") as? PersistenceService
