@@ -132,7 +132,7 @@ private object SvgUtils {
         <desc>$desc</desc>
         <path d="$path" style="$style" />
       </svg>
-    """.trimIndent()
+      """.trimIndent()
   }
 
   fun makeStar(r1: Int, r2: Int, vc: Int): Path2D {
