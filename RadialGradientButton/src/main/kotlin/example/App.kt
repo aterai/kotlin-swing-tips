@@ -1,12 +1,12 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.geom.Ellipse2D
 import java.awt.geom.RoundRectangle2D
 import java.awt.image.BufferedImage
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 fun makeUI(): Component {
   val button1 = RadialGradientButton("JButton JButton JButton JButton")

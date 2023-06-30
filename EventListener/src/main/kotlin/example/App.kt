@@ -1,9 +1,9 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.util.EventListener
 import java.util.EventObject
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private val FONT12 = Font(Font.SANS_SERIF, Font.PLAIN, 12)
 private val FONT32 = Font(Font.SANS_SERIF, Font.PLAIN, 32)

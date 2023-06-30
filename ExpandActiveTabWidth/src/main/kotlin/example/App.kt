@@ -1,8 +1,8 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import javax.imageio.ImageIO
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 fun makeUI(): Component {
   val tabbedPane = JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT)

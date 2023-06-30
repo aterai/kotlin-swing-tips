@@ -1,13 +1,13 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseWheelEvent
 import java.awt.geom.Point2D
 import java.awt.image.BufferedImage
 import java.awt.image.PixelGrabber
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.plaf.metal.MetalSliderUI
 
 private val TEXTURE = TextureUtils.createCheckerTexture(6, Color(200, 150, 100, 50))

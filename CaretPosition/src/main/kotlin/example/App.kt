@@ -1,9 +1,9 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.time.LocalDateTime
 import java.time.ZoneId
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private const val LS = "\n"
 private const val LIMIT = 1000

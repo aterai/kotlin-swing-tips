@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.ActionEvent
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -14,7 +14,7 @@ import java.util.logging.LogRecord
 import java.util.logging.Logger
 import java.util.logging.SimpleFormatter
 import java.util.logging.StreamHandler
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private val LOGGER_NAME = MethodHandles.lookup().lookupClass().name
 private val LOGGER = Logger.getLogger(LOGGER_NAME)

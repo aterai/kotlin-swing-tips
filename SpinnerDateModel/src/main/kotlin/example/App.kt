@@ -1,11 +1,11 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
 import java.util.Calendar
 import java.util.Date
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.JSpinner.DateEditor
 
 fun makeUI(): Component {

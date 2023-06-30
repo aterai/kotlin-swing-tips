@@ -1,11 +1,11 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.WindowEvent
 import javax.imageio.ImageIO
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 fun start(frame: JFrame) {
   val cl = Thread.currentThread().contextClassLoader

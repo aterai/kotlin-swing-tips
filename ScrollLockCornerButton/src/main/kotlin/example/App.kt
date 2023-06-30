@@ -1,11 +1,11 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.InputEvent
 import java.awt.event.ItemEvent
 import java.awt.event.MouseAdapter
 import java.beans.PropertyChangeEvent
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.plaf.LayerUI
 
 fun makeUI(): Component {

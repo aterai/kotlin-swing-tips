@@ -1,10 +1,10 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.geom.AffineTransform
 import java.awt.geom.Path2D
 import java.awt.geom.PathIterator
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.event.ChangeListener
 import kotlin.math.PI
 import kotlin.math.cos

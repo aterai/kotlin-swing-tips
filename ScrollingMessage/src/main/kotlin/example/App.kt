@@ -1,12 +1,12 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.HierarchyEvent
 import java.awt.font.FontRenderContext
 import java.awt.font.GlyphVector
 import java.awt.font.LineMetrics
 import java.awt.geom.Line2D
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 fun makeUI() = JPanel(BorderLayout()).also {
   it.add(MarqueePanel())

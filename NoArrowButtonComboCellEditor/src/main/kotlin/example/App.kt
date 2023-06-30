@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.event.MouseEvent
 import java.time.LocalDateTime
@@ -8,7 +8,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAccessor
 import java.util.EventObject
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.plaf.basic.BasicComboBoxUI
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel

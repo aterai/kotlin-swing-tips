@@ -1,7 +1,7 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import java.awt.*
+import javax.swing.*
 
 fun makeUI() = JPanel(BorderLayout(5, 5)).also { panel ->
   val selectedLabelShift = "TabbedPane.selectedLabelShift"

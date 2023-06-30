@@ -1,10 +1,10 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.font.FontRenderContext
 import java.awt.font.TextLayout
 import java.awt.geom.Line2D
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 fun makeUI() = JPanel(GridLayout(2, 1)).also {
   it.add(TextLayoutPanel())

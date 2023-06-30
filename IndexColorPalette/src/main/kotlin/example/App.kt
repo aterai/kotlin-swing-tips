@@ -1,12 +1,12 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.image.BufferedImage
 import java.awt.image.ColorModel
 import java.awt.image.DataBuffer
 import java.awt.image.IndexColorModel
 import javax.imageio.ImageIO
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private val CELL_SIZE = Dimension(8, 8)
 

@@ -1,10 +1,10 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.ActionEvent
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.JSpinner.DefaultEditor
 import javax.swing.text.DefaultFormatterFactory
 import javax.swing.text.NumberFormatter

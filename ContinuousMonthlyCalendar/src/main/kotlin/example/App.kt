@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -10,7 +10,7 @@ import java.time.format.TextStyle
 import java.time.temporal.ChronoUnit
 import java.time.temporal.WeekFields
 import java.util.Locale
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.event.ListSelectionListener
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel

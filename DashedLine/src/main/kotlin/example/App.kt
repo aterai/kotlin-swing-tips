@@ -1,7 +1,7 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import java.awt.*
+import javax.swing.*
 
 private val field = JTextField("1f, 1f, 5f, 1f")
 var dashedStroke = makeStroke(field)

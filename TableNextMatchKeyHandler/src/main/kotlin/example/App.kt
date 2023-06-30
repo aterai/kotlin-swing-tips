@@ -1,10 +1,10 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 import java.util.Locale
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.table.DefaultTableModel
 import javax.swing.text.Position.Bias
 

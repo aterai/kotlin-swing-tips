@@ -10,8 +10,10 @@ trim_trailing_whitespace = true
 
 [*.{kt,kts}]
 max_line_length = 100
+ktlint_code_style = ktlint_official
 ktlint_standard_trailing-comma-on-declaration-site = disabled
 ktlint_standard_trailing-comma-on-call-site = disabled
+ij_kotlin_packages_to_use_import_on_demand = java.awt.*,javax.swing.*
 
 [*.md]
 trim_trailing_whitespace = false

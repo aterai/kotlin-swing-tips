@@ -1,11 +1,11 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.Clip
 import javax.sound.sampled.DataLine
 import javax.sound.sampled.LineEvent
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 fun makeUI(): Component {
   val b1 = JButton("play")

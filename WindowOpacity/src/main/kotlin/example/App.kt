@@ -1,10 +1,10 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.ItemEvent
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 val imageTexture = makeImageTexture()
 val checkerTexture = makeCheckerTexture()

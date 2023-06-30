@@ -1,8 +1,8 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.ActionListener
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private const val KEY = "Button.defaultButtonFollowsFocus"
 private val b1 = JButton("Button1")

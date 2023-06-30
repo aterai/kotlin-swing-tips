@@ -1,12 +1,12 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.ItemEvent
 import java.awt.font.TextLayout
 import java.awt.geom.AffineTransform
 import java.text.ParseException
 import java.util.EnumSet
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.text.DefaultFormatter
 import javax.swing.text.DefaultFormatterFactory
 

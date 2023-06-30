@@ -1,12 +1,12 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.HierarchyEvent
 import java.lang.invoke.MethodHandles
 import java.time.LocalTime
 import java.time.ZoneId
 import java.util.logging.Logger
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private val logger = Logger.getLogger(MethodHandles.lookup().lookupClass().name)
 

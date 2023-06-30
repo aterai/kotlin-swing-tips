@@ -1,11 +1,11 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.io.IOException
 import javax.imageio.ImageIO
 import javax.imageio.ImageReader
 import javax.imageio.stream.ImageInputStream
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 fun makeUI(): Component {
   val cl = Thread.currentThread().contextClassLoader

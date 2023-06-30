@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.StringSelection
 import java.awt.datatransfer.Transferable
@@ -9,7 +9,7 @@ import java.awt.dnd.DragSource
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.io.IOException
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 fun makeUI() {
   val f1 = JFrame("@title@")

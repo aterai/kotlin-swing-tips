@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
 import java.awt.datatransfer.UnsupportedFlavorException
@@ -15,7 +15,7 @@ import java.io.Reader
 import java.io.StringReader
 import java.nio.charset.Charset
 import java.util.Date
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.plaf.ColorUIResource
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel

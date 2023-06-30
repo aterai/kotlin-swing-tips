@@ -1,9 +1,9 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private val check1 = ActionCommandCheckBox(TreeDraws.DRAWS_FOCUS_BORDER_AROUND_ICON)
 private val check2 = ActionCommandCheckBox(TreeDraws.DRAW_DASHED_FOCUS_INDICATOR)

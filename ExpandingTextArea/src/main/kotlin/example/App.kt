@@ -1,12 +1,12 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private const val TEXT = "The quick brown fox jumps over the lazy dog."
 

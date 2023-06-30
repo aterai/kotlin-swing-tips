@@ -1,13 +1,13 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.font.GlyphMetrics
 import java.awt.font.GlyphVector
 import java.awt.font.LineBreakMeasurer
 import java.awt.font.TextAttribute
 import java.awt.geom.Point2D
 import java.text.AttributedString
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private const val TEXT = "あいうえお かきくけこ さしすせそ たちつてと なにぬねの はひふへほ まみむめも"
 

@@ -1,9 +1,9 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private const val MW = 320
 private const val MH1 = 100

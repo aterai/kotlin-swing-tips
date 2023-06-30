@@ -1,12 +1,12 @@
 package example
 
 import com.sun.java.swing.plaf.windows.WindowsComboBoxUI
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.InputEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.plaf.basic.BasicComboBoxUI
 import javax.swing.plaf.basic.BasicComboPopup
 

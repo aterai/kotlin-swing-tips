@@ -1,10 +1,10 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import java.io.File
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private val log = JTextArea()
 

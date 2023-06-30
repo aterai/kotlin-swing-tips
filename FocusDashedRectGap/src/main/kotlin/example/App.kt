@@ -1,7 +1,7 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import java.awt.*
+import javax.swing.*
 
 // private const val PAD = "<html><table><td height='32'>"
 // private const val PAD = "<html><table cellpadding='0'>"

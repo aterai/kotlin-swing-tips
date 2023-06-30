@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.event.WindowEvent
 import java.io.BufferedReader
@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets
 import java.util.Locale
 import java.util.PropertyResourceBundle
 import java.util.ResourceBundle
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.plaf.basic.BasicToolBarUI
 
 // private val BAR_FACTORY = BarFactory("resources.Main")

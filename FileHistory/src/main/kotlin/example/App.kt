@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import java.awt.event.WindowEvent
@@ -14,7 +14,7 @@ import java.nio.file.Paths
 import java.util.Locale
 import java.util.PropertyResourceBundle
 import java.util.ResourceBundle
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.plaf.basic.BasicToolBarUI
 
 private const val MAX_HISTORY = 3

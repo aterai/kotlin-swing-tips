@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.geom.Ellipse2D
 import java.awt.image.BufferedImage
 import java.io.File
@@ -9,7 +9,7 @@ import javax.imageio.IIOImage
 import javax.imageio.ImageIO
 import javax.imageio.ImageTypeSpecifier
 import javax.imageio.metadata.IIOMetadataNode
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private const val DELAY = 10
 private const val R = 20.0

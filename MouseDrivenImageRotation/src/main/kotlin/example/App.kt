@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.geom.AffineTransform
@@ -12,7 +12,7 @@ import java.awt.geom.RoundRectangle2D
 import java.awt.image.BufferedImage
 import java.awt.image.ImageObserver
 import javax.imageio.ImageIO
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import kotlin.math.PI
 import kotlin.math.atan2
 

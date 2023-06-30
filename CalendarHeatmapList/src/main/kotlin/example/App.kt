@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.MouseEvent
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -8,7 +8,7 @@ import java.time.ZoneId
 import java.time.format.TextStyle
 import java.time.temporal.WeekFields
 import java.util.Locale
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private val CELL_SIZE = Dimension(10, 10)
 private val color = Color(0x32_C8_32)

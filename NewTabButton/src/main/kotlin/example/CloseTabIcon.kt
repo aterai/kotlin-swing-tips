@@ -1,7 +1,7 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import java.awt.*
+import javax.swing.*
 
 class CloseTabIcon(private val color: Color) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {

@@ -1,9 +1,9 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.font.TextLayout
 import java.awt.geom.AffineTransform
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 fun makeUI(): Component {
   val font = Font(Font.MONOSPACED, Font.BOLD, 200)

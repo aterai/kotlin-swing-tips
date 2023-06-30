@@ -1,9 +1,9 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.io.IOException
 import java.lang.reflect.InvocationTargetException
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.event.HyperlinkEvent
 
 private const val SITE = "https://ateraimemo.com/"

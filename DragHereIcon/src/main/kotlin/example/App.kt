@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.datatransfer.DataFlavor
 import java.awt.dnd.DnDConstants
 import java.awt.dnd.DropTarget
@@ -11,7 +11,7 @@ import java.awt.font.TextLayout
 import java.awt.geom.AffineTransform
 import java.awt.geom.RoundRectangle2D
 import java.io.File
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 fun makeUI(): Component {
   val label = JLabel(DragHereIcon())

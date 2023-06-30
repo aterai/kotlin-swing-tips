@@ -1,9 +1,9 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.geom.Ellipse2D
 import java.awt.geom.FlatteningPathIterator
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin

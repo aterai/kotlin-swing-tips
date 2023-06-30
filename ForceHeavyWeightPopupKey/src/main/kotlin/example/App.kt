@@ -1,9 +1,9 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.security.AccessController
 import java.security.PrivilegedAction
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 fun makeUI(): Component {
   val label = makeLabel("FORCE_HEAVYWEIGHT_POPUP", Color.PINK)

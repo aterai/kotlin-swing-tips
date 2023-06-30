@@ -1,8 +1,8 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.KeyEvent
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private val check = JCheckBox("一時ウィンドウ(入力モード)->enterでセル編集開始")
 

@@ -1,13 +1,13 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.text.DateFormat
 import java.text.ParsePosition
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 fun makeUI(): Component {
   val format = SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.US)

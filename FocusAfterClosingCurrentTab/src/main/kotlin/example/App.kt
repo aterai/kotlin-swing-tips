@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.InputEvent
@@ -9,7 +9,7 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.time.LocalTime
 import java.time.ZoneId
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.plaf.synth.Region
 import javax.swing.plaf.synth.SynthConstants
 import javax.swing.plaf.synth.SynthContext

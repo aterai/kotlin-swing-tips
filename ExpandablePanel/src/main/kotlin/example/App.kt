@@ -1,9 +1,9 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.util.EventListener
 import java.util.EventObject
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private fun makeList() = listOf(
   object : AbstractExpansionPanel("Panel1") {

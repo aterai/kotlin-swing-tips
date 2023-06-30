@@ -1,10 +1,10 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.ItemListener
 import java.util.Calendar
 import java.util.Date
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.JSpinner.DateEditor
 
 val r1 = JRadioButton("LEADING")

@@ -1,12 +1,12 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.image.BufferedImage
 import java.awt.image.FilteredImageSource
 import java.awt.image.ImageFilter
 import java.awt.image.RGBImageFilter
 import javax.imageio.ImageIO
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import kotlin.math.roundToInt
 
 fun makeUI(): Component {

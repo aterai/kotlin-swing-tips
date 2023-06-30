@@ -1,11 +1,11 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.MouseEvent
 import java.awt.image.BufferedImage
 import java.io.File
 import java.net.URL
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 fun makeUI(): Component {
   ToolTipManager.sharedInstance().dismissDelay = Int.MAX_VALUE

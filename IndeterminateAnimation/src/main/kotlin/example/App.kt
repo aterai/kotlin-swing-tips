@@ -1,9 +1,9 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.plaf.basic.BasicProgressBarUI
 
 fun makeUI(): Component {

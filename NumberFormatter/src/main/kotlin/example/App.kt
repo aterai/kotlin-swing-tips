@@ -1,9 +1,9 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.text.DecimalFormat
 import java.text.ParseException
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.JSpinner.DefaultEditor
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener

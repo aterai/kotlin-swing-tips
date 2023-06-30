@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.ActionEvent
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -9,7 +9,7 @@ import java.net.URLConnection
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.util.Scanner
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private val textArea = JTextArea()
 private val runButton = JButton("Load")

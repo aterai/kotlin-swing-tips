@@ -1,11 +1,11 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.io.ByteArrayInputStream
 import java.nio.file.Files
 import java.util.Base64
 import javax.imageio.ImageIO
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.filechooser.FileNameExtensionFilter
 
 private val textArea = JTextArea().also {

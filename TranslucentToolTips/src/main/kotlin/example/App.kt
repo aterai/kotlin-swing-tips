@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.HierarchyEvent
 import java.awt.event.HierarchyListener
 import java.awt.event.MouseEvent
@@ -12,7 +12,7 @@ import java.time.ZoneId
 import java.time.format.TextStyle
 import java.time.temporal.WeekFields
 import java.util.Locale
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 val CELL_SIZE = Dimension(10, 10)
 val currentLocalDate: LocalDate = LocalDate.now(ZoneId.systemDefault())

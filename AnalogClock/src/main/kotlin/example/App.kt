@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.HierarchyEvent
 import java.awt.event.HierarchyListener
 import java.awt.geom.AffineTransform
@@ -8,7 +8,7 @@ import java.awt.geom.Ellipse2D
 import java.awt.geom.Line2D
 import java.time.LocalTime
 import java.time.ZoneId
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import kotlin.math.PI
 
 fun makeUI() = JPanel(BorderLayout()).also {

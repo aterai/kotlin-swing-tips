@@ -1,8 +1,8 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.HierarchyEvent
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private const val BLACK_CIRCLE = "Åú" // "\u25CF"
 private const val WHITE_CIRCLE = "Åõ" // "\u25CB"

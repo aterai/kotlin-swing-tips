@@ -1,7 +1,7 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import java.awt.*
+import javax.swing.*
 
 fun makeUI(): Component {
   val tds1 = "border-right:1px solid green;border-top:1px solid blue"

@@ -1,12 +1,12 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
 import java.awt.geom.Path2D
 import java.awt.geom.PathIterator
 import java.awt.geom.Point2D
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.border.EmptyBorder
 
 fun makeUI(): Component {

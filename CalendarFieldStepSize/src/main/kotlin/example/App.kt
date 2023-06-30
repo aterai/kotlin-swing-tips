@@ -1,10 +1,10 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.text.DateFormatter
 import javax.swing.text.DefaultFormatterFactory
 

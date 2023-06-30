@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 import java.io.File
@@ -10,7 +10,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.SimpleFileVisitor
 import java.nio.file.attribute.BasicFileAttributes
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private val dirCombo = JComboBox<String>()
 private val fileChooser = JFileChooser()

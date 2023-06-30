@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.OutputStream
@@ -17,7 +17,7 @@ import java.util.logging.StreamHandler
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import java.util.zip.ZipOutputStream
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import kotlin.streams.toList
 
 private val logger = Logger.getLogger(MethodHandles.lookup().lookupClass().name)

@@ -1,12 +1,12 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.HierarchyEvent
 import java.awt.geom.Path2D
 import java.awt.geom.Rectangle2D
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.plaf.nimbus.AbstractRegionPainter
 
 private var worker: SwingWorker<String, Void?>? = null

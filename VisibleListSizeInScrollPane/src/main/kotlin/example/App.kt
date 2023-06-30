@@ -1,7 +1,7 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import java.awt.*
+import javax.swing.*
 
 fun makeUI() = JPanel(GridLayout(2, 1)).also {
   it.add(makePanel(null, 4))

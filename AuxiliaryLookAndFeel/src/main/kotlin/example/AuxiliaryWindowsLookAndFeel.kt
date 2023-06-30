@@ -1,6 +1,6 @@
 package example
 
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 class AuxiliaryWindowsLookAndFeel : LookAndFeel() {
   override fun getName() = "AuxiliaryWindows"

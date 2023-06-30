@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.HierarchyEvent
 import java.awt.event.HierarchyListener
 import java.awt.event.KeyEvent
@@ -10,7 +10,7 @@ import java.awt.geom.Ellipse2D
 import java.awt.image.BufferedImage
 import java.util.Collections
 import javax.imageio.ImageIO
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.Timer
 
 fun makeUI() = JPanel(GridLayout(1, 2)).also {

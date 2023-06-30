@@ -1,10 +1,10 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.ItemEvent
 import java.awt.event.ItemListener
 import java.util.Collections
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private const val MIN_X = 5
 private const val MIN_Y = 5

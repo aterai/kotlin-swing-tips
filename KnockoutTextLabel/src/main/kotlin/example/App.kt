@@ -1,12 +1,12 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.geom.AffineTransform
 import java.awt.geom.Area
 import java.awt.geom.Rectangle2D
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 fun makeUI(): Component {
   val path = "example/test.jpg"

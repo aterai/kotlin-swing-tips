@@ -1,10 +1,10 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.color.ColorSpace
 import java.awt.image.BufferedImage
 import java.awt.image.ColorConvertOp
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private const val HTML_TEXT = "<html>Html <font color='red'>label</font><br/> Test"
 

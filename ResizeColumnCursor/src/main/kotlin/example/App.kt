@@ -1,13 +1,13 @@
 package example
 
 import com.sun.java.swing.plaf.windows.WindowsTableHeaderUI
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.MouseEvent
 import java.awt.font.TextLayout
 import java.awt.geom.AffineTransform
 import java.awt.geom.Point2D
 import java.awt.image.BufferedImage
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.event.MouseInputListener
 import javax.swing.plaf.basic.BasicSplitPaneUI
 import javax.swing.plaf.basic.BasicTableHeaderUI

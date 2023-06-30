@@ -1,10 +1,10 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.image.BufferedImage
 import java.awt.image.ConvolveOp
 import java.awt.image.Kernel
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.plaf.LayerUI
 
 fun makeUI(): Component {

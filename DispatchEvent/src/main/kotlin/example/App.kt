@@ -1,8 +1,8 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.AWTEventListener
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private const val DELAY = 10 * 1000 // 10s
 private val label = JLabel("Not connected")

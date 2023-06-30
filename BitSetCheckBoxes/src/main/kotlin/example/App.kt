@@ -1,9 +1,9 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.ActionEvent
 import java.util.BitSet
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.undo.AbstractUndoableEdit
 import javax.swing.undo.UndoManager
 import javax.swing.undo.UndoableEditSupport

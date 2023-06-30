@@ -1,10 +1,10 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.HierarchyEvent
 import javax.sound.midi.MidiSystem
 import javax.sound.midi.Sequencer
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private const val END_OF_TRACK: Byte = 0x2F
 private val start = makeButton("start")

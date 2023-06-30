@@ -1,8 +1,8 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.ActionEvent
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private val disableIndexSet: MutableSet<Int> = HashSet()
 private val field = JTextField("1, 2, 5")

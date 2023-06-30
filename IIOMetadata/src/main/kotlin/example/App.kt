@@ -3,11 +3,11 @@ package example
 import org.w3c.dom.Element
 import org.w3c.dom.Node
 import org.w3c.dom.Text
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.util.Enumeration
 import javax.imageio.ImageIO
 import javax.imageio.metadata.IIOMetadataNode
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreeNode
 

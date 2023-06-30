@@ -1,7 +1,7 @@
 package example
 
 import sun.awt.shell.ShellFolder
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.datatransfer.DataFlavor
 import java.awt.dnd.DnDConstants
 import java.awt.dnd.DropTarget
@@ -9,7 +9,7 @@ import java.awt.dnd.DropTargetAdapter
 import java.awt.dnd.DropTargetDragEvent
 import java.awt.dnd.DropTargetDropEvent
 import java.io.File
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.filechooser.FileSystemView
 
 fun makeUI(): Component {

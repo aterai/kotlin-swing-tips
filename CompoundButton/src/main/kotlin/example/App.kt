@@ -1,10 +1,10 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.geom.Arc2D
 import java.awt.geom.Area
 import java.awt.geom.Ellipse2D
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 fun makeUI() = JPanel().also {
   val d = Dimension(64, 64)

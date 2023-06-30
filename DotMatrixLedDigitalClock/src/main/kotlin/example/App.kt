@@ -1,11 +1,11 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.HierarchyEvent
 import java.awt.event.HierarchyListener
 import java.time.LocalTime
 import java.time.ZoneId
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private val timer = Timer(100, null)
 private var time = LocalTime.now(ZoneId.systemDefault())

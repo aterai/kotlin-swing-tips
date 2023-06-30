@@ -1,13 +1,13 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
 import javax.script.Invocable
 import javax.script.ScriptEngine
 import javax.script.ScriptEngineManager
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.plaf.LayerUI
 import javax.swing.text.html.HTMLEditorKit
 import javax.swing.text.html.StyleSheet

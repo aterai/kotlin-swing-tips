@@ -1,7 +1,7 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import java.awt.*
+import javax.swing.*
 
 fun makeUI(): Component {
   val spinner1 = JSpinner(SpinnerNumberModel(0.0, 0.0, 1.0, .01))

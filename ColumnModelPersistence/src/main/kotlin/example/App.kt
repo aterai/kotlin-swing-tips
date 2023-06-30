@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.beans.DefaultPersistenceDelegate
 import java.beans.Encoder
 import java.beans.Statement
@@ -12,7 +12,7 @@ import java.io.ByteArrayInputStream
 import java.io.File
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.event.AncestorEvent
 import javax.swing.event.AncestorListener
 import javax.swing.table.DefaultTableColumnModel

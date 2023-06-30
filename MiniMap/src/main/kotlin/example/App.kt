@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.MouseEvent
 import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
@@ -10,7 +10,7 @@ import java.nio.file.Paths
 import javax.script.Invocable
 import javax.script.ScriptEngine
 import javax.script.ScriptEngineManager
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.event.MouseInputAdapter
 import javax.swing.event.MouseInputListener
 import javax.swing.text.html.HTMLEditorKit

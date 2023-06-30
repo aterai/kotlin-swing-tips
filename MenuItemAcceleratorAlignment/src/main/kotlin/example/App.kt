@@ -4,10 +4,10 @@ import com.sun.java.swing.plaf.windows.WindowsMenuItemUI
 import sun.swing.MenuItemLayoutHelper
 import sun.swing.MenuItemLayoutHelper.LayoutResult
 import sun.swing.SwingUtilities2
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.plaf.basic.BasicMenuItemUI
 
 fun makeUI() = JPanel(BorderLayout()).also {

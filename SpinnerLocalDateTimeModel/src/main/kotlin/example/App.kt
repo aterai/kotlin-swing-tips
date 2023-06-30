@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.text.ParseException
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -12,7 +12,7 @@ import java.time.temporal.TemporalAccessor
 import java.time.temporal.TemporalUnit
 import java.util.Calendar
 import java.util.Date
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.JSpinner.DateEditor
 import javax.swing.JSpinner.DefaultEditor
 import javax.swing.text.DefaultFormatterFactory

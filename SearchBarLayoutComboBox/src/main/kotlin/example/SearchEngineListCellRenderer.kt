@@ -1,7 +1,7 @@
 package example
 
 import java.awt.Component
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 class SearchEngineListCellRenderer<E> : ListCellRenderer<E> {
   private val renderer = DefaultListCellRenderer()

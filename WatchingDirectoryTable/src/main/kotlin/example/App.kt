@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.HierarchyEvent
 import java.nio.file.FileSystems
 import java.nio.file.Files
@@ -9,7 +9,7 @@ import java.nio.file.Paths
 import java.nio.file.StandardWatchEventKinds
 import java.nio.file.WatchEvent
 import java.nio.file.WatchService
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter

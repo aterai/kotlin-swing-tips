@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.geom.AffineTransform
 import java.awt.geom.Area
 import java.awt.image.BufferedImage
@@ -8,7 +8,7 @@ import java.awt.image.ImageObserver
 import java.awt.image.MemoryImageSource
 import java.awt.image.PixelGrabber
 import javax.imageio.ImageIO
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 fun makeUI(): Component {
   val cl = Thread.currentThread().contextClassLoader

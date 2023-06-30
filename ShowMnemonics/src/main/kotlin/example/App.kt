@@ -1,9 +1,9 @@
 package example
 
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.KeyEvent
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private const val SHOW_MNEMONICS = "Button.showMnemonics"
 

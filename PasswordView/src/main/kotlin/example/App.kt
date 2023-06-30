@@ -1,9 +1,9 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.geom.AffineTransform
 import java.awt.geom.Path2D
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.plaf.basic.BasicPasswordFieldUI
 import javax.swing.text.Element
 import javax.swing.text.PasswordView

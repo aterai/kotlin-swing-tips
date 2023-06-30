@@ -1,9 +1,9 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.HierarchyEvent
 import java.io.Serializable
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private val panelDim = Dimension(320, 240)
 private val racket = Racket(panelDim)

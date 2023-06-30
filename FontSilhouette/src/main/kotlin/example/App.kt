@@ -1,12 +1,12 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.geom.AffineTransform
 import java.awt.geom.Area
 import java.awt.geom.Path2D
 import java.awt.geom.PathIterator
 import java.io.Serializable
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 private val SIZE = Dimension(50, 50)
 private val FONT = Font(Font.SANS_SERIF, Font.PLAIN, SIZE.width)

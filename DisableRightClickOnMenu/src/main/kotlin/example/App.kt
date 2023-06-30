@@ -2,9 +2,9 @@ package example
 
 import com.sun.java.swing.plaf.windows.WindowsMenuItemUI
 import com.sun.java.swing.plaf.windows.WindowsMenuUI
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.MouseEvent
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 import javax.swing.event.MouseInputListener
 import javax.swing.plaf.basic.BasicMenuItemUI
 

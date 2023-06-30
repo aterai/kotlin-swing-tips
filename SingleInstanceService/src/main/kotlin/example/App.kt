@@ -1,10 +1,10 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import javax.jnlp.ServiceManager
 import javax.jnlp.SingleInstanceListener
 import javax.jnlp.SingleInstanceService
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 fun makeUI() = JPanel(BorderLayout()).also {
   it.add(JScrollPane(JTree()))

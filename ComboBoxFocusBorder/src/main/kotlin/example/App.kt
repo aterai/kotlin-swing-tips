@@ -1,7 +1,7 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import java.awt.*
+import javax.swing.*
 
 private fun makeTitledPanel(title: String, c: Component): Component {
   val p = JPanel(BorderLayout())

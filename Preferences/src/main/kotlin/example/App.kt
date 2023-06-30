@@ -1,12 +1,12 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.ComponentEvent
 import java.awt.event.ComponentListener
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import java.util.prefs.Preferences
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 fun makeUI(): Component {
   val handler = WindowPreferencesHandler()

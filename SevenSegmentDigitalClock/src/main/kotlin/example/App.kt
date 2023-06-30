@@ -1,6 +1,6 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.HierarchyEvent
 import java.awt.event.HierarchyListener
 import java.awt.geom.AffineTransform
@@ -9,7 +9,7 @@ import java.awt.geom.Path2D
 import java.time.LocalTime
 import java.time.ZoneId
 import java.util.EnumSet
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 fun makeUI(): Component {
   return JPanel(GridLayout(2, 1)).also {

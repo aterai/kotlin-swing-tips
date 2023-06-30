@@ -1,12 +1,12 @@
 package example
 
-import java.awt.* // ktlint-disable no-wildcard-imports
+import java.awt.*
 import java.awt.event.ItemEvent
 import java.awt.image.BufferedImage
 import java.awt.image.DataBufferInt
 import java.awt.image.MemoryImageSource
 import javax.imageio.ImageIO
-import javax.swing.* // ktlint-disable no-wildcard-imports
+import javax.swing.*
 
 fun makeUI(): Component {
   val imageA = makeImage("example/a.png")
