@@ -324,23 +324,19 @@ private class SortButtonRenderer : JButton(), TableCellRenderer {
 
 private class HeaderMouseListener : MouseAdapter() {
   override fun mousePressed(e: MouseEvent) {
-    val h = e.component as? JTableHeader ?: return
-    val columnModel = h.columnModel
-    val viewColumn = columnModel.getColumnIndexAtX(e.x)
-    if (viewColumn < 0) {
-      return
+    val header = e.component as? JTableHeader ?: return
+    val table = header.table
+    if (table.isEditing) {
+      table.cellEditor.stopCellEditing()
     }
-    val tcr = h.defaultRenderer
-    val column = columnModel.getColumn(viewColumn).modelIndex
-    if (column != -1 && tcr is SortButtonRenderer) {
-      tcr.setPressedColumn(column)
-      tcr.setSelectedColumn(column)
-      h.repaint()
-      val table = h.table
-      if (table.isEditing) {
-        table.cellEditor.stopCellEditing()
-      }
-      val isAscent = SortButtonRenderer.DOWN == tcr.getState(column)
+    val renderer = header.defaultRenderer
+    val viewColumn = table.columnAtPoint(e.point)
+    if (viewColumn >= 0 && renderer is SortButtonRenderer) {
+      val column = table.convertColumnIndexToModel(viewColumn)
+      renderer.setPressedColumn(column)
+      renderer.setSelectedColumn(column)
+      header.repaint()
+      val isAscent = SortButtonRenderer.DOWN == renderer.getState(column)
       (table.model as? SortableTableModel)?.sortByColumn(column, isAscent)
     }
   }
