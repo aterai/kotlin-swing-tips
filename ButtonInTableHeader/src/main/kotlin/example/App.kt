@@ -73,8 +73,8 @@ private class HeaderRenderer(
     override fun mouseClicked(e: MouseEvent) {
       val hdr = e.component as? JTableHeader ?: return
       val table = hdr.table
-      val columnModel = table.columnModel
-      val vci = columnModel.getColumnIndexAtX(e.x)
+      val pt = e.point
+      val vci = table.columnAtPoint(pt)
       val r = hdr.getHeaderRect(vci)
       val isSelected = true
       val hasFocus = true
@@ -82,7 +82,7 @@ private class HeaderRenderer(
       (c as? Container)?.also {
         r.translate(r.width - BUTTON_WIDTH, 0)
         r.setSize(BUTTON_WIDTH, r.height)
-        if (it.componentCount > 0 && r.contains(e.point)) {
+        if (it.componentCount > 0 && r.contains(pt)) {
           pop.show(hdr, r.x, r.height)
           (it.getComponent(0) as? JButton)?.doClick()
           e.consume()
@@ -91,16 +91,18 @@ private class HeaderRenderer(
     }
 
     override fun mouseExited(e: MouseEvent) {
+      val h = e.component as? JTableHeader ?: return
       rolloverIndex = -1
+      h.repaint()
     }
 
     override fun mouseMoved(e: MouseEvent) {
       val h = e.component as? JTableHeader ?: return
       val table = h.table
-      val columnModel = table.columnModel
-      val vci = columnModel.getColumnIndexAtX(e.x)
+      val vci = table.columnAtPoint(e.point)
       val mci = table.convertColumnIndexToModel(vci)
       rolloverIndex = mci
+      h.repaint()
     }
   }
 
