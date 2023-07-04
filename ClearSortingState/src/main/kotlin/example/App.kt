@@ -24,19 +24,14 @@ fun makeUI(): Component {
   table.autoCreateRowSorter = true
   val ml = object : MouseAdapter() {
     override fun mouseClicked(e: MouseEvent) {
-      val sorter = table.rowSorter
-      val h = e.component as? JTableHeader
-      if (h == null || sorter == null || sorter.sortKeys.isEmpty()) {
-        return
-      }
-      val columnModel = h.columnModel
-      val viewColumn = columnModel.getColumnIndexAtX(e.x)
-      if (viewColumn < 0) {
-        return
-      }
-      val column = columnModel.getColumn(viewColumn).modelIndex
-      if (column != -1 && e.isShiftDown) {
-        EventQueue.invokeLater { sorter.setSortKeys(null) }
+      val tbl = (e.component as? JTableHeader)?.table
+      val sorter = tbl?.rowSorter
+      if (sorter?.sortKeys?.isNotEmpty() == true) {
+        val viewColumn = tbl.columnAtPoint(e.point)
+        val column = tbl.convertColumnIndexToModel(viewColumn)
+        if (column >= 0 && e.isShiftDown) {
+          EventQueue.invokeLater { sorter.setSortKeys(null) }
+        }
       }
     }
   }
