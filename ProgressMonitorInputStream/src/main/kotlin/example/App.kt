@@ -79,16 +79,13 @@ private open class MonitorTask(
   length: Int
 ) : BackgroundTask(pms, cs, length) {
   override fun process(chunks: List<Chunk>) {
-    if (isCancelled) {
-      return
-    }
-    if (!textArea.isDisplayable) {
+    if (textArea.isDisplayable) {
+      chunks.forEach {
+        append(it.line)
+        monitor?.note = it.note
+      }
+    } else {
       cancel(true)
-      return
-    }
-    chunks.forEach {
-      append(it.line)
-      monitor?.note = it.note
     }
   }
 
@@ -168,7 +165,7 @@ fun main() {
       Toolkit.getDefaultToolkit().beep()
     }
     JFrame().apply {
-      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+      defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
       contentPane.add(makeUI())
       pack()
       setLocationRelativeTo(null)
