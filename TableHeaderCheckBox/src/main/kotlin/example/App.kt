@@ -147,11 +147,11 @@ private class HeaderCheckBoxHandler(
 
   override fun mouseClicked(e: MouseEvent) {
     val tbl = (e.component as? JTableHeader)?.table ?: return
-    val columnModel = tbl.columnModel
     val m = tbl.model
-    val vci = columnModel.getColumnIndexAtX(e.x)
+    val vci = tbl.columnAtPoint(e.point)
     val mci = tbl.convertColumnIndexToModel(vci)
     if (mci == targetColumnIndex && m.rowCount > 0) {
+      val columnModel = tbl.columnModel
       val column = columnModel.getColumn(vci)
       val b = Status.DESELECTED === column.headerValue
       for (i in 0 until m.rowCount) {
