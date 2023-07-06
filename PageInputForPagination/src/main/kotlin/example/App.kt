@@ -85,17 +85,14 @@ private class TableUpdateTask(max: Int, itemsPerPage: Int) : LoadTask(max, items
   }
 
   override fun process(chunks: List<List<Array<Any>>>) {
-    if (isCancelled) {
-      return
-    }
-    if (!table.isDisplayable) {
+    if (table.isDisplayable) {
+      chunks.forEach { it.forEach(model::addRow) }
+      val rowCount = model.rowCount
+      maxPageIndex = rowCount / ITEMS_PER_PAGE + if (rowCount % ITEMS_PER_PAGE == 0) 0 else 1
+      initFilterAndButtons()
+    } else {
       cancel(true)
-      return
     }
-    chunks.forEach { it.forEach(model::addRow) }
-    val rowCount = model.rowCount
-    maxPageIndex = rowCount / ITEMS_PER_PAGE + if (rowCount % ITEMS_PER_PAGE == 0) 0 else 1
-    initFilterAndButtons()
   }
 
   override fun done() {
