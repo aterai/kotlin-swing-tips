@@ -17,12 +17,11 @@ fun makeUI(): Component {
     override fun valueChanged(e: ListSelectionEvent) {
       val sr = table0.selectedRow
       val sc = table0.selectedColumn
-      if (e.valueIsAdjusting || getRowColumnAdjusting(sr, sc)) {
-        return
+      if (!e.valueIsAdjusting && updateRowColumnInfo(sr, sc)) {
+        val o = table0.getValueAt(sr, sc)
+        textArea.append("($sr, $sc) $o\n")
+        textArea.caretPosition = textArea.document.length
       }
-      val o = table0.getValueAt(sr, sc)
-      textArea.append("($sr, $sc) $o\n")
-      textArea.caretPosition = textArea.document.length
     }
   }
   table0.selectionModel.addListSelectionListener(selectionListener0)
@@ -34,12 +33,11 @@ fun makeUI(): Component {
     override fun valueChanged(e: ListSelectionEvent) {
       val sr = table1.selectionModel.leadSelectionIndex
       val sc = table1.columnModel.selectionModel.leadSelectionIndex
-      if (e.valueIsAdjusting || getRowColumnAdjusting(sr, sc)) {
-        return
+      if (!e.valueIsAdjusting && updateRowColumnInfo(sr, sc)) {
+        val o = table1.getValueAt(sr, sc)
+        textArea.append("($sr, $sc) $o\n")
+        textArea.caretPosition = textArea.document.length
       }
-      val o = table1.getValueAt(sr, sc)
-      textArea.append("($sr, $sc) $o\n")
-      textArea.caretPosition = textArea.document.length
     }
   }
   table1.selectionModel.addListSelectionListener(selectionListener1)
@@ -106,11 +104,11 @@ private fun makeModel() = object : DefaultTableModel() {
 private abstract class AbstractTableCellSelectionListener : ListSelectionListener {
   private var prevRow = -1
   private var prevCol = -1
-  protected fun getRowColumnAdjusting(sr: Int, sc: Int): Boolean {
+  protected fun updateRowColumnInfo(sr: Int, sc: Int): Boolean {
     val flg = prevRow == sr && prevCol == sc
     prevRow = sr
     prevCol = sc
-    return flg
+    return !flg
   }
 }
 
