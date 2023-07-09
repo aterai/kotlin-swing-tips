@@ -268,12 +268,10 @@ private class TableSorter() : AbstractTableModel() {
 
   private inner class MouseHandler : MouseAdapter() {
     override fun mouseClicked(e: MouseEvent) {
-      val columnModel = (e.component as? JTableHeader)?.columnModel
-      val viewColumn = columnModel?.getColumnIndexAtX(e.x) ?: -1
-      if (columnModel == null || viewColumn < 0) {
-        return
-      }
-      val column = columnModel.getColumn(viewColumn).modelIndex
+      val header = e.component as? JTableHeader ?: return
+      val table = header.table
+      val viewColumn = table.columnAtPoint(e.point)
+      val column = table.convertColumnIndexToModel(viewColumn)
       if (column != -1) {
         var status = getSortingStatus(column) + if (e.isShiftDown) -1 else 1
         if (!e.isControlDown) {

@@ -268,18 +268,14 @@ private class TableSorter() : AbstractTableModel() {
 
   private inner class MouseHandler : MouseAdapter() {
     override fun mouseClicked(e: MouseEvent) {
-      val header = e.component as? JTableHeader
-      val columnModel = header?.columnModel
-      val viewColumn = columnModel?.getColumnIndexAtX(e.x) ?: -1
-      if (columnModel == null || viewColumn < 0) {
-        return
-      }
-      val column = columnModel.getColumn(viewColumn).modelIndex
+      val header = e.component as? JTableHeader ?: return
+      val table = header.table
+      val viewColumn = table.columnAtPoint(e.point)
+      val column = table.convertColumnIndexToModel(viewColumn)
       if (column != -1) {
-        val t = header.table
         val keyCol = 0
         val list = mutableListOf<Any?>()
-        val intList = t.selectedRows
+        val intList = table.selectedRows
         for (i in intList.indices.reversed()) {
           list.add(tableModel?.getValueAt(modelIndex(intList[i]), keyCol))
         }
@@ -289,7 +285,7 @@ private class TableSorter() : AbstractTableModel() {
         }
         status = (status + 4) % 3 - 1
         setSortingStatus(column, status)
-        loadSelectedRow(t, list, keyCol)
+        loadSelectedRow(table, list, keyCol)
       }
     }
   }
