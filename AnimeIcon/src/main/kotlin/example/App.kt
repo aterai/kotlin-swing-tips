@@ -30,14 +30,11 @@ private fun executeWorker() {
   bar.isIndeterminate = true
   val w = object : BackgroundTask() {
     override fun process(chunks: List<String?>) {
-      if (isCancelled) {
-        return
-      }
-      if (!runButton.isDisplayable) {
+      if (runButton.isDisplayable && !isCancelled) {
+        chunks.forEach { appendLine(it) }
+      } else {
         cancel(true)
-        return
       }
-      chunks.forEach { appendLine(it) }
     }
 
     override fun done() {
