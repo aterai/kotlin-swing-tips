@@ -162,7 +162,7 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
       val index = l.locationToIndex(e.point)
       if (l.getCellBounds(index, index).contains(e.point)) {
         l.isFocusable = true
-        cellPressed(l, e, index)
+        cellPressed(e, index)
       } else {
         l.isFocusable = false
         l.clearSelection()
@@ -173,22 +173,37 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
       l.repaint()
     }
 
-    private fun cellPressed(l: JList<*>, e: MouseEvent, index: Int) {
+    private fun cellPressed(e: MouseEvent, index: Int) {
       if (e.button == MouseEvent.BUTTON1 && e.clickCount > 1) {
-        val item: ListItem = model.getElementAt(index)
-        JOptionPane.showMessageDialog(l.rootPane, item.title)
+        val item = model.getElementAt(index)
+        JOptionPane.showMessageDialog(rootPane, item.title)
       } else {
         checkedIndex = -1
-        getItemCheckBox(l, e, index)?.also {
+        getCheckBox(e, index)?.also {
           checkedIndex = index
-          if (l.isSelectedIndex(index)) {
-            l.isFocusable = false
+          if (isSelectedIndex(index)) {
+            setFocusable(false)
             removeSelectionInterval(index, index)
           } else {
             setSelectionInterval(index, index)
           }
         }
       }
+    }
+
+    private fun getCheckBox(e: MouseEvent, index: Int): AbstractButton? {
+      if (e.isShiftDown || e.isControlDown || e.isAltDown) {
+        return null
+      }
+      val list = this@RubberBandSelectionList
+      val proto = list.prototypeCellValue
+      val cr = list.cellRenderer
+      val c = cr.getListCellRendererComponent(list, proto, index, false, false)
+      val r = list.getCellBounds(index, index)
+      c.bounds = r
+      val pt = e.point
+      pt.translate(-r.x, -r.y)
+      return SwingUtilities.getDeepestComponentAt(c, pt.x, pt.y) as? AbstractButton
     }
   }
 
@@ -272,20 +287,6 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
       }
       return renderer
     }
-  }
-
-  private fun <E> getItemCheckBox(list: JList<E>, e: MouseEvent, index: Int): AbstractButton? {
-    if (e.isShiftDown || e.isControlDown || e.isAltDown) {
-      return null
-    }
-    val proto = list.prototypeCellValue
-    val cr = list.cellRenderer
-    val c = cr.getListCellRendererComponent(list, proto, index, false, false)
-    val r = list.getCellBounds(index, index)
-    c.bounds = r
-    val pt = e.point
-    pt.translate(-r.x, -r.y)
-    return SwingUtilities.getDeepestComponentAt(c, pt.x, pt.y) as? AbstractButton
   }
 
   private fun makeRubberBandColor(c: Color): Color {
