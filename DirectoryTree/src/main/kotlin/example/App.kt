@@ -73,30 +73,23 @@ private class FolderSelectionListener(
   private val fileSystemView: FileSystemView
 ) : TreeSelectionListener {
   override fun valueChanged(e: TreeSelectionEvent) {
-    val tree = e.source
-    val node = e.path.lastPathComponent
-    if (tree !is JTree || node !is DefaultMutableTreeNode || !node.isLeaf) {
-      return
-    }
-    val model = tree.model
-    val parent = node.userObject
-    if (model !is DefaultTreeModel || parent !is File || !parent.isDirectory) {
-      return
-    }
-    val worker = object : BackgroundTask(fileSystemView, parent) {
-      override fun process(chunks: List<File>) {
-        if (isCancelled) {
-          return
+    val tree = e.source as? JTree
+    val node = e.path.lastPathComponent as? DefaultMutableTreeNode
+    val model = tree?.model as? DefaultTreeModel
+    val parent = node?.userObject as? File
+    if (model != null && parent != null && node.isLeaf && parent.isDirectory) {
+      val worker = object : BackgroundTask(fileSystemView, parent) {
+        override fun process(chunks: List<File>) {
+          if (tree.isDisplayable && !isCancelled) {
+            chunks.map { DefaultMutableTreeNode(it) }
+              .forEach { model.insertNodeInto(it, node, node.childCount) }
+          } else {
+            cancel(true)
+          }
         }
-        if (!tree.isDisplayable) {
-          cancel(true)
-          return
-        }
-        chunks.map { DefaultMutableTreeNode(it) }
-          .forEach { model.insertNodeInto(it, node, node.childCount) }
       }
+      worker.execute()
     }
-    worker.execute()
   }
 }
 
