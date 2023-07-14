@@ -71,14 +71,11 @@ private fun addActionPerformed() {
   val file = File(System.getProperty("java.io.tmpdir"), FILE_NAME)
   object : BackgroundTask(file, model1.number.toInt(), model2.number.toInt()) {
     override fun process(chunks: List<Message>) {
-      if (isCancelled) {
-        return
-      }
-      if (!jtp.isDisplayable) {
+      if (jtp.isDisplayable && !isCancelled) {
+        chunks.forEach { append(it) }
+      } else {
         cancel(true)
-        return
       }
-      chunks.forEach { append(it) }
     }
 
     override fun done() {
