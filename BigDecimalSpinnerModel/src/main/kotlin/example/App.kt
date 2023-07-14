@@ -53,12 +53,13 @@ private class BigDecimalSpinnerModel(
     val value = BigDecimal.valueOf(number.toDouble())
     val stepSize = BigDecimal.valueOf(stepSize.toDouble())
     val newValue = if (dir > 0) value.add(stepSize) else value.subtract(stepSize)
-    val maximum = BigDecimal.valueOf(maximum as? Double ?: 0.0)
-    if (maximum < newValue) {
-      return null
+    val max = BigDecimal.valueOf(maximum as? Double ?: 0.0)
+    val min = BigDecimal.valueOf(minimum as? Double ?: 0.0)
+    return if (max < newValue || min > newValue) {
+      null
+    } else {
+      newValue
     }
-    val minimum = BigDecimal.valueOf(minimum as? Double ?: 0.0)
-    return if (minimum > newValue) null else newValue
   }
 }
 
