@@ -59,14 +59,11 @@ fun makeUI(): Component {
 
 private class ProgressTask : BackgroundTask() {
   override fun process(chunks: List<Progress>) {
-    if (isCancelled) {
-      return
-    }
-    if (!area.isDisplayable) {
+    if (area.isDisplayable && !isCancelled) {
+      chunks.forEach { processChunks(it) }
+    } else {
       cancel(true)
-      return
     }
-    chunks.forEach { processChunks(it) }
   }
 
   override fun done() {

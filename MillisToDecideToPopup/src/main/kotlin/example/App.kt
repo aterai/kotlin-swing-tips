@@ -13,11 +13,11 @@ private fun executeWorker(
 ) {
   val worker = object : BackgroundTask(lengthOfTask) {
     override fun process(chunks: List<String>) {
-      if (!area.isDisplayable) {
+      if (area.isDisplayable && !isCancelled) {
+        chunks.forEach(monitor::setNote)
+      } else {
         cancel(true)
-        return
       }
-      chunks.forEach(monitor::setNote)
     }
 
     public override fun done() {
