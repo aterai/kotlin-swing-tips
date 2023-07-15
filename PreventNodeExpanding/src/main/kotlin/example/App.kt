@@ -77,16 +77,12 @@ private class FolderSelectionListener(
 
     object : BackgroundTask(fileSystemView, parent) {
       override fun process(chunks: List<File?>?) {
-        if (isCancelled) {
-          return
-        }
-        if (!tree.isDisplayable) {
+        if (tree.isDisplayable && !isCancelled) {
+          chunks?.map { DefaultMutableTreeNode(it) }
+            ?.forEach { model.insertNodeInto(it, node, node.childCount) }
+        } else {
           cancel(true)
-          return
         }
-        chunks
-          ?.map { DefaultMutableTreeNode(it) }
-          ?.forEach { model.insertNodeInto(it, node, node.childCount) }
       }
     }.execute()
   }

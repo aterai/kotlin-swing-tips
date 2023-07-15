@@ -85,7 +85,7 @@ private class TableUpdateTask(max: Int, itemsPerPage: Int) : LoadTask(max, items
   }
 
   override fun process(chunks: List<List<Array<Any>>>) {
-    if (table.isDisplayable) {
+    if (table.isDisplayable && !isCancelled) {
       chunks.forEach { it.forEach(model::addRow) }
       val rowCount = model.rowCount
       maxPageIndex = rowCount / ITEMS_PER_PAGE + if (rowCount % ITEMS_PER_PAGE == 0) 0 else 1
