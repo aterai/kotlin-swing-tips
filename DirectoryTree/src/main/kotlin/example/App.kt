@@ -75,9 +75,9 @@ private class FolderSelectionListener(
   override fun valueChanged(e: TreeSelectionEvent) {
     val tree = e.source as? JTree
     val node = e.path.lastPathComponent as? DefaultMutableTreeNode
-    val model = tree?.model as? DefaultTreeModel
+    val model = tree?.model as? DefaultTreeModel ?: return
     val parent = node?.userObject as? File
-    if (model != null && parent != null && node.isLeaf && parent.isDirectory) {
+    if (parent != null && node.isLeaf && parent.isDirectory) {
       val worker = object : BackgroundTask(fileSystemView, parent) {
         override fun process(chunks: List<File>) {
           if (tree.isDisplayable && !isCancelled) {
