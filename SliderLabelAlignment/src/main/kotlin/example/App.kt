@@ -13,8 +13,8 @@ fun makeUI(): Component {
         value.text = getLabel(slider1, key)
       }
     }
+    slider1.labelTable = labelTable1
   }
-  slider1.labelTable = slider1.labelTable
 
   val slider2 = makeSlider()
   val labelTable2 = slider2.labelTable
@@ -24,8 +24,8 @@ fun makeUI(): Component {
         value.text = " "
       }
     }
+    slider2.labelTable = labelTable2
   }
-  slider2.labelTable = slider2.labelTable
   val layer = JLayer(slider2, SliderLabelLayerUI())
 
   return JPanel(BorderLayout(5, 5)).also {
