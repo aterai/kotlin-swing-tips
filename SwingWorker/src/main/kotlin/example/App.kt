@@ -19,14 +19,11 @@ private var worker: SwingWorker<String, String>? = null
 
 private class AnimationTask : BackgroundTask() {
   override fun process(chunks: List<String>) {
-    if (isCancelled) {
-      return
-    }
-    if (!area.isDisplayable) {
+    if (area.isDisplayable && !isCancelled) {
+      chunks.forEach { appendText(it) }
+    } else {
       cancel(true)
-      return
     }
-    chunks.forEach { appendText(it) }
   }
 
   public override fun done() {
