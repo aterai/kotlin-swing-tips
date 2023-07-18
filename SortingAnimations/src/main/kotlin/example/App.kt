@@ -118,11 +118,11 @@ fun workerExecute() {
   val paintArea = Rectangle(MIN_X, MIN_Y, MAX_X - MIN_X, MAX_Y - MIN_Y)
   worker = object : SortingTask(sa, number, array, paintArea, fax, fay) {
     override fun process(chunks: List<Rectangle>) {
-      if (isCancelled || !panel.isDisplayable) {
+      if (panel.isDisplayable && !isCancelled) {
+        chunks.forEach(panel::repaint)
+      } else {
         cancel(true)
-        return
       }
-      chunks.forEach(panel::repaint)
     }
 
     override fun done() {
