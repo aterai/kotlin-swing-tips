@@ -232,13 +232,11 @@ private class TitledBorder2(title: String?) : TitledBorder(title) {
 
   private fun getJustification2(c: Component): Int {
     val justification = getTitleJustification()
-    if (justification == LEADING || justification == DEFAULT_JUSTIFICATION) {
-      return if (c.componentOrientation.isLeftToRight) LEFT else RIGHT
-    }
-    return if (justification == TRAILING) {
-      if (c.componentOrientation.isLeftToRight) RIGHT else LEFT
-    } else {
-      justification
+    return when (justification) {
+      DEFAULT_JUSTIFICATION -> if (c.componentOrientation.isLeftToRight) LEFT else RIGHT
+      LEADING -> if (c.componentOrientation.isLeftToRight) LEFT else RIGHT
+      TRAILING -> if (c.componentOrientation.isLeftToRight) RIGHT else LEFT
+      else -> justification
     }
   }
 
