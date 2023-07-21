@@ -305,7 +305,7 @@ private object TitledBorderUtils {
 
   fun getPositionByString(value: String) = when (value.uppercase()) {
     "ABOVE_TOP" -> TitledBorder.ABOVE_TOP
-    "TOP" -> TitledBorder.ABOVE_TOP
+    "TOP" -> TitledBorder.TOP
     "BELOW_TOP" -> TitledBorder.BELOW_TOP
     "ABOVE_BOTTOM" -> TitledBorder.ABOVE_BOTTOM
     "BOTTOM" -> TitledBorder.BOTTOM
