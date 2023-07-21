@@ -32,16 +32,13 @@ fun makeUI(): Component {
 
 private class ComboTask : BackgroundTask() {
   override fun process(chunks: List<Int>) {
-    if (isCancelled) {
-      return
-    }
-    if (!combo.isDisplayable) {
+    if (combo.isDisplayable && !isCancelled) {
+      chunks.forEach { counter = it }
+      combo.selectedIndex = -1
+      combo.repaint()
+    } else {
       cancel(true)
-      return
     }
-    chunks.forEach { counter = it }
-    combo.selectedIndex = -1
-    combo.repaint()
   }
 
   public override fun done() {
