@@ -67,19 +67,16 @@ fun initStatusPanel(start: Boolean) {
 
 private class ProgressTask : BackgroundTask() {
   override fun process(chunks: List<Progress>) {
-    if (isCancelled) {
-      return
-    }
-    if (!logger.isDisplayable) {
-      cancel(true)
-      return
-    }
-    chunks.forEach {
-      when (it.componentType) {
-        ComponentType.TOTAL -> bar1.value = it.value as? Int ?: 0
-        ComponentType.FILE -> bar2.value = it.value as? Int ?: 0
-        ComponentType.LOG -> logger.append(it.value.toString())
+    if (logger.isDisplayable && !isCancelled) {
+      chunks.forEach {
+        when (it.componentType) {
+          ComponentType.TOTAL -> bar1.value = it.value as? Int ?: 0
+          ComponentType.FILE -> bar2.value = it.value as? Int ?: 0
+          ComponentType.LOG -> logger.append(it.value.toString())
+        }
       }
+    } else {
+      cancel(true)
     }
   }
 
