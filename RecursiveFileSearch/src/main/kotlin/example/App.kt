@@ -90,14 +90,11 @@ private fun initOpenButton() {
 
 private open class FileSearchTask(dir: File) : RecursiveFileSearchTask(dir) {
   override fun process(chunks: List<Message>) {
-    if (isCancelled) {
-      return
-    }
-    if (!statusPanel.isDisplayable) {
+    if (statusPanel.isDisplayable && !isCancelled) {
+      chunks.forEach { processChunks(it) }
+    } else {
       cancel(true)
-      return
     }
-    chunks.forEach { processChunks(it) }
   }
 
   override fun done() {
