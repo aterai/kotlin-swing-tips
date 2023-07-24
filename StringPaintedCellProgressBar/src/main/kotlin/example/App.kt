@@ -73,15 +73,12 @@ fun addActionPerformed() {
   val lengthOfTask = (100..200).random()
   val worker = object : BackgroundTask(lengthOfTask) {
     override fun process(c: List<ProgressValue>) {
-      if (isCancelled) {
-        return
-      }
-      if (!table.isDisplayable) {
+      if (table.isDisplayable && !isCancelled) {
+        c.forEach { model.setValueAt(it, key, 2) }
+      } else {
         cancel(true)
         // executor.shutdown()
-        return
       }
-      c.forEach { model.setValueAt(it, key, 2) }
     }
 
     override fun done() {
