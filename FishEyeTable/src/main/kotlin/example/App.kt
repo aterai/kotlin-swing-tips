@@ -114,13 +114,14 @@ private class FishEyeTable(m: TableModel) : JTable(m) {
 
   override fun doLayout() {
     super.doLayout()
-    val p = SwingUtilities.getAncestorOfClass(JViewport::class.java, this) as? JViewport ?: return
-    val h = p.extentSize.height
-    if (h == handler?.prevHeight) {
-      return
+    val p = SwingUtilities.getAncestorOfClass(JViewport::class.java, this)
+    if (p is JViewport) {
+      val h = p.extentSize.height
+      if (h != handler?.prevHeight) {
+        initRowHeight(h, selectedRow)
+        handler?.prevHeight = h
+      }
     }
-    initRowHeight(h, selectedRow)
-    handler?.prevHeight = h
   }
 
   override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int): Component {
