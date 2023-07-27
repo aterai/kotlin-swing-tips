@@ -120,11 +120,10 @@ private class PasswordView2(elem: Element) : PasswordView(elem) {
 
   @Throws(BadLocationException::class)
   private fun drawLastChar(g: Graphics, x: Int, y: Int, p1: Int): Int {
-    val g2 = g as Graphics2D
-    val font = g2.font
-    val fs = font.size2D
-    val w = font.getStringBounds("0", g2.fontRenderContext).width
-    val sz = ((fs - w) / 2.0).toInt()
+    val font = g.font
+    val frc = g.fontMetrics.fontRenderContext
+    val w = font.getStringBounds("0", frc).width
+    val sz = ((font.size2D - w) / 2.0).toInt()
     val doc = document
     val s = Segment()
     doc.getText(p1, 1, s)
