@@ -9,7 +9,7 @@ import javax.swing.border.TitledBorder
 fun makeUI(): Component {
   val p1 = object : JPanel() {
     override fun paintComponent(g: Graphics) {
-      val g2 = g.create() as Graphics2D
+      val g2 = g.create() as? Graphics2D ?: return
       g2.paint = background
       g2.fill(SwingUtilities.calculateInnerArea(this, null))
       g2.dispose()
@@ -18,7 +18,7 @@ fun makeUI(): Component {
   }
   val p2 = object : JPanel() {
     override fun paintComponent(g: Graphics) {
-      val g2 = g.create() as Graphics2D
+      val g2 = g.create() as? Graphics2D ?: return
       g2.paint = background
       val area = Area(Rectangle(size))
       area.subtract(Area(SwingUtilities.calculateInnerArea(this, null)))
@@ -31,7 +31,7 @@ fun makeUI(): Component {
   val p3 = JPanel(BorderLayout())
   p3.border = object : TitledBorder("Override paintBorder") {
     override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
-      val g2 = g.create() as Graphics2D
+      val g2 = g.create() as? Graphics2D ?: return
       g2.paint = Color.WHITE
       val area = Area(Rectangle(x, y, width, 16))
       area.subtract(Area(SwingUtilities.calculateInnerArea(p3, null)))
