@@ -95,7 +95,7 @@ private fun makeSpinner(model: SpinnerListModel): JSpinner {
 
     override fun getPreviousValue() = super.getNextValue()
   }
-  (spinner.editor as DefaultEditor).textField.isEditable = false
+  (spinner.editor as? DefaultEditor)?.textField?.isEditable = false
   return spinner
 }
 
