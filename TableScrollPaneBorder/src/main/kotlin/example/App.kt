@@ -33,7 +33,7 @@ fun makeUI(): Component {
     }
   }
   check.addActionListener { e ->
-    val b = (e.source as JCheckBox).isSelected
+    val b = (e.source as? JCheckBox)?.isSelected == true
     updateTableScrollPane(scroll, key, b)
   }
 
