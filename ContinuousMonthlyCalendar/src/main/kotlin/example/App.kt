@@ -106,10 +106,12 @@ private fun verticalScrollChanged() {
     val pt = SwingUtilities.convertPoint(viewport, 0, 0, monthTable)
     val row = monthTable.rowAtPoint(pt)
     val col = 6 // monthTable.columnAtPoint(pt);
-    val localDate = monthTable.getValueAt(row, col) as LocalDate
-    currentLocalDate = localDate
-    updateMonthLabel(localDate, locale1)
-    viewport.repaint()
+    val localDate = monthTable.getValueAt(row, col)
+    if (localDate is LocalDate) {
+      currentLocalDate = localDate
+      updateMonthLabel(localDate, locale1)
+      viewport.repaint()
+    }
   }
 }
 
