@@ -59,9 +59,9 @@ fun makeUI(): Component {
     override fun paint(g: Graphics, c: JComponent) {
       super.paint(g, c)
       if (c is JLayer<*>) {
-        val tabbedPane = c.view as JTabbedPane
-        if (focusIdx >= 0 && focusIdx != tabbedPane.selectedIndex) {
-          val r = tabbedPane.getBoundsAt(focusIdx)
+        val t = c.view
+        if (t is JTabbedPane && focusIdx >= 0 && focusIdx != t.selectedIndex) {
+          val r = t.getBoundsAt(focusIdx)
           val g2 = g.create() as? Graphics2D ?: return
           g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f)
           g2.paint = Color.RED
