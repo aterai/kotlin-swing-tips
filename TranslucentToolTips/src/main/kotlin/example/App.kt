@@ -198,8 +198,8 @@ private class CalendarViewListModel(date: LocalDate) : AbstractListModel<Contrib
     val dow = date.get(WeekFields.of(Locale.getDefault()).dayOfWeek())
     this.startDate = date.minusWeeks((WEEK_VIEW - 1).toLong()).minusDays((dow - 1).toLong())
     this.displayDays = DayOfWeek.values().size * (WEEK_VIEW - 1) + dow
-    (0 until displayDays).forEach {
-      contributionActivity[startDate.plusDays(it.toLong())] = (0..4).random()
+    for (i in 0 until displayDays) {
+      contributionActivity[startDate.plusDays(i.toLong())] = (0..4).random()
     }
   }
 
