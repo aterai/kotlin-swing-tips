@@ -88,8 +88,8 @@ private class PressAndHoldButton(icon: Icon, val popupMenu: JPopupMenu?) : JButt
 
   private inner class PressAndHoldHandler : AbstractAction(), MouseListener {
     private val holdTimer = Timer(1000) { e ->
-      val timer = e.source as Timer
-      if (popupMenu != null && getModel().isPressed && timer.isRunning) {
+      val timer = e.source
+      if ((timer as? Timer)?.isRunning == true && popupMenu != null && getModel().isPressed) {
         timer.stop()
         popupMenu.show(this@PressAndHoldButton, 0, height)
         popupMenu.requestFocusInWindow()
