@@ -15,7 +15,8 @@ fun makeUI(): Component {
   for (y in 0 until Y_SIZE) {
     c.gridx = y and 1 // start x offset
     c.gridwidth = WIDTH
-    (0 until X_SIZE).forEach { _ ->
+    // for (x in 0 until X_SIZE) {
+    repeat(X_SIZE) {
       panel.add(makeBrick(), c)
       c.gridx += WIDTH
     }

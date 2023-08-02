@@ -95,7 +95,7 @@ private fun makeAnimatedGif() = runCatching {
     metadata.setFromTree(metaFormat, root)
 
     // make frame
-    (0 until list.size * DELAY).forEach { _ ->
+    repeat(list.size * DELAY) {
       paintFrame(image, list)
       Collections.rotate(list, 1)
       writer.writeToSequence(IIOImage(image, null, metadata), null)
