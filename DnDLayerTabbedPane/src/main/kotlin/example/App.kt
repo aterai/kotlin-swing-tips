@@ -38,7 +38,9 @@ fun makeUI(handler: TransferHandler, layerUI: LayerUI<DnDTabbedPane>): Component
     it.addTab("JTabbedPane 06", sub)
     it.addTab("Title 000000000000000007", JScrollPane(JTree()))
   }
-  (0 until tabbedPane.tabCount).forEach { setTabComponent(tabbedPane, it) }
+  for (i in 0 until tabbedPane.tabCount) {
+    setTabComponent(tabbedPane, i)
+  }
 
   val sub2 = DnDTabbedPane().also {
     it.addTab("Title aaa", JLabel("aaa"))
