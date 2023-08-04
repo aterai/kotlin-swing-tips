@@ -136,8 +136,8 @@ private class TextOverflowFadeLabel(text: String) : JLabel(text) {
 
     rect.width = 1
     var alpha = 1f
-    (w - LENGTH until w).forEach {
-      rect.x = it
+    for (x in w - LENGTH until w) {
+      rect.x = x
       alpha = maxOf(0f, alpha - DIFF)
       g2.composite = AlphaComposite.SrcOver.derive(alpha)
       g2.clip = rect
