@@ -201,12 +201,12 @@ private class FileListTable(model: TableModel) : JTable(model) {
       rubberBand.closePath()
       clearSelection()
       val col = convertColumnIndexToView(0)
-      (0 until model.rowCount)
-        .filter { rubberBand.intersects(getCellRect2(this@FileListTable, it, col)) }
-        .forEach {
-          addRowSelectionInterval(it, it)
-          changeSelection(it, col, true, true)
+      for (i in 0 until model.rowCount) {
+        if (rubberBand.intersects(getCellRect2(this@FileListTable, i, col))) {
+          addRowSelectionInterval(i, i)
+          changeSelection(i, col, true, true)
         }
+      }
       repaint()
     }
 
