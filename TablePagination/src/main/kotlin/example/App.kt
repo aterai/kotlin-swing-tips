@@ -33,8 +33,9 @@ fun makeUI(): Component {
   table.putClientProperty("terminateEditOnFocusLost", true)
   table.rowSorter = sorter
 
-  (1..2019).map { i -> arrayOf(i, "Test: $i", if (i % 2 == 0) "" else "comment...") }
-    .forEach { model.addRow(it) }
+  for (year in 1..2019) {
+    model.addRow(arrayOf(year, "Test: $year", if (year % 2 == 0) "" else "comment..."))
+  }
 
   initLinkBox(100, 1)
   box.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
