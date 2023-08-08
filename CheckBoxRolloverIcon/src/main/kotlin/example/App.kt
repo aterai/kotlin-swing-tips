@@ -42,7 +42,7 @@ fun makeUI(): Component {
       }
       val painter2 = Painter { g: Graphics2D, cb: JCheckBox, width: Int, height: Int ->
         painter1.paint(g, cb, width, height)
-        val g2 = g.create() as Graphics2D
+        val g2 = g.create() as? Graphics2D ?: return
         g2.paint = Color.WHITE
         g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f)
         cb.setSelected(true)
