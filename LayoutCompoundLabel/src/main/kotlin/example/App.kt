@@ -28,10 +28,12 @@ fun makeUI(): Component {
         this.iconTextGap
       )
       val tip = super.getToolTipText(e)
+      val pt = e.point
       return when {
         tip == null -> null
-        iconRect.contains(e.point) -> "Icon: $tip"
-        textRect.contains(e.point) -> "Text: $tip"
+        iconRect.contains(pt) -> "Icon: $tip"
+        textRect.contains(pt) -> "Text: $tip"
+        viewRect.contains(pt) -> "InnerArea: $tip"
         else -> "Border: $tip"
       }
     }
@@ -39,7 +41,7 @@ fun makeUI(): Component {
   label.isOpaque = true
   label.background = Color.GREEN
   label.border = BorderFactory.createMatteBorder(20, 10, 50, 30, Color.RED)
-  label.toolTipText = "ToolTipText ToolTipText"
+  label.toolTipText = "ToolTipText"
 
   val item = IconTooltipItem("Information", icon)
   item.toolTipText = "Information item"
