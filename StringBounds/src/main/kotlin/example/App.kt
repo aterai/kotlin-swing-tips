@@ -76,6 +76,7 @@ private fun getLayoutCompoundLabelBounds(): Rectangle {
   val viewR = Rectangle()
   val iconR = Rectangle()
   val textR = Rectangle()
+  SwingUtilities.calculateInnerArea(label, viewR)
   SwingUtilities.layoutCompoundLabel(
     label,
     label.getFontMetrics(label.font),
