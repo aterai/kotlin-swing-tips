@@ -71,27 +71,24 @@ private class BasicClippedTitleTabbedPaneUI : BasicTabbedPaneUI() {
     isSelected: Boolean
   ) {
     val tabRect = rects[tabIndex]
-    val x = textRect.x + tabInsets.left
+    val x = tabRect.x + tabInsets.left
     val y = textRect.y
     val w = tabRect.width - tabInsets.left - tabInsets.right
     val h = textRect.height
     val viewR = Rectangle(x, y, w, h)
     val iconR = Rectangle()
-    val textR = Rectangle(x, y, w, h)
+    val textR = Rectangle()
     val clippedText = SwingUtilities.layoutCompoundLabel(
-      metrics,
-      title,
-      null,
-      SwingConstants.CENTER,
-      SwingConstants.CENTER,
-      SwingConstants.CENTER,
-      SwingConstants.TRAILING,
-      viewR,
-      iconR,
-      textR,
-      0
+      metrics, title, null,
+      CENTER, CENTER, CENTER, TRAILING,
+      viewR, iconR, textR, 0
     )
-    super.paintText(g, tabPlacement, font, metrics, tabIndex, clippedText, textRect, isSelected)
+    if (title == clippedText) {
+      super.paintText(g, tabPlacement, font, metrics, tabIndex, title, textRect, isSelected)
+    } else {
+      textR.x = textRect.x + tabInsets.left
+      super.paintText(g, tabPlacement, font, metrics, tabIndex, clippedText, textR, isSelected)
+    }
   }
 }
 
@@ -117,27 +114,24 @@ private class WindowsClippedTitleTabbedPaneUI : WindowsTabbedPaneUI() {
     isSelected: Boolean
   ) {
     val tabRect = rects[tabIndex]
-    val x = textRect.x + tabInsets.left
+    val x = tabRect.x + tabInsets.left
     val y = textRect.y
     val w = tabRect.width - tabInsets.left - tabInsets.right
     val h = textRect.height
     val viewR = Rectangle(x, y, w, h)
     val iconR = Rectangle()
-    val textR = Rectangle(x, y, w, h)
+    val textR = Rectangle()
     val clippedText = SwingUtilities.layoutCompoundLabel(
-      metrics,
-      title,
-      null,
-      SwingConstants.CENTER,
-      SwingConstants.CENTER,
-      SwingConstants.CENTER,
-      SwingConstants.TRAILING,
-      viewR,
-      iconR,
-      textR,
-      0
+      metrics, title, null,
+      CENTER, CENTER, CENTER, TRAILING,
+      viewR, iconR, textR, 0
     )
-    super.paintText(g, tabPlacement, font, metrics, tabIndex, clippedText, textRect, isSelected)
+    if (title == clippedText) {
+      super.paintText(g, tabPlacement, font, metrics, tabIndex, title, textRect, isSelected)
+    } else {
+      textR.x = textRect.x + tabInsets.left
+      super.paintText(g, tabPlacement, font, metrics, tabIndex, clippedText, textR, isSelected)
+    }
   }
 }
 
