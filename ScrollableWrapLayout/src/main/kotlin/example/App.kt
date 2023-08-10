@@ -75,7 +75,7 @@ private class ScrollableWrapLayout(
         width -= d.width + fixedHorGap
       }
     }
-    return fixedHorGap + width / columns
+    return fixedHorGap + if (columns == 0) 0 else width / columns
   }
 
   override fun layoutContainer(target: Container) {
