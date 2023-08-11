@@ -23,7 +23,7 @@ fun makeUI(): Component {
     override fun updateUI() {
       super.updateUI()
       setRowHeight(size)
-      val hr: TableCellRenderer = VerticalTableHeaderRenderer()
+      val hr = VerticalTableHeaderRenderer()
       val cm = getColumnModel()
       cm.getColumn(0).headerRenderer = DiagonallySplitHeaderRenderer()
       cm.getColumn(0).preferredWidth = size * 5
