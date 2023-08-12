@@ -29,7 +29,7 @@ fun makeUI(): Component {
   val field1 = JTextField(txt2, 20)
   initActionInputMap(field1)
   val tabSize = 4
-  val doc: Document = PlainDocument()
+  val doc = PlainDocument()
   doc.putProperty(PlainDocument.tabSizeAttribute, tabSize)
 
   val field2 = JTextField(doc, txt2, 20)
