@@ -124,14 +124,14 @@ private class CalendarViewTableModel(
     Any::class.java
   }
 
-  override fun getColumnName(column: Int): String = if (column == 0) {
+  override fun getColumnName(column: Int) = if (column == 0) {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM")
     currentMonth.format(formatter.withLocale(Locale.getDefault()))
   } else {
     ""
   }
 
-  override fun getValueAt(row: Int, column: Int): Any? = if (column == 0) {
+  override fun getValueAt(row: Int, column: Int) = if (column == 0) {
     currentMonth.atDay(1).plusDays(row.toLong())
   } else {
     super.getValueAt(row, column)
