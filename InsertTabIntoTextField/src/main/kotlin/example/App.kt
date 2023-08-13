@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import javax.swing.*
-import javax.swing.text.Document
 import javax.swing.text.JTextComponent
 import javax.swing.text.PlainDocument
 
