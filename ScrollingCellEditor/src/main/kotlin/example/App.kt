@@ -57,7 +57,7 @@ private class TextAreaCellEditor : AbstractCellEditor(), TableCellEditor {
     textArea.actionMap.put(KEY, action)
   }
 
-  override fun getCellEditorValue(): Any = textArea.text
+  override fun getCellEditorValue() = textArea.text
 
   override fun getTableCellEditorComponent(
     table: JTable,
