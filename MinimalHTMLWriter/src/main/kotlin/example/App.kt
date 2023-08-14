@@ -80,7 +80,7 @@ private class TextComponentPopupMenu : JPopupMenu() {
           writer.flush()
           val contents = os.toString()
           val plain = doc.getText(start, length)
-          val transferable: Transferable = BasicTransferable(plain, contents)
+          val transferable = BasicTransferable(plain, contents)
           clipboard.setContents(transferable, null)
         }
       }
@@ -103,7 +103,7 @@ private class TextComponentPopupMenu : JPopupMenu() {
           w.write()
           writer.flush()
           val contents = os.toString()
-          val htmlTransferable: Transferable = HtmlTransferable(contents)
+          val htmlTransferable = HtmlTransferable(contents)
           clipboard.setContents(htmlTransferable, null)
         }
       }
