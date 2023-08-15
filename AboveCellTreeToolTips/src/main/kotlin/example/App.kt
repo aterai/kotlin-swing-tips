@@ -29,11 +29,9 @@ fun makeUI(): Component {
   p.add(makeTitledPanel("Default location", tree0))
   p.add(makeTitledPanel("Draw directly above the cell", tree1))
 
-  return JSplitPane().also {
+  return JSplitPane(JSplitPane.HORIZONTAL_SPLIT, p, JPanel()).also {
     it.resizeWeight = .5
     it.dividerLocation = 160
-    it.leftComponent = p
-    it.rightComponent = JLabel("JLabel")
     it.preferredSize = Dimension(320, 240)
   }
 }

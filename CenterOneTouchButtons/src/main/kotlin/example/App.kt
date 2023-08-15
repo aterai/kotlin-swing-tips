@@ -4,11 +4,12 @@ import java.awt.*
 import javax.swing.*
 
 fun makeUI(): Component {
-  val splitPane = JSplitPane()
-  splitPane.topComponent = JScrollPane(JTable(8, 3))
-  splitPane.bottomComponent = JScrollPane(JTree())
-  splitPane.isOneTouchExpandable = true
-  splitPane.dividerSize = 32
+  val s1 = JScrollPane(JTable(8, 3))
+  val s2 = JScrollPane(JTree())
+  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, s1, s2)
+  split.resizeWeight = .5
+  split.isOneTouchExpandable = true
+  split.dividerSize = 32
 
   val key = "SplitPane.centerOneTouchButtons"
   val check = object : JCheckBox(key, UIManager.getBoolean(key)) {
@@ -17,14 +18,14 @@ fun makeUI(): Component {
       EventQueue.invokeLater {
         val b = UIManager.getLookAndFeelDefaults().getBoolean(key)
         isSelected = b
-        updateCenterOneTouchButtons(splitPane, b)
+        updateCenterOneTouchButtons(split, b)
       }
     }
   }
   check.isOpaque = false
   check.addActionListener { e ->
     val b = (e.source as? JCheckBox)?.isSelected == true
-    updateCenterOneTouchButtons(splitPane, b)
+    updateCenterOneTouchButtons(split, b)
   }
 
   val mb = JMenuBar()
@@ -34,7 +35,7 @@ fun makeUI(): Component {
 
   return JPanel(BorderLayout(5, 5)).also {
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
-    it.add(splitPane)
+    it.add(split)
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.preferredSize = Dimension(320, 240)
   }

@@ -20,14 +20,10 @@ fun makeUI(): Component {
   scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
   scroll.verticalScrollBar.unitIncrement = 25
 
-  val split = JSplitPane()
-  split.resizeWeight = .5
-  split.dividerSize = 2
-  split.leftComponent = scroll
-  split.rightComponent = JPanel()
-
-  return JPanel(BorderLayout()).also {
-    it.add(split)
+  return JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scroll, JPanel()).also {
+    it.resizeWeight = .5
+    it.dividerLocation = 160
+    it.dividerSize = 2
     it.preferredSize = Dimension(320, 240)
   }
 }
