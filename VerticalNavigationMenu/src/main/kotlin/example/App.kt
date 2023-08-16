@@ -50,12 +50,10 @@ fun makeUI(): Component {
       cardLayout.show(p, it.userObject.toString())
     }
   }
-  val sp = JSplitPane()
-  sp.leftComponent = JScrollPane(tree)
-  sp.rightComponent = JScrollPane(p)
-  sp.resizeWeight = .5
+  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, JScrollPane(tree), JScrollPane(p))
+  split.resizeWeight = .5
   return JPanel(BorderLayout(2, 2)).also {
-    it.add(sp)
+    it.add(split)
     it.preferredSize = Dimension(320, 240)
   }
 }

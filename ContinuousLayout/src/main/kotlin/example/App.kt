@@ -17,9 +17,7 @@ fun makeUI(): Component {
   rightPane.isContinuousLayout = true
   rightPane.resizeWeight = .5
 
-  val centerPane = JSplitPane() // JSplitPane.HORIZONTAL_SPLIT
-  centerPane.leftComponent = leftPane
-  centerPane.rightComponent = rightPane
+  val centerPane = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPane, rightPane)
   centerPane.isContinuousLayout = true
   centerPane.resizeWeight = .5
 

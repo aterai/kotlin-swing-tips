@@ -9,7 +9,7 @@ import javax.swing.text.DefaultCaret
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.text.Highlighter.HighlightPainter
 
-fun makeUI() = JSplitPane().also {
+fun makeUI() = JSplitPane(JSplitPane.HORIZONTAL_SPLIT).also {
   it.resizeWeight = .5
   it.leftComponent = makeTabbedPane()
   it.rightComponent = makeTabbedPane()
