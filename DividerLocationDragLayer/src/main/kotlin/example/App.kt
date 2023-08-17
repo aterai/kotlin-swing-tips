@@ -6,25 +6,24 @@ import javax.swing.*
 import javax.swing.plaf.LayerUI
 
 fun makeUI(): Component {
-  val splitPane = JSplitPane()
-  splitPane.dividerSize = 1
-  splitPane.resizeWeight = .5
-  splitPane.leftComponent = makeTestBox()
-  splitPane.rightComponent = makeTestBox()
+  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, makeBox(), makeBox())
+  split.dividerSize = 1
+  split.resizeWeight = .5
+
   val check = JCheckBox("VERTICAL")
   check.addActionListener { e ->
     val b = (e.source as? JCheckBox)?.isSelected == true
-    splitPane.orientation = if (b) JSplitPane.VERTICAL_SPLIT else JSplitPane.HORIZONTAL_SPLIT
+    split.orientation = if (b) JSplitPane.VERTICAL_SPLIT else JSplitPane.HORIZONTAL_SPLIT
   }
 
   return JPanel(BorderLayout()).also {
     it.add(check, BorderLayout.NORTH)
-    it.add(JLayer(splitPane, DividerLocationDragLayerUI()))
+    it.add(JLayer(split, DividerLocationDragLayerUI()))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeTestBox(): Component {
+private fun makeBox(): Component {
   val tree = JTree()
   tree.visibleRowCount = 3
 

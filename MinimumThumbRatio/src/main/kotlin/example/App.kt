@@ -41,12 +41,12 @@ fun makeUI(): Component {
       putClientProperty("JScrollBar.fastWheelScrolling", true)
     }
   }
-  val sp = JSplitPane()
-  sp.leftComponent = JScrollPane(JTextArea("default\n\n$txt"))
-  sp.rightComponent = scroll
-  sp.resizeWeight = .5
-  sp.preferredSize = Dimension(320, 240)
-  return sp
+  val s0 = JScrollPane(JTextArea("default\n\n$txt"))
+  return JSplitPane(JSplitPane.HORIZONTAL_SPLIT, s0, scroll).also {
+    it.resizeWeight = .5
+    it.dividerLocation = 160
+    it.preferredSize = Dimension(320, 240)
+  }
 }
 
 fun main() {
