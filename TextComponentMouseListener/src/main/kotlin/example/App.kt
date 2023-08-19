@@ -11,7 +11,7 @@ import javax.swing.text.JTextComponent
 
 fun makeUI(): Component {
   val textArea = makeTextArea()
-  val handler: MouseAdapter = TextComponentMouseHandler(textArea)
+  val handler = TextComponentMouseHandler(textArea)
   textArea.addMouseListener(handler)
   textArea.addMouseMotionListener(handler)
 
