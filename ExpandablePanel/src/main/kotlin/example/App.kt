@@ -87,9 +87,7 @@ fun makeUI(): Component {
   panel.add(centerBox)
   panel.add(southBox, BorderLayout.SOUTH)
 
-  return JSplitPane().also {
-    it.leftComponent = panel
-    it.rightComponent = JScrollPane(JTree())
+  return JSplitPane(JSplitPane.HORIZONTAL_SPLIT, panel, JScrollPane(JTree())).also {
     it.preferredSize = Dimension(320, 240)
   }
 }

@@ -8,14 +8,14 @@ import javax.swing.*
 import javax.swing.plaf.basic.BasicSplitPaneUI
 
 fun makeUI(): Component {
-  val splitPane = JSplitPane().also {
+  val s1 = JScrollPane(JTree())
+  val s2 = JScrollPane(JTable(2, 3))
+  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, s1, s2).also {
     it.isOneTouchExpandable = true
     it.isContinuousLayout = true
     it.border = BorderFactory.createMatteBorder(8, 8, 8, 8, Color.WHITE)
-    it.leftComponent = JScrollPane(JTree())
-    it.rightComponent = JScrollPane(JTable(2, 3))
   }
-  EventQueue.invokeLater { splitPane.setDividerLocation(.3) }
+  EventQueue.invokeLater { split.setDividerLocation(.3) }
 
   val check = JCheckBox("Show JPopupMenu only on Divider", true)
   val popup = object : JPopupMenu() {
@@ -30,23 +30,23 @@ fun makeUI(): Component {
       }
     }
   }
-  popup.add("center").addActionListener { splitPane.setDividerLocation(.5) }
-  popup.add("selectMin").addActionListener { selectMinMax(splitPane, "selectMin") }
-  popup.add("selectMax").addActionListener { selectMinMax(splitPane, "selectMax") }
-  splitPane.componentPopupMenu = popup
+  popup.add("center").addActionListener { split.setDividerLocation(.5) }
+  popup.add("selectMin").addActionListener { selectMinMax(split, "selectMin") }
+  popup.add("selectMax").addActionListener { selectMinMax(split, "selectMax") }
+  split.componentPopupMenu = popup
 
-  val ui = splitPane.ui as? BasicSplitPaneUI
+  val ui = split.ui as? BasicSplitPaneUI
   ui?.divider?.addMouseListener(object : MouseAdapter() {
     override fun mouseClicked(e: MouseEvent) {
       if (SwingUtilities.isLeftMouseButton(e) && e.clickCount >= 2) {
-        splitPane.setDividerLocation(.5)
+        split.setDividerLocation(.5)
       }
     }
   })
 
   return JPanel(BorderLayout()).also {
     it.add(check, BorderLayout.NORTH)
-    it.add(splitPane)
+    it.add(split)
     it.preferredSize = Dimension(320, 240)
   }
 }
