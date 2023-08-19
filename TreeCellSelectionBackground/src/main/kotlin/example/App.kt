@@ -33,10 +33,8 @@ fun makeUI(): Component {
   tree.putClientProperty("Nimbus.Overrides.InheritDefaults", false)
   tree.background = Color.WHITE
 
-  val split = JSplitPane()
+  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, JScrollPane(JTree()), JScrollPane(tree))
   split.resizeWeight = .5
-  split.leftComponent = JScrollPane(JTree())
-  split.rightComponent = JScrollPane(tree)
 
   return JPanel(BorderLayout()).also {
     it.add(split)

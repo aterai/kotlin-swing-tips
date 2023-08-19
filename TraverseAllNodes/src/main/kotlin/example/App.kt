@@ -39,12 +39,8 @@ fun makeUI(): Component {
   panel.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   panel.add(p, BorderLayout.NORTH)
 
-  val sp = JSplitPane()
-  sp.leftComponent = JScrollPane(tree)
-  sp.rightComponent = JScrollPane(textArea)
-
   return JPanel(BorderLayout()).also {
-    it.add(sp)
+    it.add(JSplitPane(JSplitPane.HORIZONTAL_SPLIT, JScrollPane(tree), JScrollPane(textArea)))
     it.add(panel, BorderLayout.EAST)
     it.preferredSize = Dimension(320, 240)
   }
