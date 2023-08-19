@@ -9,7 +9,6 @@ import javax.swing.*
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
-import javax.swing.table.TableModel
 
 fun makeUI(): Component {
   UIManager.put("TableHeader.rightAlignSortArrow", false)
@@ -20,7 +19,7 @@ fun makeUI(): Component {
     arrayOf("ccc", "2%", "0.3MB", "1MB/S"),
     arrayOf("ddd", "3%", "0.5MB", "2MB/S")
   )
-  val model: TableModel = object : DefaultTableModel(data, columnNames) {
+  val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = String::class.java
   }
   val table = object : JTable(model) {
