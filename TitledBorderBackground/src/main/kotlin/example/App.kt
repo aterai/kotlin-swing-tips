@@ -80,8 +80,8 @@ fun makeLabelTitledBorderPanel(title: String, p: JPanel): JPanel {
 
   val height = label.preferredSize.height / 2
   val color = Color(0x0, true)
-  val b1: Border = BorderFactory.createMatteBorder(height, 2, 2, 2, color)
-  val b2: Border = BorderFactory.createTitledBorder("")
+  val b1 = BorderFactory.createMatteBorder(height, 2, 2, 2, color)
+  val b2 = BorderFactory.createTitledBorder("")
   p.border = BorderFactory.createCompoundBorder(b1, b2)
   p.alignmentX = Component.LEFT_ALIGNMENT
   p.alignmentY = Component.TOP_ALIGNMENT
