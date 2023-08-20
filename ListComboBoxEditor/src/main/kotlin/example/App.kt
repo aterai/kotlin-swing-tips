@@ -206,7 +206,7 @@ private class NewspaperStyleList(model: ListModel<ListItem>) : JList<ListItem>(m
 }
 
 private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
-  private val label: JLabel = object : JLabel("", null, CENTER) {
+  private val label = object : JLabel("", null, CENTER) {
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
       if (SELECTED_COLOR == background) {
