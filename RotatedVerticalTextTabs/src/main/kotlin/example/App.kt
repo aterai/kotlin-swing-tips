@@ -37,12 +37,10 @@ fun makeUI(): Component {
     val c2 = JLabel(it, icon, SwingConstants.CENTER)
     tabs2.addTab(null, makeVerticalTabIcon(it, icon, true), c2)
   }
-  val sp = JSplitPane()
-  sp.resizeWeight = .5
-  sp.leftComponent = tabs1
-  sp.rightComponent = tabs2
-  sp.preferredSize = Dimension(320, 240)
-  return sp
+  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tabs1, tabs2)
+  split.resizeWeight = .5
+  split.preferredSize = Dimension(320, 240)
+  return split
 }
 
 fun main() {
