@@ -3,7 +3,6 @@ package example
 import java.awt.*
 import java.awt.geom.Area
 import javax.swing.*
-import javax.swing.border.Border
 import javax.swing.border.TitledBorder
 
 fun makeUI(): Component {
