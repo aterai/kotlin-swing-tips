@@ -14,12 +14,6 @@ import javax.swing.*
 import javax.swing.plaf.LayerUI
 
 fun makeUI(): Component {
-  val split = JSplitPane().also {
-    it.isContinuousLayout = true
-    it.resizeWeight = .5
-    it.dividerSize = 0
-  }
-
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/test.png")
   val source = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
@@ -29,36 +23,13 @@ fun makeUI(): Component {
   val colorConvert = ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null)
   val destination = colorConvert.filter(source, null)
 
-  val beforeCanvas = object : JComponent() {
-    override fun paintComponent(g: Graphics) {
-      super.paintComponent(g)
-      val iw = source.width
-      val ih = source.height
-      val dim = split.size
-      val x = (dim.width - iw) / 2
-      val y = (dim.height - ih) / 2
-      g.drawImage(source, x, y, iw, ih, this)
-    }
+  val before = makeBeforeCanvas(source)
+  val after = makeAfterCanvas(destination)
+  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, before, after).also {
+    it.isContinuousLayout = true
+    it.resizeWeight = .5
+    it.dividerSize = 0
   }
-  split.leftComponent = beforeCanvas
-
-  val afterCanvas = object : JComponent() {
-    override fun paintComponent(g: Graphics) {
-      super.paintComponent(g)
-      val g2 = g.create() as? Graphics2D ?: return
-      val iw = destination.getWidth(this)
-      val ih = destination.getHeight(this)
-      val pt = location
-      g2.translate(-pt.x + split.insets.left, 0)
-
-      val dim = split.size
-      val x = (dim.width - iw) / 2
-      val y = (dim.height - ih) / 2
-      g2.drawImage(destination, x, y, iw, ih, this)
-      g2.dispose()
-    }
-  }
-  split.rightComponent = afterCanvas
 
   val layerUI = DividerLocationDragLayerUI()
   val check = JCheckBox("Paint divider")
@@ -71,6 +42,37 @@ fun makeUI(): Component {
     it.add(check, BorderLayout.SOUTH)
     it.isOpaque = false
     it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private fun makeBeforeCanvas(source: Image) = object : JComponent() {
+  override fun paintComponent(g: Graphics) {
+    super.paintComponent(g)
+    val iw = source.getWidth(this)
+    val ih = source.getHeight(this)
+    val p = SwingUtilities.getUnwrappedParent(this)
+    val dim = p.size
+    val x = (dim.width - iw) / 2
+    val y = (dim.height - ih) / 2
+    g.drawImage(source, x, y, iw, ih, this)
+  }
+}
+
+private fun makeAfterCanvas(destination: Image) = object : JComponent() {
+  override fun paintComponent(g: Graphics) {
+    super.paintComponent(g)
+    val c = SwingUtilities.getUnwrappedParent(this)
+    if (c is JComponent) {
+      val g2 = g.create() as? Graphics2D ?: return
+      val iw = destination.getWidth(this)
+      val ih = destination.getHeight(this)
+      g2.translate(-location.x + c.insets.left, 0)
+      val dim = c.size
+      val x = (dim.width - iw) / 2
+      val y = (dim.height - ih) / 2
+      g2.drawImage(destination, x, y, iw, ih, this)
+      g2.dispose()
+    }
   }
 }
 

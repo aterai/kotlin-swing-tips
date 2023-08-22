@@ -15,10 +15,10 @@ fun makeUI(): Component {
   textArea.addMouseListener(handler)
   textArea.addMouseMotionListener(handler)
 
-  val split = JSplitPane()
+  val c1 = makeTitledPanel("Default", makeTextArea())
+  val c2 = makeTitledPanel("MouseListener", textArea)
+  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, c1, c2)
   split.resizeWeight = .5
-  split.leftComponent = makeTitledPanel("Default", makeTextArea())
-  split.rightComponent = makeTitledPanel("MouseListener", textArea)
 
   return JPanel(BorderLayout()).also {
     it.add(split)
