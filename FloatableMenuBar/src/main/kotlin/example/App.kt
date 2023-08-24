@@ -14,12 +14,12 @@ fun makeUI(): Component {
   menu2.addMenuListener(object : MenuListener {
     private fun isFloating(menu: JMenu): Boolean {
       val c = SwingUtilities.getAncestorOfClass(JToolBar::class.java, menu)
-      return c is JToolBar && !(c.ui as BasicToolBarUI).isFloating
+      return c is JToolBar && (c.ui as? BasicToolBarUI)?.isFloating == true
     }
 
     override fun menuSelected(e: MenuEvent) {
       val menu = e.source
-      if (menu is JMenu && menu.isTopLevelMenu && isFloating(menu)) {
+      if (menu is JMenu && menu.isTopLevelMenu && !isFloating(menu)) {
         val d = menu.preferredSize
         val p = menu.location
         val cp = menu.rootPane.contentPane
