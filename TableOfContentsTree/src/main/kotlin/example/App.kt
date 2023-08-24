@@ -22,14 +22,14 @@ fun makeUI(): Component {
   val tree2 = TableOfContentsTree(makeModel())
   tree2.isRootVisible = false
 
-  val sp = JSplitPane().also {
+  val s1 = JScrollPane(tree)
+  val s2 = JScrollPane(tree2)
+  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, s1, s2).also {
     it.resizeWeight = .5
-    it.leftComponent = JScrollPane(tree)
-    it.rightComponent = JScrollPane(tree2)
   }
 
   return JPanel(BorderLayout()).also {
-    it.add(sp)
+    it.add(split)
     it.preferredSize = Dimension(320, 240)
   }
 }

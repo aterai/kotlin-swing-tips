@@ -48,10 +48,8 @@ fun makeUI(): Component {
   val scroll2 = JScrollPane(table)
   scroll2.verticalScrollBar.model = scroll1.verticalScrollBar.model
 
-  val split = JSplitPane()
+  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scroll1, scroll2)
   split.resizeWeight = .3
-  split.leftComponent = scroll1
-  split.rightComponent = scroll2
 
   val button = JButton("add")
   button.addActionListener {
