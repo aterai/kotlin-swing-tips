@@ -4,9 +4,9 @@ import java.awt.*
 import javax.swing.*
 
 fun makeUI(): Component {
-  val sp = JSplitPane().also {
-    it.leftComponent = JScrollPane(JTree())
-    it.rightComponent = JScrollPane(JTable(6, 3))
+  val s1 = JScrollPane(JTree())
+  val s2 = JScrollPane(JTable(6, 3))
+  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, s1, s2).also {
     it.resizeWeight = .4
   }
 
@@ -15,19 +15,19 @@ fun makeUI(): Component {
   val button = JButton("swap")
   button.isFocusable = false
   button.addActionListener {
-    val left = sp.leftComponent
-    val right = sp.rightComponent
-    val loc = sp.dividerLocation
+    val left = split.leftComponent
+    val right = split.rightComponent
+    val loc = split.dividerLocation
 
-    sp.remove(left)
-    sp.remove(right)
+    split.remove(left)
+    split.remove(right)
 
-    sp.leftComponent = right
-    sp.rightComponent = left
+    split.leftComponent = right
+    split.rightComponent = left
 
-    sp.resizeWeight = 1.0 - sp.resizeWeight
+    split.resizeWeight = 1.0 - split.resizeWeight
     if (check.isSelected) {
-      sp.dividerLocation = loc
+      split.dividerLocation = loc
     }
   }
 
@@ -39,7 +39,7 @@ fun makeUI(): Component {
   }
 
   return JPanel(BorderLayout()).also {
-    it.add(sp)
+    it.add(split)
     it.add(box, BorderLayout.SOUTH)
     it.preferredSize = Dimension(320, 240)
   }
