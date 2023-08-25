@@ -68,7 +68,7 @@ private class HtmlListEditor(
     text = (e.source as? JSpinner)?.value?.toString()
   }
 
-  override fun getPreferredSize(): Dimension = super.getPreferredSize().also {
+  override fun getPreferredSize() = super.getPreferredSize().also {
     it.width = 200
   }
 
