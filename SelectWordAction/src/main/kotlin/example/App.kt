@@ -37,10 +37,10 @@ fun makeUI(): Component {
     }
   }
   textArea.actionMap.put(DefaultEditorKit.selectWordAction, action)
-  val split = JSplitPane()
+  val c1 = makeTitledPanel("Default", JTextArea(TEXT))
+  val c2 = makeTitledPanel("Break words: _ and -", textArea)
+  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, c1, c2)
   split.resizeWeight = .5
-  split.leftComponent = makeTitledPanel("Default", JTextArea(TEXT))
-  split.rightComponent = makeTitledPanel("Break words: _ and -", textArea)
   split.preferredSize = Dimension(320, 240)
   return split
 }
