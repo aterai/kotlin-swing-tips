@@ -138,7 +138,7 @@ private class DateEditor : AbstractCellEditor(), TableCellEditor {
     return spinner
   }
 
-  override fun getCellEditorValue(): Any = spinner.value
+  override fun getCellEditorValue() = spinner.value
 
   override fun stopCellEditing(): Boolean {
     runCatching {
@@ -200,7 +200,7 @@ private class ColorEditor : AbstractCellEditor(), TableCellEditor, ActionListene
     }
   }
 
-  override fun getCellEditorValue(): Any? = currentColor
+  override fun getCellEditorValue() = currentColor
 
   override fun getTableCellEditorComponent(
     table: JTable,
