@@ -82,9 +82,7 @@ fun makeUI(): Component {
     }
   }
 
-  return JSplitPane().also {
-    it.leftComponent = JScrollPane(tree)
-    it.rightComponent = scroll
+  return JSplitPane(JSplitPane.HORIZONTAL_SPLIT, JScrollPane(tree), scroll).also {
     it.resizeWeight = .5
     it.preferredSize = Dimension(320, 240)
   }
