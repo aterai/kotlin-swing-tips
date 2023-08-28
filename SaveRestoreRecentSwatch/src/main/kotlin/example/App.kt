@@ -42,11 +42,12 @@ fun makeUI(): Component {
     val swatch = MySwatchChooserPanel()
     swatch.addPropertyChangeListener("ancestor") { event ->
       swatch.recentSwatchPanel?.colors?.also { colors ->
-        val spc = switchPanel.colors ?: return@also
-        if (event.newValue == null) {
-          System.arraycopy(colors, 0, spc, 0, colors.size)
-        } else {
-          System.arraycopy(spc, 0, colors, 0, colors.size)
+        switchPanel.colors?.also { spc ->
+          if (event.newValue == null) {
+            System.arraycopy(colors, 0, spc, 0, colors.size)
+          } else {
+            System.arraycopy(spc, 0, colors, 0, colors.size)
+          }
         }
       }
     }
