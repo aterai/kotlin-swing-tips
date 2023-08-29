@@ -60,13 +60,12 @@ fun makeUI(): Component {
   val button = JButton("bottom")
   button.addActionListener { scrollToId("bottom") }
   EventQueue.invokeLater { scrollToId("main") }
-  val sp = JSplitPane()
-  sp.leftComponent = JScrollPane(tree)
-  sp.rightComponent = JScrollPane(editor)
-  sp.resizeWeight = .5
+
+  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, JScrollPane(tree), JScrollPane(editor))
+  split.resizeWeight = .5
 
   return JPanel(BorderLayout(2, 2)).also {
-    it.add(sp)
+    it.add(split)
     it.add(button, BorderLayout.SOUTH)
     it.preferredSize = Dimension(320, 240)
   }
