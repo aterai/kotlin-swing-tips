@@ -257,34 +257,43 @@ open class SwatchPanel : JPanel() {
       }
     })
     addKeyListener(object : KeyAdapter() {
+      @Suppress("CognitiveComplexMethod")
       override fun keyPressed(e: KeyEvent) {
         val typed = e.keyCode
         val leftToRight = componentOrientation.isLeftToRight
         when (typed) {
-          KeyEvent.VK_UP -> if (selRow > 0) {
-            selRow--
-            repaint()
+          KeyEvent.VK_UP -> {
+            if (selRow > 0) {
+              selRow--
+              repaint()
+            }
           }
 
-          KeyEvent.VK_DOWN -> if (selRow < numSwatches.height - 1) {
-            selRow++
-            repaint()
+          KeyEvent.VK_DOWN -> {
+            if (selRow < numSwatches.height - 1) {
+              selRow++
+              repaint()
+            }
           }
 
-          KeyEvent.VK_LEFT -> if (selCol > 0 && leftToRight) {
-            selCol--
-            repaint()
-          } else if (selCol < numSwatches.width - 1 && !leftToRight) {
-            selCol++
-            repaint()
+          KeyEvent.VK_LEFT -> {
+            if (selCol > 0 && leftToRight) {
+              selCol--
+              repaint()
+            } else if (selCol < numSwatches.width - 1 && !leftToRight) {
+              selCol++
+              repaint()
+            }
           }
 
-          KeyEvent.VK_RIGHT -> if (selCol < numSwatches.width - 1 && leftToRight) {
-            selCol++
-            repaint()
-          } else if (selCol > 0 && !leftToRight) {
-            selCol--
-            repaint()
+          KeyEvent.VK_RIGHT -> {
+            if (selCol < numSwatches.width - 1 && leftToRight) {
+              selCol++
+              repaint()
+            } else if (selCol > 0 && !leftToRight) {
+              selCol--
+              repaint()
+            }
           }
 
           KeyEvent.VK_HOME -> {
@@ -453,6 +462,7 @@ private class MainSwatchPanel : SwatchPanel() {
     }
   }
 
+  @Suppress("LongMethod")
   private fun initRawValues(): IntArray {
     return intArrayOf(
       255, 255, 255, // first row.
