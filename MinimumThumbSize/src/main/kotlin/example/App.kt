@@ -10,16 +10,13 @@ fun makeUI(): Component {
   for (i in 0 until 1000) {
     buf.append(i).append(LF)
   }
-
-  val sp = JSplitPane()
-  sp.leftComponent = JScrollPane(JTextArea(buf.toString()))
+  val s1 = JScrollPane(JTextArea(buf.toString()))
 
   UIManager.put("ScrollBar.minimumThumbSize", Dimension(32, 32))
-  sp.rightComponent = JScrollPane(JTextArea(buf.toString()))
-  sp.resizeWeight = .5
+  val s2 = JScrollPane(JTextArea(buf.toString()))
 
-  return JPanel(BorderLayout()).also {
-    it.add(sp)
+  return JSplitPane(JSplitPane.HORIZONTAL_SPLIT, s1, s2).also {
+    it.resizeWeight = .5
     it.preferredSize = Dimension(320, 240)
   }
 }
