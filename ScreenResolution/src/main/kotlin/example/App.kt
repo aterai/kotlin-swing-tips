@@ -33,11 +33,8 @@ fun makeUI(): Component {
     }
   }
 
-  val sp = JSplitPane().also {
-    it.leftComponent = JScrollPane(table)
-    it.rightComponent = JScrollPane(tree)
-    it.resizeWeight = .5
-  }
+  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, JScrollPane(table), JScrollPane(tree))
+  split.resizeWeight = .5
 
   val p = object : JPanel(BorderLayout()) {
     private val defaultSize = Dimension(320, 240)
@@ -54,7 +51,7 @@ fun makeUI(): Component {
       return resolutionSize
     }
   }
-  p.add(sp)
+  p.add(split)
   return p
 }
 
