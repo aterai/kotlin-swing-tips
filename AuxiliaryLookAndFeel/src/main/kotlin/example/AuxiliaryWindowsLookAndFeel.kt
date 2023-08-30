@@ -19,7 +19,7 @@ class AuxiliaryWindowsLookAndFeel : LookAndFeel() {
         // not needed
       }
     }
-    val uiDefaults = arrayOf<Any>("ComboBoxUI", "example.AuxiliaryWindowsComboBoxUI")
+    val uiDefaults = arrayOf("ComboBoxUI", "example.AuxiliaryWindowsComboBoxUI")
     table.putDefaults(uiDefaults)
     return table
   }

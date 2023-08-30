@@ -33,7 +33,7 @@ fun makeUI(): Component {
 
   val button3 = JButton("showOptionDialog")
   button3.addActionListener { e ->
-    val options = arrayOf<Any>("Yes, please")
+    val options = arrayOf("Yes, please")
     JOptionPane.showOptionDialog(
       (e.source as? JComponent)?.rootPane,
       "Would you like green eggs and ham?",

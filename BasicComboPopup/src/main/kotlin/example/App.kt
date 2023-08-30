@@ -15,7 +15,7 @@ fun makeUI(): Component {
   val textPane = JTextPane()
   textPane.text = "Shift+Tab: open EditorComboPopup\n"
 
-  val model = arrayOf<Any>(
+  val model = arrayOf(
     "public", "protected", "private",
     "final", "transient", "super", "this", "return", "class"
   )
