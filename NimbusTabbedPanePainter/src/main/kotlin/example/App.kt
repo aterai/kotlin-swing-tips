@@ -22,12 +22,12 @@ private object NimbusTabbedPanePainterUtils {
   const val OVER_PAINT = 6
   const val STROKE_SIZE = 2.0
   const val ARC = 10.0
-  val CONTENT_BACKGROUND: Color = Color.LIGHT_GRAY
-  val CONTENT_BORDER: Color = Color.ORANGE // Color.GRAY
-  val TAB_TABAREA_MASK: Color = Color.GREEN // CONTENT_BACKGROUND
-  val TAB_BACKGROUND: Color = Color.PINK // CONTENT_BORDER
-  val TABAREA_BACKGROUND: Color = Color.CYAN // CONTENT_BACKGROUND
-  val TABAREA_BORDER: Color = Color.RED // CONTENT_BORDER
+  val CONTENT_BACKGROUND = Color.LIGHT_GRAY
+  val CONTENT_BORDER = Color.ORANGE // Color.GRAY
+  val TAB_TABAREA_MASK = Color.GREEN // CONTENT_BACKGROUND
+  val TAB_BACKGROUND = Color.PINK // CONTENT_BORDER
+  val TABAREA_BACKGROUND = Color.CYAN // CONTENT_BACKGROUND
+  val TABAREA_BORDER = Color.RED // CONTENT_BORDER
 
   fun configureUI() {
     val d = UIManager.getLookAndFeelDefaults()
