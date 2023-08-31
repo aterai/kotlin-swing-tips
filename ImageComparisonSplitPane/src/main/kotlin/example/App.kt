@@ -6,7 +6,7 @@ import javax.imageio.ImageIO
 import javax.swing.*
 
 fun makeUI(): Component {
-  val split = JSplitPane()
+  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT)
   split.isContinuousLayout = true
   split.resizeWeight = .5
 
