@@ -9,7 +9,7 @@ import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
 import javax.swing.*
 
-private val splitPane = JSplitPane()
+private val splitPane = JSplitPane(JSplitPane.HORIZONTAL_SPLIT)
 private val tabAreaSize = Dimension(40, 40)
 private val renderer = JPanel()
 
