@@ -134,7 +134,7 @@ private class ComboBoxCellEditor : AbstractCellEditor(), TableCellEditor {
     return panel
   }
 
-  override fun getCellEditorValue(): Any? = comboBox.selectedItem
+  override fun getCellEditorValue() = comboBox.selectedItem
 
   override fun shouldSelectCell(anEvent: EventObject): Boolean {
     if (anEvent is MouseEvent) {

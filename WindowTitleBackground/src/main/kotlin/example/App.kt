@@ -135,7 +135,7 @@ private class ColorEditor : AbstractCellEditor(), TableCellEditor, ActionListene
   }
 
   // Implement the one CellEditor method that AbstractCellEditor doesn't.
-  override fun getCellEditorValue(): Any? = currentColor
+  override fun getCellEditorValue() = currentColor
 
   // Implement the one method defined by TableCellEditor.
   override fun getTableCellEditorComponent(

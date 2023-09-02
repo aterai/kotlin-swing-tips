@@ -192,7 +192,7 @@ private class RowHeaderEditor : AbstractCellEditor(), TableCellEditor {
     return renderer
   }
 
-  override fun getCellEditorValue(): Any? = rowHeader
+  override fun getCellEditorValue() = rowHeader
 }
 
 private class CheckIcon : Icon {
