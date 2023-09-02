@@ -28,9 +28,7 @@ fun makeUI(): Component {
   table1.autoCreateRowSorter = true
   table1.putClientProperty("terminateEditOnFocusLost", true)
 
-  return JSplitPane(JSplitPane.VERTICAL_SPLIT).also {
-    it.topComponent = JScrollPane(table0)
-    it.bottomComponent = JScrollPane(table1)
+  return JSplitPane(JSplitPane.VERTICAL_SPLIT, JScrollPane(table0), JScrollPane(table1)).also {
     it.resizeWeight = .5
     it.preferredSize = Dimension(320, 240)
   }

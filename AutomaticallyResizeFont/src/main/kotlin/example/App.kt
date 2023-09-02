@@ -28,15 +28,12 @@ fun makeUI(): Component {
   editor2.font = font
   editor2.text = "doLayout + deriveFont\n$TEST"
 
-  val sp = JSplitPane(JSplitPane.VERTICAL_SPLIT)
-  sp.topComponent = editor1
-  sp.bottomComponent = editor2
-  sp.resizeWeight = .5
-
-  return JPanel(BorderLayout()).also {
-    it.add(sp)
+  return JSplitPane(JSplitPane.VERTICAL_SPLIT, editor1, editor2).also {
+    it.topComponent = editor1
+    it.bottomComponent = editor2
+    it.resizeWeight = .5
     it.preferredSize = Dimension(320, 240)
-    EventQueue.invokeLater { sp.setDividerLocation(.5) }
+    EventQueue.invokeLater { it.setDividerLocation(.5) }
   }
 }
 
