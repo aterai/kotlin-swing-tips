@@ -79,7 +79,7 @@ private class SpinnerCellEditor : AbstractCellEditor(), TableCellEditor {
     column: Int
   ) = spinner.also { it.value = value }
 
-  override fun getCellEditorValue(): Any = spinner.value
+  override fun getCellEditorValue() = spinner.value
 }
 
 fun main() {

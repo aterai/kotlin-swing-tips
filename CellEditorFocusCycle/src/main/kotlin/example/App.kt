@@ -174,7 +174,7 @@ private class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
     it.updateButtons(value)
   }
 
-  override fun getCellEditorValue(): Any = EnumSet.noneOf(Permissions::class.java).also {
+  override fun getCellEditorValue() = EnumSet.noneOf(Permissions::class.java).also {
     if (renderer.buttons[0].isSelected) {
       it.add(Permissions.READ)
     }
