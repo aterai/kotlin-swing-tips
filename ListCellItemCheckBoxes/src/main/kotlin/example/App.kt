@@ -7,6 +7,7 @@ import java.awt.geom.Path2D
 import javax.swing.*
 import javax.swing.border.Border
 
+
 fun makeUI(): Component {
   val model = DefaultListModel<ListItem>().also {
     it.addElement(ListItem("red", ColorIcon(Color.RED)))
@@ -59,7 +60,7 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
   private var rbl: ItemCheckBoxesListener? = null
   private var rubberBandColor: Color? = null
   private val rubberBand = Path2D.Double()
-  private var rollOverRowIndex = -1
+  private var rollOverIndex = -1
   private var checkedIndex = -1
   override fun updateUI() {
     selectionForeground = null // Nimbus
@@ -92,7 +93,7 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
   }
 
   override fun setSelectionInterval(anchor: Int, lead: Int) {
-    if (checkedIndex < 0 && !rubberBand.bounds.isEmpty) {
+    if (checkedIndex < 0 && isDragging()) {
       super.setSelectionInterval(anchor, lead)
     } else {
       EventQueue.invokeLater {
@@ -113,12 +114,17 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
     }
   }
 
+  private fun isDragging(): Boolean {
+    val r = rubberBand.bounds
+    return r.width != 0 || r.height != 0
+  }
+
   private inner class ItemCheckBoxesListener : MouseAdapter() {
     private val srcPoint = Point()
     override fun mouseDragged(e: MouseEvent) {
       checkedIndex = -1
       val l = e.component as? JList<*> ?: return
-      l.isFocusable = true
+      // l.isFocusable = true
       val destPoint = e.point
       rubberBand.reset()
       rubberBand.moveTo(srcPoint.getX(), srcPoint.getY())
@@ -134,26 +140,36 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
     }
 
     override fun mouseExited(e: MouseEvent) {
-      rollOverRowIndex = -1
+      rollOverIndex = -1
       e.component.repaint()
     }
 
     override fun mouseMoved(e: MouseEvent) {
-      val row = locationToIndex(e.point)
-      if (row != rollOverRowIndex) {
-        val rect = getCellBounds(row, row)
-        if (rollOverRowIndex >= 0) {
-          rect.add(getCellBounds(rollOverRowIndex, rollOverRowIndex))
-        }
-        rollOverRowIndex = row
-        (e.component as? JComponent)?.repaint(rect)
+      val pt = e.getPoint()
+      var idx = locationToIndex(pt)
+      if (!getCellBounds(idx, idx).contains(pt)) {
+        idx = -1
       }
+      val rect = Rectangle()
+      if (idx > 0) {
+        rect.add(getCellBounds(idx, idx))
+        if (rollOverIndex >= 0 && idx != rollOverIndex) {
+          rect.add(getCellBounds(rollOverIndex, rollOverIndex))
+        }
+        rollOverIndex = idx
+      } else {
+        if (rollOverIndex >= 0) {
+          rect.add(getCellBounds(rollOverIndex, rollOverIndex))
+        }
+        rollOverIndex = -1
+      }
+      (e.component as? JComponent)?.repaint(rect)
     }
 
     override fun mouseReleased(e: MouseEvent) {
       rubberBand.reset()
       val c = e.component
-      c.isFocusable = true
+      // c.isFocusable = true
       c.repaint()
     }
 
@@ -161,13 +177,15 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
       val l = e.component as? JList<*> ?: return
       val index = l.locationToIndex(e.point)
       if (l.getCellBounds(index, index).contains(e.point)) {
-        l.isFocusable = true
+        // l.isFocusable = true
         cellPressed(e, index)
       } else {
-        l.isFocusable = false
-        l.clearSelection()
-        l.selectionModel.anchorSelectionIndex = -1
-        l.selectionModel.leadSelectionIndex = -1
+        EventQueue.invokeLater {
+          // l.isFocusable = false
+          l.clearSelection()
+          l.selectionModel.anchorSelectionIndex = -1
+          l.selectionModel.leadSelectionIndex = -1
+        }
       }
       srcPoint.location = e.point
       l.repaint()
@@ -270,13 +288,13 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
       itemPanel.border = if (cellHasFocus) focusBorder else noFocusBorder
       icon.icon = value.icon
       check.isSelected = isSelected
-      check.model.isRollover = index == rollOverRowIndex
+      check.model.isRollover = index == rollOverIndex
       if (isSelected) {
         label.foreground = list.selectionForeground
         label.background = SELECTED_COLOR
         itemPanel.background = SELECTED_COLOR
         check.isVisible = true
-      } else if (index == rollOverRowIndex) {
+      } else if (index == rollOverIndex) {
         itemPanel.background = ROLLOVER_COLOR
         check.isVisible = true
       } else {
