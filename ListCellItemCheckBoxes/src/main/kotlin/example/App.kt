@@ -7,7 +7,6 @@ import java.awt.geom.Path2D
 import javax.swing.*
 import javax.swing.border.Border
 
-
 fun makeUI(): Component {
   val model = DefaultListModel<ListItem>().also {
     it.addElement(ListItem("red", ColorIcon(Color.RED)))
