@@ -97,7 +97,7 @@ private class ButtonCellEditor : AbstractCellEditor(), TreeCellEditor {
     return panel.remakePanel(c)
   }
 
-  override fun getCellEditorValue(): Any = panel.renderer.text
+  override fun getCellEditorValue() = panel.renderer.text
 
   override fun isCellEditable(e: EventObject?): Boolean {
     val tree = (e as? MouseEvent)?.component as? JTree ?: return false
