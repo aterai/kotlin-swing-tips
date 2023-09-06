@@ -53,7 +53,7 @@ private class SiteListItemRenderer : ListCellRenderer<SiteItem> {
       super.updateUI()
       this.contentType = "text/html"
       this.isEditable = false
-      listener = HyperlinkListener() { e ->
+      listener = HyperlinkListener { e ->
         if (e.eventType == HyperlinkEvent.EventType.ACTIVATED) {
           val c = (e.source as? JComponent)?.rootPane
           JOptionPane.showMessageDialog(c, "You click the link with the URL " + e.url)
