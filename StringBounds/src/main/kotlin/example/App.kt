@@ -81,7 +81,7 @@ private fun getLayoutCompoundLabelBounds(): Rectangle {
     label,
     label.getFontMetrics(label.font),
     label.text,
-    null, // icon,
+    null,
     label.verticalAlignment,
     label.horizontalAlignment,
     label.verticalTextPosition,

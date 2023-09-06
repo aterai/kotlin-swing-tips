@@ -50,10 +50,17 @@ class OperaTabViewButtonUI : BasicTabViewButtonUI() {
     val icon = b.icon
     viewRect.width = size.width - i.right - viewRect.x - CLOSE_ICON_WIDTH
     val text = SwingUtilities.layoutCompoundLabel(
-      c, c.getFontMetrics(c.font), b.text, icon, // altIcon != null ? altIcon : getDefaultIcon(),
-      b.verticalAlignment, b.horizontalAlignment,
-      b.verticalTextPosition, b.horizontalTextPosition,
-      viewRect, iconRect, textRect,
+      c,
+      c.getFontMetrics(c.font),
+      b.text,
+      icon,
+      b.verticalAlignment,
+      b.horizontalAlignment,
+      b.verticalTextPosition,
+      b.horizontalTextPosition,
+      viewRect,
+      iconRect,
+      textRect,
       if (b.text != null) b.iconTextGap else 0
     )
 

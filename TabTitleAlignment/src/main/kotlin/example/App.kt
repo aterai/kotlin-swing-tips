@@ -142,7 +142,7 @@ private class LeftAlignmentWindowsTabbedPaneUI : WindowsTabbedPaneUI() {
       tabPane,
       metrics, title, icon,
       SwingConstants.CENTER,
-      SwingConstants.LEFT, // CENTER, <----
+      SwingConstants.LEFT,
       SwingConstants.CENTER,
       SwingConstants.TRAILING,
       tabRect,
@@ -182,9 +182,11 @@ private class LeftAlignmentTabbedPaneUI : MetalTabbedPaneUI() {
     }
     SwingUtilities.layoutCompoundLabel(
       tabPane,
-      metrics, title, icon,
+      metrics,
+      title,
+      icon,
       SwingConstants.CENTER,
-      SwingConstants.LEFT, // CENTER,
+      SwingConstants.LEFT,
       SwingConstants.CENTER,
       SwingConstants.TRAILING,
       tabRect,

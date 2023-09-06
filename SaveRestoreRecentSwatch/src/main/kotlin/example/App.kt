@@ -465,7 +465,8 @@ private class MainSwatchPanel : SwatchPanel() {
   @Suppress("LongMethod")
   private fun initRawValues(): IntArray {
     return intArrayOf(
-      255, 255, 255, // first row.
+      // first row.
+      255, 255, 255,
       204, 255, 255,
       204, 204, 255,
       204, 204, 255,
@@ -496,7 +497,8 @@ private class MainSwatchPanel : SwatchPanel() {
       204, 255, 204,
       204, 255, 204,
       204, 255, 204,
-      204, 204, 204, // second row.
+      // second row.
+      204, 204, 204,
       153, 255, 255,
       153, 204, 255,
       153, 153, 255,
@@ -527,7 +529,8 @@ private class MainSwatchPanel : SwatchPanel() {
       153, 255, 153,
       153, 255, 153,
       153, 255, 204,
-      204, 204, 204, // third row
+      // third row
+      204, 204, 204,
       102, 255, 255,
       102, 204, 255,
       102, 153, 255,
@@ -558,7 +561,8 @@ private class MainSwatchPanel : SwatchPanel() {
       102, 255, 102,
       102, 255, 153,
       102, 255, 204,
-      153, 153, 153, // fourth row
+      // fourth row
+      153, 153, 153,
       51, 255, 255,
       51, 204, 255,
       51, 153, 255,
@@ -589,7 +593,8 @@ private class MainSwatchPanel : SwatchPanel() {
       51, 255, 102,
       51, 255, 153,
       51, 255, 204,
-      153, 153, 153, // Fifth row
+      // Fifth row
+      153, 153, 153,
       0, 255, 255,
       0, 204, 255,
       0, 153, 255,
@@ -620,7 +625,8 @@ private class MainSwatchPanel : SwatchPanel() {
       0, 255, 102,
       0, 255, 153,
       0, 255, 204,
-      102, 102, 102, // sixth row
+      // sixth row
+      102, 102, 102,
       0, 204, 204,
       0, 204, 204,
       0, 153, 204,
@@ -651,7 +657,8 @@ private class MainSwatchPanel : SwatchPanel() {
       0, 204, 102,
       0, 204, 153,
       0, 204, 204,
-      102, 102, 102, // seventh row
+      // seventh row
+      102, 102, 102,
       0, 153, 153,
       0, 153, 153,
       0, 153, 153,
@@ -682,7 +689,8 @@ private class MainSwatchPanel : SwatchPanel() {
       0, 153, 102,
       0, 153, 153,
       0, 153, 153,
-      51, 51, 51, // eigth row
+      // eigth row
+      51, 51, 51,
       0, 102, 102,
       0, 102, 102,
       0, 102, 102,
@@ -713,7 +721,8 @@ private class MainSwatchPanel : SwatchPanel() {
       0, 102, 102,
       0, 102, 102,
       0, 102, 102,
-      0, 0, 0, // ninth row
+      // ninth row
+      0, 0, 0,
       0, 51, 51,
       0, 51, 51,
       0, 51, 51,

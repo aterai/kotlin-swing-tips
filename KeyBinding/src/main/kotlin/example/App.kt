@@ -10,7 +10,7 @@ private val model = BindingMapModel()
 private val components = arrayOf<JComponent>(
   JComboBox<Any>(),
   JDesktopPane(),
-  JFormattedTextField(), // JFileChooser(),
+  JFormattedTextField(),
   JInternalFrame(),
   JLabel(),
   JLayeredPane(),

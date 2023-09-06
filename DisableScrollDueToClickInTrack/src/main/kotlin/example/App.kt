@@ -83,10 +83,13 @@ private class DisableLeftPressedLayerUI<V : Component> : LayerUI<V>() {
       e.component.dispatchEvent(
         MouseEvent(
           e.component,
-          e.id, e.getWhen(),
-          InputEvent.BUTTON3_DOWN_MASK, // e.getModifiers(),
-          e.x, e.y,
-          e.xOnScreen, e.yOnScreen,
+          e.id,
+          e.getWhen(),
+          InputEvent.BUTTON3_DOWN_MASK,
+          e.x,
+          e.y,
+          e.xOnScreen,
+          e.yOnScreen,
           e.clickCount,
           e.isPopupTrigger,
           MouseEvent.BUTTON3

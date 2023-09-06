@@ -215,7 +215,7 @@ private class CloseableWindowsTabbedPaneUI : WindowsTabbedPaneUI() {
       metrics, title, icon,
       CENTER,
       CENTER,
-      CENTER, // SwingConstants.TRAILING,
+      CENTER,
       horTextPosition,
       tabRect,
       iconRect,
@@ -262,10 +262,12 @@ private class CloseableTabbedPaneUI : BasicTabbedPaneUI() {
     }
     SwingUtilities.layoutCompoundLabel(
       tabPane,
-      metrics, title, icon,
+      metrics,
+      title,
+      icon,
       CENTER,
       CENTER,
-      CENTER, // SwingConstants.TRAILING,
+      CENTER,
       horTextPosition,
       tabRect,
       iconRect,
