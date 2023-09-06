@@ -201,7 +201,7 @@ private class CheckIcon : Icon {
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     g2.font = c.font
     if (c is AbstractButton) {
-      val txt = if (c.isSelected) "Å»" else "Å…"
+      val txt = if (c.isSelected) "‚àß" else "‚à®"
       g2.drawString(txt, x, y + 10)
     }
     g2.dispose()

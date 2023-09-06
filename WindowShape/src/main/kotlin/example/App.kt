@@ -21,7 +21,7 @@ fun makeUI(): Component {
     it.contentPane.background = Color.GREEN
     it.pack()
   }
-  val textField = JTextField("š", 20)
+  val textField = JTextField("â˜…", 20)
   val button = JToggleButton("show")
   button.addActionListener { e ->
     val btn = e.source as? AbstractButton
@@ -50,6 +50,7 @@ fun makeUI(): Component {
 
 private class DragWindowListener : MouseAdapter() {
   private val startPt = Point()
+
   override fun mousePressed(e: MouseEvent) {
     if (SwingUtilities.isLeftMouseButton(e)) {
       startPt.location = e.point

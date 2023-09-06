@@ -13,7 +13,7 @@ import kotlin.math.sin
 
 fun makeUI(): Component {
   val pf1 = JPasswordField()
-  pf1.echoChar = 'Åö'
+  pf1.echoChar = '‚òÖ'
   val pf2 = object : JPasswordField() {
     override fun updateUI() {
       super.updateUI()
@@ -21,7 +21,7 @@ fun makeUI(): Component {
     }
   }
   return JPanel(GridLayout(2, 1)).also {
-    it.add(makeTitledPanel("setEchoChar('Åö')", pf1))
+    it.add(makeTitledPanel("setEchoChar('‚òÖ')", pf1))
     it.add(makeTitledPanel("drawEchoCharacter", pf2))
     it.border = BorderFactory.createEmptyBorder(10, 5, 10, 5)
     it.preferredSize = Dimension(320, 240)
@@ -52,6 +52,7 @@ private class MyPasswordFieldUI : BasicPasswordFieldUI() {
 
   companion object {
     private val ICON = StarIcon()
+
     fun createUI(c: JPasswordField): MyPasswordFieldUI {
       c.echoChar = '\u25A0' // As wide as a CJK character cell (full width)
       return MyPasswordFieldUI()
@@ -61,6 +62,7 @@ private class MyPasswordFieldUI : BasicPasswordFieldUI() {
 
 private class StarIcon : Icon {
   private val star = makeStar(6, 3, 8)
+
   fun makeStar(r1: Int, r2: Int, vc: Int): Path2D {
     val or = r1.coerceAtLeast(r2).toDouble()
     val ir = r1.coerceAtMost(r2).toDouble()

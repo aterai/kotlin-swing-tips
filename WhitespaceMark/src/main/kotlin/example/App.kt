@@ -28,11 +28,11 @@ private val TAB_TXT = """
 """.trimIndent()
 private const val IDEOGRAPHIC_SPACE = """
 123456789012
-bbb2@@1 3 ccc3
+bbb2ã€€ã€€1 3 ccc3
 
 
-00000@12345@
-@“ú–{Œê@
+00000ã€€12345ã€€
+ã€€æ—¥æœ¬èªã€€
 """
 
 fun makeUI(): Component {
@@ -145,7 +145,7 @@ private class WhitespaceLabelView(elem: Element) : LabelView(elem) {
   }
 
   companion object {
-    private const val IDEOGRAPHIC_SPACE = "@" // \u3000
+    private const val IDEOGRAPHIC_SPACE = "ã€€" // \u3000
     private val MARK_COLOR = Color(0x78_82_6E)
     private val DASHED = BasicStroke(
       1f,

@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.event.KeyEvent
 import javax.swing.*
 
-private val check = JCheckBox("ˆêƒEƒBƒ“ƒhƒE(“ü—Íƒ‚[ƒh)->enter‚ÅƒZƒ‹•ÒWŠJn")
+private val check = JCheckBox("ä¸€æ™‚ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦(å…¥åŠ›ãƒ¢ãƒ¼ãƒ‰)->enterã§ã‚»ãƒ«ç·¨é›†é–‹å§‹")
 
 fun makeUI(): Component {
   val table = object : JTable(4, 3) {

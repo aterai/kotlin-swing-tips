@@ -14,12 +14,12 @@ fun makeUI(): Component {
   c.insets = Insets(5, 5, 5, 0)
   c.fill = GridBagConstraints.HORIZONTAL
   c.gridx = 0
-  p.add(JLabel("‘Å—¦"), c)
-  p.add(JLabel("‘Å—¦", SwingConstants.RIGHT), c)
-  p.add(JustifiedLabel("‘Å—¦"), c)
-  p.add(JLabel("o—Û—¦", SwingConstants.CENTER), c)
-  p.add(JustifiedLabel("o—Û—¦"), c)
-  p.add(JustifiedLabel("ƒ`[ƒ€o—Û—¦"), c)
+  p.add(JLabel("æ‰“ç‡"), c)
+  p.add(JLabel("æ‰“ç‡", SwingConstants.RIGHT), c)
+  p.add(JustifiedLabel("æ‰“ç‡"), c)
+  p.add(JLabel("å‡ºå¡ç‡", SwingConstants.CENTER), c)
+  p.add(JustifiedLabel("å‡ºå¡ç‡"), c)
+  p.add(JustifiedLabel("ãƒãƒ¼ãƒ å‡ºå¡ç‡"), c)
   c.gridx = 1
   c.weightx = 1.0
   p.add(JTextField(), c)
@@ -30,7 +30,7 @@ fun makeUI(): Component {
   p.add(JTextField(), c)
   return JPanel(BorderLayout()).also {
     it.add(p)
-    it.add(JustifiedLabel("‚ ‚¢‚¤‚¦‚¨‚©‚«‚­‚¯‚±"), BorderLayout.SOUTH)
+    it.add(JustifiedLabel("ã‚ã„ã†ãˆãŠã‹ããã‘ã“"), BorderLayout.SOUTH)
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.preferredSize = Dimension(320, 240)
   }
@@ -39,6 +39,7 @@ fun makeUI(): Component {
 private class JustifiedLabel(str: String? = null) : JLabel(str) {
   private var gvText: GlyphVector? = null
   private var prevWidth = -1
+
   override fun setText(text: String) {
     super.setText(text)
     prevWidth = -1

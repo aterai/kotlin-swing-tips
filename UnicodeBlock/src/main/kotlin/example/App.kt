@@ -11,7 +11,7 @@ fun makeUI(): Component {
   val labelUnicodeBlock = JTextField()
   label.isEditable = false
 
-  val textArea = JTextArea("??????‚Ä‚·‚ÆƒeƒXƒg‚s‚d‚r‚stestŽŽŒ±A??„¸¨")
+  val textArea = JTextArea("ðŸ˜€ðŸ˜ðŸ˜‚ã¦ã™ã¨ãƒ†ã‚¹ãƒˆï¼´ï¼¥ï¼³ï¼´testè©¦é¨“ã€ð ®Ÿâ”·â†’")
   textArea.addCaretListener { e ->
     runCatching {
       val loc = e.dot.coerceAtMost(e.mark)

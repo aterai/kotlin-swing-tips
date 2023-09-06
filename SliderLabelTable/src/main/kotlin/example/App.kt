@@ -29,7 +29,7 @@ fun makeUI(): Component {
   }
   slider1.labelTable = labelTable1
 
-  val list2 = arrayOf("—ë", "ˆë", "“ó", "Q", "ãæ", "ŒŞ", "—¤", "½", "J", "‹è", "E")
+  val list2 = arrayOf("é›¶", "å£±", "å¼", "å‚", "è‚†", "ä¼", "é™¸", "æ¼†", "æŒ", "ç–", "æ‹¾")
   val slider2 = JSlider(0, list2.size - 1, 0)
   // slider2.setForeground(Color.BLUE)
   // slider2.setForeground(Color.BLUE)

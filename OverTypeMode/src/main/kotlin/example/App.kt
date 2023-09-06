@@ -9,7 +9,7 @@ import javax.swing.text.DefaultCaret
 fun makeUI(): Component {
   val textArea = OvertypeTextArea()
   textArea.font = Font(Font.MONOSPACED, Font.PLAIN, 12)
-  textArea.text = "Press the INSERT key to toggle the overwrite mode.\nÅúÅ§ÅûÅ°\n1234567890"
+  textArea.text = "Press the INSERT key to toggle the overwrite mode.\n‚óè‚ñΩ‚óá‚ñ†\n1234567890"
 
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(textArea))
@@ -101,7 +101,7 @@ private class OvertypeTextArea : JTextArea() {
         y = r.y
         // width = c.getFontMetrics(c.getFont()).charWidth('w')
         // width = c.getFontMetrics(c.getFont()).charWidth('\u3042')
-        width = c.getFontMetrics(c.font).charWidth('Å°')
+        width = c.getFontMetrics(c.font).charWidth('‚ñ†')
         height = r.height
         c.repaint()
       }

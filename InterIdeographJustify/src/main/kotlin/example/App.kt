@@ -9,12 +9,12 @@ import javax.swing.table.TableCellRenderer
 fun makeUI(): Component {
   val columnNames = arrayOf("Justified", "Default")
   val data = arrayOf(
-    arrayOf("‰ïĞ–¼", ""),
-    arrayOf("Šİ’n", ""),
-    arrayOf("“d˜b”Ô†", ""),
-    arrayOf("İ—§", ""),
-    arrayOf("‘ã•\æ’÷–ğ", ""),
-    arrayOf("–‹Æ“à—e", "")
+    arrayOf("ä¼šç¤¾å", ""),
+    arrayOf("æ‰€åœ¨åœ°", ""),
+    arrayOf("é›»è©±ç•ªå·", ""),
+    arrayOf("è¨­ç«‹", ""),
+    arrayOf("ä»£è¡¨å–ç· å½¹", ""),
+    arrayOf("äº‹æ¥­å†…å®¹", "")
   )
   val model = DefaultTableModel(data, columnNames)
   val table = object : JTable(model) {
@@ -74,6 +74,7 @@ fun makeUI(): Component {
 private class JustifiedLabel(str: String? = null) : JLabel(str ?: "") {
   private var layout: TextLayout? = null
   private var prevWidth = -1
+
   override fun setText(text: String) {
     super.setText(text)
     prevWidth = -1

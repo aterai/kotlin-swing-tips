@@ -78,7 +78,7 @@ private class StarPanel3 : JPanel() {
     g2.translate(0, FONT_SIZE)
     val frc = g2.fontRenderContext
     val font = Font(Font.SERIF, Font.PLAIN, FONT_SIZE)
-    val shape = TextLayout("Åö", font, frc).getOutline(null)
+    val shape = TextLayout("‚òÖ", font, frc).getOutline(null)
     g2.paint = Color.YELLOW
     g2.fill(shape)
     g2.paint = Color.BLACK

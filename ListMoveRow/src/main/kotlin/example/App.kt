@@ -21,7 +21,7 @@ fun makeUI(): Component {
   }
 }
 
-private fun <E> makeUpButton(list: JList<E>, m: DefaultListModel<E>) = JButton("Å£").also {
+private fun <E> makeUpButton(list: JList<E>, m: DefaultListModel<E>) = JButton("‚ñ≤").also {
   it.isFocusable = false
   it.addActionListener { e ->
     val pos = list.selectedIndices
@@ -40,7 +40,7 @@ private fun <E> makeUpButton(list: JList<E>, m: DefaultListModel<E>) = JButton("
   }
 }
 
-private fun <E> makeDownButton(list: JList<E>, m: DefaultListModel<E>) = JButton("Å•").also {
+private fun <E> makeDownButton(list: JList<E>, m: DefaultListModel<E>) = JButton("‚ñº").also {
   it.isFocusable = false
   it.addActionListener { e ->
     val pos = list.selectedIndices

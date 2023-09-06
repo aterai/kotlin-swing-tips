@@ -124,7 +124,7 @@ private class SolidGaugeUI(range: Int, extent: Double) : BasicProgressBarUI() {
       g2.drawString(str, vx, h)
       val ksz = fsz * 2f / 3f
       g2.font = font.deriveFont(ksz)
-      val kmh = "‡q/h"
+      val kmh = "ãŽž/h"
       val tx = cx.toFloat() - g2.fontMetrics.stringWidth(kmh) * .5f
       g2.drawString(kmh, tx, h + ksz)
     }

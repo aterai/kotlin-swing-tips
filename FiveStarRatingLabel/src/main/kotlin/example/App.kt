@@ -89,6 +89,6 @@ private class FiveStarRatingLabel(rating: String) : JComponent() {
   }
 
   companion object {
-    private const val STAR = "ššššš"
+    private const val STAR = "â˜…â˜…â˜…â˜…â˜…"
   }
 }

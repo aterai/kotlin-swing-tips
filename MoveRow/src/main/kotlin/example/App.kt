@@ -47,8 +47,8 @@ private fun makeModel() = RowDataModel().also {
 
 private fun makeToolBar(table: JTable) = JToolBar().also {
   it.isFloatable = true
-  it.add(makeToolButton(UpAction("Å£", table)))
-  it.add(makeToolButton(DownAction("Å•", table)))
+  it.add(makeToolButton(UpAction("‚ñ≤", table)))
+  it.add(makeToolButton(DownAction("‚ñº", table)))
   it.add(Box.createHorizontalGlue())
   it.add(makeToolButton(InitAction("OK", table)))
 }
@@ -202,6 +202,7 @@ private class InitAction(str: String, private val table: JTable) : AbstractActio
 
 private class RowDataModel : SortableTableModel() {
   private var number = 0
+
   fun addRowData(t: RowData) {
     val obj = arrayOf(number, t.name, t.comment)
     super.addRow(obj)

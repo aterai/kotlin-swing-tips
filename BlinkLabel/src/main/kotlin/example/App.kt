@@ -4,14 +4,14 @@ import java.awt.*
 import java.awt.event.HierarchyEvent
 import javax.swing.*
 
-private const val BLACK_CIRCLE = "Åú" // "\u25CF"
-private const val WHITE_CIRCLE = "Åõ" // "\u25CB"
+private const val BLACK_CIRCLE = "‚óè" // "\u25CF"
+private const val WHITE_CIRCLE = "‚óã" // "\u25CB"
 
 fun makeUI(): Component {
   val label1 = JLabel(BLACK_CIRCLE, SwingConstants.CENTER)
   val label2 = JLabel("", SwingConstants.CENTER)
   val p = JPanel(GridLayout(2, 1, 5, 5))
-  p.add(makeTitledPanel("Åõ<->Åú", label1))
+  p.add(makeTitledPanel("‚óã<->‚óè", label1))
   p.add(makeTitledPanel("!!!Warning!!!<->Empty", label2))
   val timer1 = Timer(600) {
     label1.text = if (BLACK_CIRCLE == label1.text) WHITE_CIRCLE else BLACK_CIRCLE

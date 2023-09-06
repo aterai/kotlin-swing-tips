@@ -6,7 +6,7 @@ import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreeModel
 
-private const val MARK = "\u00a7" // "Åò"
+private const val MARK = "\u00a7" // "¬ß"
 private const val CHAPTER = "Chapter"
 private const val SECTION = "Section"
 
