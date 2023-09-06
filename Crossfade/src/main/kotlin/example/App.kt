@@ -53,7 +53,8 @@ fun makeUI(): Component {
 }
 
 private enum class CrossFade {
-  IN, OUT;
+  IN,
+  OUT;
 
   fun toggle() = if (this == IN) OUT else IN
 }

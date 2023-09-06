@@ -99,7 +99,8 @@ fun makeUI(): Component {
 }
 
 private enum class AutoResizeMode(val autoResizeMode: Int) {
-  AUTO_RESIZE_OFF(JTable.AUTO_RESIZE_OFF), AUTO_RESIZE_ALL_COLUMNS(JTable.AUTO_RESIZE_ALL_COLUMNS)
+  AUTO_RESIZE_OFF(JTable.AUTO_RESIZE_OFF),
+  AUTO_RESIZE_ALL_COLUMNS(JTable.AUTO_RESIZE_ALL_COLUMNS)
 }
 
 fun main() {

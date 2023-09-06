@@ -74,7 +74,9 @@ fun makeUI(): Component {
 }
 
 private enum class Permissions {
-  EXECUTE, WRITE, READ
+  EXECUTE,
+  WRITE,
+  READ
 }
 
 private class CheckBoxesPanel : JPanel() {

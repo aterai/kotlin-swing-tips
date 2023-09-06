@@ -141,7 +141,8 @@ private class LineFocusTable(model: TableModel) : JTable(model) {
 }
 
 private enum class Type {
-  START, END
+  START,
+  END
 }
 
 private class DotBorder(

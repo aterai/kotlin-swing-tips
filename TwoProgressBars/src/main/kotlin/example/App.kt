@@ -95,7 +95,9 @@ private class ProgressTask : BackgroundTask() {
 }
 
 private enum class ComponentType {
-  TOTAL, FILE, LOG
+  TOTAL,
+  FILE,
+  LOG
 }
 
 private data class Progress(val componentType: ComponentType, val value: Any)

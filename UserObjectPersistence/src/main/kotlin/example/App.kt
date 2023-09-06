@@ -140,7 +140,9 @@ private class IndeterminateIcon : Icon {
 }
 
 enum class Status {
-  SELECTED, DESELECTED, INDETERMINATE
+  SELECTED,
+  DESELECTED,
+  INDETERMINATE
 }
 
 private data class CheckBoxNode(val label: String, val status: Status) {

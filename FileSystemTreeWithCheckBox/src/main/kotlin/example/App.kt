@@ -91,7 +91,9 @@ private class IndeterminateIcon : Icon {
 }
 
 private enum class Status {
-  SELECTED, DESELECTED, INDETERMINATE
+  SELECTED,
+  DESELECTED,
+  INDETERMINATE
 }
 
 private data class CheckBoxNode(val file: File, val status: Status) {

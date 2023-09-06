@@ -64,7 +64,9 @@ private fun makeTable(): JTable {
 }
 
 private enum class Permissions {
-  EXECUTE, WRITE, READ
+  EXECUTE,
+  WRITE,
+  READ
 }
 
 private class CheckBoxesPanel : JPanel() {

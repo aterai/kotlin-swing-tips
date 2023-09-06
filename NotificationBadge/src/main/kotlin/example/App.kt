@@ -165,7 +165,10 @@ private open class BadgeIcon(
 }
 
 private enum class BadgePosition {
-  NORTH_WEST, NORTH_EAST, SOUTH_EAST, SOUTH_WEST
+  NORTH_WEST,
+  NORTH_EAST,
+  SOUTH_EAST,
+  SOUTH_WEST
 }
 
 fun main() {

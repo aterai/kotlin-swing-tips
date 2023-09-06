@@ -35,7 +35,9 @@ fun makeUI(): Component {
 }
 
 private enum class Answer {
-  A, B, C
+  A,
+  B,
+  C
 }
 
 private class RadioButtonsPanel : JPanel() {

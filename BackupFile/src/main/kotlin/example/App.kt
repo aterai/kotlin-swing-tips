@@ -117,7 +117,9 @@ fun append(m: Message) {
 }
 
 enum class MessageType {
-  REGULAR, ERROR, BLUE
+  REGULAR,
+  ERROR,
+  BLUE
 }
 
 data class Message(val text: String?, val type: MessageType)

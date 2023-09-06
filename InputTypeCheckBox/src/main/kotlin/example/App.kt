@@ -175,7 +175,9 @@ private class HeaderCheckBoxHandler(
 }
 
 private enum class Status {
-  SELECTED, DESELECTED, INDETERMINATE
+  SELECTED,
+  DESELECTED,
+  INDETERMINATE
 }
 
 fun main() {

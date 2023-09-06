@@ -1,5 +1,7 @@
 package example
 
 enum class Status {
-  SELECTED, DESELECTED, INDETERMINATE
+  SELECTED,
+  DESELECTED,
+  INDETERMINATE
 }

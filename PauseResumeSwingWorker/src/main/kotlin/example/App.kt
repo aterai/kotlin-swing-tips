@@ -142,7 +142,10 @@ private fun createRightAlignButtonBox4(vararg list: Component): Component {
 }
 
 private enum class ProgressType {
-  TOTAL, FILE, LOG, PAUSE
+  TOTAL,
+  FILE,
+  LOG,
+  PAUSE
 }
 
 private data class Progress(val component: ProgressType, val value: Any)

@@ -201,7 +201,9 @@ private class ComponentIcon(private val cmp: Component) : Icon {
 }
 
 private enum class Status {
-  SELECTED, DESELECTED, INDETERMINATE
+  SELECTED,
+  DESELECTED,
+  INDETERMINATE
 }
 
 private class HeaderCheckBoxHandler(

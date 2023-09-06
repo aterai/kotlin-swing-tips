@@ -80,7 +80,10 @@ private fun createMenuBar(): JMenuBar {
 }
 
 private enum class CheckIcon {
-  ENABLED_SELECTED, SELECTED_MOUSEOVER, ENABLED, MOUSEOVER
+  ENABLED_SELECTED,
+  SELECTED_MOUSEOVER,
+  ENABLED,
+  MOUSEOVER
 }
 
 private class MyCheckBoxMenuItemPainter(private val state: CheckIcon) : AbstractRegionPainter() {

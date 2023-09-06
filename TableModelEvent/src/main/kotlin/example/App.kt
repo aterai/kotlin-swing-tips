@@ -124,7 +124,9 @@ private class ComponentIcon(private val c: Component) : Icon {
 }
 
 private enum class Status {
-  SELECTED, DESELECTED, INDETERMINATE
+  SELECTED,
+  DESELECTED,
+  INDETERMINATE
 }
 
 private class TablePopupMenu : JPopupMenu() {
