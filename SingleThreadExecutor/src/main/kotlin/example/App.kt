@@ -13,7 +13,7 @@ import javax.swing.table.TableRowSorter
 private val model = WorkerModel()
 private val table = JTable(model)
 private val sorter = TableRowSorter(model)
-private val deleteRowSet = TreeSet<Int> ()
+private val deleteRowSet = TreeSet<Int>()
 private val executor = Executors.newSingleThreadExecutor()
 
 fun makeUI(): Component {
