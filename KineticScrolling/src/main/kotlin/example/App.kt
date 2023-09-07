@@ -20,6 +20,7 @@ fun makeUI(): Component {
   val viewport = object : JViewport() { // Java 7
     val middleWeight = false
     private var adjusting = false
+
     override fun revalidate() {
       if (!middleWeight && adjusting) {
         return

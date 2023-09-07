@@ -96,6 +96,7 @@ private class PluginPanel(val comboBox: JComboBox<String>) : JPanel() {
 
 private class PluginCellRenderer(comboBox: JComboBox<String>) : TreeCellRenderer {
   private val panel = PluginPanel(comboBox)
+
   override fun getTreeCellRendererComponent(
     tree: JTree,
     value: Any?,

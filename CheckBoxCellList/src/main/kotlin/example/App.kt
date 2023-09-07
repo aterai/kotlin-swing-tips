@@ -133,6 +133,7 @@ private class CheckBoxList(model: ListModel<CheckBoxNode>) : JList<CheckBoxNode>
 private class CheckBoxCellRenderer : MouseAdapter(), ListCellRenderer<CheckBoxNode> {
   private val checkBox = JCheckBox()
   private var rollOverRowIndex = -1
+
   override fun getListCellRendererComponent(
     list: JList<out CheckBoxNode>,
     value: CheckBoxNode,
@@ -176,6 +177,7 @@ private class CheckBoxCellRenderer : MouseAdapter(), ListCellRenderer<CheckBoxNo
 private class CheckBoxNodeRenderer : TreeCellRenderer {
   private val checkBox = JCheckBox()
   private val tcr = DefaultTreeCellRenderer()
+
   override fun getTreeCellRendererComponent(
     tree: JTree,
     value: Any?,

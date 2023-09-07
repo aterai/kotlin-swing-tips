@@ -18,6 +18,7 @@ private fun makeOverlayLayoutButton(): Component {
   b1.border = BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, 4)
   val b2 = object : JButton("▼") {
     private val dim = Dimension(120, 24)
+
     override fun getPreferredSize() = dim
 
     override fun getMaximumSize() = preferredSize

@@ -9,6 +9,7 @@ fun makeUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
   val label = object : JLabel(ImageIcon(cl.getResource("example/CRW_3857_JFR.jpg"))) {
     @Transient private var listener: MouseAdapter? = null
+
     override fun updateUI() {
       removeMouseMotionListener(listener)
       removeMouseListener(listener)
@@ -37,6 +38,7 @@ private class DragScrollListener : MouseAdapter() {
   private val defCursor = Cursor.getDefaultCursor()
   private val hndCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
   private val pp = Point()
+
   override fun mouseDragged(e: MouseEvent) {
     val c = e.component
     val viewPort = SwingUtilities.getUnwrappedParent(c)

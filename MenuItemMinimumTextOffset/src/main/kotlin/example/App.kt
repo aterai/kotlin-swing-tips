@@ -104,6 +104,7 @@ private class EmptyIcon : Icon {
 
   override fun getIconHeight() = 0
 }
+
 fun main() {
   EventQueue.invokeLater {
     runCatching {

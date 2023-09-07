@@ -86,6 +86,7 @@ private class RadioButtonsPanel : JPanel() {
 
 private class RadioButtonsRenderer : TableCellRenderer {
   private val renderer = RadioButtonsPanel()
+
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -98,6 +99,7 @@ private class RadioButtonsRenderer : TableCellRenderer {
 
 private class RadioButtonsEditor : AbstractCellEditor(), TableCellEditor {
   private val renderer = RadioButtonsPanel()
+
   init {
     val al = ActionListener { fireEditingStopped() }
     for (b in renderer.buttons) {

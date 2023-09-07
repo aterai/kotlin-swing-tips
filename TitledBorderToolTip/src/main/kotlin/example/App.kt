@@ -8,6 +8,7 @@ import javax.swing.border.TitledBorder
 fun makeUI(): Component {
   val panel1 = object : JPanel() {
     private val label = JLabel()
+
     override fun getToolTipText(e: MouseEvent): String? {
       (border as? TitledBorder)?.also { titledBorder ->
         val i = titledBorder.getBorderInsets(this)

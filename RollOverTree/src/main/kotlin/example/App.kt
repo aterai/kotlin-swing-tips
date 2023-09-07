@@ -15,6 +15,7 @@ fun makeUI(): Component {
     private val rolloverRowColor = Color(0xDC_F0_FF)
     private var rollOverRowIndex = -1
     private var listener: MouseMotionListener? = null
+
     override fun updateUI() {
       removeMouseMotionListener(listener)
       setCellRenderer(null)

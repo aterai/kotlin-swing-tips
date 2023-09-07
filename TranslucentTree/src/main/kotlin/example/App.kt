@@ -75,6 +75,7 @@ private class TransparentRootPane : JRootPane() {
 
   companion object {
     private val TEXTURE = makeCheckerTexture()
+
     private fun makeCheckerTexture(): TexturePaint {
       val cs = 6
       val sz = cs * cs

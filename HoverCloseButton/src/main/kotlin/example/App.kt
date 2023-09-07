@@ -22,11 +22,13 @@ private class HoverCloseButtonTabbedPane(
   tabPlacement: Int = TOP
 ) : JTabbedPane(tabPlacement, SCROLL_TAB_LAYOUT) {
   private var hoverHandler: MouseMotionListener? = null
+
   override fun updateUI() {
     removeMouseMotionListener(hoverHandler)
     super.updateUI()
     hoverHandler = object : MouseAdapter() {
       private var prev = -1
+
       override fun mouseMoved(e: MouseEvent) {
         val source = e.component as? JTabbedPane
         val focused = source?.indexAtLocation(e.x, e.y)

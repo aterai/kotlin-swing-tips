@@ -24,6 +24,7 @@ fun makeUI(): Component {
 
 private class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
   private val selectedTabColor = UIManager.getColor("TabbedPane.selected")
+
   override fun paintTabArea(g: Graphics, tabPlacement: Int, selectedIndex: Int) {
     val tabCount = tabPane.tabCount
     val iconRect = Rectangle()

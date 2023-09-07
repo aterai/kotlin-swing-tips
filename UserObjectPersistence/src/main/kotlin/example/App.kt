@@ -119,6 +119,7 @@ private open class TriStateCheckBox : JCheckBox() {
 
 private class IndeterminateIcon : Icon {
   private val icon = UIManager.getIcon("CheckBox.icon")
+
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
@@ -151,6 +152,7 @@ private data class CheckBoxNode(val label: String, val status: Status) {
 
 private class CheckBoxStatusUpdateListener : TreeModelListener {
   private var adjusting = false
+
   override fun treeNodesChanged(e: TreeModelEvent) {
     val children = e.children
     val model = e.source
@@ -224,6 +226,7 @@ private class CheckBoxNodeRenderer : TreeCellRenderer {
   private val panel = JPanel(BorderLayout())
   private val checkBox = TriStateCheckBox()
   private val tcr = DefaultTreeCellRenderer()
+
   override fun getTreeCellRendererComponent(
     tree: JTree,
     value: Any?,
@@ -265,6 +268,7 @@ private class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
   private val panel = JPanel(BorderLayout())
   private val checkBox = object : TriStateCheckBox() {
     private var handler: ActionListener? = null
+
     override fun updateUI() {
       removeActionListener(handler)
       super.updateUI()
@@ -276,6 +280,7 @@ private class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
   }
   private val tcr = DefaultTreeCellRenderer()
   private var str: String? = null
+
   override fun getTreeCellEditorComponent(
     tree: JTree,
     value: Any?,

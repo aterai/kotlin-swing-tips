@@ -23,6 +23,7 @@ fun makeUI(): Component {
   fonts.map { it.fontName }.forEach { m2.addElement(it) }
   val combo = object : JComboBox<String>(m2) {
     private var handler: PopupMenuListener? = null
+
     override fun updateUI() {
       removePopupMenuListener(handler)
       super.updateUI()

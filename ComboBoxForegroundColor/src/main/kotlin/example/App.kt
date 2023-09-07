@@ -78,6 +78,7 @@ private class ComboForegroundRenderer(
 ) : ListCellRenderer<ColorItem> {
   private val renderer: ListCellRenderer<in ColorItem> = DefaultListCellRenderer()
   private val selectedBackground = Color(0xF0_F5_FA)
+
   override fun getListCellRendererComponent(
     list: JList<out ColorItem>,
     value: ColorItem?,
@@ -102,6 +103,7 @@ private class ComboForegroundRenderer(
 private class ComboHtmlRenderer : ListCellRenderer<ColorItem> {
   private val renderer: ListCellRenderer<in ColorItem> = DefaultListCellRenderer()
   private val selectedBackground = Color(0xF0_F5_FA)
+
   override fun getListCellRendererComponent(
     list: JList<out ColorItem>,
     value: ColorItem?,

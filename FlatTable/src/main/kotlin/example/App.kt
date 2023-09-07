@@ -11,6 +11,7 @@ import javax.swing.table.TableCellEditor
 fun makeUI(): Component {
   val table = object : JTable(10, 3) {
     private val border = CellBorder(2, 2, 1, 2)
+
     override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int): Component {
       val c = super.prepareEditor(editor, row, column)
       (c as? JTextField)?.border = border

@@ -46,6 +46,7 @@ private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()
 
 private class ClearSelectionListener : MouseInputAdapter() {
   private var startOutside = false
+
   override fun mousePressed(e: MouseEvent) {
     val list = e.component as? JList<*> ?: return
     startOutside = !contains(list, e.point)

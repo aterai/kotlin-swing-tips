@@ -280,6 +280,7 @@ private class OverlappedScrollBarUI : BasicScrollBarUI() {
 
 private class HorizontalScrollLayerUI : LayerUI<JScrollPane>() {
   private var isDragging = false
+
   override fun installUI(c: JComponent) {
     super.installUI(c)
     (c as? JLayer<*>)?.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or

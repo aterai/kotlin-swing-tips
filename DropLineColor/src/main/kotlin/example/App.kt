@@ -336,6 +336,7 @@ private class TableRowTransferHandler : TransferHandler() {
 
 private class TreeTransferHandler : TransferHandler() {
   private var source: JTree? = null
+
   override fun createTransferable(c: JComponent): Transferable {
     val src = c as? JTree
     source = src

@@ -14,6 +14,7 @@ import javax.swing.plaf.basic.BasicComboBoxUI
 fun makeUI(): Component {
   val combo = object : JComboBox<String>(makeModel()) {
     private var listener: PopupMenuListener? = null
+
     override fun updateUI() {
       removePopupMenuListener(listener)
       super.updateUI()

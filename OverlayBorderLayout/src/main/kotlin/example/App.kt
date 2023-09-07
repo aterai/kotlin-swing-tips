@@ -28,6 +28,7 @@ fun makeUI(): Component {
 
   val field = object : JTextField("b", 10) {
     private var listener: AncestorListener? = null
+
     override fun updateUI() {
       removeAncestorListener(listener)
       super.updateUI()
@@ -88,6 +89,7 @@ private class LayoutAnimator(private val component: JComponent) : BorderLayout()
   var isShowing = true
   private var yy = 0
   private var counter = 0
+
   override fun actionPerformed(e: ActionEvent) {
     val height = component.preferredSize.height
     if (isShowing) {
@@ -147,6 +149,7 @@ private class FindNextAction(
   private val field: JTextField
 ) : AbstractAction() {
   private val rollOverPathLists = mutableListOf<TreePath>()
+
   override fun actionPerformed(e: ActionEvent) {
     val selectedPath = tree.selectionPath
     tree.clearSelection()
@@ -189,6 +192,7 @@ private fun searchTree(
 
 private object AnimationUtils {
   private const val N = 3
+
   fun easeInOut(t: Double): Double {
     val ret: Double
     val isFirstHalf = t < .5

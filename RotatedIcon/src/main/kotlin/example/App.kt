@@ -33,6 +33,7 @@ private class RotateIcon(icon: Icon, rotate: Int) : Icon {
   private val dim = Dimension()
   private val image: Image
   private var trans: AffineTransform? = null
+
   init {
     require(rotate % 90 == 0) { "$rotate: Rotate must be (rotate % 90 == 0)" }
     dim.setSize(icon.iconWidth, icon.iconHeight)

@@ -94,6 +94,7 @@ private fun makeComboBox2(model: ComboBoxModel<Icon>, proto: Icon): JComboBox<Ic
   }
   val pl = object : PopupMenuListener {
     private var adjusting = false
+
     override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
       val comboBox = e.source as? JComboBox<*> ?: return
       val i = comboBox.insets

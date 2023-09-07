@@ -20,6 +20,7 @@ fun makeUI(): Component {
   tabbedPane.addChangeListener { updateDividerLocation(tabbedPane) }
   tabbedPane.addMouseListener(object : MouseAdapter() {
     private var prev = -1
+
     override fun mouseClicked(e: MouseEvent) {
       val tabs = e.component as? JTabbedPane ?: return
       if (prev == tabs.selectedIndex && SwingUtilities.isLeftMouseButton(e)) {

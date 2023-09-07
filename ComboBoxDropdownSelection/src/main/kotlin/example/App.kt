@@ -17,6 +17,7 @@ fun makeUI(): Component {
 
   val comboBox1 = object : JComboBox<String>(model) {
     @Transient private var handler: PopupMenuListener? = null
+
     override fun updateUI() {
       removePopupMenuListener(handler)
       super.updateUI()
@@ -28,6 +29,7 @@ fun makeUI(): Component {
 
   val comboBox2 = object : JComboBox<String>(model) {
     @Transient private var handler: PopupMenuListener? = null
+
     override fun updateUI() {
       removePopupMenuListener(handler)
       actionMap.put(ENTER_PRESSED, null)

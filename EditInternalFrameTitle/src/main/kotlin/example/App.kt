@@ -45,6 +45,7 @@ private class InternalFramePopupMenu : JPopupMenu() {
   init {
     val field = object : JTextField(24) {
       private var listener: AncestorListener? = null
+
       override fun updateUI() {
         removeAncestorListener(listener)
         super.updateUI()

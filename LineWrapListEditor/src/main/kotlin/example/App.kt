@@ -176,6 +176,7 @@ private class EditableList(model: DefaultListModel<ListItem>) : JList<ListItem>(
     editor.componentPopupMenu = TextComponentPopupMenu()
     val dl = object : DocumentListener {
       private var prev = -1
+
       private fun update() {
         EventQueue.invokeLater {
           val h = editor.preferredSize.height

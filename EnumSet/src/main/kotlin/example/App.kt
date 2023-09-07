@@ -138,6 +138,7 @@ private class CheckBoxesPanel : JPanel() {
 
 private class CheckBoxesRenderer : TableCellRenderer {
   private val renderer = CheckBoxesPanel()
+
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,

@@ -79,6 +79,7 @@ private class SpinnerLayout : LayoutManager {
   private var nextButton: Component? = null
   private var previousButton: Component? = null
   private var editor: Component? = null
+
   override fun addLayoutComponent(name: String, c: Component) {
     when (name) {
       "Next" -> nextButton = c

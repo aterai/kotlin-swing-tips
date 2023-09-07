@@ -38,6 +38,7 @@ private fun makeModel(vararg items: String) =
 
 private class ComboCellRenderer : TableCellRenderer {
   private val combo = JComboBox<String>()
+
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,

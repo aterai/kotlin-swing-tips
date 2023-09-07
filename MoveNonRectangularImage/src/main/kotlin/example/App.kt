@@ -55,6 +55,7 @@ private fun makeMissingImage(): BufferedImage {
 
 private class ComponentMoveHandler : MouseAdapter() {
   private val startPt = Point()
+
   override fun mousePressed(e: MouseEvent) {
     startPt.location = e.point
   }

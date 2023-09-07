@@ -22,6 +22,7 @@ fun makeUI(): Component {
 
   val glass = object : JPanel(BorderLayout()) {
     private val backgroundColor = Color(0x64_64_64_C8, true)
+
     override fun paintComponent(g: Graphics) {
       g.color = backgroundColor
       g.fillRect(0, 0, width, height)

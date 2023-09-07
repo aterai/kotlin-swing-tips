@@ -12,6 +12,7 @@ fun makeUI(): Component {
 
   val slider2 = object : JSlider(0, 100, 0) {
     @Transient private var listener: FocusListener? = null
+
     override fun updateUI() {
       removeFocusListener(listener)
       super.updateUI()

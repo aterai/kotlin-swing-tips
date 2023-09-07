@@ -85,6 +85,7 @@ private class CloseableTabbedPane : JTabbedPane() {
 
 private class CloseableTabIconHandler : MouseAdapter() {
   private val drawRect = Rectangle()
+
   private fun isCloseTabIconRollover(
     tabbedPane: CloseableTabbedPane,
     icon: CloseTabIcon,
@@ -327,6 +328,7 @@ private class CloseTabIcon(private val fileIcon: Icon?) : Icon {
 
 private class TabbedPaneWithCloseButton : JTabbedPane() {
   private var closeButtons: MutableList<JButton>? = null
+
   override fun updateUI() {
     closeButtons?.forEach {
       this.remove(it)

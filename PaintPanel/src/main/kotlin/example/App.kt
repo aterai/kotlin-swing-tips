@@ -22,6 +22,7 @@ private class PaintPanel : JPanel() {
     super.updateUI()
     handler = object : MouseInputAdapter() {
       private var path: Path2D? = null
+
       override fun mousePressed(e: MouseEvent) {
         path = Path2D.Double().also {
           it.moveTo(e.x.toDouble(), e.y.toDouble())

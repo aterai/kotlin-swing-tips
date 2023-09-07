@@ -99,6 +99,7 @@ private class HighlightIcon(
   private val scrollbar: JScrollBar
 ) : Icon {
   private val thumbRect = Rectangle()
+
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val top = scrollbar.insets.top
     val range = scrollbar.model

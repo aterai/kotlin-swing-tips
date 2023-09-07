@@ -9,6 +9,7 @@ import javax.swing.*
 fun makeUI(): Component {
   val tabbedPane = object : JTabbedPane() {
     private var hoverHandler: MouseMotionListener? = null
+
     override fun updateUI() {
       removeMouseMotionListener(hoverHandler)
       super.updateUI()

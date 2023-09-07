@@ -95,6 +95,7 @@ private class CloseableTabbedPaneLayerUI : LayerUI<JTabbedPane>() {
   }
   private val dim = button.preferredSize
   private val repaintRect = Rectangle(dim.width * 2, dim.height * 2)
+
   private fun getTabButtonRect(tabbedPane: JTabbedPane, index: Int) =
     tabbedPane.getBoundsAt(index).also {
       it.translate(it.width - dim.width - GAP, (it.height - dim.height) / 2)

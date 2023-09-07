@@ -98,6 +98,7 @@ private fun makeSlider(): JSlider {
 
 private fun makeCheckBox() = object : JCheckBox() {
   private var handler: MouseInputListener? = null
+
   override fun updateUI() {
     removeMouseListener(handler)
     removeMouseMotionListener(handler)

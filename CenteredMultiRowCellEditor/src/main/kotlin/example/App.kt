@@ -203,6 +203,7 @@ private class EditableList(model: DefaultListModel<ListItem>) : JList<ListItem>(
     editor.componentPopupMenu = TextComponentPopupMenu()
     editor.document.addDocumentListener(object : DocumentListener {
       private var prev = -1
+
       private fun update() {
         EventQueue.invokeLater {
           val h = editor.preferredSize.height
@@ -284,6 +285,7 @@ private class EditableList(model: DefaultListModel<ListItem>) : JList<ListItem>(
 
   private inner class EditingHandler : MouseAdapter() {
     private var startOutside = false
+
     override fun mouseClicked(e: MouseEvent) {
       val idx = selectedIndex
       val rect = getCellBounds(idx, idx) ?: return

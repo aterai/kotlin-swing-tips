@@ -106,6 +106,7 @@ private class PaintPanel : JPanel(), MouseMotionListener, MouseListener {
 
   companion object {
     private val TEXTURE = createCheckerTexture(6, Color(0x32_C8_96_64, true))
+
     fun createCheckerTexture(cs: Int, color: Color?): TexturePaint {
       val size = cs * cs
       val img = BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB)

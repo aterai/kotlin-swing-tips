@@ -27,6 +27,7 @@ fun makeUI(): Component {
 
 private class RollOverList<E>(model: ListModel<E>) : JList<E>(model) {
   private var rollOverHandler: RollOverCellHandler? = null
+
   override fun updateUI() {
     removeMouseListener(rollOverHandler)
     removeMouseMotionListener(rollOverHandler)
@@ -42,6 +43,7 @@ private class RollOverList<E>(model: ListModel<E>) : JList<E>(model) {
     private val rolloverBackground = Color(0xDC_F0_FF)
     private var rollOverRowIndex = -1
     private val r: ListCellRenderer<in E> = DefaultListCellRenderer()
+
     override fun getListCellRendererComponent(
       list: JList<out E>,
       value: E?,

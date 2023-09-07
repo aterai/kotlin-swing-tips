@@ -75,6 +75,7 @@ private fun makePreferredSizeImage(icon: Icon, w: Int, h: Int): Image {
 
 private class StarIcon : Icon {
   private val star = makeStar()
+
   private fun makeStar(): Path2D {
     val or = 8.0
     val ir = 4.0

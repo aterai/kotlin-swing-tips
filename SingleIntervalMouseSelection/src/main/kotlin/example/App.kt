@@ -21,6 +21,7 @@ val cellSize = Dimension(40, 26)
 private val yearMonthLabel = JLabel("", SwingConstants.CENTER)
 val monthList = object : JList<LocalDate>() {
   var handler: MouseInputListener? = null
+
   override fun updateUI() {
     cellRenderer = null
     removeMouseListener(handler)
@@ -243,6 +244,7 @@ private class CalendarViewListModel(date: LocalDate) : AbstractListModel<LocalDa
 
 private class SingleIntervalMouseSelectionListener : MouseInputAdapter() {
   private var start = -1
+
   override fun mousePressed(e: MouseEvent) {
     (e.component as? JList<*>)?.also {
       start = it.locationToIndex(e.point)

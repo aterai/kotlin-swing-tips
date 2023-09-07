@@ -36,6 +36,7 @@ fun makeModel() = DefaultListModel<String>().also {
 private class CellButtonsMouseListener<E>(private val list: JList<E>) : MouseInputAdapter() {
   private var prevIndex = -1
   private var prevButton: JButton? = null
+
   override fun mouseMoved(e: MouseEvent) {
     val pt = e.point
     val index = list.locationToIndex(pt)

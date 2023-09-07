@@ -44,6 +44,7 @@ private fun makeButton(text: String, btnBorder: Border): JButton {
 
 private class CustomBevelBorder(bevelType: Int) : BevelBorder(bevelType) {
   private val ins = Insets(8, 8, 8, 8)
+
   override fun getBorderInsets(c: Component, insets: Insets): Insets {
     insets.set(ins.top + 2, ins.left + 2, ins.bottom + 2, ins.right + 2)
     return insets

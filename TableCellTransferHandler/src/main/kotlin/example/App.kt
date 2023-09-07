@@ -125,6 +125,7 @@ private class CellIconTransferHandler : TransferHandler() {
 
 private class IconListCellRenderer<E : Icon> : ListCellRenderer<E> {
   private val renderer = JLabel()
+
   override fun getListCellRendererComponent(
     list: JList<out E>,
     value: E?,

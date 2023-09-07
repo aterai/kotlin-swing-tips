@@ -14,6 +14,7 @@ private fun canAddRow() = !check1.isSelected && !check2.isSelected
 private class TablePopupMenu : JPopupMenu() {
   private val addMenuItem = add("add")
   private val deleteMenuItem: JMenuItem
+
   init {
     addMenuItem.addActionListener {
       (invoker as? JTable)?.also {
@@ -102,6 +103,7 @@ fun makeUI(): Component {
 
 private class RowDataModel : DefaultTableModel() {
   private var number = 0
+
   fun addRowData(t: RowData) {
     val obj = arrayOf(number, t.name, t.comment)
     super.addRow(obj)

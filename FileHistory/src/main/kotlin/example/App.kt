@@ -114,6 +114,7 @@ private val actions: List<Action>
 
 private class NewAction : AbstractAction("new") {
   private var counter = 0
+
   override fun actionPerformed(e: ActionEvent) {
     val c = e.source as? JComponent ?: return
     val obj = arrayOf(

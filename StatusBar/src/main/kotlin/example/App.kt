@@ -21,6 +21,7 @@ private class StatusBar : JPanel(BorderLayout()) {
 
 private class BottomRightCornerLabel : JLabel(BottomRightCornerIcon()) {
   @Transient private var handler: MouseInputListener? = null
+
   override fun updateUI() {
     removeMouseListener(handler)
     removeMouseMotionListener(handler)
@@ -35,6 +36,7 @@ private class BottomRightCornerLabel : JLabel(BottomRightCornerIcon()) {
 private class ResizeWindowListener : MouseInputAdapter() {
   private val rect = Rectangle()
   private val startPt = Point()
+
   override fun mousePressed(e: MouseEvent) {
     val p = SwingUtilities.getRoot(e.component)
     if (p is Window) {

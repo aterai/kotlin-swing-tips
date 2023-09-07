@@ -112,6 +112,7 @@ private class VerticalTableHeaderRenderer : TableCellRenderer {
   companion object {
     private const val ASCENDING = "Table.ascendingSortIcon"
     private const val DESCENDING = "Table.descendingSortIcon"
+
     fun getColumnSortOrder(table: JTable?, column: Int): SortOrder {
       var rv = SortOrder.UNSORTED
       if (table != null && table.rowSorter != null) {
@@ -143,6 +144,7 @@ private class RotateIcon(icon: Icon, rotate: Int) : Icon {
   private val dim = Dimension()
   private val image: Image
   private var trans: AffineTransform? = null
+
   init {
     require(rotate % 90 == 0) { "$rotate: Rotate must be (rotate % 90 == 0)" }
     dim.setSize(icon.iconWidth, icon.iconHeight)

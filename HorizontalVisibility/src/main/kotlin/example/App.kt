@@ -110,6 +110,7 @@ private class EmptyThumbHandler(
   private val scroller: JScrollBar
 ) : ComponentAdapter(), DocumentListener {
   private val emptyThumbModel = DefaultBoundedRangeModel(0, 1, 0, 1)
+
   private fun changeThumbModel() {
     EventQueue.invokeLater {
       val m = textField.horizontalVisibility

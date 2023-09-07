@@ -40,6 +40,7 @@ fun makeUI(): Component {
 // Public Domain Software -- Free to Use as You Like
 private object BrowserLauncher {
   private const val ERR_MSG = "Error attempting to launch web browser"
+
   fun openUrl(url: String) {
     val osName = System.getProperty("os.name")
     runCatching {

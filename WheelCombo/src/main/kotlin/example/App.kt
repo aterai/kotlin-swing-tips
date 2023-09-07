@@ -7,6 +7,7 @@ import javax.swing.*
 fun makeUI(): Component {
   val combo = object : JComboBox<String>(makeModel()) {
     @Transient private var handler: MouseWheelListener? = null
+
     override fun updateUI() {
       removeMouseWheelListener(handler)
       super.updateUI()

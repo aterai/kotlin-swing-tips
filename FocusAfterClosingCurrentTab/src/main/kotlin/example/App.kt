@@ -20,6 +20,7 @@ private const val CLOSE_CURRENT_TAB = "close_current_tab"
 fun makeUI(): Component {
   val tabbedPane = object : ClippedTitleTabbedPane() {
     private val history = ArrayList<Component>(5)
+
     override fun setSelectedIndex(index: Int) {
       super.setSelectedIndex(index)
       val component = getComponentAt(index)

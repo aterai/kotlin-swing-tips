@@ -11,6 +11,7 @@ fun makeUI(): Component {
   val icon = ImageIcon(cl.getResource("example/test.png"))
   val wipe = object : JComponent() {
     private var ww = 0
+
     override fun paintComponent(g: Graphics) {
       g.color = background
       g.fillRect(0, 0, width, height)

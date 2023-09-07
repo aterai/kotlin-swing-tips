@@ -197,6 +197,7 @@ private class RibbonToggleButtonIcon : ArrowToggleButtonIcon() {
 
 private class BreadcrumbLayerUI<V : Component> : LayerUI<V>() {
   private var shape: Shape? = null
+
   override fun paint(g: Graphics, c: JComponent) {
     super.paint(g, c)
     val s = shape ?: return

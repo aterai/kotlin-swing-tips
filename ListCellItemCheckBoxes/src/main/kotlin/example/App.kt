@@ -61,6 +61,7 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
   private val rubberBand = Path2D.Double()
   private var rollOverIndex = -1
   private var checkedIndex = -1
+
   override fun updateUI() {
     selectionForeground = null // Nimbus
     selectionBackground = null // Nimbus
@@ -120,6 +121,7 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
 
   private inner class ItemCheckBoxesListener : MouseAdapter() {
     private val srcPoint = Point()
+
     override fun mouseDragged(e: MouseEvent) {
       checkedIndex = -1
       val l = e.component as? JList<*> ?: return

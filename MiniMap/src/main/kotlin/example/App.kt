@@ -80,6 +80,7 @@ private open class MiniMapHandler : MouseInputAdapter() {
     m.value = v.toInt()
   }
 }
+
 val p = object : JPanel() {
   override fun isOptimizedDrawingEnabled() = false
 }

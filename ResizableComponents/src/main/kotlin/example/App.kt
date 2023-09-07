@@ -214,6 +214,7 @@ private class ResizeMouseListener : MouseInputAdapter() {
   private var cursor = Cursor.getDefaultCursor()
   private val startPos = Point(-1, -1)
   private val startingBounds = Rectangle()
+
   override fun mouseMoved(e: MouseEvent) {
     val c = e.component as? JComponent ?: return
     (c.border as? ResizableBorder)?.also {

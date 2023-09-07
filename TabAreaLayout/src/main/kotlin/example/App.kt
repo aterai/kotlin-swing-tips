@@ -44,6 +44,7 @@ private fun makeOverlayTabbedPane(): Component {
 
   val button = object : JButton("⊽") {
     private var handler: MouseListener? = null
+
     override fun updateUI() {
       removeMouseListener(handler)
       super.updateUI()
@@ -107,6 +108,7 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
   private val contentsPanel = JPanel(cardLayout)
   private val hiddenTabs = object : JButton("⊽") {
     private var handler: MouseListener? = null
+
     override fun updateUI() {
       removeMouseListener(handler)
       super.updateUI()
@@ -404,6 +406,7 @@ private class OverlappedScrollBarUI : BasicScrollBarUI() {
 
 private class HorizontalScrollLayerUI : LayerUI<JScrollPane>() {
   private var isDragging = false
+
   override fun installUI(c: JComponent) {
     super.installUI(c)
     (c as? JLayer<*>)?.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or

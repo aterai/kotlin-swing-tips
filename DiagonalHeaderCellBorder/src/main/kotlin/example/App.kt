@@ -97,6 +97,7 @@ private class DiagonallySplitHeaderRenderer : TableCellRenderer {
 private class VerticalTableHeaderRenderer : TableCellRenderer {
   private val intermediate = JPanel()
   private val label = JLabel("", null, SwingConstants.LEADING)
+
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,

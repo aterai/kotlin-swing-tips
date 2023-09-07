@@ -94,6 +94,7 @@ private class ColorEditor : AbstractCellEditor(), TableCellEditor, ActionListene
   private val colorChooser: JColorChooser
   private val dialog: JDialog
   private var currentColor: Color? = null
+
   init {
     // Set up the editor (from the table's point of view),
     // which is a button.

@@ -32,6 +32,7 @@ fun makeUI(): Component {
 
 private class DisableInputLayerUI<V : Component> : LayerUI<V>() {
   private var running = false
+
   fun start() {
     if (running) {
       return

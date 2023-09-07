@@ -83,6 +83,7 @@ private class ImagePanel(private val image: Image) : JPanel() {
 
   private inner class RubberBandingListener : MouseAdapter() {
     private val srcPoint = Point()
+
     override fun mouseDragged(e: MouseEvent) {
       val destPoint = e.point
       val rb = rubberBand

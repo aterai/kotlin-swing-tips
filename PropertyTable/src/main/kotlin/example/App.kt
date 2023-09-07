@@ -35,6 +35,7 @@ fun makeUI(): Component {
 
 class PropertyTable(model: TableModel) : JTable(model) {
   private var editingClass: Class<*>? = null
+
   private fun getClassAt(row: Int, column: Int): Class<*> {
     val mc = convertColumnIndexToModel(column)
     val mr = convertRowIndexToModel(row)

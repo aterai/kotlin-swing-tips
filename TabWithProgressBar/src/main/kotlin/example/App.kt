@@ -11,6 +11,7 @@ fun makeUI(): Component {
 
   val addAction = object : AbstractAction("Add") {
     private var count = 0
+
     override fun actionPerformed(e: ActionEvent) {
       val c = if (count % 2 == 0) JTree() else JLabel("Tab$count")
       tabbedPane.addTab("Title$count", c)

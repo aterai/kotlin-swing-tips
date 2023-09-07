@@ -41,6 +41,7 @@ fun makeUI(): Component {
 
   val panel = object : JPanel(BorderLayout()) {
     private val texture = TextureUtils.createCheckerTexture(6)
+
     override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.paint = texture

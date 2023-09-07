@@ -117,6 +117,7 @@ private class MyWindowsTableHeaderUI : WindowsTableHeaderUI() {
     return object : MouseInputHandler() {
       private val resizeCursor = ResizeCursorUtils.createCursor("⇼", 32, 32, header)
       private val defaultCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+
       override fun mouseMoved(e: MouseEvent) {
         super.mouseMoved(e)
         if (header.isEnabled) {
@@ -136,6 +137,7 @@ private class MySynthTableHeaderUI : SynthTableHeaderUI() {
     return object : MouseInputHandler() {
       private val resizeCursor = ResizeCursorUtils.createCursor("⇼", 32, 32, header)
       private val defaultCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+
       override fun mouseMoved(e: MouseEvent) {
         super.mouseMoved(e)
         if (header.isEnabled) {
@@ -155,6 +157,7 @@ private class MyBasicTableHeaderUI : BasicTableHeaderUI() {
     return object : MouseInputHandler() {
       private val resizeCursor = ResizeCursorUtils.createCursor("⇼", 32, 32, header)
       private val defaultCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+
       override fun mouseMoved(e: MouseEvent) {
         super.mouseMoved(e)
         if (header.isEnabled) {

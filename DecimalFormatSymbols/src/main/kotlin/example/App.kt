@@ -17,6 +17,7 @@ fun makeUI(): Component {
 
   val act = object : AbstractAction("setEnabled") {
     private var old: Any? = null
+
     override fun actionPerformed(e: ActionEvent) {
       val flg = (e.source as? JCheckBox)?.isSelected == true
       listOf(s0, s1, s2, s3).forEach { it.isEnabled = flg }

@@ -62,6 +62,7 @@ private data class RowData(val group: String, val name: String, val count: Int)
 
 private class RowDataRenderer : TableCellRenderer {
   private val renderer = DefaultTableCellRenderer()
+
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,

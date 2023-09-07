@@ -45,6 +45,7 @@ fun makeUI(): Component {
 private class CheckBoxNodeRenderer : TreeCellRenderer {
   private val checkBox = JCheckBox()
   private val tcr = DefaultTreeCellRenderer()
+
   override fun getTreeCellRendererComponent(
     tree: JTree,
     value: Any?,

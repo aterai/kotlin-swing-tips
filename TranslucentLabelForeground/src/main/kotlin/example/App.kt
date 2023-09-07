@@ -17,6 +17,7 @@ fun makeUI(): Component {
 
   val p = object : JPanel(GridLayout(2, 1)) {
     private var texture: Paint? = null
+
     override fun updateUI() {
       super.updateUI()
       val tc = Color(0xEE_32_32_32.toInt(), true)

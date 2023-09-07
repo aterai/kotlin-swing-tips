@@ -10,6 +10,7 @@ import javax.swing.table.DefaultTableModel
 fun makeUI(): Component {
   val table = object : JTable(DefaultTableModel(10, 10)) {
     private var highlighter: HighlightListener? = null
+
     override fun updateUI() {
       removeMouseListener(highlighter)
       removeMouseMotionListener(highlighter)
@@ -32,6 +33,7 @@ fun makeUI(): Component {
 private class HighlightListener : MouseAdapter() {
   private var viewRowIndex = -1
   private var viewColumnIndex = -1
+
   fun getCellHighlightColor(row: Int, column: Int): Color? {
     return if (viewRowIndex == row || viewColumnIndex == column) {
       if (viewRowIndex == row && viewColumnIndex == column) {

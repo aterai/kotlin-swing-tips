@@ -169,6 +169,7 @@ private class LoadingIcon : Icon {
     Ellipse2D.Double(SX + 1 * R, SY + 1 * R, 2 * R, 2 * R)
   )
   private var running = false
+
   operator fun next() {
     if (running) {
       Collections.rotate(list, 1)

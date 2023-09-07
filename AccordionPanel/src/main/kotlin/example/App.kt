@@ -64,6 +64,7 @@ private fun makeExpansionPanelList() = listOf(
 abstract class AbstractExpansionPanel(private val title: String) : JPanel(BorderLayout()) {
   private val titleBar = object : JLabel("▼ $title") {
     private val bgc = Color(0xC8_C8_FF)
+
     override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.paint = GradientPaint(50f, 0f, Color.WHITE, width.toFloat(), height.toFloat(), bgc)

@@ -86,6 +86,7 @@ private class AnimeListCellRenderer<E>(
 
   private inner class MarqueeLabel : JLabel() {
     private var xx = 0f
+
     init {
       isOpaque = false
     }

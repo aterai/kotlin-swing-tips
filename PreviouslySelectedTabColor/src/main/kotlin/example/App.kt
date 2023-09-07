@@ -23,6 +23,7 @@ fun makeUI(): Component {
 
 private class LineFocusTabbedPane : JTabbedPane() {
   private var listener: ChangeListener? = null
+
   override fun updateUI() {
     removeChangeListener(listener)
     UIManager.put("TabbedPane.tabInsets", InsetsUIResource(1, 4, 0, 4))
@@ -46,6 +47,7 @@ private class LineFocusTabbedPane : JTabbedPane() {
 
 private class TabSelectionListener : ChangeListener {
   private var prev = -1
+
   override fun stateChanged(e: ChangeEvent) {
     val tabbedPane = e.source as? JTabbedPane
     if (tabbedPane == null || tabbedPane.tabCount <= 0) {

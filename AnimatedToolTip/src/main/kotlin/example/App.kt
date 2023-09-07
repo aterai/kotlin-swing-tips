@@ -124,8 +124,8 @@ private class AnimeIcon : Icon {
     Ellipse2D.Double(SX + 0 * R, SY + 3 * R, 2 * R, 2 * R),
     Ellipse2D.Double(SX + 1 * R, SY + 1 * R, 2 * R, 2 * R)
   )
-
   private var running = false
+
   operator fun next() {
     if (running) {
       // list.add(list.remove(0))

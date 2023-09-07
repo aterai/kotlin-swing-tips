@@ -31,6 +31,7 @@ private fun addImageTab(tabbedPane: JTabbedPane, url: URL?) {
 
 private class TabThumbnailTabbedPane : JTabbedPane() {
   private var current = -1
+
   private fun getTabThumbnail(index: Int): Component {
     var c = getComponentAt(index)
     var icon: Icon? = null

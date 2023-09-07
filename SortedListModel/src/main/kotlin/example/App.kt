@@ -25,6 +25,7 @@ private val defaultModel = arrayOf(
 private val model = DefaultListModel<ListItem>()
 private val list = object : JList<ListItem>(model) {
   @Transient private var handler: MouseInputAdapter? = null
+
   override fun updateUI() {
     removeMouseListener(handler)
     selectionForeground = null
@@ -201,6 +202,7 @@ private class ColorIcon(private val color: Color) : Icon {
 // https://github.com/aterai/java-swing-tips/blob/master/ClearSelection/src/java/example/MainPanel.java
 private class ClearSelectionListener : MouseInputAdapter() {
   private var startOutside = false
+
   override fun mousePressed(e: MouseEvent) {
     val list = e.component as? JList<*> ?: return
     startOutside = !contains(list, e.point)

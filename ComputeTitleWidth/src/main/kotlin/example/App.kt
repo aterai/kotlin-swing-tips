@@ -21,6 +21,7 @@ fun makeUI(): Component {
   val button = JButton("add")
   button.action = object : AbstractAction("add") {
     private var num = 2
+
     override fun actionPerformed(e: ActionEvent) {
       desktop.add(createFrame("#", num++))
     }

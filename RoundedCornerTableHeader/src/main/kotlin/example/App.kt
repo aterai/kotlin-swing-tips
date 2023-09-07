@@ -124,6 +124,7 @@ fun updateMonthView(localDate: LocalDate) {
 
 private class CalendarTableRenderer : DefaultTableCellRenderer() {
   private val p = JPanel()
+
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,

@@ -37,6 +37,7 @@ fun makeUI(): Component {
 private class ToggleButtonGroup : ButtonGroup() {
   private var prevModel: ButtonModel? = null
   private var isAdjusting = false
+
   override fun setSelected(m: ButtonModel?, b: Boolean) {
     if (isAdjusting) {
       return

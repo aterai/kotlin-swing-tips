@@ -48,6 +48,7 @@ private fun makeBox(): Component {
 private class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
   private var dividerLocation = 0
   private val startPt = Point()
+
   override fun installUI(c: JComponent) {
     super.installUI(c)
     (c as? JLayer<*>)?.layerEventMask =

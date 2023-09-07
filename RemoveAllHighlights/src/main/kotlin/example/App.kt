@@ -33,6 +33,7 @@ private val HIGHLIGHT = DefaultHighlightPainter(Color.YELLOW)
 fun makeUI(): Component {
   val textArea = object : JTextArea() {
     private var handler: WordHighlightListener? = null
+
     override fun updateUI() {
       removeCaretListener(handler)
       removeMouseListener(handler)
@@ -72,6 +73,7 @@ fun makeUI(): Component {
 private class WordHighlightListener : MouseAdapter(), CaretListener, KeyListener {
   private var dragActive = false
   private var shiftActive = false
+
   override fun caretUpdate(e: CaretEvent) {
     if (!dragActive && !shiftActive) {
       fire(e.source)

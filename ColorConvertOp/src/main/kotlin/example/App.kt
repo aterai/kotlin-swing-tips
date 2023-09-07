@@ -52,6 +52,7 @@ private fun makeLabel(icon: Icon, orgIcon: Icon, str: String): JLabel {
   val label = JLabel(str, icon, SwingConstants.LEFT)
   val ml = object : MouseAdapter() {
     private var isGray = false
+
     override fun mouseClicked(e: MouseEvent) {
       (e.component as? JLabel)?.icon = if (isGray) icon else orgIcon
       isGray = isGray xor true

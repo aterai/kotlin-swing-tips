@@ -17,6 +17,7 @@ fun makeUI(): Component {
   }
   val table = object : JTable(model) {
     private var handler: MouseAdapter? = null
+
     override fun updateUI() {
       removeMouseMotionListener(handler)
       removeMouseListener(handler)

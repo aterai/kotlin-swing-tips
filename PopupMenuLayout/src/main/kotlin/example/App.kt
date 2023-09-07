@@ -48,6 +48,7 @@ private fun makeButton(symbol: String): AbstractButton {
   val icon = SymbolIcon(symbol)
   val b = object : JMenuItem() {
     private val dim = Dimension(icon.iconWidth, icon.iconHeight)
+
     override fun getPreferredSize() = dim
 
     override fun paintComponent(g: Graphics) {

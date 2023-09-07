@@ -19,6 +19,7 @@ fun main() {
       val sis = ServiceManager.lookup("javax.jnlp.SingleInstanceService")
       (sis as? SingleInstanceService)?.addSingleInstanceListener(object : SingleInstanceListener {
         private var count = 0
+
         override fun newActivation(args: Array<String>) {
           EventQueue.invokeLater {
             JOptionPane.showMessageDialog(frame, "already running: $count")

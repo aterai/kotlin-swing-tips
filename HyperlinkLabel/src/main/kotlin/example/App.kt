@@ -67,6 +67,7 @@ fun makeUI(): Component {
 
 private class UrlLabel(h: String?) : JLabel("<html><a href='$h'>$h") {
   private var handler: MouseListener? = null
+
   override fun updateUI() {
     removeMouseListener(handler)
     super.updateUI()

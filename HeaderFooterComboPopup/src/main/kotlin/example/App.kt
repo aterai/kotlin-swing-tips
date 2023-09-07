@@ -36,6 +36,7 @@ fun makeUI(): Component {
 private class HeaderFooterComboPopup(combo: JComboBox<*>?) : BasicComboPopup(combo) {
   private var header: JLabel? = null
   private var footer: JMenuItem? = null
+
   override fun configurePopup() {
     super.configurePopup()
     configureHeader()

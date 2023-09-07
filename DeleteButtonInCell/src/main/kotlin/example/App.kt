@@ -59,6 +59,7 @@ fun makeUI(): Component {
 
 private class RowDataModel : DefaultTableModel() {
   private var number = 0
+
   fun addRowData(t: RowData) {
     val obj = arrayOf(number, t.name, t.comment, "")
     super.addRow(obj)
@@ -103,6 +104,7 @@ private class DeleteButton : JButton() {
 
 private class DeleteButtonRenderer : TableCellRenderer {
   private val renderer = DeleteButton()
+
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,

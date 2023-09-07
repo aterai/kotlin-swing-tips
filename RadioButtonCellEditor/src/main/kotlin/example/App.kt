@@ -45,6 +45,7 @@ fun makeUI(): Component {
 
 private class RadioButtonsRenderer : TableCellRenderer {
   private val renderer = JRadioButton()
+
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,

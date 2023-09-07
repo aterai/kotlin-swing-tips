@@ -64,6 +64,7 @@ private class StripeTableRenderer : DefaultTableCellRenderer() {
 
 private class RowDataModel : DefaultTableModel() {
   private var number = 0
+
   fun addRowData(t: RowData) {
     val obj = arrayOf(number, t.name, t.comment)
     super.addRow(obj)

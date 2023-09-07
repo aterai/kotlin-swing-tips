@@ -76,6 +76,7 @@ private class DnDTree : JTree() {
 
   private inner class NodeDragGestureListener : DragGestureListener {
     private val handler = NodeDragSourceListener()
+
     override fun dragGestureRecognized(dge: DragGestureEvent) {
       val pt = dge.dragOrigin
       val path = getPathForLocation(pt.x, pt.y)
@@ -161,6 +162,7 @@ private class DnDTree : JTree() {
   private inner class DnDTreeCellRenderer : DefaultTreeCellRenderer() {
     private var isTargetNode = false
     private var isTargetNodeLeaf = false
+
     override fun getTreeCellRendererComponent(
       tree: JTree,
       value: Any?,

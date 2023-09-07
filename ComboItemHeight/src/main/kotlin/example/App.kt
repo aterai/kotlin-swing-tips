@@ -18,6 +18,7 @@ fun makeUI(): Component {
   val combo2 = JComboBox(items)
   combo2.renderer = object : DefaultListCellRenderer() {
     private var cellHeight = 0
+
     override fun getListCellRendererComponent(
       list: JList<*>,
       value: Any?,

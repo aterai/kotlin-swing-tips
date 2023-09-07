@@ -15,6 +15,7 @@ fun makeUI(): Component {
   val tree = JTree(makeModel())
   val findNextAction = object : AbstractAction("Find Next") {
     private val rollOverPathLists = mutableListOf<TreePath>()
+
     override fun actionPerformed(e: ActionEvent) {
       val selectedPath = tree.selectionPath
       tree.clearSelection()

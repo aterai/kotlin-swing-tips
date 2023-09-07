@@ -57,6 +57,7 @@ private class SpinnerPanel : JPanel(GridBagLayout()) {
 
 private class SpinnerRenderer : TableCellRenderer {
   private val renderer = SpinnerPanel()
+
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -72,6 +73,7 @@ private class SpinnerRenderer : TableCellRenderer {
 
 private class SpinnerEditor : AbstractCellEditor(), TableCellEditor {
   private val renderer = SpinnerPanel()
+
   override fun getTableCellEditorComponent(
     table: JTable,
     value: Any?,
@@ -117,6 +119,7 @@ private class ButtonsPanel : JPanel() {
 
 private class ButtonsRenderer : TableCellRenderer {
   private val renderer = ButtonsPanel()
+
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,

@@ -84,6 +84,7 @@ private class HoverLayout : BorderLayout(0, 0) {
 
 private class HoverLayer : LayerUI<JPanel>() {
   private var isDragging = false
+
   override fun installUI(c: JComponent) {
     super.installUI(c)
     if (c is JLayer<*>) {

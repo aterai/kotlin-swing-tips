@@ -143,6 +143,7 @@ fun changeHighlight(index: Int): Int {
 
 private class HighlightHandler : DocumentListener, ActionListener {
   private var current = 0
+
   override fun changedUpdate(e: DocumentEvent) {
     // not needed
   }

@@ -56,6 +56,7 @@ private class ScrollableWrapLayout(
   verGap: Int
 ) : FlowLayout(align, horGap, verGap) {
   private val fixedHorGap = horGap
+
   private fun getPreferredHorizontalGap(target: Container): Int {
     val insets = target.insets
     var columns = 0

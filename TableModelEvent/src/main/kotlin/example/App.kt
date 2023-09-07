@@ -33,6 +33,7 @@ fun makeUI(): Component {
     private val CHECKBOX_COLUMN = 0
 
     private var handler: HeaderCheckBoxHandler? = null
+
     override fun updateUI() {
       setSelectionForeground(ColorUIResource(Color.RED))
       setSelectionBackground(ColorUIResource(Color.RED))
@@ -73,6 +74,7 @@ fun makeUI(): Component {
 private class HeaderRenderer : TableCellRenderer {
   private val check = JCheckBox("")
   private val label = JLabel("Check All")
+
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,

@@ -52,6 +52,7 @@ private class CompoundButton(
       private val fc = Color(100, 150, 255, 200)
       private val ac = Color(230, 230, 230)
       private val rc = Color.ORANGE
+
       override fun paintIcon(
         c: Component?,
         g: Graphics,

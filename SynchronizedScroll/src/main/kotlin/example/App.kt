@@ -16,6 +16,7 @@ fun makeUI(): Component {
   val sp2 = JScrollPane(lbl2)
   val cl = object : ChangeListener {
     private var adjusting = false
+
     override fun stateChanged(e: ChangeEvent) {
       var src: JViewport? = null
       var tgt: JViewport? = null

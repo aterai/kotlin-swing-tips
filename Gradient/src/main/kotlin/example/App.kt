@@ -70,6 +70,7 @@ private class GradientSeparatorUI : BasicSeparatorUI() {
   private var bgc: Color? = null
   private var ssc: Color? = null
   private var shc: Color? = null
+
   private fun updateColors(c: Component) {
     bgc = UIManager.getColor("Panel.background") as? ColorUIResource ?: c.background
     ssc = UIManager.getColor("Separator.shadow") as? ColorUIResource ?: c.background.brighter()

@@ -21,6 +21,7 @@ fun makeUI(): Component {
 
   val table = object : JTable(model) {
     private val evenColor = Color(0xFA_FA_FA)
+
     override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int) =
       super.prepareRenderer(tcr, row, column).also {
         if (isRowSelected(row)) {
@@ -61,6 +62,7 @@ fun makeUI(): Component {
 
 private class RowDataModel : SortableTableModel() {
   private var number = 0
+
   fun addRowData(t: RowData) {
     val obj = arrayOf(number, t.name, t.comment)
     super.addRow(obj)

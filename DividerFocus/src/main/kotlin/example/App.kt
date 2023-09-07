@@ -10,6 +10,7 @@ import javax.swing.plaf.basic.BasicSplitPaneUI
 fun makeUI(): Component {
   val splitPane = object : JSplitPane() {
     private var handler: MouseListener? = null
+
     override fun updateUI() {
       (ui as? BasicSplitPaneUI)?.divider?.removeMouseListener(handler)
       super.updateUI()

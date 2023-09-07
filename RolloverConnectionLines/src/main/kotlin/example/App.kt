@@ -11,6 +11,7 @@ fun makeUI(): Component {
   val tree = object : JTree() {
     private var rollover = false
     private var rolloverHandler: MouseAdapter? = null
+
     override fun updateUI() {
       removeMouseListener(rolloverHandler)
       super.updateUI()

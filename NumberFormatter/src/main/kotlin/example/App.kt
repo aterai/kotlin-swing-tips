@@ -49,6 +49,7 @@ private fun makeWarningSpinner(model: SpinnerNumberModel): JSpinner {
     ftf.formatterFactory = makeFormatterFactory(model)
     val dl = object : DocumentListener {
       private val errorBackground = Color(0xFF_C8_C8)
+
       override fun changedUpdate(e: DocumentEvent) {
         updateEditValid()
       }

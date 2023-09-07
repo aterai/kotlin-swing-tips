@@ -15,6 +15,7 @@ fun makeUI(): Component {
   val editor2 = object : JTextPane() {
     private val rect = Rectangle()
     private var fontSize = 0f
+
     override fun doLayout() {
       val f = .08f * SwingUtilities.calculateInnerArea(this, rect).width
       val fontSizeShouldChange = abs(fontSize - f) > 1.0e-1

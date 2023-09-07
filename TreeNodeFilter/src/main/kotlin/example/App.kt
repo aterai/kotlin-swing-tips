@@ -114,6 +114,7 @@ private data class FilterableNode(val label: String) {
 
 private class FilterableStatusUpdateListener : TreeModelListener {
   private var adjusting = false
+
   override fun treeNodesChanged(e: TreeModelEvent) {
     val model = e.source
     if (adjusting || model !is DefaultTreeModel) {
@@ -181,6 +182,7 @@ private class FilterableStatusUpdateListener : TreeModelListener {
 
 private class FilterTreeCellRenderer : DefaultTreeCellRenderer() {
   private val emptyLabel = JLabel()
+
   override fun getTreeCellRendererComponent(
     tree: JTree,
     value: Any?,

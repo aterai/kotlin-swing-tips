@@ -62,6 +62,7 @@ private class ComboTask : BackgroundTask() {
 private class ProgressCellRenderer<E> : ListCellRenderer<E> {
   private val renderer: ListCellRenderer<in E> = DefaultListCellRenderer()
   private val bar = JProgressBar()
+
   override fun getListCellRendererComponent(
     list: JList<out E>,
     value: E?,

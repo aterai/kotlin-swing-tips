@@ -50,6 +50,7 @@ private class HyperlinkHeaderCellRenderer : DefaultTableCellRenderer(), MouseInp
   )
   private val alphaZero = Color(0x0, true)
   private var col = -1
+
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,

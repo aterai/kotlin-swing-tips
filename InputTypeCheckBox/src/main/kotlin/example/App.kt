@@ -31,6 +31,7 @@ fun makeUI(): Component {
   val table = object : JTable(model) {
     private val checkBoxColumnIndex = 0
     private var handler: HeaderCheckBoxHandler? = null
+
     override fun updateUI() {
       setSelectionForeground(ColorUIResource(Color.RED))
       setSelectionBackground(ColorUIResource(Color.RED))

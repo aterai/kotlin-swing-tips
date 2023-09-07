@@ -119,6 +119,7 @@ private class DragScrollListener : MouseAdapter() {
   private val defCursor = Cursor.getDefaultCursor()
   private val hndCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
   private val pp = Point()
+
   override fun mouseDragged(e: MouseEvent) {
     val c = e.component
     val p = SwingUtilities.getUnwrappedParent(c)

@@ -45,6 +45,7 @@ fun makeUI(): Component {
 private class ScrollBackToTopIcon : Icon {
   private val rolloverColor = Color(0xAA_FF_AF_64.toInt(), true)
   private val arrowColor = Color(0xAA_64_64_64.toInt(), true)
+
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)

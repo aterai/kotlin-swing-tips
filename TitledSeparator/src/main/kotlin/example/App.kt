@@ -32,7 +32,6 @@ private class TitledSeparator(
   private val target: Color?,
   private val titlePosition: Int
 ) : JLabel() {
-
   constructor(title: String, titlePosition: Int) : this(
     title,
     null,
@@ -64,6 +63,7 @@ private class TitledSeparator(
     private var width = -1
     private var painter1: Paint? = null
     private var painter2: Paint? = null
+
     override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
       val w = c.width
       if (w != width || painter1 == null || painter2 == null) {

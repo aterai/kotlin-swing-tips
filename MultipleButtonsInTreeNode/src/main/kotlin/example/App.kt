@@ -46,6 +46,7 @@ private class ButtonPanel : JPanel() {
 
 private class ButtonCellRenderer : TreeCellRenderer {
   private val panel = ButtonPanel()
+
   override fun getTreeCellRendererComponent(
     tree: JTree,
     value: Any?,

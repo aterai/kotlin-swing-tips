@@ -46,6 +46,7 @@ fun makeUI(): Component {
 private class DisableInputLayerUI<V : Component> : LayerUI<V>() {
   private val emptyMouseAdapter = object : MouseAdapter() { /* do nothing listener */ }
   private var isBlocking = false
+
   fun setLocked(flag: Boolean) {
     firePropertyChange(CMD_REPAINT, isBlocking, flag)
     isBlocking = flag

@@ -104,6 +104,7 @@ private fun makeModel() = object : DefaultTableModel() {
 private abstract class AbstractTableCellSelectionListener : ListSelectionListener {
   private var prevRow = -1
   private var prevCol = -1
+
   protected fun updateRowColumnInfo(sr: Int, sc: Int): Boolean {
     val flg = prevRow == sr && prevCol == sc
     prevRow = sr

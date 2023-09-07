@@ -59,6 +59,7 @@ private class CopyOnSelectListener : MouseAdapter(), CaretListener, KeyListener 
   private var shiftActive = false
   private var dot = 0
   private var mark = 0
+
   override fun caretUpdate(e: CaretEvent) {
     if (!dragActive && !shiftActive) {
       fire(e.source)

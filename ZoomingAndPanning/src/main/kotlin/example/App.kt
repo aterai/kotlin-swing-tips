@@ -15,6 +15,7 @@ fun makeUI(): Component {
   val icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) } ?: MissingIcon()
   val p = object : JPanel(BorderLayout()) {
     var zoomAndPanHandler: ZoomAndPanHandler? = null
+
     override fun updateUI() {
       removeMouseListener(zoomAndPanHandler)
       removeMouseMotionListener(zoomAndPanHandler)

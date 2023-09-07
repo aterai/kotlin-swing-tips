@@ -47,6 +47,7 @@ private class TableHeaderPopupMenu : JPopupMenu() {
 
   private inner class SortAction(private val dir: SortOrder) : AbstractAction(dir.toString()) {
     private var index = -1
+
     fun setIndex(index: Int) {
       this.index = index
     }

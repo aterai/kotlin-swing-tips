@@ -70,6 +70,7 @@ private class CursorActionListener(
   private val frames: List<Cursor>
 ) : ActionListener {
   private var counter = 0
+
   override fun actionPerformed(e: ActionEvent) {
     comp.cursor = frames[counter]
     counter = (counter + 1) % frames.size

@@ -99,6 +99,7 @@ private open class TooltipList<E>(m: ListModel<E>?) : JList<E>(m) {
 
 private class TooltipListCellRenderer<E> : ListCellRenderer<E> {
   private val renderer: ListCellRenderer<in E> = DefaultListCellRenderer()
+
   override fun getListCellRendererComponent(
     list: JList<out E>,
     value: E?,

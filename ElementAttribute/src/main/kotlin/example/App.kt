@@ -80,6 +80,7 @@ private class CustomTooltipEditorPane : JEditorPane() {
     super.updateUI()
     listener = object : HyperlinkListener {
       private var tooltip: String? = null
+
       override fun hyperlinkUpdate(e: HyperlinkEvent) {
         (e.source as? JEditorPane)?.also { editor ->
           when (e.eventType) {

@@ -112,6 +112,7 @@ private class SortIconLayoutHeaderRenderer(private val component: Component) : T
   companion object {
     private const val ASCENDING = "Table.ascendingSortIcon"
     private const val DESCENDING = "Table.descendingSortIcon"
+
     fun getColumnSortOrder(table: JTable?, column: Int): SortOrder {
       var rv = SortOrder.UNSORTED
       if (table != null && table.rowSorter != null) {

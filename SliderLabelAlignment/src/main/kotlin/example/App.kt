@@ -65,6 +65,7 @@ private fun makeTitledPanel(title: String, c: Component): Component {
 private class SliderLabelLayerUI : LayerUI<JSlider>() {
   private val min = JLabel("Short")
   private val max = JLabel("Long")
+
   override fun paint(g: Graphics, c: JComponent) {
     super.paint(g, c)
     val s = (c as? JLayer<*>)?.view as? JSlider ?: return

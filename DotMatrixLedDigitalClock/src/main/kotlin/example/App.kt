@@ -154,6 +154,7 @@ private fun makeLedMatrixList(m: ListModel<Boolean>, d: Dimension) = object : JL
 
 private class LedDotIcon(private val led: Boolean, private val dim: Dimension) : Icon {
   private val on = Color(0x32_FF_AA)
+
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)

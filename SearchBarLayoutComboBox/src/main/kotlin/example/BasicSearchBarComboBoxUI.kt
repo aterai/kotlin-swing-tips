@@ -43,6 +43,7 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
     if (popupMenuListener == null) {
       popupMenuListener = object : PopupMenuListener {
         private var str: String? = null
+
         override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
           (e.source as? JComboBox<*>)?.also {
             str = it.editor.item.toString()

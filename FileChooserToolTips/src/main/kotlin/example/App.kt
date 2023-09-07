@@ -64,6 +64,7 @@ fun descendants(parent: Container): List<Component> = parent.components
 
 private class TooltipListCellRenderer<E> : ListCellRenderer<E> {
   private val renderer = DefaultListCellRenderer()
+
   override fun getListCellRendererComponent(
     list: JList<out E>,
     value: E?,
@@ -79,6 +80,7 @@ private class TooltipListCellRenderer<E> : ListCellRenderer<E> {
 
 private class TooltipTableCellRenderer : TableCellRenderer {
   private val renderer = DefaultTableCellRenderer()
+
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,

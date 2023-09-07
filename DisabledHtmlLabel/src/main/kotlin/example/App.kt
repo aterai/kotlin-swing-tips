@@ -62,6 +62,7 @@ private fun initTitledBorder(title: String, c: JComponent): Component {
 
 private class DisabledHtmlLabel(text: String?) : JLabel(text) {
   @Transient private var shadow: BufferedImage? = null
+
   override fun setEnabled(b: Boolean) {
     val key = if (b) "Label.foreground" else "Label.disabledForeground"
     foreground = UIManager.getColor(key)

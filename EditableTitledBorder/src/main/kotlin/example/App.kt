@@ -86,6 +86,7 @@ private class EditableTitledBorder(
   }
   private val glassPane: Container = object : JLabel() {
     private var listener: MouseListener? = null
+
     override fun updateUI() {
       super.updateUI()
       focusTraversalPolicy = object : DefaultFocusTraversalPolicy() {

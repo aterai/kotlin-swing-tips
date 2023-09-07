@@ -21,6 +21,7 @@ private val bottomRight = SideLabel(Side.SE)
 private val contentPanel = JPanel(BorderLayout())
 private val resizePanel = object : JPanel(BorderLayout()) {
   private val borderColor = Color(0x64_64_64)
+
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     val w = width
@@ -255,6 +256,7 @@ private class SideLabel(val side: Side) : JLabel() {
 
 private class ResizeWindowListener : MouseInputAdapter() {
   private val rect = Rectangle()
+
   override fun mousePressed(e: MouseEvent) {
     val p = SwingUtilities.getRoot(e.component)
     if (p is Window) {

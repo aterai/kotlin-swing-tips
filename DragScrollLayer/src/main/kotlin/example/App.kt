@@ -84,6 +84,7 @@ private class DragScrollListener : MouseInputAdapter() {
 
 private class DragScrollLayerUI : LayerUI<JScrollPane>() {
   private val pp = Point()
+
   override fun installUI(c: JComponent) {
     super.installUI(c)
     if (c is JLayer<*>) {

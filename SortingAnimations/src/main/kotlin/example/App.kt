@@ -196,6 +196,7 @@ private open class SortingTask(
   private val fay: Double
 ) : SwingWorker<String, Rectangle>() {
   private val repaintArea = Rectangle(rect)
+
   init {
     repaintArea.grow(5, 5)
   }

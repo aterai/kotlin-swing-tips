@@ -94,6 +94,7 @@ private class DnDList<E>(
 
 private class TabTitleDropTargetListener : DropTargetListener {
   private var targetTabIndex = -1
+
   override fun dropActionChanged(e: DropTargetDragEvent) {
     // repaint()
   }

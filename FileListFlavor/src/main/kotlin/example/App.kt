@@ -58,6 +58,7 @@ fun makeUI(): Component {
 
 private class FileModel : DefaultTableModel() {
   private var number = 0
+
   fun addPath(path: Path) {
     super.addRow(arrayOf(number++, path.fileName, path.toAbsolutePath()))
   }

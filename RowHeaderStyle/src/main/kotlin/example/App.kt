@@ -22,6 +22,7 @@ fun makeUI(): Component {
   }
   val table = object : JTable(model) {
     @Transient private var handler: RowHeaderRenderer? = null
+
     override fun updateUI() {
       getColumnModel().getColumn(0).cellRenderer = null
       removeMouseListener(handler)
@@ -45,6 +46,7 @@ fun makeUI(): Component {
 private class RowHeaderRenderer : MouseAdapter(), TableCellRenderer {
   private val renderer = JLabel()
   private var rollOverRowIndex = -1
+
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,

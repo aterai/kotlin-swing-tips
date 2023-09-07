@@ -45,6 +45,7 @@ private class SlideInNotification : PropertyChangeListener, HierarchyListener {
   private val dialog = JWindow()
   private val animator = Timer(DELAY, null)
   private var listener: ActionListener? = null
+
   fun startSlideIn(slideInAnimation: SlideInAnimation) {
     if (animator.isRunning) {
       return
@@ -110,6 +111,7 @@ private class SlideInNotification : PropertyChangeListener, HierarchyListener {
 
 private class DragWindowListener : MouseAdapter() {
   private val startPt = Point()
+
   override fun mousePressed(e: MouseEvent) {
     if (SwingUtilities.isLeftMouseButton(e)) {
       startPt.location = e.point

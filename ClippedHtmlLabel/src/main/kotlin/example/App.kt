@@ -15,6 +15,7 @@ private fun makeUrl(path: String): URL? = runCatching { URL(path) }.getOrNull()
 private fun makeTable(model: DefaultTableModel): JTable {
   val table = object : JTable(model) {
     private val evenColor = Color(0xFA_FA_FA)
+
     override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
       val c = super.prepareRenderer(tcr, row, column)
       c.foreground = foreground
@@ -99,6 +100,7 @@ private open class UrlRenderer : DefaultTableCellRenderer(), MouseListener, Mous
   private var viewRowIndex = -1
   private var viewColumnIndex = -1
   private var isRollover = false
+
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,

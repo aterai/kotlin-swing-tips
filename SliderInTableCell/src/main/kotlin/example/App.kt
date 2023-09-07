@@ -43,6 +43,7 @@ fun makeUI(): Component {
 
 private class SliderRenderer : TableCellRenderer {
   private val renderer = JSlider()
+
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,

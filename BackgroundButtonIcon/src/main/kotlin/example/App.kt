@@ -14,6 +14,7 @@ private fun makeButton(title: String, color: Color, first: Boolean): AbstractBut
   // https://java-swing-tips.blogspot.com/2008/11/rounded-corner-jbutton.html
   val b = object : JToggleButton(title) {
     private val icon = ArrowToggleButtonBarCellIcon()
+
     override fun contains(x: Int, y: Int) = icon.shape?.contains(Point(x, y)) == true
 
     override fun getPreferredSize() = Dimension(icon.iconWidth, icon.iconHeight)

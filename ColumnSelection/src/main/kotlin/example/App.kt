@@ -20,6 +20,7 @@ fun makeUI(): Component {
   }
   val table = object : JTable(model) {
     private val evenColor = Color(0xFA_FA_FA)
+
     override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int) =
       super.prepareRenderer(tcr, row, column).also {
         if (isCellSelected(row, column)) {

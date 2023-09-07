@@ -87,6 +87,7 @@ private fun makePanel(shape: Shape): Component {
 
 private class DragWindowListener : MouseAdapter() {
   private val startPt = Point()
+
   override fun mousePressed(e: MouseEvent) {
     if (SwingUtilities.isLeftMouseButton(e)) {
       startPt.location = e.point

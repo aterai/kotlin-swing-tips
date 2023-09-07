@@ -101,6 +101,7 @@ private data class CheckBoxNode(val text: String, val selected: Boolean, val ena
 private class CheckBoxNodeRenderer : TreeCellRenderer {
   private val checkBox = JCheckBox()
   private val tcr = DefaultTreeCellRenderer()
+
   override fun getTreeCellRendererComponent(
     tree: JTree,
     value: Any?,
@@ -127,6 +128,7 @@ private class CheckBoxNodeRenderer : TreeCellRenderer {
 private class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
   private val checkBox = object : JCheckBox() {
     private var handler: ActionListener? = null
+
     override fun updateUI() {
       removeActionListener(handler)
       super.updateUI()
@@ -166,6 +168,7 @@ private class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
 
 private class CheckBoxStatusUpdateListener : TreeModelListener {
   private var adjusting = false
+
   override fun treeNodesChanged(e: TreeModelEvent) {
     val model = e.source as? DefaultTreeModel
     if (model == null || adjusting) {

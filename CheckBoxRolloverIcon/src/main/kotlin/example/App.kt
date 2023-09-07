@@ -77,6 +77,7 @@ private fun getIconPainter(d: UIDefaults, status: String): Painter<JCheckBox>? {
 
 private class CheckBoxIcon : Icon {
   private val checkIcon = UIManager.getIcon("CheckBox.icon")
+
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     if (c is AbstractButton) {
       val g2 = g.create() as? Graphics2D ?: return

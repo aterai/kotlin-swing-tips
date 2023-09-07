@@ -12,6 +12,7 @@ private val check = JCheckBox("scroll tabs")
 fun makeUI(): Component {
   val tabbedPane = object : JTabbedPane(TOP, SCROLL_TAB_LAYOUT) {
     private var handler: MouseWheelListener? = null
+
     override fun updateUI() {
       removeMouseWheelListener(handler)
       super.updateUI()

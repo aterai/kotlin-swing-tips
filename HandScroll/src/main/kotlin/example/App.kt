@@ -17,6 +17,7 @@ fun makeUI(): Component {
 
   val viewport = object : JViewport() {
     private var isAdjusting = false
+
     override fun revalidate() {
       // if (!weightMixing && isAdjusting) {
       if (isAdjusting) {

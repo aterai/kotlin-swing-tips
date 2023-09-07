@@ -149,6 +149,7 @@ private class TableOfContentsTreeCellRenderer : DefaultTreeCellRenderer() {
 
 private class TableOfContentsTree(model: TreeModel?) : JTree(model) {
   private var isSynth = false
+
   override fun updateUI() {
     super.updateUI()
     border = BorderFactory.createTitledBorder("JTree#paintComponent(...)")

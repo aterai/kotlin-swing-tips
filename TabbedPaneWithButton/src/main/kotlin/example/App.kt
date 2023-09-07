@@ -18,6 +18,7 @@ fun makeUI(): Component {
     ?: UIManager.getIcon("html.missingImage")
   val button = object : JButton(icon) {
     private var handler: MouseListener? = null
+
     override fun updateUI() {
       removeMouseListener(handler)
       super.updateUI()
