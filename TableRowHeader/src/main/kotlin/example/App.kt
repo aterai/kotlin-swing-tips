@@ -210,7 +210,7 @@ private class RowDataModel(
   companion object {
     private val COLUMN_ARRAY = arrayOf(
       ColumnContext("Name", String::class.java, false),
-      ColumnContext("Comment", String::class.java, false)
+      ColumnContext("Comment", String::class.java, false),
     )
   }
 }

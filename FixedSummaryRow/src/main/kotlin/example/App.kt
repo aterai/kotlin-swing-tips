@@ -22,7 +22,7 @@ fun makeUI(): Component {
     arrayOf(1, -5),
     arrayOf(1, 0),
     arrayOf(1, 6),
-    arrayOf(Int.MAX_VALUE, Int.MAX_VALUE)
+    arrayOf(Int.MAX_VALUE, Int.MAX_VALUE),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = Number::class.java

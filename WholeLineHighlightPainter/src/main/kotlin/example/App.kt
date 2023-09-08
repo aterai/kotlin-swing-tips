@@ -24,7 +24,7 @@ fun makeUI(): Component {
   val editor0 = makeEditorPane("DefaultHighlightPainter")
   val caret0 = FocusCaret(
     DefaultHighlightPainter(Color(0xAA_CC_DD_FF.toInt(), true)),
-    DefaultHighlightPainter(Color(0xEE_EE_EE_EE.toInt(), true))
+    DefaultHighlightPainter(Color(0xEE_EE_EE_EE.toInt(), true)),
   )
   caret0.blinkRate = editor0.caret.blinkRate
   editor0.caret = caret0
@@ -32,7 +32,7 @@ fun makeUI(): Component {
   val editor1 = makeEditorPane("ParagraphMarkHighlightPainter")
   val caret1 = FocusCaret(
     ParagraphMarkHighlightPainter(Color(0xAA_CC_DD_FF.toInt(), true)),
-    ParagraphMarkHighlightPainter(Color(0xEE_EE_EE_EE.toInt(), true))
+    ParagraphMarkHighlightPainter(Color(0xEE_EE_EE_EE.toInt(), true)),
   )
   caret1.blinkRate = editor1.caret.blinkRate
   editor1.caret = caret1
@@ -40,7 +40,7 @@ fun makeUI(): Component {
   val editor2 = makeEditorPane("WholeLineHighlightPainter")
   val caret2 = FocusCaret(
     WholeLineHighlightPainter(Color(0xAA_CC_DD_FF.toInt(), true)),
-    WholeLineHighlightPainter(Color(0xEE_EE_EE_EE.toInt(), true))
+    WholeLineHighlightPainter(Color(0xEE_EE_EE_EE.toInt(), true)),
   )
   caret2.blinkRate = editor2.caret.blinkRate
   editor2.caret = caret2

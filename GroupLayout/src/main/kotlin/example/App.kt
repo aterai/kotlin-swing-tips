@@ -22,10 +22,10 @@ fun makeUI(): Component {
   layout.setHorizontalGroup(hgp)
   val vgp = layout.createSequentialGroup()
   vgp.addGroup(
-    layout.createParallelGroup(Alignment.BASELINE).addComponent(label1).addComponent(tf1)
+    layout.createParallelGroup(Alignment.BASELINE).addComponent(label1).addComponent(tf1),
   )
   vgp.addGroup(
-    layout.createParallelGroup(Alignment.BASELINE).addComponent(label2).addComponent(tf2)
+    layout.createParallelGroup(Alignment.BASELINE).addComponent(label2).addComponent(tf2),
   )
   layout.setVerticalGroup(vgp)
 

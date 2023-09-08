@@ -92,8 +92,8 @@ private class DisableLeftPressedLayerUI<V : Component> : LayerUI<V>() {
           e.yOnScreen,
           e.clickCount,
           e.isPopupTrigger,
-          MouseEvent.BUTTON3
-        )
+          MouseEvent.BUTTON3,
+        ),
       )
       e.consume()
     }

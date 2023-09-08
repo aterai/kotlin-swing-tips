@@ -109,7 +109,7 @@ fun main() {
     JFrame().apply {
       iconImages = listOf(
         makePreferredSizeImage(StarIcon(), 16, 16),
-        makePreferredSizeImage(StarIcon(16, 8, 5), 40, 40)
+        makePreferredSizeImage(StarIcon(16, 8, 5), 40, 40),
       )
       defaultCloseOperation = if (SystemTray.isSupported()) {
         WindowConstants.DISPOSE_ON_CLOSE

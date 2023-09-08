@@ -67,7 +67,7 @@ private fun makeExpandingTextArea2(): Component {
       foreground = UIManager.getColor("TextField.foreground")
       border = BorderFactory.createCompoundBorder(
         UIManager.getBorder("TextField.border"),
-        BorderFactory.createEmptyBorder(1, 1, 1, 1)
+        BorderFactory.createEmptyBorder(1, 1, 1, 1),
       )
       font = UIManager.getFont("TextArea.font")
     }

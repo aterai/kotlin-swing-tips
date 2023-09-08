@@ -63,7 +63,7 @@ private class ButtonCellRenderer : TreeCellRenderer {
       expanded,
       leaf,
       row,
-      hasFocus
+      hasFocus,
     )
     return panel.remakePanel(c)
   }
@@ -93,7 +93,7 @@ private class ButtonCellEditor : AbstractCellEditor(), TreeCellEditor {
       expanded,
       leaf,
       row,
-      true
+      true,
     )
     return panel.remakePanel(c)
   }
@@ -116,7 +116,7 @@ private class ButtonCellEditor : AbstractCellEditor(), TreeCellEditor {
         true,
         node.isLeaf,
         row,
-        true
+        true,
       )
       c.bounds = r
       c.setLocation(0, 0)

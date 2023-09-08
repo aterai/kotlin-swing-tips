@@ -60,7 +60,7 @@ private object BrowserLauncher {
     ClassNotFoundException::class,
     NoSuchMethodException::class,
     IllegalAccessException::class,
-    InvocationTargetException::class
+    InvocationTargetException::class,
   )
   private fun macOpenUrl(url: String) {
     val fileMgr = Class.forName("com.apple.eio.FileManager")

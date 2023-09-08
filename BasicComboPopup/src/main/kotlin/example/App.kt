@@ -17,7 +17,7 @@ fun makeUI(): Component {
 
   val model = arrayOf(
     "public", "protected", "private",
-    "final", "transient", "super", "this", "return", "class"
+    "final", "transient", "super", "this", "return", "class",
   )
   val combo = JComboBox(model)
 

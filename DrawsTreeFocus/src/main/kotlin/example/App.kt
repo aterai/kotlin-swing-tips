@@ -36,10 +36,10 @@ fun makeUI(): Component {
     override fun updateUI() {
       super.updateUI()
       fbaCheck.isSelected = UIManager.getBoolean(
-        TreeDraws.DRAWS_FOCUS_BORDER_AROUND_ICON.toString()
+        TreeDraws.DRAWS_FOCUS_BORDER_AROUND_ICON.toString(),
       )
       dfiCheck.isSelected = UIManager.getBoolean(
-        TreeDraws.DRAW_DASHED_FOCUS_INDICATOR.toString()
+        TreeDraws.DRAW_DASHED_FOCUS_INDICATOR.toString(),
       )
     }
   }
@@ -83,7 +83,7 @@ private object LookAndFeelUtils {
     ClassNotFoundException::class,
     InstantiationException::class,
     IllegalAccessException::class,
-    UnsupportedLookAndFeelException::class
+    UnsupportedLookAndFeelException::class,
   )
   private fun setLookAndFeel(newLookAndFeel: String) {
     val oldLookAndFeel = lookAndFeel

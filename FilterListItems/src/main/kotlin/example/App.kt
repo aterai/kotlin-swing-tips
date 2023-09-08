@@ -20,7 +20,7 @@ private val defaultModel = arrayOf(
   ListItem("example/wi0111-32.png"),
   ListItem("example/wi0122-32.png"),
   ListItem("example/wi0124-32.png"),
-  ListItem("example/wi0126-32.png")
+  ListItem("example/wi0126-32.png"),
 )
 private val model = DefaultListModel<ListItem>()
 private val list = object : JList<ListItem>(model) {

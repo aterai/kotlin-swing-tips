@@ -30,7 +30,7 @@ fun makeUI(): Component {
           expanded,
           leaf,
           row,
-          hasFocus
+          hasFocus,
         )
         if (c is JLabel && value == tree.model.root) {
           c.icon = icon0
@@ -63,7 +63,7 @@ fun makeUI(): Component {
           expanded,
           leaf,
           row,
-          hasFocus
+          hasFocus,
         )
         if (c is JLabel && value == tree.model.root) {
           c.icon = icon1

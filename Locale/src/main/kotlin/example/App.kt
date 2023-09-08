@@ -25,7 +25,7 @@ private val LOCALE_ARRAY = arrayOf(
   Locale.UK,
   Locale.US,
   Locale.CANADA,
-  Locale.CANADA_FRENCH
+  Locale.CANADA_FRENCH,
 )
 
 fun makeUI(): Component {

@@ -87,7 +87,7 @@ private class ImagePreview(fc: JFileChooser) : JComponent(), PropertyChangeListe
       val g2 = img.createGraphics()
       g2.setRenderingHint(
         RenderingHints.KEY_INTERPOLATION,
-        RenderingHints.VALUE_INTERPOLATION_BILINEAR
+        RenderingHints.VALUE_INTERPOLATION_BILINEAR,
       )
       g2.drawImage(tmpIcon.image, 0, 0, newW, newH, null)
       g2.dispose()
@@ -130,7 +130,7 @@ private object LookAndFeelUtils {
     ClassNotFoundException::class,
     InstantiationException::class,
     IllegalAccessException::class,
-    UnsupportedLookAndFeelException::class
+    UnsupportedLookAndFeelException::class,
   )
   private fun setLookAndFeel(newLookAndFeel: String) {
     val oldLookAndFeel = lookAndFeel

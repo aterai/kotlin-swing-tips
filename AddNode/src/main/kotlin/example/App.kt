@@ -63,7 +63,7 @@ private class TreePopupMenu : JPopupMenu() {
           textField,
           "edit",
           JOptionPane.OK_CANCEL_OPTION,
-          JOptionPane.PLAIN_MESSAGE
+          JOptionPane.PLAIN_MESSAGE,
         )
         if (ret == JOptionPane.OK_OPTION) {
           tree.model.valueForPathChanged(path, textField.text)

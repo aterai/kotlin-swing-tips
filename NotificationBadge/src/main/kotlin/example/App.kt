@@ -69,7 +69,7 @@ private open class BadgeLayerUI : LayerUI<BadgeLabel>() {
         viewRect,
         iconRect,
         textRect,
-        label.iconTextGap
+        label.iconTextGap,
       )
       val badge = getBadgeIcon(label.counter)
       val pt = getBadgeLocation(label.badgePosition, badge)
@@ -121,7 +121,7 @@ private class BadgeIconLayerUI : BadgeLayerUI() {
           iconWidth.toDouble(),
           iconHeight.toDouble(),
           5.0,
-          5.0
+          5.0,
         )
     }
 }

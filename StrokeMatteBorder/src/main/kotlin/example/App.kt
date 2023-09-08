@@ -30,7 +30,7 @@ fun makeLabelTable(row: Int, column: Int): Component {
   }
   p.border = BorderFactory.createCompoundBorder(
     BorderFactory.createEmptyBorder(15, 15, 15 + 1, 15 + 1),
-    StrokeMatteBorder(1, 1, 0, 0, dashedStroke, Color.RED)
+    StrokeMatteBorder(1, 1, 0, 0, dashedStroke, Color.RED),
   )
   return p
 }

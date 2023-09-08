@@ -14,7 +14,7 @@ fun makeUI(): Component {
     arrayOf(50, 100),
     arrayOf(100, 50),
     arrayOf(30, 20),
-    arrayOf(0, 100)
+    arrayOf(0, 100),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = Number::class.java

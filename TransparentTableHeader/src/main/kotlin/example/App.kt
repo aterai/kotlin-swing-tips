@@ -18,7 +18,7 @@ fun makeUI(): Component {
     arrayOf("aaa", 12, true),
     arrayOf("bbb", 5, false),
     arrayOf("CCC", 92, true),
-    arrayOf("DDD", 0, false)
+    arrayOf("DDD", 0, false),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun isCellEditable(row: Int, column: Int) = column == 2
@@ -118,7 +118,7 @@ private fun makeMissingImage(): BufferedImage {
 private class TransparentHeader : TableCellRenderer {
   private val border = BorderFactory.createCompoundBorder(
     BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
-    BorderFactory.createEmptyBorder(2, 2, 1, 2)
+    BorderFactory.createEmptyBorder(2, 2, 1, 2),
   )
   private val alphaZero = Color(0x0, true)
   private val cr = DefaultTableCellRenderer()

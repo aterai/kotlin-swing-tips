@@ -167,7 +167,7 @@ private class LinkViewRadioButtonUI : BasicRadioButtonUI() {
     val text = SwingUtilities.layoutCompoundLabel(
       b, c.getFontMetrics(c.font), b.text, null, b.verticalAlignment,
       b.horizontalAlignment, b.verticalTextPosition, b.horizontalTextPosition,
-      viewRect, iconRect, textRect, 0
+      viewRect, iconRect, textRect, 0,
     )
 
     val m = b.model
@@ -179,7 +179,7 @@ private class LinkViewRadioButtonUI : BasicRadioButtonUI() {
         viewRect.x,
         viewRect.y + viewRect.height,
         viewRect.x + viewRect.width,
-        viewRect.y + viewRect.height
+        viewRect.y + viewRect.height,
       )
     }
     (b.getClientProperty(BasicHTML.propertyKey) as? View)?.paint(g, textRect)

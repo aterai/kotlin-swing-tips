@@ -9,7 +9,7 @@ fun makeUI(): Component {
     "111",
     "222222",
     "333333333",
-    "444444444444"
+    "444444444444",
   )
   val m = DefaultListModel<String>()
   m.addElement(lm[0])

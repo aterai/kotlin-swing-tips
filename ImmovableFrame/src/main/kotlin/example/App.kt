@@ -47,7 +47,7 @@ private fun createMenuBar(): JMenuBar {
   menuItem.mnemonic = KeyEvent.VK_N
   menuItem.accelerator = KeyStroke.getKeyStroke(
     KeyEvent.VK_N,
-    InputEvent.ALT_DOWN_MASK
+    InputEvent.ALT_DOWN_MASK,
   )
   menuItem.actionCommand = "new"
   menuItem.addActionListener {

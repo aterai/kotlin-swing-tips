@@ -30,7 +30,7 @@ fun makeUI(): Component {
   val list = listOf(
     makeTestTabbedPane(JTabbedPane(SwingConstants.LEFT)),
     makeTestTabbedPane(tabbedPane),
-    makeTestTabbedPane(ClippedTitleTabbedPane(SwingConstants.LEFT))
+    makeTestTabbedPane(ClippedTitleTabbedPane(SwingConstants.LEFT)),
   )
 
   val p = JPanel(GridLayout(list.size, 1))
@@ -148,7 +148,7 @@ private class LeftAlignmentWindowsTabbedPaneUI : WindowsTabbedPaneUI() {
       tabRect,
       iconRect,
       textRect,
-      textIconGap
+      textIconGap,
     )
     tabPane.putClientProperty(html, null)
     textRect.translate(tabInsets.left + 2, 0)
@@ -192,7 +192,7 @@ private class LeftAlignmentTabbedPaneUI : MetalTabbedPaneUI() {
       tabRect,
       iconRect,
       textRect,
-      textIconGap
+      textIconGap,
     )
     tabPane.putClientProperty(html, null)
     textRect.translate(tabInsets.left + 2, 0)

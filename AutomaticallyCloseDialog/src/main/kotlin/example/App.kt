@@ -21,7 +21,7 @@ fun makeUI(): Component {
       label,
       title,
       JOptionPane.OK_CANCEL_OPTION,
-      JOptionPane.INFORMATION_MESSAGE
+      JOptionPane.INFORMATION_MESSAGE,
     )
     when (r) {
       JOptionPane.OK_OPTION -> textArea.append("OK\n")

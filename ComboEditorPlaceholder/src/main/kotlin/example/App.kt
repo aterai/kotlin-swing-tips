@@ -16,7 +16,7 @@ fun makeUI(): Component {
   val arrays = arrayOf(
     arrayOf("blue", "violet", "red", "yellow"),
     arrayOf("basketball", "soccer", "football", "hockey"),
-    arrayOf("hot dogs", "pizza", "ravioli", "bananas")
+    arrayOf("hot dogs", "pizza", "ravioli", "bananas"),
   )
   val combo2 = object : JComboBox<String>() {
     override fun updateUI() {

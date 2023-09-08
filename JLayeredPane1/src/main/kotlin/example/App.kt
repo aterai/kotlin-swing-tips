@@ -21,7 +21,7 @@ private val COLORS = intArrayOf(
   0xAA_FF_AA,
   0xFF_FF_AA,
   0xFF_AA_FF,
-  0xAA_FF_FF
+  0xAA_FF_FF,
 )
 
 fun makeUI(): Component {

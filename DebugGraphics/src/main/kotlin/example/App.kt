@@ -9,7 +9,7 @@ fun makeUI(): Component {
   val data = arrayOf(
     arrayOf("aaa", 12, true),
     arrayOf("bbb", 5, false),
-    arrayOf("ccc", 92, true)
+    arrayOf("ccc", 92, true),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass

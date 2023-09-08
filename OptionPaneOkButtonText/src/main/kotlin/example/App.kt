@@ -42,7 +42,7 @@ fun makeUI(): Component {
       JOptionPane.PLAIN_MESSAGE,
       null,
       options,
-      options[0]
+      options[0],
     )
   }
 

@@ -17,7 +17,7 @@ private val cube = listOf(
   Vertex(SIDE_LENGTH, -SIDE_LENGTH, SIDE_LENGTH),
   Vertex(SIDE_LENGTH, -SIDE_LENGTH, -SIDE_LENGTH),
   Vertex(-SIDE_LENGTH, -SIDE_LENGTH, -SIDE_LENGTH),
-  Vertex(-SIDE_LENGTH, -SIDE_LENGTH, SIDE_LENGTH)
+  Vertex(-SIDE_LENGTH, -SIDE_LENGTH, SIDE_LENGTH),
 )
 
 fun makeUI(): Component {

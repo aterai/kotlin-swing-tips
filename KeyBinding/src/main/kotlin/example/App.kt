@@ -35,13 +35,13 @@ private val components = arrayOf<JComponent>(
   JTree(),
   JEditorPane(),
   JTextArea(),
-  JTextField()
+  JTextField(),
 )
 private val componentChoices = JComboBox(components)
 private val focusTypes = listOf(
   JComponent.WHEN_FOCUSED,
   JComponent.WHEN_IN_FOCUSED_WINDOW,
-  JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT
+  JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT,
 )
 
 private fun loadBindingMap(focusType: Int, im: InputMap, am: ActionMap) {
@@ -142,7 +142,7 @@ private class BindingMapModel : DefaultTableModel() {
     private val COLUMN_ARRAY = arrayOf(
       ColumnContext("Focus", String::class.java, false),
       ColumnContext("ActionName", String::class.java, false),
-      ColumnContext("KeyDescription", String::class.java, false)
+      ColumnContext("KeyDescription", String::class.java, false),
     )
   }
 }

@@ -47,8 +47,8 @@ private class ScrollTabsAction(
             ActionEvent.ACTION_PERFORMED,
             null,
             e.getWhen(),
-            e.modifiers
-          )
+            e.modifiers,
+          ),
         )
       }
     }

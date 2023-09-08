@@ -94,7 +94,7 @@ private class SaveHandler(
       JOptionPane.INFORMATION_MESSAGE,
       null,
       options,
-      options[0]
+      options[0],
     )
     if (retValue != JOptionPane.CANCEL_OPTION) {
       frame.dispose()

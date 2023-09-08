@@ -71,7 +71,7 @@ private val activityIcons = listOf(
   ContributionIcon(color.brighter()),
   ContributionIcon(color),
   ContributionIcon(color.darker()),
-  ContributionIcon(color.darker().darker())
+  ContributionIcon(color.darker().darker()),
 )
 
 fun makeUI(): Component {

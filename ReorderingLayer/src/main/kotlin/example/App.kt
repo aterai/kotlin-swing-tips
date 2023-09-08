@@ -14,7 +14,7 @@ fun makeUI(): Component {
     JLabel("<html>000<br>00<br>00"),
     JButton("1"),
     JCheckBox("2"),
-    JTextField("3")
+    JTextField("3"),
   ).forEach {
     addDraggablePanel(box, it)
   }
@@ -31,7 +31,7 @@ private fun addDraggablePanel(parent: Container, c: Component) {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createCompoundBorder(
     BorderFactory.createEmptyBorder(5, 5, 5, 5),
-    BorderFactory.createLineBorder(Color.BLUE, 2)
+    BorderFactory.createLineBorder(Color.BLUE, 2),
   )
   p.add(l, BorderLayout.WEST)
   p.add(c)

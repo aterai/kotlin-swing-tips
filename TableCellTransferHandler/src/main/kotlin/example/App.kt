@@ -18,7 +18,7 @@ fun makeUI(): Component {
     arrayOf("ccc", ColorIcon(Color.BLUE), true),
     arrayOf("ddd", ColorIcon(Color.ORANGE), true),
     arrayOf("eee", ColorIcon(Color.PINK), false),
-    arrayOf("fff", ColorIcon(Color.CYAN), true)
+    arrayOf("fff", ColorIcon(Color.CYAN), true),
   )
   val tableModel = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = when (column) {

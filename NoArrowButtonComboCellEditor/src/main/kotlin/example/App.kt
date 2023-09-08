@@ -21,7 +21,7 @@ fun makeUI(): Component {
     arrayOf(LocalDateTime.now(zid), "aaa", true),
     arrayOf(LocalDateTime.now(zid), "bbb", false),
     arrayOf(LocalDateTime.now(zid), "CCC", true),
-    arrayOf(LocalDateTime.now(zid), "DDD", false)
+    arrayOf(LocalDateTime.now(zid), "DDD", false),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass

@@ -19,7 +19,7 @@ fun makeUI(): Component {
           expanded,
           isLeaf,
           row,
-          focused
+          focused,
         ).also {
           if (selected) {
             it.background = selectionBgc

@@ -58,7 +58,7 @@ private fun updateViewRect(c: JLabel) {
     viewRect,
     iconRect,
     textRect,
-    c.iconTextGap
+    c.iconTextGap,
   )
 }
 

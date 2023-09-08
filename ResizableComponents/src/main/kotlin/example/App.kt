@@ -108,49 +108,49 @@ private class DefaultResizableBorder : ResizableBorder, SwingConstants {
       Cursor.N_RESIZE_CURSOR,
       Function { r ->
         Point(r.x + r.width / 2 - SIZE / 2, r.y)
-      }
+      },
     ),
     SOUTH(
       Cursor.S_RESIZE_CURSOR,
       Function { r ->
         Point(r.x + r.width / 2 - SIZE / 2, r.y + r.height - SIZE)
-      }
+      },
     ),
     WEST(
       Cursor.W_RESIZE_CURSOR,
       Function { r ->
         Point(r.x, r.y + r.height / 2 - SIZE / 2)
-      }
+      },
     ),
     EAST(
       Cursor.E_RESIZE_CURSOR,
       Function { r ->
         Point(r.x + r.width - SIZE, r.y + r.height / 2 - SIZE / 2)
-      }
+      },
     ),
     NORTH_WEST(
       Cursor.NW_RESIZE_CURSOR,
       Function { r ->
         Point(r.x, r.y)
-      }
+      },
     ),
     NORTH_EAST(
       Cursor.NE_RESIZE_CURSOR,
       Function { r ->
         Point(r.x + r.width - SIZE, r.y)
-      }
+      },
     ),
     SOUTH_WEST(
       Cursor.SW_RESIZE_CURSOR,
       Function { r ->
         Point(r.x, r.y + r.height - SIZE)
-      }
+      },
     ),
     SOUTH_EAST(
       Cursor.SE_RESIZE_CURSOR,
       Function { r ->
         Point(r.x + r.width - SIZE, r.y + r.height - SIZE)
-      }
+      },
     );
 
     val cursor: Cursor = Cursor.getPredefinedCursor(cursor)
@@ -271,7 +271,7 @@ private enum class Directions(private val cursor: Int) {
       rect.x,
       rect.y - delta.y,
       rect.width,
-      rect.height + delta.y
+      rect.height + delta.y,
     )
   },
   SOUTH(Cursor.S_RESIZE_CURSOR) {
@@ -286,7 +286,7 @@ private enum class Directions(private val cursor: Int) {
       rect.x,
       rect.y,
       rect.width,
-      rect.height - delta.y
+      rect.height - delta.y,
     )
   },
   WEST(Cursor.W_RESIZE_CURSOR) {
@@ -301,7 +301,7 @@ private enum class Directions(private val cursor: Int) {
       rect.x - delta.x,
       rect.y,
       rect.width + delta.x,
-      rect.height
+      rect.height,
     )
   },
   EAST(Cursor.E_RESIZE_CURSOR) {
@@ -316,7 +316,7 @@ private enum class Directions(private val cursor: Int) {
       rect.x,
       rect.y,
       rect.width - delta.x,
-      rect.height
+      rect.height,
     )
   },
   NORTH_WEST(Cursor.NW_RESIZE_CURSOR) {
@@ -331,7 +331,7 @@ private enum class Directions(private val cursor: Int) {
       rect.x - delta.x,
       rect.y - delta.y,
       rect.width + delta.x,
-      rect.height + delta.y
+      rect.height + delta.y,
     )
   },
   NORTH_EAST(Cursor.NE_RESIZE_CURSOR) {
@@ -346,7 +346,7 @@ private enum class Directions(private val cursor: Int) {
       rect.x,
       rect.y - delta.y,
       rect.width - delta.x,
-      rect.height + delta.y
+      rect.height + delta.y,
     )
   },
   SOUTH_WEST(Cursor.SW_RESIZE_CURSOR) {
@@ -361,7 +361,7 @@ private enum class Directions(private val cursor: Int) {
       rect.x,
       rect.y,
       rect.width,
-      rect.height
+      rect.height,
     )
   },
   SOUTH_EAST(Cursor.SE_RESIZE_CURSOR) {
@@ -372,14 +372,14 @@ private enum class Directions(private val cursor: Int) {
       deltaY: Int
     ) = Point(
       getDeltaX(deltaX, parentBounds, startingBounds),
-      getDeltaY(deltaY, parentBounds, startingBounds)
+      getDeltaY(deltaY, parentBounds, startingBounds),
     )
 
     override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
       rect.x,
       rect.y,
       rect.width - delta.x,
-      rect.height - delta.y
+      rect.height - delta.y,
     )
   },
   MOVE(Cursor.MOVE_CURSOR) {
@@ -394,7 +394,7 @@ private enum class Directions(private val cursor: Int) {
       rect.x - delta.x,
       rect.y - delta.y,
       rect.width,
-      rect.height
+      rect.height,
     )
   };
 
@@ -417,7 +417,7 @@ private enum class Directions(private val cursor: Int) {
     private fun getDeltaX(dx: Int, startingBounds: Rectangle): Int {
       val left = minOf(
         MAX.width - startingBounds.width,
-        startingBounds.x
+        startingBounds.x,
       )
       return dx.coerceIn(MIN.width - startingBounds.width, left)
     }
@@ -425,7 +425,7 @@ private enum class Directions(private val cursor: Int) {
     private fun getDeltaX(dx: Int, parentBounds: Rectangle, startingBounds: Rectangle): Int {
       val right = maxOf(
         startingBounds.width - MAX.width,
-        startingBounds.x + startingBounds.width - parentBounds.width
+        startingBounds.x + startingBounds.width - parentBounds.width,
       )
       return dx.coerceIn(right, startingBounds.width - MIN.width)
     }
@@ -433,7 +433,7 @@ private enum class Directions(private val cursor: Int) {
     private fun getDeltaY(dy: Int, startingBounds: Rectangle): Int {
       val top = minOf(
         MAX.height - startingBounds.height,
-        startingBounds.y
+        startingBounds.y,
       )
       return dy.coerceIn(MIN.height - startingBounds.height, top)
     }
@@ -441,7 +441,7 @@ private enum class Directions(private val cursor: Int) {
     private fun getDeltaY(dy: Int, parentBounds: Rectangle, startingBounds: Rectangle): Int {
       val bottom = maxOf(
         startingBounds.height - MAX.height,
-        startingBounds.y + startingBounds.height - parentBounds.height
+        startingBounds.y + startingBounds.height - parentBounds.height,
       )
       return dy.coerceIn(bottom, startingBounds.height - MIN.height)
     }

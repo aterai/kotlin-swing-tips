@@ -47,7 +47,7 @@ private class DnDList<E>(
     DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(
       this,
       DnDConstants.ACTION_MOVE,
-      this
+      this,
     )
   }
 

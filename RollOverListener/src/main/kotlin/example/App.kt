@@ -55,7 +55,7 @@ private class RollOverList<E>(model: ListModel<E>) : JList<E>(model) {
       value,
       index,
       isSelected,
-      cellHasFocus
+      cellHasFocus,
     ).also {
       if (index == rollOverRowIndex) {
         it.background = rolloverBackground

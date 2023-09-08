@@ -44,7 +44,7 @@ private class TabThumbnailTabbedPane : JTabbedPane() {
       val g2 = image.createGraphics()
       g2.setRenderingHint(
         RenderingHints.KEY_INTERPOLATION,
-        RenderingHints.VALUE_INTERPOLATION_BILINEAR
+        RenderingHints.VALUE_INTERPOLATION_BILINEAR,
       )
       g2.scale(SCALE, SCALE)
       c.print(g2)
@@ -77,7 +77,7 @@ private class TabThumbnailTabbedPane : JTabbedPane() {
       p,
       "ToolTip.background",
       "ToolTip.foreground",
-      "ToolTip.font"
+      "ToolTip.font",
     )
     tip.layout = BorderLayout()
     tip.add(p)

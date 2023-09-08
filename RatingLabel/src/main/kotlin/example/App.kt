@@ -24,7 +24,7 @@ fun makeUI(): Component {
     makeStarImageIcon(ip, SelectedImageFilter(.5f, 1f, .5f)),
     makeStarImageIcon(ip, SelectedImageFilter(1f, .5f, 1f)),
     makeStarImageIcon(ip, SelectedImageFilter(.5f, .5f, 1f)),
-    makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, .5f))
+    makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, .5f)),
   )
   p.add(makeStarRatingPanel("gap=0", LevelBar(defaultIcon, list1, 0)))
 
@@ -33,7 +33,7 @@ fun makeUI(): Component {
     makeStarImageIcon(ip, SelectedImageFilter(0f, 1f, .2f)),
     makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, .2f)),
     makeStarImageIcon(ip, SelectedImageFilter(.8f, .4f, .2f)),
-    makeStarImageIcon(ip, SelectedImageFilter(1f, .1f, .1f))
+    makeStarImageIcon(ip, SelectedImageFilter(1f, .1f, .1f)),
   )
   val p2 = object : LevelBar(defaultIcon, list2, 1) {
     override fun repaintIcon(index: Int) {
@@ -50,7 +50,7 @@ fun makeUI(): Component {
     makeStarImageIcon(ip, SelectedImageFilter(.7f, .7f, 0f)),
     makeStarImageIcon(ip, SelectedImageFilter(.8f, .8f, 0f)),
     makeStarImageIcon(ip, SelectedImageFilter(.9f, .9f, 0f)),
-    makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, 0f))
+    makeStarImageIcon(ip, SelectedImageFilter(1f, 1f, 0f)),
   )
   p.add(makeStarRatingPanel("gap=2+2", LevelBar(defaultIcon, list3, 2)))
 

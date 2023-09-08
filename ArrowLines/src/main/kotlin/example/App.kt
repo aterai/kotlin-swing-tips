@@ -8,7 +8,7 @@ import javax.swing.*
 fun makeUI(): Component {
   val arrows = listOf(
     Arrow(Point(50, 50), Point(100, 150)),
-    Arrow(Point(250, 50), Point(150, 50))
+    Arrow(Point(250, 50), Point(150, 50)),
   )
   val p = object : JPanel() {
     override fun paintComponent(g: Graphics) {

@@ -237,7 +237,7 @@ private class Utf8ResourceBundleControl : ResourceBundle.Control() {
     if ("properties" == format) {
       val bundleName = toBundleName(
         requireNotNull(baseName) { "baseName must not be null" },
-        requireNotNull(locale) { "locale must not be null" }
+        requireNotNull(locale) { "locale must not be null" },
       )
       val resourceName = toResourceName(bundleName, format)
       var stream: InputStream? = null

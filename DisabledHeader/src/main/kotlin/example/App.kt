@@ -87,7 +87,7 @@ private class RowDataModel : SortableTableModel() {
     private val COLUMN_ARRAY = arrayOf(
       ColumnContext("No.", Number::class.java, false),
       ColumnContext("Name", String::class.java, true),
-      ColumnContext("Comment", String::class.java, true)
+      ColumnContext("Comment", String::class.java, true),
     )
   }
 }

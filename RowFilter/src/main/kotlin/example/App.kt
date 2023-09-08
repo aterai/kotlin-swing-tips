@@ -112,7 +112,7 @@ private class RowDataModel : DefaultTableModel() {
 
   fun getRowData(identifier: Int) = RowData(
     getValueAt(identifier, 1)?.toString() ?: "",
-    getValueAt(identifier, 2)?.toString() ?: ""
+    getValueAt(identifier, 2)?.toString() ?: "",
   )
 
   override fun isCellEditable(row: Int, col: Int) = COLUMN_ARRAY[col].isEditable
@@ -133,7 +133,7 @@ private class RowDataModel : DefaultTableModel() {
     private val COLUMN_ARRAY = arrayOf(
       ColumnContext("No.", Number::class.java, false),
       ColumnContext("Name", String::class.java, true),
-      ColumnContext("Comment", String::class.java, true)
+      ColumnContext("Comment", String::class.java, true),
     )
   }
 }

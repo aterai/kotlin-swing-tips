@@ -58,7 +58,7 @@ private fun makeExpansionPanelList() = listOf(
           bg.add(radio)
         }
     }
-  }
+  },
 )
 
 abstract class AbstractExpansionPanel(private val title: String) : JPanel(BorderLayout()) {

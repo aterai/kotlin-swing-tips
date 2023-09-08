@@ -19,7 +19,7 @@ import kotlin.math.abs
 fun makeUI(): Component {
   val clock = AnalogClock()
   val attr = mapOf<TextAttribute, Any>(
-    Pair(TextAttribute.TRACKING, TextAttribute.TRACKING_TIGHT)
+    Pair(TextAttribute.TRACKING, TextAttribute.TRACKING_TIGHT),
   )
   clock.font = clock.font.deriveFont(32f).deriveFont(attr)
 
@@ -67,7 +67,7 @@ private class AnalogClock : JPanel() {
     "8",
     "9",
     "10",
-    "11"
+    "11",
   )
   private var listener: HierarchyListener? = null
   private var time = LocalTime.now(ZoneId.systemDefault())

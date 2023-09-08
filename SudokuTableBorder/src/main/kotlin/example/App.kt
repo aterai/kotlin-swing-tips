@@ -20,7 +20,7 @@ fun makeUI(): Component {
     arrayOf(7, 0, 0, 0, 2, 0, 0, 0, 6),
     arrayOf(0, 6, 0, 0, 0, 0, 2, 8, 0),
     arrayOf(0, 0, 0, 4, 1, 9, 0, 0, 5),
-    arrayOf(0, 0, 0, 0, 8, 0, 0, 7, 9)
+    arrayOf(0, 0, 0, 0, 8, 0, 0, 7, 9),
   )
 
   val model = object : DefaultTableModel(data, columnNames) {
@@ -102,11 +102,11 @@ private class SudokuCellRenderer(src: Array<Array<Number>>) : DefaultTableCellRe
   private val b1 = BorderFactory.createMatteBorder(0, 0, BW2, BW2, Color.BLACK)
   private val b2 = BorderFactory.createCompoundBorder(
     BorderFactory.createMatteBorder(0, 0, BW2, 0, Color.BLACK),
-    BorderFactory.createMatteBorder(0, 0, 0, BW1, Color.GRAY)
+    BorderFactory.createMatteBorder(0, 0, 0, BW1, Color.GRAY),
   )
   private val b3 = BorderFactory.createCompoundBorder(
     BorderFactory.createMatteBorder(0, 0, 0, BW2, Color.BLACK),
-    BorderFactory.createMatteBorder(0, 0, BW1, 0, Color.GRAY)
+    BorderFactory.createMatteBorder(0, 0, BW1, 0, Color.GRAY),
   )
   private val mask = Array(src.size) { i -> Array(src[i].size) { j -> src[i][j] } }
 

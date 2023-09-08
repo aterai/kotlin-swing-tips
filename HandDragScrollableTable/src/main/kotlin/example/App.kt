@@ -51,7 +51,7 @@ private class DragScrollingListener(c: JComponent) : MouseAdapter() {
         if (abs(delta.x) > 0 || abs(delta.y) > 0) {
           delta.setLocation(
             (delta.x * GRAVITY).toInt(),
-            (delta.y * GRAVITY).toInt()
+            (delta.y * GRAVITY).toInt(),
           )
         } else {
           (e.source as? Timer)?.stop()

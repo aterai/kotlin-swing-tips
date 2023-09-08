@@ -15,7 +15,7 @@ fun initDisableIndex(set: MutableSet<Int>) {
         .map { it.trim() }
         .filter { it.isNotEmpty() }
         .map { it.toInt() }
-        .toSet()
+        .toSet(),
     )
   }.onFailure {
     Toolkit.getDefaultToolkit().beep()

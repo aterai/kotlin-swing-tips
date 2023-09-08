@@ -404,7 +404,7 @@ private class CompactListItemTransferHandler : ListItemTransferHandler() {
         (w - d.width) / 2,
         (h - d.height) / 2,
         d.width,
-        d.height
+        d.height,
       )
     }
     g2.dispose()

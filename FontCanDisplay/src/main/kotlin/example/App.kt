@@ -27,7 +27,7 @@ fun makeUI(): Component {
       it.name,
       it.psName,
       it.canDisplay(code),
-      it.createGlyphVector(frc, txt).visualBounds.isEmpty
+      it.createGlyphVector(frc, txt).visualBounds.isEmpty,
     )
   }.forEach { model.addRow(it) }
   table.selectionModel.addListSelectionListener { e ->

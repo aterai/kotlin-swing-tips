@@ -11,7 +11,7 @@ fun makeUI(): Component {
   val data = arrayOf(
     arrayOf("colors", makeModel("blue", "violet", "red", "yellow")),
     arrayOf("sports", makeModel("basketball", "soccer", "football", "hockey")),
-    arrayOf("food", makeModel("hot dogs", "pizza", "ravioli", "bananas"))
+    arrayOf("food", makeModel("hot dogs", "pizza", "ravioli", "bananas")),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) =

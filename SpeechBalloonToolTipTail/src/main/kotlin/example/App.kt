@@ -74,7 +74,7 @@ private fun makeTabbedPane(): JTabbedPane {
           label,
           "ToolTip.background",
           "ToolTip.foreground",
-          "ToolTip.font"
+          "ToolTip.font",
         )
         it.add(label)
         it.updateBalloonShape(getTabPlacement())
@@ -227,7 +227,7 @@ private object LookAndFeelUtils {
     ClassNotFoundException::class,
     InstantiationException::class,
     IllegalAccessException::class,
-    UnsupportedLookAndFeelException::class
+    UnsupportedLookAndFeelException::class,
   )
   private fun setLookAndFeel(newLookAndFeel: String) {
     val oldLookAndFeel = lookAndFeel

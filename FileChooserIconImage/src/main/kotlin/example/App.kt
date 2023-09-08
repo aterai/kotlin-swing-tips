@@ -45,7 +45,7 @@ private val IMAGE_LIST = listOf(
   makeImage(24, Color.PINK),
   makeImage(32, Color.ORANGE),
   makeImage(40, Color.CYAN),
-  makeImage(64, Color.MAGENTA)
+  makeImage(64, Color.MAGENTA),
 )
 
 fun makeImage(size: Int, color: Color): Image {

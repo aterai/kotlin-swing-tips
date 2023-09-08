@@ -35,14 +35,14 @@ private fun makeList() = listOf(
       listOf(
         JRadioButton("aa"),
         JRadioButton("bb"),
-        JRadioButton("cc", true)
+        JRadioButton("cc", true),
       ).forEach {
         p.add(it)
         bg.add(it)
       }
       return p
     }
-  }
+  },
 )
 
 fun makeUI(): Component {

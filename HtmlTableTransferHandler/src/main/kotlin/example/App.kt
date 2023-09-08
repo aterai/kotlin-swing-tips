@@ -31,7 +31,7 @@ fun makeUI(): Component {
     arrayOf<Any>("Integer", 12),
     arrayOf<Any>("Double", 3.45),
     arrayOf<Any>("Boolean", true),
-    arrayOf<Any>("Color", Color.RED)
+    arrayOf<Any>("Color", Color.RED),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
@@ -248,8 +248,8 @@ private class HtmlTableTransferHandler : TransferHandler() {
       is Date -> buf.append("  <td><time>").append(o.toString()).append("</time></td>")
       is Color -> buf.append(
         "  <td style='background-color:#%06X'>&nbsp;</td>%n".format(
-          o.rgb and 0xFF_FF_FF
-        )
+          o.rgb and 0xFF_FF_FF,
+        ),
       )
       else -> buf.append("  <td>").append(o?.toString() ?: "").append("</td>")
     }
@@ -322,16 +322,16 @@ private class BasicTransferable(
   private val htmlFlavors = arrayOf(
     DataFlavor("text/html;class=java.lang.String"),
     DataFlavor("text/html;class=java.io.Reader"),
-    DataFlavor("text/html;charset=unicode;class=java.io.InputStream")
+    DataFlavor("text/html;charset=unicode;class=java.io.InputStream"),
   )
   private val plainFlavors = arrayOf(
     DataFlavor("text/plain;class=java.lang.String"),
     DataFlavor("text/plain;class=java.io.Reader"),
-    DataFlavor("text/plain;charset=unicode;class=java.io.InputStream")
+    DataFlavor("text/plain;charset=unicode;class=java.io.InputStream"),
   )
   private val stringFlavors = arrayOf(
     DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + ";class=java.lang.String"),
-    DataFlavor.stringFlavor
+    DataFlavor.stringFlavor,
   )
   private val getRicherData get() = null
   private val richerFlavors: Array<DataFlavor> get() = arrayOf()

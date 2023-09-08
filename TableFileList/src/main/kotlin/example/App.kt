@@ -25,7 +25,7 @@ fun makeUI(): Component {
     arrayOf("3333333333.jpg", "123"),
     arrayOf("444444444444444444444444.mpg", "test"),
     arrayOf("5555555555555555", ""),
-    arrayOf("test1.jpg", "")
+    arrayOf("test1.jpg", ""),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass

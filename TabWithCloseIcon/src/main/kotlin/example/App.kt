@@ -110,7 +110,7 @@ private class CloseableTabIconHandler : MouseAdapter() {
             e.component, e.id + 1,
             System.currentTimeMillis(), e.modifiersEx,
             rec.x, rec.y,
-            e.clickCount, e.isPopupTrigger, e.button
+            e.clickCount, e.isPopupTrigger, e.button,
           )
           tabbedPane.dispatchEvent(event)
         }
@@ -221,7 +221,7 @@ private class CloseableWindowsTabbedPaneUI : WindowsTabbedPaneUI() {
       tabRect,
       iconRect,
       textRect,
-      textIconGap + 2
+      textIconGap + 2,
     )
     tabPane.putClientProperty(HTML, null)
     val xn = getTabLabelShiftX(tabPlacement, tabIndex, isSelected)
@@ -273,7 +273,7 @@ private class CloseableTabbedPaneUI : BasicTabbedPaneUI() {
       tabRect,
       iconRect,
       textRect,
-      textIconGap + 2
+      textIconGap + 2,
     )
     tabPane.putClientProperty(HTML, null)
     val xn = getTabLabelShiftX(tabPlacement, tabIndex, isSelected)

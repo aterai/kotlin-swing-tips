@@ -35,7 +35,7 @@ private class TitledSeparator(
   constructor(title: String, titlePosition: Int) : this(
     title,
     null,
-    titlePosition
+    titlePosition,
   )
 
   private fun updateBorder() {
@@ -44,7 +44,7 @@ private class TitledSeparator(
       BorderFactory.createMatteBorder(icon.iconHeight, 0, 0, 0, icon),
       title,
       TitledBorder.DEFAULT_JUSTIFICATION,
-      titlePosition
+      titlePosition,
     )
   }
 

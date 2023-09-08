@@ -73,8 +73,8 @@ private class TabNavigateAction(val tabs: JTabbedPane, val action: Action?) : Ab
             ActionEvent.ACTION_PERFORMED,
             null,
             e.getWhen(),
-            e.modifiers
-          )
+            e.modifiers,
+          ),
         )
       }
     }

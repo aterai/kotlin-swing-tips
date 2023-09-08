@@ -53,7 +53,7 @@ private class TextComponentMouseHandler(textArea: JTextComponent) : MouseAdapter
     DefaultEditorKit.selectWordAction,
     DefaultEditorKit.selectLineAction,
     DefaultEditorKit.selectParagraphAction,
-    DefaultEditorKit.selectAllAction
+    DefaultEditorKit.selectAllAction,
   )
 
   init {

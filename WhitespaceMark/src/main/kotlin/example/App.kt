@@ -153,7 +153,7 @@ private class WhitespaceLabelView(elem: Element) : LabelView(elem) {
       BasicStroke.JOIN_MITER,
       10f,
       floatArrayOf(1f),
-      0f
+      0f,
     )
   }
 }

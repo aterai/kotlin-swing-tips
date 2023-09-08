@@ -118,7 +118,7 @@ private class BasicComboPopup3(combo: JComboBox<*>) : BasicComboPopup(combo) {
             e.xOnScreen, e.yOnScreen,
             e.clickCount,
             e.isPopupTrigger,
-            MouseEvent.NOBUTTON
+            MouseEvent.NOBUTTON,
           )
         }
         super.processMouseEvent(ev)

@@ -78,7 +78,7 @@ private fun makeTable(): JTable {
   table.transferHandler = FileTransferHandler()
   table.setDefaultRenderer(
     Any::class.java,
-    FileIconTableCellRenderer(FileSystemView.getFileSystemView())
+    FileIconTableCellRenderer(FileSystemView.getFileSystemView()),
   )
   return table
 }

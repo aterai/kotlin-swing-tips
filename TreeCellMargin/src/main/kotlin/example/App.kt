@@ -192,7 +192,7 @@ private class CompoundTreeCellRenderer : DefaultTreeCellRenderer() {
       expanded,
       leaf,
       row,
-      hasFocus
+      hasFocus,
     )
     (c as? JLabel)?.also {
       text.text = it.text

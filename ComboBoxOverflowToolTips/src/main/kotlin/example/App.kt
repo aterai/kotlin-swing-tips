@@ -38,7 +38,7 @@ private fun <E> makeComboBox(model: ComboBoxModel<E>) = object : JComboBox<E>(mo
         value,
         index,
         isSelected,
-        cellHasFocus
+        cellHasFocus,
       )
       (c as? JComponent)?.also {
         val rect = SwingUtilities.calculateInnerArea(combo, null)

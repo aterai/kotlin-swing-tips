@@ -133,8 +133,8 @@ private class ToggleSwitchLayerUI : LayerUI<JSlider>() {
           e.xOnScreen, e.yOnScreen,
           e.clickCount,
           e.isPopupTrigger,
-          MouseEvent.BUTTON3
-        )
+          MouseEvent.BUTTON3,
+        ),
       )
       e.consume()
     } else if (e.id == MouseEvent.MOUSE_CLICKED && SwingUtilities.isLeftMouseButton(e)) {

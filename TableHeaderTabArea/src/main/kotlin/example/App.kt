@@ -208,7 +208,7 @@ private class BasicTabViewButtonUI : TabViewButtonUI() {
       viewRect,
       iconRect,
       textRect,
-      0
+      0,
     )
     g.color = c.background
     g.fillRect(0, 0, c.width, c.height)

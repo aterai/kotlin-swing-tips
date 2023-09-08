@@ -114,7 +114,7 @@ private class TooltipTableCellRenderer : TableCellRenderer {
       viewR,
       iconR,
       textR,
-      label.iconTextGap
+      label.iconTextGap,
     )
     return label.text != str
   }

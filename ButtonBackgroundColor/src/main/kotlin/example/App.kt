@@ -49,7 +49,7 @@ fun makeUI(): Component {
     button1,
     button2,
     button3,
-    JLayer(button4, ImageFilterLayerUI<Component>(ColorFilter()))
+    JLayer(button4, ImageFilterLayerUI<Component>(ColorFilter())),
   )
 
   return JPanel(BorderLayout()).also {
@@ -142,7 +142,7 @@ private object LookAndFeelUtils {
     ClassNotFoundException::class,
     InstantiationException::class,
     IllegalAccessException::class,
-    UnsupportedLookAndFeelException::class
+    UnsupportedLookAndFeelException::class,
   )
   private fun setLookAndFeel(newLookAndFeel: String) {
     val oldLookAndFeel = lookAndFeel

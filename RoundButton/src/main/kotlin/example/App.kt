@@ -95,7 +95,7 @@ open class RoundedCornerButton : JButton {
         width - 1 - FOCUS_STROKE * 2,
         height - 1 - FOCUS_STROKE * 2,
         ARC_WIDTH,
-        ARC_HEIGHT
+        ARC_HEIGHT,
       )
     }
   }
@@ -175,7 +175,7 @@ open class RoundButton : RoundedCornerButton {
         FOCUS_STROKE,
         FOCUS_STROKE,
         width - 1 - FOCUS_STROKE * 2,
-        height - 1 - FOCUS_STROKE * 2
+        height - 1 - FOCUS_STROKE * 2,
       )
     }
   }

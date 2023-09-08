@@ -23,7 +23,7 @@ private val data = arrayOf(
   arrayOf(true, 3, "EEE"),
   arrayOf(false, 6, "GGG"),
   arrayOf(true, 4, "FFF"),
-  arrayOf(false, 7, "HHH")
+  arrayOf(false, 7, "HHH"),
 )
 private val model = object : DefaultTableModel(data, columnNames) {
   override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass

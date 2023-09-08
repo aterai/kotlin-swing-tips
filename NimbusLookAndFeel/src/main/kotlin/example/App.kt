@@ -38,7 +38,7 @@ private object LookAndFeelUtils {
     ClassNotFoundException::class,
     InstantiationException::class,
     IllegalAccessException::class,
-    UnsupportedLookAndFeelException::class
+    UnsupportedLookAndFeelException::class,
   )
   private fun setLookAndFeel(newLookAndFeel: String) {
     val oldLookAndFeel = lookAndFeel

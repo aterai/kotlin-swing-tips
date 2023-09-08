@@ -39,7 +39,7 @@ fun makeUI(): Component {
           row,
           isExpanded,
           hasBeenExpanded,
-          isLeaf
+          isLeaf,
         )
 
         override fun paintHorizontalLine(

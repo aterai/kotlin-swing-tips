@@ -15,7 +15,7 @@ fun makeUI(): Component {
   val data = arrayOf(
     arrayOf("aaa", "JTextArea+JScrollPane\nCtrl-Enter: stopCellEditing"),
     arrayOf("bbb", "ccc"),
-    arrayOf("11112222", "333\n444\n555")
+    arrayOf("11112222", "333\n444\n555"),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass

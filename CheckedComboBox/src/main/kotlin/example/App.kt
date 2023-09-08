@@ -33,7 +33,7 @@ private fun makeModel(): ComboBoxModel<CheckableItem> {
     CheckableItem("111", false),
     CheckableItem("33333", true),
     CheckableItem("2222", true),
-    CheckableItem("c", false)
+    CheckableItem("c", false),
   )
   return DefaultComboBoxModel(m)
 }
@@ -93,7 +93,7 @@ private open class CheckedComboBox(
   protected fun initActionMap() {
     getInputMap(JComponent.WHEN_FOCUSED).put(
       KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0),
-      "checkbox-select"
+      "checkbox-select",
     )
     val action = object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {

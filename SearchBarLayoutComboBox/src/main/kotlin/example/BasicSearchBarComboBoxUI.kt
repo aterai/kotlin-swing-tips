@@ -100,7 +100,7 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
       it.setContentAreaFilled(false)
       val border = BorderFactory.createCompoundBorder(
         BorderFactory.createMatteBorder(0, 0, 0, 1, Color(0x7F_9D_B9)),
-        BorderFactory.createEmptyBorder(1, 1, 1, 1)
+        BorderFactory.createEmptyBorder(1, 1, 1, 1),
       )
       it.setBorder(border)
     }

@@ -55,7 +55,7 @@ private class MyInternalFrame : JInternalFrame(
   true,
   true,
   true,
-  true
+  true,
 ) {
   init {
     setSize(180, 100)

@@ -46,7 +46,7 @@ fun makeUI(): Component {
 private class HyperlinkHeaderCellRenderer : DefaultTableCellRenderer(), MouseInputListener {
   private val border = BorderFactory.createCompoundBorder(
     BorderFactory.createMatteBorder(0, 0, 1, 0, Color.GRAY),
-    BorderFactory.createEmptyBorder(4, 1, 3, 2)
+    BorderFactory.createEmptyBorder(4, 1, 3, 2),
   )
   private val alphaZero = Color(0x0, true)
   private var col = -1
@@ -115,7 +115,7 @@ private class HyperlinkHeaderCellRenderer : DefaultTableCellRenderer(), MouseInp
         viewRect,
         iconRect,
         textRect,
-        c.iconTextGap
+        c.iconTextGap,
       )
     }
     return textRect

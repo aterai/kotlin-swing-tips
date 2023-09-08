@@ -18,7 +18,7 @@ fun makeUI(): Component {
   listOf(
     "Copy24.gif", "Cut24.gif", "Paste24.gif",
     "Delete24.gif", "Undo24.gif", "Redo24.gif",
-    "Help24.gif", "Open24.gif", "Save24.gif"
+    "Help24.gif", "Open24.gif", "Save24.gif",
   ).map { createToolBarButton(it) }.forEach { toolBar.add(it) }
 
   return JPanel(BorderLayout()).also {

@@ -12,7 +12,7 @@ fun makeUI(): Component {
     ColorItem(Color.BLUE, "Blue"),
     ColorItem(Color.CYAN, "Cyan"),
     ColorItem(Color.ORANGE, "Orange"),
-    ColorItem(Color.MAGENTA, "Magenta")
+    ColorItem(Color.MAGENTA, "Magenta"),
   )
   val combo00 = JComboBox(model)
 
@@ -118,7 +118,7 @@ private class ComboHtmlRenderer : ListCellRenderer<ColorItem> {
     if (c is JLabel && value != null) {
       c.text = "<html><font color='#%06X'>%s".format(
         value.color.rgb and 0xFF_FF_FF,
-        value.description
+        value.description,
       )
     }
     c.background = if (isSelected) selectedBackground else list.background

@@ -69,7 +69,7 @@ private fun makeTablePanel(): Component {
     arrayOf("FFF", 19, true),
     arrayOf("fff", 6, false),
     arrayOf("GGG", 92, true),
-    arrayOf("ggg", 0, false)
+    arrayOf("ggg", 0, false),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int): Class<*> {

@@ -7,7 +7,7 @@ fun makeUI(): Component {
   val p1 = JPanel(GridBagLayout())
   val b1 = BorderFactory.createCompoundBorder(
     BorderFactory.createTitledBorder("GridBagLayout"),
-    BorderFactory.createMatteBorder(5, 10, 15, 20, Color.RED)
+    BorderFactory.createMatteBorder(5, 10, 15, 20, Color.RED),
   )
   p1.border = b1
   p1.add(JButton("GridBagLayout"))
@@ -15,7 +15,7 @@ fun makeUI(): Component {
   val p2 = JPanel(CenterLayout())
   val b2 = BorderFactory.createCompoundBorder(
     BorderFactory.createTitledBorder("CenterLayout"),
-    BorderFactory.createMatteBorder(5, 10, 15, 20, Color.GREEN)
+    BorderFactory.createMatteBorder(5, 10, 15, 20, Color.GREEN),
   )
   p2.border = b2
   p2.add(JButton("CenterLayout"))

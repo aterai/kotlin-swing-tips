@@ -33,7 +33,7 @@ private class CustomCellEditor(field: JTextField) : DefaultCellEditor(field) {
           r.width - BUTTON_WIDTH,
           0,
           BUTTON_WIDTH,
-          r.height
+          r.height,
         )
       }
     }

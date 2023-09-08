@@ -103,7 +103,7 @@ class RoundedCornerButtonUI : BasicButtonUI() {
         c.width - 1 - FOCUS_STROKE * 2,
         c.height - 1 - FOCUS_STROKE * 2,
         ARC,
-        ARC
+        ARC,
       )
     }
   }

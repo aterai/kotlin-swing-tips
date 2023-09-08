@@ -28,7 +28,7 @@ fun makeUI(): Component {
     JRadioButton("RadioButton1"),
     JRadioButton("RadioButton2"),
     t1,
-    t2
+    t2,
   ).forEach {
     bg.add(it)
     p.add(it)

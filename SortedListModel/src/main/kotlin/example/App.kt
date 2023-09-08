@@ -20,7 +20,7 @@ private val defaultModel = arrayOf(
   ListItem("pink", Color.PINK),
   ListItem("yellow", Color.YELLOW),
   ListItem("black", Color.BLACK),
-  ListItem("white", Color.WHITE)
+  ListItem("white", Color.WHITE),
 )
 private val model = DefaultListModel<ListItem>()
 private val list = object : JList<ListItem>(model) {

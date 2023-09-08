@@ -63,7 +63,7 @@ private class InternalFramePopupMenu : JPopupMenu() {
           field,
           cmd,
           JOptionPane.OK_CANCEL_OPTION,
-          JOptionPane.PLAIN_MESSAGE
+          JOptionPane.PLAIN_MESSAGE,
         )
         if (ret == JOptionPane.OK_OPTION) {
           renameInternalFrameTitle(frame, field.text.trim())

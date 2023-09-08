@@ -135,16 +135,16 @@ private class BasicTransferable(
   private val htmlFlavors = arrayOf(
     DataFlavor("text/html;class=java.lang.String"),
     DataFlavor("text/html;class=java.io.Reader"),
-    DataFlavor("text/html;charset=unicode;class=java.io.InputStream")
+    DataFlavor("text/html;charset=unicode;class=java.io.InputStream"),
   )
   private val plainFlavors = arrayOf(
     DataFlavor("text/plain;class=java.lang.String"),
     DataFlavor("text/plain;class=java.io.Reader"),
-    DataFlavor("text/plain;charset=unicode;class=java.io.InputStream")
+    DataFlavor("text/plain;charset=unicode;class=java.io.InputStream"),
   )
   private val stringFlavors = arrayOf(
     DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + ";class=java.lang.String"),
-    DataFlavor.stringFlavor
+    DataFlavor.stringFlavor,
   )
   private val isHtmlSupported = true
   private val isPlainSupported = true

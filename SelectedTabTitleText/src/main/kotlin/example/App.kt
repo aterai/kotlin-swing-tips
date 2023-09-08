@@ -17,7 +17,7 @@ fun makeUI(): Component {
     TabTitle("JTree", cl.getResource("example/wi0009-32.png")),
     TabTitle("JTextArea", cl.getResource("example/wi0054-32.png")),
     TabTitle("JTable", cl.getResource("example/wi0062-32.png")),
-    TabTitle("JSplitPane", cl.getResource("example/wi0063-32.png"))
+    TabTitle("JSplitPane", cl.getResource("example/wi0063-32.png")),
   )
   addTab(tabs, titles[0], JScrollPane(JTree()))
   addTab(tabs, titles[1], JScrollPane(JTextArea()))

@@ -39,7 +39,7 @@ fun makeUI(): Component {
     mapOf(
       "CellBounds" to list1,
       "ListCellRenderer" to list2,
-      "Default location" to list3
+      "Default location" to list3,
     ).forEach { (title, c) -> it.add(makeTitledPanel(title, c)) }
     it.preferredSize = Dimension(320, 240)
   }
@@ -134,7 +134,7 @@ private open class TooltipListCellRenderer<E> : ListCellRenderer<E> {
     value,
     index,
     isSelected,
-    cellHasFocus
+    cellHasFocus,
   ).also {
     val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
     if (it is JComponent && c is JViewport) {

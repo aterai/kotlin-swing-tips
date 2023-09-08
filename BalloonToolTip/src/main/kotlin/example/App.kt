@@ -129,8 +129,8 @@ private class BalloonToolTip : JToolTip() {
         w.toFloat(),
         (h - i.bottom - v).toFloat(),
         i.top.toFloat(),
-        i.top.toFloat()
-      )
+        i.top.toFloat(),
+      ),
     )
     area.add(Area(triangle))
     return area

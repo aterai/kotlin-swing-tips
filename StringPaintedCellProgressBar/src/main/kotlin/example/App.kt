@@ -28,7 +28,7 @@ private val table = object : JTable(model) {
             isSelected,
             hasFocus,
             row,
-            column
+            column,
           )
 
           current < lengthOfTask -> progress.also {
@@ -43,7 +43,7 @@ private val table = object : JTable(model) {
             isSelected,
             hasFocus,
             row,
-            column
+            column,
           )
         }
       } else {
@@ -53,7 +53,7 @@ private val table = object : JTable(model) {
           isSelected,
           hasFocus,
           row,
-          column
+          column,
         )
       }
     }

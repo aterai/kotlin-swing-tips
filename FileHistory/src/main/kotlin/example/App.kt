@@ -93,13 +93,13 @@ private class HistoryAction(private val path: Path) : AbstractAction() {
     val obj = arrayOf(
       "Open the file.\n",
       "This example do nothing\n",
-      " and move the file to the beginning of the history."
+      " and move the file to the beginning of the history.",
     )
     JOptionPane.showMessageDialog(
       c.rootPane,
       obj,
       VersionAction.APP_NAME,
-      JOptionPane.INFORMATION_MESSAGE
+      JOptionPane.INFORMATION_MESSAGE,
     )
     updateHistory(path)
   }
@@ -120,13 +120,13 @@ private class NewAction : AbstractAction("new") {
     val obj = arrayOf(
       "Create a new file.\n",
       "This example do nothing\n",
-      " and pretend to generate an appropriate file name and open it."
+      " and pretend to generate an appropriate file name and open it.",
     )
     JOptionPane.showMessageDialog(
       c.rootPane,
       obj,
       VersionAction.APP_NAME,
-      JOptionPane.INFORMATION_MESSAGE
+      JOptionPane.INFORMATION_MESSAGE,
     )
     val fileName = "C:/tmp/sample.jpg.$counter~"
     updateHistory(Paths.get(fileName))
@@ -329,7 +329,7 @@ private class Utf8ResourceBundleControl : ResourceBundle.Control() {
     if ("properties" == format) {
       val bundleName = toBundleName(
         requireNotNull(baseName) { "baseName must not be null" },
-        requireNotNull(locale) { "locale must not be null" }
+        requireNotNull(locale) { "locale must not be null" },
       )
       val resourceName = toResourceName(bundleName, format)
       var stream: InputStream? = null

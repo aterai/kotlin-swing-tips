@@ -10,7 +10,7 @@ fun makeUI(): Component {
     "wi0062-16.png",
     "wi0063-16.png",
     "wi0124-16.png",
-    "wi0126-16.png"
+    "wi0126-16.png",
   )
   val tabbedPane = JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT)
   val cl = Thread.currentThread().contextClassLoader

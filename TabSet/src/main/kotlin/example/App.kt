@@ -40,7 +40,7 @@ fun makeUI(): Component {
     TabStop(0f, TabStop.ALIGN_LEFT, TabStop.LEAD_NONE),
     TabStop(100f, TabStop.ALIGN_CENTER, TabStop.LEAD_NONE),
     TabStop(200f, TabStop.ALIGN_RIGHT, TabStop.LEAD_NONE),
-    TabStop(250f, TabStop.ALIGN_DECIMAL, TabStop.LEAD_NONE)
+    TabStop(250f, TabStop.ALIGN_DECIMAL, TabStop.LEAD_NONE),
   )
   val attr = textPane.getStyle(StyleContext.DEFAULT_STYLE)
   StyleConstants.setTabSet(attr, TabSet(array))

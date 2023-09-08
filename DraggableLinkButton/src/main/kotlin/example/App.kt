@@ -45,7 +45,7 @@ private class LinkViewButtonUI : BasicButtonUI() {
       c.verticalAlignment, c.horizontalAlignment,
       c.verticalTextPosition, c.horizontalTextPosition,
       viewRect, iconRect, textRect,
-      0
+      0,
     )
     if (c.isOpaque()) {
       g.color = c.background
@@ -58,7 +58,7 @@ private class LinkViewButtonUI : BasicButtonUI() {
         viewRect.x,
         viewRect.y + viewRect.height,
         viewRect.x + viewRect.width,
-        viewRect.y + viewRect.height
+        viewRect.y + viewRect.height,
       )
     }
     (c.getClientProperty(BasicHTML.propertyKey) as? View)?.paint(g, textRect)

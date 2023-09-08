@@ -16,7 +16,7 @@ fun makeUI(): Component {
     "12345",
     "67890",
     "55551",
-    "555512"
+    "555512",
   )
   val combo = makeComboBox(list)
   combo.isEditable = true

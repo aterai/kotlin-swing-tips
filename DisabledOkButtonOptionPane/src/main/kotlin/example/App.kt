@@ -36,7 +36,7 @@ private fun makeButton1(log: JTextArea): JButton {
       field1,
       "Input text",
       JOptionPane.OK_CANCEL_OPTION,
-      JOptionPane.PLAIN_MESSAGE
+      JOptionPane.PLAIN_MESSAGE,
     )
     if (ret == JOptionPane.OK_OPTION) {
       log.text = field1.text
@@ -52,7 +52,7 @@ private fun makeButton2(log: JTextArea): JButton {
   val i = enabledBorder.getBorderInsets(field2)
   val disabledBorder = BorderFactory.createCompoundBorder(
     BorderFactory.createLineBorder(Color.RED),
-    BorderFactory.createEmptyBorder(i.top - 1, i.left - 1, i.bottom - 1, i.right - 1)
+    BorderFactory.createEmptyBorder(i.top - 1, i.left - 1, i.bottom - 1, i.right - 1),
   )
   val disabledMessage = "Text is required to create ..."
   val label2 = JLabel(" ")
@@ -112,7 +112,7 @@ private fun makeButton2(log: JTextArea): JButton {
       panel2,
       "Input text",
       JOptionPane.OK_CANCEL_OPTION,
-      JOptionPane.PLAIN_MESSAGE
+      JOptionPane.PLAIN_MESSAGE,
     )
     if (ret == JOptionPane.OK_OPTION) {
       log.text = field2.text

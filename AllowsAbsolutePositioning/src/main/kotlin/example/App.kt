@@ -68,8 +68,8 @@ private class AbsolutePositioningWindowsScrollBarUI : WindowsScrollBarUI() {
             e.yOnScreen,
             e.clickCount,
             e.isPopupTrigger,
-            MouseEvent.BUTTON2
-          )
+            MouseEvent.BUTTON2,
+          ),
         )
       } else {
         super.mousePressed(e)
@@ -90,8 +90,8 @@ private class AbsolutePositioningBasicScrollBarUI : BasicScrollBarUI() {
             e.xOnScreen, e.yOnScreen,
             e.clickCount,
             e.isPopupTrigger,
-            MouseEvent.BUTTON2
-          )
+            MouseEvent.BUTTON2,
+          ),
         )
       } else {
         super.mousePressed(e)

@@ -59,7 +59,7 @@ private class ZoomAndPanePanel(private val icon: Icon) : JPanel() {
       0,
       EXTENT,
       MIN_ZOOM,
-      MAX_ZOOM + EXTENT
+      MAX_ZOOM + EXTENT,
     )
 
     override fun mouseWheelMoved(e: MouseWheelEvent) {

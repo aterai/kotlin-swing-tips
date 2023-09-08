@@ -9,7 +9,7 @@ fun makeUI(): Component {
   val columnNames = arrayOf("A", "B")
   val data = arrayOf(
     arrayOf("123456789012345678901234567890123456789012345678901234567890", "12345"),
-    arrayOf("bbb", "abcdefghijklmnopqrstuvwxyz----abcdefghijklmnopqrstuvwxyz")
+    arrayOf("bbb", "abcdefghijklmnopqrstuvwxyz----abcdefghijklmnopqrstuvwxyz"),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun isCellEditable(row: Int, column: Int) = false

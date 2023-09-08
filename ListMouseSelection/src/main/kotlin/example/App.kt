@@ -61,7 +61,7 @@ private class SingleMouseClickSelectList<E>(model: ListModel<E>) : JList<E>(mode
       e.xOnScreen, e.yOnScreen,
       e.clickCount,
       e.isPopupTrigger,
-      e.button
+      e.button,
     )
   }
 }

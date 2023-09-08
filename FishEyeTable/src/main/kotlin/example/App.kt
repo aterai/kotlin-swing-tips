@@ -63,7 +63,7 @@ private class FishEyeTable(m: TableModel) : JTable(m) {
       FishEyeRowContext(32, font32, color32),
       FishEyeRowContext(24, font24, color24),
       FishEyeRowContext(18, font18, color18),
-      FishEyeRowContext(12, font12, color12)
+      FishEyeRowContext(12, font12, color12),
     )
   }
 

@@ -124,8 +124,8 @@ private class AnimeListCellRenderer<E>(
         Ellipse2D.Double(SX + 3 * R, SY + 6 * R, 2 * R, 2 * R),
         Ellipse2D.Double(SX + 1 * R, SY + 5 * R, 2 * R, 2 * R),
         Ellipse2D.Double(SX + 0 * R, SY + 3 * R, 2 * R, 2 * R),
-        Ellipse2D.Double(SX + 1 * R, SY + 1 * R, 2 * R, 2 * R)
-      )
+        Ellipse2D.Double(SX + 1 * R, SY + 1 * R, 2 * R, 2 * R),
+      ),
     )
 
     override fun getPreferredSize() = Dimension(ICON_WIDTH + 2, ICON_HEIGHT)

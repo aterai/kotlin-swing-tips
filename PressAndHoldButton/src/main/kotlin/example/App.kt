@@ -52,7 +52,7 @@ private fun makeMenuList() = listOf(
   MenuContext("ORANGE", Color.ORANGE),
   MenuContext("PINK", Color.PINK),
   MenuContext("RED", Color.RED),
-  MenuContext("YELLOW", Color.YELLOW)
+  MenuContext("YELLOW", Color.YELLOW),
 )
 
 private fun makeMenuButton(m: MenuContext): AbstractButton {

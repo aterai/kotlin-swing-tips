@@ -14,7 +14,7 @@ fun makeUI(): Component {
     arrayOf("aaa", 12, true),
     arrayOf("bbb", 5, false),
     arrayOf("CCC", 92, true),
-    arrayOf("DDD", 0, false)
+    arrayOf("DDD", 0, false),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
@@ -42,7 +42,7 @@ fun makeUI(): Component {
 private class TableHeaderPopupMenu : JPopupMenu() {
   private val actions = listOf(
     SortAction(SortOrder.ASCENDING),
-    SortAction(SortOrder.DESCENDING)
+    SortAction(SortOrder.DESCENDING),
   )
 
   private inner class SortAction(private val dir: SortOrder) : AbstractAction(dir.toString()) {

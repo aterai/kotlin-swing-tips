@@ -17,7 +17,7 @@ private val data = arrayOf(
   arrayOf("bb", listOf(errorIcon, informationIcon, warningIcon, questionIcon)),
   arrayOf("cc", listOf(questionIcon, errorIcon, warningIcon)),
   arrayOf("dd", listOf(informationIcon)),
-  arrayOf("ee", listOf(warningIcon, questionIcon))
+  arrayOf("ee", listOf(warningIcon, questionIcon)),
 )
 private val model = object : DefaultTableModel(data, columnNames) {
   override fun getColumnClass(column: Int) = if (column == 1) {

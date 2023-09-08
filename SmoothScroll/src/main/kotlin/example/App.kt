@@ -111,7 +111,7 @@ private class LineNumberView(private val textArea: JTextArea) : JComponent() {
     val i = textArea.insets
     border = BorderFactory.createCompoundBorder(
       BorderFactory.createMatteBorder(0, 0, 0, 1, Color.GRAY),
-      BorderFactory.createEmptyBorder(i.top, MARGIN, i.bottom, MARGIN - 1)
+      BorderFactory.createEmptyBorder(i.top, MARGIN, i.bottom, MARGIN - 1),
     )
     isOpaque = true
     background = Color.WHITE

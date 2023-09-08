@@ -22,7 +22,7 @@ fun makeUI(): Component {
     UIManager.put("FileView.fullRowSelection", flg)
     val chooser = JFileChooser()
     chooser.actionMap["viewTypeDetails"]?.actionPerformed(
-      ActionEvent(e.source, e.id, "viewTypeDetails")
+      ActionEvent(e.source, e.id, "viewTypeDetails"),
     )
 
     descendants(chooser)
@@ -85,7 +85,7 @@ private object LookAndFeelUtils {
     ClassNotFoundException::class,
     InstantiationException::class,
     IllegalAccessException::class,
-    UnsupportedLookAndFeelException::class
+    UnsupportedLookAndFeelException::class,
   )
   private fun setLookAndFeel(newLookAndFeel: String) {
     val oldLookAndFeel = lookAndFeel

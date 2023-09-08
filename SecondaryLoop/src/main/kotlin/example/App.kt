@@ -24,7 +24,7 @@ fun makeUI(): Component {
       override fun run() {
         val str = runCatching { sleep(5000) }.fold(
           onSuccess = { "Done" },
-          onFailure = { "Interrupted" }
+          onFailure = { "Interrupted" },
         )
         append(str)
         setInputBlock(false)

@@ -17,7 +17,7 @@ fun makeUI(): Component {
     RoundButton("003.png", "003d.png", "003g.png"),
     RoundButton("001.png", "001d.png", "001g.png"),
     RoundButton("002.png", "002d.png", "002g.png"),
-    RoundButton("004.png", "004d.png", "004g.png")
+    RoundButton("004.png", "004d.png", "004g.png"),
   )
   // TEST: buttons = makeButtonArray2(getClass()) // Set ButtonUI
   buttons.forEach {

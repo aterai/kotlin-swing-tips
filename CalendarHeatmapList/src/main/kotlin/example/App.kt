@@ -17,7 +17,7 @@ private val activityIcons = listOf(
   ContributionIcon(color.brighter()),
   ContributionIcon(color),
   ContributionIcon(color.darker()),
-  ContributionIcon(color.darker().darker())
+  ContributionIcon(color.darker().darker()),
 )
 private val currentLocalDate = LocalDate.now(ZoneId.systemDefault())
 private val weekList = object : JList<Contribution>(CalendarViewListModel(currentLocalDate)) {

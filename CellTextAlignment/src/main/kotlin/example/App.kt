@@ -17,7 +17,7 @@ fun makeUI(): Component {
     arrayOf(12, "aaa", true),
     arrayOf(5, "bbb", false),
     arrayOf(92, "CCC", true),
-    arrayOf(0, "DDD", false)
+    arrayOf(0, "DDD", false),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass

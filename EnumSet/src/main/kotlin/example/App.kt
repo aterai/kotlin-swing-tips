@@ -15,7 +15,7 @@ fun makeUI(): Component {
   val data = arrayOf(
     arrayOf("owner", EnumSet.allOf(Permissions::class.java)),
     arrayOf("group", EnumSet.of(Permissions.READ)),
-    arrayOf("other", EnumSet.noneOf(Permissions::class.java))
+    arrayOf("other", EnumSet.noneOf(Permissions::class.java)),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass

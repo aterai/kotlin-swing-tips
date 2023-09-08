@@ -108,7 +108,7 @@ private fun makeInternalFrame(desktop: JDesktopPane): JInternalFrame {
     true,
     true,
     true,
-    true
+    true,
   )
   row += 1
   f.setSize(240, 120)

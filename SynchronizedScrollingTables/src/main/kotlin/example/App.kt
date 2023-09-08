@@ -15,7 +15,7 @@ fun makeUI(): Component {
     arrayOf(3, 33, ES, ES, "C"),
     arrayOf(4, 1, ES, ES, ES),
     arrayOf(5, 55, ES, ES, ES),
-    arrayOf(6, 66, ES, ES, ES)
+    arrayOf(6, 66, ES, ES, ES),
   )
   val columnNames = arrayOf("1", "2", "a", "b", "c")
   val model = object : DefaultTableModel(data, columnNames) {

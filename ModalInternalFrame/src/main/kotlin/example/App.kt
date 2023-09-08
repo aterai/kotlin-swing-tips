@@ -85,7 +85,7 @@ private class ModalInternalFrameAction1(label: String) : AbstractAction(label) {
       desktop,
       "information",
       "modal1",
-      JOptionPane.INFORMATION_MESSAGE
+      JOptionPane.INFORMATION_MESSAGE,
     )
     setMenuBarEnabled(true)
   }
@@ -112,7 +112,7 @@ private class ModalInternalFrameAction2(label: String) : AbstractAction(label) {
       desktop,
       "information",
       "modal2",
-      JOptionPane.INFORMATION_MESSAGE
+      JOptionPane.INFORMATION_MESSAGE,
     )
     glass.isVisible = false
     setMenuBarEnabled(true)

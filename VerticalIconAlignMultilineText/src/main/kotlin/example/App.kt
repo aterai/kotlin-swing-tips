@@ -96,7 +96,7 @@ private class WindowsVerticalAlignmentCheckBoxUI : WindowsCheckBoxUI() {
       c.verticalAlignment, c.horizontalAlignment,
       c.verticalTextPosition, c.horizontalTextPosition,
       viewRect, iconRect, textRect,
-      if (c.text != null) c.iconTextGap else 0
+      if (c.text != null) c.iconTextGap else 0,
     )
 
     // Paint the radio button
@@ -140,7 +140,7 @@ private class BasicVerticalAlignmentCheckBoxUI : BasicCheckBoxUI() {
       c.verticalAlignment, c.horizontalAlignment,
       c.verticalTextPosition, c.horizontalTextPosition,
       viewRect, iconRect, textRect,
-      if (c.text != null) c.iconTextGap else 0
+      if (c.text != null) c.iconTextGap else 0,
     )
 
     // Paint the radio button

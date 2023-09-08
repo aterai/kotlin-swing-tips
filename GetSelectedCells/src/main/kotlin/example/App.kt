@@ -24,7 +24,7 @@ fun makeUI(): Component {
     arrayOf(true, false, true, false, true, true, false, true, true),
     arrayOf(true, false, true, false, true, true, false, true, true),
     arrayOf(true, false, true, false, true, true, false, true, true),
-    arrayOf(true, false, true, false, true, true, false, true, true)
+    arrayOf(true, false, true, false, true, true, false, true, true),
   )
 
   val model = object : DefaultTableModel(data, columnNames) {

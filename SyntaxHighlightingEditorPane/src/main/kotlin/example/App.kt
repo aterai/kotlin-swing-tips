@@ -63,7 +63,7 @@ fun loadFile(path: String) {
     }
   }.fold(
     onSuccess = { prettify(engine, it) },
-    onFailure = { it.message }
+    onFailure = { it.message },
   )
   editor.text = "<pre>$html\n</pre>"
 }

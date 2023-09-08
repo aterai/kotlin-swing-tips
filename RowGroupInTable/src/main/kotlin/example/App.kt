@@ -76,7 +76,7 @@ private class RowDataRenderer : TableCellRenderer {
     isSelected,
     hasFocus,
     row,
-    column
+    column,
   ).also { c ->
     if (c is JLabel && value is RowData) {
       c.horizontalAlignment = SwingConstants.LEFT

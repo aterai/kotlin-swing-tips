@@ -131,7 +131,7 @@ private open class UrlRenderer : DefaultTableCellRenderer(), MouseListener, Mous
         CELL_RECT,
         ICON_RECT,
         TEXT_RECT,
-        c.iconTextGap
+        c.iconTextGap,
       )
       c.text = when {
         isRolloverCell(table, row, column) -> "<html><u><font color='blue'>$str"

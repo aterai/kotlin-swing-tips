@@ -15,7 +15,7 @@ private fun makeTrayIcon(p: JComponent): TrayIcon {
     makeImage("example/16x16.png"),
     makeImage("example/16x16l.png"),
     makeImage("example/16x16.png"),
-    makeImage("example/16x16r.png")
+    makeImage("example/16x16r.png"),
   )
 
   val item1 = MenuItem("Open:Frame")

@@ -43,7 +43,7 @@ private class SpinnerLayout : BorderLayout() {
   private val layoutMap = mapOf(
     "Editor" to "Center",
     "Next" to "East",
-    "Previous" to "West"
+    "Previous" to "West",
   )
 
   override fun addLayoutComponent(comp: Component, constraints: Any) {

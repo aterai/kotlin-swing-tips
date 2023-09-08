@@ -8,7 +8,7 @@ fun makeUI(): Component {
   val arrays = arrayOf(
     arrayOf("blue", "violet", "red", "yellow"),
     arrayOf("basketball", "soccer", "football", "hockey"),
-    arrayOf("hot dogs", "pizza", "ravioli", "bananas")
+    arrayOf("hot dogs", "pizza", "ravioli", "bananas"),
   )
   val combo1 = JComboBox(arrayOf("colors", "sports", "food"))
   val combo2 = JComboBox<String>()

@@ -12,7 +12,7 @@ val AUDITORY_CUES = arrayOf(
   "OptionPane.errorSound",
   "OptionPane.informationSound",
   "OptionPane.questionSound",
-  "OptionPane.warningSound"
+  "OptionPane.warningSound",
 )
 
 fun makeUI(): Component {
@@ -90,7 +90,7 @@ private object LookAndFeelUtils {
     ClassNotFoundException::class,
     InstantiationException::class,
     IllegalAccessException::class,
-    UnsupportedLookAndFeelException::class
+    UnsupportedLookAndFeelException::class,
   )
   private fun setLookAndFeel(newLookAndFeel: String) {
     val oldLookAndFeel = lookAndFeel

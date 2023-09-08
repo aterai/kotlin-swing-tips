@@ -69,7 +69,7 @@ private class BlurredButton(label: String) : JButton(label) {
     private val DATA = floatArrayOf(
       .05f, .05f, .05f,
       .05f, .60f, .05f,
-      .05f, .05f, .05f
+      .05f, .05f, .05f,
     )
     private val CONVOLVE_OP = ConvolveOp(Kernel(3, 3, DATA))
   }
@@ -99,7 +99,7 @@ private class BlurButton(label: String) : JButton(label) {
     private val DATA = floatArrayOf(
       .05f, .05f, .05f,
       .05f, .60f, .05f,
-      .05f, .05f, .05f
+      .05f, .05f, .05f,
     )
     private val CONVOLVE_OP = ConvolveOp(Kernel(3, 3, DATA), ConvolveOp.EDGE_NO_OP, null)
   }
@@ -130,7 +130,7 @@ private class BlurLayerUI<V : AbstractButton?> : LayerUI<V>() {
     private val DATA = floatArrayOf(
       .05f, .05f, .05f,
       .05f, .60f, .05f,
-      .05f, .05f, .05f
+      .05f, .05f, .05f,
     )
     private val CONVOLVE_OP = ConvolveOp(Kernel(3, 3, DATA), ConvolveOp.EDGE_NO_OP, null)
   }
@@ -163,7 +163,7 @@ private object LookAndFeelUtils {
     ClassNotFoundException::class,
     InstantiationException::class,
     IllegalAccessException::class,
-    UnsupportedLookAndFeelException::class
+    UnsupportedLookAndFeelException::class,
   )
   private fun setLookAndFeel(newLookAndFeel: String) {
     val oldLookAndFeel = lookAndFeel

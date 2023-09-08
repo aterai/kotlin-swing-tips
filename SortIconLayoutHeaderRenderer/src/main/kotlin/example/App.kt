@@ -17,7 +17,7 @@ fun makeUI(): Component {
     arrayOf("aaa", "1%", "1.6MB", "0MB/S"),
     arrayOf("bbb", "1%", "2.4MB", "3MB/S"),
     arrayOf("ccc", "2%", "0.3MB", "1MB/S"),
-    arrayOf("ddd", "3%", "0.5MB", "2MB/S")
+    arrayOf("ddd", "3%", "0.5MB", "2MB/S"),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = String::class.java
@@ -171,7 +171,7 @@ private object LookAndFeelUtils {
     ClassNotFoundException::class,
     InstantiationException::class,
     IllegalAccessException::class,
-    UnsupportedLookAndFeelException::class
+    UnsupportedLookAndFeelException::class,
   )
   private fun setLookAndFeel(newLookAndFeel: String) {
     val oldLookAndFeel = lookAndFeel

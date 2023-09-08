@@ -16,7 +16,7 @@ fun makeUI(): Component {
     "<html><font color='black'>Wednesday</font> <font color='gray'>(Wed.)",
     "<html><font color='black'>Thursday</font> <font color='gray'>(Thu.)",
     "<html><font color='black'>Friday</font> <font color='gray'>(Fri.)",
-    "<html><font color='blue'>Saturday</font> <font color='gray'>(Sat.)"
+    "<html><font color='blue'>Saturday</font> <font color='gray'>(Sat.)",
   )
   val p1 = JPanel(BorderLayout(5, 5))
   p1.add(JSpinner(SpinnerListModel(items)))

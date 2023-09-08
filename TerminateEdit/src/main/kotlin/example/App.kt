@@ -16,7 +16,7 @@ private fun makeTable(): JTable {
     arrayOf("aaa", 12),
     arrayOf("bbb", 5),
     arrayOf("CCC", 92),
-    arrayOf("DDD", 0)
+    arrayOf("DDD", 0),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass

@@ -60,11 +60,11 @@ private fun makeCmp1(): Component {
   centerConstraints.height = height
   centerConstraints.setConstraint(
     SpringLayout.WEST,
-    leftConstraints.getConstraint(SpringLayout.EAST)
+    leftConstraints.getConstraint(SpringLayout.EAST),
   )
   rightConstraints.setConstraint(
     SpringLayout.WEST,
-    centerConstraints.getConstraint(SpringLayout.EAST)
+    centerConstraints.getConstraint(SpringLayout.EAST),
   )
   layout.putConstraint(SpringLayout.EAST, panel, 0, SpringLayout.EAST, rsp)
 

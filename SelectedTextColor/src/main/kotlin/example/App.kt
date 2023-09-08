@@ -77,7 +77,7 @@ fun loadFile(path: String) {
     }
   }.fold(
     onSuccess = { prettify(engine, it) },
-    onFailure = { it.message }
+    onFailure = { it.message },
   )
   editor1.text = "<pre>$html\n</pre>"
   editor2.text = "<pre>$html\n</pre>"

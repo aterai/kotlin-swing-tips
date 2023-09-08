@@ -115,7 +115,7 @@ private class DnDTabbedPane : JTabbedPane() {
     DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(
       this,
       DnDConstants.ACTION_COPY_OR_MOVE,
-      TabDragGestureListener()
+      TabDragGestureListener(),
     )
   }
 

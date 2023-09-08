@@ -269,7 +269,7 @@ private class TabButton : JToggleButton() {
   private val emptyBorder = BorderFactory.createEmptyBorder(2, 4, 4, 4)
   private val selectedBorder = BorderFactory.createCompoundBorder(
     BorderFactory.createMatteBorder(0, 0, 3, 0, Color(0xFA_00_AA_FF.toInt(), true)),
-    BorderFactory.createEmptyBorder(2, 4, 1, 4)
+    BorderFactory.createEmptyBorder(2, 4, 1, 4),
   )
   private val pressedColor = Color(32, 32, 32)
   private val selectedColor = Color(48, 32, 32)
@@ -464,7 +464,7 @@ open class ClippedTitleTabbedPane : JTabbedPane() {
       tabAreaInsets.top.coerceAtLeast(tih),
       tabAreaInsets.left,
       tabAreaInsets.bottom,
-      tabAreaInsets.left + buttonSize
+      tabAreaInsets.left + buttonSize,
     )
     UIManager.put(key, ins)
     super.updateUI() // reinstall

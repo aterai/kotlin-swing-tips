@@ -9,7 +9,7 @@ fun makeUI(): Component {
   val icons = arrayOf(
     cl.getResource("example/wi0062-16.png"),
     cl.getResource("example/wi0063-16.png"),
-    cl.getResource("example/wi0064-16.png")
+    cl.getResource("example/wi0064-16.png"),
   )
   val columnNames = arrayOf("Column1", "Column2", "Column3")
   val table = JTable(DefaultTableModel(columnNames, 8))
@@ -59,7 +59,7 @@ private object LookAndFeelUtils {
     ClassNotFoundException::class,
     InstantiationException::class,
     IllegalAccessException::class,
-    UnsupportedLookAndFeelException::class
+    UnsupportedLookAndFeelException::class,
   )
   private fun setLookAndFeel(newLookAndFeel: String) {
     val oldLookAndFeel = lookAndFeel

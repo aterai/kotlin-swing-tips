@@ -10,7 +10,7 @@ fun makeUI(): Component {
     "wi0009-16.png", "wi0054-16.png", "wi0062-16.png",
     "wi0063-16.png", "wi0064-16.png", "wi0096-16.png",
     "wi0111-16.png", "wi0122-16.png", "wi0124-16.png",
-    "wi0126-16.png"
+    "wi0126-16.png",
   ).map { makeIcon(it) }
   val slider1 = JSlider(SwingConstants.VERTICAL, 0, list1.size - 1, 0)
   slider1.snapToTicks = true

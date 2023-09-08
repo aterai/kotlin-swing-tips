@@ -19,7 +19,7 @@ private val data = arrayOf(
   arrayOf("ccc bbb aaa bbb aae abe", "xxx"),
   arrayOf("ddd aaa bbb bbb", "cc bb aa"),
   arrayOf("cc cc bb bb aaa bb bb e", "xxx"),
-  arrayOf("ddd aaa b bb bb", "cc bb aa")
+  arrayOf("ddd aaa b bb bb", "cc bb aa"),
 )
 private val model = object : DefaultTableModel(data, columnNames) {
   override fun getColumnClass(column: Int) = String::class.java

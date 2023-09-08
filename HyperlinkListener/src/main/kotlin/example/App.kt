@@ -120,7 +120,7 @@ private class BasicLinkViewButtonUI : LinkViewButtonUI() {
       viewRect,
       iconRect,
       textRect,
-      0
+      0,
     )
 
     if (c.isOpaque()) {
@@ -134,7 +134,7 @@ private class BasicLinkViewButtonUI : LinkViewButtonUI() {
         viewRect.x,
         viewRect.y + viewRect.height,
         viewRect.x + viewRect.width,
-        viewRect.y + viewRect.height
+        viewRect.y + viewRect.height,
       )
     }
 

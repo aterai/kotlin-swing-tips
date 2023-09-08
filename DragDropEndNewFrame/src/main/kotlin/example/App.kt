@@ -106,7 +106,7 @@ private class DnDTabbedPane : JTabbedPane() {
     DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(
       this,
       DnDConstants.ACTION_COPY_OR_MOVE,
-      TabDragGestureListener()
+      TabDragGestureListener(),
     )
   }
 
@@ -262,7 +262,7 @@ private class TabTransferable(private val tabbedPane: Component) : Transferable 
   override fun getTransferDataFlavors(): Array<DataFlavor> {
     return arrayOf(
       DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "test"),
-      DataFlavor.javaFileListFlavor
+      DataFlavor.javaFileListFlavor,
     )
   }
 

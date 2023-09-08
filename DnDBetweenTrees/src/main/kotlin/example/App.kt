@@ -90,7 +90,7 @@ private class TreeTransferHandler : TransferHandler() {
         model.insertNodeInto(
           deepCopyTreeNode(it, clone),
           parent,
-          idx.incrementAndGet()
+          idx.incrementAndGet(),
         )
       }
       return true

@@ -13,7 +13,7 @@ fun makeUI(): Component {
 
   val combo = JComboBox<Icon>()
   combo.model = DefaultComboBoxModel(
-    arrayOf(ImageIcon(url1), makeImageIcon(url2, combo, 1))
+    arrayOf(ImageIcon(url1), makeImageIcon(url2, combo, 1)),
   )
 
   val p = JPanel(GridLayout(4, 1, 5, 5))

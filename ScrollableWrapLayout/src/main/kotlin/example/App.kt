@@ -23,7 +23,7 @@ private fun makePanel(box: JPanel): Component {
     ListItem("pink", ColorIcon(Color.PINK)),
     ListItem("yellow", ColorIcon(Color.YELLOW)),
     ListItem("black", ColorIcon(Color.BLACK)),
-    ListItem("white", ColorIcon(Color.WHITE))
+    ListItem("white", ColorIcon(Color.WHITE)),
   ).forEach {
     val button = JButton(it.icon)
     val label = JLabel(it.title, SwingConstants.CENTER)

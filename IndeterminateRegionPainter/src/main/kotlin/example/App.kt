@@ -144,7 +144,7 @@ private class IndeterminateRegionPainter : AbstractRegionPainter() {
       decodeAnchorX(.21111111f, 0f).toDouble(),
       decodeAnchorY(1f, -2f).toDouble(),
       decodeX(.21111111f).toDouble(),
-      decodeY(1f).toDouble()
+      decodeY(1f).toDouble(),
     )
     path.curveTo(
       decodeAnchorX(.21111111f, 0f).toDouble(),
@@ -152,7 +152,7 @@ private class IndeterminateRegionPainter : AbstractRegionPainter() {
       decodeAnchorX(.21111111f, 0f).toDouble(),
       decodeAnchorY(2f, -2f).toDouble(),
       decodeX(.21111111f).toDouble(),
-      decodeY(2f).toDouble()
+      decodeY(2f).toDouble(),
     )
     path.curveTo(
       decodeAnchorX(.21111111f, 0f).toDouble(),
@@ -160,7 +160,7 @@ private class IndeterminateRegionPainter : AbstractRegionPainter() {
       decodeAnchorX(1f, -2f).toDouble(),
       decodeAnchorY(2.8222225f, 0f).toDouble(),
       decodeX(1f).toDouble(),
-      decodeY(2.8222225f).toDouble()
+      decodeY(2.8222225f).toDouble(),
     )
     path.curveTo(
       decodeAnchorX(1f, 2f).toDouble(),
@@ -168,7 +168,7 @@ private class IndeterminateRegionPainter : AbstractRegionPainter() {
       decodeAnchorX(3f, 0f).toDouble(),
       decodeAnchorY(2.8222225f, 0f).toDouble(),
       decodeX(3f).toDouble(),
-      decodeY(2.8222225f).toDouble()
+      decodeY(2.8222225f).toDouble(),
     )
     path.lineTo(decodeX(3f).toDouble(), decodeY(2.3333333f).toDouble())
     path.lineTo(decodeX(.6666667f).toDouble(), decodeY(2.3333333f).toDouble())
@@ -181,7 +181,7 @@ private class IndeterminateRegionPainter : AbstractRegionPainter() {
       decodeAnchorX(1f, 2f).toDouble(),
       decodeAnchorY(.21111111f, 0f).toDouble(),
       decodeX(1f).toDouble(),
-      decodeY(.21111111f).toDouble()
+      decodeY(.21111111f).toDouble(),
     )
     path.closePath()
     return path
@@ -192,7 +192,7 @@ private class IndeterminateRegionPainter : AbstractRegionPainter() {
       decodeX(.4f).toDouble(),
       decodeY(.4f).toDouble(),
       (decodeX(3f) - decodeX(.4f)).toDouble(),
-      (decodeY(2.6f) - decodeY(.4f)).toDouble()
+      (decodeY(2.6f) - decodeY(.4f)).toDouble(),
     )
   }
 
@@ -201,7 +201,7 @@ private class IndeterminateRegionPainter : AbstractRegionPainter() {
       decodeX(.6f).toDouble(),
       decodeY(.6f).toDouble(),
       (decodeX(2.8f) - decodeX(.6f)).toDouble(),
-      (decodeY(2.4f) - decodeY(.6f)).toDouble()
+      (decodeY(2.4f) - decodeY(.6f)).toDouble(),
     )
   }
 
@@ -225,7 +225,7 @@ private class IndeterminateRegionPainter : AbstractRegionPainter() {
         .6967742f,
         .9032258f,
         .9241935f,
-        .9451613f
+        .9451613f,
       ),
       arrayOf(
         color18,
@@ -236,8 +236,8 @@ private class IndeterminateRegionPainter : AbstractRegionPainter() {
         decodeColor(color20, color21, .5f),
         color21,
         decodeColor(color21, color22, .5f),
-        color22
-      )
+        color22,
+      ),
     )
   }
 
@@ -263,7 +263,7 @@ private class IndeterminateRegionPainter : AbstractRegionPainter() {
         .71774197f,
         .91612905f,
         .92419356f,
-        .93225807f
+        .93225807f,
       ),
       arrayOf(
         color23,
@@ -276,8 +276,8 @@ private class IndeterminateRegionPainter : AbstractRegionPainter() {
         decodeColor(color26, color27, .5f),
         color27,
         decodeColor(color27, color28, .5f),
-        color28
-      )
+        color28,
+      ),
     )
   }
 

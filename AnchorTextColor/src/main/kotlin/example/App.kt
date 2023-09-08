@@ -16,7 +16,7 @@ fun makeUI(): Component {
   val p2 = makeUrlPanel("styleSheet.addRule(\"a{color:#FF0000;}\")", HREF)
   val p3 = makeUrlPanel(
     "<a style='color:#00FF00'...",
-    "<html><a style='color:#00FF00' href='$SITE'>$SITE</a>"
+    "<html><a style='color:#00FF00' href='$SITE'>$SITE</a>",
   )
 
   val p = JPanel(GridLayout(3, 1))

@@ -109,7 +109,7 @@ private class TableOfContentsTreeCellRenderer : DefaultTreeCellRenderer() {
       expanded,
       leaf,
       row,
-      hasFocus
+      hasFocus,
     )
     val toc = (value as? DefaultMutableTreeNode)?.userObject
     return if (c is JLabel && toc is TableOfContents) getTocRenderer(c, tree, toc) else c
@@ -142,7 +142,7 @@ private class TableOfContentsTreeCellRenderer : DefaultTreeCellRenderer() {
       BasicStroke.JOIN_MITER,
       1f,
       floatArrayOf(1f),
-      0f
+      0f,
     )
   }
 }
@@ -208,7 +208,7 @@ private class TableOfContentsTree(model: TreeModel?) : JTree(model) {
       BasicStroke.JOIN_MITER,
       1f,
       floatArrayOf(1f),
-      0f
+      0f,
     )
   }
 }

@@ -89,7 +89,7 @@ private fun getLayoutCompoundLabelBounds(): Rectangle {
     viewR,
     iconR,
     textR,
-    0
+    0,
   )
   return textR
 }

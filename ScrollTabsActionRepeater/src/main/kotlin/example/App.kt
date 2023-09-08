@@ -66,8 +66,8 @@ private class ActionRepeatHandler(
             ActionEvent.ACTION_PERFORMED,
             null,
             e.getWhen(),
-            e.modifiers
-          )
+            e.modifiers,
+          ),
         )
       }
     }

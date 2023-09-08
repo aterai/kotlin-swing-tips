@@ -26,7 +26,7 @@ fun makeUI(): Component {
     "contentsChanged(...):",
     "repaint():",
     "(remove/insert)ItemAt(...):",
-    "fireContentsChanged(...):"
+    "fireContentsChanged(...):",
   ).map { JLabel(it) }
     .forEach {
       p.add(it, c)
@@ -44,7 +44,7 @@ fun makeUI(): Component {
     CheckableItem("111", false),
     CheckableItem("33333", true),
     CheckableItem("2222", true),
-    CheckableItem("444444", false)
+    CheckableItem("444444", false),
   )
 
   val combo0 = CheckedComboBox(DefaultComboBoxModel(m))

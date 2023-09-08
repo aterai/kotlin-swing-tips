@@ -43,7 +43,7 @@ fun makeUI(): Component {
     arrayOf("textText", UIManager.getColor("textText")),
     arrayOf("window", UIManager.getColor("window")),
     arrayOf("windowBorder", UIManager.getColor("windowBorder")),
-    arrayOf("windowText", UIManager.getColor("windowText"))
+    arrayOf("windowText", UIManager.getColor("windowText")),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun isCellEditable(row: Int, column: Int) = column == COLOR_COL

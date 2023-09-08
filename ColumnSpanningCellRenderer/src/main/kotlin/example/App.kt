@@ -13,7 +13,7 @@ fun makeUI(): Component {
     arrayOf(makeOptionPaneDescription("error"), see),
     arrayOf(makeOptionPaneDescription("information"), see),
     arrayOf(makeOptionPaneDescription("question"), see),
-    arrayOf(makeOptionPaneDescription("warning"), see)
+    arrayOf(makeOptionPaneDescription("warning"), see),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun isCellEditable(row: Int, column: Int) = false

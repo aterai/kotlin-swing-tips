@@ -13,7 +13,7 @@ private val TEXT = listOf(
   """var%20l=location,m=l.href.match("^https?://(.+)(api[^+]+|technotes[^+]+)");""",
   """if(m)l.href='https://docs.oracle.com/javase/8/docs/'""",
   """+decodeURIComponent(m[2]).replace(/\+.*$/,'').replace(/\[\]/g,':A')""",
-  """.replace(/,%20|\(|\)/g,'-');}());"""
+  """.replace(/,%20|\(|\)/g,'-');}());""",
 ).joinToString(separator = "")
 
 private val textField1 = JTextField(TEXT)

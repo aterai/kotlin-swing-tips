@@ -61,7 +61,7 @@ private class Racket(private val parentSize: Dimension) : Serializable {
       centerPos - WIDTH / 2,
       parentSize.height - HEIGHT,
       WIDTH,
-      HEIGHT
+      HEIGHT,
     )
   }
 

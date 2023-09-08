@@ -157,7 +157,7 @@ class DnDTabbedPane : JTabbedPane() {
         r.x + r.width - SCROLL_SIZE - BUTTON_SIZE,
         r.y,
         SCROLL_SIZE + BUTTON_SIZE,
-        r.height
+        r.height,
       )
     } else { // if (tabPlacement == LEFT || tabPlacement == RIGHT) {
       RECT_BACKWARD.setBounds(r.x, r.y, r.width, SCROLL_SIZE)
@@ -165,7 +165,7 @@ class DnDTabbedPane : JTabbedPane() {
         r.x,
         r.y + r.height - SCROLL_SIZE - BUTTON_SIZE,
         r.width,
-        SCROLL_SIZE + BUTTON_SIZE
+        SCROLL_SIZE + BUTTON_SIZE,
       )
     }
     if (RECT_BACKWARD.contains(pt)) {

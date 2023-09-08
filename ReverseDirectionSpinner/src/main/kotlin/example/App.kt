@@ -36,7 +36,7 @@ fun makeUI(): Component {
     "CCC-",
     "CC",
     "R",
-    "D"
+    "D",
   )
   val spinner2 = JSpinner(SpinnerListModel(scale))
   box.add(makeTitledPanel("SpinnerListModel", spinner2))

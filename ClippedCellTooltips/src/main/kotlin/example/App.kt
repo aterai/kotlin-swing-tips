@@ -14,7 +14,7 @@ fun makeUI(): Component {
     arrayOf("CCC", 4, true),
     arrayOf("FFF", 5, false),
     arrayOf("DDD", 6, true),
-    arrayOf("GGG", 7, false)
+    arrayOf("GGG", 7, false),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
@@ -86,7 +86,7 @@ private class ToolTipHeaderRenderer : TableCellRenderer {
       viewR,
       iconR,
       textR,
-      label.iconTextGap
+      label.iconTextGap,
     )
     return label.text != str
   }

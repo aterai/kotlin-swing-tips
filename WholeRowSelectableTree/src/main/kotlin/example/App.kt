@@ -65,7 +65,7 @@ private class WholeRowSelectableTreeUI : BasicTreeUI() {
             hasBeenExpanded = tree.hasBeenExpanded(path)
           }
           paintRow(
-            g, paintBounds, insets, bounds, path, row, isExpanded, hasBeenExpanded, isLeaf
+            g, paintBounds, insets, bounds, path, row, isExpanded, hasBeenExpanded, isLeaf,
           )
           if (bounds.y + bounds.height >= endY) {
             done = true
@@ -119,7 +119,7 @@ private class WholeRowSelectableTreeUI : BasicTreeUI() {
               row,
               isExpanded,
               hasBeenExpanded,
-              isLeaf
+              isLeaf,
             )
           } else if (tree.isRootVisible && row == 0) {
             paintHorizontalPartOfLeg(
@@ -131,7 +131,7 @@ private class WholeRowSelectableTreeUI : BasicTreeUI() {
               row,
               isExpanded,
               hasBeenExpanded,
-              isLeaf
+              isLeaf,
             )
           }
           if (shouldPaintExpandControl(path, row, isExpanded, hasBeenExpanded, isLeaf)) {
@@ -143,7 +143,7 @@ private class WholeRowSelectableTreeUI : BasicTreeUI() {
               row,
               isExpanded,
               hasBeenExpanded,
-              isLeaf
+              isLeaf,
             )
           }
           if (bounds.y + bounds.height >= endY) {
@@ -192,7 +192,7 @@ private class WholeRowSelectableTreeUI : BasicTreeUI() {
       isExpanded,
       isLeaf,
       row,
-      false
+      false,
     )
     if (isSelected) {
       val oldColor = g.color
@@ -208,7 +208,7 @@ private class WholeRowSelectableTreeUI : BasicTreeUI() {
       bounds.y,
       bounds.width,
       bounds.height,
-      true
+      true,
     )
     val leadIndex = if (tree.hasFocus()) leadSelectionRow else -1
     val hasFocus = leadIndex == row
@@ -250,7 +250,7 @@ private class WholeRowSelectableTreeUI : BasicTreeUI() {
             e.y,
             e.clickCount,
             e.isPopupTrigger,
-            e.button
+            e.button,
           )
         } else {
           e
@@ -290,7 +290,7 @@ private object LookAndFeelUtils {
     ClassNotFoundException::class,
     InstantiationException::class,
     IllegalAccessException::class,
-    UnsupportedLookAndFeelException::class
+    UnsupportedLookAndFeelException::class,
   )
   private fun setLookAndFeel(newLookAndFeel: String) {
     val oldLookAndFeel = lookAndFeel

@@ -22,7 +22,7 @@ fun makeUI(): Component {
   detailsView.addActionListener { e ->
     val chooser = JFileChooser()
     chooser.actionMap["viewTypeDetails"]?.actionPerformed(
-      ActionEvent(e.source, e.id, "viewTypeDetails")
+      ActionEvent(e.source, e.id, "viewTypeDetails"),
     )
     val retValue = chooser.showOpenDialog(p)
     if (retValue == JFileChooser.APPROVE_OPTION) {

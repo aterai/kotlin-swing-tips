@@ -49,7 +49,7 @@ private fun makePopup(): JPopupMenu {
     makeMenuItem("1 pt", 1f, d),
     makeMenuItem("1.5 pt", 1.5f, d),
     makeMenuItem("2.25 pt", 2.25f, d),
-    makeMenuItem("3 pt", 3f, d)
+    makeMenuItem("3 pt", 3f, d),
   ).forEach {
     popup.add(it)
     bg.add(it)

@@ -22,7 +22,7 @@ fun makeUI(): Component {
     arrayOf<Any>("Integer", 12),
     arrayOf<Any>("Double", 3.45),
     arrayOf<Any>("Boolean", true),
-    arrayOf<Any>("Color", Color.RED)
+    arrayOf<Any>("Color", Color.RED),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass

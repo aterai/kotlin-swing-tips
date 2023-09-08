@@ -40,7 +40,7 @@ fun makeUI(): Component {
         "TEST0: $value",
         index,
         isSelected,
-        cellHasFocus
+        cellHasFocus,
       )
     }
   }
@@ -62,7 +62,7 @@ fun makeUI(): Component {
         "TEST1: $value",
         index,
         isSelected,
-        cellHasFocus
+        cellHasFocus,
       )
     }
   }
@@ -138,7 +138,7 @@ private object LookAndFeelUtils {
     ClassNotFoundException::class,
     InstantiationException::class,
     IllegalAccessException::class,
-    UnsupportedLookAndFeelException::class
+    UnsupportedLookAndFeelException::class,
   )
   private fun setLookAndFeel(newLookAndFeel: String) {
     val oldLookAndFeel = lookAndFeel

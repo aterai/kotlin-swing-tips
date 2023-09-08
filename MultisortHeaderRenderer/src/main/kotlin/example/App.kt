@@ -11,7 +11,7 @@ fun makeUI(): Component {
     arrayOf("aaa", "1", "true", "cc"),
     arrayOf("aaa", "1", "false", "dd"),
     arrayOf("aaa", "2", "true", "ee"),
-    arrayOf("ddd", "3", "false", "ff")
+    arrayOf("ddd", "3", "false", "ff"),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = String::class.java

@@ -30,14 +30,14 @@ private fun createMenuBar(): JMenuBar {
   menuItem.mnemonic = KeyEvent.VK_N
   menuItem.accelerator = KeyStroke.getKeyStroke(
     KeyEvent.VK_N,
-    InputEvent.ALT_DOWN_MASK
+    InputEvent.ALT_DOWN_MASK,
   )
   list.add(menuItem)
   menuItem = JMenuItem("aaa")
   menuItem.mnemonic = KeyEvent.VK_1
   menuItem.accelerator = KeyStroke.getKeyStroke(
     KeyEvent.VK_ESCAPE,
-    InputEvent.ALT_DOWN_MASK
+    InputEvent.ALT_DOWN_MASK,
   )
   list.add(menuItem)
   menuItem = JMenuItem("bb")
@@ -153,7 +153,7 @@ private object MenuItemHelper {
         g,
         text,
         viewRect.x + viewRect.width - menuItem.iconTextGap - accRect.width,
-        accRect.y + ascent
+        accRect.y + ascent,
       )
     } else { // *** paint the accText disabled
       if (disabledForeground != null) {
@@ -209,7 +209,7 @@ private class RaaWindowsMenuItemUI : WindowsMenuItemUI() {
     val lh = MenuItemLayoutHelper(
       mi, checkIcon, arrowIcon, viewRect, textIconGap, "+",
       true, mi.font, acceleratorFont,
-      MenuItemLayoutHelper.useCheckAndArrow(menuItem), propertyPrefix
+      MenuItemLayoutHelper.useCheckAndArrow(menuItem), propertyPrefix,
     )
     val lr = lh.layoutMenuItem()
     paintBackground(g2, mi, background)
@@ -222,7 +222,7 @@ private class RaaWindowsMenuItemUI : WindowsMenuItemUI() {
       lr,
       disabledForeground,
       acceleratorForeground,
-      acceleratorSelectionForeground
+      acceleratorSelectionForeground,
     )
     MenuItemHelper.paintArrowIcon(g2, lh, lr, foreground)
   }
@@ -259,7 +259,7 @@ private class RaaBasicMenuItemUI : BasicMenuItemUI() {
     val lh = MenuItemLayoutHelper(
       mi, checkIcon, arrowIcon, viewRect, textIconGap, "+",
       true, mi.font, acceleratorFont,
-      MenuItemLayoutHelper.useCheckAndArrow(menuItem), propertyPrefix
+      MenuItemLayoutHelper.useCheckAndArrow(menuItem), propertyPrefix,
     )
     val lr = lh.layoutMenuItem()
     paintBackground(g2, mi, background)
@@ -272,7 +272,7 @@ private class RaaBasicMenuItemUI : BasicMenuItemUI() {
       lr,
       disabledForeground,
       acceleratorForeground,
-      acceleratorSelectionForeground
+      acceleratorSelectionForeground,
     )
     MenuItemHelper.paintArrowIcon(g2, lh, lr, foreground)
   }

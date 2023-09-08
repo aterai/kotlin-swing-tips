@@ -52,7 +52,7 @@ private class CompoundTreeCellRenderer : DefaultTreeCellRenderer() {
     val focusBgsColor = Color(getBackgroundSelectionColor().rgb.inv())
     compoundFocusBorder = BorderFactory.createCompoundBorder(
       DotBorder(focusBgsColor, bsColor),
-      insideBorder
+      insideBorder,
     )
 
     icon.border = BorderFactory.createEmptyBorder(0, 0, 0, 2)
@@ -95,7 +95,7 @@ private class CompoundTreeCellRenderer : DefaultTreeCellRenderer() {
       expanded,
       leaf,
       row,
-      hasFocus
+      hasFocus,
     )
     (c as? JLabel)?.also {
       text.text = it.text

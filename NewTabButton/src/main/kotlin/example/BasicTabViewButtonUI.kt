@@ -55,7 +55,7 @@ open class BasicTabViewButtonUI : TabViewButtonUI() {
       viewRect,
       iconRect,
       textRect,
-      0
+      0,
     )
 
     g.color = b.background
@@ -67,7 +67,7 @@ open class BasicTabViewButtonUI : TabViewButtonUI() {
       viewRect.x,
       viewRect.y,
       viewRect.x + viewRect.width,
-      viewRect.y + viewRect.height
+      viewRect.y + viewRect.height,
     )
 
     val color = Color(255, 120, 40)

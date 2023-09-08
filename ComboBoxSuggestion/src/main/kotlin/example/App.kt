@@ -14,7 +14,7 @@ fun makeUI(): Component {
     "1234",
     "12567",
     "2221",
-    "22212"
+    "22212",
   )
   val combo = JComboBox(array)
   combo.isEditable = true

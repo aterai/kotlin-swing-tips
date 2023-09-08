@@ -14,7 +14,7 @@ fun makeUI(): Component {
     arrayOf("a", 12, true),
     arrayOf("b", 5, false),
     arrayOf("C", 92, true),
-    arrayOf("D", 0, false)
+    arrayOf("D", 0, false),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
@@ -219,7 +219,7 @@ private object LookAndFeelUtils {
     ClassNotFoundException::class,
     InstantiationException::class,
     IllegalAccessException::class,
-    UnsupportedLookAndFeelException::class
+    UnsupportedLookAndFeelException::class,
   )
   private fun setLookAndFeel(newLookAndFeel: String) {
     val oldLookAndFeel = lookAndFeel

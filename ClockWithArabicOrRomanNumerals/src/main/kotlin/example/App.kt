@@ -18,7 +18,7 @@ import kotlin.math.PI
 fun makeUI(): Component {
   val clock = AnalogClock()
   val attr = mapOf<TextAttribute, Any>(
-    Pair(TextAttribute.TRACKING, -.08f)
+    Pair(TextAttribute.TRACKING, -.08f),
   )
   clock.font = clock.font.deriveFont(20f).deriveFont(attr)
 
@@ -67,7 +67,7 @@ private class AnalogClock : JPanel() {
     "8",
     "9",
     "10",
-    "11"
+    "11",
   )
   private val romanNumerals = arrayOf(
     "XII",
@@ -81,7 +81,7 @@ private class AnalogClock : JPanel() {
     "VIII",
     "IX",
     "X",
-    "XI"
+    "XI",
   )
   private var listener: HierarchyListener? = null
   private var time = LocalTime.now(ZoneId.systemDefault())

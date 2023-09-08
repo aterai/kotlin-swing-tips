@@ -30,7 +30,7 @@ fun makeUI(): Component {
     "JST ColorChooserSwatchSize",
     true,
     cc,
-    ok
+    ok,
   ) { log.append("cancel\n") }
   val button2 = JButton("JColorChooser.createDialog(...).setVisible(true)")
   button2.addActionListener {

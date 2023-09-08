@@ -13,7 +13,7 @@ fun makeUI(): Component {
     arrayOf("aaa", "eee", "fff"),
     arrayOf("bbb", "lll", "kk"),
     arrayOf("CCC", "g", "hh"),
-    arrayOf("DDD", "iii", "j")
+    arrayOf("DDD", "iii", "j"),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = String::class.java
@@ -44,7 +44,7 @@ private class TablePopupMenu(columnNames: Array<String>) : JPopupMenu() {
           textField,
           "Edit: setHeaderValue",
           JOptionPane.OK_CANCEL_OPTION,
-          JOptionPane.PLAIN_MESSAGE
+          JOptionPane.PLAIN_MESSAGE,
         )
         if (result == JOptionPane.OK_OPTION) {
           val str = textField.text.trim()
@@ -66,7 +66,7 @@ private class TablePopupMenu(columnNames: Array<String>) : JPopupMenu() {
           textField,
           "Edit: setColumnIdentifiers",
           JOptionPane.OK_CANCEL_OPTION,
-          JOptionPane.PLAIN_MESSAGE
+          JOptionPane.PLAIN_MESSAGE,
         )
         if (result == JOptionPane.OK_OPTION) {
           val str = textField.text.trim()

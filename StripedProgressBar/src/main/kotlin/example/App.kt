@@ -32,7 +32,7 @@ fun makeUI(): Component {
     progress1,
     progress2,
     progress3,
-    progress4
+    progress4,
   )
 
   val p = JPanel(GridLayout(5, 1))

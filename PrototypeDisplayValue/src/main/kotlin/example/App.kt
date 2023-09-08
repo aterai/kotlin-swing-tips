@@ -20,7 +20,7 @@ fun makeUI(): Component {
   val arrayOfWebSites = arrayOf(
     WebSite("a", ColorIcon(Color.RED)),
     WebSite("b", ColorIcon(Color.GREEN)),
-    WebSite("c", ColorIcon(Color.BLUE))
+    WebSite("c", ColorIcon(Color.BLUE)),
   )
   val model2 = DefaultComboBoxModel(arrayOfWebSites)
 

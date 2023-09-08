@@ -15,7 +15,7 @@ fun makeUI(): Component {
     arrayOf("<html><font color=blue>font color blue</font> $TEXT"),
     arrayOf("<html><font color=black>font color black</font><br />  $TEXT"),
     arrayOf("<html><font color=orange>font color orange</font> $TEXT"),
-    arrayOf("<html><font color=gray>font color gray</font> $TEXT")
+    arrayOf("<html><font color=gray>font color gray</font> $TEXT"),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = String::class.java

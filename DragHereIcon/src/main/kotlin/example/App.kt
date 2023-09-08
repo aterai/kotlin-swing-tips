@@ -73,7 +73,7 @@ private class DragHereIcon : Icon {
       (ICON_WIDTH - 2 * BORDER_SIZE - 1).toDouble(),
       (ICON_HEIGHT - 2 * BORDER_SIZE - 1).toDouble(),
       ARC_SIZE.toDouble(),
-      ARC_SIZE.toDouble()
+      ARC_SIZE.toDouble(),
     )
     private val FONT = Font(Font.MONOSPACED, Font.BOLD, ICON_WIDTH)
     private val LINE_COLOR = Color.GRAY

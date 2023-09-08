@@ -27,7 +27,7 @@ fun makeUI(): Component {
     arrayOf("33333.jpg", "123"),
     arrayOf("4444444444444444.mpg", "test"),
     arrayOf("5555555555555", ""),
-    arrayOf("test1.jpg", "")
+    arrayOf("test1.jpg", ""),
   )
   val table = FileListTable(object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass

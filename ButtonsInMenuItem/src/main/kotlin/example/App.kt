@@ -19,7 +19,7 @@ private fun makeMenuBar(): JMenuBar {
   val actions = listOf(
     makeButton("Cut", DefaultEditorKit.CutAction()),
     makeButton("Copy", DefaultEditorKit.CopyAction()),
-    makeButton("Paste", DefaultEditorKit.PasteAction())
+    makeButton("Paste", DefaultEditorKit.PasteAction()),
   )
   val edit = makeEditButtonBar(actions)
 

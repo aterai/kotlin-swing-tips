@@ -29,13 +29,13 @@ fun makeUI(): Component {
           val uiClass = BasicSliderUI::class.java
           val uninstall = uiClass.getDeclaredMethod(
             "uninstallListeners",
-            JSlider::class.java
+            JSlider::class.java,
           )
           uninstall.isAccessible = true
           uninstall.invoke(getUI(), slider)
           val uninstallKbdActs = uiClass.getDeclaredMethod(
             "uninstallKeyboardActions",
-            JSlider::class.java
+            JSlider::class.java,
           )
           uninstallKbdActs.isAccessible = true
           uninstallKbdActs.invoke(getUI(), slider)

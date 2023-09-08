@@ -67,7 +67,7 @@ private class DnDTree : JTree() {
     DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(
       this,
       DnDConstants.ACTION_MOVE,
-      NodeDragGestureListener()
+      NodeDragGestureListener(),
     )
     if (treeDropTarget == null) {
       treeDropTarget = DropTarget(this, NodeDropTargetListener())
@@ -183,7 +183,7 @@ private class DnDTree : JTree() {
         expanded,
         leaf,
         row,
-        hasFocus
+        hasFocus,
       )
     }
 

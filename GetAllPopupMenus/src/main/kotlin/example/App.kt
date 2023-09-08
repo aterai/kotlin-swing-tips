@@ -13,7 +13,7 @@ fun makeUI(): Component {
     arrayOf("prev1: Ctrl+1", 1, true),
     arrayOf("next1: Ctrl+2", 2, false),
     arrayOf("prev2: Ctrl+3", 3, true),
-    arrayOf("next2: Ctrl+4", 4, false)
+    arrayOf("next2: Ctrl+4", 4, false),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass

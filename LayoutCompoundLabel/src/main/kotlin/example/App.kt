@@ -25,7 +25,7 @@ fun makeUI(): Component {
         viewRect,
         iconRect,
         textRect,
-        this.iconTextGap
+        this.iconTextGap,
       )
       val tip = super.getToolTipText(e)
       val pt = e.point
@@ -72,7 +72,7 @@ private class IconTooltipItem(text: String?, icon: Icon?) : JMenuItem(text, icon
       VIEW_RECT,
       ICON_RECT,
       TEXT_RECT,
-      iconTextGap
+      iconTextGap,
     )
     return super.getToolTipText(e)?.let {
       val type = if (ICON_RECT.contains(e.point)) "Icon" else "Text"

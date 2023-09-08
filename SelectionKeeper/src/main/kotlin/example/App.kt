@@ -23,7 +23,7 @@ fun makeUI(): Component {
     arrayOf(null, 15, true),
     arrayOf("", null, false),
     arrayOf("CCC", 92, true),
-    arrayOf("DDD", 0, false)
+    arrayOf("DDD", 0, false),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
@@ -327,7 +327,7 @@ private class SortableHeaderRenderer(val cellRenderer: TableCellRenderer) : Tabl
     isSelected,
     hasFocus,
     row,
-    column
+    column,
   ).also {
     val sorter = table.model
     if (it is JLabel && sorter is TableSorter) {

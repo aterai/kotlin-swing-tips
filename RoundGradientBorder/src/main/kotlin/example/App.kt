@@ -15,7 +15,7 @@ fun makeUI(): Component {
     Color(0xFF_51_56),
     Color(0xFF_DB_4E),
     Color(0x00_FE_9B),
-    Color(0x2D_D9_FE)
+    Color(0x2D_D9_FE),
   )
   val icon = object : Icon {
     override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
@@ -61,7 +61,7 @@ private class RoundGradientBorder(
     Color(0xFF_51_56),
     Color(0xFF_DB_4E),
     Color(0x00_FE_9B),
-    Color(0x2D_D9_FE)
+    Color(0x2D_D9_FE),
   )
 
   override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
@@ -78,7 +78,7 @@ private class RoundGradientBorder(
       width - 1f,
       height - 1f,
       arc,
-      arc
+      arc,
     )
     val inner = RoundRectangle2D.Float(
       x + stroke,
@@ -86,7 +86,7 @@ private class RoundGradientBorder(
       width - stroke - stroke - 1f,
       height - stroke - stroke - 1f,
       arc - stroke - stroke,
-      arc - stroke - stroke
+      arc - stroke - stroke,
     )
     val rr = Area(outer)
     rr.subtract(Area(inner))

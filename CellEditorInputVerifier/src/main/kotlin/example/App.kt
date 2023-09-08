@@ -152,7 +152,7 @@ private class IntegerDocumentFilter : DocumentFilter() {
 private class NumberFormatterFactory : DefaultFormatterFactory(
   numberFormatter,
   numberFormatter,
-  numberFormatter
+  numberFormatter,
 ) {
   companion object {
     private val numberFormatter = NumberFormatter()

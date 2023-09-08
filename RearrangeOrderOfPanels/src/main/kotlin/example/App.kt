@@ -16,7 +16,7 @@ fun makeUI(): Component {
     JLabel("<html>1<br>11<br>111"),
     JButton("22"),
     JCheckBox("333"),
-    JScrollPane(JTextArea(4, 12))
+    JScrollPane(JTextArea(4, 12)),
   )
   for ((i, c) in list.withIndex()) {
     box.add(createSortablePanel(i, c))
@@ -34,7 +34,7 @@ private fun createSortablePanel(i: Int, c: Component): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createCompoundBorder(
     BorderFactory.createEmptyBorder(5, 5, 5, 5),
-    BorderFactory.createLineBorder(Color.BLUE, 2)
+    BorderFactory.createLineBorder(Color.BLUE, 2),
   )
   p.add(l, BorderLayout.WEST)
   p.add(c)

@@ -75,7 +75,7 @@ private open class TooltipList<E>(m: ListModel<E>?) : JList<E>(m) {
           p1.x,
           p1.y,
           e.clickCount,
-          e.isPopupTrigger
+          e.isPopupTrigger,
         )
         return super.getToolTipText(event)
       }

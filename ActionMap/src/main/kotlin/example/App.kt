@@ -32,7 +32,7 @@ fun makeUI(): Component {
             (e.source as? JComponent)?.rootPane,
             "paste is disabled",
             "title",
-            JOptionPane.ERROR_MESSAGE
+            JOptionPane.ERROR_MESSAGE,
           )
         }
       }

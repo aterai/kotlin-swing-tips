@@ -41,7 +41,7 @@ private fun makeButton(field: JTextField, textArea: JTextArea): JButton {
       field,
       "Input Text",
       JOptionPane.OK_CANCEL_OPTION,
-      JOptionPane.PLAIN_MESSAGE
+      JOptionPane.PLAIN_MESSAGE,
     )
     if (ret == JOptionPane.OK_OPTION) {
       textArea.text = field.text

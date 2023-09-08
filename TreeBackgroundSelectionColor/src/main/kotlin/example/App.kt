@@ -63,7 +63,7 @@ private class SelectionColorTreeCellRenderer : DefaultTreeCellRenderer() {
     expanded,
     leaf,
     row,
-    hasFocus
+    hasFocus,
   ).also {
     if (selected && it is JComponent) {
       it.isOpaque = false

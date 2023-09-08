@@ -13,7 +13,7 @@ fun makeUI(): Component {
   val table = JTable()
   val data = arrayOf(
     arrayOf("Default ImageIcon", icon),
-    arrayOf("ImageIcon#setImageObserver", makeAnimatedIcon(url, table, 1, 1))
+    arrayOf("ImageIcon#setImageObserver", makeAnimatedIcon(url, table, 1, 1)),
   )
   val columnNames = arrayOf("String", "ImageIcon")
   table.model = object : DefaultTableModel(data, columnNames) {

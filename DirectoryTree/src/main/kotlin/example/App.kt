@@ -37,7 +37,7 @@ fun makeUI(): Component {
           expanded,
           leaf,
           row,
-          hasFocus
+          hasFocus,
         )
         (c as? JLabel)?.also {
           if (selected) {

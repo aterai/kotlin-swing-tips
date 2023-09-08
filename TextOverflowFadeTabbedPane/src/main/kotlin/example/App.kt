@@ -11,7 +11,7 @@ import javax.swing.plaf.synth.SynthLookAndFeel
 fun makeUI(): Component {
   val list = listOf(
     makeTabbedPane(ClippedTitleTabbedPane()),
-    makeTabbedPane(TextOverflowFadeTabbedPane())
+    makeTabbedPane(TextOverflowFadeTabbedPane()),
   )
 
   val p = JPanel(GridLayout(list.size, 1))

@@ -109,7 +109,7 @@ private class FileModel : DefaultTableModel() {
     ColumnContext("Name", String::class.java, false),
     ColumnContext("Full Path", String::class.java, false),
     ColumnContext("Width", Number::class.java, false),
-    ColumnContext("Height", Number::class.java, false)
+    ColumnContext("Height", Number::class.java, false),
   )
 
   override fun isCellEditable(row: Int, col: Int) = columnList[col].isEditable

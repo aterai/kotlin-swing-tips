@@ -74,7 +74,7 @@ private class ImageCaptionLabel(caption: String, icon: Icon) : JLabel() {
     super.updateUI()
     border = BorderFactory.createCompoundBorder(
       BorderFactory.createLineBorder(Color(0xDE_DE_DE)),
-      BorderFactory.createLineBorder(Color.WHITE, 4)
+      BorderFactory.createLineBorder(Color.WHITE, 4),
     )
     layout = object : OverlayLayout(this) {
       override fun layoutContainer(parent: Container) {

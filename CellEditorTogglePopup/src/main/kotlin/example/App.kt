@@ -11,7 +11,7 @@ fun makeUI(): Component {
   val columnNames = arrayOf("Default", "setEnabled", "String")
   val data = arrayOf(
     arrayOf(model[0], model[0], "aaa"),
-    arrayOf(model[1], model[2], "bbb")
+    arrayOf(model[1], model[2], "bbb"),
   )
   val table = JTable(DefaultTableModel(data, columnNames))
   table.rowHeight = 20

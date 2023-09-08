@@ -25,7 +25,7 @@ fun makeUI(): Component {
     Calendar.HOUR_OF_DAY to 1,
     Calendar.MINUTE to 1,
     Calendar.SECOND to 30,
-    Calendar.MILLISECOND to 500
+    Calendar.MILLISECOND to 500,
   )
 
   val m2 = object : SpinnerDateModel(d, null, null, Calendar.SECOND) {

@@ -19,7 +19,7 @@ fun makeUI(): Component {
   label.add(toolBar)
   label.border = BorderFactory.createCompoundBorder(
     BorderFactory.createLineBorder(Color(0xDE_DE_DE)),
-    BorderFactory.createLineBorder(Color.WHITE, 4)
+    BorderFactory.createLineBorder(Color.WHITE, 4),
   )
   return JPanel().also {
     it.add(label)

@@ -114,7 +114,7 @@ private enum class Side(
       r.y += d.y
       r.height -= d.y
       r
-    }
+    },
   ),
   W(
     Cursor.W_RESIZE_CURSOR,
@@ -123,7 +123,7 @@ private enum class Side(
       r.x += d.x
       r.width -= d.x
       r
-    }
+    },
   ),
   E(
     Cursor.E_RESIZE_CURSOR,
@@ -131,7 +131,7 @@ private enum class Side(
     BiFunction { r, d ->
       r.width += d.x
       r
-    }
+    },
   ),
   S(
     Cursor.S_RESIZE_CURSOR,
@@ -139,7 +139,7 @@ private enum class Side(
     BiFunction { r, d ->
       r.height += d.y
       r
-    }
+    },
   ),
   NW(
     Cursor.NW_RESIZE_CURSOR,
@@ -150,7 +150,7 @@ private enum class Side(
       r.x += d.x
       r.width -= d.x
       r
-    }
+    },
   ),
   NE(
     Cursor.NE_RESIZE_CURSOR,
@@ -160,7 +160,7 @@ private enum class Side(
       r.height -= d.y
       r.width += d.x
       r
-    }
+    },
   ),
   SW(
     Cursor.SW_RESIZE_CURSOR,
@@ -170,7 +170,7 @@ private enum class Side(
       r.x += d.x
       r.width -= d.x
       r
-    }
+    },
   ),
   SE(
     Cursor.SE_RESIZE_CURSOR,
@@ -179,7 +179,7 @@ private enum class Side(
       r.height += d.y
       r.width += d.x
       r
-    }
+    },
   );
 
   companion object {

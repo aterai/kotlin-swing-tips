@@ -14,7 +14,7 @@ private val data = arrayOf(
   arrayOf(3, 33, ES, ES, "C", ES, ES, ES),
   arrayOf(4, 1, ES, ES, ES, "D", ES, ES),
   arrayOf(5, 55, ES, ES, ES, ES, "E", ES),
-  arrayOf(6, 66, ES, ES, ES, ES, ES, "F")
+  arrayOf(6, 66, ES, ES, ES, ES, ES, "F"),
 )
 private val columnNames = arrayOf("fixed 1", "fixed 2", "A", "B", "C", "D", "E", "F")
 private val model = object : DefaultTableModel(data, columnNames) {
@@ -272,28 +272,28 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
       if (leftToRight) rowHeadR.x else vsbR.x,
       hsbR.y,
       if (leftToRight) rowHeadR.width else vsbR.width,
-      hsbR.height
+      hsbR.height,
     )
 
     lowerRight?.setBounds(
       if (leftToRight) vsbR.x else rowHeadR.x,
       hsbR.y,
       if (leftToRight) vsbR.width else rowHeadR.width,
-      hsbR.height
+      hsbR.height,
     )
 
     upperLeft?.setBounds(
       if (leftToRight) rowHeadR.x else vsbR.x,
       colHeadR.y,
       if (leftToRight) rowHeadR.width else vsbR.width,
-      colHeadR.height
+      colHeadR.height,
     )
 
     upperRight?.setBounds(
       if (leftToRight) vsbR.x else rowHeadR.x,
       colHeadR.y,
       if (leftToRight) vsbR.width else rowHeadR.width,
-      colHeadR.height
+      colHeadR.height,
     )
   }
 

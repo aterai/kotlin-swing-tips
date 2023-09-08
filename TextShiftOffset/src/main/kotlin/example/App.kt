@@ -9,7 +9,7 @@ fun makeUI(): Component {
   val rl = listOf(
     JRadioButton(TextShiftOffsetAction(0)),
     JRadioButton(TextShiftOffsetAction(1)),
-    JRadioButton(TextShiftOffsetAction(-1))
+    JRadioButton(TextShiftOffsetAction(-1)),
   )
   val bg = ButtonGroup()
   val box = Box.createHorizontalBox()

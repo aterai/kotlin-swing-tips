@@ -17,7 +17,7 @@ private val data = arrayOf(
   arrayOf("aaa", 12, true),
   arrayOf("bbb", 5, false),
   arrayOf("CCC", 92, true),
-  arrayOf("DDD", 0, false)
+  arrayOf("DDD", 0, false),
 )
 private val model = object : DefaultTableModel(data, columnNames) {
   override fun getColumnClass(column: Int) = when (column) {
@@ -183,7 +183,7 @@ private class DotBorder(
       BasicStroke.JOIN_MITER,
       10f,
       floatArrayOf(1f),
-      0f
+      0f,
     )
     private val DOT_COLOR = Color(0xC8_96_96)
   }

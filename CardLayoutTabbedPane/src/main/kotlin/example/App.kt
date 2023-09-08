@@ -208,7 +208,7 @@ private open class BasicTabViewButtonUI : TabViewButtonUI() {
       viewRect,
       iconRect,
       textRect,
-      0
+      0,
     )
     g.color = c.background
     g.fillRect(0, 0, c.width, c.height)
@@ -284,7 +284,7 @@ private class OperaTabViewButtonUI : BasicTabViewButtonUI() {
       b.verticalAlignment, b.horizontalAlignment,
       b.verticalTextPosition, b.horizontalTextPosition,
       viewRect, iconRect, textRect,
-      if (b.text != null) b.iconTextGap else 0
+      if (b.text != null) b.iconTextGap else 0,
     )
     val v = c.getClientProperty(BasicHTML.propertyKey)
     if (v is View) {
@@ -314,7 +314,7 @@ private class OperaTabViewButtonUI : BasicTabViewButtonUI() {
       0f,
       (r1.y + r1.height).toFloat(),
       Color(0x67_85_98),
-      true
+      true,
     )
     g2.fill(r1)
     g2.paint = GradientPaint(
@@ -324,7 +324,7 @@ private class OperaTabViewButtonUI : BasicTabViewButtonUI() {
       0f,
       (r2.y + r2.height).toFloat(),
       Color(0x3C_56_65),
-      true
+      true,
     )
     g2.fill(r2)
     g2.paint = GradientPaint(
@@ -334,7 +334,7 @@ private class OperaTabViewButtonUI : BasicTabViewButtonUI() {
       0f,
       (r3.y + r3.height).toFloat(),
       Color(0, 0, 0, 5),
-      true
+      true,
     )
     g2.fill(r3)
     g2.paint = Color(39, 56, 67) // g2.setPaint(Color.GREEN)

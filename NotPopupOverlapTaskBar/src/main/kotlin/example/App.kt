@@ -9,7 +9,7 @@ fun makeUI(): Component {
     JMenuItem("JMenuItem 2"),
     JMenuItem("JMenuItem 3"),
     JMenuItem("JMenuItem 4"),
-    JMenuItem("JMenuItem 5")
+    JMenuItem("JMenuItem 5"),
   )
   val popup = object : JPopupMenu() {
     override fun show(c: Component, x: Int, y: Int) {

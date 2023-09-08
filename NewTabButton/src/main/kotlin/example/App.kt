@@ -42,7 +42,7 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
     makeIcon("example/wi0111-16.png"),
     makeIcon("example/wi0122-16.png"),
     makeIcon("example/wi0124-16.png"),
-    makeIcon("example/wi0126-16.png")
+    makeIcon("example/wi0126-16.png"),
   )
 
   init {

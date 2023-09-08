@@ -23,7 +23,7 @@ class MainPanel : JPanel() {
   private val data = floatArrayOf(
     .1f, .1f, .1f,
     .1f, .2f, .1f,
-    .1f, .1f, .1f
+    .1f, .1f, .1f,
   )
   private val kernel = Kernel(3, 3, data)
   private val op = ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null)

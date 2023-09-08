@@ -85,7 +85,7 @@ private class RowDataModel : DefaultTableModel() {
       ColumnContext("No.", Number::class.java, false),
       ColumnContext("Name", String::class.java, true),
       ColumnContext("Comment", String::class.java, true),
-      ColumnContext("", String::class.java, true)
+      ColumnContext("", String::class.java, true),
     )
   }
 }

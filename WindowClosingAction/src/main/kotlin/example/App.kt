@@ -11,7 +11,7 @@ fun makeUI(): Component {
     JMenuItem("Open"),
     JMenuItem("Save"),
     JSeparator(),
-    JMenuItem(ExitAction())
+    JMenuItem(ExitAction()),
   )
 
   val popup = JPopupMenu()

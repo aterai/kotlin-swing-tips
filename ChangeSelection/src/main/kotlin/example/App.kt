@@ -97,7 +97,7 @@ private fun makeModel(): TableModel {
     arrayOf("6, 0", "6, 1", "6, 2"),
     arrayOf("7, 0", "7, 1", "7, 2"),
     arrayOf("8, 0", "8, 1", "8, 2"),
-    arrayOf("9, 0", "9, 1", "9, 2")
+    arrayOf("9, 0", "9, 1", "9, 2"),
   )
   return DefaultTableModel(data, columnNames)
 }

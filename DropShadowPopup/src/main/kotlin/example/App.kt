@@ -83,7 +83,7 @@ private class DropShadowPopupMenu : JPopupMenu() {
             w - OFFSET - OFFSET + i,
             h - OFFSET - OFFSET + i,
             4,
-            4
+            4,
           )
         }
         g2.dispose()

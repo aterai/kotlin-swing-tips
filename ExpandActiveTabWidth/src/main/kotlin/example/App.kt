@@ -13,7 +13,7 @@ fun makeUI(): Component {
     "example/wi0062-16.png",
     "example/wi0063-16.png",
     "example/wi0124-16.png",
-    "example/wi0126-16.png"
+    "example/wi0126-16.png",
   ).forEach { path ->
     val icon = makeIcon(path)
     val label = ShrinkLabel(path, icon)

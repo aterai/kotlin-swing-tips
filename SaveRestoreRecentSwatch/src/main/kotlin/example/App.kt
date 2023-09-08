@@ -341,13 +341,13 @@ open class SwatchPanel : JPanel() {
           x + swatchSize.width - 1,
           y,
           x + swatchSize.width - 1,
-          y + swatchSize.height - 1
+          y + swatchSize.height - 1,
         )
         g.drawLine(
           x,
           y + swatchSize.height - 1,
           x + swatchSize.width - 1,
-          y + swatchSize.height - 1
+          y + swatchSize.height - 1,
         )
         if (selRow == row && selCol == column && this.isFocusOwner) {
           val c2 = getFocusColor(c)
@@ -358,13 +358,13 @@ open class SwatchPanel : JPanel() {
             x + swatchSize.width - 1,
             y,
             x + swatchSize.width - 1,
-            y + swatchSize.height - 1
+            y + swatchSize.height - 1,
           )
           g.drawLine(
             x,
             y + swatchSize.height - 1,
             x + swatchSize.width - 1,
-            y + swatchSize.height - 1
+            y + swatchSize.height - 1,
           )
           g.drawLine(x, y, x + swatchSize.width - 1, y + swatchSize.height - 1)
           g.drawLine(x, y + swatchSize.height - 1, x + swatchSize.width - 1, y)
@@ -752,7 +752,7 @@ private class MainSwatchPanel : SwatchPanel() {
       0, 51, 51,
       0, 51, 51,
       0, 51, 51,
-      51, 51, 51
+      51, 51, 51,
     )
   }
 }

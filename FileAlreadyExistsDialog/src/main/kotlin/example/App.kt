@@ -30,7 +30,7 @@ fun makeUI(): Component {
   val p = JPanel(GridBagLayout())
   p.border = BorderFactory.createCompoundBorder(
     BorderFactory.createEmptyBorder(20, 20, 20, 20),
-    BorderFactory.createTitledBorder("JFileChooser#showSaveDialog(...)")
+    BorderFactory.createTitledBorder("JFileChooser#showSaveDialog(...)"),
   )
   p.add(button)
 

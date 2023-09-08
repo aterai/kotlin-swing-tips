@@ -46,7 +46,7 @@ private fun makeIconTableModel(list: ListModel<IconItem>): TableModel {
   val data = arrayOf(
     arrayOf(list.getElementAt(0), list.getElementAt(1), list.getElementAt(2)),
     arrayOf(list.getElementAt(3), list.getElementAt(4), list.getElementAt(5)),
-    arrayOf(list.getElementAt(6), list.getElementAt(7), list.getElementAt(8))
+    arrayOf(list.getElementAt(6), list.getElementAt(7), list.getElementAt(8)),
   )
   return object : DefaultTableModel(data, null) {
     override fun isCellEditable(row: Int, column: Int) = false
