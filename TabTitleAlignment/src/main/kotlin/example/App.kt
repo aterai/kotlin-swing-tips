@@ -130,7 +130,7 @@ private class LeftAlignmentWindowsTabbedPaneUI : WindowsTabbedPaneUI() {
     tabRect: Rectangle,
     iconRect: Rectangle,
     textRect: Rectangle,
-    isSelected: Boolean
+    isSelected: Boolean,
   ) {
     textRect.setLocation(0, 0)
     iconRect.setLocation(0, 0)
@@ -172,7 +172,7 @@ private class LeftAlignmentTabbedPaneUI : MetalTabbedPaneUI() {
     tabRect: Rectangle,
     iconRect: Rectangle,
     textRect: Rectangle,
-    isSelected: Boolean
+    isSelected: Boolean,
   ) {
     textRect.setLocation(0, 0)
     iconRect.setLocation(0, 0)

@@ -80,7 +80,7 @@ private fun initLinkBoxLayout(
   currentPageIndex: Int,
   maxPageIndex: Int,
   startPageIndex: Int,
-  endPageIndex: Int
+  endPageIndex: Int,
 ) {
   box.removeAll()
   group.elements.toList().forEach { group.remove(it) }
@@ -135,7 +135,7 @@ private fun makePrevNextButton(
   itemsPerPage: Int,
   target: Int,
   title: String,
-  flag: Boolean
+  flag: Boolean,
 ) = JRadioButton(title).also {
   it.foreground = Color.BLUE
   it.ui = linkViewRadioButtonUI

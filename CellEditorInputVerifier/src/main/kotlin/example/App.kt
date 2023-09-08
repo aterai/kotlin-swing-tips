@@ -110,7 +110,7 @@ private class IntegerDocumentFilter : DocumentFilter() {
     fb: FilterBypass,
     offset: Int,
     text: String?,
-    attr: AttributeSet
+    attr: AttributeSet,
   ) {
     if (text != null) {
       replace(fb, offset, 0, text, attr)
@@ -128,7 +128,7 @@ private class IntegerDocumentFilter : DocumentFilter() {
     offset: Int,
     length: Int,
     text: String?,
-    attrs: AttributeSet?
+    attrs: AttributeSet?,
   ) {
     val doc = fb.document
     val currentLength = doc.length

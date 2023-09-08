@@ -150,7 +150,7 @@ private fun getDayOfWeekColor(dow: DayOfWeek) = when (dow) {
 
 private class CalendarViewTableModel(
   date: LocalDate,
-  private val locale: Locale
+  private val locale: Locale,
 ) : DefaultTableModel() {
   private val startDate: LocalDate
   private val weekFields: WeekFields

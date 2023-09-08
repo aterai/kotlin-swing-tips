@@ -233,7 +233,7 @@ private enum class Side(private val cursor: Int, private val width: Int, private
       rect.width += delta.x
       return rect
     }
-  };
+  }, ;
 
   val size get() = Dimension(width, height)
 

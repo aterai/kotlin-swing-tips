@@ -113,7 +113,7 @@ private class RowDataModel : SortableTableModel() {
   private data class ColumnContext(
     val columnName: String,
     val columnClass: Class<*>,
-    val isEditable: Boolean
+    val isEditable: Boolean,
   )
 
   companion object {
@@ -136,7 +136,7 @@ private open class SortableTableModel : DefaultTableModel() {
 
 private class ColumnComparator(
   val index: Int,
-  val ascending: Boolean
+  val ascending: Boolean,
 ) : Comparator<Any>, Serializable {
   override fun compare(one: Any, two: Any): Int {
     val one1 = (one as? List<*>)?.filterIsInstance<Comparable<Any>>()
@@ -175,7 +175,7 @@ private class SortButtonRenderer : JButton(), TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     text = value?.toString() ?: ""
     icon = iconSize?.let { EmptyIcon(it) }

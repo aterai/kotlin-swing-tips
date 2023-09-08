@@ -60,7 +60,7 @@ fun makeUI(): Component {
 private data class PluginNode(
   private val name: String,
   val plugins: List<String> = emptyList(),
-  val selectedIndex: Int = 0
+  val selectedIndex: Int = 0,
 ) {
   override fun toString() = name
 }
@@ -104,7 +104,7 @@ private class PluginCellRenderer(comboBox: JComboBox<String>) : TreeCellRenderer
     expanded: Boolean,
     leaf: Boolean,
     row: Int,
-    hasFocus: Boolean
+    hasFocus: Boolean,
   ): Component {
     panel.extractNode(value)
     return panel
@@ -121,7 +121,7 @@ private class PluginCellEditor(comboBox: JComboBox<String>) : DefaultCellEditor(
     isSelected: Boolean,
     expanded: Boolean,
     leaf: Boolean,
-    row: Int
+    row: Int,
   ): Component {
     node = panel.extractNode(value)
     return panel

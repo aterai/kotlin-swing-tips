@@ -48,7 +48,7 @@ fun makeUI(): Component {
 private class ScaledIcon(
   private val icon: Icon,
   private val width: Int,
-  private val height: Int
+  private val height: Int,
 ) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return

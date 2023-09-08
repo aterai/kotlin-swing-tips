@@ -160,7 +160,7 @@ private class ButtonsRenderer<E>(comboBox: RemoveButtonComboBox<E>) : ListCellRe
     value: E?,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ): Component {
     val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
     if (index < 0) {

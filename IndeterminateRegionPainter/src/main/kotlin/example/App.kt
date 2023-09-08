@@ -120,7 +120,7 @@ private class IndeterminateRegionPainter : AbstractRegionPainter() {
     c: JComponent,
     width: Int,
     height: Int,
-    extendedCacheKeys: Array<Any>?
+    extendedCacheKeys: Array<Any>?,
   ) {
     path = decodePath1()
     g.paint = color17

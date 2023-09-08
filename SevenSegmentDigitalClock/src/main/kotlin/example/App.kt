@@ -129,7 +129,7 @@ private class DigitalClock : JPanel() {
 private class DigitalNumber(
   private val dx: Double,
   private val dy: Double,
-  private val isosceles: Double
+  private val isosceles: Double,
 ) {
   private val width: Double
   private val height: Double
@@ -226,7 +226,7 @@ private enum class Seg {
       val at = AffineTransform.getTranslateInstance(x, y)
       return at.createTransformedShape(horiz1(w, i))
     }
-  };
+  }, ;
 
   abstract fun getShape(x: Double, y: Double, w: Double, h: Double, i: Double): Shape
 

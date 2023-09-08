@@ -100,7 +100,7 @@ private object ResizeCursorUtils {
     rect: Rectangle,
     header: JTableHeader,
     pt: Point,
-    column: Int
+    column: Int,
   ): TableColumn? {
     val midPoint = rect.x + rect.width / 2
     val columnIndex = if (header.componentOrientation.isLeftToRight) {
@@ -175,7 +175,7 @@ private class MyBasicTableHeaderUI : BasicTableHeaderUI() {
 private class ShapeIcon(
   private val shape: Shape,
   private val width: Int,
-  private val height: Int
+  private val height: Int,
 ) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return

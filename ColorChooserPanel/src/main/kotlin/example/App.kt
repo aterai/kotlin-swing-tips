@@ -52,7 +52,7 @@ fun showColorChooserDialog(
   p: Component,
   title: String,
   selected: List<String>,
-  initialColor: Color?
+  initialColor: Color?,
 ): Color? {
   val cc = JColorChooser()
   cc.color = initialColor

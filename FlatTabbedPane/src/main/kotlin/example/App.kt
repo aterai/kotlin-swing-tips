@@ -60,7 +60,7 @@ private class FlatTabbedPaneUI : BasicTabbedPaneUI() {
     tabIndex: Int,
     iconRect: Rectangle?,
     textRect: Rectangle?,
-    isSelected: Boolean
+    isSelected: Boolean,
   ) { /* Do not paint anything */ }
 
   override fun paintTabBorder(
@@ -71,7 +71,7 @@ private class FlatTabbedPaneUI : BasicTabbedPaneUI() {
     y: Int,
     w: Int,
     h: Int,
-    isSelected: Boolean
+    isSelected: Boolean,
   ) { /* Do not paint anything */ }
 
   override fun paintTabBackground(
@@ -82,7 +82,7 @@ private class FlatTabbedPaneUI : BasicTabbedPaneUI() {
     y: Int,
     w: Int,
     h: Int,
-    isSelected: Boolean
+    isSelected: Boolean,
   ) {
     g.color = if (isSelected) SELECTED_BG else UNSELECTED_BG
     g.fillRect(x, y, w, h)
@@ -95,7 +95,7 @@ private class FlatTabbedPaneUI : BasicTabbedPaneUI() {
     x: Int,
     y: Int,
     w: Int,
-    h: Int
+    h: Int,
   ) {
     paintContentBorder(g, x, y, w, h)
   }
@@ -107,7 +107,7 @@ private class FlatTabbedPaneUI : BasicTabbedPaneUI() {
     x: Int,
     y: Int,
     w: Int,
-    h: Int
+    h: Int,
   ) {
     paintContentBorder(g, x, y, w, h)
   }
@@ -119,7 +119,7 @@ private class FlatTabbedPaneUI : BasicTabbedPaneUI() {
     x: Int,
     y: Int,
     w: Int,
-    h: Int
+    h: Int,
   ) {
     paintContentBorder(g, x, y, w, h)
   }
@@ -131,7 +131,7 @@ private class FlatTabbedPaneUI : BasicTabbedPaneUI() {
     x: Int,
     y: Int,
     w: Int,
-    h: Int
+    h: Int,
   ) {
     paintContentBorder(g, x, y, w, h)
   }

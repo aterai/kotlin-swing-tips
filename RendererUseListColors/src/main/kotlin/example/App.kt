@@ -33,7 +33,7 @@ fun makeUI(): Component {
       value: Any?,
       index: Int,
       isSelected: Boolean,
-      cellHasFocus: Boolean
+      cellHasFocus: Boolean,
     ): Component {
       return super.getListCellRendererComponent(
         list,
@@ -55,7 +55,7 @@ fun makeUI(): Component {
       value: Any?,
       index: Int,
       isSelected: Boolean,
-      cellHasFocus: Boolean
+      cellHasFocus: Boolean,
     ): Component {
       return super.getListCellRendererComponent(
         list,

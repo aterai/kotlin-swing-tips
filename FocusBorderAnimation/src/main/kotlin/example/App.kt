@@ -42,7 +42,7 @@ private fun makeTextField(text: String) = JTextField(text, 32).also {
 }
 
 private class AnimatedBorder(
-  c: JComponent
+  c: JComponent,
 ) : EmptyBorder(BORDER, BORDER, BORDER + BOTTOM_SPACE, BORDER) {
   private val animator = Timer(10, null)
   private val stroke = BasicStroke(BORDER.toFloat())
@@ -140,7 +140,7 @@ private class AnimatedBorder(
     points: MutableList<Point2D>,
     prev: Point2D,
     pt: Point2D,
-    delta: Double = 0.02
+    delta: Double = 0.02,
   ) {
     var fraction = delta
     val distance = prev.distance(pt)

@@ -68,7 +68,7 @@ private class VerticalTableHeaderRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     emptyIcon.width = ascendingIcon.iconWidth
     emptyIcon.height = ascendingIcon.iconHeight

@@ -73,7 +73,7 @@ private class LinkCellRenderer<E> : ListCellRenderer<E> {
     value: E?,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ): Component {
     panel.removeAll()
     panel.add(label)

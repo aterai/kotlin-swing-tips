@@ -69,7 +69,7 @@ private class RowDataRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component = renderer.getTableCellRendererComponent(
     table,
     value,

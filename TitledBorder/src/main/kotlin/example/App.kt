@@ -57,7 +57,8 @@ private enum class VerticalOrientation(val mode: Int, private val description: S
   BELOW_TOP(TitledBorder.BELOW_TOP, "Below Top"),
   ABOVE_BOTTOM(TitledBorder.ABOVE_BOTTOM, "Above Bottom"),
   BOTTOM(TitledBorder.BOTTOM, "Bottom"),
-  BELOW_BOTTOM(TitledBorder.BELOW_BOTTOM, "Below Bottom");
+  BELOW_BOTTOM(TitledBorder.BELOW_BOTTOM, "Below Bottom"),
+  ;
 
   override fun toString() = description
 }
@@ -68,7 +69,8 @@ private enum class Justification(val mode: Int, private val description: String)
   CENTER(TitledBorder.CENTER, "Center"),
   RIGHT(TitledBorder.RIGHT, "Right"),
   LEADING(TitledBorder.LEADING, "Leading"),
-  TRAILING(TitledBorder.TRAILING, "Trailing");
+  TRAILING(TitledBorder.TRAILING, "Trailing"),
+  ;
 
   override fun toString() = description
 }

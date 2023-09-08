@@ -175,7 +175,7 @@ fun makeUI(): Component {
 }
 
 private open class BackgroundTask(
-  private val lengthOfTask: Int
+  private val lengthOfTask: Int,
 ) : SwingWorker<Int, ProgressValue>() {
   private val randomSleep = (1..49).random()
 

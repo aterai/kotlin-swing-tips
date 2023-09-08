@@ -197,7 +197,7 @@ private enum class TabPlacement(val placement: Int) {
   TOP(SwingConstants.TOP),
   BOTTOM(SwingConstants.BOTTOM),
   LEFT(SwingConstants.LEFT),
-  RIGHT(SwingConstants.RIGHT)
+  RIGHT(SwingConstants.RIGHT),
 }
 
 private object LookAndFeelUtils {

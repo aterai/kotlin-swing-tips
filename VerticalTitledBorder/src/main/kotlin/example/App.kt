@@ -40,7 +40,7 @@ private class VerticalTitledBorder(title: String?) : TitledBorder(title) {
     x: Int,
     y: Int,
     width: Int,
-    height: Int
+    height: Int,
   ) {
     val border = getBorder()
     val title = getTitle()
@@ -123,7 +123,7 @@ private class VerticalTitledBorder(title: String?) : TitledBorder(title) {
     private fun makeComponentBorderInsets(
       border: Border?,
       c: Component,
-      i: Insets
+      i: Insets,
     ): Insets {
       var ins = Insets(i.top, i.left, i.bottom, i.right)
       when (border) {

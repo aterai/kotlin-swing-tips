@@ -36,7 +36,7 @@ fun makeUI(): Component {
 private class ComponentTitledBorder(
   private val comp: Component,
   container: Container,
-  private val border: Border
+  private val border: Border,
 ) : MouseAdapter(), Border, SwingConstants {
   init {
     if (comp is JComponent) {
@@ -54,7 +54,7 @@ private class ComponentTitledBorder(
     x: Int,
     y: Int,
     width: Int,
-    height: Int
+    height: Int,
   ) {
     if (c is Container) {
       val borderInsets = border.getBorderInsets(c)

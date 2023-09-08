@@ -196,7 +196,7 @@ private class CalendarListRenderer : ListCellRenderer<LocalDate> {
     value: LocalDate,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ): Component {
     val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
     val isSameMonth = YearMonth.from(value) == YearMonth.from(currentLocalDate)

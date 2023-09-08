@@ -26,7 +26,7 @@ private fun setScaleAndAdd(
   parent: Container,
   layout: SpringLayout,
   child: Component,
-  r: Rectangle2D.Float
+  r: Rectangle2D.Float,
 ) {
   val pw = layout.getConstraint(SpringLayout.WIDTH, parent)
   val ph = layout.getConstraint(SpringLayout.HEIGHT, parent)

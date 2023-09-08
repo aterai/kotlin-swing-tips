@@ -78,7 +78,7 @@ private fun updateCheckBoxes(value: BigInteger) {
 
 private class StatusEdit(
   private val oldValue: BigInteger,
-  private val newValue: BigInteger
+  private val newValue: BigInteger,
 ) : AbstractUndoableEdit() {
   override fun undo() {
     super.undo()

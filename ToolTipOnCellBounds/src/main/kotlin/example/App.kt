@@ -128,7 +128,7 @@ private open class TooltipListCellRenderer<E> : ListCellRenderer<E> {
     value: E?,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ): Component = renderer.getListCellRendererComponent(
     list,
     value,
@@ -148,7 +148,7 @@ private open class TooltipListCellRenderer<E> : ListCellRenderer<E> {
 
 private class RendererIcon(
   private val renderer: Component,
-  private val rect: Rectangle
+  private val rect: Rectangle,
 ) : Icon {
   init {
     rect.setLocation(0, 0)

@@ -106,7 +106,7 @@ private class FileNameRenderer(table: JTable) : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     textLabel.font = table.font
     textLabel.text = value?.toString() ?: ""

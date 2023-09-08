@@ -56,7 +56,7 @@ private class DiagonallySplitBorder(
   left: Int,
   bottom: Int,
   right: Int,
-  matteColor: Color
+  matteColor: Color,
 ) : MatteBorder(top, left, bottom, right, matteColor) {
   override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
     super.paintBorder(c, g, x, y, width, height)
@@ -81,7 +81,7 @@ private class DiagonallySplitHeaderRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     trl.border = BorderFactory.createEmptyBorder(8, 0, 0, 4)
     bll.border = BorderFactory.createEmptyBorder(0, 4, 8, 0)
@@ -104,7 +104,7 @@ private class VerticalTableHeaderRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val r = table.tableHeader.defaultRenderer
     val c = r.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)

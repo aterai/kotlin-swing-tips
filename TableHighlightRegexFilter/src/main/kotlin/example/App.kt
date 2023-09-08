@@ -108,7 +108,7 @@ private class HighlightTableCellRenderer : JTextField(), TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val txt = value?.toString() ?: ""
     val highlighter = highlighter

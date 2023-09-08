@@ -73,7 +73,7 @@ private fun makeTestImage(
   colorModel: ColorModel,
   w: Int,
   h: Int,
-  transIdx: Int
+  transIdx: Int,
 ): Image {
   val buf = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
   for (y in 0 until h) {
@@ -104,11 +104,11 @@ private fun makeMissingImage(): BufferedImage {
 private data class IndexedColor(
   val index: Int,
   val color: Color,
-  val isTransparent: Boolean
+  val isTransparent: Boolean,
 )
 
 private class PaletteListModel(
-  private val model: IndexColorModel
+  private val model: IndexColorModel,
 ) : AbstractListModel<IndexedColor>() {
   override fun getSize() = model.mapSize
 

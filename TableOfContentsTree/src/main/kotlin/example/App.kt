@@ -100,7 +100,7 @@ private class TableOfContentsTreeCellRenderer : DefaultTreeCellRenderer() {
     expanded: Boolean,
     leaf: Boolean,
     row: Int,
-    hasFocus: Boolean
+    hasFocus: Boolean,
   ): Component {
     val c = super.getTreeCellRendererComponent(
       tree,
@@ -118,7 +118,7 @@ private class TableOfContentsTreeCellRenderer : DefaultTreeCellRenderer() {
   private fun getTocRenderer(
     c: JLabel,
     tree: JTree,
-    toc: TableOfContents
+    toc: TableOfContents,
   ): Component {
     renderer.removeAll()
     renderer.add(c, BorderLayout.WEST)
@@ -182,7 +182,7 @@ private class TableOfContentsTree(model: TreeModel?) : JTree(model) {
     tcr: DefaultTreeCellRenderer,
     pageNumMaxWidth: Int,
     maxX: Int,
-    i: Int
+    i: Int,
   ) {
     val node = getPathForRow(i).lastPathComponent as? DefaultMutableTreeNode
     val r = getRowBounds(i)

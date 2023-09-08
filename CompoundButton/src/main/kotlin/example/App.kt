@@ -37,12 +37,12 @@ private enum class ButtonLocation(val startAngle: Double) {
   NORTH(45.0),
   EAST(135.0),
   SOUTH(225.0),
-  WEST(-45.0)
+  WEST(-45.0),
 }
 
 private class CompoundButton(
   private val dim: Dimension,
-  private val bl: ButtonLocation
+  private val bl: ButtonLocation,
 ) : JButton() {
   private var shape: Shape? = null
   private var base: Shape? = null
@@ -57,7 +57,7 @@ private class CompoundButton(
         c: Component?,
         g: Graphics,
         x: Int,
-        y: Int
+        y: Int,
       ) {
         val g2 = g.create() as? Graphics2D ?: return
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)

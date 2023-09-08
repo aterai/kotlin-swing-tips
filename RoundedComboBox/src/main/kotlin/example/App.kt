@@ -68,7 +68,7 @@ fun makeUI(): Component {
 private fun makeBox0(
   combo0: JComboBox<String>,
   combo1: JComboBox<String>,
-  combo2: JComboBox<String>
+  combo2: JComboBox<String>,
 ) = Box.createVerticalBox().also {
   combo0.border = RoundedCornerBorder()
   combo1.border = KamabokoBorder()
@@ -96,7 +96,7 @@ private fun makeBox0(
 private fun makeBox1(
   combo00: JComboBox<String>,
   combo01: JComboBox<String>,
-  combo02: JComboBox<String>
+  combo02: JComboBox<String>,
 ) = Box.createVerticalBox().also {
   combo00.ui = MetalComboBoxUI()
   combo01.ui = BasicComboBoxUI()

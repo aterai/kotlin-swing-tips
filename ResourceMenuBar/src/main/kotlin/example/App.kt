@@ -231,7 +231,7 @@ private class Utf8ResourceBundleControl : ResourceBundle.Control() {
     locale: Locale?,
     format: String?,
     loader: ClassLoader?,
-    reload: Boolean
+    reload: Boolean,
   ): ResourceBundle? {
     var bundle: ResourceBundle? = null
     if ("properties" == format) {

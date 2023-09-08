@@ -43,7 +43,7 @@ private fun makeComponent(str: String, border: Border) = JLabel().also {
 
 private class ComponentTitledBorder(
   private val comp: Component,
-  private val border: Border
+  private val border: Border,
 ) : Border, SwingConstants {
   init {
     (comp as? JComponent)?.isOpaque = true

@@ -74,7 +74,7 @@ private class ListIconRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     renderer.removeAll()
     if (isSelected) {

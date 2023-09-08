@@ -130,7 +130,7 @@ private class TextComponentPopupMenu : JPopupMenu() {
 
 private class BasicTransferable(
   private var plainData: String,
-  private var htmlData: String
+  private var htmlData: String,
 ) : Transferable {
   private val htmlFlavors = arrayOf(
     DataFlavor("text/html;class=java.lang.String"),

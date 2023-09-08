@@ -50,7 +50,7 @@ private class CustomCellEditor(field: JTextField) : DefaultCellEditor(field) {
 }
 
 private class CustomComponentCellEditor(
-  private val field: JTextField
+  private val field: JTextField,
 ) : DefaultCellEditor(field) {
   private val panel = JPanel(BorderLayout())
 
@@ -73,7 +73,7 @@ private class CustomComponentCellEditor(
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     field.text = value?.toString() ?: ""
     EventQueue.invokeLater {
@@ -113,7 +113,7 @@ private class CustomComponent : JPanel(BorderLayout()) {
     ks: KeyStroke,
     e: KeyEvent,
     condition: Int,
-    pressed: Boolean
+    pressed: Boolean,
   ): Boolean {
     if (!field.isFocusOwner && !pressed) {
       field.requestFocusInWindow()
@@ -128,14 +128,14 @@ private class CustomComponent : JPanel(BorderLayout()) {
 }
 
 private class CustomComponentCellEditor2(
-  private val component: CustomComponent
+  private val component: CustomComponent,
 ) : DefaultCellEditor(component.field) {
   override fun getTableCellEditorComponent(
     table: JTable,
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     component.field.text = value?.toString() ?: ""
     return component

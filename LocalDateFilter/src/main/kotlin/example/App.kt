@@ -88,7 +88,7 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
     selected: Boolean,
     focused: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val c = super.getTableCellRendererComponent(table, value, selected, focused, row, column)
     if (value is LocalDate && c is JLabel) {
@@ -116,7 +116,7 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
 }
 
 private class CalendarViewTableModel(
-  private val currentMonth: YearMonth
+  private val currentMonth: YearMonth,
 ) : DefaultTableModel(currentMonth.lengthOfMonth(), 2) {
   override fun getColumnClass(column: Int) = if (column == 0) {
     LocalDate::class.java
@@ -143,7 +143,7 @@ private class CalendarViewTableModel(
 private class LocalDateFilter(
   private val startDate: LocalDate,
   private val endDate: LocalDate,
-  private val column: Int
+  private val column: Int,
 ) : RowFilter<TableModel, Int>() {
   override fun include(entry: Entry<out TableModel, out Int>): Boolean {
     val date = entry.model.getValueAt(entry.identifier, column)

@@ -80,7 +80,7 @@ fun updateCheckBoxes(value: BitSet) {
 
 private class StatusEdit(
   private val oldValue: BitSet,
-  private val newValue: BitSet
+  private val newValue: BitSet,
 ) : AbstractUndoableEdit() {
   override fun undo() { // throws CannotUndoException {
     super.undo()

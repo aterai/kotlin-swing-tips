@@ -57,7 +57,7 @@ fun makeUI(): Component {
       isSelected: Boolean,
       hasFocus: Boolean,
       row: Int,
-      column: Int
+      column: Int,
     ): Component {
       val c: Component
       val m = table.model

@@ -91,7 +91,7 @@ private class MultiColumnCellRenderer : ListCellRenderer<PairItem> {
     value: PairItem,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ): Component {
     leftLabel.text = value.leftText
     rightLabel.text = value.rightText

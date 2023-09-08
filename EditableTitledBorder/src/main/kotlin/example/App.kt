@@ -50,7 +50,7 @@ private class EditableTitledBorder(
   justification: Int,
   pos: Int,
   font: Font?,
-  var comp: Component
+  var comp: Component,
 ) : TitledBorder(border, title, justification, pos, font) {
   private val editor = JTextField()
   private val renderer = JLabel()
@@ -138,7 +138,7 @@ private class EditableTitledBorder(
     title: String,
     justification: Int,
     pos: Int,
-    c: Component
+    c: Component,
   ) : this(border, title, justification, pos, null, c)
 
   override fun isBorderOpaque() = true
@@ -220,7 +220,7 @@ private class EditableTitledBorder(
     c: Component,
     size: Dimension,
     insets: Insets,
-    lblR: Rectangle
+    lblR: Rectangle,
   ) {
     if (lblR.width > size.width) {
       lblR.width = size.width

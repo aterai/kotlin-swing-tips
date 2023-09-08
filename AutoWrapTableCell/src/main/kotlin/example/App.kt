@@ -65,7 +65,7 @@ private class TextAreaCellRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     renderer.font = table.font
     renderer.text = value?.toString() ?: ""
@@ -78,7 +78,7 @@ private class TextAreaCellRenderer : TableCellRenderer {
   private fun adjustRowHeight(
     table: JTable,
     row: Int,
-    column: Int
+    column: Int,
   ) {
     renderer.bounds = table.getCellRect(row, column, false)
     val preferredHeight = renderer.preferredSize.height

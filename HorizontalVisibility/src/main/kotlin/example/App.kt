@@ -107,7 +107,7 @@ private fun makeBox(list: List<JButton>) = Box.createHorizontalBox().also {
 
 private class EmptyThumbHandler(
   private val textField: JTextField,
-  private val scroller: JScrollBar
+  private val scroller: JScrollBar,
 ) : ComponentAdapter(), DocumentListener {
   private val emptyThumbModel = DefaultBoundedRangeModel(0, 1, 0, 1)
 

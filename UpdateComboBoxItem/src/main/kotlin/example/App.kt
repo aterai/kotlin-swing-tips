@@ -78,7 +78,7 @@ private class CheckBoxCellRenderer<E : CheckableItem> : ListCellRenderer<E> {
     value: E,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ): Component {
     if (index < 0) {
       // val txt = getCheckedItemString(list.model)
@@ -112,7 +112,7 @@ private class CheckBoxCellRenderer<E : CheckableItem> : ListCellRenderer<E> {
 }
 
 private open class CheckedComboBox<E : CheckableItem>(
-  model: ComboBoxModel<E>
+  model: ComboBoxModel<E>,
 ) : JComboBox<E>(model) {
   private var keepOpen = false
   private var listener: ActionListener? = null
@@ -167,7 +167,7 @@ private open class CheckedComboBox<E : CheckableItem>(
 }
 
 private class CheckedComboBox1<E : CheckableItem>(
-  model: ComboBoxModel<E>
+  model: ComboBoxModel<E>,
 ) : CheckedComboBox<E>(model) {
   override fun updateItem(index: Int) {
     if (isPopupVisible) {
@@ -179,7 +179,7 @@ private class CheckedComboBox1<E : CheckableItem>(
 }
 
 private class CheckedComboBox2<E : CheckableItem>(
-  model: ComboBoxModel<E>
+  model: ComboBoxModel<E>,
 ) : CheckedComboBox<E>(model) {
   override fun updateItem(index: Int) {
     if (isPopupVisible) {
@@ -193,7 +193,7 @@ private class CheckedComboBox2<E : CheckableItem>(
 }
 
 private class CheckedComboBox3<E : CheckableItem>(
-  model: ComboBoxModel<E>
+  model: ComboBoxModel<E>,
 ) : CheckedComboBox<E>(model) {
   override fun updateItem(index: Int) {
     if (isPopupVisible) {
@@ -207,7 +207,7 @@ private class CheckedComboBox3<E : CheckableItem>(
 }
 
 private class CheckableComboBoxModel<E>(
-  items: Array<E>
+  items: Array<E>,
 ) : DefaultComboBoxModel<E>(items) {
   fun fireContentsChanged(index: Int) {
     super.fireContentsChanged(this, index, index)
@@ -215,7 +215,7 @@ private class CheckableComboBoxModel<E>(
 }
 
 private class CheckedComboBox4<E : CheckableItem>(
-  model: ComboBoxModel<E>
+  model: ComboBoxModel<E>,
 ) : CheckedComboBox<E>(model) {
   override fun updateItem(index: Int) {
     if (isPopupVisible) {

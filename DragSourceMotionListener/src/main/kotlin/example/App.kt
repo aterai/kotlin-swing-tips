@@ -131,7 +131,7 @@ private class LabelTransferHandler : TransferHandler("Text") {
 
 private class LabelTransferable(
   private val localObjectFlavor: DataFlavor,
-  private val panel: DragPanel?
+  private val panel: DragPanel?,
 ) : Transferable {
   private val ss: StringSelection?
 

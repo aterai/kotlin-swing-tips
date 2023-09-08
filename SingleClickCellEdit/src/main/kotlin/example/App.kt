@@ -69,7 +69,7 @@ class UnderlineCellRenderer : DefaultTableCellRenderer(), MouseListener, MouseMo
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     if (c is JLabel) {

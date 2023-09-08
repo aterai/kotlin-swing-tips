@@ -142,14 +142,14 @@ private class LineFocusTable(model: TableModel) : JTable(model) {
 
 private enum class Type {
   START,
-  END
+  END,
 }
 
 private class DotBorder(
   top: Int,
   left: Int,
   bottom: Int,
-  right: Int
+  right: Int,
 ) : EmptyBorder(top, left, bottom, right) {
   val type: MutableSet<Type> = EnumSet.noneOf(Type::class.java)
 

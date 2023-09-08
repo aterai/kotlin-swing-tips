@@ -52,7 +52,7 @@ private class LineStyleTreeUI : BasicTreeUI() {
     row: Int,
     isExpanded: Boolean,
     hasBeenExpanded: Boolean,
-    isLeaf: Boolean
+    isLeaf: Boolean,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.stroke = horizontalLine
@@ -66,7 +66,7 @@ private class LineStyleTreeUI : BasicTreeUI() {
     g: Graphics,
     clipBounds: Rectangle,
     insets: Insets,
-    path: TreePath
+    path: TreePath,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.stroke = verticalLine

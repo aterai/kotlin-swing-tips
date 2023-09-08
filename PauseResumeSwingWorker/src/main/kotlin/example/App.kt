@@ -145,7 +145,7 @@ private enum class ProgressType {
   TOTAL,
   FILE,
   LOG,
-  PAUSE
+  PAUSE,
 }
 
 private data class Progress(val component: ProgressType, val value: Any)

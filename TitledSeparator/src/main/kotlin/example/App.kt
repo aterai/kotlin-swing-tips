@@ -30,7 +30,7 @@ fun makeUI(): Component {
 private class TitledSeparator(
   private val title: String,
   private val target: Color?,
-  private val titlePosition: Int
+  private val titlePosition: Int,
 ) : JLabel() {
   constructor(title: String, titlePosition: Int) : this(
     title,

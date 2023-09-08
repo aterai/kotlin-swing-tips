@@ -101,7 +101,7 @@ private class FileTreeCellRenderer : DefaultTreeCellRenderer() {
     expanded: Boolean,
     leaf: Boolean,
     row: Int,
-    hasFocus: Boolean
+    hasFocus: Boolean,
   ): Component {
     val c = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
     if (c is JLabel) {

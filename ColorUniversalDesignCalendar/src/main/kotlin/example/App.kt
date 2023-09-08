@@ -78,7 +78,7 @@ private class CalendarTableRenderer : TableCellRenderer {
     selected: Boolean,
     focused: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     renderer.isOpaque = true
     renderer.removeAll()

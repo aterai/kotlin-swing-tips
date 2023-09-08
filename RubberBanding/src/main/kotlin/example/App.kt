@@ -188,7 +188,7 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
     value: ListItem?,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ): Component {
     if (value != null) {
       label.text = value.title

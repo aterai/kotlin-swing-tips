@@ -132,7 +132,7 @@ private class DateEditor : AbstractCellEditor(), TableCellEditor {
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     spinner.value = value
     return spinner
@@ -158,7 +158,7 @@ private class ColorRenderer : DefaultTableCellRenderer() {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     if (value is Color && c is JLabel) {
@@ -207,7 +207,7 @@ private class ColorEditor : AbstractCellEditor(), TableCellEditor, ActionListene
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     currentColor = (value as? Color)?.also {
       button.icon = ColorIcon(it)
@@ -317,7 +317,7 @@ private class HtmlTableTransferHandler : TransferHandler() {
 
 private class BasicTransferable(
   private var plainData: String,
-  private var htmlData: String
+  private var htmlData: String,
 ) : Transferable {
   private val htmlFlavors = arrayOf(
     DataFlavor("text/html;class=java.lang.String"),

@@ -73,7 +73,7 @@ private class IconTableCellRenderer : DefaultTableCellRenderer() {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     if (c is JLabel && value is IconItem) {
@@ -193,7 +193,7 @@ private class IconTable(model: TableModel?, private val editor: JList<IconItem>)
 
 private class EditorFromList(
   model: ListModel<IconItem>,
-  private val dim: Dimension
+  private val dim: Dimension,
 ) : JList<IconItem>(model) {
   private var handler: RollOverListener? = null
   private var rollOverRowIndex = -1

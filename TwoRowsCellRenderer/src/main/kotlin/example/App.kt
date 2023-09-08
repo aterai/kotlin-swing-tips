@@ -48,7 +48,7 @@ private class TwoRowsCellRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     if (isSelected) {
       top.foreground = table.selectionForeground

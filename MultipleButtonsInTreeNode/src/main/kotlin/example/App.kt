@@ -54,7 +54,7 @@ private class ButtonCellRenderer : TreeCellRenderer {
     expanded: Boolean,
     leaf: Boolean,
     row: Int,
-    hasFocus: Boolean
+    hasFocus: Boolean,
   ): Component {
     val c = panel.renderer.getTreeCellRendererComponent(
       tree,
@@ -84,7 +84,7 @@ private class ButtonCellEditor : AbstractCellEditor(), TreeCellEditor {
     isSelected: Boolean,
     expanded: Boolean,
     leaf: Boolean,
-    row: Int
+    row: Int,
   ): Component {
     val c = panel.renderer.getTreeCellRendererComponent(
       tree,

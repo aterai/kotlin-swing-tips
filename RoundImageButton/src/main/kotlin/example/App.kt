@@ -113,7 +113,8 @@ private fun makeIcon(path: String): Icon {
 enum class ButtonAlignments(private val description: String, val alignment: Float) {
   TOP("Top Alignment", Component.TOP_ALIGNMENT),
   CENTER("Center Alignment", Component.CENTER_ALIGNMENT),
-  BOTTOM("Bottom Alignment", Component.BOTTOM_ALIGNMENT);
+  BOTTOM("Bottom Alignment", Component.BOTTOM_ALIGNMENT),
+  ;
 
   override fun toString() = description
 }

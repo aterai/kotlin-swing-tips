@@ -74,7 +74,7 @@ private class CompoundTreeCellRenderer : DefaultTreeCellRenderer() {
     expanded: Boolean,
     leaf: Boolean,
     row: Int,
-    hasFocus: Boolean
+    hasFocus: Boolean,
   ): Component {
     val bgColor: Color
     val fgColor: Color
@@ -107,7 +107,7 @@ private class CompoundTreeCellRenderer : DefaultTreeCellRenderer() {
 
 private class DotBorder(
   color: Color,
-  private val borderSelectionColor: Color
+  private val borderSelectionColor: Color,
 ) : LineBorder(color, 1) {
   override fun isBorderOpaque() = true
 

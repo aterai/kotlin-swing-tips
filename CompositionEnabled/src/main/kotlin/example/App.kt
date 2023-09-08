@@ -12,7 +12,7 @@ fun makeUI(): Component {
       ks: KeyStroke,
       e: KeyEvent,
       condition: Int,
-      pressed: Boolean
+      pressed: Boolean,
     ): Boolean {
       if (!check.isSelected || isTabOrEnterKey(ks)) {
         // println("tab or enter typed")

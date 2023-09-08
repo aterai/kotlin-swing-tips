@@ -77,7 +77,7 @@ private class RowDataModel : DefaultTableModel() {
   private data class ColumnContext(
     val columnName: String,
     val columnClass: Class<*>,
-    val isEditable: Boolean
+    val isEditable: Boolean,
   )
 
   companion object {
@@ -111,7 +111,7 @@ private class DeleteButtonRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ) = renderer
 }
 
@@ -133,7 +133,7 @@ private class DeleteButtonEditor : AbstractCellEditor(), TableCellEditor {
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ) = renderer
 
   override fun getCellEditorValue() = ""

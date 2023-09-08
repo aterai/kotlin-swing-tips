@@ -31,7 +31,7 @@ private enum class MessageType(val messageType: Int) {
   ERROR(JOptionPane.ERROR_MESSAGE),
   INFORMATION(JOptionPane.INFORMATION_MESSAGE),
   WARNING(JOptionPane.WARNING_MESSAGE),
-  QUESTION(JOptionPane.QUESTION_MESSAGE)
+  QUESTION(JOptionPane.QUESTION_MESSAGE),
 }
 
 fun main() {

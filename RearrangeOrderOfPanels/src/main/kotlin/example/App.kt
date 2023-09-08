@@ -159,7 +159,7 @@ private class RearrangingHandler : MouseAdapter() {
     parent: Container,
     remove: Component?,
     insert: Component?,
-    idx: Int
+    idx: Int,
   ) {
     if (insert == null) {
       return

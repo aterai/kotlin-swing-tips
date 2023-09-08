@@ -127,7 +127,7 @@ private class CentredBackgroundBorder(private val image: BufferedImage) : Border
     x: Int,
     y: Int,
     width: Int,
-    height: Int
+    height: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)

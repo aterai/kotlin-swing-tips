@@ -70,7 +70,7 @@ fun makeUI(): Component {
 }
 
 private class FolderSelectionListener(
-  private val fileSystemView: FileSystemView
+  private val fileSystemView: FileSystemView,
 ) : TreeSelectionListener {
   override fun valueChanged(e: TreeSelectionEvent) {
     val tree = e.source as? JTree
@@ -95,7 +95,7 @@ private class FolderSelectionListener(
 
 private open class BackgroundTask constructor(
   private val fileSystemView: FileSystemView,
-  private val parent: File
+  private val parent: File,
 ) : SwingWorker<String, File>() {
   public override fun doInBackground(): String {
     fileSystemView.getFiles(parent, true)

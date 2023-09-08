@@ -66,7 +66,7 @@ private class WrappedLabelRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     if (isSelected) {
       renderer.foreground = table.selectionForeground
@@ -115,7 +115,7 @@ private open class WrappedLabel(str: String? = "") : JLabel(str) {
       str: String,
       width: Double,
       font: Font,
-      frc: FontRenderContext
+      frc: FontRenderContext,
     ): GlyphVector {
       val gmPos = Point2D.Float()
       val gv = font.createGlyphVector(frc, str)
@@ -153,7 +153,7 @@ private class TextAreaCellRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     if (isSelected) {
       renderer.foreground = table.selectionForeground

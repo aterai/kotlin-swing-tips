@@ -76,7 +76,7 @@ fun makeUI(): Component {
 private enum class Permissions {
   EXECUTE,
   WRITE,
-  READ
+  READ,
 }
 
 private class CheckBoxesPanel : JPanel() {
@@ -145,7 +145,7 @@ private class CheckBoxesRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     renderer.updateButtons(value)
     return renderer
@@ -177,7 +177,7 @@ private class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     renderer.updateButtons(value)
     return renderer

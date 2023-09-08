@@ -170,7 +170,7 @@ private class DnDTree : JTree() {
       expanded: Boolean,
       leaf: Boolean,
       row: Int,
-      hasFocus: Boolean
+      hasFocus: Boolean,
     ): Component {
       if (value is TreeNode) {
         isTargetNode = value == dropTargetNode

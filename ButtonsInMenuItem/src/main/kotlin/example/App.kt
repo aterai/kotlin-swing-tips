@@ -168,7 +168,7 @@ private class ToggleButtonBarCellIcon : Icon {
 }
 
 private class EditMenuLayerUI<V : Component>(
-  private val lastButton: AbstractButton
+  private val lastButton: AbstractButton,
 ) : LayerUI<V>() {
   private var shape: Shape? = null
 

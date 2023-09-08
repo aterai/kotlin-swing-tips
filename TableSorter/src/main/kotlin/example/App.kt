@@ -301,7 +301,7 @@ private class SortableHeaderRenderer(val cellRenderer: TableCellRenderer) : Tabl
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component = cellRenderer.getTableCellRendererComponent(
     table,
     value,
@@ -330,7 +330,7 @@ private class SortableHeaderRenderer(val cellRenderer: TableCellRenderer) : Tabl
 private class Arrow(
   private val descending: Boolean,
   private val size: Int,
-  private val priority: Int
+  private val priority: Int,
 ) : Icon, Serializable {
   override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
     val color1 = c?.background ?: Color.GRAY

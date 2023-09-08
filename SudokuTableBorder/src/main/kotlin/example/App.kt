@@ -58,7 +58,7 @@ fun makeUI(): Component {
       value: Any?,
       isSelected: Boolean,
       row: Int,
-      column: Int
+      column: Int,
     ): Component {
       val v = if (value == 0) "" else value
       return super.getTableCellEditorComponent(table, v, isSelected, row, column)
@@ -116,7 +116,7 @@ private class SudokuCellRenderer(src: Array<Array<Number>>) : DefaultTableCellRe
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val isEditable = mask[row][column] == 0
     val b = isEditable && isSelected

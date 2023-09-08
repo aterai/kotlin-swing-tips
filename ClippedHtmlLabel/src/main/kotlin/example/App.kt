@@ -83,7 +83,7 @@ private class UrlRenderer1 : UrlRenderer() {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val c = super.getTableCellRendererComponent(table, value, isSelected, false, row, column)
     val str = value?.toString() ?: ""
@@ -107,7 +107,7 @@ private open class UrlRenderer : DefaultTableCellRenderer(), MouseListener, Mous
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val c = super.getTableCellRendererComponent(table, value, isSelected, false, row, column)
     if (c is JLabel) {

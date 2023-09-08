@@ -40,7 +40,7 @@ private val table = object : JTable(model) {
   override fun prepareEditor(
     editor: TableCellEditor,
     row: Int,
-    column: Int
+    column: Int,
   ) = super.prepareEditor(editor, row, column).also {
     if (it is JCheckBox) {
       it.background = selectionBackground
@@ -66,7 +66,7 @@ fun makeUI(): Component {
 
 private class HeaderRenderer(
   header: JTableHeader,
-  private val pop: JPopupMenu
+  private val pop: JPopupMenu,
 ) : JButton(), TableCellRenderer {
   private var rolloverIndex = -1
   private val handler = object : MouseInputAdapter() {
@@ -124,7 +124,7 @@ private class HeaderRenderer(
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val r = table.tableHeader.defaultRenderer
     val c = r.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)

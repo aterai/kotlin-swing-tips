@@ -61,7 +61,7 @@ fun makeUI(): Component {
 
 private enum class Wipe {
   IN,
-  OUT
+  OUT,
 }
 
 fun main() {

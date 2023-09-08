@@ -21,7 +21,7 @@ fun makeUI() = JPanel(BorderLayout()).also {
 }
 
 private open class LoadSaveTask(
-  val windowState: WindowState
+  val windowState: WindowState,
 ) : SwingWorker<WindowListener?, Void?>() {
   public override fun doInBackground(): WindowListener? {
     val service: PersistenceService? = runCatching {

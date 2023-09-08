@@ -126,7 +126,7 @@ private class GradientPalletSliderUI : MetalSliderUI() {
     trackTop: Int,
     trackLeft: Int,
     trackBottom: Int,
-    trackRight: Int
+    trackRight: Int,
   ) {
     if (slider.isEnabled) {
       g.color = controlDarkShadow
@@ -150,7 +150,7 @@ private class GradientPalletSliderUI : MetalSliderUI() {
     trackTop: Int,
     trackLeft: Int,
     trackBottom: Int,
-    trackRight: Int
+    trackRight: Int,
   ) {
     var middleOfThumb: Int
     val fillTop: Int
@@ -189,7 +189,7 @@ private class GradientPalletSliderUI : MetalSliderUI() {
     trackTop: Int,
     trackLeft: Int,
     trackBottom: Int,
-    trackRight: Int
+    trackRight: Int,
   ) {
     var yy = trackTop + (trackBottom - trackTop) / 2
     for (i in 10 downTo 0) {

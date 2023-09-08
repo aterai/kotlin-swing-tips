@@ -136,7 +136,7 @@ private fun makeFormatterFactory(): DefaultFormatterFactory {
 
 private enum class FontPaint {
   IPA_EX_MINCHO,
-  IPA_MJ_MINCHO
+  IPA_MJ_MINCHO,
 }
 
 fun main() {

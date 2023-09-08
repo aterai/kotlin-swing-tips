@@ -74,7 +74,7 @@ private class ButtonsRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     panel.background = if (isSelected) table.selectionBackground else table.background
     return panel
@@ -134,7 +134,7 @@ private class ButtonsEditor(private val table: JTable) : AbstractCellEditor(), T
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ) = panel.also { it.background = tbl.selectionBackground }
 
   override fun getCellEditorValue() = ""

@@ -171,7 +171,7 @@ private class WholeRowSelectableTreeUI : BasicTreeUI() {
     row: Int,
     isExpanded: Boolean,
     hasBeenExpanded: Boolean,
-    isLeaf: Boolean
+    isLeaf: Boolean,
   ) {
     val isSelected = tree.isRowSelected(row)
 

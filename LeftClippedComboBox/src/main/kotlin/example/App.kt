@@ -38,7 +38,7 @@ private fun initComboBoxRenderer(combo: JComboBox<String>) {
       value: Any?,
       index: Int,
       isSelected: Boolean,
-      cellHasFocus: Boolean
+      cellHasFocus: Boolean,
     ): Component {
       val c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
       if (c is JLabel) {

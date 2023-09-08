@@ -100,7 +100,7 @@ class CheckBoxNodeRenderer : TreeCellRenderer {
     expanded: Boolean,
     leaf: Boolean,
     row: Int,
-    hasFocus: Boolean
+    hasFocus: Boolean,
   ): Component {
     val c = tcr.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
     c.font = tree.font
@@ -147,7 +147,7 @@ class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
     selected: Boolean,
     expanded: Boolean,
     leaf: Boolean,
-    row: Int
+    row: Int,
   ): Component {
     val c = renderer.getTreeCellRendererComponent(tree, value, true, expanded, leaf, row, true)
     c.font = tree.font

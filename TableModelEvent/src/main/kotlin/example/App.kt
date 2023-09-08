@@ -81,7 +81,7 @@ private class HeaderRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     if (value is Status) {
       when (value) {
@@ -128,7 +128,7 @@ private class ComponentIcon(private val c: Component) : Icon {
 private enum class Status {
   SELECTED,
   DESELECTED,
-  INDETERMINATE
+  INDETERMINATE,
 }
 
 private class TablePopupMenu : JPopupMenu() {
@@ -171,7 +171,7 @@ private class TablePopupMenu : JPopupMenu() {
 
 private class HeaderCheckBoxHandler(
   private val table: JTable,
-  private val targetColumnIndex: Int
+  private val targetColumnIndex: Int,
 ) : MouseAdapter(), TableModelListener {
   override fun tableChanged(e: TableModelEvent) {
     val vci = table.convertColumnIndexToView(targetColumnIndex)
@@ -213,7 +213,7 @@ private class HeaderCheckBoxHandler(
     m: TableModel,
     column: TableColumn,
     status: Any,
-    e: TableModelEvent
+    e: TableModelEvent,
   ): Boolean {
     var selected = status === Status.DESELECTED
     var deselected = status === Status.SELECTED

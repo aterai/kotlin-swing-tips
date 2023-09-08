@@ -153,7 +153,7 @@ private class BooleanEditor : AbstractCellEditor(), TableCellEditor {
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     checkBox.isSelected = value == true
     renderer.add(checkBox)

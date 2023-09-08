@@ -104,7 +104,7 @@ private object SvgUtils {
     pi: PathIterator,
     sz: Int,
     style: String?,
-    desc: String?
+    desc: String?,
   ): String {
     val sb = StringBuilder()
     val c = DoubleArray(6)

@@ -101,7 +101,7 @@ private class HighlightTreeCellRenderer : TreeCellRenderer {
     expanded: Boolean,
     leaf: Boolean,
     row: Int,
-    hasFocus: Boolean
+    hasFocus: Boolean,
   ): Component {
     val txt = value?.toString() ?: ""
     renderer.highlighter.removeAllHighlights()

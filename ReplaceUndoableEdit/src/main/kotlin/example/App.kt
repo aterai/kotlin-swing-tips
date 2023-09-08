@@ -96,7 +96,7 @@ private class CustomUndoPlainDocument : PlainDocument() {
     offset: Int,
     length: Int,
     text: String,
-    attrs: AttributeSet?
+    attrs: AttributeSet?,
   ) {
     if (length == 0) { // println("insert")
       super.replace(offset, length, text, attrs)
@@ -120,7 +120,7 @@ private class DocumentFilterUndoManager : UndoManager() {
       offset: Int,
       length: Int,
       text: String,
-      attrs: AttributeSet?
+      attrs: AttributeSet?,
     ) {
       if (length == 0) {
         fb.insertString(offset, text, attrs)

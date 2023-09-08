@@ -43,7 +43,7 @@ private class BigDecimalSpinnerModel(
   value: Double,
   minimum: Double,
   maximum: Double,
-  stepSize: Double
+  stepSize: Double,
 ) : SpinnerNumberModel(value, minimum, maximum, stepSize) {
   override fun getPreviousValue() = incrValue2(-1)
 

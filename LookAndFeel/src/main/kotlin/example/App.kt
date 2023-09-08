@@ -87,7 +87,7 @@ private object LookAndFeelUtils {
     menu: JMenu,
     lafMenuGroup: ButtonGroup,
     label: String,
-    laf: String
+    laf: String,
   ): JMenuItem {
     val mi = menu.add(JRadioButtonMenuItem(label))
     lafMenuGroup.add(mi)

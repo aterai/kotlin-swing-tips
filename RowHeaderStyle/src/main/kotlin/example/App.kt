@@ -53,7 +53,7 @@ private class RowHeaderRenderer : MouseAdapter(), TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val tcr = table.tableHeader.defaultRenderer
     val f = row == rollOverRowIndex

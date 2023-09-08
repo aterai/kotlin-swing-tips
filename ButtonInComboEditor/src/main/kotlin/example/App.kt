@@ -73,7 +73,7 @@ private fun initComboBox(combo: JComboBox<SiteItem>) {
 }
 
 private class SiteItemComboBox(
-  model: DefaultComboBoxModel<SiteItem>
+  model: DefaultComboBoxModel<SiteItem>,
 ) : JComboBox<SiteItem>(model) {
   init {
     val favicon = makeLabel()
@@ -156,7 +156,7 @@ private class SiteItemComboBox(
 
 private class SiteComboBoxLayout(
   private val favicon: JLabel?,
-  private val feedButton: JButton?
+  private val feedButton: JButton?,
 ) : LayoutManager {
   override fun addLayoutComponent(name: String, comp: Component) {
     // not needed

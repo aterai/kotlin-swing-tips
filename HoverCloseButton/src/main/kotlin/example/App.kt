@@ -19,7 +19,7 @@ fun makeUI(): Component {
 }
 
 private class HoverCloseButtonTabbedPane(
-  tabPlacement: Int = TOP
+  tabPlacement: Int = TOP,
 ) : JTabbedPane(tabPlacement, SCROLL_TAB_LAYOUT) {
   private var hoverHandler: MouseMotionListener? = null
 
@@ -53,7 +53,7 @@ private class HoverCloseButtonTabbedPane(
 private class TabPanel(
   pane: JTabbedPane,
   title: String?,
-  content: Component?
+  content: Component?,
 ) : JPanel(BorderLayout()) {
   private val button = object : JButton(CloseTabIcon()) {
     override fun updateUI() {

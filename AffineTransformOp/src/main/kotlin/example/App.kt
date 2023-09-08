@@ -88,7 +88,7 @@ private fun makeMissingImage(): BufferedImage {
 private enum class Flip {
   NONE,
   VERTICAL,
-  HORIZONTAL
+  HORIZONTAL,
 }
 
 private class MissingIcon : Icon {

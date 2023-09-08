@@ -172,7 +172,7 @@ private object SpringLayoutUtils {
     parent: Container,
     layout: SpringLayout,
     child: Component,
-    r: Rectangle2D.Float
+    r: Rectangle2D.Float,
   ) {
     val pnlWidth = layout.getConstraint(SpringLayout.WIDTH, parent)
     val pnlHeight = layout.getConstraint(SpringLayout.HEIGHT, parent)
@@ -190,7 +190,7 @@ private object SpringLayoutUtils {
     leftList: JList<*>,
     rightList: JList<*>,
     l2rButton: JButton,
-    r2lButton: JButton
+    r2lButton: JButton,
   ): Component {
     val box = Box.createVerticalBox()
     box.border = BorderFactory.createEmptyBorder(0, 2, 0, 2)

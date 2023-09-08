@@ -403,7 +403,7 @@ private class TreeTransferHandler : TransferHandler() {
 
   private fun deepCopyTreeNode(
     src: MutableTreeNode,
-    tgt: DefaultMutableTreeNode
+    tgt: DefaultMutableTreeNode,
   ): DefaultMutableTreeNode {
     src.children().toList()
       .filterIsInstance<DefaultMutableTreeNode>()

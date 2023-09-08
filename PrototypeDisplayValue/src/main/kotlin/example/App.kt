@@ -99,7 +99,7 @@ private class SiteListCellRenderer<E : WebSite> : ListCellRenderer<E> {
     value: E?,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ): Component {
     val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
     c.isEnabled = list.isEnabled

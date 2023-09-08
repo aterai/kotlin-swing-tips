@@ -24,7 +24,7 @@ fun makeUI(): Component {
       value: Any?,
       index: Int,
       isSelected: Boolean,
-      cellHasFocus: Boolean
+      cellHasFocus: Boolean,
     ): Component {
       cellHeight = super.getPreferredSize()?.takeIf { index < 0 }?.height ?: 32
       return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)

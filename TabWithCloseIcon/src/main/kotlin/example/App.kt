@@ -89,7 +89,7 @@ private class CloseableTabIconHandler : MouseAdapter() {
   private fun isCloseTabIconRollover(
     tabbedPane: CloseableTabbedPane,
     icon: CloseTabIcon,
-    e: MouseEvent
+    e: MouseEvent,
   ): Boolean {
     val rect = icon.bounds
     val pos = tabbedPane.headerViewPosition
@@ -203,7 +203,7 @@ private class CloseableWindowsTabbedPaneUI : WindowsTabbedPaneUI() {
     tabRect: Rectangle?,
     iconRect: Rectangle,
     textRect: Rectangle,
-    isSelected: Boolean
+    isSelected: Boolean,
   ) {
     textRect.setLocation(0, 0)
     iconRect.setLocation(0, 0)
@@ -253,7 +253,7 @@ private class CloseableTabbedPaneUI : BasicTabbedPaneUI() {
     tabRect: Rectangle?,
     iconRect: Rectangle,
     textRect: Rectangle,
-    isSelected: Boolean
+    isSelected: Boolean,
   ) {
     textRect.setLocation(0, 0)
     iconRect.setLocation(0, 0)
@@ -342,7 +342,7 @@ private class TabbedPaneWithCloseButton : JTabbedPane() {
 }
 
 private class CloseButtonTabbedPaneUI(
-  val closeButtons: MutableList<JButton>
+  val closeButtons: MutableList<JButton>,
 ) : BasicTabbedPaneUI() {
   override fun createLayoutManager() = object : TabbedPaneLayout() {
     override fun layoutContainer(parent: Container?) {
@@ -385,7 +385,7 @@ private class CloseButtonTabbedPaneUI(
 
 private class CloseButton(
   tabPane: JTabbedPane,
-  index: Int
+  index: Int,
 ) : JButton(CloseButtonAction(tabPane, index)), UIResource {
   init {
     toolTipText = "Close this tab"
@@ -411,7 +411,7 @@ private class CloseButton(
 
 private class CloseButtonAction(
   private val tabPane: JTabbedPane,
-  private val index: Int
+  private val index: Int,
 ) : AbstractAction("x") {
   override fun actionPerformed(e: ActionEvent) {
     tabPane.remove(index)

@@ -26,7 +26,7 @@ fun makeUI(): Component {
 
 private class ScrollTabsAction(
   private val tabbedPane: JTabbedPane,
-  private val action: Action?
+  private val action: Action?,
 ) : AbstractAction() {
   private val index: Int
 

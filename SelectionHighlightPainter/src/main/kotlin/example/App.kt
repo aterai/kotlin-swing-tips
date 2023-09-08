@@ -20,7 +20,7 @@ fun makeUI(): Component {
       offs1: Int,
       bounds: Shape,
       c: JTextComponent,
-      view: View
+      view: View,
     ) = super.paintLayer(g, offs0, offs1, bounds, c, view).also {
       if (it is Rectangle) {
         g.color = Color.ORANGE

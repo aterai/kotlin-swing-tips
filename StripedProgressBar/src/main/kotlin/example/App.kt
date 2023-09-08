@@ -84,14 +84,14 @@ private fun makePanel(cmp: Component): Component {
 
 private class StripedProgressBarUI(
   private val dir: Boolean,
-  private val slope: Boolean
+  private val slope: Boolean,
 ) : BasicProgressBarUI() {
   override fun getBoxLength(availableLength: Int, otherDimension: Int) = availableLength
   // (availableLength / 6.0).roundToInt()
 
   public override fun paintIndeterminate(
     g: Graphics,
-    c: JComponent
+    c: JComponent,
   ) {
     val barRect = SwingUtilities.calculateInnerArea(progressBar, null)
     if (barRect.isEmpty) {

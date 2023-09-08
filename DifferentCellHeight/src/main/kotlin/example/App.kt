@@ -52,7 +52,7 @@ private class TextAreaRenderer<E> : ListCellRenderer<E> {
     value: E?,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ): Component {
     renderer.text = value?.toString() ?: ""
     if (isSelected) {

@@ -95,7 +95,7 @@ private class HighlightTableCellRenderer : DefaultTableCellRenderer() {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     var txt = value?.toString() ?: ""
     if (pattern.isNotEmpty() && pattern != prev) {

@@ -96,7 +96,7 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
     value: ListItem,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ): Component {
     icon.icon = value.icon
     label.text = value.title

@@ -161,7 +161,7 @@ private class TranslucentPopupFactory : PopupFactory() {
     owner: Component,
     contents: Component,
     x: Int,
-    y: Int
+    y: Int,
   ) = TranslucentPopup(owner, contents, x, y)
 }
 
@@ -169,7 +169,7 @@ private class TranslucentPopup(
   owner: Component?,
   contents: Component,
   ownerX: Int,
-  ownerY: Int
+  ownerY: Int,
 ) : Popup(owner, contents, ownerX, ownerY) {
   private val popupWindow = JWindow()
 

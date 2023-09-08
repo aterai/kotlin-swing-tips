@@ -101,7 +101,7 @@ private class ColumnSpanningCellRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val d: OptionPaneDescription
     if (value is OptionPaneDescription) {

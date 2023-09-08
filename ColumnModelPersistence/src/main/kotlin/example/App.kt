@@ -93,7 +93,7 @@ private class DefaultTableModelPersistenceDelegate : DefaultPersistenceDelegate(
     type: Class<*>,
     oldInstance: Any,
     newInstance: Any,
-    encoder: Encoder
+    encoder: Encoder,
   ) {
     super.initialize(type, oldInstance, newInstance, encoder)
     (oldInstance as? DefaultTableModel)?.also { m ->
@@ -112,7 +112,7 @@ private class DefaultTableColumnModelPersistenceDelegate : DefaultPersistenceDel
     type: Class<*>,
     oldInstance: Any,
     newInstance: Any,
-    encoder: Encoder
+    encoder: Encoder,
   ) {
     super.initialize(type, oldInstance, newInstance, encoder)
     (oldInstance as? DefaultTableColumnModel)?.also { m ->

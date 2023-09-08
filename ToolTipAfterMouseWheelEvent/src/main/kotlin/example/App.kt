@@ -105,7 +105,7 @@ private class TooltipListCellRenderer<E> : ListCellRenderer<E> {
     value: E?,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ): Component {
     val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
     if (c is JComponent && value != null) {

@@ -99,7 +99,8 @@ private class TexturePanel(lm: LayoutManager) : JPanel(lm) {
 private enum class TexturePaints(private val description: String) {
   NULL("Color(.5f, .8f, .5f, .5f)"),
   IMAGE("Image TexturePaint"),
-  CHECKER("Checker TexturePaint");
+  CHECKER("Checker TexturePaint"),
+  ;
 
   val texturePaint
     get() = when (this) {

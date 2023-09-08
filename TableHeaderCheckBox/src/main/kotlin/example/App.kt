@@ -82,7 +82,7 @@ private class HeaderRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val status = value as? Status ?: Status.INDETERMINATE
     when (status) {
@@ -111,7 +111,7 @@ private class HeaderRenderer : TableCellRenderer {
 
 private class HeaderCheckBoxHandler(
   private val table: JTable,
-  private val targetColumnIndex: Int
+  private val targetColumnIndex: Int,
 ) : MouseAdapter(), TableModelListener {
   override fun tableChanged(e: TableModelEvent) {
     if (e.type == TableModelEvent.UPDATE && e.column == targetColumnIndex) {
@@ -175,7 +175,7 @@ private class ComponentIcon(private val cmp: Component) : Icon {
 private enum class Status {
   SELECTED,
   DESELECTED,
-  INDETERMINATE
+  INDETERMINATE,
 }
 
 fun main() {

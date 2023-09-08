@@ -36,7 +36,7 @@ private fun makeList(): JList<String> {
 }
 
 private class AnimeListCellRenderer<E>(
-  val list: JList<E>
+  val list: JList<E>,
 ) : JPanel(BorderLayout()), ListCellRenderer<E>, HierarchyListener {
   private val iconLabel = AnimeIcon()
   private val marqueeLabel = MarqueeLabel()
@@ -76,7 +76,7 @@ private class AnimeListCellRenderer<E>(
     value: E?,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ): Component {
     background = if (isSelected) SELECTED_COLOR else l.background
     marqueeLabel.text = value?.toString() ?: ""

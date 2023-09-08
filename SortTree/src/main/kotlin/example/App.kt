@@ -145,7 +145,7 @@ private object TreeUtils {
 
   fun deepCopyTree(
     src: DefaultMutableTreeNode,
-    tgt: DefaultMutableTreeNode
+    tgt: DefaultMutableTreeNode,
   ): DefaultMutableTreeNode {
     src.children().toList()
       .filterIsInstance<DefaultMutableTreeNode>()

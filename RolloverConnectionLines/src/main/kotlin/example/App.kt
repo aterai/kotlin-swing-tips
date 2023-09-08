@@ -33,7 +33,7 @@ fun makeUI(): Component {
           row: Int,
           isExpanded: Boolean,
           hasBeenExpanded: Boolean,
-          isLeaf: Boolean
+          isLeaf: Boolean,
         ) = rollover && super.shouldPaintExpandControl(
           path,
           row,
@@ -47,7 +47,7 @@ fun makeUI(): Component {
           c: JComponent,
           y: Int,
           left: Int,
-          right: Int
+          right: Int,
         ) {
           if (rollover) {
             super.paintHorizontalLine(g, c, y, left, right)
@@ -59,7 +59,7 @@ fun makeUI(): Component {
           c: JComponent,
           x: Int,
           top: Int,
-          bottom: Int
+          bottom: Int,
         ) {
           if (rollover) {
             super.paintVerticalLine(g, c, x, top, bottom)

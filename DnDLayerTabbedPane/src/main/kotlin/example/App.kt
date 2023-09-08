@@ -481,7 +481,7 @@ private class DropLocationLayerUI : LayerUI<DnDTabbedPane>() {
 }
 
 private class ButtonTabComponent(
-  private val tabbedPane: JTabbedPane
+  private val tabbedPane: JTabbedPane,
 ) : JPanel(FlowLayout(FlowLayout.LEFT, 0, 0)) {
   private inner class TabButtonHandler : MouseAdapter(), ActionListener {
     override fun actionPerformed(e: ActionEvent) {

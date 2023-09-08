@@ -50,7 +50,7 @@ private class SliderRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     renderer.background = if (isSelected) table.selectionBackground else table.background
     if (value is Int) {
@@ -84,7 +84,7 @@ private class SliderEditor : AbstractCellEditor(), TableCellEditor {
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     if (value is Int) {
       renderer.value = value

@@ -66,7 +66,7 @@ private class AlignDecimalCellRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     textPane.font = table.font
     textPane.text = "\t" + value?.toString()

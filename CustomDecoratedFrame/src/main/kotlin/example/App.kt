@@ -105,7 +105,7 @@ private fun makeCloseButton() = JButton(CloseIcon()).also {
 private enum class Side(
   val cursor: Int,
   val size: Dimension,
-  val resize: BiFunction<Rectangle, Point, Rectangle>
+  val resize: BiFunction<Rectangle, Point, Rectangle>,
 ) {
   N(
     Cursor.N_RESIZE_CURSOR,
@@ -180,7 +180,8 @@ private enum class Side(
       r.width += d.x
       r
     },
-  );
+  ),
+  ;
 
   companion object {
     fun getByType(cursor: Int): Side? = EnumSet.allOf(Side::class.java).first { d ->

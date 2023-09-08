@@ -43,7 +43,7 @@ private data class CheckableItem(val title: String, val isSelected: Boolean) {
 }
 
 private open class CheckedComboBox(
-  model: ComboBoxModel<CheckableItem>
+  model: ComboBoxModel<CheckableItem>,
 ) : JComboBox<CheckableItem>(model) {
   protected var keepOpen = false
   private val panel = JPanel(BorderLayout())
@@ -132,7 +132,7 @@ private open class CheckedComboBox(
 }
 
 private class WindowsCheckedComboBox(
-  model: ComboBoxModel<CheckableItem>
+  model: ComboBoxModel<CheckableItem>,
 ) : CheckedComboBox(model) {
   private var listener: ActionListener? = null
 

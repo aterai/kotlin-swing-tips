@@ -90,7 +90,7 @@ private class TextAreaCellRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     textArea.font = table.font
     textArea.text = value?.toString() ?: ""
@@ -102,7 +102,7 @@ private class TextAreaCellRenderer : TableCellRenderer {
 private data class RowHeader(
   val title: String,
   val isExpandable: Boolean,
-  val isSelected: Boolean
+  val isSelected: Boolean,
 ) {
   override fun equals(other: Any?): Boolean {
     if (this === other) {
@@ -147,7 +147,7 @@ private class RowHeaderRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     if (value is RowHeader) {
       renderer.check.isVisible = value.isExpandable
@@ -181,7 +181,7 @@ private class RowHeaderEditor : AbstractCellEditor(), TableCellEditor {
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     if (value is RowHeader) {
       renderer.check.isVisible = value.isExpandable

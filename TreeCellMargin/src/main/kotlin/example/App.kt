@@ -61,7 +61,7 @@ private class MarginTreeCellRenderer : DefaultTreeCellRenderer() {
     expanded: Boolean,
     leaf: Boolean,
     row: Int,
-    hasFocus: Boolean
+    hasFocus: Boolean,
   ): Component {
     super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, false)
     // this.tree = tree
@@ -103,7 +103,7 @@ private class MarginTreeCellRenderer : DefaultTreeCellRenderer() {
   private fun paintFocusRect(
     g: Graphics,
     r: Rectangle,
-    notColor: Color
+    notColor: Color,
   ) {
     val bsColor = getBorderSelectionColor()
     val b = selected || !drawDashedFocus
@@ -169,7 +169,7 @@ private class CompoundTreeCellRenderer : DefaultTreeCellRenderer() {
     expanded: Boolean,
     leaf: Boolean,
     row: Int,
-    hasFocus: Boolean
+    hasFocus: Boolean,
   ): Component {
     val bgColor: Color
     val fgColor: Color
@@ -204,7 +204,7 @@ private class CompoundTreeCellRenderer : DefaultTreeCellRenderer() {
 
 private class DotBorder(
   color: Color?,
-  private val borderSelectionColor: Color
+  private val borderSelectionColor: Color,
 ) : LineBorder(color, 1) {
   override fun isBorderOpaque() = true
 
@@ -214,7 +214,7 @@ private class DotBorder(
     x: Int,
     y: Int,
     w: Int,
-    h: Int
+    h: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)

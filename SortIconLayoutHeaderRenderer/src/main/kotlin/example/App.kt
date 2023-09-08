@@ -83,7 +83,7 @@ private class SortIconLayoutHeaderRenderer(private val component: Component) : T
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     emptyIcon.width = ascendingIcon.iconWidth
     emptyIcon.height = ascendingIcon.iconHeight

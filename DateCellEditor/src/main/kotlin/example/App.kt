@@ -76,7 +76,7 @@ private class SpinnerCellEditor : AbstractCellEditor(), TableCellEditor {
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ) = spinner.also { it.value = value }
 
   override fun getCellEditorValue() = spinner.value

@@ -45,7 +45,7 @@ fun makeUI(): Component {
 }
 
 private class HtmlListEditor(
-  spinner: JSpinner
+  spinner: JSpinner,
 ) : JLabel(spinner.value.toString()), ChangeListener {
   init {
     require(spinner.model is SpinnerListModel) { "model not a SpinnerListModel" }

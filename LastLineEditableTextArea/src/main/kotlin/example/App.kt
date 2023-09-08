@@ -27,7 +27,7 @@ private class NonEditableLineDocumentFilter : DocumentFilter() {
     fb: FilterBypass,
     offset: Int,
     text: String?,
-    attr: AttributeSet?
+    attr: AttributeSet?,
   ) {
     if (text != null) {
       replace(fb, offset, 0, text, attr)
@@ -38,7 +38,7 @@ private class NonEditableLineDocumentFilter : DocumentFilter() {
   override fun remove(
     fb: FilterBypass,
     offset: Int,
-    length: Int
+    length: Int,
   ) {
     replace(fb, offset, length, "", null)
   }
@@ -49,7 +49,7 @@ private class NonEditableLineDocumentFilter : DocumentFilter() {
     offset: Int,
     length: Int,
     text: String?,
-    attrs: AttributeSet?
+    attrs: AttributeSet?,
   ) {
     val doc = fb.document
     val root = doc.defaultRootElement

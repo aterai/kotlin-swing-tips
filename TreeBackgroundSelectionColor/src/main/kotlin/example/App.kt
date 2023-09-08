@@ -55,7 +55,7 @@ private class SelectionColorTreeCellRenderer : DefaultTreeCellRenderer() {
     expanded: Boolean,
     leaf: Boolean,
     row: Int,
-    hasFocus: Boolean
+    hasFocus: Boolean,
   ): Component = super.getTreeCellRendererComponent(
     tree,
     value,

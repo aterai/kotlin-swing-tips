@@ -163,7 +163,7 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
     parent: Container,
     remove: Component?,
     insert: Component?,
-    idx: Int
+    idx: Int,
   ) {
     if (insert == null) {
       return

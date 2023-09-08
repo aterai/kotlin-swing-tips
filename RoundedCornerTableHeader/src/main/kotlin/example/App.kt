@@ -131,7 +131,7 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
     selected: Boolean,
     focused: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val c = super.getTableCellRendererComponent(table, value, false, false, row, column)
     if (value is LocalDate && c is JLabel) {
@@ -241,7 +241,7 @@ private class RoundedHeaderRenderer : DefaultTableCellRenderer() {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     val l = when (column) {

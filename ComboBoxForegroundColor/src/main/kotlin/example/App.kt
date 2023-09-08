@@ -74,7 +74,7 @@ private data class ColorItem(val color: Color, val description: String) : Serial
 }
 
 private class ComboForegroundRenderer(
-  private val combo: JComboBox<ColorItem>
+  private val combo: JComboBox<ColorItem>,
 ) : ListCellRenderer<ColorItem> {
   private val renderer: ListCellRenderer<in ColorItem> = DefaultListCellRenderer()
   private val selectedBackground = Color(0xF0_F5_FA)
@@ -84,7 +84,7 @@ private class ComboForegroundRenderer(
     value: ColorItem?,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ): Component {
     val ic = value?.color?.also {
       if (index < 0 && it != combo.foreground) {
@@ -109,7 +109,7 @@ private class ComboHtmlRenderer : ListCellRenderer<ColorItem> {
     value: ColorItem?,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ): Component {
     if (index < 0) {
       list.selectionBackground = selectedBackground

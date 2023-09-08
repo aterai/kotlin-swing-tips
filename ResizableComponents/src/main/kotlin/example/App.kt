@@ -151,7 +151,8 @@ private class DefaultResizableBorder : ResizableBorder, SwingConstants {
       Function { r ->
         Point(r.x + r.width - SIZE, r.y + r.height - SIZE)
       },
-    );
+    ),
+    ;
 
     val cursor: Cursor = Cursor.getPredefinedCursor(cursor)
 
@@ -168,7 +169,7 @@ private class DefaultResizableBorder : ResizableBorder, SwingConstants {
     x: Int,
     y: Int,
     w: Int,
-    h: Int
+    h: Int,
   ) {
     g.color = Color.BLACK
     g.drawRect(x + SIZE / 2, y + SIZE / 2, w - SIZE, h - SIZE)
@@ -264,7 +265,7 @@ private enum class Directions(private val cursor: Int) {
       startingBounds: Rectangle,
       parentBounds: Rectangle,
       deltaX: Int,
-      deltaY: Int
+      deltaY: Int,
     ) = Point(0, getDeltaY(deltaY, startingBounds))
 
     override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
@@ -279,7 +280,7 @@ private enum class Directions(private val cursor: Int) {
       startingBounds: Rectangle,
       parentBounds: Rectangle,
       deltaX: Int,
-      deltaY: Int
+      deltaY: Int,
     ) = Point(0, getDeltaY(deltaY, parentBounds, startingBounds))
 
     override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
@@ -294,7 +295,7 @@ private enum class Directions(private val cursor: Int) {
       startingBounds: Rectangle,
       parentBounds: Rectangle,
       deltaX: Int,
-      deltaY: Int
+      deltaY: Int,
     ) = Point(getDeltaX(deltaX, startingBounds), 0)
 
     override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
@@ -309,7 +310,7 @@ private enum class Directions(private val cursor: Int) {
       startingBounds: Rectangle,
       parentBounds: Rectangle,
       deltaX: Int,
-      deltaY: Int
+      deltaY: Int,
     ) = Point(getDeltaX(deltaX, parentBounds, startingBounds), 0)
 
     override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
@@ -324,7 +325,7 @@ private enum class Directions(private val cursor: Int) {
       startingBounds: Rectangle,
       parentBounds: Rectangle,
       deltaX: Int,
-      deltaY: Int
+      deltaY: Int,
     ) = Point(getDeltaX(deltaX, startingBounds), getDeltaY(deltaY, startingBounds))
 
     override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
@@ -339,7 +340,7 @@ private enum class Directions(private val cursor: Int) {
       startingBounds: Rectangle,
       parentBounds: Rectangle,
       deltaX: Int,
-      deltaY: Int
+      deltaY: Int,
     ) = Point(getDeltaX(deltaX, parentBounds, startingBounds), getDeltaY(deltaY, startingBounds))
 
     override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
@@ -354,7 +355,7 @@ private enum class Directions(private val cursor: Int) {
       startingBounds: Rectangle,
       parentBounds: Rectangle,
       deltaX: Int,
-      deltaY: Int
+      deltaY: Int,
     ) = Point(getDeltaX(deltaX, startingBounds), getDeltaY(deltaY, parentBounds, startingBounds))
 
     override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
@@ -369,7 +370,7 @@ private enum class Directions(private val cursor: Int) {
       startingBounds: Rectangle,
       parentBounds: Rectangle,
       deltaX: Int,
-      deltaY: Int
+      deltaY: Int,
     ) = Point(
       getDeltaX(deltaX, parentBounds, startingBounds),
       getDeltaY(deltaY, parentBounds, startingBounds),
@@ -387,7 +388,7 @@ private enum class Directions(private val cursor: Int) {
       startingBounds: Rectangle,
       parentBounds: Rectangle,
       deltaX: Int,
-      deltaY: Int
+      deltaY: Int,
     ) = Point(deltaX, deltaY)
 
     override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
@@ -396,7 +397,7 @@ private enum class Directions(private val cursor: Int) {
       rect.width,
       rect.height,
     )
-  };
+  }, ;
 
   abstract fun getBounds(rect: Rectangle, delta: Point): Rectangle
 
@@ -404,7 +405,7 @@ private enum class Directions(private val cursor: Int) {
     startingBounds: Rectangle,
     parentBounds: Rectangle,
     deltaX: Int,
-    deltaY: Int
+    deltaY: Int,
   ): Point
 
   companion object {

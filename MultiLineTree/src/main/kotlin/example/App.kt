@@ -112,7 +112,7 @@ private class MultiLineCellRenderer : TreeCellRenderer {
     expanded: Boolean,
     leaf: Boolean,
     row: Int,
-    hasFocus: Boolean
+    hasFocus: Boolean,
   ): Component {
     val bgColor: Color
     val fgColor: Color

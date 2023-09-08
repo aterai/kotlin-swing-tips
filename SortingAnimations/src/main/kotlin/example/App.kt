@@ -150,7 +150,8 @@ private enum class SortAlgorithms(private val description: String) {
   SHELLSORT("Shell Sort"),
   HSORT("Heap Sort"),
   QSORT("Quicksort"),
-  QSORT2("2-way Quicksort");
+  QSORT2("2-way Quicksort"),
+  ;
 
   override fun toString() = description
 }
@@ -176,7 +177,7 @@ private enum class GenerateInputs {
         array.add(1.0 - i / n.toDouble())
       }
     }
-  };
+  }, ;
 
   abstract fun generate(array: MutableList<Double>, n: Int)
 }
@@ -193,7 +194,7 @@ private open class SortingTask(
   private val array: List<Double>,
   private val rect: Rectangle,
   private val fax: Double,
-  private val fay: Double
+  private val fay: Double,
 ) : SwingWorker<String, Rectangle>() {
   private val repaintArea = Rectangle(rect)
 

@@ -52,7 +52,7 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
     selected: Boolean,
     focused: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val c = super.getTableCellRendererComponent(table, value, selected, focused, row, column)
     if (value is LocalDate && c is JLabel) {

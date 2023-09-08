@@ -146,7 +146,7 @@ private class FocusAncestorListener : AncestorListener {
 
 private class FindNextAction(
   private val tree: JTree,
-  private val field: JTextField
+  private val field: JTextField,
 ) : AbstractAction() {
   private val rollOverPathLists = mutableListOf<TreePath>()
 
@@ -176,7 +176,7 @@ private fun searchTree(
   tree: JTree,
   path: TreePath,
   q: String,
-  rollOverPathLists: MutableList<TreePath>
+  rollOverPathLists: MutableList<TreePath>,
 ) {
   (path.lastPathComponent as? TreeNode)?.also { node ->
     if (node.toString().startsWith(q)) {

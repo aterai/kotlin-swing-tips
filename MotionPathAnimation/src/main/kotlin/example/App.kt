@@ -95,7 +95,7 @@ class MotionPathAnimationPanel : JPanel(BorderLayout()) {
     points: MutableList<Point2D>,
     prev: Point2D,
     pt: Point2D,
-    delta: Double = 0.02
+    delta: Double = 0.02,
   ) {
     var fraction = delta
     val distance = prev.distance(pt)

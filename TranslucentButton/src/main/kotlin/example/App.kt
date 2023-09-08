@@ -235,7 +235,7 @@ private class CentredBackgroundBorder(private val image: BufferedImage) : Border
     x: Int,
     y: Int,
     width: Int,
-    height: Int
+    height: Int,
   ) {
     val cx = (width - image.width) / 2.0
     val cy = (height - image.height) / 2.0

@@ -139,7 +139,7 @@ private class CheckBoxCellRenderer : MouseAdapter(), ListCellRenderer<CheckBoxNo
     value: CheckBoxNode,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ): Component {
     checkBox.isOpaque = true
     if (isSelected) {
@@ -185,7 +185,7 @@ private class CheckBoxNodeRenderer : TreeCellRenderer {
     expanded: Boolean,
     leaf: Boolean,
     row: Int,
-    hasFocus: Boolean
+    hasFocus: Boolean,
   ): Component {
     if (leaf && value is DefaultMutableTreeNode) {
       checkBox.isOpaque = false
@@ -221,7 +221,7 @@ private class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
     selected: Boolean,
     expanded: Boolean,
     leaf: Boolean,
-    row: Int
+    row: Int,
   ): Component {
     if (leaf && value is DefaultMutableTreeNode) {
       val userObject = value.userObject

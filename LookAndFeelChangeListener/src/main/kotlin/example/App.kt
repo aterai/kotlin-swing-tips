@@ -46,7 +46,8 @@ fun makeUI(): Component {
 
 private enum class TreeDraws(private val key: String) {
   DRAWS_FOCUS_BORDER_AROUND_ICON("Tree.drawsFocusBorderAroundIcon"),
-  DRAW_DASHED_FOCUS_INDICATOR("Tree.drawDashedFocusIndicator");
+  DRAW_DASHED_FOCUS_INDICATOR("Tree.drawDashedFocusIndicator"),
+  ;
 
   override fun toString() = key
 }

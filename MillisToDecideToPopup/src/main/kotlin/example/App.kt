@@ -9,7 +9,7 @@ private fun executeWorker(
   monitor: ProgressMonitor,
   lengthOfTask: Int,
   button: JButton,
-  area: JTextArea
+  area: JTextArea,
 ) {
   val worker = object : BackgroundTask(lengthOfTask) {
     override fun process(chunks: List<String>) {

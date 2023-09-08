@@ -44,14 +44,14 @@ private enum class TabPlacements(val tabPlacement: Int) {
   TOP(JTabbedPane.TOP),
   BOTTOM(JTabbedPane.BOTTOM),
   LEFT(JTabbedPane.LEFT),
-  RIGHT(JTabbedPane.RIGHT)
+  RIGHT(JTabbedPane.RIGHT),
 }
 
 private class WindowsTabHeightTabbedPaneUI : WindowsTabbedPaneUI() {
   override fun calculateTabHeight(
     tabPlacement: Int,
     tabIndex: Int,
-    fontHeight: Int
+    fontHeight: Int,
   ) = TAB_AREA_HEIGHT
 
   override fun paintTab(
@@ -60,7 +60,7 @@ private class WindowsTabHeightTabbedPaneUI : WindowsTabbedPaneUI() {
     rects: Array<Rectangle>,
     tabIndex: Int,
     iconRect: Rectangle,
-    textRect: Rectangle
+    textRect: Rectangle,
   ) {
     val isTopOrBottom = tabPlacement == SwingConstants.TOP || tabPlacement == SwingConstants.BOTTOM
     if (isTopOrBottom && tabPane.selectedIndex != tabIndex) {
@@ -82,7 +82,7 @@ private class BasicTabHeightTabbedPaneUI : BasicTabbedPaneUI() {
   override fun calculateTabHeight(
     tabPlacement: Int,
     tabIndex: Int,
-    fontHeight: Int
+    fontHeight: Int,
   ) = TAB_AREA_HEIGHT
 
   override fun paintTab(
@@ -91,7 +91,7 @@ private class BasicTabHeightTabbedPaneUI : BasicTabbedPaneUI() {
     rects: Array<Rectangle>,
     tabIndex: Int,
     iconRect: Rectangle,
-    textRect: Rectangle
+    textRect: Rectangle,
   ) {
     val isTopOrBottom = tabPlacement == SwingConstants.TOP || tabPlacement == SwingConstants.BOTTOM
     if (isTopOrBottom && tabPane.selectedIndex != tabIndex) {

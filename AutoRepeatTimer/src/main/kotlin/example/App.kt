@@ -48,7 +48,7 @@ private fun makeButton(extent: Int, view: JTextField): JButton {
 
 private class AutoRepeatHandler(
   extent: Int,
-  private val view: JTextComponent
+  private val view: JTextComponent,
 ) : MouseAdapter(), ActionListener {
   private val autoRepeatTimer = Timer(60, this)
   private val extent = BigInteger.valueOf(extent.toLong())

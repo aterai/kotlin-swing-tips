@@ -85,7 +85,7 @@ private class CheckBoxesRenderer : CheckBoxesPanel(), TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     updateButtons(value)
     return this
@@ -122,7 +122,7 @@ private class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     panel.updateButtons(value)
     return panel

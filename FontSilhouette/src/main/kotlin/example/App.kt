@@ -45,7 +45,7 @@ private fun initLabel(l: JLabel, i: Int): JLabel {
 private class SilhouetteIcon(
   private val font: Font,
   private val str: String,
-  private val size: Dimension
+  private val size: Dimension,
 ) : Icon, Serializable {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return

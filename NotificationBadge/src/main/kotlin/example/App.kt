@@ -40,7 +40,7 @@ fun makeUI(): Component {
 private class BadgeLabel(
   image: Icon?,
   val badgePosition: BadgePosition,
-  val counter: Int
+  val counter: Int,
 ) : JLabel(image)
 
 private open class BadgeLayerUI : LayerUI<BadgeLabel>() {
@@ -129,7 +129,7 @@ private class BadgeIconLayerUI : BadgeLayerUI() {
 private open class BadgeIcon(
   private val value: Int,
   private val badgeFgc: Color,
-  private val badgeBgc: Color
+  private val badgeBgc: Color,
 ) : Icon {
   open val badgeShape: Shape
     get() = Ellipse2D.Double(0.0, 0.0, iconWidth.toDouble(), iconHeight.toDouble())
@@ -168,7 +168,7 @@ private enum class BadgePosition {
   NORTH_WEST,
   NORTH_EAST,
   SOUTH_EAST,
-  SOUTH_WEST
+  SOUTH_WEST,
 }
 
 fun main() {

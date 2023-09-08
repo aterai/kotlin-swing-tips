@@ -49,7 +49,7 @@ private class RollOverList<E>(model: ListModel<E>) : JList<E>(model) {
       value: E?,
       index: Int,
       isSelected: Boolean,
-      cellHasFocus: Boolean
+      cellHasFocus: Boolean,
     ): Component = r.getListCellRendererComponent(
       list,
       value,

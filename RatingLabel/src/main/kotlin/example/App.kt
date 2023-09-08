@@ -75,7 +75,7 @@ private fun makeMissingImage(): Image {
 
 private fun makeStarRatingPanel(
   title: String,
-  label: LevelBar
+  label: LevelBar,
 ) = JPanel(FlowLayout(FlowLayout.LEFT)).also {
   val button = JButton("clear")
   button.addActionListener { label.clear() }
@@ -92,7 +92,7 @@ private fun makeStarImageIcon(ip: ImageProducer, filter: ImageFilter): ImageIcon
 private open class LevelBar(
   private val defaultIcon: ImageIcon,
   protected val iconList: List<ImageIcon>,
-  private val gap: Int
+  private val gap: Int,
 ) : JPanel(GridLayout(1, 5, gap * 2, gap * 2)) {
   protected val labelList = listOf(JLabel(), JLabel(), JLabel(), JLabel(), JLabel())
   private var clicked = -1

@@ -57,7 +57,7 @@ private class ToolTipHeaderRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val header = table.tableHeader
     val r = header.defaultRenderer

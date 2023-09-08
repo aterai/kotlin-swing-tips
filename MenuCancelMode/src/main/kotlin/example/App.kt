@@ -36,7 +36,7 @@ fun makeUI(): Component {
 
 private fun makeRadioButton(
   text: String,
-  selected: Boolean
+  selected: Boolean,
 ) = object : JRadioButton(text, selected) {
   override fun updateUI() {
     super.updateUI()

@@ -83,7 +83,7 @@ private enum class CheckIcon {
   ENABLED_SELECTED,
   SELECTED_MOUSEOVER,
   ENABLED,
-  MOUSEOVER
+  MOUSEOVER,
 }
 
 private class MyCheckBoxMenuItemPainter(private val state: CheckIcon) : AbstractRegionPainter() {
@@ -145,7 +145,7 @@ private class MultiLineTableCellRenderer : JTextArea(), TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     font = table.font
     text = value?.toString() ?: ""

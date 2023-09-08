@@ -60,7 +60,7 @@ fun makeUI(): Component {
 
 private class StringAlignmentProgressBar(
   model: BoundedRangeModel,
-  horAlignment: Int
+  horAlignment: Int,
 ) : JProgressBar(model) {
   private val label = JLabel(" ", horAlignment)
 
@@ -99,7 +99,7 @@ private open class BackgroundTask : SwingWorker<String, Void>() {
 }
 
 private class ProgressListener(
-  private val progressBar: JProgressBar
+  private val progressBar: JProgressBar,
 ) : PropertyChangeListener {
   init {
     progressBar.value = 0

@@ -58,7 +58,7 @@ private fun makeContainer(overlap: Int): Container {
 private fun makeBreadcrumbList(
   overlap: Int,
   color: Color,
-  list: List<String>
+  list: List<String>,
 ): Component {
   val p = makeContainer(overlap + LINE_WIDTH)
   val bg = ButtonGroup()

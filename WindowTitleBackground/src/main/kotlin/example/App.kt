@@ -78,7 +78,7 @@ private class ColorRenderer : DefaultTableCellRenderer() {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val l = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     if (l is JLabel && value is Color) {
@@ -144,7 +144,7 @@ private class ColorEditor : AbstractCellEditor(), TableCellEditor, ActionListene
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     currentColor = (value as? Color)?.also {
       button.text = "(${it.red}, ${it.green}, ${it.blue})"

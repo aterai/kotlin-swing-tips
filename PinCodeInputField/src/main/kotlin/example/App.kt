@@ -75,7 +75,7 @@ private class PinCodeDocumentFilter : DocumentFilter() {
     offset: Int,
     length: Int,
     text: String,
-    attrs: AttributeSet?
+    attrs: AttributeSet?,
   ) {
     val str = fb.document.getText(0, fb.document.length) + text
     if (str.length <= MAX && str.matches("\\d+".toRegex())) {
@@ -95,7 +95,7 @@ private class PasswordView2(elem: Element) : PasswordView(elem) {
     x: Int,
     y: Int,
     p0: Int,
-    p1: Int
+    p1: Int,
   ) = drawText(g, x, y, p0, p1)
 
   @Throws(BadLocationException::class)

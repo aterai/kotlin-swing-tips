@@ -67,7 +67,7 @@ private fun makeMissingImage(): Image {
 
 private class CursorActionListener(
   private val comp: Component,
-  private val frames: List<Cursor>
+  private val frames: List<Cursor>,
 ) : ActionListener {
   private var counter = 0
 

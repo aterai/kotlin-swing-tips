@@ -41,7 +41,7 @@ private class StripeTableRenderer : DefaultTableCellRenderer() {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     if (isSelected) {
@@ -82,7 +82,7 @@ private class RowDataModel : DefaultTableModel() {
   private data class ColumnContext(
     val columnName: String,
     val columnClass: Class<*>,
-    val isEditable: Boolean
+    val isEditable: Boolean,
   )
 
   companion object {

@@ -102,7 +102,7 @@ private class WrappedLabel(str: String?) : JLabel(str) {
     str: String?,
     width: Double,
     font: Font,
-    frc: FontRenderContext
+    frc: FontRenderContext,
   ): GlyphVector {
     val gmPos = Point2D.Float()
     val gv = font.createGlyphVector(frc, str)

@@ -131,7 +131,7 @@ private class IconListCellRenderer<E : Icon> : ListCellRenderer<E> {
     value: E?,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ) = renderer.also { renderer.icon = value }
 }
 

@@ -129,7 +129,7 @@ private class TransparentHeader : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val c = cr.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     if (c is JLabel) {
@@ -151,7 +151,7 @@ private class TranslucentObjectRenderer : DefaultTableCellRenderer() {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ) = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)?.also {
     // it.setOpaque(true)
     (it as? JComponent)?.border = BorderFactory.createEmptyBorder(8, 8, 8, 8)
@@ -173,7 +173,7 @@ private class TranslucentBooleanRenderer : JCheckBox(), TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     horizontalAlignment = SwingConstants.CENTER
     if (isSelected) {

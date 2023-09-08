@@ -166,7 +166,7 @@ private class ButtonsRenderer<E>(model: DefaultListModel<E>) : ListCellRenderer<
     value: E?,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ): Component {
     textArea.text = value?.toString() ?: ""
     targetIndex = index

@@ -23,7 +23,7 @@ fun makeUI(): Component {
       rowIndex: Int,
       columnIndex: Int,
       toggle: Boolean,
-      extend: Boolean
+      extend: Boolean,
     ) {
       if (isColumnSelectable(columnIndex)) {
         super.changeSelection(rowIndex, columnIndex, toggle, extend)

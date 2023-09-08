@@ -41,7 +41,7 @@ private fun makeModel(index: Int) = DefaultListModel<String>().also {
 }
 
 private class DnDList<E>(
-  model: ListModel<E>
+  model: ListModel<E>,
 ) : JList<E>(model), DragGestureListener, DragSourceListener, Transferable {
   init {
     DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(

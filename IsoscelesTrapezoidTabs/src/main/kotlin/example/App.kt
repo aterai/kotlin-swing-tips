@@ -59,7 +59,7 @@ private class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
     y: Int,
     w: Int,
     h: Int,
-    isSelected: Boolean
+    isSelected: Boolean,
   ) {
     // Do nothing
   }
@@ -71,7 +71,7 @@ private class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
     tabIndex: Int,
     iconRect: Rectangle,
     textRect: Rectangle,
-    isSelected: Boolean
+    isSelected: Boolean,
   ) {
     // Do nothing
   }
@@ -83,7 +83,7 @@ private class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
     x: Int,
     y: Int,
     w: Int,
-    h: Int
+    h: Int,
   ) {
     super.paintContentBorderTopEdge(g, tabPlacement, selectedIndex, x, y, w, h)
     val selRect = getTabBounds(selectedIndex, calcRect)
@@ -101,7 +101,7 @@ private class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
     y: Int,
     w: Int,
     h: Int,
-    isSelected: Boolean
+    isSelected: Boolean,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)

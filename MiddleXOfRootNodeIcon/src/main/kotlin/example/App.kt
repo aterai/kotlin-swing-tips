@@ -22,7 +22,8 @@ fun makeUI(): Component {
           expanded: Boolean,
           leaf: Boolean,
           row: Int,
-          hasFocus: Boolean ->
+          hasFocus: Boolean,
+        ->
         val c = r.getTreeCellRendererComponent(
           tree,
           value,
@@ -55,7 +56,8 @@ fun makeUI(): Component {
           expanded: Boolean,
           leaf: Boolean,
           row: Int,
-          hasFocus: Boolean ->
+          hasFocus: Boolean,
+        ->
         val c = r.getTreeCellRendererComponent(
           tree,
           value,

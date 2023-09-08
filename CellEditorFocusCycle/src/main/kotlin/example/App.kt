@@ -66,7 +66,7 @@ private fun makeTable(): JTable {
 private enum class Permissions {
   EXECUTE,
   WRITE,
-  READ
+  READ,
 }
 
 private class CheckBoxesPanel : JPanel() {
@@ -128,7 +128,7 @@ private class CheckBoxesRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     if (isSelected) {
       renderer.isOpaque = true
@@ -169,7 +169,7 @@ private class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ) = renderer.also {
     it.isOpaque = true
     it.background = table.selectionBackground

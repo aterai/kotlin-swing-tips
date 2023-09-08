@@ -53,7 +53,7 @@ private fun initContainer(p: Container): Container {
 }
 
 private class MySynthStyleFactory(
-  private val wrappedFactory: SynthStyleFactory
+  private val wrappedFactory: SynthStyleFactory,
 ) : SynthStyleFactory() {
   override fun getStyle(c: JComponent, id: Region): SynthStyle {
     var s = wrappedFactory.getStyle(c, id)
@@ -98,7 +98,7 @@ private class TranslucentSynthStyle(private val style: SynthStyle) : SynthStyle(
         x: Int,
         y: Int,
         w: Int,
-        h: Int
+        h: Int,
       ) {
         g.color = Color(100, 200, 100, 100)
         g.fillRoundRect(x, y, w - 1, h - 1, 15, 15)

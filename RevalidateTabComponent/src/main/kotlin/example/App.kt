@@ -25,7 +25,7 @@ fun makeUI(): Component {
 }
 
 private class ButtonTabComponent(
-  val tabbedPane: JTabbedPane
+  val tabbedPane: JTabbedPane,
 ) : JPanel(FlowLayout(FlowLayout.LEFT, 0, 0)) {
   private inner class TabButtonHandler : MouseAdapter(), ActionListener {
     override fun actionPerformed(e: ActionEvent) {

@@ -141,7 +141,7 @@ private class NineSliceScalingIcon(
   private val lw: Int,
   private val rw: Int,
   private val th: Int,
-  private val bh: Int
+  private val bh: Int,
 ) : Icon {
   private var width = 0
   private var height = 0

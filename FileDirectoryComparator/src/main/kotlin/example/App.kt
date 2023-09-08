@@ -84,7 +84,7 @@ private fun makeTable(): JTable {
 }
 
 private class FileIconTableCellRenderer(
-  private val fileSystemView: FileSystemView
+  private val fileSystemView: FileSystemView,
 ) : DefaultTableCellRenderer() {
   override fun getTableCellRendererComponent(
     table: JTable,
@@ -92,7 +92,7 @@ private class FileIconTableCellRenderer(
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     if (c is JLabel && value is File) {
@@ -143,7 +143,7 @@ private class FileTransferHandler : TransferHandler() {
 }
 
 private open class DefaultFileComparator(
-  protected val column: Int
+  protected val column: Int,
 ) : Comparator<File>, Serializable {
   override fun compare(a: File, b: File) = when (column) {
     0 -> a.name.compareTo(b.name, ignoreCase = true)
@@ -172,7 +172,7 @@ private class FileComparator(column: Int) : DefaultFileComparator(column) {
 // > ls --group-directories-first
 private class FileGroupComparator(
   private val table: JTable,
-  column: Int
+  column: Int,
 ) : DefaultFileComparator(column) {
   override fun compare(a: File, b: File): Int {
     val key = table.rowSorter.sortKeys.firstOrNull()

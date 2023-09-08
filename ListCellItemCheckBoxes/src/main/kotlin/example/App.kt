@@ -283,7 +283,7 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
       value: ListItem,
       index: Int,
       isSelected: Boolean,
-      cellHasFocus: Boolean
+      cellHasFocus: Boolean,
     ): Component {
       label.text = value.title
       itemPanel.border = if (cellHasFocus) focusBorder else noFocusBorder

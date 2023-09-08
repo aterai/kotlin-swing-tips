@@ -135,7 +135,7 @@ private object TrayIconPopupMenuUtils {
 
 private class TrayIconPopupMenuHandler(
   private val popup: JPopupMenu,
-  private val tmp: Window
+  private val tmp: Window,
 ) : MouseAdapter() {
   private fun showPopupMenu(e: MouseEvent) {
     if (e.isPopupTrigger) {

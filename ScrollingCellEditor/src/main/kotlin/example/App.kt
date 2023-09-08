@@ -64,7 +64,7 @@ private class TextAreaCellEditor : AbstractCellEditor(), TableCellEditor {
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     // println("getTableCellEditorComponent")
     textArea.font = table.font
@@ -113,7 +113,7 @@ private class TextAreaCellRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     if (isSelected) {
       textArea.foreground = table.selectionForeground

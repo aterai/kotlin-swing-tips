@@ -73,7 +73,7 @@ private class ParagraphMarkHighlightPainter(color: Color) : DefaultHighlightPain
     offs1: Int,
     bounds: Shape,
     c: JTextComponent,
-    view: View
+    view: View,
   ): Shape {
     val s = super.paintLayer(g, offs0, offs1, bounds, c, view)
     val r = s.bounds
@@ -91,7 +91,7 @@ private class WholeLineHighlightPainter(color: Color) : DefaultHighlightPainter(
     offs1: Int,
     bounds: Shape,
     c: JTextComponent,
-    view: View
+    view: View,
   ): Shape {
     val rect = bounds.bounds.also {
       it.width = c.size.width
@@ -102,7 +102,7 @@ private class WholeLineHighlightPainter(color: Color) : DefaultHighlightPainter(
 
 private class FocusCaret(
   private val selectionPainter: HighlightPainter,
-  private val nonFocusPainter: HighlightPainter
+  private val nonFocusPainter: HighlightPainter,
 ) : DefaultCaret() {
   override fun focusLost(e: FocusEvent?) {
     super.focusLost(e)
@@ -165,7 +165,7 @@ private class ParagraphMarkIcon : Icon {
     c: Component?,
     g: Graphics,
     x: Int,
-    y: Int
+    y: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.paint = MARK_COLOR

@@ -77,21 +77,22 @@ fun makeUI(): Component {
 private enum class PaperSize(
   val series: String,
   val width: Int,
-  val height: Int
+  val height: Int,
 ) {
   A1("A1", 594, 841),
   A2("A2", 420, 594),
   A3("A3", 297, 420),
   A4("A4", 210, 297),
   A5("A5", 148, 210),
-  A6("A6", 105, 148);
+  A6("A6", 105, 148),
+  ;
 
   override fun toString() = "%s(%dx%d)".format(series, width, height)
 }
 
 private class DropdownTableComboBox(
   paperSizes: Array<PaperSize>,
-  tableModel: TableModel
+  tableModel: TableModel,
 ) : JComboBox<PaperSize>(paperSizes) {
   private val highlighter = HighlightListener()
   private val table = object : JTable() {
@@ -133,7 +134,7 @@ private class DropdownTableComboBox(
 
 private class ComboTablePopup(
   combo: JComboBox<*>,
-  private val table: JTable
+  private val table: JTable,
 ) : BasicComboPopup(combo) {
   private val scroll: JScrollPane
 

@@ -81,7 +81,7 @@ private class SpinnerLocalDateTimeModel(
   value: ChronoLocalDateTime<*>?,
   start: Comparable<ChronoLocalDateTime<*>?>,
   end: Comparable<ChronoLocalDateTime<*>?>,
-  temporalUnit: TemporalUnit
+  temporalUnit: TemporalUnit,
 ) : AbstractSpinnerModel() {
   var start: Comparable<ChronoLocalDateTime<*>>
     private set
@@ -121,7 +121,7 @@ private class SpinnerLocalDateTimeModel(
 
 private class LocalDateTimeEditor(
   spinner: JSpinner,
-  dateFormatPattern: String?
+  dateFormatPattern: String?,
 ) : DefaultEditor(spinner) {
   val dateTimeFormatter: DateTimeFormatter
   val model = spinner.model as? SpinnerLocalDateTimeModel

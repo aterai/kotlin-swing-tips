@@ -28,7 +28,7 @@ private class ColumnHeaderRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val r = table.tableHeader.defaultRenderer
     val csm = table.columnModel.selectionModel

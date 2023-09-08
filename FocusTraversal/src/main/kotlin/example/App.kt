@@ -99,7 +99,7 @@ private fun debugString(label: String, c: Container) = """
   """.trimIndent()
 
 private class CustomFocusTraversalPolicy(
-  private val order: List<Component>
+  private val order: List<Component>,
 ) : FocusTraversalPolicy() {
   override fun getFirstComponent(focusCycleRoot: Container) = order[0]
 

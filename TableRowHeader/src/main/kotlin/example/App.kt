@@ -61,7 +61,7 @@ fun makeUI(): Component {
 
 private class RowHeaderList<E>(
   model: ListModel<E>,
-  private val table: JTable
+  private val table: JTable,
 ) : JList<E>(model) {
   private val tableSelection: ListSelectionModel
   private val listSelection: ListSelectionModel
@@ -82,7 +82,7 @@ private class RowHeaderList<E>(
   }
 
   inner class RowHeaderRenderer<F>(
-    private val header: JTableHeader
+    private val header: JTableHeader,
   ) : ListCellRenderer<F> {
     private val renderer = JLabel()
 
@@ -101,7 +101,7 @@ private class RowHeaderList<E>(
       value: F?,
       index: Int,
       isSelected: Boolean,
-      cellHasFocus: Boolean
+      cellHasFocus: Boolean,
     ): Component {
       renderer.font = header.font
       renderer.text = value?.toString() ?: ""
@@ -177,7 +177,7 @@ private class RowHeaderList<E>(
 }
 
 private class RowDataModel(
-  private val rowListModel: DefaultListModel<String>
+  private val rowListModel: DefaultListModel<String>,
 ) : DefaultTableModel() {
   private var number = 0
 
@@ -204,7 +204,7 @@ private class RowDataModel(
   private data class ColumnContext(
     val columnName: String,
     val columnClass: Class<*>,
-    val isEditable: Boolean
+    val isEditable: Boolean,
   )
 
   companion object {

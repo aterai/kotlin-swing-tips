@@ -98,7 +98,7 @@ private class ComboCellRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     (combo.editor.editorComponent as? JTextField)?.also { editor ->
       editor.border = BorderFactory.createEmptyBorder()

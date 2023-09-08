@@ -44,7 +44,7 @@ private class LocalDateTimeTableCellRenderer : DefaultTableCellRenderer() {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     if (c is JLabel && value is TemporalAccessor) {
@@ -90,7 +90,7 @@ private class LocalDateTimeTableCellEditor : AbstractCellEditor(), TableCellEdit
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     if (value is LocalDateTime) {
       comboBox.model = object : DefaultComboBoxModel<LocalDateTime>() {
@@ -140,7 +140,7 @@ private class LocalDateTimeCellRenderer : ListCellRenderer<LocalDateTime> {
     value: LocalDateTime?,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ): Component {
     val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
     if (c is JLabel && value != null) {

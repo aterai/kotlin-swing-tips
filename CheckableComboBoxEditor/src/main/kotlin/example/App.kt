@@ -41,7 +41,7 @@ private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()
 private open class ComboItem(
   var isEnabled: Boolean = false,
   var isEditable: Boolean = false,
-  var text: String? = ""
+  var text: String? = "",
 ) : Serializable {
   override fun hashCode() = Objects.hash(text)
 
@@ -64,7 +64,7 @@ private class CheckComboBoxRenderer<E : ComboItem> : ListCellRenderer<E> {
     value: E,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ): Component {
     renderer.item = value
     if (isSelected && index >= 0) {

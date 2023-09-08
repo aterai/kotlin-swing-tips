@@ -103,7 +103,7 @@ private class HighlightListener : MouseAdapter() {
 }
 
 private open class RolloverDefaultTableCellRenderer(
-  private val highlighter: HighlightListener
+  private val highlighter: HighlightListener,
 ) : DefaultTableCellRenderer() {
   override fun getTableCellRendererComponent(
     table: JTable,
@@ -111,7 +111,7 @@ private open class RolloverDefaultTableCellRenderer(
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     val str = value?.toString() ?: ""
@@ -136,7 +136,7 @@ private open class RolloverDefaultTableCellRenderer(
 }
 
 private class RolloverNumberRenderer(
-  highlighter: HighlightListener
+  highlighter: HighlightListener,
 ) : RolloverDefaultTableCellRenderer(highlighter) {
   init {
     horizontalAlignment = SwingConstants.RIGHT
@@ -144,7 +144,7 @@ private class RolloverNumberRenderer(
 }
 
 private class RolloverBooleanRenderer(
-  private val highlighter: HighlightListener
+  private val highlighter: HighlightListener,
 ) : TableCellRenderer {
   private final val check = object : JCheckBox() {
     override fun updateUI() {
@@ -209,7 +209,7 @@ private class RolloverBooleanRenderer(
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     check.horizontalAlignment = SwingConstants.CENTER
     check.getModel().isRollover = highlighter.isHighlightedCell(row, column)

@@ -70,7 +70,7 @@ private class TooltipListCellRenderer<E> : ListCellRenderer<E> {
     value: E?,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ): Component {
     val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
     (c as? JComponent)?.toolTipText = value?.toString()
@@ -87,7 +87,7 @@ private class TooltipTableCellRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val c = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     if (c is JLabel) {

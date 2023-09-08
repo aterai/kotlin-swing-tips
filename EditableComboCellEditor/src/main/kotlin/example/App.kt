@@ -45,7 +45,7 @@ private class ComboCellRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     combo.removeAllItems()
     if (value is DefaultComboBoxModel<*>) {
@@ -69,7 +69,7 @@ private class ComboCellEditor : AbstractCellEditor(), TableCellEditor {
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     if (value is ComboBoxModel<*>) {
       @Suppress("UNCHECKED_CAST")

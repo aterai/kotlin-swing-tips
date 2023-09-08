@@ -86,7 +86,7 @@ private fun makeTreeRoot(): DefaultMutableTreeNode {
 
 private class NodeProgressWorker(
   private val tree: JTree,
-  private val treeNode: DefaultMutableTreeNode
+  private val treeNode: DefaultMutableTreeNode,
 ) : SwingWorker<TreeNode, Int>() {
   private val lengthOfTask = 120
   private val model = tree.model
@@ -153,7 +153,7 @@ private class ProgressBarRenderer : DefaultTreeCellRenderer() {
     expanded: Boolean,
     leaf: Boolean,
     row: Int,
-    hasFocus: Boolean
+    hasFocus: Boolean,
   ): Component {
     var c = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
     val o = (value as? DefaultMutableTreeNode)?.userObject

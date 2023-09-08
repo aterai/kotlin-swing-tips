@@ -53,7 +53,7 @@ private class CheckBoxNodeRenderer : TreeCellRenderer {
     expanded: Boolean,
     leaf: Boolean,
     row: Int,
-    hasFocus: Boolean
+    hasFocus: Boolean,
   ): Component {
     if (leaf && value is DefaultMutableTreeNode) {
       checkBox.isEnabled = tree.isEnabled
@@ -90,7 +90,7 @@ private class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
     selected: Boolean,
     expanded: Boolean,
     leaf: Boolean,
-    row: Int
+    row: Int,
   ): Component {
     if (leaf && value is DefaultMutableTreeNode) {
       checkBox.isSelected = (value.userObject as? CheckBoxNode)?.selected == true

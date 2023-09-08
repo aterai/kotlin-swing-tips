@@ -71,7 +71,7 @@ private fun print(buf: StringBuilder, node: Node, level: Int) {
 private class XmlTreeNode(
   private val xmlNode: Node?,
   private val parent: XmlTreeNode? = null,
-  private val showAttributes: Boolean? = true
+  private val showAttributes: Boolean? = true,
 ) : TreeNode {
   private var list: MutableList<XmlTreeNode>? = null
   private val isShowAttributes: Boolean get() = showAttributes ?: parent?.isShowAttributes ?: false

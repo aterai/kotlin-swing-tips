@@ -69,7 +69,7 @@ private class SiteListItemRenderer : ListCellRenderer<SiteItem> {
     item: SiteItem,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ): Component {
     val buf = StringBuilder(100)
     buf.append("<html><h1>${item.name}</h1><table>")

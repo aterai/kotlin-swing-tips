@@ -64,7 +64,7 @@ private class SpinnerRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ) = renderer.also {
     it.background = if (isSelected) table.selectionBackground else table.background
     it.spinner.value = value
@@ -79,7 +79,7 @@ private class SpinnerEditor : AbstractCellEditor(), TableCellEditor {
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ) = renderer.also {
     it.background = table.selectionBackground
     it.spinner.value = value
@@ -126,7 +126,7 @@ private class ButtonsRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ) = renderer.also {
     it.background = if (isSelected) table.selectionBackground else table.background
     it.label.foreground = if (isSelected) table.selectionForeground else table.foreground
@@ -161,7 +161,7 @@ private class ButtonsEditor : AbstractCellEditor(), TableCellEditor {
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ) = renderer.also {
     it.background = table.selectionBackground
     it.label.foreground = table.selectionForeground

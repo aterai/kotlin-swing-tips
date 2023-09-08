@@ -168,7 +168,7 @@ private open class WorkerModel : DefaultTableModel() {
   private data class ColumnContext(
     val columnName: String,
     val columnClass: Class<*>,
-    val isEditable: Boolean
+    val isEditable: Boolean,
   )
 
   companion object {
@@ -190,7 +190,7 @@ private class ProgressRenderer : DefaultTableCellRenderer() {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     var text = value
     if (value is Int) {

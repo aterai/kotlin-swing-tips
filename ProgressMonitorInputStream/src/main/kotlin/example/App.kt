@@ -76,7 +76,7 @@ fun executeWorker(e: ActionEvent) {
 private open class MonitorTask(
   pms: ProgressMonitorInputStream,
   cs: Charset,
-  length: Int
+  length: Int,
 ) : BackgroundTask(pms, cs, length) {
   override fun process(chunks: List<Chunk>) {
     if (textArea.isDisplayable) {
@@ -128,7 +128,7 @@ private data class Chunk(val line: String, val note: String)
 private open class BackgroundTask(
   protected val pms: ProgressMonitorInputStream,
   private val cs: Charset,
-  private val lengthOfFile: Int
+  private val lengthOfFile: Int,
 ) : SwingWorker<String, Chunk>() {
   @Throws(InterruptedException::class)
   override fun doInBackground(): String {

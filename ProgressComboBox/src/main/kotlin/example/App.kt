@@ -68,7 +68,7 @@ private class ProgressCellRenderer<E> : ListCellRenderer<E> {
     value: E?,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ): Component {
     if (index < 0 && worker?.isDone != true) {
       bar.font = list.font

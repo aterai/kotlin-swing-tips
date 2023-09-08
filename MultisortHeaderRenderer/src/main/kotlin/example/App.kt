@@ -39,7 +39,7 @@ private class MultiSortHeaderRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     var str = value?.toString() ?: ""
     table.rowSorter?.also { sorter ->

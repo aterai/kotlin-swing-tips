@@ -52,7 +52,7 @@ private class RadioButtonsRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     if (value is Boolean) {
       renderer.background = if (isSelected) table.selectionBackground else table.background
@@ -73,7 +73,7 @@ private class RadioButtonsEditor : AbstractCellEditor(), TableCellEditor {
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     if (value is Boolean) {
       renderer.background = table.selectionBackground

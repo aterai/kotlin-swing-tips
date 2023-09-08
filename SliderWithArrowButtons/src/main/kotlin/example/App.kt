@@ -82,7 +82,7 @@ private fun getLabel(key: Int, slider: JSlider) = when (key) {
 
 private class AutoRepeatHandler(
   private val stepSize: Int,
-  private val slider: JSlider
+  private val slider: JSlider,
 ) : MouseAdapter(), ActionListener {
   private val autoRepeatTimer = Timer(60, this)
   private var arrowButton: JButton? = null

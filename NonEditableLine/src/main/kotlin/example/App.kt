@@ -53,7 +53,7 @@ private class NonEditableLineDocumentFilter(private val maskRange: Int) : Docume
     offset: Int,
     length: Int,
     text: String,
-    attrs: AttributeSet?
+    attrs: AttributeSet?,
   ) {
     if (fb.document.defaultRootElement.getElementIndex(offset) >= maskRange) {
       fb.replace(offset, length, text, attrs)

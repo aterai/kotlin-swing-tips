@@ -56,7 +56,7 @@ private class CustomBevelBorder(bevelType: Int) : BevelBorder(bevelType) {
     x: Int,
     y: Int,
     width: Int,
-    height: Int
+    height: Int,
   ) {
     var isPressed = false
     if (c is AbstractButton) {
@@ -76,7 +76,7 @@ private class CustomBevelBorder(bevelType: Int) : BevelBorder(bevelType) {
     x: Int,
     y: Int,
     width: Int,
-    height: Int
+    height: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
@@ -98,7 +98,7 @@ private class CustomBevelBorder(bevelType: Int) : BevelBorder(bevelType) {
     x: Int,
     y: Int,
     width: Int,
-    height: Int
+    height: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)

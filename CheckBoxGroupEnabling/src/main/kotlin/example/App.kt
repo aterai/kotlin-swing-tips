@@ -109,7 +109,7 @@ private class CheckBoxNodeRenderer : TreeCellRenderer {
     expanded: Boolean,
     leaf: Boolean,
     row: Int,
-    hasFocus: Boolean
+    hasFocus: Boolean,
   ): Component {
     checkBox.text = value?.toString() ?: ""
     if (value is DefaultMutableTreeNode) {
@@ -145,7 +145,7 @@ private class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
     selected: Boolean,
     expanded: Boolean,
     leaf: Boolean,
-    row: Int
+    row: Int,
   ): Component {
     if (value is DefaultMutableTreeNode) {
       val node = value.userObject

@@ -43,7 +43,7 @@ private fun makeToolBar(title: String): JToolBar {
 
 private class DockingListener2(
   private val toolBar: JToolBar,
-  private val listener: MouseInputListener
+  private val listener: MouseInputListener,
 ) : MouseInputAdapter() {
   private fun cancelDrag(e: MouseEvent) =
     !toolBar.isEnabled || !SwingUtilities.isLeftMouseButton(e)

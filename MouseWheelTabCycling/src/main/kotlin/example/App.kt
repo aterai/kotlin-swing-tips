@@ -102,7 +102,7 @@ private enum class TabPlacements(val tabPlacement: Int) {
   TOP(SwingConstants.TOP),
   BOTTOM(SwingConstants.BOTTOM),
   LEFT(SwingConstants.LEFT),
-  RIGHT(SwingConstants.RIGHT)
+  RIGHT(SwingConstants.RIGHT),
 }
 
 fun main() {

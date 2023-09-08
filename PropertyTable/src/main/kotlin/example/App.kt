@@ -121,7 +121,7 @@ class DateEditor : AbstractCellEditor(), TableCellEditor {
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     spinner.value = value
     return spinner
@@ -147,7 +147,7 @@ class ColorRenderer : DefaultTableCellRenderer() {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     if (c is JLabel && value is Color) {
@@ -196,7 +196,7 @@ class ColorEditor : AbstractCellEditor(), TableCellEditor, ActionListener {
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     currentColor = value as? Color
     button.icon = ColorIcon(currentColor)

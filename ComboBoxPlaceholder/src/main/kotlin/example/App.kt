@@ -19,7 +19,7 @@ fun makeUI(): Component {
       value: Any?,
       index: Int,
       isSelected: Boolean,
-      cellHasFocus: Boolean
+      cellHasFocus: Boolean,
     ): Component {
       val str = value?.toString() ?: "- Select category -"
       return super.getListCellRendererComponent(list, str, index, isSelected, cellHasFocus)
@@ -39,7 +39,7 @@ fun makeUI(): Component {
       value: Any?,
       index: Int,
       isSelected: Boolean,
-      cellHasFocus: Boolean
+      cellHasFocus: Boolean,
     ): Component {
       val str = value?.toString() ?: "- Select type -"
       return super.getListCellRendererComponent(list, str, index, isSelected, cellHasFocus)

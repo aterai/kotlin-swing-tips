@@ -84,7 +84,7 @@ private class TableNextMatchKeyHandler : KeyAdapter() {
     max: Int,
     e: KeyEvent,
     prf: String,
-    startIdx: Int
+    startIdx: Int,
   ) {
     var start = startIdx
     var fromSelection = !src.selectionModel.isSelectionEmpty
@@ -118,7 +118,7 @@ private class TableNextMatchKeyHandler : KeyAdapter() {
       table: JTable,
       prefix: String,
       startingRow: Int,
-      bias: Bias
+      bias: Bias,
     ): Int {
       val max = table.rowCount
       require(!(startingRow < 0 || startingRow >= max)) { "(0 <= startingRow < max) is false" }

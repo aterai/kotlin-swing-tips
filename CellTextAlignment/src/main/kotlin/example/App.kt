@@ -56,7 +56,7 @@ private class HorizontalAlignmentTableRenderer : DefaultTableCellRenderer() {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
     if (c is JLabel) {
@@ -86,7 +86,7 @@ private class HeaderRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val hr = table.tableHeader.defaultRenderer
     val c = hr.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)

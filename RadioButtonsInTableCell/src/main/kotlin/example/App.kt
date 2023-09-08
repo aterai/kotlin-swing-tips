@@ -37,7 +37,7 @@ fun makeUI(): Component {
 private enum class Answer {
   A,
   B,
-  C
+  C,
 }
 
 private class RadioButtonsPanel : JPanel() {
@@ -93,7 +93,7 @@ private class RadioButtonsRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component = renderer.also { it.updateSelectedButton(value) }
 }
 
@@ -112,7 +112,7 @@ private class RadioButtonsEditor : AbstractCellEditor(), TableCellEditor {
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component = renderer.also { it.updateSelectedButton(value) }
 
   override fun getCellEditorValue() = Answer.valueOf(renderer.bg.selection.actionCommand)

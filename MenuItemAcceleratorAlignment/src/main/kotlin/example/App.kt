@@ -82,7 +82,7 @@ private object MenuItemHelper {
   fun paintIcon(
     g: Graphics,
     lh: MenuItemLayoutHelper,
-    lr: LayoutResult
+    lr: LayoutResult,
   ) {
     lh.icon?.also {
       val menuItem = lh.menuItem
@@ -105,7 +105,7 @@ private object MenuItemHelper {
     lh: MenuItemLayoutHelper,
     lr: LayoutResult,
     c: Color?,
-    foreground: Color?
+    foreground: Color?,
   ) {
     lh.checkIcon?.also {
       val menuItem = lh.menuItem
@@ -128,7 +128,7 @@ private object MenuItemHelper {
     lr: LayoutResult,
     disabledForeground: Color?,
     acceleratorForeground: Color?,
-    acceleratorSelectionForeground: Color?
+    acceleratorSelectionForeground: Color?,
   ) {
     val text = lh.accText
     if (text.isEmpty()) {
@@ -177,7 +177,7 @@ private object MenuItemHelper {
     g: Graphics,
     lh: MenuItemLayoutHelper,
     lr: LayoutResult,
-    foreground: Color?
+    foreground: Color?,
   ) {
     lh.arrowIcon?.also { arrowIcon ->
       val menuItem = lh.menuItem
@@ -200,7 +200,7 @@ private class RaaWindowsMenuItemUI : WindowsMenuItemUI() {
     arrowIcon: Icon,
     background: Color,
     foreground: Color,
-    textIconGap: Int
+    textIconGap: Int,
   ) { // // Save original graphics font and color
     val g2 = g.create() as? Graphics2D ?: return
     val mi = c as? JMenuItem ?: return
@@ -230,7 +230,7 @@ private class RaaWindowsMenuItemUI : WindowsMenuItemUI() {
   private fun paintText(
     g: Graphics,
     lh: MenuItemLayoutHelper,
-    lr: LayoutResult
+    lr: LayoutResult,
   ) {
     if (lh.text.isNotEmpty()) {
       if (lh.htmlView != null) {
@@ -250,7 +250,7 @@ private class RaaBasicMenuItemUI : BasicMenuItemUI() {
     arrowIcon: Icon,
     background: Color,
     foreground: Color,
-    textIconGap: Int
+    textIconGap: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
     val mi = c as? JMenuItem ?: return
@@ -280,7 +280,7 @@ private class RaaBasicMenuItemUI : BasicMenuItemUI() {
   private fun paintMenuText(
     g: Graphics,
     lh: MenuItemLayoutHelper,
-    lr: LayoutResult
+    lr: LayoutResult,
   ) {
     if (lh.text.isNotEmpty()) {
       if (lh.htmlView != null) {

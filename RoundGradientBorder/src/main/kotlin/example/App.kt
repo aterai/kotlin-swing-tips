@@ -53,7 +53,7 @@ private class RoundGradientBorder(
   top: Int,
   left: Int,
   bottom: Int,
-  right: Int
+  right: Int,
 ) : EmptyBorder(top, left, bottom, right) {
   private val fractions = floatArrayOf(0f, .25f, .5f, .75f, 1f)
   private val colors = arrayOf(

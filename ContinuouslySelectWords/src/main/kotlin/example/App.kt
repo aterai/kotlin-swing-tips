@@ -32,7 +32,7 @@ fun makeUI(): Component {
 private enum class SelectingMode {
   CHAR,
   WORD,
-  ROW
+  ROW,
 }
 
 private class SelectWordCaret : DefaultCaret() {

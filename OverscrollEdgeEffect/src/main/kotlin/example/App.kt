@@ -40,7 +40,7 @@ private fun makeMissingImage(): Image {
 }
 
 private class KineticScrollingListener(
-  private val label: JComponent
+  private val label: JComponent,
 ) : MouseAdapter(), HierarchyListener {
   private val dc = label.cursor
   private val hc = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)

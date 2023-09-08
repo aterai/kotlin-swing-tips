@@ -128,7 +128,7 @@ private class MissingIcon : Icon {
     c: Component?,
     g: Graphics,
     x: Int,
-    y: Int
+    y: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
     val w = iconWidth

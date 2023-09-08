@@ -114,7 +114,7 @@ private class ContributionListRenderer : ListCellRenderer<Contribution> {
     value: Contribution,
     index: Int,
     isSelected: Boolean,
-    cellHasFocus: Boolean
+    cellHasFocus: Boolean,
   ): Component {
     val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
     (c as? JLabel)?.icon = if (value.date.isAfter(currentLocalDate)) {

@@ -91,7 +91,7 @@ private fun makeModel(): DefaultTreeModel {
 private class ControlPanelLayout(
   private val controls: Container,
   horizontalGap: Int,
-  verticalGap: Int
+  verticalGap: Int,
 ) : BorderLayout(horizontalGap, verticalGap) {
   private var isHidden = true
   private val animator = Timer(5, null)
@@ -141,7 +141,7 @@ private object TreeUtils {
     tree: JTree,
     path: TreePath,
     q: String,
-    rollOverPathLists: MutableList<TreePath>
+    rollOverPathLists: MutableList<TreePath>,
   ) {
     val node = path.lastPathComponent
     if (node is TreeNode) {

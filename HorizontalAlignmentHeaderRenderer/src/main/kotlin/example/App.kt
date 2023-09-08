@@ -62,7 +62,7 @@ private class HorizontalAlignmentHeaderRenderer(private val horAlignment: Int) :
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val r = table.tableHeader.defaultRenderer
     val c = r.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)

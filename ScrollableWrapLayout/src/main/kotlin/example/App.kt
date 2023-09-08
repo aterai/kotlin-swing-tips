@@ -53,7 +53,7 @@ private class ScrollableWrapPanel(layout: LayoutManager) : JPanel(layout), Scrol
 private class ScrollableWrapLayout(
   align: Int,
   horGap: Int,
-  verGap: Int
+  verGap: Int,
 ) : FlowLayout(align, horGap, verGap) {
   private val fixedHorGap = horGap
 

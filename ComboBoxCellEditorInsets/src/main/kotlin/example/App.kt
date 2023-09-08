@@ -80,7 +80,7 @@ private class ComboBoxCellRenderer : TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val c = GridBagConstraints()
     c.weightx = 1.0
@@ -118,7 +118,7 @@ private class ComboBoxCellEditor : AbstractCellEditor(), TableCellEditor {
     value: Any?,
     isSelected: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val c = GridBagConstraints()
     c.weightx = 1.0

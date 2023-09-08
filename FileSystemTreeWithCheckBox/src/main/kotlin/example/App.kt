@@ -93,7 +93,7 @@ private class IndeterminateIcon : Icon {
 private enum class Status {
   SELECTED,
   DESELECTED,
-  INDETERMINATE
+  INDETERMINATE,
 }
 
 private data class CheckBoxNode(val file: File, val status: Status) {
@@ -101,7 +101,7 @@ private data class CheckBoxNode(val file: File, val status: Status) {
 }
 
 private class FileTreeCellRenderer(
-  private val fileSystemView: FileSystemView
+  private val fileSystemView: FileSystemView,
 ) : TreeCellRenderer {
   private val checkBox = TriStateCheckBox().also { it.isOpaque = false }
   private val tcr = DefaultTreeCellRenderer()
@@ -119,7 +119,7 @@ private class FileTreeCellRenderer(
     expanded: Boolean,
     leaf: Boolean,
     row: Int,
-    hasFocus: Boolean
+    hasFocus: Boolean,
   ): Component {
     val c = tcr.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
     c.font = tree.font
@@ -141,7 +141,7 @@ private class FileTreeCellRenderer(
 }
 
 private class CheckBoxNodeEditor(
-  private val fileSystemView: FileSystemView
+  private val fileSystemView: FileSystemView,
 ) : AbstractCellEditor(), TreeCellEditor {
   private val checkBox = TriStateCheckBox().also {
     it.isOpaque = false
@@ -163,7 +163,7 @@ private class CheckBoxNodeEditor(
     selected: Boolean,
     expanded: Boolean,
     leaf: Boolean,
-    row: Int
+    row: Int,
   ): Component {
     val c = tcr.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, false)
     c.font = tree.font
@@ -202,7 +202,7 @@ private class CheckBoxNodeEditor(
 }
 
 private class FolderSelectionListener(
-  val fileSystemView: FileSystemView
+  val fileSystemView: FileSystemView,
 ) : TreeSelectionListener {
   override fun valueChanged(e: TreeSelectionEvent) {
     val node = e.path.lastPathComponent
@@ -228,7 +228,7 @@ private class FolderSelectionListener(
 
 private open class BackgroundTask(
   private val fileSystemView: FileSystemView,
-  private val parent: File
+  private val parent: File,
 ) : SwingWorker<String, File>() {
   @Throws(InterruptedException::class)
   override fun doInBackground(): String {

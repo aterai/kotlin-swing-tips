@@ -119,7 +119,7 @@ fun append(m: Message) {
 enum class MessageType {
   REGULAR,
   ERROR,
-  BLUE
+  BLUE,
 }
 
 data class Message(val text: String?, val type: MessageType)
@@ -127,7 +127,7 @@ data class Message(val text: String?, val type: MessageType)
 private open class BackgroundTask(
   private val orgFile: File,
   private val oldIndex: Int,
-  private val newIndex: Int
+  private val newIndex: Int,
 ) : SwingWorker<File, Message>() {
   @Suppress("ReturnCount")
   @Throws(IOException::class)

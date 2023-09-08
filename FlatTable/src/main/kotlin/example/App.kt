@@ -87,7 +87,7 @@ private class CellBorder(
   top: Int,
   left: Int,
   bottom: Int,
-  right: Int
+  right: Int,
 ) : EmptyBorder(top, left, bottom, right) {
   private var startCell = false
 
@@ -97,7 +97,7 @@ private class CellBorder(
     x: Int,
     y: Int,
     w: Int,
-    h: Int
+    h: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)

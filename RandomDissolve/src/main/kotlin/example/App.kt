@@ -38,7 +38,7 @@ private fun makeImage(url: URL?): BufferedImage {
 
 private class RandomDissolve(
   private val image1: BufferedImage,
-  private val image2: BufferedImage
+  private val image2: BufferedImage,
 ) : JComponent() {
   private val animator: Timer
   private var buf: BufferedImage

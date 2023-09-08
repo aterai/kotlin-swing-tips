@@ -33,7 +33,7 @@ private fun makeTitledPanel(title: String, cmp: Component): Component {
 }
 
 private class FirstCharToUpperCaseDocumentFilter(
-  private val textField: JTextComponent
+  private val textField: JTextComponent,
 ) : DocumentFilter() {
   @Throws(BadLocationException::class)
   override fun remove(fb: FilterBypass, offset: Int, length: Int) {
@@ -51,7 +51,7 @@ private class FirstCharToUpperCaseDocumentFilter(
     offset: Int,
     length: Int,
     text: String?,
-    attrs: AttributeSet?
+    attrs: AttributeSet?,
   ) {
     val str = if (offset == 0 && text?.isNotEmpty() == true) {
       text.substring(0, 1).uppercase(Locale.ENGLISH) + text.substring(1)

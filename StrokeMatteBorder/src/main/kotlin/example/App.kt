@@ -48,7 +48,7 @@ private class StrokeMatteBorder(
   bottom: Int,
   right: Int,
   @field:Transient private val stroke: BasicStroke,
-  private val color: Color?
+  private val color: Color?,
 ) : EmptyBorder(top, left, bottom, right) {
   override fun paintBorder(
     c: Component?,
@@ -56,7 +56,7 @@ private class StrokeMatteBorder(
     x: Int,
     y: Int,
     width: Int,
-    height: Int
+    height: Int,
   ) {
     val size = stroke.lineWidth
     if (size > 0) {

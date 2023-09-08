@@ -31,7 +31,7 @@ fun makeUI() = JTabbedPane().also {
 }
 
 private class TabTitleEditListener(
-  val tabs: JTabbedPane
+  val tabs: JTabbedPane,
 ) : MouseAdapter(), ChangeListener, DocumentListener {
   private val editor = JTextField()
   private var editingIdx = -1

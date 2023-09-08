@@ -115,7 +115,7 @@ private class TranslucentBooleanRenderer : JCheckBox(), TableCellRenderer {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     horizontalAlignment = SwingConstants.CENTER
     if (isSelected) {

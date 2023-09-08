@@ -57,7 +57,7 @@ private class HyperlinkHeaderCellRenderer : DefaultTableCellRenderer(), MouseInp
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component {
     val str = value?.toString() ?: ""
     var sort = ""

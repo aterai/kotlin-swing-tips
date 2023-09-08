@@ -130,7 +130,7 @@ private class DragWindowListener : MouseAdapter() {
 private enum class SlideInAnimation {
   EASE_IN,
   EASE_OUT,
-  EASE_IN_OUT
+  EASE_IN_OUT,
 }
 
 private object AnimationUtils {

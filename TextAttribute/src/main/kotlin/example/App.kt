@@ -57,7 +57,7 @@ private enum class UnderlineStyle(val style: Int) {
   UNDERLINE_LOW_GRAY(TextAttribute.UNDERLINE_LOW_GRAY),
   UNDERLINE_LOW_ONE_PIXEL(TextAttribute.UNDERLINE_LOW_ONE_PIXEL),
   UNDERLINE_LOW_TWO_PIXEL(TextAttribute.UNDERLINE_LOW_TWO_PIXEL),
-  UNDERLINE_ON(TextAttribute.UNDERLINE_ON)
+  UNDERLINE_ON(TextAttribute.UNDERLINE_ON),
 }
 
 fun main() {

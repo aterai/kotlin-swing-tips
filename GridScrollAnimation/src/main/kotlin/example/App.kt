@@ -44,13 +44,13 @@ private class GridPanel(rows: Int, cols: Int) : JPanel(GridLayout(rows, cols, 0,
   override fun getScrollableUnitIncrement(
     visibleRect: Rectangle,
     orientation: Int,
-    direction: Int
+    direction: Int,
   ) = if (orientation == SwingConstants.HORIZONTAL) visibleRect.width else visibleRect.height
 
   override fun getScrollableBlockIncrement(
     visibleRect: Rectangle,
     orientation: Int,
-    direction: Int
+    direction: Int,
   ) = if (orientation == SwingConstants.HORIZONTAL) visibleRect.width else visibleRect.height
 
   override fun getScrollableTracksViewportWidth() = false
@@ -63,7 +63,7 @@ private class GridPanel(rows: Int, cols: Int) : JPanel(GridLayout(rows, cols, 0,
 private class ScrollAction(
   name: String?,
   private val scrollPane: JScrollPane,
-  private val vec: Point
+  private val vec: Point,
 ) : AbstractAction(name) {
   private val scroller = Timer(5, null)
   private var listener: ActionListener? = null

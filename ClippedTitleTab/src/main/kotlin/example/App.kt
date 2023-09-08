@@ -68,7 +68,7 @@ private class BasicClippedTitleTabbedPaneUI : BasicTabbedPaneUI() {
     tabIndex: Int,
     title: String,
     textRect: Rectangle,
-    isSelected: Boolean
+    isSelected: Boolean,
   ) {
     val tabRect = rects[tabIndex]
     val x = tabRect.x + tabInsets.left
@@ -111,7 +111,7 @@ private class WindowsClippedTitleTabbedPaneUI : WindowsTabbedPaneUI() {
     tabIndex: Int,
     title: String,
     textRect: Rectangle,
-    isSelected: Boolean
+    isSelected: Boolean,
   ) {
     val tabRect = rects[tabIndex]
     val x = tabRect.x + tabInsets.left

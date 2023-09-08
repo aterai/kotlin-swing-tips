@@ -40,7 +40,7 @@ private fun makeTitledPanel(title: String, cmp: Component): Component {
 
 private class SilentDeleteTextAction(
   name: String?,
-  private val deleteAction: Action
+  private val deleteAction: Action,
 ) : TextAction(name) {
   override fun actionPerformed(e: ActionEvent) {
     val target = getTextComponent(e)
@@ -71,7 +71,7 @@ private class SizeFilter : DocumentFilter() {
     fb: FilterBypass,
     offset: Int,
     text: String,
-    attr: AttributeSet?
+    attr: AttributeSet?,
   ) {
     val len = fb.document.length
     if (len + text.length > MAX) {
@@ -92,7 +92,7 @@ private class SizeFilter : DocumentFilter() {
     offset: Int,
     length: Int,
     text: String,
-    attrs: AttributeSet?
+    attrs: AttributeSet?,
   ) {
     val len = fb.document.length
     if (len - length + text.length > MAX) {
