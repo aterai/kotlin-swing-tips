@@ -95,7 +95,8 @@ private class EditableTitledBorder(
       listener = object : MouseAdapter() {
         override fun mouseClicked(e: MouseEvent) {
           if (!editor.bounds.contains(e.point)) {
-            renameTitle.actionPerformed(ActionEvent(e.component, ActionEvent.ACTION_PERFORMED, ""))
+            val id = ActionEvent.ACTION_PERFORMED
+            renameTitle.actionPerformed(ActionEvent(e.component, id, ""))
           }
         }
       }
@@ -118,7 +119,8 @@ private class EditableTitledBorder(
           val src = e.component
           rect.bounds = getTitleBounds(src)
           if (rect.contains(e.point)) {
-            startEditing.actionPerformed(ActionEvent(src, ActionEvent.ACTION_PERFORMED, ""))
+            val id = ActionEvent.ACTION_PERFORMED
+            startEditing.actionPerformed(ActionEvent(src, id, ""))
           }
         }
       }
