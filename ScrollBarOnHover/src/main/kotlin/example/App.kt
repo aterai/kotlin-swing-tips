@@ -11,13 +11,19 @@ fun makeUI(): Component {
   val textArea = JTextArea("Mouse cursor flickers over the JScrollBar.\n$text")
   val ml = object : MouseAdapter() {
     override fun mouseEntered(e: MouseEvent) {
-      val sp = SwingUtilities.getAncestorOfClass(JScrollPane::class.java, e.source as? Component)
-      (sp as? JScrollPane)?.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS
+      val c = e.source as? Component
+      val sp = SwingUtilities.getAncestorOfClass(JScrollPane::class.java, c)
+      if (sp is JScrollPane) {
+        sp.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS
+      }
     }
 
     override fun mouseExited(e: MouseEvent) {
-      val sp = SwingUtilities.getAncestorOfClass(JScrollPane::class.java, e.source as? Component)
-      (sp as? JScrollPane)?.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
+      val c = e.source as? Component
+      val sp = SwingUtilities.getAncestorOfClass(JScrollPane::class.java, c)
+      if (sp is JScrollPane) {
+        sp.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
+      }
     }
   }
   textArea.addMouseListener(ml)

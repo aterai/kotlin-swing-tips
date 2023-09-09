@@ -30,28 +30,34 @@ fun makeUI() = JPanel(BorderLayout(5, 5)).also { panel ->
     }
   }
 
-  val box1 = Box.createHorizontalBox()
-  box1.border = BorderFactory.createTitledBorder("""UIManager.put("$selectedLabelShift", offset)""")
-  box1.add(JLabel("offset = "))
-  box1.add(JSpinner(slsModel))
-  box1.add(Box.createHorizontalGlue())
+  val title1 = """UIManager.put("$selectedLabelShift", offset)"""
+  val box1 = Box.createHorizontalBox().also {
+    it.border = BorderFactory.createTitledBorder(title1)
+    it.add(JLabel("offset = "))
+    it.add(JSpinner(slsModel))
+    it.add(Box.createHorizontalGlue())
+  }
 
-  val box2 = Box.createHorizontalBox()
-  box2.border = BorderFactory.createTitledBorder("""UIManager.put("$labelShift", offset)""")
-  box2.add(JLabel("offset = "))
-  box2.add(JSpinner(lsModel))
-  box2.add(Box.createHorizontalGlue())
+  val title2 = """UIManager.put("$labelShift", offset)"""
+  val box2 = Box.createHorizontalBox().also {
+    it.border = BorderFactory.createTitledBorder(title2)
+    it.add(JLabel("offset = "))
+    it.add(JSpinner(lsModel))
+    it.add(Box.createHorizontalGlue())
+  }
 
-  val p = JPanel(GridLayout(2, 1))
-  p.add(box1)
-  p.add(box2)
+  val p = JPanel(GridLayout(2, 1)).also {
+    it.add(box1)
+    it.add(box2)
+  }
 
-  val tabbedPane = JTabbedPane()
-  tabbedPane.addTab("title 0", ColorIcon(Color.RED), JScrollPane(log))
-  tabbedPane.addTab("title 1", ColorIcon(Color.GREEN), JButton("button"))
-  tabbedPane.addTab("title 2", ColorIcon(Color.BLUE), JLabel("label"))
-  tabbedPane.addTab("title 3", JPanel())
-  tabbedPane.setTabComponentAt(3, JLabel("label", ColorIcon(Color.ORANGE), SwingConstants.LEFT))
+  val tabbedPane = JTabbedPane().also {
+    it.addTab("title 0", ColorIcon(Color.RED), JScrollPane(log))
+    it.addTab("title 1", ColorIcon(Color.GREEN), JButton("button"))
+    it.addTab("title 2", ColorIcon(Color.BLUE), JLabel("label"))
+    it.addTab("title 3", JPanel())
+    it.setTabComponentAt(3, JLabel("label", ColorIcon(Color.ORANGE), SwingConstants.LEFT))
+  }
 
   panel.add(p, BorderLayout.NORTH)
   panel.add(tabbedPane)
