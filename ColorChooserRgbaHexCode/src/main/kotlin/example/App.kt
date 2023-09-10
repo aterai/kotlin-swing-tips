@@ -120,9 +120,7 @@ private class ValueFormatter : AbstractFormatter(), FocusListener {
       }
     }
 
-    private fun isValidLength(len: Int): Boolean {
-      return 0 <= len && len <= 8
-    }
+    private fun isValidLength(len: Int) = 0 <= len && len <= 8
 
     private fun isValid(text: String): Boolean {
       val len = text.length
