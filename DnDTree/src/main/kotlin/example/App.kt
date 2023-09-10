@@ -85,7 +85,8 @@ private class DnDTree : JTree() {
       }
       draggedNode = (path.lastPathComponent as? TreeNode)?.also {
         val trans = TreeNodeTransferable(it)
-        DragSource.getDefaultDragSource().startDrag(dge, Cursor.getDefaultCursor(), trans, handler)
+        val cursor = Cursor.getDefaultCursor()
+        DragSource.getDefaultDragSource().startDrag(dge, cursor, trans, handler)
       }
     }
   }
