@@ -19,13 +19,13 @@ fun makeUI(): Component {
   val label = object : JLabel() {
     override fun getPreferredSize() = Dimension(32, 32)
   }
-  label.setOpaque(true)
-  label.setBackground(Color.RED)
+  label.isOpaque = true
+  label.background = Color(0xFF_FF_00_00.toInt(), true)
   UIManager.put("ColorChooser.rgbHexCodeText", "#RGBA:")
   val button = JButton("open JColorChooser")
   button.addActionListener {
     val cc = JColorChooser()
-    cc.color = Color(0xFF_FF_00_00.toInt(), true)
+    cc.color = label.background
     val panels = cc.chooserPanels
     val choosers = panels.toMutableList()
     val ccp = choosers[3]
@@ -47,9 +47,8 @@ fun makeUI(): Component {
       }
     })
     dialog.isVisible = true
-    val color = ok.color
-    if (color != null) {
-      label.setBackground(color)
+    ok.color?.also {
+      label.setBackground(it)
     }
   }
   return JPanel().also {
@@ -62,9 +61,9 @@ fun makeUI(): Component {
 
 private fun init(text: JFormattedTextField) {
   val formatter = ValueFormatter()
-  text.setColumns(8)
-  text.setFormatterFactory(DefaultFormatterFactory(formatter))
-  text.setHorizontalAlignment(SwingConstants.RIGHT)
+  text.columns = 8
+  text.formatterFactory = DefaultFormatterFactory(formatter)
+  text.horizontalAlignment = SwingConstants.RIGHT
   text.minimumSize = text.getPreferredSize()
   text.addFocusListener(formatter)
 }
