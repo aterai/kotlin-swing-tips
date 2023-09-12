@@ -31,12 +31,12 @@ fun makeUI(): Component {
 
 fun makeImageIcon(url: URL?, combo: JComboBox<*>, row: Int): Icon {
   val icon = ImageIcon(url)
-  icon.imageObserver = ImageObserver { _, infoFlags, _, _, _, _ ->
+  icon.imageObserver = ImageObserver { _, flags, _, _, _, _ ->
     // @see http://www2.gol.com/users/tame/swing/examples/SwingExamples.html
-    if (combo.isShowing && infoFlags and (ImageObserver.FRAMEBITS or ImageObserver.ALLBITS) != 0) {
+    if (combo.isShowing && flags and (ImageObserver.FRAMEBITS or ImageObserver.ALLBITS) != 0) {
       repaintComboBox(combo, row)
     }
-    infoFlags and (ImageObserver.ALLBITS or ImageObserver.ABORT) == 0
+    flags and (ImageObserver.ALLBITS or ImageObserver.ABORT) == 0
   }
   return icon
 }
