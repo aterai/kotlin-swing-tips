@@ -135,18 +135,17 @@ private class ValueFormatter : AbstractFormatter(), FocusListener {
   }
 
   @Throws(ParseException::class)
-  override fun stringToValue(text: String): Any {
-    return try {
-      val r = text.substring(0, 2).toInt(16)
-      val g = text.substring(2, 4).toInt(16)
-      val b = text.substring(4, 6).toInt(16)
-      val a = text.substring(6).toInt(16)
-      a shl 24 or (r shl 16) or (g shl 8) or b
-    } catch (nfe: NumberFormatException) {
-      val pe = ParseException("illegal format", 0)
-      pe.initCause(nfe)
-      throw pe
-    }
+  override fun stringToValue(text: String) = try {
+    // val r = text.substring(0, 2).toInt(16)
+    // val g = text.substring(2, 4).toInt(16)
+    // val b = text.substring(4, 6).toInt(16)
+    // val a = text.substring(6).toInt(16)
+    // a shl 24 or (r shl 16) or (g shl 8) or b
+    Integer.parseUnsignedInt(rgbaToArgb(text), 16)
+  } catch (nfe: NumberFormatException) {
+    val pe = ParseException("illegal format", 0)
+    pe.initCause(nfe)
+    throw pe
   }
 
   @Throws(ParseException::class)
@@ -158,11 +157,14 @@ private class ValueFormatter : AbstractFormatter(), FocusListener {
         array[i] = Character.forDigit(value and 0x0F, 16)
         value = value shr 4
       }
-      val argb = String(array).uppercase()
-      return argb.substring(2) + argb.substring(0, 2)
+      return argbToRgba(String(array).uppercase())
     }
     throw ParseException("illegal object", 0)
   }
+
+  private fun argbToRgba(argb: String) = argb.substring(2) + argb.substring(0, 2)
+
+  private fun rgbaToArgb(rgba: String) = rgba.substring(6) + rgba.substring(0, 6)
 
   override fun getDocumentFilter() = filter
 
