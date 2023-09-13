@@ -10,7 +10,11 @@ fun makeUI(): Component {
   val table = object : JTable(model) {
     private val evenColor = Color(0xFA_FA_FA)
 
-    override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
+    override fun prepareRenderer(
+      tcr: TableCellRenderer,
+      row: Int,
+      column: Int,
+    ): Component {
       val c = super.prepareRenderer(tcr, row, column)
       if (isRowSelected(row)) {
         c.foreground = getSelectionForeground()
@@ -51,7 +55,10 @@ private class RowDataModel : DefaultTableModel() {
     number++
   }
 
-  override fun isCellEditable(row: Int, col: Int) = COLUMN_ARRAY[col].isEditable
+  override fun isCellEditable(
+    row: Int,
+    col: Int,
+  ) = COLUMN_ARRAY[col].isEditable
 
   override fun getColumnClass(column: Int) = COLUMN_ARRAY[column].columnClass
 
@@ -103,7 +110,11 @@ private class TablePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTable) {
       delete.isEnabled = c.selectedRowCount > 0
       super.show(c, x, y)

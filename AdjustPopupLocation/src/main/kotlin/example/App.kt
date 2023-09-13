@@ -6,7 +6,11 @@ import javax.swing.*
 fun makeUI(): Component {
   val check = JCheckBox("Adjust JPopupMenu location", true)
   val popup = object : JPopupMenu() {
-    override fun show(c: Component?, x: Int, y: Int) {
+    override fun show(
+      c: Component?,
+      x: Int,
+      y: Int,
+    ) {
       if (check.isSelected && c != null) {
         val p = Point(x, y)
         val r = c.bounds
