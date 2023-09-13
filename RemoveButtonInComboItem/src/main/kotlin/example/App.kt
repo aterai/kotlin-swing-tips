@@ -35,14 +35,20 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeComboBox(isDefault: Boolean, isEditable: Boolean): JComboBox<String> {
+private fun makeComboBox(
+  isDefault: Boolean,
+  isEditable: Boolean,
+): JComboBox<String> {
   val m = DefaultComboBoxModel(arrayOf("aaa", "bbb", "ccc"))
   val comboBox = if (isDefault) JComboBox(m) else RemoveButtonComboBox(m)
   comboBox.isEditable = isEditable
   return comboBox
 }
 
-private fun makeTitledPanel(title: String, list: List<Component>): Component {
+private fun makeTitledPanel(
+  title: String,
+  list: List<Component>,
+): Component {
   val p = JPanel(GridBagLayout())
   p.border = BorderFactory.createTitledBorder(title)
   val c = GridBagConstraints()
@@ -107,7 +113,11 @@ private class CellButtonsMouseListener : MouseAdapter() {
     ((e.component as? JList<*>)?.cellRenderer as? ButtonsRenderer<*>)?.rolloverIndex = -1
   }
 
-  private fun <E> getButton(list: JList<E>, pt: Point, index: Int): JButton? {
+  private fun <E> getButton(
+    list: JList<E>,
+    pt: Point,
+    index: Int,
+  ): JButton? {
     val proto = list.prototypeCellValue
     val c = list.cellRenderer.getListCellRendererComponent(list, proto, index, false, false)
     val r = list.getCellBounds(index, index)
@@ -169,9 +179,9 @@ private class ButtonsRenderer<E>(comboBox: RemoveButtonComboBox<E>) : ListCellRe
     (c as? JComponent)?.isOpaque = false
     this.targetIndex = index
     if (isSelected) {
-      panel.setBackground(list.selectionBackground)
+      panel.background = list.selectionBackground
     } else {
-      panel.setBackground(if (index % 2 == 0) EVEN_COLOR else list.background)
+      panel.background = if (index % 2 == 0) EVEN_COLOR else list.background
     }
     val showDeleteButton = list.model.size > 1
     deleteButton.isVisible = showDeleteButton
