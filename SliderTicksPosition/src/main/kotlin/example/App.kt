@@ -61,7 +61,10 @@ private fun initSliderTicks(slider: JSlider) {
 }
 
 private class VerticalFlipLayerUI : LayerUI<JComponent>() {
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     if (c is JLayer<*>) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.transform = getAffineTransform(c.getSize())
@@ -86,7 +89,10 @@ private class VerticalFlipLayerUI : LayerUI<JComponent>() {
     super.uninstallUI(c)
   }
 
-  override fun eventDispatched(e: AWTEvent, l: JLayer<out JComponent>) {
+  override fun eventDispatched(
+    e: AWTEvent,
+    l: JLayer<out JComponent>,
+  ) {
     if (e is MouseEvent) {
       val pt = e.point.let {
         runCatching {

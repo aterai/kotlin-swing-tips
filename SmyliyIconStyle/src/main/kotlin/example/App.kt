@@ -28,7 +28,10 @@ fun makeUI(): Component {
       update(e.document, e.offset)
     }
 
-    private fun update(d: Document, offset: Int) {
+    private fun update(
+      d: Document,
+      offset: Int,
+    ) {
       val doc = d as? DefaultStyledDocument ?: return
       val elm = doc.getCharacterElement(offset)
       EventQueue.invokeLater {
@@ -61,7 +64,12 @@ fun makeUI(): Component {
 }
 
 private class FaceIcon : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.color = Color.RED
