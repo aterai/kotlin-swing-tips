@@ -6,13 +6,19 @@ import javax.swing.*
 fun makeUI(): Component {
   val box = makeTestBox()
   box.focusTraversalPolicy = object : LayoutFocusTraversalPolicy() {
-    override fun getComponentAfter(focusCycleRoot: Container, cmp: Component): Component {
+    override fun getComponentAfter(
+      focusCycleRoot: Container,
+      cmp: Component,
+    ): Component {
       val c = super.getComponentAfter(focusCycleRoot, cmp)
       (focusCycleRoot as? JComponent)?.scrollRectToVisible(c.bounds)
       return c
     }
 
-    override fun getComponentBefore(focusCycleRoot: Container, cmp: Component): Component {
+    override fun getComponentBefore(
+      focusCycleRoot: Container,
+      cmp: Component,
+    ): Component {
       val c = super.getComponentBefore(focusCycleRoot, cmp)
       (focusCycleRoot as? JComponent)?.scrollRectToVisible(c.bounds)
       return c

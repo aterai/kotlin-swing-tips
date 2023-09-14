@@ -34,7 +34,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)
@@ -136,7 +139,11 @@ private class TreePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTree) {
       path = c.getPathForLocation(x, y)
       path?.also { treePath ->
