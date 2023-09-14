@@ -55,7 +55,10 @@ private fun makeDefaultChooserPanel(): JPanel {
   return p
 }
 
-private fun appendSelectedFile(fileChooser: JFileChooser, p: Component) {
+private fun appendSelectedFile(
+  fileChooser: JFileChooser,
+  p: Component,
+) {
   val retValue = fileChooser.showOpenDialog(p)
   if (retValue == JFileChooser.APPROVE_OPTION) {
     log.append(fileChooser.selectedFile.toString() + "\n")

@@ -25,7 +25,10 @@ fun makeUI(): Component {
   return p
 }
 
-private fun makeUrlPanel(title: String, href: String): Component {
+private fun makeUrlPanel(
+  title: String,
+  href: String,
+): Component {
   val p = JPanel(GridBagLayout())
   p.border = BorderFactory.createTitledBorder(title)
   val editor = JEditorPane("text/html", href)

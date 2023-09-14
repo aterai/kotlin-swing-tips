@@ -81,7 +81,11 @@ private class TreePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     (c as? JTree)?.also { tree ->
       path = tree.getPathForLocation(x, y)
       path?.also { treePath ->

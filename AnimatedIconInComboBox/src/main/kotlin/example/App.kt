@@ -29,7 +29,11 @@ fun makeUI(): Component {
   }
 }
 
-fun makeImageIcon(url: URL?, combo: JComboBox<*>, row: Int): Icon {
+fun makeImageIcon(
+  url: URL?,
+  combo: JComboBox<*>,
+  row: Int,
+): Icon {
   val icon = ImageIcon(url)
   icon.imageObserver = ImageObserver { _, flags, _, _, _, _ ->
     // @see http://www2.gol.com/users/tame/swing/examples/SwingExamples.html
@@ -41,7 +45,10 @@ fun makeImageIcon(url: URL?, combo: JComboBox<*>, row: Int): Icon {
   return icon
 }
 
-private fun repaintComboBox(combo: JComboBox<*>, row: Int) {
+private fun repaintComboBox(
+  combo: JComboBox<*>,
+  row: Int,
+) {
   if (combo.selectedIndex == row) {
     combo.repaint()
   }
