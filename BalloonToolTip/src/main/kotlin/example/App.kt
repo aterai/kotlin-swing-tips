@@ -69,7 +69,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val scroll = JScrollPane(c)
   scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
   val p = JPanel(BorderLayout())

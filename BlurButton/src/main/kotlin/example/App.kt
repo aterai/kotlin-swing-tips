@@ -108,7 +108,10 @@ private class BlurButton(label: String) : JButton(label) {
 private class BlurLayerUI<V : AbstractButton?> : LayerUI<V>() {
   private var buf: BufferedImage? = null
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     if (c is JLayer<*>) {
       val view = c.view
       if (view.isEnabled) {
@@ -151,7 +154,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd

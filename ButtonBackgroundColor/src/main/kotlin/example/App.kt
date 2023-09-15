@@ -73,7 +73,12 @@ private fun makePanel(vararg list: Component): Component {
 }
 
 private class ButtonBackgroundIcon(private val color: Color) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.paint = color
     g2.fillRect(0, 0, c.width, c.height)
@@ -88,7 +93,10 @@ private class ButtonBackgroundIcon(private val color: Color) : Icon {
 private class ImageFilterLayerUI<V : Component>(private val filter: ImageFilter) : LayerUI<V>() {
   private var buf: BufferedImage? = null
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     if (c is JLayer<*>) {
       val view = c.view
       val d = view.size
@@ -107,7 +115,11 @@ private class ImageFilterLayerUI<V : Component>(private val filter: ImageFilter)
 }
 
 private class ColorFilter : RGBImageFilter() {
-  override fun filterRGB(x: Int, y: Int, argb: Int): Int {
+  override fun filterRGB(
+    x: Int,
+    y: Int,
+    argb: Int,
+  ): Int {
     val r = 0xFF // argb shr 16 and 0xFF
     val g = argb shr 8 and 0xFF
     val b = argb and 0xFF
@@ -130,7 +142,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd

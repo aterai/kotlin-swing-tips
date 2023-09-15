@@ -104,7 +104,10 @@ fun makeUI(): Component {
 }
 
 private object TextEditorUtils {
-  fun append(editor: JTextComponent, str: String?) {
+  fun append(
+    editor: JTextComponent,
+    str: String?,
+  ) {
     runCatching {
       val doc = editor.document
       doc.insertString(editor.caretPosition, str, null)

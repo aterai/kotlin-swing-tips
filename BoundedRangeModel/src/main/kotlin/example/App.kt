@@ -59,7 +59,12 @@ private fun updateHighlighter() {
 }
 
 private class HighlightIcon : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val container = SwingUtilities.getAncestorOfClass(JViewport::class.java, table)
     val viewport = container as? JViewport ?: return
     val viewRect = viewport.bounds

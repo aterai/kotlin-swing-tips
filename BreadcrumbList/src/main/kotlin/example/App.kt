@@ -40,7 +40,10 @@ private fun makeContainer(overlap: Int): Container {
   return p
 }
 
-private fun initBreadcrumbList(p: Container, tree: JTree) {
+private fun initBreadcrumbList(
+  p: Container,
+  tree: JTree,
+) {
   val treePath = tree.selectionPath ?: return
   val paths = treePath.path
   val bg = ButtonGroup()
@@ -63,9 +66,16 @@ private fun makeBreadcrumbList(list: List<String>): Component {
   return p
 }
 
-private fun makeButton(tree: JTree?, path: TreePath, color: Color): AbstractButton {
+private fun makeButton(
+  tree: JTree?,
+  path: TreePath,
+  color: Color,
+): AbstractButton {
   val b = object : JRadioButton(path.lastPathComponent.toString()) {
-    override fun contains(x: Int, y: Int) = (icon as? ArrowToggleButtonBarCellIcon)?.let {
+    override fun contains(
+      x: Int,
+      y: Int,
+    ) = (icon as? ArrowToggleButtonBarCellIcon)?.let {
       it.shape?.contains(Point(x, y))
     } ?: super.contains(x, y)
   }
@@ -96,7 +106,12 @@ private class ArrowToggleButtonBarCellIcon : Icon {
   var shape: Shape? = null
     private set
 
-  private fun makeShape(parent: Container, c: Component, x: Int, y: Int): Shape {
+  private fun makeShape(
+    parent: Container,
+    c: Component,
+    x: Int,
+    y: Int,
+  ): Shape {
     val w = c.width - 1.0
     val h = c.height - 1.0
     val h2 = h * .5
@@ -116,7 +131,12 @@ private class ArrowToggleButtonBarCellIcon : Icon {
     return AffineTransform.getTranslateInstance(tx, ty).createTransformedShape(p)
   }
 
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val parent = c.parent ?: return
     shape = makeShape(parent, c, x, y)
     var bgc = parent.background
@@ -150,7 +170,10 @@ private class ArrowToggleButtonBarCellIcon : Icon {
 private class BreadcrumbLayerUI<V : Component> : LayerUI<V>() {
   private var shape: Shape? = null
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     super.paint(g, c)
     shape?.also {
       val g2 = g.create() as? Graphics2D ?: return
@@ -172,7 +195,10 @@ private class BreadcrumbLayerUI<V : Component> : LayerUI<V>() {
     super.uninstallUI(c)
   }
 
-  private fun update(e: MouseEvent, l: JLayer<out V>) {
+  private fun update(
+    e: MouseEvent,
+    l: JLayer<out V>,
+  ) {
     val s = when (e.id) {
       MouseEvent.MOUSE_ENTERED, MouseEvent.MOUSE_MOVED ->
         (e.component as? AbstractButton)?.let { button ->
@@ -190,11 +216,17 @@ private class BreadcrumbLayerUI<V : Component> : LayerUI<V>() {
     }
   }
 
-  override fun processMouseEvent(e: MouseEvent, l: JLayer<out V>) {
+  override fun processMouseEvent(
+    e: MouseEvent,
+    l: JLayer<out V>,
+  ) {
     update(e, l)
   }
 
-  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out V>) {
+  override fun processMouseMotionEvent(
+    e: MouseEvent,
+    l: JLayer<out V>,
+  ) {
     update(e, l)
   }
 }
