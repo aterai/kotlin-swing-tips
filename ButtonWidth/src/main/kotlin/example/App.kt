@@ -28,7 +28,11 @@ fun makeUI(): Component {
   }
 }
 
-fun createRightAlignBox6(width: Int, gap: Int, vararg titles: String): Component {
+fun createRightAlignBox6(
+  width: Int,
+  gap: Int,
+  vararg titles: String,
+): Component {
   val p = JPanel(GridBagLayout())
   val c = GridBagConstraints()
   c.insets = Insets(0, gap, 0, 0)
@@ -40,7 +44,10 @@ fun createRightAlignBox6(width: Int, gap: Int, vararg titles: String): Component
   return JPanel(BorderLayout()).also { it.add(p, BorderLayout.EAST) }
 }
 
-fun createRightAlignBox5(gap: Int, vararg titles: String): Component {
+fun createRightAlignBox5(
+  gap: Int,
+  vararg titles: String,
+): Component {
   val list = titles.map { JButton(it) }
   val p = object : JPanel(GridLayout(1, list.size, gap, gap)) {
     override fun getMaximumSize() = super.getPreferredSize()
@@ -53,7 +60,11 @@ fun createRightAlignBox5(gap: Int, vararg titles: String): Component {
   }
 }
 
-fun createRightAlignBox4(width: Int, gap: Int, vararg titles: String): Component {
+fun createRightAlignBox4(
+  width: Int,
+  gap: Int,
+  vararg titles: String,
+): Component {
   val list = titles.map { JButton(it) }
   val layout = SpringLayout()
   val p = object : JPanel(layout) {
@@ -78,7 +89,11 @@ fun createRightAlignBox4(width: Int, gap: Int, vararg titles: String): Component
   return p
 }
 
-fun createRightAlignBox3(width: Int, gap: Int, vararg titles: String): Component {
+fun createRightAlignBox3(
+  width: Int,
+  gap: Int,
+  vararg titles: String,
+): Component {
   val list = titles.map { JButton(it) }
   val layout = SpringLayout()
   val p = object : JPanel(layout) {
@@ -111,7 +126,11 @@ fun createRightAlignBox3(width: Int, gap: Int, vararg titles: String): Component
   }
 }
 
-fun createRightAlignBox2(width: Int, gap: Int, vararg titles: String): Component {
+fun createRightAlignBox2(
+  width: Int,
+  gap: Int,
+  vararg titles: String,
+): Component {
   val list = titles.map { JButton(it) }
   val box = object : JPanel() {
     override fun updateUI() {

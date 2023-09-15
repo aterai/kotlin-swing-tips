@@ -58,7 +58,10 @@ private fun makeButton(title: String): JButton {
   return button
 }
 
-private fun makeTitledPanel(c: Component, title: String): Container {
+private fun makeTitledPanel(
+  c: Component,
+  title: String,
+): Container {
   val box = Box.createHorizontalBox()
   box.add(JLabel("$title: "))
   box.add(c)
@@ -96,7 +99,10 @@ private class DisableInputLayerUI<V : AbstractButton> : LayerUI<V>() {
     super.uninstallUI(c)
   }
 
-  override fun eventDispatched(e: AWTEvent, l: JLayer<out V>) {
+  override fun eventDispatched(
+    e: AWTEvent,
+    l: JLayer<out V>,
+  ) {
     if (isBlocking && e is InputEvent) {
       e.consume()
     }
@@ -108,7 +114,10 @@ private class DisableInputLayerUI<V : AbstractButton> : LayerUI<V>() {
     firePropertyChange(CMD_BLOCKING, old, isBlocking)
   }
 
-  override fun applyPropertyChange(e: PropertyChangeEvent, l: JLayer<out V>) {
+  override fun applyPropertyChange(
+    e: PropertyChangeEvent,
+    l: JLayer<out V>,
+  ) {
     if (CMD_BLOCKING == e.propertyName) {
       val b = l.view
       b.isFocusable = !isBlocking
@@ -118,7 +127,10 @@ private class DisableInputLayerUI<V : AbstractButton> : LayerUI<V>() {
     }
   }
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     if (c is JLayer<*>) {
       val view = c.view
       if (isBlocking) {
@@ -153,7 +165,10 @@ private class DisabledHtmlTextLayerUI<V : AbstractButton> : LayerUI<V>() {
     SwingUtilities.updateComponentTreeUI(label)
   }
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     if (c is JLayer<*>) {
       val view = c.view
       view.paint(g)
@@ -163,7 +178,10 @@ private class DisabledHtmlTextLayerUI<V : AbstractButton> : LayerUI<V>() {
     }
   }
 
-  private fun paintDisabledText(g: Graphics, c: Component) {
+  private fun paintDisabledText(
+    g: Graphics,
+    c: Component,
+  ) {
     if (c is AbstractButton) {
       val b = c
       label.font = b.font
@@ -199,7 +217,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd

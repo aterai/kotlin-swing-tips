@@ -44,7 +44,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeButtonGroupPanel(title: String, bg: ButtonGroup): Container {
+private fun makeButtonGroupPanel(
+  title: String,
+  bg: ButtonGroup,
+): Container {
   val p = JPanel()
   listOf("aaa", "bbb", "ccc", "ddd", "eee").forEach {
     val rb = JRadioButton(it, "ccc" == it)
