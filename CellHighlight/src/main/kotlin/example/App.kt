@@ -34,7 +34,10 @@ private class HighlightListener : MouseAdapter() {
   private var viewRowIndex = -1
   private var viewColumnIndex = -1
 
-  fun getCellHighlightColor(row: Int, column: Int): Color? {
+  fun getCellHighlightColor(
+    row: Int,
+    column: Int,
+  ): Color? {
     return if (viewRowIndex == row || viewColumnIndex == column) {
       if (viewRowIndex == row && viewColumnIndex == column) {
         HIGHLIGHT1

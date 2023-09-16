@@ -15,7 +15,10 @@ fun makeUI(): Component {
       }
     }
 
-    private fun paintSideComponents(g: Graphics, idx: Int) {
+    private fun paintSideComponents(
+      g: Graphics,
+      idx: Int,
+    ) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.composite = AlphaComposite.SrcOver.derive(.5f)
       val insets = insets

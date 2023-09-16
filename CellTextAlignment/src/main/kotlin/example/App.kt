@@ -66,7 +66,10 @@ private class HorizontalAlignmentTableRenderer : DefaultTableCellRenderer() {
   }
 }
 
-fun initLabel(l: JLabel, row: Int) {
+fun initLabel(
+  l: JLabel,
+  row: Int,
+) {
   l.horizontalAlignment = when {
     leftRadio.isSelected -> SwingConstants.LEFT
     centerRadio.isSelected -> SwingConstants.CENTER

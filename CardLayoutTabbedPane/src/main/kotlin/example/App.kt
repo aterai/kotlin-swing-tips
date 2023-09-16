@@ -55,7 +55,10 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
     add(contentsPanel)
   }
 
-  private fun createTabComponent(title: String, comp: Component): Component {
+  private fun createTabComponent(
+    title: String,
+    comp: Component,
+  ): Component {
     val tab = TabButton(title)
     val ml = object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
@@ -95,7 +98,10 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
     return tab
   }
 
-  fun addTab(title: String, comp: Component) {
+  fun addTab(
+    title: String,
+    comp: Component,
+  ) {
     tabPanel.add(createTabComponent(title, comp))
     contentsPanel.add(comp, title)
     cardLayout.show(contentsPanel, title)
@@ -146,7 +152,12 @@ private class TabButton(text: String?) : JRadioButton(text, null) {
 }
 
 private class CloseTabIcon(private val color: Color) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = color
@@ -188,7 +199,10 @@ private open class BasicTabViewButtonUI : TabViewButtonUI() {
     }
   }
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     if (c !is AbstractButton) {
       return
     }
@@ -266,7 +280,10 @@ private class OperaTabViewButtonUI : BasicTabViewButtonUI() {
     }
   }
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     val b = c as? AbstractButton ?: return
     val f = b.font
     g.font = f
@@ -303,7 +320,10 @@ private class OperaTabViewButtonUI : BasicTabViewButtonUI() {
     g2.dispose()
   }
 
-  private fun tabPainter(g2: Graphics2D, r: Rectangle) {
+  private fun tabPainter(
+    g2: Graphics2D,
+    r: Rectangle,
+  ) {
     val r1 = Rectangle(r.x, r.y, r.width, r.height / 2)
     val r2 = Rectangle(r.x, r.y + r.height / 2, r.width, r.height / 2)
     val r3 = Rectangle(r.x, r.y + r.height / 2 - 2, r.width, r.height / 4)

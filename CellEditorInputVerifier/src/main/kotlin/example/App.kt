@@ -31,7 +31,11 @@ fun makeUI(): Component {
     override fun getColumnClass(column: Int) = Int::class.javaObjectType
   }
   val table = object : JTable(model) {
-    override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int): Component? {
+    override fun prepareEditor(
+      editor: TableCellEditor,
+      row: Int,
+      column: Int,
+    ): Component? {
       val c = super.prepareEditor(editor, row, column)
       (c as? JComponent)?.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
       return c
@@ -118,7 +122,11 @@ private class IntegerDocumentFilter : DocumentFilter() {
   }
 
   @Throws(BadLocationException::class)
-  override fun remove(fb: FilterBypass, offset: Int, length: Int) {
+  override fun remove(
+    fb: FilterBypass,
+    offset: Int,
+    length: Int,
+  ) {
     replace(fb, offset, length, "", null)
   }
 

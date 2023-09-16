@@ -22,7 +22,11 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeInternalFrame(title: String, p: Point, c: Component): JInternalFrame {
+private fun makeInternalFrame(
+  title: String,
+  p: Point,
+  c: Component,
+): JInternalFrame {
   val f = JInternalFrame(title, true, true, true, true)
   f.add(c)
   f.setSize(200, 100)

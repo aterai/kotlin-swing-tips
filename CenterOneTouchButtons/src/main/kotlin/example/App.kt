@@ -41,7 +41,10 @@ fun makeUI(): Component {
   }
 }
 
-fun updateCenterOneTouchButtons(splitPane: JSplitPane?, b: Boolean) {
+fun updateCenterOneTouchButtons(
+  splitPane: JSplitPane?,
+  b: Boolean,
+) {
   UIManager.put("SplitPane.centerOneTouchButtons", b)
   SwingUtilities.updateComponentTreeUI(splitPane)
 }
@@ -61,7 +64,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd
