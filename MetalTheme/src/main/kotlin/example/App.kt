@@ -96,7 +96,7 @@ private object LookAndFeelUtils {
 
 fun main() {
   EventQueue.invokeLater {
-    // BasicLookAndFeel, WidowsLookAndFeel
+    // BasicLookAndFeel, WindowsLookAndFeel
     UIManager.put("InternalFrame.activeTitleForeground", Color.RED)
     UIManager.put("InternalFrame.inactiveTitleForeground", Color.WHITE)
     // MetalLookAndFeel
