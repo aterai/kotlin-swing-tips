@@ -57,7 +57,11 @@ fun makeUI(): Component {
   }
 }
 
-private fun getData(img: Image, w: Int, h: Int): IntArray {
+private fun getData(
+  img: Image,
+  w: Int,
+  h: Int,
+): IntArray {
   val image = BufferedImage(w, h, BufferedImage.TYPE_INT_RGB)
   val g = image.createGraphics()
   g.drawImage(img, 0, 0, null)

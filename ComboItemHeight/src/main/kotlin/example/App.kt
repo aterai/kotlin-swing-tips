@@ -78,7 +78,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)
@@ -86,7 +89,12 @@ private fun makeTitledPanel(title: String, c: Component): Component {
 }
 
 private class H32Icon : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     // Empty icon
   }
 

@@ -34,7 +34,10 @@ fun makeUI(): Component {
   }
 }
 
-fun createFrame(t: String, i: Int): JInternalFrame {
+fun createFrame(
+  t: String,
+  i: Int,
+): JInternalFrame {
   val f = JInternalFrame(t + i, true, true, true, true)
   f.desktopIcon = object : JDesktopIcon(f) {
     override fun getPreferredSize(): Dimension {

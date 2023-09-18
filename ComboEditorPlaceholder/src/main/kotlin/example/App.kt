@@ -26,7 +26,8 @@ fun makeUI(): Component {
 
         override fun getEditorComponent(): Component? {
           (super.getEditorComponent() as? JTextComponent)?.also {
-            editorComponent = editorComponent ?: JLayer(it, PlaceholderLayerUI("- Select type -"))
+            val help = "- Select type -"
+            editorComponent = editorComponent ?: JLayer(it, PlaceholderLayerUI(help))
           }
           return editorComponent
         }
@@ -81,7 +82,10 @@ private class PlaceholderLayerUI<E : JTextComponent>(hintMessage: String) : Laye
     SwingUtilities.updateComponentTreeUI(hint)
   }
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     super.paint(g, c)
     (c as? JLayer<*>)?.also {
       val tc = it.view as? JTextComponent ?: return
@@ -107,7 +111,10 @@ private class PlaceholderLayerUI<E : JTextComponent>(hintMessage: String) : Laye
     (c as? JLayer<*>)?.layerEventMask = 0
   }
 
-  override fun processFocusEvent(e: FocusEvent, l: JLayer<out E>) {
+  override fun processFocusEvent(
+    e: FocusEvent,
+    l: JLayer<out E>,
+  ) {
     l.view.repaint()
   }
 }

@@ -118,13 +118,20 @@ private class ComboKeyHandler(private val comboBox: JComboBox<String>) : KeyAdap
     shouldHide = true
   }
 
-  private fun setSuggestionModel(cb: JComboBox<String>, m: ComboBoxModel<String>, txt: String) {
+  private fun setSuggestionModel(
+    cb: JComboBox<String>,
+    m: ComboBoxModel<String>,
+    txt: String,
+  ) {
     cb.model = m
     cb.selectedIndex = -1
     (cb.editor.editorComponent as? JTextField)?.text = txt
   }
 
-  private fun getSuggestedModel(list: List<String>, text: String): ComboBoxModel<String> {
+  private fun getSuggestedModel(
+    list: List<String>,
+    text: String,
+  ): ComboBoxModel<String> {
     val m = DefaultComboBoxModel<String>()
     for (s in list) {
       if (s.startsWith(text)) {
