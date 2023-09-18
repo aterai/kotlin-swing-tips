@@ -66,7 +66,11 @@ private class TablePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     (c as? JTable)?.also {
       delete.isEnabled = it.selectedRowCount > 0
       super.show(it, x, y)

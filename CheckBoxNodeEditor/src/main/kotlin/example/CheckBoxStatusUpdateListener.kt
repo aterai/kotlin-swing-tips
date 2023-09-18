@@ -65,7 +65,10 @@ class CheckBoxStatusUpdateListener : TreeModelListener {
     }
   }
 
-  private fun updateAllChildrenUserObject(parent: DefaultMutableTreeNode, status: Status) {
+  private fun updateAllChildrenUserObject(
+    parent: DefaultMutableTreeNode,
+    status: Status,
+  ) {
     parent.breadthFirstEnumeration().toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .filter { it != parent }

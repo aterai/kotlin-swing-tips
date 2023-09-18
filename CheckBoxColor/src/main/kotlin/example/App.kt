@@ -23,7 +23,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)
@@ -33,7 +36,12 @@ private fun makeTitledPanel(title: String, c: Component): Component {
 private class CheckBoxIcon3 : Icon {
   private val orgIcon = MetalCheckBoxIcon()
 
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     orgIcon.paintIcon(c, g2, 0, 0)
@@ -50,7 +58,12 @@ private class CheckBoxIcon3 : Icon {
 private class CheckBoxIcon2 : Icon {
   private val orgIcon = UIManager.getIcon("CheckBox.icon")
 
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     orgIcon.paintIcon(c, g2, 0, 0)
@@ -80,7 +93,12 @@ private class CheckBoxIcon2 : Icon {
 }
 
 private class CheckBoxIcon : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val cb = c as? JCheckBox ?: return
     val model = cb.model
     val g2 = g.create() as? Graphics2D ?: return

@@ -21,7 +21,10 @@ fun makeUI(): Component {
   }
 }
 
-fun makeTitledPanel(title: String, c: Component): Component {
+fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)

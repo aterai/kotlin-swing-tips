@@ -56,7 +56,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)
@@ -92,7 +95,11 @@ private class TextComponentPopupMenu(textComponent: JTextComponent) : JPopupMenu
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, msk), "redo")
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTextComponent) {
       val hasSelectedText = c.selectedText != null
       cutAction.isEnabled = hasSelectedText

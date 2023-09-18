@@ -69,7 +69,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun getIconPainter(d: UIDefaults, status: String): Painter<JCheckBox>? {
+private fun getIconPainter(
+  d: UIDefaults,
+  status: String,
+): Painter<JCheckBox>? {
   val key = "CheckBox[%s].iconPainter".format(status)
   val painter = d[key]
   return painter as? Painter<JCheckBox>
@@ -78,7 +81,12 @@ private fun getIconPainter(d: UIDefaults, status: String): Painter<JCheckBox>? {
 private class CheckBoxIcon : Icon {
   private val checkIcon = UIManager.getIcon("CheckBox.icon")
 
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     if (c is AbstractButton) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.translate(x, y)
@@ -102,7 +110,12 @@ private class CheckBoxIcon : Icon {
 }
 
 private class CheckBoxRolloverIcon : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     if (c is AbstractButton) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.translate(x, y)
@@ -142,7 +155,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd
