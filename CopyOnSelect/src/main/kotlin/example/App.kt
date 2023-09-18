@@ -47,7 +47,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)
@@ -120,7 +123,11 @@ private class TextAreaOutputStream(private val textArea: JTextArea) : OutputStre
     buffer.write(b)
   }
 
-  override fun write(b: ByteArray, off: Int, len: Int) {
+  override fun write(
+    b: ByteArray,
+    off: Int,
+    len: Int,
+  ) {
     buffer.write(b, off, len)
   }
 }

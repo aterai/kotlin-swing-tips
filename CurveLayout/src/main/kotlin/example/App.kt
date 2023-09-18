@@ -60,7 +60,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun initPanel(title: String, p: JComponent): Component {
+private fun initPanel(
+  title: String,
+  p: JComponent,
+): Component {
   p.border = BorderFactory.createTitledBorder(title)
   p.add(JCheckBox("000000000000000000"))
   p.add(JCheckBox("11111111111"))

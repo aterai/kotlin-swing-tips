@@ -51,7 +51,10 @@ private fun makeOvalBufferedImage(): BufferedImage {
   return bi
 }
 
-private fun makeIconBufferedImage(icon: Icon, c: Component): BufferedImage {
+private fun makeIconBufferedImage(
+  icon: Icon,
+  c: Component,
+): BufferedImage {
   val w = icon.iconWidth
   val h = icon.iconHeight
   val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
@@ -61,13 +64,21 @@ private fun makeIconBufferedImage(icon: Icon, c: Component): BufferedImage {
   return bi
 }
 
-private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+) = JPanel(BorderLayout()).also {
   it.border = BorderFactory.createTitledBorder(title)
   it.add(c)
 }
 
 private class GreenBlueIcon : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = Color.GREEN

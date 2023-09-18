@@ -79,7 +79,11 @@ private class SelectWordCaret : DefaultCaret() {
     }
   }
 
-  private fun getCaretPositionByLocation(c: JTextComponent, pt: Point, biasRet: Array<Bias?>): Int {
+  private fun getCaretPositionByLocation(
+    c: JTextComponent,
+    pt: Point,
+    biasRet: Array<Bias?>,
+  ): Int {
     val pos = c.ui.viewToModel(c, pt, biasRet)
     if (biasRet[0] == null) {
       biasRet[0] = Bias.Forward

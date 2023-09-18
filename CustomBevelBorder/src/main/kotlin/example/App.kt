@@ -7,7 +7,10 @@ import javax.swing.border.Border
 
 fun makeUI(): Component {
   val border = object : BevelBorder(RAISED) {
-    override fun getBorderInsets(c: Component, insets: Insets): Insets {
+    override fun getBorderInsets(
+      c: Component,
+      insets: Insets,
+    ): Insets {
       insets[10, 10, 10] = 10
       return insets
     }
@@ -27,7 +30,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeButton(text: String, btnBorder: Border): JButton {
+private fun makeButton(
+  text: String,
+  btnBorder: Border,
+): JButton {
   val button = object : JButton("<html>JButton<br>+ $text") {
     override fun updateUI() {
       super.updateUI()
@@ -45,7 +51,10 @@ private fun makeButton(text: String, btnBorder: Border): JButton {
 private class CustomBevelBorder(bevelType: Int) : BevelBorder(bevelType) {
   private val ins = Insets(8, 8, 8, 8)
 
-  override fun getBorderInsets(c: Component, insets: Insets): Insets {
+  override fun getBorderInsets(
+    c: Component,
+    insets: Insets,
+  ): Insets {
     insets.set(ins.top + 2, ins.left + 2, ins.bottom + 2, ins.right + 2)
     return insets
   }
@@ -114,12 +123,21 @@ private class CustomBevelBorder(bevelType: Int) : BevelBorder(bevelType) {
     g2.dispose()
   }
 
-  private fun fillTopLeft(g2: Graphics2D, w: Int, h: Int, i: Insets) {
+  private fun fillTopLeft(
+    g2: Graphics2D,
+    w: Int,
+    h: Int,
+    i: Insets,
+  ) {
     g2.fillRect(0, 0, w, i.top)
     g2.fillRect(0, 0, i.left, h)
   }
 
-  private fun makeBottomRightShape(w: Int, h: Int, i: Insets): Shape {
+  private fun makeBottomRightShape(
+    w: Int,
+    h: Int,
+    i: Insets,
+  ): Shape {
     val p = Polygon()
     p.addPoint(w, 0)
     p.addPoint(w - i.right, i.top)
@@ -130,7 +148,12 @@ private class CustomBevelBorder(bevelType: Int) : BevelBorder(bevelType) {
     return p
   }
 
-  private fun drawRectLine(g2: Graphics2D, w: Int, h: Int, i: Insets) {
+  private fun drawRectLine(
+    g2: Graphics2D,
+    w: Int,
+    h: Int,
+    i: Insets,
+  ) {
     g2.drawRect(0, 0, w, h)
     g2.drawRect(i.left, i.top, w - i.left - i.right, h - i.top - i.bottom)
     g2.drawLine(0, 0, i.left, i.top)
