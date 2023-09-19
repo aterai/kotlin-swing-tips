@@ -142,7 +142,10 @@ private class PluginCellEditor(comboBox: JComboBox<String>) : DefaultCellEditor(
     return delegate.isCellEditable(e)
   }
 
-  private fun showComboPopup(cmp: Component, p: Point) {
+  private fun showComboPopup(
+    cmp: Component,
+    p: Point,
+  ) {
     EventQueue.invokeLater {
       val pt = SwingUtilities.convertPoint(cmp, p, panel)
       val o = SwingUtilities.getDeepestComponentAt(panel, pt.x, pt.y)

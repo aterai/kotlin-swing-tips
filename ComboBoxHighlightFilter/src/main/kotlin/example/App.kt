@@ -69,7 +69,11 @@ private fun makeComboBox(model: List<String>): JComboBox<String> {
       }
     }
 
-    private fun addHighlight(txt: String, pattern: String, highlighter: Highlighter) {
+    private fun addHighlight(
+      txt: String,
+      pattern: String,
+      highlighter: Highlighter,
+    ) {
       pattern.toRegex().findAll(txt).map { it.range }.filterNot { it.isEmpty() }.forEach {
         highlighter.addHighlight(it.first(), it.last() + 1, highlightPainter)
       }
@@ -157,13 +161,20 @@ private class ComboKeyHandler(private val combo: JComboBox<String>) : KeyAdapter
     shouldHide = true
   }
 
-  private fun setSuggestionModel(cb: JComboBox<String>, m: ComboBoxModel<String>, txt: String) {
+  private fun setSuggestionModel(
+    cb: JComboBox<String>,
+    m: ComboBoxModel<String>,
+    txt: String,
+  ) {
     cb.model = m
     cb.selectedIndex = -1
     (cb.editor.editorComponent as? JTextField)?.text = txt
   }
 
-  private fun getSuggestedModel(list: List<String>, text: String): ComboBoxModel<String> {
+  private fun getSuggestedModel(
+    list: List<String>,
+    text: String,
+  ): ComboBoxModel<String> {
     val m = DefaultComboBoxModel<String>()
     for (s in list) {
       if (s.contains(text)) {
