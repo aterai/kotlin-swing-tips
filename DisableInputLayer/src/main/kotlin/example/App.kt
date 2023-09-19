@@ -46,7 +46,10 @@ private class DisableInputLayerUI<V : Component> : LayerUI<V>() {
     firePropertyChange(CMD_REPAINT, true, false)
   }
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     super.paint(g, c)
     if (!running) {
       return
@@ -73,13 +76,19 @@ private class DisableInputLayerUI<V : Component> : LayerUI<V>() {
     super.uninstallUI(c)
   }
 
-  override fun eventDispatched(e: AWTEvent, l: JLayer<out V>) {
+  override fun eventDispatched(
+    e: AWTEvent,
+    l: JLayer<out V>,
+  ) {
     if (running && e is InputEvent) {
       e.consume()
     }
   }
 
-  override fun applyPropertyChange(e: PropertyChangeEvent, l: JLayer<out V>) {
+  override fun applyPropertyChange(
+    e: PropertyChangeEvent,
+    l: JLayer<out V>,
+  ) {
     if (CMD_REPAINT == e.propertyName) {
       l.glassPane.isVisible = e.newValue as? Boolean == true
     }

@@ -58,7 +58,14 @@ private class DiagonallySplitBorder(
   right: Int,
   matteColor: Color,
 ) : MatteBorder(top, left, bottom, right, matteColor) {
-  override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
+  override fun paintBorder(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+    width: Int,
+    height: Int,
+  ) {
     super.paintBorder(c, g, x, y, width, height)
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)

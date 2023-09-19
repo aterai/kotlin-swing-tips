@@ -27,7 +27,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: String, cmp: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  cmp: Component,
+): Component {
   val p = JPanel(GridBagLayout())
   p.border = BorderFactory.createTitledBorder(title)
   val c = GridBagConstraints()
@@ -82,7 +85,11 @@ private class SizeFilter : DocumentFilter() {
   }
 
   @Throws(BadLocationException::class)
-  override fun remove(fb: FilterBypass, offset: Int, length: Int) {
+  override fun remove(
+    fb: FilterBypass,
+    offset: Int,
+    length: Int,
+  ) {
     fb.remove(offset, length)
   }
 

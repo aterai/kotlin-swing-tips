@@ -14,7 +14,14 @@ fun makeUI(): Component {
   label1.border = BorderFactory.createTitledBorder("Default")
 
   val label2 = object : JLabel(icon) {
-    override fun imageUpdate(img: Image, infoflags: Int, x: Int, y: Int, w: Int, h: Int): Boolean {
+    override fun imageUpdate(
+      img: Image,
+      infoflags: Int,
+      x: Int,
+      y: Int,
+      w: Int,
+      h: Int,
+    ): Boolean {
       var info = infoflags
       if (!isEnabled) {
         info = info and FRAMEBITS.inv()
