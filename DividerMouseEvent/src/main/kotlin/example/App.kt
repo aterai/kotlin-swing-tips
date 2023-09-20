@@ -19,7 +19,11 @@ fun makeUI(): Component {
 
   val check = JCheckBox("Show JPopupMenu only on Divider", true)
   val popup = object : JPopupMenu() {
-    override fun show(invoker: Component, x: Int, y: Int) {
+    override fun show(
+      invoker: Component,
+      x: Int,
+      y: Int,
+    ) {
       if (check.isSelected && invoker is JSplitPane) {
         val ui = invoker.ui as? BasicSplitPaneUI ?: return
         if (ui.divider.bounds.contains(x, y)) {
@@ -51,7 +55,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun selectMinMax(splitPane: JSplitPane, cmd: String) {
+private fun selectMinMax(
+  splitPane: JSplitPane,
+  cmd: String,
+) {
   splitPane.requestFocusInWindow()
   object : SwingWorker<Void?, Void?>() {
     override fun doInBackground() = null

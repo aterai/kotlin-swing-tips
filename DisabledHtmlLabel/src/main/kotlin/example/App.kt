@@ -55,7 +55,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun initTitledBorder(title: String, c: JComponent): Component {
+private fun initTitledBorder(
+  title: String,
+  c: JComponent,
+): Component {
   c.border = BorderFactory.createTitledBorder(title)
   return c
 }

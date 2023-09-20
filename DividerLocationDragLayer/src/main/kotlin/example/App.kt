@@ -60,7 +60,10 @@ private class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
     super.uninstallUI(c)
   }
 
-  override fun processMouseEvent(e: MouseEvent, l: JLayer<out JSplitPane>) {
+  override fun processMouseEvent(
+    e: MouseEvent,
+    l: JLayer<out JSplitPane>,
+  ) {
     val sp = l.view
     val c = e.component
     if (isDraggableComponent(sp, c) && e.id == MouseEvent.MOUSE_PRESSED) {
@@ -69,7 +72,10 @@ private class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
     }
   }
 
-  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out JSplitPane>) {
+  override fun processMouseMotionEvent(
+    e: MouseEvent,
+    l: JLayer<out JSplitPane>,
+  ) {
     val sp = l.view
     val c = e.component
     if (isDraggableComponent(sp, c) && e.id == MouseEvent.MOUSE_DRAGGED) {
@@ -84,8 +90,10 @@ private class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
   }
 
   companion object {
-    private fun isDraggableComponent(splitPane: JSplitPane, c: Component) =
-      splitPane == c || splitPane == SwingUtilities.getUnwrappedParent(c)
+    private fun isDraggableComponent(
+      splitPane: JSplitPane,
+      c: Component,
+    ) = splitPane == c || splitPane == SwingUtilities.getUnwrappedParent(c)
   }
 }
 
