@@ -70,7 +70,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makePanel(tabs: JTabbedPane, c: JComponent?): JPanel {
+private fun makePanel(
+  tabs: JTabbedPane,
+  c: JComponent?,
+): JPanel {
   val p = JPanel(BorderLayout())
   if (c != null) {
     p.add(c, BorderLayout.NORTH)

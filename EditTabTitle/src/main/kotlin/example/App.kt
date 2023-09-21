@@ -114,7 +114,11 @@ private class EditableTabbedPane : JTabbedPane() {
     }
   }
 
-  private fun actionPerformed(c: Component, a: Action, command: String) {
+  private fun actionPerformed(
+    c: Component,
+    a: Action,
+    command: String,
+  ) {
     a.actionPerformed(ActionEvent(c, ActionEvent.ACTION_PERFORMED, command))
   }
 

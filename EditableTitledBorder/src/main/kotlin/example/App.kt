@@ -181,7 +181,12 @@ private class EditableTitledBorder(
     return r
   }
 
-  private fun calcLabelPosition(c: Component, edge: Int, insets: Insets, lblR: Rectangle) {
+  private fun calcLabelPosition(
+    c: Component,
+    edge: Int,
+    insets: Insets,
+    lblR: Rectangle,
+  ) {
     when (getTitlePosition()) {
       ABOVE_TOP -> {
         insets.left = 0
@@ -234,7 +239,10 @@ private class EditableTitledBorder(
     }
   }
 
-  private fun getBorderInsets(border: Border?, c: Component): Insets {
+  private fun getBorderInsets(
+    border: Border?,
+    c: Component,
+  ): Insets {
     var ins = Insets(0, 0, 0, 0)
     return when (border) {
       null -> ins

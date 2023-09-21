@@ -35,7 +35,10 @@ private class RowComparator(
   private val table: JTable,
   private val column: Int,
 ) : Comparator<String>, Serializable {
-  override fun compare(a: String, b: String): Int {
+  override fun compare(
+    a: String,
+    b: String,
+  ): Int {
     var flag = 1
     val keys = table.rowSorter.sortKeys
     if (keys.isNotEmpty()) {

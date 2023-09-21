@@ -163,7 +163,10 @@ private object AnimationUtils {
     }
   }
 
-  fun intPow(base0: Double, exp0: Int): Double {
+  fun intPow(
+    base0: Double,
+    exp0: Int,
+  ): Double {
     require(exp0 >= 0) { "exp0 must be a positive integer or zero" }
     var base = base0
     var exp = exp0
@@ -180,7 +183,12 @@ private object AnimationUtils {
 }
 
 private class MissingIcon : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     val w = iconWidth
     val h = iconHeight
