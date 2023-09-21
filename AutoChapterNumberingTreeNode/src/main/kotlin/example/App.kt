@@ -18,7 +18,15 @@ fun makeUI(): Component {
       // setCellRenderer(ChapterNumberingTreeCellRenderer())
       val r = getCellRenderer()
       setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-        r.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus).also {
+        r.getTreeCellRendererComponent(
+          tree,
+          value,
+          selected,
+          expanded,
+          leaf,
+          row,
+          hasFocus,
+        ).also {
           if (value is DefaultMutableTreeNode) {
             val tn = value.path
             val s = (1 until tn.size) // ignore the root node by skipping index 0
