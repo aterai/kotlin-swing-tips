@@ -7,7 +7,11 @@ import javax.swing.tree.TreePath
 
 // Expanding or Collapsing All Nodes in a JTree Component (Java Developers Almanac Example)
 // http://www.exampledepot.com/egs/javax.swing.tree/ExpandAll.html
-fun visitAll(tree: JTree, parent: TreePath, expand: Boolean) {
+fun visitAll(
+  tree: JTree,
+  parent: TreePath,
+  expand: Boolean,
+) {
   (parent.lastPathComponent as? TreeNode)?.also { node ->
     node.children()
       .toList()

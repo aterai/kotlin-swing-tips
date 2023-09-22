@@ -36,11 +36,18 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledScrollPane(view: Component, title: String) = JScrollPane(view).also {
+private fun makeTitledScrollPane(
+  view: Component,
+  title: String,
+) = JScrollPane(view).also {
   it.border = BorderFactory.createTitledBorder(title)
 }
 
-private fun searchTree(tree: JTree, path: TreePath, q: String) {
+private fun searchTree(
+  tree: JTree,
+  path: TreePath,
+  q: String,
+) {
   (path.lastPathComponent as? TreeNode)?.also { node ->
     if (node.toString() == q) {
       tree.addSelectionPath(path)

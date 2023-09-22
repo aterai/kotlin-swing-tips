@@ -71,7 +71,11 @@ private class ListPopupMenu(list: JList<*>) : JPopupMenu() {
     add("clearSelection").addActionListener { list.clearSelection() }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JList<*>) {
       val isSelected = !c.isSelectionEmpty
       cutItem.isEnabled = isSelected
@@ -133,13 +137,23 @@ private class ListItemTransferHandler : TransferHandler() {
     return values.isNotEmpty()
   }
 
-  override fun importData(comp: JComponent, t: Transferable) = importData(TransferSupport(comp, t))
+  override fun importData(
+    comp: JComponent,
+    t: Transferable,
+  ) = importData(TransferSupport(comp, t))
 
-  override fun exportDone(c: JComponent, data: Transferable, action: Int) {
+  override fun exportDone(
+    c: JComponent,
+    data: Transferable,
+    action: Int,
+  ) {
     cleanup(c, action == MOVE)
   }
 
-  private fun cleanup(c: JComponent, remove: Boolean) {
+  private fun cleanup(
+    c: JComponent,
+    remove: Boolean,
+  ) {
     if (remove && selectedIndices.isNotEmpty()) {
       val selectedList = if (addCount > 0) {
         selectedIndices.map { if (it >= addIndex) it + addCount else it }

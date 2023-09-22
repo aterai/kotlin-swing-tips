@@ -52,7 +52,11 @@ fun makeUI(): Component {
   }
 }
 
-private fun visitAll(tree: JTree, parent: TreePath, expand: Boolean) {
+private fun visitAll(
+  tree: JTree,
+  parent: TreePath,
+  expand: Boolean,
+) {
   (parent.lastPathComponent as? TreeNode)?.also { node ->
     if (!node.isLeaf) {
       node.children().toList().forEach {

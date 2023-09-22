@@ -32,7 +32,10 @@ fun makeUI(): Component {
   val table = FileListTable(object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
 
-    override fun isCellEditable(row: Int, column: Int) = false
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = false
   })
   val scroll = JScrollPane(table)
   val tab = KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0)
@@ -63,7 +66,11 @@ fun makeUI(): Component {
 }
 
 private class SelectedImageFilter : RGBImageFilter() {
-  override fun filterRGB(x: Int, y: Int, argb: Int): Int {
+  override fun filterRGB(
+    x: Int,
+    y: Int,
+    argb: Int,
+  ): Int {
     val r = argb shr 16 and 0xFF
     val g = argb shr 8 and 0xFF
     return argb and 0xFF_00_00_FF.toInt() or (r shr 1 shl 16) or (g shr 1 shl 8)
@@ -209,7 +216,11 @@ private class TablePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTable) {
       delete.isEnabled = c.selectedRowCount > 0
       super.show(c, x, y)
