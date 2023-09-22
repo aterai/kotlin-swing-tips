@@ -37,7 +37,12 @@ fun makeUI(): Component {
             val row = it.convertRowIndexToModel(i)
             val v0 = m.getValueAt(row, 0)
             val v1 = m.getValueAt(row, 1)
-            JOptionPane.showMessageDialog(it, "$v0 ($v1)", "title", JOptionPane.INFORMATION_MESSAGE)
+            JOptionPane.showMessageDialog(
+              it,
+              "$v0 ($v1)",
+              "title",
+              JOptionPane.INFORMATION_MESSAGE,
+            )
           }
         }
       }

@@ -248,7 +248,9 @@ private class EditableList(model: DefaultListModel<ListItem>) : JList<ListItem>(
       addMouseListener(object : MouseAdapter() {
         override fun mouseClicked(e: MouseEvent) {
           if (!editor.bounds.contains(e.point)) {
-            renameTitle.actionPerformed(ActionEvent(e.component, ActionEvent.ACTION_PERFORMED, ""))
+            val c = e.component
+            val id = ActionEvent.ACTION_PERFORMED
+            renameTitle.actionPerformed(ActionEvent(c, id, ""))
           }
         }
       })
