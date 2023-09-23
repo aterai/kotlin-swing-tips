@@ -26,7 +26,10 @@ fun makeUI(): Component {
 
 private fun makeIconLabel(txt: String) = JLabel(SilhouetteIcon(FONT, txt, SIZE))
 
-private fun initLabel(l: JLabel, i: Int): JLabel {
+private fun initLabel(
+  l: JLabel,
+  i: Int,
+): JLabel {
   l.horizontalAlignment = SwingConstants.CENTER
   l.font = FONT
   l.isOpaque = true
@@ -47,7 +50,12 @@ private class SilhouetteIcon(
   private val str: String,
   private val size: Dimension,
 ) : Icon, Serializable {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)

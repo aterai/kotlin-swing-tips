@@ -12,7 +12,10 @@ fun makeUI(): Component {
   label.verticalAlignment = SwingConstants.CENTER
   val columnNames = arrayOf("family", "name", "postscript name", "canDisplay", "isEmpty")
   val model = object : DefaultTableModel(null, columnNames) {
-    override fun isCellEditable(row: Int, column: Int) = false
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = false
 
     override fun getColumnClass(column: Int) =
       if (column > 2) Boolean::class.javaObjectType else String::class.java

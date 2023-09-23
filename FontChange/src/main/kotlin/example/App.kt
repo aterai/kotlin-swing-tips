@@ -56,7 +56,10 @@ fun makeUI(): Component {
   return p
 }
 
-private fun updateFont(font: Font, parent: JComponent) {
+private fun updateFont(
+  font: Font,
+  parent: JComponent,
+) {
   val fontResource = FontUIResource(font)
   UIManager.getLookAndFeelDefaults()
     .forEach { key, _ ->

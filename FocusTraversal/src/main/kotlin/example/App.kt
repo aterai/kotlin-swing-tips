@@ -91,7 +91,10 @@ fun debugPrint() {
   textArea.text = builder.toString()
 }
 
-private fun debugString(label: String, c: Container) = """
+private fun debugString(
+  label: String,
+  c: Container,
+) = """
   ---- $label ----
     isFocusCycleRoot: ${c.isFocusCycleRoot}
     isFocusTraversalPolicySet: ${c.isFocusTraversalPolicySet}
@@ -105,11 +108,15 @@ private class CustomFocusTraversalPolicy(
 
   override fun getLastComponent(focusCycleRoot: Container) = order[order.size - 1]
 
-  override fun getComponentAfter(focusCycleRoot: Container, cmp: Component) =
-    order[(order.indexOf(cmp) + 1) % order.size]
+  override fun getComponentAfter(
+    focusCycleRoot: Container,
+    cmp: Component,
+  ) = order[(order.indexOf(cmp) + 1) % order.size]
 
-  override fun getComponentBefore(focusCycleRoot: Container, cmp: Component) =
-    order[(order.indexOf(cmp) - 1 + order.size) % order.size]
+  override fun getComponentBefore(
+    focusCycleRoot: Container,
+    cmp: Component,
+  ) = order[(order.indexOf(cmp) - 1 + order.size) % order.size]
 
   override fun getDefaultComponent(focusCycleRoot: Container) = order[0]
 }

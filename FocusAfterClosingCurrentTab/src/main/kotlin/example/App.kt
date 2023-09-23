@@ -101,7 +101,13 @@ private open class ClippedTitleTabbedPane : JTabbedPane() {
     return style.getInsets(context, null)
   }
 
-  override fun insertTab(title: String?, icon: Icon?, c: Component?, tip: String?, index: Int) {
+  override fun insertTab(
+    title: String?,
+    icon: Icon?,
+    c: Component?,
+    tip: String?,
+    index: Int,
+  ) {
     super.insertTab(title, icon, c, tip ?: title, index)
     setTabComponentAt(index, ButtonTabComponent(this))
   }
@@ -127,7 +133,10 @@ private open class ClippedTitleTabbedPane : JTabbedPane() {
     super.doLayout()
   }
 
-  private fun updateAllTabWidth(tabWidth: Int, gap: Int) {
+  private fun updateAllTabWidth(
+    tabWidth: Int,
+    gap: Int,
+  ) {
     val dim = Dimension()
     var rest = gap
     for (i in 0 until tabCount) {
@@ -203,7 +212,12 @@ private class ButtonTabComponent(val tabbedPane: JTabbedPane) : JPanel(BorderLay
 }
 
 private class CloseTabIcon(private val color: Color) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = color

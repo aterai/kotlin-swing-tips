@@ -44,7 +44,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeLabel(title: String, color: Color) = JLabel(title).also {
+private fun makeLabel(
+  title: String,
+  color: Color,
+) = JLabel(title).also {
   it.isOpaque = true
   it.background = color
   it.toolTipText = "1234567890"
