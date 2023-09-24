@@ -37,7 +37,11 @@ fun makeUI(): Component {
       runCatching {
         FileSystems.getDefault().newWatchService()
       }.onSuccess {
-        dir.register(it, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE)
+        dir.register(
+          it,
+          StandardWatchEventKinds.ENTRY_CREATE,
+          StandardWatchEventKinds.ENTRY_DELETE,
+        )
         append("register: $dir")
         processEvents(dir, it)
       }.onFailure {
