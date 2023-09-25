@@ -63,7 +63,10 @@ private class FileModel : DefaultTableModel() {
     super.addRow(arrayOf(number++, path.fileName, path.toAbsolutePath()))
   }
 
-  override fun isCellEditable(row: Int, col: Int) = COLUMN_ARRAY[col].isEditable
+  override fun isCellEditable(
+    row: Int,
+    col: Int,
+  ) = COLUMN_ARRAY[col].isEditable
 
   override fun getColumnClass(column: Int) = COLUMN_ARRAY[column].columnClass
 
@@ -102,7 +105,11 @@ private class TablePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTable) {
       delete.isEnabled = c.selectedRowCount > 0
       super.show(c, x, y)

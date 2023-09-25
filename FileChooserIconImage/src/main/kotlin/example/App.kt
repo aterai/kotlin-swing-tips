@@ -48,7 +48,10 @@ private val IMAGE_LIST = listOf(
   makeImage(64, Color.MAGENTA),
 )
 
-fun makeImage(size: Int, color: Color): Image {
+fun makeImage(
+  size: Int,
+  color: Color,
+): Image {
   val image = BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB)
   val g2 = image.createGraphics()
   g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)

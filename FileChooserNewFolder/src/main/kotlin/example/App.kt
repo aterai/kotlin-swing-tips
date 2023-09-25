@@ -43,7 +43,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun info(log: JTextArea, key: String) {
+private fun info(
+  log: JTextArea,
+  key: String,
+) {
   log.append("%s:%n  %s%n".format(key, UIManager.getString(key)))
 }
 

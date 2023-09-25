@@ -145,7 +145,10 @@ private class FileTransferHandler : TransferHandler() {
 private open class DefaultFileComparator(
   protected val column: Int,
 ) : Comparator<File>, Serializable {
-  override fun compare(a: File, b: File) = when (column) {
+  override fun compare(
+    a: File,
+    b: File,
+  ) = when (column) {
     0 -> a.name.compareTo(b.name, ignoreCase = true)
     1 -> a.length().compareTo(b.length())
     else -> a.absolutePath.compareTo(b.absolutePath, ignoreCase = true)
@@ -157,7 +160,10 @@ private open class DefaultFileComparator(
 }
 
 private class FileComparator(column: Int) : DefaultFileComparator(column) {
-  override fun compare(a: File, b: File) = when {
+  override fun compare(
+    a: File,
+    b: File,
+  ) = when {
     a.isDirectory && !b.isDirectory -> -1
     !a.isDirectory && b.isDirectory -> 1
     else -> super.compare(a, b)
@@ -174,7 +180,10 @@ private class FileGroupComparator(
   private val table: JTable,
   column: Int,
 ) : DefaultFileComparator(column) {
-  override fun compare(a: File, b: File): Int {
+  override fun compare(
+    a: File,
+    b: File,
+  ): Int {
     val key = table.rowSorter.sortKeys.firstOrNull()
     val flag = key?.takeIf {
       it.column == column && it.sortOrder == SortOrder.DESCENDING
@@ -207,7 +216,11 @@ private class TablePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTable) {
       delete.isEnabled = c.selectedRowCount > 0
       super.show(c, x, y)

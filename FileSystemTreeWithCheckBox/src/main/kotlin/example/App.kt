@@ -70,7 +70,12 @@ private open class TriStateCheckBox : JCheckBox() {
 private class IndeterminateIcon : Icon {
   private val icon = UIManager.getIcon("CheckBox.icon")
 
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     icon.paintIcon(c, g2, 0, 0)
@@ -290,7 +295,10 @@ private class CheckBoxStatusUpdateListener : TreeModelListener {
     }
   }
 
-  private fun updateAllChildrenUserObject(parent: DefaultMutableTreeNode, status: Status) {
+  private fun updateAllChildrenUserObject(
+    parent: DefaultMutableTreeNode,
+    status: Status,
+  ) {
     parent.breadthFirstEnumeration().toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .filter { it != parent }
