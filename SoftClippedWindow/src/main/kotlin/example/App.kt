@@ -48,7 +48,10 @@ fun makeUI(): Component {
 
 private fun makePanel(image: BufferedImage): Component {
   val panel = object : JPanel(BorderLayout()) {
-    override fun getPreferredSize() = Dimension(image.getWidth(this) / 2, image.getHeight(this) / 2)
+    override fun getPreferredSize() = Dimension(
+      image.getWidth(this) / 2,
+      image.getHeight(this) / 2,
+    )
 
     override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
