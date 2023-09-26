@@ -22,7 +22,15 @@ fun makeUI(): Component {
       super.updateUI()
       val r = DefaultTreeCellRenderer()
       setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-        r.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus).also {
+        r.getTreeCellRendererComponent(
+          tree,
+          value,
+          selected,
+          expanded,
+          leaf,
+          row,
+          hasFocus,
+        ).also {
           val isRollOver = row == rollOverRowIndex
           if (isRollOver) {
             it.background = rolloverRowColor
