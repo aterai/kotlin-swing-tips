@@ -25,7 +25,11 @@ fun makeUI(): Component {
   val table = object : JTable(model) {
     private val evenColor = Color(0xFA_FA_FA)
 
-    override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
+    override fun prepareRenderer(
+      tcr: TableCellRenderer,
+      row: Int,
+      column: Int,
+    ): Component {
       val c = super.prepareRenderer(tcr, row, column)
       if (isRowSelected(row)) {
         c.foreground = getSelectionForeground()
@@ -65,7 +69,10 @@ private class RowDataModel : DefaultTableModel() {
     list.add(t)
   }
 
-  override fun isCellEditable(row: Int, col: Int) = COLUMN_ARRAY[col].isEditable
+  override fun isCellEditable(
+    row: Int,
+    col: Int,
+  ) = COLUMN_ARRAY[col].isEditable
 
   override fun getColumnClass(column: Int) = COLUMN_ARRAY[column].columnClass
 

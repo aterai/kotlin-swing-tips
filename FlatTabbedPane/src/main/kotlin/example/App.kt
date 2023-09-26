@@ -136,7 +136,13 @@ private class FlatTabbedPaneUI : BasicTabbedPaneUI() {
     paintContentBorder(g, x, y, w, h)
   }
 
-  private fun paintContentBorder(g: Graphics, x: Int, y: Int, w: Int, h: Int) {
+  private fun paintContentBorder(
+    g: Graphics,
+    x: Int,
+    y: Int,
+    w: Int,
+    h: Int,
+  ) {
     g.color = SELECTED_BG
     g.fillRect(x, y, w, h)
   }

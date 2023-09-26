@@ -27,7 +27,10 @@ fun makeUI(): Component {
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = Number::class.java
 
-    override fun isCellEditable(row: Int, column: Int) = row > 0 && row != rowCount - 1
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = row > 0 && row != rowCount - 1
   }
   val table = JTable(model)
   val filter = object : RowFilter<TableModel, Int>() {

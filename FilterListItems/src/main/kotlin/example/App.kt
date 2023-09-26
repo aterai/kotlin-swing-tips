@@ -111,8 +111,11 @@ private fun makeMissingImage(): Image {
 }
 
 private class SelectedImageFilter : RGBImageFilter() {
-  override fun filterRGB(x: Int, y: Int, argb: Int) =
-    argb and 0xFF_FF_FF_00.toInt() or (argb and 0xFF shr 1)
+  override fun filterRGB(
+    x: Int,
+    y: Int,
+    argb: Int,
+  ) = argb and 0xFF_FF_FF_00.toInt() or (argb and 0xFF shr 1)
 }
 
 private class ListItemListCellRenderer : ListCellRenderer<ListItem> {

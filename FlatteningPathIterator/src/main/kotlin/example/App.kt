@@ -40,12 +40,20 @@ fun convertEllipse2Polygon(e: Ellipse2D): Polygon {
   return polygon
 }
 
-private fun makeLabel(t: String, s: Shape) = JLabel(t, ShapeIcon(s), SwingConstants.CENTER).also {
+private fun makeLabel(
+  t: String,
+  s: Shape,
+) = JLabel(t, ShapeIcon(s), SwingConstants.CENTER).also {
   it.horizontalTextPosition = SwingConstants.CENTER
 }
 
 private class ShapeIcon(private val shape: Shape) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = Color.BLACK

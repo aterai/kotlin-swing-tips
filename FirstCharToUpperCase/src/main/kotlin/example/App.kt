@@ -21,7 +21,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: String, cmp: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  cmp: Component,
+): Component {
   val p = JPanel(GridBagLayout())
   p.border = BorderFactory.createTitledBorder(title)
   val c = GridBagConstraints()
@@ -36,7 +39,11 @@ private class FirstCharToUpperCaseDocumentFilter(
   private val textField: JTextComponent,
 ) : DocumentFilter() {
   @Throws(BadLocationException::class)
-  override fun remove(fb: FilterBypass, offset: Int, length: Int) {
+  override fun remove(
+    fb: FilterBypass,
+    offset: Int,
+    length: Int,
+  ) {
     val doc = fb.document
     if (offset == 0 && doc.length - length > 0) {
       fb.replace(length, 1, doc.getText(length, 1).uppercase(Locale.ENGLISH), null)

@@ -124,7 +124,11 @@ private class FishEyeTable(m: TableModel) : JTable(m) {
     }
   }
 
-  override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int): Component {
+  override fun prepareRenderer(
+    renderer: TableCellRenderer,
+    row: Int,
+    column: Int,
+  ): Component {
     val c = super.prepareRenderer(renderer, row, column)
     val rowCount = model.rowCount
     var color = Color.WHITE
@@ -160,7 +164,10 @@ private class FishEyeTable(m: TableModel) : JTable(m) {
   }
 
   @Suppress("LoopWithTooManyJumpStatements")
-  private fun initRowHeight(height: Int, ccRow: Int) {
+  private fun initRowHeight(
+    height: Int,
+    ccRow: Int,
+  ) {
     val rd2 = (fishEyeRowList.size - 1) / 2
     val rowCount = model.rowCount
     val viewRc = getViewableColoredRowCount(ccRow)
