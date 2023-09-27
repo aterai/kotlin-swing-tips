@@ -11,8 +11,10 @@ import javax.swing.plaf.basic.BasicToolBarUI
 fun makeUI(): Component {
   val toolBar = makeToolBar("Override createDockingListener()")
   toolBar.ui = object : BasicToolBarUI() {
-    override fun createDockingListener() =
-      DockingListener2(toolBar, super.createDockingListener())
+    override fun createDockingListener() = DockingListener2(
+      toolBar,
+      super.createDockingListener(),
+    )
   }
 
   val p = JPanel(BorderLayout()).also {
