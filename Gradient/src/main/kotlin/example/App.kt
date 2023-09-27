@@ -23,7 +23,11 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTestPanel(title: String, sp: JSeparator, indent: Int = 10): Component {
+private fun makeTestPanel(
+  title: String,
+  sp: JSeparator,
+  indent: Int = 10,
+): Component {
   val p = JPanel(GridBagLayout())
   p.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
   val c = GridBagConstraints()
@@ -44,7 +48,10 @@ private fun makeTestPanel(title: String, sp: JSeparator, indent: Int = 10): Comp
   return p
 }
 
-private fun makeTitledPanel(title: String, separator: JSeparator): Component {
+private fun makeTitledPanel(
+  title: String,
+  separator: JSeparator,
+): Component {
   val p = JPanel(GridBagLayout())
   val c = GridBagConstraints()
   c.insets = Insets(2, 2, 2, 2)
@@ -82,7 +89,10 @@ private class GradientSeparatorUI : BasicSeparatorUI() {
     updateColors(c)
   }
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     if (c is JSeparator) {
       val g2 = g.create() as? Graphics2D ?: return
       val s = c.getSize()

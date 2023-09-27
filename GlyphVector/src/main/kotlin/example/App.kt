@@ -34,8 +34,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledColorBorder(title: String, color: Color) =
-  BorderFactory.createTitledBorder(BorderFactory.createLineBorder(color, 5), title)
+private fun makeTitledColorBorder(
+  title: String,
+  color: Color,
+) = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(color, 5), title)
 
 private class WrappingLabel(text: String?) : JLabel(text) {
   override fun paintComponent(g: Graphics) {
@@ -89,7 +91,10 @@ private class WrappedLabel(str: String?) : JLabel(str) {
   }
 }
 
-private fun getWrappedGlyphVector(gv: GlyphVector, width: Double): GlyphVector {
+private fun getWrappedGlyphVector(
+  gv: GlyphVector,
+  width: Double,
+): GlyphVector {
   val gmPos = Point2D.Float()
   val lineHeight = gv.logicalBounds.height.toFloat()
   var pos = 0f

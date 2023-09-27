@@ -105,7 +105,10 @@ private class GroupableTableHeader(model: TableColumnModel) : JTableHeader(model
  * @author aterai aterai@outlook.com
  */
 private class GroupableTableHeaderUI : BasicTableHeaderUI() {
-  override fun paint(g: Graphics, c: JComponent?) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent?,
+  ) {
     val clip = g.clipBounds
     // val left = clip.getLocation()
     // val right = Point(clip.x + clip.width - 1, clip.y)
@@ -151,12 +154,20 @@ private class GroupableTableHeaderUI : BasicTableHeaderUI() {
   }
 
   // Copied from javax/swing/plaf/basic/BasicTableHeaderUI.java
-  private fun paintCell(g: Graphics, rect: Rectangle, columnIndex: Int) {
+  private fun paintCell(
+    g: Graphics,
+    rect: Rectangle,
+    columnIndex: Int,
+  ) {
     val c = getHeaderRenderer(columnIndex)
     rendererPane.paintComponent(g, c, header, rect.x, rect.y, rect.width, rect.height, true)
   }
 
-  private fun paintCellGroup(g: Graphics, rect: Rectangle, columnGroup: ColumnGroup) {
+  private fun paintCellGroup(
+    g: Graphics,
+    rect: Rectangle,
+    columnGroup: ColumnGroup,
+  ) {
     val r = header.defaultRenderer
     val v = columnGroup.headerValue
     val c = r.getTableCellRendererComponent(header.table, v, false, false, -1, -1)
@@ -213,7 +224,10 @@ private class ColumnGroup(text: String) {
     obj?.also { list.add(it) }
   }
 
-  fun getColumnGroupList(column: TableColumn, groups: MutableList<Any>): List<*> {
+  fun getColumnGroupList(
+    column: TableColumn,
+    groups: MutableList<Any>,
+  ): List<*> {
     groups.add(this)
     return if (list.contains(column)) {
       groups

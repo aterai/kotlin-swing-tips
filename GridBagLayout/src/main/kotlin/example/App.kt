@@ -5,7 +5,10 @@ import javax.swing.*
 
 private const val GAP = 5
 
-private fun makeBorderLayoutPanel(cmp: JComponent, btn: JButton): Component {
+private fun makeBorderLayoutPanel(
+  cmp: JComponent,
+  btn: JButton,
+): Component {
   val panel = JPanel(BorderLayout(GAP, GAP))
   panel.border = BorderFactory.createEmptyBorder(GAP, GAP, GAP, GAP)
   panel.add(JLabel("BorderLayout:"), BorderLayout.WEST)
@@ -16,7 +19,10 @@ private fun makeBorderLayoutPanel(cmp: JComponent, btn: JButton): Component {
   return panel
 }
 
-fun makeGridBagLayoutPanel(cmp: JComponent, btn: JButton): Component {
+fun makeGridBagLayoutPanel(
+  cmp: JComponent,
+  btn: JButton,
+): Component {
   val c = GridBagConstraints()
   val panel = JPanel(GridBagLayout())
 

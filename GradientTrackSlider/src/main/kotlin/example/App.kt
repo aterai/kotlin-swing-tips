@@ -14,7 +14,12 @@ private val TEXTURE = TextureUtils.createCheckerTexture(6, Color(200, 150, 100, 
 
 fun makeUI(): Component {
   val icon = object : Icon {
-    override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+    override fun paintIcon(
+      c: Component,
+      g: Graphics,
+      x: Int,
+      y: Int,
+    ) {
       // Empty icon
     }
 
@@ -76,7 +81,10 @@ private fun makeSlider(): JSlider {
   return slider
 }
 
-private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+) = JPanel(BorderLayout()).also {
   it.border = BorderFactory.createTitledBorder(title)
   it.isOpaque = false
   it.add(c)
@@ -228,7 +236,11 @@ private object GradientPalletUtils {
     return pallet
   }
 
-  fun getColorFromPallet(pallet: IntArray, x: Float, alpha: Int): Color {
+  fun getColorFromPallet(
+    pallet: IntArray,
+    x: Float,
+    alpha: Int,
+  ): Color {
     // val i = (pallet.size * x).toInt()
     // val max = pallet.size - 1
     // val index = minOf(maxOf(i, 0), max)
@@ -240,7 +252,10 @@ private object GradientPalletUtils {
 }
 
 private object TextureUtils {
-  fun createCheckerTexture(cs: Int, color: Color): TexturePaint {
+  fun createCheckerTexture(
+    cs: Int,
+    color: Color,
+  ): TexturePaint {
     val size = cs * cs
     val img = BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB)
     val g2 = img.createGraphics()

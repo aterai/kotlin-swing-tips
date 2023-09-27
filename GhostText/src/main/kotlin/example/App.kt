@@ -44,7 +44,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+) = JPanel(BorderLayout()).also {
   it.border = BorderFactory.createTitledBorder(title)
   it.add(c)
 }
@@ -91,7 +94,10 @@ private class PlaceholderLayerUI<V : JTextComponent>(hintMessage: String) : Laye
     SwingUtilities.updateComponentTreeUI(hint)
   }
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     super.paint(g, c)
     ((c as? JLayer<*>)?.view as? JTextComponent)
       ?.takeIf { it.text.isEmpty() && !it.hasFocus() }
@@ -116,7 +122,10 @@ private class PlaceholderLayerUI<V : JTextComponent>(hintMessage: String) : Laye
     (c as? JLayer<*>)?.layerEventMask = 0
   }
 
-  override fun processFocusEvent(e: FocusEvent, l: JLayer<out V>) {
+  override fun processFocusEvent(
+    e: FocusEvent,
+    l: JLayer<out V>,
+  ) {
     l.view.repaint()
   }
 }
