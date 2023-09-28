@@ -35,7 +35,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun setElementColor(element: Element, color: String) {
+private fun setElementColor(
+  element: Element,
+  color: String,
+) {
   val a = element.attributes
   (a.getAttribute(HTML.Tag.A) as? MutableAttributeSet)?.addAttribute(HTML.Attribute.COLOR, color)
 }

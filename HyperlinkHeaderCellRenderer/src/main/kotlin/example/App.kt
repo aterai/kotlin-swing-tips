@@ -91,7 +91,10 @@ private class HyperlinkHeaderCellRenderer : DefaultTableCellRenderer(), MouseInp
     return d
   }
 
-  private fun getTextRect(header: JTableHeader, idx: Int): Rectangle {
+  private fun getTextRect(
+    header: JTableHeader,
+    idx: Int,
+  ): Rectangle {
     val table = header.table
     val hr = table.tableHeader.defaultRenderer
     val headerValue = header.columnModel.getColumn(idx).headerValue

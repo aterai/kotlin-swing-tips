@@ -44,7 +44,10 @@ private class HoverCloseButtonTabbedPane(
     addMouseMotionListener(hoverHandler)
   }
 
-  override fun addTab(title: String, content: Component) {
+  override fun addTab(
+    title: String,
+    content: Component,
+  ) {
     super.addTab(title, content)
     setTabComponentAt(tabCount - 1, TabPanel(this, title, content))
   }
@@ -99,7 +102,12 @@ private class TabPanel(
 }
 
 private class CloseTabIcon : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = Color.ORANGE
@@ -134,7 +142,11 @@ private class TabbedPanePopupMenu : JPopupMenu() {
     closeAll.addActionListener { (invoker as? JTabbedPane)?.removeAll() }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTabbedPane) {
       closeAll.isEnabled = c.tabCount > 0
       super.show(c, x, y)

@@ -20,7 +20,10 @@ fun makeUI(): Component {
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = String::class.java
 
-    override fun isCellEditable(row: Int, column: Int) = false
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = false
   }
   val table = JTable(model)
   table.autoCreateRowSorter = true

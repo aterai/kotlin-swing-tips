@@ -26,13 +26,20 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeHtml(tbs: String, padding: String, tds: String): String {
+private fun makeHtml(
+  tbs: String,
+  padding: String,
+  tds: String,
+): String {
   val txt = "123456789012345678901234567890"
   val tr = "<tr><td style='background:white;$tds'>$txt</td></tr>"
   return "<html><table style='$tbs' $padding>$tr$tr</table>"
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)

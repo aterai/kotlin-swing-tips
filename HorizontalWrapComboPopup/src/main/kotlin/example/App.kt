@@ -38,7 +38,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeComboBox1(model: ComboBoxModel<Icon>, proto: Icon): JComboBox<Icon> {
+private fun makeComboBox1(
+  model: ComboBoxModel<Icon>,
+  proto: Icon,
+): JComboBox<Icon> {
   return object : JComboBox<Icon>(model) {
     override fun getPreferredSize(): Dimension {
       val i = insets
@@ -61,7 +64,10 @@ private fun makeComboBox1(model: ComboBoxModel<Icon>, proto: Icon): JComboBox<Ic
   }
 }
 
-private fun makeComboBox2(model: ComboBoxModel<Icon>, proto: Icon): JComboBox<Icon> {
+private fun makeComboBox2(
+  model: ComboBoxModel<Icon>,
+  proto: Icon,
+): JComboBox<Icon> {
   val combo = object : JComboBox<Icon>(model) {
     override fun getPreferredSize(): Dimension {
       val i = insets
@@ -139,7 +145,12 @@ private fun makeModel(): ComboBoxModel<Icon> {
 }
 
 private class ColorIcon(private val color: Color) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = color
