@@ -171,7 +171,10 @@ private class HighlightHandler : DocumentListener, ActionListener {
 }
 
 @Throws(BadLocationException::class)
-private fun scrollToCenter(tc: JTextComponent, pos: Int) {
+private fun scrollToCenter(
+  tc: JTextComponent,
+  pos: Int,
+) {
   val rect = tc.modelToView(pos)
   // Java 9: val rect = tc.modelToView2D(pos).getBounds()
   val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, tc)
@@ -197,7 +200,10 @@ private class PlaceholderLayerUI<V : JTextComponent> : LayerUI<V>() {
     SwingUtilities.updateComponentTreeUI(hint)
   }
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     super.paint(g, c)
     val layer = c as? JLayer<*>
     val tc = layer?.view

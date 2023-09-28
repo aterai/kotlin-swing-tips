@@ -50,7 +50,10 @@ fun makeUI(): Component {
   }
 }
 
-fun setHighlight(jtc: JTextComponent, pattern: String) {
+fun setHighlight(
+  jtc: JTextComponent,
+  pattern: String,
+) {
   jtc.highlighter.removeAllHighlights()
   runCatching {
     val highlighter = jtc.highlighter

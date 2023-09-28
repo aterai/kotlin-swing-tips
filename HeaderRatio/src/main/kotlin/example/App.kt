@@ -57,7 +57,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun setTableHeaderColumnRatio(table: JTable, text: String) {
+private fun setTableHeaderColumnRatio(
+  table: JTable,
+  text: String,
+) {
   val m = table.columnModel
   val list = getWidthRatio(text, m.columnCount)
   var total = table.size.width
@@ -73,7 +76,10 @@ private fun setTableHeaderColumnRatio(table: JTable, text: String) {
   table.revalidate()
 }
 
-private fun getWidthRatio(text: String, length: Int) = runCatching {
+private fun getWidthRatio(
+  text: String,
+  length: Int,
+) = runCatching {
   val a = text.split(":").toList().filter { it.trim().isNotEmpty() }.map { it.toInt() }
   val b = generateSequence(1) { it }.take(length).toList()
   (a + b).take(length)

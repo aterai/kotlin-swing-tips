@@ -27,7 +27,10 @@ fun makeUI(): Component {
       addMouseListener(handler)
     }
 
-    override fun isCellEditable(row: Int, column: Int) = false
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = false
   }
   return JScrollPane(table).also {
     it.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER

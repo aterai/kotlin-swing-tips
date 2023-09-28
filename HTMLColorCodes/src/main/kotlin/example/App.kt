@@ -23,7 +23,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeLbl(title: String, c: Color): JLabel {
+private fun makeLbl(
+  title: String,
+  c: Color,
+): JLabel {
   val label = object : JLabel("#%06x".format(c.rgb and 0xFFFFFF)) {
     override fun getMaximumSize(): Dimension {
       val d = super.getPreferredSize()

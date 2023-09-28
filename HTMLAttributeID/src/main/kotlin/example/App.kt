@@ -53,7 +53,11 @@ private val parserAction = object : AbstractAction("ParserDelegator") {
     val delegator = ParserDelegator()
     runCatching {
       val cb = object : ParserCallback() {
-        override fun handleStartTag(tag: HTML.Tag, a: MutableAttributeSet, pos: Int) {
+        override fun handleStartTag(
+          tag: HTML.Tag,
+          a: MutableAttributeSet,
+          pos: Int,
+        ) {
           val attrId = a.getAttribute(HTML.Attribute.ID)
           textArea.append("$tag@id=$attrId\n")
           if (id == attrId) {
@@ -110,7 +114,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun addHighlight(element: Element, isBlock: Boolean) {
+private fun addHighlight(
+  element: Element,
+  isBlock: Boolean,
+) {
   val start = element.startOffset
   val lf = if (isBlock) 1 else 0
   val end = element.endOffset - lf
@@ -146,14 +153,20 @@ private fun checkId(element: Element) {
   }
 }
 
-private fun blockHighlight(element: Element, attrs: AttributeSet) {
+private fun blockHighlight(
+  element: Element,
+  attrs: AttributeSet,
+) {
   attrs.getAttribute(HTML.Attribute.ID)?.also {
     textArea.append("block: id=$it\n")
     addHighlight(element, true)
   }
 }
 
-private fun inlineHighlight(element: Element, attrs: AttributeSet) {
+private fun inlineHighlight(
+  element: Element,
+  attrs: AttributeSet,
+) {
   attrs.attributeNames.toList()
     .map { attrs.getAttribute(it) }
     .filterIsInstance<AttributeSet>()
