@@ -22,7 +22,11 @@ fun makeUI(): Component {
 }
 
 private class WindowsIconScrollBarUI : WindowsScrollBarUI() {
-  override fun paintThumb(g: Graphics, c: JComponent, thumbBounds: Rectangle) {
+  override fun paintThumb(
+    g: Graphics,
+    c: JComponent,
+    thumbBounds: Rectangle,
+  ) {
     super.paintThumb(g, c, thumbBounds)
     val sb = c as? JScrollBar
     if (sb?.isEnabled != true || thumbBounds.width > thumbBounds.height) {
@@ -51,7 +55,12 @@ private class WindowsIconScrollBarUI : WindowsScrollBarUI() {
     g2.dispose()
   }
 
-  private fun paintCircle(g2: Graphics2D, thumbBounds: Rectangle, w: Int, color: Color) {
+  private fun paintCircle(
+    g2: Graphics2D,
+    thumbBounds: Rectangle,
+    w: Int,
+    color: Color,
+  ) {
     g2.paint = color
     val ww = thumbBounds.width - w
     g2.fillOval(thumbBounds.x + w / 2, thumbBounds.y + (thumbBounds.height - ww) / 2, ww, ww)
@@ -59,7 +68,11 @@ private class WindowsIconScrollBarUI : WindowsScrollBarUI() {
 }
 
 private class BasicIconScrollBarUI : BasicScrollBarUI() {
-  override fun paintThumb(g: Graphics, c: JComponent, thumbBounds: Rectangle) {
+  override fun paintThumb(
+    g: Graphics,
+    c: JComponent,
+    thumbBounds: Rectangle,
+  ) {
     super.paintThumb(g, c, thumbBounds)
     val sb = c as? JScrollBar
     if (sb?.isEnabled != true || thumbBounds.width > thumbBounds.height) {
@@ -88,7 +101,12 @@ private class BasicIconScrollBarUI : BasicScrollBarUI() {
     g2.dispose()
   }
 
-  private fun paintCircle(g2: Graphics2D, thumbBounds: Rectangle, w: Int, color: Color) {
+  private fun paintCircle(
+    g2: Graphics2D,
+    thumbBounds: Rectangle,
+    w: Int,
+    color: Color,
+  ) {
     g2.paint = color
     val ww = thumbBounds.width - w
     g2.fillOval(thumbBounds.x + w / 2, thumbBounds.y + (thumbBounds.height - ww) / 2, ww, ww)

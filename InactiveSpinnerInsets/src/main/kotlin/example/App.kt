@@ -66,7 +66,11 @@ fun makeUI(): Component {
   }
 }
 
-private fun addTestSpinner(box: Box, spinner: JSpinner, title: String) {
+private fun addTestSpinner(
+  box: Box,
+  spinner: JSpinner,
+  title: String,
+) {
   val p = JPanel(BorderLayout())
   p.add(spinner)
   p.border = BorderFactory.createTitledBorder(title)
@@ -74,7 +78,10 @@ private fun addTestSpinner(box: Box, spinner: JSpinner, title: String) {
   box.add(Box.createVerticalStrut(2))
 }
 
-private fun append(info: JTextArea, key: String) {
+private fun append(
+  info: JTextArea,
+  key: String,
+) {
   info.append("%s: %s%n".format(key, UIManager.get(key)))
 }
 

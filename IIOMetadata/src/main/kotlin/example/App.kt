@@ -51,7 +51,11 @@ fun makeUI(): Component {
   }
 }
 
-private fun print(buf: StringBuilder, node: Node, level: Int) {
+private fun print(
+  buf: StringBuilder,
+  node: Node,
+  level: Int,
+) {
   val indent = " ".repeat(level * 2)
   buf.append("%s%s%n".format(indent, node.nodeName))
   if (node.hasAttributes()) {

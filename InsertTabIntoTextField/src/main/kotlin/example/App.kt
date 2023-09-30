@@ -69,7 +69,10 @@ private fun initActionInputMap(editor: JTextComponent) {
   editor.getInputMap(JPanel.WHEN_FOCUSED).put(keyStroke, mapKey)
 }
 
-private fun setTabSize(editor: JTextComponent, size: Int) {
+private fun setTabSize(
+  editor: JTextComponent,
+  size: Int,
+) {
   val doc = editor.document
   if (doc != null) {
     doc.putProperty(PlainDocument.tabSizeAttribute, size)
