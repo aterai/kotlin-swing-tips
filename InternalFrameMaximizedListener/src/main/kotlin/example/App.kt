@@ -47,7 +47,10 @@ fun makeUI(): Component {
       displayMessage("Internal frame deactivated", e)
     }
 
-    private fun displayMessage(prefix: String, e: EventObject) {
+    private fun displayMessage(
+      prefix: String,
+      e: EventObject,
+    ) {
       val s = prefix + ": " + e.source + "\n"
       textArea.append(s)
       textArea.caretPosition = textArea.document.length

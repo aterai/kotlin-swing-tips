@@ -13,7 +13,10 @@ fun makeUI(): Component {
   return desktop
 }
 
-private fun makeInternalFrame(color: Color, idx: Int): JInternalFrame {
+private fun makeInternalFrame(
+  color: Color,
+  idx: Int,
+): JInternalFrame {
   val f = JInternalFrame("Document #$idx", true, true, true, true)
   f.frameIcon = ColorIcon(color)
   f.setSize(240, 120)
@@ -22,7 +25,12 @@ private fun makeInternalFrame(color: Color, idx: Int): JInternalFrame {
 }
 
 private class ColorIcon(private val color: Color) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = color

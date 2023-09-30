@@ -117,7 +117,13 @@ private fun makeRadioButtons(textArea: JTextArea): Component {
   return JScrollPane(p)
 }
 
-private fun print(log: JTextArea, e: AWTEvent, clz: Class<*>, isSelected: Boolean, cmd: Any?) {
+private fun print(
+  log: JTextArea,
+  e: AWTEvent,
+  clz: Class<*>,
+  isSelected: Boolean,
+  cmd: Any?,
+) {
   val l = e.javaClass.simpleName
   val s = if (isSelected) "SELECTED" else "DESELECTED"
   log.append("%-14s %s %-10s %s%n".format(l, clz.simpleName, s, cmd ?: "NULL"))
