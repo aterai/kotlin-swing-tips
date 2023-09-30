@@ -101,7 +101,10 @@ private class DisableInputLayerUI<V : AbstractButton> : LayerUI<V>() {
     super.uninstallUI(c)
   }
 
-  override fun eventDispatched(e: AWTEvent, l: JLayer<out V>) {
+  override fun eventDispatched(
+    e: AWTEvent,
+    l: JLayer<out V>,
+  ) {
     if (isBlocking && e is InputEvent) {
       e.consume()
     }
@@ -113,7 +116,10 @@ private class DisableInputLayerUI<V : AbstractButton> : LayerUI<V>() {
     firePropertyChange(CMD_BLOCKING, old, isBlocking)
   }
 
-  override fun applyPropertyChange(e: PropertyChangeEvent, l: JLayer<out V>) {
+  override fun applyPropertyChange(
+    e: PropertyChangeEvent,
+    l: JLayer<out V>,
+  ) {
     if (CMD_BLOCKING == e.propertyName) {
       val b = l.view
       b.isFocusable = !isBlocking
@@ -123,7 +129,10 @@ private class DisableInputLayerUI<V : AbstractButton> : LayerUI<V>() {
     }
   }
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     if (c is JLayer<*>) {
       val view = c.view
       if (isBlocking) {
@@ -163,7 +172,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd

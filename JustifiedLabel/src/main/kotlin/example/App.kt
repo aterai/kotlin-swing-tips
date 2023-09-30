@@ -66,7 +66,10 @@ private class JustifiedLabel(str: String? = null) : JLabel(str) {
     g2.dispose()
   }
 
-  private fun makeJustifiedGlyphVector(gv: GlyphVector, width: Int): GlyphVector {
+  private fun makeJustifiedGlyphVector(
+    gv: GlyphVector,
+    width: Int,
+  ): GlyphVector {
     val r = gv.visualBounds
     val jw = width.toFloat()
     val vw = r.width.toFloat()

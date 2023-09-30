@@ -40,14 +40,21 @@ fun makeUI(): Component {
   }
 }
 
-private fun getColor(i: Int, f: Float): Color {
+private fun getColor(
+  i: Int,
+  f: Float,
+): Color {
   val r = ((i shr 16 and 0xFF) * f).toInt()
   val g = ((i shr 8 and 0xFF) * f).toInt()
   val b = ((i and 0xFF) * f).toInt()
   return Color(r, g, b)
 }
 
-private fun createPanel(layerPane: JLayeredPane, idx: Int, cc: Int): JPanel {
+private fun createPanel(
+  layerPane: JLayeredPane,
+  idx: Int,
+  cc: Int,
+): JPanel {
   val s = "<html><font color=#333333>Header:$idx</font></html>"
   val label = JLabel(s).also {
     it.font = FONT
@@ -125,7 +132,12 @@ private fun makeMissingImage(): Image {
 }
 
 private class MissingIcon : Icon {
-  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     val w = iconWidth
     val h = iconHeight

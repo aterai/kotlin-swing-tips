@@ -84,7 +84,10 @@ fun makeUI(): Component {
   }
 }
 
-fun initWindowListener(c: Container, editor: JTextArea) {
+fun initWindowListener(
+  c: Container,
+  editor: JTextArea,
+) {
   EventQueue.invokeLater {
     val window = SwingUtilities.getWindowAncestor(c)
     val wl = object : MouseAdapter() {
@@ -158,7 +161,10 @@ fun makeEditor(): JTextArea {
   return editor
 }
 
-fun resetEditor(editor: JTextArea, b: JButton?) {
+fun resetEditor(
+  editor: JTextArea,
+  b: JButton?,
+) {
   val window = SwingUtilities.getWindowAncestor(editor)
   window?.dispose()
   if (b != null) {
@@ -178,7 +184,11 @@ private class TextComponentPopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTextComponent) {
       val hasSelectedText = c.selectedText != null
       for (menuElement in subElements) {
