@@ -74,7 +74,11 @@ fun makeUI(): Component {
   return p
 }
 
-private fun initDividerButtonModel(divider: Container, minButton: JButton, maxButton: JButton) {
+private fun initDividerButtonModel(
+  divider: Container,
+  minButton: JButton,
+  maxButton: JButton,
+) {
   var selectMinModel: ButtonModel? = null
   var selectMaxModel: ButtonModel? = null
   for (c in divider.components) {

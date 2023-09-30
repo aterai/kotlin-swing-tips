@@ -44,7 +44,11 @@ private val focusTypes = listOf(
   JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT,
 )
 
-private fun loadBindingMap(focusType: Int, im: InputMap, am: ActionMap) {
+private fun loadBindingMap(
+  focusType: Int,
+  im: InputMap,
+  am: ActionMap,
+) {
   if (im.allKeys() == null) {
     return
   }
@@ -74,7 +78,11 @@ fun makeUI(): Component {
   val table = object : JTable(model) {
     private val evenColor = Color(0xFA_FA_FA)
 
-    override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
+    override fun prepareRenderer(
+      tcr: TableCellRenderer,
+      row: Int,
+      column: Int,
+    ): Component {
       val c = super.prepareRenderer(tcr, row, column)
       if (isRowSelected(row)) {
         c.foreground = getSelectionForeground()
@@ -124,7 +132,10 @@ private class BindingMapModel : DefaultTableModel() {
     super.addRow(arrayOf(t.focusTypeName, t.actionName, t.keyDescription))
   }
 
-  override fun isCellEditable(row: Int, col: Int) = COLUMN_ARRAY[col].isEditable
+  override fun isCellEditable(
+    row: Int,
+    col: Int,
+  ) = COLUMN_ARRAY[col].isEditable
 
   override fun getColumnClass(column: Int) = COLUMN_ARRAY[column].columnClass
 
