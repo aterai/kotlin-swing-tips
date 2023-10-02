@@ -42,7 +42,12 @@ fun makeUI(): Component {
   }
 }
 
-private fun addRow(c1: Component, c2: Component, p: Container, c: GridBagConstraints) {
+private fun addRow(
+  c1: Component,
+  c2: Component,
+  p: Container,
+  c: GridBagConstraints,
+) {
   c.gridx = 0
   c.weightx = 0.0
   c.insets = Insets(5, 5, 5, 0)

@@ -181,7 +181,10 @@ private fun makeModel(): ListModel<ListItem> {
   return model
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(GridBagLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)
@@ -267,7 +270,12 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
 private data class ListItem(val title: String, val icon: Icon)
 
 private class ColorIcon(private val color: Color) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = color
@@ -281,7 +289,12 @@ private class ColorIcon(private val color: Color) : Icon {
 }
 
 private class DropDownArrowIcon : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     if (c is AbstractButton && c.isSelected) {

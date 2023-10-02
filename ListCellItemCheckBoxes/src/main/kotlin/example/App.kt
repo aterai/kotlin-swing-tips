@@ -92,7 +92,10 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
     g2.dispose()
   }
 
-  override fun setSelectionInterval(anchor: Int, lead: Int) {
+  override fun setSelectionInterval(
+    anchor: Int,
+    lead: Int,
+  ) {
     if (checkedIndex < 0 && isDragging()) {
       super.setSelectionInterval(anchor, lead)
     } else {
@@ -106,7 +109,10 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
     }
   }
 
-  override fun removeSelectionInterval(index0: Int, index1: Int) {
+  override fun removeSelectionInterval(
+    index0: Int,
+    index1: Int,
+  ) {
     if (checkedIndex < 0) {
       super.removeSelectionInterval(index0, index1)
     } else {
@@ -192,7 +198,10 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
       l.repaint()
     }
 
-    private fun cellPressed(e: MouseEvent, index: Int) {
+    private fun cellPressed(
+      e: MouseEvent,
+      index: Int,
+    ) {
       if (e.button == MouseEvent.BUTTON1 && e.clickCount > 1) {
         val item = model.getElementAt(index)
         JOptionPane.showMessageDialog(rootPane, item.title)
@@ -210,7 +219,10 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
       }
     }
 
-    private fun getCheckBox(e: MouseEvent, index: Int): AbstractButton? {
+    private fun getCheckBox(
+      e: MouseEvent,
+      index: Int,
+    ): AbstractButton? {
       if (e.isShiftDown || e.isControlDown || e.isAltDown) {
         return null
       }
@@ -329,7 +341,12 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
 private data class ListItem(val title: String, val icon: Icon)
 
 private class ColorIcon(private val color: Color) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = color
