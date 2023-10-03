@@ -62,7 +62,10 @@ private fun makeTopLevelMenu(): JMenu {
   return menu
 }
 
-private fun makeMenu(title: String, delay: Int): JMenu {
+private fun makeMenu(
+  title: String,
+  delay: Int,
+): JMenu {
   val menu = JMenu(title)
   menu.setDelay(delay)
   return menu
@@ -83,7 +86,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd

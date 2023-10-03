@@ -65,7 +65,10 @@ private class PaintPanel : JPanel(), MouseMotionListener, MouseListener {
     startPoint = e.point
   }
 
-  private fun paintStamp(p: Point2D, pen: Int) {
+  private fun paintStamp(
+    p: Point2D,
+    pen: Int,
+  ) {
     val px = p.x.toInt()
     val py = p.y.toInt()
     for (n in -1..1) {
@@ -107,7 +110,10 @@ private class PaintPanel : JPanel(), MouseMotionListener, MouseListener {
   companion object {
     private val TEXTURE = createCheckerTexture(6, Color(0x32_C8_96_64, true))
 
-    fun createCheckerTexture(cs: Int, color: Color?): TexturePaint {
+    fun createCheckerTexture(
+      cs: Int,
+      color: Color?,
+    ): TexturePaint {
       val size = cs * cs
       val img = BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB)
       val g2 = img.createGraphics()

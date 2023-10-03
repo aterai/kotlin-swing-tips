@@ -27,7 +27,12 @@ private fun makeSubMenu(title: String): JMenu {
 }
 
 private class ArrowIcon : Icon {
-  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     if (c is AbstractButton && c.model.isSelected) {
       g2.paint = Color.WHITE

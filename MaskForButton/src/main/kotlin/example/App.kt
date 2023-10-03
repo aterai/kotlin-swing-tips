@@ -92,7 +92,11 @@ private class TabbedPanePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component, x: Int, y: Int) {
+  override fun show(
+    c: Component,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTabbedPane) {
       closePage.isEnabled = c.indexAtLocation(x, y) >= 0
       closeAll.isEnabled = c.tabCount > 0

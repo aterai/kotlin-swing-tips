@@ -28,7 +28,12 @@ fun makeUI(): Component {
   d["Slider:SliderThumb[MouseOver].backgroundPainter"] = thumbPainter
   d["Slider:SliderThumb[Pressed].backgroundPainter"] = thumbPainter
   d["Slider:SliderTrack[Enabled].backgroundPainter"] = object : Painter<JSlider> {
-    override fun paint(g: Graphics2D, c: JSlider, w: Int, h: Int) {
+    override fun paint(
+      g: Graphics2D,
+      c: JSlider,
+      w: Int,
+      h: Int,
+    ) {
       val arc = 10
       val thumbSize = 24
       val trackHeight = 8
@@ -63,7 +68,11 @@ fun makeUI(): Component {
       g.fillRoundRect(fillLeft, fillTop, fillRight - fillLeft, fillBottom - fillTop, arc, arc)
     }
 
-    private fun getPositionForValue(slider: JSlider, trackRect: Rectangle, value: Float): Int {
+    private fun getPositionForValue(
+      slider: JSlider,
+      trackRect: Rectangle,
+      value: Float,
+    ): Int {
       val min = slider.minimum.toFloat()
       val max = slider.maximum.toFloat()
       val pixelsPerValue = trackRect.width / (max - min)
@@ -98,7 +107,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)
@@ -112,7 +124,12 @@ private class NumberIcon(private val value: Int) : Icon {
     return TextLayout(txt, g2.font, g2.fontRenderContext).getOutline(at)
   }
 
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     val shape = getTextShape(g2)

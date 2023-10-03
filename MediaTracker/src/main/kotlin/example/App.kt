@@ -112,7 +112,10 @@ private class FileModel : DefaultTableModel() {
     ColumnContext("Height", Number::class.java, false),
   )
 
-  override fun isCellEditable(row: Int, col: Int) = columnList[col].isEditable
+  override fun isCellEditable(
+    row: Int,
+    col: Int,
+  ) = columnList[col].isEditable
 
   override fun getColumnClass(column: Int) = columnList[column].columnClass
 
@@ -152,7 +155,11 @@ private class TablePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTable) {
       delete.isEnabled = c.selectedRowCount > 0
       super.show(c, x, y)

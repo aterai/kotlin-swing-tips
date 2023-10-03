@@ -59,10 +59,17 @@ private fun makePopup(): JPopupMenu {
 
 private fun getCheckIcon() = UIManager.getIcon(PRE + "checkIcon")
 
-private fun makeMenuItem(txt: String, width: Float, d: Dimension): JMenuItem {
+private fun makeMenuItem(
+  txt: String,
+  width: Float,
+  d: Dimension,
+): JMenuItem {
   val px = width * Toolkit.getDefaultToolkit().screenResolution / 72f
   return object : JRadioButtonMenuItem(txt, LineIcon(BasicStroke(px), d)) {
-    override fun init(text: String, icon: Icon) {
+    override fun init(
+      text: String,
+      icon: Icon,
+    ) {
       super.init(text, icon)
       horizontalTextPosition = LEADING
       horizontalAlignment = TRAILING
@@ -81,7 +88,12 @@ private fun makeMenuItem(txt: String, width: Float, d: Dimension): JMenuItem {
 }
 
 private class LineIcon(private val stroke: Stroke, private val size: Dimension) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.color = Color.BLACK
     g2.stroke = stroke
@@ -96,7 +108,12 @@ private class LineIcon(private val stroke: Stroke, private val size: Dimension) 
 }
 
 private class EmptyIcon : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     // empty
   }
 
