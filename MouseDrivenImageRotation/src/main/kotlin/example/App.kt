@@ -68,7 +68,10 @@ private class DraggableImageMouseListener(ii: ImageIcon) : MouseAdapter() {
     outer.setFrameFromCenter(cx, cy, cx + OR / 2.0, cy - OR / 2.0)
   }
 
-  fun paint(g: Graphics, observer: ImageObserver?) {
+  fun paint(
+    g: Graphics,
+    observer: ImageObserver?,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     val w2 = imageSz.width / 2.0
@@ -163,7 +166,12 @@ private fun makeMissingImage(): Image {
 }
 
 private class MissingIcon : Icon {
-  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     val w = iconWidth
     val h = iconHeight

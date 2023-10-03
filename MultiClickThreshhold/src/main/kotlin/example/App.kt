@@ -30,7 +30,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun addInternalFrame(desktop: JDesktopPane, idx: Int) {
+private fun addInternalFrame(
+  desktop: JDesktopPane,
+  idx: Int,
+) {
   val f = JInternalFrame("#$idx", true, true, true, true)
   f.setBounds(idx * 10, idx * 10, 200, 100)
   desktop.add(f)

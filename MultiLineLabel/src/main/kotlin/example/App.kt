@@ -35,7 +35,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeLeftIcon(label: JTextComponent, icon: Icon): Box {
+private fun makeLeftIcon(
+  label: JTextComponent,
+  icon: Icon,
+): Box {
   label.foreground = UIManager.getColor("Label.foreground")
   label.isOpaque = false
   label.isEditable = false

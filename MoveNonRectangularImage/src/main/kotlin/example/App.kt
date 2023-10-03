@@ -29,8 +29,10 @@ fun makeUI(): Component {
 private fun makeLabelIcon(image: BufferedImage): JLabel {
   val handler = ComponentMoveHandler()
   return object : JLabel(ImageIcon(image)) {
-    override fun contains(x: Int, y: Int) =
-      super.contains(x, y) && image.getRGB(x, y) shr 24 and 0xFF != 0
+    override fun contains(
+      x: Int,
+      y: Int,
+    ) = super.contains(x, y) && image.getRGB(x, y) shr 24 and 0xFF != 0
 
     override fun updateUI() {
       removeMouseListener(handler)

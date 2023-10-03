@@ -67,7 +67,10 @@ class MotionPathAnimationPanel : JPanel(BorderLayout()) {
     g2.dispose()
   }
 
-  private fun makePointList(shape: Shape, points: MutableList<Point2D>) {
+  private fun makePointList(
+    shape: Shape,
+    points: MutableList<Point2D>,
+  ) {
     val pi = shape.getPathIterator(null, 0.01)
     val prev = Point2D.Double()
     val threshold = 2.0
@@ -107,7 +110,11 @@ class MotionPathAnimationPanel : JPanel(BorderLayout()) {
     }
   }
 
-  private fun interpolate(start: Point2D, end: Point2D, fraction: Double): Point2D {
+  private fun interpolate(
+    start: Point2D,
+    end: Point2D,
+    fraction: Double,
+  ): Point2D {
     val dx = end.x - start.x
     val dy = end.y - start.y
     val nx = start.x + dx * fraction

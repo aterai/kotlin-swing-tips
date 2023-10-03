@@ -226,7 +226,10 @@ private object TextureUtils {
   private val DEFAULT_COLOR = Color(100, 100, 100, 100)
 
   @JvmOverloads
-  fun createCheckerTexture(cs: Int, color: Color = DEFAULT_COLOR): TexturePaint {
+  fun createCheckerTexture(
+    cs: Int,
+    color: Color = DEFAULT_COLOR,
+  ): TexturePaint {
     val size = cs * cs
     val img = BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB)
     val g2 = img.createGraphics()
