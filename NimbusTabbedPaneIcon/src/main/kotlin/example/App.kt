@@ -5,7 +5,13 @@ import javax.swing.*
 
 fun makeUI(): Component {
   val tabbedPane = object : JTabbedPane() {
-    override fun insertTab(title: String?, icon: Icon?, c: Component?, tip: String?, index: Int) {
+    override fun insertTab(
+      title: String?,
+      icon: Icon?,
+      c: Component?,
+      tip: String?,
+      index: Int,
+    ) {
       super.insertTab(title, icon, c, tip, index)
       val label = JLabel(title, icon, LEADING)
       setTabComponentAt(tabCount - 1, label)
@@ -32,7 +38,10 @@ private fun initTabbedPane(tabs: JTabbedPane): JTabbedPane {
   return tabs
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)
@@ -40,7 +49,12 @@ private fun makeTitledPanel(title: String, c: Component): Component {
 }
 
 private class ColorIcon(private val color: Color) : Icon {
-  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = color
@@ -68,7 +82,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd

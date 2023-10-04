@@ -7,7 +7,12 @@ import kotlin.math.roundToInt
 fun makeUI(): Component {
   val d = UIDefaults()
   d["Slider:SliderTrack[Enabled].backgroundPainter"] = object : Painter<JSlider> {
-    override fun paint(g: Graphics2D, c: JSlider, w: Int, h: Int) {
+    override fun paint(
+      g: Graphics2D,
+      c: JSlider,
+      w: Int,
+      h: Int,
+    ) {
       val arc = 10
       val trackHeight = 8
       val trackWidth = w - 2
@@ -30,7 +35,10 @@ fun makeUI(): Component {
     }
 
     // @see javax/swing/plaf/basic/BasicSliderUI#xPositionForValue(int value)
-    private fun getPositionForValue(slider: JSlider, trackRect: Rectangle): Int {
+    private fun getPositionForValue(
+      slider: JSlider,
+      trackRect: Rectangle,
+    ): Int {
       val value = slider.value.toFloat()
       val min = slider.minimum.toFloat()
       val max = slider.maximum.toFloat()
@@ -59,7 +67,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)

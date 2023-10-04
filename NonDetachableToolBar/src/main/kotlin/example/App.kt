@@ -16,7 +16,10 @@ fun makeUI(): Component {
       super.updateUI()
       val tmp = if (ui is WindowsToolBarUI) {
         object : WindowsToolBarUI() {
-          override fun setFloating(b: Boolean, p: Point?) {
+          override fun setFloating(
+            b: Boolean,
+            p: Point?,
+          ) {
             if (detachable.isSelected) {
               super.setFloating(b, p)
             } else {
@@ -26,7 +29,10 @@ fun makeUI(): Component {
         }
       } else {
         object : BasicToolBarUI() {
-          override fun setFloating(b: Boolean, p: Point?) {
+          override fun setFloating(
+            b: Boolean,
+            p: Point?,
+          ) {
             if (detachable.isSelected) {
               super.setFloating(b, p)
             } else {

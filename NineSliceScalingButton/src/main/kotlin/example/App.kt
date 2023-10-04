@@ -65,7 +65,10 @@ private fun makeMissingImage(): BufferedImage {
   return bi
 }
 
-private fun makeFilteredImage(src: BufferedImage, filter: ImageFilter): BufferedImage {
+private fun makeFilteredImage(
+  src: BufferedImage,
+  filter: ImageFilter,
+): BufferedImage {
   val ip = src.source
   val img = Toolkit.getDefaultToolkit().createImage(FilteredImageSource(ip, filter))
   val w = img.getWidth(null)
@@ -150,7 +153,12 @@ private class NineSliceScalingIcon(
 
   override fun getIconHeight() = image.getHeight(null).coerceAtLeast(height)
 
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     RECT.bounds = c.bounds
@@ -189,14 +197,22 @@ private class NineSliceScalingIcon(
 }
 
 private class PressedImageFilter : RGBImageFilter() {
-  override fun filterRGB(x: Int, y: Int, argb: Int): Int {
+  override fun filterRGB(
+    x: Int,
+    y: Int,
+    argb: Int,
+  ): Int {
     val r = ((argb shr 16 and 0xFF) * .6f).roundToInt()
     return argb and 0xFF_00_FF_FF.toInt() or (r shl 16)
   }
 }
 
 private class RolloverImageFilter : RGBImageFilter() {
-  override fun filterRGB(x: Int, y: Int, argb: Int): Int {
+  override fun filterRGB(
+    x: Int,
+    y: Int,
+    argb: Int,
+  ): Int {
     val g = 0xFF.coerceAtMost(((argb shr 8 and 0xFF) * 1.5f).roundToInt())
     val b = 0xFF.coerceAtMost(((argb and 0xFF) * 1.5f).roundToInt())
     return argb and 0xFF_FF_00_00.toInt() or (g shl 8) or b

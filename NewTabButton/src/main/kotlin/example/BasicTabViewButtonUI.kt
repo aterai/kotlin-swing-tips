@@ -30,7 +30,10 @@ open class BasicTabViewButtonUI : TabViewButtonUI() {
 
   // @Override public void installDefaults() {}
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     val b = c as? AbstractButton ?: return
     g.font = c.font
 

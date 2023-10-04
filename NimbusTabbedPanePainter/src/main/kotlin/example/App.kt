@@ -55,7 +55,12 @@ private object NimbusTabbedPanePainterUtils {
   class TabPainter(private val selected: Boolean) : Painter<JComponent> {
     private val color = if (selected) CONTENT_BACKGROUND else TAB_BACKGROUND
 
-    override fun paint(g: Graphics2D, c: JComponent?, width: Int, height: Int) {
+    override fun paint(
+      g: Graphics2D,
+      c: JComponent?,
+      width: Int,
+      height: Int,
+    ) {
       val a = if (selected) OVER_PAINT else 0
       val r = 6
       val x = 3.0
@@ -96,7 +101,12 @@ private object NimbusTabbedPanePainterUtils {
   }
 
   class TabAreaPainter : Painter<JComponent> {
-    override fun paint(g: Graphics2D, c: JComponent, w: Int, h: Int) {
+    override fun paint(
+      g: Graphics2D,
+      c: JComponent,
+      w: Int,
+      h: Int,
+    ) {
       val g2 = g.create(0, 0, w, h) as? Graphics2D ?: return
       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
       val dy = (h - OVER_PAINT).toDouble()
@@ -113,7 +123,12 @@ private object NimbusTabbedPanePainterUtils {
   }
 
   class TabbedPaneContentPainter : Painter<JComponent> {
-    override fun paint(g: Graphics2D, c: JComponent, w: Int, h: Int) {
+    override fun paint(
+      g: Graphics2D,
+      c: JComponent,
+      w: Int,
+      h: Int,
+    ) {
       val g2 = g.create(0, 0, w, h) as? Graphics2D ?: return
       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
       g2.translate(0, -OVER_PAINT)

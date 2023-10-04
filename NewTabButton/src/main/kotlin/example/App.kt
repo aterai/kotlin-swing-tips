@@ -76,7 +76,10 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
     }
   }
 
-  private fun createTabComponent(title: String, comp: Component): Component {
+  private fun createTabComponent(
+    title: String,
+    comp: Component,
+  ): Component {
     val tab = TabButton(title)
     val handler = object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
@@ -117,7 +120,10 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
     return tab
   }
 
-  fun addTab(title: String, comp: Component) {
+  fun addTab(
+    title: String,
+    comp: Component,
+  ) {
     tabPanel.remove(button)
     tabPanel.add(createTabComponent(title, comp))
     tabPanel.add(button)
@@ -128,7 +134,10 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
 }
 
 private class TabLayout : LayoutManager, Serializable {
-  override fun addLayoutComponent(name: String, comp: Component) {
+  override fun addLayoutComponent(
+    name: String,
+    comp: Component,
+  ) {
     // not needed
   }
 

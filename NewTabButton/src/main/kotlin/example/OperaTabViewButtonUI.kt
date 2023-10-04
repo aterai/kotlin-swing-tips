@@ -28,7 +28,10 @@ class OperaTabViewButtonUI : BasicTabViewButtonUI() {
   //   super.installUI(c)
   // }
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     val b = c as? AbstractButton ?: return
     g.font = c.font
 
@@ -93,7 +96,10 @@ class OperaTabViewButtonUI : BasicTabViewButtonUI() {
     //   return OperaTabViewButtonUI()
     // }
 
-    fun tabPainter(g2: Graphics2D, r: Rectangle) {
+    fun tabPainter(
+      g2: Graphics2D,
+      r: Rectangle,
+    ) {
       val r1 = Rectangle(r.x, r.y, r.width, r.height / 2)
       val r2 = Rectangle(r.x, r.y + r.height / 2, r.width, r.height / 2)
       val r3 = Rectangle(r.x, r.y + r.height / 2 - 2, r.width, r.height / 4)
