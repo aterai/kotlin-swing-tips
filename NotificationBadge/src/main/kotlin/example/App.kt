@@ -48,7 +48,10 @@ private open class BadgeLayerUI : LayerUI<BadgeLabel>() {
   private val iconRect = Rectangle()
   private val textRect = Rectangle()
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     super.paint(g, c)
     val label = (c as? JLayer<*>)?.view
     if (label is BadgeLabel) {
@@ -82,7 +85,10 @@ private open class BadgeLayerUI : LayerUI<BadgeLabel>() {
   open fun getBadgeIcon(count: Int) =
     BadgeIcon(count, Color.WHITE, Color(0xAA_FF_16_16.toInt(), true))
 
-  protected fun getBadgeLocation(pos: BadgePosition, icon: Icon): Point {
+  protected fun getBadgeLocation(
+    pos: BadgePosition,
+    icon: Icon,
+  ): Point {
     var x = 0
     var y = 0
     when (pos) {
@@ -134,7 +140,12 @@ private open class BadgeIcon(
   open val badgeShape: Shape
     get() = Ellipse2D.Double(0.0, 0.0, iconWidth.toDouble(), iconHeight.toDouble())
 
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     if (value <= 0) {
       return
     }

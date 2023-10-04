@@ -12,7 +12,11 @@ fun makeUI(): Component {
     JMenuItem("JMenuItem 5"),
   )
   val popup = object : JPopupMenu() {
-    override fun show(c: Component, x: Int, y: Int) {
+    override fun show(
+      c: Component,
+      x: Int,
+      y: Int,
+    ) {
       val popupLocation = getInvokerOrigin(x, y, c.locationOnScreen)
       val scrBounds = getScreenBounds(c, popupLocation)
       val popupSize = preferredSize
@@ -38,7 +42,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun getScreenBounds(c: Component, popupLocation: Point): Rectangle {
+private fun getScreenBounds(
+  c: Component,
+  popupLocation: Point,
+): Rectangle {
   val scrBounds: Rectangle
   val gc = getCurrentGraphicsConfiguration2(c, popupLocation)
   val toolkit = Toolkit.getDefaultToolkit()
@@ -57,7 +64,10 @@ private fun getScreenBounds(c: Component, popupLocation: Point): Rectangle {
 }
 
 // @see JPopupMenu#getCurrentGraphicsConfiguration(Point)
-private fun getCurrentGraphicsConfiguration2(c: Component?, p: Point): GraphicsConfiguration? {
+private fun getCurrentGraphicsConfiguration2(
+  c: Component?,
+  p: Point,
+): GraphicsConfiguration? {
   var gc: GraphicsConfiguration? = null
   val ge = GraphicsEnvironment.getLocalGraphicsEnvironment()
   val gd = ge.screenDevices
@@ -79,7 +89,11 @@ private fun getCurrentGraphicsConfiguration2(c: Component?, p: Point): GraphicsC
 
 // @see JPopupMenu#show(Component invoker, int x, int y)
 // To avoid integer overflow
-private fun getInvokerOrigin(x: Int, y: Int, invokerOrigin: Point): Point {
+private fun getInvokerOrigin(
+  x: Int,
+  y: Int,
+  invokerOrigin: Point,
+): Point {
   var lx = invokerOrigin.x.toLong() + x.toLong()
   var ly = invokerOrigin.y.toLong() + y.toLong()
   if (lx > Int.MAX_VALUE) {

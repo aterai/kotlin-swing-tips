@@ -31,7 +31,10 @@ fun makeUI(): Component {
 private fun makeSpinnerNumberModel() =
   SpinnerNumberModel(10.toLong(), 0.toLong(), 99_999.toLong(), 1.toLong())
 
-private fun makeTitledPanel(title: String, cmp: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  cmp: Component,
+): Component {
   val p = JPanel(GridBagLayout())
   p.border = BorderFactory.createTitledBorder(title)
   val c = GridBagConstraints()
