@@ -32,7 +32,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeButton(field: JTextField, textArea: JTextArea): JButton {
+private fun makeButton(
+  field: JTextField,
+  textArea: JTextArea,
+): JButton {
   val button = JButton("show")
   button.addActionListener {
     val p = textArea.rootPane
@@ -50,7 +53,10 @@ private fun makeButton(field: JTextField, textArea: JTextArea): JButton {
   return button
 }
 
-private fun makeButton2(textField: JTextField, textArea: JTextArea): JButton {
+private fun makeButton2(
+  textField: JTextField,
+  textArea: JTextArea,
+): JButton {
   val button = JButton("show")
   button.addActionListener {
     val pane = JOptionPane(textField, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION)
@@ -74,7 +80,10 @@ private fun makeButton2(textField: JTextField, textArea: JTextArea): JButton {
   return button
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)

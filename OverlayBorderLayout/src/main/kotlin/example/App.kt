@@ -204,7 +204,10 @@ private object AnimationUtils {
     return ret
   }
 
-  fun intPow(base0: Double, exp0: Int): Double {
+  fun intPow(
+    base0: Double,
+    exp0: Int,
+  ): Double {
     require(exp0 >= 0) { "exp0 must be a positive integer or zero" }
     var base = base0
     var exp = exp0

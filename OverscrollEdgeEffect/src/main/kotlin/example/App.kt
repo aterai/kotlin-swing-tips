@@ -106,7 +106,10 @@ private class OverscrollEdgeEffectLayerUI : LayerUI<JScrollPane>() {
   private var ovalHeight = 0.0
   private var delta = 0
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     super.paint(g, c)
     if (c is JLayer<*> && ovalHeight > 0.0) {
       val rh = (c.view as? JScrollPane)?.viewport?.viewRect?.height ?: 0
@@ -134,7 +137,10 @@ private class OverscrollEdgeEffectLayerUI : LayerUI<JScrollPane>() {
     super.uninstallUI(c)
   }
 
-  override fun processMouseEvent(e: MouseEvent, l: JLayer<out JScrollPane>) {
+  override fun processMouseEvent(
+    e: MouseEvent,
+    l: JLayer<out JScrollPane>,
+  ) {
     if (e.component is JViewport) {
       val id = e.id
       if (id == MouseEvent.MOUSE_PRESSED) {
@@ -145,7 +151,10 @@ private class OverscrollEdgeEffectLayerUI : LayerUI<JScrollPane>() {
     }
   }
 
-  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out JScrollPane>) {
+  override fun processMouseMotionEvent(
+    e: MouseEvent,
+    l: JLayer<out JScrollPane>,
+  ) {
     val c = e.component
     if (c is JViewport && e.id == MouseEvent.MOUSE_DRAGGED && !animator.isRunning) {
       val viewport = l.view.viewport
@@ -199,7 +208,12 @@ private class OverscrollEdgeEffectLayerUI : LayerUI<JScrollPane>() {
 }
 
 private class MissingIcon : Icon {
-  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     val w = iconWidth
     val h = iconHeight

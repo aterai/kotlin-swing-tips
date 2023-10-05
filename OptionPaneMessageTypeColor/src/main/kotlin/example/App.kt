@@ -15,14 +15,21 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeButton(p: JPanel, type: MessageType): JButton {
+private fun makeButton(
+  p: JPanel,
+  type: MessageType,
+): JButton {
   val msg = type.toString()
   val b = JButton(msg)
   b.addActionListener { showDialog(p.rootPane, msg, type.messageType) }
   return b
 }
 
-private fun showDialog(c: Component, msg: String, type: Int) {
+private fun showDialog(
+  c: Component,
+  msg: String,
+  type: Int,
+) {
   JOptionPane.showMessageDialog(c, msg, msg, type)
 }
 

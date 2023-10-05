@@ -8,12 +8,21 @@ fun makeUI(): Component {
   val rubberBand = Rectangle()
   val desktop = JDesktopPane()
   desktop.desktopManager = object : DefaultDesktopManager() {
-    override fun beginResizingFrame(f: JComponent, direction: Int) {
+    override fun beginResizingFrame(
+      f: JComponent,
+      direction: Int,
+    ) {
       (f as? JInternalFrame)?.desktopPane?.dragMode = JDesktopPane.OUTLINE_DRAG_MODE
       super.beginResizingFrame(f, direction)
     }
 
-    override fun resizeFrame(f: JComponent, newX: Int, newY: Int, newWidth: Int, newHeight: Int) {
+    override fun resizeFrame(
+      f: JComponent,
+      newX: Int,
+      newY: Int,
+      newWidth: Int,
+      newHeight: Int,
+    ) {
       val d = (f as? JInternalFrame)?.desktopPane
       if (d?.dragMode == JDesktopPane.OUTLINE_DRAG_MODE) {
         super.resizeFrame(f, newX, newY, 0, 0)
@@ -46,7 +55,10 @@ fun makeUI(): Component {
     frame2.isVisible = true
   }
   val layerUI = object : LayerUI<JDesktopPane>() {
-    override fun paint(g: Graphics, c: JComponent) {
+    override fun paint(
+      g: Graphics,
+      c: JComponent,
+    ) {
       super.paint(g, c)
       if (c is JLayer<*>) {
         val d = c.view as? JDesktopPane
