@@ -46,7 +46,10 @@ fun initTextFieldBorder(textField: JTextField) {
   }
 }
 
-private fun makeTitledPanel(title: String, cmp: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  cmp: Component,
+): Component {
   val p = JPanel(GridBagLayout())
   p.border = BorderFactory.createTitledBorder(title)
   val c = GridBagConstraints()
@@ -71,7 +74,14 @@ private class StringBorder(parent: JComponent, private val str: String) : Border
 
   override fun isBorderOpaque() = false
 
-  override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
+  override fun paintBorder(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+    width: Int,
+    height: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     val tx = (x + width - rect.width).toFloat()
     val ty = y - rect.y + (height - rect.height) / 2f

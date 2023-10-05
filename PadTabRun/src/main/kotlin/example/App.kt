@@ -11,11 +11,17 @@ fun makeUI(): Component {
       super.updateUI()
       val tmp = if (ui is WindowsTabbedPaneUI) {
         object : WindowsTabbedPaneUI() {
-          override fun shouldPadTabRun(tabPlacement: Int, run: Int) = false
+          override fun shouldPadTabRun(
+            tabPlacement: Int,
+            run: Int,
+          ) = false
         }
       } else {
         object : MetalTabbedPaneUI() {
-          override fun shouldPadTabRun(tabPlacement: Int, run: Int) = false
+          override fun shouldPadTabRun(
+            tabPlacement: Int,
+            run: Int,
+          ) = false
         }
       }
       setUI(tmp)
@@ -26,11 +32,17 @@ fun makeUI(): Component {
       super.updateUI()
       val tmp = if (ui is WindowsTabbedPaneUI) {
         object : WindowsTabbedPaneUI() {
-          override fun shouldPadTabRun(tabPlacement: Int, run: Int) = true
+          override fun shouldPadTabRun(
+            tabPlacement: Int,
+            run: Int,
+          ) = true
         }
       } else {
         object : MetalTabbedPaneUI() {
-          override fun shouldPadTabRun(tabPlacement: Int, run: Int) = true
+          override fun shouldPadTabRun(
+            tabPlacement: Int,
+            run: Int,
+          ) = true
         }
       }
       setUI(tmp)
@@ -48,7 +60,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTabbedPane(title: String, tabbedPane: JTabbedPane): JTabbedPane {
+private fun makeTabbedPane(
+  title: String,
+  tabbedPane: JTabbedPane,
+): JTabbedPane {
   tabbedPane.addTab("1111111111111111111111111111", ColorIcon(Color.RED), JLabel(title))
   tabbedPane.addTab("2", ColorIcon(Color.GREEN), JLabel())
   tabbedPane.addTab("333333333333333333333333333333333", ColorIcon(Color.BLUE), JLabel())
@@ -57,7 +72,12 @@ private fun makeTabbedPane(title: String, tabbedPane: JTabbedPane): JTabbedPane 
 }
 
 private class ColorIcon(private val color: Color) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = color
@@ -85,7 +105,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd

@@ -135,7 +135,11 @@ private object SvgUtils {
       """.trimIndent()
   }
 
-  fun makeStar(r1: Int, r2: Int, vc: Int): Path2D {
+  fun makeStar(
+    r1: Int,
+    r2: Int,
+    vc: Int,
+  ): Path2D {
     val or = r1.coerceAtLeast(r2).toDouble()
     val ir = r1.coerceAtMost(r2).toDouble()
     var agl = 0.0
@@ -154,7 +158,12 @@ private object SvgUtils {
 }
 
 private class StarIcon(private val star: Shape, private val antialias: Boolean) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = Color.PINK

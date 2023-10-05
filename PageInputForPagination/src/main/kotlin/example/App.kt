@@ -150,7 +150,10 @@ private open class LoadTask(
   }
 
   @Throws(InterruptedException::class)
-  protected fun load(current: Int, size: Int): Int {
+  protected fun load(
+    current: Int,
+    size: Int,
+  ): Int {
     val result = (current until current + size).map {
       arrayOf<Any>(it, "Test: $it", if (it % 2 == 0) "" else "comment...")
     }.toList()

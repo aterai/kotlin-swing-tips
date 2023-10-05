@@ -102,7 +102,11 @@ private class Vertex(private var dx: Double, private var dy: Double, private var
     vy = screenDistance * dy / gz
   }
 
-  fun rotateTransformation(kx: Double, ky: Double, kz: Double) {
+  fun rotateTransformation(
+    kx: Double,
+    ky: Double,
+    kz: Double,
+  ) {
     val x0 = dx * cos(ky) - dz * sin(ky)
     val y0 = dy
     val z0 = dx * sin(ky) + dz * cos(ky)

@@ -28,7 +28,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: String, cmp: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  cmp: Component,
+): Component {
   val p = JPanel(GridBagLayout())
   p.border = BorderFactory.createTitledBorder(title)
   val c = GridBagConstraints()
@@ -43,7 +46,12 @@ private class MyPasswordFieldUI : BasicPasswordFieldUI() {
   override fun create(elem: Element) = MyPasswordView(elem)
 
   class MyPasswordView(element: Element?) : PasswordView(element) {
-    override fun drawEchoCharacter(g: Graphics, x: Int, y: Int, c: Char): Int {
+    override fun drawEchoCharacter(
+      g: Graphics,
+      x: Int,
+      y: Int,
+      c: Char,
+    ): Int {
       val fm = g.fontMetrics
       ICON.paintIcon(null, g, x, y - fm.ascent)
       return x + ICON.iconWidth // fm.charWidth(c)
@@ -63,7 +71,11 @@ private class MyPasswordFieldUI : BasicPasswordFieldUI() {
 private class StarIcon : Icon {
   private val star = makeStar(6, 3, 8)
 
-  fun makeStar(r1: Int, r2: Int, vc: Int): Path2D {
+  fun makeStar(
+    r1: Int,
+    r2: Int,
+    vc: Int,
+  ): Path2D {
     val or = r1.coerceAtLeast(r2).toDouble()
     val ir = r1.coerceAtMost(r2).toDouble()
     var agl = 0.0
@@ -80,7 +92,12 @@ private class StarIcon : Icon {
     return Path2D.Double(p, at)
   }
 
-  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)

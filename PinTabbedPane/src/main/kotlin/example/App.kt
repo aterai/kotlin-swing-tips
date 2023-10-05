@@ -62,7 +62,11 @@ private class PinTabPopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTabbedPane) {
       val idx = c.indexAtLocation(x, y)
       pinTabMenuItem.isEnabled = idx >= 0
@@ -71,7 +75,11 @@ private class PinTabPopupMenu : JPopupMenu() {
     }
   }
 
-  private fun searchNewSelectedIndex(t: JTabbedPane, idx: Int, dir: Boolean): Int {
+  private fun searchNewSelectedIndex(
+    t: JTabbedPane,
+    idx: Int,
+    dir: Boolean,
+  ): Int {
     var i: Int
     if (dir) {
       i = 0
@@ -93,7 +101,10 @@ private class PinTabPopupMenu : JPopupMenu() {
     return i
   }
 
-  private fun isSelectedPinTab(t: JTabbedPane, idx: Int) = idx >= 0 &&
+  private fun isSelectedPinTab(
+    t: JTabbedPane,
+    idx: Int,
+  ) = idx >= 0 &&
     idx == t.selectedIndex && isEmpty(t.getTitleAt(idx))
 
   private fun isEmpty(s: String?) = s == null || s.isEmpty()

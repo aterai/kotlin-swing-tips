@@ -99,7 +99,13 @@ private class PasswordView2(elem: Element) : PasswordView(elem) {
   ) = drawText(g, x, y, p0, p1)
 
   @Throws(BadLocationException::class)
-  private fun drawText(g: Graphics, x: Int, y: Int, p0: Int, p1: Int): Int {
+  private fun drawText(
+    g: Graphics,
+    x: Int,
+    y: Int,
+    p0: Int,
+    p1: Int,
+  ): Int {
     val c = container
     var j = x
     if (c is JPasswordField) {
@@ -119,7 +125,12 @@ private class PasswordView2(elem: Element) : PasswordView(elem) {
   }
 
   @Throws(BadLocationException::class)
-  private fun drawLastChar(g: Graphics, x: Int, y: Int, p1: Int): Int {
+  private fun drawLastChar(
+    g: Graphics,
+    x: Int,
+    y: Int,
+    p1: Int,
+  ): Int {
     val font = g.font
     val frc = g.fontMetrics.fontRenderContext
     val w = font.getStringBounds("0", frc).width
@@ -145,7 +156,10 @@ private class PlaceholderLayerUI<E : JTextComponent>(hintMessage: String) : Laye
     SwingUtilities.updateComponentTreeUI(hint)
   }
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     super.paint(g, c)
     if (c is JLayer<*>) {
       val tc = c.view as? JTextComponent
@@ -175,7 +189,10 @@ private class PlaceholderLayerUI<E : JTextComponent>(hintMessage: String) : Laye
     }
   }
 
-  public override fun processFocusEvent(e: FocusEvent, l: JLayer<out E>) {
+  public override fun processFocusEvent(
+    e: FocusEvent,
+    l: JLayer<out E>,
+  ) {
     l.view.repaint()
   }
 }
