@@ -84,7 +84,10 @@ private fun makeStarRatingPanel(
   it.add(label)
 }
 
-private fun makeStarImageIcon(ip: ImageProducer, filter: ImageFilter): ImageIcon {
+private fun makeStarImageIcon(
+  ip: ImageProducer,
+  filter: ImageFilter,
+): ImageIcon {
   val img = Toolkit.getDefaultToolkit().createImage(FilteredImageSource(ip, filter))
   return ImageIcon(img)
 }
@@ -165,7 +168,11 @@ class SelectedImageFilter(rf: Float, gf: Float, bf: Float) : RGBImageFilter() {
     canFilterIndexColorModel = false
   }
 
-  override fun filterRGB(x: Int, y: Int, argb: Int): Int {
+  override fun filterRGB(
+    x: Int,
+    y: Int,
+    argb: Int,
+  ): Int {
     val r = ((argb shr 16 and 0xFF) * rf).toInt()
     val g = ((argb shr 8 and 0xFF) * gf).toInt()
     val b = ((argb and 0xFF) * bf).toInt()

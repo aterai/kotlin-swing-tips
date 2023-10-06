@@ -53,7 +53,10 @@ private class DragHandler : MouseAdapter() {
     }
   }
 
-  private fun startDragging(parent: Container, pt: Point) {
+  private fun startDragging(
+    parent: Container,
+    pt: Point,
+  ) {
     val c = parent.getComponentAt(pt)
     index = parent.getComponentZOrder(c)
     if (c == null || c == parent || index < 0) {
@@ -105,7 +108,11 @@ private class DragHandler : MouseAdapter() {
     }
   }
 
-  private fun searchAndSwap(parent: Container, cmp: Component?, pt: Point): Boolean {
+  private fun searchAndSwap(
+    parent: Container,
+    cmp: Component?,
+    pt: Point,
+  ): Boolean {
     var find = false
     for ((i, c) in parent.components.withIndex()) {
       val r = c.bounds
@@ -124,7 +131,12 @@ private class DragHandler : MouseAdapter() {
     return find
   }
 
-  private fun swapComponent(parent: Container, remove: Component, add: Component?, idx: Int) {
+  private fun swapComponent(
+    parent: Container,
+    remove: Component,
+    add: Component?,
+    idx: Int,
+  ) {
     if (add == null) {
       return
     }

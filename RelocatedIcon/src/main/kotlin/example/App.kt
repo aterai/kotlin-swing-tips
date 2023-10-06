@@ -55,7 +55,11 @@ fun doReIconify(desktop: JDesktopPane?) {
   }
 }
 
-fun createFrame(t: String?, x: Int, y: Int): JInternalFrame {
+fun createFrame(
+  t: String?,
+  x: Int,
+  y: Int,
+): JInternalFrame {
   val f = JInternalFrame(t, false, true, true, true)
   f.setSize(200, 100)
   f.setLocation(x, y)
@@ -63,7 +67,10 @@ fun createFrame(t: String?, x: Int, y: Int): JInternalFrame {
   return f
 }
 
-fun addIconifiedFrame(desktop: JDesktopPane, f: JInternalFrame) {
+fun addIconifiedFrame(
+  desktop: JDesktopPane,
+  f: JInternalFrame,
+) {
   desktop.add(f)
   runCatching {
     f.isIcon = true

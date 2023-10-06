@@ -18,7 +18,11 @@ fun makeUI(): Component {
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
 
-    override fun setValueAt(v: Any, row: Int, column: Int) {
+    override fun setValueAt(
+      v: Any,
+      row: Int,
+      column: Int,
+    ) {
       if (v is Boolean) {
         for (i in 0 until rowCount) {
           super.setValueAt(i == row, i, column)

@@ -27,7 +27,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun createSortablePanel(i: Int, c: Component): Component {
+private fun createSortablePanel(
+  i: Int,
+  c: Component,
+): Component {
   val l = JLabel(" %04d ".format(i))
   l.isOpaque = true
   l.background = Color.RED
@@ -59,7 +62,10 @@ private class RearrangingHandler : MouseAdapter() {
     }
   }
 
-  private fun startDragging(parent: Container, pt: Point) {
+  private fun startDragging(
+    parent: Container,
+    pt: Point,
+  ) {
     val c = parent.getComponentAt(pt)
     index = parent.getComponentZOrder(c)
     if (c == null || c == parent || index < 0) {
@@ -79,7 +85,10 @@ private class RearrangingHandler : MouseAdapter() {
     window.isVisible = true
   }
 
-  private fun updateWindowLocation(pt: Point, parent: Component) {
+  private fun updateWindowLocation(
+    pt: Point,
+    parent: Component,
+  ) {
     if (window.isVisible && draggingComponent != null) {
       val p = Point(pt.x - dragOffset.x, pt.y - dragOffset.y)
       SwingUtilities.convertPointToScreen(p, parent)
@@ -87,7 +96,11 @@ private class RearrangingHandler : MouseAdapter() {
     }
   }
 
-  private fun getTargetIndex(r: Rectangle, pt: Point, i: Int): Int {
+  private fun getTargetIndex(
+    r: Rectangle,
+    pt: Point,
+    i: Int,
+  ): Int {
     val ht2 = (r.height / 2f).roundToInt()
     PREV_AREA.setBounds(r.x, r.y, r.width, ht2)
     NEXT_AREA.setBounds(r.x, r.y + ht2, r.width, ht2)
@@ -137,7 +150,11 @@ private class RearrangingHandler : MouseAdapter() {
     }
   }
 
-  private fun searchAndSwap(parent: Container, cmp: Component?, pt: Point): Boolean {
+  private fun searchAndSwap(
+    parent: Container,
+    cmp: Component?,
+    pt: Point,
+  ): Boolean {
     var find = false
     for ((i, c) in parent.components.withIndex()) {
       val r = c.bounds

@@ -130,7 +130,10 @@ private class WordHighlightListener : MouseAdapter(), CaretListener, KeyListener
   }
 }
 
-fun setHighlight(tc: JTextComponent, pattern: String) {
+fun setHighlight(
+  tc: JTextComponent,
+  pattern: String,
+) {
   removeWordHighlights(tc)
   runCatching {
     val highlighter = tc.highlighter

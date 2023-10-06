@@ -105,7 +105,10 @@ private class RadialGradientButton(title: String) : JButton(title) {
     }
   }
 
-  override fun contains(x: Int, y: Int): Boolean {
+  override fun contains(
+    x: Int,
+    y: Int,
+  ): Boolean {
     update()
     return shape?.contains(Point(x, y)) ?: false
   }
@@ -255,7 +258,10 @@ private class RadialGradientPaintButton(title: String) : JButton(title) {
     g2.dispose()
   }
 
-  override fun contains(x: Int, y: Int): Boolean {
+  override fun contains(
+    x: Int,
+    y: Int,
+  ): Boolean {
     update()
     return shape?.contains(Point(x, y)) ?: false
   }
@@ -274,7 +280,10 @@ private class RadialGradientPaintButton(title: String) : JButton(title) {
 }
 
 private object TextureUtils {
-  fun createCheckerTexture(cs: Int, color: Color): TexturePaint {
+  fun createCheckerTexture(
+    cs: Int,
+    color: Color,
+  ): TexturePaint {
     val size = cs * cs
     val img = BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB)
     val g2 = img.createGraphics()

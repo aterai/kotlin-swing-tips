@@ -75,7 +75,12 @@ private open class ColorRadioButton(text: String?) : JRadioButton(text) {
 }
 
 private open class DefaultIcon : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = DEFAULT_COLOR
@@ -98,7 +103,12 @@ private open class DefaultIcon : Icon {
 }
 
 private class PressedIcon : DefaultIcon() {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = PRESSED_COLOR
@@ -111,7 +121,12 @@ private class PressedIcon : DefaultIcon() {
 }
 
 private class SelectedIcon : DefaultIcon() {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = SELECTED_COLOR
@@ -124,7 +139,12 @@ private class SelectedIcon : DefaultIcon() {
 }
 
 private class RolloverIcon : DefaultIcon() {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = ROLLOVER_COLOR

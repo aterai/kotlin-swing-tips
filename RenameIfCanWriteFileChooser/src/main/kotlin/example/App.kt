@@ -55,8 +55,10 @@ private class WindowsCanWriteFileChooserUI(chooser: JFileChooser) : WindowsFileC
   override fun createModel() {
     model2?.invalidateFileCache()
     model2 = object : BasicDirectoryModel(fileChooser) {
-      override fun renameFile(oldFile: File, newFile: File) =
-        oldFile.canWrite() && super.renameFile(oldFile, newFile)
+      override fun renameFile(
+        oldFile: File,
+        newFile: File,
+      ) = oldFile.canWrite() && super.renameFile(oldFile, newFile)
     }
   }
 
@@ -78,8 +80,10 @@ private class MetalCanWriteFileChooserUI(chooser: JFileChooser) : MetalFileChoos
   override fun createModel() {
     model2?.invalidateFileCache()
     model2 = object : BasicDirectoryModel(fileChooser) {
-      override fun renameFile(oldFile: File, newFile: File) =
-        oldFile.canWrite() && super.renameFile(oldFile, newFile)
+      override fun renameFile(
+        oldFile: File,
+        newFile: File,
+      ) = oldFile.canWrite() && super.renameFile(oldFile, newFile)
     }
   }
 

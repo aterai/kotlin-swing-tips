@@ -31,7 +31,10 @@ private fun makeBox(icon: Icon): Box {
   return box
 }
 
-private fun makeLabel(title: String, icon: Icon): JLabel {
+private fun makeLabel(
+  title: String,
+  icon: Icon,
+): JLabel {
   val l = JLabel(title, icon, SwingConstants.CENTER)
   l.verticalTextPosition = SwingConstants.BOTTOM
   l.horizontalTextPosition = SwingConstants.CENTER
@@ -48,7 +51,12 @@ private class QuadrantRotateIcon(
   private val icon: Icon,
   private val rotate: QuadrantRotate,
 ) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val w = icon.iconWidth
     val h = icon.iconHeight
     val g2 = g.create() as? Graphics2D ?: return
