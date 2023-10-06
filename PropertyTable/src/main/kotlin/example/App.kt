@@ -36,7 +36,10 @@ fun makeUI(): Component {
 class PropertyTable(model: TableModel) : JTable(model) {
   private var editingClass: Class<*>? = null
 
-  private fun getClassAt(row: Int, column: Int): Class<*> {
+  private fun getClassAt(
+    row: Int,
+    column: Int,
+  ): Class<*> {
     val mc = convertColumnIndexToModel(column)
     val mr = convertRowIndexToModel(row)
     return model.getValueAt(mr, mc).javaClass
@@ -51,7 +54,10 @@ class PropertyTable(model: TableModel) : JTable(model) {
     setDefaultEditor(Date::class.java, DateEditor())
   }
 
-  override fun getCellRenderer(row: Int, column: Int): TableCellRenderer {
+  override fun getCellRenderer(
+    row: Int,
+    column: Int,
+  ): TableCellRenderer {
     return if (convertColumnIndexToModel(column) == TARGET_COLUMN) {
       getDefaultRenderer(getClassAt(row, column))
     } else {
@@ -59,7 +65,10 @@ class PropertyTable(model: TableModel) : JTable(model) {
     }
   }
 
-  override fun getCellEditor(row: Int, column: Int): TableCellEditor {
+  override fun getCellEditor(
+    row: Int,
+    column: Int,
+  ): TableCellEditor {
     return if (convertColumnIndexToModel(column) == TARGET_COLUMN) {
       editingClass = getClassAt(row, column)
       getDefaultEditor(editingClass)
@@ -213,7 +222,12 @@ class ColorEditor : AbstractCellEditor(), TableCellEditor, ActionListener {
 }
 
 class ColorIcon(private val color: Color) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = color

@@ -144,7 +144,11 @@ private open class BackgroundTask(
   }
 
   @Throws(InterruptedException::class)
-  protected fun doSomething(scanner: Scanner, idx: Int, readied: Int): Int {
+  protected fun doSomething(
+    scanner: Scanner,
+    idx: Int,
+    readied: Int,
+  ): Int {
     if (idx % 50 == 0) {
       Thread.sleep(10)
     }

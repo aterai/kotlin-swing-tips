@@ -55,7 +55,10 @@ private fun initTree(tree: JTree): JTree {
   return tree
 }
 
-private fun createChildren(parent: File, node: DefaultMutableTreeNode) {
+private fun createChildren(
+  parent: File,
+  node: DefaultMutableTreeNode,
+) {
   parent.listFiles()?.forEach { file ->
     val child = DefaultMutableTreeNode(file)
     node.add(child)

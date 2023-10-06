@@ -80,7 +80,11 @@ private class ProgressCellRenderer<E> : ListCellRenderer<E> {
   }
 }
 
-fun makeTitledPanel(title: String, cmp: Component, btn: Component): Component {
+fun makeTitledPanel(
+  title: String,
+  cmp: Component,
+  btn: Component,
+): Component {
   val c = GridBagConstraints()
   val p = JPanel(GridBagLayout())
   c.insets = Insets(5, 5, 5, 0)
