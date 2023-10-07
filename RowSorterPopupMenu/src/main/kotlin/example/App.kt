@@ -61,7 +61,11 @@ private class TableHeaderPopupMenu : JPopupMenu() {
     actions.forEach { this.add(it) }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTableHeader) {
       val table = c.table
       c.draggedColumn = null

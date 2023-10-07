@@ -20,7 +20,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makePanel(m: JComponent, c: Component): Component {
+private fun makePanel(
+  m: JComponent,
+  c: Component,
+): Component {
   val ir = 20 // inset.right
   val ch = c.preferredSize.height / 2
   val ib = BorderFactory.createEmptyBorder(0, 0, ch, 0)

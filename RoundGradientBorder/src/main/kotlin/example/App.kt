@@ -18,7 +18,12 @@ fun makeUI(): Component {
     Color(0x2D_D9_FE),
   )
   val icon = object : Icon {
-    override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+    override fun paintIcon(
+      c: Component,
+      g: Graphics,
+      x: Int,
+      y: Int,
+    ) {
       val g2 = g.create() as? Graphics2D ?: return
       val start = Point2D.Float(0f, 0f)
       val end = Point2D.Float(c.width.toFloat(), 0f)
@@ -64,7 +69,14 @@ private class RoundGradientBorder(
     Color(0x2D_D9_FE),
   )
 
-  override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
+  override fun paintBorder(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+    width: Int,
+    height: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     val start = Point2D.Float(0f, 0f)

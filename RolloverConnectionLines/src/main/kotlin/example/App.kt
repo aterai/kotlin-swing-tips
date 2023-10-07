@@ -81,7 +81,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(view: Component, title: String): JScrollPane {
+private fun makeTitledPanel(
+  view: Component,
+  title: String,
+): JScrollPane {
   val scroll = JScrollPane(view)
   scroll.border = BorderFactory.createTitledBorder(title)
   return scroll

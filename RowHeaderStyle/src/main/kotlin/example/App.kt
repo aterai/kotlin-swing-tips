@@ -18,7 +18,10 @@ fun makeUI(): Component {
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
 
-    override fun isCellEditable(row: Int, column: Int) = column != 0
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = column != 0
   }
   val table = object : JTable(model) {
     @Transient private var handler: RowHeaderRenderer? = null
@@ -103,7 +106,12 @@ private class RowHeaderRenderer : MouseAdapter(), TableCellRenderer {
 }
 
 private class ComponentIcon(private val cmp: Component) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     SwingUtilities.paintComponent(g, cmp, c.parent, x, y, iconWidth, iconHeight)
   }
 

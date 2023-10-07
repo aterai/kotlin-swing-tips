@@ -7,7 +7,11 @@ import javax.swing.*
 
 private val p = JPanel()
 
-private fun makeVerticalTabIcon(title: String?, icon: Icon, clockwise: Boolean): Icon? {
+private fun makeVerticalTabIcon(
+  title: String?,
+  icon: Icon,
+  clockwise: Boolean,
+): Icon? {
   val label = JLabel(title, icon, SwingConstants.LEADING)
   label.border = BorderFactory.createEmptyBorder(0, 2, 0, 2)
   val d = label.preferredSize

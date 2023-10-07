@@ -57,7 +57,10 @@ class RoundedCornerButtonUI : BasicButtonUI() {
     button.addChangeListener(listener)
   }
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     initShape(c)
 
     val g2 = g.create() as? Graphics2D ?: return
@@ -108,7 +111,11 @@ class RoundedCornerButtonUI : BasicButtonUI() {
     }
   }
 
-  private fun paintFocusAndRollover(g2: Graphics2D, c: Component, color: Color) {
+  private fun paintFocusAndRollover(
+    g2: Graphics2D,
+    c: Component,
+    color: Color,
+  ) {
     g2.paint = GradientPaint(0f, 0f, color, c.width - 1f, c.height - 1f, color.brighter(), true)
     g2.fill(shape)
     g2.paint = c.background

@@ -21,7 +21,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeLabel(title: String, icon: Icon): JLabel {
+private fun makeLabel(
+  title: String,
+  icon: Icon,
+): JLabel {
   val l = JLabel(title, icon, SwingConstants.CENTER)
   l.verticalTextPosition = SwingConstants.BOTTOM
   l.horizontalTextPosition = SwingConstants.CENTER
@@ -69,7 +72,12 @@ private class RotateIcon(icon: Icon, rotate: Int) : Icon {
     }
   }
 
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.drawImage(image, trans, c)

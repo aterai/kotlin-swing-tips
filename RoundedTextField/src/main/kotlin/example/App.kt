@@ -99,7 +99,10 @@ fun makeUI(): Component {
   return panel
 }
 
-private fun makeTitledPanel(title: String, cmp: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  cmp: Component,
+): Component {
   val p = JPanel(GridBagLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.isOpaque = false
@@ -134,7 +137,14 @@ private fun makeCheckerTexture(): TexturePaint {
 }
 
 private class RoundedCornerBorder : AbstractBorder() {
-  override fun paintBorder(c: Component?, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
+  override fun paintBorder(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+    width: Int,
+    height: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     val border = getBorderShape(x, y, width - 1, height - 1)
@@ -154,7 +164,12 @@ private class RoundedCornerBorder : AbstractBorder() {
     g2.dispose()
   }
 
-  fun getBorderShape(x: Int, y: Int, w: Int, h: Int): Shape {
+  fun getBorderShape(
+    x: Int,
+    y: Int,
+    w: Int,
+    h: Int,
+  ): Shape {
     val dx = x.toDouble()
     val dy = y.toDouble()
     val dw = w.toDouble()
@@ -164,7 +179,10 @@ private class RoundedCornerBorder : AbstractBorder() {
 
   override fun getBorderInsets(c: Component) = Insets(4, 8, 4, 8)
 
-  override fun getBorderInsets(c: Component?, insets: Insets): Insets {
+  override fun getBorderInsets(
+    c: Component?,
+    insets: Insets,
+  ): Insets {
     insets.set(4, 8, 4, 8)
     return insets
   }

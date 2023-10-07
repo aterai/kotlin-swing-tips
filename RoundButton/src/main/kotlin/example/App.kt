@@ -17,25 +17,31 @@ private val button = object : JButton("RoundedCornerButtonUI") {
   }
 }
 
-fun makeUI() = JPanel().also {
-  it.add(JButton("Default JButton"))
-  // button.ui = RoundedCornerButtonUI()
-  it.add(button)
-  it.add(RoundedCornerButton("Rounded Corner Button"))
-  val cl = Thread.currentThread().contextClassLoader
-  val button = object : RoundButton(ImageIcon(cl.getResource("example/16x16.png"))) {
-    override fun getPreferredSize() = super.getPreferredSize()?.also { d ->
-      val r = 16 + (FOCUS_STROKE.toInt() + 4) * 2 // test margin = 4
-      d.setSize(r, r)
+fun makeUI() =
+  JPanel().also {
+    it.add(JButton("Default JButton"))
+    // button.ui = RoundedCornerButtonUI()
+    it.add(button)
+    it.add(RoundedCornerButton("Rounded Corner Button"))
+    val cl = Thread.currentThread().contextClassLoader
+    val button = object : RoundButton(ImageIcon(cl.getResource("example/16x16.png"))) {
+      override fun getPreferredSize() =
+        super.getPreferredSize()?.also { d ->
+          val r = 16 + (FOCUS_STROKE.toInt() + 4) * 2 // test margin = 4
+          d.setSize(r, r)
+        }
     }
+    it.add(button)
+    it.add(ShapeButton(makeStar(25, 30, 20)))
+    it.add(RoundButton("Round Button"))
+    it.preferredSize = Dimension(320, 240)
   }
-  it.add(button)
-  it.add(ShapeButton(makeStar(25, 30, 20)))
-  it.add(RoundButton("Round Button"))
-  it.preferredSize = Dimension(320, 240)
-}
 
-fun makeStar(r1: Int, r2: Int, vc: Int): Path2D {
+fun makeStar(
+  r1: Int,
+  r2: Int,
+  vc: Int,
+): Path2D {
   val ora = maxOf(r1, r2)
   val ira = minOf(r1, r2)
   var agl = 0.0
@@ -100,7 +106,10 @@ open class RoundedCornerButton : JButton {
     }
   }
 
-  private fun paintFocusAndRollover(g2: Graphics2D, color: Color) {
+  private fun paintFocusAndRollover(
+    g2: Graphics2D,
+    color: Color,
+  ) {
     g2.paint = GradientPaint(0f, 0f, color, width - 1f, height - 1f, color.brighter(), true)
     g2.fill(shape)
     g2.paint = background
@@ -135,7 +144,10 @@ open class RoundedCornerButton : JButton {
     g2.dispose()
   }
 
-  override fun contains(x: Int, y: Int): Boolean {
+  override fun contains(
+    x: Int,
+    y: Int,
+  ): Boolean {
     initShape()
     return shape?.contains(Point(x, y)) ?: false
   }
@@ -162,10 +174,11 @@ open class RoundButton : RoundedCornerButton {
   //   // init(text, icon)
   // }
 
-  override fun getPreferredSize() = super.getPreferredSize()?.also {
-    val s = maxOf(width, height)
-    it.setSize(s, s)
-  }
+  override fun getPreferredSize() =
+    super.getPreferredSize()?.also {
+      val s = maxOf(width, height)
+      it.setSize(s, s)
+    }
 
   override fun initShape() {
     if (bounds != base) {
@@ -199,7 +212,10 @@ class ShapeButton(private val shape: Shape) : JButton() {
     background = Color(250, 250, 250)
   }
 
-  private fun paintFocusAndRollover(g2: Graphics2D, color: Color) {
+  private fun paintFocusAndRollover(
+    g2: Graphics2D,
+    color: Color,
+  ) {
     g2.paint = GradientPaint(0f, 0f, color, width - 1f, height - 1f, color.brighter(), true)
     g2.fill(shape)
   }
@@ -230,11 +246,19 @@ class ShapeButton(private val shape: Shape) : JButton() {
     g2.dispose()
   }
 
-  override fun contains(x: Int, y: Int) = shape.contains(Point(x, y))
+  override fun contains(
+    x: Int,
+    y: Int,
+  ) = shape.contains(Point(x, y))
 }
 
 class ShapeSizeIcon(private val shape: Shape) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     // Empty icon
   }
 
