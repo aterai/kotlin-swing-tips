@@ -24,7 +24,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun addDraggablePanel(parent: Container, c: Component) {
+private fun addDraggablePanel(
+  parent: Container,
+  c: Component,
+) {
   val l = JLabel(" %04d ".format(parent.componentCount))
   l.isOpaque = true
   l.background = Color.RED
@@ -47,7 +50,10 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
   private var draggingComponent: Component? = null
   private var fillerComponent: Component? = null
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     super.paint(g, c)
     if (c is JLayer<*> && draggingComponent != null) {
       SwingUtilities.paintComponent(g, draggingComponent, canvas, DRAGGING_RECT)
@@ -65,7 +71,10 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
     super.uninstallUI(c)
   }
 
-  override fun processMouseEvent(e: MouseEvent, l: JLayer<out V>) {
+  override fun processMouseEvent(
+    e: MouseEvent,
+    l: JLayer<out V>,
+  ) {
     val parent = l.view
     val c = e.component
     when (e.id) {
@@ -82,7 +91,10 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
     }
   }
 
-  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out V>) {
+  override fun processMouseMotionEvent(
+    e: MouseEvent,
+    l: JLayer<out V>,
+  ) {
     if (e.id == MouseEvent.MOUSE_DRAGGED && e.component is JLayer<*>) {
       val parent = l.view
       val pt = e.point
@@ -103,14 +115,22 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
     }
   }
 
-  private fun updateDraggingPanelLocation(parent: JComponent, e: MouseEvent, dragOffset: Point) {
+  private fun updateDraggingPanelLocation(
+    parent: JComponent,
+    e: MouseEvent,
+    dragOffset: Point,
+  ) {
     val pt = SwingUtilities.convertPoint(e.component, e.point, parent)
     val r = SwingUtilities.calculateInnerArea(parent, INNER_RECT)
     val y = (pt.y - dragOffset.y).coerceIn(r.y, r.y + r.height - DRAGGING_RECT.height)
     DRAGGING_RECT.setLocation(r.x, y)
   }
 
-  private fun updateFillerLocation(parent: Container, filler: Component?, pt: Point) {
+  private fun updateFillerLocation(
+    parent: Container,
+    filler: Component?,
+    pt: Point,
+  ) {
     // change the temporary filler location
     for (i in 0 until parent.componentCount) {
       val c = parent.getComponent(i)
@@ -126,7 +146,10 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
     }
   }
 
-  private fun startDragging(parent: JComponent, e: MouseEvent) {
+  private fun startDragging(
+    parent: JComponent,
+    e: MouseEvent,
+  ) {
     val pt = e.point
     val c = parent.getComponentAt(pt)
     val index = parent.getComponentZOrder(c)
@@ -142,7 +165,11 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
     updateDraggingPanelLocation(parent, e, dragOffset)
   }
 
-  private fun getTargetIndex(r: Rectangle, pt: Point, i: Int): Int {
+  private fun getTargetIndex(
+    r: Rectangle,
+    pt: Point,
+    i: Int,
+  ): Int {
     val ht2 = (r.height / 2f).roundToInt()
     TOP_HALF_RECT.setBounds(r.x, r.y, r.width, ht2)
     BOTTOM_HALF_RECT.setBounds(r.x, r.y + ht2, r.width, ht2)

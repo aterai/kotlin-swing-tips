@@ -18,7 +18,11 @@ private val pt = Point()
 
 fun makeUI(): Component {
   val popup = object : JPopupMenu() {
-    override fun show(c: Component?, x: Int, y: Int) {
+    override fun show(
+      c: Component?,
+      x: Int,
+      y: Int,
+    ) {
       pt.setLocation(x, y)
       super.show(c, x, y)
     }
@@ -268,7 +272,10 @@ private enum class Directions(private val cursor: Int) {
       deltaY: Int,
     ) = Point(0, getDeltaY(deltaY, startingBounds))
 
-    override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
+    override fun getBounds(
+      rect: Rectangle,
+      delta: Point,
+    ) = Rectangle(
       rect.x,
       rect.y - delta.y,
       rect.width,
@@ -283,7 +290,10 @@ private enum class Directions(private val cursor: Int) {
       deltaY: Int,
     ) = Point(0, getDeltaY(deltaY, parentBounds, startingBounds))
 
-    override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
+    override fun getBounds(
+      rect: Rectangle,
+      delta: Point,
+    ) = Rectangle(
       rect.x,
       rect.y,
       rect.width,
@@ -298,7 +308,10 @@ private enum class Directions(private val cursor: Int) {
       deltaY: Int,
     ) = Point(getDeltaX(deltaX, startingBounds), 0)
 
-    override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
+    override fun getBounds(
+      rect: Rectangle,
+      delta: Point,
+    ) = Rectangle(
       rect.x - delta.x,
       rect.y,
       rect.width + delta.x,
@@ -313,7 +326,10 @@ private enum class Directions(private val cursor: Int) {
       deltaY: Int,
     ) = Point(getDeltaX(deltaX, parentBounds, startingBounds), 0)
 
-    override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
+    override fun getBounds(
+      rect: Rectangle,
+      delta: Point,
+    ) = Rectangle(
       rect.x,
       rect.y,
       rect.width - delta.x,
@@ -328,7 +344,10 @@ private enum class Directions(private val cursor: Int) {
       deltaY: Int,
     ) = Point(getDeltaX(deltaX, startingBounds), getDeltaY(deltaY, startingBounds))
 
-    override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
+    override fun getBounds(
+      rect: Rectangle,
+      delta: Point,
+    ) = Rectangle(
       rect.x - delta.x,
       rect.y - delta.y,
       rect.width + delta.x,
@@ -343,7 +362,10 @@ private enum class Directions(private val cursor: Int) {
       deltaY: Int,
     ) = Point(getDeltaX(deltaX, parentBounds, startingBounds), getDeltaY(deltaY, startingBounds))
 
-    override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
+    override fun getBounds(
+      rect: Rectangle,
+      delta: Point,
+    ) = Rectangle(
       rect.x,
       rect.y - delta.y,
       rect.width - delta.x,
@@ -358,7 +380,10 @@ private enum class Directions(private val cursor: Int) {
       deltaY: Int,
     ) = Point(getDeltaX(deltaX, startingBounds), getDeltaY(deltaY, parentBounds, startingBounds))
 
-    override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
+    override fun getBounds(
+      rect: Rectangle,
+      delta: Point,
+    ) = Rectangle(
       rect.x,
       rect.y,
       rect.width,
@@ -376,7 +401,10 @@ private enum class Directions(private val cursor: Int) {
       getDeltaY(deltaY, parentBounds, startingBounds),
     )
 
-    override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
+    override fun getBounds(
+      rect: Rectangle,
+      delta: Point,
+    ) = Rectangle(
       rect.x,
       rect.y,
       rect.width - delta.x,
@@ -391,7 +419,10 @@ private enum class Directions(private val cursor: Int) {
       deltaY: Int,
     ) = Point(deltaX, deltaY)
 
-    override fun getBounds(rect: Rectangle, delta: Point) = Rectangle(
+    override fun getBounds(
+      rect: Rectangle,
+      delta: Point,
+    ) = Rectangle(
       rect.x - delta.x,
       rect.y - delta.y,
       rect.width,
@@ -399,7 +430,10 @@ private enum class Directions(private val cursor: Int) {
     )
   }, ;
 
-  abstract fun getBounds(rect: Rectangle, delta: Point): Rectangle
+  abstract fun getBounds(
+    rect: Rectangle,
+    delta: Point,
+  ): Rectangle
 
   abstract fun getLimitedDelta(
     startingBounds: Rectangle,
@@ -415,7 +449,10 @@ private enum class Directions(private val cursor: Int) {
     fun getByCursorType(cursor: Int): Directions? =
       EnumSet.allOf(Directions::class.java).first { d -> d.cursor == cursor }
 
-    private fun getDeltaX(dx: Int, startingBounds: Rectangle): Int {
+    private fun getDeltaX(
+      dx: Int,
+      startingBounds: Rectangle,
+    ): Int {
       val left = minOf(
         MAX.width - startingBounds.width,
         startingBounds.x,
@@ -423,7 +460,11 @@ private enum class Directions(private val cursor: Int) {
       return dx.coerceIn(MIN.width - startingBounds.width, left)
     }
 
-    private fun getDeltaX(dx: Int, parentBounds: Rectangle, startingBounds: Rectangle): Int {
+    private fun getDeltaX(
+      dx: Int,
+      parentBounds: Rectangle,
+      startingBounds: Rectangle,
+    ): Int {
       val right = maxOf(
         startingBounds.width - MAX.width,
         startingBounds.x + startingBounds.width - parentBounds.width,
@@ -431,7 +472,10 @@ private enum class Directions(private val cursor: Int) {
       return dx.coerceIn(right, startingBounds.width - MIN.width)
     }
 
-    private fun getDeltaY(dy: Int, startingBounds: Rectangle): Int {
+    private fun getDeltaY(
+      dy: Int,
+      startingBounds: Rectangle,
+    ): Int {
       val top = minOf(
         MAX.height - startingBounds.height,
         startingBounds.y,
@@ -439,7 +483,11 @@ private enum class Directions(private val cursor: Int) {
       return dy.coerceIn(MIN.height - startingBounds.height, top)
     }
 
-    private fun getDeltaY(dy: Int, parentBounds: Rectangle, startingBounds: Rectangle): Int {
+    private fun getDeltaY(
+      dy: Int,
+      parentBounds: Rectangle,
+      startingBounds: Rectangle,
+    ): Int {
       val bottom = maxOf(
         startingBounds.height - MAX.height,
         startingBounds.y + startingBounds.height - parentBounds.height,

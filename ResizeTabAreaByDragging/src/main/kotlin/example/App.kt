@@ -59,12 +59,21 @@ private class ClippedTitleTabbedPane(tabPlacement: Int) : JTabbedPane(tabPlaceme
     super.doLayout()
   }
 
-  override fun insertTab(title: String?, icon: Icon?, c: Component?, tip: String?, index: Int) {
+  override fun insertTab(
+    title: String?,
+    icon: Icon?,
+    c: Component?,
+    tip: String?,
+    index: Int,
+  ) {
     super.insertTab(title, icon, c, tip ?: title, index)
     setTabComponentAt(index, JLabel(title, icon, SwingConstants.LEADING))
   }
 
-  private fun updateAllTabWidth(tabWidth: Int, gap: Int) {
+  private fun updateAllTabWidth(
+    tabWidth: Int,
+    gap: Int,
+  ) {
     val dim = Dimension()
     var rest = gap
     for (i in 0 until tabCount) {
@@ -109,7 +118,10 @@ private class TabAreaResizeLayer : LayerUI<ClippedTitleTabbedPane>() {
     super.uninstallUI(c)
   }
 
-  override fun processMouseEvent(e: MouseEvent, l: JLayer<out ClippedTitleTabbedPane>) {
+  override fun processMouseEvent(
+    e: MouseEvent,
+    l: JLayer<out ClippedTitleTabbedPane>,
+  ) {
     val tabbedPane = l.view
     if (e.id == MouseEvent.MOUSE_PRESSED) {
       val rect = getDividerBounds(tabbedPane)
@@ -127,7 +139,10 @@ private class TabAreaResizeLayer : LayerUI<ClippedTitleTabbedPane>() {
     }
   }
 
-  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out ClippedTitleTabbedPane>) {
+  override fun processMouseMotionEvent(
+    e: MouseEvent,
+    l: JLayer<out ClippedTitleTabbedPane>,
+  ) {
     val tabbedPane = l.view
     val pt = e.point
     SwingUtilities.convertPoint(e.component, pt, tabbedPane)
@@ -170,7 +185,12 @@ private class TabAreaResizeLayer : LayerUI<ClippedTitleTabbedPane>() {
 }
 
 private class ColorIcon(private val color: Color) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = color

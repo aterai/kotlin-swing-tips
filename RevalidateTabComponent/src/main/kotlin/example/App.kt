@@ -149,7 +149,11 @@ private class TabTitleRenamePopupMenu : JPopupMenu() {
     add("close all").addActionListener { (invoker as? JTabbedPane)?.removeAll() }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTabbedPane) {
       rename.isEnabled = c.indexAtLocation(x, y) >= 0
       super.show(c, x, y)

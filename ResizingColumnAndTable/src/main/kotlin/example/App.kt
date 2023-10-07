@@ -25,7 +25,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: String, table: JTable): Component {
+private fun makeTitledPanel(
+  title: String,
+  table: JTable,
+): Component {
   table.autoResizeMode = JTable.AUTO_RESIZE_LAST_COLUMN
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)

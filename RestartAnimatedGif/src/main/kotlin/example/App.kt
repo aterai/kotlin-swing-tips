@@ -26,7 +26,12 @@ fun makeUI(): Component {
   }
   button.rolloverIcon = animatedIcon
   button.pressedIcon = object : Icon {
-    override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+    override fun paintIcon(
+      c: Component,
+      g: Graphics,
+      x: Int,
+      y: Int,
+    ) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.paint = Color.BLACK
       g2.fillRect(x, y, iconWidth, iconHeight)
@@ -59,7 +64,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: String, c: Component) = JPanel().also {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+) = JPanel().also {
   it.border = BorderFactory.createTitledBorder(title)
   it.add(c)
 }
