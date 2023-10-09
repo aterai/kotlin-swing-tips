@@ -57,11 +57,10 @@ private class ImgBaselineHtmlEditorKit : HTMLEditorKit() {
     }
   }
 
-  private fun createImageView(elem: Element) = object : ImageView(elem) {
-    override fun getAlignment(axis: Int): Float {
-      // .8125f magic number...
-      return if (axis == Y_AXIS) .8125f else super.getAlignment(axis)
-    }
+  private fun createImageView(elem: Element) =
+    object : ImageView(elem) {
+      override fun getAlignment(axis: Int) =
+        if (axis == Y_AXIS) .8125f else super.getAlignment(axis) // .8125f magic number
   }
 }
 
