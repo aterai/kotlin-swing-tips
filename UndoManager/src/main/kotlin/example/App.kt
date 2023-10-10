@@ -54,7 +54,10 @@ private fun initUndoRedo(tc: JTextComponent) {
   im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, modifiers), "redo")
 }
 
-private fun makeTitledPanel(title: String, cmp: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  cmp: Component,
+): Component {
   val p = JPanel(GridBagLayout())
   p.border = BorderFactory.createTitledBorder(title)
   val c = GridBagConstraints()

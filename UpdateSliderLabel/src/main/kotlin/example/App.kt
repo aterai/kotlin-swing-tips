@@ -40,7 +40,10 @@ private fun makeSlider(): JSlider {
   return slider
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)
