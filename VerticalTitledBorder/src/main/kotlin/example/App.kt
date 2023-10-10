@@ -76,7 +76,10 @@ private class VerticalTitledBorder(title: String?) : TitledBorder(title) {
     }
   }
 
-  override fun getBorderInsets(c: Component, insets: Insets): Insets {
+  override fun getBorderInsets(
+    c: Component,
+    insets: Insets,
+  ): Insets {
     val border = getBorder()
     val ins = makeComponentBorderInsets(border, c, insets)
     val title = getTitle()

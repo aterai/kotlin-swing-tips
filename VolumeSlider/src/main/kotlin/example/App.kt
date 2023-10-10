@@ -14,7 +14,11 @@ fun makeUI(): Component {
 
   val slider2 = JSlider(0, 100, 0)
   slider2.ui = object : BasicSliderUI(slider2) {
-    override fun paintHorizontalLabel(g: Graphics, value: Int, label: Component) {
+    override fun paintHorizontalLabel(
+      g: Graphics,
+      value: Int,
+      label: Component,
+    ) {
       // Windows/Motif L&F: JSlider should use foreground color for ticks. - Java Bug System
       // https://bugs.openjdk.org/browse/JDK-5099681
       label.foreground = Color.GREEN
@@ -42,7 +46,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)

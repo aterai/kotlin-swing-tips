@@ -113,7 +113,10 @@ private class VerticalTableHeaderRenderer : TableCellRenderer {
     private const val ASCENDING = "Table.ascendingSortIcon"
     private const val DESCENDING = "Table.descendingSortIcon"
 
-    fun getColumnSortOrder(table: JTable?, column: Int): SortOrder {
+    fun getColumnSortOrder(
+      table: JTable?,
+      column: Int,
+    ): SortOrder {
       var rv = SortOrder.UNSORTED
       if (table != null && table.rowSorter != null) {
         val sortKeys = table.rowSorter.sortKeys
@@ -131,7 +134,12 @@ private class EmptyIcon : Icon {
   var width = 5
   var height = 5
 
-  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     // do nothing
   }
 
@@ -180,7 +188,12 @@ private class RotateIcon(icon: Icon, rotate: Int) : Icon {
     }
   }
 
-  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.drawImage(image, trans, c)
@@ -207,7 +220,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd

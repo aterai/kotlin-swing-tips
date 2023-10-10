@@ -52,7 +52,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)
@@ -60,7 +63,11 @@ private fun makeTitledPanel(title: String, c: Component): Component {
 }
 
 private object HtmlViewUtils {
-  fun getFirstLineCenterY(text: String?, c: AbstractButton, iconRect: Rectangle): Int {
+  fun getFirstLineCenterY(
+    text: String?,
+    c: AbstractButton,
+    iconRect: Rectangle,
+  ): Int {
     var y = 0
     if (text != null && c.verticalTextPosition == SwingConstants.TOP) {
       (c.getClientProperty(BasicHTML.propertyKey) as? View)?.also {
@@ -82,7 +89,10 @@ private class WindowsVerticalAlignmentCheckBoxUI : WindowsCheckBoxUI() {
   private val textRect = Rectangle()
 
   @Synchronized
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     if (c !is AbstractButton) {
       return
     }
@@ -113,7 +123,11 @@ private class WindowsVerticalAlignmentCheckBoxUI : WindowsCheckBoxUI() {
     }
   }
 
-  override fun paintFocus(g: Graphics, txtRect: Rectangle, sz: Dimension) {
+  override fun paintFocus(
+    g: Graphics,
+    txtRect: Rectangle,
+    sz: Dimension,
+  ) {
     if (txtRect.width > 0 && txtRect.height > 0) {
       super.paintFocus(g, txtRect, sz)
     }
@@ -126,7 +140,10 @@ private class BasicVerticalAlignmentCheckBoxUI : BasicCheckBoxUI() {
   private val textRect = Rectangle()
 
   @Synchronized
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     if (c !is AbstractButton) {
       return
     }
@@ -157,7 +174,11 @@ private class BasicVerticalAlignmentCheckBoxUI : BasicCheckBoxUI() {
     }
   }
 
-  override fun paintFocus(g: Graphics, txtRect: Rectangle, sz: Dimension) {
+  override fun paintFocus(
+    g: Graphics,
+    txtRect: Rectangle,
+    sz: Dimension,
+  ) {
     if (txtRect.width > 0 && txtRect.height > 0) {
       super.paintFocus(g, txtRect, sz)
     }
