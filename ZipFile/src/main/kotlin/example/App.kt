@@ -142,7 +142,10 @@ private fun makeDestDirPath(text: String): Path? {
 
 private object ZipUtils {
   @Throws(IOException::class)
-  fun zip(srcDir: Path, zip: Path) {
+  fun zip(
+    srcDir: Path,
+    zip: Path,
+  ) {
     Files.walk(srcDir)
       .filter { it.toFile().isFile }
       .use {
@@ -160,7 +163,10 @@ private object ZipUtils {
   }
 
   @Throws(IOException::class)
-  fun unzip(zipFilePath: Path, destDir: Path) {
+  fun unzip(
+    zipFilePath: Path,
+    destDir: Path,
+  ) {
     ZipFile(zipFilePath.toString()).use { zipFile ->
       zipFile.entries().toList().forEach { entry ->
         val name = entry.name
@@ -194,7 +200,11 @@ private class TextAreaOutputStream(private val textArea: JTextArea) : OutputStre
     buffer.write(b)
   }
 
-  override fun write(b: ByteArray, off: Int, len: Int) {
+  override fun write(
+    b: ByteArray,
+    off: Int,
+    len: Int,
+  ) {
     buffer.write(b, off, len)
   }
 }
