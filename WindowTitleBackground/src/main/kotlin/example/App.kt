@@ -46,7 +46,10 @@ fun makeUI(): Component {
     arrayOf("windowText", UIManager.getColor("windowText")),
   )
   val model = object : DefaultTableModel(data, columnNames) {
-    override fun isCellEditable(row: Int, column: Int) = column == COLOR_COL
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = column == COLOR_COL
 
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
@@ -159,7 +162,12 @@ private class ColorEditor : AbstractCellEditor(), TableCellEditor, ActionListene
 }
 
 private class ColorIcon(private val color: Color?) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = color

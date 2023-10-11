@@ -88,7 +88,10 @@ fun makeUI(): Component {
 // Watching a Directory for Changes (The Java™ Tutorials > Essential Classes > Basic I/O)
 // https://docs.oracle.com/javase/tutorial/essential/io/notification.html
 // Process all events for keys queued to the watcher
-private fun processEvents(dir: Path, watcher: WatchService) {
+private fun processEvents(
+  dir: Path,
+  watcher: WatchService,
+) {
   while (true) {
     // wait for key to be signaled
     val key = runCatching {
@@ -126,7 +129,10 @@ private fun processEvents(dir: Path, watcher: WatchService) {
   }
 }
 
-private fun updateTable(kind: WatchEvent.Kind<*>, child: Path) {
+private fun updateTable(
+  kind: WatchEvent.Kind<*>,
+  child: Path,
+) {
   if (kind === StandardWatchEventKinds.ENTRY_CREATE) {
     model.addPath(child)
   } else if (kind === StandardWatchEventKinds.ENTRY_DELETE) {
@@ -158,7 +164,10 @@ private class FileModel : DefaultTableModel() {
     number++
   }
 
-  override fun isCellEditable(row: Int, col: Int) = COLUMN_ARRAY[col].isEditable
+  override fun isCellEditable(
+    row: Int,
+    col: Int,
+  ) = COLUMN_ARRAY[col].isEditable
 
   override fun getColumnClass(column: Int) = COLUMN_ARRAY[column].columnClass
 
@@ -204,7 +213,11 @@ private class TablePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTable) {
       delete.isEnabled = c.selectedRowCount > 0
       super.show(c, x, y)

@@ -72,7 +72,12 @@ private class WavyLineSeparator(orientation: Int = HORIZONTAL) : JSeparator(orie
       this.orientation = orientation
     }
 
-    override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+    override fun paintIcon(
+      c: Component,
+      g: Graphics,
+      x: Int,
+      y: Int,
+    ) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.paint = sfc
       if (orientation == VERTICAL) {

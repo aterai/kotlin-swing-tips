@@ -33,7 +33,10 @@ fun makeUI(): Component {
 
 private class WholeRowSelectableTreeUI : BasicTreeUI() {
   @Suppress("LongMethod", "ComplexMethod", "NestedBlockDepth", "CognitiveComplexMethod")
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     val paintBounds = g.clipBounds
     val insets = tree.insets
     val initialPath = getClosestPathForLocation(tree, 0, paintBounds.y)
@@ -278,7 +281,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd
