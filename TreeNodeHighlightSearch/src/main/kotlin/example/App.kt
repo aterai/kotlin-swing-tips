@@ -53,7 +53,11 @@ private fun fireDocumentChangeEvent() {
   }
 }
 
-private fun searchTree(tree: JTree, path: TreePath, q: String) {
+private fun searchTree(
+  tree: JTree,
+  path: TreePath,
+  q: String,
+) {
   val node = path.lastPathComponent as? TreeNode ?: return
   if (node.toString().startsWith(q)) {
     tree.expandPath(path.parentPath)
@@ -63,7 +67,10 @@ private fun searchTree(tree: JTree, path: TreePath, q: String) {
   }
 }
 
-private fun collapseAll(tree: JTree, parent: TreePath) {
+private fun collapseAll(
+  tree: JTree,
+  parent: TreePath,
+) {
   val node = parent.lastPathComponent as? TreeNode ?: return
   if (!node.isLeaf) {
     // Java 9: Collections.list(node.children()).stream()

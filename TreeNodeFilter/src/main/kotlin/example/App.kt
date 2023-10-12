@@ -69,7 +69,11 @@ private fun fireDocumentChangeEvent() {
   }
 }
 
-fun searchTree(tree: JTree, path: TreePath, q: String) {
+fun searchTree(
+  tree: JTree,
+  path: TreePath,
+  q: String,
+) {
   val node = path.lastPathComponent as? DefaultMutableTreeNode
   (node?.userObject as? FilterableNode)?.also {
     it.status = node.toString().startsWith(q)
@@ -85,7 +89,10 @@ fun searchTree(tree: JTree, path: TreePath, q: String) {
   }
 }
 
-fun resetAll(parent: TreePath, match: Boolean) {
+fun resetAll(
+  parent: TreePath,
+  match: Boolean,
+) {
   val node = parent.lastPathComponent as? DefaultMutableTreeNode ?: return
   (node.userObject as? FilterableNode)?.status = match
   for (c in node.children()) {
@@ -93,7 +100,11 @@ fun resetAll(parent: TreePath, match: Boolean) {
   }
 }
 
-fun visitAll(tree: JTree, parent: TreePath, expand: Boolean) {
+fun visitAll(
+  tree: JTree,
+  parent: TreePath,
+  expand: Boolean,
+) {
   val node = parent.lastPathComponent as? TreeNode ?: return
   for (c in node.children()) {
     visitAll(tree, parent.pathByAddingChild(c), expand)
@@ -156,7 +167,10 @@ private class FilterableStatusUpdateListener : TreeModelListener {
     uo.status = false
   }
 
-  private fun updateAllChildrenUserObject(root: DefaultMutableTreeNode?, match: Boolean?) {
+  private fun updateAllChildrenUserObject(
+    root: DefaultMutableTreeNode?,
+    match: Boolean?,
+  ) {
     val breadth = root?.breadthFirstEnumeration() ?: return
     for (n in breadth) {
       val node = n as? DefaultMutableTreeNode

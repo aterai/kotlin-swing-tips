@@ -7,7 +7,10 @@ import javax.swing.*
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.TreeNode
 
-private fun makeComboBoxModel(model: DefaultComboBoxModel<TreeNode>, node: TreeNode) {
+private fun makeComboBoxModel(
+  model: DefaultComboBoxModel<TreeNode>,
+  node: TreeNode,
+) {
   if (node is DefaultMutableTreeNode && !node.isRoot) {
     model.addElement(node)
   }
@@ -20,7 +23,10 @@ private fun makeComboBoxModel(model: DefaultComboBoxModel<TreeNode>, node: TreeN
 
 private fun makeModel() = JTree().model
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)
