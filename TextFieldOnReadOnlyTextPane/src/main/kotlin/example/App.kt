@@ -27,7 +27,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun insertQuestion(textPane: JTextPane, str: String) {
+private fun insertQuestion(
+  textPane: JTextPane,
+  str: String,
+) {
   val doc = textPane.document
   runCatching {
     doc.insertString(doc.length, str, null)

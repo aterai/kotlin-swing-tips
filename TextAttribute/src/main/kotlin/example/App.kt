@@ -42,7 +42,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun initUnderline(tc: JTextComponent, style: Any) {
+private fun initUnderline(
+  tc: JTextComponent,
+  style: Any,
+) {
   val font = tc.font
   val attrs = mutableMapOf<TextAttribute, Any?>()
   attrs.putAll(font.attributes)

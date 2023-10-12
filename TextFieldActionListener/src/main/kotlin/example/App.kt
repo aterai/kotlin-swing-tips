@@ -55,7 +55,10 @@ fun makeUI(): Component {
   }
 }
 
-fun append(log: JTextArea, text: String) {
+fun append(
+  log: JTextArea,
+  text: String,
+) {
   log.append("$text\n")
   log.caretPosition = log.document.length
 }

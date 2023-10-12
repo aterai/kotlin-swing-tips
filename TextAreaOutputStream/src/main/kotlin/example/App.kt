@@ -72,7 +72,11 @@ private class TextAreaOutputStream(private val textArea: JTextArea) : OutputStre
     buffer.write(b)
   }
 
-  override fun write(b: ByteArray, off: Int, len: Int) {
+  override fun write(
+    b: ByteArray,
+    off: Int,
+    len: Int,
+  ) {
     buffer.write(b, off, len)
   }
 }

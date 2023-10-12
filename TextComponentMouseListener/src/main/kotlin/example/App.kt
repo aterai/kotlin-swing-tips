@@ -39,7 +39,10 @@ private fun makeTextArea(): JTextComponent {
   return textArea
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.add(JLabel(title), BorderLayout.NORTH)
   p.add(JScrollPane(c))
@@ -111,7 +114,11 @@ private class TextFieldPopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTextComponent) {
       val hasSelectedText = c.selectedText == null
       for (menuElement in subElements) {
