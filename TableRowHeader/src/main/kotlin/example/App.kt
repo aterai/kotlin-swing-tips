@@ -193,7 +193,10 @@ private class RowDataModel(
     rowListModel.remove(index)
   }
 
-  override fun isCellEditable(row: Int, col: Int) = COLUMN_ARRAY[col].isEditable
+  override fun isCellEditable(
+    row: Int,
+    col: Int,
+  ) = COLUMN_ARRAY[col].isEditable
 
   override fun getColumnClass(column: Int) = COLUMN_ARRAY[column].columnClass
 
@@ -243,7 +246,11 @@ private class TablePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     (c as? JTable)?.also {
       delete.isEnabled = it.selectedRowCount > 0
       super.show(it, x, y)

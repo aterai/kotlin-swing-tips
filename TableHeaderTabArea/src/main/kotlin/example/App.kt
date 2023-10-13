@@ -68,7 +68,10 @@ private class TableHeaderTabbedPane : JPanel(BorderLayout()) {
     add(contentsPanel)
   }
 
-  fun addTab(title: String, comp: Component) {
+  fun addTab(
+    title: String,
+    comp: Component,
+  ) {
     contentsPanel.add(comp, title)
     val tc = TableColumn(model.columnCount, 75, header.defaultRenderer, null)
     tc.headerValue = title
@@ -188,7 +191,10 @@ private class BasicTabViewButtonUI : TabViewButtonUI() {
     }
   }
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     if (c !is AbstractButton) {
       return
     }

@@ -48,7 +48,11 @@ fun makeUI(): Component {
   }
 }
 
-private fun updateTableScrollPane(scroll: Component, key: String, lnf: Boolean) {
+private fun updateTableScrollPane(
+  scroll: Component,
+  key: String,
+  lnf: Boolean,
+) {
   val border = if (lnf) {
     UIManager.getLookAndFeelDefaults().getBorder(key)
   } else {
@@ -73,7 +77,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd

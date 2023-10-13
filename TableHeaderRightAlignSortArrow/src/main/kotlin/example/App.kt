@@ -47,7 +47,11 @@ fun makeUI(): Component {
   }
 }
 
-fun updateSortAlign(table: JTable, key: String?, b: Boolean) {
+fun updateSortAlign(
+  table: JTable,
+  key: String?,
+  b: Boolean,
+) {
   UIManager.put(key, b)
   table.tableHeader.cursor = Cursor.getDefaultCursor()
   SwingUtilities.updateComponentTreeUI(table)
@@ -68,7 +72,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd
