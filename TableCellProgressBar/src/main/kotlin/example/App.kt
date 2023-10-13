@@ -66,7 +66,11 @@ fun makeUI(): Component {
   }
 }
 
-private fun addProgressValue(name: String, iv: Int, worker: SwingWorker<*, *>?) {
+private fun addProgressValue(
+  name: String,
+  iv: Int,
+  worker: SwingWorker<*, *>?,
+) {
   val obj = arrayOf(number, name, iv, worker)
   model.addRow(obj)
   number++
@@ -109,7 +113,11 @@ private class TablePopupMenu : JPopupMenu() {
     deleteMenuItem.addActionListener { deleteActionPerformed() }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTable) {
       val flag = c.selectedRowCount > 0
       cancelMenuItem.isEnabled = flag

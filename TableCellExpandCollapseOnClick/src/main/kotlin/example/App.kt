@@ -39,7 +39,10 @@ fun makeUI(): Component {
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
 
-    override fun isCellEditable(row: Int, column: Int) = column == 0
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = column == 0
   }
   val defaultHeight = 20
   val table = object : JTable(model) {
@@ -196,7 +199,12 @@ private class RowHeaderEditor : AbstractCellEditor(), TableCellEditor {
 }
 
 private class CheckIcon : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     g2.font = c.font

@@ -30,7 +30,10 @@ fun makeUI(): Component {
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
 
-    override fun isCellEditable(row: Int, column: Int) = false
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = false
   }
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(FileListTable(model)))
@@ -39,7 +42,11 @@ fun makeUI(): Component {
 }
 
 private class SelectedImageFilter : RGBImageFilter() {
-  override fun filterRGB(x: Int, y: Int, argb: Int): Int {
+  override fun filterRGB(
+    x: Int,
+    y: Int,
+    argb: Int,
+  ): Int {
     val r = argb shr 16 and 0xFF
     val g = argb shr 8 and 0xFF
     return argb and 0xFF_00_00_FF.toInt() or (r shr 1 shl 16) or (g shr 1 shl 8)
@@ -183,7 +190,10 @@ private class FileListTable(model: TableModel) : JTable(model) {
     return if (rect.contains(pt)) getValueAt(row, col).toString() else null
   }
 
-  override fun setColumnSelectionInterval(index0: Int, index1: Int) {
+  override fun setColumnSelectionInterval(
+    index0: Int,
+    index1: Int,
+  ) {
     val idx = convertColumnIndexToView(0)
     super.setColumnSelectionInterval(idx, idx)
   }
@@ -243,7 +253,11 @@ private class FileListTable(model: TableModel) : JTable(model) {
   }
 
   // SwingUtilities2.pointOutsidePrefSize(...)
-  private fun getCellRect2(table: JTable, row: Int, col: Int): Rectangle {
+  private fun getCellRect2(
+    table: JTable,
+    row: Int,
+    col: Int,
+  ): Rectangle {
     val tcr = table.getCellRenderer(row, col)
     val value = table.getValueAt(row, col)
     val cell = tcr.getTableCellRendererComponent(table, value, false, false, row, col)
