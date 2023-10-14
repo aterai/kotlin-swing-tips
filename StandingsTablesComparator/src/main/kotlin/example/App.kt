@@ -85,16 +85,12 @@ private fun makeTable(model: TableModel) =
         val promotion = num <= 2
         val promotionPlayOff = num <= 6
         val relegation = num >= 21
-        if (promotion) {
-          c.setBackground(Color(0xCF_F3_C0))
-        } else if (promotionPlayOff) {
-          c.setBackground(Color(0xCB_F7_F5))
-        } else if (relegation) {
-          c.setBackground(Color(0xFB_DC_DC))
-        } else if (row % 2 == 0) {
-          c.setBackground(Color.WHITE)
-        } else {
-          c.setBackground(Color(0xF0_F0_F0))
+        c.background = when {
+          promotion -> Color(0xCF_F3_C0)
+          promotionPlayOff -> Color(0xCB_F7_F5)
+          relegation -> Color(0xFB_DC_DC)
+          row % 2 == 0 -> Color.WHITE
+          else -> Color(0xF0_F0_F0)
         }
       }
       c.setForeground(Color.BLACK)
@@ -137,28 +133,28 @@ private fun makeModel(): TableModel {
   val model = object : DefaultTableModel(null, columnNames) {
     override fun getColumnClass(column: Int) = RowData::class.java
   }
-  addRow(model, RowData(1, "Machida", 33, 20, 7, 6, 57, 27))
-  addRow(model, RowData(2, "Iwata", 35, 17, 11, 7, 61, 39))
-  addRow(model, RowData(3, "Shimizu", 34, 16, 12, 6, 61, 27))
-  addRow(model, RowData(4, "Tokyo", 35, 17, 9, 9, 47, 26))
-  addRow(model, RowData(5, "Nagasaki", 35, 15, 10, 10, 58, 43))
-  addRow(model, RowData(6, "Chiba", 35, 15, 9, 11, 46, 44))
-  addRow(model, RowData(7, "Kofu", 35, 15, 7, 13, 49, 43))
-  addRow(model, RowData(8, "Okayama", 35, 12, 15, 8, 43, 37))
-  addRow(model, RowData(9, "Yamagata", 35, 16, 3, 16, 53, 49))
-  addRow(model, RowData(10, "Oita", 35, 14, 9, 12, 46, 49))
-  addRow(model, RowData(11, "Gunma", 32, 12, 12, 8, 36, 30))
-  addRow(model, RowData(12, "Mito", 35, 11, 12, 12, 45, 53))
-  addRow(model, RowData(13, "Tochigi", 35, 10, 12, 13, 35, 35))
-  addRow(model, RowData(14, "Tokushima", 35, 8, 17, 10, 39, 46))
-  addRow(model, RowData(15, "Akita", 34, 9, 13, 12, 27, 36))
-  addRow(model, RowData(16, "Sendai", 35, 10, 10, 15, 40, 50))
-  addRow(model, RowData(17, "Fujieda", 33, 11, 7, 15, 46, 57))
-  addRow(model, RowData(18, "Kumamoto", 35, 9, 10, 16, 42, 45))
-  addRow(model, RowData(19, "Iwaki", 34, 9, 10, 15, 33, 51))
-  addRow(model, RowData(20, "Yamaguchi", 35, 8, 12, 15, 28, 55))
-  addRow(model, RowData(21, "Kanazawa", 33, 9, 5, 19, 35, 55))
-  addRow(model, RowData(22, "Omiya", 35, 7, 6, 22, 30, 60))
+  addRow(model, RowData(1, "Machida", 20, 7, 6, 57, 27))
+  addRow(model, RowData(2, "Iwata", 17, 11, 7, 61, 39))
+  addRow(model, RowData(3, "Shimizu", 16, 12, 6, 61, 27))
+  addRow(model, RowData(4, "Tokyo", 17, 9, 9, 47, 26))
+  addRow(model, RowData(5, "Nagasaki", 15, 10, 10, 58, 43))
+  addRow(model, RowData(6, "Chiba", 15, 9, 11, 46, 44))
+  addRow(model, RowData(7, "Kofu", 15, 7, 13, 49, 43))
+  addRow(model, RowData(8, "Okayama", 12, 15, 8, 43, 37))
+  addRow(model, RowData(9, "Yamagata", 16, 3, 16, 53, 49))
+  addRow(model, RowData(10, "Oita", 14, 9, 12, 46, 49))
+  addRow(model, RowData(11, "Gunma", 12, 12, 8, 36, 30))
+  addRow(model, RowData(12, "Mito", 11, 12, 12, 45, 53))
+  addRow(model, RowData(13, "Tochigi", 10, 12, 13, 35, 35))
+  addRow(model, RowData(14, "Tokushima", 8, 17, 10, 39, 46))
+  addRow(model, RowData(15, "Akita", 9, 13, 12, 27, 36))
+  addRow(model, RowData(16, "Sendai", 10, 10, 15, 40, 50))
+  addRow(model, RowData(17, "Fujieda", 11, 7, 15, 46, 57))
+  addRow(model, RowData(18, "Kumamoto", 9, 10, 16, 42, 45))
+  addRow(model, RowData(19, "Iwaki", 9, 10, 15, 33, 51))
+  addRow(model, RowData(20, "Yamaguchi", 8, 12, 15, 28, 55))
+  addRow(model, RowData(21, "Kanazawa", 9, 5, 19, 35, 55))
+  addRow(model, RowData(22, "Omiya", 7, 6, 22, 30, 60))
   return model
 }
 
@@ -170,7 +166,6 @@ private fun addRow(model: DefaultTableModel, data: RowData) {
 private data class RowData(
   val position: Int,
   val team: String,
-  val matches: Int,
   val wins: Int,
   val draws: Int,
   val losses: Int,
@@ -179,8 +174,12 @@ private data class RowData(
 ) {
   val goalDifference: Int
     get() = goalsFor - goalsAgainst
+
   val points: Int
     get() = wins * 3 + draws
+
+  val matches: Int
+    get() = wins + draws + losses
 }
 
 fun main() {
