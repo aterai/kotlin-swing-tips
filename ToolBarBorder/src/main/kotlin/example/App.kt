@@ -36,7 +36,14 @@ fun makeUI(): Component {
 }
 
 private class ToolBarDragBorder : MetalBorders.ToolBarBorder() {
-  override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, w: Int, h: Int) {
+  override fun paintBorder(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+    w: Int,
+    h: Int,
+  ) {
     val tb = c as? JToolBar ?: return
     if (tb.isFloatable) {
       if (tb.orientation == HORIZONTAL) {
@@ -54,7 +61,12 @@ private class ToolBarDragBorder : MetalBorders.ToolBarBorder() {
 }
 
 private class ToolBarDragIcon : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = Color.GRAY
@@ -87,7 +99,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd
