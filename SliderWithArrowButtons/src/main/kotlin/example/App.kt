@@ -49,7 +49,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeButton(stepSize: Int, slider: JSlider): JButton {
+private fun makeButton(
+  stepSize: Int,
+  slider: JSlider,
+): JButton {
   val title = if (stepSize > 0) "+" else "-"
   val button = object : JButton(title) {
     override fun getPreferredSize() = Dimension(24, 24)
@@ -73,7 +76,10 @@ private fun updateSliderLabelTable(slider: JSlider) {
   slider.labelTable = labelTable // Update LabelTable
 }
 
-private fun getLabel(key: Int, slider: JSlider) = when (key) {
+private fun getLabel(
+  key: Int,
+  slider: JSlider,
+) = when (key) {
   0 -> "100%"
   slider.minimum -> "10%"
   slider.maximum -> "1000%"

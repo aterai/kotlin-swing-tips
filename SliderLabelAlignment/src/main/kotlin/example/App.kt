@@ -45,7 +45,10 @@ private fun makeSlider(): JSlider {
   return slider
 }
 
-private fun getLabel(slider: JSlider, key: Any): String {
+private fun getLabel(
+  slider: JSlider,
+  key: Any,
+): String {
   var txt = ""
   if (key == slider.minimum) {
     txt = "Short"
@@ -55,7 +58,10 @@ private fun getLabel(slider: JSlider, key: Any): String {
   return txt
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)
@@ -66,7 +72,10 @@ private class SliderLabelLayerUI : LayerUI<JSlider>() {
   private val min = JLabel("Short")
   private val max = JLabel("Long")
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     super.paint(g, c)
     val s = (c as? JLayer<*>)?.view as? JSlider ?: return
     val d = c.getSize()

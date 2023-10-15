@@ -18,7 +18,10 @@ fun makeUI(): Component {
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
 
-    override fun isCellEditable(row: Int, column: Int) = column != 0
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = column != 0
   }
   val table = object : JTable(model) {
     override fun updateUI() {

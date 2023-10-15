@@ -55,7 +55,12 @@ private fun makeSlider(): JSlider {
   return slider
 }
 
-private fun updateLabel(list: List<String>, slider: JSlider, i: Int, l: JLabel) {
+private fun updateLabel(
+  list: List<String>,
+  slider: JSlider,
+  i: Int,
+  l: JLabel,
+) {
   l.text = list[i]
   if (slider.value == i) {
     l.foreground = Color.RED
@@ -78,11 +83,17 @@ private fun setCurrentLabelListener(slider: JSlider) {
   }
 }
 
-private fun resetForeground(o: Any?, c: Color) {
+private fun resetForeground(
+  o: Any?,
+  c: Color,
+) {
   (o as? Component)?.foreground = c
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)
