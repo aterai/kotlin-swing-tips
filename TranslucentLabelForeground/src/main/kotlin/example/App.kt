@@ -67,7 +67,10 @@ fun makeUI(): Component {
 }
 
 private object TextureUtils {
-  fun createCheckerTexture(cs: Int, color: Color): TexturePaint {
+  fun createCheckerTexture(
+    cs: Int,
+    color: Color,
+  ): TexturePaint {
     val size = cs * cs
     val img = BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB)
     val g2 = img.createGraphics()

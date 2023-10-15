@@ -224,7 +224,10 @@ private object TextureUtils {
   private val DEFAULT_COLOR = Color(0x32, 0x32, 0x32, 0xEE)
 
   @JvmOverloads
-  fun createCheckerTexture(cs: Int, color: Color = DEFAULT_COLOR): TexturePaint {
+  fun createCheckerTexture(
+    cs: Int,
+    color: Color = DEFAULT_COLOR,
+  ): TexturePaint {
     val size = cs * cs
     val img = BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB)
     val g2 = img.createGraphics()
@@ -247,7 +250,12 @@ private object TextureUtils {
 }
 
 private class ColorIcon(private val color: Color) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = color

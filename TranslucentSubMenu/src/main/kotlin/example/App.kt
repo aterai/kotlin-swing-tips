@@ -71,7 +71,11 @@ private class TranslucentPopupMenu : JPopupMenu() {
     return super.add(menuItem)
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     EventQueue.invokeLater {
       val p = topLevelAncestor
       if (p is JWindow && p.type == Window.Type.POPUP) {
@@ -134,13 +138,19 @@ private class TransparentMenu(title: String?) : JMenu(title) {
     require(pos >= 0) { "index less than zero." }
   }
 
-  override fun insert(s: String, pos: Int) {
+  override fun insert(
+    s: String,
+    pos: Int,
+  ) {
     checkIndex(pos)
     val popup = ensurePopupMenuCreated2()
     popup.insert(JMenuItem(s), pos)
   }
 
-  override fun insert(mi: JMenuItem, pos: Int): JMenuItem {
+  override fun insert(
+    mi: JMenuItem,
+    pos: Int,
+  ): JMenuItem {
     checkIndex(pos)
     val popup = ensurePopupMenuCreated2()
     popup.insert(mi, pos)

@@ -163,7 +163,10 @@ private fun makeRolloverIcon(srcIcon: ImageIcon): ImageIcon {
   return ImageIcon(op.filter(img, null))
 }
 
-private fun makeImageIcon(path: String, d: Dimension): ImageIcon {
+private fun makeImageIcon(
+  path: String,
+  d: Dimension,
+): ImageIcon {
   val url = Thread.currentThread().contextClassLoader.getResource(path)
   val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage(d)
   return ImageIcon(img)

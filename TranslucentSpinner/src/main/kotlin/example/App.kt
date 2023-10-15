@@ -82,7 +82,10 @@ fun makeUI(): Component {
   return pp
 }
 
-private fun configureSpinnerButtons(comp: Container, d: UIDefaults) {
+private fun configureSpinnerButtons(
+  comp: Container,
+  d: UIDefaults,
+) {
   for (c in comp.components) {
     val name = c.name
     if (c is JButton && name?.endsWith("Button") == true) {
@@ -94,7 +97,10 @@ private fun configureSpinnerButtons(comp: Container, d: UIDefaults) {
 }
 
 private object TextureUtils {
-  fun createCheckerTexture(cs: Int, color: Color): TexturePaint {
+  fun createCheckerTexture(
+    cs: Int,
+    color: Color,
+  ): TexturePaint {
     val size = cs * cs
     val img = BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB)
     val g2 = img.createGraphics()

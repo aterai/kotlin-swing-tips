@@ -13,8 +13,11 @@ import javax.swing.border.Border
 
 private val texture = makeCheckerTexture()
 
-private fun makeTitleWithIcon(url: URL?, title: String, align: String) =
-  "<html><p align='$align'><img src='$url' align='$align' />&nbsp;$title</p></html>"
+private fun makeTitleWithIcon(
+  url: URL?,
+  title: String,
+  align: String,
+) = "<html><p align='$align'><img src='$url' align='$align' />&nbsp;$title</p></html>"
 
 private fun makeButton(title: String): AbstractButton {
   return object : JButton(title) {
@@ -182,7 +185,12 @@ private class TranslucentButtonIcon(c: JComponent) : Icon {
     height = d.height - i.top - i.bottom
   }
 
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     if (c is AbstractButton) {
       // val i = c.insets
       val w = c.getWidth()
