@@ -130,12 +130,21 @@ private open class ClippedTitleTabbedPane : JTabbedPane() {
     super.doLayout()
   }
 
-  override fun insertTab(title: String?, icon: Icon?, c: Component?, tip: String?, index: Int) {
+  override fun insertTab(
+    title: String?,
+    icon: Icon?,
+    c: Component?,
+    tip: String?,
+    index: Int,
+  ) {
     super.insertTab(title, icon, c, tip ?: title, index)
     setTabComponentAt(index, JLabel(title, icon, CENTER))
   }
 
-  private fun updateAllTabWidth(tabWidth: Int, gap: Int) {
+  private fun updateAllTabWidth(
+    tabWidth: Int,
+    gap: Int,
+  ) {
     val dim = Dimension()
     var rest = gap
     for (i in 0 until tabCount) {

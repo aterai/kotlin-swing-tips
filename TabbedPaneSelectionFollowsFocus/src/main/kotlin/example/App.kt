@@ -56,7 +56,10 @@ fun makeUI(): Component {
     SwingUtilities.updateComponentTreeUI(tabs)
   }
   val layerUI = object : LayerUI<JTabbedPane>() {
-    override fun paint(g: Graphics, c: JComponent) {
+    override fun paint(
+      g: Graphics,
+      c: JComponent,
+    ) {
       super.paint(g, c)
       if (c is JLayer<*>) {
         val t = c.view
@@ -97,7 +100,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd

@@ -45,7 +45,14 @@ private class TabbedPaneWithCompBorder(
   private val rubberStamp = JPanel()
   private val rect = Rectangle()
 
-  override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
+  override fun paintBorder(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+    width: Int,
+    height: Int,
+  ) {
     val size = checkBox.preferredSize
     var xx = tab.size.width - size.width
     val lastTab = tab.getBoundsAt(tab.tabCount - 1)
