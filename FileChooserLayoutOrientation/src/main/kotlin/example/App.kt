@@ -52,9 +52,10 @@ fun makeUI(): Component {
   }
 }
 
-fun descendants(parent: Container): List<Component> = parent.components
-  .filterIsInstance<Container>()
-  .flatMap { listOf(it) + descendants(it) }
+fun descendants(parent: Container): List<Component> =
+  parent.components
+    .filterIsInstance<Container>()
+    .flatMap { listOf(it) + descendants(it) }
 
 private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
@@ -71,7 +72,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd

@@ -79,7 +79,10 @@ private fun setViewTypeDetails(fileChooser: JFileChooser) {
   )
 }
 
-private fun append(log: JTextArea, str: String) {
+private fun append(
+  log: JTextArea,
+  str: String,
+) {
   log.append(str + "\n")
   log.caretPosition = log.document.length
 }
@@ -103,9 +106,10 @@ private fun append(log: JTextArea, str: String) {
 //     .map { c -> stream(Container::class.java.cast(c)) }
 //     .reduce(Stream.of<Component>(parent), { a, b -> Stream.concat<Component>(a, b) })
 
-fun descendants(parent: Container): List<Component> = parent.components
-  .filterIsInstance<Container>()
-  .flatMap { listOf(it) + descendants(it) }
+fun descendants(parent: Container): List<Component> =
+  parent.components
+    .filterIsInstance<Container>()
+    .flatMap { listOf(it) + descendants(it) }
 
 fun main() {
   EventQueue.invokeLater {

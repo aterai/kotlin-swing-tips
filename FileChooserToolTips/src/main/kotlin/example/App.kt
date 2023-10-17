@@ -58,9 +58,10 @@ fun makeUI(): Component {
   }
 }
 
-fun descendants(parent: Container): List<Component> = parent.components
-  .filterIsInstance<Container>()
-  .flatMap { listOf(it) + descendants(it) }
+fun descendants(parent: Container): List<Component> =
+  parent.components
+    .filterIsInstance<Container>()
+    .flatMap { listOf(it) + descendants(it) }
 
 private class TooltipListCellRenderer<E> : ListCellRenderer<E> {
   private val renderer = DefaultListCellRenderer()
@@ -99,7 +100,10 @@ private class TooltipTableCellRenderer : TableCellRenderer {
     return c
   }
 
-  private fun isClipped(label: JLabel, viewR: Rectangle): Boolean {
+  private fun isClipped(
+    label: JLabel,
+    viewR: Rectangle,
+  ): Boolean {
     val iconR = Rectangle()
     val textR = Rectangle()
     val str = SwingUtilities.layoutCompoundLabel(

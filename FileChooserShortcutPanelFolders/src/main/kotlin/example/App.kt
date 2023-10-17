@@ -53,9 +53,10 @@ fun makeUI(): Component {
   }
 }
 
-fun descendants(parent: Container): List<Component> = parent.components
-  .filterIsInstance<Container>()
-  .flatMap { listOf(it) + descendants(it) }
+fun descendants(parent: Container): List<Component> =
+  parent.components
+    .filterIsInstance<Container>()
+    .flatMap { listOf(it) + descendants(it) }
 
 fun main() {
   EventQueue.invokeLater {

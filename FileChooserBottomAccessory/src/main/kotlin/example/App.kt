@@ -82,11 +82,12 @@ private class EncodingFileChooserUI(chooser: JFileChooser) : MetalFileChooserUI(
     val bottomPanel = bottomPanel
 
     val label = object : JLabel("Encoding:") {
-      override fun getPreferredSize() = SwingUtils.descendants(bottomPanel)
-        .filterIsInstance<JLabel>()
-        .firstOrNull()
-        ?.preferredSize
-        ?: super.getPreferredSize()
+      override fun getPreferredSize() =
+        SwingUtils.descendants(bottomPanel)
+          .filterIsInstance<JLabel>()
+          .firstOrNull()
+          ?.preferredSize
+          ?: super.getPreferredSize()
     }
     label.setDisplayedMnemonic('E')
     label.labelFor = combo
@@ -111,9 +112,10 @@ private class EncodingFileChooserUI(chooser: JFileChooser) : MetalFileChooserUI(
 }
 
 object SwingUtils {
-  fun descendants(parent: Container): List<Component> = parent.components
-    .filterIsInstance<Container>()
-    .flatMap { listOf(it) + descendants(it) }
+  fun descendants(parent: Container): List<Component> =
+    parent.components
+      .filterIsInstance<Container>()
+      .flatMap { listOf(it) + descendants(it) }
 }
 
 fun main() {
