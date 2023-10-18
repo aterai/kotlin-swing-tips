@@ -36,7 +36,10 @@ fun makeUI(): Component {
 }
 
 private class ProgressTabbedPane : JTabbedPane() {
-  override fun addTab(title: String, content: Component) {
+  override fun addTab(
+    title: String,
+    content: Component,
+  ) {
     super.addTab(title, JLabel("Loading..."))
     val bar = JProgressBar()
     val currentIndex = tabCount - 1

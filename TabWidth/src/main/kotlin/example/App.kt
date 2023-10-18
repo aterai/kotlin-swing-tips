@@ -13,13 +13,19 @@ fun makeUI(): Component {
       super.updateUI()
       val tmp = if (ui is WindowsTabbedPaneUI) {
         object : WindowsTabbedPaneUI() {
-          override fun calculateTabWidth(tabPlacement: Int, tabIndex: Int, metrics: FontMetrics) =
-            MIN_TAB_WIDTH.coerceAtLeast(super.calculateTabWidth(tabPlacement, tabIndex, metrics))
+          override fun calculateTabWidth(
+            tabPlacement: Int,
+            tabIndex: Int,
+            metrics: FontMetrics,
+          ) = MIN_TAB_WIDTH.coerceAtLeast(super.calculateTabWidth(tabPlacement, tabIndex, metrics))
         }
       } else {
         object : BasicTabbedPaneUI() {
-          override fun calculateTabWidth(tabPlacement: Int, tabIndex: Int, metrics: FontMetrics) =
-            MIN_TAB_WIDTH.coerceAtLeast(super.calculateTabWidth(tabPlacement, tabIndex, metrics))
+          override fun calculateTabWidth(
+            tabPlacement: Int,
+            tabIndex: Int,
+            metrics: FontMetrics,
+          ) = MIN_TAB_WIDTH.coerceAtLeast(super.calculateTabWidth(tabPlacement, tabIndex, metrics))
         }
       }
       setUI(tmp)
