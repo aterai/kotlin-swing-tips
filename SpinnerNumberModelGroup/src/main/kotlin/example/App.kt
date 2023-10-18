@@ -60,7 +60,10 @@ private class SpinnerNumberModelGroup(private val expectedSum: Int) {
     updating = false
   }
 
-  private fun distributeRemove(delta: Int, source: SpinnerNumberModel) {
+  private fun distributeRemove(
+    delta: Int,
+    source: SpinnerNumberModel,
+  ) {
     var counter = 0
     var remaining = delta
     while (remaining > 0) {
@@ -87,7 +90,10 @@ private class SpinnerNumberModelGroup(private val expectedSum: Int) {
     }
   }
 
-  private fun distributeAdd(delta: Int, source: SpinnerNumberModel) {
+  private fun distributeAdd(
+    delta: Int,
+    source: SpinnerNumberModel,
+  ) {
     var counter = 0
     var remaining = -delta
     while (remaining > 0) {

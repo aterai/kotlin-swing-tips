@@ -64,11 +64,15 @@ fun makeUI(): Component {
   }
 }
 
-private fun descendants(parent: Container): List<Component> = parent.components
-  .filterIsInstance<Container>()
-  .flatMap { listOf(it) + descendants(it) }
+private fun descendants(parent: Container): List<Component> =
+  parent.components
+    .filterIsInstance<Container>()
+    .flatMap { listOf(it) + descendants(it) }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)
@@ -80,7 +84,10 @@ private class SpinnerLayout : LayoutManager {
   private var previousButton: Component? = null
   private var editor: Component? = null
 
-  override fun addLayoutComponent(name: String, c: Component) {
+  override fun addLayoutComponent(
+    name: String,
+    c: Component,
+  ) {
     when (name) {
       "Next" -> nextButton = c
       "Previous" -> previousButton = c
@@ -160,7 +167,13 @@ private class SpinnerLayout : LayoutManager {
   companion object {
     private fun preferredSize(c: Component?) = c?.preferredSize ?: Dimension()
 
-    private fun setBounds(c: Component?, x: Int, y: Int, width: Int, height: Int) {
+    private fun setBounds(
+      c: Component?,
+      x: Int,
+      y: Int,
+      width: Int,
+      height: Int,
+    ) {
       c?.setBounds(x, y, width, height)
     }
   }
@@ -181,7 +194,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd
