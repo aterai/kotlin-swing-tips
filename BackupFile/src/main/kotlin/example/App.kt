@@ -156,7 +156,10 @@ private open class BackgroundTask(
   }
 
   @Throws(IOException::class)
-  private fun renameAndBackup(file: File, newFileName: String): File? {
+  private fun renameAndBackup(
+    file: File,
+    newFileName: String,
+  ): File? {
     var simpleRename = false
     var testFile: File? = null
     for (i in 1..oldIndex) {
@@ -225,12 +228,20 @@ private open class BackgroundTask(
   }
 
   companion object {
-    fun makeMessage(text: String?, type: MessageType) = Message(text, type)
+    fun makeMessage(
+      text: String?,
+      type: MessageType,
+    ) = Message(text, type)
 
-    private fun makeBackupFileName(name: String, num: Int) = "%s.%d~".format(name, num)
+    private fun makeBackupFileName(
+      name: String,
+      num: Int,
+    ) = "%s.%d~".format(name, num)
 
-    private fun createBackupFile(file: File, idx: Int) =
-      File(file.parentFile, makeBackupFileName(file.name, idx))
+    private fun createBackupFile(
+      file: File,
+      idx: Int,
+    ) = File(file.parentFile, makeBackupFileName(file.name, idx))
   }
 }
 

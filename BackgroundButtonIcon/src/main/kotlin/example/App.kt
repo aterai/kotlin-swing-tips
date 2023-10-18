@@ -10,12 +10,19 @@ private const val TXT = "***********************"
 private const val LINE_WIDTH = 1
 private const val BI_GAP = 2
 
-private fun makeButton(title: String, color: Color, first: Boolean): AbstractButton {
+private fun makeButton(
+  title: String,
+  color: Color,
+  first: Boolean,
+): AbstractButton {
   // https://java-swing-tips.blogspot.com/2008/11/rounded-corner-jbutton.html
   val b = object : JToggleButton(title) {
     private val icon = ArrowToggleButtonBarCellIcon()
 
-    override fun contains(x: Int, y: Int) = icon.shape?.contains(Point(x, y)) == true
+    override fun contains(
+      x: Int,
+      y: Int,
+    ) = icon.shape?.contains(Point(x, y)) == true
 
     override fun getPreferredSize() = Dimension(icon.iconWidth, icon.iconHeight)
 
@@ -25,7 +32,12 @@ private fun makeButton(title: String, color: Color, first: Boolean): AbstractBut
     }
   }
   b.icon = object : Icon {
-    override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+    override fun paintIcon(
+      c: Component,
+      g: Graphics,
+      x: Int,
+      y: Int,
+    ) {
       g.color = Color.GRAY
       g.drawOval(x, y, iconWidth, iconHeight)
     }
@@ -88,7 +100,12 @@ private class ArrowToggleButtonBarCellIcon : Icon {
   var shape: Shape? = null
     private set
 
-  fun makeShape(parent: Container, c: Component, x: Int, y: Int): Shape {
+  fun makeShape(
+    parent: Container,
+    c: Component,
+    x: Int,
+    y: Int,
+  ): Shape {
     val w = c.width - 1
     val h = c.height - 1
     val h2 = (h * .5).roundToInt().toDouble()
@@ -108,7 +125,12 @@ private class ArrowToggleButtonBarCellIcon : Icon {
     return AffineTransform.getTranslateInstance(tx, ty).createTransformedShape(p)
   }
 
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val parent = c.parent ?: return
     shape = makeShape(parent, c, x, y)
     var bgc = parent.background
