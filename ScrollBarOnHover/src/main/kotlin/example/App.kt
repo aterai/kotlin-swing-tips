@@ -43,7 +43,10 @@ private fun makeScrollPane(c: JComponent): JScrollPane {
   return scroll
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)
@@ -61,7 +64,10 @@ private class ScrollBarOnHoverLayerUI : LayerUI<JScrollPane>() {
     super.uninstallUI(c)
   }
 
-  override fun processMouseEvent(e: MouseEvent, l: JLayer<out JScrollPane>) {
+  override fun processMouseEvent(
+    e: MouseEvent,
+    l: JLayer<out JScrollPane>,
+  ) {
     val id = e.id
     if (id == MouseEvent.MOUSE_ENTERED) {
       l.view.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS

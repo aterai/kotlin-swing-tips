@@ -54,7 +54,10 @@ private class ScrollTabsAction(
     }
   }
 
-  private fun scrollTabAt(tabbedPane: JTabbedPane, index: Int) {
+  private fun scrollTabAt(
+    tabbedPane: JTabbedPane,
+    index: Int,
+  ) {
     var cmp: Component? = null
     for (c in tabbedPane.components) {
       if ("TabbedPane.scrollableViewport" == c.name) {

@@ -34,7 +34,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun addRepeatHandler(button: JButton, action: Action) {
+private fun addRepeatHandler(
+  button: JButton,
+  action: Action,
+) {
   val handler = ActionRepeatHandler(action)
   button.addActionListener(handler)
   button.addMouseListener(handler)

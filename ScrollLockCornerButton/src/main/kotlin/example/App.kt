@@ -53,7 +53,10 @@ fun makeUI(): Component {
   }
 }
 
-fun scrollLock(scroll: JScrollPane, lock: Boolean) {
+fun scrollLock(
+  scroll: JScrollPane,
+  lock: Boolean,
+) {
   scroll.isWheelScrollingEnabled = !lock
   scroll.viewport.view.also {
     it.isEnabled = !lock
@@ -87,13 +90,19 @@ private class DisableInputLayerUI<V : Component> : LayerUI<V>() {
     super.uninstallUI(c)
   }
 
-  override fun eventDispatched(e: AWTEvent, l: JLayer<out V>) {
+  override fun eventDispatched(
+    e: AWTEvent,
+    l: JLayer<out V>,
+  ) {
     if (isBlocking && e is InputEvent) {
       e.consume()
     }
   }
 
-  override fun applyPropertyChange(e: PropertyChangeEvent, l: JLayer<out V>) {
+  override fun applyPropertyChange(
+    e: PropertyChangeEvent,
+    l: JLayer<out V>,
+  ) {
     if (CMD_REPAINT == e.propertyName) {
       l.glassPane.isVisible = e.newValue == true
     }

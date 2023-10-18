@@ -46,7 +46,12 @@ private class ScrollBackToTopIcon : Icon {
   private val rolloverColor = Color(0xAA_FF_AF_64.toInt(), true)
   private val arrowColor = Color(0xAA_64_64_64.toInt(), true)
 
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     g2.translate(x, y)
@@ -88,7 +93,10 @@ private class ScrollBackToTopLayerUI<V : JScrollPane> : LayerUI<V>() {
   }
   private val buttonRect = Rectangle(button.preferredSize)
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     super.paint(g, c)
     val scroll = (c as? JLayer<*>)?.view as? JScrollPane ?: return
     updateButtonRect(scroll)
@@ -116,7 +124,10 @@ private class ScrollBackToTopLayerUI<V : JScrollPane> : LayerUI<V>() {
     super.uninstallUI(c)
   }
 
-  override fun processMouseEvent(e: MouseEvent, l: JLayer<out V>) {
+  override fun processMouseEvent(
+    e: MouseEvent,
+    l: JLayer<out V>,
+  ) {
     val scroll = l.view
     val r = scroll.viewport.viewRect
     val p = SwingUtilities.convertPoint(e.component, e.point, scroll)
@@ -131,7 +142,10 @@ private class ScrollBackToTopLayerUI<V : JScrollPane> : LayerUI<V>() {
     }
   }
 
-  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out V>) {
+  override fun processMouseMotionEvent(
+    e: MouseEvent,
+    l: JLayer<out V>,
+  ) {
     val p = SwingUtilities.convertPoint(e.component, e.point, l.view)
     mousePt.location = p
     l.glassPane.isVisible = buttonRect.contains(mousePt)
