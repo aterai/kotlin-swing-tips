@@ -184,7 +184,12 @@ private data class ListItem(val title: String, val color: Color) {
 }
 
 private class ColorIcon(private val color: Color) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = color
@@ -231,7 +236,10 @@ private class ClearSelectionListener : MouseInputAdapter() {
       list.selectionModel.leadSelectionIndex = -1
     }
 
-    private fun <E> contains(list: JList<E>, pt: Point): Boolean {
+    private fun <E> contains(
+      list: JList<E>,
+      pt: Point,
+    ): Boolean {
       for (i in 0 until list.model.size) {
         if (list.getCellBounds(i, i).contains(pt)) {
           return true

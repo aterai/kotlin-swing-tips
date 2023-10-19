@@ -14,15 +14,20 @@ fun makeUI(): Component {
     arrayOf(3, "", false),
   )
   val model = object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int) = when (column) {
-      0 -> Number::class.java
-      1 -> String::class.java
-      2 -> Boolean::class.javaObjectType
-      else -> super.getColumnClass(column)
-    }
+    override fun getColumnClass(column: Int) =
+      when (column) {
+        0 -> Number::class.java
+        1 -> String::class.java
+        2 -> Boolean::class.javaObjectType
+        else -> super.getColumnClass(column)
+      }
   }
   val table = object : JTable(model) {
-    override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
+    override fun prepareRenderer(
+      tcr: TableCellRenderer,
+      row: Int,
+      column: Int,
+    ): Component {
       val c = super.prepareRenderer(tcr, row, column)
       when {
         isRowSelected(row) -> {
@@ -87,7 +92,11 @@ private class TablePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTable) {
       delete.isEnabled = c.selectedRowCount > 0
       super.show(c, x, y)

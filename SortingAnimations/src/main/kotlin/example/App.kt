@@ -158,28 +158,40 @@ private enum class SortAlgorithms(private val description: String) {
 
 private enum class GenerateInputs {
   RANDOM {
-    override fun generate(array: MutableList<Double>, n: Int) {
+    override fun generate(
+      array: MutableList<Double>,
+      n: Int,
+    ) {
       for (i in 0 until n) {
         array.add(Math.random())
       }
     }
   },
   ASCENDING {
-    override fun generate(array: MutableList<Double>, n: Int) {
+    override fun generate(
+      array: MutableList<Double>,
+      n: Int,
+    ) {
       for (i in 0 until n) {
         array.add(i / n.toDouble())
       }
     }
   },
   DESCENDING {
-    override fun generate(array: MutableList<Double>, n: Int) {
+    override fun generate(
+      array: MutableList<Double>,
+      n: Int,
+    ) {
       for (i in 0 until n) {
         array.add(1.0 - i / n.toDouble())
       }
     }
   }, ;
 
-  abstract fun generate(array: MutableList<Double>, n: Int)
+  abstract fun generate(
+    array: MutableList<Double>,
+    n: Int,
+  )
 }
 
 // SortAnim.java -- Animate sorting algorithms
@@ -216,7 +228,10 @@ private open class SortingTask(
   }
 
   @Throws(InterruptedException::class)
-  private fun swap(i: Int, j: Int) {
+  private fun swap(
+    i: Int,
+    j: Int,
+  ) {
     if (isCancelled) {
       throw InterruptedException()
     }
@@ -285,7 +300,10 @@ private open class SortingTask(
   }
 
   @Throws(InterruptedException::class)
-  private fun siftdown(l: Int, u: Int) {
+  private fun siftdown(
+    l: Int,
+    u: Int,
+  ) {
     var i = l
     var c: Int
     @Suppress("LoopWithTooManyJumpStatements")
@@ -321,7 +339,10 @@ private open class SortingTask(
   }
 
   @Throws(InterruptedException::class)
-  private fun qsort(l: Int, u: Int) {
+  private fun qsort(
+    l: Int,
+    u: Int,
+  ) {
     if (l >= u) {
       return
     }
@@ -337,7 +358,10 @@ private open class SortingTask(
   }
 
   @Throws(InterruptedException::class)
-  private fun qsort2(l: Int, u: Int) {
+  private fun qsort2(
+    l: Int,
+    u: Int,
+  ) {
     if (l >= u) {
       return
     }

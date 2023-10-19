@@ -51,7 +51,12 @@ private class EmptyIcon : Icon {
   var width = 5
   var height = 5
 
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     // do nothing
   }
 
@@ -113,7 +118,10 @@ private class SortIconLayoutHeaderRenderer(private val component: Component) : T
     private const val ASCENDING = "Table.ascendingSortIcon"
     private const val DESCENDING = "Table.descendingSortIcon"
 
-    fun getColumnSortOrder(table: JTable?, column: Int): SortOrder {
+    fun getColumnSortOrder(
+      table: JTable?,
+      column: Int,
+    ): SortOrder {
       var rv = SortOrder.UNSORTED
       if (table != null && table.rowSorter != null) {
         val sortKeys = table.rowSorter.sortKeys
@@ -127,7 +135,10 @@ private class SortIconLayoutHeaderRenderer(private val component: Component) : T
   }
 }
 
-fun getIconUri(icon: Icon, c: Component): URI? {
+fun getIconUri(
+  icon: Icon,
+  c: Component,
+): URI? {
   val w = icon.iconWidth
   val h = icon.iconHeight
   val img = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
@@ -159,7 +170,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd
