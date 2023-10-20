@@ -12,7 +12,10 @@ fun makeUI(): Component {
     arrayOf("bbb", "abcdefghijklmnopqrstuvwxyz----abcdefghijklmnopqrstuvwxyz"),
   )
   val model = object : DefaultTableModel(data, columnNames) {
-    override fun isCellEditable(row: Int, column: Int) = false
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = false
 
     override fun getColumnClass(column: Int) = String::class.java
   }

@@ -108,7 +108,11 @@ private object TrayIconPopupMenuUtils {
     return gc
   }
 
-  fun adjustPopupLocation(popup: JPopupMenu, xpt: Int, ypt: Int): Point {
+  fun adjustPopupLocation(
+    popup: JPopupMenu,
+    xpt: Int,
+    ypt: Int,
+  ): Point {
     val p = Point(xpt, ypt)
     if (GraphicsEnvironment.isHeadless()) {
       return p
@@ -159,7 +163,10 @@ private class TrayIconPopupMenuHandler(
 private object LookAndFeelUtils {
   private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd

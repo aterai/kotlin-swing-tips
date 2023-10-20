@@ -75,22 +75,29 @@ private class CustomEditorKit : StyledEditorKit() {
 }
 
 private class CustomViewFactory : ViewFactory {
-  override fun create(elem: Element) = when (elem.name) {
-    AbstractDocument.ParagraphElementName -> ParagraphWithEopmView(elem)
-    AbstractDocument.SectionElementName -> BoxView(elem, View.Y_AXIS)
-    StyleConstants.ComponentElementName -> ComponentView(elem)
-    StyleConstants.IconElementName -> IconView(elem)
-    else -> WhitespaceLabelView(elem)
-  }
+  override fun create(elem: Element) =
+    when (elem.name) {
+      AbstractDocument.ParagraphElementName -> ParagraphWithEopmView(elem)
+      AbstractDocument.SectionElementName -> BoxView(elem, View.Y_AXIS)
+      StyleConstants.ComponentElementName -> ComponentView(elem)
+      StyleConstants.IconElementName -> IconView(elem)
+      else -> WhitespaceLabelView(elem)
+    }
 }
 
 private class ParagraphWithEopmView(elem: Element) : ParagraphView(elem) {
-  override fun paint(g: Graphics, allocation: Shape) {
+  override fun paint(
+    g: Graphics,
+    allocation: Shape,
+  ) {
     super.paint(g, allocation)
     paintCustomParagraph(g, allocation)
   }
 
-  private fun paintCustomParagraph(g: Graphics, a: Shape) {
+  private fun paintCustomParagraph(
+    g: Graphics,
+    a: Shape,
+  ) {
     runCatching {
       val paragraph = modelToView(endOffset, a, Position.Bias.Backward)
       val r = paragraph?.bounds ?: a.bounds
@@ -112,7 +119,10 @@ private class ParagraphWithEopmView(elem: Element) : ParagraphView(elem) {
 }
 
 private class WhitespaceLabelView(elem: Element) : LabelView(elem) {
-  override fun paint(g: Graphics, a: Shape) {
+  override fun paint(
+    g: Graphics,
+    a: Shape,
+  ) {
     super.paint(g, a)
     val g2 = g.create() as? Graphics2D ?: return
     val alloc = if (a is Rectangle) a else a.bounds

@@ -115,28 +115,33 @@ private class FocusCaret(
     isSelectionVisible = true // addHighlight
   }
 
-  override fun getSelectionPainter() = if (component.hasFocus()) {
-    selectionPainter
-  } else {
-    nonFocusPainter
-  }
+  override fun getSelectionPainter() =
+    if (component.hasFocus()) {
+      selectionPainter
+    } else {
+      nonFocusPainter
+    }
 }
 
 private class MyEditorKit : StyledEditorKit(), ViewFactory {
   override fun getViewFactory() = this
 
-  override fun create(elem: Element) = when (elem.name ?: LabelView(elem)) {
-    AbstractDocument.ContentElementName -> LabelView(elem)
-    AbstractDocument.ParagraphElementName -> ParagraphWithEndMarkView(elem)
-    AbstractDocument.SectionElementName -> BoxView(elem, View.Y_AXIS)
-    StyleConstants.ComponentElementName -> ComponentView(elem)
-    StyleConstants.IconElementName -> IconView(elem)
-    else -> LabelView(elem)
-  }
+  override fun create(elem: Element) =
+    when (elem.name ?: LabelView(elem)) {
+      AbstractDocument.ContentElementName -> LabelView(elem)
+      AbstractDocument.ParagraphElementName -> ParagraphWithEndMarkView(elem)
+      AbstractDocument.SectionElementName -> BoxView(elem, View.Y_AXIS)
+      StyleConstants.ComponentElementName -> ComponentView(elem)
+      StyleConstants.IconElementName -> IconView(elem)
+      else -> LabelView(elem)
+    }
 }
 
 private class ParagraphWithEndMarkView(elem: Element) : ParagraphView(elem) {
-  override fun paint(g: Graphics, allocation: Shape) {
+  override fun paint(
+    g: Graphics,
+    allocation: Shape,
+  ) {
     super.paint(g, allocation)
     runCatching {
       val para = modelToView(endOffset, allocation, Bias.Backward)

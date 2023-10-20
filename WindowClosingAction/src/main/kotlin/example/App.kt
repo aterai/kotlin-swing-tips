@@ -52,11 +52,12 @@ private class ExitAction : AbstractAction("Exit") {
     }
   }
 
-  private fun getToolBarRoot(b: JToolBar) = if ((b.ui as? BasicToolBarUI)?.isFloating == true) {
-    SwingUtilities.getWindowAncestor(b).owner
-  } else {
-    SwingUtilities.getRoot(b)
-  }
+  private fun getToolBarRoot(b: JToolBar) =
+    if ((b.ui as? BasicToolBarUI)?.isFloating == true) {
+      SwingUtilities.getWindowAncestor(b).owner
+    } else {
+      SwingUtilities.getRoot(b)
+    }
 }
 
 fun main() {
