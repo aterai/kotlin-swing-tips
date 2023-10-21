@@ -21,13 +21,17 @@ fun makeUI(): Component {
     arrayOf("fff", false),
   )
   val model = object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int) = if (column == 1) {
-      Boolean::class.javaObjectType
-    } else {
-      String::class.java
-    }
+    override fun getColumnClass(column: Int) =
+      if (column == 1) {
+        Boolean::class.javaObjectType
+      } else {
+        String::class.java
+      }
 
-    override fun isCellEditable(row: Int, column: Int) = column == 1
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = column == 1
   }
   val table = object : JTable(model) {
     override fun updateUI() {

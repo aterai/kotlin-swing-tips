@@ -111,7 +111,12 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
 private data class ListItem(val title: String, val icon: Icon)
 
 private class ColorIcon(private val color: Color) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = color
@@ -327,7 +332,10 @@ private class EditableList(model: DefaultListModel<ListItem>) : JList<ListItem>(
       list.selectionModel.leadSelectionIndex = -1
     }
 
-    private fun contains(list: JList<*>, pt: Point): Boolean {
+    private fun contains(
+      list: JList<*>,
+      pt: Point,
+    ): Boolean {
       for (i in 0 until list.model.size) {
         if (list.getCellBounds(i, i).contains(pt)) {
           return true
@@ -359,7 +367,11 @@ private class TextComponentPopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTextComponent) {
       val hasSelectedText = c.selectedText != null
       for (menuElement in subElements) {
@@ -379,22 +391,24 @@ private class WrapEditorKit : StyledEditorKit() {
 }
 
 private class WrapColumnFactory : ViewFactory {
-  override fun create(element: Element) = when (element.name) {
-    AbstractDocument.ContentElementName -> WrapLabelView(element)
-    AbstractDocument.ParagraphElementName -> ParagraphView(element)
-    AbstractDocument.SectionElementName -> BoxView(element, View.Y_AXIS)
-    StyleConstants.ComponentElementName -> ComponentView(element)
-    StyleConstants.IconElementName -> IconView(element)
-    else -> LabelView(element)
-  }
+  override fun create(element: Element) =
+    when (element.name) {
+      AbstractDocument.ContentElementName -> WrapLabelView(element)
+      AbstractDocument.ParagraphElementName -> ParagraphView(element)
+      AbstractDocument.SectionElementName -> BoxView(element, View.Y_AXIS)
+      StyleConstants.ComponentElementName -> ComponentView(element)
+      StyleConstants.IconElementName -> IconView(element)
+      else -> LabelView(element)
+    }
 }
 
 private class WrapLabelView(element: Element?) : LabelView(element) {
-  override fun getMinimumSpan(axis: Int) = when (axis) {
-    X_AXIS -> 0f
-    Y_AXIS -> super.getMinimumSpan(axis)
-    else -> throw IllegalArgumentException("Invalid axis: $axis")
-  }
+  override fun getMinimumSpan(axis: Int) =
+    when (axis) {
+      X_AXIS -> 0f
+      Y_AXIS -> super.getMinimumSpan(axis)
+      else -> throw IllegalArgumentException("Invalid axis: $axis")
+    }
 }
 
 fun main() {

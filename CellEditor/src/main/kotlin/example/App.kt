@@ -8,7 +8,10 @@ import javax.swing.table.DefaultTableModel
 fun makeUI(): Component {
   val modelCheck = JCheckBox("isCellEditable return false")
   val model = object : RowDataModel() {
-    override fun isCellEditable(row: Int, col: Int) = !modelCheck.isSelected
+    override fun isCellEditable(
+      row: Int,
+      col: Int,
+    ) = !modelCheck.isSelected
   }
   model.addRowData(RowData("Name 1", "Comment"))
   model.addRowData(RowData("Name 2", "Test"))
@@ -54,7 +57,10 @@ private open class RowDataModel : DefaultTableModel() {
     number++
   }
 
-  override fun isCellEditable(row: Int, col: Int) = COLUMN_ARRAY[col].isEditable
+  override fun isCellEditable(
+    row: Int,
+    col: Int,
+  ) = COLUMN_ARRAY[col].isEditable
 
   override fun getColumnClass(column: Int) = COLUMN_ARRAY[column].columnClass
 

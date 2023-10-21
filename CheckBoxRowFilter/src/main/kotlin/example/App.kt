@@ -22,7 +22,10 @@ fun makeUI(): Component {
   selector.autoCreateRowSorter = true
   selector.columnModel.getColumn(0).maxWidth = 32
   val viewer = object : JTable(model) {
-    override fun isCellEditable(row: Int, column: Int) = false
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = false
   }
   viewer.autoCreateRowSorter = true
   val cm = viewer.columnModel

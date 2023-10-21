@@ -19,7 +19,10 @@ fun makeUI(): Component {
   table.model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
 
-    override fun isCellEditable(row: Int, column: Int) = column == 0
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = column == 0
   }
   table.autoCreateRowSorter = true
   table.rowHeight = 20
@@ -30,7 +33,12 @@ fun makeUI(): Component {
   }
 }
 
-fun makeAnimatedIcon(url: URL?, table: JTable, row: Int, col: Int): Icon {
+fun makeAnimatedIcon(
+  url: URL?,
+  table: JTable,
+  row: Int,
+  col: Int,
+): Icon {
   return if (url == null) {
     UIManager.getIcon("html.missingImage")
   } else {

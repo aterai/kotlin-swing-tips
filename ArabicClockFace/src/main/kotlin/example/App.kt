@@ -150,7 +150,11 @@ private class AnalogClock : JPanel() {
     g2.dispose()
   }
 
-  private fun paintClockNumbers(g2: Graphics2D, radius: Double, hourMarkerLen: Double) {
+  private fun paintClockNumbers(
+    g2: Graphics2D,
+    radius: Double,
+    hourMarkerLen: Double,
+  ) {
     val at = AffineTransform.getRotateInstance(0.0)
     g2.color = Color.WHITE
     val font = g2.font
@@ -184,6 +188,9 @@ private class AnalogClock : JPanel() {
     }
   }
 
-  private fun getTextLayout(txt: String, font: Font, frc: FontRenderContext) =
-    TextLayout(txt, font, frc)
+  private fun getTextLayout(
+    txt: String,
+    font: Font,
+    frc: FontRenderContext,
+  ) = TextLayout(txt, font, frc)
 }

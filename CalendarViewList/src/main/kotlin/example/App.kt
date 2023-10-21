@@ -200,17 +200,19 @@ private class CalendarListRenderer : ListCellRenderer<LocalDate> {
     return c
   }
 
-  private fun getForegroundColor(ld: LocalDate) = if (ld.isEqual(realLocalDate)) {
-    Color(0x64_FF_64)
-  } else {
-    getDayOfWeekColor(ld.dayOfWeek)
-  }
+  private fun getForegroundColor(ld: LocalDate) =
+    if (ld.isEqual(realLocalDate)) {
+      Color(0x64_FF_64)
+    } else {
+      getDayOfWeekColor(ld.dayOfWeek)
+    }
 
-  private fun getDayOfWeekColor(dow: DayOfWeek) = when (dow) {
-    DayOfWeek.SUNDAY -> Color(0xFF_64_64)
-    DayOfWeek.SATURDAY -> Color(0x64_64_FF)
-    else -> Color.BLACK
-  }
+  private fun getDayOfWeekColor(dow: DayOfWeek) =
+    when (dow) {
+      DayOfWeek.SUNDAY -> Color(0xFF_64_64)
+      DayOfWeek.SATURDAY -> Color(0x64_64_FF)
+      else -> Color.BLACK
+    }
 }
 
 private class CalendarViewListModel(date: LocalDate) : AbstractListModel<LocalDate>() {
