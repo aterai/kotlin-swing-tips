@@ -110,7 +110,9 @@ private class FileDropTargetListener : DropTargetAdapter() {
         e.dropComplete(false)
       }
     } else {
-      val textArea = e.source as? JTextComponent
+      val src = e.source
+      val c = (src as? DropTarget)?.component ?: src
+      val textArea = c as? JTextComponent
       val textHandler = textArea?.transferHandler
       textHandler?.importData(textArea, transferable)
     }
