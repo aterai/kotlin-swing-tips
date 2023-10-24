@@ -4,6 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.plaf.BorderUIResource
 import javax.swing.plaf.ColorUIResource
+import javax.swing.plaf.DimensionUIResource
 import javax.swing.table.DefaultTableModel
 
 fun makeUI(): Component {
@@ -13,8 +14,14 @@ fun makeUI(): Component {
       setSelectionForeground(reset)
       setSelectionBackground(reset)
       super.updateUI()
-      val showGrid = UIManager.getLookAndFeelDefaults()["Table.showGrid"] as? Boolean
-      setShowGrid(showGrid == null || showGrid)
+      val def = UIManager.getLookAndFeelDefaults()
+      val showGrid = def["Table.showGrid"]
+      val gridColor = def.getColor("Table.gridColor")
+      if (showGrid == null && gridColor != null) {
+        setShowGrid(true)
+        setIntercellSpacing(DimensionUIResource(1, 1))
+        createDefaultRenderers()
+      }
     }
   }
   table.autoResizeMode = JTable.AUTO_RESIZE_OFF

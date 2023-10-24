@@ -18,16 +18,7 @@ fun makeUI(): Component {
   scroll1.setRowHeaderView(LineNumberView(textArea))
   textArea.border = BorderFactory.createEmptyBorder(0, 2, 0, 0)
 
-  val table = object : JTable(500, 3) {
-    override fun updateUI() {
-      val reset = ColorUIResource(Color.RED)
-      setSelectionForeground(reset)
-      setSelectionBackground(reset)
-      super.updateUI()
-      val showGrid = UIManager.getLookAndFeelDefaults().get("Table.showGrid")
-      setShowGrid(showGrid as? Boolean ?: true)
-    }
-  }
+  val table = object : JTable(500, 3)
   val scroll2 = JScrollPane(table)
   SwingUtilities.invokeLater { table.scrollRectToVisible(table.getCellRect(500, 0, true)) }
 
