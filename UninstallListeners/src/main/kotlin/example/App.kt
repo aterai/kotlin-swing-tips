@@ -24,8 +24,8 @@ fun makeUI(): Component {
     override fun updateUI() {
       super.updateUI()
       val slider = this
-      val pa = PrivilegedAction<Void> {
-        kotlin.runCatching {
+      val pa = PrivilegedAction<Unit?> {
+        runCatching {
           val uiClass = BasicSliderUI::class.java
           val uninstall = uiClass.getDeclaredMethod(
             "uninstallListeners",
@@ -40,7 +40,6 @@ fun makeUI(): Component {
           uninstallKbdActs.isAccessible = true
           uninstallKbdActs.invoke(getUI(), slider)
         }
-        null
       }
       AccessController.doPrivileged(pa)
     }

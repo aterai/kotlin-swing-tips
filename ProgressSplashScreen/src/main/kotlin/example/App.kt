@@ -55,9 +55,9 @@ private class MissingIcon : Icon {
   override fun getIconHeight() = 160
 }
 
-private open class BackgroundTask : SwingWorker<Void, Void>() {
+private open class BackgroundTask : SwingWorker<Unit?, Unit?>() {
   @Throws(InterruptedException::class)
-  override fun doInBackground(): Void? {
+  override fun doInBackground(): Unit? {
     var current = 0
     val lengthOfTask = 120
     while (current < lengthOfTask && !isCancelled) {

@@ -24,7 +24,7 @@ fun makeUI(): Component {
   button.addActionListener { e ->
     (e.source as? JButton)?.isEnabled = false
     val executor = Executors.newCachedThreadPool()
-    object : SwingWorker<Boolean, Void?>() {
+    object : SwingWorker<Boolean, Unit?>() {
       @Throws(InterruptedException::class)
       override fun doInBackground(): Boolean {
         val model = tree.model as? DefaultTreeModel

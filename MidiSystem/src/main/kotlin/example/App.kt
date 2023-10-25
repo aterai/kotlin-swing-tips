@@ -17,9 +17,9 @@ fun makeUI(): Component {
 
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/Mozart_toruko_k.mid")
-  val worker = object : SwingWorker<Void, Long>() {
+  val worker = object : SwingWorker<Unit?, Long>() {
     @Throws(InterruptedException::class)
-    override fun doInBackground(): Void? {
+    override fun doInBackground(): Unit? {
       runCatching {
         MidiSystem.getSequencer().use { sequencer ->
           sequencer.open()
@@ -86,7 +86,7 @@ fun makeUI(): Component {
   }
 }
 
-private fun addHierarchyListener(it: JPanel, worker: SwingWorker<Void, Long>) {
+private fun addHierarchyListener(it: JPanel, worker: SwingWorker<*, *>) {
   it.addHierarchyListener { e ->
     val b = e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L
     if (b && !e.component.isDisplayable) {
