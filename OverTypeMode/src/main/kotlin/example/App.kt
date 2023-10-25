@@ -69,7 +69,7 @@ private class OvertypeTextArea : JTextArea() {
   private inner class OvertypeCaret : DefaultCaret() {
     override fun paint(g: Graphics) {
       if (isVisible) {
-        kotlin.runCatching {
+        runCatching {
           val component = component
           val mapper = component.ui
           val r = mapper.modelToView(component, dot)

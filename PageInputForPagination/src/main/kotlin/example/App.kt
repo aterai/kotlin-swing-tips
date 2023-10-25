@@ -100,7 +100,7 @@ private class TableUpdateTask(max: Int, itemsPerPage: Int) : LoadTask(max, items
       cancel(true)
       return
     }
-    val text = kotlin.runCatching {
+    val text = runCatching {
       get()
     }.onFailure {
       if (it is InterruptedException) {

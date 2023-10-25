@@ -123,7 +123,7 @@ fun main() {
       isVisible = true
       if (SystemTray.isSupported()) {
         defaultCloseOperation = WindowConstants.HIDE_ON_CLOSE
-        kotlin.runCatching {
+        runCatching {
           SystemTray.getSystemTray().add(makeTrayIcon(this))
         }
       }

@@ -87,7 +87,7 @@ private class SpinnerEditor : AbstractCellEditor(), TableCellEditor {
 
   override fun getCellEditorValue(): Any = renderer.spinner.value
 
-  override fun stopCellEditing() = kotlin.runCatching {
+  override fun stopCellEditing() = runCatching {
     renderer.spinner.commitEdit()
     true
   }.onFailure {

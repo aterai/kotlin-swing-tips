@@ -57,7 +57,7 @@ private fun initActionInputMap(editor: JTextComponent) {
   val mapKey = "insert-horizontal-tab"
   val a = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      kotlin.runCatching {
+      runCatching {
         editor.document.insertString(editor.caretPosition, "\t", null)
       }.onFailure {
         UIManager.getLookAndFeel().provideErrorFeedback(editor)

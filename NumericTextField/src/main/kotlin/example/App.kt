@@ -103,7 +103,7 @@ private class IntegerDocument : PlainDocument() {
   @Throws(BadLocationException::class)
   private fun checkInput(proposedValue: String, offset: Int) {
     if (proposedValue.isNotEmpty()) {
-      kotlin.runCatching {
+      runCatching {
         proposedValue.toInt()
       }.onFailure {
         throw BadLocationException(proposedValue, offset)
