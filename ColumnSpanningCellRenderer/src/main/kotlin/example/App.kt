@@ -16,7 +16,10 @@ fun makeUI(): Component {
     arrayOf(makeOptionPaneDescription("warning"), see),
   )
   val model = object : DefaultTableModel(data, columnNames) {
-    override fun isCellEditable(row: Int, column: Int) = false
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = false
   }
   val table = object : JTable(model) {
     override fun updateUI() {

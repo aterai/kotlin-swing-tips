@@ -18,11 +18,12 @@ private val data = arrayOf(
 )
 private val columnNames = arrayOf("fixed 1", "fixed 2", "A", "B", "C", "D", "E", "F")
 private val model = object : DefaultTableModel(data, columnNames) {
-  override fun getColumnClass(column: Int) = if (column < FIXED_RANGE) {
-    Number::class.java
-  } else {
-    Any::class.java
-  }
+  override fun getColumnClass(column: Int) =
+    if (column < FIXED_RANGE) {
+      Number::class.java
+    } else {
+      Any::class.java
+    }
 }
 
 private val sorter = TableRowSorter<DefaultTableModel>(model)

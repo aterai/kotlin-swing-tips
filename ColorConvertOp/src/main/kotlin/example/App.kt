@@ -48,7 +48,11 @@ private fun makeMissingImage(): Image {
   return bi
 }
 
-private fun makeLabel(icon: Icon, orgIcon: Icon, str: String): JLabel {
+private fun makeLabel(
+  icon: Icon,
+  orgIcon: Icon,
+  str: String,
+): JLabel {
   val label = JLabel(str, icon, SwingConstants.LEFT)
   val ml = object : MouseAdapter() {
     private var isGray = false
@@ -96,7 +100,11 @@ private fun makeGrayIcon5(img: Image): Icon {
 }
 
 private class GrayImageFilter : RGBImageFilter() {
-  override fun filterRGB(x: Int, y: Int, argb: Int): Int {
+  override fun filterRGB(
+    x: Int,
+    y: Int,
+    argb: Int,
+  ): Int {
     val r = argb shr 16 and 0xFF
     val g = argb shr 8 and 0xFF
     val b = argb and 0xFF
