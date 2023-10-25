@@ -60,7 +60,7 @@ private fun selectMinMax(
   cmd: String,
 ) {
   splitPane.requestFocusInWindow()
-  object : SwingWorker<Void?, Void?>() {
+  object : SwingWorker<Unit?, Unit?>() {
     override fun doInBackground() = null
 
     override fun done() {

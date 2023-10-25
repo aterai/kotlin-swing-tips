@@ -15,7 +15,7 @@ import javax.swing.*
 import javax.swing.table.DefaultTableModel
 
 private val imageId = AtomicInteger(0)
-private val model = FileModel()
+private val model = FileModel
 private val table = JTable(model)
 private val scroll = JScrollPane(table)
 private var tracker: MediaTracker? = null
@@ -83,9 +83,9 @@ fun addImage(path: Path) {
   val mediaTracker = tracker ?: MediaTracker(table)
   tracker = mediaTracker
   mediaTracker.addImage(img, id)
-  object : SwingWorker<Void?, Void?>() {
+  object : SwingWorker<Unit?, Unit?>() {
     @Throws(InterruptedException::class)
-    override fun doInBackground(): Void? {
+    override fun doInBackground(): Unit? {
       mediaTracker.waitForID(id)
       return null
     }
@@ -103,7 +103,7 @@ fun addImage(path: Path) {
   }.execute()
 }
 
-private class FileModel : DefaultTableModel() {
+private object FileModel : DefaultTableModel() {
   private val columnList = listOf(
     ColumnContext("No.", Number::class.java, false),
     ColumnContext("Name", String::class.java, false),

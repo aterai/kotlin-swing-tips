@@ -6,9 +6,9 @@ import javax.imageio.ImageIO
 import javax.swing.*
 
 fun makeUI(): Component {
-  object : SwingWorker<Void, Void>() {
+  object : SwingWorker<Unit?, Unit?>() {
     @Throws(InterruptedException::class)
-    override fun doInBackground(): Void? {
+    override fun doInBackground(): Unit? {
       Thread.sleep(3_000)
       return null
     }
