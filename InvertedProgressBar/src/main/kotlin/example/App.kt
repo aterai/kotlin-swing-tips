@@ -9,7 +9,7 @@ import java.beans.PropertyChangeListener
 import javax.swing.*
 import javax.swing.plaf.LayerUI
 
-private var worker: SwingWorker<String, Void>? = null
+private var worker: SwingWorker<String, Unit?>? = null
 
 fun makeUI(): Component {
   val m = DefaultBoundedRangeModel()
@@ -106,7 +106,7 @@ private fun makePanel2(m: BoundedRangeModel): Component {
   return p2
 }
 
-private class BackgroundTask : SwingWorker<String, Void>() {
+private class BackgroundTask : SwingWorker<String, Unit?>() {
   @Throws(InterruptedException::class)
   override fun doInBackground(): String {
     var current = 0

@@ -40,7 +40,7 @@ fun makeUI(): Component {
     p.add(makePanel(it))
   }
 
-  var worker: SwingWorker<String, Void>? = null
+  var worker: SwingWorker<String, Unit?>? = null
   val button = JButton("Test start")
   button.addActionListener {
     worker?.takeUnless { it.isDone }?.cancel(true)
@@ -142,7 +142,7 @@ private class StripedProgressBarUI(
   }
 }
 
-private class BackgroundTask : SwingWorker<String, Void>() {
+private class BackgroundTask : SwingWorker<String, Unit?>() {
   @Throws(InterruptedException::class)
   public override fun doInBackground(): String {
     Thread.sleep(5000)

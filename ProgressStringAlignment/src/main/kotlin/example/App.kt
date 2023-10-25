@@ -7,7 +7,7 @@ import java.beans.PropertyChangeListener
 import javax.swing.*
 import javax.swing.event.ChangeListener
 
-private var worker: SwingWorker<String, Void>? = null
+private var worker: SwingWorker<String, Unit?>? = null
 
 fun makeUI(): Component {
   val model = DefaultBoundedRangeModel()
@@ -77,7 +77,7 @@ private class StringAlignmentProgressBar(
   override fun createChangeListener() = ChangeListener { label.text = string }
 }
 
-private open class BackgroundTask : SwingWorker<String, Void>() {
+private open class BackgroundTask : SwingWorker<String, Unit?>() {
   @Throws(InterruptedException::class)
   override fun doInBackground(): String {
     var current = 0

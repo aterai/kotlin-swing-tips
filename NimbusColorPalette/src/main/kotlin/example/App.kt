@@ -6,7 +6,7 @@ import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 import javax.swing.*
 
-private var worker: SwingWorker<String, Void>? = null
+private var worker: SwingWorker<String, Unit?>? = null
 
 fun makeUI(): Component {
   val def = UIManager.getLookAndFeelDefaults()
@@ -56,7 +56,7 @@ fun makeUI(): Component {
   return panel
 }
 
-private class BackgroundTask : SwingWorker<String, Void>() {
+private class BackgroundTask : SwingWorker<String, Unit?>() {
   @Throws(InterruptedException::class)
   public override fun doInBackground(): String {
     var current = 0

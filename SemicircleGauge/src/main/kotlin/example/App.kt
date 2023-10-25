@@ -37,7 +37,7 @@ fun makeUI(): Component {
   button.addActionListener {
     button.isEnabled = false
     val lengthOfTask = progress2.maximum - progress2.minimum
-    val worker = object : SwingWorker<String, Void>() {
+    val worker = object : SwingWorker<String, Unit?>() {
       @Throws(InterruptedException::class)
       override fun doInBackground(): String {
         var current = 0

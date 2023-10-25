@@ -50,7 +50,7 @@ fun makeUI(): Component {
   }
 }
 
-private open class BackgroundTask : SwingWorker<String, Void>() {
+private open class BackgroundTask : SwingWorker<String, Unit?>() {
   @Throws(InterruptedException::class)
   public override fun doInBackground(): String {
     Thread.sleep(5000)

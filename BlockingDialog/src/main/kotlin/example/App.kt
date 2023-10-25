@@ -38,7 +38,7 @@ fun makeUI(): Component {
   return panel
 }
 
-open class BackgroundTask : SwingWorker<String, Void?>() {
+open class BackgroundTask : SwingWorker<String, Unit?>() {
   @Throws(InterruptedException::class)
   public override fun doInBackground(): String {
     Thread.sleep(5_000)
