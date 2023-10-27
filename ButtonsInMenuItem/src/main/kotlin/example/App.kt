@@ -78,7 +78,10 @@ private fun makeEditButtonBar(list: List<AbstractButton>): Component {
   return JLayer<Component>(p, EditMenuLayerUI(list[size - 1]))
 }
 
-private fun makeButton(title: String, action: Action): AbstractButton {
+private fun makeButton(
+  title: String,
+  action: Action,
+): AbstractButton {
   val b = JButton(action)
   b.addActionListener { e ->
     val c = e.source
@@ -103,7 +106,12 @@ private fun makeButton(title: String, action: Action): AbstractButton {
 
 // https://ateraimemo.com/Swing/ToggleButtonBar.html
 private class ToggleButtonBarCellIcon : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val parent = c.parent ?: return
     val r = 8.0
     val dx = x.toDouble()
@@ -172,7 +180,10 @@ private class EditMenuLayerUI<V : Component>(
 ) : LayerUI<V>() {
   private var shape: Shape? = null
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     super.paint(g, c)
     shape?.also {
       val g2 = g.create() as? Graphics2D ?: return
@@ -194,7 +205,10 @@ private class EditMenuLayerUI<V : Component>(
     super.uninstallUI(c)
   }
 
-  private fun update(e: MouseEvent, l: JLayer<out V>) {
+  private fun update(
+    e: MouseEvent,
+    l: JLayer<out V>,
+  ) {
     val id = e.id
     var s: Shape? = null
     if (id == MouseEvent.MOUSE_ENTERED || id == MouseEvent.MOUSE_MOVED) {
@@ -210,11 +224,17 @@ private class EditMenuLayerUI<V : Component>(
     }
   }
 
-  override fun processMouseEvent(e: MouseEvent, l: JLayer<out V>) {
+  override fun processMouseEvent(
+    e: MouseEvent,
+    l: JLayer<out V>,
+  ) {
     update(e, l)
   }
 
-  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out V>) {
+  override fun processMouseMotionEvent(
+    e: MouseEvent,
+    l: JLayer<out V>,
+  ) {
     update(e, l)
   }
 }

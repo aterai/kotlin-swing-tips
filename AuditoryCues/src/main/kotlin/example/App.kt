@@ -40,7 +40,11 @@ fun makeUI(): Component {
   }
 }
 
-fun showMessageDialogAndPlayAudio(p: Component, msg: String, audioResource: String) {
+fun showMessageDialogAndPlayAudio(
+  p: Component,
+  msg: String,
+  audioResource: String,
+) {
   val url = Thread.currentThread().contextClassLoader.getResource(audioResource) ?: return
   AudioSystem.getAudioInputStream(url).use { stream ->
     (AudioSystem.getLine(DataLine.Info(Clip::class.java, stream.format)) as? Clip)?.use {
@@ -78,7 +82,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd

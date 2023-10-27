@@ -7,7 +7,10 @@ import javax.swing.table.DefaultTableModel
 fun makeUI(): Component {
   val columnNames = arrayOf("family", "name", "postscript name")
   val model = object : DefaultTableModel(null, columnNames) {
-    override fun isCellEditable(row: Int, column: Int) = false
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = false
 
     override fun getColumnClass(column: Int) = String::class.java
   }

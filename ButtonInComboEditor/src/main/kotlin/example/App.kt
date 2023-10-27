@@ -145,7 +145,10 @@ private class SiteItemComboBox(
     return label
   }
 
-  private fun getSiteItemFromModel(model: ComboBoxModel<SiteItem>, o: Any?): SiteItem? {
+  private fun getSiteItemFromModel(
+    model: ComboBoxModel<SiteItem>,
+    o: Any?,
+  ): SiteItem? {
     if (o is SiteItem) {
       return o
     }
@@ -158,7 +161,10 @@ private class SiteComboBoxLayout(
   private val favicon: JLabel?,
   private val feedButton: JButton?,
 ) : LayoutManager {
-  override fun addLayoutComponent(name: String, comp: Component) {
+  override fun addLayoutComponent(
+    name: String,
+    comp: Component,
+  ) {
     // not needed
   }
 
@@ -210,7 +216,11 @@ private data class SiteItem(val url: String, val image: Image, val hasRss: Boole
 }
 
 private class SelectedImageFilter : RGBImageFilter() {
-  override fun filterRGB(x: Int, y: Int, argb: Int): Int {
+  override fun filterRGB(
+    x: Int,
+    y: Int,
+    argb: Int,
+  ): Int {
     val r = minOf(0xFF, ((argb shr 16 and 0xFF) * SCALE).toInt())
     val g = minOf(0xFF, ((argb shr 8 and 0xFF) * SCALE).toInt())
     val b = minOf(0xFF, ((argb and 0xFF) * SCALE).toInt())
