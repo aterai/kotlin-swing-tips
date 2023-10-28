@@ -98,7 +98,10 @@ fun makeWeekCalendar(list: JList<*>, font: Font) = JScrollPane(list).also {
   it.background = Color.WHITE
 }
 
-private fun makeRowHeader(loc: Locale, font: Font): Component {
+private fun makeRowHeader(
+  loc: Locale,
+  font: Font,
+): Component {
   val weekFields = WeekFields.of(loc)
   val weekModel = DefaultListModel<String>()
   val firstDayOfWeek = weekFields.firstDayOfWeek
@@ -178,7 +181,12 @@ private class CalendarViewListModel(date: LocalDate) : AbstractListModel<Contrib
 }
 
 private class ContributionIcon(private val color: Color) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     // JList#setLayoutOrientation(VERTICAL_WRAP) + SynthLookAndFeel(Nimbus, GTK) bug???
     // g2.translate(x, y)

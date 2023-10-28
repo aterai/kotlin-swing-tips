@@ -28,7 +28,10 @@ fun makeUI(): Component {
 }
 
 private class CenterLayout : LayoutManager {
-  override fun addLayoutComponent(name: String, comp: Component) {
+  override fun addLayoutComponent(
+    name: String,
+    comp: Component,
+  ) {
     // not needed
   }
 

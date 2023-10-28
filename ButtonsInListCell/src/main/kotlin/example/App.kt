@@ -59,7 +59,11 @@ private class CellButtonsMouseListener<E>(private val list: JList<E>) : MouseInp
     prevIndex = index
   }
 
-  private fun repaintCell(renderer: ButtonsRenderer<*>, button: JButton, index: Int) {
+  private fun repaintCell(
+    renderer: ButtonsRenderer<*>,
+    button: JButton,
+    index: Int,
+  ) {
     button.model.isRollover = true
     renderer.rolloverIndex = index
     if (button != prevButton) {
@@ -67,7 +71,10 @@ private class CellButtonsMouseListener<E>(private val list: JList<E>) : MouseInp
     }
   }
 
-  private fun repaintPrevButton(renderer: ButtonsRenderer<*>, index: Int) {
+  private fun repaintPrevButton(
+    renderer: ButtonsRenderer<*>,
+    index: Int,
+  ) {
     renderer.rolloverIndex = -1
     val r = if (prevIndex == index) {
       prevButton?.let { list.getCellBounds(prevIndex, prevIndex) }
@@ -107,11 +114,18 @@ private class CellButtonsMouseListener<E>(private val list: JList<E>) : MouseInp
     }
   }
 
-  private fun rectRepaint(c: JComponent, rect: Rectangle?) {
+  private fun rectRepaint(
+    c: JComponent,
+    rect: Rectangle?,
+  ) {
     rect?.also { c.repaint(it) }
   }
 
-  private fun <E> getButton(list: JList<E>, pt: Point, index: Int): JButton? {
+  private fun <E> getButton(
+    list: JList<E>,
+    pt: Point,
+    index: Int,
+  ): JButton? {
     val prototype = list.prototypeCellValue
     val c = list.cellRenderer.getListCellRendererComponent(list, prototype, index, false, false)
     val r = list.getCellBounds(index, index)
