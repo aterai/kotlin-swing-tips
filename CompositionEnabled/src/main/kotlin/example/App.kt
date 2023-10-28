@@ -19,7 +19,8 @@ fun makeUI(): Component {
         return super.processKeyBinding(ks, e, condition, pressed)
       }
       val editingOrPressed = isEditing || pressed
-      if (inputContext.isCompositionEnabled && !ks.isOnKeyRelease && !editingOrPressed) {
+      val isCompositionEnabled = inputContext?.isCompositionEnabled() == true
+      if (isCompositionEnabled && !ks.isOnKeyRelease && !editingOrPressed) {
         val selectedRow = selectedRow
         val selectedColumn = selectedColumn
         if (selectedRow != -1 && selectedColumn != -1) {
