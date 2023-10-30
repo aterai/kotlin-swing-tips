@@ -65,7 +65,11 @@ private fun makeTrayIcon(frame: JFrame): TrayIcon {
   return icon
 }
 
-private fun makePreferredSizeImage(icon: Icon, w: Int, h: Int): Image {
+private fun makePreferredSizeImage(
+  icon: Icon,
+  w: Int,
+  h: Int,
+): Image {
   val image = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
   val g2 = image.createGraphics()
   icon.paintIcon(null, g2, (w - icon.iconWidth) / 2, (h - icon.iconHeight) / 2)
@@ -94,7 +98,12 @@ private class StarIcon : Icon {
     return Path2D.Double(p, at)
   }
 
-  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)

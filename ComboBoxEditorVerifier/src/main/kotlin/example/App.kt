@@ -91,7 +91,10 @@ private class SelectItemMenuListener : PopupMenuListener {
 
 // @see https://docs.oracle.com/javase/tutorial/uiswing/examples/misc/FieldValidatorProject/src/FieldValidator.java
 private class ValidationLayerUI<V : JTextComponent> : LayerUI<V>() {
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     super.paint(g, c)
     val cb = SwingUtilities.getAncestorOfClass(JComboBox::class.java, c) as? JComboBox<*> ?: return
     cb.inputVerifier?.takeUnless { it.verify(cb) }?.also {
