@@ -19,7 +19,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledBox(title: String, combo: JComboBox<*>): Box {
+private fun makeTitledBox(
+  title: String,
+  combo: JComboBox<*>,
+): Box {
   val leftTextField = JTextField()
   val rightTextField = JTextField()
   leftTextField.isEditable = false

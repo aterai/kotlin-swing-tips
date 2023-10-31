@@ -9,7 +9,13 @@ fun makeUI(): Component {
   val tabbedPane = object : JTabbedPane() {
     override fun getToolTipTextAt(index: Int) = getTitleAt(index)
 
-    override fun insertTab(title: String?, icon: Icon?, c: Component?, tip: String?, idx: Int) {
+    override fun insertTab(
+      title: String?,
+      icon: Icon?,
+      c: Component?,
+      tip: String?,
+      idx: Int,
+    ) {
       super.insertTab(title, icon, c, title, idx)
     }
 
@@ -50,7 +56,11 @@ private fun makeTabbedPane(tabbedPane: JTabbedPane): JTabbedPane {
 }
 
 private class BasicClippedTitleTabbedPaneUI : BasicTabbedPaneUI() {
-  override fun calculateTabWidth(tabPlacement: Int, tabIndex: Int, metrics: FontMetrics): Int {
+  override fun calculateTabWidth(
+    tabPlacement: Int,
+    tabIndex: Int,
+    metrics: FontMetrics,
+  ): Int {
     val ins = tabPane.insets
     val width = tabPane.width - tabAreaInsets.left - tabAreaInsets.right - ins.left - ins.right
     return if (tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT) {
@@ -93,7 +103,11 @@ private class BasicClippedTitleTabbedPaneUI : BasicTabbedPaneUI() {
 }
 
 private class WindowsClippedTitleTabbedPaneUI : WindowsTabbedPaneUI() {
-  override fun calculateTabWidth(tabPlacement: Int, tabIndex: Int, metrics: FontMetrics): Int {
+  override fun calculateTabWidth(
+    tabPlacement: Int,
+    tabIndex: Int,
+    metrics: FontMetrics,
+  ): Int {
     val ins = tabPane.insets
     val width = tabPane.width - tabAreaInsets.left - tabAreaInsets.right - ins.left - ins.right
     return if (tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT) {

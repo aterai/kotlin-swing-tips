@@ -20,7 +20,11 @@ fun makeUI(): Component {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
   val table = object : JTable(model) {
-    override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
+    override fun prepareRenderer(
+      tcr: TableCellRenderer,
+      row: Int,
+      column: Int,
+    ): Component {
       val c = super.prepareRenderer(tcr, row, column)
       if (c is JComponent) {
         val i = c.insets
@@ -71,7 +75,10 @@ private class ToolTipHeaderRenderer : TableCellRenderer {
     return c
   }
 
-  private fun isClipped(label: JLabel, viewR: Rectangle): Boolean {
+  private fun isClipped(
+    label: JLabel,
+    viewR: Rectangle,
+  ): Boolean {
     val iconR = Rectangle()
     val textR = Rectangle()
     val str = SwingUtilities.layoutCompoundLabel(
