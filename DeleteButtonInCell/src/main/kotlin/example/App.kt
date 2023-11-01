@@ -66,7 +66,10 @@ private class RowDataModel : DefaultTableModel() {
     number++
   }
 
-  override fun isCellEditable(row: Int, col: Int) = COLUMN_ARRAY[col].isEditable
+  override fun isCellEditable(
+    row: Int,
+    col: Int,
+  ) = COLUMN_ARRAY[col].isEditable
 
   override fun getColumnClass(column: Int) = COLUMN_ARRAY[column].columnClass
 

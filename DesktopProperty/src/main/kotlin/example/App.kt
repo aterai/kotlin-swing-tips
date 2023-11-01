@@ -14,7 +14,10 @@ fun makeUI(): Component {
   val columnNames = arrayOf("Name", "Class", "Value")
   val model = DefaultTableModel(null, columnNames)
   val table = object : JTable(model) {
-    override fun isCellEditable(row: Int, column: Int) = false
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = false
   }
   table.autoCreateRowSorter = true
   val l = PropertyChangeListener { e -> updateModel(model, e) }
@@ -27,7 +30,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun updateModel(model: DefaultTableModel, e: PropertyChangeEvent?) {
+private fun updateModel(
+  model: DefaultTableModel,
+  e: PropertyChangeEvent?,
+) {
   if (e != null) {
     logger.info {
       val n = e.propertyName

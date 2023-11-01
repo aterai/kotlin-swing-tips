@@ -82,7 +82,11 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
     return c
   }
 
-  private fun updateCellWeekColor(d: LocalDate, fgc: JComponent, bgc: JComponent) {
+  private fun updateCellWeekColor(
+    d: LocalDate,
+    fgc: JComponent,
+    bgc: JComponent,
+  ) {
     if (YearMonth.from(d) == YearMonth.from(currentLocalDate)) {
       fgc.foreground = Color.BLACK
     } else {
@@ -153,14 +157,22 @@ private class CalendarViewTableModel(date: LocalDate) : DefaultTableModel() {
 
   override fun getColumnCount() = 7
 
-  override fun getValueAt(row: Int, column: Int): Any =
-    startDate.plusDays(row.toLong() * columnCount + column)
+  override fun getValueAt(
+    row: Int,
+    column: Int,
+  ): Any = startDate.plusDays(row.toLong() * columnCount + column)
 
-  override fun isCellEditable(row: Int, column: Int) = false
+  override fun isCellEditable(
+    row: Int,
+    column: Int,
+  ) = false
 }
 
 private class DiagonallySplitCellLayerUI : LayerUI<JPanel>() {
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     super.paint(g, c)
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)

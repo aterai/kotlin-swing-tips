@@ -42,7 +42,11 @@ fun makeUI(): Component {
   }
 }
 
-private fun createFrame(t: String, x: Int, y: Int): JInternalFrame {
+private fun createFrame(
+  t: String,
+  x: Int,
+  y: Int,
+): JInternalFrame {
   val f = JInternalFrame(t, true, true, true, true)
   f.desktopIcon = object : JDesktopIcon(f) {
     override fun getPreferredSize() = when {
@@ -57,7 +61,10 @@ private fun createFrame(t: String, x: Int, y: Int): JInternalFrame {
   return f
 }
 
-private fun addIconifiedFrame(desktop: JDesktopPane, f: JInternalFrame) {
+private fun addIconifiedFrame(
+  desktop: JDesktopPane,
+  f: JInternalFrame,
+) {
   desktop.add(f)
   runCatching { f.isIcon = true }
 }
@@ -77,7 +84,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd

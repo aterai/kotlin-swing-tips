@@ -17,28 +17,44 @@ fun makeUI(): Component {
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
 
-    override fun isCellEditable(row: Int, column: Int) = column != 0
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = column != 0
   }
 
   val table1 = object : JTable(model) {
-    override fun changeSelection(rowIdx: Int, colIdx: Int, toggle: Boolean, extend: Boolean) {
+    override fun changeSelection(
+      rowIdx: Int,
+      colIdx: Int,
+      toggle: Boolean,
+      extend: Boolean,
+    ) {
       if (convertColumnIndexToModel(colIdx) != targetColIdx) {
         return
       }
       super.changeSelection(rowIdx, colIdx, toggle, extend)
     }
 
-    override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int) =
-      if (convertColumnIndexToModel(column) != targetColIdx) {
-        val value = getValueAt(row, column)
-        renderer.getTableCellRendererComponent(this, value, false, false, row, column)
-      } else {
-        super.prepareRenderer(renderer, row, column)
-      }
+    override fun prepareRenderer(
+      renderer: TableCellRenderer,
+      row: Int,
+      column: Int,
+    ) = if (convertColumnIndexToModel(column) != targetColIdx) {
+      val value = getValueAt(row, column)
+      renderer.getTableCellRendererComponent(this, value, false, false, row, column)
+    } else {
+      super.prepareRenderer(renderer, row, column)
+    }
   }
 
   val t2 = object : JTable(model) {
-    override fun changeSelection(rowIdx: Int, colIdx: Int, toggle: Boolean, extend: Boolean) {
+    override fun changeSelection(
+      rowIdx: Int,
+      colIdx: Int,
+      toggle: Boolean,
+      extend: Boolean,
+    ) {
       if (convertColumnIndexToModel(colIdx) != targetColIdx) {
         return
       }
