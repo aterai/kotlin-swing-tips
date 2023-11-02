@@ -178,7 +178,10 @@ private class DnDTabbedPane : JTabbedPane() {
     return if (r.contains(tabPt)) tabCount else -1
   }
 
-  fun convertTab(prev: Int, next: Int) {
+  fun convertTab(
+    prev: Int,
+    next: Int,
+  ) {
     if (next < 0 || prev == next) {
       // This check is needed if tab content is null.
       return
@@ -414,7 +417,12 @@ private class GhostGlassPane(val tabbedPane: DnDTabbedPane) : JComponent() {
 
   override fun isOpaque() = false
 
-  fun setTargetRect(x: Int, y: Int, width: Int, height: Int) {
+  fun setTargetRect(
+    x: Int,
+    y: Int,
+    width: Int,
+    height: Int,
+  ) {
     lineRect.setBounds(x, y, width, height)
   }
 
@@ -459,7 +467,12 @@ private class GhostGlassPane(val tabbedPane: DnDTabbedPane) : JComponent() {
 }
 
 private class ColorIcon(private val color: Color) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = color

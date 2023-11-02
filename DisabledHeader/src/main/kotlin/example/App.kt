@@ -69,7 +69,10 @@ private class RowDataModel : SortableTableModel() {
     number++
   }
 
-  override fun isCellEditable(row: Int, col: Int) = COLUMN_ARRAY[col].isEditable
+  override fun isCellEditable(
+    row: Int,
+    col: Int,
+  ) = COLUMN_ARRAY[col].isEditable
 
   override fun getColumnClass(column: Int) = COLUMN_ARRAY[column].columnClass
 
@@ -95,7 +98,10 @@ private class RowDataModel : SortableTableModel() {
 private data class RowData(val name: String, val comment: String)
 
 private open class SortableTableModel : DefaultTableModel() {
-  fun sortByColumn(column: Int, isAscent: Boolean) {
+  fun sortByColumn(
+    column: Int,
+    isAscent: Boolean,
+  ) {
     getDataVector().sortWith(ColumnComparator(column, isAscent))
     fireTableDataChanged()
   }
@@ -105,7 +111,10 @@ private class ColumnComparator(
   val index: Int,
   val ascending: Boolean,
 ) : Comparator<Any>, Serializable {
-  override fun compare(one: Any, two: Any): Int {
+  override fun compare(
+    one: Any,
+    two: Any,
+  ): Int {
     val one1 = (one as? List<*>)?.filterIsInstance<Comparable<Any>>()
     val two1 = (two as? List<*>)?.filterIsInstance<Comparable<Any>>()
     if (one1?.isNotEmpty() == true && two1?.isNotEmpty() == true) {
@@ -171,7 +180,10 @@ private class SortButtonRenderer(
     pushedColumn = col
   }
 
-  fun setEnabledAt(col: Int, b: Boolean) {
+  fun setEnabledAt(
+    col: Int,
+    b: Boolean,
+  ) {
     dirMap[col] = b
     header.repaint()
   }
@@ -225,7 +237,12 @@ private class HeaderMouseListener : MouseAdapter() {
 }
 
 private class EmptyIcon(private val size: Dimension) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     // Empty icon
   }
 

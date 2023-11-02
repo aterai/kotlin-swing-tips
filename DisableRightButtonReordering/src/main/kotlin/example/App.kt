@@ -19,7 +19,11 @@ private fun makeTable(): JTable {
   val table = JTable(4, 3)
   table.autoCreateRowSorter = true
   val popup = object : JPopupMenu() {
-    override fun show(c: Component?, x: Int, y: Int) {
+    override fun show(
+      c: Component?,
+      x: Int,
+      y: Int,
+    ) {
       (c as? JTableHeader)?.also { header ->
         header.draggedColumn = null
         header.repaint()
@@ -35,7 +39,10 @@ private fun makeTable(): JTable {
   return table
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)
@@ -53,7 +60,10 @@ private class DisableRightButtonSwapLayerUI : LayerUI<JScrollPane>() {
     super.uninstallUI(c)
   }
 
-  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out JScrollPane>) {
+  override fun processMouseMotionEvent(
+    e: MouseEvent,
+    l: JLayer<out JScrollPane>,
+  ) {
     val b1 = e.component is JTableHeader
     val b2 = e.id == MouseEvent.MOUSE_DRAGGED
     if (b1 && b2 && SwingUtilities.isRightMouseButton(e)) {

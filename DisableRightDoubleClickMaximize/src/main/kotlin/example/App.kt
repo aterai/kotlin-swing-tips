@@ -43,7 +43,10 @@ private fun makeDesktopPane() = JDesktopPane().also {
   it.background = Color.LIGHT_GRAY
 }
 
-private fun createFrame(t: String, i: Int): JInternalFrame {
+private fun createFrame(
+  t: String,
+  i: Int,
+): JInternalFrame {
   val f = JInternalFrame(t, true, true, true, true)
   f.setSize(200, 100)
   f.setLocation(5 + 40 * i, 5 + 50 * i)
@@ -86,7 +89,11 @@ private class InternalFrameTitlePanePopupMenu : JPopupMenu() {
     add("test2")
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is BasicInternalFrameTitlePane) {
       super.show(c, x, y)
     }
@@ -106,7 +113,10 @@ private class DesktopLayerUI : LayerUI<JDesktopPane>() {
     super.uninstallUI(c)
   }
 
-  override fun processMouseEvent(e: MouseEvent, l: JLayer<out JDesktopPane>) {
+  override fun processMouseEvent(
+    e: MouseEvent,
+    l: JLayer<out JDesktopPane>,
+  ) {
     if (SwingUtilities.isRightMouseButton(e) && e.clickCount >= 2) {
       val c = e.component
       val p = SwingUtilities.getAncestorOfClass(BasicInternalFrameTitlePane::class.java, c)
@@ -119,7 +129,10 @@ private class DesktopLayerUI : LayerUI<JDesktopPane>() {
     }
   }
 
-  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out JDesktopPane>) {
+  override fun processMouseMotionEvent(
+    e: MouseEvent,
+    l: JLayer<out JDesktopPane>,
+  ) {
     val b = e.component is JInternalFrame
     val isRight = SwingUtilities.isRightMouseButton(e)
     if (b && isRight && e.id == MouseEvent.MOUSE_DRAGGED) {

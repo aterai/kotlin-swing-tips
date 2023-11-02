@@ -21,7 +21,10 @@ import javax.swing.plaf.LayerUI
 import javax.swing.plaf.basic.BasicButtonUI
 import javax.swing.plaf.metal.MetalTabbedPaneUI
 
-fun makeUI(handler: TransferHandler, layerUI: LayerUI<DnDTabbedPane>): Component {
+fun makeUI(
+  handler: TransferHandler,
+  layerUI: LayerUI<DnDTabbedPane>,
+): Component {
   val sub = DnDTabbedPane().also {
     it.addTab("Title aa", JLabel("aaa"))
     it.addTab("Title bb", JScrollPane(JTree()))
@@ -75,7 +78,10 @@ fun makeUI(handler: TransferHandler, layerUI: LayerUI<DnDTabbedPane>): Component
   }
 }
 
-private fun setTabComponent(tabbedPane: JTabbedPane, i: Int) {
+private fun setTabComponent(
+  tabbedPane: JTabbedPane,
+  i: Int,
+) {
   tabbedPane.setTabComponentAt(i, ButtonTabComponent(tabbedPane))
   tabbedPane.setToolTipTextAt(i, "tooltip: $i")
 }
@@ -185,14 +191,21 @@ class DnDTabbedPane : JTabbedPane() {
     return DropLocation(p, idx)
   }
 
-  fun updateTabDropLocation(location: DropLocation?, forDrop: Boolean): Any? {
+  fun updateTabDropLocation(
+    location: DropLocation?,
+    forDrop: Boolean,
+  ): Any? {
     val old = dropLocation
     dropLocation = if (location == null || !forDrop) DropLocation(Point(), -1) else location
     firePropertyChange("dropLocation", old, dropLocation)
     return null
   }
 
-  fun exportTab(dragIndex: Int, target: JTabbedPane, targetIndex: Int) {
+  fun exportTab(
+    dragIndex: Int,
+    target: JTabbedPane,
+    targetIndex: Int,
+  ) {
     val cmp = getComponentAt(dragIndex)
     val title = getTitleAt(dragIndex)
     val icon = getIconAt(dragIndex)
@@ -212,7 +225,10 @@ class DnDTabbedPane : JTabbedPane() {
     }
   }
 
-  fun convertTab(prev: Int, next: Int) {
+  fun convertTab(
+    prev: Int,
+    next: Int,
+  ) {
     val cmp = getComponentAt(prev)
     val tab = getTabComponentAt(prev)
     val title = getTitleAt(prev)
@@ -317,7 +333,10 @@ private class TabTransferHandler : TransferHandler() {
   private val localObjectFlavor = DataFlavor(DnDTabData::class.java, "DnDTabData")
   private var source: DnDTabbedPane? = null
   private val label = object : JLabel() {
-    override fun contains(x: Int, y: Int) = false
+    override fun contains(
+      x: Int,
+      y: Int,
+    ) = false
   }
   private val dialog = JWindow()
   private var mode = DragImageMode.LIGHTWEIGHT
@@ -439,7 +458,11 @@ private class TabTransferHandler : TransferHandler() {
     return true
   }
 
-  override fun exportDone(c: JComponent?, data: Transferable?, action: Int) {
+  override fun exportDone(
+    c: JComponent?,
+    data: Transferable?,
+    action: Int,
+  ) {
     val src = c as? DnDTabbedPane ?: return
     src.updateTabDropLocation(null, false)
     src.repaint()
@@ -450,7 +473,10 @@ private class TabTransferHandler : TransferHandler() {
 }
 
 private class DropLocationLayerUI : LayerUI<DnDTabbedPane>() {
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     super.paint(g, c)
     val tabbedPane = (c as? JLayer<*>)?.view as? DnDTabbedPane ?: return
     tabbedPane.dropLocation?.takeIf { it.index >= 0 }?.also {
@@ -463,7 +489,10 @@ private class DropLocationLayerUI : LayerUI<DnDTabbedPane>() {
     }
   }
 
-  private fun initLineRect(tabs: JTabbedPane, loc: DnDTabbedPane.DropLocation) {
+  private fun initLineRect(
+    tabs: JTabbedPane,
+    loc: DnDTabbedPane.DropLocation,
+  ) {
     val index = loc.index
     val a = minOf(index, 1)
     val r = tabs.getBoundsAt(a * (index - 1))

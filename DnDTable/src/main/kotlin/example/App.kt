@@ -78,7 +78,11 @@ private class TablePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTable) {
       delete.isEnabled = c.selectedRowCount > 0
       super.show(c, x, y)
@@ -98,7 +102,11 @@ private class DnDTable(model: TableModel?) : JTable(model), DragGestureListener,
     ds.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_COPY_OR_MOVE, this)
   }
 
-  override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component =
+  override fun prepareRenderer(
+    tcr: TableCellRenderer,
+    row: Int,
+    column: Int,
+  ): Component =
     super.prepareRenderer(tcr, row, column).also {
       if (isRowSelected(row)) {
         it.foreground = getSelectionForeground()

@@ -97,13 +97,23 @@ private class ListItemTransferHandler : TransferHandler() {
     return values.isNotEmpty()
   }
 
-  override fun importData(comp: JComponent, t: Transferable) = importData(TransferSupport(comp, t))
+  override fun importData(
+    comp: JComponent,
+    t: Transferable,
+  ) = importData(TransferSupport(comp, t))
 
-  override fun exportDone(c: JComponent, data: Transferable, action: Int) {
+  override fun exportDone(
+    c: JComponent,
+    data: Transferable,
+    action: Int,
+  ) {
     cleanup(c, action == MOVE)
   }
 
-  private fun cleanup(c: JComponent, remove: Boolean) {
+  private fun cleanup(
+    c: JComponent,
+    remove: Boolean,
+  ) {
     if (remove && selectedIndices.isNotEmpty()) {
       // If we are moving items around in the same list, we
       // need to adjust the indices accordingly, since those
