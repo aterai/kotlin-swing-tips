@@ -73,11 +73,18 @@ fun makeUI(): Component {
   return p
 }
 
-private fun contains(index: Int, start: Int, end: Int, num: Int) =
-  index < end * ROW && NUMBERS[num].contains(index - start * ROW)
+private fun contains(
+  index: Int,
+  start: Int,
+  end: Int,
+  num: Int,
+) = index < end * ROW && NUMBERS[num].contains(index - start * ROW)
 
 @Suppress("ReturnCount")
-private fun getHoursMinutesDotMatrix(time: LocalTime, index: Int): Boolean {
+private fun getHoursMinutesDotMatrix(
+  time: LocalTime,
+  index: Int,
+): Boolean {
   val ten = 10
   val hours = time.hour
   val h1 = hours / ten
@@ -114,7 +121,10 @@ private fun getHoursMinutesDotMatrix(time: LocalTime, index: Int): Boolean {
   return contains(index, start, end, m2)
 }
 
-private fun getSecondsDotMatrix(time: LocalTime, index: Int): Boolean {
+private fun getSecondsDotMatrix(
+  time: LocalTime,
+  index: Int,
+): Boolean {
   val ten = 10
   val seconds = time.second
   val s1 = seconds / ten
@@ -130,7 +140,10 @@ private fun getSecondsDotMatrix(time: LocalTime, index: Int): Boolean {
   return contains(index, start, end, s2)
 }
 
-private fun makeLedMatrixList(m: ListModel<Boolean>, d: Dimension) = object : JList<Boolean>(m) {
+private fun makeLedMatrixList(
+  m: ListModel<Boolean>,
+  d: Dimension,
+) = object : JList<Boolean>(m) {
   override fun updateUI() {
     fixedCellWidth = d.width
     fixedCellHeight = d.height
@@ -155,7 +168,12 @@ private fun makeLedMatrixList(m: ListModel<Boolean>, d: Dimension) = object : JL
 private class LedDotIcon(private val led: Boolean, private val dim: Dimension) : Icon {
   private val on = Color(0x32_FF_AA)
 
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     // JList#setLayoutOrientation(VERTICAL_WRAP) + SynthLookAndFeel(Nimbus, GTK) bug???

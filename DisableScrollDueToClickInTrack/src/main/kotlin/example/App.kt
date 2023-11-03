@@ -60,7 +60,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c, BorderLayout.NORTH)
@@ -78,7 +81,10 @@ private class DisableLeftPressedLayerUI<V : Component> : LayerUI<V>() {
     super.uninstallUI(c)
   }
 
-  override fun processMouseEvent(e: MouseEvent, l: JLayer<out V>) {
+  override fun processMouseEvent(
+    e: MouseEvent,
+    l: JLayer<out V>,
+  ) {
     if (e.id == MouseEvent.MOUSE_PRESSED && SwingUtilities.isLeftMouseButton(e)) {
       e.component.dispatchEvent(
         MouseEvent(

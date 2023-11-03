@@ -18,7 +18,10 @@ fun makeUI(): Component {
     override fun getColumnClass(column: Int) =
       if (column == 1) Number::class.java else String::class.java
 
-    override fun isCellEditable(row: Int, column: Int) = false
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = false
   }
   val table = JTable(model)
   table.autoCreateRowSorter = true
@@ -83,7 +86,11 @@ private class TablePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTable) {
       delete.isEnabled = c.selectedRowCount > 0
       super.show(c, x, y)
