@@ -19,7 +19,10 @@ fun makeUI(): Component {
       f.repaint()
     }
 
-    override fun beginResizingFrame(f: JComponent, direction: Int) {
+    override fun beginResizingFrame(
+      f: JComponent,
+      direction: Int,
+    ) {
       draggingFrame = f
       desktop.dragMode = JDesktopPane.OUTLINE_DRAG_MODE
       super.beginResizingFrame(f, direction)

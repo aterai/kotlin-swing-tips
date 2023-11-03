@@ -123,7 +123,12 @@ private class ResizePopupMeneListener : MouseInputAdapter() {
 }
 
 private class DotIcon : Icon {
-  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = Color.GRAY

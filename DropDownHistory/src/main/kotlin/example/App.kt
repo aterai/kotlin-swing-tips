@@ -56,7 +56,11 @@ fun makeUI(): Component {
   }
 }
 
-fun addItem(combo: JComboBox<String>, str: String?, max: Int): Boolean {
+fun addItem(
+  combo: JComboBox<String>,
+  str: String?,
+  max: Int,
+): Boolean {
   if (str?.isEmpty() == true) {
     return false
   }
@@ -73,7 +77,10 @@ fun addItem(combo: JComboBox<String>, str: String?, max: Int): Boolean {
   return true
 }
 
-private fun setHighlight(jtc: JTextComponent, pattern: String) {
+private fun setHighlight(
+  jtc: JTextComponent,
+  pattern: String,
+) {
   val highlighter = jtc.highlighter
   highlighter.removeAllHighlights()
   runCatching {

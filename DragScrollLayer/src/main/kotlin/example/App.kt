@@ -97,7 +97,10 @@ private class DragScrollLayerUI : LayerUI<JScrollPane>() {
     super.uninstallUI(c)
   }
 
-  override fun processMouseEvent(e: MouseEvent, l: JLayer<out JScrollPane>) {
+  override fun processMouseEvent(
+    e: MouseEvent,
+    l: JLayer<out JScrollPane>,
+  ) {
     val c = e.component
     if (c is JScrollBar || c is JSlider) {
       return
@@ -107,7 +110,10 @@ private class DragScrollLayerUI : LayerUI<JScrollPane>() {
     }
   }
 
-  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out JScrollPane>) {
+  override fun processMouseMotionEvent(
+    e: MouseEvent,
+    l: JLayer<out JScrollPane>,
+  ) {
     val c = e.component
     if (c is JScrollBar || c is JSlider) {
       return

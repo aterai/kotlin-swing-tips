@@ -65,7 +65,11 @@ private class DropShadowPopupMenu : JPopupMenu() {
     g2.dispose()
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     val d = preferredSize
     val w = d.width
     val h = d.height
@@ -104,7 +108,12 @@ private class DropShadowPopupMenu : JPopupMenu() {
 }
 
 private class MissingIcon : Icon {
-  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     val w = iconWidth
     val h = iconHeight
