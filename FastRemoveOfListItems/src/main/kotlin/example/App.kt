@@ -65,7 +65,10 @@ private fun makeCmp2(): Component {
   return SpringLayoutUtils.makePanel(leftList, rightList, button1, button2)
 }
 
-private fun <E> move0(from: JList<E>, to: JList<E>) {
+private fun <E> move0(
+  from: JList<E>,
+  to: JList<E>,
+) {
   val selectedIndices = from.selectedIndices
   val fromModel = from.model as? DefaultListModel<E>
   val toModel = to.model as? DefaultListModel<E>
@@ -79,7 +82,10 @@ private fun <E> move0(from: JList<E>, to: JList<E>) {
   }
 }
 
-private fun <E> move1(from: JList<E>, to: JList<E>) {
+private fun <E> move1(
+  from: JList<E>,
+  to: JList<E>,
+) {
   val sm = from.selectionModel
   val selectedIndices = from.selectedIndices
 
@@ -101,7 +107,10 @@ private fun <E> move1(from: JList<E>, to: JList<E>) {
   }
 }
 
-private fun <E> move2(from: JList<E>, to: JList<E>) {
+private fun <E> move2(
+  from: JList<E>,
+  to: JList<E>,
+) {
   val selectedIndices = from.selectedIndices
   if (selectedIndices.isNotEmpty()) {
     (to.model as? ArrayListModel<E>)?.addAll(from.selectedValuesList)

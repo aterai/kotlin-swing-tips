@@ -99,7 +99,14 @@ private class AnimatedBorder(
     })
   }
 
-  override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, w: Int, h: Int) {
+  override fun paintBorder(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+    w: Int,
+    h: Int,
+  ) {
     super.paintBorder(c, g, x, y, w, h)
     val g2 = g.create() as? Graphics2D ?: return
     g2.paint = if (c.isEnabled) Color.ORANGE else Color.GRAY
@@ -111,7 +118,10 @@ private class AnimatedBorder(
     g2.dispose()
   }
 
-  private fun makePointList(shape: Shape, points: MutableList<Point2D>) {
+  private fun makePointList(
+    shape: Shape,
+    points: MutableList<Point2D>,
+  ) {
     points.clear()
     val pi = shape.getPathIterator(null, 0.01)
     val prev = Point2D.Double()
@@ -152,7 +162,11 @@ private class AnimatedBorder(
     }
   }
 
-  private fun interpolate(start: Point2D, end: Point2D, fraction: Double): Point2D {
+  private fun interpolate(
+    start: Point2D,
+    end: Point2D,
+    fraction: Double,
+  ): Point2D {
     val dx = end.x - start.x
     val dy = end.y - start.y
     val nx = start.x + dx * fraction
