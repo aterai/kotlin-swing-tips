@@ -121,7 +121,10 @@ private class CustomTooltipEditorPane : JEditorPane() {
     return title
   }
 
-  private fun getSpanTitleAttribute(doc: HTMLDocument, pos: Int): String? {
+  private fun getSpanTitleAttribute(
+    doc: HTMLDocument,
+    pos: Int,
+  ): String? {
     val a = doc.getCharacterElement(pos).attributes
     val span = a.getAttribute(HTML.Tag.SPAN) as? AttributeSet
     return span?.getAttribute(HTML.Attribute.TITLE)?.toString()

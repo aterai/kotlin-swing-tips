@@ -99,7 +99,11 @@ private class ListPopupMenu(list: JList<*>) : JPopupMenu() {
     add("clearSelection").addActionListener { list.clearSelection() }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JList<*>) {
       val isSelected = !c.isSelectionEmpty
       cutItem.isEnabled = isSelected
@@ -167,27 +171,45 @@ private class ListItemTransferHandler : TransferHandler() {
     return values.isNotEmpty()
   }
 
-  override fun importData(c: JComponent?, t: Transferable?) = importData(TransferSupport(c, t))
+  override fun importData(
+    c: JComponent?,
+    t: Transferable?,
+  ) = importData(TransferSupport(c, t))
 
-  override fun exportAsDrag(comp: JComponent, e: InputEvent?, action: Int) {
+  override fun exportAsDrag(
+    comp: JComponent,
+    e: InputEvent?,
+    action: Int,
+  ) {
     // println("exportAsDrag")
     if (comp.getClientProperty("canExportAsDrag") == true) {
       super.exportAsDrag(comp, e, action)
     }
   }
 
-  override fun exportToClipboard(comp: JComponent, clip: Clipboard?, action: Int) {
+  override fun exportToClipboard(
+    comp: JComponent,
+    clip: Clipboard?,
+    action: Int,
+  ) {
     // println("exportToClipboard")
     if (comp.getClientProperty("canExportToClipboard") == true) {
       super.exportToClipboard(comp, clip, action)
     }
   }
 
-  override fun exportDone(c: JComponent, data: Transferable?, action: Int) {
+  override fun exportDone(
+    c: JComponent,
+    data: Transferable?,
+    action: Int,
+  ) {
     cleanup(c, action == MOVE)
   }
 
-  private fun cleanup(c: JComponent, remove: Boolean) {
+  private fun cleanup(
+    c: JComponent,
+    remove: Boolean,
+  ) {
     if (remove && selectedIndices.isNotEmpty()) {
       val selectedList = if (addCount > 0) {
         selectedIndices.map { if (it >= addIndex) it + addCount else it }

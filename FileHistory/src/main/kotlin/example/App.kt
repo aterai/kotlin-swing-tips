@@ -79,7 +79,10 @@ fun updateHistory(path: Path) {
   }
 }
 
-private fun makeHistoryMenuItem(name: Path, idx: Int): JMenuItem {
+private fun makeHistoryMenuItem(
+  name: Path,
+  idx: Int,
+): JMenuItem {
   val num = (idx + 1).toString()
   val mi = JMenuItem(HistoryAction(name))
   mi.text = "$num: $name"

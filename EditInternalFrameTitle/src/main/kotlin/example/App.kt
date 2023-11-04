@@ -28,7 +28,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun createFrame(t: String, i: Int): JInternalFrame {
+private fun createFrame(
+  t: String,
+  i: Int,
+): JInternalFrame {
   val f = JInternalFrame(t + i, true, true, true, true)
   f.setSize(200, 100)
   f.setLocation(5 + 40 * i, 5 + 50 * i)
@@ -72,23 +75,31 @@ private class InternalFramePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (getInternalFrame(c) is JInternalFrame) {
       super.show(c, x, y)
     }
   }
 
-  private fun renameInternalFrameTitle(frame: JInternalFrame, title: String) {
+  private fun renameInternalFrameTitle(
+    frame: JInternalFrame,
+    title: String,
+  ) {
     if (title != frame.title) {
       frame.title = title
     }
   }
 
-  private fun getInternalFrame(c: Component?) = if (c is JInternalFrame.JDesktopIcon) {
-    c.internalFrame
-  } else {
-    c as? JInternalFrame ?: SwingUtilities.getAncestorOfClass(JInternalFrame::class.java, c)
-  }
+  private fun getInternalFrame(c: Component?) =
+    if (c is JInternalFrame.JDesktopIcon) {
+      c.internalFrame
+    } else {
+      c as? JInternalFrame ?: SwingUtilities.getAncestorOfClass(JInternalFrame::class.java, c)
+    }
 }
 
 private class FocusAncestorListener : AncestorListener {
