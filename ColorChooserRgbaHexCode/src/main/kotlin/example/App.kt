@@ -8,8 +8,10 @@ import java.awt.event.ComponentEvent
 import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
 import java.text.ParseException
+import java.util.Locale
 import javax.swing.*
 import javax.swing.JFormattedTextField.AbstractFormatter
+import javax.swing.colorchooser.AbstractColorChooserPanel
 import javax.swing.text.AttributeSet
 import javax.swing.text.BadLocationException
 import javax.swing.text.DefaultFormatterFactory
@@ -28,12 +30,14 @@ fun makeUI(): Component {
     cc.color = label.background
     val panels = cc.chooserPanels
     val choosers = panels.toMutableList()
-    val ccp = choosers[3]
-    // Java 9: if (ccp.isColorTransparencySelectionEnabled()) {
-    for (c in ccp.components) {
-      if (c is JFormattedTextField) {
-        removeFocusListeners(c)
-        init(c)
+    val ccp = getRgbChooser(cc)
+    // Java 9: if (ccp.isColorTransparencySelectionEnabled() && ccp != null) {
+    if (ccp != null) {
+      for (c in ccp.components) {
+        if (c is JFormattedTextField) {
+          removeFocusListeners(c)
+          init(c)
+        }
       }
     }
     cc.setChooserPanels(choosers.toTypedArray())
@@ -61,7 +65,8 @@ fun makeUI(): Component {
 
 private fun init(text: JFormattedTextField) {
   val formatter = ValueFormatter()
-  text.columns = 8
+  text.columns = 9
+  text.setFont(Font(Font.MONOSPACED, Font.PLAIN, text.getFont().getSize()))
   text.formatterFactory = DefaultFormatterFactory(formatter)
   text.horizontalAlignment = SwingConstants.RIGHT
   text.minimumSize = text.getPreferredSize()
@@ -177,6 +182,17 @@ private class ValueFormatter : AbstractFormatter(), FocusListener {
   override fun focusLost(e: FocusEvent) {
     // Do nothing
   }
+}
+
+private fun getRgbChooser(colorChooser: JColorChooser): AbstractColorChooserPanel? {
+  val rgbName = UIManager.getString("ColorChooser.rgbNameText", Locale.getDefault())
+  var rgbChooser: AbstractColorChooserPanel? = null
+  for (p in colorChooser.chooserPanels) {
+    if (rgbName == p.displayName) {
+      rgbChooser = p
+    }
+  }
+  return rgbChooser
 }
 
 fun main() {
