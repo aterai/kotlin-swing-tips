@@ -88,7 +88,10 @@ private class TablePopupMenu : JPopupMenu() {
     }
   }
 
-  private fun initAllTableValue(table: JTable, b: Boolean) {
+  private fun initAllTableValue(
+    table: JTable,
+    b: Boolean,
+  ) {
     for (row in table.selectedRows) {
       for (col in table.selectedColumns) {
         table.setValueAt(b, row, col)
@@ -105,7 +108,11 @@ private class TablePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTable) {
       val isSelected = c.selectedRowCount > 0
       select.isEnabled = isSelected

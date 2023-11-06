@@ -195,8 +195,11 @@ private class ReorderingList(model: ListModel<ListItem>) : JList<ListItem>(model
 }
 
 private class SelectedImageFilter : RGBImageFilter() {
-  override fun filterRGB(x: Int, y: Int, argb: Int) =
-    argb and 0xFF_FF_FF_00.toInt() or (argb and 0xFF shr 1)
+  override fun filterRGB(
+    x: Int,
+    y: Int,
+    argb: Int,
+  ) = argb and 0xFF_FF_FF_00.toInt() or (argb and 0xFF shr 1)
 }
 
 private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
@@ -316,13 +319,20 @@ private open class ListItemTransferHandler : TransferHandler() {
     return addCount > 0
   }
 
-  override fun exportDone(c: JComponent, data: Transferable, action: Int) {
+  override fun exportDone(
+    c: JComponent,
+    data: Transferable,
+    action: Int,
+  ) {
     val glassPane = c.rootPane.glassPane
     glassPane.isVisible = false
     cleanup(c, action == MOVE)
   }
 
-  private fun cleanup(c: JComponent, remove: Boolean) {
+  private fun cleanup(
+    c: JComponent,
+    remove: Boolean,
+  ) {
     if (remove && selectedIndices.isNotEmpty()) {
       val selectedList = if (addCount > 0) {
         selectedIndices.map { if (it >= addIndex) it + addCount else it }
@@ -381,7 +391,11 @@ private class CompactListItemTransferHandler : ListItemTransferHandler() {
     return MOVE // TransferHandler.COPY_OR_MOVE
   }
 
-  private fun <E> createCompactDragImage(source: JList<E>, w: Int, h: Int): BufferedImage {
+  private fun <E> createCompactDragImage(
+    source: JList<E>,
+    w: Int,
+    h: Int,
+  ): BufferedImage {
     require(!(w <= 0 || h <= 0)) { "width and height must be > 0" }
     val selectedIndices = source.selectedIndices
     val br = source.graphicsConfiguration.createCompatibleImage(w, h, Transparency.TRANSLUCENT)

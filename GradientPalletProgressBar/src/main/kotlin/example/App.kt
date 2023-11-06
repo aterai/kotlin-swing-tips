@@ -105,7 +105,10 @@ class GradientPalletProgressBarUI : BasicProgressBarUI() {
     return pallet
   }
 
-  private fun getColorFromPallet(pallet: IntArray, x: Float): Color {
+  private fun getColorFromPallet(
+    pallet: IntArray,
+    x: Float,
+  ): Color {
     require(x in 0f..1f) { "Parameter outside of expected range" }
     val max = pallet.size - 1
     val index = (pallet.size * x).toInt().coerceIn(0, max)
@@ -115,7 +118,10 @@ class GradientPalletProgressBarUI : BasicProgressBarUI() {
     // return Color(pix, true)
   }
 
-  override fun paintDeterminate(g: Graphics, c: JComponent) {
+  override fun paintDeterminate(
+    g: Graphics,
+    c: JComponent,
+  ) {
     val b = progressBar.insets // area for border
     val barRectWidth = progressBar.width - b.right - b.left
     val barRectHeight = progressBar.height - b.top - b.bottom
