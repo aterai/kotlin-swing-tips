@@ -149,14 +149,22 @@ private class ArrowButtonlessScrollBarUI : BasicScrollBarUI() {
 
   override fun createIncreaseButton(orientation: Int) = ZeroSizeButton()
 
-  override fun paintTrack(g: Graphics, c: JComponent, r: Rectangle) {
+  override fun paintTrack(
+    g: Graphics,
+    c: JComponent,
+    r: Rectangle,
+  ) {
     // val g2 = g.create() as? Graphics2D ?: return
     // g2.setPaint(Color(100, 100, 100, 100))
     // g2.fillRect(r.x, r.y, r.width - 1, r.height - 1)
     // g2.dispose()
   }
 
-  override fun paintThumb(g: Graphics, c: JComponent, r: Rectangle) {
+  override fun paintThumb(
+    g: Graphics,
+    c: JComponent,
+    r: Rectangle,
+  ) {
     val sb = c as? JScrollBar
     if (sb?.isEnabled != true) {
       return

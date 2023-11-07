@@ -25,7 +25,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeEditorPane(kit: HTMLEditorKit, text: String) = JEditorPane().also {
+private fun makeEditorPane(
+  kit: HTMLEditorKit,
+  text: String,
+) = JEditorPane().also {
   it.isEditable = false
   it.contentType = "text/html"
   it.editorKit = kit

@@ -20,7 +20,10 @@ fun makeUI(): Component {
       else -> super.getColumnClass(column)
     }
 
-    override fun isCellEditable(row: Int, col: Int) = false
+    override fun isCellEditable(
+      row: Int,
+      col: Int,
+    ) = false
   }
   model.addRow(arrayOf(0, "FrontPage", makeUrl("https://ateraimemo.com/")))
   model.addRow(arrayOf(1, "Java Swing Tips", makeUrl("https://ateraimemo.com/Swing.html")))
@@ -30,7 +33,11 @@ fun makeUI(): Component {
   val table = object : JTable(model) {
     private val evenColor = Color(250, 250, 250)
 
-    override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
+    override fun prepareRenderer(
+      tcr: TableCellRenderer,
+      row: Int,
+      column: Int,
+    ): Component {
       val c = super.prepareRenderer(tcr, row, column)
       c.foreground = foreground
       c.background = if (row % 2 == 0) evenColor else background
@@ -96,11 +103,16 @@ private class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMoti
     return c
   }
 
-  private fun isRolloverCell(table: JTable, row: Int, column: Int) =
-    !table.isEditing && viewRowIndex == row && viewColumnIndex == column && isRollover
+  private fun isRolloverCell(
+    table: JTable,
+    row: Int,
+    column: Int,
+  ) = !table.isEditing && viewRowIndex == row && viewColumnIndex == column && isRollover
 
-  private fun isUrlColumn(table: JTable, column: Int) =
-    column >= 0 && table.getColumnClass(column) == URL::class.java
+  private fun isUrlColumn(
+    table: JTable,
+    column: Int,
+  ) = column >= 0 && table.getColumnClass(column) == URL::class.java
 
   override fun mouseMoved(e: MouseEvent) {
     val table = e.component as? JTable ?: return

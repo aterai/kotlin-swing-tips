@@ -51,7 +51,10 @@ fun makeUI(): Component {
 private class PropertyTable(model: TableModel?) : JTable(model) {
   private var editingClass: Class<*>? = null
 
-  private fun getClassAt(row: Int, column: Int): Class<*> {
+  private fun getClassAt(
+    row: Int,
+    column: Int,
+  ): Class<*> {
     val mc = convertColumnIndexToModel(column)
     val mr = convertRowIndexToModel(row)
     return model.getValueAt(mr, mc).javaClass
@@ -66,14 +69,20 @@ private class PropertyTable(model: TableModel?) : JTable(model) {
     setDefaultEditor(Date::class.java, DateEditor())
   }
 
-  override fun getCellRenderer(row: Int, column: Int): TableCellRenderer =
+  override fun getCellRenderer(
+    row: Int,
+    column: Int,
+  ): TableCellRenderer =
     if (convertColumnIndexToModel(column) == TARGET_COL_IDX) {
       getDefaultRenderer(getClassAt(row, column))
     } else {
       super.getCellRenderer(row, column)
     }
 
-  override fun getCellEditor(row: Int, column: Int): TableCellEditor =
+  override fun getCellEditor(
+    row: Int,
+    column: Int,
+  ): TableCellEditor =
     if (convertColumnIndexToModel(column) == TARGET_COL_IDX) {
       editingClass = getClassAt(row, column)
       getDefaultEditor(editingClass)
@@ -222,7 +231,12 @@ private class ColorEditor : AbstractCellEditor(), TableCellEditor, ActionListene
 }
 
 private class ColorIcon(private val color: Color?) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = color
@@ -243,7 +257,10 @@ private class HtmlTableTransferHandler : TransferHandler() {
     return false
   }
 
-  fun appendTag(buf: StringBuilder, o: Any?) {
+  fun appendTag(
+    buf: StringBuilder,
+    o: Any?,
+  ) {
     when (o) {
       is Date -> buf.append("  <td><time>").append(o.toString()).append("</time></td>")
       is Color -> buf.append(
@@ -368,8 +385,10 @@ private class BasicTransferable(
     }
   }
 
-  private fun createInputStream(flavor: DataFlavor, data: String) =
-    ByteArrayInputStream(data.toByteArray(charset(getTextCharset(flavor))))
+  private fun createInputStream(
+    flavor: DataFlavor,
+    data: String,
+  ) = ByteArrayInputStream(data.toByteArray(charset(getTextCharset(flavor))))
 
   @Throws(IOException::class, UnsupportedFlavorException::class)
   private fun getHtmlTransferData(flavor: DataFlavor): Any = when (flavor.representationClass) {
