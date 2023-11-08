@@ -14,7 +14,14 @@ fun makeUI(): Component {
   val title2 = "<html><table cellpadding='0'><tr><td><img src='$path'></td><td>test"
 
   val border3 = object : TitledBorder("  test") {
-    override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
+    override fun paintBorder(
+      c: Component,
+      g: Graphics,
+      x: Int,
+      y: Int,
+      width: Int,
+      height: Int,
+    ) {
       super.paintBorder(c, g, x, y, width, height)
       icon.paintIcon(c, g, 5, 0)
     }
@@ -51,7 +58,14 @@ private class ComponentTitledBorder(
 
   override fun isBorderOpaque() = true
 
-  override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
+  override fun paintBorder(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+    width: Int,
+    height: Int,
+  ) {
     if (c is Container) {
       val borderInsets = border.getBorderInsets(c)
       val insets = getBorderInsets(c)

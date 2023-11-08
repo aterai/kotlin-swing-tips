@@ -14,13 +14,19 @@ fun makeUI(): Component {
 
   val p = JPanel(BorderLayout())
   p.focusTraversalPolicy = object : LayoutFocusTraversalPolicy() {
-    override fun getComponentAfter(focusCycleRoot: Container, cmp: Component): Component {
+    override fun getComponentAfter(
+      focusCycleRoot: Container,
+      cmp: Component,
+    ): Component {
       // println("getComponentAfter")
       button.isEnabled = isAllValid(p)
       return super.getComponentAfter(focusCycleRoot, cmp)
     }
 
-    override fun getComponentBefore(focusCycleRoot: Container, cmp: Component): Component {
+    override fun getComponentBefore(
+      focusCycleRoot: Container,
+      cmp: Component,
+    ): Component {
       // println("getComponentBefore")
       button.isEnabled = isAllValid(p)
       return super.getComponentBefore(focusCycleRoot, cmp)
@@ -52,7 +58,10 @@ fun isAllValid(c: Container) = c.components
   .filterIsInstance<JTextField>()
   .all { it.inputVerifier.verify(it) }
 
-fun makeTextField(button: JButton, root: Container): JTextField {
+fun makeTextField(
+  button: JButton,
+  root: Container,
+): JTextField {
   val textField = JTextField(24)
   textField.inputVerifier = object : InputVerifier() {
     override fun verify(c: JComponent): Boolean {

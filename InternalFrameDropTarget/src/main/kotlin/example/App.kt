@@ -158,11 +158,18 @@ private class TableRowTransferHandler : TransferHandler() {
     return values.isNotEmpty()
   }
 
-  override fun exportDone(c: JComponent, data: Transferable, action: Int) {
+  override fun exportDone(
+    c: JComponent,
+    data: Transferable,
+    action: Int,
+  ) {
     cleanup(c, action == MOVE)
   }
 
-  private fun cleanup(c: JComponent, remove: Boolean) {
+  private fun cleanup(
+    c: JComponent,
+    remove: Boolean,
+  ) {
     c.rootPane.glassPane.isVisible = false
     if (remove && selectedIndices.isNotEmpty()) {
       val selectedList = if (addCount > 0) {

@@ -26,7 +26,11 @@ fun makeUI(): Component {
   }
 }
 
-private fun addFrame(desktop: JDesktopPane, idx: Int, resizable: Boolean) {
+private fun addFrame(
+  desktop: JDesktopPane,
+  idx: Int,
+  resizable: Boolean,
+) {
   val frame = JInternalFrame("resizable: $resizable", resizable, true, true, true)
   frame.add(makePanel())
   frame.setSize(240, 100)
@@ -55,7 +59,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd

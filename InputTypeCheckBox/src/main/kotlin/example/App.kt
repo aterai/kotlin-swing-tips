@@ -96,7 +96,10 @@ private class HeaderRenderer : TableCellRenderer {
     return c
   }
 
-  private fun updateCheckBox(c: Component?, value: Any?) {
+  private fun updateCheckBox(
+    c: Component?,
+    value: Any?,
+  ) {
     if (c is JCheckBox) {
       c.isOpaque = false
       c.border = BorderFactory.createEmptyBorder()
@@ -138,7 +141,11 @@ private class HeaderCheckBoxHandler(
     }
   }
 
-  private fun fireUpdateEvent(m: DefaultTableModel, column: TableColumn, status: Any): Boolean {
+  private fun fireUpdateEvent(
+    m: DefaultTableModel,
+    column: TableColumn,
+    status: Any,
+  ): Boolean {
     return if (status === Status.INDETERMINATE) {
       val l = m.dataVector.filterIsInstance<List<*>>()
         .mapNotNull { it[targetColumnIndex] as? Boolean }

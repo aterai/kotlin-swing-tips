@@ -10,7 +10,10 @@ fun makeUI() = JDesktopPane().also {
   it.preferredSize = Dimension(320, 240)
 }
 
-private fun addFrame(desktop: JDesktopPane, idx: Int) {
+private fun addFrame(
+  desktop: JDesktopPane,
+  idx: Int,
+) {
   val titleAlignment = if (idx == 0) "CENTER" else "LEADING"
   val frame = JInternalFrame("title: $titleAlignment", true, true, true, true)
   (frame.ui as? BasicInternalFrameUI)?.northPane?.also {

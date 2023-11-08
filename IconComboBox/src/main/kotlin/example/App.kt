@@ -62,7 +62,10 @@ private fun makeModel() = DefaultComboBoxModel<String>().also {
   it.addElement("bbb12")
 }
 
-private fun makeTitledPanel(title: String, vararg list: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  vararg list: Component,
+): Component {
   val p = JPanel(GridBagLayout())
   p.border = BorderFactory.createTitledBorder(title)
   val c = GridBagConstraints()
@@ -76,10 +79,18 @@ private fun makeTitledPanel(title: String, vararg list: Component): Component {
   return p
 }
 
-private fun initIconComboBorder1(comboBox: JComboBox<*>, icon: Icon) {
+private fun initIconComboBorder1(
+  comboBox: JComboBox<*>,
+  icon: Icon,
+) {
   val c = comboBox.editor.editorComponent as? JTextField ?: return
   val wrappedIcon = object : Icon {
-    override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+    override fun paintIcon(
+      c: Component,
+      g: Graphics,
+      x: Int,
+      y: Int,
+    ) {
       val g2 = g.create() as? Graphics2D ?: return
       val ih = icon.iconHeight
       val ch = iconHeight
@@ -98,7 +109,10 @@ private fun initIconComboBorder1(comboBox: JComboBox<*>, icon: Icon) {
   c.border = BorderFactory.createCompoundBorder(c.border, b3)
 }
 
-private fun initIconComboBorder2(comboBox: JComboBox<*>, icon: Icon) {
+private fun initIconComboBorder2(
+  comboBox: JComboBox<*>,
+  icon: Icon,
+) {
   EventQueue.invokeLater {
     val margin = BorderFactory.createEmptyBorder(0, icon.iconWidth + 2, 0, 2)
     (comboBox.editor.editorComponent as? JTextField)?.also {
@@ -116,7 +130,10 @@ private fun initIconComboBorder2(comboBox: JComboBox<*>, icon: Icon) {
   }
 }
 
-private fun <E> initComboBoxRenderer(combo: JComboBox<E>, icon: Icon) {
+private fun <E> initComboBoxRenderer(
+  combo: JComboBox<E>,
+  icon: Icon,
+) {
   val renderer = combo.renderer
   combo.setRenderer { list, value, index, isSelected, cellHasFocus ->
     renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
