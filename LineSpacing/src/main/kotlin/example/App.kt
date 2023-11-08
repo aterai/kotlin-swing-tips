@@ -41,7 +41,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun setSampleText(textPane: JTextPane, attr: MutableAttributeSet) {
+private fun setSampleText(
+  textPane: JTextPane,
+  attr: MutableAttributeSet,
+) {
   textPane.text = "12341234\n1234 567890 5555 66666 77777\n88 999999 "
   runCatching {
     val doc = textPane.styledDocument

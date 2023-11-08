@@ -104,7 +104,10 @@ private class LineFocusTable(model: TableModel) : JTable(model) {
     setDefaultEditor(Boolean::class.javaObjectType, DefaultCellEditor(checkBox))
   }
 
-  private fun updateBorderType(border: DotBorder, column: Int) {
+  private fun updateBorderType(
+    border: DotBorder,
+    column: Int,
+  ) {
     border.type.clear() // = EnumSet.noneOf(Type.class)
     if (column == 0) {
       border.type.add(Type.START)
@@ -114,7 +117,11 @@ private class LineFocusTable(model: TableModel) : JTable(model) {
     }
   }
 
-  override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
+  override fun prepareRenderer(
+    tcr: TableCellRenderer,
+    row: Int,
+    column: Int,
+  ): Component {
     val o = super.prepareRenderer(tcr, row, column)
     val c = o as? JComponent ?: return o
     (c as? JCheckBox)?.isBorderPainted = true
@@ -127,7 +134,11 @@ private class LineFocusTable(model: TableModel) : JTable(model) {
     return c
   }
 
-  override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int): Component {
+  override fun prepareEditor(
+    editor: TableCellEditor,
+    row: Int,
+    column: Int,
+  ): Component {
     val c = super.prepareEditor(editor, row, column)
     (c as? JCheckBox)?.also {
       it.border = dotBorder
@@ -155,7 +166,14 @@ private class DotBorder(
 
   override fun isBorderOpaque() = true
 
-  override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, w: Int, h: Int) {
+  override fun paintBorder(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+    w: Int,
+    h: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = DOT_COLOR
@@ -217,7 +235,11 @@ private class TablePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     (c as? JTable)?.also {
       delete.isEnabled = it.selectedRowCount > 0
       super.show(it, x, y)

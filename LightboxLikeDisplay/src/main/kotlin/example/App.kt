@@ -175,7 +175,12 @@ private class LoadingIcon : Icon {
     this.running = running
   }
 
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = Color(0x0, true)
@@ -206,7 +211,12 @@ private class LoadingIcon : Icon {
 }
 
 private class MissingIcon : Icon {
-  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     val w = iconWidth
     val h = iconHeight

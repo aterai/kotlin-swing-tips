@@ -86,7 +86,10 @@ private class SingleClickSelectList<E>(model: ListModel<E>) : JList<E>(model) {
     addMouseMotionListener(listener)
   }
 
-  override fun setSelectionInterval(anchor: Int, lead: Int) {
+  override fun setSelectionInterval(
+    anchor: Int,
+    lead: Int,
+  ) {
     if (anchor == lead && lead >= 0) {
       if (isDragging) {
         addSelectionInterval(anchor, anchor)

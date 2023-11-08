@@ -43,7 +43,10 @@ private fun makeTestBox() = Box.createVerticalBox().also {
   it.add(Box.createVerticalGlue())
 }
 
-private fun makeSystemColor(color: Color, text: String): Component {
+private fun makeSystemColor(
+  color: Color,
+  text: String,
+): Component {
   val field = JTextField("%s RGB(#%06X)".format(text, color.rgb and 0xFF_FF_FF))
   field.isEditable = false
   val c = object : JLabel() {

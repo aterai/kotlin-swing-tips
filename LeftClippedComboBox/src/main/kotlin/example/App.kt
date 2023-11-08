@@ -48,7 +48,10 @@ private fun initComboBoxRenderer(combo: JComboBox<String>) {
       return c
     }
 
-    private fun getAvailableWidth(combo: JComboBox<String>, index: Int): Int {
+    private fun getAvailableWidth(
+      combo: JComboBox<String>,
+      index: Int,
+    ): Int {
       var itb = 0
       var ilr = 0
       var insets = insets
@@ -69,7 +72,11 @@ private fun initComboBoxRenderer(combo: JComboBox<String>) {
       return availableWidth
     }
 
-    private fun getLeftClippedText(text: String, fm: FontMetrics, availableWidth: Int): String {
+    private fun getLeftClippedText(
+      text: String,
+      fm: FontMetrics,
+      availableWidth: Int,
+    ): String {
       if (fm.stringWidth(text) <= availableWidth) {
         return text
       }

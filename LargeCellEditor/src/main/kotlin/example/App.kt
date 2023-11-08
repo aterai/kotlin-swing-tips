@@ -49,7 +49,10 @@ private fun makeIconTableModel(list: ListModel<IconItem>): TableModel {
     arrayOf(list.getElementAt(6), list.getElementAt(7), list.getElementAt(8)),
   )
   return object : DefaultTableModel(data, null) {
-    override fun isCellEditable(row: Int, column: Int) = false
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = false
 
     override fun getColumnCount() = 3
   }

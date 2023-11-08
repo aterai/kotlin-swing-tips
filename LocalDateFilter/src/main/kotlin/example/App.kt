@@ -131,13 +131,19 @@ private class CalendarViewTableModel(
     ""
   }
 
-  override fun getValueAt(row: Int, column: Int) = if (column == 0) {
+  override fun getValueAt(
+    row: Int,
+    column: Int,
+  ) = if (column == 0) {
     currentMonth.atDay(1).plusDays(row.toLong())
   } else {
     super.getValueAt(row, column)
   }
 
-  override fun isCellEditable(row: Int, column: Int) = column != 0
+  override fun isCellEditable(
+    row: Int,
+    column: Int,
+  ) = column != 0
 }
 
 private class LocalDateFilter(
