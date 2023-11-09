@@ -24,7 +24,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun addFrame(desktop: JDesktopPane, idx: Int) {
+private fun addFrame(
+  desktop: JDesktopPane,
+  idx: Int,
+) {
   val frame = object : JInternalFrame("JInternalFrame", true, true, true, true) {
     override fun updateUI() {
       super.updateUI()
@@ -64,7 +67,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd

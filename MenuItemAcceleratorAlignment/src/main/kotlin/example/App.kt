@@ -168,7 +168,13 @@ private object MenuItemHelper {
     }
   }
 
-  private fun drawString(c: JComponent, g: Graphics, text: String, x: Int, y: Int) {
+  private fun drawString(
+    c: JComponent,
+    g: Graphics,
+    text: String,
+    x: Int,
+    y: Int,
+  ) {
     SwingUtilities2.drawString(c, g, text, x, y)
     // Java 9: BasicGraphicsUtils.drawString(c, g as Graphics2D, text, x, y)
   }

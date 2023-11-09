@@ -77,7 +77,10 @@ fun makeUI(): Component {
   }
   tree.border = BorderFactory.createEmptyBorder(1, 1 + (iw - ow) / 2, 1, 1)
   val layerUI = object : LayerUI<JTree>() {
-    override fun paint(g: Graphics, c: JComponent) {
+    override fun paint(
+      g: Graphics,
+      c: JComponent,
+    ) {
       super.paint(g, c)
       val g2 = g.create() as? Graphics2D ?: return
       icon2.paintIcon(c, g2, 1, 1)
@@ -93,7 +96,12 @@ fun makeUI(): Component {
 }
 
 private class ColorIcon(private val color: Color, private val dim: Dimension) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.color = color

@@ -7,7 +7,11 @@ import javax.swing.border.AbstractBorder
 import javax.swing.plaf.basic.BasicPopupMenuUI
 
 class CustomPopupMenuUI : BasicPopupMenuUI() {
-  override fun getPopup(popup: JPopupMenu?, x: Int, y: Int): Popup? {
+  override fun getPopup(
+    popup: JPopupMenu?,
+    x: Int,
+    y: Int,
+  ): Popup? {
     val pp = super.getPopup(popup, x, y)
     if (pp != null) {
       EventQueue.invokeLater {
@@ -26,13 +30,25 @@ class CustomPopupMenuUI : BasicPopupMenuUI() {
   private class ShadowBorderInPanel : AbstractBorder() {
     override fun getBorderInsets(c: Component?) = Insets(0, 0, OFF, OFF)
 
-    override fun paintBorder(c: Component?, g: Graphics, x: Int, y: Int, w: Int, h: Int) {
+    override fun paintBorder(
+      c: Component?,
+      g: Graphics,
+      x: Int,
+      y: Int,
+      w: Int,
+      h: Int,
+    ) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.drawImage(makeShadowImage(x, y, w, h), x, y, c)
       g2.dispose()
     }
 
-    fun makeShadowImage(x: Int, y: Int, w: Int, h: Int): BufferedImage {
+    fun makeShadowImage(
+      x: Int,
+      y: Int,
+      w: Int,
+      h: Int,
+    ): BufferedImage {
       val image = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
       val g2 = image.createGraphics()
       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)

@@ -20,7 +20,10 @@ fun makeUI(): Component {
     }
   }
   val mi2 = object : JMenuItem("JPanel with JMenuItem", STRUT) {
-    override fun contains(x: Int, y: Int) = false // disable mouse events
+    override fun contains(
+      x: Int,
+      y: Int,
+    ) = false // disable mouse events
   }
   item2.add(mi2)
 
@@ -28,7 +31,10 @@ fun makeUI(): Component {
   item3.border = BorderFactory.createEmptyBorder() // NimbusLookAndFeel
   item3.isEnabled = false
   val mi3 = object : JMenuItem("JMenuItem(disabled) with JMenuItem", STRUT) {
-    override fun contains(x: Int, y: Int) = false // disable mouse events
+    override fun contains(
+      x: Int,
+      y: Int,
+    ) = false // disable mouse events
   }
   item3.add(mi3)
 
@@ -56,7 +62,12 @@ private fun makeMenu(title: String, item: Component) = JMenu(title).also {
 }
 
 private class ColorIcon(private val color: Color) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = color

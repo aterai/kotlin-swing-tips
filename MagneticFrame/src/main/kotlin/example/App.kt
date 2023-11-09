@@ -31,7 +31,11 @@ private fun createFrame(title: String): JInternalFrame {
 }
 
 private class MagneticDesktopManager : DefaultDesktopManager() {
-  override fun dragFrame(frame: JComponent, x: Int, y: Int) {
+  override fun dragFrame(
+    frame: JComponent,
+    x: Int,
+    y: Int,
+  ) {
     val desktop = SwingUtilities.getAncestorOfClass(JDesktopPane::class.java, frame)
     if (desktop is JDesktopPane) {
       val w = desktop.size.width - frame.size.width - x
@@ -45,19 +49,23 @@ private class MagneticDesktopManager : DefaultDesktopManager() {
     }
   }
 
-  private fun getX(east: Int, west: Int) =
-    if (east < west) {
-      if (isNear(east)) 0 else east
-    } else {
-      if (isNear(west)) west + east else east
-    }
+  private fun getX(
+    east: Int,
+    west: Int,
+  ) = if (east < west) {
+    if (isNear(east)) 0 else east
+  } else {
+    if (isNear(west)) west + east else east
+  }
 
-  private fun getY(north: Int, south: Int) =
-    if (north < south) {
-      if (isNear(north)) 0 else north
-    } else {
-      if (isNear(south)) south + north else north
-    }
+  private fun getY(
+    north: Int,
+    south: Int,
+  ) = if (north < south) {
+    if (isNear(north)) 0 else north
+  } else {
+    if (isNear(south)) south + north else north
+  }
 
   private fun isNear(c: Int) = abs(c) < 10
 }
