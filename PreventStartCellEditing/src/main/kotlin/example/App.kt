@@ -25,7 +25,10 @@ fun makeUI(): Component {
       Any::class.java
     }
 
-    override fun isCellEditable(row: Int, col: Int) = col != 0 && !r4.isSelected
+    override fun isCellEditable(
+      row: Int,
+      col: Int,
+    ) = col != 0 && !r4.isSelected
   }
   val table = JTable(model)
   table.autoCreateRowSorter = true

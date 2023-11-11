@@ -140,7 +140,12 @@ private class PressAndHoldButton(icon: Icon, val popupMenu: JPopupMenu?) : JButt
 private data class MenuContext(val command: String, val color: Color)
 
 private class MenuArrowIcon : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = Color.BLACK

@@ -18,7 +18,10 @@ private val model = object : DefaultTableModel(columnNames, 0) {
     else -> super.getColumnClass(column)
   }
 
-  override fun isCellEditable(row: Int, col: Int) = false
+  override fun isCellEditable(
+    row: Int,
+    col: Int,
+  ) = false
 }
 
 fun makeUI(): Component {
@@ -30,7 +33,11 @@ fun makeUI(): Component {
   val table = object : JTable(model) {
     private val evenColor = Color(0xFA_FA_FA)
 
-    override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
+    override fun prepareRenderer(
+      tcr: TableCellRenderer,
+      row: Int,
+      column: Int,
+    ): Component {
       val c = super.prepareRenderer(tcr, row, column)
       c.foreground = foreground
       c.background = if (row % 2 == 0) evenColor else background
@@ -115,8 +122,11 @@ private class UrlRenderer : MouseAdapter(), TableCellRenderer {
     return c
   }
 
-  private fun isRolloverCell(table: JTable, row: Int, column: Int) =
-    !table.isEditing && viewRowIndex == row && viewColumnIndex == column && isRollover
+  private fun isRolloverCell(
+    table: JTable,
+    row: Int,
+    column: Int,
+  ) = !table.isEditing && viewRowIndex == row && viewColumnIndex == column && isRollover
 
   override fun mouseMoved(e: MouseEvent) {
     val table = e.component as? JTable ?: return
@@ -169,11 +179,16 @@ private class UrlRenderer : MouseAdapter(), TableCellRenderer {
     }
   }
 
-  private fun isUrlColumn(tbl: JTable, col: Int) =
-    col >= 0 && tbl.getColumnClass(col) == URL::class.java
+  private fun isUrlColumn(
+    tbl: JTable,
+    col: Int,
+  ) = col >= 0 && tbl.getColumnClass(col) == URL::class.java
 
   // @see SwingUtilities2.pointOutsidePrefSize(...)
-  private fun pointInsidePrefSize(table: JTable, p: Point): Boolean {
+  private fun pointInsidePrefSize(
+    table: JTable,
+    p: Point,
+  ): Boolean {
     val row = table.rowAtPoint(p)
     val col = table.columnAtPoint(p)
     val tcr = table.getCellRenderer(row, col)

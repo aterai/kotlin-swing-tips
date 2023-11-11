@@ -69,13 +69,19 @@ private class DisableInputLayerUI<V : Component> : LayerUI<V>() {
     super.uninstallUI(c)
   }
 
-  override fun eventDispatched(e: AWTEvent, l: JLayer<out V>) {
+  override fun eventDispatched(
+    e: AWTEvent,
+    l: JLayer<out V>,
+  ) {
     if (isBlocking && e is InputEvent) {
       e.consume()
     }
   }
 
-  override fun applyPropertyChange(e: PropertyChangeEvent, l: JLayer<out V>) {
+  override fun applyPropertyChange(
+    e: PropertyChangeEvent,
+    l: JLayer<out V>,
+  ) {
     if (CMD_REPAINT == e.propertyName) {
       l.glassPane.isVisible = e.newValue as? Boolean == true
     }
@@ -113,7 +119,11 @@ private class TablePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTable) {
       delete.isEnabled = c.selectedRowCount > 0
       super.show(c, x, y)

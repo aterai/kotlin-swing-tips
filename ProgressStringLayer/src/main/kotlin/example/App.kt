@@ -148,7 +148,10 @@ private class ProgressBarLayerUI(private val label: JLabel) : LayerUI<JProgressB
     SwingUtilities.updateComponentTreeUI(label)
   }
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     super.paint(g, c)
     val progress = (c as? JLayer<*>)?.view
     if (progress is JProgressBar) {

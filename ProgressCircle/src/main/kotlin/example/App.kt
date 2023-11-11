@@ -68,7 +68,10 @@ private class ProgressCircleUI : BasicProgressBarUI() {
     it.setSize(v, v)
   }
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     val b = progressBar.insets // area for border
     val barRectWidth = progressBar.width - b.right - b.left
     val barRectHeight = progressBar.height - b.top - b.bottom

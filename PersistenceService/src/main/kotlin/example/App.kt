@@ -49,7 +49,11 @@ private open class LoadSaveTask(
   }
 
   companion object {
-    private fun loadWindowState(ps: PersistenceService, codebase: URL, windowState: WindowState) {
+    private fun loadWindowState(
+      ps: PersistenceService,
+      codebase: URL,
+      windowState: WindowState,
+    ) {
       runCatching {
         val fc = ps[codebase]
         XMLDecoder(BufferedInputStream(fc.inputStream)).use { d ->
@@ -64,7 +68,11 @@ private open class LoadSaveTask(
       }
     }
 
-    protected fun saveWindowState(ps: PersistenceService, codebase: URL, windowState: WindowState) {
+    protected fun saveWindowState(
+      ps: PersistenceService,
+      codebase: URL,
+      windowState: WindowState,
+    ) {
       runCatching {
         val fc = ps[codebase]
         XMLEncoder(BufferedOutputStream(fc.getOutputStream(true))).use { e ->

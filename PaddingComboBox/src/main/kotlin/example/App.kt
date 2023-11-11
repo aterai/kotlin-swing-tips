@@ -29,7 +29,10 @@ fun makeUI(): Component {
   }
 }
 
-fun layoutComboBoxPanel(p2: JPanel, list: List<JComboBox<*>>) {
+fun layoutComboBoxPanel(
+  p2: JPanel,
+  list: List<JComboBox<*>>,
+) {
   p2.removeAll()
   p2.layout = GridBagLayout()
   val inside = BorderFactory.createEmptyBorder(10, 5 + 2, 10, 10 + 2)
@@ -166,7 +169,10 @@ private object LookAndFeelUtils {
     return menu
   }
 
-  fun initLookAndFeelAction(info: UIManager.LookAndFeelInfo, b: AbstractButton) {
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
     val cmd = info.className
     b.text = info.name
     b.actionCommand = cmd

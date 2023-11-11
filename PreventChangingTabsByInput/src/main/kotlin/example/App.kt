@@ -66,7 +66,10 @@ private class DisableInputLayerUI : LayerUI<Component>() {
     super.uninstallUI(c)
   }
 
-  override fun eventDispatched(e: AWTEvent, l: JLayer<out Component>) {
+  override fun eventDispatched(
+    e: AWTEvent,
+    l: JLayer<out Component>,
+  ) {
     if (e is InputEvent && l.view == e.source) {
       e.consume()
     }

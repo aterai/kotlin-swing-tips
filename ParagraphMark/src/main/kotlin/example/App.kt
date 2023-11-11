@@ -46,12 +46,18 @@ private class MyViewFactory : ViewFactory {
 }
 
 private class ParagraphWithEopmView(elem: Element?) : ParagraphView(elem) {
-  override fun paint(g: Graphics, allocation: Shape) {
+  override fun paint(
+    g: Graphics,
+    allocation: Shape,
+  ) {
     super.paint(g, allocation)
     paintCustomParagraph(g, allocation)
   }
 
-  private fun paintCustomParagraph(g: Graphics, a: Shape) {
+  private fun paintCustomParagraph(
+    g: Graphics,
+    a: Shape,
+  ) {
     runCatching {
       val paragraph = modelToView(endOffset, a, Position.Bias.Backward)
       val r = paragraph?.bounds ?: a.bounds
