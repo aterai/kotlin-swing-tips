@@ -67,14 +67,20 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val sp = JScrollPane(c)
   sp.border = BorderFactory.createTitledBorder(title)
   return sp
 }
 
 private class NoWrapParagraphView(elem: Element) : ParagraphView(elem) {
-  override fun calculateMinorAxisRequirements(axis: Int, r: SizeRequirements?): SizeRequirements {
+  override fun calculateMinorAxisRequirements(
+    axis: Int,
+    r: SizeRequirements?,
+  ): SizeRequirements {
     val req = super.calculateMinorAxisRequirements(axis, r)
     req.minimum = req.preferred
     return req

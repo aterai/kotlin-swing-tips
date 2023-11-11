@@ -72,7 +72,11 @@ private class IntegerInputVerifier : InputVerifier() {
 
 private class IntegerDocument : PlainDocument() {
   @Throws(BadLocationException::class)
-  override fun insertString(offset: Int, str: String?, attributes: AttributeSet?) {
+  override fun insertString(
+    offset: Int,
+    str: String?,
+    attributes: AttributeSet?,
+  ) {
     if (str != null) {
       val newValue: String
       val length = length
@@ -90,7 +94,10 @@ private class IntegerDocument : PlainDocument() {
   }
 
   @Throws(BadLocationException::class)
-  override fun remove(offset: Int, length: Int) {
+  override fun remove(
+    offset: Int,
+    length: Int,
+  ) {
     val currentLength = getLength()
     val currentContent = getText(0, currentLength)
     val before = currentContent.substring(0, offset)
@@ -101,7 +108,10 @@ private class IntegerDocument : PlainDocument() {
   }
 
   @Throws(BadLocationException::class)
-  private fun checkInput(proposedValue: String, offset: Int) {
+  private fun checkInput(
+    proposedValue: String,
+    offset: Int,
+  ) {
     if (proposedValue.isNotEmpty()) {
       runCatching {
         proposedValue.toInt()
