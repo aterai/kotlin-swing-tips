@@ -37,7 +37,12 @@ fun makeUI(): Component {
   }
 }
 
-fun showMessageDialog(parent: Component?, message: Any, title: String, messageType: Int) {
+fun showMessageDialog(
+  parent: Component?,
+  message: Any,
+  title: String,
+  messageType: Int,
+) {
   val pane = object : JOptionPane(message, messageType, DEFAULT_OPTION, null, null, null) {
     private var texture: Paint? = null
 
@@ -70,7 +75,10 @@ private fun descendants(parent: Container): List<Component> = parent.components
 //   .fold(listOf<Component>(parent)) { a, b -> a + b }
 
 private object TextureUtils {
-  fun createCheckerTexture(cs: Int, color: Color): TexturePaint {
+  fun createCheckerTexture(
+    cs: Int,
+    color: Color,
+  ): TexturePaint {
     val size = cs * cs
     val img = BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB)
     val g2 = img.createGraphics()

@@ -43,7 +43,11 @@ fun makePanel(overlap: Int) = object : JPanel(FlowLayout(FlowLayout.LEADING, -ov
   it.isOpaque = false
 }
 
-fun makeBreadcrumb(list: List<String>, color: Color, overlap: Int): JPanel {
+fun makeBreadcrumb(
+  list: List<String>,
+  color: Color,
+  overlap: Int,
+): JPanel {
   val p = makePanel(overlap)
   p.border = BorderFactory.createEmptyBorder(5, overlap + 5, 5, 5)
   val bg = ButtonGroup()
@@ -55,7 +59,11 @@ fun makeBreadcrumb(list: List<String>, color: Color, overlap: Int): JPanel {
   return p
 }
 
-fun makeChevronBreadcrumb(list: List<String>, color: Color, overlap: Int): JPanel {
+fun makeChevronBreadcrumb(
+  list: List<String>,
+  color: Color,
+  overlap: Int,
+): JPanel {
   val p = makePanel(overlap)
   p.border = BorderFactory.createEmptyBorder(5, overlap + 5, 5, 5)
   val bg = ButtonGroup()
@@ -67,7 +75,11 @@ fun makeChevronBreadcrumb(list: List<String>, color: Color, overlap: Int): JPane
   return p
 }
 
-fun makeRibbonBreadcrumb(list: List<String>, color: Color, overlap: Int): JPanel {
+fun makeRibbonBreadcrumb(
+  list: List<String>,
+  color: Color,
+  overlap: Int,
+): JPanel {
   val p = makePanel(overlap)
   p.border = BorderFactory.createEmptyBorder(5, overlap + 5, 5, 5)
   val bg = ButtonGroup()
@@ -79,9 +91,16 @@ fun makeRibbonBreadcrumb(list: List<String>, color: Color, overlap: Int): JPanel
   return p
 }
 
-private fun makeButton(title: String, icon: Icon, color: Color): AbstractButton {
+private fun makeButton(
+  title: String,
+  icon: Icon,
+  color: Color,
+): AbstractButton {
   val b = object : JRadioButton(title) {
-    override fun contains(x: Int, y: Int) = (getIcon() as? ArrowToggleButtonIcon)?.let {
+    override fun contains(
+      x: Int,
+      y: Int,
+    ) = (getIcon() as? ArrowToggleButtonIcon)?.let {
       it.shape?.contains(Point(x, y))
     } ?: super.contains(x, y)
   }
@@ -99,7 +118,12 @@ private open class ArrowToggleButtonIcon : Icon {
   var shape: Shape? = null
     private set
 
-  open fun makeShape(parent: Container, c: Component, x: Int, y: Int): Shape {
+  open fun makeShape(
+    parent: Container,
+    c: Component,
+    x: Int,
+    y: Int,
+  ): Shape {
     val w = c.width - 1.0
     val h = c.height - 1.0
     val h2 = h * .5
@@ -119,7 +143,12 @@ private open class ArrowToggleButtonIcon : Icon {
     return AffineTransform.getTranslateInstance(tx, ty).createTransformedShape(p)
   }
 
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val parent = c.parent ?: return
     shape = makeShape(parent, c, x, y)
     var bgc = parent.background
@@ -152,7 +181,12 @@ private open class ArrowToggleButtonIcon : Icon {
 }
 
 private class SizeIcon : ArrowToggleButtonIcon() {
-  override fun makeShape(parent: Container, c: Component, x: Int, y: Int): Shape {
+  override fun makeShape(
+    parent: Container,
+    c: Component,
+    x: Int,
+    y: Int,
+  ): Shape {
     val w = c.width - 1.0
     val h = c.height - 1.0
     val p: Path2D = Path2D.Double()
@@ -168,7 +202,12 @@ private class SizeIcon : ArrowToggleButtonIcon() {
 }
 
 private class RibbonToggleButtonIcon : ArrowToggleButtonIcon() {
-  override fun makeShape(parent: Container, c: Component, x: Int, y: Int): Shape {
+  override fun makeShape(
+    parent: Container,
+    c: Component,
+    x: Int,
+    y: Int,
+  ): Shape {
     val r = 4.0
     val w = c.width - 1.0
     val h = c.height - 1.0
@@ -198,7 +237,10 @@ private class RibbonToggleButtonIcon : ArrowToggleButtonIcon() {
 private class BreadcrumbLayerUI<V : Component> : LayerUI<V>() {
   private var shape: Shape? = null
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     super.paint(g, c)
     val s = shape ?: return
     val g2 = g.create() as? Graphics2D ?: return
@@ -231,7 +273,10 @@ private class BreadcrumbLayerUI<V : Component> : LayerUI<V>() {
     super.uninstallUI(c)
   }
 
-  private fun update(e: MouseEvent, l: JLayer<out V>) {
+  private fun update(
+    e: MouseEvent,
+    l: JLayer<out V>,
+  ) {
     val id = e.id
     val s = if (id == MouseEvent.MOUSE_ENTERED || id == MouseEvent.MOUSE_MOVED) {
       val c = e.component
@@ -249,11 +294,17 @@ private class BreadcrumbLayerUI<V : Component> : LayerUI<V>() {
     }
   }
 
-  override fun processMouseEvent(e: MouseEvent, l: JLayer<out V>) {
+  override fun processMouseEvent(
+    e: MouseEvent,
+    l: JLayer<out V>,
+  ) {
     update(e, l)
   }
 
-  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out V>) {
+  override fun processMouseMotionEvent(
+    e: MouseEvent,
+    l: JLayer<out V>,
+  ) {
     update(e, l)
   }
 }
