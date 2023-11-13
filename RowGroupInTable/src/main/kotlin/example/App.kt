@@ -54,7 +54,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun addRowData(model: DefaultTableModel, data: RowData) {
+private fun addRowData(
+  model: DefaultTableModel,
+  data: RowData,
+) {
   model.addRow(Collections.nCopies(model.columnCount, data).toTypedArray())
 }
 
@@ -91,7 +94,12 @@ private class RowDataRenderer : TableCellRenderer {
     }
   }
 
-  private fun getGroupText(value: RowData, row: Int, table: JTable, column: Int): String {
+  private fun getGroupText(
+    value: RowData,
+    row: Int,
+    table: JTable,
+    column: Int,
+  ): String {
     val str = value.group
     val prev = if (row > 0) {
       (table.getValueAt(row - 1, column) as? RowData)?.group

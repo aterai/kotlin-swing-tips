@@ -62,7 +62,10 @@ private class HighlightListener : MouseAdapter() {
   private var viewRowIndex = -1
   private var viewColumnIndex = -1
 
-  fun isHighlightedCell(row: Int, column: Int) = viewRowIndex == row && viewColumnIndex == column
+  fun isHighlightedCell(
+    row: Int,
+    column: Int,
+  ) = viewRowIndex == row && viewColumnIndex == column
 
   override fun mouseMoved(e: MouseEvent) {
     (e.component as? JTable)?.also { table ->
@@ -82,7 +85,11 @@ private class HighlightListener : MouseAdapter() {
     }
   }
 
-  private fun getRepaintRect(table: JTable, pr: Int, pc: Int): Rectangle {
+  private fun getRepaintRect(
+    table: JTable,
+    pr: Int,
+    pc: Int,
+  ): Rectangle {
     return if (viewRowIndex >= 0 && viewColumnIndex >= 0) {
       val r = table.getCellRect(viewRowIndex, viewColumnIndex, false)
       if (pr >= 0 && pc >= 0) r.union(table.getCellRect(pr, pc, false)) else r
@@ -166,18 +173,32 @@ private class RolloverBooleanRenderer(
       } ?: super.isOpaque()
     }
 
-    override fun firePropertyChange(propertyName: String, oldValue: Any?, newValue: Any?) {
+    override fun firePropertyChange(
+      propertyName: String,
+      oldValue: Any?,
+      newValue: Any?,
+    ) {
       // if (propertyName == "border" ||
       //     ((propertyName == "font" || propertyName == "foreground") && oldValue != newValue)) {
       //   super.firePropertyChange(propertyName, oldValue, newValue)
       // }
     }
 
-    override fun firePropertyChange(propertyName: String, oldValue: Boolean, newValue: Boolean) {
+    override fun firePropertyChange(
+      propertyName: String,
+      oldValue: Boolean,
+      newValue: Boolean,
+    ) {
       // Overridden for performance reasons.
     }
 
-    override fun repaint(tm: Long, x: Int, y: Int, width: Int, height: Int) {
+    override fun repaint(
+      tm: Long,
+      x: Int,
+      y: Int,
+      width: Int,
+      height: Int,
+    ) {
       // Overridden for performance reasons.
     }
 

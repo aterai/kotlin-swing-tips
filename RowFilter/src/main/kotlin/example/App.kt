@@ -35,7 +35,11 @@ private class TablePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTable) {
       addMenuItem.isEnabled = canAddRow()
       deleteMenuItem.isEnabled = c.selectedRowCount > 0
@@ -115,7 +119,10 @@ private class RowDataModel : DefaultTableModel() {
     getValueAt(identifier, 2)?.toString() ?: "",
   )
 
-  override fun isCellEditable(row: Int, col: Int) = COLUMN_ARRAY[col].isEditable
+  override fun isCellEditable(
+    row: Int,
+    col: Int,
+  ) = COLUMN_ARRAY[col].isEditable
 
   override fun getColumnClass(column: Int) = COLUMN_ARRAY[column].columnClass
 

@@ -126,7 +126,14 @@ private object ImageUtils {
 }
 
 private class CentredBackgroundBorder(private val image: BufferedImage) : Border {
-  override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
+  override fun paintBorder(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+    width: Int,
+    height: Int,
+  ) {
     val cx = (width - image.width) / 2
     val cy = (height - image.height) / 2
     val g2 = g.create() as? Graphics2D ?: return
@@ -204,13 +211,19 @@ private class TransparentMenu(title: String?) : JMenu(title) {
     require(pos >= 0) { "index less than zero." }
   }
 
-  override fun insert(s: String, pos: Int) {
+  override fun insert(
+    s: String,
+    pos: Int,
+  ) {
     checkIndex(pos)
     val popup = ensurePopupMenuCreated2()
     popup.insert(JMenuItem(s), pos)
   }
 
-  override fun insert(mi: JMenuItem, pos: Int): JMenuItem {
+  override fun insert(
+    mi: JMenuItem,
+    pos: Int,
+  ): JMenuItem {
     checkIndex(pos)
     val popup = ensurePopupMenuCreated2()
     popup.insert(mi, pos)

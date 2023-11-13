@@ -66,7 +66,12 @@ private fun makeTable() = object : JTable(2, 3) {
 }
 
 private object ResizeCursorUtils {
-  fun createCursor(s: String?, width: Int, height: Int, c: Component): Cursor {
+  fun createCursor(
+    s: String?,
+    width: Int,
+    height: Int,
+    c: Component,
+  ): Cursor {
     val size = height - 2f
     val bi = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
     val g2 = bi.createGraphics()
@@ -79,12 +84,18 @@ private object ResizeCursorUtils {
     return c.toolkit.createCustomCursor(bi, hotSpot, s)
   }
 
-  fun canResize(header: JTableHeader, p: Point): Boolean {
+  fun canResize(
+    header: JTableHeader,
+    p: Point,
+  ): Boolean {
     val column = getResizeColumn(header, p)
     return column != null && header.resizingAllowed && column.resizable
   }
 
-  private fun getResizeColumn(header: JTableHeader, p: Point): TableColumn? {
+  private fun getResizeColumn(
+    header: JTableHeader,
+    p: Point,
+  ): TableColumn? {
     val column = header.columnAtPoint(p)
     return if (column == -1) {
       null
@@ -177,7 +188,12 @@ private class ShapeIcon(
   private val width: Int,
   private val height: Int,
 ) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     val b = shape.bounds2D

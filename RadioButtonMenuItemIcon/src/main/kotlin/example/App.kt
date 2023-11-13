@@ -24,7 +24,12 @@ private fun createMenuBar(): JMenuBar {
 }
 
 private class RadioButtonMenuItemIcon1 : Icon, UIResource, Serializable {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     if (c is AbstractButton) {
       val model = c.model
       if (model.isSelected) {
@@ -47,7 +52,12 @@ private class RadioButtonMenuItemIcon1 : Icon, UIResource, Serializable {
 }
 
 private class RadioButtonMenuItemIcon2 : Icon, UIResource, Serializable {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     if (c is AbstractButton) {
       val model = c.model
       if (model.isSelected) {

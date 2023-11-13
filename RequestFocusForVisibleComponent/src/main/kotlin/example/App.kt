@@ -47,7 +47,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTabbedPane(tabs: JTabbedPane, title: String): JTabbedPane {
+private fun makeTabbedPane(
+  tabs: JTabbedPane,
+  title: String,
+): JTabbedPane {
   tabs.componentPopupMenu = TabbedPanePopupMenu()
   tabs.addTab(title, JTextArea(title))
   tabs.addTab("000", JTextArea("000000000000000000000000"))
@@ -110,7 +113,11 @@ private class TabbedPanePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTabbedPane) {
       closePage.isEnabled = c.indexAtLocation(x, y) >= 0
       closeAll.isEnabled = c.tabCount > 0

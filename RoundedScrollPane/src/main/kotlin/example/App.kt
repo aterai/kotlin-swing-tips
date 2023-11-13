@@ -174,7 +174,12 @@ private class ComboRolloverHandler : MouseAdapter() {
 }
 
 private class ArrowIcon(private val color: Color, private val rollover: Color) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.paint = color
     var shift = 0
@@ -201,7 +206,14 @@ private class ArrowIcon(private val color: Color, private val rollover: Color) :
 }
 
 private open class RoundedCornerBorder : AbstractBorder() {
-  override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
+  override fun paintBorder(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+    width: Int,
+    height: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     val dr = ARC.toDouble()
@@ -239,7 +251,14 @@ private open class RoundedCornerBorder : AbstractBorder() {
 
 private class TopRoundedCornerBorder : RoundedCornerBorder() {
   // https://ateraimemo.com/Swing/RoundedComboBox.html
-  override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
+  override fun paintBorder(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+    width: Int,
+    height: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     if (c is JPopupMenu) {
@@ -268,7 +287,14 @@ private class TopRoundedCornerBorder : RoundedCornerBorder() {
 }
 
 private class BottomRoundedCornerBorder : RoundedCornerBorder() {
-  override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
+  override fun paintBorder(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+    width: Int,
+    height: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     val r = ARC.toDouble()
@@ -304,14 +330,22 @@ private class WithoutArrowButtonScrollBarUI : BasicScrollBarUI() {
 
   override fun createIncreaseButton(orientation: Int) = ZeroSizeButton()
 
-  override fun paintTrack(g: Graphics, c: JComponent, r: Rectangle) {
+  override fun paintTrack(
+    g: Graphics,
+    c: JComponent,
+    r: Rectangle,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.paint = trackColor
     g2.fill(r)
     g2.dispose()
   }
 
-  override fun paintThumb(g: Graphics, c: JComponent, r: Rectangle) {
+  override fun paintThumb(
+    g: Graphics,
+    c: JComponent,
+    r: Rectangle,
+  ) {
     if (c !is JScrollBar || !c.isEnabled) {
       return
     }

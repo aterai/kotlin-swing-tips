@@ -159,7 +159,11 @@ private fun appendLine(str: String?) {
   textArea.caretPosition = textArea.document.length
 }
 
-private fun addItem(dirCombo: JComboBox<String>, str: String?, max: Int = 4) {
+private fun addItem(
+  dirCombo: JComboBox<String>,
+  str: String?,
+  max: Int = 4,
+) {
   val model = dirCombo.model as? DefaultComboBoxModel<String>
   if (str == null || str.isEmpty() || model == null) {
     return
@@ -208,7 +212,10 @@ private open class RecursiveFileSearchTask(private val dir: File) : SwingWorker<
   }
 
   @Throws(InterruptedException::class)
-  protected fun doSomething(list: List<Path>, idx: Int) {
+  protected fun doSomething(
+    list: List<Path>,
+    idx: Int,
+  ) {
     val lengthOfTask = list.size
     progress = 100 * idx / lengthOfTask
     Thread.sleep(10)
@@ -218,10 +225,16 @@ private open class RecursiveFileSearchTask(private val dir: File) : SwingWorker<
   }
 
   @Throws(IOException::class)
-  private fun recursiveSearch(dirPath: Path, list: MutableList<Path>) {
+  private fun recursiveSearch(
+    dirPath: Path,
+    list: MutableList<Path>,
+  ) {
     val visitor = object : SimpleFileVisitor<Path>() {
       @Throws(IOException::class)
-      override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
+      override fun visitFile(
+        file: Path,
+        attrs: BasicFileAttributes,
+      ): FileVisitResult {
         if (Thread.interrupted()) {
           throw IOException("Interrupted2")
         }

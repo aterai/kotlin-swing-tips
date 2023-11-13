@@ -48,7 +48,14 @@ private class RippleBorder(c: Component, size: Int) : EmptyBorder(size, size, si
     })
   }
 
-  override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, w: Int, h: Int) {
+  override fun paintBorder(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+    w: Int,
+    h: Int,
+  ) {
     if (!animator.isRunning) {
       super.paintBorder(c, g, x, y, w, h)
       return
