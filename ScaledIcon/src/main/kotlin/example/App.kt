@@ -15,7 +15,11 @@ private val table = object : JTable(model) {
   private val iconIns = Insets(4, 4, 4, 4)
   private val checkIcon = CheckBoxIcon()
 
-  override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int): Component {
+  override fun prepareRenderer(
+    renderer: TableCellRenderer,
+    row: Int,
+    column: Int,
+  ): Component {
     val c = super.prepareRenderer(renderer, row, column)
     if (c is JCheckBox) {
       val s = getRowHeight(row) - iconIns.top - iconIns.bottom
@@ -25,7 +29,11 @@ private val table = object : JTable(model) {
     return c
   }
 
-  override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int): Component {
+  override fun prepareEditor(
+    editor: TableCellEditor,
+    row: Int,
+    column: Int,
+  ): Component {
     val c = super.prepareEditor(editor, row, column)
     if (c is JCheckBox) {
       val s = getRowHeight(row) - iconIns.top - iconIns.bottom
@@ -50,7 +58,12 @@ private class ScaledIcon(
   private val width: Int,
   private val height: Int,
 ) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     g2.translate(x, y)
@@ -67,7 +80,12 @@ private class ScaledIcon(
 }
 
 private class CheckBoxIcon : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create()
     if (g2 is Graphics2D && c is AbstractButton) {
       val model = c.model

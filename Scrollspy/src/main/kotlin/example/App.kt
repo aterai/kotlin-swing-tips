@@ -105,7 +105,10 @@ private fun expandAllNodes(tree: JTree) {
   }
 }
 
-private fun searchTreeNode(tree: JTree, name: Any) {
+private fun searchTreeNode(
+  tree: JTree,
+  name: Any,
+) {
   val model = tree.model
   val root = model.root as? DefaultMutableTreeNode ?: return
   root.preorderEnumeration().toList()
@@ -210,7 +213,12 @@ private class RowSelectionTree : JTree() {
 }
 
 private class EmptyIcon : Icon {
-  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     // Empty icon
   }
 

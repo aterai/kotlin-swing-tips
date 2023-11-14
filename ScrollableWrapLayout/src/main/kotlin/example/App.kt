@@ -41,9 +41,17 @@ private class ScrollableWrapPanel(layout: LayoutManager) : JPanel(layout), Scrol
     return (o as? JViewport)?.size ?: super.getPreferredSize()
   }
 
-  override fun getScrollableUnitIncrement(visible: Rectangle, orientation: Int, dir: Int) = 32
+  override fun getScrollableUnitIncrement(
+    visible: Rectangle,
+    orientation: Int,
+    dir: Int,
+  ) = 32
 
-  override fun getScrollableBlockIncrement(visible: Rectangle, orientation: Int, dir: Int) = 32
+  override fun getScrollableBlockIncrement(
+    visible: Rectangle,
+    orientation: Int,
+    dir: Int,
+  ) = 32
 
   override fun getScrollableTracksViewportWidth() = true
 
@@ -104,7 +112,12 @@ private class ScrollableWrapLayout(
 private data class ListItem(val title: String, val icon: Icon)
 
 private class ColorIcon(private val color: Color) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = color

@@ -388,7 +388,10 @@ open class SwatchPanel : JPanel() {
     return color.red.toString() + ", " + color.green + ", " + color.blue
   }
 
-  fun setSelectedColorFromLocation(x: Int, y: Int) {
+  fun setSelectedColorFromLocation(
+    x: Int,
+    y: Int,
+  ) {
     selCol = if (componentOrientation.isLeftToRight) {
       x / (swatchSize.width + gap.width)
     } else {
@@ -398,7 +401,10 @@ open class SwatchPanel : JPanel() {
     repaint()
   }
 
-  fun getColorForLocation(x: Int, y: Int): Color {
+  fun getColorForLocation(
+    x: Int,
+    y: Int,
+  ): Color {
     val column: Int
     column = if (componentOrientation.isLeftToRight) {
       x / (swatchSize.width + gap.width)
