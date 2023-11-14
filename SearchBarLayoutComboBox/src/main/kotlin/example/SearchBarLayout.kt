@@ -4,7 +4,10 @@ import java.awt.*
 import javax.swing.*
 
 class SearchBarLayout : LayoutManager {
-  override fun addLayoutComponent(name: String, comp: Component) {
+  override fun addLayoutComponent(
+    name: String,
+    comp: Component,
+  ) {
     // not needed
   }
 

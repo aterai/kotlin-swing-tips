@@ -105,7 +105,11 @@ private fun makeMissingImage(): BufferedImage {
   return bi
 }
 
-fun setHighlight(jtc: JTextComponent, pattern: String, painter: HighlightPainter) {
+fun setHighlight(
+  jtc: JTextComponent,
+  pattern: String,
+  painter: HighlightPainter,
+) {
   val highlighter = jtc.highlighter
   highlighter.removeAllHighlights()
   val doc = jtc.document

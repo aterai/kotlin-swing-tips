@@ -182,56 +182,107 @@ private class DigitalNumber(
 
 private enum class Seg {
   A {
-    override fun getShape(x: Double, y: Double, w: Double, h: Double, i: Double): Shape {
+    override fun getShape(
+      x: Double,
+      y: Double,
+      w: Double,
+      h: Double,
+      i: Double,
+    ): Shape {
       val at = AffineTransform.getTranslateInstance(x, y - h - i * 2)
       return at.createTransformedShape(horiz2(w, i))
     }
   },
   B {
-    override fun getShape(x: Double, y: Double, w: Double, h: Double, i: Double): Shape {
+    override fun getShape(
+      x: Double,
+      y: Double,
+      w: Double,
+      h: Double,
+      i: Double,
+    ): Shape {
       val at = AffineTransform.getTranslateInstance(x + w + i * 2, y)
       at.scale(-1.0, 1.0)
       return at.createTransformedShape(vert(h, i))
     }
   },
   C {
-    override fun getShape(x: Double, y: Double, w: Double, h: Double, i: Double): Shape {
+    override fun getShape(
+      x: Double,
+      y: Double,
+      w: Double,
+      h: Double,
+      i: Double,
+    ): Shape {
       val at = AffineTransform.getTranslateInstance(x + w + i * 2, y)
       at.scale(-1.0, -1.0)
       return at.createTransformedShape(vert(h, i))
     }
   },
   D {
-    override fun getShape(x: Double, y: Double, w: Double, h: Double, i: Double): Shape {
+    override fun getShape(
+      x: Double,
+      y: Double,
+      w: Double,
+      h: Double,
+      i: Double,
+    ): Shape {
       val at = AffineTransform.getTranslateInstance(x, y + h + i * 2)
       at.scale(1.0, -1.0)
       return at.createTransformedShape(horiz2(w, i))
     }
   },
   E {
-    override fun getShape(x: Double, y: Double, w: Double, h: Double, i: Double): Shape {
+    override fun getShape(
+      x: Double,
+      y: Double,
+      w: Double,
+      h: Double,
+      i: Double,
+    ): Shape {
       val at = AffineTransform.getTranslateInstance(x, y)
       at.scale(1.0, -1.0)
       return at.createTransformedShape(vert(h, i))
     }
   },
   F {
-    override fun getShape(x: Double, y: Double, w: Double, h: Double, i: Double): Shape {
+    override fun getShape(
+      x: Double,
+      y: Double,
+      w: Double,
+      h: Double,
+      i: Double,
+    ): Shape {
       val at = AffineTransform.getTranslateInstance(x, y)
       return at.createTransformedShape(vert(h, i))
     }
   },
   G {
-    override fun getShape(x: Double, y: Double, w: Double, h: Double, i: Double): Shape {
+    override fun getShape(
+      x: Double,
+      y: Double,
+      w: Double,
+      h: Double,
+      i: Double,
+    ): Shape {
       val at = AffineTransform.getTranslateInstance(x, y)
       return at.createTransformedShape(horiz1(w, i))
     }
   }, ;
 
-  abstract fun getShape(x: Double, y: Double, w: Double, h: Double, i: Double): Shape
+  abstract fun getShape(
+    x: Double,
+    y: Double,
+    w: Double,
+    h: Double,
+    i: Double,
+  ): Shape
 
   companion object {
-    private fun vert(height: Double, isosceles: Double): Path2D {
+    private fun vert(
+      height: Double,
+      isosceles: Double,
+    ): Path2D {
       val path: Path2D = Path2D.Double()
       path.moveTo(0.0, 0.0)
       path.lineTo(isosceles, -isosceles)
@@ -242,7 +293,10 @@ private enum class Seg {
       return path
     }
 
-    private fun horiz1(width: Double, isosceles: Double): Path2D {
+    private fun horiz1(
+      width: Double,
+      isosceles: Double,
+    ): Path2D {
       val path: Path2D = Path2D.Double()
       path.moveTo(0.0, 0.0)
       path.lineTo(isosceles, isosceles)
@@ -254,7 +308,10 @@ private enum class Seg {
       return path
     }
 
-    private fun horiz2(width: Double, isosceles: Double): Path2D {
+    private fun horiz2(
+      width: Double,
+      isosceles: Double,
+    ): Path2D {
       val path: Path2D = Path2D.Double()
       path.moveTo(isosceles, isosceles)
       path.lineTo(isosceles + width, isosceles)

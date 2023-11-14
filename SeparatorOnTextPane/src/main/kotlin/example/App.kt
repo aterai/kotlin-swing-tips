@@ -58,7 +58,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun insertBr(kit: HTMLEditorKit, doc: HTMLDocument) {
+private fun insertBr(
+  kit: HTMLEditorKit,
+  doc: HTMLDocument,
+) {
   runCatching {
     kit.insertHTML(doc, doc.length, "<br />", 0, 0, null)
   }

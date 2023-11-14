@@ -60,7 +60,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun getNextIndex(list: List<TreePath>, selected: TreePath?): Int {
+private fun getNextIndex(
+  list: List<TreePath>,
+  selected: TreePath?,
+): Int {
   for ((i, tp) in list.withIndex()) {
     if (tp == selected) {
       return if (i + 1 < list.size) i + 1 else 0

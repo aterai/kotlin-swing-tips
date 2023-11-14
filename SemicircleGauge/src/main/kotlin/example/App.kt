@@ -79,7 +79,10 @@ private class SolidGaugeUI(range: Int, extent: Double) : BasicProgressBarUI() {
     this.extent = extent
   }
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     val rect = SwingUtilities.calculateInnerArea(progressBar, null)
     if (rect.isEmpty) {
       return
@@ -153,7 +156,10 @@ private class SolidGaugeUI(range: Int, extent: Double) : BasicProgressBarUI() {
     return pallet
   }
 
-  private fun getColorFromPallet(pallet: IntArray, pos: Double): Color {
+  private fun getColorFromPallet(
+    pallet: IntArray,
+    pos: Double,
+  ): Color {
     require(!(pos < 0.0 || pos > 1.0)) { "Parameter outside of expected range" }
     val i = (pallet.size * pos).toInt()
     val max = pallet.size - 1

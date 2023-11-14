@@ -32,7 +32,11 @@ fun makeUI(): Component {
   val table = object : JTable(sorter) {
     private val evenColor = Color(0xFA_FA_FA)
 
-    override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int): Component {
+    override fun prepareRenderer(
+      tcr: TableCellRenderer,
+      row: Int,
+      column: Int,
+    ): Component {
       val c = super.prepareRenderer(tcr, row, column)
       if (isRowSelected(row)) {
         c.foreground = getSelectionForeground()
@@ -140,7 +144,10 @@ private class TableSorter() : AbstractTableModel() {
     tableHeader?.repaint()
   }
 
-  fun setSortingStatus(column: Int, status: Int) {
+  fun setSortingStatus(
+    column: Int,
+    status: Int,
+  ) {
     getDirective(column).takeIf { it != EMPTY_DIRECTIVE }.also {
       sortingColumns.remove(it)
     }
@@ -150,7 +157,10 @@ private class TableSorter() : AbstractTableModel() {
     sortingStatusChanged()
   }
 
-  fun getHeaderRendererIcon(column: Int, size: Int): Icon? {
+  fun getHeaderRendererIcon(
+    column: Int,
+    size: Int,
+  ): Icon? {
     val dir = getDirective(column)
     return if (EMPTY_DIRECTIVE == dir) {
       null
@@ -209,19 +219,30 @@ private class TableSorter() : AbstractTableModel() {
 
   override fun getColumnClass(column: Int) = tableModel?.getColumnClass(column)
 
-  override fun isCellEditable(row: Int, column: Int) =
-    tableModel?.isCellEditable(modelIndex(row), column) ?: false
+  override fun isCellEditable(
+    row: Int,
+    column: Int,
+  ) = tableModel?.isCellEditable(modelIndex(row), column) ?: false
 
-  override fun getValueAt(row: Int, column: Int) =
-    tableModel?.getValueAt(modelIndex(row), column)
+  override fun getValueAt(
+    row: Int,
+    column: Int,
+  ) = tableModel?.getValueAt(modelIndex(row), column)
 
-  override fun setValueAt(value: Any?, row: Int, column: Int) {
+  override fun setValueAt(
+    value: Any?,
+    row: Int,
+    column: Int,
+  ) {
     tableModel?.setValueAt(value, modelIndex(row), column)
   }
 
   // Helper classes
   private inner class RowComparator : Comparator<TableRow> {
-    override fun compare(r1: TableRow, r2: TableRow): Int {
+    override fun compare(
+      r1: TableRow,
+      r2: TableRow,
+    ): Int {
       val row1 = r1.modelIndex
       val row2 = r2.modelIndex
       for (directive in sortingColumns) {
@@ -291,7 +312,11 @@ private class TableSorter() : AbstractTableModel() {
     }
   }
 
-  fun loadSelectedRow(table: JTable, list: List<Any?>, keyColIndex: Int) {
+  fun loadSelectedRow(
+    table: JTable,
+    list: List<Any?>,
+    keyColIndex: Int,
+  ) {
     if (list.isEmpty()) {
       return
     }
@@ -351,7 +376,12 @@ private class Arrow(
   private val size: Int,
   private val priority: Int,
 ) : Icon, Serializable {
-  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val color1 = c?.background ?: Color.GRAY
     val color2: Color
     // In a compound sort, make each successive triangle 20%

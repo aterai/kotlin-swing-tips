@@ -45,7 +45,10 @@ fun makeUI(): Component {
   return split
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.add(JLabel(title), BorderLayout.NORTH)
   p.add(JScrollPane(c))
@@ -55,7 +58,10 @@ private fun makeTitledPanel(title: String, c: Component): Component {
 private object TextUtils {
   // @see javax.swing.text.Utilities.getWordStart(...)
   @Throws(BadLocationException::class)
-  fun getWordStart(c: JTextComponent, offs: Int): Int {
+  fun getWordStart(
+    c: JTextComponent,
+    offs: Int,
+  ): Int {
     val line = Utilities.getParagraphElement(c, offs)
       ?: throw BadLocationException("No word at $offs", offs)
     val doc = c.document
@@ -90,7 +96,10 @@ private object TextUtils {
 
   // @see javax.swing.text.Utilities.getWordEnd(...)
   @Throws(BadLocationException::class)
-  fun getWordEnd(c: JTextComponent, offs: Int): Int {
+  fun getWordEnd(
+    c: JTextComponent,
+    offs: Int,
+  ): Int {
     val line = Utilities.getParagraphElement(c, offs)
       ?: throw BadLocationException("No word at $offs", offs)
     val doc = c.document
