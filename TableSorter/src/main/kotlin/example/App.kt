@@ -332,7 +332,12 @@ private class Arrow(
   private val size: Int,
   private val priority: Int,
 ) : Icon, Serializable {
-  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val color1 = c?.background ?: Color.GRAY
     val color2: Color
     // In a compound sort, make each successive triangle 20%

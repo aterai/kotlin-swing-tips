@@ -163,7 +163,12 @@ private class HeaderCheckBoxHandler(
 }
 
 private class ComponentIcon(private val cmp: Component) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     SwingUtilities.paintComponent(g, cmp, c.parent, x, y, iconWidth, iconHeight)
   }
 

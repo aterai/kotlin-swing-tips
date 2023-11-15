@@ -298,7 +298,12 @@ private class CloseTabIcon(private val fileIcon: Icon?) : Icon {
   var mousePressed = false
   val bounds get() = Rectangle(xp, yp, width, height)
 
-  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     xp = x
     yp = y
     val yp = y + 2
@@ -450,7 +455,12 @@ private class SimpleCloseTabIcon(private val fileIcon: Icon?) : Icon {
   private val pos = Point()
   val bounds get() = Rectangle(pos, dim)
 
-  override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     pos.setLocation(x, y)
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y + 2)

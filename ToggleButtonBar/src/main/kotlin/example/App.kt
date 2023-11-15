@@ -42,29 +42,34 @@ private fun makeToggleButtonBar(cc: Int, icon: Icon): Component {
 }
 
 private class CellIcon : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     g2.translate(x, y)
-    var ssc = TL
-    var bgc = BR
     if (c is AbstractButton) {
+      var ssc = TL
+      var bgc = BR
       val m = c.model
       if (m.isSelected || m.isRollover) {
         ssc = ST
         bgc = SB
       }
+      val w = c.width
+      val h = c.height
+      g2.paint = c.background
+      g2.fillRect(0, 0, w, h)
+      g2.paint = GradientPaint(0f, 0f, ssc, 0f, h.toFloat(), bgc, true)
+      g2.fillRect(0, 0, w, h)
+      g2.paint = TL
+      g2.fillRect(0, 0, 1, h)
+      g2.paint = BR
+      g2.fillRect(w, 0, 1, h)
     }
-    val w = c.width
-    val h = c.height
-    g2.paint = c.background
-    g2.fillRect(0, 0, w, h)
-    g2.paint = GradientPaint(0f, 0f, ssc, 0f, h.toFloat(), bgc, true)
-    g2.fillRect(0, 0, w, h)
-    g2.paint = TL
-    g2.fillRect(0, 0, 1, h)
-    g2.paint = BR
-    g2.fillRect(w, 0, 1, h)
     g2.dispose()
   }
 
@@ -81,8 +86,13 @@ private class CellIcon : Icon {
 }
 
 private class ToggleButtonBarCellIcon : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-    val parent = c.parent ?: return
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
+    val parent = c?.parent ?: return
     val r = 8f
     val fx = x.toFloat()
     val fy = y.toFloat()

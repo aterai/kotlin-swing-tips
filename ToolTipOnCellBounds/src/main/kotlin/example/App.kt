@@ -154,7 +154,12 @@ private class RendererIcon(
     rect.setLocation(0, 0)
   }
 
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     if (c is Container) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.translate(x, y)

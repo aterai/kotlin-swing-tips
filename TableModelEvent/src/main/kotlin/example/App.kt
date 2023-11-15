@@ -116,7 +116,12 @@ private class HeaderRenderer : TableCellRenderer {
 }
 
 private class ComponentIcon(private val c: Component) : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     SwingUtilities.paintComponent(g, this.c, c.parent, x, y, iconWidth, iconHeight)
   }
 

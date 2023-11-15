@@ -64,7 +64,12 @@ private open class BadgeIcon(val value: Int, val badgeFgc: Color, val badgeBgc: 
     return TextLayout(txt, font, frc).getOutline(null)
   }
 
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     if (value <= 0) {
       return
     }

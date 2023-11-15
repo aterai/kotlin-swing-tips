@@ -42,7 +42,12 @@ private fun makeTree(): JTree {
 }
 
 private class EmptyIcon : Icon {
-  override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
     // Empty icon
   }
 
