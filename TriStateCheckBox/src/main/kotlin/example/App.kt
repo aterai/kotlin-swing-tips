@@ -282,7 +282,7 @@ private object LookAndFeelUtils {
 
   fun initLookAndFeelAction(
     info: UIManager.LookAndFeelInfo,
-    b: AbstractButton
+    b: AbstractButton,
   ) {
     val cmd = info.className
     b.text = info.name
