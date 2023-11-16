@@ -32,7 +32,10 @@ private class LinkViewButtonUI : BasicButtonUI() {
   private val iconRect = Rectangle()
   private val textRect = Rectangle()
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     if (c !is AbstractButton) {
       return
     }

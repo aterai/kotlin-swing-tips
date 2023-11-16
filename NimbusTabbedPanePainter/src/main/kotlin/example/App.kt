@@ -57,7 +57,7 @@ private object NimbusTabbedPanePainterUtils {
 
     override fun paint(
       g: Graphics2D,
-      c: JComponent?,
+      c: JComponent,
       width: Int,
       height: Int,
     ) {

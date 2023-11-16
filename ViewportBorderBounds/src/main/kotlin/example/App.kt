@@ -104,7 +104,10 @@ fun prettify(engine: ScriptEngine?, src: String) = runCatching {
 }.getOrNull() ?: "error"
 
 private class ScrollPaneLayerUI : LayerUI<JScrollPane>() {
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     super.paint(g, c)
     val scroll = (c as? JLayer<*>)?.view as? JScrollPane ?: return
     val rect = scroll.viewportBorderBounds

@@ -32,7 +32,10 @@ private class TableHeaderFillerLayerUI : LayerUI<JScrollPane>() {
     SwingUtilities.updateComponentTreeUI(tempTable)
   }
 
-  override fun paint(g: Graphics?, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     super.paint(g, c)
     val scroll = (c as? JLayer<*>)?.view as? JScrollPane ?: return
     val table = scroll.viewport.view as? JTable ?: return

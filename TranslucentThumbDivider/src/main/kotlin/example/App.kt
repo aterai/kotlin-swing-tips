@@ -109,7 +109,10 @@ private class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
     super.uninstallUI(c)
   }
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     super.paint(g, c)
     if ((isEnter || isDragging) && c is JLayer<*>) {
       updateThumbLocation(c.view, thumb)

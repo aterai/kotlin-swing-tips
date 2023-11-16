@@ -151,7 +151,10 @@ private class LinkViewRadioButtonUI : BasicRadioButtonUI() {
   override fun getDefaultIcon() = null
 
   @Synchronized
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     g.font = c.font
 
     SwingUtilities.calculateInnerArea(c, viewRect)
