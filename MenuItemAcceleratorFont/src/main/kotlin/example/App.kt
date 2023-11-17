@@ -65,7 +65,7 @@ private fun changeAccelerator(selected: Boolean) {
     if (selected) {
       color1 = Color(0xEC_64_64)
       color2 = Color.WHITE
-      font = UIManager.getFont(key3).deriveFont(10f)
+      font = UIManager.getFont(key3)?.deriveFont(10f)
     } else {
       val def = UIManager.getLookAndFeelDefaults()
       color1 = def.getColor(key1)
