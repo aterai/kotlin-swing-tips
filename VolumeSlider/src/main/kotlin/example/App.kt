@@ -5,39 +5,48 @@ import javax.swing.*
 import javax.swing.plaf.basic.BasicSliderUI
 
 fun makeUI(): Component {
-  val slider1 = JSlider(0, 100, 0)
-  slider1.ui = TriSliderUI(slider1)
-  slider1.majorTickSpacing = 10
-  slider1.minorTickSpacing = 5
-  slider1.paintTicks = true
-  slider1.paintLabels = true
-
-  val slider2 = JSlider(0, 100, 0)
-  slider2.ui = object : BasicSliderUI(slider2) {
-    override fun paintHorizontalLabel(
-      g: Graphics,
-      value: Int,
-      label: Component,
-    ) {
-      // Windows/Motif L&F: JSlider should use foreground color for ticks. - Java Bug System
-      // https://bugs.openjdk.org/browse/JDK-5099681
-      label.foreground = Color.GREEN
-      super.paintHorizontalLabel(g, value, label)
+  val slider1 = object : JSlider(0, 100, 0) {
+    override fun updateUI() {
+      super.updateUI()
+      setUI(TriSliderUI(this))
+      majorTickSpacing = 10
+      minorTickSpacing = 5
+      paintTicks = true
+      paintLabels = true
     }
   }
-  // slider2.setBackground(Color.BLACK)
-  slider2.foreground = Color.BLUE
-  slider2.majorTickSpacing = 10
-  slider2.minorTickSpacing = 5
-  slider2.paintTicks = true
-  slider2.paintLabels = true
 
-  val box = Box.createVerticalBox()
-  box.add(Box.createVerticalStrut(5))
-  box.add(makeTitledPanel("TriangleSliderUI", slider1))
-  box.add(Box.createVerticalStrut(5))
-  box.add(makeTitledPanel("HorizontalLabelColor", slider2))
-  box.add(Box.createVerticalGlue())
+  val slider2 = object : JSlider(0, 100, 0) {
+    override fun updateUI() {
+      val sliderUI = object : BasicSliderUI(this) {
+        override fun paintHorizontalLabel(
+          g: Graphics,
+          value: Int,
+          label: Component,
+        ) {
+          // Windows/Motif L&F: JSlider should use foreground color for ticks. - Java Bug System
+          // https://bugs.openjdk.org/browse/JDK-5099681
+          label.foreground = Color.GREEN
+          super.paintHorizontalLabel(g, value, label)
+        }
+      }
+      setUI(sliderUI)
+      // setBackground(Color.BLACK)
+      foreground = Color.BLUE
+      majorTickSpacing = 10
+      minorTickSpacing = 5
+      paintTicks = true
+      paintLabels = true
+    }
+  }
+
+  val box = Box.createVerticalBox().also {
+    it.add(Box.createVerticalStrut(5))
+    it.add(makeTitledPanel("TriangleSliderUI", slider1))
+    it.add(Box.createVerticalStrut(5))
+    it.add(makeTitledPanel("HorizontalLabelColor", slider2))
+    it.add(Box.createVerticalGlue())
+  }
 
   return JPanel(BorderLayout(5, 5)).also {
     it.add(box)
