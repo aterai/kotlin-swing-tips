@@ -88,7 +88,7 @@ private fun makeToolBar(table: JTable): JToolBar {
   val font = table.font
   val fontSize = font.size2D
   val rowHeight = table.rowHeight
-  val b1 = JToggleButton("*1")
+  val b1 = JToggleButton("*1", true)
   b1.addActionListener {
     scaling(
       table,
