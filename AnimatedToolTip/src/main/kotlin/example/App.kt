@@ -2,6 +2,7 @@ package example
 
 import java.awt.*
 import java.awt.event.HierarchyEvent
+import java.awt.event.HierarchyListener
 import java.awt.geom.Ellipse2D
 import java.util.Collections
 import javax.swing.*
@@ -138,13 +139,13 @@ private class AnimeIcon : Icon {
   }
 
   override fun paintIcon(
-    c: Component,
+    c: Component?,
     g: Graphics,
     x: Int,
     y: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.paint = c.background ?: Color.WHITE
+    g2.paint = c?.background ?: Color.WHITE
     g2.fillRect(x, y, iconWidth, iconHeight)
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     g2.paint = ELLIPSE_COLOR
