@@ -147,7 +147,7 @@ private class RendererIcon(private val renderer: Component, private val rect: Re
   }
 
   override fun paintIcon(
-    c: Component,
+    c: Component?,
     g: Graphics,
     x: Int,
     y: Int,

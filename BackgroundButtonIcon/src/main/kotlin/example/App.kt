@@ -33,7 +33,7 @@ private fun makeButton(
   }
   b.icon = object : Icon {
     override fun paintIcon(
-      c: Component,
+      c: Component?,
       g: Graphics,
       x: Int,
       y: Int,
@@ -126,12 +126,12 @@ private class ArrowToggleButtonBarCellIcon : Icon {
   }
 
   override fun paintIcon(
-    c: Component,
+    c: Component?,
     g: Graphics,
     x: Int,
     y: Int,
   ) {
-    val parent = c.parent ?: return
+    val parent = c?.parent ?: return
     shape = makeShape(parent, c, x, y)
     var bgc = parent.background
     var borderColor = Color.GRAY.brighter()
