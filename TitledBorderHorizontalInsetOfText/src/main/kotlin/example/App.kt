@@ -59,7 +59,14 @@ private class ComponentTitledBorder(
 
   override fun isBorderOpaque() = false
 
-  override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
+  override fun paintBorder(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+    width: Int,
+    height: Int,
+  ) {
     if (c is Container) {
       val borderInsets = border.getBorderInsets(c)
       val insets = getBorderInsets(c)
@@ -110,7 +117,14 @@ private class TitledBorder2(title: String?) : TitledBorder(title) {
     installPropertyChangeListeners()
   }
 
-  override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
+  override fun paintBorder(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+    width: Int,
+    height: Int,
+  ) {
     val bdr = getBorder()
     if (bdr != null && getTitle()?.isNotEmpty() == true) {
       val edge = if (bdr is TitledBorder2) 0 else EDGE_SPACING
@@ -139,7 +153,13 @@ private class TitledBorder2(title: String?) : TitledBorder(title) {
     }
   }
 
-  private fun initJustificationRect(c: Component, x: Int, width: Int, lr: Rectangle, ins: Insets) {
+  private fun initJustificationRect(
+    c: Component,
+    x: Int,
+    width: Int,
+    lr: Rectangle,
+    ins: Insets,
+  ) {
     val sz = getLabel2(c).preferredSize
     lr.x = x
     lr.width = width - ins.left - ins.right
@@ -153,7 +173,13 @@ private class TitledBorder2(title: String?) : TitledBorder(title) {
     }
   }
 
-  private fun initPositionRect(height: Int, edge: Int, ins: Insets, br: Rectangle, lr: Rectangle) {
+  private fun initPositionRect(
+    height: Int,
+    edge: Int,
+    ins: Insets,
+    br: Rectangle,
+    lr: Rectangle,
+  ) {
     when (position2) {
       ABOVE_TOP -> {
         ins.left = 0
@@ -196,7 +222,13 @@ private class TitledBorder2(title: String?) : TitledBorder(title) {
     }
   }
 
-  private fun paintWrapBorder(c: Component, bdr: Border?, g: Graphics, b: Rectangle, l: Rectangle) {
+  private fun paintWrapBorder(
+    c: Component,
+    bdr: Border?,
+    g: Graphics,
+    b: Rectangle,
+    l: Rectangle,
+  ) {
     bdr?.also {
       if (position2 == TOP || position2 == BOTTOM) {
         val xx = l.x + l.width + TEXT_SPACING2
@@ -215,7 +247,10 @@ private class TitledBorder2(title: String?) : TitledBorder(title) {
     }
   }
 
-  override fun getBorderInsets(c: Component?, insets: Insets): Insets {
+  override fun getBorderInsets(
+    c: Component?,
+    insets: Insets,
+  ): Insets {
     return if (getTitle()?.isNotEmpty() == true) {
       val edge = if (getBorder() is TitledBorder2) 0 else EDGE_SPACING
       val size = getLabel2(c).preferredSize
@@ -277,7 +312,10 @@ private class TitledBorder2(title: String?) : TitledBorder(title) {
 }
 
 private object TitledBorderUtils {
-  fun getBorderInsets(bdr: Border?, c: Component?): Insets {
+  fun getBorderInsets(
+    bdr: Border?,
+    c: Component?,
+  ): Insets {
     var insets = Insets(0, 0, 0, 0)
     if (bdr is AbstractBorder) {
       insets = bdr.getBorderInsets(c, insets)
@@ -288,7 +326,12 @@ private object TitledBorderUtils {
     return insets
   }
 
-  fun initInsets(insets: Insets, position: Int?, edge: Int, size: Dimension) {
+  fun initInsets(
+    insets: Insets,
+    position: Int?,
+    edge: Int,
+    size: Dimension,
+  ) {
     when (position) {
       TitledBorder.ABOVE_TOP -> insets.top += size.height - edge
       TitledBorder.TOP -> if (insets.top < size.height) {

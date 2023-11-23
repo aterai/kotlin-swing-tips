@@ -29,7 +29,14 @@ fun makeUI(): Component {
 
   val p3 = JPanel(BorderLayout())
   p3.border = object : TitledBorder("Override paintBorder") {
-    override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
+    override fun paintBorder(
+      c: Component,
+      g: Graphics,
+      x: Int,
+      y: Int,
+      width: Int,
+      height: Int,
+    ) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.paint = Color.WHITE
       val area = Area(Rectangle(x, y, width, 16))
@@ -56,14 +63,20 @@ fun makeUI(): Component {
   }
 }
 
-private fun init(c: JComponent, title: String): JComponent {
+private fun init(
+  c: JComponent,
+  title: String,
+): JComponent {
   c.background = Color.WHITE
   c.isOpaque = false
   c.border = BorderFactory.createTitledBorder(title)
   return c
 }
 
-fun makeLabelTitledBorderPanel(title: String, p: JPanel): JPanel {
+fun makeLabelTitledBorderPanel(
+  title: String,
+  p: JPanel,
+): JPanel {
   val label = JLabel(title, SwingConstants.LEADING)
   label.border = BorderFactory.createEmptyBorder(2, 4, 2, 4)
   label.isOpaque = true

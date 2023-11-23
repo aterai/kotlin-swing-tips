@@ -64,7 +64,14 @@ private class ColumnRulesBorder : Border {
   private val separator = JSeparator(SwingConstants.VERTICAL)
   private val renderer = JPanel()
 
-  override fun paintBorder(c: Component?, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
+  override fun paintBorder(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+    width: Int,
+    height: Int,
+  ) {
     if (c is JComponent) {
       val r = SwingUtilities.calculateInnerArea(c, null)
       val sw = separator.preferredSize.width
