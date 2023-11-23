@@ -37,8 +37,8 @@ fun makeUI(): Component {
 
 private class ProgressTabbedPane : JTabbedPane() {
   override fun addTab(
-    title: String,
-    content: Component,
+    title: String?,
+    content: Component?,
   ) {
     super.addTab(title, JLabel("Loading..."))
     val bar = JProgressBar()

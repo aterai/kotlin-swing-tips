@@ -8,8 +8,8 @@ private var counter = 0
 fun makeUI(): Component {
   val tabs = object : JTabbedPane() {
     override fun addTab(
-      title: String,
-      content: Component,
+      title: String?,
+      content: Component?,
     ) {
       super.addTab(title, content)
       val check = JCheckBox().also {

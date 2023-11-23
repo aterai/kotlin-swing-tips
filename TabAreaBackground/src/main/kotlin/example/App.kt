@@ -77,13 +77,21 @@ private fun makeTabbedPane(): JTabbedPane {
   return tabs
 }
 
-private fun updateTabColor(t: JTabbedPane, si: Int, tgt: Int) {
+private fun updateTabColor(
+  t: JTabbedPane,
+  si: Int,
+  tgt: Int,
+) {
   for (i in 0 until t.tabCount) {
     t.setForegroundAt(i, getTabTabForeground(i, si, tgt))
   }
 }
 
-private fun getTabTabForeground(i: Int, selected: Int, cursor: Int) = when (i) {
+private fun getTabTabForeground(
+  i: Int,
+  selected: Int,
+  cursor: Int,
+) = when (i) {
   selected -> Color.BLACK
   cursor -> Color.ORANGE
   else -> Color.WHITE

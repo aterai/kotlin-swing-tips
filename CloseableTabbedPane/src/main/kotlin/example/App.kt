@@ -64,7 +64,10 @@ private class CloseTabIcon : Icon {
 }
 
 private class CloseableTabbedPane : JTabbedPane() {
-  override fun addTab(title: String, content: Component) {
+  override fun addTab(
+    title: String?,
+    content: Component?,
+  ) {
     val tab = JPanel(BorderLayout())
     tab.isOpaque = false
     val label = JLabel(title)

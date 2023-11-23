@@ -50,7 +50,10 @@ fun makeUI(): Component {
   }
 }
 
-fun tabComponentResized(e: ComponentEvent, tabs: JTabbedPane) {
+fun tabComponentResized(
+  e: ComponentEvent,
+  tabs: JTabbedPane,
+) {
   val c = e.component
   if (c == tabs.selectedComponent) {
     val d = c.preferredSize
@@ -89,7 +92,10 @@ fun tabClicked(tabs: JTabbedPane) {
   }
 }
 
-private fun makeVerticalTabIcon(title: String?, icon: Icon?): Icon {
+private fun makeVerticalTabIcon(
+  title: String?,
+  icon: Icon?,
+): Icon {
   val label = JLabel(title, icon, SwingConstants.LEADING)
   label.border = BorderFactory.createEmptyBorder(0, 2, 0, 2)
   val d = label.preferredSize

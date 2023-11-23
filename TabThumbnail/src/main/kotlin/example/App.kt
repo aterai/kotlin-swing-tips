@@ -22,7 +22,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun addImageTab(tabbedPane: JTabbedPane, url: URL?) {
+private fun addImageTab(
+  tabbedPane: JTabbedPane,
+  url: URL?,
+) {
   requireNotNull(url) { "Resource not found" }
   val scroll = JScrollPane(JLabel(ImageIcon(url)))
   val f = File(url.file)

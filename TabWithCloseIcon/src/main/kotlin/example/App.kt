@@ -55,8 +55,11 @@ private class CloseableTabbedPane : JTabbedPane() {
     }
   }
 
-  override fun addTab(title: String?, component: Component?) {
-    super.addTab(title, CloseTabIcon(null), component)
+  override fun addTab(
+    title: String?,
+    content: Component?,
+  ) {
+    super.addTab(title, CloseTabIcon(null), content)
   }
 
 //  fun addCloseableTabbedPaneListener(l: CloseableTabbedPaneListener?) {
@@ -173,7 +176,10 @@ private class CloseableTabIconHandler : MouseAdapter() {
     tabbedPane.repaint(drawRect)
   }
 
-  private fun getCloseTabIcon(tabbedPane: CloseableTabbedPane, pt: Point): CloseTabIcon? {
+  private fun getCloseTabIcon(
+    tabbedPane: CloseableTabbedPane,
+    pt: Point,
+  ): CloseTabIcon? {
     val tabNumber = tabbedPane.indexAtLocation(pt.x, pt.y)
     return if (tabNumber < 0) {
       null
@@ -441,12 +447,19 @@ private class TabbedPaneWithCloseIcons : JTabbedPane() {
     })
   }
 
-  override fun addTab(title: String?, component: Component?) {
-    super.addTab(title, SimpleCloseTabIcon(null), component)
+  override fun addTab(
+    title: String?,
+    content: Component?,
+  ) {
+    super.addTab(title, SimpleCloseTabIcon(null), content)
   }
 
-  override fun addTab(title: String?, icon: Icon?, component: Component?) {
-    super.addTab(title, SimpleCloseTabIcon(icon), component)
+  override fun addTab(
+    title: String?,
+    icon: Icon?,
+    content: Component?,
+  ) {
+    super.addTab(title, SimpleCloseTabIcon(icon), content)
   }
 }
 

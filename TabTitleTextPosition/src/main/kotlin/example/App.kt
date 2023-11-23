@@ -21,7 +21,12 @@ fun makeUI(): Component {
   }
 }
 
-private fun addTab(tabbedPane: JTabbedPane, title: String, path: String, c: Component) {
+private fun addTab(
+  tabbedPane: JTabbedPane,
+  title: String,
+  path: String,
+  c: Component,
+) {
   tabbedPane.addTab(title, c)
   val url = Thread.currentThread().contextClassLoader.getResource(path)
   val icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) }
@@ -74,7 +79,10 @@ private class ClippedTitleTabbedPane : JTabbedPane() {
     super.doLayout()
   }
 
-  private fun updateAllTabWidth(tabWidth: Int, gap: Int) {
+  private fun updateAllTabWidth(
+    tabWidth: Int,
+    gap: Int,
+  ) {
     val dim = Dimension()
     var rest = gap
     for (i in 0 until tabCount) {

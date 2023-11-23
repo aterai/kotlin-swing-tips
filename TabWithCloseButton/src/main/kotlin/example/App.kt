@@ -14,8 +14,8 @@ fun makeUI(): Component {
 
 private class CloseableTabbedPane : JTabbedPane() {
   override fun addTab(
-    title: String,
-    content: Component,
+    title: String?,
+    content: Component?,
   ) {
     val tab = JPanel(BorderLayout())
     tab.isOpaque = false

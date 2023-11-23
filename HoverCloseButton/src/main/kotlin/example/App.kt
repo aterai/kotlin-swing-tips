@@ -45,8 +45,8 @@ private class HoverCloseButtonTabbedPane(
   }
 
   override fun addTab(
-    title: String,
-    content: Component,
+    title: String?,
+    content: Component?,
   ) {
     super.addTab(title, content)
     setTabComponentAt(tabCount - 1, TabPanel(this, title, content))
