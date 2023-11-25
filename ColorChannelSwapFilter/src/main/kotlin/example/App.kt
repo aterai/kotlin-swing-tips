@@ -83,7 +83,10 @@ private class BlockedColorLayerUI<V : Component> : LayerUI<V>() {
   var isPreventing = false
   private var buf: BufferedImage? = null
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     if (isPreventing && c is JLayer<*>) {
       val view = c.view
       val d = view.size

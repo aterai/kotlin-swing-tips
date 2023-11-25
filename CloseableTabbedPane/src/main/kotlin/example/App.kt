@@ -115,7 +115,10 @@ private class CloseableTabbedPaneLayerUI : LayerUI<JTabbedPane>() {
     SwingUtilities.updateComponentTreeUI(button)
   }
 
-  override fun paint(g: Graphics, c: JComponent) {
+  override fun paint(
+    g: Graphics,
+    c: JComponent,
+  ) {
     super.paint(g, c)
     val tabbedPane = (c as? JLayer<*>)?.view as? JTabbedPane ?: return
     for (i in 0 until tabbedPane.tabCount) {
