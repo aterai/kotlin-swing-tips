@@ -62,7 +62,11 @@ private val table = object : JTable(model) {
 private val deletedRowSet: MutableSet<Int> = TreeSet()
 private var number = 0
 
-private fun addProgressValue(name: String, value: ProgressValue, worker: SwingWorker<*, *>) {
+private fun addProgressValue(
+  name: String,
+  value: ProgressValue,
+  worker: SwingWorker<*, *>,
+) {
   val obj = arrayOf(number, name, value, worker)
   model.addRow(obj)
   number++
@@ -108,7 +112,11 @@ private class TablePopupMenu : JPopupMenu() {
     deleteMenuItem.addActionListener { deleteActionPerformed() }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTable) {
       val flag = c.selectedRowCount > 0
       cancelMenuItem.isEnabled = flag

@@ -116,7 +116,11 @@ private class TablePopupMenu : JPopupMenu() {
     deleteMenuItem.addActionListener { deleteActionPerformed() }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTable) {
       val flag = c.selectedRowCount > 0
       cancelMenuItem.isEnabled = flag
@@ -146,7 +150,11 @@ private open class WorkerModel : DefaultTableModel() {
   private val workerMap = mutableMapOf<Int, SwingWorker<Int, Int>>()
   private var number = 0
 
-  fun addProgressValue(name: String, iv: Int, worker: SwingWorker<Int, Int>?) {
+  fun addProgressValue(
+    name: String,
+    iv: Int,
+    worker: SwingWorker<Int, Int>?,
+  ) {
     super.addRow(arrayOf(number, name, iv))
     worker?.also { workerMap[number] = it }
     number++
@@ -157,7 +165,10 @@ private open class WorkerModel : DefaultTableModel() {
     return workerMap[key]
   }
 
-  override fun isCellEditable(row: Int, col: Int) = COLUMN_ARRAY[col].isEditable
+  override fun isCellEditable(
+    row: Int,
+    col: Int,
+  ) = COLUMN_ARRAY[col].isEditable
 
   override fun getColumnClass(column: Int) = COLUMN_ARRAY[column].columnClass
 

@@ -106,7 +106,11 @@ private class EditableTabbedPane : JTabbedPane() {
     }
   }
 
-  private fun actionPerformed(c: Component, a: Action, command: String) {
+  private fun actionPerformed(
+    c: Component,
+    a: Action,
+    command: String,
+  ) {
     a.actionPerformed(ActionEvent(c, ActionEvent.ACTION_PERFORMED, command))
   }
 
@@ -166,7 +170,11 @@ class TabbedPanePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     val tabs = c as? JTabbedPane ?: return
     sortTabs.isEnabled = tabs.tabCount > 1
     closePage.isEnabled = tabs.indexAtLocation(x, y) >= 0
