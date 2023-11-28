@@ -74,50 +74,52 @@ private fun getColumnText(v: RowData, column: Int) =
     else -> v.points.toString()
   }
 
-private fun makeTable(model: TableModel) =
-  object : JTable(model) {
-    override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int): Component {
-      val c = super.prepareRenderer(renderer, row, column)
-      val isSelected = isRowSelected(row)
-      if (!isSelected) {
-        val data = model.getValueAt(convertRowIndexToModel(row), 0) as RowData
-        val num = data.position
-        val promotion = num <= 2
-        val promotionPlayOff = num <= 6
-        val relegation = num >= 21
-        c.background = when {
-          promotion -> Color(0xCF_F3_C0)
-          promotionPlayOff -> Color(0xCB_F7_F5)
-          relegation -> Color(0xFB_DC_DC)
-          row % 2 == 0 -> Color.WHITE
-          else -> Color(0xF0_F0_F0)
-        }
+private fun makeTable(model: TableModel) = object : JTable(model) {
+  override fun prepareRenderer(
+    renderer: TableCellRenderer,
+    row: Int,
+    column: Int,
+  ): Component {
+    val c = super.prepareRenderer(renderer, row, column)
+    val data = model.getValueAt(convertRowIndexToModel(row), 0)
+    if (!isRowSelected(row) && data is RowData) {
+      val num = data.position
+      val promotion = num <= 2
+      val promotionPlayOff = num <= 6
+      val relegation = num >= 21
+      c.background = when {
+        promotion -> Color(0xCF_F3_C0)
+        promotionPlayOff -> Color(0xCB_F7_F5)
+        relegation -> Color(0xFB_DC_DC)
+        row % 2 == 0 -> Color.WHITE
+        else -> Color(0xF0_F0_F0)
       }
-      c.setForeground(Color.BLACK)
-      if (c is JLabel && column != 1) {
-        c.setHorizontalAlignment(SwingConstants.CENTER)
-      }
-      return c
     }
-
-    override fun isCellEditable(
-      row: Int,
-      column: Int,
-    ) = false
-
-    override fun updateUI() {
-      super.updateUI()
-      setFillsViewportHeight(true)
-      setShowVerticalLines(false)
-      setShowHorizontalLines(false)
-      setIntercellSpacing(Dimension())
-      setSelectionForeground(getForeground())
-      setSelectionBackground(Color(0, 0, 100, 50))
-      setAutoCreateRowSorter(true)
-      setFocusable(false)
-      initTableHeader(this)
+    c.setForeground(Color.BLACK)
+    if (c is JLabel && column != 1) {
+      c.setHorizontalAlignment(SwingConstants.CENTER)
     }
+    return c
   }
+
+  override fun isCellEditable(
+    row: Int,
+    column: Int,
+  ) = false
+
+  override fun updateUI() {
+    super.updateUI()
+    setFillsViewportHeight(true)
+    setShowVerticalLines(false)
+    setShowHorizontalLines(false)
+    setIntercellSpacing(Dimension())
+    setSelectionForeground(getForeground())
+    setSelectionBackground(Color(0, 0, 100, 50))
+    setAutoCreateRowSorter(true)
+    setFocusable(false)
+    initTableHeader(this)
+  }
+}
 
 private fun initTableHeader(table: JTable) {
   val header = table.tableHeader
