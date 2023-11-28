@@ -171,10 +171,15 @@ private class CalendarViewTableModel(
 
   override fun getColumnCount() = 7 // day
 
-  override fun getValueAt(row: Int, column: Int): LocalDate =
-    startDate.plusDays((row * columnCount + column).toLong())
+  override fun getValueAt(
+    row: Int,
+    column: Int,
+  ): LocalDate = startDate.plusDays((row * columnCount + column).toLong())
 
-  override fun isCellEditable(row: Int, column: Int) = false
+  override fun isCellEditable(
+    row: Int,
+    column: Int,
+  ) = false
 
   companion object {
     private const val WEEK_COUNT = 1000

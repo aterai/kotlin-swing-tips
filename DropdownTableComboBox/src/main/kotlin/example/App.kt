@@ -23,7 +23,10 @@ fun makeUI(): Component {
     override fun getColumnClass(column: Int) =
       if (column == 1 || column == 2) Number::class.java else String::class.java
 
-    override fun isCellEditable(row: Int, column: Int) = false
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = false
   }
   for (v in PaperSize.values()) {
     model.addRow(arrayOf(v.series, v.width, v.height))

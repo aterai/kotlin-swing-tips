@@ -26,7 +26,10 @@ fun makeUI(): Component {
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = Number::class.java
 
-    override fun isCellEditable(row: Int, column: Int) = data[row][column] == 0
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = data[row][column] == 0
   }
   val table = object : JTable(model) {
     override fun getPreferredScrollableViewportSize() = super.getPreferredSize()

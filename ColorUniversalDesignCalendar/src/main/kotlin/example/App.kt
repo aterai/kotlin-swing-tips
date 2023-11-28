@@ -169,10 +169,15 @@ private class CalendarViewTableModel(date: LocalDate) : DefaultTableModel() {
 
   override fun getColumnCount() = 7
 
-  override fun getValueAt(row: Int, column: Int): Any =
-    startDate.plusDays(row.toLong() * columnCount + column)
+  override fun getValueAt(
+    row: Int,
+    column: Int,
+  ): Any = startDate.plusDays(row.toLong() * columnCount + column)
 
-  override fun isCellEditable(row: Int, column: Int) = false
+  override fun isCellEditable(
+    row: Int,
+    column: Int,
+  ) = false
 }
 
 fun main() {

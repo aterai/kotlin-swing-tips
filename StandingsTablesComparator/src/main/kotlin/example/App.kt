@@ -100,7 +100,10 @@ private fun makeTable(model: TableModel) =
       return c
     }
 
-    override fun isCellEditable(row: Int, column: Int) = false
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = false
 
     override fun updateUI() {
       super.updateUI()

@@ -209,13 +209,21 @@ private class TableSorter() : AbstractTableModel() {
 
   override fun getColumnClass(column: Int) = tableModel?.getColumnClass(column)
 
-  override fun isCellEditable(row: Int, column: Int) =
-    tableModel?.isCellEditable(modelIndex(row), column) ?: false
+  override fun isCellEditable(
+    row: Int,
+    column: Int,
+  ) = tableModel?.isCellEditable(modelIndex(row), column) ?: false
 
-  override fun getValueAt(row: Int, column: Int) =
-    tableModel?.getValueAt(modelIndex(row), column)
+  override fun getValueAt(
+    row: Int,
+    column: Int,
+  ) = tableModel?.getValueAt(modelIndex(row), column)
 
-  override fun setValueAt(value: Any?, row: Int, column: Int) {
+  override fun setValueAt(
+    value: Any?,
+    row: Int,
+    column: Int,
+  ) {
     tableModel?.setValueAt(value, modelIndex(row), column)
   }
 

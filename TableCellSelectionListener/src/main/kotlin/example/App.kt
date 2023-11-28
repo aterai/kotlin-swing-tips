@@ -96,9 +96,15 @@ private fun makeModel() = object : DefaultTableModel() {
 
   override fun getColumnCount() = 7
 
-  override fun getValueAt(row: Int, column: Int) = row * columnCount + column
+  override fun getValueAt(
+    row: Int,
+    column: Int,
+  ) = row * columnCount + column
 
-  override fun isCellEditable(row: Int, column: Int) = false
+  override fun isCellEditable(
+    row: Int,
+    column: Int,
+  ) = false
 }
 
 private abstract class AbstractTableCellSelectionListener : ListSelectionListener {

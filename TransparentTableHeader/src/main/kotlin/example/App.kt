@@ -21,16 +21,25 @@ fun makeUI(): Component {
     arrayOf("DDD", 0, false),
   )
   val model = object : DefaultTableModel(data, columnNames) {
-    override fun isCellEditable(row: Int, column: Int) = column == 2
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = column == 2
 
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
   val table = object : JTable(model) {
-    override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int) =
-      super.prepareEditor(editor, row, column).also { (it as? JComponent)?.isOpaque = false }
+    override fun prepareEditor(
+      editor: TableCellEditor,
+      row: Int,
+      column: Int,
+    ) = super.prepareEditor(editor, row, column).also { (it as? JComponent)?.isOpaque = false }
 
-    override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int) =
-      super.prepareRenderer(renderer, row, column).also { it.foreground = Color.BLACK }
+    override fun prepareRenderer(
+      renderer: TableCellRenderer,
+      row: Int,
+      column: Int,
+    ) = super.prepareRenderer(renderer, row, column).also { it.foreground = Color.BLACK }
   }
   // table.autoCreateRowSorter = true
   table.rowSelectionAllowed = true

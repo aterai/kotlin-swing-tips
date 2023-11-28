@@ -14,7 +14,10 @@ fun makeUI(): Component {
     arrayOf("DDD", 0, false),
   )
   val model = object : DefaultTableModel(data, columnNames) {
-    override fun isCellEditable(row: Int, column: Int) = column == 2
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = column == 2
 
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
