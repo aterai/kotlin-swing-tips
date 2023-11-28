@@ -56,11 +56,15 @@ private val table = object : JTable(model) {
     }
   }
 
-  override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int): Component {
+  override fun prepareEditor(
+    editor: TableCellEditor,
+    row: Int,
+    column: Int,
+  ): Component {
     val c = super.prepareEditor(editor, row, column)
-    (c as? JCheckBox)?.also {
-      it.background = getSelectionBackground()
-      it.isBorderPainted = true
+    if (c is JCheckBox) {
+      c.background = getSelectionBackground()
+      c.isBorderPainted = true
     }
     return c
   }
@@ -103,7 +107,10 @@ private class HeaderRenderer : TableCellRenderer {
     return c
   }
 
-  private fun updateCheckBox(isSelected: Boolean, isEnabled: Boolean) {
+  private fun updateCheckBox(
+    isSelected: Boolean,
+    isEnabled: Boolean,
+  ) {
     check.isSelected = isSelected
     check.isEnabled = isEnabled
   }
@@ -169,7 +176,7 @@ private class ComponentIcon(private val cmp: Component) : Icon {
     x: Int,
     y: Int,
   ) {
-    SwingUtilities.paintComponent(g, cmp, c.parent, x, y, iconWidth, iconHeight)
+    SwingUtilities.paintComponent(g, cmp, c?.parent, x, y, iconWidth, iconHeight)
   }
 
   override fun getIconWidth() = cmp.preferredSize.width

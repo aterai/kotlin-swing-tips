@@ -36,7 +36,11 @@ fun makeUI(): Component {
       }
     }
 
-    override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int): Component {
+    override fun prepareEditor(
+      editor: TableCellEditor,
+      row: Int,
+      column: Int,
+    ): Component {
       val c = super.prepareEditor(editor, row, column)
       if (c is JTextField) {
         c.isOpaque = false

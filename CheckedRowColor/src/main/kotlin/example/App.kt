@@ -27,7 +27,11 @@ fun makeTable(model: TableModel) = object : JTable(model) {
     }
   }
 
-  override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int): Component {
+  override fun prepareEditor(
+    editor: TableCellEditor,
+    row: Int,
+    column: Int,
+  ): Component {
     val c = super.prepareEditor(editor, row, column)
     if (convertColumnIndexToModel(column) == BOOLEAN_COLUMN && c is JCheckBox) {
       c.background = if (c.isSelected) Color.ORANGE else background
@@ -35,12 +39,15 @@ fun makeTable(model: TableModel) = object : JTable(model) {
     return c
   }
 
-  override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int) =
-    super.prepareRenderer(renderer, row, column).also {
-      val b = model.getValueAt(convertRowIndexToModel(row), BOOLEAN_COLUMN) as? Boolean
-      it.background = if (b == true) Color.ORANGE else background
-      it.foreground = foreground
-    }
+  override fun prepareRenderer(
+    renderer: TableCellRenderer,
+    row: Int,
+    column: Int,
+  ) = super.prepareRenderer(renderer, row, column).also {
+    val b = model.getValueAt(convertRowIndexToModel(row), BOOLEAN_COLUMN) as? Boolean
+    it.background = if (b == true) Color.ORANGE else background
+    it.foreground = foreground
+  }
 }
 
 fun makeUI(): Component {
