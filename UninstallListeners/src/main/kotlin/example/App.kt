@@ -24,7 +24,7 @@ fun makeUI(): Component {
     override fun updateUI() {
       super.updateUI()
       val slider = this
-      val pa = PrivilegedAction<Unit?> {
+      val pa = PrivilegedAction<Unit> {
         runCatching {
           val uiClass = BasicSliderUI::class.java
           val uninstall = uiClass.getDeclaredMethod(

@@ -9,7 +9,7 @@ fun makeUI(): Component {
   val label = makeLabel("FORCE_HEAVYWEIGHT_POPUP", Color.PINK)
   ToolTipManager.sharedInstance().isLightWeightPopupEnabled = false
 
-  val action = PrivilegedAction<Unit?> {
+  val action = PrivilegedAction<Unit> {
     runCatching {
       val clazz = Class.forName("javax.swing.ClientPropertyKey")
       val field = clazz.getDeclaredField("PopupFactory_FORCE_HEAVYWEIGHT_POPUP")
