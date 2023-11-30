@@ -122,7 +122,7 @@ private class ComponentIcon(private val c: Component) : Icon {
     x: Int,
     y: Int,
   ) {
-    SwingUtilities.paintComponent(g, this.c, c.parent, x, y, iconWidth, iconHeight)
+    SwingUtilities.paintComponent(g, this.c, c?.parent, x, y, iconWidth, iconHeight)
   }
 
   override fun getIconWidth() = c.preferredSize.width
@@ -222,7 +222,7 @@ private class HeaderCheckBoxHandler(
   ): Boolean {
     var selected = status === Status.DESELECTED
     var deselected = status === Status.SELECTED
-    for (i in e.firstRow..e.lastRow) {
+    for (i in e.firstRow until e.lastRow + 1) {
       val b = m.getValueAt(i, targetColumnIndex) as? Boolean ?: false
       selected = selected and b
       deselected = deselected and !b
