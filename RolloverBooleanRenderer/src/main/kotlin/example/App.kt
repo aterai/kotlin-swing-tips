@@ -38,10 +38,13 @@ private val table = object : JTable(model) {
     setDefaultRenderer(Boolean::class.javaObjectType, RolloverBooleanRenderer(hl))
   }
 
-  override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int) =
-    super.prepareEditor(editor, row, column).also {
-      (it as? JCheckBox)?.background = getSelectionBackground()
-    }
+  override fun prepareEditor(
+    editor: TableCellEditor,
+    row: Int,
+    column: Int,
+  ) = super.prepareEditor(editor, row, column).also {
+    (it as? JCheckBox)?.background = getSelectionBackground()
+  }
 }
 
 fun makeUI(): Component {

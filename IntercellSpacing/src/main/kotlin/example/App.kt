@@ -22,10 +22,13 @@ fun makeUI(): Component {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
   val table = object : JTable(model) {
-    override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int) =
-      super.prepareEditor(editor, row, column).also {
-        (it as? JCheckBox)?.background = getSelectionBackground()
-      }
+    override fun prepareEditor(
+      editor: TableCellEditor,
+      row: Int,
+      column: Int,
+    ) = super.prepareEditor(editor, row, column).also {
+      (it as? JCheckBox)?.background = getSelectionBackground()
+    }
   }
   table.autoCreateRowSorter = true
   table.rowSelectionAllowed = true

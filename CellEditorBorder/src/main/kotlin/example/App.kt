@@ -22,15 +22,18 @@ fun makeUI(): Component {
     }
   }
   val table = object : JTable(model) {
-    override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int) =
-      super.prepareEditor(editor, row, column).also {
-        if (it is JCheckBox) {
-          it.isBorderPainted = true
-          it.background = getSelectionBackground()
-        } else if (it is JComponent && isNumber(getColumnClass(column))) {
-          it.border = BorderFactory.createLineBorder(Color.GREEN, 2)
-        }
+    override fun prepareEditor(
+      editor: TableCellEditor,
+      row: Int,
+      column: Int,
+    ) = super.prepareEditor(editor, row, column).also {
+      if (it is JCheckBox) {
+        it.isBorderPainted = true
+        it.background = getSelectionBackground()
+      } else if (it is JComponent && isNumber(getColumnClass(column))) {
+        it.border = BorderFactory.createLineBorder(Color.GREEN, 2)
       }
+    }
 
     private fun isNumber(clz: Class<*>) = Number::class.java.isAssignableFrom(clz)
   }

@@ -19,16 +19,19 @@ fun makeUI(): Component {
   val table = object : JTable(model) {
     private val evenColor = Color(0xFA_E6_E6)
 
-    override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int) =
-      super.prepareRenderer(tcr, row, column).also {
-        if (isRowSelected(row)) {
-          it.foreground = getSelectionForeground()
-          it.background = getSelectionBackground()
-        } else {
-          it.foreground = foreground
-          it.background = if (isSortingColumn(column)) evenColor else background
-        }
+    override fun prepareRenderer(
+      tcr: TableCellRenderer,
+      row: Int,
+      column: Int,
+    ) = super.prepareRenderer(tcr, row, column).also {
+      if (isRowSelected(row)) {
+        it.foreground = getSelectionForeground()
+        it.background = getSelectionBackground()
+      } else {
+        it.foreground = foreground
+        it.background = if (isSortingColumn(column)) evenColor else background
       }
+    }
 
     fun isSortingColumn(column: Int) = rowSorter?.sortKeys?.let {
       it.isNotEmpty() && column == convertColumnIndexToView(it[0].column)

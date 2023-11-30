@@ -21,16 +21,19 @@ fun makeUI(): Component {
   val table = object : JTable(model) {
     private val evenColor = Color(0xFA_FA_FA)
 
-    override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int) =
-      super.prepareRenderer(tcr, row, column).also {
-        if (isCellSelected(row, column)) {
-          it.foreground = getSelectionForeground()
-          it.background = getSelectionBackground()
-        } else {
-          it.foreground = foreground
-          it.background = if (row % 2 == 0) evenColor else background
-        }
+    override fun prepareRenderer(
+      tcr: TableCellRenderer,
+      row: Int,
+      column: Int,
+    ) = super.prepareRenderer(tcr, row, column).also {
+      if (isCellSelected(row, column)) {
+        it.foreground = getSelectionForeground()
+        it.background = getSelectionBackground()
+      } else {
+        it.foreground = foreground
+        it.background = if (row % 2 == 0) evenColor else background
       }
+    }
   }
   table.cellSelectionEnabled = true
   val check = JCheckBox("Header click: Select all cells in a column", true)

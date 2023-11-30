@@ -20,16 +20,19 @@ fun makeUI(): Component {
   val table = object : JTable(model) {
     private val evenColor = Color(0xF5_F5_FF)
 
-    override fun prepareRenderer(tcr: TableCellRenderer, row: Int, column: Int) =
-      super.prepareRenderer(tcr, row, column).also {
-        if (isRowSelected(row)) {
-          it.foreground = getSelectionForeground()
-          it.background = getSelectionBackground()
-        } else {
-          it.foreground = foreground
-          it.background = if (row % 2 == 0) evenColor else background
-        }
+    override fun prepareRenderer(
+      tcr: TableCellRenderer,
+      row: Int,
+      column: Int,
+    ) = super.prepareRenderer(tcr, row, column).also {
+      if (isRowSelected(row)) {
+        it.foreground = getSelectionForeground()
+        it.background = getSelectionBackground()
+      } else {
+        it.foreground = foreground
+        it.background = if (row % 2 == 0) evenColor else background
       }
+    }
   }
   table.isFocusable = false
   table.rowSelectionAllowed = true

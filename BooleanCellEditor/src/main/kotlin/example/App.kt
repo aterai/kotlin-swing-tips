@@ -53,11 +53,14 @@ private fun makeTable(model: TableModel) = object : JTable(model) {
     }
   }
 
-  override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int) =
-    super.prepareEditor(editor, row, column).also {
-      it.background = getSelectionBackground()
-      (it as? JCheckBox)?.isBorderPainted = true
-    }
+  override fun prepareEditor(
+    editor: TableCellEditor,
+    row: Int,
+    column: Int,
+  ) = super.prepareEditor(editor, row, column).also {
+    it.background = getSelectionBackground()
+    (it as? JCheckBox)?.isBorderPainted = true
+  }
 }
 
 private fun makeBooleanEditor(table: JTable): JCheckBox {

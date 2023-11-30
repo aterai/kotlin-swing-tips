@@ -54,13 +54,16 @@ fun makeUI(): Component {
       getTableHeader().addMouseListener(handler)
     }
 
-    override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int) =
-      super.prepareEditor(editor, row, column).also {
-        if (it is JCheckBox) {
-          it.background = getSelectionBackground()
-          it.isBorderPainted = true
-        }
+    override fun prepareEditor(
+      editor: TableCellEditor,
+      row: Int,
+      column: Int,
+    ) = super.prepareEditor(editor, row, column).also {
+      if (it is JCheckBox) {
+        it.background = getSelectionBackground()
+        it.isBorderPainted = true
       }
+    }
   }
   table.fillsViewportHeight = true
 

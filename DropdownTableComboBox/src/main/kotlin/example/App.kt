@@ -99,15 +99,18 @@ private class DropdownTableComboBox(
 ) : JComboBox<PaperSize>(paperSizes) {
   private val highlighter = HighlightListener()
   private val table = object : JTable() {
-    override fun prepareRenderer(renderer: TableCellRenderer, row: Int, column: Int) =
-      super.prepareRenderer(renderer, row, column).also {
-        it.foreground = Color.BLACK
-        it.background = when {
-          highlighter.isHighlightedRow(row) -> Color(0xFF_C8_C8)
-          isRowSelected(row) -> Color.CYAN
-          else -> Color.WHITE
-        }
+    override fun prepareRenderer(
+      renderer: TableCellRenderer,
+      row: Int,
+      column: Int,
+    ) = super.prepareRenderer(renderer, row, column).also {
+      it.foreground = Color.BLACK
+      it.background = when {
+        highlighter.isHighlightedRow(row) -> Color(0xFF_C8_C8)
+        isRowSelected(row) -> Color.CYAN
+        else -> Color.WHITE
       }
+    }
 
     override fun updateUI() {
       removeMouseListener(highlighter)
