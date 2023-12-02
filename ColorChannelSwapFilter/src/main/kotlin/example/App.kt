@@ -106,7 +106,11 @@ private class BlockedColorLayerUI<V : Component> : LayerUI<V>() {
 }
 
 private class RedGreenChannelSwapFilter : RGBImageFilter() {
-  override fun filterRGB(x: Int, y: Int, argb: Int): Int {
+  override fun filterRGB(
+    x: Int,
+    y: Int,
+    argb: Int,
+  ): Int {
     val r = argb shr 16 and 0xFF
     val g = argb shr 8 and 0xFF
     return argb and 0xFF_00_00_FF.toInt() or (g shl 16) or (r shl 8)
