@@ -87,7 +87,10 @@ private class DisableRightButtonDragOutLayerUI : LayerUI<JPanel>() {
     super.uninstallUI(c)
   }
 
-  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out JPanel>) {
+  override fun processMouseMotionEvent(
+    e: MouseEvent,
+    l: JLayer<out JPanel>,
+  ) {
     val c = e.component
     if (c is JToolBar) {
       val dragEvent = e.id == MouseEvent.MOUSE_DRAGGED

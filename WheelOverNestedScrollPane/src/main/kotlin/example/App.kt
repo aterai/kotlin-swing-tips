@@ -88,7 +88,10 @@ private class WheelScrollLayerUI : LayerUI<JScrollPane>() {
     super.uninstallUI(c)
   }
 
-  override fun processMouseWheelEvent(e: MouseWheelEvent, l: JLayer<out JScrollPane>) {
+  override fun processMouseWheelEvent(
+    e: MouseWheelEvent,
+    l: JLayer<out JScrollPane>,
+  ) {
     val c = e.component
     val dir = e.wheelRotation
     val main = l.view

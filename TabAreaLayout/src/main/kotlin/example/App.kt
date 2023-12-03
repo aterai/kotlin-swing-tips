@@ -428,7 +428,10 @@ private class HorizontalScrollLayerUI : LayerUI<JScrollPane>() {
     super.uninstallUI(c)
   }
 
-  override fun processMouseEvent(e: MouseEvent, l: JLayer<out JScrollPane>) {
+  override fun processMouseEvent(
+    e: MouseEvent,
+    l: JLayer<out JScrollPane>,
+  ) {
     val hsb = l.view.horizontalScrollBar
     when (e.id) {
       MouseEvent.MOUSE_ENTERED -> hsb.isVisible = true
@@ -442,13 +445,19 @@ private class HorizontalScrollLayerUI : LayerUI<JScrollPane>() {
     }
   }
 
-  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out JScrollPane>) {
+  override fun processMouseMotionEvent(
+    e: MouseEvent,
+    l: JLayer<out JScrollPane>,
+  ) {
     if (e.id == MouseEvent.MOUSE_DRAGGED) {
       isDragging = true
     }
   }
 
-  override fun processMouseWheelEvent(e: MouseWheelEvent, l: JLayer<out JScrollPane>) {
+  override fun processMouseWheelEvent(
+    e: MouseWheelEvent,
+    l: JLayer<out JScrollPane>,
+  ) {
     val scroll = l.view
     val hsb = scroll.horizontalScrollBar
     val viewport = scroll.viewport

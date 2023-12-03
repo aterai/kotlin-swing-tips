@@ -157,7 +157,10 @@ private class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
     this.dividerEnabled = flg
   }
 
-  override fun processMouseEvent(e: MouseEvent, l: JLayer<out JSplitPane>) {
+  override fun processMouseEvent(
+    e: MouseEvent,
+    l: JLayer<out JSplitPane>,
+  ) {
     val splitPane = l.view
     when (e.id) {
       MouseEvent.MOUSE_ENTERED -> isEnter = true
@@ -178,7 +181,10 @@ private class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
     }
   }
 
-  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out JSplitPane>) {
+  override fun processMouseMotionEvent(
+    e: MouseEvent,
+    l: JLayer<out JSplitPane>,
+  ) {
     val splitPane = l.view
     val c = e.component
     val pt = SwingUtilities.convertPoint(c, e.point, splitPane)

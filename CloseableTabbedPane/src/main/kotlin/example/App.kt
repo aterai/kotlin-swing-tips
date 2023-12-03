@@ -139,7 +139,10 @@ private class CloseableTabbedPaneLayerUI : LayerUI<JTabbedPane>() {
     super.uninstallUI(c)
   }
 
-  override fun processMouseEvent(e: MouseEvent, l: JLayer<out JTabbedPane>) {
+  override fun processMouseEvent(
+    e: MouseEvent,
+    l: JLayer<out JTabbedPane>,
+  ) {
     if (e.id == MouseEvent.MOUSE_CLICKED) {
       pt.location = e.point
       val tabbedPane = l.view
@@ -150,7 +153,10 @@ private class CloseableTabbedPaneLayerUI : LayerUI<JTabbedPane>() {
     }
   }
 
-  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out JTabbedPane>) {
+  override fun processMouseMotionEvent(
+    e: MouseEvent,
+    l: JLayer<out JTabbedPane>,
+  ) {
     val loc = e.point
     pt.location = loc
     if (l.view.indexAtLocation(pt.x, pt.y) >= 0) {

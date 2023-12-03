@@ -122,7 +122,10 @@ private class ToggleSwitchLayerUI : LayerUI<JSlider>() {
     super.uninstallUI(c)
   }
 
-  override fun processMouseEvent(e: MouseEvent, l: JLayer<out JSlider>) {
+  override fun processMouseEvent(
+    e: MouseEvent,
+    l: JLayer<out JSlider>,
+  ) {
     if (e.id == MouseEvent.MOUSE_PRESSED && SwingUtilities.isLeftMouseButton(e)) {
       e.component.dispatchEvent(
         MouseEvent(
@@ -148,7 +151,10 @@ private class ToggleSwitchLayerUI : LayerUI<JSlider>() {
     }
   }
 
-  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out JSlider>) {
+  override fun processMouseMotionEvent(
+    e: MouseEvent,
+    l: JLayer<out JSlider>,
+  ) {
     l.view.repaint()
   }
 }

@@ -46,7 +46,10 @@ private class ToolTipLayerUI<V : JComboBox<*>> : LayerUI<V>() {
     super.uninstallUI(c)
   }
 
-  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out V>) {
+  override fun processMouseMotionEvent(
+    e: MouseEvent,
+    l: JLayer<out V>,
+  ) {
     l.view.toolTipText = if (e.component is JButton) {
       "ArrowButton"
     } else {
