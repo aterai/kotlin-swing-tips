@@ -16,7 +16,14 @@ private const val TITLE = "TitledBorder Test"
 
 fun makeUI() = JPanel(GridLayout(0, 1, 5, 5)).also {
   val b1 = object : TitledBorder(TITLE + "1") {
-    override fun paintBorder(c: Component, g: Graphics, x: Int, y: Int, width: Int, height: Int) {
+    override fun paintBorder(
+      c: Component,
+      g: Graphics,
+      x: Int,
+      y: Int,
+      width: Int,
+      height: Int,
+    ) {
       super.paintBorder(c, g, x + 10, y, width, height)
     }
   }

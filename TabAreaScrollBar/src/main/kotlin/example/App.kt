@@ -269,11 +269,19 @@ private class OverlappedScrollBarUI : BasicScrollBarUI() {
 
   override fun createIncreaseButton(orientation: Int) = ZeroSizeButton()
 
-  override fun paintTrack(g: Graphics, c: JComponent, r: Rectangle) {
+  override fun paintTrack(
+    g: Graphics,
+    c: JComponent,
+    r: Rectangle,
+  ) {
     // empty paint
   }
 
-  override fun paintThumb(g: Graphics, c: JComponent, r: Rectangle) {
+  override fun paintThumb(
+    g: Graphics,
+    c: JComponent,
+    r: Rectangle,
+  ) {
     if (c.isEnabled && !r.isEmpty) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
