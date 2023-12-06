@@ -17,7 +17,7 @@ fun makeUI(): Component {
   val pf2 = object : JPasswordField() {
     override fun updateUI() {
       super.updateUI()
-      setUI(MyPasswordFieldUI.createUI(this))
+      setUI(IconPasswordFieldUI.createUI(this))
     }
   }
   return JPanel(GridLayout(2, 1)).also {
@@ -42,10 +42,12 @@ private fun makeTitledPanel(
   return p
 }
 
-private class MyPasswordFieldUI : BasicPasswordFieldUI() {
-  override fun create(elem: Element) = MyPasswordView(elem)
+private class IconPasswordFieldUI : BasicPasswordFieldUI() {
+  override fun create(elem: Element) = IconPasswordView(elem)
 
-  class MyPasswordView(element: Element?) : PasswordView(element) {
+  class IconPasswordView(element: Element?) : PasswordView(element) {
+    private val icon = StarIcon()
+
     override fun drawEchoCharacter(
       g: Graphics,
       x: Int,
@@ -53,17 +55,15 @@ private class MyPasswordFieldUI : BasicPasswordFieldUI() {
       c: Char,
     ): Int {
       val fm = g.fontMetrics
-      ICON.paintIcon(null, g, x, y - fm.ascent)
-      return x + ICON.iconWidth // fm.charWidth(c)
+      icon.paintIcon(null, g, x, y - fm.ascent)
+      return x + icon.iconWidth
     }
   }
 
   companion object {
-    private val ICON = StarIcon()
-
-    fun createUI(c: JPasswordField): MyPasswordFieldUI {
-      c.echoChar = '\u25A0' // As wide as a CJK character cell (full width)
-      return MyPasswordFieldUI()
+    fun createUI(c: JPasswordField): IconPasswordFieldUI {
+      c.echoChar = '■' // U+25A0: As wide as a CJK character cell (full width)
+      return IconPasswordFieldUI()
     }
   }
 }
