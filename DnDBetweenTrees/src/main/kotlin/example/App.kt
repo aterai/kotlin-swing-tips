@@ -98,7 +98,11 @@ private class TreeTransferHandler : TransferHandler() {
     return false
   }
 
-  override fun exportDone(src: JComponent, data: Transferable, action: Int) {
+  override fun exportDone(
+    src: JComponent,
+    data: Transferable,
+    action: Int,
+  ) {
     val tree = src as? JTree
     val model = tree?.model
     val selectionPaths = tree?.selectionPaths

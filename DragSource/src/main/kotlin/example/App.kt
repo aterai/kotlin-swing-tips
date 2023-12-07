@@ -40,11 +40,18 @@ fun makeUI(): Component {
       TempFileTransferable(it)
     }
 
-    override fun exportDone(c: JComponent, data: Transferable, action: Int) {
+    override fun exportDone(
+      c: JComponent,
+      data: Transferable,
+      action: Int,
+    ) {
       cleanup(c, action == MOVE)
     }
 
-    private fun cleanup(c: JComponent, isMoved: Boolean) {
+    private fun cleanup(
+      c: JComponent,
+      isMoved: Boolean,
+    ) {
       if (isMoved) {
         file = null
         c.repaint()
@@ -94,7 +101,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeIcon(path: String, key: String): Icon {
+private fun makeIcon(
+  path: String,
+  key: String,
+): Icon {
   val url = Thread.currentThread().contextClassLoader.getResource(path)
   return url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) }
     ?: UIManager.getIcon(key)

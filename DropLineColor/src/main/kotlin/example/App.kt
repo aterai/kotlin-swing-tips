@@ -186,13 +186,23 @@ private class ListItemTransferHandler : TransferHandler() {
     return values.isNotEmpty()
   }
 
-  override fun importData(comp: JComponent, t: Transferable) = importData(TransferSupport(comp, t))
+  override fun importData(
+    comp: JComponent,
+    t: Transferable,
+  ) = importData(TransferSupport(comp, t))
 
-  override fun exportDone(c: JComponent, data: Transferable, action: Int) {
+  override fun exportDone(
+    c: JComponent,
+    data: Transferable,
+    action: Int,
+  ) {
     cleanup(c, action == MOVE)
   }
 
-  private fun cleanup(c: JComponent, remove: Boolean) {
+  private fun cleanup(
+    c: JComponent,
+    remove: Boolean,
+  ) {
     if (remove && selectedIndices.isNotEmpty()) {
       // If we are moving items around in the same list, we
       // need to adjust the indices accordingly, since those
@@ -306,11 +316,18 @@ private class TableRowTransferHandler : TransferHandler() {
     return values.isNotEmpty()
   }
 
-  override fun exportDone(c: JComponent, data: Transferable?, action: Int) {
+  override fun exportDone(
+    c: JComponent,
+    data: Transferable?,
+    action: Int,
+  ) {
     cleanup(c, action == MOVE)
   }
 
-  private fun cleanup(c: JComponent, remove: Boolean) {
+  private fun cleanup(
+    c: JComponent,
+    remove: Boolean,
+  ) {
     c.rootPane.glassPane.isVisible = false
     if (remove && selectedIndices.isNotEmpty()) {
       val selectedList = if (addCount > 0) {
@@ -389,7 +406,11 @@ private class TreeTransferHandler : TransferHandler() {
     }
   }
 
-  override fun exportDone(src: JComponent?, data: Transferable?, action: Int) {
+  override fun exportDone(
+    src: JComponent?,
+    data: Transferable?,
+    action: Int,
+  ) {
     if (action == MOVE && src is JTree) {
       val model = src.model as? DefaultTreeModel
       val selectionPaths = src.selectionPaths

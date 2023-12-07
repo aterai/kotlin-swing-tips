@@ -293,13 +293,20 @@ private class ListItemTransferHandler : TransferHandler() {
     return addCount > 0
   }
 
-  override fun exportDone(c: JComponent, data: Transferable, action: Int) {
+  override fun exportDone(
+    c: JComponent,
+    data: Transferable,
+    action: Int,
+  ) {
     val glassPane = c.rootPane.glassPane
     glassPane.isVisible = false
     cleanup(c, action == MOVE)
   }
 
-  private fun cleanup(c: JComponent, remove: Boolean) {
+  private fun cleanup(
+    c: JComponent,
+    remove: Boolean,
+  ) {
     if (remove && selectedIndices.isNotEmpty()) {
       // If we are moving items around in the same list, we
       // need to adjust the indices accordingly, since those

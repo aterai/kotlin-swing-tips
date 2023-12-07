@@ -120,7 +120,11 @@ private class LabelTransferHandler : TransferHandler("Text") {
     true
   }.isSuccess
 
-  override fun exportDone(c: JComponent, data: Transferable, action: Int) {
+  override fun exportDone(
+    c: JComponent,
+    data: Transferable,
+    action: Int,
+  ) {
     val src = c as? DragPanel ?: return
     if (action == MOVE) {
       src.remove(src.draggingLabel)
