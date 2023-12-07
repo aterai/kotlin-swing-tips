@@ -106,7 +106,10 @@ private class CompoundButton(
     }
   }
 
-  private fun paintFocusAndRollover(g2: Graphics2D, color: Color) {
+  private fun paintFocusAndRollover(
+    g2: Graphics2D,
+    color: Color,
+  ) {
     g2.paint = GradientPaint(0f, 0f, color, width - 1f, height - 1f, color.brighter(), true)
     g2.fill(shape)
     g2.paint = background
@@ -125,7 +128,10 @@ private class CompoundButton(
     g2.dispose()
   }
 
-  override fun contains(x: Int, y: Int) = shape?.contains(Point(x, y)) ?: false
+  override fun contains(
+    x: Int,
+    y: Int,
+  ) = shape?.contains(Point(x, y)) ?: false
 }
 
 fun main() {

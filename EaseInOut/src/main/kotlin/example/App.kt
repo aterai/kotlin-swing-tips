@@ -53,7 +53,10 @@ private class ImageCaptionLabel(caption: String, icon: Icon) : JLabel() {
       addMouseListener(listener)
     }
 
-    // override fun contains(x: Int, y: Int) = false
+    // override fun contains(
+    //   x: Int,
+    //   y: Int,
+    // ) = false
   }
   private val handler = LabelHandler(textArea)
 

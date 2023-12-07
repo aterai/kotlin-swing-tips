@@ -73,7 +73,10 @@ private class Handler : MouseAdapter() {
 private class LabelTransferHandler : TransferHandler("Text") {
   private val localObjectFlavor = DataFlavor(DragPanel::class.java, "DragPanel")
   private val label = object : JLabel() {
-    override fun contains(x: Int, y: Int) = false
+    override fun contains(
+      x: Int,
+      y: Int,
+    ) = false
   }
   private val window = JWindow()
 
