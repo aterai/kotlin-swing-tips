@@ -5,6 +5,7 @@ import java.awt.*
 import java.awt.geom.AffineTransform
 import javax.swing.*
 import javax.swing.plaf.metal.MetalScrollBarUI
+import javax.swing.plaf.synth.SynthScrollBarUI
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.text.JTextComponent
 
@@ -31,18 +32,22 @@ fun makeUI(): Component {
   textArea.isEditable = false
   textArea.text = INIT_TXT.repeat(3)
 
-  val scrollbar = JScrollBar(Adjustable.VERTICAL)
-  if (scrollbar.ui is WindowsScrollBarUI) {
-    scrollbar.ui = WindowsHighlightScrollBarUI(textArea)
-  } else {
-    scrollbar.ui = MetalHighlightScrollBarUI(textArea)
-  }
-  scrollbar.unitIncrement = 10
-
   val scroll = JScrollPane(textArea)
+  val scrollbar = object : JScrollBar(Adjustable.VERTICAL) {
+    override fun updateUI() {
+      super.updateUI()
+      val ui = getUI()
+      if (ui is WindowsScrollBarUI) {
+        setUI(WindowsHighlightScrollBarUI())
+      } else if (ui !is SynthScrollBarUI) {
+        setUI(MetalHighlightScrollBarUI())
+      }
+      unitIncrement = 10
+    }
+  }
   scroll.verticalScrollBar = scrollbar
 
-  val label = JLabel(HighlightIcon(textArea, scrollbar))
+  val label = JLabel(HighlightIcon(textArea, scroll.verticalScrollBar))
   scroll.setRowHeaderView(label)
 
   val check = JCheckBox("LineWrap")
@@ -152,51 +157,57 @@ private class HighlightIcon(
   }
 }
 
-private class WindowsHighlightScrollBarUI(
-  private val textArea: JTextComponent,
-) : WindowsScrollBarUI() {
+private class WindowsHighlightScrollBarUI : WindowsScrollBarUI() {
   override fun paintTrack(
     g: Graphics,
     c: JComponent,
     trackBounds: Rectangle,
   ) {
     super.paintTrack(g, c, trackBounds)
-    val rect = textArea.bounds
-    val sy = trackBounds.getHeight() / rect.getHeight()
-    val at = AffineTransform.getScaleInstance(1.0, sy)
-    val highlighter = textArea.highlighter
-    g.color = Color.YELLOW
-    runCatching {
-      for (hh in highlighter.highlights) {
-        val r = textArea.modelToView(hh.startOffset)
-        val s = at.createTransformedShape(r).bounds
-        val h = 2
-        g.fillRect(trackBounds.x, trackBounds.y + s.y, trackBounds.width, h)
+    val s = SwingUtilities.getAncestorOfClass(JScrollPane::class.java, c)
+    val v = (s as? JScrollPane)?.viewport?.view
+    if (v is JTextComponent) {
+      val textArea = v
+      val rect = textArea.bounds
+      val sy = trackBounds.getHeight() / rect.getHeight()
+      val at = AffineTransform.getScaleInstance(1.0, sy)
+      val highlighter = textArea.highlighter
+      g.color = Color.YELLOW
+      runCatching {
+        for (hh in highlighter.highlights) {
+          val r = textArea.modelToView(hh.startOffset)
+          val by = at.createTransformedShape(r).bounds.y
+          val h = 2
+          g.fillRect(trackBounds.x, trackBounds.y + by, trackBounds.width, h)
+        }
       }
     }
   }
 }
 
-private class MetalHighlightScrollBarUI(
-  private val textArea: JTextComponent,
-) : MetalScrollBarUI() {
+private class MetalHighlightScrollBarUI : MetalScrollBarUI() {
   override fun paintTrack(
     g: Graphics,
     c: JComponent,
     trackBounds: Rectangle,
   ) {
     super.paintTrack(g, c, trackBounds)
-    val rect = textArea.bounds
-    val sy = trackBounds.getHeight() / rect.getHeight()
-    val at = AffineTransform.getScaleInstance(1.0, sy)
-    val highlighter = textArea.highlighter
-    g.color = Color.YELLOW
-    runCatching {
-      for (hh in highlighter.highlights) {
-        val r = textArea.modelToView(hh.startOffset)
-        val s = at.createTransformedShape(r).bounds
-        val h = 2
-        g.fillRect(trackBounds.x, trackBounds.y + s.y, trackBounds.width, h)
+    val s = SwingUtilities.getAncestorOfClass(JScrollPane::class.java, c)
+    val v = (s as? JScrollPane)?.viewport?.view
+    if (v is JTextComponent) {
+      val textArea = v
+      val rect = textArea.bounds
+      val sy = trackBounds.getHeight() / rect.getHeight()
+      val at = AffineTransform.getScaleInstance(1.0, sy)
+      val highlighter = textArea.highlighter
+      g.color = Color.YELLOW
+      runCatching {
+        for (hh in highlighter.highlights) {
+          val r = textArea.modelToView(hh.startOffset)
+          val by = at.createTransformedShape(r).bounds.y
+          val h = 2
+          g.fillRect(trackBounds.x, trackBounds.y + by, trackBounds.width, h)
+        }
       }
     }
   }
