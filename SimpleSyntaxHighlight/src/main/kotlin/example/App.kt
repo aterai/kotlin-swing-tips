@@ -22,19 +22,29 @@ fun makeUI() = JPanel(BorderLayout()).also {
 
 private class SimpleSyntaxDocument : DefaultStyledDocument() {
   @Throws(BadLocationException::class)
-  override fun insertString(offset: Int, text: String, a: AttributeSet?) {
+  override fun insertString(
+    offset: Int,
+    text: String,
+    a: AttributeSet?,
+  ) {
     super.insertString(offset, text, a)
     processChangedLines(offset, text.length)
   }
 
   @Throws(BadLocationException::class)
-  override fun remove(offset: Int, length: Int) {
+  override fun remove(
+    offset: Int,
+    length: Int,
+  ) {
     super.remove(offset, length)
     processChangedLines(offset, 0)
   }
 
   @Throws(BadLocationException::class)
-  private fun processChangedLines(offset: Int, length: Int) {
+  private fun processChangedLines(
+    offset: Int,
+    length: Int,
+  ) {
     val root = defaultRootElement
     val content = getText(0, getLength())
     val startLine = root.getElementIndex(offset)
@@ -45,7 +55,10 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
   }
 
   @Throws(BadLocationException::class)
-  private fun applyHighlighting(content: String, line: Int) {
+  private fun applyHighlighting(
+    content: String,
+    line: Int,
+  ) {
     val root = defaultRootElement
     val startOffset = root.getElement(line).startOffset
     var endOffset = root.getElement(line).endOffset - 1
@@ -56,7 +69,11 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
     checkForTokens(content, startOffset, endOffset)
   }
 
-  private fun checkForTokens(content: String, startOffset: Int, endOffset: Int) {
+  private fun checkForTokens(
+    content: String,
+    startOffset: Int,
+    endOffset: Int,
+  ) {
     var index = startOffset
     while (index <= endOffset) {
       while (isDelimiter(content.substring(index, index + 1))) {
@@ -70,7 +87,11 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
     }
   }
 
-  private fun getOtherToken(content: String, startOffset: Int, endOffset: Int): Int {
+  private fun getOtherToken(
+    content: String,
+    startOffset: Int,
+    endOffset: Int,
+  ): Int {
     var endOfToken = startOffset + 1
     while (endOfToken <= endOffset) {
       if (isDelimiter(content.substring(endOfToken, endOfToken + 1))) {

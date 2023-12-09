@@ -93,7 +93,11 @@ private class ColorTracker(private val chooser: JColorChooser) : ActionListener 
 private class ValueFormatter : AbstractFormatter(), FocusListener {
   private val filter: DocumentFilter = object : DocumentFilter() {
     @Throws(BadLocationException::class)
-    override fun remove(fb: FilterBypass, offset: Int, length: Int) {
+    override fun remove(
+      fb: FilterBypass,
+      offset: Int,
+      length: Int,
+    ) {
       if (isValidLength(fb.document.length - length)) {
         fb.remove(offset, length)
       }
