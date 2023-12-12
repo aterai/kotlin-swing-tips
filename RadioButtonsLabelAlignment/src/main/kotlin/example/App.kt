@@ -9,7 +9,6 @@ fun makeUI(): Component {
   p.focusTraversalPolicy = ContainerOrderFocusTraversalPolicy()
   p.isFocusTraversalPolicyProvider = true
   p.isFocusable = false
-
   val gbc = GridBagConstraints()
   gbc.fill = GridBagConstraints.HORIZONTAL
   gbc.gridx = 1
@@ -24,19 +23,26 @@ fun makeUI(): Component {
     JCheckBox("JCheckBox1"),
     JCheckBox("JCheckBox2"),
   )
-  val icon = UIManager.getIcon("RadioButton.icon")
-  val iconWidth = icon?.iconWidth ?: 0
-  var left = 0
+  var gap = 0
   for (c in list) {
     gbc.insets.left = 0
+    gbc.insets.right = 0
     if (c is JRadioButton) {
-      group.add(c)
-      if (left == 0) {
-        c.isSelected = true
-        left = c.insets.left + iconWidth + c.iconTextGap
+      val button = c
+      if (gap == 0) {
+        gap = getIconSpace(button)
+        button.isSelected = true
       }
+      group.add(button)
     } else if (c is JLabel) {
-      gbc.insets.left = left
+      val leftToRightParent = p.componentOrientation.isLeftToRight
+      val leftToRight = c.getComponentOrientation().isLeftToRight
+      when {
+        leftToRight && leftToRightParent -> gbc.insets.left = gap
+        leftToRight -> gbc.insets.right = gap
+        leftToRightParent -> gbc.insets.right = gap
+        else -> gbc.insets.left = gap
+      }
     }
     p.add(c, gbc)
   }
@@ -52,6 +58,15 @@ fun makeUI(): Component {
     it.add(p, BorderLayout.NORTH)
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+private fun getIconSpace(button: JRadioButton): Int {
+  val icon = UIManager.getIcon("RadioButton.icon")
+  val iconWidth = icon?.iconWidth ?: 0
+  val leftToRight = button.componentOrientation.isLeftToRight
+  val i = button.insets
+  val ins = if (leftToRight) i.left else i.right
+  return ins + iconWidth + button.iconTextGap
 }
 
 private object LookAndFeelUtils {
