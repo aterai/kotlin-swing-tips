@@ -63,7 +63,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: Component, c: Component): Container {
+private fun makeTitledPanel(
+  title: Component,
+  c: Component,
+): Container {
   val box = JPanel()
   box.add(title)
   box.add(c)

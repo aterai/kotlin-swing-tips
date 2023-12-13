@@ -28,11 +28,14 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: String, tree: JTree): Component {
-  tree.border = BorderFactory.createEmptyBorder(2, 4, 2, 2)
+private fun makeTitledPanel(
+  title: String,
+  c: JComponent,
+): Component {
+  c.border = BorderFactory.createEmptyBorder(2, 4, 2, 2)
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
-  p.add(JScrollPane(tree))
+  p.add(JScrollPane(c))
   return p
 }
 

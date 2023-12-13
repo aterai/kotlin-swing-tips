@@ -50,7 +50,10 @@ private fun makeSlider(orientation: Int) = JSlider(orientation).also {
   it.minorTickSpacing = 5
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)

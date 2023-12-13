@@ -67,7 +67,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: String, vararg list: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  vararg list: Component,
+): Component {
   val p = JPanel(GridBagLayout())
   p.border = BorderFactory.createTitledBorder(title)
   val c = GridBagConstraints()

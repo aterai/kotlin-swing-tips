@@ -18,7 +18,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: String, bg: ButtonGroup): Component {
+private fun makeTitledPanel(
+  title: String,
+  bg: ButtonGroup,
+): Component {
   val p = JPanel()
   p.border = BorderFactory.createTitledBorder(title)
   listOf("aaa", "bbb", "ccc")

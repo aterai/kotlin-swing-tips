@@ -108,7 +108,10 @@ private fun makePasswordField() = JPasswordField(24).also {
   it.alignmentX = Component.RIGHT_ALIGNMENT
 }
 
-private fun makeTitledPanel(title: String, cmp: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  cmp: Component,
+): Component {
   val p = JPanel(GridBagLayout())
   p.border = BorderFactory.createTitledBorder(title)
   val c = GridBagConstraints()

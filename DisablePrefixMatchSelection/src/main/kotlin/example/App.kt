@@ -26,7 +26,10 @@ private fun makeModel() = DefaultListModel<String>().also {
   it.addElement("fff fff fff fff fff fff")
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)
