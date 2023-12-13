@@ -68,9 +68,14 @@ fun expandAll(tree: JTree) {
   }
 }
 
-private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
-  it.border = BorderFactory.createTitledBorder(title)
-  it.add(c)
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
+  val p = JPanel(BorderLayout())
+  p.border = BorderFactory.createTitledBorder(title)
+  p.add(c)
+  return p
 }
 
 private object LookAndFeelUtils {
