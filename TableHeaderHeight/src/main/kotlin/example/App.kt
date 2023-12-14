@@ -60,9 +60,14 @@ private fun makeTable() = JTable(DefaultTableModel(2, 20)).also {
   it.autoResizeMode = JTable.AUTO_RESIZE_OFF
 }
 
-private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
-  it.border = BorderFactory.createTitledBorder(title)
-  it.add(c)
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
+  val p = JPanel(BorderLayout())
+  p.border = BorderFactory.createTitledBorder(title)
+  p.add(c)
+  return p
 }
 
 fun main() {
