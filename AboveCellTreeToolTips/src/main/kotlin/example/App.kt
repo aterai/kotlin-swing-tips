@@ -79,11 +79,16 @@ private fun makeTreeRoot(): DefaultMutableTreeNode {
   return root
 }
 
-private fun makeTitledPanel(title: String, c: Component) = JPanel(BorderLayout()).also {
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
+  val p = JPanel(BorderLayout())
+  p.border = BorderFactory.createTitledBorder(title)
   val scroll = JScrollPane(c)
   scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
-  it.border = BorderFactory.createTitledBorder(title)
-  it.add(scroll)
+  p.add(scroll)
+  return p
 }
 
 private class TooltipTree(model: TreeModel) : JTree(model) {
