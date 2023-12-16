@@ -16,10 +16,15 @@ fun makeUI() = JPanel(BorderLayout()).also {
 
 private fun getArrowButton(c: Container) = c.components.filterIsInstance<JButton>().firstOrNull()
 
-private fun makeTitledPanel(title: String, c: Component) = Box.createVerticalBox().also {
-  it.border = BorderFactory.createTitledBorder(title)
-  it.add(Box.createVerticalStrut(2))
-  it.add(c)
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
+  val box = Box.createVerticalBox()
+  box.border = BorderFactory.createTitledBorder(title)
+  box.add(Box.createVerticalStrut(2))
+  box.add(c)
+  return box
 }
 
 private fun makeComboBoxModel() = DefaultComboBoxModel<String>().also {
