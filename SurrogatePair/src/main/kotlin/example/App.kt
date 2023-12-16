@@ -68,8 +68,13 @@ private fun browseCacheFile(url: URL?) {
   }
 }
 
-fun makeTitledPanel(title: String, c: Component) = JScrollPane(c).also {
-  it.border = BorderFactory.createTitledBorder(title)
+private fun makeTitledPanel(
+  title: String,
+  c: Component,
+): Component {
+  val scroll = JScrollPane(c)
+  scroll.border = BorderFactory.createTitledBorder(title)
+  return scroll
 }
 
 fun main() {
