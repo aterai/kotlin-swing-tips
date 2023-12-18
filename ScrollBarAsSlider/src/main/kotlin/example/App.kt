@@ -34,14 +34,19 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledPanel(title: String, cmp: Component) = JPanel(GridBagLayout()).also {
-  it.border = BorderFactory.createTitledBorder(title)
-  it.background = Color.WHITE
+private fun makeTitledPanel(
+  title: String,
+  cmp: Component,
+): Component {
+  val p = JPanel(GridBagLayout())
+  p.border = BorderFactory.createTitledBorder(title)
+  p.background = Color.WHITE
   val c = GridBagConstraints()
   c.weightx = 1.0
   c.fill = GridBagConstraints.HORIZONTAL
   c.insets = Insets(5, 5, 5, 5)
-  it.add(cmp, c)
+  p.add(cmp, c)
+  return p
 }
 
 fun main() {
