@@ -6,18 +6,22 @@ import javax.swing.*
 import javax.swing.event.MouseInputAdapter
 import javax.swing.event.MouseInputListener
 
-fun makeUI() = JPanel(GridLayout(1, 2)).also {
-  it.add(makeTitledPanel("Default", JScrollPane(JList(makeModel()))))
-  it.add(makeTitledPanel("clearSelection", JScrollPane(makeList(makeModel()))))
-  it.preferredSize = Dimension(320, 240)
+fun makeUI(): Component {
+  val p = JPanel(GridLayout(1, 2))
+  p.add(makeTitledPanel("Default", JScrollPane(JList(makeModel()))))
+  p.add(makeTitledPanel("clearSelection", JScrollPane(makeList(makeModel()))))
+  p.preferredSize = Dimension(320, 240)
+  return p
 }
 
-private fun makeModel() = DefaultListModel<String>().also {
-  it.addElement("000000000")
-  it.addElement("111111111")
-  it.addElement("2222222222")
-  it.addElement("33333")
-  it.addElement("44444444444")
+private fun makeModel(): ListModel<String> {
+  val m = DefaultListModel<String>()
+  m.addElement("000000000")
+  m.addElement("111111111")
+  m.addElement("2222222222")
+  m.addElement("33333")
+  m.addElement("44444444444")
+  return m
 }
 
 private fun <E> makeList(model: ListModel<E>): JList<E> {
@@ -81,7 +85,10 @@ private class ClearSelectionListener : MouseInputAdapter() {
     }
   }
 
-  private fun contains(list: JList<*>, pt: Point): Boolean {
+  private fun contains(
+    list: JList<*>,
+    pt: Point,
+  ): Boolean {
     for (i in 0 until list.model.size) {
       if (list.getCellBounds(i, i).contains(pt)) {
         return true

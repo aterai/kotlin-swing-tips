@@ -65,11 +65,13 @@ private open class CheckBoxesPanel : JPanel() {
     buttons[2].isSelected = i and (1 shl 0) != 0
   }
 
-  private fun makeCheckBox(title: String) = JCheckBox(title).also {
-    it.isOpaque = false
-    it.isFocusable = false
-    it.isRolloverEnabled = false
-    it.background = bgc
+  private fun makeCheckBox(title: String): JCheckBox {
+    val c = JCheckBox(title)
+    c.isOpaque = false
+    c.isFocusable = false
+    c.isRolloverEnabled = false
+    c.background = bgc
+    return c
   }
 }
 

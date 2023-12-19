@@ -88,14 +88,19 @@ fun makeUI(): Component {
   }
 }
 
-fun makeWeekCalendar(list: JList<*>, font: Font) = JScrollPane(list).also {
+fun makeWeekCalendar(
+  list: JList<*>,
+  font: Font,
+): Component {
   val loc = Locale.getDefault()
-  it.border = BorderFactory.createEmptyBorder()
-  it.setColumnHeaderView(makeColumnHeader(loc))
-  it.setRowHeaderView(makeRowHeader(loc, font))
-  it.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
-  it.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
-  it.background = Color.WHITE
+  val scroll = JScrollPane(list)
+  scroll.setColumnHeaderView(makeColumnHeader(loc))
+  scroll.setRowHeaderView(makeRowHeader(loc, font))
+  scroll.border = BorderFactory.createEmptyBorder()
+  scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
+  scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+  scroll.background = Color.WHITE
+  return scroll
 }
 
 private fun makeRowHeader(
@@ -147,9 +152,14 @@ private fun makeColumnHeader(loc: Locale): Component {
   return colHeader
 }
 
-private fun makeLabel(title: String, font: Font) = JLabel(title).also {
-  it.font = font
-  it.isEnabled = false
+private fun makeLabel(
+  title: String,
+  font: Font,
+): JLabel {
+  val label = JLabel(title)
+  label.font = font
+  label.isEnabled = false
+  return label
 }
 
 private data class Contribution(val date: LocalDate, val activity: Int)

@@ -53,13 +53,18 @@ private fun makeMissingImage(): Image {
   return bi
 }
 
-private fun makeModel(i1: Image, i2: Image) = DefaultComboBoxModel<SiteItem>().also {
-  it.addElement(SiteItem("https://ateraimemo.com/", i1, true))
-  it.addElement(SiteItem("https://ateraimemo.com/Swing.html", i1, true))
-  it.addElement(SiteItem("https://ateraimemo.com/Kotlin.html", i1, true))
-  it.addElement(SiteItem("https://github.com/aterai/java-swing-tips", i2, true))
-  it.addElement(SiteItem("https://java-swing-tips.blogspot.com/", i2, true))
-  it.addElement(SiteItem("http://www.example.com/", i2, false))
+private fun makeModel(
+  i1: Image,
+  i2: Image,
+): DefaultComboBoxModel<SiteItem> {
+  val m = DefaultComboBoxModel<SiteItem>()
+  m.addElement(SiteItem("https://ateraimemo.com/", i1, true))
+  m.addElement(SiteItem("https://ateraimemo.com/Swing.html", i1, true))
+  m.addElement(SiteItem("https://ateraimemo.com/Kotlin.html", i1, true))
+  m.addElement(SiteItem("https://github.com/aterai/java-swing-tips", i2, true))
+  m.addElement(SiteItem("https://java-swing-tips.blogspot.com/", i2, true))
+  m.addElement(SiteItem("http://www.example.com/", i2, false))
+  return m
 }
 
 private fun initComboBox(combo: JComboBox<SiteItem>) {
@@ -110,21 +115,26 @@ private class SiteItemComboBox(
     }
   }
 
-  private fun updateFavicon(model: ComboBoxModel<SiteItem>, label: JLabel) {
+  private fun updateFavicon(
+    model: ComboBoxModel<SiteItem>,
+    label: JLabel,
+  ) {
     getSiteItemFromModel(model, selectedItem)?.also { label.icon = it.favicon }
   }
 
-  private fun makeRssButton() = JButton().also {
+  private fun makeRssButton(): JButton {
+    val b = JButton()
     val rss = makeImage("example/feed-icon-14x14.png") // http://feedicons.com/
-    it.icon = ImageIcon(rss)
+    b.icon = ImageIcon(rss)
     val ip = FilteredImageSource(rss.source, SelectedImageFilter())
-    it.rolloverIcon = ImageIcon(it.toolkit.createImage(ip))
-    it.addActionListener { Toolkit.getDefaultToolkit().beep() }
-    it.isFocusPainted = false
-    it.isBorderPainted = false
-    it.isContentAreaFilled = false
-    it.cursor = Cursor.getDefaultCursor()
-    it.border = BorderFactory.createEmptyBorder(0, 1, 0, 2)
+    b.rolloverIcon = ImageIcon(b.toolkit.createImage(ip))
+    b.addActionListener { Toolkit.getDefaultToolkit().beep() }
+    b.isFocusPainted = false
+    b.isBorderPainted = false
+    b.isContentAreaFilled = false
+    b.cursor = Cursor.getDefaultCursor()
+    b.border = BorderFactory.createEmptyBorder(0, 1, 0, 2)
+    return b
   }
 
   private fun makeLabel(): JLabel {

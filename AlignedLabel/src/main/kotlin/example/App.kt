@@ -47,10 +47,15 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeLabeledBox(label: Component, c: Component) = Box.createHorizontalBox().also {
-  it.add(label)
-  it.add(Box.createHorizontalStrut(5))
-  it.add(c)
+private fun makeLabeledBox(
+  label: Component,
+  c: Component,
+): Component {
+  val box = Box.createHorizontalBox()
+  box.add(label)
+  box.add(Box.createHorizontalStrut(5))
+  box.add(c)
+  return box
 }
 
 // @see javax/swing/plaf/metal/MetalFileChooserUI.java
@@ -62,9 +67,11 @@ private class AlignedLabel(text: String) : JLabel(text) {
     horizontalAlignment = SwingConstants.RIGHT
   }
 
-  override fun getPreferredSize() = super.getPreferredSize()?.also {
+  override fun getPreferredSize(): Dimension? {
+    val d = super.getPreferredSize()
     // Align the width with all other labels in group.
-    it.width = getMaxWidth() + INDENT
+    d?.width = getMaxWidth() + INDENT
+    return d
   }
 
   private fun getSuperPreferredWidth() = super.getPreferredSize().width

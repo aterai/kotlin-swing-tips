@@ -11,42 +11,46 @@ import javax.swing.table.TableModel
 
 private const val BOOLEAN_COLUMN = 2
 
-fun makeTable(model: TableModel) = object : JTable(model) {
-  override fun updateUI() {
-    // Changing to Nimbus LAF and back doesn't reset look and feel of JTable completely
-    // https://bugs.openjdk.org/browse/JDK-6788475
-    // Set a temporary ColorUIResource to avoid this issue
-    setSelectionForeground(ColorUIResource(Color.RED))
-    setSelectionBackground(ColorUIResource(Color.RED))
-    super.updateUI()
-    val m = getModel()
-    for (i in 0 until m.columnCount) {
-      (getDefaultRenderer(m.getColumnClass(i)) as? Component)?.also {
-        SwingUtilities.updateComponentTreeUI(it)
+fun makeTable(model: TableModel): JTable {
+  return object : JTable(model) {
+    override fun updateUI() {
+      // Changing to Nimbus LAF and back doesn't reset look and feel of JTable completely
+      // https://bugs.openjdk.org/browse/JDK-6788475
+      // Set a temporary ColorUIResource to avoid this issue
+      setSelectionForeground(ColorUIResource(Color.RED))
+      setSelectionBackground(ColorUIResource(Color.RED))
+      super.updateUI()
+      val m = getModel()
+      for (i in 0 until m.columnCount) {
+        (getDefaultRenderer(m.getColumnClass(i)) as? Component)?.also {
+          SwingUtilities.updateComponentTreeUI(it)
+        }
       }
     }
-  }
 
-  override fun prepareEditor(
-    editor: TableCellEditor,
-    row: Int,
-    column: Int,
-  ): Component {
-    val c = super.prepareEditor(editor, row, column)
-    if (convertColumnIndexToModel(column) == BOOLEAN_COLUMN && c is JCheckBox) {
-      c.background = if (c.isSelected) Color.ORANGE else background
+    override fun prepareEditor(
+      editor: TableCellEditor,
+      row: Int,
+      column: Int,
+    ): Component {
+      val c = super.prepareEditor(editor, row, column)
+      if (convertColumnIndexToModel(column) == BOOLEAN_COLUMN && c is JCheckBox) {
+        c.background = if (c.isSelected) Color.ORANGE else background
+      }
+      return c
     }
-    return c
-  }
 
-  override fun prepareRenderer(
-    renderer: TableCellRenderer,
-    row: Int,
-    column: Int,
-  ) = super.prepareRenderer(renderer, row, column).also {
-    val b = model.getValueAt(convertRowIndexToModel(row), BOOLEAN_COLUMN) as? Boolean
-    it.background = if (b == true) Color.ORANGE else background
-    it.foreground = foreground
+    override fun prepareRenderer(
+      renderer: TableCellRenderer,
+      row: Int,
+      column: Int,
+    ): Component {
+      val r = super.prepareRenderer(renderer, row, column)
+      val b = model.getValueAt(convertRowIndexToModel(row), BOOLEAN_COLUMN) as? Boolean
+      r.background = if (b == true) Color.ORANGE else background
+      r.foreground = foreground
+      return r
+    }
   }
 }
 
@@ -89,7 +93,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun rowRepaint(table: JTable, row: Int) {
+private fun rowRepaint(
+  table: JTable,
+  row: Int,
+) {
   val r = table.getCellRect(row, 0, true)
   r.width = table.width
   table.repaint(r)
