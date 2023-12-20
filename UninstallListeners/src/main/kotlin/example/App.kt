@@ -68,9 +68,14 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTitledSeparator(title: String, c: Component) = JPanel(BorderLayout()).also {
-  it.border = BorderFactory.createTitledBorder(title)
-  it.add(c, BorderLayout.NORTH)
+private fun makeTitledSeparator(
+  title: String,
+  c: Component,
+): Component {
+  val p = JPanel(BorderLayout())
+  p.border = BorderFactory.createTitledBorder(title)
+  p.add(c, BorderLayout.NORTH)
+  return p
 }
 
 fun main() {

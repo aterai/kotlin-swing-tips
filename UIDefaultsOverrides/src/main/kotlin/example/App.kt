@@ -45,9 +45,14 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeCheckBoxMenuItem(title: String, d: UIDefaults) = JCheckBoxMenuItem(title).also {
-  it.putClientProperty("Nimbus.Overrides", d)
-  it.putClientProperty("Nimbus.Overrides.InheritDefaults", false)
+private fun makeCheckBoxMenuItem(
+  title: String,
+  d: UIDefaults,
+): JMenuItem {
+  val item = JCheckBoxMenuItem(title)
+  item.putClientProperty("Nimbus.Overrides", d)
+  item.putClientProperty("Nimbus.Overrides.InheritDefaults", false)
+  return item
 }
 
 private fun createMenuBar(): JMenuBar {
@@ -92,7 +97,13 @@ private enum class CheckIcon {
 private class MyCheckBoxMenuItemPainter(private val state: CheckIcon) : AbstractRegionPainter() {
   private val ctx = PaintContext(Insets(5, 5, 5, 5), Dimension(9, 10), false, null, 1.0, 1.0)
 
-  override fun doPaint(g: Graphics2D, c: JComponent, width: Int, height: Int, keys: Array<Any>?) {
+  override fun doPaint(
+    g: Graphics2D,
+    c: JComponent,
+    width: Int,
+    height: Int,
+    keys: Array<Any>?,
+  ) {
     when (state) {
       CheckIcon.ENABLED -> paintIconEnabled(g)
       CheckIcon.MOUSEOVER -> paintIconMouseOver(g)
@@ -168,7 +179,10 @@ private class MultiLineTableCellRenderer : JTextArea(), TableCellRenderer {
     return this
   }
 
-  private fun getAdjustedRowHeight(row: Int, column: Int): Int {
+  private fun getAdjustedRowHeight(
+    row: Int,
+    column: Int,
+  ): Int {
     val prefH = preferredSize.height
     while (rowColHeight.size <= row) {
       rowColHeight.add(createMutableList(column))

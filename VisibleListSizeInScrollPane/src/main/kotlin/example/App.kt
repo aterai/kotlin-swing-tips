@@ -3,13 +3,18 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI() = JPanel(GridLayout(2, 1)).also {
-  it.add(makePanel(null, 4))
-  it.add(makePanel("MMMMMMM", 4))
-  it.preferredSize = Dimension(320, 240)
+fun makeUI(): Component {
+  val p = JPanel(GridLayout(2, 1))
+  p.add(makePanel(null, 4))
+  p.add(makePanel("MMMMMMM", 4))
+  p.preferredSize = Dimension(320, 240)
+  return p
 }
 
-fun makePanel(prototypeValue: String?, visibleRowCount: Int): Component {
+private fun makePanel(
+  prototypeValue: String?,
+  visibleRowCount: Int,
+): Component {
   val model1 = (0 until 20).map { it.toString() }.toTypedArray()
   val list1 = JList(model1)
   list1.visibleRowCount = visibleRowCount
