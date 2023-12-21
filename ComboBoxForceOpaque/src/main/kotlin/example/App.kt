@@ -105,7 +105,10 @@ private fun makeComboBox2(): JComboBox<String> {
   }
 }
 
-private fun putClientProperty(c: JComponent, d: UIDefaults) {
+private fun putClientProperty(
+  c: JComponent,
+  d: UIDefaults,
+) {
   c.putClientProperty("Nimbus.Overrides", d)
   c.putClientProperty("Nimbus.Overrides.InheritDefaults", true)
 }
