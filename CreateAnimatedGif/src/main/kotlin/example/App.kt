@@ -106,7 +106,10 @@ private fun makeAnimatedGif() = runCatching {
   file
 }.getOrNull()
 
-fun paintFrame(image: BufferedImage, list: List<Shape>) {
+fun paintFrame(
+  image: BufferedImage,
+  list: List<Shape>,
+) {
   val g2 = image.createGraphics()
   g2.paint = Color.WHITE
   g2.fillRect(0, 0, image.width, image.height)

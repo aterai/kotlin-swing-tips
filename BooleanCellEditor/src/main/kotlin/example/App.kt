@@ -53,16 +53,15 @@ private fun makeTable(model: TableModel) = object : JTable(model) {
     }
   }
 
-    override fun prepareEditor(
-      editor: TableCellEditor,
-      row: Int,
-      column: Int,
-    ): Component {
-      val c = super.prepareEditor(editor, row, column)
-      c.background = getSelectionBackground()
-      (c as? JCheckBox)?.isBorderPainted = true
-      return c
-    }
+  override fun prepareEditor(
+    editor: TableCellEditor,
+    row: Int,
+    column: Int,
+  ): Component {
+    val c = super.prepareEditor(editor, row, column)
+    c.background = getSelectionBackground()
+    (c as? JCheckBox)?.isBorderPainted = true
+    return c
   }
 }
 

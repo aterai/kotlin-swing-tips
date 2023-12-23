@@ -36,16 +36,20 @@ fun makeUI(): Component {
     it.add(makeComponent(title2, BorderFactory.createTitledBorder(title2)))
     it.add(makeComponent("TitledBorder#paintBorder(...)", border3))
     it.add(makeComponent("ComponentTitledBorder", border4))
-
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeComponent(str: String, border: Border) = JLabel().also {
-  it.border = border
-  it.putClientProperty("html.disable", true)
-  it.text = str
+private fun makeComponent(
+  str: String,
+  border: Border,
+): Component {
+  val c = JLabel()
+  c.border = border
+  c.putClientProperty("html.disable", true)
+  c.text = str
+  return c
 }
 
 private class ComponentTitledBorder(

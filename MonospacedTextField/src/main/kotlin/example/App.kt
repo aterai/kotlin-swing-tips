@@ -73,7 +73,11 @@ private fun makeTitledPanel(
   return box
 }
 
-private fun append(log: JTextArea, c: JComponent, str: String) {
+private fun append(
+  log: JTextArea,
+  c: JComponent,
+  str: String,
+) {
   val font = c.font
   val frc = c.getFontMetrics(font).fontRenderContext
   val r2 = font.getStringBounds(str, frc)
