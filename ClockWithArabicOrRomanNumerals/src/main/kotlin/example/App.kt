@@ -200,6 +200,9 @@ private class AnalogClock : JPanel() {
     }
   }
 
-  private fun getTextLayout(txt: String, font: Font, frc: FontRenderContext) =
-    TextLayout(txt, font, frc)
+  private fun getTextLayout(
+    txt: String,
+    font: Font,
+    frc: FontRenderContext,
+  ) = TextLayout(txt, font, frc)
 }

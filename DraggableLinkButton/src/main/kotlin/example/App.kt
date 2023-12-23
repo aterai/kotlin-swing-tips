@@ -71,13 +71,18 @@ private class LinkViewButtonUI : BasicButtonUI() {
   companion object {
     private val URI_FLAVOR = DataFlavor.stringFlavor
 
-    fun createUI(b: JButton, href: String): ButtonUI {
+    fun createUI(
+      b: JButton,
+      href: String,
+    ): ButtonUI {
       b.foreground = Color.BLUE
       b.border = BorderFactory.createEmptyBorder(0, 0, 2, 0)
       b.cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
       b.transferHandler = object : TransferHandler("text") {
-        override fun canImport(c: JComponent, flavors: Array<DataFlavor>) =
-          flavors.isNotEmpty() && flavors[0].equals(URI_FLAVOR)
+        override fun canImport(
+          c: JComponent,
+          flavors: Array<DataFlavor>,
+        ) = flavors.isNotEmpty() && flavors[0].equals(URI_FLAVOR)
 
         override fun createTransferable(c: JComponent) = object : Transferable {
           override fun getTransferData(flavor: DataFlavor) = href

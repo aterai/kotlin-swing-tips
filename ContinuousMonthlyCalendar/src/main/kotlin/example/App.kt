@@ -115,7 +115,10 @@ private fun verticalScrollChanged() {
   }
 }
 
-fun updateMonthView(localDate: LocalDate, locale: Locale) {
+fun updateMonthView(
+  localDate: LocalDate,
+  locale: Locale,
+) {
   currentLocalDate = localDate
   updateMonthLabel(localDate, locale)
   val model = monthTable.model
@@ -130,12 +133,18 @@ fun updateMonthView(localDate: LocalDate, locale: Locale) {
   scroll.repaint()
 }
 
-private fun updateMonthLabel(localDate: LocalDate, locale: Locale) {
+private fun updateMonthLabel(
+  localDate: LocalDate,
+  locale: Locale,
+) {
   val fmt = DateTimeFormatter.ofPattern("yyyy / MM")
   monthLabel.text = localDate.format(fmt.withLocale(locale))
 }
 
-private fun getTopLeftCellDayOfMonth(date: LocalDate, locale: Locale): LocalDate {
+private fun getTopLeftCellDayOfMonth(
+  date: LocalDate,
+  locale: Locale,
+): LocalDate {
   val weekFields = WeekFields.of(locale)
   val firstDayOfMonth = YearMonth.from(date).atDay(1)
   val v = firstDayOfMonth[weekFields.dayOfWeek()] - 1
