@@ -14,7 +14,7 @@ private const val LR_PAGE_SIZE = 5
 private val box = Box.createHorizontalBox()
 private val group = ButtonGroup()
 private val columnNames = arrayOf("Year", "String", "Comment")
-private val model = object : DefaultTableModel(null, columnNames) {
+private val model = object : DefaultTableModel(columnNames, 0) {
   override fun getColumnClass(column: Int) = if (column == 0) {
     Number::class.java
   } else {

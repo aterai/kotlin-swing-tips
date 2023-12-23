@@ -11,7 +11,7 @@ import kotlin.math.abs
 
 fun makeUI(): Component {
   val columnNames = arrayOf("String", "Integer", "Boolean")
-  val model = object : DefaultTableModel(null, columnNames) {
+  val model = object : DefaultTableModel(columnNames, 0) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
 

@@ -11,7 +11,7 @@ fun makeUI(): Component {
   label.horizontalAlignment = SwingConstants.CENTER
   label.verticalAlignment = SwingConstants.CENTER
   val columnNames = arrayOf("family", "name", "postscript name", "canDisplay", "isEmpty")
-  val model = object : DefaultTableModel(null, columnNames) {
+  val model = object : DefaultTableModel(columnNames, 0) {
     override fun isCellEditable(
       row: Int,
       column: Int,

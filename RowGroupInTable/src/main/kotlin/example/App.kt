@@ -10,7 +10,7 @@ import javax.swing.table.TableRowSorter
 
 fun makeUI(): Component {
   val columnNames = arrayOf("Group", "Name", "Count")
-  val model = object : DefaultTableModel(null, columnNames) {
+  val model = object : DefaultTableModel(columnNames, 0) {
     override fun getColumnClass(column: Int) = RowData::class.java
   }
   val colors = "colors"

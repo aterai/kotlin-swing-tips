@@ -63,7 +63,7 @@ private fun setDefaultComparator(sorter: TableRowSorter<TableModel>) {
 
 private fun makeTable(): JTable {
   val columnNames = arrayOf("Name", "Size", "Full Path")
-  val model = object : DefaultTableModel(null, columnNames) {
+  val model = object : DefaultTableModel(columnNames, 0) {
     override fun getColumnClass(column: Int) = File::class.java
   }
   val table = JTable(model)

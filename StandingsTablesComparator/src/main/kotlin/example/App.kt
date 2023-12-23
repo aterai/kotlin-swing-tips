@@ -135,7 +135,7 @@ private fun initTableHeader(table: JTable) {
 
 private fun makeModel(): TableModel {
   val columnNames = arrayOf("#", "Team", "MP", "W", "D", "L", "F", "A", "GD", "P")
-  val model = object : DefaultTableModel(null, columnNames) {
+  val model = object : DefaultTableModel(columnNames, 0) {
     override fun getColumnClass(column: Int) = RowData::class.java
   }
   addRow(model, RowData(1, "Machida", 20, 7, 6, 57, 27))

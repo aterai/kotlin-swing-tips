@@ -12,7 +12,7 @@ private val logger = Logger.getLogger(MethodHandles.lookup().lookupClass().name)
 
 fun makeUI(): Component {
   val columnNames = arrayOf("Name", "Class", "Value")
-  val model = DefaultTableModel(null, columnNames)
+  val model = DefaultTableModel(columnNames, 0)
   val table = object : JTable(model) {
     override fun isCellEditable(
       row: Int,

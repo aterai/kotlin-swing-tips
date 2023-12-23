@@ -10,7 +10,7 @@ import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter
 
 private val columnNames = arrayOf("No.", "Name", "Progress", "")
-private val model = DefaultTableModel(null, columnNames)
+private val model = DefaultTableModel(columnNames, 0)
 private val table = object : JTable(model) {
   override fun updateUI() {
     super.updateUI()
