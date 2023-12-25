@@ -6,7 +6,6 @@ import java.awt.event.MouseEvent
 import javax.swing.*
 import javax.swing.plaf.basic.BasicButtonUI
 import javax.swing.plaf.basic.BasicHTML
-import javax.swing.table.DefaultTableModel
 import javax.swing.table.JTableHeader
 import javax.swing.table.TableColumn
 import javax.swing.table.TableColumnModel
@@ -41,7 +40,7 @@ private class TableHeaderTabbedPane : JPanel(BorderLayout()) {
     tabPanel.border = BorderFactory.createEmptyBorder(1, left, 0, right)
     contentsPanel.border = BorderFactory.createEmptyBorder(4, left, 2, right)
 
-    val table = JTable(DefaultTableModel(null, arrayOf<String>()))
+    val table = JTable(0, 0)
     header = table.tableHeader
     model = header.columnModel
 
