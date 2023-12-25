@@ -66,7 +66,10 @@ private fun setSizeVariant(key: String) {
   }
 }
 
-private fun setSizeVariantAllComponents(parent: Container, key: String) {
+private fun setSizeVariantAllComponents(
+  parent: Container,
+  key: String,
+) {
   if (parent is JComponent) {
     parent.font = FontUIResource(parent.font)
     parent.putClientProperty("JComponent.sizeVariant", key)

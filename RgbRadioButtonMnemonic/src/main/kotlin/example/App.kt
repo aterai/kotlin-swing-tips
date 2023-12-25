@@ -84,7 +84,10 @@ private fun makeButton2(label: JLabel): JButton {
   return button2
 }
 
-private fun setMnemonic(r: JRadioButton, locale: Locale) {
+private fun setMnemonic(
+  r: JRadioButton,
+  locale: Locale,
+) {
   val rgbKey = listOf("rgbRed", "rgbGreen", "rgbBlue")
   val fmt = "ColorChooser.%sText"
   val rgbList = listOf(
@@ -104,14 +107,21 @@ private fun setMnemonic(r: JRadioButton, locale: Locale) {
   }
 }
 
-private fun setDisplayedMnemonicIndex(r: JRadioButton, key: String, locale: Locale) {
+private fun setDisplayedMnemonicIndex(
+  r: JRadioButton,
+  key: String,
+  locale: Locale,
+) {
   val mnemonic = getInteger(key + "Index", locale)
   if (mnemonic >= 0) {
     r.setDisplayedMnemonicIndex(mnemonic)
   }
 }
 
-private fun getInteger(key: String, locale: Locale): Int {
+private fun getInteger(
+  key: String,
+  locale: Locale,
+): Int {
   val value = UIManager.get(key, locale)
   return when (value) {
     is Int -> value

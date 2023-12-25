@@ -177,33 +177,48 @@ private fun makeComboBox(title: String): JComboBox<String> {
 
 private enum class Side(private val cursor: Int, private val width: Int, private val height: Int) {
   N(Cursor.N_RESIZE_CURSOR, 0, 4) {
-    override fun getBounds(rect: Rectangle, delta: Point): Rectangle {
+    override fun getBounds(
+      rect: Rectangle,
+      delta: Point,
+    ): Rectangle {
       rect.y += delta.y
       rect.height -= delta.y
       return rect
     }
   },
   W(Cursor.W_RESIZE_CURSOR, 4, 0) {
-    override fun getBounds(rect: Rectangle, delta: Point): Rectangle {
+    override fun getBounds(
+      rect: Rectangle,
+      delta: Point,
+    ): Rectangle {
       rect.x += delta.x
       rect.width -= delta.x
       return rect
     }
   },
   E(Cursor.E_RESIZE_CURSOR, 4, 0) {
-    override fun getBounds(rect: Rectangle, delta: Point): Rectangle {
+    override fun getBounds(
+      rect: Rectangle,
+      delta: Point,
+    ): Rectangle {
       rect.width += delta.x
       return rect
     }
   },
   S(Cursor.S_RESIZE_CURSOR, 0, 4) {
-    override fun getBounds(rect: Rectangle, delta: Point): Rectangle {
+    override fun getBounds(
+      rect: Rectangle,
+      delta: Point,
+    ): Rectangle {
       rect.height += delta.y
       return rect
     }
   },
   NW(Cursor.NW_RESIZE_CURSOR, 4, 4) {
-    override fun getBounds(rect: Rectangle, delta: Point): Rectangle {
+    override fun getBounds(
+      rect: Rectangle,
+      delta: Point,
+    ): Rectangle {
       rect.y += delta.y
       rect.height -= delta.y
       rect.x += delta.x
@@ -212,7 +227,10 @@ private enum class Side(private val cursor: Int, private val width: Int, private
     }
   },
   NE(Cursor.NE_RESIZE_CURSOR, 4, 4) {
-    override fun getBounds(rect: Rectangle, delta: Point): Rectangle {
+    override fun getBounds(
+      rect: Rectangle,
+      delta: Point,
+    ): Rectangle {
       rect.y += delta.y
       rect.height -= delta.y
       rect.width += delta.x
@@ -220,7 +238,10 @@ private enum class Side(private val cursor: Int, private val width: Int, private
     }
   },
   SW(Cursor.SW_RESIZE_CURSOR, 4, 4) {
-    override fun getBounds(rect: Rectangle, delta: Point): Rectangle {
+    override fun getBounds(
+      rect: Rectangle,
+      delta: Point,
+    ): Rectangle {
       rect.height += delta.y
       rect.x += delta.x
       rect.width -= delta.x
@@ -228,7 +249,10 @@ private enum class Side(private val cursor: Int, private val width: Int, private
     }
   },
   SE(Cursor.SE_RESIZE_CURSOR, 4, 4) {
-    override fun getBounds(rect: Rectangle, delta: Point): Rectangle {
+    override fun getBounds(
+      rect: Rectangle,
+      delta: Point,
+    ): Rectangle {
       rect.height += delta.y
       rect.width += delta.x
       return rect
@@ -239,7 +263,10 @@ private enum class Side(private val cursor: Int, private val width: Int, private
 
   fun getCursor(): Cursor = Cursor.getPredefinedCursor(cursor)
 
-  abstract fun getBounds(rect: Rectangle, delta: Point): Rectangle
+  abstract fun getBounds(
+    rect: Rectangle,
+    delta: Point,
+  ): Rectangle
 }
 
 private class SideLabel(val side: Side) : JLabel() {
