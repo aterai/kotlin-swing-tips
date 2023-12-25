@@ -18,8 +18,8 @@ fun makeUI(): Component {
   val htf = JTextField(5)
   htf.isEditable = false
 
-  val columns = arrayOf("A series", "width", "height")
-  val model = object : DefaultTableModel(null, columns) {
+  val columnNames = arrayOf("A series", "width", "height")
+  val model = object : DefaultTableModel(columnNames, 0) {
     override fun getColumnClass(column: Int) =
       if (column == 1 || column == 2) Number::class.java else String::class.java
 
