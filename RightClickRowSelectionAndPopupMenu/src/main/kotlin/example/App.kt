@@ -105,7 +105,7 @@ private fun makePopupMenu(): JPopupMenu {
   return popup
 }
 
-private class RightMouseButtonLayerUI : LayerUI<JScrollPane?>() {
+private class RightMouseButtonLayerUI : LayerUI<JScrollPane>() {
   override fun installUI(c: JComponent) {
     super.installUI(c)
     (c as? JLayer<*>)?.setLayerEventMask(AWTEvent.MOUSE_EVENT_MASK)
@@ -118,7 +118,7 @@ private class RightMouseButtonLayerUI : LayerUI<JScrollPane?>() {
 
   override fun processMouseEvent(
     e: MouseEvent,
-    l: JLayer<out JScrollPane?>,
+    l: JLayer<out JScrollPane>,
   ) {
     val table = e.component
     if (table is JTable && SwingUtilities.isRightMouseButton(e)) {

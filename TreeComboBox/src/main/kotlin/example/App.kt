@@ -41,7 +41,7 @@ fun makeUI(): Component {
     makeComboBoxModel(model2, root)
   }
 
-  val combo = TreeComboBox<TreeNode?>()
+  val combo = TreeComboBox<TreeNode>()
   combo.model = model2
   combo.selectedIndex = -1
 
@@ -57,7 +57,7 @@ fun makeUI(): Component {
   }
 }
 
-private class TreeComboBox<E : TreeNode?> : JComboBox<E>() {
+private class TreeComboBox<E : TreeNode> : JComboBox<E>() {
   private var notSelectable = false
   private val up = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {

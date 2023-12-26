@@ -6,7 +6,7 @@ import javax.swing.*
 fun makeUI(): Component {
   val p = Box.createVerticalBox()
   val items = arrayOf("JComboBox 11111:", "JComboBox 222:", "JComboBox 33:")
-  val combo1 = object : JComboBox<String?>(items) {
+  val combo1 = object : JComboBox<String>(items) {
     override fun updateUI() {
       super.updateUI()
       (getRenderer() as? Component)?.preferredSize = Dimension(0, 32)
@@ -39,7 +39,7 @@ fun makeUI(): Component {
   p.add(makeTitledPanel("getListCellRendererComponent", combo2))
   p.add(Box.createVerticalStrut(5))
 
-  val combo3 = object : JComboBox<String?>(items) {
+  val combo3 = object : JComboBox<String>(items) {
     override fun updateUI() {
       setRenderer(null)
       super.updateUI()
@@ -56,7 +56,7 @@ fun makeUI(): Component {
   p.add(makeTitledPanel("html", combo3))
   p.add(Box.createVerticalStrut(5))
 
-  val combo4 = object : JComboBox<String?>(items) {
+  val combo4 = object : JComboBox<String>(items) {
     override fun updateUI() {
       setRenderer(null)
       super.updateUI()

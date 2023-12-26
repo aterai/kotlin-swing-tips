@@ -32,8 +32,8 @@ fun makeUI(): Component {
   cm.removeColumn(cm.getColumn(0))
   val sorter = TableRowSorter(model)
   viewer.rowSorter = sorter
-  sorter.rowFilter = object : RowFilter<TableModel, Int?>() {
-    override fun include(entry: Entry<out TableModel, out Int?>): Boolean {
+  sorter.rowFilter = object : RowFilter<TableModel, Int>() {
+    override fun include(entry: Entry<out TableModel, out Int>): Boolean {
       val i = entry.identifier ?: -1
       return entry.model.getValueAt(i, 0) == true
     }
