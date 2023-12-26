@@ -28,17 +28,14 @@ private fun makeTable(model: TableModel): JTable {
       val isSelected = isRowSelected(row)
       if (!isSelected) {
         val num = model.getValueAt(convertRowIndexToModel(row), 0) as? Int ?: -1
-        if (num <= 2) {
-          c.setBackground(Color(0xCF_F3_C0))
-        } else if (num <= 6) {
-          c.setBackground(Color(0xCB_F7_F5))
-        } else if (num >= 21) {
-          c.setBackground(Color(0xFB_DC_DC))
-        } else if (row % 2 == 0) {
-          c.setBackground(Color.WHITE)
-        } else {
-          c.setBackground(Color(0xF0_F0_F0))
+        val bgc = when {
+          num <= 2 -> 0xCF_F3_C0
+          num <= 6 -> 0xCB_F7_F5
+          num >= 21 -> 0xFB_DC_DC
+          row % 2 == 0 -> 0xFF_FF_FF
+          else -> 0xF0_F0_F0
         }
+        c.setBackground(Color(bgc))
       }
       c.setForeground(Color.BLACK)
       if (c is JLabel && column != 1) {
@@ -127,7 +124,7 @@ private fun makeModel(): TableModel {
   }
 }
 
-private class BorderPaintLayerUI : LayerUI<JScrollPane?>() {
+private class BorderPaintLayerUI : LayerUI<JScrollPane>() {
   override fun paint(
     g: Graphics,
     c: JComponent,
