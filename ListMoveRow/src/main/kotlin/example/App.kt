@@ -21,9 +21,13 @@ fun makeUI(): Component {
   }
 }
 
-private fun <E> makeUpButton(list: JList<E>, m: DefaultListModel<E>) = JButton("▲").also {
-  it.isFocusable = false
-  it.addActionListener { e ->
+private fun <E> makeUpButton(
+  list: JList<E>,
+  m: DefaultListModel<E>,
+): JButton {
+  val button = JButton("▲")
+  button.isFocusable = false
+  button.addActionListener { e ->
     val pos = list.selectedIndices
     if (pos.isNotEmpty()) {
       val isShiftDown = e.modifiers and ActionEvent.SHIFT_MASK != 0
@@ -38,11 +42,16 @@ private fun <E> makeUpButton(list: JList<E>, m: DefaultListModel<E>) = JButton("
       list.scrollRectToVisible(r)
     }
   }
+  return button
 }
 
-private fun <E> makeDownButton(list: JList<E>, m: DefaultListModel<E>) = JButton("▼").also {
-  it.isFocusable = false
-  it.addActionListener { e ->
+private fun <E> makeDownButton(
+  list: JList<E>,
+  m: DefaultListModel<E>,
+): JButton {
+  val button = JButton("▼")
+  button.isFocusable = false
+  button.addActionListener { e ->
     val pos = list.selectedIndices
     if (pos.isNotEmpty()) {
       val isShiftDown = e.modifiers and ActionEvent.SHIFT_MASK != 0
@@ -64,6 +73,7 @@ private fun <E> makeDownButton(list: JList<E>, m: DefaultListModel<E>) = JButton
       list.scrollRectToVisible(r)
     }
   }
+  return button
 }
 
 private fun makeModel() = DefaultListModel<Color>().also {
