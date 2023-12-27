@@ -86,8 +86,11 @@ fun makeUI(): Component {
   }
 }
 
-private fun addHierarchyListener(it: JPanel, worker: SwingWorker<*, *>) {
-  it.addHierarchyListener { e ->
+private fun addHierarchyListener(
+  panel: JPanel,
+  worker: SwingWorker<*, *>,
+) {
+  panel.addHierarchyListener { e ->
     val b = e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L
     if (b && !e.component.isDisplayable) {
       worker.cancel(true)

@@ -40,11 +40,16 @@ fun makeUI(): Component {
   return p
 }
 
-private fun makeRadioButton(text: String, icon: Icon) = JRadioButton(text, icon).also {
-  it.verticalAlignment = SwingConstants.BOTTOM
-  it.verticalTextPosition = SwingConstants.BOTTOM
-  it.horizontalAlignment = SwingConstants.CENTER
-  it.horizontalTextPosition = SwingConstants.CENTER
+private fun makeRadioButton(
+  text: String,
+  icon: Icon,
+): JRadioButton {
+  val radio = JRadioButton(text, icon)
+  radio.verticalAlignment = SwingConstants.BOTTOM
+  radio.verticalTextPosition = SwingConstants.BOTTOM
+  radio.horizontalAlignment = SwingConstants.CENTER
+  radio.horizontalTextPosition = SwingConstants.CENTER
+  return radio
 }
 
 private fun makeIcon(path: String): Icon {
@@ -72,7 +77,10 @@ private class ColorIcon(private val color: Color) : Icon {
   override fun getIconHeight() = 48
 }
 
-private class SelectedIcon(private val icon: Icon, private val color: Color) : Icon {
+private class SelectedIcon(
+  private val icon: Icon,
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component?,
     g: Graphics,

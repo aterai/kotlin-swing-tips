@@ -53,12 +53,17 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeMenu(title: String, item: Component) = JMenu(title).also {
-  it.add(item)
-  it.addSeparator()
-  it.add("JMenuItem") // .addActionListener { println("actionPerformed") }
-  it.add("JMenuItem + Icon").icon = ColorIcon(Color.RED)
-  it.add("1234567878909758457546734564562346432")
+private fun makeMenu(
+  title: String,
+  item: Component,
+): JMenu {
+  val menu = JMenu(title)
+  menu.add(item)
+  menu.addSeparator()
+  menu.add("JMenuItem") // .addActionListener { println("actionPerformed") }
+  menu.add("JMenuItem + Icon").icon = ColorIcon(Color.RED)
+  menu.add("1234567878909758457546734564562346432")
+  return menu
 }
 
 private class ColorIcon(private val color: Color) : Icon {
