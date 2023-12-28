@@ -88,7 +88,10 @@ private fun makeSliderPainter(): UIDefaults {
 }
 
 // @see javax/swing/plaf/basic/BasicSliderUI#xPositionForValue(int value)
-private fun getPositionForValue(slider: JSlider, trackRect: Rectangle): Int {
+private fun getPositionForValue(
+  slider: JSlider,
+  trackRect: Rectangle,
+): Int {
   val value = slider.value
   val min = slider.minimum
   val max = slider.maximum

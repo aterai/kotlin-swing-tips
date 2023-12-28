@@ -46,7 +46,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun append(textArea: JTextArea, txt: Any) {
+private fun append(
+  textArea: JTextArea,
+  txt: Any,
+) {
   textArea.append("$txt\n")
 }
 

@@ -77,7 +77,10 @@ private class SelectionColorTreeCellRenderer : DefaultTreeCellRenderer() {
     }
   }
 
-  private fun setUserObjectColor(value: Any?, c: JComponent) {
+  private fun setUserObjectColor(
+    value: Any?,
+    c: JComponent,
+  ) {
     if (value is DefaultMutableTreeNode) {
       val uo = value.userObject
       if (uo is Color) {
@@ -87,7 +90,11 @@ private class SelectionColorTreeCellRenderer : DefaultTreeCellRenderer() {
     }
   }
 
-  private fun setPatternColor(value: Any?, c: JComponent, leaf: Boolean) {
+  private fun setPatternColor(
+    value: Any?,
+    c: JComponent,
+    leaf: Boolean,
+  ) {
     val str = value?.toString() ?: ""
     if (leaf && pattern.matches(str)) {
       c.isOpaque = true

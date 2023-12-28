@@ -24,7 +24,10 @@ private fun makeButton(title: String) = JRadioButton(title).also {
   it.foreground = Color.WHITE
 }
 
-private fun makeToggleButtonBar(cc: Int, icon: Icon): Component {
+private fun makeToggleButtonBar(
+  cc: Int,
+  icon: Icon,
+): Component {
   val p = JPanel(GridLayout(1, 0, 0, 0))
   p.border = BorderFactory.createTitledBorder("Color: #%06X".format(cc))
 

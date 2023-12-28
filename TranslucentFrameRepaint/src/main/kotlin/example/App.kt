@@ -153,7 +153,10 @@ private object TextureUtils {
     return TexturePaint(bi, Rectangle(sz, sz))
   }
 
-  fun makeTexturePanel(label: JLabel, url: URL?): TexturePanel {
+  fun makeTexturePanel(
+    label: JLabel,
+    url: URL?,
+  ): TexturePanel {
     val font = makeFont(url) ?: label.font
     label.font = font.deriveFont(80f)
     label.background = Color(0x0, true)
