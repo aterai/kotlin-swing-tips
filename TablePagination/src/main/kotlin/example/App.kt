@@ -47,7 +47,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun initLinkBox(itemsPerPage: Int, currentPageIndex: Int) {
+private fun initLinkBox(
+  itemsPerPage: Int,
+  currentPageIndex: Int,
+) {
   sorter.rowFilter = object : RowFilter<TableModel, Int>() {
     override fun include(entry: Entry<out TableModel, out Int>): Boolean {
       val ti = currentPageIndex - 1
@@ -105,7 +108,11 @@ private fun addButton(button: AbstractButton) {
   group.add(button)
 }
 
-private fun makeRadioButton(itemsPerPage: Int, current: Int, target: Int): JRadioButton {
+private fun makeRadioButton(
+  itemsPerPage: Int,
+  current: Int,
+  target: Int,
+): JRadioButton {
   val radio = object : JRadioButton(target.toString()) {
     override fun fireStateChanged() {
       val bm = getModel()

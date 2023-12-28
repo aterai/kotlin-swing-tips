@@ -133,7 +133,11 @@ private class HeaderCheckBoxHandler(
     }
   }
 
-  private fun fireUpdateEvent(m: DefaultTableModel, column: TableColumn, status: Any): Boolean {
+  private fun fireUpdateEvent(
+    m: DefaultTableModel,
+    column: TableColumn,
+    status: Any,
+  ): Boolean {
     return if (Status.INDETERMINATE == status) {
       val l = m.dataVector.mapNotNull {
         (it as? List<*>)?.get(targetColumnIndex) as? Boolean

@@ -159,7 +159,11 @@ private class TablePopupMenu : JPopupMenu() {
     }
   }
 
-  override fun show(c: Component?, x: Int, y: Int) {
+  override fun show(
+    c: Component?,
+    x: Int,
+    y: Int,
+  ) {
     if (c is JTable) {
       delete.isEnabled = c.selectedRowCount > 0
       super.show(c, x, y)
@@ -198,7 +202,11 @@ private class HeaderCheckBoxHandler(
     }
   }
 
-  private fun fireDeleteEvent(m: TableModel, column: TableColumn, status: Any): Boolean {
+  private fun fireDeleteEvent(
+    m: TableModel,
+    column: TableColumn,
+    status: Any,
+  ): Boolean {
     if (m.rowCount == 0) {
       column.headerValue = Status.DESELECTED
     } else if (status === Status.INDETERMINATE) {
@@ -240,7 +248,11 @@ private class HeaderCheckBoxHandler(
     return true
   }
 
-  private fun fireUpdateEvent(m: TableModel, column: TableColumn, status: Any): Boolean {
+  private fun fireUpdateEvent(
+    m: TableModel,
+    column: TableColumn,
+    status: Any,
+  ): Boolean {
     if (status === Status.INDETERMINATE) {
       var selected = true
       var deselected = true

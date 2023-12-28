@@ -67,7 +67,12 @@ fun makeUI(): Component {
   }
 
   val table3 = object : JTable(model) {
-    override fun changeSelection(rowIndex: Int, colIndex: Int, toggle: Boolean, extend: Boolean) {
+    override fun changeSelection(
+      rowIndex: Int,
+      colIndex: Int,
+      toggle: Boolean,
+      extend: Boolean,
+    ) {
       super.changeSelection(rowIndex, colIndex, toggle, extend)
       textArea.append("changeSelection: $rowIndex, $colIndex\n")
       textArea.caretPosition = textArea.document.length
@@ -111,7 +116,10 @@ private abstract class AbstractTableCellSelectionListener : ListSelectionListene
   private var prevRow = -1
   private var prevCol = -1
 
-  protected fun updateRowColumnInfo(sr: Int, sc: Int): Boolean {
+  protected fun updateRowColumnInfo(
+    sr: Int,
+    sc: Int,
+  ): Boolean {
     val flg = prevRow == sr && prevCol == sc
     prevRow = sr
     prevCol = sc

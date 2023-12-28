@@ -131,7 +131,10 @@ private fun makeCmp2(): Component {
   return panel
 }
 
-private fun <E> move(from: JList<E>, to: JList<E>) {
+private fun <E> move(
+  from: JList<E>,
+  to: JList<E>,
+) {
   val sm = from.selectionModel
   val selectedIndices = from.selectedIndices
   val fromModel = from.model as? DefaultListModel<E>

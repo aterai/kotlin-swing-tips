@@ -144,7 +144,10 @@ private class TableSorter() : AbstractTableModel() {
     tableHeader?.repaint()
   }
 
-  fun setSortingStatus(column: Int, status: Int) {
+  fun setSortingStatus(
+    column: Int,
+    status: Int,
+  ) {
     getDirective(column).takeIf { it != EMPTY_DIRECTIVE }.also {
       sortingColumns.remove(it)
     }
@@ -154,7 +157,10 @@ private class TableSorter() : AbstractTableModel() {
     sortingStatusChanged()
   }
 
-  fun getHeaderRendererIcon(column: Int, size: Int): Icon? {
+  fun getHeaderRendererIcon(
+    column: Int,
+    size: Int,
+  ): Icon? {
     val dir = getDirective(column)
     return if (EMPTY_DIRECTIVE == dir) {
       null
@@ -233,7 +239,10 @@ private class TableSorter() : AbstractTableModel() {
 
   // Helper classes
   private inner class RowComparator : Comparator<TableRow> {
-    override fun compare(r1: TableRow, r2: TableRow): Int {
+    override fun compare(
+      r1: TableRow,
+      r2: TableRow,
+    ): Int {
       val row1 = r1.modelIndex
       val row2 = r2.modelIndex
       for (directive in sortingColumns) {
