@@ -382,16 +382,19 @@ private class CloseButtonTabbedPaneUI(
     }
   }
 
-  override fun getTabInsets(tabPlacement: Int, tabIndex: Int) =
-    (super.getTabInsets(tabPlacement, tabIndex).clone() as? Insets)?.also {
-      it.right += 40
-      it.top += 2
-      it.bottom += 2
-    }
-
-  companion object {
-    fun createTabCloseButton(tabbedPane: JTabbedPane, index: Int) = CloseButton(tabbedPane, index)
+  override fun getTabInsets(
+    tabPlacement: Int,
+    tabIndex: Int,
+  ) = (super.getTabInsets(tabPlacement, tabIndex).clone() as? Insets)?.also {
+    it.right += 40
+    it.top += 2
+    it.bottom += 2
   }
+
+  fun createTabCloseButton(
+    tabbedPane: JTabbedPane,
+    index: Int,
+  ) = CloseButton(tabbedPane, index)
 }
 
 private class CloseButton(

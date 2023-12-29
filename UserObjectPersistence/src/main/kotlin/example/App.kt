@@ -151,7 +151,10 @@ enum class Status {
   INDETERMINATE,
 }
 
-private data class CheckBoxNode(val label: String, val status: Status) {
+private data class CheckBoxNode(
+  val label: String,
+  val status: Status,
+) {
   override fun toString() = label
 }
 
@@ -202,7 +205,10 @@ private class CheckBoxStatusUpdateListener : TreeModelListener {
     }
   }
 
-  private fun updateAllChildrenUserObject(parent: DefaultMutableTreeNode?, status: Status?) {
+  private fun updateAllChildrenUserObject(
+    parent: DefaultMutableTreeNode?,
+    status: Status?,
+  ) {
     if (parent == null || status == null) {
       return
     }

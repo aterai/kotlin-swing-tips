@@ -58,7 +58,10 @@ private fun initSlider(slider: JSlider) {
   slider.labelTable = labelTable // Update LabelTable
 }
 
-private fun getLabel(key: Int, slider: JSlider) = when (key) {
+private fun getLabel(
+  key: Int,
+  slider: JSlider,
+) = when (key) {
   0 -> "100%"
   slider.minimum -> "5%"
   slider.maximum -> "800%"

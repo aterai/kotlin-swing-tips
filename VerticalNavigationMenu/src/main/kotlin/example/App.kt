@@ -104,16 +104,22 @@ private class RowSelectionTree : JTree() {
     removeTreeWillExpandListener(listener)
     super.updateUI()
     val tmp = object : BasicTreeUI() {
-      override fun getPathBounds(tree: JTree?, path: TreePath?) =
-        tree?.let {
-          getPathBounds(path, it.insets, Rectangle())
-        }
+      override fun getPathBounds(
+        tree: JTree,
+        path: TreePath?,
+      ) = getPathBounds(path, Rectangle())
 
-      private fun getPathBounds(path: TreePath?, insets: Insets, bounds: Rectangle) =
-        treeState?.getBounds(path, bounds)?.also {
-          it.width = tree.width
-          it.y += insets.top
+      private fun getPathBounds(
+        path: TreePath?,
+        bounds: Rectangle,
+      ): Rectangle? {
+        val r = treeState?.getBounds(path, bounds)
+        if (r != null) {
+          r.width = tree.width
+          r.y += tree.insets.top
         }
+        return r
+      }
     }
     setUI(tmp)
     UIManager.put("Tree.repaintWholeRow", true)
