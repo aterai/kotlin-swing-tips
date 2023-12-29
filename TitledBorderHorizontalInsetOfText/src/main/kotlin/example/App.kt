@@ -50,10 +50,15 @@ fun makeUI() = JPanel(GridLayout(0, 1, 5, 5)).also {
   it.preferredSize = Dimension(320, 240)
 }
 
-private fun makeComp(str: String, bdr: Border) = JLabel().also {
-  it.border = bdr
-  it.putClientProperty("html.disable", true)
-  it.text = str
+private fun makeComp(
+  str: String,
+  bdr: Border,
+): JLabel {
+  val c = JLabel()
+  c.border = bdr
+  c.putClientProperty("html.disable", true)
+  c.text = str
+  return c
 }
 
 private class ComponentTitledBorder(

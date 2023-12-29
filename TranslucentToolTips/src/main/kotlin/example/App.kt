@@ -126,17 +126,25 @@ private class ContributionListRenderer : ListCellRenderer<Contribution> {
   }
 }
 
-fun makeWeekCalendar(list: JList<*>, font: Font) = JScrollPane(list).also {
+fun makeWeekCalendar(
+  list: JList<*>,
+  font: Font,
+): JScrollPane {
+  val scroll = JScrollPane(list)
   val loc = Locale.getDefault()
-  it.border = BorderFactory.createEmptyBorder()
-  it.setColumnHeaderView(makeColumnHeader(loc))
-  it.setRowHeaderView(makeRowHeader(loc, font))
-  it.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
-  it.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
-  it.background = Color.WHITE
+  scroll.border = BorderFactory.createEmptyBorder()
+  scroll.setColumnHeaderView(makeColumnHeader(loc))
+  scroll.setRowHeaderView(makeRowHeader(loc, font))
+  scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
+  scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+  scroll.background = Color.WHITE
+  return scroll
 }
 
-private fun makeRowHeader(loc: Locale, font: Font): Component {
+private fun makeRowHeader(
+  loc: Locale,
+  font: Font,
+): Component {
   val weekFields = WeekFields.of(loc)
   val weekModel = DefaultListModel<String>()
   val firstDayOfWeek = weekFields.firstDayOfWeek

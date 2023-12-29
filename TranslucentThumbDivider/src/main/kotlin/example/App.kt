@@ -171,7 +171,10 @@ private class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
     splitPane.repaint()
   }
 
-  private fun mousePressed(e: MouseEvent, splitPane: JSplitPane) {
+  private fun mousePressed(
+    e: MouseEvent,
+    splitPane: JSplitPane,
+  ) {
     val c = e.component
     if (isDraggable(splitPane, c)) {
       val pt = SwingUtilities.convertPoint(c, e.point, splitPane)
@@ -200,8 +203,10 @@ private class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
     }
   }
 
-  private fun isDraggable(splitPane: JSplitPane, c: Component) =
-    splitPane == c || splitPane == SwingUtilities.getUnwrappedParent(c)
+  private fun isDraggable(
+    split: JSplitPane,
+    c: Component,
+  ) = split == c || split == SwingUtilities.getUnwrappedParent(c)
 
   private fun updateThumbLocation(c: Component, thumb: Ellipse2D) {
     val splitPane = c as? JSplitPane ?: return

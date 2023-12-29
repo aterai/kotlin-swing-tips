@@ -143,10 +143,12 @@ private class TriStateCheckBox(title: String) : JCheckBox(title) {
         isSelected = true
         icon = null
       }
+
       Status.DESELECTED -> {
         isSelected = false
         icon = null
       }
+
       Status.INDETERMINATE -> {
         isSelected = false
         icon = currentIcon
@@ -237,27 +239,29 @@ private class HeaderCheckBoxHandler(
     }
   }
 
-  private fun fireUpdateEvent(m: DefaultTableModel, column: TableColumn, status: Any): Boolean {
-    return if (Status.INDETERMINATE == status) {
-      // val l = (m.getDataVector() as Vector<*>).stream()
-      //     .map { v -> (v as Vector<*>).get(targetColumnIndex) as Boolean }
-      //     .distinct()
-      //     .collect(Collectors.toList())
-      val l = m.dataVector.mapNotNull {
-        (it as? List<*>)?.get(targetColumnIndex) as? Boolean
-      }.distinct()
-      val isOnlyOneSelected = l.size == 1
-      if (isOnlyOneSelected) {
-        // column.setHeaderValue(if (l.get(0)) Status.SELECTED else Status.DESELECTED)
-        column.headerValue = if (l.first()) Status.SELECTED else Status.DESELECTED
-        true
-      } else {
-        false
-      }
-    } else {
-      column.headerValue = Status.INDETERMINATE
+  private fun fireUpdateEvent(
+    m: DefaultTableModel,
+    column: TableColumn,
+    status: Any,
+  ) = if (Status.INDETERMINATE == status) {
+    // val l = (m.getDataVector() as Vector<*>).stream()
+    //     .map { v -> (v as Vector<*>).get(targetColumnIndex) as Boolean }
+    //     .distinct()
+    //     .collect(Collectors.toList())
+    val l = m.dataVector.mapNotNull {
+      (it as? List<*>)?.get(targetColumnIndex) as? Boolean
+    }.distinct()
+    val isOnlyOneSelected = l.size == 1
+    if (isOnlyOneSelected) {
+      // column.setHeaderValue(if (l.get(0)) Status.SELECTED else Status.DESELECTED)
+      column.headerValue = if (l.first()) Status.SELECTED else Status.DESELECTED
       true
+    } else {
+      false
     }
+  } else {
+    column.headerValue = Status.INDETERMINATE
+    true
   }
 
   override fun mouseClicked(e: MouseEvent) {
