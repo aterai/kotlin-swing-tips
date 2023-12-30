@@ -139,9 +139,12 @@ private class TooltipEditorKit : HTMLEditorKit() {
       val o = if (elementName == null) attrs.getAttribute(StyleConstants.NameAttribute) else null
       if (o is HTML.Tag && o === HTML.Tag.DIV) {
         return object : BlockView(elem, Y_AXIS) {
-          override fun getToolTipText(x: Float, y: Float, allocation: Shape) =
-            super.getToolTipText(x, y, allocation)
-              ?: element?.attributes?.getAttribute(HTML.Attribute.TITLE)?.toString()
+          override fun getToolTipText(
+            x: Float,
+            y: Float,
+            allocation: Shape,
+          ) = super.getToolTipText(x, y, allocation)
+            ?: element?.attributes?.getAttribute(HTML.Attribute.TITLE)?.toString()
         }
       }
       return super.create(elem)

@@ -27,9 +27,10 @@ fun makeUI(): Component {
   p1.add(JScrollPane(JTree()))
 
   val p2 = JPanel(GridLayout(1, 2))
-  p2.add(JLabel("abc"))
-  p2.add(JCheckBox("def"))
-  p2.add(JButton("ghi"))
+  p2.border = BorderFactory.createEmptyBorder(0, 5, 2, 5)
+  p2.add(JLabel("JLabel"))
+  p2.add(JCheckBox("JCheckBox"))
+  p2.add(JButton("JButton"))
 
   return JPanel(BorderLayout()).also {
     val mb = JMenuBar()
@@ -42,21 +43,27 @@ fun makeUI(): Component {
   }
 }
 
-fun createSizeVariantMenu() = JMenu("Resizing a Component").also { menu ->
+fun createSizeVariantMenu(): JMenu {
+  val menu = JMenu("Resizing a Component")
   val bg = ButtonGroup()
   listOf("regular", "mini", "small", "large").forEach {
     menu.add(createSizeVariantItem(it, bg))
   }
+  return menu
 }
 
-private fun createSizeVariantItem(key: String, bg: ButtonGroup) =
-  JRadioButtonMenuItem(key, "regular" == key).also {
-    it.addActionListener {
-      setSizeVariant(bg.selection.actionCommand)
-    }
-    it.actionCommand = key
-    bg.add(it)
+private fun createSizeVariantItem(
+  key: String,
+  bg: ButtonGroup,
+): JMenuItem {
+  val item = JRadioButtonMenuItem(key, "regular" == key)
+  item.addActionListener {
+    setSizeVariant(bg.selection.actionCommand)
   }
+  item.actionCommand = key
+  bg.add(item)
+  return item
+}
 
 private fun setSizeVariant(key: String) {
   Window.getWindows().forEach {

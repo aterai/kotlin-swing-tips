@@ -236,7 +236,7 @@ private class KineticScrollingListener2(
 
   private fun isInside(
     viewport: JViewport,
-    c: JComponent
+    c: JComponent,
   ): Boolean {
     val pt = viewport.viewPosition
     val ww = pt.x >= 0 && pt.x + viewport.width - c.width <= 0

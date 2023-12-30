@@ -25,12 +25,15 @@ fun makeUI(): Component {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
   val table = object : JTable(model) {
-    override fun editCellAt(row: Int, column: Int, e: EventObject) =
-      if (check.isSelected && e is KeyEvent && checkIgnoreKeyCode(e.keyCode)) {
-        false
-      } else {
-        super.editCellAt(row, column, e)
-      }
+    override fun editCellAt(
+      row: Int,
+      column: Int,
+      e: EventObject,
+    ) = if (check.isSelected && e is KeyEvent && checkIgnoreKeyCode(e.keyCode)) {
+      false
+    } else {
+      super.editCellAt(row, column, e)
+    }
   }
   table.autoCreateRowSorter = true
 

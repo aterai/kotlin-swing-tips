@@ -4,15 +4,21 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.text.Position.Bias
 
-fun makeUI() = JPanel(GridLayout(1, 2, 5, 5)).also {
+fun makeUI(): Component {
   val model = makeModel()
   val list = object : JList<String>(model) {
-    override fun getNextMatch(prefix: String, startIndex: Int, bias: Bias) = -1
+    override fun getNextMatch(
+      prefix: String,
+      startIndex: Int,
+      bias: Bias,
+    ) = -1
   }
-  it.add(makeTitledPanel("Default", JScrollPane(JList(model))))
-  it.add(makeTitledPanel("Disable prefixMatchSelection", JScrollPane(list)))
-  it.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
-  it.preferredSize = Dimension(320, 240)
+  return JPanel(GridLayout(1, 2, 5, 5)).also {
+    it.add(makeTitledPanel("Default", JScrollPane(JList(model))))
+    it.add(makeTitledPanel("Disable prefixMatchSelection", JScrollPane(list)))
+    it.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
+    it.preferredSize = Dimension(320, 240)
+  }
 }
 
 private fun makeModel() = DefaultListModel<String>().also {
