@@ -87,15 +87,14 @@ private class PlaceholderLayerUI<E : JTextComponent>(hintMessage: String) : Laye
     c: JComponent,
   ) {
     super.paint(g, c)
-    (c as? JLayer<*>)?.also {
-      val tc = it.view as? JTextComponent ?: return
-      if (tc.text.isEmpty() && !tc.hasFocus()) {
+    ((c as? JLayer<*>)?.view as? JTextComponent)?.also {
+      if (it.text.isEmpty() && !it.hasFocus()) {
         val g2 = g.create() as? Graphics2D ?: return
         g2.paint = hint.foreground
-        val r = SwingUtilities.calculateInnerArea(tc, null)
+        val r = SwingUtilities.calculateInnerArea(it, null)
         val d = hint.preferredSize
         val yy = (r.y + (r.height - d.height) / 2.0).toInt()
-        SwingUtilities.paintComponent(g2, hint, tc, r.x, yy, d.width, d.height)
+        SwingUtilities.paintComponent(g2, hint, it, r.x, yy, d.width, d.height)
         g2.dispose()
       }
     }
