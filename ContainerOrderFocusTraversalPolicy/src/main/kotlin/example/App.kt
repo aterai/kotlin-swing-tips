@@ -48,7 +48,7 @@ private fun makePanel(group: ButtonGroup): Container {
     JLabel("JLabel1"),
     JLabel("JLabel2"),
     JCheckBox("JCheckBox1"),
-    JCheckBox("JCheckBox2")
+    JCheckBox("JCheckBox2"),
   )
   for (c in list) {
     if (c is JRadioButton) {
