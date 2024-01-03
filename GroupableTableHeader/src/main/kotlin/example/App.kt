@@ -113,8 +113,8 @@ private class GroupableTableHeaderUI : BasicTableHeaderUI() {
     // val left = clip.getLocation()
     // val right = Point(clip.x + clip.width - 1, clip.y)
     val cm = header.columnModel
-    val colMin = header.columnAtPoint(clip.location)
-    val colMax = header.columnAtPoint(Point(clip.x + clip.width - 1, clip.y))
+    val colMin: Int = header.columnAtPoint(clip.location)
+    val colMax: Int = header.columnAtPoint(Point(clip.x + clip.width - 1, clip.y))
 
     val cellRect = header.getHeaderRect(colMin)
     val headerY = cellRect.y
