@@ -106,7 +106,7 @@ private class XmlTreeNode(
       return xmlNode?.nodeName ?: ""
     }
 
-  private fun loadChildren(l: MutableList<XmlTreeNode>?): MutableList<XmlTreeNode> {
+  private fun loadChildren(l: List<XmlTreeNode>?): List<XmlTreeNode> {
     return if (l == null) {
       val cn = xmlNode?.childNodes ?: return mutableListOf()
       val count = cn.length
