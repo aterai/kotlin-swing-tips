@@ -207,7 +207,7 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   private val icon = JLabel(null as? Icon?, SwingConstants.CENTER)
   private val label = JLabel("", SwingConstants.CENTER)
   private val focusBorder = UIManager.getBorder("List.focusCellHighlightBorder")
-  private val noFocusBorder = UIManager.getBorder("List.noFocusBorder") ?: getNimbusNoFocusBorder()
+  private val noFocusBorder = getNoFocusBorder()
 
   init {
     icon.isOpaque = false
@@ -220,9 +220,14 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
     renderer.add(label, BorderLayout.SOUTH)
   }
 
-  private fun getNimbusNoFocusBorder(): Border {
-    val i = focusBorder.getBorderInsets(label)
-    return BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
+  private fun getNoFocusBorder(): Border {
+    val border = UIManager.getBorder("List.noFocusBorder")
+    return if (border is Border) {
+      border
+    } else {
+      val i = focusBorder.getBorderInsets(label)
+      BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
+    }
   }
 
   override fun getListCellRendererComponent(
@@ -357,8 +362,13 @@ private open class ListItemTransferHandler : TransferHandler() {
     val g2 = bi.createGraphics()
     val renderer = source.cellRenderer
     for (i in source.selectedIndices) {
-      val c =
-        renderer.getListCellRendererComponent(source, source.model.getElementAt(i), i, false, false)
+      val c = renderer.getListCellRendererComponent(
+        source,
+        source.model.getElementAt(i),
+        i,
+        false,
+        false,
+      )
       SwingUtilities.paintComponent(g2, c, source, source.getCellBounds(i, i))
     }
     g2.dispose()
