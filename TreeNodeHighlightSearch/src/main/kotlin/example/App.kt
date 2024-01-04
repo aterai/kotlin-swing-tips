@@ -103,7 +103,15 @@ private class HighlightTreeCellRenderer : DefaultTreeCellRenderer() {
     row: Int,
     hasFocus: Boolean,
   ): Component {
-    val c = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+    val c = super.getTreeCellRendererComponent(
+      tree,
+      value,
+      selected,
+      expanded,
+      leaf,
+      row,
+      hasFocus,
+    )
     if (selected) {
       c.foreground = getTextSelectionColor()
     } else {

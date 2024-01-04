@@ -155,7 +155,15 @@ private class ProgressBarRenderer : DefaultTreeCellRenderer() {
     row: Int,
     hasFocus: Boolean,
   ): Component {
-    var c = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+    var c = super.getTreeCellRendererComponent(
+      tree,
+      value,
+      selected,
+      expanded,
+      leaf,
+      row,
+      hasFocus,
+    )
     val o = (value as? DefaultMutableTreeNode)?.userObject
     if (o is ProgressObject) {
       val i = o.value

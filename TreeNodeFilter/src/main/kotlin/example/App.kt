@@ -206,7 +206,15 @@ private class FilterTreeCellRenderer : DefaultTreeCellRenderer() {
     row: Int,
     hasFocus: Boolean,
   ): Component {
-    val c = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+    val c = super.getTreeCellRendererComponent(
+      tree,
+      value,
+      selected,
+      expanded,
+      leaf,
+      row,
+      hasFocus,
+    )
     val node = value as? DefaultMutableTreeNode
     return if ((node?.userObject as? FilterableNode)?.status == true) c else emptyLabel
   }
