@@ -47,8 +47,8 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
   ) {
     val root = defaultRootElement
     val content = getText(0, getLength())
-    val startLine = root.getElementIndex(offset)
-    val endLine = root.getElementIndex(offset + length)
+    val startLine: Int = root.getElementIndex(offset)
+    val endLine: Int = root.getElementIndex(offset + length)
     for (i in startLine..endLine) {
       applyHighlighting(content, i)
     }
