@@ -19,9 +19,13 @@ fun makeUI() = JPanel(BorderLayout()).also {
 }
 
 private fun makeProgressBar(): Component {
-  val progressBar = JProgressBar()
-  progressBar.isOpaque = false
-  progressBar.ui = GradientPalletProgressBarUI()
+  val progressBar = object : JProgressBar() {
+    override fun updateUI() {
+      super.updateUI()
+      setUI(GradientPalletProgressBarUI())
+      isOpaque = false
+    }
+  }
 
   val button = JButton("Start")
   button.addActionListener {

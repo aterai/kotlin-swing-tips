@@ -130,7 +130,7 @@ private fun makeRadioButton(
   }
   radio.foreground = Color.BLUE
   linkViewRadioButtonUI = LinkViewRadioButtonUI()
-  radio.ui = linkViewRadioButtonUI
+  radio.setUI(linkViewRadioButtonUI)
   if (target == current) {
     radio.isSelected = true
   }
@@ -145,7 +145,7 @@ private fun makePrevNextButton(
   flag: Boolean,
 ) = JRadioButton(title).also {
   it.foreground = Color.BLUE
-  it.ui = linkViewRadioButtonUI
+  it.setUI(linkViewRadioButtonUI)
   it.isEnabled = flag
   it.addActionListener { initLinkBox(itemsPerPage, target) }
 }

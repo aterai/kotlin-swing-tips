@@ -37,7 +37,7 @@ fun makeUI(): Component {
 
   val slider0 = makeSlider()
   val slider1 = makeSlider()
-  slider1.ui = GradientPalletSliderUI()
+  slider1.setUI(GradientPalletSliderUI())
   slider1.model = slider0.model
 
   val box = Box.createVerticalBox()
@@ -62,23 +62,28 @@ fun makeUI(): Component {
 }
 
 private fun makeSlider(): JSlider {
-  val slider = JSlider(SwingConstants.HORIZONTAL, 0, 100, 50)
-  slider.background = Color.GRAY
-  slider.isOpaque = false
-  val ma = object : MouseAdapter() {
-    override fun mouseDragged(e: MouseEvent) {
-      e.component.repaint()
-    }
+  return object : JSlider(SwingConstants.HORIZONTAL, 0, 100, 50) {
+    private var handler: MouseAdapter? = null
 
-    override fun mouseWheelMoved(e: MouseWheelEvent) {
-      (e.component as? JSlider)?.model?.also {
-        it.value = it.value - e.wheelRotation
+    override fun updateUI() {
+      super.updateUI()
+      handler = object : MouseAdapter() {
+        override fun mouseDragged(e: MouseEvent) {
+          e.component.repaint()
+        }
+
+        override fun mouseWheelMoved(e: MouseWheelEvent) {
+          (e.component as? JSlider)?.model?.also {
+            it.value = it.value - e.wheelRotation
+          }
+        }
       }
+      addMouseMotionListener(handler)
+      addMouseWheelListener(handler)
+      background = Color.GRAY
+      isOpaque = false
     }
   }
-  slider.addMouseMotionListener(ma)
-  slider.addMouseWheelListener(ma)
-  return slider
 }
 
 private fun makeTitledPanel(

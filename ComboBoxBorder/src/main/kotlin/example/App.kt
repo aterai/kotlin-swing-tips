@@ -23,11 +23,11 @@ fun makeUI(): Component {
   val o00 = combo00.accessibleContext.getAccessibleChild(0)
   (o00 as? JComponent)?.border = BorderFactory.createMatteBorder(0, 1, 1, 1, Color.WHITE)
   val combo01 = makeComboBox()
-  combo01.ui = BasicComboBoxUI()
+  combo01.setUI(BasicComboBoxUI())
   val o01 = combo01.accessibleContext.getAccessibleChild(0)
   (o01 as? JComponent)?.border = BorderFactory.createMatteBorder(0, 1, 1, 1, Color.WHITE)
   val combo02 = makeComboBox()
-  combo02.ui = object : BasicComboBoxUI() {
+  val ui2 = object : BasicComboBoxUI() {
     override fun createArrowButton(): JButton {
       val b = JButton(ArrowIcon()) // createArrowButton()
       b.background = Color.BLACK
@@ -37,6 +37,7 @@ fun makeUI(): Component {
       return b
     }
   }
+  combo02.setUI(ui2)
   val ml2 = object : MouseAdapter() {
     private fun getButtonModel(e: MouseEvent): ButtonModel? {
       val b = (e.component as? JComboBox<*>)?.getComponent(0)

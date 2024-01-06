@@ -12,7 +12,7 @@ import javax.swing.plaf.basic.BasicComboPopup
 
 fun makeUI(): Component {
   val combo1 = makeComboBox(5)
-  combo1.ui = if (combo1.ui is WindowsComboBoxUI) {
+  val ui1 = if (combo1.ui is WindowsComboBoxUI) {
     object : WindowsComboBoxUI() {
       override fun createPopup() = BasicComboPopup2(comboBox)
     }
@@ -21,9 +21,10 @@ fun makeUI(): Component {
       override fun createPopup() = BasicComboPopup2(comboBox)
     }
   }
+  combo1.setUI(ui1)
 
   val combo2 = makeComboBox(20)
-  combo2.ui = if (combo2.ui is WindowsComboBoxUI) {
+  val ui2 = if (combo2.ui is WindowsComboBoxUI) {
     object : WindowsComboBoxUI() {
       override fun createPopup() = BasicComboPopup3(comboBox)
     }
@@ -32,6 +33,7 @@ fun makeUI(): Component {
       override fun createPopup() = BasicComboPopup3(comboBox)
     }
   }
+  combo2.setUI(ui2)
 
   val box = Box.createVerticalBox()
   box.add(makeTitledPanel("default:", makeComboBox(5)))
@@ -65,7 +67,7 @@ private fun makeComboBox(size: Int): JComboBox<String> {
   return JComboBox(model)
 }
 
-private class BasicComboPopup2(combo: JComboBox<*>) : BasicComboPopup(combo) {
+private class BasicComboPopup2(combo: JComboBox<Any>) : BasicComboPopup(combo) {
   @Transient private var handler2: MouseListener? = null
 
   override fun uninstallingUI() {
@@ -101,8 +103,8 @@ private class BasicComboPopup2(combo: JComboBox<*>) : BasicComboPopup(combo) {
   }
 }
 
-private class BasicComboPopup3(combo: JComboBox<*>) : BasicComboPopup(combo) {
-  override fun createList(): JList<*> {
+private class BasicComboPopup3(combo: JComboBox<Any>) : BasicComboPopup(combo) {
+  override fun createList(): JList<Any> {
     return object : JList<Any>(comboBox.model) {
       override fun processMouseEvent(e: MouseEvent) {
         if (SwingUtilities.isRightMouseButton(e)) {

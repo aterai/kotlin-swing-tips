@@ -13,9 +13,9 @@ fun makeUI(): Component {
   val slider1 = makeSlider("ChangeListener")
   val slider2 = makeSlider("TrackListener")
   if (slider2.ui is WindowsSliderUI) {
-    slider2.ui = WindowsDragLimitedSliderUI(slider2)
+    slider2.setUI(WindowsDragLimitedSliderUI(slider2))
   } else {
-    slider2.ui = BasicDragLimitedSliderUI(slider2)
+    slider2.setUI(BasicDragLimitedSliderUI(slider2))
   }
   return JPanel(GridLayout(2, 1, 5, 5)).also {
     it.add(slider1)

@@ -27,8 +27,8 @@ fun makeUI(): Component {
   val scroll = object : JScrollPane(JTextArea(txt)) {
     override fun updateUI() {
       super.updateUI()
-      getVerticalScrollBar().ui = WithoutArrowButtonScrollBarUI()
-      getHorizontalScrollBar().ui = WithoutArrowButtonScrollBarUI()
+      getVerticalScrollBar().setUI(WithoutArrowButtonScrollBarUI())
+      getHorizontalScrollBar().setUI(WithoutArrowButtonScrollBarUI())
     }
   }
 

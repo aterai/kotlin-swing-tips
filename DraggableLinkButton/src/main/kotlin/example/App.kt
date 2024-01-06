@@ -12,12 +12,16 @@ import javax.swing.plaf.basic.BasicHTML
 import javax.swing.text.View
 
 fun makeUI(): Component {
-  val label = JButton("https://ateraimemo.com/")
-  label.ui = LinkViewButtonUI.createUI(label, label.text)
-
   val p = JPanel(FlowLayout(FlowLayout.LEADING, 5, 5))
   p.border = BorderFactory.createTitledBorder("Draggable Hyperlink")
   p.add(JLabel("D&D->Browser:"))
+
+  val label = object : JButton("https://ateraimemo.com/") {
+    override fun updateUI() {
+      super.updateUI()
+      setUI(LinkViewButtonUI.createUI(this, text))
+    }
+  }
   p.add(label)
 
   return JPanel(BorderLayout()).also {

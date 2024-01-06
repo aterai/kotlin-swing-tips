@@ -49,8 +49,8 @@ fun makeUI(): Component {
             val sp = object : JScrollPane(list) {
               override fun updateUI() {
                 super.updateUI()
-                getVerticalScrollBar().ui = WithoutArrowButtonScrollBarUI()
-                getHorizontalScrollBar().ui = WithoutArrowButtonScrollBarUI()
+                getVerticalScrollBar().setUI(WithoutArrowButtonScrollBarUI())
+                getHorizontalScrollBar().setUI(WithoutArrowButtonScrollBarUI())
               }
             }
             sp.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED

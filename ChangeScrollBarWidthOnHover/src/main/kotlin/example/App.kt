@@ -46,7 +46,7 @@ private fun makeTranslucentScrollBar(c: Component) = object : JScrollPane(c) {
   override fun updateUI() {
     super.updateUI()
     EventQueue.invokeLater {
-      getVerticalScrollBar().ui = TranslucentScrollBarUI()
+      getVerticalScrollBar().setUI(TranslucentScrollBarUI())
       setComponentZOrder(getVerticalScrollBar(), 0)
       setComponentZOrder(getViewport(), 1)
       getVerticalScrollBar().isOpaque = false
