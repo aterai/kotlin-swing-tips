@@ -5,7 +5,8 @@ import java.awt.event.ActionEvent
 import javax.swing.*
 
 fun makeUI(): Component {
-  UIManager.put("Button.textShiftOffset", 0)
+  val key = "Button.textShiftOffset"
+  UIManager.put(key, 0)
   val rl = listOf(
     JRadioButton(TextShiftOffsetAction(0)),
     JRadioButton(TextShiftOffsetAction(1)),
@@ -13,7 +14,7 @@ fun makeUI(): Component {
   )
   val bg = ButtonGroup()
   val box = Box.createHorizontalBox()
-  box.border = BorderFactory.createTitledBorder("UIManager.put(\"Button.textShiftOffset\", offset)")
+  box.border = BorderFactory.createTitledBorder("UIManager.put(\"$key\", offset)")
   box.add(JLabel("offset = "))
 
   var isFirst = true

@@ -55,7 +55,9 @@ private fun makeTable(): JTable {
   return table
 }
 
-private class HorizontalAlignmentHeaderRenderer(private val horAlignment: Int) : TableCellRenderer {
+private class HorizontalAlignmentHeaderRenderer(
+  private val horAlignment: Int,
+) : TableCellRenderer {
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,

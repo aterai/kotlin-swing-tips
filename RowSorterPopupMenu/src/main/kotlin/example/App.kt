@@ -53,7 +53,8 @@ private class TableHeaderPopupMenu : JPopupMenu() {
     }
 
     override fun actionPerformed(e: ActionEvent) {
-      (invoker as? JTableHeader)?.table?.rowSorter?.sortKeys = listOf(RowSorter.SortKey(index, dir))
+      val t = (invoker as? JTableHeader)?.table
+      t?.rowSorter?.sortKeys = listOf(RowSorter.SortKey(index, dir))
     }
   }
 

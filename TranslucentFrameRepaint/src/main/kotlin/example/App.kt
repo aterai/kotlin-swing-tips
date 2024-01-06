@@ -15,7 +15,8 @@ import javax.swing.Timer
 
 fun makeUI(): Component {
   val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
-  val label = JLabel(LocalTime.now(ZoneId.systemDefault()).format(formatter), SwingConstants.CENTER)
+  val txt = LocalTime.now(ZoneId.systemDefault()).format(formatter)
+  val label = JLabel(txt, SwingConstants.CENTER)
   val timer = Timer(100, null)
   timer.addActionListener {
     label.text = LocalTime.now(ZoneId.systemDefault()).format(formatter)

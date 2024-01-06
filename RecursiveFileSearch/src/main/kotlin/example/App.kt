@@ -178,7 +178,9 @@ private fun addItem(
   dirCombo.isVisible = true
 }
 
-private open class RecursiveFileSearchTask(private val dir: File) : SwingWorker<String, Message>() {
+private open class RecursiveFileSearchTask(
+  private val dir: File,
+) : SwingWorker<String, Message>() {
   protected var counter = 0
 
   @Throws(InterruptedException::class)
