@@ -6,14 +6,20 @@ import javax.swing.*
 import javax.swing.plaf.basic.BasicScrollBarUI
 
 fun makeUI(): Component {
-  val l = object : JLabel("1234567890") {
+  val label = object : JLabel("1234567890") {
     override fun getPreferredSize() = Dimension(1000, 1000)
   }
-  val scrollPane = JScrollPane(l)
-  if (scrollPane.verticalScrollBar.ui is WindowsScrollBarUI) {
-    scrollPane.verticalScrollBar.ui = BasicIconScrollBarUI()
-  } else {
-    scrollPane.verticalScrollBar.ui = WindowsIconScrollBarUI()
+  val scrollPane = object : JScrollPane(label) {
+    override fun updateUI() {
+      super.updateUI()
+      val vsb = verticalScrollBar
+      val ui = if (vsb.ui is WindowsScrollBarUI) {
+        WindowsIconScrollBarUI()
+      } else {
+        BasicIconScrollBarUI()
+      }
+      vsb.setUI(ui)
+    }
   }
   return JPanel(BorderLayout()).also {
     it.add(scrollPane)

@@ -22,11 +22,16 @@ fun makeUI(): Component {
   val tree1 = JTree(treeModel)
   tree1.addTreeWillExpandListener(FileExpandVetoListener())
 
-  val tree2 = JTree(treeModel)
-  tree2.ui = object : MetalTreeUI() {
-    override fun isToggleEvent(e: MouseEvent): Boolean {
-      val file = getFileFromTreePath(tree.selectionPath)
-      return file == null && super.isToggleEvent(e)
+  val tree2 = object : JTree(treeModel) {
+    override fun updateUI() {
+      super.updateUI()
+      val ui2 = object : MetalTreeUI() {
+        override fun isToggleEvent(e: MouseEvent): Boolean {
+          val file = getFileFromTreePath(tree.selectionPath)
+          return file == null && super.isToggleEvent(e)
+        }
+      }
+      setUI(ui2)
     }
   }
 

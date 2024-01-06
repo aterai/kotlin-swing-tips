@@ -7,13 +7,8 @@ import javax.swing.*
 import javax.swing.plaf.metal.MetalSliderUI
 
 fun makeUI(): Component {
-  val slider1 = JSlider(SwingConstants.VERTICAL, 0, 1000, 500)
-  setSliderUI(slider1)
-
-  val slider2 = JSlider(0, 1000, 500)
-  setSliderUI(slider2)
-
-  val box = Box.createHorizontalBox().also {
+  val slider1 = makeSlider(SwingConstants.VERTICAL, 0, 1000, 500)
+  val box1 = Box.createHorizontalBox().also {
     it.border = BorderFactory.createEmptyBorder(20, 20, 20, 20)
     it.add(JSlider(SwingConstants.VERTICAL, 0, 1000, 100))
     it.add(Box.createHorizontalStrut(20))
@@ -21,7 +16,8 @@ fun makeUI(): Component {
     it.add(Box.createHorizontalGlue())
   }
 
-  val p = Box.createVerticalBox().also {
+  val slider2 = makeSlider(SwingConstants.HORIZONTAL, 0, 1000, 500)
+  val box2 = Box.createVerticalBox().also {
     it.border = BorderFactory.createEmptyBorder(20, 0, 20, 20)
     it.add(makeTitledPanel("Default", JSlider(0, 100, 100)))
     it.add(Box.createVerticalStrut(20))
@@ -30,22 +26,33 @@ fun makeUI(): Component {
   }
 
   return JPanel(BorderLayout()).also {
-    it.add(box, BorderLayout.WEST)
-    it.add(p)
+    it.add(box1, BorderLayout.WEST)
+    it.add(box2)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun setSliderUI(slider: JSlider) {
-  if (slider.ui is WindowsSliderUI) {
-    slider.ui = WindowsJumpToClickedPositionSliderUI(slider)
-  } else {
-    val icon = UIManager.getIcon("html.missingImage")
-    UIManager.put("Slider.trackWidth", 0) // Meaningless settings that are not used?
-    UIManager.put("Slider.majorTickLength", 0) // BasicSliderUI#getTickLength(): 8
-    UIManager.put("Slider.verticalThumbIcon", icon)
-    UIManager.put("Slider.horizontalThumbIcon", icon)
-    slider.ui = MetalJumpToClickedPositionSliderUI()
+private fun makeSlider(
+  orientation: Int,
+  min: Int,
+  max: Int,
+  value: Int,
+): JSlider {
+  return object : JSlider(orientation, min, max, value) {
+    override fun updateUI() {
+      super.updateUI()
+      val ui2 = if (ui is WindowsSliderUI) {
+        WindowsJumpToClickedPositionSliderUI(this)
+      } else {
+        val icon = UIManager.getIcon("html.missingImage")
+        UIManager.put("Slider.trackWidth", 0) // Meaningless settings that are not used?
+        UIManager.put("Slider.majorTickLength", 0) // BasicSliderUI#getTickLength(): 8
+        UIManager.put("Slider.verticalThumbIcon", icon)
+        UIManager.put("Slider.horizontalThumbIcon", icon)
+        MetalJumpToClickedPositionSliderUI()
+      }
+      setUI(ui2)
+    }
   }
   // slider.setSnapToTicks(false)
   // slider.setPaintTicks(true)

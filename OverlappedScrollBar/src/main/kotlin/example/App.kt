@@ -22,13 +22,17 @@ private fun makeTranslucentScrollBar(c: JTable) = object : JScrollPane(c) {
   override fun updateUI() {
     super.updateUI()
     EventQueue.invokeLater {
-      getVerticalScrollBar().ui = OverlappedScrollBarUI()
-      getHorizontalScrollBar().ui = OverlappedScrollBarUI()
-      setComponentZOrder(getVerticalScrollBar(), 0)
-      setComponentZOrder(getHorizontalScrollBar(), 1)
+      verticalScrollBar.also {
+        it.setUI(OverlappedScrollBarUI())
+        it.isOpaque = false
+        setComponentZOrder(it, 0)
+      }
+      horizontalScrollBar.also {
+        it.setUI(OverlappedScrollBarUI())
+        it.isOpaque = false
+        setComponentZOrder(it, 1)
+      }
       setComponentZOrder(getViewport(), 2)
-      getVerticalScrollBar().isOpaque = false
-      getHorizontalScrollBar().isOpaque = false
     }
     setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS)
     setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS)
