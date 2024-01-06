@@ -10,7 +10,9 @@ fun makeUI(): Component {
 
   val tree2 = JTree(makeTreeRoot())
   expandAll(tree2)
-  tree2.addTreeSelectionListener { e -> tree2.scrollPathToVisible(e.newLeadSelectionPath) }
+  tree2.addTreeSelectionListener {
+    tree2.scrollPathToVisible(it.newLeadSelectionPath)
+  }
 
   val key = "Tree.scrollsHorizontallyAndVertically"
   val check = JCheckBoxMenuItem(key)

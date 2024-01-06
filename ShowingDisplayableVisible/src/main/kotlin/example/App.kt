@@ -17,14 +17,18 @@ fun makeUI(): Component {
   }
 
   val check1 = JCheckBox("setVisible", true)
-  check1.addActionListener { e -> button.isVisible = (e.source as? JCheckBox)?.isSelected == true }
+  check1.addActionListener {
+    button.isVisible = (it.source as? JCheckBox)?.isSelected == true
+  }
 
   val check2 = JCheckBox("setEnabled", true)
-  check2.addActionListener { e -> button.isEnabled = (e.source as? JCheckBox)?.isSelected == true }
+  check2.addActionListener {
+    button.isEnabled = (it.source as? JCheckBox)?.isSelected == true
+  }
 
   val check3 = JCheckBox("start", true)
-  check3.addActionListener { e ->
-    if ((e.source as? JCheckBox)?.isSelected == true) {
+  check3.addActionListener {
+    if ((it.source as? JCheckBox)?.isSelected == true) {
       timer.start()
     } else {
       timer.stop()

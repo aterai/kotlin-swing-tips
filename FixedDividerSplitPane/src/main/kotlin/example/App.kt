@@ -11,12 +11,15 @@ fun makeUI(): Component {
   EventQueue.invokeLater { sp.setDividerLocation(.5) }
 
   val check1 = JCheckBox("setEnabled(...)", true)
-  check1.addActionListener { e -> sp.isEnabled = (e.source as? JCheckBox)?.isSelected == true }
+  check1.addActionListener {
+    sp.isEnabled = (it.source as? JCheckBox)?.isSelected == true
+  }
 
   val dividerSize = UIManager.getInt("SplitPane.dividerSize")
   val check2 = JCheckBox("setDividerSize(0)")
   check2.addActionListener { e ->
-    sp.dividerSize = if ((e.source as? JCheckBox)?.isSelected == true) 0 else dividerSize
+    val b = (e.source as? JCheckBox)?.isSelected == true
+    sp.dividerSize = if (b) 0 else dividerSize
   }
 
   val p = JPanel(GridLayout(1, 0))

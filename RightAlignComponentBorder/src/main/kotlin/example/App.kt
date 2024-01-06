@@ -6,7 +6,10 @@ import javax.swing.*
 fun makeUI(): Component {
   val tree = JTree()
   val c = JCheckBox("setEnabled", true)
-  c.addActionListener { e -> tree.isEnabled = (e.source as? JCheckBox)?.isSelected == true }
+  c.addActionListener {
+    tree.isEnabled = (it.source as? JCheckBox)?.isSelected == true
+  }
+
   val textArea = JTextArea("1234567890")
   val b = JButton("Clear")
   b.isFocusable = false

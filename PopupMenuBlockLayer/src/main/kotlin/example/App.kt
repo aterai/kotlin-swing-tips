@@ -34,7 +34,9 @@ fun makeUI(): Component {
 
   val layerUI = DisableInputLayerUI<Component>()
   val check = JCheckBox("Lock all(JScrollPane, JTable, JPopupMenu)")
-  check.addActionListener { e -> layerUI.setLocked((e.source as? JCheckBox)?.isSelected == true) }
+  check.addActionListener {
+    layerUI.setLocked((it.source as? JCheckBox)?.isSelected == true)
+  }
   val scroll = JScrollPane(table)
   return JPanel(BorderLayout()).also {
     it.add(JLayer(scroll, layerUI))

@@ -35,7 +35,9 @@ fun makeUI(): Component {
   p.isFocusCycleRoot = true
 
   val check = JCheckBox("use FocusTraversalPolicy", true)
-  check.addActionListener { e -> p.isFocusCycleRoot = (e.source as? JCheckBox)?.isSelected == true }
+  check.addActionListener {
+    p.isFocusCycleRoot = (it.source as? JCheckBox)?.isSelected == true
+  }
 
   val box = Box.createVerticalBox()
   box.add(check)
