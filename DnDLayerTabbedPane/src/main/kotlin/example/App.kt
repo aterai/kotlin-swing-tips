@@ -344,8 +344,8 @@ private class TabTransferHandler : TransferHandler() {
   init {
     dialog.add(label)
     dialog.opacity = .5f
-    DragSource.getDefaultDragSource().addDragSourceMotionListener { e ->
-      val pt = e.location
+    DragSource.getDefaultDragSource().addDragSourceMotionListener {
+      val pt = it.location
       pt.translate(5, 5) // offset
       dialog.location = pt
     }

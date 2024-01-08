@@ -9,7 +9,9 @@ import javax.swing.text.TabStop
 
 fun makeUI(): Component {
   val check = JCheckBox("vertical grid lines", true)
-  check.addActionListener { e -> (e.source as? JComponent)?.rootPane?.repaint() }
+  check.addActionListener {
+    (it.source as? JComponent)?.rootPane?.repaint()
+  }
 
   val textPane = object : JTextPane() {
     override fun paintComponent(g: Graphics) {
