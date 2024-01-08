@@ -13,8 +13,8 @@ fun makeUI(): Component {
   val tabbedPane = object : JTabbedPane() {
     override fun updateUI() {
       super.updateUI()
-      if (getUI() is WindowsTabbedPaneUI) {
-        setUI(object : WindowsTabbedPaneUI() {
+      val ui2 = if (ui is WindowsTabbedPaneUI) {
+        object : WindowsTabbedPaneUI() {
           override fun createMouseListener() = object : TabSelectionMouseListener(this) {
             override fun mouseEntered(e: MouseEvent) {
               rolloverTab = tabForCoordinate(tabPane, e.x, e.y)
@@ -24,9 +24,9 @@ fun makeUI(): Component {
               rolloverTab = -1
             }
           }
-        })
+        }
       } else {
-        setUI(object : MetalTabbedPaneUI() {
+        object : MetalTabbedPaneUI() {
           override fun createMouseListener() = object : TabSelectionMouseListener(this) {
             override fun mouseEntered(e: MouseEvent) {
               rolloverTab = tabForCoordinate(tabPane, e.x, e.y)
@@ -36,8 +36,9 @@ fun makeUI(): Component {
               rolloverTab = -1
             }
           }
-        })
+        }
       }
+      setUI(ui2)
     }
   }
   return JPanel(GridLayout(2, 1)).also {

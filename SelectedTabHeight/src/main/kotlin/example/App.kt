@@ -6,10 +6,24 @@ import java.awt.event.ItemEvent
 import javax.swing.*
 import javax.swing.plaf.basic.BasicTabbedPaneUI
 
-private val comboBox = JComboBox(TabPlacements.values())
-private val tabbedPane = JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT)
-
 fun makeUI(): Component {
+  val tabbedPane = object : JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT) {
+    override fun updateUI() {
+      super.updateUI()
+      val ui2 = if (ui is WindowsTabbedPaneUI) {
+        WindowsTabHeightTabbedPaneUI()
+      } else {
+        BasicTabHeightTabbedPaneUI()
+      }
+      setUI(ui2)
+    }
+  }
+  tabbedPane.addTab("00000", JLabel("0000000000"))
+  tabbedPane.addTab("111112", JLabel("111111111111"))
+  tabbedPane.addTab("22222232", JScrollPane(JTree()))
+  tabbedPane.addTab("3333333333", JSplitPane())
+
+  val comboBox = JComboBox(TabPlacements.values())
   comboBox.addItemListener { e ->
     val item = e.item
     if (e.stateChange == ItemEvent.SELECTED && item is TabPlacements) {
@@ -22,16 +36,6 @@ fun makeUI(): Component {
   box.add(Box.createHorizontalStrut(2))
   box.add(comboBox)
   box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-
-  if (tabbedPane.ui is WindowsTabbedPaneUI) {
-    tabbedPane.ui = WindowsTabHeightTabbedPaneUI()
-  } else {
-    tabbedPane.ui = BasicTabHeightTabbedPaneUI()
-  }
-  tabbedPane.addTab("00000", JLabel("0000000000"))
-  tabbedPane.addTab("111112", JLabel("111111111111"))
-  tabbedPane.addTab("22222232", JScrollPane(JTree()))
-  tabbedPane.addTab("3333333333", JSplitPane())
 
   return JPanel(BorderLayout()).also {
     it.add(tabbedPane)

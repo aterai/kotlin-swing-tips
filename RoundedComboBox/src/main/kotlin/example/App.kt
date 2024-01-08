@@ -74,7 +74,7 @@ private fun makeBox0(
   combo1.border = KamabokoBorder()
   combo2.border = KamabokoBorder()
   if (combo2.ui is WindowsComboBoxUI) {
-    combo2.ui = object : WindowsComboBoxUI() {
+    combo2.setUI(object : WindowsComboBoxUI() {
       override fun createArrowButton(): JButton {
         val b = JButton(ArrowIcon(Color.BLACK, Color.BLUE)) // .createArrowButton()
         b.isContentAreaFilled = false
@@ -82,7 +82,7 @@ private fun makeBox0(
         b.border = BorderFactory.createEmptyBorder()
         return b
       }
-    }
+    })
   }
   it.add(makeTitledPanel("RoundRectangle2D:", combo0, null))
   it.add(Box.createVerticalStrut(5))
@@ -98,9 +98,9 @@ private fun makeBox1(
   combo01: JComboBox<String>,
   combo02: JComboBox<String>,
 ) = Box.createVerticalBox().also {
-  combo00.ui = MetalComboBoxUI()
-  combo01.ui = BasicComboBoxUI()
-  combo02.ui = object : BasicComboBoxUI() {
+  combo00.setUI(MetalComboBoxUI())
+  combo01.setUI(BasicComboBoxUI())
+  combo02.setUI(object : BasicComboBoxUI() {
     override fun createArrowButton(): JButton {
       val b = JButton(ArrowIcon(BACKGROUND, FOREGROUND))
       b.isContentAreaFilled = false
@@ -108,7 +108,7 @@ private fun makeBox1(
       b.border = BorderFactory.createEmptyBorder()
       return b
     }
-  }
+  })
 
   combo02.addMouseListener(ComboRolloverHandler())
 

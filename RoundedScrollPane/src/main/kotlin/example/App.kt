@@ -58,8 +58,8 @@ fun makeUI(): Component {
           override fun createScroller() = object : JScrollPane(list) {
             override fun updateUI() {
               super.updateUI()
-              getVerticalScrollBar().ui = WithoutArrowButtonScrollBarUI()
-              getHorizontalScrollBar().ui = WithoutArrowButtonScrollBarUI()
+              verticalScrollBar.setUI(WithoutArrowButtonScrollBarUI())
+              horizontalScrollBar.setUI(WithoutArrowButtonScrollBarUI())
             }
           }.also {
             it.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED
@@ -95,8 +95,8 @@ fun makeUI(): Component {
   val scroll = object : JScrollPane(tree) {
     override fun updateUI() {
       super.updateUI()
-      getVerticalScrollBar().ui = WithoutArrowButtonScrollBarUI()
-      getHorizontalScrollBar().ui = WithoutArrowButtonScrollBarUI()
+      verticalScrollBar.setUI(WithoutArrowButtonScrollBarUI())
+      horizontalScrollBar.setUI(WithoutArrowButtonScrollBarUI())
     }
   }
   scroll.background = tree.background

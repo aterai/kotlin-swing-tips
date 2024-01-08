@@ -8,32 +8,40 @@ import javax.swing.*
 import javax.swing.plaf.metal.MetalSliderUI
 
 fun makeUI(): Component {
-  val slider1 = makeSlider()
-  val slider2 = makeSlider()
-  slider2.model = slider1.model
-  setSliderUI(slider2)
+  val box = Box.createVerticalBox()
+  box.add(Box.createVerticalStrut(5))
+  box.add(makeTitledPanel("Default", makeSlider(JSlider(0, 100, 0))))
+  box.add(Box.createVerticalStrut(25))
 
-  val ma = SliderPopupListener()
-  slider2.addMouseMotionListener(ma)
-  slider2.addMouseListener(ma)
+  val slider = object : JSlider(0, 100, 0) {
+    private var handler: MouseAdapter? = null
 
-  val box = Box.createVerticalBox().also {
-    it.add(Box.createVerticalStrut(5))
-    it.add(makeTitledPanel("Default", slider1))
-    it.add(Box.createVerticalStrut(25))
-    it.add(makeTitledPanel("Show ToolTip", slider2))
-    it.add(Box.createVerticalGlue())
+    override fun updateUI() {
+      removeMouseMotionListener(handler)
+      removeMouseListener(handler)
+      super.updateUI()
+      val ui2 = if (ui is WindowsSliderUI) {
+        WindowsTooltipSliderUI(this)
+      } else {
+        MetalTooltipSliderUI()
+      }
+      setUI(ui2)
+      handler = SliderPopupListener()
+      addMouseMotionListener(handler)
+      addMouseListener(handler)
+    }
   }
+  box.add(makeTitledPanel("Show ToolTip", makeSlider(slider)))
+  box.add(Box.createVerticalGlue())
 
-  val p = JPanel(BorderLayout())
-  p.add(box, BorderLayout.NORTH)
-  p.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-  p.preferredSize = Dimension(320, 240)
-  return p
+  return JPanel(BorderLayout()).also {
+    it.add(box, BorderLayout.NORTH)
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    it.preferredSize = Dimension(320, 240)
+  }
 }
 
-private fun makeSlider(): JSlider {
-  val slider = JSlider(0, 100, 0)
+private fun makeSlider(slider: JSlider): JSlider {
   slider.paintTicks = true
   slider.majorTickSpacing = 10
   slider.minorTickSpacing = 5
@@ -53,14 +61,6 @@ private fun makeTitledPanel(
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)
   return p
-}
-
-private fun setSliderUI(slider: JSlider) {
-  if (slider.ui is WindowsSliderUI) {
-    slider.ui = WindowsTooltipSliderUI(slider)
-  } else {
-    slider.ui = MetalTooltipSliderUI()
-  }
 }
 
 private class WindowsTooltipSliderUI(slider: JSlider) : WindowsSliderUI(slider) {

@@ -6,25 +6,40 @@ import javax.swing.*
 import javax.swing.plaf.basic.BasicSpinnerUI
 
 fun makeUI(): Component {
-  val spinner1 = JSpinner(SpinnerNumberModel(10, 0, 1000, 1))
-  spinner1.ui = MySpinnerUI()
-
-  val spinner2 = JSpinner(SpinnerNumberModel(10, 0, 1000, 1))
-  searchSpinnerButtons(spinner2)
-
-  val spinner3 = JSpinner(SpinnerNumberModel(10, 0, 1000, 1))
-  if (spinner3.ui is WindowsSpinnerUI) {
-    spinner3.ui = MyWinSpinnerUI()
-  } else {
-    searchSpinnerButtons(spinner3)
-  }
-
   val box = Box.createVerticalBox()
+
+  val spinner1 = object : JSpinner(SpinnerNumberModel(10, 0, 1000, 1)) {
+    override fun updateUI() {
+      super.updateUI()
+      setUI(ToolTipSpinnerUI())
+    }
+  }
   box.add(makeTitledPanel("BasicSpinnerUI", spinner1))
+
+  val spinner2 = object : JSpinner(SpinnerNumberModel(10, 0, 1000, 1)) {
+    override fun updateUI() {
+      super.updateUI()
+      searchSpinnerButtons(this)
+    }
+  }
   box.add(makeTitledPanel("getName()", spinner2))
+
+  val spinner3 = object : JSpinner(SpinnerNumberModel(10, 0, 1000, 1)) {
+    override fun updateUI() {
+      super.updateUI()
+      if (ui is WindowsSpinnerUI) {
+        setUI(ToolTipWindowsSpinnerUI())
+      } else {
+        searchSpinnerButtons(this)
+      }
+    }
+  }
   box.add(makeTitledPanel("WindowsSpinnerUI", spinner3))
 
   return JPanel(BorderLayout()).also {
+    val mb = JMenuBar()
+    mb.add(LookAndFeelUtils.createLookAndFeelMenu())
+    EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.add(box, BorderLayout.NORTH)
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.preferredSize = Dimension(320, 240)
@@ -52,7 +67,7 @@ private fun makeTitledPanel(
   return p
 }
 
-private class MySpinnerUI : BasicSpinnerUI() {
+private class ToolTipSpinnerUI : BasicSpinnerUI() {
   override fun createNextButton() = (super.createNextButton() as? JComponent)?.also {
     it.toolTipText = "SpinnerUI: next next"
   }
@@ -62,13 +77,61 @@ private class MySpinnerUI : BasicSpinnerUI() {
   }
 }
 
-private class MyWinSpinnerUI : WindowsSpinnerUI() {
+private class ToolTipWindowsSpinnerUI : WindowsSpinnerUI() {
   override fun createNextButton() = (super.createNextButton() as? JComponent)?.also {
     it.toolTipText = "SpinnerUI: next next"
   }
 
   override fun createPreviousButton() = (super.createPreviousButton() as? JComponent)?.also {
     it.toolTipText = "SpinnerUI: prev prev"
+  }
+}
+
+private object LookAndFeelUtils {
+  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
+
+  fun createLookAndFeelMenu(): JMenu {
+    val menu = JMenu("LookAndFeel")
+    val buttonGroup = ButtonGroup()
+    for (info in UIManager.getInstalledLookAndFeels()) {
+      val b = JRadioButtonMenuItem(info.name, info.className == lookAndFeel)
+      initLookAndFeelAction(info, b)
+      menu.add(b)
+      buttonGroup.add(b)
+    }
+    return menu
+  }
+
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
+    val cmd = info.className
+    b.text = info.name
+    b.actionCommand = cmd
+    b.hideActionText = true
+    b.addActionListener { setLookAndFeel(cmd) }
+  }
+
+  @Throws(
+    ClassNotFoundException::class,
+    InstantiationException::class,
+    IllegalAccessException::class,
+    UnsupportedLookAndFeelException::class,
+  )
+  private fun setLookAndFeel(newLookAndFeel: String) {
+    val oldLookAndFeel = lookAndFeel
+    if (oldLookAndFeel != newLookAndFeel) {
+      UIManager.setLookAndFeel(newLookAndFeel)
+      lookAndFeel = newLookAndFeel
+      updateLookAndFeel()
+    }
+  }
+
+  private fun updateLookAndFeel() {
+    for (window in Window.getWindows()) {
+      SwingUtilities.updateComponentTreeUI(window)
+    }
   }
 }
 

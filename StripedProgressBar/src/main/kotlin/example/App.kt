@@ -15,17 +15,33 @@ fun makeUI(): Component {
 
   val model = DefaultBoundedRangeModel()
 
-  val progress1 = JProgressBar(model)
-  progress1.ui = StripedProgressBarUI(dir = true, slope = true)
+  val progress1 = object : JProgressBar(model) {
+    override fun updateUI() {
+      super.updateUI()
+      setUI(StripedProgressBarUI(dir = true, slope = true))
+    }
+  }
 
-  val progress2 = JProgressBar(model)
-  progress2.ui = StripedProgressBarUI(dir = true, slope = false)
+  val progress2 = object : JProgressBar(model) {
+    override fun updateUI() {
+      super.updateUI()
+      setUI(StripedProgressBarUI(dir = true, slope = false))
+    }
+  }
 
-  val progress3 = JProgressBar(model)
-  progress3.ui = StripedProgressBarUI(dir = false, slope = true)
+  val progress3 = object : JProgressBar(model) {
+    override fun updateUI() {
+      super.updateUI()
+      setUI(StripedProgressBarUI(dir = false, slope = true))
+    }
+  }
 
-  val progress4 = JProgressBar(model)
-  progress4.ui = StripedProgressBarUI(dir = false, slope = false)
+  val progress4 = object : JProgressBar(model) {
+    override fun updateUI() {
+      super.updateUI()
+      setUI(StripedProgressBarUI(dir = false, slope = false))
+    }
+  }
 
   val list = listOf(
     JProgressBar(model),

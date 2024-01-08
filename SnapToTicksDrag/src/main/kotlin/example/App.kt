@@ -5,16 +5,59 @@ import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import java.awt.event.MouseEvent
+import java.awt.event.MouseWheelListener
 import javax.swing.*
 import javax.swing.plaf.metal.MetalSliderUI
 import kotlin.math.roundToInt
 
 fun makeUI(): Component {
-  val slider = makeSlider("Custom SnapToTicks")
-  initSlider(slider)
+  val slider0 = JSlider(0, 100, 50)
+  slider0.border = BorderFactory.createTitledBorder("Default SnapToTicks")
 
-  val list = listOf(makeSlider("Default SnapToTicks"), slider)
+  val slider1 = object : JSlider(0, 100, 50) {
+    private var handler: MouseWheelListener? = null
 
+    override fun updateUI() {
+      removeMouseWheelListener(handler)
+      super.updateUI()
+      val ui1 = if (ui is WindowsSliderUI) {
+        WindowsSnapToTicksDragSliderUI(this)
+      } else {
+        MetalSnapToTicksDragSliderUI()
+      }
+      setUI(ui1)
+      inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "RIGHT_ARROW")
+      val a1 = object : AbstractAction() {
+        override fun actionPerformed(e: ActionEvent) {
+          val s = e.source as? JSlider ?: return
+          s.value = s.value + s.majorTickSpacing
+        }
+      }
+      actionMap.put("RIGHT_ARROW", a1)
+      inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false), "LEFT_ARROW")
+      val a2 = object : AbstractAction() {
+        override fun actionPerformed(e: ActionEvent) {
+          val s = e.source as? JSlider ?: return
+          s.value = s.value - s.majorTickSpacing
+        }
+      }
+      actionMap.put("LEFT_ARROW", a2)
+      handler = MouseWheelListener { e ->
+        (e.component as? JSlider)?.also {
+          val hasMinorTickSp = it.minorTickSpacing > 0
+          val tickSpacing = if (hasMinorTickSp) it.minorTickSpacing else it.majorTickSpacing
+          val v = it.value - e.wheelRotation * tickSpacing
+          val m = it.model
+          // it.value = minOf(m.maximum, maxOf(v, m.minimum))
+          it.value = v.coerceIn(m.minimum, m.maximum)
+        }
+      }
+      addMouseWheelListener(handler)
+    }
+  }
+  slider1.border = BorderFactory.createTitledBorder("Custom SnapToTicks")
+
+  val list = listOf(initSlider(slider0), initSlider(slider1))
   val check = JCheckBox("JSlider.setMinorTickSpacing(5)")
   check.addActionListener { e ->
     val mts = if ((e.source as? JCheckBox)?.isSelected == true) 5 else 0
@@ -36,46 +79,12 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeSlider(title: String) = JSlider(0, 100, 50).also {
-  it.border = BorderFactory.createTitledBorder(title)
-  it.majorTickSpacing = 10
-  it.snapToTicks = true
-  it.paintTicks = true
-  it.paintLabels = true
-}
-
-private fun initSlider(slider: JSlider) {
-  slider.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "RIGHT_ARROW")
-  val a1 = object : AbstractAction() {
-    override fun actionPerformed(e: ActionEvent) {
-      val s = e.source as? JSlider ?: return
-      s.value = s.value + s.majorTickSpacing
-    }
-  }
-  slider.actionMap.put("RIGHT_ARROW", a1)
-  slider.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false), "LEFT_ARROW")
-  val a2 = object : AbstractAction() {
-    override fun actionPerformed(e: ActionEvent) {
-      val s = e.source as? JSlider ?: return
-      s.value = s.value - s.majorTickSpacing
-    }
-  }
-  slider.actionMap.put("LEFT_ARROW", a2)
-  slider.addMouseWheelListener { e ->
-    (e.component as? JSlider)?.also {
-      val hasMinorTickSp = it.minorTickSpacing > 0
-      val tickSpacing = if (hasMinorTickSp) it.minorTickSpacing else it.majorTickSpacing
-      val v = it.value - e.wheelRotation * tickSpacing
-      val m = it.model
-      // it.value = minOf(m.maximum, maxOf(v, m.minimum))
-      it.value = v.coerceIn(m.minimum, m.maximum)
-    }
-  }
-  if (slider.ui is WindowsSliderUI) {
-    slider.ui = WindowsSnapToTicksDragSliderUI(slider)
-  } else {
-    slider.ui = MetalSnapToTicksDragSliderUI()
-  }
+private fun initSlider(slider: JSlider): JSlider {
+  slider.majorTickSpacing = 10
+  slider.snapToTicks = true
+  slider.paintTicks = true
+  slider.paintLabels = true
+  return slider
 }
 
 private class WindowsSnapToTicksDragSliderUI(slider: JSlider) : WindowsSliderUI(slider) {

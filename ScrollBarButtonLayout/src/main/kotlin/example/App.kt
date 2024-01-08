@@ -7,16 +7,19 @@ import javax.swing.plaf.metal.MetalScrollBarUI
 import kotlin.math.roundToInt
 
 fun makeUI(): Component {
-  val scrollbar = JScrollBar(Adjustable.VERTICAL)
-  scrollbar.unitIncrement = 10
-  if (scrollbar.ui is WindowsScrollBarUI) {
-    scrollbar.ui = WindowsCustomScrollBarUI()
-  } else {
-    scrollbar.ui = MetalCustomScrollBarUI()
+  val scroll = object : JScrollPane(JTable(20, 3)) {
+    override fun updateUI() {
+      super.updateUI()
+      val vsb = verticalScrollBar
+      val ui2 = if (vsb.ui is WindowsScrollBarUI) {
+        WindowsCustomScrollBarUI()
+      } else {
+        MetalCustomScrollBarUI()
+      }
+      vsb.setUI(ui2)
+      vsb.unitIncrement = 10
+    }
   }
-  val scroll = JScrollPane(JTable(20, 3))
-  scroll.verticalScrollBar = scrollbar
-
   return JPanel(BorderLayout()).also {
     it.add(scroll)
     it.preferredSize = Dimension(320, 240)
