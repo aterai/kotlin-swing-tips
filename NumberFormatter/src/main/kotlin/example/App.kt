@@ -86,7 +86,9 @@ private fun makeFormatterFactory(m: SpinnerNumberModel): DefaultFormatterFactory
       }
       val lv = format.parse(text)
       if (lv is Long) {
-        if (lv !in m.minimum..m.maximum) {
+        val min = m.minimum as? Int ?: 0
+        val max = m.maximum as? Int ?: 0
+        if (lv !in min..max) {
           throw ParseException("out of bounds", 0)
         }
         return lv
