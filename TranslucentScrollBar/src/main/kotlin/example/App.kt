@@ -6,10 +6,13 @@ import java.time.ZoneId
 import javax.swing.*
 import javax.swing.plaf.basic.BasicScrollBarUI
 
-fun makeUI() = JPanel(GridLayout(1, 2)).also {
-  it.add(JScrollPane(makeList()))
-  it.add(makeTranslucentScrollBar(makeList()))
-  it.preferredSize = Dimension(320, 240)
+fun makeUI(): Component {
+  val scroll = makeTranslucentScrollBar(makeList())
+  return JPanel(GridLayout(1, 2)).also {
+    it.add(JScrollPane(makeList()))
+    it.add(scroll)
+    it.preferredSize = Dimension(320, 240)
+  }
 }
 
 private fun makeList(): Component {
@@ -25,14 +28,14 @@ private fun makeTranslucentScrollBar(c: Component) = object : JScrollPane(c) {
 
   override fun updateUI() {
     super.updateUI()
-    EventQueue.invokeLater {
-      getVerticalScrollBar().ui = TranslucentScrollBarUI()
-      setComponentZOrder(getVerticalScrollBar(), 0)
-      setComponentZOrder(getViewport(), 1)
-      getVerticalScrollBar().isOpaque = false
-    }
     setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS)
     setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
+    verticalScrollBar.also {
+      it.setUI(TranslucentScrollBarUI())
+      it.isOpaque = false
+    }
+    setComponentZOrder(verticalScrollBar, 0)
+    setComponentZOrder(viewport, 1)
     layout = TranslucentScrollPaneLayout()
   }
 }

@@ -21,14 +21,20 @@ fun makeUI(): Component {
   val progressBar1 = JProgressBar(model)
   progressBar1.isStringPainted = true
 
-  val progressBar2 = JProgressBar(model)
-  progressBar2.isStringPainted = true
-  progressBar2.foreground = Color.BLUE
-  progressBar2.background = Color.CYAN.brighter()
-  progressBar2.ui = object : BasicProgressBarUI() {
-    override fun getSelectionForeground() = Color.PINK
+  val progressBar2 = object : JProgressBar(model) {
+    override fun updateUI() {
+      super.updateUI()
+      EventQueue.invokeLater {
+        isStringPainted = true
+        foreground = Color.BLUE
+        background = Color.CYAN.brighter()
+        setUI(object : BasicProgressBarUI() {
+          override fun getSelectionForeground() = Color.PINK
 
-    override fun getSelectionBackground() = Color.BLUE
+          override fun getSelectionBackground() = Color.BLUE
+        })
+      }
+    }
   }
 
   val p = JPanel(GridLayout(5, 1))
@@ -113,12 +119,6 @@ private class ProgressListener(private val progressBar: JProgressBar) : Property
 
 fun main() {
   EventQueue.invokeLater {
-//    runCatching {
-//      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
-//    }.onFailure {
-//      it.printStackTrace()
-//      Toolkit.getDefaultToolkit().beep()
-//    }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
       contentPane.add(makeUI())

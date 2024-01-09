@@ -42,18 +42,16 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
 
     override fun updateUI() {
       super.updateUI()
-      EventQueue.invokeLater {
-        getVerticalScrollBar().ui = OverlappedScrollBarUI()
-        getHorizontalScrollBar().ui = OverlappedScrollBarUI()
-        layout = OverlapScrollPaneLayout()
-        setComponentZOrder(getVerticalScrollBar(), 0)
-        setComponentZOrder(getHorizontalScrollBar(), 1)
-        setComponentZOrder(getViewport(), 2)
-      }
-      setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_NEVER)
-      setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_ALWAYS)
-      getVerticalScrollBar().isOpaque = false
-      getHorizontalScrollBar().isOpaque = false
+      verticalScrollBar.setUI(OverlappedScrollBarUI())
+      verticalScrollBar.isOpaque = false
+      horizontalScrollBar.setUI(OverlappedScrollBarUI())
+      horizontalScrollBar.isOpaque = false
+      layout = OverlapScrollPaneLayout()
+      setComponentZOrder(verticalScrollBar, 0)
+      setComponentZOrder(horizontalScrollBar, 1)
+      setComponentZOrder(viewport, 2)
+      verticalScrollBarPolicy = VERTICAL_SCROLLBAR_NEVER
+      horizontalScrollBarPolicy = HORIZONTAL_SCROLLBAR_ALWAYS
       background = Color.DARK_GRAY
       viewportBorder = BorderFactory.createEmptyBorder()
       border = BorderFactory.createEmptyBorder()

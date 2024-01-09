@@ -18,11 +18,12 @@ fun makeUI(): Component {
     override fun updateUI() {
       removePopupMenuListener(listener)
       super.updateUI()
-      if (getUI() is WindowsComboBoxUI) {
-        setUI(RightPopupWindowsComboBoxUI())
+      val ui2 = if (ui is WindowsComboBoxUI) {
+        RightPopupWindowsComboBoxUI()
       } else {
-        setUI(RightPopupBasicComboBoxUI())
+        RightPopupBasicComboBoxUI()
       }
+      setUI(ui2)
       listener = RightPopupMenuListener()
       addPopupMenuListener(listener)
     }
