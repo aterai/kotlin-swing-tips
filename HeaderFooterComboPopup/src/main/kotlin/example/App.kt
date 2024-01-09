@@ -13,7 +13,7 @@ fun makeUI(): Component {
   val combo = object : JComboBox<String>(model) {
     override fun updateUI() {
       super.updateUI()
-      val tmpUI = if (getUI() is WindowsComboBoxUI) {
+      val ui2 = if (ui is WindowsComboBoxUI) {
         object : WindowsComboBoxUI() {
           override fun createPopup() = HeaderFooterComboPopup(comboBox)
         }
@@ -22,7 +22,7 @@ fun makeUI(): Component {
           override fun createPopup() = HeaderFooterComboPopup(comboBox)
         }
       }
-      setUI(tmpUI)
+      setUI(ui2)
       maximumRowCount = 4
     }
   }
@@ -33,7 +33,7 @@ fun makeUI(): Component {
   }
 }
 
-private class HeaderFooterComboPopup(combo: JComboBox<*>?) : BasicComboPopup(combo) {
+private class HeaderFooterComboPopup(combo: JComboBox<Any>) : BasicComboPopup(combo) {
   private var header: JLabel? = null
   private var footer: JMenuItem? = null
 
