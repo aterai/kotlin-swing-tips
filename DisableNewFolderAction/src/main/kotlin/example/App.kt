@@ -22,8 +22,8 @@ fun makeUI(): Component {
   }
   val cmd = "New Folder"
   fc2.actionMap[cmd]?.isEnabled = false
-  fc2.addPropertyChangeListener(JFileChooser.DIRECTORY_CHANGED_PROPERTY) { e ->
-    if (e.newValue is File) {
+  fc2.addPropertyChangeListener(JFileChooser.DIRECTORY_CHANGED_PROPERTY) {
+    if (it.newValue is File) {
       fc2.actionMap[cmd]?.isEnabled = false
     }
   }

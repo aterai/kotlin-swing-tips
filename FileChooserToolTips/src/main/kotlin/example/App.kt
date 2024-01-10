@@ -90,7 +90,14 @@ private class TooltipTableCellRenderer : TableCellRenderer {
     row: Int,
     column: Int,
   ): Component {
-    val c = renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    val c = renderer.getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
     if (c is JLabel) {
       val i = c.insets
       val rect = table.getCellRect(row, column, false)

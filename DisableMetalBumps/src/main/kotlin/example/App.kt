@@ -14,10 +14,12 @@ fun makeUI(): Component {
   val f1 = object : JInternalFrame("basic", true, true, true, true) {
     override fun updateUI() {
       super.updateUI()
-      val tmp = object : BasicInternalFrameUI(this) {
-        override fun createNorthPane(w: JInternalFrame) = BumpsFreeInternalFrameTitlePane(w)
+      val ui1 = object : BasicInternalFrameUI(this) {
+        override fun createNorthPane(
+          w: JInternalFrame,
+        ) = BumpsFreeInternalFrameTitlePane(w)
       }
-      setUI(tmp)
+      setUI(ui1)
     }
   }
   f1.setSize(240, 100)
@@ -33,7 +35,9 @@ fun makeUI(): Component {
   }
 }
 
-private class BumpsFreeInternalFrameTitlePane(w: JInternalFrame) : BasicInternalFrameTitlePane(w) {
+private class BumpsFreeInternalFrameTitlePane(
+  frame: JInternalFrame,
+) : BasicInternalFrameTitlePane(frame) {
   override fun updateUI() {
     super.updateUI()
   }
@@ -51,7 +55,7 @@ private class BumpsFreeInternalFrameTitlePane(w: JInternalFrame) : BasicInternal
     g.drawLine(width - 1, 0, width - 1, 0)
   }
 
-  override fun getPreferredSize(): Dimension? = super.getPreferredSize().also {
+  override fun getPreferredSize() = super.getPreferredSize()?.also {
     it.height = 24
   }
 

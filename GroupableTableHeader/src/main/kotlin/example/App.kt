@@ -150,7 +150,14 @@ private class GroupableTableHeaderUI : BasicTableHeaderUI() {
     val hasFocus = !header.isPaintingForPrint && header.hasFocus()
     // && (columnIndex == getSelectedColumnIndex())
     val table = header.table
-    return r.getTableCellRendererComponent(table, tc.headerValue, false, hasFocus, -1, columnIndex)
+    return r.getTableCellRendererComponent(
+      table,
+      tc.headerValue,
+      false,
+      hasFocus,
+      -1,
+      columnIndex,
+    )
   }
 
   // Copied from javax/swing/plaf/basic/BasicTableHeaderUI.java
