@@ -33,15 +33,15 @@ private val p = object : JPanel(BorderLayout()) {
 fun makeUI(): Component {
   val button = JButton("JButton")
   button.font = FONT12
-  p.addFontChangeListener { e -> button.font = e.font }
+  p.addFontChangeListener { button.font = it.font }
 
   val label = JLabel("JLabel")
   label.font = FONT12
-  p.addFontChangeListener { e -> button.font = e.font }
+  p.addFontChangeListener { button.font = it.font }
 
   val combo = JComboBox(DefaultComboBoxModel(arrayOf("item1", "item2")))
   combo.font = FONT12
-  p.addFontChangeListener { e -> button.font = e.font }
+  p.addFontChangeListener { button.font = it.font }
 
   val menu = JMenu("Font")
   menu.toolTipText = "Select font size"

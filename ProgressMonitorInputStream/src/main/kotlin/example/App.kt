@@ -17,7 +17,7 @@ private var monitor: ProgressMonitor? = null
 
 private fun makeUI(): Component {
   textArea.isEditable = false
-  runButton.addActionListener { e -> executeWorker(e) }
+  runButton.addActionListener { executeWorker(it) }
 
   val box = Box.createHorizontalBox()
   box.add(Box.createHorizontalGlue())

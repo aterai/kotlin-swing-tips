@@ -20,7 +20,7 @@ fun makeUI(): Component {
     ) = false
   }
   table.autoCreateRowSorter = true
-  val l = PropertyChangeListener { e -> updateModel(model, e) }
+  val l = PropertyChangeListener { updateModel(model, it) }
   Toolkit.getDefaultToolkit().addPropertyChangeListener("win.xpstyle.colorName", l)
   Toolkit.getDefaultToolkit().addPropertyChangeListener("awt.multiClickInterval", l)
   updateModel(model, null)

@@ -19,7 +19,7 @@ fun makeUI(): Component {
     r2.isSelected = true
   }
   val bg = ButtonGroup()
-  val al = ActionListener { e -> UIManager.put(KEY, r1 == e.source) }
+  val al = ActionListener { UIManager.put(KEY, r1 == it.source) }
   listOf(r1, r2).forEach {
     it.addActionListener(al)
     bg.add(it)
