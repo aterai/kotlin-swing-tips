@@ -96,23 +96,28 @@ private class ValidationLayerUI<V : JTextComponent> : LayerUI<V>() {
     c: JComponent,
   ) {
     super.paint(g, c)
-    val cb = SwingUtilities.getAncestorOfClass(JComboBox::class.java, c) as? JComboBox<*> ?: return
-    cb.inputVerifier?.takeUnless { it.verify(cb) }?.also {
-      val w = c.width
-      val h = c.height
-      val s = 8
-      val pad = 5
-      val x = w - pad - s
-      val y = (h - s) / 2
-      val g2 = g.create() as? Graphics2D ?: return
-      g2.translate(x, y)
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-      g2.paint = Color.RED
-      g2.fillRect(0, 0, s + 1, s + 1)
-      g2.paint = Color.WHITE
-      g2.drawLine(0, 0, s, s)
-      g2.drawLine(0, s, s, 0)
-      g2.dispose()
+    val cb = SwingUtilities.getAncestorOfClass(JComboBox::class.java, c)
+    if (cb is JComboBox<*>) {
+      cb.inputVerifier?.takeUnless { it.verify(cb) }?.also {
+        val w = c.width
+        val h = c.height
+        val s = 8
+        val pad = 5
+        val x = w - pad - s
+        val y = (h - s) / 2
+        val g2 = g.create() as? Graphics2D ?: return
+        g2.translate(x, y)
+        g2.setRenderingHint(
+          RenderingHints.KEY_ANTIALIASING,
+          RenderingHints.VALUE_ANTIALIAS_ON,
+        )
+        g2.paint = Color.RED
+        g2.fillRect(0, 0, s + 1, s + 1)
+        g2.paint = Color.WHITE
+        g2.drawLine(0, 0, s, s)
+        g2.drawLine(0, s, s, 0)
+        g2.dispose()
+      }
     }
   }
 }

@@ -7,7 +7,8 @@ import javax.swing.*
 
 fun makeUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
-  val label = object : JLabel(ImageIcon(cl.getResource("example/CRW_3857_JFR.jpg"))) {
+  val name = "example/CRW_3857_JFR.jpg"
+  val label = object : JLabel(ImageIcon(cl.getResource(name))) {
     @Transient private var listener: MouseAdapter? = null
 
     override fun updateUI() {
@@ -22,9 +23,9 @@ fun makeUI(): Component {
 
   val scroll = JScrollPane(label)
   scroll.componentOrientation = ComponentOrientation.RIGHT_TO_LEFT
-
+  val barWidth = scroll.verticalScrollBar.preferredSize.width
   val p = JPanel(BorderLayout())
-  p.add(Box.createHorizontalStrut(scroll.verticalScrollBar.preferredSize.width), BorderLayout.WEST)
+  p.add(Box.createHorizontalStrut(barWidth), BorderLayout.WEST)
   p.add(scroll.horizontalScrollBar)
 
   return JPanel(BorderLayout()).also {
