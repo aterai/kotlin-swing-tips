@@ -19,7 +19,7 @@ fun makeUI(): Component {
   scroll.verticalScrollBar = object : JScrollBar(VERTICAL) {
     override fun updateUI() {
       super.updateUI()
-      val barUI = if (getUI() is WindowsScrollBarUI) {
+      val barUI = if (ui is WindowsScrollBarUI) {
         object : WindowsScrollBarUI() {
           override fun getMinimumThumbSize(): Dimension {
             val d = super.getMinimumThumbSize()

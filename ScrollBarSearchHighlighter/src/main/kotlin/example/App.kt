@@ -36,7 +36,6 @@ fun makeUI(): Component {
   val scrollbar = object : JScrollBar(Adjustable.VERTICAL) {
     override fun updateUI() {
       super.updateUI()
-      val ui = getUI()
       if (ui is WindowsScrollBarUI) {
         setUI(WindowsHighlightScrollBarUI())
       } else if (ui !is SynthScrollBarUI) {

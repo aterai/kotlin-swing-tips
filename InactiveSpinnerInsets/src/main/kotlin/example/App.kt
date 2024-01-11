@@ -90,7 +90,7 @@ private class SimpleBorderSpinner : JSpinner() {
 
   override fun updateUI() {
     super.updateUI()
-    isWindowsLnF = getUI().javaClass.name.contains("WindowsSpinnerUI")
+    isWindowsLnF = ui.javaClass.name.contains("WindowsSpinnerUI")
   }
 
   override fun paintComponent(g: Graphics) {

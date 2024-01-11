@@ -28,7 +28,7 @@ fun makeUI(): Component {
       }
       addFocusListener(listener)
 
-      if (getUI() is WindowsSliderUI) {
+      if (ui is WindowsSliderUI) {
         val wui = object : WindowsSliderUI(this) {
           override fun paintFocus(g: Graphics) {
             // empty paint

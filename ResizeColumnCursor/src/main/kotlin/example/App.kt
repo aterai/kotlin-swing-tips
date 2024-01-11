@@ -35,7 +35,7 @@ private fun makeSplitPane(flag: Boolean): JSplitPane {
       override fun updateUI() {
         super.updateUI()
         EventQueue.invokeLater {
-          (getUI() as? BasicSplitPaneUI)?.divider?.also {
+          (ui as? BasicSplitPaneUI)?.divider?.also {
             it.cursor = ResizeCursorUtils.createCursor("⇹", 32, 32, it)
           }
         }
@@ -55,7 +55,7 @@ private fun makeTable() = object : JTable(2, 3) {
   override fun createDefaultTableHeader() = object : JTableHeader(columnModel) {
     override fun updateUI() {
       super.updateUI()
-      val headerUI = when (getUI()) {
+      val headerUI = when (ui) {
         is WindowsTableHeaderUI -> MyWindowsTableHeaderUI()
         is SynthTableHeaderUI -> MySynthTableHeaderUI()
         else -> MyBasicTableHeaderUI()
