@@ -30,8 +30,8 @@ fun makeUI(): Component {
   })
 
   val textField2 = JTextField("addActionListener")
-  textField2.addActionListener { e ->
-    val str = (e.source as? JTextField)?.text ?: ""
+  textField2.addActionListener {
+    val str = (it.source as? JTextField)?.text ?: ""
     append(log, str)
   }
 
