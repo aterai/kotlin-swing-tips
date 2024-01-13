@@ -255,7 +255,7 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
       }
     }
     val focusBorder = UIManager.getBorder("List.focusCellHighlightBorder")
-    val noFocusBorder = UIManager.getBorder("List.noFocusBorder") ?: getNimbusNoFocusBorder()
+    val noFocusBorder = getNoFocusBorder(focusBorder)
 
     init {
       itemPanel.border = noFocusBorder
@@ -285,9 +285,11 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
       renderer.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
     }
 
-    private fun getNimbusNoFocusBorder(): Border {
-      val i = focusBorder.getBorderInsets(label)
-      return BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
+    private fun getNoFocusBorder(focusBorder: Border): Border {
+      val b = UIManager.getBorder("List.noFocusBorder")
+      return b ?: focusBorder.getBorderInsets(renderer).let {
+        BorderFactory.createEmptyBorder(it.top, it.left, it.bottom, it.right)
+      }
     }
 
     override fun getListCellRendererComponent(

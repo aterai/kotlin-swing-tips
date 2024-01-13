@@ -64,7 +64,7 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
     }
   }
   private val focusBorder = UIManager.getBorder("List.focusCellHighlightBorder")
-  private val noFocusBorder = UIManager.getBorder("List.noFocusBorder") ?: getNoFocusBorder()
+  private val noFocusBorder = getNoFocusBorder(focusBorder)
 
   init {
     renderer.border = noFocusBorder
@@ -76,6 +76,13 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
     icon.isOpaque = false
     renderer.add(icon)
     renderer.add(label, BorderLayout.SOUTH)
+  }
+
+  private fun getNoFocusBorder(focusBorder: Border): Border {
+    val b = UIManager.getBorder("List.noFocusBorder")
+    return b ?: focusBorder.getBorderInsets(renderer).let {
+      BorderFactory.createEmptyBorder(it.top, it.left, it.bottom, it.right)
+    }
   }
 
   override fun getListCellRendererComponent(

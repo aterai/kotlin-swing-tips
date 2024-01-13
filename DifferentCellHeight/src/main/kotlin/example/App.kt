@@ -39,11 +39,15 @@ private class TextAreaRenderer<E> : ListCellRenderer<E> {
   private val renderer = object : JTextArea() {
     override fun updateUI() {
       super.updateUI()
-      focusBorder = UIManager.getBorder("List.focusCellHighlightBorder")?.also {
-        val i = it.getBorderInsets(this)
-        noFocusBorder = UIManager.getBorder("List.noFocusBorder")
-          ?: BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
-      }
+      focusBorder = UIManager.getBorder("List.focusCellHighlightBorder")
+      noFocusBorder = getNoFocusBorder(focusBorder)
+    }
+  }
+
+  private fun getNoFocusBorder(focusBorder: Border): Border {
+    val b = UIManager.getBorder("List.noFocusBorder")
+    return b ?: focusBorder.getBorderInsets(renderer).let {
+      BorderFactory.createEmptyBorder(it.top, it.left, it.bottom, it.right)
     }
   }
 

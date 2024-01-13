@@ -51,7 +51,7 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   }
   private val renderer = JPanel(BorderLayout())
   private val focusBorder = UIManager.getBorder("List.focusCellHighlightBorder")
-  private val noFocusBorder = UIManager.getBorder("List.noFocusBorder") ?: getNoFocusBorder()
+  private val noFocusBorder = getNoFocusBorder(focusBorder)
 
   init {
     label.verticalTextPosition = SwingConstants.BOTTOM
@@ -63,6 +63,13 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
     renderer.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
     renderer.add(label)
     renderer.isOpaque = true
+  }
+
+  private fun getNoFocusBorder(focusBorder: Border): Border {
+    val b = UIManager.getBorder("List.noFocusBorder")
+    return b ?: focusBorder.getBorderInsets(renderer).let {
+      BorderFactory.createEmptyBorder(it.top, it.left, it.bottom, it.right)
+    }
   }
 
   override fun getListCellRendererComponent(

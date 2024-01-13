@@ -192,7 +192,7 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   private val icon = JLabel(null as? Icon?, SwingConstants.CENTER)
   private val label = JLabel("", SwingConstants.CENTER)
   private val focusBorder = UIManager.getBorder("List.focusCellHighlightBorder")
-  private val noFocusBorder = UIManager.getBorder("List.noFocusBorder") ?: getNimbusNoFocusBorder()
+  private val noFocusBorder = getNoFocusBorder(focusBorder)
 
   init {
     icon.isOpaque = false
@@ -205,9 +205,11 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
     renderer.add(label, BorderLayout.SOUTH)
   }
 
-  private fun getNimbusNoFocusBorder(): Border {
-    val i = focusBorder.getBorderInsets(label)
-    return BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
+  private fun getNoFocusBorder(focusBorder: Border): Border {
+    val b = UIManager.getBorder("List.noFocusBorder")
+    return b ?: focusBorder.getBorderInsets(renderer).let {
+      BorderFactory.createEmptyBorder(it.top, it.left, it.bottom, it.right)
+    }
   }
 
   override fun getListCellRendererComponent(
