@@ -46,7 +46,8 @@ fun makeUI(): Component {
   info.append("$s\n")
   info.append("$e\n")
 
-  val spinner1 = JSpinner(SpinnerDateModel(toDate(d), toDate(s), toDate(e), Calendar.DAY_OF_MONTH))
+  val m = SpinnerDateModel(toDate(d), toDate(s), toDate(e), Calendar.DAY_OF_MONTH)
+  val spinner1 = JSpinner(m)
   spinner1.editor = DateEditor(spinner1, dateFormat)
 
   val spinner2 = JSpinner(SpinnerLocalDateTimeModel(d, s, e, ChronoUnit.DAYS))
@@ -126,7 +127,7 @@ private class SpinnerLocalDateTimeModel(
 
 private class LocalDateTimeEditor(
   spinner: JSpinner,
-  dateFormatPattern: String?,
+  dateFormatPattern: String,
 ) : DefaultEditor(spinner) {
   val dateTimeFormatter: DateTimeFormatter
   val model = spinner.model as? SpinnerLocalDateTimeModel
