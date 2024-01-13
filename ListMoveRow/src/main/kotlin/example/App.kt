@@ -86,7 +86,7 @@ private fun makeModel() = DefaultListModel<Color>().also {
   it.addElement(Color.MAGENTA)
 }
 
-private fun makeList(model: DefaultListModel<Color>) = object : JList<Color>(model) {
+private fun makeList(model: ListModel<Color>) = object : JList<Color>(model) {
   override fun updateUI() {
     cellRenderer = null
     super.updateUI()

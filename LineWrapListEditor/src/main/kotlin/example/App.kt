@@ -15,26 +15,29 @@ import javax.swing.text.DefaultEditorKit
 import javax.swing.text.JTextComponent
 
 fun makeUI(): Component {
-  val model = DefaultListModel<ListItem>().also {
-    it.addElement(ListItem("red", ColorIcon(Color.RED)))
-    it.addElement(ListItem("green", ColorIcon(Color.GREEN)))
-    it.addElement(ListItem("blue", ColorIcon(Color.BLUE)))
-    it.addElement(ListItem("cyan", ColorIcon(Color.CYAN)))
-    it.addElement(ListItem("darkGray", ColorIcon(Color.DARK_GRAY)))
-    it.addElement(ListItem("gray", ColorIcon(Color.GRAY)))
-    it.addElement(ListItem("lightGray", ColorIcon(Color.LIGHT_GRAY)))
-    it.addElement(ListItem("magenta", ColorIcon(Color.MAGENTA)))
-    it.addElement(ListItem("orange", ColorIcon(Color.ORANGE)))
-    it.addElement(ListItem("pink", ColorIcon(Color.PINK)))
-    it.addElement(ListItem("yellow", ColorIcon(Color.YELLOW)))
-    it.addElement(ListItem("black", ColorIcon(Color.BLACK)))
-    it.addElement(ListItem("white", ColorIcon(Color.WHITE)))
-  }
-  val list = EditableList(model)
+  val list = EditableList(makeModel())
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(list))
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+private fun makeModel(): ListModel<ListItem> {
+  val m = DefaultListModel<ListItem>()
+  m.addElement(ListItem("red", ColorIcon(Color.RED)))
+  m.addElement(ListItem("green", ColorIcon(Color.GREEN)))
+  m.addElement(ListItem("blue", ColorIcon(Color.BLUE)))
+  m.addElement(ListItem("cyan", ColorIcon(Color.CYAN)))
+  m.addElement(ListItem("darkGray", ColorIcon(Color.DARK_GRAY)))
+  m.addElement(ListItem("gray", ColorIcon(Color.GRAY)))
+  m.addElement(ListItem("lightGray", ColorIcon(Color.LIGHT_GRAY)))
+  m.addElement(ListItem("magenta", ColorIcon(Color.MAGENTA)))
+  m.addElement(ListItem("orange", ColorIcon(Color.ORANGE)))
+  m.addElement(ListItem("pink", ColorIcon(Color.PINK)))
+  m.addElement(ListItem("yellow", ColorIcon(Color.YELLOW)))
+  m.addElement(ListItem("black", ColorIcon(Color.BLACK)))
+  m.addElement(ListItem("white", ColorIcon(Color.WHITE)))
+  return m
 }
 
 private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
@@ -125,7 +128,7 @@ private class ColorIcon(private val color: Color) : Icon {
   override fun getIconHeight() = 32
 }
 
-private class EditableList(model: DefaultListModel<ListItem>) : JList<ListItem>(model) {
+private class EditableList(model: ListModel<ListItem>) : JList<ListItem>(model) {
   private var editingIndex = -1
   private val window = JFrame()
   private val editor = JTextArea()

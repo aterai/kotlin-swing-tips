@@ -138,7 +138,7 @@ private class ColorIcon(private val color: Color) : Icon {
   override fun getIconHeight() = 32
 }
 
-private class EditableList(model: DefaultListModel<ListItem>) : JList<ListItem>(model) {
+private class EditableList(model: ListModel<ListItem>) : JList<ListItem>(model) {
   private var editingIndex = -1
   private var editorWidth = -1
   private var handler: MouseAdapter? = null
