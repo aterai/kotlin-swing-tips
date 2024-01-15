@@ -8,32 +8,41 @@ import javax.swing.event.MouseInputListener
 import javax.swing.plaf.LayerUI
 import javax.swing.plaf.basic.BasicToolBarUI
 
-fun makeUI(): Component {
-  val toolBar = makeToolBar("Override createDockingListener()")
-  toolBar.setUI(object : BasicToolBarUI() {
-    override fun createDockingListener() = DockingListener2(
-      toolBar,
-      super.createDockingListener(),
-    )
-  })
 
-  val p = JPanel(BorderLayout()).also {
-    it.add(JScrollPane(JTree()))
-    it.add(toolBar, BorderLayout.NORTH)
-    it.add(makeToolBar("DisableRightButtonDraggedOut"), BorderLayout.SOUTH)
-    it.add(makeToolBar("Default"), BorderLayout.WEST)
+fun makeUI(): Component {
+  val tabs = JTabbedPane()
+  tabs.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
+
+  val t0 = JToolBar("Default")
+  tabs.addTab(t0.name, makePanel(t0))
+
+  val t1 = object : JToolBar("Override createDockingListener()") {
+    override fun updateUI() {
+      super.updateUI()
+      setUI(object : BasicToolBarUI() {
+        override fun createDockingListener(): MouseInputListener {
+          return DockingListener2(toolBar, super.createDockingListener())
+        }
+      })
+    }
   }
+  tabs.addTab(t1.name, makePanel(t1))
+
+  val t2 = JToolBar("DisableRightButtonDraggedOut")
+  val l2 = DisableRightButtonDragOutLayerUI()
+  tabs.addTab(t2.name, JLayer(makePanel(t2), l2))
+
   return JPanel(BorderLayout()).also {
-    it.add(JLayer(p, DisableRightButtonDragOutLayerUI()))
+    it.add(tabs)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeToolBar(title: String): JToolBar {
-  val toolBar = JToolBar(title)
-  toolBar.add(JLabel(title))
+private fun initToolBar(toolBar: JToolBar): JToolBar {
+  toolBar.add(JLabel(toolBar.name))
   toolBar.add(Box.createRigidArea(Dimension(5, 5)))
-  toolBar.add(JButton("Button"))
+  toolBar.add(JButton("JButton"))
+  toolBar.add(JCheckBox("JCheckBox"))
   toolBar.add(Box.createGlue())
   val popup = JPopupMenu()
   popup.add("Item 1")
@@ -41,6 +50,13 @@ private fun makeToolBar(title: String): JToolBar {
   popup.add("Item 3")
   toolBar.componentPopupMenu = popup
   return toolBar
+}
+
+private fun makePanel(toolBar: JToolBar): JPanel {
+  val p = JPanel(BorderLayout())
+  p.add(initToolBar(toolBar), BorderLayout.NORTH)
+  p.add(JScrollPane(JTree()))
+  return p
 }
 
 private class DockingListener2(
@@ -72,7 +88,7 @@ private class DockingListener2(
   }
 }
 
-private class DisableRightButtonDragOutLayerUI : LayerUI<JPanel>() {
+private class DisableRightButtonDragOutLayerUI : LayerUI<Container>() {
   override fun installUI(c: JComponent) {
     super.installUI(c)
     if (c is JLayer<*>) {
@@ -89,7 +105,7 @@ private class DisableRightButtonDragOutLayerUI : LayerUI<JPanel>() {
 
   override fun processMouseMotionEvent(
     e: MouseEvent,
-    l: JLayer<out JPanel>,
+    l: JLayer<out Container>,
   ) {
     val c = e.component
     if (c is JToolBar) {
