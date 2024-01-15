@@ -24,7 +24,8 @@ private const val KEY = "ComboBox.border"
 
 fun makeUI(): Component {
   UIManager.put("ScrollBar.width", 10)
-  UIManager.put("ScrollBar.thumbHeight", 20) // GTKLookAndFeel, SynthLookAndFeel, NimbusLookAndFeel
+  // ScrollBar.thumbHeight: GTKLookAndFeel, SynthLookAndFeel, NimbusLookAndFeel
+  UIManager.put("ScrollBar.thumbHeight", 20)
   UIManager.put("ScrollBar.minimumThumbSize", Dimension(30, 30))
   UIManager.put("ScrollBar.incrementButtonGap", 0)
   UIManager.put("ScrollBar.decrementButtonGap", 0)

@@ -55,7 +55,10 @@ private class ZoomAndPanHandler : MouseAdapter() {
     val dragEndPoint = e.point
     val dragStart = transformPoint(dragStartPoint)
     val dragEnd = transformPoint(dragEndPoint)
-    coordAndZoomAtf.translate(dragEnd.getX() - dragStart.getX(), dragEnd.getY() - dragStart.getY())
+    coordAndZoomAtf.translate(
+      dragEnd.getX() - dragStart.getX(),
+      dragEnd.getY() - dragStart.getY(),
+    )
     dragStartPoint.location = dragEndPoint
     e.component.repaint()
   }

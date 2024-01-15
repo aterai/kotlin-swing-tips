@@ -11,10 +11,14 @@ import javax.swing.text.JTextComponent
 
 fun makeUI(): Component {
   val field = JTextField()
-  (field.document as? AbstractDocument)?.documentFilter = FirstCharToUpperCaseDocumentFilter(field)
-  field.text = "abc def ghi jkl mno"
+  val doc = field.document
+  if (doc is AbstractDocument) {
+    doc.documentFilter = FirstCharToUpperCaseDocumentFilter(field)
+  }
+  val txt = "abc def ghi jkl mno"
+  field.text = txt
   return JPanel(GridLayout(2, 1)).also {
-    it.add(makeTitledPanel("Default", JTextField("abc def ghi jkl mno")))
+    it.add(makeTitledPanel("Default", JTextField(txt)))
     it.add(makeTitledPanel("FirstCharToUpperCase", field))
     it.border = BorderFactory.createEmptyBorder(10, 5, 10, 5)
     it.preferredSize = Dimension(320, 240)
