@@ -21,11 +21,12 @@ fun makeUI(): Component {
       e.component.repaint()
     }
   })
+  val layer = JLayer(makeToggleSlider(d), ToggleSwitchLayerUI())
   return JPanel().also {
     it.add(makeTitledPanel("Default", makeToggleSlider(null)))
     it.add(makeTitledPanel("Thumb size", slider0))
     it.add(makeTitledPanel("SliderTrack", slider1))
-    it.add(makeTitledPanel("JSlider + JLayer", JLayer(makeToggleSlider(d), ToggleSwitchLayerUI())))
+    it.add(makeTitledPanel("JSlider + JLayer", layer))
     it.preferredSize = Dimension(320, 240)
   }
 }
@@ -45,38 +46,8 @@ private fun makeSliderPainter(): UIDefaults {
   val d = UIDefaults()
   d["Slider.thumbWidth"] = 40
   d["Slider.thumbHeight"] = 40
-  d["Slider:SliderTrack[Enabled].backgroundPainter"] =
-    Painter<JSlider> { g, c, w, h ->
-      val arc = 40
-      val fillLeft = 2
-      val fillTop = 2
-      val trackWidth = w - fillLeft - fillLeft
-      val trackHeight = h - fillTop - fillTop
-      val baseline = trackHeight - fillTop - fillTop
-      val off = "Off"
-      g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-      g.color = Color.GRAY
-      g.fillRoundRect(fillLeft, fillTop, trackWidth, trackHeight, arc, arc)
-      g.paint = Color.WHITE
-      g.drawString(off, w - g.fontMetrics.stringWidth(off) - fillLeft * 5, baseline)
-      val fillRight = getPositionForValue(c, Rectangle(fillLeft, fillTop, trackWidth, trackHeight))
-      g.color = Color.ORANGE
-      g.fillRoundRect(fillLeft + 1, fillTop, fillRight - fillLeft, trackHeight, arc, arc)
-      g.paint = Color.WHITE
-      if (fillRight - fillLeft > 0) {
-        g.drawString("On", fillLeft * 5, baseline)
-      }
-      g.stroke = BasicStroke(2.5f)
-      g.drawRoundRect(fillLeft, fillTop, trackWidth, trackHeight, arc, arc)
-    }
-  val thumbPainter = Painter<JSlider> { g, _, w, h ->
-    val fillLeft = 8
-    val fillTop = 8
-    val trackWidth = w - fillLeft - fillLeft
-    val trackHeight = h - fillTop - fillTop
-    g.paint = Color.WHITE
-    g.fillOval(fillLeft, fillTop, trackWidth, trackHeight)
-  }
+  d["Slider:SliderTrack[Enabled].backgroundPainter"] = makeBackgroundPainter()
+  val thumbPainter = makeThumbPainter()
   d["Slider:SliderThumb[Disabled].backgroundPainter"] = thumbPainter
   d["Slider:SliderThumb[Enabled].backgroundPainter"] = thumbPainter
   d["Slider:SliderThumb[Focused+MouseOver].backgroundPainter"] = thumbPainter
@@ -85,6 +56,40 @@ private fun makeSliderPainter(): UIDefaults {
   d["Slider:SliderThumb[MouseOver].backgroundPainter"] = thumbPainter
   d["Slider:SliderThumb[Pressed].backgroundPainter"] = thumbPainter
   return d
+}
+
+private fun makeBackgroundPainter() = Painter<JSlider> { g, c, w, h ->
+  val arc = 40
+  val fillLeft = 2
+  val fillTop = 2
+  val trackWidth = w - fillLeft - fillLeft
+  val trackHeight = h - fillTop - fillTop
+  val baseline = trackHeight - fillTop - fillTop
+  val off = "Off"
+  g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+  g.color = Color.GRAY
+  g.fillRoundRect(fillLeft, fillTop, trackWidth, trackHeight, arc, arc)
+  g.paint = Color.WHITE
+  g.drawString(off, w - g.fontMetrics.stringWidth(off) - fillLeft * 5, baseline)
+  val trackRect = Rectangle(fillLeft, fillTop, trackWidth, trackHeight)
+  val fillRight = getPositionForValue(c, trackRect)
+  g.color = Color.ORANGE
+  g.fillRoundRect(fillLeft + 1, fillTop, fillRight - fillLeft, trackHeight, arc, arc)
+  g.paint = Color.WHITE
+  if (fillRight - fillLeft > 0) {
+    g.drawString("On", fillLeft * 5, baseline)
+  }
+  g.stroke = BasicStroke(2.5f)
+  g.drawRoundRect(fillLeft, fillTop, trackWidth, trackHeight, arc, arc)
+}
+
+private fun makeThumbPainter() = Painter<JSlider> { g, _, w, h ->
+  val fillLeft = 8
+  val fillTop = 8
+  val trackWidth = w - fillLeft - fillLeft
+  val trackHeight = h - fillTop - fillTop
+  g.paint = Color.WHITE
+  g.fillOval(fillLeft, fillTop, trackWidth, trackHeight)
 }
 
 // @see javax/swing/plaf/basic/BasicSliderUI#xPositionForValue(int value)

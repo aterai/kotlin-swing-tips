@@ -8,7 +8,6 @@ import javax.swing.event.MouseInputListener
 import javax.swing.plaf.LayerUI
 import javax.swing.plaf.basic.BasicToolBarUI
 
-
 fun makeUI(): Component {
   val tabs = JTabbedPane()
   tabs.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
