@@ -134,11 +134,11 @@ private class CentredBackgroundBorder(private val image: BufferedImage) : Border
     width: Int,
     height: Int,
   ) {
-    val cx = (width - image.width) / 2
-    val cy = (height - image.height) / 2
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
-    g2.drawRenderedImage(image, AffineTransform.getTranslateInstance(cx.toDouble(), cy.toDouble()))
+    val cx = (width - image.width) / 2.0
+    val cy = (height - image.height) / 2.0
+    g2.drawRenderedImage(image, AffineTransform.getTranslateInstance(cx, cy))
     g2.dispose()
   }
 
