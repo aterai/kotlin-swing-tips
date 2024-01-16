@@ -49,7 +49,9 @@ fun makeUI(): Component {
   }
 }
 
-private class WindowsCanWriteFileChooserUI(chooser: JFileChooser) : WindowsFileChooserUI(chooser) {
+private class WindowsCanWriteFileChooserUI(
+  chooser: JFileChooser,
+) : WindowsFileChooserUI(chooser) {
   private var model2: BasicDirectoryModel? = null
 
   override fun createModel() {
@@ -74,7 +76,9 @@ private class WindowsCanWriteFileChooserUI(chooser: JFileChooser) : WindowsFileC
   }
 }
 
-private class MetalCanWriteFileChooserUI(chooser: JFileChooser) : MetalFileChooserUI(chooser) {
+private class MetalCanWriteFileChooserUI(
+  chooser: JFileChooser,
+) : MetalFileChooserUI(chooser) {
   private var model2: BasicDirectoryModel? = null
 
   override fun createModel() {
