@@ -175,7 +175,11 @@ private fun makeComboBox(title: String): JComboBox<String> {
   return combo
 }
 
-private enum class Side(private val cursor: Int, private val width: Int, private val height: Int) {
+private enum class Side(
+  private val cursor: Int,
+  private val width: Int,
+  private val height: Int,
+) {
   N(Cursor.N_RESIZE_CURSOR, 0, 4) {
     override fun getBounds(
       rect: Rectangle,

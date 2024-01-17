@@ -66,8 +66,8 @@ private class WindowsTabHeightTabbedPaneUI : WindowsTabbedPaneUI() {
     iconRect: Rectangle,
     textRect: Rectangle,
   ) {
-    val isTopOrBottom = tabPlacement == SwingConstants.TOP || tabPlacement == SwingConstants.BOTTOM
-    if (isTopOrBottom && tabPane.selectedIndex != tabIndex) {
+    val b = tabPlacement == SwingConstants.TOP || tabPlacement == SwingConstants.BOTTOM
+    if (b && tabPane.selectedIndex != tabIndex) {
       val tabHeight = TAB_AREA_HEIGHT / 2 + 3
       rects[tabIndex].height = tabHeight
       if (tabPlacement == JTabbedPane.TOP) {
@@ -97,8 +97,8 @@ private class BasicTabHeightTabbedPaneUI : BasicTabbedPaneUI() {
     iconRect: Rectangle,
     textRect: Rectangle,
   ) {
-    val isTopOrBottom = tabPlacement == SwingConstants.TOP || tabPlacement == SwingConstants.BOTTOM
-    if (isTopOrBottom && tabPane.selectedIndex != tabIndex) {
+    val b = tabPlacement == SwingConstants.TOP || tabPlacement == SwingConstants.BOTTOM
+    if (b && tabPane.selectedIndex != tabIndex) {
       val tabHeight = TAB_AREA_HEIGHT / 2 + 3
       rects[tabIndex].height = tabHeight
       if (tabPlacement == JTabbedPane.TOP) {

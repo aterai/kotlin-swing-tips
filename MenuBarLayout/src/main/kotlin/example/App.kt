@@ -42,9 +42,18 @@ private fun createMenuBar(): JMenuBar {
       }
     }
   }
-  listOf("File", "Edit", "View", "Navigate", "Code", "Analyze", "Refactor", "Build", "Run", "Help")
-    .map { createMenu(it) }
-    .forEach { menuBar.add(it) }
+  listOf(
+    "File",
+    "Edit",
+    "View",
+    "Navigate",
+    "Code",
+    "Analyze",
+    "Refactor",
+    "Build",
+    "Run",
+    "Help",
+  ).map { createMenu(it) }.forEach { menuBar.add(it) }
   return menuBar
 }
 

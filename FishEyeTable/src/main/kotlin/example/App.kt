@@ -32,7 +32,11 @@ fun makeUI(): Component {
   }
 }
 
-private class FishEyeRowContext(val height: Int, val font: Font, val color: Color) : Serializable {
+private class FishEyeRowContext(
+  val height: Int,
+  val font: Font,
+  val color: Color,
+) : Serializable {
   companion object {
     private const val serialVersionUID = 1L
   }
