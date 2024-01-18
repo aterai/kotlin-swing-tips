@@ -11,15 +11,20 @@ fun makeUI(): Component {
   log.text = "$key: $showHiddenFiles"
 
   val chooser = JFileChooser()
-  searchPopupMenu(chooser)?.also {
-    it.addSeparator()
-    val mi = JCheckBoxMenuItem("isFileHidingEnabled")
-    mi.addActionListener { e ->
-      chooser.isFileHidingEnabled = (e.source as? JCheckBoxMenuItem)?.isSelected == true
+  descendants(chooser)
+    .filterIsInstance<JComponent>()
+    .mapNotNull { it.componentPopupMenu }
+    .first()
+    .also { pop ->
+      pop.addSeparator()
+      val item = JCheckBoxMenuItem("isFileHidingEnabled")
+      item.addActionListener {
+        val b = (it.source as? JCheckBoxMenuItem)?.isSelected == true
+        chooser.isFileHidingEnabled = b
+      }
+      item.isSelected = chooser.isFileHidingEnabled
+      pop.add(item)
     }
-    mi.isSelected = chooser.isFileHidingEnabled
-    it.add(mi)
-  }
 
   val button = JButton("showOpenDialog")
   button.addActionListener {
@@ -40,19 +45,9 @@ fun makeUI(): Component {
   }
 }
 
-private fun searchPopupMenu(parent: Container): JPopupMenu? {
-  for (c in parent.components) {
-    val pop = when {
-      c is JComponent && c.componentPopupMenu != null -> c.componentPopupMenu
-      c is Container -> searchPopupMenu(c)
-      else -> null
-    }
-    if (pop != null) {
-      return pop
-    }
-  }
-  return null
-}
+fun descendants(parent: Container): List<Component> = parent.components
+  .filterIsInstance<Container>()
+  .flatMap { listOf(it) + descendants(it) }
 
 fun main() {
   EventQueue.invokeLater {
