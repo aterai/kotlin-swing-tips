@@ -17,7 +17,9 @@ fun makeUI(): Component {
             tabPlacement: Int,
             tabIndex: Int,
             metrics: FontMetrics,
-          ) = MIN_TAB_WIDTH.coerceAtLeast(super.calculateTabWidth(tabPlacement, tabIndex, metrics))
+          ) = MIN_TAB_WIDTH.coerceAtLeast(
+            super.calculateTabWidth(tabPlacement, tabIndex, metrics),
+          )
         }
       } else {
         object : BasicTabbedPaneUI() {
@@ -25,7 +27,9 @@ fun makeUI(): Component {
             tabPlacement: Int,
             tabIndex: Int,
             metrics: FontMetrics,
-          ) = MIN_TAB_WIDTH.coerceAtLeast(super.calculateTabWidth(tabPlacement, tabIndex, metrics))
+          ) = MIN_TAB_WIDTH.coerceAtLeast(
+            super.calculateTabWidth(tabPlacement, tabIndex, metrics),
+          )
         }
       }
       setUI(tmp)
