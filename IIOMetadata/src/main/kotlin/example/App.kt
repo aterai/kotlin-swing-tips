@@ -78,7 +78,8 @@ private class XmlTreeNode(
   private val showAttributes: Boolean? = true,
 ) : TreeNode {
   private var list: MutableList<XmlTreeNode>? = null
-  private val isShowAttributes: Boolean get() = showAttributes ?: parent?.isShowAttributes ?: false
+  private val isShowAttributes: Boolean
+    get() = showAttributes ?: parent?.isShowAttributes ?: false
   private val xmlTag: String
     get() {
       if (xmlNode is Element && isShowAttributes) {
