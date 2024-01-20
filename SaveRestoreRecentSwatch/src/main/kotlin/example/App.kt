@@ -259,9 +259,8 @@ open class SwatchPanel : JPanel() {
     addKeyListener(object : KeyAdapter() {
       @Suppress("CognitiveComplexMethod")
       override fun keyPressed(e: KeyEvent) {
-        val typed = e.keyCode
         val leftToRight = componentOrientation.isLeftToRight
-        when (typed) {
+        when (e.keyCode) {
           KeyEvent.VK_UP -> {
             if (selRow > 0) {
               selRow--
@@ -308,7 +307,9 @@ open class SwatchPanel : JPanel() {
             repaint()
           }
 
-          else -> {}
+          else -> {
+            // repaint()
+          }
         }
       }
     })
