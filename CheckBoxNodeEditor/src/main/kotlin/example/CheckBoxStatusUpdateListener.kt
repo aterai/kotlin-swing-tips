@@ -105,7 +105,15 @@ class CheckBoxNodeRenderer : TreeCellRenderer {
     row: Int,
     hasFocus: Boolean,
   ): Component {
-    val c = tcr.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+    val c = tcr.getTreeCellRendererComponent(
+      tree,
+      value,
+      selected,
+      expanded,
+      leaf,
+      row,
+      hasFocus,
+    )
     c.font = tree.font
 
     val treeNode = value as? DefaultMutableTreeNode ?: return c

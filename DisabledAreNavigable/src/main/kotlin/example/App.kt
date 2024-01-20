@@ -59,7 +59,12 @@ private object MenuBarUtils {
     mb.add(file)
 
     val edit = JMenu("Edit")
-    listOf("Cut", "Copy", "Paste", "Delete").map { edit.add(it) }.forEach { it.isEnabled = false }
+    listOf(
+      "Cut",
+      "Copy",
+      "Paste",
+      "Delete",
+    ).map { edit.add(it) }.forEach { it.isEnabled = false }
     mb.add(edit)
 
     mb.add(LookAndFeelUtils.createLookAndFeelMenu())

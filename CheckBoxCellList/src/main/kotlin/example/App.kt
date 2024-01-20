@@ -89,11 +89,12 @@ private class CheckBoxList(model: ListModel<CheckBoxNode>) : JList<CheckBoxNode>
     handler = object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
         val index = locationToIndex(e.point)
-        val m = model
-        if (e.button == MouseEvent.BUTTON1 && index >= 0 && m is DefaultListModel<CheckBoxNode>) {
-          val n = m.get(index)
-          m.set(index, CheckBoxNode(n.text, !n.selected))
-          repaint(getCellBounds(index, index))
+        if (e.button == MouseEvent.BUTTON1 && index >= 0) {
+          (model as? DefaultListModel<CheckBoxNode>)?.also {
+            val node = it.get(index)
+            it.set(index, CheckBoxNode(node.text, !node.selected))
+            repaint(getCellBounds(index, index))
+          }
         }
       }
     }

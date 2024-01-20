@@ -131,7 +131,15 @@ private class MultiLineCellRenderer : TreeCellRenderer {
     text.foreground = fgColor
     text.background = bgColor
     icon.background = bgColor
-    val l = tcr.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+    val l = tcr.getTreeCellRendererComponent(
+      tree,
+      value,
+      selected,
+      expanded,
+      leaf,
+      row,
+      hasFocus,
+    )
     if (l is JLabel) {
       text.font = l.font
       text.text = l.text

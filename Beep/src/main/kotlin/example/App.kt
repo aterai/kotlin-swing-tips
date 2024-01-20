@@ -9,7 +9,12 @@ fun makeUI(): Component {
   val button = JButton("showMessageDialog")
   button.addActionListener {
     Toolkit.getDefaultToolkit().beep()
-    JOptionPane.showMessageDialog(p.rootPane, "Error Message", "Title", JOptionPane.ERROR_MESSAGE)
+    JOptionPane.showMessageDialog(
+      p.rootPane,
+      "Error Message",
+      "Title",
+      JOptionPane.ERROR_MESSAGE,
+    )
   }
   p.add(button)
   return JPanel(BorderLayout()).also {

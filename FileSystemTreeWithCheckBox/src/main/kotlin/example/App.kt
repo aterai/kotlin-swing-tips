@@ -126,7 +126,15 @@ private class FileTreeCellRenderer(
     row: Int,
     hasFocus: Boolean,
   ): Component {
-    val c = tcr.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+    val c = tcr.getTreeCellRendererComponent(
+      tree,
+      value,
+      selected,
+      expanded,
+      leaf,
+      row,
+      hasFocus,
+    )
     c.font = tree.font
     val uo = (value as? DefaultMutableTreeNode)?.userObject
     if (c is JLabel && uo is CheckBoxNode) {

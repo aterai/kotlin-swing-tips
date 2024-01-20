@@ -113,7 +113,15 @@ private class FileTreeCellRenderer(
     row: Int,
     hasFocus: Boolean,
   ): Component {
-    val c = tcr.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+    val c = tcr.getTreeCellRendererComponent(
+      tree,
+      value,
+      selected,
+      expanded,
+      leaf,
+      row,
+      hasFocus,
+    )
     if (c is JLabel && value is DefaultMutableTreeNode) {
       if (selected) {
         c.isOpaque = false
