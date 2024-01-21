@@ -60,7 +60,9 @@ private fun makeTabbedPane(
   return tabs
 }
 
-private open class TabSelectionMouseListener(private val ui: BasicTabbedPaneUI) : MouseAdapter() {
+private open class TabSelectionMouseListener(
+  private val ui: BasicTabbedPaneUI,
+) : MouseAdapter() {
   override fun mousePressed(e: MouseEvent) {
     val tabPane = e.component
     if (tabPane !is JTabbedPane || !tabPane.isEnabled || SwingUtilities.isRightMouseButton(e)) {

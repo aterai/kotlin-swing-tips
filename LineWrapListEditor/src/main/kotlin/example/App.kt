@@ -233,7 +233,9 @@ private class EditableList(model: ListModel<ListItem>) : JList<ListItem>(model) 
         rect.height = rowHeight
         val isDoubleClick = e.clickCount >= 2
         if (isDoubleClick && rect.contains(e.point)) {
-          startEditing.actionPerformed(ActionEvent(e.component, ActionEvent.ACTION_PERFORMED, ""))
+          startEditing.actionPerformed(
+            ActionEvent(e.component, ActionEvent.ACTION_PERFORMED, ""),
+          )
         }
       }
     })

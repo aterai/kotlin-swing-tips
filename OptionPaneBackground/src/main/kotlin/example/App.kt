@@ -7,14 +7,24 @@ import javax.swing.*
 
 fun makeUI(): Component {
   UIManager.put("OptionPane.background", Color.LIGHT_GRAY)
-  val txt = "<html>JOptionPane:<br><li>messageArea<li>realBody<li>separator<li>body<li>buttonArea"
+  val html = """
+    <html>
+    JOptionPane:<br>
+    <li>messageArea
+    <li>realBody
+    <li>separator
+    <li>body
+    <li>buttonArea
+  """.trimIndent()
   val title = "Title"
   val type = JOptionPane.WARNING_MESSAGE
 
   val b1 = JButton("default")
-  b1.addActionListener { JOptionPane.showMessageDialog(b1.rootPane, JLabel(txt), title, type) }
+  b1.addActionListener {
+    JOptionPane.showMessageDialog(b1.rootPane, JLabel(html), title, type)
+  }
 
-  val label = JLabel(txt)
+  val label = JLabel(html)
   label.addHierarchyListener { e ->
     val c = e.component
     if (e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L && c.isShowing) {
@@ -27,7 +37,7 @@ fun makeUI(): Component {
   b2.addActionListener { JOptionPane.showMessageDialog(b2.rootPane, label, title, type) }
 
   val b3 = JButton("override")
-  b3.addActionListener { showMessageDialog(b3.rootPane, JLabel(txt), title, type) }
+  b3.addActionListener { showMessageDialog(b3.rootPane, JLabel(html), title, type) }
 
   return JPanel().also {
     it.add(b1)

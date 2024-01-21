@@ -53,7 +53,9 @@ fun makeUI(): Component {
   }
 }
 
-private class FifoDocumentListener(private val textComponent: JTextComponent) : DocumentListener {
+private class FifoDocumentListener(
+  private val textComponent: JTextComponent,
+) : DocumentListener {
   override fun insertUpdate(e: DocumentEvent) {
     val doc = e.document
     val root = doc.defaultRootElement
