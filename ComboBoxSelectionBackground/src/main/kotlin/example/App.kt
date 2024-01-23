@@ -24,7 +24,13 @@ fun makeUI(): Component {
       super.updateUI()
       val renderer = getRenderer()
       setRenderer { list, value, index, isSelected, cellHasFocus ->
-        renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
+        renderer.getListCellRendererComponent(
+          list,
+          value,
+          index,
+          isSelected,
+          cellHasFocus,
+        ).also {
           if (isSelected) {
             it.foreground = Color.WHITE
             it.background = Color.ORANGE

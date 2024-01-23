@@ -17,7 +17,14 @@ private val table = object : JTable(model) {
     super.updateUI()
     val renderer = DefaultTableCellRenderer()
     setDefaultRenderer(Any::class.java) { tbl, value, isSelected, hasFocus, row, column ->
-      renderer.getTableCellRendererComponent(tbl, value, isSelected, hasFocus, row, column).also {
+      renderer.getTableCellRendererComponent(
+        tbl,
+        value,
+        isSelected,
+        hasFocus,
+        row,
+        column,
+      ).also {
         if (emphasisIndices.contains(row)) {
           it.background = Color.YELLOW
         } else {
