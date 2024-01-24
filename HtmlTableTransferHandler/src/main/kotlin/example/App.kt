@@ -350,13 +350,13 @@ private class BasicTransferable(
     DataFlavor(DataFlavor.javaJVMLocalObjectMimeType + ";class=java.lang.String"),
     DataFlavor.stringFlavor,
   )
-  private val getRicherData get() = null
+  private val getRicherData: Array<DataFlavor> get() = arrayOf()
   private val richerFlavors: Array<DataFlavor> get() = arrayOf()
   private val isHtmlSupported = true
   private val isPlainSupported = true
 
-  fun getTextCharset(flavor: DataFlavor): String =
-    flavor.getParameter("charset") ?: Charset.defaultCharset().name()
+  fun getTextCharset(flavor: DataFlavor?): String =
+    flavor?.getParameter("charset") ?: Charset.defaultCharset().name()
 
   override fun getTransferDataFlavors(): Array<DataFlavor> {
     val flavors = mutableListOf<DataFlavor>()
@@ -370,28 +370,24 @@ private class BasicTransferable(
     return flavors.toTypedArray()
   }
 
-  override fun isDataFlavorSupported(flavor: DataFlavor) = transferDataFlavors.any {
-    it.equals(flavor)
-  }
+  override fun isDataFlavorSupported(flavor: DataFlavor) = transferDataFlavors.contains(flavor)
 
-  @Throws(UnsupportedFlavorException::class, IOException::class)
-  override fun getTransferData(flavor: DataFlavor): Any? {
-    return when {
-      richerFlavors.any { it.equals(flavor) } -> getRicherData
-      htmlFlavors.any { it.equals(flavor) } -> getHtmlTransferData(flavor)
-      plainFlavors.any { it.equals(flavor) } -> getPlaneTransferData(flavor)
-      stringFlavors.any { it.equals(flavor) } -> plainData
-      else -> UnsupportedFlavorException(flavor)
-    }
+  @Throws(IOException::class, UnsupportedFlavorException::class)
+  override fun getTransferData(flavor: DataFlavor?): Any = when {
+    richerFlavors.contains(flavor) -> getRicherData
+    htmlFlavors.contains(flavor) -> getHtmlTransferData(flavor)
+    plainFlavors.contains(flavor) -> getPlaneTransferData(flavor)
+    stringFlavors.contains(flavor) -> plainData
+    else -> UnsupportedFlavorException(flavor)
   }
 
   private fun createInputStream(
-    flavor: DataFlavor,
+    flavor: DataFlavor?,
     data: String,
   ) = ByteArrayInputStream(data.toByteArray(charset(getTextCharset(flavor))))
 
   @Throws(IOException::class, UnsupportedFlavorException::class)
-  private fun getHtmlTransferData(flavor: DataFlavor): Any = when (flavor.representationClass) {
+  private fun getHtmlTransferData(flavor: DataFlavor?): Any = when (flavor?.representationClass) {
     String::class.java -> htmlData
     Reader::class.java -> StringReader(htmlData)
     InputStream::class.java -> createInputStream(flavor, htmlData)
@@ -399,7 +395,7 @@ private class BasicTransferable(
   }
 
   @Throws(IOException::class, UnsupportedFlavorException::class)
-  fun getPlaneTransferData(flavor: DataFlavor): Any = when (flavor.representationClass) {
+  fun getPlaneTransferData(flavor: DataFlavor?): Any = when (flavor?.representationClass) {
     String::class.java -> plainData
     Reader::class.java -> StringReader(plainData)
     InputStream::class.java -> createInputStream(flavor, plainData)
