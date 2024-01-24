@@ -38,12 +38,10 @@ private class HighlightListener : MouseAdapter() {
     row: Int,
     column: Int,
   ): Color? {
-    return if (viewRowIndex == row || viewColumnIndex == column) {
-      if (viewRowIndex == row && viewColumnIndex == column) {
-        HIGHLIGHT1
-      } else {
-        HIGHLIGHT2
-      }
+    val ri = viewRowIndex == row
+    val ci = viewColumnIndex == column
+    return if (ri || ci) {
+      if (ri && ci) HIGHLIGHT1 else HIGHLIGHT2
     } else {
       null
     }
@@ -92,10 +90,21 @@ private class HighlightRenderer(
     row: Int,
     column: Int,
   ): Component {
-    val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    val c = super.getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
     if (c is JLabel) {
-      c.horizontalAlignment = if (value is Number) SwingConstants.RIGHT else SwingConstants.LEFT
       c.background = table.background
+      if (value is Number) {
+        c.horizontalAlignment = SwingConstants.RIGHT
+      } else {
+        c.horizontalAlignment = SwingConstants.LEFT
+      }
       highlighter.getCellHighlightColor(row, column)?.also {
         c.background = it
       }
