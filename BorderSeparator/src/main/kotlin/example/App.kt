@@ -32,7 +32,9 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeComboBox(model: ComboBoxModel<ComboItem>) = object : JComboBox<ComboItem>(model) {
+private fun makeComboBox(
+  model: ComboBoxModel<ComboItem>,
+) = object : JComboBox<ComboItem>(model) {
   override fun updateUI() {
     setRenderer(null)
     super.updateUI()
