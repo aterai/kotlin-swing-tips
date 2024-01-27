@@ -149,7 +149,7 @@ open class RoundedCornerButton : JButton {
     y: Int,
   ): Boolean {
     initShape()
-    return shape?.contains(Point(x, y)) ?: false
+    return shape?.contains(Point(x, y)) ?: super.contains(x, y)
   }
 
   companion object {
@@ -194,7 +194,7 @@ open class RoundButton : RoundedCornerButton {
   }
 }
 
-class ShapeButton(private val shape: Shape) : JButton() {
+class ShapeButton(private val shape: Shape?) : JButton() {
   private val fc = Color(100, 150, 255, 200)
   private val ac = Color(230, 230, 230)
   private val rc = Color.ORANGE
@@ -249,10 +249,10 @@ class ShapeButton(private val shape: Shape) : JButton() {
   override fun contains(
     x: Int,
     y: Int,
-  ) = shape.contains(Point(x, y))
+  ) = shape?.contains(Point(x, y)) ?: super.contains(x, y)
 }
 
-class ShapeSizeIcon(private val shape: Shape) : Icon {
+class ShapeSizeIcon(private val shape: Shape?) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,
@@ -262,9 +262,9 @@ class ShapeSizeIcon(private val shape: Shape) : Icon {
     // Empty icon
   }
 
-  override fun getIconWidth() = shape.bounds.width
+  override fun getIconWidth() = shape?.bounds?.width ?: 0
 
-  override fun getIconHeight() = shape.bounds.height
+  override fun getIconHeight() = shape?.bounds?.height ?: 0
 }
 
 fun main() {
