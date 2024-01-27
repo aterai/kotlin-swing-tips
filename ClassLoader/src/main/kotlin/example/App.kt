@@ -4,16 +4,15 @@ import java.awt.*
 import javax.swing.*
 
 fun makeUI(): Component {
-  val p = JPanel(GridLayout(3, 1, 5, 5))
-  // val url1 = javaClass.classLoader.getResource("example/test.png")
-  // val url2 = javaClass.getResource("test.png")
-  val url1 = Thread.currentThread().contextClassLoader.getResource("example/test.png")
-  url1?.also {
-    p.add(JLabel(ImageIcon(it)))
-    p.add(makeTitledPanel("ClassLoader.getResource(\"example/test.png\")", JLabel(it.toString())))
-  }
-  // p.add(makeTitledPanel("getClass().getResource(\"test.png\")", JLabel(url2.toString())))
+  val p = JPanel(GridLayout(0, 1, 5, 5))
   p.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+
+  val path = "example/test.png"
+  Thread.currentThread().contextClassLoader.getResource(path)?.also {
+    p.add(JLabel(ImageIcon(it)))
+    val title = "ClassLoader.getResource(\"$path\")"
+    p.add(makeTitledPanel(title, JLabel(it.toString())))
+  }
 
   return JPanel(BorderLayout()).also {
     it.add(p, BorderLayout.NORTH)
