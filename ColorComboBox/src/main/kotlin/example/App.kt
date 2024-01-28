@@ -94,7 +94,10 @@ private class AlternateRowColorComboBox<E>(model: ComboBoxModel<E>) : JComboBox<
     }
   }
 
-  private fun getAlternateRowColor(idx: Int) = if (idx % 2 == 0) Color(0xE1_FF_E1) else Color.WHITE
+  private fun getAlternateRowColor(idx: Int): Color {
+    val rgb = if (idx % 2 == 0) 0xE1_FF_E1 else 0xFF_FF_FF
+    return Color(rgb)
+  }
 }
 
 fun main() {

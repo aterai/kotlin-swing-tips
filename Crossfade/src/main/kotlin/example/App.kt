@@ -20,10 +20,12 @@ fun makeUI(): Component {
       g2.paint = background
       g2.fillRect(0, 0, width, height)
       if (check.isSelected) {
-        g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f - alpha.get() * .1f)
+        val a1 = 1f - alpha.get() * .1f
+        g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, a1)
       }
       icon1.paintIcon(this, g2, 0, 0)
-      g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha.get() * .1f)
+      val a2 = alpha.get() * .1f
+      g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, a2)
       icon2.paintIcon(this, g2, 0, 0)
       g2.dispose()
     }
