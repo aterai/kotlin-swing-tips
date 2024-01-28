@@ -104,7 +104,7 @@ private class RoundButton(i1: String, i2: String, i3: String) : JButton(makeIcon
     y: Int,
   ): Boolean {
     initShape()
-    return shape?.contains(Point(x, y)) ?: false
+    return shape?.contains(Point(x, y)) ?: super.contains(x, y)
   }
 }
 

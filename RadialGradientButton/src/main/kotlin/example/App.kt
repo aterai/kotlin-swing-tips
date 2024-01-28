@@ -110,7 +110,7 @@ private class RadialGradientButton(title: String) : JButton(title) {
     y: Int,
   ): Boolean {
     update()
-    return shape?.contains(Point(x, y)) ?: false
+    return shape?.contains(Point(x, y)) ?: super.contains(x, y)
   }
 
   // override fun paintBorder(g: Graphics) {
@@ -263,7 +263,7 @@ private class RadialGradientPaintButton(title: String) : JButton(title) {
     y: Int,
   ): Boolean {
     update()
-    return shape?.contains(Point(x, y)) ?: false
+    return shape?.contains(Point(x, y)) ?: super.contains(x, y)
   }
 
   override fun paintComponent(g: Graphics) {

@@ -22,7 +22,7 @@ private fun makeButton(
     override fun contains(
       x: Int,
       y: Int,
-    ) = icon.shape?.contains(Point(x, y)) == true
+    ) = icon.shape?.contains(Point(x, y)) ?: super.contains(x, y)
 
     override fun getPreferredSize() = Dimension(icon.iconWidth, icon.iconHeight)
 

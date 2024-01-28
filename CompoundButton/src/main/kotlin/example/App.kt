@@ -131,7 +131,7 @@ private class CompoundButton(
   override fun contains(
     x: Int,
     y: Int,
-  ) = shape?.contains(Point(x, y)) ?: false
+  ) = shape?.contains(Point(x, y)) ?: super.contains(x, y)
 }
 
 fun main() {
