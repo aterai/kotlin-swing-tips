@@ -370,7 +370,7 @@ private class BasicTransferable(
     return flavors.toTypedArray()
   }
 
-  override fun isDataFlavorSupported(flavor: DataFlavor) = transferDataFlavors.contains(flavor)
+  override fun isDataFlavorSupported(f: DataFlavor) = transferDataFlavors.contains(f)
 
   @Throws(IOException::class, UnsupportedFlavorException::class)
   override fun getTransferData(flavor: DataFlavor?): Any = when {
@@ -387,7 +387,9 @@ private class BasicTransferable(
   ) = ByteArrayInputStream(data.toByteArray(charset(getTextCharset(flavor))))
 
   @Throws(IOException::class, UnsupportedFlavorException::class)
-  private fun getHtmlTransferData(flavor: DataFlavor?): Any = when (flavor?.representationClass) {
+  private fun getHtmlTransferData(
+    flavor: DataFlavor?,
+  ): Any = when (flavor?.representationClass) {
     String::class.java -> htmlData
     Reader::class.java -> StringReader(htmlData)
     InputStream::class.java -> createInputStream(flavor, htmlData)
@@ -402,13 +404,13 @@ private class BasicTransferable(
     else -> UnsupportedFlavorException(flavor)
   }
 
-  // private fun isRicherFlavor(flavor: DataFlavor) = richerFlavors.any { it.equals(flavor) }
+  // private fun isRicherFlavor(flavor: DataFlavor) = richerFlavors.contains(flavor)
 
-  // private fun isHtmlFlavor(flavor: DataFlavor) = htmlFlavors.any { it.equals(flavor) }
+  // private fun isHtmlFlavor(flavor: DataFlavor) = htmlFlavors.contains(flavor)
 
-  // private fun isPlainFlavor(flavor: DataFlavor) = plainFlavors.any { it.equals(flavor) }
+  // private fun isPlainFlavor(flavor: DataFlavor) = plainFlavors.contains(flavor)
 
-  // private fun isStringFlavor(flavor: DataFlavor) = stringFlavors.any { it.equals(flavor) }
+  // private fun isStringFlavor(flavor: DataFlavor) = stringFlavors.contains(flavor)
 }
 
 fun main() {

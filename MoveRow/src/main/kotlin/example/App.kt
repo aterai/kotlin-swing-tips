@@ -82,7 +82,7 @@ private class TablePopupMenu(private val table: JTable) : JPopupMenu() {
     y: Int,
   ) {
     val row = table.rowAtPoint(Point(x, y))
-    if (row > 0 && !table.selectedRows.any { it == row }) {
+    if (row > 0 && !table.selectedRows.contains(row)) {
       table.setRowSelectionInterval(row, row)
     }
     val count = table.selectedRowCount

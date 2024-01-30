@@ -168,17 +168,15 @@ private class BasicTransferable(
     return flavors.toTypedArray()
   }
 
-  override fun isDataFlavorSupported(flavor: DataFlavor) = transferDataFlavors.any {
-    it.equals(flavor)
-  }
+  override fun isDataFlavorSupported(f: DataFlavor) = transferDataFlavors.contains(f)
 
   @Throws(UnsupportedFlavorException::class, IOException::class)
   override fun getTransferData(flavor: DataFlavor): Any {
     return when {
-      // richerFlavors.any { it.equals(flavor) } -> getRicherData
-      htmlFlavors.any { it.equals(flavor) } -> getHtmlTransferData(flavor)
-      plainFlavors.any { it.equals(flavor) } -> getPlaneTransferData(flavor)
-      stringFlavors.any { it.equals(flavor) } -> plainData
+      // richerFlavors.contains(flavor) -> getRicherData
+      htmlFlavors.contains(flavor) -> getHtmlTransferData(flavor)
+      plainFlavors.contains(flavor) -> getPlaneTransferData(flavor)
+      stringFlavors.contains(flavor) -> plainData
       else -> throw UnsupportedFlavorException(flavor)
     }
   }
@@ -189,7 +187,9 @@ private class BasicTransferable(
   ) = ByteArrayInputStream(data.toByteArray(charset(getTextCharset(flavor))))
 
   @Throws(IOException::class, UnsupportedFlavorException::class)
-  private fun getHtmlTransferData(flavor: DataFlavor?): Any = when (flavor?.representationClass) {
+  private fun getHtmlTransferData(
+    flavor: DataFlavor?,
+  ): Any = when (flavor?.representationClass) {
     String::class.java -> htmlData
     Reader::class.java -> StringReader(htmlData)
     InputStream::class.java -> createInputStream(flavor, htmlData)
@@ -302,14 +302,7 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
 private class HtmlTransferable(private val htmlFormattedText: String) : Transferable {
   override fun getTransferDataFlavors() = arrayOf(DataFlavor.allHtmlFlavor)
 
-  override fun isDataFlavorSupported(flavor: DataFlavor): kotlin.Boolean {
-    for (supportedFlavor in transferDataFlavors) {
-      if (supportedFlavor.equals(flavor)) {
-        return true
-      }
-    }
-    return false
-  }
+  override fun isDataFlavorSupported(f: DataFlavor) = transferDataFlavors.contains(f)
 
   @Throws(UnsupportedFlavorException::class, IOException::class)
   override fun getTransferData(flavor: DataFlavor): Any {
