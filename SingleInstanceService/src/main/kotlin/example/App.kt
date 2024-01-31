@@ -16,8 +16,9 @@ fun main() {
     runCatching {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
       val frame = JFrame()
-      val sis = ServiceManager.lookup("javax.jnlp.SingleInstanceService")
-      (sis as? SingleInstanceService)?.addSingleInstanceListener(object : SingleInstanceListener {
+      val key = "javax.jnlp.SingleInstanceService"
+      val sis = ServiceManager.lookup(key) as? SingleInstanceService
+      sis?.addSingleInstanceListener(object : SingleInstanceListener {
         private var count = 0
 
         override fun newActivation(args: Array<String>) {

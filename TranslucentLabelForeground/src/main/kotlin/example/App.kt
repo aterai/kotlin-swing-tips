@@ -10,8 +10,9 @@ fun makeUI(): Component {
   label1.background = Color(0x64_64_C8)
   label1.font = Font(Font.MONOSPACED, Font.BOLD, 140)
 
-  val style = "font-family:monospace;font-weight:bold;color:rgba(255,170,170,0.4);font-size:140pt"
-  val label2 = JLabel("<html><span style='$style'>ABC")
+  val fontStyle = "font-family:monospace;font-weight:bold;font-size:140pt;"
+  val colorStyle = "color:rgba(255,170,170,0.4)"
+  val label2 = JLabel("<html><span style='$fontStyle$colorStyle'>ABC")
   label2.background = Color(0x64_64_C8)
   label2.horizontalAlignment = SwingConstants.CENTER
 

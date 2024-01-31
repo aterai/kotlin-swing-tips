@@ -17,8 +17,9 @@ fun makeUI(): Component {
   for (i in 0 until m.columnCount) {
     val icon = icons[i]
     val name = columnNames[i]
-    val hv = "<html><table cellpadding='0' cellspacing='0'><td><img src='$icon'/></td>&nbsp;$name"
-    m.getColumn(i).headerValue = hv
+    m.getColumn(i).headerValue = """
+      <html><table cellpadding="0" cellspacing="0"><td><img src="$icon"/></td>&nbsp;$name
+    """.trimIndent()
   }
   table.autoCreateRowSorter = true
 
