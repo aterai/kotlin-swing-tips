@@ -78,7 +78,14 @@ private class IconTableCellRenderer : DefaultTableCellRenderer() {
     row: Int,
     column: Int,
   ): Component {
-    val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    val c = super.getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
     if (c is JLabel && value is IconItem) {
       c.icon = value.large
       c.horizontalAlignment = SwingConstants.CENTER
@@ -87,7 +94,10 @@ private class IconTableCellRenderer : DefaultTableCellRenderer() {
   }
 }
 
-private class IconTable(model: TableModel?, private val editor: JList<IconItem>) : JTable(model) {
+private class IconTable(
+  model: TableModel?,
+  private val editor: JList<IconItem>,
+) : JTable(model) {
   private val glassPane = object : JComponent() {
     override fun setVisible(flag: Boolean) {
       super.setVisible(flag)

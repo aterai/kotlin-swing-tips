@@ -20,7 +20,8 @@ fun makeUI(): Component {
       super.updateUI()
       setUI(object : BasicToolBarUI() {
         override fun createDockingListener(): MouseInputListener {
-          return DockingListener2(toolBar, super.createDockingListener())
+          val listener = super.createDockingListener()
+          return DockingListener2(toolBar, listener)
         }
       })
     }

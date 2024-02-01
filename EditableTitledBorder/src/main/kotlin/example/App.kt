@@ -133,7 +133,10 @@ private class EditableTitledBorder(
     am.put("cancel-editing", cancelEditing)
   }
 
-  constructor(title: String, c: Component) : this(null, title, LEADING, DEFAULT_POSITION, null, c)
+  constructor(
+    title: String,
+    c: Component,
+  ) : this(null, title, LEADING, DEFAULT_POSITION, null, c)
 
   constructor(
     border: Border?,
