@@ -154,7 +154,7 @@ private class LabelTransferable(
     it.add(localObjectFlavor)
   }.toTypedArray()
 
-  override fun isDataFlavorSupported(flavor: DataFlavor) = transferDataFlavors.contains(flavor)
+  override fun isDataFlavorSupported(f: DataFlavor) = transferDataFlavors.contains(f)
 
   @Throws(UnsupportedFlavorException::class, IOException::class)
   override fun getTransferData(flavor: DataFlavor) = if (flavor.equals(localObjectFlavor)) {

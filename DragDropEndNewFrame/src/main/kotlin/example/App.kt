@@ -269,7 +269,7 @@ private class TabTransferable(private val tabbedPane: Component) : Transferable 
     )
   }
 
-  override fun isDataFlavorSupported(flavor: DataFlavor) = transferDataFlavors.contains(flavor)
+  override fun isDataFlavorSupported(f: DataFlavor) = transferDataFlavors.contains(f)
 }
 
 private class TabDragSourceListener : DragSourceListener {
