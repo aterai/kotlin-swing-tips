@@ -26,7 +26,8 @@ fun makeUI(): Component {
     override fun updateUI() {
       super.updateUI()
       surrendersFocusOnKeystroke = true
-      (getDefaultRenderer(Date::class.java) as? JLabel)?.horizontalAlignment = SwingConstants.LEFT
+      val r = getDefaultRenderer(Date::class.java)
+      (r as? JLabel)?.horizontalAlignment = SwingConstants.LEFT
       setDefaultEditor(Date::class.java, SpinnerCellEditor())
     }
   }

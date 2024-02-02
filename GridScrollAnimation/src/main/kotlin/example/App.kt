@@ -31,7 +31,10 @@ fun makeUI(): Component {
 private fun makeSampleComponent(idx: Int): Component =
   if (idx % 2 == 0) JButton("button$idx") else JScrollPane(JTree())
 
-private class GridPanel(rows: Int, cols: Int) : JPanel(GridLayout(rows, cols, 0, 0)), Scrollable {
+private class GridPanel(
+  rows: Int,
+  cols: Int,
+) : JPanel(GridLayout(rows, cols, 0, 0)), Scrollable {
   private val sz = Dimension(160 * cols, 120 * rows)
   val rows get() = (layout as? GridLayout)?.rows ?: -1
   val columns get() = (layout as? GridLayout)?.columns ?: -1
