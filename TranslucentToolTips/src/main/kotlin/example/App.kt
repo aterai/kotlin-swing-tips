@@ -183,7 +183,8 @@ private fun makeColumnHeader(loc: Locale): Component {
     val date = weekList.model.getElementAt(c.gridx * DayOfWeek.values().size).date
     val isSimplyFirstWeekOfMonth = date.month != date.minusWeeks(1).month
     if (isSimplyFirstWeekOfMonth) {
-      colHeader.add(makeLabel(date.month.getDisplayName(TextStyle.SHORT, loc), colHeader.font), c)
+      val title = date.month.getDisplayName(TextStyle.SHORT, loc)
+      colHeader.add(makeLabel(title, colHeader.font), c)
     }
     c.gridx++
   }
