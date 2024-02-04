@@ -137,7 +137,7 @@ private class BasicRoundMenuItemUI : BasicMenuItemUI() {
     val menuWidth = menuItem.width
     val menuHeight = menuItem.height
     if (menuItem.isOpaque) {
-      if (model.isArmed || (menuItem is JMenu && model.isSelected)) {
+      if (model.isArmed || menuItem is JMenu && model.isSelected) {
         val g2 = g.create() as? Graphics2D ?: return
         g2.setRenderingHint(
           RenderingHints.KEY_ANTIALIASING,
@@ -153,7 +153,7 @@ private class BasicRoundMenuItemUI : BasicMenuItemUI() {
         g.fillRect(0, 0, menuWidth, menuHeight)
       }
       g.color = oldColor
-    } else if (model.isArmed || (menuItem is JMenu && model.isSelected)) {
+    } else if (model.isArmed || menuItem is JMenu && model.isSelected) {
       g.color = bgColor
       g.fillRect(0, 0, menuWidth, menuHeight)
       g.color = oldColor
@@ -166,7 +166,7 @@ private class WindowsRoundMenuItemUI : WindowsMenuItemUI() {
 
   override fun paintBackground(g: Graphics, menuItem: JMenuItem, bgColor: Color) {
     val model = menuItem.model
-    if (model.isArmed || (menuItem is JMenu && model.isSelected)) {
+    if (model.isArmed || menuItem is JMenu && model.isSelected) {
       val width = menuItem.width
       val height = menuItem.height
       val buf = buffer
@@ -194,7 +194,7 @@ private class WindowsRoundMenuItemUI2 : WindowsMenuItemUI() {
 
   override fun paintBackground(g: Graphics, menuItem: JMenuItem, bgColor: Color) {
     val model = menuItem.model
-    if (model.isArmed || (menuItem is JMenu && model.isSelected)) {
+    if (model.isArmed || menuItem is JMenu && model.isSelected) {
       val width = menuItem.width
       val height = menuItem.height
       val config = (g as? Graphics2D)?.deviceConfiguration ?: return
