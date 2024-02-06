@@ -78,8 +78,11 @@ private fun makeTabPopupMenu(): JPopupMenu {
       val name = it.getTitleAt(it.selectedIndex)
       val textField = JTextField(name)
       val result = JOptionPane.showConfirmDialog(
-        it, textField, rename.text,
-        JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
+        it,
+        textField,
+        rename.text,
+        JOptionPane.OK_CANCEL_OPTION,
+        JOptionPane.PLAIN_MESSAGE,
       )
       if (result == JOptionPane.OK_OPTION) {
         val str = textField.text.trim { it <= ' ' }

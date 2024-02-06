@@ -40,7 +40,9 @@ fun makeUI(): Component {
   }
 
   val policy2 = object : LayoutFocusTraversalPolicy() {
-    override fun accept(c: Component) = if (c is JTextComponent) c.isEditable else super.accept(c)
+    override fun accept(
+      c: Component,
+    ) = if (c is JTextComponent) c.isEditable else super.accept(c)
   }
   val r2 = JRadioButton("Layout")
   r2.addActionListener {

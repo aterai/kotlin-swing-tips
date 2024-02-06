@@ -227,7 +227,11 @@ private class FolderSelectionListener(
     if (model !is DefaultTreeModel || check !is CheckBoxNode || !check.file.isDirectory) {
       return
     }
-    val parentStatus = if (check.status == Status.SELECTED) Status.SELECTED else Status.DESELECTED
+    val parentStatus = if (check.status == Status.SELECTED) {
+      Status.SELECTED
+    } else {
+      Status.DESELECTED
+    }
     val worker = object : BackgroundTask(fileSystemView, check.file) {
       override fun process(chunks: List<File>) {
         chunks.map { CheckBoxNode(it, parentStatus) }
