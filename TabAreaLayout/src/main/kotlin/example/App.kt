@@ -518,7 +518,9 @@ open class ClippedTitleTabbedPane : JTabbedPane() {
       return
     }
     val tabInsets = UIManager.getInsets("TabbedPane.tabInsets") ?: getSynthTabInsets()
-    val tabAreaInsets = UIManager.getInsets("TabbedPane.tabAreaInsets") ?: getSynthTabAreaInsets()
+    val tabAreaInsets = UIManager.getInsets(
+      "TabbedPane.tabAreaInsets",
+    ) ?: getSynthTabAreaInsets()
     val ins = insets
     val tabPlacement = getTabPlacement()
     val areaWidth = width - tabAreaInsets.left - tabAreaInsets.right - ins.left - ins.right

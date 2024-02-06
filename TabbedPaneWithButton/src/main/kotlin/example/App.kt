@@ -91,7 +91,9 @@ private open class ClippedTitleTabbedPane : JTabbedPane() {
   val tabInsets get() =
     UIManager.getInsets("TabbedPane.tabInsets") ?: getSynthInsets(Region.TABBED_PANE_TAB)
   val tabAreaInsets get() =
-    UIManager.getInsets("TabbedPane.tabAreaInsets") ?: getSynthInsets(Region.TABBED_PANE_TAB_AREA)
+    UIManager.getInsets(
+      "TabbedPane.tabAreaInsets",
+    ) ?: getSynthInsets(Region.TABBED_PANE_TAB_AREA)
 
   private fun getSynthInsets(region: Region): Insets {
     val style = SynthLookAndFeel.getStyle(this, region)
