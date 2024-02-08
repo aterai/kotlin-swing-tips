@@ -46,7 +46,14 @@ private class LocalDateTimeTableCellRenderer : DefaultTableCellRenderer() {
     row: Int,
     column: Int,
   ): Component {
-    val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    val c = super.getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
     if (c is JLabel && value is TemporalAccessor) {
       text = DateTimeFormatter.ofPattern(DATE_PATTERN).format(value)
     }
@@ -113,11 +120,8 @@ private class LocalDateTimeTableCellEditor : AbstractCellEditor(), TableCellEdit
 
   override fun getCellEditorValue() = comboBox.selectedItem ?: ""
 
-  override fun shouldSelectCell(anEvent: EventObject): Boolean {
-    if (anEvent is MouseEvent) {
-      return anEvent.id != MouseEvent.MOUSE_DRAGGED
-    }
-    return true
+  override fun shouldSelectCell(e: EventObject): Boolean {
+    return e !is MouseEvent || e.id != MouseEvent.MOUSE_DRAGGED
   }
 
   override fun stopCellEditing(): Boolean {
@@ -142,7 +146,13 @@ private class LocalDateTimeCellRenderer : ListCellRenderer<LocalDateTime> {
     isSelected: Boolean,
     cellHasFocus: Boolean,
   ): Component {
-    val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+    val c = renderer.getListCellRendererComponent(
+      list,
+      value,
+      index,
+      isSelected,
+      cellHasFocus,
+    )
     if (c is JLabel && value != null) {
       c.isOpaque = true
       c.text = dateTimeFormatter.format(value)
