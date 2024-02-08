@@ -124,7 +124,9 @@ private object LookAndFeelUtils {
     }
   }
 
-  private class ChangeLookAndFeelAction(private val laf: String) : AbstractAction("ChangeTheme") {
+  private class ChangeLookAndFeelAction(
+    private val laf: String,
+  ) : AbstractAction("ChangeTheme") {
     override fun actionPerformed(e: ActionEvent) {
       setLookAndFeel(laf)
     }
