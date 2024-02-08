@@ -20,7 +20,10 @@ fun makeUI(): Component {
     override fun getToolTipText(e: MouseEvent): String {
       val row = convertRowIndexToModel(rowAtPoint(e.point))
       val m = getModel()
-      return "<html>${m.getValueAt(row, 0)}<br>${m.getValueAt(row, 1)}<br>${m.getValueAt(row, 2)}"
+      val v0 = m.getValueAt(row, 0)
+      val v1 = m.getValueAt(row, 1)
+      val v2 = m.getValueAt(row, 2)
+      return "<html>$v0<br>$v1<br>$v2"
     }
   }
   table.autoCreateRowSorter = true
