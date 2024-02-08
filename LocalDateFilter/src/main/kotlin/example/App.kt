@@ -90,7 +90,14 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
     row: Int,
     column: Int,
   ): Component {
-    val c = super.getTableCellRendererComponent(table, value, selected, focused, row, column)
+    val c = super.getTableCellRendererComponent(
+      table,
+      value,
+      selected,
+      focused,
+      row,
+      column,
+    )
     if (value is LocalDate && c is JLabel) {
       c.text = value.dayOfMonth.toString()
       c.horizontalAlignment = CENTER
@@ -153,11 +160,10 @@ private class LocalDateFilter(
 ) : RowFilter<TableModel, Int>() {
   override fun include(entry: Entry<out TableModel, out Int>): Boolean {
     val date = entry.model.getValueAt(entry.identifier, column)
-    if (date is LocalDate) {
-      return !(startDate.isAfter(date) || endDate.isBefore(date))
-    }
-    return false
+    return date is LocalDate && between(date)
   }
+
+  fun between(d: LocalDate) = !(startDate.isAfter(d) || endDate.isBefore(d))
 }
 
 fun main() {
