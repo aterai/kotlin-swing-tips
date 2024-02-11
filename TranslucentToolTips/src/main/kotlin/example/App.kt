@@ -16,6 +16,14 @@ import javax.swing.*
 
 val CELL_SIZE = Dimension(10, 10)
 val currentLocalDate: LocalDate = LocalDate.now(ZoneId.systemDefault())
+private val color = Color(0x32_C8_32)
+private val activityIcons = listOf(
+  ContributionIcon(Color(0xC8_C8_C8)),
+  ContributionIcon(color.brighter()),
+  ContributionIcon(color),
+  ContributionIcon(color.darker()),
+  ContributionIcon(color.darker().darker()),
+)
 private val weekList = object : JList<Contribution>(CalendarViewListModel(currentLocalDate)) {
   private var tip: JToolTip? = null
 
@@ -32,13 +40,9 @@ private val weekList = object : JList<Contribution>(CalendarViewListModel(curren
   }
 
   override fun getToolTipText(e: MouseEvent): String? {
-    val pt = e.point
-    val idx = locationToIndex(pt)
-    getCellBounds(idx, idx)?.contains(pt) ?: return null
-    val value = model.getElementAt(idx)
-    val act = if (value.activity == 0) "No" else value.activity.toString()
-    val date = value.date.toString()
-    return "<html>$act contribution <span style='color:#C8C8C8'> on $date"
+    val p = e.point
+    val i = locationToIndex(p)
+    return getCellBounds(i, i)?.contains(p)?.let { getActivityText(i) }
   }
 
   override fun getToolTipLocation(e: MouseEvent): Point? {
@@ -46,14 +50,15 @@ private val weekList = object : JList<Contribution>(CalendarViewListModel(curren
     val i = locationToIndex(p)
     val rect = getCellBounds(i, i)
     val toolTipText = getToolTipText(e)
-    if (toolTipText != null && rect != null) {
+    return if (toolTipText != null && rect != null) {
       val tip = createToolTip()
       tip?.tipText = toolTipText
       val d = tip?.preferredSize ?: Dimension()
       val gap = 2
-      return Point((rect.centerX - d.width / 2.0).toInt(), rect.y - d.height - gap)
+      Point((rect.centerX - d.width / 2.0).toInt(), rect.y - d.height - gap)
+    } else {
+      null
     }
-    return null
   }
 
   override fun createToolTip(): JToolTip? {
@@ -64,15 +69,22 @@ private val weekList = object : JList<Contribution>(CalendarViewListModel(curren
     }
     return tip
   }
+
+  private fun getActivityIcon(value: Contribution): Icon {
+    return if (value.date.isAfter(currentLocalDate)) {
+      ContributionIcon(Color.WHITE)
+    } else {
+      activityIcons[value.activity]
+    }
+  }
+
+  private fun getActivityText(idx: Int): String {
+    val c = model.getElementAt(idx)
+    val act = if (c.activity == 0) "No" else c.activity.toString()
+    val date = c.date.toString()
+    return "<html>$act contribution <span style='color:#C8C8C8'> on $date"
+  }
 }
-private val color = Color(0x32_C8_32)
-private val activityIcons = listOf(
-  ContributionIcon(Color(0xC8_C8_C8)),
-  ContributionIcon(color.brighter()),
-  ContributionIcon(color),
-  ContributionIcon(color.darker()),
-  ContributionIcon(color.darker().darker()),
-)
 
 fun makeUI(): Component {
   val font = weekList.font.deriveFont(CELL_SIZE.height - 1f)
@@ -204,7 +216,7 @@ private class CalendarViewListModel(date: LocalDate) : AbstractListModel<Contrib
   private val contributionActivity = mutableMapOf<LocalDate, Int>()
 
   init {
-    val dow = date.get(WeekFields.of(Locale.getDefault()).dayOfWeek())
+    val dow = date[WeekFields.of(Locale.getDefault()).dayOfWeek()]
     this.startDate = date.minusWeeks((WEEK_VIEW - 1).toLong()).minusDays((dow - 1).toLong())
     this.displayDays = DayOfWeek.values().size * (WEEK_VIEW - 1) + dow
     for (i in 0 until displayDays) {
