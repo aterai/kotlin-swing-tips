@@ -4,6 +4,7 @@ import java.awt.*
 import java.awt.geom.Area
 import java.awt.geom.Path2D
 import javax.swing.*
+import kotlin.math.sqrt
 
 fun makeUI() = JPanel().also {
   val roundIcon = ToggleButtonBarCellIcon()
@@ -96,37 +97,38 @@ private class ToggleButtonBarCellIcon : Icon {
     y: Int,
   ) {
     val parent = c?.parent ?: return
-    val r = 8f
-    val fx = x.toFloat()
-    val fy = y.toFloat()
-    var fw = c.width.toFloat()
-    val fh = c.height - 1f
+    val r = 4.0
+    val rr = r * 4.0 * (sqrt(2.0) - 1.0) / 3.0
+    val dx = x.toDouble()
+    val dy = y.toDouble()
+    var dw = c.width.toDouble()
+    val dh = c.height - 1.0
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    val p = Path2D.Float()
+    val p = Path2D.Double()
     when {
       c === parent.getComponent(0) -> { // :first-child
-        p.moveTo(fx, y + r)
-        p.quadTo(fx, fy, x + r, fy)
-        p.lineTo(x + fw, fy)
-        p.lineTo(x + fw, y + fh)
-        p.lineTo(x + r, y + fh)
-        p.quadTo(fx, y + fh, fx, y + fh - r)
+        p.moveTo(dx, dy + r)
+        p.curveTo(dx, dy + r - rr, dx + r - rr, dy, dx + r, dy)
+        p.lineTo(dx + dw, dy)
+        p.lineTo(dx + dw, dy + dh)
+        p.lineTo(dx + r, dy + dh)
+        p.curveTo(dx + r - rr, dy + dh, dx, dy + dh - r + rr, dx, dy + dh - r)
       }
       c === parent.getComponent(parent.componentCount - 1) -> { // :last-child
-        fw--
-        p.moveTo(fx, fy)
-        p.lineTo(x + fw - r, fy)
-        p.quadTo(x + fw, fy, x + fw, y + r)
-        p.lineTo(x + fw, y + fh - r)
-        p.quadTo(x + fw, y + fh, x + fw - r, y + fh)
-        p.lineTo(fx, y + fh)
+        dw--
+        p.moveTo(dx, dy)
+        p.lineTo(dx + dw - r, dy)
+        p.curveTo(dx + dw - r + rr, dy, dx + dw, dy + r - rr, dx + dw, dy + r)
+        p.lineTo(dx + dw, dy + dh - r)
+        p.curveTo(dx + dw, dy + dh - r + rr, dx + dw - r + rr, dy + dh, dx + dw - r, dy + dh)
+        p.lineTo(dx, dy + dh)
       }
       else -> {
-        p.moveTo(fx, fy)
-        p.lineTo(x + fw, fy)
-        p.lineTo(x + fw, y + fh)
-        p.lineTo(fx, y + fh)
+        p.moveTo(dx, dy)
+        p.lineTo(dx + dw, dy)
+        p.lineTo(dx + dw, dy + dh)
+        p.lineTo(dx, dy + dh)
       }
     }
     p.closePath()
@@ -142,7 +144,15 @@ private class ToggleButtonBarCellIcon : Icon {
     val area = Area(p)
     g2.paint = c.background
     g2.fill(area)
-    g2.paint = GradientPaint(fx, fy, ssc, fx, y + fh, bgc, true)
+    g2.paint = GradientPaint(
+      x.toFloat(),
+      y.toFloat(),
+      ssc,
+      x.toFloat(),
+      y.toFloat() + dh.toFloat(),
+      bgc,
+      true,
+    )
     g2.fill(area)
     g2.paint = BR
     g2.draw(area)

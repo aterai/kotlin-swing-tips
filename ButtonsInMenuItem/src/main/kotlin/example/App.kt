@@ -8,6 +8,7 @@ import java.awt.geom.Path2D
 import javax.swing.*
 import javax.swing.plaf.LayerUI
 import javax.swing.text.DefaultEditorKit
+import kotlin.math.sqrt
 
 fun makeUI() = JPanel(BorderLayout()).also {
   EventQueue.invokeLater { it.rootPane.jMenuBar = makeMenuBar() }
@@ -113,7 +114,8 @@ private class ToggleButtonBarCellIcon : Icon {
     y: Int,
   ) {
     val parent = c.parent ?: return
-    val r = 8.0
+    val r = 4.0
+    val rr = r * 4.0 * (sqrt(2.0) - 1.0) / 3.0
     val dx = x.toDouble()
     val dy = y.toDouble()
     var dw = c.width.toDouble()
@@ -127,20 +129,20 @@ private class ToggleButtonBarCellIcon : Icon {
       c === parent.getComponent(0) -> {
         // :first-child
         p.moveTo(dx, dy + r)
-        p.quadTo(dx, dy, dx + r, dy)
+        p.curveTo(dx, dy + r - rr, dx + r - rr, dy, dx + r, dy)
         p.lineTo(dx + dw, dy)
         p.lineTo(dx + dw, dy + dh)
         p.lineTo(dx + r, dy + dh)
-        p.quadTo(dx, dy + dh, dx, dy + dh - r)
+        p.curveTo(dx + r - rr, dy + dh, dx, dy + dh - r + rr, dx, dy + dh - r)
       }
       c === parent.getComponent(parent.componentCount - 1) -> {
         // :last-child
         dw--
         p.moveTo(dx, dy)
         p.lineTo(dx + dw - r, dy)
-        p.quadTo(dx + dw, dy, dx + dw, dy + r)
+        p.curveTo(dx + dw - r + rr, dy, dx + dw, dy + r - rr, dx + dw, dy + r)
         p.lineTo(dx + dw, dy + dh - r)
-        p.quadTo(dx + dw, dy + dh, dx + dw - r, dy + dh)
+        p.curveTo(dx + dw, dy + dh - r + rr, dx + dw - r + rr, dy + dh, dx + dw - r, dy + dh)
         p.lineTo(dx, dy + dh)
       }
       else -> {
