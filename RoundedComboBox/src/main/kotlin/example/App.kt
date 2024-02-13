@@ -12,6 +12,7 @@ import javax.swing.*
 import javax.swing.border.AbstractBorder
 import javax.swing.plaf.basic.BasicComboBoxUI
 import javax.swing.plaf.metal.MetalComboBoxUI
+import kotlin.math.sqrt
 
 private val BACKGROUND = Color.BLACK // RED
 private val FOREGROUND = Color.WHITE // YELLOW
@@ -222,7 +223,7 @@ private open class RoundedCornerBorder : AbstractBorder() {
   ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    val r = 12.0
+    val r = 6 * 2.0
     val dx = x.toDouble()
     val dy = y.toDouble()
     val dw = width.toDouble() - 1.0
@@ -263,7 +264,8 @@ private class KamabokoBorder : RoundedCornerBorder() {
   ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    val r = 12.0
+    val r = 6.0
+    val rr = r * 4.0 * (sqrt(2.0) - 1.0) / 3.0
     val dx = x.toDouble()
     val dy = y.toDouble()
     val dw = width.toDouble() - 1.0
@@ -272,9 +274,9 @@ private class KamabokoBorder : RoundedCornerBorder() {
     val p = Path2D.Double()
     p.moveTo(dx, dy + dh)
     p.lineTo(dx, dy + r)
-    p.quadTo(dx, dy, dx + r, dy)
+    p.curveTo(dx, dy + r - rr, dx + r - rr, dy, dx + r, dy)
     p.lineTo(dx + dw - r, dy)
-    p.quadTo(dx + dw, dy, dx + dw, dy + r)
+    p.curveTo(dx + dw - r + rr, dy, dx + dw, dy + r - rr, dx + dw, dy + r)
     p.lineTo(dx + dw, dy + dh)
     p.closePath()
     val round = Area(p)

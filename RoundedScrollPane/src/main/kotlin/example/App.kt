@@ -15,6 +15,7 @@ import javax.swing.event.PopupMenuListener
 import javax.swing.plaf.basic.BasicComboBoxUI
 import javax.swing.plaf.basic.BasicComboPopup
 import javax.swing.plaf.basic.BasicScrollBarUI
+import kotlin.math.sqrt
 
 private val BACKGROUND = Color.WHITE
 private val FOREGROUND = Color.BLACK
@@ -217,7 +218,7 @@ private open class RoundedCornerBorder : AbstractBorder() {
   ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    val dr = ARC.toDouble()
+    val dr = ARC * 2.0
     val dx = x.toDouble()
     val dy = y.toDouble()
     val dw = width.toDouble()
@@ -246,7 +247,7 @@ private open class RoundedCornerBorder : AbstractBorder() {
   }
 
   companion object {
-    const val ARC = 12
+    const val ARC = 6
   }
 }
 
@@ -265,7 +266,7 @@ private class TopRoundedCornerBorder : RoundedCornerBorder() {
     if (c is JPopupMenu) {
       g2.clearRect(x, y, width, height)
     }
-    val dr = ARC.toDouble()
+    val dr = ARC * 2.0
     val dx = x.toDouble()
     val dy = y.toDouble()
     val dw = width.toDouble()
@@ -299,15 +300,16 @@ private class BottomRoundedCornerBorder : RoundedCornerBorder() {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     val r = ARC.toDouble()
+    val rr = r * 4.0 * (sqrt(2.0) - 1.0) / 3.0
     val w = width - 1.0
     val h = height - 1.0
 
     val p = Path2D.Double()
     p.moveTo(x.toDouble(), y.toDouble())
     p.lineTo(x.toDouble(), y + h - r)
-    p.quadTo(x.toDouble(), y + h, x + r, y + h)
+    p.curveTo(x.toDouble(), y + h - r + rr, x + r - rr, y + h, x + r, y + h)
     p.lineTo(x + w - r, y + h)
-    p.quadTo(x + w, y + h, x + w, y + h - r)
+    p.curveTo(x + w - r + rr, y + h, x + w, y + h - r + rr, x + w, y + h - r)
     p.lineTo(x + w, y.toDouble())
     p.closePath()
 
