@@ -70,14 +70,6 @@ private val weekList = object : JList<Contribution>(CalendarViewListModel(curren
     return tip
   }
 
-  private fun getActivityIcon(value: Contribution): Icon {
-    return if (value.date.isAfter(currentLocalDate)) {
-      ContributionIcon(Color.WHITE)
-    } else {
-      activityIcons[value.activity]
-    }
-  }
-
   private fun getActivityText(idx: Int): String {
     val c = model.getElementAt(idx)
     val act = if (c.activity == 0) "No" else c.activity.toString()
