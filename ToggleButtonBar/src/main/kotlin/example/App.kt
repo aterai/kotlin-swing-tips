@@ -96,15 +96,49 @@ private class ToggleButtonBarCellIcon : Icon {
     x: Int,
     y: Int,
   ) {
-    val parent = c?.parent ?: return
+    var ssc = TL
+    var bgc = BR
+    if (c is AbstractButton) {
+      val m = c.model
+      if (m.isSelected || m.isRollover) {
+        ssc = ST
+        bgc = SB
+      }
+      val path = makeButtonPath(c, x, y) ?: return
+      val area = Area(path)
+      val g2 = g.create() as? Graphics2D ?: return
+      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.paint = c.background
+      g2.fill(area)
+      g2.paint = GradientPaint(
+        x.toFloat(),
+        y.toFloat(),
+        ssc,
+        x.toFloat(),
+        y.toFloat() + c.height,
+        bgc,
+        true,
+      )
+      g2.fill(area)
+      g2.paint = BR
+      g2.draw(area)
+      g2.dispose()
+    }
+  }
+
+  private fun makeButtonPath(
+    c: Component?,
+    x: Int,
+    y: Int
+  ): Path2D.Double? {
+    val parent = c?.parent ?: return null
     val r = 4.0
     val rr = r * 4.0 * (sqrt(2.0) - 1.0) / 3.0
     val dx = x.toDouble()
     val dy = y.toDouble()
     var dw = c.width.toDouble()
     val dh = c.height - 1.0
-    val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+
     val p = Path2D.Double()
     when {
       c === parent.getComponent(0) -> { // :first-child
@@ -115,6 +149,7 @@ private class ToggleButtonBarCellIcon : Icon {
         p.lineTo(dx + r, dy + dh)
         p.curveTo(dx + r - rr, dy + dh, dx, dy + dh - r + rr, dx, dy + dh - r)
       }
+
       c === parent.getComponent(parent.componentCount - 1) -> { // :last-child
         dw--
         p.moveTo(dx, dy)
@@ -124,6 +159,7 @@ private class ToggleButtonBarCellIcon : Icon {
         p.curveTo(dx + dw, dy + dh - r + rr, dx + dw - r + rr, dy + dh, dx + dw - r, dy + dh)
         p.lineTo(dx, dy + dh)
       }
+
       else -> {
         p.moveTo(dx, dy)
         p.lineTo(dx + dw, dy)
@@ -132,31 +168,7 @@ private class ToggleButtonBarCellIcon : Icon {
       }
     }
     p.closePath()
-    var ssc = TL
-    var bgc = BR
-    if (c is AbstractButton) {
-      val m = c.model
-      if (m.isSelected || m.isRollover) {
-        ssc = ST
-        bgc = SB
-      }
-    }
-    val area = Area(p)
-    g2.paint = c.background
-    g2.fill(area)
-    g2.paint = GradientPaint(
-      x.toFloat(),
-      y.toFloat(),
-      ssc,
-      x.toFloat(),
-      y.toFloat() + dh.toFloat(),
-      bgc,
-      true,
-    )
-    g2.fill(area)
-    g2.paint = BR
-    g2.draw(area)
-    g2.dispose()
+    return p
   }
 
   override fun getIconWidth() = 80
