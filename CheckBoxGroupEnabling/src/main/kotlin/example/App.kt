@@ -168,7 +168,15 @@ private class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
   override fun getCellEditorValue() =
     CheckBoxNode(checkBox.text, checkBox.isSelected, checkBox.isEnabled)
 
-  override fun isCellEditable(e: EventObject?) = e is MouseEvent
+  // override fun isCellEditable(e: EventObject?) = e is MouseEvent
+  override fun isCellEditable(e: EventObject): Boolean {
+    val me = e as? MouseEvent
+    val tree = me?.component as? JTree
+    val path = tree?.getPathForLocation(me.x, me.y)
+    val node = path?.lastPathComponent as? DefaultMutableTreeNode
+    val checkBoxNode = node?.userObject as? CheckBoxNode
+    return checkBoxNode?.enabled ?: false
+  }
 }
 
 private class CheckBoxStatusUpdateListener : TreeModelListener {
