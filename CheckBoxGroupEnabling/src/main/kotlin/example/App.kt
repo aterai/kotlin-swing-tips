@@ -15,6 +15,7 @@ import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.ExpandVetoException
 import javax.swing.tree.TreeCellEditor
 import javax.swing.tree.TreeCellRenderer
+import javax.swing.tree.TreePath
 
 fun makeUI(): Component {
   val tree = object : JTree() {
@@ -27,6 +28,12 @@ fun makeUI(): Component {
       setShowsRootHandles(false)
       setCellRenderer(CheckBoxNodeRenderer())
       setCellEditor(CheckBoxNodeEditor())
+    }
+
+    override fun isPathEditable(path: TreePath): Boolean {
+      val node = path.lastPathComponent as? DefaultMutableTreeNode
+      val checkBoxNode = node?.userObject as? CheckBoxNode
+      return checkBoxNode?.enabled ?: false
     }
   }
   var row = 0
@@ -168,15 +175,15 @@ private class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
   override fun getCellEditorValue() =
     CheckBoxNode(checkBox.text, checkBox.isSelected, checkBox.isEnabled)
 
-  // override fun isCellEditable(e: EventObject?) = e is MouseEvent
-  override fun isCellEditable(e: EventObject): Boolean {
-    val me = e as? MouseEvent
-    val tree = me?.component as? JTree
-    val path = tree?.getPathForLocation(me.x, me.y)
-    val node = path?.lastPathComponent as? DefaultMutableTreeNode
-    val checkBoxNode = node?.userObject as? CheckBoxNode
-    return checkBoxNode?.enabled ?: false
-  }
+  override fun isCellEditable(e: EventObject?) = e is MouseEvent
+  // override fun isCellEditable(e: EventObject): Boolean {
+  //   val me = e as? MouseEvent
+  //   val tree = me?.component as? JTree
+  //   val path = tree?.getPathForLocation(me.x, me.y)
+  //   val node = path?.lastPathComponent as? DefaultMutableTreeNode
+  //   val checkBoxNode = node?.userObject as? CheckBoxNode
+  //   return checkBoxNode?.enabled ?: false
+  // }
 }
 
 private class CheckBoxStatusUpdateListener : TreeModelListener {
