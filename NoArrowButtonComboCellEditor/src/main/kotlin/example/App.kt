@@ -120,9 +120,8 @@ private class LocalDateTimeTableCellEditor : AbstractCellEditor(), TableCellEdit
 
   override fun getCellEditorValue() = comboBox.selectedItem ?: ""
 
-  override fun shouldSelectCell(e: EventObject): Boolean {
-    return e !is MouseEvent || e.id != MouseEvent.MOUSE_DRAGGED
-  }
+  override fun shouldSelectCell(e: EventObject) =
+    e !is MouseEvent || e.id != MouseEvent.MOUSE_DRAGGED
 
   override fun stopCellEditing(): Boolean {
     if (comboBox.isEditable) {
