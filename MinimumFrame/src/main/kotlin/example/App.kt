@@ -19,17 +19,21 @@ fun makeUI(): Component {
   }
   label.addComponentListener(cl)
 
-  val checkbox1 = JCheckBox("the minimum size of this window: " + MW + "x" + MH1, true)
-  checkbox1.addActionListener { e ->
-    if ((e.source as? JCheckBox)?.isSelected == true) {
+  val title1 = "The minimum size of this window: ${MW}x$MH1"
+  val check1 = JCheckBox(title1, true)
+  check1.addActionListener { e ->
+    val c = e.source
+    if (c is JCheckBox && c.isSelected) {
       initFrameSize(SwingUtilities.getWindowAncestor(label.rootPane))
     }
   }
 
-  val checkbox2 = JCheckBox("the minimum size of this window(since 1.6): " + MW + "x" + MH2, true)
-  checkbox2.addActionListener { e ->
+  val title2 = "The minimum size of this window(since 1.6): ${MW}x$MH2"
+  val check2 = JCheckBox(title2, true)
+  check2.addActionListener { e ->
     val w = SwingUtilities.getWindowAncestor(label.rootPane)
-    w.minimumSize = if ((e.source as? JCheckBox)?.isSelected == true) Dimension(MW, MH2) else null
+    val b = (e.source as? JCheckBox)?.isSelected == true
+    w.minimumSize = if (b) Dimension(MW, MH2) else null
   }
 
   EventQueue.invokeLater {
@@ -38,7 +42,7 @@ fun makeUI(): Component {
     val cl2 = object : ComponentAdapter() {
       override fun componentResized(e: ComponentEvent) {
         val win = e.component
-        if (checkbox1.isSelected && win is Window) {
+        if (check1.isSelected && win is Window) {
           initFrameSize(win)
         }
       }
@@ -46,8 +50,8 @@ fun makeUI(): Component {
     w.addComponentListener(cl2)
   }
   val box = Box.createVerticalBox()
-  box.add(checkbox1)
-  box.add(checkbox2)
+  box.add(check1)
+  box.add(check2)
 
   return JPanel(BorderLayout()).also {
     it.add(box, BorderLayout.NORTH)
