@@ -96,9 +96,11 @@ class BarFactory(base: String) {
     }
   }
 
-  private fun getResource(key: String) = getResourceString(key)?.let { javaClass.getResource(it) }
+  private fun getResource(key: String) =
+    getResourceString(key)?.let { javaClass.getResource(it) }
 
-  private fun getResourceString(nm: String) = runCatching { resources?.getString(nm) }.getOrNull()
+  private fun getResourceString(name: String) =
+    runCatching { resources?.getString(name) }.getOrNull()
 
   fun createToolBar(): JToolBar? {
     val tmp = getResourceString("toolbar") ?: return null

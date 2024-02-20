@@ -33,7 +33,9 @@ class SearchBarLayout : LayoutManager {
     }
 
     // LoupeButton
-    var loupeButton = cb.components.filter { c -> "ComboBox.loupeButton" == c.name }.firstOrNull()
+    var loupeButton = cb.components
+      .filter { it.name == "ComboBox.loupeButton" }
+      .firstOrNull()
     var loupeSize = 0
     if (loupeButton is JButton) {
       loupeSize = r.height
