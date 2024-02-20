@@ -129,7 +129,7 @@ private class ToggleButtonBarCellIcon : Icon {
   private fun makeButtonPath(
     c: Component?,
     x: Int,
-    y: Int
+    y: Int,
   ): Path2D.Double? {
     val parent = c?.parent ?: return null
     val r = 4.0

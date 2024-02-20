@@ -117,7 +117,8 @@ private class UrlRenderer : MouseAdapter(), TableCellRenderer {
         TEXT_RECT,
         c.iconTextGap,
       )
-      c.text = if (isRolloverCell(table, row, column)) "<html><u><font color='blue'>$str" else str
+      val rollover = isRolloverCell(table, row, column)
+      c.text = if (rollover) "<html><u><font color='blue'>$str" else str
     }
     return c
   }

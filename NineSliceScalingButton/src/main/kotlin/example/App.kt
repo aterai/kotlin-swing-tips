@@ -98,7 +98,10 @@ private class ScalingButton(title: String?, private val image: BufferedImage) : 
   }
 }
 
-private class NineSliceScalingButton(title: String?, private val img: BufferedImage) : JButton() {
+private class NineSliceScalingButton(
+  title: String?,
+  private val img: BufferedImage,
+) : JButton() {
   init {
     setModel(DefaultButtonModel())
     init(title, null)
