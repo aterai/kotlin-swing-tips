@@ -50,7 +50,11 @@ private class ImgBaselineHtmlEditorKit : HTMLEditorKit() {
         // }
         val attrs = elem.attributes
         val elementName = attrs.getAttribute(AbstractDocument.ElementNameAttribute)
-        val o = if (elementName != null) null else attrs.getAttribute(StyleConstants.NameAttribute)
+        val o = if (elementName == null) {
+          attrs.getAttribute(StyleConstants.NameAttribute)
+        } else {
+          null
+        }
         return if (o is HTML.Tag && o === HTML.Tag.IMG) {
           createImageView(elem)
         } else {

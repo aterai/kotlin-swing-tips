@@ -88,7 +88,7 @@ private fun initComboBoxes(isColor: Boolean): List<JComboBox<*>> {
     val i = it.insets
     it.margin = Insets(i.top, i.left + 5, i.bottom, i.right)
   }
-  cb3.toolTipText = "Insets i = ed.getInsets(); ed.setMargin(new Insets(i.top, i.left + 5, ...));"
+  cb3.toolTipText = "Insets i = ed.getInsets(); ed.setMargin(Insets(i.top, i.left + 5, ...));"
 
   // ---- 4 ----
   val cb4 = list[4]
@@ -97,7 +97,7 @@ private fun initComboBoxes(isColor: Boolean): List<JComboBox<*>> {
     val m = it.margin
     it.margin = Insets(m.top, m.left + 5, m.bottom, m.right)
   }
-  cb4.toolTipText = "Insets m = ed.getMargin(); ed.setMargin(new Insets(m.top, m.left + 5, ...));"
+  cb4.toolTipText = "Insets m = ed.getMargin(); ed.setMargin(Insets(m.top, m.left + 5, ...));"
 
   // ---- 5 ----
   val cb5 = list[5]
