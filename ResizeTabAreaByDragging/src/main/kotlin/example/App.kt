@@ -37,18 +37,28 @@ private class ClippedTitleTabbedPane(tabPlacement: Int) : JTabbedPane(tabPlaceme
   private val tabAreaInsets = UIManager.getInsets("TabbedPane.tabAreaInsets")
     ?: getSynthTabAreaInsets()
 
+  private fun getSynthTabInsets(): Insets {
+    val style = SynthLookAndFeel.getStyle(this, Region.TABBED_PANE_TAB)
+    val ctx = SynthContext(this, Region.TABBED_PANE_TAB, style, SynthConstants.ENABLED)
+    return style.getInsets(ctx, null)
+  }
+
+  private fun getSynthTabAreaInsets(): Insets {
+    val style = SynthLookAndFeel.getStyle(this, Region.TABBED_PANE_TAB_AREA)
+    val ctx = SynthContext(this, Region.TABBED_PANE_TAB_AREA, style, SynthConstants.ENABLED)
+    return style.getInsets(ctx, null)
+  }
+
   override fun doLayout() {
     val tabCount = tabCount
     if (tabCount == 0 || !isVisible) {
       super.doLayout()
       return
     }
-    val tabInsets = tabInsets
-    val tabAreaInsets = tabAreaInsets
-    val insets = insets
-    val tabPlacement = getTabPlacement()
-    val areaWidth = width - tabAreaInsets.left - tabAreaInsets.right - insets.left - insets.right
-    val isSide = tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT
+    val tabAreaIns = tabAreaInsets
+    val ins = insets
+    val areaWidth = width - tabAreaIns.left - tabAreaIns.right - ins.left - ins.right
+    val isSide = tabPlacement == LEFT || tabPlacement == RIGHT
     var tabWidth = if (isSide) tabAreaWidth else areaWidth / tabCount
     val gap = if (isSide) 0 else areaWidth - tabWidth * tabCount
 
@@ -84,18 +94,6 @@ private class ClippedTitleTabbedPane(tabPlacement: Int) : JTabbedPane(tabPlaceme
       tab.preferredSize = dim
       rest -= a
     }
-  }
-
-  private fun getSynthTabInsets(): Insets {
-    val style = SynthLookAndFeel.getStyle(this, Region.TABBED_PANE_TAB)
-    val context = SynthContext(this, Region.TABBED_PANE_TAB, style, SynthConstants.ENABLED)
-    return style.getInsets(context, null)
-  }
-
-  private fun getSynthTabAreaInsets(): Insets {
-    val style = SynthLookAndFeel.getStyle(this, Region.TABBED_PANE_TAB_AREA)
-    val context = SynthContext(this, Region.TABBED_PANE_TAB_AREA, style, SynthConstants.ENABLED)
-    return style.getInsets(context, null)
   }
 
   companion object {

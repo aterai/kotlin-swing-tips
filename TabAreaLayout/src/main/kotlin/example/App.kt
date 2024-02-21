@@ -291,18 +291,26 @@ private class TabButton : JToggleButton() {
   override fun fireStateChanged() {
     val model = getModel()
     if (model.isEnabled) {
-      if (model.isPressed || model.isArmed) {
-        background = pressedColor
-        border = selectedBorder
-      } else if (isSelected) {
-        background = selectedColor
-        border = selectedBorder
-      } else if (isRolloverEnabled && model.isRollover) {
-        background = rolloverColor
-        border = emptyBorder
-      } else {
-        background = Color.GRAY
-        border = emptyBorder
+      when {
+        model.isPressed || model.isArmed -> {
+          background = pressedColor
+          border = selectedBorder
+        }
+
+        isSelected -> {
+          background = selectedColor
+          border = selectedBorder
+        }
+
+        isRolloverEnabled && model.isRollover -> {
+          background = rolloverColor
+          border = emptyBorder
+        }
+
+        else -> {
+          background = Color.GRAY
+          border = emptyBorder
+        }
       }
     } else {
       background = Color.GRAY
@@ -426,7 +434,7 @@ private class HorizontalScrollLayerUI : LayerUI<JScrollPane>() {
   override fun installUI(c: JComponent) {
     super.installUI(c)
     (c as? JLayer<*>)?.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or
-      AWTEvent.MOUSE_MOTION_EVENT_MASK or AWTEvent.MOUSE_WHEEL_EVENT_MASK
+        AWTEvent.MOUSE_MOTION_EVENT_MASK or AWTEvent.MOUSE_WHEEL_EVENT_MASK
   }
 
   override fun uninstallUI(c: JComponent) {
@@ -476,6 +484,23 @@ private class HorizontalScrollLayerUI : LayerUI<JScrollPane>() {
 }
 
 open class ClippedTitleTabbedPane : JTabbedPane() {
+  private val tabInsets = UIManager.getInsets("TabbedPane.tabInsets")
+    ?: getSynthTabInsets()
+  private val tabAreaInsets = UIManager.getInsets("TabbedPane.tabAreaInsets")
+    ?: getSynthTabAreaInsets()
+
+  private fun getSynthTabInsets(): Insets {
+    val style = SynthLookAndFeel.getStyle(this, Region.TABBED_PANE_TAB)
+    val ctx = SynthContext(this, Region.TABBED_PANE_TAB, style, SynthConstants.ENABLED)
+    return style.getInsets(ctx, null)
+  }
+
+  private fun getSynthTabAreaInsets(): Insets {
+    val style = SynthLookAndFeel.getStyle(this, Region.TABBED_PANE_TAB_AREA)
+    val ctx = SynthContext(this, Region.TABBED_PANE_TAB_AREA, style, SynthConstants.ENABLED)
+    return style.getInsets(ctx, null)
+  }
+
   override fun updateUI() {
     val key = "TabbedPane.tabAreaInsets"
     UIManager.put(key, null) // uninstall
@@ -499,37 +524,23 @@ open class ClippedTitleTabbedPane : JTabbedPane() {
 
   override fun getAlignmentY() = TOP_ALIGNMENT
 
-  private fun getSynthTabInsets(): Insets {
-    val style = SynthLookAndFeel.getStyle(this, Region.TABBED_PANE_TAB)
-    val context = SynthContext(this, Region.TABBED_PANE_TAB, style, SynthConstants.ENABLED)
-    return style.getInsets(context, null)
-  }
-
-  private fun getSynthTabAreaInsets(): Insets {
-    val style = SynthLookAndFeel.getStyle(this, Region.TABBED_PANE_TAB_AREA)
-    val context = SynthContext(this, Region.TABBED_PANE_TAB_AREA, style, SynthConstants.ENABLED)
-    return style.getInsets(context, null)
-  }
-
   override fun doLayout() {
     val tabCount = tabCount
     if (tabCount == 0 || !isVisible) {
       super.doLayout()
       return
     }
-    val tabInsets = UIManager.getInsets("TabbedPane.tabInsets") ?: getSynthTabInsets()
-    val tabAreaInsets = UIManager.getInsets(
-      "TabbedPane.tabAreaInsets",
-    ) ?: getSynthTabAreaInsets()
+    val tabIns = tabInsets
+    val tabAreaIns = tabAreaInsets
     val ins = insets
     val tabPlacement = getTabPlacement()
-    val areaWidth = width - tabAreaInsets.left - tabAreaInsets.right - ins.left - ins.right
-    val isSide = tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT
+    val areaWidth = width - tabAreaIns.left - tabAreaIns.right - ins.left - ins.right
+    val isSide = tabPlacement == LEFT || tabPlacement == RIGHT
     var tabWidth = if (isSide) areaWidth / 4 else areaWidth / tabCount
     val gap = if (isSide) 0 else areaWidth - tabWidth * tabCount
 
     // "3" is magic number @see BasicTabbedPaneUI#calculateTabWidth
-    tabWidth -= tabInsets.left + tabInsets.right + 3
+    tabWidth -= tabIns.left + tabIns.right + 3
     updateAllTabWidth(tabWidth, gap)
 
     super.doLayout()

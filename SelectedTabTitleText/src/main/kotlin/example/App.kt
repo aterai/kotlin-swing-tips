@@ -72,14 +72,14 @@ private class ClippedTitleTabbedPane : JTabbedPane() {
 
   private fun getSynthTabInsets(): Insets {
     val style = SynthLookAndFeel.getStyle(this, Region.TABBED_PANE_TAB)
-    val context = SynthContext(this, Region.TABBED_PANE_TAB, style, SynthConstants.ENABLED)
-    return style.getInsets(context, null)
+    val ctx = SynthContext(this, Region.TABBED_PANE_TAB, style, SynthConstants.ENABLED)
+    return style.getInsets(ctx, null)
   }
 
   private fun getSynthTabAreaInsets(): Insets {
     val style = SynthLookAndFeel.getStyle(this, Region.TABBED_PANE_TAB_AREA)
-    val context = SynthContext(this, Region.TABBED_PANE_TAB_AREA, style, SynthConstants.ENABLED)
-    return style.getInsets(context, null)
+    val ctx = SynthContext(this, Region.TABBED_PANE_TAB_AREA, style, SynthConstants.ENABLED)
+    return style.getInsets(ctx, null)
   }
 
   override fun doLayout() {
@@ -88,17 +88,17 @@ private class ClippedTitleTabbedPane : JTabbedPane() {
       super.doLayout()
       return
     }
-    val tabInsets = tabInsets
-    val tabAreaInsets = tabAreaInsets
-    val insets = insets
+    val tabIns = tabInsets
+    val tabAreaIns = tabAreaInsets
+    val ins = insets
     val tabPlacement = getTabPlacement()
-    val areaWidth = width - tabAreaInsets.left - tabAreaInsets.right - insets.left - insets.right
-    val isSide = tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT
+    val areaWidth = width - tabAreaIns.left - tabAreaIns.right - ins.left - ins.right
+    val isSide = tabPlacement == LEFT || tabPlacement == RIGHT
     var tabWidth = if (isSide) areaWidth / 4 else areaWidth / tabCount
     val gap = if (isSide) 0 else areaWidth - tabWidth * tabCount
 
     // "3" is magic number @see BasicTabbedPaneUI#calculateTabWidth
-    tabWidth -= tabInsets.left + tabInsets.right + 3
+    tabWidth -= tabIns.left + tabIns.right + 3
     updateAllTabWidth(tabWidth, gap)
 
     super.doLayout()
