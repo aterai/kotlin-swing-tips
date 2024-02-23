@@ -90,7 +90,9 @@ private class ButtonBackgroundIcon(private val color: Color) : Icon {
   override fun getIconHeight() = 0
 }
 
-private class ImageFilterLayerUI<V : Component>(private val filter: ImageFilter) : LayerUI<V>() {
+private class ImageFilterLayerUI<V : Component>(
+  private val filter: ImageFilter,
+) : LayerUI<V>() {
   private var buf: BufferedImage? = null
 
   override fun paint(

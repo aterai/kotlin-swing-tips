@@ -20,7 +20,7 @@ fun makeUI(): Component {
   p.add(label)
 
   val label2 = JLabel()
-  label2.text = "<html><font size='+3' face='Burnstown Dam'>2: html, font, size,+3</font></html>"
+  label2.text = "<html><font size='+3' face='Burnstown Dam'>2: html, font, size,+3"
   p.add(label2)
 
   val styleSheet = StyleSheet()

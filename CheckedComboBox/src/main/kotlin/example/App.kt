@@ -70,7 +70,13 @@ private open class CheckedComboBox(
     check.isOpaque = false
     setRenderer { list, value, index, isSelected, cellHasFocus ->
       panel.removeAll()
-      val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+      val c = renderer.getListCellRendererComponent(
+        list,
+        value,
+        index,
+        isSelected,
+        cellHasFocus,
+      )
       if (index < 0) {
         c.foreground = list.foreground
         (c as? JLabel)?.also {

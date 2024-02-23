@@ -14,7 +14,15 @@ private val tree = object : JTree() {
     super.updateUI()
     val r = getCellRenderer()
     setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-      r.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus).also {
+      r.getTreeCellRendererComponent(
+        tree,
+        value,
+        selected,
+        expanded,
+        leaf,
+        row,
+        hasFocus,
+      ).also {
         if (it is JLabel) {
           val uo = (value as? DefaultMutableTreeNode)?.userObject
           if (uo is NodeObject) {

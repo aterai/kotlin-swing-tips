@@ -72,7 +72,13 @@ private fun initLinkBox(
     endPageIndex = maxPageIndex
   }
   if (startPageIndex < endPageIndex) {
-    initLinkBoxLayout(itemsPerPage, currentPageIndex, maxPageIndex, startPageIndex, endPageIndex)
+    initLinkBoxLayout(
+      itemsPerPage,
+      currentPageIndex,
+      maxPageIndex,
+      startPageIndex,
+      endPageIndex,
+    )
     box.revalidate()
     box.repaint()
   }

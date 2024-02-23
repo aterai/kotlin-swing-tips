@@ -133,7 +133,15 @@ private class CheckBoxNodeRenderer : TreeCellRenderer {
       }
       return checkBox
     }
-    return tcr.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus)
+    return tcr.getTreeCellRendererComponent(
+      tree,
+      value,
+      selected,
+      expanded,
+      leaf,
+      row,
+      hasFocus,
+    )
   }
 }
 

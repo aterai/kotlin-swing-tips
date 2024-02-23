@@ -28,7 +28,14 @@ private val monthTable = object : JTable() {
     fillsViewportHeight = true
     val renderer = DefaultTableCellRenderer()
     setDefaultRenderer(LocalDate::class.java) { table, value, selected, focused, row, column ->
-      renderer.getTableCellRendererComponent(table, value, selected, focused, row, column).also {
+      renderer.getTableCellRendererComponent(
+        table,
+        value,
+        selected,
+        focused,
+        row,
+        column,
+      ).also {
         if (it is JLabel && value is LocalDate) {
           it.horizontalAlignment = SwingConstants.CENTER
           it.text = value.dayOfMonth.toString()

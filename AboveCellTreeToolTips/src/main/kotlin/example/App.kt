@@ -104,7 +104,15 @@ private class TooltipTree(model: TreeModel) : JTree(model) {
     // rowHeight = 24
     val r = getCellRenderer()
     setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-      r.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus).also {
+      r.getTreeCellRendererComponent(
+        tree,
+        value,
+        selected,
+        expanded,
+        leaf,
+        row,
+        hasFocus,
+      ).also {
         (it as? JComponent)?.toolTipText = value?.toString()
       }
     }
@@ -122,7 +130,15 @@ private class TooltipTree(model: TreeModel) : JTree(model) {
       val r = getCellRenderer()
       val selected = isRowSelected(i)
       val expanded = isExpanded(i)
-      val tcr = r.getTreeCellRendererComponent(this, node, selected, expanded, leaf, i, hasFocus)
+      val tcr = r.getTreeCellRendererComponent(
+        this,
+        node,
+        selected,
+        expanded,
+        leaf,
+        i,
+        hasFocus,
+      )
       if ((tcr as? JComponent)?.toolTipText != null) {
         val pt = cellBounds.location
         val ins = label.insets
@@ -146,7 +162,10 @@ private class TooltipTree(model: TreeModel) : JTree(model) {
   }
 }
 
-private class RendererIcon(private val renderer: Component, private val rect: Rectangle) : Icon {
+private class RendererIcon(
+  private val renderer: Component,
+  private val rect: Rectangle,
+) : Icon {
   init {
     rect.setLocation(0, 0)
   }

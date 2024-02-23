@@ -47,7 +47,12 @@ fun makeUI(): Component {
   }
 
   val box = Box.createVerticalBox()
-  listOf(focusPainted, borderPainted, contentAreaFilled, rolloverEnabled).forEach { box.add(it) }
+  listOf(
+    focusPainted,
+    borderPainted,
+    contentAreaFilled,
+    rolloverEnabled,
+  ).forEach { box.add(it) }
 
   return JPanel(BorderLayout()).also {
     val mb = JMenuBar()

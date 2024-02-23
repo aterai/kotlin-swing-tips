@@ -112,7 +112,15 @@ private open class TransparentTreeCellRenderer : DefaultTreeCellRenderer() {
     row: Int,
     hasFocus: Boolean,
   ): Component {
-    val c = super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, false)
+    val c = super.getTreeCellRendererComponent(
+      tree,
+      value,
+      selected,
+      expanded,
+      leaf,
+      row,
+      false,
+    )
     (c as? JComponent)?.isOpaque = false
     return c
   }
