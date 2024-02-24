@@ -153,29 +153,43 @@ private class DnDTabbedPane : JTabbedPane() {
     }
   }
 
+  // https://github.com/aterai/java-swing-tips/pull/24
   fun getTargetTabIndex(glassPt: Point): Int {
+    val count = tabCount
+    if (count == 0) {
+      return -1
+    }
+
     val tabPt = SwingUtilities.convertPoint(glassPane, glassPt, this)
-    val d = if (isTopBottomTabPlacement(getTabPlacement())) Point(1, 0) else Point(0, 1)
-//    return (0 until getTabCount().taleIf { i ->
-//      val r = getBoundsAt(i)
-//      r.translate(-r.width * d.x / 2, -r.height * d.y / 2)
-//      r.contains(tabPt)
-//    }.findFirst().orElseGet {
-//      val count = getTabCount()
-//      val r = getBoundsAt(count - 1)
-//      r.translate(r.width * d.x / 2, r.height * d.y / 2)
-//      if (r.contains(tabPt)) count else -1
-//    }
-    for (i in 0 until tabCount) {
+    val isHorizontal = isTopBottomTabPlacement(getTabPlacement())
+    for (i in 0 until count) {
       val r = getBoundsAt(i)
-      r.translate(-r.width * d.x / 2, -r.height * d.y / 2)
+
+      // First half.
+      if (isHorizontal) {
+        r.width = r.width / 2 + 1
+      } else {
+        r.height = r.height / 2 + 1
+      }
       if (r.contains(tabPt)) {
         return i
       }
+
+      // Second half.
+      if (isHorizontal) {
+        r.x += r.width
+      } else {
+        r.y += r.height
+      }
+      if (r.contains(tabPt)) {
+        return i + 1
+      }
     }
-    val r = getBoundsAt(tabCount - 1)
-    r.translate(r.width * d.x / 2, r.height * d.y / 2)
-    return if (r.contains(tabPt)) tabCount else -1
+
+    val lastRect = getBoundsAt(count - 1)
+    val d = if (isHorizontal) Point(1, 0) else Point(0, 1)
+    lastRect.translate(lastRect.width * d.x, lastRect.height * d.y)
+    return if (lastRect.contains(tabPt)) count else -1
   }
 
   fun convertTab(
