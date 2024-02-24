@@ -7,6 +7,7 @@ import java.awt.event.ItemListener
 import java.awt.event.KeyEvent
 import java.awt.event.MouseEvent
 import javax.swing.*
+import javax.swing.plaf.LayerUI
 
 fun makeUI(): Component {
   val tabbedPane = object : JTabbedPane() {
@@ -24,31 +25,10 @@ fun makeUI(): Component {
 
     override fun getPopupLocation(e: MouseEvent): Point? {
       val selected = indexAtLocation(e.x, e.y) < 0
-      val contains = getTabAreaBounds().contains(e.point)
+      val contains = getTabAreaBounds(this).contains(e.point)
       componentPopupMenu = if (selected && contains) popup2 else popup1
       return super.getPopupLocation(e)
     }
-
-    private fun getTabAreaBounds(): Rectangle {
-      val tabbedRect = bounds
-      val compRect = selectedComponent?.let { it.bounds } ?: Rectangle()
-      val tabPlacement = getTabPlacement()
-      if (isTopBottomTabPlacement(tabPlacement)) {
-        tabbedRect.height = tabbedRect.height - compRect.height
-        if (tabPlacement == BOTTOM) {
-          tabbedRect.y += compRect.y + compRect.height
-        }
-      } else {
-        tabbedRect.width = tabbedRect.width - compRect.width
-        if (tabPlacement == RIGHT) {
-          tabbedRect.x += compRect.x + compRect.width
-        }
-      }
-      return tabbedRect
-    }
-
-    private fun isTopBottomTabPlacement(tabPlacement: Int) =
-      tabPlacement == TOP || tabPlacement == BOTTOM
   }
   tabbedPane.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
   tabbedPane.addTab("Title: 0", JScrollPane(JTextArea()))
@@ -57,9 +37,28 @@ fun makeUI(): Component {
     val mb = JMenuBar()
     mb.add(LookAndFeelUtils.createLookAndFeelMenu())
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
-    it.add(tabbedPane)
+    it.add(JLayer(tabbedPane, makeTestLayer()))
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+private fun getTabAreaBounds(tabbedPane: JTabbedPane): Rectangle {
+  val r = SwingUtilities.calculateInnerArea(tabbedPane, null)
+  val cr = tabbedPane.selectedComponent?.let { it.bounds } ?: Rectangle()
+  val tp = tabbedPane.tabPlacement
+  // Note: don't call BasicTabbedPaneUI#getTabAreaInsets(), because it causes rotation.
+  val i1 = UIManager.getInsets("TabbedPane.tabAreaInsets")
+  val i2 = UIManager.getInsets("TabbedPane.contentBorderInsets")
+  if (tp == SwingConstants.TOP || tp == SwingConstants.BOTTOM) {
+    r.height -= cr.height + i1.top + i1.bottom + i2.top + i2.bottom
+    // r.x += i1.left
+    r.y += if (tp == SwingConstants.TOP) i1.top else cr.y + cr.height + i1.bottom + i2.bottom
+  } else {
+    r.width -= cr.width + i1.top + i1.bottom + i2.left + i2.right
+    r.x += if (tp == SwingConstants.LEFT) i1.top else cr.x + cr.width + i1.bottom + i2.right
+    // r.y += i1.left
+  }
+  return r
 }
 
 private fun makeTabPopupMenu(): JPopupMenu {
@@ -146,6 +145,23 @@ private fun makeTabAreaPopupMenu(): JPopupMenu {
     group.add(item)
   }
   return popup
+}
+
+private fun makeTestLayer(): LayerUI<JTabbedPane> {
+  return object : LayerUI<JTabbedPane>() {
+    override fun paint(g: Graphics, c: JComponent) {
+      super.paint(g, c)
+      if (c is JLayer<*>) {
+        val g2 = g.create() as? Graphics2D ?: return
+        g2.paint = Color.RED
+        (c.view as? JTabbedPane)?.also {
+          val r = getTabAreaBounds(it)
+          g2.drawRect(r.x, r.y, r.width - 1, r.height - 1)
+        }
+        g2.dispose()
+      }
+    }
+  }
 }
 
 private enum class TabPlacement(val placement: Int) {
