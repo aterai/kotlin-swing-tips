@@ -14,7 +14,8 @@ fun makeUI() = JPanel(BorderLayout()).also {
   it.preferredSize = Dimension(320, 240)
 }
 
-private fun getArrowButton(c: Container) = c.components.filterIsInstance<JButton>().firstOrNull()
+private fun getArrowButton(c: Container) =
+  c.components.filterIsInstance<JButton>().firstOrNull()
 
 private fun makeTitledPanel(
   title: String,

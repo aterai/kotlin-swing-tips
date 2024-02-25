@@ -39,18 +39,20 @@ fun makeUI(): Component {
   encButton.addActionListener {
     runCatching {
       val path = File.createTempFile("output", ".xml").toPath()
-      XMLEncoder(BufferedOutputStream(Files.newOutputStream(path))).use { xe ->
+      XMLEncoder(BufferedOutputStream(Files.newOutputStream(path))).use {
         val d1 = DefaultPersistenceDelegate(arrayOf("column", "sortOrder"))
-        xe.setPersistenceDelegate(RowSorter.SortKey::class.java, d1)
-        xe.writeObject(table.rowSorter.sortKeys)
+        it.setPersistenceDelegate(RowSorter.SortKey::class.java, d1)
+        it.writeObject(table.rowSorter.sortKeys)
         val d2 = DefaultTableModelPersistenceDelegate()
-        xe.setPersistenceDelegate(DefaultTableModel::class.java, d2)
-        xe.writeObject(table.model)
+        it.setPersistenceDelegate(DefaultTableModel::class.java, d2)
+        it.writeObject(table.model)
         val d3 = DefaultTableColumnModelPersistenceDelegate()
-        xe.setPersistenceDelegate(DefaultTableColumnModel::class.java, d3)
-        xe.writeObject(table.columnModel)
+        it.setPersistenceDelegate(DefaultTableColumnModel::class.java, d3)
+        it.writeObject(table.columnModel)
       }
-      Files.newBufferedReader(path, StandardCharsets.UTF_8).use { r -> textArea.read(r, "temp") }
+      Files.newBufferedReader(path, StandardCharsets.UTF_8).use {
+        textArea.read(it, "temp")
+      }
     }.onFailure {
       it.printStackTrace()
       textArea.text = it.message

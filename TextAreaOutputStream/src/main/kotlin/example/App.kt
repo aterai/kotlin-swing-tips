@@ -51,7 +51,12 @@ fun makeUI(): Component {
 
 private class EnterAction(private val textField: JTextField) : AbstractAction("Enter") {
   override fun actionPerformed(e: ActionEvent) {
-    LOGGER.info { "%s%n  %s%n".format(LocalDateTime.now(ZoneId.systemDefault()), textField.text) }
+    LOGGER.info {
+      "%s%n  %s%n".format(
+        LocalDateTime.now(ZoneId.systemDefault()),
+        textField.text,
+      )
+    }
   }
 
   companion object {

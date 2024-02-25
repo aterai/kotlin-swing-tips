@@ -96,7 +96,9 @@ private class ImageCaptionLabel(caption: String, icon: Icon) : JLabel() {
   }
 }
 
-private class LabelHandler(private val textArea: Component) : MouseAdapter(), HierarchyListener {
+private class LabelHandler(
+  private val textArea: Component,
+) : MouseAdapter(), HierarchyListener {
   private val animator = Timer(5) { updateTextAreaLocation() }
   var textAreaHeight = 0
     private set

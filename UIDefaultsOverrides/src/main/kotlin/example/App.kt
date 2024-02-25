@@ -94,7 +94,9 @@ private enum class CheckIcon {
   MOUSEOVER,
 }
 
-private class MyCheckBoxMenuItemPainter(private val state: CheckIcon) : AbstractRegionPainter() {
+private class MyCheckBoxMenuItemPainter(
+  private val state: CheckIcon,
+) : AbstractRegionPainter() {
   private val ctx = PaintContext(Insets(5, 5, 5, 5), Dimension(9, 10), false, null, 1.0, 1.0)
 
   override fun doPaint(

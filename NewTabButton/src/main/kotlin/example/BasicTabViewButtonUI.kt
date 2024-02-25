@@ -76,18 +76,48 @@ open class BasicTabViewButtonUI : TabViewButtonUI() {
     val color = Color(255, 120, 40)
     if (model.isSelected) {
       g.color = color
-      g.drawLine(viewRect.x + 1, viewRect.y - 2, viewRect.x + viewRect.width - 1, viewRect.y - 2)
+      g.drawLine(
+        viewRect.x + 1,
+        viewRect.y - 2,
+        viewRect.x + viewRect.width - 1,
+        viewRect.y - 2,
+      )
       g.color = color.brighter()
-      g.drawLine(viewRect.x + 0, viewRect.y - 1, viewRect.x + viewRect.width - 0, viewRect.y - 1)
+      g.drawLine(
+        viewRect.x + 0,
+        viewRect.y - 1,
+        viewRect.x + viewRect.width - 0,
+        viewRect.y - 1,
+      )
       g.color = color
-      g.drawLine(viewRect.x + 0, viewRect.y - 0, viewRect.x + viewRect.width - 0, viewRect.y - 0)
+      g.drawLine(
+        viewRect.x + 0,
+        viewRect.y - 0,
+        viewRect.x + viewRect.width - 0,
+        viewRect.y - 0,
+      )
     } else if (model.isRollover) {
       g.color = color
-      g.drawLine(viewRect.x + 1, viewRect.y + 0, viewRect.x + viewRect.width - 1, viewRect.y + 0)
+      g.drawLine(
+        viewRect.x + 1,
+        viewRect.y + 0,
+        viewRect.x + viewRect.width - 1,
+        viewRect.y + 0,
+      )
       g.color = color.brighter()
-      g.drawLine(viewRect.x + 0, viewRect.y + 1, viewRect.x + viewRect.width - 0, viewRect.y + 1)
+      g.drawLine(
+        viewRect.x + 0,
+        viewRect.y + 1,
+        viewRect.x + viewRect.width - 0,
+        viewRect.y + 1,
+      )
       g.color = color
-      g.drawLine(viewRect.x + 0, viewRect.y + 2, viewRect.x + viewRect.width - 0, viewRect.y + 2)
+      g.drawLine(
+        viewRect.x + 0,
+        viewRect.y + 2,
+        viewRect.x + viewRect.width - 0,
+        viewRect.y + 2,
+      )
     }
     val v = c.getClientProperty(BasicHTML.propertyKey)
     if (v is View) {

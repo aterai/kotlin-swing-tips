@@ -46,7 +46,7 @@ private fun getTabAreaBounds(tabbedPane: JTabbedPane): Rectangle {
   val r = SwingUtilities.calculateInnerArea(tabbedPane, null)
   val cr = tabbedPane.selectedComponent?.let { it.bounds } ?: Rectangle()
   val tp = tabbedPane.tabPlacement
-  // Note: don't call BasicTabbedPaneUI#getTabAreaInsets(), because it causes rotation.
+  // Note: BasicTabbedPaneUI#getTabAreaInsets() causes rotation
   val i1 = UIManager.getInsets("TabbedPane.tabAreaInsets")
   val i2 = UIManager.getInsets("TabbedPane.contentBorderInsets")
   if (tp == SwingConstants.TOP || tp == SwingConstants.BOTTOM) {
