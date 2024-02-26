@@ -334,7 +334,8 @@ private class TitleBarDragLayerUI : LayerUI<JComponent>() {
     l: JLayer<out JComponent>,
   ) {
     val c = SwingUtilities.getRoot(e.component)
-    if (e.id == MouseEvent.MOUSE_DRAGGED && c is Window && SwingUtilities.isLeftMouseButton(e)) {
+    val isLeftButton = SwingUtilities.isLeftMouseButton(e)
+    if (e.id == MouseEvent.MOUSE_DRAGGED && c is Window && isLeftButton) {
       val pt = c.getLocation()
       c.setLocation(pt.x - startPt.x + e.x, pt.y - startPt.y + e.y)
     }
