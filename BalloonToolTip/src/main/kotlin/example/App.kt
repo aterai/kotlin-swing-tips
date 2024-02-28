@@ -36,7 +36,8 @@ fun makeUI(): Component {
             val rect = SwingUtilities.calculateInnerArea(it, it.bounds)
             val fm = c.getFontMetrics(c.font)
             val str = value?.toString() ?: ""
-            (c as? JComponent)?.toolTipText = if (fm.stringWidth(str) > rect.width) str else null
+            val b = fm.stringWidth(str) > rect.width
+            (c as? JComponent)?.toolTipText = if (b) str else null
           }
         }
       }
