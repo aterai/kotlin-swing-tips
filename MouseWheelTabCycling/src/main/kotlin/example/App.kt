@@ -58,45 +58,38 @@ fun makeUI(): Component {
 
 private class TabWheelHandler : MouseWheelListener {
   override fun mouseWheelMoved(e: MouseWheelEvent) {
-    val src = e.component as? JTabbedPane
-    if (src == null || !getTabAreaBounds(src).contains(e.point)) {
-      return
+    val src = e.component as? JTabbedPane ?: return
+    val policy = src.tabLayoutPolicy == JTabbedPane.SCROLL_TAB_LAYOUT
+    if (policy && getTabAreaBounds(src).contains(e.point)) {
+      val dir = (if (e.isControlDown) -1 else 1) * e.preciseWheelRotation > 0
+      val id = ActionEvent.ACTION_PERFORMED
+      val cmd = getCommand(dir)
+      val event = ActionEvent(src, id, cmd, e.getWhen(), e.modifiersEx)
+      src.actionMap[cmd].actionPerformed(event)
     }
-    val dir = (if (e.isControlDown) -1 else 1) * e.preciseWheelRotation > 0
-    val id = ActionEvent.ACTION_PERFORMED
-    val cmd = if (check.isSelected()) {
-      if (dir) "scrollTabsForwardAction" else "scrollTabsBackwardAction"
-    } else {
-      if (dir) "navigateNext" else "navigatePrevious"
-    }
-    val event = ActionEvent(src, id, cmd, e.getWhen(), e.modifiersEx)
-    src.actionMap[cmd].actionPerformed(event)
   }
-}
 
-fun getTabAreaBounds(tabbedPane: JTabbedPane): Rectangle {
-  val tabbedRect = tabbedPane.bounds
-  val xx = tabbedRect.x
-  val yy = tabbedRect.y
-  val compRect = tabbedPane.selectedComponent?.bounds ?: Rectangle()
-  val tabPlacement = tabbedPane.tabPlacement
-  if (isTopBottomTabPlacement(tabPlacement)) {
-    tabbedRect.height = tabbedRect.height - compRect.height
-    if (tabPlacement == SwingConstants.BOTTOM) {
-      tabbedRect.y += compRect.y + compRect.height
-    }
+  private fun getCommand(dir: Boolean) = if (check.isSelected()) {
+    if (dir) "scrollTabsForwardAction" else "scrollTabsBackwardAction"
   } else {
-    tabbedRect.width = tabbedRect.width - compRect.width
-    if (tabPlacement == SwingConstants.RIGHT) {
-      tabbedRect.x += compRect.x + compRect.width
-    }
+    if (dir) "navigateNext" else "navigatePrevious"
   }
-  tabbedRect.translate(-xx, -yy)
-  return tabbedRect
 }
 
-private fun isTopBottomTabPlacement(tabPlacement: Int) =
-  tabPlacement == SwingConstants.TOP || tabPlacement == SwingConstants.BOTTOM
+fun descendants(parent: Container): List<Component> =
+  parent.components
+    .filterIsInstance<Container>()
+    .flatMap { listOf(it) + descendants(it) }
+
+fun getTabAreaBounds(tabbedPane: JTabbedPane) =
+  descendants(tabbedPane)
+    .filterIsInstance<JViewport>()
+    .first { "TabbedPane.scrollableViewport" == it.name }
+    .let {
+      val r = SwingUtilities.calculateInnerArea(it, null)
+      SwingUtilities.convertRectangle(it, r, tabbedPane)
+    }
+    ?: Rectangle()
 
 private enum class TabPlacements(val tabPlacement: Int) {
   TOP(SwingConstants.TOP),
