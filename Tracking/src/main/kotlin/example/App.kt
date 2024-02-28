@@ -10,10 +10,14 @@ import javax.swing.*
 fun makeUI(): Component {
   val text = "1234567890"
   val l1 = JLabel("$text TRACKING_TIGHT (-.04f)")
-  l1.font = l1.font.deriveFont(hashMapOf(TextAttribute.TRACKING to TextAttribute.TRACKING_TIGHT))
+  l1.font = l1.font.deriveFont(
+    hashMapOf(TextAttribute.TRACKING to TextAttribute.TRACKING_TIGHT),
+  )
 
   val l2 = JLabel("$text TRACKING_LOOSE (.04f)")
-  l2.font = l2.font.deriveFont(hashMapOf(TextAttribute.TRACKING to TextAttribute.TRACKING_LOOSE))
+  l2.font = l2.font.deriveFont(
+    hashMapOf(TextAttribute.TRACKING to TextAttribute.TRACKING_LOOSE),
+  )
 
   val p0 = JPanel(GridLayout(0, 1, 5, 5))
   p0.border = BorderFactory.createTitledBorder("TextAttribute.TRACKING")
