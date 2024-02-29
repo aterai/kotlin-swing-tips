@@ -44,7 +44,8 @@ private fun makeTable1(): JTable {
         if (r.contains(pt)) {
           val currentRow = t.rowAtPoint(pt)
           val currentColumn = t.columnAtPoint(pt)
-          if (isNotRowContains(t.getSelectedRows(), currentRow)) {
+          val none = table.selectedRows.none { it == currentRow }
+          if (none) {
             t.changeSelection(currentRow, currentColumn, false, false)
           }
         } else {
@@ -71,7 +72,8 @@ private fun makeTable2(): JTable {
         if (r.contains(pt)) {
           val currentRow = table.rowAtPoint(pt)
           val currentColumn = table.columnAtPoint(pt)
-          if (isNotRowContains(table.getSelectedRows(), currentRow)) {
+          val none = table.selectedRows.none { it == currentRow }
+          if (none) {
             table.changeSelection(currentRow, currentColumn, false, false)
           }
         } else {
@@ -130,7 +132,8 @@ private class RightMouseButtonLayerUI : LayerUI<JScrollPane>() {
       if (r.contains(pt)) {
         val currentRow = table.rowAtPoint(pt)
         val currentColumn = table.columnAtPoint(pt)
-        if (isNotRowContains(table.getSelectedRows(), currentRow)) {
+        val none = table.selectedRows.none { it == currentRow }
+        if (none) {
           table.changeSelection(currentRow, currentColumn, false, false)
         }
       } else {
@@ -148,18 +151,6 @@ fun getCellArea(table: JTable): Rectangle {
   val cc = table.columnCount
   val end = table.getCellRect(rc - 1, cc - 1, true)
   return start.union(end)
-}
-
-fun isNotRowContains(
-  selectedRows: IntArray,
-  currentRow: Int,
-): Boolean {
-  for (i in selectedRows) {
-    if (i == currentRow) {
-      return false
-    }
-  }
-  return true
 }
 
 fun main() {
