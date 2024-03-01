@@ -315,9 +315,11 @@ private class HorizontalScrollLayerUI : LayerUI<JScrollPane>() {
     val hsb = l.view.horizontalScrollBar
     when (e.id) {
       MouseEvent.MOUSE_ENTERED -> hsb.isVisible = true
+
       MouseEvent.MOUSE_EXITED -> if (!isDragging) {
         hsb.isVisible = false
       }
+
       MouseEvent.MOUSE_RELEASED -> if (isDragging) {
         isDragging = false
         hsb.isVisible = false

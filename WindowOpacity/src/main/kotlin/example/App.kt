@@ -36,10 +36,12 @@ fun makeUI(): Component {
           texture = imageTexture
           p.isOpaque = false
         }
+
         "CheckerTexturePaint" -> {
           texture = checkerTexture
           p.isOpaque = false
         }
+
         else -> {
           texture = null
           p.isOpaque = true

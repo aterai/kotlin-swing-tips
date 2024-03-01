@@ -50,10 +50,12 @@ fun makeUI(): Component {
           val msg = "You click the link with the URL " + e.url
           JOptionPane.showMessageDialog(it, msg)
         }
+
         HyperlinkEvent.EventType.ENTERED -> {
           tooltip = it.toolTipText
           it.toolTipText = e.url?.toExternalForm()
         }
+
         HyperlinkEvent.EventType.EXITED -> {
           it.toolTipText = tooltip
           tooltip = null
@@ -88,12 +90,14 @@ private class CustomTooltipEditorPane : JEditorPane() {
               val msg = e.url
               JOptionPane.showMessageDialog(editor, msg)
             }
+
             HyperlinkEvent.EventType.ENTERED -> {
               tooltip = editor.toolTipText
               (e.sourceElement?.attributes?.getAttribute(HTML.Tag.A) as? AttributeSet)?.also {
                 editor.toolTipText = it.getAttribute(HTML.Attribute.TITLE)?.toString()
               }
             }
+
             HyperlinkEvent.EventType.EXITED -> {
               editor.toolTipText = tooltip
               tooltip = null

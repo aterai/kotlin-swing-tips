@@ -30,6 +30,7 @@ fun makeUI(): Component {
           g2.drawImage(image, at, this)
           g2.dispose()
         }
+
         Flip.HORIZONTAL -> {
           val at = AffineTransform.getScaleInstance(-1.0, 1.0)
           val w = image.getWidth(this)
@@ -38,6 +39,7 @@ fun makeUI(): Component {
           val atOp = AffineTransformOp(at, null)
           g.drawImage(atOp.filter(image, null), 0, 0, w, h, this)
         }
+
         Flip.NONE -> {
           val w = image.getWidth(this)
           val h = image.getHeight(this)

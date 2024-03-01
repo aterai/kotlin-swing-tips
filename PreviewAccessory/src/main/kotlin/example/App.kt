@@ -47,10 +47,12 @@ private class ImagePreview(fc: JFileChooser) : JComponent(), PropertyChangeListe
         file = null
         true
       }
+
       JFileChooser.SELECTED_FILE_CHANGED_PROPERTY -> {
         file = e.newValue as? File
         true
       }
+
       else -> {
         file = null
         false

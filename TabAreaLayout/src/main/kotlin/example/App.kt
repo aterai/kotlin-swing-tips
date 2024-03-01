@@ -434,7 +434,7 @@ private class HorizontalScrollLayerUI : LayerUI<JScrollPane>() {
   override fun installUI(c: JComponent) {
     super.installUI(c)
     (c as? JLayer<*>)?.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or
-        AWTEvent.MOUSE_MOTION_EVENT_MASK or AWTEvent.MOUSE_WHEEL_EVENT_MASK
+      AWTEvent.MOUSE_MOTION_EVENT_MASK or AWTEvent.MOUSE_WHEEL_EVENT_MASK
   }
 
   override fun uninstallUI(c: JComponent) {
@@ -449,9 +449,11 @@ private class HorizontalScrollLayerUI : LayerUI<JScrollPane>() {
     val hsb = l.view.horizontalScrollBar
     when (e.id) {
       MouseEvent.MOUSE_ENTERED -> hsb.isVisible = true
+
       MouseEvent.MOUSE_EXITED -> if (!isDragging) {
         hsb.isVisible = false
       }
+
       MouseEvent.MOUSE_RELEASED -> if (isDragging) {
         isDragging = false
         hsb.isVisible = false

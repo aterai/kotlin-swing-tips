@@ -199,6 +199,7 @@ private class TitledBorder2(title: String?) : TitledBorder(title) {
         br.y += lr.height - edge
         br.height -= lr.height - edge
       }
+
       TOP -> {
         ins.top = edge + ins.top / 2 - lr.height / 2
         if (ins.top < edge) {
@@ -208,14 +209,17 @@ private class TitledBorder2(title: String?) : TitledBorder(title) {
           lr.y += ins.top
         }
       }
+
       BELOW_TOP -> {
         val a = ins.top + edge
         lr.y += a
       }
+
       ABOVE_BOTTOM -> {
         val a = ins.bottom + edge
         lr.y += height - lr.height - a
       }
+
       BOTTOM -> {
         lr.y += height - lr.height
         ins.bottom = edge + (ins.bottom - lr.height) / 2
@@ -225,6 +229,7 @@ private class TitledBorder2(title: String?) : TitledBorder(title) {
           lr.y -= ins.bottom
         }
       }
+
       BELOW_BOTTOM -> {
         ins.left = 0
         ins.right = 0
@@ -346,14 +351,19 @@ private object TitledBorderUtils {
   ) {
     when (position) {
       TitledBorder.ABOVE_TOP -> insets.top += size.height - edge
+
       TitledBorder.TOP -> if (insets.top < size.height) {
         insets.top = size.height - edge
       }
+
       TitledBorder.BELOW_TOP -> insets.top += size.height
+
       TitledBorder.ABOVE_BOTTOM -> insets.bottom += size.height
+
       TitledBorder.BOTTOM -> if (insets.bottom < size.height) {
         insets.bottom = size.height - edge
       }
+
       TitledBorder.BELOW_BOTTOM -> insets.bottom += size.height - edge
     }
   }

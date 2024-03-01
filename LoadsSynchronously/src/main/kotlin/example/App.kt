@@ -51,10 +51,12 @@ fun makeUI(): Component {
         editor2.text = st0
         saveImage(editor2)
       }
+
       1 -> {
         editor1.text = st1
         saveImage(editor1)
       }
+
       else -> {
         editor0.text = st0
         saveImage(editor0)

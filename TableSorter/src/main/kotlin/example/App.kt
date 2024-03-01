@@ -266,10 +266,12 @@ private class TableSorter() : AbstractTableModel() {
           clearSortingState()
           fireTableChanged(e)
         }
+
         e.firstRow == TableModelEvent.HEADER_ROW -> {
           cancelSorting()
           fireTableChanged(e)
         }
+
         else -> {
           val column = e.column
           val fr = e.firstRow

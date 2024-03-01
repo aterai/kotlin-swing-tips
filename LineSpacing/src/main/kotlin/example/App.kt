@@ -61,9 +61,13 @@ private class BottomInsetViewFactory : ViewFactory {
     AbstractDocument.ParagraphElementName -> object : ParagraphView(elem) {
       override fun getBottomInset(): Short = 5
     }
+
     AbstractDocument.SectionElementName -> BoxView(elem, View.Y_AXIS)
+
     StyleConstants.ComponentElementName -> ComponentView(elem)
+
     StyleConstants.IconElementName -> IconView(elem)
+
     else -> LabelView(elem)
   }
 }

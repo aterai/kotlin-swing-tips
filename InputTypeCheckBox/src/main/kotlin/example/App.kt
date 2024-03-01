@@ -112,10 +112,12 @@ private class HeaderRenderer : TableCellRenderer {
             c.isSelected = true
             c.isEnabled = true
           }
+
           Status.DESELECTED -> {
             c.isSelected = false
             c.isEnabled = true
           }
+
           Status.INDETERMINATE -> {
             c.isSelected = true
             c.isEnabled = false

@@ -164,14 +164,17 @@ private class TabAreaResizeLayer : LayerUI<ClippedTitleTabbedPane>() {
           bounds.x = compRect.x - dividerSize.width
           bounds.width = dividerSize.width * 2
         }
+
         SwingConstants.RIGHT -> {
           bounds.x += compRect.x + compRect.width - dividerSize.width
           bounds.width = dividerSize.width * 2
         }
+
         SwingConstants.BOTTOM -> {
           bounds.y += compRect.y + compRect.height - dividerSize.height
           bounds.height = dividerSize.height * 2
         }
+
         else -> {
           bounds.y = compRect.y - dividerSize.height
           bounds.height = dividerSize.height * 2

@@ -116,7 +116,9 @@ private class HoverLayer : LayerUI<JPanel>() {
     if (c is JScrollBar) {
       when (e.id) {
         MouseEvent.MOUSE_ENTERED -> expandStart(isDragging)
+
         MouseEvent.MOUSE_EXITED -> collapseStart(isDragging)
+
         MouseEvent.MOUSE_RELEASED -> c.bounds.contains(e.point).also {
           isDragging = false
           collapseStart(!it)
@@ -238,6 +240,7 @@ private class ScrollBarOnHoverLayerUI : LayerUI<JScrollPane>() {
         val max = TranslucentScrollBarUI.MAX_WIDTH
         c.preferredSize = Dimension(max, 0)
       }
+
       MouseEvent.MOUSE_EXITED -> {
         timer.removeActionListener(listener)
         listener = ActionListener {

@@ -37,10 +37,12 @@ private fun makeEditorPane(editable: Boolean) = JEditorPane().also {
         val msg = "Clicked on the link " + e.url
         JOptionPane.showMessageDialog(it, msg)
       }
+
       HyperlinkEvent.EventType.ENTERED -> {
         tooltip = it.toolTipText
         it.toolTipText = e.url?.toExternalForm()
       }
+
       HyperlinkEvent.EventType.EXITED -> {
         it.toolTipText = tooltip
         tooltip = null

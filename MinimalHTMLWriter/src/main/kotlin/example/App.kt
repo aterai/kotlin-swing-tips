@@ -175,8 +175,11 @@ private class BasicTransferable(
     return when {
       // richerFlavors.contains(flavor) -> getRicherData
       htmlFlavors.contains(flavor) -> getHtmlTransferData(flavor)
+
       plainFlavors.contains(flavor) -> getPlaneTransferData(flavor)
+
       stringFlavors.contains(flavor) -> plainData
+
       else -> throw UnsupportedFlavorException(flavor)
     }
   }

@@ -112,14 +112,19 @@ private object SvgUtils {
       when (pi.currentSegment(c)) {
         PathIterator.SEG_MOVETO ->
           sb.append("M%.2f,%.2f ".format(c[0], c[1]))
+
         PathIterator.SEG_LINETO ->
           sb.append("L%.2f,%.2f ".format(c[0], c[1]))
+
         PathIterator.SEG_QUADTO ->
           sb.append("Q%.2f,%.2f,%.2f,%.2f ".format(c[0], c[1], c[2], c[3]))
+
         PathIterator.SEG_CUBICTO ->
           sb.append("C%.2f,%.2f,%.2f,%.2f,%.2f,%.2f ".format(c[0], c[1], c[2], c[3], c[4], c[5]))
+
         PathIterator.SEG_CLOSE ->
           sb.append('Z')
+
         else -> throw InternalError("unrecognized path type")
       }
       pi.next()

@@ -92,14 +92,19 @@ private class SilhouetteIcon(
     while (!pi.isDone) {
       when (val pathSegmentType = pi.currentSegment(cd)) {
         PathIterator.SEG_MOVETO -> path.moveTo(cd[0], cd[1])
+
         PathIterator.SEG_LINETO -> path.lineTo(cd[0], cd[1])
+
         PathIterator.SEG_QUADTO -> path.quadTo(cd[0], cd[1], cd[2], cd[3])
+
         PathIterator.SEG_CUBICTO -> path.curveTo(cd[0], cd[1], cd[2], cd[3], cd[4], cd[5])
+
         PathIterator.SEG_CLOSE -> path.also {
           it.closePath()
           area.add(createArea(it))
           it.reset()
         }
+
         else -> System.err.println("Unexpected value! $pathSegmentType")
       }
       pi.next()

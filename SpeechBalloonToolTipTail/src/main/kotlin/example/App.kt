@@ -151,16 +151,19 @@ private class BalloonToolTip : JToolTip() {
         tail.lineTo(-SIZE.toDouble(), cy)
         tail.lineTo(0.0, cy + SIZE)
       }
+
       SwingConstants.RIGHT -> {
         tail.moveTo(w, cy - SIZE)
         tail.lineTo(w + SIZE, cy)
         tail.lineTo(w, cy + SIZE)
       }
+
       SwingConstants.BOTTOM -> {
         tail.moveTo(cx - SIZE, h)
         tail.lineTo(cx, h + SIZE)
         tail.lineTo(cx + SIZE, h)
       }
+
       else -> {
         tail.moveTo(cx - SIZE, 0.0)
         tail.lineTo(cx, -SIZE.toDouble())

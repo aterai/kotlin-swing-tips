@@ -82,6 +82,7 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
         startPt.location = e.point
         parent.repaint()
       }
+
       MouseEvent.MOUSE_RELEASED -> if (draggingComponent != null) {
         // swap the dragging panel and the temporary filler
         val idx = parent.getComponentZOrder(fillerComponent)

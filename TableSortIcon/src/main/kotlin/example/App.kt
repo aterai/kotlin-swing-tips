@@ -51,10 +51,12 @@ private fun makeRadioPane(table: JTable): Box {
         ascending = IconUIResource(ImageIcon(ascendingPath))
         descending = IconUIResource(ImageIcon(descendingPath))
       }
+
       r == r1 -> {
         ascending = IconUIResource(EMPTY_ICON)
         descending = IconUIResource(EMPTY_ICON)
       }
+
       else -> {
         ascending = UIManager.getLookAndFeelDefaults().getIcon("Table.ascendingSortIcon")
         descending = UIManager.getLookAndFeelDefaults().getIcon("Table.descendingSortIcon")

@@ -263,11 +263,13 @@ private class HtmlTableTransferHandler : TransferHandler() {
   ) {
     when (o) {
       is Date -> buf.append("  <td><time>").append(o.toString()).append("</time></td>")
+
       is Color -> buf.append(
         "  <td style='background-color:#%06X'>&nbsp;</td>%n".format(
           o.rgb and 0xFF_FF_FF,
         ),
       )
+
       else -> buf.append("  <td>").append(o?.toString() ?: "").append("</td>")
     }
   }

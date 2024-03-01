@@ -208,6 +208,7 @@ private class BreadcrumbLayerUI<V : Component> : LayerUI<V>() {
             at.createTransformedShape(icon.shape)
           }
         }
+
       else -> null
     }
     if (s != shape) {

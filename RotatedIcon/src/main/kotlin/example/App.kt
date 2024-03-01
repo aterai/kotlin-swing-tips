@@ -53,15 +53,18 @@ private class RotateIcon(icon: Icon, rotate: Int) : Icon {
         ty = dim.width
         dim.setSize(icon.iconHeight, icon.iconWidth)
       }
+
       1, -3 -> {
         tx = dim.height
         ty = 0
         dim.setSize(icon.iconHeight, icon.iconWidth)
       }
+
       2 -> {
         tx = dim.width
         ty = dim.height
       }
+
       else -> {
         tx = 0
         ty = 0

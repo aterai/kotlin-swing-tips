@@ -34,10 +34,12 @@ fun makeUI(): Component {
           c.foreground = getSelectionForeground()
           c.background = getSelectionBackground()
         }
+
         convertRowIndexToModel(row) == rowCount - 1 -> {
           c.foreground = Color.WHITE
           c.background = Color.RED
         }
+
         else -> {
           c.foreground = foreground
           c.background = background

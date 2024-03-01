@@ -62,6 +62,7 @@ private class RowHeightResizeLayer : LayerUI<JScrollPane>() {
           otherCursor = tmp
         }
       }
+
       MouseEvent.MOUSE_DRAGGED -> {
         val newHeight = e.y - mouseOffsetY
         if (newHeight > MIN_ROW_HEIGHT && resizingRow >= 0) {
@@ -83,7 +84,9 @@ private class RowHeightResizeLayer : LayerUI<JScrollPane>() {
     return when {
       // col != 0 -> -1
       r.contains(p) -> -1
+
       p.y < r.centerY -> row - 1
+
       else -> row
     }
   }

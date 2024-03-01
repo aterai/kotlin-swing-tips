@@ -72,11 +72,16 @@ fun initLabel(
 ) {
   l.horizontalAlignment = when {
     leftRadio.isSelected -> SwingConstants.LEFT
+
     centerRadio.isSelected -> SwingConstants.CENTER
+
     rightRadio.isSelected -> SwingConstants.RIGHT
+
     else -> when { // customRadio.isSelected
       row % 3 == 0 -> SwingConstants.LEFT
+
       row % 3 == 1 -> SwingConstants.CENTER
+
       else -> SwingConstants.RIGHT
     }
   }

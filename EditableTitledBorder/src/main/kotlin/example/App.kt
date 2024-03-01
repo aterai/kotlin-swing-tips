@@ -195,20 +195,24 @@ private class EditableTitledBorder(
         insets.left = 0
         insets.right = 0
       }
+
       TOP -> {
         insets.top = edge + insets.top / 2 - lblR.height / 2
         if (insets.top >= edge) {
           lblR.y += insets.top
         }
       }
+
       BELOW_TOP -> {
         val v = insets.top + edge
         lblR.y += v
       }
+
       ABOVE_BOTTOM -> {
         val v = insets.bottom + edge
         lblR.y += c.height - lblR.height - v
       }
+
       BOTTOM -> {
         lblR.y += c.height - lblR.height
         insets.bottom = edge + (insets.bottom - lblR.height) / 2
@@ -216,6 +220,7 @@ private class EditableTitledBorder(
           lblR.y -= insets.bottom
         }
       }
+
       BELOW_BOTTOM -> {
         insets.left = 0
         insets.right = 0

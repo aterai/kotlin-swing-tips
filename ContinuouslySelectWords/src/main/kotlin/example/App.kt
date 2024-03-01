@@ -101,10 +101,12 @@ private class SelectWordCaret : DefaultCaret() {
           dot = p0
           moveDot(p1, biasRet[0])
         }
+
         p1 < pos -> {
           dot = p0
           moveDot(Utilities.getWordEnd(c, pos), biasRet[0])
         }
+
         p0 > pos -> {
           dot = p1
           moveDot(Utilities.getWordStart(c, pos), biasRet[0])
@@ -125,10 +127,12 @@ private class SelectWordCaret : DefaultCaret() {
           dot = p0
           moveDot(p1, biasRet[0])
         }
+
         p1 < pos -> {
           dot = p0
           moveDot(Utilities.getRowEnd(c, pos), biasRet[0])
         }
+
         p0 > pos -> {
           dot = p1
           moveDot(Utilities.getRowStart(c, pos), biasRet[0])

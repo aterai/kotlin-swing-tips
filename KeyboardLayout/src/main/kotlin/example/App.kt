@@ -54,10 +54,18 @@ private fun makeKeyboardPanel() = JPanel(GridBagLayout()).also {
 }
 
 private fun getKeyButtonColumnGridWidth(length: Int) = when (length) {
-  in 5..8 -> 4 // Shift, Enter
-  in 2..4 -> 3 // Alt, Ctrl, Esc, Tab, ...
-  1 -> 2 // A, B, C, ..., Z
-  0 -> 1 // HorizontalStrut
+  in 5..8 -> 4
+
+  // Shift, Enter
+  in 2..4 -> 3
+
+  // Alt, Ctrl, Esc, Tab, ...
+  1 -> 2
+
+  // A, B, C, ..., Z
+  0 -> 1
+
+  // HorizontalStrut
   else -> 14 // Space
 }
 

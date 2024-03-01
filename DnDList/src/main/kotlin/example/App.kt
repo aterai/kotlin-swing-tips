@@ -155,11 +155,13 @@ private class DnDList<E> : JList<E>(), DragGestureListener, Transferable {
         val str = model[draggedIndex]
         when {
           targetIndex == draggedIndex -> setSelectedIndex(targetIndex)
+
           targetIndex < draggedIndex -> model.also {
             it.remove(draggedIndex)
             it.add(targetIndex, str)
             setSelectedIndex(targetIndex)
           }
+
           else -> model.also {
             it.add(targetIndex, str)
             it.remove(draggedIndex)

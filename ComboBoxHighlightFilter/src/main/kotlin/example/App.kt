@@ -147,7 +147,9 @@ private class ComboKeyHandler(private val combo: JComboBox<String>) : KeyAdapter
       KeyEvent.VK_RIGHT -> list.first { it.contains(text) }.also {
         textField.text = it
       }
+
       KeyEvent.VK_ENTER -> enter(text)
+
       KeyEvent.VK_ESCAPE -> shouldHide = true
     }
   }

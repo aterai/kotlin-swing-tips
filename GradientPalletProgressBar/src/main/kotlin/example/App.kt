@@ -144,6 +144,7 @@ class GradientPalletProgressBarUI : BasicProgressBarUI() {
         g.color = getColorFromPallet(pallet, x)
         g.fillRect(b.left, b.top, amountFull, barRectHeight)
       }
+
       SwingConstants.VERTICAL -> {
         val y = amountFull / barRectHeight.toFloat()
         g.color = getColorFromPallet(pallet, y)

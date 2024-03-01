@@ -48,11 +48,13 @@ private fun startScroll() {
             current.y = current.y - d
             textArea.scrollRectToVisible(current)
           }
+
           dest.y > current.y && animator.isRunning -> {
             val d = 1.coerceAtLeast((dest.y - current.y) / 2)
             current.y = current.y + d
             textArea.scrollRectToVisible(current)
           }
+
           else -> {
             textArea.caretPosition = elem.startOffset
             animator.stop()

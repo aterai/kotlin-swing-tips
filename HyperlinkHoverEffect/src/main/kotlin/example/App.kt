@@ -18,7 +18,9 @@ fun makeUI(): Component {
   editor.addHyperlinkListener { e ->
     when (e.eventType) {
       HyperlinkEvent.EventType.ENTERED -> setElementColor(e.sourceElement, "red")
+
       HyperlinkEvent.EventType.EXITED -> setElementColor(e.sourceElement, "blue")
+
       HyperlinkEvent.EventType.ACTIVATED -> runCatching {
         Desktop.getDesktop().browse(e.url.toURI())
       }

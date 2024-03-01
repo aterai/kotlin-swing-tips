@@ -102,6 +102,7 @@ private class ButtonsEditor(private val table: JTable) : AbstractCellEditor(), T
     override fun mousePressed(e: MouseEvent) {
       when (val o = e.source) {
         is TableCellEditor -> actionPerformed(makeActionEvent(o))
+
         is JButton -> if (o.model.isPressed && e.isControlDown && isInEditor()) {
           panel.background = table.background
         }

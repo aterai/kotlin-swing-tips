@@ -85,10 +85,13 @@ private class RowDataRenderer : TableCellRenderer {
       c.horizontalAlignment = SwingConstants.LEFT
       c.text = when (table.convertColumnIndexToModel(column)) {
         0 -> getGroupText(value, row, table, column)
+
         1 -> value.name
+
         2 -> value.count.toString().also {
           c.horizontalAlignment = SwingConstants.RIGHT
         }
+
         else -> null
       }
     }

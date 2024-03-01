@@ -110,14 +110,17 @@ private class RowHeaderList<E>(
           renderer.foreground = Color.WHITE
           renderer.background = Color.GRAY
         }
+
         index == rollOverRowIndex -> {
           renderer.foreground = Color.BLACK
           renderer.background = Color.WHITE
         }
+
         isSelected -> {
           renderer.foreground = header.foreground.brighter()
           renderer.background = Color.GRAY.brighter()
         }
+
         else -> {
           renderer.foreground = header.foreground
           renderer.background = header.background

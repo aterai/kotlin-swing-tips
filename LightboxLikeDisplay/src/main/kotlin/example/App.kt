@@ -110,15 +110,18 @@ private class LightboxGlassPane(private val img: BufferedImage) : JPanel() {
         val dh = img.height / 16
         currentSize.height += dh
       }
+
       currentSize.width < img.width + BW + BW -> {
         currentSize.height = img.height + BW + BW
         val dw = img.width / 16
         currentSize.width += dw
       }
+
       1f - alpha > 0 -> {
         currentSize.width = img.width + BW + BW
         alpha += .1f
       }
+
       else -> {
         animatedIcon.setRunning(false)
         animator.stop()

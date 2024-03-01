@@ -102,16 +102,19 @@ private class FileIconTableCellRenderer(
           c.icon = fileSystemView.getSystemIcon(value)
           c.text = fileSystemView.getSystemDisplayName(value)
         }
+
         1 -> {
           c.horizontalAlignment = SwingConstants.RIGHT
           c.icon = null
           c.text = if (value.isDirectory) "" else value.length().toString()
         }
+
         2 -> {
           c.horizontalAlignment = SwingConstants.LEFT
           c.icon = null
           c.text = value.absolutePath
         }
+
         else -> {
           c.horizontalAlignment = SwingConstants.LEFT
           c.icon = null

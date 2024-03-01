@@ -135,6 +135,7 @@ private class ToggleButtonBarCellIcon : Icon {
         p.lineTo(dx + r, dy + dh)
         p.curveTo(dx + r - rr, dy + dh, dx, dy + dh - r + rr, dx, dy + dh - r)
       }
+
       c === parent.getComponent(parent.componentCount - 1) -> {
         // :last-child
         dw--
@@ -145,6 +146,7 @@ private class ToggleButtonBarCellIcon : Icon {
         p.curveTo(dx + dw, dy + dh - r + rr, dx + dw - r + rr, dy + dh, dx + dw - r, dy + dh)
         p.lineTo(dx, dy + dh)
       }
+
       else -> {
         p.moveTo(dx, dy)
         p.lineTo(dx + dw, dy)

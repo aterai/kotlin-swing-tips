@@ -47,10 +47,12 @@ private class WindowsIconScrollBarUI : WindowsScrollBarUI() {
         oc = SystemColor.activeCaption.darker()
         ic = SystemColor.inactiveCaptionText.darker()
       }
+
       isThumbRollover -> {
         oc = SystemColor.activeCaption.brighter()
         ic = SystemColor.inactiveCaptionText.brighter()
       }
+
       else -> {
         oc = SystemColor.activeCaption
         ic = SystemColor.inactiveCaptionText
@@ -93,10 +95,12 @@ private class BasicIconScrollBarUI : BasicScrollBarUI() {
         oc = SystemColor.activeCaption.darker()
         ic = SystemColor.inactiveCaptionText.darker()
       }
+
       isThumbRollover -> {
         oc = SystemColor.activeCaption.brighter()
         ic = SystemColor.inactiveCaptionText.brighter()
       }
+
       else -> {
         oc = SystemColor.activeCaption
         ic = SystemColor.inactiveCaptionText

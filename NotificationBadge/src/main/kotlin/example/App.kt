@@ -96,14 +96,17 @@ private open class BadgeLayerUI : LayerUI<BadgeLabel>() {
         x = iconRect.x - OFFSET.x
         y = iconRect.y - OFFSET.y
       }
+
       BadgePosition.NORTH_EAST -> {
         x = iconRect.x + iconRect.width - icon.iconWidth + OFFSET.x
         y = iconRect.y - OFFSET.y
       }
+
       BadgePosition.SOUTH_WEST -> {
         x = iconRect.x - OFFSET.x
         y = iconRect.y + iconRect.height - icon.iconHeight + OFFSET.y
       }
+
       BadgePosition.SOUTH_EAST -> {
         x = iconRect.x + iconRect.width - icon.iconWidth + OFFSET.x
         y = iconRect.y + iconRect.height - icon.iconHeight + OFFSET.y
