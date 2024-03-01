@@ -16,8 +16,15 @@ fun makeUI(): Component {
   textPane.text = "Shift+Tab: open EditorComboPopup\n"
 
   val model = arrayOf(
-    "public", "protected", "private",
-    "final", "transient", "super", "this", "return", "class",
+    "public",
+    "protected",
+    "private",
+    "final",
+    "transient",
+    "super",
+    "this",
+    "return",
+    "class",
   )
   val combo = JComboBox(model)
 

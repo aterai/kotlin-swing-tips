@@ -40,8 +40,16 @@ fun makeUI(): Component {
 
   val root = DefaultMutableTreeNode("JTree")
   listOf(
-    "aaa", "bbb bb bb", "ccc", "dd dd dd", "eee eee",
-    "ff ff ff fff", "ggg ggg", "hhh hh", "ii ii", "jjj jjj jj jj",
+    "aaa",
+    "bbb bb bb",
+    "ccc",
+    "dd dd dd",
+    "eee eee",
+    "ff ff ff fff",
+    "ggg ggg",
+    "hhh hh",
+    "ii ii",
+    "jjj jjj jj jj",
   ).forEach {
     val isSelected = it.length % 2 == 0
     val c = JCheckBox(it, isSelected)
@@ -125,9 +133,17 @@ private class CheckBoxList(model: ListModel<CheckBoxNode>) : JList<CheckBoxNode>
   override fun processMouseMotionEvent(e: MouseEvent) {
     if (pointOutsidePrefSize(e.point)) {
       val ev = MouseEvent(
-        e.component, MouseEvent.MOUSE_EXITED, e.getWhen(), e.modifiersEx,
-        e.x, e.y, e.xOnScreen, e.yOnScreen, e.clickCount,
-        e.isPopupTrigger, MouseEvent.NOBUTTON,
+        e.component,
+        MouseEvent.MOUSE_EXITED,
+        e.getWhen(),
+        e.modifiersEx,
+        e.x,
+        e.y,
+        e.xOnScreen,
+        e.yOnScreen,
+        e.clickCount,
+        e.isPopupTrigger,
+        MouseEvent.NOBUTTON,
       )
       super.processMouseEvent(ev)
     } else {

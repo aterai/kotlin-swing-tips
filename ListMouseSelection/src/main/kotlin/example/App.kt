@@ -59,11 +59,14 @@ private class SingleMouseClickSelectList<E>(model: ListModel<E>) : JList<E>(mode
   private fun convertMouseEvent(e: MouseEvent): MouseEvent {
     return MouseEvent(
       e.component,
-      e.id, e.getWhen(),
+      e.id,
+      e.getWhen(),
       e.modifiersEx or Toolkit.getDefaultToolkit().menuShortcutKeyMask,
       // Java 10: e.getModifiersEx() or Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx(),
-      e.x, e.y,
-      e.xOnScreen, e.yOnScreen,
+      e.x,
+      e.y,
+      e.xOnScreen,
+      e.yOnScreen,
       e.clickCount,
       e.isPopupTrigger,
       e.button,

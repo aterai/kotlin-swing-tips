@@ -89,9 +89,17 @@ private class BasicClippedTitleTabbedPaneUI : BasicTabbedPaneUI() {
     val iconR = Rectangle()
     val textR = Rectangle()
     val clippedText = SwingUtilities.layoutCompoundLabel(
-      metrics, title, null,
-      CENTER, CENTER, CENTER, TRAILING,
-      viewR, iconR, textR, 0,
+      metrics,
+      title,
+      null,
+      CENTER,
+      CENTER,
+      CENTER,
+      TRAILING,
+      viewR,
+      iconR,
+      textR,
+      0,
     )
     if (title == clippedText) {
       super.paintText(g, tabPlacement, font, metrics, tabIndex, title, textRect, isSelected)
@@ -136,9 +144,17 @@ private class WindowsClippedTitleTabbedPaneUI : WindowsTabbedPaneUI() {
     val iconR = Rectangle()
     val textR = Rectangle()
     val clippedText = SwingUtilities.layoutCompoundLabel(
-      metrics, title, null,
-      CENTER, CENTER, CENTER, TRAILING,
-      viewR, iconR, textR, 0,
+      metrics,
+      title,
+      null,
+      CENTER,
+      CENTER,
+      CENTER,
+      TRAILING,
+      viewR,
+      iconR,
+      textR,
+      0,
     )
     if (title == clippedText) {
       super.paintText(g, tabPlacement, font, metrics, tabIndex, title, textRect, isSelected)

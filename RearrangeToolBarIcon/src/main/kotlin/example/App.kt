@@ -16,9 +16,15 @@ fun makeUI(): Component {
   toolBar.addMouseMotionListener(dh)
   toolBar.border = BorderFactory.createEmptyBorder(2, 2, 2, 0)
   listOf(
-    "Copy24.gif", "Cut24.gif", "Paste24.gif",
-    "Delete24.gif", "Undo24.gif", "Redo24.gif",
-    "Help24.gif", "Open24.gif", "Save24.gif",
+    "Copy24.gif",
+    "Cut24.gif",
+    "Paste24.gif",
+    "Delete24.gif",
+    "Undo24.gif",
+    "Redo24.gif",
+    "Help24.gif",
+    "Open24.gif",
+    "Save24.gif",
   ).map { createToolBarButton(it) }.forEach { toolBar.add(it) }
 
   return JPanel(BorderLayout()).also {

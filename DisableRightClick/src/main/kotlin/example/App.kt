@@ -115,12 +115,16 @@ private class BasicComboPopup3(combo: JComboBox<Any>) : BasicComboPopup(combo) {
           // Fix for 4234053. Filter out the Control Key from the list.
           // ie., don't allow CTRL key deselection.
           ev = MouseEvent(
-            e.component, e.id, e.getWhen(),
+            e.component,
+            e.id,
+            e.getWhen(),
             // e.getModifiers() ^ InputEvent.CTRL_MASK,
             // Java 10: e.getModifiersEx() ^ Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx(),
             e.modifiersEx xor InputEvent.CTRL_DOWN_MASK,
-            e.x, e.y,
-            e.xOnScreen, e.yOnScreen,
+            e.x,
+            e.y,
+            e.xOnScreen,
+            e.yOnScreen,
             e.clickCount,
             e.isPopupTrigger,
             MouseEvent.NOBUTTON,

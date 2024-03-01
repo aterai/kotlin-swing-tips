@@ -48,10 +48,17 @@ private class LinkViewButtonUI : BasicButtonUI() {
     iconRect.setBounds(0, 0, 0, 0)
     textRect.setBounds(0, 0, 0, 0)
     val text = SwingUtilities.layoutCompoundLabel(
-      c, c.getFontMetrics(c.font), c.text, null,
-      c.verticalAlignment, c.horizontalAlignment,
-      c.verticalTextPosition, c.horizontalTextPosition,
-      viewRect, iconRect, textRect,
+      c,
+      c.getFontMetrics(c.font),
+      c.text,
+      null,
+      c.verticalAlignment,
+      c.horizontalAlignment,
+      c.verticalTextPosition,
+      c.horizontalTextPosition,
+      viewRect,
+      iconRect,
+      textRect,
       0,
     )
     if (c.isOpaque()) {

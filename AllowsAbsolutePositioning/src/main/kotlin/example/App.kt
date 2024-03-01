@@ -84,10 +84,14 @@ private class AbsolutePositioningBasicScrollBarUI : BasicScrollBarUI() {
       if (SwingUtilities.isLeftMouseButton(e)) {
         super.mousePressed(
           MouseEvent(
-            e.component, e.id, e.getWhen(),
+            e.component,
+            e.id,
+            e.getWhen(),
             InputEvent.BUTTON2_DOWN_MASK xor InputEvent.BUTTON2_MASK,
-            e.x, e.y,
-            e.xOnScreen, e.yOnScreen,
+            e.x,
+            e.y,
+            e.xOnScreen,
+            e.yOnScreen,
             e.clickCount,
             e.isPopupTrigger,
             MouseEvent.BUTTON2,
