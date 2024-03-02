@@ -43,21 +43,22 @@ open class BasicTabViewButtonUI : TabViewButtonUI() {
     // viewRect.y = i.top
     // viewRect.width = size.width - i.right - viewRect.x
     // viewRect.height = size.height - i.bottom - viewRect.y
-    SwingUtilities.calculateInnerArea(b, viewRect)
-    iconRect.setBounds(0, 0, 0, 0)
-    textRect.setBounds(0, 0, 0, 0)
+    SwingUtilities.calculateInnerArea(b, vr)
+    ir.setBounds(0, 0, 0, 0)
+    tr.setBounds(0, 0, 0, 0)
 
     val text = SwingUtilities.layoutCompoundLabel(
       c,
       c.getFontMetrics(c.font),
-      b.text, null,
+      b.text,
+      null,
       b.verticalAlignment,
       b.horizontalAlignment,
       b.verticalTextPosition,
       b.horizontalTextPosition,
-      viewRect,
-      iconRect,
-      textRect,
+      vr,
+      ir,
+      tr,
       0,
     )
 
@@ -66,77 +67,42 @@ open class BasicTabViewButtonUI : TabViewButtonUI() {
 
     val model = b.model
     g.color = if (model.isSelected || model.isArmed) Color.WHITE else Color(220, 220, 220)
-    g.fillRect(
-      viewRect.x,
-      viewRect.y,
-      viewRect.x + viewRect.width,
-      viewRect.y + viewRect.height,
-    )
+    g.fillRect(vr.x, vr.y, vr.x + vr.width, vr.y + vr.height)
 
     val color = Color(255, 120, 40)
     if (model.isSelected) {
       g.color = color
-      g.drawLine(
-        viewRect.x + 1,
-        viewRect.y - 2,
-        viewRect.x + viewRect.width - 1,
-        viewRect.y - 2,
-      )
+      g.drawLine(vr.x + 1, vr.y - 2, vr.x + vr.width - 1, vr.y - 2)
       g.color = color.brighter()
-      g.drawLine(
-        viewRect.x + 0,
-        viewRect.y - 1,
-        viewRect.x + viewRect.width - 0,
-        viewRect.y - 1,
-      )
+      g.drawLine(vr.x + 0, vr.y - 1, vr.x + vr.width - 0, vr.y - 1)
       g.color = color
-      g.drawLine(
-        viewRect.x + 0,
-        viewRect.y - 0,
-        viewRect.x + viewRect.width - 0,
-        viewRect.y - 0,
-      )
+      g.drawLine(vr.x + 0, vr.y - 0, vr.x + vr.width - 0, vr.y - 0)
     } else if (model.isRollover) {
       g.color = color
-      g.drawLine(
-        viewRect.x + 1,
-        viewRect.y + 0,
-        viewRect.x + viewRect.width - 1,
-        viewRect.y + 0,
-      )
+      g.drawLine(vr.x + 1, vr.y + 0, vr.x + vr.width - 1, vr.y + 0)
       g.color = color.brighter()
-      g.drawLine(
-        viewRect.x + 0,
-        viewRect.y + 1,
-        viewRect.x + viewRect.width - 0,
-        viewRect.y + 1,
-      )
+      g.drawLine(vr.x + 0, vr.y + 1, vr.x + vr.width - 0, vr.y + 1)
       g.color = color
-      g.drawLine(
-        viewRect.x + 0,
-        viewRect.y + 2,
-        viewRect.x + viewRect.width - 0,
-        viewRect.y + 2,
-      )
+      g.drawLine(vr.x + 0, vr.y + 2, vr.x + vr.width - 0, vr.y + 2)
     }
     val v = c.getClientProperty(BasicHTML.propertyKey)
     if (v is View) {
-      v.paint(g, textRect)
+      v.paint(g, tr)
     } else {
       if (model.isSelected) {
-        textRect.y -= 2
-        textRect.x -= 1
+        tr.y -= 2
+        tr.x -= 1
       }
-      textRect.x += 4
-      paintText(g, b, textRect, text)
+      tr.x += 4
+      paintText(g, b, tr, text)
     }
   }
 
   companion object {
     private val size = Dimension()
-    private val viewRect = Rectangle()
-    private val iconRect = Rectangle()
-    private val textRect = Rectangle()
+    private val vr = Rectangle()
+    private val ir = Rectangle()
+    private val tr = Rectangle()
 
     // "Accidental override" reported when a @JvmStatic method in a Kotlin class has
     //   the same signature as a static method in a Java base class : KT-12993

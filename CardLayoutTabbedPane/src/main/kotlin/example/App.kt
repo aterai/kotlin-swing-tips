@@ -228,32 +228,24 @@ private open class BasicTabViewButtonUI : TabViewButtonUI() {
     g.fillRect(0, 0, c.width, c.height)
     val model = c.model
     g.color = if (model.isSelected || model.isArmed) Color.WHITE else Color(0xDC_DC_DC)
-    g.fillRect(
-      viewRect.x,
-      viewRect.y,
-      viewRect.x + viewRect.width,
-      viewRect.y + viewRect.height,
-    )
-    val color = Color(0xFF_78_28)
-    if (model.isSelected) {
-      g.color = color
-      g.drawLine(
-        viewRect.x + 1,
-        viewRect.y - 2,
-        viewRect.x + viewRect.width - 1,
-        viewRect.y - 2,
-      )
-      g.color = color.brighter()
-      g.drawLine(viewRect.x, viewRect.y - 1, viewRect.x + viewRect.width, viewRect.y - 1)
-      g.color = color
-      g.drawLine(viewRect.x, viewRect.y, viewRect.x + viewRect.width, viewRect.y)
-    } else if (model.isRollover) {
-      g.color = color
-      g.drawLine(viewRect.x + 1, viewRect.y, viewRect.x + viewRect.width - 1, viewRect.y)
-      g.color = color.brighter()
-      g.drawLine(viewRect.x, viewRect.y + 1, viewRect.x + viewRect.width, viewRect.y + 1)
-      g.color = color
-      g.drawLine(viewRect.x, viewRect.y + 2, viewRect.x + viewRect.width, viewRect.y + 2)
+    viewRect.also {
+      g.fillRect(it.x, it.y, it.x + it.width, it.y + it.height)
+      val color = Color(0xFF_78_28)
+      if (model.isSelected) {
+        g.color = color
+        g.drawLine(it.x + 1, it.y - 2, it.x + it.width - 1, it.y - 2)
+        g.color = color.brighter()
+        g.drawLine(it.x, it.y - 1, it.x + it.width, it.y - 1)
+        g.color = color
+        g.drawLine(it.x, it.y, it.x + it.width, it.y)
+      } else if (model.isRollover) {
+        g.color = color
+        g.drawLine(it.x + 1, it.y, it.x + it.width - 1, it.y)
+        g.color = color.brighter()
+        g.drawLine(it.x, it.y + 1, it.x + it.width, it.y + 1)
+        g.color = color
+        g.drawLine(it.x, it.y + 2, it.x + it.width, it.y + 2)
+      }
     }
     (c.getClientProperty(BasicHTML.propertyKey) as? View)?.paint(g, textRect) ?: also {
       if (model.isSelected) {

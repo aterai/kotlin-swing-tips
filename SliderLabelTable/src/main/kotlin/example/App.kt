@@ -6,6 +6,24 @@ import javax.imageio.ImageIO
 import javax.swing.*
 
 fun makeUI(): Component {
+  val box = Box.createVerticalBox()
+  box.border = BorderFactory.createEmptyBorder(20, 20, 20, 0)
+  box.add(JSlider(0, 100, 100))
+  box.add(Box.createVerticalStrut(20))
+  box.add(JSlider())
+  box.add(Box.createVerticalStrut(20))
+  box.add(makeSlider2())
+  box.add(Box.createHorizontalGlue())
+
+  return JPanel(BorderLayout()).also {
+    it.add(makeSlider1(), BorderLayout.WEST)
+    it.add(box)
+    it.border = BorderFactory.createEmptyBorder(5, 20, 5, 10)
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private fun makeSlider1(): JSlider {
   val list1 = listOf(
     "wi0009-16.png",
     "wi0054-16.png",
@@ -34,7 +52,10 @@ fun makeUI(): Component {
     }
   }
   slider1.labelTable = labelTable1
+  return slider1
+}
 
+private fun makeSlider2(): JSlider {
   val list2 = arrayOf("零", "壱", "弐", "参", "肆", "伍", "陸", "漆", "捌", "玖", "拾")
   val slider2 = JSlider(0, list2.size - 1, 0)
   // slider2.setForeground(Color.BLUE)
@@ -55,22 +76,7 @@ fun makeUI(): Component {
     }
   }
   slider2.labelTable = labelTable2
-
-  val box = Box.createVerticalBox()
-  box.border = BorderFactory.createEmptyBorder(20, 20, 20, 0)
-  box.add(JSlider(0, 100, 100))
-  box.add(Box.createVerticalStrut(20))
-  box.add(JSlider())
-  box.add(Box.createVerticalStrut(20))
-  box.add(slider2)
-  box.add(Box.createHorizontalGlue())
-
-  return JPanel(BorderLayout()).also {
-    it.add(slider1, BorderLayout.WEST)
-    it.add(box)
-    it.border = BorderFactory.createEmptyBorder(5, 20, 5, 10)
-    it.preferredSize = Dimension(320, 240)
-  }
+  return slider2
 }
 
 private fun makeIcon(path: String): Icon {
