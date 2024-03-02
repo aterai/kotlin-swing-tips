@@ -46,10 +46,18 @@ private val monthTable = object : JTable() {
   }
 }
 private val monthThemeColor = listOf(
-  Color(0xD5_0B_17), Color(0x02_6C_B6), Color(0xED_87_AD),
-  Color(0xCE_30_6A), Color(0x48_B0_37), Color(0xA4_62_A2),
-  Color(0x00_BD_E7), Color(0xEB_5E_31), Color(0xC8_01_82),
-  Color(0x8F_19_19), Color(0x6A_31_8F), Color(0x00_7A_70),
+  Color(0xD5_0B_17),
+  Color(0x02_6C_B6),
+  Color(0xED_87_AD),
+  Color(0xCE_30_6A),
+  Color(0x48_B0_37),
+  Color(0xA4_62_A2),
+  Color(0x00_BD_E7),
+  Color(0xEB_5E_31),
+  Color(0xC8_01_82),
+  Color(0x8F_19_19),
+  Color(0x6A_31_8F),
+  Color(0x00_7A_70),
 )
 
 var currentLocalDate: LocalDate = LocalDate.of(2021, 6, 21)

@@ -213,9 +213,17 @@ private class RaaWindowsMenuItemUI : WindowsMenuItemUI() {
     g2.font = mi.font
     val viewRect = SwingUtilities.calculateInnerArea(mi, null)
     val lh = MenuItemLayoutHelper(
-      mi, checkIcon, arrowIcon, viewRect, textIconGap, "+",
-      true, mi.font, acceleratorFont,
-      MenuItemLayoutHelper.useCheckAndArrow(menuItem), propertyPrefix,
+      mi,
+      checkIcon,
+      arrowIcon,
+      viewRect,
+      textIconGap,
+      "+",
+      true,
+      mi.font,
+      acceleratorFont,
+      MenuItemLayoutHelper.useCheckAndArrow(menuItem),
+      propertyPrefix,
     )
     val lr = lh.layoutMenuItem()
     paintBackground(g2, mi, background)
@@ -263,9 +271,17 @@ private class RaaBasicMenuItemUI : BasicMenuItemUI() {
     g2.font = mi.font
     val viewRect = SwingUtilities.calculateInnerArea(mi, null)
     val lh = MenuItemLayoutHelper(
-      mi, checkIcon, arrowIcon, viewRect, textIconGap, "+",
-      true, mi.font, acceleratorFont,
-      MenuItemLayoutHelper.useCheckAndArrow(menuItem), propertyPrefix,
+      mi,
+      checkIcon,
+      arrowIcon,
+      viewRect,
+      textIconGap,
+      "+",
+      true,
+      mi.font,
+      acceleratorFont,
+      MenuItemLayoutHelper.useCheckAndArrow(menuItem),
+      propertyPrefix,
     )
     val lr = lh.layoutMenuItem()
     paintBackground(g2, mi, background)

@@ -13,13 +13,20 @@ fun makeUI(): Component {
 
   val columnNames = arrayOf("String", "Integer", "Boolean")
   val data = arrayOf(
-    arrayOf("AA", 1, true), arrayOf("BB", 2, false),
-    arrayOf("cc", 3, true), arrayOf("dd", 4, false),
-    arrayOf("ee", 5, false), arrayOf("FF", -1, true),
-    arrayOf("GG", -2, false), arrayOf("HH", -3, true),
-    arrayOf("II", -4, false), arrayOf("JJ", -5, false),
-    arrayOf("KK", 11, true), arrayOf("LL", 22, false),
-    arrayOf("MM", 33, true), arrayOf("NN", 44, false),
+    arrayOf("AA", 1, true),
+    arrayOf("BB", 2, false),
+    arrayOf("cc", 3, true),
+    arrayOf("dd", 4, false),
+    arrayOf("ee", 5, false),
+    arrayOf("FF", -1, true),
+    arrayOf("GG", -2, false),
+    arrayOf("HH", -3, true),
+    arrayOf("II", -4, false),
+    arrayOf("JJ", -5, false),
+    arrayOf("KK", 11, true),
+    arrayOf("LL", 22, false),
+    arrayOf("MM", 33, true),
+    arrayOf("NN", 44, false),
     arrayOf("OO", 55, false),
   )
   val model = object : DefaultTableModel(data, columnNames) {

@@ -110,10 +110,15 @@ private class CloseableTabIconHandler : MouseAdapter() {
         if (selIndex > 0) {
           val rec = tabbedPane.getBoundsAt(selIndex - 1)
           val event = MouseEvent(
-            e.component, e.id + 1,
-            System.currentTimeMillis(), e.modifiersEx,
-            rec.x, rec.y,
-            e.clickCount, e.isPopupTrigger, e.button,
+            e.component,
+            e.id + 1,
+            System.currentTimeMillis(),
+            e.modifiersEx,
+            rec.x,
+            rec.y,
+            e.clickCount,
+            e.isPopupTrigger,
+            e.button,
           )
           tabbedPane.dispatchEvent(event)
         }
@@ -219,7 +224,9 @@ private class CloseableWindowsTabbedPaneUI : WindowsTabbedPaneUI() {
     }
     SwingUtilities.layoutCompoundLabel(
       tabPane,
-      metrics, title, icon,
+      metrics,
+      title,
+      icon,
       CENTER,
       CENTER,
       CENTER,

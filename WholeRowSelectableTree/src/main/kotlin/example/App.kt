@@ -68,7 +68,15 @@ private class WholeRowSelectableTreeUI : BasicTreeUI() {
             hasBeenExpanded = tree.hasBeenExpanded(path)
           }
           paintRow(
-            g, paintBounds, insets, bounds, path, row, isExpanded, hasBeenExpanded, isLeaf,
+            g,
+            paintBounds,
+            insets,
+            bounds,
+            path,
+            row,
+            isExpanded,
+            hasBeenExpanded,
+            isLeaf,
           )
           if (bounds.y + bounds.height >= endY) {
             done = true
@@ -141,7 +149,8 @@ private class WholeRowSelectableTreeUI : BasicTreeUI() {
             paintExpandControl(
               g,
               paintBounds,
-              insets, bounds,
+              insets,
+              bounds,
               path,
               row,
               isExpanded,

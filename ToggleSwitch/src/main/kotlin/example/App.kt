@@ -143,10 +143,13 @@ private class ToggleSwitchLayerUI : LayerUI<JSlider>() {
       e.component.dispatchEvent(
         MouseEvent(
           e.component,
-          e.id, e.getWhen(),
+          e.id,
+          e.getWhen(),
           InputEvent.BUTTON3_DOWN_MASK,
-          e.x, e.y,
-          e.xOnScreen, e.yOnScreen,
+          e.x,
+          e.y,
+          e.xOnScreen,
+          e.yOnScreen,
           e.clickCount,
           e.isPopupTrigger,
           MouseEvent.BUTTON3,

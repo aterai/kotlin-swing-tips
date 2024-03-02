@@ -102,10 +102,17 @@ private class WindowsVerticalAlignmentCheckBoxUI : WindowsCheckBoxUI() {
     iconRect.setBounds(0, 0, 0, 0)
     textRect.setBounds(0, 0, 0, 0)
     val text = SwingUtilities.layoutCompoundLabel(
-      c, c.getFontMetrics(f), c.text, defaultIcon,
-      c.verticalAlignment, c.horizontalAlignment,
-      c.verticalTextPosition, c.horizontalTextPosition,
-      viewRect, iconRect, textRect,
+      c,
+      c.getFontMetrics(f),
+      c.text,
+      defaultIcon,
+      c.verticalAlignment,
+      c.horizontalAlignment,
+      c.verticalTextPosition,
+      c.horizontalTextPosition,
+      viewRect,
+      iconRect,
+      textRect,
       if (c.text != null) c.iconTextGap else 0,
     )
 
@@ -153,10 +160,17 @@ private class BasicVerticalAlignmentCheckBoxUI : BasicCheckBoxUI() {
     iconRect.setBounds(0, 0, 0, 0)
     textRect.setBounds(0, 0, 0, 0)
     val text = SwingUtilities.layoutCompoundLabel(
-      c, c.getFontMetrics(f), c.text, defaultIcon,
-      c.verticalAlignment, c.horizontalAlignment,
-      c.verticalTextPosition, c.horizontalTextPosition,
-      viewRect, iconRect, textRect,
+      c,
+      c.getFontMetrics(f),
+      c.text,
+      defaultIcon,
+      c.verticalAlignment,
+      c.horizontalAlignment,
+      c.verticalTextPosition,
+      c.horizontalTextPosition,
+      viewRect,
+      iconRect,
+      textRect,
       if (c.text != null) c.iconTextGap else 0,
     )
 

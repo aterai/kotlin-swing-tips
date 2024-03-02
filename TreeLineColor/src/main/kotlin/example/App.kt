@@ -62,7 +62,15 @@ private class LineStyleTreeUI : BasicTreeUI() {
     val g2 = g.create() as? Graphics2D ?: return
     g2.stroke = horizontalLine
     super.paintHorizontalPartOfLeg(
-      g2, clipBounds, insets, bounds, path, row, isExpanded, hasBeenExpanded, isLeaf,
+      g2,
+      clipBounds,
+      insets,
+      bounds,
+      path,
+      row,
+      isExpanded,
+      hasBeenExpanded,
+      isLeaf,
     )
     g2.dispose()
   }
