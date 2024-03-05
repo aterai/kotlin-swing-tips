@@ -139,7 +139,7 @@ private class DropdownTableComboBox(
 }
 
 private class ComboTablePopup(
-  combo: JComboBox<*>,
+  combo: JComboBox<Any>,
   private val table: JTable,
 ) : BasicComboPopup(combo) {
   private val scroll: JScrollPane
@@ -164,7 +164,7 @@ private class ComboTablePopup(
     table.addMouseListener(ml)
 
     scroll = JScrollPane(table)
-    border = BorderFactory.createEmptyBorder()
+    // border = BorderFactory.createEmptyBorder()
   }
 
   override fun togglePopup() {
@@ -176,6 +176,8 @@ private class ComboTablePopup(
       scroll.preferredSize = Dimension(240, scrollHeight)
       super.removeAll()
       super.add(scroll)
+      // border = BorderFactory.createEmptyBorder()
+      isBorderPainted = false
     }
     super.togglePopup()
   }
