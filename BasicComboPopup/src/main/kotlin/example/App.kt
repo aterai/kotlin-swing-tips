@@ -26,7 +26,7 @@ fun makeUI(): Component {
     "return",
     "class",
   )
-  val combo = JComboBox(model)
+  val combo = JComboBox<Any>(model)
 
   val popup = object : BasicComboPopup(combo) {
     private var listener: MouseListener? = null
