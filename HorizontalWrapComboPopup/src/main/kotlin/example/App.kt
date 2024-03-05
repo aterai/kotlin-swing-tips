@@ -106,16 +106,16 @@ private fun makeComboBox2(
       val i = comboBox.insets
       val popupWidth = proto.iconWidth * 3 + i.left + i.right
       val size = comboBox.size
-      if (size.width >= popupWidth) {
+      if (size.width >= popupWidth || adjusting) {
         return
       }
-      if (!adjusting) {
-        adjusting = true
-        comboBox.setSize(popupWidth, size.height)
-        comboBox.showPopup()
+      adjusting = true
+      comboBox.setSize(popupWidth, size.height)
+      comboBox.showPopup()
+      EventQueue.invokeLater {
+        comboBox.size = size
+        adjusting = false
       }
-      comboBox.size = size
-      adjusting = false
     }
 
     override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
