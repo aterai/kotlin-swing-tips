@@ -51,7 +51,7 @@ private open class ComboItem(
   override fun hashCode() = Objects.hash(text)
 
   override fun equals(other: Any?) =
-    if (this === other) true else other is ComboItem && other.text == text
+    this === other || (other as? ComboItem)?.text == text
 
   override fun toString() = "%s: %b, %b".format(text, isEnabled, isEditable)
 
