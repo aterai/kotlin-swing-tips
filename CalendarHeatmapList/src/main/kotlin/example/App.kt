@@ -171,7 +171,7 @@ private class CalendarViewListModel(date: LocalDate) : AbstractListModel<Contrib
   private val contributionActivity = mutableMapOf<LocalDate, Int>()
 
   init {
-    val dow = date.get(WeekFields.of(Locale.getDefault()).dayOfWeek())
+    val dow = date[WeekFields.of(Locale.getDefault()).dayOfWeek()]
     this.startDate = date.minusWeeks((WEEK_VIEW - 1).toLong()).minusDays((dow - 1).toLong())
     this.displayDays = DayOfWeek.values().size * (WEEK_VIEW - 1) + dow
     for (i in 0 until displayDays) {

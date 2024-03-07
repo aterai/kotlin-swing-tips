@@ -35,7 +35,7 @@ fun makeUI(): Component {
     val o = popup.invoker
     val c = o as? JComboBox<*> ?: SwingUtilities.getAncestorOfClass(JComboBox::class.java, o)
     (c as? JComboBox<*>)?.also {
-      val a = it.actionMap.get(copyKey)
+      val a = it.actionMap[copyKey]
       a.actionPerformed(ActionEvent(it, e.id, e.actionCommand))
       // val keyEvent = KeyEvent(c, 0, 0, 0, 0, 'C')
       // SwingUtilities.notifyAction(a, keyStroke, keyEvent, it, modifiers)

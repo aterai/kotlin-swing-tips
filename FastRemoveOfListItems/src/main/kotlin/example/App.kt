@@ -99,7 +99,7 @@ private fun <E> move1(
   }
   if (selectedIndices.isNotEmpty()) {
     for (i in selectedIndices) {
-      toModel.addElement(fromModel.get(i))
+      toModel.addElement(fromModel[i])
     }
     val model = DefaultListModel<E>()
     unselectedValues.forEach { model.addElement(it) }

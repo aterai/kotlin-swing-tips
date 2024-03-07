@@ -14,7 +14,7 @@ import javax.swing.table.TableCellRenderer
 fun makeUI(): Component {
   val table = makeTable()
   val am = table.actionMap
-  val selectNextAction = am.get("selectNextColumnCell")
+  val selectNextAction = am["selectNextColumnCell"]
   val action = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       if (!table.isEditing || !isEditorFocusCycle(table.editorComponent)) {

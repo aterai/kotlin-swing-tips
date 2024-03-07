@@ -148,7 +148,7 @@ private fun installActions() {
   }
   am.put("selectNextIndex", a2)
 
-  val selectPreviousRow = am.get("selectPreviousRow")
+  val selectPreviousRow = am["selectPreviousRow"]
   val a3 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val index = monthList.leadSelectionIndex
@@ -164,7 +164,7 @@ private fun installActions() {
   }
   am.put("selectPreviousRow", a3)
 
-  val selectNextRow = am.get("selectNextRow")
+  val selectNextRow = am["selectNextRow"]
   val a4 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val index = monthList.leadSelectionIndex
@@ -229,7 +229,7 @@ private class CalendarViewListModel(date: LocalDate) : AbstractListModel<LocalDa
 
   init {
     val firstDayOfMonth = YearMonth.from(date).atDay(1)
-    val v = firstDayOfMonth.get(weekFields.dayOfWeek()) - 1
+    val v = firstDayOfMonth[weekFields.dayOfWeek()] - 1
     startDate = firstDayOfMonth.minusDays(v.toLong())
   }
 

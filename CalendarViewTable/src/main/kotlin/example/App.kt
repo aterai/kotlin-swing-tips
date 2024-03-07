@@ -110,8 +110,8 @@ private class CalendarViewTableModel(date: LocalDate) : DefaultTableModel() {
 
   init {
     val firstDayOfMonth = YearMonth.from(date).atDay(1)
-    // val minusDays = firstDayOfMonth.get(WeekFields.SUNDAY_START.dayOfWeek()) - 1
-    val minusDays = firstDayOfMonth.get(weekFields.dayOfWeek()) - 1
+    // val minusDays = firstDayOfMonth[WeekFields.SUNDAY_START.dayOfWeek()] - 1
+    val minusDays = firstDayOfMonth[weekFields.dayOfWeek()] - 1
     startDate = firstDayOfMonth.minusDays(minusDays.toLong())
   }
 

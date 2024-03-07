@@ -10,7 +10,7 @@ import javax.swing.text.DefaultFormatterFactory
 
 fun makeUI(): Component {
   val calendar = Calendar.getInstance()
-  calendar.set(Calendar.HOUR_OF_DAY, 0)
+  calendar[Calendar.HOUR_OF_DAY] = 0
   calendar.clear(Calendar.MINUTE)
   calendar.clear(Calendar.SECOND)
   calendar.clear(Calendar.MILLISECOND)

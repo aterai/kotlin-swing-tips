@@ -74,7 +74,7 @@ fun makeUI(): Component {
 }
 
 private fun setViewTypeDetails(fileChooser: JFileChooser) {
-  fileChooser.actionMap.get("viewTypeDetails")?.actionPerformed(
+  fileChooser.actionMap["viewTypeDetails"]?.actionPerformed(
     ActionEvent(fileChooser, ActionEvent.ACTION_PERFORMED, "viewTypeDetails"),
   )
 }
