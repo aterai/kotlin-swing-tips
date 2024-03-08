@@ -15,12 +15,10 @@ private val undoSupport = UndoableEditSupport()
 private val label = JLabel(print(status))
 private val panel = JPanel(GridLayout(0, 8))
 private val um = UndoManager()
-private val undoAction = UndoAction(um)
-private val redoAction = RedoAction(um)
 private val selectAllAction = object : AbstractAction("select all") {
   override fun actionPerformed(e: ActionEvent) {
     val newValue = BitSet(BIT_LENGTH)
-    newValue.set(0, BIT_LENGTH, true)
+    newValue[0, BIT_LENGTH] = true
     undoSupport.postEdit(StatusEdit(status, newValue))
     updateCheckBoxes(newValue)
   }
@@ -37,9 +35,9 @@ fun makeUI(): Component {
   undoSupport.addUndoableEditListener(um)
   val box = Box.createHorizontalBox().also {
     it.add(Box.createHorizontalGlue())
-    it.add(JButton(undoAction))
+    it.add(JButton(UndoAction(um)))
     it.add(Box.createHorizontalStrut(2))
-    it.add(JButton(redoAction))
+    it.add(JButton(RedoAction(um)))
     it.add(Box.createHorizontalStrut(2))
     it.add(JButton(selectAllAction))
     it.add(Box.createHorizontalStrut(2))
@@ -48,11 +46,11 @@ fun makeUI(): Component {
   }
 
   for (i in 0 until BIT_LENGTH) {
-    val c = JCheckBox(i.toString(), status.get(i))
+    val c = JCheckBox(i.toString(), status[i])
     c.addActionListener { e ->
       val v = (e.source as? JCheckBox)?.isSelected ?: false
-      val newValue = status.get(0, BIT_LENGTH)
-      newValue.set(i, v)
+      val newValue = status[0, BIT_LENGTH]
+      newValue[i] = v
       undoSupport.postEdit(StatusEdit(status, newValue))
       status = newValue
       label.text = print(status)
@@ -73,7 +71,7 @@ fun makeUI(): Component {
 fun updateCheckBoxes(value: BitSet) {
   status = value
   for (i in 0 until BIT_LENGTH) {
-    (panel.getComponent(i) as? JCheckBox)?.isSelected = status.get(i)
+    (panel.getComponent(i) as? JCheckBox)?.isSelected = status[i]
   }
   label.text = print(status)
 }
