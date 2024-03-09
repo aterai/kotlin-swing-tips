@@ -99,8 +99,8 @@ private class CheckBoxList(model: ListModel<CheckBoxNode>) : JList<CheckBoxNode>
         val index = locationToIndex(e.point)
         if (e.button == MouseEvent.BUTTON1 && index >= 0) {
           (model as? DefaultListModel<CheckBoxNode>)?.also {
-            val node = it.get(index)
-            it.set(index, CheckBoxNode(node.text, !node.selected))
+            val node = it[index]
+            it[index] = CheckBoxNode(node.text, !node.selected)
             repaint(getCellBounds(index, index))
           }
         }
