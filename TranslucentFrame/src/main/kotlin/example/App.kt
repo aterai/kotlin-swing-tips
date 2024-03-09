@@ -16,7 +16,6 @@ fun makeUI(): Component {
   p1.isOpaque = false
   val p2 = object : JPanel() {
     override fun paintComponent(g: Graphics) {
-      // super.paintComponent(g)
       g.color = Color(100, 50, 50, 100)
       g.fillRect(0, 0, width, height)
     }
@@ -75,7 +74,7 @@ private class TranslucentSynthStyle(private val style: SynthStyle) : SynthStyle(
   override operator fun get(
     context: SynthContext?,
     key: Any,
-  ): Any? = style.get(context, key)
+  ): Any? = style[context, key]
 
   override fun getBoolean(
     context: SynthContext?,
@@ -150,7 +149,6 @@ private class TranslucentSynthStyle(private val style: SynthStyle) : SynthStyle(
 fun main() {
   EventQueue.invokeLater {
     runCatching {
-      // UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
       UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
       SynthLookAndFeel.setStyleFactory(MySynthStyleFactory(SynthLookAndFeel.getStyleFactory()))
     }.onFailure {
