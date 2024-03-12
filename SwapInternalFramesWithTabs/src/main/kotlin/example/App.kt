@@ -26,7 +26,8 @@ fun makeUI(): Component {
       cardLayout.show(panel, tabbedPane.javaClass.name)
     } else {
       desktopPane.allFrames.forEach {
-        it.contentPane = tabbedPane.getComponentAt(tabbedPane.indexOfTab(it.title)) as? Container
+        val title = tabbedPane.indexOfTab(it.title)
+        it.contentPane = tabbedPane.getComponentAt(title) as? Container
       }
       cardLayout.show(panel, desktopPane.javaClass.name)
     }
