@@ -94,7 +94,10 @@ private class TablePopupMenu(private val table: JTable) : JPopupMenu() {
   }
 }
 
-private class RowDataCreateAction(str: String, private val table: JTable) : AbstractAction(str) {
+private class RowDataCreateAction(
+  str: String,
+  private val table: JTable,
+) : AbstractAction(str) {
   override fun actionPerformed(e: ActionEvent) {
     if (table.isEditing) {
       table.cellEditor.stopCellEditing()

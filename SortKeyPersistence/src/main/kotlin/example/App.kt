@@ -38,7 +38,9 @@ fun makeUI(): Component {
         xe.setPersistenceDelegate(DefaultTableModel::class.java, d2)
         xe.writeObject(table.model)
       }
-      Files.newBufferedReader(path, StandardCharsets.UTF_8).use { r -> textArea.read(r, "temp") }
+      Files.newBufferedReader(path, StandardCharsets.UTF_8).use { r ->
+        textArea.read(r, "temp")
+      }
     }.onFailure {
       textArea.text = it.message
     }
