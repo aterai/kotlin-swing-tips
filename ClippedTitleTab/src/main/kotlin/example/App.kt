@@ -63,7 +63,7 @@ private class BasicClippedTitleTabbedPaneUI : BasicTabbedPaneUI() {
   ): Int {
     val ins = tabPane.insets
     val width = tabPane.width - tabAreaInsets.left - tabAreaInsets.right - ins.left - ins.right
-    return if (tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT) {
+    return if (tabPlacement == LEFT || tabPlacement == RIGHT) {
       width / 4
     } else { // TOP || BOTTOM
       width / tabPane.tabCount
@@ -118,7 +118,7 @@ private class WindowsClippedTitleTabbedPaneUI : WindowsTabbedPaneUI() {
   ): Int {
     val ins = tabPane.insets
     val width = tabPane.width - tabAreaInsets.left - tabAreaInsets.right - ins.left - ins.right
-    return if (tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT) {
+    return if (tabPlacement == LEFT || tabPlacement == RIGHT) {
       width / 4
     } else { // TOP || BOTTOM
       width / tabPane.tabCount

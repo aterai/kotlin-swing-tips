@@ -169,7 +169,6 @@ private class TranslucentObjectRenderer : DefaultTableCellRenderer() {
     row,
     column,
   )?.also {
-    // it.setOpaque(true)
     (it as? JComponent)?.border = BorderFactory.createEmptyBorder(8, 8, 8, 8)
   }
 }
@@ -177,7 +176,7 @@ private class TranslucentObjectRenderer : DefaultTableCellRenderer() {
 private class TranslucentBooleanRenderer : JCheckBox(), TableCellRenderer {
   override fun updateUI() {
     super.updateUI()
-    horizontalAlignment = SwingConstants.CENTER
+    horizontalAlignment = CENTER
     isBorderPainted = true
     border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
     isOpaque = false
@@ -191,7 +190,7 @@ private class TranslucentBooleanRenderer : JCheckBox(), TableCellRenderer {
     row: Int,
     column: Int,
   ): Component {
-    horizontalAlignment = SwingConstants.CENTER
+    horizontalAlignment = CENTER
     if (isSelected) {
       foreground = table.selectionForeground
       background = SELECTION_BACKGROUND

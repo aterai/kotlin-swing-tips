@@ -26,7 +26,7 @@ fun makeUI(): Component {
         BasicVerticalAlignmentCheckBoxUI()
       }
       setUI(tmp)
-      verticalTextPosition = SwingConstants.TOP
+      verticalTextPosition = TOP
     }
   }
 

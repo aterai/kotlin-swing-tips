@@ -35,10 +35,10 @@ private class BadgeLabel(image: Icon, val ribbonText: String? = null) : JLabel(i
   override fun updateUI() {
     super.updateUI()
     border = BorderFactory.createEmptyBorder(8, 8, 8, 8)
-    verticalAlignment = SwingConstants.CENTER
-    verticalTextPosition = SwingConstants.BOTTOM
-    horizontalAlignment = SwingConstants.CENTER
-    horizontalTextPosition = SwingConstants.CENTER
+    verticalAlignment = CENTER
+    verticalTextPosition = BOTTOM
+    horizontalAlignment = CENTER
+    horizontalTextPosition = CENTER
   }
 
   override fun paintComponent(g: Graphics) {

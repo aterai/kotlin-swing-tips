@@ -108,7 +108,7 @@ private fun makeMissingImage(): BufferedImage {
 private class TranslucentBooleanRenderer : JCheckBox(), TableCellRenderer {
   override fun updateUI() {
     super.updateUI()
-    horizontalAlignment = SwingConstants.CENTER
+    horizontalAlignment = CENTER
     isBorderPainted = true
     border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
   }
@@ -121,7 +121,7 @@ private class TranslucentBooleanRenderer : JCheckBox(), TableCellRenderer {
     row: Int,
     column: Int,
   ): Component {
-    horizontalAlignment = SwingConstants.CENTER
+    horizontalAlignment = CENTER
     if (isSelected) {
       isOpaque = true
       foreground = table.selectionForeground

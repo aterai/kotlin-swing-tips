@@ -71,7 +71,7 @@ private class MultiColumnCellRenderer : ListCellRenderer<PairItem> {
       isOpaque = false
       border = BorderFactory.createEmptyBorder(0, 2, 0, 2)
       foreground = Color.GRAY
-      horizontalAlignment = SwingConstants.RIGHT
+      horizontalAlignment = RIGHT
     }
 
     override fun getPreferredSize() = Dimension(80, 0)

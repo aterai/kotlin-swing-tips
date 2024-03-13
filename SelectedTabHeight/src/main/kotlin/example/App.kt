@@ -97,11 +97,11 @@ private class BasicTabHeightTabbedPaneUI : BasicTabbedPaneUI() {
     iconRect: Rectangle,
     textRect: Rectangle,
   ) {
-    val b = tabPlacement == SwingConstants.TOP || tabPlacement == SwingConstants.BOTTOM
+    val b = tabPlacement == TOP || tabPlacement == BOTTOM
     if (b && tabPane.selectedIndex != tabIndex) {
       val tabHeight = TAB_AREA_HEIGHT / 2 + 3
       rects[tabIndex].height = tabHeight
-      if (tabPlacement == JTabbedPane.TOP) {
+      if (tabPlacement == TOP) {
         rects[tabIndex].y = TAB_AREA_HEIGHT - tabHeight + 3
       }
     }

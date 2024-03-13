@@ -23,10 +23,10 @@ private fun makeButton(title: String): AbstractButton {
   return object : JButton(title) {
     override fun updateUI() {
       super.updateUI()
-      verticalAlignment = SwingConstants.CENTER
-      verticalTextPosition = SwingConstants.CENTER
-      horizontalAlignment = SwingConstants.CENTER
-      horizontalTextPosition = SwingConstants.CENTER
+      verticalAlignment = CENTER
+      verticalTextPosition = CENTER
+      horizontalAlignment = CENTER
+      horizontalTextPosition = CENTER
       border = BorderFactory.createEmptyBorder(2, 8, 2, 8)
       margin = Insets(2, 8, 2, 8)
       isBorderPainted = false
@@ -123,7 +123,6 @@ fun makeUI(): Component {
   panel.add(makeButton("44444444444444444444444444444"))
   val bi = getFilteredImage(cl.getResource("example/test.jpg"))
   panel.border = CentredBackgroundBorder(bi)
-  // setBackground(Color(50, 50, 50))
   panel.isOpaque = false
   panel.preferredSize = Dimension(320, 240)
   return panel

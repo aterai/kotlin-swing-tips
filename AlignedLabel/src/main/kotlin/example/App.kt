@@ -64,7 +64,7 @@ private class AlignedLabel(text: String) : JLabel(text) {
   private var maxWidth = 0
 
   init {
-    horizontalAlignment = SwingConstants.RIGHT
+    horizontalAlignment = RIGHT
   }
 
   override fun getPreferredSize(): Dimension? {

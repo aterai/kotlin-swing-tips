@@ -149,7 +149,7 @@ private class RolloverNumberRenderer(
   highlighter: HighlightListener,
 ) : RolloverDefaultTableCellRenderer(highlighter) {
   init {
-    horizontalAlignment = SwingConstants.RIGHT
+    horizontalAlignment = RIGHT
   }
 }
 
@@ -159,7 +159,7 @@ private class RolloverBooleanRenderer(
   private final val check = object : JCheckBox() {
     override fun updateUI() {
       super.updateUI()
-      // horizontalAlignment = SwingConstants.CENTER
+      // horizontalAlignment = CENTER
       isBorderPainted = true
       isRolloverEnabled = true
       isOpaque = true
