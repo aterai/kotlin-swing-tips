@@ -83,7 +83,9 @@ private fun addActionPerformed() {
         val nf = get()
         when {
           nf == null -> append(makeMessage("Failed to create backup file.", MessageType.ERROR))
-          nf.createNewFile() -> append(makeMessage("Generated ${nf.name}.", MessageType.REGULAR))
+          nf.createNewFile() -> append(
+            makeMessage("Generated ${nf.name}.", MessageType.REGULAR),
+          )
           else -> append(makeMessage("Failed to generate ${nf.name}.", MessageType.ERROR))
         }
       }.onFailure {
