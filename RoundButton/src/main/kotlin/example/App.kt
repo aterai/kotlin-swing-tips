@@ -202,10 +202,10 @@ class ShapeButton(private val shape: Shape?) : JButton() {
   init {
     setModel(DefaultButtonModel())
     init("Shape", ShapeSizeIcon(shape))
-    verticalAlignment = SwingConstants.CENTER
-    verticalTextPosition = SwingConstants.CENTER
-    horizontalAlignment = SwingConstants.CENTER
-    horizontalTextPosition = SwingConstants.CENTER
+    verticalAlignment = CENTER
+    verticalTextPosition = CENTER
+    horizontalAlignment = CENTER
+    horizontalTextPosition = CENTER
     border = BorderFactory.createEmptyBorder()
     isContentAreaFilled = false
     isFocusPainted = false
