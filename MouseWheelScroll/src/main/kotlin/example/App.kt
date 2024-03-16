@@ -97,8 +97,8 @@ private fun getIcon(): Icon {
 
 private fun initActionMap(scroll: JScrollPane) {
   val im = scroll.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_SHIFT, InputEvent.SHIFT_DOWN_MASK, false), "pressed")
-  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_SHIFT, 0, true), "released")
+  im.put(KeyStroke.getKeyStroke("SHIFT"), "pressed")
+  im.put(KeyStroke.getKeyStroke("released SHIFT"), "released")
 
   val am = scroll.actionMap
   val a1 = object : AbstractAction() {
@@ -107,6 +107,7 @@ private fun initActionMap(scroll: JScrollPane) {
     }
   }
   am.put("pressed", a1)
+
   val a2 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       isShiftPressed = false
