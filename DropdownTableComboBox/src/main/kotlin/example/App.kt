@@ -104,11 +104,21 @@ private class DropdownTableComboBox(
       row: Int,
       column: Int,
     ) = super.prepareRenderer(renderer, row, column).also {
-      it.foreground = Color.BLACK
-      it.background = when {
-        highlighter.isHighlightedRow(row) -> Color(0xFF_C8_C8)
-        isRowSelected(row) -> Color.CYAN
-        else -> Color.WHITE
+      when {
+        highlighter.isHighlightedRow(row) -> {
+          it.foreground = UIManager.getColor("Table.selectionForeground")
+          it.background = UIManager.getColor("Table.selectionBackground").brighter()
+        }
+
+        isRowSelected(row) -> {
+          it.foreground = UIManager.getColor("Table.selectionForeground")
+          it.background = UIManager.getColor("Table.selectionBackground")
+        }
+
+        else -> {
+          it.foreground = UIManager.getColor("Table.foreground")
+          it.background = UIManager.getColor("Table.background")
+        }
       }
     }
 
