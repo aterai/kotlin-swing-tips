@@ -360,7 +360,10 @@ private enum class Directions(private val cursor: Int) {
       parentBounds: Rectangle,
       deltaX: Int,
       deltaY: Int,
-    ) = Point(getDeltaX(deltaX, parentBounds, startingBounds), getDeltaY(deltaY, startingBounds))
+    ) = Point(
+      getDeltaX(deltaX, parentBounds, startingBounds),
+      getDeltaY(deltaY, startingBounds),
+    )
 
     override fun getBounds(
       rect: Rectangle,
@@ -378,7 +381,10 @@ private enum class Directions(private val cursor: Int) {
       parentBounds: Rectangle,
       deltaX: Int,
       deltaY: Int,
-    ) = Point(getDeltaX(deltaX, startingBounds), getDeltaY(deltaY, parentBounds, startingBounds))
+    ) = Point(
+      getDeltaX(deltaX, startingBounds),
+      getDeltaY(deltaY, parentBounds, startingBounds),
+    )
 
     override fun getBounds(
       rect: Rectangle,
