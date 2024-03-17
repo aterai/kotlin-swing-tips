@@ -11,8 +11,18 @@ fun makeUI(): Component {
     SpinnerNumberModel(Long.MAX_VALUE, 0L, Long.MAX_VALUE, 1L),
   )
   val list2 = listOf(
-    SpinnerNumberModel(Byte.MAX_VALUE.toLong(), 0.toLong(), Byte.MAX_VALUE.toLong(), 1.toLong()),
-    SpinnerNumberModel(Short.MAX_VALUE.toLong(), 0.toLong(), Short.MAX_VALUE.toLong(), 1.toLong()),
+    SpinnerNumberModel(
+      Byte.MAX_VALUE.toLong(),
+      0.toLong(),
+      Byte.MAX_VALUE.toLong(),
+      1.toLong(),
+    ),
+    SpinnerNumberModel(
+      Short.MAX_VALUE.toLong(),
+      0.toLong(),
+      Short.MAX_VALUE.toLong(),
+      1.toLong(),
+    ),
     SpinnerNumberModel(Int.MAX_VALUE.toLong(), 0.toLong(), Int.MAX_VALUE.toLong(), 1),
     SpinnerNumberModel(Long.MAX_VALUE, 0.toLong(), Long.MAX_VALUE, 1.toLong()),
   )
