@@ -92,7 +92,14 @@ private class UrlRenderer1 : UrlRenderer() {
     row: Int,
     column: Int,
   ): Component {
-    val c = super.getTableCellRendererComponent(table, value, isSelected, false, row, column)
+    val c = super.getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      false,
+      row,
+      column,
+    )
     val str = value?.toString() ?: ""
     (c as? JLabel)?.text = when {
       isRolloverCell(table, row, column) -> "<html><u><font color='blue'>$str"
@@ -103,7 +110,7 @@ private class UrlRenderer1 : UrlRenderer() {
   }
 }
 
-private open class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMotionListener {
+open class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMotionListener {
   private var viewRowIndex = -1
   private var viewColumnIndex = -1
   private var isRollover = false
@@ -116,7 +123,14 @@ private open class UrlRenderer : DefaultTableCellRenderer(), MouseListener, Mous
     row: Int,
     column: Int,
   ): Component {
-    val c = super.getTableCellRendererComponent(table, value, isSelected, false, row, column)
+    val c = super.getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      false,
+      row,
+      column,
+    )
     if (c is JLabel) {
       val cm = table.columnModel
       val i = c.insets
