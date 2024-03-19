@@ -1,6 +1,8 @@
 package example
 
 import java.awt.*
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
 import javax.swing.*
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
@@ -13,7 +15,13 @@ fun makeUI(): Component {
   wrappingMenuBar.add(makeToolBar(button))
   EventQueue.invokeLater { p.rootPane.jMenuBar = wrappingMenuBar }
 
-  val handler = object : PopupMenuListener {
+  val popupKeeper = object : MouseAdapter() {
+    override fun mousePressed(e: MouseEvent) {
+      (e.component as? JMenu)?.doClick()
+    }
+  }
+
+  val switchHandler = object : PopupMenuListener {
     override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
       // not need
     }
@@ -31,7 +39,9 @@ fun makeUI(): Component {
     }
   }
   for (i in 0 until mainMenuBar.menuCount) {
-    mainMenuBar.getMenu(i).popupMenu.addPopupMenuListener(handler)
+    val menu = mainMenuBar.getMenu(i)
+    menu.addMouseListener(popupKeeper)
+    menu.popupMenu.addPopupMenuListener(switchHandler)
   }
   p.add(JScrollPane(JTextArea()))
   p.preferredSize = Dimension(320, 240)
@@ -39,7 +49,7 @@ fun makeUI(): Component {
 }
 
 private fun makeHamburgerMenuButton(menuBar: JMenuBar, p: JComponent): JButton {
-  val button = object : JButton("ƒ¬") {
+  val button = object : JButton("Îž") {
     override fun getPreferredSize(): Dimension {
       val d = super.getPreferredSize()
       d.height = menuBar.getMenu(0).preferredSize.height
@@ -67,6 +77,7 @@ private fun makeHamburgerMenuButton(menuBar: JMenuBar, p: JComponent): JButton {
 private fun makeToolBar(button: JButton): JToolBar {
   val toolBar = JToolBar()
   toolBar.isFloatable = false
+  toolBar.isOpaque = false
   toolBar.add(button)
   toolBar.add(Box.createHorizontalStrut(5))
   toolBar.add(JLabel("<- Switch to JMenuBar"))
