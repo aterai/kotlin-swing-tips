@@ -6,7 +6,11 @@ import javax.swing.*
 fun makeUI(): Component {
   val buttonAreaBorder = "OptionPane.buttonAreaBorder"
   val borderCheck = JCheckBox(buttonAreaBorder)
-  val op = JOptionPane("message", JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION)
+  val op = JOptionPane(
+    "message",
+    JOptionPane.QUESTION_MESSAGE,
+    JOptionPane.YES_NO_CANCEL_OPTION,
+  )
 
   val sameSizeButtons = "OptionPane.sameSizeButtons"
   val p1 = JPanel()
