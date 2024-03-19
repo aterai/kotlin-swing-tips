@@ -65,38 +65,34 @@ private fun makeTitledPanel(
 
 private open class TooltipList<E>(m: ListModel<E>?) : JList<E>(m) {
   override fun getToolTipText(e: MouseEvent): String {
-    val p0 = e.point
-    val p1 = mousePosition
-    if (p1 != null && p1 != p0) {
-      val i = locationToIndex(p1)
-      if (getCellBounds(i, i)?.contains(p1) == true) {
-        val event = MouseEvent(
-          e.component,
-          MouseEvent.MOUSE_MOVED,
-          e.getWhen(),
-          e.modifiersEx or e.modifiers,
-          p1.x,
-          p1.y,
-          e.clickCount,
-          e.isPopupTrigger,
-        )
-        return super.getToolTipText(event)
-      }
-    }
-    return super.getToolTipText(e)
+    val event = getToolTipCellPoint(e)?.let {
+      MouseEvent(
+        e.component,
+        MouseEvent.MOUSE_MOVED,
+        e.getWhen(),
+        e.modifiersEx or e.modifiers,
+        it.x,
+        it.y,
+        e.clickCount,
+        e.isPopupTrigger,
+      )
+    } ?: e
+    return super.getToolTipText(event)
   }
 
-  override fun getToolTipLocation(e: MouseEvent): Point? {
-    val p0 = e.point
-    val p1 = mousePosition
-    if (p1 != null && p1 != p0) {
-      val i = locationToIndex(p1)
-      val cellBounds = getCellBounds(i, i)
-      if (cellBounds?.contains(p1) == true) {
-        return Point(p1.x, p1.y + cellBounds.height)
+  override fun getToolTipLocation(e: MouseEvent) = getToolTipCellPoint(e)?.let {
+    val i = locationToIndex(it)
+    Point(it.x, it.y + getCellBounds(i, i).height)
+  }
+
+  private fun getToolTipCellPoint(e: MouseEvent): Point? {
+    return mousePosition
+      ?.takeIf { it != e.point }
+      ?.takeIf { p ->
+        val i = locationToIndex(p)
+        val cellBounds = getCellBounds(i, i)
+        cellBounds != null && cellBounds.contains(p)
       }
-    }
-    return null
   }
 }
 
