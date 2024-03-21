@@ -41,8 +41,8 @@ private fun setElementColor(
   element: Element,
   color: String,
 ) {
-  val a = element.attributes
-  (a.getAttribute(HTML.Tag.A) as? MutableAttributeSet)?.addAttribute(HTML.Attribute.COLOR, color)
+  val a = element.attributes.getAttribute(HTML.Tag.A) as? MutableAttributeSet
+  a?.addAttribute(HTML.Attribute.COLOR, color)
 }
 
 fun main() {
