@@ -94,7 +94,14 @@ open class RoundedCornerButton : JButton {
   open fun initShape() {
     if (bounds != base) {
       base = bounds
-      shape = RoundRectangle2D.Double(0.0, 0.0, width - 1.0, height - 1.0, ARC_WIDTH, ARC_HEIGHT)
+      shape = RoundRectangle2D.Double(
+        0.0,
+        0.0,
+        width - 1.0,
+        height - 1.0,
+        ARC_WIDTH,
+        ARC_HEIGHT,
+      )
       border = RoundRectangle2D.Double(
         FOCUS_STROKE,
         FOCUS_STROKE,
@@ -116,20 +123,26 @@ open class RoundedCornerButton : JButton {
     g2.fill(border)
   }
 
+  private fun paintArmed(
+    g2: Graphics2D,
+    color: Color,
+  ) {
+    g2.paint = color
+    g2.fill(shape)
+  }
+
   override fun paintComponent(g: Graphics) {
     initShape()
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    if (getModel().isArmed) {
-      g2.paint = ac
-      g2.fill(shape)
-    } else if (isRolloverEnabled && getModel().isRollover) {
-      paintFocusAndRollover(g2, rc)
-    } else if (hasFocus()) {
-      paintFocusAndRollover(g2, fc)
-    } else {
-      g2.paint = background
-      g2.fill(shape)
+    when {
+      model.isArmed -> paintArmed(g2, ac)
+
+      isRolloverEnabled && model.isRollover -> paintFocusAndRollover(g2, rc)
+
+      hasFocus() -> paintFocusAndRollover(g2, fc)
+
+      else -> paintArmed(g2, background)
     }
     g2.dispose()
     super.paintComponent(g)
@@ -220,19 +233,25 @@ class ShapeButton(private val shape: Shape?) : JButton() {
     g2.fill(shape)
   }
 
+  private fun paintArmed(
+    g2: Graphics2D,
+    color: Color,
+  ) {
+    g2.paint = color
+    g2.fill(shape)
+  }
+
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    if (getModel().isArmed) {
-      g2.paint = ac
-      g2.fill(shape)
-    } else if (isRolloverEnabled && getModel().isRollover) {
-      paintFocusAndRollover(g2, rc)
-    } else if (hasFocus()) {
-      paintFocusAndRollover(g2, fc)
-    } else {
-      g2.paint = background
-      g2.fill(shape)
+    when {
+      getModel().isArmed -> paintArmed(g2, ac)
+
+      isRolloverEnabled && getModel().isRollover -> paintFocusAndRollover(g2, rc)
+
+      hasFocus() -> paintFocusAndRollover(g2, fc)
+
+      else -> paintArmed(g2, background)
     }
     g2.dispose()
     super.paintComponent(g)
