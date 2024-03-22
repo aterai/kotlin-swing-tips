@@ -5,6 +5,7 @@ import java.awt.geom.AffineTransform
 import java.awt.geom.Area
 import java.awt.image.BufferedImage
 import java.awt.image.ImageObserver
+import java.awt.image.ImageProducer
 import java.awt.image.MemoryImageSource
 import java.awt.image.PixelGrabber
 import javax.imageio.ImageIO
@@ -22,7 +23,7 @@ fun makeUI(): Component {
 
   val cardLayout = CardLayout()
   val p = JPanel(cardLayout)
-  makeRoundedMemoryImageSource(img, width, height)?.also {
+  makeRoundedImageProducer(img, width, height)?.also {
     val g = bi.createGraphics()
     g.drawImage(p.createImage(it), 0, 0, p)
     g.dispose()
@@ -86,11 +87,11 @@ private fun makeNorthWestCorner() = Area().also {
   it.add(Area(Rectangle(0, 3, 1, 2)))
 }
 
-private fun makeRoundedMemoryImageSource(
+private fun makeRoundedImageProducer(
   img: Image,
   w: Int,
   h: Int,
-): MemoryImageSource? {
+): ImageProducer? {
   val pix = IntArray(h * w)
   val pg = PixelGrabber(img, 0, 0, w, h, pix, 0, w)
   val ret = runCatching {
