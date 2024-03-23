@@ -138,9 +138,9 @@ private class CustomTooltipEditorPane : JEditorPane() {
 private class TooltipEditorKit : HTMLEditorKit() {
   override fun getViewFactory() = object : HTMLFactory() {
     override fun create(elem: Element): View {
-      val attrs = elem.attributes
-      val elementName = attrs.getAttribute(AbstractDocument.ElementNameAttribute)
-      val o = if (elementName == null) attrs.getAttribute(StyleConstants.NameAttribute) else null
+      val a = elem.attributes
+      val name = a.getAttribute(AbstractDocument.ElementNameAttribute)
+      val o = if (name == null) a.getAttribute(StyleConstants.NameAttribute) else null
       if (o is HTML.Tag && o === HTML.Tag.DIV) {
         return object : BlockView(elem, Y_AXIS) {
           override fun getToolTipText(
