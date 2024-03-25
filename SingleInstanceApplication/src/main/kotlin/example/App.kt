@@ -38,7 +38,8 @@ fun main() {
         loop.enter()
       }
     }.onFailure {
-      JOptionPane.showMessageDialog(null, "An instance of the application is already running...")
+      val msg = "An instance of the application is already running..."
+      JOptionPane.showMessageDialog(null, msg)
     }
   }
 }
