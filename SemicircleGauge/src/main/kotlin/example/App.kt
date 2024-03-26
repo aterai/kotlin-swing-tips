@@ -168,7 +168,9 @@ private class SolidGaugeUI(range: Int, extent: Double) : BasicProgressBarUI() {
   }
 }
 
-private class ProgressListener(private val progressBar: JProgressBar) : PropertyChangeListener {
+private class ProgressListener(
+  private val progressBar: JProgressBar,
+) : PropertyChangeListener {
   init {
     progressBar.value = progressBar.minimum
   }
