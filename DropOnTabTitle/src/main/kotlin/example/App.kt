@@ -20,9 +20,9 @@ import javax.swing.*
 
 fun makeUI(): Component {
   val tabs = JTabbedPane()
-  tabs.addTab("00000000", JScrollPane(DnDList(makeModel(0))))
-  tabs.addTab("11111111", JScrollPane(DnDList(makeModel(1))))
-  tabs.addTab("22222222", JScrollPane(DnDList(makeModel(2))))
+  tabs.addTab("Tab:000", JScrollPane(DnDList(makeModel(0))))
+  tabs.addTab("Tab:001", JScrollPane(DnDList(makeModel(1))))
+  tabs.addTab("Tab:002", JScrollPane(DnDList(makeModel(2))))
   DropTarget(tabs, DnDConstants.ACTION_MOVE, TabTitleDropTargetListener(), true)
 
   return JPanel(BorderLayout()).also {
