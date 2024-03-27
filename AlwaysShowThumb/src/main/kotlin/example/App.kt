@@ -11,7 +11,10 @@ fun makeUI(): Component {
   val check = object : JCheckBox(key) {
     override fun updateUI() {
       super.updateUI()
-      EventQueue.invokeLater { isSelected = UIManager.getLookAndFeelDefaults().getBoolean(key) }
+      EventQueue.invokeLater {
+        val def = UIManager.getLookAndFeelDefaults()
+        isSelected = def.getBoolean(key)
+      }
     }
   }
   check.addActionListener {
