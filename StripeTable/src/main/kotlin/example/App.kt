@@ -43,7 +43,14 @@ private class StripeTableRenderer : DefaultTableCellRenderer() {
     row: Int,
     column: Int,
   ): Component {
-    val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    val c = super.getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
     if (isSelected) {
       c.foreground = table.selectionForeground
       c.background = table.selectionBackground

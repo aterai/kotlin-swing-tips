@@ -92,7 +92,14 @@ private class UrlRenderer : MouseAdapter(), TableCellRenderer {
     row: Int,
     column: Int,
   ): Component {
-    val c = renderer.getTableCellRendererComponent(table, value, isSelected, false, row, column)
+    val c = renderer.getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      false,
+      row,
+      column,
+    )
     if (c is JLabel) {
       val cm = table.columnModel
       val i = c.insets

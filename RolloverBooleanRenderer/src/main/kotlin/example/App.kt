@@ -123,7 +123,14 @@ private open class RolloverDefaultTableCellRenderer(
     row: Int,
     column: Int,
   ): Component {
-    val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    val c = super.getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
     val str = value?.toString() ?: ""
     val isHighlightedCell = highlighter.isHighlightedCell(row, column)
     c.foreground = when {

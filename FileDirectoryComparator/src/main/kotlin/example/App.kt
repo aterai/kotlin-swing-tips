@@ -94,7 +94,14 @@ private class FileIconTableCellRenderer(
     row: Int,
     column: Int,
   ): Component {
-    val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    val c = super.getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
     if (c is JLabel && value is File) {
       when (table.convertColumnIndexToModel(column)) {
         0 -> {

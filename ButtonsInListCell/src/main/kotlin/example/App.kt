@@ -127,7 +127,13 @@ private class CellButtonsMouseListener<E>(private val list: JList<E>) : MouseInp
     index: Int,
   ): JButton? {
     val prototype = list.prototypeCellValue
-    val c = list.cellRenderer.getListCellRendererComponent(list, prototype, index, false, false)
+    val c = list.cellRenderer.getListCellRendererComponent(
+      list,
+      prototype,
+      index,
+      false,
+      false,
+    )
     val r = list.getCellBounds(index, index)
     c.bounds = r
     pt.translate(-r.x, -r.y)

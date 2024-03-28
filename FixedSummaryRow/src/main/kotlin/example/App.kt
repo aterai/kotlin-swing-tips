@@ -68,10 +68,24 @@ fun makeUI(): Component {
         val total = (1 until m.rowCount - 1).sumOf {
           m.getValueAt(it, column) as? Int ?: 0
         }
-        c = super.getTableCellRendererComponent(table, total, isSelected, hasFocus, row, column)
+        c = super.getTableCellRendererComponent(
+          table,
+          total,
+          isSelected,
+          hasFocus,
+          row,
+          column,
+        )
         c.background = Color.ORANGE
       } else {
-        c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+        c = super.getTableCellRendererComponent(
+          table,
+          value,
+          isSelected,
+          hasFocus,
+          row,
+          column,
+        )
         c.background = Color.WHITE
       }
       c.foreground = Color.BLACK

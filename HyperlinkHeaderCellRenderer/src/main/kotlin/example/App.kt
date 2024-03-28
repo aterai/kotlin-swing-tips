@@ -73,7 +73,14 @@ private class HyperlinkHeaderCellRenderer : DefaultTableCellRenderer(), MouseInp
         sort = "<small>$k"
       }
     }
-    val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    val c = super.getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
     if (c is JLabel) {
       c.text = when {
         col == column -> "<html><u><font color='blue'>$str</u>$sort"

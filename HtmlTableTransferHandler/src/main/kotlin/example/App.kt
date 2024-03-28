@@ -169,7 +169,14 @@ private class ColorRenderer : DefaultTableCellRenderer() {
     row: Int,
     column: Int,
   ): Component {
-    val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    val c = super.getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
     if (value is Color && c is JLabel) {
       c.icon = ColorIcon(value)
       c.text = "(${value.red}, ${value.green}, ${value.blue})"

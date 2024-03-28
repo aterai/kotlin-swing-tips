@@ -30,7 +30,13 @@ private val weekList = object : JList<Contribution>(CalendarViewListModel(curren
     fixedCellHeight = CELL_SIZE.height
     val renderer = cellRenderer
     setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-      renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
+      renderer.getListCellRendererComponent(
+        list,
+        value,
+        index,
+        isSelected,
+        cellHasFocus,
+      ).also {
         (it as? JLabel)?.icon = if (value.date.isAfter(currentLocalDate)) {
           ContributionIcon(Color.WHITE)
         } else {

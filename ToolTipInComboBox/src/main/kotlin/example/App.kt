@@ -28,7 +28,13 @@ private fun <E> makeComboBox(model: ComboBoxModel<E>) = object : JComboBox<E>(mo
     super.updateUI()
     val renderer = getRenderer()
     setRenderer { list, value, index, isSelected, cellHasFocus ->
-      renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
+      renderer.getListCellRendererComponent(
+        list,
+        value,
+        index,
+        isSelected,
+        cellHasFocus,
+      ).also {
         (it as? JComponent)?.toolTipText = "Item$index: $value"
       }
     }
