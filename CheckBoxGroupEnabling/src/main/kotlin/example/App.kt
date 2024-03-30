@@ -106,7 +106,11 @@ private fun makeTitledPanel(
   return p
 }
 
-private data class CheckBoxNode(val text: String, val selected: Boolean, val enabled: Boolean) {
+private data class CheckBoxNode(
+  val text: String,
+  val selected: Boolean,
+  val enabled: Boolean,
+) {
   override fun toString() = text
 }
 
