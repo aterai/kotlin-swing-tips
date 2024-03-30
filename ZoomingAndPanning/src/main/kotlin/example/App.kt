@@ -85,7 +85,9 @@ private class ZoomAndPanHandler : MouseAdapter() {
   // https://community.oracle.com/thread/1263955
   // How to implement Zoom & Pan in Java using Graphics2D
   private fun transformPoint(p1: Point): Point {
-    val inverse = runCatching { coordAndZoomAtf.createInverse() }.getOrNull() ?: coordAndZoomAtf
+    val inverse = runCatching {
+      coordAndZoomAtf.createInverse()
+    }.getOrNull() ?: coordAndZoomAtf
     val p2 = Point()
     inverse.transform(p1, p2)
     return p2
