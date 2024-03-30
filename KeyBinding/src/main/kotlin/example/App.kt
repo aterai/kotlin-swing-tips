@@ -1,12 +1,38 @@
 package example
 
 import java.awt.*
+import java.awt.event.ItemEvent
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.JTableHeader
 import javax.swing.table.TableCellRenderer
 
-private val model = BindingMapModel()
+private val model = object : DefaultTableModel() {
+  val columns = arrayOf(
+    ColumnContext("Focus", String::class.java, false),
+    ColumnContext("ActionName", String::class.java, false),
+    ColumnContext("KeyDescription", String::class.java, false),
+  )
+
+  fun addBinding(t: Binding) {
+    super.addRow(arrayOf(t.focusTypeName, t.actionName, t.keyDescription))
+  }
+
+  override fun isCellEditable(row: Int, col: Int) = columns[col].isEditable
+
+  override fun getColumnClass(column: Int) = columns[column].columnClass
+
+  override fun getColumnCount() = columns.size
+
+  override fun getColumnName(column: Int) = columns[column].columnName
+}
+
+private data class ColumnContext(
+  val columnName: String,
+  val columnClass: Class<*>,
+  val isEditable: Boolean,
+)
+
 private val components = arrayOf<JComponent>(
   JComboBox<Any>(),
   JDesktopPane(),
@@ -38,14 +64,9 @@ private val components = arrayOf<JComponent>(
   JTextField(),
 )
 private val componentChoices = JComboBox(components)
-private val focusTypes = listOf(
-  JComponent.WHEN_FOCUSED,
-  JComponent.WHEN_IN_FOCUSED_WINDOW,
-  JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT,
-)
 
 private fun loadBindingMap(
-  focusType: Int,
+  focusType: FocusType,
   im: InputMap,
   am: ActionMap,
 ) {
@@ -95,31 +116,27 @@ fun makeUI(): Component {
     }
   }
   table.autoCreateRowSorter = true
-  val renderer = JLabel()
-  componentChoices.setRenderer { list, value, index, isSelected, _ ->
-    renderer.isOpaque = index >= 0
-    renderer.text = value.javaClass.name
-    if (isSelected) {
-      renderer.background = list.selectionBackground
-      renderer.foreground = list.selectionForeground
-    } else {
-      renderer.background = list.background
-      renderer.foreground = list.foreground
-    }
-    renderer
+  val renderer = DefaultListCellRenderer()
+  componentChoices.setRenderer { list, value, index, isSelected, hasFocus ->
+    val c = renderer.getListCellRendererComponent(list, value, index, isSelected, hasFocus)
+    (c as? JLabel)?.text = value.javaClass.name
+    c
   }
-  val button = JButton("show")
-  button.addActionListener {
-    model.rowCount = 0
-    val c = componentChoices.getItemAt(componentChoices.selectedIndex)
-    for (f in focusTypes) {
-      loadBindingMap(f, c.getInputMap(f), c.actionMap)
+  componentChoices.addItemListener {
+    if (it.stateChange == ItemEvent.SELECTED) {
+      model.rowCount = 0
+      val c = componentChoices.getItemAt(componentChoices.selectedIndex)
+      for (f in FocusType.values()) {
+        loadBindingMap(f, c.getInputMap(f.id), c.actionMap)
+      }
     }
   }
-  val p = JPanel(GridLayout(2, 1, 5, 5))
+  SwingUtilities.invokeLater {
+    componentChoices.selectedIndex = componentChoices.itemCount - 1
+  }
+  val p = JPanel(BorderLayout())
   p.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   p.add(componentChoices)
-  p.add(button)
   return JPanel(BorderLayout()).also {
     it.add(p, BorderLayout.NORTH)
     it.add(JScrollPane(table))
@@ -127,48 +144,18 @@ fun makeUI(): Component {
   }
 }
 
-private class BindingMapModel : DefaultTableModel() {
-  fun addBinding(t: Binding) {
-    super.addRow(arrayOf(t.focusTypeName, t.actionName, t.keyDescription))
-  }
-
-  override fun isCellEditable(
-    row: Int,
-    col: Int,
-  ) = COLUMN_ARRAY[col].isEditable
-
-  override fun getColumnClass(column: Int) = COLUMN_ARRAY[column].columnClass
-
-  override fun getColumnCount() = COLUMN_ARRAY.size
-
-  override fun getColumnName(column: Int) = COLUMN_ARRAY[column].columnName
-
-  private data class ColumnContext(
-    val columnName: String,
-    val columnClass: Class<*>,
-    val isEditable: Boolean,
-  )
-
-  companion object {
-    private val COLUMN_ARRAY = arrayOf(
-      ColumnContext("Focus", String::class.java, false),
-      ColumnContext("ActionName", String::class.java, false),
-      ColumnContext("KeyDescription", String::class.java, false),
-    )
-  }
-}
-
 private data class Binding(
-  private val focusType: Int,
+  private val focusType: FocusType,
   val actionName: String,
   val keyDescription: String,
 ) {
-  val focusTypeName
-    get() = when (focusType) {
-      JComponent.WHEN_FOCUSED -> "WHEN_FOCUSED"
-      JComponent.WHEN_IN_FOCUSED_WINDOW -> "WHEN_IN_FOCUSED_WINDOW"
-      else -> "WHEN_ANCESTOR_OF_FOCUSED_COMPONENT"
-    }
+  val focusTypeName get() = focusType.name
+}
+
+private enum class FocusType(val id: Int) {
+  WHEN_FOCUSED(JComponent.WHEN_FOCUSED),
+  WHEN_IN_FOCUSED_WINDOW(JComponent.WHEN_IN_FOCUSED_WINDOW),
+  WHEN_ANCESTOR_OF_FOCUSED_COMPONENT(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
 }
 
 fun main() {
