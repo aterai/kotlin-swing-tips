@@ -19,8 +19,10 @@ fun makeUI(): Component {
   val button2 = JButton("Details View")
   button2.addActionListener { e ->
     val chooser = JFileChooser()
+    val src = e.source
+    val cmd = "viewTypeDetails"
     val act = chooser.actionMap["viewTypeDetails"]
-    act?.actionPerformed(ActionEvent(e.source, ActionEvent.ACTION_PERFORMED, "viewTypeDetails"))
+    act?.actionPerformed(ActionEvent(src, ActionEvent.ACTION_PERFORMED, cmd))
     descendants(chooser)
       .filterIsInstance<JTable>()
       .first()

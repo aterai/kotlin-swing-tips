@@ -40,7 +40,13 @@ private fun makeComboBox(
     super.updateUI()
     val renderer = getRenderer()
     setRenderer { list, value, index, isSelected, cellHasFocus ->
-      renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
+      renderer.getListCellRendererComponent(
+        list,
+        value,
+        index,
+        isSelected,
+        cellHasFocus,
+      ).also {
         if (it is JComponent && value != null) {
           it.border = if (index != -1 && value.hasSeparator) {
             BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY)
