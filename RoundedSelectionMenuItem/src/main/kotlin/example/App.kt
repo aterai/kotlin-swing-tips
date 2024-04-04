@@ -195,43 +195,47 @@ private class WindowsRoundMenuItemUI2 : WindowsMenuItemUI() {
   override fun paintBackground(g: Graphics, menuItem: JMenuItem, bgColor: Color) {
     val model = menuItem.model
     if (model.isArmed || menuItem is JMenu && model.isSelected) {
-      val width = menuItem.width
-      val height = menuItem.height
-      val config = (g as? Graphics2D)?.deviceConfiguration ?: return
-      do {
-        var status = buffer?.let {
-          it.validate(config)
-        } ?: VolatileImage.IMAGE_INCOMPATIBLE
-        if (status == VolatileImage.IMAGE_INCOMPATIBLE ||
-          status == VolatileImage.IMAGE_RESTORED
-        ) {
-          val buf = buffer
-            ?.takeIf { b -> b.width == width && b.height == height }
-            ?.takeIf { status != VolatileImage.IMAGE_INCOMPATIBLE }
-            ?: let {
-              buffer?.flush()
-              config.createCompatibleVolatileImage(width, height, Transparency.TRANSLUCENT)
-            }
-          buffer = buf
-          val g2 = buf.createGraphics()
-          g2.setRenderingHint(
-            RenderingHints.KEY_ANTIALIASING,
-            RenderingHints.VALUE_ANTIALIAS_ON,
-          )
-          g2.composite = AlphaComposite.Clear
-          g2.fillRect(0, 0, width, height)
-          g2.setPaintMode()
-          g2.paint = Color.WHITE
-          g2.fill(RoundRectangle2D.Float(0f, 0f, width.toFloat(), height.toFloat(), 8f, 8f))
-          g2.composite = AlphaComposite.SrcAtop
-          super.paintBackground(g2, menuItem, bgColor)
-          g2.dispose()
-        }
-      } while (buffer?.contentsLost() ?: false)
-      g.drawImage(buffer, 0, 0, menuItem)
+      paintSelectedBackground(g, menuItem, bgColor)
     } else {
       super.paintBackground(g, menuItem, bgColor)
     }
+  }
+
+  private fun paintSelectedBackground(g: Graphics, menuItem: JMenuItem, bgColor: Color) {
+    val width = menuItem.width
+    val height = menuItem.height
+    val config = (g as? Graphics2D)?.deviceConfiguration ?: return
+    do {
+      var status = buffer?.let {
+        it.validate(config)
+      } ?: VolatileImage.IMAGE_INCOMPATIBLE
+      if (status == VolatileImage.IMAGE_INCOMPATIBLE ||
+        status == VolatileImage.IMAGE_RESTORED
+      ) {
+        val buf = buffer
+          ?.takeIf { b -> b.width == width && b.height == height }
+          ?.takeIf { status != VolatileImage.IMAGE_INCOMPATIBLE }
+          ?: let {
+            buffer?.flush()
+            config.createCompatibleVolatileImage(width, height, Transparency.TRANSLUCENT)
+          }
+        buffer = buf
+        val g2 = buf.createGraphics()
+        g2.setRenderingHint(
+          RenderingHints.KEY_ANTIALIASING,
+          RenderingHints.VALUE_ANTIALIAS_ON,
+        )
+        g2.composite = AlphaComposite.Clear
+        g2.fillRect(0, 0, width, height)
+        g2.setPaintMode()
+        g2.paint = Color.WHITE
+        g2.fill(RoundRectangle2D.Float(0f, 0f, width.toFloat(), height.toFloat(), 8f, 8f))
+        g2.composite = AlphaComposite.SrcAtop
+        super.paintBackground(g2, menuItem, bgColor)
+        g2.dispose()
+      }
+    } while (buffer?.contentsLost() ?: false)
+    g.drawImage(buffer, 0, 0, menuItem)
   }
 }
 
