@@ -30,11 +30,11 @@ fun makeUI(): Component {
   }
 
   val button3 = JButton("JTable tooltips")
-  button3.addActionListener { e ->
-    val key = "viewTypeDetails"
+  button3.addActionListener {
+    val cmd = "viewTypeDetails"
+    val actionEvent = ActionEvent(it.source, ActionEvent.ACTION_PERFORMED, cmd)
     val chooser = JFileChooser()
-    val src = e.source
-    chooser.actionMap[key]?.actionPerformed(ActionEvent(src, ActionEvent.ACTION_PERFORMED, key))
+    chooser.actionMap[cmd]?.actionPerformed(actionEvent)
     descendants(chooser)
       .filterIsInstance<JTable>()
       .first()
@@ -72,10 +72,14 @@ private class TooltipListCellRenderer<E> : ListCellRenderer<E> {
     index: Int,
     isSelected: Boolean,
     cellHasFocus: Boolean,
-  ): Component {
-    val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-    (c as? JComponent)?.toolTipText = value?.toString()
-    return c
+  ) = renderer.getListCellRendererComponent(
+      list,
+      value,
+      index,
+      isSelected,
+      cellHasFocus,
+    ).also {
+    (it as? JComponent)?.toolTipText = value?.toString()
   }
 }
 
