@@ -31,13 +31,14 @@ fun makeUI(): Component {
       super.updateUI()
       val r = DefaultListCellRenderer()
       setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-        r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also { c ->
-          (SwingUtilities.getAncestorOfClass(JViewport::class.java, list) as? JViewport)?.also {
-            val rect = SwingUtilities.calculateInnerArea(it, it.bounds)
-            val fm = c.getFontMetrics(c.font)
+        r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
+          val vp = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
+          if (vp is JViewport) {
+            val rect = SwingUtilities.calculateInnerArea(vp, vp.bounds)
+            val fm = it.getFontMetrics(it.font)
             val str = value?.toString() ?: ""
             val b = fm.stringWidth(str) > rect.width
-            (c as? JComponent)?.toolTipText = if (b) str else null
+            (it as? JComponent)?.toolTipText = if (b) str else null
           }
         }
       }
@@ -50,13 +51,14 @@ fun makeUI(): Component {
       super.updateUI()
       val r = DefaultListCellRenderer()
       setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-        r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also { c ->
-          (SwingUtilities.getAncestorOfClass(JViewport::class.java, list) as? JViewport)?.also {
-            val rect = SwingUtilities.calculateInnerArea(it, it.bounds)
-            val fm = c.getFontMetrics(c.font)
+        r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
+          val vp = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
+          if (vp is JViewport) {
+            val rect = SwingUtilities.calculateInnerArea(vp, vp.bounds)
+            val fm = it.getFontMetrics(it.font)
             val str = value?.toString() ?: ""
             val b = fm.stringWidth(str) > rect.width
-            (c as? JComponent)?.toolTipText = if (b) str else list.toolTipText
+            (it as? JComponent)?.toolTipText = if (b) str else list.toolTipText
           }
         }
       }
