@@ -73,12 +73,12 @@ private class TooltipListCellRenderer<E> : ListCellRenderer<E> {
     isSelected: Boolean,
     cellHasFocus: Boolean,
   ) = renderer.getListCellRendererComponent(
-      list,
-      value,
-      index,
-      isSelected,
-      cellHasFocus,
-    ).also {
+    list,
+    value,
+    index,
+    isSelected,
+    cellHasFocus,
+  ).also {
     (it as? JComponent)?.toolTipText = value?.toString()
   }
 }
