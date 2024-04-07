@@ -122,14 +122,13 @@ private enum class Position {
 private fun getPosition(table: JTable, column: Int): Position {
   val isFirst = column == 0
   val isLast = column == table.columnCount - 1
-  val p = if (isFirst) {
+  return if (isFirst) {
     Position.FIRST
   } else if (isLast) {
     Position.LAST
   } else {
     Position.MIDDLE
   }
-  return p
 }
 
 fun main() {
