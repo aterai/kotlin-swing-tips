@@ -162,7 +162,11 @@ private fun getRegex(): Regex? {
   }
   val cw = if (checkWord.isSelected) "\\b" else ""
   val pattern = "%s%s%s".format(cw, text, cw)
-  val op = if (checkCase.isSelected) emptySet<RegexOption>() else setOf(RegexOption.IGNORE_CASE)
+  val op = if (checkCase.isSelected) {
+    emptySet<RegexOption>()
+  } else {
+    setOf(RegexOption.IGNORE_CASE)
+  }
   return runCatching {
     pattern.toRegex(op)
   }.onFailure {

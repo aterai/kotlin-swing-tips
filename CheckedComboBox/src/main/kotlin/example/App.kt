@@ -128,7 +128,9 @@ private open class CheckedComboBox(
     }
   }
 
-  protected fun getCheckedItemString(model: ListModel<out CheckableItem>) = (0 until model.size)
+  protected fun getCheckedItemString(
+    model: ListModel<out CheckableItem>,
+  ) = (0 until model.size)
     .asSequence()
     .map { model.getElementAt(it) }
     .filter { it.isSelected }
