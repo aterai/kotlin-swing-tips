@@ -130,10 +130,20 @@ private class DnDTabbedPane : JTabbedPane() {
     val r = getTabAreaBounds()
     if (isTopBottomTabPlacement(getTabPlacement())) {
       rectBackward.setBounds(r.x, r.y, RWH, r.height)
-      rectForward.setBounds(r.x + r.width - RWH - BUTTON_SIZE, r.y, RWH + BUTTON_SIZE, r.height)
+      rectForward.setBounds(
+        r.x + r.width - RWH - BUTTON_SIZE,
+        r.y,
+        RWH + BUTTON_SIZE,
+        r.height,
+      )
     } else {
       rectBackward.setBounds(r.x, r.y, r.width, RWH)
-      rectForward.setBounds(r.x, r.y + r.height - RWH - BUTTON_SIZE, r.width, RWH + BUTTON_SIZE)
+      rectForward.setBounds(
+        r.x,
+        r.y + r.height - RWH - BUTTON_SIZE,
+        r.width,
+        RWH + BUTTON_SIZE,
+      )
     }
     rectBackward = SwingUtilities.convertRectangle(parent, rectBackward, glassPane)
     rectForward = SwingUtilities.convertRectangle(parent, rectForward, glassPane)
