@@ -61,7 +61,11 @@ private fun makeComboBox(model: List<String>): JComboBox<String> {
           val txt = value?.toString() ?: ""
           field.text = txt
           addHighlight(txt, pattern, highlighter)
-          field.background = if (isSelected) Color(0xAA_64_AA_FF.toInt(), true) else Color.WHITE
+          field.background = if (isSelected) {
+            Color(0xAA_64_AA_FF.toInt(), true)
+          } else {
+            Color.WHITE
+          }
           field
         } else {
           renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
