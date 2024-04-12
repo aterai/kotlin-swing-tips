@@ -59,7 +59,7 @@ private class StripeTableRenderer : DefaultTableCellRenderer() {
       c.background = if (row % 2 == 0) EVEN_COLOR else table.background
     }
     if (c is JLabel) {
-      c.horizontalAlignment = if (value is Number) SwingConstants.RIGHT else SwingConstants.LEFT
+      c.horizontalAlignment = if (value is Number) RIGHT else LEFT
     }
     return c
   }
