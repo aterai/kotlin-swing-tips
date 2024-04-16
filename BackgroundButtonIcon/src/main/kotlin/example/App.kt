@@ -14,47 +14,32 @@ private fun makeButton(
   title: String,
   color: Color,
   first: Boolean,
-): AbstractButton {
-  // https://java-swing-tips.blogspot.com/2008/11/rounded-corner-jbutton.html
-  val b = object : JToggleButton(title) {
-    private val icon = ArrowToggleButtonBarCellIcon()
+) = object : JToggleButton(title, TestIcon()) {
+  private val icon = ArrowToggleButtonBarCellIcon()
 
-    override fun contains(
-      x: Int,
-      y: Int,
-    ) = icon.shape?.contains(Point(x, y)) ?: super.contains(x, y)
-
-    override fun getPreferredSize() = Dimension(icon.iconWidth, icon.iconHeight)
-
-    override fun paintComponent(g: Graphics) {
-      icon.paintIcon(this, g, 0, 0)
-      super.paintComponent(g)
-    }
+  override fun updateUI() {
+    super.updateUI()
+    isContentAreaFilled = false
+    horizontalAlignment = LEFT
+    isFocusPainted = false
+    isOpaque = false
+    background = color
+    val th = ArrowToggleButtonBarCellIcon.TH
+    val left = (if (first) 0 else th) + LINE_WIDTH + BI_GAP
+    border = BorderFactory.createEmptyBorder(0, left, 0, th)
   }
-  b.icon = object : Icon {
-    override fun paintIcon(
-      c: Component?,
-      g: Graphics,
-      x: Int,
-      y: Int,
-    ) {
-      g.color = Color.GRAY
-      g.drawOval(x, y, iconWidth, iconHeight)
-    }
 
-    override fun getIconWidth() = 12
+  override fun contains(
+    x: Int,
+    y: Int,
+  ) = icon.shape?.contains(Point(x, y)) ?: super.contains(x, y)
 
-    override fun getIconHeight() = 12
+  override fun getPreferredSize() = Dimension(icon.iconWidth, icon.iconHeight)
+
+  override fun paintComponent(g: Graphics) {
+    icon.paintIcon(this, g, 0, 0)
+    super.paintComponent(g)
   }
-  b.isContentAreaFilled = false
-  val th = ArrowToggleButtonBarCellIcon.TH
-  val left = (if (first) 0 else th) + LINE_WIDTH + BI_GAP
-  b.border = BorderFactory.createEmptyBorder(0, left, 0, th)
-  b.horizontalAlignment = SwingConstants.LEFT
-  b.isFocusPainted = false
-  b.isOpaque = false
-  b.background = color
-  return b
 }
 
 private fun makeContainer(overlap: Int): Container {
@@ -159,6 +144,22 @@ private class ArrowToggleButtonBarCellIcon : Icon {
     private const val HEIGHT = TH * 2 + 1
     private const val WIDTH = 100
   }
+}
+
+private class TestIcon : Icon {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
+    g.color = Color.GRAY
+    g.drawOval(x, y, iconWidth, iconHeight)
+  }
+
+  override fun getIconWidth() = 12
+
+  override fun getIconHeight() = 12
 }
 
 fun main() {
