@@ -43,13 +43,16 @@ private fun createMenuBar(): JMenuBar {
   menuItem = JMenuItem("bb")
   menuItem.mnemonic = KeyEvent.VK_2
 
-  val msk2 = InputEvent.ALT_DOWN_MASK or InputEvent.CTRL_DOWN_MASK
+  val msk2 = InputEvent.ALT_DOWN_MASK or
+      InputEvent.CTRL_DOWN_MASK
   menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, msk2)
   list.add(menuItem)
   menuItem = JMenuItem("c")
   menuItem.mnemonic = KeyEvent.VK_3
 
-  val msk3 = InputEvent.ALT_DOWN_MASK or InputEvent.CTRL_DOWN_MASK or InputEvent.SHIFT_DOWN_MASK
+  val msk3 = InputEvent.ALT_DOWN_MASK or
+      InputEvent.CTRL_DOWN_MASK or
+      InputEvent.SHIFT_DOWN_MASK
   menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, msk3)
   list.add(menuItem)
 
