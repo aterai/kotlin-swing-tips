@@ -214,9 +214,9 @@ private class CalendarListRenderer : ListCellRenderer<LocalDate> {
     val c = renderer.getListCellRendererComponent(list, value, index, false, false)
     val isSameMonth = YearMonth.from(value) == YearMonth.from(currentLocalDate)
     val fgc = if (isSameMonth) getForegroundColor(value) else Color.GRAY
-    c.foreground = if (isSelected) c.foreground else fgc
+    c.foreground = if (isSelected) Color.WHITE else fgc
     if (c is JLabel) {
-      c.isOpaque = true
+      c.isOpaque = false
       c.horizontalAlignment = SwingConstants.CENTER
       c.text = value.dayOfMonth.toString()
     }
