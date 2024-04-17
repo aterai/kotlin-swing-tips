@@ -240,7 +240,7 @@ private class ColumnGroup(text: String) {
       groups
     } else {
       list.filterIsInstance<ColumnGroup>().map {
-        it.getColumnGroupList(column, ArrayList(groups))
+        it.getColumnGroupList(column, groups)
       }.firstOrNull { it.isNotEmpty() }.orEmpty()
     }
   }
