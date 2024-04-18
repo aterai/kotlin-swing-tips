@@ -76,27 +76,26 @@ private class ImagePreview(fc: JFileChooser) : JComponent(), PropertyChangeListe
     }
   }
 
-  private fun getImageThumbnail(file: File?): ImageIcon? {
-    if (file == null || !file.exists()) {
-      return null
+  private fun getImageThumbnail(file: File?) = file
+    ?.let { ImageIcon(it.path) }
+    ?.let {
+      val w = it.iconWidth
+      val scale = PREVIEW_WIDTH / w.toFloat()
+      if (w > PREVIEW_WIDTH) getScaledImageIcon(it, scale) else it
     }
-    val tmpIcon = ImageIcon(file.path)
-    return if (tmpIcon.iconWidth > PREVIEW_WIDTH) {
-      val scale = PREVIEW_WIDTH / tmpIcon.iconWidth.toFloat()
-      val newW = (tmpIcon.iconWidth * scale).roundToInt()
-      val newH = (tmpIcon.iconHeight * scale).roundToInt()
-      val img = BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB)
-      val g2 = img.createGraphics()
-      g2.setRenderingHint(
-        RenderingHints.KEY_INTERPOLATION,
-        RenderingHints.VALUE_INTERPOLATION_BILINEAR,
-      )
-      g2.drawImage(tmpIcon.image, 0, 0, newW, newH, null)
-      g2.dispose()
-      ImageIcon(img)
-    } else {
-      tmpIcon
-    }
+
+  private fun getScaledImageIcon(icon: ImageIcon, scale: Float): ImageIcon {
+    val newW = (icon.iconWidth * scale).roundToInt()
+    val newH = (icon.iconHeight * scale).roundToInt()
+    val img = BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB)
+    val g2 = img.createGraphics()
+    g2.setRenderingHint(
+      RenderingHints.KEY_INTERPOLATION,
+      RenderingHints.VALUE_INTERPOLATION_BILINEAR,
+    )
+    g2.drawImage(icon.image, 0, 0, newW, newH, null)
+    g2.dispose()
+    return ImageIcon(img)
   }
 
   companion object {
