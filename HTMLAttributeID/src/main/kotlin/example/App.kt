@@ -143,7 +143,11 @@ private fun traverseElementById(element: Element) {
 private fun checkId(element: Element) {
   val attrs = element.attributes
   val elementName = attrs.getAttribute(AbstractDocument.ElementNameAttribute)
-  val name = if (elementName == null) attrs.getAttribute(StyleConstants.NameAttribute) else null
+  val name = if (elementName == null) {
+    attrs.getAttribute(StyleConstants.NameAttribute)
+  } else {
+    null
+  }
   val tag = if (name is HTML.Tag) name else return
   textArea.append("$tag\n")
   if (tag.isBlock) { // block
