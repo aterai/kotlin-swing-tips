@@ -71,7 +71,8 @@ private fun setCurrentLabelListener(slider: JSlider) {
   val prev = AtomicInteger(-1)
   slider.model.addChangeListener { e ->
     val i = (e.source as? BoundedRangeModel)?.value ?: prev.get()
-    if ((slider.majorTickSpacing == 0 || i % slider.majorTickSpacing == 0) && i != prev.get()) {
+    val b = slider.majorTickSpacing == 0 || i % slider.majorTickSpacing == 0
+    if (b && i != prev.get()) {
       val labelTable = slider.labelTable
       if (labelTable is Map<*, *>) {
         resetForeground(labelTable[i], Color.RED)

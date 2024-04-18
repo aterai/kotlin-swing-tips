@@ -114,7 +114,11 @@ private class WindowsSnapToTicksDragSliderUI(slider: JSlider) : WindowsSliderUI(
         offset = 0
         val possibleTickPos = slider.maximum - slider.minimum
         val hasMinorTick = slider.minorTickSpacing > 0
-        val tickSpacing = if (hasMinorTick) slider.minorTickSpacing else slider.majorTickSpacing
+        val tickSpacing = if (hasMinorTick) {
+          slider.minorTickSpacing
+        } else {
+          slider.majorTickSpacing
+        }
         val tickPixels = trackLength * tickSpacing / possibleTickPos.toFloat()
         val px = pos - trackLeft
         return ((px / tickPixels).roundToInt() * tickPixels).roundToInt() + trackLeft
@@ -150,7 +154,11 @@ private class MetalSnapToTicksDragSliderUI : MetalSliderUI() {
         offset = 0
         val possibleTickPos = slider.maximum - slider.minimum
         val hasMinorTick = slider.minorTickSpacing > 0
-        val tickSpacing = if (hasMinorTick) slider.minorTickSpacing else slider.majorTickSpacing
+        val tickSpacing = if (hasMinorTick) {
+          slider.minorTickSpacing
+        } else {
+          slider.majorTickSpacing
+        }
         val tickPixels = trackLength * tickSpacing / possibleTickPos.toFloat()
         val px = pos - trackLeft
         return ((px / tickPixels).roundToInt() * tickPixels).roundToInt() + trackLeft
