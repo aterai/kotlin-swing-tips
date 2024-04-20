@@ -148,9 +148,8 @@ private class LabelHandler(
   }
 
   override fun hierarchyChanged(e: HierarchyEvent) {
-    if (e.changeFlags.toInt() and HierarchyEvent.DISPLAYABILITY_CHANGED != 0 &&
-      !e.component.isDisplayable
-    ) {
+    val flags = e.changeFlags.toInt() and HierarchyEvent.DISPLAYABILITY_CHANGED
+    if (flags != 0 && !e.component.isDisplayable) {
       animator.stop()
     }
   }

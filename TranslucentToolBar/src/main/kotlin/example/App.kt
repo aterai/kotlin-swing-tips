@@ -204,14 +204,12 @@ private object AnimationUtils {
   private const val N = 3
 
   fun easeInOut(t: Double): Double {
-    val ret: Double
     val isFirstHalf = t < .5
-    ret = if (isFirstHalf) {
+    return if (isFirstHalf) {
       .5 * intPow(t * 2.0)
     } else {
       .5 * (intPow(t * 2.0 - 2.0) + 2.0)
     }
-    return ret
   }
 
   private fun intPow(da: Double): Double {

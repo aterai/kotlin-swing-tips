@@ -141,14 +141,12 @@ private object AnimationUtils {
   fun easeOut(t: Double) = (t - 1.0).pow(N.toDouble()) + 1.0
 
   fun easeInOut(t: Double): Double {
-    val ret: Double
     val isFirstHalf = t < .5
-    ret = if (isFirstHalf) {
+    return if (isFirstHalf) {
       .5 * intPow(t * 2.0, N)
     } else {
       .5 * (intPow(t * 2.0 - 2.0, N) + 2.0)
     }
-    return ret
   }
 
   fun intPow(
