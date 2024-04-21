@@ -128,7 +128,11 @@ private class TableRowTransferHandler : TransferHandler() {
     val canDrop = info.isDrop && isSupported
     val dp = SwingUtilities.getAncestorOfClass(JDesktopPane::class.java, info.component)
     val glassPane = (dp as? JComponent)?.rootPane?.glassPane ?: return false
-    glassPane.cursor = if (canDrop) DragSource.DefaultMoveDrop else DragSource.DefaultMoveNoDrop
+    glassPane.cursor = if (canDrop) {
+      DragSource.DefaultMoveDrop
+    } else {
+      DragSource.DefaultMoveNoDrop
+    }
     return canDrop
   }
 

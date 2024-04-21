@@ -25,16 +25,18 @@ fun makeUI(): Component {
   b3.border = BorderFactory.createEmptyBorder()
   b3.foreground = Color.WHITE
   b3.horizontalTextPosition = SwingConstants.CENTER
-  b3.pressedIcon = NineSliceScalingIcon(makeFilteredImage(bi, PressedImageFilter()), 0, 0, 0, 0)
-  b3.rolloverIcon = NineSliceScalingIcon(makeFilteredImage(bi, RolloverImageFilter()), 0, 0, 0, 0)
+  val pressedImg = makeFilteredImage(bi, PressedImageFilter())
+  b3.pressedIcon = NineSliceScalingIcon(pressedImg, 0, 0, 0, 0)
+  val rolloverImg = makeFilteredImage(bi, RolloverImageFilter())
+  b3.rolloverIcon = NineSliceScalingIcon(rolloverImg, 0, 0, 0, 0)
 
   val b4 = JButton("9-Slice Scaling Icon", NineSliceScalingIcon(bi, 8, 8, 8, 8))
   b4.isContentAreaFilled = false
   b4.border = BorderFactory.createEmptyBorder()
   b4.foreground = Color.WHITE
   b4.horizontalTextPosition = SwingConstants.CENTER
-  b4.pressedIcon = NineSliceScalingIcon(makeFilteredImage(bi, PressedImageFilter()), 8, 8, 8, 8)
-  b4.rolloverIcon = NineSliceScalingIcon(makeFilteredImage(bi, RolloverImageFilter()), 8, 8, 8, 8)
+  b4.pressedIcon = NineSliceScalingIcon(pressedImg, 8, 8, 8, 8)
+  b4.rolloverIcon = NineSliceScalingIcon(rolloverImg, 8, 8, 8, 8)
 
   val p2 = JPanel(GridLayout(1, 2, 5, 5))
   p2.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)

@@ -139,7 +139,10 @@ private class LightboxGlassPane(private val img: BufferedImage) : JPanel() {
     g2.fill(rect)
 
     if (alpha > 0) {
-      g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha.coerceAtMost(1f))
+      g2.composite = AlphaComposite.getInstance(
+        AlphaComposite.SRC_OVER,
+        alpha.coerceAtMost(1f),
+      )
       g2.drawImage(img, rect.x + BW, rect.y + BW, img.width, img.height, this)
     } else {
       val cx = centerPt.x - animatedIcon.iconWidth / 2
