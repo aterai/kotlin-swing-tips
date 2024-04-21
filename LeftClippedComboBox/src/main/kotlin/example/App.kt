@@ -46,10 +46,17 @@ private fun initComboBoxRenderer(combo: JComboBox<String>) {
       isSelected: Boolean,
       cellHasFocus: Boolean,
     ): Component {
-      val c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+      val c = super.getListCellRendererComponent(
+        list,
+        value,
+        index,
+        isSelected,
+        cellHasFocus,
+      )
       if (c is JLabel) {
-        val width = getAvailableWidth(combo, index)
-        c.text = getLeftClippedText(value?.toString() ?: "", c.getFontMetrics(c.font), width)
+        val w = getAvailableWidth(combo, index)
+        val fm = c.getFontMetrics(c.font)
+        c.text = if (fm.stringWidth(text) <= w) text else getLeftClippedText(text, fm, w)
       }
       return c
     }
@@ -83,9 +90,6 @@ private fun initComboBoxRenderer(combo: JComboBox<String>) {
       fm: FontMetrics,
       availableWidth: Int,
     ): String {
-      if (fm.stringWidth(text) <= availableWidth) {
-        return text
-      }
       val dots = "..."
       var textWidth = fm.stringWidth(dots)
       val len = text.length
