@@ -14,7 +14,7 @@ private fun makeButton(
   title: String,
   color: Color,
   first: Boolean,
-) = object : JToggleButton(title, TestIcon()) {
+) = object : JToggleButton(title, GrayIcon()) {
   private val icon = ArrowToggleButtonBarCellIcon()
 
   override fun updateUI() {
@@ -146,7 +146,7 @@ private class ArrowToggleButtonBarCellIcon : Icon {
   }
 }
 
-private class TestIcon : Icon {
+private class GrayIcon : Icon {
   override fun paintIcon(
     c: Component?,
     g: Graphics,
