@@ -172,26 +172,46 @@ private class ButtonsRenderer<E>(comboBox: RemoveButtonComboBox<E>) : ListCellRe
     isSelected: Boolean,
     cellHasFocus: Boolean,
   ): Component {
-    val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-    if (index < 0) {
-      return c
-    }
-    (c as? JComponent)?.isOpaque = false
-    this.targetIndex = index
-    if (isSelected) {
-      panel.background = list.selectionBackground
+    val c = renderer.getListCellRendererComponent(
+      list,
+      value,
+      index,
+      isSelected,
+      cellHasFocus,
+    )
+    return if (index >= 0 && c is JComponent) {
+      c.isOpaque = false
+      this.targetIndex = index
+      panel.background = getPanelBackground(list, index, isSelected)
+      updateDeleteButton(list, deleteButton, index == rolloverIndex)
+      panel.add(c)
+      panel
     } else {
-      panel.background = if (index % 2 == 0) EVEN_COLOR else list.background
+      c
     }
+  }
+
+  private fun getPanelBackground(
+    list: JList<*>,
+    index: Int,
+    isSelected: Boolean,
+  ) = if (isSelected) {
+    list.selectionBackground
+  } else {
+    if (index % 2 == 0) EVEN_COLOR else list.background
+  }
+
+  private fun updateDeleteButton(
+    list: JList<*>,
+    button: JButton,
+    isRollover: Boolean,
+  ) {
     val showDeleteButton = list.model.size > 1
-    deleteButton.isVisible = showDeleteButton
+    button.isVisible = showDeleteButton
     if (showDeleteButton) {
-      val isRollover = index == rolloverIndex
-      deleteButton.model.isRollover = isRollover
-      deleteButton.foreground = if (isRollover) Color.WHITE else list.foreground
+      button.model.isRollover = isRollover
+      button.foreground = if (isRollover) Color.WHITE else list.foreground
     }
-    panel.add(c)
-    return panel
   }
 
   companion object {
