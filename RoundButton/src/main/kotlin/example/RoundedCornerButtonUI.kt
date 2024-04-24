@@ -116,7 +116,15 @@ class RoundedCornerButtonUI : BasicButtonUI() {
     c: Component,
     color: Color,
   ) {
-    g2.paint = GradientPaint(0f, 0f, color, c.width - 1f, c.height - 1f, color.brighter(), true)
+    g2.paint = GradientPaint(
+      0f,
+      0f,
+      color,
+      c.width - 1f,
+      c.height - 1f,
+      color.brighter(),
+      true,
+    )
     g2.fill(shape)
     g2.paint = c.background
     g2.fill(border)

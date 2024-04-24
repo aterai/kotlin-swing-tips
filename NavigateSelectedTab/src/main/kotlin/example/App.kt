@@ -17,7 +17,11 @@ fun makeUI(): Component {
   layout.isFocusable = false
   layout.addActionListener { e ->
     val b = (e.source as? JCheckBox)?.isSelected == true
-    tabs.tabLayoutPolicy = if (b) JTabbedPane.SCROLL_TAB_LAYOUT else JTabbedPane.WRAP_TAB_LAYOUT
+    tabs.tabLayoutPolicy = if (b) {
+      JTabbedPane.SCROLL_TAB_LAYOUT
+    } else {
+      JTabbedPane.WRAP_TAB_LAYOUT
+    }
   }
 
   val placement = JCheckBox("TOP", true)
@@ -56,7 +60,10 @@ fun makeUI(): Component {
   }
 }
 
-private class TabNavigateAction(val tabs: JTabbedPane, val action: Action?) : AbstractAction() {
+private class TabNavigateAction(
+  val tabs: JTabbedPane,
+  val action: Action?,
+) : AbstractAction() {
   override fun actionPerformed(e: ActionEvent) {
     if (action != null && action.isEnabled) {
       val isWrap = tabs.tabLayoutPolicy == JTabbedPane.WRAP_TAB_LAYOUT

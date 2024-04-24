@@ -71,7 +71,7 @@ private fun initComboBoxes(isColor: Boolean): List<JComboBox<*>> {
   (cb1.editor.editorComponent as? JTextField)?.also {
     it.border = BorderFactory.createCompoundBorder(it.border, getPaddingBorder(isColor))
   }
-  cb1.toolTipText = "ed.setBorder(BorderFactory.createCompoundBorder(ed.getBorder(), padding));"
+  cb1.toolTipText = "ed.setBorder(CompoundBorder(ed.getBorder(), padding));"
 
   // ---- 2 ----
   val cb2 = list[2]
@@ -103,7 +103,7 @@ private fun initComboBoxes(isColor: Boolean): List<JComboBox<*>> {
   val cb5 = list[5]
   cb5.isEditable = true
   cb5.border = BorderFactory.createCompoundBorder(cb5.border, getPaddingBorder(isColor))
-  cb5.toolTipText = "cb.setBorder(BorderFactory.createCompoundBorder(cb.getBorder(), padding));"
+  cb5.toolTipText = "cb.setBorder(CompoundBorder(cb.getBorder(), padding));"
 
   // ---- 6 ----
   val cb6 = list[6]

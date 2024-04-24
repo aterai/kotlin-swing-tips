@@ -95,7 +95,9 @@ private class EditAction(private val table: JTable) : AbstractAction("edit") {
   }
 }
 
-private class ButtonsEditor(private val table: JTable) : AbstractCellEditor(), TableCellEditor {
+private class ButtonsEditor(
+  private val table: JTable,
+) : AbstractCellEditor(), TableCellEditor {
   private val panel = ButtonsPanel()
 
   private inner class EditingStopHandler : MouseAdapter(), ActionListener {
