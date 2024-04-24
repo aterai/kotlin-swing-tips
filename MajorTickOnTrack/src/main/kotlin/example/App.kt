@@ -136,9 +136,9 @@ private class NumberIcon(private val value: Int) : Icon {
     val b = shape.bounds
     val tx = iconWidth / 2.0 - b.centerX
     val ty = iconHeight / 2.0 - b.centerY
-    val toCenterAtf = AffineTransform.getTranslateInstance(tx, ty)
+    val toCenterAt = AffineTransform.getTranslateInstance(tx, ty)
     g2.paint = Color.WHITE
-    g2.fill(toCenterAtf.createTransformedShape(shape))
+    g2.fill(toCenterAt.createTransformedShape(shape))
     g2.dispose()
   }
 

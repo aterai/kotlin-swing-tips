@@ -168,8 +168,8 @@ private open class BadgeIcon(
     val b = shape.bounds
     val tx = iconWidth / 2.0 - b.centerX
     val ty = iconHeight / 2.0 - b.centerY
-    val toCenterAT = AffineTransform.getTranslateInstance(tx, ty)
-    g2.fill(toCenterAT.createTransformedShape(shape))
+    val toCenterAt = AffineTransform.getTranslateInstance(tx, ty)
+    g2.fill(toCenterAt.createTransformedShape(shape))
     g2.dispose()
   }
 

@@ -25,8 +25,8 @@ fun makeUI(): Component {
       val h = height.toDouble()
       val cx = w / 2.0 - b.centerX
       val cy = h / 2.0 - b.centerY
-      val toCenterAtf = AffineTransform.getTranslateInstance(cx, cy)
-      val s = toCenterAtf.createTransformedShape(gv.outline)
+      val toCenterAt = AffineTransform.getTranslateInstance(cx, cy)
+      val s = toCenterAt.createTransformedShape(gv.outline)
       val bg = Area(Rectangle2D.Double(0.0, 0.0, w, h))
       bg.subtract(Area(s))
       g2.color = background

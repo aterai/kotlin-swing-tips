@@ -36,19 +36,19 @@ private class TricoloreLabel(private val text: String) : JComponent() {
     val b = gv.visualBounds
     val cx = w / 2.0 - b.centerX
     val cy = h / 2.0 - b.centerY
-    val toCenterAtf = AffineTransform.getTranslateInstance(cx, cy)
+    val toCenterAt = AffineTransform.getTranslateInstance(cx, cy)
     val dh = b.height / 3.0
     val clip = Rectangle2D.Double(b.x, b.y, b.width, b.height)
     val clip1 = Rectangle2D.Double(b.x, b.y, b.width, dh)
     val clip2 = Rectangle2D.Double(b.x, b.y + 2.0 * dh, b.width, dh)
-    val s = toCenterAtf.createTransformedShape(gv.outline)
-    g2.clip = toCenterAtf.createTransformedShape(clip1)
+    val s = toCenterAt.createTransformedShape(gv.outline)
+    g2.clip = toCenterAt.createTransformedShape(clip1)
     g2.paint = Color.BLUE
     g2.fill(s)
-    g2.clip = toCenterAtf.createTransformedShape(clip2)
+    g2.clip = toCenterAt.createTransformedShape(clip2)
     g2.paint = Color.RED
     g2.fill(s)
-    g2.clip = toCenterAtf.createTransformedShape(clip)
+    g2.clip = toCenterAt.createTransformedShape(clip)
     g2.paint = Color.BLACK
     g2.draw(s)
     g2.dispose()
@@ -69,12 +69,12 @@ private class LineSplittingLabel(private val text: String) : JComponent() {
     val b = shape.bounds2D
     val cx = w / 2.0 - b.centerX
     val cy = h / 2.0 - b.centerY
-    val toCenterAtf = AffineTransform.getTranslateInstance(cx, cy)
-    val s = toCenterAtf.createTransformedShape(shape)
+    val toCenterAt = AffineTransform.getTranslateInstance(cx, cy)
+    val s = toCenterAt.createTransformedShape(shape)
     g2.paint = Color.BLACK
     g2.fill(s)
     val clip = Rectangle2D.Double(b.x, b.y, b.width, b.height / 2.0)
-    g2.clip = toCenterAtf.createTransformedShape(clip)
+    g2.clip = toCenterAt.createTransformedShape(clip)
     g2.paint = Color.RED
     g2.fill(s)
     g2.dispose()

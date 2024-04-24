@@ -197,8 +197,9 @@ private class ShapeIcon(
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     val b = shape.bounds2D
-    val p = Point2D.Double(b.x + b.width / 2.0, b.y + b.height / 2.0)
-    val toCenterAt = AffineTransform.getTranslateInstance(width / 2.0 - p.x, height / 2.0 - p.y)
+    val cx = width / 2.0 - b.centerX
+    val cy = height / 2.0 - b.centerY
+    val toCenterAt = AffineTransform.getTranslateInstance(cx, cy)
     g2.paint = c.foreground
     g2.fill(toCenterAt.createTransformedShape(shape))
     g2.dispose()

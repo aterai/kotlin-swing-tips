@@ -64,8 +64,8 @@ fun makeImage(
   val r = s.bounds
   val cx = size / 2.0 - r.centerX
   val cy = size / 2.0 - r.centerY
-  val toCenterAtf = AffineTransform.getTranslateInstance(cx, cy)
-  g2.fill(toCenterAtf.createTransformedShape(s))
+  val toCenterAt = AffineTransform.getTranslateInstance(cx, cy)
+  g2.fill(toCenterAt.createTransformedShape(s))
   g2.dispose()
   return image
 }

@@ -86,13 +86,13 @@ private class GlyphPaintPanel : JPanel() {
     val b = exShape.bounds2D
     val cx = width / 2.0 - b.centerX
     val cy = height / 2.0 - b.centerY
-    val toCenterAtf = AffineTransform.getTranslateInstance(cx, cy)
+    val toCenterAt = AffineTransform.getTranslateInstance(cx, cy)
 
     g2.paint = Color.YELLOW
-    g2.draw(toCenterAtf.createTransformedShape(b))
+    g2.draw(toCenterAt.createTransformedShape(b))
 
-    val s1 = toCenterAtf.createTransformedShape(exShape)
-    val s2 = toCenterAtf.createTransformedShape(mjShape)
+    val s1 = toCenterAt.createTransformedShape(exShape)
+    val s2 = toCenterAt.createTransformedShape(mjShape)
 
     if (fontPaintFlag.contains(FontPaint.IPA_EX_MINCHO)) {
       g2.paint = Color.CYAN

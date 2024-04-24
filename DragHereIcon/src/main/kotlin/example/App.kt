@@ -56,8 +56,8 @@ private class DragHereIcon : Icon {
     val b = arrow.bounds2D
     val cx = ICON_WIDTH / 2.0 - b.centerX
     val cy = ICON_HEIGHT / 2.0 - b.centerY
-    val toCenterAtf = AffineTransform.getTranslateInstance(cx, cy)
-    g2.fill(toCenterAtf.createTransformedShape(arrow))
+    val toCenterAt = AffineTransform.getTranslateInstance(cx, cy)
+    g2.fill(toCenterAt.createTransformedShape(arrow))
     g2.dispose()
   }
 

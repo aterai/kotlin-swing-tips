@@ -19,8 +19,8 @@ fun makeUI(): Component {
       val b = copyleft.bounds2D
       val cx = width / 2.0 - b.centerX
       val cy = height / 2.0 - b.centerY
-      val toCenterAtf = AffineTransform.getTranslateInstance(cx, cy)
-      g2.fill(toCenterAtf.createTransformedShape(copyleft))
+      val toCenterAt = AffineTransform.getTranslateInstance(cx, cy)
+      g2.fill(toCenterAt.createTransformedShape(copyleft))
       g2.dispose()
     }
   }

@@ -69,7 +69,7 @@ private class FiveStarRatingLabel(rating: String) : JComponent() {
     val r = gv.visualBounds
     val cx = w / 2.0 - r.centerX
     val cy = h / 2.0 - r.centerY
-    val toCenterAtf = AffineTransform.getTranslateInstance(cx, cy)
+    val toCenterAt = AffineTransform.getTranslateInstance(cx, cy)
     var point = 0.0
     for (i in 0 until gv.numGlyphs) {
       val gm = gv.getGlyphMetrics(i)
@@ -80,10 +80,10 @@ private class FiveStarRatingLabel(rating: String) : JComponent() {
       }
     }
     g2.paint = Color.GREEN
-    val s = toCenterAtf.createTransformedShape(gv.outline)
+    val s = toCenterAt.createTransformedShape(gv.outline)
     g2.draw(s)
     val clip = Rectangle2D.Double(r.x, r.y, point, r.height)
-    g2.clip = toCenterAtf.createTransformedShape(clip)
+    g2.clip = toCenterAt.createTransformedShape(clip)
     g2.fill(s)
     g2.dispose()
   }

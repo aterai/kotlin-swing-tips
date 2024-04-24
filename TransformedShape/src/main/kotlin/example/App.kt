@@ -34,9 +34,9 @@ private class FontRotateAnimation(str: String) : JComponent() {
       val at = AffineTransform.getRotateInstance(Math.toRadians(rotate), b.centerX, b.centerY)
       val cx = width / 2.0 - b.centerX
       val cy = height / 2.0 - b.centerY
-      val toCenterAtf = AffineTransform.getTranslateInstance(cx, cy)
+      val toCenterAt = AffineTransform.getTranslateInstance(cx, cy)
       val s1 = at.createTransformedShape(outline)
-      shape = toCenterAtf.createTransformedShape(s1)
+      shape = toCenterAt.createTransformedShape(s1)
       repaint(shape.bounds)
       // rotate = if (rotate >= 360.0) 0.0 else rotate + 2.0
       rotate = (rotate + 2.0) % 360.0

@@ -86,8 +86,8 @@ private class SymbolIcon(private val str: String) : Icon {
     val b = symbol.bounds2D
     val cx = iconWidth / 2.0 - b.centerX
     val cy = iconHeight / 2.0 - b.centerY
-    val toCenterAtf = AffineTransform.getTranslateInstance(cx, cy)
-    g2.fill(toCenterAtf.createTransformedShape(symbol))
+    val toCenterAt = AffineTransform.getTranslateInstance(cx, cy)
+    g2.fill(toCenterAt.createTransformedShape(symbol))
     g2.dispose()
   }
 
