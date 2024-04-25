@@ -411,12 +411,11 @@ private class WrapColumnFactory : ViewFactory {
 }
 
 private class WrapLabelView(element: Element?) : LabelView(element) {
-  override fun getMinimumSpan(axis: Int) =
-    when (axis) {
-      X_AXIS -> 0f
-      Y_AXIS -> super.getMinimumSpan(axis)
-      else -> throw IllegalArgumentException("Invalid axis: $axis")
-    }
+  override fun getMinimumSpan(axis: Int) = if (axis == X_AXIS) {
+    0f 
+  } else {
+    super.getMinimumSpan(axis)
+  }
 }
 
 fun main() {
