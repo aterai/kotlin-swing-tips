@@ -207,7 +207,7 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
         JOptionPane.showMessageDialog(rootPane, item.title)
       } else {
         checkedIndex = -1
-        getCheckBox(e, index)?.also {
+        getDeepestButtonAt(e, index)?.also {
           checkedIndex = index
           if (isSelectedIndex(index)) {
             setFocusable(false)
@@ -219,13 +219,12 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
       }
     }
 
-    private fun getCheckBox(
+    private fun getDeepestButtonAt(
       e: MouseEvent,
       index: Int,
-    ): AbstractButton? {
-      if (e.isShiftDown || e.isControlDown || e.isAltDown) {
-        return null
-      }
+    ) = if (e.isShiftDown || e.isControlDown || e.isAltDown) {
+      null
+    } else {
       val list = this@RubberBandSelectionList
       val proto = list.prototypeCellValue
       val cr = list.cellRenderer
@@ -234,7 +233,7 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
       c.bounds = r
       val pt = e.point
       pt.translate(-r.x, -r.y)
-      return SwingUtilities.getDeepestComponentAt(c, pt.x, pt.y) as? AbstractButton
+      SwingUtilities.getDeepestComponentAt(c, pt.x, pt.y) as? AbstractButton
     }
   }
 
