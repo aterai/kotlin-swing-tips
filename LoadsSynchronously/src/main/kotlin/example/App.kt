@@ -10,7 +10,7 @@ import javax.swing.text.html.HTMLEditorKit
 import javax.swing.text.html.ImageView
 import kotlin.math.roundToInt
 
-private const val TEXT = "<span style='background-color:red'>1111111111111111111</span><br />\n"
+private const val TEXT = "<span style='background-color:red'>11111111111111111</span><br/>\n"
 private val label = JLabel("screenshot")
 
 fun makeUI(): Component {

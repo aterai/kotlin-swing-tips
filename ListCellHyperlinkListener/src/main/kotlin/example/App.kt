@@ -9,8 +9,12 @@ import javax.swing.event.HyperlinkListener
 
 fun makeUI(): Component {
   val m = DefaultListModel<SiteItem>()
-  m.addElement(SiteItem("aterai", listOf("https://ateraimemo.com", "https://github.com/aterai")))
-  m.addElement(SiteItem("example", listOf("http://www.example.com", "https://www.example.com")))
+  m.addElement(
+    SiteItem("aterai", listOf("https://ateraimemo.com", "https://github.com/aterai")),
+  )
+  m.addElement(
+    SiteItem("example", listOf("http://www.example.com", "https://www.example.com")),
+  )
   val list = object : JList<SiteItem>(m) {
     override fun updateUI() {
       super.updateUI()
