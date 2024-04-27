@@ -60,7 +60,9 @@ private class RightAlignmentMetalFileChooserUI(fc: JFileChooser) : MetalFileChoo
   }
 }
 
-private class RightAlignmentWindowsFileChooserUI(fc: JFileChooser?) : WindowsFileChooserUI(fc) {
+private class RightAlignmentWindowsFileChooserUI(
+  fc: JFileChooser?,
+) : WindowsFileChooserUI(fc) {
   override fun installComponents(fc: JFileChooser) {
     super.installComponents(fc)
     descendants(bottomPanel)
