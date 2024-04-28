@@ -106,8 +106,8 @@ private class MosaicImageFilter(private val blockSize: Int) : BufferedImageOp {
         }
       }
       val size = w * h
-      r = (r / size) shl 16
-      g = (g / size) shl 8
+      r = r / size shl 16
+      g = g / size shl 8
       b = b / size
       return r or g or b
     }
