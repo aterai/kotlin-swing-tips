@@ -267,11 +267,12 @@ private object GeomUtils {
     val akv = arc - arc * kappa
     val pt0 = list[0]
     val path = Path2D.Double()
+    val sz = list.size
     path.moveTo(pt0.x + arc, pt0.y)
-    for (i in 0 until list.size) {
-      val prv = if (i == 0) list.last() else list[i - 1]
+    for (i in 0 until sz) {
+      val prv = list[(i - 1 + sz) % sz]
       val cur = list[i]
-      val nxt = if (i < list.size - 1) list[i + 1] else list.first()
+      val nxt = list[(i + 1) % sz]
       val dx0 = sign(cur.x - prv.x)
       val dy0 = sign(cur.y - prv.y)
       val dx1 = sign(nxt.x - cur.x)
