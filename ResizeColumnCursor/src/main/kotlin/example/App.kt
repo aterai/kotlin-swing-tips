@@ -5,7 +5,6 @@ import java.awt.*
 import java.awt.event.MouseEvent
 import java.awt.font.TextLayout
 import java.awt.geom.AffineTransform
-import java.awt.geom.Point2D
 import java.awt.image.BufferedImage
 import javax.swing.*
 import javax.swing.event.MouseInputListener
