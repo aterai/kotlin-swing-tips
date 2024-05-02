@@ -1,8 +1,7 @@
 package example
 
 import java.awt.*
-import java.awt.event.ActionEvent
-import java.awt.event.KeyEvent
+import java.awt.event.*
 import javax.swing.*
 
 fun makeUI(): Component {
@@ -12,7 +11,8 @@ fun makeUI(): Component {
     override fun actionPerformed(e: ActionEvent) {
       (e.source as? JComboBox<*>)?.also {
         val i = it.selectedIndex
-        it.selectedIndex = if (i == 0) it.itemCount - 1 else i - 1
+        val size = it.itemCount
+        it.selectedIndex = (i - 1 + size) % size
       }
     }
   }
@@ -21,18 +21,19 @@ fun makeUI(): Component {
     override fun actionPerformed(e: ActionEvent) {
       (e.source as? JComboBox<*>)?.also {
         val i = it.selectedIndex
-        it.selectedIndex = if (i == it.itemCount - 1) 0 else i + 1
+        val size = it.itemCount
+        it.selectedIndex = (i + 1) % size
       }
     }
   }
 
   val am = combo.actionMap
-  am.put("myUp", up)
-  am.put("myDown", down)
+  am.put("loopUp", up)
+  am.put("loopDown", down)
 
   val im = combo.inputMap
-  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "myUp")
-  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "myDown")
+  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "loopUp")
+  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "loopDown")
 
   val box = Box.createVerticalBox()
   box.add(makeTitledPanel("default:", JComboBox(makeModel())))

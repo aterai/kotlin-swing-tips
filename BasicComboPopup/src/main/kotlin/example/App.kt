@@ -56,18 +56,20 @@ fun makeUI(): Component {
   val a1 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val i = combo.selectedIndex
-      combo.selectedIndex = if (i == 0) combo.itemCount - 1 else i - 1
+      val size = combo.itemCount
+      combo.selectedIndex = (i - 1 + size) % size
     }
   }
-  am.put("myUp", a1)
+  am.put("loopUp", a1)
 
   val a2 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val i = combo.selectedIndex
-      combo.selectedIndex = if (i == combo.itemCount - 1) 0 else i + 1
+      val size = combo.itemCount
+      combo.selectedIndex = (i + 1) % size
     }
   }
-  am.put("myDown", a2)
+  am.put("loopDown", a2)
 
   val a3 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
@@ -77,12 +79,12 @@ fun makeUI(): Component {
       }
     }
   }
-  am.put("myEnt", a3)
+  am.put("insert", a3)
 
   val im = popup.inputMap
-  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "myUp")
-  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "myDown")
-  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "myEnt")
+  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "loopUp")
+  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "loopDown")
+  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "insert")
 
   val a4 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
@@ -100,9 +102,9 @@ fun makeUI(): Component {
       }
     }
   }
-  textPane.actionMap.put("myPop", a4)
+  textPane.actionMap.put("popupInsert", a4)
   val keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK)
-  textPane.inputMap.put(keyStroke, "myPop")
+  textPane.inputMap.put(keyStroke, "popupInsert")
 
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(textPane))
