@@ -54,8 +54,8 @@ fun makeUI(): Component {
 private fun createFrame(title: String): JInternalFrame {
   val frame = object : JInternalFrame(title, true, true, true, true) {
     override fun paintComponent(g: Graphics) {
-      if (draggingFrame === this) {
-        (g as? Graphics2D)?.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f)
+      if (draggingFrame === this && g is Graphics2D) {
+        g.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f)
       }
       super.paintComponent(g)
     }
