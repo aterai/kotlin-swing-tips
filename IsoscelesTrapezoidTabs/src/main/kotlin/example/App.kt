@@ -1,6 +1,7 @@
 package example
 
 import java.awt.*
+import java.awt.geom.AffineTransform
 import java.awt.geom.GeneralPath
 import javax.swing.*
 import javax.swing.plaf.basic.BasicTabbedPaneUI
@@ -54,8 +55,8 @@ private class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
     i: Int,
     tabCount: Int,
   ): Int {
-    val next = tabRuns[if (i == runCount - 1) 0 else i + 1]
-    return if (next == 0) tabCount - 1 else next - 1
+    val next = tabRuns[(i + 1) % runCount]
+    return (next - 1 + tabCount) % tabCount
   }
 
   override fun paintTabBorder(
@@ -115,12 +116,14 @@ private class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
     val clipRect = g2.clipBounds
     clipRect.grow(ADJ2 + 1, 0)
     g2.clip = clipRect
-    val textShiftOffset = if (isSelected) 0 else 1
+    val textShiftOffset = if (isSelected) 0f else 1f
     val trapezoid = GeneralPath()
-    trapezoid.moveTo((x - ADJ2).toFloat(), (y + h).toFloat())
-    trapezoid.lineTo((x + ADJ2).toFloat(), (y + textShiftOffset).toFloat())
-    trapezoid.lineTo((x + w - ADJ2).toFloat(), (y + textShiftOffset).toFloat())
-    trapezoid.lineTo((x + w + ADJ2).toFloat(), (y + h).toFloat())
+    trapezoid.moveTo(-ADJ2.toFloat(), h.toFloat())
+    trapezoid.lineTo(ADJ2.toFloat(), textShiftOffset)
+    trapezoid.lineTo((w - ADJ2).toFloat(), textShiftOffset)
+    trapezoid.lineTo((w + ADJ2).toFloat(), h.toFloat())
+    trapezoid.closePath()
+    trapezoid.transform(AffineTransform.getTranslateInstance(x.toDouble(), y.toDouble()))
     g2.color = if (isSelected) selectedTabColor else TAB_BACKGROUND
     g2.fill(trapezoid)
     g2.color = TAB_BORDER
