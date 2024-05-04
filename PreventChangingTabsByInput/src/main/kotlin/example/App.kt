@@ -27,8 +27,7 @@ fun makeUI(): Component {
 
   val button = JButton("next")
   button.addActionListener {
-    val i = tabs0.selectedIndex + 1
-    val next = if (i >= tabs0.tabCount) 0 else i
+    val next = (tabs0.selectedIndex + 1) % tabs0.tabCount
     listOf(tabs0, tabs2, tabs3).forEach { it.selectedIndex = next }
   }
 
