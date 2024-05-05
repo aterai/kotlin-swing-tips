@@ -1,7 +1,8 @@
 package example
 
 import java.awt.*
-import java.awt.event.*
+import java.awt.event.ActionEvent
+import java.awt.event.KeyEvent
 import javax.swing.*
 
 fun makeUI(): Component {
