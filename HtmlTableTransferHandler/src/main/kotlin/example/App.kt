@@ -150,13 +150,12 @@ private class DateEditor : AbstractCellEditor(), TableCellEditor {
   override fun getCellEditorValue() = spinner.value
 
   override fun stopCellEditing(): Boolean {
-    runCatching {
+    val stopEditing = runCatching {
       spinner.commitEdit()
     }.onFailure {
       UIManager.getLookAndFeel().provideErrorFeedback(spinner)
-      return false
-    }
-    return super.stopCellEditing()
+    }.isSuccess
+    return stopEditing && super.stopCellEditing()
   }
 }
 
