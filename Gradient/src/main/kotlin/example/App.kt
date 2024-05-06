@@ -79,9 +79,10 @@ private class GradientSeparatorUI : BasicSeparatorUI() {
   private var shc: Color? = null
 
   private fun updateColors(c: Component) {
-    bgc = UIManager.getColor("Panel.background") as? ColorUIResource ?: c.background
-    ssc = UIManager.getColor("Separator.shadow") as? ColorUIResource ?: c.background.brighter()
-    shc = UIManager.getColor("Separator.highlight") as? ColorUIResource ?: c.background.darker()
+    val bc = c.background
+    bgc = UIManager.getColor("Panel.background") as? ColorUIResource ?: bc
+    ssc = UIManager.getColor("Separator.shadow") as? ColorUIResource ?: bc.brighter()
+    shc = UIManager.getColor("Separator.highlight") as? ColorUIResource ?: bc.darker()
   }
 
   override fun installUI(c: JComponent) {
