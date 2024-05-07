@@ -77,18 +77,16 @@ private class TextAreaCellEditor : AbstractCellEditor(), TableCellEditor {
     return scroll
   }
 
-  override fun isCellEditable(e: EventObject): Boolean {
-    if (e is MouseEvent) {
-      return e.clickCount >= 2
+  override fun isCellEditable(e: EventObject?) = when (e) {
+      is MouseEvent -> e.clickCount >= 2
+      is KeyEvent -> immediatelyInsert(e.keyChar)
+      else -> true
     }
-    // println("isCellEditable")
+
+  private fun immediatelyInsert(keyChar: Char): Boolean {
     EventQueue.invokeLater {
-      if (e is KeyEvent) {
-        val kc = e.keyChar
-        if (Character.isUnicodeIdentifierStart(kc)) {
-          textArea.text = textArea.text + kc
-          // println("invokeLater: isCellEditable")
-        }
+      if (Character.isUnicodeIdentifierStart(keyChar)) {
+        textArea.text = textArea.text + keyChar
       }
     }
     return true
