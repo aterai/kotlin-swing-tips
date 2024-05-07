@@ -7,18 +7,23 @@ import javax.swing.JComboBox.KeySelectionManager
 fun makeUI(): Component {
   val box = Box.createVerticalBox()
   box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-  box.add(makeTitledPanel("BasicComboBoxUI#DefaultKeySelectionManager", JComboBox(makeModel())))
+
+  val title0 = "BasicComboBoxUI#DefaultKeySelectionManager"
+  val combo0 = JComboBox(makeModel())
+  box.add(makeTitledPanel(title0, combo0))
   box.add(Box.createVerticalStrut(5))
 
+  val title1 = "disable JComboBox#selectWithKeyChar(...)"
   val combo1 = object : JComboBox<String>(makeModel()) {
     override fun selectWithKeyChar(keyChar: Char) = false
   }
-  box.add(makeTitledPanel("disable JComboBox#selectWithKeyChar(...)", combo1))
+  box.add(makeTitledPanel(title1, combo1))
   box.add(Box.createVerticalStrut(5))
 
+  val title2 = "disable KeySelectionManager#selectionForKey(...)"
   val combo2 = JComboBox(makeModel())
   combo2.keySelectionManager = KeySelectionManager { _, _ -> -1 }
-  box.add(makeTitledPanel("disable KeySelectionManager#selectionForKey(...)", combo2))
+  box.add(makeTitledPanel(title2, combo2))
 
   return JPanel(BorderLayout()).also {
     it.add(box, BorderLayout.NORTH)
