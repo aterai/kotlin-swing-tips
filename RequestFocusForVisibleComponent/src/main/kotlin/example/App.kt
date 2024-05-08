@@ -64,19 +64,18 @@ private open class TabSelectionMouseListener(
   private val ui: BasicTabbedPaneUI,
 ) : MouseAdapter() {
   override fun mousePressed(e: MouseEvent) {
-    val tabPane = e.component
-    if (tabPane !is JTabbedPane || !tabPane.isEnabled || SwingUtilities.isRightMouseButton(e)) {
-      return
-    }
-    val tabIndex = ui.tabForCoordinate(tabPane, e.x, e.y)
-    if (tabIndex >= 0 && tabPane.isEnabledAt(tabIndex)) {
-      if (tabIndex != tabPane.selectedIndex && e.clickCount < 2) {
-        tabPane.selectedIndex = tabIndex
-        val cmd = "requestFocusForVisibleComponent"
-        val a = ActionEvent(tabPane, ActionEvent.ACTION_PERFORMED, cmd)
-        EventQueue.invokeLater { tabPane.actionMap[cmd].actionPerformed(a) }
-      } else if (tabPane.isRequestFocusEnabled) {
-        tabPane.requestFocusInWindow()
+    val rightClick = SwingUtilities.isRightMouseButton(e)
+    (e.component as? JTabbedPane)?.takeIf { !rightClick && it.isEnabled }?.also {
+      val tabIndex = ui.tabForCoordinate(it, e.x, e.y)
+      if (tabIndex >= 0 && it.isEnabledAt(tabIndex)) {
+        if (tabIndex != it.selectedIndex && e.clickCount < 2) {
+          it.selectedIndex = tabIndex
+          val cmd = "requestFocusForVisibleComponent"
+          val a = ActionEvent(it, ActionEvent.ACTION_PERFORMED, cmd)
+          EventQueue.invokeLater { it.actionMap[cmd].actionPerformed(a) }
+        } else if (it.isRequestFocusEnabled) {
+          it.requestFocusInWindow()
+        }
       }
     }
   }
