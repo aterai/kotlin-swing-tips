@@ -10,14 +10,17 @@ fun makeUI(): Component {
   val table = object : JTable(4, 3) {
     override fun processKeyBinding(
       ks: KeyStroke,
-      e: KeyEvent,
+      e: KeyEvent?,
       condition: Int,
       pressed: Boolean,
     ): Boolean {
-      if (!check.isSelected || isTabOrEnterKey(ks)) {
-        // println("tab or enter typed")
-        return super.processKeyBinding(ks, e, condition, pressed)
+      if (check.isSelected && !isTabOrEnterKey(ks)) {
+        startEditing(ks, pressed)
       }
+      return super.processKeyBinding(ks, e, condition, pressed)
+    }
+
+    private fun startEditing(ks: KeyStroke, pressed: Boolean) {
       val editingOrPressed = isEditing || pressed
       val isCompositionEnabled = inputContext?.isCompositionEnabled() == true
       if (isCompositionEnabled && !ks.isOnKeyRelease && !editingOrPressed) {
@@ -29,7 +32,6 @@ fun makeUI(): Component {
           // println("editCellAt: $b")
         }
       }
-      return super.processKeyBinding(ks, e, condition, pressed)
     }
 
     protected fun isTabOrEnterKey(ks: KeyStroke) =
