@@ -412,7 +412,7 @@ private class WrapColumnFactory : ViewFactory {
 
 private class WrapLabelView(element: Element?) : LabelView(element) {
   override fun getMinimumSpan(axis: Int) = if (axis == X_AXIS) {
-    0f 
+    0f
   } else {
     super.getMinimumSpan(axis)
   }
