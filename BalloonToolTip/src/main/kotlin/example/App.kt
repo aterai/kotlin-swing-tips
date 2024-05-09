@@ -8,6 +8,17 @@ import java.awt.geom.RoundRectangle2D
 import javax.swing.*
 
 fun makeUI(): Component {
+  val model = makeModel()
+  val list1 = makeList1(model)
+  val list2 = makeList2(model)
+  return JPanel(GridLayout(1, 2)).also {
+    it.add(makeTitledPanel("BalloonToolTip", list1))
+    it.add(makeTitledPanel("Default JToolTip", list2))
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private fun makeModel(): DefaultListModel<String> {
   val model = DefaultListModel<String>()
   model.addElement("ABC DEF GHI JKL MNO PQR STU VWX YZ")
   model.addElement("111")
@@ -18,57 +29,52 @@ fun makeUI(): Component {
   model.addElement("bbb12")
   model.addElement("1234567890-+*/=ABC DEF GHI JKL MNO PQR STU VWX YZ")
   model.addElement("bbb123")
+  return model
+}
 
-  val list1 = object : JList<String>(model) {
-    override fun createToolTip(): JToolTip {
-      val tip = BalloonToolTip()
-      tip.component = this
-      return tip
-    }
+private fun makeList1(model: DefaultListModel<String>) = object : JList<String>(model) {
+  override fun createToolTip(): JToolTip {
+    val tip = BalloonToolTip()
+    tip.component = this
+    return tip
+  }
 
-    override fun updateUI() {
-      cellRenderer = null
-      super.updateUI()
-      val r = DefaultListCellRenderer()
-      setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-        r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
-          val vp = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
-          if (vp is JViewport) {
-            val rect = SwingUtilities.calculateInnerArea(vp, vp.bounds)
-            val fm = it.getFontMetrics(it.font)
-            val str = value?.toString() ?: ""
-            val b = fm.stringWidth(str) > rect.width
-            (it as? JComponent)?.toolTipText = if (b) str else null
-          }
+  override fun updateUI() {
+    cellRenderer = null
+    super.updateUI()
+    val r = DefaultListCellRenderer()
+    setCellRenderer { list, value, index, isSelected, cellHasFocus ->
+      r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
+        val vp = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
+        if (vp is JViewport) {
+          val rect = SwingUtilities.calculateInnerArea(vp, vp.bounds)
+          val fm = it.getFontMetrics(it.font)
+          val str = value?.toString() ?: ""
+          val b = fm.stringWidth(str) > rect.width
+          (it as? JComponent)?.toolTipText = if (b) str else null
         }
       }
     }
   }
+}
 
-  val list2 = object : JList<String>(model) {
-    override fun updateUI() {
-      cellRenderer = null
-      super.updateUI()
-      val r = DefaultListCellRenderer()
-      setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-        r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
-          val vp = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
-          if (vp is JViewport) {
-            val rect = SwingUtilities.calculateInnerArea(vp, vp.bounds)
-            val fm = it.getFontMetrics(it.font)
-            val str = value?.toString() ?: ""
-            val b = fm.stringWidth(str) > rect.width
-            (it as? JComponent)?.toolTipText = if (b) str else list.toolTipText
-          }
+private fun makeList2(model: DefaultListModel<String>) = object : JList<String>(model) {
+  override fun updateUI() {
+    cellRenderer = null
+    super.updateUI()
+    val r = DefaultListCellRenderer()
+    setCellRenderer { list, value, index, isSelected, cellHasFocus ->
+      r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
+        val vp = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
+        if (vp is JViewport) {
+          val rect = SwingUtilities.calculateInnerArea(vp, vp.bounds)
+          val fm = it.getFontMetrics(it.font)
+          val str = value?.toString() ?: ""
+          val b = fm.stringWidth(str) > rect.width
+          (it as? JComponent)?.toolTipText = if (b) str else list.toolTipText
         }
       }
     }
-  }
-
-  return JPanel(GridLayout(1, 2)).also {
-    it.add(makeTitledPanel("BalloonToolTip", list1))
-    it.add(makeTitledPanel("Default JToolTip", list2))
-    it.preferredSize = Dimension(320, 240)
   }
 }
 
