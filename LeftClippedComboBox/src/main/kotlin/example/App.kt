@@ -49,8 +49,8 @@ private fun makeComboBoxModel() = DefaultComboBoxModel<String>().also {
 }
 
 fun descendants(parent: Container): List<Component> = parent.components
-    .filterIsInstance<Container>()
-    .flatMap { listOf(it) + descendants(it) }
+  .filterIsInstance<Container>()
+  .flatMap { listOf(it) + descendants(it) }
 
 private fun makeComboBoxRenderer(combo: JComboBox<*>) =
   object : DefaultListCellRenderer() {
