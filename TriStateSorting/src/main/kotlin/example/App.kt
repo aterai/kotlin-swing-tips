@@ -22,26 +22,16 @@ fun makeUI(): Component {
   val table = JTable(model)
   val sorter = object : TableRowSorter<TableModel>(model) {
     override fun toggleSortOrder(column: Int) {
-      if (!check2.isSelected || !isSortable(column)) {
+      if (check2.isSelected && isSortable(column) && isDescending(column)) {
+        sortKeys = emptyList()
+      } else {
         super.toggleSortOrder(column)
-        return
       }
-      // val keys = ArrayList<RowSorter.SortKey>(getSortKeys())
-      // if (!keys.isEmpty()) {
-      //   val sortKey = keys.get(0)
-      //   if (sortKey.getColumn() == column && sortKey.getSortOrder() == SortOrder.DESCENDING) {
-      //     setSortKeys(null)
-      //     return
-      //   }
-      // }
-      sortKeys.firstOrNull()
-        ?.takeIf { it.column == column && it.sortOrder == SortOrder.DESCENDING }
-        ?.also {
-          sortKeys = null
-          return
-        }
-      super.toggleSortOrder(column)
     }
+
+    private fun isDescending(column: Int) = sortKeys.firstOrNull()
+      ?.let { it.column == column && it.sortOrder == SortOrder.DESCENDING }
+      ?: false
   }
   table.rowSorter = sorter
 
