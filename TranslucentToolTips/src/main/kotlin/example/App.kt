@@ -120,7 +120,13 @@ private class ContributionListRenderer : ListCellRenderer<Contribution> {
     isSelected: Boolean,
     cellHasFocus: Boolean,
   ): Component {
-    val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+    val c = renderer.getListCellRendererComponent(
+      list,
+      value,
+      index,
+      isSelected,
+      cellHasFocus,
+    )
     (c as? JLabel)?.icon = if (value.date.isAfter(currentLocalDate)) {
       ContributionIcon(Color.WHITE)
     } else {

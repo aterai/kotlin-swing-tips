@@ -28,7 +28,11 @@ fun makeUI(): Component {
   table1.autoCreateRowSorter = true
   table1.putClientProperty("terminateEditOnFocusLost", true)
 
-  return JSplitPane(JSplitPane.VERTICAL_SPLIT, JScrollPane(table0), JScrollPane(table1)).also {
+  return JSplitPane(
+    JSplitPane.VERTICAL_SPLIT,
+    JScrollPane(table0),
+    JScrollPane(table1),
+  ).also {
     val mb = JMenuBar()
     mb.add(LookAndFeelUtils.createLookAndFeelMenu())
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
