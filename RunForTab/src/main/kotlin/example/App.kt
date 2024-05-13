@@ -16,7 +16,8 @@ private fun makeUI(): Component {
     override fun getToolTipText(e: MouseEvent): String? {
       var tip = super.getToolTipText(e)
       val idx = indexAtLocation(e.x, e.y)
-      if (idx >= 0 && isHorizontalTabPlacement()) {
+      val isHorizontal = tabPlacement == TOP || tabPlacement == BOTTOM
+      if (idx >= 0 && isHorizontal) {
         val run = getRunForTab(tabCount, idx)
         tip = "%s: Run: %d".format(tip, run)
       }
@@ -46,10 +47,6 @@ private fun makeUI(): Component {
         rect.add(getBoundsAt(i))
       }
       return rect
-    }
-
-    private fun isHorizontalTabPlacement(): Boolean {
-      return getTabPlacement() == TOP || getTabPlacement() == BOTTOM
     }
   }
   tabs.addTab("111111111111111111111111", ColorIcon(Color.RED), JLabel())
