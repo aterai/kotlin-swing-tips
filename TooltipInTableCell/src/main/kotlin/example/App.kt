@@ -30,23 +30,25 @@ private val table = object : JTable(model) {
   override fun getToolTipText(e: MouseEvent): String? {
     val pt = e.point
     val row = rowAtPoint(pt)
-    val column = columnAtPoint(pt)
-    val modelColumnIndex = convertColumnIndexToModel(column)
-    if (modelColumnIndex == LIST_ICON_COLUMN) {
-      val c = prepareRenderer(getCellRenderer(row, column), row, column)
-      if (c is JPanel) {
-        val r = getCellRect(row, column, true)
-        c.bounds = r
-        // @see https://stackoverflow.com/questions/10854831/tool-tip-in-jpanel-in-jtable-not-working
-        c.doLayout()
-        pt.translate(-r.x, -r.y)
-        return SwingUtilities.getDeepestComponentAt(c, pt.x, pt.y)
-          ?.let { it as? JLabel }
-          ?.let { (it.icon as? ImageIcon)?.description }
-          ?: super.getToolTipText(e)
-      }
-    }
-    return super.getToolTipText(e)
+    val col = columnAtPoint(pt)
+    val tcr = getCellRenderer(row, col)
+    val c = prepareRenderer(tcr, row, col)
+    val b = convertColumnIndexToModel(col) == LIST_ICON_COLUMN && c is JPanel
+    return if (b) getToolTipText(e, c) else super.getToolTipText(e)
+  }
+
+  private fun getToolTipText(e: MouseEvent, c: Component): String {
+    val pt = e.point
+    val row = rowAtPoint(pt)
+    val col = columnAtPoint(pt)
+    val r = getCellRect(row, col, true)
+    c.bounds = r
+    c.doLayout()
+    pt.translate(-r.x, -r.y)
+    return SwingUtilities.getDeepestComponentAt(c, pt.x, pt.y)
+      ?.let { it as? JLabel }
+      ?.let { (it.icon as? ImageIcon)?.description }
+      ?: super.getToolTipText(e)
   }
 }
 
