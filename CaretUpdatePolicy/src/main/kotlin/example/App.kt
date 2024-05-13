@@ -15,7 +15,7 @@ private val textArea2 = JTextArea()
 private var worker: SwingWorker<String, String>? = null
 
 fun makeUI(): Component {
-  (textArea0.caret as? DefaultCaret)?.updatePolicy = DefaultCaret.UPDATE_WHEN_ON_EDT // default
+  (textArea0.caret as? DefaultCaret)?.updatePolicy = DefaultCaret.UPDATE_WHEN_ON_EDT
   (textArea1.caret as? DefaultCaret)?.updatePolicy = DefaultCaret.ALWAYS_UPDATE
   (textArea2.caret as? DefaultCaret)?.updatePolicy = DefaultCaret.NEVER_UPDATE
 

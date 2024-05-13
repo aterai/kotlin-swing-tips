@@ -160,7 +160,15 @@ class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
     leaf: Boolean,
     row: Int,
   ): Component {
-    val c = renderer.getTreeCellRendererComponent(tree, value, true, expanded, leaf, row, true)
+    val c = renderer.getTreeCellRendererComponent(
+      tree,
+      value,
+      true,
+      expanded,
+      leaf,
+      row,
+      true,
+    )
     c.font = tree.font
 
     val treeNode = value as? DefaultMutableTreeNode ?: return c

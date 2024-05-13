@@ -340,7 +340,9 @@ private class TableSorter() : AbstractTableModel() {
   }
 }
 
-private class SortableHeaderRenderer(val cellRenderer: TableCellRenderer) : TableCellRenderer {
+private class SortableHeaderRenderer(
+  val cellRenderer: TableCellRenderer,
+) : TableCellRenderer {
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
