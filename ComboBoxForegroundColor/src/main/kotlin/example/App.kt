@@ -96,7 +96,13 @@ private class ComboForegroundRenderer(
         list.selectionBackground = selectedBackground
       }
     }
-    val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+    val c = renderer.getListCellRendererComponent(
+      list,
+      value,
+      index,
+      isSelected,
+      cellHasFocus,
+    )
     c.foreground = ic
     c.background = if (isSelected) selectedBackground else list.background
     return c
@@ -117,7 +123,13 @@ private class ComboHtmlRenderer : ListCellRenderer<ColorItem> {
     if (index < 0) {
       list.selectionBackground = selectedBackground
     }
-    val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+    val c = renderer.getListCellRendererComponent(
+      list,
+      value,
+      index,
+      isSelected,
+      cellHasFocus,
+    )
     if (c is JLabel && value != null) {
       c.text = "<html><font color='#%06X'>%s".format(
         value.color.rgb and 0xFF_FF_FF,

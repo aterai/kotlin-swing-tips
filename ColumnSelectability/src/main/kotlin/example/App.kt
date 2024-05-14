@@ -42,7 +42,14 @@ fun makeUI(): Component {
     ) = if (isColumnSelectable(column)) {
       super.prepareRenderer(r, row, column)
     } else {
-      r.getTableCellRendererComponent(this, getValueAt(row, column), false, false, row, column)
+      r.getTableCellRendererComponent(
+        this,
+        getValueAt(row, column),
+        false,
+        false,
+        row,
+        column,
+      )
     }
   }
   table.cellSelectionEnabled = true

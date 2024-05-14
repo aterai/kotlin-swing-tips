@@ -105,7 +105,16 @@ private class BasicClippedTitleTabbedPaneUI : BasicTabbedPaneUI() {
       super.paintText(g, tabPlacement, font, metrics, tabIndex, title, textRect, isSelected)
     } else {
       textR.x = textRect.x + tabInsets.left
-      super.paintText(g, tabPlacement, font, metrics, tabIndex, clippedText, textR, isSelected)
+      super.paintText(
+        g,
+        tabPlacement,
+        font,
+        metrics,
+        tabIndex,
+        clippedText,
+        textR,
+        isSelected,
+      )
     }
   }
 }
@@ -160,7 +169,16 @@ private class WindowsClippedTitleTabbedPaneUI : WindowsTabbedPaneUI() {
       super.paintText(g, tabPlacement, font, metrics, tabIndex, title, textRect, isSelected)
     } else {
       textR.x = textRect.x + tabInsets.left
-      super.paintText(g, tabPlacement, font, metrics, tabIndex, clippedText, textR, isSelected)
+      super.paintText(
+        g,
+        tabPlacement,
+        font,
+        metrics,
+        tabIndex,
+        clippedText,
+        textR,
+        isSelected,
+      )
     }
   }
 }
