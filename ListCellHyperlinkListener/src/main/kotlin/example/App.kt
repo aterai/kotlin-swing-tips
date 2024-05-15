@@ -28,7 +28,13 @@ fun makeUI(): Component {
       val index = list.locationToIndex(pt)
       if (index >= 0) {
         val item = list.model.getElementAt(index)
-        val c = list.cellRenderer.getListCellRendererComponent(list, item, index, false, false)
+        val c = list.cellRenderer.getListCellRendererComponent(
+          list,
+          item,
+          index,
+          false,
+          false,
+        )
         if (c is JEditorPane) {
           val r = list.getCellBounds(index, index)
           c.setBounds(r)

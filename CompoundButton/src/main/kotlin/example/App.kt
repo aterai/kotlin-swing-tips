@@ -60,7 +60,10 @@ private class CompoundButton(
         y: Int,
       ) {
         val g2 = g.create() as? Graphics2D ?: return
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+        g2.setRenderingHint(
+          RenderingHints.KEY_ANTIALIASING,
+          RenderingHints.VALUE_ANTIALIAS_ON,
+        )
         if (getModel().isArmed) {
           g2.paint = ac
           g2.fill(shape)

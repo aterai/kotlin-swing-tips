@@ -106,7 +106,13 @@ private class TooltipListCellRenderer<E> : ListCellRenderer<E> {
     isSelected: Boolean,
     cellHasFocus: Boolean,
   ): Component {
-    val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+    val c = renderer.getListCellRendererComponent(
+      list,
+      value,
+      index,
+      isSelected,
+      cellHasFocus,
+    )
     if (c is JComponent && value != null) {
       c.toolTipText = value.toString()
     }

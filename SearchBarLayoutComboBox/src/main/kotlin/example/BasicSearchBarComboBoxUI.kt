@@ -171,7 +171,8 @@ class BasicSearchBarComboBoxUI : SearchBarComboBoxUI() {
 
   private fun makeRolloverIcon(srcIcon: Icon): Icon {
     val op = RescaleOp(floatArrayOf(1.2f, 1.2f, 1.2f, 1f), floatArrayOf(0f, 0f, 0f, 0f), null)
-    val img = BufferedImage(srcIcon.iconWidth, srcIcon.iconHeight, BufferedImage.TYPE_INT_ARGB)
+    val img =
+      BufferedImage(srcIcon.iconWidth, srcIcon.iconHeight, BufferedImage.TYPE_INT_ARGB)
     val g = img.graphics
     // g.drawImage(srcIcon.getImage(), 0, 0, null)
     srcIcon.paintIcon(null, g, 0, 0)

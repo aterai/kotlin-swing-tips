@@ -178,7 +178,15 @@ private class CheckBoxNodeEditor(
     leaf: Boolean,
     row: Int,
   ): Component {
-    val c = tcr.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, false)
+    val c = tcr.getTreeCellRendererComponent(
+      tree,
+      value,
+      selected,
+      expanded,
+      leaf,
+      row,
+      false,
+    )
     c.font = tree.font
     val uo = (value as? DefaultMutableTreeNode)?.userObject
     if (c is JLabel && uo is CheckBoxNode) {

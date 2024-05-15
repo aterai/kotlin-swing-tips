@@ -13,7 +13,13 @@ class SearchEngineListCellRenderer<E> : ListCellRenderer<E> {
     isSelected: Boolean,
     cellHasFocus: Boolean,
   ): Component {
-    val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+    val c = renderer.getListCellRendererComponent(
+      list,
+      value,
+      index,
+      isSelected,
+      cellHasFocus,
+    )
     if (c is JLabel && value is SearchEngine) {
       c.icon = value.favicon
       c.toolTipText = value.url

@@ -65,7 +65,12 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
     val lineLength = endOffset - startOffset
     val contentLength = content.length
     endOffset = if (endOffset >= contentLength) contentLength - 1 else endOffset
-    setCharacterAttributes(startOffset, lineLength, getStyle(StyleContext.DEFAULT_STYLE), true)
+    setCharacterAttributes(
+      startOffset,
+      lineLength,
+      getStyle(StyleContext.DEFAULT_STYLE),
+      true,
+    )
     checkForTokens(content, startOffset, endOffset)
   }
 

@@ -32,7 +32,13 @@ fun makeUI(): Component {
       val title = (border as? TitledBorder)?.title ?: "JTextArea"
       border = null
       super.updateUI()
-      border = EditableTitledBorder(null, title, TitledBorder.RIGHT, TitledBorder.BOTTOM, this)
+      border = EditableTitledBorder(
+        null,
+        title,
+        TitledBorder.RIGHT,
+        TitledBorder.BOTTOM,
+        this,
+      )
     }
   }
 

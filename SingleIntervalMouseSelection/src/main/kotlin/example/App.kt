@@ -198,7 +198,13 @@ private class CalendarListRenderer : ListCellRenderer<LocalDate> {
     isSelected: Boolean,
     cellHasFocus: Boolean,
   ): Component {
-    val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+    val c = renderer.getListCellRendererComponent(
+      list,
+      value,
+      index,
+      isSelected,
+      cellHasFocus,
+    )
     val isSameMonth = YearMonth.from(value) == YearMonth.from(currentLocalDate)
     val fgc = if (isSameMonth) getForegroundColor(value) else Color.GRAY
     c.foreground = if (isSelected) c.foreground else fgc

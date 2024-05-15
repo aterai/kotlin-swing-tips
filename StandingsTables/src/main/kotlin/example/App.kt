@@ -88,7 +88,14 @@ private fun initTableHeader(table: JTable) {
         txt = "0"
       }
       setHorizontalAlignment(RIGHT)
-      return super.getTableCellRendererComponent(table, txt, isSelected, hasFocus, row, column)
+      return super.getTableCellRendererComponent(
+        table,
+        txt,
+        isSelected,
+        hasFocus,
+        row,
+        column,
+      )
     }
   })
 }
