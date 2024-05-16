@@ -77,7 +77,10 @@ private class DropShadowPopupMenu : JPopupMenu() {
       dim.setSize(w, h)
       shadow = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB).also {
         val g2 = it.createGraphics()
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+        g2.setRenderingHint(
+          RenderingHints.KEY_ANTIALIASING,
+          RenderingHints.VALUE_ANTIALIAS_ON,
+        )
         g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f)
         g2.paint = Color.BLACK
         for (i in 0 until OFFSET) {

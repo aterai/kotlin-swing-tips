@@ -78,10 +78,10 @@ private class TextAreaCellEditor : AbstractCellEditor(), TableCellEditor {
   }
 
   override fun isCellEditable(e: EventObject?) = when (e) {
-      is MouseEvent -> e.clickCount >= 2
-      is KeyEvent -> immediatelyInsert(e.keyChar)
-      else -> true
-    }
+    is MouseEvent -> e.clickCount >= 2
+    is KeyEvent -> immediatelyInsert(e.keyChar)
+    else -> true
+  }
 
   private fun immediatelyInsert(keyChar: Char): Boolean {
     EventQueue.invokeLater {

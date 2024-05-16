@@ -56,7 +56,14 @@ private class DraggableImageMouseListener(ii: ImageIcon) : MouseAdapter() {
     val width = ii.iconWidth
     val height = ii.iconHeight
     imageSz = Dimension(width, height)
-    border = RoundRectangle2D.Double(0.0, 0.0, width.toDouble(), height.toDouble(), 10.0, 10.0)
+    border = RoundRectangle2D.Double(
+      0.0,
+      0.0,
+      width.toDouble(),
+      height.toDouble(),
+      10.0,
+      10.0,
+    )
     polaroid = Rectangle2D.Double(-2.0, -2.0, width + 4.0, height + 20.0)
     setCirclesLocation(centerPt)
   }

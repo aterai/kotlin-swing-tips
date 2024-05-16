@@ -20,7 +20,12 @@ fun makeUI(): Component {
   label.horizontalTextPosition = SwingConstants.CENTER
   label.foreground = Color.GRAY
   label.font = Font(Font.SERIF, Font.PLAIN, 24)
-  label.dropTarget = DropTarget(label, DnDConstants.ACTION_COPY, FileDropTargetAdapter(), true)
+  label.dropTarget = DropTarget(
+    label,
+    DnDConstants.ACTION_COPY,
+    FileDropTargetAdapter(),
+    true,
+  )
   return JPanel().also {
     it.add(label)
     it.preferredSize = Dimension(320, 240)

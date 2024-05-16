@@ -33,7 +33,9 @@ fun makeUI(): Component {
       editor: TableCellEditor,
       row: Int,
       column: Int,
-    ) = super.prepareEditor(editor, row, column).also { (it as? JComponent)?.isOpaque = false }
+    ) = super.prepareEditor(editor, row, column).also {
+      (it as? JComponent)?.isOpaque = false
+    }
 
     override fun prepareRenderer(
       renderer: TableCellRenderer,
