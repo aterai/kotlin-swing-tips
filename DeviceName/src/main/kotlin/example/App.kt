@@ -20,7 +20,12 @@ fun makeUI(): Component {
       }
     }.onFailure {
       val obj = arrayOf(it.message)
-      JOptionPane.showMessageDialog(p.rootPane, obj, "Error1", JOptionPane.INFORMATION_MESSAGE)
+      JOptionPane.showMessageDialog(
+        p.rootPane,
+        obj,
+        "Error1",
+        JOptionPane.INFORMATION_MESSAGE,
+      )
     }
   }
   val p1 = makeTitledPanel("IOException: before 1.5", b1)
@@ -30,7 +35,12 @@ fun makeUI(): Component {
     val file = File(deviceName)
     if (!isCanonicalPath(file)) {
       val obj = arrayOf(file.absolutePath + " is not a canonical path.")
-      JOptionPane.showMessageDialog(p.rootPane, obj, "Error2", JOptionPane.INFORMATION_MESSAGE)
+      JOptionPane.showMessageDialog(
+        p.rootPane,
+        obj,
+        "Error2",
+        JOptionPane.INFORMATION_MESSAGE,
+      )
     }
   }
   val p2 = makeTitledPanel("getCanonicalPath: before 1.5", b2)
@@ -40,7 +50,12 @@ fun makeUI(): Component {
     val file = File(deviceName)
     if (!file.isFile) {
       val obj = arrayOf(file.absolutePath + " is not a file.")
-      JOptionPane.showMessageDialog(p.rootPane, obj, "Error3", JOptionPane.INFORMATION_MESSAGE)
+      JOptionPane.showMessageDialog(
+        p.rootPane,
+        obj,
+        "Error3",
+        JOptionPane.INFORMATION_MESSAGE,
+      )
     }
   }
   val p3 = makeTitledPanel("isFile: JDK 1.5+", b3)
