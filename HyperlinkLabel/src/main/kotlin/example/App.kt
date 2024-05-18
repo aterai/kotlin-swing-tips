@@ -81,7 +81,10 @@ private class UrlLabel(h: String?) : JLabel("<html><a href='$h'>$h") {
   }
 }
 
-private class HyperlinkButton(text: String? = null, icon: Icon? = null) : JButton(text, icon) {
+private class HyperlinkButton(
+  text: String? = null,
+  icon: Icon? = null,
+) : JButton(text, icon) {
   constructor(a: Action?) : this() {
     super.setAction(a)
   }

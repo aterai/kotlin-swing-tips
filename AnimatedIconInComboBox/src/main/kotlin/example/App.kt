@@ -36,8 +36,8 @@ fun makeImageIcon(
 ): Icon {
   val icon = ImageIcon(url)
   icon.imageObserver = ImageObserver { _, flags, _, _, _, _ ->
-    // @see http://www2.gol.com/users/tame/swing/examples/SwingExamples.html
-    if (combo.isShowing && flags and (ImageObserver.FRAMEBITS or ImageObserver.ALLBITS) != 0) {
+    val mask = ImageObserver.FRAMEBITS or ImageObserver.ALLBITS
+    if (combo.isShowing && flags and mask != 0) {
       repaintComboBox(combo, row)
     }
     flags and (ImageObserver.ALLBITS or ImageObserver.ABORT) == 0

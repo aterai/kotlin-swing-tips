@@ -52,8 +52,8 @@ private class HighlightBarHandler : MouseInputAdapter() {
     val pt = e.point
     val c = e.component
     val m = scrollbar.model
-    val iv = (pt.y * (m.maximum - m.minimum) / c.height.toFloat() - m.extent / 2f).roundToInt()
-    m.value = iv
+    val v = pt.y * (m.maximum - m.minimum) / c.height.toFloat() - m.extent / 2f
+    m.value = v.roundToInt()
   }
 }
 
