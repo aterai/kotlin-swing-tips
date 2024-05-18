@@ -20,14 +20,16 @@ class MainPanel : JPanel() {
   private val screenRect = Rectangle(Toolkit.getDefaultToolkit().screenSize)
   private val buf = Rectangle()
   private var backgroundImage: BufferedImage? = null
+  private val kernel = Kernel(3, 3, data)
+  private val op = ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null)
+  private val bgc = Color(255, 255, 255, 100)
+
+  @Suppress("ktlint:standard:argument-list-wrapping")
   private val data = floatArrayOf(
     .1f, .1f, .1f,
     .1f, .2f, .1f,
     .1f, .1f, .1f,
   )
-  private val kernel = Kernel(3, 3, data)
-  private val op = ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null)
-  private val bgc = Color(255, 255, 255, 100)
 
   init {
     updateBackground()

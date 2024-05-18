@@ -66,6 +66,7 @@ private class BlurredButton(label: String) : JButton(label) {
   }
 
   companion object {
+    @Suppress("ktlint:standard:argument-list-wrapping")
     private val DATA = floatArrayOf(
       .05f, .05f, .05f,
       .05f, .60f, .05f,
@@ -96,6 +97,7 @@ private class BlurButton(label: String) : JButton(label) {
   }
 
   companion object {
+    @Suppress("ktlint:standard:argument-list-wrapping")
     private val DATA = floatArrayOf(
       .05f, .05f, .05f,
       .05f, .60f, .05f,
@@ -130,6 +132,7 @@ private class BlurLayerUI<V : AbstractButton?> : LayerUI<V>() {
   }
 
   companion object {
+    @Suppress("ktlint:standard:argument-list-wrapping")
     private val DATA = floatArrayOf(
       .05f, .05f, .05f,
       .05f, .60f, .05f,

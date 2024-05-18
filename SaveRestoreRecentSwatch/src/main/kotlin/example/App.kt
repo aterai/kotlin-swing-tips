@@ -469,7 +469,7 @@ private class MainSwatchPanel : SwatchPanel() {
     }
   }
 
-  @Suppress("LongMethod")
+  @Suppress("LongMethod", "ktlint:standard:argument-list-wrapping")
   private fun initRawValues(): IntArray {
     return intArrayOf(
       // first row.
