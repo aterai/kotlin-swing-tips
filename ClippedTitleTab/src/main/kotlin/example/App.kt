@@ -61,12 +61,12 @@ private class BasicClippedTitleTabbedPaneUI : BasicTabbedPaneUI() {
     tabIndex: Int,
     metrics: FontMetrics,
   ): Int {
-    val ins = tabPane.insets
-    val width = tabPane.width - tabAreaInsets.left - tabAreaInsets.right - ins.left - ins.right
+    val r = SwingUtilities.calculateInnerArea(tabPane, null)
+    r.width -= tabAreaInsets.left + tabAreaInsets.right
     return if (tabPlacement == LEFT || tabPlacement == RIGHT) {
-      width / 4
+      r.width / 4
     } else { // TOP || BOTTOM
-      width / tabPane.tabCount
+      r.width / tabPane.tabCount
     }
   }
 
