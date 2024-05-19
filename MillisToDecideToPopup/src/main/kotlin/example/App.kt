@@ -104,7 +104,9 @@ private open class BackgroundTask(
   }
 }
 
-private class ProgressListener(private val monitor: ProgressMonitor) : PropertyChangeListener {
+private class ProgressListener(
+  private val monitor: ProgressMonitor,
+) : PropertyChangeListener {
   init {
     monitor.setProgress(0)
   }

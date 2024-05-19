@@ -51,7 +51,8 @@ private class ColumnWidthResizeHandler : MouseInputAdapter() {
     return p
   }
 
-  private fun getResizingColumn(e: MouseEvent) = (e.component as? JTableHeader)?.resizingColumn
+  private fun getResizingColumn(e: MouseEvent) =
+    (e.component as? JTableHeader)?.resizingColumn
 
   private fun updateTooltipText(e: MouseEvent) {
     getResizingColumn(e)?.also {
