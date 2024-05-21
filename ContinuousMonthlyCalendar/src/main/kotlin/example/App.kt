@@ -29,7 +29,9 @@ private val monthTable = object : JTable() {
     rowHeight = 32
     fillsViewportHeight = true
     val renderer = DefaultTableCellRenderer()
-    setDefaultRenderer(LocalDate::class.java) { table, value, selected, focused, row, column ->
+    setDefaultRenderer(
+      LocalDate::class.java,
+    ) { table, value, selected, focused, row, column ->
       renderer.getTableCellRendererComponent(
         table,
         value,
