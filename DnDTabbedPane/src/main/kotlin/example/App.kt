@@ -75,7 +75,11 @@ private fun makeCheckBoxPanel(tab: DnDTabbedPane): Component {
   val check3 = JCheckBox("SCROLL_TAB_LAYOUT", true)
   check3.addActionListener { e ->
     val b = (e.source as? JCheckBox)?.isSelected ?: false
-    tab.tabLayoutPolicy = if (b) JTabbedPane.SCROLL_TAB_LAYOUT else JTabbedPane.WRAP_TAB_LAYOUT
+    tab.tabLayoutPolicy = if (b) {
+      JTabbedPane.SCROLL_TAB_LAYOUT
+    } else {
+      JTabbedPane.WRAP_TAB_LAYOUT
+    }
   }
 
   val check4 = JCheckBox("Debug Paint", true)
