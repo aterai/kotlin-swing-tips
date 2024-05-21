@@ -21,7 +21,10 @@ fun makeUI(): Component {
         val w = width - 1
         val h = height - 1
         val g2 = g.create() as? Graphics2D ?: return
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+        g2.setRenderingHint(
+          RenderingHints.KEY_ANTIALIASING,
+          RenderingHints.VALUE_ANTIALIAS_ON,
+        )
         g2.paint = UIManager.getColor("TextField.background")
         g2.fillRoundRect(0, 0, w, h, h, h)
         g2.paint = Color.GRAY

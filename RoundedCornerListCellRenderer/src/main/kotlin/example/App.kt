@@ -53,7 +53,10 @@ private class RoundedCornerListCellRenderer<E> : ListCellRenderer<E> {
     override fun paintComponent(g: Graphics) {
       if (icon != null) {
         val g2 = g.create() as? Graphics2D ?: return
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+        g2.setRenderingHint(
+          RenderingHints.KEY_ANTIALIASING,
+          RenderingHints.VALUE_ANTIALIAS_ON,
+        )
         g2.paint = background
         val r = SwingUtilities.calculateInnerArea(this, null)
         val rr = RoundRectangle2D.Float(
