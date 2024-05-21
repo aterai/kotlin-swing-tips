@@ -97,11 +97,15 @@ private fun makeRoundedImageProducer(
   val ret = runCatching {
     pg.grabPixels()
   }.getOrNull() ?: false
-  if (!ret || pg.status and ImageObserver.ABORT != 0) {
-    System.err.println("image fetch aborted or error")
-    return null
+  return if (ret && pg.status and ImageObserver.ABORT == 0) {
+    roundTopCorners(pix, w)
+    MemoryImageSource(w, h, pix, 0, w)
+  } else {
+    null
   }
+}
 
+private fun roundTopCorners(pix: IntArray, w: Int) {
   val area = makeNorthWestCorner()
   val r = area.bounds
   for (y in 0 until r.height) {
@@ -121,7 +125,6 @@ private fun makeRoundedImageProducer(
       }
     }
   }
-  return MemoryImageSource(w, h, pix, 0, w)
 }
 
 fun main() {
