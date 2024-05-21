@@ -30,7 +30,7 @@ fun makeUI(): Component {
     }
   }
   field.actionMap.put("beep", a1)
-  field.inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_B, InputEvent.SHIFT_DOWN_MASK), "beep")
+  field.inputMap.put(KeyStroke.getKeyStroke("shift B"), "beep")
   val listener = object : KeyAdapter() {
     override fun keyPressed(e: KeyEvent) {
       val shiftActive = e.modifiersEx and InputEvent.SHIFT_DOWN_MASK != 0
