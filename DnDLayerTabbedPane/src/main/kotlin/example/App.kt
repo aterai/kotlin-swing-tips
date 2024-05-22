@@ -273,16 +273,19 @@ class DnDTabbedPane : JTabbedPane() {
 
     override fun mouseDragged(e: MouseEvent) {
       val tabPt = e.point // e.getDragOrigin()
-      val src = e.component
-      if (src is DnDTabbedPane && startPt != null && tabPt.distance(startPt) > dragThreshold) {
-        val th = src.transferHandler
-        val idx = src.indexAtLocation(tabPt.x, tabPt.y)
-        val selIdx = src.selectedIndex
-        val isRotate = src.tabLayoutPolicy == WRAP_TAB_LAYOUT && idx != selIdx
-        dragTabIndex = if (src.ui !is MetalTabbedPaneUI && isRotate) selIdx else idx
-        th.exportAsDrag(src, e, TransferHandler.MOVE)
-        startPt = null
-      }
+      (e.component as? DnDTabbedPane)
+        ?.takeIf {
+          startPt != null && tabPt.distance(startPt) > dragThreshold
+        }
+        ?.also {
+          val th = it.transferHandler
+          val idx = it.indexAtLocation(tabPt.x, tabPt.y)
+          val selIdx = it.selectedIndex
+          val isRotate = it.tabLayoutPolicy == WRAP_TAB_LAYOUT && idx != selIdx
+          dragTabIndex = if (it.ui !is MetalTabbedPaneUI && isRotate) selIdx else idx
+          th.exportAsDrag(it, e, TransferHandler.MOVE)
+          startPt = null
+        }
     }
   }
 
@@ -403,11 +406,11 @@ private class TabTransferHandler : TransferHandler() {
     return canDrop
   }
 
-  private fun makeDragTabImage(tabbedPane: DnDTabbedPane): BufferedImage {
-    val rect = tabbedPane.getBoundsAt(tabbedPane.dragTabIndex)
-    val image = BufferedImage(tabbedPane.width, tabbedPane.height, BufferedImage.TYPE_INT_ARGB)
+  private fun makeDragTabImage(tabs: DnDTabbedPane): BufferedImage {
+    val rect = tabs.getBoundsAt(tabs.dragTabIndex)
+    val image = BufferedImage(tabs.width, tabs.height, BufferedImage.TYPE_INT_ARGB)
     val g2 = image.createGraphics()
-    tabbedPane.paint(g2)
+    tabs.paint(g2)
     g2.dispose()
     if (rect.x < 0) {
       rect.translate(-rect.x, 0)
@@ -599,9 +602,13 @@ fun main() {
     }
     val handler = TabTransferHandler()
     val check = JCheckBoxMenuItem("Ghost image: Heavyweight")
-    check.addActionListener { e ->
-      val b = (e.source as? JCheckBoxMenuItem)?.isSelected == true
-      handler.setDragImageMode(if (b) DragImageMode.HEAVYWEIGHT else DragImageMode.LIGHTWEIGHT)
+    check.addActionListener {
+      val m = if ((it.source as? JCheckBoxMenuItem)?.isSelected == true) {
+        DragImageMode.HEAVYWEIGHT
+      } else {
+        DragImageMode.LIGHTWEIGHT
+      }
+      handler.setDragImageMode(m)
     }
     val menu = JMenu("Debug")
     menu.add(check)

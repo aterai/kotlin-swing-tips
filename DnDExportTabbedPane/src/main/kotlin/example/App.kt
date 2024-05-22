@@ -391,11 +391,11 @@ private class TabTransferHandler : TransferHandler() {
     return canDrop
   }
 
-  private fun makeDragTabImage(tabbedPane: DnDTabbedPane): BufferedImage {
-    val rect = tabbedPane.getBoundsAt(tabbedPane.dragTabIndex)
-    val image = BufferedImage(tabbedPane.width, tabbedPane.height, BufferedImage.TYPE_INT_ARGB)
+  private fun makeDragTabImage(tabs: DnDTabbedPane): BufferedImage {
+    val rect = tabs.getBoundsAt(tabs.dragTabIndex)
+    val image = BufferedImage(tabs.width, tabs.height, BufferedImage.TYPE_INT_ARGB)
     val g2 = image.createGraphics()
-    tabbedPane.paint(g2)
+    tabs.paint(g2)
     g2.dispose()
     if (rect.x < 0) {
       rect.translate(-rect.x, 0)
