@@ -101,30 +101,33 @@ private class TableRowTransferHandler : TransferHandler() {
   private fun getInternalFrame(c: Component?) =
     SwingUtilities.getAncestorOfClass(JInternalFrame::class.java, c) as? JInternalFrame
 
-  private fun canDropTableIntersection(info: TransferSupport): Boolean {
-    val target = info.component // as? JTable ?: return false
-    if (target != source) {
-      val dp = SwingUtilities.getAncestorOfClass(JDesktopPane::class.java, target)
-      val sf = getInternalFrame(source)
-      val tf = getInternalFrame(target)
-      return (dp as? JDesktopPane)
-        ?.takeIf { sf != null && tf != null && it.getIndexOf(tf) > it.getIndexOf(sf) }
-        ?.let {
-          val pt = SwingUtilities.convertPoint(target, info.dropLocation.dropPoint, it)
-          if (sf != null && tf != null) {
-            val rect = sf.bounds.intersection(tf.bounds)
-            !rect.contains(pt)
-          } else {
-            false
-          }
-        }
-        ?: false
-    }
-    return true
+  private fun canDropTable(info: TransferSupport): Boolean {
+    val c = info.component
+    val p = SwingUtilities.getAncestorOfClass(JDesktopPane::class.java, c)
+    return c is JTable && p is JDesktopPane
+        && (c == source || canDropTargetTable(info, p, c))
   }
 
+  private fun canDropTargetTable(
+    info: TransferSupport,
+    dp: JDesktopPane,
+    target: JTable,
+  ): Boolean {
+    val sf = getInternalFrame(source)
+    val tf = getInternalFrame(target)
+    val isBack = dp.getIndexOf(tf) >= dp.getIndexOf(sf)
+    val pt = SwingUtilities.convertPoint(target, info.dropLocation.dropPoint, dp)
+    return sf != null && tf != null && isBack && notIntersectionArea(sf, tf, pt)
+  }
+
+  private fun notIntersectionArea(
+    sf: JInternalFrame,
+    tf: JInternalFrame,
+    pt: Point,
+  ) = !sf.bounds.intersection(tf.bounds).contains(pt)
+
   override fun canImport(info: TransferSupport): Boolean {
-    val isSupported = info.isDataFlavorSupported(FLAVOR) && canDropTableIntersection(info)
+    val isSupported = info.isDataFlavorSupported(FLAVOR) && canDropTable(info)
     val canDrop = info.isDrop && isSupported
     val dp = SwingUtilities.getAncestorOfClass(JDesktopPane::class.java, info.component)
     val glassPane = (dp as? JComponent)?.rootPane?.glassPane ?: return false
