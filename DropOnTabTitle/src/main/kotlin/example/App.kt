@@ -108,7 +108,9 @@ private class TabTitleDropTargetListener : DropTargetListener {
   }
 
   override fun dragOver(e: DropTargetDragEvent) {
-    if (isDropAcceptable(e)) {
+    targetTabIndex = -1
+    val t = e.transferable
+    if (t.isDataFlavorSupported(t.transferDataFlavors[0]) && notOwnTab(e)) {
       e.acceptDrag(e.dropAction)
     } else {
       e.rejectDrag()
@@ -147,24 +149,20 @@ private class TabTitleDropTargetListener : DropTargetListener {
     }
   }
 
-  private fun isDropAcceptable(e: DropTargetDragEvent): Boolean {
-    val c = e.dropTargetContext
-    val t = e.transferable
-    val f = t.transferDataFlavors
+  private fun notOwnTab(e: DropTargetDragEvent): Boolean {
     val pt = e.location
-    targetTabIndex = -1
-    val tabs = c.component
-    if (tabs is JTabbedPane) {
-      for (i in 0 until tabs.tabCount) {
-        if (tabs.getBoundsAt(i).contains(pt)) {
-          targetTabIndex = i
-          break
-        }
+    val c = e.dropTargetContext.component
+    return c is JTabbedPane && notOwnTab(c, pt)
+  }
+
+  private fun notOwnTab(tabbedPane: JTabbedPane, pt: Point): Boolean {
+    for (i in 0..<tabbedPane.tabCount) {
+      if (tabbedPane.getBoundsAt(i).contains(pt)) {
+        targetTabIndex = i
+        break
       }
-      val b = targetTabIndex >= 0 && targetTabIndex != tabs.selectedIndex
-      return b && t.isDataFlavorSupported(f[0])
     }
-    return false
+    return targetTabIndex >= 0 && targetTabIndex != tabbedPane.selectedIndex
   }
 }
 
