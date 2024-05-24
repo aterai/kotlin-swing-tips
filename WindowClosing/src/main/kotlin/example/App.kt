@@ -80,15 +80,20 @@ private class SaveHandler(
 
   private fun maybeExit() {
     if (title == frame.title) {
-      logger.info { "The document has already been saved, exit without doing anything." }
+      logger.info {
+        "The document has already been saved, exit without doing anything."
+      }
       frame.dispose()
       return
     }
     Toolkit.getDefaultToolkit().beep()
     val options = arrayOf("Save", "Discard", "Cancel")
+    val help1 = "Save: Exit & Save Changes"
+    val help2 = "Discard: Exit & Discard Changes"
+    val help3 = "Cancel: Continue"
     val retValue = JOptionPane.showOptionDialog(
       frame,
-      "<html>Save: Exit & Save Changes<br>Discard: Exit & Discard Changes<br>Cancel: Continue",
+      "<html>$help1<br>$help2<br>$help3",
       "Exit Options",
       JOptionPane.YES_NO_CANCEL_OPTION,
       JOptionPane.INFORMATION_MESSAGE,

@@ -49,7 +49,9 @@ fun makeUI(): Component {
     if (!e.valueIsAdjusting) {
       textArea.append("row first, last: ${e.firstIndex}, ${e.lastIndex}\n")
       (e.source as? ListSelectionModel)?.also {
-        val msg = "row anchor->lead: ${it.anchorSelectionIndex}->${it.leadSelectionIndex}\n"
+        val anchor = it.anchorSelectionIndex
+        val lead = it.leadSelectionIndex
+        val msg = "row anchor->lead: $anchor->$lead\n"
         textArea.append(msg)
       }
       textArea.caretPosition = textArea.document.length
@@ -59,7 +61,9 @@ fun makeUI(): Component {
     if (!e.valueIsAdjusting) {
       textArea.append("column first, last: ${e.firstIndex}, ${e.lastIndex}\n")
       (e.source as? ListSelectionModel)?.also {
-        val msg = "column anchor->lead: ${it.anchorSelectionIndex}->${it.leadSelectionIndex}\n"
+        val anchor = it.anchorSelectionIndex
+        val lead = it.leadSelectionIndex
+        val msg = "column anchor->lead: $anchor->$lead\n"
         textArea.append(msg)
       }
       textArea.caretPosition = textArea.document.length
