@@ -58,22 +58,13 @@ private fun makeTitledPanel(
 private data class ColorItem(val color: Color, val description: String) : Serializable {
   override fun hashCode() = Objects.hash(color, description)
 
-  override fun equals(other: Any?): Boolean {
-    if (this === other) {
-      return true
-    }
-    return if (other is ColorItem) {
-      other.color == color && other.toString() == description
-    } else {
-      false
-    }
-  }
+  override fun equals(other: Any?) =
+    this === other || other is ColorItem && equals(other)
+
+  private fun equals(item: ColorItem) =
+    item.color == color && item.toString() == description
 
   override fun toString() = description
-
-  companion object {
-    private const val serialVersionUID = 1L
-  }
 }
 
 private class ComboForegroundRenderer(
