@@ -25,7 +25,10 @@ fun makeUI(): Component {
   val centerButton = JButton("CENTER")
   centerButton.addActionListener {
     UIManager.put(key, SwingConstants.CENTER)
-    val str = JOptionPane.showInputDialog(log.rootPane, "OptionPane.buttonOrientation: CENTER")
+    val str = JOptionPane.showInputDialog(
+      log.rootPane,
+      "OptionPane.buttonOrientation: CENTER",
+    )
     log.text = str
   }
 
