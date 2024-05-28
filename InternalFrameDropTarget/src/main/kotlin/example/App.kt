@@ -104,8 +104,8 @@ private class TableRowTransferHandler : TransferHandler() {
   private fun canDropTable(info: TransferSupport): Boolean {
     val c = info.component
     val p = SwingUtilities.getAncestorOfClass(JDesktopPane::class.java, c)
-    return c is JTable && p is JDesktopPane
-        && (c == source || canDropTargetTable(info, p, c))
+    return c is JTable && p is JDesktopPane &&
+      (c == source || canDropTargetTable(info, p, c))
   }
 
   private fun canDropTargetTable(
