@@ -59,10 +59,10 @@ private data class ColorItem(val color: Color, val description: String) : Serial
   override fun hashCode() = Objects.hash(color, description)
 
   override fun equals(other: Any?) =
-    this === other || other is ColorItem && equals(other)
-
-  private fun equals(item: ColorItem) =
-    item.color == color && item.toString() == description
+    this === other ||
+      other is ColorItem &&
+      other.color == color &&
+      other.toString() == description
 
   override fun toString() = description
 }
