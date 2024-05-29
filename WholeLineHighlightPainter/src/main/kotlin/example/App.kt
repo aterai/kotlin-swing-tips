@@ -121,6 +121,19 @@ private class FocusCaret(
     } else {
       nonFocusPainter
     }
+
+  override fun equals(other: Any?) =
+    this === other ||
+      super.equals(other) &&
+      other is FocusCaret &&
+      nonFocusPainter == other.nonFocusPainter &&
+      getSelectionPainter() == other.getSelectionPainter()
+
+  override fun hashCode() =
+    Objects.hash(super.hashCode(), nonFocusPainter, getSelectionPainter())
+
+  override fun toString() = "FocusCaret{nonFocusPainter=%s, selectionPainter=%s}"
+    .format(nonFocusPainter, selectionPainter)
 }
 
 private class MyEditorKit : StyledEditorKit(), ViewFactory {
@@ -138,6 +151,8 @@ private class MyEditorKit : StyledEditorKit(), ViewFactory {
 }
 
 private class ParagraphWithEndMarkView(elem: Element) : ParagraphView(elem) {
+  private val paragraphMarkIcon = ParagraphMarkIcon()
+
   override fun paint(
     g: Graphics,
     allocation: Shape,
@@ -148,10 +163,6 @@ private class ParagraphWithEndMarkView(elem: Element) : ParagraphView(elem) {
       val r = para?.bounds ?: allocation.bounds
       paragraphMarkIcon.paintIcon(null, g, r.x, r.y)
     }
-  }
-
-  companion object {
-    private val paragraphMarkIcon = ParagraphMarkIcon()
   }
 }
 
