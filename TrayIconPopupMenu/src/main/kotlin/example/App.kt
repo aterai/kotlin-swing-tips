@@ -26,14 +26,14 @@ fun makeUI(): Component {
   box.add(Box.createVerticalGlue())
   box.border = BorderFactory.createEmptyBorder(5, 25, 5, 25)
 
+  val label = JLabel("SystemTray.isSupported(): " + SystemTray.isSupported())
+
   return JPanel(BorderLayout()).also {
-    EventQueue.invokeLater {
-      (it.topLevelAncestor as? Frame)?.also { frame ->
-        initPopupMenu(frame)
-      }
-    }
-    it.add(JLabel("SystemTray.isSupported(): " + SystemTray.isSupported()), BorderLayout.NORTH)
+    it.add(label, BorderLayout.NORTH)
     it.add(box)
+    EventQueue.invokeLater {
+      (it.topLevelAncestor as? Frame)?.also { f -> initPopupMenu(f) }
+    }
     it.preferredSize = Dimension(320, 240)
   }
 }

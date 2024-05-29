@@ -53,8 +53,10 @@ fun main() {
   EventQueue.invokeLater {
     runCatching {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
-      val m = UIManager.getInsets("TextField.margin")
-      UIManager.put("TextField.margin", InsetsUIResource(m.top, m.left + 5, m.bottom, m.right))
+      val key = "TextField.margin"
+      val m = UIManager.getInsets(key)
+      val ins = InsetsUIResource(m.top, m.left + 5, m.bottom, m.right)
+      UIManager.put(key, ins)
     }.onFailure {
       it.printStackTrace()
       Toolkit.getDefaultToolkit().beep()
