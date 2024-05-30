@@ -106,7 +106,13 @@ private class SiteListCellRenderer<E : WebSite> : ListCellRenderer<E> {
     isSelected: Boolean,
     cellHasFocus: Boolean,
   ): Component {
-    val c = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+    val c = renderer.getListCellRendererComponent(
+      list,
+      value,
+      index,
+      isSelected,
+      cellHasFocus,
+    )
     c.isEnabled = list.isEnabled
     c.font = list.font
     if (c is JLabel && value != null) {

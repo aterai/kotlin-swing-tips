@@ -34,7 +34,10 @@ private class RadioButtonMenuItemIcon1 : Icon, UIResource, Serializable {
       val model = c.model
       if (model.isSelected) {
         val g2 = g.create() as? Graphics2D ?: return
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+        g2.setRenderingHint(
+          RenderingHints.KEY_ANTIALIASING,
+          RenderingHints.VALUE_ANTIALIAS_ON,
+        )
         g2.translate(x, y)
         g2.fillRoundRect(3, 3, iconWidth - 6, iconHeight - 6, 4, 4)
         g2.dispose()
