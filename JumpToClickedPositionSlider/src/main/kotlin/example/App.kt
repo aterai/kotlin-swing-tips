@@ -69,7 +69,9 @@ private fun makeTitledPanel(
   return p
 }
 
-private class WindowsJumpToClickedPositionSliderUI(slider: JSlider) : WindowsSliderUI(slider) {
+private class WindowsJumpToClickedPositionSliderUI(
+  slider: JSlider,
+) : WindowsSliderUI(slider) {
   override fun createTrackListener(slider: JSlider?): TrackListener {
     return object : TrackListener() {
       override fun mousePressed(e: MouseEvent) {

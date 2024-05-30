@@ -62,9 +62,11 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
       c.horizontalAlignment = SwingConstants.LEFT
       updateCellWeekColor(value, c, c)
 
-      val isLastRow = row == table.model.rowCount - 1
-      if (isLastRow && YearMonth.from(value.plusDays(7)) == YearMonth.from(currentLocalDate)) {
+      val lastRow = row == table.model.rowCount - 1
+      val split = YearMonth.from(value.plusDays(7)) == YearMonth.from(currentLocalDate)
+      if (lastRow && split) {
         val sub = JLabel(nextWeekDay.dayOfMonth.toString())
+        sub.font = c.font
         sub.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
         sub.isOpaque = false
         sub.verticalAlignment = SwingConstants.BOTTOM
