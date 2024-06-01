@@ -127,19 +127,19 @@ private class ReorderingList(model: ListModel<ListItem>) : JList<ListItem>(model
   }
 
   private inner class RubberBandingListener : MouseInputAdapter() {
-    private val srcPoint = Point()
+    private val startPt = Point()
 
     override fun mouseDragged(e: MouseEvent) {
       val l = (e.component as? JList<*>)?.takeUnless { it.dragEnabled } ?: return
-      val destPoint = e.point
+      val endPt = e.point
       rubberBand.reset()
-      rubberBand.moveTo(srcPoint.getX(), srcPoint.getY())
-      rubberBand.lineTo(destPoint.getX(), srcPoint.getY())
-      rubberBand.lineTo(destPoint.getX(), destPoint.getY())
-      rubberBand.lineTo(srcPoint.getX(), destPoint.getY())
+      rubberBand.moveTo(startPt.getX(), startPt.getY())
+      rubberBand.lineTo(endPt.getX(), startPt.getY())
+      rubberBand.lineTo(endPt.getX(), endPt.getY())
+      rubberBand.lineTo(startPt.getX(), endPt.getY())
       rubberBand.closePath()
 
-      val indices = (0 until l.model.size)
+      val indices = (0..<l.model.size)
         .filter { rubberBand.intersects(l.getCellBounds(it, it)) }
         .toIntArray()
       l.selectedIndices = indices
@@ -172,7 +172,7 @@ private class ReorderingList(model: ListModel<ListItem>) : JList<ListItem>(model
         l.isFocusable = false
         l.setDragEnabled(false)
       }
-      srcPoint.location = e.point
+      startPt.location = e.point
       l.repaint()
     }
   }
@@ -307,7 +307,7 @@ private open class ListItemTransferHandler : TransferHandler() {
       return false
     }
     val max = listModel.size
-    var index = dl.index.takeIf { it in 0 until max } ?: max
+    var index = dl.index.takeIf { it in 0..<max } ?: max
     addIndex = index
     val values = runCatching {
       info.transferable.getTransferData(FLAVOR) as? List<*>
@@ -405,7 +405,8 @@ private class CompactListItemTransferHandler : ListItemTransferHandler() {
   ): BufferedImage {
     require(!(w <= 0 || h <= 0)) { "width and height must be > 0" }
     val selectedIndices = source.selectedIndices
-    val br = source.graphicsConfiguration.createCompatibleImage(w, h, Transparency.TRANSLUCENT)
+    val gc = source.graphicsConfiguration
+    val br = gc.createCompatibleImage(w, h, Transparency.TRANSLUCENT)
     val g2 = br.createGraphics()
     val renderer = source.cellRenderer
     val idx = selectedIndices[0]
