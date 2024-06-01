@@ -6,19 +6,22 @@ import javax.swing.*
 import javax.swing.border.TitledBorder
 
 fun makeUI(): Component {
+  val title = "TitledBorder"
   val box = Box.createVerticalBox()
-  box.add(TitledSeparator("TitledBorder", TitledBorder.DEFAULT_POSITION))
+  box.add(TitledSeparator(title, TitledBorder.DEFAULT_POSITION))
   box.add(JCheckBox("JCheckBox 0"))
   box.add(JCheckBox("JCheckBox 1"))
   box.add(Box.createVerticalStrut(10))
-  box.add(TitledSeparator("TitledBorder ABOVE TOP", Color(0x64_B4_C8), TitledBorder.ABOVE_TOP))
+
+  val color = Color(0x64_B4_C8)
+  box.add(TitledSeparator("$title ABOVE TOP", color, TitledBorder.ABOVE_TOP))
   box.add(JCheckBox("JCheckBox 2"))
   box.add(JCheckBox("JCheckBox 3"))
   box.add(Box.createVerticalStrut(10))
+
   box.add(JSeparator())
   box.add(JCheckBox("JCheckBox 4"))
   box.add(JCheckBox("JCheckBox 5"))
-  // box.add(Box.createVerticalStrut(8))
 
   return JPanel(BorderLayout()).also {
     it.add(box, BorderLayout.NORTH)
@@ -48,15 +51,15 @@ private class TitledSeparator(
     )
   }
 
-  override fun getMaximumSize(): Dimension? {
+  override fun getMaximumSize(): Dimension {
     val d = super.getPreferredSize()
-    d?.width = Short.MAX_VALUE.toInt()
+    d.width = Short.MAX_VALUE.toInt()
     return d
   }
 
   override fun updateUI() {
     super.updateUI()
-    updateBorder()
+    EventQueue.invokeLater { updateBorder() }
   }
 
   private inner class TitledSeparatorIcon : Icon {
@@ -83,7 +86,7 @@ private class TitledSeparator(
       }
       val h = iconHeight / 2
       val g2 = g.create() as? Graphics2D ?: return
-      // XXX: g2.translate(x, y)
+      g2.translate(x, y)
       g2.paint = painter1
       g2.fillRect(x, y, width, iconHeight)
       g2.paint = painter2
