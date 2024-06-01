@@ -37,7 +37,8 @@ fun makeUI(): Component {
 fun initTextFieldBorder(textField: JTextField) {
   EventQueue.invokeLater {
     val b = StringBorder(textField, "%")
-    textField.border = if (textField.ui.javaClass.name.contains("SynthFormattedTextFieldUI")) {
+    val uiName = textField.ui.javaClass.name
+    textField.border = if (uiName.contains("SynthFormattedTextFieldUI")) {
       val c = textField.border
       if (c != null) BorderFactory.createCompoundBorder(c, b) else b
     } else {
