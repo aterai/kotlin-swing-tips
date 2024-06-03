@@ -34,7 +34,7 @@ fun makeUI(): Component {
 private fun makeTestBox(): Box {
   val box = Box.createVerticalBox()
   box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-  for (i in 0 until 20) {
+  for (i in 0..<20) {
     box.add(JTextField("test$i"))
     box.add(Box.createVerticalStrut(5))
   }
