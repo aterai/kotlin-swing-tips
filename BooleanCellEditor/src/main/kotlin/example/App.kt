@@ -53,7 +53,7 @@ private fun makeTable(model: TableModel) = object : JTable(model) {
 
   private fun updateRenderer() {
     val m = getModel()
-    for (i in 0 until m.columnCount) {
+    for (i in 0..<m.columnCount) {
       (getDefaultRenderer(m.getColumnClass(i)) as? Component)?.also {
         SwingUtilities.updateComponentTreeUI(it)
       }

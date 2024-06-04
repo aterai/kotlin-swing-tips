@@ -35,7 +35,7 @@ fun makeUI(): Component {
   tabbedPane.addTab("JButton", JScrollPane(JButton("JButton")))
   tabbedPane.addChangeListener { e ->
     (e.source as? JTabbedPane)?.also {
-      for (i in 0 until it.tabCount) {
+      for (i in 0..<it.tabCount) {
         val title = it.getTitleAt(i)
         if (i == it.selectedIndex) {
           it.setTitleAt(i, TAG + title)

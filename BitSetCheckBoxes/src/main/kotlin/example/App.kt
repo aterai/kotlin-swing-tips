@@ -45,7 +45,7 @@ fun makeUI(): Component {
     it.add(Box.createHorizontalStrut(2))
   }
 
-  for (i in 0 until BIT_LENGTH) {
+  for (i in 0..<BIT_LENGTH) {
     val c = JCheckBox(i.toString(), status[i])
     c.addActionListener { e ->
       val v = (e.source as? JCheckBox)?.isSelected ?: false
@@ -70,7 +70,7 @@ fun makeUI(): Component {
 
 fun updateCheckBoxes(value: BitSet) {
   status = value
-  for (i in 0 until BIT_LENGTH) {
+  for (i in 0..<BIT_LENGTH) {
     (panel.getComponent(i) as? JCheckBox)?.isSelected = status[i]
   }
   label.text = print(status)

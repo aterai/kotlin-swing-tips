@@ -12,10 +12,10 @@ fun makeUI(): Component {
   panel.border = BorderFactory.createTitledBorder("Brick Layout")
   val c = GridBagConstraints()
   c.fill = GridBagConstraints.HORIZONTAL
-  for (y in 0 until Y_SIZE) {
+  for (y in 0..<Y_SIZE) {
     c.gridx = y and 1 // start x offset
     c.gridwidth = WIDTH
-    // for (x in 0 until X_SIZE) {
+    // for (x in 0..<X_SIZE) {
     repeat(X_SIZE) {
       panel.add(makeBrick(), c)
       c.gridx += WIDTH

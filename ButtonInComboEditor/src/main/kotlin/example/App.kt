@@ -158,12 +158,11 @@ private class SiteItemComboBox(
   private fun getSiteItemFromModel(
     model: ComboBoxModel<SiteItem>,
     o: Any?,
-  ): SiteItem? {
-    if (o is SiteItem) {
-      return o
-    }
+  ) = if (o is SiteItem) {
+    o
+  } else {
     val str = o?.toString() ?: ""
-    return (0 until model.size).map { model.getElementAt(it) }.firstOrNull { it.url == str }
+    (0..<model.size).map { model.getElementAt(it) }.firstOrNull { it.url == str }
   }
 }
 

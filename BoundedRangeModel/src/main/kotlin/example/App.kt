@@ -58,7 +58,7 @@ private class HighlightBarHandler : MouseInputAdapter() {
 }
 
 private fun updateHighlighter() {
-  for (i in 0 until table.rowCount) {
+  for (i in 0..<table.rowCount) {
     if (PATTERN == table.getValueAt(i, 0)) {
       emphasisIndices.add(i)
     }
@@ -113,7 +113,7 @@ private val THUMB_COLOR = Color(0, 0, 255, 50)
 private const val PATTERN = "Swing"
 
 fun makeUI(): Component {
-  for (i in 0 until 100) {
+  for (i in 0..<100) {
     val o = if (i % 19 == 0 || i % 17 == 0) PATTERN else "Java"
     model.addRow(arrayOf(o, ""))
   }
