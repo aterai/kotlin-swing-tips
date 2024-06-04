@@ -118,7 +118,11 @@ private class PasswordView2(elem: Element) : PasswordView(elem) {
       val echoChar = c.echoChar
       val n = p1 - p0
       for (i in 0 until n) {
-        j = if (i == n - 1) drawLastChar(g2, j, y, i) else drawEchoCharacter(g, j, y, echoChar)
+        j = if (i == n - 1) {
+          drawLastChar(g2, j, y, i)
+        } else {
+          drawEchoCharacter(g, j, y, echoChar)
+        }
       }
     }
     return j
