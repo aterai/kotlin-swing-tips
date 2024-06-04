@@ -11,15 +11,16 @@ import javax.swing.plaf.LayerUI
 
 fun makeUI(): Component {
   UIManager.put("Button.disabledText", Color.RED)
-  val html = "<html>html <span style='color:#0000ff'>tag"
-  val button0 = makeButton(html)
+  val button0 = makeButton()
   val layer1 = DisableInputLayerUI<AbstractButton>()
-  val button2 = makeButton(html)
+  val button2 = makeButton()
 
   val p = JPanel(GridLayout(0, 1, 8, 8))
   p.add(makeTitledPanel(button0, "Default"))
-  p.add(makeTitledPanel(JLayer(makeButton(html), layer1), "JLayer1"))
-  p.add(makeTitledPanel(JLayer(button2, DisabledHtmlTextLayerUI<AbstractButton>()), "JLayer2"))
+  val c1 = JLayer(makeButton(), layer1)
+  p.add(makeTitledPanel(c1, "JLayer1"))
+  val c2 = JLayer(button2, DisabledHtmlTextLayerUI<AbstractButton>())
+  p.add(makeTitledPanel(c2, "JLayer2"))
 
   val check = JCheckBox("setEnabled", true)
   check.addActionListener { e ->
@@ -45,15 +46,16 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeButton(title: String): JButton {
+private fun makeButton(): JButton {
+  val html = "<html>html <span style='color:#0000ff'>tag"
   val pop = JPopupMenu()
-  pop.add(title)
-  val button = JButton(title)
-  if (title.isNotEmpty()) {
-    button.mnemonic = title.codePointAt(0)
+  pop.add(html)
+  val button = JButton(html)
+  if (html.isNotEmpty()) {
+    button.mnemonic = html.codePointAt(0)
   }
   button.icon = UIManager.getIcon("FileView.directoryIcon")
-  button.toolTipText = title
+  button.toolTipText = html
   button.componentPopupMenu = pop
   return button
 }
