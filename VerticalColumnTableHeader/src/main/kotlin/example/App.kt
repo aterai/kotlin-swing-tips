@@ -24,7 +24,7 @@ fun makeUI(): Component {
       super.updateUI()
       val hr = VerticalTableHeaderRenderer()
       val cm = getColumnModel()
-      for (i in 0 until cm.columnCount) {
+      for (i in 0..<cm.columnCount) {
         val tc = cm.getColumn(i)
         tc.headerRenderer = hr
         tc.preferredWidth = 32
@@ -50,17 +50,11 @@ fun makeUI(): Component {
 }
 
 private class VerticalTableHeaderRenderer : TableCellRenderer {
-  private val ascendingIcon: Icon
-  private val descendingIcon: Icon
-  private val emptyIcon: EmptyIcon
+  private val ascendingIcon = UIManager.getLookAndFeelDefaults().getIcon(ASCENDING)
+  private val descendingIcon = UIManager.getLookAndFeelDefaults().getIcon(DESCENDING)
+  private val emptyIcon = EmptyIcon()
   private val intermediate = JPanel()
   private val label = JLabel("", null, SwingConstants.LEADING)
-
-  init {
-    ascendingIcon = UIManager.getLookAndFeelDefaults().getIcon(ASCENDING)
-    descendingIcon = UIManager.getLookAndFeelDefaults().getIcon(DESCENDING)
-    emptyIcon = EmptyIcon()
-  }
 
   override fun getTableCellRendererComponent(
     table: JTable,
@@ -85,7 +79,7 @@ private class VerticalTableHeaderRenderer : TableCellRenderer {
         SortOrder.DESCENDING -> descendingIcon
         else -> emptyIcon
       }
-      label.text = c.getText()
+      label.text = c.text
       label.icon = RotateIcon(sortIcon, 90)
       label.horizontalTextPosition = SwingConstants.LEFT
       label.border = BorderFactory.createEmptyBorder(0, 2, 0, 2)
@@ -121,7 +115,7 @@ private class VerticalTableHeaderRenderer : TableCellRenderer {
       if (table != null && table.rowSorter != null) {
         val sortKeys = table.rowSorter.sortKeys
         val mi = table.convertColumnIndexToModel(column)
-        if (!sortKeys.isEmpty() && sortKeys[0].column == mi) {
+        if (sortKeys.isNotEmpty() && sortKeys[0].column == mi) {
           rv = sortKeys[0].sortOrder
         }
       }
@@ -161,8 +155,8 @@ private class RotateIcon(icon: Icon, rotate: Int) : Icon {
     icon.paintIcon(null, g, 0, 0)
     g.dispose()
     val numQuadrants = rotate / 90 % 4
-    var tx: Int
-    var ty: Int
+    val tx: Int
+    val ty: Int
     when (numQuadrants) {
       3, -1 -> {
         tx = 0
