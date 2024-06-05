@@ -38,11 +38,11 @@ fun makeUI(): Component {
   button.addActionListener {
     val numBuf = StringBuilder(3)
     val buf = StringBuilder(9)
-    for (i in 0 until model.rowCount) {
+    for (i in 0..<model.rowCount) {
       var flg = 0
       val v = model.getValueAt(i, 1) as? Set<*> ?: continue
       if (v.contains(Permissions.READ)) {
-        flg = flg or (map[Permissions.READ] ?: 0)
+        flg = map[Permissions.READ] ?: 0
         buf.append('r')
       } else {
         buf.append('-')
