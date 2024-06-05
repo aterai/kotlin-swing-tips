@@ -15,7 +15,7 @@ fun makeUI(): Component {
         val c = e.component
         if (c is JComboBox<*> && c.hasFocus()) {
           val idx = c.selectedIndex + e.wheelRotation
-          c.selectedIndex = idx.coerceIn(0 until c.itemCount)
+          c.selectedIndex = idx.coerceIn(0..<c.itemCount)
         }
       }
       addMouseWheelListener(handler)

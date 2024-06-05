@@ -136,7 +136,7 @@ private fun updateTable(
   if (kind === StandardWatchEventKinds.ENTRY_CREATE) {
     model.addPath(child)
   } else if (kind === StandardWatchEventKinds.ENTRY_DELETE) {
-    for (i in 0 until model.rowCount) {
+    for (i in 0..<model.rowCount) {
       val path = model.getValueAt(i, 2)?.toString() ?: ""
       if (path == child.toString()) {
         deleteRowSet.add(i)

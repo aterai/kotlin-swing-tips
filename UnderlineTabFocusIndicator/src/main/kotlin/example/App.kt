@@ -33,7 +33,7 @@ private class UnderlineFocusTabbedPane : JTabbedPane() {
         ?.takeIf { it.tabCount > 0 }
         ?.also {
           val idx = it.selectedIndex
-          for (i in 0 until it.tabCount) {
+          for (i in 0..<it.tabCount) {
             (it.getTabComponentAt(i) as? JComponent)?.also { tab ->
               val color = if (i == idx) SELECTION_COLOR else ALPHA_ZERO
               tab.border = BorderFactory.createMatteBorder(0, 0, 3, 0, color)

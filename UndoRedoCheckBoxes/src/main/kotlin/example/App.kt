@@ -41,7 +41,7 @@ fun makeUI(): Component {
     box.add(JButton(a))
     box.add(Box.createHorizontalStrut(2))
   }
-  for (i in 0 until BIT_LENGTH) {
+  for (i in 0..<BIT_LENGTH) {
     panel.add(makeCheckBox(i))
   }
   return JPanel(BorderLayout()).also {
@@ -67,7 +67,7 @@ private fun makeCheckBox(idx: Int): JCheckBox {
 
 private fun updateCheckBoxes(value: BigInteger) {
   status = value
-  for (i in 0 until BIT_LENGTH) {
+  for (i in 0..<BIT_LENGTH) {
     val l = BigInteger.ONE.shiftLeft(i)
     (panel.getComponent(i) as? JCheckBox)?.also {
       it.isSelected = status.and(l) != BigInteger.ZERO

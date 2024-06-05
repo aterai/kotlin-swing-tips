@@ -39,19 +39,19 @@ fun makeUI(): Component {
   c.fill = GridBagConstraints.HORIZONTAL
 
   val m = arrayOf(
-    CheckableItem("aaa", false),
-    CheckableItem("00000", true),
-    CheckableItem("111", false),
-    CheckableItem("33333", true),
-    CheckableItem("2222", true),
-    CheckableItem("444444", false),
+    CheckBoxItem("aaa", false),
+    CheckBoxItem("00000", true),
+    CheckBoxItem("111", false),
+    CheckBoxItem("33333", true),
+    CheckBoxItem("2222", true),
+    CheckBoxItem("444444", false),
   )
 
   val combo0 = CheckedComboBox(DefaultComboBoxModel(m))
   val combo1 = CheckedComboBox1(DefaultComboBoxModel(m))
   val combo2 = CheckedComboBox2(DefaultComboBoxModel(m))
   val combo3 = CheckedComboBox3(DefaultComboBoxModel(m))
-  val combo4 = CheckedComboBox4(CheckableComboBoxModel(m))
+  val combo4 = CheckedComboBox4(CheckComboBoxModel(m))
 
   listOf(combo0, combo1, combo2, combo3, combo4)
     .forEach {
@@ -65,11 +65,11 @@ fun makeUI(): Component {
   }
 }
 
-private open class CheckableItem(private val text: String, var isSelected: Boolean) {
+private open class CheckBoxItem(private val text: String, var isSelected: Boolean) {
   override fun toString() = text
 }
 
-private class CheckBoxCellRenderer<E : CheckableItem> : ListCellRenderer<E> {
+private class CheckBoxCellRenderer<E : CheckBoxItem> : ListCellRenderer<E> {
   private val label = JLabel(" ")
   private val check = JCheckBox(" ")
 
@@ -79,39 +79,36 @@ private class CheckBoxCellRenderer<E : CheckableItem> : ListCellRenderer<E> {
     index: Int,
     isSelected: Boolean,
     cellHasFocus: Boolean,
-  ): Component {
-    if (index < 0) {
-      // val txt = getCheckedItemString(list.model)
-      // label.setText(if (txt.isEmpty()) " " else txt)
-      // label.text = txt.takeUnless { it.isEmpty() } ?: " "
-      label.text = getCheckedItemString(list.model).ifEmpty { " " }
-      return label
+  ): Component = if (index < 0) {
+    // val txt = getCheckedItemString(list.model)
+    // label.setText(if (txt.isEmpty()) " " else txt)
+    // label.text = txt.takeUnless { it.isEmpty() } ?: " "
+    label.text = getCheckedItemString(list.model).ifEmpty { " " }
+    label
+  } else {
+    check.text = value.toString()
+    check.isSelected = value.isSelected
+    if (isSelected) {
+      check.background = list.selectionBackground
+      check.foreground = list.selectionForeground
     } else {
-      check.text = value.toString()
-      check.isSelected = value.isSelected
-      if (isSelected) {
-        check.background = list.selectionBackground
-        check.foreground = list.selectionForeground
-      } else {
-        check.background = list.background
-        check.foreground = list.foreground
-      }
-      return check
+      check.background = list.background
+      check.foreground = list.foreground
     }
+    check
   }
 
-  private fun <E : CheckableItem> getCheckedItemString(model: ListModel<E>): String {
-    return (0 until model.size)
+  private fun <E : CheckBoxItem> getCheckedItemString(model: ListModel<E>) =
+    (0..<model.size)
       .asSequence()
       .map { model.getElementAt(it) }
       .filter { it.isSelected }
       .map { it.toString() }
       .sorted()
       .joinToString()
-  }
 }
 
-private open class CheckedComboBox<E : CheckableItem>(
+private open class CheckedComboBox<E : CheckBoxItem>(
   model: ComboBoxModel<E>,
 ) : JComboBox<E>(model) {
   private var keepOpen = false
@@ -131,7 +128,7 @@ private open class CheckedComboBox<E : CheckableItem>(
         keepOpen = true
       }
     }
-    setRenderer(CheckBoxCellRenderer<CheckableItem>())
+    setRenderer(CheckBoxCellRenderer<CheckBoxItem>())
     addActionListener(listener)
 
     val im = getInputMap(JComponent.WHEN_FOCUSED)
@@ -166,7 +163,7 @@ private open class CheckedComboBox<E : CheckableItem>(
   }
 }
 
-private class CheckedComboBox1<E : CheckableItem>(
+private class CheckedComboBox1<E : CheckBoxItem>(
   model: ComboBoxModel<E>,
 ) : CheckedComboBox<E>(model) {
   override fun updateItem(index: Int) {
@@ -178,7 +175,7 @@ private class CheckedComboBox1<E : CheckableItem>(
   }
 }
 
-private class CheckedComboBox2<E : CheckableItem>(
+private class CheckedComboBox2<E : CheckBoxItem>(
   model: ComboBoxModel<E>,
 ) : CheckedComboBox<E>(model) {
   override fun updateItem(index: Int) {
@@ -192,7 +189,7 @@ private class CheckedComboBox2<E : CheckableItem>(
   }
 }
 
-private class CheckedComboBox3<E : CheckableItem>(
+private class CheckedComboBox3<E : CheckBoxItem>(
   model: ComboBoxModel<E>,
 ) : CheckedComboBox<E>(model) {
   override fun updateItem(index: Int) {
@@ -206,7 +203,7 @@ private class CheckedComboBox3<E : CheckableItem>(
   }
 }
 
-private class CheckableComboBoxModel<E>(
+private class CheckComboBoxModel<E>(
   items: Array<E>,
 ) : DefaultComboBoxModel<E>(items) {
   fun fireContentsChanged(index: Int) {
@@ -214,14 +211,14 @@ private class CheckableComboBoxModel<E>(
   }
 }
 
-private class CheckedComboBox4<E : CheckableItem>(
+private class CheckedComboBox4<E : CheckBoxItem>(
   model: ComboBoxModel<E>,
 ) : CheckedComboBox<E>(model) {
   override fun updateItem(index: Int) {
     if (isPopupVisible) {
       val item = getItemAt(index)
       item.isSelected = !item.isSelected
-      (model as? CheckableComboBoxModel<E>)?.fireContentsChanged(index)
+      (model as? CheckComboBoxModel<E>)?.fireContentsChanged(index)
     }
   }
 }

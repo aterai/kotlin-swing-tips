@@ -11,11 +11,11 @@ fun makeUI(): Component {
   return p
 }
 
-private fun makePanel(
+fun makePanel(
   prototypeValue: String?,
   visibleRowCount: Int,
 ): Component {
-  val model1 = (0 until 20).map { it.toString() }.toTypedArray()
+  val model1 = (0..<20).map { it.toString() }.toTypedArray()
   val list1 = JList(model1)
   list1.visibleRowCount = visibleRowCount
   list1.prototypeCellValue = prototypeValue
