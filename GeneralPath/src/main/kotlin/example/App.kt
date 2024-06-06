@@ -181,7 +181,7 @@ private class StarIcon2 : Icon {
     val add = PI / VC
     val p = Path2D.Double()
     p.moveTo(R2.toDouble(), 0.0)
-    for (i in 0 until VC * 2 - 1) {
+    for (i in 0..<VC * 2 - 1) {
       agl += add
       val r = if (i % 2 == 0) R1 else R2
       p.lineTo(r * cos(agl), r * sin(agl))

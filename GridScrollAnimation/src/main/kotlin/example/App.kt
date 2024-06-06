@@ -8,7 +8,7 @@ import kotlin.math.pow
 
 fun makeUI(): Component {
   val gp = GridPanel(4, 3)
-  for (i in 0 until gp.columns * gp.rows) {
+  for (i in 0..<gp.columns * gp.rows) {
     gp.add(makeSampleComponent(i))
   }
 

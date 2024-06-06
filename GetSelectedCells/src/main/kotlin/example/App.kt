@@ -47,7 +47,7 @@ fun makeUI(): Component {
   table.componentPopupMenu = TablePopupMenu()
 
   val m = table.columnModel
-  for (i in 0 until m.columnCount) {
+  for (i in 0..<m.columnCount) {
     val col = m.getColumn(i)
     col.preferredWidth = CELL_SIZE
     col.resizable = false

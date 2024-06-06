@@ -184,7 +184,7 @@ private class GroupableTableHeaderUI : BasicTableHeaderUI() {
   private fun getHeaderHeight(): Int {
     var height = 0
     val columnModel = header.columnModel
-    for (column in 0 until columnModel.columnCount) {
+    for (column in 0..<columnModel.columnCount) {
       val tc = columnModel.getColumn(column)
       val comp = getHeaderRenderer(column)
       var rendererHeight = comp.preferredSize.height
