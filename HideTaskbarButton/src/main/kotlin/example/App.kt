@@ -78,7 +78,7 @@ private class StarIcon(r1: Int = 8, r2: Int = 4, vc: Int = 5) : Icon {
     val add = PI / vc
     val p: Path2D = Path2D.Double()
     p.moveTo(or, 0.0)
-    for (i in 0 until vc * 2 - 1) {
+    for (i in 0..<vc * 2 - 1) {
       agl += add
       val r = if (i % 2 == 0) ir else or
       p.lineTo(r * cos(agl), r * sin(agl))

@@ -24,7 +24,7 @@ fun makeUI(): Component {
   table.autoCreateRowSorter = true
   val sorter = table.rowSorter
   if (sorter is DefaultRowSorter<*, *>) {
-    for (i in 0 until table.columnCount) {
+    for (i in 0..<table.columnCount) {
       sorter.setSortable(i, false)
     }
   }
@@ -66,7 +66,7 @@ private class HyperlinkHeaderCellRenderer : DefaultTableCellRenderer(), MouseInp
     val str = value?.toString() ?: ""
     var sort = ""
     val sorter = table.rowSorter
-    if (sorter != null && !sorter.sortKeys.isEmpty()) {
+    if (sorter != null && sorter.sortKeys.isNotEmpty()) {
       val sortKey = sorter.sortKeys[0]
       if (column == sortKey.column) {
         val k = if (sortKey.sortOrder == SortOrder.ASCENDING) "▴" else "▾"

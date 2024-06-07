@@ -12,7 +12,7 @@ fun makeUI(): Component {
   val model = object : DefaultTableModel(columnNames, 0) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
-  for (i in 0 until 1000) {
+  for (i in 0..<1000) {
     model.addRow(arrayOf("Java Swing", i, i % 2 == 0))
   }
   val table = object : JTable(model) {

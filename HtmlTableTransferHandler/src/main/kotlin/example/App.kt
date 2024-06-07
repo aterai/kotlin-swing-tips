@@ -147,7 +147,7 @@ private class DateEditor : AbstractCellEditor(), TableCellEditor {
     return spinner
   }
 
-  override fun getCellEditorValue() = spinner.value
+  override fun getCellEditorValue(): Any = spinner.value
 
   override fun stopCellEditing(): Boolean {
     val stopEditing = runCatching {
@@ -325,7 +325,7 @@ private class HtmlTableTransferHandler : TransferHandler() {
     } else {
       val rowCount = table.rowCount
       rows = IntArray(rowCount)
-      for (counter in 0 until rowCount) {
+      for (counter in 0..<rowCount) {
         rows[counter] = counter
       }
     }
@@ -339,7 +339,7 @@ private class HtmlTableTransferHandler : TransferHandler() {
     } else {
       val colCount = table.columnCount
       cols = IntArray(colCount)
-      for (counter in 0 until colCount) {
+      for (counter in 0..<colCount) {
         cols[counter] = counter
       }
     }

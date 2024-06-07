@@ -35,7 +35,7 @@ private class HoverCloseButtonTabbedPane(
         if (source == null || focused == null || focused == prev) {
           return
         }
-        for (i in 0 until source.tabCount) {
+        for (i in 0..<source.tabCount) {
           (source.getTabComponentAt(i) as? TabPanel)?.setButtonVisible(i == focused)
         }
         prev = focused

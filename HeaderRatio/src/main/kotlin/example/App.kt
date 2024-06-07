@@ -65,7 +65,7 @@ private fun setTableHeaderColumnRatio(
   val list = getWidthRatio(text, m.columnCount)
   var total = table.size.width
   val ratio = total / list.sum().toFloat()
-  for (i in 0 until m.columnCount - 1) {
+  for (i in 0..<m.columnCount - 1) {
     val col = m.getColumn(i)
     val colWidth = (list[i] * ratio).roundToInt()
     col.preferredWidth = colWidth

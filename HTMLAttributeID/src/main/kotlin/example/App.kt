@@ -130,7 +130,7 @@ private fun traverseElementById(element: Element) {
   if (element.isLeaf) {
     checkId(element)
   } else {
-    for (i in 0 until element.elementCount) {
+    for (i in 0..<element.elementCount) {
       val child = element.getElement(i)
       checkId(child)
       if (!child.isLeaf) {
