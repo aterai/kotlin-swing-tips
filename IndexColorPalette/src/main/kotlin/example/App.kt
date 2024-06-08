@@ -76,8 +76,8 @@ private fun makeTestImage(
   transIdx: Int,
 ): Image {
   val buf = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
-  for (y in 0 until h) {
-    for (x in 0 until w) {
+  for (y in 0..<h) {
+    for (x in 0..<w) {
       val arrayIndex = x + y * w
       val colorIndex = dataBuffer.getElem(arrayIndex)
       if (transIdx == colorIndex) {

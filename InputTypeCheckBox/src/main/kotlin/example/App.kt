@@ -40,7 +40,7 @@ fun makeUI(): Component {
       m?.removeTableModelListener(handler)
       super.updateUI()
       m = getModel()
-      for (i in 0 until m.columnCount) {
+      for (i in 0..<m.columnCount) {
         val r = getDefaultRenderer(m.getColumnClass(i))
         if (r is Component) {
           SwingUtilities.updateComponentTreeUI(r)
@@ -179,7 +179,7 @@ private class HeaderCheckBoxHandler(
     if (mci == targetColumnIndex && m.rowCount > 0) {
       val column = columnModel.getColumn(vci)
       val b = column.headerValue === Status.DESELECTED
-      for (i in 0 until m.rowCount) {
+      for (i in 0..<m.rowCount) {
         m.setValueAt(b, i, mci)
       }
       column.headerValue = if (b) Status.SELECTED else Status.DESELECTED

@@ -105,7 +105,7 @@ private class TableRowTransferHandler : TransferHandler() {
     val c = info.component
     val p = SwingUtilities.getAncestorOfClass(JDesktopPane::class.java, c)
     return c is JTable && p is JDesktopPane &&
-      (c == source || canDropTargetTable(info, p, c))
+        (c == source || canDropTargetTable(info, p, c))
   }
 
   private fun canDropTargetTable(
@@ -149,7 +149,7 @@ private class TableRowTransferHandler : TransferHandler() {
     if (info.isDrop) {
       index = (info.dropLocation as? JTable.DropLocation)?.row ?: index
     }
-    index = if (index in 0 until max) index else max
+    index = if (index in 0..<max) index else max
     addIndex = index
 
     val values = runCatching {

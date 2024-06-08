@@ -32,7 +32,7 @@ private fun makeKeyboardPanel() = JPanel(GridBagLayout()).also {
   val c = GridBagConstraints()
   c.fill = GridBagConstraints.BOTH
   c.gridy = 50
-  for (i in 0 until keys[0].size * 2) {
+  for (i in 0..<keys[0].size * 2) {
     c.gridx = i
     it.add(Box.createHorizontalStrut(KeyButton.SIZE))
   }

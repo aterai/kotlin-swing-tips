@@ -59,13 +59,13 @@ private fun print(
   val indent = " ".repeat(level * 2)
   buf.append("%s%s%n".format(indent, node.nodeName))
   if (node.hasAttributes()) {
-    for (i in 0 until node.attributes.length) {
+    for (i in 0..<node.attributes.length) {
       val attr = node.attributes.item(i)
       buf.append("%s  #%s=%s%n".format(indent, attr.nodeName, attr.nodeValue))
     }
   }
   if (node.hasChildNodes()) {
-    for (i in 0 until node.childNodes.length) {
+    for (i in 0..<node.childNodes.length) {
       val child = node.childNodes.item(i)
       print(buf, child, level + 1)
     }
@@ -89,7 +89,7 @@ private class XmlTreeNode(
         if (e.hasAttributes()) {
           val attr = e.attributes
           val count = attr.length
-          for (i in 0 until count) {
+          for (i in 0..<count) {
             val a = attr.item(i)
             if (i == 0) {
               buf.append(" [")
@@ -112,7 +112,7 @@ private class XmlTreeNode(
       val cn = xmlNode?.childNodes ?: return mutableListOf()
       val count = cn.length
       val ml = mutableListOf<XmlTreeNode>().also {
-        for (i in 0 until count) {
+        for (i in 0..<count) {
           val c = cn.item(i)
           if (c is Text && c.getNodeValue().isEmpty()) {
             continue

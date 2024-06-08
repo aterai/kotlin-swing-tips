@@ -78,7 +78,7 @@ private class JustifiedLabel(str: String? = null) : JLabel(str) {
       val xx = (jw - vw) / (num - 1f)
       var pos = if (num == 1) (jw - vw) * .5f else 0f
       val gmPos = Point2D.Float()
-      for (i in 0 until num) {
+      for (i in 0..<num) {
         val gm = gv.getGlyphMetrics(i)
         gmPos.setLocation(pos.toDouble(), 0.0)
         gv.setGlyphPosition(i, gmPos)
