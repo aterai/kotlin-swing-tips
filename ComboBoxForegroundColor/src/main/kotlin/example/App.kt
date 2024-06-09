@@ -55,7 +55,7 @@ private fun makeTitledPanel(
   return p
 }
 
-private data class ColorItem(val color: Color, val description: String) : Serializable {
+private data class ColorItem(val color: Color, val description: String) {
   override fun hashCode() = Objects.hash(color, description)
 
   override fun equals(other: Any?) =
