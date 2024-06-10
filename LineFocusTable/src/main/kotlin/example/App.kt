@@ -12,26 +12,9 @@ import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableModel
 
-private val columnNames = arrayOf("String", "Integer", "Boolean")
-private val data = arrayOf(
-  arrayOf("aaa", 12, true),
-  arrayOf("bbb", 5, false),
-  arrayOf("CCC", 92, true),
-  arrayOf("DDD", 0, false),
-)
-private val model = object : DefaultTableModel(data, columnNames) {
-  override fun getColumnClass(column: Int) = when (column) {
-    0 -> String::class.java
-    1 -> Number::class.java
-    2 -> Boolean::class.javaObjectType
-    else -> super.getColumnClass(column)
-  }
-}
-private val table = LineFocusTable(model)
-
 fun makeUI(): Component {
   UIManager.put("Table.focusCellHighlightBorder", DotBorder(2, 2, 2, 2))
-
+  val table = LineFocusTable(makeModel())
   table.rowSelectionAllowed = true
   table.autoCreateRowSorter = true
   table.fillsViewportHeight = true
@@ -43,6 +26,24 @@ fun makeUI(): Component {
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(table))
     it.preferredSize = Dimension(320, 240)
+  }
+}
+
+fun makeModel(): TableModel {
+  val columnNames = arrayOf("String", "Integer", "Boolean")
+  val data = arrayOf(
+    arrayOf("aaa", 12, true),
+    arrayOf("bbb", 5, false),
+    arrayOf("CCC", 92, true),
+    arrayOf("DDD", 0, false),
+  )
+  return object : DefaultTableModel(data, columnNames) {
+    override fun getColumnClass(column: Int) = when (column) {
+      0 -> String::class.java
+      1 -> Number::class.java
+      2 -> Boolean::class.javaObjectType
+      else -> super.getColumnClass(column)
+    }
   }
 }
 
@@ -63,7 +64,7 @@ private class LineFocusTable(model: TableModel) : JTable(model) {
 
   private fun updateRenderer() {
     val m = model
-    for (i in 0 until m.columnCount) {
+    for (i in 0..<m.columnCount) {
       (getDefaultRenderer(m.getColumnClass(i)) as? Component)?.also {
         SwingUtilities.updateComponentTreeUI(it)
       }
