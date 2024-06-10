@@ -114,7 +114,7 @@ private class IconTable(
       g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .15f)
       g2.paint = Color.BLACK
       val r = editor.bounds
-      for (i in 0 until OFFSET) {
+      for (i in 0..<OFFSET) {
         g2.fillRoundRect(r.x - i, r.y + OFFSET, r.width + i + i, r.height - OFFSET + i, 5, 5)
       }
       g2.dispose()
@@ -131,7 +131,7 @@ private class IconTable(
         cancelEditing()
       }
     }
-    editor.getActionMap().put("cancel-editing", a)
+    editor.actionMap.put("cancel-editing", a)
     editor.addMouseListener(object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
         val p = e.point
@@ -161,7 +161,7 @@ private class IconTable(
     tableHeader.resizingAllowed = false
     tableHeader.reorderingAllowed = false
     val m = getColumnModel()
-    for (i in 0 until m.columnCount) {
+    for (i in 0..<m.columnCount) {
       val col = m.getColumn(i)
       col.minWidth = CELL_SIZE
       col.maxWidth = CELL_SIZE
@@ -199,8 +199,8 @@ private class IconTable(
   }
 
   companion object {
-    protected const val CELL_SIZE = 50
-    protected const val OFFSET = 4
+    const val CELL_SIZE = 50
+    const val OFFSET = 4
   }
 }
 
