@@ -31,9 +31,7 @@ fun makeUI(): Component {
 
   val popup = JPopupMenu("JList JPopupMenu")
   popup.add("info").addActionListener {
-    val msg = list.selectedValuesList
-      .map { it.title }
-      .joinToString(", ")
+    val msg = list.selectedValuesList.joinToString(", ") { it.title }
     JOptionPane.showMessageDialog(list.rootPane, msg)
   }
   popup.addSeparator()
@@ -132,14 +130,14 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
       checkedIndex = -1
       val l = e.component as? JList<*> ?: return
       // l.isFocusable = true
-      val destPoint = e.point
+      val tgtPoint = e.point
       rubberBand.reset()
       rubberBand.moveTo(srcPoint.getX(), srcPoint.getY())
-      rubberBand.lineTo(destPoint.getX(), srcPoint.getY())
-      rubberBand.lineTo(destPoint.getX(), destPoint.getY())
-      rubberBand.lineTo(srcPoint.getX(), destPoint.getY())
+      rubberBand.lineTo(tgtPoint.getX(), srcPoint.getY())
+      rubberBand.lineTo(tgtPoint.getX(), tgtPoint.getY())
+      rubberBand.lineTo(srcPoint.getX(), tgtPoint.getY())
       rubberBand.closePath()
-      val indices = (0 until l.model.size)
+      val indices = (0..<l.model.size)
         .filter { rubberBand.intersects(l.getCellBounds(it, it)) }
         .toIntArray()
       l.selectedIndices = indices
@@ -253,7 +251,7 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
         }
       }
     }
-    val focusBorder = UIManager.getBorder("List.focusCellHighlightBorder")
+    val focusBorder: Border = UIManager.getBorder("List.focusCellHighlightBorder")
     val noFocusBorder = getNoFocusBorder(focusBorder)
 
     init {
