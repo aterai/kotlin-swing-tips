@@ -49,7 +49,7 @@ private class SpinnerNumberModelGroup(private val expectedSum: Int) {
     }
     updating = true
     if (candidates.size - 1 > 0) {
-      val sum = candidates.map { it.number.toInt() }.sum()
+      val sum = candidates.sumOf { it.number.toInt() }
       val delta = sum - expectedSum
       if (delta > 0) {
         distributeRemove(delta, source)
