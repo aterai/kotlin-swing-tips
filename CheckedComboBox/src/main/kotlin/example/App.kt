@@ -26,25 +26,25 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeModel(): ComboBoxModel<CheckableItem> {
+private fun makeModel(): ComboBoxModel<CheckBoxItem> {
   val m = arrayOf(
-    CheckableItem("aaa", false),
-    CheckableItem("bb", true),
-    CheckableItem("111", false),
-    CheckableItem("33333", true),
-    CheckableItem("2222", true),
-    CheckableItem("c", false),
+    CheckBoxItem("aaa", false),
+    CheckBoxItem("bb", true),
+    CheckBoxItem("111", false),
+    CheckBoxItem("33333", true),
+    CheckBoxItem("2222", true),
+    CheckBoxItem("c", false),
   )
   return DefaultComboBoxModel(m)
 }
 
-private data class CheckableItem(val title: String, val isSelected: Boolean) {
+private data class CheckBoxItem(val title: String, val isSelected: Boolean) {
   override fun toString() = title
 }
 
 private open class CheckedComboBox(
-  model: ComboBoxModel<CheckableItem>,
-) : JComboBox<CheckableItem>(model) {
+  model: ComboBoxModel<CheckBoxItem>,
+) : JComboBox<CheckBoxItem>(model) {
   protected var keepOpen = false
   private val panel = JPanel(BorderLayout())
 
@@ -115,7 +115,7 @@ private open class CheckedComboBox(
     val item = getItemAt(index)
     if (isPopupVisible && item != null) {
       removeItemAt(index)
-      insertItemAt(CheckableItem(item.title, !item.isSelected), index)
+      insertItemAt(CheckBoxItem(item.title, !item.isSelected), index)
       selectedIndex = index
     }
   }
@@ -129,8 +129,8 @@ private open class CheckedComboBox(
   }
 
   protected fun getCheckedItemString(
-    model: ListModel<out CheckableItem>,
-  ) = (0 until model.size)
+    model: ListModel<out CheckBoxItem>,
+  ) = (0..<model.size)
     .asSequence()
     .map { model.getElementAt(it) }
     .filter { it.isSelected }
@@ -140,7 +140,7 @@ private open class CheckedComboBox(
 }
 
 private class WindowsCheckedComboBox(
-  model: ComboBoxModel<CheckableItem>,
+  model: ComboBoxModel<CheckBoxItem>,
 ) : CheckedComboBox(model) {
   private var listener: ActionListener? = null
 

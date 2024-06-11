@@ -194,7 +194,7 @@ private class LoadingIcon : Icon {
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     g2.paint = ELLIPSE_COLOR
     val size = list.size
-    for (i in 0 until size) {
+    for (i in 0..<size) {
       val alpha = if (running) (i + 1) / size.toFloat() else .5f
       g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha)
       g2.fill(list[i])
