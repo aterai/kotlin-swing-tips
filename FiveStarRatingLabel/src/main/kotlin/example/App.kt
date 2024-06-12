@@ -71,7 +71,7 @@ private class FiveStarRatingLabel(rating: String) : JComponent() {
     val cy = h / 2.0 - r.centerY
     val toCenterAt = AffineTransform.getTranslateInstance(cx, cy)
     var point = 0.0
-    for (i in 0 until gv.numGlyphs) {
+    for (i in 0..<gv.numGlyphs) {
       val gm = gv.getGlyphMetrics(i)
       if (i <= ip - 1) {
         point += gm.advance.toDouble()

@@ -92,7 +92,7 @@ private fun <E> move1(
   val fromModel = from.model as? DefaultListModel<E> ?: return
   val toModel = to.model as? DefaultListModel<E> ?: return
   val unselectedValues = mutableListOf<E>()
-  for (i in 0 until fromModel.size) {
+  for (i in 0..<fromModel.size) {
     if (!sm.isSelectedIndex(i)) {
       unselectedValues.add(fromModel.getElementAt(i))
     }
@@ -123,7 +123,7 @@ private fun <E> makeList(model: ListModel<E>): JList<E> {
   val popup = JPopupMenu()
   popup.add("reverse").addActionListener {
     val sm = list.selectionModel
-    for (i in 0 until list.model.size) {
+    for (i in 0..<list.model.size) {
       if (sm.isSelectedIndex(i)) {
         sm.removeSelectionInterval(i, i)
       } else {

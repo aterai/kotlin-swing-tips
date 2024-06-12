@@ -27,7 +27,7 @@ fun makeUI(): Component {
   val check2 = JRadioButton("Directory < File", false)
   check2.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      for (i in 0 until 3) {
+      for (i in 0..<3) {
         sorter.setComparator(i, FileComparator(i))
       }
     }
@@ -35,7 +35,7 @@ fun makeUI(): Component {
   val check3 = JRadioButton("Group Sorting", false)
   check3.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      for (i in 0 until 3) {
+      for (i in 0..<3) {
         sorter.setComparator(i, FileGroupComparator(table, i))
       }
     }
@@ -56,7 +56,7 @@ fun makeUI(): Component {
 }
 
 private fun setDefaultComparator(sorter: TableRowSorter<TableModel>) {
-  for (i in 0 until 3) {
+  for (i in 0..<3) {
     sorter.setComparator(i, DefaultFileComparator(i))
   }
 }
@@ -163,10 +163,6 @@ private open class DefaultFileComparator(
     1 -> a.length().compareTo(b.length())
     else -> a.absolutePath.compareTo(b.absolutePath, ignoreCase = true)
   }
-
-  companion object {
-    private const val serialVersionUID = 1L
-  }
 }
 
 private class FileComparator(column: Int) : DefaultFileComparator(column) {
@@ -177,10 +173,6 @@ private class FileComparator(column: Int) : DefaultFileComparator(column) {
     a.isDirectory && !b.isDirectory -> -1
     !a.isDirectory && b.isDirectory -> 1
     else -> super.compare(a, b)
-  }
-
-  companion object {
-    private const val serialVersionUID = 1L
   }
 }
 
@@ -203,10 +195,6 @@ private class FileGroupComparator(
       !a.isDirectory && b.isDirectory -> 1 * flag
       else -> super.compare(a, b)
     }
-  }
-
-  companion object {
-    private const val serialVersionUID = 1L
   }
 }
 

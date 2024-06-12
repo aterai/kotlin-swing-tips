@@ -62,7 +62,7 @@ fun makeUI(): Component {
   val addButton = JButton("add")
   addButton.addActionListener {
     sorter.sortKeys = null
-    for (i in 0 until 100) {
+    for (i in 0..<100) {
       model.addRow(arrayOf(i, i + 1, "A$i", "B$i"))
     }
   }

@@ -33,7 +33,7 @@ fun convertEllipse2Polygon(e: Ellipse2D): Polygon {
   var a = 0.0
   val d = 2 * PI / v
   val polygon = Polygon()
-  for (i in 0 until v) {
+  for (i in 0..<v) {
     polygon.addPoint((r1 * cos(a) + x0).toInt(), (r2 * sin(a) + y0).toInt())
     a += d
   }

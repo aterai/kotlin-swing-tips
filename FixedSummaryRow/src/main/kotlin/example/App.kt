@@ -65,7 +65,7 @@ fun makeUI(): Component {
       val c: Component
       val m = table.model
       if (row == m.rowCount - 2) {
-        val total = (1 until m.rowCount - 1).sumOf {
+        val total = (1..<m.rowCount - 1).sumOf {
           m.getValueAt(it, column) as? Int ?: 0
         }
         c = super.getTableCellRendererComponent(
@@ -93,7 +93,7 @@ fun makeUI(): Component {
     }
   }
   val cm = table.columnModel
-  for (i in 0 until cm.columnCount) {
+  for (i in 0..<cm.columnCount) {
     cm.getColumn(i).cellRenderer = renderer
   }
   return JPanel(BorderLayout()).also {

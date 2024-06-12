@@ -3,7 +3,6 @@ package example
 import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.io.Serializable
 import javax.swing.*
 import javax.swing.event.ListSelectionEvent
 import javax.swing.event.ListSelectionListener
@@ -17,7 +16,7 @@ fun makeUI(): Component {
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
-  for (i in 0 until 20) {
+  for (i in 0..<20) {
     model.addRow(arrayOf("Name: $i", i, i % 2 == 0))
   }
   val table = FishEyeTable(model)
@@ -36,11 +35,7 @@ private class FishEyeRowContext(
   val height: Int,
   val font: Font,
   val color: Color,
-) : Serializable {
-  companion object {
-    private const val serialVersionUID = 1L
-  }
-}
+)
 
 private class FishEyeTable(m: TableModel) : JTable(m) {
   private val fishEyeRowList: List<FishEyeRowContext>
@@ -140,7 +135,7 @@ private class FishEyeTable(m: TableModel) : JTable(m) {
     val ccRow = handler?.prevRow ?: -1
     var index = 0
     val rd2 = (fishEyeRowList.size - 1) / 2
-    for (i in -rd2 until rowCount) {
+    for (i in -rd2..<rowCount) {
       if (ccRow - rd2 <= i && i <= ccRow + rd2) {
         if (i == row) {
           color = fishEyeRowList[index].color
@@ -187,7 +182,7 @@ private class FishEyeTable(m: TableModel) : JTable(m) {
     var restGap = restH - restRh * restRc
     var index = -1
     val range = ccRow - rd2..ccRow + rd2
-    for (i in -rd2 until rowCount) {
+    for (i in -rd2..<rowCount) {
       val crh = if (range.contains(i)) {
         index++
         if (i < 0) {
