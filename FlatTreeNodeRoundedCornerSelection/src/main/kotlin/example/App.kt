@@ -17,7 +17,7 @@ fun makeUI(): Component {
   val tree = JTree()
   tree.rowHeight = 20
   val mb = JMenuBar()
-  mb.add(example.LookAndFeelUtils.createLookAndFeelMenu())
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   return JPanel(GridLayout(1, 0, 2, 2)).also {
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.add(makeScrollPane(tree))
@@ -237,7 +237,7 @@ private object GeomUtils {
 
   fun flatteningStepsOnRightSide(list: MutableList<Point2D>, arc: Double): List<Point2D> {
     val sz = list.size
-    for (i in 0 until sz) {
+    for (i in 0..<sz) {
       val i1 = (i + 1) % sz
       val i2 = (i + 2) % sz
       val i3 = (i + 3) % sz
@@ -269,7 +269,7 @@ private object GeomUtils {
     val path = Path2D.Double()
     val sz = list.size
     path.moveTo(pt0.x + arc, pt0.y)
-    for (i in 0 until sz) {
+    for (i in 0..<sz) {
       val prv = list[(i - 1 + sz) % sz]
       val cur = list[i]
       val nxt = list[(i + 1) % sz]
