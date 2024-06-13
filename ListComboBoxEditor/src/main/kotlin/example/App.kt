@@ -115,7 +115,7 @@ private fun makeListEditorComboBox(): JComboBox<ListItem> {
   scroll.border = BorderFactory.createEmptyBorder()
   scroll.viewportBorder = BorderFactory.createEmptyBorder()
   val cm = DefaultComboBoxModel<ListItem>()
-  for (i in 0 until model.size) {
+  for (i in 0..<model.size) {
     cm.addElement(model.getElementAt(i))
   }
   val combo = object : JComboBox<ListItem>(cm) {
@@ -264,7 +264,7 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   }
 
   companion object {
-    protected val SELECTED_COLOR = Color(0x40_32_64_FF, true)
+    val SELECTED_COLOR = Color(0x40_32_64_FF, true)
   }
 }
 
