@@ -9,7 +9,7 @@ fun makeUI(): Component {
   val key = "List.lockToPositionOnScroll"
   // UIManager.put(key, false)
   val model = DefaultListModel<String>()
-  for (i in 0 until 1000) {
+  for (i in 0..<1000) {
     model.addElement(i.toString())
   }
   val list = object : JList<String>(model) {

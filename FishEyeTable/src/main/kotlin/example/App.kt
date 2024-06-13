@@ -171,7 +171,7 @@ private class FishEyeTable(m: TableModel) : JTable(m) {
     val rowCount = model.rowCount
     val viewRc = getViewableColoredRowCount(ccRow)
     // var viewH = 0
-    // for (i in 0 until viewRc) {
+    // for (i in 0..<viewRc) {
     //   viewH += fishEyeRowList[i].height
     // }
     // val viewH = fishEyeRowList.filterIndexed { i, _ -> i < viewRc }.sumBy { it.height }

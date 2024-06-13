@@ -90,10 +90,10 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
     return renderer
   }
 
-  fun getNoFocusBorder(): Border {
-    val i = focusBorder.getBorderInsets(renderer)
-    return BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
-  }
+  // fun getNoFocusBorder(): Border {
+  //   val i = focusBorder.getBorderInsets(renderer)
+  //   return BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
+  // }
 
   companion object {
     val SELECTED_COLOR = Color(0xAE_16_64_FF.toInt(), true)
@@ -158,7 +158,7 @@ private class ClearSelectionListener : MouseInputAdapter() {
       list: JList<E>,
       pt: Point,
     ): Boolean {
-      for (i in 0 until list.model.size) {
+      for (i in 0..<list.model.size) {
         if (list.getCellBounds(i, i).contains(pt)) {
           return true
         }

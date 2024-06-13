@@ -123,7 +123,7 @@ private class SingleClickSelectList<E>(model: ListModel<E>) : JList<E>(model) {
   }
 
   private fun cellsContains(pt: Point): Boolean {
-    for (i in 0 until model.size) {
+    for (i in 0..<model.size) {
       if (getCellBounds(i, i).contains(pt)) {
         return true
       }

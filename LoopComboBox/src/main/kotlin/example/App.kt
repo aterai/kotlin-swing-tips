@@ -59,7 +59,7 @@ private fun makeTitledPanel(
 
 private fun makeModel(): ComboBoxModel<String> {
   val model = DefaultComboBoxModel<String>()
-  for (i in 0 until 10) {
+  for (i in 0..<10) {
     model.addElement("item: $i")
   }
   return model

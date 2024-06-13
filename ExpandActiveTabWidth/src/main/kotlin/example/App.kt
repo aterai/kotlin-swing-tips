@@ -42,7 +42,7 @@ private fun updateTabWidth(tabs: JTabbedPane) {
   when (tabs.tabPlacement) {
     JTabbedPane.TOP, JTabbedPane.BOTTOM -> {
       val idx = tabs.selectedIndex
-      for (i in 0 until tabs.tabCount) {
+      for (i in 0..<tabs.tabCount) {
         (tabs.getTabComponentAt(i) as? ShrinkLabel)?.isSelected = i == idx
       }
     }

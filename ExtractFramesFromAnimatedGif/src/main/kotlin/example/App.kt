@@ -37,7 +37,7 @@ private fun loadFromStream(stream: ImageInputStream): List<Image> {
     ?: throw IOException("Can not read image format!")
   reader.setInput(stream, false, false)
   val list = ArrayList<Image>()
-  for (i in 0 until reader.getNumImages(true)) {
+  for (i in 0..<reader.getNumImages(true)) {
     (reader.readAll(i, null).renderedImage as? Image)?.also { list.add(it) }
   }
   reader.dispose()
