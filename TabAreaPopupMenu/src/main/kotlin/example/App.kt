@@ -44,7 +44,7 @@ fun makeUI(): Component {
 
 private fun getTabAreaBounds(tabbedPane: JTabbedPane): Rectangle {
   val r = SwingUtilities.calculateInnerArea(tabbedPane, null)
-  val cr = tabbedPane.selectedComponent?.let { it.bounds } ?: Rectangle()
+  val cr = tabbedPane.selectedComponent?.bounds ?: Rectangle()
   val tp = tabbedPane.tabPlacement
   // Note: BasicTabbedPaneUI#getTabAreaInsets() causes rotation
   val i1 = UIManager.getInsets("TabbedPane.tabAreaInsets")
@@ -73,11 +73,11 @@ private fun makeTabPopupMenu(): JPopupMenu {
   popup.addSeparator()
   val rename = popup.add("Rename")
   rename.addActionListener {
-    (popup.invoker as? JTabbedPane)?.also {
-      val name = it.getTitleAt(it.selectedIndex)
+    (popup.invoker as? JTabbedPane)?.also { tabbedPane ->
+      val name = tabbedPane.getTitleAt(tabbedPane.selectedIndex)
       val textField = JTextField(name)
       val result = JOptionPane.showConfirmDialog(
-        it,
+        tabbedPane,
         textField,
         rename.text,
         JOptionPane.OK_CANCEL_OPTION,
@@ -86,7 +86,7 @@ private fun makeTabPopupMenu(): JPopupMenu {
       if (result == JOptionPane.OK_OPTION) {
         val str = textField.text.trim { it <= ' ' }
         if (str != name) {
-          it.setTitleAt(it.selectedIndex, str)
+          tabbedPane.setTitleAt(tabbedPane.selectedIndex, str)
         }
       }
     }
@@ -135,7 +135,7 @@ private fun makeTabAreaPopupMenu(): JPopupMenu {
       c.tabPlacement = tp.placement
     }
   }
-  TabPlacement.values().forEach {
+  TabPlacement.entries.forEach {
     val name = it.name
     val selected = it == TabPlacement.TOP
     val item = JRadioButtonMenuItem(name, selected)
