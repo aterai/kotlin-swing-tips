@@ -50,7 +50,7 @@ fun makeUI(): Component {
   }
 
   val bg = ButtonGroup()
-  Flip.values().map { makeRadioButton(it) }
+  Flip.entries.map { makeRadioButton(it) }
     .forEach {
       box.add(it)
       bg.add(it)

@@ -60,8 +60,8 @@ fun makeUI(): Component {
   val l = Locale.getDefault()
   val weekModel = DefaultListModel<DayOfWeek>()
   val firstDayOfWeek = WeekFields.of(l).firstDayOfWeek
-  for (i in DayOfWeek.values().indices) {
-    weekModel.add(i, firstDayOfWeek.plus(i.toLong()))
+  DayOfWeek.entries.forEachIndexed { idx, _ ->
+    weekModel.add(idx, firstDayOfWeek.plus(idx.toLong()))
   }
   val header = object : JList<DayOfWeek>(weekModel) {
     override fun updateUI() {
@@ -165,7 +165,7 @@ private fun installActions() {
   val a3 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val index = monthList.leadSelectionIndex
-      val weekLength = DayOfWeek.values().size // 7
+      val weekLength = DayOfWeek.entries.size // 7
       if (index < weekLength) {
         val d = monthList.model.getElementAt(index).minusDays(weekLength.toLong())
         updateMonthView(currentLocalDate.minusMonths(1))
@@ -181,7 +181,7 @@ private fun installActions() {
   val a4 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val index = monthList.leadSelectionIndex
-      val weekLength = DayOfWeek.values().size // 7
+      val weekLength = DayOfWeek.entries.size // 7
       if (index > monthList.model.size - weekLength) {
         val d = monthList.model.getElementAt(index).plusDays(weekLength.toLong())
         updateMonthView(currentLocalDate.plusMonths(1))
@@ -248,7 +248,7 @@ private class CalendarViewListModel(date: LocalDate) : AbstractListModel<LocalDa
     startDate = firstDayOfMonth.minusDays(v.toLong())
   }
 
-  override fun getSize() = DayOfWeek.values().size * ROW_COUNT
+  override fun getSize() = DayOfWeek.entries.size * ROW_COUNT
 
   override fun getElementAt(index: Int): LocalDate = startDate.plusDays(index.toLong())
 
@@ -298,7 +298,7 @@ private object GeomUtils {
     val path = Path2D.Double()
     val sz = list.size
     path.moveTo(pt0.x + arc, pt0.y)
-    for (i in 0 until sz) {
+    for (i in 0..<sz) {
       val prv = list[(i - 1 + sz) % sz]
       val cur = list[i]
       val nxt = list[(i + 1) % sz]
@@ -318,50 +318,5 @@ private object GeomUtils {
     }
     path.closePath()
     return path
-  }
-
-  fun singularization(rect: Area): List<Area> {
-    val list = mutableListOf<Area>()
-    val path = Path2D.Double()
-    val pi = rect.getPathIterator(null)
-    val coords = DoubleArray(6)
-    while (!pi.isDone) {
-      val pathSegmentType = pi.currentSegment(coords)
-      when (pathSegmentType) {
-        PathIterator.SEG_MOVETO -> path.moveTo(
-          coords[0],
-          coords[1],
-        )
-
-        PathIterator.SEG_LINETO -> path.lineTo(
-          coords[0],
-          coords[1],
-        )
-
-        PathIterator.SEG_QUADTO -> path.quadTo(
-          coords[0],
-          coords[1],
-          coords[2],
-          coords[3],
-        )
-
-        PathIterator.SEG_CUBICTO -> path.curveTo(
-          coords[0],
-          coords[1],
-          coords[2],
-          coords[3],
-          coords[4],
-          coords[5],
-        )
-
-        PathIterator.SEG_CLOSE -> {
-          path.closePath()
-          list.add(Area(path))
-          path.reset()
-        }
-      }
-      pi.next()
-    }
-    return list
   }
 }

@@ -32,7 +32,7 @@ private fun makeUI(): Component {
       val pt = Point2D.Double(tabRect.centerX, tabRect.centerY)
       val runRect = Rectangle(taRect.x, taRect.y, taRect.width, runHeight)
       var run = -1
-      for (i in 0 until runCount) {
+      for (i in 0..<runCount) {
         if (runRect.contains(pt)) {
           run = i
         }
@@ -43,7 +43,7 @@ private fun makeUI(): Component {
 
     private fun getTabAreaRect(tabCount: Int): Rectangle {
       val rect = getBoundsAt(0)
-      for (i in 0 until tabCount) {
+      for (i in 0..<tabCount) {
         rect.add(getBoundsAt(i))
       }
       return rect
@@ -76,7 +76,7 @@ private fun makeTabPlacementMenu(tabs: JTabbedPane): JMenu {
     }
   }
   val menu = JMenu("TabPlacement")
-  TabPlacement.values().forEach { tp ->
+  TabPlacement.entries.forEach { tp ->
     val item = JRadioButtonMenuItem(tp.name, tp == TabPlacement.TOP).also {
       it.addItemListener(handler)
       it.actionCommand = tp.name
