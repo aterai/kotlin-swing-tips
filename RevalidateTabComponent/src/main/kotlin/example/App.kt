@@ -12,7 +12,7 @@ import javax.swing.plaf.basic.BasicButtonUI
 
 fun makeUI(): Component {
   val tabbedPane = JTabbedPane()
-  for (i in 0 until 3) {
+  for (i in 0..<3) {
     val title = "Tab $i"
     tabbedPane.addTab(title, JLabel(title))
     tabbedPane.setTabComponentAt(i, ButtonTabComponent(tabbedPane))

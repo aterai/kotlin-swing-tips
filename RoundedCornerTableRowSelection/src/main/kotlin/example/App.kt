@@ -42,7 +42,7 @@ private fun makeTable(): JTable {
       setRowSelectionAllowed(true)
       val columns = getColumnModel()
       val r = RoundSelectionRenderer()
-      for (i in 0 until columns.columnCount) {
+      for (i in 0..<columns.columnCount) {
         columns.getColumn(i).cellRenderer = r
       }
     }

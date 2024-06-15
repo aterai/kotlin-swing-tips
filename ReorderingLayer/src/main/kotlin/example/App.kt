@@ -133,7 +133,7 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
     pt: Point,
   ) {
     // change the temporary filler location
-    for (i in 0 until parent.componentCount) {
+    for (i in 0..<parent.componentCount) {
       val c = parent.getComponent(i)
       val r = c.bounds
       if (c == filler && r.contains(pt)) {

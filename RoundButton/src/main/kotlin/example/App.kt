@@ -48,7 +48,7 @@ fun makeStar(
   val add = 2 * PI / (vc * 2)
   val p = Path2D.Double()
   p.moveTo(ora * 1.0, ora * 0.0)
-  for (i in 0 until vc * 2 - 1) {
+  for (i in 0..<vc * 2 - 1) {
     agl += add
     val r = if (i % 2 == 0) ira else ora
     p.lineTo(r * cos(agl), r * sin(agl))

@@ -24,7 +24,7 @@ fun makeUI(): Component {
       column: Int,
     ) {
       if (v is Boolean) {
-        for (i in 0 until rowCount) {
+        for (i in 0..<rowCount) {
           super.setValueAt(i == row, i, column)
         }
       } else {

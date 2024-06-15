@@ -85,7 +85,7 @@ private class RandomDissolve(
     val step1 = IntArray(src1.size)
     mode = mode xor true
     for (i in step1.indices) {
-      step1[i] = (0 until currentStage).random()
+      step1[i] = (0..<currentStage).random()
     }
     src = src1
     dst = dst1

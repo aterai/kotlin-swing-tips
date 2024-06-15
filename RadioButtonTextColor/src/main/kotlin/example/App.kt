@@ -7,7 +7,7 @@ fun makeUI(): Component {
   val bg0 = ButtonGroup()
   val box0 = Box.createVerticalBox()
   box0.border = BorderFactory.createTitledBorder("Default")
-  for (i in 0 until 4) {
+  for (i in 0..<4) {
     val b = JRadioButton("Default: $i")
     bg0.add(b)
     box0.add(b)
@@ -17,7 +17,7 @@ fun makeUI(): Component {
   val bg1 = ButtonGroup()
   val box1 = Box.createVerticalBox()
   box1.border = BorderFactory.createTitledBorder("Text Color")
-  for (i in 4 until 8) {
+  for (i in 4..<8) {
     val b = ColorRadioButton("Text: $i")
     bg1.add(b)
     box1.add(b)
@@ -27,7 +27,7 @@ fun makeUI(): Component {
   val bg2 = ButtonGroup()
   val box2 = Box.createVerticalBox()
   box2.border = BorderFactory.createTitledBorder("Icon Color")
-  for (i in 8 until 12) {
+  for (i in 8..<12) {
     val b = object : ColorRadioButton("Icon: $i") {
       override fun updateUI() {
         super.updateUI()
