@@ -15,16 +15,16 @@ fun makeUI(): Component {
   label.isOpaque = true
   label.background = Color.WHITE
 
-  val vertAlignment = JComboBox(Vertical.values())
+  val vertAlignment = JComboBox(Vertical.entries.toTypedArray())
   vertAlignment.selectedItem = Vertical.CENTER
 
-  val vertTextPosition = JComboBox(Vertical.values())
+  val vertTextPosition = JComboBox(Vertical.entries.toTypedArray())
   vertTextPosition.selectedItem = Vertical.CENTER
 
-  val horAlignment = JComboBox(Horizontal.values())
+  val horAlignment = JComboBox(Horizontal.entries.toTypedArray())
   horAlignment.selectedItem = Horizontal.CENTER
 
-  val horTextPosition = JComboBox(Horizontal.values())
+  val horTextPosition = JComboBox(Horizontal.entries.toTypedArray())
   horTextPosition.selectedItem = Horizontal.TRAILING
 
   val listener = ItemListener { e ->
@@ -94,7 +94,7 @@ private class StarburstIcon : Icon {
     val add = PI / VC
     val p = Path2D.Double()
     p.moveTo(R2.toDouble(), 0.0)
-    for (i in 0 until VC * 2 - 1) {
+    for (i in 0..<VC * 2 - 1) {
       agl += add
       val r = if (i % 2 == 0) R1 else R2
       p.lineTo(r * cos(agl), r * sin(agl))

@@ -31,7 +31,7 @@ private val weekList = object : JList<Contribution>(CalendarViewListModel(curren
     cellRenderer = null
     super.updateUI()
     layoutOrientation = VERTICAL_WRAP
-    visibleRowCount = DayOfWeek.values().size // ensure 7 rows in the list
+    visibleRowCount = DayOfWeek.entries.size // ensure 7 rows in the list
     fixedCellWidth = CELL_SIZE.width
     fixedCellHeight = CELL_SIZE.height
     cellRenderer = ContributionListRenderer()
@@ -158,20 +158,20 @@ private fun makeRowHeader(
   val weekFields = WeekFields.of(loc)
   val weekModel = DefaultListModel<String>()
   val firstDayOfWeek = weekFields.firstDayOfWeek
-  for (i in DayOfWeek.values().indices) {
-    val isEven = i % 2 == 0
+  DayOfWeek.entries.forEachIndexed { idx, _ ->
+    val isEven = idx % 2 == 0
     if (isEven) {
-      weekModel.add(i, "")
+      weekModel.add(idx, "")
     } else {
-      val week = firstDayOfWeek.plus(i.toLong())
-      weekModel.add(i, week.getDisplayName(TextStyle.SHORT_STANDALONE, loc))
+      val week = firstDayOfWeek.plus(idx.toLong())
+      weekModel.add(idx, week.getDisplayName(TextStyle.SHORT_STANDALONE, loc))
     }
   }
   return JList(weekModel).also {
     it.isEnabled = false
     it.font = font
     it.layoutOrientation = JList.VERTICAL_WRAP
-    it.visibleRowCount = DayOfWeek.values().size
+    it.visibleRowCount = DayOfWeek.entries.size
     it.setFixedCellHeight(CELL_SIZE.height)
   }
 }
@@ -190,7 +190,7 @@ private fun makeColumnHeader(loc: Locale): Component {
   c.gridwidth = 3 // use 3 columns to display the name of the month
   c.gridx = 0
   while (c.gridx < CalendarViewListModel.WEEK_VIEW - c.gridwidth + 1) {
-    val date = weekList.model.getElementAt(c.gridx * DayOfWeek.values().size).date
+    val date = weekList.model.getElementAt(c.gridx * DayOfWeek.entries.size).date
     val isSimplyFirstWeekOfMonth = date.month != date.minusWeeks(1).month
     if (isSimplyFirstWeekOfMonth) {
       val title = date.month.getDisplayName(TextStyle.SHORT, loc)
@@ -216,8 +216,8 @@ private class CalendarViewListModel(date: LocalDate) : AbstractListModel<Contrib
   init {
     val dow = date[WeekFields.of(Locale.getDefault()).dayOfWeek()]
     this.startDate = date.minusWeeks((WEEK_VIEW - 1).toLong()).minusDays((dow - 1).toLong())
-    this.displayDays = DayOfWeek.values().size * (WEEK_VIEW - 1) + dow
-    for (i in 0 until displayDays) {
+    this.displayDays = DayOfWeek.entries.size * (WEEK_VIEW - 1) + dow
+    for (i in 0..<displayDays) {
       contributionActivity[startDate.plusDays(i.toLong())] = (0..4).random()
     }
   }

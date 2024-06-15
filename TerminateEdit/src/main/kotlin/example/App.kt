@@ -76,7 +76,7 @@ fun makeUI(): Component {
   }
   table.tableHeader.addMouseListener(ml)
 
-  val comboBox = JComboBox(AutoResizeMode.values())
+  val comboBox = JComboBox(AutoResizeMode.entries.toTypedArray())
   comboBox.addItemListener { e ->
     val item = e.item
     if (e.stateChange == ItemEvent.SELECTED && item is AutoResizeMode) {

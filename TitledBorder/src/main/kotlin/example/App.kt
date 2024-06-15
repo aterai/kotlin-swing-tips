@@ -10,7 +10,7 @@ fun makeUI(): Component {
   val panel = JPanel()
   panel.border = border
 
-  val positionChoices = JComboBox(VerticalOrientation.values())
+  val positionChoices = JComboBox(VerticalOrientation.entries.toTypedArray())
   positionChoices.addItemListener { e ->
     val item = e.item
     if (e.stateChange == ItemEvent.SELECTED && item is VerticalOrientation) {
@@ -19,7 +19,7 @@ fun makeUI(): Component {
     }
   }
 
-  val justificationChoices = JComboBox(Justification.values())
+  val justificationChoices = JComboBox(Justification.entries.toTypedArray())
   justificationChoices.addItemListener { e ->
     val item = e.item
     if (e.stateChange == ItemEvent.SELECTED && item is Justification) {

@@ -35,7 +35,7 @@ fun makeUI(): Component {
   digitalClock.defaultCloseOperation = WindowConstants.HIDE_ON_CLOSE
   digitalClock.pack()
   digitalClock.setLocationRelativeTo(null)
-  val combo = object : JComboBox<TexturePaints>(TexturePaints.values()) {
+  val combo = object : JComboBox<TexturePaints>(TexturePaints.entries.toTypedArray()) {
     override fun getPreferredSize(): Dimension {
       val d = super.getPreferredSize()
       d.width = 150.coerceAtLeast(d.width)

@@ -16,7 +16,7 @@ fun makeUI(): Component {
   val font = textField2.font
   textField2.font = font.deriveFont(16f)
 
-  val comboBox = JComboBox(UnderlineStyle.values())
+  val comboBox = JComboBox(UnderlineStyle.entries.toTypedArray())
   comboBox.addItemListener { e ->
     val item = e.item
     if (e.stateChange == ItemEvent.SELECTED && item is UnderlineStyle) {
