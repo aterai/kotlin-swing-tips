@@ -31,7 +31,7 @@ fun makeUI(): Component {
   }
 }
 
-private class FishEyeRowContext(
+private data class FishEyeRowContext(
   val height: Int,
   val font: Font,
   val color: Color,
@@ -40,8 +40,7 @@ private class FishEyeRowContext(
 private class FishEyeTable(m: TableModel) : JTable(m) {
   private val fishEyeRowList: List<FishEyeRowContext>
   private val minFont: Font
-
-  @Transient private var handler: FishEyeTableHandler? = null
+  private var handler: FishEyeTableHandler? = null
 
   init {
     val font = font
