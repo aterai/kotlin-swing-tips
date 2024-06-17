@@ -28,11 +28,10 @@ fun makeUI(): Component {
       column: Int,
     ) = false
   }
-  for (v in PaperSize.values()) {
-    model.addRow(arrayOf(v.series, v.width, v.height))
+  PaperSize.entries.forEach {
+    model.addRow(arrayOf(it.series, it.width, it.height))
   }
-
-  val combo = DropdownTableComboBox(PaperSize.values(), model)
+  val combo = DropdownTableComboBox(PaperSize.entries.toTypedArray(), model)
   combo.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
       val rowData = combo.getItemAt(combo.selectedIndex)

@@ -15,7 +15,7 @@ fun makeUI(): Component {
       tabs1.tabPlacement = TabPlacement.valueOf(bg1.selection.actionCommand).placement
     }
   }
-  TabPlacement.values().forEach { tp ->
+  TabPlacement.entries.forEach { tp ->
     val item = JRadioButtonMenuItem(tp.name, tp == TabPlacement.TOP).also {
       it.addItemListener(handler1)
       it.actionCommand = tp.name
@@ -35,7 +35,7 @@ fun makeUI(): Component {
     }
   }
   val box = Box.createHorizontalBox()
-  TabPlacement.values().forEach { tp ->
+  TabPlacement.entries.forEach { tp ->
     val radio = JRadioButton(tp.name, tp == TabPlacement.TOP).also {
       it.addItemListener(handler2)
       it.actionCommand = tp.name
@@ -45,7 +45,7 @@ fun makeUI(): Component {
   }
 
   val tabs3 = makeTabbedPane()
-  val combo = JComboBox(TabPlacement.values())
+  val combo = JComboBox(TabPlacement.entries.toTypedArray())
   combo.addItemListener { e ->
     (e.item as? TabPlacement)?.takeIf { e.stateChange == ItemEvent.SELECTED }?.also {
       tabs3.tabPlacement = it.placement
@@ -53,7 +53,7 @@ fun makeUI(): Component {
   }
 
   val tabs4 = makeTabbedPane()
-  val model4 = SpinnerListModel(TabPlacement.values())
+  val model4 = SpinnerListModel(TabPlacement.entries.toTypedArray())
   val spinner = makeSpinner(model4)
   spinner.addChangeListener {
     (model4.value as? TabPlacement)?.also {

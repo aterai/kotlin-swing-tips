@@ -179,8 +179,8 @@ private class DefaultResizableBorder : ResizableBorder, SwingConstants {
     g.drawRect(x + SIZE / 2, y + SIZE / 2, w - SIZE, h - SIZE)
     val rect = Rectangle(SIZE, SIZE)
     val r = Rectangle(x, y, w, h)
-    for (loc in Locations.values()) {
-      rect.location = loc.getPoint(r)
+    Locations.entries.forEach {
+      rect.location = it.getPoint(r)
       g.color = Color.WHITE
       g.fillRect(rect.x, rect.y, rect.width - 1, rect.height - 1)
       g.color = Color.BLACK
@@ -201,10 +201,10 @@ private class DefaultResizableBorder : ResizableBorder, SwingConstants {
     val rect = Rectangle(SIZE, SIZE)
     val r = Rectangle(0, 0, w, h)
     var cursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR)
-    for (loc in Locations.values()) {
-      rect.location = loc.getPoint(r)
+    Locations.entries.forEach {
+      rect.location = it.getPoint(r)
       if (rect.contains(pt)) {
-        cursor = loc.cursor
+        cursor = it.cursor
       }
     }
     return cursor

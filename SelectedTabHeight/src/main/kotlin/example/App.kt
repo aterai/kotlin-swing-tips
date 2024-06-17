@@ -23,7 +23,7 @@ fun makeUI(): Component {
   tabbedPane.addTab("22222232", JScrollPane(JTree()))
   tabbedPane.addTab("3333333333", JSplitPane())
 
-  val comboBox = JComboBox(TabPlacements.values())
+  val comboBox = JComboBox(TabPlacements.entries.toTypedArray())
   comboBox.addItemListener { e ->
     val item = e.item
     if (e.stateChange == ItemEvent.SELECTED && item is TabPlacements) {

@@ -21,8 +21,8 @@ private var fax = 0.0
 private var fay = 0.0
 
 private var worker: SwingWorker<String, Rectangle>? = null
-private val distributionsCmb = JComboBox(GenerateInputs.values())
-private val algorithmsCmb = JComboBox(SortAlgorithms.values())
+private val distributionsCmb = JComboBox(GenerateInputs.entries.toTypedArray())
+private val algorithmsCmb = JComboBox(SortAlgorithms.entries.toTypedArray())
 private val model = SpinnerNumberModel(number, MIN_NUM, MAX_NUM, 10)
 private val spinner = JSpinner(model)
 private val startButton = JButton("Start")

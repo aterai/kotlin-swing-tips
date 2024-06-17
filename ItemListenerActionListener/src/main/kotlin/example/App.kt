@@ -22,7 +22,7 @@ fun makeUI(): Component {
 }
 
 private fun makeComboBox(textArea: JTextArea): Component {
-  val combo = JComboBox(DayOfWeek.values())
+  val combo = JComboBox(DayOfWeek.entries.toTypedArray())
   combo.addItemListener { e ->
     val c = e.itemSelectable
     val dow = (e.item as? DayOfWeek)?.toString()
@@ -63,7 +63,7 @@ private fun makeCheckBoxes(textArea: JTextArea): Component {
 
   val list = mutableListOf<AbstractButton>()
   val p = Box.createHorizontalBox()
-  DayOfWeek.values().map { JCheckBox(it.toString()) }.forEach {
+  DayOfWeek.entries.map { JCheckBox(it.toString()) }.forEach {
     list.add(it)
     it.addItemListener(il)
     it.addActionListener(al)
@@ -98,7 +98,7 @@ private fun makeRadioButtons(textArea: JTextArea): Component {
   }
 
   val p = Box.createHorizontalBox()
-  DayOfWeek.values().map { JRadioButton(it.toString()) }.forEach {
+  DayOfWeek.entries.map { JRadioButton(it.toString()) }.forEach {
     it.addItemListener(il)
     it.addActionListener(al)
     p.add(it)

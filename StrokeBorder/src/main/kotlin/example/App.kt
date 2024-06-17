@@ -3,8 +3,8 @@ package example
 import java.awt.*
 import javax.swing.*
 
-private val joinCombo = JComboBox(JoinStyle.values())
-private val endcapCombo = JComboBox(EndCapStyle.values())
+private val joinCombo = JComboBox(JoinStyle.entries.toTypedArray())
+private val endcapCombo = JComboBox(EndCapStyle.entries.toTypedArray())
 private val field = JTextField("10, 20")
 private val label = JLabel()
 private val button = JButton("Change")

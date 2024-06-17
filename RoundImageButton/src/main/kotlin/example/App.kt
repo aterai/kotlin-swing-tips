@@ -37,7 +37,7 @@ fun makeUI(): Component {
   val p = JPanel()
   p.add(check)
 
-  val alignmentsChoices = JComboBox(ButtonAlignments.values())
+  val alignmentsChoices = JComboBox(ButtonAlignments.entries.toTypedArray())
   alignmentsChoices.addItemListener { e ->
     val item = e.item
     if (e.stateChange == ItemEvent.SELECTED && item is ButtonAlignments) {

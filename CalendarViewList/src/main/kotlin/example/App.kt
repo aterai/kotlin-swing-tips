@@ -37,8 +37,8 @@ fun makeUI(): Component {
   val l = Locale.getDefault()
   val weekModel = DefaultListModel<DayOfWeek>()
   val firstDayOfWeek = WeekFields.of(l).firstDayOfWeek
-  for (i in DayOfWeek.values().indices) {
-    weekModel.add(i, firstDayOfWeek.plus(i.toLong()))
+  DayOfWeek.entries.forEachIndexed { idx, _ ->
+    weekModel.add(idx, firstDayOfWeek.plus(idx.toLong()))
   }
   val header = object : JList<DayOfWeek>(weekModel) {
     override fun updateUI() {
@@ -142,7 +142,7 @@ private fun installActions() {
   val a3 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val index = monthList.leadSelectionIndex
-      val weekLength = DayOfWeek.values().size // 7
+      val weekLength = DayOfWeek.entries.size // 7
       if (index < weekLength) {
         val d = monthList.model.getElementAt(index).minusDays(weekLength.toLong())
         updateMonthView(currentLocalDate.minusMonths(1))
@@ -158,7 +158,7 @@ private fun installActions() {
   val a4 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val index = monthList.leadSelectionIndex
-      val weekLength = DayOfWeek.values().size // 7
+      val weekLength = DayOfWeek.entries.size // 7
       if (index > monthList.model.size - weekLength) {
         val d = monthList.model.getElementAt(index).plusDays(weekLength.toLong())
         updateMonthView(currentLocalDate.plusMonths(1))
@@ -227,11 +227,11 @@ private class CalendarViewListModel(date: LocalDate) : AbstractListModel<LocalDa
 
   init {
     val firstDayOfMonth = YearMonth.from(date).atDay(1)
-    val v = firstDayOfMonth.get(weekFields.dayOfWeek()) - 1
+    val v = firstDayOfMonth[weekFields.dayOfWeek()] - 1
     startDate = firstDayOfMonth.minusDays(v.toLong())
   }
 
-  override fun getSize() = DayOfWeek.values().size * ROW_COUNT
+  override fun getSize() = DayOfWeek.entries.size * ROW_COUNT
 
   override fun getElementAt(index: Int): LocalDate = startDate.plusDays(index.toLong())
 

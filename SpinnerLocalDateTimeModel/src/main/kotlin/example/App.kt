@@ -167,7 +167,7 @@ private class LocalDateTimeEditor(
       return runCatching {
         val ta = dateTimeFormatter.parse(text)
         var value = m.localDateTime
-        for (field in ChronoField.values()) {
+        for (field in ChronoField.entries) {
           if (field.isSupportedBy(value) && ta.isSupported(field)) {
             value = field.adjustInto(value, ta.getLong(field))
           }

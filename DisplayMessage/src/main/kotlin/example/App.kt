@@ -26,13 +26,16 @@ fun makeUI(): Component {
 
   val path = "example/16x16.png"
   val cl = Thread.currentThread().contextClassLoader
-  val image = cl.getResource(path)?.openStream()?.use(ImageIO::read) ?: makeDefaultTrayImage()
+  val image = cl.getResource(path)
+    ?.openStream()
+    ?.use(ImageIO::read)
+    ?: makeDefaultTrayImage()
   runCatching {
     SystemTray.getSystemTray().add(TrayIcon(image, "TRAY", popup))
   }
 
   // ERROR, WARNING, INFO, NONE
-  val messageType = JComboBox(TrayIcon.MessageType.values())
+  val messageType = JComboBox(TrayIcon.MessageType.entries.toTypedArray())
   val messageButton = JButton("TrayIcon#displayMessage()")
   messageButton.addActionListener {
     val icons = SystemTray.getSystemTray().trayIcons

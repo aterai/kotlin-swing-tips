@@ -66,7 +66,7 @@ private fun makePopupMenu(
   types: EnumSet<Type>,
 ): JPopupMenu {
   val popup = JPopupMenu()
-  Corner.values().forEach {
+  Corner.entries.forEach {
     val check = JCheckBoxMenuItem(it.name, true)
     check.addActionListener { e ->
       if ((e.source as? AbstractButton)?.isSelected == true) {
@@ -79,7 +79,7 @@ private fun makePopupMenu(
     popup.add(check)
   }
   popup.addSeparator()
-  Type.values().forEach {
+  Type.entries.forEach {
     val check = JCheckBoxMenuItem(it.name, true)
     check.addActionListener { e ->
       if ((e.source as? AbstractButton)?.isSelected == true) {

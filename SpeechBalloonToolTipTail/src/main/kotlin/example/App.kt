@@ -22,7 +22,7 @@ fun makeUI(): Component {
       tabbedPane.tabPlacement = tp.placement
     }
   }
-  TabPlacement.values().forEach {
+  TabPlacement.entries.forEach {
     val name = it.name
     val selected = it == TabPlacement.TOP
     val item = JRadioButtonMenuItem(name, selected)

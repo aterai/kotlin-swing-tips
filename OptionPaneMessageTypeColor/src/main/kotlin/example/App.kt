@@ -6,9 +6,7 @@ import javax.swing.*
 fun makeUI(): Component {
   val p = JPanel()
   p.border = BorderFactory.createTitledBorder("JOptionPane")
-  for (type in MessageType.values()) {
-    p.add(makeButton(p, type))
-  }
+  MessageType.entries.forEach { p.add(makeButton(p, it)) }
   return JPanel(BorderLayout()).also {
     it.add(p)
     it.preferredSize = Dimension(320, 240)

@@ -122,12 +122,12 @@ fun makeUI(): Component {
     (c as? JLabel)?.text = value.javaClass.name
     c
   }
-  componentChoices.addItemListener {
-    if (it.stateChange == ItemEvent.SELECTED) {
+  componentChoices.addItemListener { e ->
+    if (e.stateChange == ItemEvent.SELECTED) {
       model.rowCount = 0
       val c = componentChoices.getItemAt(componentChoices.selectedIndex)
-      for (f in FocusType.values()) {
-        loadBindingMap(f, c.getInputMap(f.id), c.actionMap)
+      FocusType.entries.forEach {
+        loadBindingMap(it, c.getInputMap(it.id), c.actionMap)
       }
     }
   }
