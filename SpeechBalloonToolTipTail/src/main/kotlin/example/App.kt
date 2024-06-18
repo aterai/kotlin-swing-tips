@@ -43,7 +43,7 @@ fun makeUI(): Component {
 }
 
 private fun makeTabbedPane(): JTabbedPane {
-  val tabs = object : JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT) {
+  val tabs = object : JTabbedPane(TOP, SCROLL_TAB_LAYOUT) {
     private var tip: BalloonToolTip? = null
     private val label = JLabel(" ", CENTER)
 
