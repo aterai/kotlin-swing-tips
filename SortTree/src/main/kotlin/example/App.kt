@@ -83,7 +83,7 @@ private object TreeUtils {
 
   fun sortTree1(root: DefaultMutableTreeNode) {
     val n = root.childCount
-    for (i in 0 until n - 1) {
+    for (i in 0..<n - 1) {
       for (j in n - 1 downTo i + 1) {
         val curNode = root.getChildAt(j) as? DefaultMutableTreeNode
         val prevNode = root.getChildAt(j - 1) as? DefaultMutableTreeNode
@@ -101,9 +101,9 @@ private object TreeUtils {
 
   private fun sort2(parent: DefaultMutableTreeNode) {
     val n = parent.childCount
-    for (i in 0 until n - 1) {
+    for (i in 0..<n - 1) {
       var min = i
-      for (j in i + 1 until n) {
+      for (j in i + 1..<n) {
         val a = parent.getChildAt(min) as? DefaultMutableTreeNode
         val b = parent.getChildAt(j) as? DefaultMutableTreeNode
         if (tnc.compare(a, b) > 0) {

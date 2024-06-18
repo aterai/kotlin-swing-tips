@@ -28,7 +28,7 @@ fun makeUI(): Component {
   tabbedPane.addTab("JPanel", JLabel("JPanel"))
   tabbedPane.addTab("JTree", JScrollPane(JTree()))
   tabbedPane.addTab("JTextArea", JScrollPane(JTextArea("JTextArea")))
-  for (i in 0 until 20) {
+  for (i in 0..<20) {
     val title = "title$i"
     tabbedPane.addTab(title, JScrollPane(JLabel(title)))
   }

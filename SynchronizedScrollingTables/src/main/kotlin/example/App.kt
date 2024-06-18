@@ -54,7 +54,7 @@ fun makeUI(): Component {
   val button = JButton("add")
   button.addActionListener {
     table.rowSorter.sortKeys = null
-    for (i in 0 until 100) {
+    for (i in 0..<100) {
       model.addRow(arrayOf(i, i + 1, "A$i", "B$i"))
     }
   }

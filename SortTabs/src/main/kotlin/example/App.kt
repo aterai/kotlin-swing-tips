@@ -139,7 +139,7 @@ class TabbedPanePopupMenu : JPopupMenu() {
     sortTabs = add("Sort")
     sortTabs.addActionListener {
       (invoker as? JTabbedPane)?.also { tabs ->
-        val list = (0 until tabs.tabCount)
+        val list = (0..<tabs.tabCount)
           .map { ComparableTab(tabs.getTitleAt(it), tabs.getComponentAt(it)) }
           .sortedWith(compareBy(ComparableTab::title))
         tabs.removeAll()

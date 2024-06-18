@@ -34,7 +34,7 @@ fun makeUI(): Component {
   val table = object : JTable(model) {
     override fun getPreferredScrollableViewportSize() = super.getPreferredSize()
   }
-  for (i in 0 until table.rowCount) {
+  for (i in 0..<table.rowCount) {
     val a = if ((i + 1) % 3 == 0) BW2 else BW1
     table.setRowHeight(i, CELL_SIZE + a)
   }
@@ -78,7 +78,7 @@ fun makeUI(): Component {
 
   val m = table.columnModel
   m.selectionModel.selectionMode = ListSelectionModel.SINGLE_SELECTION
-  for (i in 0 until m.columnCount) {
+  for (i in 0..<m.columnCount) {
     val col = m.getColumn(i)
     val a = if ((i + 1) % 3 == 0) BW2 else BW1
     col.preferredWidth = CELL_SIZE + a

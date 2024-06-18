@@ -83,8 +83,8 @@ class DefaultTableModelPersistenceDelegate : DefaultPersistenceDelegate() {
   ) {
     super.initialize(type, oldInstance, newInstance, encoder)
     val m = oldInstance as? DefaultTableModel ?: return
-    for (row in 0 until m.rowCount) {
-      for (col in 0 until m.columnCount) {
+    for (row in 0..<m.rowCount) {
+      for (col in 0..<m.columnCount) {
         val o = arrayOf(m.getValueAt(row, col), row, col)
         encoder.writeStatement(Statement(oldInstance, "setValueAt", o))
       }

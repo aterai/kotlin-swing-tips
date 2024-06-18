@@ -85,7 +85,7 @@ fun makeUI(): Component {
 }
 
 fun drawAllOval(g: Graphics) {
-  for (i in 0 until number) {
+  for (i in 0..<number) {
     val px = (MIN_X + fax * i).toInt()
     val py = MAX_Y - (fay * array[i]).toInt()
     g.color = if (i % 5 == 0) Color.RED else DRAW_COLOR
@@ -162,7 +162,7 @@ private enum class GenerateInputs {
       array: MutableList<Double>,
       n: Int,
     ) {
-      for (i in 0 until n) {
+      for (i in 0..<n) {
         array.add(Math.random())
       }
     }
@@ -172,7 +172,7 @@ private enum class GenerateInputs {
       array: MutableList<Double>,
       n: Int,
     ) {
-      for (i in 0 until n) {
+      for (i in 0..<n) {
         array.add(i / n.toDouble())
       }
     }
@@ -182,7 +182,7 @@ private enum class GenerateInputs {
       array: MutableList<Double>,
       n: Int,
     ) {
-      for (i in 0 until n) {
+      for (i in 0..<n) {
         array.add(1.0 - i / n.toDouble())
       }
     }
@@ -250,7 +250,7 @@ private open class SortingTask(
   // Sorting Algorithms
   @Throws(InterruptedException::class)
   private fun isort(n: Int) {
-    for (i in 1 until n) {
+    for (i in 1..<n) {
       var j = i
       while (j > 0 && array[j - 1] > array[j]) {
         swap(j - 1, j)
@@ -261,8 +261,8 @@ private open class SortingTask(
 
   @Throws(InterruptedException::class)
   private fun ssort(n: Int) {
-    for (i in 0 until n - 1) {
-      for (j in i until n) {
+    for (i in 0..<n - 1) {
+      for (j in i..<n) {
         if (array[j] < array[i]) {
           swap(i, j)
         }

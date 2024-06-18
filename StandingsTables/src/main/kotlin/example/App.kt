@@ -68,7 +68,7 @@ private fun initTableHeader(table: JTable) {
   val header = table.tableHeader
   (header.defaultRenderer as JLabel).setHorizontalAlignment(SwingConstants.CENTER)
   val columnModel = table.columnModel
-  for (i in 0 until columnModel.columnCount) {
+  for (i in 0..<columnModel.columnCount) {
     if (i != 1) {
       columnModel.getColumn(i).setMaxWidth(26)
     }

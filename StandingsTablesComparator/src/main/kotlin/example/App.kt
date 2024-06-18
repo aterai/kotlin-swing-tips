@@ -125,7 +125,7 @@ private fun initTableHeader(table: JTable) {
   val header = table.tableHeader
   (header.defaultRenderer as JLabel).setHorizontalAlignment(SwingConstants.CENTER)
   val columnModel = table.columnModel
-  for (i in 0 until columnModel.columnCount) {
+  for (i in 0..<columnModel.columnCount) {
     val isNotTeam = i != 1
     if (isNotTeam) {
       columnModel.getColumn(i).setMaxWidth(26)

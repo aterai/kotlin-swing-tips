@@ -8,7 +8,7 @@ import javax.swing.*
 
 fun makeUI(): Component {
   val tabs = JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT)
-  for (i in 0 until 20) {
+  for (i in 0..<20) {
     val title = "title$i"
     tabs.addTab(title, JScrollPane(JTextArea(title)))
   }
