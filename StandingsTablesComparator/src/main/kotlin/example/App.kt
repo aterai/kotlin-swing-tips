@@ -50,10 +50,9 @@ private fun makeRenderer(): DefaultTableCellRenderer {
         column,
       )
       if (c is JLabel && value is RowData) {
-        val l = c
         val col = table.convertColumnIndexToModel(column)
-        l.setHorizontalAlignment(if (col == 1) LEADING else CENTER)
-        l.setText(getColumnText(value, col))
+        c.setHorizontalAlignment(if (col == 1) LEADING else CENTER)
+        c.setText(getColumnText(value, col))
       }
       return c
     }
