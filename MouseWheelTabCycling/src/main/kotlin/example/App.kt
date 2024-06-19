@@ -69,7 +69,7 @@ private class TabWheelHandler : MouseWheelListener {
     }
   }
 
-  private fun getCommand(dir: Boolean) = if (check.isSelected()) {
+  private fun getCommand(dir: Boolean) = if (check.isSelected) {
     if (dir) "scrollTabsForwardAction" else "scrollTabsBackwardAction"
   } else {
     if (dir) "navigateNext" else "navigatePrevious"
