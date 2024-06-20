@@ -325,10 +325,10 @@ private object GeomUtils {
           coords[5],
         )
 
-        PathIterator.SEG_CLOSE -> {
-          path.closePath()
-          list.add(Area(path))
-          path.reset()
+        PathIterator.SEG_CLOSE -> path.also {
+          it.closePath()
+          list.add(Area(it))
+          it.reset()
         }
       }
       pi.next()
