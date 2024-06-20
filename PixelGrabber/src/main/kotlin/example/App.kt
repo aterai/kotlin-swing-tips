@@ -108,8 +108,8 @@ private fun makeRoundedImageProducer(
 private fun roundTopCorners(pix: IntArray, w: Int) {
   val area = makeNorthWestCorner()
   val r = area.bounds
-  for (y in 0 until r.height) {
-    for (x in 0 until r.width) {
+  for (y in 0..<r.height) {
+    for (x in 0..<r.width) {
       if (area.contains(Point(x, y))) {
         pix[x + y * w] = 0x0
       }
@@ -118,8 +118,8 @@ private fun roundTopCorners(pix: IntArray, w: Int) {
   val at = AffineTransform.getScaleInstance(-1.0, 1.0)
   at.translate(-w.toDouble(), 0.0)
   val s2 = at.createTransformedShape(area) // NE
-  for (y in 0 until r.height) {
-    for (x in w - r.width until w) {
+  for (y in 0..<r.height) {
+    for (x in w - r.width..<w) {
       if (s2.contains(Point(x, y))) {
         pix[x + y * w] = 0x0
       }

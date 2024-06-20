@@ -14,7 +14,7 @@ private val outer = SpinnerNumberModel(40, 10, 1000, 1)
 private val inner = SpinnerNumberModel(30, 10, 1000, 1)
 private val vcModel = SpinnerNumberModel(20, 3, 100, 1)
 private val styleField = JTextField("stroke:none; fill:pink")
-private val check = JCheckBox("Antialias", true)
+private val check = JCheckBox("Antialiasing", true)
 private val label = JLabel()
 private val textArea = JTextArea()
 
@@ -86,9 +86,9 @@ private fun initStar() {
   val r1 = outer.number.toInt()
   val r2 = inner.number.toInt()
   val vc = vcModel.number.toInt()
-  val antialias = check.isSelected
+  val antialiasing = check.isSelected
   val star = SvgUtils.makeStar(r1, r2, vc)
-  label.icon = StarIcon(star, antialias)
+  label.icon = StarIcon(star, antialiasing)
   val style = styleField.text.trim()
   val min = r1.coerceAtMost(r2)
   val max = r1.coerceAtLeast(r2)
@@ -151,7 +151,7 @@ private object SvgUtils {
     val add = PI / vc
     val p: Path2D = Path2D.Double()
     p.moveTo(or, 0.0)
-    for (i in 0 until vc * 2 - 1) {
+    for (i in 0..<vc * 2 - 1) {
       agl += add
       val r = if (i % 2 == 0) ir else or
       p.lineTo(r * cos(agl), r * sin(agl))
@@ -162,7 +162,7 @@ private object SvgUtils {
   }
 }
 
-private class StarIcon(private val star: Shape, private val antialias: Boolean) : Icon {
+private class StarIcon(private val star: Shape, private val antialiasing: Boolean) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,
@@ -172,7 +172,7 @@ private class StarIcon(private val star: Shape, private val antialias: Boolean) 
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = Color.PINK
-    if (antialias) {
+    if (antialiasing) {
       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     }
     g2.fill(star)

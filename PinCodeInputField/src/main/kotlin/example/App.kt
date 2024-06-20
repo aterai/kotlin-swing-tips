@@ -117,7 +117,7 @@ private class PasswordView2(elem: Element) : PasswordView(elem) {
       val g2 = g as? Graphics2D ?: return 0
       val echoChar = c.echoChar
       val n = p1 - p0
-      for (i in 0 until n) {
+      for (i in 0..<n) {
         j = if (i == n - 1) {
           drawLastChar(g2, j, y, i)
         } else {

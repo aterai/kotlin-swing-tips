@@ -12,7 +12,7 @@ fun makeUI(): Component {
 
   val tabs2 = makeTabbedPane()
   tabs2.isEnabled = false
-  for (i in 0 until tabs2.tabCount) {
+  for (i in 0..<tabs2.tabCount) {
     tabs2.setTabComponentAt(i, JLabel(tabs2.getTitleAt(i)))
     tabs2.border = BorderFactory.createTitledBorder("setTabComponentAt(...)")
   }
@@ -44,7 +44,7 @@ private fun makeTabbedPane(): JTabbedPane {
       it.height = 70
     }
   }
-  for (i in 0 until 4) {
+  for (i in 0..<4) {
     val title = "Step$i"
     tabs.addTab(title, JTextField(title))
   }

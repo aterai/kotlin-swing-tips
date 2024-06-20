@@ -23,7 +23,7 @@ fun makeUI(): Component {
   runCatching {
     val highlighter = textArea.highlighter
     val root = textArea.document.defaultRootElement
-    for (i in 0 until maskRange) {
+    for (i in 0..<maskRange) {
       val elem = root.getElement(i)
       highlighter.addHighlight(elem.startOffset, elem.endOffset - 1, highlightPainter)
     }
@@ -34,7 +34,9 @@ fun makeUI(): Component {
   }
 }
 
-private class NonEditableLineDocumentFilter(private val maskRange: Int) : DocumentFilter() {
+private class NonEditableLineDocumentFilter(
+  private val maskRange: Int,
+) : DocumentFilter() {
   @Throws(BadLocationException::class)
   override fun insertString(
     fb: FilterBypass,

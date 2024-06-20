@@ -78,7 +78,7 @@ fun makeUI(): Component {
 //     val rowHeight = height / rowCount
 //     if (height != prevHeight && rowHeight > 0) {
 //       var remainder = height % rowCount
-//       for (i in 0 until rowCount) {
+//       for (i in 0..<rowCount) {
 //         val a = if (remainder > 0) if (i == rowCount - 1) remainder else 1 else 0
 //         table.setRowHeight(i, rowHeight + a)
 //         remainder--

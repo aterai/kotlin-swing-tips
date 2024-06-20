@@ -60,7 +60,7 @@ private class TabSelectionListener : ChangeListener {
       return
     }
     val idx = tabbedPane.selectedIndex
-    for (i in 0 until tabbedPane.tabCount) {
+    for (i in 0..<tabbedPane.tabCount) {
       val tab = tabbedPane.getTabComponentAt(i)
       if (tab is JComponent) {
         val color = when (i) {

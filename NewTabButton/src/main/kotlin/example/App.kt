@@ -189,7 +189,7 @@ private class TabLayout : LayoutManager, Serializable {
         c.setBounds(x, y, cw, h)
         x += cw
       }
-      // for (i in 0 until componentCount) {
+      // for (i in 0..<componentCount) {
       //   val cw = if (i == numCols) lastWidth else w + if (gap-- > 0) 1 else 0
       //   parent.getComponent(i).setBounds(x, y, cw, h)
       //   x += cw

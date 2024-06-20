@@ -162,7 +162,7 @@ private class FindNextAction(
     }
     var nextIndex = 0
     val size = rollOverPathLists.size
-    for (i in 0 until size) {
+    for (i in 0..<size) {
       if (rollOverPathLists[i] == selectedPath) {
         nextIndex = if (i + 1 < size) i + 1 else 0
         break
