@@ -28,7 +28,7 @@ fun makeUI(): Component {
 
     override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
       EventQueue.invokeLater {
-        if (MenuSelectionManager.defaultManager().selectedPath.size == 0) {
+        if (MenuSelectionManager.defaultManager().selectedPath.isEmpty()) {
           p.rootPane.jMenuBar = wrappingMenuBar
         }
       }
@@ -38,7 +38,7 @@ fun makeUI(): Component {
       EventQueue.invokeLater { p.rootPane.jMenuBar = wrappingMenuBar }
     }
   }
-  for (i in 0 until mainMenuBar.menuCount) {
+  for (i in 0..<mainMenuBar.menuCount) {
     val menu = mainMenuBar.getMenu(i)
     menu.addMouseListener(popupKeeper)
     menu.popupMenu.addPopupMenuListener(switchHandler)
