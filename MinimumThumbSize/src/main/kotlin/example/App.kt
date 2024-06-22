@@ -7,7 +7,7 @@ private const val LF = "\n"
 
 fun makeUI(): Component {
   val buf = StringBuilder()
-  for (i in 0 until 1000) {
+  for (i in 0..<1000) {
     buf.append(i).append(LF)
   }
   val s1 = JScrollPane(JTextArea(buf.toString()))

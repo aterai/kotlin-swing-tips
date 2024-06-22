@@ -55,7 +55,7 @@ class CustomPopupMenuUI : BasicPopupMenuUI() {
       g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ALPHA)
       g2.paint = Color.BLACK
       g2.translate(x, y)
-      for (i in 0 until OFF) {
+      for (i in 0..<OFF) {
         g2.fillRoundRect(OFF, OFF, w - OFF - OFF + i, h - OFF - OFF + i, ARC, ARC)
       }
       g2.dispose()

@@ -39,7 +39,7 @@ private fun makeTitledPanel(
 }
 
 private fun expandRow(tree: JTree): JTree {
-  for (i in 0 until tree.rowCount) {
+  for (i in 0..<tree.rowCount) {
     tree.expandRow(i)
   }
   return tree
@@ -166,7 +166,7 @@ private class CellTextArea2 : JTextArea() {
     val lineCount = root.elementCount // = root.getElementIndex(doc.getLength())
     var maxWidth = 10
     runCatching {
-      for (i in 0 until lineCount) {
+      for (i in 0..<lineCount) {
         val e = root.getElement(i)
         val rangeStart = e.startOffset
         val rangeEnd = e.endOffset

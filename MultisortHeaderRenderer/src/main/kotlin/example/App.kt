@@ -21,7 +21,7 @@ fun makeUI(): Component {
       super.updateUI()
       val r = MultiSortHeaderRenderer()
       val cm = getColumnModel()
-      for (i in 0 until cm.columnCount) {
+      for (i in 0..<cm.columnCount) {
         cm.getColumn(i).headerRenderer = r
       }
     }

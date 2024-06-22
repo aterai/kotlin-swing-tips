@@ -32,7 +32,7 @@ fun makeUI(): Component {
 
 private fun makeModel(): DefaultComboBoxModel<String> {
   val model = DefaultComboBoxModel<String>()
-  for (i in 0 until 100) {
+  for (i in 0..<100) {
     model.addElement("Item$i")
   }
   return model

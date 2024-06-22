@@ -97,8 +97,8 @@ private class MosaicImageFilter(private val blockSize: Int) : BufferedImageOp {
       var r = 0
       var g = 0
       var b = 0
-      for (by in 0 until h) {
-        for (bx in 0 until w) {
+      for (by in 0..<h) {
+        for (bx in 0..<w) {
           val argb = pixels[bx + by * w]
           r += argb shr 16 and 0xFF
           g += argb shr 8 and 0xFF
@@ -114,8 +114,8 @@ private class MosaicImageFilter(private val blockSize: Int) : BufferedImageOp {
 
     fun updatePixels(w: Int, h: Int, pixels: IntArray) {
       val rgb = getBlockRgb(w, h, pixels)
-      for (by in 0 until h) {
-        for (bx in 0 until w) {
+      for (by in 0..<h) {
+        for (bx in 0..<w) {
           val i = bx + by * w
           pixels[i] = pixels[i] and 0xFF_00_00_00.toInt() or rgb
         }

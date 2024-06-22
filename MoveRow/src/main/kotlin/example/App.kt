@@ -189,7 +189,7 @@ private class InitAction(str: String, private val table: JTable) : AbstractActio
     }
     val currentModel = RowDataModel()
     val dv = model.dataVector
-    for (i in 0 until row) {
+    for (i in 0..<row) {
       val v = dv[i] as? List<*> ?: continue
       currentModel.addRowData(makeRowData(v))
     }

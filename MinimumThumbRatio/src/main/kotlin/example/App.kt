@@ -10,7 +10,7 @@ private const val LF = "\n"
 fun makeUI(): Component {
   UIManager.put("ScrollBar.minimumThumbSize", Dimension(32, 32))
   val buf = StringBuilder()
-  for (i in 0 until 1000) {
+  for (i in 0..<1000) {
     buf.append(i).append(LF)
   }
   val txt = buf.toString()
