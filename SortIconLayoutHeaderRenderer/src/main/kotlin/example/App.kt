@@ -29,7 +29,7 @@ fun makeUI(): Component {
       cr.horizontalAlignment = SwingConstants.RIGHT
       val hr = SortIconLayoutHeaderRenderer(this)
       val cm = getColumnModel()
-      for (i in 1 until cm.columnCount) {
+      for (i in 1..<cm.columnCount) {
         val tc = cm.getColumn(i)
         tc.headerRenderer = hr
         tc.cellRenderer = cr
@@ -65,24 +65,13 @@ private class EmptyIcon : Icon {
   override fun getIconHeight() = height
 }
 
-private class SortIconLayoutHeaderRenderer(
-  private val component: Component,
-) : TableCellRenderer {
-  private val ascendingUri: URI?
-  private val descendingUri: URI?
-  private val naturalUri: URI?
-  private val ascendingIcon: Icon
-  private val descendingIcon: Icon
-  private val emptyIcon: EmptyIcon
-
-  init {
-    ascendingIcon = UIManager.getLookAndFeelDefaults().getIcon(ASCENDING)
-    ascendingUri = getIconUri(ascendingIcon, component)
-    descendingIcon = UIManager.getLookAndFeelDefaults().getIcon(DESCENDING)
-    descendingUri = getIconUri(descendingIcon, component)
-    emptyIcon = EmptyIcon()
-    naturalUri = getIconUri(emptyIcon, component)
-  }
+private class SortIconLayoutHeaderRenderer(component: Component) : TableCellRenderer {
+  private val ascendingIcon = UIManager.getLookAndFeelDefaults().getIcon(ASCENDING)
+  private val ascendingUri = getIconUri(ascendingIcon, component)
+  private val descendingIcon = UIManager.getLookAndFeelDefaults().getIcon(DESCENDING)
+  private val descendingUri = getIconUri(descendingIcon, component)
+  private val emptyIcon = EmptyIcon()
+  private val naturalUri = getIconUri(emptyIcon, component)
 
   override fun getTableCellRendererComponent(
     table: JTable,
@@ -128,7 +117,7 @@ private class SortIconLayoutHeaderRenderer(
       if (table != null && table.rowSorter != null) {
         val sortKeys = table.rowSorter.sortKeys
         val mi = table.convertColumnIndexToModel(column)
-        if (!sortKeys.isEmpty() && sortKeys[0].column == mi) {
+        if (sortKeys.isNotEmpty() && sortKeys[0].column == mi) {
           rv = sortKeys[0].sortOrder
         }
       }
