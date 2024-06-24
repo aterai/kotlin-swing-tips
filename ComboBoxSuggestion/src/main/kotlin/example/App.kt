@@ -72,7 +72,7 @@ private class ComboKeyHandler(private val comboBox: JComboBox<String>) : KeyAdap
   private var shouldHide = false
 
   init {
-    for (i in 0 until comboBox.model.size) {
+    for (i in 0..<comboBox.model.size) {
       list.add(comboBox.getItemAt(i))
     }
   }

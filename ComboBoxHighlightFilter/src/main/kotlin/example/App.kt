@@ -119,7 +119,7 @@ private class ComboKeyHandler(private val combo: JComboBox<String>) : KeyAdapter
   private var shouldHide = false
 
   init {
-    for (i in 0 until combo.model.size) {
+    for (i in 0..<combo.model.size) {
       list.add(combo.getItemAt(i))
     }
   }

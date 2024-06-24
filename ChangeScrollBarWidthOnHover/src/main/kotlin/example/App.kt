@@ -34,7 +34,7 @@ private fun makeScrollBarOnHoverScrollPane(): Component {
 
 private fun makeList(): Component {
   val m = DefaultListModel<String>()
-  for (i in 0 until 50) {
+  for (i in 0..<50) {
     m.addElement("%05d: %s".format(i, LocalDateTime.now(ZoneId.systemDefault())))
   }
   return JList(m)

@@ -32,7 +32,7 @@ fun makeUI(): Component {
   }
   tree.isEditable = true
   tree.border = BorderFactory.createEmptyBorder(4, 4, 4, 4)
-  for (i in 0 until tree.rowCount) {
+  for (i in 0..<tree.rowCount) {
     tree.expandRow(i)
   }
   return JPanel(BorderLayout()).also {

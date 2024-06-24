@@ -31,7 +31,7 @@ fun makeUI(): Component {
 
     private fun setColumnCellRenderer(renderer: TableCellRenderer?) {
       val cm = getColumnModel()
-      for (i in 0 until cm.columnCount) {
+      for (i in 0..<cm.columnCount) {
         val c = cm.getColumn(i)
         c.cellRenderer = renderer
         c.minWidth = 50
@@ -47,7 +47,7 @@ fun makeUI(): Component {
   table.intercellSpacing = Dimension(0, 1)
   table.rowHeight = 56
   val renderer = ColumnSpanningCellRenderer()
-  for (i in 0 until table.columnModel.columnCount) {
+  for (i in 0..<table.columnModel.columnCount) {
     table.columnModel.getColumn(i).also {
       it.cellRenderer = renderer
       it.minWidth = 50

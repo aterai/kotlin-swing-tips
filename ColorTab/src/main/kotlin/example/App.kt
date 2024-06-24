@@ -19,7 +19,7 @@ private class TabChangeListener : ChangeListener {
       return
     }
     val selectedIndex = tabbedPane.selectedIndex
-    for (i in 0 until tabbedPane.tabCount) {
+    for (i in 0..<tabbedPane.tabCount) {
       if (i == selectedIndex && tabbedPane.getTitleAt(selectedIndex).endsWith("1")) {
         tabbedPane.setForegroundAt(i, Color.GREEN)
       } else if (i == selectedIndex) {

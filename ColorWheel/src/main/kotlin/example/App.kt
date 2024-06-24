@@ -48,9 +48,9 @@ private class ColorWheel : JPanel() {
     val size = SIZE.toFloat()
     val radius = size / 2f
 
-    for (yi in 0 until SIZE) {
+    for (yi in 0..<SIZE) {
       val y = yi - size / 2.0
-      for (xi in 0 until SIZE) {
+      for (xi in 0..<SIZE) {
         val x = xi - size / 2.0
         var theta = atan2(y, x) - 3.0 * PI / 2.0
         if (theta < 0) {

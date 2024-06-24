@@ -89,7 +89,7 @@ private class ClearSelectionListener : MouseInputAdapter() {
     list: JList<*>,
     pt: Point,
   ): Boolean {
-    for (i in 0 until list.model.size) {
+    for (i in 0..<list.model.size) {
       if (list.getCellBounds(i, i).contains(pt)) {
         return true
       }

@@ -77,7 +77,7 @@ private fun makeTitledPanel(
 }
 
 private fun makeModel(start: Int) = DefaultComboBoxModel<String>().also {
-  for (i in start until start + 5) {
+  for (i in start..<start + 5) {
     it.addElement("item: $i")
   }
 }

@@ -41,7 +41,7 @@ fun makeUI(): Component {
     override fun updateUI() {
       super.updateUI()
       val r = ToolTipHeaderRenderer()
-      for (i in 0 until getColumnModel().columnCount) {
+      for (i in 0..<getColumnModel().columnCount) {
         getColumnModel().getColumn(i).headerRenderer = r
       }
     }

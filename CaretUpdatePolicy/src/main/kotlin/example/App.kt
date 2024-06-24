@@ -24,7 +24,7 @@ fun makeUI(): Component {
   p.add(makeTitledPanel("ALWAYS_UPDATE", JScrollPane(textArea1)))
   p.add(makeTitledPanel("NEVER_UPDATE", JScrollPane(textArea2)))
 
-  for (i in 0 until 10) {
+  for (i in 0..<10) {
     test(i.toString())
   }
   start.addActionListener { startTest() }

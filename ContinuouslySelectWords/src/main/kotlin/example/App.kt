@@ -97,7 +97,7 @@ private class SelectWordCaret : DefaultCaret() {
     val pos = getCaretPositionByLocation(c, e.point, biasRet)
     runCatching {
       when {
-        pos in p0 until p1 -> {
+        pos in p0..<p1 -> {
           dot = p0
           moveDot(p1, biasRet[0])
         }
@@ -123,7 +123,7 @@ private class SelectWordCaret : DefaultCaret() {
     val pos = getCaretPositionByLocation(c, e.point, biasRet)
     runCatching {
       when {
-        pos in p0 until p1 -> {
+        pos in p0..<p1 -> {
           dot = p0
           moveDot(p1, biasRet[0])
         }

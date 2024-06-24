@@ -122,7 +122,7 @@ private class AnalogClock : JPanel() {
     val at = AffineTransform.getRotateInstance(0.0)
     g2.stroke = BasicStroke(2f)
     g2.color = Color.WHITE
-    for (i in 0 until 60) {
+    for (i in 0..<60) {
       if (i % 5 == 0) {
         g2.draw(at.createTransformedShape(hourMarker))
       } else {

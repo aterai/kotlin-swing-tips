@@ -11,7 +11,7 @@ fun makeUI(): Component {
   table.autoCreateRowSorter = true
   val cm = table.columnModel
   val r = ColumnHeaderRenderer()
-  for (i in 0 until cm.columnCount) {
+  for (i in 0..<cm.columnCount) {
     cm.getColumn(i).headerRenderer = r
   }
   cm.selectionModel.addListSelectionListener { table.tableHeader.repaint() }

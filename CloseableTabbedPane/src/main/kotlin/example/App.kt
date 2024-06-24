@@ -125,7 +125,7 @@ private class CloseableTabbedPaneLayerUI : LayerUI<JTabbedPane>() {
   ) {
     super.paint(g, c)
     val tabbedPane = (c as? JLayer<*>)?.view as? JTabbedPane ?: return
-    for (i in 0 until tabbedPane.tabCount) {
+    for (i in 0..<tabbedPane.tabCount) {
       val r = getTabButtonRect(tabbedPane, i)
       button.model.isRollover = r.contains(pt)
       SwingUtilities.paintComponent(g, button, rubberStamp, r)

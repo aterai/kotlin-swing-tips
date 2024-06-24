@@ -18,7 +18,7 @@ fun makeUI(): Component {
       g2.paint = Color.RED
       var px = 0
       var py = 0
-      for (x in 0 until r.width) {
+      for (x in 0..<r.width) {
         val y = (x / a2).pow(2.0).toInt()
         g2.drawLine(px, py, x, y)
         px = x
