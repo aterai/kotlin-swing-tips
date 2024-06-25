@@ -98,17 +98,14 @@ private class TableRowTransferHandler : TransferHandler() {
 
   override fun importData(info: TransferSupport): Boolean {
     val target = info.component as? JTable
-    val model = target?.model as? DefaultTableModel
-    if (model == null) {
-      return false
-    }
+    val model = target?.model as? DefaultTableModel ?: return false
     val max = model.rowCount
     var index = if (info.isDrop) {
       (info.dropLocation as? JTable.DropLocation)?.row ?: -1
     } else {
       target.selectedRow
     }
-    index = if (index >= 0 && index < max) index else max
+    index = if (index in 0..<max) index else max
     addIndex = index
     val values = runCatching {
       info.transferable.getTransferData(FLAVOR) as? List<*>
