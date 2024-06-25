@@ -34,7 +34,7 @@ private fun makeTree(handler: TransferHandler): JTree {
     }
   }
   tree.actionMap.put(TransferHandler.getCutAction().getValue(Action.NAME), empty)
-  for (i in 0 until tree.rowCount) {
+  for (i in 0..<tree.rowCount) {
     tree.expandRow(i)
   }
   return tree

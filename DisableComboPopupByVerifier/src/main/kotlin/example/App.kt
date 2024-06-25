@@ -62,7 +62,7 @@ private fun makeTitledPanel(
 
 private fun makeComboBox(size: Int): JComboBox<String> {
   val model = DefaultComboBoxModel<String>()
-  for (i in 0 until size) {
+  for (i in 0..<size) {
     model.addElement("No.$i")
   }
   return JComboBox(model)

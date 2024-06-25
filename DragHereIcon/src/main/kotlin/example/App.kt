@@ -50,7 +50,7 @@ private class DragHereIcon : Icon {
     val n = SLIT_NUM + 1
     val v = ICON_WIDTH / n
     val m = n * v
-    for (i in 1 until n) {
+    for (i in 1..<n) {
       val a = i * v
       g2.drawLine(a, 0, a, m)
       g2.drawLine(0, a, m, a)

@@ -138,7 +138,7 @@ private class DnDTable(
     targetLine.setSize(lineWidth, lineHeight)
     targetIndex = -1
     val rowCount = rowCount
-    for (i in 0 until rowCount) {
+    for (i in 0..<rowCount) {
       rect.setLocation(0, cellHeight * i - cellHeight / 2)
       if (rect.contains(p)) {
         targetIndex = i

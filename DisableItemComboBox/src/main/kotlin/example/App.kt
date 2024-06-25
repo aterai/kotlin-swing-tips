@@ -67,7 +67,7 @@ private class DisableItemComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(mod
   }
   private val down = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      for (i in selectedIndex + 1 until getModel().size) {
+      for (i in selectedIndex + 1..<getModel().size) {
         if (isEnabledIndex(i)) {
           selectedIndex = i
           break

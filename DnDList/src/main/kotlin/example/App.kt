@@ -89,7 +89,7 @@ private class DnDList<E> : JList<E>(), DragGestureListener, Transferable {
     val modelSize = model.size
     targetIndex = -1
     targetLine.setSize(rect.width, lineHeight)
-    for (i in 0 until modelSize) {
+    for (i in 0..<modelSize) {
       rect.setLocation(0, cellHeight * i - cellHeight / 2)
       if (rect.contains(p)) {
         targetIndex = i

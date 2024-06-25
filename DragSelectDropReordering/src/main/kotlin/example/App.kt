@@ -281,7 +281,7 @@ private class ListItemTransferHandler : TransferHandler() {
       return false
     }
     val max = listModel.size
-    var index = dl.index.takeIf { it in 0 until max } ?: max
+    var index = dl.index.takeIf { it in 0..<max } ?: max
     addIndex = index
     val values = runCatching {
       info.transferable.getTransferData(FLAVOR) as? List<*>

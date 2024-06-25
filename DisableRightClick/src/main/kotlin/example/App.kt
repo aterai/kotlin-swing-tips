@@ -61,7 +61,7 @@ private fun makeTitledPanel(
 
 private fun makeComboBox(size: Int): JComboBox<String> {
   val model = DefaultComboBoxModel<String>()
-  for (i in 0 until size) {
+  for (i in 0..<size) {
     model.addElement("No.$i")
   }
   return JComboBox(model)
@@ -113,7 +113,7 @@ private class BasicComboPopup3(combo: JComboBox<Any>) : BasicComboPopup(combo) {
         var ev = e
         if (e.isControlDown) {
           // Fix for 4234053. Filter out the Control Key from the list.
-          // ie., don't allow CTRL key deselection.
+          // i.e., don't allow CTRL key deselection.
           ev = MouseEvent(
             e.component,
             e.id,

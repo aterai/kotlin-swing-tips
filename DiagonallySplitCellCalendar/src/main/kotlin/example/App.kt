@@ -20,7 +20,7 @@ private val monthTable = object : JTable() {
     val rowCount = model.rowCount
     val defaultRowHeight = height / rowCount
     var remainder = height % rowCount
-    for (i in 0 until rowCount) {
+    for (i in 0..<rowCount) {
       val a = 1.coerceAtMost(0.coerceAtLeast(remainder--))
       setRowHeight(i, defaultRowHeight + a)
     }

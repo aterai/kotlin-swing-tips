@@ -25,7 +25,7 @@ private val table = object : JTable(model) {
 private val scroll = JScrollPane(table)
 
 fun makeUI(): Component {
-  for (i in 0 until 100) {
+  for (i in 0..<100) {
     model.addRow(arrayOf("Name $i", i, false))
   }
   table.autoCreateRowSorter = true

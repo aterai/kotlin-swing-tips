@@ -83,7 +83,7 @@ private class DropShadowPopupMenu : JPopupMenu() {
         )
         g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f)
         g2.paint = Color.BLACK
-        for (i in 0 until OFFSET) {
+        for (i in 0..<OFFSET) {
           g2.fillRoundRect(
             OFFSET,
             OFFSET,

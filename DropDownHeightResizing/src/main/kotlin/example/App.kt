@@ -136,7 +136,7 @@ private class DotIcon : Icon {
     val gap = 4
     val start = iconWidth / 2 - (dots - 1) * 2
     val h = iconHeight / 2
-    for (i in 0 until dots) {
+    for (i in 0..<dots) {
       g2.fillRect(start + gap * i, h, 2, 2)
     }
     g2.dispose()

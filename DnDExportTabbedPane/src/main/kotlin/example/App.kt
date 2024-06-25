@@ -180,7 +180,7 @@ class DnDTabbedPane : JTabbedPane() {
   }
 
   fun tabDropLocationForPoint(p: Point): DropLocation {
-    for (i in 0 until tabCount) {
+    for (i in 0..<tabCount) {
       if (getBoundsAt(i).contains(p)) {
         return DropLocation(p, i)
       }

@@ -176,7 +176,7 @@ private class DnDTabbedPane : JTabbedPane() {
 
     val tabPt = SwingUtilities.convertPoint(glassPane, glassPt, this)
     val isHorizontal = isTopBottomTabPlacement(getTabPlacement())
-    for (i in 0 until count) {
+    for (i in 0..<count) {
       val r = getBoundsAt(i)
 
       // First half.

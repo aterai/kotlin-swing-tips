@@ -27,7 +27,7 @@ import javax.swing.tree.TreeNode
 fun makeUI(): Component {
   val tree = DnDTree()
   tree.model = makeModel()
-  for (i in 0 until tree.rowCount) {
+  for (i in 0..<tree.rowCount) {
     tree.expandRow(i)
   }
   return JPanel(BorderLayout()).also {

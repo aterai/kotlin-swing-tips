@@ -103,13 +103,13 @@ private class TableRowTransferHandler : TransferHandler() {
     val target = info.component as? JTable
     val model = target?.model as? DefaultTableModel ?: return false
     val max = model.rowCount
-    var index = target.selectedRow
-    if (info.isDrop) {
-      index = (info.dropLocation as? JTable.DropLocation)?.row ?: index
+    var index = if (info.isDrop) {
+      (info.dropLocation as? JTable.DropLocation)?.row ?: -1
+    } else {
+      target.selectedRow
     }
-    index = if (index in 0 until max) index else max
+    index = if (index in 0..<max) index else max
     addIndex = index
-
     val values = runCatching {
       info.transferable.getTransferData(FLAVOR) as? List<*>
     }.getOrNull().orEmpty()

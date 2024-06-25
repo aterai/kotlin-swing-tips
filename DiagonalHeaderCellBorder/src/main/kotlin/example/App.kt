@@ -27,7 +27,7 @@ fun makeUI(): Component {
       val cm = getColumnModel()
       cm.getColumn(0).headerRenderer = DiagonallySplitHeaderRenderer()
       cm.getColumn(0).preferredWidth = size * 5
-      for (i in 1 until cm.columnCount) {
+      for (i in 1..<cm.columnCount) {
         val tc = cm.getColumn(i)
         tc.headerRenderer = hr
         tc.preferredWidth = size

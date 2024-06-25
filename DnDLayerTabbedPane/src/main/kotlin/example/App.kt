@@ -41,7 +41,7 @@ fun makeUI(
     it.addTab("JTabbedPane 06", sub)
     it.addTab("Title 000000000000000007", JScrollPane(JTree()))
   }
-  for (i in 0 until tabbedPane.tabCount) {
+  for (i in 0..<tabbedPane.tabCount) {
     setTabComponent(tabbedPane, i)
   }
 
@@ -182,7 +182,7 @@ class DnDTabbedPane : JTabbedPane() {
   }
 
   fun tabDropLocationForPoint(p: Point): DropLocation {
-    for (i in 0 until tabCount) {
+    for (i in 0..<tabCount) {
       if (getBoundsAt(i).contains(p)) {
         return DropLocation(p, i)
       }

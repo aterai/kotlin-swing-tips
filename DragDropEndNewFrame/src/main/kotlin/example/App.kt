@@ -161,7 +161,7 @@ private class DnDTabbedPane : JTabbedPane() {
   fun getTargetTabIndex(glassPt: Point): Int {
     val tabPt = SwingUtilities.convertPoint(glassPane, glassPt, this)
     val d = if (isTopBottomTabPlacement(getTabPlacement())) Point(1, 0) else Point(0, 1)
-//    return (0 until getTabCount().taleIf { i ->
+//    return (0..<getTabCount().taleIf { i ->
 //      val r = getBoundsAt(i)
 //      r.translate(-r.width * d.x / 2, -r.height * d.y / 2)
 //      r.contains(tabPt)
@@ -171,7 +171,7 @@ private class DnDTabbedPane : JTabbedPane() {
 //      r.translate(r.width * d.x / 2, r.height * d.y / 2)
 //      if (r.contains(tabPt)) count else -1
 //    }
-    for (i in 0 until tabCount) {
+    for (i in 0..<tabCount) {
       val r = getBoundsAt(i)
       r.translate(-r.width * d.x / 2, -r.height * d.y / 2)
       if (r.contains(tabPt)) {

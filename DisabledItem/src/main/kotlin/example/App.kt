@@ -60,7 +60,7 @@ fun makeUI(): Component {
   val a1 = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val index = list.selectedIndex
-      for (i in index + 1 until list.model.size) {
+      for (i in index + 1..<list.model.size) {
         if (!disableIndexSet.contains(i)) {
           list.selectedIndex = i
           break
