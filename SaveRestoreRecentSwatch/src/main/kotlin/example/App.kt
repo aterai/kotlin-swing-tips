@@ -696,7 +696,7 @@ private class MainSwatchPanel : SwatchPanel() {
       0, 153, 102,
       0, 153, 153,
       0, 153, 153,
-      // eigth row
+      // eighth row
       51, 51, 51,
       0, 102, 102,
       0, 102, 102,
