@@ -88,8 +88,8 @@ private class DisableItemComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(mod
     setRenderer { list, value, index, isSelected, cellHasFocus ->
       val isEditable = isEnabledIndex(index)
       val selected = isSelected and isEditable
-      val hasFoucs = cellHasFocus and isEditable
-      r.getListCellRendererComponent(list, value, index, selected, hasFoucs).also {
+      val hasFocus = cellHasFocus and isEditable
+      r.getListCellRendererComponent(list, value, index, selected, hasFocus).also {
         it.isEnabled = isEditable
       }
     }
