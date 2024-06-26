@@ -66,7 +66,7 @@ fun makeUI(): Component {
 private fun init(text: JFormattedTextField) {
   val formatter = ValueFormatter()
   text.columns = 9
-  text.setFont(Font(Font.MONOSPACED, Font.PLAIN, text.getFont().getSize()))
+  text.setFont(Font(Font.MONOSPACED, Font.PLAIN, text.font.size))
   text.formatterFactory = DefaultFormatterFactory(formatter)
   text.horizontalAlignment = SwingConstants.RIGHT
   text.minimumSize = text.getPreferredSize()
@@ -128,15 +128,12 @@ private class ValueFormatter : AbstractFormatter(), FocusListener {
       }
     }
 
-    private fun isValidLength(len: Int) = 0 <= len && len <= 8
+    private fun isValidLength(len: Int) = len in 0..8
 
     private fun isValid(text: String): Boolean {
       val len = text.length
-      for (i in 0 until len) {
-        val ch = text[i]
-        if (ch.digitToIntOrNull(16) ?: -1 < 0) {
-          return false
-        }
+      for (i in 0..<len) {
+        text[i].digitToIntOrNull(16) ?: return false
       }
       return true
     }
