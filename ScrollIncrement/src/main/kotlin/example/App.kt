@@ -7,7 +7,7 @@ private const val LF = "\n"
 
 fun makeUI(): Component {
   val buf = StringBuilder()
-  for (i in 0 until 100) {
+  for (i in 0..<100) {
     buf.append(i).append(LF)
   }
 

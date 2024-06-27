@@ -35,7 +35,9 @@ private fun makePanel(box: JPanel): Component {
   return JScrollPane(box)
 }
 
-private class ScrollableWrapPanel(layout: LayoutManager) : JPanel(layout), Scrollable {
+private class ScrollableWrapPanel(
+  layout: LayoutManager,
+) : JPanel(layout), Scrollable {
   override fun getPreferredScrollableViewportSize(): Dimension? {
     val o = SwingUtilities.getUnwrappedParent(this)
     return (o as? JViewport)?.size ?: super.getPreferredSize()
@@ -73,7 +75,7 @@ private class ScrollableWrapLayout(
       width = target.parent.bounds.width
     }
     width -= insets.left + insets.right + fixedHorGap * 2
-    for (i in 0 until target.componentCount) {
+    for (i in 0..<target.componentCount) {
       val m = target.getComponent(i)
       if (m.isVisible) {
         val d = m.preferredSize

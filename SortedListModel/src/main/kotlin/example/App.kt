@@ -5,6 +5,7 @@ import java.awt.event.ItemEvent
 import java.awt.event.ItemListener
 import java.awt.event.MouseEvent
 import javax.swing.*
+import javax.swing.border.Border
 import javax.swing.event.MouseInputAdapter
 
 private val defaultModel = arrayOf(
@@ -244,7 +245,7 @@ private class ClearSelectionListener : MouseInputAdapter() {
       list: JList<E>,
       pt: Point,
     ): Boolean {
-      for (i in 0 until list.model.size) {
+      for (i in 0..<list.model.size) {
         if (list.getCellBounds(i, i).contains(pt)) {
           return true
         }

@@ -116,7 +116,7 @@ private object TextUtils {
         wordPosition = words.last() - 1
       }
       offs2 = lineStart + words.following(wordPosition) - seg.offset
-      for (i in offs until offs2) {
+      for (i in offs..<offs2) {
         val ch = seg[i - seg.offset]
         if (ch == '_' || ch == '-') {
           offs2 = i

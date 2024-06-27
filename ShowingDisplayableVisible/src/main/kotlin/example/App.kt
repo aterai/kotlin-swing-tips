@@ -48,7 +48,7 @@ fun makeUI(): Component {
 
   val panel = JPanel()
   panel.add(button)
-  for (i in 0 until 15) {
+  for (i in 0..<15) {
     panel.add(JLabel("<html>JLabel<br>&nbsp;idx:$i"))
   }
   tabs.addTab("Main", JScrollPane(panel))

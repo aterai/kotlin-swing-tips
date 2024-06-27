@@ -40,7 +40,7 @@ fun makeUI(): Component {
   table.fillsViewportHeight = true
   table.autoCreateRowSorter = true
   table.rowHeight = START_HEIGHT
-  for (i in 0 until model.rowCount) {
+  for (i in 0..<model.rowCount) {
     table.setRowHeight(i, END_HEIGHT)
   }
 

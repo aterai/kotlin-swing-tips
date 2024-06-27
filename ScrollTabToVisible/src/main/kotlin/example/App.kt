@@ -5,7 +5,7 @@ import javax.swing.*
 
 fun makeUI(): Component {
   val tabbedPane = JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT)
-  for (i in 0 until 100) {
+  for (i in 0..<100) {
     tabbedPane.addTab("title$i", JLabel("label$i"))
   }
 
@@ -52,7 +52,7 @@ private fun scrollTabAt(
     }
   }
   if (cmp is JViewport) {
-    for (i in 0 until tabbedPane.tabCount) {
+    for (i in 0..<tabbedPane.tabCount) {
       tabbedPane.setForegroundAt(i, if (i == index) Color.RED else Color.BLACK)
     }
     val d = tabbedPane.size

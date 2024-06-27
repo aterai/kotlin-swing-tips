@@ -325,13 +325,12 @@ open class SwatchPanel : JPanel() {
   public override fun paintComponent(g: Graphics) {
     g.color = getBackground()
     g.fillRect(0, 0, width, height)
-    for (row in 0 until numSwatches.height) {
+    for (row in 0..<numSwatches.height) {
       val y = row * (swatchSize.height + gap.height)
-      for (column in 0 until numSwatches.width) {
+      for (column in 0..<numSwatches.width) {
         val c = getColorForCell(column, row)
         g.color = c
-        var x: Int
-        x = if (componentOrientation.isLeftToRight) {
+        val x = if (componentOrientation.isLeftToRight) {
           column * (swatchSize.width + gap.width)
         } else {
           (numSwatches.width - column - 1) * (swatchSize.width + gap.width)
@@ -406,8 +405,7 @@ open class SwatchPanel : JPanel() {
     x: Int,
     y: Int,
   ): Color {
-    val column: Int
-    column = if (componentOrientation.isLeftToRight) {
+    val column = if (componentOrientation.isLeftToRight) {
       x / (swatchSize.width + gap.width)
     } else {
       numSwatches.width - x / (swatchSize.width + gap.width) - 1
@@ -463,7 +461,7 @@ private class MainSwatchPanel : SwatchPanel() {
     val rawValues = initRawValues()
     val numColors = rawValues.size / 3
     colors = Array<Color>(numColors) { _ -> Color.RED }.also {
-      for (i in 0 until numColors) {
+      for (i in 0..<numColors) {
         it[i] = Color(rawValues[i * 3], rawValues[i * 3 + 1], rawValues[i * 3 + 2])
       }
     }

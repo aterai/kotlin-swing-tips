@@ -30,7 +30,7 @@ fun makeUI(): Component {
     val tabbedPane = e.source
     if (tabbedPane is JTabbedPane && tabbedPane.tabCount > 0) {
       val idx = tabbedPane.selectedIndex
-      for (i in 0 until tabbedPane.tabCount) {
+      for (i in 0..<tabbedPane.tabCount) {
         tabbedPane.getTabComponentAt(i).also {
           (it as? JLabel)?.text = if (i == idx) tabbedPane.getTitleAt(i) else null
         }
@@ -121,7 +121,7 @@ private class ClippedTitleTabbedPane : JTabbedPane() {
   ) {
     val dim = Dimension()
     var rest = gap
-    for (i in 0 until tabCount) {
+    for (i in 0..<tabCount) {
       val tab = getTabComponentAt(i) as? JComponent ?: continue
       val a = if (i == tabCount - 1) rest else 1
       val w = if (rest > 0) tabWidth + a else tabWidth
