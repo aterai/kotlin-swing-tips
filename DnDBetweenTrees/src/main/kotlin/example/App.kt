@@ -78,8 +78,8 @@ private class TreeTransferHandler : TransferHandler() {
       support.transferable?.getTransferData(FLAVOR) as? Array<DefaultMutableTreeNode>
     }.getOrNull().orEmpty()
     val dl = support.dropLocation as? JTree.DropLocation
-    val dest = dl?.path
-    val parent = dest?.lastPathComponent
+    val target = dl?.path
+    val parent = target?.lastPathComponent
     val tree = support.component as? JTree
     val model = tree?.model
     if (dl != null && model is DefaultTreeModel && parent is DefaultMutableTreeNode) {

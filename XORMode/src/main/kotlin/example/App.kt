@@ -85,13 +85,13 @@ private class ImagePanel(private val image: Image) : JPanel() {
     private val srcPoint = Point()
 
     override fun mouseDragged(e: MouseEvent) {
-      val destPoint = e.point
+      val dstPoint = e.point
       val rb = rubberBand
       rb.reset()
       rb.moveTo(srcPoint.x.toDouble(), srcPoint.y.toDouble())
-      rb.lineTo(destPoint.x.toDouble(), srcPoint.y.toDouble())
-      rb.lineTo(destPoint.x.toDouble(), destPoint.y.toDouble())
-      rb.lineTo(srcPoint.x.toDouble(), destPoint.y.toDouble())
+      rb.lineTo(dstPoint.x.toDouble(), srcPoint.y.toDouble())
+      rb.lineTo(dstPoint.x.toDouble(), dstPoint.y.toDouble())
+      rb.lineTo(srcPoint.x.toDouble(), dstPoint.y.toDouble())
       rb.closePath()
       e.component.repaint()
     }

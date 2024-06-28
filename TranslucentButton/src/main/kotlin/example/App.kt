@@ -41,14 +41,14 @@ private fun makeButton(title: String): AbstractButton {
 
 private fun getFilteredImage(url: URL?): BufferedImage {
   val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
-  val dest = BufferedImage(img.width, img.height, BufferedImage.TYPE_INT_RGB)
+  val dst = BufferedImage(img.width, img.height, BufferedImage.TYPE_INT_RGB)
   val b = ByteArray(256)
   for (i in b.indices) {
     b[i] = (i * .5).toInt().toByte()
   }
   val op = LookupOp(ByteLookupTable(0, b), null)
-  op.filter(img, dest)
-  return dest
+  op.filter(img, dst)
+  return dst
 }
 
 private fun makeMissingImage(): BufferedImage {

@@ -80,14 +80,14 @@ private object ImageUtils {
 
   fun getFilteredImage(url: URL?): BufferedImage {
     val image = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
-    val dest = BufferedImage(image.width, image.height, BufferedImage.TYPE_INT_RGB)
+    val dst = BufferedImage(image.width, image.height, BufferedImage.TYPE_INT_RGB)
     val b = ByteArray(256)
     for (i in b.indices) {
       b[i] = (i * .5).toInt().toByte()
     }
     val op = LookupOp(ByteLookupTable(0, b), null)
-    op.filter(image, dest)
-    return dest
+    op.filter(image, dst)
+    return dst
   }
 
   private fun makeMissingImage(): BufferedImage {

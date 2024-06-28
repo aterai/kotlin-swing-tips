@@ -105,21 +105,21 @@ private fun zip(str: String) {
 }
 
 private fun unzip(str: String) {
-  makeDestDirPath(str)?.also { destDir ->
+  makeDestDirPath(str)?.also { dstDir ->
     val path = Paths.get(str)
     runCatching {
-      if (destDir.toFile().exists()) {
-        val m = "<html>$destDir already exists.<br>Do you want to overwrite it?"
+      if (dstDir.toFile().exists()) {
+        val m = "<html>$dstDir already exists.<br>Do you want to overwrite it?"
         val c = textArea.rootPane
         val rv = JOptionPane.showConfirmDialog(c, m, "Unzip", JOptionPane.YES_NO_OPTION)
         if (rv != JOptionPane.YES_OPTION) {
           return
         }
       } else {
-        logger.info { "mkdir0: $destDir" }
-        Files.createDirectories(destDir)
+        logger.info { "mkdir0: $dstDir" }
+        Files.createDirectories(dstDir)
       }
-      ZipUtils.unzip(path, destDir)
+      ZipUtils.unzip(path, dstDir)
     }.onFailure {
       logger.info { "Cant unzip! : $path" }
       UIManager.getLookAndFeel().provideErrorFeedback(textArea)
@@ -165,12 +165,12 @@ private object ZipUtils {
   @Throws(IOException::class)
   fun unzip(
     zipFilePath: Path,
-    destDir: Path,
+    dstDir: Path,
   ) {
     ZipFile(zipFilePath.toString()).use { zipFile ->
       zipFile.entries().toList().forEach { entry ->
         val name = entry.name
-        val path = destDir.resolve(name)
+        val path = dstDir.resolve(name)
         if (name.endsWith("/")) {
           logger.info { "mkdir1: $path" }
           Files.createDirectories(path)

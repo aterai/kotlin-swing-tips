@@ -80,11 +80,11 @@ private fun makeGrayIcon1(img: Image): Icon {
 private fun makeGrayIcon2(img: Image): Icon {
   val w = img.getWidth(null)
   val h = img.getHeight(null)
-  val destination = BufferedImage(w, h, BufferedImage.TYPE_BYTE_GRAY)
-  val g = destination.createGraphics()
+  val dst = BufferedImage(w, h, BufferedImage.TYPE_BYTE_GRAY)
+  val g = dst.createGraphics()
   g.drawImage(img, 0, 0, null)
   g.dispose()
-  return ImageIcon(destination)
+  return ImageIcon(dst)
 }
 
 private fun makeGrayIcon3(img: Image) = ImageIcon(GrayFilter.createDisabledImage(img))

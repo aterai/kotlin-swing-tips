@@ -98,12 +98,12 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
     override fun mouseDragged(e: MouseEvent) {
       val l = e.component as? JList<*> ?: return
       l.isFocusable = true
-      val tgtPoint = e.point
+      val dstPoint = e.point
       rubberBand.reset()
       rubberBand.moveTo(srcPoint.getX(), srcPoint.getY())
-      rubberBand.lineTo(tgtPoint.getX(), srcPoint.getY())
-      rubberBand.lineTo(tgtPoint.getX(), tgtPoint.getY())
-      rubberBand.lineTo(srcPoint.getX(), tgtPoint.getY())
+      rubberBand.lineTo(dstPoint.getX(), srcPoint.getY())
+      rubberBand.lineTo(dstPoint.getX(), dstPoint.getY())
+      rubberBand.lineTo(srcPoint.getX(), dstPoint.getY())
       rubberBand.closePath()
 
       val indices = (0..<l.model.size)

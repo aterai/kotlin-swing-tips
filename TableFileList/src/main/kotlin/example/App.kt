@@ -202,16 +202,16 @@ private class FileListTable(model: TableModel) : JTable(model) {
     private val srcPoint = Point()
 
     override fun mouseDragged(e: MouseEvent) {
-      val destPoint = e.point
+      val dstPoint = e.point
       rubberBand.reset()
       rubberBand.moveTo(srcPoint.getX(), srcPoint.getY())
-      rubberBand.lineTo(destPoint.getX(), srcPoint.getY())
-      rubberBand.lineTo(destPoint.getX(), destPoint.getY())
-      rubberBand.lineTo(srcPoint.getX(), destPoint.getY())
+      rubberBand.lineTo(dstPoint.getX(), srcPoint.getY())
+      rubberBand.lineTo(dstPoint.getX(), dstPoint.getY())
+      rubberBand.lineTo(srcPoint.getX(), dstPoint.getY())
       rubberBand.closePath()
       clearSelection()
       val col = convertColumnIndexToView(0)
-      for (i in 0 until model.rowCount) {
+      for (i in 0..<model.rowCount) {
         if (rubberBand.intersects(getCellRect2(this@FileListTable, i, col))) {
           addRowSelectionInterval(i, i)
           changeSelection(i, col, true, true)

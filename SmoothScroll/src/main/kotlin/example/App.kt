@@ -38,19 +38,19 @@ private fun startScroll() {
   val ln = model.number.toInt()
   runCatching {
     val elem = root.getElement(ln - 1)
-    val dest = textArea.modelToView(elem.startOffset)
+    val dst = textArea.modelToView(elem.startOffset)
     val current = scroll.viewport.viewRect
     Timer(20) { e ->
       (e.source as? Timer)?.also { animator ->
         when {
-          dest.y < current.y && animator.isRunning -> {
-            val d = 1.coerceAtLeast((current.y - dest.y) / 2)
+          dst.y < current.y && animator.isRunning -> {
+            val d = 1.coerceAtLeast((current.y - dst.y) / 2)
             current.y = current.y - d
             textArea.scrollRectToVisible(current)
           }
 
-          dest.y > current.y && animator.isRunning -> {
-            val d = 1.coerceAtLeast((dest.y - current.y) / 2)
+          dst.y > current.y && animator.isRunning -> {
+            val d = 1.coerceAtLeast((dst.y - current.y) / 2)
             current.y = current.y + d
             textArea.scrollRectToVisible(current)
           }
