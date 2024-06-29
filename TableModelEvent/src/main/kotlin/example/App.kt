@@ -41,7 +41,7 @@ fun makeUI(): Component {
       getModel()?.removeTableModelListener(handler)
       super.updateUI()
       val m = getModel()
-      for (i in 0 until m.columnCount) {
+      for (i in 0..<m.columnCount) {
         val r = getDefaultRenderer(m.getColumnClass(i))
         SwingUtilities.updateComponentTreeUI(r as? Component)
       }
@@ -214,7 +214,7 @@ private class HeaderCheckBoxHandler(
     } else if (status === Status.INDETERMINATE) {
       var selected = true
       var deselected = true
-      for (i in 0 until m.rowCount) {
+      for (i in 0..<m.rowCount) {
         val b = m.getValueAt(i, targetColumnIndex) as? Boolean ?: false
         selected = selected and b
         deselected = deselected and !b
@@ -235,7 +235,7 @@ private class HeaderCheckBoxHandler(
   ): Boolean {
     var selected = status === Status.DESELECTED
     var deselected = status === Status.SELECTED
-    for (i in e.firstRow until e.lastRow + 1) {
+    for (i in e.firstRow..<e.lastRow + 1) {
       val b = m.getValueAt(i, targetColumnIndex) as? Boolean ?: false
       selected = selected and b
       deselected = deselected and !b
@@ -258,7 +258,7 @@ private class HeaderCheckBoxHandler(
     if (status === Status.INDETERMINATE) {
       var selected = true
       var deselected = true
-      for (i in 0 until m.rowCount) {
+      for (i in 0..<m.rowCount) {
         val b = m.getValueAt(i, targetColumnIndex) as? Boolean ?: false
         selected = selected and b
         deselected = deselected and !b
@@ -283,7 +283,7 @@ private class HeaderCheckBoxHandler(
     if (mci == targetColumnIndex && m.rowCount > 0) {
       val column = columnModel.getColumn(vci)
       val b = column.headerValue === Status.DESELECTED
-      for (i in 0 until m.rowCount) {
+      for (i in 0..<m.rowCount) {
         m.setValueAt(b, i, mci)
       }
       column.headerValue = if (b) Status.SELECTED else Status.DESELECTED

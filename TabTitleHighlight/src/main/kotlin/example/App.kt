@@ -17,7 +17,7 @@ fun makeUI(): Component {
         override fun mouseMoved(e: MouseEvent) {
           (e.component as? JTabbedPane)?.also {
             val num = it.indexAtLocation(e.x, e.y)
-            for (i in 0 until it.tabCount) {
+            for (i in 0..<it.tabCount) {
               it.setForegroundAt(i, if (i == num) Color.GREEN else Color.BLACK)
             }
           }

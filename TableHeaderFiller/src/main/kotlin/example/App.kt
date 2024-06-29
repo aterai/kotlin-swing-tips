@@ -43,7 +43,7 @@ private class TableHeaderFillerLayerUI : LayerUI<JScrollPane>() {
 
     var width = header.width
     val cm = header.columnModel
-    for (i in 0 until cm.columnCount) {
+    for (i in 0..<cm.columnCount) {
       width -= cm.getColumn(i).width
     }
 

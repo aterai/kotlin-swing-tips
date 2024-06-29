@@ -123,7 +123,7 @@ private open class WrappedLabel(str: String? = "") : JLabel(str) {
       var pos = 0f
       var lineCount = 0
       var gm: GlyphMetrics
-      for (i in 0 until gv.numGlyphs) {
+      for (i in 0..<gv.numGlyphs) {
         gm = gv.getGlyphMetrics(i)
         val advance = gm.advance
         if (pos < width && width <= pos + advance) {

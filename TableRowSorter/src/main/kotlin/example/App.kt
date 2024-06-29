@@ -30,7 +30,7 @@ fun makeUI(): Component {
     }
   }
   val columns = table.columnModel
-  for (i in 0 until columns.columnCount) {
+  for (i in 0..<columns.columnCount) {
     val c = columns.getColumn(i)
     c.headerRenderer = renderer
     if (i == 0) {

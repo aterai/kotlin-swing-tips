@@ -73,7 +73,7 @@ private class TreeComboBox<E : TreeNode> : JComboBox<E>() {
   private val down = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val si = selectedIndex
-      for (i in si + 1 until model.size) {
+      for (i in si + 1..<model.size) {
         if (getItemAt(i)?.isLeaf == true) {
           selectedIndex = i
           break

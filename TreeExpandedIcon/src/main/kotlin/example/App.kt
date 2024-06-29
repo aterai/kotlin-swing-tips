@@ -11,7 +11,7 @@ fun makeUI(): Component {
   UIManager.put(expandedKey, IconUIResource(emptyIcon))
   UIManager.put(collapsedKey, IconUIResource(emptyIcon))
   val tree = JTree()
-  for (i in 0 until tree.rowCount) {
+  for (i in 0..<tree.rowCount) {
     tree.expandRow(i)
   }
 

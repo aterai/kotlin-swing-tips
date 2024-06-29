@@ -149,7 +149,7 @@ private open class ClippedTitleTabbedPane : JTabbedPane() {
   ) {
     val dim = Dimension()
     var rest = gap
-    for (i in 0 until tabCount) {
+    for (i in 0..<tabCount) {
       (getTabComponentAt(i) as? JComponent)?.also { tab ->
         val a = if (i == tabCount - 1) rest else 1
         val w = if (rest > 0) tabWidth + a else tabWidth

@@ -135,7 +135,7 @@ private class CloseableTabIconHandler : MouseAdapter() {
 
   override fun mouseExited(e: MouseEvent) {
     val tabbedPane = e.component as? CloseableTabbedPane ?: return
-    for (i in 0 until tabbedPane.tabCount) {
+    for (i in 0..<tabbedPane.tabCount) {
       (tabbedPane.getIconAt(i) as? CloseTabIcon)?.also {
         it.mouseOver = false
       }

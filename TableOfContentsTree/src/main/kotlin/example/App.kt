@@ -168,7 +168,7 @@ private class TableOfContentsTree(model: TreeModel?) : JTree(model) {
     if (g2 == null || tcr == null) {
       return
     }
-    for (i in 0 until rowCount) {
+    for (i in 0..<rowCount) {
       val r = getRowBounds(i)
       if (rect.intersects(r)) {
         drawReader(g2, tcr, pageNumMaxWidth, maxX.toInt(), i)

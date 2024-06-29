@@ -5,7 +5,7 @@ import javax.swing.*
 
 fun makeUI(): Component {
   val tabs = JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT)
-  for (i in 1 until 100) {
+  for (i in 1..<100) {
     tabs.addTab("title$i", JLabel("label$i"))
   }
 

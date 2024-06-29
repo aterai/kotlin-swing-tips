@@ -29,7 +29,7 @@ fun makeUI(): Component {
       setSelectionBackground(ColorUIResource(Color.RED))
       super.updateUI()
       val m = getModel()
-      for (i in 0 until m.columnCount) {
+      for (i in 0..<m.columnCount) {
         (getDefaultRenderer(m.getColumnClass(i)) as? Component)?.also {
           SwingUtilities.updateComponentTreeUI(it)
         }

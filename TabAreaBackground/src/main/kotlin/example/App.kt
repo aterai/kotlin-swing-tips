@@ -82,7 +82,7 @@ private fun updateTabColor(
   si: Int,
   tgt: Int,
 ) {
-  for (i in 0 until t.tabCount) {
+  for (i in 0..<t.tabCount) {
     t.setForegroundAt(i, getTabTabForeground(i, si, tgt))
   }
 }

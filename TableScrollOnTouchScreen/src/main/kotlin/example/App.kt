@@ -15,7 +15,7 @@ fun makeUI(): Component {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
 
-  for (i in 0 until 1000) {
+  for (i in 0..<1000) {
     model.addRow(arrayOf("12345", i, i % 2 == 0))
   }
 

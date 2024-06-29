@@ -45,7 +45,7 @@ private val table = object : JTable(model) {
     super.updateUI()
 
     model?.also {
-      for (i in 0 until it.columnCount) {
+      for (i in 0..<it.columnCount) {
         val r = getDefaultRenderer(it.getColumnClass(i)) as? Component ?: continue
         SwingUtilities.updateComponentTreeUI(r)
       }
@@ -274,7 +274,7 @@ private class HeaderCheckBoxHandler(
     if (mci == targetColumnIndex && m.rowCount > 0) {
       val column = columnModel.getColumn(vci)
       val b = Status.DESELECTED === column.headerValue
-      for (i in 0 until m.rowCount) {
+      for (i in 0..<m.rowCount) {
         m.setValueAt(b, i, mci)
       }
       column.headerValue = if (b) Status.SELECTED else Status.DESELECTED

@@ -77,7 +77,7 @@ private fun makeOverlayTabbedPane(): Component {
     val p = b.location
     val popup = JPopupMenu()
     val selected = tabs.selectedIndex
-    for (i in 0 until tabs.tabCount) {
+    for (i in 0..<tabs.tabCount) {
       popup.add(makeRadioMenuItem(tabs, i, selected))
     }
     p.x += b.width - popup.preferredSize.width - 1
@@ -166,7 +166,7 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
       val b = e.source as? JButton ?: hiddenTabs
       val p = b.location
       val popup = JPopupMenu()
-      for (i in 0 until tabPanel.componentCount) {
+      for (i in 0..<tabPanel.componentCount) {
         val mi = makeRadioMenuItem(tabPanel, i)
         if (mi != null) {
           popup.add(mi)
@@ -562,7 +562,7 @@ open class ClippedTitleTabbedPane : JTabbedPane() {
   private fun updateAllTabWidth(tabWidth: Int, gap: Int) {
     val dim = Dimension()
     var rest = gap
-    for (i in 0 until tabCount) {
+    for (i in 0..<tabCount) {
       val tab = getTabComponentAt(i) as? JComponent ?: continue
       val a = if (i == tabCount - 1) rest else 1
       val w = if (rest > 0) tabWidth + a else tabWidth

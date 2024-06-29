@@ -99,7 +99,7 @@ private open class ClippedTitleTabbedPane : JTabbedPane() {
   ) {
     val dim = Dimension()
     var rest = gap
-    for (i in 0 until tabCount) {
+    for (i in 0..<tabCount) {
       val tab = getTabComponentAt(i) as? JComponent ?: continue
       val a = if (i == tabCount - 1) rest else 1
       val w = if (rest > 0) tabWidth + a else tabWidth
@@ -151,7 +151,7 @@ private class TextOverflowFadeLabel(text: String) : JLabel(text) {
 
     rect.width = 1
     var alpha = 1f
-    for (x in w - LENGTH until w) {
+    for (x in w - LENGTH..<w) {
       rect.x = x
       alpha = maxOf(0f, alpha - DIFF)
       g2.composite = AlphaComposite.SrcOver.derive(alpha)

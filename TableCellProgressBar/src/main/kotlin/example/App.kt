@@ -20,7 +20,7 @@ private val table = object : JTable(model) {
     val tc = getColumnModel().getColumn(2)
     tc.cellRenderer = TableCellRenderer { tbl, value, isSelected, hasFocus, row, column ->
       if (value is Int) {
-        if (value in 0 until progress.maximum) { // < 100
+        if (value in 0..<progress.maximum) { // < 100
           progress.value = value
           progress.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
           progress

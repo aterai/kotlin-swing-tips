@@ -9,7 +9,7 @@ import javax.swing.tree.TreeNode
 
 fun makeUI(): Component {
   val tree = JTree()
-  for (i in 0 until tree.rowCount) {
+  for (i in 0..<tree.rowCount) {
     tree.expandRow(i)
   }
 

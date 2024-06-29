@@ -11,7 +11,7 @@ fun makeUI(): Component {
   val c2 = JPanel(GridLayout(10, 10))
   val intRange = 0..255
   val timer = Timer(16, null)
-  for (i in 0 until 100) {
+  for (i in 0..<100) {
     c1.add(Tile1(intRange))
     c2.add(Tile2(intRange, timer))
   }
@@ -95,13 +95,13 @@ private class Tile2(val rng: IntRange, timer: Timer) : JComponent() {
 
 private class TilePanel(rng: IntRange) : JPanel(GridLayout(10, 10)) {
   init {
-    for (i in 0 until 100) {
+    for (i in 0..<100) {
       val l = JLabel()
       l.isOpaque = true
       add(l)
     }
     val timer = Timer(16) {
-      for (i in 0 until 100) {
+      for (i in 0..<100) {
         val c = getComponent(i)
         val red = rng.random()
         c.background = Color(red, rng.last - red, 0)

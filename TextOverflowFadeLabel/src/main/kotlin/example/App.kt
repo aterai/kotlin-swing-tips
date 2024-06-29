@@ -50,7 +50,7 @@ private class FadeOutLabel(text: String) : JLabel(text) {
 
     rect.width = 1
     var alpha = 1f
-    for (x in w - LENGTH until w) {
+    for (x in w - LENGTH..<w) {
       rect.x = x
       alpha = maxOf(0f, alpha - DIFF)
       g2.composite = AlphaComposite.SrcOver.derive(alpha)
@@ -86,7 +86,7 @@ private class TextOverflowFadeLabel(text: String) : JLabel(text) {
 
     rect.width = 1
     var alpha = 1f
-    for (x in w - LENGTH until w) {
+    for (x in w - LENGTH..<w) {
       rect.x = x
       alpha = maxOf(0f, alpha - DIFF)
       g2.composite = AlphaComposite.SrcOver.derive(alpha)
@@ -128,9 +128,9 @@ private class FadingOutLabel(text: String) : JLabel(text) {
     g2.dispose()
 
     val spx = maxOf(0, d.width - LENGTH)
-    for (x in 0 until LENGTH) {
+    for (x in 0..<LENGTH) {
       val factor = 1.0 - x / LENGTH.toDouble()
-      for (y in 0 until d.height) {
+      for (y in 0..<d.height) {
         val argb = img.getRGB(spx + x, y)
         val rgb = argb and 0x00_FF_FF_FF
         val a = argb shr 24 and 0xFF

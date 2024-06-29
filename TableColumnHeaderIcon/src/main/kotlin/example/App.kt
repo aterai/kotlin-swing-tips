@@ -14,7 +14,7 @@ fun makeUI(): Component {
   val columnNames = arrayOf("Column1", "Column2", "Column3")
   val table = JTable(DefaultTableModel(columnNames, 8))
   val m = table.columnModel
-  for (i in 0 until m.columnCount) {
+  for (i in 0..<m.columnCount) {
     val icon = icons[i]
     val name = columnNames[i]
     m.getColumn(i).headerValue = """

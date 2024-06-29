@@ -7,7 +7,7 @@ fun makeUI(): Component {
   val key = "Tree.paintLines"
   UIManager.put(key, true)
   val tree = JTree()
-  for (i in 0 until tree.rowCount) {
+  for (i in 0..<tree.rowCount) {
     tree.expandRow(i)
   }
 

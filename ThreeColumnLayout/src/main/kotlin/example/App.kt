@@ -16,7 +16,7 @@ fun makeUI(): Component {
 private fun makeCmp1(): Component {
   val model = DefaultListModel<String>()
   model.addElement("l${"o".repeat(40)}ng")
-  for (i in 0 until 5000) {
+  for (i in 0..<5000) {
     model.addElement(i.toString())
   }
 
@@ -74,7 +74,7 @@ private fun makeCmp1(): Component {
 private fun makeCmp2(): Component {
   val model = DefaultListModel<String>()
   model.addElement("l${"o".repeat(40)}ng")
-  for (i in 0 until 5000) {
+  for (i in 0..<5000) {
     model.addElement(i.toString())
   }
 
@@ -143,7 +143,7 @@ private fun <E> move(
     return
   }
   val unselectedValues = mutableListOf<E>()
-  for (i in 0 until fromModel.size) {
+  for (i in 0..<fromModel.size) {
     if (!sm.isSelectedIndex(i)) {
       unselectedValues.add(fromModel.getElementAt(i))
     }
@@ -164,7 +164,7 @@ private fun <E> makeList(model: ListModel<E>): JList<E> {
   val popup = JPopupMenu()
   popup.add("reverse").addActionListener {
     val sm = list.selectionModel
-    for (i in 0 until list.model.size) {
+    for (i in 0..<list.model.size) {
       if (sm.isSelectedIndex(i)) {
         sm.removeSelectionInterval(i, i)
       } else {

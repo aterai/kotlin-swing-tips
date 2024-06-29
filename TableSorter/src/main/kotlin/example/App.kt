@@ -190,7 +190,7 @@ private class TableSorter() : AbstractTableModel() {
   private fun getViewToModel(): List<TableRow> {
     val rc = tableModel?.rowCount ?: 0
     if (viewToModel.isEmpty() && tableModel != null) {
-      for (i in 0 until rc) {
+      for (i in 0..<rc) {
         viewToModel.add(TableRow(i))
       }
       if (isSorting) {

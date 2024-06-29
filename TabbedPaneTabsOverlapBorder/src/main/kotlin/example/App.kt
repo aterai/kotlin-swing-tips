@@ -42,7 +42,7 @@ fun makeUI(): Component {
 
 private fun makeTabbedPane(): JTabbedPane {
   val tabs = JTabbedPane()
-  for (i in 0 until 10) {
+  for (i in 0..<10) {
     tabs.addTab("title$i", JLabel("label$i"))
   }
   return tabs
