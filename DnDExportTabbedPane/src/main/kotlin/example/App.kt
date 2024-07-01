@@ -99,12 +99,12 @@ class DnDTabbedPane : JTabbedPane() {
       val compRect = selectedComponent?.bounds ?: Rectangle()
       val tabPlacement = getTabPlacement()
       if (isTopBottomTabPlacement(tabPlacement)) {
-        tabbedRect.height = tabbedRect.height - compRect.height
+        tabbedRect.height -= compRect.height
         if (tabPlacement == BOTTOM) {
           tabbedRect.y += compRect.y + compRect.height
         }
       } else {
-        tabbedRect.width = tabbedRect.width - compRect.width
+        tabbedRect.width -= compRect.width
         if (tabPlacement == RIGHT) {
           tabbedRect.x += compRect.x + compRect.width
         }
