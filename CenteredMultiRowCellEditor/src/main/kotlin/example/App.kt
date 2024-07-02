@@ -105,11 +105,6 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
     return renderer
   }
 
-  fun getNoFocusBorder(): Border {
-    val i = focusBorder.getBorderInsets(renderer)
-    return BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
-  }
-
   companion object {
     val SELECTED_COLOR = Color(0xAE_16_64_FF.toInt(), true)
   }
