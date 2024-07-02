@@ -101,7 +101,7 @@ private class MySwatchChooserPanel : AbstractColorChooserPanel() {
     inheritsPopupMenu = true
   }
 
-  override fun getDisplayName() =
+  override fun getDisplayName(): String =
     UIManager.getString("ColorChooser.swatchesNameText", getLocale())
 
   override fun getSmallDisplayIcon() = null
@@ -438,7 +438,7 @@ private class RecentSwatchPanel : SwatchPanel() {
   override fun initColors() {
     val defaultRecent = UIManager.getColor("ColorChooser.swatchesDefaultRecentColor")
     val numColors = numSwatches.width * numSwatches.height
-    colors = Array<Color>(numColors) { defaultRecent }
+    colors = Array(numColors) { defaultRecent }
   }
 
   fun setMostRecentColor(c: Color?) {
