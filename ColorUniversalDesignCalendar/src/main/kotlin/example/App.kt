@@ -93,19 +93,27 @@ private class CalendarTableRenderer : TableCellRenderer {
       label.text = "<html><b>" + value.dayOfMonth.toString()
       label.border = BorderFactory.createEmptyBorder(2, 0, 3, 1)
       val isThisMonth = YearMonth.from(value) == YearMonth.from(currentLocalDate)
-      if (isThisMonth && value.dayOfWeek == DayOfWeek.SUNDAY) {
-        label.foreground = Color.WHITE
-        label.background = Color.BLACK
-      } else if (isThisMonth && value.dayOfWeek == DayOfWeek.SATURDAY) {
-        label.foreground = Color.WHITE
-        label.background = Color.BLUE
-      } else if (isThisMonth) {
-        label.background = Color.WHITE
-        label.foreground = Color.BLACK
-      } else {
-        label.background = Color.WHITE
-        label.foreground = Color.GRAY
-        label.text = value.dayOfMonth.toString()
+      when {
+        isThisMonth && value.dayOfWeek == DayOfWeek.SUNDAY -> {
+          label.foreground = Color.WHITE
+          label.background = Color.BLACK
+        }
+
+        isThisMonth && value.dayOfWeek == DayOfWeek.SATURDAY -> {
+          label.foreground = Color.WHITE
+          label.background = Color.BLUE
+        }
+
+        isThisMonth -> {
+          label.background = Color.WHITE
+          label.foreground = Color.BLACK
+        }
+
+        else -> {
+          label.background = Color.WHITE
+          label.foreground = Color.GRAY
+          label.text = value.dayOfMonth.toString()
+        }
       }
       when {
         selected -> renderer.background = table.selectionBackground
