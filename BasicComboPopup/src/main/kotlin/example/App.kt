@@ -96,7 +96,7 @@ fun makeUI(): Component {
           (popup.topLevelAncestor as? Window)?.toFront()
           popup.requestFocusInWindow()
         }
-      }.onFailure { // should never happen
+      }.onFailure {
         it.printStackTrace()
         UIManager.getLookAndFeel().provideErrorFeedback(textPane)
       }
@@ -120,7 +120,7 @@ private object TextEditorUtils {
     runCatching {
       val doc = editor.document
       doc.insertString(editor.caretPosition, str, null)
-    }.onFailure { // should never happen
+    }.onFailure {
       it.printStackTrace()
       UIManager.getLookAndFeel().provideErrorFeedback(editor)
     }

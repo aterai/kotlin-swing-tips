@@ -128,7 +128,7 @@ private fun changeHighlight() {
     runCatching {
       highlighter.addHighlight(hh.startOffset, hh.endOffset, currentPainter)
       scrollToCenter(textArea, hh.startOffset)
-    }.onFailure { // should never happen
+    }.onFailure {
       it.printStackTrace()
       UIManager.getLookAndFeel().provideErrorFeedback(field)
     }
