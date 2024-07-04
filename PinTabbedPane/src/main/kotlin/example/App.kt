@@ -105,7 +105,8 @@ private class PinTabPopupMenu : JPopupMenu() {
     t: JTabbedPane,
     idx: Int,
   ) = idx >= 0 &&
-    idx == t.selectedIndex && isEmpty(t.getTitleAt(idx))
+    idx == t.selectedIndex &&
+    isEmpty(t.getTitleAt(idx))
 
   private fun isEmpty(s: String?) = s == null || s.isEmpty()
 }
