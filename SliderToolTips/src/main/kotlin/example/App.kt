@@ -64,50 +64,46 @@ private fun makeTitledPanel(
 }
 
 private class WindowsTooltipSliderUI(slider: JSlider) : WindowsSliderUI(slider) {
-  override fun createTrackListener(slider: JSlider?): TrackListener {
-    return object : TrackListener() {
-      override fun mousePressed(e: MouseEvent) {
-        if (SwingUtilities.isLeftMouseButton(e)) {
-          (e.component as? JSlider)?.also {
-            if (it.orientation == SwingConstants.VERTICAL) {
-              it.value = valueForYPosition(e.y)
-            } else { // SwingConstants.HORIZONTAL
-              it.value = valueForXPosition(e.x)
-            }
-            super.mousePressed(e) // isDragging = true
-            super.mouseDragged(e)
+  override fun createTrackListener(slider: JSlider?) = object : TrackListener() {
+    override fun mousePressed(e: MouseEvent) {
+      if (SwingUtilities.isLeftMouseButton(e)) {
+        (e.component as? JSlider)?.also {
+          if (it.orientation == SwingConstants.VERTICAL) {
+            it.value = valueForYPosition(e.y)
+          } else { // SwingConstants.HORIZONTAL
+            it.value = valueForXPosition(e.x)
           }
-        } else {
-          super.mousePressed(e)
+          super.mousePressed(e) // isDragging = true
+          super.mouseDragged(e)
         }
+      } else {
+        super.mousePressed(e)
       }
-
-      override fun shouldScroll(direction: Int) = false
     }
+
+    override fun shouldScroll(direction: Int) = false
   }
 }
 
 private class MetalTooltipSliderUI : MetalSliderUI() {
-  override fun createTrackListener(slider: JSlider?): TrackListener {
-    return object : TrackListener() {
-      override fun mousePressed(e: MouseEvent) {
-        if (SwingUtilities.isLeftMouseButton(e)) {
-          (e.component as? JSlider)?.also {
-            if (it.orientation == SwingConstants.VERTICAL) {
-              it.value = valueForYPosition(e.y)
-            } else { // SwingConstants.HORIZONTAL
-              it.value = valueForXPosition(e.x)
-            }
-            super.mousePressed(e) // isDragging = true
-            super.mouseDragged(e)
+  override fun createTrackListener(slider: JSlider?) = object : TrackListener() {
+    override fun mousePressed(e: MouseEvent) {
+      if (SwingUtilities.isLeftMouseButton(e)) {
+        (e.component as? JSlider)?.also {
+          if (it.orientation == SwingConstants.VERTICAL) {
+            it.value = valueForYPosition(e.y)
+          } else { // SwingConstants.HORIZONTAL
+            it.value = valueForXPosition(e.x)
           }
-        } else {
-          super.mousePressed(e)
+          super.mousePressed(e) // isDragging = true
+          super.mouseDragged(e)
         }
+      } else {
+        super.mousePressed(e)
       }
-
-      override fun shouldScroll(direction: Int) = false
     }
+
+    override fun shouldScroll(direction: Int) = false
   }
 }
 

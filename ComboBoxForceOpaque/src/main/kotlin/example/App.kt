@@ -64,44 +64,40 @@ private fun makeComboBox0(): JComboBox<String> {
   return comboBox
 }
 
-private fun makeComboBox1(): JComboBox<String> {
-  return object : JComboBox<String>(MODEL) {
-    override fun updateUI() {
-      setRenderer(null)
-      super.updateUI()
-      setRenderer(ComboRenderer())
-      background = BACKGROUND
-    }
+private fun makeComboBox1() = object : JComboBox<String>(MODEL) {
+  override fun updateUI() {
+    setRenderer(null)
+    super.updateUI()
+    setRenderer(ComboRenderer())
+    background = BACKGROUND
   }
 }
 
-private fun makeComboBox2(): JComboBox<String> {
-  return object : JComboBox<String>(MODEL) {
-    override fun updateUI() {
-      setRenderer(null)
-      super.updateUI()
-      val r = getRenderer()
-      setRenderer { list, value, index, isSelected, cellHasFocus ->
-        val c = r.getListCellRendererComponent(
-          list,
-          value,
-          index,
-          isSelected,
-          cellHasFocus,
-        )
-        (c as? JComponent)?.isOpaque = true
-        c
-      }
-      val popup = getAccessibleContext().getAccessibleChild(0)
-      if (popup is ComboPopup) {
-        val list = popup.list
-        list.background = BACKGROUND
-        list.foreground = Color.WHITE
-        list.selectionBackground = Color.LIGHT_GRAY
-        list.selectionForeground = Color.BLACK
-      }
-      background = BACKGROUND
+private fun makeComboBox2() = object : JComboBox<String>(MODEL) {
+  override fun updateUI() {
+    setRenderer(null)
+    super.updateUI()
+    val r = getRenderer()
+    setRenderer { list, value, index, isSelected, cellHasFocus ->
+      val c = r.getListCellRendererComponent(
+        list,
+        value,
+        index,
+        isSelected,
+        cellHasFocus,
+      )
+      (c as? JComponent)?.isOpaque = true
+      c
     }
+    val popup = getAccessibleContext().getAccessibleChild(0)
+    if (popup is ComboPopup) {
+      val list = popup.list
+      list.background = BACKGROUND
+      list.foreground = Color.WHITE
+      list.selectionBackground = Color.LIGHT_GRAY
+      list.selectionForeground = Color.BLACK
+    }
+    background = BACKGROUND
   }
 }
 

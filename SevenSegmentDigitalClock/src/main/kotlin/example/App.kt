@@ -11,12 +11,10 @@ import java.time.ZoneId
 import java.util.EnumSet
 import javax.swing.*
 
-fun makeUI(): Component {
-  return JPanel(GridLayout(2, 1)).also {
-    it.add(DigitalClock())
-    it.add(HelpPanel())
-    it.preferredSize = Dimension(320, 240)
-  }
+fun makeUI() = JPanel(GridLayout(2, 1)).also {
+  it.add(DigitalClock())
+  it.add(HelpPanel())
+  it.preferredSize = Dimension(320, 240)
 }
 
 private class DigitalClock : JPanel() {

@@ -137,23 +137,21 @@ private class HeaderCheckBoxHandler(
     m: DefaultTableModel,
     column: TableColumn,
     status: Any,
-  ): Boolean {
-    return if (Status.INDETERMINATE == status) {
-      val l = m.dataVector.mapNotNull {
-        (it as? List<*>)?.get(targetColumnIndex) as? Boolean
-      }.distinct()
-      val isOnlyOneSelected = l.size == 1
-      if (isOnlyOneSelected) {
-        // column.setHeaderValue(if (l.get(0)) Status.SELECTED else Status.DESELECTED)
-        column.headerValue = if (l.first()) Status.SELECTED else Status.DESELECTED
-        true
-      } else {
-        false
-      }
-    } else {
-      column.headerValue = Status.INDETERMINATE
+  ) = if (Status.INDETERMINATE == status) {
+    val l = m.dataVector.mapNotNull {
+      (it as? List<*>)?.get(targetColumnIndex) as? Boolean
+    }.distinct()
+    val isOnlyOneSelected = l.size == 1
+    if (isOnlyOneSelected) {
+      // column.setHeaderValue(if (l.get(0)) Status.SELECTED else Status.DESELECTED)
+      column.headerValue = if (l.first()) Status.SELECTED else Status.DESELECTED
       true
+    } else {
+      false
     }
+  } else {
+    column.headerValue = Status.INDETERMINATE
+    true
   }
 
   override fun mouseClicked(e: MouseEvent) {

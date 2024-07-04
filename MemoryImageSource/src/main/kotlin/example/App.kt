@@ -10,10 +10,8 @@ import java.awt.image.MemoryImageSource
 import javax.swing.*
 import kotlin.math.abs
 
-fun makeUI(): Component {
-  return PaintPanel().also {
-    it.preferredSize = Dimension(320, 240)
-  }
+fun makeUI() = PaintPanel().also {
+  it.preferredSize = Dimension(320, 240)
 }
 
 private class PaintPanel : JPanel(), MouseMotionListener, MouseListener {

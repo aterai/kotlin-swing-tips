@@ -24,22 +24,20 @@ private fun makeModel(): ListModel<String> {
   return m
 }
 
-private fun <E> makeList(model: ListModel<E>): JList<E> {
-  return object : JList<E>(model) {
-    private var listener: MouseInputListener? = null
+private fun <E> makeList(model: ListModel<E>) = object : JList<E>(model) {
+  private var listener: MouseInputListener? = null
 
-    override fun updateUI() {
-      removeMouseListener(listener)
-      removeMouseMotionListener(listener)
-      foreground = null
-      background = null
-      selectionForeground = null
-      selectionBackground = null
-      super.updateUI()
-      listener = ClearSelectionListener()
-      addMouseListener(listener)
-      addMouseMotionListener(listener)
-    }
+  override fun updateUI() {
+    removeMouseListener(listener)
+    removeMouseMotionListener(listener)
+    foreground = null
+    background = null
+    selectionForeground = null
+    selectionBackground = null
+    super.updateUI()
+    listener = ClearSelectionListener()
+    addMouseListener(listener)
+    addMouseMotionListener(listener)
   }
 }
 

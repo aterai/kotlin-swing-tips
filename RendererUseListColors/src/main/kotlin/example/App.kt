@@ -34,15 +34,13 @@ fun makeUI(): Component {
       index: Int,
       isSelected: Boolean,
       cellHasFocus: Boolean,
-    ): Component {
-      return super.getListCellRendererComponent(
-        list,
-        "TEST0: $value",
-        index,
-        isSelected,
-        cellHasFocus,
-      )
-    }
+    ) = super.getListCellRendererComponent(
+      list,
+      "TEST0: $value",
+      index,
+      isSelected,
+      cellHasFocus,
+    )
   }
   // val d1 = UIDefaults()
   // d1.put("ComboBox.rendererUseListColors", true)
@@ -56,15 +54,13 @@ fun makeUI(): Component {
       index: Int,
       isSelected: Boolean,
       cellHasFocus: Boolean,
-    ): Component {
-      return super.getListCellRendererComponent(
-        list,
-        "TEST1: $value",
-        index,
-        isSelected,
-        cellHasFocus,
-      )
-    }
+    ) = super.getListCellRendererComponent(
+      list,
+      "TEST1: $value",
+      index,
+      isSelected,
+      cellHasFocus,
+    )
   }
   // combo2.putClientProperty("Nimbus.Overrides", d1)
 
@@ -107,11 +103,9 @@ fun makeUI(): Component {
 private fun makeTitledPanel(
   title: String,
   c: Component,
-): Component {
-  val p = JPanel(BorderLayout())
-  p.border = BorderFactory.createTitledBorder(title)
-  p.add(c)
-  return p
+) = JPanel(BorderLayout()).also {
+  it.border = BorderFactory.createTitledBorder(title)
+  it.add(c)
 }
 
 private object LookAndFeelUtils {

@@ -19,23 +19,21 @@ private fun makeTitleWithIcon(
   align: String,
 ) = "<html><p align='$align'><img src='$url' align='$align' />&nbsp;$title</p></html>"
 
-private fun makeButton(title: String): AbstractButton {
-  return object : JButton(title) {
-    override fun updateUI() {
-      super.updateUI()
-      verticalAlignment = CENTER
-      verticalTextPosition = CENTER
-      horizontalAlignment = CENTER
-      horizontalTextPosition = CENTER
-      border = BorderFactory.createEmptyBorder(2, 8, 2, 8)
-      margin = Insets(2, 8, 2, 8)
-      isBorderPainted = false
-      isContentAreaFilled = false
-      isFocusPainted = false
-      isOpaque = false
-      foreground = Color.WHITE
-      icon = TranslucentButtonIcon(this)
-    }
+private fun makeButton(title: String) = object : JButton(title) {
+  override fun updateUI() {
+    super.updateUI()
+    verticalAlignment = CENTER
+    verticalTextPosition = CENTER
+    horizontalAlignment = CENTER
+    horizontalTextPosition = CENTER
+    border = BorderFactory.createEmptyBorder(2, 8, 2, 8)
+    margin = Insets(2, 8, 2, 8)
+    isBorderPainted = false
+    isContentAreaFilled = false
+    isFocusPainted = false
+    isOpaque = false
+    foreground = Color.WHITE
+    icon = TranslucentButtonIcon(this)
   }
 }
 

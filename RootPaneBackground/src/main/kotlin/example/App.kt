@@ -154,10 +154,8 @@ private class TranslucentPopupMenu : JPopupMenu() {
     (c as? JComponent)?.isOpaque = false
   }
 
-  override fun add(menuItem: JMenuItem): JMenuItem {
-    return super.add(menuItem).also {
-      it.isOpaque = false
-    }
+  override fun add(menuItem: JMenuItem): JMenuItem = super.add(menuItem).also {
+    it.isOpaque = false
   }
 
   override fun paintComponent(g: Graphics) {

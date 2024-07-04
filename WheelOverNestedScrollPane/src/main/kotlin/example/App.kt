@@ -80,13 +80,11 @@ fun makeUI(): Component {
   }
 }
 
-private fun createChildScrollPane(view: Component): JScrollPane {
-  return object : JScrollPane(view) {
-    override fun getPreferredSize() = Dimension(240, 120)
+private fun createChildScrollPane(view: Component) = object : JScrollPane(view) {
+  override fun getPreferredSize() = Dimension(240, 120)
 
-    override fun getMaximumSize() = super.getMaximumSize().also {
-      it.height = preferredSize.height
-    }
+  override fun getMaximumSize() = super.getMaximumSize().also {
+    it.height = preferredSize.height
   }
 }
 

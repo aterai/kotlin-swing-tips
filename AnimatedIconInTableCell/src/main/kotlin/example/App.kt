@@ -38,22 +38,20 @@ fun makeAnimatedIcon(
   table: JTable,
   row: Int,
   col: Int,
-): Icon {
-  return if (url == null) {
-    UIManager.getIcon("html.missingImage")
-  } else {
-    ImageIcon(url).also {
-      it.imageObserver = ImageObserver { _, infoFlags, _, _, _, _ ->
-        if (!table.isShowing) {
-          false
-        } else {
-          if (infoFlags and (ImageObserver.FRAMEBITS or ImageObserver.ALLBITS) != 0) {
-            val vr = table.convertRowIndexToView(row) // JDK 1.6.0
-            val vc = table.convertColumnIndexToView(col)
-            table.repaint(table.getCellRect(vr, vc, false))
-          }
-          infoFlags and (ImageObserver.ALLBITS or ImageObserver.ABORT) == 0
+): Icon = if (url == null) {
+  UIManager.getIcon("html.missingImage")
+} else {
+  ImageIcon(url).also {
+    it.imageObserver = ImageObserver { _, infoFlags, _, _, _, _ ->
+      if (!table.isShowing) {
+        false
+      } else {
+        if (infoFlags and (ImageObserver.FRAMEBITS or ImageObserver.ALLBITS) != 0) {
+          val vr = table.convertRowIndexToView(row) // JDK 1.6.0
+          val vc = table.convertColumnIndexToView(col)
+          table.repaint(table.getCellRect(vr, vc, false))
         }
+        infoFlags and (ImageObserver.ALLBITS or ImageObserver.ABORT) == 0
       }
     }
   }

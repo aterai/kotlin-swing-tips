@@ -92,13 +92,11 @@ private class HighlightListener : MouseAdapter() {
     table: JTable,
     pr: Int,
     pc: Int,
-  ): Rectangle {
-    return if (viewRowIndex >= 0 && viewColumnIndex >= 0) {
-      val r = table.getCellRect(viewRowIndex, viewColumnIndex, false)
-      if (pr >= 0 && pc >= 0) r.union(table.getCellRect(pr, pc, false)) else r
-    } else {
-      table.getCellRect(pr, pc, false)
-    }
+  ) = if (viewRowIndex >= 0 && viewColumnIndex >= 0) {
+    val r = table.getCellRect(viewRowIndex, viewColumnIndex, false)
+    if (pr >= 0 && pc >= 0) r.union(table.getCellRect(pr, pc, false)) else r
+  } else {
+    table.getCellRect(pr, pc, false)
   }
 
   override fun mouseExited(e: MouseEvent) {
@@ -243,7 +241,7 @@ private class RolloverBooleanRenderer(
     column: Int,
   ): Component {
     check.horizontalAlignment = SwingConstants.CENTER
-    check.getModel().isRollover = highlighter.isHighlightedCell(row, column)
+    check.model.isRollover = highlighter.isHighlightedCell(row, column)
     if (isSelected) {
       check.foreground = table.selectionForeground
       check.setBackground(table.selectionBackground)

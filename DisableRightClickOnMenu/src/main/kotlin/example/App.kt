@@ -8,12 +8,10 @@ import javax.swing.*
 import javax.swing.event.MouseInputListener
 import javax.swing.plaf.basic.BasicMenuItemUI
 
-fun makeUI(): Component {
-  return JPanel(BorderLayout()).also {
-    EventQueue.invokeLater { it.rootPane.jMenuBar = createMenuBar() }
-    it.add(JScrollPane(JTextArea()))
-    it.preferredSize = Dimension(320, 240)
-  }
+fun makeUI() = JPanel(BorderLayout()).also {
+  EventQueue.invokeLater { it.rootPane.jMenuBar = createMenuBar() }
+  it.add(JScrollPane(JTextArea()))
+  it.preferredSize = Dimension(320, 240)
 }
 
 private fun createMenuBar(): JMenuBar {

@@ -267,29 +267,24 @@ private class TitledBorder2(title: String?) : TitledBorder(title) {
   override fun getBorderInsets(
     c: Component?,
     insets: Insets,
-  ): Insets {
-    return if (getTitle()?.isNotEmpty() == true) {
-      val edge = if (getBorder() is TitledBorder2) 0 else EDGE_SPACING
-      val size = getLabel2(c).preferredSize
-      TitledBorderUtils.initInsets(insets, position2, edge, size)
-      insets.top += edge + TEXT_SPACING2
-      insets.left += edge + TEXT_SPACING2
-      insets.right += edge + TEXT_SPACING2
-      insets.bottom += edge + TEXT_SPACING2
-      insets
-    } else {
-      super.getBorderInsets(c, insets)
-    }
+  ): Insets = if (getTitle()?.isNotEmpty() == true) {
+    val edge = if (getBorder() is TitledBorder2) 0 else EDGE_SPACING
+    val size = getLabel2(c).preferredSize
+    TitledBorderUtils.initInsets(insets, position2, edge, size)
+    insets.top += edge + TEXT_SPACING2
+    insets.left += edge + TEXT_SPACING2
+    insets.right += edge + TEXT_SPACING2
+    insets.bottom += edge + TEXT_SPACING2
+    insets
+  } else {
+    super.getBorderInsets(c, insets)
   }
 
-  private fun getJustification2(c: Component): Int {
-    val justification = getTitleJustification()
-    return when (justification) {
-      DEFAULT_JUSTIFICATION -> if (c.componentOrientation.isLeftToRight) LEFT else RIGHT
-      LEADING -> if (c.componentOrientation.isLeftToRight) LEFT else RIGHT
-      TRAILING -> if (c.componentOrientation.isLeftToRight) RIGHT else LEFT
-      else -> justification
-    }
+  private fun getJustification2(c: Component) = when (val j = getTitleJustification()) {
+    DEFAULT_JUSTIFICATION -> if (c.componentOrientation.isLeftToRight) LEFT else RIGHT
+    LEADING -> if (c.componentOrientation.isLeftToRight) LEFT else RIGHT
+    TRAILING -> if (c.componentOrientation.isLeftToRight) RIGHT else LEFT
+    else -> j
   }
 
   private fun getLabel2(c: Component?): JLabel {

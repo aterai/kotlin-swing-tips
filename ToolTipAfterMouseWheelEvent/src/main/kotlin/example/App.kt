@@ -85,15 +85,13 @@ private open class TooltipList<E>(m: ListModel<E>?) : JList<E>(m) {
     Point(it.x, it.y + getCellBounds(i, i).height)
   }
 
-  private fun getToolTipCellPoint(e: MouseEvent): Point? {
-    return mousePosition
-      ?.takeIf { it != e.point }
-      ?.takeIf { p ->
-        val i = locationToIndex(p)
-        val cellBounds = getCellBounds(i, i)
-        cellBounds != null && cellBounds.contains(p)
-      }
-  }
+  private fun getToolTipCellPoint(e: MouseEvent) = mousePosition
+    ?.takeIf { it != e.point }
+    ?.takeIf { p ->
+      val i = locationToIndex(p)
+      val cellBounds = getCellBounds(i, i)
+      cellBounds != null && cellBounds.contains(p)
+    }
 }
 
 private class TooltipListCellRenderer<E> : ListCellRenderer<E> {

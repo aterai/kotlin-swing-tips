@@ -44,13 +44,11 @@ private fun makeTable(model: DefaultTableModel): JTable {
 fun makeUI(): Component {
   val columnNames = arrayOf("No.", "Name", "URL")
   val model = object : DefaultTableModel(columnNames, 0) {
-    override fun getColumnClass(column: Int): Class<*> {
-      return when (column) {
-        0 -> Number::class.java
-        1 -> String::class.java
-        2 -> URL::class.java
-        else -> super.getColumnClass(column)
-      }
+    override fun getColumnClass(column: Int) = when (column) {
+      0 -> Number::class.java
+      1 -> String::class.java
+      2 -> URL::class.java
+      else -> super.getColumnClass(column)
     }
 
     override fun isCellEditable(
