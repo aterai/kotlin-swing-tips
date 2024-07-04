@@ -7,7 +7,6 @@ import java.awt.font.TextLayout
 import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
 import javax.swing.*
-import javax.swing.event.MouseInputListener
 import javax.swing.plaf.basic.BasicSplitPaneUI
 import javax.swing.plaf.basic.BasicTableHeaderUI
 import javax.swing.plaf.synth.SynthTableHeaderUI
@@ -123,19 +122,17 @@ private object ResizeCursorUtils {
 }
 
 private class MyWindowsTableHeaderUI : WindowsTableHeaderUI() {
-  override fun createMouseInputListener(): MouseInputListener {
-    return object : MouseInputHandler() {
-      private val resizeCursor = ResizeCursorUtils.createCursor("⇼", 32, 32, header)
-      private val defaultCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+  override fun createMouseInputListener() = object : MouseInputHandler() {
+    private val resizeCursor = ResizeCursorUtils.createCursor("⇼", 32, 32, header)
+    private val defaultCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
 
-      override fun mouseMoved(e: MouseEvent) {
-        super.mouseMoved(e)
-        if (header.isEnabled) {
-          header.cursor = if (ResizeCursorUtils.canResize(header, e.point)) {
-            resizeCursor
-          } else {
-            defaultCursor
-          }
+    override fun mouseMoved(e: MouseEvent) {
+      super.mouseMoved(e)
+      if (header.isEnabled) {
+        header.cursor = if (ResizeCursorUtils.canResize(header, e.point)) {
+          resizeCursor
+        } else {
+          defaultCursor
         }
       }
     }
@@ -143,19 +140,17 @@ private class MyWindowsTableHeaderUI : WindowsTableHeaderUI() {
 }
 
 private class MySynthTableHeaderUI : SynthTableHeaderUI() {
-  override fun createMouseInputListener(): MouseInputListener {
-    return object : MouseInputHandler() {
-      private val resizeCursor = ResizeCursorUtils.createCursor("⇼", 32, 32, header)
-      private val defaultCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+  override fun createMouseInputListener() = object : MouseInputHandler() {
+    private val resizeCursor = ResizeCursorUtils.createCursor("⇼", 32, 32, header)
+    private val defaultCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
 
-      override fun mouseMoved(e: MouseEvent) {
-        super.mouseMoved(e)
-        if (header.isEnabled) {
-          header.cursor = if (ResizeCursorUtils.canResize(header, e.point)) {
-            resizeCursor
-          } else {
-            defaultCursor
-          }
+    override fun mouseMoved(e: MouseEvent) {
+      super.mouseMoved(e)
+      if (header.isEnabled) {
+        header.cursor = if (ResizeCursorUtils.canResize(header, e.point)) {
+          resizeCursor
+        } else {
+          defaultCursor
         }
       }
     }
@@ -163,19 +158,17 @@ private class MySynthTableHeaderUI : SynthTableHeaderUI() {
 }
 
 private class MyBasicTableHeaderUI : BasicTableHeaderUI() {
-  override fun createMouseInputListener(): MouseInputListener {
-    return object : MouseInputHandler() {
-      private val resizeCursor = ResizeCursorUtils.createCursor("⇼", 32, 32, header)
-      private val defaultCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+  override fun createMouseInputListener() = object : MouseInputHandler() {
+    private val resizeCursor = ResizeCursorUtils.createCursor("⇼", 32, 32, header)
+    private val defaultCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
 
-      override fun mouseMoved(e: MouseEvent) {
-        super.mouseMoved(e)
-        if (header.isEnabled) {
-          header.cursor = if (ResizeCursorUtils.canResize(header, e.point)) {
-            resizeCursor
-          } else {
-            defaultCursor
-          }
+    override fun mouseMoved(e: MouseEvent) {
+      super.mouseMoved(e)
+      if (header.isEnabled) {
+        header.cursor = if (ResizeCursorUtils.canResize(header, e.point)) {
+          resizeCursor
+        } else {
+          defaultCursor
         }
       }
     }

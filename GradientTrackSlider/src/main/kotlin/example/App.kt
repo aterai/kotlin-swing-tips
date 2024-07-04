@@ -61,28 +61,26 @@ fun makeUI(): Component {
   return p
 }
 
-private fun makeSlider(): JSlider {
-  return object : JSlider(SwingConstants.HORIZONTAL, 0, 100, 50) {
-    private var handler: MouseAdapter? = null
+private fun makeSlider() = object : JSlider(SwingConstants.HORIZONTAL, 0, 100, 50) {
+  private var handler: MouseAdapter? = null
 
-    override fun updateUI() {
-      super.updateUI()
-      handler = object : MouseAdapter() {
-        override fun mouseDragged(e: MouseEvent) {
-          e.component.repaint()
-        }
+  override fun updateUI() {
+    super.updateUI()
+    handler = object : MouseAdapter() {
+      override fun mouseDragged(e: MouseEvent) {
+        e.component.repaint()
+      }
 
-        override fun mouseWheelMoved(e: MouseWheelEvent) {
-          (e.component as? JSlider)?.model?.also {
-            it.value = it.value - e.wheelRotation
-          }
+      override fun mouseWheelMoved(e: MouseWheelEvent) {
+        (e.component as? JSlider)?.model?.also {
+          it.value -= e.wheelRotation
         }
       }
-      addMouseMotionListener(handler)
-      addMouseWheelListener(handler)
-      background = Color.GRAY
-      isOpaque = false
     }
+    addMouseMotionListener(handler)
+    addMouseWheelListener(handler)
+    background = Color.GRAY
+    isOpaque = false
   }
 }
 

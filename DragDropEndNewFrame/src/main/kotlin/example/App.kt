@@ -269,17 +269,14 @@ private class DnDTabbedPane : JTabbedPane() {
 }
 
 private class TabTransferable(private val tabbedPane: Component) : Transferable {
-  override fun getTransferData(flavor: DataFlavor): Any {
-    val flavors = transferDataFlavors
-    return if (flavor.equals(flavors[0])) tabbedPane else emptyList<File>()
-  }
+  override fun getTransferData(
+    flavor: DataFlavor,
+  ): Any = if (flavor == transferDataFlavors[0]) tabbedPane else emptyList<File>()
 
-  override fun getTransferDataFlavors(): Array<DataFlavor> {
-    return arrayOf(
-      DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "test"),
-      DataFlavor.javaFileListFlavor,
-    )
-  }
+  override fun getTransferDataFlavors() = arrayOf(
+    DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "test"),
+    DataFlavor.javaFileListFlavor,
+  )
 
   override fun isDataFlavorSupported(f: DataFlavor) = transferDataFlavors.contains(f)
 }

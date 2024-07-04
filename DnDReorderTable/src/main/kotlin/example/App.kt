@@ -76,12 +76,12 @@ private class TableRowTransferHandler : TransferHandler() {
       override fun isDataFlavorSupported(flavor: DataFlavor) = FLAVOR == flavor
 
       @Throws(UnsupportedFlavorException::class)
-      override fun getTransferData(flavor: DataFlavor): Any {
-        return if (isDataFlavorSupported(flavor)) {
-          transferredRows
-        } else {
-          throw UnsupportedFlavorException(flavor)
-        }
+      override fun getTransferData(
+        flavor: DataFlavor,
+      ) = if (isDataFlavorSupported(flavor)) {
+        transferredRows
+      } else {
+        throw UnsupportedFlavorException(flavor)
       }
     }
   }

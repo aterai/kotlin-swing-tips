@@ -59,18 +59,18 @@ private fun createFrame2(): JInternalFrame {
     override fun updateUI() {
       super.updateUI()
       setUI(object : WindowsInternalFrameUI(this) {
-        override fun createBorderListener(w: JInternalFrame): MouseInputAdapter {
-          return object : BorderListener() {
-            override fun mouseClicked(e: MouseEvent) {
-              if (SwingUtilities.isLeftMouseButton(e)) {
-                super.mouseClicked(e)
-              }
+        override fun createBorderListener(
+          w: JInternalFrame,
+        ) = object : BorderListener() {
+          override fun mouseClicked(e: MouseEvent) {
+            if (SwingUtilities.isLeftMouseButton(e)) {
+              super.mouseClicked(e)
             }
+          }
 
-            override fun mousePressed(e: MouseEvent) {
-              if (SwingUtilities.isLeftMouseButton(e)) {
-                super.mousePressed(e)
-              }
+          override fun mousePressed(e: MouseEvent) {
+            if (SwingUtilities.isLeftMouseButton(e)) {
+              super.mousePressed(e)
             }
           }
         }

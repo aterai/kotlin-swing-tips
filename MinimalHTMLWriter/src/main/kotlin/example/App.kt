@@ -171,17 +171,15 @@ private class BasicTransferable(
   override fun isDataFlavorSupported(f: DataFlavor) = transferDataFlavors.contains(f)
 
   @Throws(UnsupportedFlavorException::class, IOException::class)
-  override fun getTransferData(flavor: DataFlavor): Any {
-    return when {
-      // richerFlavors.contains(flavor) -> getRicherData
-      htmlFlavors.contains(flavor) -> getHtmlTransferData(flavor)
+  override fun getTransferData(flavor: DataFlavor) = when {
+    // richerFlavors.contains(flavor) -> getRicherData
+    htmlFlavors.contains(flavor) -> getHtmlTransferData(flavor)
 
-      plainFlavors.contains(flavor) -> getPlaneTransferData(flavor)
+    plainFlavors.contains(flavor) -> getPlaneTransferData(flavor)
 
-      stringFlavors.contains(flavor) -> plainData
+    stringFlavors.contains(flavor) -> plainData
 
-      else -> throw UnsupportedFlavorException(flavor)
-    }
+    else -> throw UnsupportedFlavorException(flavor)
   }
 
   private fun createInputStream(

@@ -57,33 +57,29 @@ class PropertyTable(model: TableModel) : JTable(model) {
   override fun getCellRenderer(
     row: Int,
     column: Int,
-  ): TableCellRenderer {
-    return if (convertColumnIndexToModel(column) == TARGET_COLUMN) {
-      getDefaultRenderer(getClassAt(row, column))
-    } else {
-      super.getCellRenderer(row, column)
-    }
+  ): TableCellRenderer = if (convertColumnIndexToModel(column) == TARGET_COLUMN) {
+    getDefaultRenderer(getClassAt(row, column))
+  } else {
+    super.getCellRenderer(row, column)
   }
 
   override fun getCellEditor(
     row: Int,
     column: Int,
-  ): TableCellEditor {
-    return if (convertColumnIndexToModel(column) == TARGET_COLUMN) {
-      editingClass = getClassAt(row, column)
-      getDefaultEditor(editingClass)
-    } else {
-      editingClass = null
-      super.getCellEditor(row, column)
-    }
+  ): TableCellEditor = if (convertColumnIndexToModel(column) == TARGET_COLUMN) {
+    editingClass = getClassAt(row, column)
+    getDefaultEditor(editingClass)
+  } else {
+    editingClass = null
+    super.getCellEditor(row, column)
   }
 
-  override fun getColumnClass(column: Int): Class<*>? {
-    return if (convertColumnIndexToModel(column) == TARGET_COLUMN) {
-      editingClass
-    } else {
-      super.getColumnClass(column)
-    }
+  override fun getColumnClass(
+    column: Int,
+  ) = if (convertColumnIndexToModel(column) == TARGET_COLUMN) {
+    editingClass
+  } else {
+    super.getColumnClass(column)
   }
 
   companion object {
@@ -136,7 +132,7 @@ class DateEditor : AbstractCellEditor(), TableCellEditor {
     return spinner
   }
 
-  override fun getCellEditorValue() = spinner.value
+  override fun getCellEditorValue(): Any = spinner.value
 
   override fun stopCellEditing(): Boolean {
     val stopEditing = runCatching {
@@ -204,7 +200,7 @@ class ColorEditor : AbstractCellEditor(), TableCellEditor, ActionListener {
     }
   }
 
-  override fun getCellEditorValue() = currentColor
+  override fun getCellEditorValue(): Color = currentColor
 
   override fun getTableCellEditorComponent(
     table: JTable,

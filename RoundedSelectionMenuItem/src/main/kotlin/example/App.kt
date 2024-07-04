@@ -46,40 +46,32 @@ fun makeUI(): Component {
   }
 }
 
-private fun makePopupMenu(): JPopupMenu {
-  return object : JPopupMenu() {
-    override fun add(s: String): JMenuItem {
-      return add(object : JMenuItem(s) {
-        override fun updateUI() {
-          super.updateUI()
-          val ui = getUI()
-          if (ui is WindowsMenuItemUI) {
-            setUI(WindowsRoundMenuItemUI())
-          } else if (ui !is SynthMenuItemUI) {
-            setUI(BasicRoundMenuItemUI())
-          }
-        }
-      })
+private fun makePopupMenu() = object : JPopupMenu() {
+  override fun add(s: String): JMenuItem = add(object : JMenuItem(s) {
+    override fun updateUI() {
+      super.updateUI()
+      val ui = getUI()
+      if (ui is WindowsMenuItemUI) {
+        setUI(WindowsRoundMenuItemUI())
+      } else if (ui !is SynthMenuItemUI) {
+        setUI(BasicRoundMenuItemUI())
+      }
     }
-  }
+  })
 }
 
-private fun makeMenu(): JMenu {
-  return object : JMenu("JMenu(M)") {
-    override fun add(s: String): JMenuItem {
-      return add(object : JMenuItem(s) {
-        override fun updateUI() {
-          super.updateUI()
-          val ui = getUI()
-          if (ui is WindowsMenuItemUI) {
-            setUI(WindowsRoundMenuItemUI2())
-          } else if (ui !is SynthMenuItemUI) {
-            setUI(BasicRoundMenuItemUI())
-          }
-        }
-      })
+private fun makeMenu() = object : JMenu("JMenu(M)") {
+  override fun add(s: String): JMenuItem = add(object : JMenuItem(s) {
+    override fun updateUI() {
+      super.updateUI()
+      val ui = getUI()
+      if (ui is WindowsMenuItemUI) {
+        setUI(WindowsRoundMenuItemUI2())
+      } else if (ui !is SynthMenuItemUI) {
+        setUI(BasicRoundMenuItemUI())
+      }
     }
-  }
+  })
 }
 
 private object LookAndFeelUtils {

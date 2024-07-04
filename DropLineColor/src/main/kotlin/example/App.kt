@@ -72,13 +72,11 @@ private fun makeTablePanel(): Component {
     arrayOf("ggg", 0, false),
   )
   val model = object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int): Class<*> {
-      return when (column) {
-        0 -> String::class.java
-        1 -> Number::class.java
-        2 -> Boolean::class.javaObjectType
-        else -> super.getColumnClass(column)
-      }
+    override fun getColumnClass(column: Int) = when (column) {
+      0 -> String::class.java
+      1 -> Number::class.java
+      2 -> Boolean::class.javaObjectType
+      else -> super.getColumnClass(column)
     }
   }
   val table = JTable(model)
@@ -151,12 +149,12 @@ private class ListItemTransferHandler : TransferHandler() {
       override fun isDataFlavorSupported(flavor: DataFlavor) = FLAVOR == flavor
 
       @Throws(UnsupportedFlavorException::class)
-      override fun getTransferData(flavor: DataFlavor): Any {
-        return if (isDataFlavorSupported(flavor) && selectedValues != null) {
-          selectedValues
-        } else {
-          throw UnsupportedFlavorException(flavor)
-        }
+      override fun getTransferData(
+        flavor: DataFlavor,
+      ) = if (isDataFlavorSupported(flavor) && selectedValues != null) {
+        selectedValues
+      } else {
+        throw UnsupportedFlavorException(flavor)
       }
     }
   }
@@ -269,12 +267,12 @@ private class TableRowTransferHandler : TransferHandler() {
       override fun isDataFlavorSupported(flavor: DataFlavor) = FLAVOR == flavor
 
       @Throws(UnsupportedFlavorException::class)
-      override fun getTransferData(flavor: DataFlavor): Any {
-        return if (isDataFlavorSupported(flavor)) {
-          transferredRows
-        } else {
-          throw UnsupportedFlavorException(flavor)
-        }
+      override fun getTransferData(
+        flavor: DataFlavor,
+      ) = if (isDataFlavorSupported(flavor)) {
+        transferredRows
+      } else {
+        throw UnsupportedFlavorException(flavor)
       }
     }
   }

@@ -56,30 +56,28 @@ private fun makeModel() = DefaultListModel<Color>().also {
   it.addElement(Color.MAGENTA)
 }
 
-private fun makeList(model: ListModel<Color>): JList<Color> {
-  return object : JList<Color>(model) {
-    override fun updateUI() {
-      selectionBackground = null // Nimbus
-      cellRenderer = null
-      super.updateUI()
-      selectionModel.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
-      dropMode = DropMode.INSERT
-      dragEnabled = true
-      val renderer = cellRenderer
-      setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-        renderer.getListCellRendererComponent(
-          list,
-          value,
-          index,
-          isSelected,
-          cellHasFocus,
-        ).also {
-          it.foreground = value
-        }
+private fun makeList(model: ListModel<Color>) = object : JList<Color>(model) {
+  override fun updateUI() {
+    selectionBackground = null // Nimbus
+    cellRenderer = null
+    super.updateUI()
+    selectionModel.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
+    dropMode = DropMode.INSERT
+    dragEnabled = true
+    val renderer = cellRenderer
+    setCellRenderer { list, value, index, isSelected, cellHasFocus ->
+      renderer.getListCellRendererComponent(
+        list,
+        value,
+        index,
+        isSelected,
+        cellHasFocus,
+      ).also {
+        it.foreground = value
       }
-      transferHandler = ListItemTransferHandler()
-      componentPopupMenu = ListPopupMenu(this)
     }
+    transferHandler = ListItemTransferHandler()
+    componentPopupMenu = ListPopupMenu(this)
   }
 }
 
@@ -135,12 +133,12 @@ private class ListItemTransferHandler : TransferHandler() {
       override fun isDataFlavorSupported(flavor: DataFlavor) = FLAVOR == flavor
 
       @Throws(UnsupportedFlavorException::class)
-      override fun getTransferData(flavor: DataFlavor): Any {
-        return if (isDataFlavorSupported(flavor) && selectedValues != null) {
-          selectedValues
-        } else {
-          throw UnsupportedFlavorException(flavor)
-        }
+      override fun getTransferData(
+        flavor: DataFlavor,
+      ) = if (isDataFlavorSupported(flavor) && selectedValues != null) {
+        selectedValues
+      } else {
+        throw UnsupportedFlavorException(flavor)
       }
     }
   }

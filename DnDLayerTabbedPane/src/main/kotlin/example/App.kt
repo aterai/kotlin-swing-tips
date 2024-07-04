@@ -368,12 +368,12 @@ private class TabTransferHandler : TransferHandler() {
       override fun isDataFlavorSupported(flavor: DataFlavor) = localObjectFlavor == flavor
 
       @Throws(UnsupportedFlavorException::class, IOException::class)
-      override fun getTransferData(flavor: DataFlavor): Any {
-        return if (isDataFlavorSupported(flavor) && src != null) {
-          DnDTabData(src)
-        } else {
-          throw UnsupportedFlavorException(flavor)
-        }
+      override fun getTransferData(
+        flavor: DataFlavor,
+      ) = if (isDataFlavorSupported(flavor) && src != null) {
+        DnDTabData(src)
+      } else {
+        throw UnsupportedFlavorException(flavor)
       }
     }
   }

@@ -43,14 +43,14 @@ fun makeUI(): Component {
   tree.model.addTreeModelListener(CheckBoxStatusUpdateListener())
   val handler = object : TreeWillExpandListener {
     @Throws(ExpandVetoException::class)
-    override fun treeWillExpand(e: TreeExpansionEvent) {
-      throw ExpandVetoException(e, "Tree expansion cancelled")
-    }
+    override fun treeWillExpand(
+      e: TreeExpansionEvent,
+    ) = throw ExpandVetoException(e, "Tree expansion cancelled")
 
     @Throws(ExpandVetoException::class)
-    override fun treeWillCollapse(e: TreeExpansionEvent) {
-      throw ExpandVetoException(e, "Tree collapse cancelled")
-    }
+    override fun treeWillCollapse(
+      e: TreeExpansionEvent,
+    ) = throw ExpandVetoException(e, "Tree collapse cancelled")
   }
   tree.addTreeWillExpandListener(handler)
 

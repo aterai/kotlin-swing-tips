@@ -3,12 +3,10 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
-  return JPanel(BorderLayout()).also {
-    EventQueue.invokeLater { it.rootPane.jMenuBar = createMenuBar() }
-    it.add(JScrollPane(JTextArea()))
-    it.preferredSize = Dimension(320, 240)
-  }
+fun makeUI() = JPanel(BorderLayout()).also {
+  EventQueue.invokeLater { it.rootPane.jMenuBar = createMenuBar() }
+  it.add(JScrollPane(JTextArea()))
+  it.preferredSize = Dimension(320, 240)
 }
 
 private fun createMenuBar(): JMenuBar {

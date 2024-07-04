@@ -33,9 +33,9 @@ private fun makeTree(): JTree {
     }
 
     @Throws(ExpandVetoException::class)
-    override fun treeWillCollapse(e: TreeExpansionEvent) {
-      throw ExpandVetoException(e, "Tree collapse cancelled")
-    }
+    override fun treeWillCollapse(
+      e: TreeExpansionEvent,
+    ) = throw ExpandVetoException(e, "Tree collapse cancelled")
   }
   tree.addTreeWillExpandListener(handler)
   return tree

@@ -88,12 +88,12 @@ private class TableRowTransferHandler : TransferHandler() {
       override fun isDataFlavorSupported(flavor: DataFlavor) = FLAVOR == flavor
 
       @Throws(UnsupportedFlavorException::class)
-      override fun getTransferData(flavor: DataFlavor): Any {
-        return if (isDataFlavorSupported(flavor)) {
-          transferredObjects
-        } else {
-          throw UnsupportedFlavorException(flavor)
-        }
+      override fun getTransferData(
+        flavor: DataFlavor,
+      ) = if (isDataFlavorSupported(flavor)) {
+        transferredObjects
+      } else {
+        throw UnsupportedFlavorException(flavor)
       }
     }
   }
@@ -104,7 +104,8 @@ private class TableRowTransferHandler : TransferHandler() {
   private fun canDropTable(info: TransferSupport): Boolean {
     val c = info.component
     val p = SwingUtilities.getAncestorOfClass(JDesktopPane::class.java, c)
-    return c is JTable && p is JDesktopPane &&
+    return c is JTable &&
+        p is JDesktopPane &&
         (c == source || canDropTargetTable(info, p, c))
   }
 

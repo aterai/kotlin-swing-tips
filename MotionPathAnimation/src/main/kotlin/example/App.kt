@@ -7,10 +7,8 @@ import java.awt.geom.Point2D
 import java.awt.geom.RoundRectangle2D
 import javax.swing.*
 
-fun makeUI(): Component {
-  return MotionPathAnimationPanel().also {
-    it.preferredSize = Dimension(320, 240)
-  }
+fun makeUI() = MotionPathAnimationPanel().also {
+  it.preferredSize = Dimension(320, 240)
 }
 
 class MotionPathAnimationPanel : JPanel(BorderLayout()) {

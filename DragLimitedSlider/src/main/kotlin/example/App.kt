@@ -48,39 +48,35 @@ private fun makeSlider(title: String): JSlider {
 }
 
 private class WindowsDragLimitedSliderUI(slider: JSlider) : WindowsSliderUI(slider) {
-  override fun createTrackListener(slider: JSlider): TrackListener {
-    return object : TrackListener() {
-      override fun mouseDragged(e: MouseEvent) { // case HORIZONTAL:
-        val halfThumbWidth = thumbRect.width / 2
-        val thumbLeft = e.x - offset
-        val maxPos = xPositionForValue(MAXI) - halfThumbWidth
-        val minPos = xPositionForValue(MINI) - halfThumbWidth
-        if (thumbLeft > maxPos) {
-          e.translatePoint(maxPos + offset - e.x, 0)
-        } else if (thumbLeft < minPos) {
-          e.translatePoint(minPos + offset - e.x, 0)
-        }
-        super.mouseDragged(e)
+  override fun createTrackListener(slider: JSlider) = object : TrackListener() {
+    override fun mouseDragged(e: MouseEvent) { // case HORIZONTAL:
+      val halfThumbWidth = thumbRect.width / 2
+      val thumbLeft = e.x - offset
+      val maxPos = xPositionForValue(MAXI) - halfThumbWidth
+      val minPos = xPositionForValue(MINI) - halfThumbWidth
+      if (thumbLeft > maxPos) {
+        e.translatePoint(maxPos + offset - e.x, 0)
+      } else if (thumbLeft < minPos) {
+        e.translatePoint(minPos + offset - e.x, 0)
       }
+      super.mouseDragged(e)
     }
   }
 }
 
 private class BasicDragLimitedSliderUI(slider: JSlider) : BasicSliderUI(slider) {
-  override fun createTrackListener(slider: JSlider): TrackListener {
-    return object : TrackListener() {
-      override fun mouseDragged(e: MouseEvent) { // case HORIZONTAL:
-        val halfThumbWidth = thumbRect.width / 2
-        val thumbLeft = e.x - offset
-        val maxPos = xPositionForValue(MAXI) - halfThumbWidth
-        val minPos = xPositionForValue(MINI) - halfThumbWidth
-        if (thumbLeft > maxPos) {
-          e.translatePoint(maxPos + offset - e.x, 0)
-        } else if (thumbLeft < minPos) {
-          e.translatePoint(minPos + offset - e.x, 0)
-        }
-        super.mouseDragged(e)
+  override fun createTrackListener(slider: JSlider) = object : TrackListener() {
+    override fun mouseDragged(e: MouseEvent) { // case HORIZONTAL:
+      val halfThumbWidth = thumbRect.width / 2
+      val thumbLeft = e.x - offset
+      val maxPos = xPositionForValue(MAXI) - halfThumbWidth
+      val minPos = xPositionForValue(MINI) - halfThumbWidth
+      if (thumbLeft > maxPos) {
+        e.translatePoint(maxPos + offset - e.x, 0)
+      } else if (thumbLeft < minPos) {
+        e.translatePoint(minPos + offset - e.x, 0)
       }
+      super.mouseDragged(e)
     }
   }
 }

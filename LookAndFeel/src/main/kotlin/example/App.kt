@@ -4,14 +4,12 @@ import java.awt.*
 import java.awt.event.ActionEvent
 import javax.swing.*
 
-fun makeUI(): Component {
-  return JPanel(BorderLayout()).also {
-    val menuBar = JMenuBar()
-    menuBar.add(LookAndFeelUtils.createLookAndFeelMenu())
-    EventQueue.invokeLater { it.rootPane.jMenuBar = menuBar }
-    it.add(JScrollPane(makeTestBox()))
-    it.preferredSize = Dimension(320, 240)
-  }
+fun makeUI() = JPanel(BorderLayout()).also {
+  val menuBar = JMenuBar()
+  menuBar.add(LookAndFeelUtils.createLookAndFeelMenu())
+  EventQueue.invokeLater { it.rootPane.jMenuBar = menuBar }
+  it.add(JScrollPane(makeTestBox()))
+  it.preferredSize = Dimension(320, 240)
 }
 
 private fun makeTestBox() = Box.createVerticalBox().also {

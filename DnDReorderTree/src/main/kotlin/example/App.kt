@@ -164,16 +164,18 @@ private fun isDescendant(tree: JTree, selRow: Int, dropRow: Int): Boolean {
   return node is DefaultMutableTreeNode && isDescendant2(tree, dropRow, node)
 }
 
-private fun isDescendant2(tree: JTree, dropRow: Int, node: DefaultMutableTreeNode): Boolean {
-  return node.depthFirstEnumeration()
-    .asSequence()
-    .filterIsInstance<DefaultMutableTreeNode>()
-    .map { it.path }
-    .map { TreePath(it) }
-    .toList()
-    .map { tree.getRowForPath(it) }
-    .any { it == dropRow }
-}
+private fun isDescendant2(
+  tree: JTree,
+  dropRow: Int,
+  node: DefaultMutableTreeNode,
+) = node.depthFirstEnumeration()
+  .asSequence()
+  .filterIsInstance<DefaultMutableTreeNode>()
+  .map { it.path }
+  .map { TreePath(it) }
+  .toList()
+  .map { tree.getRowForPath(it) }
+  .any { it == dropRow }
 
 fun deepCopy(src: MutableTreeNode, tgt: DefaultMutableTreeNode): DefaultMutableTreeNode {
   src.children()
