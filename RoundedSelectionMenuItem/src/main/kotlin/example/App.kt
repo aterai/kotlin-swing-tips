@@ -198,9 +198,7 @@ private class WindowsRoundMenuItemUI2 : WindowsMenuItemUI() {
     val height = menuItem.height
     val config = (g as? Graphics2D)?.deviceConfiguration ?: return
     do {
-      var status = buffer?.let {
-        it.validate(config)
-      } ?: VolatileImage.IMAGE_INCOMPATIBLE
+      val status = buffer?.validate(config) ?: VolatileImage.IMAGE_INCOMPATIBLE
       if (status == VolatileImage.IMAGE_INCOMPATIBLE ||
         status == VolatileImage.IMAGE_RESTORED
       ) {
@@ -226,7 +224,7 @@ private class WindowsRoundMenuItemUI2 : WindowsMenuItemUI() {
         super.paintBackground(g2, menuItem, bgColor)
         g2.dispose()
       }
-    } while (buffer?.contentsLost() ?: false)
+    } while (buffer?.contentsLost() == true)
     g.drawImage(buffer, 0, 0, menuItem)
   }
 }
