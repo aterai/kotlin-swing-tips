@@ -26,7 +26,9 @@ fun makeUI(): Component {
 
 private fun expandTree(tree: JTree) {
   val root = tree.model.root as? DefaultMutableTreeNode ?: return
-  root.preorderEnumeration().toList()
+  root
+    .preorderEnumeration()
+    .toList()
     .filterIsInstance<DefaultMutableTreeNode>()
     .map { TreePath(it.path) }
     .forEach { tree.expandRow(tree.getRowForPath(it)) }

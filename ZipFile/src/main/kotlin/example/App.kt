@@ -146,7 +146,8 @@ private object ZipUtils {
     srcDir: Path,
     zip: Path,
   ) {
-    Files.walk(srcDir)
+    Files
+      .walk(srcDir)
       .filter { it.toFile().isFile }
       .use {
         val files = it.toList() // it.collect(Collectors.toList())

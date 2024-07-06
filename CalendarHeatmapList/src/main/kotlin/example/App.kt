@@ -30,19 +30,20 @@ private val weekList = object : JList<Contribution>(CalendarViewListModel(curren
     fixedCellHeight = CELL_SIZE.height
     val renderer = cellRenderer
     setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-      renderer.getListCellRendererComponent(
-        list,
-        value,
-        index,
-        isSelected,
-        cellHasFocus,
-      ).also {
-        (it as? JLabel)?.icon = if (value.date.isAfter(currentLocalDate)) {
-          ContributionIcon(Color.WHITE)
-        } else {
-          activityIcons[value.activity]
+      renderer
+        .getListCellRendererComponent(
+          list,
+          value,
+          index,
+          isSelected,
+          cellHasFocus,
+        ).also {
+          (it as? JLabel)?.icon = if (value.date.isAfter(currentLocalDate)) {
+            ContributionIcon(Color.WHITE)
+          } else {
+            activityIcons[value.activity]
+          }
         }
-      }
     }
     selectionModel.selectionMode = ListSelectionModel.SINGLE_INTERVAL_SELECTION
     border = BorderFactory.createEmptyBorder(2, 2, 2, 2)

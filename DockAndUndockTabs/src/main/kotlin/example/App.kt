@@ -245,8 +245,7 @@ class DnDTabbedPane : JTabbedPane() {
       (e.component as? DnDTabbedPane)
         ?.takeIf {
           startPt != null && tabPt.distance(startPt) > dragThreshold
-        }
-        ?.also {
+        }?.also {
           val th = it.transferHandler
           val idx = it.indexAtLocation(tabPt.x, tabPt.y)
           val selIdx = it.selectedIndex

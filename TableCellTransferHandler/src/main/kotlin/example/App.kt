@@ -80,11 +80,12 @@ fun makeUI(): Component {
 
 private class CellIconTransferHandler : TransferHandler() {
   override fun createTransferable(c: JComponent): Transferable {
-    val data = (c as? JTable)?.takeIf {
-      Icon::class.java.isAssignableFrom(it.getColumnClass(it.selectedColumn))
-    }?.let {
-      it.getValueAt(it.selectedRow, it.selectedColumn)
-    }
+    val data = (c as? JTable)
+      ?.takeIf {
+        Icon::class.java.isAssignableFrom(it.getColumnClass(it.selectedColumn))
+      }?.let {
+        it.getValueAt(it.selectedRow, it.selectedColumn)
+      }
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(ICON_FLAVOR)
 

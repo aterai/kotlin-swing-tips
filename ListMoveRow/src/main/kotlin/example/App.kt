@@ -96,15 +96,16 @@ private fun makeList(model: ListModel<Color>) = object : JList<Color>(model) {
     transferHandler = ListItemTransferHandler()
     val renderer = cellRenderer
     setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-      renderer.getListCellRendererComponent(
-        list,
-        value,
-        index,
-        isSelected,
-        cellHasFocus,
-      ).also {
-        it.foreground = value
-      }
+      renderer
+        .getListCellRendererComponent(
+          list,
+          value,
+          index,
+          isSelected,
+          cellHasFocus,
+        ).also {
+          it.foreground = value
+        }
     }
   }
 }

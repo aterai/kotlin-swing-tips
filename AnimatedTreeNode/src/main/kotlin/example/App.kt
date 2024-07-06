@@ -12,28 +12,29 @@ private val tree = object : JTree() {
   override fun updateUI() {
     setCellRenderer(null)
     super.updateUI()
-    val r = getCellRenderer()
+    val renderer = getCellRenderer()
     setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-      r.getTreeCellRendererComponent(
-        tree,
-        value,
-        selected,
-        expanded,
-        leaf,
-        row,
-        hasFocus,
-      ).also {
-        if (it is JLabel) {
-          val uo = (value as? DefaultMutableTreeNode)?.userObject
-          if (uo is NodeObject) {
-            it.text = uo.title
-            it.icon = uo.icon
-          } else {
-            it.text = value?.toString() ?: ""
-            it.icon = null
+      renderer
+        .getTreeCellRendererComponent(
+          tree,
+          value,
+          selected,
+          expanded,
+          leaf,
+          row,
+          hasFocus,
+        ).also {
+          if (it is JLabel) {
+            val uo = (value as? DefaultMutableTreeNode)?.userObject
+            if (uo is NodeObject) {
+              it.text = uo.title
+              it.icon = uo.icon
+            } else {
+              it.text = value?.toString() ?: ""
+              it.icon = null
+            }
           }
         }
-      }
     }
   }
 }

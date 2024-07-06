@@ -171,7 +171,8 @@ private fun inlineHighlight(
   element: Element,
   attrs: AttributeSet,
 ) {
-  attrs.attributeNames.toList()
+  attrs.attributeNames
+    .toList()
     .map { attrs.getAttribute(it) }
     .filterIsInstance<AttributeSet>()
     .mapNotNull { it.getAttribute(HTML.Attribute.ID) }

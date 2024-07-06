@@ -23,7 +23,8 @@ fun makeUI(): Component {
   fileSystemView.roots.forEach { fileSystemRoot ->
     val node = DefaultMutableTreeNode(CheckBoxNode(fileSystemRoot, Status.DESELECTED))
     root.add(node)
-    fileSystemView.getFiles(fileSystemRoot, true)
+    fileSystemView
+      .getFiles(fileSystemRoot, true)
       .filter { it.isDirectory }
       .map { CheckBoxNode(it, Status.DESELECTED) }
       .map { DefaultMutableTreeNode(it) }
@@ -242,7 +243,8 @@ private class FolderSelectionListener(
     }
     val worker = object : BackgroundTask(fileSystemView, check.file) {
       override fun process(chunks: List<File>) {
-        chunks.map { CheckBoxNode(it, parentStatus) }
+        chunks
+          .map { CheckBoxNode(it, parentStatus) }
           .map { DefaultMutableTreeNode(it) }
           .forEach { model.insertNodeInto(it, node, node.childCount) }
       }
@@ -257,7 +259,8 @@ private open class BackgroundTask(
 ) : SwingWorker<String, File>() {
   @Throws(InterruptedException::class)
   override fun doInBackground(): String {
-    fileSystemView.getFiles(parent, true)
+    fileSystemView
+      .getFiles(parent, true)
       .filter { it.isDirectory }
       .forEach { this.publish(it) }
     return "done"
@@ -301,7 +304,9 @@ private class CheckBoxStatusUpdateListener : TreeModelListener {
   }
 
   private fun updateParentUserObject(parent: DefaultMutableTreeNode) {
-    val list = parent.children().toList()
+    val list = parent
+      .children()
+      .toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .mapNotNull { (it.userObject as? CheckBoxNode)?.status }
 
@@ -319,7 +324,9 @@ private class CheckBoxStatusUpdateListener : TreeModelListener {
     parent: DefaultMutableTreeNode,
     status: Status,
   ) {
-    parent.breadthFirstEnumeration().toList()
+    parent
+      .breadthFirstEnumeration()
+      .toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .filter { it != parent }
       .forEach {

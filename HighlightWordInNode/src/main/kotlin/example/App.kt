@@ -67,7 +67,9 @@ private fun searchTree(
     tree.expandPath(path.parentPath)
   }
   if (!node.isLeaf) {
-    node.children().toList()
+    node
+      .children()
+      .toList()
       .forEach { searchTree(tree, path.pathByAddingChild(it), q) }
   }
 }
@@ -78,7 +80,9 @@ private fun collapseAll(
 ) {
   val node = parent.lastPathComponent as? TreeNode ?: return
   if (!node.isLeaf) {
-    node.children().toList()
+    node
+      .children()
+      .toList()
       .forEach { collapseAll(tree, parent.pathByAddingChild(it)) }
   }
   tree.collapsePath(parent)

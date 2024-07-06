@@ -350,21 +350,22 @@ private class SortableHeaderRenderer(
     hasFocus: Boolean,
     row: Int,
     column: Int,
-  ): Component = cellRenderer.getTableCellRendererComponent(
-    table,
-    value,
-    isSelected,
-    hasFocus,
-    row,
-    column,
-  ).also {
-    val sorter = table.model
-    if (it is JLabel && sorter is TableSorter) {
-      val mi = table.convertColumnIndexToModel(column)
-      it.icon = sorter.getHeaderRendererIcon(mi, it.font.size)
-      it.horizontalTextPosition = SwingConstants.LEFT
+  ): Component = cellRenderer
+    .getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    ).also {
+      val sorter = table.model
+      if (it is JLabel && sorter is TableSorter) {
+        val mi = table.convertColumnIndexToModel(column)
+        it.icon = sorter.getHeaderRendererIcon(mi, it.font.size)
+        it.horizontalTextPosition = SwingConstants.LEFT
+      }
     }
-  }
 }
 
 // private class LexicalComparator : Comparator<Any>, Serializable {

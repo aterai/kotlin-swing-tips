@@ -60,7 +60,8 @@ private fun makeButton2(label: JLabel): JButton {
     if (rgbChooser != null) {
       val panels = cc.chooserPanels
       val choosers = panels.toMutableList()
-      SwingUtils.descendants(rgbChooser)
+      SwingUtils
+        .descendants(rgbChooser)
         .filterIsInstance<JRadioButton>()
         .forEach {
           setMnemonic(it, rgbChooser.getLocale())

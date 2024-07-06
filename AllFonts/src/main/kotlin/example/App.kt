@@ -17,7 +17,9 @@ fun makeUI(): Component {
   val table = JTable(model)
   table.autoCreateRowSorter = true
 
-  GraphicsEnvironment.getLocalGraphicsEnvironment().allFonts
+  GraphicsEnvironment
+    .getLocalGraphicsEnvironment()
+    .allFonts
     .map { arrayOf(it.family, it.name, it.psName) }
     .forEach { model.addRow(it) }
 

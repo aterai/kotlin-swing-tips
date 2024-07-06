@@ -15,19 +15,20 @@ fun makeUI(): Component {
     override fun updateUI() {
       setCellRenderer(null)
       super.updateUI()
-      val r = getCellRenderer()
+      val renderer = getCellRenderer()
       setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-        r.getTreeCellRendererComponent(
-          tree,
-          value,
-          selected,
-          expanded,
-          leaf,
-          row,
-          hasFocus,
-        )?.also {
-          (it as? JComponent)?.toolTipText = value?.let { v -> "TreeCellRenderer: $v" }
-        }
+        renderer
+          .getTreeCellRendererComponent(
+            tree,
+            value,
+            selected,
+            expanded,
+            leaf,
+            row,
+            hasFocus,
+          )?.also {
+            (it as? JComponent)?.toolTipText = value?.let { v -> "TreeCellRenderer: $v" }
+          }
       }
     }
   }

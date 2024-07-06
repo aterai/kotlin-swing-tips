@@ -80,22 +80,24 @@ private class CheckBoxCellRenderer<E : CheckBoxItem> : ListCellRenderer<E> {
     isSelected: Boolean,
     cellHasFocus: Boolean,
   ): Component = if (index < 0) {
-    // val txt = getCheckedItemString(list.model)
-    // label.setText(if (txt.isEmpty()) " " else txt)
-    // label.text = txt.takeUnless { it.isEmpty() } ?: " "
-    label.text = getCheckedItemString(list.model).ifEmpty { " " }
-    label
-  } else {
-    check.text = value.toString()
-    check.isSelected = value.isSelected
-    if (isSelected) {
-      check.background = list.selectionBackground
-      check.foreground = list.selectionForeground
-    } else {
-      check.background = list.background
-      check.foreground = list.foreground
+    label.also {
+      // val txt = getCheckedItemString(list.model)
+      // it.setText(if (txt.isEmpty()) " " else txt)
+      // it.text = txt.takeUnless { txt -> txt.isEmpty() } ?: " "
+      it.text = getCheckedItemString(list.model).ifEmpty { " " }
     }
-    check
+  } else {
+    check.also {
+      it.text = value.toString()
+      it.isSelected = value.isSelected
+      if (isSelected) {
+        it.background = list.selectionBackground
+        it.foreground = list.selectionForeground
+      } else {
+        it.background = list.background
+        it.foreground = list.foreground
+      }
+    }
   }
 
   private fun <E : CheckBoxItem> getCheckedItemString(model: ListModel<E>) =

@@ -12,19 +12,20 @@ fun makeUI(): Component {
     override fun updateUI() {
       setCellRenderer(null)
       super.updateUI()
-      val r = getCellRenderer()
+      val renderer = getCellRenderer()
       setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-        r.getTreeCellRendererComponent(
-          tree,
-          value,
-          selected,
-          expanded,
-          leaf,
-          row,
-          hasFocus,
-        ).also {
-          (it as? JComponent)?.toolTipText = value?.toString()
-        }
+        renderer
+          .getTreeCellRendererComponent(
+            tree,
+            value,
+            selected,
+            expanded,
+            leaf,
+            row,
+            hasFocus,
+          ).also {
+            (it as? JComponent)?.toolTipText = value?.toString()
+          }
       }
     }
   }
@@ -102,19 +103,20 @@ private class TooltipTree(model: TreeModel) : JTree(model) {
     setCellRenderer(null)
     super.updateUI()
     // rowHeight = 24
-    val r = getCellRenderer()
+    val renderer = getCellRenderer()
     setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-      r.getTreeCellRendererComponent(
-        tree,
-        value,
-        selected,
-        expanded,
-        leaf,
-        row,
-        hasFocus,
-      ).also {
-        (it as? JComponent)?.toolTipText = value?.toString()
-      }
+      renderer
+        .getTreeCellRendererComponent(
+          tree,
+          value,
+          selected,
+          expanded,
+          leaf,
+          row,
+          hasFocus,
+        ).also {
+          (it as? JComponent)?.toolTipText = value?.toString()
+        }
     }
   }
 

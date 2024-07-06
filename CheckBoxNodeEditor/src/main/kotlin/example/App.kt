@@ -17,7 +17,9 @@ private fun makeUI(): Component {
   }
   val model = tree.model
   (model.root as? DefaultMutableTreeNode)?.also { root ->
-    root.breadthFirstEnumeration().toList()
+    root
+      .breadthFirstEnumeration()
+      .toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .forEach {
         val title = it.userObject?.toString() ?: ""

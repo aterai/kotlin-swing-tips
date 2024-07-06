@@ -61,7 +61,9 @@ fun makeUI(): Component {
 private fun allNodesChanged(tree: JTree) {
   val model = tree.model as? DefaultTreeModel
   val root = model?.root as? DefaultMutableTreeNode ?: return
-  root.preorderEnumeration().toList()
+  root
+    .preorderEnumeration()
+    .toList()
     .filterIsInstance<TreeNode>()
     .forEach { model.nodeChanged(it) }
 }

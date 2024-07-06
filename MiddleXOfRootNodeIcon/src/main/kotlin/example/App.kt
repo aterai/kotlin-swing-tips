@@ -14,29 +14,22 @@ fun makeUI(): Component {
       setCellRenderer(null)
       super.updateUI()
       setRowHeight(0)
-      val r = getCellRenderer()
-      setCellRenderer {
-          tree: JTree,
-          value: Any?,
-          selected: Boolean,
-          expanded: Boolean,
-          leaf: Boolean,
-          row: Int,
-          hasFocus: Boolean,
-        ->
-        val c = r.getTreeCellRendererComponent(
-          tree,
-          value,
-          selected,
-          expanded,
-          leaf,
-          row,
-          hasFocus,
-        )
-        if (c is JLabel && value == tree.model.root) {
-          c.icon = icon0
-        }
-        c
+      val renderer = getCellRenderer()
+      setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
+        renderer
+          .getTreeCellRendererComponent(
+            tree,
+            value,
+            selected,
+            expanded,
+            leaf,
+            row,
+            hasFocus,
+          ).also {
+            if (it is JLabel && value == tree.model.root) {
+              it.icon = icon0
+            }
+          }
       }
     }
   }
@@ -48,30 +41,23 @@ fun makeUI(): Component {
       setCellRenderer(null)
       super.updateUI()
       setRowHeight(0)
-      val r = getCellRenderer()
-      setCellRenderer {
-          tree: JTree,
-          value: Any?,
-          selected: Boolean,
-          expanded: Boolean,
-          leaf: Boolean,
-          row: Int,
-          hasFocus: Boolean,
-        ->
-        val c = r.getTreeCellRendererComponent(
-          tree,
-          value,
-          selected,
-          expanded,
-          leaf,
-          row,
-          hasFocus,
-        )
-        if (c is JLabel && value == tree.model.root) {
-          c.icon = icon1
-          c.iconTextGap = 2 + (iw - icon1.iconWidth) / 2
-        }
-        c
+      val renderer = getCellRenderer()
+      setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
+        renderer
+          .getTreeCellRendererComponent(
+            tree,
+            value,
+            selected,
+            expanded,
+            leaf,
+            row,
+            hasFocus,
+          ).also {
+            if (it is JLabel && value == tree.model.root) {
+              it.icon = icon1
+              it.iconTextGap = 2 + (iw - icon1.iconWidth) / 2
+            }
+          }
       }
     }
   }

@@ -105,7 +105,8 @@ private class TreeTransferHandler : TransferHandler() {
     val nodes = getTransferData(transferable)
     if (parent is MutableTreeNode && model is DefaultTreeModel) {
       val index = AtomicInteger(getDropIndex(parent, dl.childIndex))
-      nodes.filterIsInstance<MutableTreeNode>()
+      nodes
+        .filterIsInstance<MutableTreeNode>()
         .forEach {
           model.insertNodeInto(it, parent, index.getAndIncrement())
         }
@@ -144,7 +145,8 @@ private fun getDropIndex(parent: MutableTreeNode, childIndex: Int): Int {
 
 fun canStartDrag(tree: JTree) = tree.selectionPaths?.let { canStartDragPaths(it) } ?: false
 
-fun canStartDragPaths(paths: Array<TreePath>) = paths.asSequence()
+fun canStartDragPaths(paths: Array<TreePath>) = paths
+  .asSequence()
   .map { it.lastPathComponent }
   .filterIsInstance<DefaultMutableTreeNode>()
   .map { it.level }
@@ -168,7 +170,8 @@ private fun isDescendant2(
   tree: JTree,
   dropRow: Int,
   node: DefaultMutableTreeNode,
-) = node.depthFirstEnumeration()
+) = node
+  .depthFirstEnumeration()
   .asSequence()
   .filterIsInstance<DefaultMutableTreeNode>()
   .map { it.path }
@@ -178,7 +181,8 @@ private fun isDescendant2(
   .any { it == dropRow }
 
 fun deepCopy(src: MutableTreeNode, tgt: DefaultMutableTreeNode): DefaultMutableTreeNode {
-  src.children()
+  src
+    .children()
     .asSequence()
     .filterIsInstance<DefaultMutableTreeNode>()
     .forEach {

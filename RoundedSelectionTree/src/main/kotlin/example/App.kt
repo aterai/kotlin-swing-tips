@@ -38,11 +38,11 @@ private class RoundedSelectionTree : JTree() {
       g2.paint = SELECTED_COLOR
       val innerArea = SwingUtilities.calculateInnerArea(this, null)
       val area = Area()
-      sr.map { getRowBounds(it) }
+      sr
+        .map { getRowBounds(it) }
         .map {
           Rectangle(innerArea.x, it.y, innerArea.width, it.height)
-        }
-        .forEach { area.add(Area(it)) }
+        }.forEach { area.add(Area(it)) }
       val arc = 10
       for (a in singularization(area)) {
         val r = a.bounds

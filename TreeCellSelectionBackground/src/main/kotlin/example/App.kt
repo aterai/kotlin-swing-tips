@@ -12,20 +12,21 @@ fun makeUI(): Component {
       val selectionBgc = Color(0x39_69_8A)
       val renderer = getCellRenderer()
       setCellRenderer { tree, value, selected, expanded, isLeaf, row, focused ->
-        renderer.getTreeCellRendererComponent(
-          tree,
-          value,
-          selected,
-          expanded,
-          isLeaf,
-          row,
-          focused,
-        ).also {
-          if (selected) {
-            it.background = selectionBgc
+        renderer
+          .getTreeCellRendererComponent(
+            tree,
+            value,
+            selected,
+            expanded,
+            isLeaf,
+            row,
+            focused,
+          ).also {
+            if (selected) {
+              it.background = selectionBgc
+            }
+            (it as? JComponent)?.isOpaque = selected
           }
-          (it as? JComponent)?.isOpaque = selected
-        }
       }
     }
   }

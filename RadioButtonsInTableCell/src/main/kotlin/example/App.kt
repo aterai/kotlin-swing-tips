@@ -94,7 +94,7 @@ private class RadioButtonsRenderer : TableCellRenderer {
     hasFocus: Boolean,
     row: Int,
     column: Int,
-  ): Component = renderer.also { it.updateSelectedButton(value) }
+  ) = renderer.also { it.updateSelectedButton(value) }
 }
 
 private class RadioButtonsEditor : AbstractCellEditor(), TableCellEditor {
@@ -113,7 +113,7 @@ private class RadioButtonsEditor : AbstractCellEditor(), TableCellEditor {
     isSelected: Boolean,
     row: Int,
     column: Int,
-  ): Component = renderer.also { it.updateSelectedButton(value) }
+  ) = renderer.also { it.updateSelectedButton(value) }
 
   override fun getCellEditorValue() = Answer.valueOf(renderer.bg.selection.actionCommand)
 }

@@ -104,7 +104,8 @@ private class FileDropTargetAdapter : DropTargetAdapter() {
       if (e.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
         e.acceptDrop(DnDConstants.ACTION_COPY)
         (e.transferable.getTransferData(DataFlavor.javaFileListFlavor) as? List<*>)?.also {
-          val msg = it.filterIsInstance<File>()
+          val msg = it
+            .filterIsInstance<File>()
             .map { file -> file.absolutePath + "<br>" }
             .fold("<html>") { o, s -> o + s }
           JOptionPane.showMessageDialog(null, msg)

@@ -61,7 +61,9 @@ private class NonEditableLineDocumentFilter : DocumentFilter() {
       var str = text
       if (LB == str) {
         val line = doc.getText(promptPosition, offset - promptPosition)
-        val args = line.split(",").map { it.trim() }
+        val args = line
+          .split(",")
+          .map { it.trim() }
           .filter { it.isNotEmpty() }
         str = if (args.isEmpty() || args[0].isEmpty()) {
           "%n%s".format(PROMPT)

@@ -121,14 +121,18 @@ private object TreeUtils {
   }
 
   fun sortTree2(parent: DefaultMutableTreeNode) {
-    parent.preorderEnumeration().toList()
+    parent
+      .preorderEnumeration()
+      .toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .filterNot { it.isLeaf }
       .forEach { sort2(it) }
   }
 
   private fun sort3(parent: DefaultMutableTreeNode) {
-    val children = parent.children().toList()
+    val children = parent
+      .children()
+      .toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .sortedWith(tnc)
     // .sortedWith(compareBy(DefaultMutableTreeNode::isLeaf, { it.getUserObject().toString() }))
@@ -137,7 +141,9 @@ private object TreeUtils {
   }
 
   fun sortTree3(parent: DefaultMutableTreeNode) {
-    parent.preorderEnumeration().toList()
+    parent
+      .preorderEnumeration()
+      .toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .filterNot { it.isLeaf }
       .forEach { sort3(it) }
@@ -147,7 +153,9 @@ private object TreeUtils {
     src: DefaultMutableTreeNode,
     tgt: DefaultMutableTreeNode,
   ): DefaultMutableTreeNode {
-    src.children().toList()
+    src
+      .children()
+      .toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .forEach {
         val clone = DefaultMutableTreeNode(it.userObject)

@@ -42,7 +42,8 @@ fun makeUI(): Component {
 }
 
 private fun getDashArray(): FloatArray {
-  val l = field.text.split(",")
+  val l = field.text
+    .split(",")
     .map { it.trim() }
     .filter { it.isNotEmpty() }
   if (l.isEmpty()) {

@@ -147,12 +147,13 @@ private class LabelTransferable(
     ss = txt?.let { StringSelection(it.trim()) }
   }
 
-  override fun getTransferDataFlavors() = mutableListOf<DataFlavor>().also {
-    if (ss != null) {
-      it.addAll(ss.transferDataFlavors)
-    }
-    it.add(localObjectFlavor)
-  }.toTypedArray()
+  override fun getTransferDataFlavors() = mutableListOf<DataFlavor>()
+    .also {
+      if (ss != null) {
+        it.addAll(ss.transferDataFlavors)
+      }
+      it.add(localObjectFlavor)
+    }.toTypedArray()
 
   override fun isDataFlavorSupported(f: DataFlavor) = transferDataFlavors.contains(f)
 

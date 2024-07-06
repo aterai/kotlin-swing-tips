@@ -29,7 +29,9 @@ fun makeUI(): Component {
       override fun doInBackground(): Boolean {
         val model = tree.model as? DefaultTreeModel
         val root = model?.root as? DefaultMutableTreeNode ?: return false
-        root.breadthFirstEnumeration().toList()
+        root
+          .breadthFirstEnumeration()
+          .toList()
           .filterIsInstance<DefaultMutableTreeNode>()
           .filter { root != it && !model.isLeaf(it) }
           .forEach { executor.execute(NodeProgressWorker(tree, it)) }

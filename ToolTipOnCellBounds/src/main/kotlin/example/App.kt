@@ -124,7 +124,7 @@ private open class CellRendererTooltipList<E>(m: ListModel<E>) : JList<E>(m) {
 }
 
 private open class TooltipListCellRenderer<E> : ListCellRenderer<E> {
-  private val renderer: ListCellRenderer<in E> = DefaultListCellRenderer()
+  private val renderer = DefaultListCellRenderer()
 
   override fun getListCellRendererComponent(
     list: JList<out E>,
@@ -132,21 +132,22 @@ private open class TooltipListCellRenderer<E> : ListCellRenderer<E> {
     index: Int,
     isSelected: Boolean,
     cellHasFocus: Boolean,
-  ): Component = renderer.getListCellRendererComponent(
-    list,
-    value,
-    index,
-    isSelected,
-    cellHasFocus,
-  ).also {
-    val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
-    if (it is JComponent && c is JViewport) {
-      val fm = it.getFontMetrics(it.font)
-      val str = value?.toString() ?: ""
-      val w = c.viewRect.width
-      it.toolTipText = if (fm.stringWidth(str) > w) str else list.toolTipText
+  ): Component = renderer
+    .getListCellRendererComponent(
+      list,
+      value,
+      index,
+      isSelected,
+      cellHasFocus,
+    ).also {
+      val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
+      if (it is JComponent && c is JViewport) {
+        val fm = it.getFontMetrics(it.font)
+        val str = value?.toString() ?: ""
+        val w = c.viewRect.width
+        it.toolTipText = if (fm.stringWidth(str) > w) str else list.toolTipText
+      }
     }
-  }
 }
 
 private class RendererIcon(

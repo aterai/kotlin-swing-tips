@@ -37,15 +37,16 @@ private fun makeList(): JList<Color> {
       dragEnabled = true
       val renderer = cellRenderer
       setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-        renderer.getListCellRendererComponent(
-          list,
-          value,
-          index,
-          isSelected,
-          cellHasFocus,
-        ).also {
-          it.foreground = value
-        }
+        renderer
+          .getListCellRendererComponent(
+            list,
+            value,
+            index,
+            isSelected,
+            cellHasFocus,
+          ).also {
+            it.foreground = value
+          }
       }
       transferHandler = ListItemTransferHandler()
     }

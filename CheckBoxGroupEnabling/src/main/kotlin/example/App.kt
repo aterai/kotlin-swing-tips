@@ -57,7 +57,9 @@ fun makeUI(): Component {
   val verticalBox = Box.createVerticalBox()
   val map = mutableMapOf<String, Component>()
   val model = tree.model
-  (model.root as? DefaultMutableTreeNode)?.preorderEnumeration()?.toList()
+  (model.root as? DefaultMutableTreeNode)
+    ?.preorderEnumeration()
+    ?.toList()
     ?.filterIsInstance<DefaultMutableTreeNode>()
     ?.forEach {
       val title = it.userObject?.toString() ?: ""
@@ -69,7 +71,9 @@ fun makeUI(): Component {
           verticalBox.add(Box.createVerticalStrut(5))
           c.addActionListener { e ->
             val selected = (e.source as? JCheckBox)?.isSelected == true
-            it.children().toList()
+            it
+              .children()
+              .toList()
               .filterIsInstance<DefaultMutableTreeNode>()
               .forEach { child ->
                 val cn = child.userObject as? CheckBoxNode
@@ -224,7 +228,9 @@ private class CheckBoxStatusUpdateListener : TreeModelListener {
     parent: DefaultMutableTreeNode,
     enabled: Boolean,
   ) {
-    parent.breadthFirstEnumeration().toList()
+    parent
+      .breadthFirstEnumeration()
+      .toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .filter { parent != it }
       .forEach { node ->

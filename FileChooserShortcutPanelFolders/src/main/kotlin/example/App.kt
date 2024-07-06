@@ -29,7 +29,8 @@ fun makeUI(): Component {
     val chooser = JFileChooser()
     chooser.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
     val fsv = chooser.fileSystemView
-    val files = sun.awt.shell.ShellFolder.get("fileChooserShortcutPanelFolders") as? Array<*>
+    val files = sun.awt.shell.ShellFolder
+      .get("fileChooserShortcutPanelFolders") as? Array<*>
     chooser.addHierarchyListener { e ->
       val c = e.component
       val b = e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L
@@ -38,8 +39,7 @@ fun makeUI(): Component {
           .filterIsInstance<JToggleButton>()
           .first { rb ->
             fsv.getSystemDisplayName(files[3] as? File) == rb.text
-          }
-          .doClick()
+          }.doClick()
       }
     }
     chooser.showOpenDialog(button2.rootPane)

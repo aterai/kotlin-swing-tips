@@ -73,29 +73,30 @@ private class RowDataRenderer : TableCellRenderer {
     hasFocus: Boolean,
     row: Int,
     column: Int,
-  ): Component = renderer.getTableCellRendererComponent(
-    table,
-    value,
-    isSelected,
-    hasFocus,
-    row,
-    column,
-  ).also { c ->
-    if (c is JLabel && value is RowData) {
-      c.horizontalAlignment = SwingConstants.LEFT
-      c.text = when (table.convertColumnIndexToModel(column)) {
-        0 -> getGroupText(value, row, table, column)
+  ): Component = renderer
+    .getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    ).also { c ->
+      if (c is JLabel && value is RowData) {
+        c.horizontalAlignment = SwingConstants.LEFT
+        c.text = when (table.convertColumnIndexToModel(column)) {
+          0 -> getGroupText(value, row, table, column)
 
-        1 -> value.name
+          1 -> value.name
 
-        2 -> value.count.toString().also {
-          c.horizontalAlignment = SwingConstants.RIGHT
+          2 -> value.count.toString().also {
+            c.horizontalAlignment = SwingConstants.RIGHT
+          }
+
+          else -> null
         }
-
-        else -> null
       }
     }
-  }
 
   private fun getGroupText(
     value: RowData,

@@ -39,7 +39,9 @@ fun makeUI(): Component {
   val model = tree.model
   val root = model.root
   if (root is DefaultMutableTreeNode) {
-    root.breadthFirstEnumeration().toList()
+    root
+      .breadthFirstEnumeration()
+      .toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .forEach {
         it.userObject = FilterableNode(it.userObject.toString())

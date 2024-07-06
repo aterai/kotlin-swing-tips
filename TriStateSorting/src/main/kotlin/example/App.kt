@@ -29,7 +29,8 @@ fun makeUI(): Component {
       }
     }
 
-    private fun isDescending(column: Int) = sortKeys.firstOrNull()
+    private fun isDescending(column: Int) = sortKeys
+      .firstOrNull()
       ?.let { it.column == column && it.sortOrder == SortOrder.DESCENDING }
       ?: false
   }

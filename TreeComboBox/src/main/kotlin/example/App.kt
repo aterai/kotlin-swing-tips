@@ -15,7 +15,9 @@ private fun makeComboBoxModel(
     model.addElement(node)
   }
   if (!node.isLeaf) {
-    node.children().toList()
+    node
+      .children()
+      .toList()
       .filterIsInstance<TreeNode>()
       .forEach { makeComboBoxModel(model, it) }
   }

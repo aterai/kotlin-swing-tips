@@ -151,7 +151,8 @@ private class HeaderCheckBoxHandler(
     column: TableColumn,
     status: Any,
   ) = if (status === Status.INDETERMINATE) {
-    val l = m.dataVector.filterIsInstance<List<*>>()
+    val l = m.dataVector
+      .filterIsInstance<List<*>>()
       .mapNotNull { it[targetColumnIndex] as? Boolean }
       .distinct()
     val notDuplicates = l.size == 1

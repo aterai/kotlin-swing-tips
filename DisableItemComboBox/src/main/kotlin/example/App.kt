@@ -40,7 +40,8 @@ private fun makeModel() = DefaultComboBoxModel<String>().also {
 }
 
 private fun getDisableIndexFromTextField(field: JTextField) = runCatching {
-  field.text.split(",")
+  field.text
+    .split(",")
     .map { it.trim() }
     .filterNot { it.isEmpty() }
     .map { it.toInt() }

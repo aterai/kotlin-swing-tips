@@ -22,7 +22,9 @@ fun makeUI(): Component {
     }
   }
   (tree.model.root as? DefaultMutableTreeNode)?.also { root ->
-    root.breadthFirstEnumeration().toList()
+    root
+      .breadthFirstEnumeration()
+      .toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .filter { it.isLeaf }
       .forEach {

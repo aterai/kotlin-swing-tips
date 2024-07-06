@@ -13,7 +13,8 @@ fun visitAll(
   expand: Boolean,
 ) {
   (parent.lastPathComponent as? TreeNode)?.also { node ->
-    node.children()
+    node
+      .children()
       .toList()
       .filterIsInstance<TreeNode>()
       .forEach { visitAll(tree, parent.pathByAddingChild(it), expand) }

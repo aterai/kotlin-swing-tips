@@ -11,7 +11,9 @@ fun initDisableIndex(set: MutableSet<Int>) {
   set.clear()
   runCatching {
     set.addAll(
-      field.text.split(",".toRegex()).toTypedArray()
+      field.text
+        .split(",".toRegex())
+        .toTypedArray()
         .map { it.trim() }
         .filter { it.isNotEmpty() }
         .map { it.toInt() }

@@ -65,17 +65,18 @@ private open class FocusComboBox<E> constructor(
     if (isWindowsLnF) {
       val renderer = getRenderer()
       setRenderer { list, value, index, isSelected, cellHasFocus ->
-        renderer.getListCellRendererComponent(
-          list,
-          value,
-          index,
-          isSelected,
-          cellHasFocus,
-        ).also {
-          if (index < 0 && it is JComponent) {
-            it.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
+        renderer
+          .getListCellRendererComponent(
+            list,
+            value,
+            index,
+            isSelected,
+            cellHasFocus,
+          ).also {
+            if (index < 0 && it is JComponent) {
+              it.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
+            }
           }
-        }
       }
     }
   }

@@ -13,16 +13,17 @@ fun makeUI(): Component {
   val renderer = DefaultTableCellRenderer()
   val table1 = makeTable()
   table1.tableHeader.setDefaultRenderer { table, value, isSelected, hasFocus, row, column ->
-    renderer.getTableCellRendererComponent(
-      table,
-      value,
-      isSelected,
-      hasFocus,
-      row,
-      column,
-    ).also {
-      (it as? JLabel)?.horizontalAlignment = SwingConstants.CENTER
-    }
+    renderer
+      .getTableCellRendererComponent(
+        table,
+        value,
+        isSelected,
+        hasFocus,
+        row,
+        column,
+      ).also {
+        (it as? JLabel)?.horizontalAlignment = SwingConstants.CENTER
+      }
   }
 
   val table2 = makeTable()

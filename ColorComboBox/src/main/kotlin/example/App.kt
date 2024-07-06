@@ -67,18 +67,19 @@ private class AlternateRowColorComboBox<E>(model: ComboBoxModel<E>) : JComboBox<
     super.updateUI()
     val renderer = getRenderer()
     setRenderer { list, value, index, isSelected, cellHasFocus ->
-      renderer.getListCellRendererComponent(
-        list,
-        value,
-        index,
-        isSelected,
-        cellHasFocus,
-      ).also {
-        (it as? JComponent)?.isOpaque = true
-        if (!isSelected) {
-          it.background = getAlternateRowColor(index)
+      renderer
+        .getListCellRendererComponent(
+          list,
+          value,
+          index,
+          isSelected,
+          cellHasFocus,
+        ).also {
+          (it as? JComponent)?.isOpaque = true
+          if (!isSelected) {
+            it.background = getAlternateRowColor(index)
+          }
         }
-      }
     }
     itemColorListener = ItemListener { e ->
       val cb = e.itemSelectable

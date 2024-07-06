@@ -77,7 +77,9 @@ fun makeModel(): DefaultTreeModel {
 
 fun collapseFirstHierarchy(tree: JTree) {
   val root = tree.model.root as? DefaultMutableTreeNode ?: return
-  root.breadthFirstEnumeration().toList()
+  root
+    .breadthFirstEnumeration()
+    .toList()
     .filterIsInstance<DefaultMutableTreeNode>()
     .takeWhile { it.level <= 1 }
     .dropWhile { it.isRoot || it.isLeaf }

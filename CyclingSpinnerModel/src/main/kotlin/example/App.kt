@@ -10,7 +10,9 @@ import javax.swing.*
 fun makeUI(): Component {
   val locale = Locale.ENGLISH // Locale.getDefault()
   val firstDayOfWeek = WeekFields.of(locale).firstDayOfWeek
-  val weeks = DayOfWeek.entries.toTypedArray().indices
+  val weeks = DayOfWeek.entries
+    .toTypedArray()
+    .indices
     .map { firstDayOfWeek.plus(it.toLong()) }
     .map { it.getDisplayName(TextStyle.SHORT_STANDALONE, locale) }
 

@@ -58,7 +58,8 @@ private fun initBreadcrumbList(
 private fun makeBreadcrumbList(list: List<String>): Component {
   val p = makeContainer(5 + 1)
   val bg = ButtonGroup()
-  list.map { makeButton(null, TreePath(it), Color.PINK) }
+  list
+    .map { makeButton(null, TreePath(it), Color.PINK) }
     .forEach {
       p.add(it)
       bg.add(it)

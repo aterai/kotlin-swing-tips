@@ -154,9 +154,10 @@ private open class LoadTask(
     current: Int,
     size: Int,
   ): Int {
-    val result = (current..<current + size).map {
-      arrayOf<Any>(it, "Test: $it", if (it % 2 == 0) "" else "comment...")
-    }.toList()
+    val result = (current..<current + size)
+      .map {
+        arrayOf<Any>(it, "Test: $it", if (it % 2 == 0) "" else "comment...")
+      }.toList()
     Thread.sleep(500)
     publish(result)
     return current + result.size

@@ -16,25 +16,26 @@ fun makeUI(): Component {
       setCellRenderer(null)
       super.updateUI()
       // setCellRenderer(ChapterNumberingTreeCellRenderer())
-      val r = getCellRenderer()
+      val renderer = getCellRenderer()
       setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-        r.getTreeCellRendererComponent(
-          tree,
-          value,
-          selected,
-          expanded,
-          leaf,
-          row,
-          hasFocus,
-        ).also {
-          if (value is DefaultMutableTreeNode) {
-            val tn = value.path
-            val s = (1..<tn.size) // ignore the root node by skipping index 0
-              .map { idx -> 1 + tn[idx - 1].getIndex(tn[idx]) }
-              .joinToString(".")
-            (it as? JLabel)?.text = "$MARK$s $value"
+        renderer
+          .getTreeCellRendererComponent(
+            tree,
+            value,
+            selected,
+            expanded,
+            leaf,
+            row,
+            hasFocus,
+          ).also {
+            if (value is DefaultMutableTreeNode) {
+              val tn = value.path
+              val s = (1..<tn.size) // ignore the root node by skipping index 0
+                .map { idx -> 1 + tn[idx - 1].getIndex(tn[idx]) }
+                .joinToString(".")
+              (it as? JLabel)?.text = "$MARK$s $value"
+            }
           }
-        }
       }
       isRootVisible = false
     }

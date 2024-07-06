@@ -33,7 +33,8 @@ private fun makeStroke(field: JTextField): BasicStroke {
   return BasicStroke(5f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10f, dist, 0f)
 }
 
-private fun tokenize(text: String) = text.split(",")
+private fun tokenize(text: String) = text
+  .split(",")
   .map { it.trim() }
   .filter { it.isNotEmpty() }
   .toTypedArray()

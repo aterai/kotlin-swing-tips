@@ -80,7 +80,11 @@ private fun getWidthRatio(
   text: String,
   length: Int,
 ) = runCatching {
-  val a = text.split(":").toList().filter { it.trim().isNotEmpty() }.map { it.toInt() }
+  val a = text
+    .split(":")
+    .toList()
+    .filter { it.trim().isNotEmpty() }
+    .map { it.toInt() }
   val b = generateSequence(1) { it }.take(length).toList()
   (a + b).take(length)
 }.onFailure {

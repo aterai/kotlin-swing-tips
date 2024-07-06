@@ -289,7 +289,8 @@ private class CalendarViewTableModel(date: LocalDate) : DefaultTableModel() {
   override fun getColumnClass(column: Int) = LocalDate::class.java
 
   override fun getColumnName(column: Int): String =
-    weekFields.firstDayOfWeek.plus(column.toLong())
+    weekFields.firstDayOfWeek
+      .plus(column.toLong())
       .getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault())
 
   override fun getRowCount() = 5

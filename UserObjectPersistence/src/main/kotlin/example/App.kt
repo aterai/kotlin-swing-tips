@@ -94,7 +94,9 @@ private fun makeTree(): JTree {
 
   val model = tree.model
   (tree.model.root as? DefaultMutableTreeNode)?.also { root ->
-    root.breadthFirstEnumeration().toList()
+    root
+      .breadthFirstEnumeration()
+      .toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .forEach {
         it.userObject = CheckBoxNode(it.userObject?.toString() ?: "", Status.DESELECTED)
@@ -191,7 +193,9 @@ private class CheckBoxStatusUpdateListener : TreeModelListener {
   }
 
   private fun updateParentUserObject(pn: DefaultMutableTreeNode) {
-    val list = pn.children().toList()
+    val list = pn
+      .children()
+      .toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .map { it.userObject }
       .filterIsInstance<CheckBoxNode>()
@@ -217,7 +221,9 @@ private class CheckBoxStatusUpdateListener : TreeModelListener {
     if (parent == null || status == null) {
       return
     }
-    parent.breadthFirstEnumeration().toList()
+    parent
+      .breadthFirstEnumeration()
+      .toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .filter { parent != it }
       .forEach {

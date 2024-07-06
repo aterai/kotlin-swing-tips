@@ -17,7 +17,8 @@ fun makeUI(): Component {
       val path = e.path
       val node = path.lastPathComponent
       if (node is DefaultMutableTreeNode && t.isPathSelected(path)) {
-        val paths = node.children()
+        val paths = node
+          .children()
           .toList()
           .filterIsInstance<DefaultMutableTreeNode>()
           .map { TreePath(it.path) }

@@ -32,26 +32,27 @@ private val monthTable = object : JTable() {
     setDefaultRenderer(
       LocalDate::class.java,
     ) { table, value, selected, focused, row, column ->
-      renderer.getTableCellRendererComponent(
-        table,
-        value,
-        selected,
-        focused,
-        row,
-        column,
-      ).also {
-        if (it is JLabel && value is LocalDate) {
-          it.horizontalAlignment = SwingConstants.CENTER
-          it.text = value.dayOfMonth.toString()
-          val flg = YearMonth.from(value) == YearMonth.from(currentLocalDate)
-          it.foreground = if (flg) Color.BLACK else Color.GRAY
-          it.background = if (value.isEqual(realLocalDate)) {
-            Color(0xDC_FF_DC)
-          } else {
-            getDayOfWeekColor(value.dayOfWeek)
+      renderer
+        .getTableCellRendererComponent(
+          table,
+          value,
+          selected,
+          focused,
+          row,
+          column,
+        ).also {
+          if (it is JLabel && value is LocalDate) {
+            it.horizontalAlignment = SwingConstants.CENTER
+            it.text = value.dayOfMonth.toString()
+            val flg = YearMonth.from(value) == YearMonth.from(currentLocalDate)
+            it.foreground = if (flg) Color.BLACK else Color.GRAY
+            it.background = if (value.isEqual(realLocalDate)) {
+              Color(0xDC_FF_DC)
+            } else {
+              getDayOfWeekColor(value.dayOfWeek)
+            }
           }
         }
-      }
     }
   }
 }

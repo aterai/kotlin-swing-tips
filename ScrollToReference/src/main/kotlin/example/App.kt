@@ -41,7 +41,9 @@ fun makeUI(): Component {
   (editor.document as? HTMLDocument)?.also { doc ->
     (model.root as? DefaultMutableTreeNode)?.also { root ->
       val element = doc.getElement("main")
-      root.preorderEnumeration().toList()
+      root
+        .preorderEnumeration()
+        .toList()
         .filterIsInstance<DefaultMutableTreeNode>()
         .filterNot { it.isRoot }
         .map { it.userObject }
@@ -170,20 +172,21 @@ private class RowSelectionTree : JTree() {
     }
     setUI(tmp)
     UIManager.put("Tree.repaintWholeRow", true)
-    val r = getCellRenderer()
+    val renderer = getCellRenderer()
     setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-      r.getTreeCellRendererComponent(
-        tree,
-        value,
-        selected,
-        expanded,
-        leaf,
-        row,
-        hasFocus,
-      ).also {
-        it.background = if (selected) SELECTED_COLOR else tree.background
-        (it as? JComponent)?.isOpaque = true
-      }
+      renderer
+        .getTreeCellRendererComponent(
+          tree,
+          value,
+          selected,
+          expanded,
+          leaf,
+          row,
+          hasFocus,
+        ).also {
+          it.background = if (selected) SELECTED_COLOR else tree.background
+          (it as? JComponent)?.isOpaque = true
+        }
     }
     isOpaque = false
     isRootVisible = false

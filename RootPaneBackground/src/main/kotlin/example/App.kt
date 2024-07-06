@@ -60,7 +60,8 @@ private object ImageUtils {
       }
     }
     mb.isOpaque = false
-    listOf("File", "Edit", "Help").map { createMenu(it) }
+    listOf("File", "Edit", "Help")
+      .map { createMenu(it) }
       .forEach { mb.add(it) }
     return mb
   }

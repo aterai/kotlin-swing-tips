@@ -23,7 +23,8 @@ fun makeUI(): Component {
     //     .map(JTable::class.java::cast)
     //     .findFirst()
     //     .ifPresent { append(log, "isEditing: ${it.isEditing()}") }
-    descendants(fileChooser0).filterIsInstance<JTable>()
+    descendants(fileChooser0)
+      .filterIsInstance<JTable>()
       .firstOrNull()
       ?.also { append(log, "isEditing: ${it.isEditing}") }
 

@@ -61,7 +61,8 @@ private fun updateFont(
   parent: JComponent,
 ) {
   val fontResource = FontUIResource(font)
-  UIManager.getLookAndFeelDefaults()
+  UIManager
+    .getLookAndFeelDefaults()
     .forEach { key, _ ->
       if (key.toString().lowercase(Locale.ENGLISH).endsWith("font")) {
         UIManager.put(key, fontResource)

@@ -26,7 +26,8 @@ fun makeUI(): Component {
 
   val path = "example/16x16.png"
   val cl = Thread.currentThread().contextClassLoader
-  val image = cl.getResource(path)
+  val image = cl
+    .getResource(path)
     ?.openStream()
     ?.use(ImageIO::read)
     ?: makeDefaultTrayImage()

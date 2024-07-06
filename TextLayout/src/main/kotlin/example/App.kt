@@ -31,7 +31,11 @@ private class TextLayoutPanel : JComponent() {
     g2.draw(Line2D.Float(0f, leading, w, leading))
     g2.paint = Color.CYAN
     val xh =
-      baseline - TEXT_LAYOUT.getBlackBoxBounds(23, 24).bounds.getHeight().toFloat()
+      baseline - TEXT_LAYOUT
+        .getBlackBoxBounds(23, 24)
+        .bounds
+        .getHeight()
+        .toFloat()
     g2.draw(Line2D.Float(0f, xh, w, xh))
     g2.paint = Color.BLACK
     TEXT_LAYOUT.draw(g2, 0f, baseline)
@@ -65,7 +69,10 @@ private class GlyphVectorPanel : JComponent() {
     val leading = baseline + lm.descent + lm.leading
     g2.draw(Line2D.Float(0f, leading, w, leading))
     g2.paint = Color.CYAN
-    val xh = baseline - gv.getGlyphMetrics(23).bounds2D.height.toFloat()
+    val xh = baseline - gv
+      .getGlyphMetrics(23)
+      .bounds2D.height
+      .toFloat()
     g2.draw(Line2D.Float(0f, xh, w, xh))
     g2.paint = Color.BLACK
     g2.drawGlyphVector(gv, 0f, baseline)

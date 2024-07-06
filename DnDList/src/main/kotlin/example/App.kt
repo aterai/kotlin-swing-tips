@@ -54,21 +54,22 @@ private class DnDList<E> : JList<E>(), DragGestureListener, Transferable {
     super.updateUI()
     val renderer = cellRenderer
     setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-      renderer.getListCellRendererComponent(
-        list,
-        value,
-        index,
-        isSelected,
-        cellHasFocus,
-      ).also {
-        if (isSelected) {
-          it.foreground = list.selectionForeground
-          it.background = list.selectionBackground
-        } else {
-          it.foreground = list.foreground
-          it.background = if (index % 2 == 0) EVEN_BACKGROUND else list.background
+      renderer
+        .getListCellRendererComponent(
+          list,
+          value,
+          index,
+          isSelected,
+          cellHasFocus,
+        ).also {
+          if (isSelected) {
+            it.foreground = list.selectionForeground
+            it.background = list.selectionBackground
+          } else {
+            it.foreground = list.foreground
+            it.background = if (index % 2 == 0) EVEN_BACKGROUND else list.background
+          }
         }
-      }
     }
   }
 

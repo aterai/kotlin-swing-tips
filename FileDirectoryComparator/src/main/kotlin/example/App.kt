@@ -140,7 +140,8 @@ private class FileTransferHandler : TransferHandler() {
       support.transferable.getTransferData(DataFlavor.javaFileListFlavor) as? List<*>
     }.getOrNull().orEmpty()
     val model = (support.component as? JTable)?.model as? DefaultTableModel ?: return false
-    list.filterIsInstance<File>()
+    list
+      .filterIsInstance<File>()
       .map { file -> (0..2).map { file }.toTypedArray() }
       .forEach { model.addRow(it) }
     return list.isNotEmpty()
@@ -187,9 +188,10 @@ private class FileGroupComparator(
     b: File,
   ): Int {
     val key = table.rowSorter.sortKeys.firstOrNull()
-    val flag = key?.takeIf {
-      it.column == column && it.sortOrder == SortOrder.DESCENDING
-    }?.let { -1 } ?: 1
+    val flag = key
+      ?.takeIf {
+        it.column == column && it.sortOrder == SortOrder.DESCENDING
+      }?.let { -1 } ?: 1
     return when {
       a.isDirectory && !b.isDirectory -> -1 * flag
       !a.isDirectory && b.isDirectory -> 1 * flag

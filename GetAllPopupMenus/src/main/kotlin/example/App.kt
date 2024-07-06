@@ -75,7 +75,8 @@ fun makeUI(): Component {
     tabs.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(ks4, "next2")
     val act4 = object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
-        MenuSelectionManager.defaultManager()
+        MenuSelectionManager
+          .defaultManager()
           .selectedPath
           .filterIsInstance<JPopupMenu>()
           .forEach { it.isVisible = false }

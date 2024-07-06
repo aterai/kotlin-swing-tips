@@ -45,7 +45,8 @@ private val table = object : JTable(model) {
     c.bounds = r
     c.doLayout()
     pt.translate(-r.x, -r.y)
-    return SwingUtilities.getDeepestComponentAt(c, pt.x, pt.y)
+    return SwingUtilities
+      .getDeepestComponentAt(c, pt.x, pt.y)
       ?.let { it as? JLabel }
       ?.let { (it.icon as? ImageIcon)?.description }
       ?: super.getToolTipText(e)
@@ -87,7 +88,8 @@ private class ListIconRenderer : TableCellRenderer {
       // renderer.setBackground(table.getBackground())
     }
     if (value is List<*>) {
-      value.filterIsInstance<Icon>()
+      value
+        .filterIsInstance<Icon>()
         .map { makeLabel(it) }
         .forEach { renderer.add(it) }
     }

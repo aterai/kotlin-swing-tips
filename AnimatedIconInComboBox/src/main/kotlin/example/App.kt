@@ -52,7 +52,8 @@ private fun repaintComboBox(
   if (combo.selectedIndex == row) {
     combo.repaint()
   }
-  (combo.accessibleContext.getAccessibleChild(0) as? ComboPopup)?.list
+  (combo.accessibleContext.getAccessibleChild(0) as? ComboPopup)
+    ?.list
     ?.takeIf { it.isShowing }
     ?.also {
       it.repaint(it.getCellBounds(row, row))

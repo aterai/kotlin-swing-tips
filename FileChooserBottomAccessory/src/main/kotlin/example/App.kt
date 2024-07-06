@@ -34,7 +34,8 @@ fun makeUI(): Component {
         val tmp = object : WindowsFileChooserUI(this) {
           override fun installComponents(fc: JFileChooser) {
             super.installComponents(fc)
-            SwingUtils.descendants(bottomPanel)
+            SwingUtils
+              .descendants(bottomPanel)
               .filterIsInstance<JLabel>()
               .forEach {
                 it.alignmentX = Component.RIGHT_ALIGNMENT
@@ -83,7 +84,8 @@ private class EncodingFileChooserUI(chooser: JFileChooser) : MetalFileChooserUI(
 
     val label = object : JLabel("Encoding:") {
       override fun getPreferredSize() =
-        SwingUtils.descendants(bottomPanel)
+        SwingUtils
+          .descendants(bottomPanel)
           .filterIsInstance<JLabel>()
           .firstOrNull()
           ?.preferredSize
@@ -102,7 +104,8 @@ private class EncodingFileChooserUI(chooser: JFileChooser) : MetalFileChooserUI(
     // 2: filesOfTypePanel
     bottomPanel.add(Box.createRigidArea(Dimension(1, 5)), 3)
     bottomPanel.add(panel, 4)
-    SwingUtils.descendants(bottomPanel)
+    SwingUtils
+      .descendants(bottomPanel)
       .filterIsInstance<JLabel>()
       .forEach {
         it.horizontalAlignment = SwingConstants.RIGHT

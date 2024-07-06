@@ -42,7 +42,7 @@ private class RollOverList<E>(model: ListModel<E>) : JList<E>(model) {
   private inner class RollOverCellHandler : MouseAdapter(), ListCellRenderer<E> {
     private val rolloverBackground = Color(0xDC_F0_FF)
     private var rollOverRowIndex = -1
-    private val r: ListCellRenderer<in E> = DefaultListCellRenderer()
+    private val renderer = DefaultListCellRenderer()
 
     override fun getListCellRendererComponent(
       list: JList<out E>,
@@ -50,20 +50,21 @@ private class RollOverList<E>(model: ListModel<E>) : JList<E>(model) {
       index: Int,
       isSelected: Boolean,
       cellHasFocus: Boolean,
-    ): Component = r.getListCellRendererComponent(
-      list,
-      value,
-      index,
-      isSelected,
-      cellHasFocus,
-    ).also {
-      if (index == rollOverRowIndex) {
-        it.background = rolloverBackground
-        if (isSelected) {
-          it.foreground = Color.BLACK
+    ): Component = renderer
+      .getListCellRendererComponent(
+        list,
+        value,
+        index,
+        isSelected,
+        cellHasFocus,
+      ).also {
+        if (index == rollOverRowIndex) {
+          it.background = rolloverBackground
+          if (isSelected) {
+            it.foreground = Color.BLACK
+          }
         }
       }
-    }
 
     override fun mouseExited(e: MouseEvent) {
       rollOverRowIndex = -1

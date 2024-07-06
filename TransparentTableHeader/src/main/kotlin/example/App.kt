@@ -163,16 +163,17 @@ private class TranslucentObjectRenderer : DefaultTableCellRenderer() {
     hasFocus: Boolean,
     row: Int,
     column: Int,
-  ) = super.getTableCellRendererComponent(
-    table,
-    value,
-    isSelected,
-    hasFocus,
-    row,
-    column,
-  )?.also {
-    (it as? JComponent)?.border = BorderFactory.createEmptyBorder(8, 8, 8, 8)
-  }
+  ) = super
+    .getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )?.also {
+      (it as? JComponent)?.border = BorderFactory.createEmptyBorder(8, 8, 8, 8)
+    }
 }
 
 private class TranslucentBooleanRenderer : JCheckBox(), TableCellRenderer {

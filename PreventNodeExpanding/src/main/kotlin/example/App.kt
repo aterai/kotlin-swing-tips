@@ -22,7 +22,8 @@ fun makeUI(): Component {
     .forEach { fileSystemRoot ->
       val node = DefaultMutableTreeNode(fileSystemRoot)
       root.add(node)
-      fileSystemView.getFiles(fileSystemRoot, true)
+      fileSystemView
+        .getFiles(fileSystemRoot, true)
         .filter { it.isDirectory }
         .map { DefaultMutableTreeNode(it) }
         .forEach { node.add(it) }
@@ -78,7 +79,8 @@ private class FolderSelectionListener(
     object : BackgroundTask(fileSystemView, parent) {
       override fun process(chunks: List<File?>?) {
         if (tree.isDisplayable && !isCancelled) {
-          chunks?.map { DefaultMutableTreeNode(it) }
+          chunks
+            ?.map { DefaultMutableTreeNode(it) }
             ?.forEach { model.insertNodeInto(it, node, node.childCount) }
         } else {
           cancel(true)
@@ -93,7 +95,8 @@ private open class BackgroundTask(
   private val parent: File,
 ) : SwingWorker<String, File?>() {
   public override fun doInBackground(): String {
-    fileSystemView.getFiles(parent, true)
+    fileSystemView
+      .getFiles(parent, true)
       .filter { it.isDirectory }
       .forEach { publish(it) }
     return "done"

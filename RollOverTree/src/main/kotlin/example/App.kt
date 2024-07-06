@@ -20,26 +20,27 @@ fun makeUI(): Component {
       removeMouseMotionListener(listener)
       setCellRenderer(null)
       super.updateUI()
-      val r = DefaultTreeCellRenderer()
+      val renderer = DefaultTreeCellRenderer()
       setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-        r.getTreeCellRendererComponent(
-          tree,
-          value,
-          selected,
-          expanded,
-          leaf,
-          row,
-          hasFocus,
-        ).also {
-          val isRollOver = row == rollOverRowIndex
-          if (isRollOver) {
-            it.background = rolloverRowColor
-            if (selected) {
-              it.foreground = r.textNonSelectionColor
+        renderer
+          .getTreeCellRendererComponent(
+            tree,
+            value,
+            selected,
+            expanded,
+            leaf,
+            row,
+            hasFocus,
+          ).also {
+            val isRollOver = row == rollOverRowIndex
+            if (isRollOver) {
+              it.background = rolloverRowColor
+              if (selected) {
+                it.foreground = renderer.textNonSelectionColor
+              }
             }
+            (it as? JComponent)?.isOpaque = isRollOver
           }
-          (it as? JComponent)?.isOpaque = isRollOver
-        }
       }
       listener = object : MouseAdapter() {
         override fun mouseMoved(e: MouseEvent) {

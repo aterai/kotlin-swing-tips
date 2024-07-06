@@ -56,26 +56,27 @@ private class SelectionColorTreeCellRenderer : DefaultTreeCellRenderer() {
     leaf: Boolean,
     row: Int,
     hasFocus: Boolean,
-  ): Component = super.getTreeCellRendererComponent(
-    tree,
-    value,
-    selected,
-    expanded,
-    leaf,
-    row,
-    hasFocus,
-  ).also {
-    if (selected && it is JComponent) {
-      it.isOpaque = false
-      it.foreground = getTextSelectionColor()
-      it.background = getBackgroundSelectionColor()
-      setUserObjectColor(value, it)
-      setPatternColor(value, it, leaf)
-    } else {
-      it.foreground = getTextNonSelectionColor()
-      it.background = getBackgroundNonSelectionColor()
+  ): Component = super
+    .getTreeCellRendererComponent(
+      tree,
+      value,
+      selected,
+      expanded,
+      leaf,
+      row,
+      hasFocus,
+    ).also {
+      if (selected && it is JComponent) {
+        it.isOpaque = false
+        it.foreground = getTextSelectionColor()
+        it.background = getBackgroundSelectionColor()
+        setUserObjectColor(value, it)
+        setPatternColor(value, it, leaf)
+      } else {
+        it.foreground = getTextNonSelectionColor()
+        it.background = getBackgroundNonSelectionColor()
+      }
     }
-  }
 
   private fun setUserObjectColor(
     value: Any?,

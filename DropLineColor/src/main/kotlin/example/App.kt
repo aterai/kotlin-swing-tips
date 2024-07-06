@@ -421,7 +421,9 @@ private class TreeTransferHandler : TransferHandler() {
     src: MutableTreeNode,
     tgt: DefaultMutableTreeNode,
   ): DefaultMutableTreeNode {
-    src.children().toList()
+    src
+      .children()
+      .toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .forEach {
         val clone = DefaultMutableTreeNode(it.userObject)

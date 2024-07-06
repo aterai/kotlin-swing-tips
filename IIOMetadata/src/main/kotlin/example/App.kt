@@ -22,7 +22,8 @@ fun makeUI(): Component {
   if (url != null) {
     ImageIO.createImageInputStream(url.openStream()).use { iis ->
       reader.setInput(iis, true)
-      buf.append("Width: %d%n".format(reader.getWidth(0)))
+      buf
+        .append("Width: %d%n".format(reader.getWidth(0)))
         .append("Height: %d%n".format(reader.getHeight(0)))
       val meta = reader.getImageMetadata(0)
       for (s in meta.metadataFormatNames) {

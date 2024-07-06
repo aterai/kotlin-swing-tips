@@ -205,7 +205,9 @@ private class GroupableTableHeaderUI : BasicTableHeaderUI() {
 
   override fun getPreferredSize(c: JComponent?): Dimension {
     // val width = header.columnModel.columns.toList().map { it.preferredWidth.toLong() }.sum()
-    val width = header.columnModel.columns.toList().sumOf { it.preferredWidth.toLong() }
+    val width = header.columnModel.columns
+      .toList()
+      .sumOf { it.preferredWidth.toLong() }
     return Dimension(minOf(width, Integer.MAX_VALUE.toLong()).toInt(), getHeaderHeight())
     // return createHeaderSize(width)
   }
@@ -239,9 +241,12 @@ private class ColumnGroup(text: String) {
     return if (list.contains(column)) {
       groups
     } else {
-      list.filterIsInstance<ColumnGroup>().map {
-        it.getColumnGroupList(column, groups)
-      }.firstOrNull { it.isNotEmpty() }.orEmpty()
+      list
+        .filterIsInstance<ColumnGroup>()
+        .map {
+          it.getColumnGroupList(column, groups)
+        }.firstOrNull { it.isNotEmpty() }
+        .orEmpty()
     }
   }
 

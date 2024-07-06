@@ -110,7 +110,10 @@ private fun makeRadioButtons(textArea: JTextArea): Component {
 
   val button1 = JButton("MONDAY")
   button1.addActionListener {
-    bg.elements.toList().firstOrNull()?.let { it.isSelected = !it.isSelected }
+    bg.elements
+      .toList()
+      .firstOrNull()
+      ?.let { it.isSelected = !it.isSelected }
   }
   p.add(button0)
   p.add(button1)
