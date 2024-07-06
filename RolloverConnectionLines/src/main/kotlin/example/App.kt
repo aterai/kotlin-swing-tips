@@ -34,13 +34,14 @@ fun makeUI(): Component {
           isExpanded: Boolean,
           hasBeenExpanded: Boolean,
           isLeaf: Boolean,
-        ) = rollover && super.shouldPaintExpandControl(
-          path,
-          row,
-          isExpanded,
-          hasBeenExpanded,
-          isLeaf,
-        )
+        ) = rollover &&
+          super.shouldPaintExpandControl(
+            path,
+            row,
+            isExpanded,
+            hasBeenExpanded,
+            isLeaf,
+          )
 
         override fun paintHorizontalLine(
           g: Graphics,
