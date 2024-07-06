@@ -44,31 +44,26 @@ fun makeUI(): Component {
       renderer: TableCellRenderer,
       row: Int,
       column: Int,
-    ): Component {
-      val c = super.prepareRenderer(renderer, row, column)
-      c.setFont(font)
-      if (c is JCheckBox) {
-        val cb = c
-        cb.setBorderPainted(false)
-        updateCheckIcon(cb)
+    ) = super.prepareRenderer(renderer, row, column).also {
+      it.setFont(font)
+      if (it is JCheckBox) {
+        it.isBorderPainted = false
+        updateCheckIcon(it)
       }
-      return c
     }
 
     override fun prepareEditor(
       editor: TableCellEditor,
       row: Int,
       column: Int,
-    ): Component {
-      val c = super.prepareEditor(editor, row, column)
-      c.setFont(font)
-      if (c is JCheckBox) {
-        val cb = c
-        cb.setBackground(getSelectionBackground())
-        cb.setBorderPainted(false)
-        updateCheckIcon(cb)
+    ) = super.prepareEditor(editor, row, column).also {
+      it.setFont(font)
+      if (it is JCheckBox) {
+        it.foreground = selectionForeground
+        it.background = selectionBackground
+        it.isBorderPainted = false
+        updateCheckIcon(it)
       }
-      return c
     }
 
     private fun updateCheckIcon(checkBox: JCheckBox) {
@@ -178,10 +173,9 @@ private class CheckBoxIcon : Icon {
   ) {
     val g2 = g.create()
     if (g2 is Graphics2D && c is AbstractButton) {
-      val model = c.model
       g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
       g2.translate(x, y)
-      g2.paint = Color.DARK_GRAY
+      g2.paint = c.foreground
       val s = iconWidth.coerceAtMost(iconHeight) * .05
       val w = iconWidth - s - s
       val h = iconHeight - s - s
@@ -189,7 +183,7 @@ private class CheckBoxIcon : Icon {
       val gh = h / 8.0
       g2.stroke = BasicStroke(s.toFloat())
       g2.draw(Rectangle2D.Double(s, s, w, h))
-      if (model.isSelected) {
+      if (c.model.isSelected) {
         g2.stroke = BasicStroke(3f * s.toFloat())
         val p = Path2D.Double()
         p.moveTo(x + 2f * gw, y + .5f * h)
