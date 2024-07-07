@@ -5,7 +5,6 @@ import java.awt.*
 import java.awt.event.MouseEvent
 import javax.swing.*
 import javax.swing.JInternalFrame.JDesktopIcon
-import javax.swing.event.MouseInputAdapter
 import javax.swing.plaf.LayerUI
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane
 import javax.swing.plaf.basic.BasicInternalFrameUI
