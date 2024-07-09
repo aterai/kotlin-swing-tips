@@ -141,7 +141,9 @@ fun changeHighlight(index: Int): Int {
   return idx
 }
 
-private class HighlightHandler : DocumentListener, ActionListener {
+private class HighlightHandler :
+  DocumentListener,
+  ActionListener {
   private var current = 0
 
   override fun changedUpdate(e: DocumentEvent) {

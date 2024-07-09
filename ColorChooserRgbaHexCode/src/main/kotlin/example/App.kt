@@ -81,7 +81,9 @@ private fun removeFocusListeners(c: Component) {
   }
 }
 
-private class ColorTracker(private val chooser: JColorChooser) : ActionListener {
+private class ColorTracker(
+  private val chooser: JColorChooser,
+) : ActionListener {
   var color: Color? = null
     private set
 
@@ -90,7 +92,9 @@ private class ColorTracker(private val chooser: JColorChooser) : ActionListener 
   }
 }
 
-private class ValueFormatter : AbstractFormatter(), FocusListener {
+private class ValueFormatter :
+  AbstractFormatter(),
+  FocusListener {
   private val filter: DocumentFilter = object : DocumentFilter() {
     @Throws(BadLocationException::class)
     override fun remove(

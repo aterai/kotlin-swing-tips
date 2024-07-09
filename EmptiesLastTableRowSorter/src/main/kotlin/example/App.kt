@@ -43,7 +43,8 @@ fun makeUI(): Component {
 private class RowComparator(
   private val table: JTable,
   private val column: Int,
-) : Comparator<String>, Serializable {
+) : Comparator<String>,
+  Serializable {
   override fun compare(
     a: String,
     b: String,

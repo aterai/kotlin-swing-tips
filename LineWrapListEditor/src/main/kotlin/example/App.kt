@@ -105,9 +105,14 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   }
 }
 
-private data class ListItem(val title: String, val icon: Icon)
+private data class ListItem(
+  val title: String,
+  val icon: Icon,
+)
 
-private class ColorIcon(private val color: Color) : Icon {
+private class ColorIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,
@@ -128,7 +133,9 @@ private class ColorIcon(private val color: Color) : Icon {
   override fun getIconHeight() = 32
 }
 
-private class EditableList(model: ListModel<ListItem>) : JList<ListItem>(model) {
+private class EditableList(
+  model: ListModel<ListItem>,
+) : JList<ListItem>(model) {
   private var editingIndex = -1
   private val window = JFrame()
   private val editor = JTextArea()

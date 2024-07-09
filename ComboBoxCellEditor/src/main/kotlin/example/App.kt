@@ -65,7 +65,9 @@ private data class PluginNode(
   override fun toString() = name
 }
 
-private class PluginPanel(val comboBox: JComboBox<String>) : JPanel() {
+private class PluginPanel(
+  val comboBox: JComboBox<String>,
+) : JPanel() {
   val pluginName = JLabel()
 
   init {
@@ -94,7 +96,9 @@ private class PluginPanel(val comboBox: JComboBox<String>) : JPanel() {
   }
 }
 
-private class PluginCellRenderer(comboBox: JComboBox<String>) : TreeCellRenderer {
+private class PluginCellRenderer(
+  comboBox: JComboBox<String>,
+) : TreeCellRenderer {
   private val panel = PluginPanel(comboBox)
 
   override fun getTreeCellRendererComponent(
@@ -111,7 +115,9 @@ private class PluginCellRenderer(comboBox: JComboBox<String>) : TreeCellRenderer
   }
 }
 
-private class PluginCellEditor(comboBox: JComboBox<String>) : DefaultCellEditor(comboBox) {
+private class PluginCellEditor(
+  comboBox: JComboBox<String>,
+) : DefaultCellEditor(comboBox) {
   private val panel = PluginPanel(comboBox)
   private var node: PluginNode? = null
 

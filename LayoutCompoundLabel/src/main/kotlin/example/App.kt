@@ -57,7 +57,10 @@ fun makeUI(): Component {
   }
 }
 
-private class IconTooltipItem(text: String?, icon: Icon?) : JMenuItem(text, icon) {
+private class IconTooltipItem(
+  text: String?,
+  icon: Icon?,
+) : JMenuItem(text, icon) {
   override fun getToolTipText(e: MouseEvent): String? {
     SwingUtilities.calculateInnerArea(this, VIEW_RECT)
     SwingUtilities.layoutCompoundLabel(

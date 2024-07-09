@@ -108,7 +108,9 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
   }
 }
 
-private class TabButton(text: String?) : JRadioButton(text, null) {
+private class TabButton(
+  text: String?,
+) : JRadioButton(text, null) {
   var textColor: Color? = null
   var pressedTc: Color? = null
   var rolloverTc: Color? = null
@@ -151,7 +153,9 @@ private class TabButton(text: String?) : JRadioButton(text, null) {
   }
 }
 
-private class CloseTabIcon(private val color: Color) : Icon {
+private class CloseTabIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

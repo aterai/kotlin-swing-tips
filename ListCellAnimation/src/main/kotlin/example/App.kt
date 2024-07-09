@@ -37,7 +37,9 @@ private fun makeList(): JList<String> {
 
 private class AnimeListCellRenderer<E>(
   val list: JList<E>,
-) : JPanel(BorderLayout()), ListCellRenderer<E>, HierarchyListener {
+) : JPanel(BorderLayout()),
+  ListCellRenderer<E>,
+  HierarchyListener {
   private val iconLabel = AnimeIcon()
   private val marqueeLabel = MarqueeLabel()
   private val animator: Timer

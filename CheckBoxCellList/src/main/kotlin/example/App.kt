@@ -77,11 +77,16 @@ private fun makeTitledPanel(
   return p
 }
 
-private data class CheckBoxNode(val text: String, val selected: Boolean) {
+private data class CheckBoxNode(
+  val text: String,
+  val selected: Boolean,
+) {
   override fun toString() = text
 }
 
-private class CheckBoxList(model: ListModel<CheckBoxNode>) : JList<CheckBoxNode>(model) {
+private class CheckBoxList(
+  model: ListModel<CheckBoxNode>,
+) : JList<CheckBoxNode>(model) {
   private var renderer: CheckBoxCellRenderer? = null
   private var handler: MouseListener? = null
 
@@ -152,7 +157,9 @@ private class CheckBoxList(model: ListModel<CheckBoxNode>) : JList<CheckBoxNode>
   }
 }
 
-private class CheckBoxCellRenderer : MouseAdapter(), ListCellRenderer<CheckBoxNode> {
+private class CheckBoxCellRenderer :
+  MouseAdapter(),
+  ListCellRenderer<CheckBoxNode> {
   private val checkBox = JCheckBox()
   private var rollOverRowIndex = -1
 
@@ -231,7 +238,9 @@ private class CheckBoxNodeRenderer : TreeCellRenderer {
 }
 
 // delegation pattern
-private class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
+private class CheckBoxNodeEditor :
+  AbstractCellEditor(),
+  TreeCellEditor {
   private val checkBox = object : JCheckBox() {
     private var handler: ActionListener? = null
 

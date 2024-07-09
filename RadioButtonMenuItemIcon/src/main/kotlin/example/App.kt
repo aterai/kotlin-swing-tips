@@ -23,7 +23,10 @@ private fun createMenuBar(): JMenuBar {
   return menuBar
 }
 
-private class RadioButtonMenuItemIcon1 : Icon, UIResource, Serializable {
+private class RadioButtonMenuItemIcon1 :
+  Icon,
+  UIResource,
+  Serializable {
   override fun paintIcon(
     c: Component,
     g: Graphics,
@@ -54,7 +57,10 @@ private class RadioButtonMenuItemIcon1 : Icon, UIResource, Serializable {
   }
 }
 
-private class RadioButtonMenuItemIcon2 : Icon, UIResource, Serializable {
+private class RadioButtonMenuItemIcon2 :
+  Icon,
+  UIResource,
+  Serializable {
   override fun paintIcon(
     c: Component,
     g: Graphics,

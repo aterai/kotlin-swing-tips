@@ -50,7 +50,9 @@ private fun makeTabbedPane(tabbedPane: JTabbedPane) = tabbedPane.also {
   it.addTab("444444444444", ColorIcon(Color.ORANGE), JLabel())
 }
 
-private class ColorIcon(private val color: Color) : Icon {
+private class ColorIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

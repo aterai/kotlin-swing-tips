@@ -140,7 +140,11 @@ private class ColumnSpanningCellRenderer : TableCellRenderer {
   }
 }
 
-private data class OptionPaneDescription(val title: String, val icon: Icon?, val text: String)
+private data class OptionPaneDescription(
+  val title: String,
+  val icon: Icon?,
+  val text: String,
+)
 
 fun main() {
   EventQueue.invokeLater {

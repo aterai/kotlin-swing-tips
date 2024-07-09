@@ -114,7 +114,9 @@ private fun makeHelpPanel(): Component {
   return p
 }
 
-private class ComboKeyHandler(private val combo: JComboBox<String>) : KeyAdapter() {
+private class ComboKeyHandler(
+  private val combo: JComboBox<String>,
+) : KeyAdapter() {
   private val list = mutableListOf<String>()
   private var shouldHide = false
 

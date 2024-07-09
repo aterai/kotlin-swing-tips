@@ -99,7 +99,10 @@ private class ColorRenderer : DefaultTableCellRenderer() {
   }
 }
 
-private class ColorEditor : AbstractCellEditor(), TableCellEditor, ActionListener {
+private class ColorEditor :
+  AbstractCellEditor(),
+  TableCellEditor,
+  ActionListener {
   private val button = JButton()
   private val colorChooser: JColorChooser
   private val dialog: JDialog
@@ -175,7 +178,9 @@ private class ColorEditor : AbstractCellEditor(), TableCellEditor, ActionListene
   }
 }
 
-private class ColorIcon(private val color: Color?) : Icon {
+private class ColorIcon(
+  private val color: Color?,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

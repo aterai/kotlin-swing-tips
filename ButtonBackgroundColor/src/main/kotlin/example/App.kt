@@ -72,7 +72,9 @@ private fun makePanel(vararg list: Component): Component {
   return p
 }
 
-private class ButtonBackgroundIcon(private val color: Color) : Icon {
+private class ButtonBackgroundIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

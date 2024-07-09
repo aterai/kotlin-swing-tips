@@ -100,7 +100,10 @@ private enum class ComponentType {
   LOG,
 }
 
-private data class Progress(val componentType: ComponentType, val value: Any)
+private data class Progress(
+  val componentType: ComponentType,
+  val value: Any,
+)
 
 private open class BackgroundTask : SwingWorker<String, Progress>() {
   @Throws(InterruptedException::class)

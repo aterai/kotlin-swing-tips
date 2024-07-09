@@ -170,9 +170,14 @@ private fun makeLabel(
   return label
 }
 
-private data class Contribution(val date: LocalDate, val activity: Int)
+private data class Contribution(
+  val date: LocalDate,
+  val activity: Int,
+)
 
-private class CalendarViewListModel(date: LocalDate) : AbstractListModel<Contribution>() {
+private class CalendarViewListModel(
+  date: LocalDate,
+) : AbstractListModel<Contribution>() {
   private val startDate: LocalDate
   private val displayDays: Int
   private val contributionActivity = mutableMapOf<LocalDate, Int>()
@@ -198,7 +203,9 @@ private class CalendarViewListModel(date: LocalDate) : AbstractListModel<Contrib
   }
 }
 
-private class ContributionIcon(private val color: Color) : Icon {
+private class ContributionIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

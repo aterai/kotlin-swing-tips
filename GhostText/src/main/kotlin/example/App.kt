@@ -52,7 +52,9 @@ private fun makeTitledPanel(
   it.add(c)
 }
 
-private class PlaceholderFocusListener(private val hintMessage: String) : FocusListener {
+private class PlaceholderFocusListener(
+  private val hintMessage: String,
+) : FocusListener {
   override fun focusGained(e: FocusEvent) {
     update(e.component)
   }
@@ -77,7 +79,9 @@ private class PlaceholderFocusListener(private val hintMessage: String) : FocusL
   }
 }
 
-private class PlaceholderLayerUI<V : JTextComponent>(hintMessage: String) : LayerUI<V>() {
+private class PlaceholderLayerUI<V : JTextComponent>(
+  hintMessage: String,
+) : LayerUI<V>() {
   private val hint = object : JLabel() {
     override fun updateUI() {
       super.updateUI()

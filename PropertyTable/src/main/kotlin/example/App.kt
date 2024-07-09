@@ -33,7 +33,9 @@ fun makeUI(): Component {
   }
 }
 
-class PropertyTable(model: TableModel) : JTable(model) {
+class PropertyTable(
+  model: TableModel,
+) : JTable(model) {
   private var editingClass: Class<*>? = null
 
   private fun getClassAt(
@@ -87,7 +89,9 @@ class PropertyTable(model: TableModel) : JTable(model) {
   }
 }
 
-class DateEditor : AbstractCellEditor(), TableCellEditor {
+class DateEditor :
+  AbstractCellEditor(),
+  TableCellEditor {
   private val spinner = JSpinner(SpinnerDateModel())
 
   init {
@@ -169,7 +173,10 @@ class ColorRenderer : DefaultTableCellRenderer() {
   }
 }
 
-class ColorEditor : AbstractCellEditor(), TableCellEditor, ActionListener {
+class ColorEditor :
+  AbstractCellEditor(),
+  TableCellEditor,
+  ActionListener {
   private val button = JButton()
   private val colorChooser: JColorChooser
   private val dialog: JDialog
@@ -223,7 +230,9 @@ class ColorEditor : AbstractCellEditor(), TableCellEditor, ActionListener {
   }
 }
 
-class ColorIcon(private val color: Color) : Icon {
+class ColorIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

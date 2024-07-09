@@ -48,7 +48,9 @@ private fun makeTitledPanel(
   return p
 }
 
-private class ColorIcon(private val color: Color) : Icon {
+private class ColorIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component?,
     g: Graphics,

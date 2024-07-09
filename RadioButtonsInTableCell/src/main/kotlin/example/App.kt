@@ -97,7 +97,9 @@ private class RadioButtonsRenderer : TableCellRenderer {
   ) = renderer.also { it.updateSelectedButton(value) }
 }
 
-private class RadioButtonsEditor : AbstractCellEditor(), TableCellEditor {
+private class RadioButtonsEditor :
+  AbstractCellEditor(),
+  TableCellEditor {
   private val renderer = RadioButtonsPanel()
 
   init {

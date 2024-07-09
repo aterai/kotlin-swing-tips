@@ -92,7 +92,9 @@ private class TablePopupMenu : JPopupMenu() {
 
 private class DnDTable(
   model: TableModel?,
-) : JTable(model), DragGestureListener, Transferable {
+) : JTable(model),
+  DragGestureListener,
+  Transferable {
   private val targetLine = Rectangle()
   private var draggedIndex = -1
   private var targetIndex = -1

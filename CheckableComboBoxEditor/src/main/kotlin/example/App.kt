@@ -119,7 +119,9 @@ private class CheckComboBoxEditor : ComboBoxEditor {
   }
 }
 
-private class EditorPanel(private val data: ComboItem) : JPanel() {
+private class EditorPanel(
+  private val data: ComboItem,
+) : JPanel() {
   private val enabledCheck = JCheckBox()
   private val editableCheck = JCheckBox()
   private val textField = JTextField("", 16)

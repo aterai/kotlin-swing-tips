@@ -53,7 +53,9 @@ private class SelectedImageFilter : RGBImageFilter() {
   }
 }
 
-private class FileNameRenderer(table: JTable) : TableCellRenderer {
+private class FileNameRenderer(
+  table: JTable,
+) : TableCellRenderer {
   private val dim = Dimension()
   private val renderer = JPanel(BorderLayout())
   private val textLabel = JLabel(" ")
@@ -140,7 +142,9 @@ private class FileNameRenderer(table: JTable) : TableCellRenderer {
   }
 }
 
-private class FileListTable(model: TableModel) : JTable(model) {
+private class FileListTable(
+  model: TableModel,
+) : JTable(model) {
   private val bandColor = SystemColor.activeCaption
   private val rectColor = makeRubberBandColor(bandColor)
   private val rubberBand = Path2D.Double()

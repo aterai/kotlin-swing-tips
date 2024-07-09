@@ -154,7 +154,9 @@ private fun makeInternalFrame(desktop: JDesktopPane): JInternalFrame {
   return f
 }
 
-private class CloseIcon(private val color: Color) : Icon {
+private class CloseIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component?,
     g: Graphics,
@@ -178,7 +180,9 @@ private class CloseIcon(private val color: Color) : Icon {
   override fun getIconHeight() = 16
 }
 
-private class TextAreaOutputStream(private val textArea: JTextArea) : OutputStream() {
+private class TextAreaOutputStream(
+  private val textArea: JTextArea,
+) : OutputStream() {
   private val buffer = ByteArrayOutputStream()
 
   @Throws(IOException::class)
@@ -192,7 +196,9 @@ private class TextAreaOutputStream(private val textArea: JTextArea) : OutputStre
   }
 }
 
-private class TextAreaHandler(os: OutputStream) : StreamHandler(os, SimpleFormatter()) {
+private class TextAreaHandler(
+  os: OutputStream,
+) : StreamHandler(os, SimpleFormatter()) {
   override fun getEncoding() = StandardCharsets.UTF_8.name()
 
   @Synchronized

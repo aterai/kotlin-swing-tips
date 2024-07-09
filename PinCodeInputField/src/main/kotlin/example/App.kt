@@ -88,7 +88,9 @@ private class PinCodeDocumentFilter : DocumentFilter() {
   }
 }
 
-private class PasswordView2(elem: Element) : PasswordView(elem) {
+private class PasswordView2(
+  elem: Element,
+) : PasswordView(elem) {
   @Throws(BadLocationException::class)
   override fun drawUnselectedText(
     g: Graphics,
@@ -146,7 +148,9 @@ private class PasswordView2(elem: Element) : PasswordView(elem) {
   }
 }
 
-private class PlaceholderLayerUI<E : JTextComponent>(hintMessage: String) : LayerUI<E>() {
+private class PlaceholderLayerUI<E : JTextComponent>(
+  hintMessage: String,
+) : LayerUI<E>() {
   private val hint = object : JLabel(hintMessage) {
     override fun updateUI() {
       super.updateUI()

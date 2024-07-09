@@ -97,7 +97,9 @@ private fun print(l: BigInteger): String {
   return "<html>0b" + ZERO_PAD.substring(b.length) + b + "<br/> count: " + count
 }
 
-private class UndoAction(private val um: UndoManager) : AbstractAction("undo") {
+private class UndoAction(
+  private val um: UndoManager,
+) : AbstractAction("undo") {
   override fun actionPerformed(e: ActionEvent) {
     if (um.canUndo()) {
       um.undo()
@@ -105,7 +107,9 @@ private class UndoAction(private val um: UndoManager) : AbstractAction("undo") {
   }
 }
 
-private class RedoAction(private val um: UndoManager) : AbstractAction("redo") {
+private class RedoAction(
+  private val um: UndoManager,
+) : AbstractAction("redo") {
   override fun actionPerformed(e: ActionEvent) {
     if (um.canRedo()) {
       um.redo()

@@ -176,7 +176,9 @@ private class TranslucentObjectRenderer : DefaultTableCellRenderer() {
     }
 }
 
-private class TranslucentBooleanRenderer : JCheckBox(), TableCellRenderer {
+private class TranslucentBooleanRenderer :
+  JCheckBox(),
+  TableCellRenderer {
   override fun updateUI() {
     super.updateUI()
     horizontalAlignment = CENTER

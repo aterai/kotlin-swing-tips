@@ -70,7 +70,9 @@ private class MySynthStyleFactory(
   }
 }
 
-private class TranslucentSynthStyle(private val style: SynthStyle) : SynthStyle() {
+private class TranslucentSynthStyle(
+  private val style: SynthStyle,
+) : SynthStyle() {
   override operator fun get(
     context: SynthContext?,
     key: Any,

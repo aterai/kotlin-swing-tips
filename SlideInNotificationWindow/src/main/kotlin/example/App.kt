@@ -41,7 +41,9 @@ fun makeUI(): Component {
   }
 }
 
-private class SlideInNotification : PropertyChangeListener, HierarchyListener {
+private class SlideInNotification :
+  PropertyChangeListener,
+  HierarchyListener {
   private val dialog = JWindow()
   private val animator = Timer(DELAY, null)
   private var listener: ActionListener? = null

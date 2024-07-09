@@ -44,7 +44,9 @@ fun makeUI(): Component {
 
 private class SaveHandler(
   private val frame: Frame,
-) : WindowAdapter(), DocumentListener, ActionListener {
+) : WindowAdapter(),
+  DocumentListener,
+  ActionListener {
   private val logger = Logger.getLogger(MethodHandles.lookup().lookupClass().name)
   private val title = frame.title
   private val list = mutableListOf<JComponent>()

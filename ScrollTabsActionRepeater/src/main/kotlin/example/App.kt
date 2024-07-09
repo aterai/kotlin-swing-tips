@@ -45,7 +45,8 @@ private fun addRepeatHandler(
 
 private class ActionRepeatHandler(
   private val action: Action,
-) : MouseAdapter(), ActionListener {
+) : MouseAdapter(),
+  ActionListener {
   private val timer: Timer
   private var button: JButton? = null
 

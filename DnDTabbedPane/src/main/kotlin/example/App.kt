@@ -305,7 +305,9 @@ private class DnDTabbedPane : JTabbedPane() {
   }
 }
 
-private class TabTransferable(private val tabbedPane: Component) : Transferable {
+private class TabTransferable(
+  private val tabbedPane: Component,
+) : Transferable {
   override fun getTransferData(flavor: DataFlavor) = tabbedPane
 
   override fun getTransferDataFlavors() = arrayOf(FLAVOR)
@@ -428,7 +430,9 @@ private class TabDropTargetListener : DropTargetListener {
   }
 }
 
-private class GhostGlassPane(val tabbedPane: DnDTabbedPane) : JComponent() {
+private class GhostGlassPane(
+  val tabbedPane: DnDTabbedPane,
+) : JComponent() {
   private val lineRect = Rectangle()
   private val lineColor = Color(0, 100, 255)
   private val locPt = Point()
@@ -492,7 +496,9 @@ private class GhostGlassPane(val tabbedPane: DnDTabbedPane) : JComponent() {
   }
 }
 
-private class ColorIcon(private val color: Color) : Icon {
+private class ColorIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

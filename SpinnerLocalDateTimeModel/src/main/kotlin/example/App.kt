@@ -155,9 +155,10 @@ private class LocalDateTimeEditor(
     }
   }
 
-  private inner class LocalDateTimeFormatter : InternationalFormatter(
-    dateTimeFormatter.toFormat(),
-  ) {
+  private inner class LocalDateTimeFormatter :
+    InternationalFormatter(
+      dateTimeFormatter.toFormat(),
+    ) {
     override fun valueToString(value: Any?) =
       (value as? TemporalAccessor)?.let { dateTimeFormatter.format(it) } ?: ""
 

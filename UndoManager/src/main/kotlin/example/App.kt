@@ -21,7 +21,9 @@ fun makeUI(): Component {
   }
 }
 
-private class UndoAction(private val undoManager: UndoManager) : AbstractAction("undo") {
+private class UndoAction(
+  private val undoManager: UndoManager,
+) : AbstractAction("undo") {
   override fun actionPerformed(e: ActionEvent) {
     runCatching {
       undoManager.undo()
@@ -31,7 +33,9 @@ private class UndoAction(private val undoManager: UndoManager) : AbstractAction(
   }
 }
 
-private class RedoAction(private val undoManager: UndoManager) : AbstractAction("redo") {
+private class RedoAction(
+  private val undoManager: UndoManager,
+) : AbstractAction("redo") {
   override fun actionPerformed(e: ActionEvent) {
     runCatching {
       undoManager.redo()

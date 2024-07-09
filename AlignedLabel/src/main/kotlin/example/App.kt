@@ -59,7 +59,9 @@ private fun makeLabeledBox(
 }
 
 // @see javax/swing/plaf/metal/MetalFileChooserUI.java
-private class AlignedLabel(text: String) : JLabel(text) {
+private class AlignedLabel(
+  text: String,
+) : JLabel(text) {
   private var group = mutableListOf<AlignedLabel>()
   private var maxWidth = 0
 

@@ -64,7 +64,9 @@ fun makeUI() = JPanel(BorderLayout(5, 5)).also { panel ->
   panel.preferredSize = Dimension(320, 240)
 }
 
-private class ColorIcon(private val color: Color) : Icon {
+private class ColorIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component?,
     g: Graphics,

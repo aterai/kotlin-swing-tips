@@ -191,7 +191,9 @@ private fun makeTitledPanel(
   return p
 }
 
-private class NewspaperStyleList(model: ListModel<ListItem>) : JList<ListItem>(model) {
+private class NewspaperStyleList(
+  model: ListModel<ListItem>,
+) : JList<ListItem>(model) {
   override fun updateUI() {
     selectionForeground = null // Nimbus
     selectionBackground = null // Nimbus
@@ -268,9 +270,14 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   }
 }
 
-private data class ListItem(val title: String, val icon: Icon)
+private data class ListItem(
+  val title: String,
+  val icon: Icon,
+)
 
-private class ColorIcon(private val color: Color) : Icon {
+private class ColorIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

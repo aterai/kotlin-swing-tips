@@ -48,7 +48,9 @@ fun makeUI(): Component {
   }
 }
 
-private class RightAlignmentMetalFileChooserUI(fc: JFileChooser) : MetalFileChooserUI(fc) {
+private class RightAlignmentMetalFileChooserUI(
+  fc: JFileChooser,
+) : MetalFileChooserUI(fc) {
   override fun installComponents(fc: JFileChooser) {
     super.installComponents(fc)
     descendants(bottomPanel)

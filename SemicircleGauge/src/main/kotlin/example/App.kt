@@ -70,7 +70,10 @@ fun makeUI(): Component {
   }
 }
 
-private class SolidGaugeUI(range: Int, extent: Double) : BasicProgressBarUI() {
+private class SolidGaugeUI(
+  range: Int,
+  extent: Double,
+) : BasicProgressBarUI() {
   private val pallet: IntArray
   private val extent: Double
 

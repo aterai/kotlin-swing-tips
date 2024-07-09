@@ -50,13 +50,14 @@ private fun createMenuBar(): JMenuBar {
   return menuBar
 }
 
-private class MyInternalFrame : JInternalFrame(
-  "Document #%s".format(OPEN_FRAME_COUNT.getAndIncrement()),
-  true,
-  true,
-  true,
-  true,
-) {
+private class MyInternalFrame :
+  JInternalFrame(
+    "Document #%s".format(OPEN_FRAME_COUNT.getAndIncrement()),
+    true,
+    true,
+    true,
+    true,
+  ) {
   init {
     setSize(180, 100)
     setLocation(OFFSET * OPEN_FRAME_COUNT.toInt(), OFFSET * OPEN_FRAME_COUNT.toInt())

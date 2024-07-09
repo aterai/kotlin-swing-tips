@@ -119,7 +119,8 @@ private class HeaderRenderer : TableCellRenderer {
 private class HeaderCheckBoxHandler(
   private val table: JTable,
   private val targetColumnIndex: Int,
-) : MouseAdapter(), TableModelListener {
+) : MouseAdapter(),
+  TableModelListener {
   override fun tableChanged(e: TableModelEvent) {
     if (e.type == TableModelEvent.UPDATE && e.column == targetColumnIndex) {
       val vci = table.convertColumnIndexToView(targetColumnIndex)
@@ -172,7 +173,9 @@ private class HeaderCheckBoxHandler(
   }
 }
 
-private class ComponentIcon(private val cmp: Component) : Icon {
+private class ComponentIcon(
+  private val cmp: Component,
+) : Icon {
   override fun paintIcon(
     c: Component?,
     g: Graphics,

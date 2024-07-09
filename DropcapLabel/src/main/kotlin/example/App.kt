@@ -27,7 +27,9 @@ fun makeUI(): Component {
   }
 }
 
-private class DropcapLabel(text: String) : JLabel(text) {
+private class DropcapLabel(
+  text: String,
+) : JLabel(text) {
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.paint = background

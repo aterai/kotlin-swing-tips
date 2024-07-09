@@ -120,7 +120,9 @@ private class HeaderRenderer : TableCellRenderer {
   }
 }
 
-private class ComponentIcon(private val c: Component) : Icon {
+private class ComponentIcon(
+  private val c: Component,
+) : Icon {
   override fun paintIcon(
     c: Component?,
     g: Graphics,
@@ -186,7 +188,8 @@ private class TablePopupMenu : JPopupMenu() {
 private class HeaderCheckBoxHandler(
   private val table: JTable,
   private val targetColumnIndex: Int,
-) : MouseAdapter(), TableModelListener {
+) : MouseAdapter(),
+  TableModelListener {
   override fun tableChanged(e: TableModelEvent) {
     val vci = table.convertColumnIndexToView(targetColumnIndex)
     val col = table.columnModel.getColumn(vci)

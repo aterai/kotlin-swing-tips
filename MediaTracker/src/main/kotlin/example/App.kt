@@ -134,7 +134,12 @@ private data class ColumnContext(
   val isEditable: Boolean,
 )
 
-private data class RowData(val id: Int, val path: Path, val width: Int, val height: Int) {
+private data class RowData(
+  val id: Int,
+  val path: Path,
+  val width: Int,
+  val height: Int,
+) {
   val name get() = path.fileName.toString()
   val absolutePath get() = path.toAbsolutePath().toString()
 }

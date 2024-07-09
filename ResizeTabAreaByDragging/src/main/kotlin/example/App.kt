@@ -23,7 +23,9 @@ fun makeUI(): Component {
   }
 }
 
-private class ClippedTitleTabbedPane(tabPlacement: Int) : JTabbedPane(tabPlacement) {
+private class ClippedTitleTabbedPane(
+  tabPlacement: Int,
+) : JTabbedPane(tabPlacement) {
   var tabAreaWidth = 32
     set(newWidth) {
       val w = newWidth.coerceIn(MIN_WIDTH, width - MIN_WIDTH)
@@ -185,7 +187,9 @@ private class TabAreaResizeLayer : LayerUI<ClippedTitleTabbedPane>() {
   }
 }
 
-private class ColorIcon(private val color: Color) : Icon {
+private class ColorIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

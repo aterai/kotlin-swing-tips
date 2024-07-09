@@ -53,7 +53,10 @@ private fun makeModel(): DefaultTreeModel {
   return DefaultTreeModel(root)
 }
 
-private data class TableOfContents(val title: String, val page: Int) {
+private data class TableOfContents(
+  val title: String,
+  val page: Int,
+) {
   override fun toString() = title
 }
 
@@ -147,7 +150,9 @@ private class TableOfContentsTreeCellRenderer : DefaultTreeCellRenderer() {
   }
 }
 
-private class TableOfContentsTree(model: TreeModel?) : JTree(model) {
+private class TableOfContentsTree(
+  model: TreeModel?,
+) : JTree(model) {
   private var isSynth = false
 
   override fun updateUI() {

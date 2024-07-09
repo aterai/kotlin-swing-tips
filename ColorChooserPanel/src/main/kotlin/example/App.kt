@@ -72,7 +72,9 @@ fun showColorChooserDialog(
   return ok.color
 }
 
-private class ColorTracker(private val chooser: JColorChooser) : ActionListener {
+private class ColorTracker(
+  private val chooser: JColorChooser,
+) : ActionListener {
   var color: Color? = null
     private set
 

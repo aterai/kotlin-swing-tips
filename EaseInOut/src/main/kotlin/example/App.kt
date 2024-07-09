@@ -20,7 +20,10 @@ fun makeUI(): Component {
   }
 }
 
-private class ImageCaptionLabel(caption: String, icon: Icon) : JLabel() {
+private class ImageCaptionLabel(
+  caption: String,
+  icon: Icon,
+) : JLabel() {
   private val textArea = object : JTextArea() {
     @Transient private var listener: MouseListener? = null
 
@@ -98,7 +101,8 @@ private class ImageCaptionLabel(caption: String, icon: Icon) : JLabel() {
 
 private class LabelHandler(
   private val textArea: Component,
-) : MouseAdapter(), HierarchyListener {
+) : MouseAdapter(),
+  HierarchyListener {
   private val animator = Timer(5) { updateTextAreaLocation() }
   var textAreaHeight = 0
     private set

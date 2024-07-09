@@ -60,7 +60,10 @@ private fun makeComboBox(
   }
 }
 
-private data class ComboItem(val item: String, val hasSeparator: Boolean = false) {
+private data class ComboItem(
+  val item: String,
+  val hasSeparator: Boolean = false,
+) {
   override fun toString() = item
 }
 

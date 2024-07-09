@@ -152,7 +152,9 @@ private data class Binding(
   val focusTypeName get() = focusType.name
 }
 
-private enum class FocusType(val id: Int) {
+private enum class FocusType(
+  val id: Int,
+) {
   WHEN_FOCUSED(JComponent.WHEN_FOCUSED),
   WHEN_IN_FOCUSED_WINDOW(JComponent.WHEN_IN_FOCUSED_WINDOW),
   WHEN_ANCESTOR_OF_FOCUSED_COMPONENT(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT),

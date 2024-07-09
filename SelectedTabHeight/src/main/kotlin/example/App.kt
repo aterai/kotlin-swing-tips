@@ -44,7 +44,9 @@ fun makeUI(): Component {
   }
 }
 
-private enum class TabPlacements(val tabPlacement: Int) {
+private enum class TabPlacements(
+  val tabPlacement: Int,
+) {
   TOP(JTabbedPane.TOP),
   BOTTOM(JTabbedPane.BOTTOM),
   LEFT(JTabbedPane.LEFT),

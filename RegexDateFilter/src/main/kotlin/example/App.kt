@@ -96,7 +96,9 @@ private fun makeBox(sorter: TableRowSorter<TableModel>): Component {
   return box
 }
 
-private class RegexDateFilter(private val pattern: Regex) : RowFilter<TableModel, Int>() {
+private class RegexDateFilter(
+  private val pattern: Regex,
+) : RowFilter<TableModel, Int>() {
   override fun include(entry: Entry<out TableModel, out Int>): Boolean {
     for (i in entry.valueCount - 1 downTo 0) {
       val v = entry.getValue(i)

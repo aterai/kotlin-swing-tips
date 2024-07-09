@@ -35,7 +35,9 @@ fun makeUI(): Component {
 }
 
 // https://stackoverflow.com/questions/21388255/multiple-jsliders-reacting-to-each-other-to-always-equal-100-percent
-private class SpinnerNumberModelGroup(private val expectedSum: Int) {
+private class SpinnerNumberModelGroup(
+  private val expectedSum: Int,
+) {
   private val candidates = ArrayDeque<SpinnerNumberModel>()
   private val changeListener = ChangeListener { e ->
     val source = e.source as? SpinnerNumberModel

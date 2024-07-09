@@ -110,7 +110,9 @@ private fun makeIcon(
     ?: UIManager.getIcon(key)
 }
 
-private class TempFileTransferable(private val file: File?) : Transferable {
+private class TempFileTransferable(
+  private val file: File?,
+) : Transferable {
   override fun getTransferData(flavor: DataFlavor) = listOf(file)
 
   override fun getTransferDataFlavors() = arrayOf(DataFlavor.javaFileListFlavor)

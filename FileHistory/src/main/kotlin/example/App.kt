@@ -90,7 +90,9 @@ private fun makeHistoryMenuItem(
   return mi
 }
 
-private class HistoryAction(private val path: Path) : AbstractAction() {
+private class HistoryAction(
+  private val path: Path,
+) : AbstractAction() {
   override fun actionPerformed(e: ActionEvent) {
     val c = e.source as? JComponent ?: return
     val obj = arrayOf(
@@ -178,7 +180,9 @@ private class VersionAction : AbstractAction("version") {
   }
 }
 
-class BarFactory(base: String) {
+class BarFactory(
+  base: String,
+) {
   private val resources = ResourceBundle.getBundle(base, Utf8ResourceBundleControl())
   private val menuItems = mutableMapOf<String, JMenuItem>()
   private val toolButtons = mutableMapOf<String, JButton>()

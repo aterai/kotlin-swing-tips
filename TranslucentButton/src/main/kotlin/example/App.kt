@@ -126,7 +126,10 @@ fun makeUI(): Component {
   return panel
 }
 
-private class TranslucentButton(text: String?, icon: Icon?) : JButton(text, icon) {
+private class TranslucentButton(
+  text: String?,
+  icon: Icon?,
+) : JButton(text, icon) {
   override fun updateUI() {
     super.updateUI()
     isContentAreaFilled = false
@@ -171,7 +174,9 @@ private class TranslucentButton(text: String?, icon: Icon?) : JButton(text, icon
   }
 }
 
-private class TranslucentButtonIcon(c: JComponent) : Icon {
+private class TranslucentButtonIcon(
+  c: JComponent,
+) : Icon {
   private var width = 100
   private var height = 20
 
@@ -233,7 +238,9 @@ private class TranslucentButtonIcon(c: JComponent) : Icon {
 
 // https://community.oracle.com/thread/1395763 How can I use TextArea with Background Picture ?
 // https://ateraimemo.com/Swing/CentredBackgroundBorder.html
-private class CentredBackgroundBorder(private val image: BufferedImage) : Border {
+private class CentredBackgroundBorder(
+  private val image: BufferedImage,
+) : Border {
   override fun paintBorder(
     c: Component,
     g: Graphics,

@@ -30,7 +30,9 @@ private fun makeTitledPanel(
   return p
 }
 
-private class SingleMouseClickSelectList<E>(model: ListModel<E>) : JList<E>(model) {
+private class SingleMouseClickSelectList<E>(
+  model: ListModel<E>,
+) : JList<E>(model) {
   override fun updateUI() {
     foreground = null
     background = null
@@ -72,7 +74,9 @@ private class SingleMouseClickSelectList<E>(model: ListModel<E>) : JList<E>(mode
   )
 }
 
-private class SingleClickSelectList<E>(model: ListModel<E>) : JList<E>(model) {
+private class SingleClickSelectList<E>(
+  model: ListModel<E>,
+) : JList<E>(model) {
   private var listener: SelectionHandler? = null
   private var isDragging = false
   private var isInsideDragging = false

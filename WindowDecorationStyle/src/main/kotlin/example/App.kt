@@ -58,7 +58,9 @@ private class DragWindowListener : MouseAdapter() {
   }
 }
 
-private class DraggableInternalFrame(title: String?) : JInternalFrame(title) {
+private class DraggableInternalFrame(
+  title: String?,
+) : JInternalFrame(title) {
   init {
     val focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager()
     focusManager.addPropertyChangeListener { e ->

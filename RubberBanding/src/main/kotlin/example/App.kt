@@ -28,7 +28,10 @@ private fun makeModel() = DefaultListModel<ListItem>().also {
   it.addElement(ListItem("3333", "example/wi0063-32.png"))
 }
 
-private data class ListItem(val title: String, val iconFile: String) {
+private data class ListItem(
+  val title: String,
+  val iconFile: String,
+) {
   val img = makeImage(iconFile)
   val icon = ImageIcon(img)
   val selectedIcon: ImageIcon
@@ -55,7 +58,9 @@ private fun makeMissingImage(): Image {
   return bi
 }
 
-private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListItem>(model) {
+private class RubberBandSelectionList(
+  model: ListModel<ListItem>,
+) : JList<ListItem>(model) {
   private var rbl: RubberBandingListener? = null
   private var rubberBandColor: Color? = null
   private val rubberBand = Path2D.Double()

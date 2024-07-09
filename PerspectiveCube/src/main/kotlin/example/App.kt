@@ -86,7 +86,11 @@ private class DragRotateHandler : MouseAdapter() {
   }
 }
 
-private class Vertex(private var dx: Double, private var dy: Double, private var dz: Double) {
+private class Vertex(
+  private var dx: Double,
+  private var dy: Double,
+  private var dz: Double,
+) {
   var vx = 0.0
   var vy = 0.0
 

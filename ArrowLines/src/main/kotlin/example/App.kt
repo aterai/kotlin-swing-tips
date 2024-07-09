@@ -27,7 +27,10 @@ fun makeUI(): Component {
   return p
 }
 
-private class Arrow(start: Point, end: Point) {
+private class Arrow(
+  start: Point,
+  end: Point,
+) {
   private val start = Point()
   private val end = Point()
   private val arrowHead: Path2D

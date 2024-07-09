@@ -357,7 +357,8 @@ private class Arrow(
   private val descending: Boolean,
   private val size: Int,
   private val priority: Int,
-) : Icon, Serializable {
+) : Icon,
+  Serializable {
   override fun paintIcon(
     c: Component?,
     g: Graphics,
@@ -412,13 +413,18 @@ private class Arrow(
   }
 }
 
-private class Directive(val column: Int, val direction: Int) : Serializable {
+private class Directive(
+  val column: Int,
+  val direction: Int,
+) : Serializable {
   companion object {
     private const val serialVersionUID = 1L
   }
 }
 
-private class TableRow(val modelIndex: Int) : Serializable {
+private class TableRow(
+  val modelIndex: Int,
+) : Serializable {
   companion object {
     private const val serialVersionUID = 1L
   }

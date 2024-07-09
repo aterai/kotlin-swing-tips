@@ -45,7 +45,9 @@ private fun makeTitledPanel(
 private class IconPasswordFieldUI : BasicPasswordFieldUI() {
   override fun create(elem: Element) = IconPasswordView(elem)
 
-  class IconPasswordView(element: Element?) : PasswordView(element) {
+  class IconPasswordView(
+    element: Element?,
+  ) : PasswordView(element) {
     private val icon = StarIcon()
 
     override fun drawEchoCharacter(

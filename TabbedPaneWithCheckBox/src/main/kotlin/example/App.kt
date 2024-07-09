@@ -41,7 +41,9 @@ fun makeUI(): Component {
 private class TabbedPaneWithCompBorder(
   private val checkBox: JCheckBox,
   private val tab: JTabbedPane,
-) : Border, MouseListener, SwingConstants {
+) : Border,
+  MouseListener,
+  SwingConstants {
   private val rubberStamp = JPanel()
   private val rect = Rectangle()
 

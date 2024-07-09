@@ -14,7 +14,10 @@ fun makeUI() = PaintPanel().also {
   it.preferredSize = Dimension(320, 240)
 }
 
-private class PaintPanel : JPanel(), MouseMotionListener, MouseListener {
+private class PaintPanel :
+  JPanel(),
+  MouseMotionListener,
+  MouseListener {
   private var startPoint = Point()
   private val backImage: BufferedImage
   private val rect = Rectangle(320, 240)

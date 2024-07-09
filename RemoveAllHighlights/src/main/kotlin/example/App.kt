@@ -70,7 +70,10 @@ fun makeUI(): Component {
   }
 }
 
-private class WordHighlightListener : MouseAdapter(), CaretListener, KeyListener {
+private class WordHighlightListener :
+  MouseAdapter(),
+  CaretListener,
+  KeyListener {
   private var dragActive = false
   private var shiftActive = false
 

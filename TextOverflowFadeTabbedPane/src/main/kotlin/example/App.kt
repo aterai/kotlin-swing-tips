@@ -130,7 +130,9 @@ private open class TextOverflowFadeTabbedPane : ClippedTitleTabbedPane() {
   }
 }
 
-private class TextOverflowFadeLabel(text: String) : JLabel(text) {
+private class TextOverflowFadeLabel(
+  text: String,
+) : JLabel(text) {
   override fun paintComponent(g: Graphics) {
     val i = insets
     val w = width - i.left - i.right
@@ -167,7 +169,9 @@ private class TextOverflowFadeLabel(text: String) : JLabel(text) {
   }
 }
 
-private class ColorIcon(private val color: Color) : Icon {
+private class ColorIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component?,
     g: Graphics,

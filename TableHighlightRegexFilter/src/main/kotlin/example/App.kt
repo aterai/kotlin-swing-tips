@@ -80,7 +80,9 @@ private fun fireDocumentChangeEvent() {
   }
 }
 
-private class HighlightTableCellRenderer : JTextField(), TableCellRenderer {
+private class HighlightTableCellRenderer :
+  JTextField(),
+  TableCellRenderer {
   private val highlightPainter = DefaultHighlightPainter(Color.YELLOW)
   private var pattern = ""
   private var prev: String? = null

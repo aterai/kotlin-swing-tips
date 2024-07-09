@@ -63,7 +63,10 @@ private fun makeMenuButton(m: MenuContext): AbstractButton {
   return b
 }
 
-private class PressAndHoldButton(icon: Icon, val popupMenu: JPopupMenu?) : JButton(icon) {
+private class PressAndHoldButton(
+  icon: Icon,
+  val popupMenu: JPopupMenu?,
+) : JButton(icon) {
   private var handler: PressAndHoldHandler? = null
 
   override fun updateUI() {
@@ -86,7 +89,9 @@ private class PressAndHoldButton(icon: Icon, val popupMenu: JPopupMenu?) : JButt
     Companion.ARROW_ICON.paintIcon(this, g, r.x + r.width, r.y + cy)
   }
 
-  private inner class PressAndHoldHandler : AbstractAction(), MouseListener {
+  private inner class PressAndHoldHandler :
+    AbstractAction(),
+    MouseListener {
     private val holdTimer = Timer(1000) { e ->
       val timer = e.source
       if ((timer as? Timer)?.isRunning == true && popupMenu != null && getModel().isPressed) {
@@ -137,7 +142,10 @@ private class PressAndHoldButton(icon: Icon, val popupMenu: JPopupMenu?) : JButt
   }
 }
 
-private data class MenuContext(val command: String, val color: Color)
+private data class MenuContext(
+  val command: String,
+  val color: Color,
+)
 
 private class MenuArrowIcon : Icon {
   override fun paintIcon(

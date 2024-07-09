@@ -87,7 +87,8 @@ fun makeUI(): Component {
 
 private class LayoutAnimator(
   private val component: JComponent,
-) : BorderLayout(), ActionListener {
+) : BorderLayout(),
+  ActionListener {
   var isShowing = true
   private var yy = 0
   private var counter = 0

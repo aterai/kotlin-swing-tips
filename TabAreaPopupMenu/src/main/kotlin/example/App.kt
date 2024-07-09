@@ -164,7 +164,9 @@ private fun makeTestLayer(): LayerUI<JTabbedPane> {
   }
 }
 
-private enum class TabPlacement(val placement: Int) {
+private enum class TabPlacement(
+  val placement: Int,
+) {
   TOP(SwingConstants.TOP),
   LEFT(SwingConstants.LEFT),
   BOTTOM(SwingConstants.BOTTOM),

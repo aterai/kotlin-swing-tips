@@ -59,7 +59,9 @@ private fun makeMissingImage(): BufferedImage {
   return bi
 }
 
-private class MosaicImageFilter(private val blockSize: Int) : BufferedImageOp {
+private class MosaicImageFilter(
+  private val blockSize: Int,
+) : BufferedImageOp {
   override fun filter(src: BufferedImage, dst: BufferedImage?): BufferedImage {
     val width = src.width
     val height = src.height

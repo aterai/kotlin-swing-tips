@@ -103,7 +103,9 @@ private class TranslucentPopupMenu : JPopupMenu() {
   }
 }
 
-private class TransparentMenu(title: String?) : JMenu(title) {
+private class TransparentMenu(
+  title: String?,
+) : JMenu(title) {
   private var popupMenu: JPopupMenu? = null
 
   private fun ensurePopupMenuCreated2(): JPopupMenu {

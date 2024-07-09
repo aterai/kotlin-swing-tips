@@ -87,7 +87,9 @@ private fun initSlider(slider: JSlider): JSlider {
   return slider
 }
 
-private class WindowsSnapToTicksDragSliderUI(slider: JSlider) : WindowsSliderUI(slider) {
+private class WindowsSnapToTicksDragSliderUI(
+  slider: JSlider,
+) : WindowsSliderUI(slider) {
   override fun createTrackListener(slider: JSlider): TrackListener {
     return object : TrackListener() {
       override fun mouseDragged(e: MouseEvent) {

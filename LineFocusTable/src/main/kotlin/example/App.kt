@@ -47,7 +47,9 @@ fun makeModel(): TableModel {
   }
 }
 
-private class LineFocusTable(model: TableModel) : JTable(model) {
+private class LineFocusTable(
+  model: TableModel,
+) : JTable(model) {
   private val dotBorder = DotBorder(2, 2, 2, 2)
   private val emptyBorder = BorderFactory.createEmptyBorder(2, 2, 2, 2)
 

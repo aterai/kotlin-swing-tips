@@ -155,7 +155,8 @@ private class FileTransferHandler : TransferHandler() {
 
 private open class DefaultFileComparator(
   protected val column: Int,
-) : Comparator<File>, Serializable {
+) : Comparator<File>,
+  Serializable {
   override fun compare(
     a: File,
     b: File,
@@ -166,7 +167,9 @@ private open class DefaultFileComparator(
   }
 }
 
-private class FileComparator(column: Int) : DefaultFileComparator(column) {
+private class FileComparator(
+  column: Int,
+) : DefaultFileComparator(column) {
   override fun compare(
     a: File,
     b: File,

@@ -49,7 +49,10 @@ private fun updateTabWidth(tabs: JTabbedPane) {
   }
 }
 
-private class ShrinkLabel(title: String, icon: Icon) : JLabel(title, icon, LEFT) {
+private class ShrinkLabel(
+  title: String,
+  icon: Icon,
+) : JLabel(title, icon, LEFT) {
   var isSelected = false
 
   override fun getPreferredSize() = super.getPreferredSize()?.also {

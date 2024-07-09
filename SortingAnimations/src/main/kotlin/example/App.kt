@@ -144,7 +144,9 @@ fun workerExecute() {
   }.also { it.execute() }
 }
 
-private enum class SortAlgorithms(private val description: String) {
+private enum class SortAlgorithms(
+  private val description: String,
+) {
   ISORT("Insertion Sort"),
   SELSORT("Selection Sort"),
   SHELLSORT("Shell Sort"),

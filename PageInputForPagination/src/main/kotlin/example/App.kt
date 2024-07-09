@@ -79,7 +79,10 @@ fun updateCurrentPageIndex(e: ActionEvent) {
   initFilterAndButtons()
 }
 
-private class TableUpdateTask(max: Int, itemsPerPage: Int) : LoadTask(max, itemsPerPage) {
+private class TableUpdateTask(
+  max: Int,
+  itemsPerPage: Int,
+) : LoadTask(max, itemsPerPage) {
   init {
     field.isEditable = false
   }

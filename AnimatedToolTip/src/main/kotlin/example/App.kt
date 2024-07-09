@@ -56,7 +56,9 @@ fun makeUI(): Component {
   }
 }
 
-private class AnimatedToolTip(private val iconLabel: JLabel?) : JToolTip() {
+private class AnimatedToolTip(
+  private val iconLabel: JLabel?,
+) : JToolTip() {
   init {
     LookAndFeel.installColorsAndFont(
       iconLabel,
@@ -80,7 +82,9 @@ private class AnimatedToolTip(private val iconLabel: JLabel?) : JToolTip() {
   override fun getTipText() = iconLabel?.text ?: ""
 }
 
-private class AnimatedLabel(title: String) : JLabel(title, AnimeIcon(), LEADING) {
+private class AnimatedLabel(
+  title: String,
+) : JLabel(title, AnimeIcon(), LEADING) {
   private var listener: HierarchyListener? = null
   private val animator = Timer(100) {
     (icon as? AnimeIcon)?.next()

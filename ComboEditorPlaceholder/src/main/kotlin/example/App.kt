@@ -68,7 +68,9 @@ fun makeUI(): Component {
   }
 }
 
-private class PlaceholderLayerUI<E : JTextComponent>(hintMessage: String) : LayerUI<E>() {
+private class PlaceholderLayerUI<E : JTextComponent>(
+  hintMessage: String,
+) : LayerUI<E>() {
   private val hint = object : JLabel(hintMessage) {
     override fun updateUI() {
       super.updateUI()

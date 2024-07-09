@@ -47,7 +47,9 @@ private fun makeSlider(title: String): JSlider {
   return slider
 }
 
-private class WindowsDragLimitedSliderUI(slider: JSlider) : WindowsSliderUI(slider) {
+private class WindowsDragLimitedSliderUI(
+  slider: JSlider,
+) : WindowsSliderUI(slider) {
   override fun createTrackListener(slider: JSlider) = object : TrackListener() {
     override fun mouseDragged(e: MouseEvent) { // case HORIZONTAL:
       val halfThumbWidth = thumbRect.width / 2
@@ -64,7 +66,9 @@ private class WindowsDragLimitedSliderUI(slider: JSlider) : WindowsSliderUI(slid
   }
 }
 
-private class BasicDragLimitedSliderUI(slider: JSlider) : BasicSliderUI(slider) {
+private class BasicDragLimitedSliderUI(
+  slider: JSlider,
+) : BasicSliderUI(slider) {
   override fun createTrackListener(slider: JSlider) = object : TrackListener() {
     override fun mouseDragged(e: MouseEvent) { // case HORIZONTAL:
       val halfThumbWidth = thumbRect.width / 2

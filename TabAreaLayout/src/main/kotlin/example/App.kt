@@ -320,7 +320,9 @@ private class TabButton : JToggleButton() {
   }
 }
 
-private class CloseTabIcon(private val color: Color) : Icon {
+private class CloseTabIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component?,
     g: Graphics,
@@ -341,7 +343,9 @@ private class CloseTabIcon(private val color: Color) : Icon {
   override fun getIconHeight() = 12
 }
 
-private class ColorIcon(private val color: Color) : Icon {
+private class ColorIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component?,
     g: Graphics,

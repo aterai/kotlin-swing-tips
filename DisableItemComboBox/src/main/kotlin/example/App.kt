@@ -51,9 +51,13 @@ private fun getDisableIndexFromTextField(field: JTextField) = runCatching {
   val p = field.rootPane
   val msg = "invalid value.\n${it.message}"
   JOptionPane.showMessageDialog(p, msg, "Error", JOptionPane.ERROR_MESSAGE)
-}.getOrNull().orEmpty()
+}.getOrElse {
+  emptySet()
+}
 
-private class DisableItemComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(model) {
+private class DisableItemComboBox<E>(
+  model: ComboBoxModel<E>,
+) : JComboBox<E>(model) {
   private val disableIndexSet = mutableSetOf<Int>()
   private var isDisableIndex = false
   private val up = object : AbstractAction() {

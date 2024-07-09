@@ -46,7 +46,9 @@ fun main() {
   }
 }
 
-private class FiveStarRatingLabel(rating: String) : JComponent() {
+private class FiveStarRatingLabel(
+  rating: String,
+) : JComponent() {
   private val ip: Int
   private val fp: Int
 

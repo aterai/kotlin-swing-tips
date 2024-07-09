@@ -63,7 +63,9 @@ private fun makeTitledPanel(
   return p
 }
 
-private open class TooltipList<E>(m: ListModel<E>?) : JList<E>(m) {
+private open class TooltipList<E>(
+  m: ListModel<E>?,
+) : JList<E>(m) {
   override fun getToolTipText(e: MouseEvent): String {
     val event = getToolTipCellPoint(e)?.let {
       MouseEvent(

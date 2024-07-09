@@ -124,7 +124,9 @@ fun setHighlight(
   jtc.repaint()
 }
 
-private class CentredBackgroundBorder(private val image: BufferedImage) : Border {
+private class CentredBackgroundBorder(
+  private val image: BufferedImage,
+) : Border {
   override fun paintBorder(
     c: Component,
     g: Graphics,

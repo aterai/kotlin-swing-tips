@@ -207,7 +207,9 @@ open class RoundButton : RoundedCornerButton {
   }
 }
 
-class ShapeButton(private val shape: Shape?) : JButton() {
+class ShapeButton(
+  private val shape: Shape?,
+) : JButton() {
   private val fc = Color(100, 150, 255, 200)
   private val ac = Color(230, 230, 230)
   private val rc = Color.ORANGE
@@ -271,7 +273,9 @@ class ShapeButton(private val shape: Shape?) : JButton() {
   ) = shape?.contains(Point(x, y)) ?: super.contains(x, y)
 }
 
-class ShapeSizeIcon(private val shape: Shape?) : Icon {
+class ShapeSizeIcon(
+  private val shape: Shape?,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

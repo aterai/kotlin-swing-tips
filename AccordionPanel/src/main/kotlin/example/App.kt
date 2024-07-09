@@ -61,7 +61,9 @@ private fun makeExpansionPanelList() = listOf(
   },
 )
 
-abstract class AbstractExpansionPanel(private val title: String) : JPanel(BorderLayout()) {
+abstract class AbstractExpansionPanel(
+  private val title: String,
+) : JPanel(BorderLayout()) {
   private val titleBar = object : JLabel("▼ $title") {
     private val bgc = Color(0xC8_C8_FF)
 

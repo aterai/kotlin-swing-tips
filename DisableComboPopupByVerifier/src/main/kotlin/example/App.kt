@@ -88,7 +88,9 @@ private class LengthInputVerifier : InputVerifier() {
   }
 }
 
-private class BasicComboPopup2(combo: JComboBox<Any>) : BasicComboPopup(combo) {
+private class BasicComboPopup2(
+  combo: JComboBox<Any>,
+) : BasicComboPopup(combo) {
   private var handler2: MouseListener? = null
 
   override fun uninstallingUI() {

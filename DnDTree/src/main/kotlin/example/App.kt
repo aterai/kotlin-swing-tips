@@ -202,7 +202,9 @@ private class DnDTree : JTree() {
   }
 }
 
-private class TreeNodeTransferable(private val obj: Any) : Transferable {
+private class TreeNodeTransferable(
+  private val obj: Any,
+) : Transferable {
   @Throws(UnsupportedFlavorException::class)
   override fun getTransferData(df: DataFlavor) = if (isDataFlavorSupported(df)) {
     obj

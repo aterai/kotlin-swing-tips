@@ -65,7 +65,9 @@ private class EmptyIcon : Icon {
   override fun getIconHeight() = height
 }
 
-private class SortIconLayoutHeaderRenderer(component: Component) : TableCellRenderer {
+private class SortIconLayoutHeaderRenderer(
+  component: Component,
+) : TableCellRenderer {
   private val ascendingIcon = UIManager.getLookAndFeelDefaults().getIcon(ASCENDING)
   private val ascendingUri = getIconUri(ascendingIcon, component)
   private val descendingIcon = UIManager.getLookAndFeelDefaults().getIcon(DESCENDING)

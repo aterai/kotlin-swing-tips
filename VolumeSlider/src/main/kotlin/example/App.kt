@@ -65,7 +65,9 @@ private fun makeTitledPanel(
   return p
 }
 
-private class TriSliderUI(slider: JSlider) : BasicSliderUI(slider) {
+private class TriSliderUI(
+  slider: JSlider,
+) : BasicSliderUI(slider) {
   override fun paintThumb(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)

@@ -78,7 +78,9 @@ fun makeUI(): Component {
 
 private fun makeUrl(spec: String) = runCatching { URL(spec) }.getOrNull()
 
-private class UrlRenderer : MouseAdapter(), TableCellRenderer {
+private class UrlRenderer :
+  MouseAdapter(),
+  TableCellRenderer {
   private val renderer = DefaultTableCellRenderer()
   private var viewRowIndex = -1
   private var viewColumnIndex = -1

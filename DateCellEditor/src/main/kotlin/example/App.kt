@@ -38,7 +38,9 @@ fun makeUI(): Component {
   }
 }
 
-private class SpinnerCellEditor : AbstractCellEditor(), TableCellEditor {
+private class SpinnerCellEditor :
+  AbstractCellEditor(),
+  TableCellEditor {
   private val spinner = JSpinner(SpinnerDateModel())
 
   init {

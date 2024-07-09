@@ -51,7 +51,9 @@ fun makeUI(): Component {
   }
 }
 
-private open class ColorRadioButton(text: String?) : JRadioButton(text) {
+private open class ColorRadioButton(
+  text: String?,
+) : JRadioButton(text) {
   override fun updateUI() {
     super.updateUI()
     foreground = DefaultIcon.DEFAULT_COLOR

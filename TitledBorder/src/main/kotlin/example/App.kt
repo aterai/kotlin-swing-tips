@@ -50,7 +50,10 @@ fun makeUI(): Component {
   return p
 }
 
-private enum class VerticalOrientation(val mode: Int, private val description: String) {
+private enum class VerticalOrientation(
+  val mode: Int,
+  private val description: String,
+) {
   DEFAULT_POSITION(TitledBorder.DEFAULT_POSITION, "Default Position"),
   ABOVE_TOP(TitledBorder.ABOVE_TOP, "Above Top"),
   TOP(TitledBorder.TOP, "Top"),
@@ -63,7 +66,10 @@ private enum class VerticalOrientation(val mode: Int, private val description: S
   override fun toString() = description
 }
 
-private enum class Justification(val mode: Int, private val description: String) {
+private enum class Justification(
+  val mode: Int,
+  private val description: String,
+) {
   DEFAULT_JUSTIFICATION(TitledBorder.DEFAULT_JUSTIFICATION, "Default Justification"),
   LEFT(TitledBorder.LEFT, "Left"),
   CENTER(TitledBorder.CENTER, "Center"),

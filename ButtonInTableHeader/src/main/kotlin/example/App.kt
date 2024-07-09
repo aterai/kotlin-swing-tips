@@ -67,7 +67,8 @@ fun makeUI(): Component {
 private class HeaderRenderer(
   header: JTableHeader,
   private val pop: JPopupMenu,
-) : JButton(), TableCellRenderer {
+) : JButton(),
+  TableCellRenderer {
   private var rolloverIndex = -1
   private val handler = object : MouseInputAdapter() {
     override fun mouseClicked(e: MouseEvent) {

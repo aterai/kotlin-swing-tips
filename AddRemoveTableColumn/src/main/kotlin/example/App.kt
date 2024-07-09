@@ -15,7 +15,9 @@ fun makeUI(): Component {
   }
 }
 
-private class TableHeaderPopupMenu(table: JTable) : JPopupMenu() {
+private class TableHeaderPopupMenu(
+  table: JTable,
+) : JPopupMenu() {
   init {
     val columnModel = table.columnModel
     for (tableColumn in columnModel.columns) {

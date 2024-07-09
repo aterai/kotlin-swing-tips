@@ -31,7 +31,9 @@ private fun showDialog(
   JOptionPane.showMessageDialog(c, msg, msg, type)
 }
 
-private enum class MessageType(val messageType: Int) {
+private enum class MessageType(
+  val messageType: Int,
+) {
   PLAIN(JOptionPane.PLAIN_MESSAGE),
   ERROR(JOptionPane.ERROR_MESSAGE),
   INFORMATION(JOptionPane.INFORMATION_MESSAGE),

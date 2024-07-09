@@ -43,7 +43,10 @@ fun makeUI(): Component {
   }
 }
 
-private data class PairItem(val leftText: String, val rightText: String) {
+private data class PairItem(
+  val leftText: String,
+  val rightText: String,
+) {
   private val htmlText: String
     get() = """
       <html>

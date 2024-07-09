@@ -41,7 +41,9 @@ private fun makeLabel(
   return l
 }
 
-private enum class QuadrantRotate(val numQuadrants: Int) {
+private enum class QuadrantRotate(
+  val numQuadrants: Int,
+) {
   CLOCKWISE(1),
   HORIZONTAL_FLIP(2),
   COUNTER_CLOCKWISE(-1),

@@ -118,9 +118,14 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   }
 }
 
-private data class ListItem(val title: String, val icon: Icon)
+private data class ListItem(
+  val title: String,
+  val icon: Icon,
+)
 
-private class ColorIcon(private val color: Color) : Icon {
+private class ColorIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,
@@ -141,7 +146,9 @@ private class ColorIcon(private val color: Color) : Icon {
   override fun getIconHeight() = 32
 }
 
-private open class NewspaperStyleList(model: ListModel<ListItem>) : JList<ListItem>(model) {
+private open class NewspaperStyleList(
+  model: ListModel<ListItem>,
+) : JList<ListItem>(model) {
   override fun updateUI() {
     selectionForeground = null
     selectionBackground = null

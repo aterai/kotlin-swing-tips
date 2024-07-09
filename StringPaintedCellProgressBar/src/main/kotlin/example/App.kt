@@ -199,7 +199,10 @@ private open class BackgroundTask(
   }
 }
 
-private data class ProgressValue(val lengthOfTask: Int, val progress: Int)
+private data class ProgressValue(
+  val lengthOfTask: Int,
+  val progress: Int,
+)
 
 fun main() {
   EventQueue.invokeLater {

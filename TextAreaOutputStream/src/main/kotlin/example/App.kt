@@ -49,7 +49,9 @@ fun makeUI(): Component {
   }
 }
 
-private class EnterAction(private val textField: JTextField) : AbstractAction("Enter") {
+private class EnterAction(
+  private val textField: JTextField,
+) : AbstractAction("Enter") {
   override fun actionPerformed(e: ActionEvent) {
     LOGGER.info {
       "%s%n  %s%n".format(
@@ -64,7 +66,9 @@ private class EnterAction(private val textField: JTextField) : AbstractAction("E
   }
 }
 
-private class TextAreaOutputStream(private val textArea: JTextArea) : OutputStream() {
+private class TextAreaOutputStream(
+  private val textArea: JTextArea,
+) : OutputStream() {
   private val buffer = ByteArrayOutputStream()
 
   @Throws(IOException::class)
@@ -86,7 +90,9 @@ private class TextAreaOutputStream(private val textArea: JTextArea) : OutputStre
   }
 }
 
-private class TextAreaHandler(os: OutputStream) : StreamHandler(os, SimpleFormatter()) {
+private class TextAreaHandler(
+  os: OutputStream,
+) : StreamHandler(os, SimpleFormatter()) {
   override fun getEncoding() = StandardCharsets.UTF_8.name()
 
   @Synchronized

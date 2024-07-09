@@ -27,7 +27,9 @@ fun makeUI(): Component {
 private class ButtonTabComponent(
   val tabbedPane: JTabbedPane,
 ) : JPanel(FlowLayout(FlowLayout.LEFT, 0, 0)) {
-  private inner class TabButtonHandler : MouseAdapter(), ActionListener {
+  private inner class TabButtonHandler :
+    MouseAdapter(),
+    ActionListener {
     override fun actionPerformed(e: ActionEvent) {
       val i = tabbedPane.indexOfTabComponent(this@ButtonTabComponent)
       if (i != -1) {

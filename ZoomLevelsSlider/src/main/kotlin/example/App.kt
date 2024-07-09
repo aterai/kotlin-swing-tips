@@ -68,7 +68,9 @@ private fun getLabel(
   else -> " "
 }
 
-private class WindowsZoomLevelsSliderUI(slider: JSlider) : WindowsSliderUI(slider) {
+private class WindowsZoomLevelsSliderUI(
+  slider: JSlider,
+) : WindowsSliderUI(slider) {
   override fun createTrackListener(slider: JSlider) = object : TrackListener() {
     override fun mouseClicked(e: MouseEvent) {
       super.mouseClicked(e)

@@ -273,7 +273,9 @@ private enum class Side(
   ): Rectangle
 }
 
-private class SideLabel(val side: Side) : JLabel() {
+private class SideLabel(
+  val side: Side,
+) : JLabel() {
   init {
     cursor = side.getCursor()
   }

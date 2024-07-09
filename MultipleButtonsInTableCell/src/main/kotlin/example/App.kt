@@ -81,13 +81,17 @@ private class ButtonsRenderer : TableCellRenderer {
   }
 }
 
-private class ViewAction(private val table: JTable) : AbstractAction("view") {
+private class ViewAction(
+  private val table: JTable,
+) : AbstractAction("view") {
   override fun actionPerformed(e: ActionEvent) {
     JOptionPane.showMessageDialog(table, "Viewing")
   }
 }
 
-private class EditAction(private val table: JTable) : AbstractAction("edit") {
+private class EditAction(
+  private val table: JTable,
+) : AbstractAction("edit") {
   override fun actionPerformed(e: ActionEvent) {
     val row = table.convertRowIndexToModel(table.editingRow)
     val o = table.model.getValueAt(row, 0)
@@ -97,10 +101,13 @@ private class EditAction(private val table: JTable) : AbstractAction("edit") {
 
 private class ButtonsEditor(
   private val table: JTable,
-) : AbstractCellEditor(), TableCellEditor {
+) : AbstractCellEditor(),
+  TableCellEditor {
   private val panel = ButtonsPanel()
 
-  private inner class EditingStopHandler : MouseAdapter(), ActionListener {
+  private inner class EditingStopHandler :
+    MouseAdapter(),
+    ActionListener {
     override fun mousePressed(e: MouseEvent) {
       when (val o = e.source) {
         is TableCellEditor -> actionPerformed(makeActionEvent(o))

@@ -26,7 +26,9 @@ fun makeUI(): Component {
   }
 }
 
-private class VerticalTitledBorder(title: String?) : TitledBorder(title) {
+private class VerticalTitledBorder(
+  title: String?,
+) : TitledBorder(title) {
   private val label = JLabel(title)
 
   init {

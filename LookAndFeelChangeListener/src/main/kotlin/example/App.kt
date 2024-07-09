@@ -44,7 +44,9 @@ fun makeUI(): Component {
   }
 }
 
-private enum class TreeDraws(private val key: String) {
+private enum class TreeDraws(
+  private val key: String,
+) {
   DRAWS_FOCUS_BORDER_AROUND_ICON("Tree.drawsFocusBorderAroundIcon"),
   DRAW_DASHED_FOCUS_INDICATOR("Tree.drawDashedFocusIndicator"),
   ;
@@ -71,7 +73,9 @@ private fun append(str: String) {
   textArea.append("$str\n")
 }
 
-private class ActionCommandCheckBox(key: TreeDraws) : JCheckBox(key.toString()) {
+private class ActionCommandCheckBox(
+  key: TreeDraws,
+) : JCheckBox(key.toString()) {
   init {
     action = object : AbstractAction(key.toString()) {
       override fun actionPerformed(e: ActionEvent) {

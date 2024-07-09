@@ -152,7 +152,9 @@ private class CheckBoxesRenderer : TableCellRenderer {
   }
 }
 
-private class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
+private class CheckBoxesEditor :
+  AbstractCellEditor(),
+  TableCellEditor {
   private val renderer = CheckBoxesPanel()
 
   init {

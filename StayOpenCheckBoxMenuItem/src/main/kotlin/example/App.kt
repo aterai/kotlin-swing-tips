@@ -118,7 +118,8 @@ private class DispatchParentHandler : MouseInputAdapter() {
 private class TogglePopupHandler(
   private val popup: JPopupMenu,
   private val button: AbstractButton,
-) : PopupMenuListener, ActionListener {
+) : PopupMenuListener,
+  ActionListener {
   override fun actionPerformed(e: ActionEvent) {
     val b = e.source as? AbstractButton
     if (b?.isSelected == true) {

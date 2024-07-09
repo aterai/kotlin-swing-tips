@@ -162,7 +162,10 @@ private object SvgUtils {
   }
 }
 
-private class StarIcon(private val star: Shape, private val antialiasing: Boolean) : Icon {
+private class StarIcon(
+  private val star: Shape,
+  private val antialiasing: Boolean,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

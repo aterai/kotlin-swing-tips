@@ -169,7 +169,9 @@ private class ScrollBackToTopLayerUI<V : JScrollPane> : LayerUI<V>() {
   }
 }
 
-private class LineNumberView(private val textArea: JTextArea) : JComponent() {
+private class LineNumberView(
+  private val textArea: JTextArea,
+) : JComponent() {
   private val componentWidth: Int
     get() {
       val maxDigits = 3.coerceAtLeast(textArea.lineCount.toString().length)

@@ -47,7 +47,9 @@ private fun makeLabel(
   it.horizontalTextPosition = SwingConstants.CENTER
 }
 
-private class ShapeIcon(private val shape: Shape) : Icon {
+private class ShapeIcon(
+  private val shape: Shape,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

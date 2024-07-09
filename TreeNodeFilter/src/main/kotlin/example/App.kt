@@ -119,7 +119,9 @@ fun visitAll(
 }
 
 @Suppress("DataClassShouldBeImmutable")
-private data class FilterableNode(val label: String) {
+private data class FilterableNode(
+  val label: String,
+) {
   var status = false
 
   override fun toString() = label

@@ -78,7 +78,9 @@ private fun repaintWindowAncestor(c: JComponent) {
   }
 }
 
-private class TexturePanel(lm: LayoutManager) : JPanel(lm) {
+private class TexturePanel(
+  lm: LayoutManager,
+) : JPanel(lm) {
   private var texture: Paint? = null
 
   fun setTexturePaint(texturePaint: Paint?) {
@@ -97,7 +99,9 @@ private class TexturePanel(lm: LayoutManager) : JPanel(lm) {
   }
 }
 
-private enum class TexturePaints(private val description: String) {
+private enum class TexturePaints(
+  private val description: String,
+) {
   NULL("Color(.5f, .8f, .5f, .5f)"),
   IMAGE("Image TexturePaint"),
   CHECKER("Checker TexturePaint"),

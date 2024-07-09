@@ -82,7 +82,9 @@ private fun makeList(model: ListModel<Color>) = object : JList<Color>(model) {
   }
 }
 
-private class ListPopupMenu(list: JList<*>) : JPopupMenu() {
+private class ListPopupMenu(
+  list: JList<*>,
+) : JPopupMenu() {
   private val cutItem: JMenuItem
   private val copyItem: JMenuItem
 

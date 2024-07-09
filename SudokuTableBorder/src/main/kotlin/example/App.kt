@@ -100,7 +100,9 @@ fun makeUI(): Component {
   }
 }
 
-private class SudokuCellRenderer(src: Array<Array<Number>>) : DefaultTableCellRenderer() {
+private class SudokuCellRenderer(
+  src: Array<Array<Number>>,
+) : DefaultTableCellRenderer() {
   private val b0 = BorderFactory.createMatteBorder(0, 0, BW1, BW1, Color.GRAY)
   private val b1 = BorderFactory.createMatteBorder(0, 0, BW2, BW2, Color.BLACK)
   private val b2 = BorderFactory.createCompoundBorder(

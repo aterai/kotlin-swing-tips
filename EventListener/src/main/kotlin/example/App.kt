@@ -69,7 +69,10 @@ fun interface FontChangeListener : EventListener {
   fun fontStateChanged(e: FontChangeEvent)
 }
 
-class FontChangeEvent(source: Any?, val font: Font?) : EventObject(source) {
+class FontChangeEvent(
+  source: Any?,
+  val font: Font?,
+) : EventObject(source) {
   companion object {
     private const val serialVersionUID = 1L
   }

@@ -60,7 +60,9 @@ fun makeUI(): Component {
   }
 }
 
-private class ClockwiseRotateIcon(private val icon: Icon) : Icon {
+private class ClockwiseRotateIcon(
+  private val icon: Icon,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

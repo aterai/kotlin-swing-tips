@@ -49,7 +49,9 @@ fun makeUI(): Component {
   return p
 }
 
-private enum class TreeDraws(private val key: String) {
+private enum class TreeDraws(
+  private val key: String,
+) {
   DRAWS_FOCUS_BORDER_AROUND_ICON("Tree.drawsFocusBorderAroundIcon"),
   DRAW_DASHED_FOCUS_INDICATOR("Tree.drawDashedFocusIndicator"),
   ;

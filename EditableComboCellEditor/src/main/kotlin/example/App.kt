@@ -55,7 +55,9 @@ private class ComboCellRenderer : TableCellRenderer {
   }
 }
 
-private class ComboCellEditor : AbstractCellEditor(), TableCellEditor {
+private class ComboCellEditor :
+  AbstractCellEditor(),
+  TableCellEditor {
   private val combo = JComboBox<String>()
 
   init {

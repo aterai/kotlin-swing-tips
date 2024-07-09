@@ -68,7 +68,11 @@ fun makeUI(): Component {
   }
 }
 
-private class StarIcon(r1: Int = 8, r2: Int = 4, vc: Int = 5) : Icon {
+private class StarIcon(
+  r1: Int = 8,
+  r2: Int = 4,
+  vc: Int = 5,
+) : Icon {
   private val star: Shape
 
   init {

@@ -117,7 +117,9 @@ private fun makeTitledPanel(
   return p
 }
 
-private class NumberIcon(private val value: Int) : Icon {
+private class NumberIcon(
+  private val value: Int,
+) : Icon {
   private fun getTextShape(g2: Graphics2D): Shape {
     val txt = if (value > 999) "1K" else value.toString()
     val at = if (txt.length < 3) null else AffineTransform.getScaleInstance(.66, 1.0)

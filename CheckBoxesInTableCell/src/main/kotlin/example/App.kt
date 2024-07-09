@@ -75,7 +75,9 @@ private open class CheckBoxesPanel : JPanel() {
   }
 }
 
-private class CheckBoxesRenderer : CheckBoxesPanel(), TableCellRenderer {
+private class CheckBoxesRenderer :
+  CheckBoxesPanel(),
+  TableCellRenderer {
   override fun updateUI() {
     super.updateUI()
     name = "Table.cellRenderer"
@@ -95,7 +97,9 @@ private class CheckBoxesRenderer : CheckBoxesPanel(), TableCellRenderer {
   // public static class UIResource extends CheckBoxesRenderer implements UIResource {}
 }
 
-private class CheckBoxesEditor : AbstractCellEditor(), TableCellEditor {
+private class CheckBoxesEditor :
+  AbstractCellEditor(),
+  TableCellEditor {
   private val panel = object : CheckBoxesPanel() {
     override fun updateUI() {
       super.updateUI()

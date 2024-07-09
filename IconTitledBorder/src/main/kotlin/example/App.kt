@@ -55,7 +55,8 @@ private fun makeComponent(
 private class ComponentTitledBorder(
   private val comp: Component,
   private val border: Border,
-) : Border, SwingConstants {
+) : Border,
+  SwingConstants {
   init {
     (comp as? JComponent)?.isOpaque = true
   }

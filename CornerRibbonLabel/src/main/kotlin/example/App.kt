@@ -29,7 +29,10 @@ fun makeUI(): Component {
   return p
 }
 
-private class BadgeLabel(image: Icon, val ribbonText: String? = null) : JLabel(image) {
+private class BadgeLabel(
+  image: Icon,
+  val ribbonText: String? = null,
+) : JLabel(image) {
   private val ribbonColor = Color(0xAA_FF_64_00.toInt(), true)
 
   override fun updateUI() {

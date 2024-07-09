@@ -36,7 +36,10 @@ fun makeUI(): Component {
   }
 }
 
-private class Tile1(rng: IntRange) : JComponent(), HierarchyListener {
+private class Tile1(
+  rng: IntRange,
+) : JComponent(),
+  HierarchyListener {
   private var red = 0
   private val timer: Timer
 
@@ -74,7 +77,10 @@ private class Tile1(rng: IntRange) : JComponent(), HierarchyListener {
   }
 }
 
-private class Tile2(val rng: IntRange, timer: Timer) : JComponent() {
+private class Tile2(
+  val rng: IntRange,
+  timer: Timer,
+) : JComponent() {
   private var red = 0
 
   init {
@@ -93,7 +99,9 @@ private class Tile2(val rng: IntRange, timer: Timer) : JComponent() {
   }
 }
 
-private class TilePanel(rng: IntRange) : JPanel(GridLayout(10, 10)) {
+private class TilePanel(
+  rng: IntRange,
+) : JPanel(GridLayout(10, 10)) {
   init {
     for (i in 0..<100) {
       val l = JLabel()

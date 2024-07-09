@@ -57,7 +57,9 @@ private fun makeToolButton(action: Action) = JButton(action).also {
   it.isFocusable = false
 }
 
-private class TablePopupMenu(private val table: JTable) : JPopupMenu() {
+private class TablePopupMenu(
+  private val table: JTable,
+) : JPopupMenu() {
   private val createAction: Action
   private val deleteAction: Action
   private val upAction: Action
@@ -110,7 +112,10 @@ private class RowDataCreateAction(
   }
 }
 
-private class DeleteAction(str: String, private val table: JTable) : AbstractAction(str) {
+private class DeleteAction(
+  str: String,
+  private val table: JTable,
+) : AbstractAction(str) {
   override fun actionPerformed(e: ActionEvent) {
     if (table.isEditing) {
       table.cellEditor.stopCellEditing()
@@ -124,7 +129,10 @@ private class DeleteAction(str: String, private val table: JTable) : AbstractAct
   }
 }
 
-private class UpAction(str: String, private val table: JTable) : AbstractAction(str) {
+private class UpAction(
+  str: String,
+  private val table: JTable,
+) : AbstractAction(str) {
   override fun actionPerformed(e: ActionEvent) {
     val model = table.model
     val pos = table.selectedRows
@@ -151,7 +159,10 @@ private class UpAction(str: String, private val table: JTable) : AbstractAction(
   }
 }
 
-private class DownAction(str: String, private val table: JTable) : AbstractAction(str) {
+private class DownAction(
+  str: String,
+  private val table: JTable,
+) : AbstractAction(str) {
   override fun actionPerformed(e: ActionEvent) {
     val model = table.model
     val pos = table.selectedRows
@@ -177,7 +188,10 @@ private class DownAction(str: String, private val table: JTable) : AbstractActio
   }
 }
 
-private class InitAction(str: String, private val table: JTable) : AbstractAction(str) {
+private class InitAction(
+  str: String,
+  private val table: JTable,
+) : AbstractAction(str) {
   override fun actionPerformed(e: ActionEvent) {
     val model = table.model
     val row = table.rowCount
@@ -242,7 +256,10 @@ private class RowDataModel : SortableTableModel() {
   }
 }
 
-private data class RowData(val name: String, val comment: String)
+private data class RowData(
+  val name: String,
+  val comment: String,
+)
 
 private open class SortableTableModel : DefaultTableModel() {
   fun sortByColumn(
@@ -257,7 +274,8 @@ private open class SortableTableModel : DefaultTableModel() {
 private class ColumnComparator(
   val index: Int,
   val ascending: Boolean,
-) : Comparator<Any>, Serializable {
+) : Comparator<Any>,
+  Serializable {
   override fun compare(
     one: Any,
     two: Any,
@@ -278,7 +296,9 @@ private class ColumnComparator(
   }
 }
 
-private class SortButtonRenderer : JButton(), TableCellRenderer {
+private class SortButtonRenderer :
+  JButton(),
+  TableCellRenderer {
   private var iconSize: Dimension? = null
   private var pushedColumn = -1
   private val state = mutableMapOf<Int, Int>()
@@ -363,7 +383,9 @@ private class HeaderMouseListener : MouseAdapter() {
   }
 }
 
-private class EmptyIcon(private val size: Dimension) : Icon {
+private class EmptyIcon(
+  private val size: Dimension,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

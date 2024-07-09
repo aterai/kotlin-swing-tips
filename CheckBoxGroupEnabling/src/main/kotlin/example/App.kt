@@ -153,7 +153,9 @@ private class CheckBoxNodeRenderer : TreeCellRenderer {
   }
 }
 
-private class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
+private class CheckBoxNodeEditor :
+  AbstractCellEditor(),
+  TreeCellEditor {
   private val checkBox = object : JCheckBox() {
     private var handler: ActionListener? = null
 

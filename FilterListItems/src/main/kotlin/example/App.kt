@@ -81,7 +81,9 @@ private fun filter() {
   }
 }
 
-private data class ListItem(val iconFile: String) {
+private data class ListItem(
+  val iconFile: String,
+) {
   val img = makeImage(iconFile)
   val icon = ImageIcon(img)
   val selectedIcon: ImageIcon

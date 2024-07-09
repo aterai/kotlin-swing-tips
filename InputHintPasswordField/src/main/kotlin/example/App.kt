@@ -38,7 +38,10 @@ private fun makeTitledPanel(
   return p
 }
 
-private class WatermarkPasswordField : JPasswordField(), FocusListener, DocumentListener {
+private class WatermarkPasswordField :
+  JPasswordField(),
+  FocusListener,
+  DocumentListener {
   private var showWatermark = true
 
   init {

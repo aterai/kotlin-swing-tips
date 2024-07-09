@@ -68,7 +68,9 @@ private fun makeButton(symbol: String): AbstractButton {
   return b
 }
 
-private class SymbolIcon(private val str: String) : Icon {
+private class SymbolIcon(
+  private val str: String,
+) : Icon {
   private val font = Font(Font.MONOSPACED, Font.BOLD, ICON_SIZE)
 
   override fun paintIcon(

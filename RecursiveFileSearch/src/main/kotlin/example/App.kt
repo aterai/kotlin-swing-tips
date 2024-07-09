@@ -93,7 +93,9 @@ private fun initOpenButton() {
   }
 }
 
-private open class FileSearchTask(dir: File) : RecursiveFileSearchTask(dir) {
+private open class FileSearchTask(
+  dir: File,
+) : RecursiveFileSearchTask(dir) {
   override fun process(chunks: List<Message>) {
     if (statusPanel.isDisplayable && !isCancelled) {
       chunks.forEach { processChunks(it) }
@@ -275,7 +277,10 @@ private class ProgressListener(
   }
 }
 
-private data class Message(val text: String, val append: Boolean)
+private data class Message(
+  val text: String,
+  val append: Boolean,
+)
 
 fun main() {
   EventQueue.invokeLater {

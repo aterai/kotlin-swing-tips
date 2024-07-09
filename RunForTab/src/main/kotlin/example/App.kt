@@ -87,7 +87,9 @@ private fun makeTabPlacementMenu(tabs: JTabbedPane): JMenu {
   return menu
 }
 
-private class ColorIcon(private val color: Color) : Icon {
+private class ColorIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component?,
     g: Graphics,
@@ -106,7 +108,9 @@ private class ColorIcon(private val color: Color) : Icon {
   override fun getIconHeight() = 12
 }
 
-private enum class TabPlacement(val placement: Int) {
+private enum class TabPlacement(
+  val placement: Int,
+) {
   TOP(SwingConstants.TOP),
   LEFT(SwingConstants.LEFT),
   BOTTOM(SwingConstants.BOTTOM),

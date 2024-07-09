@@ -3,7 +3,9 @@ package example
 import java.awt.*
 import javax.swing.*
 
-class CloseTabIcon(private val color: Color) : Icon {
+class CloseTabIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

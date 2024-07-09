@@ -59,13 +59,17 @@ private fun getDashArray(): FloatArray {
   return if (i == 0) DEFAULT_DASH_ARRAY else list
 }
 
-private enum class JoinStyle(val style: Int) {
+private enum class JoinStyle(
+  val style: Int,
+) {
   JOIN_BEVEL(BasicStroke.JOIN_BEVEL),
   JOIN_MITER(BasicStroke.JOIN_MITER),
   JOIN_ROUND(BasicStroke.JOIN_ROUND),
 }
 
-private enum class EndCapStyle(val style: Int) {
+private enum class EndCapStyle(
+  val style: Int,
+) {
   CAP_BUTT(BasicStroke.CAP_BUTT),
   CAP_ROUND(BasicStroke.CAP_ROUND),
   CAP_SQUARE(BasicStroke.CAP_SQUARE),

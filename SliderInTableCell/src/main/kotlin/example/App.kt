@@ -63,7 +63,9 @@ private class SliderRenderer : TableCellRenderer {
   }
 }
 
-private class SliderEditor : AbstractCellEditor(), TableCellEditor {
+private class SliderEditor :
+  AbstractCellEditor(),
+  TableCellEditor {
   private val renderer = JSlider()
   private var prev = 0
 

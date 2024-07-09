@@ -139,7 +139,9 @@ class CheckBoxNodeRenderer : TreeCellRenderer {
   }
 }
 
-class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
+class CheckBoxNodeEditor :
+  AbstractCellEditor(),
+  TreeCellEditor {
   private val panel = JPanel(BorderLayout())
   private val checkBox = object : TriStateCheckBox() {
     private var handler: ActionListener? = null

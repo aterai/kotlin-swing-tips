@@ -98,7 +98,10 @@ private class RowDataModel : SortableTableModel() {
   }
 }
 
-private data class RowData(val name: String, val comment: String)
+private data class RowData(
+  val name: String,
+  val comment: String,
+)
 
 private open class SortableTableModel : DefaultTableModel() {
   fun sortByColumn(
@@ -113,7 +116,8 @@ private open class SortableTableModel : DefaultTableModel() {
 private class ColumnComparator(
   val index: Int,
   val ascending: Boolean,
-) : Comparator<Any>, Serializable {
+) : Comparator<Any>,
+  Serializable {
   override fun compare(
     one: Any,
     two: Any,
@@ -136,7 +140,8 @@ private class ColumnComparator(
 
 private class SortButtonRenderer(
   private val header: JTableHeader,
-) : JButton(), TableCellRenderer {
+) : JButton(),
+  TableCellRenderer {
   private var iconSize: Dimension? = null
   private var pushedColumn = -1
   private val state = mutableMapOf<Int, Int>()
@@ -239,7 +244,9 @@ private class HeaderMouseListener : MouseAdapter() {
   }
 }
 
-private class EmptyIcon(private val size: Dimension) : Icon {
+private class EmptyIcon(
+  private val size: Dimension,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

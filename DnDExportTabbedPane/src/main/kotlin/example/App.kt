@@ -113,7 +113,10 @@ class DnDTabbedPane : JTabbedPane() {
       return tabbedRect
     }
 
-  class DropLocation(pt: Point, val index: Int) : TransferHandler.DropLocation(pt)
+  class DropLocation(
+    pt: Point,
+    val index: Int,
+  ) : TransferHandler.DropLocation(pt)
 
   init {
     val h = Handler()
@@ -240,7 +243,9 @@ class DnDTabbedPane : JTabbedPane() {
     setTabComponentAt(tgtIndex, tab)
   }
 
-  private inner class Handler : MouseAdapter(), PropertyChangeListener { // , BeforeDrag
+  private inner class Handler :
+    MouseAdapter(),
+    PropertyChangeListener { // , BeforeDrag
     private var startPt: Point? = null
     private val gestureMotionThreshold = DragSource.getDragThreshold()
 
@@ -333,7 +338,9 @@ private class TabDropTargetAdapter : DropTargetAdapter() {
   // }
 }
 
-private data class DnDTabData(val tabbedPane: DnDTabbedPane)
+private data class DnDTabData(
+  val tabbedPane: DnDTabbedPane,
+)
 
 private class TabTransferHandler : TransferHandler() {
   private val localObjectFlavor = DataFlavor(DnDTabData::class.java, "DnDTabData")
@@ -455,7 +462,9 @@ private class TabTransferHandler : TransferHandler() {
   }
 }
 
-private class GhostGlassPane(private var tabbedPane: DnDTabbedPane) : JComponent() {
+private class GhostGlassPane(
+  private var tabbedPane: DnDTabbedPane,
+) : JComponent() {
   override fun isOpaque() = false
 
   fun setTargetTabbedPane(tab: DnDTabbedPane) {

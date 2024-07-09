@@ -108,7 +108,10 @@ private class UrlRenderer1 : UrlRenderer() {
   }
 }
 
-open class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMotionListener {
+open class UrlRenderer :
+  DefaultTableCellRenderer(),
+  MouseListener,
+  MouseMotionListener {
   private var viewRowIndex = -1
   private var viewColumnIndex = -1
   private var isRollover = false

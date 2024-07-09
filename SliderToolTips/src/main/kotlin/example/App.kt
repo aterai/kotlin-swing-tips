@@ -63,7 +63,9 @@ private fun makeTitledPanel(
   return p
 }
 
-private class WindowsTooltipSliderUI(slider: JSlider) : WindowsSliderUI(slider) {
+private class WindowsTooltipSliderUI(
+  slider: JSlider,
+) : WindowsSliderUI(slider) {
   override fun createTrackListener(slider: JSlider?) = object : TrackListener() {
     override fun mousePressed(e: MouseEvent) {
       if (SwingUtilities.isLeftMouseButton(e)) {

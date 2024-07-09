@@ -190,7 +190,9 @@ private enum class Side(
   }
 }
 
-private class SideLabel(private val side: Side) : JLabel() {
+private class SideLabel(
+  private val side: Side,
+) : JLabel() {
   init {
     cursor = Cursor.getPredefinedCursor(side.cursor)
   }

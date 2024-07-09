@@ -220,7 +220,9 @@ private class BalloonToolTip : JToolTip() {
   }
 }
 
-private class ColorIcon(private val color: Color) : Icon {
+private class ColorIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
@@ -234,7 +236,10 @@ private class ColorIcon(private val color: Color) : Icon {
   override fun getIconHeight() = 16
 }
 
-private data class ColorItem(val title: String, val icon: Icon)
+private data class ColorItem(
+  val title: String,
+  val icon: Icon,
+)
 
 fun main() {
   EventQueue.invokeLater {

@@ -112,7 +112,9 @@ private class VerticalFlipLayerUI : LayerUI<JComponent>() {
   }
 }
 
-private class UpArrowThumbSliderUI(slider: JSlider) : BasicSliderUI(slider) {
+private class UpArrowThumbSliderUI(
+  slider: JSlider,
+) : BasicSliderUI(slider) {
   override fun calculateTrackRect() {
     if (slider.orientation == SwingConstants.HORIZONTAL) {
       var centerSpacing = thumbRect.height

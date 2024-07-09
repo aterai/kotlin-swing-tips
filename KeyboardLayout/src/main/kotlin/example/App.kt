@@ -69,7 +69,10 @@ private fun getKeyButtonColumnGridWidth(length: Int) = when (length) {
   else -> 14 // Space
 }
 
-private class KeyButton(str: String, private val square: Boolean = true) : JButton(str) {
+private class KeyButton(
+  str: String,
+  private val square: Boolean = true,
+) : JButton(str) {
   init {
     isFocusable = false
     putClientProperty("JComponent.sizeVariant", "mini")

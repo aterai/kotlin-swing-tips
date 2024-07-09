@@ -75,9 +75,14 @@ fun makeUI(): Component {
   }
 }
 
-private open class WebSite(val title: String, val favicon: Icon)
+private open class WebSite(
+  val title: String,
+  val favicon: Icon,
+)
 
-private class ColorIcon(private val color: Color) : Icon {
+private class ColorIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

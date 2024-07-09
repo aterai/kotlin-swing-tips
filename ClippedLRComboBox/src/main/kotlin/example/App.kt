@@ -117,7 +117,10 @@ private class MultiColumnCellRenderer : ListCellRenderer<PairItem> {
   }
 }
 
-private data class PairItem(val leftText: String, val rightText: String) {
+private data class PairItem(
+  val leftText: String,
+  val rightText: String,
+) {
   override fun toString() = "$leftText / $rightText"
 }
 

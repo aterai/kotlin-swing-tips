@@ -34,7 +34,10 @@ fun makeUI() = JPanel(BorderLayout()).also {
   it.preferredSize = Dimension(320, 240)
 }
 
-private class DnDList<E> : JList<E>(), DragGestureListener, Transferable {
+private class DnDList<E> :
+  JList<E>(),
+  DragGestureListener,
+  Transferable {
   private val targetLine = Rectangle()
   private var draggedIndex = -1
   private var targetIndex = -1

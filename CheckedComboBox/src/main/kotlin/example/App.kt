@@ -38,7 +38,10 @@ private fun makeModel(): ComboBoxModel<CheckBoxItem> {
   return DefaultComboBoxModel(m)
 }
 
-private data class CheckBoxItem(val title: String, val isSelected: Boolean) {
+private data class CheckBoxItem(
+  val title: String,
+  val isSelected: Boolean,
+) {
   override fun toString() = title
 }
 

@@ -58,7 +58,9 @@ private fun makeTestTabbedPane(tabbedPane: JTabbedPane) = tabbedPane.also {
   it.addTab("55555555555555555555555555555555", ColorIcon(Color.CYAN), JLabel("e"))
 }
 
-private class ClippedTitleTabbedPane(tabPlacement: Int) : JTabbedPane(tabPlacement) {
+private class ClippedTitleTabbedPane(
+  tabPlacement: Int,
+) : JTabbedPane(tabPlacement) {
   private val tabInsets: Insets
     get() = UIManager.getInsets("TabbedPane.tabInsets")
       ?: getSynthInsets(Region.TABBED_PANE_TAB)
@@ -219,10 +221,14 @@ private class LeftAlignmentTabbedPaneUI : MetalTabbedPaneUI() {
 
 // How to Use Tabbed Panes (The Java™ Tutorials > ... > Using Swing Components)
 // https://docs.oracle.com/javase/tutorial/uiswing/components/tabbedpane.html
-private class ButtonTabComponent(pane: JTabbedPane) : JPanel(BorderLayout()) {
+private class ButtonTabComponent(
+  pane: JTabbedPane,
+) : JPanel(BorderLayout()) {
   private val tabs = pane
 
-  private inner class TabButtonHandler : MouseAdapter(), ActionListener {
+  private inner class TabButtonHandler :
+    MouseAdapter(),
+    ActionListener {
     override fun actionPerformed(e: ActionEvent) {
       val i = tabs.indexOfTabComponent(this@ButtonTabComponent)
       if (i != -1) {
@@ -306,7 +312,9 @@ private class TabButton : JButton() {
   }
 }
 
-private class ColorIcon(private val color: Color) : Icon {
+private class ColorIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component?,
     g: Graphics,

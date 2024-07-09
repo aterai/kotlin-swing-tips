@@ -53,7 +53,9 @@ private fun initUnderline(
   tc.font = font.deriveFont(attrs)
 }
 
-private enum class UnderlineStyle(val style: Int) {
+private enum class UnderlineStyle(
+  val style: Int,
+) {
   UNDERLINE_OFF(-1),
   UNDERLINE_LOW_DASHED(TextAttribute.UNDERLINE_LOW_DASHED),
   UNDERLINE_LOW_DOTTED(TextAttribute.UNDERLINE_LOW_DOTTED),

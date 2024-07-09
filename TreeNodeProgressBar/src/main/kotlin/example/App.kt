@@ -190,7 +190,10 @@ private class ProgressBarRenderer : DefaultTreeCellRenderer() {
   }
 }
 
-private data class ProgressObject(val title: String, val value: Int) {
+private data class ProgressObject(
+  val title: String,
+  val value: Int,
+) {
   override fun toString() = title
 }
 

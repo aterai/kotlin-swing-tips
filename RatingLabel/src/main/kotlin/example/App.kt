@@ -159,7 +159,11 @@ private open class LevelBar(
   }
 }
 
-class SelectedImageFilter(rf: Float, gf: Float, bf: Float) : RGBImageFilter() {
+class SelectedImageFilter(
+  rf: Float,
+  gf: Float,
+  bf: Float,
+) : RGBImageFilter() {
   private val rf = rf.coerceIn(0f, 1f)
   private val gf = gf.coerceIn(0f, 1f)
   private val bf = bf.coerceIn(0f, 1f)

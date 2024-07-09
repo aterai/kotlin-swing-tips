@@ -64,7 +64,8 @@ private fun makeComp(
 private class ComponentTitledBorder(
   private val comp: Component,
   private val border: Border,
-) : Border, SwingConstants {
+) : Border,
+  SwingConstants {
   init {
     (comp as? JComponent)?.isOpaque = true
   }
@@ -103,7 +104,9 @@ private class ComponentTitledBorder(
   }
 }
 
-private class TitledBorder2(title: String?) : TitledBorder(title) {
+private class TitledBorder2(
+  title: String?,
+) : TitledBorder(title) {
   private val label2 = JLabel()
 
   private val position2: Int

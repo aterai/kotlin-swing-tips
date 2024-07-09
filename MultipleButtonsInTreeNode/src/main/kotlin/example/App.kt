@@ -69,7 +69,9 @@ private class ButtonCellRenderer : TreeCellRenderer {
   }
 }
 
-private class ButtonCellEditor : AbstractCellEditor(), TreeCellEditor {
+private class ButtonCellEditor :
+  AbstractCellEditor(),
+  TreeCellEditor {
   private val panel = ButtonPanel()
 
   init {
@@ -130,7 +132,9 @@ private class ButtonCellEditor : AbstractCellEditor(), TreeCellEditor {
   }
 }
 
-private class ColorButton(icon: ColorIcon) : JButton(icon) {
+private class ColorButton(
+  icon: ColorIcon,
+) : JButton(icon) {
   init {
     pressedIcon = ColorIcon(icon.color.darker())
     isFocusable = false
@@ -141,7 +145,9 @@ private class ColorButton(icon: ColorIcon) : JButton(icon) {
   }
 }
 
-private class ColorIcon(val color: Color) : Icon {
+private class ColorIcon(
+  val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

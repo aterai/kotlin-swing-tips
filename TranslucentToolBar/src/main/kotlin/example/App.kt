@@ -59,7 +59,10 @@ private fun makeTranslucientToolBar(): JToolBar {
   return toolBar
 }
 
-private class LabelWithToolBox(image: Icon?, toolBox: JToolBar) : JLabel(image) {
+private class LabelWithToolBox(
+  image: Icon?,
+  toolBox: JToolBar,
+) : JLabel(image) {
   private val delay = 8
   private val animator = Timer(delay, null)
   private var handler: ToolBoxHandler? = null
@@ -113,7 +116,9 @@ private class LabelWithToolBox(image: Icon?, toolBox: JToolBar) : JLabel(image) 
     addHierarchyListener(handler)
   }
 
-  private inner class ToolBoxHandler : MouseAdapter(), HierarchyListener {
+  private inner class ToolBoxHandler :
+    MouseAdapter(),
+    HierarchyListener {
     override fun mouseEntered(e: MouseEvent) {
       if (!animator.isRunning) {
         isHidden = true

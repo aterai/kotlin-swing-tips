@@ -78,7 +78,9 @@ fun makeUI(): Component {
 
 // menuItem = JMenuItem(ModalInternalFrameAction1("InternalMessageDialog(Normal)"))
 // menuItem.setMnemonic(KeyEvent.VK_1)
-private class ModalInternalFrameAction1(label: String) : AbstractAction(label) {
+private class ModalInternalFrameAction1(
+  label: String,
+) : AbstractAction(label) {
   override fun actionPerformed(e: ActionEvent) {
     setMenuBarEnabled(false)
     JOptionPane.showInternalMessageDialog(
@@ -93,7 +95,9 @@ private class ModalInternalFrameAction1(label: String) : AbstractAction(label) {
 
 // menuItem = JMenuItem(ModalInternalFrameAction2("InternalMessageDialog"))
 // menuItem.setMnemonic(KeyEvent.VK_2)
-private class ModalInternalFrameAction2(label: String) : AbstractAction(label) {
+private class ModalInternalFrameAction2(
+  label: String,
+) : AbstractAction(label) {
   private val glass = MyGlassPane()
 
   init {
@@ -123,7 +127,9 @@ private class ModalInternalFrameAction2(label: String) : AbstractAction(label) {
 // menuItem.setMnemonic(KeyEvent.VK_3)
 // Creating Modal Internal Frames -- Approach 1 and Approach 2
 // http://java.sun.com/developer/JDCTechTips/2001/tt1220.html
-private class ModalInternalFrameAction3(label: String) : AbstractAction(label) {
+private class ModalInternalFrameAction3(
+  label: String,
+) : AbstractAction(label) {
   private val glassPane = PrintGlassPane()
   private var originalGlassPane: Component? = null
 

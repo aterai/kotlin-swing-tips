@@ -22,7 +22,9 @@ fun makeUI(): Component {
   }
 }
 
-private class TricoloreLabel(private val text: String) : JComponent() {
+private class TricoloreLabel(
+  private val text: String,
+) : JComponent() {
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     val w = width
@@ -55,7 +57,9 @@ private class TricoloreLabel(private val text: String) : JComponent() {
   }
 }
 
-private class LineSplittingLabel(private val text: String) : JComponent() {
+private class LineSplittingLabel(
+  private val text: String,
+) : JComponent() {
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     val w = width

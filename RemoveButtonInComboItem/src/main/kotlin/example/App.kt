@@ -60,7 +60,9 @@ private fun makeTitledPanel(
   return p
 }
 
-private class RemoveButtonComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(model) {
+private class RemoveButtonComboBox<E>(
+  model: ComboBoxModel<E>,
+) : JComboBox<E>(model) {
   private var handler: CellButtonsMouseListener? = null
 
   private fun getList() = (getAccessibleContext().getAccessibleChild(0) as? ComboPopup)?.list
@@ -128,7 +130,9 @@ private class CellButtonsMouseListener : MouseAdapter() {
   }
 }
 
-private class ButtonsRenderer<E>(comboBox: RemoveButtonComboBox<E>) : ListCellRenderer<E> {
+private class ButtonsRenderer<E>(
+  comboBox: RemoveButtonComboBox<E>,
+) : ListCellRenderer<E> {
   private var targetIndex = 0
   var rolloverIndex = -1
   private val panel = object : JPanel(BorderLayout()) { // *1

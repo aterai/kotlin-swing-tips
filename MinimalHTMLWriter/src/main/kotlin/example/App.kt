@@ -305,7 +305,9 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
   }
 }
 
-private class HtmlTransferable(private val htmlFormattedText: String) : Transferable {
+private class HtmlTransferable(
+  private val htmlFormattedText: String,
+) : Transferable {
   override fun getTransferDataFlavors() = arrayOf(DataFlavor.allHtmlFlavor)
 
   override fun isDataFlavorSupported(f: DataFlavor) = transferDataFlavors.contains(f)

@@ -61,7 +61,10 @@ private fun makeTitledPanel(
   return p
 }
 
-private class StringBorder(parent: JComponent, private val str: String) : Border {
+private class StringBorder(
+  parent: JComponent,
+  private val str: String,
+) : Border {
   private val insets: Insets
   private val rect: Rectangle
 

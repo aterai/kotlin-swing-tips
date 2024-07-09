@@ -102,7 +102,9 @@ private fun makeSpinner(model: SpinnerListModel): JSpinner {
   return spinner
 }
 
-private enum class TabPlacement(val placement: Int) {
+private enum class TabPlacement(
+  val placement: Int,
+) {
   TOP(SwingConstants.TOP),
   LEFT(SwingConstants.LEFT),
   BOTTOM(SwingConstants.BOTTOM),

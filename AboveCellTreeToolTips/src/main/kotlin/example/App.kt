@@ -92,7 +92,9 @@ private fun makeTitledPanel(
   return p
 }
 
-private class TooltipTree(model: TreeModel) : JTree(model) {
+private class TooltipTree(
+  model: TreeModel,
+) : JTree(model) {
   private val label = object : JLabel() {
     override fun getPreferredSize() = super.getPreferredSize()?.also {
       it.height = getRowHeight()

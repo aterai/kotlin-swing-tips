@@ -78,7 +78,10 @@ fun makeUI(): Component {
 
 private fun makeUrl(spec: String) = runCatching { URL(spec) }.getOrNull()
 
-private class UrlRenderer : DefaultTableCellRenderer(), MouseListener, MouseMotionListener {
+private class UrlRenderer :
+  DefaultTableCellRenderer(),
+  MouseListener,
+  MouseMotionListener {
   private var viewRowIndex = -1
   private var viewColumnIndex = -1 // viewColumnIndex
   private var isRollover = false

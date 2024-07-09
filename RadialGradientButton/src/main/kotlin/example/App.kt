@@ -38,7 +38,9 @@ fun makeUI(): Component {
   }
 }
 
-private class RadialGradientButton(title: String) : JButton(title) {
+private class RadialGradientButton(
+  title: String,
+) : JButton(title) {
   private val timer1 = Timer(10, null)
   private val timer2 = Timer(10, null)
   private val pt = Point()
@@ -162,7 +164,9 @@ private class RadialGradientButton(title: String) : JButton(title) {
   }
 }
 
-private class RadialGradientPaintButton(title: String) : JButton(title) {
+private class RadialGradientPaintButton(
+  title: String,
+) : JButton(title) {
   private val timer1 = Timer(10, null)
   private val timer2 = Timer(10, null)
   private val pt = Point()

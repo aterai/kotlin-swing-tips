@@ -67,7 +67,9 @@ private class RadioButtonsRenderer : TableCellRenderer {
   }
 }
 
-private class RadioButtonsEditor : AbstractCellEditor(), TableCellEditor {
+private class RadioButtonsEditor :
+  AbstractCellEditor(),
+  TableCellEditor {
   private val renderer = JRadioButton().also {
     it.addActionListener { fireEditingStopped() }
   }

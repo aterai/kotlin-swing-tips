@@ -28,7 +28,9 @@ fun makeUI(): Component {
   }
 }
 
-private class TablePopupMenu(columnNames: Array<String>) : JPopupMenu() {
+private class TablePopupMenu(
+  columnNames: Array<String>,
+) : JPopupMenu() {
   private var index = -1
 
   init {

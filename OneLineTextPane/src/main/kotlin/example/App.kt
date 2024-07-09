@@ -202,7 +202,9 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
   }
 }
 
-private class NoWrapParagraphView(elem: Element?) : ParagraphView(elem) {
+private class NoWrapParagraphView(
+  elem: Element?,
+) : ParagraphView(elem) {
   override fun calculateMinorAxisRequirements(
     axis: Int,
     r: SizeRequirements?,

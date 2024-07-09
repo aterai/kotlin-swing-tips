@@ -123,7 +123,9 @@ private class TablePopupMenu : JPopupMenu() {
   }
 }
 
-private class BooleanEditor : AbstractCellEditor(), TableCellEditor {
+private class BooleanEditor :
+  AbstractCellEditor(),
+  TableCellEditor {
   private val renderer = object : JPanel(GridBagLayout()) {
     private var listener: MouseListener? = null
 
@@ -174,7 +176,9 @@ private class BooleanEditor : AbstractCellEditor(), TableCellEditor {
     ?.let { true }
     ?: super.isCellEditable(e)
 
-  private inner class CheckBoxHandler : MouseAdapter(), ActionListener {
+  private inner class CheckBoxHandler :
+    MouseAdapter(),
+    ActionListener {
     override fun actionPerformed(e: ActionEvent) {
       fireEditingStopped()
     }

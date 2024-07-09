@@ -37,7 +37,9 @@ private class ComponentTitledBorder(
   private val comp: Component,
   container: Container,
   private val border: Border,
-) : MouseAdapter(), Border, SwingConstants {
+) : MouseAdapter(),
+  Border,
+  SwingConstants {
   init {
     if (comp is JComponent) {
       comp.isOpaque = true

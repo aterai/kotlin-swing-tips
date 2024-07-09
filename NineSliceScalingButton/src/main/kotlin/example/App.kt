@@ -82,7 +82,10 @@ private fun makeFilteredImage(
   return bi
 }
 
-private class ScalingButton(title: String?, private val image: BufferedImage) : JButton() {
+private class ScalingButton(
+  title: String?,
+  private val image: BufferedImage,
+) : JButton() {
   init {
     setModel(DefaultButtonModel())
     init(title, null)

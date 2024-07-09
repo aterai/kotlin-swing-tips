@@ -62,7 +62,10 @@ private fun addTab(
   tabbedPane.setTabComponentAt(tabbedPane.tabCount - 1, label)
 }
 
-private data class TabTitle(val title: String, val url: URL?)
+private data class TabTitle(
+  val title: String,
+  val url: URL?,
+)
 
 private class ClippedTitleTabbedPane : JTabbedPane() {
   private val tabInsets = UIManager.getInsets("TabbedPane.tabInsets")

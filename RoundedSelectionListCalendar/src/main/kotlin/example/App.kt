@@ -238,7 +238,9 @@ private class CalendarListRenderer : ListCellRenderer<LocalDate> {
     }
 }
 
-private class CalendarViewListModel(date: LocalDate) : AbstractListModel<LocalDate>() {
+private class CalendarViewListModel(
+  date: LocalDate,
+) : AbstractListModel<LocalDate>() {
   private val startDate: LocalDate
   private val weekFields = WeekFields.of(Locale.getDefault())
 

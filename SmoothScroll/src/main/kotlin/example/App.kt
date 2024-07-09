@@ -67,7 +67,9 @@ private fun startScroll() {
   }
 }
 
-private class LineNumberView(private val textArea: JTextArea) : JComponent() {
+private class LineNumberView(
+  private val textArea: JTextArea,
+) : JComponent() {
   private val fontMetrics: FontMetrics
   private val fontAscent: Int
   private val fontHeight: Int

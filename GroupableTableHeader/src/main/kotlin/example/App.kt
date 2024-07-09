@@ -55,7 +55,9 @@ fun makeUI(): Component {
  * @author Nobuo Tamemasa
  * @author aterai aterai@outlook.com
  */
-private class GroupableTableHeader(model: TableColumnModel) : JTableHeader(model) {
+private class GroupableTableHeader(
+  model: TableColumnModel,
+) : JTableHeader(model) {
   private val columnGroups = mutableListOf<ColumnGroup>()
 
   override fun updateUI() {
@@ -221,7 +223,9 @@ private class GroupableTableHeaderUI : BasicTableHeaderUI() {
  * @author Nobuo Tamemasa
  * @author aterai aterai@outlook.com
  */
-private class ColumnGroup(text: String) {
+private class ColumnGroup(
+  text: String,
+) {
   private val list = mutableListOf<Any>()
   val headerValue = text
 

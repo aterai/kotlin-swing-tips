@@ -126,7 +126,10 @@ enum class MessageType {
   BLUE,
 }
 
-data class Message(val text: String?, val type: MessageType)
+data class Message(
+  val text: String?,
+  val type: MessageType,
+)
 
 private open class BackgroundTask(
   private val orgFile: File,

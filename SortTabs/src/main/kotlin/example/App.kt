@@ -19,7 +19,10 @@ fun makeUI() = JPanel(BorderLayout()).also {
   it.preferredSize = Dimension(320, 240)
 }
 
-private data class ComparableTab(val title: String, val component: Component)
+private data class ComparableTab(
+  val title: String,
+  val component: Component,
+)
 
 private class EditableTabbedPane : JTabbedPane() {
   private val glassPane = object : JComponent() {

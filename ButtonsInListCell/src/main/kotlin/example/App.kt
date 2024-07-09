@@ -33,7 +33,9 @@ fun makeModel() = DefaultListModel<String>().also {
   it.addElement("444")
 }
 
-private class CellButtonsMouseListener<E>(private val list: JList<E>) : MouseInputAdapter() {
+private class CellButtonsMouseListener<E>(
+  private val list: JList<E>,
+) : MouseInputAdapter() {
   private var prevIndex = -1
   private var prevButton: JButton? = null
 
@@ -141,7 +143,9 @@ private class CellButtonsMouseListener<E>(private val list: JList<E>) : MouseInp
   }
 }
 
-private class ButtonsRenderer<E>(model: DefaultListModel<E>) : ListCellRenderer<E> {
+private class ButtonsRenderer<E>(
+  model: DefaultListModel<E>,
+) : ListCellRenderer<E> {
   private val textArea = JTextArea()
   private val deleteButton = JButton("delete")
   private val copyButton = JButton("copy")

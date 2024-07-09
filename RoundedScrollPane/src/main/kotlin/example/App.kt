@@ -175,7 +175,10 @@ private class ComboRolloverHandler : MouseAdapter() {
     ((e.component as? Container)?.getComponent(0) as? JButton)?.model
 }
 
-private class ArrowIcon(private val color: Color, private val rollover: Color) : Icon {
+private class ArrowIcon(
+  private val color: Color,
+  private val rollover: Color,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

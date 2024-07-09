@@ -34,7 +34,9 @@ private fun makeTitledPanel(
   return p
 }
 
-private class FadeOutLabel(text: String) : JLabel(text) {
+private class FadeOutLabel(
+  text: String,
+) : JLabel(text) {
   override fun paintComponent(g: Graphics) {
     val i = insets
     val w = width - i.left - i.right
@@ -66,7 +68,9 @@ private class FadeOutLabel(text: String) : JLabel(text) {
   }
 }
 
-private class TextOverflowFadeLabel(text: String) : JLabel(text) {
+private class TextOverflowFadeLabel(
+  text: String,
+) : JLabel(text) {
   override fun paintComponent(g: Graphics) {
     val i = insets
     val w = width - i.left - i.right
@@ -102,7 +106,9 @@ private class TextOverflowFadeLabel(text: String) : JLabel(text) {
   }
 }
 
-private class FadingOutLabel(text: String) : JLabel(text) {
+private class FadingOutLabel(
+  text: String,
+) : JLabel(text) {
   private val dim = Dimension()
   private var buffer: Image? = null
 

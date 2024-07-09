@@ -71,7 +71,9 @@ private class SpinnerRenderer : TableCellRenderer {
   }
 }
 
-private class SpinnerEditor : AbstractCellEditor(), TableCellEditor {
+private class SpinnerEditor :
+  AbstractCellEditor(),
+  TableCellEditor {
   private val renderer = SpinnerPanel()
 
   override fun getTableCellEditorComponent(
@@ -134,7 +136,9 @@ private class ButtonsRenderer : TableCellRenderer {
   }
 }
 
-private class ButtonsEditor : AbstractCellEditor(), TableCellEditor {
+private class ButtonsEditor :
+  AbstractCellEditor(),
+  TableCellEditor {
   private val renderer = ButtonsPanel()
 
   init {

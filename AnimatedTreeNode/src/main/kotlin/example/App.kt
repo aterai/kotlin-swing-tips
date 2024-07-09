@@ -86,7 +86,10 @@ private fun makeMissingImage(): Image {
   return bi
 }
 
-private data class NodeObject(val title: String, val icon: Icon)
+private data class NodeObject(
+  val title: String,
+  val icon: Icon,
+)
 
 fun main() {
   EventQueue.invokeLater {

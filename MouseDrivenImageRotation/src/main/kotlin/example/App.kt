@@ -38,7 +38,9 @@ fun makeUI(): Component {
   return p
 }
 
-private class DraggableImageMouseListener(ii: ImageIcon) : MouseAdapter() {
+private class DraggableImageMouseListener(
+  ii: ImageIcon,
+) : MouseAdapter() {
   private val border: Shape
   private val polaroid: Shape
   private val inner = Ellipse2D.Double(0.0, 0.0, IR, IR)

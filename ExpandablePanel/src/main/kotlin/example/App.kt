@@ -92,7 +92,9 @@ fun makeUI(): Component {
   }
 }
 
-private abstract class AbstractExpansionPanel(title: String?) : JPanel(BorderLayout()) {
+private abstract class AbstractExpansionPanel(
+  title: String?,
+) : JPanel(BorderLayout()) {
   private var expansionEvent: ExpansionEvent? = null
   private val scroll = JScrollPane()
   private val button = JButton(title)
@@ -147,7 +149,9 @@ private abstract class AbstractExpansionPanel(title: String?) : JPanel(BorderLay
   }
 }
 
-class ExpansionEvent(source: Any?) : EventObject(source) {
+class ExpansionEvent(
+  source: Any?,
+) : EventObject(source) {
   companion object {
     private const val serialVersionUID = 1L
   }

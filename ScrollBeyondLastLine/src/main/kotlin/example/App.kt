@@ -52,7 +52,9 @@ fun makeUI(): Component {
 
 // Advice for editor gutter implementation...
 // https://community.oracle.com/thread/1479759
-private class LineNumberView(private val textArea: JTextArea) : JComponent() {
+private class LineNumberView(
+  private val textArea: JTextArea,
+) : JComponent() {
   private val fontMetrics: FontMetrics
   private val fontAscent: Int
   private val fontHeight: Int

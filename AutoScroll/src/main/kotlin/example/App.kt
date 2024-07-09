@@ -29,7 +29,9 @@ fun makeUI(): Component {
   return scroll
 }
 
-private class ViewportDragScrollListener : MouseAdapter(), HierarchyListener {
+private class ViewportDragScrollListener :
+  MouseAdapter(),
+  HierarchyListener {
   private val startPt = Point()
   private val move = Point()
   private val scroller = Timer(DELAY, null)

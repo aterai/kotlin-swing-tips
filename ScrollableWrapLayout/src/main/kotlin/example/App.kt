@@ -37,7 +37,8 @@ private fun makePanel(box: JPanel): Component {
 
 private class ScrollableWrapPanel(
   layout: LayoutManager,
-) : JPanel(layout), Scrollable {
+) : JPanel(layout),
+  Scrollable {
   override fun getPreferredScrollableViewportSize(): Dimension? {
     val o = SwingUtilities.getUnwrappedParent(this)
     return (o as? JViewport)?.size ?: super.getPreferredSize()
@@ -111,9 +112,14 @@ private class ScrollableWrapLayout(
   }
 }
 
-private data class ListItem(val title: String, val icon: Icon)
+private data class ListItem(
+  val title: String,
+  val icon: Icon,
+)
 
-private class ColorIcon(private val color: Color) : Icon {
+private class ColorIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

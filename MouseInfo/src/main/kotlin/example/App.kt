@@ -48,7 +48,9 @@ fun makeUI(): Component {
   return p
 }
 
-private class Racket(private val parentSize: Dimension) : Serializable {
+private class Racket(
+  private val parentSize: Dimension,
+) : Serializable {
   private var centerPos: Int
 
   init {

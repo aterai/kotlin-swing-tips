@@ -58,7 +58,9 @@ private fun makeIconTableModel(list: ListModel<IconItem>): TableModel {
   }
 }
 
-private data class IconItem(val name: String) {
+private data class IconItem(
+  val name: String,
+) {
   val large = makeIcon("example/$name-48.png")
   val small = makeIcon("example/$name-24.png")
 }

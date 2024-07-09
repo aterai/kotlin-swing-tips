@@ -38,7 +38,9 @@ private fun makeVerticalToolBar() = JToolBar(SwingConstants.VERTICAL).also {
   it.add(Box.createGlue())
 }
 
-private class ColorPanel(color: Color) : JPanel() {
+private class ColorPanel(
+  color: Color,
+) : JPanel() {
   init {
     background = color
   }

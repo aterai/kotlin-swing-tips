@@ -49,7 +49,8 @@ private class SilhouetteIcon(
   private val font: Font,
   private val str: String,
   private val size: Dimension,
-) : Icon, Serializable {
+) : Icon,
+  Serializable {
   override fun paintIcon(
     c: Component,
     g: Graphics,

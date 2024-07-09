@@ -52,7 +52,9 @@ fun makeUI(): Component {
   }
 }
 
-private class CheckBoxPanelEditor : AbstractCellEditor(), TableCellEditor {
+private class CheckBoxPanelEditor :
+  AbstractCellEditor(),
+  TableCellEditor {
   private val renderer = object : JPanel(GridBagLayout()) {
     private var listener: MouseListener? = null
 
@@ -98,7 +100,9 @@ private class CheckBoxPanelEditor : AbstractCellEditor(), TableCellEditor {
 
   override fun getCellEditorValue() = checkBox.isSelected
 
-  private inner class CellEditorHandler : MouseAdapter(), ActionListener {
+  private inner class CellEditorHandler :
+    MouseAdapter(),
+    ActionListener {
     override fun actionPerformed(e: ActionEvent) {
       fireEditingStopped()
     }

@@ -57,7 +57,9 @@ private fun makeTitledPanel(
   return p
 }
 
-private open class TooltipList<E>(m: ListModel<E>) : JList<E>(m) {
+private open class TooltipList<E>(
+  m: ListModel<E>,
+) : JList<E>(m) {
   override fun getToolTipLocation(e: MouseEvent): Point? {
     val p = e.point
     val r = cellRenderer
@@ -77,7 +79,9 @@ private open class TooltipList<E>(m: ListModel<E>) : JList<E>(m) {
   }
 }
 
-private open class CellRendererTooltipList<E>(m: ListModel<E>) : JList<E>(m) {
+private open class CellRendererTooltipList<E>(
+  m: ListModel<E>,
+) : JList<E>(m) {
   private val label = JLabel()
 
   init {

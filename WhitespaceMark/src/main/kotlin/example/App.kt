@@ -85,7 +85,9 @@ private class CustomViewFactory : ViewFactory {
     }
 }
 
-private class ParagraphWithEopmView(elem: Element) : ParagraphView(elem) {
+private class ParagraphWithEopmView(
+  elem: Element,
+) : ParagraphView(elem) {
   override fun paint(
     g: Graphics,
     allocation: Shape,
@@ -118,7 +120,9 @@ private class ParagraphWithEopmView(elem: Element) : ParagraphView(elem) {
   }
 }
 
-private class WhitespaceLabelView(elem: Element) : LabelView(elem) {
+private class WhitespaceLabelView(
+  elem: Element,
+) : LabelView(elem) {
   override fun paint(
     g: Graphics,
     a: Shape,

@@ -31,7 +31,10 @@ fun makeUI(): Component {
   }
 }
 
-private class ImagePreview(fc: JFileChooser) : JComponent(), PropertyChangeListener {
+private class ImagePreview(
+  fc: JFileChooser,
+) : JComponent(),
+  PropertyChangeListener {
   private var thumbnail: ImageIcon? = null
   private var file: File? = null
 

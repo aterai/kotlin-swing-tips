@@ -43,7 +43,9 @@ private fun makeModel() = DefaultComboBoxModel<String>().also {
   it.addElement("bbb12")
 }
 
-private class AlternateRowColorComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(model) {
+private class AlternateRowColorComboBox<E>(
+  model: ComboBoxModel<E>,
+) : JComboBox<E>(model) {
   private var itemColorListener: ItemListener? = null
 
   // constructor() : super()

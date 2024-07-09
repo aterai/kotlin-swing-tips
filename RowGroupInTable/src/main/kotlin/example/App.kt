@@ -61,7 +61,11 @@ private fun addRowData(
   model.addRow(Collections.nCopies(model.columnCount, data).toTypedArray())
 }
 
-private data class RowData(val group: String, val name: String, val count: Int)
+private data class RowData(
+  val group: String,
+  val name: String,
+  val count: Int,
+)
 
 private class RowDataRenderer : TableCellRenderer {
   private val renderer = DefaultTableCellRenderer()

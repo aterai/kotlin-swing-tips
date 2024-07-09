@@ -77,7 +77,9 @@ private class SelectedImageFilter : RGBImageFilter() {
   }
 }
 
-private class FileNameRenderer(table: JTable) : TableCellRenderer {
+private class FileNameRenderer(
+  table: JTable,
+) : TableCellRenderer {
   private val dim = Dimension()
   private val renderer = JPanel(BorderLayout())
   private val textLabel = JLabel(" ")
@@ -164,7 +166,9 @@ private class FileNameRenderer(table: JTable) : TableCellRenderer {
   }
 }
 
-private class FileListTable(model: TableModel) : JTable(model) {
+private class FileListTable(
+  model: TableModel,
+) : JTable(model) {
   override fun updateUI() {
     setSelectionForeground(ColorUIResource(Color.RED))
     setSelectionBackground(ColorUIResource(Color.RED))

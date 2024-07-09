@@ -133,7 +133,9 @@ private class TriStateActionListener : ActionListener {
   }
 }
 
-private class TriStateCheckBox(title: String) : JCheckBox(title) {
+private class TriStateCheckBox(
+  title: String,
+) : JCheckBox(title) {
   private var listener: TriStateActionListener? = null
   private var currentIcon: Icon? = null
 
@@ -201,7 +203,9 @@ private class IndeterminateIcon : Icon {
   }
 }
 
-private class ComponentIcon(private val cmp: Component) : Icon {
+private class ComponentIcon(
+  private val cmp: Component,
+) : Icon {
   override fun paintIcon(
     c: Component?,
     g: Graphics,
@@ -225,7 +229,8 @@ private enum class Status {
 private class HeaderCheckBoxHandler(
   val table: JTable,
   val targetColumnIndex: Int,
-) : MouseAdapter(), TableModelListener {
+) : MouseAdapter(),
+  TableModelListener {
   override fun tableChanged(e: TableModelEvent) {
     if (e.type == TableModelEvent.UPDATE && e.column == targetColumnIndex) {
       val vci = table.convertColumnIndexToView(targetColumnIndex)

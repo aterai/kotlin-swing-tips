@@ -59,7 +59,9 @@ fun makeUI(): Component {
   }
 }
 
-private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListItem>(model) {
+private class RubberBandSelectionList(
+  model: ListModel<ListItem>,
+) : JList<ListItem>(model) {
   private var rbl: RubberBandingListener? = null
   private var rubberBandColor: Color? = null
   private val rubberBand = Path2D.Double()
@@ -218,7 +220,10 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   }
 }
 
-private data class ListItem(val title: String, val icon: Icon)
+private data class ListItem(
+  val title: String,
+  val icon: Icon,
+)
 
 private object TextureUtils {
   // private val DEFAULT_COLOR = Color(0xEE_32_32_32.toInt(), true)
@@ -251,7 +256,9 @@ private object TextureUtils {
   }
 }
 
-private class ColorIcon(private val color: Color) : Icon {
+private class ColorIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

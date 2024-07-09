@@ -302,7 +302,9 @@ private class CloseableTabbedPaneUI : BasicTabbedPaneUI() {
   }
 }
 
-private class CloseTabIcon(private val fileIcon: Icon?) : Icon {
+private class CloseTabIcon(
+  private val fileIcon: Icon?,
+) : Icon {
   private var xp = 0
   private var yp = 0
   private val width = 16
@@ -407,7 +409,8 @@ private class CloseButtonTabbedPaneUI(
 private class CloseButton(
   tabPane: JTabbedPane,
   index: Int,
-) : JButton(CloseButtonAction(tabPane, index)), UIResource {
+) : JButton(CloseButtonAction(tabPane, index)),
+  UIResource {
   init {
     toolTipText = "Close this tab"
     border = BorderFactory.createEmptyBorder()
@@ -473,7 +476,9 @@ private class TabbedPaneWithCloseIcons : JTabbedPane() {
   }
 }
 
-private class SimpleCloseTabIcon(private val fileIcon: Icon?) : Icon {
+private class SimpleCloseTabIcon(
+  private val fileIcon: Icon?,
+) : Icon {
   private val dim = Dimension(16, 16)
   private val pos = Point()
   val bounds get() = Rectangle(pos, dim)

@@ -37,7 +37,9 @@ private data class FishEyeRowContext(
   val color: Color,
 )
 
-private class FishEyeTable(m: TableModel) : JTable(m) {
+private class FishEyeTable(
+  m: TableModel,
+) : JTable(m) {
   private val fishEyeRowList: List<FishEyeRowContext>
   private val minFont: Font
   private var handler: FishEyeTableHandler? = null
@@ -80,7 +82,9 @@ private class FishEyeTable(m: TableModel) : JTable(m) {
     getSelectionModel().addListSelectionListener(handler)
   }
 
-  private inner class FishEyeTableHandler : MouseAdapter(), ListSelectionListener {
+  private inner class FishEyeTableHandler :
+    MouseAdapter(),
+    ListSelectionListener {
     var prevRow = -1
     var prevHeight = 0
 

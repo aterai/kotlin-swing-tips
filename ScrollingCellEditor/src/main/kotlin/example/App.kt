@@ -37,7 +37,9 @@ fun makeUI(): Component {
   }
 }
 
-private class TextAreaCellEditor : AbstractCellEditor(), TableCellEditor {
+private class TextAreaCellEditor :
+  AbstractCellEditor(),
+  TableCellEditor {
   private val textArea = JTextArea()
   private val scroll = JScrollPane(textArea)
 

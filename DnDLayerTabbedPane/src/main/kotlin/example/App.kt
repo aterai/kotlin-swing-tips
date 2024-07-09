@@ -138,7 +138,10 @@ class DnDTabbedPane : JTabbedPane() {
     addPropertyChangeListener(h)
   }
 
-  class DropLocation(pt: Point, val index: Int) : TransferHandler.DropLocation(pt)
+  class DropLocation(
+    pt: Point,
+    val index: Int,
+  ) : TransferHandler.DropLocation(pt)
 
   private fun clickArrowButton(actionKey: String) {
     var forwardButton: JButton? = null
@@ -245,7 +248,9 @@ class DnDTabbedPane : JTabbedPane() {
     setTabComponentAt(tgtIndex, tab)
   }
 
-  private inner class Handler : MouseAdapter(), PropertyChangeListener { // , BeforeDrag
+  private inner class Handler :
+    MouseAdapter(),
+    PropertyChangeListener { // , BeforeDrag
     private var startPt: Point? = null
     private val dragThreshold = DragSource.getDragThreshold()
 
@@ -329,7 +334,9 @@ private class TabDropTargetAdapter : DropTargetAdapter() {
   // }
 }
 
-private data class DnDTabData(val tabbedPane: DnDTabbedPane)
+private data class DnDTabData(
+  val tabbedPane: DnDTabbedPane,
+)
 
 private class TabTransferHandler : TransferHandler() {
   private val localObjectFlavor = DataFlavor(DnDTabData::class.java, "DnDTabData")
@@ -514,7 +521,9 @@ private class DropLocationLayerUI : LayerUI<DnDTabbedPane>() {
 private class ButtonTabComponent(
   private val tabbedPane: JTabbedPane,
 ) : JPanel(FlowLayout(FlowLayout.LEFT, 0, 0)) {
-  private inner class TabButtonHandler : MouseAdapter(), ActionListener {
+  private inner class TabButtonHandler :
+    MouseAdapter(),
+    ActionListener {
     override fun actionPerformed(e: ActionEvent) {
       val i = tabbedPane.indexOfTabComponent(this@ButtonTabComponent)
       if (i != -1) {

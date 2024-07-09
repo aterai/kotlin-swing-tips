@@ -142,7 +142,10 @@ private class EmptyIcon : Icon {
   override fun getIconHeight() = height
 }
 
-private class RotateIcon(icon: Icon, rotate: Int) : Icon {
+private class RotateIcon(
+  icon: Icon,
+  rotate: Int,
+) : Icon {
   private val dim = Dimension()
   private val image: Image
   private var trans: AffineTransform? = null

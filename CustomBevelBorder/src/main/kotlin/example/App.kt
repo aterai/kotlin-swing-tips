@@ -48,7 +48,9 @@ private fun makeButton(
   return button
 }
 
-private class CustomBevelBorder(bevelType: Int) : BevelBorder(bevelType) {
+private class CustomBevelBorder(
+  bevelType: Int,
+) : BevelBorder(bevelType) {
   private val ins = Insets(8, 8, 8, 8)
 
   override fun getBorderInsets(

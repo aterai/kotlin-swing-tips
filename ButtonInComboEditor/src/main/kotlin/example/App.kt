@@ -218,7 +218,11 @@ private class SiteComboBoxLayout(
   }
 }
 
-private data class SiteItem(val url: String, val image: Image, val hasRss: Boolean) {
+private data class SiteItem(
+  val url: String,
+  val image: Image,
+  val hasRss: Boolean,
+) {
   val favicon = ImageIcon(image)
 
   override fun toString() = url

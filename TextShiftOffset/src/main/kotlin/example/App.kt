@@ -43,7 +43,9 @@ fun makeUI(): Component {
   }
 }
 
-private class TextShiftOffsetAction(private val offset: Int) : AbstractAction(" $offset ") {
+private class TextShiftOffsetAction(
+  private val offset: Int,
+) : AbstractAction(" $offset ") {
   override fun actionPerformed(e: ActionEvent) {
     UIManager.put("Button.textShiftOffset", offset)
     (e.source as? JComponent)?.also {

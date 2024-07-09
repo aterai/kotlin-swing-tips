@@ -174,7 +174,10 @@ private class HeavyWeightContainerListener : PopupMenuListener {
   }
 }
 
-private class ArrowIcon(private val color: Color, private val rollover: Color) : Icon {
+private class ArrowIcon(
+  private val color: Color,
+  private val rollover: Color,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

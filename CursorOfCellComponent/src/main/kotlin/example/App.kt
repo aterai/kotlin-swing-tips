@@ -16,7 +16,9 @@ private fun makeModel(): ListModel<String> {
   return model
 }
 
-private class LinkCellList<E>(model: ListModel<E>) : JList<E>(model) {
+private class LinkCellList<E>(
+  model: ListModel<E>,
+) : JList<E>(model) {
   private var prevIndex = -1
 
   override fun updateUI() {

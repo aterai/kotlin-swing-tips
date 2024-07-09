@@ -157,8 +157,12 @@ private open class ClippedTitleTabbedPane : JTabbedPane() {
   }
 }
 
-private class ButtonTabComponent(val tabbedPane: JTabbedPane) : JPanel(BorderLayout()) {
-  private inner class TabButtonHandler : MouseAdapter(), ActionListener {
+private class ButtonTabComponent(
+  val tabbedPane: JTabbedPane,
+) : JPanel(BorderLayout()) {
+  private inner class TabButtonHandler :
+    MouseAdapter(),
+    ActionListener {
     override fun actionPerformed(e: ActionEvent) {
       val i = tabbedPane.indexOfTabComponent(this@ButtonTabComponent)
       if (i != -1) {
@@ -213,7 +217,9 @@ private class ButtonTabComponent(val tabbedPane: JTabbedPane) : JPanel(BorderLay
   }
 }
 
-private class CloseTabIcon(private val color: Color) : Icon {
+private class CloseTabIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

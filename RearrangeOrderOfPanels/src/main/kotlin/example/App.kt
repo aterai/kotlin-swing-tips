@@ -105,9 +105,11 @@ private class RearrangingHandler : MouseAdapter() {
     PREV_AREA.setBounds(r.x, r.y, r.width, ht2)
     NEXT_AREA.setBounds(r.x, r.y + ht2, r.width, ht2)
     return when {
-      PREV_AREA.contains(pt) -> i.also {
-        prevRect.bounds = PREV_AREA
-      }.takeIf { it > 1 } ?: 0
+      PREV_AREA.contains(pt) ->
+        i
+          .also {
+            prevRect.bounds = PREV_AREA
+          }.takeIf { it > 1 } ?: 0
 
       NEXT_AREA.contains(pt) -> i.also {
         prevRect.bounds = NEXT_AREA

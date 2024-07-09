@@ -113,7 +113,11 @@ private open class BadgeIcon(
   override fun getIconHeight() = 24
 }
 
-private class BadgeIcon2(value: Int, fgc: Color, bgc: Color) : BadgeIcon(value, fgc, bgc) {
+private class BadgeIcon2(
+  value: Int,
+  fgc: Color,
+  bgc: Color,
+) : BadgeIcon(value, fgc, bgc) {
   override fun getTextShape(g2: Graphics2D): Shape {
     val txt = text
     val at = if (txt.length < 3) null else AffineTransform.getScaleInstance(.95, 1.0)

@@ -53,7 +53,9 @@ fun makeUI(): Component {
   }
 }
 
-private class WindowPreferencesHandler : WindowAdapter(), ComponentListener {
+private class WindowPreferencesHandler :
+  WindowAdapter(),
+  ComponentListener {
   val prefs: Preferences = Preferences.userNodeForPackage(javaClass)
   val dim = Dimension(320, 240)
   val pos = Point()

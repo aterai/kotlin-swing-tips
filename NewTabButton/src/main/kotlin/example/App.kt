@@ -133,7 +133,9 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
   }
 }
 
-private class TabLayout : LayoutManager, Serializable {
+private class TabLayout :
+  LayoutManager,
+  Serializable {
   override fun addLayoutComponent(
     name: String,
     comp: Component,

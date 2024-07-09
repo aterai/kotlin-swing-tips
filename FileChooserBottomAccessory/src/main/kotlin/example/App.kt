@@ -75,7 +75,9 @@ fun makeUI(): Component {
   }
 }
 
-private class EncodingFileChooserUI(chooser: JFileChooser) : MetalFileChooserUI(chooser) {
+private class EncodingFileChooserUI(
+  chooser: JFileChooser,
+) : MetalFileChooserUI(chooser) {
   val combo = JComboBox(arrayOf("UTF-8", "UTF-16", "Shift_JIS", "EUC-JP"))
 
   override fun installComponents(fc: JFileChooser) {

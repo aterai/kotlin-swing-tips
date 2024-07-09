@@ -37,7 +37,9 @@ fun makeUI(): Component {
   return p
 }
 
-private class TestWindowListener(private val log: JTextArea) : WindowListener {
+private class TestWindowListener(
+  private val log: JTextArea,
+) : WindowListener {
   override fun windowOpened(e: WindowEvent) {
     log.append("windowOpened\n")
   }

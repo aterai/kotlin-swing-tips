@@ -276,7 +276,9 @@ private class RoundedHeaderRenderer : DefaultTableCellRenderer() {
   }
 }
 
-private class CalendarViewTableModel(date: LocalDate) : DefaultTableModel() {
+private class CalendarViewTableModel(
+  date: LocalDate,
+) : DefaultTableModel() {
   private val startDate: LocalDate
   private val weekFields = WeekFields.of(Locale.getDefault())
 

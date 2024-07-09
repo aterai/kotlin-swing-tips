@@ -102,7 +102,10 @@ private enum class Status {
   INDETERMINATE,
 }
 
-private data class CheckBoxNode(val file: File, val status: Status) {
+private data class CheckBoxNode(
+  val file: File,
+  val status: Status,
+) {
   override fun toString() = file.name ?: ""
 }
 
@@ -156,7 +159,8 @@ private class FileTreeCellRenderer(
 
 private class CheckBoxNodeEditor(
   private val fileSystemView: FileSystemView,
-) : AbstractCellEditor(), TreeCellEditor {
+) : AbstractCellEditor(),
+  TreeCellEditor {
   private val checkBox = TriStateCheckBox().also {
     it.isOpaque = false
     it.isFocusable = false

@@ -20,7 +20,9 @@ fun makeUI(): Component {
   }
 }
 
-private class LeftClippedComboBox<E>(m: ComboBoxModel<E>) : JComboBox<E>(m) {
+private class LeftClippedComboBox<E>(
+  m: ComboBoxModel<E>,
+) : JComboBox<E>(m) {
   override fun updateUI() {
     setRenderer(null)
     super.updateUI()

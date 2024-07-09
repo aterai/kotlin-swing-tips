@@ -36,7 +36,9 @@ fun makeUI(): Component {
   }
 }
 
-private class JustifiedLabel(str: String? = null) : JLabel(str) {
+private class JustifiedLabel(
+  str: String? = null,
+) : JLabel(str) {
   private var gvText: GlyphVector? = null
   private var prevWidth = -1
 

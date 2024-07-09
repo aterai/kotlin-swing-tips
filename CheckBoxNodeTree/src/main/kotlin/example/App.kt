@@ -80,7 +80,9 @@ private class CheckBoxNodeRenderer : TreeCellRenderer {
   }
 }
 
-private class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
+private class CheckBoxNodeEditor :
+  AbstractCellEditor(),
+  TreeCellEditor {
   private val checkBox = object : JCheckBox() {
     private var handler: ActionListener? = null
 
@@ -118,7 +120,10 @@ private class CheckBoxNodeEditor : AbstractCellEditor(), TreeCellEditor {
     ?.isLeaf == true
 }
 
-private data class CheckBoxNode(val text: String, val selected: Boolean) {
+private data class CheckBoxNode(
+  val text: String,
+  val selected: Boolean,
+) {
   override fun toString() = text
 }
 

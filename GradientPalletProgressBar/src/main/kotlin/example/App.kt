@@ -66,7 +66,9 @@ private open class BackgroundTask : SwingWorker<Unit, Unit>() {
   }
 }
 
-class ProgressListener(private val progressBar: JProgressBar) : PropertyChangeListener {
+class ProgressListener(
+  private val progressBar: JProgressBar,
+) : PropertyChangeListener {
   init {
     this.progressBar.value = 0
   }

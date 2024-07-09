@@ -137,7 +137,9 @@ private class MyCheckBoxMenuItemPainter(
   }
 }
 
-private class MultiLineTableCellRenderer : JTextArea(), TableCellRenderer {
+private class MultiLineTableCellRenderer :
+  JTextArea(),
+  TableCellRenderer {
   private val rowColHeight = mutableListOf<MutableList<Int>>()
   private var fhb: Border? = null
   private var epb: Border? = null

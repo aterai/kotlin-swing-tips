@@ -56,7 +56,9 @@ private fun makeList(handler: TransferHandler): JList<Color> {
   }
 }
 
-private class ListPopupMenu(list: JList<*>) : JPopupMenu() {
+private class ListPopupMenu(
+  list: JList<*>,
+) : JPopupMenu() {
   private val cutItem: JMenuItem
   private val copyItem: JMenuItem
 

@@ -76,7 +76,9 @@ private fun makeTitledPanel(
   return sp
 }
 
-private class NoWrapParagraphView(elem: Element) : ParagraphView(elem) {
+private class NoWrapParagraphView(
+  elem: Element,
+) : ParagraphView(elem) {
   override fun calculateMinorAxisRequirements(
     axis: Int,
     r: SizeRequirements?,

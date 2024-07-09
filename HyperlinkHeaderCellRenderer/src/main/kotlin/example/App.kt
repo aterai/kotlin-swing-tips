@@ -47,7 +47,9 @@ fun makeUI(): Component {
   }
 }
 
-private class HyperlinkHeaderCellRenderer : DefaultTableCellRenderer(), MouseInputListener {
+private class HyperlinkHeaderCellRenderer :
+  DefaultTableCellRenderer(),
+  MouseInputListener {
   private val border = BorderFactory.createCompoundBorder(
     BorderFactory.createMatteBorder(0, 0, 1, 0, Color.GRAY),
     BorderFactory.createEmptyBorder(4, 1, 3, 2),

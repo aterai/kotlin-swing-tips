@@ -83,7 +83,9 @@ private class WrappedLabelRenderer : TableCellRenderer {
   }
 }
 
-private open class WrappedLabel(str: String? = "") : JLabel(str) {
+private open class WrappedLabel(
+  str: String? = "",
+) : JLabel(str) {
   private var gvText: GlyphVector? = null
 
   override fun doLayout() {

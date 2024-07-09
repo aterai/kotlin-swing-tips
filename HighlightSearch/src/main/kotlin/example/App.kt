@@ -77,7 +77,9 @@ fun makeUI(): Component {
   }
 }
 
-private class HighlightHandler : DocumentListener, ActionListener {
+private class HighlightHandler :
+  DocumentListener,
+  ActionListener {
   override fun changedUpdate(e: DocumentEvent) {
     // not needed
   }

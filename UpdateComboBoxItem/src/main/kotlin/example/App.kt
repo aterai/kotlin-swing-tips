@@ -65,7 +65,10 @@ fun makeUI(): Component {
   }
 }
 
-private open class CheckBoxItem(private val text: String, var isSelected: Boolean) {
+private open class CheckBoxItem(
+  private val text: String,
+  var isSelected: Boolean,
+) {
   override fun toString() = text
 }
 

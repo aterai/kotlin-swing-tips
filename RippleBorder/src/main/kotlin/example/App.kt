@@ -27,7 +27,10 @@ private fun makeLabel(str: String) = JLabel(str).also {
   it.border = RippleBorder(it, 10)
 }
 
-private class RippleBorder(c: Component, size: Int) : EmptyBorder(size, size, size, size) {
+private class RippleBorder(
+  c: Component,
+  size: Int,
+) : EmptyBorder(size, size, size, size) {
   private val animator: Timer
   private var count = 1f
 

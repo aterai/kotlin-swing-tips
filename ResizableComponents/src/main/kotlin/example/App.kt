@@ -78,7 +78,9 @@ private fun createTable() {
   layeredPane.moveToFront(resizer)
 }
 
-private class ResizablePanel(layout: LayoutManager) : JPanel(layout) {
+private class ResizablePanel(
+  layout: LayoutManager,
+) : JPanel(layout) {
   private var resizeListener: MouseInputListener? = null
 
   override fun updateUI() {
@@ -106,8 +108,13 @@ private interface ResizableBorder : Border {
   fun getResizeCursor(e: MouseEvent): Cursor
 }
 
-private class DefaultResizableBorder : ResizableBorder, SwingConstants {
-  private enum class Locations(cursor: Int, private val location: Function<Rectangle, Point>) {
+private class DefaultResizableBorder :
+  ResizableBorder,
+  SwingConstants {
+  private enum class Locations(
+    cursor: Int,
+    private val location: Function<Rectangle, Point>,
+  ) {
     NORTH(
       Cursor.N_RESIZE_CURSOR,
       Function { r ->
@@ -263,7 +270,9 @@ private class ResizeMouseListener : MouseInputAdapter() {
   }
 }
 
-private enum class Directions(private val cursor: Int) {
+private enum class Directions(
+  private val cursor: Int,
+) {
   NORTH(Cursor.N_RESIZE_CURSOR) {
     override fun getLimitedDelta(
       startingBounds: Rectangle,

@@ -86,7 +86,9 @@ fun makeUI(): Component {
   }
 }
 
-private open class PlaqueBorder(arc: Int) : EmptyBorder(arc, arc, arc, arc) {
+private open class PlaqueBorder(
+  arc: Int,
+) : EmptyBorder(arc, arc, arc, arc) {
   override fun paintBorder(
     c: Component,
     g: Graphics,

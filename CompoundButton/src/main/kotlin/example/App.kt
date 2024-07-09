@@ -17,7 +17,9 @@ fun makeUI() = JPanel().also {
   it.preferredSize = Dimension(320, 240)
 }
 
-private class CompoundButtonPanel(private val dim: Dimension) : JComponent() {
+private class CompoundButtonPanel(
+  private val dim: Dimension,
+) : JComponent() {
   init {
     layout = OverlayLayout(this)
     add(CompoundButton(dim, ButtonLocation.CENTER))
@@ -32,7 +34,9 @@ private class CompoundButtonPanel(private val dim: Dimension) : JComponent() {
   override fun isOptimizedDrawingEnabled() = false
 }
 
-private enum class ButtonLocation(val startAngle: Double) {
+private enum class ButtonLocation(
+  val startAngle: Double,
+) {
   CENTER(0.0),
   NORTH(45.0),
   EAST(135.0),

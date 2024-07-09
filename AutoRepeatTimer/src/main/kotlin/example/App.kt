@@ -52,7 +52,8 @@ private fun makeButton(
 private class AutoRepeatHandler(
   extent: Int,
   private val view: JTextComponent,
-) : MouseAdapter(), ActionListener {
+) : MouseAdapter(),
+  ActionListener {
   private val autoRepeatTimer = Timer(60, this)
   private val extent = BigInteger.valueOf(extent.toLong())
   private var arrowButton: JButton? = null

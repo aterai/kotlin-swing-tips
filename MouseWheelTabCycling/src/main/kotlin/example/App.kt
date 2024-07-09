@@ -91,7 +91,9 @@ fun getTabAreaBounds(tabbedPane: JTabbedPane) =
     }
     ?: Rectangle()
 
-private enum class TabPlacements(val tabPlacement: Int) {
+private enum class TabPlacements(
+  val tabPlacement: Int,
+) {
   TOP(SwingConstants.TOP),
   BOTTOM(SwingConstants.BOTTOM),
   LEFT(SwingConstants.LEFT),

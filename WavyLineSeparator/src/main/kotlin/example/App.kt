@@ -27,7 +27,9 @@ fun makeUI(): Component {
   }
 }
 
-private class WavyLineSeparator(orientation: Int = HORIZONTAL) : JSeparator(orientation) {
+private class WavyLineSeparator(
+  orientation: Int = HORIZONTAL,
+) : JSeparator(orientation) {
   override fun updateUI() {
     super.updateUI()
     BorderFactory.createEmptyBorder(2, 2, 2, 2)

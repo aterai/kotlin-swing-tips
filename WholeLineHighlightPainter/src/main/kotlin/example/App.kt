@@ -66,7 +66,9 @@ private fun makeEditorPane(txt: String): JEditorPane {
   return editor
 }
 
-private class ParagraphMarkHighlightPainter(color: Color) : DefaultHighlightPainter(color) {
+private class ParagraphMarkHighlightPainter(
+  color: Color,
+) : DefaultHighlightPainter(color) {
   override fun paintLayer(
     g: Graphics,
     offs0: Int,
@@ -84,7 +86,9 @@ private class ParagraphMarkHighlightPainter(color: Color) : DefaultHighlightPain
   }
 }
 
-private class WholeLineHighlightPainter(color: Color) : DefaultHighlightPainter(color) {
+private class WholeLineHighlightPainter(
+  color: Color,
+) : DefaultHighlightPainter(color) {
   override fun paintLayer(
     g: Graphics,
     offs0: Int,
@@ -136,7 +140,9 @@ private class FocusCaret(
     .format(nonFocusPainter, selectionPainter)
 }
 
-private class MyEditorKit : StyledEditorKit(), ViewFactory {
+private class MyEditorKit :
+  StyledEditorKit(),
+  ViewFactory {
   override fun getViewFactory() = this
 
   override fun create(elem: Element) =
@@ -150,7 +156,9 @@ private class MyEditorKit : StyledEditorKit(), ViewFactory {
     }
 }
 
-private class ParagraphWithEndMarkView(elem: Element) : ParagraphView(elem) {
+private class ParagraphWithEndMarkView(
+  elem: Element,
+) : ParagraphView(elem) {
   private val paragraphMarkIcon = ParagraphMarkIcon()
 
   override fun paint(

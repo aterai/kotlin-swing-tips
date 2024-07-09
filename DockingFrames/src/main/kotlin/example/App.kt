@@ -9,7 +9,10 @@ fun makeUI() = JPanel().also {
   it.preferredSize = Dimension(320, 100)
 }
 
-private class DockingListener(private val frame1: JFrame, f2: JFrame) : ComponentListener {
+private class DockingListener(
+  private val frame1: JFrame,
+  f2: JFrame,
+) : ComponentListener {
   private val frame2: JFrame
 
   init {

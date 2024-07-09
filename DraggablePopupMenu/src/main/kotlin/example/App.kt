@@ -117,7 +117,10 @@ private class MenuArrowIcon : Icon {
   override fun getIconHeight() = 9
 }
 
-private class MenuToggleButton(text: String = "", icon: Icon? = null) : JToggleButton() {
+private class MenuToggleButton(
+  text: String = "",
+  icon: Icon? = null,
+) : JToggleButton() {
   private var popup: JPopupMenu? = null
 
   init {

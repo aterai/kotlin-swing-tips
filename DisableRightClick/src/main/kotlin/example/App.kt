@@ -67,7 +67,9 @@ private fun makeComboBox(size: Int): JComboBox<String> {
   return JComboBox(model)
 }
 
-private class BasicComboPopup2(combo: JComboBox<Any>) : BasicComboPopup(combo) {
+private class BasicComboPopup2(
+  combo: JComboBox<Any>,
+) : BasicComboPopup(combo) {
   @Transient private var handler2: MouseListener? = null
 
   override fun uninstallingUI() {
@@ -103,7 +105,9 @@ private class BasicComboPopup2(combo: JComboBox<Any>) : BasicComboPopup(combo) {
   }
 }
 
-private class BasicComboPopup3(combo: JComboBox<Any>) : BasicComboPopup(combo) {
+private class BasicComboPopup3(
+  combo: JComboBox<Any>,
+) : BasicComboPopup(combo) {
   override fun createList(): JList<Any> {
     return object : JList<Any>(comboBox.model) {
       override fun processMouseEvent(e: MouseEvent) {

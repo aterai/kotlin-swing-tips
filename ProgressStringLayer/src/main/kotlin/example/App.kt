@@ -118,7 +118,9 @@ private class ProgressListener(
   }
 }
 
-private class TextLabelProgressBar(model: BoundedRangeModel) : JProgressBar(model) {
+private class TextLabelProgressBar(
+  model: BoundedRangeModel,
+) : JProgressBar(model) {
   private val label = JLabel("000/100", CENTER)
 
   override fun updateUI() {
@@ -142,7 +144,9 @@ private class TextLabelProgressBar(model: BoundedRangeModel) : JProgressBar(mode
   }
 }
 
-private class ProgressBarLayerUI(private val label: JLabel) : LayerUI<JProgressBar>() {
+private class ProgressBarLayerUI(
+  private val label: JLabel,
+) : LayerUI<JProgressBar>() {
   private val rubberStamp = JPanel()
 
   override fun updateUI(l: JLayer<out JProgressBar>?) {

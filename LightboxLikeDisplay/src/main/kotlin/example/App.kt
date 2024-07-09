@@ -52,7 +52,9 @@ private fun makeSamplePanel(): JPanel {
   return p
 }
 
-private class LightboxGlassPane(private val img: BufferedImage) : JPanel() {
+private class LightboxGlassPane(
+  private val img: BufferedImage,
+) : JPanel() {
   private val animatedIcon = LoadingIcon()
   private var alpha = 0f
   private val currentSize = Dimension()
@@ -74,7 +76,9 @@ private class LightboxGlassPane(private val img: BufferedImage) : JPanel() {
     addHierarchyListener(handler)
   }
 
-  private inner class Handler : MouseAdapter(), HierarchyListener {
+  private inner class Handler :
+    MouseAdapter(),
+    HierarchyListener {
     override fun mouseClicked(e: MouseEvent) {
       e.component.isVisible = false
     }

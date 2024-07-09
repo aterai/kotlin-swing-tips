@@ -52,7 +52,9 @@ private object NimbusTabbedPanePainterUtils {
     d["TabbedPane:TabbedPaneTab[Pressed+Selected].backgroundPainter"] = selTabPainter
   }
 
-  class TabPainter(private val selected: Boolean) : Painter<JComponent> {
+  class TabPainter(
+    private val selected: Boolean,
+  ) : Painter<JComponent> {
     private val color = if (selected) CONTENT_BACKGROUND else TAB_BACKGROUND
 
     override fun paint(

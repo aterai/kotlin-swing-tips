@@ -66,7 +66,9 @@ private fun makeTitledPanel(
   return p
 }
 
-private class TextComponentPopupMenu(textComponent: JTextComponent) : JPopupMenu() {
+private class TextComponentPopupMenu(
+  textComponent: JTextComponent,
+) : JPopupMenu() {
   private val cutAction = DefaultEditorKit.CutAction()
   private val copyAction = DefaultEditorKit.CopyAction()
   private val deleteAction = object : AbstractAction("delete") {
@@ -110,7 +112,9 @@ private class TextComponentPopupMenu(textComponent: JTextComponent) : JPopupMenu
   }
 }
 
-private class UndoAction(private val undoManager: UndoManager) : AbstractAction("undo") {
+private class UndoAction(
+  private val undoManager: UndoManager,
+) : AbstractAction("undo") {
   override fun actionPerformed(e: ActionEvent) {
     runCatching {
       undoManager.undo()
@@ -120,7 +124,9 @@ private class UndoAction(private val undoManager: UndoManager) : AbstractAction(
   }
 }
 
-private class RedoAction(private val undoManager: UndoManager) : AbstractAction("redo") {
+private class RedoAction(
+  private val undoManager: UndoManager,
+) : AbstractAction("redo") {
   override fun actionPerformed(e: ActionEvent) {
     runCatching {
       undoManager.redo()

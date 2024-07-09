@@ -105,7 +105,9 @@ private fun makeMissingImage(): BufferedImage {
   return bi
 }
 
-private class TranslucentBooleanRenderer : JCheckBox(), TableCellRenderer {
+private class TranslucentBooleanRenderer :
+  JCheckBox(),
+  TableCellRenderer {
   override fun updateUI() {
     super.updateUI()
     horizontalAlignment = CENTER

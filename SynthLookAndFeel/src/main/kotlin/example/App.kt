@@ -20,7 +20,9 @@ fun makeUI() = JPanel().also {
   it.preferredSize = Dimension(320, 240)
 }
 
-private class MyButton(title: String) : JButton("$title: class")
+private class MyButton(
+  title: String,
+) : JButton("$title: class")
 
 fun main() {
   EventQueue.invokeLater {

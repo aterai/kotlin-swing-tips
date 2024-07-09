@@ -38,7 +38,9 @@ private fun makeTitledPanel(
   it.add(c)
 }
 
-private class BackgroundFocusListener(private val color: Color) : FocusListener {
+private class BackgroundFocusListener(
+  private val color: Color,
+) : FocusListener {
   override fun focusGained(e: FocusEvent) {
     e.component.background = color
   }

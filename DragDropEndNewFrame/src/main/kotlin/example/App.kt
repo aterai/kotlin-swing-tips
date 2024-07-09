@@ -268,7 +268,9 @@ private class DnDTabbedPane : JTabbedPane() {
   }
 }
 
-private class TabTransferable(private val tabbedPane: Component) : Transferable {
+private class TabTransferable(
+  private val tabbedPane: Component,
+) : Transferable {
   override fun getTransferData(
     flavor: DataFlavor,
   ): Any = if (flavor == transferDataFlavors[0]) tabbedPane else emptyList<File>()
@@ -416,7 +418,9 @@ private class TabDropTargetListener : DropTargetListener {
   }
 }
 
-private class GhostGlassPane(val tabbedPane: DnDTabbedPane) : JComponent() {
+private class GhostGlassPane(
+  val tabbedPane: DnDTabbedPane,
+) : JComponent() {
   private val lineRect = Rectangle()
   private val lineColor = Color(0, 100, 255)
   private val locPt = Point()

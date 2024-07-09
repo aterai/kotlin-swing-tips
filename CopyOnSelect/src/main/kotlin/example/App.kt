@@ -57,7 +57,10 @@ private fun makeTitledPanel(
   return p
 }
 
-private class CopyOnSelectListener : MouseAdapter(), CaretListener, KeyListener {
+private class CopyOnSelectListener :
+  MouseAdapter(),
+  CaretListener,
+  KeyListener {
   private var dragActive = false
   private var shiftActive = false
   private var dot = 0
@@ -110,7 +113,9 @@ private class CopyOnSelectListener : MouseAdapter(), CaretListener, KeyListener 
   }
 }
 
-private class TextAreaOutputStream(private val textArea: JTextArea) : OutputStream() {
+private class TextAreaOutputStream(
+  private val textArea: JTextArea,
+) : OutputStream() {
   private val buffer = ByteArrayOutputStream()
 
   @Throws(IOException::class)
@@ -132,7 +137,9 @@ private class TextAreaOutputStream(private val textArea: JTextArea) : OutputStre
   }
 }
 
-private class TextAreaHandler(os: OutputStream) : StreamHandler(os, SimpleFormatter()) {
+private class TextAreaHandler(
+  os: OutputStream,
+) : StreamHandler(os, SimpleFormatter()) {
   override fun getEncoding() = StandardCharsets.UTF_8.name()
 
   @Synchronized

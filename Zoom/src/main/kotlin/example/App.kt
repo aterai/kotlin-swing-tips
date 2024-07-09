@@ -59,7 +59,9 @@ private class MissingIcon : Icon {
   override fun getIconHeight() = 240
 }
 
-private class ZoomImage(private val icon: Icon) : JPanel() {
+private class ZoomImage(
+  private val icon: Icon,
+) : JPanel() {
   private var handler: MouseWheelListener? = null
   private var scale = 1.0
 

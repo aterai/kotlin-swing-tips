@@ -18,7 +18,9 @@ fun makeUI(): Component {
   }
 }
 
-private class LineCursorTextArea(text: String?) : JTextArea(text) {
+private class LineCursorTextArea(
+  text: String?,
+) : JTextArea(text) {
   // constructor() : super()
   // constructor(doc: Document?) : super(doc)
   // constructor(doc: Document?, text: String?, rows: Int, columns: Int) : super(doc, text, rows, columns)

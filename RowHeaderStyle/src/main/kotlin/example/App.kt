@@ -46,7 +46,9 @@ fun makeUI(): Component {
   }
 }
 
-private class RowHeaderRenderer : MouseAdapter(), TableCellRenderer {
+private class RowHeaderRenderer :
+  MouseAdapter(),
+  TableCellRenderer {
   private val renderer = JLabel()
   private var rollOverRowIndex = -1
 
@@ -103,7 +105,9 @@ private class RowHeaderRenderer : MouseAdapter(), TableCellRenderer {
   }
 }
 
-private class ComponentIcon(private val cmp: Component) : Icon {
+private class ComponentIcon(
+  private val cmp: Component,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

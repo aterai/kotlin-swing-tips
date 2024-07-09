@@ -46,7 +46,9 @@ fun makeUI(): Component {
   return p
 }
 
-private class WrappingLabel(text: String?) : JLabel(text) {
+private class WrappingLabel(
+  text: String?,
+) : JLabel(text) {
   private val rect = Rectangle()
 
   override fun paintComponent(g: Graphics) {
@@ -71,7 +73,9 @@ private class WrappingLabel(text: String?) : JLabel(text) {
   }
 }
 
-private class WrappedLabel(str: String?) : JLabel(str) {
+private class WrappedLabel(
+  str: String?,
+) : JLabel(str) {
   @Transient private var gvText: GlyphVector? = null
   private var prevWidth = -1
   private val rect = Rectangle()

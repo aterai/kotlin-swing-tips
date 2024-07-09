@@ -38,7 +38,9 @@ fun makeUI(): Component {
   }
 }
 
-private class DragScrollingListener(c: JComponent) : MouseAdapter() {
+private class DragScrollingListener(
+  c: JComponent,
+) : MouseAdapter() {
   private val dc = Cursor.getDefaultCursor()
   private val hc = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
   private val scroller: Timer

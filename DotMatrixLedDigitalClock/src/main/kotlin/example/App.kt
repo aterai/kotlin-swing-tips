@@ -165,7 +165,10 @@ private fun makeLedMatrixList(
   }
 }
 
-private class LedDotIcon(private val led: Boolean, private val dim: Dimension) : Icon {
+private class LedDotIcon(
+  private val led: Boolean,
+  private val dim: Dimension,
+) : Icon {
   private val on = Color(0x32_FF_AA)
 
   override fun paintIcon(

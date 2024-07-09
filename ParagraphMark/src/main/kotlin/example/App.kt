@@ -45,7 +45,9 @@ private class MyViewFactory : ViewFactory {
   }
 }
 
-private class ParagraphWithEopmView(elem: Element?) : ParagraphView(elem) {
+private class ParagraphWithEopmView(
+  elem: Element?,
+) : ParagraphView(elem) {
   override fun paint(
     g: Graphics,
     allocation: Shape,

@@ -83,7 +83,9 @@ private fun createPanel(
   }
 }
 
-private class DragMouseListener(private val parent: JLayeredPane) : MouseAdapter() {
+private class DragMouseListener(
+  private val parent: JLayeredPane,
+) : MouseAdapter() {
   private val origin = Point()
 
   override fun mousePressed(e: MouseEvent) {
@@ -98,7 +100,9 @@ private class DragMouseListener(private val parent: JLayeredPane) : MouseAdapter
   }
 }
 
-private class BackImageLayeredPane(private val bgImage: Image?) : JLayeredPane() {
+private class BackImageLayeredPane(
+  private val bgImage: Image?,
+) : JLayeredPane() {
   override fun isOptimizedDrawingEnabled() = false
 
   override fun paintComponent(g: Graphics) {

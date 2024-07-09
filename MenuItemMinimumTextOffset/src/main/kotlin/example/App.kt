@@ -87,7 +87,10 @@ private fun makeMenuItem(
   }
 }
 
-private class LineIcon(private val stroke: Stroke, private val size: Dimension) : Icon {
+private class LineIcon(
+  private val stroke: Stroke,
+  private val size: Dimension,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

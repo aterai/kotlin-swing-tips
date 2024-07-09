@@ -123,7 +123,10 @@ private fun getCharset(urlConnection: URLConnection): Charset {
   }
 }
 
-private data class Chunk(val line: String, val note: String)
+private data class Chunk(
+  val line: String,
+  val note: String,
+)
 
 private open class BackgroundTask(
   protected val pms: ProgressMonitorInputStream,

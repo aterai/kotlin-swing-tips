@@ -99,7 +99,9 @@ private class ComboBoxCellRenderer : TableCellRenderer {
   }
 }
 
-private class ComboBoxCellEditor : AbstractCellEditor(), TableCellEditor {
+private class ComboBoxCellEditor :
+  AbstractCellEditor(),
+  TableCellEditor {
   private val comboBox = JComboBox(makeComboModel())
   private val panel = JPanel(GridBagLayout())
 

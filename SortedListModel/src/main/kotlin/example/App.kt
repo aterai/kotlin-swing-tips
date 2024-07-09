@@ -184,11 +184,16 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   }
 }
 
-private data class ListItem(val title: String, val color: Color) {
+private data class ListItem(
+  val title: String,
+  val color: Color,
+) {
   val icon = ColorIcon(color)
 }
 
-private class ColorIcon(private val color: Color) : Icon {
+private class ColorIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

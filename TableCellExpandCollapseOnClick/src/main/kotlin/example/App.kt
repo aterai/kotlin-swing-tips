@@ -157,7 +157,9 @@ private class RowHeaderRenderer : TableCellRenderer {
   }
 }
 
-private class RowHeaderEditor : AbstractCellEditor(), TableCellEditor {
+private class RowHeaderEditor :
+  AbstractCellEditor(),
+  TableCellEditor {
   private val renderer = RowHeaderPanel()
   private var rowHeader: RowHeader? = null
 

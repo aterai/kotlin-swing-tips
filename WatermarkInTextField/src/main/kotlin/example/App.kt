@@ -88,7 +88,9 @@ private class WatermarkTextField : JTextField() {
   }
 }
 
-private class GhostFocusListener(tf: JTextComponent) : FocusListener {
+private class GhostFocusListener(
+  tf: JTextComponent,
+) : FocusListener {
   private val ghostMessage = tf.text
 
   init {

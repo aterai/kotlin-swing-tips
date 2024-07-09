@@ -83,7 +83,10 @@ private open class RowDataModel : DefaultTableModel() {
   }
 }
 
-private data class RowData(val name: String, val comment: String)
+private data class RowData(
+  val name: String,
+  val comment: String,
+)
 
 fun main() {
   EventQueue.invokeLater {

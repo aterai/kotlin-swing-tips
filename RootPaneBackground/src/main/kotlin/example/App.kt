@@ -126,7 +126,9 @@ private object ImageUtils {
   }
 }
 
-private class CentredBackgroundBorder(private val image: BufferedImage) : Border {
+private class CentredBackgroundBorder(
+  private val image: BufferedImage,
+) : Border {
   override fun paintBorder(
     c: Component,
     g: Graphics,
@@ -175,7 +177,9 @@ private class TranslucentPopupMenu : JPopupMenu() {
   }
 }
 
-private class TransparentMenu(title: String?) : JMenu(title) {
+private class TransparentMenu(
+  title: String?,
+) : JMenu(title) {
   private var popupMenu: JPopupMenu? = null
 
   private fun ensurePopupMenuCreated2(): JPopupMenu {

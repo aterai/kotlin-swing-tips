@@ -44,7 +44,9 @@ private fun makeSystemColorPanel(color: Color, text: String) = JPanel(BorderLayo
   it.add(field)
 }
 
-private class ColorIcon(private val color: Color) : Icon {
+private class ColorIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component?,
     g: Graphics,

@@ -40,7 +40,10 @@ fun makeUI(): Component {
   return scroll
 }
 
-private class TableTouchScreenHandler(table: JTable) : MouseAdapter(), ListSelectionListener {
+private class TableTouchScreenHandler(
+  table: JTable,
+) : MouseAdapter(),
+  ListSelectionListener {
   private val dc = Cursor.getDefaultCursor()
   private val hc = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
   private val scroller = Timer(DELAY) { e ->

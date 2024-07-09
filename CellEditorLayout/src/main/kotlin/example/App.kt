@@ -17,7 +17,9 @@ fun makeUI(): Component {
   }
 }
 
-private class CustomCellEditor(field: JTextField) : DefaultCellEditor(field) {
+private class CustomCellEditor(
+  field: JTextField,
+) : DefaultCellEditor(field) {
   private val button = JButton()
 
   init {

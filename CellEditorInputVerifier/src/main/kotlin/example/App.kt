@@ -157,11 +157,12 @@ private class IntegerDocumentFilter : DocumentFilter() {
 
 // How to Use Formatted Text Fields (The Java™ Tutorials > ... > Using Swing Components)
 // https://docs.oracle.com/javase/tutorial/uiswing/components/formattedtextfield.html
-private class NumberFormatterFactory : DefaultFormatterFactory(
-  numberFormatter,
-  numberFormatter,
-  numberFormatter,
-) {
+private class NumberFormatterFactory :
+  DefaultFormatterFactory(
+    numberFormatter,
+    numberFormatter,
+    numberFormatter,
+  ) {
   companion object {
     private val numberFormatter = NumberFormatter()
 

@@ -38,7 +38,10 @@ fun makeUI(): Component {
   }
 }
 
-private data class ListItem(val title: String, val iconFile: String) {
+private data class ListItem(
+  val title: String,
+  val iconFile: String,
+) {
   val icon: Icon
   val selectedIcon: Icon
 
@@ -66,7 +69,9 @@ private fun makeMissingImage(): BufferedImage {
   return bi
 }
 
-private class ReorderingList(model: ListModel<ListItem>) : JList<ListItem>(model) {
+private class ReorderingList(
+  model: ListModel<ListItem>,
+) : JList<ListItem>(model) {
   private var rbl: MouseInputListener? = null
   private var rubberBandColor: Color? = null
   private val rubberBand = Path2D.Double()

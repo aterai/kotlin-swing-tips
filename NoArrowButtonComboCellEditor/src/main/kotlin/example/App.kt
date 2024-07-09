@@ -78,7 +78,9 @@ private class ZeroSizeButtonUI : BasicComboBoxUI() {
   }
 }
 
-private class LocalDateTimeTableCellEditor : AbstractCellEditor(), TableCellEditor {
+private class LocalDateTimeTableCellEditor :
+  AbstractCellEditor(),
+  TableCellEditor {
   private val comboBox = object : JComboBox<LocalDateTime>() {
     override fun updateUI() {
       super.updateUI()

@@ -63,7 +63,9 @@ private fun initTitledBorder(
   return c
 }
 
-private class DisabledHtmlLabel(text: String?) : JLabel(text) {
+private class DisabledHtmlLabel(
+  text: String?,
+) : JLabel(text) {
   @Transient private var shadow: BufferedImage? = null
 
   override fun setEnabled(b: Boolean) {

@@ -75,7 +75,9 @@ fun makeUI(): Component {
 //   }
 // }
 
-private class JustifiedLabel(str: String? = null) : JLabel(str ?: "") {
+private class JustifiedLabel(
+  str: String? = null,
+) : JLabel(str ?: "") {
   private var layout: TextLayout? = null
   private var prevWidth = -1
 

@@ -29,7 +29,9 @@ private fun makeMissingImage(): Image {
   return bi
 }
 
-private class ImagePanel(private val image: Image) : JPanel() {
+private class ImagePanel(
+  private val image: Image,
+) : JPanel() {
   private var rbl: RubberBandingListener? = null
   private val stroke = BasicStroke(2f)
   private val rubberBand: Path2D = Path2D.Double()

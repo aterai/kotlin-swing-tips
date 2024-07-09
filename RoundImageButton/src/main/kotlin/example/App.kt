@@ -56,7 +56,11 @@ fun makeUI(): Component {
   }
 }
 
-private class RoundButton(i1: String, i2: String, i3: String) : JButton(makeIcon(i1)) {
+private class RoundButton(
+  i1: String,
+  i2: String,
+  i3: String,
+) : JButton(makeIcon(i1)) {
   private var shape: Shape? = null
   private var base: Shape? = null
 
@@ -113,7 +117,10 @@ private fun makeIcon(path: String): Icon {
   return url?.let { ImageIcon(url) } ?: UIManager.getIcon("OptionPane.errorIcon")
 }
 
-enum class ButtonAlignments(private val description: String, val alignment: Float) {
+enum class ButtonAlignments(
+  private val description: String,
+  val alignment: Float,
+) {
   TOP("Top Alignment", Component.TOP_ALIGNMENT),
   CENTER("Center Alignment", Component.CENTER_ALIGNMENT),
   BOTTOM("Bottom Alignment", Component.BOTTOM_ALIGNMENT),

@@ -53,7 +53,9 @@ fun makeUI(): Component {
   }
 }
 
-private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListItem>(model) {
+private class RubberBandSelectionList(
+  model: ListModel<ListItem>,
+) : JList<ListItem>(model) {
   private var rbl: ItemCheckBoxesListener? = null
   private var rubberBandColor: Color? = null
   private val rubberBand = Path2D.Double()
@@ -337,9 +339,14 @@ private class RubberBandSelectionList(model: ListModel<ListItem>) : JList<ListIt
   }
 }
 
-private data class ListItem(val title: String, val icon: Icon)
+private data class ListItem(
+  val title: String,
+  val icon: Icon,
+)
 
-private class ColorIcon(private val color: Color) : Icon {
+private class ColorIcon(
+  private val color: Color,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

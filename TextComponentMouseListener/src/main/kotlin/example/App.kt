@@ -49,7 +49,9 @@ private fun makeTitledPanel(
   return p
 }
 
-private class TextComponentMouseHandler(textArea: JTextComponent) : MouseAdapter() {
+private class TextComponentMouseHandler(
+  textArea: JTextComponent,
+) : MouseAdapter() {
   private val count = AtomicInteger(0)
   private val holdTimer = Timer(1000, null)
   private val list = listOf(

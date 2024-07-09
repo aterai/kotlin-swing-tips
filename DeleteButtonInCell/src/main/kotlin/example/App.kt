@@ -93,7 +93,10 @@ private class RowDataModel : DefaultTableModel() {
   }
 }
 
-private data class RowData(val name: String, val comment: String)
+private data class RowData(
+  val name: String,
+  val comment: String,
+)
 
 private class DeleteButton : JButton() {
   override fun updateUI() {
@@ -118,7 +121,9 @@ private class DeleteButtonRenderer : TableCellRenderer {
   ) = renderer
 }
 
-private class DeleteButtonEditor : AbstractCellEditor(), TableCellEditor {
+private class DeleteButtonEditor :
+  AbstractCellEditor(),
+  TableCellEditor {
   private val renderer = DeleteButton()
 
   init {

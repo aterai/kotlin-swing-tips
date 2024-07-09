@@ -12,7 +12,9 @@ fun makeUI() = JPanel(BorderLayout()).also {
   it.preferredSize = Dimension(320, 240)
 }
 
-private class FontRotateAnimation(str: String) : JComponent() {
+private class FontRotateAnimation(
+  str: String,
+) : JComponent() {
   private var rotate = 0.0
   private var shape: Shape
   private val animator = Timer(10, null)

@@ -39,7 +39,9 @@ private fun makeTitledColorBorder(
   color: Color,
 ) = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(color, 5), title)
 
-private class WrappingLabel(text: String?) : JLabel(text) {
+private class WrappingLabel(
+  text: String?,
+) : JLabel(text) {
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.paint = foreground
@@ -61,7 +63,9 @@ private class WrappingLabel(text: String?) : JLabel(text) {
   }
 }
 
-private class WrappedLabel(str: String?) : JLabel(str) {
+private class WrappedLabel(
+  str: String?,
+) : JLabel(str) {
   private var gvText: GlyphVector? = null
   private var prevWidth = -1
 

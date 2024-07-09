@@ -81,7 +81,10 @@ fun makeUI(): Component {
   }
 }
 
-private class ColorIcon(private val color: Color, private val dim: Dimension) : Icon {
+private class ColorIcon(
+  private val color: Color,
+  private val dim: Dimension,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,

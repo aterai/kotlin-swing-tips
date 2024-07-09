@@ -83,7 +83,9 @@ private class VersionAction : AbstractAction("version") {
   }
 }
 
-class BarFactory(base: String) {
+class BarFactory(
+  base: String,
+) {
   private val resources = ResourceBundle.getBundle(base, Utf8ResourceBundleControl())
   private val menuItems = mutableMapOf<String, JMenuItem>()
   private val toolButtons = mutableMapOf<String, JButton>()
