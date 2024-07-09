@@ -129,15 +129,11 @@ private class LocalDateTimeEditor(
   spinner: JSpinner,
   dateFormatPattern: String,
 ) : DefaultEditor(spinner) {
-  val dateTimeFormatter: DateTimeFormatter
+  val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(dateFormatPattern)
   val model = spinner.model as? SpinnerLocalDateTimeModel
     ?: throw IllegalArgumentException("model not a SpinnerLocalDateTimeModel")
 
   init {
-    // val m = spinner.model
-    // require(m is SpinnerLocalDateTimeModel) { "model not a SpinnerLocalDateTimeModel" }
-    // model = m
-    dateTimeFormatter = DateTimeFormatter.ofPattern(dateFormatPattern)
     val formatter = LocalDateTimeFormatter()
     EventQueue.invokeLater {
       formatter.valueClass = LocalDateTime::class.java
