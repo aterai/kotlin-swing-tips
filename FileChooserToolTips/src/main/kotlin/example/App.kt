@@ -37,8 +37,8 @@ fun makeUI(): Component {
     chooser.actionMap[cmd]?.actionPerformed(actionEvent)
     descendants(chooser)
       .filterIsInstance<JTable>()
-      .first()
-      .setDefaultRenderer(Any::class.java, TooltipTableCellRenderer())
+      .firstOrNull()
+      ?.setDefaultRenderer(Any::class.java, TooltipTableCellRenderer())
     val retValue = chooser.showOpenDialog(log.rootPane)
     if (retValue == JFileChooser.APPROVE_OPTION) {
       log.text = chooser.selectedFile.absolutePath
@@ -72,7 +72,7 @@ private class TooltipListCellRenderer<E> : ListCellRenderer<E> {
     index: Int,
     isSelected: Boolean,
     cellHasFocus: Boolean,
-  ) = renderer
+  ): Component = renderer
     .getListCellRendererComponent(
       list,
       value,

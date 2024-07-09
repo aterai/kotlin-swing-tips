@@ -25,14 +25,12 @@ fun makeUI(): Component {
     act?.actionPerformed(ActionEvent(src, ActionEvent.ACTION_PERFORMED, cmd))
     descendants(chooser)
       .filterIsInstance<JTable>()
-      .first()
-      .also {
-        it.autoResizeMode = JTable.AUTO_RESIZE_LAST_COLUMN
-        val retValue = chooser.showOpenDialog(log.rootPane)
-        if (retValue == JFileChooser.APPROVE_OPTION) {
-          log.text = chooser.selectedFile.absolutePath
-        }
-      }
+      .firstOrNull()
+      ?.autoResizeMode = JTable.AUTO_RESIZE_LAST_COLUMN
+    val retValue = chooser.showOpenDialog(log.rootPane)
+    if (retValue == JFileChooser.APPROVE_OPTION) {
+      log.text = chooser.selectedFile.absolutePath
+    }
   }
 
   val p = JPanel()
