@@ -25,8 +25,9 @@ fun makeUI(): Component {
     //     .ifPresent { append(log, "isEditing: ${it.isEditing()}") }
     descendants(fileChooser0)
       .filterIsInstance<JTable>()
-      .firstOrNull()
-      ?.also { append(log, "isEditing: ${it.isEditing}") }
+      .firstNotNullOf {
+        append(log, "isEditing: ${it.isEditing}")
+      }
 
     val retValue = fileChooser0.showOpenDialog(log.rootPane)
     if (retValue == JFileChooser.APPROVE_OPTION) {

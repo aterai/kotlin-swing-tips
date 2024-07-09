@@ -24,8 +24,7 @@ fun makeUI(): Component {
     val chooser = JFileChooser()
     descendants(chooser)
       .filterIsInstance<JList<*>>()
-      .first()
-      .also { addCellEditorListener(it) }
+      .firstNotNullOf { addCellEditorListener(it) }
     val retValue = chooser.showOpenDialog(log.rootPane)
     if (retValue == JFileChooser.APPROVE_OPTION) {
       log.text = chooser.selectedFile.absolutePath
@@ -40,8 +39,7 @@ fun makeUI(): Component {
     detailsAction?.actionPerformed(ActionEvent(chooser, ActionEvent.ACTION_PERFORMED, cmd))
     descendants(chooser)
       .filterIsInstance<JTable>()
-      .first()
-      .also { addCellEditorFocusListener(it) }
+      .firstNotNullOf { addCellEditorFocusListener(it) }
     val retValue = chooser.showOpenDialog(log.rootPane)
     if (retValue == JFileChooser.APPROVE_OPTION) {
       log.text = chooser.selectedFile.absolutePath
