@@ -4,7 +4,6 @@ import java.awt.*
 import java.awt.datatransfer.DataFlavor
 import java.awt.event.ItemEvent
 import java.io.File
-import java.io.Serializable
 import javax.swing.*
 import javax.swing.filechooser.FileSystemView
 import javax.swing.table.DefaultTableCellRenderer
@@ -155,8 +154,7 @@ private class FileTransferHandler : TransferHandler() {
 
 private open class DefaultFileComparator(
   protected val column: Int,
-) : Comparator<File>,
-  Serializable {
+) : Comparator<File> {
   override fun compare(
     a: File,
     b: File,
