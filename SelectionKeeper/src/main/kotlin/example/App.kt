@@ -4,7 +4,6 @@ import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
-import java.io.Serializable
 import javax.swing.*
 import javax.swing.event.TableModelEvent
 import javax.swing.event.TableModelListener
@@ -368,20 +367,11 @@ private class SortableHeaderRenderer(
     }
 }
 
-// private class LexicalComparator : Comparator<Any>, Serializable {
-//   override fun compare(o1: Any, o2: Any) = o1.toString().compareTo(o2.toString())
-//
-//   companion object {
-//     private const val serialVersionUID = 1L
-//   }
-// }
-
 private class Arrow(
   private val descending: Boolean,
   private val size: Int,
   private val priority: Int,
-) : Icon,
-  Serializable {
+) : Icon {
   override fun paintIcon(
     c: Component?,
     g: Graphics,
@@ -430,28 +420,16 @@ private class Arrow(
   override fun getIconWidth() = size
 
   override fun getIconHeight() = size
-
-  companion object {
-    private const val serialVersionUID = 1L
-  }
 }
 
-private class Directive(
+private data class Directive(
   val column: Int,
   val direction: Int,
-) : Serializable {
-  companion object {
-    private const val serialVersionUID = 1L
-  }
-}
+)
 
-private class TableRow(
+private data class TableRow(
   val modelIndex: Int,
-) : Serializable {
-  companion object {
-    private const val serialVersionUID = 1L
-  }
-}
+)
 
 fun main() {
   EventQueue.invokeLater {
