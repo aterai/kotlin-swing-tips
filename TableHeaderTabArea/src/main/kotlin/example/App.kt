@@ -143,18 +143,12 @@ private class TabButton : JRadioButton(null, null) {
 
   override fun fireStateChanged() {
     val m = getModel()
-    foreground = if (m.isEnabled) {
-      if (m.isPressed && m.isArmed) {
-        pressedTc
-      } else if (m.isSelected) {
-        selectedTc
-      } else if (isRolloverEnabled && m.isRollover) {
-        rolloverTc
-      } else {
-        textColor
-      }
-    } else {
-      Color.GRAY
+    foreground = when {
+      !m.isEnabled -> Color.GRAY
+      m.isPressed && m.isArmed -> pressedTc
+      m.isSelected -> selectedTc
+      isRolloverEnabled && m.isRollover -> rolloverTc
+      else -> textColor
     }
     super.fireStateChanged()
   }
@@ -194,30 +188,28 @@ private class BasicTabViewButtonUI : TabViewButtonUI() {
     g: Graphics,
     c: JComponent,
   ) {
-    if (c !is AbstractButton) {
-      return
-    }
-    g.font = c.font
-    SwingUtilities.calculateInnerArea(c, viewRect)
+    val b = c as? AbstractButton ?: return
+    // g.font = b.font
+    SwingUtilities.calculateInnerArea(b, viewRect)
     iconRect.setBounds(0, 0, 0, 0)
     textRect.setBounds(0, 0, 0, 0)
     val text = SwingUtilities.layoutCompoundLabel(
-      c,
-      c.getFontMetrics(c.font),
-      c.text,
+      b,
+      b.getFontMetrics(b.font),
+      b.text,
       null,
-      c.verticalAlignment,
-      c.horizontalAlignment,
-      c.verticalTextPosition,
-      c.horizontalTextPosition,
+      b.verticalAlignment,
+      b.horizontalAlignment,
+      b.verticalTextPosition,
+      b.horizontalTextPosition,
       viewRect,
       iconRect,
       textRect,
       0,
     )
-    g.color = c.background
-    g.fillRect(0, 0, c.width, c.height)
-    val model = c.model
+    g.color = b.background
+    g.fillRect(0, 0, b.width, b.height)
+    val model = b.model
     g.color = if (model.isSelected || model.isArmed) Color.WHITE else Color(0xDC_DC_DC)
     g.fillRect(
       viewRect.x,
@@ -246,20 +238,14 @@ private class BasicTabViewButtonUI : TabViewButtonUI() {
       g.color = color
       g.drawLine(viewRect.x, viewRect.y + 2, viewRect.x + viewRect.width, viewRect.y + 2)
     }
-    (c.getClientProperty(BasicHTML.propertyKey) as? View)?.paint(g, textRect) ?: also {
+    (b.getClientProperty(BasicHTML.propertyKey) as? View)?.paint(g, textRect) ?: also {
       if (model.isSelected) {
         textRect.y -= 2
         textRect.x -= 1
       }
       textRect.x += 4
-      paintText(g, c, textRect, text)
+      paintText(g, b, textRect, text)
     }
-  }
-
-  companion object {
-    // fun createUI(c: JComponent?): ComponentUI {
-    //   return BasicTabViewButtonUI()
-    // }
   }
 }
 
