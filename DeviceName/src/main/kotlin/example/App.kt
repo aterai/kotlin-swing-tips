@@ -4,14 +4,26 @@ import java.awt.*
 import java.io.File
 import javax.swing.*
 
+private val log = JTextArea()
+private const val DEVICE_NAME = "con.txt"
+
 fun makeUI(): Component {
   val p = JPanel(GridLayout(3, 1, 10, 10))
-  val log = JTextArea()
+  p.add(makeTitledPanel("IOException: before 1.5", makeButton1()))
+  p.add(makeTitledPanel("getCanonicalPath: before 1.5", makeButton2()))
+  p.add(makeTitledPanel("isFile: JDK 1.5+", makeButton3()))
+  return JPanel(BorderLayout(10, 10)).also {
+    it.add(p, BorderLayout.NORTH)
+    it.add(JScrollPane(log))
+    it.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
+    it.preferredSize = Dimension(320, 240)
+  }
+}
 
-  val deviceName = "con.txt"
-  val b1 = JButton("c:/$deviceName")
-  b1.addActionListener {
-    val file = File(deviceName)
+private fun makeButton1(): JButton {
+  val b = JButton("c:/$DEVICE_NAME")
+  b.addActionListener {
+    val file = File(DEVICE_NAME)
     runCatching {
       if (file.createNewFile()) {
         log.append("the named file does not exist and was successfully created.\n")
@@ -21,54 +33,48 @@ fun makeUI(): Component {
     }.onFailure {
       val obj = arrayOf(it.message)
       JOptionPane.showMessageDialog(
-        p.rootPane,
+        b.rootPane,
         obj,
         "Error1",
         JOptionPane.INFORMATION_MESSAGE,
       )
     }
   }
-  val p1 = makeTitledPanel("IOException: before 1.5", b1)
+  return b
+}
 
-  val b2 = JButton("c:/$deviceName:getCanonicalPath")
-  b2.addActionListener {
-    val file = File(deviceName)
+private fun makeButton2(): JButton {
+  val b = JButton("c:/$DEVICE_NAME:getCanonicalPath")
+  b.addActionListener {
+    val file = File(DEVICE_NAME)
     if (!isCanonicalPath(file)) {
       val obj = arrayOf(file.absolutePath + " is not a canonical path.")
       JOptionPane.showMessageDialog(
-        p.rootPane,
+        b.rootPane,
         obj,
         "Error2",
         JOptionPane.INFORMATION_MESSAGE,
       )
     }
   }
-  val p2 = makeTitledPanel("getCanonicalPath: before 1.5", b2)
+  return b
+}
 
-  val b3 = JButton("c:/$deviceName:isFile")
-  b3.addActionListener {
-    val file = File(deviceName)
+private fun makeButton3(): JButton {
+  val b = JButton("c:/$DEVICE_NAME:isFile")
+  b.addActionListener {
+    val file = File(DEVICE_NAME)
     if (!file.isFile) {
       val obj = arrayOf(file.absolutePath + " is not a file.")
       JOptionPane.showMessageDialog(
-        p.rootPane,
+        b.rootPane,
         obj,
         "Error3",
         JOptionPane.INFORMATION_MESSAGE,
       )
     }
   }
-  val p3 = makeTitledPanel("isFile: JDK 1.5+", b3)
-
-  p.add(p1)
-  p.add(p2)
-  p.add(p3)
-  return JPanel(BorderLayout(10, 10)).also {
-    it.add(p, BorderLayout.NORTH)
-    it.add(JScrollPane(log))
-    it.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
-    it.preferredSize = Dimension(320, 240)
-  }
+  return b
 }
 
 // Before 1.5: file.canonicalPath == null
