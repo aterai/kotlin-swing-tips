@@ -174,8 +174,7 @@ private class DnDTabbedPane : JTabbedPane() {
     return (0..<tabCount)
       .map {
         if (horiz) getHorizontalIndex(it, tabPt) else getVerticalIndex(it, tabPt)
-      }
-      .firstOrNull { it >= 0 }
+      }.firstOrNull { it >= 0 }
       ?: -1
   }
 
