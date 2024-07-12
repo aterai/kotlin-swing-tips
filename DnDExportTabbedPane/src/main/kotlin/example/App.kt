@@ -10,6 +10,7 @@ import java.awt.dnd.DropTargetDropEvent
 import java.awt.dnd.DropTargetEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.awt.geom.Rectangle2D
 import java.awt.image.BufferedImage
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
@@ -125,22 +126,6 @@ class DnDTabbedPane : JTabbedPane() {
     addPropertyChangeListener(h)
   }
 
-  fun getDropLineRect(): Rectangle {
-    val index = dropLocation?.index ?: -1
-    if (index < 0) {
-      RECT_LINE.setBounds(0, 0, 0, 0)
-      return RECT_LINE
-    }
-    val a = minOf(index, 1)
-    val r = getBoundsAt(a * (index - 1))
-    if (isTopBottomTabPlacement(getTabPlacement())) {
-      RECT_LINE.setBounds(r.x - LINE_SIZE / 2 + r.width * a, r.y, LINE_SIZE, r.height)
-    } else {
-      RECT_LINE.setBounds(r.x, r.y - LINE_SIZE / 2 + r.height * a, r.width, LINE_SIZE)
-    }
-    return RECT_LINE
-  }
-
   private fun clickArrowButton(actionKey: String) {
     var forwardButton: JButton? = null
     var backwardButton: JButton? = null
@@ -183,13 +168,47 @@ class DnDTabbedPane : JTabbedPane() {
   }
 
   fun tabDropLocationForPoint(p: Point): DropLocation {
-    for (i in 0..<tabCount) {
-      if (getBoundsAt(i).contains(p)) {
-        return DropLocation(p, i)
-      }
-    }
-    val idx = if (tabAreaBounds.contains(p)) tabCount else -1
+    val horiz = isTopBottomTabPlacement(getTabPlacement())
+    val idx = (0..<tabCount)
+      .map {
+        if (horiz) getHorizontalIndex(it, p) else getVerticalIndex(it, p)
+      }.firstOrNull { it >= 0 }
+      ?: -1
     return DropLocation(p, idx)
+  }
+
+  private fun getHorizontalIndex(i: Int, pt: Point): Int {
+    val r = getBoundsAt(i)
+    val contains = r.contains(pt)
+    val lastTab = i == tabCount - 1
+    var idx = -1
+    val cr: Rectangle2D = Rectangle2D.Double(r.centerX, r.getY(), .1, r.getHeight())
+    val iv = cr.outcode(pt)
+    if (cr.contains(pt) || contains && iv and Rectangle2D.OUT_LEFT != 0) {
+      // First half.
+      idx = i
+    } else if ((contains || lastTab) && iv and Rectangle2D.OUT_RIGHT != 0) {
+      // Second half.
+      idx = i + 1
+    }
+    return idx
+  }
+
+  private fun getVerticalIndex(i: Int, pt: Point): Int {
+    val r = getBoundsAt(i)
+    val contains = r.contains(pt)
+    val lastTab = i == tabCount - 1
+    var idx = -1
+    val cr = Rectangle2D.Double(r.getX(), r.centerY, r.getWidth(), .1)
+    val iv = cr.outcode(pt)
+    if (cr.contains(pt) || contains && iv and Rectangle2D.OUT_TOP != 0) {
+      // First half.
+      idx = i
+    } else if ((contains || lastTab) && iv and Rectangle2D.OUT_BOTTOM != 0) {
+      // Second half.
+      idx = i + 1
+    }
+    return idx
   }
 
   fun updateTabDropLocation(
@@ -290,7 +309,7 @@ class DnDTabbedPane : JTabbedPane() {
         val isTabRunsRotated = isNotMetal && isWrapTabLayout
         dragTabIndex = if (isTabRunsRotated && idx != selIdx) selIdx else idx
         th.exportAsDrag(src, e, TransferHandler.MOVE)
-        RECT_LINE.setBounds(0, 0, 0, 0)
+        // RECT_LINE.setBounds(0, 0, 0, 0)
         src.rootPane.glassPane.isVisible = true
         src.updateTabDropLocation(DropLocation(tabPt, -1), true)
         startPt = null
@@ -303,10 +322,8 @@ class DnDTabbedPane : JTabbedPane() {
   companion object {
     private const val SCROLL_SIZE = 20 // Test
     private const val BUTTON_SIZE = 30 // XXX 30 is magic number of scroll button size
-    private const val LINE_SIZE = 3
     private val RECT_BACKWARD = Rectangle()
     private val RECT_FORWARD = Rectangle()
-    private val RECT_LINE = Rectangle()
   }
 }
 
@@ -472,7 +489,7 @@ private class GhostGlassPane(
   }
 
   override fun paintComponent(g: Graphics) {
-    tabbedPane.getDropLineRect().also { rect ->
+    getDropLineRect().also { rect ->
       val g2 = g.create() as? Graphics2D ?: return
       val r = SwingUtilities.convertRectangle(tabbedPane, rect, this)
       g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f)
@@ -480,6 +497,28 @@ private class GhostGlassPane(
       g2.fill(r)
       g2.dispose()
     }
+  }
+
+  fun getDropLineRect(): Rectangle {
+    val index = tabbedPane.dropLocation?.index ?: -1
+    if (index < 0) {
+      RECT_LINE.setBounds(0, 0, 0, 0)
+    } else {
+      val a = minOf(index, 1)
+      val r = tabbedPane.getBoundsAt(a * (index - 1))
+      val tp = tabbedPane.tabPlacement
+      if (tp == JTabbedPane.TOP || tp == JTabbedPane.BOTTOM) {
+        RECT_LINE.setBounds(r.x - LINE_SIZE / 2 + r.width * a, r.y, LINE_SIZE, r.height)
+      } else {
+        RECT_LINE.setBounds(r.x, r.y - LINE_SIZE / 2 + r.height * a, r.width, LINE_SIZE)
+      }
+    }
+    return RECT_LINE
+  }
+
+  companion object {
+    private const val LINE_SIZE = 3
+    private val RECT_LINE = Rectangle()
   }
 }
 

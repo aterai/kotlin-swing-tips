@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.awt.geom.Rectangle2D
 import java.awt.image.BufferedImage
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
@@ -185,13 +186,47 @@ class DnDTabbedPane : JTabbedPane() {
   }
 
   fun tabDropLocationForPoint(p: Point): DropLocation {
-    for (i in 0..<tabCount) {
-      if (getBoundsAt(i).contains(p)) {
-        return DropLocation(p, i)
-      }
-    }
-    val idx = if (tabAreaBounds.contains(p)) tabCount else -1
+    val horiz = isTopBottomTabPlacement(getTabPlacement())
+    val idx = (0..<tabCount)
+      .map {
+        if (horiz) getHorizontalIndex(it, p) else getVerticalIndex(it, p)
+      }.firstOrNull { it >= 0 }
+      ?: -1
     return DropLocation(p, idx)
+  }
+
+  private fun getHorizontalIndex(i: Int, pt: Point): Int {
+    val r = getBoundsAt(i)
+    val contains = r.contains(pt)
+    val lastTab = i == tabCount - 1
+    var idx = -1
+    val cr: Rectangle2D = Rectangle2D.Double(r.centerX, r.getY(), .1, r.getHeight())
+    val iv = cr.outcode(pt)
+    if (cr.contains(pt) || contains && iv and Rectangle2D.OUT_LEFT != 0) {
+      // First half.
+      idx = i
+    } else if ((contains || lastTab) && iv and Rectangle2D.OUT_RIGHT != 0) {
+      // Second half.
+      idx = i + 1
+    }
+    return idx
+  }
+
+  private fun getVerticalIndex(i: Int, pt: Point): Int {
+    val r = getBoundsAt(i)
+    val contains = r.contains(pt)
+    val lastTab = i == tabCount - 1
+    var idx = -1
+    val cr = Rectangle2D.Double(r.getX(), r.centerY, r.getWidth(), .1)
+    val iv = cr.outcode(pt)
+    if (cr.contains(pt) || contains && iv and Rectangle2D.OUT_TOP != 0) {
+      // First half.
+      idx = i
+    } else if ((contains || lastTab) && iv and Rectangle2D.OUT_BOTTOM != 0) {
+      // Second half.
+      idx = i + 1
+    }
+    return idx
   }
 
   fun updateTabDropLocation(
@@ -298,7 +333,6 @@ class DnDTabbedPane : JTabbedPane() {
   companion object {
     private const val SCROLL_SIZE = 20 // Test
     private const val BUTTON_SIZE = 30 // XXX 30 is magic number of scroll button size
-
     private val RECT_BACKWARD = Rectangle()
     private val RECT_FORWARD = Rectangle()
   }
