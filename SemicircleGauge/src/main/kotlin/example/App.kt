@@ -163,7 +163,7 @@ private class SolidGaugeUI(
     pallet: IntArray,
     pos: Double,
   ): Color {
-    require(!(pos < 0.0 || pos > 1.0)) { "Parameter outside of expected range" }
+    require(pos in 0.0..1.0) { "Parameter outside of expected range" }
     val i = (pallet.size * pos).toInt()
     val max = pallet.size - 1
     val index = i.coerceAtLeast(0).coerceAtMost(max)
