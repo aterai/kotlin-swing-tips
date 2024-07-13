@@ -121,21 +121,38 @@ private class TableNextMatchKeyHandler : KeyAdapter() {
       bias: Bias,
     ): Int {
       val max = table.rowCount
-      require(!(startingRow < 0 || startingRow >= max)) { "(0 <= startingRow < max) is false" }
+      require(startingRow in 0..<max) { "(0 <= startingRow < max) is false" }
       val casePrefix = prefix.uppercase(Locale.ENGLISH)
       // start search from the next/previous element from the
       // selected element
       val increment = if (bias == Bias.Forward) 1 else -1
-      var row = startingRow
-      do {
-        val value = table.getValueAt(row, TARGET_COLUMN)
-        val text = value.toString()
-        if (text.uppercase(Locale.ENGLISH).startsWith(casePrefix)) {
-          return row
-        }
-        row = (row + increment + max) % max
-      } while (row != startingRow)
-      return -1
+      return (0..<max)
+        .map {
+          (startingRow + it + increment + max) % max
+        }.firstOrNull { row ->
+          val text = table.getValueAt(row, TARGET_COLUMN).toString()
+          text.uppercase().startsWith(casePrefix)
+        } ?: -1
+
+      // return IntStream.iterate(startingRow) { row -> (row + increment + max) % max }
+      //   .limit(max.toLong())
+      //   .filter { row ->
+      //     val text = table.getValueAt(row, TARGET_COLUMN).toString()
+      //     text.uppercase().startsWith(casePrefix)
+      //   }
+      //   .findFirst()
+      //   .orElse(-1)
+
+      // var row = startingRow
+      // do {
+      //   val value = table.getValueAt(row, TARGET_COLUMN)
+      //   val text = value.toString()
+      //   if (text.uppercase(Locale.ENGLISH).startsWith(casePrefix)) {
+      //     return row
+      //   }
+      //   row = (row + increment + max) % max
+      // } while (row != startingRow)
+      // return -1
     }
   }
 }
