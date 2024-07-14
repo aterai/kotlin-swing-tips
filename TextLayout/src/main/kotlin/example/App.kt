@@ -69,10 +69,8 @@ private class GlyphVectorPanel : JComponent() {
     val leading = baseline + lm.descent + lm.leading
     g2.draw(Line2D.Float(0f, leading, w, leading))
     g2.paint = Color.CYAN
-    val xh = baseline - gv
-      .getGlyphMetrics(23)
-      .bounds2D.height
-      .toFloat()
+    val ht = gv.getGlyphMetrics(23).bounds2D.height
+    val xh = baseline - ht.toFloat()
     g2.draw(Line2D.Float(0f, xh, w, xh))
     g2.paint = Color.BLACK
     g2.drawGlyphVector(gv, 0f, baseline)

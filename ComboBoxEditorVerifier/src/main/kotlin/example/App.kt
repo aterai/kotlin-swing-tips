@@ -124,10 +124,8 @@ private class ValidationLayerUI<V : JTextComponent> : LayerUI<V>() {
 
 private class LengthInputVerifier : InputVerifier() {
   override fun verify(c: JComponent) = (c as? JComboBox<*>)?.let {
-    val iv = it.editor.item
-      ?.toString()
-      ?.length ?: 0
-    MAX_LEN - iv >= 0
+    val str = it.editor.item?.toString() ?: ""
+    MAX_LEN - str.length >= 0
   } ?: false
 
   companion object {

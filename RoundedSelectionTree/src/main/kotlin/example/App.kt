@@ -40,9 +40,8 @@ private class RoundedSelectionTree : JTree() {
       val area = Area()
       sr
         .map { getRowBounds(it) }
-        .map {
-          Rectangle(innerArea.x, it.y, innerArea.width, it.height)
-        }.forEach { area.add(Area(it)) }
+        .map { Rectangle(innerArea.x, it.y, innerArea.width, it.height) }
+        .forEach { area.add(Area(it)) }
       val arc = 10
       for (a in singularization(area)) {
         val r = a.bounds
