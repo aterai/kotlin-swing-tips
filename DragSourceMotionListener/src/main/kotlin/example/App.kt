@@ -12,7 +12,7 @@ import java.io.IOException
 import javax.swing.*
 
 fun makeUI() {
-  val f1 = JFrame("@title@")
+  val f1 = JFrame()
   val f2 = JFrame()
   f1.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
   f2.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
@@ -147,22 +147,24 @@ private class LabelTransferable(
     ss = txt?.let { StringSelection(it.trim()) }
   }
 
-  override fun getTransferDataFlavors() = mutableListOf<DataFlavor>()
-    .also {
-      if (ss != null) {
-        it.addAll(ss.transferDataFlavors)
-      }
-      it.add(localObjectFlavor)
-    }.toTypedArray()
+  override fun getTransferDataFlavors(): Array<DataFlavor> {
+    val list = mutableListOf<DataFlavor>()
+    if (ss != null) {
+      list.addAll(ss.transferDataFlavors)
+    }
+    list.add(localObjectFlavor)
+    return list.toTypedArray()
+  }
 
   override fun isDataFlavorSupported(f: DataFlavor) = transferDataFlavors.contains(f)
 
   @Throws(UnsupportedFlavorException::class, IOException::class)
-  override fun getTransferData(flavor: DataFlavor) = if (flavor.equals(localObjectFlavor)) {
-    panel
-  } else {
-    ss?.getTransferData(flavor)
-  }
+  override fun getTransferData(flavor: DataFlavor): Any =
+    when {
+      localObjectFlavor.equals(flavor) && panel != null -> panel
+      ss != null -> ss.getTransferData(flavor)
+      else -> throw UnsupportedFlavorException(flavor)
+    }
 }
 
 fun main() {
