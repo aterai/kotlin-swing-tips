@@ -248,9 +248,8 @@ class DnDTabbedPane : JTabbedPane() {
     override fun mouseDragged(e: MouseEvent) {
       val tabPt = e.point // e.getDragOrigin()
       (e.component as? DnDTabbedPane)
-        ?.takeIf {
-          startPt != null && tabPt.distance(startPt) > dragThreshold
-        }?.also {
+        ?.takeIf { startPt != null && tabPt.distance(startPt) > dragThreshold }
+        ?.also {
           val th = it.transferHandler
           val idx = it.indexAtLocation(tabPt.x, tabPt.y)
           val selIdx = it.selectedIndex

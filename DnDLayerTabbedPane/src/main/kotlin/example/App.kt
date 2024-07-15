@@ -188,9 +188,8 @@ class DnDTabbedPane : JTabbedPane() {
   fun tabDropLocationForPoint(p: Point): DropLocation {
     val horiz = isTopBottomTabPlacement(getTabPlacement())
     val idx = (0..<tabCount)
-      .map {
-        if (horiz) getHorizontalIndex(it, p) else getVerticalIndex(it, p)
-      }.firstOrNull { it >= 0 }
+      .map { if (horiz) getHorizontalIndex(it, p) else getVerticalIndex(it, p) }
+      .firstOrNull { it >= 0 }
       ?: -1
     return DropLocation(p, idx)
   }
@@ -314,9 +313,8 @@ class DnDTabbedPane : JTabbedPane() {
     override fun mouseDragged(e: MouseEvent) {
       val tabPt = e.point // e.getDragOrigin()
       (e.component as? DnDTabbedPane)
-        ?.takeIf {
-          startPt != null && tabPt.distance(startPt) > dragThreshold
-        }?.also {
+        ?.takeIf { startPt != null && tabPt.distance(startPt) > dragThreshold }
+        ?.also {
           val th = it.transferHandler
           val idx = it.indexAtLocation(tabPt.x, tabPt.y)
           val selIdx = it.selectedIndex

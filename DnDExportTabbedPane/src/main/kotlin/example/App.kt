@@ -170,9 +170,8 @@ class DnDTabbedPane : JTabbedPane() {
   fun tabDropLocationForPoint(p: Point): DropLocation {
     val horiz = isTopBottomTabPlacement(getTabPlacement())
     val idx = (0..<tabCount)
-      .map {
-        if (horiz) getHorizontalIndex(it, p) else getVerticalIndex(it, p)
-      }.firstOrNull { it >= 0 }
+      .map { if (horiz) getHorizontalIndex(it, p) else getVerticalIndex(it, p) }
+      .firstOrNull { it >= 0 }
       ?: -1
     return DropLocation(p, idx)
   }
