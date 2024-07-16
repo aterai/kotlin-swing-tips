@@ -118,12 +118,12 @@ private class HeaderRenderer : TableCellRenderer {
 
 private class HeaderCheckBoxHandler(
   private val table: JTable,
-  private val targetColumnIndex: Int,
+  private val targetColumn: Int,
 ) : MouseAdapter(),
   TableModelListener {
   override fun tableChanged(e: TableModelEvent) {
-    if (e.type == TableModelEvent.UPDATE && e.column == targetColumnIndex) {
-      val vci = table.convertColumnIndexToView(targetColumnIndex)
+    if (e.type == TableModelEvent.UPDATE && e.column == targetColumn) {
+      val vci = table.convertColumnIndexToView(targetColumn)
       val column = table.columnModel.getColumn(vci)
       val status = column.headerValue
       val m = table.model
@@ -139,10 +139,8 @@ private class HeaderCheckBoxHandler(
     column: TableColumn,
     status: Any,
   ) = if (Status.INDETERMINATE == status) {
-    val l = m.dataVector
-      .mapNotNull {
-        (it as? List<*>)?.get(targetColumnIndex) as? Boolean
-      }.distinct()
+    val dv = m.dataVector
+    val l = dv.mapNotNull { (it as? List<*>)?.get(targetColumn) as? Boolean }.distinct()
     val isOnlyOneSelected = l.size == 1
     if (isOnlyOneSelected) {
       // column.setHeaderValue(if (l.get(0)) Status.SELECTED else Status.DESELECTED)
@@ -161,7 +159,7 @@ private class HeaderCheckBoxHandler(
     val m = tbl.model
     val vci = tbl.columnAtPoint(e.point)
     val mci = tbl.convertColumnIndexToModel(vci)
-    if (mci == targetColumnIndex && m.rowCount > 0) {
+    if (mci == targetColumn && m.rowCount > 0) {
       val columnModel = tbl.columnModel
       val column = columnModel.getColumn(vci)
       val b = Status.DESELECTED === column.headerValue

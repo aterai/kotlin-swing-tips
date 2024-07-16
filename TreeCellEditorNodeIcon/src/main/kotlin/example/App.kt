@@ -12,9 +12,9 @@ fun makeUI(): Component {
     override fun updateUI() {
       setCellRenderer(null)
       super.updateUI()
-      val r = DefaultTreeCellRenderer()
+      val renderer = DefaultTreeCellRenderer()
       setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-        r
+        renderer
           .getTreeCellRendererComponent(
             tree,
             value,

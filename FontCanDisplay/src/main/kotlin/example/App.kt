@@ -23,17 +23,8 @@ fun makeUI(): Component {
   val table = JTable(model)
   val fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().allFonts
   fonts
-    .map {
-      val txt = String(Character.toChars(code))
-      val frc = label.getFontMetrics(it).fontRenderContext
-      arrayOf(
-        it.family,
-        it.name,
-        it.psName,
-        it.canDisplay(code),
-        it.createGlyphVector(frc, txt).visualBounds.isEmpty,
-      )
-    }.forEach { model.addRow(it) }
+    .map { makeRow(it, code, label.getFontMetrics(it)) }
+    .forEach { model.addRow(it) }
   table.selectionModel.addListSelectionListener { e ->
     if (!e.valueIsAdjusting && table.selectedRowCount == 1) {
       label.font = fonts[table.selectedRow].deriveFont(24f)
@@ -44,6 +35,17 @@ fun makeUI(): Component {
     it.add(JScrollPane(table))
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+fun makeRow(font: Font, code: Int, frc: FontMetrics): Array<Any> {
+  val txt = String(Character.toChars(code))
+  return arrayOf(
+    font.family,
+    font.name,
+    font.psName,
+    font.canDisplay(code),
+    font.createGlyphVector(frc.fontRenderContext, txt).visualBounds.isEmpty,
+  )
 }
 
 fun main() {

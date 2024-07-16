@@ -247,9 +247,8 @@ private class ColumnGroup(
     } else {
       list
         .filterIsInstance<ColumnGroup>()
-        .map {
-          it.getColumnGroupList(column, groups)
-        }.firstOrNull { it.isNotEmpty() }
+        .map { it.getColumnGroupList(column, groups) }
+        .firstOrNull { it.isNotEmpty() }
         .orEmpty()
     }
   }

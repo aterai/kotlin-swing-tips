@@ -190,9 +190,9 @@ private class FileGroupComparator(
   ): Int {
     val key = table.rowSorter.sortKeys.firstOrNull()
     val flag = key
-      ?.takeIf {
-        it.column == column && it.sortOrder == SortOrder.DESCENDING
-      }?.let { -1 } ?: 1
+      ?.takeIf { it.column == column && it.sortOrder == SortOrder.DESCENDING }
+      ?.let { -1 }
+      ?: 1
     return when {
       a.isDirectory && !b.isDirectory -> -1 * flag
       !a.isDirectory && b.isDirectory -> 1 * flag

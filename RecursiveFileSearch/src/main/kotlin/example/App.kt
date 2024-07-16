@@ -77,12 +77,9 @@ private fun initOpenButton() {
       JFileChooser.APPROVE_OPTION ->
         fileChooser.selectedFile
           ?.takeIf { it.isDirectory }
-          ?.let {
-            val path = it.absolutePath
-            addItem(dirCombo, path, 4)
-            statusPanel.repaint()
-            path
-          } ?: "Please select directory."
+          ?.absolutePath
+          ?.also { addItem(dirCombo, it, 4) }
+          ?: "Please select directory."
 
       JFileChooser.CANCEL_OPTION -> "JFileChooser cancelled."
 
@@ -172,7 +169,7 @@ private fun addItem(
   max: Int = 4,
 ) {
   val model = dirCombo.model as? DefaultComboBoxModel<String>
-  if (str == null || str.isEmpty() || model == null) {
+  if (str.isNullOrEmpty() || model == null) {
     return
   }
   dirCombo.isVisible = false
@@ -183,6 +180,7 @@ private fun addItem(
   }
   dirCombo.selectedIndex = 0
   dirCombo.isVisible = true
+  // statusPanel.repaint()
 }
 
 private open class RecursiveFileSearchTask(

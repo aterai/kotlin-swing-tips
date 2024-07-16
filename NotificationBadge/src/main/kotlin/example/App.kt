@@ -28,9 +28,8 @@ fun makeUI(): Component {
 
   val ui2 = BadgeIconLayerUI()
   listOf(informationIcon, errorIcon, questionIcon, warningIcon)
-    .map {
-      BadgeLabel(it, BadgePosition.SOUTH_EAST, 128)
-    }.forEach {
+    .map { BadgeLabel(it, BadgePosition.SOUTH_EAST, 128) }
+    .forEach {
       it.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
       p.add(JLayer(it, ui2))
     }

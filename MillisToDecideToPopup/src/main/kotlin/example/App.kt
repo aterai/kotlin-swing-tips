@@ -115,9 +115,8 @@ private class ProgressListener(
     if ("progress" == e.propertyName) {
       monitor.setProgress(e.newValue as? Int ?: 0)
       (e.source as? SwingWorker<*, *>)
-        ?.takeIf {
-          it.isDone || monitor.isCanceled
-        }?.cancel(true)
+        ?.takeIf { it.isDone || monitor.isCanceled }
+        ?.cancel(true)
     }
   }
 }
