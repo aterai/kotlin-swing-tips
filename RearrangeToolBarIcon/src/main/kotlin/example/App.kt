@@ -45,10 +45,10 @@ private fun createToolBarButton(name: String): Component {
 
 private class DragHandler : MouseAdapter() {
   private val window = JWindow()
-  private val gap = Box.createHorizontalStrut(24)
   private val startPt = Point()
   private val gestureMotionThreshold = DragSource.getDragThreshold()
   private var draggingComponent: Component? = null
+  private var gap: Component? = null
   private var index = -1
 
   override fun mousePressed(e: MouseEvent) {
@@ -69,6 +69,7 @@ private class DragHandler : MouseAdapter() {
       return
     }
     draggingComponent = c
+    gap = Box.createHorizontalStrut(c.width)
     swapComponent(parent, c, gap, index)
     window.add(c)
     window.pack()
@@ -92,10 +93,11 @@ private class DragHandler : MouseAdapter() {
     val p = Point(pt.x - d.width / 2, pt.y - d.height / 2)
     SwingUtilities.convertPointToScreen(p, parent)
     window.location = p
-    if (!searchAndSwap(parent, gap, pt)) {
-      parent.remove(gap)
-      parent.revalidate()
-    }
+    val idx = (0..<parent.componentCount)
+      .map { getTargetIndex(parent, it, pt) }
+      .firstOrNull { it >= 0 }
+      ?: -1
+    swapComponent(parent, gap, gap, idx)
   }
 
   override fun mouseReleased(e: MouseEvent) {
@@ -105,50 +107,47 @@ private class DragHandler : MouseAdapter() {
     }
     window.isVisible = false
     val pt = e.point
+    val max = parent.componentCount
     val cmp = draggingComponent
     draggingComponent = null
 
-    if (!searchAndSwap(parent, cmp, pt)) {
-      val idx = if (parent.parent.bounds.contains(pt)) parent.componentCount else index
-      swapComponent(parent, gap, cmp, idx)
+    val idx = (0..<max)
+      .map { getTargetIndex(parent, it, pt) }
+      .firstOrNull { it >= 0 }
+      ?: if (parent.parent.bounds.contains(pt)) max else index
+    swapComponent(parent, gap, cmp, idx)
+  }
+
+  private fun getTargetIndex(
+    parent: Container,
+    i: Int,
+    pt: Point,
+  ): Int {
+    val c = parent.getComponent(i)
+    val r = c.bounds
+    val wd2 = r.width / 2
+    PREV_AREA.setBounds(r.x, r.y, wd2, r.height)
+    NEXT_AREA.setBounds(r.x + wd2, r.y, wd2, r.height)
+    return when {
+      PREV_AREA.contains(pt) -> if (i > 1) i else 0
+      NEXT_AREA.contains(pt) -> i
+      else -> -1
     }
   }
 
-  private fun searchAndSwap(
-    parent: Container,
-    cmp: Component?,
-    pt: Point,
-  ): Boolean {
-    var find = false
-    for ((i, c) in parent.components.withIndex()) {
-      val r = c.bounds
-      val wd2 = r.width / 2
-      PREV_AREA.setBounds(r.x, r.y, wd2, r.height)
-      NEXT_AREA.setBounds(r.x + wd2, r.y, wd2, r.height)
-      if (PREV_AREA.contains(pt)) {
-        swapComponent(parent, gap, cmp, if (i > 1) i else 0)
-        return true
-      } else if (NEXT_AREA.contains(pt)) {
-        swapComponent(parent, gap, cmp, i)
-        find = true
-        break
-      }
-    }
-    return find
-  }
 
   private fun swapComponent(
     parent: Container,
-    remove: Component,
+    remove: Component?,
     add: Component?,
     idx: Int,
   ) {
-    if (add == null) {
-      return
-    }
     parent.remove(remove)
-    parent.add(add, idx)
+    if (idx >= 0 && add != null) {
+      parent.add(add, idx)
+    }
     parent.revalidate()
+    parent.repaint()
   }
 
   companion object {
