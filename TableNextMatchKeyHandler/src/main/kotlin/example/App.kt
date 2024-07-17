@@ -127,12 +127,9 @@ private class TableNextMatchKeyHandler : KeyAdapter() {
       // selected element
       val increment = if (bias == Bias.Forward) 1 else -1
       return (0..<max)
-        .map {
-          (startingRow + it + increment + max) % max
-        }.firstOrNull { row ->
-          val text = table.getValueAt(row, TARGET_COLUMN).toString()
-          text.uppercase().startsWith(casePrefix)
-        } ?: -1
+        .map { (startingRow + it + increment + max) % max }
+        .firstOrNull { startsWith(table, it, casePrefix) }
+        ?: -1
 
       // return IntStream.iterate(startingRow) { row -> (row + increment + max) % max }
       //   .limit(max.toLong())
@@ -153,6 +150,11 @@ private class TableNextMatchKeyHandler : KeyAdapter() {
       //   row = (row + increment + max) % max
       // } while (row != startingRow)
       // return -1
+    }
+
+    private fun startsWith(table: JTable, row: Int, casePrefix: String): Boolean {
+      val text = table.getValueAt(row, TARGET_COLUMN).toString()
+      return text.uppercase().startsWith(casePrefix)
     }
   }
 }
