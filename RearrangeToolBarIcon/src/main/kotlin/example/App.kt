@@ -44,16 +44,16 @@ private fun createToolBarButton(name: String): Component {
 }
 
 private class DragHandler : MouseAdapter() {
+  private val gestureMotionThreshold = DragSource.getDragThreshold()
   private val window = JWindow()
   private val startPt = Point()
-  private val gestureMotionThreshold = DragSource.getDragThreshold()
   private var draggingComponent: Component? = null
   private var gap: Component? = null
   private var index = -1
 
   override fun mousePressed(e: MouseEvent) {
-    val parent = e.component as? Container ?: return
-    if (parent.componentCount > 0) {
+    val c = e.component as? Container ?: return
+    if (c.componentCount > 0) {
       startPt.location = e.point
       window.background = Color(0x0, true)
     }
@@ -126,33 +126,32 @@ private class DragHandler : MouseAdapter() {
     val c = parent.getComponent(i)
     val r = c.bounds
     val wd2 = r.width / 2
-    PREV_AREA.setBounds(r.x, r.y, wd2, r.height)
-    NEXT_AREA.setBounds(r.x + wd2, r.y, wd2, r.height)
+    PREV.setBounds(r.x, r.y, wd2, r.height)
+    NEXT.setBounds(r.x + wd2, r.y, wd2, r.height)
     return when {
-      PREV_AREA.contains(pt) -> if (i > 1) i else 0
-      NEXT_AREA.contains(pt) -> i
+      PREV.contains(pt) -> if (i > 1) i else 0
+      NEXT.contains(pt) -> i
       else -> -1
     }
   }
 
-
   private fun swapComponent(
     parent: Container,
     remove: Component?,
-    add: Component?,
+    insert: Component?,
     idx: Int,
   ) {
     parent.remove(remove)
-    if (idx >= 0 && add != null) {
-      parent.add(add, idx)
+    if (idx >= 0 && insert != null) {
+      parent.add(insert, idx)
     }
     parent.revalidate()
     parent.repaint()
   }
 
   companion object {
-    private val PREV_AREA = Rectangle()
-    private val NEXT_AREA = Rectangle()
+    private val PREV = Rectangle()
+    private val NEXT = Rectangle()
   }
 }
 

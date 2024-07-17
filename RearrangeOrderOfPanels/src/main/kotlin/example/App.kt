@@ -5,7 +5,6 @@ import java.awt.dnd.DragSource
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.*
-import kotlin.math.roundToInt
 
 fun makeUI(): Component {
   val box = Box.createVerticalBox()
@@ -51,9 +50,9 @@ private class RearrangingHandler : MouseAdapter() {
   private val window = JWindow()
   private val startPt = Point()
   private val dragOffset = Point()
-  private var index = -1
   private var draggingComponent: Component? = null
   private var gap: Component? = null
+  private var index = -1
 
   override fun mousePressed(e: MouseEvent) {
     val c = e.component as? Container ?: return
@@ -76,7 +75,7 @@ private class RearrangingHandler : MouseAdapter() {
     val dp = c.location
     dragOffset.setLocation(pt.x - dp.x, pt.y - dp.y)
     gap = Box.createRigidArea(d)
-    swapComponentLocation(parent, c, gap, index)
+    swapComponent(parent, c, gap, index)
     window.background = Color(0x0, true)
     window.add(draggingComponent)
     // window.setSize(d)
@@ -96,42 +95,23 @@ private class RearrangingHandler : MouseAdapter() {
     }
   }
 
-  private fun getTargetIndex(
-    r: Rectangle,
-    pt: Point,
-    i: Int,
-  ): Int {
-    val ht2 = (r.height / 2f).roundToInt()
-    PREV_AREA.setBounds(r.x, r.y, r.width, ht2)
-    NEXT_AREA.setBounds(r.x, r.y + ht2, r.width, ht2)
-    return when {
-      PREV_AREA.contains(pt) ->
-        i
-          .also {
-            prevRect.bounds = PREV_AREA
-          }.takeIf { it > 1 } ?: 0
-
-      NEXT_AREA.contains(pt) -> i.also {
-        prevRect.bounds = NEXT_AREA
-      }
-
-      else -> -1
-    }
-  }
-
   override fun mouseDragged(e: MouseEvent) {
     val pt = e.point
-    (e.component as? Container)?.also { parent ->
+    (e.component as? Container)?.also { p ->
       if (draggingComponent == null) {
         if (startPt.distance(pt) > gestureMotionThreshold) {
-          startDragging(parent, pt)
+          startDragging(p, pt)
         }
         return
       }
-      updateWindowLocation(pt, parent)
-      if (!prevRect.contains(pt) && !searchAndSwap(parent, gap, pt)) {
-        parent.remove(gap)
-        parent.revalidate()
+      updateWindowLocation(pt, p)
+      if (!prevRect.contains(pt)) {
+        val idx = (0..<p.componentCount)
+          .filter { i -> p.getComponent(i).let { it !== gap || it.bounds.contains(pt) } }
+          .map { getTargetIndex(p, it, pt) }
+          .firstOrNull { it >= 0 }
+          ?: -1
+        swapComponent(p, gap, gap, idx)
       }
     }
   }
@@ -140,57 +120,53 @@ private class RearrangingHandler : MouseAdapter() {
     dragOffset.setLocation(0, 0)
     prevRect.setBounds(0, 0, 0, 0)
     window.isVisible = false
-
-    val pt = e.point
     (e.component as? Container)?.also { parent ->
+      val pt = e.point
+      val max = parent.componentCount
       val c = draggingComponent
       draggingComponent = null
-      if (!searchAndSwap(parent, c, pt)) {
-        val i = if (parent.parent.bounds.contains(pt)) parent.componentCount else index
-        swapComponentLocation(parent, gap, c, i)
-      }
+      val idx = (0..<max)
+        .map { getTargetIndex(parent, it, pt) }
+        .firstOrNull { it >= 0 }
+        ?: if (parent.parent.bounds.contains(pt)) max else index
+      swapComponent(parent, gap, c, idx)
     }
   }
 
-  private fun searchAndSwap(
+  private fun getTargetIndex(
     parent: Container,
-    cmp: Component?,
+    i: Int,
     pt: Point,
-  ): Boolean {
-    var find = false
-    for ((i, c) in parent.components.withIndex()) {
-      val r = c.bounds
-      if (c == gap && r.contains(pt)) {
-        swapComponentLocation(parent, gap, cmp, i)
-        return true
-      }
-      val tgt = getTargetIndex(r, pt, i)
-      if (tgt >= 0) {
-        swapComponentLocation(parent, gap, cmp, tgt)
-        find = true
-        break
-      }
+  ): Int {
+    val c = parent.getComponent(i)
+    val r = c.bounds
+    val ht2 = r.height / 2
+    PREV.setBounds(r.x, r.y, r.width, ht2)
+    NEXT.setBounds(r.x, r.y + ht2, r.width, ht2)
+    return when {
+      PREV.contains(pt) -> i.also { prevRect.bounds = PREV }.takeIf { it > 1 } ?: 0
+      NEXT.contains(pt) -> i.also { prevRect.bounds = NEXT }
+      else -> -1
     }
-    return find
   }
 
-  private fun swapComponentLocation(
+  private fun swapComponent(
     parent: Container,
     remove: Component?,
     insert: Component?,
     idx: Int,
   ) {
-    if (insert == null) {
-      return
-    }
     parent.remove(remove)
-    parent.add(insert, idx)
+    if (idx >= 0 && insert != null) {
+      parent.add(insert, idx)
+    }
     parent.revalidate()
+    parent.repaint()
   }
 
   companion object {
-    private val PREV_AREA = Rectangle()
-    private val NEXT_AREA = Rectangle()
+    private val PREV = Rectangle()
+    private val NEXT = Rectangle()
   }
 }
 
