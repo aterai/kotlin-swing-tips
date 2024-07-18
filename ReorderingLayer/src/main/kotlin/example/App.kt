@@ -56,7 +56,7 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
   ) {
     super.paint(g, c)
     if (c is JLayer<*> && draggingComponent != null) {
-      SwingUtilities.paintComponent(g, draggingComponent, canvas, DRAGGING_RECT)
+      SwingUtilities.paintComponent(g, draggingComponent, canvas, DRAGGING)
     }
   }
 
@@ -80,13 +80,13 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
     when (e.id) {
       MouseEvent.MOUSE_PRESSED -> if (parent.componentCount > 0 && c is JLayer<*>) {
         startPt.location = e.point
-        parent.repaint()
+        l.repaint()
       }
 
       MouseEvent.MOUSE_RELEASED -> if (draggingComponent != null) {
         // swap the dragging panel and the temporary filler
         val idx = parent.getComponentZOrder(fillerComponent)
-        replaceComponents(parent, fillerComponent, draggingComponent, idx)
+        swapComponent(parent, fillerComponent, draggingComponent, idx)
         draggingComponent = null
       }
     }
@@ -105,8 +105,8 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
         }
         return
       }
-      // update the filler panel location
-      if (!PREV_RECT.contains(pt)) {
+      if (!PREV.contains(pt)) {
+        // update the filler panel location
         updateFillerLocation(parent, fillerComponent, pt)
       }
 
@@ -122,29 +122,21 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
     dragOffset: Point,
   ) {
     val pt = SwingUtilities.convertPoint(e.component, e.point, parent)
-    val r = SwingUtilities.calculateInnerArea(parent, INNER_RECT)
-    val y = (pt.y - dragOffset.y).coerceIn(r.y, r.y + r.height - DRAGGING_RECT.height)
-    DRAGGING_RECT.setLocation(r.x, y)
+    val r = SwingUtilities.calculateInnerArea(parent, INNER)
+    val y = (pt.y - dragOffset.y).coerceIn(r.y, r.y + r.height - DRAGGING.height)
+    DRAGGING.setLocation(r.x, y)
   }
 
   private fun updateFillerLocation(
-    parent: Container,
+    p: Container,
     filler: Component?,
     pt: Point,
   ) {
-    // change the temporary filler location
-    for (i in 0..<parent.componentCount) {
-      val c = parent.getComponent(i)
-      val r = c.bounds
-      if (c == filler && r.contains(pt)) {
-        return
-      }
-      val tgt = getTargetIndex(r, pt, i)
-      if (tgt >= 0) {
-        replaceComponents(parent, filler, filler, tgt)
-        return
-      }
-    }
+    (0..<p.componentCount)
+      .filter { i -> p.getComponent(i).let { it !== filler || !it.bounds.contains(pt) } }
+      .map { getTargetIndex(p.getComponent(it), pt, it) }
+      .firstOrNull { it >= 0 }
+      ?.also { swapComponent(p, filler, filler, it) }
   }
 
   private fun startDragging(
@@ -159,57 +151,49 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
     }
     draggingComponent = c
     val r = c.bounds
-    DRAGGING_RECT.bounds = r // save draggingComponent size
+    DRAGGING.bounds = r // save draggingComponent size
     dragOffset.setLocation(pt.x - r.x, pt.y - r.y)
     fillerComponent = Box.createRigidArea(r.size)
-    replaceComponents(parent, c, fillerComponent, index)
+    swapComponent(parent, c, fillerComponent, index)
     updateDraggingPanelLocation(parent, e, dragOffset)
   }
 
   private fun getTargetIndex(
-    r: Rectangle,
+    c: Component,
     pt: Point,
     i: Int,
   ): Int {
+    val r = c.bounds
     val ht2 = (r.height / 2f).roundToInt()
-    TOP_HALF_RECT.setBounds(r.x, r.y, r.width, ht2)
-    BOTTOM_HALF_RECT.setBounds(r.x, r.y + ht2, r.width, ht2)
+    TOP_HALF.setBounds(r.x, r.y, r.width, ht2)
+    BOTTOM_HALF.setBounds(r.x, r.y + ht2, r.width, ht2)
     return when {
-      TOP_HALF_RECT.contains(pt) ->
-        i
-          .also {
-            PREV_RECT.bounds = TOP_HALF_RECT
-          }.takeIf { it > 1 } ?: 0
-
-      BOTTOM_HALF_RECT.contains(pt) -> i.also {
-        PREV_RECT.bounds = BOTTOM_HALF_RECT
-      }
-
+      TOP_HALF.contains(pt) -> i.also { PREV.bounds = TOP_HALF }.takeIf { it > 1 } ?: 0
+      BOTTOM_HALF.contains(pt) -> i.also { PREV.bounds = BOTTOM_HALF }
       else -> -1
     }
   }
 
-  private fun replaceComponents(
+  private fun swapComponent(
     parent: Container,
     remove: Component?,
     insert: Component?,
     idx: Int,
   ) {
-    if (insert == null) {
-      return
-    }
     parent.remove(remove)
-    parent.add(insert, idx)
+    if (idx >= 0 && insert != null) {
+      parent.add(insert, idx)
+    }
     parent.revalidate()
     parent.repaint()
   }
 
   companion object {
-    private val TOP_HALF_RECT = Rectangle()
-    private val BOTTOM_HALF_RECT = Rectangle()
-    private val INNER_RECT = Rectangle()
-    private val PREV_RECT = Rectangle()
-    private val DRAGGING_RECT = Rectangle()
+    private val TOP_HALF = Rectangle()
+    private val BOTTOM_HALF = Rectangle()
+    private val INNER = Rectangle()
+    private val PREV = Rectangle()
+    private val DRAGGING = Rectangle()
   }
 }
 
