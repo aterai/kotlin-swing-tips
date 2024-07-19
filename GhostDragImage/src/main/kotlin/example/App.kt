@@ -408,7 +408,7 @@ private class CompactListItemTransferHandler : ListItemTransferHandler() {
     w: Int,
     h: Int,
   ): BufferedImage {
-    require(!(w <= 0 || h <= 0)) { "width and height must be > 0" }
+    require(w > 0 && h > 0) { "width and height must be > 0" }
     val selectedIndices = source.selectedIndices
     val gc = source.graphicsConfiguration
     val br = gc.createCompatibleImage(w, h, Transparency.TRANSLUCENT)
