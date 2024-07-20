@@ -17,9 +17,9 @@ fun makeUI(): Component {
 
 private fun makePopupMenu(): JPopupMenu {
   val popup = JPopupMenu()
-  popup.add("« add(new JSeparator()")
+  popup.add("â†“ add(new JSeparator()")
   popup.add(JSeparator())
-  popup.add("« JSeparator(): height = 8")
+  popup.add("â†“ JSeparator(): height = 8")
   popup.add(object : JSeparator() {
     override fun getPreferredSize(): Dimension {
       val d = super.getPreferredSize()
@@ -27,9 +27,9 @@ private fun makePopupMenu(): JPopupMenu {
       return d
     }
   })
-  popup.add("« addSeparator()")
+  popup.add("â†“ addSeparator()")
   popup.addSeparator()
-  popup.add("« JPopupMenu.Separator(): height = 4")
+  popup.add("â†“ JPopupMenu.Separator(): height = 4")
   popup.add(object : JPopupMenu.Separator() {
     override fun getPreferredSize(): Dimension {
       val d = super.getPreferredSize()
@@ -37,11 +37,11 @@ private fun makePopupMenu(): JPopupMenu {
       return d
     }
   })
-  popup.add("« JPopupMenu.Separator(): font size 16f")
+  popup.add("â†“ JPopupMenu.Separator(): font size 16f")
   popup.add(object : JPopupMenu.Separator() {
     override fun getFont() = super.getFont().deriveFont(16f)
   })
-  popup.add("« PopupMenuSeparator.contentMargins")
+  popup.add("â†“ PopupMenuSeparator.contentMargins")
   popup.add(object : JPopupMenu.Separator() {
     override fun updateUI() {
       super.updateUI()
