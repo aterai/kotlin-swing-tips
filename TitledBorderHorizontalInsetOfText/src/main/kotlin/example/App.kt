@@ -252,11 +252,12 @@ private class TitledBorder2(
     bdr?.also {
       if (position2 == TOP || position2 == BOTTOM) {
         val xx = l.x + l.width + TEXT_SPACING2
+        val yy = l.y + l.height
         val p = Path2D.Float()
-        p.append(Rectangle(b.x, b.y, b.width, l.y - b.y), false)
-        p.append(Rectangle(b.x, l.y, l.x - b.x - TEXT_SPACING, l.height), false)
-        p.append(Rectangle(xx, l.y, b.x + b.width - xx, l.height), false)
-        p.append(Rectangle(b.x, l.y + l.height, b.width, b.y - l.y + b.height - l.height), false)
+        append(p, b.x, b.y, b.width, l.y - b.y)
+        append(p, b.x, l.y, l.x - b.x - TEXT_SPACING, l.height)
+        append(p, xx, l.y, b.x + b.width - xx, l.height)
+        append(p, b.x, yy, b.width, b.y + b.height - yy)
         val g2 = g.create() as? Graphics2D ?: return
         g2.clip(p)
         it.paintBorder(c, g2, b.x, b.y, b.width, b.height)
@@ -265,6 +266,10 @@ private class TitledBorder2(
         it.paintBorder(c, g, b.x, b.y, b.width, b.height)
       }
     }
+  }
+
+  private fun append(path: Path2D, x: Int, y: Int, w: Int, h: Int) {
+    path.append(Rectangle(x, y, w, h), false)
   }
 
   override fun getBorderInsets(
