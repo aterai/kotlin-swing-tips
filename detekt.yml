@@ -516,7 +516,7 @@ style:
   CanBeNonNullable:
     active: true
   CascadingCallWrapping:
-    active: true
+    active: false
     includeElvis: true
   ClassOrdering:
     active: true
