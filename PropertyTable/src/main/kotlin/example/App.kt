@@ -192,7 +192,14 @@ class ColorEditor :
     button.horizontalAlignment = SwingConstants.LEFT
     button.horizontalTextPosition = SwingConstants.RIGHT
     colorChooser = JColorChooser()
-    dialog = JColorChooser.createDialog(button, "Pick a Color", true, colorChooser, this, null)
+    dialog = JColorChooser.createDialog(
+      button,
+      "Pick a Color",
+      true,
+      colorChooser,
+      this,
+      null,
+    )
   }
 
   override fun actionPerformed(e: ActionEvent) {
