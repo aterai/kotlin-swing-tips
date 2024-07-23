@@ -80,15 +80,18 @@ private class ProgressCircleUI : BasicProgressBarUI() {
     // }
 
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
 
-    val degree = 360 * progressBar.percentComplete
+    val deg = 360 * progressBar.percentComplete
     val sz = minOf(barRectWidth, barRectHeight).toDouble()
-    val cp = Point2D.Double(b.left + barRectWidth * .5, b.top + barRectHeight * .5)
+    val cp = Point2D.Double(b.left + barRectWidth * 5, b.top + barRectHeight * .5)
     val r = sz * .5
 
     val track = Area(Ellipse2D.Double(cp.x - r, cp.y - r, sz, sz))
-    val sector = Area(Arc2D.Double(cp.x - r, cp.y - r, sz, sz, 90 - degree, degree, Arc2D.PIE))
+    val sector = Area(Arc2D.Double(cp.x - r, cp.y - r, sz, sz, 90 - deg, deg, Arc2D.PIE))
     val hole = Area(Ellipse2D.Double(cp.x - r * .5, cp.y - r * .5, r, r))
 
     track.subtract(hole)
