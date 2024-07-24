@@ -10,7 +10,6 @@ import java.awt.image.FilteredImageSource
 import java.awt.image.RGBImageFilter
 import javax.imageio.ImageIO
 import javax.swing.*
-import javax.swing.border.Border
 import javax.swing.plaf.ColorUIResource
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
@@ -85,7 +84,10 @@ private class FileNameRenderer(
   private val textLabel = JLabel(" ")
   private val iconLabel: JLabel
   private val focusBorder = UIManager.getBorder("Table.focusCellHighlightBorder")
-  private val noFocusBorder = UIManager.getBorder("Table.noFocusBorder") ?: makeNoFocusBorder()
+  private val noFocusBorder = UIManager.getBorder("Table.noFocusBorder")
+    ?: focusBorder
+      .getBorderInsets(textLabel)
+      .let { BorderFactory.createEmptyBorder(it.top, it.left, it.bottom, it.right) }
   private val icon: ImageIcon
   private val selectedIcon: ImageIcon
 
@@ -128,11 +130,6 @@ private class FileNameRenderer(
     return bi
   }
 
-  private fun makeNoFocusBorder(): Border {
-    val i = focusBorder.getBorderInsets(textLabel)
-    return BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
-  }
-
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -147,7 +144,8 @@ private class FileNameRenderer(
 
     val fm = table.getFontMetrics(table.font)
     val i = textLabel.insets
-    val sw = iconLabel.preferredSize.width + fm.stringWidth(textLabel.text) + i.left + i.right
+    val lr = i.left + i.right
+    val sw = iconLabel.preferredSize.width + fm.stringWidth(textLabel.text) + lr
     val cw = table.columnModel.getColumn(column).width
     dim.width = minOf(sw, cw)
 
