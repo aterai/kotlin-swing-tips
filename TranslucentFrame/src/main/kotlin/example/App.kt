@@ -152,7 +152,8 @@ fun main() {
   EventQueue.invokeLater {
     runCatching {
       UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
-      SynthLookAndFeel.setStyleFactory(MySynthStyleFactory(SynthLookAndFeel.getStyleFactory()))
+      val factory = MySynthStyleFactory(SynthLookAndFeel.getStyleFactory())
+      SynthLookAndFeel.setStyleFactory(factory)
     }.onFailure {
       it.printStackTrace()
       Toolkit.getDefaultToolkit().beep()
