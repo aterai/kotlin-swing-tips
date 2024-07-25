@@ -202,19 +202,18 @@ private class DefaultResizableBorder :
     val pt = e.point
     val bounds = Rectangle(w, h)
     val actualBounds = Rectangle(SIZE, SIZE, w - 2 * SIZE, h - 2 * SIZE)
-    if (!bounds.contains(pt) || actualBounds.contains(pt)) {
-      return Cursor.getDefaultCursor()
+    return if (bounds.contains(pt) && !actualBounds.contains(pt)) {
+      val controlPoint = Rectangle(SIZE, SIZE)
+      Locations
+        .entries
+        .firstOrNull {
+          controlPoint.location = it.getPoint(bounds)
+          controlPoint.contains(pt)
+        }?.cursor
+        ?: Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR)
+    } else {
+      Cursor.getDefaultCursor()
     }
-    val rect = Rectangle(SIZE, SIZE)
-    val r = Rectangle(0, 0, w, h)
-    var cursor = Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR)
-    Locations.entries.forEach {
-      rect.location = it.getPoint(r)
-      if (rect.contains(pt)) {
-        cursor = it.cursor
-      }
-    }
-    return cursor
   }
 
   companion object {
@@ -399,10 +398,10 @@ private enum class Directions(
       rect: Rectangle,
       delta: Point,
     ) = Rectangle(
-      rect.x,
+      rect.x - delta.x,
       rect.y,
-      rect.width,
-      rect.height,
+      rect.width + delta.x,
+      rect.height - delta.y,
     )
   },
   SOUTH_EAST(Cursor.SE_RESIZE_CURSOR) {
