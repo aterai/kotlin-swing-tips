@@ -181,7 +181,11 @@ private object ZipUtils {
             Files.createDirectories(it)
           }
           logger.info { "copy: $path" }
-          Files.copy(zipFile.getInputStream(entry), path, StandardCopyOption.REPLACE_EXISTING)
+          Files.copy(
+            zipFile.getInputStream(entry),
+            path,
+            StandardCopyOption.REPLACE_EXISTING,
+          )
         }
       }
     }

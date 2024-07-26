@@ -38,7 +38,9 @@ private fun addCheckBoxAndSlider(popup: JComponent) {
   val slider = makeSlider()
   slider.isEnabled = false
   val check = makeCheckBox()
-  check.addActionListener { slider.isEnabled = (it.source as? JCheckBox)?.isSelected == true }
+  check.addActionListener {
+    slider.isEnabled = (it.source as? JCheckBox)?.isSelected == true
+  }
   val mi = JMenuItem(" ")
   mi.layout = BorderLayout()
   mi.add(check, BorderLayout.WEST)

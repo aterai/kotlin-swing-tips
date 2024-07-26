@@ -33,7 +33,11 @@ private class FontRotateAnimation(
     animator.addActionListener {
       repaint(shape.bounds) // clear prev
       val b = outline.bounds2D
-      val at = AffineTransform.getRotateInstance(Math.toRadians(rotate), b.centerX, b.centerY)
+      val at = AffineTransform.getRotateInstance(
+        Math.toRadians(rotate),
+        b.centerX,
+        b.centerY,
+      )
       val cx = width / 2.0 - b.centerX
       val cy = height / 2.0 - b.centerY
       val toCenterAt = AffineTransform.getTranslateInstance(cx, cy)

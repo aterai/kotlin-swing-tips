@@ -24,7 +24,9 @@ private val activityIcons = listOf(
   ContributionIcon(color.darker()),
   ContributionIcon(color.darker().darker()),
 )
-private val weekList = object : JList<Contribution>(CalendarViewListModel(currentLocalDate)) {
+private val weekList = object : JList<Contribution>(
+  CalendarViewListModel(currentLocalDate),
+) {
   private var tip: JToolTip? = null
 
   override fun updateUI() {

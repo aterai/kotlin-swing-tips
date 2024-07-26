@@ -20,7 +20,9 @@ private val activityIcons = listOf(
   ContributionIcon(color.darker().darker()),
 )
 private val currentLocalDate = LocalDate.now(ZoneId.systemDefault())
-private val weekList = object : JList<Contribution>(CalendarViewListModel(currentLocalDate)) {
+private val weekList = object : JList<Contribution>(
+  CalendarViewListModel(currentLocalDate),
+) {
   override fun updateUI() {
     cellRenderer = null
     super.updateUI()

@@ -69,7 +69,9 @@ fun makeUI(): Component {
 
 fun toggleFullScreenWindow(c: JComponent) {
   (c.topLevelAncestor as? Dialog)?.also {
-    val graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().defaultScreenDevice
+    val graphicsDevice = GraphicsEnvironment
+      .getLocalGraphicsEnvironment()
+      .defaultScreenDevice
     if (graphicsDevice.fullScreenWindow == null) {
       it.dispose() // destroy the native resources
       it.isUndecorated = true

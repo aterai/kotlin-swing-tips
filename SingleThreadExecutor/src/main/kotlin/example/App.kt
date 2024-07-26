@@ -216,7 +216,14 @@ private class ProgressRenderer : DefaultTableCellRenderer() {
         return renderer
       }
     }
-    return super.getTableCellRendererComponent(table, text, isSelected, hasFocus, row, column)
+    return super.getTableCellRendererComponent(
+      table,
+      text,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
   }
 
   override fun updateUI() {

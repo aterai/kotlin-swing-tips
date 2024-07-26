@@ -37,7 +37,9 @@ fun makeUI(): Component {
       runCatching {
         if (e.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
           e.acceptDrop(DnDConstants.ACTION_COPY)
-          val list = e.transferable.getTransferData(DataFlavor.javaFileListFlavor) as? List<*>
+          val list = e.transferable.getTransferData(
+            DataFlavor.javaFileListFlavor,
+          ) as? List<*>
           list?.filterIsInstance<File>()?.forEach { model.addPath(it.toPath()) }
           e.dropComplete(true)
         } else {
