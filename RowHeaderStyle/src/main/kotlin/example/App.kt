@@ -62,7 +62,14 @@ private class RowHeaderRenderer :
   ): Component {
     val tcr = table.tableHeader.defaultRenderer
     val f = row == rollOverRowIndex
-    val c = tcr.getTableCellRendererComponent(table, value, isSelected, f || hasFocus, -1, -1)
+    val c = tcr.getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      f || hasFocus,
+      -1,
+      -1,
+    )
     return if (tcr.javaClass.name.contains("XPDefaultRenderer")) {
       (c as? JComponent)?.isOpaque = !f
       renderer.icon = ComponentIcon(c)
