@@ -71,9 +71,16 @@ private fun initComboBox(combo: JComboBox<SiteItem>) {
   combo.isEditable = true
   val renderer = combo.renderer
   combo.setRenderer { list, value, index, isSelected, cellHasFocus ->
-    renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
-      (it as? JLabel)?.icon = value?.favicon
-    }
+    renderer
+      .getListCellRendererComponent(
+        list,
+        value,
+        index,
+        isSelected,
+        cellHasFocus,
+      ).also {
+        (it as? JLabel)?.icon = value?.favicon
+      }
   }
 }
 

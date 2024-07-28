@@ -41,19 +41,26 @@ fun makeUI(): Component {
   }
   val renderer = combo.renderer
   combo.setRenderer { list, value, index, isSelected, cellHasFocus ->
-    renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
-      if (isSelected) {
-        it.background = list.selectionBackground
-        it.foreground = list.selectionForeground
-      } else {
-        it.background = list.background
-        it.foreground = list.foreground
+    renderer
+      .getListCellRendererComponent(
+        list,
+        value,
+        index,
+        isSelected,
+        cellHasFocus,
+      ).also {
+        if (isSelected) {
+          it.background = list.selectionBackground
+          it.foreground = list.selectionForeground
+        } else {
+          it.background = list.background
+          it.foreground = list.foreground
+        }
+        (it as? JLabel)?.also { label ->
+          label.isOpaque = true
+          label.text = value?.series ?: ""
+        }
       }
-      (it as? JLabel)?.also { label ->
-        label.isOpaque = true
-        label.text = value?.series ?: ""
-      }
-    }
   }
 
   EventQueue.invokeLater { combo.setSelectedIndex(3) }

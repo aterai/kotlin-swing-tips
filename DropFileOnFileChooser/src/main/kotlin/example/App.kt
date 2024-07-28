@@ -48,7 +48,8 @@ private class FileChooserTransferHandler : TransferHandler() {
 
   override fun importData(support: TransferSupport) = runCatching {
     val fc = support.component as? JFileChooser ?: return false
-    val list = support.transferable.getTransferData(DataFlavor.javaFileListFlavor) as? List<*>
+    val t = support.transferable
+    val list = t.getTransferData(DataFlavor.javaFileListFlavor) as? List<*>
     val files = list?.filterIsInstance<File>()?.toTypedArray()
     if (fc.isMultiSelectionEnabled) {
       fc.selectedFiles = files
