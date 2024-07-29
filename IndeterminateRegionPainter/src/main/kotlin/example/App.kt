@@ -106,18 +106,30 @@ private class ProgressListener(
 }
 
 private class IndeterminateRegionPainter : AbstractRegionPainter() {
-  private val color17 = decodeColor(NIMBUS_ORANGE, .0000000000f, .00000000f, .0000000000f, -156)
-  private val color18 = decodeColor(NIMBUS_ORANGE, -.0157965120f, .02094239f, -.1529411700f, 0)
-  private val color19 = decodeColor(NIMBUS_ORANGE, -.0043216050f, .02094239f, -.0745098000f, 0)
-  private val color20 = decodeColor(NIMBUS_ORANGE, -.0080213990f, .02094239f, -.1019607800f, 0)
-  private val color21 = decodeColor(NIMBUS_ORANGE, -.0117069040f, -.17905760f, -.0235294100f, 0)
-  private val color22 = decodeColor(NIMBUS_ORANGE, -.0486912540f, .02094239f, -.3019608000f, 0)
-  private val color23 = decodeColor(NIMBUS_ORANGE, .0039403290f, -.73753220f, .1764705800f, 0)
-  private val color24 = decodeColor(NIMBUS_ORANGE, .0055067390f, -.46764207f, .1098039150f, 0)
-  private val color25 = decodeColor(NIMBUS_ORANGE, .0042127445f, -.18595415f, .0470588200f, 0)
-  private val color26 = decodeColor(NIMBUS_ORANGE, .0047626942f, .02094239f, .0039215684f, 0)
-  private val color27 = decodeColor(NIMBUS_ORANGE, .0047626942f, -.15147138f, .1607843000f, 0)
-  private val color28 = decodeColor(NIMBUS_ORANGE, .0106654760f, -.27317524f, .2509803800f, 0)
+  private val color17 =
+    decodeColor(NIMBUS_ORANGE, .0000000000f, .00000000f, .0000000000f, -156)
+  private val color18 =
+    decodeColor(NIMBUS_ORANGE, -.0157965120f, .02094239f, -.1529411700f, 0)
+  private val color19 =
+    decodeColor(NIMBUS_ORANGE, -.0043216050f, .02094239f, -.0745098000f, 0)
+  private val color20 =
+    decodeColor(NIMBUS_ORANGE, -.0080213990f, .02094239f, -.1019607800f, 0)
+  private val color21 =
+    decodeColor(NIMBUS_ORANGE, -.0117069040f, -.17905760f, -.0235294100f, 0)
+  private val color22 =
+    decodeColor(NIMBUS_ORANGE, -.0486912540f, .02094239f, -.3019608000f, 0)
+  private val color23 =
+    decodeColor(NIMBUS_ORANGE, .0039403290f, -.73753220f, .1764705800f, 0)
+  private val color24 =
+    decodeColor(NIMBUS_ORANGE, .0055067390f, -.46764207f, .1098039150f, 0)
+  private val color25 =
+    decodeColor(NIMBUS_ORANGE, .0042127445f, -.18595415f, .0470588200f, 0)
+  private val color26 =
+    decodeColor(NIMBUS_ORANGE, .0047626942f, .02094239f, .0039215684f, 0)
+  private val color27 =
+    decodeColor(NIMBUS_ORANGE, .0047626942f, -.15147138f, .1607843000f, 0)
+  private val color28 =
+    decodeColor(NIMBUS_ORANGE, .0106654760f, -.27317524f, .2509803800f, 0)
   private val ctx = PaintContext(Insets(5, 5, 5, 5), Dimension(29, 19), false)
   private var rect: Rectangle2D = Rectangle2D.Float()
   private var path: Path2D = Path2D.Float()
