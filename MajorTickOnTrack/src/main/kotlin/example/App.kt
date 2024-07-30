@@ -65,7 +65,14 @@ fun makeUI(): Component {
 
       // JSlider.isFilled
       val fillRight = getPositionForValue(c, r, c.value.toFloat())
-      g.fillRoundRect(fillLeft, fillTop, fillRight - fillLeft, fillBottom - fillTop, arc, arc)
+      g.fillRoundRect(
+        fillLeft,
+        fillTop,
+        fillRight - fillLeft,
+        fillBottom - fillTop,
+        arc,
+        arc,
+      )
     }
 
     private fun getPositionForValue(

@@ -47,13 +47,23 @@ fun makeUI(): Component {
   val longButton = JButton("JOptionPane: long")
   longButton.addActionListener {
     textArea.text = msgLong
-    JOptionPane.showMessageDialog(scroll.rootPane, scroll, "Error", JOptionPane.ERROR_MESSAGE)
+    JOptionPane.showMessageDialog(
+      scroll.rootPane,
+      scroll,
+      "Error",
+      JOptionPane.ERROR_MESSAGE,
+    )
   }
   val msgShort = "This is a short error message."
   val shortButton = JButton("JOptionPane: short")
   shortButton.addActionListener {
     textArea.text = msgShort
-    JOptionPane.showMessageDialog(scroll.rootPane, scroll, "Error", JOptionPane.ERROR_MESSAGE)
+    JOptionPane.showMessageDialog(
+      scroll.rootPane,
+      scroll,
+      "Error",
+      JOptionPane.ERROR_MESSAGE,
+    )
   }
   return JPanel().also {
     it.add(longButton)
