@@ -136,9 +136,16 @@ private fun <E> initComboBoxRenderer(
 ) {
   val renderer = combo.renderer
   combo.setRenderer { list, value, index, isSelected, cellHasFocus ->
-    renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
-      (it as? JLabel)?.icon = icon
-    }
+    renderer
+      .getListCellRendererComponent(
+        list,
+        value,
+        index,
+        isSelected,
+        cellHasFocus,
+      ).also {
+        (it as? JLabel)?.icon = icon
+      }
   }
 }
 

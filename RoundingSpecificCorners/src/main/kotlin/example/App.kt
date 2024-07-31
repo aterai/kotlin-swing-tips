@@ -17,7 +17,10 @@ fun makeUI(): Component {
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
       val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
 
       val x = width * .1
       val y = height * .1
@@ -94,7 +97,12 @@ private fun makePopupMenu(
   return popup
 }
 
-fun makeRoundedRect0(rect: Rectangle2D, aw: Double, ah: Double, corners: Set<Corner>): Shape {
+fun makeRoundedRect0(
+  rect: Rectangle2D,
+  aw: Double,
+  ah: Double,
+  corners: Set<Corner>,
+): Shape {
   val x = rect.x
   val y = rect.y
   val w = rect.width
@@ -126,7 +134,12 @@ fun makeRoundedRect0(rect: Rectangle2D, aw: Double, ah: Double, corners: Set<Cor
   return r
 }
 
-fun makeRoundedRect2(r: Rectangle2D, aw: Double, ah: Double, corners: Set<Corner>): Shape {
+fun makeRoundedRect2(
+  r: Rectangle2D,
+  aw: Double,
+  ah: Double,
+  corners: Set<Corner>,
+): Shape {
   val x = r.x
   val y = r.y
   val w = r.width
@@ -165,7 +178,12 @@ fun makeRoundedRect2(r: Rectangle2D, aw: Double, ah: Double, corners: Set<Corner
   return p
 }
 
-fun makeRoundedRect1(r: Rectangle2D, aw: Double, ah: Double, corners: Set<Corner>): Path2D {
+fun makeRoundedRect1(
+  r: Rectangle2D,
+  aw: Double,
+  ah: Double,
+  corners: Set<Corner>,
+): Path2D {
   val x = r.x
   val y = r.y
   val w = r.width
