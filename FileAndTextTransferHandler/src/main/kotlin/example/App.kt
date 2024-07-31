@@ -85,7 +85,8 @@ fun addTab(file: File?) {
 
 @Throws(UnsupportedFlavorException::class, IOException::class)
 fun addFile(transferable: Transferable) {
-  val list = transferable.getTransferData(DataFlavor.javaFileListFlavor) as? List<*> ?: return
+  val data = transferable.getTransferData(DataFlavor.javaFileListFlavor)
+  val list = data as? List<*> ?: return
   object : SwingWorker<Unit?, Unit?>() {
     override fun doInBackground(): Unit? {
       for (o in list) {
