@@ -93,8 +93,9 @@ private class CustomTooltipEditorPane : JEditorPane() {
 
             HyperlinkEvent.EventType.ENTERED -> {
               tooltip = editor.toolTipText
-              (e.sourceElement?.attributes?.getAttribute(HTML.Tag.A) as? AttributeSet)?.also {
-                editor.toolTipText = it.getAttribute(HTML.Attribute.TITLE)?.toString()
+              val tagA = e.sourceElement?.attributes?.getAttribute(HTML.Tag.A)
+              if (tagA is AttributeSet) {
+                editor.toolTipText = tagA.getAttribute(HTML.Attribute.TITLE)?.toString()
               }
             }
 
