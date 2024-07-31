@@ -144,7 +144,9 @@ class DnDTabbedPane : JTabbedPane() {
     val index: Int,
   ) : TransferHandler.DropLocation(pt)
 
-  private fun clickArrowButton(actionKey: String) {
+  private enum class ScrollDirection { FORWARD, BACKWARD }
+
+  private fun clickArrowButton(dir: ScrollDirection) {
     var forwardButton: JButton? = null
     var backwardButton: JButton? = null
     for (c in components) {
@@ -155,7 +157,7 @@ class DnDTabbedPane : JTabbedPane() {
         backwardButton = b
       }
     }
-    val button = if ("scrollTabsForwardAction" == actionKey) forwardButton else backwardButton
+    val button = if (dir == ScrollDirection.FORWARD) forwardButton else backwardButton
     button?.takeIf { it.isEnabled }?.doClick()
   }
 
@@ -179,9 +181,9 @@ class DnDTabbedPane : JTabbedPane() {
       )
     }
     if (RECT_BACKWARD.contains(pt)) {
-      clickArrowButton("scrollTabsBackwardAction")
+      clickArrowButton(ScrollDirection.BACKWARD)
     } else if (RECT_FORWARD.contains(pt)) {
-      clickArrowButton("scrollTabsForwardAction")
+      clickArrowButton(ScrollDirection.FORWARD)
     }
   }
 

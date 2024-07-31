@@ -114,19 +114,20 @@ private class DnDTabbedPane : JTabbedPane() {
     )
   }
 
-  private fun clickArrowButton(actionKey: String) {
+  private enum class ScrollDirection { FORWARD, BACKWARD }
+
+  private fun clickArrowButton(dir: ScrollDirection) {
     var forwardButton: JButton? = null
     var backwardButton: JButton? = null
     for (c in components) {
-      if (c is JButton) {
-        if (forwardButton == null) {
-          forwardButton = c
-        } else if (backwardButton == null) {
-          backwardButton = c
-        }
+      val b = c as? JButton ?: continue
+      if (forwardButton == null) {
+        forwardButton = b
+      } else if (backwardButton == null) {
+        backwardButton = b
       }
     }
-    val button = if ("scrollTabsForwardAction" == actionKey) forwardButton else backwardButton
+    val button = if (dir == ScrollDirection.FORWARD) forwardButton else backwardButton
     button?.takeIf { it.isEnabled }?.doClick()
   }
 
@@ -152,9 +153,9 @@ private class DnDTabbedPane : JTabbedPane() {
     rectBackward = SwingUtilities.convertRectangle(parent, rectBackward, glassPane)
     rectForward = SwingUtilities.convertRectangle(parent, rectForward, glassPane)
     if (rectBackward.contains(glassPt)) {
-      clickArrowButton("scrollTabsBackwardAction")
+      clickArrowButton(ScrollDirection.BACKWARD)
     } else if (rectForward.contains(glassPt)) {
-      clickArrowButton("scrollTabsForwardAction")
+      clickArrowButton(ScrollDirection.FORWARD)
     }
   }
 
