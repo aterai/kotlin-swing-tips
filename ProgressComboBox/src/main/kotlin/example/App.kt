@@ -76,7 +76,13 @@ private class ProgressCellRenderer<E> : ListCellRenderer<E> {
       bar.value = counter
       return bar
     }
-    return renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+    return renderer.getListCellRendererComponent(
+      list,
+      value,
+      index,
+      isSelected,
+      cellHasFocus,
+    )
   }
 }
 
