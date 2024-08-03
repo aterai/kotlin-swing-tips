@@ -30,8 +30,9 @@ fun makeUI(): Component {
   }
 
   val check = JCheckBox("filter: idx%2==0")
-  check.addActionListener { e ->
-    sorter.rowFilter = if ((e.source as? JCheckBox)?.isSelected == true) filter else defFilter
+  check.addActionListener {
+    val b = (it.source as? JCheckBox)?.isSelected == true
+    sorter.rowFilter = if (b) filter else defFilter
   }
 
   return JPanel(BorderLayout()).also {
