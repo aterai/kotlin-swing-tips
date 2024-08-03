@@ -59,7 +59,11 @@ private fun makeButton2(
 ): JButton {
   val button = JButton("show")
   button.addActionListener {
-    val pane = JOptionPane(textField, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION)
+    val pane = JOptionPane(
+      textField,
+      JOptionPane.PLAIN_MESSAGE,
+      JOptionPane.OK_CANCEL_OPTION,
+    )
     val dialog = pane.createDialog(textArea.rootPane, "Input Text")
     val wl = object : WindowAdapter() {
       override fun windowOpened(e: WindowEvent) {

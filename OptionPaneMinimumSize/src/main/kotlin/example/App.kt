@@ -33,7 +33,12 @@ fun makeUI(): Component {
   button2.addActionListener { e ->
     UIManager.put(key, Dimension(120, 120))
     val p = (e.source as? JComponent)?.rootPane
-    JOptionPane.showMessageDialog(p, "message3", "title3(120*120)", JOptionPane.PLAIN_MESSAGE)
+    JOptionPane.showMessageDialog(
+      p,
+      "message3",
+      "title3(120*120)",
+      JOptionPane.PLAIN_MESSAGE,
+    )
     UIManager.put(key, UIManager.getLookAndFeelDefaults().getDimension(key))
   }
 
