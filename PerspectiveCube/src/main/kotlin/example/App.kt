@@ -25,7 +25,10 @@ fun makeUI(): Component {
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
       val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       val path = Path2D.Double()
       path.moveTo(cube[0].vx, cube[0].vy)
       path.lineTo(cube[1].vx, cube[1].vy)

@@ -68,7 +68,13 @@ private fun makeComboBox(model: List<String>): JComboBox<String> {
           }
           field
         } else {
-          renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+          renderer.getListCellRendererComponent(
+            list,
+            value,
+            index,
+            isSelected,
+            cellHasFocus,
+          )
         }
       }
     }

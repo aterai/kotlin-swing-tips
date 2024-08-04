@@ -104,7 +104,14 @@ private class HeaderRenderer : TableCellRenderer {
     column: Int,
   ): Component {
     val hr = table.tableHeader.defaultRenderer
-    val c = hr.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    val c = hr.getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
     c.font = FONT
     (c as? JLabel)?.horizontalAlignment = SwingConstants.CENTER
     return c
