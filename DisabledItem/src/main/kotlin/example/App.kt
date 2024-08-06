@@ -47,7 +47,13 @@ fun makeList(disableIndexSet: Set<Int>): JList<String> {
             it.isEnabled = false
           }
         } else {
-          renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+          renderer.getListCellRendererComponent(
+            list,
+            value,
+            index,
+            isSelected,
+            cellHasFocus,
+          )
         }
       }
     }

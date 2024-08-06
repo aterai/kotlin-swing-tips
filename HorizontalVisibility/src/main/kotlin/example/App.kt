@@ -174,7 +174,10 @@ private class ArrowButtonlessScrollBarUI : BasicScrollBarUI() {
     val iv = m.maximum - m.minimum - m.extent - 1 // -1: bug?
     if (iv > 0) {
       val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       val color = when {
         isDragging -> DRAGGING_COLOR
         isThumbRollover -> ROLLOVER_COLOR

@@ -40,7 +40,10 @@ private class RoundedSelectionTree : JTree() {
     val sr = selectionRows
     if (sr?.isNotEmpty() == true) {
       val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g2.paint = SELECTED_COLOR
       val area = Area()
       sr.map { getRowBounds(it) }.forEach { area.add(Area(it)) }
@@ -77,7 +80,10 @@ private class RoundedSelectionTree0 : JTree() {
     val sr = selectionRows
     if (sr?.isNotEmpty() == true) {
       val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g2.paint = SELECTED_COLOR
       val area = Area()
       sr.map { getRowBounds(it) }.forEach { area.add(Area(it)) }

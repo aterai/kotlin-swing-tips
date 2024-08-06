@@ -49,7 +49,13 @@ private fun <E> makeComboBox(model: ComboBoxModel<E>): JComboBox<E> {
         if (value is JSeparator) {
           value
         } else {
-          renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+          renderer.getListCellRendererComponent(
+            list,
+            value,
+            index,
+            isSelected,
+            cellHasFocus,
+          )
         }
       }
     }

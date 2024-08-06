@@ -54,7 +54,14 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
     row: Int,
     column: Int,
   ): Component {
-    val c = super.getTableCellRendererComponent(table, value, selected, focused, row, column)
+    val c = super.getTableCellRendererComponent(
+      table,
+      value,
+      selected,
+      focused,
+      row,
+      column,
+    )
     if (value is LocalDate && c is JLabel) {
       val nextWeekDay = value.plusDays(7)
       c.text = value.dayOfMonth.toString()

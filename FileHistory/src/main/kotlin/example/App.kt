@@ -169,7 +169,12 @@ private class VersionAction : AbstractAction("version") {
   override fun actionPerformed(e: ActionEvent) {
     val c = e.source as? JComponent ?: return
     val obj = arrayOf("$APP_NAME - Version $VERSION.$RELEASE", COPYRIGHT)
-    JOptionPane.showMessageDialog(c.rootPane, obj, APP_NAME, JOptionPane.INFORMATION_MESSAGE)
+    JOptionPane.showMessageDialog(
+      c.rootPane,
+      obj,
+      APP_NAME,
+      JOptionPane.INFORMATION_MESSAGE,
+    )
   }
 
   companion object {
