@@ -34,7 +34,10 @@ private class RoundedSelectionTree : JTree() {
     val sr = selectionRows
     if (sr != null) {
       val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g2.paint = SELECTED_COLOR
       val innerArea = SwingUtilities.calculateInnerArea(this, null)
       val area = Area()

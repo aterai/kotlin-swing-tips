@@ -115,7 +115,10 @@ private class OverscrollEdgeEffectLayerUI : LayerUI<JScrollPane>() {
     if (c is JLayer<*> && ovalHeight > 0.0) {
       val rh = (c.view as? JScrollPane)?.viewport?.viewRect?.height ?: 0
       val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g2.paint = color
       if (oval.y < 0) {
         oval.setFrame(oval.x, -ovalHeight, oval.width, ovalHeight * 2.0)

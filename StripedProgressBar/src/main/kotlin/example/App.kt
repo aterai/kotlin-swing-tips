@@ -120,7 +120,10 @@ private class StripedProgressBarUI(
       val x = animationIndex
       val s = makeIndeterminateBox(w)
       val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g2.paint = progressBar.foreground
       if (slope) {
         var i = boxRect.width + x

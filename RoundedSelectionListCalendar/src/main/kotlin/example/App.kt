@@ -40,7 +40,10 @@ val monthList = object : JList<LocalDate>() {
     val indices = selectedIndices
     if (indices.isNotEmpty()) {
       val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g2.paint = Color(0xC8_00_78_D7.toInt(), true)
       val area = Area()
       indices.map { getCellBounds(it, it) }.forEach { area.add(Area(it)) }

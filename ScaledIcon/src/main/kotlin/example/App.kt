@@ -89,7 +89,10 @@ private class CheckBoxIcon : Icon {
     val g2 = g.create()
     if (g2 is Graphics2D && c is AbstractButton) {
       val model = c.model
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g2.translate(x, y)
       g2.paint = Color.DARK_GRAY
       val s = iconWidth.coerceAtMost(iconHeight) * .05

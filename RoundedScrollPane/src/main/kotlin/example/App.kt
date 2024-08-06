@@ -358,7 +358,10 @@ private class WithoutArrowButtonScrollBarUI : BasicScrollBarUI() {
     val m = c.model
     if (m.maximum - m.minimum - m.extent > 0) {
       val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g2.paint = when {
         isDragging -> thumbDarkShadowColor
         isThumbRollover -> thumbLightShadowColor

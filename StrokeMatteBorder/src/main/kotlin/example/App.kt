@@ -70,7 +70,10 @@ private class StrokeMatteBorder(
       val g2 = g.create() as? Graphics2D ?: return
       g2.stroke = stroke
       g2.paint = color ?: c?.foreground
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g2.translate(x, y)
       val s = size.roundToInt()
       val sd2 = (size / 2f).roundToInt()

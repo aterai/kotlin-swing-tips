@@ -286,7 +286,10 @@ private class OverlappedScrollBarUI : BasicScrollBarUI() {
   ) {
     if (c.isEnabled && !r.isEmpty) {
       val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g2.paint = DEFAULT_COLOR
       g2.fillRect(r.x, r.y, r.width - 1, r.height - 1)
       g2.dispose()

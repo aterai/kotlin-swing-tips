@@ -56,7 +56,10 @@ private open class BadgeLayerUI : LayerUI<BadgeLabel>() {
     val label = (c as? JLayer<*>)?.view
     if (label is BadgeLabel) {
       val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       iconRect.setBounds(0, 0, 0, 0)
       textRect.setBounds(0, 0, 0, 0)
       SwingUtilities.calculateInnerArea(label, viewRect)

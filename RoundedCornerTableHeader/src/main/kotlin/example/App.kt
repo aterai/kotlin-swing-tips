@@ -194,7 +194,10 @@ private class RoundedHeaderRenderer : DefaultTableCellRenderer() {
   private val firstLabel = object : JLabel() {
     public override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g2.paint = background
       val r = 8.0
       val x = 0.0
@@ -217,7 +220,10 @@ private class RoundedHeaderRenderer : DefaultTableCellRenderer() {
   private val lastLabel = object : JLabel() {
     public override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g2.paint = background
       val r = 8.0
       val x = 0.0
@@ -318,7 +324,10 @@ private class DiagonallySplitCellLayerUI : LayerUI<JPanel>() {
     super.paint(g, c)
     if (c is JLayer<*>) {
       val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g2.paint = c.view.foreground
       g2.drawLine(c.width - 4, 4, 4, c.height - 4)
       g2.dispose()
