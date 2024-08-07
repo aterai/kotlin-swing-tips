@@ -124,7 +124,10 @@ private class ScrollPaneLayerUI : LayerUI<JScrollPane>() {
       val shd = 6
       val g2 = g.create() as? Graphics2D ?: return
       g2.translate(rect.x + w - shd, rect.y)
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g2.paint = Color(0x08_00_00_00, true)
       for (i in 0..<shd) {
         g2.fillRect(i, 0, shd - i, h)

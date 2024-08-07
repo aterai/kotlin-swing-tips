@@ -201,7 +201,10 @@ private class TranslucentButtonIcon(
       width = r.width
       height = r.height
       val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       val fx = (x - r.minX).toFloat()
       val fy = (y - r.minY).toFloat()
       val area = RoundRectangle2D.Float(fx, fy, w - 1f, h - 1f, R, R)

@@ -68,7 +68,10 @@ private object NimbusTabbedPanePainterUtils {
       val x = 3.0
       val y = 3.0
       val g2 = g.create(0, 0, width, height + a) as? Graphics2D ?: return
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       val w = width - x
       val h = (height + a).toDouble()
 
@@ -110,7 +113,10 @@ private object NimbusTabbedPanePainterUtils {
       h: Int,
     ) {
       val g2 = g.create(0, 0, w, h) as? Graphics2D ?: return
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       val dy = (h - OVER_PAINT).toDouble()
       val ww = w - STROKE_SIZE
       val hh = h - STROKE_SIZE
@@ -132,7 +138,10 @@ private object NimbusTabbedPanePainterUtils {
       h: Int,
     ) {
       val g2 = g.create(0, 0, w, h) as? Graphics2D ?: return
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g2.translate(0, -OVER_PAINT)
       val ww = w - STROKE_SIZE
       val hh = h - STROKE_SIZE + OVER_PAINT

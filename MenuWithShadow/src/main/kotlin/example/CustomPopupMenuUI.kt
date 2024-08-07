@@ -51,7 +51,10 @@ class CustomPopupMenuUI : BasicPopupMenuUI() {
     ): BufferedImage {
       val image = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
       val g2 = image.createGraphics()
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, ALPHA)
       g2.paint = Color.BLACK
       g2.translate(x, y)

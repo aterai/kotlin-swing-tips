@@ -49,7 +49,10 @@ private fun makePanel(shape: Shape): Component {
     override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC, .5f)
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g2.paint = Color.RED
       g2.fill(shape)
       g2.dispose()

@@ -112,7 +112,10 @@ private class IconTable(
       g.fillRect(0, 0, width, height)
       val buffer = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
       val g2 = buffer.createGraphics()
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .15f)
       g2.paint = Color.BLACK
       val r = editor.bounds

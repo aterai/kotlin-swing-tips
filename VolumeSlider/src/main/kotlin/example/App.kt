@@ -83,7 +83,10 @@ private class TriSliderUI(
       val g2 = g.create() as? Graphics2D ?: return
       cy = -2 + trackBounds.height / 2
       cw = trackBounds.width
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g2.translate(trackBounds.x, trackBounds.y + cy)
 
       g2.paint = Color.GRAY
