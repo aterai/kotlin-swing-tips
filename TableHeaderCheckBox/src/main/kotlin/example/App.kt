@@ -98,7 +98,14 @@ private class HeaderRenderer : TableCellRenderer {
     check.isOpaque = false
     check.font = table.font
     val r = table.tableHeader.defaultRenderer
-    val c = r.getTableCellRendererComponent(table, status, isSelected, hasFocus, row, column)
+    val c = r.getTableCellRendererComponent(
+      table,
+      status,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
     (c as? JLabel)?.also {
       label.icon = ComponentIcon(check)
       it.icon = ComponentIcon(label)

@@ -142,7 +142,14 @@ private class TransparentHeader : TableCellRenderer {
     row: Int,
     column: Int,
   ): Component {
-    val c = cr.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    val c = cr.getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
     if (c is JLabel) {
       c.text = value?.toString() ?: ""
       c.horizontalAlignment = SwingConstants.CENTER

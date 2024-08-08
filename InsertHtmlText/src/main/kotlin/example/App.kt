@@ -7,14 +7,15 @@ import javax.swing.*
 import javax.swing.text.html.HTMLDocument
 import javax.swing.text.html.HTMLEditorKit
 
-private const val HTML_TEXT = "<html><body>head<table id='log' border='1'></table>tail</body>"
-private const val ROW_TEXT = "<tr bgColor='%s'><td>%s</td><td>%s</td></tr>"
+private const val ROW_TXT = "<tr bgColor='%s'><td>%s</td><td>%s</td></tr>"
+private const val TABLE_TXT = "<table id='log' border='1'></table>"
+private const val BODY_TXT = "<html><body>head${TABLE_TXT}tail</body></html>"
 
 fun makeUI(): Component {
   val htmlEditorKit = HTMLEditorKit()
   val editor = JEditorPane()
   editor.editorKit = htmlEditorKit
-  editor.text = HTML_TEXT
+  editor.text = BODY_TXT
   editor.isEditable = false
 
   val insertAfterStart = JButton("insertAfterStart")
@@ -22,7 +23,7 @@ fun makeUI(): Component {
     (editor.document as? HTMLDocument)?.also {
       val element = it.getElement("log")
       val date = LocalDateTime.now(ZoneId.systemDefault())
-      val tag = ROW_TEXT.format("#AEEEEE", "insertAfterStart", date)
+      val tag = ROW_TXT.format("#AEEEEE", "insertAfterStart", date)
       runCatching {
         it.insertAfterStart(element, tag)
       }.onFailure {
@@ -36,7 +37,7 @@ fun makeUI(): Component {
     (editor.document as? HTMLDocument)?.also {
       val element = it.getElement("log")
       val date = LocalDateTime.now(ZoneId.systemDefault())
-      val tag = ROW_TEXT.format("#FFFFFF", "insertBeforeEnd", date)
+      val tag = ROW_TXT.format("#FFFFFF", "insertBeforeEnd", date)
       runCatching {
         it.insertBeforeEnd(element, tag)
       }.onFailure {

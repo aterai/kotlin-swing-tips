@@ -10,7 +10,8 @@ import javax.swing.text.html.HTMLEditorKit
 import javax.swing.text.html.ImageView
 import kotlin.math.roundToInt
 
-private const val TEXT = "<span style='background-color:red'>11111111111111111</span><br/>\n"
+private const val TXT = "********************"
+private const val SPAN = "<span style='background-color:red'>$TXT</span><br/>\n"
 private val label = JLabel("screenshot")
 
 fun makeUI(): Component {
@@ -21,8 +22,8 @@ fun makeUI(): Component {
 
   val cl = Thread.currentThread().contextClassLoader
   val path = cl.getResource("example/GIANT_TCR1_2013.jpg")
-  val html1 = TEXT.repeat(50)
-  val html2 = TEXT.repeat(3)
+  val html1 = SPAN.repeat(50)
+  val html2 = SPAN.repeat(3)
   val tabs = JTabbedPane()
   val img0 = "<p><img src='$path'></p>"
   val st0 = html1 + img0 + html2
