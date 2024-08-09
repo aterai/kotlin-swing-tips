@@ -30,7 +30,7 @@ fun makeUI(): Component {
       val a1 = object : AbstractAction() {
         override fun actionPerformed(e: ActionEvent) {
           val s = e.source as? JSlider ?: return
-          s.value = s.value + s.majorTickSpacing
+          s.value += s.majorTickSpacing
         }
       }
       actionMap.put("RIGHT_ARROW", a1)
@@ -38,15 +38,15 @@ fun makeUI(): Component {
       val a2 = object : AbstractAction() {
         override fun actionPerformed(e: ActionEvent) {
           val s = e.source as? JSlider ?: return
-          s.value = s.value - s.majorTickSpacing
+          s.value -= s.majorTickSpacing
         }
       }
       actionMap.put("LEFT_ARROW", a2)
       handler = MouseWheelListener { e ->
         (e.component as? JSlider)?.also {
           val hasMinorTickSp = it.minorTickSpacing > 0
-          val tickSpacing = if (hasMinorTickSp) it.minorTickSpacing else it.majorTickSpacing
-          val v = it.value - e.wheelRotation * tickSpacing
+          val tickSp = if (hasMinorTickSp) it.minorTickSpacing else it.majorTickSpacing
+          val v = it.value - e.wheelRotation * tickSp
           val m = it.model
           // it.value = minOf(m.maximum, maxOf(v, m.minimum))
           it.value = v.coerceIn(m.minimum, m.maximum)
