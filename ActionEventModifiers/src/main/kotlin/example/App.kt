@@ -46,7 +46,9 @@ fun makeUI(): Component {
     // BAD EXAMPLE: val isShiftDown = (e.getModifiers() & InputEvent.SHIFT_MASK) != 0
     // Always use ActionEvent.*_MASK instead of InputEvent.*_MASK in ActionListener
     val isShiftDown = e.modifiers and ActionEvent.SHIFT_MASK != 0
-    logger.info { if (isShiftDown) "JButton: Shift is Down" else "JButton: Shift is Up" }
+    logger.info {
+      if (isShiftDown) "JButton: Shift is Down" else "JButton: Shift is Up"
+    }
     if (e.modifiers and AWTEvent.MOUSE_EVENT_MASK.toInt() != 0) {
       logger.info { "JButton: Mouse event mask" }
     }
@@ -84,7 +86,9 @@ private fun makeManuBar(): JMenuBar {
   item.mnemonic = KeyEvent.VK_I
   item.addActionListener { e ->
     val isShiftDown = e.modifiers and ActionEvent.SHIFT_MASK != 0
-    logger.info { if (isShiftDown) "JMenuItem: Shift is Down" else "JMenuItem: Shift is Up" }
+    logger.info {
+      if (isShiftDown) "JMenuItem: Shift is Down" else "JMenuItem: Shift is Up"
+    }
     if (e.modifiers and AWTEvent.MOUSE_EVENT_MASK.toInt() != 0) {
       logger.info { "JMenuItem: Mouse event mask" }
     }

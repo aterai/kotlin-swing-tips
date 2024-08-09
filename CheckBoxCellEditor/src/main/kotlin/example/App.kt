@@ -108,8 +108,9 @@ private class CheckBoxPanelEditor :
     }
 
     override fun mousePressed(e: MouseEvent) {
-      (SwingUtilities.getAncestorOfClass(JTable::class.java, e.component) as? JTable)?.also {
-        if (checkBox.model.isPressed && it.isRowSelected(it.editingRow) && e.isControlDown) {
+      getTable(e)?.also {
+        val m = checkBox.model
+        if (m.isPressed && it.isRowSelected(it.editingRow) && e.isControlDown) {
           renderer.background = it.background
         } else {
           renderer.background = it.selectionBackground
@@ -118,10 +119,11 @@ private class CheckBoxPanelEditor :
     }
 
     override fun mouseExited(e: MouseEvent) {
-      (SwingUtilities.getAncestorOfClass(JTable::class.java, e.component) as? JTable)
-        ?.takeIf { it.isEditing }
-        ?.also { it.removeEditor() }
+      getTable(e)?.takeIf { it.isEditing }?.also { it.removeEditor() }
     }
+
+    private fun getTable(e: MouseEvent) =
+      SwingUtilities.getAncestorOfClass(JTable::class.java, e.component) as? JTable
   }
 }
 
