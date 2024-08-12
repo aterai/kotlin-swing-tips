@@ -111,8 +111,8 @@ private class RoundedCellSelectionTable(
       )
       g2.paint = getSelectionBackground()
       val area = Area()
-      for (row in 0..<rowCount) {
-        for (col in 0..<columnCount) {
+      for (row in selectedRows) {
+        for (col in selectedColumns) {
           addArea(area, row, col)
         }
       }
