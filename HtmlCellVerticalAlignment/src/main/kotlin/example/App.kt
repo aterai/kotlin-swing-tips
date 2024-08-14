@@ -5,7 +5,7 @@ import java.awt.event.ActionListener
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
 
-private const val TEXT = "drag select table cells 1 22 333 4444 55555 666666 7777777 88888888"
+private const val TEXT = "drag select table cells 1 22 333 4444 55555 666666 7777777"
 
 fun makeUI(): Component {
   val columnNames = arrayOf("html")
@@ -33,7 +33,8 @@ fun makeUI(): Component {
   val topRadio = JRadioButton("TOP")
   val bottomRadio = JRadioButton("BOTTOM")
   val al = ActionListener {
-    (table.getDefaultRenderer(String::class.java) as? JLabel)?.verticalAlignment = when {
+    val renderer = table.getDefaultRenderer(String::class.java)
+    (renderer as? JLabel)?.verticalAlignment = when {
       topRadio.isSelected -> SwingConstants.TOP
       bottomRadio.isSelected -> SwingConstants.BOTTOM
       else -> SwingConstants.CENTER

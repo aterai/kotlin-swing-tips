@@ -69,7 +69,14 @@ private class VerticalTableHeaderRenderer : TableCellRenderer {
     UIManager.put(ASCENDING, emptyIcon)
     UIManager.put(DESCENDING, emptyIcon)
     val r = table.tableHeader.defaultRenderer
-    val c = r.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    val c = r.getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
     UIManager.put(ASCENDING, ascendingIcon)
     UIManager.put(DESCENDING, descendingIcon)
     if (c is JLabel) {

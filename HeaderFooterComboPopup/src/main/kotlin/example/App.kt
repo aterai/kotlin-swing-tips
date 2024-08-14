@@ -60,7 +60,10 @@ private class HeaderFooterComboPopup(
     footer = JMenuItem("Show All Bookmarks").also {
       it.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_B, modifiers)
       it.addActionListener {
-        JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(invoker), "Bookmarks")
+        JOptionPane.showMessageDialog(
+          SwingUtilities.getWindowAncestor(invoker),
+          "Bookmarks",
+        )
       }
     }
   }

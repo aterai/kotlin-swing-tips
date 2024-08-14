@@ -69,7 +69,10 @@ private class DiagonallySplitBorder(
     super.paintBorder(c, g, x, y, width, height)
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.paint = matteColor
     g2.drawLine(0, 0, c.width - 1, c.height - 1)
     g2.dispose()
@@ -114,7 +117,14 @@ private class VerticalTableHeaderRenderer : TableCellRenderer {
     column: Int,
   ): Component {
     val r = table.tableHeader.defaultRenderer
-    val c = r.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    val c = r.getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
     if (c is JLabel) {
       label.text = c.text
       label.horizontalTextPosition = SwingConstants.LEFT
