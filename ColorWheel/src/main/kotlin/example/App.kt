@@ -27,7 +27,10 @@ private class ColorWheel : JPanel() {
     val g2d = buf.createGraphics()
 
     g2d.composite = AlphaComposite.Src
-    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2d.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2d.fill(Ellipse2D.Float(0f, 0f, s.toFloat(), s.toFloat()))
 
     g2d.composite = AlphaComposite.SrcAtop

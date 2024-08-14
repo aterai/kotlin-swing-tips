@@ -102,7 +102,16 @@ private class BasicClippedTitleTabbedPaneUI : BasicTabbedPaneUI() {
       0,
     )
     if (title == clippedText) {
-      super.paintText(g, tabPlacement, font, metrics, tabIndex, title, textRect, isSelected)
+      super.paintText(
+        g,
+        tabPlacement,
+        font,
+        metrics,
+        tabIndex,
+        title,
+        textRect,
+        isSelected,
+      )
     } else {
       textR.x = textRect.x + tabInsets.left
       super.paintText(
@@ -166,7 +175,16 @@ private class WindowsClippedTitleTabbedPaneUI : WindowsTabbedPaneUI() {
       0,
     )
     if (title == clippedText) {
-      super.paintText(g, tabPlacement, font, metrics, tabIndex, title, textRect, isSelected)
+      super.paintText(
+        g,
+        tabPlacement,
+        font,
+        metrics,
+        tabIndex,
+        title,
+        textRect,
+        isSelected,
+      )
     } else {
       textR.x = textRect.x + tabInsets.left
       super.paintText(

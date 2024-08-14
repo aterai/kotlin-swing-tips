@@ -65,7 +65,14 @@ private class ToolTipHeaderRenderer : TableCellRenderer {
   ): Component {
     val header = table.tableHeader
     val r = header.defaultRenderer
-    val c = r.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    val c = r.getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
     if (c is JLabel) {
       val i = c.insets
       val rect = header.getHeaderRect(column)
