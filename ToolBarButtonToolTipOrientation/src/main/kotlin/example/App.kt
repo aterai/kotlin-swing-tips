@@ -97,7 +97,11 @@ private fun calculateConstraint(source: Container, toolBar: Component): String {
   return constraint ?: BorderLayout.NORTH
 }
 
-private fun getToolTipPoint(btnSz: Dimension, tipSz: Dimension, constraint: String): Point {
+private fun getToolTipPoint(
+  btnSz: Dimension,
+  tipSz: Dimension,
+  constraint: String,
+): Point {
   val dx: Double
   val dy: Double
   when (constraint) {
@@ -148,6 +152,7 @@ private class BalloonToolTip : JToolTip() {
       if (e.changeFlags.toInt() and HierarchyEvent.SHOWING_CHANGED != 0 && c.isShowing) {
         SwingUtilities
           .getWindowAncestor(c)
+          ?.takeIf { it.graphicsConfiguration.isTranslucencyCapable }
           ?.takeIf { it.type == Window.Type.POPUP }
           ?.background = Color(0x0, true)
       }

@@ -101,6 +101,7 @@ private class BalloonToolTip : JToolTip() {
       if (e.changeFlags.toInt() and HierarchyEvent.SHOWING_CHANGED != 0 && c.isShowing) {
         SwingUtilities
           .getWindowAncestor(c)
+          ?.takeIf { it.graphicsConfiguration.isTranslucencyCapable }
           ?.takeIf { it.type == Window.Type.POPUP }
           ?.background = Color(0x0, true)
       }
