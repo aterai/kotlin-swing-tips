@@ -43,7 +43,10 @@ fun makeUI(): Component {
       val fillLeft = thumbSize / 2
 
       // Paint track
-      g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g.color = Color(0xC6_E4_FC)
       g.fillRoundRect(fillLeft, fillTop + 2, trackWidth, trackHeight - 4, arc, arc)
 

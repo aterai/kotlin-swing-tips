@@ -19,7 +19,10 @@ fun makeUI(): Component {
       val fillTop = 4
       val fillLeft = 1
 
-      g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g.stroke = BasicStroke(1.5f)
       g.color = Color.GRAY
       g.fillRoundRect(fillLeft, fillTop, trackWidth, trackHeight, arc, arc)

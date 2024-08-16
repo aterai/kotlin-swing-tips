@@ -41,8 +41,8 @@ class OperaTabViewButtonUI : BasicTabViewButtonUI() {
     viewRect.y = i.top
     viewRect.width = size.width - i.right - viewRect.x
     viewRect.height = size.height - i.bottom - viewRect.y
-    iconRect.setBounds(0, 0, 0, 0) // .x = iconRect.y = iconRect.width = iconRect.height = 0
-    textRect.setBounds(0, 0, 0, 0) // .x = textRect.y = textRect.width = textRect.height = 0
+    iconRect.setBounds(0, 0, 0, 0)
+    textRect.setBounds(0, 0, 0, 0)
 
     val g2 = g.create() as? Graphics2D ?: return
     // g2.setPaint(Color.CYAN) // c.getBackground())

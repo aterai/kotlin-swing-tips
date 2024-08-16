@@ -73,7 +73,13 @@ fun makeUI(): Component {
       putClientProperty(key, def)
       val r = getRenderer()
       setRenderer { list, value, index, isSelected, cellHasFocus ->
-        val c = r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+        val c = r.getListCellRendererComponent(
+          list,
+          value,
+          index,
+          isSelected,
+          cellHasFocus,
+        )
         if (c is JLabel) {
           c.text = "TEST2: $value"
         }
