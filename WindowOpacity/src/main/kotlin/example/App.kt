@@ -104,7 +104,9 @@ fun main() {
   EventQueue.invokeLater {
     JFrame.setDefaultLookAndFeelDecorated(true)
     JFrame().apply {
-      background = Color(0x0, true)
+      if (graphicsConfiguration.isTranslucencyCapable) {
+        background = Color(0x0, true)
+      }
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
       contentPane.add(makeUI())
       pack()

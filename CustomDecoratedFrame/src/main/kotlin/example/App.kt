@@ -276,7 +276,9 @@ fun main() {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
       isUndecorated = true
-      background = Color(0x0, true)
+      if (graphicsConfiguration.isTranslucencyCapable) {
+        background = Color(0x0, true)
+      }
       contentPane = makeResizableContentPane("title")
       contentPane.add(makeUI())
       pack()

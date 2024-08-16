@@ -87,7 +87,9 @@ fun main() {
       minimumSize = Dimension(300, 120)
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
       contentPane.add(makeUI())
-      background = Color(0x0, true)
+      if (graphicsConfiguration.isTranslucencyCapable) {
+        background = Color(0x0, true)
+      }
       pack()
       setLocationRelativeTo(null)
       isVisible = true
