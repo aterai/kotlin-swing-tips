@@ -42,16 +42,23 @@ fun makeUI(): Component {
         fixedCellHeight = CELL_SIZE.height
         selectionModel.selectionMode = ListSelectionModel.SINGLE_INTERVAL_SELECTION
         border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
-        val r = cellRenderer
+        val renderer = cellRenderer
         setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-          r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
-            (it as? JLabel)?.also { label ->
-              label.icon = ColorIcon(value.color)
-              label.toolTipText = "index: ${value.index}"
-              val bc = if (value.isTransparent) Color.RED else Color.WHITE
-              label.border = BorderFactory.createLineBorder(bc)
+          renderer
+            .getListCellRendererComponent(
+              list,
+              value,
+              index,
+              isSelected,
+              cellHasFocus,
+            ).also {
+              (it as? JLabel)?.also { label ->
+                label.icon = ColorIcon(value.color)
+                label.toolTipText = "index: ${value.index}"
+                val bc = if (value.isTransparent) Color.RED else Color.WHITE
+                label.border = BorderFactory.createLineBorder(bc)
+              }
             }
-          }
         }
       }
     }
