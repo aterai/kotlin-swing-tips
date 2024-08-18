@@ -31,7 +31,13 @@ fun makeUI(): Component {
   }
 }
 
-private fun createFrame(i: Int) = JInternalFrame("title: $i", true, true, true, true).also {
+private fun createFrame(i: Int) = JInternalFrame(
+  "title: $i",
+  true,
+  true,
+  true,
+  true,
+).also {
   it.putClientProperty("JInternalFrame.isPalette", true)
   it.setSize(160, 120)
   it.setLocation(100 + 20 * i, 10 + 20 * i)
