@@ -6,7 +6,8 @@ import javax.swing.event.HyperlinkEvent
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableModel
 
-private const val PLACEHOLDER = "<html>No data! <a href='#placeholder'>Input hint(beep)</a>"
+private const val HINT = "Input hint(beep)"
+private const val PLACEHOLDER = "<html>No data! <a href='#placeholder'>$HINT</a>"
 
 fun makeUI(): Component {
   val editor = JEditorPane("text/html", PLACEHOLDER)
