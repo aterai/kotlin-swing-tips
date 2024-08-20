@@ -26,7 +26,14 @@ private val table = object : JTable(model) {
           progress
         } else {
           val txt = "Done(0ms)"
-          renderer.getTableCellRendererComponent(tbl, txt, isSelected, hasFocus, row, column)
+          renderer.getTableCellRendererComponent(
+            tbl,
+            txt,
+            isSelected,
+            hasFocus,
+            row,
+            column,
+          )
         }
       } else {
         val txt = value?.toString() ?: ""
