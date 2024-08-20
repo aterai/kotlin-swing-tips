@@ -25,7 +25,7 @@ fun makeUI(): Component {
       removePopupMenuListener(listener)
       super.updateUI()
       border = RoundedCornerBorder()
-      setRenderer(RoundedCornerListCellRenderer<Any?>())
+      setRenderer(RoundedCornerListCellRenderer<Any>())
       setUI(object : BasicComboBoxUI() {
         override fun createArrowButton(): JButton {
           val b = JButton(ArrowIcon(Color.WHITE, Color.BLACK))
@@ -140,13 +140,12 @@ private class RoundedCornerListCellRenderer<E> : ListCellRenderer<E> {
       cellHasFocus,
     )
     if (c is JLabel) {
-      val label = c
-      label.isOpaque = false
-      label.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
-      label.iconTextGap = 0
+      c.isOpaque = false
+      c.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
+      c.iconTextGap = 0
       val isListItem = index >= 0
-      label.icon = if (isListItem) GapIcon() else null
-      label.isOpaque = !isListItem
+      c.icon = if (isListItem) GapIcon() else null
+      c.isOpaque = !isListItem
     }
     return c
   }
@@ -154,13 +153,15 @@ private class RoundedCornerListCellRenderer<E> : ListCellRenderer<E> {
 
 private class HeavyWeightContainerListener : PopupMenuListener {
   override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-    val c = e.source as? JComboBox<*> ?: return
-    c.border = TopRoundedCornerBorder()
+    val combo = e.source as? JComboBox<*> ?: return
+    combo.border = TopRoundedCornerBorder()
     EventQueue.invokeLater {
-      val pop = c.getUI().getAccessibleChild(c, 0)
-      val top = (pop as? JPopupMenu)?.topLevelAncestor
-      if (top is JWindow && top.type == Window.Type.POPUP) {
-        top.background = Color(0x0, true)
+      val pop = combo.ui.getAccessibleChild(combo, 0)
+      if (pop is JPopupMenu) {
+        SwingUtilities.getWindowAncestor(pop)
+          ?.takeIf { it.graphicsConfiguration.isTranslucencyCapable }
+          ?.takeIf { it is JWindow && it.type == Window.Type.POPUP }
+          ?.background = Color(0x0, true)
       }
     }
   }
