@@ -186,7 +186,9 @@ private class TranslucentPopup(
   private val popupWindow = JWindow()
 
   init {
-    popupWindow.background = Color(0x0, true)
+    if (popupWindow.graphicsConfiguration.isTranslucencyCapable) {
+      popupWindow.background = Color(0x0, true)
+    }
     popupWindow.setLocation(ownerX, ownerY)
     popupWindow.contentPane.add(contents)
     contents.invalidate()

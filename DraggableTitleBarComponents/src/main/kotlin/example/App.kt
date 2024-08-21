@@ -51,7 +51,9 @@ fun makeFrame(str: String): JFrame {
     override fun getContentPane() = mainContentPane
   }
   frame.isUndecorated = true
-  frame.background = Color(0x0, true)
+  if (frame.graphicsConfiguration.isTranslucencyCapable) {
+    frame.background = Color(0x0, true)
+  }
 
   val title = JPanel(BorderLayout(GAP, GAP))
   title.isOpaque = false
