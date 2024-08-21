@@ -9,34 +9,30 @@ fun makeUI(): Component {
 
   val defaultButton = JButton("Default")
   defaultButton.addActionListener {
-    val iv = UIManager.getLookAndFeelDefaults().getInt(key)
-    UIManager.put(key, iv)
-    val str = JOptionPane.showInputDialog(log.rootPane, "Default")
-    log.text = str
+    UIManager.put(key, UIManager.getLookAndFeelDefaults().getInt(key))
+    val msg = "Default"
+    log.text = JOptionPane.showInputDialog(log.rootPane, msg)
   }
 
   val rightButton = JButton("RIGHT")
   rightButton.addActionListener {
     UIManager.put(key, SwingConstants.RIGHT)
-    val str = JOptionPane.showInputDialog(log.rootPane, "OptionPane.buttonOrientation: RIGHT")
-    log.text = str
+    val msg = "OptionPane.buttonOrientation: RIGHT"
+    log.text = JOptionPane.showInputDialog(log.rootPane, msg)
   }
 
   val centerButton = JButton("CENTER")
   centerButton.addActionListener {
     UIManager.put(key, SwingConstants.CENTER)
-    val str = JOptionPane.showInputDialog(
-      log.rootPane,
-      "OptionPane.buttonOrientation: CENTER",
-    )
-    log.text = str
+    val msg = "OptionPane.buttonOrientation: CENTER"
+    log.text = JOptionPane.showInputDialog(log.rootPane, msg)
   }
 
   val leftButton = JButton("LEFT")
   leftButton.addActionListener {
     UIManager.put(key, SwingConstants.LEFT)
-    val str = JOptionPane.showInputDialog(log.rootPane, "OptionPane.buttonOrientation: LEFT")
-    log.text = str
+    val msg = "OptionPane.buttonOrientation: LEFT"
+    log.text = JOptionPane.showInputDialog(log.rootPane, msg)
   }
 
   val p = JPanel().also {

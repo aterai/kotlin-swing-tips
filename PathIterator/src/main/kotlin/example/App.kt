@@ -176,7 +176,10 @@ private class StarIcon(
     g2.translate(x, y)
     g2.paint = Color.PINK
     if (antialiasing) {
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
     }
     g2.fill(star)
     g2.dispose()
