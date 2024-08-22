@@ -50,7 +50,9 @@ fun makeUI(): Component {
       UIManager.put(KEY, TopRoundedCornerBorder())
       super.updateUI()
       val tmp = object : BasicComboBoxUI() {
-        override fun createArrowButton() = JButton(ArrowIcon(BACKGROUND, FOREGROUND)).also {
+        override fun createArrowButton() = JButton(
+          ArrowIcon(BACKGROUND, FOREGROUND),
+        ).also {
           it.isContentAreaFilled = false
           it.isFocusPainted = false
           it.border = BorderFactory.createEmptyBorder()
@@ -137,11 +139,11 @@ private class HeavyWeightContainerListener : PopupMenuListener {
   override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
     val c = e.source as? JComboBox<*> ?: return
     EventQueue.invokeLater {
-      val pop = c.getUI().getAccessibleChild(c, 0)
-      val top = (pop as? JPopupMenu)?.topLevelAncestor
-      if (top is JWindow && top.type == Window.Type.POPUP) {
-        top.background = Color(0x0, true)
-      }
+      val pop = c.ui.getAccessibleChild(c, 0)
+      SwingUtilities.getWindowAncestor(pop as? JPopupMenu)
+        ?.takeIf { it.graphicsConfiguration.isTranslucencyCapable }
+        ?.takeIf { it.type == Window.Type.POPUP }
+        ?.background = Color(0x0, true)
     }
   }
 
