@@ -97,10 +97,10 @@ private class DropShadowPopupMenu : JPopupMenu() {
       }
     }
     EventQueue.invokeLater {
-      val top = SwingUtilities.getWindowAncestor(this)
-      if (top?.type == Window.Type.POPUP) {
-        top.background = Color(0x0, true)
-      }
+      SwingUtilities.getWindowAncestor(this)
+        ?.takeIf { it.graphicsConfiguration.isTranslucencyCapable }
+        ?.takeIf { it.type == Window.Type.POPUP }
+        ?.background = Color(0x0, true)
     }
     super.show(c, x, y)
   }
