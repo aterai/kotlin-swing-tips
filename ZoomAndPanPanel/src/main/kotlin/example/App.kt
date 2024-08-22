@@ -75,7 +75,8 @@ private class ZoomAndPanePanel(
           val ovr = p.viewRect
           val s = if (dir > 0) 1.0 / ZOOM_FACTOR else ZOOM_FACTOR
           zoomTransform.scale(s, s)
-          val nvr = AffineTransform.getScaleInstance(s, s).createTransformedShape(ovr).bounds
+          val at = AffineTransform.getScaleInstance(s, s)
+          val nvr = at.createTransformedShape(ovr).bounds
           val vp = nvr.location
           vp.translate((nvr.width - ovr.width) / 2, (nvr.height - ovr.height) / 2)
           p.viewPosition = vp
