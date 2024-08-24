@@ -32,7 +32,9 @@ fun makeUI(): Component {
   button2.addActionListener { e ->
     JWindow().also {
       it.contentPane.add(makePanel(clippedImage))
-      it.background = Color(0x0, true)
+      if (it.graphicsConfiguration.isTranslucencyCapable) {
+        it.background = Color(0x0, true)
+      }
       it.pack()
       it.setLocationRelativeTo((e.source as? JComponent)?.rootPane)
       it.isVisible = true
