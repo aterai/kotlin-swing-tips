@@ -12,7 +12,7 @@ fun makeUI(): Component {
   tabs.addTab("JTree", ColorIcon(Color.RED), JScrollPane(JTree()))
   tabs.addTab("JTextArea", ColorIcon(Color.GREEN), JScrollPane(JTextArea()))
   tabs.addTab("JTable", ColorIcon(Color.BLUE), JScrollPane(JTable(8, 3)))
-  tabs.addTab("JSplitPane", ColorIcon(Color.ORANGE), JScrollPane(JSplitPane()))
+  tabs.addTab("JSplitPane", ColorIcon(Color.ORANGE), JSplitPane())
   tabs.selectedIndex = -1
   EventQueue.invokeLater { tabs.selectedIndex = 0 }
   return JPanel(BorderLayout()).also {
