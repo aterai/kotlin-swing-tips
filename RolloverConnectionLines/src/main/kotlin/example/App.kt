@@ -70,14 +70,15 @@ fun makeUI(): Component {
     }
   }
 
-  val sp = JSplitPane()
-  sp.resizeWeight = .5
-  sp.leftComponent = makeTitledPanel(JTree(), "Default")
-  val title = "Paint the lines that connect the nodes during rollover"
-  sp.rightComponent = makeTitledPanel(tree, title)
+  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT).also {
+    it.resizeWeight = .5
+    it.leftComponent = makeTitledPanel(JTree(), "Default")
+    val title = "Paint the lines that connect the nodes during rollover"
+    it.rightComponent = makeTitledPanel(tree, title)
+  }
 
   return JPanel(BorderLayout()).also {
-    it.add(sp)
+    it.add(split)
     it.preferredSize = Dimension(320, 240)
   }
 }

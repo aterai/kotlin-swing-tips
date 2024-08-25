@@ -33,7 +33,7 @@ fun makeUI(): Component {
     }
   }
 
-  val split = JSplitPane().also {
+  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT).also {
     it.leftComponent = JScrollPane(table)
     it.rightComponent = JScrollPane(tree)
     it.resizeWeight = .5

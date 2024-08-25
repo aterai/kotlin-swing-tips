@@ -34,12 +34,12 @@ fun makeUI(): Component {
     }
   }
 
-  val splitPane = JSplitPane()
-  splitPane.resizeWeight = .5
-  splitPane.leftComponent = scroll1
-  splitPane.rightComponent = scroll2
-  splitPane.preferredSize = Dimension(320, 240)
-  return splitPane
+  return JSplitPane(JSplitPane.HORIZONTAL_SPLIT).also {
+    it.resizeWeight = .5
+    it.leftComponent = scroll1
+    it.rightComponent = scroll2
+    it.preferredSize = Dimension(320, 240)
+  }
 }
 
 fun main() {

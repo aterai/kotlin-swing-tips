@@ -70,9 +70,10 @@ fun makeUI(): Component {
   val p = JPanel(BorderLayout())
   p.add(menuBar, BorderLayout.NORTH)
 
-  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT)
-  split.leftComponent = p
-  split.rightComponent = JScrollPane(JTree())
+  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT).also {
+    it.leftComponent = p
+    it.rightComponent = JScrollPane(JTree())
+  }
 
   val mb = JMenuBar()
   mb.add(LookAndFeelUtils.createLookAndFeelMenu())
