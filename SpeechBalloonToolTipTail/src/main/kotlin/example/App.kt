@@ -90,7 +90,7 @@ private fun makeTabbedPane(): JTabbedPane {
     }
   }
   tabs.addTab("000", ColorIcon(Color.RED), JScrollPane(JTree()), "00000")
-  tabs.addTab("111", ColorIcon(Color.GREEN), JScrollPane(JSplitPane()), "11111")
+  tabs.addTab("111", ColorIcon(Color.GREEN), JSplitPane(), "11111")
   tabs.addTab("222", ColorIcon(Color.BLUE), JScrollPane(JTable(5, 5)), "22222")
   tabs.addTab("333", ColorIcon(Color.ORANGE), JLabel("6"), "33333")
   tabs.addTab("444", ColorIcon(Color.CYAN), JLabel("7"), "44444")

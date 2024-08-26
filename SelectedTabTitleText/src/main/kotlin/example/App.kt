@@ -22,7 +22,7 @@ fun makeUI(): Component {
   addTab(tabs, titles[0], JScrollPane(JTree()))
   addTab(tabs, titles[1], JScrollPane(JTextArea()))
   addTab(tabs, titles[2], JScrollPane(JTable(8, 3)))
-  addTab(tabs, titles[3], JScrollPane(JSplitPane()))
+  addTab(tabs, titles[3], JSplitPane())
   tabs.selectedIndex = -1
   EventQueue.invokeLater { tabs.selectedIndex = 0 }
 
