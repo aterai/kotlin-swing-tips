@@ -96,8 +96,15 @@ private class HeaderRenderer : TableCellRenderer {
     row: Int,
     column: Int,
   ): Component {
-    val r = table.tableHeader.defaultRenderer
-    val c = r.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    val renderer = table.tableHeader.defaultRenderer
+    val c = renderer.getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
 
     check.isOpaque = false
     if (value is Status) {
