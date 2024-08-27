@@ -28,22 +28,22 @@ fun makeUI(): Component {
 private fun makeModel(): TableModel {
   val columnNames = arrayOf("String", "Integer", "Boolean")
   val data = arrayOf(
-    arrayOf<Any>("aaa", 12, true),
-    arrayOf<Any>("bbb", 5, false),
-    arrayOf<Any>("CCC", 92, true),
-    arrayOf<Any>("DDD", 0, false),
-    arrayOf<Any>("eee", 22, true),
-    arrayOf<Any>("fff", 6, false),
-    arrayOf<Any>("ggg", 83, true),
-    arrayOf<Any>("hhh", 9, false),
-    arrayOf<Any>("iii", 31, true),
-    arrayOf<Any>("jjj", 4, false),
-    arrayOf<Any>("kkk", 75, true),
-    arrayOf<Any>("lll", 8, false),
-    arrayOf<Any>("mmm", 77, true),
-    arrayOf<Any>("nnn", 2, false),
-    arrayOf<Any>("OOO", 68, true),
-    arrayOf<Any>("PPP", 7, false),
+    arrayOf("aaa", 12, true),
+    arrayOf("bbb", 5, false),
+    arrayOf("CCC", 92, true),
+    arrayOf("DDD", 0, false),
+    arrayOf("eee", 22, true),
+    arrayOf("fff", 6, false),
+    arrayOf("ggg", 83, true),
+    arrayOf("hhh", 9, false),
+    arrayOf("iii", 31, true),
+    arrayOf("jjj", 4, false),
+    arrayOf("kkk", 75, true),
+    arrayOf("lll", 8, false),
+    arrayOf("mmm", 77, true),
+    arrayOf("nnn", 2, false),
+    arrayOf("OOO", 68, true),
+    arrayOf("PPP", 7, false),
   )
   return object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass

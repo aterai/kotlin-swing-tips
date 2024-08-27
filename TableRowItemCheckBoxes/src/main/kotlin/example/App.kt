@@ -19,10 +19,10 @@ fun makeUI() = JPanel(GridLayout(2, 1)).also {
 private fun makeModel(): TableModel {
   val columnNames = arrayOf("String", "Integer", "CheckBox")
   val data = arrayOf(
-    arrayOf<Any>("aaa", 12, false),
-    arrayOf<Any>("bbb", 5, false),
-    arrayOf<Any>("CCC", 92, false),
-    arrayOf<Any>("DDD", 0, false),
+    arrayOf("aaa", 12, false),
+    arrayOf("bbb", 5, false),
+    arrayOf("CCC", 92, false),
+    arrayOf("DDD", 0, false),
   )
   return object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass

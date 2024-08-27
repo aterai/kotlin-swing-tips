@@ -24,10 +24,10 @@ fun makeUI(): Component {
 private fun makeTable(): JTable {
   val columnNames = arrayOf("A", "B", "C", "Integer")
   val data = arrayOf(
-    arrayOf<Any>("aaa", "aa", "a", 12),
-    arrayOf<Any>("bbb", "bb", "b", 5),
-    arrayOf<Any>("ccc", "cc", "c", 92),
-    arrayOf<Any>("ddd", "dd", "d", 0),
+    arrayOf("aaa", "aa", "a", 12),
+    arrayOf("bbb", "bb", "b", 5),
+    arrayOf("ccc", "cc", "c", 92),
+    arrayOf("ddd", "dd", "d", 0),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
