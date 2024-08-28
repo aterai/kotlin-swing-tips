@@ -109,14 +109,21 @@ private class HeaderRenderer : TableCellRenderer {
     }
     check.isOpaque = false
     check.font = table.font
-    val r = table.tableHeader.defaultRenderer
-    val l = r.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    val renderer = table.tableHeader.defaultRenderer
+    val c = renderer.getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
     label.icon = ComponentIcon(check)
-    if (l is JLabel) {
-      l.icon = ComponentIcon(label)
-      l.text = null // XXX: Nimbus???
+    if (c is JLabel) {
+      c.icon = ComponentIcon(label)
+      c.text = null // XXX: Nimbus???
     }
-    return l
+    return c
   }
 }
 
