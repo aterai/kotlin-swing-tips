@@ -169,7 +169,16 @@ private class GroupableTableHeaderUI : BasicTableHeaderUI() {
     columnIndex: Int,
   ) {
     val c = getHeaderRenderer(columnIndex)
-    rendererPane.paintComponent(g, c, header, rect.x, rect.y, rect.width, rect.height, true)
+    rendererPane.paintComponent(
+      g,
+      c,
+      header,
+      rect.x,
+      rect.y,
+      rect.width,
+      rect.height,
+      true,
+    )
   }
 
   private fun paintCellGroup(
@@ -180,7 +189,16 @@ private class GroupableTableHeaderUI : BasicTableHeaderUI() {
     val r = header.defaultRenderer
     val v = columnGroup.headerValue
     val c = r.getTableCellRendererComponent(header.table, v, false, false, -1, -1)
-    rendererPane.paintComponent(g, c, header, rect.x, rect.y, rect.width, rect.height, true)
+    rendererPane.paintComponent(
+      g,
+      c,
+      header,
+      rect.x,
+      rect.y,
+      rect.width,
+      rect.height,
+      true,
+    )
   }
 
   private fun getHeaderHeight(): Int {
@@ -254,12 +272,22 @@ private class ColumnGroup(
   }
 
   fun getSize(header: JTableHeader): Dimension {
-    val r = header.defaultRenderer
-    val c = r.getTableCellRendererComponent(header.table, headerValue, false, false, -1, -1)
+    val headerRenderer = header.defaultRenderer
+    val c = headerRenderer.getTableCellRendererComponent(
+      header.table,
+      headerValue,
+      false,
+      false,
+      -1,
+      -1,
+    )
     var width = 0
     for (o in list) {
-      // width += if (o is TableColumn) o.getWidth() else (o as ColumnGroup).getSize(header).width
-      width += (o as? TableColumn)?.width ?: (o as? ColumnGroup)?.getSize(header)?.width ?: 0
+      width += when (o) {
+        is TableColumn -> o.width
+        is ColumnGroup -> o.getSize(header).width
+        else -> 0
+      }
     }
     return Dimension(width, c.preferredSize.height)
   }
