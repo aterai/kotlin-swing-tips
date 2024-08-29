@@ -63,15 +63,25 @@ fun makeUI(): Component {
 private fun getTabAreaBounds(tabbedPane: JTabbedPane): Rectangle {
   val r = SwingUtilities.calculateInnerArea(tabbedPane, null)
   val cr = tabbedPane.selectedComponent?.bounds ?: Rectangle()
-  val tp = tabbedPane.tabPlacement
   val i1 = UIManager.getInsets("TabbedPane.tabAreaInsets")
   val i2 = UIManager.getInsets("TabbedPane.contentBorderInsets")
-  if (tp == SwingConstants.TOP || tp == SwingConstants.BOTTOM) {
-    r.height -= cr.height + i1.top + i1.bottom + i2.top + i2.bottom
-    r.y += if (tp == SwingConstants.TOP) i1.top else cr.y + cr.height + i1.bottom + i2.bottom
-  } else {
-    r.width -= cr.width + i1.top + i1.bottom + i2.left + i2.right
-    r.x += if (tp == SwingConstants.LEFT) i1.top else cr.x + cr.width + i1.bottom + i2.right
+  when (tabbedPane.tabPlacement) {
+    SwingConstants.TOP -> {
+      r.height -= cr.height + i1.top + i1.bottom + i2.top + i2.bottom
+      r.y += i1.top
+    }
+    SwingConstants.BOTTOM -> {
+      r.height -= cr.height + i1.top + i1.bottom + i2.top + i2.bottom
+      r.y += cr.y + cr.height + i1.bottom + i2.bottom
+    }
+    SwingConstants.LEFT -> {
+      r.width -= cr.width + i1.top + i1.bottom + i2.left + i2.right
+      r.x += i1.top
+    }
+    SwingConstants.RIGHT -> {
+      r.width -= cr.width + i1.top + i1.bottom + i2.left + i2.right
+      r.x += cr.x + cr.width + i1.bottom + i2.right
+    }
   }
   return r
 }
@@ -84,9 +94,9 @@ private class TabbedPanePopupMenu : JPopupMenu() {
   init {
     val addTab = add("New tab")
     addTab.actionCommand = "AddTab"
-    addTab.addActionListener {
+    addTab.addActionListener { e ->
       (invoker as? JTabbedPane)?.also { tabs ->
-        val key = addTab.actionCommand
+        val key = e.actionCommand
         tabs.actionMap[key]?.also {
           it.actionPerformed(ActionEvent(tabs, ActionEvent.ACTION_PERFORMED, key))
         }
@@ -96,9 +106,9 @@ private class TabbedPanePopupMenu : JPopupMenu() {
 
     removeTab = add("Close")
     removeTab.actionCommand = "RemoveTab"
-    removeTab.addActionListener {
+    removeTab.addActionListener { e ->
       (invoker as? JTabbedPane)?.also { tabs ->
-        val key = addTab.actionCommand
+        val key = e.actionCommand
         tabs.actionMap[key]?.also {
           it.actionPerformed(ActionEvent(tabs, ActionEvent.ACTION_PERFORMED, key))
         }
