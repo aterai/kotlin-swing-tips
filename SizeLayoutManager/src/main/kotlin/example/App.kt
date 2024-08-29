@@ -4,9 +4,16 @@ import java.awt.*
 import java.awt.event.ActionListener
 import javax.swing.*
 
+fun makeUI() = JPanel(GridLayout(2, 1)).also {
+  it.add(makeCmp1())
+  it.add(makeCmp2())
+  it.preferredSize = Dimension(320, 240)
+}
+
 private fun makeCmp1(): Component {
+  val title = "Override JToggleButton#getPreferredSize(...)"
   val p = JPanel(GridBagLayout())
-  p.border = BorderFactory.createTitledBorder("Override JToggleButton#getPreferredSize(...)")
+  p.border = BorderFactory.createTitledBorder(title)
   val c = GridBagConstraints()
   c.insets = Insets(5, 5, 5, 5)
   val al = ActionListener { p.revalidate() }
@@ -27,8 +34,9 @@ private fun makeCmp1(): Component {
 }
 
 private fun makeCmp2(): Component {
+  val title = "Override FlowLayout#layoutContainer(...)"
   val p = JPanel(GridBagLayout())
-  p.border = BorderFactory.createTitledBorder("Override FlowLayout#layoutContainer(...)")
+  p.border = BorderFactory.createTitledBorder(title)
   p.layout = object : FlowLayout() {
     override fun layoutContainer(target: Container) {
       synchronized(target.treeLock) {
@@ -63,12 +71,6 @@ private fun makeCmp2(): Component {
       p.add(b)
     }
   return p
-}
-
-fun makeUI() = JPanel(GridLayout(2, 1)).also {
-  it.add(makeCmp1())
-  it.add(makeCmp2())
-  it.preferredSize = Dimension(320, 240)
 }
 
 fun main() {

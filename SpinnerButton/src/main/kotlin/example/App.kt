@@ -70,22 +70,30 @@ private fun makeTitledPanel(
 }
 
 private class ToolTipSpinnerUI : BasicSpinnerUI() {
-  override fun createNextButton() = (super.createNextButton() as? JComponent)?.also {
-    it.toolTipText = "SpinnerUI: next next"
+  override fun createNextButton(): Component {
+    val c = super.createNextButton()
+    (c as? JComponent)?.toolTipText = "SpinnerUI: next next"
+    return c
   }
 
-  override fun createPreviousButton() = (super.createPreviousButton() as? JComponent)?.also {
-    it.toolTipText = "SpinnerUI: prev prev"
+  override fun createPreviousButton(): Component {
+    val c = super.createPreviousButton()
+    (c as? JComponent)?.toolTipText = "SpinnerUI: prev prev"
+    return c
   }
 }
 
 private class ToolTipWindowsSpinnerUI : WindowsSpinnerUI() {
-  override fun createNextButton() = (super.createNextButton() as? JComponent)?.also {
-    it.toolTipText = "SpinnerUI: next next"
+  override fun createNextButton(): Component {
+    val c = super.createNextButton()
+    (c as? JComponent)?.toolTipText = "SpinnerUI: next next"
+    return c
   }
 
-  override fun createPreviousButton() = (super.createPreviousButton() as? JComponent)?.also {
-    it.toolTipText = "SpinnerUI: prev prev"
+  override fun createPreviousButton(): Component {
+    val c = super.createPreviousButton()
+    (c as? JComponent)?.toolTipText = "SpinnerUI: prev prev"
+    return c
   }
 }
 
