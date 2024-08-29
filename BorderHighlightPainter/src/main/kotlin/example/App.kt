@@ -111,13 +111,9 @@ private class HighlightHandler :
   }
 
   override fun actionPerformed(e: ActionEvent) {
-    (e.source as? AbstractButton)?.also {
-      val cmd = it.actionCommand
-      if ("prev" == cmd) {
-        current--
-      } else if ("next" == cmd) {
-        current++
-      }
+    when (e.actionCommand) {
+      "prev" -> current--
+      "next" -> current++
     }
     changeHighlight()
   }
@@ -159,13 +155,13 @@ private fun changeHighlight() {
 
 private fun getRegex(): Regex? {
   val text = field.text
-  if (text == null || text.isEmpty()) {
+  if (text.isNullOrEmpty()) {
     return null
   }
   val cw = if (checkWord.isSelected) "\\b" else ""
   val pattern = "%s%s%s".format(cw, text, cw)
   val op = if (checkCase.isSelected) {
-    emptySet<RegexOption>()
+    emptySet()
   } else {
     setOf(RegexOption.IGNORE_CASE)
   }
@@ -177,7 +173,7 @@ private fun getRegex(): Regex? {
 }
 
 @Throws(BadLocationException::class)
-private fun scrollToCenter(
+fun scrollToCenter(
   tc: JTextComponent,
   pos: Int,
 ) {
@@ -185,7 +181,7 @@ private fun scrollToCenter(
   // Java 9: val rect = tc.modelToView2D(pos).getBounds()
   val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, tc)
   if (rect != null && c is JViewport) {
-    rect.x = rect.x - c.width / 2
+    rect.x -= c.width / 2
     rect.width = c.width
     rect.height = c.height / 2
     tc.scrollRectToVisible(rect)
