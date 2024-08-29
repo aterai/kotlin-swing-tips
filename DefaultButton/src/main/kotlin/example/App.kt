@@ -34,7 +34,7 @@ private fun makeRadioPane(): Box {
   map["Button2"] = b2
   val bg = ButtonGroup()
   val al = ActionListener {
-    box.rootPane?.defaultButton = map[bg.selection.actionCommand]
+    box.rootPane?.defaultButton = map[it.actionCommand]
   }
   map.forEach { (key, _) ->
     val r = JRadioButton(key)
