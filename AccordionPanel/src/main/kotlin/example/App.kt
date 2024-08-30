@@ -16,11 +16,17 @@ fun makeUI(): Component {
   }
   accordion.add(Box.createVerticalGlue())
 
-  val scroll = JScrollPane(accordion)
-  scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
-  scroll.verticalScrollBar.unitIncrement = 25
+  val scroll = object : JScrollPane(accordion) {
+    override fun updateUI() {
+      super.updateUI()
+      horizontalScrollBarPolicy = HORIZONTAL_SCROLLBAR_NEVER
+      verticalScrollBar.unitIncrement = 25
+    }
+  }
 
-  return JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scroll, JPanel()).also {
+  return JSplitPane(JSplitPane.HORIZONTAL_SPLIT).also {
+    it.leftComponent = scroll
+    it.rightComponent = JPanel()
     it.resizeWeight = .5
     it.dividerLocation = 160
     it.dividerSize = 2
@@ -69,7 +75,9 @@ abstract class AbstractExpansionPanel(
 
     override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
-      g2.paint = GradientPaint(50f, 0f, Color.WHITE, width.toFloat(), height.toFloat(), bgc)
+      val fw = width.toFloat()
+      val fh = height.toFloat()
+      g2.paint = GradientPaint(50f, 0f, Color.WHITE, fw, fh, bgc)
       g2.fillRect(0, 0, width, height)
       g2.dispose()
       super.paintComponent(g)
@@ -99,6 +107,12 @@ abstract class AbstractExpansionPanel(
   }
 
   abstract fun makePanel(): JPanel
+
+  final override fun add(comp: Component?): Component = super.add(comp)
+
+  final override fun add(comp: Component, constraints: Any?) {
+    super.add(comp, constraints)
+  }
 
   override fun getPreferredSize(): Dimension? = titleBar.preferredSize?.also {
     panel.takeIf { it.isVisible }?.also { p ->
