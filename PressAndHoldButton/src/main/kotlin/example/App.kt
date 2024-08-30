@@ -16,8 +16,8 @@ fun makeUI(): Component {
   makeMenuList()
     .map { makeMenuButton(it) }
     .forEach {
-      it.addActionListener {
-        val cmd = bg.selection?.actionCommand ?: "null"
+      it.addActionListener { e ->
+        val cmd = e.actionCommand
         log.append("Selected JRadioButton command: $cmd\n")
         popupMenu.isVisible = false
       }
@@ -65,28 +65,28 @@ private fun makeMenuButton(m: MenuContext): AbstractButton {
 
 private class PressAndHoldButton(
   icon: Icon,
-  val popupMenu: JPopupMenu?,
+  val popup: JPopupMenu?,
 ) : JButton(icon) {
   private var handler: PressAndHoldHandler? = null
 
   override fun updateUI() {
     removeMouseListener(handler)
     super.updateUI()
-    if (popupMenu != null) {
-      SwingUtilities.updateComponentTreeUI(popupMenu)
+    if (popup != null) {
+      SwingUtilities.updateComponentTreeUI(popup)
     }
     handler = PressAndHoldHandler()
     action = handler
     addMouseListener(handler)
     isFocusable = false
-    border = BorderFactory.createEmptyBorder(4, 4, 4, 4 + Companion.ARROW_ICON.iconWidth)
+    border = BorderFactory.createEmptyBorder(4, 4, 4, 4 + ARROW_ICON.iconWidth)
   }
 
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     val r = SwingUtilities.calculateInnerArea(this, null)
-    val cy = (r.height - Companion.ARROW_ICON.iconHeight) / 2
-    Companion.ARROW_ICON.paintIcon(this, g, r.x + r.width, r.y + cy)
+    val cy = (r.height - ARROW_ICON.iconHeight) / 2
+    ARROW_ICON.paintIcon(this, g, r.x + r.width, r.y + cy)
   }
 
   private inner class PressAndHoldHandler :
@@ -94,10 +94,11 @@ private class PressAndHoldButton(
     MouseListener {
     private val holdTimer = Timer(1000) { e ->
       val timer = e.source
-      if ((timer as? Timer)?.isRunning == true && popupMenu != null && getModel().isPressed) {
+      val isPressed = getModel().isPressed
+      if (timer is Timer && timer.isRunning && popup != null && isPressed) {
         timer.stop()
-        popupMenu.show(this@PressAndHoldButton, 0, height)
-        popupMenu.requestFocusInWindow()
+        popup.show(this@PressAndHoldButton, 0, height)
+        popup.requestFocusInWindow()
       }
     }
 
