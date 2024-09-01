@@ -94,12 +94,11 @@ private class InternalFramePopupMenu : JPopupMenu() {
     }
   }
 
-  private fun getInternalFrame(c: Component?) =
-    if (c is JInternalFrame.JDesktopIcon) {
-      c.internalFrame
-    } else {
-      c as? JInternalFrame ?: SwingUtilities.getAncestorOfClass(JInternalFrame::class.java, c)
-    }
+  private fun getInternalFrame(c: Component?) = when (c) {
+    is JInternalFrame.JDesktopIcon -> c.internalFrame
+    is JInternalFrame -> c
+    else -> SwingUtilities.getAncestorOfClass(JInternalFrame::class.java, c)
+  }
 }
 
 private class FocusAncestorListener : AncestorListener {
