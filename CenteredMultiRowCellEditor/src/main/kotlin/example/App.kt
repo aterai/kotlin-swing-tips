@@ -167,8 +167,9 @@ private class EditableList(
       editor.bounds = rect
       editor.selectAll()
       val p = Point(rect.location)
-      SwingUtilities.convertPointToScreen(p, this@EditableList)
-      val w = window ?: JWindow(SwingUtilities.getWindowAncestor(this@EditableList)).also {
+      val c = this@EditableList
+      SwingUtilities.convertPointToScreen(p, c)
+      val w = window ?: JWindow(SwingUtilities.getWindowAncestor(c)).also {
         it.focusableWindowState = true
         it.modalExclusionType = Dialog.ModalExclusionType.APPLICATION_EXCLUDE
         it.add(editor)
@@ -272,7 +273,8 @@ private class EditableList(
       val c = SwingUtilities.getAncestorOfClass(JScrollPane::class.java, this)
       c?.addMouseWheelListener {
         if (window != null && window?.isVisible == true && editingIndex >= 0) {
-          renameTitle.actionPerformed(ActionEvent(editor, ActionEvent.ACTION_PERFORMED, ""))
+          val id = ActionEvent.ACTION_PERFORMED
+          renameTitle.actionPerformed(ActionEvent(editor, id, ""))
         }
       }
     }
@@ -309,7 +311,8 @@ private class EditableList(
       val isDoubleClick = e.clickCount >= 2
       if (isDoubleClick && rect.contains(e.point)) {
         val c = e.component
-        startEditing.actionPerformed(ActionEvent(c, ActionEvent.ACTION_PERFORMED, ""))
+        val id = ActionEvent.ACTION_PERFORMED
+        startEditing.actionPerformed(ActionEvent(c, id, ""))
       }
     }
 
@@ -317,7 +320,8 @@ private class EditableList(
       val list = e.component as? JList<*> ?: return
       startOutside = !contains(list, e.point)
       if (window != null && window?.isVisible == true && editingIndex >= 0) {
-        renameTitle.actionPerformed(ActionEvent(editor, ActionEvent.ACTION_PERFORMED, ""))
+        val id = ActionEvent.ACTION_PERFORMED
+        renameTitle.actionPerformed(ActionEvent(editor, id, ""))
       } else if (startOutside) {
         clearSelectionAndFocus(list)
       }

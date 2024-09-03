@@ -186,7 +186,9 @@ private class CalendarViewListModel(
 
   init {
     val dow = date[WeekFields.of(Locale.getDefault()).dayOfWeek()]
-    this.startDate = date.minusWeeks((WEEK_VIEW - 1).toLong()).minusDays((dow - 1).toLong())
+    val minusWeeks = (WEEK_VIEW - 1).toLong()
+    val minusDays = (dow - 1).toLong()
+    this.startDate = date.minusWeeks(minusWeeks).minusDays(minusDays)
     this.displayDays = DayOfWeek.entries.size * (WEEK_VIEW - 1) + dow
     for (i in 0..<displayDays) {
       contributionActivity[startDate.plusDays(i.toLong())] = (0..4).random()
