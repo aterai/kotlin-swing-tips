@@ -47,7 +47,8 @@ private fun loadFromStream(stream: ImageInputStream): List<Image> {
 private fun checkGifFormat(reader: ImageReader): Boolean {
   val metaFormat = reader.originatingProvider.nativeImageMetadataFormatName
   val name = runCatching { reader.formatName }.getOrNull() ?: ""
-  return "gif".equals(name, ignoreCase = true) && "javax_imageio_gif_image_1.0" == metaFormat
+  val format = "javax_imageio_gif_image_1.0"
+  return "gif".equals(name, ignoreCase = true) && format == metaFormat
 }
 
 fun main() {

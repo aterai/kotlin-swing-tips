@@ -184,8 +184,11 @@ private class BooleanEditor :
     }
 
     override fun mousePressed(e: MouseEvent) {
-      (SwingUtilities.getAncestorOfClass(JTable::class.java, e.component) as? JTable)?.also {
-        if (checkBox.model.isPressed && it.isRowSelected(it.editingRow) && e.isControlDown) {
+      val c = SwingUtilities.getAncestorOfClass(JTable::class.java, e.component)
+      (c as? JTable)?.also {
+        val pressed = checkBox.model.isPressed
+        val rowSelected = it.isRowSelected(it.editingRow)
+        if (pressed && rowSelected && e.isControlDown) {
           renderer.background = it.background
         } else {
           renderer.background = it.selectionBackground
