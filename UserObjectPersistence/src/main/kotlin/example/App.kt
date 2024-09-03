@@ -195,11 +195,12 @@ private class CheckBoxStatusUpdateListener : TreeModelListener {
   private fun updateParentUserObject(pn: DefaultMutableTreeNode) {
     val list = pn
       .children()
-      .toList()
+      .asSequence()
       .filterIsInstance<DefaultMutableTreeNode>()
       .map { it.userObject }
       .filterIsInstance<CheckBoxNode>()
       .map { it.status }
+      .toList()
     (pn.userObject as? CheckBoxNode)?.label?.also { l ->
       when {
         list.all { it == Status.DESELECTED } ->
@@ -227,7 +228,8 @@ private class CheckBoxStatusUpdateListener : TreeModelListener {
       .filterIsInstance<DefaultMutableTreeNode>()
       .filter { parent != it }
       .forEach {
-        it.userObject = CheckBoxNode((it.userObject as? CheckBoxNode)?.label ?: "", status)
+        val node = it.userObject as? CheckBoxNode
+        it.userObject = CheckBoxNode(node?.label ?: "", status)
       }
   }
 
@@ -321,7 +323,15 @@ private class CheckBoxNodeEditor :
     leaf: Boolean,
     row: Int,
   ): Component {
-    val c = tcr.getTreeCellRendererComponent(tree, value, true, expanded, leaf, row, true)
+    val c = tcr.getTreeCellRendererComponent(
+      tree,
+      value,
+      true,
+      expanded,
+      leaf,
+      row,
+      true,
+    )
     c.font = tree.font
     if (value is DefaultMutableTreeNode) {
       panel.isFocusable = false
@@ -347,11 +357,16 @@ private class CheckBoxNodeEditor :
     return c
   }
 
-  override fun getCellEditorValue() =
-    CheckBoxNode(str ?: "", if (checkBox.isSelected) Status.SELECTED else Status.DESELECTED)
+  override fun getCellEditorValue(): CheckBoxNode {
+    val label = str ?: ""
+    val status = if (checkBox.isSelected) Status.SELECTED else Status.DESELECTED
+    return CheckBoxNode(label, status)
+  }
 
-  override fun isCellEditable(e: EventObject?) =
-    ((e as? MouseEvent)?.component as? JTree)?.let { pathContainsPoint(it, e.point) } ?: false
+  override fun isCellEditable(e: EventObject?): Boolean {
+    val tree = (e as? MouseEvent)?.component as? JTree
+    return tree?.let { pathContainsPoint(it, e.point) } ?: false
+  }
 
   private fun pathContainsPoint(tree: JTree, p: Point) =
     tree.getPathBounds(tree.getPathForLocation(p.x, p.y))?.let {
