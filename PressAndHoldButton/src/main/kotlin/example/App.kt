@@ -94,11 +94,10 @@ private class PressAndHoldButton(
     MouseListener {
     private val holdTimer = Timer(1000) { e ->
       val timer = e.source
-      val isPressed = getModel().isPressed
-      if (timer is Timer && timer.isRunning && popup != null && isPressed) {
+      if (timer is Timer && timer.isRunning && getModel().isPressed) {
         timer.stop()
-        popup.show(this@PressAndHoldButton, 0, height)
-        popup.requestFocusInWindow()
+        popup?.show(this@PressAndHoldButton, 0, height)
+        popup?.requestFocusInWindow()
       }
     }
 
