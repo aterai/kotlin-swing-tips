@@ -110,7 +110,14 @@ private class HighlightTableCellRenderer : DefaultTableCellRenderer() {
       buf.append(txt.substring(pos))
       txt = buf.toString()
     }
-    return super.getTableCellRendererComponent(table, txt, isSelected, hasFocus, row, column)
+    return super.getTableCellRendererComponent(
+      table,
+      txt,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
   }
 }
 

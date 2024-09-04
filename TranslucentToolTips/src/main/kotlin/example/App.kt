@@ -141,12 +141,12 @@ private class ContributionListRenderer : ListCellRenderer<Contribution> {
 fun makeWeekCalendar(
   list: JList<*>,
   font: Font,
-): JScrollPane {
-  val scroll = JScrollPane(list)
+): Component {
   val loc = Locale.getDefault()
-  scroll.border = BorderFactory.createEmptyBorder()
+  val scroll = JScrollPane(list)
   scroll.setColumnHeaderView(makeColumnHeader(loc))
   scroll.setRowHeaderView(makeRowHeader(loc, font))
+  scroll.border = BorderFactory.createEmptyBorder()
   scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
   scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
   scroll.background = Color.WHITE
@@ -222,7 +222,9 @@ private class CalendarViewListModel(
 
   init {
     val dow = date[WeekFields.of(Locale.getDefault()).dayOfWeek()]
-    this.startDate = date.minusWeeks((WEEK_VIEW - 1).toLong()).minusDays((dow - 1).toLong())
+    val minusWeeks = (WEEK_VIEW - 1).toLong()
+    val minusDays = (dow - 1).toLong()
+    this.startDate = date.minusWeeks(minusWeeks).minusDays(minusDays)
     this.displayDays = DayOfWeek.entries.size * (WEEK_VIEW - 1) + dow
     for (i in 0..<displayDays) {
       contributionActivity[startDate.plusDays(i.toLong())] = (0..4).random()

@@ -162,14 +162,9 @@ private fun makeColumnHeader(loc: Locale): Component {
   return colHeader
 }
 
-private fun makeLabel(
-  title: String,
-  font: Font,
-): JLabel {
-  val label = JLabel(title)
-  label.font = font
-  label.isEnabled = false
-  return label
+private fun makeLabel(title: String, font: Font) = JLabel(title).also {
+  it.font = font
+  it.isEnabled = false
 }
 
 private data class Contribution(
@@ -211,7 +206,7 @@ private class ContributionIcon(
   private val color: Color,
 ) : Icon {
   override fun paintIcon(
-    c: Component,
+    c: Component?,
     g: Graphics,
     x: Int,
     y: Int,

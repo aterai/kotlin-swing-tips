@@ -45,7 +45,10 @@ val label = object : JLabel() {
     val rect = SwingUtilities.calculateInnerArea(this, Rectangle())
 
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     val sy = rect.getHeight() / editor.bounds.getHeight()
     val at = AffineTransform.getScaleInstance(1.0, sy)
 
@@ -153,7 +156,8 @@ fun makeUI(): Component {
           val vsw = if (vsb.isVisible) vsb.size.width else 0
           it.setBounds(right - d.width - vsw, top, d.width, bottom - top)
         }
-        getLayoutComponent(parent, CENTER)?.setBounds(left, top, right - left, bottom - top)
+        val c = getLayoutComponent(parent, CENTER)
+        c?.setBounds(left, top, right - left, bottom - top)
       }
     }
   }
