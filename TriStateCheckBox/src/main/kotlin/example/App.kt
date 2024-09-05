@@ -204,7 +204,7 @@ private class IndeterminateIcon : Icon {
   override fun getIconHeight() = icon.iconHeight
 
   companion object {
-    private val FOREGROUND = Color.BLACK // TEST: UIManager.getColor("CheckBox.foreground")
+    private val FOREGROUND = Color.BLACK
     private const val MARGIN = 4
     private const val HEIGHT = 2
   }

@@ -88,7 +88,10 @@ private fun startExpandTimer(e: TreeExpansionEvent, list: List<DefaultMutableTre
   }.start()
 }
 
-private fun startCollapseTimer(e: TreeExpansionEvent, list: List<DefaultMutableTreeNode>) {
+private fun startCollapseTimer(
+  e: TreeExpansionEvent,
+  list: List<DefaultMutableTreeNode>,
+) {
   val tree = e.source as? JTree ?: return
   val path = e.path
   val model = tree.model

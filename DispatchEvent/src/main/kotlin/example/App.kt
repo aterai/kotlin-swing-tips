@@ -55,7 +55,11 @@ fun makeUI(): Component {
 }
 
 private fun setTestConnected(flag: Boolean) {
-  val str = if (flag) "<font color='blue'>Connected" else "<font color='red'>Not connected"
+  val str = if (flag) {
+    "<font color='blue'>Connected"
+  } else {
+    "<font color='red'>Not connected"
+  }
   label.text = "<html>Status: $str"
   combo.isEnabled = flag
   textField.isEnabled = flag
