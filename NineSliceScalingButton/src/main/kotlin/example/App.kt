@@ -94,7 +94,10 @@ private class ScalingButton(
 
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     val bw = width
     val bh = height
     g2.drawImage(image, 0, 0, bw, bh, this)
@@ -115,7 +118,10 @@ private class NineSliceScalingButton(
 
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     val iw = img.getWidth(this)
     val ih = img.getHeight(this)
     val ww = width
@@ -168,7 +174,10 @@ private class NineSliceScalingIcon(
     y: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     RECT.bounds = c.bounds
     SwingUtilities.calculateInnerArea(c as? JComponent, RECT)
     width = RECT.width

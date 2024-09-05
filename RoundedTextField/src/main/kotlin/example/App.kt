@@ -149,7 +149,10 @@ private class RoundedCornerBorder : AbstractBorder() {
     height: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     val border = getBorderShape(x, y, width - 1, height - 1)
 
     g2.paint = ALPHA_ZERO

@@ -65,7 +65,10 @@ private class FiveStarRatingLabel(
     g.color = Color.WHITE
     g.fillRect(0, 0, w, h)
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     val frc = g2.fontRenderContext
     val gv = font.createGlyphVector(frc, STAR)
     val r = gv.visualBounds

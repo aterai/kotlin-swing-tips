@@ -98,7 +98,10 @@ private open class PlaqueBorder(
     height: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.paint = Color.GRAY
     val arc = getBorderInsets(c).top.toDouble()
     g2.draw(getBorderShape(x.toDouble(), y.toDouble(), width - 1.0, height - 1.0, arc))

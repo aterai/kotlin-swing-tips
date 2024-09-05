@@ -54,7 +54,10 @@ private class RoundSelectionRenderer : DefaultTableCellRenderer() {
 
   public override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.color = background.brighter()
     val area = pos?.getArea(width - 1.0, height - 1.0, ARC)
     g2.fill(area)

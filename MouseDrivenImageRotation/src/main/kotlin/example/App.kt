@@ -82,7 +82,10 @@ private class DraggableImageMouseListener(
     observer: ImageObserver?,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     val w2 = imageSz.width / 2.0
     val h2 = imageSz.height / 2.0
     val at = AffineTransform.getTranslateInstance(centerPt.x - w2, centerPt.y - h2)

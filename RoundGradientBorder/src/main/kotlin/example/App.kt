@@ -78,7 +78,10 @@ private class RoundGradientBorder(
     height: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     val start = Point2D.Float(0f, 0f)
     val end = Point2D.Float(width.toFloat(), 0f)
     g2.paint = LinearGradientPaint(start, end, fractions, colors)

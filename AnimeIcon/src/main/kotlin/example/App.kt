@@ -181,7 +181,10 @@ private class AnimeIcon : Icon {
     val g2 = g.create() as? Graphics2D ?: return
     g2.paint = c?.background ?: Color.WHITE
     g2.fillRect(x, y, iconWidth, iconHeight)
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.paint = ELLIPSE_COLOR
     val xx = x + dim.width / 2.0
     val yy = y + dim.height / 2.0

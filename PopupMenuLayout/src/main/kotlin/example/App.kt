@@ -80,7 +80,10 @@ private class SymbolIcon(
     y: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.translate(x, y)
     g2.paint = if (c.isEnabled) Color.BLACK else Color.GRAY
     val frc = g2.fontRenderContext

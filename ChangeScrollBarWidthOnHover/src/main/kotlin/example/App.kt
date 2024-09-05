@@ -201,7 +201,10 @@ private class TranslucentScrollBarUI : BasicScrollBarUI() {
       r.width -= dw
     }
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.paint = color
     g2.fillRect(r.x, r.y, r.width - 2, r.height - 1)
     g2.dispose()

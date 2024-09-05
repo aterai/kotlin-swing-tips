@@ -117,7 +117,8 @@ open class RoundedCornerButton : JButton {
     g2: Graphics2D,
     color: Color,
   ) {
-    g2.paint = GradientPaint(0f, 0f, color, width - 1f, height - 1f, color.brighter(), true)
+    g2.paint =
+      GradientPaint(0f, 0f, color, width - 1f, height - 1f, color.brighter(), true)
     g2.fill(shape)
     g2.paint = background
     g2.fill(border)
@@ -134,7 +135,10 @@ open class RoundedCornerButton : JButton {
   override fun paintComponent(g: Graphics) {
     initShape()
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     when {
       model.isArmed -> paintArmed(g2, ac)
 
@@ -151,7 +155,10 @@ open class RoundedCornerButton : JButton {
   override fun paintBorder(g: Graphics) {
     initShape()
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.paint = foreground
     g2.draw(shape)
     g2.dispose()
@@ -231,7 +238,8 @@ class ShapeButton(
     g2: Graphics2D,
     color: Color,
   ) {
-    g2.paint = GradientPaint(0f, 0f, color, width - 1f, height - 1f, color.brighter(), true)
+    g2.paint =
+      GradientPaint(0f, 0f, color, width - 1f, height - 1f, color.brighter(), true)
     g2.fill(shape)
   }
 
@@ -245,7 +253,10 @@ class ShapeButton(
 
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     when {
       getModel().isArmed -> paintArmed(g2, ac)
 
@@ -261,7 +272,10 @@ class ShapeButton(
 
   override fun paintBorder(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.paint = foreground
     g2.draw(shape)
     g2.dispose()

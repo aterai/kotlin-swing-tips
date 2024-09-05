@@ -32,7 +32,10 @@ private class TricoloreLabel(
     g.color = Color.WHITE
     g.fillRect(0, 0, w, h)
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     val frc = g2.fontRenderContext
     val gv = font.createGlyphVector(frc, text)
     val b = gv.visualBounds
@@ -67,7 +70,10 @@ private class LineSplittingLabel(
     g.color = Color.WHITE
     g.fillRect(0, 0, w, h)
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     val frc = g2.fontRenderContext
     val shape = TextLayout(text, font, frc).getOutline(null)
     val b = shape.bounds2D

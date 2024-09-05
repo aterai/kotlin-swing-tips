@@ -187,7 +187,10 @@ private class DiagonallySplitCellLayerUI : LayerUI<JPanel>() {
   ) {
     super.paint(g, c)
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.paint = UIManager.getColor("Table.gridColor")
     g2.drawLine(c.width, 0, 0, c.height)
     g2.dispose()

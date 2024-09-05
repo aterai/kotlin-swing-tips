@@ -112,7 +112,10 @@ private class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
     isSelected: Boolean,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     val clipRect = g2.clipBounds
     clipRect.grow(ADJ2 + 1, 0)
     g2.clip = clipRect
