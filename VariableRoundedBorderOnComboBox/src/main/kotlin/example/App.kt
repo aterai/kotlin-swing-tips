@@ -12,7 +12,6 @@ import javax.swing.event.PopupMenuListener
 import javax.swing.plaf.basic.BasicComboBoxUI
 import javax.swing.plaf.basic.BasicComboPopup
 import javax.swing.plaf.basic.BasicScrollBarUI
-import javax.swing.plaf.basic.ComboPopup
 
 fun makeUI(): Component {
   val model = arrayOf("111", "2222", "33333")
@@ -35,20 +34,15 @@ fun makeUI(): Component {
           return b
         }
 
-        override fun createPopup(): ComboPopup {
-          return object : BasicComboPopup(comboBox) {
-            override fun createScroller(): JScrollPane {
-              val sp = object : JScrollPane(list) {
-                override fun updateUI() {
-                  super.updateUI()
-                  getVerticalScrollBar().setUI(WithoutArrowButtonScrollBarUI())
-                  getHorizontalScrollBar().setUI(WithoutArrowButtonScrollBarUI())
-                }
-              }
-              sp.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED
-              sp.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
-              sp.horizontalScrollBar = null
-              return sp
+        override fun createPopup() = object : BasicComboPopup(comboBox) {
+          override fun createScroller() = object : JScrollPane(list) {
+            override fun updateUI() {
+              super.updateUI()
+              verticalScrollBarPolicy = VERTICAL_SCROLLBAR_AS_NEEDED
+              horizontalScrollBarPolicy = HORIZONTAL_SCROLLBAR_NEVER
+              verticalScrollBar.setUI(WithoutArrowButtonScrollBarUI())
+              horizontalScrollBar.setUI(WithoutArrowButtonScrollBarUI())
+              // horizontalScrollBar = null
             }
           }
         }
@@ -158,7 +152,8 @@ private class HeavyWeightContainerListener : PopupMenuListener {
     EventQueue.invokeLater {
       val pop = combo.ui.getAccessibleChild(combo, 0)
       if (pop is JPopupMenu) {
-        SwingUtilities.getWindowAncestor(pop)
+        SwingUtilities
+          .getWindowAncestor(pop)
           ?.takeIf { it.graphicsConfiguration.isTranslucencyCapable }
           ?.takeIf { it is JWindow && it.type == Window.Type.POPUP }
           ?.background = Color(0x0, true)
@@ -220,7 +215,10 @@ private open class RoundedCornerBorder : AbstractBorder() {
     height: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     val dr = ARC.toDouble() * 2.0
     val dx = x.toDouble()
     val dy = y.toDouble()
@@ -268,7 +266,10 @@ private class TopRoundedCornerBorder : RoundedCornerBorder() {
     height: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     if (c is JPopupMenu) {
       g2.clearRect(x, y, width, height)
     }
@@ -304,7 +305,10 @@ private class BottomRoundedCornerBorder : RoundedCornerBorder() {
     height: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     val r = ARC.toDouble()
     val w = width - 1.0
     val h = height - 1.0
