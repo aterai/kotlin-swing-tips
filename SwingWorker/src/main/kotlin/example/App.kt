@@ -192,7 +192,10 @@ private class LoadingIcon : Icon {
     g2.translate(x, y)
     g2.paint = c?.background ?: Color.WHITE
     g2.fillRect(0, 0, iconWidth, iconHeight)
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.paint = ELLIPSE_COLOR
     val size = list.size.toFloat()
     list.forEach {

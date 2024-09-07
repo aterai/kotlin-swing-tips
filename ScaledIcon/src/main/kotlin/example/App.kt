@@ -65,7 +65,10 @@ private class ScaledIcon(
     y: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.translate(x, y)
     val sx = width / icon.iconWidth.toDouble()
     val sy = height / icon.iconHeight.toDouble()

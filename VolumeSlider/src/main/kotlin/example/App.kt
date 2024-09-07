@@ -70,7 +70,10 @@ private class TriSliderUI(
 ) : BasicSliderUI(slider) {
   override fun paintThumb(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.fillRect(thumbRect.x, thumbRect.y, thumbRect.width - 4, thumbRect.height - 4)
     g2.dispose()
   }

@@ -120,7 +120,8 @@ private class HeavyWeightContainerListener : PopupMenuListener {
     val c = e.source as? JComboBox<*> ?: return
     EventQueue.invokeLater {
       val pop = c.ui.getAccessibleChild(c, 0)
-      SwingUtilities.getWindowAncestor(pop as? JPopupMenu)
+      SwingUtilities
+        .getWindowAncestor(pop as? JPopupMenu)
         ?.takeIf { it.graphicsConfiguration.isTranslucencyCapable }
         ?.takeIf { it.type == Window.Type.POPUP }
         ?.background = Color(0x0, true)
@@ -202,7 +203,10 @@ private open class RoundedCornerBorder : AbstractBorder() {
     height: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     val dr = ARC.toDouble()
     val dx = x.toDouble()
     val dy = y.toDouble()
@@ -250,7 +254,10 @@ private class TopRoundedCornerBorder : RoundedCornerBorder() {
     height: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     if (c is JPopupMenu) {
       g2.clearRect(x, y, width, height)
     }
@@ -286,7 +293,10 @@ private class BottomRoundedCornerBorder : RoundedCornerBorder() {
     height: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     val r = ARC.toDouble()
     val w = width - 1.0
     val h = height - 1.0

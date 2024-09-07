@@ -87,7 +87,10 @@ private class TranslucentScrollBarUI : BasicScrollBarUI() {
     if (g2 == null || !sb.isEnabled || r.width > r.height) {
       return
     }
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.paint = when {
       isDragging -> DRAGGING_COLOR
       isThumbRollover -> ROLLOVER_COLOR

@@ -196,7 +196,10 @@ private class CloseTabIcon(
     y: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.translate(x, y)
     g2.paint = color
     g2.drawLine(3, 3, 9, 9)
@@ -219,7 +222,10 @@ private class ColorIcon(
     y: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.translate(x, y)
     g2.paint = color
     g2.fillOval(1, 1, iconWidth - 2, iconHeight - 2)

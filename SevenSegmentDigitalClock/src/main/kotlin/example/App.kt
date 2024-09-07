@@ -102,7 +102,10 @@ private class DigitalClock : JPanel() {
   public override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.stroke = BasicStroke(3f)
     g2.shear(-.1, 0.0)
     val sv = width / (h1.bounds.width * 8.0)
@@ -329,7 +332,10 @@ private class HelpPanel : JPanel() {
   public override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.stroke = BasicStroke(3f)
     g2.shear(-.1, 0.0)
     val sv = width / (help.bounds.width * 8.0)

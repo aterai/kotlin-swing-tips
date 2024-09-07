@@ -55,7 +55,14 @@ fun makeUI(): Component {
   val check = JCheckBox("editable")
   check.addActionListener { e ->
     val f = (e.source as? JCheckBox)?.isSelected ?: false
-    listOf(combo00, combo01, combo02, combo0, combo1, combo2).forEach { it.setEditable(f) }
+    listOf(
+      combo00,
+      combo01,
+      combo02,
+      combo0,
+      combo1,
+      combo2,
+    ).forEach { it.setEditable(f) }
     tabbedPane.rootPane.repaint()
   }
 
@@ -225,7 +232,10 @@ private open class RoundedCornerBorder : AbstractBorder() {
     height: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     val r = 6 * 2.0
     val dx = x.toDouble()
     val dy = y.toDouble()
@@ -266,7 +276,10 @@ private class KamabokoBorder : RoundedCornerBorder() {
     height: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     val r = 6.0
     val rr = r * 4.0 * (sqrt(2.0) - 1.0) / 3.0
     val dx = x.toDouble()
