@@ -44,9 +44,13 @@ private class CheckIcon : Icon {
     y: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.translate(x, y)
-    g2.paint = if ((c as? AbstractButton)?.isSelected == true) Color.ORANGE else Color.GRAY
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    val isSelected = (c as? AbstractButton)?.isSelected == true
+    g2.paint = if (isSelected) Color.ORANGE else Color.GRAY
     g2.fillOval(1, 1, iconWidth - 2, iconHeight - 2)
     g2.dispose()
   }

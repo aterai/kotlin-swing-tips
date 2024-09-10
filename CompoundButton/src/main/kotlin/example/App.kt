@@ -117,7 +117,9 @@ private class CompoundButton(
     g2: Graphics2D,
     color: Color,
   ) {
-    g2.paint = GradientPaint(0f, 0f, color, width - 1f, height - 1f, color.brighter(), true)
+    val fw = width - 1f
+    val fh = height - 1f
+    g2.paint = GradientPaint(0f, 0f, color, fw, fh, color.brighter(), true)
     g2.fill(shape)
     g2.paint = background
   }
@@ -129,7 +131,10 @@ private class CompoundButton(
 
   override fun paintBorder(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.paint = Color.GRAY
     g2.draw(shape)
     g2.dispose()
