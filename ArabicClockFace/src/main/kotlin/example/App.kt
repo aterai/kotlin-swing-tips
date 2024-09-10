@@ -94,7 +94,10 @@ private class AnalogClock : JPanel() {
 
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     val rect = SwingUtilities.calculateInnerArea(this, null)
     g2.color = Color.DARK_GRAY
     g2.fill(rect)
@@ -130,14 +133,16 @@ private class AnalogClock : JPanel() {
     val hourHand = Line2D.Double(0.0, 0.0, 0.0, -hourHandLen)
     g2.stroke = BasicStroke(8f)
     g2.paint = Color.LIGHT_GRAY
-    g2.draw(AffineTransform.getRotateInstance(hourRot).createTransformedShape(hourHand))
+    val at1 = AffineTransform.getRotateInstance(hourRot)
+    g2.draw(at1.createTransformedShape(hourHand))
 
     // Drawing the minute hand
     val minuteHandLen = 5.0 * radius / 6.0
     val minuteHand = Line2D.Double(0.0, 0.0, 0.0, -minuteHandLen)
     g2.stroke = BasicStroke(4f)
     g2.paint = Color.WHITE
-    g2.draw(AffineTransform.getRotateInstance(minuteRot).createTransformedShape(minuteHand))
+    val at2 = AffineTransform.getRotateInstance(minuteRot)
+    g2.draw(at2.createTransformedShape(minuteHand))
 
     // Drawing the second hand
     val r = radius / 6.0
@@ -145,7 +150,8 @@ private class AnalogClock : JPanel() {
     val secondHand = Line2D.Double(0.0, r, 0.0, -secondHandLen)
     g2.paint = Color.RED
     g2.stroke = BasicStroke(1f)
-    g2.draw(AffineTransform.getRotateInstance(secondRot).createTransformedShape(secondHand))
+    val at3 = AffineTransform.getRotateInstance(secondRot)
+    g2.draw(at3.createTransformedShape(secondHand))
     g2.fill(Ellipse2D.Double(-r / 4.0, -r / 4.0, r / 2.0, r / 2.0))
     g2.dispose()
   }
