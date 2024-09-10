@@ -33,19 +33,21 @@ fun makeUI(): Component {
   val popup = JPopupMenu()
   popup.add(copyKey).addActionListener { e ->
     val o = popup.invoker
-    val c = o as? JComboBox<*> ?: SwingUtilities.getAncestorOfClass(JComboBox::class.java, o)
-    (c as? JComboBox<*>)?.also {
-      val a = it.actionMap[copyKey]
-      a.actionPerformed(ActionEvent(it, e.id, e.actionCommand))
+    val c = o as? JComboBox<*>
+    val combo = c ?: SwingUtilities.getAncestorOfClass(JComboBox::class.java, o)
+    if (combo is JComboBox<*>) {
+      val a = combo.actionMap[copyKey]
+      a.actionPerformed(ActionEvent(combo, e.id, e.actionCommand))
       // val keyEvent = KeyEvent(c, 0, 0, 0, 0, 'C')
-      // SwingUtilities.notifyAction(a, keyStroke, keyEvent, it, modifiers)
+      // SwingUtilities.notifyAction(a, keyStroke, keyEvent, combo, modifiers)
     }
   }
   combo1.componentPopupMenu = popup
 
   val combo2 = JComboBox(makeModel(10))
   combo2.isEditable = true
-  (combo2.editor.editorComponent as? JTextField)?.componentPopupMenu = TextFieldPopupMenu()
+  val editor2 = combo2.editor.editorComponent as? JTextField
+  editor2?.componentPopupMenu = TextFieldPopupMenu()
 
   val box = Box.createVerticalBox()
   box.add(makeTitledPanel("Default:", JComboBox(makeModel(0))))

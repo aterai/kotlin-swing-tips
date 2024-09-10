@@ -39,13 +39,14 @@ private class CenterLayout : LayoutManager {
     // not needed
   }
 
-  override fun preferredLayoutSize(container: Container) = container.getComponent(0)?.let {
-    val size = it.preferredSize
-    val insets = container.insets
-    size.width += insets.left + insets.right
-    size.height += insets.top + insets.bottom
-    size
-  } ?: Dimension()
+  override fun preferredLayoutSize(container: Container) =
+    container.getComponent(0)?.let {
+      val size = it.preferredSize
+      val insets = container.insets
+      size.width += insets.left + insets.right
+      size.height += insets.top + insets.bottom
+      size
+    } ?: Dimension()
 
   override fun minimumLayoutSize(c: Container) = preferredLayoutSize(c)
 

@@ -44,7 +44,13 @@ private class ComboRenderer : DefaultListCellRenderer() {
     list.foreground = Color.WHITE
     list.selectionBackground = Color.LIGHT_GRAY
     list.selectionForeground = Color.BLACK
-    return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+    return super.getListCellRendererComponent(
+      list,
+      value,
+      index,
+      isSelected,
+      cellHasFocus,
+    )
   }
 }
 
