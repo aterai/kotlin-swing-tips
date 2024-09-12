@@ -57,9 +57,7 @@ private fun createSizeVariantItem(
   bg: ButtonGroup,
 ): JMenuItem {
   val item = JRadioButtonMenuItem(key, "regular" == key)
-  item.addActionListener {
-    setSizeVariant(bg.selection.actionCommand)
-  }
+  item.addActionListener { setSizeVariant(it.actionCommand) }
   item.actionCommand = key
   bg.add(item)
   return item
