@@ -91,8 +91,15 @@ private class HeaderRenderer : TableCellRenderer {
     row: Int,
     column: Int,
   ): Component {
-    val r = table.tableHeader.defaultRenderer
-    val c = r.getTableCellRendererComponent(table, html, isSelected, hasFocus, row, column)
+    val renderer = table.tableHeader.defaultRenderer
+    val c = renderer.getTableCellRendererComponent(
+      table,
+      html,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
     (c as? Container)?.components?.forEach {
       updateCheckBox((it as? Container)?.getComponent(0), value)
     }

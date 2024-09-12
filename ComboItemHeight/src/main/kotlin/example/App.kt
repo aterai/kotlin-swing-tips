@@ -49,13 +49,20 @@ fun makeUI(): Component {
     override fun updateUI() {
       setRenderer(null)
       super.updateUI()
-      val r = getRenderer()
+      val renderer = getRenderer()
       setRenderer { list, value, index, isSelected, cellHasFocus ->
-        r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
-          if (index >= 0) {
-            (it as? JLabel)?.text = "<html><table><td height='32'>$value"
+        renderer
+          .getListCellRendererComponent(
+            list,
+            value,
+            index,
+            isSelected,
+            cellHasFocus,
+          ).also {
+            if (index >= 0) {
+              (it as? JLabel)?.text = "<html><table><td height='32'>$value"
+            }
           }
-        }
       }
     }
   }
@@ -66,11 +73,18 @@ fun makeUI(): Component {
     override fun updateUI() {
       setRenderer(null)
       super.updateUI()
-      val r = getRenderer()
+      val renderer = getRenderer()
       setRenderer { list, value, index, isSelected, cellHasFocus ->
-        r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
-          (it as? JLabel)?.icon = if (index >= 0) H32Icon() else null
-        }
+        renderer
+          .getListCellRendererComponent(
+            list,
+            value,
+            index,
+            isSelected,
+            cellHasFocus,
+          ).also {
+            (it as? JLabel)?.icon = if (index >= 0) H32Icon() else null
+          }
       }
     }
   }
