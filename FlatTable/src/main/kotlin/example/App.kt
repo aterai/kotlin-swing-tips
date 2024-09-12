@@ -34,7 +34,9 @@ fun makeUI(): Component {
 
   val border = CellBorder(2, 2, 1, 2)
   val r = DefaultTableCellRenderer()
-  table.setDefaultRenderer(Any::class.java) { tbl, value, isSelected, hasFocus, row, column ->
+  table.setDefaultRenderer(
+    Any::class.java,
+  ) { tbl, value, isSelected, hasFocus, row, column ->
     r.getTableCellRendererComponent(tbl, value, isSelected, hasFocus, row, column).also {
       border.setStartCell(column == 0)
       (it as? JComponent)?.border = border
@@ -189,7 +191,10 @@ private class OverlappedScrollBarUI : BasicScrollBarUI() {
       else -> DEFAULT_COLOR
     }
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.paint = color
     g2.fill(r)
     g2.dispose()

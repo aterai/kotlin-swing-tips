@@ -24,7 +24,14 @@ fun makeUI(): Component {
   val information2 = BadgeLabel(informationIcon, "RC2")
 
   val p = JPanel(FlowLayout(FlowLayout.CENTER, 50, 50))
-  listOf(error, error1, question, warning, information, information2).forEach { p.add(it) }
+  listOf(
+    error,
+    error1,
+    question,
+    warning,
+    information,
+    information2,
+  ).forEach { p.add(it) }
   p.preferredSize = Dimension(320, 240)
   return p
 }
@@ -46,7 +53,10 @@ private class BadgeLabel(
 
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.paint = Color.WHITE
     g2.fill(getShape())
     super.paintComponent(g)

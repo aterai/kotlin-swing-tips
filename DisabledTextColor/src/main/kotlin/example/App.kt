@@ -18,14 +18,21 @@ fun makeUI(): Component {
     override fun updateUI() {
       setRenderer(null)
       super.updateUI()
-      val r = getRenderer()
+      val renderer = getRenderer()
       setRenderer { list, value, index, isSelected, cellHasFocus ->
-        r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
-          if (index < 0 && !isEnabled && it is JLabel) {
-            it.text = "<html><font color='red'>" + it.text
-            it.isOpaque = false
+        renderer
+          .getListCellRendererComponent(
+            list,
+            value,
+            index,
+            isSelected,
+            cellHasFocus,
+          ).also {
+            if (index < 0 && !isEnabled && it is JLabel) {
+              it.text = "<html><font color='red'>" + it.text
+              it.isOpaque = false
+            }
           }
-        }
       }
     }
   }

@@ -20,18 +20,25 @@ private fun makePanel(): Component {
         }
       }
       setUI(tmp)
-      val r = getRenderer()
+      val renderer = getRenderer()
       setRenderer { list, value, index, isSelected, cellHasFocus ->
-        r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
-          (it as? JLabel)?.horizontalAlignment = SwingConstants.RIGHT
-          if (isSelected) {
-            it.foreground = list.selectionForeground
-            it.background = list.selectionBackground
-          } else {
-            it.foreground = list.foreground
-            it.background = list.background
+        renderer
+          .getListCellRendererComponent(
+            list,
+            value,
+            index,
+            isSelected,
+            cellHasFocus,
+          ).also {
+            (it as? JLabel)?.horizontalAlignment = SwingConstants.RIGHT
+            if (isSelected) {
+              it.foreground = list.selectionForeground
+              it.background = list.selectionBackground
+            } else {
+              it.foreground = list.foreground
+              it.background = list.background
+            }
           }
-        }
       }
       border = BorderFactory.createEmptyBorder(0, 2, 0, 2)
       isOpaque = false

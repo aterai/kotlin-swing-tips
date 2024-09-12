@@ -19,13 +19,15 @@ fun makeUI(): Component {
   val b1 = JButton("showMessageDialog1")
   b1.addActionListener {
     UIManager.put(KEY, AUDITORY_CUES)
-    JOptionPane.showMessageDialog(b1.rootPane, "showMessageDialog1")
+    val msg = "showMessageDialog1"
+    JOptionPane.showMessageDialog(b1.rootPane, msg)
   }
 
   val b2 = JButton("showMessageDialog2")
   b2.addActionListener {
     UIManager.put(KEY, UIManager.get("AuditoryCues.noAuditoryCues"))
-    showMessageDialogAndPlayAudio(b2.rootPane, "showMessageDialog2", "example/notice2.wav")
+    val msg = "showMessageDialog2"
+    showMessageDialogAndPlayAudio(b2.rootPane, msg, "example/notice2.wav")
   }
 
   return JPanel(GridLayout(2, 1, 5, 5)).also {
@@ -43,9 +45,10 @@ fun makeUI(): Component {
 fun showMessageDialogAndPlayAudio(
   p: Component,
   msg: String,
-  audioResource: String,
+  audioPath: String,
 ) {
-  val url = Thread.currentThread().contextClassLoader.getResource(audioResource) ?: return
+  val cl = Thread.currentThread().contextClassLoader
+  val url = cl.getResource(audioPath) ?: return
   AudioSystem.getAudioInputStream(url).use { stream ->
     (AudioSystem.getLine(DataLine.Info(Clip::class.java, stream.format)) as? Clip)?.use {
       val loop = p.toolkit.systemEventQueue.createSecondaryLoop()
