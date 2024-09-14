@@ -96,31 +96,19 @@ private fun loadBindingMap(
 }
 
 fun makeUI(): Component {
-  val table = object : JTable(model) {
-    private val evenColor = Color(0xFA_FA_FA)
-
-    override fun prepareRenderer(
-      tcr: TableCellRenderer,
-      row: Int,
-      column: Int,
-    ): Component {
-      val c = super.prepareRenderer(tcr, row, column)
-      if (isRowSelected(row)) {
-        c.foreground = getSelectionForeground()
-        c.background = getSelectionBackground()
-      } else {
-        c.foreground = foreground
-        c.background = if (row % 2 == 0) evenColor else background
-      }
-      return c
-    }
-  }
+  val table = JTable(model)
   table.autoCreateRowSorter = true
   val renderer = DefaultListCellRenderer()
   componentChoices.setRenderer { list, value, index, isSelected, hasFocus ->
-    val c = renderer.getListCellRendererComponent(list, value, index, isSelected, hasFocus)
-    (c as? JLabel)?.text = value.javaClass.name
-    c
+    renderer.getListCellRendererComponent(
+      list,
+      value,
+      index,
+      isSelected,
+      hasFocus,
+    ).also {
+      (it as? JLabel)?.text = value.javaClass.name
+    }
   }
   componentChoices.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
