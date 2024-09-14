@@ -40,7 +40,10 @@ private class DragHereIcon : Icon {
     y: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.translate(x, y)
     g2.stroke = BasicStroke(BORDER_SIZE)
     g2.paint = LINE_COLOR
@@ -103,7 +106,8 @@ private class FileDropTargetAdapter : DropTargetAdapter() {
     runCatching {
       if (e.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
         e.acceptDrop(DnDConstants.ACTION_COPY)
-        (e.transferable.getTransferData(DataFlavor.javaFileListFlavor) as? List<*>)?.also {
+        val l = e.transferable.getTransferData(DataFlavor.javaFileListFlavor)
+        (l as? List<*>)?.also {
           val msg = it
             .filterIsInstance<File>()
             .map { file -> file.absolutePath + "<br>" }

@@ -106,10 +106,11 @@ private class DnDTabbedPane : JTabbedPane() {
 
   init {
     glassPane.name = "GlassPane"
-    DropTarget(glassPane, DnDConstants.ACTION_COPY_OR_MOVE, TabDropTargetListener(), true)
+    val actionCopyOrMove = DnDConstants.ACTION_COPY_OR_MOVE
+    DropTarget(glassPane, actionCopyOrMove, TabDropTargetListener(), true)
     DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(
       this,
-      DnDConstants.ACTION_COPY_OR_MOVE,
+      actionCopyOrMove,
       TabDragGestureListener(),
     )
   }
@@ -161,7 +162,8 @@ private class DnDTabbedPane : JTabbedPane() {
 
   fun getTargetTabIndex(glassPt: Point): Int {
     val tabPt = SwingUtilities.convertPoint(glassPane, glassPt, this)
-    val d = if (isTopBottomTabPlacement(getTabPlacement())) Point(1, 0) else Point(0, 1)
+    val tp = getTabPlacement()
+    val d = if (isTopBottomTabPlacement(tp)) Point(1, 0) else Point(0, 1)
 //    return (0..<getTabCount().taleIf { i ->
 //      val r = getBoundsAt(i)
 //      r.translate(-r.width * d.x / 2, -r.height * d.y / 2)
@@ -218,9 +220,19 @@ private class DnDTabbedPane : JTabbedPane() {
       val r = SwingUtilities.convertRectangle(this, it, glassPane)
       val a = minOf(next, 1) // a = (next == 0) ? 0 : 1
       if (isTopBottomTabPlacement(getTabPlacement())) {
-        glassPane.setTargetRect(r.x + r.width * a - LINE_SIZE / 2, r.y, LINE_SIZE, r.height)
+        glassPane.setTargetRect(
+          r.x + r.width * a - LINE_SIZE / 2,
+          r.y,
+          LINE_SIZE,
+          r.height,
+        )
       } else {
-        glassPane.setTargetRect(r.x, r.y + r.height * a - LINE_SIZE / 2, r.width, LINE_SIZE)
+        glassPane.setTargetRect(
+          r.x,
+          r.y + r.height * a - LINE_SIZE / 2,
+          r.width,
+          LINE_SIZE,
+        )
       }
     }
   }
