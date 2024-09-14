@@ -341,7 +341,11 @@ private class Utf8ResourceBundleControl : ResourceBundle.Control() {
     return listOf("properties")
   }
 
-  @Throws(IllegalAccessException::class, InstantiationException::class, IOException::class)
+  @Throws(
+    IllegalAccessException::class,
+    InstantiationException::class,
+    IOException::class,
+  )
   override fun newBundle(
     baseName: String?,
     locale: Locale?,
