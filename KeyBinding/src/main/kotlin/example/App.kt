@@ -5,7 +5,6 @@ import java.awt.event.ItemEvent
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.JTableHeader
-import javax.swing.table.TableCellRenderer
 
 private val model = object : DefaultTableModel() {
   val columns = arrayOf(
@@ -100,15 +99,16 @@ fun makeUI(): Component {
   table.autoCreateRowSorter = true
   val renderer = DefaultListCellRenderer()
   componentChoices.setRenderer { list, value, index, isSelected, hasFocus ->
-    renderer.getListCellRendererComponent(
-      list,
-      value,
-      index,
-      isSelected,
-      hasFocus,
-    ).also {
-      (it as? JLabel)?.text = value.javaClass.name
-    }
+    renderer
+      .getListCellRendererComponent(
+        list,
+        value,
+        index,
+        isSelected,
+        hasFocus,
+      ).also {
+        (it as? JLabel)?.text = value.javaClass.name
+      }
   }
   componentChoices.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {

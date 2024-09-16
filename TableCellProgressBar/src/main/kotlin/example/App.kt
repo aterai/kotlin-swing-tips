@@ -37,7 +37,14 @@ private val table = object : JTable(model) {
         }
       } else {
         val txt = value?.toString() ?: ""
-        renderer.getTableCellRendererComponent(tbl, txt, isSelected, hasFocus, row, column)
+        renderer.getTableCellRendererComponent(
+          tbl,
+          txt,
+          isSelected,
+          hasFocus,
+          row,
+          column,
+        )
       }
     }
   }

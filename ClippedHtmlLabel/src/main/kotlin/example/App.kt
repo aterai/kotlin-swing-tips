@@ -57,7 +57,9 @@ fun makeUI(): Component {
     ) = false
   }
   model.addRow(arrayOf(0, "FrontPage", makeUrl("https://ateraimemo.com/")))
-  model.addRow(arrayOf(1, "Java Swing Tips", makeUrl("https://ateraimemo.com/Swing.html")))
+  model.addRow(
+    arrayOf(1, "Java Swing Tips", makeUrl("https://ateraimemo.com/Swing.html")),
+  )
   model.addRow(arrayOf(2, "Example", makeUrl("http://www.example.com/")))
   model.addRow(arrayOf(3, "Example.jp", makeUrl("http://www.example.jp/")))
 
@@ -137,8 +139,10 @@ open class UrlRenderer :
       val i = c.insets
       CELL_RECT.x = i.left
       CELL_RECT.y = i.top
-      CELL_RECT.width = cm.getColumn(column).width - cm.columnMargin - i.right - CELL_RECT.x
-      CELL_RECT.height = table.getRowHeight(row) - table.rowMargin - i.bottom - CELL_RECT.y
+      CELL_RECT.width =
+        cm.getColumn(column).width - cm.columnMargin - i.right - CELL_RECT.x
+      CELL_RECT.height =
+        table.getRowHeight(row) - table.rowMargin - i.bottom - CELL_RECT.y
       ICON_RECT.setBounds(0, 0, 0, 0)
       TEXT_RECT.setBounds(0, 0, 0, 0)
       val str = SwingUtilities.layoutCompoundLabel(
@@ -178,7 +182,7 @@ open class UrlRenderer :
       val prevRollover = isRollover
       viewRowIndex = table.rowAtPoint(pt)
       viewColumnIndex = table.columnAtPoint(pt)
-      isRollover = isUrlColumn(table, viewColumnIndex) // && pointInsidePrefSize(table, pt)
+      isRollover = isUrlColumn(table, viewColumnIndex)
       val b1 = viewRowIndex == prevRow && viewColumnIndex == prevCol
       val b2 = isRollover == prevRollover || !isRollover && !prevRollover
       if (b1 && b2) {

@@ -81,14 +81,21 @@ private fun makeComboBox2(
       super.updateUI()
       setMaximumRowCount(3)
       prototypeDisplayValue = proto
-      val r = getRenderer()
+      val renderer = getRenderer()
       setRenderer { list, value, index, isSelected, cellHasFocus ->
-        r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
-          if (it is JLabel) {
-            it.icon = value
-            it.border = BorderFactory.createEmptyBorder()
+        renderer
+          .getListCellRendererComponent(
+            list,
+            value,
+            index,
+            isSelected,
+            cellHasFocus,
+          ).also {
+            if (it is JLabel) {
+              it.icon = value
+              it.border = BorderFactory.createEmptyBorder()
+            }
           }
-        }
       }
       (getAccessibleContext().getAccessibleChild(0) as? ComboPopup)?.list?.also {
         it.layoutOrientation = JList.HORIZONTAL_WRAP
