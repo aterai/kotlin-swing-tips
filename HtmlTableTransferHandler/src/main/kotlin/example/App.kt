@@ -93,7 +93,7 @@ private class PropertyTable(
       super.getCellEditor(row, column)
     }
 
-  override fun getColumnClass(column: Int): Class<*>? =
+  override fun getColumnClass(column: Int) =
     if (convertColumnIndexToModel(column) == TARGET_COL_IDX) {
       editingClass
     } else {
@@ -421,7 +421,9 @@ private class BasicTransferable(
   }
 
   @Throws(IOException::class, UnsupportedFlavorException::class)
-  fun getPlaneTransferData(flavor: DataFlavor?): Any = when (flavor?.representationClass) {
+  fun getPlaneTransferData(
+    flavor: DataFlavor?,
+  ): Any = when (flavor?.representationClass) {
     String::class.java -> plainData
     Reader::class.java -> StringReader(plainData)
     InputStream::class.java -> createInputStream(flavor, plainData)

@@ -49,7 +49,7 @@ private fun makeModel(): TableModel {
     arrayOf("DDD", 0, false),
   )
   return object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int): Class<*> = getValueAt(0, column).javaClass
+    override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
 }
 
