@@ -39,7 +39,10 @@ private class WindowsIconScrollBarUI : WindowsScrollBarUI() {
       return
     }
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     val oc: Color
     val ic: Color
     when {
@@ -71,7 +74,12 @@ private class WindowsIconScrollBarUI : WindowsScrollBarUI() {
   ) {
     g2.paint = color
     val ww = thumbBounds.width - w
-    g2.fillOval(thumbBounds.x + w / 2, thumbBounds.y + (thumbBounds.height - ww) / 2, ww, ww)
+    g2.fillOval(
+      thumbBounds.x + w / 2,
+      thumbBounds.y + (thumbBounds.height - ww) / 2,
+      ww,
+      ww,
+    )
   }
 }
 
@@ -87,7 +95,10 @@ private class BasicIconScrollBarUI : BasicScrollBarUI() {
       return
     }
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     val oc: Color
     val ic: Color
     when {
@@ -119,7 +130,12 @@ private class BasicIconScrollBarUI : BasicScrollBarUI() {
   ) {
     g2.paint = color
     val ww = thumbBounds.width - w
-    g2.fillOval(thumbBounds.x + w / 2, thumbBounds.y + (thumbBounds.height - ww) / 2, ww, ww)
+    g2.fillOval(
+      thumbBounds.x + w / 2,
+      thumbBounds.y + (thumbBounds.height - ww) / 2,
+      ww,
+      ww,
+    )
   }
 }
 

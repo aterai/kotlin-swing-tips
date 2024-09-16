@@ -53,7 +53,14 @@ fun showMessageDialog(
   title: String,
   messageType: Int,
 ) {
-  val pane = object : JOptionPane(message, messageType, DEFAULT_OPTION, null, null, null) {
+  val pane = object : JOptionPane(
+    message,
+    messageType,
+    DEFAULT_OPTION,
+    null,
+    null,
+    null,
+  ) {
     private var texture: Paint? = null
 
     override fun updateUI() {

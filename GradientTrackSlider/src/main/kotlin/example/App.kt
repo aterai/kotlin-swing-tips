@@ -141,7 +141,12 @@ private class GradientPalletSliderUI : MetalSliderUI() {
   ) {
     if (slider.isEnabled) {
       g.color = controlDarkShadow
-      g.drawRect(trackLeft, trackTop, trackRight - trackLeft - 1, trackBottom - trackTop - 1)
+      g.drawRect(
+        trackLeft,
+        trackTop,
+        trackRight - trackLeft - 1,
+        trackBottom - trackTop - 1,
+      )
 
       g.color = controlHighlight
       g.drawLine(trackLeft + 1, trackBottom, trackRight, trackBottom)
@@ -152,7 +157,12 @@ private class GradientPalletSliderUI : MetalSliderUI() {
       g.drawLine(trackLeft + 1, trackTop + 1, trackLeft + 1, trackBottom - 2)
     } else {
       g.color = controlShadow
-      g.drawRect(trackLeft, trackTop, trackRight - trackLeft - 1, trackBottom - trackTop - 1)
+      g.drawRect(
+        trackLeft,
+        trackTop,
+        trackRight - trackLeft - 1,
+        trackBottom - trackTop - 1,
+      )
     }
   }
 
