@@ -60,11 +60,10 @@ private class ImageDropTargetListener : DropTargetAdapter() {
     runCatching {
       if (e.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
         e.acceptDrop(DnDConstants.ACTION_COPY)
-        (e.transferable.getTransferData(DataFlavor.javaFileListFlavor) as? List<*>)?.also {
-          for (o in it) {
-            if (o is File) {
-              addImage(o.toPath())
-            }
+        val list = e.transferable.getTransferData(DataFlavor.javaFileListFlavor)
+        (list as? List<*>)?.forEach {
+          if (it is File) {
+            addImage(it.toPath())
           }
           e.dropComplete(true)
         } ?: e.rejectDrop()
@@ -126,6 +125,8 @@ private object FileModel : DefaultTableModel() {
   fun addRowData(t: RowData) {
     super.addRow(arrayOf(t.id, t.name, t.absolutePath, t.width, t.height))
   }
+
+  private fun readResolve(): Any = FileModel
 }
 
 private data class ColumnContext(
