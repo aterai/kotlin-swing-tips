@@ -198,7 +198,9 @@ private class BasicTransferable(
   }
 
   @Throws(IOException::class, UnsupportedFlavorException::class)
-  fun getPlaneTransferData(flavor: DataFlavor?): Any = when (flavor?.representationClass) {
+  fun getPlaneTransferData(
+    flavor: DataFlavor?,
+  ): Any = when (flavor?.representationClass) {
     String::class.java -> plainData
     Reader::class.java -> StringReader(plainData)
     InputStream::class.java -> createInputStream(flavor, plainData)

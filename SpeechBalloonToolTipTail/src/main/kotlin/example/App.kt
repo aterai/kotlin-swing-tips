@@ -66,7 +66,10 @@ private fun makeTabbedPane(): JTabbedPane {
       else -> makePoint(r.centerX - d.getWidth() / 2.0, r.maxY + 8.0)
     }
 
-    private fun makePoint(x: Double, y: Double) = Point((x + .5).toInt(), (y + .5).toInt())
+    private fun makePoint(x: Double, y: Double) = Point(
+      (x + .5).toInt(),
+      (y + .5).toInt(),
+    )
 
     override fun createToolTip(): JToolTip {
       val t = tip ?: BalloonToolTip().also {
@@ -130,7 +133,10 @@ private class BalloonToolTip : JToolTip() {
 
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.color = getBackground()
     g2.fill(shape)
     g2.paint = getForeground()

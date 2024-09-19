@@ -166,7 +166,13 @@ private object MenuItemHelper {
         g.color = menuItem.background.brighter()
         drawString(menuItem, g, text, accRect.x, accRect.y + ascent)
         g.color = menuItem.background.darker()
-        drawString(menuItem, g, text, accRect.x - 1, accRect.y + lh.fontMetrics.ascent - 1)
+        drawString(
+          menuItem,
+          g,
+          text,
+          accRect.x - 1,
+          accRect.y + lh.fontMetrics.ascent - 1,
+        )
       }
     }
   }
