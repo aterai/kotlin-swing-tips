@@ -63,7 +63,12 @@ private class TreePopupMenu : JPopupMenu() {
         model.reload(self)
       } else {
         val message = "ERROR: Maximum levels of $MAX_NODE_LEVELS exceeded."
-        JOptionPane.showMessageDialog(tree, message, "add node", JOptionPane.ERROR_MESSAGE)
+        JOptionPane.showMessageDialog(
+          tree,
+          message,
+          "add node",
+          JOptionPane.ERROR_MESSAGE,
+        )
       }
     }
   }

@@ -70,7 +70,13 @@ private open class TooltipList<E>(
       val hasFocus = hasFocus() && lsm.leadSelectionIndex == i
       val value = model.getElementAt(i)
       val selectedIndex = lsm.isSelectedIndex(i)
-      val renderer = r.getListCellRendererComponent(this, value, i, selectedIndex, hasFocus)
+      val renderer = r.getListCellRendererComponent(
+        this,
+        value,
+        i,
+        selectedIndex,
+        hasFocus,
+      )
       if (renderer is JComponent && renderer.toolTipText != null) {
         return cellBounds.location
       }
