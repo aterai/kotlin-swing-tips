@@ -3,7 +3,6 @@ package example
 import java.awt.*
 import java.awt.datatransfer.StringSelection
 import java.awt.event.ActionEvent
-import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import javax.swing.*
 import javax.swing.text.DefaultEditorKit
@@ -25,7 +24,7 @@ fun makeUI(): Component {
   }
   val am = combo1.actionMap
   am.put(copyKey, copy)
-  val modifiers = InputEvent.CTRL_DOWN_MASK
+  val modifiers = Toolkit.getDefaultToolkit().menuShortcutKeyMask
   val keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_C, modifiers)
 
   val im = combo1.getInputMap(JComponent.WHEN_FOCUSED)
