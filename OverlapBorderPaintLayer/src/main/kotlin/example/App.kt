@@ -37,10 +37,12 @@ fun makeUI(): Component {
   }
 }
 
-fun makePanel(overlap: Int) = object : JPanel(FlowLayout(FlowLayout.LEADING, -overlap, 0)) {
-  override fun isOptimizedDrawingEnabled() = false
-}.also {
-  it.isOpaque = false
+fun makePanel(overlap: Int): JPanel {
+  val p = object : JPanel(FlowLayout(FlowLayout.LEADING, -overlap, 0)) {
+    override fun isOptimizedDrawingEnabled() = false
+  }
+  p.isOpaque = false
+  return p
 }
 
 fun makeBreadcrumb(
@@ -161,7 +163,10 @@ private open class ArrowToggleButtonIcon : Icon {
       }
     }
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.paint = bgc
     g2.fill(shape)
     g2.paint = borderColor
@@ -244,7 +249,10 @@ private class BreadcrumbLayerUI<V : Component> : LayerUI<V>() {
     super.paint(g, c)
     val s = shape ?: return
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     val r = Rectangle(c.width, c.height)
     val area = Area(r)
     area.subtract(Area(s))
