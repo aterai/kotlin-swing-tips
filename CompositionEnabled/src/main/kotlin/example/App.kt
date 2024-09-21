@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.event.KeyEvent
 import javax.swing.*
 
-private val check = JCheckBox("一時ウィンドウ(入力モード)->enterでセル編集開始")
+private val check = JCheckBox("一時ウィンドウ(入力モード)->enterでセル編集開始", true)
 
 fun makeUI(): Component {
   val table = object : JTable(4, 3) {
@@ -14,7 +14,7 @@ fun makeUI(): Component {
       condition: Int,
       pressed: Boolean,
     ): Boolean {
-      if (check.isSelected && !isTabOrEnterKey(ks)) {
+      if (check.isSelected && !isTabOrEnterKey(ks.keyCode)) {
         startEditing(ks, pressed)
       }
       return super.processKeyBinding(ks, e, condition, pressed)
@@ -22,7 +22,7 @@ fun makeUI(): Component {
 
     private fun startEditing(ks: KeyStroke, pressed: Boolean) {
       val editingOrPressed = isEditing || pressed
-      val isCompositionEnabled = inputContext?.isCompositionEnabled() == true
+      val isCompositionEnabled = inputContext?.isCompositionEnabled == true
       if (isCompositionEnabled && !ks.isOnKeyRelease && !editingOrPressed) {
         val selectedRow = selectedRow
         val selectedColumn = selectedColumn
@@ -34,8 +34,8 @@ fun makeUI(): Component {
       }
     }
 
-    protected fun isTabOrEnterKey(ks: KeyStroke) =
-      KeyStroke.getKeyStroke('\t') == ks || KeyStroke.getKeyStroke('\n') == ks
+    protected fun isTabOrEnterKey(keyCode: Int) =
+      keyCode == KeyEvent.VK_TAB || keyCode == KeyEvent.VK_ENTER
   }
   table.putClientProperty("terminateEditOnFocusLost", true)
 
