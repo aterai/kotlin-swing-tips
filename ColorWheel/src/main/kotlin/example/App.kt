@@ -48,20 +48,17 @@ private class ColorWheel : JPanel() {
   private fun makeColorWheelImage(): BufferedImage {
     val image = BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB)
     val row = IntArray(SIZE)
-    val size = SIZE.toFloat()
-    val radius = size / 2f
-
+    val radius = SIZE / 2.0
     for (yi in 0..<SIZE) {
-      val y = yi - size / 2.0
+      val y = yi - radius
       for (xi in 0..<SIZE) {
-        val x = xi - size / 2.0
+        val x = xi - radius
         var theta = atan2(y, x) - 3.0 * PI / 2.0
         if (theta < 0) {
           theta += 2.0 * PI
         }
-        val r = hypot(x, y) // Math.sqrt(x * x + y * y)
         val hue = (theta / (2.0 * PI)).toFloat()
-        val sat = minOf((r / radius).toFloat(), 1f)
+        val sat = minOf(hypot(x, y) / radius, 1.0).toFloat()
         val bri = 1f
         row[xi] = Color.HSBtoRGB(hue, sat, bri)
       }
