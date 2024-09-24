@@ -22,12 +22,12 @@ fun makeUI(): Component {
   val table = object : JTable(model) {
     override fun updateUI() {
       super.updateUI()
-      getColumnModel().getColumn(1).cellRenderer = RadioButtonsRenderer()
-      getColumnModel().getColumn(1).cellEditor = RadioButtonsEditor()
+      val column = getColumnModel().getColumn(1)
+      column.cellRenderer = RadioButtonsRenderer()
+      column.cellEditor = RadioButtonsEditor()
     }
   }
   table.putClientProperty("terminateEditOnFocusLost", true)
-
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(table))
     it.preferredSize = Dimension(320, 240)
@@ -41,47 +41,47 @@ private enum class Answer {
 }
 
 private class RadioButtonsPanel : JPanel() {
-  private val answer = arrayOf(Answer.A.toString(), Answer.B.toString(), Answer.C.toString())
-  val buttons = ArrayList<JRadioButton>(answer.size)
-  var bg = ButtonGroup()
+  private val group = ButtonGroup()
 
   init {
     layout = BoxLayout(this, BoxLayout.X_AXIS)
     initButtons()
   }
 
+  val selectedActionCommand: String
+    get() = group.selection.actionCommand
+
   private fun initButtons() {
-    buttons.clear()
+    group.clearSelection()
+    group.elements.toList().forEach { group.remove(it) }
     removeAll()
-    bg = ButtonGroup()
-    for (title in answer) {
-      val b = makeButton(title)
-      buttons.add(b)
+    for (a in Answer.entries) {
+      val b = makeButton(a.name)
       add(b)
-      bg.add(b)
+      group.add(b)
     }
   }
 
   fun updateSelectedButton(v: Any?) {
     if (v is Answer) {
       initButtons()
-      when (v) {
-        Answer.A -> buttons[0].isSelected = true
-        Answer.B -> buttons[1].isSelected = true
-        Answer.C -> buttons[2].isSelected = true
-      }
+      (getComponent(v.ordinal) as? JRadioButton)?.isSelected = true
     }
   }
 
-  companion object {
-    private fun makeButton(title: String): JRadioButton {
-      val b = JRadioButton(title)
-      b.actionCommand = title
-      b.isFocusable = false
-      b.isRolloverEnabled = false
-      return b
-    }
+  override fun setLayout(mgr: LayoutManager) {
+    super.setLayout(mgr)
   }
+
+  override fun add(comp: Component?): Component = super.add(comp)
+}
+
+private fun makeButton(title: String): JRadioButton {
+  val b = JRadioButton(title)
+  b.actionCommand = title
+  b.isFocusable = false
+  b.isRolloverEnabled = false
+  return b
 }
 
 private class RadioButtonsRenderer : TableCellRenderer {
@@ -104,8 +104,8 @@ private class RadioButtonsEditor :
 
   init {
     val al = ActionListener { fireEditingStopped() }
-    for (b in renderer.buttons) {
-      b.addActionListener(al)
+    for (c in renderer.components) {
+      (c as? JRadioButton)?.addActionListener(al)
     }
   }
 
@@ -117,7 +117,7 @@ private class RadioButtonsEditor :
     column: Int,
   ) = renderer.also { it.updateSelectedButton(value) }
 
-  override fun getCellEditorValue() = Answer.valueOf(renderer.bg.selection.actionCommand)
+  override fun getCellEditorValue() = Answer.valueOf(renderer.selectedActionCommand)
 }
 
 fun main() {
