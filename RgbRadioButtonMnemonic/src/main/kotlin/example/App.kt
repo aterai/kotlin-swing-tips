@@ -122,13 +122,10 @@ private fun setDisplayedMnemonicIndex(
 private fun getInteger(
   key: String,
   locale: Locale,
-): Int {
-  val value = UIManager.get(key, locale)
-  return when (value) {
-    is Int -> value
-    is String -> runCatching { value.toInt() }.getOrDefault(-1)
-    else -> -1
-  }
+) = when (val value = UIManager.get(key, locale)) {
+  is Int -> value
+  is String -> runCatching { value.toInt() }.getOrDefault(-1)
+  else -> -1
 }
 
 private fun getRgbChooser(colorChooser: JColorChooser): AbstractColorChooserPanel? {
