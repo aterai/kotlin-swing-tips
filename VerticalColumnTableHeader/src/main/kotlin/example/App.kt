@@ -165,32 +165,32 @@ private class RotateIcon(
     icon.paintIcon(null, g, 0, 0)
     g.dispose()
     val numQuadrants = rotate / 90 % 4
-    val tx: Int
-    val ty: Int
+    val tx: Double
+    val ty: Double
     when (numQuadrants) {
       3, -1 -> {
-        tx = 0
-        ty = dim.width
+        tx = 0.0
+        ty = dim.getWidth()
         dim.setSize(icon.iconHeight, icon.iconWidth)
       }
 
       1, -3 -> {
-        tx = dim.height
-        ty = 0
+        tx = dim.getHeight()
+        ty = 0.0
         dim.setSize(icon.iconHeight, icon.iconWidth)
       }
 
       2 -> {
-        tx = dim.width
-        ty = dim.height
+        tx = dim.getWidth()
+        ty = dim.getHeight()
       }
 
       else -> {
-        tx = 0
-        ty = 0
+        tx = 0.0
+        ty = 0.0
       }
     }
-    trans = AffineTransform.getTranslateInstance(tx.toDouble(), ty.toDouble()).also {
+    trans = AffineTransform.getTranslateInstance(tx, ty).also {
       it.quadrantRotate(numQuadrants)
     }
   }
