@@ -2,7 +2,6 @@ package example
 
 import java.awt.*
 import java.awt.event.ActionEvent
-import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
@@ -103,8 +102,7 @@ fun makeUI(): Component {
     }
   }
   textPane.actionMap.put("popupInsert", a4)
-  val keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK)
-  textPane.inputMap.put(keyStroke, "popupInsert")
+  textPane.inputMap.put(KeyStroke.getKeyStroke("shift TAB"), "popupInsert")
 
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(textPane))
