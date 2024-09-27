@@ -66,7 +66,9 @@ private fun initTitledBorder(
 private class DisabledHtmlLabel(
   text: String?,
 ) : JLabel(text) {
-  @Transient private var shadow: BufferedImage? = null
+  private val cs: ColorSpace = ColorSpace.getInstance(ColorSpace.CS_GRAY)
+  private val grayOp = ColorConvertOp(cs, null)
+  private var shadow: BufferedImage? = null
 
   override fun setEnabled(b: Boolean) {
     val key = if (b) "Label.foreground" else "Label.disabledForeground"
@@ -76,10 +78,9 @@ private class DisabledHtmlLabel(
       val g2 = source.createGraphics()
       g2.paint = Color(0x0, true)
       g2.fillRect(0, 0, width, height)
-      // print(g2)
-      paint(g2)
+      paint(g2) // print(g2)
       g2.dispose()
-      shadow = GRAY_CCO.filter(source, null)
+      shadow = grayOp.filter(source, null)
     }
     super.setEnabled(b)
   }
@@ -90,10 +91,6 @@ private class DisabledHtmlLabel(
     } else {
       super.paintComponent(g)
     }
-  }
-
-  companion object {
-    private val GRAY_CCO = ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null)
   }
 }
 

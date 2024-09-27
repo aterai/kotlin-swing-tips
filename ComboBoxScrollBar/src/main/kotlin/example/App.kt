@@ -38,10 +38,12 @@ fun makeUI(): Component {
       UIManager.put("ComboBox.buttonShadow", FOREGROUND)
       super.updateUI()
       setUI(object : BasicComboBoxUI() {
-        override fun createArrowButton() = JButton(ArrowIcon(BACKGROUND, FOREGROUND)).also {
-          it.isContentAreaFilled = false
-          it.isFocusPainted = false
-          it.border = BorderFactory.createEmptyBorder()
+        override fun createArrowButton(): JButton {
+          val button = JButton(ArrowIcon(BACKGROUND, FOREGROUND))
+          button.isContentAreaFilled = false
+          button.isFocusPainted = false
+          button.border = BorderFactory.createEmptyBorder()
+          return button
         }
 
         override fun createPopup() = object : BasicComboPopup(comboBox) {

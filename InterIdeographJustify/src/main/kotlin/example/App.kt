@@ -94,7 +94,8 @@ private class JustifiedLabel(
     val w = d.width - ins.left - ins.right
     if (w != prevWidth) {
       prevWidth = w
-      layout = TextLayout(text, font, g2.fontRenderContext).getJustifiedLayout(w.toFloat())
+      val frc = g2.fontRenderContext
+      layout = TextLayout(text, font, frc).getJustifiedLayout(w.toFloat())
     }
     g2.paint = background
     g2.fillRect(0, 0, d.width, d.height)
