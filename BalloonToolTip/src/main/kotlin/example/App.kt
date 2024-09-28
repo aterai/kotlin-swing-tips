@@ -4,6 +4,7 @@ import java.awt.*
 import java.awt.event.HierarchyEvent
 import java.awt.event.HierarchyListener
 import java.awt.geom.Area
+import java.awt.geom.Path2D
 import java.awt.geom.RoundRectangle2D
 import javax.swing.*
 
@@ -109,14 +110,12 @@ private class BalloonToolTip : JToolTip() {
     addHierarchyListener(listener)
     isOpaque = false
     border = BorderFactory.createEmptyBorder(8, 5, 0, 5)
-    // setForeground(Color.WHITE)
-    // setBackground(Color(0xEF_64_64_64.toInt(), true))
   }
 
   override fun getPreferredSize() = super.getPreferredSize()?.also { it.height = 28 }
 
   override fun paintComponent(g: Graphics) {
-    val s = makeBalloonShape()
+    val s = makeBalloonShape(4.0, 6.0)
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(
       RenderingHints.KEY_ANTIALIASING,
@@ -130,25 +129,16 @@ private class BalloonToolTip : JToolTip() {
     super.paintComponent(g)
   }
 
-  private fun makeBalloonShape(): Shape {
-    val i = insets
-    val w = width - 1
-    val h = height - 1
-    val v = i.top / 2
-    val triangle = Polygon()
-    triangle.addPoint(i.left + v + v, 0)
-    triangle.addPoint(i.left + v, v)
-    triangle.addPoint(i.left + v + v + v, v)
-    val area = Area(
-      RoundRectangle2D.Float(
-        0f,
-        v.toFloat(),
-        w.toFloat(),
-        (h - i.bottom - v).toFloat(),
-        i.top.toFloat(),
-        i.top.toFloat(),
-      ),
-    )
+  fun makeBalloonShape(triHeight: Double, arc: Double): Shape {
+    val rect = SwingUtilities.calculateInnerArea(this, null)
+    val x = rect.getX()
+    val triangle = Path2D.Double()
+    triangle.moveTo(x + triHeight, triHeight)
+    triangle.lineTo(x + triHeight * 2.0, 0.0)
+    triangle.lineTo(x + triHeight * 3.0, triHeight)
+    val w = width - 1.0
+    val h = rect.getHeight() + triHeight - 1.0
+    val area = Area(RoundRectangle2D.Double(0.0, triHeight, w, h, arc, arc))
     area.add(Area(triangle))
     return area
   }
