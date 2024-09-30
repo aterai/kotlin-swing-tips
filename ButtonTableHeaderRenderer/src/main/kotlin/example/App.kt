@@ -85,11 +85,12 @@ private class ButtonHeaderRenderer :
     if (table.rowSorter != null) {
       val sortKeys = table.rowSorter.sortKeys
       if (sortKeys.isNotEmpty() && sortKeys[0].column == modelColumn) {
-        sortIcon = when (sortKeys[0].sortOrder) {
-          SortOrder.ASCENDING -> UIManager.getIcon("Table.ascendingSortIcon")
-          SortOrder.DESCENDING -> UIManager.getIcon("Table.descendingSortIcon")
-          SortOrder.UNSORTED, null -> UIManager.getIcon("Table.naturalSortIcon")
+        val key = when (sortKeys[0].sortOrder) {
+          SortOrder.ASCENDING -> "Table.ascendingSortIcon"
+          SortOrder.DESCENDING -> "Table.descendingSortIcon"
+          SortOrder.UNSORTED, null -> "Table.naturalSortIcon"
         }
+        sortIcon = UIManager.getIcon(key)
       }
     }
     icon = sortIcon

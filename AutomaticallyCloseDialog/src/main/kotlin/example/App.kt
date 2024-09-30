@@ -14,22 +14,20 @@ fun makeUI(): Component {
   label.addHierarchyListener(AutomaticallyCloseListener())
   val button = JButton("show")
   button.addActionListener {
-    val p = label.rootPane
-    val title = "Automatically close dialog"
-    val r = JOptionPane.showConfirmDialog(
-      p,
+    val ret = JOptionPane.showConfirmDialog(
+      label.rootPane,
       label,
-      title,
+      "Automatically close dialog",
       JOptionPane.OK_CANCEL_OPTION,
       JOptionPane.INFORMATION_MESSAGE,
     )
-    when (r) {
-      JOptionPane.OK_OPTION -> textArea.append("OK\n")
-      JOptionPane.CANCEL_OPTION -> textArea.append("Cancel\n")
-      JOptionPane.CLOSED_OPTION -> textArea.append("Closed(automatically)\n")
-      else -> textArea.append("----\n")
+    val msg = when (ret) {
+      JOptionPane.OK_OPTION -> "OK"
+      JOptionPane.CANCEL_OPTION -> "Cancel"
+      JOptionPane.CLOSED_OPTION -> "Closed(automatically)"
+      else -> "----"
     }
-    textArea.append("\n")
+    textArea.append(msg + "\n\n")
   }
   val p = JPanel(BorderLayout())
   p.border = BorderFactory.createTitledBorder("HierarchyListener")
