@@ -5,6 +5,7 @@ import java.awt.event.HierarchyEvent
 import java.awt.event.HierarchyListener
 import java.awt.event.MouseEvent
 import java.awt.geom.Area
+import java.awt.geom.Path2D
 import java.awt.geom.RoundRectangle2D
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -304,15 +305,15 @@ private class BalloonToolTip : JToolTip() {
   }
 
   private fun makeBalloonShape(): Shape {
-    val w = width - 1
-    val h = height - TRI_HEIGHT - 1
-    val r = 10f
-    val cx = width / 2
-    val triangle = Polygon()
-    triangle.addPoint(cx - TRI_HEIGHT, h)
-    triangle.addPoint(cx, h + TRI_HEIGHT)
-    triangle.addPoint(cx + TRI_HEIGHT, h)
-    val area = Area(RoundRectangle2D.Float(0f, 0f, w.toFloat(), h.toFloat(), r, r))
+    val w = width - 1.0
+    val h = height - TRI_HEIGHT - 1.0
+    val arc = 10.0
+    val cx = width / 2.0
+    val triangle = Path2D.Double()
+    triangle.moveTo(cx - TRI_HEIGHT, h)
+    triangle.lineTo(cx, h + TRI_HEIGHT)
+    triangle.lineTo(cx + TRI_HEIGHT, h)
+    val area = Area(RoundRectangle2D.Double(0.0, 0.0, w, h, arc, arc))
     area.add(Area(triangle))
     return area
   }
