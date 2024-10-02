@@ -70,7 +70,7 @@ fun makeUI(): Component {
   }
 }
 
-private fun <E> getSelectedItem(combo: JComboBox<E>) = combo.getItemAt(combo.selectedIndex)
+private fun <E> getSelectedItem(c: JComboBox<E>) = c.getItemAt(c.selectedIndex)
 
 private enum class Vertical(
   val alignment: Int,
@@ -116,7 +116,10 @@ private class StarburstIcon : Icon {
   ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.paint = Color.YELLOW
     g2.fill(star)
     g2.paint = Color.BLACK
