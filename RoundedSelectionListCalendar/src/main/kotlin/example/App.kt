@@ -46,8 +46,10 @@ val monthList = object : JList<LocalDate>() {
       g2.paint = Color(0xC8_00_78_D7.toInt(), true)
       val area = Area()
       indices.map { getCellBounds(it, it) }.forEach { area.add(Area(it)) }
-      val lst = GeomUtils.convertAreaToPoint2DList(area)
-      g2.fill(GeomUtils.convertRoundedPath(lst, 4.0))
+      for (a in singularization(area)) {
+        val lst = convertAreaToPoint2DList(a)
+        g2.fill(convertRoundedPath(lst, 4.0))
+      }
       g2.dispose()
     }
     super.paintComponent(g)
@@ -322,5 +324,50 @@ private object GeomUtils {
     }
     path.closePath()
     return path
+  }
+
+  fun singularization(rect: Area): List<Area> {
+    val list = mutableListOf<Area>()
+    val path = Path2D.Double()
+    val pi = rect.getPathIterator(null)
+    val coords = DoubleArray(6)
+    while (!pi.isDone) {
+      val pathSegmentType = pi.currentSegment(coords)
+      when (pathSegmentType) {
+        PathIterator.SEG_MOVETO -> path.moveTo(
+          coords[0],
+          coords[1],
+        )
+
+        PathIterator.SEG_LINETO -> path.lineTo(
+          coords[0],
+          coords[1],
+        )
+
+        PathIterator.SEG_QUADTO -> path.quadTo(
+          coords[0],
+          coords[1],
+          coords[2],
+          coords[3],
+        )
+
+        PathIterator.SEG_CUBICTO -> path.curveTo(
+          coords[0],
+          coords[1],
+          coords[2],
+          coords[3],
+          coords[4],
+          coords[5],
+        )
+
+        PathIterator.SEG_CLOSE -> path.also {
+          it.closePath()
+          list.add(Area(it))
+          it.reset()
+        }
+      }
+      pi.next()
+    }
+    return list
   }
 }
