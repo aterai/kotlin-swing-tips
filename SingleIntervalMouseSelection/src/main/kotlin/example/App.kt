@@ -17,7 +17,6 @@ import javax.swing.*
 import javax.swing.event.MouseInputAdapter
 import javax.swing.event.MouseInputListener
 
-val cellSize = Dimension(40, 26)
 private val yearMonthLabel = JLabel("", SwingConstants.CENTER)
 val monthList = object : JList<LocalDate>() {
   var handler: MouseInputListener? = null
@@ -29,8 +28,8 @@ val monthList = object : JList<LocalDate>() {
     super.updateUI()
     layoutOrientation = HORIZONTAL_WRAP
     visibleRowCount = CalendarViewListModel.ROW_COUNT // ensure 6 rows in the list
-    fixedCellWidth = cellSize.width
-    fixedCellHeight = cellSize.height
+    fixedCellWidth = 40
+    fixedCellHeight = 26
     cellRenderer = CalendarListRenderer()
     selectionModel.selectionMode = ListSelectionModel.SINGLE_INTERVAL_SELECTION
     handler = SingleIntervalMouseSelectionListener()
@@ -55,8 +54,8 @@ fun makeUI(): Component {
       super.updateUI()
       layoutOrientation = HORIZONTAL_WRAP
       visibleRowCount = 0
-      fixedCellWidth = cellSize.width
-      fixedCellHeight = cellSize.height
+      fixedCellWidth = monthList.fixedCellWidth
+      fixedCellHeight = monthList.fixedCellHeight
       val renderer = cellRenderer
       setCellRenderer { list, value, index, _, _ ->
         renderer.getListCellRendererComponent(list, value, index, false, false).also {
