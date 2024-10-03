@@ -11,7 +11,7 @@ fun makeUI(): Component {
   button1.putClientProperty("html.disable", true)
   label1.text = "<html><font color=red>Html l1</font></html>"
   button1.text = "<html><font color=red>Html b1</font></html>"
-  label1.toolTipText = "<html>&lt;html&gt;&lt;font color=red&gt;Html&lt;/font&gt;&lt;/html&gt;"
+  label1.toolTipText = "<html>&lt;html&gt;&lt;font color=red&gt;Html&lt;/font&gt;"
   button1.toolTipText = "<html><font color=red>Html</font></html>"
 
   val label2 = JLabel()
