@@ -46,9 +46,9 @@ val monthList = object : JList<LocalDate>() {
       g2.paint = Color(0xC8_00_78_D7.toInt(), true)
       val area = Area()
       indices.map { getCellBounds(it, it) }.forEach { area.add(Area(it)) }
-      for (a in singularization(area)) {
-        val lst = convertAreaToPoint2DList(a)
-        g2.fill(convertRoundedPath(lst, 4.0))
+      for (a in GeomUtils.singularization(area)) {
+        val lst = GeomUtils.convertAreaToPoint2DList(a)
+        g2.fill(GeomUtils.convertRoundedPath(lst, 4.0))
       }
       g2.dispose()
     }
