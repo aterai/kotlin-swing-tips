@@ -91,7 +91,10 @@ private class SolidGaugeUI(
       return
     }
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     // val extent = -150d
     val start = 90.0 + extent * .5
     val degree = extent * progressBar.percentComplete
@@ -100,7 +103,15 @@ private class SolidGaugeUI(
     val cy = rect.maxY
     val sz = or * 2.0
     val ir = or * .6
-    val inner = Arc2D.Double(cx - ir, cy - ir, ir * 2.0, ir * 2.0, start, -extent, Arc2D.PIE)
+    val inner = Arc2D.Double(
+      cx - ir,
+      cy - ir,
+      ir * 2.0,
+      ir * 2.0,
+      start,
+      -extent,
+      Arc2D.PIE,
+    )
     val outer = Arc2D.Double(cx - or, cy - or, sz, sz, start, -extent, Arc2D.PIE)
     val sector = Arc2D.Double(cx - or, cy - or, sz, sz, start, -degree, Arc2D.PIE)
     val foreground = Area(sector)

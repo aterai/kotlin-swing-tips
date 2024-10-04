@@ -19,7 +19,11 @@ fun makeUI(): Component {
 
   val table = JTable(500, 3)
   val scroll2 = JScrollPane(table)
-  SwingUtilities.invokeLater { table.scrollRectToVisible(table.getCellRect(500, 0, true)) }
+  SwingUtilities.invokeLater {
+    table.scrollRectToVisible(
+      table.getCellRect(500, 0, true),
+    )
+  }
 
   val tabbedPane = JTabbedPane().also {
     it.addTab("JTextArea", JLayer(scroll1, ScrollBackToTopLayerUI()))
@@ -43,7 +47,10 @@ private class ScrollBackToTopIcon : Icon {
     y: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.translate(x, y)
     if (c is AbstractButton && c.model.isRollover) {
       g2.paint = rolloverColor

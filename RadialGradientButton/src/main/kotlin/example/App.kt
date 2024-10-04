@@ -135,7 +135,10 @@ private class RadialGradientButton(
   override fun paintComponent(g: Graphics) {
     update()
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
 
     // g2.setComposite(AlphaComposite.Clear)
     // g2.setPaint(Color(0x0, true))
@@ -242,7 +245,10 @@ private class RadialGradientPaintButton(
     //   return
     // }
     val g2 = buf?.createGraphics() ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     // val c1 = Color(0x00_F7_23_59, true)
     // val c2 = Color(0x64_44_05_F7, true)
 
