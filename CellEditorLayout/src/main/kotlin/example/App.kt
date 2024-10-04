@@ -8,9 +8,10 @@ import javax.swing.*
 
 fun makeUI(): Component {
   val table = JTable(8, 4)
-  table.columnModel.getColumn(0).cellEditor = CustomComponentCellEditor(JTextField())
-  table.columnModel.getColumn(1).cellEditor = CustomCellEditor(JTextField())
-  table.columnModel.getColumn(2).cellEditor = CustomComponentCellEditor2(CustomComponent())
+  val cm = table.columnModel
+  cm.getColumn(0).cellEditor = CustomComponentCellEditor(JTextField())
+  cm.getColumn(1).cellEditor = CustomCellEditor(JTextField())
+  cm.getColumn(2).cellEditor = CustomComponentCellEditor2(CustomComponent())
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(table))
     it.preferredSize = Dimension(320, 240)

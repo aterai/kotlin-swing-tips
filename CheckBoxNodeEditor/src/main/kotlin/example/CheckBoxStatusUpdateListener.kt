@@ -129,7 +129,8 @@ class CheckBoxNodeRenderer : TreeCellRenderer {
     checkBox.isFocusable = false
     checkBox.isOpaque = false
     (treeNode.userObject as? CheckBoxNode)?.also {
-      checkBox.icon = if (it.status === Status.INDETERMINATE) IndeterminateIcon() else null
+      val indeterminate = it.status === Status.INDETERMINATE
+      checkBox.icon = if (indeterminate) IndeterminateIcon() else null
       (c as? JLabel)?.text = it.label
       checkBox.isSelected = it.status === Status.SELECTED
     }
@@ -200,8 +201,10 @@ class CheckBoxNodeEditor :
     return panel
   }
 
-  override fun getCellEditorValue() =
-    CheckBoxNode(str ?: "", if (checkBox.isSelected) Status.SELECTED else Status.DESELECTED)
+  override fun getCellEditorValue(): Any {
+    val v = if (checkBox.isSelected) Status.SELECTED else Status.DESELECTED
+    return CheckBoxNode(str ?: "", v)
+  }
 
   override fun isCellEditable(e: EventObject?): Boolean {
     val tree = e?.source

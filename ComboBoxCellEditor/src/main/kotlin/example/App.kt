@@ -136,7 +136,8 @@ private class PluginCellEditor(
   override fun getCellEditorValue(): Any {
     val o = super.getCellEditorValue()
     return node?.let {
-      val idx = (panel.comboBox.model as? DefaultComboBoxModel<String>)?.getIndexOf(o) ?: -1
+      val model = panel.comboBox.model as? DefaultComboBoxModel<String>
+      val idx = model?.getIndexOf(o) ?: -1
       PluginNode(panel.pluginName.text, it.plugins, idx)
     } ?: o
   }

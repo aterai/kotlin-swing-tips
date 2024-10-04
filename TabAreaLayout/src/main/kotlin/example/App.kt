@@ -330,7 +330,10 @@ private class CloseTabIcon(
     y: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.translate(x, y)
     g2.paint = color
     g2.drawLine(3, 3, 9, 9)
@@ -353,7 +356,10 @@ private class ColorIcon(
     y: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.translate(x, y)
     g2.paint = color
     g2.fillOval(1, 1, iconWidth - 2, iconHeight - 2)
@@ -420,7 +426,10 @@ private class OverlappedScrollBarUI : BasicScrollBarUI() {
   ) {
     if (c.isEnabled && !r.isEmpty) {
       val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g2.paint = DEFAULT_COLOR
       g2.fillRect(r.x, r.y, r.width - 1, r.height - 1)
       g2.dispose()
