@@ -6,20 +6,22 @@ import javax.swing.*
 fun makeUI(): Component {
   val tree = JTree()
 
-  val fbaCheck = JCheckBox(TreeDraws.DRAWS_FOCUS_BORDER_AROUND_ICON.toString()).also {
-    it.isSelected = UIManager.getBoolean(TreeDraws.DRAWS_FOCUS_BORDER_AROUND_ICON.toString())
+  val fbaTitle = TreeDraws.DRAWS_FOCUS_BORDER_AROUND_ICON.toString()
+  val fbaCheck = JCheckBox(fbaTitle).also {
+    it.isSelected = UIManager.getBoolean(it.text)
     it.addActionListener { e ->
       val b = (e.source as? JCheckBox)?.isSelected == true
-      UIManager.put(TreeDraws.DRAWS_FOCUS_BORDER_AROUND_ICON.toString(), b)
+      UIManager.put(it.text, b)
       SwingUtilities.updateComponentTreeUI(tree)
     }
   }
 
-  val dfiCheck = JCheckBox(TreeDraws.DRAW_DASHED_FOCUS_INDICATOR.toString()).also {
-    it.isSelected = UIManager.getBoolean(TreeDraws.DRAW_DASHED_FOCUS_INDICATOR.toString())
+  val dfiTitle = TreeDraws.DRAW_DASHED_FOCUS_INDICATOR.toString()
+  val dfiCheck = JCheckBox(dfiTitle).also {
+    it.isSelected = UIManager.getBoolean(it.text)
     it.addActionListener { e ->
       val b = (e.source as? JCheckBox)?.isSelected == true
-      UIManager.put(TreeDraws.DRAW_DASHED_FOCUS_INDICATOR.toString(), b)
+      UIManager.put(it.text, b)
       SwingUtilities.updateComponentTreeUI(tree)
     }
   }
@@ -35,12 +37,8 @@ fun makeUI(): Component {
   val p = object : JPanel(BorderLayout()) {
     override fun updateUI() {
       super.updateUI()
-      fbaCheck.isSelected = UIManager.getBoolean(
-        TreeDraws.DRAWS_FOCUS_BORDER_AROUND_ICON.toString(),
-      )
-      dfiCheck.isSelected = UIManager.getBoolean(
-        TreeDraws.DRAW_DASHED_FOCUS_INDICATOR.toString(),
-      )
+      fbaCheck.isSelected = UIManager.getBoolean(fbaCheck.text)
+      dfiCheck.isSelected = UIManager.getBoolean(dfiCheck.text)
     }
   }
   p.add(np, BorderLayout.NORTH)
