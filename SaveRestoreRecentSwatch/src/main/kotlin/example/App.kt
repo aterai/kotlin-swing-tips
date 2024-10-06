@@ -432,13 +432,15 @@ open class SwatchPanel : JPanel() {
 
 private class RecentSwatchPanel : SwatchPanel() {
   override fun initValues() {
-    swatchSize.size = UIManager.getDimension("ColorChooser.swatchesRecentSwatchSize")
+    val key = "ColorChooser.swatchesRecentSwatchSize"
+    swatchSize.size = UIManager.getDimension(key)
     numSwatches.setSize(5, 7)
     gap.setSize(1, 1)
   }
 
   override fun initColors() {
-    val defaultRecent = UIManager.getColor("ColorChooser.swatchesDefaultRecentColor")
+    val key = "ColorChooser.swatchesDefaultRecentColor"
+    val defaultRecent = UIManager.getColor(key)
     val numColors = numSwatches.width * numSwatches.height
     colors = Array(numColors) { defaultRecent }
   }
@@ -454,7 +456,8 @@ private class RecentSwatchPanel : SwatchPanel() {
 
 private class MainSwatchPanel : SwatchPanel() {
   override fun initValues() {
-    swatchSize.size = UIManager.getDimension("ColorChooser.swatchesSwatchSize", getLocale())
+    val key = "ColorChooser.swatchesSwatchSize"
+    swatchSize.size = UIManager.getDimension(key, getLocale())
     numSwatches.setSize(31, 9)
     gap.setSize(1, 1)
   }

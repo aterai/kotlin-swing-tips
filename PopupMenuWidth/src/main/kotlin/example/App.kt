@@ -34,7 +34,9 @@ fun makeUI(): Component {
   }
 
   makeMenu(mb.add(JMenu("Html"))).also {
-    val item = it.add("<html><table cellpadding='0' cellspacing='0' style='width:200'>Table")
+    val item = it.add(
+      "<html><table cellpadding='0' cellspacing='0' style='width:200'>Table",
+    )
     item.mnemonic = KeyEvent.VK_T
   }
 
