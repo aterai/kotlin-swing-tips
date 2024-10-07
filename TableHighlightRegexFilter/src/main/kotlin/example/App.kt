@@ -119,9 +119,15 @@ private class HighlightTableCellRenderer :
     background = if (isSelected) BACKGROUND_SELECTION_COLOR else Color.WHITE
     if (pattern.isNotEmpty() && pattern != prev) {
       runCatching {
-        pattern.toRegex().findAll(txt).map { it.range }.filterNot { it.isEmpty() }.forEach {
-          highlighter.addHighlight(it.first(), it.last() + 1, highlightPainter)
-        }
+        pattern
+          .toRegex()
+          .findAll(
+            txt,
+          ).map { it.range }
+          .filterNot { it.isEmpty() }
+          .forEach {
+            highlighter.addHighlight(it.first(), it.last() + 1, highlightPainter)
+          }
       }.onFailure {
         UIManager.getLookAndFeel().provideErrorFeedback(this)
       }

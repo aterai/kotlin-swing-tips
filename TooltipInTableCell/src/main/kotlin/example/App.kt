@@ -37,7 +37,7 @@ private val table = object : JTable(model) {
     return if (b) getToolTipText(e, c) else super.getToolTipText(e)
   }
 
-  private fun getToolTipText(e: MouseEvent, c: Component): String {
+  private fun getToolTipText(e: MouseEvent, c: Component): String? {
     val pt = e.point
     val row = rowAtPoint(pt)
     val col = columnAtPoint(pt)
@@ -64,8 +64,10 @@ fun makeUI(): Component {
   }
 }
 
-private fun getOptionPaneIcon(key: String) = (UIManager.getIcon(key) as? ImageIcon)?.also {
-  it.description = key
+private fun getOptionPaneIcon(key: String): Icon {
+  val icon = UIManager.getIcon(key)
+  (icon as? ImageIcon)?.description = key
+  return icon
 }
 
 private class ListIconRenderer : TableCellRenderer {

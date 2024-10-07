@@ -53,7 +53,10 @@ private class CellIcon : Icon {
     y: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.translate(x, y)
     if (c is AbstractButton) {
       var ssc = TL
@@ -107,7 +110,10 @@ private class ToggleButtonBarCellIcon : Icon {
       val path = makeButtonPath(c, x, y) ?: return
       val area = Area(path)
       val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
       g2.paint = c.background
       g2.fill(area)
       g2.paint = GradientPaint(
