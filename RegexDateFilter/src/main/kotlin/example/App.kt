@@ -30,8 +30,10 @@ fun makeUI(): Component {
     override fun getColumnClass(column: Int) = Date::class.java
   }
   val table = object : JTable(model) {
-    override fun getToolTipText(e: MouseEvent) =
-      getModel().getValueAt(convertRowIndexToModel(rowAtPoint(e.point)), 0).toString()
+    override fun getToolTipText(e: MouseEvent): String? {
+      val row = convertRowIndexToModel(rowAtPoint(e.point))
+      return getModel().getValueAt(row, 0)?.toString()
+    }
   }
   val sorter = TableRowSorter<TableModel>(model)
   table.rowSorter = sorter
@@ -107,7 +109,7 @@ private class RegexDateFilter(
       } else {
         pattern.containsMatchIn(entry.getStringValue(i))
       }
-      if (b == true) {
+      if (b) {
         return true
       }
     }
