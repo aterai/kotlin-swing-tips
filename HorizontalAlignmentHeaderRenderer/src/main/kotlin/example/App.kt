@@ -5,39 +5,16 @@ import javax.swing.*
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
+import javax.swing.table.TableModel
 
 fun makeUI(): Component {
-  val table0 = makeTable()
-  (table0.tableHeader.defaultRenderer as? JLabel)?.horizontalAlignment = SwingConstants.CENTER
-
-  val renderer = DefaultTableCellRenderer()
-  val table1 = makeTable()
-  table1.tableHeader.setDefaultRenderer { table, value, isSelected, hasFocus, row, column ->
-    renderer
-      .getTableCellRendererComponent(
-        table,
-        value,
-        isSelected,
-        hasFocus,
-        row,
-        column,
-      ).also {
-        (it as? JLabel)?.horizontalAlignment = SwingConstants.CENTER
-      }
-  }
-
-  val table2 = makeTable()
-  val cm = table2.columnModel
-  cm.getColumn(0).headerRenderer = HorizontalAlignmentHeaderRenderer(SwingConstants.LEFT)
-  cm.getColumn(1).headerRenderer = HorizontalAlignmentHeaderRenderer(SwingConstants.CENTER)
-  cm.getColumn(2).headerRenderer = HorizontalAlignmentHeaderRenderer(SwingConstants.RIGHT)
-
+  val table = JTable(makeModel())
+  table.autoCreateRowSorter = true
   val tabs = JTabbedPane()
-  tabs.addTab("Default", JScrollPane(makeTable()))
-  tabs.addTab("Test0", JScrollPane(table0))
-  tabs.addTab("Test1", JScrollPane(table1))
-  tabs.addTab("Test2", JScrollPane(table2))
-
+  tabs.addTab("Default", JScrollPane(table))
+  tabs.addTab("Test0", JScrollPane(makeTable0()))
+  tabs.addTab("Test1", JScrollPane(makeTable1()))
+  tabs.addTab("Test2", JScrollPane(makeTable2()))
   return JPanel(BorderLayout()).also {
     val mb = JMenuBar()
     mb.add(LookAndFeelUtils.createLookAndFeelMenu())
@@ -47,7 +24,55 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTable(): JTable {
+private fun makeTable0() = object : JTable(makeModel()) {
+  override fun updateUI() {
+    super.updateUI()
+    autoCreateRowSorter = true
+    val r = tableHeader.defaultRenderer
+    (r as? JLabel)?.horizontalAlignment = SwingConstants.CENTER
+  }
+}
+
+private fun makeTable1() = object : JTable(makeModel()) {
+  override fun updateUI() {
+    super.updateUI()
+    autoCreateRowSorter = true
+    val renderer = DefaultTableCellRenderer()
+    tableHeader.setDefaultRenderer {
+        table,
+        value,
+        isSelected,
+        hasFocus,
+        row,
+        column,
+      ->
+      renderer
+        .getTableCellRendererComponent(
+          table,
+          value,
+          isSelected,
+          hasFocus,
+          row,
+          column,
+        ).also {
+          (it as? JLabel)?.horizontalAlignment = SwingConstants.CENTER
+        }
+    }
+  }
+}
+
+private fun makeTable2(): JTable {
+  val table = JTable(makeModel())
+  table.autoCreateRowSorter = true
+  listOf(SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.RIGHT)
+    .forEachIndexed { index, align ->
+      val column = table.columnModel.getColumn(index)
+      column.headerRenderer = HorizontalAlignmentHeaderRenderer(align)
+    }
+  return table
+}
+
+private fun makeModel(): TableModel {
   val columnNames = arrayOf("String", "Integer", "Boolean")
   val data = arrayOf(
     arrayOf("aaa", 12, true),
@@ -55,12 +80,9 @@ private fun makeTable(): JTable {
     arrayOf("CCC", 92, true),
     arrayOf("DDD", 0, false),
   )
-  val model = object : DefaultTableModel(data, columnNames) {
+  return object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
-  val table = JTable(model)
-  table.autoCreateRowSorter = true
-  return table
 }
 
 private class HorizontalAlignmentHeaderRenderer(
@@ -75,7 +97,14 @@ private class HorizontalAlignmentHeaderRenderer(
     column: Int,
   ): Component {
     val r = table.tableHeader.defaultRenderer
-    val c = r.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+    val c = r.getTableCellRendererComponent(
+      table,
+      value,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
     (c as? JLabel)?.horizontalAlignment = horAlignment
     return c
   }
