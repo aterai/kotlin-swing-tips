@@ -55,7 +55,9 @@ fun makeUI(): Component {
       runCatching {
         if (e.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
           e.acceptDrop(DnDConstants.ACTION_COPY)
-          (e.transferable.getTransferData(DataFlavor.javaFileListFlavor) as? List<*>)?.also {
+          val t = e.transferable
+          val list = t.getTransferData(DataFlavor.javaFileListFlavor)
+          (list as? List<*>)?.also {
             val file = it[0]
             if (file is File) {
               smallLabel.icon = FileSystemView.getFileSystemView().getSystemIcon(file)
