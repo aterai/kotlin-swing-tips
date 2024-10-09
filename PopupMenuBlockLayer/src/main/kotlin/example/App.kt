@@ -23,7 +23,7 @@ fun makeUI(): Component {
     model.addRow(arrayOf("Name $i", i, false))
   }
   val table = object : JTable(model) {
-    override fun getToolTipText(e: MouseEvent): String {
+    override fun getToolTipText(e: MouseEvent): String? {
       val row = convertRowIndexToModel(rowAtPoint(e.point))
       val m = getModel()
       return "%s, %s".format(m.getValueAt(row, 0), m.getValueAt(row, 2))
