@@ -210,7 +210,8 @@ private class CheckBoxNodeEditor(
 
   override fun getCellEditorValue(): Any {
     val f = file ?: File("")
-    return CheckBoxNode(f, if (checkBox.isSelected) Status.SELECTED else Status.DESELECTED)
+    val s = if (checkBox.isSelected) Status.SELECTED else Status.DESELECTED
+    return CheckBoxNode(f, s)
   }
 
   override fun isCellEditable(e: EventObject?): Boolean {
