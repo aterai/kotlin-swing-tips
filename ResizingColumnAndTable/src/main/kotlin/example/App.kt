@@ -8,10 +8,10 @@ fun makeUI(): Component {
     // https://stackoverflow.com/questions/16368343/jtable-resize-only-selected-column-when-container-size-changes
     // https://stackoverflow.com/questions/23201818/jtable-columns-doesnt-resize-probably-when-jframe-resize
     override fun doLayout() {
-      getTableHeader()?.also { header ->
-        if (header.resizingColumn == null && getAutoResizeMode() == AUTO_RESIZE_LAST_COLUMN) {
+      getTableHeader()?.also { h ->
+        if (h.resizingColumn == null && autoResizeMode == AUTO_RESIZE_LAST_COLUMN) {
           val tcm = getColumnModel()
-          header.resizingColumn = tcm.getColumn(tcm.columnCount - 1)
+          h.resizingColumn = tcm.getColumn(tcm.columnCount - 1)
         }
       }
       super.doLayout()
