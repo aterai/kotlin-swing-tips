@@ -138,7 +138,8 @@ private class FileTransferHandler : TransferHandler() {
     val list = runCatching {
       support.transferable.getTransferData(DataFlavor.javaFileListFlavor) as? List<*>
     }.getOrNull().orEmpty()
-    val model = (support.component as? JTable)?.model as? DefaultTableModel ?: return false
+    val table = support.component as? JTable
+    val model = table?.model as? DefaultTableModel ?: return false
     list
       .filterIsInstance<File>()
       .map { file -> (0..2).map { file }.toTypedArray() }
