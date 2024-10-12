@@ -14,7 +14,8 @@ fun makeUI(): Component {
   editor.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true)
   editor.isEditable = false
   editor.addHyperlinkListener { e ->
-    if (Desktop.isDesktopSupported() && e.eventType == HyperlinkEvent.EventType.ACTIVATED) {
+    val desktopSupported = Desktop.isDesktopSupported()
+    if (desktopSupported && e.eventType == HyperlinkEvent.EventType.ACTIVATED) {
       runCatching {
         Desktop.getDesktop().browse(URI(SITE))
       }.onFailure {

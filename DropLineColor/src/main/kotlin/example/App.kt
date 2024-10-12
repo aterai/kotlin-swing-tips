@@ -280,7 +280,11 @@ private class TableRowTransferHandler : TransferHandler() {
   override fun canImport(info: TransferSupport): Boolean {
     val canDrop = info.isDrop && info.isDataFlavorSupported(FLAVOR)
     (info.component as? JComponent)?.rootPane?.glassPane?.also {
-      it.cursor = if (canDrop) DragSource.DefaultMoveDrop else DragSource.DefaultMoveNoDrop
+      it.cursor = if (canDrop) {
+        DragSource.DefaultMoveDrop
+      } else {
+        DragSource.DefaultMoveNoDrop
+      }
     }
     return canDrop
   }
@@ -382,13 +386,13 @@ private class TreeTransferHandler : TransferHandler() {
   override fun importData(support: TransferSupport): Boolean {
     val nodes = runCatching {
       support.transferable.getTransferData(FLAVOR) as? Array<*>
-    }.getOrNull()?.filterIsInstance<DefaultMutableTreeNode>() ?: return false // .orEmpty()
+    }.getOrNull()?.filterIsInstance<DefaultMutableTreeNode>() ?: return false
     val dl = support.dropLocation as? JTree.DropLocation
     val target = dl?.path
-    val parent = target?.lastPathComponent
+    val parent = target?.lastPathComponent as? DefaultMutableTreeNode
     val tree = support.component as? JTree
-    val model = tree?.model
-    return if (dl != null && model is DefaultTreeModel && parent is DefaultMutableTreeNode) {
+    val model = tree?.model as? DefaultTreeModel
+    return if (dl != null && model != null && parent != null) {
       val childIndex = dl.childIndex
       val idx = AtomicInteger(if (childIndex < 0) parent.childCount else childIndex)
       nodes.forEach {
