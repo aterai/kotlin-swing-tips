@@ -6,8 +6,6 @@ import javax.swing.*
 import javax.swing.plaf.IconUIResource
 import javax.swing.table.DefaultTableModel
 
-private val EMPTY_ICON = EmptyIcon()
-
 fun makeUI(): Component {
   val columnNames = arrayOf("String", "Integer", "Boolean")
   val data = arrayOf(
@@ -53,13 +51,15 @@ private fun makeRadioPane(table: JTable): Box {
       }
 
       r == r1 -> {
-        ascending = IconUIResource(EMPTY_ICON)
-        descending = IconUIResource(EMPTY_ICON)
+        val emptyIcon = EmptyIcon()
+        ascending = IconUIResource(emptyIcon)
+        descending = IconUIResource(emptyIcon)
       }
 
       else -> {
-        ascending = UIManager.getLookAndFeelDefaults().getIcon("Table.ascendingSortIcon")
-        descending = UIManager.getLookAndFeelDefaults().getIcon("Table.descendingSortIcon")
+        val def = UIManager.getLookAndFeelDefaults()
+        ascending = def.getIcon("Table.ascendingSortIcon")
+        descending = def.getIcon("Table.descendingSortIcon")
       }
     }
     UIManager.put("Table.ascendingSortIcon", ascending)
