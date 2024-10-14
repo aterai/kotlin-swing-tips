@@ -1,7 +1,6 @@
 package example
 
 import java.awt.*
-import java.awt.event.InputEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.*
@@ -19,28 +18,27 @@ fun makeUI(): Component {
   tabbedPane.addMouseListener(object : MouseAdapter() {
     override fun mouseClicked(e: MouseEvent) {
       val button = e.button
-      val isB2Clicked = e.modifiersEx and InputEvent.getMaskForButton(2) != 0
       val mask = if (button == 0) "NOBUTTON" else "BUTTON$button"
       log.append("$mask\n")
-      log.append("BUTTON2 mouseClicked: $isB2Clicked\n")
-      val isB1Double = e.clickCount == 2 && button == 1
-      val isB2Down = MouseInfo.getNumberOfButtons() > 2 && button == 2
+      val isDouble = e.clickCount >= 2
+      val isLeftDouble = SwingUtilities.isLeftMouseButton(e) && isDouble
+      val isMiddle = SwingUtilities.isMiddleMouseButton(e)
       (e.component as? JTabbedPane)?.also {
         val idx = it.indexAtLocation(e.x, e.y)
-        if (idx >= 0 && (isB2Down || isB1Double)) {
+        if (idx >= 0 && (isMiddle || isLeftDouble)) {
           it.remove(idx)
         }
       }
     }
 
     override fun mousePressed(e: MouseEvent) {
-      val mousePressed = e.modifiersEx and InputEvent.getMaskForButton(2) != 0
-      log.append("BUTTON2 mousePressed: $mousePressed\n")
+      val mousePressed = SwingUtilities.isMiddleMouseButton(e)
+      log.append("Middle mousePressed: $mousePressed\n")
     }
 
     override fun mouseReleased(e: MouseEvent) {
-      val mouseReleased = e.modifiersEx and InputEvent.getMaskForButton(2) != 0
-      log.append("BUTTON2 mouseReleased: $mouseReleased\n")
+      val mouseReleased = SwingUtilities.isMiddleMouseButton(e)
+      log.append("Middle mouseReleased: $mouseReleased\n")
     }
   })
 
