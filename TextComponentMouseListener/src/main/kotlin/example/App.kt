@@ -90,7 +90,7 @@ private class TextComponentMouseHandler(
         val pos = textArea.viewToModel(e.point)
         textArea.caretPosition = pos
       }
-      if (e.button == MouseEvent.BUTTON1) {
+      if (SwingUtilities.isLeftMouseButton(e)) {
         holdTimer.start()
       }
     }

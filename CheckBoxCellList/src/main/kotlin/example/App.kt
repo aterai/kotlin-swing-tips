@@ -102,7 +102,7 @@ private class CheckBoxList(
     handler = object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
         val index = locationToIndex(e.point)
-        if (e.button == MouseEvent.BUTTON1 && index >= 0) {
+        if (SwingUtilities.isLeftMouseButton(e) && index >= 0) {
           (model as? DefaultListModel<CheckBoxNode>)?.also {
             val node = it[index]
             it[index] = CheckBoxNode(node.text, !node.selected)

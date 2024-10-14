@@ -14,8 +14,8 @@ import kotlin.math.sin
 private val TEXT = """
   icon.addMouseListener(new MouseAdapter() {
     public void mouseClicked(MouseEvent e) {
-      boolean isDoubleClick = e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() >= 2;
-      if (isDoubleClick) {
+      boolean isDoubleClick = e.getClickCount() >= 2;
+      if (SwingUtilities.isLeftMouseButton(e) && isDoubleClick) {
         frame.setVisible(true);
       } else if (frame.isVisible()) {
         frame.setExtendedState(Frame.NORMAL);
@@ -52,8 +52,8 @@ private fun makeTrayIcon(frame: JFrame): TrayIcon {
   val icon = TrayIcon(image, "Click Test", popup)
   val ml = object : MouseAdapter() {
     override fun mouseClicked(e: MouseEvent) {
-      val isDoubleClick = e.button == MouseEvent.BUTTON1 && e.clickCount >= 2
-      if (isDoubleClick) {
+      val isDoubleClick = e.clickCount >= 2
+      if (SwingUtilities.isLeftMouseButton(e) && isDoubleClick) {
         frame.isVisible = true
       } else if (frame.isVisible) {
         frame.extendedState = Frame.NORMAL

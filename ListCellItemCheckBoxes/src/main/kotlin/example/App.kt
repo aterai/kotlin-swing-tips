@@ -202,7 +202,7 @@ private class RubberBandSelectionList(
       e: MouseEvent,
       index: Int,
     ) {
-      if (e.button == MouseEvent.BUTTON1 && e.clickCount > 1) {
+      if (SwingUtilities.isLeftMouseButton(e) && e.clickCount > 1) {
         val item = model.getElementAt(index)
         JOptionPane.showMessageDialog(rootPane, item.title)
       } else {

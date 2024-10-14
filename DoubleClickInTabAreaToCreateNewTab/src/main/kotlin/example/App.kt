@@ -41,7 +41,7 @@ fun makeUI(): Component {
   tabbedPane.addTab("Title", JScrollPane(JTextArea(help)))
   tabbedPane.addMouseListener(object : MouseAdapter() {
     override fun mouseClicked(e: MouseEvent) {
-      val leftButton = e.button == MouseEvent.BUTTON1
+      val leftButton = SwingUtilities.isLeftMouseButton(e)
       val doubleClick = e.clickCount >= 2
       val tabs = e.component as JTabbedPane
       val idx = tabs.indexAtLocation(e.x, e.y)

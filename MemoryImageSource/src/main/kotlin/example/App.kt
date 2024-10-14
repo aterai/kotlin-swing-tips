@@ -85,7 +85,7 @@ private class PaintPanel :
 
   override fun mousePressed(e: MouseEvent) {
     startPoint = e.point
-    penColor = if (e.button == MouseEvent.BUTTON1) 0xFF_00_00_00.toInt() else 0x0
+    penColor = if (SwingUtilities.isLeftMouseButton(e)) 0xFF_00_00_00.toInt() else 0x0
   }
 
   override fun mouseMoved(e: MouseEvent) {

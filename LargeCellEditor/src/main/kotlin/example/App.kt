@@ -120,7 +120,14 @@ private class IconTable(
       g2.paint = Color.BLACK
       val r = editor.bounds
       for (i in 0..<OFFSET) {
-        g2.fillRoundRect(r.x - i, r.y + OFFSET, r.width + i + i, r.height - OFFSET + i, 5, 5)
+        g2.fillRoundRect(
+          r.x - i,
+          r.y + OFFSET,
+          r.width + i + i,
+          r.height - OFFSET + i,
+          5,
+          5,
+        )
       }
       g2.dispose()
       g.drawImage(buffer, 0, 0, this)
@@ -176,7 +183,7 @@ private class IconTable(
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
     handler = object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
-        if (e.button == MouseEvent.BUTTON1) {
+        if (SwingUtilities.isLeftMouseButton(e)) {
           startEditing()
         }
       }
