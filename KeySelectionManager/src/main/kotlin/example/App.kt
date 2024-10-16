@@ -41,7 +41,9 @@ private fun makeTitledPanel(
   return p
 }
 
-private fun makeModel() = DefaultComboBoxModel(arrayOf("a", "ab", "abc", "b1", "b2", "b3"))
+private fun makeModel() = DefaultComboBoxModel(
+  arrayOf("a", "ab", "abc", "b1", "b2", "b3"),
+)
 
 fun main() {
   EventQueue.invokeLater {

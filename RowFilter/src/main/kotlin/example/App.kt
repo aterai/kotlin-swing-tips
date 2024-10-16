@@ -77,7 +77,8 @@ fun makeUI(): Component {
     }
   }
   val filter2 = object : RowFilter<RowDataModel, Int>() {
-    override fun include(entry: Entry<out RowDataModel?, out Int>) = entry.identifier % 2 == 0
+    override fun include(entry: Entry<out RowDataModel?, out Int>) =
+      entry.identifier % 2 == 0
   }
   check1.addActionListener { e ->
     if ((e.source as? JCheckBox)?.isSelected == true) {
