@@ -16,10 +16,14 @@ private val model = object : DefaultTableModel(data, columnNames) {
   override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
 }
 private val table = object : JTable(model) {
-  override fun getToolTipText(e: MouseEvent): String {
-    val row = convertRowIndexToModel(rowAtPoint(e.point))
-    val m = model
-    return "%s, %s".format(m.getValueAt(row, 0), m.getValueAt(row, 2))
+  override fun getToolTipText(e: MouseEvent): String? {
+    val row = rowAtPoint(e.point)
+    return if (row >= 0) {
+      val i = convertRowIndexToModel(row)
+      "%s, %s".format(model.getValueAt(i, 0), model.getValueAt(i, 2))
+    } else {
+      null
+    }
   }
 }
 private val scroll = JScrollPane(table)
