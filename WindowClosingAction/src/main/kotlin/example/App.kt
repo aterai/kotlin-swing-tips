@@ -41,11 +41,12 @@ fun makeUI(): Component {
 
 private class ExitAction : AbstractAction("Exit") {
   override fun actionPerformed(e: ActionEvent) {
-    val p = SwingUtilities.getUnwrappedParent(e.source as? Component) ?: return
-    val root = when (p) {
+    val c = e.source as? Component
+    val root = when (val p = SwingUtilities.getUnwrappedParent(c)) {
       is JPopupMenu -> SwingUtilities.getRoot(p.invoker)
       is JToolBar -> getToolBarRoot(p)
-      else -> SwingUtilities.getRoot(p)
+      is Container -> SwingUtilities.getRoot(p)
+      else -> null
     }
     (root as? Window)?.also { window ->
       window.dispatchEvent(WindowEvent(window, WindowEvent.WINDOW_CLOSING))
