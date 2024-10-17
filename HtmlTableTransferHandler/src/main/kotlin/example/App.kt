@@ -26,12 +26,12 @@ import javax.swing.table.TableModel
 fun makeUI(): Component {
   val columnNames = arrayOf("Type", "Value")
   val data = arrayOf(
-    arrayOf("String", "text"),
-    arrayOf("Date", Date()),
-    arrayOf("Integer", 12),
-    arrayOf("Double", 3.45),
-    arrayOf("Boolean", true),
-    arrayOf("Color", Color.RED),
+    arrayOf<Any>("String", "text"),
+    arrayOf<Any>("Date", Date()),
+    arrayOf<Any>("Integer", 12),
+    arrayOf<Any>("Double", 3.45),
+    arrayOf<Any>("Boolean", true),
+    arrayOf<Any>("Color", Color.RED),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
