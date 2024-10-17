@@ -8,12 +8,14 @@ import javax.swing.*
 fun makeUI(): Component {
   val button1 = JButton("JOptionPane.showMessageDialog")
   button1.addActionListener {
-    JOptionPane.showMessageDialog(button1.rootPane, "showMessageDialog")
+    val owner = button1.rootPane
+    JOptionPane.showMessageDialog(owner, "showMessageDialog")
   }
 
   val button2 = JButton("Default")
   button2.addActionListener {
-    val dialog = JDialog(JOptionPane.getFrameForComponent(button2.rootPane), "title", true)
+    val owner = JOptionPane.getFrameForComponent(button2.rootPane)
+    val dialog = JDialog(owner, "title", true)
     val act = object : AbstractAction("OK") {
       override fun actionPerformed(e: ActionEvent) {
         dialog.dispose()
@@ -28,15 +30,17 @@ fun makeUI(): Component {
 
   val button3 = JButton("close JDialog with ESC key")
   button3.addActionListener {
-    val dialog = JDialog(JOptionPane.getFrameForComponent(button3.rootPane), "title", true)
+    val owner = JOptionPane.getFrameForComponent(button3.rootPane)
+    val dialog = JDialog(owner, "title", true)
     val act = object : AbstractAction("OK") {
       override fun actionPerformed(e: ActionEvent) {
         dialog.dispose()
       }
     }
-    val imap = dialog.rootPane.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-    imap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "close-it")
-    dialog.rootPane.actionMap.put("close-it", act)
+    val root = dialog.rootPane
+    val im = root.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "close-it")
+    root.actionMap.put("close-it", act)
     dialog.contentPane.add(makePanel(act))
     dialog.pack()
     dialog.isResizable = false
