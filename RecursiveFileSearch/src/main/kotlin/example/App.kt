@@ -17,9 +17,9 @@ private val fileChooser = JFileChooser()
 private val textArea = JTextArea()
 private val progress = JProgressBar()
 private val statusPanel = JPanel(BorderLayout())
-private val runButton = JButton("Run")
+private val searchButton = JButton("Run")
 private val cancelButton = JButton("Cancel")
-private val openButton = JButton("Choose...")
+private val chooseButton = JButton("Choose...")
 private var worker: SwingWorker<String, Message>? = null
 
 fun makeUI(): Component {
@@ -30,26 +30,21 @@ fun makeUI(): Component {
   textArea.isEditable = false
   statusPanel.add(progress)
   statusPanel.isVisible = false
-  runButton.addActionListener {
-    updateComponentStatus(true)
-    executeWorker()
-  }
-  cancelButton.addActionListener {
-    worker?.takeUnless { it.isDone }?.cancel(true)
-    worker = null
-  }
-  initOpenButton()
+
+  searchButton.addActionListener { searchActionPerformed() }
+  cancelButton.addActionListener { cancelActionPerformed() }
+  chooseButton.addActionListener { chooseActionPerformed() }
 
   val box1 = JPanel(BorderLayout(5, 5)).also {
     it.add(JLabel("Search folder:"), BorderLayout.WEST)
     it.add(dirCombo)
-    it.add(openButton, BorderLayout.EAST)
+    it.add(chooseButton, BorderLayout.EAST)
   }
 
   val box2 = Box.createHorizontalBox().also {
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.add(Box.createHorizontalGlue())
-    it.add(runButton)
+    it.add(searchButton)
     it.add(Box.createHorizontalStrut(2))
     it.add(cancelButton)
   }
@@ -68,24 +63,37 @@ fun makeUI(): Component {
   }
 }
 
-private fun initOpenButton() {
-  openButton.addActionListener {
-    fileChooser.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
-    fileChooser.selectedFile = File(dirCombo.editor.item.toString())
-    val c = dirCombo.rootPane
-    textArea.text = when (fileChooser.showOpenDialog(c)) {
-      JFileChooser.APPROVE_OPTION ->
-        fileChooser.selectedFile
-          ?.takeIf { it.isDirectory }
-          ?.absolutePath
-          ?.also { addItem(dirCombo, it, 4) }
-          ?: "Please select directory."
+private fun searchActionPerformed() {
+  updateComponentStatus(true)
+  val dir = File(dirCombo.getItemAt(dirCombo.selectedIndex))
+  if (dir.exists()) {
+    executeWorker(dir)
+  } else {
+    textArea.text = "The directory does not exist."
+  }
+}
 
-      JFileChooser.CANCEL_OPTION -> "JFileChooser cancelled."
+private fun cancelActionPerformed() {
+  worker?.takeUnless { it.isDone }?.cancel(true)
+  worker = null
+}
 
-      else -> "JFileChooser error.".also {
-        UIManager.getLookAndFeel().provideErrorFeedback(c)
-      }
+private fun chooseActionPerformed() {
+  fileChooser.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+  fileChooser.selectedFile = File(dirCombo.editor.item.toString())
+  val c = dirCombo.rootPane
+  textArea.text = when (fileChooser.showOpenDialog(c)) {
+    JFileChooser.APPROVE_OPTION ->
+      fileChooser.selectedFile
+        ?.takeIf { it.isDirectory }
+        ?.absolutePath
+        ?.also { addItem(dirCombo, it, 4) }
+        ?: "Please select directory."
+
+    JFileChooser.CANCEL_OPTION -> "JFileChooser cancelled."
+
+    else -> "JFileChooser error.".also {
+      UIManager.getLookAndFeel().provideErrorFeedback(c)
     }
   }
 }
@@ -128,22 +136,21 @@ fun updateComponentStatus(start: Boolean) {
     addItem(dirCombo, dirCombo.editor.item.toString())
     statusPanel.isVisible = true
     dirCombo.isEnabled = false
-    openButton.isEnabled = false
-    runButton.isEnabled = false
+    chooseButton.isEnabled = false
+    searchButton.isEnabled = false
     cancelButton.isEnabled = true
     progress.isIndeterminate = true
     textArea.text = ""
   } else {
     dirCombo.isEnabled = true
-    openButton.isEnabled = true
-    runButton.isEnabled = true
+    chooseButton.isEnabled = true
+    searchButton.isEnabled = true
     cancelButton.isEnabled = false
     statusPanel.isVisible = false
   }
 }
 
-private fun executeWorker() {
-  val dir = File(dirCombo.getItemAt(dirCombo.selectedIndex))
+private fun executeWorker(dir: File) {
   worker = FileSearchTask(dir).also {
     it.addPropertyChangeListener(ProgressListener(progress))
     it.execute()
@@ -189,23 +196,10 @@ private open class RecursiveFileSearchTask(
   protected var counter = 0
 
   @Throws(InterruptedException::class)
-  override fun doInBackground() = if (!dir.exists()) {
-    publish(Message("The directory does not exist.", true))
-    "Error"
-  } else {
-    fileSearchInBackground(dir.toPath())
-  }
-
-  @Throws(InterruptedException::class)
-  private fun fileSearchInBackground(path: Path): String {
+  override fun doInBackground() = runCatching {
+    counter = 0
     val list = mutableListOf<Path>()
-    runCatching {
-      counter = 0
-      recursiveSearch(path, list)
-    }.onFailure {
-      publish(Message("The search was canceled", true))
-      return "Interrupted1"
-    }
+    recursiveSearch(dir.toPath(), list)
     firePropertyChange("clear-JTextArea", "", "")
     val lengthOfTask = list.size
     publish(Message("Length Of Task: $lengthOfTask", false))
@@ -215,8 +209,10 @@ private open class RecursiveFileSearchTask(
       doSomething(list, idx)
       idx++
     }
-    return "Done"
-  }
+    "Done"
+  }.onFailure {
+    publish(Message("The search was canceled", true))
+  }.getOrNull() ?: "Interrupted1"
 
   @Throws(InterruptedException::class)
   protected fun doSomething(
