@@ -12,7 +12,7 @@ fun makeUI(): Component {
   val auxLookAndFeel = AuxiliaryWindowsLookAndFeel()
   UIManager.addPropertyChangeListener { e ->
     if ("lookAndFeel" == e.propertyName) {
-      val lnf = e.newValue.toString()
+      val lnf = e.newValue?.toString() ?: ""
       if (lnf.contains("Windows")) {
         if (check.isSelected) {
           UIManager.addAuxiliaryLookAndFeel(auxLookAndFeel)
