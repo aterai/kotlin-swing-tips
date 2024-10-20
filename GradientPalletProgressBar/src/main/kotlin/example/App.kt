@@ -129,33 +129,37 @@ class GradientPalletProgressBarUI : BasicProgressBarUI() {
     c: JComponent,
   ) {
     val b = progressBar.insets // area for border
-    val barRectWidth = progressBar.width - b.right - b.left
-    val barRectHeight = progressBar.height - b.top - b.bottom
-    if (barRectWidth <= 0 || barRectHeight <= 0) {
+    // val barRectWidth = progressBar.width - b.right - b.left
+    // val barRectHeight = progressBar.height - b.top - b.bottom
+    // if (barRectWidth <= 0 || barRectHeight <= 0) {
+    //   return
+    // }
+    val r = SwingUtilities.calculateInnerArea(progressBar, null)
+    if (r.isEmpty) {
       return
     }
     // val cellLength = getCellLength()
     // val cellSpacing = getCellSpacing()
     // amount of progress to draw
-    val amountFull = getAmountFull(b, barRectWidth, barRectHeight)
+    val amountFull = getAmountFull(b, r.width, r.height)
 
     // draw the cells
     when (progressBar.orientation) {
       SwingConstants.HORIZONTAL -> {
-        val x = amountFull / barRectWidth.toFloat()
+        val x = amountFull / r.width.toFloat()
         g.color = getColorFromPallet(pallet, x)
-        g.fillRect(b.left, b.top, amountFull, barRectHeight)
+        g.fillRect(r.x, r.y, amountFull, r.height)
       }
 
       SwingConstants.VERTICAL -> {
-        val y = amountFull / barRectHeight.toFloat()
+        val y = amountFull / r.height.toFloat()
         g.color = getColorFromPallet(pallet, y)
-        g.fillRect(b.left, barRectHeight + b.bottom - amountFull, barRectWidth, amountFull)
+        g.fillRect(r.x, r.y + r.height - amountFull, r.width, amountFull)
       }
     }
     // Deal with possible text painting
     if (progressBar.isStringPainted) {
-      paintString(g, b.left, b.top, barRectWidth, barRectHeight, amountFull, b)
+      paintString(g, r.x, r.y, r.width, r.height, amountFull, b)
     }
   }
 }
