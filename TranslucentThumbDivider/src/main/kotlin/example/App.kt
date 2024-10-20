@@ -191,18 +191,21 @@ private class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
     e: MouseEvent,
     l: JLayer<out JSplitPane>,
   ) {
-    val splitPane = l.view
+    val split = l.view
     val c = e.component
-    val pt = SwingUtilities.convertPoint(c, e.point, splitPane)
-    if (e.id == MouseEvent.MOUSE_MOVED) {
-      splitPane.cursor = if (thumb.contains(e.point)) wc else dc
-    } else if (isDragging && isDraggable(splitPane, c) && e.id == MouseEvent.MOUSE_DRAGGED) {
-      val d = if (splitPane.orientation == JSplitPane.HORIZONTAL_SPLIT) {
-        pt.x - startPt.x
-      } else {
-        pt.y - startPt.y
+    val p = e.point
+    when (e.id) {
+      MouseEvent.MOUSE_MOVED -> split.cursor = if (thumb.contains(p)) wc else dc
+
+      MouseEvent.MOUSE_DRAGGED -> if (isDragging && isDraggable(split, c)) {
+        val pt = SwingUtilities.convertPoint(c, p, split)
+        val d = if (split.orientation == JSplitPane.HORIZONTAL_SPLIT) {
+          pt.x - startPt.x
+        } else {
+          pt.y - startPt.y
+        }
+        split.dividerLocation = maxOf(0, dividerLocation + d)
       }
-      splitPane.dividerLocation = maxOf(0, dividerLocation + d)
     }
   }
 
