@@ -54,12 +54,12 @@ private fun makeTabbedPane(): JTabbedPane {
         val tips = createToolTip()
         tips.tipText = it
         label.text = it
-        (tips as? BalloonToolTip)?.updateBalloonShape(getTabPlacement())
+        (tips as? BalloonToolTip)?.updateBalloonShape(tabPlacement)
         getToolTipPoint(getBoundsAt(idx), tips.preferredSize)
       }
     }
 
-    private fun getToolTipPoint(r: Rectangle, d: Dimension) = when (getTabPlacement()) {
+    private fun getToolTipPoint(r: Rectangle, d: Dimension) = when (tabPlacement) {
       LEFT -> makePoint(r.maxX, r.centerY - d.getHeight() / 2.0)
       RIGHT -> makePoint(r.minX - d.width, r.centerY - d.getHeight() / 2.0)
       BOTTOM -> makePoint(r.centerX - d.getWidth() / 2.0, r.minY - d.height)
@@ -80,7 +80,7 @@ private fun makeTabbedPane(): JTabbedPane {
           "ToolTip.font",
         )
         it.add(label)
-        it.updateBalloonShape(getTabPlacement())
+        it.updateBalloonShape(tabPlacement)
         it.component = this
       }
       tip = t
