@@ -24,13 +24,13 @@ private open class LoadSaveTask(
   val windowState: WindowState,
 ) : SwingWorker<WindowListener?, Unit?>() {
   public override fun doInBackground(): WindowListener? {
-    val service: PersistenceService? = runCatching {
-      ServiceManager.lookup("javax.jnlp.PersistenceService") as? PersistenceService
+    val service = runCatching {
+      ServiceManager.lookup("javax.jnlp.PersistenceService")
     }.getOrNull()
-    val bs: BasicService? = runCatching {
-      ServiceManager.lookup("javax.jnlp.BasicService") as? BasicService
+    val bs = runCatching {
+      ServiceManager.lookup("javax.jnlp.BasicService")
     }.getOrNull()
-    return if (service != null && bs != null) {
+    return if (service is PersistenceService && bs is BasicService) {
       val codebase = bs.codeBase
       loadWindowState(service, codebase, windowState)
       object : WindowAdapter() {
