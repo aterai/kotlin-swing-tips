@@ -17,7 +17,7 @@ fun makeUI(): Component {
 
 private class AlternateRowColorTree : JTree() {
   override fun paintComponent(g: Graphics) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.paint = Color(0xCC_CC_CC)
     (0..<rowCount)
       .filter { it % 2 == 0 }

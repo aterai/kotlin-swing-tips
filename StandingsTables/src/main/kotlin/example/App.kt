@@ -143,7 +143,7 @@ private class BorderPaintLayerUI : LayerUI<JScrollPane>() {
       val keys = sorter.sortKeys
       val column = if (keys.isEmpty()) -1 else keys[0].column
       if (column <= 0 || column == 9) {
-        val g2 = g.create() as Graphics2D
+        val g2 = g.create() as? Graphics2D ?: return
         val b1 = column == 0 && keys[0].sortOrder == SortOrder.ASCENDING
         val b2 = column == 9 && keys[0].sortOrder == SortOrder.DESCENDING
         if (column < 0 || b1 || b2) {

@@ -16,7 +16,7 @@ fun makeUI(): Component {
   val p = object : JPanel() {
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
-      val g2 = g.create() as Graphics2D
+      val g2 = g.create() as? Graphics2D ?: return
       g2.setRenderingHint(
         RenderingHints.KEY_ANTIALIASING,
         RenderingHints.VALUE_ANTIALIAS_ON,
