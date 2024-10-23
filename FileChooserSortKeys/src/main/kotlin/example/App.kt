@@ -45,7 +45,7 @@ private fun makeFileChooser() = object : JFileChooser() {
     super.updateUI()
     handler = object : AncestorListener {
       override fun ancestorAdded(e: AncestorEvent) {
-        val fc = e.component as JFileChooser
+        val fc = e.component as? JFileChooser ?: return
         setViewTypeDetails(fc)
         descendants(e.component)
           .filterIsInstance<JTable>()

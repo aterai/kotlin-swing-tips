@@ -43,7 +43,7 @@ fun makeUI(): Component {
     override fun mouseClicked(e: MouseEvent) {
       val leftButton = SwingUtilities.isLeftMouseButton(e)
       val doubleClick = e.clickCount >= 2
-      val tabs = e.component as JTabbedPane
+      val tabs = e.component as? JTabbedPane ?: return
       val idx = tabs.indexAtLocation(e.x, e.y)
       val r = getTabAreaBounds(tabs)
       val b = idx < 0 && r.contains(e.point)

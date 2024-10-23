@@ -36,7 +36,9 @@ fun makeUI(): Component {
     val chooser = JFileChooser()
     val cmd = "viewTypeDetails"
     val detailsAction = chooser.actionMap[cmd]
-    detailsAction?.actionPerformed(ActionEvent(chooser, ActionEvent.ACTION_PERFORMED, cmd))
+    detailsAction?.actionPerformed(
+      ActionEvent(chooser, ActionEvent.ACTION_PERFORMED, cmd),
+    )
     descendants(chooser)
       .filterIsInstance<JTable>()
       .firstNotNullOf { addCellEditorFocusListener(it) }
@@ -101,8 +103,8 @@ private fun addCellEditorFocusListener(table: JTable) {
   val columnModel = table.columnModel
   if (!readOnly && columnModel.columnCount > 0) {
     val tc = columnModel.getColumn(0)
-    val editor = tc.cellEditor as DefaultCellEditor
-    val tf = editor.component as JTextField
+    val editor = tc.cellEditor as? DefaultCellEditor
+    val tf = editor?.component as? JTextField ?: return
     tf.addFocusListener(object : FocusAdapter() {
       override fun focusGained(e: FocusEvent) {
         selectWithoutExtension(tf)
