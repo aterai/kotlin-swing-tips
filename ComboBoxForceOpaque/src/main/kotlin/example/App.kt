@@ -65,7 +65,7 @@ private fun makeComboBox0(): JComboBox<String> {
   d1["ComboBox:\"ComboBox.listRenderer\"[Selected].textForeground"] = Color.BLACK
   val renderer = comboBox.renderer
   if (renderer is JComponent) {
-    putClientProperty(renderer as JComponent, d1)
+    putClientProperty(renderer, d1)
   }
   return comboBox
 }
