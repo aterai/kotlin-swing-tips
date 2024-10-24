@@ -314,11 +314,12 @@ class DnDTabbedPane : JTabbedPane() {
 
     override fun mouseDragged(e: MouseEvent) {
       val tabPt = e.point // e.getDragOrigin()
+      val pt = startPt ?: return
       (e.component as? DnDTabbedPane)
-        ?.takeIf { startPt != null && tabPt.distance(startPt) > dragThreshold }
+        ?.takeIf { tabPt.distance(startPt) > dragThreshold }
         ?.also {
           val th = it.transferHandler
-          val idx = it.indexAtLocation(tabPt.x, tabPt.y)
+          val idx = it.indexAtLocation(pt.x, pt.y)
           val selIdx = it.selectedIndex
           val isRotate = it.tabLayoutPolicy == WRAP_TAB_LAYOUT && idx != selIdx
           dragTabIndex = if (it.ui !is MetalTabbedPaneUI && isRotate) selIdx else idx
