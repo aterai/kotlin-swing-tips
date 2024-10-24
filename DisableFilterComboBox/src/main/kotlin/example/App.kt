@@ -43,11 +43,12 @@ fun makeUI(): Component {
 private fun updateFileChooser(fileChooser: JFileChooser) {
   val f = fileChooser.fileSelectionMode != JFileChooser.DIRECTORIES_ONLY
   fileChooser.isAcceptAllFileFilterUsed = f
-  val labelText = UIManager.getString("FileChooser.filesOfTypeLabelText", fileChooser.locale)
+  val l = fileChooser.locale
+  val text = UIManager.getString("FileChooser.filesOfTypeLabelText", l)
   descendants(fileChooser)
     .filterIsInstance<JLabel>()
     .forEach {
-      if (labelText == it.text) {
+      if (text == it.text) {
         val combo = it.labelFor
         it.isEnabled = f
         if (combo is JComboBox<*>) {
