@@ -66,7 +66,7 @@ private fun makeTable(model: TableModel): JTable {
 
 private fun initTableHeader(table: JTable) {
   val header = table.tableHeader
-  (header.defaultRenderer as JLabel).setHorizontalAlignment(SwingConstants.CENTER)
+  (header.defaultRenderer as? JLabel)?.setHorizontalAlignment(SwingConstants.CENTER)
   val columnModel = table.columnModel
   for (i in 0..<columnModel.columnCount) {
     if (i != 1) {
