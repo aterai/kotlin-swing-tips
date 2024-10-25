@@ -39,12 +39,12 @@ private fun makeTable1() = object : JTable(makeModel()) {
     autoCreateRowSorter = true
     val renderer = DefaultTableCellRenderer()
     tableHeader.setDefaultRenderer {
-        table,
-        value,
-        isSelected,
-        hasFocus,
-        row,
-        column,
+      table,
+      value,
+      isSelected,
+      hasFocus,
+      row,
+      column,
       ->
       renderer
         .getTableCellRendererComponent(
