@@ -74,7 +74,7 @@ private fun makeButton2(label: JLabel): JButton {
     val dialog = JColorChooser.createDialog(parent, title, true, cc, ok, null)
     dialog.addComponentListener(object : ComponentAdapter() {
       override fun componentHidden(e: ComponentEvent) {
-        (e.component as Window).dispose()
+        (e.component as? Window)?.dispose()
       }
     })
     dialog.isVisible = true

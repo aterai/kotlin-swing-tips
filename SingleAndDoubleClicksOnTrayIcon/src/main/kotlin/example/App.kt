@@ -63,7 +63,7 @@ private fun initPopupMenu(lnf: JPopupMenu, frame: Frame) {
   icon.addMouseListener(TrayIconPopupMenuHandler(popup, tmp))
   icon.addMouseListener(object : MouseAdapter() {
     private val timer = Timer(500) { e ->
-      (e.source as Timer).stop()
+      (e.source as? Timer)?.stop()
       openLookAndFeelBox(lnf, tmp, loc)
     }
 
