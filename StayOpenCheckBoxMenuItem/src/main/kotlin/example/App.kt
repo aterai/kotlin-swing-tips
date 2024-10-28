@@ -43,8 +43,9 @@ fun makeUI(): Component {
   popup.add(JCheckBoxMenuItem("JCheckBoxMenuItem"))
   popup.add(JCheckBoxMenuItem("keeping open #1")).addActionListener { e ->
     // println("ActionListener")
-    val c = SwingUtilities.getAncestorOfClass(JPopupMenu::class.java, e.source as? Component)
-    (c as? JPopupMenu)?.isVisible = true
+    val c = e.source as? Component
+    val pop = SwingUtilities.getAncestorOfClass(JPopupMenu::class.java, c)
+    (pop as? JPopupMenu)?.isVisible = true
   }
 
   val mi = object : JCheckBoxMenuItem("keeping open #2") {
