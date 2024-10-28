@@ -317,7 +317,7 @@ open class SwatchPanel : JPanel() {
     })
   }
 
-  open val selectedColor: Color
+  open val selectedColor: Color?
     get() = getColorForCell(selCol, selRow)
 
   open fun initValues() {
@@ -330,7 +330,7 @@ open class SwatchPanel : JPanel() {
     for (row in 0..<numSwatches.height) {
       val y = row * (swatchSize.height + gap.height)
       for (column in 0..<numSwatches.width) {
-        val c = getColorForCell(column, row)
+        val c = getColorForCell(column, row) ?: return
         g.color = c
         val x = if (componentOrientation.isLeftToRight) {
           column * (swatchSize.width + gap.width)
@@ -385,9 +385,8 @@ open class SwatchPanel : JPanel() {
     // empty
   }
 
-  override fun getToolTipText(e: MouseEvent): String {
-    val color = getColorForLocation(e.x, e.y)
-    return color.red.toString() + ", " + color.green + ", " + color.blue
+  override fun getToolTipText(e: MouseEvent) = getColorForLocation(e.x, e.y)?.let {
+    it.red.toString() + ", " + it.green + ", " + it.blue
   }
 
   fun setSelectedColorFromLocation(
@@ -406,7 +405,7 @@ open class SwatchPanel : JPanel() {
   fun getColorForLocation(
     x: Int,
     y: Int,
-  ): Color {
+  ): Color? {
     val column = if (componentOrientation.isLeftToRight) {
       x / (swatchSize.width + gap.width)
     } else {
@@ -418,7 +417,7 @@ open class SwatchPanel : JPanel() {
 
   private fun getColorForCell(column: Int, row: Int) = colors?.let {
     it[row * numSwatches.width + column]
-  } ?: Color.RED
+  }
 
   companion object {
     private fun getFocusColor(c: Color): Color {
