@@ -16,12 +16,15 @@ fun makeUI() = JPanel(BorderLayout()).also {
 
 private fun makeVerticalToolBar() = JToolBar(SwingConstants.VERTICAL).also {
   val panel = object : JPanel() {
-    override fun getPreferredSize() = if ((it.ui as? BasicToolBarUI)?.isFloating == true) {
-      layout = GridLayout(0, 3)
-      Dimension(ICON_SIZE * 3, ICON_SIZE * 2)
-    } else {
-      layout = BoxLayout(this, BoxLayout.Y_AXIS)
-      super.getPreferredSize()
+    override fun getPreferredSize(): Dimension? {
+      val d = super.getPreferredSize()
+      if ((it.ui as? BasicToolBarUI)?.isFloating == true && d != null) {
+        layout = GridLayout(0, 3)
+        d.setSize(ICON_SIZE * 3, ICON_SIZE * 2)
+      } else {
+        layout = BoxLayout(this, BoxLayout.Y_AXIS)
+      }
+      return d
     }
 
     override fun getMinimumSize() = preferredSize
