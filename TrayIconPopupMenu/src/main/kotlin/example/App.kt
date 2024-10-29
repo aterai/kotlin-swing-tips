@@ -43,7 +43,8 @@ private fun initPopupMenu(frame: Frame) {
   tmp.isUndecorated = true
   val cl = Thread.currentThread().contextClassLoader
   val path = "example/16x16.png"
-  val img = cl.getResource(path)
+  val img = cl
+    .getResource(path)
     ?.openStream()
     ?.use(ImageIO::read)
     ?: makeDefaultTrayImage()
