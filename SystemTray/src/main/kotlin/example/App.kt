@@ -29,7 +29,11 @@ private fun makeTrayIcon(frame: JFrame): TrayIcon {
 
   val path = "example/16x16.png"
   val cl = Thread.currentThread().contextClassLoader
-  val img = cl.getResource(path)?.openStream()?.use(ImageIO::read) ?: makeDefaultTrayImage()
+  val img = cl
+    .getResource(path)
+    ?.openStream()
+    ?.use(ImageIO::read)
+    ?: makeDefaultTrayImage()
   return TrayIcon(img, "TRAY", popup)
 }
 
