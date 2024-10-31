@@ -19,7 +19,10 @@ private fun createMenuBar(): JMenuBar {
   sub1.add("JMenuItem2").toolTipText = "JMenuItem2 ToolTipText"
   menu.add(sub1)
   val sub2 = object : JMenu("JMenu#getToolTipText()") {
-    override fun getToolTipText() = if (popupMenu.isVisible) null else super.getToolTipText()
+    override fun getToolTipText(): String? {
+      val b = popupMenu.isVisible
+      return if (b) null else super.getToolTipText()
+    }
   }
   sub2.toolTipText = "JMenu ToolTipText"
   sub2.add("JMenuItem1").toolTipText = "JMenuItem1 ToolTipText"
