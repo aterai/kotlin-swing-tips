@@ -20,8 +20,9 @@ fun makeUI(): Component {
   label.border = BorderFactory.createTitledBorder("Horizontal scroll: CTRL + Wheel")
   label.addMouseWheelListener { e ->
     val c = e.component
-    (SwingUtilities.getAncestorOfClass(JScrollPane::class.java, c) as? JScrollPane)?.also {
-      val sb = if (e.isControlDown) it.horizontalScrollBar else it.verticalScrollBar
+    val sp = SwingUtilities.getAncestorOfClass(JScrollPane::class.java, c)
+    if (sp is JScrollPane) {
+      val sb = if (e.isControlDown) sp.horizontalScrollBar else sp.verticalScrollBar
       sb.dispatchEvent(SwingUtilities.convertMouseEvent(c, e, sb))
     }
   }
@@ -32,8 +33,9 @@ fun makeUI(): Component {
   hsb.unitIncrement = 10
   hsb.addMouseWheelListener { e ->
     val c = e.component
-    (SwingUtilities.getAncestorOfClass(JScrollPane::class.java, c) as? JScrollPane)?.also {
-      val viewport = it.viewport
+    val sp = SwingUtilities.getAncestorOfClass(JScrollPane::class.java, c)
+    if (sp is JScrollPane) {
+      val viewport = sp.viewport
       val vp = viewport.viewPosition
       val d = hsb.unitIncrement * e.wheelRotation
       vp.translate(d, 0)
