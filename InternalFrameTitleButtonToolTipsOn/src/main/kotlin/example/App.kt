@@ -9,7 +9,8 @@ fun makeUI(): Component {
   addFrame(desktop, 1)
 
   val key = "InternalFrame.titleButtonToolTipsOn"
-  val check = object : JCheckBox(key, UIManager.getLookAndFeelDefaults().getBoolean(key)) {
+  val selected = UIManager.getLookAndFeelDefaults().getBoolean(key)
+  val check = object : JCheckBox(key, selected) {
     override fun updateUI() {
       super.updateUI()
       isOpaque = false
@@ -48,11 +49,9 @@ private fun addFrame(
   EventQueue.invokeLater { frame.isVisible = true }
 }
 
-private fun makePanel(): Component? {
-  val p = JPanel()
-  p.add(JLabel("label"))
-  p.add(JButton("button"))
-  return p
+private fun makePanel() = JPanel().also {
+  it.add(JLabel("label"))
+  it.add(JButton("button"))
 }
 
 private object LookAndFeelUtils {
