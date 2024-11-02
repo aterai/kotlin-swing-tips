@@ -29,10 +29,9 @@ fun makeUI(): Component {
       row: Int,
       column: Int,
       e: EventObject,
-    ) = if (check.isSelected && e is KeyEvent && checkIgnoreKeyCode(e.keyCode)) {
-      false
-    } else {
-      super.editCellAt(row, column, e)
+    ): Boolean {
+      val b = check.isSelected && e is KeyEvent && isIgnoreKeyCode(e.keyCode)
+      return !b && super.editCellAt(row, column, e)
     }
   }
   table.autoCreateRowSorter = true
@@ -59,7 +58,7 @@ fun makeUI(): Component {
   }
 }
 
-private fun checkIgnoreKeyCode(code: Int) = KeyEvent.VK_F1 <= code && code <= KeyEvent.VK_F21
+private fun isIgnoreKeyCode(c: Int) = KeyEvent.VK_F1 <= c && c <= KeyEvent.VK_F21
 
 fun main() {
   EventQueue.invokeLater {
