@@ -13,8 +13,8 @@ fun makeUI(): Component {
   val textArea = JTextArea()
   textArea.margin = Insets(2, 5, 2, 2)
   textArea.text = MESSAGE + NonEditableLineDocumentFilter.PROMPT
-  (textArea.document as? AbstractDocument)?.documentFilter = NonEditableLineDocumentFilter()
-
+  val doc = textArea.document as? AbstractDocument
+  doc?.documentFilter = NonEditableLineDocumentFilter()
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(textArea))
     it.preferredSize = Dimension(320, 240)
