@@ -100,35 +100,40 @@ private class ButtonCellEditor :
     return panel.remakePanel(c)
   }
 
-  override fun getCellEditorValue() = panel.renderer.text
+  override fun getCellEditorValue(): Any? = panel.renderer.text
 
   override fun isCellEditable(e: EventObject?): Boolean {
     val tree = (e as? MouseEvent)?.component as? JTree ?: return false
     val pt = e.point
     val path = tree.getPathForLocation(pt.x, pt.y)
     val r = tree.getPathBounds(path)
-    val node = path?.lastPathComponent
-    return if (node is TreeNode && r != null && r.contains(pt)) {
-      val row = tree.getRowForLocation(pt.x, pt.y)
-      val renderer = tree.cellRenderer
-      val c = renderer.getTreeCellRendererComponent(
-        tree,
-        " ",
-        true,
-        true,
-        node.isLeaf,
-        row,
-        true,
-      )
-      c.bounds = r
-      c.setLocation(0, 0)
-      // tree.doLayout()
-      tree.revalidate()
-      pt.translate(-r.x, -r.y)
-      SwingUtilities.getDeepestComponentAt(c, pt.x, pt.y) is JButton
-    } else {
-      false
-    }
+    val n = path?.lastPathComponent
+    return (n is TreeNode && r?.contains(pt) == true) && isButton(tree, pt, n, r)
+  }
+
+  private fun isButton(
+    tree: JTree,
+    pt: Point,
+    node: TreeNode,
+    r: Rectangle
+  ): Boolean {
+    val row = tree.getRowForLocation(pt.x, pt.y)
+    val renderer = tree.cellRenderer
+    val c = renderer.getTreeCellRendererComponent(
+      tree,
+      " ",
+      true,
+      true,
+      node.isLeaf,
+      row,
+      true,
+    )
+    c.bounds = r
+    c.setLocation(0, 0)
+    // tree.doLayout()
+    tree.revalidate()
+    pt.translate(-r.x, -r.y)
+    return SwingUtilities.getDeepestComponentAt(c, pt.x, pt.y) is JButton
   }
 }
 
