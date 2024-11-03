@@ -108,14 +108,14 @@ private class ButtonCellEditor :
     val path = tree.getPathForLocation(pt.x, pt.y)
     val r = tree.getPathBounds(path)
     val n = path?.lastPathComponent
-    return (n is TreeNode && r?.contains(pt) == true) && isButton(tree, pt, n, r)
+    return n is TreeNode && r?.contains(pt) == true && isButton(tree, pt, n, r)
   }
 
   private fun isButton(
     tree: JTree,
     pt: Point,
     node: TreeNode,
-    r: Rectangle
+    r: Rectangle,
   ): Boolean {
     val row = tree.getRowForLocation(pt.x, pt.y)
     val renderer = tree.cellRenderer
