@@ -101,12 +101,20 @@ private class HighlightTableCellRenderer : DefaultTableCellRenderer() {
     if (pattern.isNotEmpty() && pattern != prev) {
       var pos = 0
       val buf = StringBuilder("<html>")
-      pattern.toRegex().findAll(txt).map { it.range }.filterNot { it.isEmpty() }.forEach {
-        val span = "%s<span style='color:#000000; background-color:#FFFF00'>%s</span>"
-        val end = it.last + 1
-        buf.append(span.format(txt.substring(pos, it.first), txt.substring(it.first, end)))
-        pos = end
-      }
+      pattern
+        .toRegex()
+        .findAll(txt)
+        .map { it.range }
+        .filterNot { it.isEmpty() }
+        .forEach {
+          val fgc = if (isSelected) "#FF1616" else "#000000"
+          val fmt = "%s<span style='color:$fgc;background-color:#FFFF00'>%s</span>"
+          val end = it.last + 1
+          val pre = txt.substring(pos, it.first)
+          val hit = txt.substring(it.first, end)
+          buf.append(fmt.format(pre, hit))
+          pos = end
+        }
       buf.append(txt.substring(pos))
       txt = buf.toString()
     }
