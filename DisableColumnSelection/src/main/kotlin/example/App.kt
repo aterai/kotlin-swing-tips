@@ -6,7 +6,7 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 
 fun makeUI(): Component {
-  val targetColIdx = 0
+  val targetCol = 0
   val columnNames = arrayOf("String", "Integer", "Boolean")
   val data = arrayOf(
     arrayOf("aaa", 12, true),
@@ -23,24 +23,23 @@ fun makeUI(): Component {
     ) = column != 0
   }
 
-  val table1 = object : JTable(model) {
+  val t1 = object : JTable(model) {
     override fun changeSelection(
       rowIdx: Int,
       colIdx: Int,
       toggle: Boolean,
       extend: Boolean,
     ) {
-      if (convertColumnIndexToModel(colIdx) != targetColIdx) {
-        return
+      if (convertColumnIndexToModel(colIdx) == targetCol) {
+        super.changeSelection(rowIdx, colIdx, toggle, extend)
       }
-      super.changeSelection(rowIdx, colIdx, toggle, extend)
     }
 
     override fun prepareRenderer(
       renderer: TableCellRenderer,
       row: Int,
       column: Int,
-    ) = if (convertColumnIndexToModel(column) != targetColIdx) {
+    ) = if (convertColumnIndexToModel(column) != targetCol) {
       val value = getValueAt(row, column)
       renderer.getTableCellRendererComponent(this, value, false, false, row, column)
     } else {
@@ -55,19 +54,18 @@ fun makeUI(): Component {
       toggle: Boolean,
       extend: Boolean,
     ) {
-      if (convertColumnIndexToModel(colIdx) != targetColIdx) {
-        return
+      if (convertColumnIndexToModel(colIdx) == targetCol) {
+        super.changeSelection(rowIdx, colIdx, toggle, extend)
       }
-      super.changeSelection(rowIdx, colIdx, toggle, extend)
     }
   }
   t2.cellSelectionEnabled = true
   t2.columnModel.selectionModel = object : DefaultListSelectionModel() {
-    override fun isSelectedIndex(idx: Int) = t2.convertColumnIndexToModel(idx) == targetColIdx
+    override fun isSelectedIndex(i: Int) = t2.convertColumnIndexToModel(i) == targetCol
   }
 
   val p = JPanel(GridLayout(0, 1))
-  p.add(JScrollPane(table1))
+  p.add(JScrollPane(t1))
   p.add(JScrollPane(t2))
 
   return JPanel(BorderLayout()).also {
