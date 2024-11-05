@@ -15,16 +15,14 @@ fun makeUI(): Component {
       accessory = ImagePreview(this)
     }
   }
-
   val button = JButton("Open JFileChooser")
   button.addActionListener {
     SwingUtilities.updateComponentTreeUI(chooser)
     chooser.showOpenDialog(button.rootPane)
   }
-
+  val mb = JMenuBar()
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   return JPanel(GridBagLayout()).also {
-    val mb = JMenuBar()
-    mb.add(LookAndFeelUtils.createLookAndFeelMenu())
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.add(button)
     it.preferredSize = Dimension(320, 240)
@@ -36,7 +34,6 @@ private class ImagePreview(
 ) : JComponent(),
   PropertyChangeListener {
   private var thumbnail: ImageIcon? = null
-  private var file: File? = null
 
   init {
     fc.addPropertyChangeListener(this)
@@ -45,26 +42,14 @@ private class ImagePreview(
   override fun getPreferredSize() = Dimension(PREVIEW_WIDTH + PREVIEW_MARGIN * 2, 50)
 
   override fun propertyChange(e: PropertyChangeEvent) {
-    val update = when (e.propertyName) {
+    when (e.propertyName) {
       JFileChooser.DIRECTORY_CHANGED_PROPERTY -> {
-        file = null
-        true
+        thumbnail = getImageThumbnail(null)
+        repaint()
       }
 
       JFileChooser.SELECTED_FILE_CHANGED_PROPERTY -> {
-        file = e.newValue as? File
-        true
-      }
-
-      else -> {
-        file = null
-        false
-      }
-    }
-    if (update) {
-      thumbnail = null
-      if (isShowing) {
-        thumbnail = getImageThumbnail(file)
+        thumbnail = getImageThumbnail(e.newValue as? File)
         repaint()
       }
     }
@@ -72,7 +57,7 @@ private class ImagePreview(
 
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
-    thumbnail = (thumbnail ?: getImageThumbnail(file))?.also {
+    thumbnail?.also {
       val x = PREVIEW_MARGIN.coerceAtLeast(width / 2 - it.iconWidth / 2)
       val y = 0.coerceAtLeast(height / 2 - it.iconHeight / 2)
       it.paintIcon(this, g, x, y)
