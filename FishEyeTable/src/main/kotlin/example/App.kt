@@ -139,7 +139,9 @@ private class FishEyeTable(
     var index = 0
     val rd2 = (fishEyeRowList.size - 1) / 2
     for (i in -rd2..<rowCount) {
-      if (ccRow - rd2 <= i && i <= ccRow + rd2) {
+      val start = ccRow - rd2
+      val end = ccRow + rd2
+      if (i in start..end) {
         if (i == row) {
           color = fishEyeRowList[index].color
           font = fishEyeRowList[index].font
