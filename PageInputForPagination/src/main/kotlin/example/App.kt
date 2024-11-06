@@ -90,8 +90,8 @@ private class TableUpdateTask(
   override fun process(chunks: List<List<Array<Any>>>) {
     if (table.isDisplayable && !isCancelled) {
       chunks.forEach { it.forEach(model::addRow) }
-      val rowCount = model.rowCount
-      maxPageIndex = rowCount / ITEMS_PER_PAGE + if (rowCount % ITEMS_PER_PAGE == 0) 0 else 1
+      val rc = model.rowCount
+      maxPageIndex = rc / ITEMS_PER_PAGE + if (rc % ITEMS_PER_PAGE == 0) 0 else 1
       initFilterAndButtons()
     } else {
       cancel(true)
@@ -119,9 +119,9 @@ private class TableUpdateTask(
 fun initFilterAndButtons() {
   sorter.rowFilter = object : RowFilter<TableModel, Int>() {
     override fun include(entry: Entry<out TableModel, out Int>): Boolean {
-      val ti = currentPageIndex - 1
-      val ei = entry.identifier
-      return ti * ITEMS_PER_PAGE <= ei && ei < ti * ITEMS_PER_PAGE + ITEMS_PER_PAGE
+      val start = (currentPageIndex - 1) * ITEMS_PER_PAGE
+      val end = start + ITEMS_PER_PAGE
+      return entry.identifier in start..<end
     }
   }
   first.isEnabled = currentPageIndex > 1
