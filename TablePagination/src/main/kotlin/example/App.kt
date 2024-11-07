@@ -53,9 +53,9 @@ private fun initLinkBox(
 ) {
   sorter.rowFilter = object : RowFilter<TableModel, Int>() {
     override fun include(entry: Entry<out TableModel, out Int>): Boolean {
-      val ti = currentPageIndex - 1
-      val ei = entry.identifier.toInt()
-      return ti * itemsPerPage <= ei && ei < ti * itemsPerPage + itemsPerPage
+      val start = (currentPageIndex - 1) * itemsPerPage
+      val end = start + itemsPerPage
+      return entry.identifier in start..<end
     }
   }
 
