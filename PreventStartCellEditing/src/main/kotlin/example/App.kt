@@ -39,8 +39,10 @@ fun makeUI(): Component {
     val rb = e.source
     table.putClientProperty("JTable.autoStartsEdit", rb != r1 && rb != r3)
     val cc = if (rb == r2 || rb == r3) Int.MAX_VALUE else 2
-    (table.getDefaultEditor(Any::class.java) as? DefaultCellEditor)?.clickCountToStart = cc
-    (table.getDefaultEditor(Number::class.java) as? DefaultCellEditor)?.clickCountToStart = cc
+    val defEditor = table.getDefaultEditor(Any::class.java)
+    (defEditor as? DefaultCellEditor)?.clickCountToStart = cc
+    val numEditor = table.getDefaultEditor(Number::class.java)
+    (numEditor as? DefaultCellEditor)?.clickCountToStart = cc
   }
   val p = Box.createVerticalBox()
   val bg = ButtonGroup()
