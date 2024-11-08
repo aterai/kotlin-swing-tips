@@ -107,7 +107,9 @@ private fun getWrappedGlyphVector(
   for (i in 0..<gv.numGlyphs) {
     gm = gv.getGlyphMetrics(i)
     val advance = gm.advance
-    if (pos < width && width <= pos + advance) {
+    val start = pos + 1
+    val end = pos + advance
+    if (width in start..end) {
       lineCount++
       pos = 0f
     }
