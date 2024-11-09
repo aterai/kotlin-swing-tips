@@ -5,8 +5,9 @@ import java.awt.event.MouseEvent
 import javax.swing.*
 
 fun makeUI(): Component {
-  val icon = UIManager.getIcon("OptionPane.informationIcon")
-  val label = object : JLabel("OptionPane.informationIcon", icon, SwingConstants.LEADING) {
+  val key = "OptionPane.informationIcon"
+  val icon = UIManager.getIcon(key)
+  val label = object : JLabel(key, icon, SwingConstants.LEADING) {
     private val viewRect = Rectangle()
     private val iconRect = Rectangle()
     private val textRect = Rectangle()

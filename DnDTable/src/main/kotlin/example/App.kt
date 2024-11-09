@@ -171,7 +171,8 @@ private class DnDTable(
 
   override fun getTransferDataFlavors() = arrayOf(FLAVOR)
 
-  override fun isDataFlavorSupported(flavor: DataFlavor) = flavor.humanPresentableName == NAME
+  override fun isDataFlavorSupported(flavor: DataFlavor) =
+    flavor.humanPresentableName == NAME
 
   private inner class CDropTargetListener : DropTargetListener {
     override fun dragExit(e: DropTargetEvent) {

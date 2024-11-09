@@ -15,7 +15,8 @@ fun makeUI(): Component {
   val tree = JTree()
   val renderer = tree.cellRenderer as? DefaultTreeCellRenderer
   tree.cellEditor = object : DefaultTreeCellEditor(tree, renderer) {
-    override fun isCellEditable(e: EventObject?) = e !is MouseEvent && super.isCellEditable(e)
+    override fun isCellEditable(e: EventObject?) =
+      e !is MouseEvent && super.isCellEditable(e)
   }
   tree.isEditable = true
   tree.componentPopupMenu = TreePopupMenu()
