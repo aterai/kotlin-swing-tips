@@ -17,16 +17,22 @@ fun makeUI(): Component {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
   val table = object : JTable(model) {
-    override fun getToolTipText(e: MouseEvent): String {
-      val row = convertRowIndexToModel(rowAtPoint(e.point))
-      val m = getModel()
-      val v0 = m.getValueAt(row, 0)
-      val v1 = m.getValueAt(row, 1)
-      val v2 = m.getValueAt(row, 2)
-      return "<html>$v0<br>$v1<br>$v2"
+    override fun getToolTipText(e: MouseEvent): String? {
+      val idx = rowAtPoint(e.point)
+      return if (idx >=0) {
+        val row = convertRowIndexToModel(idx)
+        val m = getModel()
+        val v0 = m.getValueAt(row, 0)
+        val v1 = m.getValueAt(row, 1)
+        val v2 = m.getValueAt(row, 2)
+        "<html>$v0<br>$v1<br>$v2"
+      } else {
+        super.getToolTipText(e)
+      }
     }
   }
   table.autoCreateRowSorter = true
+  table.fillsViewportHeight = true
 
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(table))
