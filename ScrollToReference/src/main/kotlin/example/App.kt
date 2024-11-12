@@ -63,7 +63,9 @@ fun makeUI(): Component {
   button.addActionListener { scrollToId("bottom") }
   EventQueue.invokeLater { scrollToId("main") }
 
-  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, JScrollPane(tree), JScrollPane(editor))
+  val left = JScrollPane(tree)
+  val right = JScrollPane(editor)
+  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left, right)
   split.resizeWeight = .5
 
   return JPanel(BorderLayout(2, 2)).also {
