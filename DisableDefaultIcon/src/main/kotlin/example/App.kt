@@ -19,7 +19,8 @@ fun makeUI(): Component {
   val r2 = JRadioButton("img=new ImageIcon(\"\").getImage()")
   r2.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      (r2.topLevelAncestor as? Frame)?.iconImage = ImageIcon("").image // JDK 1.5
+      (r2.topLevelAncestor as? Frame)?.iconImage =
+        ImageIcon("").image // JDK 1.5
     }
   }
 
@@ -39,7 +40,8 @@ fun makeUI(): Component {
     }
   }
   EventQueue.invokeLater {
-    (r4.topLevelAncestor as? Frame)?.iconImage = Toolkit.getDefaultToolkit().createImage(url)
+    (r4.topLevelAncestor as? Frame)?.iconImage =
+      Toolkit.getDefaultToolkit().createImage(url)
   }
 
   val box = Box.createVerticalBox()
