@@ -28,13 +28,19 @@ private val model = object : DefaultTableModel(data, columnNames) {
 }
 private val table = object : JTable(model) {
   override fun getToolTipText(e: MouseEvent): String? {
+    val txt = super.getToolTipText(e)
     val pt = e.point
     val row = rowAtPoint(pt)
     val col = columnAtPoint(pt)
-    val tcr = getCellRenderer(row, col)
-    val c = prepareRenderer(tcr, row, col)
-    val b = convertColumnIndexToModel(col) == LIST_ICON_COLUMN && c is JPanel
-    return if (b) getToolTipText(e, c) else super.getToolTipText(e)
+    if (row >= 0 && col >= 0) {
+      val tcr = getCellRenderer(row, col)
+      val c = prepareRenderer(tcr, row, col)
+      val mci = convertColumnIndexToModel(col)
+      if (mci == LIST_ICON_COLUMN && c is JPanel) {
+        getToolTipText(e, c)
+      }
+    }
+    return txt
   }
 
   private fun getToolTipText(e: MouseEvent, c: Component): String? {
@@ -54,6 +60,7 @@ private val table = object : JTable(model) {
 }
 
 fun makeUI(): Component {
+  table.fillsViewportHeight = true
   table.autoCreateRowSorter = true
   table.rowHeight = 40
   table.columnModel.getColumn(LIST_ICON_COLUMN).cellRenderer = ListIconRenderer()
