@@ -24,11 +24,17 @@ fun makeUI(): Component {
   }
   val table = object : JTable(model) {
     override fun getToolTipText(e: MouseEvent): String? {
-      val row = convertRowIndexToModel(rowAtPoint(e.point))
-      val m = getModel()
-      return "%s, %s".format(m.getValueAt(row, 0), m.getValueAt(row, 2))
+      val idx = rowAtPoint(e.point)
+      return if (idx >= 0) {
+        val row = convertRowIndexToModel(idx)
+        val m = getModel()
+        "%s, %s".format(m.getValueAt(row, 0), m.getValueAt(row, 2))
+      } else {
+        null
+      }
     }
   }
+  table.fillsViewportHeight = true
   table.autoCreateRowSorter = true
   table.componentPopupMenu = TablePopupMenu()
 
