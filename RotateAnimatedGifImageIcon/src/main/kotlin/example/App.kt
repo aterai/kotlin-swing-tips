@@ -5,13 +5,16 @@ import java.awt.geom.AffineTransform
 import javax.swing.*
 
 fun makeUI(): Component {
-  val url = Thread.currentThread().contextClassLoader.getResource("example/duke.running.gif")
+  val path = "example/duke.running.gif"
+  val url = Thread.currentThread().contextClassLoader.getResource(path)
   val imageIcon = ImageIcon(url)
   val label0 = JLabel(imageIcon)
-  label0.border = BorderFactory.createTitledBorder("Default ImageIcon")
+  val title0 = "Default ImageIcon"
+  label0.border = BorderFactory.createTitledBorder(title0)
 
   val label1 = JLabel(ClockwiseRotateIcon(imageIcon))
-  label1.border = BorderFactory.createTitledBorder("Wrapping with another Icon")
+  val title1 = "Wrapping with another Icon"
+  label1.border = BorderFactory.createTitledBorder(title1)
 
   val img = imageIcon.image
   val label2 = object : JPanel() {
@@ -27,7 +30,8 @@ fun makeUI(): Component {
       g2.dispose()
     }
   }
-  label2.border = BorderFactory.createTitledBorder("Override JPanel#paintComponent(...)")
+  val title2 = "Override JPanel#paintComponent(...)"
+  label2.border = BorderFactory.createTitledBorder(title2)
 
   val icon3 = object : ImageIcon(url) {
     @Synchronized
@@ -49,7 +53,8 @@ fun makeUI(): Component {
     override fun getIconHeight() = super.getIconWidth()
   }
   val label3 = JLabel(icon3)
-  label3.border = BorderFactory.createTitledBorder("Override ImageIcon#paintIcon(...)")
+  val title3 = "Override ImageIcon#paintIcon(...)"
+  label3.border = BorderFactory.createTitledBorder(title3)
 
   return JPanel(GridLayout(2, 2)).also {
     it.add(label0)
