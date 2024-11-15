@@ -234,7 +234,7 @@ private class MySwatchChooserPanel : AbstractColorChooserPanel() {
 }
 
 open class SwatchPanel : JPanel() {
-  var colors: Array<Color>? = null
+  var colors: Array<Color?>? = null
   val swatchSize = Dimension()
   val numSwatches = Dimension()
   var gap = Dimension()
@@ -327,49 +327,34 @@ open class SwatchPanel : JPanel() {
   public override fun paintComponent(g: Graphics) {
     g.color = getBackground()
     g.fillRect(0, 0, width, height)
+    val key = "ColorChooser.swatchesDefaultRecentColor"
+    val defaultRecent = UIManager.getColor(key)
+    val ltr = componentOrientation.isLeftToRight
+    val sw = swatchSize.width
+    val sh = swatchSize.height
     for (row in 0..<numSwatches.height) {
-      val y = row * (swatchSize.height + gap.height)
+      val y = row * (sh + gap.height)
       for (column in 0..<numSwatches.width) {
-        val c = getColorForCell(column, row) ?: return
+        val c = getColorForCell(column, row) ?: defaultRecent
         g.color = c
-        val x = if (componentOrientation.isLeftToRight) {
-          column * (swatchSize.width + gap.width)
+        val x = if (ltr) {
+          column * (sw + gap.width)
         } else {
-          (numSwatches.width - column - 1) * (swatchSize.width + gap.width)
+          (numSwatches.width - column - 1) * (sw + gap.width)
         }
-        g.fillRect(x, y, swatchSize.width, swatchSize.height)
+        g.fillRect(x, y, sw, sh)
         g.color = Color.BLACK
-        g.drawLine(
-          x + swatchSize.width - 1,
-          y,
-          x + swatchSize.width - 1,
-          y + swatchSize.height - 1,
-        )
-        g.drawLine(
-          x,
-          y + swatchSize.height - 1,
-          x + swatchSize.width - 1,
-          y + swatchSize.height - 1,
-        )
+        g.drawLine(x + sw - 1, y, x + sw - 1, y + sh - 1)
+        g.drawLine(x, y + sh - 1, x + sw - 1, y + sh - 1)
         if (selRow == row && selCol == column && this.isFocusOwner) {
           val c2 = getFocusColor(c)
           g.color = c2
-          g.drawLine(x, y, x + swatchSize.width - 1, y)
-          g.drawLine(x, y, x, y + swatchSize.height - 1)
-          g.drawLine(
-            x + swatchSize.width - 1,
-            y,
-            x + swatchSize.width - 1,
-            y + swatchSize.height - 1,
-          )
-          g.drawLine(
-            x,
-            y + swatchSize.height - 1,
-            x + swatchSize.width - 1,
-            y + swatchSize.height - 1,
-          )
-          g.drawLine(x, y, x + swatchSize.width - 1, y + swatchSize.height - 1)
-          g.drawLine(x, y + swatchSize.height - 1, x + swatchSize.width - 1, y)
+          g.drawLine(x, y, x + sw - 1, y)
+          g.drawLine(x, y, x, y + sh - 1)
+          g.drawLine(x + sw - 1, y, x + sw - 1, y + sh - 1)
+          g.drawLine(x, y + sh - 1, x + sw - 1, y + sh - 1)
+          g.drawLine(x, y, x + sw - 1, y + sh - 1)
+          g.drawLine(x, y + sh - 1, x + sw - 1, y)
         }
       }
     }
@@ -438,8 +423,8 @@ private class RecentSwatchPanel : SwatchPanel() {
   }
 
   override fun initColors() {
-    val key = "ColorChooser.swatchesDefaultRecentColor"
-    val defaultRecent = UIManager.getColor(key)
+    // val key = "ColorChooser.swatchesDefaultRecentColor"
+    val defaultRecent = null // UIManager.getColor(key)
     val numColors = numSwatches.width * numSwatches.height
     colors = Array(numColors) { defaultRecent }
   }
@@ -447,7 +432,7 @@ private class RecentSwatchPanel : SwatchPanel() {
   fun setMostRecentColor(c: Color?) {
     colors?.also {
       System.arraycopy(it, 0, it, 1, it.size - 1)
-      it[0] = c ?: Color.RED
+      it[0] = c
     }
     repaint()
   }
@@ -464,7 +449,7 @@ private class MainSwatchPanel : SwatchPanel() {
   override fun initColors() {
     val rawValues = initRawValues()
     val numColors = rawValues.size / 3
-    colors = Array<Color>(numColors) { _ -> Color.RED }.also {
+    colors = Array<Color?>(numColors) { _ -> Color.RED }.also {
       for (i in 0..<numColors) {
         it[i] = Color(rawValues[i * 3], rawValues[i * 3 + 1], rawValues[i * 3 + 2])
       }
