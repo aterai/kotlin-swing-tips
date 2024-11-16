@@ -26,16 +26,22 @@ fun makeUI(): Component {
   log.append(date.toString() + "\n") // -> Tue Dec 31 10:30:15 JST 2002
 
   val data = arrayOf(arrayOf(date), arrayOf(start), arrayOf(end))
-  val model = object : DefaultTableModel(data, arrayOf("Date")) {
+  val tableModel = object : DefaultTableModel(data, arrayOf("Date")) {
     override fun getColumnClass(column: Int) = Date::class.java
   }
-  val table = object : JTable(model) {
+  val table = object : JTable(tableModel) {
     override fun getToolTipText(e: MouseEvent): String? {
-      val row = convertRowIndexToModel(rowAtPoint(e.point))
-      return getModel().getValueAt(row, 0)?.toString()
+      val idx = rowAtPoint(e.point)
+      return if (idx >= 0) {
+        val row = convertRowIndexToModel(idx)
+        model.getValueAt(row, 0)?.toString()
+      } else {
+        super.getToolTipText(e)
+      }
     }
   }
-  val sorter = TableRowSorter<TableModel>(model)
+  table.fillsViewportHeight = true
+  val sorter = TableRowSorter<TableModel>(tableModel)
   table.rowSorter = sorter
 
   // RowFilter.regexFilter
