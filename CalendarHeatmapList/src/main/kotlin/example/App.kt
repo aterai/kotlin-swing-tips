@@ -52,16 +52,17 @@ private val weekList = object : JList<Contribution>(
   }
 
   override fun getToolTipText(e: MouseEvent): String? {
-    val p = e.point
-    val idx = locationToIndex(p)
+    val pt = e.point
+    val idx = locationToIndex(pt)
     val rect = getCellBounds(idx, idx)
-    if (rect == null || !rect.contains(p)) {
-      return null
+    return if (rect?.contains(pt) == true) {
+      val value = model.getElementAt(idx)
+      val act = if (value.activity == 0) "No" else value.activity.toString()
+      val date = value.date.toString()
+      "$act contribution on $date"
+    } else {
+      null
     }
-    val value = model.getElementAt(idx)
-    val act = if (value.activity == 0) "No" else value.activity.toString()
-    val date = value.date.toString()
-    return "$act contribution on $date"
   }
 }
 
