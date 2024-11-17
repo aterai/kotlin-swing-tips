@@ -185,11 +185,13 @@ private class FileListTable(
     val pt = e.point
     val row = rowAtPoint(pt)
     val col = columnAtPoint(pt)
-    if (convertColumnIndexToModel(col) != 0 || row < 0 || row > rowCount) {
-      return null
+    val mci = convertColumnIndexToModel(col)
+    return if (mci == 0 && row in 0..rowCount) {
+      val rect = getCellRect2(this, row, col)
+      if (rect.contains(pt)) getValueAt(row, col).toString() else null
+    } else {
+      super.getToolTipText(e)
     }
-    val rect = getCellRect2(this, row, col)
-    return if (rect.contains(pt)) getValueAt(row, col).toString() else null
   }
 
   override fun setColumnSelectionInterval(
