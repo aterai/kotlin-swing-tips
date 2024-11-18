@@ -56,7 +56,7 @@ fun makeUI(): Component {
 }
 
 private fun isFunctionKey(e: EventObject) =
-  e is KeyEvent && (KeyEvent.VK_F1..KeyEvent.VK_F21).contains(e.keyCode)
+  e is KeyEvent && e.keyCode in KeyEvent.VK_F1..KeyEvent.VK_F24
 
 fun main() {
   EventQueue.invokeLater {
