@@ -99,6 +99,7 @@ private class ToggleButtonBarCellIcon : Icon {
     x: Int,
     y: Int,
   ) {
+    val parent = c?.parent ?: return
     var ssc = TL
     var bgc = BR
     if (c is AbstractButton) {
@@ -107,9 +108,11 @@ private class ToggleButtonBarCellIcon : Icon {
         ssc = ST
         bgc = SB
       }
-      val path = makeButtonPath(c, x, y) ?: return
+      val path = makeButtonPath(c, parent)
+      // path.transform(AffineTransform.getTranslateInstance(x, y))
       val area = Area(path)
       val g2 = g.create() as? Graphics2D ?: return
+      g2.translate(x.toDouble(), y.toDouble())
       g2.setRenderingHint(
         RenderingHints.KEY_ANTIALIASING,
         RenderingHints.VALUE_ANTIALIAS_ON,
@@ -132,45 +135,37 @@ private class ToggleButtonBarCellIcon : Icon {
     }
   }
 
-  private fun makeButtonPath(
-    c: Component?,
-    x: Int,
-    y: Int,
-  ): Path2D.Double? {
-    val parent = c?.parent ?: return null
+  private fun makeButtonPath(c: Component, parent: Container): Path2D.Double {
     val r = 4.0
     val rr = r * 4.0 * (sqrt(2.0) - 1.0) / 3.0
-    val dx = x.toDouble()
-    val dy = y.toDouble()
     var dw = c.width.toDouble()
     val dh = c.height - 1.0
-
     val p = Path2D.Double()
     when {
       c === parent.getComponent(0) -> { // :first-child
-        p.moveTo(dx, dy + r)
-        p.curveTo(dx, dy + r - rr, dx + r - rr, dy, dx + r, dy)
-        p.lineTo(dx + dw, dy)
-        p.lineTo(dx + dw, dy + dh)
-        p.lineTo(dx + r, dy + dh)
-        p.curveTo(dx + r - rr, dy + dh, dx, dy + dh - r + rr, dx, dy + dh - r)
+        p.moveTo(0.0, r)
+        p.curveTo(0.0, r - rr, r - rr, 0.0, r, 0.0)
+        p.lineTo(dw, 0.0)
+        p.lineTo(dw, dh)
+        p.lineTo(r, dh)
+        p.curveTo(r - rr, dh, 0.0, dh - r + rr, 0.0, dh - r)
       }
 
       c === parent.getComponent(parent.componentCount - 1) -> { // :last-child
         dw--
-        p.moveTo(dx, dy)
-        p.lineTo(dx + dw - r, dy)
-        p.curveTo(dx + dw - r + rr, dy, dx + dw, dy + r - rr, dx + dw, dy + r)
-        p.lineTo(dx + dw, dy + dh - r)
-        p.curveTo(dx + dw, dy + dh - r + rr, dx + dw - r + rr, dy + dh, dx + dw - r, dy + dh)
-        p.lineTo(dx, dy + dh)
+        p.moveTo(0.0, 0.0)
+        p.lineTo(dw - r, 0.0)
+        p.curveTo(dw - r + rr, 0.0, dw, r - rr, dw, r)
+        p.lineTo(dw, dh - r)
+        p.curveTo(dw, dh - r + rr, dw - r + rr, dh, dw - r, dh)
+        p.lineTo(0.0, dh)
       }
 
       else -> {
-        p.moveTo(dx, dy)
-        p.lineTo(dx + dw, dy)
-        p.lineTo(dx + dw, dy + dh)
-        p.lineTo(dx, dy + dh)
+        p.moveTo(0.0, 0.0)
+        p.lineTo(dw, 0.0)
+        p.lineTo(dw, dh)
+        p.lineTo(0.0, dh)
       }
     }
     p.closePath()
