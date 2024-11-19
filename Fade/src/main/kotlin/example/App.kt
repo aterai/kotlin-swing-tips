@@ -21,7 +21,8 @@ fun makeUI(): Component {
       val g2 = g.create() as? Graphics2D ?: return
       g2.paint = Color.BLACK
       g2.fillRect(0, 0, width, height)
-      g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha.get() * .1f)
+      val a = alpha.get() * .1f
+      g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, a)
       icon.paintIcon(this, g2, 0, 0)
       g2.dispose()
     }
