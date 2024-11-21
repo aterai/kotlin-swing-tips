@@ -19,7 +19,7 @@ fun makeUI(): Component {
   val table = object : JTable(model) {
     override fun getToolTipText(e: MouseEvent): String? {
       val idx = rowAtPoint(e.point)
-      return if (idx >=0) {
+      return if (idx >= 0) {
         val row = convertRowIndexToModel(idx)
         val m = getModel()
         val v0 = m.getValueAt(row, 0)
