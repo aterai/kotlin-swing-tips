@@ -77,7 +77,7 @@ fun makeUI(): Component {
     }
   }
   val filter2 = object : RowFilter<RowDataModel, Int>() {
-    override fun include(entry: Entry<out RowDataModel?, out Int>) =
+    override fun include(entry: Entry<out RowDataModel, out Int>) =
       entry.identifier % 2 == 0
   }
   check1.addActionListener { e ->
