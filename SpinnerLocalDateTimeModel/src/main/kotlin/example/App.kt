@@ -51,7 +51,8 @@ fun makeUI(): Component {
   spinner1.editor = DateEditor(spinner1, dateFormat)
 
   val spinner2 = JSpinner(SpinnerLocalDateTimeModel(d, s, e, ChronoUnit.DAYS))
-  spinner2.editor = LocalDateTimeEditor(spinner2, dateFormat)
+  val formatter = DateTimeFormatter.ofPattern(dateFormat)
+  spinner2.editor = LocalDateTimeEditor(spinner2, formatter)
 
   val p = JPanel(GridLayout(0, 1))
   p.add(makeTitledPanel("SpinnerDateModel", spinner0))
@@ -127,9 +128,8 @@ private class SpinnerLocalDateTimeModel(
 
 private class LocalDateTimeEditor(
   spinner: JSpinner,
-  dateFormatPattern: String,
+  private val dateTimeFormatter: DateTimeFormatter,
 ) : DefaultEditor(spinner) {
-  val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(dateFormatPattern)
   val model = spinner.model as? SpinnerLocalDateTimeModel
     ?: throw IllegalArgumentException("model not a SpinnerLocalDateTimeModel")
 
