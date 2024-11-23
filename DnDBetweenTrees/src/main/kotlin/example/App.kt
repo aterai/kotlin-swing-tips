@@ -10,6 +10,7 @@ import javax.swing.*
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.MutableTreeNode
+import javax.swing.tree.TreeNode
 import javax.swing.tree.TreeSelectionModel
 
 fun makeUI() = JPanel(GridLayout(1, 2)).also {
@@ -114,9 +115,9 @@ private class TreeTransferHandler : TransferHandler() {
   }
 
   private fun deepCopyTreeNode(
-    src: MutableTreeNode,
+    src: TreeNode,
     tgt: DefaultMutableTreeNode,
-  ): DefaultMutableTreeNode {
+  ): MutableTreeNode {
     src
       .children()
       .toList()
