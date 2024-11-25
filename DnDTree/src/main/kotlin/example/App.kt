@@ -113,16 +113,16 @@ private class DnDTree : JTree() {
         rejectDrag(e)
         return
       }
-      val draggingNode = selectionPath?.lastPathComponent as? MutableTreeNode
-      val targetNode = path.lastPathComponent as? DefaultMutableTreeNode
+      val draggingNode = selectionPath?.lastPathComponent // as? TreeNode
+      val targetNode = path.lastPathComponent as? TreeNode
       val parent = targetNode?.parent
       if (parent is DefaultMutableTreeNode && parent.path.contains(draggingNode)) {
         rejectDrag(e)
-        return
+      } else {
+        dropTargetNode = targetNode
+        e.acceptDrag(e.dropAction)
+        repaint()
       }
-      dropTargetNode = targetNode
-      e.acceptDrag(e.dropAction)
-      repaint()
     }
 
     override fun drop(e: DropTargetDropEvent) {
@@ -134,23 +134,23 @@ private class DnDTree : JTree() {
         return
       }
       val model = model as? DefaultTreeModel
-      val targetNode = path.lastPathComponent as? DefaultMutableTreeNode
+      val targetNode = path.lastPathComponent as? MutableTreeNode
       if (model == null || targetNode == null || targetNode == draggingNode) {
         e.dropComplete(false)
-        return
-      }
-      e.acceptDrop(DnDConstants.ACTION_MOVE)
-      model.removeNodeFromParent(draggingNode)
-      val parent = targetNode.parent
-      if (parent is MutableTreeNode && targetNode.isLeaf) {
-        model.insertNodeInto(draggingNode, parent, parent.getIndex(targetNode))
       } else {
-        model.insertNodeInto(draggingNode, targetNode, targetNode.childCount)
+        e.acceptDrop(DnDConstants.ACTION_MOVE)
+        model.removeNodeFromParent(draggingNode)
+        val parent = targetNode.parent
+        if (parent is MutableTreeNode && targetNode.isLeaf) {
+          model.insertNodeInto(draggingNode, parent, parent.getIndex(targetNode))
+        } else {
+          model.insertNodeInto(draggingNode, targetNode, targetNode.childCount)
+        }
+        e.dropComplete(true)
+        dropTargetNode = null
+        draggedNode = null
+        repaint()
       }
-      e.dropComplete(true)
-      dropTargetNode = null
-      draggedNode = null
-      repaint()
     }
 
     private fun rejectDrag(e: DropTargetDragEvent) {
