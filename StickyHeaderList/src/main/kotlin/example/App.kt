@@ -1,6 +1,8 @@
 package example
 
 import java.awt.*
+import java.awt.event.MouseEvent
+import java.awt.event.MouseWheelEvent
 import java.time.LocalDateTime
 import java.time.ZoneId
 import javax.swing.*
@@ -10,39 +12,41 @@ import javax.swing.text.Position
 fun makeUI() = JPanel(GridLayout(1, 2)).also {
   UIManager.put("ScrollBar.minimumThumbSize", Dimension(12, 20))
   UIManager.put("List.lockToPositionOnScroll", false)
-  it.add(JScrollPane(makeList()))
-  it.add(makeStickyHeaderScrollPane(makeList()))
+  val model = makeModel()
+  it.add(makeScrollPane(makeList(model)))
+  it.add(JLayer(makeScrollPane(makeList(model)), StickyLayerUI()))
   it.preferredSize = Dimension(320, 240)
 }
 
-private fun makeList(): JList<String> {
-  val m = DefaultListModel<String>()
+private fun makeModel(): ListModel<String> {
+  val model = DefaultListModel<String>()
   for (i in 0..99) {
     val indent = if (i % 10 == 0) "" else "    "
     val now = LocalDateTime.now(ZoneId.systemDefault())
-    m.addElement("%s%04d: %s".format(indent, i, now))
+    model.addElement(String.format("%s%04d: %s", indent, i, now))
   }
+  return model
+}
+
+private fun makeList(m: ListModel<String>): Component {
   val list = JList(m)
   list.fixedCellHeight = 32
   return list
 }
 
-private fun makeStickyHeaderScrollPane(c: JList<String>): Component {
-  val scroll = object : JScrollPane(c) {
-    override fun updateUI() {
-      super.updateUI()
-      setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS)
-      setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER)
-      getVerticalScrollBar().unitIncrement = 2
-    }
+private fun makeScrollPane(c: Component) = object : JScrollPane(c) {
+  override fun updateUI() {
+    super.updateUI()
+    setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS)
+    setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER)
+    getVerticalScrollBar().unitIncrement = 4
   }
-  return JLayer(scroll, StickyLayerUI(c))
 }
 
-private class StickyLayerUI(
-  val list: JList<String>,
-) : LayerUI<JScrollPane>() {
-  private val panel = JPanel()
+private class StickyLayerUI : LayerUI<JScrollPane>() {
+  private val renderer = JPanel()
+  private var currentHeaderIdx = -1
+  private var nextHeaderIdx = -1
 
   override fun installUI(c: JComponent) {
     super.installUI(c)
@@ -59,41 +63,76 @@ private class StickyLayerUI(
     super.uninstallUI(c)
   }
 
+  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out JScrollPane>) {
+    super.processMouseMotionEvent(e, l)
+    val c = l.view.viewport.view
+    if (e.id == MouseEvent.MOUSE_DRAGGED && c is JList<*>) {
+      update(c)
+    }
+  }
+
+  override fun processMouseWheelEvent(e: MouseWheelEvent, l: JLayer<out JScrollPane>) {
+    super.processMouseWheelEvent(e, l)
+    val c = l.view.viewport.view
+    if (c is JList<*>) {
+      update(c)
+    }
+  }
+
+  private fun update(list: JList<*>) {
+    val idx = list.firstVisibleIndex
+    if (idx >= 0) {
+      currentHeaderIdx = getHeaderIndex1(list, idx)
+      nextHeaderIdx = getNextHeaderIndex1(list, idx)
+    } else {
+      currentHeaderIdx = -1
+      nextHeaderIdx = -1
+    }
+  }
+
   override fun paint(g: Graphics, c: JComponent) {
     super.paint(g, c)
-    if (c is JLayer<*>) {
-      val scroll = c.view as? JScrollPane
-      val viewport = scroll?.viewport ?: return
-      val cellHeight = list.fixedCellHeight
-      val viewRect = viewport.viewRect
-      val vp = SwingUtilities.convertPoint(viewport, 0, 0, c)
-      val pt1 = SwingUtilities.convertPoint(c, vp, list)
-      val idx1 = list.locationToIndex(pt1)
-      val header1 = Rectangle(vp.x, vp.y, viewRect.width, cellHeight)
-      if (idx1 >= 0) {
-        val g2 = g.create() as? Graphics2D ?: return
-        val headerIndex1 = getHeaderIndex1(list, idx1)
-        val c1 = getComponent(list, headerIndex1)
-        val nhi = getNextHeaderIndex1(list, idx1)
-        val nextPt = list.getCellBounds(nhi, nhi).location
-        if (header1.contains(SwingUtilities.convertPoint(list, nextPt, c))) {
-          val d = header1.size
-          SwingUtilities.paintComponent(g2, c1, panel, getHeaderRect(list, idx1, c, d))
-          val cn = getComponent(list, nhi)
-          SwingUtilities.paintComponent(g2, cn, panel, getHeaderRect(list, nhi, c, d))
-        } else {
-          SwingUtilities.paintComponent(g2, c1, panel, header1)
-        }
-        g2.dispose()
+    val list = getList(c)
+    if (list != null && currentHeaderIdx >= 0) {
+      val scroll = (c as? JLayer<*>)?.view as? JScrollPane
+      val headerRect = scroll?.viewport?.bounds ?: return
+      headerRect.height = list.fixedCellHeight
+      val g2 = g.create() as? Graphics2D ?: return
+      val firstVisibleIdx = list.firstVisibleIndex
+      if (firstVisibleIdx + 1 == nextHeaderIdx) {
+        val d = headerRect.size
+        val c1 = getComponent(list, currentHeaderIdx)
+        val r1 = getHeaderRect(list, firstVisibleIdx, c, d)
+        SwingUtilities.paintComponent(g2, c1, renderer, r1)
+        val c2 = getComponent(list, nextHeaderIdx)
+        val r2 = getHeaderRect(list, nextHeaderIdx, c, d)
+        SwingUtilities.paintComponent(g2, c2, renderer, r2)
+      } else {
+        val c1 = getComponent(list, currentHeaderIdx)
+        SwingUtilities.paintComponent(g2, c1, renderer, headerRect)
       }
+      g2.dispose()
+    }
+  }
+
+  companion object {
+    private fun getList(layer: JComponent): JList<*>? {
+      var list: JList<*>? = null
+      if (layer is JLayer<*>) {
+        val view = (layer.view as? JScrollPane)?.viewport?.view
+        if (view is JList<*>) {
+          list = view
+        }
+      }
+      return list
     }
   }
 }
 
-private fun getHeaderIndex1(list: JList<String>, start: Int) =
+private fun getHeaderIndex1(list: JList<*>, start: Int) =
   list.getNextMatch("0", start, Position.Bias.Backward)
 
-private fun getNextHeaderIndex1(list: JList<String>, start: Int) =
+private fun getNextHeaderIndex1(list: JList<*>, start: Int) =
   list.getNextMatch("0", start, Position.Bias.Forward)
 
 private fun getHeaderRect(
