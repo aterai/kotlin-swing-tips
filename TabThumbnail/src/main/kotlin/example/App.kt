@@ -109,17 +109,6 @@ private class TabThumbnailTabbedPane : JTabbedPane() {
   }
 }
 
-private fun makeMissingImage(): Image {
-  val missingIcon: Icon = MissingIcon()
-  val w = missingIcon.iconWidth
-  val h = missingIcon.iconHeight
-  val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
-  val g2 = bi.createGraphics()
-  missingIcon.paintIcon(null, g2, 0, 0)
-  g2.dispose()
-  return bi
-}
-
 private class MissingIcon : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as Graphics2D
