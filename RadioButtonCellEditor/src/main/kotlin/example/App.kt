@@ -59,7 +59,8 @@ private class RadioButtonsRenderer : TableCellRenderer {
     column: Int,
   ): Component {
     if (value is Boolean) {
-      renderer.background = if (isSelected) table.selectionBackground else table.background
+      renderer.background =
+        if (isSelected) table.selectionBackground else table.background
       renderer.horizontalAlignment = SwingConstants.CENTER
       renderer.isSelected = value
     }
