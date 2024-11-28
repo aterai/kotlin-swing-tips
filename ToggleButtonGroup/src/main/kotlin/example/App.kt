@@ -6,11 +6,12 @@ import javax.swing.*
 fun makeUI(): Component {
   val box = Box.createVerticalBox()
   box.add(Box.createVerticalStrut(5))
-  box.add(makeTitledPanel("Default ButtonGroup", ButtonGroup()))
+  val title1 = "Default ButtonGroup"
+  box.add(makeTitledPanel(title1, ButtonGroup()))
   box.add(Box.createVerticalStrut(5))
-  box.add(makeTitledPanel("Custom ButtonGroup(clears the selection)", ToggleButtonGroup()))
+  val title2 = "Custom ButtonGroup(clears the selection)"
+  box.add(makeTitledPanel(title2, ToggleButtonGroup()))
   box.add(Box.createVerticalGlue())
-
   return JPanel(BorderLayout()).also {
     it.add(box)
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
