@@ -7,6 +7,7 @@ import javax.swing.*
 import javax.swing.plaf.basic.BasicScrollBarUI
 
 fun makeUI(): Component {
+  UIManager.put("ScrollBar.minimumThumbSize", Dimension(12, 20))
   val scroll = makeTranslucentScrollBar(makeList())
   return JPanel(GridLayout(1, 2)).also {
     it.add(JScrollPane(makeList()))
@@ -17,8 +18,8 @@ fun makeUI(): Component {
 
 private fun makeList(): Component {
   val m = DefaultListModel<String>()
-  for (i in 0..50) {
-    m.addElement("%05d: %s".format(i, LocalDateTime.now(ZoneId.systemDefault())))
+  for (i in 0..500) {
+    m.addElement("%03d: %s".format(i, LocalDateTime.now(ZoneId.systemDefault())))
   }
   return JList(m)
 }
@@ -82,23 +83,23 @@ private class TranslucentScrollBarUI : BasicScrollBarUI() {
     c: JComponent?,
     r: Rectangle,
   ) {
-    val sb = c as? JScrollBar ?: return
-    val g2 = g.create() as? Graphics2D
-    if (g2 == null || !sb.isEnabled || r.width > r.height) {
-      return
+    val g2 = g.create() as? Graphics2D ?: return
+    if (c is JScrollBar && c.isEnabled) {
+      val min = UIManager.getDimension("ScrollBar.minimumThumbSize")
+      r.height = r.height.coerceAtLeast(min.height)
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
+      g2.paint = when {
+        isDragging -> DRAGGING_COLOR
+        isThumbRollover -> ROLLOVER_COLOR
+        else -> DEFAULT_COLOR
+      }
+      g2.fillRect(r.x, r.y, r.width - 1, r.height - 1)
+      g2.paint = Color.WHITE
+      g2.drawRect(r.x, r.y, r.width - 1, r.height - 1)
     }
-    g2.setRenderingHint(
-      RenderingHints.KEY_ANTIALIASING,
-      RenderingHints.VALUE_ANTIALIAS_ON,
-    )
-    g2.paint = when {
-      isDragging -> DRAGGING_COLOR
-      isThumbRollover -> ROLLOVER_COLOR
-      else -> DEFAULT_COLOR
-    }
-    g2.fillRect(r.x, r.y, r.width - 1, r.height - 1)
-    g2.paint = Color.WHITE
-    g2.drawRect(r.x, r.y, r.width - 1, r.height - 1)
     g2.dispose()
   }
 
