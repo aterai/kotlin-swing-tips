@@ -32,7 +32,7 @@ fun makeUI(): Component {
   button2.addActionListener { e ->
     JWindow().also {
       it.contentPane.add(makePanel(clippedImage))
-      if (it.graphicsConfiguration.isTranslucencyCapable) {
+      if (it.graphicsConfiguration?.isTranslucencyCapable == true) {
         it.background = Color(0x0, true)
       }
       it.pack()

@@ -154,7 +154,7 @@ private class HeavyWeightContainerListener : PopupMenuListener {
       if (pop is JPopupMenu) {
         SwingUtilities
           .getWindowAncestor(pop)
-          ?.takeIf { it.graphicsConfiguration.isTranslucencyCapable }
+          ?.takeIf { it.graphicsConfiguration?.isTranslucencyCapable == true }
           ?.takeIf { it is JWindow && it.type == Window.Type.POPUP }
           ?.background = Color(0x0, true)
       }

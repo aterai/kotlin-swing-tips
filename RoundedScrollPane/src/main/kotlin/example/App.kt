@@ -142,7 +142,7 @@ private class HeavyWeightContainerListener : PopupMenuListener {
       val pop = c.ui.getAccessibleChild(c, 0)
       SwingUtilities
         .getWindowAncestor(pop as? JPopupMenu)
-        ?.takeIf { it.graphicsConfiguration.isTranslucencyCapable }
+        ?.takeIf { it.graphicsConfiguration?.isTranslucencyCapable == true }
         ?.takeIf { it.type == Window.Type.POPUP }
         ?.background = Color(0x0, true)
     }

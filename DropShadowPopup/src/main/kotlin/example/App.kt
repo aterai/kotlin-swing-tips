@@ -99,7 +99,7 @@ private class DropShadowPopupMenu : JPopupMenu() {
     EventQueue.invokeLater {
       SwingUtilities
         .getWindowAncestor(this)
-        ?.takeIf { it.graphicsConfiguration.isTranslucencyCapable }
+        ?.takeIf { it.graphicsConfiguration?.isTranslucencyCapable == true}
         ?.takeIf { it.type == Window.Type.POPUP }
         ?.background = Color(0x0, true)
     }
