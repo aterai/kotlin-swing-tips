@@ -51,7 +51,7 @@ fun makeFrame(str: String): JFrame {
     override fun getContentPane() = mainContentPane
   }
   frame.isUndecorated = true
-  if (frame.graphicsConfiguration.isTranslucencyCapable) {
+  if (frame.graphicsConfiguration?.isTranslucencyCapable == true) {
     frame.background = Color(0x0, true)
   }
 

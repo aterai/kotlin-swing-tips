@@ -144,7 +144,7 @@ fun main() {
     JFrame().apply {
       isUndecorated = true
       rootPane.windowDecorationStyle = JRootPane.PLAIN_DIALOG
-      if (graphicsConfiguration.isTranslucencyCapable) {
+      if (graphicsConfiguration?.isTranslucencyCapable == true) {
         background = Color(0x0, true)
       }
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
