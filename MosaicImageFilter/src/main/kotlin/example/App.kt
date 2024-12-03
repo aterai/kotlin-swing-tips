@@ -49,7 +49,7 @@ fun makeUI(): Component {
 }
 
 private fun makeMissingImage(): BufferedImage {
-  val missingIcon: Icon = MissingIcon()
+  val missingIcon = MissingIcon()
   val w = missingIcon.iconWidth
   val h = missingIcon.iconHeight
   val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)

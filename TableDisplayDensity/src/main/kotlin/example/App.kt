@@ -23,7 +23,7 @@ fun makeUI(): Component {
   }
   val table = object : JTable(model) {
     private val iconIns = Insets(2, 2, 2, 2)
-    private val checkIcon: Icon = CheckBoxIcon()
+    private val checkIcon = CheckBoxIcon()
 
     override fun updateUI() {
       val reset = ColorUIResource(Color.RED)
