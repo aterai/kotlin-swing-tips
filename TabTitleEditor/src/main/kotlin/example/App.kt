@@ -60,7 +60,9 @@ private class TabTitleEditListener(
       if (editingIdx >= 0 && title.isNotEmpty()) {
         tabs.setTitleAt(editingIdx, title)
       }
-      cancelEditing.actionPerformed(ActionEvent(tabs, ActionEvent.ACTION_PERFORMED, CANCEL))
+      cancelEditing.actionPerformed(
+        ActionEvent(tabs, ActionEvent.ACTION_PERFORMED, CANCEL),
+      )
     }
   }
   private val cancelEditing = object : AbstractAction() {
