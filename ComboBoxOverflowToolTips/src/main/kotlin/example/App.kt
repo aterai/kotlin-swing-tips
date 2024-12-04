@@ -5,8 +5,10 @@ import javax.swing.*
 
 fun makeUI() = JPanel(BorderLayout()).also {
   val m = makeComboBoxModel()
-  it.add(makeTitledPanel("Overflow ToolTip JComboBox", makeComboBox(m)), BorderLayout.NORTH)
-  it.add(makeTitledPanel("Default JComboBox", JComboBox(m)), BorderLayout.SOUTH)
+  val p1 = makeTitledPanel("Overflow ToolTip JComboBox", makeComboBox(m))
+  val p2 = makeTitledPanel("Default JComboBox", JComboBox(m))
+  it.add(p1, BorderLayout.NORTH)
+  it.add(p2, BorderLayout.SOUTH)
   it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   it.preferredSize = Dimension(320, 240)
 }
