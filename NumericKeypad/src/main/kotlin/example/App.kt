@@ -69,7 +69,7 @@ private fun makeButton(vararg s: String): JButton {
   val l2 = JLabel(sub)
   l2.font = l2.font.deriveFont(9.5f)
   l2.border = border
-  val button: JButton = object : JButton() {
+  val button = object : JButton() {
     override fun updateUI() {
       super.updateUI()
       layout = BorderLayout()

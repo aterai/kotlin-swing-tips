@@ -21,7 +21,7 @@ fun makeUI(): Component {
   attr[TextAttribute.TRACKING] = -.011f
   field2.setFont(mono.deriveFont(attr))
   field2.setColumns(8)
-  val field3: JFormattedTextField = object : JFormattedTextField(code) {
+  val field3 = object : JFormattedTextField(code) {
     override fun getPreferredSize(): Dimension {
       val d = super.getPreferredSize()
       d.width += 1

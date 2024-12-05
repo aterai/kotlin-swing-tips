@@ -47,7 +47,7 @@ fun makeUI(): Component {
 }
 
 private fun makePopupMenu() = object : JPopupMenu() {
-  override fun add(s: String): JMenuItem = add(object : JMenuItem(s) {
+  override fun add(s: String) = add(object : JMenuItem(s) {
     override fun updateUI() {
       super.updateUI()
       val ui = getUI()
@@ -61,7 +61,7 @@ private fun makePopupMenu() = object : JPopupMenu() {
 }
 
 private fun makeMenu() = object : JMenu("JMenu(M)") {
-  override fun add(s: String): JMenuItem = add(object : JMenuItem(s) {
+  override fun add(s: String) = add(object : JMenuItem(s) {
     override fun updateUI() {
       super.updateUI()
       val ui = getUI()

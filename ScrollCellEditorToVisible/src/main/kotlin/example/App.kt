@@ -8,7 +8,7 @@ fun makeUI(): Component {
   val table1 = JTable(50, 50)
   table1.autoResizeMode = JTable.AUTO_RESIZE_OFF
 
-  val table2: JTable = object : JTable(50, 50) {
+  val table2 = object : JTable(50, 50) {
     override fun prepareEditor(
       editor: TableCellEditor,
       row: Int,
