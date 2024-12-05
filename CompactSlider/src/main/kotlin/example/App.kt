@@ -45,7 +45,7 @@ private fun makeCompactSlider1(): Component {
 
 private fun makeProgressBar(
   model: BoundedRangeModel,
-): JProgressBar = object : JProgressBar(model) {
+) = object : JProgressBar(model) {
   override fun updateUI() {
     super.updateUI()
     setUI(BasicProgressBarUI())
@@ -128,7 +128,7 @@ private fun makeSpinner2(m: BoundedRangeModel): JSpinner {
       isOpaque = false
       val editor = editor as? DefaultEditor ?: return
       editor.isOpaque = false
-      val field: JTextField = editor.textField
+      val field = editor.textField
       field.isOpaque = false
       field.border = BorderFactory.createEmptyBorder()
       val d = UIDefaults()
@@ -241,7 +241,7 @@ private fun makeButton(
 }
 
 private fun makeCompactSlider4(): Component {
-  val slider: JSlider = object : JSlider(0, 100, 50) {
+  val slider = object : JSlider(0, 100, 50) {
     override fun updateUI() {
       super.updateUI()
       foreground = Color.LIGHT_GRAY
