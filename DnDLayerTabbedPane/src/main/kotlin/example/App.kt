@@ -235,7 +235,11 @@ class DnDTabbedPane : JTabbedPane() {
     forDrop: Boolean,
   ): Any? {
     val old = dropLocation
-    dropLocation = if (location == null || !forDrop) DropLocation(Point(), -1) else location
+    dropLocation = if (location == null || !forDrop) {
+      DropLocation(Point(), -1)
+    } else {
+      location
+    }
     firePropertyChange("dropLocation", old, dropLocation)
     return null
   }
@@ -439,7 +443,11 @@ private class TabTransferHandler : TransferHandler() {
       source?.let { !it.isAncestorOf(target) } ?: false && isAreaContains
     }
 
-    target.cursor = if (canDrop) DragSource.DefaultMoveDrop else DragSource.DefaultMoveNoDrop
+    target.cursor = if (canDrop) {
+      DragSource.DefaultMoveDrop
+    } else {
+      DragSource.DefaultMoveNoDrop
+    }
 
     support.setShowDropLocation(canDrop)
     // dl.canDrop = canDrop
