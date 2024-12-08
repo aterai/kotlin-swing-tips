@@ -108,7 +108,12 @@ private class StickyLayerUI : LayerUI<JScrollPane>() {
         val r2 = getHeaderRect(list, nextHeaderIdx, c, d)
         SwingUtilities.paintComponent(g2, c2, renderer, r2)
       } else {
-        val c1 = getComponent(list, currentHeaderIdx)
+        val idx = if (firstVisibleIdx == nextHeaderIdx) {
+          nextHeaderIdx
+        } else {
+          currentHeaderIdx
+        }
+        val c1 = getComponent(list, idx)
         SwingUtilities.paintComponent(g2, c1, renderer, headerRect)
       }
       g2.dispose()
