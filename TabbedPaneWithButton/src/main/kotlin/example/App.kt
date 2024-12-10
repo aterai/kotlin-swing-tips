@@ -48,7 +48,8 @@ fun makeUI(): Component {
         val d = button.preferredSize
         val fm = getFontMetrics(font)
         val tih = d.height - fm.height - ti.top - ti.bottom - ai.bottom
-        return Insets(ai.top.coerceAtLeast(tih), d.width + ai.left, ai.bottom, ai.right)
+        val top = ai.top.coerceAtLeast(tih)
+        return Insets(top, d.width + ai.left, ai.bottom, ai.right)
       }
 
     override fun updateUI() {
@@ -89,7 +90,9 @@ fun makeUI(): Component {
 
 private open class ClippedTitleTabbedPane : JTabbedPane() {
   val tabInsets get() =
-    UIManager.getInsets("TabbedPane.tabInsets") ?: getSynthInsets(Region.TABBED_PANE_TAB)
+    UIManager.getInsets(
+      "TabbedPane.tabInsets",
+    ) ?: getSynthInsets(Region.TABBED_PANE_TAB)
   val tabAreaInsets get() =
     UIManager.getInsets(
       "TabbedPane.tabAreaInsets",
@@ -107,11 +110,11 @@ private open class ClippedTitleTabbedPane : JTabbedPane() {
       super.doLayout()
       return
     }
-    val tabInsets = tabInsets
-    val tabAreaInsets = tabAreaInsets
+    val tabIns = tabInsets
+    val tabAreaIns = tabAreaInsets
     val ins = insets
     val tabPlacement = getTabPlacement()
-    val areaWidth = width - tabAreaInsets.left - tabAreaInsets.right - ins.left - ins.right
+    val areaWidth = width - tabAreaIns.left - tabAreaIns.right - ins.left - ins.right
     var tabWidth: Int
     var gap: Int
     if (tabPlacement == LEFT || tabPlacement == RIGHT) {
@@ -127,7 +130,7 @@ private open class ClippedTitleTabbedPane : JTabbedPane() {
     }
 
     // "3" is magic number @see BasicTabbedPaneUI#calculateTabWidth
-    tabWidth -= tabInsets.left + tabInsets.right + 3
+    tabWidth -= tabIns.left + tabIns.right + 3
     updateAllTabWidth(tabWidth, gap)
     super.doLayout()
   }
