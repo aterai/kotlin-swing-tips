@@ -8,18 +8,18 @@ import javax.swing.plaf.synth.SynthContext
 import javax.swing.plaf.synth.SynthLookAndFeel
 
 fun makeUI(): Component {
-  val list = listOf(makeTabbedPane(JTabbedPane()), makeTabbedPane(ClippedTitleTabbedPane()))
-
+  val list = listOf(
+    makeTabbedPane(JTabbedPane()),
+    makeTabbedPane(ClippedTitleTabbedPane()),
+  )
   val p = JPanel(GridLayout(list.size, 1))
   list.forEach { p.add(it) }
-
   val check = JCheckBox("LEFT")
   check.addActionListener { e ->
     val b = (e.source as? JCheckBox)?.isSelected ?: false
     val tabPlacement = if (b) JTabbedPane.LEFT else JTabbedPane.TOP
     list.forEach { it.tabPlacement = tabPlacement }
   }
-
   return JPanel(BorderLayout()).also {
     it.add(check, BorderLayout.NORTH)
     it.add(p)
@@ -43,14 +43,16 @@ private class ClippedTitleTabbedPane : JTabbedPane() {
     ?: getSynthTabAreaInsets()
 
   private fun getSynthTabInsets(): Insets {
-    val style = SynthLookAndFeel.getStyle(this, Region.TABBED_PANE_TAB)
-    val ctx = SynthContext(this, Region.TABBED_PANE_TAB, style, SynthConstants.ENABLED)
+    val region = Region.TABBED_PANE_TAB
+    val style = SynthLookAndFeel.getStyle(this, region)
+    val ctx = SynthContext(this, region, style, SynthConstants.ENABLED)
     return style.getInsets(ctx, null)
   }
 
   private fun getSynthTabAreaInsets(): Insets {
-    val style = SynthLookAndFeel.getStyle(this, Region.TABBED_PANE_TAB_AREA)
-    val ctx = SynthContext(this, Region.TABBED_PANE_TAB_AREA, style, SynthConstants.ENABLED)
+    val region = Region.TABBED_PANE_TAB_AREA
+    val style = SynthLookAndFeel.getStyle(this, region)
+    val ctx = SynthContext(this, region, style, SynthConstants.ENABLED)
     return style.getInsets(ctx, null)
   }
 
