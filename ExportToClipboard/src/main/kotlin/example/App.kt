@@ -9,7 +9,8 @@ import javax.swing.*
 fun makeUI(): Component {
   val p = JPanel(GridLayout(1, 2, 10, 0))
   val h = ListItemTransferHandler()
-  p.border = BorderFactory.createTitledBorder("Drag & Drop(Copy, Cut, Paste) between JLists")
+  val help = "Drag & Drop(Copy, Cut, Paste) between JLists"
+  p.border = BorderFactory.createTitledBorder(help)
   p.add(JScrollPane(makeList(h)))
   p.add(JScrollPane(makeList(h)))
   return JPanel(BorderLayout()).also {
