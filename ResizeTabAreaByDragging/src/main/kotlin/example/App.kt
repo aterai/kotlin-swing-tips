@@ -40,14 +40,16 @@ private class ClippedTitleTabbedPane(
     ?: getSynthTabAreaInsets()
 
   private fun getSynthTabInsets(): Insets {
-    val style = SynthLookAndFeel.getStyle(this, Region.TABBED_PANE_TAB)
-    val ctx = SynthContext(this, Region.TABBED_PANE_TAB, style, SynthConstants.ENABLED)
+    val region = Region.TABBED_PANE_TAB
+    val style = SynthLookAndFeel.getStyle(this, region)
+    val ctx = SynthContext(this, region, style, SynthConstants.ENABLED)
     return style.getInsets(ctx, null)
   }
 
   private fun getSynthTabAreaInsets(): Insets {
-    val style = SynthLookAndFeel.getStyle(this, Region.TABBED_PANE_TAB_AREA)
-    val ctx = SynthContext(this, Region.TABBED_PANE_TAB_AREA, style, SynthConstants.ENABLED)
+    val region = Region.TABBED_PANE_TAB_AREA
+    val style = SynthLookAndFeel.getStyle(this, region)
+    val ctx = SynthContext(this, region, style, SynthConstants.ENABLED)
     return style.getInsets(ctx, null)
   }
 
