@@ -407,10 +407,10 @@ private class CompactListItemTransferHandler : ListItemTransferHandler() {
     source: JList<E>,
     w: Int,
     h: Int,
-  ): BufferedImage {
-    require(w > 0 && h > 0) { "width and height must be > 0" }
-    val selectedIndices = source.selectedIndices
+  ): BufferedImage? {
     val gc = source.graphicsConfiguration
+    require(w > 0 && h > 0 && gc != null) { "width and height must be > 0" }
+    val selectedIndices = source.selectedIndices
     val br = gc.createCompatibleImage(w, h, Transparency.TRANSLUCENT)
     val g2 = br.createGraphics()
     val renderer = source.cellRenderer
