@@ -26,7 +26,8 @@ fun makeUI(): Component {
   table.rowSorter = sorter
   val defFilter = sorter.rowFilter
   val filter = object : RowFilter<TableModel, Int>() {
-    override fun include(entry: Entry<out TableModel?, out Int>) = entry.identifier % 2 == 0
+    override fun include(entry: Entry<out TableModel, out Int>) =
+      entry.identifier % 2 == 0
   }
 
   val check = JCheckBox("filter: idx%2==0")
