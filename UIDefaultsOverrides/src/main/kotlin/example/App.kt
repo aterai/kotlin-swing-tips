@@ -97,8 +97,6 @@ private enum class CheckIcon {
 private class MyCheckBoxMenuItemPainter(
   private val state: CheckIcon,
 ) : AbstractRegionPainter() {
-  private val ctx = PaintContext(Insets(5, 5, 5, 5), Dimension(9, 10), false, null, 1.0, 1.0)
-
   override fun doPaint(
     g: Graphics2D,
     c: JComponent,
@@ -114,7 +112,11 @@ private class MyCheckBoxMenuItemPainter(
     }
   }
 
-  override fun getPaintContext() = ctx
+  override fun getPaintContext(): PaintContext {
+    val ins = Insets(5, 5, 5, 5)
+    val dim = Dimension(9, 10)
+    return PaintContext(ins, dim, false, null, 1.0, 1.0)
+  }
 
   private fun paintIconEnabled(g: Graphics2D) {
     g.paint = Color.GREEN
@@ -151,8 +153,9 @@ private class MultiLineTableCellRenderer :
     wrapStyleWord = true
     isOpaque = true
 
-    val b = BorderFactory.createLineBorder(Color(0x73_A4_D1))
-    fhb = BorderFactory.createCompoundBorder(b, BorderFactory.createEmptyBorder(1, 4, 1, 4))
+    val outside = BorderFactory.createLineBorder(Color(0x73_A4_D1))
+    val inside = BorderFactory.createEmptyBorder(1, 4, 1, 4)
+    fhb = BorderFactory.createCompoundBorder(outside, inside)
     epb = BorderFactory.createEmptyBorder(2, 5, 2, 5)
     border = epb
   }
@@ -206,7 +209,7 @@ private class MultiLineTableCellRenderer :
   }
 
   companion object {
-    private fun <E> createMutableList(initialCapacity: Int) = ArrayList<E>(initialCapacity)
+    private fun <E> createMutableList(initCapacity: Int) = ArrayList<E>(initCapacity)
   }
 }
 
