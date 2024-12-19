@@ -3,8 +3,8 @@ package example
 import java.awt.*
 import java.awt.event.ItemEvent
 import java.awt.image.BufferedImage
-import java.awt.image.DataBufferInt
 import java.awt.image.MemoryImageSource
+import java.awt.image.PixelGrabber
 import javax.imageio.ImageIO
 import javax.swing.*
 
@@ -66,7 +66,21 @@ private fun getData(
   val g = image.createGraphics()
   g.drawImage(img, 0, 0, null)
   g.dispose()
-  return (image.raster.dataBuffer as? DataBufferInt)?.data ?: IntArray(0)
+  // return (image.raster.dataBuffer as? DataBufferInt)?.data ?: IntArray(0)
+  val pixels = IntArray(w * h)
+  val systemEventQueue = Toolkit.getDefaultToolkit().systemEventQueue
+  val loop = systemEventQueue.createSecondaryLoop()
+  val worker = Thread {
+    runCatching {
+      PixelGrabber(image, 0, 0, w, h, pixels, 0, w).grabPixels()
+    }.onFailure {
+      Thread.currentThread().interrupt()
+    }
+    loop.exit()
+  }
+  worker.start()
+  loop.enter()
+  return pixels
 }
 
 private fun makeImage(path: String): BufferedImage {
