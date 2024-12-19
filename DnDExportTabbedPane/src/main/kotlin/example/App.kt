@@ -217,7 +217,7 @@ class DnDTabbedPane : JTabbedPane() {
     forDrop: Boolean,
   ): Any? {
     val old = dropLocation
-    dropLocation = if (location == null || !forDrop) DropLocation(Point(), -1) else location
+    dropLocation = location?.takeIf { forDrop } ?: DropLocation(Point(), -1)
     firePropertyChange("dropLocation", old, dropLocation)
     return null
   }
@@ -385,8 +385,10 @@ private class TabTransferHandler : TransferHandler() {
   }
 
   override fun canImport(support: TransferSupport): Boolean {
+    val isDrop = support.isDrop
+    val isFlavorSupported = support.isDataFlavorSupported(localObjectFlavor)
     val tgt = support.component as? DnDTabbedPane
-    if (!support.isDrop || !support.isDataFlavorSupported(localObjectFlavor) || tgt == null) {
+    if (!isDrop || !isFlavorSupported || tgt == null) {
       return false
     }
     support.dropAction = MOVE
