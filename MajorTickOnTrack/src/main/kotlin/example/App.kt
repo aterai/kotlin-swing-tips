@@ -27,71 +27,8 @@ fun makeUI(): Component {
   d["Slider:SliderThumb[Focused].backgroundPainter"] = thumbPainter
   d["Slider:SliderThumb[MouseOver].backgroundPainter"] = thumbPainter
   d["Slider:SliderThumb[Pressed].backgroundPainter"] = thumbPainter
-  d["Slider:SliderTrack[Enabled].backgroundPainter"] = object : Painter<JSlider> {
-    override fun paint(
-      g: Graphics2D,
-      c: JSlider,
-      w: Int,
-      h: Int,
-    ) {
-      val arc = 10
-      val thumbSize = 24
-      val trackHeight = 8
-      val tickSize = 4
-      val trackWidth = w - thumbSize
-      val fillTop = (thumbSize - trackHeight) / 2
-      val fillLeft = thumbSize / 2
+  d["Slider:SliderTrack[Enabled].backgroundPainter"] = SliderTrackPainter()
 
-      // Paint track
-      g.setRenderingHint(
-        RenderingHints.KEY_ANTIALIASING,
-        RenderingHints.VALUE_ANTIALIAS_ON,
-      )
-      g.color = Color(0xC6_E4_FC)
-      g.fillRoundRect(fillLeft, fillTop + 2, trackWidth, trackHeight - 4, arc, arc)
-
-      val fillBottom = fillTop + trackHeight
-      val r = Rectangle(fillLeft, fillTop, trackWidth, fillBottom - fillTop)
-
-      // Paint the major tick marks on the track
-      g.color = Color(0x31_A8_F8)
-      var value = c.minimum
-      while (value <= c.maximum) {
-        val xpt = getPositionForValue(c, r, value.toFloat())
-        g.fillOval(xpt, r.centerY.toInt() - tickSize / 2, tickSize, tickSize)
-        // Overflow checking
-        if (Int.MAX_VALUE - c.majorTickSpacing < value) {
-          break
-        }
-        value += c.majorTickSpacing
-      }
-
-      // JSlider.isFilled
-      val fillRight = getPositionForValue(c, r, c.value.toFloat())
-      g.fillRoundRect(
-        fillLeft,
-        fillTop,
-        fillRight - fillLeft,
-        fillBottom - fillTop,
-        arc,
-        arc,
-      )
-    }
-
-    private fun getPositionForValue(
-      slider: JSlider,
-      trackRect: Rectangle,
-      value: Float,
-    ): Int {
-      val min = slider.minimum.toFloat()
-      val max = slider.maximum.toFloat()
-      val pixelsPerValue = trackRect.width / (max - min)
-      val trackLeft = trackRect.x
-      val trackRight = trackRect.x + trackRect.width - 1
-      val pos = trackLeft + (pixelsPerValue * (value - min)).roundToInt()
-      return pos.coerceIn(trackLeft, trackRight)
-    }
-  }
   val slider = JSlider()
   slider.snapToTicks = true
   slider.majorTickSpacing = 10
@@ -125,6 +62,72 @@ private fun makeTitledPanel(
   p.border = BorderFactory.createTitledBorder(title)
   p.add(c)
   return p
+}
+
+private class SliderTrackPainter : Painter<JSlider> {
+  override fun paint(
+    g: Graphics2D,
+    c: JSlider,
+    w: Int,
+    h: Int,
+  ) {
+    val arc = 10
+    val thumbSize = 24
+    val trackHeight = 8
+    val tickSize = 4
+    val trackWidth = w - thumbSize
+    val fillTop = (thumbSize - trackHeight) / 2
+    val fillLeft = thumbSize / 2
+
+    // Paint track
+    g.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
+    g.color = Color(0xC6_E4_FC)
+    g.fillRoundRect(fillLeft, fillTop + 2, trackWidth, trackHeight - 4, arc, arc)
+
+    val fillBottom = fillTop + trackHeight
+    val r = Rectangle(fillLeft, fillTop, trackWidth, fillBottom - fillTop)
+
+    // Paint the major tick marks on the track
+    g.color = Color(0x31_A8_F8)
+    var value = c.minimum
+    while (value <= c.maximum) {
+      val xpt = getPositionForValue(c, r, value.toFloat())
+      g.fillOval(xpt, r.centerY.toInt() - tickSize / 2, tickSize, tickSize)
+      // Overflow checking
+      if (Int.MAX_VALUE - c.majorTickSpacing < value) {
+        break
+      }
+      value += c.majorTickSpacing
+    }
+
+    // JSlider.isFilled
+    val fillRight = getPositionForValue(c, r, c.value.toFloat())
+    g.fillRoundRect(
+      fillLeft,
+      fillTop,
+      fillRight - fillLeft,
+      fillBottom - fillTop,
+      arc,
+      arc,
+    )
+  }
+
+  private fun getPositionForValue(
+    slider: JSlider,
+    trackRect: Rectangle,
+    value: Float,
+  ): Int {
+    val min = slider.minimum.toFloat()
+    val max = slider.maximum.toFloat()
+    val pixelsPerValue = trackRect.width / (max - min)
+    val trackLeft = trackRect.x
+    val trackRight = trackRect.x + trackRect.width - 1
+    val pos = trackLeft + (pixelsPerValue * (value - min)).roundToInt()
+    return pos.coerceIn(trackLeft, trackRight)
+  }
 }
 
 private class NumberIcon(
