@@ -290,9 +290,19 @@ private class DnDTabbedPane : JTabbedPane() {
       val r = SwingUtilities.convertRectangle(this, it, glassPane)
       val a = minOf(next, 1) // a = (next == 0) ? 0 : 1
       if (isTopBottomTabPlacement(getTabPlacement())) {
-        glassPane.setTargetRect(r.x + r.width * a - LINE_SIZE / 2, r.y, LINE_SIZE, r.height)
+        glassPane.setTargetRect(
+          r.x + r.width * a - LINE_SIZE / 2,
+          r.y,
+          LINE_SIZE,
+          r.height,
+        )
       } else {
-        glassPane.setTargetRect(r.x, r.y + r.height * a - LINE_SIZE / 2, r.width, LINE_SIZE)
+        glassPane.setTargetRect(
+          r.x,
+          r.y + r.height * a - LINE_SIZE / 2,
+          r.width,
+          LINE_SIZE,
+        )
       }
     }
   }
@@ -357,7 +367,8 @@ private class TabTransferable(
 
   override fun getTransferDataFlavors() = arrayOf(FLAVOR)
 
-  override fun isDataFlavorSupported(flavor: DataFlavor) = flavor.humanPresentableName == NAME
+  override fun isDataFlavorSupported(flavor: DataFlavor) =
+    flavor.humanPresentableName == NAME
 
   companion object {
     private const val NAME = "test"
