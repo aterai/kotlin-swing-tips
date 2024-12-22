@@ -88,7 +88,8 @@ private class DnDList<E>(
   override fun getTransferDataFlavors() =
     arrayOf(DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, NAME))
 
-  override fun isDataFlavorSupported(flavor: DataFlavor) = flavor.humanPresentableName == NAME
+  override fun isDataFlavorSupported(flavor: DataFlavor) =
+    flavor.humanPresentableName == NAME
 
   companion object {
     private const val NAME = "test"
