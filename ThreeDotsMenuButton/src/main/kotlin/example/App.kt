@@ -21,7 +21,7 @@ private fun makeModel(): ListModel<String> {
   for (i in 0..99) {
     val indent = if (i % 10 == 0) "" else "    "
     val now = LocalDateTime.now(ZoneId.systemDefault())
-    model.addElement(String.format("%s%04d: %s", indent, i, now))
+    model.addElement("%s%04d: %s".format(indent, i, now))
   }
   return model
 }
