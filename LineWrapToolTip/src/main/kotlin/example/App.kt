@@ -1,30 +1,11 @@
 package example
 
-import java.awt.BorderLayout
-import java.awt.Component
-import java.awt.Dimension
-import java.awt.EventQueue
-import java.awt.Insets
-import java.awt.LayoutManager
-import java.awt.Toolkit
-import java.awt.Window
+import java.awt.*
 import java.awt.event.MouseEvent
 import java.awt.font.LineBreakMeasurer
 import java.awt.font.TextAttribute
 import java.text.AttributedString
-import javax.swing.BorderFactory
-import javax.swing.Box
-import javax.swing.JButton
-import javax.swing.JFrame
-import javax.swing.JLabel
-import javax.swing.JPanel
-import javax.swing.JTextArea
-import javax.swing.JTextField
-import javax.swing.JToolTip
-import javax.swing.LookAndFeel
-import javax.swing.SwingUtilities
-import javax.swing.UIManager
-import javax.swing.WindowConstants
+import javax.swing.*
 import kotlin.math.min
 
 fun makeUI(): Component {
@@ -65,7 +46,6 @@ private fun makeButton(title: String) = object : JButton(title) {
     EventQueue.invokeLater {
       if (tip != null) {
         SwingUtilities.getWindowAncestor(tip)?.also {
-          println("aaaaaaaaaaaaaaaa")
           if (it.type == Window.Type.POPUP) {
             it.pack()
           }
@@ -102,7 +82,7 @@ private fun makeTextField(txt: String): JTextField {
   return field
 }
 
-private class LineWrapToolTip : JToolTip() {
+private class LineWrapToolTip: JToolTip() {
   private val textArea = JTextArea(0, 20)
 
   init {
@@ -111,10 +91,7 @@ private class LineWrapToolTip : JToolTip() {
     textArea.isOpaque = true
     // textArea.columns = 20
     LookAndFeel.installColorsAndFont(
-      textArea,
-      "ToolTip.background",
-      "ToolTip.foreground",
-      "ToolTip.font",
+      textArea, "ToolTip.background", "ToolTip.foreground", "ToolTip.font"
     )
     layout = BorderLayout()
     add(textArea)
@@ -128,8 +105,8 @@ private class LineWrapToolTip : JToolTip() {
 
   override fun getPreferredSize(): Dimension {
     val d = layout.preferredLayoutSize(this)
-    val version = System.getProperty("java.specification.version").toDouble()
-    return if (version >= 21.0) {
+    val version = System.getProperty("java.specification.version")
+    return if (version.toDouble() >= JAVA_21) {
       getTextAreaSize21(d)
     } else {
       getTextAreaSize8(d)
@@ -137,11 +114,11 @@ private class LineWrapToolTip : JToolTip() {
   }
 
   private fun getTextAreaSize8(d: Dimension): Dimension {
-    MEASURER.text = textArea.text
-    val i = insets
-    val pad = getTextAreaPadding(i)
-    d.width = min(TIP_WIDTH, MEASURER.preferredSize.width + pad)
     val font = textArea.font
+    MEASURER.font = font
+    MEASURER.text = textArea.text
+    val pad = getTextAreaPaddingWidth(insets)
+    d.width = min(TIP_WIDTH, MEASURER.preferredSize.width + pad)
     val attr = AttributedString(textArea.text)
     attr.addAttribute(TextAttribute.FONT, font)
     val aci = attr.iterator
@@ -153,21 +130,38 @@ private class LineWrapToolTip : JToolTip() {
       val tl = lbm.nextLayout(TIP_WIDTH.toFloat())
       y += tl.descent + tl.leading + tl.ascent
     }
-    d.height = y.toInt() + font.size - i.top - i.bottom
+    d.height = y.toInt() + getTextAreaPaddingHeight(insets)
     return d
   }
 
   private fun getTextAreaSize21(d: Dimension): Dimension {
+    MEASURER.font = textArea.font
     MEASURER.text = textArea.text
-    val pad = getTextAreaPadding(insets)
+    val pad = getTextAreaPaddingWidth(insets)
     d.width = min(d.width, MEASURER.preferredSize.width + pad)
     return d
   }
 
-  private fun getTextAreaPadding(i: Insets): Int {
+  private fun getTextAreaPaddingWidth(i: Insets): Int {
+    var caretMargin = -1
+    var property = UIManager.get("Caret.width")
+    if (property is Number) {
+      caretMargin = property.toInt()
+    }
+    property = textArea.getClientProperty("caretWidth")
+    if (property is Number) {
+      caretMargin = property.toInt()
+    }
+    if (caretMargin < 0) {
+      caretMargin = 1
+    }
     val ti = textArea.insets
-    val tm = textArea.margin
-    return i.left + i.right + ti.left + ti.right + tm.left + tm.right
+    return i.left + i.right + ti.left + ti.right + caretMargin
+  }
+
+  private fun getTextAreaPaddingHeight(i: Insets): Int {
+    val ti = textArea.insets
+    return i.top + i.bottom + ti.top + ti.bottom
   }
 
   override fun setTipText(tipText: String) {
@@ -183,6 +177,7 @@ private class LineWrapToolTip : JToolTip() {
   override fun getTipText(): String? = textArea?.text
 
   companion object {
+    private const val JAVA_21 = 21.0
     private val MEASURER = JLabel(" ")
     private const val TIP_WIDTH = 200
   }
