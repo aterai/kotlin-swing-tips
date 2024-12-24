@@ -143,7 +143,8 @@ private fun getDropIndex(parent: MutableTreeNode, childIndex: Int): Int {
   return index
 }
 
-fun canStartDrag(tree: JTree) = tree.selectionPaths?.let { canStartDragPaths(it) } ?: false
+fun canStartDrag(tree: JTree) =
+  tree.selectionPaths?.let { canStartDragPaths(it) } ?: false
 
 fun canStartDragPaths(paths: Array<TreePath>) = paths
   .asSequence()
