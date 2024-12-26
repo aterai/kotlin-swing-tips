@@ -185,7 +185,9 @@ private class EditableList(
     val wl = object : WindowAdapter() {
       override fun windowDeactivated(e: WindowEvent) {
         if (editingIndex >= 0) {
-          renameTitle.actionPerformed(ActionEvent(editor, ActionEvent.ACTION_PERFORMED, ""))
+          renameTitle.actionPerformed(
+            ActionEvent(editor, ActionEvent.ACTION_PERFORMED, ""),
+          )
         }
         editingIndex = -1
       }
