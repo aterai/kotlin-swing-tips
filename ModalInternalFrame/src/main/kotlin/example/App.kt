@@ -107,9 +107,9 @@ private class ModalInternalFrameAction2(
   }
 
   override fun actionPerformed(e: ActionEvent) {
-    setMenuBarEnabled(false)
     val w = SwingUtilities.getWindowAncestor(desktop)
-    val screen = w.graphicsConfiguration.bounds
+    val screen = w.graphicsConfiguration?.bounds ?: return
+    setMenuBarEnabled(false)
     glass.setSize(screen.width, screen.height)
     glass.isVisible = true
     JOptionPane.showInternalMessageDialog(
