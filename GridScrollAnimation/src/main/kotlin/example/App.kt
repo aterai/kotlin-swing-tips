@@ -49,13 +49,21 @@ private class GridPanel(
     visibleRect: Rectangle,
     orientation: Int,
     direction: Int,
-  ) = if (orientation == SwingConstants.HORIZONTAL) visibleRect.width else visibleRect.height
+  ) = if (orientation == SwingConstants.HORIZONTAL) {
+    visibleRect.width
+  } else {
+    visibleRect.height
+  }
 
   override fun getScrollableBlockIncrement(
     visibleRect: Rectangle,
     orientation: Int,
     direction: Int,
-  ) = if (orientation == SwingConstants.HORIZONTAL) visibleRect.width else visibleRect.height
+  ) = if (orientation == SwingConstants.HORIZONTAL) {
+    visibleRect.width
+  } else {
+    visibleRect.height
+  }
 
   override fun getScrollableTracksViewportWidth() = false
 

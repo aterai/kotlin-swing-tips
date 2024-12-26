@@ -82,7 +82,7 @@ private fun makeTextField(txt: String): JTextField {
   return field
 }
 
-private class LineWrapToolTip: JToolTip() {
+private class LineWrapToolTip : JToolTip() {
   private val textArea = JTextArea(0, 20)
 
   init {
@@ -91,7 +91,10 @@ private class LineWrapToolTip: JToolTip() {
     textArea.isOpaque = true
     // textArea.columns = 20
     LookAndFeel.installColorsAndFont(
-      textArea, "ToolTip.background", "ToolTip.foreground", "ToolTip.font"
+      textArea,
+      "ToolTip.background",
+      "ToolTip.foreground",
+      "ToolTip.font",
     )
     layout = BorderLayout()
     add(textArea)
