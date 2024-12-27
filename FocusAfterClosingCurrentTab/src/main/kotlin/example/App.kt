@@ -44,10 +44,12 @@ fun makeUI(): Component {
   tabbedPane.addTab("d", JLabel("ddd"))
   tabbedPane.addTab("ee", JLabel("eee"))
 
-  val modifiers = Toolkit.getDefaultToolkit().menuShortcutKeyMask
   val im = tabbedPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, modifiers), CLOSE_CURRENT_TAB)
-  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_DOWN_MASK), CLOSE_CURRENT_TAB)
+  val modifiers = Toolkit.getDefaultToolkit().menuShortcutKeyMask
+  val keyStroke1 = KeyStroke.getKeyStroke(KeyEvent.VK_W, modifiers)
+  im.put(keyStroke1, CLOSE_CURRENT_TAB)
+  val keyStroke2 = KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_DOWN_MASK)
+  im.put(keyStroke2, CLOSE_CURRENT_TAB)
   val a = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val t = e.source as? JTabbedPane ?: return
