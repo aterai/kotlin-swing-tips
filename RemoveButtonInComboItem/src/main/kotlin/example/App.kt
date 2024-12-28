@@ -65,7 +65,10 @@ private class RemoveButtonComboBox<E>(
 ) : JComboBox<E>(model) {
   private var handler: CellButtonsMouseListener? = null
 
-  private fun getList() = (getAccessibleContext().getAccessibleChild(0) as? ComboPopup)?.list
+  private fun getList(): JList<Any>? {
+    val child = getAccessibleContext().getAccessibleChild(0)
+    return (child as? ComboPopup)?.list
+  }
 
   override fun updateUI() {
     if (handler != null) {
@@ -121,7 +124,13 @@ private class CellButtonsMouseListener : MouseAdapter() {
     index: Int,
   ): JButton? {
     val proto = list.prototypeCellValue
-    val c = list.cellRenderer.getListCellRendererComponent(list, proto, index, false, false)
+    val c = list.cellRenderer.getListCellRendererComponent(
+      list,
+      proto,
+      index,
+      false,
+      false,
+    )
     val r = list.getCellBounds(index, index)
     c.bounds = r
     // c.doLayout() // may be needed for other layout managers (e.g. FlowLayout)
