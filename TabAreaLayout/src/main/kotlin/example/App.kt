@@ -522,16 +522,16 @@ open class ClippedTitleTabbedPane : JTabbedPane() {
     val key = "TabbedPane.tabAreaInsets"
     UIManager.put(key, null) // uninstall
     super.updateUI()
-    val tabInsets = UIManager.getInsets("TabbedPane.tabInsets") ?: getSynthTabInsets()
-    val tabAreaInsets = UIManager.getInsets(key) ?: getSynthTabAreaInsets()
+    val tabIns = UIManager.getInsets("TabbedPane.tabInsets") ?: getSynthTabInsets()
+    val tabAreaIns = UIManager.getInsets(key) ?: getSynthTabAreaInsets()
     val fm = getFontMetrics(font)
-    val buttonSize = 20
-    val tih = buttonSize - fm.height - tabInsets.top - tabInsets.bottom - tabAreaInsets.bottom
+    val btnSz = 20
+    val tih = btnSz - fm.height - tabIns.top - tabIns.bottom - tabAreaIns.bottom
     val ins = Insets(
-      tabAreaInsets.top.coerceAtLeast(tih),
-      tabAreaInsets.left,
-      tabAreaInsets.bottom,
-      tabAreaInsets.left + buttonSize,
+      tabAreaIns.top.coerceAtLeast(tih),
+      tabAreaIns.left,
+      tabAreaIns.bottom,
+      tabAreaIns.left + btnSz,
     )
     UIManager.put(key, ins)
     super.updateUI() // reinstall
