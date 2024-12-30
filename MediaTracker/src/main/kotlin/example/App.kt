@@ -126,6 +126,7 @@ private object FileModel : DefaultTableModel() {
     super.addRow(arrayOf(t.id, t.name, t.absolutePath, t.width, t.height))
   }
 
+  @Suppress("unused")
   private fun readResolve(): Any = FileModel
 }
 
