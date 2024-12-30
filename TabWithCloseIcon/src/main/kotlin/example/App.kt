@@ -378,8 +378,10 @@ private class CloseButtonTabbedPaneUI(
         val closeButton = closeButtons[i]
         val d = closeButton.preferredSize
         val isSelected = i == tabPane.selectedIndex
-        val x = getTabLabelShiftX(placement, i, isSelected) + r.x + r.width - d.width - 2
-        val y = getTabLabelShiftY(placement, i, isSelected) + r.y + (r.height - d.height) / 2
+        val tabLabelShiftX = getTabLabelShiftX(placement, i, isSelected)
+        val x = tabLabelShiftX + r.x + r.width - d.width - 2
+        val tabLabelShiftY = getTabLabelShiftY(placement, i, isSelected)
+        val y = tabLabelShiftY + r.y + (r.height - d.height) / 2
         closeButton.setBounds(x, y, d.width, d.height)
         tabPane.add(closeButton)
         i++
