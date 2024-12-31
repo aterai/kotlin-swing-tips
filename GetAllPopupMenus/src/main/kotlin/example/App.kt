@@ -64,7 +64,8 @@ fun makeUI(): Component {
     tabs.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(ks3, "prev2")
     val act3 = object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
-        tabs.dispatchEvent(MouseEvent(tabs, MouseEvent.MOUSE_PRESSED, 0, 0, 0, 0, 1, false))
+        val me = MouseEvent(tabs, MouseEvent.MOUSE_PRESSED, 0, 0, 0, 0, 1, false)
+        tabs.dispatchEvent(me)
         val s = tabs.tabCount
         tabs.selectedIndex = (tabs.selectedIndex + s - 1) % s
       }
