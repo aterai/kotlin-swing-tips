@@ -107,9 +107,15 @@ fun main() {
     UIManager.put("InternalFrame.inactiveTitleForeground", Color.WHITE)
     // MetalLookAndFeel
     val theme = object : OceanTheme() {
-      override fun getWindowTitleForeground() = ColorUIResource(Color.RED.brighter())
+      override fun getWindowTitleForeground(): ColorUIResource {
+        val color = UIManager.getColor("InternalFrame.activeTitleForeground")
+        return ColorUIResource(color.brighter())
+      }
 
-      override fun getWindowTitleInactiveForeground() = ColorUIResource(Color.ORANGE.darker())
+      override fun getWindowTitleInactiveForeground(): ColorUIResource {
+        val color = Color.ORANGE
+        return ColorUIResource(color.darker())
+      }
     }
     MetalLookAndFeel.setCurrentTheme(theme)
     JFrame().apply {
