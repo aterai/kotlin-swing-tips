@@ -48,14 +48,15 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
   init {
     val left = 0
     val right = 0
-    tabPanel.border = BorderFactory.createMatteBorder(0, left, 0, right, Color(20, 30, 50))
+    val color = Color(20, 30, 50)
+    tabPanel.border = BorderFactory.createMatteBorder(0, left, 0, right, color)
     contentsPanel.border = BorderFactory.createEmptyBorder(4, left, 2, right)
 
     tabPanel.isOpaque = true
-    tabPanel.background = Color(20, 30, 50)
+    tabPanel.background = color
 
     wrapPanel.isOpaque = true
-    wrapPanel.background = Color(20, 30, 50)
+    wrapPanel.background = color
 
     // contentsPanel.setOpaque(true)
     // contentsPanel.setBackground(Color(20, 30, 50))
