@@ -12,23 +12,24 @@ import javax.swing.text.DefaultFormatterFactory
 import javax.swing.text.NumberFormatter
 
 fun makeUI(): Component {
-  val spinner = JSpinner(makeSpinnerNumberModel())
-  (spinner.editor as? DefaultEditor)?.also {
+  val spinner1 = JSpinner(makeLongModel())
+  (spinner1.editor as? DefaultEditor)?.also {
     val formatter = it.textField.formatter
     if (formatter is DefaultFormatter) {
       formatter.allowsInvalid = false
     }
   }
+  val spinner2 = makeWarningSpinner(makeLongModel())
   return JPanel(GridLayout(3, 1)).also {
-    it.add(makeTitledPanel("Default", JSpinner(makeSpinnerNumberModel())))
-    it.add(makeTitledPanel("NumberFormatter#setAllowsInvalid(false)", spinner))
-    it.add(makeTitledPanel("BackgroundColor", makeWarningSpinner(makeSpinnerNumberModel())))
+    it.add(makeTitledPanel("Default", JSpinner(makeLongModel())))
+    it.add(makeTitledPanel("NumberFormatter#setAllowsInvalid(false)", spinner1))
+    it.add(makeTitledPanel("BackgroundColor", spinner2))
     it.border = BorderFactory.createEmptyBorder(10, 5, 10, 5)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeSpinnerNumberModel() =
+private fun makeLongModel() =
   SpinnerNumberModel(10.toLong(), 0.toLong(), 99_999.toLong(), 1.toLong())
 
 private fun makeTitledPanel(
@@ -77,7 +78,7 @@ private fun makeWarningSpinner(model: SpinnerNumberModel): JSpinner {
 }
 
 private fun makeFormatterFactory(m: SpinnerNumberModel): DefaultFormatterFactory {
-  val format = DecimalFormat("####0")
+  val format = DecimalFormat("##################0")
   val editFormatter = object : NumberFormatter(format) {
     @Throws(ParseException::class)
     override fun stringToValue(text: String): Any {
@@ -86,8 +87,8 @@ private fun makeFormatterFactory(m: SpinnerNumberModel): DefaultFormatterFactory
       }
       val lv = format.parse(text)
       if (lv is Long) {
-        val min = m.minimum as? Int ?: 0
-        val max = m.maximum as? Int ?: 0
+        val min = m.minimum as? Long ?: 0
+        val max = m.maximum as? Long ?: 0
         if (lv !in min..max) {
           throw ParseException("out of bounds", 0)
         }
