@@ -127,7 +127,7 @@ private class ComboKeyHandler(
   private var shouldHide = false
 
   init {
-    for (i in 0..<combo.model.size) {
+    for (i in 0..<combo.itemCount) {
       list.add(combo.getItemAt(i))
     }
   }

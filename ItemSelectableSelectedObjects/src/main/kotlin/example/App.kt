@@ -211,7 +211,7 @@ private open class CheckedComboBox(
   }
 
   override fun getSelectedObjects() = // : Array<Any> {
-    (0..<model.size)
+    (0..<itemCount)
       .toList()
       .map { model.getElementAt(it) }
       .filter(CheckItem::isSelected)
@@ -219,7 +219,7 @@ private open class CheckedComboBox(
 
 //  protected fun getCheckedItemString(
 //    model: ListModel<out CheckItem>,
-//  ) = (0..<model.size)
+//  ) = (0..<itemCount)
 //    .asSequence()
 //    .map { model.getElementAt(it) }
 //    .filter { it.isSelected }

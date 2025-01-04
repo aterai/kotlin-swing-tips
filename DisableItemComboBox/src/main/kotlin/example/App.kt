@@ -72,7 +72,7 @@ private class DisableItemComboBox<E>(
   }
   private val down = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      for (i in selectedIndex + 1..<getModel().size) {
+      for (i in selectedIndex + 1..<itemCount) {
         if (isEnabledIndex(i)) {
           selectedIndex = i
           break

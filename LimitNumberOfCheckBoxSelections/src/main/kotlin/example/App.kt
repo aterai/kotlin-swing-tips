@@ -167,7 +167,7 @@ private open class GroupCheckComboBox(
   }
 
   override fun getSelectedObjects() =
-    (0..<model.size)
+    (0..<itemCount)
       .toList()
       .map { model.getElementAt(it) }
       .filter(CheckItem::isSelected)
