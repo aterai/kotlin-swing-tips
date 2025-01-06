@@ -8,10 +8,13 @@ import javax.swing.*
 import javax.swing.plaf.LayerUI
 
 fun makeUI(): Component {
-  val model = makeModel()
-  return JPanel(GridLayout(1, 2)).also {
-    it.add(makeScrollPane(makeList(model)))
-    it.add(JLayer(makeScrollPane(makeList(model)), RolloverLayerUI()))
+  val m = makeModel()
+  val l = makeScrollPane(makeList(m))
+  val r = JLayer(makeScrollPane(makeList(m)), RolloverLayerUI())
+  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, l, r)
+  split.resizeWeight = .5
+  return JPanel(BorderLayout()).also {
+    it.add(split)
     it.preferredSize = Dimension(320, 240)
   }
 }
@@ -111,7 +114,7 @@ private class RolloverLayerUI : LayerUI<JScrollPane>() {
       if (popup != null && !r.contains(pt)) {
         popup.show(c, pt.x, pt.y)
       }
-    } else if (id == MouseEvent.MOUSE_EXITED) {
+    } else if (id == MouseEvent.MOUSE_EXITED && rolloverIdx >= 0) {
       c.repaint(c.getCellBounds(rolloverIdx, rolloverIdx))
       rolloverIdx = -1
       loc.setLocation(-100, -100)
@@ -122,14 +125,16 @@ private class RolloverLayerUI : LayerUI<JScrollPane>() {
     super.processMouseMotionEvent(e, l)
     val c = e.component
     if (e.id == MouseEvent.MOUSE_MOVED && c is JList<*>) {
-      val pt = e.point
-      rolloverIdx = c.locationToIndex(pt)
-      button.doLayout()
-      val r = c.getCellBounds(rolloverIdx, rolloverIdx)
-      r.width = l.view.viewportBorderBounds.width
-      r.grow(0, r.height)
-      loc.location = pt
-      c.repaint(r)
+      loc.location = e.point
+      val prev = rolloverIdx
+      rolloverIdx = c.locationToIndex(loc)
+      if (rolloverIdx >= 0) {
+        val r = c.getCellBounds(rolloverIdx, rolloverIdx)
+        r.width = l.view.viewportBorderBounds.width
+        r.grow(0, r.height)
+        val rr = if (prev >= 0) r.union(c.getCellBounds(prev, prev)) else r
+        c.repaint(rr)
+      }
     }
   }
 
@@ -205,9 +210,9 @@ private class ThreeDotsIcon : Icon {
     g2.dispose()
   }
 
-  override fun getIconWidth(): Int = 20
+  override fun getIconWidth() = 20
 
-  override fun getIconHeight(): Int = 12
+  override fun getIconHeight() = 12
 }
 
 fun main() {
