@@ -40,7 +40,8 @@ fun makeUI(): Component {
 
   initActionMap(scroll)
 
-  val r0 = JRadioButton("PreferredSize: 0, shift pressed: Horizontal WheelScrolling", true)
+  val txt0 = "PreferredSize: 0, shift pressed: Horizontal WheelScrolling"
+  val r0 = JRadioButton(txt0, true)
   r0.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
       scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS
@@ -50,7 +51,8 @@ fun makeUI(): Component {
     }
   }
 
-  val r1 = JRadioButton("SCROLLBAR_ALWAYS")
+  val txt1 = "SCROLLBAR_ALWAYS"
+  val r1 = JRadioButton(txt1)
   r1.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
       scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS
@@ -60,7 +62,8 @@ fun makeUI(): Component {
     }
   }
 
-  val r2 = JRadioButton("SCROLLBAR_NEVER")
+  val txt2 = "SCROLLBAR_NEVER"
+  val r2 = JRadioButton(txt2)
   r2.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
       scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
