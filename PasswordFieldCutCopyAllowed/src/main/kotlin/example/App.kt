@@ -5,12 +5,11 @@ import javax.swing.*
 
 fun makeUI(): Component {
   val password = JPasswordField()
-  password.putClientProperty("JPasswordField.cutCopyAllowed", true)
-
+  val key = "JPasswordField.cutCopyAllowed"
+  password.putClientProperty(key, true)
   val p = JPanel(GridLayout(2, 1))
-  p.add(makeTitledPanel("JPasswordField.cutCopyAllowed: false(default)", JPasswordField()))
-  p.add(makeTitledPanel("JPasswordField.cutCopyAllowed: true", password))
-
+  p.add(makeTitledPanel("$key: false(default)", JPasswordField()))
+  p.add(makeTitledPanel("$key: true", password))
   return JPanel(BorderLayout(10, 10)).also {
     it.add(p, BorderLayout.NORTH)
     it.add(JScrollPane(JTextArea()))
