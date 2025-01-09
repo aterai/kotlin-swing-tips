@@ -58,14 +58,14 @@ private class ClippedTitleTabbedPane : JTabbedPane() {
       super.doLayout()
       return
     }
-    val tabInsets = tabInsets
-    val tabAreaInsets = tabAreaInsets
+    val tabIns = tabInsets
+    val tabAreaIns = tabAreaInsets
     val ins = insets
-    val tabPlacement = getTabPlacement()
-    val areaWidth = width - tabAreaInsets.left - tabAreaInsets.right - ins.left - ins.right
+    val placement = getTabPlacement()
+    val areaWidth = width - tabAreaIns.left - tabAreaIns.right - ins.left - ins.right
     var tabWidth: Int // = tabInsets.left + tabInsets.right + 3
     val gap: Int
-    if (tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT) {
+    if (placement == SwingConstants.LEFT || placement == SwingConstants.RIGHT) {
       tabWidth = areaWidth / 4
       gap = 0
     } else { // TOP || BOTTOM
@@ -74,7 +74,7 @@ private class ClippedTitleTabbedPane : JTabbedPane() {
     }
 
     // "3" is magic number @see BasicTabbedPaneUI#calculateTabWidth
-    tabWidth -= tabInsets.left + tabInsets.right + 3
+    tabWidth -= tabIns.left + tabIns.right + 3
     updateAllTabWidth(tabWidth, gap)
     super.doLayout()
   }
