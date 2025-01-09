@@ -55,7 +55,7 @@ private fun makeTestTabbedPane(tabbedPane: JTabbedPane) = tabbedPane.also {
   it.addTab("2", ColorIcon(Color.GREEN), JLabel("1111111"))
   it.addTab("33333333333333", ColorIcon(Color.BLUE), JScrollPane(JTree()))
   it.addTab("444444444444444", ColorIcon(Color.ORANGE), JLabel("11111111"))
-  it.addTab("55555555555555555555555555555555", ColorIcon(Color.CYAN), JLabel("e"))
+  it.addTab("555555555555555555555555555", ColorIcon(Color.CYAN), JLabel("e"))
 }
 
 private class ClippedTitleTabbedPane(
@@ -81,14 +81,14 @@ private class ClippedTitleTabbedPane(
       super.doLayout()
       return
     }
-    val tabInsets = tabInsets
-    val tabAreaInsets = tabAreaInsets
+    val tabIns = tabInsets
+    val tabAreaIns = tabAreaInsets
     val ins = insets
-    val tabPlacement = getTabPlacement()
-    val areaWidth = width - tabAreaInsets.left - tabAreaInsets.right - ins.left - ins.right
+    val placement = tabPlacement
+    val areaWidth = width - tabAreaIns.left - tabAreaIns.right - ins.left - ins.right
     var tabWidth: Int // = tabInsets.left + tabInsets.right + 3
     val gap: Int
-    if (tabPlacement == SwingConstants.LEFT || tabPlacement == SwingConstants.RIGHT) {
+    if (placement == SwingConstants.LEFT || placement == SwingConstants.RIGHT) {
       tabWidth = areaWidth / 2
       gap = 0
     } else { // TOP || BOTTOM
@@ -97,7 +97,7 @@ private class ClippedTitleTabbedPane(
     }
 
     // "3" is magic number @see BasicTabbedPaneUI#calculateTabWidth
-    tabWidth -= tabInsets.left + tabInsets.right + 3
+    tabWidth -= tabIns.left + tabIns.right + 3
     updateAllTabWidth(tabWidth, gap)
     super.doLayout()
   }
