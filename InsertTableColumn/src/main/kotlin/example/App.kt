@@ -136,7 +136,10 @@ private class ColumnInsertLayerUI : LayerUI<JScrollPane>() {
           true
         }
 
-        else -> false
+        else -> {
+          // continue
+          false
+        }
       }
       if (b) {
         return
