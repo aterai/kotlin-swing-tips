@@ -14,25 +14,27 @@ private var worker: SwingWorker<String, Unit?>? = null
 
 fun makeUI(): Component {
   val model = DefaultBoundedRangeModel()
-  val progress01 = JProgressBar(model)
-  progress01.isStringPainted = true
-  val progress02 = JProgressBar(model)
-  progress02.isStringPainted = true
-  val progress03 = JProgressBar(model)
-  progress03.isOpaque = false
-  val progress04 = JProgressBar(model)
-  progress04.isOpaque = true // for NimbusLookAndFeel
+  val progress1 = JProgressBar(model)
+  progress1.isStringPainted = true
+  val progress2 = JProgressBar(model)
+  progress2.isStringPainted = true
+  val progress3 = JProgressBar(model)
+  progress3.isOpaque = false
+  val progress4 = JProgressBar(model)
+  progress4.isOpaque = true // for NimbusLookAndFeel
 
   val layerUI = BlockedColorLayerUI<Component>()
-  val p = JPanel(GridLayout(2, 1))
-  p.add(makeTitledPanel("setStringPainted(true)", progress01, progress02))
-  p.add(makeTitledPanel("setStringPainted(false)", progress03, JLayer(progress04, layerUI)))
+  val p = JPanel(GridLayout(2, 1)).also {
+    val t = "setStringPainted"
+    it.add(makeTitledPanel("$t(true)", progress1, progress2))
+    it.add(makeTitledPanel("$t(false)", progress3, JLayer(progress4, layerUI)))
+  }
 
   val check = JCheckBox("Turn the progress bar red")
   check.addActionListener { e ->
     val b = (e.source as? JCheckBox)?.isSelected == true
-    val color = if (b) Color(0x64_FF_00_00, true) else progress01.foreground
-    progress02.foreground = color
+    val color = if (b) Color(0x64_FF_00_00, true) else progress1.foreground
+    progress2.foreground = color
     layerUI.isPreventing = b
     p.repaint()
   }
@@ -40,7 +42,7 @@ fun makeUI(): Component {
   button.addActionListener {
     worker?.takeUnless { it.isDone }?.cancel(true)
     worker = BackgroundTask().also {
-      it.addPropertyChangeListener(ProgressListener(progress01))
+      it.addPropertyChangeListener(ProgressListener(progress1))
       it.execute()
     }
   }
@@ -99,8 +101,8 @@ private class BlockedColorLayerUI<V : Component> : LayerUI<V>() {
       // super.paint(g2, c)
       view.paint(g2)
       g2.dispose()
-      val image = c.createImage(FilteredImageSource(img.source, RedGreenChannelSwapFilter()))
-      g.drawImage(image, 0, 0, view)
+      val src = FilteredImageSource(img.source, RedGreenChannelSwapFilter())
+      g.drawImage(c.createImage(src), 0, 0, view)
       buf = img
     } else {
       super.paint(g, c)
