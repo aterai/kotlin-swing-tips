@@ -88,7 +88,7 @@ private class ScrollBackToTopLayerUI<V : JScrollPane> : LayerUI<V>() {
       isRolloverEnabled = false
     }
   }
-  private val buttonRect = Rectangle(button.preferredSize)
+  private val btnRct = Rectangle(button.preferredSize)
 
   override fun paint(
     g: Graphics,
@@ -98,8 +98,8 @@ private class ScrollBackToTopLayerUI<V : JScrollPane> : LayerUI<V>() {
     val scroll = (c as? JLayer<*>)?.view as? JScrollPane ?: return
     updateButtonRect(scroll)
     if (scroll.viewport.viewRect.y > 0) {
-      button.model.isRollover = buttonRect.contains(mousePt)
-      SwingUtilities.paintComponent(g, button, rubberStamp, buttonRect)
+      button.model.isRollover = btnRct.contains(mousePt)
+      SwingUtilities.paintComponent(g, button, rubberStamp, btnRct)
     }
   }
 
@@ -131,10 +131,10 @@ private class ScrollBackToTopLayerUI<V : JScrollPane> : LayerUI<V>() {
     mousePt.location = p
     val id = e.id
     if (id == MouseEvent.MOUSE_CLICKED) {
-      if (buttonRect.contains(mousePt)) {
+      if (btnRct.contains(mousePt)) {
         scrollBackToTop(l.view)
       }
-    } else if (id == MouseEvent.MOUSE_PRESSED && r.y > 0 && buttonRect.contains(mousePt)) {
+    } else if (id == MouseEvent.MOUSE_PRESSED && r.y > 0 && btnRct.contains(mousePt)) {
       e.consume()
     }
   }
@@ -145,15 +145,15 @@ private class ScrollBackToTopLayerUI<V : JScrollPane> : LayerUI<V>() {
   ) {
     val p = SwingUtilities.convertPoint(e.component, e.point, l.view)
     mousePt.location = p
-    l.glassPane.isVisible = buttonRect.contains(mousePt)
-    l.repaint(buttonRect)
+    l.glassPane.isVisible = btnRct.contains(mousePt)
+    l.repaint(btnRct)
   }
 
   private fun updateButtonRect(scroll: JScrollPane) {
     val viewport = scroll.viewport
-    val x = viewport.x + viewport.width - buttonRect.width - GAP
-    val y = viewport.y + viewport.height - buttonRect.height - GAP
-    buttonRect.setLocation(x, y)
+    val x = viewport.x + viewport.width - btnRct.width - GAP
+    val y = viewport.y + viewport.height - btnRct.height - GAP
+    btnRct.setLocation(x, y)
   }
 
   private fun scrollBackToTop(scroll: JScrollPane) {
