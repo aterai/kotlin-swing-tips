@@ -4,7 +4,9 @@ import java.awt.*
 import javax.swing.*
 
 fun makeUI(): Component {
-  val tabbedPane = object : JTabbedPane() {
+  val tabbedPane0 = JTabbedPane()
+  addTabs(tabbedPane0)
+  val tabbedPane1 = object : JTabbedPane() {
     override fun insertTab(
       title: String?,
       icon: Icon?,
@@ -17,19 +19,18 @@ fun makeUI(): Component {
       setTabComponentAt(tabCount - 1, label)
     }
   }
-
+  addTabs(tabbedPane1)
   val mb = JMenuBar()
   mb.add(LookAndFeelUtils.createLookAndFeelMenu())
-
   return JPanel(GridLayout(2, 1)).also {
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
-    it.add(makeTitledPanel("Default addTab(title, icon, c)", initTabbedPane(JTabbedPane())))
-    it.add(makeTitledPanel("TabComponent + JLabel + LEADING", initTabbedPane(tabbedPane)))
+    it.add(makeTitledPanel("Default addTab(title, icon, c)", tabbedPane0))
+    it.add(makeTitledPanel("TabComponent + JLabel + LEADING", tabbedPane1))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun initTabbedPane(tabs: JTabbedPane): JTabbedPane {
+private fun addTabs(tabs: JTabbedPane): JTabbedPane {
   tabs.addTab("JTree", ColorIcon(Color.RED), JScrollPane(JTree()))
   tabs.addTab("JTable", ColorIcon(Color.GREEN), JScrollPane(JTable(8, 3)))
   tabs.addTab("JTextArea", ColorIcon(Color.BLUE), JScrollPane(JTextArea()))
