@@ -114,10 +114,10 @@ private object TrayIconPopupMenuUtils {
 
   fun adjustPopupLocation(
     popup: JPopupMenu,
-    xpt: Int,
-    ypt: Int,
+    px: Int,
+    py: Int,
   ): Point {
-    val p = Point(xpt, ypt)
+    val p = Point(px, py)
     if (GraphicsEnvironment.isHeadless()) {
       return p
     }
