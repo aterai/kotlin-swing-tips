@@ -64,7 +64,7 @@ private class HorizontalScrollCaret : DefaultCaret() {
     val ui = field.ui
     val dot = dot
     val bias = Bias.Forward
-    val startRect = kotlin.runCatching {
+    val startRect = runCatching {
       ui.modelToView(field, dot, bias)
     }.getOrNull()
     val i = field.insets
