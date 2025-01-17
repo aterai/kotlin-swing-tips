@@ -16,12 +16,10 @@ fun makeUI(): Component {
   button2.foreground = Color.WHITE
 
   val p = object : JPanel(FlowLayout(FlowLayout.CENTER, 20, 50)) {
-    // private val texture = TextureUtils.createCheckerTexture(16, Color(-0x11cdcdce, true))
-    // private val texture = TextureUtils.createCheckerTexture(16, Color(0xEE_32_32_32.toInt(), true))
-    private val texture = TextureUtils.createCheckerTexture(
-      16,
-      Color(0x32, 0x32, 0x32, 0xEE),
-    )
+    // val color = Color(-0x11cdcdce, true)
+    // val color = Color(0xEE_32_32_32.toInt(), true)
+    val color = Color(0x32, 0x32, 0x32, 0xEE)
+    private val texture = TextureUtils.createCheckerTexture(16, color)
 
     override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
@@ -106,7 +104,9 @@ private class RadialGradientButton(
   private fun update() {
     if (bounds != base) {
       base = bounds
-      shape = RoundRectangle2D.Float(0f, 0f, width - 1f, height - 1f, ARC_WIDTH, ARC_HEIGHT)
+      val fw = width - 1f
+      val fh = height - 1f
+      shape = RoundRectangle2D.Float(0f, 0f, fw, fh, ARC_WIDTH, ARC_HEIGHT)
     }
   }
 
@@ -121,7 +121,10 @@ private class RadialGradientButton(
   // override fun paintBorder(g: Graphics) {
   //   update()
   //   val g2 = g.create() as? Graphics2D ?: return
-  //   g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+  //   g2.setRenderingHint(
+  //       RenderingHints.KEY_ANTIALIASING,
+  //       RenderingHints.VALUE_ANTIALIAS_ON
+  //   )
   //   // g2.setStroke(BasicStroke(2.5f))
   //   if (getModel().isArmed()) {
   //     g2.paint = Color(0x64_44_05_F7, true)
@@ -152,7 +155,10 @@ private class RadialGradientButton(
       val r2 = radius + radius
       // Stunning hover effects with CSS variables ? Prototypr
       // https://blog.prototypr.io/stunning-hover-effects-with-css-variables-f855e7b95330
-      val colors = arrayOf(Color(0x64_44_05_F7, true), Color(0x00_F7_23_59, true))
+      val colors = arrayOf(
+        Color(0x64_44_05_F7, true),
+        Color(0x00_F7_23_59, true),
+      )
       g2.paint = RadialGradientPaint(pt, r2, floatArrayOf(0f, 1f), colors)
       g2.composite = AlphaComposite.SrcAtop
       g2.clip = shape
@@ -239,11 +245,10 @@ private class RadialGradientPaintButton(
       if (width > 0 && height > 0) {
         buf = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
       }
-      shape = RoundRectangle2D.Float(0f, 0f, width - 1f, height - 1f, ARC_WIDTH, ARC_HEIGHT)
+      val fw = width - 1f
+      val fh = height - 1f
+      shape = RoundRectangle2D.Float(0f, 0f, fw, fh, ARC_WIDTH, ARC_HEIGHT)
     }
-    // if (buf == null) {
-    //   return
-    // }
     val g2 = buf?.createGraphics() ?: return
     g2.setRenderingHint(
       RenderingHints.KEY_ANTIALIASING,
