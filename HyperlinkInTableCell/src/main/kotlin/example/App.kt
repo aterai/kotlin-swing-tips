@@ -4,6 +4,7 @@ import java.awt.*
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.awt.event.MouseMotionListener
+import java.net.URI
 import java.net.URL
 import javax.swing.*
 import javax.swing.table.DefaultTableCellRenderer
@@ -12,7 +13,7 @@ import javax.swing.table.TableCellRenderer
 
 fun makeUI(): Component {
   val columnNames = arrayOf("No.", "Name", "URL")
-  val model = object : DefaultTableModel(columnNames, 0) {
+  val m = object : DefaultTableModel(columnNames, 0) {
     override fun getColumnClass(column: Int) = when (column) {
       0 -> Number::class.java
       1 -> String::class.java
@@ -25,12 +26,11 @@ fun makeUI(): Component {
       col: Int,
     ) = false
   }
-  model.addRow(arrayOf(0, "FrontPage", makeUrl("https://ateraimemo.com/")))
-  model.addRow(arrayOf(1, "Java Swing Tips", makeUrl("https://ateraimemo.com/Swing.html")))
-  model.addRow(arrayOf(2, "Example", makeUrl("http://www.example.com/")))
-  model.addRow(arrayOf(3, "Example.jp", makeUrl("http://www.example.jp/")))
+  m.addRow(makeRow(0, "FrontPage", "https://ateraimemo.com/"))
+  m.addRow(makeRow(1, "Example", "https://www.example.com/"))
+  m.addRow(makeRow(2, "Example.jp", "https://www.example.jp/"))
 
-  val table = object : JTable(model) {
+  val table = object : JTable(m) {
     private val evenColor = Color(250, 250, 250)
 
     override fun prepareRenderer(
@@ -76,7 +76,11 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeUrl(spec: String) = runCatching { URL(spec) }.getOrNull()
+private fun makeRow(i: Int, title: String, spec: String) = arrayOf(
+  i,
+  title,
+  runCatching { URI(spec).toURL() }.getOrNull(),
+)
 
 private class UrlRenderer :
   DefaultTableCellRenderer(),
