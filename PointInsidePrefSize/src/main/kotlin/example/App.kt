@@ -3,34 +3,15 @@ package example
 import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.net.URL
+import java.net.URI
 import javax.swing.*
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
-
-private val columnNames = arrayOf("No.", "Name", "URL")
-private val model = object : DefaultTableModel(columnNames, 0) {
-  override fun getColumnClass(column: Int) = when (column) {
-    0 -> Number::class.java
-    1 -> String::class.java
-    2 -> URL::class.java
-    else -> super.getColumnClass(column)
-  }
-
-  override fun isCellEditable(
-    row: Int,
-    col: Int,
-  ) = false
-}
+import javax.swing.table.TableModel
 
 fun makeUI(): Component {
-  model.addRow(arrayOf(0, "FrontPage", makeUrl("https://ateraimemo.com/")))
-  model.addRow(arrayOf(1, "Java Swing Tips", makeUrl("https://ateraimemo.com/Swing.html")))
-  model.addRow(arrayOf(2, "Example", makeUrl("http://www.example.com/")))
-  model.addRow(arrayOf(3, "Example.jp", makeUrl("http://www.example.jp/")))
-
-  val table = object : JTable(model) {
+  val table = object : JTable(makeModel()) {
     private val evenColor = Color(0xFA_FA_FA)
 
     override fun prepareRenderer(
@@ -50,24 +31,19 @@ fun makeUI(): Component {
   table.setShowGrid(false)
   table.putClientProperty("terminateEditOnFocusLost", true)
   table.autoCreateRowSorter = true
-
   var col = table.columnModel.getColumn(0)
   col.minWidth = 50
   col.maxWidth = 50
   col.resizable = false
-
-  val renderer = UrlRenderer()
-  table.setDefaultRenderer(URL::class.java, renderer)
+  val renderer = UriRenderer()
+  table.setDefaultRenderer(URI::class.java, renderer)
   table.addMouseListener(renderer)
   table.addMouseMotionListener(renderer)
-
   col = table.columnModel.getColumn(1)
   col.preferredWidth = 1000
-
   col = table.columnModel.getColumn(2)
   // col.setCellRenderer(renderer)
   col.preferredWidth = 2000
-
   val scrollPane = JScrollPane(table)
   scrollPane.viewport.background = Color.WHITE
   return JPanel(BorderLayout()).also {
@@ -76,9 +52,35 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeUrl(spec: String) = runCatching { URL(spec) }.getOrNull()
+fun makeModel(): TableModel {
+  val columnNames = arrayOf("No.", "Name", "URI")
+  val m = object : DefaultTableModel(columnNames, 0) {
+    override fun getColumnClass(column: Int) = when (column) {
+      0 -> Number::class.java
+      1 -> String::class.java
+      2 -> URI::class.java
+      else -> super.getColumnClass(column)
+    }
 
-private class UrlRenderer :
+    override fun isCellEditable(
+      row: Int,
+      col: Int,
+    ) = false
+  }
+  m.addRow(makeRow(0, "FrontPage", "https://ateraimemo.com/"))
+  m.addRow(makeRow(1, "Java Swing Tips", "https://ateraimemo.com/Swing.html"))
+  m.addRow(makeRow(2, "Example", "http://www.example.com/"))
+  m.addRow(makeRow(3, "Example.jp", "http://www.example.jp/"))
+  return m
+}
+
+private fun makeRow(i: Int, title: String, path: String) = arrayOf(
+  i,
+  title,
+  runCatching { URI(path) }.getOrNull(),
+)
+
+private class UriRenderer :
   MouseAdapter(),
   TableCellRenderer {
   private val renderer = DefaultTableCellRenderer()
@@ -107,8 +109,10 @@ private class UrlRenderer :
       val i = c.insets
       CELL_RECT.x = i.left
       CELL_RECT.y = i.top
-      CELL_RECT.width = cm.getColumn(column).width - cm.columnMargin - i.right - CELL_RECT.x
-      CELL_RECT.height = table.getRowHeight(row) - table.rowMargin - i.bottom - CELL_RECT.y
+      CELL_RECT.width =
+        cm.getColumn(column).width - cm.columnMargin - i.right - CELL_RECT.x
+      CELL_RECT.height =
+        table.getRowHeight(row) - table.rowMargin - i.bottom - CELL_RECT.y
       ICON_RECT.setBounds(0, 0, 0, 0)
       TEXT_RECT.setBounds(0, 0, 0, 0)
 
@@ -146,7 +150,7 @@ private class UrlRenderer :
     val prevRollover = isRollover
     viewRowIndex = table.rowAtPoint(pt)
     viewColumnIndex = table.columnAtPoint(pt)
-    isRollover = isUrlColumn(table, viewColumnIndex) && pointInsidePrefSize(table, pt)
+    isRollover = isUriColumn(table, viewColumnIndex) && pointInsidePrefSize(table, pt)
     val rollover = isRollover == prevRollover
     val isSameCell = viewRowIndex == prevRow && viewColumnIndex == prevCol && rollover
     val isNotRollover = !isRollover && !prevRollover
@@ -164,7 +168,7 @@ private class UrlRenderer :
 
   override fun mouseExited(e: MouseEvent) {
     val table = e.component as? JTable ?: return
-    if (isUrlColumn(table, viewColumnIndex)) {
+    if (isUriColumn(table, viewColumnIndex)) {
       table.repaint(table.getCellRect(viewRowIndex, viewColumnIndex, false))
       viewRowIndex = -1
       viewColumnIndex = -1
@@ -176,12 +180,12 @@ private class UrlRenderer :
     val table = e.component as? JTable ?: return
     val pt = e.point
     val col = table.columnAtPoint(pt)
-    if (isUrlColumn(table, col) && pointInsidePrefSize(table, pt)) {
+    if (isUriColumn(table, col) && pointInsidePrefSize(table, pt)) {
       val row = table.rowAtPoint(pt)
-      val url = table.getValueAt(row, col) as? URL ?: return
+      val uri = table.getValueAt(row, col) as? URI ?: return
       if (Desktop.isDesktopSupported()) {
         runCatching {
-          Desktop.getDesktop().browse(url.toURI())
+          Desktop.getDesktop().browse(uri)
         }.onFailure {
           it.printStackTrace()
         }
@@ -189,10 +193,10 @@ private class UrlRenderer :
     }
   }
 
-  private fun isUrlColumn(
+  private fun isUriColumn(
     tbl: JTable,
     col: Int,
-  ) = col >= 0 && tbl.getColumnClass(col) == URL::class.java
+  ) = col >= 0 && tbl.getColumnClass(col) == URI::class.java
 
   // @see SwingUtilities2.pointOutsidePrefSize(...)
   private fun pointInsidePrefSize(

@@ -4,15 +4,58 @@ import java.awt.*
 import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.awt.event.MouseMotionListener
-import java.net.URL
+import java.net.URI
 import javax.swing.*
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
+import javax.swing.table.TableModel
 
-private fun makeUrl(path: String): URL? = runCatching { URL(path) }.getOrNull()
+fun makeUI(): Component {
+  val model = makeModel()
+  val table1 = makeTable(model).also {
+    val renderer = UriRenderer1()
+    it.setDefaultRenderer(URI::class.java, renderer)
+    it.addMouseListener(renderer)
+    it.addMouseMotionListener(renderer)
+  }
+  val table2 = makeTable(model).also {
+    val renderer = UriRenderer()
+    it.setDefaultRenderer(URI::class.java, renderer)
+    it.addMouseListener(renderer)
+    it.addMouseMotionListener(renderer)
+  }
+  return JSplitPane(JSplitPane.VERTICAL_SPLIT).also {
+    it.topComponent = JScrollPane(table1)
+    it.bottomComponent = JScrollPane(table2)
+    it.resizeWeight = .5
+    it.preferredSize = Dimension(320, 240)
+  }
+}
 
-private fun makeTable(model: DefaultTableModel): JTable {
+private fun makeModel(): TableModel {
+  val columnNames = arrayOf("No.", "Name", "URI")
+  val m = object : DefaultTableModel(columnNames, 0) {
+    override fun getColumnClass(column: Int) = when (column) {
+      0 -> Number::class.java
+      1 -> String::class.java
+      2 -> URI::class.java
+      else -> super.getColumnClass(column)
+    }
+
+    override fun isCellEditable(
+      row: Int,
+      col: Int,
+    ) = false
+  }
+  m.addRow(makeRow(0, "FrontPage", "https://ateraimemo.com/"))
+  m.addRow(makeRow(1, "Java Swing Tips", "https://ateraimemo.com/Swing.html"))
+  m.addRow(makeRow(2, "Example", "http://www.example.com/"))
+  m.addRow(makeRow(3, "Example.jp", "http://www.example.jp/"))
+  return m
+}
+
+private fun makeTable(model: TableModel): JTable {
   val table = object : JTable(model) {
     private val evenColor = Color(0xFA_FA_FA)
 
@@ -41,49 +84,13 @@ private fun makeTable(model: DefaultTableModel): JTable {
   return table
 }
 
-fun makeUI(): Component {
-  val columnNames = arrayOf("No.", "Name", "URL")
-  val model = object : DefaultTableModel(columnNames, 0) {
-    override fun getColumnClass(column: Int) = when (column) {
-      0 -> Number::class.java
-      1 -> String::class.java
-      2 -> URL::class.java
-      else -> super.getColumnClass(column)
-    }
+private fun makeRow(i: Int, title: String, path: String) = arrayOf(
+  i,
+  title,
+  runCatching { URI(path) }.getOrNull(),
+)
 
-    override fun isCellEditable(
-      row: Int,
-      col: Int,
-    ) = false
-  }
-  model.addRow(arrayOf(0, "FrontPage", makeUrl("https://ateraimemo.com/")))
-  model.addRow(
-    arrayOf(1, "Java Swing Tips", makeUrl("https://ateraimemo.com/Swing.html")),
-  )
-  model.addRow(arrayOf(2, "Example", makeUrl("http://www.example.com/")))
-  model.addRow(arrayOf(3, "Example.jp", makeUrl("http://www.example.jp/")))
-
-  val table1 = makeTable(model)
-  val renderer1 = UrlRenderer1()
-  table1.setDefaultRenderer(URL::class.java, renderer1)
-  table1.addMouseListener(renderer1)
-  table1.addMouseMotionListener(renderer1)
-
-  val table = makeTable(model)
-  val renderer = UrlRenderer()
-  table.setDefaultRenderer(URL::class.java, renderer)
-  table.addMouseListener(renderer)
-  table.addMouseMotionListener(renderer)
-
-  val sp = JSplitPane(JSplitPane.VERTICAL_SPLIT)
-  sp.topComponent = JScrollPane(table1)
-  sp.bottomComponent = JScrollPane(table)
-  sp.resizeWeight = .5
-  sp.preferredSize = Dimension(320, 240)
-  return sp
-}
-
-private class UrlRenderer1 : UrlRenderer() {
+private class UriRenderer1 : UriRenderer() {
   override fun getTableCellRendererComponent(
     table: JTable,
     value: Any?,
@@ -110,7 +117,7 @@ private class UrlRenderer1 : UrlRenderer() {
   }
 }
 
-open class UrlRenderer :
+open class UriRenderer :
   DefaultTableCellRenderer(),
   MouseListener,
   MouseMotionListener {
@@ -182,9 +189,9 @@ open class UrlRenderer :
       val prevRollover = isRollover
       viewRowIndex = table.rowAtPoint(pt)
       viewColumnIndex = table.columnAtPoint(pt)
-      isRollover = isUrlColumn(table, viewColumnIndex)
+      isRollover = isUriColumn(table, viewColumnIndex)
       val b1 = viewRowIndex == prevRow && viewColumnIndex == prevCol
-      val b2 = isRollover == prevRollover || !isRollover && !prevRollover
+      val b2 = isRollover == prevRollover
       if (b1 && b2) {
         return
       }
@@ -200,7 +207,7 @@ open class UrlRenderer :
 
   override fun mouseExited(e: MouseEvent) {
     (e.component as? JTable)?.also { table ->
-      if (isUrlColumn(table, viewColumnIndex)) {
+      if (isUriColumn(table, viewColumnIndex)) {
         table.repaint(table.getCellRect(viewRowIndex, viewColumnIndex, false))
         viewRowIndex = -1
         viewColumnIndex = -1
@@ -213,12 +220,12 @@ open class UrlRenderer :
     val pt = e.point
     (e.component as? JTable)?.also { table ->
       val col = table.columnAtPoint(pt)
-      if (isUrlColumn(table, col)) { // && pointInsidePrefSize(table, pt)) {
+      if (isUriColumn(table, col)) { // && pointInsidePrefSize(table, pt)) {
         val crow = table.rowAtPoint(pt)
         runCatching {
           if (Desktop.isDesktopSupported()) {
-            val url = table.getValueAt(crow, col) as? URL
-            Desktop.getDesktop().browse(url?.toURI())
+            val uri = table.getValueAt(crow, col) as? URI
+            Desktop.getDesktop().browse(uri)
           }
         }.onFailure {
           UIManager.getLookAndFeel().provideErrorFeedback(e.component)
@@ -248,10 +255,10 @@ open class UrlRenderer :
     private val ICON_RECT = Rectangle()
     private val TEXT_RECT = Rectangle()
 
-    private fun isUrlColumn(
+    private fun isUriColumn(
       table: JTable,
       column: Int,
-    ) = column >= 0 && table.getColumnClass(column) == URL::class.java
+    ) = column >= 0 && table.getColumnClass(column) == URI::class.java
   }
 }
 

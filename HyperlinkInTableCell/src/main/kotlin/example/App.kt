@@ -5,19 +5,18 @@ import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import java.awt.event.MouseMotionListener
 import java.net.URI
-import java.net.URL
 import javax.swing.*
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 
 fun makeUI(): Component {
-  val columnNames = arrayOf("No.", "Name", "URL")
+  val columnNames = arrayOf("No.", "Name", "URI")
   val m = object : DefaultTableModel(columnNames, 0) {
     override fun getColumnClass(column: Int) = when (column) {
       0 -> Number::class.java
       1 -> String::class.java
-      2 -> URL::class.java
+      2 -> URI::class.java
       else -> super.getColumnClass(column)
     }
 
@@ -56,8 +55,8 @@ fun makeUI(): Component {
   col.maxWidth = 50
   col.resizable = false
 
-  val renderer = UrlRenderer()
-  table.setDefaultRenderer(URL::class.java, renderer)
+  val renderer = UriRenderer()
+  table.setDefaultRenderer(URI::class.java, renderer)
   table.addMouseListener(renderer)
   table.addMouseMotionListener(renderer)
 
@@ -79,10 +78,10 @@ fun makeUI(): Component {
 private fun makeRow(i: Int, title: String, spec: String) = arrayOf(
   i,
   title,
-  runCatching { URI(spec).toURL() }.getOrNull(),
+  runCatching { URI(spec) }.getOrNull(),
 )
 
-private class UrlRenderer :
+private class UriRenderer :
   DefaultTableCellRenderer(),
   MouseListener,
   MouseMotionListener {
@@ -123,10 +122,10 @@ private class UrlRenderer :
     column: Int,
   ) = !table.isEditing && viewRowIndex == row && viewColumnIndex == column && isRollover
 
-  private fun isUrlColumn(
+  private fun isUriColumn(
     table: JTable,
     column: Int,
-  ) = column >= 0 && table.getColumnClass(column) == URL::class.java
+  ) = column >= 0 && table.getColumnClass(column) == URI::class.java
 
   override fun mouseMoved(e: MouseEvent) {
     val table = e.component as? JTable ?: return
@@ -136,7 +135,7 @@ private class UrlRenderer :
     val prevRollover = isRollover
     viewRowIndex = table.rowAtPoint(pt)
     viewColumnIndex = table.columnAtPoint(pt)
-    isRollover = isUrlColumn(table, viewColumnIndex)
+    isRollover = isUriColumn(table, viewColumnIndex)
     val isSameView = viewRowIndex == prevRow && viewColumnIndex == prevCol
     val isSameCell = isSameView && isRollover == prevRollover
     val isNotRollover = !isRollover && !prevRollover
@@ -154,7 +153,7 @@ private class UrlRenderer :
 
   override fun mouseExited(e: MouseEvent) {
     val table = e.component as? JTable ?: return
-    if (isUrlColumn(table, viewColumnIndex)) {
+    if (isUriColumn(table, viewColumnIndex)) {
       table.repaint(table.getCellRect(viewRowIndex, viewColumnIndex, false))
       viewRowIndex = -1
       viewColumnIndex = -1
@@ -166,12 +165,12 @@ private class UrlRenderer :
     val table = e.component as? JTable ?: return
     val pt = e.point
     val col = table.columnAtPoint(pt)
-    if (isUrlColumn(table, col)) {
+    if (isUriColumn(table, col)) {
       val row = table.rowAtPoint(pt)
-      val url = table.getValueAt(row, col) as? URL ?: return
+      val uri = table.getValueAt(row, col) as? URI ?: return
       if (Desktop.isDesktopSupported()) { // JDK 1.6.0
         runCatching {
-          Desktop.getDesktop().browse(url.toURI())
+          Desktop.getDesktop().browse(uri)
         }.onFailure {
           it.printStackTrace()
         }
