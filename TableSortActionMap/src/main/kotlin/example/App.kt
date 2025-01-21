@@ -77,21 +77,22 @@ private fun initMap(table: JTable, key: String, ks: String, order: SortOrder) {
 }
 
 private fun columnSort(e: ActionEvent, order: SortOrder) {
-  var table: JTable? = null
-  var col = -1
-  val o = e.source
-  if (o is JTable) {
-    table = o
-    val header = table.tableHeader
-    if (header != null) {
-      table.actionMap["focusHeader"].actionPerformed(e)
-      col = table.selectedColumn
+  val src = e.source
+  if (src is JTable) {
+    src.tableHeader?.also {
+      src.actionMap["focusHeader"].actionPerformed(e)
+      sort(src, src.selectedColumn, order)
+      val cmd = "focusTable"
+      val id = ActionEvent.ACTION_PERFORMED
+      it.actionMap[cmd].actionPerformed(ActionEvent(it, id, cmd))
     }
-  } else if (o is JTableHeader) {
-    table = o.table
-    col = getSelectedColumnIndex(o)
+  } else if (src is JTableHeader) {
+    sort(src.table, getSelectedColumnIndex(src), order)
   }
-  if (col >= 0 && table != null) {
+}
+
+private fun sort(table: JTable, col: Int, order: SortOrder) {
+  if (col >= 0) {
     val sortKey = RowSorter.SortKey(col, order)
     table.rowSorter.sortKeys = listOf(sortKey)
   }
