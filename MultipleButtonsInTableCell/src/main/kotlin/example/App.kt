@@ -52,7 +52,7 @@ private open class ButtonsPanel : JPanel() {
     }
   }
 
-  final override fun add(comp: Component?) = super.add(comp)
+  final override fun add(comp: Component): Component = super.add(comp)
 
   override fun updateUI() {
     super.updateUI()
@@ -110,7 +110,7 @@ private class ButtonsEditor(
     ActionListener {
     override fun mousePressed(e: MouseEvent) {
       when (val o = e.source) {
-        is TableCellEditor -> actionPerformed(makeActionEvent(o))
+        is TableCellEditor -> actionPerformed(makeActionEvent(o, e.id))
 
         is JButton -> if (o.model.isPressed && e.isControlDown && isInEditor()) {
           panel.background = table.background
@@ -120,7 +120,7 @@ private class ButtonsEditor(
 
     private fun isInEditor() = table.isRowSelected(table.editingRow)
 
-    private fun makeActionEvent(o: Any?) = ActionEvent(o, ActionEvent.ACTION_PERFORMED, "")
+    private fun makeActionEvent(o: Any?, id: Int) = ActionEvent(o, id, "")
 
     override fun actionPerformed(e: ActionEvent) {
       EventQueue.invokeLater { fireEditingStopped() }
