@@ -35,7 +35,7 @@ fun makeUI() = JPanel(BorderLayout()).also {
   it.preferredSize = Dimension(320, 240)
 }
 
-private fun mkSysColorCell(color: Color, txt: String) : JPanel {
+private fun mkSysColorCell(color: Color, txt: String): JPanel {
   val hex = Integer.toHexString(color.rgb).uppercase(Locale.ENGLISH)
   val field = JTextField("$txt: 0x$hex")
   field.isEditable = false
