@@ -9,7 +9,7 @@ fun makeUI(): Component {
   val m = makeComboBoxModel()
   p.add(makeTitledPanel("Left clipped", LeftClippedComboBox<String>(m)))
   p.add(Box.createVerticalStrut(5))
-  p.add(makeTitledPanel("Default", JComboBox<String>(m)))
+  p.add(makeTitledPanel("Default", JComboBox(m)))
   val mb = JMenuBar()
   mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   return JPanel(BorderLayout()).also {
@@ -42,12 +42,12 @@ private fun makeTitledPanel(
 }
 
 private fun makeComboBoxModel() = DefaultComboBoxModel<String>().also {
-  it.addElement("1234567890123456789012/3456789012345678901234567890/12345678901234567890.jpg")
+  it.addElement("1234567890123456789012".repeat(3) + ".jpg")
   it.addElement("abc.tif")
-  it.addElement("""\0123456789\0123456789\0123456789.avi""")
+  it.addElement("""\0123456789""".repeat(3) + ".avi")
   it.addElement("0123456789.pdf")
-  it.addElement("c:/12312343245/643667345624523451/324513/41234125/134513451345135125.mpg")
-  it.addElement("http://localhost/1234567890123456789/3456789012345/678901234567894567890.jpg")
+  it.addElement("c:/${"12312343245".repeat(3)}/134513451345135125.mpg")
+  it.addElement("https://localhost/${"12312343245".repeat(3)}/894567890.jpg")
 }
 
 fun descendants(parent: Container): List<Component> = parent.components
@@ -92,7 +92,7 @@ private fun getAvailableWidth(
   availableWidth = getLookAndFeelDependWidth(combo, availableWidth)
   if (index < 0) {
     val buttonSize = arrowButton?.width
-      ?: r.height - rendererIns.top - rendererIns.bottom
+      ?: (r.height - rendererIns.top - rendererIns.bottom)
     availableWidth -= buttonSize
   }
   return availableWidth
