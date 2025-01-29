@@ -19,10 +19,10 @@ private val jtp = JTextPane()
 
 fun makeUI(): Component {
   jtp.isEditable = false
-  val doc = jtp.styledDocument
-  val def = doc.getStyle(StyleContext.DEFAULT_STYLE)
-  StyleConstants.setForeground(doc.addStyle(MessageType.ERROR.toString(), def), Color.RED)
-  StyleConstants.setForeground(doc.addStyle(MessageType.BLUE.toString(), def), Color.BLUE)
+  val d = jtp.styledDocument
+  val s = d.getStyle(StyleContext.DEFAULT_STYLE)
+  StyleConstants.setForeground(d.addStyle(MessageType.ERROR.toString(), s), Color.RED)
+  StyleConstants.setForeground(d.addStyle(MessageType.BLUE.toString(), s), Color.BLUE)
 
   val ok = JButton("Create new $FILE_NAME")
   ok.addActionListener { addActionPerformed() }
@@ -80,23 +80,25 @@ private fun addActionPerformed() {
 
     override fun done() {
       runCatching {
-        val nf = get()
+        val newFile = get()
         when {
-          nf == null -> append(
-            makeMessage("Failed to create backup file.", MessageType.ERROR),
+          newFile == null -> append(
+            info("Failed to create backup file.", MessageType.ERROR),
           )
-          nf.createNewFile() -> append(
-            makeMessage("Generated ${nf.name}.", MessageType.REGULAR),
+          newFile.createNewFile() -> append(
+            info("Generated ${newFile.name}.", MessageType.REGULAR),
           )
-          else -> append(makeMessage("Failed to generate ${nf.name}.", MessageType.ERROR))
+          else -> append(
+            info("Failed to generate ${newFile.name}.", MessageType.ERROR),
+          )
         }
       }.onFailure {
         if (it is InterruptedException) {
           Thread.currentThread().interrupt()
         }
-        append(makeMessage(it.message, MessageType.ERROR))
+        append(info(it.message, MessageType.ERROR))
       }
-      append(makeMessage("----------------------------------", MessageType.REGULAR))
+      append(info("----------------------------------", MessageType.REGULAR))
     }
   }.execute()
 }
@@ -148,7 +150,7 @@ private open class BackgroundTask(
         Files.delete(orgFile.toPath())
         File(newFileName)
       }.onFailure {
-        publish(makeMessage(it.message, MessageType.ERROR))
+        publish(info(it.message, MessageType.ERROR))
       }.getOrNull()
     }
     val tmpFile = renameAndBackup(orgFile, newFileName)
@@ -188,12 +190,12 @@ private open class BackgroundTask(
     if (testFile != null && simpleRename) {
       val path = file.toPath()
       return runCatching {
-        publish(makeMessage("Rename the older file", MessageType.REGULAR))
-        publish(makeMessage("  %s -> %s".format(file.name, testFile.name), MessageType.BLUE))
+        publish(info("Rename the older file", MessageType.REGULAR))
+        publish(info("  %s -> %s".format(file.name, testFile.name), MessageType.BLUE))
         Files.move(path, path.resolveSibling(testFile.name))
         File(newFileName)
       }.onFailure {
-        publish(makeMessage(it.message, MessageType.ERROR))
+        publish(info(it.message, MessageType.ERROR))
       }.getOrThrow()
     }
     return null
@@ -201,13 +203,13 @@ private open class BackgroundTask(
 
   @Suppress("ReturnCount")
   private fun renameAndShiftBackup(file: File): Boolean {
-    val tmpFile3 = File(file.parentFile, makeBackupFileName(file.name, oldIndex + 1))
-    publish(makeMessage("Delete old backup file", MessageType.REGULAR))
-    publish(makeMessage("  del:" + tmpFile3.absolutePath, MessageType.BLUE))
+    val tmpFile3 = File(file.parentFile, getBackupName(file.name, oldIndex + 1))
+    publish(info("Delete old backup file", MessageType.REGULAR))
+    publish(info("  del:" + tmpFile3.absolutePath, MessageType.BLUE))
     runCatching {
       Files.delete(tmpFile3.toPath())
     }.onFailure {
-      publish(makeMessage(it.message, MessageType.ERROR))
+      publish(info(it.message, MessageType.ERROR))
       return false
     }
     for (i in oldIndex + 2..oldIndex + newIndex) {
@@ -217,30 +219,30 @@ private open class BackgroundTask(
       runCatching {
         Files.move(oldPath, oldPath.resolveSibling(tmpFile2.name))
       }.onFailure {
-        publish(makeMessage(it.message, MessageType.ERROR))
+        publish(info(it.message, MessageType.ERROR))
         return false
       }
-      publish(makeMessage("Update old backup file numbers", MessageType.REGULAR))
-      publish(makeMessage("  " + tmpFile1.name + " -> " + tmpFile2.name, MessageType.BLUE))
+      publish(info("Update old backup file numbers", MessageType.REGULAR))
+      publish(info("  " + tmpFile1.name + " -> " + tmpFile2.name, MessageType.BLUE))
     }
-    val tmpFile = File(file.parentFile, makeBackupFileName(file.name, oldIndex + newIndex))
-    publish(makeMessage("Rename the older file", MessageType.REGULAR))
-    publish(makeMessage("  " + file.name + " -> " + tmpFile.name, MessageType.BLUE))
+    val tmpFile = File(file.parentFile, getBackupName(file.name, oldIndex + newIndex))
+    publish(info("Rename the older file", MessageType.REGULAR))
+    publish(info("  " + file.name + " -> " + tmpFile.name, MessageType.BLUE))
     val path = file.toPath()
     return runCatching {
       Files.move(path, path.resolveSibling(tmpFile.name))
     }.onFailure {
-      publish(makeMessage(it.message, MessageType.ERROR))
+      publish(info(it.message, MessageType.ERROR))
     }.isSuccess
   }
 
   companion object {
-    fun makeMessage(
+    fun info(
       text: String?,
       type: MessageType,
     ) = Message(text, type)
 
-    private fun makeBackupFileName(
+    private fun getBackupName(
       name: String,
       num: Int,
     ) = "%s.%d~".format(name, num)
@@ -248,7 +250,7 @@ private open class BackgroundTask(
     private fun createBackupFile(
       file: File,
       idx: Int,
-    ) = File(file.parentFile, makeBackupFileName(file.name, idx))
+    ) = File(file.parentFile, getBackupName(file.name, idx))
   }
 }
 
