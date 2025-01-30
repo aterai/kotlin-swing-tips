@@ -54,13 +54,16 @@ fun makeUI(): Component {
 
   val filterButton = JButton("filter")
   filterButton.addActionListener {
-    val f = object : RowFilter<TableModel, Int>() {
-      override fun include(entry: Entry<out TableModel, out Int>): Boolean {
-        val o = entry.model.getValueAt(entry.identifier, 1)
-        return model.isEmpty || model.contains(o)
+    val filter = object : RowFilter<TableModel, Int>() {
+      override fun include(entry: Entry<out TableModel, out Int>) =
+        model.isEmpty || contains(entry)
+
+      private fun contains(entry: Entry<out TableModel, out Int>): Boolean {
+        val i = entry.identifier
+        return i >= 0 && model.contains(entry.model.getValueAt(i, 1))
       }
     }
-    sorter.setRowFilter(f)
+    sorter.setRowFilter(filter)
   }
   val box = Box.createHorizontalBox()
   box.add(clearButton)

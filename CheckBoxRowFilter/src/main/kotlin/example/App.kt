@@ -34,8 +34,8 @@ fun makeUI(): Component {
   viewer.rowSorter = sorter
   sorter.rowFilter = object : RowFilter<TableModel, Int>() {
     override fun include(entry: Entry<out TableModel, out Int>): Boolean {
-      val i = entry.identifier ?: -1
-      return entry.model.getValueAt(i, 0) == true
+      val i = entry.identifier
+      return i >= 0 && entry.model.getValueAt(i, 0) == true
     }
   }
   model.addTableModelListener { e ->
