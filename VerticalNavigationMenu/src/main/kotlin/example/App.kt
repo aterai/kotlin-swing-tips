@@ -149,7 +149,7 @@ private class RowSelectionTree : JTree() {
 
     // https://ateraimemo.com/Swing/TreeNodeCollapseVeto.html
     listener = object : TreeWillExpandListener {
-      override fun treeWillExpand(e: TreeExpansionEvent) { // throws ExpandVetoException {
+      override fun treeWillExpand(e: TreeExpansionEvent) {
         // throw ExpandVetoException(e, "Tree expansion cancelled")
       }
 

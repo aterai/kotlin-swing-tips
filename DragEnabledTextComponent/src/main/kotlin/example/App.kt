@@ -36,7 +36,14 @@ fun makeUI(): Component {
 
   val box = Box.createVerticalBox()
   box.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
-  listOf(textField0, textField1, textField2, textField3, textField4, textField5).forEach {
+  listOf(
+    textField0,
+    textField1,
+    textField2,
+    textField3,
+    textField4,
+    textField5,
+  ).forEach {
     it.dragEnabled = true
     box.add(it)
     box.add(Box.createVerticalStrut(10))

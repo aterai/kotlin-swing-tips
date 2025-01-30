@@ -194,7 +194,7 @@ private class RowSelectionTree : JTree() {
     isRootVisible = false
 
     listener = object : TreeWillExpandListener {
-      override fun treeWillExpand(e: TreeExpansionEvent) { // throws ExpandVetoException {
+      override fun treeWillExpand(e: TreeExpansionEvent) {
         // throw ExpandVetoException(e, "Tree expansion cancelled")
       }
 

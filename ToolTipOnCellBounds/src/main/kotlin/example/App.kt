@@ -104,7 +104,13 @@ private open class CellRendererTooltipList<E>(
       val str = model.getElementAt(i)
       val hasFocus = hasFocus() && lsm.leadSelectionIndex == i
       val selectedIndex = lsm.isSelectedIndex(i)
-      val renderer = r.getListCellRendererComponent(this, str, i, selectedIndex, hasFocus)
+      val renderer = r.getListCellRendererComponent(
+        this,
+        str,
+        i,
+        selectedIndex,
+        hasFocus,
+      )
       if (renderer is JComponent && renderer.toolTipText != null) {
         val pt = cellBounds.location
         val ins = label.insets
