@@ -49,7 +49,12 @@ private class TreePopupMenu : JPopupMenu() {
       val path = tree?.selectionPath
       if (path != null) {
         updateLabel(path)
-        JOptionPane.showMessageDialog(tree, path, "path", JOptionPane.INFORMATION_MESSAGE)
+        JOptionPane.showMessageDialog(
+          tree,
+          path,
+          "path",
+          JOptionPane.INFORMATION_MESSAGE,
+        )
       }
     }
     add("add").addActionListener {

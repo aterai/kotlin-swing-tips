@@ -25,7 +25,12 @@ fun makeUI(): Component {
   val button1 = JButton("HierarchyListener + setPreferredSize")
   button1.addActionListener { e ->
     val p = (e.source as? JComponent)?.rootPane
-    JOptionPane.showMessageDialog(p, label1, "title1(120*120)", JOptionPane.PLAIN_MESSAGE)
+    JOptionPane.showMessageDialog(
+      p,
+      label1,
+      "title1(120*120)",
+      JOptionPane.PLAIN_MESSAGE,
+    )
   }
 
   val key = "OptionPane.minimumSize"
