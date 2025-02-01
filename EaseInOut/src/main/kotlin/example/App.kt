@@ -10,10 +10,19 @@ import javax.imageio.ImageIO
 import javax.swing.*
 
 fun makeUI(): Component {
-  val cl = Thread.currentThread().contextClassLoader
-  val url = cl.getResource("example/test.png")
-  val icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) } ?: MissingIcon()
-  val txt = "Mini-size 86Key Japanese Keyboard\n  Model No: DE-SK-86BK\n  SERIAL NO: 0000"
+  val icon = Thread
+    .currentThread()
+    .contextClassLoader
+    .getResource("example/test.png")
+    ?.openStream()
+    ?.use(ImageIO::read)
+    ?.let { ImageIcon(it) }
+    ?: MissingIcon()
+  val txt = """
+    Mini-size 86Key Japanese Keyboard
+      Model No: DE-SK-86BK
+      SERIAL NO: 0000
+  """.trimIndent()
   return JPanel().also {
     it.add(ImageCaptionLabel(txt, icon))
     it.preferredSize = Dimension(320, 240)

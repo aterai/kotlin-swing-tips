@@ -9,7 +9,12 @@ import javax.swing.text.DefaultCaret
 fun makeUI(): Component {
   val textArea = OvertypeTextArea()
   textArea.font = Font(Font.MONOSPACED, Font.PLAIN, 12)
-  textArea.text = "Press the INSERT key to toggle the overwrite mode.\n●▽◇■\n1234567890"
+  textArea.text =
+    """
+      Press the INSERT key to toggle the overwrite mode.
+      ●▽◇■
+      1234567890
+    """.trimIndent()
 
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(textArea))
