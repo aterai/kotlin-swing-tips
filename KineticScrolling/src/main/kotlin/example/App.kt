@@ -40,9 +40,14 @@ fun makeUI(): Component {
   }
   scroll.viewport = viewport
 
-  val cl = Thread.currentThread().contextClassLoader
-  val url = cl.getResource("example/GIANT_TCR1_2013.jpg")
-  val icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) } ?: MissingIcon()
+  val icon = Thread
+    .currentThread()
+    .contextClassLoader
+    .getResource("example/GIANT_TCR1_2013.jpg")
+    ?.openStream()
+    ?.use(ImageIO::read)
+    ?.let { ImageIcon(it) }
+    ?: MissingIcon()
   val label = JLabel(icon)
   viewport.add(label)
   val l1 = KineticScrollingListener1(label)
@@ -124,7 +129,7 @@ private class KineticScrollingListener1(
   override fun mouseDragged(e: MouseEvent) {
     val pt = e.point
     val viewport = e.component as? JViewport ?: return
-    val vp = viewport.viewPosition // = SwingUtilities.convertPoint(viewport, 0, 0, label)
+    val vp = viewport.viewPosition // SwingUtilities.convertPoint(vp, 0, 0, lbl)
     vp.translate(startPt.x - pt.x, startPt.y - pt.y)
     delta.setLocation(SPEED * (pt.x - startPt.x), SPEED * (pt.y - startPt.y))
     label.scrollRectToVisible(Rectangle(vp, viewport.size))

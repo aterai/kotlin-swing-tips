@@ -371,7 +371,8 @@ private class TabTransferHandler : TransferHandler() {
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(localObjectFlavor)
 
-      override fun isDataFlavorSupported(flavor: DataFlavor) = localObjectFlavor == flavor
+      override fun isDataFlavorSupported(flavor: DataFlavor) =
+        localObjectFlavor == flavor
 
       @Throws(UnsupportedFlavorException::class, IOException::class)
       override fun getTransferData(
@@ -408,7 +409,11 @@ private class TabTransferHandler : TransferHandler() {
     // [JDK-6700748]
     // Cursor flickering during D&D when using CellRendererPane with validation - Java Bug System
     // https://bugs.openjdk.org/browse/JDK-6700748
-    val cursor = if (canDrop) DragSource.DefaultMoveDrop else DragSource.DefaultMoveNoDrop
+    val cursor = if (canDrop) {
+      DragSource.DefaultMoveDrop
+    } else {
+      DragSource.DefaultMoveNoDrop
+    }
     val glassPane = tgt.rootPane.glassPane
     glassPane.cursor = cursor
     tgt.cursor = cursor

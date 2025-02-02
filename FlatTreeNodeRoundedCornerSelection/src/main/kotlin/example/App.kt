@@ -241,7 +241,10 @@ private object GeomUtils {
     return list
   }
 
-  fun flatteningStepsOnRightSide(list: MutableList<Point2D>, arc: Double): List<Point2D> {
+  fun flatteningStepsOnRightSide(
+    list: MutableList<Point2D>,
+    arc: Double,
+  ): List<Point2D> {
     val sz = list.size
     for (i in 0..<sz) {
       val i1 = (i + 1) % sz
