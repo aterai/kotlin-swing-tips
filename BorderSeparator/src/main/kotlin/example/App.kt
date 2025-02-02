@@ -2,28 +2,20 @@ package example
 
 import java.awt.*
 import javax.swing.*
+import javax.swing.border.Border
 
 fun makeUI(): Component {
-  val model = DefaultComboBoxModel<ComboItem>()
-  model.addElement(ComboItem("1111"))
-  model.addElement(ComboItem("1111222"))
-  model.addElement(ComboItem("111122233"))
-  model.addElement(ComboItem("444444", true))
-  model.addElement(ComboItem("555"))
-  model.addElement(ComboItem("6666666"))
-
-  val combo1 = makeComboBox(model)
-  val combo2 = makeComboBox(model)
-  combo2.isEditable = true
-
-  val box1 = Box.createVerticalBox()
-  box1.border = BorderFactory.createTitledBorder("setEditable(false)")
-  box1.add(combo1)
-
-  val box2 = Box.createVerticalBox()
-  box2.border = BorderFactory.createTitledBorder("setEditable(true)")
-  box2.add(combo2)
-
+  val model = makeModel()
+  val box1 = Box.createVerticalBox().also {
+    it.border = BorderFactory.createTitledBorder("setEditable(false)")
+    it.add(makeComboBox(model))
+  }
+  val box2 = Box.createVerticalBox().also {
+    it.border = BorderFactory.createTitledBorder("setEditable(true)")
+    val combo = makeComboBox(model)
+    combo.isEditable = true
+    it.add(combo)
+  }
   return JPanel(BorderLayout()).also {
     it.border = BorderFactory.createEmptyBorder(50, 5, 50, 5)
     it.add(box1, BorderLayout.NORTH)
@@ -32,9 +24,20 @@ fun makeUI(): Component {
   }
 }
 
+private fun makeModel(): DefaultComboBoxModel<ListItem> {
+  val model = DefaultComboBoxModel<ListItem>()
+  model.addElement(ListItem("1111"))
+  model.addElement(ListItem("1111222"))
+  model.addElement(ListItem("111122233"))
+  model.addElement(ListItem("444444", true))
+  model.addElement(ListItem("555"))
+  model.addElement(ListItem("6666666"))
+  return model
+}
+
 private fun makeComboBox(
-  model: ComboBoxModel<ComboItem>,
-) = object : JComboBox<ComboItem>(model) {
+  model: ComboBoxModel<ListItem>,
+) = object : JComboBox<ListItem>(model) {
   override fun updateUI() {
     setRenderer(null)
     super.updateUI()
@@ -49,21 +52,23 @@ private fun makeComboBox(
           cellHasFocus,
         ).also {
           if (it is JComponent && value != null) {
-            it.border = if (index != -1 && value.hasSeparator) {
-              BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY)
-            } else {
-              BorderFactory.createEmptyBorder()
-            }
+            it.border = value.getSeparatorBorder(index)
           }
         }
     }
   }
 }
 
-private data class ComboItem(
+private data class ListItem(
   val item: String,
   val hasSeparator: Boolean = false,
 ) {
+  fun getSeparatorBorder(index: Int): Border = if (index != -1 && hasSeparator) {
+    BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY)
+  } else {
+    BorderFactory.createEmptyBorder()
+  }
+
   override fun toString() = item
 }
 
