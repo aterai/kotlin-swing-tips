@@ -111,12 +111,12 @@ private class ValueFormatter :
     override fun replace(
       fb: FilterBypass,
       offset: Int,
-      length: Int,
-      text: String,
+      len: Int,
+      txt: String,
       set: AttributeSet?,
     ) {
-      if (isValidLength(fb.document.length + text.length - length) && isValid(text)) {
-        fb.replace(offset, length, text.uppercase(), set)
+      if (isValidLength(fb.document.length + txt.length - len) && isValidCode(txt)) {
+        fb.replace(offset, len, txt.uppercase(), set)
       }
     }
 
@@ -124,22 +124,18 @@ private class ValueFormatter :
     override fun insertString(
       fb: FilterBypass,
       offset: Int,
-      text: String,
+      txt: String,
       set: AttributeSet?,
     ) {
-      if (isValidLength(fb.document.length + text.length) && isValid(text)) {
-        fb.insertString(offset, text.uppercase(), set)
+      if (isValidLength(fb.document.length + txt.length) && isValidCode(txt)) {
+        fb.insertString(offset, txt.uppercase(), set)
       }
     }
 
     private fun isValidLength(len: Int) = len in 0..8
 
-    private fun isValid(text: String): Boolean {
-      val len = text.length
-      for (i in 0..<len) {
-        text[i].digitToIntOrNull(16) ?: return false
-      }
-      return true
+    private fun isValidCode(code: String) = code.codePoints().allMatch {
+      Character.digit(it, 16) >= 0
     }
   }
 
