@@ -52,7 +52,7 @@ private fun makeComboBox(
           cellHasFocus,
         ).also {
           if (it is JComponent && value != null) {
-            it.border = value.getSeparatorBorder(index)
+            it.border = ListItem.getSeparatorBorder(value, index)
           }
         }
     }
@@ -63,13 +63,18 @@ private data class ListItem(
   val item: String,
   val hasSeparator: Boolean = false,
 ) {
-  fun getSeparatorBorder(index: Int): Border = if (index != -1 && hasSeparator) {
-    BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY)
-  } else {
-    BorderFactory.createEmptyBorder()
-  }
-
   override fun toString() = item
+
+  companion object {
+    fun getSeparatorBorder(
+      item: ListItem,
+      index: Int,
+    ): Border = if (index != -1 && item.hasSeparator) {
+      BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY)
+    } else {
+      BorderFactory.createEmptyBorder()
+    }
+  }
 }
 
 fun main() {
