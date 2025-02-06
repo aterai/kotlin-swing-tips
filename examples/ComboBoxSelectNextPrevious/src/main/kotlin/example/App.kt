@@ -41,9 +41,15 @@ private open class LookAndFeelComboBox(
     removeItemListener(listener)
     setRenderer(null)
     super.updateUI()
-    val r = getRenderer()
+    val renderer = getRenderer()
     setRenderer { list, value, index, isSelected, cellHasFocus ->
-      val c = r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+      val c = renderer.getListCellRendererComponent(
+        list,
+        value,
+        index,
+        isSelected,
+        cellHasFocus,
+      )
       if (c is JLabel && value != null) {
         c.text = value.name
       }
