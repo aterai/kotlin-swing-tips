@@ -26,7 +26,12 @@ fun makeUI(): Component {
   initBorderAndAlignment(textField3)
   textField3.formatterFactory = NumberFormatterFactory()
 
-  val names = arrayOf("Default", "DocumentFilter", "InputVerifier", "JFormattedTextField")
+  val names = arrayOf(
+    "Default",
+    "DocumentFilter",
+    "InputVerifier",
+    "JFormattedTextField",
+  )
   val model = object : DefaultTableModel(names, 10) {
     override fun getColumnClass(column: Int) = Int::class.javaObjectType
   }
