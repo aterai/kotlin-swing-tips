@@ -410,7 +410,8 @@ private class TabTransferHandler : TransferHandler() {
     return object : Transferable {
       override fun getTransferDataFlavors() = arrayOf(localObjectFlavor)
 
-      override fun isDataFlavorSupported(flavor: DataFlavor) = localObjectFlavor == flavor
+      override fun isDataFlavorSupported(flavor: DataFlavor) =
+        localObjectFlavor == flavor
 
       @Throws(UnsupportedFlavorException::class, IOException::class)
       override fun getTransferData(
@@ -548,7 +549,8 @@ private class DropLocationLayerUI : LayerUI<DnDTabbedPane>() {
     val index = loc.index
     val a = minOf(index, 1)
     val r = tabs.getBoundsAt(a * (index - 1))
-    if (tabs.tabPlacement == JTabbedPane.TOP || tabs.tabPlacement == JTabbedPane.BOTTOM) {
+    val tabPlacement = tabs.tabPlacement
+    if (tabPlacement == JTabbedPane.TOP || tabPlacement == JTabbedPane.BOTTOM) {
       RECT_LINE.setBounds(r.x - LINE_SIZE / 2 + r.width * a, r.y, LINE_SIZE, r.height)
     } else {
       RECT_LINE.setBounds(r.x, r.y - LINE_SIZE / 2 + r.height * a, r.width, LINE_SIZE)
