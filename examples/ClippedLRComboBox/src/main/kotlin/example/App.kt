@@ -109,8 +109,13 @@ private class MultiColumnCellRenderer : ListCellRenderer<PairItem> {
       leftLabel.foreground = list.foreground
       renderer.isOpaque = false
     } else {
-      leftLabel.foreground = if (isSelected) list.selectionForeground else list.foreground
-      renderer.background = if (isSelected) list.selectionBackground else list.background
+      if (isSelected) {
+        leftLabel.foreground = list.selectionForeground
+        renderer.background = list.selectionBackground
+      } else {
+        leftLabel.foreground = list.foreground
+        renderer.background = list.background
+      }
       renderer.isOpaque = true
     }
     return renderer
