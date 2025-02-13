@@ -33,11 +33,18 @@ fun makeUI(): Component {
   table.border = BorderFactory.createEmptyBorder()
 
   val border = CellBorder(2, 2, 1, 2)
-  val r = DefaultTableCellRenderer()
+  val renderer = DefaultTableCellRenderer()
   table.setDefaultRenderer(
     Any::class.java,
   ) { tbl, value, isSelected, hasFocus, row, column ->
-    r.getTableCellRendererComponent(tbl, value, isSelected, hasFocus, row, column).also {
+    renderer.getTableCellRendererComponent(
+      tbl,
+      value,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    ).also {
       border.setStartCell(column == 0)
       (it as? JComponent)?.border = border
     }
@@ -45,16 +52,24 @@ fun makeUI(): Component {
 
   val header = table.tableHeader
   header.border = BorderFactory.createEmptyBorder()
-  val hr = DefaultTableCellRenderer()
+  val headerRenderer = DefaultTableCellRenderer()
   header.setDefaultRenderer { tbl, value, isSelected, hasFocus, row, column ->
-    hr.getTableCellRendererComponent(tbl, value, isSelected, hasFocus, row, column).also {
-      if (it is JLabel) {
-        border.setStartCell(column == 0)
-        it.horizontalAlignment = SwingConstants.CENTER
-        it.border = border
-        it.background = table.gridColor
+    headerRenderer
+      .getTableCellRendererComponent(
+        tbl,
+        value,
+        isSelected,
+        hasFocus,
+        row,
+        column,
+      ).also {
+        if (it is JLabel) {
+          border.setStartCell(column == 0)
+          it.horizontalAlignment = SwingConstants.CENTER
+          it.border = border
+          it.background = table.gridColor
+        }
       }
-    }
   }
 
   val scroll = makeTranslucentScrollBar(table)
@@ -81,8 +96,8 @@ private fun makeTranslucentScrollBar(c: JTable) = object : JScrollPane(c) {
       getVerticalScrollBar().isOpaque = false
       getHorizontalScrollBar().isOpaque = false
     }
-    setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS)
-    setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS)
+    setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS)
+    setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_ALWAYS)
     layout = OverlapScrollPaneLayout()
   }
 }
