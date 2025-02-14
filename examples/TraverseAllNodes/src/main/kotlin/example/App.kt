@@ -8,7 +8,8 @@ import javax.swing.tree.DefaultTreeModel
 fun makeUI(): Component {
   val tree = JTree()
   val textArea = JTextArea()
-  val root = tree.model.root as? DefaultMutableTreeNode ?: DefaultMutableTreeNode().also {
+  val node = tree.model.root as? DefaultMutableTreeNode
+  val root = node ?: DefaultMutableTreeNode().also {
     tree.model = DefaultTreeModel(it)
   }
 
