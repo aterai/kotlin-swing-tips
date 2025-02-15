@@ -197,7 +197,9 @@ fun createEngine(): ScriptEngine? {
 }
 
 fun prettify(engine: ScriptEngine?, src: String) = runCatching {
-  (engine as? Invocable)?.invokeMethod(engine["window"], "prettyPrintOne", src) as? String
+  val iv = engine as? Invocable
+  val name = "prettyPrintOne"
+  iv?.invokeMethod(engine["window"], name, src) as? String
 }.getOrNull() ?: "error"
 
 private fun makeMiniMap(c: Component): Icon {
