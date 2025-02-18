@@ -2,6 +2,8 @@ package example
 
 import java.awt.*
 import javax.swing.*
+import javax.swing.JSeparator.HORIZONTAL
+import javax.swing.JSeparator.VERTICAL
 import kotlin.math.PI
 
 fun makeUI(): Component {
@@ -56,55 +58,58 @@ private class WavyLineSeparator(
   override fun getPreferredSize(): Dimension {
     val i = insets
     return if (orientation == HORIZONTAL) {
-      Dimension(30, ICON_SZ + i.top + i.bottom)
+      Dimension(30, WavyLineIcon.ICON_SZ + i.top + i.bottom)
     } else {
-      Dimension(ICON_SZ + i.left + i.right, 30)
+      Dimension(WavyLineIcon.ICON_SZ + i.left + i.right, 30)
     }
-  }
-
-  private class WavyLineIcon : Icon {
-    private val sfc = UIManager.getColor("Separator.foreground")
-    private val orientation: Int
-
-    constructor() {
-      orientation = HORIZONTAL
-    }
-
-    constructor(orientation: Int) {
-      this.orientation = orientation
-    }
-
-    override fun paintIcon(
-      c: Component,
-      g: Graphics,
-      x: Int,
-      y: Int,
-    ) {
-      val g2 = g.create() as? Graphics2D ?: return
-      g2.paint = sfc
-      if (orientation == VERTICAL) {
-        g2.translate(x + iconWidth, y)
-        g2.rotate(PI / 2)
-      } else {
-        g2.translate(x, y)
-      }
-      g2.drawLine(0, 2, 0, 2)
-      g2.drawLine(1, 1, 1, 1)
-      g2.drawLine(2, 0, 3, 0)
-      g2.drawLine(4, 1, 4, 1)
-      g2.drawLine(5, 2, 5, 2)
-      g2.dispose()
-    }
-
-    override fun getIconWidth() = if (orientation == HORIZONTAL) ICON_SZ * 2 else ICON_SZ
-
-    override fun getIconHeight() = if (orientation == HORIZONTAL) ICON_SZ else ICON_SZ * 2
   }
 
   companion object {
-    private const val ICON_SZ = 3
     private val HORIZONTAL_ICON = WavyLineIcon()
     private val VERTICAL_ICON = WavyLineIcon(VERTICAL)
+  }
+}
+
+private class WavyLineIcon : Icon {
+  private val sfc = UIManager.getColor("Separator.foreground")
+  private val orientation: Int
+
+  constructor() {
+    orientation = HORIZONTAL
+  }
+
+  constructor(orientation: Int) {
+    this.orientation = orientation
+  }
+
+  override fun paintIcon(
+    c: Component,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
+    val g2 = g.create() as? Graphics2D ?: return
+    g2.paint = sfc
+    if (orientation == VERTICAL) {
+      g2.translate(x + iconWidth, y)
+      g2.rotate(PI / 2)
+    } else {
+      g2.translate(x, y)
+    }
+    g2.drawLine(0, 2, 0, 2)
+    g2.drawLine(1, 1, 1, 1)
+    g2.drawLine(2, 0, 3, 0)
+    g2.drawLine(4, 1, 4, 1)
+    g2.drawLine(5, 2, 5, 2)
+    g2.dispose()
+  }
+
+  override fun getIconWidth() = if (orientation == VERTICAL) ICON_SZ else ICON_SZ * 2
+
+  override fun getIconHeight() = if (orientation == VERTICAL) ICON_SZ * 2 else ICON_SZ
+
+  companion object {
+    const val ICON_SZ = 3
   }
 }
 
