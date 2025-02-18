@@ -2,27 +2,21 @@ package example
 
 import java.awt.*
 import javax.swing.*
+import kotlin.math.abs
 
 fun makeUI(): Component {
-  val list1 = listOf(
-    makeCell(),
-    makeCell(),
-    makeCell(),
-    makeCell(),
-    makeCell(),
-    makeCell(),
-  )
-  val list2 = listOf(
-    makeCell(),
-    makeCell(),
-    makeCell(),
-    makeCell(),
-    makeCell(),
-    makeCell(),
-  )
+  val list1 = makeCellList()
+  val list2 = makeCellList()
+  val list3 = makeCellList()
   val button = JButton("open JColorChooser")
   button.addActionListener {
-    showColorChooser(list1, list2, button.rootPane)
+    val bgc = list1[0].background
+    val color = JColorChooser.showDialog(button.rootPane, "title", bgc)
+    if (color != null) {
+      makePalette1(list1, color)
+      makePalette2(list2, color)
+      makePalette3(list3, color)
+    }
   }
   val p1 = JPanel(GridLayout(0, 1, 1, 1))
   p1.border = BorderFactory.createTitledBorder("Shade")
@@ -34,10 +28,21 @@ fun makeUI(): Component {
   for (l in list2) {
     p2.add(l)
   }
-  makePalette(list1, list2, Color(0x70_AD_47))
-  val p = JPanel(GridLayout(1, 2, 2, 2))
+  val p3 = JPanel(GridLayout(0, 1, 1, 1)).also {
+    it.border = BorderFactory.createTitledBorder("lumMod/lumOff")
+    for (l in list3) {
+      it.add(l)
+    }
+  }
+  val color = Color(0x70_AD_47)
+  makePalette1(list1, color)
+  makePalette2(list2, color)
+  makePalette3(list3, color)
+
+  val p = JPanel(GridLayout(1, 0, 2, 2))
   p.add(p1)
   p.add(p2)
+  p.add(p3)
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(p))
     it.add(button, BorderLayout.SOUTH)
@@ -45,27 +50,31 @@ fun makeUI(): Component {
   }
 }
 
-private fun showColorChooser(list1: List<JLabel>, list2: List<JLabel>, p: Component) {
-  val title = "JColorChooser"
-  val color = JColorChooser.showDialog(p, title, list1[0].background)
-  if (color != null) {
-    makePalette(list1, list2, color)
-  }
+private fun makePalette1(list: List<JLabel>, color: Color) {
+  shade(list[0], color, 1f, "")
+  shade(list[1], color, .95f, "Darker 5%")
+  shade(list[2], color, .85f, "Darker 15%")
+  shade(list[3], color, .75f, "Darker 25%")
+  shade(list[4], color, .65f, "Darker 35%")
+  shade(list[5], color, .5f, "Darker 50%")
 }
 
-private fun makePalette(list1: List<JLabel>, list2: List<JLabel>, color: Color) {
-  shade(list1[0], color, 1f, "")
-  shade(list1[1], color, .95f, "Darker 5%")
-  shade(list1[2], color, .85f, "Darker 15%")
-  shade(list1[3], color, .75f, "Darker 25%")
-  shade(list1[4], color, .65f, "Darker 35%")
-  shade(list1[5], color, .5f, "Darker 50%")
-  tint(list2[0], color, 0f, "")
-  tint(list2[1], color, .8f, "Lighter 80%")
-  tint(list2[2], color, .6f, "Lighter 80%")
-  tint(list2[3], color, .4f, "Lighter 40%")
-  tint(list2[4], color, -.25f, "Darker 25%")
-  tint(list2[5], color, -.5f, "Darker 50%")
+private fun makePalette2(list: List<JLabel>, color: Color) {
+  tint(list[0], color, 0f, "")
+  tint(list[1], color, .8f, "Lighter 80%")
+  tint(list[2], color, .6f, "Lighter 60%")
+  tint(list[3], color, .4f, "Lighter 40%")
+  tint(list[4], color, -.25f, "Darker 25%")
+  tint(list[5], color, -.5f, "Darker 50%")
+}
+
+private fun makePalette3(list: List<JLabel>, color: Color) {
+  luminance(list[0], color, 1.0, 0.0, "")
+  luminance(list[1], color, .2, .8, "Lighter 80%")
+  luminance(list[2], color, .4, .6, "Lighter 60%")
+  luminance(list[3], color, .6, .4, "Lighter 40%")
+  luminance(list[4], color, .75, 0.0, "Darker 25%")
+  luminance(list[5], color, .5, 0.0, "Darker 50%")
 }
 
 private fun tint(l: JLabel, color: Color, tint: Float, txt: String) {
@@ -79,6 +88,21 @@ private fun shade(l: JLabel, color: Color, shade: Float, txt: String) {
   l.background = c
   l.text = "%s #%06X".format(txt, c.rgb and 0xFF_FF_FF)
 }
+
+private fun luminance(l: JLabel, c: Color, lumMod: Double, lumOff: Double, s: String) {
+  val bg = ColorUtils.getLuminanceColor(c, lumMod, lumOff)
+  l.background = bg
+  l.text = String.format("%s #%06X", s, bg.rgb and 0xFFFFFF)
+}
+
+private fun makeCellList() = listOf(
+  makeCell(),
+  makeCell(),
+  makeCell(),
+  makeCell(),
+  makeCell(),
+  makeCell()
+)
 
 private fun makeCell(): JLabel {
   val label = object : JLabel() {
@@ -116,6 +140,77 @@ private object ColorUtils {
     val g = color.green * shade
     val b = color.blue * shade
     return Color(r.toInt(), g.toInt(), b.toInt())
+  }
+
+  fun getLuminanceColor(c: Color, lumMod: Double, lumOff: Double): Color {
+    val r = c.red / 255.0
+    val g = c.green / 255.0
+    val b = c.blue / 255.0
+    val hsl = rgbToHsl(r, g, b)
+    val lum = hsl[2] * lumMod + lumOff
+    return hslToRgb(hsl[0], hsl[1], lum)
+  }
+
+  fun rgbToHsl(r: Double, g: Double, b: Double): DoubleArray {
+    val max = listOf(r, g, b).maxOrNull() ?: 0.0
+    val min = listOf(r, g, b).minOrNull() ?: 0.0
+    val l = (max + min) / 2.0
+    val v = DoubleArray(3)
+    if (max == min) {
+      v[0] = 0.0
+      v[1] = 0.0
+    } else {
+      val d = max - min
+      val s = if (l > .5) d / (2.0 - max - min) else d / (max + min)
+      val h = if (r > g && r > b) {
+        (g - b) / d + (if (g < b) 6.0 else 0.0)
+      } else if (g > b) {
+        (b - r) / d + 2.0
+      } else {
+        (r - g) / d + 4.0
+      }
+      v[0] = h / 6.0
+      v[1] = s
+    }
+    v[2] = l
+    return v
+  }
+
+  fun hslToRgb(h: Double, s: Double, l: Double): Color {
+    val c: Color
+    val achromatic = abs(s) <= 1.0e-6
+    if (achromatic) {
+      val v = to255(l)
+      c = Color(v, v, v)
+    } else {
+      val q = if (l < .5) l * (1.0 + s) else l + s - l * s
+      val p = 2.0 * l - q
+      val r = to255(hueToRgb(p, q, h + 1.0 / 3.0))
+      val g = to255(hueToRgb(p, q, h))
+      val b = to255(hueToRgb(p, q, h - 1.0 / 3.0))
+      c = Color(r, g, b)
+    }
+    return c
+  }
+
+  fun to255(v: Double): Int {
+    val vv = Math.round(255.0 * v).toInt()
+    return vv.coerceIn(0..255)
+  }
+
+  fun hueToRgb(p: Double, q: Double, t: Double): Double {
+    val t1 = if (t < 0.0) t + 1.0 else t
+    val tt = if (t1 > 1.0) t1 - 1.0 else t1
+    val c = if (tt < 1.0 / 6.0) {
+      p + (q - p) * 6.0 * tt
+    } else if (tt < 1.0 / 2.0) {
+      q
+    } else if (tt < 2.0 / 3.0) {
+      p + (q - p) * (2.0 / 3.0 - tt) * 6.0
+    } else {
+      p
+    }
+    return c
   }
 }
 
