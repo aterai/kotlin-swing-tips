@@ -15,6 +15,14 @@ import javax.swing.table.DefaultTableModel
 
 private val monthLabel = JLabel("", SwingConstants.CENTER)
 private val monthTable = object : JTable() {
+  override fun doLayout() {
+    super.doLayout()
+    val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, this)
+    if (c is JViewport) {
+      updateRowsHeight(c)
+    }
+  }
+
   private fun updateRowsHeight(vp: JViewport) {
     val height = vp.extentSize.height
     val rowCount = model.rowCount
@@ -23,13 +31,6 @@ private val monthTable = object : JTable() {
     for (i in 0..<rowCount) {
       val a = 1.coerceAtMost(0.coerceAtLeast(remainder--))
       setRowHeight(i, defaultRowHeight + a)
-    }
-  }
-
-  override fun doLayout() {
-    super.doLayout()
-    (SwingUtilities.getAncestorOfClass(JViewport::class.java, this) as? JViewport)?.also {
-      updateRowsHeight(it)
     }
   }
 }
