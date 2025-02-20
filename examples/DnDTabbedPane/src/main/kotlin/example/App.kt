@@ -116,7 +116,12 @@ private class DnDTabbedPane : JTabbedPane() {
 
   init {
     glassPane.name = "GlassPane"
-    DropTarget(glassPane, DnDConstants.ACTION_COPY_OR_MOVE, TabDropTargetListener(), true)
+    DropTarget(
+      glassPane,
+      DnDConstants.ACTION_COPY_OR_MOVE,
+      TabDropTargetListener(),
+      true,
+    )
     DragSource.getDefaultDragSource().createDefaultDragGestureRecognizer(
       this,
       DnDConstants.ACTION_COPY_OR_MOVE,
@@ -390,8 +395,8 @@ private class TabDragSourceListener : DragSourceListener {
   }
 
   override fun dragDropEnd(e: DragSourceDropEvent) {
-    val gp = (e.dragSourceContext.component as? JComponent)?.rootPane?.glassPane ?: return
-    gp.isVisible = false
+    val c = e.dragSourceContext.component as? JComponent
+    c?.rootPane?.glassPane?.isVisible = false
   }
 
   override fun dropActionChanged(e: DragSourceDragEvent) {
