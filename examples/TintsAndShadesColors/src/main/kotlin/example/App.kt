@@ -80,20 +80,22 @@ private fun makePalette3(list: List<JLabel>, color: Color) {
 private fun tint(l: JLabel, color: Color, tint: Float, txt: String) {
   val c = ColorUtils.getTintColor(color, tint)
   l.background = c
-  l.text = "%s #%06X".format(txt, c.rgb and 0xFF_FF_FF)
+  l.text = txt + getColorCode(c)
 }
 
 private fun shade(l: JLabel, color: Color, shade: Float, txt: String) {
   val c = ColorUtils.getShadeColor(color, shade)
   l.background = c
-  l.text = "%s #%06X".format(txt, c.rgb and 0xFF_FF_FF)
+  l.text = txt + getColorCode(c)
 }
 
 private fun luminance(l: JLabel, c: Color, lumMod: Double, lumOff: Double, s: String) {
   val bg = ColorUtils.getLuminanceColor(c, lumMod, lumOff)
   l.background = bg
-  l.text = String.format("%s #%06X", s, bg.rgb and 0xFFFFFF)
+  l.text = s + getColorCode(bg)
 }
+
+private fun getColorCode(c: Color) = "#%06X".format(c.rgb and 0xFF_FF_FF)
 
 private fun makeCellList() = listOf(
   makeCell(),
@@ -163,7 +165,7 @@ private object ColorUtils {
       val d = max - min
       val s = if (l > .5) d / (2.0 - max - min) else d / (max + min)
       val h = if (r > g && r > b) {
-        (g - b) / d + (if (g < b) 6.0 else 0.0)
+        (g - b) / d + if (g < b) 6.0 else 0.0
       } else if (g > b) {
         (b - r) / d + 2.0
       } else {
