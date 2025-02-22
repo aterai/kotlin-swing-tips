@@ -84,9 +84,14 @@ private fun makeComboBox(model: List<String>): JComboBox<String> {
       pattern: String,
       highlighter: Highlighter,
     ) {
-      pattern.toRegex().findAll(txt).map { it.range }.filterNot { it.isEmpty() }.forEach {
-        highlighter.addHighlight(it.first(), it.last() + 1, highlightPainter)
-      }
+      pattern
+        .toRegex()
+        .findAll(txt)
+        .map { it.range }
+        .filterNot { it.isEmpty() }
+        .forEach {
+          highlighter.addHighlight(it.first(), it.last() + 1, highlightPainter)
+        }
     }
   }
 }
