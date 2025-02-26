@@ -141,23 +141,19 @@ private class LabelHandler(
   }
 
   override fun mouseEntered(e: MouseEvent) {
-    if (animator.isRunning || textAreaHeight == textArea.preferredSize.height) {
-      return
+    if (!animator.isRunning && textAreaHeight != textArea.preferredSize.height) {
+      this.direction = 2
+      animator.start()
     }
-    this.direction = 1
-    animator.start()
   }
 
   override fun mouseExited(e: MouseEvent) {
-    if (animator.isRunning) {
-      return
-    }
     val c = e.component
-    if (c.contains(e.point) && textAreaHeight == textArea.preferredSize.height) {
-      return
+    val b = c.contains(e.point) && textAreaHeight == textArea.preferredSize.height
+    if (!animator.isRunning && !b) {
+      this.direction = -2
+      animator.start()
     }
-    this.direction = -1
-    animator.start()
   }
 
   override fun hierarchyChanged(e: HierarchyEvent) {
