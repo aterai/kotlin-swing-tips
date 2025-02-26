@@ -18,6 +18,14 @@ import javax.swing.table.TableCellRenderer
 val realLocalDate: LocalDate = LocalDate.now(ZoneId.systemDefault())
 private val monthLabel = JLabel("", SwingConstants.CENTER)
 private val monthTable = object : JTable() {
+  override fun doLayout() {
+    super.doLayout()
+    val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, this)
+    if (c is JViewport) {
+      updateRowsHeight(c)
+    }
+  }
+
   private fun updateRowsHeight(viewPort: JViewport) {
     val height = viewPort.extentSize.height
     val rowCount = model.rowCount
@@ -26,13 +34,6 @@ private val monthTable = object : JTable() {
     for (i in 0..<rowCount) {
       val a = 1.coerceAtMost(0.coerceAtLeast(remainder--))
       setRowHeight(i, defaultRowHeight + a)
-    }
-  }
-
-  override fun doLayout() {
-    super.doLayout()
-    (SwingUtilities.getAncestorOfClass(JViewport::class.java, this) as? JViewport)?.also {
-      updateRowsHeight(it)
     }
   }
 }
