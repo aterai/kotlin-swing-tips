@@ -514,7 +514,8 @@ private class DropLocationLayerUI : LayerUI<DnDTabbedPane>() {
     val index = loc.index
     val a = minOf(index, 1)
     val r = tabs.getBoundsAt(a * (index - 1))
-    if (tabs.tabPlacement == JTabbedPane.TOP || tabs.tabPlacement == JTabbedPane.BOTTOM) {
+    val tp = tabs.tabPlacement
+    if (tp == JTabbedPane.TOP || tp == JTabbedPane.BOTTOM) {
       RECT_LINE.setBounds(r.x - LINE_SIZE / 2 + r.width * a, r.y, LINE_SIZE, r.height)
     } else {
       RECT_LINE.setBounds(r.x, r.y - LINE_SIZE / 2 + r.height * a, r.width, LINE_SIZE)
