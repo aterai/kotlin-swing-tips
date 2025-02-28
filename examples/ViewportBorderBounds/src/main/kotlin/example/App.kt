@@ -53,7 +53,8 @@ fun makeUI(): Component {
 
   val check = JCheckBox("HORIZONTAL_SCROLLBAR_NEVER", true)
   check.addActionListener { e ->
-    scroll.horizontalScrollBarPolicy = if ((e.source as? JCheckBox)?.isSelected == true) {
+    val cb = e.source as? JCheckBox
+    scroll.horizontalScrollBarPolicy = if (cb?.isSelected == true) {
       ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
     } else {
       ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
@@ -103,7 +104,9 @@ fun prettify(
   engine: ScriptEngine?,
   src: String,
 ) = runCatching {
-  (engine as? Invocable)?.invokeMethod(engine["window"], "prettyPrintOne", src) as? String
+  val invocable = engine as? Invocable
+  val name = "prettyPrintOne"
+  invocable?.invokeMethod(engine["window"], name, src) as? String
 }.getOrNull() ?: "error"
 
 private class ScrollPaneLayerUI : LayerUI<JScrollPane>() {
