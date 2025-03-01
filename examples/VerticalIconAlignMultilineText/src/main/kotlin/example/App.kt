@@ -74,7 +74,8 @@ private object HtmlViewUtils {
         runCatching {
           val e = it.element.getElement(0)
           val b = Bias.Forward
-          val s = it.modelToView(e.startOffset, Bias.Forward, e.endOffset, b, Rectangle())
+          val r = Rectangle()
+          val s = it.modelToView(e.startOffset, b, e.endOffset, b, r)
           y = (abs(s.bounds.height - iconRect.height) / 2f).roundToInt()
         }
       }
