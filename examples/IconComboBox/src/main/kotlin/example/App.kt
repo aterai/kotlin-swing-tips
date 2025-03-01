@@ -101,7 +101,8 @@ private fun initIconComboBorder1(
 
     override fun getIconWidth() = icon.iconWidth
 
-    override fun getIconHeight() = c.preferredSize.height - c.insets.top - c.insets.bottom
+    override fun getIconHeight() = SwingUtilities.calculateInnerArea(c, null).height
+    // c.preferredSize.height - c.insets.top - c.insets.bottom
   }
   val b1 = BorderFactory.createMatteBorder(0, icon.iconWidth, 0, 0, wrappedIcon)
   val b2 = BorderFactory.createEmptyBorder(0, 5, 0, 0)
