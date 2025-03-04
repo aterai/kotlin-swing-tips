@@ -152,8 +152,7 @@ private class CompoundTreeCellRenderer : DefaultTreeCellRenderer() {
       emptyBorder
     } else {
       val bsColor = getBorderSelectionColor()
-      val drawDashedFocusIndicator = UIManager.getBoolean("Tree.drawDashedFocusIndicator")
-      val b = if (drawDashedFocusIndicator) {
+      val b = if (UIManager.getBoolean("Tree.drawDashedFocusIndicator")) {
         DotBorder(Color(getBackgroundSelectionColor().rgb.inv()), bsColor)
       } else {
         BorderFactory.createLineBorder(bsColor)
