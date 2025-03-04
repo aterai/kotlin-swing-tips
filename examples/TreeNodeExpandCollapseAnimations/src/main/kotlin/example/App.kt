@@ -99,7 +99,11 @@ private fun startCollapseTimer(
   Timer(DELAY) { ev ->
     val h = height.getAndDecrement()
     if (h >= START_HEIGHT) {
-      list.forEach { model.valueForPathChanged(TreePath(it.path), makeUserObject(it, h)) }
+      list.forEach {
+        val treePath = TreePath(it.path)
+        val userObject = makeUserObject(it, h)
+        model.valueForPathChanged(treePath, userObject)
+      }
     } else {
       (ev.source as? Timer)?.stop()
       tree.collapsePath(path)
