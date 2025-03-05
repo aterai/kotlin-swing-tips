@@ -103,7 +103,7 @@ private fun makeCellList() = listOf(
   makeCell(),
   makeCell(),
   makeCell(),
-  makeCell()
+  makeCell(),
 )
 
 private fun makeCell(): JLabel {
