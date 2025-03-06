@@ -106,13 +106,12 @@ private class RoundToHalfSpinnerModel(
   }
 
   companion object {
-    private fun roundDownToHalf(value: Double): Double {
-      return BigDecimal.valueOf(value)
-        .multiply(BigDecimal.valueOf(2))
-        .setScale(0, RoundingMode.DOWN)
-        .multiply(BigDecimal.valueOf(.5))
-        .toDouble()
-    }
+    private fun roundDownToHalf(value: Double) = BigDecimal
+      .valueOf(value)
+      .multiply(BigDecimal.valueOf(2))
+      .setScale(0, RoundingMode.DOWN)
+      .multiply(BigDecimal.valueOf(.5))
+      .toDouble()
   }
 }
 
