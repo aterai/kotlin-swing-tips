@@ -37,17 +37,18 @@ fun makeUI(): Component {
   table.setDefaultRenderer(
     Any::class.java,
   ) { tbl, value, isSelected, hasFocus, row, column ->
-    renderer.getTableCellRendererComponent(
-      tbl,
-      value,
-      isSelected,
-      hasFocus,
-      row,
-      column,
-    ).also {
-      border.setStartCell(column == 0)
-      (it as? JComponent)?.border = border
-    }
+    renderer
+      .getTableCellRendererComponent(
+        tbl,
+        value,
+        isSelected,
+        hasFocus,
+        row,
+        column,
+      ).also {
+        border.setStartCell(column == 0)
+        (it as? JComponent)?.border = border
+      }
   }
 
   val header = table.tableHeader
