@@ -98,7 +98,9 @@ private class TreeComboBox<E : TreeNode> : JComboBox<E>() {
         } else {
           0
         }
-        (it as? JComponent)?.border = BorderFactory.createEmptyBorder(1, indent + 1, 1, 1)
+        if (it is JComponent) {
+          it.border = BorderFactory.createEmptyBorder(1, indent + 1, 1, 1)
+        }
       }
     }
     EventQueue.invokeLater {
