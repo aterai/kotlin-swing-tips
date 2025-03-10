@@ -53,7 +53,10 @@ private fun searchTree(
       tree.addSelectionPath(path)
     }
     if (!node.isLeaf) {
-      node.children().toList().forEach { searchTree(tree, path.pathByAddingChild(it), q) }
+      node.children().toList().forEach {
+        val child = path.pathByAddingChild(it)
+        searchTree(tree, child, q)
+      }
     }
   }
 }
