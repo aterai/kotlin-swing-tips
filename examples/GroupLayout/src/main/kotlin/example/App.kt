@@ -2,7 +2,7 @@ package example
 
 import java.awt.*
 import javax.swing.*
-import javax.swing.GroupLayout.Alignment
+import javax.swing.GroupLayout.Alignment.BASELINE
 
 fun makeUI(): Component {
   // GroupLayout
@@ -17,15 +17,19 @@ fun makeUI(): Component {
   val tf1 = JTextField()
   val tf2 = JTextField()
   val hgp = layout.createSequentialGroup()
-  hgp.addGroup(layout.createParallelGroup().addComponent(label1).addComponent(label2))
-  hgp.addGroup(layout.createParallelGroup().addComponent(tf1).addComponent(tf2))
+  hgp.addGroup(
+    layout.createParallelGroup().addComponent(label1).addComponent(label2),
+  )
+  hgp.addGroup(
+    layout.createParallelGroup().addComponent(tf1).addComponent(tf2),
+  )
   layout.setHorizontalGroup(hgp)
   val vgp = layout.createSequentialGroup()
   vgp.addGroup(
-    layout.createParallelGroup(Alignment.BASELINE).addComponent(label1).addComponent(tf1),
+    layout.createParallelGroup(BASELINE).addComponent(label1).addComponent(tf1),
   )
   vgp.addGroup(
-    layout.createParallelGroup(Alignment.BASELINE).addComponent(label2).addComponent(tf2),
+    layout.createParallelGroup(BASELINE).addComponent(label2).addComponent(tf2),
   )
   layout.setVerticalGroup(vgp)
 
