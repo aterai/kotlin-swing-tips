@@ -40,8 +40,9 @@ private val monthTable = object : JTable() {
 
   override fun doLayout() {
     super.doLayout()
-    (SwingUtilities.getAncestorOfClass(JViewport::class.java, this) as? JViewport)?.also {
-      updateRowsHeight(it)
+    val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, this)
+    if (c is JViewport) {
+      updateRowsHeight(c)
     }
   }
 }
