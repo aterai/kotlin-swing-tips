@@ -132,7 +132,7 @@ fun updateMonthView(localDate: LocalDate) {
 }
 
 private class CalendarTableRenderer : DefaultTableCellRenderer() {
-  private val p = JPanel()
+  private val p = JPanel(BorderLayout())
 
   override fun getTableCellRendererComponent(
     table: JTable,
@@ -152,6 +152,7 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
       val isLastRow = row == table.model.rowCount - 1
       if (isLastRow && YearMonth.from(nextWeekDay) == YearMonth.from(currentLocalDate)) {
         val sub = JLabel(nextWeekDay.dayOfMonth.toString()).also {
+          updateCellWeekColor(nextWeekDay, it)
           it.font = table.font
           it.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
           it.isOpaque = false
