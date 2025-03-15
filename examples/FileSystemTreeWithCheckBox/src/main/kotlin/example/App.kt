@@ -144,7 +144,11 @@ private class FileTreeCellRenderer(
     if (c is JLabel && uo is CheckBoxNode) {
       checkBox.isEnabled = tree.isEnabled
       checkBox.font = tree.font
-      checkBox.icon = if (uo.status == Status.INDETERMINATE) IndeterminateIcon() else null
+      checkBox.icon = if (uo.status == Status.INDETERMINATE) {
+        IndeterminateIcon()
+      } else {
+        null
+      }
       val file = uo.file
       c.icon = fileSystemView.getSystemIcon(file)
       c.text = fileSystemView.getSystemDisplayName(file)
@@ -197,7 +201,11 @@ private class CheckBoxNodeEditor(
     if (c is JLabel && uo is CheckBoxNode) {
       checkBox.isEnabled = tree.isEnabled
       checkBox.font = tree.font
-      checkBox.icon = if (uo.status == Status.INDETERMINATE) IndeterminateIcon() else null
+      checkBox.icon = if (uo.status == Status.INDETERMINATE) {
+        IndeterminateIcon()
+      } else {
+        null
+      }
       file = uo.file
       c.icon = fileSystemView.getSystemIcon(file)
       c.text = fileSystemView.getSystemDisplayName(file)
@@ -236,25 +244,24 @@ private class FolderSelectionListener(
     if (node !is DefaultMutableTreeNode || !node.isLeaf) {
       return
     }
-    val check = node.userObject
-    val model = (e.source as? JTree)?.model
-    if (model !is DefaultTreeModel || check !is CheckBoxNode || !check.file.isDirectory) {
-      return
-    }
-    val parentStatus = if (check.status == Status.SELECTED) {
-      Status.SELECTED
-    } else {
-      Status.DESELECTED
-    }
-    val worker = object : BackgroundTask(fileSystemView, check.file) {
-      override fun process(chunks: List<File>) {
-        chunks
-          .map { CheckBoxNode(it, parentStatus) }
-          .map { DefaultMutableTreeNode(it) }
-          .forEach { model.insertNodeInto(it, node, node.childCount) }
+    val cbn = node.userObject
+    val m = (e.source as? JTree)?.model
+    if (m is DefaultTreeModel && cbn is CheckBoxNode && cbn.file.isDirectory) {
+      val parentStatus = if (cbn.status == Status.SELECTED) {
+        Status.SELECTED
+      } else {
+        Status.DESELECTED
       }
+      val worker = object : BackgroundTask(fileSystemView, cbn.file) {
+        override fun process(chunks: List<File>) {
+          chunks
+            .map { CheckBoxNode(it, parentStatus) }
+            .map { DefaultMutableTreeNode(it) }
+            .forEach { m.insertNodeInto(it, node, node.childCount) }
+        }
+      }
+      worker.execute()
     }
-    worker.execute()
   }
 }
 
