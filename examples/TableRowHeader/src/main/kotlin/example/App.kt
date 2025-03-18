@@ -89,7 +89,8 @@ private class RowHeaderList<E>(
     init {
       renderer.isOpaque = true
       // renderer.setBorder(UIManager.getBorder("TableHeader.cellBorder"))
-      renderer.border = BorderFactory.createMatteBorder(0, 0, 1, 2, Color.GRAY.brighter())
+      val color = Color.GRAY.brighter()
+      renderer.border = BorderFactory.createMatteBorder(0, 0, 1, 2, color)
       renderer.horizontalAlignment = SwingConstants.CENTER
       // renderer.foreground = header.foreground
       // renderer.background = header.background
