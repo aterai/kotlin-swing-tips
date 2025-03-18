@@ -72,12 +72,13 @@ private class SliderEditor :
   init {
     renderer.isOpaque = true
     renderer.addChangeListener {
-      (SwingUtilities.getAncestorOfClass(JTable::class.java, renderer) as? JTable)?.also {
+      val c = SwingUtilities.getAncestorOfClass(JTable::class.java, renderer)
+      if (c is JTable) {
         val value = renderer.value
-        if (it.isEditing && value != prev) {
-          val row = it.convertRowIndexToModel(it.editingRow)
-          it.model.setValueAt(value, row, 0)
-          it.model.setValueAt(value, row, 1)
+        if (c.isEditing && value != prev) {
+          val row = c.convertRowIndexToModel(c.editingRow)
+          c.model.setValueAt(value, row, 0)
+          c.model.setValueAt(value, row, 1)
           prev = value
         }
       }
