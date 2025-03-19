@@ -83,7 +83,9 @@ private class TabTitleEditListener(
     editor.border = BorderFactory.createEmptyBorder()
     val fl = object : FocusAdapter() {
       override fun focusLost(e: FocusEvent) {
-        renameTab.actionPerformed(ActionEvent(tabs, ActionEvent.ACTION_PERFORMED, RENAME))
+        renameTab.actionPerformed(
+          ActionEvent(tabs, ActionEvent.ACTION_PERFORMED, RENAME),
+        )
       }
     }
     editor.addFocusListener(fl)
@@ -119,7 +121,9 @@ private class TabTitleEditListener(
     val r = tabs.getBoundsAt(tabs.selectedIndex)
     val isDoubleClick = e.clickCount >= 2
     if (isDoubleClick && r.contains(e.point)) {
-      startEditing.actionPerformed(ActionEvent(tabs, ActionEvent.ACTION_PERFORMED, START))
+      startEditing.actionPerformed(
+        ActionEvent(tabs, ActionEvent.ACTION_PERFORMED, START),
+      )
     } else {
       renameTab.actionPerformed(ActionEvent(tabs, ActionEvent.ACTION_PERFORMED, RENAME))
     }
