@@ -66,7 +66,8 @@ open class BasicTabViewButtonUI : TabViewButtonUI() {
     g.fillRect(0, 0, size.width, size.height)
 
     val model = b.model
-    g.color = if (model.isSelected || model.isArmed) Color.WHITE else Color(220, 220, 220)
+    val isArmed = model.isSelected || model.isArmed
+    g.color = if (isArmed) Color.WHITE else Color(220, 220, 220)
     g.fillRect(vr.x, vr.y, vr.x + vr.width, vr.y + vr.height)
 
     val color = Color(255, 120, 40)
