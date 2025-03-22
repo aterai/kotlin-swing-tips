@@ -67,7 +67,7 @@ fun main() {
 
   val splashScreen = JWindow()
   EventQueue.invokeLater {
-    logger.info { "splashScreen show start / EDT: " + EventQueue.isDispatchThread() }
+    logger.info { "splashScreen show start / EDT: ${EventQueue.isDispatchThread()}" }
     val cl = Thread.currentThread().contextClassLoader
     val url = cl.getResource("example/splash.png")
     val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
@@ -77,7 +77,7 @@ fun main() {
     splashScreen.isVisible = true
     logger.info { "splashScreen show end" }
   }
-  logger.info { "createGUI start / EDT: " + EventQueue.isDispatchThread() }
+  logger.info { "createGUI start / EDT: ${EventQueue.isDispatchThread()}" }
 
   val frame = JFrame().apply {
     defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
@@ -89,10 +89,11 @@ fun main() {
   logger.info { "createGUI end" }
 
   EventQueue.invokeLater {
-    logger.info { "  splashScreen dispose start / EDT: " + EventQueue.isDispatchThread() }
+    val dispatchThread = EventQueue.isDispatchThread()
+    logger.info { "  splashScreen dispose start / EDT: $dispatchThread" }
     splashScreen.dispose()
     logger.info { "  splashScreen dispose end" }
-    logger.info { "  frame show start / EDT: " + EventQueue.isDispatchThread() }
+    logger.info { "  frame show start / EDT: $dispatchThread" }
     frame.isVisible = true
     logger.info { "  frame show end" }
   }
