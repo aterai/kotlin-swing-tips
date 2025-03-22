@@ -87,7 +87,8 @@ private class DisableInputLayerUI<V : JComponent> : LayerUI<V>() {
     super.installUI(c)
     (c as? JLayer<*>)?.also {
       it.glassPane.cursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)
-      it.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK or
+      it.layerEventMask =
+        AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK or
         AWTEvent.MOUSE_WHEEL_EVENT_MASK or AWTEvent.KEY_EVENT_MASK or
         AWTEvent.FOCUS_EVENT_MASK or AWTEvent.COMPONENT_EVENT_MASK
     }
