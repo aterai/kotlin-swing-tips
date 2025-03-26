@@ -8,7 +8,6 @@ import kotlin.math.max
 
 fun makeUI(): Component {
   val model = makeModel()
-  val rowCount = (model.size + 1) / 2
   val combo = object : JComboBox<String>(model) {
     override fun getPreferredSize(): Dimension {
       val i = getInsets()
@@ -21,17 +20,24 @@ fun makeUI(): Component {
 
     override fun updateUI() {
       super.updateUI()
+      setModel(getModel())
+    }
+
+    override fun setModel(model: ComboBoxModel<String>) {
+      super.setModel(model)
+      val rowCount = (model.size + 1) / 2
       setMaximumRowCount(rowCount)
-      setPrototypeDisplayValue("12345")
-      val o = getAccessibleContext().getAccessibleChild(0)
-      if (o is ComboPopup) {
-        val list = o.list
-        list.setLayoutOrientation(JList.VERTICAL_WRAP)
-        list.setVisibleRowCount(rowCount)
-        val b0 = list.border
-        val b1 = ColumnRulesBorder()
-        list.setBorder(BorderFactory.createCompoundBorder(b0, b1))
-        list.setFixedCellWidth((getPreferredSize().width - 2) / 2)
+      EventQueue.invokeLater {
+        val o = getAccessibleContext().getAccessibleChild(0)
+        if (o is ComboPopup) {
+          val list = o.list
+          list.setLayoutOrientation(JList.VERTICAL_WRAP)
+          list.setVisibleRowCount(rowCount)
+          val b0 = list.border
+          val b1 = ColumnRulesBorder()
+          list.setBorder(BorderFactory.createCompoundBorder(b0, b1))
+          list.setFixedCellWidth((getPreferredSize().width - 2) / 2)
+        }
       }
     }
   }
@@ -41,7 +47,7 @@ fun makeUI(): Component {
 
   return JPanel().also {
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
-    it.add(JComboBox<String>(makeModel()))
+    it.add(JComboBox(makeModel()))
     it.add(combo)
     it.preferredSize = Dimension(320, 240)
   }
