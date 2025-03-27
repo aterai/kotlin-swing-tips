@@ -6,7 +6,6 @@ import java.awt.geom.Path2D
 import java.awt.geom.PathIterator
 import java.awt.geom.Point2D
 import javax.swing.*
-import javax.swing.plaf.TextUI
 import javax.swing.text.BadLocationException
 import javax.swing.text.DefaultCaret
 import javax.swing.text.DefaultHighlighter
@@ -74,7 +73,7 @@ fun makeUI(): Component {
 }
 
 private fun makeEditorPane(): JEditorPane {
-  val editor: JEditorPane = object : JEditorPane() {
+  val editor = object : JEditorPane() {
     override fun updateUI() {
       super.updateUI()
       val caret = RoundedSelectionCaret()
@@ -154,10 +153,12 @@ private class RoundedSelectionHighlightPainter : DefaultHighlightPainter(null) {
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
-    val color = c.selectionColor
-    g2.color = Color(color.red, color.green, color.blue, 64)
+    // val color = c.selectionColor
+    // g2.color = Color(color.red, color.green, color.blue, 64)
+    val rgba = c.selectionColor.rgb and 0xFFFFFF or (64 shl 24)
+    g2.color = Color(rgba, true)
     runCatching {
-      val area: Area = getLinesArea(c, offs0, offs1)
+      val area = getLinesArea(c, offs0, offs1)
       for (a in GeomUtils.singularization(area)) {
         val lst = GeomUtils.convertAreaToPoint2DList(a)
         GeomUtils.flatteningStepsOnRightSide(lst, 3.0 * 2.0)
@@ -169,20 +170,18 @@ private class RoundedSelectionHighlightPainter : DefaultHighlightPainter(null) {
 
   @Throws(BadLocationException::class)
   private fun getLinesArea(c: JTextComponent, offs0: Int, offs1: Int): Area {
-    val mapper: TextUI = c.ui
+    val mapper = c.ui
     val area = Area()
     var cur = offs0
     do {
-      val startOffset: Int = Utilities.getRowStart(c, cur)
-      val endOffset: Int = Utilities.getRowEnd(c, cur)
-      val p0: Rectangle = mapper.modelToView(c, max(startOffset, offs0))
-      val p1: Rectangle = mapper.modelToView(c, min(endOffset, offs1))
-      if (p0.x == p1.x) {
-        p0.width += 6
-        area.add(Area(p0))
-      } else {
-        area.add(Area(p0.union(p1)))
+      val startOffset = Utilities.getRowStart(c, cur)
+      val endOffset = Utilities.getRowEnd(c, cur)
+      val p0 = mapper.modelToView(c, max(startOffset, offs0))
+      val p1 = mapper.modelToView(c, min(endOffset, offs1))
+      if (offs1 > endOffset) {
+        p1.width += 6
       }
+      area.add(Area(p0.union(p1)))
       cur = endOffset + 1
     } while (cur < offs1)
     return area
