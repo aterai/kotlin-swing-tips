@@ -91,31 +91,25 @@ private open class BadgeLayerUI : LayerUI<BadgeLabel>() {
   protected fun getBadgeLocation(
     pos: BadgePosition,
     icon: Icon,
-  ): Point {
-    var x = 0
-    var y = 0
-    when (pos) {
-      BadgePosition.NORTH_WEST -> {
-        x = iconRect.x - OFFSET.x
-        y = iconRect.y - OFFSET.y
-      }
+  ) = when (pos) {
+    BadgePosition.NORTH_WEST -> Point(
+      iconRect.x - OFFSET.x, iconRect.y - OFFSET.y
+    )
 
-      BadgePosition.NORTH_EAST -> {
-        x = iconRect.x + iconRect.width - icon.iconWidth + OFFSET.x
-        y = iconRect.y - OFFSET.y
-      }
+    BadgePosition.NORTH_EAST -> Point(
+      iconRect.x + iconRect.width - icon.iconWidth + OFFSET.x,
+      iconRect.y - OFFSET.y
+    )
 
-      BadgePosition.SOUTH_WEST -> {
-        x = iconRect.x - OFFSET.x
-        y = iconRect.y + iconRect.height - icon.iconHeight + OFFSET.y
-      }
+    BadgePosition.SOUTH_WEST -> Point(
+      iconRect.x - OFFSET.x,
+      iconRect.y + iconRect.height - icon.iconHeight + OFFSET.y
+    )
 
-      BadgePosition.SOUTH_EAST -> {
-        x = iconRect.x + iconRect.width - icon.iconWidth + OFFSET.x
-        y = iconRect.y + iconRect.height - icon.iconHeight + OFFSET.y
-      }
-    }
-    return Point(x, y)
+    BadgePosition.SOUTH_EAST -> Point(
+      iconRect.x + iconRect.width - icon.iconWidth + OFFSET.x,
+      iconRect.y + iconRect.height - icon.iconHeight + OFFSET.y
+    )
   }
 
   companion object {

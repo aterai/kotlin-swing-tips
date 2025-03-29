@@ -56,7 +56,8 @@ fun makeUI() = JPanel(BorderLayout(5, 5)).also { panel ->
     it.addTab("title 1", ColorIcon(Color.GREEN), JButton("button"))
     it.addTab("title 2", ColorIcon(Color.BLUE), JLabel("label"))
     it.addTab("title 3", JPanel())
-    it.setTabComponentAt(3, JLabel("label", ColorIcon(Color.ORANGE), SwingConstants.LEFT))
+    val tabTitle = JLabel("label", ColorIcon(Color.ORANGE), SwingConstants.LEFT)
+    it.setTabComponentAt(3, tabTitle)
   }
 
   panel.add(p, BorderLayout.NORTH)
