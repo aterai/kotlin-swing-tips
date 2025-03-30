@@ -53,7 +53,7 @@ fun makeUI(): Component {
   }
 }
 
-private open class FocusComboBox<E> constructor(
+private open class FocusComboBox<E>(
   model: ComboBoxModel<E>,
 ) : JComboBox<E>(model) {
   val isWindowsLnF

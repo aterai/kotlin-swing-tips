@@ -95,7 +95,7 @@ private class FolderSelectionListener(
   }
 }
 
-private open class BackgroundTask constructor(
+private open class BackgroundTask(
   private val fileSystemView: FileSystemView,
   private val parent: File,
 ) : SwingWorker<String, File>() {
