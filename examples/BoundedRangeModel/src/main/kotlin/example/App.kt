@@ -16,7 +16,9 @@ private val table = object : JTable(model) {
     setDefaultRenderer(Any::class.java, null)
     super.updateUI()
     val renderer = DefaultTableCellRenderer()
-    setDefaultRenderer(Any::class.java) { tbl, value, isSelected, hasFocus, row, column ->
+    setDefaultRenderer(
+      Any::class.java,
+    ) { tbl, value, isSelected, hasFocus, row, column ->
       renderer
         .getTableCellRendererComponent(
           tbl,
