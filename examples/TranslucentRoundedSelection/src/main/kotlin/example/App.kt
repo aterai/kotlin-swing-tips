@@ -120,22 +120,18 @@ private class RoundedSelectionCaret : DefaultCaret() {
 
   @Synchronized
   override fun damage(r: Rectangle) {
+    super.damage(r)
     val c = component
     val startOffset = c.selectionStart
     val endOffset = c.selectionEnd
-    if (startOffset == endOffset) {
-      super.damage(r)
-    } else {
-      val mapper = c.ui
-      kotlin
-        .runCatching {
-          val p0 = mapper.modelToView(c, startOffset)
-          val p1 = mapper.modelToView(c, endOffset)
-          val h = (p1.maxY - p0.minY).toInt()
-          c.repaint(Rectangle(0, p0.y, c.width, h))
-        }.onFailure {
-          UIManager.getLookAndFeel().provideErrorFeedback(c)
-        }
+    val mapper = c.ui
+    runCatching {
+      val p0 = mapper.modelToView(c, startOffset)
+      val p1 = mapper.modelToView(c, endOffset)
+      val h = (p1.maxY - p0.minY).toInt()
+      c.repaint(Rectangle(0, p0.y, c.width, h))
+    }.onFailure {
+      UIManager.getLookAndFeel().provideErrorFeedback(c)
     }
   }
 }
@@ -155,7 +151,7 @@ private class RoundedSelectionHighlightPainter : DefaultHighlightPainter(null) {
     )
     // val color = c.selectionColor
     // g2.color = Color(color.red, color.green, color.blue, 64)
-    val rgba = c.selectionColor.rgb and 0xFFFFFF or (64 shl 24)
+    val rgba = c.selectionColor.rgb and 0xFF_FF_FF or (64 shl 24)
     g2.color = Color(rgba, true)
     runCatching {
       val area = getLinesArea(c, offs0, offs1)
