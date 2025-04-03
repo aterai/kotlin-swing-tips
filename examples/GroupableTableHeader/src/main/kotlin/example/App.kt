@@ -115,8 +115,8 @@ private class GroupableTableHeaderUI : BasicTableHeaderUI() {
     // val left = clip.getLocation()
     // val right = Point(clip.x + clip.width - 1, clip.y)
     val cm = header.columnModel
-    val colMin: Int = header.columnAtPoint(clip.location)
-    val colMax: Int = header.columnAtPoint(Point(clip.x + clip.width - 1, clip.y))
+    val colMin = header.columnAtPoint(clip.location)
+    val colMax = header.columnAtPoint(Point(clip.x + clip.width - 1, clip.y))
 
     val cellRect = header.getHeaderRect(colMin)
     val headerY = cellRect.y
@@ -131,11 +131,9 @@ private class GroupableTableHeaderUI : BasicTableHeaderUI() {
 
       var groupHeight = 0
       for (o in (header as? GroupableTableHeader)?.getColumnGroups(tc).orEmpty()) {
-        val cg = o as? ColumnGroup ?: continue
-        val groupRect = map[cg] ?: Rectangle(cellRect.location, cg.getSize(header)).also {
-          map[cg] = it
-        }
-        paintCellGroup(g, groupRect, cg)
+        val group = o as? ColumnGroup ?: continue
+        val groupRect = map[group] ?: makeGroupRect(cellRect, group, map)
+        paintCellGroup(g, groupRect, group)
         groupHeight += groupRect.height
         cellRect.height = headerHeight - groupHeight
         cellRect.y = groupHeight
@@ -143,6 +141,14 @@ private class GroupableTableHeaderUI : BasicTableHeaderUI() {
       paintCell(g, cellRect, column)
       cellRect.x += cellRect.width
     }
+  }
+
+  private fun makeGroupRect(
+    cellRect: Rectangle,
+    columnGroup: ColumnGroup,
+    map: HashMap<ColumnGroup, Rectangle>,
+  ) = Rectangle(cellRect.location, columnGroup.getSize(header)).also {
+    map[columnGroup] = it
   }
 
   // Copied from javax/swing/plaf/basic/BasicTableHeaderUI.java
