@@ -96,13 +96,15 @@ private class LayoutAnimator(
   override fun actionPerformed(e: ActionEvent) {
     val height = component.preferredSize.height
     if (isShowing) {
-      yy = (.5 + AnimationUtils.easeInOut(++counter / height.toDouble()) * height).toInt()
+      val v = AnimationUtils.easeInOut(++counter / height.toDouble())
+      yy = (.5 + v * height).toInt()
       if (yy >= height) {
         yy = height
         (e.source as? Timer)?.stop()
       }
     } else {
-      yy = (.5 + AnimationUtils.easeInOut(--counter / height.toDouble()) * height).toInt()
+      val v = AnimationUtils.easeInOut(--counter / height.toDouble())
+      yy = (.5 + v * height).toInt()
       if (yy <= 0) {
         yy = 0
         (e.source as? Timer)?.stop()
