@@ -19,8 +19,8 @@ private const val TEST_HTML = """
 fun makeUI(): Component {
   // UIManager.put("TextPane.caretForeground", Color.ORANGE)
   val styleSheet = StyleSheet()
-  styleSheet.addRule("body {font-size: 12pt}")
-  styleSheet.addRule(".highlight {color: red; background: green}")
+  styleSheet.addRule("body{font-size:12pt}")
+  styleSheet.addRule(".highlight{color:red;background:green}")
   val htmlEditorKit = HTMLEditorKit()
   htmlEditorKit.styleSheet = styleSheet
   val editor = JEditorPane()

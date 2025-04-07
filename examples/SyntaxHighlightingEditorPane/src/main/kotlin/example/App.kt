@@ -16,17 +16,17 @@ val engine = createEngine()
 
 fun makeUI(): Component {
   val styleSheet = StyleSheet().also {
-    it.addRule(".str {color:#008800}")
-    it.addRule(".kwd {color:#000088}")
-    it.addRule(".com {color:#880000}")
-    it.addRule(".typ {color:#660066}")
-    it.addRule(".lit {color:#006666}")
-    it.addRule(".pun {color:#666600}")
-    it.addRule(".pln {color:#000000}")
-    it.addRule(".tag {color:#000088}")
-    it.addRule(".atn {color:#660066}")
-    it.addRule(".atv {color:#008800}")
-    it.addRule(".dec {color:#660066}")
+    it.addRule(".str{color:#008800}")
+    it.addRule(".kwd{color:#000088}")
+    it.addRule(".com{color:#880000}")
+    it.addRule(".typ{color:#660066}")
+    it.addRule(".lit{color:#006666}")
+    it.addRule(".pun{color:#666600}")
+    it.addRule(".pln{color:#000000}")
+    it.addRule(".tag{color:#000088}")
+    it.addRule(".atn{color:#660066}")
+    it.addRule(".atv{color:#008800}")
+    it.addRule(".dec{color:#660066}")
   }
 
   val htmlEditorKit = HTMLEditorKit()

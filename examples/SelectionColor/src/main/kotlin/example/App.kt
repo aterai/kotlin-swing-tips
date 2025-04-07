@@ -27,7 +27,7 @@ private fun makeUI(): Component {
   }
 
   val styleSheet = StyleSheet()
-  styleSheet.addRule(".highlight {color: blue; background: #FF5533; opacity: 0.5;}")
+  styleSheet.addRule(".highlight{color:blue;background:#FF5533;opacity:0.5;}")
 
   val htmlEditorKit = HTMLEditorKit()
   htmlEditorKit.styleSheet = styleSheet

@@ -24,7 +24,7 @@ fun makeUI(): Component {
   p.add(label2)
 
   val styleSheet = StyleSheet()
-  styleSheet.addRule("body {font-size: 24pt; font-family: Burnstown Dam;}")
+  styleSheet.addRule("body{font-size:24pt;font-family:Burnstown Dam;}")
   val htmlEditorKit = HTMLEditorKit()
   htmlEditorKit.styleSheet = styleSheet
 

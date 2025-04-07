@@ -10,8 +10,8 @@ fun makeUI(): Component {
 
   //  val htmlEditorKit = HTMLEditorKit()
   //  val styleSheet = StyleSheet()
-  //  styleSheet.addRule("body {font-size: 16pt;}")
-  //  styleSheet.addRule("h1 {font-size: 64pt;}")
+  //  styleSheet.addRule("body{font-size:16pt;}")
+  //  styleSheet.addRule("h1{font-size:64pt;}")
   //  htmlEditorKit.styleSheet = styleSheet
   //  editor.editorKit = htmlEditorKit
 

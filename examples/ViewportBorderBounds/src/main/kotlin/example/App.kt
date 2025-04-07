@@ -18,17 +18,17 @@ private val engine = createEngine()
 fun makeUI(): Component {
   // https://github.com/google/code-prettify/blob/master/styles/desert.css
   val styleSheet = StyleSheet().also {
-    it.addRule(".str {color:#ffa0a0}")
-    it.addRule(".kwd {color:#f0e68c;font-weight:bold}")
-    it.addRule(".com {color:#87ceeb}")
-    it.addRule(".typ {color:#98fb98}")
-    it.addRule(".lit {color:#cd5c5c}")
-    it.addRule(".pun {color:#ffffff}")
-    it.addRule(".pln {color:#ffffff}")
-    it.addRule(".tag {color:#f0e68c;font-weight:bold}")
-    it.addRule(".atn {color:#bdb76b;font-weight:bold}")
-    it.addRule(".atv {color:#ffa0a0}")
-    it.addRule(".dec {color:#98fb98}")
+    it.addRule(".str{color:#ffa0a0}")
+    it.addRule(".kwd{color:#f0e68c;font-weight:bold}")
+    it.addRule(".com{color:#87ceeb}")
+    it.addRule(".typ{color:#98fb98}")
+    it.addRule(".lit{color:#cd5c5c}")
+    it.addRule(".pun{color:#ffffff}")
+    it.addRule(".pln{color:#ffffff}")
+    it.addRule(".tag{color:#f0e68c;font-weight:bold}")
+    it.addRule(".atn{color:#bdb76b;font-weight:bold}")
+    it.addRule(".atv{color:#ffa0a0}")
+    it.addRule(".dec{color:#98fb98}")
   }
 
   val htmlEditorKit = HTMLEditorKit()

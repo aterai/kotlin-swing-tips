@@ -12,7 +12,7 @@ import javax.swing.text.html.StyleSheet
 
 fun makeUI(): Component {
   val styleSheet = StyleSheet()
-  // styleSheet.addRule("body {font-size: 24pt; font-family: IPAexGothic;}")
+  // styleSheet.addRule("body{font-size:24pt;font-family:IPAexGothic;}")
   val htmlEditorKit = HTMLEditorKit()
   htmlEditorKit.styleSheet = styleSheet
   val editor1 = JEditorPane()

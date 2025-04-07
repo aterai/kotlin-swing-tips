@@ -17,8 +17,8 @@ private const val TEST_HTML = """
 
 fun makeUI(): Component {
   val styleSheet = StyleSheet().also {
-    it.addRule("body {font-size: 12pt;}")
-    it.addRule(".highlight {color: red; background: green}")
+    it.addRule("body{font-size:12pt;}")
+    it.addRule(".highlight{color:red;background:green}")
   }
   val htmlEditorKit = HTMLEditorKit()
   htmlEditorKit.styleSheet = styleSheet
