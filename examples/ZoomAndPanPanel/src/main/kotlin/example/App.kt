@@ -10,8 +10,14 @@ import javax.swing.*
 
 fun makeUI(): Component {
   val path = "example/CRW_3857_JFR.jpg"
-  val url = Thread.currentThread().contextClassLoader.getResource(path)
-  val icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) } ?: MissingIcon()
+  val icon = Thread
+    .currentThread()
+    .contextClassLoader
+    .getResource(path)
+    ?.openStream()
+    ?.use(ImageIO::read)
+    ?.let { ImageIcon(it) }
+    ?: MissingIcon()
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(ZoomAndPanePanel(icon)))
     it.preferredSize = Dimension(320, 240)

@@ -7,8 +7,12 @@ import javax.swing.*
 
 fun makeUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
-  val url = cl.getResource("example/test.png")
-  val icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) } ?: MissingIcon()
+  val icon = cl
+    .getResource("example/test.png")
+    ?.openStream()
+    ?.use(ImageIO::read)
+    ?.let { ImageIcon(it) }
+    ?: MissingIcon()
   val zoom = ZoomImage(icon)
 
   val button1 = JButton("Zoom In")

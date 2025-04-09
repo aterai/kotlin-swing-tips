@@ -11,8 +11,14 @@ import javax.swing.*
 
 fun makeUI(): Component {
   val path = "example/CRW_3857_JFR.jpg"
-  val url = Thread.currentThread().contextClassLoader.getResource(path)
-  val icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) } ?: MissingIcon()
+  val icon = Thread
+    .currentThread()
+    .contextClassLoader
+    .getResource(path)
+    ?.openStream()
+    ?.use(ImageIO::read)
+    ?.let { ImageIcon(it) }
+    ?: MissingIcon()
   val p = object : JPanel(BorderLayout()) {
     var zoomAndPanHandler: ZoomAndPanHandler? = null
 
@@ -43,7 +49,8 @@ fun makeUI(): Component {
 }
 
 private class ZoomAndPanHandler : MouseAdapter() {
-  private val zoomRange = DefaultBoundedRangeModel(0, EXTENT, MIN_ZOOM, MAX_ZOOM + EXTENT)
+  private val zoomRange =
+    DefaultBoundedRangeModel(0, EXTENT, MIN_ZOOM, MAX_ZOOM + EXTENT)
   val coordAndZoomAtf = AffineTransform()
   private val dragStartPoint = Point()
 
