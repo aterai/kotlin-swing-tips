@@ -93,22 +93,23 @@ private open class BadgeLayerUI : LayerUI<BadgeLabel>() {
     icon: Icon,
   ) = when (pos) {
     BadgePosition.NORTH_WEST -> Point(
-      iconRect.x - OFFSET.x, iconRect.y - OFFSET.y
+      iconRect.x - OFFSET.x,
+      iconRect.y - OFFSET.y,
     )
 
     BadgePosition.NORTH_EAST -> Point(
       iconRect.x + iconRect.width - icon.iconWidth + OFFSET.x,
-      iconRect.y - OFFSET.y
+      iconRect.y - OFFSET.y,
     )
 
     BadgePosition.SOUTH_WEST -> Point(
       iconRect.x - OFFSET.x,
-      iconRect.y + iconRect.height - icon.iconHeight + OFFSET.y
+      iconRect.y + iconRect.height - icon.iconHeight + OFFSET.y,
     )
 
     BadgePosition.SOUTH_EAST -> Point(
       iconRect.x + iconRect.width - icon.iconWidth + OFFSET.x,
-      iconRect.y + iconRect.height - icon.iconHeight + OFFSET.y
+      iconRect.y + iconRect.height - icon.iconHeight + OFFSET.y,
     )
   }
 
