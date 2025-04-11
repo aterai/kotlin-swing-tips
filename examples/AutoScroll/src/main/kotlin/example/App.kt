@@ -11,8 +11,12 @@ import javax.swing.*
 
 fun makeUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
-  val url = cl.getResource("example/CRW_3857_JFR.jpg")
-  val icon = url?.openStream()?.use(ImageIO::read)?.let { ImageIcon(it) } ?: MissingIcon()
+  val icon = cl
+    .getResource("example/CRW_3857_JFR.jpg")
+    ?.openStream()
+    ?.use(ImageIO::read)
+    ?.let { ImageIcon(it) }
+    ?: MissingIcon()
   val scroll = JScrollPane(JLabel(icon)).also {
     it.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
     it.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
