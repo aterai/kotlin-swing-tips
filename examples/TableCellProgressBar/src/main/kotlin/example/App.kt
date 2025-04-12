@@ -18,14 +18,26 @@ private val table = object : JTable(model) {
     val progress = JProgressBar()
     val renderer = DefaultTableCellRenderer()
     val tc = getColumnModel().getColumn(2)
-    tc.cellRenderer = TableCellRenderer { tbl, value, isSelected, hasFocus, row, column ->
-      if (value is Int) {
-        if (value in 0..<progress.maximum) { // < 100
-          progress.value = value
-          progress.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
-          progress
+    tc.cellRenderer =
+      TableCellRenderer { tbl, value, isSelected, hasFocus, row, column ->
+        if (value is Int) {
+          if (value in 0..<progress.maximum) { // < 100
+            progress.value = value
+            progress.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
+            progress
+          } else {
+            val txt = "Done(0ms)"
+            renderer.getTableCellRendererComponent(
+              tbl,
+              txt,
+              isSelected,
+              hasFocus,
+              row,
+              column,
+            )
+          }
         } else {
-          val txt = "Done(0ms)"
+          val txt = value?.toString() ?: ""
           renderer.getTableCellRendererComponent(
             tbl,
             txt,
@@ -35,18 +47,7 @@ private val table = object : JTable(model) {
             column,
           )
         }
-      } else {
-        val txt = value?.toString() ?: ""
-        renderer.getTableCellRendererComponent(
-          tbl,
-          txt,
-          isSelected,
-          hasFocus,
-          row,
-          column,
-        )
       }
-    }
   }
 }
 private val deletedRowSet: MutableSet<Int> = TreeSet()
