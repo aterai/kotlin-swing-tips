@@ -218,7 +218,10 @@ private class InitAction(
     table.clearSelection()
   }
 
-  private fun makeRowData(list: List<*>) = RowData(list[1].toString(), list[2].toString())
+  private fun makeRowData(list: List<*>) = RowData(
+    list[1].toString(),
+    list[2].toString(),
+  )
 }
 
 private class RowDataModel : SortableTableModel() {
