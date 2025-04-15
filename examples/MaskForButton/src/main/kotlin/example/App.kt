@@ -9,10 +9,11 @@ fun makeUI(): Component {
   val log = JTextArea()
   log.isEditable = false
   log.append("MouseInfo.getNumberOfButtons: ${MouseInfo.getNumberOfButtons()}\n")
-
   val tabbedPane = JTabbedPane()
   tabbedPane.componentPopupMenu = TabbedPanePopupMenu()
-  tabbedPane.addTab("Title a", JLabel("Close a tab by the middle mouse button clicking."))
+  val help = JLabel("Close a tab by the middle mouse button clicking.")
+  tabbedPane.addTab("Help", help)
+  tabbedPane.addTab("Title a", JLabel("JLabel a"))
   tabbedPane.addTab("Title b", JLabel("JLabel b"))
   tabbedPane.addTab("Title c", JLabel("JLabel c"))
   tabbedPane.addMouseListener(object : MouseAdapter() {
