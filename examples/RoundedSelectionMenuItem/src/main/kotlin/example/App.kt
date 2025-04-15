@@ -194,8 +194,8 @@ private class WindowsRoundMenuItemUI2 : WindowsMenuItemUI() {
   }
 
   private fun paintSelectedBackground(g: Graphics, menuItem: JMenuItem, bgColor: Color) {
-    val width = menuItem.width
-    val height = menuItem.height
+    val w = menuItem.width
+    val h = menuItem.height
     val config = (g as? Graphics2D)?.deviceConfiguration ?: return
     do {
       val status = buffer?.validate(config) ?: VolatileImage.IMAGE_INCOMPATIBLE
@@ -203,11 +203,11 @@ private class WindowsRoundMenuItemUI2 : WindowsMenuItemUI() {
         status == VolatileImage.IMAGE_RESTORED
       ) {
         val buf = buffer
-          ?.takeIf { b -> b.width == width && b.height == height }
+          ?.takeIf { b -> b.width == w && b.height == h }
           ?.takeIf { status != VolatileImage.IMAGE_INCOMPATIBLE }
           ?: let {
             buffer?.flush()
-            config.createCompatibleVolatileImage(width, height, Transparency.TRANSLUCENT)
+            config.createCompatibleVolatileImage(w, h, Transparency.TRANSLUCENT)
           }
         buffer = buf
         val g2 = buf.createGraphics()
@@ -216,10 +216,10 @@ private class WindowsRoundMenuItemUI2 : WindowsMenuItemUI() {
           RenderingHints.VALUE_ANTIALIAS_ON,
         )
         g2.composite = AlphaComposite.Clear
-        g2.fillRect(0, 0, width, height)
+        g2.fillRect(0, 0, w, h)
         g2.setPaintMode()
         g2.paint = Color.WHITE
-        g2.fill(RoundRectangle2D.Float(0f, 0f, width.toFloat(), height.toFloat(), 8f, 8f))
+        g2.fill(RoundRectangle2D.Float(0f, 0f, w.toFloat(), h.toFloat(), 8f, 8f))
         g2.composite = AlphaComposite.SrcAtop
         super.paintBackground(g2, menuItem, bgColor)
         g2.dispose()
