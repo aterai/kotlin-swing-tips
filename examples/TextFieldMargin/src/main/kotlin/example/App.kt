@@ -35,10 +35,13 @@ fun makeUI(): Component {
 
 private fun getLeftMargin(c: JTextField): Int {
   log.append("----\n")
-  log.append("getMargin().left: ${c.margin.left}\n")
-  log.append("getInsets().left: ${c.insets.left}\n")
-  log.append("getBorder().getBorderInsets(c).left: ${c.border.getBorderInsets(c).left}\n")
-  return c.insets.left
+  val l1 = c.margin.left
+  log.append("margin.left: $l1\n")
+  val l2 = c.insets.left
+  log.append("insets.left: $l2\n")
+  val l3 = c.border.getBorderInsets(c).left
+  log.append("border.getBorderInsets(c).left: $l3\n")
+  return l2
 }
 
 private fun makePanel(field: JTextField): Component {
