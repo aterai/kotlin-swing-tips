@@ -13,25 +13,25 @@ private var worker: SwingWorker<String, Unit?>? = null
 
 fun makeUI(): Component {
   val model = DefaultBoundedRangeModel()
-  val progressBar0 = JProgressBar(model)
-  val progressBar1 = JProgressBar(model)
+  val progress0 = JProgressBar(model)
+  val progress1 = JProgressBar(model)
   val d = UIDefaults()
-  d["ProgressBar[Enabled+Indeterminate].foregroundPainter"] = IndeterminateRegionPainter()
-  progressBar1.putClientProperty("Nimbus.Overrides", d)
+  d["ProgressBar[Enabled+Indeterminate].foregroundPainter"] = IndeterminatePainter()
+  progress1.putClientProperty("Nimbus.Overrides", d)
 
   val p = JPanel(GridLayout(2, 1)).also {
-    it.add(makeTitledPanel("Default", progressBar0))
-    it.add(makeTitledPanel("ProgressBar[Indeterminate].foregroundPainter", progressBar1))
+    it.add(makeTitledPanel("Default", progress0))
+    it.add(makeTitledPanel("ProgressBar[Indeterminate].foregroundPainter", progress1))
   }
 
   val button = JButton("Test start")
   button.addActionListener {
     worker?.takeUnless { it.isDone }?.cancel(true)
-    progressBar0.isIndeterminate = true
-    progressBar1.isIndeterminate = true
+    progress0.isIndeterminate = true
+    progress1.isIndeterminate = true
     worker = BackgroundTask().also {
-      it.addPropertyChangeListener(ProgressListener(progressBar0))
-      it.addPropertyChangeListener(ProgressListener(progressBar1))
+      it.addPropertyChangeListener(ProgressListener(progress0))
+      it.addPropertyChangeListener(ProgressListener(progress1))
       it.execute()
     }
   }
@@ -105,7 +105,7 @@ private class ProgressListener(
   }
 }
 
-private class IndeterminateRegionPainter : AbstractRegionPainter() {
+private class IndeterminatePainter : AbstractRegionPainter() {
   private val color17 =
     decodeColor(NIMBUS_ORANGE, .0000000000f, .00000000f, .0000000000f, -156)
   private val color18 =
@@ -131,10 +131,10 @@ private class IndeterminateRegionPainter : AbstractRegionPainter() {
   private val color28 =
     decodeColor(NIMBUS_ORANGE, .0106654760f, -.27317524f, .2509803800f, 0)
   private val ctx = PaintContext(Insets(5, 5, 5, 5), Dimension(29, 19), false)
-  private var rect: Rectangle2D = Rectangle2D.Float()
+  private var rect = Rectangle2D.Float()
   private var path: Path2D = Path2D.Float()
 
-  public override fun doPaint(
+  override fun doPaint(
     g: Graphics2D,
     c: JComponent,
     width: Int,
@@ -152,7 +152,7 @@ private class IndeterminateRegionPainter : AbstractRegionPainter() {
     g.fill(rect)
   }
 
-  public override fun getPaintContext() = ctx
+  override fun getPaintContext() = ctx
 
   private fun decodePath1(): Path2D {
     path.reset()
