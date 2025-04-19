@@ -4,23 +4,26 @@ import java.awt.*
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import java.nio.charset.StandardCharsets
 import javax.swing.*
 import javax.swing.text.html.HTMLEditorKit
 import javax.swing.text.html.StyleSheet
 import kotlin.streams.toList
 
 fun makeUI(): Component {
+  val sys = JRadioButtonMenuItem("System", true)
   val editor = object : JEditorPane() {
     override fun updateUI() {
       super.updateUI()
-      updateTheme(this)
-      loadHtml(this)
+      if (sys.isSelected) {
+        updateTheme(this)
+        loadHtml(this)
+      }
       isEditable = false
       selectedTextColor = null
       selectionColor = Color(0x64_88_AA_AA, true)
     }
   }
-  val sys = JRadioButtonMenuItem("System", true)
   sys.addActionListener {
     updateTheme(editor)
     loadHtml(editor)
@@ -102,7 +105,7 @@ fun getProcessOutput(cmd: List<String>): String {
   builder.redirectErrorStream(true)
   val p = builder.start()
   val str: String
-  BufferedReader(InputStreamReader(p.inputStream)).use {
+  BufferedReader(InputStreamReader(p.inputStream, StandardCharsets.UTF_8)).use {
     str = it.lines().toList().joinToString(System.lineSeparator())
   }
   return str
