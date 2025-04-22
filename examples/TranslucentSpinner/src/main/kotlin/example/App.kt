@@ -18,9 +18,10 @@ fun makeUI(): Component {
     g.color = Color(100, 200, 200, 100)
     g.fillRect(0, 0, w, h)
   }
-  d["Spinner:Panel:\"Spinner.formattedTextField\"[Enabled].backgroundPainter"] = painter1
-  d["Spinner:Panel:\"Spinner.formattedTextField\"[Focused].backgroundPainter"] = painter2
-  d["Spinner:Panel:\"Spinner.formattedTextField\"[Selected].backgroundPainter"] = painter2
+  val spinnerFtf = "Spinner:Panel:\"Spinner.formattedTextField\""
+  d["$spinnerFtf[Enabled].backgroundPainter"] = painter1
+  d["$spinnerFtf[Focused].backgroundPainter"] = painter2
+  d["$spinnerFtf[Selected].backgroundPainter"] = painter2
 
   val painter3 = Painter<Component> { g, _, w, h ->
     g.color = Color(100, 100, 200, 100)
@@ -31,22 +32,27 @@ fun makeUI(): Component {
     g.color = Color(120, 120, 120, 100)
     g.fillRect(0, 0, w, h)
   }
-  d["Spinner:\"Spinner.previousButton\"[Enabled].backgroundPainter"] = painter3
-  d["Spinner:\"Spinner.previousButton\"[Focused+MouseOver].backgroundPainter"] = painter3
-  d["Spinner:\"Spinner.previousButton\"[Focused+Pressed].backgroundPainter"] = painter3
-  d["Spinner:\"Spinner.previousButton\"[Focused].backgroundPainter"] = painter3
-  d["Spinner:\"Spinner.previousButton\"[MouseOver].backgroundPainter"] = painter3
-  d["Spinner:\"Spinner.previousButton\"[Pressed].backgroundPainter"] = painter4
-  d["Spinner:\"Spinner.nextButton\"[Enabled].backgroundPainter"] = painter3
-  d["Spinner:\"Spinner.nextButton\"[Focused+MouseOver].backgroundPainter"] = painter3
-  d["Spinner:\"Spinner.nextButton\"[Focused+Pressed].backgroundPainter"] = painter3
-  d["Spinner:\"Spinner.nextButton\"[Focused].backgroundPainter"] = painter3
-  d["Spinner:\"Spinner.nextButton\"[MouseOver].backgroundPainter"] = painter3
-  d["Spinner:\"Spinner.nextButton\"[Pressed].backgroundPainter"] = painter4
+  val spinnerPrevButton = "Spinner:\"Spinner.previousButton\""
+  d["$spinnerPrevButton[Enabled].backgroundPainter"] = painter3
+  d["$spinnerPrevButton[Focused+MouseOver].backgroundPainter"] = painter3
+  d["$spinnerPrevButton[Focused+Pressed].backgroundPainter"] = painter3
+  d["$spinnerPrevButton[Focused].backgroundPainter"] = painter3
+  d["$spinnerPrevButton[MouseOver].backgroundPainter"] = painter3
+  d["$spinnerPrevButton[Pressed].backgroundPainter"] = painter4
+
+  val spinnerNextButton = "Spinner:\"Spinner.nextButton\""
+  d["$spinnerNextButton[Enabled].backgroundPainter"] = painter3
+  d["$spinnerNextButton[Focused+MouseOver].backgroundPainter"] = painter3
+  d["$spinnerNextButton[Focused+Pressed].backgroundPainter"] = painter3
+  d["$spinnerNextButton[Focused].backgroundPainter"] = painter3
+  d["$spinnerNextButton[MouseOver].backgroundPainter"] = painter3
+  d["$spinnerNextButton[Pressed].backgroundPainter"] = painter4
 
   val model = SpinnerNumberModel(0, 0, 100, 5)
   val spinner1 = JSpinner(model)
-  (spinner1.editor as? DefaultEditor)?.textField?.putClientProperty("Nimbus.Overrides", d)
+  (spinner1.editor as? DefaultEditor)
+    ?.textField
+    ?.putClientProperty("Nimbus.Overrides", d)
   configureSpinnerButtons(spinner1, d)
 
   val spinner2 = object : JSpinner(model) {
