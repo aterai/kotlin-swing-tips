@@ -96,7 +96,8 @@ private fun initStar() {
     addendum_circle_radius="%d" dedendum_circle_radius ="%d" number_of_teeth="%dT"
   """.trimIndent()
   val desc = fmt.format(max, min, vc)
-  textArea.text = SvgUtils.makeStarburstSvg(star.getPathIterator(null), max * 2, style, desc)
+  val pi = star.getPathIterator(null)
+  textArea.text = SvgUtils.makeStarburstSvg(pi, max * 2, style, desc)
 }
 
 private object SvgUtils {
@@ -120,7 +121,16 @@ private object SvgUtils {
           sb.append("Q%.2f,%.2f,%.2f,%.2f ".format(c[0], c[1], c[2], c[3]))
 
         PathIterator.SEG_CUBICTO ->
-          sb.append("C%.2f,%.2f,%.2f,%.2f,%.2f,%.2f ".format(c[0], c[1], c[2], c[3], c[4], c[5]))
+          sb.append(
+            "C%.2f,%.2f,%.2f,%.2f,%.2f,%.2f ".format(
+              c[0],
+              c[1],
+              c[2],
+              c[3],
+              c[4],
+              c[5],
+            ),
+          )
 
         PathIterator.SEG_CLOSE ->
           sb.append('Z')
