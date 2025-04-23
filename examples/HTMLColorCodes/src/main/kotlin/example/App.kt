@@ -7,9 +7,9 @@ fun makeUI(): Component {
   val box = Box.createVerticalBox()
   box.add(makeLbl("Color(0xFF0000)", Color(0xFF0000)))
   box.add(makeLbl("Color(0x88_88_88)", Color(0x88_88_88)))
-  box.add(makeLbl("Color(\"00FF00\".toInt(16))", Color("00FF00".toInt(16))))
-  box.add(makeLbl("Color(Integer.decode(\"#0000FF\"))", Color(Integer.decode("#0000FF"))))
-  box.add(makeLbl("Color.decode(\"#00FFFF\")", Color.decode("#00FFFF")))
+  box.add(makeLbl("Color('00FF00'.toInt(16))", Color("00FF00".toInt(16))))
+  box.add(makeLbl("Color(Integer.decode('#0000FF'))", Color(Integer.decode("#0000FF"))))
+  box.add(makeLbl("Color.decode('#00FFFF')", Color.decode("#00FFFF")))
 
   val title = "<html><span style='color: #FF00FF'>#FF00FF"
   val label = JLabel(title)
