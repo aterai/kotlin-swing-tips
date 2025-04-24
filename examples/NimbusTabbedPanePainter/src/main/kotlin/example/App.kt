@@ -22,34 +22,35 @@ private object NimbusTabbedPanePainterUtils {
   const val OVER_PAINT = 6
   const val STROKE_SIZE = 2.0
   const val ARC = 10.0
-  val CONTENT_BACKGROUND = Color.LIGHT_GRAY
-  val CONTENT_BORDER = Color.ORANGE // Color.GRAY
-  val TAB_TABAREA_MASK = Color.GREEN // CONTENT_BACKGROUND
-  val TAB_BACKGROUND = Color.PINK // CONTENT_BORDER
-  val TABAREA_BACKGROUND = Color.CYAN // CONTENT_BACKGROUND
-  val TABAREA_BORDER = Color.RED // CONTENT_BORDER
+  val CONTENT_BACKGROUND: Color = Color.LIGHT_GRAY
+  val CONTENT_BORDER: Color = Color.ORANGE // Color.GRAY
+  val TAB_TABAREA_MASK: Color = Color.GREEN // CONTENT_BACKGROUND
+  val TAB_BACKGROUND: Color = Color.PINK // CONTENT_BORDER
+  val TABAREA_BACKGROUND: Color = Color.CYAN // CONTENT_BACKGROUND
+  val TABAREA_BORDER: Color = Color.RED // CONTENT_BORDER
 
   fun configureUI() {
     val d = UIManager.getLookAndFeelDefaults()
-    d["TabbedPane:TabbedPaneContent.contentMargins"] = Insets(0, 5, 5, 5)
-    d["TabbedPane:TabbedPaneTabArea.contentMargins"] = Insets(3, 10, OVER_PAINT, 10)
+    val t = "TabbedPane:"
+    d["${t}TabbedPaneContent.contentMargins"] = Insets(0, 5, 5, 5)
+    d["${t}TabbedPaneTabArea.contentMargins"] = Insets(3, 10, OVER_PAINT, 10)
     val tabAreaPainter = TabAreaPainter()
-    d["TabbedPane:TabbedPaneTabArea[Disabled].backgroundPainter"] = tabAreaPainter
-    d["TabbedPane:TabbedPaneTabArea[Enabled].backgroundPainter"] = tabAreaPainter
-    d["TabbedPane:TabbedPaneTabArea[Enabled+MouseOver].backgroundPainter"] = tabAreaPainter
-    d["TabbedPane:TabbedPaneTabArea[Enabled+Pressed].backgroundPainter"] = tabAreaPainter
-    d["TabbedPane:TabbedPaneContent.backgroundPainter"] = TabbedPaneContentPainter()
+    d["${t}TabbedPaneTabArea[Disabled].backgroundPainter"] = tabAreaPainter
+    d["${t}TabbedPaneTabArea[Enabled].backgroundPainter"] = tabAreaPainter
+    d["${t}TabbedPaneTabArea[Enabled+MouseOver].backgroundPainter"] = tabAreaPainter
+    d["${t}TabbedPaneTabArea[Enabled+Pressed].backgroundPainter"] = tabAreaPainter
+    d["${t}TabbedPaneContent.backgroundPainter"] = TabbedPaneContentPainter()
     val tabPainter = TabPainter(false)
-    d["TabbedPane:TabbedPaneTab[Enabled+MouseOver].backgroundPainter"] = tabPainter
-    d["TabbedPane:TabbedPaneTab[Enabled+Pressed].backgroundPainter"] = tabPainter
-    d["TabbedPane:TabbedPaneTab[Enabled].backgroundPainter"] = tabPainter
+    d["${t}TabbedPaneTab[Enabled+MouseOver].backgroundPainter"] = tabPainter
+    d["${t}TabbedPaneTab[Enabled+Pressed].backgroundPainter"] = tabPainter
+    d["${t}TabbedPaneTab[Enabled].backgroundPainter"] = tabPainter
     val selTabPainter = TabPainter(true)
-    d["TabbedPane:TabbedPaneTab[Focused+MouseOver+Selected].backgroundPainter"] = selTabPainter
-    d["TabbedPane:TabbedPaneTab[Focused+Pressed+Selected].backgroundPainter"] = selTabPainter
-    d["TabbedPane:TabbedPaneTab[Focused+Selected].backgroundPainter"] = selTabPainter
-    d["TabbedPane:TabbedPaneTab[MouseOver+Selected].backgroundPainter"] = selTabPainter
-    d["TabbedPane:TabbedPaneTab[Selected].backgroundPainter"] = selTabPainter
-    d["TabbedPane:TabbedPaneTab[Pressed+Selected].backgroundPainter"] = selTabPainter
+    d["${t}TabbedPaneTab[Focused+MouseOver+Selected].backgroundPainter"] = selTabPainter
+    d["${t}TabbedPaneTab[Focused+Pressed+Selected].backgroundPainter"] = selTabPainter
+    d["${t}TabbedPaneTab[Focused+Selected].backgroundPainter"] = selTabPainter
+    d["${t}TabbedPaneTab[MouseOver+Selected].backgroundPainter"] = selTabPainter
+    d["${t}TabbedPaneTab[Selected].backgroundPainter"] = selTabPainter
+    d["${t}TabbedPaneTab[Pressed+Selected].backgroundPainter"] = selTabPainter
   }
 
   class TabPainter(
@@ -76,9 +77,10 @@ private object NimbusTabbedPanePainterUtils {
       val h = (height + a).toDouble()
 
       // Paint tab shadow
+      val arc = r.toDouble()
       if (selected) {
         g2.paint = Color(0, 0, 0, 20)
-        val rect = RoundRectangle2D.Double(0.0, 0.0, w, h, r.toDouble(), r.toDouble())
+        val rect = RoundRectangle2D.Double(0.0, 0.0, w, h, arc, arc)
         var i = 0
         while (i < x) {
           rect.setFrame(x - i, y - i, w + i + i, h)
@@ -89,12 +91,12 @@ private object NimbusTabbedPanePainterUtils {
 
       // Fill tab background
       g2.color = color
-      g2.fill(RoundRectangle2D.Double(x, y, w - 1.0, h + a, r.toDouble(), r.toDouble()))
+      g2.fill(RoundRectangle2D.Double(x, y, w - 1.0, h + a, arc, arc))
       if (selected) {
         // Draw a border
         g2.stroke = BasicStroke(STROKE_SIZE.toFloat())
         g2.paint = TABAREA_BORDER
-        g2.draw(RoundRectangle2D.Double(x, y, w - 1.0, h + a, r.toDouble(), r.toDouble()))
+        g2.draw(RoundRectangle2D.Double(x, y, w - 1.0, h + a, arc, arc))
 
         // Over paint the overexposed area with the background color
         g2.color = TAB_TABAREA_MASK
