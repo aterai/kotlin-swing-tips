@@ -54,7 +54,10 @@ fun makeImage(
 ): Image {
   val image = BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB)
   val g2 = image.createGraphics()
-  g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+  g2.setRenderingHint(
+    RenderingHints.KEY_ANTIALIASING,
+    RenderingHints.VALUE_ANTIALIAS_ON,
+  )
   g2.paint = color
   g2.fill(Ellipse2D.Double(0.0, 0.0, size - 1.0, size - 1.0))
   val frc = g2.fontRenderContext

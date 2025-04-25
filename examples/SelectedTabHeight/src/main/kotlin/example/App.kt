@@ -7,7 +7,10 @@ import javax.swing.*
 import javax.swing.plaf.basic.BasicTabbedPaneUI
 
 fun makeUI(): Component {
-  val tabbedPane = object : JTabbedPane(JTabbedPane.TOP, JTabbedPane.SCROLL_TAB_LAYOUT) {
+  val tabbedPane = object : JTabbedPane(
+    JTabbedPane.TOP,
+    JTabbedPane.SCROLL_TAB_LAYOUT,
+  ) {
     override fun updateUI() {
       super.updateUI()
       val ui2 = if (ui is WindowsTabbedPaneUI) {

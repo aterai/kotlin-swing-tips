@@ -96,7 +96,10 @@ private fun makeClippedImage(source: BufferedImage, shape: Shape): BufferedImage
   // g2.fillRect(0, 0, width, height)
 
   g2.composite = AlphaComposite.Src
-  g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+  g2.setRenderingHint(
+    RenderingHints.KEY_ANTIALIASING,
+    RenderingHints.VALUE_ANTIALIAS_ON,
+  )
   // g2.setColor(Color.WHITE)
   g2.fill(shape)
 

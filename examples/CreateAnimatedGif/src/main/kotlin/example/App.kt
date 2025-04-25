@@ -113,7 +113,10 @@ fun paintFrame(
   val g2 = image.createGraphics()
   g2.paint = Color.WHITE
   g2.fillRect(0, 0, image.width, image.height)
-  g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+  g2.setRenderingHint(
+    RenderingHints.KEY_ANTIALIASING,
+    RenderingHints.VALUE_ANTIALIAS_ON,
+  )
   g2.paint = ellipseColor
   val size = list.size
   list.forEachIndexed { idx, shape ->

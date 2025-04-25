@@ -205,7 +205,10 @@ private class BreadcrumbLayerUI<V : Component> : LayerUI<V>() {
         (e.component as? AbstractButton)?.let { button ->
           (button.icon as? ArrowToggleButtonBarCellIcon)?.let { icon ->
             val r = button.bounds
-            val at = AffineTransform.getTranslateInstance(r.x.toDouble(), r.y.toDouble())
+            val at = AffineTransform.getTranslateInstance(
+              r.x.toDouble(),
+              r.y.toDouble(),
+            )
             at.createTransformedShape(icon.shape)
           }
         }
