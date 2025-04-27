@@ -50,7 +50,8 @@ fun showMessageDialogAndPlayAudio(
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource(audioPath) ?: return
   AudioSystem.getAudioInputStream(url).use { stream ->
-    (AudioSystem.getLine(DataLine.Info(Clip::class.java, stream.format)) as? Clip)?.use {
+    val info = DataLine.Info(Clip::class.java, stream.format)
+    (AudioSystem.getLine(info) as? Clip)?.use {
       val loop = p.toolkit.systemEventQueue.createSecondaryLoop()
       it.addLineListener { e ->
         when (e.type) {
