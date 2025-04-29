@@ -20,12 +20,10 @@ fun makeUI(): Component {
   UIManager.put("TitledBorder.titleColor", Color.WHITE)
   UIManager.put("TitledBorder.border", BorderFactory.createEmptyBorder())
   val combo00 = makeComboBox()
-  val o00 = combo00.accessibleContext.getAccessibleChild(0)
-  (o00 as? JComponent)?.border = BorderFactory.createMatteBorder(0, 1, 1, 1, Color.WHITE)
+  setMatteBorder(combo00)
   val combo01 = makeComboBox()
   combo01.setUI(BasicComboBoxUI())
-  val o01 = combo01.accessibleContext.getAccessibleChild(0)
-  (o01 as? JComponent)?.border = BorderFactory.createMatteBorder(0, 1, 1, 1, Color.WHITE)
+  setMatteBorder(combo01)
   val combo02 = makeComboBox()
   val ui2 = object : BasicComboBoxUI() {
     override fun createArrowButton(): JButton {
@@ -61,8 +59,7 @@ fun makeUI(): Component {
     }
   }
   combo02.addMouseListener(ml2)
-  val o02 = combo02.accessibleContext.getAccessibleChild(0)
-  (o02 as? JComponent)?.border = BorderFactory.createMatteBorder(0, 1, 1, 1, Color.WHITE)
+  setMatteBorder(combo02)
   val box = Box.createVerticalBox()
   box.add(makeTitledPanel("MetalComboBoxUI:", combo00))
   box.add(Box.createVerticalStrut(5))
@@ -75,6 +72,13 @@ fun makeUI(): Component {
     it.isOpaque = true
     it.background = Color.BLACK
     it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private fun setMatteBorder(combo: JComboBox<*>) {
+  val o = combo.accessibleContext.getAccessibleChild(0)
+  if (o is JComponent) {
+    o.border = BorderFactory.createMatteBorder(0, 1, 1, 1, Color.WHITE)
   }
 }
 
