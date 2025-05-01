@@ -14,20 +14,18 @@ fun makeUI(): Component {
   val timer = Timer(DELAY, null)
   val awtEvent = AWTEventListener {
     if (timer.isRunning) {
-      // println("timer.restart()")
       timer.restart()
     }
   }
   timer.addActionListener { e ->
-    // println("timeout")
     setTestConnected(false)
     Toolkit.getDefaultToolkit().removeAWTEventListener(awtEvent)
     (e.source as? Timer)?.stop()
   }
   button.addActionListener {
     setTestConnected(true)
-    val tk = Toolkit.getDefaultToolkit()
-    tk.addAWTEventListener(awtEvent, AWTEvent.KEY_EVENT_MASK + AWTEvent.MOUSE_EVENT_MASK)
+    val mask = AWTEvent.KEY_EVENT_MASK + AWTEvent.MOUSE_EVENT_MASK
+    Toolkit.getDefaultToolkit().addAWTEventListener(awtEvent, mask)
     timer.isRepeats = false
     timer.start()
   }
