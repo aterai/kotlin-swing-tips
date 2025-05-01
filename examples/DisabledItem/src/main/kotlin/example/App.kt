@@ -43,9 +43,16 @@ fun makeList(disableIndexSet: Set<Int>): JList<String> {
       val renderer = cellRenderer
       setCellRenderer { list, value, index, isSelected, cellHasFocus ->
         if (disableIndexSet.contains(index)) {
-          renderer.getListCellRendererComponent(list, value, index, false, false)?.also {
-            it.isEnabled = false
-          }
+          renderer
+            .getListCellRendererComponent(
+              list,
+              value,
+              index,
+              false,
+              false,
+            )?.also {
+              it.isEnabled = false
+            }
         } else {
           renderer.getListCellRendererComponent(
             list,

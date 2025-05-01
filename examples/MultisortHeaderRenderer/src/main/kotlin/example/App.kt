@@ -54,7 +54,14 @@ private class MultiSortHeaderRenderer : TableCellRenderer {
       }
     }
     val r = table.tableHeader.defaultRenderer
-    return r.getTableCellRendererComponent(table, str, isSelected, hasFocus, row, column)
+    return r.getTableCellRendererComponent(
+      table,
+      str,
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
   }
 }
 
