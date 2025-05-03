@@ -74,10 +74,11 @@ fun makeUI(): Component {
         it.deleteOnExit()
       }
     }.onFailure {
-      val c = e.source as? JComponent
+      val c = (e.source as? JComponent)?.rootPane
       UIManager.getLookAndFeel().provideErrorFeedback(c)
       val msg = "Could not create file."
-      JOptionPane.showMessageDialog(c?.rootPane, msg, "Error", JOptionPane.ERROR_MESSAGE)
+      val title = "Error"
+      JOptionPane.showMessageDialog(c, msg, title, JOptionPane.ERROR_MESSAGE)
     }.getOrNull()
   }
 
