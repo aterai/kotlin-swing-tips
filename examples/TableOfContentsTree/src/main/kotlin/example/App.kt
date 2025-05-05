@@ -115,7 +115,11 @@ private class TableOfContentsTreeCellRenderer : DefaultTreeCellRenderer() {
       hasFocus,
     )
     val toc = (value as? DefaultMutableTreeNode)?.userObject
-    return if (c is JLabel && toc is TableOfContents) getTocRenderer(c, tree, toc) else c
+    return if (c is JLabel && toc is TableOfContents) {
+      getTocRenderer(c, tree, toc)
+    } else {
+      c
+    }
   }
 
   private fun getTocRenderer(
