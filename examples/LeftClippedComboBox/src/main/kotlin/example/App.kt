@@ -73,7 +73,8 @@ private fun makeComboBoxRenderer(combo: JComboBox<*>) =
       if (c is JLabel) {
         val w = getAvailableWidth(combo, index, insets)
         val fm = c.getFontMetrics(c.font)
-        c.text = if (fm.stringWidth(text) <= w) text else getLeftClippedText(text, fm, w)
+        c.text =
+          if (fm.stringWidth(text) <= w) text else getLeftClippedText(text, fm, w)
       }
       return c
     }
@@ -88,11 +89,11 @@ private fun getAvailableWidth(
     .filterIsInstance<JButton>()
     .firstOrNull()
   val r = SwingUtilities.calculateInnerArea(combo, null)
-  var availableWidth = r.width - rendererIns.left - rendererIns.right
-  availableWidth = getLookAndFeelDependWidth(combo, availableWidth)
+  r.width -= rendererIns.left + rendererIns.right
+  r.height -= rendererIns.top + rendererIns.bottom
+  var availableWidth = getLookAndFeelDependWidth(combo, r.width)
   if (index < 0) {
-    val buttonSize = arrowButton?.width
-      ?: (r.height - rendererIns.top - rendererIns.bottom)
+    val buttonSize = arrowButton?.width ?: r.height
     availableWidth -= buttonSize
   }
   return availableWidth
