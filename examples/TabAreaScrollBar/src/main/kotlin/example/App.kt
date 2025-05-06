@@ -24,7 +24,10 @@ fun makeUI(): Component {
   popup.add("test: add")
   popup.add("test: delete")
   tabs.tabArea.componentPopupMenu = popup
+  val mb = JMenuBar()
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   return JPanel(BorderLayout()).also {
+    EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.add(tabs)
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.preferredSize = Dimension(320, 240)
@@ -147,13 +150,20 @@ private class TabButton : JToggleButton() {
   private val selectedColor = Color(48, 32, 32)
   private val rolloverColor = Color(48, 48, 48)
 
+  init {
+    layout = BorderLayout()
+  }
+
   override fun updateUI() {
     super.updateUI()
-    layout = BorderLayout()
     border = BorderFactory.createEmptyBorder(2, 4, 4, 4)
     isContentAreaFilled = false
     isFocusPainted = false
     isOpaque = true
+  }
+
+  override fun setLayout(mgr: LayoutManager?) {
+    super.setLayout(mgr)
   }
 
   override fun getPreferredSize(): Dimension {
@@ -313,7 +323,7 @@ private class HorizontalScrollLayerUI : LayerUI<JScrollPane>() {
   override fun installUI(c: JComponent) {
     super.installUI(c)
     (c as? JLayer<*>)?.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or
-      AWTEvent.MOUSE_MOTION_EVENT_MASK or AWTEvent.MOUSE_WHEEL_EVENT_MASK
+        AWTEvent.MOUSE_MOTION_EVENT_MASK or AWTEvent.MOUSE_WHEEL_EVENT_MASK
   }
 
   override fun uninstallUI(c: JComponent) {
@@ -360,6 +370,54 @@ private class HorizontalScrollLayerUI : LayerUI<JScrollPane>() {
     vp.translate(hsb.blockIncrement * e.wheelRotation, 0)
     (SwingUtilities.getUnwrappedView(viewport) as? JComponent)?.also {
       it.scrollRectToVisible(Rectangle(vp, viewport.size))
+    }
+  }
+}
+
+private object LookAndFeelUtils {
+  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
+
+  fun createLookAndFeelMenu(): JMenu {
+    val menu = JMenu("LookAndFeel")
+    val buttonGroup = ButtonGroup()
+    for (info in UIManager.getInstalledLookAndFeels()) {
+      val b = JRadioButtonMenuItem(info.name, info.className == lookAndFeel)
+      initLookAndFeelAction(info, b)
+      menu.add(b)
+      buttonGroup.add(b)
+    }
+    return menu
+  }
+
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
+    val cmd = info.className
+    b.text = info.name
+    b.actionCommand = cmd
+    b.hideActionText = true
+    b.addActionListener { setLookAndFeel(cmd) }
+  }
+
+  @Throws(
+    ClassNotFoundException::class,
+    InstantiationException::class,
+    IllegalAccessException::class,
+    UnsupportedLookAndFeelException::class,
+  )
+  private fun setLookAndFeel(newLookAndFeel: String) {
+    val oldLookAndFeel = lookAndFeel
+    if (oldLookAndFeel != newLookAndFeel) {
+      UIManager.setLookAndFeel(newLookAndFeel)
+      lookAndFeel = newLookAndFeel
+      updateLookAndFeel()
+    }
+  }
+
+  private fun updateLookAndFeel() {
+    for (window in Window.getWindows()) {
+      SwingUtilities.updateComponentTreeUI(window)
     }
   }
 }

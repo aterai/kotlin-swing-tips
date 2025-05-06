@@ -273,13 +273,21 @@ private class TabButton : JToggleButton() {
   private val selectedColor = Color(48, 32, 32)
   private val rolloverColor = Color(48, 48, 48)
 
+  init {
+    layout = BorderLayout()
+  }
+
   override fun updateUI() {
     super.updateUI()
-    layout = BorderLayout()
+    // layout = BorderLayout()
     border = BorderFactory.createEmptyBorder(2, 4, 4, 4)
     isContentAreaFilled = false
     isFocusPainted = false
     isOpaque = true
+  }
+
+  override fun setLayout(mgr: LayoutManager?) {
+    super.setLayout(mgr)
   }
 
   override fun getPreferredSize(): Dimension {
@@ -447,7 +455,7 @@ private class HorizontalScrollLayerUI : LayerUI<JScrollPane>() {
   override fun installUI(c: JComponent) {
     super.installUI(c)
     (c as? JLayer<*>)?.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or
-      AWTEvent.MOUSE_MOTION_EVENT_MASK or AWTEvent.MOUSE_WHEEL_EVENT_MASK
+        AWTEvent.MOUSE_MOTION_EVENT_MASK or AWTEvent.MOUSE_WHEEL_EVENT_MASK
   }
 
   override fun uninstallUI(c: JComponent) {
@@ -571,7 +579,7 @@ open class ClippedTitleTabbedPane : JTabbedPane() {
     index: Int,
   ) {
     super.insertTab(title, icon, c, tip ?: title, index)
-    setTabComponentAt(index, JLabel(title, icon, SwingConstants.CENTER))
+    setTabComponentAt(index, JLabel(title, icon, CENTER))
   }
 
   private fun updateAllTabWidth(tabWidth: Int, gap: Int) {
