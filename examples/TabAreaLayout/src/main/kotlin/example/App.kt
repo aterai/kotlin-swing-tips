@@ -500,9 +500,7 @@ private class HorizontalScrollLayerUI : LayerUI<JScrollPane>() {
     val viewport = scroll.viewport
     val vp = viewport.viewPosition
     vp.translate(hsb.blockIncrement * e.wheelRotation, 0)
-    (SwingUtilities.getUnwrappedView(viewport) as? JComponent)?.also {
-      it.scrollRectToVisible(Rectangle(vp, viewport.size))
-    }
+    viewport.viewPosition = vp
   }
 }
 

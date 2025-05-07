@@ -57,9 +57,8 @@ private class ViewportDragScrollListener :
     val viewport = e.component as? JViewport
     val c = viewport?.view
     if (c is JComponent) {
-      val vp = viewport.viewPosition
-      vp.translate(dx, dy)
-      c.scrollRectToVisible(Rectangle(vp, viewport.size))
+      val rect = viewport.viewRect.also { it.translate(dx, dy) }
+      c.scrollRectToVisible(rect)
     }
     move.setLocation(SPEED * dx, SPEED * dy)
     startPt.location = pt
@@ -80,9 +79,8 @@ private class ViewportDragScrollListener :
     val label = viewport?.view
     if (label is JComponent) {
       listener = ActionListener {
-        val vp = viewport.viewPosition
-        vp.translate(move.x, move.y)
-        label.scrollRectToVisible(Rectangle(vp, viewport.size))
+        val rect = viewport.viewRect.also { it.translate(move.x, move.y) }
+        label.scrollRectToVisible(rect)
       }
       scroller.addActionListener(listener)
       scroller.start()
@@ -127,9 +125,9 @@ private class ViewportDragScrollListener :
 //     val cp = SwingUtilities.convertPoint(jc, e.point, viewport)
 //     val dx = startPt.x - cp.x
 //     val dy = startPt.y - cp.y
-//     val vp = viewport.viewPosition
-//     vp.translate(dx, dy)
-//     jc.scrollRectToVisible(Rectangle(vp, viewport.size))
+//     val rect = viewport.viewRect
+//     rect.translate(dx, dy)
+//     jc.scrollRectToVisible(rect)
 //     move.setLocation(SPEED * dx, SPEED * dy)
 //     startPt.location = cp
 //   }
@@ -150,9 +148,9 @@ private class ViewportDragScrollListener :
 //     c.cursor = DC
 //     listener = ActionListener {
 //       val viewport = SwingUtilities.getUnwrappedParent(c) as? JViewport ?: return@ActionListener
-//       val vp = viewport.viewPosition
-//       vp.translate(move.x, move.y)
-//       (c as? JComponent)?.scrollRectToVisible(Rectangle(vp, viewport.size))
+//       val rect = viewport.viewRect
+//       rect.translate(move.x, move.y)
+//       (c as? JComponent)?.scrollRectToVisible(rect)
 //     }
 //     scroller.addActionListener(listener)
 //     scroller.start()

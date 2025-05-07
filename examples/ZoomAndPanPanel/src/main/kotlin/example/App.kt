@@ -108,12 +108,11 @@ private class DragScrollListener : MouseAdapter() {
 
   override fun mouseDragged(e: MouseEvent) {
     val c = e.component
-    val p = SwingUtilities.getUnwrappedParent(c)
-    if (p is JViewport) {
-      val cp = SwingUtilities.convertPoint(c, e.point, p)
-      val vp = p.viewPosition
-      vp.translate(pp.x - cp.x, pp.y - cp.y)
-      (c as? JComponent)?.scrollRectToVisible(Rectangle(vp, p.size))
+    val viewport = SwingUtilities.getUnwrappedParent(c)
+    if (viewport is JViewport) {
+      val cp = SwingUtilities.convertPoint(c, e.point, viewport)
+      val rect = viewport.viewRect.also { it.translate(pp.x - cp.x, pp.y - cp.y) }
+      (c as? JComponent)?.scrollRectToVisible(rect)
       pp.location = cp
     }
   }

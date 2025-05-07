@@ -78,13 +78,12 @@ private class HandScrollListener : MouseAdapter() {
   override fun mouseDragged(e: MouseEvent) {
     val viewport = e.component as? JViewport ?: return
     val cp = e.point
-    val vp = viewport.viewPosition
-    vp.translate(pp.x - cp.x, pp.y - cp.y)
+    val rect = viewport.viewRect.also { it.translate(pp.x - cp.x, pp.y - cp.y) }
     val c = SwingUtilities.getUnwrappedView(viewport)
     if (withinRangeMode && c is JComponent) {
-      c.scrollRectToVisible(Rectangle(vp, viewport.size))
+      c.scrollRectToVisible(rect)
     } else {
-      viewport.viewPosition = vp
+      viewport.viewPosition = rect.location
     }
     pp.location = cp
   }

@@ -109,9 +109,9 @@ private class KineticScrollingListener1(
     this.scroller = Timer(DELAY) { e ->
       val src = e.source
       val viewport = SwingUtilities.getUnwrappedParent(label) as? JViewport
-      val vp = viewport?.viewPosition ?: Point()
-      vp.translate(-delta.x, -delta.y)
-      label.scrollRectToVisible(Rectangle(vp, viewport?.size ?: Dimension()))
+      val rect = viewport?.viewRect ?: Rectangle()
+      rect.translate(-delta.x, -delta.y)
+      label.scrollRectToVisible(rect)
       if (abs(delta.x) > 0 || abs(delta.y) > 0) {
         delta.setLocation((delta.x * D).toInt(), (delta.y * D).toInt())
       } else if (src is Timer) {
@@ -129,10 +129,10 @@ private class KineticScrollingListener1(
   override fun mouseDragged(e: MouseEvent) {
     val pt = e.point
     val viewport = e.component as? JViewport ?: return
-    val vp = viewport.viewPosition // SwingUtilities.convertPoint(vp, 0, 0, lbl)
-    vp.translate(startPt.x - pt.x, startPt.y - pt.y)
+    val rect = viewport.viewRect
+    rect.translate(startPt.x - pt.x, startPt.y - pt.y)
     delta.setLocation(SPEED * (pt.x - startPt.x), SPEED * (pt.y - startPt.y))
-    label.scrollRectToVisible(Rectangle(vp, viewport.size))
+    label.scrollRectToVisible(rect)
     startPt.location = pt
   }
 

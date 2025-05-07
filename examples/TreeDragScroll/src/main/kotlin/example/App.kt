@@ -52,9 +52,9 @@ private class DragScrollListener : MouseAdapter() {
     val c = e.component
     (SwingUtilities.getUnwrappedParent(c) as? JViewport)?.also {
       val cp = SwingUtilities.convertPoint(c, e.point, it)
-      val vp = it.viewPosition
-      vp.translate(pp.x - cp.x, pp.y - cp.y)
-      (c as? JComponent)?.scrollRectToVisible(Rectangle(vp, it.size))
+      val rect = it.viewRect
+      rect.translate(pp.x - cp.x, pp.y - cp.y)
+      (c as? JComponent)?.scrollRectToVisible(rect)
       pp.location = cp
     }
   }

@@ -37,10 +37,8 @@ fun makeUI(): Component {
     if (sp is JScrollPane) {
       val viewport = sp.viewport
       val vp = viewport.viewPosition
-      val d = hsb.unitIncrement * e.wheelRotation
-      vp.translate(d, 0)
-      val view = SwingUtilities.getUnwrappedView(viewport)
-      (view as? JComponent)?.scrollRectToVisible(Rectangle(vp, viewport.size))
+      vp.translate(hsb.unitIncrement * e.wheelRotation, 0)
+      viewport.viewPosition = vp
     }
   }
 
