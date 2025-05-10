@@ -115,7 +115,8 @@ private class CellButtonsMouseListener : MouseAdapter() {
   }
 
   override fun mouseExited(e: MouseEvent) {
-    ((e.component as? JList<*>)?.cellRenderer as? ButtonsRenderer<*>)?.rolloverIndex = -1
+    val renderer = (e.component as? JList<*>)?.cellRenderer
+    (renderer as? ButtonsRenderer<*>)?.rolloverIndex = -1
   }
 
   private fun <E> getButton(
