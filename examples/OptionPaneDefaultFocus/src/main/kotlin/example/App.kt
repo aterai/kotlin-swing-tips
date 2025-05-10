@@ -97,7 +97,8 @@ private fun makeTitledPanel(
 private class FocusHierarchyListener : HierarchyListener {
   override fun hierarchyChanged(e: HierarchyEvent) {
     val c = e.component
-    if (e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L && c.isShowing) {
+    val flg = e.changeFlags.toInt()
+    if (flg and HierarchyEvent.SHOWING_CHANGED != 0 && c.isShowing) {
       EventQueue.invokeLater { c.requestFocusInWindow() }
     }
   }
