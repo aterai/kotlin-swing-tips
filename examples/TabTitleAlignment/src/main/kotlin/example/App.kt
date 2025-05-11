@@ -39,7 +39,9 @@ fun makeUI(): Component {
   val check = JCheckBox("TOP")
   check.addActionListener { e ->
     val b = (e.source as? JCheckBox)?.isSelected == true
-    list.forEach { it.tabPlacement = if (b) SwingConstants.TOP else SwingConstants.LEFT }
+    list.forEach {
+      it.tabPlacement = if (b) SwingConstants.TOP else SwingConstants.LEFT
+    }
   }
 
   return JPanel(BorderLayout()).also {
