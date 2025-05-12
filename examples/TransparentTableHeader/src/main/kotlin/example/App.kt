@@ -41,7 +41,12 @@ fun makeUI(): Component {
       renderer: TableCellRenderer,
       row: Int,
       column: Int,
-    ) = super.prepareRenderer(renderer, row, column).also { it.foreground = Color.BLACK }
+    ) = super
+      .prepareRenderer(
+        renderer,
+        row,
+        column,
+      ).also { it.foreground = Color.BLACK }
   }
   // table.autoCreateRowSorter = true
   table.rowSelectionAllowed = true
