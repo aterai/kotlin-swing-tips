@@ -4,7 +4,6 @@ import java.awt.*
 import java.awt.geom.Arc2D
 import java.awt.geom.Area
 import java.awt.geom.Ellipse2D
-import java.awt.geom.Point2D
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 import javax.swing.*
@@ -34,6 +33,18 @@ fun makeUI(): Component {
   slider.putClientProperty("Slider.paintThumbArrowShape", true)
   progress1.model = slider.model
 
+  val key = "Slider.clockwise"
+  progress1.putClientProperty(key, true)
+  progress2.putClientProperty(key, true)
+  val check = JCheckBox("Clockwise", true)
+  check.addActionListener { e ->
+    val b = (e.getSource() as? JCheckBox)?.isSelected == true
+    for (bar in listOf(progress1, progress2)) {
+      bar.putClientProperty(key, b)
+      bar.repaint()
+    }
+  }
+
   val button = JButton("start")
   button.addActionListener { e ->
     (e.source as? JButton)?.also {
@@ -50,6 +61,11 @@ fun makeUI(): Component {
     }
   }
 
+  val box = Box.createHorizontalBox()
+  box.add(check)
+  box.add(Box.createHorizontalGlue())
+  box.add(button)
+
   return JPanel(BorderLayout()).also {
     it.add(slider, BorderLayout.NORTH)
     val pnl = JPanel(GridLayout(1, 2)).also { p ->
@@ -57,7 +73,7 @@ fun makeUI(): Component {
       p.add(progress2)
     }
     it.add(pnl)
-    it.add(button, BorderLayout.SOUTH)
+    it.add(box, BorderLayout.SOUTH)
     it.preferredSize = Dimension(320, 240)
   }
 }
@@ -72,28 +88,28 @@ private class ProgressCircleUI : BasicProgressBarUI() {
     g: Graphics,
     c: JComponent,
   ) {
-    val b = progressBar.insets // area for border
-    val barRectWidth = progressBar.width - b.right - b.left
-    val barRectHeight = progressBar.height - b.top - b.bottom
-    // if (barRectWidth <= 0 || barRectHeight <= 0) {
-    //   return
-    // }
-
+    val rect = SwingUtilities.calculateInnerArea(progressBar, null)
+    if (rect.isEmpty) {
+      return
+    }
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
 
-    val deg = 360 * progressBar.percentComplete
-    val sz = minOf(barRectWidth, barRectHeight).toDouble()
-    val cp = Point2D.Double(b.left + barRectWidth * 5, b.top + barRectHeight * .5)
-    val r = sz * .5
-
-    val track = Area(Ellipse2D.Double(cp.x - r, cp.y - r, sz, sz))
-    val sector = Area(Arc2D.Double(cp.x - r, cp.y - r, sz, sz, 90 - deg, deg, Arc2D.PIE))
-    val hole = Area(Ellipse2D.Double(cp.x - r * .5, cp.y - r * .5, r, r))
-
+    val o = progressBar.getClientProperty("Slider.clockwise")
+    val dir = if ((o as? Boolean) == true) -1 else 1
+    val deg = dir * 360 * progressBar.percentComplete
+    val sz = minOf(rect.width, rect.height).toDouble()
+    val cx = rect.centerX
+    val cy = rect.centerY
+    val or = sz * .5
+    val ir = or * .5
+    val start = 90.0
+    val track = Area(Ellipse2D.Double(cx - or, cy - or, sz, sz))
+    val sector = Area(Arc2D.Double(cx - or, cy - or, sz, sz, start, deg, Arc2D.PIE))
+    val hole = Area(Ellipse2D.Double(cx - ir, cy - ir, ir * 2.0, ir * 2.0))
     track.subtract(hole)
     sector.subtract(hole)
 
@@ -108,7 +124,8 @@ private class ProgressCircleUI : BasicProgressBarUI() {
 
     // Deal with possible text painting
     if (progressBar.isStringPainted) {
-      paintString(g, b.left, b.top, barRectWidth, barRectHeight, 0, b)
+      val ins = progressBar.insets
+      paintString(g, rect.x, rect.y, rect.width, rect.height, 0, ins)
     }
   }
 }
