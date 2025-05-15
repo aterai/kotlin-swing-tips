@@ -27,7 +27,8 @@ fun makeUI(): Component {
             row,
             hasFocus,
           )?.also {
-            (it as? JComponent)?.toolTipText = value?.let { v -> "TreeCellRenderer: $v" }
+            val c = it as? JComponent
+            c?.toolTipText = value?.let { v -> "TreeCellRenderer: $v" }
           }
       }
     }
