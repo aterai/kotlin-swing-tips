@@ -95,10 +95,10 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
     return renderer
   }
 
-  fun getNoFocusBorder(): Border {
-    val i = focusBorder.getBorderInsets(renderer)
-    return BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
-  }
+  // fun getNoFocusBorder(): Border {
+  //   val i = focusBorder.getBorderInsets(renderer)
+  //   return BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
+  // }
 
   companion object {
     val SELECTED_COLOR = Color(0xAE_16_64_FF.toInt(), true)
@@ -106,7 +106,7 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
 }
 
 private data class ListItem(
-  val title: String,
+  var title: String,
   val icon: Icon,
 )
 
@@ -165,16 +165,15 @@ private class EditableList(
   }
   private val renameTitle = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      val m = getModel()
       val title = editor.text.trim()
-      val index = editingIndex // selectedIndex
-      val item = m.getElementAt(index)
-      if (title.isNotEmpty() && index >= 0 && m is DefaultListModel<ListItem>) {
-        m.remove(index)
-        m.add(index, ListItem(editor.text, item.icon))
+      val index = editingIndex
+      window.isVisible = false
+      if (title.isNotEmpty() && index >= 0) {
+        val item = getModel().getElementAt(index)
+        item.title = title
+        selectedIndex = index
         EventQueue.invokeLater { selectedIndex = index }
       }
-      window.isVisible = false
       editingIndex = -1
     }
   }

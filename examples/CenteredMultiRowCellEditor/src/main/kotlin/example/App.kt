@@ -111,7 +111,7 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
 }
 
 private data class ListItem(
-  val title: String,
+  var title: String,
   val icon: Icon,
 )
 
@@ -189,17 +189,15 @@ private class EditableList(
   }
   private val renameTitle = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      val m = getModel()
       val title = editor.text.trim()
       val index = editingIndex
-      if (title.isNotEmpty() && index >= 0 && m is DefaultListModel<ListItem>) {
-        val item = m.getElementAt(index)
-        m.remove(index)
-        m.add(index, ListItem(editor.text.trim(), item.icon))
-        selectedIndex = index // 1. Both must be run
-        EventQueue.invokeLater { selectedIndex = index } // 2. Both must be run
-      }
       window?.isVisible = false
+      if (title.isNotEmpty() && index >= 0) {
+        val item = getModel().getElementAt(index)
+        item.title = title
+        selectedIndex = index
+        EventQueue.invokeLater { selectedIndex = index }
+      }
       editingIndex = -1
     }
   }

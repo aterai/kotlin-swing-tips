@@ -101,7 +101,7 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
 }
 
 private data class ListItem(
-  val title: String,
+  var title: String,
   val icon: Icon,
 )
 
@@ -206,13 +206,11 @@ private class EditableList(
   }
   private val renameTitle = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      val m = getModel()
       val title = editor.text.trim()
       val index = selectedIndex
-      val item = m.getElementAt(index)
-      if (title.isNotEmpty() && index >= 0 && m is DefaultListModel<ListItem>) {
-        m.remove(index)
-        m.add(index, ListItem(editor.text, item.icon))
+      if (title.isNotEmpty() && index >= 0) {
+        val item = getModel().getElementAt(index)
+        item.title = title
         selectedIndex = index
       }
       glassPane.isVisible = false
@@ -222,7 +220,6 @@ private class EditableList(
   init {
     editor.border = BorderFactory.createLineBorder(Color.BLACK)
     editor.horizontalAlignment = SwingConstants.CENTER
-    // editor.setOpaque(false)
     // editor.setLineWrap(true)
     val im = editor.getInputMap(WHEN_FOCUSED)
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), RENAME)
