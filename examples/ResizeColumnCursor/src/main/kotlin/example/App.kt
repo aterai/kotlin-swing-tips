@@ -111,11 +111,10 @@ private object ResizeCursorUtils {
     pt: Point,
     column: Int,
   ): TableColumn? {
-    val midPoint = rect.x + rect.width / 2
     val columnIndex = if (header.componentOrientation.isLeftToRight) {
-      if (pt.x < midPoint) column - 1 else column
+      if (pt.x < rect.centerX) column - 1 else column
     } else {
-      if (pt.x < midPoint) column else column - 1
+      if (pt.x < rect.centerX) column else column - 1
     }
     return if (columnIndex == -1) null else header.columnModel.getColumn(columnIndex)
   }
