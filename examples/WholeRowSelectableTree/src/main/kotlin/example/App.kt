@@ -145,7 +145,14 @@ private class WholeRowSelectableTreeUI : BasicTreeUI() {
               isLeaf,
             )
           }
-          if (shouldPaintExpandControl(path, row, isExpanded, hasBeenExpanded, isLeaf)) {
+          if (shouldPaintExpandControl(
+              path,
+              row,
+              isExpanded,
+              hasBeenExpanded,
+              isLeaf,
+            )
+          ) {
             paintExpandControl(
               g,
               paintBounds,
