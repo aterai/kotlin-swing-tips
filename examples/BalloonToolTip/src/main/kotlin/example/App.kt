@@ -43,18 +43,25 @@ private fun makeList1(model: DefaultListModel<String>) = object : JList<String>(
   override fun updateUI() {
     cellRenderer = null
     super.updateUI()
-    val r = DefaultListCellRenderer()
+    val renderer = DefaultListCellRenderer()
     setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-      r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
-        val vp = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
-        if (vp is JViewport) {
-          val rect = SwingUtilities.calculateInnerArea(vp, vp.bounds)
-          val fm = it.getFontMetrics(it.font)
-          val str = value?.toString() ?: ""
-          val b = fm.stringWidth(str) > rect.width
-          (it as? JComponent)?.toolTipText = if (b) str else null
+      renderer
+        .getListCellRendererComponent(
+          list,
+          value,
+          index,
+          isSelected,
+          cellHasFocus,
+        ).also {
+          val vp = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
+          if (vp is JViewport) {
+            val rect = SwingUtilities.calculateInnerArea(vp, vp.bounds)
+            val fm = it.getFontMetrics(it.font)
+            val str = value?.toString() ?: ""
+            val b = fm.stringWidth(str) > rect.width
+            (it as? JComponent)?.toolTipText = if (b) str else null
+          }
         }
-      }
     }
   }
 }
@@ -63,18 +70,25 @@ private fun makeList2(model: DefaultListModel<String>) = object : JList<String>(
   override fun updateUI() {
     cellRenderer = null
     super.updateUI()
-    val r = DefaultListCellRenderer()
+    val renderer = DefaultListCellRenderer()
     setCellRenderer { list, value, index, isSelected, cellHasFocus ->
-      r.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus).also {
-        val vp = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
-        if (vp is JViewport) {
-          val rect = SwingUtilities.calculateInnerArea(vp, vp.bounds)
-          val fm = it.getFontMetrics(it.font)
-          val str = value?.toString() ?: ""
-          val b = fm.stringWidth(str) > rect.width
-          (it as? JComponent)?.toolTipText = if (b) str else list.toolTipText
+      renderer
+        .getListCellRendererComponent(
+          list,
+          value,
+          index,
+          isSelected,
+          cellHasFocus,
+        ).also {
+          val vp = SwingUtilities.getAncestorOfClass(JViewport::class.java, list)
+          if (vp is JViewport) {
+            val rect = SwingUtilities.calculateInnerArea(vp, vp.bounds)
+            val fm = it.getFontMetrics(it.font)
+            val str = value?.toString() ?: ""
+            val b = fm.stringWidth(str) > rect.width
+            (it as? JComponent)?.toolTipText = if (b) str else list.toolTipText
+          }
         }
-      }
     }
   }
 }
@@ -99,7 +113,8 @@ private class BalloonToolTip : JToolTip() {
     super.updateUI()
     listener = HierarchyListener { e ->
       val c = e.component
-      if (e.changeFlags.toInt() and HierarchyEvent.SHOWING_CHANGED != 0 && c.isShowing) {
+      val f = e.changeFlags.toInt() and HierarchyEvent.SHOWING_CHANGED != 0
+      if (f != 0 && c.isShowing) {
         SwingUtilities
           .getWindowAncestor(c)
           ?.takeIf { it.graphicsConfiguration?.isTranslucencyCapable == true }

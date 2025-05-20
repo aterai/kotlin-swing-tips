@@ -274,7 +274,8 @@ private class BalloonToolTip : JToolTip() {
     super.updateUI()
     listener = HierarchyListener { e ->
       val c = e.component
-      if (e.changeFlags.toInt() and HierarchyEvent.SHOWING_CHANGED != 0 && c.isShowing) {
+      val f = e.changeFlags.toInt() and HierarchyEvent.SHOWING_CHANGED != 0
+      if (f && c.isShowing) {
         SwingUtilities
           .getWindowAncestor(c)
           ?.takeIf { it.graphicsConfiguration?.isTranslucencyCapable == true }
