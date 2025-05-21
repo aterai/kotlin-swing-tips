@@ -2,6 +2,8 @@ package example
 
 import java.awt.*
 import java.awt.event.ActionEvent
+import java.awt.event.ComponentAdapter
+import java.awt.event.ComponentEvent
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
@@ -276,6 +278,11 @@ private class EditableList(
             val id = ActionEvent.ACTION_PERFORMED
             renameTitle.actionPerformed(ActionEvent(c, id, ""))
           }
+        }
+      })
+      addComponentListener(object : ComponentAdapter() {
+        override fun componentResized(e: ComponentEvent) {
+          setVisible(false)
         }
       })
     }

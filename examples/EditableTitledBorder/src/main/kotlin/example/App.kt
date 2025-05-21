@@ -2,6 +2,8 @@ package example
 
 import java.awt.*
 import java.awt.event.ActionEvent
+import java.awt.event.ComponentAdapter
+import java.awt.event.ComponentEvent
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
@@ -92,8 +94,11 @@ private class EditableTitledBorder(
   }
   private val glassPane: Container = object : JLabel() {
     private var listener: MouseListener? = null
+    private var resizeHandler: ComponentAdapter? = null
 
     override fun updateUI() {
+      removeMouseListener(listener)
+      removeComponentListener(resizeHandler)
       super.updateUI()
       focusTraversalPolicy = object : DefaultFocusTraversalPolicy() {
         public override fun accept(c: Component) = c == editor
@@ -107,6 +112,12 @@ private class EditableTitledBorder(
         }
       }
       addMouseListener(listener)
+      resizeHandler = object : ComponentAdapter() {
+        override fun componentResized(e: ComponentEvent?) {
+          setVisible(false)
+        }
+      }
+      addComponentListener(resizeHandler)
       isOpaque = false
     }
 
@@ -255,7 +266,7 @@ private class EditableTitledBorder(
     border: Border?,
     c: Component,
   ): Insets {
-    var ins = Insets(0, 0, 0, 0)
+    val ins = Insets(0, 0, 0, 0)
     return when (border) {
       null -> ins
       is AbstractBorder -> border.getBorderInsets(c, ins)
