@@ -227,16 +227,36 @@ private class BasicTabViewButtonUI : TabViewButtonUI() {
         viewRect.y - 2,
       )
       g.color = color.brighter()
-      g.drawLine(viewRect.x, viewRect.y - 1, viewRect.x + viewRect.width, viewRect.y - 1)
+      g.drawLine(
+        viewRect.x,
+        viewRect.y - 1,
+        viewRect.x + viewRect.width,
+        viewRect.y - 1,
+      )
       g.color = color
       g.drawLine(viewRect.x, viewRect.y, viewRect.x + viewRect.width, viewRect.y)
     } else if (model.isRollover) {
       g.color = color
-      g.drawLine(viewRect.x + 1, viewRect.y, viewRect.x + viewRect.width - 1, viewRect.y)
+      g.drawLine(
+        viewRect.x + 1,
+        viewRect.y,
+        viewRect.x + viewRect.width - 1,
+        viewRect.y,
+      )
       g.color = color.brighter()
-      g.drawLine(viewRect.x, viewRect.y + 1, viewRect.x + viewRect.width, viewRect.y + 1)
+      g.drawLine(
+        viewRect.x,
+        viewRect.y + 1,
+        viewRect.x + viewRect.width,
+        viewRect.y + 1,
+      )
       g.color = color
-      g.drawLine(viewRect.x, viewRect.y + 2, viewRect.x + viewRect.width, viewRect.y + 2)
+      g.drawLine(
+        viewRect.x,
+        viewRect.y + 2,
+        viewRect.x + viewRect.width,
+        viewRect.y + 2,
+      )
     }
     (b.getClientProperty(BasicHTML.propertyKey) as? View)?.paint(g, textRect) ?: also {
       if (model.isSelected) {
