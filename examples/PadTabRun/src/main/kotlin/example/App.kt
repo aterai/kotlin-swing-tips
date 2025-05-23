@@ -60,15 +60,12 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeTabbedPane(
-  title: String,
-  tabbedPane: JTabbedPane,
-): JTabbedPane {
-  tabbedPane.addTab("1111111111111111111111111111", ColorIcon(Color.RED), JLabel(title))
-  tabbedPane.addTab("2", ColorIcon(Color.GREEN), JLabel())
-  tabbedPane.addTab("333333333333333333333333333333333", ColorIcon(Color.BLUE), JLabel())
-  tabbedPane.addTab("444444444444", ColorIcon(Color.ORANGE), JLabel())
-  return tabbedPane
+private fun makeTabbedPane(title: String, tabs: JTabbedPane): JTabbedPane {
+  tabs.addTab("1".repeat(28), ColorIcon(Color.RED), JLabel(title))
+  tabs.addTab("2", ColorIcon(Color.GREEN), JLabel())
+  tabs.addTab("3".repeat(33), ColorIcon(Color.BLUE), JLabel())
+  tabs.addTab("4".repeat(12), ColorIcon(Color.ORANGE), JLabel())
+  return tabs
 }
 
 private class ColorIcon(
