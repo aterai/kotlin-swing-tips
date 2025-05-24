@@ -87,7 +87,7 @@ private class TextAreaCellRenderer : TableCellRenderer {
     renderer.bounds = table.getCellRect(row, column, false)
     val preferredHeight = renderer.preferredSize.height
     while (rowAndCellHeights.size <= row) {
-      rowAndCellHeights.add(createMutableList(column))
+      rowAndCellHeights.add(ArrayList(column))
     }
     val list = rowAndCellHeights[row]
     while (list.size <= column) {
@@ -99,8 +99,6 @@ private class TextAreaCellRenderer : TableCellRenderer {
       table.setRowHeight(row, max)
     }
   }
-
-  private fun <E> createMutableList(initialCapacity: Int) = ArrayList<E>(initialCapacity)
 }
 
 fun main() {
