@@ -1,7 +1,6 @@
 package example
 
 import java.awt.*
-import java.util.Arrays
 import javax.swing.*
 import javax.swing.event.AncestorEvent
 import javax.swing.event.AncestorListener
@@ -132,12 +131,10 @@ private class FocusAncestorListener : AncestorListener {
   }
 }
 
-fun findCommonParent(paths: Array<TreePath>): TreePath? = Arrays
-  .stream(paths)
+fun findCommonParent(paths: Array<TreePath>) = paths
   .map { it.getPath() }
-  .reduce(::getCommonPath)
-  .map { TreePath(it) }
-  .orElse(null)
+  .reduce { n1, n2 -> getCommonPath(n1, n2) }
+  .let { TreePath(it) }
 
 fun <T> getCommonPath(node1: Array<T>, node2: Array<T>): Array<T?> {
   val min = min(node1.size, node2.size)
