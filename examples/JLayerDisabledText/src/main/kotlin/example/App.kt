@@ -84,7 +84,8 @@ private class DisableInputLayerUI<V : AbstractButton> : LayerUI<V>() {
         c.glassPane.addMouseListener(mouseBlocker)
         c.glassPane.addKeyListener(keyBlocker)
       }
-      c.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK or
+      c.layerEventMask =
+        AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK or
         AWTEvent.MOUSE_WHEEL_EVENT_MASK or AWTEvent.KEY_EVENT_MASK or
         AWTEvent.FOCUS_EVENT_MASK or AWTEvent.COMPONENT_EVENT_MASK
     }
