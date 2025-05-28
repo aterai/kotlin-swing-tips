@@ -8,7 +8,7 @@ import javax.swing.table.TableCellRenderer
 
 fun makeUI(): Component {
   val columnNames = arrayOf("Integer", "Integer", "Boolean")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf(50, 50, false),
     arrayOf(13, 13, true),
     arrayOf(0, 0, false),
@@ -55,7 +55,11 @@ private class SliderRenderer : TableCellRenderer {
     row: Int,
     column: Int,
   ): Component {
-    renderer.background = if (isSelected) table.selectionBackground else table.background
+    renderer.background = if (isSelected) {
+      table.selectionBackground
+    } else {
+      table.background
+    }
     if (value is Int) {
       renderer.value = value
     }
