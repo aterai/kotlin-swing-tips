@@ -43,10 +43,10 @@ fun makeUI(): Component {
         val d1 = DefaultPersistenceDelegate(arrayOf("column", "sortOrder"))
         it.setPersistenceDelegate(RowSorter.SortKey::class.java, d1)
         it.writeObject(table.rowSorter.sortKeys)
-        val d2 = DefaultTableModelPersistenceDelegate()
+        val d2 = TableModelPersistenceDelegate()
         it.setPersistenceDelegate(DefaultTableModel::class.java, d2)
         it.writeObject(table.model)
-        val d3 = DefaultTableColumnModelPersistenceDelegate()
+        val d3 = TableColumnModelPersistenceDelegate()
         it.setPersistenceDelegate(DefaultTableColumnModel::class.java, d3)
         it.writeObject(table.columnModel)
       }
@@ -90,7 +90,7 @@ fun makeUI(): Component {
   }
 }
 
-private class DefaultTableModelPersistenceDelegate : DefaultPersistenceDelegate() {
+private class TableModelPersistenceDelegate : DefaultPersistenceDelegate() {
   override fun initialize(
     type: Class<*>,
     oldInstance: Any,
@@ -109,7 +109,7 @@ private class DefaultTableModelPersistenceDelegate : DefaultPersistenceDelegate(
   }
 }
 
-private class DefaultTableColumnModelPersistenceDelegate : DefaultPersistenceDelegate() {
+private class TableColumnModelPersistenceDelegate : DefaultPersistenceDelegate() {
   override fun initialize(
     type: Class<*>,
     oldInstance: Any,
