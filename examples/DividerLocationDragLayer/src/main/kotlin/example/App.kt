@@ -13,7 +13,11 @@ fun makeUI(): Component {
   val check = JCheckBox("VERTICAL")
   check.addActionListener { e ->
     val b = (e.source as? JCheckBox)?.isSelected == true
-    split.orientation = if (b) JSplitPane.VERTICAL_SPLIT else JSplitPane.HORIZONTAL_SPLIT
+    split.orientation = if (b) {
+      JSplitPane.VERTICAL_SPLIT
+    } else {
+      JSplitPane.HORIZONTAL_SPLIT
+    }
   }
 
   return JPanel(BorderLayout()).also {
