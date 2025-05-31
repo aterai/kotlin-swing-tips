@@ -11,7 +11,7 @@ import javax.swing.text.TabStop
 
 fun makeUI(): Component {
   val columnNames = arrayOf("String", "Double", "ALIGN_DECIMAL")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("aaa", 1.4142, 1.4142),
     arrayOf("bbb", 98.765, 98.765),
     arrayOf("CCC", 1.73, 1.73),
@@ -50,7 +50,7 @@ private class AlignDecimalCellRenderer : TableCellRenderer {
     override fun updateUI() {
       super.updateUI()
       isOpaque = false
-      putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true)
+      putClientProperty(HONOR_DISPLAY_PROPERTIES, true)
       EventQueue.invokeLater {
         val attr = getStyle(StyleContext.DEFAULT_STYLE)
         val ts = arrayOf(TabStop(25f, TabStop.ALIGN_DECIMAL, TabStop.LEAD_NONE))

@@ -11,7 +11,7 @@ import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 
 private val columnNames = arrayOf("Boolean", "Integer", "String")
-private val data = arrayOf(
+private val data = arrayOf<Array<Any>>(
   arrayOf(true, 1, "BBB"),
   arrayOf(false, 12, "AAA"),
   arrayOf(true, 2, "DDD"),

@@ -7,7 +7,7 @@ import javax.swing.*
 import javax.swing.table.DefaultTableModel
 
 private val columnNames = arrayOf("String", "Integer", "Boolean")
-private val data = arrayOf(
+private val data = arrayOf<Array<Any>>(
   arrayOf("aaa", 12, true),
   arrayOf("bbb", 5, false),
   arrayOf("CCC", 92, true),
@@ -57,7 +57,7 @@ fun makeUI(): Component {
   })
 
   val button = JButton("add")
-  button.addActionListener { model.addRow(arrayOf("", 0, false)) }
+  button.addActionListener { model.addRow(arrayOf<Any>("", 0, false)) }
 
   return JPanel(BorderLayout()).also {
     it.add(scroll)
