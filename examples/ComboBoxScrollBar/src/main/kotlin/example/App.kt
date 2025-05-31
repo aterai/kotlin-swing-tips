@@ -47,19 +47,16 @@ fun makeUI(): Component {
         }
 
         override fun createPopup() = object : BasicComboPopup(comboBox) {
-          override fun createScroller(): JScrollPane {
-            val sp = object : JScrollPane(list) {
+          override fun createScroller() = object : JScrollPane(list) {
               override fun updateUI() {
                 super.updateUI()
                 getVerticalScrollBar().setUI(WithoutArrowButtonScrollBarUI())
                 getHorizontalScrollBar().setUI(WithoutArrowButtonScrollBarUI())
+                verticalScrollBarPolicy = VERTICAL_SCROLLBAR_AS_NEEDED
+                horizontalScrollBarPolicy = HORIZONTAL_SCROLLBAR_NEVER
+                horizontalScrollBar = null
               }
             }
-            sp.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED
-            sp.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
-            sp.horizontalScrollBar = null
-            return sp
-          }
         }
       })
       (getAccessibleContext().getAccessibleChild(0) as? JComponent)?.also {
