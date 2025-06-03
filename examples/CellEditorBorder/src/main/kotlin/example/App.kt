@@ -7,7 +7,7 @@ import javax.swing.table.TableCellEditor
 
 fun makeUI(): Component {
   val columnNames = arrayOf("String", "Integer", "Boolean")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("aaa", 12, true),
     arrayOf("bbb", 5, false),
     arrayOf("CCC", 92, true),
@@ -59,7 +59,7 @@ private class TablePopupMenu : JPopupMenu() {
       val table = invoker as? JTable
       val model = table?.model as? DefaultTableModel
       if (model != null) {
-        model.addRow(arrayOf("New row", model.rowCount, false))
+        model.addRow(arrayOf<Any>("New row", model.rowCount, false))
         val r = table.getCellRect(model.rowCount - 1, 0, true)
         table.scrollRectToVisible(r)
       }

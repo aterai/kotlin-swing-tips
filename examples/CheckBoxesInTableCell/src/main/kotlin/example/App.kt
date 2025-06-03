@@ -10,7 +10,7 @@ import javax.swing.table.TableCellRenderer
 
 fun makeUI(): Component {
   val columnNames = arrayOf("user", "rwx")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("owner", 7),
     arrayOf("group", 6),
     arrayOf("other", 5),
@@ -115,7 +115,7 @@ private class CheckBoxesEditor :
           }
           am.put(t, a)
         }
-        val im = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+        val im = getInputMap(WHEN_IN_FOCUSED_WINDOW)
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_R, 0), titles[0])
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), titles[1])
         im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, 0), titles[2])

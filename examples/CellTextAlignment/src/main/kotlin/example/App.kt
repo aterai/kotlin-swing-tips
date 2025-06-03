@@ -13,7 +13,7 @@ private val customRadio = JRadioButton("custom")
 
 fun makeUI(): Component {
   val columnNames = arrayOf("Integer", "String", "Boolean")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf(12, "aaa", true),
     arrayOf(5, "bbb", false),
     arrayOf(92, "CCC", true),
