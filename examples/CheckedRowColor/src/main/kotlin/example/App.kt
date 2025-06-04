@@ -56,7 +56,7 @@ fun makeTable(model: TableModel): JTable {
 
 fun makeUI(): Component {
   val columnNames = arrayOf("String", "Number", "Boolean")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("aaa", 1, false),
     arrayOf("bbb", 20, false),
     arrayOf("ccc", 2, false),

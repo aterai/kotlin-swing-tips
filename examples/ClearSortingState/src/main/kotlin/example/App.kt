@@ -9,7 +9,7 @@ import javax.swing.table.JTableHeader
 
 fun makeUI(): Component {
   val columnNames = arrayOf("String", "Integer", "Boolean")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("aaa", 12, true),
     arrayOf("bbb", 5, false),
     arrayOf("CCC", 92, true),
@@ -30,7 +30,7 @@ fun makeUI(): Component {
         val viewColumn = tbl.columnAtPoint(e.point)
         val column = tbl.convertColumnIndexToModel(viewColumn)
         if (column >= 0 && e.isShiftDown) {
-          EventQueue.invokeLater { sorter.setSortKeys(null) }
+          EventQueue.invokeLater { sorter.sortKeys = null }
         }
       }
     }

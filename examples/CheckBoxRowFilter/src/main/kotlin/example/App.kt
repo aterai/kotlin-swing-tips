@@ -9,7 +9,7 @@ import javax.swing.table.TableRowSorter
 
 fun makeUI(): Component {
   val columnNames = arrayOf("#", "String", "Integer")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf(false, "aaa", 12),
     arrayOf(false, "bbb", 5),
     arrayOf(false, "CCC", 92),
