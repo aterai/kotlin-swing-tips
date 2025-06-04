@@ -76,7 +76,7 @@ private class TextComponentPopupMenu(
     tc.actionMap.put("undo", undoAction)
     tc.actionMap.put("redo", redoAction)
     val msk = Toolkit.getDefaultToolkit().menuShortcutKeyMask
-    val im = tc.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+    val im = tc.getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, msk), "undo")
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, msk), "redo")
 
