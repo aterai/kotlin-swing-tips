@@ -178,17 +178,18 @@ private class CheckBoxesEditor :
     it.updateButtons(value)
   }
 
-  override fun getCellEditorValue() = EnumSet.noneOf(Permissions::class.java).also {
-    if (renderer.buttons[0].isSelected) {
-      it.add(Permissions.READ)
+  override fun getCellEditorValue(): EnumSet<Permissions> =
+    EnumSet.noneOf(Permissions::class.java).also {
+      if (renderer.buttons[0].isSelected) {
+        it.add(Permissions.READ)
+      }
+      if (renderer.buttons[1].isSelected) {
+        it.add(Permissions.WRITE)
+      }
+      if (renderer.buttons[2].isSelected) {
+        it.add(Permissions.EXECUTE)
+      }
     }
-    if (renderer.buttons[1].isSelected) {
-      it.add(Permissions.WRITE)
-    }
-    if (renderer.buttons[2].isSelected) {
-      it.add(Permissions.EXECUTE)
-    }
-  }
 
   override fun isCellEditable(e: EventObject): Boolean {
     EventQueue.invokeLater {
