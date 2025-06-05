@@ -13,7 +13,7 @@ import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreePath
 
 private val columnNames = arrayOf("String", "Integer", "Boolean")
-private val data = arrayOf(
+private val data = arrayOf<Array<Any>>(
   arrayOf("aaa", 12, true),
   arrayOf("bbb", 5, false),
   arrayOf("CCC", 92, true),
@@ -43,7 +43,7 @@ fun makeUI(): Component {
   timer.addActionListener {
     val date = LocalDateTime.now(ZoneId.systemDefault())
     // JTable
-    model.addRow(arrayOf(date.toString(), model.rowCount, false))
+    model.addRow(arrayOf<Any>(date.toString(), model.rowCount, false))
     val i = table.convertRowIndexToView(model.rowCount - 1)
     val r = table.getCellRect(i, 0, true)
     table.scrollRectToVisible(r)

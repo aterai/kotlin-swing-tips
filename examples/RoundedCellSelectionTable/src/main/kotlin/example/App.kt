@@ -32,7 +32,7 @@ private fun makeScrollPane(view: Component): JScrollPane {
 
 fun makeModel(): TableModel {
   val columnNames = arrayOf("String", "Integer", "Boolean")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("aaa", 12, true),
     arrayOf("bbb", 5, false),
     arrayOf("CCC", 92, true),
