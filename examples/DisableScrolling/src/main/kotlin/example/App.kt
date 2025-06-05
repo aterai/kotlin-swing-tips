@@ -6,7 +6,7 @@ import javax.swing.*
 import javax.swing.table.DefaultTableModel
 
 private val columnNames = arrayOf("String", "Integer", "Boolean")
-private val data = arrayOf(
+private val data = arrayOf<Array<Any>>(
   arrayOf("aaa", 12, true),
   arrayOf("bbb", 5, false),
   arrayOf("CCC", 92, true),
@@ -30,7 +30,7 @@ private val scroll = JScrollPane(table)
 
 fun makeUI(): Component {
   for (i in 0..<100) {
-    model.addRow(arrayOf("Name $i", i, false))
+    model.addRow(arrayOf<Any>("Name $i", i, false))
   }
   table.autoCreateRowSorter = true
   table.componentPopupMenu = TablePopupMenu()
@@ -60,7 +60,7 @@ private class TablePopupMenu : JPopupMenu() {
       val table = invoker as? JTable
       val model = table?.model
       if (model is DefaultTableModel) {
-        model.addRow(arrayOf("New row", 0, false))
+        model.addRow(arrayOf<Any>("New row", 0, false))
         val r = table.getCellRect(model.rowCount - 1, 0, true)
         table.scrollRectToVisible(r)
       }

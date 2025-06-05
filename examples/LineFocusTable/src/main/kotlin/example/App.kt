@@ -31,7 +31,7 @@ fun makeUI(): Component {
 
 fun makeModel(): TableModel {
   val columnNames = arrayOf("String", "Integer", "Boolean")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("aaa", 12, true),
     arrayOf("bbb", 5, false),
     arrayOf("CCC", 92, true),
@@ -218,7 +218,7 @@ private class TablePopupMenu : JPopupMenu() {
       val table = invoker as? JTable
       val model = table?.model
       if (model is DefaultTableModel) {
-        model.addRow(arrayOf("New row", model.getRowCount(), false))
+        model.addRow(arrayOf<Any>("New row", model.rowCount, false))
         val r = table.getCellRect(model.rowCount - 1, 0, true)
         table.scrollRectToVisible(r)
       }
