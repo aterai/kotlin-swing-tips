@@ -161,7 +161,7 @@ private class RolloverNumberRenderer(
 private class RolloverBooleanRenderer(
   private val highlighter: HighlightListener,
 ) : TableCellRenderer {
-  private final val check = object : JCheckBox() {
+  private val check = object : JCheckBox() {
     override fun updateUI() {
       super.updateUI()
       // horizontalAlignment = CENTER
