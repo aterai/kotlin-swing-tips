@@ -55,7 +55,7 @@ fun makeUI(): Component {
         (xd.readObject() as? DefaultTableModel)?.also {
           table.model = it
           table.autoCreateRowSorter = true
-          table.rowSorter.setSortKeys(keys)
+          table.rowSorter.sortKeys = keys
         }
       }
     }

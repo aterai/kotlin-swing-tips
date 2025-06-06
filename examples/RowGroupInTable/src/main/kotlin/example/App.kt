@@ -44,7 +44,7 @@ fun makeUI(): Component {
   }
   val button = JButton("clear SortKeys")
   button.addActionListener {
-    table.rowSorter.setSortKeys(null)
+    table.rowSorter.sortKeys = null
   }
 
   return JPanel(BorderLayout()).also {

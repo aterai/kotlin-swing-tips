@@ -10,7 +10,7 @@ import javax.swing.table.TableRowSorter
 
 fun makeUI(): Component {
   val columnNames = arrayOf("String", "Integer", "Boolean")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("a", 12, true),
     arrayOf("b", 5, false),
     arrayOf("C", 92, true),
@@ -36,7 +36,7 @@ fun makeUI(): Component {
   table.autoResizeMode = JTable.AUTO_RESIZE_OFF
 
   val button = JButton("clear SortKeys")
-  button.addActionListener { sorter.setSortKeys(null) }
+  button.addActionListener { sorter.sortKeys = null }
 
   val mb = JMenuBar()
   mb.add(LookAndFeelUtils.createLookAndFeelMenu())
@@ -161,7 +161,7 @@ private class RotateIcon(
     require(rotate % 90 == 0) { "$rotate: Rotate must be (rotate % 90 == 0)" }
     dim.setSize(icon.iconWidth, icon.iconHeight)
     image = BufferedImage(dim.width, dim.height, BufferedImage.TYPE_INT_ARGB)
-    val g = image.getGraphics()
+    val g = image.graphics
     icon.paintIcon(null, g, 0, 0)
     g.dispose()
     val numQuadrants = rotate / 90 % 4
