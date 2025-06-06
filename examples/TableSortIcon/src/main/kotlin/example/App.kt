@@ -8,7 +8,7 @@ import javax.swing.table.DefaultTableModel
 
 fun makeUI(): Component {
   val columnNames = arrayOf("String", "Integer", "Boolean")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("aaa", 12, true),
     arrayOf("bbb", 5, false),
     arrayOf("CCC", 92, true),
@@ -22,7 +22,7 @@ fun makeUI(): Component {
 
   val clearButton = JButton("clear SortKeys")
   clearButton.addActionListener {
-    table.rowSorter.setSortKeys(null)
+    table.rowSorter.sortKeys = null
   }
 
   return JPanel(BorderLayout()).also {

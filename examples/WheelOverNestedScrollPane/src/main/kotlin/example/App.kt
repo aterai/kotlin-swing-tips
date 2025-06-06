@@ -21,7 +21,7 @@ private val TEXT = """
 
 fun makeUI(): Component {
   val columnNames = arrayOf("String", "Integer", "Boolean")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("aaa", 12, true),
     arrayOf("zzz", 6, false),
     arrayOf("bbb", 22, true),

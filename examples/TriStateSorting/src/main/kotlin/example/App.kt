@@ -10,7 +10,7 @@ fun makeUI(): Component {
   val check1 = JRadioButton("Default: ASCENDING<->DESCENDING", false)
   val check2 = JRadioButton("ASCENDING->DESCENDING->UNSORTED", true)
   val columnNames = arrayOf("String", "Integer", "Boolean")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("aaa", 12, true),
     arrayOf("bbb", 5, false),
     arrayOf("CCC", 92, true),

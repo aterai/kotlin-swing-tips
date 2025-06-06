@@ -17,7 +17,7 @@ import kotlin.math.pow
 
 fun makeUI(): Component {
   val columnNames = arrayOf("String", "Integer", "Boolean")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any?>>(
     arrayOf("aaa", 12, true),
     arrayOf("bbb", 5, false),
     arrayOf(null, 15, true),
