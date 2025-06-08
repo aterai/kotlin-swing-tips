@@ -84,7 +84,7 @@ private fun makeTable(model: TableModel): JTable {
   return table
 }
 
-private fun makeRow(i: Int, title: String, path: String) = arrayOf(
+private fun makeRow(i: Int, title: String, path: String) = arrayOf<Any?>(
   i,
   title,
   runCatching { URI(path) }.getOrNull(),

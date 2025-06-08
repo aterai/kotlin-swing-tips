@@ -10,7 +10,7 @@ import javax.swing.table.TableCellRenderer
 
 fun makeUI(): Component {
   val columnNames = arrayOf("", "Boolean1", "Boolean2", "Boolean3", "Boolean4")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("aaa", true, true, false, true),
     arrayOf("bbb", false, false, false, true),
     arrayOf("ccc", false, true, false, true),

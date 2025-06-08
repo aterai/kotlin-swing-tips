@@ -11,7 +11,7 @@ import javax.swing.table.TableCellEditor
 
 fun makeUI(): Component {
   val columnNames = arrayOf("Integer", "String", "Date")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf(-1, "AAA", Date()),
     arrayOf(2, "BBB", Date()),
     arrayOf(-9, "EEE", Date()),

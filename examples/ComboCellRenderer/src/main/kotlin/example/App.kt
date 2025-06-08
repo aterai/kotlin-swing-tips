@@ -9,7 +9,7 @@ import javax.swing.table.TableCellRenderer
 fun makeUI(): Component {
   val comboModel = arrayOf("Name 0", "Name 1", "Name 2")
   val columnNames = arrayOf("Integer", "String", "Boolean")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf(12, comboModel[0], true),
     arrayOf(5, comboModel[2], false),
     arrayOf(92, comboModel[1], true),

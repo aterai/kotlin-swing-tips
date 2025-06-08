@@ -50,7 +50,7 @@ private class RowDataModel : DefaultTableModel() {
   private var number = 0
 
   fun addRowData(t: RowData) {
-    val obj = arrayOf(number, t.name, t.comment)
+    val obj = arrayOf<Any>(number, t.name, t.comment)
     super.addRow(obj)
     number++
   }

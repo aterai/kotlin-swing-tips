@@ -12,7 +12,7 @@ import javax.swing.table.TableCellEditor
 
 fun makeUI(): Component {
   val columnNames = arrayOf("String", "Boolean")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("AAA", true),
     arrayOf("bbb", false),
     arrayOf("CCC", true),
