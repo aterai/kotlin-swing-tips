@@ -44,7 +44,7 @@ private class RotateIcon(
     require(rotate % 90 == 0) { "$rotate: Rotate must be (rotate % 90 == 0)" }
     dim.setSize(icon.iconWidth, icon.iconHeight)
     image = BufferedImage(dim.width, dim.height, BufferedImage.TYPE_INT_ARGB)
-    val g = image.getGraphics()
+    val g = image.graphics
     icon.paintIcon(null, g, 0, 0)
     g.dispose()
     val numQuadrants = rotate / 90 % 4
