@@ -49,7 +49,7 @@ private class ComboCellRenderer : TableCellRenderer {
   ): Component {
     combo.removeAllItems()
     if (value is DefaultComboBoxModel<*>) {
-      combo.addItem(value.selectedItem.toString())
+      combo.addItem(value.selectedItem?.toString())
     }
     return combo
   }
