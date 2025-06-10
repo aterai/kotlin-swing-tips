@@ -41,7 +41,7 @@ private class ComboTask : BackgroundTask() {
     }
   }
 
-  public override fun done() {
+  override fun done() {
     if (!combo.isDisplayable) {
       cancel(true)
       return
@@ -107,7 +107,7 @@ fun makeTitledPanel(
 
 private open class BackgroundTask : SwingWorker<Array<String>, Int>() {
   @Throws(InterruptedException::class)
-  public override fun doInBackground(): Array<String> {
+  override fun doInBackground(): Array<String> {
     var current = 0
     val list = mutableListOf<String>()
     while (current <= MAX && !isCancelled) {

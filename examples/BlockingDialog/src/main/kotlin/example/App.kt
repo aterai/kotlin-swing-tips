@@ -17,7 +17,7 @@ fun makeUI(): Component {
     dialog.background = Color(color, true)
 
     object : BackgroundTask() {
-      public override fun done() {
+      override fun done() {
         if (!panel.isDisplayable) {
           cancel(true)
           return
@@ -40,7 +40,7 @@ fun makeUI(): Component {
 
 open class BackgroundTask : SwingWorker<String, Unit?>() {
   @Throws(InterruptedException::class)
-  public override fun doInBackground(): String {
+  override fun doInBackground(): String {
     Thread.sleep(5_000)
     return "Done"
   }

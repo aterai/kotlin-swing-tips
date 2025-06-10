@@ -101,7 +101,7 @@ private class EditableTitledBorder(
       removeComponentListener(resizeHandler)
       super.updateUI()
       focusTraversalPolicy = object : DefaultFocusTraversalPolicy() {
-        public override fun accept(c: Component) = c == editor
+        override fun accept(c: Component) = c == editor
       }
       listener = object : MouseAdapter() {
         override fun mouseClicked(e: MouseEvent) {

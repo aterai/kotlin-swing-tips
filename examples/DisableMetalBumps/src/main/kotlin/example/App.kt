@@ -38,10 +38,6 @@ fun makeUI(): Component {
 private class BumpsFreeInternalFrameTitlePane(
   frame: JInternalFrame,
 ) : BasicInternalFrameTitlePane(frame) {
-  override fun updateUI() {
-    super.updateUI()
-  }
-
   override fun paintTitleBackground(g: Graphics) {
     super.paintTitleBackground(g)
     val shadow = if (frame.isSelected) {
@@ -59,7 +55,7 @@ private class BumpsFreeInternalFrameTitlePane(
     it.height = 24
   }
 
-  public override fun createButtons() {
+  override fun createButtons() {
     super.createButtons()
     listOf(closeButton, maxButton, iconButton).forEach {
       it.isContentAreaFilled = false

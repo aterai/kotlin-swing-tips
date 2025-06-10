@@ -58,7 +58,7 @@ fun makeUI(): Component {
 
 private class BackgroundTask : SwingWorker<String, Unit?>() {
   @Throws(InterruptedException::class)
-  public override fun doInBackground(): String {
+  override fun doInBackground(): String {
     var current = 0
     val lengthOfTask = 100
     while (current <= lengthOfTask && !isCancelled) {

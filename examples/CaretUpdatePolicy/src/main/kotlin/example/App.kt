@@ -41,7 +41,7 @@ fun makeUI(): Component {
   box.add(start)
   box.add(Box.createHorizontalStrut(5))
   box.add(stop)
-  return JPanel().also {
+  return JPanel(BorderLayout()).also {
     it.add(p)
     it.add(box, BorderLayout.SOUTH)
     it.preferredSize = Dimension(320, 240)
@@ -50,7 +50,7 @@ fun makeUI(): Component {
 
 private open class BackgroundTask : SwingWorker<String, String>() {
   @Throws(InterruptedException::class)
-  public override fun doInBackground(): String {
+  override fun doInBackground(): String {
     while (!isCancelled) {
       Thread.sleep(500)
       if (check.isSelected) {

@@ -269,7 +269,7 @@ private class EditableList(
     init {
       isOpaque = false
       focusTraversalPolicy = object : DefaultFocusTraversalPolicy() {
-        public override fun accept(c: Component) = c == editor
+        override fun accept(c: Component) = c == editor
       }
       addMouseListener(object : MouseAdapter() {
         override fun mouseClicked(e: MouseEvent) {

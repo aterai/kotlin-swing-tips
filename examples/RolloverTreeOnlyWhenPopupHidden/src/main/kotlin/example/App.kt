@@ -292,7 +292,7 @@ private open class BackgroundTask(
   private val fileSystemView: FileSystemView,
   private val parent: File,
 ) : SwingWorker<String, File>() {
-  public override fun doInBackground(): String {
+  override fun doInBackground(): String {
     fileSystemView
       .getFiles(parent, true)
       .filter { it.isDirectory }

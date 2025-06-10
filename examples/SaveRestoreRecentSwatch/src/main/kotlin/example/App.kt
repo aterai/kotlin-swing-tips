@@ -324,7 +324,7 @@ open class SwatchPanel : JPanel() {
     // empty
   }
 
-  public override fun paintComponent(g: Graphics) {
+  override fun paintComponent(g: Graphics) {
     g.color = getBackground()
     g.fillRect(0, 0, width, height)
     val key = "ColorChooser.swatchesDefaultRecentColor"

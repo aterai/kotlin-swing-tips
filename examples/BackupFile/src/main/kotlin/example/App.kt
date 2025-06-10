@@ -140,7 +140,7 @@ private open class BackgroundTask(
 ) : SwingWorker<File, Message>() {
   @Suppress("ReturnCount")
   @Throws(IOException::class)
-  public override fun doInBackground(): File? {
+  override fun doInBackground(): File? {
     if (!orgFile.exists()) {
       return orgFile
     }

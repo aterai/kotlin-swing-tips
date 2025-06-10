@@ -194,7 +194,7 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
 
 private class RoundedHeaderRenderer : DefaultTableCellRenderer() {
   private val firstLabel = object : JLabel() {
-    public override fun paintComponent(g: Graphics) {
+    override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.setRenderingHint(
         RenderingHints.KEY_ANTIALIASING,
@@ -220,7 +220,7 @@ private class RoundedHeaderRenderer : DefaultTableCellRenderer() {
     }
   }
   private val lastLabel = object : JLabel() {
-    public override fun paintComponent(g: Graphics) {
+    override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.setRenderingHint(
         RenderingHints.KEY_ANTIALIASING,

@@ -52,7 +52,7 @@ private fun makeTable(): JTable {
 private class RoundSelectionRenderer : DefaultTableCellRenderer() {
   private var pos: Position? = null
 
-  public override fun paintComponent(g: Graphics) {
+  override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(
       RenderingHints.KEY_ANTIALIASING,

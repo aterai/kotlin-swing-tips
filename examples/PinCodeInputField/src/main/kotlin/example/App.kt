@@ -196,7 +196,7 @@ private class PlaceholderLayerUI<E : JTextComponent>(
     }
   }
 
-  public override fun processFocusEvent(
+  override fun processFocusEvent(
     e: FocusEvent,
     l: JLayer<out E>,
   ) {

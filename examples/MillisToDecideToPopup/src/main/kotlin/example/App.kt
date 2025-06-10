@@ -20,7 +20,7 @@ private fun executeWorker(
       }
     }
 
-    public override fun done() {
+    override fun done() {
       if (!area.isDisplayable) {
         cancel(true)
         return
@@ -89,7 +89,7 @@ private open class BackgroundTask(
   private val lengthOfTask: Int,
 ) : SwingWorker<String, String>() {
   @Throws(InterruptedException::class)
-  public override fun doInBackground(): String {
+  override fun doInBackground(): String {
     var current = 0
     while (current < lengthOfTask && !isCancelled) {
       if (current % 10 == 0) {
