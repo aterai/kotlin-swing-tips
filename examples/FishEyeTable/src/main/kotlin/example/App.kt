@@ -12,12 +12,12 @@ import javax.swing.table.TableModel
 
 fun makeUI(): Component {
   val columnNames = arrayOf("String", "Integer", "Boolean")
-  val data = arrayOf(arrayOf("aaa", -1, true))
+  val data = arrayOf<Array<Any>>(arrayOf("aaa", -1, true))
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
   for (i in 0..<20) {
-    model.addRow(arrayOf("Name: $i", i, i % 2 == 0))
+    model.addRow(arrayOf<Any>("Name: $i", i, i % 2 == 0))
   }
   val table = FishEyeTable(model)
   table.setRowSelectionInterval(0, 0)

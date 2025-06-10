@@ -23,7 +23,7 @@ fun makeUI(): Component {
 
 private fun makeTable(): JTable {
   val columnNames = arrayOf("A", "B", "C", "Integer")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("aaa", "aa", "a", 12),
     arrayOf("bbb", "bb", "b", 5),
     arrayOf("ccc", "cc", "c", 92),

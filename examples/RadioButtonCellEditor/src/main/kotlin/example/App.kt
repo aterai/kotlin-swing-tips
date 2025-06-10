@@ -8,7 +8,7 @@ import javax.swing.table.TableCellRenderer
 
 fun makeUI(): Component {
   val columnNames = arrayOf("Integer", "String", "Boolean")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf(1, "D", true),
     arrayOf(2, "B", false),
     arrayOf(3, "C", false),

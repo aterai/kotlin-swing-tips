@@ -11,7 +11,7 @@ private const val ES = ""
 fun makeUI(): Component {
   // FixedColumnExample.java
   // @author Nobuo Tamemasa
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf(1, 11, "A", ES, ES, ES, ES, ES),
     arrayOf(2, 22, ES, "B", ES, ES, ES, ES),
     arrayOf(3, 33, ES, ES, "C", ES, ES, ES),
@@ -63,7 +63,7 @@ fun makeUI(): Component {
   addButton.addActionListener {
     sorter.sortKeys = null
     for (i in 0..<100) {
-      model.addRow(arrayOf(i, i + 1, "A$i", "B$i"))
+      model.addRow(arrayOf<Any>(i, i + 1, "A$i", "B$i"))
     }
   }
   return JPanel(BorderLayout()).also {

@@ -21,7 +21,7 @@ fun makeUI() = JPanel(BorderLayout()).also {
 
 private fun makeDragAndDropTable(handler: TransferHandler): JTable {
   val columnNames = arrayOf("String", "Integer", "Boolean")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("AAA", 12, true),
     arrayOf("aaa", 1, false),
     arrayOf("BBB", 13, true),

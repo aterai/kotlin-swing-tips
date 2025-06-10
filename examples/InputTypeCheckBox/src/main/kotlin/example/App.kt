@@ -14,8 +14,8 @@ import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableColumn
 
 fun makeUI(): Component {
-  val columnNames = arrayOf(Status.INDETERMINATE, "Integer", "String")
-  val data = arrayOf(
+  val columnNames = arrayOf<Any>(Status.INDETERMINATE, "Integer", "String")
+  val data = arrayOf<Array<Any>>(
     arrayOf(true, 1, "BBB"),
     arrayOf(false, 12, "AAA"),
     arrayOf(true, 2, "DDD"),

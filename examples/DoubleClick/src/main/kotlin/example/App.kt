@@ -8,7 +8,7 @@ import javax.swing.table.DefaultTableModel
 
 fun makeUI(): Component {
   val columnNames = arrayOf("String", "Integer", "String")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("aaa", 1, "eee"),
     arrayOf("bbb", 2, "FFF"),
     arrayOf("CCC", 0, "GGG"),
@@ -67,7 +67,7 @@ private class TablePopupMenu : JPopupMenu() {
       val table = invoker as? JTable
       val model = table?.model
       if (model is DefaultTableModel) {
-        model.addRow(arrayOf("New row", model.rowCount, false))
+        model.addRow(arrayOf<Any>("New row", model.rowCount, false))
         val r = table.getCellRect(model.rowCount - 1, 0, true)
         table.scrollRectToVisible(r)
       }

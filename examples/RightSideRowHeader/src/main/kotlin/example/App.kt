@@ -8,7 +8,7 @@ import javax.swing.table.TableRowSorter
 private const val FIXED_RANGE = 2
 private const val ES = ""
 
-private val data = arrayOf(
+private val data = arrayOf<Array<Any>>(
   arrayOf(1, 11, "A", ES, ES, ES, ES, ES),
   arrayOf(2, 22, ES, "B", ES, ES, ES, ES),
   arrayOf(3, 33, ES, ES, "C", ES, ES, ES),
@@ -74,7 +74,7 @@ fun makeUI(): Component {
   addButton.addActionListener {
     sorter.sortKeys = null
     for (i in 0..<100) {
-      model.addRow(arrayOf(i, i + 1, "A$i", "B$i"))
+      model.addRow(arrayOf<Any>(i, i + 1, "A$i", "B$i"))
     }
   }
 

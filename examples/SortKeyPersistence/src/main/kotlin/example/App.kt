@@ -17,7 +17,7 @@ import javax.swing.table.DefaultTableModel
 
 fun makeUI(): Component {
   val columnNames = arrayOf("A", "B")
-  val data = arrayOf(arrayOf("aaa", "********"), arrayOf("bbb", "????"))
+  val data = arrayOf(arrayOf("aaa", "********"), arrayOf("bbb", "☀☁☂☃"))
   val table = JTable(DefaultTableModel(data, columnNames))
   table.autoCreateRowSorter = true
   val textArea = JTextArea()

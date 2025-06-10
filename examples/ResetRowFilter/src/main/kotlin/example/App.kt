@@ -12,7 +12,7 @@ fun makeUI(): Component {
   val check1 = JCheckBox("Custom Sorting")
 
   val columnNames = arrayOf("String", "Integer", "Boolean")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("AA", 1, true),
     arrayOf("BB", 2, false),
     arrayOf("cc", 3, true),

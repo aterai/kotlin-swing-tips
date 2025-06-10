@@ -9,7 +9,7 @@ import javax.swing.table.TableCellRenderer
 
 fun makeUI(): Component {
   val columnNames = arrayOf("Integer", "Answer")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf(1, Answer.A),
     arrayOf(2, Answer.B),
     arrayOf(3, Answer.C),
@@ -68,12 +68,6 @@ private class RadioButtonsPanel : JPanel() {
       (getComponent(v.ordinal) as? JRadioButton)?.isSelected = true
     }
   }
-
-  override fun setLayout(mgr: LayoutManager) {
-    super.setLayout(mgr)
-  }
-
-  override fun add(comp: Component?): Component = super.add(comp)
 }
 
 private fun makeButton(title: String): JRadioButton {

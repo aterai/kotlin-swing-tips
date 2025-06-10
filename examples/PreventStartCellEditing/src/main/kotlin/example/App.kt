@@ -12,7 +12,7 @@ fun makeUI(): Component {
   val r4 = JRadioButton("isCellEditable return false")
 
   val columnNames = arrayOf("CellEditable:false", "Integer", "String")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("aaa", 12, "eee"),
     arrayOf("bbb", 5, "ggg"),
     arrayOf("CCC", 92, "fff"),

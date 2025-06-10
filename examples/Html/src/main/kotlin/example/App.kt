@@ -9,7 +9,7 @@ fun makeUI(): Component {
   tab.addTab("<html>Test<p>Test</p></html>", JLabel("Test1"))
   tab.addTab("<html>Test<p>test", JLabel("Test2"))
   val columnNames = arrayOf("String", "Integer", "Boolean")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("<html>Comment<p>etc.", 12, true),
     arrayOf("bbb", 5, false),
     arrayOf("CCC", 92, true),

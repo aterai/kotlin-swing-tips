@@ -55,7 +55,7 @@ private fun makeListPanel(): Component {
 
 private fun makeTablePanel(): Component {
   val columnNames = arrayOf("String", "Integer", "Boolean")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("AAA", 12, true),
     arrayOf("aaa", 1, false),
     arrayOf("BBB", 13, true),

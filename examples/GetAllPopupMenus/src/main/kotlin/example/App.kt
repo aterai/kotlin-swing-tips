@@ -9,7 +9,7 @@ import javax.swing.table.DefaultTableModel
 
 fun makeUI(): Component {
   val columnNames = arrayOf("String", "Integer", "Boolean")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("prev1: Ctrl+1", 1, true),
     arrayOf("next1: Ctrl+2", 2, false),
     arrayOf("prev2: Ctrl+3", 3, true),
