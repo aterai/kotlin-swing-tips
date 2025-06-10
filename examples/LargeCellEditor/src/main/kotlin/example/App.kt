@@ -90,7 +90,7 @@ private class IconTableCellRenderer : DefaultTableCellRenderer() {
     )
     if (c is JLabel && value is IconItem) {
       c.icon = value.large
-      c.horizontalAlignment = SwingConstants.CENTER
+      c.horizontalAlignment = CENTER
     }
     return c
   }

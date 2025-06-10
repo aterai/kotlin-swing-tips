@@ -154,8 +154,8 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
 
     val vsbR = Rectangle(0, availR.y - vpbInsets.top, 0, 0)
     var vsbNeeded = when (vsbPolicy) {
-      ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS -> true
-      ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER -> false
+      VERTICAL_SCROLLBAR_ALWAYS -> true
+      VERTICAL_SCROLLBAR_NEVER -> false
       else -> !scrollableHeight && viewPrefSize.height > extentSize.height
     }
 
@@ -166,12 +166,12 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
 
     val hsbR = Rectangle(availR.x - vpbInsets.left, 0, 0, 0)
     var hsbNeeded = when (hsbPolicy) {
-      ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS -> true
-      ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER -> false
+      HORIZONTAL_SCROLLBAR_ALWAYS -> true
+      HORIZONTAL_SCROLLBAR_NEVER -> false
       else -> !scrollableWidth && viewPrefSize.width > extentSize.width
     }
 
-    val isVsbNever = vsbPolicy != ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
+    val isVsbNever = vsbPolicy != VERTICAL_SCROLLBAR_NEVER
     if (hsb != null && hsbNeeded) {
       adjustForHsb(true, availR, hsbR, vpbInsets)
       if (vsb != null && !vsbNeeded && isVsbNever) {
@@ -195,7 +195,7 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
         val oldVsbNeeded = vsbNeeded
         scrollableWidth = sv.scrollableTracksViewportWidth
         scrollableHeight = sv.scrollableTracksViewportHeight
-        val vsbNeeded1 = vsbPolicy == ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED
+        val vsbNeeded1 = vsbPolicy == VERTICAL_SCROLLBAR_AS_NEEDED
         if (vsb != null && vsbNeeded1) {
           val newVsbNeeded = !scrollableHeight && viewPrefSize.height > extentSize.height
           if (newVsbNeeded != vsbNeeded) {
@@ -205,7 +205,7 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
             extentSize = viewport.toViewCoordinates(availR.size)
           }
         }
-        val hsbNeeded1 = hsbPolicy == ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
+        val hsbNeeded1 = hsbPolicy == HORIZONTAL_SCROLLBAR_AS_NEEDED
         if (hsb != null && hsbNeeded1) {
           val newHsbNeeded = !scrollableWidth && viewPrefSize.width > extentSize.width
           if (newHsbNeeded != hsbNeeded) {
