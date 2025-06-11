@@ -99,7 +99,7 @@ private class DigitalClock : JPanel() {
     s2.setNumber(seconds - ds * ten)
   }
 
-  public override fun paintComponent(g: Graphics) {
+  override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(
@@ -132,8 +132,8 @@ private class DigitalNumber(
   private val dy: Double,
   private val isosceles: Double,
 ) {
-  private val width: Double
-  private val height: Double
+  private val width = 2.0 * isosceles
+  private val height = width + isosceles
   val bounds = Rectangle()
   private val numbers: List<Set<Seg>> = listOf(
     EnumSet.of(Seg.A, Seg.B, Seg.C, Seg.D, Seg.E, Seg.F),
@@ -150,8 +150,6 @@ private class DigitalNumber(
   private var led: Set<Seg> = EnumSet.noneOf(Seg::class.java)
 
   init {
-    width = 2.0 * isosceles
-    height = width + isosceles
     bounds.setLocation((dx - isosceles).toInt(), (dy - height * 2.0).toInt())
     bounds.setSize((width + 4.0 * isosceles).toInt(), (height * 4.0).toInt())
   }
@@ -176,8 +174,8 @@ private class DigitalNumber(
 
   companion object {
     val OFF = Color(0xCC_CC_CC)
-    val ON = Color.DARK_GRAY
-    val BGC = Color.LIGHT_GRAY
+    val ON: Color = Color.DARK_GRAY
+    val BGC: Color = Color.LIGHT_GRAY
   }
 }
 
@@ -329,7 +327,7 @@ private class HelpPanel : JPanel() {
     it.setNumber(8)
   }
 
-  public override fun paintComponent(g: Graphics) {
+  override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(
