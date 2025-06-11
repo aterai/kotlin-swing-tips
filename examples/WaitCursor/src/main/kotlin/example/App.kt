@@ -11,7 +11,7 @@ fun makeUI(): Component {
     val c = e.source as? Component
     c?.isEnabled = false
     object : BackgroundTask() {
-      public override fun done() {
+      override fun done() {
         if (!button.isDisplayable) {
           cancel(true)
         } else {
@@ -52,7 +52,7 @@ fun makeUI(): Component {
 
 private open class BackgroundTask : SwingWorker<String, Unit?>() {
   @Throws(InterruptedException::class)
-  public override fun doInBackground(): String {
+  override fun doInBackground(): String {
     Thread.sleep(5000)
     return "Done"
   }

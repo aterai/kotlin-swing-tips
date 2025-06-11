@@ -26,7 +26,7 @@ private class AnimationTask : BackgroundTask() {
     }
   }
 
-  public override fun done() {
+  override fun done() {
     if (!area.isDisplayable) {
       cancel(true)
       return
@@ -96,7 +96,7 @@ fun makeUI(): Component {
 
 open class BackgroundTask : SwingWorker<String, String>() {
   @Throws(InterruptedException::class)
-  public override fun doInBackground(): String {
+  override fun doInBackground(): String {
     Thread.sleep(2000)
     var current = 0
     val lengthOfTask = 120 // list.size()

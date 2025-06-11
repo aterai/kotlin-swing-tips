@@ -105,7 +105,7 @@ private class StripedProgressBarUI(
   override fun getBoxLength(availableLength: Int, otherDimension: Int) = availableLength
   // (availableLength / 6.0).roundToInt()
 
-  public override fun paintIndeterminate(
+  override fun paintIndeterminate(
     g: Graphics,
     c: JComponent,
   ) {
@@ -163,7 +163,7 @@ private class StripedProgressBarUI(
 
 private class BackgroundTask : SwingWorker<String, Unit?>() {
   @Throws(InterruptedException::class)
-  public override fun doInBackground(): String {
+  override fun doInBackground(): String {
     Thread.sleep(5000)
     var current = 0
     val lengthOfTask = 100

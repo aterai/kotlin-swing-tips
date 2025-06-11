@@ -46,7 +46,7 @@ private class LineStyleTreeUI : BasicTreeUI() {
   private val horizontalLine = BasicStroke(2f)
   private val verticalLine = BasicStroke(5f)
 
-  public override fun getHashColor(): Color = Color.BLUE
+  override fun getHashColor(): Color = Color.BLUE
 
   override fun paintHorizontalPartOfLeg(
     g: Graphics,

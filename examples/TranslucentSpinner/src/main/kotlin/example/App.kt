@@ -75,7 +75,7 @@ fun makeUI(): Component {
   p.add(spinner2)
 
   val pp = object : JPanel(BorderLayout()) {
-    public override fun paintComponent(g: Graphics) {
+    override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.paint = TEXTURE
       g2.fillRect(0, 0, width, height)
