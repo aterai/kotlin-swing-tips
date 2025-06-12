@@ -21,22 +21,21 @@ private val table = object : JTable(model) {
     val tc = getColumnModel().getColumn(2)
     tc.cellRenderer =
       TableCellRenderer { tbl, value, isSelected, hasFocus, row, column ->
-        if (value is JProgressBar) {
-          value
-        } else if (value is Int) {
-          progress.value = value
-          progress
-        } else {
-          val txt = value?.toString() ?: ""
-          renderer.getTableCellRendererComponent(
-            tbl,
-            txt,
-            isSelected,
-            hasFocus,
-            row,
-            column,
-          )
-        }
+        value as? JProgressBar
+          ?: if (value is Int) {
+            progress.value = value
+            progress
+          } else {
+            val txt = value?.toString() ?: ""
+            renderer.getTableCellRendererComponent(
+              tbl,
+              txt,
+              isSelected,
+              hasFocus,
+              row,
+              column,
+            )
+          }
       }
   }
 }
@@ -70,11 +69,9 @@ fun makeUI(): Component {
 }
 
 private fun addProgressValue(
-  name: String,
-  iv: Int,
   worker: SwingWorker<*, *>?,
 ) {
-  val obj = arrayOf(number, name, iv, worker)
+  val obj = arrayOf(number, "example", 0, worker)
   model.addRow(obj)
   number++
 }
@@ -99,7 +96,7 @@ private fun addActionPerformed() {
       model.setValueAt("$message(${i}ms)", key, 2)
     }
   }
-  addProgressValue("example", 0, worker)
+  addProgressValue(worker)
   worker.execute()
 }
 
@@ -189,19 +186,21 @@ private open class BackgroundTask : SwingWorker<Int, Any>() {
     val indeterminate = JProgressBar()
     indeterminate.setUI(ui)
     indeterminate.isIndeterminate = true
-    for (i in 0..199) {
-      val iv = randomSleep.toInt()
+    var cnt = 0
+    while (cnt < 200) {
+      val iv = randomSleep
       Thread.sleep(iv.toLong())
       ui.incrementAnimationIndex()
       publish(indeterminate)
       total += iv
+      cnt++
     }
     return 1 + total / 100
   }
 
   @Throws(InterruptedException::class)
   private fun doSomething(): Int {
-    val iv = randomSleep.toInt()
+    val iv = randomSleep
     Thread.sleep(iv.toLong())
     return iv
   }
