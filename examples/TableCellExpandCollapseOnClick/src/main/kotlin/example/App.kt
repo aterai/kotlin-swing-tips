@@ -32,9 +32,9 @@ fun makeUI(): Component {
     3
   """.trimIndent()
   val data = arrayOf(
-    arrayOf(RowHeader("aaa", true, false), d0),
-    arrayOf(RowHeader("bbb", false, false), d1),
-    arrayOf(RowHeader("ccc", true, false), d2),
+    arrayOf(RowHeader("aaa", isExpandable = true, isSelected = false), d0),
+    arrayOf(RowHeader("bbb", isExpandable = false, isSelected = false), d1),
+    arrayOf(RowHeader("ccc", isExpandable = true, isSelected = false), d2),
   )
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
