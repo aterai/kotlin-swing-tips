@@ -102,7 +102,7 @@ private fun initTableHeader(table: JTable) {
 
 private fun makeModel(): TableModel {
   val columnNames = arrayOf("#", "Team", "MP", "W", "D", "L", "F", "A", "GD", "P")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf(1, "Machida", 33, 20, 7, 6, 57, 27, +30, 67),
     arrayOf(2, "Iwata", 35, 17, 11, 7, 61, 39, +22, 62),
     arrayOf(3, "Shimizu", 34, 16, 12, 6, 61, 27, +34, 60),

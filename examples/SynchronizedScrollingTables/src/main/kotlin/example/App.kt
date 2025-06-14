@@ -9,7 +9,7 @@ const val FIXED_RANGE = 2
 private const val ES = ""
 
 fun makeUI(): Component {
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf(1, 11, "A", ES, ES),
     arrayOf(2, 22, ES, "B", ES),
     arrayOf(3, 33, ES, ES, "C"),
@@ -37,7 +37,7 @@ fun makeUI(): Component {
   }
 
   val scroll1 = JScrollPane(leftTable)
-  scroll1.verticalScrollBar = object : JScrollBar(Adjustable.VERTICAL) {
+  scroll1.verticalScrollBar = object : JScrollBar(VERTICAL) {
     override fun getPreferredSize(): Dimension {
       val d = super.getPreferredSize()
       d.width = 0
@@ -55,7 +55,7 @@ fun makeUI(): Component {
   button.addActionListener {
     table.rowSorter.sortKeys = null
     for (i in 0..<100) {
-      model.addRow(arrayOf(i, i + 1, "A$i", "B$i"))
+      model.addRow(arrayOf<Any>(i, i + 1, "A$i", "B$i"))
     }
   }
 
