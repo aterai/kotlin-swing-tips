@@ -99,7 +99,7 @@ private class ProgressCircleUI : BasicProgressBarUI() {
     )
 
     val o = progressBar.getClientProperty("Slider.clockwise")
-    val dir = if ((o as? Boolean) == true) -1 else 1
+    val dir = if (o as? Boolean == true) -1 else 1
     val deg = dir * 360 * progressBar.percentComplete
     val sz = minOf(rect.width, rect.height).toDouble()
     val cx = rect.centerX
