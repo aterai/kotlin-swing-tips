@@ -33,7 +33,7 @@ fun makeUI(): Component {
   textArea.text = INIT_TXT.repeat(3)
 
   val scroll = JScrollPane(textArea)
-  val scrollbar = object : JScrollBar(Adjustable.VERTICAL) {
+  val scrollbar = object : JScrollBar(VERTICAL) {
     override fun updateUI() {
       super.updateUI()
       if (ui is WindowsScrollBarUI) {
@@ -136,7 +136,7 @@ private class HighlightIcon(
     // paint Thumb
     if (scrollbar.isVisible) {
       thumbRect.height = range.extent
-      thumbRect.y = range.value // vport.getViewPosition().y
+      thumbRect.y = range.value // viewport.getViewPosition().y
       g2.color = THUMB_COLOR
       val s = at.createTransformedShape(thumbRect).bounds
       g2.fillRect(0, top + s.y, iconWidth, s.height)

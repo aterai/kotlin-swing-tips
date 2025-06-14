@@ -19,7 +19,7 @@ fun makeUI(): Component {
   val scroll = JScrollPane(label)
   val verticalBar = scroll.verticalScrollBar
   val horizontalBar = scroll.horizontalScrollBar
-  val zeroVerticalBar = object : JScrollBar(Adjustable.VERTICAL) {
+  val zeroVerticalBar = object : JScrollBar(VERTICAL) {
     override fun isVisible() = !isShiftPressed && super.isVisible()
 
     override fun getPreferredSize(): Dimension {
@@ -28,7 +28,7 @@ fun makeUI(): Component {
       return d
     }
   }
-  val zeroHorizontalBar = object : JScrollBar(Adjustable.HORIZONTAL) {
+  val zeroHorizontalBar = object : JScrollBar(HORIZONTAL) {
     override fun getPreferredSize(): Dimension {
       val d = super.getPreferredSize()
       d.height = 0

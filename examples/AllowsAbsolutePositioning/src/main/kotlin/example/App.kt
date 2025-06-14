@@ -15,7 +15,7 @@ fun makeUI(): Component {
   val txt = help.repeat(100)
 
   val scroll = JScrollPane(JTextArea("override TrackListener#mousePressed(...)\n$txt"))
-  scroll.verticalScrollBar = object : JScrollBar(Adjustable.VERTICAL) {
+  scroll.verticalScrollBar = object : JScrollBar(VERTICAL) {
     override fun updateUI() {
       super.updateUI()
       val tmp = if (ui is WindowsScrollBarUI) {
@@ -28,7 +28,7 @@ fun makeUI(): Component {
     }
   }
 
-  scroll.horizontalScrollBar = object : JScrollBar(Adjustable.HORIZONTAL) {
+  scroll.horizontalScrollBar = object : JScrollBar(HORIZONTAL) {
     override fun updateUI() {
       super.updateUI()
       val tmp = if (ui is WindowsScrollBarUI) {
@@ -53,7 +53,7 @@ fun makeUI(): Component {
 }
 
 private class AbsolutePositioningWindowsScrollBarUI : WindowsScrollBarUI() {
-  override fun createTrackListener() = object : BasicScrollBarUI.TrackListener() {
+  override fun createTrackListener() = object : TrackListener() {
     override fun mousePressed(e: MouseEvent) {
       if (SwingUtilities.isLeftMouseButton(e)) {
         super.mousePressed(
@@ -79,7 +79,7 @@ private class AbsolutePositioningWindowsScrollBarUI : WindowsScrollBarUI() {
 }
 
 private class AbsolutePositioningBasicScrollBarUI : BasicScrollBarUI() {
-  override fun createTrackListener() = object : BasicScrollBarUI.TrackListener() {
+  override fun createTrackListener() = object : TrackListener() {
     override fun mousePressed(e: MouseEvent) {
       if (SwingUtilities.isLeftMouseButton(e)) {
         super.mousePressed(

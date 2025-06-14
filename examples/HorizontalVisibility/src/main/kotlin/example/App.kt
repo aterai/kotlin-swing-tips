@@ -20,7 +20,7 @@ private val textField1 = JTextField(TEXT)
 private val scroller1 = JScrollBar(Adjustable.HORIZONTAL)
 
 private val textField2 = JTextField(TEXT)
-private val scroller2 = object : JScrollBar(Adjustable.HORIZONTAL) {
+private val scroller2 = object : JScrollBar(HORIZONTAL) {
   override fun updateUI() {
     super.updateUI()
     setUI(ArrowButtonlessScrollBarUI())
