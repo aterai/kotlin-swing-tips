@@ -188,84 +188,60 @@ private class BasicTabViewButtonUI : TabViewButtonUI() {
     g: Graphics,
     c: JComponent,
   ) {
-    val b = c as? AbstractButton ?: return
-    // g.font = b.font
-    SwingUtilities.calculateInnerArea(b, viewRect)
+    val g2 = g.create()
+    if (c !is AbstractButton || g2 !is Graphics2D) {
+      return
+    }
+    SwingUtilities.calculateInnerArea(c, viewRect)
     iconRect.setBounds(0, 0, 0, 0)
     textRect.setBounds(0, 0, 0, 0)
     val text = SwingUtilities.layoutCompoundLabel(
-      b,
-      b.getFontMetrics(b.font),
-      b.text,
+      c,
+      c.getFontMetrics(c.font),
+      c.text,
       null,
-      b.verticalAlignment,
-      b.horizontalAlignment,
-      b.verticalTextPosition,
-      b.horizontalTextPosition,
+      c.verticalAlignment,
+      c.horizontalAlignment,
+      c.verticalTextPosition,
+      c.horizontalTextPosition,
       viewRect,
       iconRect,
       textRect,
       0,
     )
-    g.color = b.background
-    g.fillRect(0, 0, b.width, b.height)
-    val model = b.model
-    g.color = if (model.isSelected || model.isArmed) Color.WHITE else Color(0xDC_DC_DC)
-    g.fillRect(
-      viewRect.x,
-      viewRect.y,
-      viewRect.x + viewRect.width,
-      viewRect.y + viewRect.height,
-    )
+    g2.color = c.background
+    g2.fillRect(0, 0, c.width, c.height)
+    val m = c.model
+    g2.color = if (m.isSelected || m.isArmed) Color.WHITE else Color(0xDC_DC_DC)
+    val vx = viewRect.x
+    val vy = viewRect.y
+    val vw = viewRect.width
+    g2.fill(viewRect)
     val color = Color(0xFF_78_28)
-    if (model.isSelected) {
-      g.color = color
-      g.drawLine(
-        viewRect.x + 1,
-        viewRect.y - 2,
-        viewRect.x + viewRect.width - 1,
-        viewRect.y - 2,
-      )
-      g.color = color.brighter()
-      g.drawLine(
-        viewRect.x,
-        viewRect.y - 1,
-        viewRect.x + viewRect.width,
-        viewRect.y - 1,
-      )
-      g.color = color
-      g.drawLine(viewRect.x, viewRect.y, viewRect.x + viewRect.width, viewRect.y)
-    } else if (model.isRollover) {
-      g.color = color
-      g.drawLine(
-        viewRect.x + 1,
-        viewRect.y,
-        viewRect.x + viewRect.width - 1,
-        viewRect.y,
-      )
-      g.color = color.brighter()
-      g.drawLine(
-        viewRect.x,
-        viewRect.y + 1,
-        viewRect.x + viewRect.width,
-        viewRect.y + 1,
-      )
-      g.color = color
-      g.drawLine(
-        viewRect.x,
-        viewRect.y + 2,
-        viewRect.x + viewRect.width,
-        viewRect.y + 2,
-      )
+    if (m.isSelected) {
+      g2.color = color
+      g2.drawLine(vx + 1, vy - 2, vx + vw - 1, vy - 2)
+      g2.color = color.brighter()
+      g2.drawLine(vx, vy - 1, vx + vw, vy - 1)
+      g2.color = color
+      g2.drawLine(vx, vy, vx + vw, vy)
+    } else if (m.isRollover) {
+      g2.color = color
+      g2.drawLine(vx + 1, vy, vx + vw - 1, vy)
+      g2.color = color.brighter()
+      g2.drawLine(vx, vy + 1, vx + vw, vy + 1)
+      g2.color = color
+      g2.drawLine(vx, vy + 2, vx + vw, vy + 2)
     }
-    (b.getClientProperty(BasicHTML.propertyKey) as? View)?.paint(g, textRect) ?: also {
-      if (model.isSelected) {
+    (c.getClientProperty(BasicHTML.propertyKey) as? View)?.paint(g2, textRect) ?: also {
+      if (m.isSelected) {
         textRect.y -= 2
         textRect.x -= 1
       }
       textRect.x += 4
-      paintText(g, b, textRect, text)
+      paintText(g2, c, textRect, text)
     }
+    g2.dispose()
   }
 }
 
