@@ -18,7 +18,7 @@ fun makeUI() = JPanel(GridLayout(2, 1)).also {
 
 private fun makeModel(): TableModel {
   val columnNames = arrayOf("String", "Integer", "CheckBox")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("aaa", 12, false),
     arrayOf("bbb", 5, false),
     arrayOf("CCC", 92, false),

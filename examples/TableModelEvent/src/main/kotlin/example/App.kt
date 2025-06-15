@@ -15,8 +15,8 @@ import javax.swing.table.TableColumn
 import javax.swing.table.TableModel
 
 fun makeUI(): Component {
-  val columnNames = arrayOf(Status.INDETERMINATE, "Integer", "String")
-  val data = arrayOf(
+  val columnNames = arrayOf<Any>(Status.INDETERMINATE, "Integer", "String")
+  val data = arrayOf<Array<Any>>(
     arrayOf(true, 1, "BBB"),
     arrayOf(false, 12, "AAA"),
     arrayOf(true, 2, "DDD"),
@@ -185,7 +185,7 @@ private class TablePopupMenu : JPopupMenu() {
     val table = invoker as? JTable
     val model = table?.model
     if (model is DefaultTableModel) {
-      model.addRow(arrayOf(isSelected, 0, ""))
+      model.addRow(arrayOf<Any>(isSelected, 0, ""))
       val rect = table.getCellRect(model.rowCount - 1, 0, true)
       table.scrollRectToVisible(rect)
     }

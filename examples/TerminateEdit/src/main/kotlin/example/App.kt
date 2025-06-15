@@ -12,7 +12,7 @@ import javax.swing.table.TableCellRenderer
 
 private fun makeTable(): JTable {
   val columnNames = arrayOf("String", "Integer")
-  val data = arrayOf(
+  val data = arrayOf<Array<Any>>(
     arrayOf("aaa", 12),
     arrayOf("bbb", 5),
     arrayOf("CCC", 92),

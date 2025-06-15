@@ -14,8 +14,8 @@ import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableColumn
 
 private const val CHECKBOX_COLUMN = 0
-private val columnNames = arrayOf(Status.INDETERMINATE, "Integer", "String")
-private val data = arrayOf(
+private val columnNames = arrayOf<Any>(Status.INDETERMINATE, "Integer", "String")
+private val data = arrayOf<Array<Any>>(
   arrayOf(true, 1, "BBB"),
   arrayOf(false, 12, "AAA"),
   arrayOf(true, 2, "DDD"),

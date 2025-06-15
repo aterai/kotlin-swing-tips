@@ -62,11 +62,11 @@ fun makeUI(): Component {
 
 private fun makeModel(): TableModel {
   val columnNames = arrayOf("String", "Integer", "Boolean")
-  val data = arrayOf(
-    arrayOf<Any>("aaa", 12, true),
-    arrayOf<Any>("bbb", 5, false),
-    arrayOf<Any>("CCC", 92, true),
-    arrayOf<Any>("DDD", 0, false),
+  val data = arrayOf<Array<Any>>(
+    arrayOf("aaa", 12, true),
+    arrayOf("bbb", 5, false),
+    arrayOf("CCC", 92, true),
+    arrayOf("DDD", 0, false),
   )
   return object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
