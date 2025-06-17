@@ -164,7 +164,7 @@ private enum class GenerateInputs {
       array: MutableList<Double>,
       n: Int,
     ) {
-      for (i in 0..<n) {
+      repeat (n) {
         array.add(Math.random())
       }
     }
@@ -302,7 +302,7 @@ private open class SortingTask(
   }
 
   @Throws(InterruptedException::class)
-  private fun siftdown(
+  private fun shiftDown(
     l: Int,
     u: Int,
   ) {
@@ -329,13 +329,13 @@ private open class SortingTask(
   private fun heapsort(n: Int) { // BEWARE!!! Sorts x[1..n-1]
     var i = n / 2
     while (i > 0) {
-      siftdown(i, n - 1)
+      shiftDown(i, n - 1)
       i--
     }
     i = n - 1
     while (i >= 2) {
       swap(1, i)
-      siftdown(1, i - 1)
+      shiftDown(1, i - 1)
       i--
     }
   }
