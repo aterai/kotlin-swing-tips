@@ -3,6 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 fun makeUI(): Component {
   val list1 = makeCellList()
@@ -50,31 +51,34 @@ fun makeUI(): Component {
   }
 }
 
+const val DARKER = "Darker %d%"
+const val LIGHTER = "Lighter %d%"
+
 private fun makePalette1(list: List<JLabel>, color: Color) {
   shade(list[0], color, 1f, "")
-  shade(list[1], color, .95f, "Darker 5%")
-  shade(list[2], color, .85f, "Darker 15%")
-  shade(list[3], color, .75f, "Darker 25%")
-  shade(list[4], color, .65f, "Darker 35%")
-  shade(list[5], color, .5f, "Darker 50%")
+  shade(list[1], color, .95f, DARKER.format(5))
+  shade(list[2], color, .85f, DARKER.format(15))
+  shade(list[3], color, .75f, DARKER.format(25))
+  shade(list[4], color, .65f, DARKER.format(35))
+  shade(list[5], color, .5f, DARKER.format(50))
 }
 
 private fun makePalette2(list: List<JLabel>, color: Color) {
   tint(list[0], color, 0f, "")
-  tint(list[1], color, .8f, "Lighter 80%")
-  tint(list[2], color, .6f, "Lighter 60%")
-  tint(list[3], color, .4f, "Lighter 40%")
-  tint(list[4], color, -.25f, "Darker 25%")
-  tint(list[5], color, -.5f, "Darker 50%")
+  tint(list[1], color, .8f, LIGHTER.format(80))
+  tint(list[2], color, .6f, LIGHTER.format(60))
+  tint(list[3], color, .4f, LIGHTER.format(40))
+  tint(list[4], color, -.25f, DARKER.format(25))
+  tint(list[5], color, -.5f, DARKER.format(50))
 }
 
 private fun makePalette3(list: List<JLabel>, color: Color) {
   luminance(list[0], color, 1.0, 0.0, "")
-  luminance(list[1], color, .2, .8, "Lighter 80%")
-  luminance(list[2], color, .4, .6, "Lighter 60%")
-  luminance(list[3], color, .6, .4, "Lighter 40%")
-  luminance(list[4], color, .75, 0.0, "Darker 25%")
-  luminance(list[5], color, .5, 0.0, "Darker 50%")
+  luminance(list[1], color, .2, .8, LIGHTER.format(80))
+  luminance(list[2], color, .4, .6, LIGHTER.format(60))
+  luminance(list[3], color, .6, .4, LIGHTER.format(40))
+  luminance(list[4], color, .75, 0.0, DARKER.format(25))
+  luminance(list[5], color, .5, 0.0, DARKER.format(50))
 }
 
 private fun tint(l: JLabel, color: Color, tint: Float, txt: String) {
@@ -195,10 +199,7 @@ private object ColorUtils {
     return c
   }
 
-  fun to255(v: Double): Int {
-    val vv = Math.round(255.0 * v).toInt()
-    return vv.coerceIn(0..255)
-  }
+  fun to255(v: Double) = (255.0 * v).roundToInt().coerceIn(0..255)
 
   fun hueToRgb(p: Double, q: Double, t: Double): Double {
     val t1 = if (t < 0.0) t + 1.0 else t
