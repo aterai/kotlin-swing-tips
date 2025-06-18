@@ -164,7 +164,7 @@ private enum class GenerateInputs {
       array: MutableList<Double>,
       n: Int,
     ) {
-      repeat (n) {
+      repeat(n) {
         array.add(Math.random())
       }
     }
