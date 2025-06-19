@@ -135,10 +135,9 @@ private class CheckBoxesEditor :
   }
 
   override fun getCellEditorValue(): Any {
-    var i = 0
-    i = if (panel.buttons[0].isSelected) 1 shl 2 or i else i
+    var i = if (panel.buttons[0].isSelected) 1 shl 2 or 0 else 0
     i = if (panel.buttons[1].isSelected) 1 shl 1 or i else i
-    i = if (panel.buttons[2].isSelected) 1 shl 0 or i else i
+    i = if (panel.buttons[2].isSelected) 1 or i else i
     return i
   }
 }
