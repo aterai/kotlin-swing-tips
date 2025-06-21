@@ -115,9 +115,15 @@ fun setHighlight(
   val doc = jtc.document
   runCatching {
     val text = doc.getText(0, doc.length)
-    pattern.toRegex().findAll(text).map { it.range }.filterNot { it.isEmpty() }.forEach {
-      highlighter.addHighlight(it.first(), it.last() + 1, painter)
-    }
+    pattern
+      .toRegex()
+      .findAll(
+        text,
+      ).map { it.range }
+      .filterNot { it.isEmpty() }
+      .forEach {
+        highlighter.addHighlight(it.first(), it.last() + 1, painter)
+      }
   }.onFailure {
     UIManager.getLookAndFeel().provideErrorFeedback(jtc)
   }
