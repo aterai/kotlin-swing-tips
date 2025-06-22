@@ -72,7 +72,10 @@ private class HeaderRenderer(
   private var rolloverIndex = -1
   private val handler = object : MouseInputAdapter() {
     override fun mouseClicked(e: MouseEvent) {
-      val hdr = e.component as? JTableHeader ?: return
+      val hdr = e.component as? JTableHeader
+      if (hdr == null || !hdr.isEnabled) {
+        return
+      }
       val table = hdr.table
       val pt = e.point
       val vci = table.columnAtPoint(pt)

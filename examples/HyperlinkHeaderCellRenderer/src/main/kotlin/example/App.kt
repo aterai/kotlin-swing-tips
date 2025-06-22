@@ -150,7 +150,10 @@ private class HyperlinkHeaderCellRenderer :
   }
 
   override fun mouseClicked(e: MouseEvent) {
-    val header = e.component as? JTableHeader ?: return
+    val header = e.component as? JTableHeader
+    if (header == null || !header.isEnabled) {
+      return
+    }
     val table = header.table
     val ci = header.columnAtPoint(e.point)
     if (getTextRect(header, ci).contains(e.point)) {
