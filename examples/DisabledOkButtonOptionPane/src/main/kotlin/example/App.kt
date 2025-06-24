@@ -68,7 +68,8 @@ private fun makeButton2(log: JTextArea): JButton {
   }
   field2.addHierarchyListener { e ->
     val c = e.component
-    if (e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L && c.isShowing) {
+    val b = e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L
+    if (b && c.isShowing) {
       EventQueue.invokeLater { c.requestFocusInWindow() }
     }
   }
