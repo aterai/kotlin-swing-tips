@@ -53,6 +53,13 @@ private class PopupLocationTable(
   numRows: Int,
   numColumns: Int,
 ) : JTable(numRows, numColumns) {
+  private val leadSelectionCellRect: Rectangle
+    get() {
+      val row = getSelectionModel().leadSelectionIndex
+      val col = getColumnModel().selectionModel.leadSelectionIndex
+      return getCellRect(row, col, false)
+    }
+
   override fun getPopupLocation(e: MouseEvent?): Point? {
     val r = this.leadSelectionCellRect
     val b = e == null && !r.isEmpty
@@ -66,13 +73,6 @@ private class PopupLocationTable(
     val px = if (getCellSelectionEnabled()) r.maxX else bounds.centerX
     return Point(px.toInt(), r.maxY.toInt())
   }
-
-  private val leadSelectionCellRect: Rectangle
-    get() {
-      val row = getSelectionModel().leadSelectionIndex
-      val col = getColumnModel().selectionModel.leadSelectionIndex
-      return getCellRect(row, col, false)
-    }
 
   companion object {
     private val IGNORE_KEYS = listOf<Int>(
