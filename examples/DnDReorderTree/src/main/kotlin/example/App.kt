@@ -181,7 +181,10 @@ private fun isDescendant2(
   .map { tree.getRowForPath(it) }
   .any { it == dropRow }
 
-fun deepCopy(src: MutableTreeNode, tgt: DefaultMutableTreeNode): DefaultMutableTreeNode {
+fun deepCopy(
+  src: MutableTreeNode,
+  tgt: DefaultMutableTreeNode,
+): DefaultMutableTreeNode {
   src
     .children()
     .asSequence()

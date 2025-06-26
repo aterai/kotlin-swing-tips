@@ -71,7 +71,10 @@ private fun makeUserObject(node: DefaultMutableTreeNode, height: Int): Any {
   return SizeNode(title, height)
 }
 
-private fun startExpandTimer(e: TreeExpansionEvent, list: List<DefaultMutableTreeNode>) {
+private fun startExpandTimer(
+  e: TreeExpansionEvent,
+  list: List<DefaultMutableTreeNode>,
+) {
   val tree = e.source as? JTree ?: return
   val model = tree.model
   val height = AtomicInteger(START_HEIGHT)

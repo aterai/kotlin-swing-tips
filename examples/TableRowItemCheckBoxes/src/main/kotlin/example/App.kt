@@ -54,7 +54,11 @@ private class CheckBoxTable(
     getSelectionModel().addListSelectionListener(listener)
   }
 
-  override fun prepareEditor(editor: TableCellEditor, row: Int, column: Int): Component {
+  override fun prepareEditor(
+    editor: TableCellEditor,
+    row: Int,
+    column: Int,
+  ): Component {
     val c = super.prepareEditor(editor, row, column)
     if (c is JCheckBox) {
       val selected = getSelectionModel().isSelectedIndex(row)

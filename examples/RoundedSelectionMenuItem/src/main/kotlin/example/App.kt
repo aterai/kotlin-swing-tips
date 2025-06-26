@@ -193,7 +193,11 @@ private class WindowsRoundMenuItemUI2 : WindowsMenuItemUI() {
     }
   }
 
-  private fun paintSelectedBackground(g: Graphics, menuItem: JMenuItem, bgColor: Color) {
+  private fun paintSelectedBackground(
+    g: Graphics,
+    menuItem: JMenuItem,
+    bgColor: Color,
+  ) {
     val w = menuItem.width
     val h = menuItem.height
     val config = (g as? Graphics2D)?.deviceConfiguration ?: return

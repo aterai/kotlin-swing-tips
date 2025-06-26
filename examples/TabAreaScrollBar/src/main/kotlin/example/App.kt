@@ -89,7 +89,11 @@ private class CardLayoutTabbedPane : JPanel(BorderLayout()) {
     super.doLayout()
   }
 
-  private fun createTabComponent(title: String, icon: Icon, comp: Component): Component {
+  private fun createTabComponent(
+    title: String,
+    icon: Icon,
+    comp: Component,
+  ): Component {
     val tab = TabButton()
     tab.inheritsPopupMenu = true
     group.add(tab)
