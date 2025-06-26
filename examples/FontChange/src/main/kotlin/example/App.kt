@@ -32,7 +32,12 @@ fun makeUI(): Component {
   button.addActionListener {
     val c = button.rootPane
     UIManager.getLookAndFeel().provideErrorFeedback(c)
-    JOptionPane.showMessageDialog(c, "Error message", "title", JOptionPane.ERROR_MESSAGE)
+    JOptionPane.showMessageDialog(
+      c,
+      "Error message",
+      "title",
+      JOptionPane.ERROR_MESSAGE,
+    )
   }
   val panel = JPanel(GridBagLayout())
   val c = GridBagConstraints()
