@@ -45,7 +45,8 @@ private class TextLayoutPanel : JComponent() {
   companion object {
     private const val TEXT = "abcdefghijklmnopqrstuvwxyz"
     private val FONT = Font(Font.SERIF, Font.ITALIC, 64)
-    private val TEXT_LAYOUT = TextLayout(TEXT, FONT, FontRenderContext(null, true, true))
+    private val FRC = FontRenderContext(null, true, true)
+    private val TEXT_LAYOUT = TextLayout(TEXT, FONT, FRC)
   }
 }
 
