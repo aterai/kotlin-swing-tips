@@ -133,13 +133,15 @@ private class TranslucentCellSelectionLayerUI : LayerUI<JScrollPane>() {
         }
       }
       val ics = table.intercellSpacing
+      val v = table.selectionBackground
+      val sbc = Color(v.red, v.green, v.blue, 0x32)
       for (a in singularization(area)) {
         val r = a.bounds
         r.width -= ics.width - 1
         r.height -= ics.height - 1
-        g2.paint = SELECTION_BGC
+        g2.paint = sbc
         g2.fill(r)
-        g2.paint = table.selectionBackground
+        g2.paint = v
         g2.stroke = BORDER_STROKE
         g2.draw(r)
       }
@@ -148,7 +150,6 @@ private class TranslucentCellSelectionLayerUI : LayerUI<JScrollPane>() {
   }
 
   companion object {
-    private val SELECTION_BGC = Color(0x32_00_FE_64, true)
     private val BORDER_STROKE = BasicStroke(2f)
 
     private fun addArea(c: Component?, table: JTable, area: Area, row: Int, col: Int) {
