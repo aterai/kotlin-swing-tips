@@ -126,7 +126,9 @@ private class IsoscelesTrapezoidTabbedPaneUI : BasicTabbedPaneUI() {
     trapezoid.lineTo((w - ADJ2).toFloat(), textShiftOffset)
     trapezoid.lineTo((w + ADJ2).toFloat(), h.toFloat())
     trapezoid.closePath()
-    trapezoid.transform(AffineTransform.getTranslateInstance(x.toDouble(), y.toDouble()))
+    val tx = x.toDouble()
+    val ty = y.toDouble()
+    trapezoid.transform(AffineTransform.getTranslateInstance(tx, ty))
     g2.color = if (isSelected) selectedTabColor else TAB_BACKGROUND
     g2.fill(trapezoid)
     g2.color = TAB_BORDER
