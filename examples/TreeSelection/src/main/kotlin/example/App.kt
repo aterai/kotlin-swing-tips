@@ -11,21 +11,24 @@ fun makeUI(): Component {
   val r0 = JRadioButton("DISCONTIGUOUS_TREE_SELECTION", true)
   r0.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      tree.selectionModel.selectionMode = TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION
+      val sm = tree.selectionModel
+      sm.selectionMode = TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION
     }
   }
 
   val r1 = JRadioButton("SINGLE_TREE_SELECTION")
   r1.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      tree.selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
+      val sm = tree.selectionModel
+      sm.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
     }
   }
 
   val r2 = JRadioButton("CONTIGUOUS_TREE_SELECTION")
   r2.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      tree.selectionModel.selectionMode = TreeSelectionModel.CONTIGUOUS_TREE_SELECTION
+      val sm = tree.selectionModel
+      sm.selectionMode = TreeSelectionModel.CONTIGUOUS_TREE_SELECTION
     }
   }
 
