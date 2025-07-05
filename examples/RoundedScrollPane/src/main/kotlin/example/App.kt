@@ -66,8 +66,10 @@ fun makeUI(): Component {
               horizontalScrollBar.setUI(WithoutArrowButtonScrollBarUI())
             }
           }.also {
-            it.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED
-            it.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+            it.verticalScrollBarPolicy =
+              ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED
+            it.horizontalScrollBarPolicy =
+              ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
             it.horizontalScrollBar = null
           }
         }
