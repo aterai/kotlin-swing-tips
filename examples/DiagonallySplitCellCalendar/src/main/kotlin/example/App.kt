@@ -66,9 +66,9 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
     if (value is LocalDate && c is JLabel) {
       val nextWeekDay = value.plusDays(7)
       c.text = value.dayOfMonth.toString()
-      c.verticalAlignment = SwingConstants.TOP
-      c.horizontalAlignment = SwingConstants.LEFT
-      updateCellWeekColor(value, c, c)
+      c.verticalAlignment = TOP
+      c.horizontalAlignment = LEFT
+      updateCellWeekColor(value, table, c, c)
 
       val lastRow = row == table.model.rowCount - 1
       val split = YearMonth.from(value.plusDays(7)) == YearMonth.from(currentLocalDate)
@@ -77,15 +77,15 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
         sub.font = c.font
         sub.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
         sub.isOpaque = false
-        sub.verticalAlignment = SwingConstants.BOTTOM
-        sub.horizontalAlignment = SwingConstants.RIGHT
+        sub.verticalAlignment = BOTTOM
+        sub.horizontalAlignment = RIGHT
         p.removeAll()
         p.layout = BorderLayout()
         p.add(sub, BorderLayout.SOUTH)
         p.add(c, BorderLayout.NORTH)
         p.border = c.border
         c.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
-        updateCellWeekColor(value, sub, p)
+        updateCellWeekColor(value, table, sub, p)
         return JLayer(p, DiagonallySplitCellLayerUI())
       }
     }
@@ -94,21 +94,22 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
 
   private fun updateCellWeekColor(
     d: LocalDate,
+    table: JTable,
     fgc: JComponent,
     bgc: JComponent,
   ) {
     if (YearMonth.from(d) == YearMonth.from(currentLocalDate)) {
-      fgc.foreground = Color.BLACK
+      fgc.foreground = table.foreground
     } else {
       fgc.foreground = Color.GRAY
     }
-    bgc.background = getDayOfWeekColor(d.dayOfWeek)
+    bgc.background = getDayOfWeekColor(table, d.dayOfWeek)
   }
 
-  private fun getDayOfWeekColor(dow: DayOfWeek) = when (dow) {
+  private fun getDayOfWeekColor(table: JTable, dow: DayOfWeek) = when (dow) {
     DayOfWeek.SUNDAY -> Color(0xFF_DC_DC)
     DayOfWeek.SATURDAY -> Color(0xDC_DC_FF)
-    else -> Color.WHITE
+    else -> table.background
   }
 }
 

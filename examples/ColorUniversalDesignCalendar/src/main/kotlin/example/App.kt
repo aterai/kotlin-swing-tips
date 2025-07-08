@@ -52,22 +52,20 @@ fun updateMonthView(localDate: LocalDate?) {
 
 private class CalendarTableRenderer : TableCellRenderer {
   private val renderer = JPanel(FlowLayout(FlowLayout.LEADING))
-  private val label = object : JLabel("", SwingConstants.CENTER) {
+  private val label = object : JLabel("", CENTER) {
     override fun getPreferredSize() = super.getPreferredSize()?.also {
       it.width = 18
     }
 
     override fun paintComponent(g: Graphics) {
-      if (background != Color.WHITE) {
-        val g2 = g.create() as? Graphics2D ?: return
-        g2.setRenderingHint(
-          RenderingHints.KEY_ANTIALIASING,
-          RenderingHints.VALUE_ANTIALIAS_ON,
-        )
-        g2.paint = background
-        g2.fill(getShape())
-        g2.dispose()
-      }
+      val g2 = g.create() as? Graphics2D ?: return
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
+      g2.paint = background
+      g2.fill(getShape())
+      g2.dispose()
       super.paintComponent(g)
     }
 
@@ -96,22 +94,22 @@ private class CalendarTableRenderer : TableCellRenderer {
       val isThisMonth = YearMonth.from(value) == YearMonth.from(currentLocalDate)
       when {
         isThisMonth && value.dayOfWeek == DayOfWeek.SUNDAY -> {
-          label.foreground = Color.WHITE
-          label.background = Color.BLACK
+          label.foreground = table.background
+          label.background = table.foreground
         }
 
         isThisMonth && value.dayOfWeek == DayOfWeek.SATURDAY -> {
-          label.foreground = Color.WHITE
+          label.foreground = table.background
           label.background = Color.BLUE
         }
 
         isThisMonth -> {
-          label.background = Color.WHITE
-          label.foreground = Color.BLACK
+          label.background = table.background
+          label.foreground = table.foreground
         }
 
         else -> {
-          label.background = Color.WHITE
+          label.background = table.background
           label.foreground = Color.GRAY
           label.text = value.dayOfMonth.toString()
         }
@@ -119,16 +117,16 @@ private class CalendarTableRenderer : TableCellRenderer {
       when {
         selected -> renderer.background = table.selectionBackground
         value.isEqual(realLocalDate) -> renderer.background = Color(0xDC_FF_DC)
-        else -> renderer.background = getDayOfWeekColor(value.dayOfWeek)
+        else -> renderer.background = getDayOfWeekColor(table, value.dayOfWeek)
       }
     }
     return renderer
   }
 
-  private fun getDayOfWeekColor(dow: DayOfWeek) = when (dow) {
+  private fun getDayOfWeekColor(table: JTable, dow: DayOfWeek) = when (dow) {
     DayOfWeek.SUNDAY -> Color(0xFF_DC_DC)
     DayOfWeek.SATURDAY -> Color(0xDC_DC_FF)
-    else -> Color.WHITE
+    else -> table.background
   }
 }
 

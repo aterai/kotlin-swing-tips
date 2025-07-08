@@ -43,11 +43,11 @@ private val monthTable = object : JTable() {
             it.horizontalAlignment = SwingConstants.CENTER
             it.text = value.dayOfMonth.toString()
             val flg = YearMonth.from(value) == YearMonth.from(currentLocalDate)
-            it.foreground = if (flg) Color.BLACK else Color.GRAY
+            it.foreground = if (flg) table.foreground else Color.GRAY
             it.background = if (value.isEqual(realLocalDate)) {
               Color(0xDC_FF_DC)
             } else {
-              getDayOfWeekColor(value.dayOfWeek)
+              getDayOfWeekColor(table, value.dayOfWeek)
             }
           }
         }
@@ -101,10 +101,10 @@ private fun updateMonthView(localDate: LocalDate) {
   monthTable.model = CalendarViewTableModel(localDate)
 }
 
-private fun getDayOfWeekColor(dow: DayOfWeek) = when (dow) {
+private fun getDayOfWeekColor(table: JTable, dow: DayOfWeek) = when (dow) {
   DayOfWeek.SUNDAY -> Color(0xFF_DC_DC)
   DayOfWeek.SATURDAY -> Color(0xDC_DC_FF)
-  else -> Color.WHITE
+  else -> table.background
 }
 
 private class CalendarViewTableModel(

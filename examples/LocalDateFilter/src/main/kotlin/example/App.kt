@@ -118,23 +118,23 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
       c.text = value.dayOfMonth.toString()
       c.horizontalAlignment = CENTER
       c.foreground = if (YearMonth.from(value) == YearMonth.from(currentLocalDate)) {
-        Color.BLACK
+        table.foreground
       } else {
         Color.GRAY
       }
       c.background = if (value.isEqual(realDate)) {
         Color(0xDC_FF_DC)
       } else {
-        getDayOfWeekColor(value.dayOfWeek)
+        getDayOfWeekColor(table, value.dayOfWeek)
       }
     }
     return c
   }
 
-  private fun getDayOfWeekColor(dow: DayOfWeek) = when (dow) {
+  private fun getDayOfWeekColor(table: JTable, dow: DayOfWeek) = when (dow) {
     DayOfWeek.SUNDAY -> Color(0xFF_DC_DC)
     DayOfWeek.SATURDAY -> Color(0xDC_DC_FF)
-    else -> Color.WHITE
+    else -> table.background
   }
 }
 
@@ -147,7 +147,7 @@ private class CalendarViewTableModel(
     Any::class.java
   }
 
-  override fun getColumnName(column: Int) = if (column == 0) {
+  override fun getColumnName(column: Int): String = if (column == 0) {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM")
     currentMonth.format(formatter.withLocale(Locale.getDefault()))
   } else {
@@ -157,7 +157,7 @@ private class CalendarViewTableModel(
   override fun getValueAt(
     row: Int,
     column: Int,
-  ) = if (column == 0) {
+  ): Any? = if (column == 0) {
     currentMonth.atDay(1).plusDays(row.toLong())
   } else {
     super.getValueAt(row, column)
