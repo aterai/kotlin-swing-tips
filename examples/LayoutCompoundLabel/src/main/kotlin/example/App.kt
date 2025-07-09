@@ -7,7 +7,7 @@ import javax.swing.*
 fun makeUI(): Component {
   val key = "OptionPane.informationIcon"
   val icon = UIManager.getIcon(key)
-  val label = object : JLabel(key, icon, SwingConstants.LEADING) {
+  val label = object : JLabel(key, icon, LEADING) {
     private val viewRect = Rectangle()
     private val iconRect = Rectangle()
     private val textRect = Rectangle()

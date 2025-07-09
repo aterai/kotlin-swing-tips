@@ -133,7 +133,7 @@ private class SudokuCellRenderer(
       if (isEditable && value == 0) {
         c.text = " "
       }
-      c.horizontalAlignment = SwingConstants.CENTER
+      c.horizontalAlignment = CENTER
       val rf = (row + 1) % 3 == 0
       val cf = (column + 1) % 3 == 0
       c.border = when {

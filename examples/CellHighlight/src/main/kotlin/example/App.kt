@@ -100,11 +100,7 @@ private class HighlightRenderer(
     )
     if (c is JLabel) {
       c.background = table.background
-      if (value is Number) {
-        c.horizontalAlignment = SwingConstants.RIGHT
-      } else {
-        c.horizontalAlignment = SwingConstants.LEFT
-      }
+      c.horizontalAlignment = if (value is Number) RIGHT else LEFT
       highlighter.getCellHighlightColor(row, column)?.also {
         c.background = it
       }

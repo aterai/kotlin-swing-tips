@@ -313,7 +313,7 @@ private class CenterAlignmentHeaderRenderer : TableCellRenderer {
       column,
     )
     if (c is JLabel) {
-      c.setHorizontalAlignment(SwingConstants.CENTER)
+      c.horizontalAlignment = SwingConstants.CENTER
     }
     return c
   }

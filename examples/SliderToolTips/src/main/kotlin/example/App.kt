@@ -111,7 +111,7 @@ private class MetalTooltipSliderUI : MetalSliderUI() {
 
 private class SliderPopupListener : MouseAdapter() {
   private val toolTip = JWindow()
-  private val label = object : JLabel(" ", SwingConstants.CENTER) {
+  private val label = object : JLabel(" ", CENTER) {
     override fun getPreferredSize(): Dimension {
       val d = super.getPreferredSize()
       d.width = 32

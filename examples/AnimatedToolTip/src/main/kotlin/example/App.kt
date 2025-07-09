@@ -23,7 +23,7 @@ fun makeUI(): Component {
   val icon = url?.let { ImageIcon(it) } ?: UIManager.getIcon("html.missingImage")
   val l2 = object : JLabel("Gif Animated ToolTip") {
     override fun createToolTip(): JToolTip {
-      val label = JLabel("", icon, SwingConstants.LEFT)
+      val label = JLabel("", icon, LEFT)
       val tip = AnimatedToolTip(label)
       tip.component = this
       return tip

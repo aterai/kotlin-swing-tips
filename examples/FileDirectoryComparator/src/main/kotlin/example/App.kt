@@ -104,25 +104,25 @@ private class FileIconTableCellRenderer(
     if (c is JLabel && value is File) {
       when (table.convertColumnIndexToModel(column)) {
         0 -> {
-          c.horizontalAlignment = SwingConstants.LEFT
+          c.horizontalAlignment = LEFT
           c.icon = fileSystemView.getSystemIcon(value)
           c.text = fileSystemView.getSystemDisplayName(value)
         }
 
         1 -> {
-          c.horizontalAlignment = SwingConstants.RIGHT
+          c.horizontalAlignment = RIGHT
           c.icon = null
           c.text = if (value.isDirectory) "" else value.length().toString()
         }
 
         2 -> {
-          c.horizontalAlignment = SwingConstants.LEFT
+          c.horizontalAlignment = LEFT
           c.icon = null
           c.text = value.absolutePath
         }
 
         else -> {
-          c.horizontalAlignment = SwingConstants.LEFT
+          c.horizontalAlignment = LEFT
           c.icon = null
           c.text = value.absolutePath
           error("Should never happened.")
