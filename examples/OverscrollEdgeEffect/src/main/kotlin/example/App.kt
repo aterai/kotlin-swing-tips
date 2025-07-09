@@ -165,7 +165,7 @@ private class OverscrollEdgeEffectLayerUI : LayerUI<JScrollPane>() {
       val d = viewport.view.size
       val r = viewport.viewRect
       val p = SwingUtilities.convertPoint(c, e.point, l.view)
-      val ow = p.getX().coerceAtLeast(r.getWidth() - p.getX())
+      val ow = p.x.coerceAtLeast(r.width - p.x)
       val ox = p.getX() - ow
       val dy = e.point.y - mousePt.y
       if (isDragReversed(dy)) {
@@ -173,12 +173,12 @@ private class OverscrollEdgeEffectLayerUI : LayerUI<JScrollPane>() {
         ovalShrinking(l)
       } else if (r.y == 0 && dy >= 0) {
         // top edge
-        ovalHeight = (r.getHeight() / 8.0).coerceAtMost(p.getY() / 8.0)
+        ovalHeight = (r.height / 8.0).coerceAtMost(p.y / 8.0)
         oval.setFrame(ox, -ovalHeight, ow * 2.2, ovalHeight * 2.0)
       } else if (d.height == r.y + r.height && dy <= 0) {
         // bottom edge
-        ovalHeight = (r.getHeight() / 8.0).coerceAtMost((r.getHeight() - p.getY()) / 8.0)
-        oval.setFrame(ox, r.getHeight() - ovalHeight, ow * 2.2, ovalHeight * 2.0)
+        ovalHeight = (r.height / 8.0).coerceAtMost((r.height - p.y) / 8.0)
+        oval.setFrame(ox, r.height - ovalHeight, ow * 2.2, ovalHeight * 2.0)
       }
       mousePt.location = e.point
       delta = dy
