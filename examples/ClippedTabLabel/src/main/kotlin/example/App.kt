@@ -86,7 +86,7 @@ private class ClippedTitleTabbedPane : JTabbedPane() {
     index: Int,
   ) {
     super.insertTab(title, icon, c, tip ?: title, index)
-    setTabComponentAt(index, JLabel(title, icon, SwingConstants.CENTER))
+    setTabComponentAt(index, JLabel(title, icon, CENTER))
   }
 
   private fun updateAllTabWidth(

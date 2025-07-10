@@ -15,7 +15,7 @@ import javax.swing.plaf.synth.SynthContext
 import javax.swing.plaf.synth.SynthLookAndFeel
 
 fun makeUI(): Component {
-  val tabbedPane = object : JTabbedPane(SwingConstants.LEFT) {
+  val tabbedPane = object : JTabbedPane(LEFT) {
     override fun updateUI() {
       super.updateUI()
       val tmp = if (getUI() is WindowsTabbedPaneUI) {
@@ -90,7 +90,7 @@ private class ClippedTitleTabbedPane(
     val areaWidth = width - tabAreaIns.left - tabAreaIns.right - ins.left - ins.right
     var tabWidth: Int // = tabInsets.left + tabInsets.right + 3
     val gap: Int
-    if (placement == SwingConstants.LEFT || placement == SwingConstants.RIGHT) {
+    if (placement == LEFT || placement == RIGHT) {
       tabWidth = areaWidth / 2
       gap = 0
     } else { // TOP || BOTTOM

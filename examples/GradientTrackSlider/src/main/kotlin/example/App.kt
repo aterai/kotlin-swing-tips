@@ -61,7 +61,7 @@ fun makeUI(): Component {
   return p
 }
 
-private fun makeSlider() = object : JSlider(SwingConstants.HORIZONTAL, 0, 100, 50) {
+private fun makeSlider() = object : JSlider(HORIZONTAL, 0, 100, 50) {
   private var handler: MouseAdapter? = null
 
   override fun updateUI() {
