@@ -93,7 +93,7 @@ private fun makePanel2(m: BoundedRangeModel): Component {
 
   val progress8 = JProgressBar(m)
   progress8.orientation = SwingConstants.VERTICAL
-  val layer = JLayer<JProgressBar>(progress8, VerticalFlipLayerUI())
+  val layer = JLayer(progress8, VerticalFlipLayerUI())
 
   val p2 = Box.createHorizontalBox()
   p2.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
