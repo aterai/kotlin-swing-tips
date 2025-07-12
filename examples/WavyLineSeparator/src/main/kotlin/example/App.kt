@@ -9,7 +9,7 @@ import kotlin.math.PI
 fun makeUI(): Component {
   val box1 = Box.createHorizontalBox()
   box1.add(JLabel("JLabel"))
-  box1.add(WavyLineSeparator(SwingConstants.VERTICAL))
+  box1.add(WavyLineSeparator(VERTICAL))
   box1.add(Box.createHorizontalStrut(5))
   box1.add(JTextField("**********"))
   box1.add(Box.createHorizontalGlue())
