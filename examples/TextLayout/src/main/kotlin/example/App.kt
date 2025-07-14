@@ -30,12 +30,8 @@ private class TextLayoutPanel : JComponent() {
       baseline + TEXT_LAYOUT.descent + TEXT_LAYOUT.leading
     g2.draw(Line2D.Float(0f, leading, w, leading))
     g2.paint = Color.CYAN
-    val xh =
-      baseline - TEXT_LAYOUT
-        .getBlackBoxBounds(23, 24)
-        .bounds
-        .getHeight()
-        .toFloat()
+    val bounds = TEXT_LAYOUT.getBlackBoxBounds(23, 24).bounds
+    val xh = baseline - bounds.height.toFloat()
     g2.draw(Line2D.Float(0f, xh, w, xh))
     g2.paint = Color.BLACK
     TEXT_LAYOUT.draw(g2, 0f, baseline)
