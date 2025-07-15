@@ -7,8 +7,10 @@ import javax.swing.plaf.basic.BasicSplitPaneUI
 fun makeUI(): Component {
   UIManager.put("SplitPane.oneTouchButtonSize", 32)
   UIManager.put("SplitPane.oneTouchButtonOffset", 50)
-  UIManager.put("SplitPaneDivider.border", BorderFactory.createLineBorder(Color.RED, 10))
-  UIManager.put("SplitPaneDivider.draggingColor", Color(0x64_FF_64_64, true))
+  val border = BorderFactory.createLineBorder(Color.RED, 10)
+  UIManager.put("SplitPaneDivider.border", border)
+  val color = Color(0x64_FF_64_64, true)
+  UIManager.put("SplitPaneDivider.draggingColor", color)
 
   val splitPane = object : JSplitPane(VERTICAL_SPLIT) {
     override fun updateUI() {
