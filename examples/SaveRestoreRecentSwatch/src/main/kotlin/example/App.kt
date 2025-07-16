@@ -424,9 +424,10 @@ private class RecentSwatchPanel : SwatchPanel() {
 
   override fun initColors() {
     // val key = "ColorChooser.swatchesDefaultRecentColor"
-    val defaultRecent = null // UIManager.getColor(key)
+    // val defaultRecent = null // UIManager.getColor(key)
     val numColors = numSwatches.width * numSwatches.height
-    colors = Array(numColors) { defaultRecent }
+    // colors = Array(numColors) { defaultRecent }
+    colors = arrayOfNulls(numColors)
   }
 
   fun setMostRecentColor(c: Color?) {
