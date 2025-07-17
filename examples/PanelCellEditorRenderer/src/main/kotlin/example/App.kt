@@ -123,15 +123,15 @@ private class ButtonsRenderer : TableCellRenderer {
   private val renderer = ButtonsPanel()
 
   override fun getTableCellRendererComponent(
-    table: JTable,
+    tbl: JTable,
     value: Any?,
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
     column: Int,
   ) = renderer.also {
-    it.background = if (isSelected) table.selectionBackground else table.background
-    it.label.foreground = if (isSelected) table.selectionForeground else table.foreground
+    it.background = if (isSelected) tbl.selectionBackground else tbl.background
+    it.label.foreground = if (isSelected) tbl.selectionForeground else tbl.foreground
     it.label.text = value?.toString() ?: ""
   }
 }
