@@ -139,7 +139,8 @@ private class ToggleSwitchLayerUI : LayerUI<JSlider>() {
     e: MouseEvent,
     l: JLayer<out JSlider>,
   ) {
-    if (e.id == MouseEvent.MOUSE_PRESSED && SwingUtilities.isLeftMouseButton(e)) {
+    val leftMouseButton = SwingUtilities.isLeftMouseButton(e)
+    if (e.id == MouseEvent.MOUSE_PRESSED && leftMouseButton) {
       e.component.dispatchEvent(
         MouseEvent(
           e.component,
@@ -156,7 +157,7 @@ private class ToggleSwitchLayerUI : LayerUI<JSlider>() {
         ),
       )
       e.consume()
-    } else if (e.id == MouseEvent.MOUSE_CLICKED && SwingUtilities.isLeftMouseButton(e)) {
+    } else if (e.id == MouseEvent.MOUSE_CLICKED && leftMouseButton) {
       val slider = l.view
       val v = slider.value
       if (slider.minimum == v) {
