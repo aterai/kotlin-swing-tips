@@ -62,8 +62,8 @@ private fun makeTrayIcon(p: JComponent): TrayIcon {
 }
 
 private fun makeImage(path: String): Image {
-  val cl = Thread.currentThread().contextClassLoader
-  return cl.getResource(path)?.openStream()?.use(ImageIO::read) ?: makeDefaultTrayImage()
+  val res = Thread.currentThread().contextClassLoader.getResource(path)
+  return res?.openStream()?.use(ImageIO::read) ?: makeDefaultTrayImage()
 }
 
 private fun makeDefaultTrayImage(): Image {
