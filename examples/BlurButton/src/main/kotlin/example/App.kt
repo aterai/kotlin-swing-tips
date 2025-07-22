@@ -74,7 +74,8 @@ private class BlurredButton(
       .05f, .60f, .05f,
       .05f, .05f, .05f,
     )
-    private val CONVOLVE_OP = ConvolveOp(Kernel(3, 3, DATA))
+    private val KERNEL = Kernel(3, 3, DATA)
+    private val CONVOLVE_OP = ConvolveOp(KERNEL)
   }
 }
 
@@ -107,7 +108,8 @@ private class BlurButton(
       .05f, .60f, .05f,
       .05f, .05f, .05f,
     )
-    private val CONVOLVE_OP = ConvolveOp(Kernel(3, 3, DATA), ConvolveOp.EDGE_NO_OP, null)
+    private val KERNEL = Kernel(3, 3, DATA)
+    private val CONVOLVE_OP = ConvolveOp(KERNEL, ConvolveOp.EDGE_NO_OP, null)
   }
 }
 
@@ -142,7 +144,8 @@ private class BlurLayerUI<V : AbstractButton?> : LayerUI<V>() {
       .05f, .60f, .05f,
       .05f, .05f, .05f,
     )
-    private val CONVOLVE_OP = ConvolveOp(Kernel(3, 3, DATA), ConvolveOp.EDGE_NO_OP, null)
+    private val KERNEL = Kernel(3, 3, DATA)
+    private val CONVOLVE_OP = ConvolveOp(KERNEL, ConvolveOp.EDGE_NO_OP, null)
   }
 }
 
