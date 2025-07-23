@@ -7,18 +7,22 @@ import java.util.Objects
 import javax.swing.*
 
 fun makeUI(): Component {
-  val combo0 = JComboBox(makeModel())
-  combo0.renderer = CheckComboBoxRenderer<ComboItem>()
-
-  val combo1 = JComboBox(makeModel())
-  combo1.isEditable = true
-  combo1.editor = CheckComboBoxEditor()
-  combo1.renderer = CheckComboBoxRenderer<ComboItem>()
-
   val box = Box.createVerticalBox()
-  box.add(makeTitledPanel("setEditable(false), setRenderer(...)", combo0))
+  val combo0 = JComboBox(makeModel()).also {
+    it.renderer = CheckComboBoxRenderer<ComboItem>()
+  }
+  val title0 = "setEditable(false), setRenderer(...)"
+  box.add(makeTitledPanel(title0, combo0))
   box.add(Box.createVerticalStrut(5))
-  box.add(makeTitledPanel("setEditable(true), setRenderer(...), setEditor(...)", combo1))
+
+  val combo1 = JComboBox(makeModel()).also {
+    it.isEditable = true
+    it.editor = CheckComboBoxEditor()
+    it.renderer = CheckComboBoxRenderer<ComboItem>()
+  }
+  val title1 = "setEditable(true), setRenderer(...), setEditor(...)"
+  box.add(makeTitledPanel(title1, combo1))
+
   box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   return JPanel(BorderLayout()).also {
     it.add(box, BorderLayout.NORTH)
