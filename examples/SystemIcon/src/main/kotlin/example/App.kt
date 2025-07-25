@@ -61,7 +61,8 @@ fun makeUI(): Component {
             val file = it[0]
             if (file is File) {
               smallLabel.icon = FileSystemView.getFileSystemView().getSystemIcon(file)
-              largeLabel.icon = ImageIcon(ShellFolder.getShellFolder(file).getIcon(true))
+              val shellFolder = ShellFolder.getShellFolder(file)
+              largeLabel.icon = ImageIcon(shellFolder.getIcon(true))
             }
             e.dropComplete(true)
           } ?: e.rejectDrop()
