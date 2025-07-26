@@ -150,7 +150,8 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
       updateCellWeekColor(value, c)
       val nextWeekDay = value.plusDays(7)
       val isLastRow = row == table.model.rowCount - 1
-      if (isLastRow && YearMonth.from(nextWeekDay) == YearMonth.from(currentLocalDate)) {
+      val b = YearMonth.from(nextWeekDay) == YearMonth.from(currentLocalDate)
+      if (isLastRow && b) {
         val sub = JLabel(nextWeekDay.dayOfMonth.toString()).also {
           updateCellWeekColor(nextWeekDay, it)
           it.font = table.font
