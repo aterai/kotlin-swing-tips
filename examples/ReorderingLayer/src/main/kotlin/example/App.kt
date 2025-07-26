@@ -133,10 +133,15 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
     pt: Point,
   ) {
     (0..<p.componentCount)
-      .filter { i -> p.getComponent(i).let { it !== filler || !it.bounds.contains(pt) } }
-      .map { getTargetIndex(p.getComponent(it), pt, it) }
-      .firstOrNull { it >= 0 }
-      ?.also { swapComponent(p, filler, filler, it) }
+      .filter { i ->
+        p.getComponent(i).let { it !== filler || !it.bounds.contains(pt) }
+      }.map {
+        getTargetIndex(p.getComponent(it), pt, it)
+      }.firstOrNull {
+        it >= 0
+      }?.also {
+        swapComponent(p, filler, filler, it)
+      }
   }
 
   private fun startDragging(
