@@ -28,7 +28,14 @@ fun makeUI(): Component {
 }
 
 private fun makePopup(): JPopupMenu {
-  val popup = JPopupMenu()
+  val popup = object : JPopupMenu() {
+    override fun updateUI() {
+      super.updateUI()
+      SwingUtilities.invokeLater {
+        SwingUtilities.updateComponentTreeUI(this)
+      }
+    }
+  }
   popup.add(makePopupHeader())
   popup.add("JMenuItem")
   popup.addSeparator()
@@ -67,7 +74,7 @@ private fun makePopupHeader(): JLabel {
     }
   }
   header.isOpaque = true
-  header.background = Color.LIGHT_GRAY
+  header.background = UIManager.getColor("Label.background").darker()
   return header
 }
 
@@ -81,11 +88,11 @@ private class PopupHeaderMouseListener : MouseAdapter() {
   }
 
   override fun mouseDragged(e: MouseEvent) {
-    val c = e.getComponent()
+    val c = e.component
     val w = SwingUtilities.getWindowAncestor(c)
     if (w != null && SwingUtilities.isLeftMouseButton(e)) {
       if (w.type == Window.Type.POPUP) { // Popup$HeavyWeightWindow
-        val pt = e.getLocationOnScreen()
+        val pt = e.locationOnScreen
         w.setLocation(pt.x - startPt.x, pt.y - startPt.y)
       } else { // Popup$LightWeightWindow
         val popup = SwingUtilities.getAncestorOfClass(JPopupMenu::class.java, c)
