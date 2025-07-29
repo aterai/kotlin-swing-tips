@@ -21,23 +21,31 @@ fun makeUI(): Component {
 
   val b1 = JButton("default")
   b1.addActionListener {
-    JOptionPane.showMessageDialog(b1.rootPane, JLabel(html), title, type)
+    val p = b1.rootPane
+    JOptionPane.showMessageDialog(p, JLabel(html), title, type)
   }
 
   val label = JLabel(html)
   label.addHierarchyListener { e ->
     val c = e.component
-    if (e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L && c.isShowing) {
+    val b = e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L
+    if (b && c.isShowing) {
       descendants(SwingUtilities.getAncestorOfClass(JOptionPane::class.java, c))
         .filterIsInstance<JPanel>()
         .forEach { it.isOpaque = false }
     }
   }
   val b2 = JButton("background")
-  b2.addActionListener { JOptionPane.showMessageDialog(b2.rootPane, label, title, type) }
+  b2.addActionListener {
+    val p = b2.rootPane
+    JOptionPane.showMessageDialog(p,label, title, type)
+  }
 
   val b3 = JButton("override")
-  b3.addActionListener { showMessageDialog(b3.rootPane, JLabel(html), title, type) }
+  b3.addActionListener {
+    val p = b3.rootPane
+    showMessageDialog(p, JLabel(html), title, type)
+  }
 
   return JPanel().also {
     it.add(b1)
@@ -75,7 +83,8 @@ fun showMessageDialog(
       g2.dispose()
     }
   }
-  pane.componentOrientation = (parent ?: JOptionPane.getRootFrame()).componentOrientation
+  val c = parent ?: JOptionPane.getRootFrame()
+  pane.componentOrientation = c.componentOrientation
   descendants(pane).filterIsInstance<JPanel>().forEach { it.isOpaque = false }
 
   val dialog = pane.createDialog(title)
