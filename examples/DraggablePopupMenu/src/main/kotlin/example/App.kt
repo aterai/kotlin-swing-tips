@@ -9,8 +9,12 @@ import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 
 fun makeUI(): Component {
-  val button = MenuToggleButton("JToggleButton")
-  button.setPopupMenu(makePopup())
+  val button = object : MenuToggleButton("JToggleButton") {
+    override fun updateUI() {
+      super.updateUI()
+      setPopupMenu(makePopup())
+    }
+  }
 
   val box = Box.createHorizontalBox()
   box.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
@@ -28,15 +32,8 @@ fun makeUI(): Component {
 }
 
 private fun makePopup(): JPopupMenu {
-  val popup = object : JPopupMenu() {
-    override fun updateUI() {
-      super.updateUI()
-      SwingUtilities.invokeLater {
-        SwingUtilities.updateComponentTreeUI(this)
-      }
-    }
-  }
-  popup.add(makePopupHeader())
+  val popup = JPopupMenu()
+  popup.add(PopupMenuHeader("Header"))
   popup.add("JMenuItem")
   popup.addSeparator()
   popup.add(JCheckBoxMenuItem("JCheckBoxMenuItem"))
@@ -48,34 +45,32 @@ private fun makePopup(): JPopupMenu {
   return popup
 }
 
-private fun makePopupHeader(): JLabel {
-  val header = object : JLabel("Header", CENTER) {
-    private var listener: MouseAdapter? = null
+private class PopupMenuHeader(text: String) : JLabel(text, CENTER) {
+  private var listener: MouseAdapter? = null
 
-    override fun updateUI() {
-      removeMouseListener(listener)
-      removeMouseMotionListener(listener)
-      super.updateUI()
-      listener = example.PopupHeaderMouseListener()
-      addMouseListener(listener)
-      addMouseMotionListener(listener)
-    }
-
-    override fun getMaximumSize(): Dimension {
-      val d = super.getPreferredSize()
-      d.width = Short.MAX_VALUE.toInt()
-      return d
-    }
-
-    override fun getPreferredSize(): Dimension {
-      val d = super.getPreferredSize()
-      d.height = 24
-      return d
-    }
+  override fun updateUI() {
+    removeMouseListener(listener)
+    removeMouseMotionListener(listener)
+    super.updateUI()
+    listener = PopupHeaderMouseListener()
+    addMouseListener(listener)
+    addMouseMotionListener(listener)
+    setOpaque(true)
+    val color = UIManager.getColor("Label.background")
+    setBackground(color.darker())
   }
-  header.isOpaque = true
-  header.background = UIManager.getColor("Label.background").darker()
-  return header
+
+  override fun getMaximumSize(): Dimension {
+    val d = super.getPreferredSize()
+    d.width = Short.Companion.MAX_VALUE.toInt()
+    return d
+  }
+
+  override fun getPreferredSize(): Dimension {
+    val d = super.getPreferredSize()
+    d.height = 24
+    return d
+  }
 }
 
 private class PopupHeaderMouseListener : MouseAdapter() {
@@ -83,20 +78,23 @@ private class PopupHeaderMouseListener : MouseAdapter() {
 
   override fun mousePressed(e: MouseEvent) {
     if (SwingUtilities.isLeftMouseButton(e)) {
-      startPt.location = e.getPoint()
+      val c = e.component
+      val popup = SwingUtilities.getAncestorOfClass(JPopupMenu::class.java, c)
+      SwingUtilities.convertMouseEvent(c, e, popup)
+      startPt.location = e.point
     }
   }
 
   override fun mouseDragged(e: MouseEvent) {
     val c = e.component
-    val w = SwingUtilities.getWindowAncestor(c)
-    if (w != null && SwingUtilities.isLeftMouseButton(e)) {
-      if (w.type == Window.Type.POPUP) { // Popup$HeavyWeightWindow
+    if (SwingUtilities.isLeftMouseButton(e)) {
+      val w: Window? = SwingUtilities.getWindowAncestor(c)
+      if (w?.type == Window.Type.POPUP) { // Popup$HeavyWeightWindow
         val pt = e.locationOnScreen
         w.setLocation(pt.x - startPt.x, pt.y - startPt.y)
       } else { // Popup$LightWeightWindow
         val popup = SwingUtilities.getAncestorOfClass(JPopupMenu::class.java, c)
-        val pt = popup.location
+        val pt = popup.locationOnScreen
         popup.setLocation(pt.x - startPt.x + e.getX(), pt.y - startPt.y + e.getY())
       }
     }
@@ -124,7 +122,7 @@ private class MenuArrowIcon : Icon {
   override fun getIconHeight() = 9
 }
 
-private class MenuToggleButton(
+private open class MenuToggleButton(
   text: String = "",
   icon: Icon? = null,
 ) : JToggleButton() {
