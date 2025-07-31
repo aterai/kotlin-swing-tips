@@ -14,7 +14,8 @@ fun makeUI(): Component {
   val label1 = JLabel("message1")
   label1.addHierarchyListener { e ->
     val c = e.component
-    if (e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L && c.isShowing) {
+    val b = e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong() != 0L
+    if (b && c.isShowing) {
       val o = SwingUtilities.getAncestorOfClass(JOptionPane::class.java, c)
       (o as? JOptionPane)?.preferredSize = Dimension(120, 120)
       val w = SwingUtilities.getWindowAncestor(c)
