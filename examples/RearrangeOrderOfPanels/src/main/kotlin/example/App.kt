@@ -107,10 +107,15 @@ private class RearrangingHandler : MouseAdapter() {
       updateWindowLocation(pt, p)
       if (!prevRect.contains(pt)) {
         val idx = (0..<p.componentCount)
-          .filter { i -> p.getComponent(i).let { it !== gap || it.bounds.contains(pt) } }
-          .map { getTargetIndex(p, it, pt) }
-          .firstOrNull { it >= 0 }
-          ?: -1
+          .filter { i ->
+            p.getComponent(i).let {
+              it !== gap || it.bounds.contains(pt)
+            }
+          }.map {
+            getTargetIndex(p, it, pt)
+          }.firstOrNull {
+            it >= 0
+          } ?: -1
         swapComponent(p, gap, gap, idx)
       }
     }
