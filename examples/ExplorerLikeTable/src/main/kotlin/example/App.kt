@@ -38,10 +38,12 @@ fun makeUI(): Component {
   })
   val scroll = JScrollPane(table)
   val tab = KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0)
-  val stab = KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK)
+  val sTab = KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK)
   val im = table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-  im.put(tab, im[KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)])
-  im.put(stab, im[KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK)])
+  val enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)
+  im.put(tab, im[enter])
+  val sEnter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK)
+  im.put(sTab, im[sEnter])
   val orgColor = table.selectionBackground
   val tflColor = scroll.background
   val fl = object : FocusListener {
