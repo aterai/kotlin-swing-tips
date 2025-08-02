@@ -48,7 +48,9 @@ fun makeUI(): Component {
   fixedTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
   fixedTable.putClientProperty("terminateEditOnFocusLost", true)
   fixedTable.border = BorderFactory.createMatteBorder(0, 1, 0, 0, Color.GRAY)
-  fixedTable.tableHeader.border = BorderFactory.createMatteBorder(0, 1, 0, 0, Color.GRAY)
+
+  val header = fixedTable.tableHeader
+  header.border = BorderFactory.createMatteBorder(0, 1, 0, 0, Color.GRAY)
 
   table.rowSorter = sorter
   table.autoResizeMode = JTable.AUTO_RESIZE_OFF
@@ -57,14 +59,11 @@ fun makeUI(): Component {
 
   val scroll = JScrollPane(table)
   scroll.layout = RightFixedScrollPaneLayout()
-
   fixedTable.preferredScrollableViewportSize = fixedTable.preferredSize
   scroll.setRowHeaderView(fixedTable)
-
-  scroll.setCorner(ScrollPaneConstants.UPPER_LEFT_CORNER, fixedTable.tableHeader)
+  scroll.setCorner(ScrollPaneConstants.UPPER_LEFT_CORNER, header)
   scroll.viewport.background = Color.WHITE
   scroll.rowHeader.background = Color.WHITE
-
   scroll.rowHeader.addChangeListener { e ->
     (e.source as? JViewport)?.also {
       scroll.verticalScrollBar.value = it.viewPosition.y
@@ -197,7 +196,8 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
         scrollableHeight = sv.scrollableTracksViewportHeight
         val vsbNeeded1 = vsbPolicy == VERTICAL_SCROLLBAR_AS_NEEDED
         if (vsb != null && vsbNeeded1) {
-          val newVsbNeeded = !scrollableHeight && viewPrefSize.height > extentSize.height
+          val b = viewPrefSize.height > extentSize.height
+          val newVsbNeeded = !scrollableHeight && b
           if (newVsbNeeded != vsbNeeded) {
             vsbNeeded = newVsbNeeded
             // adjustForVsb(vsbNeeded, availR, vsbR, vpbInsets, leftToRight)
@@ -207,7 +207,8 @@ private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
         }
         val hsbNeeded1 = hsbPolicy == HORIZONTAL_SCROLLBAR_AS_NEEDED
         if (hsb != null && hsbNeeded1) {
-          val newHsbNeeded = !scrollableWidth && viewPrefSize.width > extentSize.width
+          val b = viewPrefSize.width > extentSize.width
+          val newHsbNeeded = !scrollableWidth && b
           if (newHsbNeeded != hsbNeeded) {
             hsbNeeded = newHsbNeeded
             adjustForHsb(hsbNeeded, availR, hsbR, vpbInsets)
