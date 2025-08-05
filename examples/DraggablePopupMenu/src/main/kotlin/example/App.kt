@@ -45,7 +45,9 @@ private fun makePopup(): JPopupMenu {
   return popup
 }
 
-private class PopupMenuHeader(text: String) : JLabel(text, CENTER) {
+private class PopupMenuHeader(
+  text: String,
+) : JLabel(text, CENTER) {
   private var listener: MouseAdapter? = null
 
   override fun updateUI() {
