@@ -22,7 +22,9 @@ fun makeUI(): Component {
     rs.setComparator(6, Comparator.comparing(RowData::goalsFor))
     rs.setComparator(7, Comparator.comparing(RowData::goalsAgainst))
     rs.setComparator(8, Comparator.comparing(RowData::goalDifference))
-    val c9 = Comparator.comparing(RowData::points).thenComparing(RowData::goalDifference)
+    val c9 = Comparator
+      .comparing(RowData::points)
+      .thenComparing(RowData::goalDifference)
     rs.setComparator(9, c9)
   }
   return JPanel(BorderLayout()).also {
