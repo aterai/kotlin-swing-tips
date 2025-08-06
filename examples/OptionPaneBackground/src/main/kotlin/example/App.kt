@@ -38,7 +38,7 @@ fun makeUI(): Component {
   val b2 = JButton("background")
   b2.addActionListener {
     val p = b2.rootPane
-    JOptionPane.showMessageDialog(p,label, title, type)
+    JOptionPane.showMessageDialog(p, label, title, type)
   }
 
   val b3 = JButton("override")
