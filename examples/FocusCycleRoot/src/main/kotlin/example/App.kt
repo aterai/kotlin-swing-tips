@@ -21,14 +21,11 @@ fun makeUI(): Component {
   p2.isFocusTraversalPolicyProvider = true
   p2.isFocusCycleRoot = true
   p2.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, emptySet())
-  p2.setFocusTraversalKeys(
-    KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,
-    HashSet(listOf(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK))),
-  )
-  p2.setFocusTraversalKeys(
-    KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS,
-    HashSet(listOf(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0))),
-  )
+  val s1 = listOf(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK))
+  p2.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, HashSet(s1))
+  val s2 = listOf(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0))
+  p2.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, HashSet(s2))
+
   return JPanel(GridLayout(1, 2, 5, 5)).also {
     it.add(p1)
     it.add(p2)
