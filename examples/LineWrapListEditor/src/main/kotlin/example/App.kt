@@ -105,6 +105,7 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   }
 }
 
+@Suppress("DataClassShouldBeImmutable")
 private data class ListItem(
   var title: String,
   val icon: Icon,
