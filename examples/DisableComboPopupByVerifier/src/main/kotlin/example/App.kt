@@ -77,8 +77,10 @@ private class LengthInputVerifier : InputVerifier() {
     }
     if (!verified) {
       UIManager.getLookAndFeel().provideErrorFeedback(c)
+      val p = c.rootPane
       val msg = "Enter at least %s characters.".format(MIN_LEN)
-      JOptionPane.showMessageDialog(c.rootPane, msg, "Error", JOptionPane.ERROR_MESSAGE)
+      val title = "Error"
+      JOptionPane.showMessageDialog(p,msg, title,JOptionPane.ERROR_MESSAGE)
     }
     return verified
   }
