@@ -83,7 +83,7 @@ private class ColorRenderer : DefaultTableCellRenderer() {
     row: Int,
     column: Int,
   ): Component {
-    val l = super.getTableCellRendererComponent(
+    val c = super.getTableCellRendererComponent(
       table,
       value,
       isSelected,
@@ -91,11 +91,16 @@ private class ColorRenderer : DefaultTableCellRenderer() {
       row,
       column,
     )
-    if (l is JLabel && value is Color) {
-      l.icon = ColorIcon(value)
-      l.text = "(${value.red}, ${value.green}, ${value.blue})"
+    if (c is JLabel) {
+      if (value is Color) {
+        c.icon = ColorIcon(value)
+        c.text = "(${value.red}, ${value.green}, ${value.blue})"
+      } else {
+        c.icon = NullIcon()
+        c.text = "null"
+      }
     }
-    return l
+    return c
   }
 }
 
@@ -166,10 +171,16 @@ private class ColorEditor :
     row: Int,
     column: Int,
   ): Component {
-    currentColor = (value as? Color)?.also {
-      button.text = "(${it.red}, ${it.green}, ${it.blue})"
+    if (value is Color) {
+      currentColor = value.also {
+        button.text = "(${it.red}, ${it.green}, ${it.blue})"
+      }
+      button.icon = ColorIcon(currentColor)
+    } else {
+      currentColor = Color.WHITE
+      button.text = "null"
+      button.icon = NullIcon()
     }
-    button.icon = ColorIcon(currentColor)
     return button
   }
 
@@ -182,7 +193,7 @@ private class ColorIcon(
   private val color: Color?,
 ) : Icon {
   override fun paintIcon(
-    c: Component,
+    c: Component?,
     g: Graphics,
     x: Int,
     y: Int,
@@ -191,6 +202,30 @@ private class ColorIcon(
     g2.translate(x, y)
     g2.paint = color
     g2.fillRect(0, 0, iconWidth, iconHeight)
+    g2.dispose()
+  }
+
+  override fun getIconWidth() = 10
+
+  override fun getIconHeight() = 10
+}
+
+private class NullIcon : Icon {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
+    val g2 = g.create() as? Graphics2D ?: return
+    g2.translate(x, y)
+    g2.paint = Color.WHITE
+    val width = getIconWidth()
+    val height = getIconHeight()
+    g2.fillRect(0, 0, width, height)
+    g2.paint = Color.BLACK
+    g2.drawLine(1, 1, width - 2, height - 2)
+    g2.drawLine(width - 2, 1, 1, height - 2)
     g2.dispose()
   }
 
