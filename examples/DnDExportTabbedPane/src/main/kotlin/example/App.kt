@@ -517,9 +517,19 @@ private class GhostGlassPane(
       val r = tabbedPane.getBoundsAt(a * (index - 1))
       val tp = tabbedPane.tabPlacement
       if (tp == JTabbedPane.TOP || tp == JTabbedPane.BOTTOM) {
-        RECT_LINE.setBounds(r.x - LINE_SIZE / 2 + r.width * a, r.y, LINE_SIZE, r.height)
+        RECT_LINE.setBounds(
+          r.x - LINE_SIZE / 2 + r.width * a,
+          r.y,
+          LINE_SIZE,
+          r.height,
+        )
       } else {
-        RECT_LINE.setBounds(r.x, r.y - LINE_SIZE / 2 + r.height * a, r.width, LINE_SIZE)
+        RECT_LINE.setBounds(
+          r.x,
+          r.y - LINE_SIZE / 2 + r.height * a,
+          r.width,
+          LINE_SIZE,
+        )
       }
     }
     return RECT_LINE
