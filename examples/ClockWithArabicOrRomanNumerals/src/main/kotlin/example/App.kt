@@ -186,8 +186,8 @@ private class AnalogClock : JPanel() {
         val r = s.bounds2D
         val tx = r.centerX
         val ty = radius - hourMarkerLen - r.height + r.centerY * .5
-        val t = AffineTransform.getTranslateInstance(-tx, -ty).createTransformedShape(s)
-        g2.fill(at.createTransformedShape(t))
+        val toCenter = AffineTransform.getTranslateInstance(-tx, -ty)
+        g2.fill(at.createTransformedShape(toCenter.createTransformedShape(s)))
         at.rotate(PI / 6.0)
       }
     } else {
