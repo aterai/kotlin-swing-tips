@@ -41,7 +41,8 @@ fun makeUI(): Component {
   col.minWidth = 60
   col.maxWidth = 60
   col.resizable = false
-  UIManager.put("ComboBox.buttonDarkShadow", UIManager.getColor("TextField.foreground"))
+  val fgc = UIManager.getColor("TextField.foreground")
+  UIManager.put("ComboBox.buttonDarkShadow", fgc)
   val combo = makeComboBox(DefaultComboBoxModel(comboModel))
   col = table.columnModel.getColumn(1)
   col.cellRenderer = ComboCellRenderer()
