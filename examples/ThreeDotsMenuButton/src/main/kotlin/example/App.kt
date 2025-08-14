@@ -172,7 +172,13 @@ private class RolloverLayerUI : LayerUI<JScrollPane>() {
       val r = list.cellRenderer
       val isSelected = list.isSelectedIndex(idx)
       val cellHasFocus = list.selectionModel.leadSelectionIndex == idx
-      val c = r.getListCellRendererComponent(list, value, idx, isSelected, cellHasFocus)
+      val c = r.getListCellRendererComponent(
+        list,
+        value,
+        idx,
+        isSelected,
+        cellHasFocus,
+      )
       if (!isSelected) {
         c.background = Color.GRAY
         c.foreground = Color.WHITE

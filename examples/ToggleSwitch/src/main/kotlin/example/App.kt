@@ -66,7 +66,10 @@ private fun makeBackgroundPainter() = Painter<JSlider> { g, c, w, h ->
   val trackHeight = h - fillTop - fillTop
   val baseline = trackHeight - fillTop - fillTop
   val off = "Off"
-  g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+  g.setRenderingHint(
+    RenderingHints.KEY_ANTIALIASING,
+    RenderingHints.VALUE_ANTIALIAS_ON,
+  )
   g.color = Color.GRAY
   g.fillRoundRect(fillLeft, fillTop, trackWidth, trackHeight, arc, arc)
   g.paint = Color.WHITE

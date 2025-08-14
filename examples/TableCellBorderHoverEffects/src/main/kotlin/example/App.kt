@@ -189,7 +189,14 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
     row: Int,
     column: Int,
   ): Component {
-    val c = super.getTableCellRendererComponent(table, value, false, false, row, column)
+    val c = super.getTableCellRendererComponent(
+      table,
+      value,
+      false,
+      false,
+      row,
+      column,
+    )
     if (value is LocalDate && c is JLabel) {
       c.text = value.dayOfMonth.toString()
       c.verticalAlignment = TOP
