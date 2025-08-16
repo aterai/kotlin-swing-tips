@@ -84,7 +84,16 @@ fun makeFrame(str: String): JFrame {
   title.add(close, BorderLayout.EAST)
 
   val rwl = ResizeWindowListener()
-  listOf(left, right, top, bottom, topLeft, topRight, bottomLeft, bottomRight).forEach {
+  listOf(
+    left,
+    right,
+    top,
+    bottom,
+    topLeft,
+    topRight,
+    bottomLeft,
+    bottomRight,
+  ).forEach {
     it.addMouseListener(rwl)
     it.addMouseMotionListener(rwl)
   }
