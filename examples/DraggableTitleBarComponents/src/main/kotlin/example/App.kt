@@ -304,7 +304,7 @@ private class ResizeWindowListener : MouseInputAdapter() {
   override fun mousePressed(e: MouseEvent) {
     val p = SwingUtilities.getRoot(e.component)
     if (p is Window) {
-      rect.bounds = p.getBounds()
+      rect.bounds = p.bounds
     }
   }
 
@@ -313,7 +313,7 @@ private class ResizeWindowListener : MouseInputAdapter() {
     val p = SwingUtilities.getRoot(c)
     if (!rect.isEmpty && c is SideLabel && p is Window) {
       val side = c.side
-      p.setBounds(side.getBounds(rect, e.point))
+      p.bounds = side.getBounds(rect, e.point)
     }
   }
 }
@@ -349,7 +349,7 @@ private class TitleBarDragLayerUI : LayerUI<JComponent>() {
     val c = SwingUtilities.getRoot(e.component)
     val isLeftButton = SwingUtilities.isLeftMouseButton(e)
     if (e.id == MouseEvent.MOUSE_DRAGGED && c is Window && isLeftButton) {
-      val pt = c.getLocation()
+      val pt = c.location
       c.setLocation(pt.x - startPt.x + e.x, pt.y - startPt.y + e.y)
     }
   }
