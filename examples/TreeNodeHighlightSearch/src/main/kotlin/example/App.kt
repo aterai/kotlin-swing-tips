@@ -47,7 +47,12 @@ private fun fireDocumentChangeEvent() {
   val q = field.text
   renderer.query = q
   val root = tree.getPathForRow(0)
-  collapseAll(tree, root)
+  val node = root.lastPathComponent as? TreeNode ?: return
+  if (!node.isLeaf) {
+    // Java 9: Collections.list(node.children()).stream()
+    node.children().toList().forEach { root.pathByAddingChild(it) }
+  }
+  tree.collapsePath(root)
   if (q.isNotEmpty()) {
     searchTree(tree, root, q)
   }
@@ -61,22 +66,16 @@ private fun searchTree(
   val node = path.lastPathComponent as? TreeNode ?: return
   if (node.toString().startsWith(q)) {
     tree.expandPath(path.parentPath)
+    tree.scrollPathToVisible(path)
   }
   if (!node.isLeaf) {
-    node.children().toList().forEach { searchTree(tree, path.pathByAddingChild(it), q) }
+    node
+      .children()
+      .toList()
+      .forEach {
+        searchTree(tree, path.pathByAddingChild(it), q)
+      }
   }
-}
-
-private fun collapseAll(
-  tree: JTree,
-  parent: TreePath,
-) {
-  val node = parent.lastPathComponent as? TreeNode ?: return
-  if (!node.isLeaf) {
-    // Java 9: Collections.list(node.children()).stream()
-    node.children().toList().forEach { parent.pathByAddingChild(it) }
-  }
-  tree.collapsePath(parent)
 }
 
 private class HighlightTreeCellRenderer : DefaultTreeCellRenderer() {
