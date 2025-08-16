@@ -102,7 +102,10 @@ private class StripedProgressBarUI(
   private val dir: Boolean,
   private val slope: Boolean,
 ) : BasicProgressBarUI() {
-  override fun getBoxLength(availableLength: Int, otherDimension: Int) = availableLength
+  override fun getBoxLength(
+    availableLength: Int,
+    otherDimension: Int,
+  ) = availableLength
   // (availableLength / 6.0).roundToInt()
 
   override fun paintIndeterminate(
