@@ -17,7 +17,15 @@ fun makeUI(): Component {
 }
 
 private fun makeMenuBar(): JMenuBar {
-  val menuBar = JMenuBar()
+  val menuBar = object : JMenuBar() {
+    override fun updateUI() {
+      super.updateUI()
+      (layout as? OverflowMenuLayout)?.also {
+        SwingUtilities.updateComponentTreeUI(it.overflowMenu)
+      }
+
+    }
+  }
   menuBar.setLayout(OverflowMenuLayout())
   menuBar.add(makeOrientationMenu(menuBar))
   menuBar.add(makeMenu("JMenu1"))
@@ -70,49 +78,50 @@ private fun makeMenu(text: String): JMenu {
 }
 
 private class OverflowMenuLayout : FlowLayout(LEADING, 0, 0) {
-  private val popupButton = JMenu("...")
+  val overflowMenu = JMenu("...")
 
   override fun layoutContainer(target: Container) {
     super.layoutContainer(target)
     val r = SwingUtilities.calculateInnerArea(target as? JComponent, null)
     val num = target.componentCount
     if (target.getComponent(num - 1).getY() > r.y + getVgap()) {
-      target.add(popupButton)
-      popupButton.size = popupButton.getPreferredSize()
+      target.add(overflowMenu)
+      overflowMenu.size = overflowMenu.getPreferredSize()
       val popupX = if (target.getComponentOrientation().isLeftToRight) {
-        r.x + r.width - popupButton.size.width
+        r.x + r.width - overflowMenu.size.width
       } else {
         r.x
       }
-      popupButton.setLocation(popupX, r.y)
-      popupButton.isVisible = true
+      overflowMenu.setLocation(popupX, r.y)
+      overflowMenu.isVisible = true
     }
-    if (target.isAncestorOf(popupButton)) {
+    if (target.isAncestorOf(overflowMenu)) {
       target
         .components
         .filter { shouldMoveToPopup(target, it) }
-        .forEach { popupButton.getPopupMenu().add(it) }
+        .forEach { overflowMenu.getPopupMenu().add(it) }
+      overflowMenu.popupMenu.pack()
     }
   }
 
   private fun shouldMoveToPopup(target: Container, c: Component): Boolean {
     val insets = target.insets
     val y = insets.top + getVgap()
-    val pt = popupButton.location
+    val pt = overflowMenu.location
     if (!target.getComponentOrientation().isLeftToRight) {
-      pt.x += popupButton.getWidth()
+      pt.x += overflowMenu.getWidth()
     }
-    val b = c != popupButton && c.bounds.contains(pt)
+    val b = c != overflowMenu && c.bounds.contains(pt)
     return c.getY() > y || b
   }
 
   override fun preferredLayoutSize(target: Container): Dimension? {
-    popupButton.isVisible = false
-    target.remove(popupButton)
-    for (c in popupButton.getPopupMenu().components) {
+    overflowMenu.isVisible = false
+    target.remove(overflowMenu)
+    for (c in overflowMenu.getPopupMenu().components) {
       target.add(c)
     }
-    popupButton.getPopupMenu().removeAll()
+    overflowMenu.removeAll()
     return super.preferredLayoutSize(target)
   }
 }
