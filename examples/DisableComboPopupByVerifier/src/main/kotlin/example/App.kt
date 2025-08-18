@@ -80,7 +80,7 @@ private class LengthInputVerifier : InputVerifier() {
       val p = c.rootPane
       val msg = "Enter at least %s characters.".format(MIN_LEN)
       val title = "Error"
-      JOptionPane.showMessageDialog(p,msg, title,JOptionPane.ERROR_MESSAGE)
+      JOptionPane.showMessageDialog(p, msg, title, JOptionPane.ERROR_MESSAGE)
     }
     return verified
   }
