@@ -104,9 +104,10 @@ private class BooleanCellEditor : JCheckBox() {
       }
 
       override fun mouseExited(e: MouseEvent) {
-        val table = SwingUtilities.getAncestorOfClass(JTable::class.java, e.component)
-        if (table is JTable && table.isEditing && !table.cellEditor.stopCellEditing()) {
-          table.cellEditor.cancelCellEditing()
+        val c = e.component
+        val t = SwingUtilities.getAncestorOfClass(JTable::class.java, c)
+        if (t is JTable && t.isEditing && !t.cellEditor.stopCellEditing()) {
+          t.cellEditor.cancelCellEditing()
         }
       }
     }
