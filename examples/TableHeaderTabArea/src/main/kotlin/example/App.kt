@@ -233,7 +233,8 @@ private class BasicTabViewButtonUI : TabViewButtonUI() {
       g2.color = color
       g2.drawLine(vx, vy + 2, vx + vw, vy + 2)
     }
-    (c.getClientProperty(BasicHTML.propertyKey) as? View)?.paint(g2, textRect) ?: also {
+    val p = c.getClientProperty(BasicHTML.propertyKey)
+    (p as? View)?.paint(g2, textRect) ?: also {
       if (m.isSelected) {
         textRect.y -= 2
         textRect.x -= 1
