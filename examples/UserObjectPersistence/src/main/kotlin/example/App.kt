@@ -32,11 +32,12 @@ private fun makeUI(): Component {
     runCatching {
       val file = File.createTempFile("output", ".xml")
       val d = DefaultPersistenceDelegate(arrayOf("label", "status"))
-      XMLEncoder(BufferedOutputStream(Files.newOutputStream(file.toPath()))).use { xe ->
-        xe.setPersistenceDelegate(CheckBoxNode::class.java, d)
-        xe.writeObject(tree.model)
+      val path = file.toPath()
+      XMLEncoder(BufferedOutputStream(Files.newOutputStream(path))).use {
+        it.setPersistenceDelegate(CheckBoxNode::class.java, d)
+        it.writeObject(tree.model)
       }
-      Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8).use {
+      Files.newBufferedReader(path, StandardCharsets.UTF_8).use {
         textArea.read(it, "temp")
       }
     }.onFailure {
@@ -99,7 +100,8 @@ private fun makeTree(): JTree {
       .toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .forEach {
-        it.userObject = CheckBoxNode(it.userObject?.toString() ?: "", Status.DESELECTED)
+        val label = it.userObject?.toString() ?: ""
+        it.userObject = CheckBoxNode(label, Status.DESELECTED)
       }
   }
   model.addTreeModelListener(CheckBoxStatusUpdateListener())
