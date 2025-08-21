@@ -11,8 +11,10 @@ fun makeUI(): Component {
   val image = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
   val check = JCheckBox("setIconImage")
   check.addActionListener { e ->
-    (e.source as? JCheckBox)?.also {
-      (it.topLevelAncestor as? Window)?.setIconImage(if (it.isSelected) image else null)
+    val c = e.source
+    if (c is JCheckBox) {
+      val img = if (c.isSelected) image else null
+      (c.topLevelAncestor as? Window)?.setIconImage(img)
     }
   }
 
