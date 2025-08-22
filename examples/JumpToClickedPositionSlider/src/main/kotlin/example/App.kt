@@ -45,8 +45,8 @@ private fun makeSlider(
         WindowsJumpToClickedPositionSliderUI(this)
       } else {
         val icon = UIManager.getIcon("html.missingImage")
-        UIManager.put("Slider.trackWidth", 0) // Meaningless settings that are not used?
-        UIManager.put("Slider.majorTickLength", 0) // BasicSliderUI#getTickLength(): 8
+        UIManager.put("Slider.trackWidth", 0)
+        UIManager.put("Slider.majorTickLength", 0)
         UIManager.put("Slider.verticalThumbIcon", icon)
         UIManager.put("Slider.horizontalThumbIcon", icon)
         MetalJumpToClickedPositionSliderUI()
