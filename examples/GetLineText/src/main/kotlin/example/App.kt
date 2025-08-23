@@ -29,8 +29,12 @@ fun makeUI(): Component {
     val count = textArea.text.split("\n").count {
       it.takeUnless { it.isEmpty() }?.codePointAt(0) == SHARP
     }
-    val msg = "commented lines: $count"
-    JOptionPane.showMessageDialog(scroll, msg, "title", JOptionPane.INFORMATION_MESSAGE)
+    JOptionPane.showMessageDialog(
+      scroll,
+      "commented lines: $count",
+      "title",
+      JOptionPane.INFORMATION_MESSAGE,
+    )
   }
   EventQueue.invokeLater { button.rootPane.defaultButton = button }
   return JPanel(BorderLayout()).also {
