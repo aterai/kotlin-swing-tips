@@ -397,7 +397,8 @@ private class TreeTransferHandler : TransferHandler() {
       val idx = AtomicInteger(if (childIndex < 0) parent.childCount else childIndex)
       nodes.forEach {
         val clone = DefaultMutableTreeNode(it.userObject)
-        model.insertNodeInto(deepCopyTreeNode(it, clone), parent, idx.incrementAndGet())
+        val newChild = deepCopyTreeNode(it, clone)
+        model.insertNodeInto(newChild, parent, idx.incrementAndGet())
       }
       true
     } else {
