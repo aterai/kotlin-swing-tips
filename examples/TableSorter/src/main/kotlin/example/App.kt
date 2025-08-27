@@ -278,9 +278,10 @@ private class TableSorter() : AbstractTableModel() {
           val lr = e.lastRow
           val b = getSortingStatus(column) == NOT_SORTED
           if (fr == lr && column != TableModelEvent.ALL_COLUMNS && b) {
-            val viewIndex = getModelToView()[fr]
+            val viewIdx = getModelToView()[fr]
             val src = this@TableSorter
-            fireTableChanged(TableModelEvent(src, viewIndex, viewIndex, column, e.type))
+            val ev = TableModelEvent(src, viewIdx, viewIdx, column, e.type)
+            fireTableChanged(ev)
             return
           }
           clearSortingState()
