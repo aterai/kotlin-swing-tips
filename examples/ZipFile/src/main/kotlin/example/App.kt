@@ -105,13 +105,16 @@ private fun zip(str: String) {
 }
 
 private fun unzip(str: String) {
-  makeDestDirPath(str)?.also { dstDir ->
+  makeTargetDirPath(str)?.also { dstDir ->
     val path = Paths.get(str)
     runCatching {
       if (dstDir.toFile().exists()) {
-        val m = "<html>$dstDir already exists.<br>Do you want to overwrite it?"
-        val c = textArea.rootPane
-        val rv = JOptionPane.showConfirmDialog(c, m, "Unzip", JOptionPane.YES_NO_OPTION)
+        val rv = JOptionPane.showConfirmDialog(
+          textArea.rootPane,
+          "<html>$dstDir already exists.<br>Do you want to overwrite it?",
+          "Unzip",
+          JOptionPane.YES_NO_OPTION,
+        )
         if (rv != JOptionPane.YES_OPTION) {
           return
         }
@@ -127,7 +130,7 @@ private fun unzip(str: String) {
   }
 }
 
-private fun makeDestDirPath(text: String): Path? {
+private fun makeTargetDirPath(text: String): Path? {
   val path = Paths.get(text)
   if (text.isEmpty() || !path.toFile().exists()) {
     return null
@@ -219,7 +222,7 @@ private class TextAreaOutputStream(
 private class TextAreaHandler(
   os: OutputStream,
 ) : StreamHandler(os, SimpleFormatter()) {
-  override fun getEncoding() = StandardCharsets.UTF_8.name()
+  override fun getEncoding(): String = StandardCharsets.UTF_8.name()
 
   @Synchronized
   override fun publish(logRecord: LogRecord) {
