@@ -125,7 +125,9 @@ private class TabTitleEditListener(
         ActionEvent(tabs, ActionEvent.ACTION_PERFORMED, START),
       )
     } else {
-      renameTab.actionPerformed(ActionEvent(tabs, ActionEvent.ACTION_PERFORMED, RENAME))
+      renameTab.actionPerformed(
+        ActionEvent(tabs, ActionEvent.ACTION_PERFORMED, RENAME),
+      )
     }
   }
 
