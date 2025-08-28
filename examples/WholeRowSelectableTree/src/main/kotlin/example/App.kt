@@ -32,7 +32,12 @@ fun makeUI(): Component {
 }
 
 private class WholeRowSelectableTreeUI : BasicTreeUI() {
-  @Suppress("LongMethod", "ComplexMethod", "NestedBlockDepth", "CognitiveComplexMethod")
+  @Suppress(
+    "LongMethod",
+    "ComplexMethod",
+    "NestedBlockDepth",
+    "CognitiveComplexMethod",
+  )
   override fun paint(
     g: Graphics,
     c: JComponent,
@@ -62,7 +67,7 @@ private class WholeRowSelectableTreeUI : BasicTreeUI() {
           isLeaf = treeModel.isLeaf(path.lastPathComponent)
           if (isLeaf) {
             hasBeenExpanded = false
-            isExpanded = hasBeenExpanded
+            isExpanded = false
           } else {
             isExpanded = treeState.getExpandedState(path)
             hasBeenExpanded = tree.hasBeenExpanded(path)
@@ -109,7 +114,7 @@ private class WholeRowSelectableTreeUI : BasicTreeUI() {
           isLeaf = treeModel.isLeaf(path.lastPathComponent)
           if (isLeaf) {
             hasBeenExpanded = false
-            isExpanded = hasBeenExpanded
+            isExpanded = false
           } else {
             isExpanded = treeState.getExpandedState(path)
             hasBeenExpanded = tree.hasBeenExpanded(path)
@@ -255,7 +260,8 @@ private class WholeRowSelectableTreeUI : BasicTreeUI() {
         val path = getClosestPathForLocation(tree, e.x, e.y)
         val bounds = getPathBounds(tree, path)
         val newX = bounds.centerX.toInt()
-        val b1 = !tree.isEnabled || !SwingUtilities.isLeftMouseButton(e) || e.isConsumed
+        val isLeft = SwingUtilities.isLeftMouseButton(e)
+        val b1 = !tree.isEnabled || !isLeft || e.isConsumed
         val b2 = path == null || isLocationInExpandControl(path, e.x, e.y)
         bounds.x = 0
         bounds.width = tree.width
