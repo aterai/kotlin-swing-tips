@@ -136,7 +136,7 @@ private open class CheckedComboBox<E : CheckBoxItem>(
     setRenderer(CheckBoxCellRenderer<CheckBoxItem>())
     addActionListener(listener)
 
-    val im = getInputMap(JComponent.WHEN_FOCUSED)
+    val im = getInputMap(WHEN_FOCUSED)
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "checkbox-select")
 
     val action = object : AbstractAction() {
@@ -175,7 +175,8 @@ private class CheckedComboBox1<E : CheckBoxItem>(
     if (isPopupVisible) {
       val item = getItemAt(index)
       item.isSelected = !item.isSelected
-      contentsChanged(ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, index, index))
+      val e = ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, index, index)
+      contentsChanged(e)
     }
   }
 }
