@@ -18,7 +18,8 @@ fun makeUI(): Component {
   val table3 = object : JTable(1, 3) {
     // java - How to make JTable both AutoResize and horizontally scrollable? - Stack Overflow
     // https://stackoverflow.com/questions/6104916/how-to-make-jtable-both-autoresize-and-horizontall-scrollable
-    override fun getScrollableTracksViewportWidth() = preferredSize.width < parent.width
+    override fun getScrollableTracksViewportWidth() =
+      preferredSize.width < parent.width
   }
   table3.autoResizeMode = JTable.AUTO_RESIZE_OFF
   val scroll3 = JScrollPane(table3)
