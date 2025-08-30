@@ -41,12 +41,14 @@ private class WindowsCustomScrollBarUI : WindowsScrollBarUI() {
     val extent = sb.visibleAmount.toFloat()
     val range = sb.maximum - min
     val value = sb.value.toFloat()
+    val maxHeight = getMaximumThumbSize().height
     var thumbH = if (range <= 0) {
-      getMaximumThumbSize().height
+      maxHeight
     } else {
       (trackH * (extent / range)).toInt()
     }
-    thumbH = thumbH.coerceIn(getMinimumThumbSize().height, getMaximumThumbSize().height)
+    val minHeight = getMinimumThumbSize().height
+    thumbH = thumbH.coerceIn(minHeight, maxHeight)
     var thumbY = incrButtonY - incrGap - thumbH
     if (value < sb.maximum - sb.visibleAmount) {
       val thumbRange = trackH - thumbH
@@ -94,12 +96,14 @@ private class MetalCustomScrollBarUI : MetalScrollBarUI() {
     val extent = sb.visibleAmount.toFloat()
     val range = sb.maximum - min
     val value = sb.value.toFloat()
+    val maxHeight = getMaximumThumbSize().height
     var thumbH = if (range <= 0) {
-      getMaximumThumbSize().height
+      maxHeight
     } else {
       (trackH * (extent / range)).toInt()
     }
-    thumbH = thumbH.coerceIn(getMinimumThumbSize().height, getMaximumThumbSize().height)
+    val minHeight = getMinimumThumbSize().height
+    thumbH = thumbH.coerceIn(minHeight, maxHeight)
     var thumbY = incrButtonY - incrGap - thumbH
     if (value < sb.maximum - sb.visibleAmount) {
       val thumbRange = trackH - thumbH
