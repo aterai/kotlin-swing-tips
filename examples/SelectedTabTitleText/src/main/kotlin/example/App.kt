@@ -44,12 +44,14 @@ fun makeUI(): Component {
 
 private fun addTab(
   tabbedPane: JTabbedPane,
-  tt: TabTitle,
+  tabTitle: TabTitle,
   c: Component,
 ) {
-  tabbedPane.addTab(tt.title, c)
-  val url = tt.url
-  val icon = if (url != null) ImageIcon(url) else UIManager.getIcon("html.missingImage")
+  tabbedPane.addTab(tabTitle.title, c)
+  val icon = tabTitle
+    .url
+    ?.let { ImageIcon(it) }
+    ?: UIManager.getIcon("html.missingImage")
   val label = object : JLabel(null, icon, CENTER) {
     override fun getPreferredSize(): Dimension {
       val d = super.getPreferredSize()
@@ -117,7 +119,7 @@ private class ClippedTitleTabbedPane : JTabbedPane() {
     index: Int,
   ) {
     super.insertTab(title, icon, c, tip ?: title, index)
-    setTabComponentAt(index, JLabel(title, icon, SwingConstants.CENTER))
+    setTabComponentAt(index, JLabel(title, icon, CENTER))
   }
 
   private fun updateAllTabWidth(
