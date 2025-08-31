@@ -45,18 +45,18 @@ fun makeUI(): Component {
 }
 
 private fun makePasswordPanel1(): JPanel {
-  val password: JPasswordField = DigitHighlightPasswordField(40)
+  val password = DigitHighlightPasswordField(40)
   password.setFont(FONT)
   password.setAlignmentX(Component.RIGHT_ALIGNMENT)
   password.text = "!1l2c$%34e5&6#7=8g9O0"
 
-  val button: AbstractButton = JToggleButton()
+  val button = JToggleButton()
   button.addActionListener { e ->
     val b = (e.source as? AbstractButton)?.isSelected == true
     password.echoChar = if (b) '\u0000' else getUIEchoChar()
   }
   initEyeButton(button)
-  val p: JPanel = OverlayLayoutPanel()
+  val p = OverlayLayoutPanel()
   p.add(button)
   p.add(password)
   return p
@@ -77,7 +77,7 @@ private fun makePasswordPanel2(): JPanel {
   p.add(password, PasswordField.HIDE.toString())
   p.add(revealPassword, PasswordField.SHOW.toString())
 
-  val button: AbstractButton = JToggleButton()
+  val button = JToggleButton()
   button.addActionListener { e ->
     val b = (e.source as? AbstractButton)?.isSelected == true
     if (b) {
