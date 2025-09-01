@@ -7,10 +7,14 @@ import javax.imageio.ImageIO
 import javax.swing.*
 
 fun makeUI(): Component {
-  val path = "example/duke.gif"
-  val url = Thread.currentThread().contextClassLoader.getResource(path)
-  val image = url?.openStream()?.use(ImageIO::read)
-  val icon = image?.let { ImageIcon(it) } ?: UIManager.getIcon("OptionPane.warningIcon")
+  val icon = Thread
+    .currentThread()
+    .contextClassLoader
+    .getResource("example/duke.gif")
+    ?.openStream()
+    ?.use(ImageIO::read)
+    ?.let { ImageIcon(it) }
+    ?: UIManager.getIcon("OptionPane.warningIcon")
   return JPanel().also {
     it.add(makeLabel("Default", icon))
     it.add(makeLabel("Rotate: 180", RotateIcon(icon, 180)))
