@@ -98,6 +98,12 @@ fun makeFrame(str: String): JFrame {
     it.addMouseMotionListener(rwl)
   }
 
+  initResizePanel(title)
+  frame.contentPane = resizePanel
+  return frame
+}
+
+private fun initResizePanel(title: JPanel) {
   val titlePanel = JPanel(BorderLayout())
   titlePanel.add(top, BorderLayout.NORTH)
   titlePanel.add(JLayer(title, TitleBarDragLayerUI()), BorderLayout.CENTER)
@@ -121,8 +127,6 @@ fun makeFrame(str: String): JFrame {
   southPanel.isOpaque = false
   contentPanel.isOpaque = false
   resizePanel.isOpaque = false
-  frame.contentPane = resizePanel
-  return frame
 }
 
 private fun makeTitleButton(icon: Icon): JButton {
