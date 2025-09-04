@@ -23,7 +23,6 @@ private fun makeMenuBar(): JMenuBar {
       (layout as? OverflowMenuLayout)?.also {
         SwingUtilities.updateComponentTreeUI(it.overflowMenu)
       }
-
     }
   }
   menuBar.setLayout(OverflowMenuLayout())
