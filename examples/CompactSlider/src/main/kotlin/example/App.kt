@@ -37,21 +37,10 @@ fun makeUI(): Component {
 
 private fun makeCompactSlider1(): Component {
   val m = DefaultBoundedRangeModel(50, 0, 0, 100)
-  val progressBar = makeProgressBar(m)
+  val progressBar = CompactProgressBar(m)
   val spinner = makeSpinner(progressBar)
   initListener(spinner, progressBar)
   return spinner
-}
-
-private fun makeProgressBar(
-  model: BoundedRangeModel,
-) = object : JProgressBar(model) {
-  override fun updateUI() {
-    super.updateUI()
-    setUI(BasicProgressBarUI())
-    isOpaque = false
-    border = BorderFactory.createEmptyBorder()
-  }
 }
 
 private fun makeSpinner(progressBar: JProgressBar): JSpinner {
@@ -94,7 +83,7 @@ private fun makeSpinner(progressBar: JProgressBar): JSpinner {
 
 private fun makeCompactSlider2(): Component {
   val m = DefaultBoundedRangeModel(50, 0, 0, 100)
-  val progressBar = makeProgressBar(m)
+  val progressBar = CompactProgressBar(m)
   val spinner = makeSpinner2(m)
   initListener(spinner, progressBar)
   val layerUI = object : LayerUI<JSpinner>() {
@@ -170,7 +159,7 @@ private fun initListener(spinner: JSpinner, progressBar: JProgressBar) {
 
 private fun makeCompactSlider3(): Component {
   val m = DefaultBoundedRangeModel(50, 0, 0, 100)
-  val progressBar = makeProgressBar(m)
+  val progressBar = CompactProgressBar(m)
   val field = makeSpinner3(progressBar)
   val box = Box.createHorizontalBox()
   box.add(Box.createHorizontalGlue())
@@ -311,6 +300,17 @@ private fun makeCompactSlider4(): Component {
   panel.add(p)
   panel.add(box, BorderLayout.EAST)
   return panel
+}
+
+private class CompactProgressBar(
+  m: BoundedRangeModel,
+) : JProgressBar(m) {
+  override fun updateUI() {
+    super.updateUI()
+    setUI(BasicProgressBarUI())
+    isOpaque = false
+    border = BorderFactory.createEmptyBorder()
+  }
 }
 
 private class NumberFormatterFactory :
