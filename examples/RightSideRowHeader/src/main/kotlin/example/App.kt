@@ -86,7 +86,12 @@ fun makeUI(): Component {
 
 @Suppress("LargeClass", "CognitiveComplexMethod")
 private class RightFixedScrollPaneLayout : ScrollPaneLayout() {
-  @Suppress("LongMethod", "ComplexMethod", "NestedBlockDepth")
+  @Suppress(
+    "LongMethod",
+    "ComplexMethod",
+    "NestedBlockDepth",
+    "CyclomaticComplexMethod",
+  )
   override fun layoutContainer(parent: Container) {
     val scrollPane = parent as? JScrollPane ?: return
     vsbPolicy = scrollPane.verticalScrollBarPolicy

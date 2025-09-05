@@ -37,6 +37,7 @@ private class WholeRowSelectableTreeUI : BasicTreeUI() {
     "ComplexMethod",
     "NestedBlockDepth",
     "CognitiveComplexMethod",
+    "CyclomaticComplexMethod",
   )
   override fun paint(
     g: Graphics,
