@@ -70,6 +70,7 @@ private class MySynthStyleFactory(
   }
 }
 
+@Suppress("TooManyFunctions")
 private class TranslucentSynthStyle(
   private val style: SynthStyle,
 ) : SynthStyle() {
