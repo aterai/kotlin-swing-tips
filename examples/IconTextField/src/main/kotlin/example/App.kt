@@ -6,9 +6,13 @@ import javax.imageio.ImageIO
 import javax.swing.*
 
 fun makeUI(): Component {
-  val path = "example/16x16.png"
-  val cl = Thread.currentThread().contextClassLoader
-  val img = cl.getResource(path)?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+  val img = Thread
+    .currentThread()
+    .contextClassLoader
+    .getResource("example/16x16.png")
+    ?.openStream()
+    ?.use(ImageIO::read)
+    ?: makeMissingImage()
   val icon = ImageIcon(img)
   val label1 = JLabel(icon)
   val field1 = object : JTextField("1111111111111111") {

@@ -13,9 +13,13 @@ fun makeUI(): Component {
   val check = JCheckBox("setXORMode(Color.BLUE)", true)
   check.addActionListener { split.repaint() }
 
-  val path = "example/test.png"
-  val cl = Thread.currentThread().contextClassLoader
-  val img = cl.getResource(path)?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+  val img = Thread
+    .currentThread()
+    .contextClassLoader
+    .getResource("example/test.png")
+    ?.openStream()
+    ?.use(ImageIO::read)
+    ?: makeMissingImage()
   val icon = ImageIcon(img)
 
   val beforeCanvas = object : JComponent() {
