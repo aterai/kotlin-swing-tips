@@ -147,7 +147,10 @@ private class HeaderCheckBoxHandler(
     status: Any,
   ) = if (Status.INDETERMINATE == status) {
     val dv = m.dataVector
-    val l = dv.mapNotNull { (it as? List<*>)?.get(targetColumn) as? Boolean }.distinct()
+    val l = dv
+      .mapNotNull {
+        (it as? List<*>)?.get(targetColumn) as? Boolean
+      }.distinct()
     val isOnlyOneSelected = l.size == 1
     if (isOnlyOneSelected) {
       // column.setHeaderValue(if (l.get(0)) Status.SELECTED else Status.DESELECTED)
