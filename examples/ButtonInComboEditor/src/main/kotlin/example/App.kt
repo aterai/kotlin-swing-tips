@@ -188,9 +188,9 @@ private class SiteComboBoxLayout(
     // not needed
   }
 
-  override fun preferredLayoutSize(parent: Container): Dimension? = parent.preferredSize
+  override fun preferredLayoutSize(p: Container): Dimension? = p.preferredSize
 
-  override fun minimumLayoutSize(parent: Container): Dimension? = parent.minimumSize
+  override fun minimumLayoutSize(p: Container): Dimension? = p.minimumSize
 
   override fun layoutContainer(parent: Container) {
     val cb = parent as? JComboBox<*> ?: return
