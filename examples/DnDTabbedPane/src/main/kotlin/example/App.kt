@@ -178,8 +178,13 @@ private class DnDTabbedPane : JTabbedPane() {
     val tabPt = SwingUtilities.convertPoint(glassPane, glassPt, this)
     val horiz = isTopBottomTabPlacement(getTabPlacement())
     return (0..<tabCount)
-      .map { if (horiz) getHorizontalIndex(it, tabPt) else getVerticalIndex(it, tabPt) }
-      .firstOrNull { it >= 0 }
+      .map {
+        if (horiz) {
+          getHorizontalIndex(it, tabPt)
+        } else {
+          getVerticalIndex(it, tabPt)
+        }
+      }.firstOrNull { it >= 0 }
       ?: -1
   }
 
