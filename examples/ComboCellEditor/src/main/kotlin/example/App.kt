@@ -6,7 +6,8 @@ import javax.swing.plaf.basic.BasicComboBoxUI
 import javax.swing.table.DefaultTableModel
 
 fun makeUI(): Component {
-  UIManager.put("ComboBox.buttonDarkShadow", UIManager.getColor("TextField.foreground"))
+  val color = UIManager.getColor("TextField.foreground")
+  UIManager.put("ComboBox.buttonDarkShadow", color)
   val comboModel = arrayOf("Name 0", "Name 1", "Name 2")
   val columnNames = arrayOf("Integer", "String", "Boolean")
   val data = arrayOf<Array<Any>>(
