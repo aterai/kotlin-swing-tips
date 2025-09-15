@@ -156,7 +156,11 @@ private class TitleLayerUI(
       val r = SwingUtilities.calculateInnerArea(sp, sp.bounds)
       if (r != null && !sp.viewport.view.hasFocus()) {
         val d = label.getPreferredSize()
-        SwingUtilities.paintComponent(g, label, sp, r.x - 1, r.y - 1, d.width, d.height)
+        val x = r.x - 1
+        val y = r.y - 1
+        val w = d.width
+        val h = d.height
+        SwingUtilities.paintComponent(g, label, sp, x, y, w, h)
       }
     }
   }
