@@ -9,9 +9,9 @@ import javax.imageio.ImageIO
 import javax.swing.*
 
 fun makeUI(): Component {
-  val path = "example/test.jpg"
   val cl = Thread.currentThread().contextClassLoader
-  val img = cl.getResource(path)?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+  val url = cl.getResource("example/test.jpg")
+  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
   val label = object : JLabel("ABC") {
     override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
