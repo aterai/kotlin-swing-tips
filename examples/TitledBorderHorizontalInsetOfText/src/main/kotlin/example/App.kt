@@ -288,11 +288,14 @@ private class TitledBorder2(
     super.getBorderInsets(c, insets)
   }
 
-  private fun getJustification2(c: Component) = when (val j = getTitleJustification()) {
-    DEFAULT_JUSTIFICATION -> if (c.componentOrientation.isLeftToRight) LEFT else RIGHT
-    LEADING -> if (c.componentOrientation.isLeftToRight) LEFT else RIGHT
-    TRAILING -> if (c.componentOrientation.isLeftToRight) RIGHT else LEFT
-    else -> j
+  private fun getJustification2(c: Component): K {
+    val leftToRight = c.componentOrientation.isLeftToRight
+    return when (val j = getTitleJustification()) {
+      DEFAULT_JUSTIFICATION -> if (leftToRight) LEFT else RIGHT
+      LEADING -> if (leftToRight) LEFT else RIGHT
+      TRAILING -> if (leftToRight) RIGHT else LEFT
+      else -> j
+    }
   }
 
   private fun getLabel2(c: Component?): JLabel {

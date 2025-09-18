@@ -173,13 +173,15 @@ private class EditableTitledBorder(
   //   return renderer
   // }
 
-  private fun getJustification2(c: Component) =
-    when (val justification = getTitleJustification()) {
-      DEFAULT_JUSTIFICATION -> if (c.componentOrientation.isLeftToRight) LEFT else RIGHT
-      LEADING -> if (c.componentOrientation.isLeftToRight) LEFT else RIGHT
-      TRAILING -> if (c.componentOrientation.isLeftToRight) RIGHT else LEFT
+  private fun getJustification2(c: Component): Int {
+    val leftToRight = c.componentOrientation.isLeftToRight
+    return when (val justification = getTitleJustification()) {
+      DEFAULT_JUSTIFICATION -> if (leftToRight) LEFT else RIGHT
+      LEADING -> if (leftToRight) LEFT else RIGHT
+      TRAILING -> if (leftToRight) RIGHT else LEFT
       else -> justification
     }
+  }
 
   private fun getTitleBounds(c: Component): Rectangle {
     // if (getTitle()?.isNotEmpty() == true) {
