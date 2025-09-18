@@ -17,9 +17,9 @@ import kotlin.math.PI
 import kotlin.math.atan2
 
 fun makeUI(): Component {
-  val path = "example/test.png"
   val cl = Thread.currentThread().contextClassLoader
-  val img = cl.getResource(path)?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+  val url = cl.getResource("example/test.png")
+  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
   val di = DraggableImageMouseListener(ImageIcon(img))
   val p = object : JPanel() {
     override fun paintComponent(g: Graphics) {
