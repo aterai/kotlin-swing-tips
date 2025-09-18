@@ -130,7 +130,8 @@ private class TableRowTransferHandler : TransferHandler() {
   override fun canImport(info: TransferSupport): Boolean {
     val isSupported = info.isDataFlavorSupported(FLAVOR) && canDropTable(info)
     val canDrop = info.isDrop && isSupported
-    val dp = SwingUtilities.getAncestorOfClass(JDesktopPane::class.java, info.component)
+    val comp = info.component
+    val dp = SwingUtilities.getAncestorOfClass(JDesktopPane::class.java, comp)
     val glassPane = (dp as? JComponent)?.rootPane?.glassPane ?: return false
     glassPane.cursor = if (canDrop) {
       DragSource.DefaultMoveDrop
