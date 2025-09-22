@@ -43,7 +43,7 @@ fun makeUI(): Component {
     it.focusTraversalPolicy = object : LayoutFocusTraversalPolicy() {
       override fun accept(c: Component) = c !is JTextArea && super.accept(c)
 
-      override fun getDefaultComponent(container: Container) = it.rootPane.defaultButton
+      override fun getDefaultComponent(c: Container) = it.rootPane.defaultButton
     }
     it.add(JScrollPane(JTextArea(HELP)))
     it.add(box, BorderLayout.SOUTH)
