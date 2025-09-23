@@ -107,7 +107,8 @@ fun changeHighlight(index: Int): Int {
   // clear the previous highlight:
   val highlighter = textPane.highlighter
   for (h in highlighter.highlights) {
-    doc.setCharacterAttributes(h.startOffset, h.endOffset - h.startOffset, def, true)
+    val length = h.endOffset - h.startOffset
+    doc.setCharacterAttributes(h.startOffset, length, def, true)
   }
   highlighter.removeAllHighlights()
   // doc.setCharacterAttributes(0, doc.getLength(), def, true)
@@ -131,9 +132,11 @@ fun changeHighlight(index: Int): Int {
     val hh = highlighter.highlights[idx]
     highlighter.removeHighlight(hh)
     runCatching {
-      highlighter.addHighlight(hh.startOffset, hh.endOffset, currentPainter)
-      doc.setCharacterAttributes(hh.startOffset, hh.endOffset - hh.startOffset, s, true)
-      scrollToCenter(textPane, hh.startOffset)
+      val p0 = hh.startOffset
+      val p1 = hh.endOffset
+      highlighter.addHighlight(p0, p1, currentPainter)
+      doc.setCharacterAttributes(p0, p1 - p0, s, true)
+      scrollToCenter(textPane, p0)
     }
   }
   label.text = "%02d / %02d%n".format(idx + 1, hits)
