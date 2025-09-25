@@ -170,7 +170,9 @@ private class WindowsRoundMenuItemUI : WindowsMenuItemUI() {
         RenderingHints.KEY_ANTIALIASING,
         RenderingHints.VALUE_ANTIALIAS_ON,
       )
-      g2.fill(RoundRectangle2D.Float(0f, 0f, width.toFloat(), height.toFloat(), 8f, 8f))
+      val fw = width.toFloat()
+      val fh = height.toFloat()
+      g2.fill(RoundRectangle2D.Float(0f, 0f, fw, fh, 8f, 8f))
       g2.composite = AlphaComposite.SrcAtop
       super.paintBackground(g2, menuItem, bgColor)
       g2.dispose()
