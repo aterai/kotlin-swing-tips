@@ -81,7 +81,7 @@ private fun makeTitledPanel(
 
 private class SpinnerLayout : LayoutManager {
   private var nextButton: Component? = null
-  private var previousButton: Component? = null
+  private var prevButton: Component? = null
   private var editor: Component? = null
 
   override fun addLayoutComponent(
@@ -90,7 +90,7 @@ private class SpinnerLayout : LayoutManager {
   ) {
     when (name) {
       "Next" -> nextButton = c
-      "Previous" -> previousButton = c
+      "Previous" -> prevButton = c
       "Editor" -> editor = c
     }
   }
@@ -98,14 +98,14 @@ private class SpinnerLayout : LayoutManager {
   override fun removeLayoutComponent(c: Component) {
     when (c) {
       nextButton -> nextButton = null
-      previousButton -> previousButton = null
+      prevButton -> prevButton = null
       editor -> editor = null
     }
   }
 
   override fun preferredLayoutSize(parent: Container): Dimension {
     val nextD = preferredSize(nextButton)
-    val previousD = preferredSize(previousButton)
+    val previousD = preferredSize(prevButton)
     val editorD = preferredSize(editor)
 
     // Force the editors' height to be a multiple of 2
@@ -122,7 +122,7 @@ private class SpinnerLayout : LayoutManager {
 
   override fun layoutContainer(parent: Container) {
     val r = SwingUtilities.calculateInnerArea(parent as? JComponent, null)
-    if (r != null && nextButton == null && previousButton == null) {
+    if (r != null && nextButton == null && prevButton == null) {
       setBounds(editor, r.x, r.y, r.width, r.height)
       return
     }
@@ -137,7 +137,8 @@ private class SpinnerLayout : LayoutManager {
     // buttons to be aligned with the outer edge of the spinner's
     // border, and leaving it as "null" places the buttons completely
     // inside the spinner's border.
-    val buttonInsets = UIManager.getInsets("Spinner.arrowButtonInsets") ?: parent.insets
+    val key = "Spinner.arrowButtonInsets"
+    val buttonInsets = UIManager.getInsets(key) ?: parent.insets
 
     val width = parent.width
     val height = parent.height
@@ -157,11 +158,11 @@ private class SpinnerLayout : LayoutManager {
     }
     val nextY = buttonInsets.top
     val nextHeight = height / 2 + height % 2 - nextY
-    val previousY = buttonInsets.top + nextHeight
-    val previousHeight = height - previousY - buttonInsets.bottom
+    val prevY = buttonInsets.top + nextHeight
+    val prevHeight = height - prevY - buttonInsets.bottom
     setBounds(editor, editorX, ins.top, editorWidth, editorHeight)
     setBounds(nextButton, buttonsX, nextY, buttonsWidth, nextHeight)
-    setBounds(previousButton, buttonsX, previousY, buttonsWidth, previousHeight)
+    setBounds(prevButton, buttonsX, prevY, buttonsWidth, prevHeight)
   }
 
   companion object {
