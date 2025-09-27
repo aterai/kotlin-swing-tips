@@ -29,8 +29,9 @@ fun makeUI(): Component {
   box.add(button)
 
   val listener = HierarchyListener { e ->
-    val changed = e.changeFlags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L
-    if (changed && !e.component.isDisplayable) {
+    val flags = e.changeFlags
+    val b = flags and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong() != 0L
+    if (b && !e.component.isDisplayable) {
       worker?.cancel(true)
       worker = null
     }
