@@ -158,7 +158,7 @@ private class RubberBandSelectionList(
         idx = -1
       }
       val rect = Rectangle()
-      if (idx > 0) {
+      if (idx >= 0) {
         rect.add(getCellBounds(idx, idx))
         if (rollOverIndex >= 0 && idx != rollOverIndex) {
           rect.add(getCellBounds(rollOverIndex, rollOverIndex))
