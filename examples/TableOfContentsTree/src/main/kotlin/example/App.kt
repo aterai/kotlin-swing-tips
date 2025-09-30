@@ -197,7 +197,11 @@ private class TableOfContentsTree(
     val r = getRowBounds(i)
     (node?.userObject as? TableOfContents)?.also {
       val pn = it.page.toString()
-      g2.paint = if (isSynth && isRowSelected(i)) tcr.textSelectionColor else foreground
+      g2.paint = if (isSynth && isRowSelected(i)) {
+        tcr.textSelectionColor
+      } else {
+        foreground
+      }
       val x1 = maxX - g2.fontMetrics.stringWidth(pn)
       val y = r.y + ((tcr as? Component)?.getBaseline(r.width, r.height) ?: 0)
       g2.drawString(pn, x1, y)
