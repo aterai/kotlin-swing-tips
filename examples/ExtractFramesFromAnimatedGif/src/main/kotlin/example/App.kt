@@ -33,7 +33,10 @@ fun makeUI(): Component {
 
 @Throws(IOException::class)
 private fun loadFromStream(stream: ImageInputStream): List<Image> {
-  val reader = ImageIO.getImageReaders(stream).asSequence().first { checkGifFormat(it) }
+  val reader = ImageIO
+    .getImageReaders(stream)
+    .asSequence()
+    .first { checkGifFormat(it) }
     ?: throw IOException("Can not read image format!")
   reader.setInput(stream, false, false)
   val list = ArrayList<Image>()
