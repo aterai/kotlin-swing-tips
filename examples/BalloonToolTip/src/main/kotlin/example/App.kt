@@ -33,7 +33,9 @@ private fun makeModel(): DefaultListModel<String> {
   return model
 }
 
-private fun makeList1(model: DefaultListModel<String>) = object : JList<String>(model) {
+private fun makeList1(
+  model: DefaultListModel<String>,
+) = object : JList<String>(model) {
   override fun createToolTip(): JToolTip {
     val tip = BalloonToolTip()
     tip.component = this
@@ -57,7 +59,7 @@ private fun makeList1(model: DefaultListModel<String>) = object : JList<String>(
           if (vp is JViewport) {
             val rect = SwingUtilities.calculateInnerArea(vp, vp.bounds)
             val fm = it.getFontMetrics(it.font)
-            val str = value?.toString() ?: ""
+            val str = value ?: ""
             val b = fm.stringWidth(str) > rect.width
             (it as? JComponent)?.toolTipText = if (b) str else null
           }
@@ -66,7 +68,9 @@ private fun makeList1(model: DefaultListModel<String>) = object : JList<String>(
   }
 }
 
-private fun makeList2(model: DefaultListModel<String>) = object : JList<String>(model) {
+private fun makeList2(
+  model: DefaultListModel<String>,
+) = object : JList<String>(model) {
   override fun updateUI() {
     cellRenderer = null
     super.updateUI()
@@ -84,7 +88,7 @@ private fun makeList2(model: DefaultListModel<String>) = object : JList<String>(
           if (vp is JViewport) {
             val rect = SwingUtilities.calculateInnerArea(vp, vp.bounds)
             val fm = it.getFontMetrics(it.font)
-            val str = value?.toString() ?: ""
+            val str = value ?: ""
             val b = fm.stringWidth(str) > rect.width
             (it as? JComponent)?.toolTipText = if (b) str else list.toolTipText
           }
@@ -114,7 +118,7 @@ private class BalloonToolTip : JToolTip() {
     listener = HierarchyListener { e ->
       val c = e.component
       val f = e.changeFlags.toInt() and HierarchyEvent.SHOWING_CHANGED != 0
-      if (f != 0 && c.isShowing) {
+      if (f && c.isShowing) {
         SwingUtilities
           .getWindowAncestor(c)
           ?.takeIf { it.graphicsConfiguration?.isTranslucencyCapable == true }
