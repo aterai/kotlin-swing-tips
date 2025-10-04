@@ -100,7 +100,7 @@ private open class CheckedComboBox(
   }
 
   protected fun initActionMap() {
-    getInputMap(JComponent.WHEN_FOCUSED).put(
+    getInputMap(WHEN_FOCUSED).put(
       KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0),
       "checkbox-select",
     )
