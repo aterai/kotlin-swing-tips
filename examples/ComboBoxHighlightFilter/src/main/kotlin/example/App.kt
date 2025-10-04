@@ -58,7 +58,7 @@ private fun makeComboBox(model: List<String>): JComboBox<String> {
         if (index >= 0 && pattern.isNotEmpty()) {
           val highlighter = field.highlighter
           highlighter.removeAllHighlights()
-          val txt = value?.toString() ?: ""
+          val txt = value ?: ""
           field.text = txt
           addHighlight(txt, pattern, highlighter)
           field.background = if (isSelected) {
