@@ -146,7 +146,7 @@ private class IntegerDocumentFilter : DocumentFilter() {
     val doc = fb.document
     val currentLength = doc.length
     val currentContent = doc.getText(0, currentLength)
-    val before = currentContent.substring(0, offset)
+    val before = currentContent.take(offset)
     val after = currentContent.substring(length + offset, currentLength)
     val newValue = before + (text ?: "") + after
     if (newValue.isEmpty()) {
