@@ -88,7 +88,7 @@ private class TextAreaCellEditor :
   private fun immediatelyInsert(keyChar: Char): Boolean {
     EventQueue.invokeLater {
       if (Character.isUnicodeIdentifierStart(keyChar)) {
-        textArea.text = textArea.text + keyChar
+        textArea.text += keyChar
       }
     }
     return true
