@@ -74,7 +74,7 @@ fun makeModel(): TableModel {
   return m
 }
 
-private fun makeRow(i: Int, title: String, path: String) = arrayOf(
+private fun makeRow(i: Int, title: String, path: String) = arrayOf<Any?>(
   i,
   title,
   runCatching { URI(path) }.getOrNull(),

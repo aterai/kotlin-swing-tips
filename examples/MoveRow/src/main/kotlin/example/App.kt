@@ -4,7 +4,6 @@ import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.io.Serializable
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.JTableHeader
@@ -60,16 +59,12 @@ private fun makeToolButton(action: Action) = JButton(action).also {
 private class TablePopupMenu(
   private val table: JTable,
 ) : JPopupMenu() {
-  private val createAction: Action
-  private val deleteAction: Action
-  private val upAction: Action
-  private val downAction: Action
+  private val createAction = RowDataCreateAction("add", table)
+  private val deleteAction = DeleteAction("delete", table)
+  private val upAction = UpAction("up", table)
+  private val downAction = DownAction("down", table)
 
   init {
-    createAction = RowDataCreateAction("add", table)
-    deleteAction = DeleteAction("delete", table)
-    upAction = UpAction("up", table)
-    downAction = DownAction("down", table)
     add(createAction)
     addSeparator()
     add(deleteAction)
@@ -228,7 +223,7 @@ private class RowDataModel : SortableTableModel() {
   private var number = 0
 
   fun addRowData(t: RowData) {
-    val obj = arrayOf(number, t.name, t.comment)
+    val obj = arrayOf<Any>(number, t.name, t.comment)
     super.addRow(obj)
     number++
   }
@@ -277,8 +272,7 @@ private open class SortableTableModel : DefaultTableModel() {
 private class ColumnComparator(
   val index: Int,
   val ascending: Boolean,
-) : Comparator<Any>,
-  Serializable {
+) : Comparator<Any> {
   override fun compare(
     one: Any,
     two: Any,
@@ -292,10 +286,6 @@ private class ColumnComparator(
       return c * if (ascending) 1 else -1
     }
     return 0
-  }
-
-  companion object {
-    private const val serialVersionUID = 1L
   }
 }
 

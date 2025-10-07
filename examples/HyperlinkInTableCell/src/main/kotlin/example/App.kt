@@ -75,7 +75,7 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeRow(i: Int, title: String, spec: String) = arrayOf(
+private fun makeRow(i: Int, title: String, spec: String) = arrayOf<Any?>(
   i,
   title,
   runCatching { URI(spec) }.getOrNull(),
