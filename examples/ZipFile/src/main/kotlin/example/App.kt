@@ -18,7 +18,6 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import java.util.zip.ZipOutputStream
 import javax.swing.*
-import kotlin.streams.toList
 
 private val logger = Logger.getLogger(MethodHandles.lookup().lookupClass().name)
 private val textArea = JTextArea()
@@ -138,7 +137,7 @@ private fun makeTargetDirPath(text: String): Path? {
   var name = path.fileName.toString()
   val lastDotPos = name.lastIndexOf('.')
   if (lastDotPos > 0) {
-    name = name.substring(0, lastDotPos)
+    name = name.take(lastDotPos)
   }
   return path.resolveSibling(name)
 }

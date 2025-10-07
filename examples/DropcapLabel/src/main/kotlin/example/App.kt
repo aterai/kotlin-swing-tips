@@ -43,7 +43,7 @@ private class DropcapLabel(
     val txt = text
 
     val frc = g2.fontRenderContext
-    val shape = TextLayout(txt.substring(0, 1), font, frc).getOutline(null)
+    val shape = TextLayout(txt.take(1), font, frc).getOutline(null)
 
     val at1 = AffineTransform.getScaleInstance(5.0, 5.0)
     val s1 = at1.createTransformedShape(shape)

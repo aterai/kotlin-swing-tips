@@ -167,9 +167,9 @@ private class ValueFormatter :
     throw ParseException("illegal object", 0)
   }
 
-  private fun argbToRgba(argb: String) = argb.substring(2) + argb.substring(0, 2)
+  private fun argbToRgba(argb: String) = argb.substring(2) + argb.take(2)
 
-  private fun rgbaToArgb(rgba: String) = rgba.substring(6) + rgba.substring(0, 6)
+  private fun rgbaToArgb(rgba: String) = rgba.substring(6) + rgba.take(6)
 
   override fun getDocumentFilter() = filter
 

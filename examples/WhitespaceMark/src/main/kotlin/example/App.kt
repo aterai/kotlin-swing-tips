@@ -64,7 +64,7 @@ private class CustomEditorKit : StyledEditorKit() {
   override fun createDefaultDocument(): Document {
     val d = super.createDefaultDocument()
     if (d is StyledDocument) {
-      d.setParagraphAttributes(0, d.getLength(), ATTRS, false)
+      d.setParagraphAttributes(0, d.length, ATTRS, false)
     }
     return d
   }
@@ -129,14 +129,14 @@ private class WhitespaceLabelView(
   ) {
     super.paint(g, a)
     val g2 = g.create() as? Graphics2D ?: return
-    val alloc = if (a is Rectangle) a else a.bounds
+    val alloc = a as? Rectangle ?: a.bounds
     val fontMetrics = g.fontMetrics
     val spaceWidth = fontMetrics.stringWidth(IDEOGRAPHIC_SPACE)
     var sumOfTabs = 0
     val text = getText(startOffset, endOffset).toString()
     for (i in text.indices) {
       val s = text.substring(i, i + 1)
-      val prevStrWidth = fontMetrics.stringWidth(text.substring(0, i)) + sumOfTabs
+      val prevStrWidth = fontMetrics.stringWidth(text.take(i)) + sumOfTabs
       val sx = alloc.x + prevStrWidth
       val sy = alloc.y + alloc.height - fontMetrics.descent
       if (IDEOGRAPHIC_SPACE == s) {

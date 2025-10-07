@@ -29,7 +29,8 @@ fun makeUI(): Component {
   val formatter = NumberFormatter()
   // formatter.valueClass = java.lang.Integer::class.java
   (formatter.format as? NumberFormat)?.isGroupingUsed = false
-  textField4.formatterFactory = DefaultFormatterFactory(formatter, formatter, formatter)
+  textField4.formatterFactory =
+    DefaultFormatterFactory(formatter, formatter, formatter)
   textField4.horizontalAlignment = SwingConstants.RIGHT
   textField4.value = 4000
 
@@ -100,7 +101,7 @@ private class IntegerDocument : PlainDocument() {
   ) {
     val currentLength = getLength()
     val currentContent = getText(0, currentLength)
-    val before = currentContent.substring(0, offset)
+    val before = currentContent.take(offset)
     val after = currentContent.substring(length + offset, currentLength)
     val newValue = before + after
     checkInput(newValue, offset)
@@ -155,7 +156,7 @@ private class IntegerDocumentFilter : DocumentFilter() {
     val doc = fb.document
     val currentLength = doc.length
     val currentContent = doc.getText(0, currentLength)
-    val before = currentContent.substring(0, offset)
+    val before = currentContent.take(offset)
     val after = currentContent.substring(length + offset, currentLength)
     val newValue = before + (text ?: "") + after
     checkInput(newValue)
