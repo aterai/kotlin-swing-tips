@@ -28,7 +28,7 @@ fun makeUI(): Component {
     }
   }
   table.autoCreateRowSorter = true
-  table.rowHeight = table.rowHeight * 2
+  table.rowHeight *= 2
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(table))
     it.preferredSize = Dimension(320, 240)
@@ -75,7 +75,7 @@ private class TwoRowsCellRenderer : TableCellRenderer {
       val cp = text.codePointAt(i)
       textWidth += fm.charWidth(cp)
       if (textWidth > columnWidth) {
-        first = text.substring(0, i)
+        first = text.take(i)
         second = text.substring(i)
         break
       }
