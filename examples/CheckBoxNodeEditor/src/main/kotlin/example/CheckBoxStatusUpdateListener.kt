@@ -42,7 +42,8 @@ class CheckBoxStatusUpdateListener : TreeModelListener {
     val isOnlyOneNodeSelected = children != null && children.size == 1
     val current = if (isOnlyOneNodeSelected) children[0] else model.root
     if (current is DefaultMutableTreeNode) {
-      val status = (current.userObject as? CheckBoxNode)?.status ?: Status.INDETERMINATE
+      val uo = current.userObject
+      val status = (uo as? CheckBoxNode)?.status ?: Status.INDETERMINATE
       updateAllChildrenUserObject(current, status)
       model.nodeChanged(current)
     }
