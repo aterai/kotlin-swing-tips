@@ -44,9 +44,9 @@ private class TextAreaRenderer<E> : ListCellRenderer<E> {
     }
   }
 
-  private fun getNoFocusBorder(focusBorder: Border): Border {
+  private fun getNoFocusBorder(focusBorder: Border?): Border? {
     val b = UIManager.getBorder("List.noFocusBorder")
-    return b ?: focusBorder.getBorderInsets(renderer).let {
+    return b ?: focusBorder?.getBorderInsets(renderer)?.let {
       BorderFactory.createEmptyBorder(it.top, it.left, it.bottom, it.right)
     }
   }
