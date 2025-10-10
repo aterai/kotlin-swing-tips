@@ -58,9 +58,10 @@ private fun <E> makeComboBox(model: ComboBoxModel<E>) = object : JComboBox<E>(mo
         if (index < 0) {
           val buttonSize = arrowButton?.width ?: rect.height
           availableWidth -= buttonSize
-          (combo.getEditor().editorComponent as? JTextField)?.also {
-            availableWidth -= it.margin.left + it.margin.right
-            combo.toolTipText = toolTipTxt
+          (combo.getEditor().editorComponent as? JTextField)?.also { editor ->
+            val margin = editor.margin
+            availableWidth -= margin.left + margin.right
+            combo.toolTipText = if (fm.stringWidth(str) > availableWidth) str else null
           }
         }
       }
