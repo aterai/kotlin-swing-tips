@@ -5,7 +5,7 @@ import javax.swing.*
 
 fun makeUI() = JPanel(BorderLayout()).also {
   val m = makeComboBoxModel()
-  val p1 = makeTitledPanel("Overflow ToolTip JComboBox", makeComboBox(m))
+  val p1 = makeTitledPanel("Overflow ToolTip JComboBox", ToolTipComboBox(m))
   val p2 = makeTitledPanel("Default JComboBox", JComboBox(m))
   it.add(p1, BorderLayout.NORTH)
   it.add(p2, BorderLayout.SOUTH)
@@ -32,7 +32,25 @@ private fun makeComboBoxModel() = DefaultComboBoxModel<String>().also {
   it.addElement("http://localhost/0123456789/0123456789/0123456789/0123456789/03.png")
 }
 
-private fun <E> makeComboBox(model: ComboBoxModel<E>) = object : JComboBox<E>(model) {
+fun main() {
+  EventQueue.invokeLater {
+    runCatching {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+    }.onFailure {
+      it.printStackTrace()
+      Toolkit.getDefaultToolkit().beep()
+    }
+    JFrame().apply {
+      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+      contentPane.add(makeUI())
+      pack()
+      setLocationRelativeTo(null)
+      isVisible = true
+    }
+  }
+}
+
+class ToolTipComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(model) {
   override fun updateUI() {
     setRenderer(null)
     super.updateUI()
@@ -70,22 +88,4 @@ private fun <E> makeComboBox(model: ComboBoxModel<E>) = object : JComboBox<E>(mo
 
   private fun getArrowButton(combo: Container): JButton? =
     combo.components?.firstOrNull { it is JButton } as? JButton
-}
-
-fun main() {
-  EventQueue.invokeLater {
-    runCatching {
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
-    }.onFailure {
-      it.printStackTrace()
-      Toolkit.getDefaultToolkit().beep()
-    }
-    JFrame().apply {
-      defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
-      pack()
-      setLocationRelativeTo(null)
-      isVisible = true
-    }
-  }
 }
