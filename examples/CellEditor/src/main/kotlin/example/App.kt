@@ -53,7 +53,7 @@ private open class RowDataModel : DefaultTableModel() {
   private var number = 0
 
   fun addRowData(t: RowData) {
-    super.addRow(arrayOf(number, t.name, t.comment))
+    super.addRow(arrayOf<Any>(number, t.name, t.comment))
     number++
   }
 
