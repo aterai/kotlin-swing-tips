@@ -11,10 +11,12 @@ fun makeUI(): Component {
   popup.add("menu 2")
   popup.add("menu 3")
 
-  val field1 = JTextField("default JTextField")
+  val txt1 = "default JTextField"
+  val field1 = JTextField(txt1)
   field1.componentPopupMenu = popup
 
-  val field2 = object : JTextField("override JTextField#getPopupLocation(MouseEvent)") {
+  val txt2 = "override JTextField#getPopupLocation(MouseEvent)"
+  val field2 = object : JTextField(txt2) {
     override fun getPopupLocation(event: MouseEvent?) = if (event == null) {
       runCatching {
         modelToView(caretPosition)?.let { r ->
