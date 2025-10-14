@@ -368,23 +368,22 @@ private class WithoutArrowButtonScrollBarUI : BasicScrollBarUI() {
     c: JComponent,
     r: Rectangle,
   ) {
-    if (c !is JScrollBar || !c.isEnabled) {
-      return
-    }
-    val m = c.model
-    if (m.maximum - m.minimum - m.extent > 0) {
-      val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(
-        RenderingHints.KEY_ANTIALIASING,
-        RenderingHints.VALUE_ANTIALIAS_ON,
-      )
-      g2.paint = when {
-        isDragging -> thumbDarkShadowColor
-        isThumbRollover -> thumbLightShadowColor
-        else -> thumbColor
+    if (c is JScrollBar && c.isEnabled) {
+      val m = c.model
+      if (m.maximum - m.minimum - m.extent > 0) {
+        val g2 = g.create() as? Graphics2D ?: return
+        g2.setRenderingHint(
+          RenderingHints.KEY_ANTIALIASING,
+          RenderingHints.VALUE_ANTIALIAS_ON,
+        )
+        g2.paint = when {
+          isDragging -> thumbDarkShadowColor
+          isThumbRollover -> thumbLightShadowColor
+          else -> thumbColor
+        }
+        g2.fillRoundRect(r.x + 1, r.y + 1, r.width - 2, r.height - 2, 10, 10)
+        g2.dispose()
       }
-      g2.fillRoundRect(r.x + 1, r.y + 1, r.width - 2, r.height - 2, 10, 10)
-      g2.dispose()
     }
   }
 }
