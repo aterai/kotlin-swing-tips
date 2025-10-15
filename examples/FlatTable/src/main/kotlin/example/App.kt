@@ -200,20 +200,20 @@ private class OverlappedScrollBarUI : BasicScrollBarUI() {
     c: JComponent?,
     r: Rectangle,
   ) {
-    (c as? JScrollBar)?.takeIf { it.isEnabled } ?: return
-    val color = when {
-      isDragging -> DRAGGING_COLOR
-      isThumbRollover -> ROLLOVER_COLOR
-      else -> DEFAULT_COLOR
+    if (c is JScrollBar && c.isEnabled) {
+      val g2 = g.create() as? Graphics2D ?: return
+      g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON,
+      )
+      g2.paint = when {
+        isDragging -> DRAGGING_COLOR
+        isThumbRollover -> ROLLOVER_COLOR
+        else -> DEFAULT_COLOR
+      }
+      g2.fill(r)
+      g2.dispose()
     }
-    val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(
-      RenderingHints.KEY_ANTIALIASING,
-      RenderingHints.VALUE_ANTIALIAS_ON,
-    )
-    g2.paint = color
-    g2.fill(r)
-    g2.dispose()
   }
 
   companion object {
