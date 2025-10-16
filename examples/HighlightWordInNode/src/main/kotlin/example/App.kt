@@ -62,15 +62,17 @@ private fun searchTree(
   path: TreePath,
   q: String,
 ) {
-  val node = path.lastPathComponent as? TreeNode ?: return
-  if (node.toString().startsWith(q)) {
-    tree.expandPath(path.parentPath)
-  }
-  if (!node.isLeaf) {
-    node
-      .children()
-      .toList()
-      .forEach { searchTree(tree, path.pathByAddingChild(it), q) }
+  val node = path.lastPathComponent
+  if (node is TreeNode) {
+    if (node.toString().startsWith(q)) {
+      tree.expandPath(path.parentPath)
+    }
+    if (!node.isLeaf) {
+      node
+        .children()
+        .toList()
+        .forEach { searchTree(tree, path.pathByAddingChild(it), q) }
+    }
   }
 }
 
@@ -78,14 +80,16 @@ private fun collapseAll(
   tree: JTree,
   parent: TreePath,
 ) {
-  val node = parent.lastPathComponent as? TreeNode ?: return
-  if (!node.isLeaf) {
-    node
-      .children()
-      .toList()
-      .forEach { collapseAll(tree, parent.pathByAddingChild(it)) }
+  val node = parent.lastPathComponent
+  if (node is TreeNode) {
+    if (!node.isLeaf) {
+      node
+        .children()
+        .toList()
+        .forEach { collapseAll(tree, parent.pathByAddingChild(it)) }
+    }
+    tree.collapsePath(parent)
   }
-  tree.collapsePath(parent)
 }
 
 private class HighlightTreeCellRenderer : TreeCellRenderer {
