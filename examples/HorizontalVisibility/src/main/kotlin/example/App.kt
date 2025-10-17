@@ -166,26 +166,24 @@ private class ArrowButtonlessScrollBarUI : BasicScrollBarUI() {
     c: JComponent,
     r: Rectangle,
   ) {
-    val sb = c as? JScrollBar
-    if (sb?.isEnabled != true) {
-      return
-    }
-    val m = sb.model
-    val iv = m.maximum - m.minimum - m.extent - 1 // -1: bug?
-    if (iv > 0) {
-      val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(
-        RenderingHints.KEY_ANTIALIASING,
-        RenderingHints.VALUE_ANTIALIAS_ON,
-      )
-      val color = when {
-        isDragging -> DRAGGING_COLOR
-        isThumbRollover -> ROLLOVER_COLOR
-        else -> DEFAULT_COLOR
+    if (c is JScrollBar && c.isEnabled && !r.isEmpty) {
+      val m = c.model
+      val iv = m.maximum - m.minimum - m.extent - 1
+      if (iv > 0) {
+        val g2 = g.create() as? Graphics2D ?: return
+        g2.setRenderingHint(
+          RenderingHints.KEY_ANTIALIASING,
+          RenderingHints.VALUE_ANTIALIAS_ON,
+        )
+        val color = when {
+          isDragging -> DRAGGING_COLOR
+          isThumbRollover -> ROLLOVER_COLOR
+          else -> DEFAULT_COLOR
+        }
+        g2.paint = color
+        g2.fillRect(r.x, r.y, r.width - 1, r.height - 1)
+        g2.dispose()
       }
-      g2.paint = color
-      g2.fillRect(r.x, r.y, r.width - 1, r.height - 1)
-      g2.dispose()
     }
   }
 
