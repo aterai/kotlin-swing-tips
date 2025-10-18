@@ -10,11 +10,16 @@ import javax.swing.*
 fun makeUI(): Component {
   val p = JPanel(BorderLayout(10, 10))
   val locale = p.locale
-  val swatches = JCheckBox(UIManager.getString("ColorChooser.swatchesNameText", locale))
-  val hsv = JCheckBox(UIManager.getString("ColorChooser.hsvNameText", locale))
-  val hsl = JCheckBox(UIManager.getString("ColorChooser.hslNameText", locale))
-  val rgb = JCheckBox(UIManager.getString("ColorChooser.rgbNameText", locale))
-  val cmyk = JCheckBox(UIManager.getString("ColorChooser.cmykNameText", locale))
+  val swatchesName = "ColorChooser.swatchesNameText"
+  val swatches = JCheckBox(UIManager.getString(swatchesName, locale))
+  val hsvName = "ColorChooser.hsvNameText"
+  val hsv = JCheckBox(UIManager.getString(hsvName, locale))
+  val hslName = "ColorChooser.hslNameText"
+  val hsl = JCheckBox(UIManager.getString(hslName, locale))
+  val rgbName = "ColorChooser.rgbNameText"
+  val rgb = JCheckBox(UIManager.getString(rgbName, locale))
+  val cmykName = "ColorChooser.cmykNameText"
+  val cmyk = JCheckBox(UIManager.getString(cmykName, locale))
   val list = listOf(swatches, hsv, hsl, rgb, cmyk)
 
   val label = JLabel()
@@ -23,11 +28,14 @@ fun makeUI(): Component {
 
   val button = JButton("open JColorChooser")
   button.addActionListener {
+    val root = p.rootPane
+    val title = "JColorChooser"
+    val initialColor = label.background
     val selected = list.filter { it.isSelected }.map { it.text }
     val color = if (selected.isEmpty()) { // use default JColorChooser
-      JColorChooser.showDialog(p.rootPane, "JColorChooser", label.background)
+      JColorChooser.showDialog(root, title, initialColor)
     } else {
-      showColorChooserDialog(p.rootPane, "JColorChooser", selected, label.background)
+      showColorChooserDialog(root, title, selected, initialColor)
     }
     if (color != null) {
       label.background = color
@@ -81,12 +89,6 @@ private class ColorTracker(
   override fun actionPerformed(e: ActionEvent) {
     color = chooser.color
   }
-}
-
-object SwingUtils {
-  fun descendants(parent: Container): List<Component> = parent.components
-    .filterIsInstance<Container>()
-    .flatMap { listOf(it) + descendants(it) }
 }
 
 fun main() {
