@@ -30,15 +30,14 @@ private class HoverCloseButtonTabbedPane(
       private var prev = -1
 
       override fun mouseMoved(e: MouseEvent) {
-        val source = e.component as? JTabbedPane
-        val focused = source?.indexAtLocation(e.x, e.y)
-        if (source == null || focused == null || focused == prev) {
-          return
+        val src = e.component as? JTabbedPane
+        val focused = src?.indexAtLocation(e.x, e.y)
+        if (focused != null && focused != prev) {
+          for (i in 0..<src.tabCount) {
+            (src.getTabComponentAt(i) as? TabPanel)?.setButtonVisible(i == focused)
+          }
+          prev = focused
         }
-        for (i in 0..<source.tabCount) {
-          (source.getTabComponentAt(i) as? TabPanel)?.setButtonVisible(i == focused)
-        }
-        prev = focused
       }
     }
     addMouseMotionListener(hoverHandler)
