@@ -246,7 +246,8 @@ private open class RoundedCornerBorder : AbstractBorder() {
 
     c.parent?.also {
       g2.paint = it.background
-      val corner = Area(Rectangle2D.Double(dx, dy, width.toDouble(), height.toDouble()))
+      val s = Rectangle2D.Double(dx, dy, width.toDouble(), height.toDouble())
+      val corner = Area(s)
       corner.subtract(round)
       g2.fill(corner)
     }
@@ -299,7 +300,8 @@ private class KamabokoBorder : RoundedCornerBorder() {
     val parent = c.parent
     if (parent != null) {
       g2.paint = parent.background
-      val corner = Area(Rectangle2D.Double(dx, dy, width.toDouble(), height.toDouble()))
+      val s = Rectangle2D.Double(dx, dy, width.toDouble(), height.toDouble())
+      val corner = Area(s)
       corner.subtract(round)
       g2.fill(corner)
     }
