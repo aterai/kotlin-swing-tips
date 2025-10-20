@@ -50,7 +50,9 @@ fun main() {
   }
 }
 
-class ToolTipComboBox<E>(model: ComboBoxModel<E>) : JComboBox<E>(model) {
+class ToolTipComboBox<E>(
+  model: ComboBoxModel<E>,
+) : JComboBox<E>(model) {
   override fun updateUI() {
     setRenderer(null)
     super.updateUI()
