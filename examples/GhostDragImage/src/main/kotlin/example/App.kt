@@ -119,36 +119,36 @@ private class ReorderingList(
 
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
-    if (dragEnabled) {
-      return
+    if (!dragEnabled) {
+      val g2 = g.create() as? Graphics2D ?: return
+      g2.paint = selectionBackground
+      g2.draw(rubberBand)
+      g2.composite = ALPHA
+      g2.paint = rubberBandColor
+      g2.fill(rubberBand)
+      g2.dispose()
     }
-    val g2 = g.create() as? Graphics2D ?: return
-    g2.paint = selectionBackground
-    g2.draw(rubberBand)
-    g2.composite = ALPHA
-    g2.paint = rubberBandColor
-    g2.fill(rubberBand)
-    g2.dispose()
   }
 
   private inner class RubberBandingListener : MouseInputAdapter() {
     private val startPt = Point()
 
     override fun mouseDragged(e: MouseEvent) {
-      val l = (e.component as? JList<*>)?.takeUnless { it.dragEnabled } ?: return
-      val endPt = e.point
-      rubberBand.reset()
-      rubberBand.moveTo(startPt.getX(), startPt.getY())
-      rubberBand.lineTo(endPt.getX(), startPt.getY())
-      rubberBand.lineTo(endPt.getX(), endPt.getY())
-      rubberBand.lineTo(startPt.getX(), endPt.getY())
-      rubberBand.closePath()
-
-      val indices = (0..<l.model.size)
-        .filter { rubberBand.intersects(l.getCellBounds(it, it)) }
-        .toIntArray()
-      l.selectedIndices = indices
-      l.repaint()
+      val c = e.component
+      if (c is JList<*> && !c.dragEnabled) {
+        val endPt = e.point
+        rubberBand.reset()
+        rubberBand.moveTo(startPt.getX(), startPt.getY())
+        rubberBand.lineTo(endPt.getX(), startPt.getY())
+        rubberBand.lineTo(endPt.getX(), endPt.getY())
+        rubberBand.lineTo(startPt.getX(), endPt.getY())
+        rubberBand.closePath()
+        val indices = (0..<c.model.size)
+          .filter { rubberBand.intersects(c.getCellBounds(it, it)) }
+          .toIntArray()
+        c.selectedIndices = indices
+        c.repaint()
+      }
     }
 
     override fun mouseReleased(e: MouseEvent) {
