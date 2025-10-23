@@ -37,8 +37,8 @@ fun makeUI(): Component {
 private fun createToolBarButton(name: String): Component {
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource(PATH + name)
-  val icon = url?.let { ImageIcon(it) } ?: UIManager.getIcon("html.missingImage")
-  val b = JLabel(icon)
+  val icon = url?.let { ImageIcon(it) }
+  val b = JLabel(icon ?: UIManager.getIcon("html.missingImage"))
   b.isOpaque = false
   return b
 }
@@ -101,21 +101,20 @@ private class DragHandler : MouseAdapter() {
   }
 
   override fun mouseReleased(e: MouseEvent) {
-    val parent = e.component as? Container
-    if (parent == null || !window.isVisible || draggingComponent == null) {
-      return
-    }
-    window.isVisible = false
-    val pt = e.point
-    val max = parent.componentCount
-    val cmp = draggingComponent
-    draggingComponent = null
+    val p = e.component
+    if (p is Container && window.isVisible && draggingComponent != null) {
+      window.isVisible = false
+      val pt = e.point
+      val max = p.componentCount
+      val cmp = draggingComponent
+      draggingComponent = null
 
-    val idx = (0..<max)
-      .map { getTargetIndex(parent, it, pt) }
-      .firstOrNull { it >= 0 }
-      ?: if (parent.parent.bounds.contains(pt)) max else index
-    swapComponent(parent, gap, cmp, idx)
+      val idx = (0..<max)
+        .map { getTargetIndex(p, it, pt) }
+        .firstOrNull { it >= 0 }
+        ?: if (p.parent.bounds.contains(pt)) max else index
+      swapComponent(p, gap, cmp, idx)
+    }
   }
 
   private fun getTargetIndex(
