@@ -97,26 +97,25 @@ private object DocumentUtils {
     val pattern = field.text.trim { it <= ' ' }
     val highlighter = editor.highlighter
     highlighter.removeAllHighlights()
-    if (pattern.isEmpty()) {
-      return
-    }
-    val doc = editor.document
-    runCatching {
-      val text = doc.getText(0, doc.length)
-      val matcher = Pattern.compile(pattern).matcher(text)
-      val highlightPainter: HighlightPainter = RoundedHighlightPainter()
-      var pos = 0
-      while (matcher.find(pos) && matcher.group().isNotEmpty()) {
-        val start = matcher.start()
-        val end = matcher.end()
-        highlighter.addHighlight(start, end, highlightPainter)
-        pos = end
+    if (pattern.isNotEmpty()) {
+      val doc = editor.document
+      runCatching {
+        val text = doc.getText(0, doc.length)
+        val matcher = Pattern.compile(pattern).matcher(text)
+        val highlightPainter: HighlightPainter = RoundedHighlightPainter()
+        var pos = 0
+        while (matcher.find(pos) && matcher.group().isNotEmpty()) {
+          val start = matcher.start()
+          val end = matcher.end()
+          highlighter.addHighlight(start, end, highlightPainter)
+          pos = end
+        }
+      }.onFailure {
+        field.background = WARNING_COLOR
       }
-    }.onFailure {
-      field.background = WARNING_COLOR
+      field.repaint()
+      editor.repaint()
     }
-    field.repaint()
-    editor.repaint()
   }
 }
 
@@ -176,7 +175,7 @@ private class RoundedHighlightPainter : DefaultHighlightPainter(Color(0x0, true)
         RenderingHints.VALUE_ANTIALIAS_ON,
       )
       g2.paint = Color.ORANGE
-      val r = makeRoundRectangle(s.getBounds())
+      val r = makeRoundRectangle(s.bounds)
       g2.fill(r)
       g2.paint = Color.RED
       g2.draw(r)
@@ -253,7 +252,7 @@ private class RoundedSelectionHighlightPainter : DefaultHighlightPainter(null) {
       g2.color = color
     }
     val r = if (offs0 == view.startOffset && offs1 == view.endOffset) {
-      if (bounds is Rectangle) bounds else bounds.bounds
+      bounds as? Rectangle ?: bounds.bounds
     } else {
       runCatching {
         val shape = view.modelToView(
@@ -263,7 +262,7 @@ private class RoundedSelectionHighlightPainter : DefaultHighlightPainter(null) {
           Position.Bias.Backward,
           bounds,
         )
-        if (shape is Rectangle) shape else shape.bounds
+        shape as? Rectangle ?: shape.bounds
       }.getOrNull()
     }
     if (r != null) {
