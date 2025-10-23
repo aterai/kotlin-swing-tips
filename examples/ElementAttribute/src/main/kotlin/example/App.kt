@@ -95,7 +95,8 @@ private class CustomTooltipEditorPane : JEditorPane() {
               tooltip = editor.toolTipText
               val tagA = e.sourceElement?.attributes?.getAttribute(HTML.Tag.A)
               if (tagA is AttributeSet) {
-                editor.toolTipText = tagA.getAttribute(HTML.Attribute.TITLE)?.toString()
+                val title = tagA.getAttribute(HTML.Attribute.TITLE)
+                editor.toolTipText = title?.toString()
               }
             }
 
