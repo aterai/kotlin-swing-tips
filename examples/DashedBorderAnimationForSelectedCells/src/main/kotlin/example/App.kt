@@ -152,34 +152,35 @@ private class TranslucentCellSelectionLayerUI : LayerUI<JScrollPane>() {
 
   override fun paint(g: Graphics, c: JComponent?) {
     super.paint(g, c)
-    val table = getTable(c) ?: return
-    val cc = table.selectedColumnCount
-    val rc = table.selectedRowCount
-    if (cc != 0 && rc != 0 && !table.isEditing) {
-      val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(
-        RenderingHints.KEY_ANTIALIASING,
-        RenderingHints.VALUE_ANTIALIAS_ON,
-      )
-      val area = Area()
-      getSelectedArea(table).forEach { r ->
-        val rect = SwingUtilities.convertRectangle(table, r, c)
-        area.add(Area(rect))
+    getTable(c)?.also { tbl ->
+      val cc = tbl.selectedColumnCount
+      val rc = tbl.selectedRowCount
+      if (cc != 0 && rc != 0 && !tbl.isEditing) {
+        val g2 = g.create() as? Graphics2D ?: return
+        g2.setRenderingHint(
+          RenderingHints.KEY_ANTIALIASING,
+          RenderingHints.VALUE_ANTIALIAS_ON,
+        )
+        val area = Area()
+        getSelectedArea(tbl).forEach { r ->
+          val rect = SwingUtilities.convertRectangle(tbl, r, c)
+          area.add(Area(rect))
+        }
+        val ics = tbl.intercellSpacing
+        val v = tbl.selectionBackground
+        val sbc = Color(v.red, v.green, v.blue, 0x32)
+        for (a in singularization(area)) {
+          val r = a.bounds
+          r.width -= ics.width - 1
+          r.height -= ics.height - 1
+          g2.paint = sbc
+          g2.fill(r)
+          g2.paint = v
+          g2.stroke = borderStroke
+          g2.draw(r)
+        }
+        g2.dispose()
       }
-      val ics = table.intercellSpacing
-      val v = table.selectionBackground
-      val sbc = Color(v.red, v.green, v.blue, 0x32)
-      for (a in singularization(area)) {
-        val r = a.bounds
-        r.width -= ics.width - 1
-        r.height -= ics.height - 1
-        g2.paint = sbc
-        g2.fill(r)
-        g2.paint = v
-        g2.stroke = borderStroke
-        g2.draw(r)
-      }
-      g2.dispose()
     }
   }
 
