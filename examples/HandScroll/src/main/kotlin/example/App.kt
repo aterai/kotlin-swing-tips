@@ -7,6 +7,8 @@ import java.awt.event.MouseEvent
 import javax.imageio.ImageIO
 import javax.swing.*
 
+var WEIGHT_MIXING = false
+
 fun makeUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
   // CRW_3857_JFR.jpg: https://sozai-free.com/
@@ -19,21 +21,19 @@ fun makeUI(): Component {
     private var isAdjusting = false
 
     override fun revalidate() {
-      // if (!weightMixing && isAdjusting) {
-      if (isAdjusting) {
-        return
+      if (WEIGHT_MIXING || !isAdjusting) {
+        super.revalidate()
       }
-      super.revalidate()
     }
 
     override fun setViewPosition(p: Point) {
-      // if (weightMixing) {
-      //   super.setViewPosition(p)
-      // } else {
-      isAdjusting = true
-      super.setViewPosition(p)
-      isAdjusting = false
-      // }
+      if (WEIGHT_MIXING) {
+        super.setViewPosition(p)
+      } else {
+        isAdjusting = true
+        super.setViewPosition(p)
+        isAdjusting = false
+      }
     }
   }
   viewport.add(label)
