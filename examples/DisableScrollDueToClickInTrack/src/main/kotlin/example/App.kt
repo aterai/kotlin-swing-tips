@@ -18,13 +18,17 @@ fun makeUI(): Component {
       super.updateUI()
       val tmp = if (ui is WindowsSliderUI) {
         object : WindowsSliderUI(this) {
-          override fun createTrackListener(slider: JSlider) = object : TrackListener() {
+          override fun createTrackListener(
+            slider: JSlider,
+          ) = object : TrackListener() {
             override fun shouldScroll(direction: Int) = false
           }
         }
       } else {
         object : BasicSliderUI(this) {
-          override fun createTrackListener(slider: JSlider) = object : TrackListener() {
+          override fun createTrackListener(
+            slider: JSlider,
+          ) = object : TrackListener() {
             override fun shouldScroll(direction: Int) = false
           }
         }
