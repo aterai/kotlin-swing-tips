@@ -79,8 +79,8 @@ private fun createChildren(
 }
 
 private fun getFileFromTreePath(path: TreePath?): File? {
-  val node = path?.lastPathComponent as? DefaultMutableTreeNode ?: return null
-  return (node.userObject as? File)?.takeIf { it.isFile }
+  val node = path?.lastPathComponent as? DefaultMutableTreeNode
+  return (node?.userObject as? File)?.takeIf { it.isFile }
 }
 
 private class FileExpandVetoListener : TreeWillExpandListener {
