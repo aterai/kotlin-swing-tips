@@ -32,7 +32,6 @@ private var currentLocalDate = realLocalDate
 
 fun makeUI(): Component {
   installActions()
-
   val l = Locale.getDefault()
   val weekModel = DefaultListModel<DayOfWeek>()
   val firstDayOfWeek = WeekFields.of(l).firstDayOfWeek
@@ -47,13 +46,14 @@ fun makeUI(): Component {
       visibleRowCount = 0
       fixedCellWidth = monthList.fixedCellWidth
       fixedCellHeight = monthList.fixedCellHeight
+      val bgc = UIManager.getColor("TableHeader.background").darker()
       val renderer = cellRenderer
       setCellRenderer { list, value, index, _, _ ->
         renderer.getListCellRendererComponent(list, value, index, false, false).also {
           (it as? JLabel)?.also { label ->
             label.horizontalAlignment = SwingConstants.CENTER
             label.text = value.getDisplayName(TextStyle.SHORT_STANDALONE, l)
-            label.background = Color(0xDC_DC_DC)
+            label.background = bgc
           }
         }
       }
@@ -72,10 +72,18 @@ fun makeUI(): Component {
   yearMonthPanel.add(prev, BorderLayout.WEST)
   yearMonthPanel.add(next, BorderLayout.EAST)
 
-  val scroll = JScrollPane(monthList)
-  scroll.setColumnHeaderView(header)
-  scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
-  scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+  val scroll = object : JScrollPane(monthList) {
+    override fun updateUI() {
+      super.updateUI()
+      setColumnHeaderView(header)
+      verticalScrollBarPolicy = VERTICAL_SCROLLBAR_NEVER
+      horizontalScrollBarPolicy = HORIZONTAL_SCROLLBAR_NEVER
+      EventQueue.invokeLater {
+        val p = SwingUtilities.getUnwrappedParent(this)
+        p?.revalidate()
+      }
+    }
+  }
 
   val label = JLabel(" ", SwingConstants.CENTER)
 
