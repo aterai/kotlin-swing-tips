@@ -64,11 +64,19 @@ fun makeUI(): Component {
   yearMonthPanel.add(prev, BorderLayout.WEST)
   yearMonthPanel.add(next, BorderLayout.EAST)
 
-  val scroll = JScrollPane(monthList)
-  scroll.setColumnHeaderView(header)
-  scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
-  scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
-  scroll.setRowHeaderView(weekNumberList)
+  val scroll = object : JScrollPane(monthList) {
+    override fun updateUI() {
+      super.updateUI()
+      setColumnHeaderView(header)
+      setRowHeaderView(weekNumberList)
+      verticalScrollBarPolicy = VERTICAL_SCROLLBAR_NEVER
+      horizontalScrollBarPolicy = HORIZONTAL_SCROLLBAR_NEVER
+      EventQueue.invokeLater {
+        val p = SwingUtilities.getUnwrappedParent(this)
+        p?.revalidate()
+      }
+    }
+  }
 
   val box = Box.createVerticalBox()
   box.add(yearMonthPanel)
@@ -253,10 +261,11 @@ private class WeekHeaderList :
   override fun updateUI() {
     setCellRenderer(null)
     super.updateUI()
+    val bgc = UIManager.getColor("TableHeader.background").darker()
     val r = cellRenderer
     setCellRenderer { list, value, index, _, _ ->
       r.getListCellRendererComponent(list, value, index, false, false).also {
-        it.setBackground(BACKGROUND)
+        it.setBackground(bgc)
         if (it is JLabel) {
           it.setHorizontalAlignment(SwingConstants.CENTER)
           val l = Locale.getDefault()
@@ -272,8 +281,7 @@ private class WeekHeaderList :
   }
 
   companion object {
-    val CELL_SIZE = Dimension(36, 26)
-    val BACKGROUND = Color(0xDC_DC_DC)
+    val CELL_SIZE = Dimension(38, 26)
 
     private fun makeDayOfWeekListModel(): ListModel<DayOfWeek> {
       val weekModel = DefaultListModel<DayOfWeek>()
@@ -294,10 +302,11 @@ private class WeekNumberList : JList<Int>() {
     setFixedCellWidth(WeekHeaderList.CELL_SIZE.width)
     setFixedCellHeight(WeekHeaderList.CELL_SIZE.height)
     setFocusable(false)
+    val bgc = UIManager.getColor("TableHeader.background").darker()
     val r = cellRenderer
     setCellRenderer { list, value, index, _, _ ->
       r.getListCellRendererComponent(list, value, index, false, false).also {
-        it.setBackground(WeekHeaderList.BACKGROUND)
+        it.setBackground(bgc)
         if (it is JLabel) {
           it.setHorizontalAlignment(SwingConstants.CENTER)
           it.setText(value?.toString() ?: "")
