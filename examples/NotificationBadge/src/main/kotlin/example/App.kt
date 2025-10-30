@@ -147,27 +147,29 @@ private open class BadgeIcon(
     x: Int,
     y: Int,
   ) {
-    if (value <= 0) {
-      return
+    val g2 = g.create()
+    if (value > 0 && g2 is Graphics2D) {
+      g2.translate(x, y)
+      val badge = badgeShape
+      g2.paint = badgeBgc
+      g2.fill(badge)
+      g2.paint = badgeBgc.darker()
+      g2.draw(badge)
+      g2.paint = badgeFgc
+      val frc = g2.fontRenderContext
+      val txt = if (value > 999) "1K" else value.toString()
+      val at = if (txt.length < 3) {
+        null
+      } else {
+        AffineTransform.getScaleInstance(.66, 1.0)
+      }
+      val shape = TextLayout(txt, g2.font, frc).getOutline(at)
+      val b = shape.bounds
+      val tx = iconWidth / 2.0 - b.centerX
+      val ty = iconHeight / 2.0 - b.centerY
+      val toCenterAt = AffineTransform.getTranslateInstance(tx, ty)
+      g2.fill(toCenterAt.createTransformedShape(shape))
     }
-    val g2 = g.create() as? Graphics2D ?: return
-    g2.translate(x, y)
-    val badge = badgeShape
-    g2.paint = badgeBgc
-    g2.fill(badge)
-    g2.paint = badgeBgc.darker()
-    g2.draw(badge)
-    g2.paint = badgeFgc
-
-    val frc = g2.fontRenderContext
-    val txt = if (value > 999) "1K" else value.toString()
-    val at = if (txt.length < 3) null else AffineTransform.getScaleInstance(.66, 1.0)
-    val shape = TextLayout(txt, g2.font, frc).getOutline(at)
-    val b = shape.bounds
-    val tx = iconWidth / 2.0 - b.centerX
-    val ty = iconHeight / 2.0 - b.centerY
-    val toCenterAt = AffineTransform.getTranslateInstance(tx, ty)
-    g2.fill(toCenterAt.createTransformedShape(shape))
     g2.dispose()
   }
 
