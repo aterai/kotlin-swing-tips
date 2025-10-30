@@ -44,8 +44,9 @@ private val monthTable = object : JTable() {
           if (it is JLabel && value is LocalDate) {
             it.horizontalAlignment = SwingConstants.CENTER
             it.text = value.dayOfMonth.toString()
-            val flg = YearMonth.from(value) == YearMonth.from(currentLocalDate)
-            it.foreground = if (flg) table.foreground else Color.GRAY
+            val m1 = YearMonth.from(value).monthValue
+            val m2 = YearMonth.from(currentLocalDate).monthValue
+            it.foreground = if (m1 == m2) table.foreground else Color.GRAY
             it.background = if (value.isEqual(realLocalDate)) {
               Color(0xDC_FF_DC)
             } else {
@@ -99,8 +100,9 @@ fun makeUI(): Component {
 private fun updateMonthView(localDate: LocalDate) {
   currentLocalDate = localDate
   val locale = Locale.getDefault()
-  val formatter = getLocalizedYearMonthFormatter(locale)
-  monthLabel.text = localDate.format(formatter.withLocale(locale))
+  val fmt = getLocalizedYearMonthFormatter(locale)
+  val txt = localDate.format(fmt.withLocale(locale))
+  monthLabel.text = getLocalizedYearMonthText(txt)
   monthTable.model = CalendarViewTableModel(localDate)
 }
 
@@ -164,6 +166,16 @@ fun getLocalizedYearMonthFormatter(locale: Locale): DateTimeFormatter {
 fun find(str: String, ptn: Pattern): String {
   val matcher = ptn.matcher(str)
   return if (matcher.find()) matcher.group(1) else ""
+}
+
+fun getLocalizedYearMonthText(str: String): String {
+  val list = str
+    .split(" ".toRegex())
+    .dropLastWhile { it.isEmpty() }
+    .toTypedArray()
+  val isNumeric = list.all { it.toIntOrNull() != null }
+  val separator = if (isNumeric) " / " else " "
+  return list.joinToString(separator)
 }
 
 fun isYearFirst(locale: Locale): Boolean {

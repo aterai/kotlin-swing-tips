@@ -160,7 +160,7 @@ fun updateMonthView(localDate: LocalDate) {
   val locale = Locale.getDefault()
   val fmt = CalendarUtils.getLocalizedYearMonthFormatter(locale)
   val txt = localDate.format(fmt.withLocale(locale))
-  yearMonthLabel.setText(CalendarUtils.getLocalizedYearMonthSeparator(txt))
+  yearMonthLabel.setText(CalendarUtils.getLocalizedYearMonthText(txt))
   currentLocalDate = localDate
   monthList.setCurrentLocalDate(localDate)
   weekNumberList.model = WeekNumberListModel(localDate)
@@ -346,7 +346,7 @@ private object CalendarUtils {
     return DateTimeFormatter.ofPattern(pattern)
   }
 
-  fun getLocalizedYearMonthSeparator(str: String): String {
+  fun getLocalizedYearMonthText(str: String): String {
     val list = str
       .split(" ".toRegex())
       .dropLastWhile { it.isEmpty() }
