@@ -17,7 +17,8 @@ fun makeUI(): Component {
 
   val path = "example/test.jpg"
   val cl = Thread.currentThread().contextClassLoader
-  val img = cl.getResource(path)?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+  val img =
+    cl.getResource(path)?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
   val imageIcon1 = ImageIcon(img)
 
   val beforeCanvas = object : JComponent() {
@@ -92,7 +93,9 @@ private class MosaicImageFilter(
 
   override fun getPoint2D(srcPt: Point2D, dstPt: Point2D) = null
 
-  override fun getRenderingHints() = RenderingHints(emptyMap<RenderingHints.Key, Any>())
+  override fun getRenderingHints() = RenderingHints(
+    emptyMap<RenderingHints.Key, Any>(),
+  )
 
   companion object {
     fun getBlockRgb(w: Int, h: Int, pixels: IntArray): Int {
