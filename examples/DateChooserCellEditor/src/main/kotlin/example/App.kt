@@ -103,13 +103,12 @@ private class DateEditor :
     column: Int,
   ): Component {
     if (value is Date) {
-      val date = value
-      button.setText(formatter.format(date))
+      button.setText(formatter.format(value))
       button.setOpaque(true)
       val fgc = table.getSelectionForeground()
       button.setForeground(Color(fgc.rgb))
       button.setBackground(table.getSelectionBackground())
-      val dateTime = date.toInstant().atZone(ZoneId.systemDefault())
+      val dateTime = value.toInstant().atZone(ZoneId.systemDefault())
       dateChooser.localDate = dateTime.toLocalDate()
       this.table = table
     }
@@ -222,8 +221,8 @@ private class DateEditor :
     private val realLocalDate: LocalDate = calender.realLocalDate
 
     init {
-      holidayColorMap.put(DayOfWeek.SUNDAY, Color(0xFFDCDC))
-      holidayColorMap.put(DayOfWeek.SATURDAY, Color(0xDCDCFF))
+      holidayColorMap[DayOfWeek.SUNDAY] = Color(0xFF_DC_DC)
+      holidayColorMap[DayOfWeek.SATURDAY] = Color(0xDC_DC_FF)
     }
 
     override fun getTableCellRendererComponent(
@@ -245,15 +244,14 @@ private class DateEditor :
       if (c is JLabel && value is LocalDate) {
         c.setHorizontalAlignment(CENTER)
         c.setText(value.dayOfMonth.toString())
-        if (YearMonth.from(value) == YearMonth.from(calender.localDate)) {
-          c.setForeground(table.getForeground())
-        } else {
-          c.setForeground(Color.GRAY)
-        }
+        val m1 = YearMonth.from(value).monthValue
+        val m2 = YearMonth.from(calender.localDate).monthValue
+        val isSameMonth = m1 == m2
+        c.foreground = if (isSameMonth) table.foreground else Color.GRAY
         if (value.isEqual(realLocalDate)) {
-          c.setBackground(Color(0xDC_FF_DC))
+          c.background = Color(0xDC_FF_DC)
         } else {
-          c.setBackground(getDayOfWeekColor(table, value.getDayOfWeek()))
+          c.background = getDayOfWeekColor(table, value.getDayOfWeek())
         }
         highlighter?.getCellHighlightColor(row, column)?.also { c.setBackground(it) }
       }
