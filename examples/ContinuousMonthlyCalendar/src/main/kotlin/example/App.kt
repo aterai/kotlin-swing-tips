@@ -44,8 +44,10 @@ private val monthTable = object : JTable() {
           if (it is JLabel && value is LocalDate) {
             it.horizontalAlignment = SwingConstants.CENTER
             it.text = value.dayOfMonth.toString()
-            val flg = YearMonth.from(value) == YearMonth.from(currentLocalDate)
-            it.foreground = if (flg) table.foreground else Color.GRAY
+            val m1 = YearMonth.from(value).monthValue
+            val m2 = YearMonth.from(currentLocalDate).monthValue
+            val isSameMonth = m1 == m2
+            it.foreground = if (isSameMonth) table.foreground else Color.GRAY
             it.background = if (value.isEqual(realLocalDate)) {
               Color(0xDC_FF_DC)
             } else {

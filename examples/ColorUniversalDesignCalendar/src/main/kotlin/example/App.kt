@@ -91,19 +91,21 @@ private class CalendarTableRenderer : TableCellRenderer {
     if (value is LocalDate) {
       label.text = "<html><b>" + value.dayOfMonth.toString()
       label.border = BorderFactory.createEmptyBorder(2, 0, 3, 1)
-      val isThisMonth = YearMonth.from(value) == YearMonth.from(currentLocalDate)
+      val m1 = YearMonth.from(value).monthValue
+      val m2 = YearMonth.from(currentLocalDate).monthValue
+      val isSameMonth = m1 == m2
       when {
-        isThisMonth && value.dayOfWeek == DayOfWeek.SUNDAY -> {
+        isSameMonth && value.dayOfWeek == DayOfWeek.SUNDAY -> {
           label.foreground = table.background
           label.background = table.foreground
         }
 
-        isThisMonth && value.dayOfWeek == DayOfWeek.SATURDAY -> {
+        isSameMonth && value.dayOfWeek == DayOfWeek.SATURDAY -> {
           label.foreground = table.background
           label.background = Color.BLUE
         }
 
-        isThisMonth -> {
+        isSameMonth -> {
           label.background = table.background
           label.foreground = table.foreground
         }
