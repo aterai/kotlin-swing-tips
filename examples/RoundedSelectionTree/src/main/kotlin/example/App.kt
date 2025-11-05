@@ -57,12 +57,13 @@ private class RoundedSelectionTree : JTree() {
 
   override fun updateUI() {
     super.updateUI()
-    UIManager.put("Tree.repaintWholeRow", java.lang.Boolean.TRUE)
+    UIManager.put("Tree.repaintWholeRow", true)
     setCellRenderer(TransparentTreeCellRenderer())
     isOpaque = false
     setRowHeight(20)
     val d = UIDefaults()
-    d["Tree:TreeCell[Enabled+Selected].backgroundPainter"] = TransparentTreeCellPainter()
+    val key = "Tree:TreeCell[Enabled+Selected].backgroundPainter"
+    d[key] = TransparentTreeCellPainter()
     putClientProperty("Nimbus.Overrides", d)
     putClientProperty("Nimbus.Overrides.InheritDefaults", false)
     addTreeSelectionListener { repaint() }
@@ -211,3 +212,4 @@ fun main() {
     }
   }
 }
+
