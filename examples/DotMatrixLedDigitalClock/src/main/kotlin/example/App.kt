@@ -89,7 +89,7 @@ private fun getHoursMinutesDotMatrix(
   val hours = time.hour
   val h1 = hours / ten
   var start = 0
-  var end = start + COLUMN
+  var end = COLUMN
   if (contains(index, start, end, h1)) {
     return hours >= ten
   }
@@ -129,7 +129,7 @@ private fun getSecondsDotMatrix(
   val seconds = time.second
   val s1 = seconds / ten
   var start = 0
-  var end = start + COLUMN
+  var end = COLUMN
   if (contains(index, start, end, s1)) {
     return true
   }
@@ -157,7 +157,7 @@ private fun makeLedMatrixList(
     val off = LedDotIcon(false, d)
     cellRenderer = ListCellRenderer { list, value, index, _, _ ->
       renderer.getListCellRendererComponent(list, null, index, false, false).also {
-        (it as? JLabel)?.icon = if (java.lang.Boolean.TRUE == value) on else off
+        (it as? JLabel)?.icon = if (value) on else off
       }
     }
     border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
