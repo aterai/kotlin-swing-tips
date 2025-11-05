@@ -7,7 +7,7 @@ import java.awt.event.MouseEvent
 import javax.imageio.ImageIO
 import javax.swing.*
 
-var WEIGHT_MIXING = false
+var weightMixing = false
 
 fun makeUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
@@ -21,13 +21,13 @@ fun makeUI(): Component {
     private var isAdjusting = false
 
     override fun revalidate() {
-      if (WEIGHT_MIXING || !isAdjusting) {
+      if (weightMixing || !isAdjusting) {
         super.revalidate()
       }
     }
 
     override fun setViewPosition(p: Point) {
-      if (WEIGHT_MIXING) {
+      if (weightMixing) {
         super.setViewPosition(p)
       } else {
         isAdjusting = true
@@ -140,3 +140,4 @@ fun main() {
     }
   }
 }
+
