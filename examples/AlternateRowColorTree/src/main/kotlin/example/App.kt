@@ -46,7 +46,7 @@ private class AlternateRowColorTree : JTree() {
 
   override fun updateUI() {
     super.updateUI()
-    UIManager.put("Tree.repaintWholeRow", java.lang.Boolean.TRUE)
+    UIManager.put("Tree.repaintWholeRow", true)
     setCellRenderer(TransparentTreeCellRenderer())
     isOpaque = false
   }
