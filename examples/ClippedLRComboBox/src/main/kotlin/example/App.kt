@@ -12,9 +12,11 @@ fun makeUI(): Component {
       setRenderer(MultiColumnCellRenderer())
     }
   }
+  val box1 = makeTitledBox("MultiColumnComboBox", combo)
+  val box2 = makeTitledBox("DefaultComboBox", JComboBox(makeModel()))
   return JPanel(BorderLayout()).also {
-    it.add(makeTitledBox("MultiColumnComboBox", combo), BorderLayout.NORTH)
-    it.add(makeTitledBox("DefaultComboBox", JComboBox(makeModel())), BorderLayout.SOUTH)
+    it.add(box1, BorderLayout.NORTH)
+    it.add(box2, BorderLayout.SOUTH)
     it.preferredSize = Dimension(320, 240)
   }
 }
