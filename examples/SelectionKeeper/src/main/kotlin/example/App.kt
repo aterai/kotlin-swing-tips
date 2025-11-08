@@ -273,18 +273,19 @@ private class TableSorter() : AbstractTableModel() {
         }
 
         else -> {
-          val column = e.column
+          val col = e.column
           val fr = e.firstRow
           val lr = e.lastRow
-          val b = getSortingStatus(column) == NOT_SORTED
-          if (fr == lr && column != TableModelEvent.ALL_COLUMNS && b) {
-            val viewIndex = getModelToView()[fr]
+          val b = getSortingStatus(col) == NOT_SORTED
+          if (fr == lr && col != TableModelEvent.ALL_COLUMNS && b) {
+            val vi = getModelToView()[fr]
             val src = this@TableSorter
-            fireTableChanged(TableModelEvent(src, viewIndex, viewIndex, column, e.type))
-            return
+            val ev = TableModelEvent(src, vi, vi, col, e.type)
+            fireTableChanged(ev)
+          } else {
+            clearSortingState()
+            fireTableDataChanged()
           }
-          clearSortingState()
-          fireTableDataChanged()
         }
       }
     }
