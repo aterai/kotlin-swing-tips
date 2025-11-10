@@ -227,7 +227,8 @@ private class EditableList(
     editor.document.addDocumentListener(dl)
 
     val im = editor.getInputMap(WHEN_FOCUSED)
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), RENAME)
+    val enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)
+    im.put(enterKey, RENAME)
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), RENAME)
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), CANCEL)
     val am = editor.actionMap
@@ -248,7 +249,7 @@ private class EditableList(
         }
       }
     })
-    getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), EDITING)
+    getInputMap(WHEN_FOCUSED).put(enterKey, EDITING)
     actionMap.put(EDITING, startEditing)
   }
 
