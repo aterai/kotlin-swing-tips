@@ -244,14 +244,15 @@ private class EditableList(
         update()
       }
     })
+    val enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)
     val im = editor.getInputMap(WHEN_FOCUSED)
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), RENAME)
+    im.put(enterKey, RENAME)
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), RENAME)
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), CANCEL)
     val am = editor.actionMap
     am.put(RENAME, renameTitle)
     am.put(CANCEL, cancelEditing)
-    getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), EDITING)
+    getInputMap(WHEN_FOCUSED).put(enterKey, EDITING)
     actionMap.put(EDITING, startEditing)
     EventQueue.invokeLater {
       val windowAncestor = SwingUtilities.getWindowAncestor(this)
