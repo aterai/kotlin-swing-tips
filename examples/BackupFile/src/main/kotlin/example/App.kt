@@ -85,9 +85,11 @@ private fun addActionPerformed() {
           newFile == null -> append(
             info("Failed to create backup file.", MessageType.ERROR),
           )
+
           newFile.createNewFile() -> append(
             info("Generated ${newFile.name}.", MessageType.REGULAR),
           )
+
           else -> append(
             info("Failed to generate ${newFile.name}.", MessageType.ERROR),
           )

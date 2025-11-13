@@ -36,21 +36,25 @@ fun makeRowFilter(selected: String): RowFilter<TableModel, Int>? = when (selecte
     realDate,
     0,
   )
+
   "within 1 week before" -> LocalDateFilter(
     realDate.minusWeeks(1).plusDays(1),
     realDate,
     0,
   )
+
   "1 week before and after" -> LocalDateFilter(
     realDate.minusDays(3),
     realDate.plusDays(3),
     0,
   )
+
   "within 1 week after" -> LocalDateFilter(
     realDate,
     realDate.plusWeeks(1).minusDays(1),
     0,
   )
+
   else -> null
 }
 

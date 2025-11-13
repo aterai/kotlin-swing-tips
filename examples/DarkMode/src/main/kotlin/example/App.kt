@@ -93,7 +93,9 @@ fun isDarkMode(): Boolean {
   val os = System.getProperty("os.name").lowercase()
   return when {
     os.contains("windows") -> isWindowsDarkMode()
+
     os.contains("linux") -> isLinuxDarkMode()
+
     // os.contains("mac") -> false
     else -> false
   }

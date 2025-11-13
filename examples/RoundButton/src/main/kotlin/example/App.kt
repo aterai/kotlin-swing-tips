@@ -141,11 +141,8 @@ open class RoundedCornerButton : JButton {
     )
     when {
       model.isArmed -> paintArmed(g2, ac)
-
       isRolloverEnabled && model.isRollover -> paintFocusAndRollover(g2, rc)
-
       hasFocus() -> paintFocusAndRollover(g2, fc)
-
       else -> paintArmed(g2, background)
     }
     g2.dispose()
@@ -259,11 +256,8 @@ class ShapeButton(
     )
     when {
       getModel().isArmed -> paintArmed(g2, ac)
-
       isRolloverEnabled && getModel().isRollover -> paintFocusAndRollover(g2, rc)
-
       hasFocus() -> paintFocusAndRollover(g2, fc)
-
       else -> paintArmed(g2, background)
     }
     g2.dispose()

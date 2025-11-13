@@ -70,14 +70,17 @@ private fun getTabAreaBounds(tabbedPane: JTabbedPane): Rectangle {
       r.height -= cr.height + i1.top + i1.bottom + i2.top + i2.bottom
       r.y += i1.top
     }
+
     SwingConstants.BOTTOM -> {
       r.height -= cr.height + i1.top + i1.bottom + i2.top + i2.bottom
       r.y += cr.y + cr.height + i1.bottom + i2.bottom
     }
+
     SwingConstants.LEFT -> {
       r.width -= cr.width + i1.top + i1.bottom + i2.left + i2.right
       r.x += i1.top
     }
+
     SwingConstants.RIGHT -> {
       r.width -= cr.width + i1.top + i1.bottom + i2.left + i2.right
       r.x += cr.x + cr.width + i1.bottom + i2.right
