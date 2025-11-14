@@ -201,7 +201,7 @@ private class BreadcrumbLayerUI<V : Component> : LayerUI<V>() {
     l: JLayer<out V>,
   ) {
     val s = when (e.id) {
-      MouseEvent.MOUSE_ENTERED, MouseEvent.MOUSE_MOVED ->
+      MouseEvent.MOUSE_ENTERED, MouseEvent.MOUSE_MOVED -> {
         (e.component as? AbstractButton)?.let { button ->
           (button.icon as? ArrowToggleButtonBarCellIcon)?.let { icon ->
             val r = button.bounds
@@ -212,8 +212,11 @@ private class BreadcrumbLayerUI<V : Component> : LayerUI<V>() {
             at.createTransformedShape(icon.shape)
           }
         }
+      }
 
-      else -> null
+      else -> {
+        null
+      }
     }
     if (s != shape) {
       shape = s

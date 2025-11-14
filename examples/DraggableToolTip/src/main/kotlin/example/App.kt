@@ -47,13 +47,14 @@ fun makeUI(): Component {
 private fun linkEvent(e: HyperlinkEvent, hint: JEditorPane) {
   val editor = e.getSource() as? JEditorPane ?: return
   when (e.eventType) {
-    HyperlinkEvent.EventType.ACTIVATED ->
+    HyperlinkEvent.EventType.ACTIVATED -> {
       JOptionPane.showMessageDialog(
         editor,
         "You click the link with the URL " + e.url,
       )
+    }
 
-    HyperlinkEvent.EventType.ENTERED ->
+    HyperlinkEvent.EventType.ENTERED -> {
       e.sourceElement
         ?.let { it.attributes.getAttribute(HTML.Tag.A) as? AttributeSet }
         ?.also {
@@ -63,8 +64,11 @@ private fun linkEvent(e: HyperlinkEvent, hint: JEditorPane) {
           hint.text = "<html>$title: <a href='$url'>$url</a><br/>...<br/>..."
           SwingUtilities.getWindowAncestor(hint)?.pack()
         }
+    }
 
-    HyperlinkEvent.EventType.EXITED -> editor.toolTipText = null
+    HyperlinkEvent.EventType.EXITED -> {
+      editor.toolTipText = null
+    }
   }
 }
 

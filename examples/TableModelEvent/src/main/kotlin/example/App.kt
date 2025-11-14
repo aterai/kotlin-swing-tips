@@ -203,14 +203,23 @@ private class HeaderCheckBoxHandler(
     val hv = col.headerValue
     val m = table.model
     val repaint = when (e.type) {
-      TableModelEvent.DELETE -> fireDeleteEvent(m, col, hv)
-      TableModelEvent.INSERT ->
+      TableModelEvent.DELETE -> {
+        fireDeleteEvent(m, col, hv)
+      }
+
+      TableModelEvent.INSERT -> {
         hv !== Status.INDETERMINATE &&
           fireInsertEvent(m, col, hv, e)
-      TableModelEvent.UPDATE ->
+      }
+
+      TableModelEvent.UPDATE -> {
         e.column == targetColumnIndex &&
           fireUpdateEvent(m, col, hv)
-      else -> false
+      }
+
+      else -> {
+        false
+      }
     }
     if (repaint) {
       val h = table.tableHeader

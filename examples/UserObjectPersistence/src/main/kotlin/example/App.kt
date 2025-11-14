@@ -205,14 +205,17 @@ private class CheckBoxStatusUpdateListener : TreeModelListener {
       .toList()
     (pn.userObject as? CheckBoxNode)?.label?.also { l ->
       when {
-        list.all { it == Status.DESELECTED } ->
+        list.all { it == Status.DESELECTED } -> {
           pn.userObject = CheckBoxNode(l, Status.DESELECTED)
+        }
 
-        list.all { it == Status.SELECTED } ->
+        list.all { it == Status.SELECTED } -> {
           pn.userObject = CheckBoxNode(l, Status.SELECTED)
+        }
 
-        else ->
+        else -> {
           pn.userObject = CheckBoxNode(l, Status.INDETERMINATE)
+        }
       }
     }
   }

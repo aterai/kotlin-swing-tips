@@ -111,16 +111,19 @@ private object SvgUtils {
     val c = DoubleArray(6)
     while (!pi.isDone) {
       when (pi.currentSegment(c)) {
-        PathIterator.SEG_MOVETO ->
+        PathIterator.SEG_MOVETO -> {
           sb.append("M%.2f,%.2f ".format(c[0], c[1]))
+        }
 
-        PathIterator.SEG_LINETO ->
+        PathIterator.SEG_LINETO -> {
           sb.append("L%.2f,%.2f ".format(c[0], c[1]))
+        }
 
-        PathIterator.SEG_QUADTO ->
+        PathIterator.SEG_QUADTO -> {
           sb.append("Q%.2f,%.2f,%.2f,%.2f ".format(c[0], c[1], c[2], c[3]))
+        }
 
-        PathIterator.SEG_CUBICTO ->
+        PathIterator.SEG_CUBICTO -> {
           sb.append(
             "C%.2f,%.2f,%.2f,%.2f,%.2f,%.2f ".format(
               c[0],
@@ -131,11 +134,15 @@ private object SvgUtils {
               c[5],
             ),
           )
+        }
 
-        PathIterator.SEG_CLOSE ->
+        PathIterator.SEG_CLOSE -> {
           sb.append('Z')
+        }
 
-        else -> throw InternalError("unrecognized path type")
+        else -> {
+          throw InternalError("unrecognized path type")
+        }
       }
       pi.next()
     }

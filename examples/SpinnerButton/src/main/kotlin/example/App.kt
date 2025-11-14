@@ -49,12 +49,17 @@ fun makeUI(): Component {
 private fun searchSpinnerButtons(comp: Container) {
   for (c in comp.components) {
     when {
-      "Spinner.nextButton" == c.name ->
+      "Spinner.nextButton" == c.name -> {
         (c as? JButton)?.toolTipText = "getName: next next"
-      "Spinner.previousButton" == c.name ->
+      }
+
+      "Spinner.previousButton" == c.name -> {
         (c as? JButton)?.toolTipText = "getName: prev prev"
-      c is Container ->
+      }
+
+      c is Container -> {
         searchSpinnerButtons(c)
+      }
     }
   }
 }

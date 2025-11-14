@@ -83,17 +83,22 @@ private fun chooseActionPerformed() {
   fileChooser.selectedFile = File(dirCombo.editor.item.toString())
   val c = dirCombo.rootPane
   textArea.text = when (fileChooser.showOpenDialog(c)) {
-    JFileChooser.APPROVE_OPTION ->
+    JFileChooser.APPROVE_OPTION -> {
       fileChooser.selectedFile
         ?.takeIf { it.isDirectory }
         ?.absolutePath
         ?.also { addItem(dirCombo, it, 4) }
         ?: "Please select directory."
+    }
 
-    JFileChooser.CANCEL_OPTION -> "JFileChooser cancelled."
+    JFileChooser.CANCEL_OPTION -> {
+      "JFileChooser cancelled."
+    }
 
-    else -> "JFileChooser error.".also {
-      UIManager.getLookAndFeel().provideErrorFeedback(c)
+    else -> {
+      "JFileChooser error.".also {
+        UIManager.getLookAndFeel().provideErrorFeedback(c)
+      }
     }
   }
 }

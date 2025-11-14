@@ -192,8 +192,9 @@ private object GeomUtils {
     while (!pi.isDone) {
       val pathSegmentType = pi.currentSegment(coords)
       when (pathSegmentType) {
-        PathIterator.SEG_MOVETO, PathIterator.SEG_LINETO ->
+        PathIterator.SEG_MOVETO, PathIterator.SEG_LINETO -> {
           list.add(Point2D.Double(coords[0], coords[1]))
+        }
       }
       pi.next()
     }
