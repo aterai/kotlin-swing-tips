@@ -190,36 +190,38 @@ private class DnDTabbedPane : JTabbedPane() {
 
   private fun getHorizontalIndex(i: Int, pt: Point): Int {
     val r = getBoundsAt(i)
-    val contains = r.contains(pt)
-    val lastTab = i == tabCount - 1
-    var idx = -1
-    val cr: Rectangle2D = Rectangle2D.Double(r.centerX, r.getY(), .1, r.getHeight())
+    val cr = Rectangle2D.Double(r.centerX, r.getY(), .1, r.getHeight())
     val iv = cr.outcode(pt)
-    if (cr.contains(pt) || contains && iv and Rectangle2D.OUT_LEFT != 0) {
-      // First half.
-      idx = i
-    } else if ((contains || lastTab) && iv and Rectangle2D.OUT_RIGHT != 0) {
-      // Second half.
-      idx = i + 1
+    val outLeft = iv and Rectangle2D.OUT_LEFT != 0
+    val outRight = iv and Rectangle2D.OUT_RIGHT != 0
+    val withInTab = r.contains(pt)
+    val firstHalf = withInTab && outLeft
+    val secondHalf = withInTab && outRight
+    val centerLine = cr.contains(pt)
+    val lastTab = i == tabCount - 1
+    return when {
+      firstHalf || centerLine -> i
+      secondHalf || lastTab -> i + 1
+      else -> -1
     }
-    return idx
   }
 
   private fun getVerticalIndex(i: Int, pt: Point): Int {
     val r = getBoundsAt(i)
-    val contains = r.contains(pt)
-    val lastTab = i == tabCount - 1
-    var idx = -1
     val cr = Rectangle2D.Double(r.getX(), r.centerY, r.getWidth(), .1)
     val iv = cr.outcode(pt)
-    if (cr.contains(pt) || contains && iv and Rectangle2D.OUT_TOP != 0) {
-      // First half.
-      idx = i
-    } else if ((contains || lastTab) && iv and Rectangle2D.OUT_BOTTOM != 0) {
-      // Second half.
-      idx = i + 1
+    val outTop = iv and Rectangle2D.OUT_TOP != 0
+    val outBottom = iv and Rectangle2D.OUT_BOTTOM != 0
+    val withInTab = r.contains(pt)
+    val firstHalf = withInTab && outTop
+    val secondHalf = withInTab && outBottom
+    val centerLine = cr.contains(pt)
+    val lastTab = i == tabCount - 1
+    return when {
+      firstHalf || centerLine -> i
+      secondHalf || lastTab -> i + 1
+      else -> -1
     }
-    return idx
   }
 
   // https://github.com/aterai/java-swing-tips/pull/24

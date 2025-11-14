@@ -197,7 +197,8 @@ private object MenuItemHelper {
     lh.arrowIcon?.also { arrowIcon ->
       val menuItem = lh.menuItem
       val model = menuItem.model
-      if (model.isArmed || menuItem is JMenu && model.isSelected) {
+      val isSelected = menuItem is JMenu && model.isSelected
+      if (model.isArmed || isSelected) {
         g.color = foreground
       }
       if (lh.useCheckAndArrow()) {
