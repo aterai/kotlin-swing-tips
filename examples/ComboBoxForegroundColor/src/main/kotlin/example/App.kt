@@ -61,10 +61,13 @@ private data class ColorItem(
   override fun hashCode() = Objects.hash(color, description)
 
   override fun equals(other: Any?) =
-    this === other ||
+    if (this === other) {
+      true
+    } else {
       other is ColorItem &&
-      other.color == color &&
-      other.toString() == description
+        other.color == color &&
+        other.toString() == description
+    }
 
   override fun toString() = description
 }

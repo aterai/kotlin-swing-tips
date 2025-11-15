@@ -108,11 +108,14 @@ private data class RowHeader(
   val isSelected: Boolean,
 ) {
   override fun equals(other: Any?) =
-    this === other ||
+    if (this === other) {
+      true
+    } else {
       other is RowHeader &&
-      isExpandable == other.isExpandable &&
-      isSelected == other.isSelected &&
-      title == other.title
+        isExpandable == other.isExpandable &&
+        isSelected == other.isSelected &&
+        title == other.title
+    }
 
   override fun hashCode() = Objects.hash(title, isExpandable, isSelected)
 }

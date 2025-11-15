@@ -118,13 +118,20 @@ private class DesktopLayerUI : LayerUI<JDesktopPane>() {
   ) {
     if (SwingUtilities.isRightMouseButton(e) && e.clickCount >= 2) {
       val c = e.component
-      val clz = BasicInternalFrameTitlePane::class.java
-      val p = SwingUtilities.getAncestorOfClass(clz, c)
-      val id = e.id
-      val b1 = c is BasicInternalFrameTitlePane || p is BasicInternalFrameTitlePane
-      val b2 = c is JDesktopIcon && id == MouseEvent.MOUSE_PRESSED
-      if (b1 && id == MouseEvent.MOUSE_CLICKED || b2) {
-        e.consume()
+      when (e.id) {
+        MouseEvent.MOUSE_CLICKED -> {
+          val clz = BasicInternalFrameTitlePane::class.java
+          val p = SwingUtilities.getAncestorOfClass(clz, c)
+          if (c is BasicInternalFrameTitlePane || p is BasicInternalFrameTitlePane) {
+            e.consume()
+          }
+        }
+
+        MouseEvent.MOUSE_PRESSED -> {
+          if (c is JDesktopIcon) {
+            e.consume()
+          }
+        }
       }
     }
   }
