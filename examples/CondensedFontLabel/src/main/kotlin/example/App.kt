@@ -30,9 +30,12 @@ fun makeUI(): Component {
   val lbl2 = WrappingLabel(TEXT)
 
   val b = BorderFactory.createLineBorder(Color.GRAY, 5)
-  textArea.border = BorderFactory.createTitledBorder(b, "JTextArea(condensed: 0.9)")
-  lbl1.border = BorderFactory.createTitledBorder(b, "GlyphVector(condensed: 0.9)")
-  lbl2.border = BorderFactory.createTitledBorder(b, "LineBreakMeasurer(condensed: 0.9)")
+  val title1 = "JTextArea(condensed: 0.9)"
+  textArea.border = BorderFactory.createTitledBorder(b, title1)
+  val title2 = "GlyphVector(condensed: 0.9)"
+  lbl1.border = BorderFactory.createTitledBorder(b, title2)
+  val title3 = "LineBreakMeasurer(condensed: 0.9)"
+  lbl2.border = BorderFactory.createTitledBorder(b, title3)
 
   val p = JPanel(GridLayout(0, 1))
   val at = AffineTransform.getScaleInstance(.9, 1.0)
