@@ -23,7 +23,8 @@ fun makeUI(): Component {
   menu.mnemonic = KeyEvent.VK_W
   val menuItem = menu.add("New")
   menuItem.mnemonic = KeyEvent.VK_N
-  menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.ALT_DOWN_MASK)
+  menuItem.accelerator = KeyStroke.getKeyStroke("alt N")
+  // KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.ALT_DOWN_MASK)
   menuItem.actionCommand = "new"
   menuItem.addActionListener { desktop.add(createInternalFrame()) }
   val menuBar = JMenuBar()
