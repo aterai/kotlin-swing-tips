@@ -12,19 +12,23 @@ fun makeUI(): Component {
     gp.add(makeSampleComponent(i))
   }
 
-  val scrollPane = JScrollPane(gp)
-  scrollPane.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
-  scrollPane.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+  val scroll = JScrollPane(gp)
+  scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
+  scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
 
   val p = JPanel()
-  p.add(scrollPane)
+  p.add(scroll)
 
+  val top = ScrollAction("top", scroll, Point(0, -1))
+  val bottom = ScrollAction("bottom", scroll, Point(0, 1))
+  val left = ScrollAction("left", scroll, Point(-1, 0))
+  val right = ScrollAction("right", scroll, Point(1, 0))
   return JPanel(BorderLayout()).also {
     it.add(p)
-    it.add(JButton(ScrollAction("right", scrollPane, Point(1, 0))), BorderLayout.EAST)
-    it.add(JButton(ScrollAction("left", scrollPane, Point(-1, 0))), BorderLayout.WEST)
-    it.add(JButton(ScrollAction("bottom", scrollPane, Point(0, 1))), BorderLayout.SOUTH)
-    it.add(JButton(ScrollAction("top", scrollPane, Point(0, -1))), BorderLayout.NORTH)
+    it.add(JButton(top), BorderLayout.NORTH)
+    it.add(JButton(bottom), BorderLayout.SOUTH)
+    it.add(JButton(left), BorderLayout.WEST)
+    it.add(JButton(right), BorderLayout.EAST)
   }
 }
 
