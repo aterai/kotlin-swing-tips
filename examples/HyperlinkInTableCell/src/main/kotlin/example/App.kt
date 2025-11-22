@@ -85,9 +85,9 @@ private class UriRenderer :
   DefaultTableCellRenderer(),
   MouseListener,
   MouseMotionListener {
-  private var viewRowIndex = -1
-  private var viewColumnIndex = -1 // viewColumnIndex
-  private var isRollover = false
+  private var viewRowIdx = -1
+  private var viewColIdx = -1
+  private var hover = false
 
   override fun getTableCellRendererComponent(
     table: JTable,
@@ -120,7 +120,7 @@ private class UriRenderer :
     table: JTable,
     row: Int,
     column: Int,
-  ) = !table.isEditing && viewRowIndex == row && viewColumnIndex == column && isRollover
+  ) = !table.isEditing && viewRowIdx == row && viewColIdx == column && hover
 
   private fun isUriColumn(
     table: JTable,
@@ -130,21 +130,21 @@ private class UriRenderer :
   override fun mouseMoved(e: MouseEvent) {
     val table = e.component as? JTable ?: return
     val pt = e.point
-    val prevRow = viewRowIndex
-    val prevCol = viewColumnIndex
-    val prevRollover = isRollover
-    viewRowIndex = table.rowAtPoint(pt)
-    viewColumnIndex = table.columnAtPoint(pt)
-    isRollover = isUriColumn(table, viewColumnIndex)
-    val isSameView = viewRowIndex == prevRow && viewColumnIndex == prevCol
-    val isSameCell = isSameView && isRollover == prevRollover
-    val isNotRollover = !isRollover && !prevRollover
+    val prevRow = viewRowIdx
+    val prevCol = viewColIdx
+    val prevHover = hover
+    viewRowIdx = table.rowAtPoint(pt)
+    viewColIdx = table.columnAtPoint(pt)
+    hover = isUriColumn(table, viewColIdx)
+    val isSameView = viewRowIdx == prevRow && viewColIdx == prevCol
+    val isSameCell = isSameView && hover == prevHover
+    val isNotRollover = !hover && !prevHover
     if (isSameCell || isNotRollover) {
       return
     }
-    val rect = if (isRollover) {
-      val r = table.getCellRect(viewRowIndex, viewColumnIndex, false)
-      if (prevRollover) r.union(table.getCellRect(prevRow, prevCol, false)) else r
+    val rect = if (hover) {
+      val r = table.getCellRect(viewRowIdx, viewColIdx, false)
+      if (prevHover) r.union(table.getCellRect(prevRow, prevCol, false)) else r
     } else {
       table.getCellRect(prevRow, prevCol, false)
     }
@@ -153,11 +153,11 @@ private class UriRenderer :
 
   override fun mouseExited(e: MouseEvent) {
     val table = e.component as? JTable ?: return
-    if (isUriColumn(table, viewColumnIndex)) {
-      table.repaint(table.getCellRect(viewRowIndex, viewColumnIndex, false))
-      viewRowIndex = -1
-      viewColumnIndex = -1
-      isRollover = false
+    if (isUriColumn(table, viewColIdx)) {
+      table.repaint(table.getCellRect(viewRowIdx, viewColIdx, false))
+      viewRowIdx = -1
+      viewColIdx = -1
+      hover = false
     }
   }
 
