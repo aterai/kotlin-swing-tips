@@ -1,7 +1,6 @@
 package example
 
 import java.awt.*
-import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.util.concurrent.atomic.AtomicInteger
 import javax.swing.*
@@ -31,7 +30,8 @@ private fun createMenuBar(): JMenuBar {
   menuBar.add(menu)
   var menuItem = menu.add("New")
   menuItem.mnemonic = KeyEvent.VK_N
-  menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.ALT_DOWN_MASK)
+  menuItem.accelerator = KeyStroke.getKeyStroke("alt N")
+  //  KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.ALT_DOWN_MASK)
   menuItem.actionCommand = "new"
   menuItem.addActionListener {
     val frame = MyInternalFrame()
@@ -41,7 +41,8 @@ private fun createMenuBar(): JMenuBar {
   menu.add(menuItem)
   menuItem = menu.add("Quit")
   menuItem.mnemonic = KeyEvent.VK_Q
-  menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.ALT_DOWN_MASK)
+  menuItem.accelerator = KeyStroke.getKeyStroke("alt Q")
+  //  KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.ALT_DOWN_MASK)
   menuItem.actionCommand = "quit"
   menuItem.addActionListener {
     SwingUtilities.getWindowAncestor(desktop)?.dispose()
@@ -60,7 +61,8 @@ private class MyInternalFrame :
   ) {
   init {
     setSize(180, 100)
-    setLocation(OFFSET * OPEN_FRAME_COUNT.toInt(), OFFSET * OPEN_FRAME_COUNT.toInt())
+    val offset = OFFSET * OPEN_FRAME_COUNT.toInt()
+    setLocation(offset, offset)
   }
 
   companion object {
