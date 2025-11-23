@@ -1,7 +1,6 @@
 package example
 
 import java.awt.*
-import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
@@ -44,13 +43,12 @@ fun makeUI(): Component {
 
   val menu = JMenu("Frame")
   menu.mnemonic = KeyEvent.VK_D
-
-  val menuItem = menu.add("New Frame")
-  menuItem.mnemonic = KeyEvent.VK_N
-  menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.ALT_DOWN_MASK)
-  menuItem.actionCommand = "new"
-  menuItem.addActionListener { desktop.add(createFrame(null)) }
-
+  menu.add("New Frame").also {
+    it.actionCommand = "new"
+    it.mnemonic = KeyEvent.VK_N
+    it.accelerator = KeyStroke.getKeyStroke("alt N")
+    it.addActionListener { desktop.add(createFrame(null)) }
+  }
   val menuBar = JMenuBar()
   menuBar.add(menu)
 
