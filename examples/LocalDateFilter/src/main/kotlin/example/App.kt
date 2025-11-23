@@ -121,11 +121,10 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
     if (value is LocalDate && c is JLabel) {
       c.text = value.dayOfMonth.toString()
       c.horizontalAlignment = CENTER
-      c.foreground = if (YearMonth.from(value) == YearMonth.from(currentLocalDate)) {
-        table.foreground
-      } else {
-        Color.GRAY
-      }
+      val m1 = YearMonth.from(value).monthValue
+      val m2 = YearMonth.from(currentLocalDate).monthValue
+      val isSameMonth = m1 == m2
+      c.foreground = if (isSameMonth) table.foreground else Color.GRAY
       c.background = if (value.isEqual(realDate)) {
         Color(0xDC_FF_DC)
       } else {
