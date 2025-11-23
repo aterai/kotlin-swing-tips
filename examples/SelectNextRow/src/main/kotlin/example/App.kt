@@ -1,7 +1,6 @@
 package example
 
 import java.awt.*
-import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
@@ -28,8 +27,8 @@ fun makeUI(): Component {
     im.put(tab, if (flg) im[enter] else orgTabAction)
   }
   im.put(tab, im[enter])
-  val shiftTab = KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK)
-  val shiftEnter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK)
+  val shiftTab = KeyStroke.getKeyStroke("shift TAB")
+  val shiftEnter = KeyStroke.getKeyStroke("shift ENTER")
   im.put(shiftTab, im[shiftEnter])
   return JPanel(BorderLayout()).also {
     it.add(checkBox, BorderLayout.NORTH)
