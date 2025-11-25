@@ -4,7 +4,6 @@ import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
-import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.*
@@ -225,8 +224,8 @@ private class EditableList(
     editor.horizontalAlignment = SwingConstants.CENTER
     // editor.setLineWrap(true)
     val im = editor.getInputMap(WHEN_FOCUSED)
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), RENAME)
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), CANCEL)
+    im.put(KeyStroke.getKeyStroke("ENTER"), RENAME)
+    im.put(KeyStroke.getKeyStroke("ESCAPE"), CANCEL)
     val am = editor.actionMap
     am.put(RENAME, renameTitle)
     am.put(CANCEL, cancelEditing)
@@ -245,7 +244,7 @@ private class EditableList(
         }
       }
     })
-    getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), EDITING)
+    getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke("ENTER"), EDITING)
     actionMap.put(EDITING, startEditing)
   }
 
