@@ -22,16 +22,28 @@ fun makeUI(): Component {
     info(split, textArea)
   }
   menu1.addSeparator()
-  menu1.add("setDividerLocation(.5)").addActionListener { split.setDividerLocation(.5) }
-  menu1.add("selectMin").addActionListener { selectMinMax(split, "selectMin") }
-  menu1.add("selectMax").addActionListener { selectMinMax(split, "selectMax") }
+  menu1.add("setDividerLocation(.5)").addActionListener {
+    split.setDividerLocation(.5)
+  }
+  menu1.add("selectMin").addActionListener {
+    selectMinMax(split, "selectMin")
+  }
+  menu1.add("selectMax").addActionListener {
+    selectMinMax(split, "selectMax")
+  }
   val menu2 = JMenu("ResizeWeight")
   val r0 = JRadioButtonMenuItem("0.0", true)
-  menu2.add(r0).addActionListener { split.resizeWeight = 0.0 }
+  menu2.add(r0).addActionListener {
+    split.resizeWeight = 0.0
+  }
   val r1 = JRadioButtonMenuItem("0.5")
-  menu2.add(r1).addActionListener { split.resizeWeight = .5 }
+  menu2.add(r1).addActionListener {
+    split.resizeWeight = .5
+  }
   val r2 = JRadioButtonMenuItem("1.0")
-  menu2.add(r2).addActionListener { split.resizeWeight = 1.0 }
+  menu2.add(r2).addActionListener {
+    split.resizeWeight = 1.0
+  }
   val group = ButtonGroup()
   for (r in listOf(r0, r1, r2)) {
     group.add(r)
