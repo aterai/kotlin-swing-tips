@@ -9,6 +9,12 @@ import javax.imageio.ImageIO
 import javax.swing.*
 
 private var isShiftPressed = false
+private const val TXT0 = "PreferredSize: 0, shift pressed: Horizontal WheelScrolling"
+private val r0 = JRadioButton(TXT0, true)
+private const val TXT1 = "SCROLLBAR_ALWAYS"
+private val r1 = JRadioButton(TXT1)
+private const val TXT2 = "SCROLLBAR_NEVER"
+private val r2 = JRadioButton(TXT2)
 
 fun makeUI(): Component {
   val label = JLabel(getIcon())
@@ -40,30 +46,26 @@ fun makeUI(): Component {
 
   initActionMap(scroll)
 
-  val txt0 = "PreferredSize: 0, shift pressed: Horizontal WheelScrolling"
-  val r0 = JRadioButton(txt0, true)
   r0.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
       scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS
-      scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS
+      scroll.horizontalScrollBarPolicy =
+        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS
       scroll.verticalScrollBar = zeroVerticalBar
       scroll.horizontalScrollBar = zeroHorizontalBar
     }
   }
 
-  val txt1 = "SCROLLBAR_ALWAYS"
-  val r1 = JRadioButton(txt1)
   r1.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
       scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS
-      scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS
+      scroll.horizontalScrollBarPolicy =
+        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS
       scroll.verticalScrollBar = verticalBar
       scroll.horizontalScrollBar = horizontalBar
     }
   }
 
-  val txt2 = "SCROLLBAR_NEVER"
-  val r2 = JRadioButton(txt2)
   r2.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
       scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
@@ -71,6 +73,17 @@ fun makeUI(): Component {
     }
   }
 
+  scroll.verticalScrollBar = zeroVerticalBar
+  scroll.horizontalScrollBar = zeroHorizontalBar
+
+  return JPanel(BorderLayout()).also {
+    it.add(makeRadioBox(), BorderLayout.NORTH)
+    it.add(scroll)
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private fun makeRadioBox(): JPanel {
   val bg = ButtonGroup()
   listOf(r0, r1, r2).forEach { bg.add(it) }
   val b = Box.createHorizontalBox()
@@ -79,14 +92,7 @@ fun makeUI(): Component {
   b.add(r2)
   p.add(r0)
   p.add(b)
-  scroll.verticalScrollBar = zeroVerticalBar
-  scroll.horizontalScrollBar = zeroHorizontalBar
-
-  return JPanel(BorderLayout()).also {
-    it.add(p, BorderLayout.NORTH)
-    it.add(scroll)
-    it.preferredSize = Dimension(320, 240)
-  }
+  return p
 }
 
 private fun getIcon(): Icon {
