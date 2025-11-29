@@ -8,15 +8,19 @@ import javax.swing.border.Border
 import javax.swing.border.TitledBorder
 
 fun makeUI(): Component {
-  val p1 = JPanel(BorderLayout())
-  p1.add(JScrollPane(JTree()))
-  p1.border = TitledBorder("TitledBorder 1234567890")
-  val p2 = JPanel(BorderLayout())
-  p2.add(JScrollPane(JTree()))
-  p2.border = VerticalTitledBorder("VerticalTitledBorder 1234567890")
-  val p3 = JPanel(BorderLayout())
-  p3.add(JScrollPane(JTree()))
-  p3.border = TitledBorder(VerticalTitledBorder("VerticalTitledBorder"), "TitledBorder")
+  val p1 = JPanel(BorderLayout()).also {
+    it.border = TitledBorder("TitledBorder 1234567890")
+    it.add(JScrollPane(JTree()))
+  }
+  val p2 = JPanel(BorderLayout()).also {
+    it.border = VerticalTitledBorder("VerticalTitledBorder 1234567890")
+    it.add(JScrollPane(JTree()))
+  }
+  val p3 = JPanel(BorderLayout()).also {
+    val border = VerticalTitledBorder("VerticalTitledBorder")
+    it.border = TitledBorder(border, "TitledBorder")
+    it.add(JScrollPane(JTree()))
+  }
   return JPanel(GridLayout(1, 3, 5, 5)).also {
     it.add(p1)
     it.add(p2)
@@ -122,22 +126,19 @@ private class VerticalTitledBorder(
     }
     return this.label
   }
+}
 
-  companion object {
-    // @see javax/swing/border/TitledBorder.java#getBorderInsets(Border border, Component c, Insets insets)
-    private fun makeComponentBorderInsets(
-      border: Border?,
-      c: Component,
-      i: Insets,
-    ): Insets {
-      var ins = Insets(i.top, i.left, i.bottom, i.right)
-      when (border) {
-        null -> ins.set(0, 0, 0, 0)
-        is AbstractBorder -> ins = border.getBorderInsets(c, i)
-      }
-      return ins
-    }
+private fun makeComponentBorderInsets(
+  border: Border?,
+  c: Component,
+  i: Insets,
+): Insets {
+  var ins = Insets(i.top, i.left, i.bottom, i.right)
+  when (border) {
+    null -> ins.set(0, 0, 0, 0)
+    is AbstractBorder -> ins = border.getBorderInsets(c, i)
   }
+  return ins
 }
 
 fun main() {
