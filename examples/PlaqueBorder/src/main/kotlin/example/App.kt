@@ -16,9 +16,10 @@ fun makeUI(): Component {
       val g2 = g.create()
       if (!isOpaque && b is PlaqueBorder && g2 is Graphics2D) {
         g2.paint = background
-        val w = width - 1
-        val h = height - 1
-        g2.fill(b.getBorderShape(0.0, 0.0, w.toDouble(), h.toDouble(), arc8.toDouble()))
+        val dw = (width - 1).toDouble()
+        val dh = (height - 1).toDouble()
+        val dr = arc8.toDouble()
+        g2.fill(b.getBorderShape(0.0, 0.0, dw, dh, dr))
       }
       g2.dispose()
       super.paintComponent(g)
@@ -63,9 +64,10 @@ fun makeUI(): Component {
       val g2 = g.create()
       if (!isOpaque && b is PlaqueBorder && g2 is Graphics2D) {
         g2.paint = background
-        val w = width - 1
-        val h = height - 1
-        g2.fill(b.getBorderShape(0.0, 0.0, w.toDouble(), h.toDouble(), arc4.toDouble()))
+        val dw = (width - 1).toDouble()
+        val dh = (height - 1).toDouble()
+        val dr = arc4.toDouble()
+        g2.fill(b.getBorderShape(0.0, 0.0, dw, dh, dr))
       }
       g2.dispose()
       super.paintComponent(g)
