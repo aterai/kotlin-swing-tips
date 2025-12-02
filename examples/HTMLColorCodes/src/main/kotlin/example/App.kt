@@ -4,26 +4,24 @@ import java.awt.*
 import javax.swing.*
 
 fun makeUI(): Component {
-  val box = Box.createVerticalBox()
-  box.add(makeLbl("Color(0xFF0000)", Color(0xFF0000)))
-  box.add(makeLbl("Color(0x88_88_88)", Color(0x88_88_88)))
-  box.add(makeLbl("Color('00FF00'.toInt(16))", Color("00FF00".toInt(16))))
-  box.add(makeLbl("Color(Integer.decode('#0000FF'))", Color(Integer.decode("#0000FF"))))
-  box.add(makeLbl("Color.decode('#00FFFF')", Color.decode("#00FFFF")))
-
+  val l1 = mkLbl("Color(0xFF0000)", Color(0xFF0000))
+  val l2 = mkLbl("Color(0x88_88_88)", Color(0x88_88_88))
+  val l3 = mkLbl("Color('00FF00'.toInt(16))", Color("00FF00".toInt(16)))
+  val l4 = mkLbl("Color(Integer.decode('#0000FF'))", Color(Integer.decode("#0000FF")))
+  val l5 = mkLbl("Color.decode('#00FFFF')", Color.decode("#00FFFF"))
   val title = "<html><span style='color: #FF00FF'>#FF00FF"
-  val label = JLabel(title)
-  label.border = BorderFactory.createTitledBorder("JLabel($title)")
-  box.add(label)
+  val l6 = JLabel(title)
+  l6.border = BorderFactory.createTitledBorder("JLabel($title)")
+  val box = Box.createVerticalBox()
+  listOf(l1, l2, l3, l4, l5, l6).forEach { box.add(it) }
   box.add(Box.createVerticalGlue())
-
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(box))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeLbl(
+private fun mkLbl(
   title: String,
   c: Color,
 ): JLabel {
