@@ -30,7 +30,7 @@ private val monthTable = object : JTable() {
     var remainder = height % rowCount
     for (i in 0..<rowCount) {
       val a = 1.coerceAtMost(0.coerceAtLeast(remainder--))
-      setRowHeight(i, defaultRowHeight + a)
+      setRowHeight(i, 1.coerceAtLeast(defaultRowHeight + a))
     }
   }
 
@@ -204,9 +204,9 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
       updateCellWeekColor(value, c)
       val nextWeekDay = value.plusDays(7)
       val isLastRow = row == table.model.rowCount - 1
-      if (isLastRow &&
-        YearMonth.from(nextWeekDay) == YearMonth.from(currentLocalDate)
-      ) {
+      val m1 = YearMonth.from(nextWeekDay).monthValue
+      val m2 = YearMonth.from(currentLocalDate).monthValue
+      if (isLastRow && m1 == m2) {
         val sub = JLabel(nextWeekDay.dayOfMonth.toString()).also {
           updateCellWeekColor(nextWeekDay, it)
           it.font = table.font
@@ -234,7 +234,9 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
     d: LocalDate,
     fgc: Component,
   ) {
-    if (YearMonth.from(d) == YearMonth.from(currentLocalDate)) {
+    val m1 = YearMonth.from(d).monthValue
+    val m2 = YearMonth.from(currentLocalDate).monthValue
+    if (m1 == m2) {
       fgc.foreground = getDayOfWeekColor(d.dayOfWeek)
     } else {
       fgc.foreground = Color.GRAY

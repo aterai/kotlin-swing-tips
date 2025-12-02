@@ -23,7 +23,7 @@ private val monthTable = object : JTable() {
     var remainder = height % rowCount
     for (i in 0..<rowCount) {
       val a = 1.coerceAtMost(0.coerceAtLeast(remainder--))
-      setRowHeight(i, defaultRowHeight + a)
+      setRowHeight(i, 1.coerceAtLeast(defaultRowHeight + a))
     }
   }
 
