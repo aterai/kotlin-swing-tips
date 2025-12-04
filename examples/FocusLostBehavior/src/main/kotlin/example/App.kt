@@ -5,31 +5,31 @@ import javax.swing.*
 import javax.swing.text.MaskFormatter
 
 fun makeUI(): Component {
+  val box = Box.createVerticalBox()
+  box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+
   val formatter = runCatching { MaskFormatter("U".repeat(10)) }.getOrNull()
+  val field0 = JFormattedTextField(formatter)
+  box.add(makeTitledPanel("COMMIT_OR_REVERT(default)", field0))
+  box.add(Box.createVerticalStrut(5))
 
   val field1 = JFormattedTextField(formatter)
   field1.focusLostBehavior = JFormattedTextField.REVERT
+  box.add(makeTitledPanel("REVERT", field1))
+  box.add(Box.createVerticalStrut(5))
 
   val field2 = JFormattedTextField(formatter)
   field2.focusLostBehavior = JFormattedTextField.COMMIT
+  box.add(makeTitledPanel("COMMIT", field2))
+  box.add(Box.createVerticalStrut(5))
 
   val field3 = JFormattedTextField(formatter)
   field3.focusLostBehavior = JFormattedTextField.PERSIST
+  box.add(makeTitledPanel("PERSIST", field3))
 
   val check = JCheckBox("setCommitsOnValidEdit")
   check.addActionListener { e ->
     formatter?.commitsOnValidEdit = (e.source as? JCheckBox)?.isSelected == true
-  }
-
-  val box = Box.createVerticalBox().also {
-    it.add(makeTitledPanel("COMMIT_OR_REVERT(default)", JFormattedTextField(formatter)))
-    it.add(Box.createVerticalStrut(5))
-    it.add(makeTitledPanel("REVERT", field1))
-    it.add(Box.createVerticalStrut(5))
-    it.add(makeTitledPanel("COMMIT", field2))
-    it.add(Box.createVerticalStrut(5))
-    it.add(makeTitledPanel("PERSIST", field3))
-    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   }
 
   return JPanel(BorderLayout()).also {
