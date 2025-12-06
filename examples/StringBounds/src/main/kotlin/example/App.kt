@@ -60,7 +60,9 @@ fun update() {
   append("GlyphVector#getVisualBounds()", gv.visualBounds)
 
   append("JLabel#getPreferredSize()", label.preferredSize)
-  append("SwingUtilities.layoutCompoundLabel(...)", getLayoutCompoundLabelBounds().size)
+
+  val rect = getLayoutCompoundLabelBounds()
+  append("SwingUtilities.layoutCompoundLabel(...)",rect.size)
 }
 
 private fun append(s: String, o: Any) {
