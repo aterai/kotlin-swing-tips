@@ -17,17 +17,18 @@ fun makeUI(): Component {
   // d.height = HEADER_HEIGHT
   // header.preferredSize = d // addColumn case test
   header.preferredSize = Dimension(100, HEADER_HEIGHT)
-  p.add(makeTitledPanel("Bad: JTableHeader#setPreferredSize(...)", JScrollPane(table1)))
+  val scroll1 = JScrollPane(table1)
+  p.add(makeTitledPanel("Bad: JTableHeader#setPreferredSize(...)", scroll1))
   // <<<<
 
   val table2 = makeTable()
-  val scroll = JScrollPane(table2)
-  scroll.columnHeader = object : JViewport() {
+  val scroll2 = JScrollPane(table2)
+  scroll2.columnHeader = object : JViewport() {
     override fun getPreferredSize() = super.getPreferredSize()?.also {
       it.height = HEADER_HEIGHT
     }
   }
-  p.add(makeTitledPanel("Override getPreferredSize()", scroll))
+  p.add(makeTitledPanel("Override getPreferredSize()", scroll2))
 
   val info = JTextField()
   info.isEditable = false
