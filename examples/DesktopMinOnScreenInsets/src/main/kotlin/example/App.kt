@@ -1,7 +1,6 @@
 package example
 
 import java.awt.*
-import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.util.concurrent.atomic.AtomicInteger
 import javax.swing.*
