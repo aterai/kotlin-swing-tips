@@ -29,7 +29,8 @@ fun makeUI(): Component {
 
   val label = JLabel("test")
   label.icon = icon
-  val border4 = ComponentTitledBorder(label, UIManager.getBorder("TitledBorder.border"))
+  val titledBorderBorder = UIManager.getBorder("TitledBorder.border")
+  val border4 = ComponentTitledBorder(label, titledBorderBorder)
 
   return JPanel(GridLayout(4, 1, 5, 5)).also {
     it.add(makeComponent(title1, BorderFactory.createTitledBorder(title1)))
