@@ -19,20 +19,26 @@ fun makeUI(): Component {
   val d = c.time
   val format = SimpleDateFormat("mm:ss", Locale.getDefault())
   val factory = DefaultFormatterFactory(DateFormatter(format))
+
   val spinner1 = JSpinner(SpinnerDateModel(d, null, null, Calendar.SECOND))
   (spinner1.editor as? DefaultEditor)?.textField?.formatterFactory = factory
+  val title1 = "Default SpinnerDateModel"
+  val panel1 = makeTitledPanel(title1, spinner1)
 
   val spinner2 = JSpinner(object : SpinnerDateModel(d, null, null, Calendar.SECOND) {
     override fun setCalendarField(calendarField: Int) {
       // https://docs.oracle.com/javase/8/docs/api/javax/swing/SpinnerDateModel.html#setCalendarField-int-
-      // If you only want one field to spin you can subclass and ignore the setCalendarField calls.
+      // If you only want one field to spin you can subclass
+      // and ignore the setCalendarField calls.
     }
   })
   (spinner2.editor as? DefaultEditor)?.textField?.formatterFactory = factory
+  val title2 = "Override SpinnerDateModel#setCalendarField(...)"
+  val panel2 = makeTitledPanel(title2, spinner2)
 
   return JPanel(GridLayout(2, 1)).also {
-    it.add(makeTitledPanel("Default SpinnerDateModel", spinner1))
-    it.add(makeTitledPanel("Override SpinnerDateModel#setCalendarField(...)", spinner2))
+    it.add(panel1)
+    it.add(panel2)
     it.border = BorderFactory.createEmptyBorder(10, 5, 10, 5)
     it.preferredSize = Dimension(320, 240)
   }
