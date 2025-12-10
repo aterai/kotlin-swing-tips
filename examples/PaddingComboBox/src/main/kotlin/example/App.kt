@@ -56,60 +56,67 @@ fun layoutComboBoxPanel(
 
 private fun initComboBoxes(isColor: Boolean): List<JComboBox<*>> {
   val list = mutableListOf<JComboBox<*>>()
-  for (i in 0..6) {
+  (0..6).forEach { _ ->
     list.add(makeComboBox())
   }
 
-  // ---- 0 ----
-  val cb0 = list[0]
-  cb0.isEditable = false
-  cb0.toolTipText = "it.isEditable = false"
-
-  // ---- 1 ----
-  val cb1 = list[1]
-  cb1.isEditable = true
-  (cb1.editor.editorComponent as? JTextField)?.also {
-    it.border = BorderFactory.createCompoundBorder(it.border, getPaddingBorder(isColor))
+  list[0].also {
+    it.isEditable = false
+    it.toolTipText = "it.isEditable = false"
   }
-  cb1.toolTipText = "it.border = CompoundBorder(it.border, padding)"
 
-  // ---- 2 ----
-  val cb2 = list[2]
-  cb2.isEditable = true
-  (cb2.editor.editorComponent as? JTextField)?.also {
-    it.border = getPaddingBorder(isColor)
+  list[1].also { combo ->
+    combo.isEditable = true
+    (combo.editor.editorComponent as? JTextField)?.also {
+      val outside = it.border
+      val inside = getPaddingBorder(isColor)
+      it.border = BorderFactory.createCompoundBorder(outside, inside)
+    }
+    combo.toolTipText = "it.border = CompoundBorder(it.border, padding)"
   }
-  cb2.toolTipText = "it.border = padding"
 
-  // ---- 3 ----
-  val cb3 = list[3]
-  cb3.isEditable = true
-  (cb3.editor.editorComponent as? JTextField)?.also {
-    val i = it.insets
-    it.margin = Insets(i.top, i.left + 5, i.bottom, i.right)
+  list[2].also { combo ->
+    combo.isEditable = true
+    (combo.editor.editorComponent as? JTextField)?.also {
+      it.border = getPaddingBorder(isColor)
+    }
+    combo.toolTipText = "it.border = padding"
   }
-  cb3.toolTipText = "val i = it.insets; it.margin = Insets(i.top, i.left + 5, ...)"
 
-  // ---- 4 ----
-  val cb4 = list[4]
-  cb4.isEditable = true
-  (cb4.editor.editorComponent as? JTextField)?.also {
-    val m = it.margin
-    it.margin = Insets(m.top, m.left + 5, m.bottom, m.right)
+  list[3].also { combo ->
+    combo.isEditable = true
+    (combo.editor.editorComponent as? JTextField)?.also {
+      val i = it.insets
+      it.margin = Insets(i.top, i.left + 5, i.bottom, i.right)
+    }
+    combo.toolTipText = "val i = it.insets; it.margin = Insets(i.top, i.left + 5, ...)"
   }
-  cb4.toolTipText = "val m = it.margin; it.margin = Insets(m.top, m.left + 5, ...)"
 
-  // ---- 5 ----
-  val cb5 = list[5]
-  cb5.isEditable = true
-  cb5.border = BorderFactory.createCompoundBorder(cb5.border, getPaddingBorder(isColor))
-  cb5.toolTipText = "it.border = CompoundBorder(it.border, padding)"
+  list[4].also { combo ->
+    combo.isEditable = true
+    (combo.editor.editorComponent as? JTextField)?.also {
+      val m = it.margin
+      it.margin = Insets(m.top, m.left + 5, m.bottom, m.right)
+    }
+    combo.toolTipText = "val m = it.margin; it.margin = Insets(m.top, m.left + 5, ...)"
+  }
 
-  // ---- 6 ----
-  val cb6 = list[6]
-  cb6.isEditable = true
-  cb6.border = BorderFactory.createCompoundBorder(getPaddingBorder(isColor), cb6.border)
-  cb6.toolTipText = "it.border = BorderFactory.createCompoundBorder(it, it.border)"
+  list[5].also {
+    it.isEditable = true
+    val outside = it.border
+    val inside = getPaddingBorder(isColor)
+    it.border = BorderFactory.createCompoundBorder(outside, inside)
+    it.toolTipText = "it.border = CompoundBorder(it.border, padding)"
+  }
+
+  list[6].also {
+    it.isEditable = true
+    val outside = getPaddingBorder(isColor)
+    val inside = it.border
+    it.border = BorderFactory.createCompoundBorder(outside, inside)
+    it.toolTipText = "it.border = BorderFactory.createCompoundBorder(it, it.border)"
+  }
+
   if (isColor) {
     val c = Color(.8f, 1f, .8f)
     for (cb in list) {
