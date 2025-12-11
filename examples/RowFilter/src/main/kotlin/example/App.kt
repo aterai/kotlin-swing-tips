@@ -69,7 +69,7 @@ fun makeUI(): Component {
   table.fillsViewportHeight = true
   table.putClientProperty("terminateEditOnFocusLost", true)
   val filters: MutableCollection<RowFilter<in RowDataModel, in Int>> = HashSet(2)
-  val filter1: RowFilter<RowDataModel, Int> = object : RowFilter<RowDataModel, Int>() {
+  val filter1 = object : RowFilter<RowDataModel, Int>() {
     override fun include(entry: Entry<out RowDataModel, out Int>): Boolean {
       val m = entry.model
       val rd = m.getRowData(entry.identifier)
@@ -110,7 +110,7 @@ private class RowDataModel : DefaultTableModel() {
   private var number = 0
 
   fun addRowData(t: RowData) {
-    val obj = arrayOf(number, t.name, t.comment)
+    val obj = arrayOf<Any>(number, t.name, t.comment)
     super.addRow(obj)
     number++
   }
