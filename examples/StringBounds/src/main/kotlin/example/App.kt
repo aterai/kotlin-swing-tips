@@ -62,13 +62,14 @@ fun update() {
   append("JLabel#getPreferredSize()", label.preferredSize)
 
   val rect = getLayoutCompoundLabelBounds()
-  append("SwingUtilities.layoutCompoundLabel(...)",rect.size)
+  append("SwingUtilities.layoutCompoundLabel(...)", rect.size)
 }
 
 private fun append(s: String, o: Any) {
   log.append("$s:\n  ")
   if (o is Rectangle2D) {
-    log.append("x=%8.4f y=%8.4f w=%8.4f h=%8.4f%n".format(o.x, o.y, o.width, o.height))
+    val fmt = "x=%8.4f y=%8.4f w=%8.4f h=%8.4f%n"
+    log.append(fmt.format(o.x, o.y, o.width, o.height))
   } else {
     log.append("$o")
   }
