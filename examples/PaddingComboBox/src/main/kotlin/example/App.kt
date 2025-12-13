@@ -54,11 +54,14 @@ fun layoutComboBoxPanel(
   p2.revalidate() // ??? JDK 1.7.0 Nimbus ???
 }
 
-private fun initComboBoxes(isColor: Boolean): List<JComboBox<*>> {
+fun makeComboBoxes(count: Int): List<JComboBox<*>> {
   val list = mutableListOf<JComboBox<*>>()
-  (0..6).forEach { _ ->
-    list.add(makeComboBox())
-  }
+  repeat(count) { list.add(makeComboBox()) }
+  return list
+}
+
+private fun initComboBoxes(isColor: Boolean): List<JComboBox<*>> {
+  val list = makeComboBoxes(6)
 
   list[0].also {
     it.isEditable = false
@@ -118,17 +121,21 @@ private fun initComboBoxes(isColor: Boolean): List<JComboBox<*>> {
   }
 
   if (isColor) {
-    val c = Color(.8f, 1f, .8f)
-    for (cb in list) {
-      cb.isOpaque = true
-      cb.background = c
-      (cb.editor.editorComponent as? JTextField)?.also {
-        it.isOpaque = true
-        it.background = c
-      }
-    }
+    updateBackground(list)
   }
   return list
+}
+
+private fun updateBackground(list: List<JComboBox<*>>) {
+  val c = Color(.8f, 1f, .8f)
+  for (cb in list) {
+    cb.isOpaque = true
+    cb.background = c
+    (cb.editor.editorComponent as? JTextField)?.also {
+      it.isOpaque = true
+      it.background = c
+    }
+  }
 }
 
 private fun makeLabel(num: Int) = JLabel("$num:")
