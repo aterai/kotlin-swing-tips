@@ -14,7 +14,8 @@ fun makeUI(): Component {
   val help = h1 + h2
   val txt = help.repeat(100)
 
-  val scroll = JScrollPane(JTextArea("override TrackListener#mousePressed(...)\n$txt"))
+  val textArea = JTextArea("override TrackListener#mousePressed(...)\n$txt")
+  val scroll = JScrollPane(textArea)
   scroll.verticalScrollBar = object : JScrollBar(VERTICAL) {
     override fun updateUI() {
       super.updateUI()
