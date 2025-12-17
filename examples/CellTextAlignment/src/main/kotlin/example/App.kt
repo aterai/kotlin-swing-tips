@@ -86,9 +86,7 @@ fun initLabel(
 
     else -> when { // customRadio.isSelected
       row % 3 == 0 -> SwingConstants.LEFT
-
       row % 3 == 1 -> SwingConstants.CENTER
-
       else -> SwingConstants.RIGHT
     }
   }
