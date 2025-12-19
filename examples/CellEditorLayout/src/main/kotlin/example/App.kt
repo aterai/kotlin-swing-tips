@@ -92,7 +92,7 @@ private class CustomComponentCellEditor(
         val kc = e.keyChar
         // val kc = ke.getKeyCode()
         if (Character.isUnicodeIdentifierStart(kc)) {
-          field.text = field.text + kc
+          field.text += kc
         }
       }
     }
@@ -121,7 +121,8 @@ private class CustomComponent : JPanel(BorderLayout()) {
     if (!field.isFocusOwner && !pressed) {
       field.requestFocusInWindow()
       EventQueue.invokeLater {
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().redispatchEvent(field, e)
+        val manager = KeyboardFocusManager.getCurrentKeyboardFocusManager()
+        manager.redispatchEvent(field, e)
       }
     }
     return super.processKeyBinding(ks, e, condition, pressed)
