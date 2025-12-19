@@ -40,7 +40,7 @@ fun makeUI(): Component {
       if (painter0 == null || painter1 == null) {
         return
       }
-      val painter2 = Painter { g: Graphics2D, cb: JCheckBox, width: Int, height: Int ->
+      val painter2 = Painter { g, cb: JCheckBox, width, height ->
         painter1.paint(g, cb, width, height)
         val g2 = g.create()
         if (g2 is Graphics2D) {
