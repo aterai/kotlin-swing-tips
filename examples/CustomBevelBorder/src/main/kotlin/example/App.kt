@@ -6,24 +6,24 @@ import javax.swing.border.BevelBorder
 import javax.swing.border.Border
 
 fun makeUI(): Component {
-  val border = object : BevelBorder(RAISED) {
+  val p = JPanel(FlowLayout(FlowLayout.CENTER, 20, 20))
+  p.border = BorderFactory.createEmptyBorder(20, 50, 20, 50)
+
+  val border1 = object : BevelBorder(RAISED) {
     override fun getBorderInsets(
       c: Component,
       insets: Insets,
     ): Insets {
-      insets[10, 10, 10] = 10
+      insets.set(10, 10, 10, 10)
       return insets
     }
   }
-  val button1 = makeButton("Default BevelBorder", border)
-  val button2 = makeButton("Custom BevelBorder", CustomBevelBorder(BevelBorder.RAISED))
+  p.add(makeButton("Default BevelBorder", border1))
 
-  val p = JPanel(FlowLayout(FlowLayout.CENTER, 20, 20))
-  p.border = BorderFactory.createEmptyBorder(20, 50, 20, 50)
-  p.add(button1)
-  p.add(button2)
+  val border2 = CustomBevelBorder(BevelBorder.RAISED)
+  p.add(makeButton("Custom BevelBorder", border2))
+
   EventQueue.invokeLater { SwingUtilities.updateComponentTreeUI(p) }
-
   return JPanel(BorderLayout()).also {
     it.add(p)
     it.preferredSize = Dimension(320, 240)
@@ -33,19 +33,16 @@ fun makeUI(): Component {
 private fun makeButton(
   text: String,
   btnBorder: Border,
-): JButton {
-  val button = object : JButton("<html>JButton<br>+ $text") {
-    override fun updateUI() {
-      super.updateUI()
-      isOpaque = true
-      foreground = Color.WHITE
-      background = Color(0x5B_9B_D5)
-      isFocusPainted = false
-      isContentAreaFilled = false
-    }
+) = object : JButton("<html>JButton<br>+ $text") {
+  override fun updateUI() {
+    super.updateUI()
+    isOpaque = true
+    foreground = Color.WHITE
+    background = Color(0x5B_9B_D5)
+    isFocusPainted = false
+    isContentAreaFilled = false
+    border = btnBorder
   }
-  button.border = btnBorder
-  return button
 }
 
 private class CustomBevelBorder(
