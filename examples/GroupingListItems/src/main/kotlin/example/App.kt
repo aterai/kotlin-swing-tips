@@ -125,10 +125,11 @@ private class GroupList<E>(
   override fun updateUI() {
     setCellRenderer(null)
     super.updateUI()
+    val separator = JSeparator()
     val r = cellRenderer
     setCellRenderer { l, v, index, isSelected, cellHasFocus ->
       if (v is JSeparator) {
-        v as JSeparator
+        separator
       } else {
         r.getListCellRendererComponent(l, v, index, isSelected, cellHasFocus)
       }
