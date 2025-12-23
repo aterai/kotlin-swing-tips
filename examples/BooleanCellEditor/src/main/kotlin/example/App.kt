@@ -85,20 +85,20 @@ private class BooleanCellEditor : JCheckBox() {
     handler = object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
         val c = e.component
-        val table = SwingUtilities.getAncestorOfClass(JTable::class.java, c) as? JTable
-        (e.component as? JCheckBox)?.also { cb ->
-          val m = cb.model
-          val editingRow = table?.editingRow ?: return
+        val table = SwingUtilities.getAncestorOfClass(JTable::class.java, c)
+        if (c is JCheckBox && table is JTable) {
+          val m = c.model
+          val editingRow = table.editingRow
           if (m.isPressed && table.isRowSelected(editingRow) && e.isControlDown) {
             if (editingRow % 2 == 0) {
-              cb.isOpaque = false
+              c.isOpaque = false
             } else {
-              cb.isOpaque = true
-              cb.background = UIManager.getColor("Table.alternateRowColor")
+              c.isOpaque = true
+              c.background = UIManager.getColor("Table.alternateRowColor")
             }
           } else {
-            cb.background = table.selectionBackground
-            cb.isOpaque = true
+            c.background = table.selectionBackground
+            c.isOpaque = true
           }
         }
       }
