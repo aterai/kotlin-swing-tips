@@ -31,7 +31,11 @@ private val table = object : JTable(model) {
           if (emphasisIndices.contains(row)) {
             it.background = Color.YELLOW
           } else {
-            it.background = if (isSelected) tbl.selectionBackground else tbl.background
+            it.background = if (isSelected) {
+              tbl.selectionBackground
+            } else {
+              tbl.background
+            }
           }
         }
     }
