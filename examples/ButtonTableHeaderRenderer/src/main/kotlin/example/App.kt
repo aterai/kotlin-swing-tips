@@ -10,7 +10,10 @@ import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableModel
 
 fun makeUI(): Component {
-  val table = object : JTable(makeModel()) {
+  val table1 = JTable(makeModel())
+  table1.autoCreateRowSorter = true
+
+  val table2 = object : JTable(makeModel()) {
     private var listener: MouseAdapter? = null
 
     override fun updateUI() {
@@ -26,12 +29,14 @@ fun makeUI(): Component {
       header.addMouseMotionListener(listener)
     }
   }
+
   val mb = JMenuBar()
   mb.add(LookAndFeelUtils.createLookAndFeelMenu())
+
   return JPanel(GridLayout(2, 1)).also {
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
-    it.add(JScrollPane(JTable(makeModel()).also { t -> t.autoCreateRowSorter = true }))
-    it.add(JScrollPane(table))
+    it.add(JScrollPane(table1))
+    it.add(JScrollPane(table2))
     it.preferredSize = Dimension(320, 240)
   }
 }
