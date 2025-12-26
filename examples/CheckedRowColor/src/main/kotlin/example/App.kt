@@ -46,7 +46,8 @@ fun makeTable(model: TableModel): JTable {
       column: Int,
     ): Component {
       val r = super.prepareRenderer(renderer, row, column)
-      val b = model.getValueAt(convertRowIndexToModel(row), BOOLEAN_COLUMN) as? Boolean
+      val rowIndex = convertRowIndexToModel(row)
+      val b = model.getValueAt(rowIndex, BOOLEAN_COLUMN) as? Boolean
       r.background = if (b == true) Color.ORANGE else background
       r.foreground = foreground
       return r
