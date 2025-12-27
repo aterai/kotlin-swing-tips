@@ -200,7 +200,8 @@ private class AnalogClock : JPanel() {
         val pt = at.transform(ptSrc, null)
         val dx = pt.x - r.centerX
         val dy = pt.y - r.centerY
-        g2.fill(AffineTransform.getTranslateInstance(dx, dy).createTransformedShape(s))
+        val transform = AffineTransform.getTranslateInstance(dx, dy)
+        g2.fill(transform.createTransformedShape(s))
         at.rotate(PI / 6.0)
       }
     }

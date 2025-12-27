@@ -21,7 +21,9 @@ fun makeUI(): Component {
       val ml = object : MouseAdapter() {
         override fun mouseClicked(e: MouseEvent) {
           // println("clicked")
-          KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner()
+          KeyboardFocusManager
+            .getCurrentKeyboardFocusManager()
+            .clearGlobalFocusOwner()
         }
       }
       root.addMouseListener(ml)
