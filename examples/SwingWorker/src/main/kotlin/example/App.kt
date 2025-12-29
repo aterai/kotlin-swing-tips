@@ -27,19 +27,17 @@ private class AnimationTask : BackgroundTask() {
   }
 
   override fun done() {
-    if (!area.isDisplayable) {
-      cancel(true)
-      return
-    }
-    updateComponentDone()
-    runCatching {
-      val msg = if (isCancelled) "Cancelled" else get()
-      appendText("$msg\n")
-    }.onFailure {
-      if (it is InterruptedException) {
-        Thread.currentThread().interrupt()
+    if (area.isDisplayable) {
+      updateComponentDone()
+      runCatching {
+        val msg = if (isCancelled) "Cancelled" else get()
+        appendText("$msg\n")
+      }.onFailure {
+        if (it is InterruptedException) {
+          Thread.currentThread().interrupt()
+        }
+        appendText("Error: ${it.message}\n")
       }
-      appendText("Error: ${it.message}\n")
     }
   }
 }

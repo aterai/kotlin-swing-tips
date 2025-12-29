@@ -18,11 +18,9 @@ fun makeUI(): Component {
 
     object : BackgroundTask() {
       override fun done() {
-        if (!panel.isDisplayable) {
-          cancel(true)
-          return
+        if (panel.isDisplayable) {
+          dialog.isVisible = false
         }
-        dialog.isVisible = false
       }
     }.execute()
     dialog.isVisible = true

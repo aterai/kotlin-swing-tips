@@ -81,15 +81,13 @@ private class ProgressTask : BackgroundTask() {
   }
 
   override fun done() {
-    if (!logger.isDisplayable) {
-      cancel(true)
-      return
-    }
-    initStatusPanel(false)
-    runCatching {
-      appendLine(if (isCancelled) "\nCancelled\n" else get())
-    }.onFailure {
-      appendLine("\n${it.message}\n")
+    if (logger.isDisplayable) {
+      initStatusPanel(false)
+      runCatching {
+        appendLine(if (isCancelled) "\nCancelled\n" else get())
+      }.onFailure {
+        appendLine("\n${it.message}\n")
+      }
     }
   }
 }

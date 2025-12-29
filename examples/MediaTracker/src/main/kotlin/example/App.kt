@@ -90,14 +90,12 @@ fun addImage(path: Path) {
     }
 
     override fun done() {
-      if (!table.isDisplayable) {
-        cancel(true)
-        return
+      if (table.isDisplayable) {
+        if (!mediaTracker.isErrorID(id)) {
+          model.addRowData(RowData(id, path, img.getWidth(table), img.getHeight(table)))
+        }
+        mediaTracker.removeImage(img)
       }
-      if (!mediaTracker.isErrorID(id)) {
-        model.addRowData(RowData(id, path, img.getWidth(table), img.getHeight(table)))
-      }
-      mediaTracker.removeImage(img)
     }
   }.execute()
 }

@@ -58,19 +58,17 @@ private class ProgressTabbedPane : JTabbedPane() {
       }
 
       override fun done() {
-        if (!isDisplayable) {
-          cancel(true)
-          return
+        if (isDisplayable) {
+          label.toolTipText = runCatching {
+            setTabComponentAt(currentIndex, label)
+            setComponentAt(currentIndex, content)
+            get()
+          }.onFailure {
+            if (it is InterruptedException) {
+              Thread.currentThread().interrupt()
+            }
+          }.getOrNull() ?: "Exception"
         }
-        label.toolTipText = runCatching {
-          setTabComponentAt(currentIndex, label)
-          setComponentAt(currentIndex, content)
-          get()
-        }.onFailure {
-          if (it is InterruptedException) {
-            Thread.currentThread().interrupt()
-          }
-        }.getOrNull() ?: "Exception"
       }
     }
     worker.addPropertyChangeListener(ProgressListener(bar))

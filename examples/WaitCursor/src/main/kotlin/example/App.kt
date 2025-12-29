@@ -12,9 +12,7 @@ fun makeUI(): Component {
     c?.isEnabled = false
     object : BackgroundTask() {
       override fun done() {
-        if (!button.isDisplayable) {
-          cancel(true)
-        } else {
+        if (button.isDisplayable) {
           button.rootPane.glassPane.isVisible = false
           c?.isEnabled = true
         }

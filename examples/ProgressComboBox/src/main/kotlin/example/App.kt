@@ -42,20 +42,18 @@ private class ComboTask : BackgroundTask() {
   }
 
   override fun done() {
-    if (!combo.isDisplayable) {
-      cancel(true)
-      return
-    }
-    runCatching {
-      if (!isCancelled) {
-        val array = get()
-        combo.model = DefaultComboBoxModel(array)
-        combo.selectedIndex = 0
+    if (combo.isDisplayable) {
+      runCatching {
+        if (!isCancelled) {
+          val array = get()
+          combo.model = DefaultComboBoxModel(array)
+          combo.selectedIndex = 0
+        }
       }
+      combo.isEnabled = true
+      button.isEnabled = true
+      counter = 0
     }
-    combo.isEnabled = true
-    button.isEnabled = true
-    counter = 0
   }
 }
 

@@ -99,20 +99,18 @@ private class TableUpdateTask(
   }
 
   override fun done() {
-    if (!table.isDisplayable) {
-      cancel(true)
-      return
+    if (table.isDisplayable) {
+      val text = runCatching {
+        get()
+      }.onFailure {
+        if (it is InterruptedException) {
+          Thread.currentThread().interrupt()
+        }
+      }.getOrNull() ?: "Interrupted"
+      label.toolTipText = text
+      table.isEnabled = true
+      field.isEditable = true
     }
-    val text = runCatching {
-      get()
-    }.onFailure {
-      if (it is InterruptedException) {
-        Thread.currentThread().interrupt()
-      }
-    }.getOrNull() ?: "Interrupted"
-    label.toolTipText = text
-    table.isEnabled = true
-    field.isEditable = true
   }
 }
 

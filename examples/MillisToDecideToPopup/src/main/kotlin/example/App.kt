@@ -21,19 +21,17 @@ private fun executeWorker(
     }
 
     override fun done() {
-      if (!area.isDisplayable) {
-        cancel(true)
-        return
+      if (area.isDisplayable) {
+        button.isEnabled = true
+        monitor.close()
+        if (isCancelled) {
+          area.append("Cancelled\n")
+        } else {
+          val msg = runCatching { get() }.onFailure { "Error: ${it.message}" }
+          area.append("$msg\n")
+        }
+        area.caretPosition = area.document.length
       }
-      button.isEnabled = true
-      monitor.close()
-      if (isCancelled) {
-        area.append("Cancelled\n")
-      } else {
-        val msg = runCatching { get() }.onFailure { "Error: ${it.message}" }
-        area.append("$msg\n")
-      }
-      area.caretPosition = area.document.length
     }
   }
   worker.addPropertyChangeListener(ProgressListener(monitor))

@@ -38,25 +38,23 @@ private fun executeWorker() {
     }
 
     override fun done() {
-      if (!runButton.isDisplayable) {
-        cancel(true)
-        return
-      }
-      loadingLabel.stopAnimation()
-      runButton.isEnabled = true
-      cancelButton.isEnabled = false
-      statusPanel.remove(bar)
-      statusPanel.revalidate()
-      appendLine("\n")
-      runCatching {
-        appendLine(if (isCancelled) "Cancelled" else get())
-      }.onFailure {
-        if (it is InterruptedException) {
-          Thread.currentThread().interrupt()
+      if (runButton.isDisplayable) {
+        loadingLabel.stopAnimation()
+        runButton.isEnabled = true
+        cancelButton.isEnabled = false
+        statusPanel.remove(bar)
+        statusPanel.revalidate()
+        appendLine("\n")
+        runCatching {
+          appendLine(if (isCancelled) "Cancelled" else get())
+        }.onFailure {
+          if (it is InterruptedException) {
+            Thread.currentThread().interrupt()
+          }
+          appendLine("Interrupted")
         }
-        appendLine("Interrupted")
+        appendLine("\n\n")
       }
-      appendLine("\n\n")
     }
   }
   w.addPropertyChangeListener(ProgressListener(bar))

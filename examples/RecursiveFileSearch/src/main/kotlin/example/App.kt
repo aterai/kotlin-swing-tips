@@ -115,24 +115,22 @@ private open class FileSearchTask(
   }
 
   override fun done() {
-    if (!statusPanel.isDisplayable) {
-      cancel(true)
-      return
+    if (statusPanel.isDisplayable) {
+      updateComponentStatus(false)
+      appendLine("----------------")
+      val text = if (isCancelled) {
+        "Cancelled"
+      } else {
+        runCatching {
+          get()
+        }.onFailure {
+          if (it is InterruptedException) {
+            Thread.currentThread().interrupt()
+          }
+        }.getOrNull() ?: "Interrupted"
+      }
+      appendLine(text)
     }
-    updateComponentStatus(false)
-    appendLine("----------------")
-    val text = if (isCancelled) {
-      "Cancelled"
-    } else {
-      runCatching {
-        get()
-      }.onFailure {
-        if (it is InterruptedException) {
-          Thread.currentThread().interrupt()
-        }
-      }.getOrNull() ?: "Interrupted"
-    }
-    appendLine(text)
   }
 }
 

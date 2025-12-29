@@ -67,15 +67,13 @@ private class ProgressTask : BackgroundTask() {
   }
 
   override fun done() {
-    if (!area.isDisplayable) {
-      cancel(true)
-      return
+    if (area.isDisplayable) {
+      updateComponentDone()
+      val message = runCatching {
+        "%n%s%n".format(if (isCancelled) "Cancelled" else get())
+      }.getOrNull() ?: "%n%s%n".format("Interrupted")
+      appendLine(message)
     }
-    updateComponentDone()
-    val message = runCatching {
-      "%n%s%n".format(if (isCancelled) "Cancelled" else get())
-    }.getOrNull() ?: "%n%s%n".format("Interrupted")
-    appendLine(message)
   }
 }
 
