@@ -105,8 +105,12 @@ private open class PlaqueBorder(
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
     g2.paint = Color.GRAY
+    val dx = x.toDouble()
+    val dy = y.toDouble()
+    val dw = width - 1.0
+    val dh = height - 1.0
     val arc = getBorderInsets(c).top.toDouble()
-    g2.draw(getBorderShape(x.toDouble(), y.toDouble(), width - 1.0, height - 1.0, arc))
+    g2.draw(getBorderShape(dx, dy, dw, dh, arc))
     g2.dispose()
   }
 
