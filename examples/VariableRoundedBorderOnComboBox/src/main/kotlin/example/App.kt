@@ -86,7 +86,8 @@ fun makeUI(): Component {
 
 private fun makeTitledPanel(title: String, c: Component): Component {
   val p = JPanel(BorderLayout())
-  p.border = BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), title)
+  val emptyBorder = BorderFactory.createEmptyBorder()
+  p.border = BorderFactory.createTitledBorder(emptyBorder, title)
   p.add(c)
   return p
 }
