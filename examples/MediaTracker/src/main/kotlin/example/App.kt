@@ -92,7 +92,8 @@ fun addImage(path: Path) {
     override fun done() {
       if (table.isDisplayable) {
         if (!mediaTracker.isErrorID(id)) {
-          model.addRowData(RowData(id, path, img.getWidth(table), img.getHeight(table)))
+          val o = RowData(id, path, img.getWidth(table), img.getHeight(table))
+          model.addRowData(o)
         }
         mediaTracker.removeImage(img)
       }
