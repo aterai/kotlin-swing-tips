@@ -81,7 +81,12 @@ private class IndeterminateIcon : Icon {
     g2.translate(x, y)
     icon.paintIcon(c, g2, 0, 0)
     g2.paint = FOREGROUND
-    g2.fillRect(MARGIN, (iconHeight - HEIGHT) / 2, iconWidth - MARGIN - MARGIN, HEIGHT)
+    g2.fillRect(
+      MARGIN,
+      (iconHeight - HEIGHT) / 2,
+      iconWidth - MARGIN - MARGIN,
+      HEIGHT,
+    )
     g2.dispose()
   }
 
