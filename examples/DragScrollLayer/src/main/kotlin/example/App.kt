@@ -123,7 +123,8 @@ private class DragScrollLayerUI : LayerUI<JScrollPane>() {
       val cp = SwingUtilities.convertPoint(c, e.point, viewPort)
       val vp = viewPort.viewPosition
       vp.translate(pp.x - cp.x, pp.y - cp.y)
-      (viewPort.view as? JComponent)?.scrollRectToVisible(Rectangle(vp, viewPort.size))
+      val r = Rectangle(vp, viewPort.size)
+      (viewPort.view as? JComponent)?.scrollRectToVisible(r)
       pp.location = cp
     }
   }
