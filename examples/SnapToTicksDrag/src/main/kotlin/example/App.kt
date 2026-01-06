@@ -45,7 +45,11 @@ fun makeUI(): Component {
       handler = MouseWheelListener { e ->
         (e.component as? JSlider)?.also {
           val hasMinorTickSp = it.minorTickSpacing > 0
-          val tickSp = if (hasMinorTickSp) it.minorTickSpacing else it.majorTickSpacing
+          val tickSp = if (hasMinorTickSp) {
+            it.minorTickSpacing
+          } else {
+            it.majorTickSpacing
+          }
           val v = it.value - e.wheelRotation * tickSp
           val m = it.model
           // it.value = minOf(m.maximum, maxOf(v, m.minimum))
