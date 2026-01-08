@@ -18,7 +18,6 @@ fun makeUI(): Component {
   tabs.addTab("222", JLabel("55555"))
   tabs.addTab("333", JLabel("66666"))
   tabs.addTab("444", JButton("77777"))
-
   return JPanel(BorderLayout()).also {
     it.add(tabs)
     it.preferredSize = Dimension(320, 240)
@@ -84,13 +83,12 @@ private class TableHeaderTabbedPane : JPanel(BorderLayout()) {
   private inner class TableHeaderMouseInputHandler : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
       val h = e.component
-      if (h !is JTableHeader || h.columnAtPoint(e.point) < 0) {
-        return
+      if (h is JTableHeader && h.columnAtPoint(e.point) >= 0) {
+        val m = h.columnModel
+        val title = m.getColumn(h.columnAtPoint(e.point)).headerValue
+        cardLayout.show(contentsPanel, title.toString())
+        selectedColumn = title
       }
-      val m = h.columnModel
-      val title = m.getColumn(h.columnAtPoint(e.point)).headerValue
-      cardLayout.show(contentsPanel, title.toString())
-      selectedColumn = title
     }
 
     override fun mouseEntered(e: MouseEvent) {
