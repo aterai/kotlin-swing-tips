@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.event.ActionEvent
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.net.URL
+import java.net.URI
 import java.net.URLConnection
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
@@ -39,7 +39,7 @@ fun executeWorker(e: ActionEvent) {
   val idx = 19 // 1 + random.nextInt(27 - 1)
   val path = "https://docs.oracle.com/javase/8/docs/api/index-files/index-$idx.html"
   append(path)
-  val urlConnection = runCatching { URL(path).openConnection() }
+  val urlConnection = runCatching { URI(path).toURL().openConnection() }
     .onFailure { textArea.text = "error: " + it.message }
     .getOrNull()
     ?: return
@@ -157,7 +157,8 @@ private open class BackgroundTask(
     }
     val line = scanner.nextLine()
     val size = readied + line.toByteArray(cs).size + 1 // +1: \n
-    val note = "%03d%% - %d/%d%n".format(100 * size / lengthOfFile, size, lengthOfFile)
+    val pct = 100 * size / lengthOfFile
+    val note = "%03d%% - %d/%d%n".format(pct, size, lengthOfFile)
     publish(Chunk(line, note))
     return size
   }
