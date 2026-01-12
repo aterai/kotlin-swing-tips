@@ -73,7 +73,11 @@ fun makeUI(): Component {
 private fun makeCheckBoxPanel(tabs: JTabbedPane): Component {
   val tc = JCheckBox("Top", true)
   tc.addActionListener {
-    tabs.tabPlacement = if (tc.isSelected) SwingConstants.TOP else SwingConstants.RIGHT
+    tabs.tabPlacement = if (tc.isSelected) {
+      SwingConstants.TOP
+    } else {
+      SwingConstants.RIGHT
+    }
   }
   val sc = JCheckBox("SCROLL_TAB_LAYOUT", true)
   sc.addActionListener {
