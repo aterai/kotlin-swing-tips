@@ -9,12 +9,12 @@ import javax.swing.event.PopupMenuListener
 private val log = JTextArea()
 
 fun makeUI(): Component {
+  val key = "ComboBox.isEnterSelectablePopup"
   val p = JPanel(GridLayout(0, 1))
-  p.add(JLabel("ComboBox.isEnterSelectablePopup: false(default)", SwingConstants.LEFT))
+  p.add(JLabel("$key: false(default)", SwingConstants.LEFT))
   p.add(makeComboBox(false))
-  p.add(JLabel("ComboBox.isEnterSelectablePopup: true", SwingConstants.LEFT))
+  p.add(JLabel("$key: true", SwingConstants.LEFT))
   p.add(makeComboBox(true))
-
   return JPanel(BorderLayout(5, 5)).also {
     it.add(p, BorderLayout.NORTH)
     it.add(JScrollPane(log))
@@ -24,7 +24,7 @@ fun makeUI(): Component {
 }
 
 private fun makeComboBox(isEnterSelectable: Boolean): JComboBox<String> {
-  // UIManager.put("ComboBox.isEnterSelectablePopup", Boolean.TRUE)
+  // UIManager.put("ComboBox.isEnterSelectablePopup", true)
   val combo = JComboBox(arrayOf("aaa", "bbb", "CCC", "DDD"))
   combo.isEditable = true
   val pml = object : PopupMenuListener {
