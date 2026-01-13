@@ -8,8 +8,8 @@ import javax.swing.plaf.basic.BasicTabbedPaneUI
 
 fun makeUI(): Component {
   val tabbedPane = object : JTabbedPane(
-    JTabbedPane.TOP,
-    JTabbedPane.SCROLL_TAB_LAYOUT,
+    TOP,
+    SCROLL_TAB_LAYOUT,
   ) {
     override fun updateUI() {
       super.updateUI()
@@ -71,11 +71,11 @@ private class WindowsTabHeightTabbedPaneUI : WindowsTabbedPaneUI() {
     iconRect: Rectangle,
     textRect: Rectangle,
   ) {
-    val b = tabPlacement == SwingConstants.TOP || tabPlacement == SwingConstants.BOTTOM
+    val b = tabPlacement == TOP || tabPlacement == BOTTOM
     if (b && tabPane.selectedIndex != tabIndex) {
       val tabHeight = TAB_AREA_HEIGHT / 2 + 3
       rects[tabIndex].height = tabHeight
-      if (tabPlacement == JTabbedPane.TOP) {
+      if (tabPlacement == TOP) {
         rects[tabIndex].y = TAB_AREA_HEIGHT - tabHeight + 3
       }
     }
