@@ -10,14 +10,14 @@ import javax.swing.*
 fun makeUI(): Component {
   UIManager.put("example.TabButton", "TabViewButtonUI")
   UIManager.put("TabViewButtonUI", "example.OperaTabViewButtonUI")
-  val tab3 = CardLayoutTabbedPane()
-  tab3.border = BorderFactory.createTitledBorder("CardLayout+JRadioButton(opera like)")
-  tab3.addTab("9999", JScrollPane(JTree()))
-  tab3.addTab("11111111111111", JLabel("666666"))
-  tab3.addTab("222222", JLabel("555555555"))
-  tab3.addTab("333", JButton("4444"))
+  val tab = CardLayoutTabbedPane()
+  tab.border = BorderFactory.createTitledBorder("CardLayout+JRadioButton")
+  tab.addTab("9999", JScrollPane(JTree()))
+  tab.addTab("11111111111111", JLabel("666666"))
+  tab.addTab("222222", JLabel("555555555"))
+  tab.addTab("333", JButton("4444"))
   return JPanel(BorderLayout()).also {
-    it.add(tab3)
+    it.add(tab)
     it.preferredSize = Dimension(320, 240)
   }
 }
