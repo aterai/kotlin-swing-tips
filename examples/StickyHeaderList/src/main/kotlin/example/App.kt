@@ -63,7 +63,10 @@ private class StickyLayerUI : LayerUI<JScrollPane>() {
     super.uninstallUI(c)
   }
 
-  override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out JScrollPane>) {
+  override fun processMouseMotionEvent(
+    e: MouseEvent,
+    l: JLayer<out JScrollPane>,
+  ) {
     super.processMouseMotionEvent(e, l)
     val c = l.view.viewport.view
     if (e.id == MouseEvent.MOUSE_DRAGGED && c is JList<*>) {
@@ -71,7 +74,10 @@ private class StickyLayerUI : LayerUI<JScrollPane>() {
     }
   }
 
-  override fun processMouseWheelEvent(e: MouseWheelEvent, l: JLayer<out JScrollPane>) {
+  override fun processMouseWheelEvent(
+    e: MouseWheelEvent,
+    l: JLayer<out JScrollPane>,
+  ) {
     super.processMouseWheelEvent(e, l)
     val c = l.view.viewport.view
     if (c is JList<*>) {
