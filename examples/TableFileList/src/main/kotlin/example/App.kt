@@ -236,7 +236,8 @@ private class FileListTable(
         repaint()
       } else {
         val index = rowAtPoint(e.point)
-        val rect = getCellRect2(this@FileListTable, index, convertColumnIndexToView(0))
+        val viewCol = convertColumnIndexToView(0)
+        val rect = getCellRect2(this@FileListTable, index, viewCol)
         if (!rect.contains(e.point)) {
           clearSelection()
           repaint()
