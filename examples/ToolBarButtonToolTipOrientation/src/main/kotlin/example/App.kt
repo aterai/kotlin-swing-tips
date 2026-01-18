@@ -17,7 +17,8 @@ fun makeUI(): Component {
   val check = JCheckBox("", leftToRight)
   check.toolTipText = "isLeftToRight"
   check.addActionListener {
-    toolBar.componentOrientation = if ((it.source as? JCheckBox)?.isSelected == true) {
+    val b = (it.source as? JCheckBox)?.isSelected == true
+    toolBar.componentOrientation = if (b) {
       ComponentOrientation.LEFT_TO_RIGHT
     } else {
       ComponentOrientation.RIGHT_TO_LEFT

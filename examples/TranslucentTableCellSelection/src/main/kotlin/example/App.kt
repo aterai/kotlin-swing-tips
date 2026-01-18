@@ -149,7 +149,13 @@ private class TranslucentCellSelectionLayerUI : LayerUI<JScrollPane>() {
   companion object {
     private val BORDER_STROKE = BasicStroke(2f)
 
-    private fun addArea(c: Component?, table: JTable, area: Area, row: Int, col: Int) {
+    private fun addArea(
+      c: Component?,
+      table: JTable,
+      area: Area,
+      row: Int,
+      col: Int,
+    ) {
       if (table.isCellSelected(row, col)) {
         val r = table.getCellRect(row, col, true)
         area.add(Area(SwingUtilities.convertRectangle(table, r, c)))
