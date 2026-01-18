@@ -126,18 +126,16 @@ fun workerExecute() {
     }
 
     override fun done() {
-      if (panel.isDisplayable) {
-        setComponentEnabled(true)
-        panel.toolTipText = runCatching {
-          if (isCancelled) "Cancelled" else get()
-        }.onFailure {
-          if (it is InterruptedException) {
-            Thread.currentThread().interrupt()
-          }
-          "Error: ${it.message}"
-        }.getOrNull()
-        panel.repaint()
-      }
+      setComponentEnabled(true)
+      panel.toolTipText = runCatching {
+        if (isCancelled) "Cancelled" else get()
+      }.onFailure {
+        if (it is InterruptedException) {
+          Thread.currentThread().interrupt()
+        }
+        "Error: ${it.message}"
+      }.getOrNull()
+      panel.repaint()
     }
   }.also { it.execute() }
 }
