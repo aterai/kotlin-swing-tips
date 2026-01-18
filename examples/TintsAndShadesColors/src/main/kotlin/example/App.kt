@@ -93,7 +93,13 @@ private fun shade(l: JLabel, color: Color, shade: Float, txt: String) {
   l.text = txt + getColorCode(c)
 }
 
-private fun luminance(l: JLabel, c: Color, lumMod: Double, lumOff: Double, s: String) {
+private fun luminance(
+  l: JLabel,
+  c: Color,
+  lumMod: Double,
+  lumOff: Double,
+  s: String,
+) {
   val bg = ColorUtils.getLuminanceColor(c, lumMod, lumOff)
   l.background = bg
   l.text = s + getColorCode(bg)
