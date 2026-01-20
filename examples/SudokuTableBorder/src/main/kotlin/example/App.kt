@@ -125,7 +125,14 @@ private class SudokuCellRenderer(
   ): Component {
     val isEditable = mask[row][column] == 0
     val b = isEditable && isSelected
-    val c = super.getTableCellRendererComponent(table, value, b, hasFocus, row, column)
+    val c = super.getTableCellRendererComponent(
+      table,
+      value,
+      b,
+      hasFocus,
+      row,
+      column,
+    )
     if (!isEditable) {
       c.font = c.font.deriveFont(Font.BOLD)
     }
