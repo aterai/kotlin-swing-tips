@@ -72,7 +72,10 @@ fun makeUI(): Component {
   table.setDefaultEditor(Boolean::class.javaObjectType, DefaultCellEditor(checkBox))
 
   table.setDefaultRenderer(Any::class.java, TranslucentObjectRenderer())
-  table.setDefaultRenderer(Boolean::class.javaObjectType, TranslucentBooleanRenderer())
+  table.setDefaultRenderer(
+    Boolean::class.javaObjectType,
+    TranslucentBooleanRenderer(),
+  )
   table.isOpaque = false
   table.background = alphaZero
   // table.gridColor = alphaZero
