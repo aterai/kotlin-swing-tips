@@ -66,7 +66,10 @@ private class LockingGlassPane : JPanel() {
   override fun setVisible(isVisible: Boolean) {
     val oldVisible = isVisible()
     super.setVisible(isVisible)
-    rootPane?.takeIf { isVisible() != oldVisible }?.layeredPane?.isVisible = !isVisible
+    rootPane
+      ?.takeIf { isVisible() != oldVisible }
+      ?.layeredPane
+      ?.isVisible = !isVisible
   }
 
   override fun paintComponent(g: Graphics) {
