@@ -54,12 +54,13 @@ private fun makeComboBox1(
       super.updateUI()
       setMaximumRowCount(3)
       prototypeDisplayValue = proto
-      val popup = getAccessibleContext().getAccessibleChild(0) as? ComboPopup ?: return
-      val list = popup.list
-      list.layoutOrientation = JList.HORIZONTAL_WRAP
-      list.visibleRowCount = 3
-      list.fixedCellWidth = proto.iconWidth
-      list.fixedCellHeight = proto.iconHeight
+      val popup = getAccessibleContext().getAccessibleChild(0)
+      (popup as? ComboPopup)?.list?.also {
+        it.layoutOrientation = JList.HORIZONTAL_WRAP
+        it.visibleRowCount = 3
+        it.fixedCellWidth = proto.iconWidth
+        it.fixedCellHeight = proto.iconHeight
+      }
     }
   }
 }
