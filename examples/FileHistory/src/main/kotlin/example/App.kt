@@ -331,7 +331,8 @@ class BarFactory(
     private const val TIP_SUFFIX = "Tooltip"
     private const val MNE_SUFFIX = "Mnemonic"
 
-    private fun tokenize(input: String?) = input?.split("\\s".toRegex()) ?: emptyList()
+    private fun tokenize(input: String?) =
+      input?.split("\\s".toRegex()) ?: emptyList()
   }
 }
 
