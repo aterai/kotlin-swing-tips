@@ -3,10 +3,14 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI() = JPanel(GridLayout(2, 1)).also {
-  it.add(makePanel(JPanel(FlowLayout(FlowLayout.LEFT, 10, 10))))
-  it.add(makePanel(ScrollableWrapPanel(ScrollableWrapLayout(FlowLayout.LEFT, 10, 10))))
-  it.preferredSize = Dimension(320, 240)
+fun makeUI(): Component {
+  val p1 = JPanel(FlowLayout(FlowLayout.LEFT, 10, 10))
+  val p2 = ScrollableWrapPanel(ScrollableWrapLayout(FlowLayout.LEFT, 10, 10))
+  return JPanel(GridLayout(2, 1)).also {
+    it.add(makePanel(p1))
+    it.add(makePanel(p2))
+    it.preferredSize = Dimension(320, 240)
+  }
 }
 
 private fun makePanel(box: JPanel): Component {
