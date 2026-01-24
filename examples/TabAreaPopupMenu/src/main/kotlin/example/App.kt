@@ -1,10 +1,8 @@
 package example
 
 import java.awt.*
-import java.awt.event.InputEvent
 import java.awt.event.ItemEvent
 import java.awt.event.ItemListener
-import java.awt.event.KeyEvent
 import java.awt.event.MouseEvent
 import javax.swing.*
 import javax.swing.plaf.LayerUI
@@ -101,7 +99,7 @@ private fun makeTabPopupMenu(): JPopupMenu {
   }
   popup.addSeparator()
   val close = popup.add("Close")
-  close.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.CTRL_DOWN_MASK)
+  close.accelerator = KeyStroke.getKeyStroke("ctrl F4")
   close.addActionListener {
     (popup.invoker as? JTabbedPane)?.also {
       it.remove(it.selectedIndex)
