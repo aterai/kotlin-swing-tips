@@ -35,8 +35,8 @@ fun makeUI(): Component {
   table.setDefaultEditor(Any::class.java, cellEditor)
 
   val r = DefaultTableCellRenderer()
-  table.setDefaultRenderer(Any::class.java) { tbl, value, isSelected, _, row, column ->
-    r.getTableCellRendererComponent(tbl, value, isSelected, false, row, column)
+  table.setDefaultRenderer(Any::class.java) { t, v, selected, _, row, col ->
+    r.getTableCellRendererComponent(t, v, selected, false, row, col)
   }
 
   val p = JPanel(GridLayout(2, 1))
