@@ -34,7 +34,8 @@ fun makeUI(): Component {
   table.rowSorter = sorter
 
   for (year in 1..2019) {
-    model.addRow(arrayOf(year, "Test: $year", if (year % 2 == 0) "" else "comment..."))
+    val com = if (year % 2 == 0) "" else "comment..."
+    model.addRow(arrayOf<Any>(year, "Test: $year", com))
   }
 
   initLinkBox(100, 1)
