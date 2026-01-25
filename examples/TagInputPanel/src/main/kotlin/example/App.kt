@@ -75,9 +75,7 @@ private class TagInputPanel : JPanel(BorderLayout()) {
     setBackground(UIManager.getColor("TextField.background"))
   }
 
-  fun getTagContainer(): Container {
-    return tagContainer
-  }
+  fun getTagContainer() = tagContainer
 
   private fun addTag(text: String) {
     val tag = JPanel(BorderLayout(5, 0))
