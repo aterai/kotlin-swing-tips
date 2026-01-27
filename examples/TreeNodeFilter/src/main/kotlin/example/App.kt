@@ -78,12 +78,12 @@ fun searchTree(
 ) {
   val node = path.lastPathComponent as? DefaultMutableTreeNode
   (node?.userObject as? FilterableNode)?.also {
-    it.status = node.toString().startsWith(q)
+    it.visible = node.toString().startsWith(q)
     (tree.model as? DefaultTreeModel)?.nodeChanged(node)
-    if (it.status) {
+    if (it.visible) {
       tree.expandPath(if (node.isLeaf) path.parentPath else path)
     }
-    if (!it.status) {
+    if (!it.visible) {
       for (c in node.children()) {
         searchTree(tree, path.pathByAddingChild(c), q)
       }
@@ -96,7 +96,7 @@ fun resetAll(
   match: Boolean,
 ) {
   val node = parent.lastPathComponent as? DefaultMutableTreeNode ?: return
-  (node.userObject as? FilterableNode)?.status = match
+  (node.userObject as? FilterableNode)?.visible = match
   for (c in node.children()) {
     resetAll(parent.pathByAddingChild(c), match)
   }
@@ -122,7 +122,7 @@ fun visitAll(
 private data class FilterableNode(
   val label: String,
 ) {
-  var status = false
+  var visible = false
 
   override fun toString() = label
 }
@@ -153,7 +153,7 @@ private class FilterableStatusUpdateListener : TreeModelListener {
       node = model.root as? DefaultMutableTreeNode
       c = node?.userObject as? FilterableNode
     }
-    updateAllChildrenUserObject(node, c?.status)
+    updateAllChildrenUserObject(node, c?.visible)
     model.nodeChanged(node)
     adjusting = false
   }
@@ -163,12 +163,12 @@ private class FilterableStatusUpdateListener : TreeModelListener {
     val children = parent.children()
     for (node in children) {
       val check = (node as? DefaultMutableTreeNode)?.userObject as? FilterableNode
-      if (check?.status == true) {
-        uo.status = true
+      if (check?.visible == true) {
+        uo.visible = true
         return
       }
     }
-    uo.status = false
+    uo.visible = false
   }
 
   private fun updateAllChildrenUserObject(
@@ -181,7 +181,7 @@ private class FilterableStatusUpdateListener : TreeModelListener {
       if (root == node) {
         continue
       }
-      (node?.userObject as? FilterableNode)?.status = match ?: false
+      (node?.userObject as? FilterableNode)?.visible = match ?: false
     }
   }
 
@@ -219,8 +219,9 @@ private class FilterTreeCellRenderer : DefaultTreeCellRenderer() {
       row,
       hasFocus,
     )
-    val node = value as? DefaultMutableTreeNode
-    return if ((node?.userObject as? FilterableNode)?.status == true) c else emptyLabel
+    val uo = (value as? DefaultMutableTreeNode)?.userObject
+    val b = (uo as? FilterableNode)?.visible == true
+    return if (b) c else emptyLabel
   }
 }
 
