@@ -22,11 +22,14 @@ private fun makeBox(icon: Icon): Box {
   box.add(Box.createHorizontalGlue())
   box.add(makeLabel("0", icon))
   box.add(Box.createHorizontalStrut(16))
-  box.add(makeLabel("180", QuadrantRotateIcon(icon, QuadrantRotate.HORIZONTAL_FLIP)))
+  val icon2 = QuadrantRotateIcon(icon, QuadrantRotate.HORIZONTAL_FLIP)
+  box.add(makeLabel("180", icon2))
   box.add(Box.createHorizontalStrut(16))
-  box.add(makeLabel("90", QuadrantRotateIcon(icon, QuadrantRotate.CLOCKWISE)))
+  val icon3 = QuadrantRotateIcon(icon, QuadrantRotate.CLOCKWISE)
+  box.add(makeLabel("90", icon3))
   box.add(Box.createHorizontalStrut(16))
-  box.add(makeLabel("-90", QuadrantRotateIcon(icon, QuadrantRotate.COUNTER_CLOCKWISE)))
+  val icon4 = QuadrantRotateIcon(icon, QuadrantRotate.COUNTER_CLOCKWISE)
+  box.add(makeLabel("-90", icon4))
   box.add(Box.createHorizontalGlue())
   return box
 }
