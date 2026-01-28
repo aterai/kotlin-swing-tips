@@ -51,7 +51,8 @@ fun makeUI(): Component {
     if (text.isNotEmpty()) {
       val bytes = text.toByteArray(StandardCharsets.UTF_8)
       XMLDecoder(BufferedInputStream(ByteArrayInputStream(bytes))).use { xd ->
-        val keys = (xd.readObject() as? List<*>)?.filterIsInstance<RowSorter.SortKey>()
+        val list = xd.readObject() as? List<*>
+        val keys = list?.filterIsInstance<RowSorter.SortKey>()
         (xd.readObject() as? DefaultTableModel)?.also {
           table.model = it
           table.autoCreateRowSorter = true
