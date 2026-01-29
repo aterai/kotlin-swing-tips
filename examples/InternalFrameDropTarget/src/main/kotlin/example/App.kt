@@ -98,8 +98,10 @@ private class TableRowTransferHandler : TransferHandler() {
     }
   }
 
-  private fun getInternalFrame(c: Component?) =
-    SwingUtilities.getAncestorOfClass(JInternalFrame::class.java, c) as? JInternalFrame
+  private fun getInternalFrame(c: Component?): JInternalFrame? {
+    val f = SwingUtilities.getAncestorOfClass(JInternalFrame::class.java, c)
+    return f as? JInternalFrame
+  }
 
   private fun canDropTable(info: TransferSupport): Boolean {
     val c = info.component
