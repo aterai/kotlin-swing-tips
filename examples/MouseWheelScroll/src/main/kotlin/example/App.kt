@@ -69,7 +69,8 @@ fun makeUI(): Component {
   r2.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
       scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
-      scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+      scroll.horizontalScrollBarPolicy =
+        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
     }
   }
 
