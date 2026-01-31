@@ -52,7 +52,9 @@ private class DropcapLabel(
     val rw = r.width
     val rh = r.height
 
-    val at2 = AffineTransform.getTranslateInstance(x0.toDouble(), (y0 + rh).toDouble())
+    val tx = x0.toDouble()
+    val ty = (y0 + rh).toDouble()
+    val at2 = AffineTransform.getTranslateInstance(tx, ty)
     val s2 = at2.createTransformedShape(s1)
     g2.paint = foreground
     g2.fill(s2)
