@@ -31,7 +31,12 @@ fun makeUI(): Component {
       val r = Rectangle(fillLeft, fillTop, trackWidth, fillBottom - fillTop)
       val fillRight = getPositionForValue(c, r)
       g.color = Color.ORANGE
-      g.fillRect(fillLeft + 1, fillTop + 1, fillRight - fillLeft, fillBottom - fillTop)
+      g.fillRect(
+        fillLeft + 1,
+        fillTop + 1,
+        fillRight - fillLeft,
+        fillBottom - fillTop,
+      )
 
       g.color = Color.WHITE
       g.drawRoundRect(fillLeft, fillTop, trackWidth, trackHeight, arc, arc)
