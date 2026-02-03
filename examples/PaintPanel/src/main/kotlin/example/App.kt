@@ -50,7 +50,11 @@ private class PaintPanel : JPanel() {
   }
 
   companion object {
-    private val STROKE = BasicStroke(3f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)
+    private val STROKE = BasicStroke(
+      3f,
+      BasicStroke.CAP_ROUND,
+      BasicStroke.JOIN_ROUND,
+    )
   }
 }
 
