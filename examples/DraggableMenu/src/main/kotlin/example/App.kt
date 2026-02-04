@@ -116,17 +116,16 @@ private class MenuDragLayerUI : LayerUI<JMenuBar?>() {
     dividerX = if (menus.size > 0) menus[0].getX() else 0
     for (i in menus.indices) {
       val m = menus[i]
-      if (m == draggingMenu) {
-        continue
-      }
-      val midX = m.getX() + m.getWidth() / 2
-      if (p.x < midX) {
-        targetIndex = i
-        dividerX = m.getX()
-        break
-      } else {
-        targetIndex = i + 1
-        dividerX = m.getX() + m.getWidth()
+      if (m != draggingMenu) {
+        val midX = m.getX() + m.getWidth() / 2
+        if (p.x < midX) {
+          targetIndex = i
+          dividerX = m.getX()
+          break
+        } else {
+          targetIndex = i + 1
+          dividerX = m.getX() + m.getWidth()
+        }
       }
     }
   }
