@@ -244,7 +244,7 @@ private class CalendarViewListModel(
 
   override fun getSize() = DayOfWeek.entries.size * ROW_COUNT
 
-  override fun getElementAt(index: Int): LocalDate = startDate.plusDays(index.toLong())
+  override fun getElementAt(idx: Int): LocalDate = startDate.plusDays(idx.toLong())
 
   companion object {
     const val ROW_COUNT = 6
