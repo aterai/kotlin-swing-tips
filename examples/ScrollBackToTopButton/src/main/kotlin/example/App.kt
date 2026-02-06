@@ -130,11 +130,12 @@ private class ScrollBackToTopLayerUI<V : JScrollPane> : LayerUI<V>() {
     val p = SwingUtilities.convertPoint(e.component, e.point, scroll)
     mousePt.location = p
     val id = e.id
+    val rollover = btnRct.contains(mousePt)
     if (id == MouseEvent.MOUSE_CLICKED) {
-      if (btnRct.contains(mousePt)) {
+      if (rollover) {
         scrollBackToTop(l.view)
       }
-    } else if (id == MouseEvent.MOUSE_PRESSED && r.y > 0 && btnRct.contains(mousePt)) {
+    } else if (id == MouseEvent.MOUSE_PRESSED && r.y > 0 && rollover) {
       e.consume()
     }
   }
