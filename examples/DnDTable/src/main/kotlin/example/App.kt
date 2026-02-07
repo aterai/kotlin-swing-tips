@@ -103,7 +103,11 @@ private class DnDTable(
   init {
     DropTarget(this, DnDConstants.ACTION_COPY_OR_MOVE, CDropTargetListener(), true)
     val ds = DragSource.getDefaultDragSource()
-    ds.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_COPY_OR_MOVE, this)
+    ds.createDefaultDragGestureRecognizer(
+      this,
+      DnDConstants.ACTION_COPY_OR_MOVE,
+      this,
+    )
   }
 
   override fun prepareRenderer(
