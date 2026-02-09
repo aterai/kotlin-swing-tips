@@ -70,7 +70,7 @@ private class BorderPaintLayerUI : LayerUI<JScrollPane>() {
   }
 
   private fun paintVerticalRules(g: Graphics, table: JTable, parent: JComponent) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.paint = UIManager.getColor("Table.gridColor")
     val columnCount = table.model.columnCount
     if (columnCount % 2 == 0) {

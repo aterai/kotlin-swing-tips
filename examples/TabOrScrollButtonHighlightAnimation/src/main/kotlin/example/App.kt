@@ -102,7 +102,7 @@ private class TabHighlightLayerUI : LayerUI<JTabbedPane>() {
   override fun paint(g: Graphics, c: JComponent?) {
     super.paint(g, c)
     if (c is JLayer<*>) {
-      val g2 = g.create() as Graphics2D
+      val g2 = g.create() as? Graphics2D ?: return
       val a = alpha / 100f
       g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, a)
       g2.paint = Color.RED

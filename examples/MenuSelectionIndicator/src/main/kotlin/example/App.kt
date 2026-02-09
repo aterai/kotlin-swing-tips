@@ -140,7 +140,7 @@ private class MenuHighlightLayerUI : LayerUI<JMenuBar>() {
   override fun paint(g: Graphics, c: JComponent) {
     super.paint(g, c)
     if (c is JLayer<*> && !rect.isEmpty) {
-      val g2 = g.create() as Graphics2D
+      val g2 = g.create() as? Graphics2D ?: return
       g2.paint = SELECTION_COLOR
       g2.fillRect(rect.x, rect.y + rect.height - SZ, rect.width, SZ)
       g2.dispose()

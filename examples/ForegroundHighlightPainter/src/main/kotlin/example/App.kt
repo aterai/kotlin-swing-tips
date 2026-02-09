@@ -262,7 +262,7 @@ private class ForegroundPainter(
     if (!r.isEmpty) {
       runCatching {
         val s = c.document.getText(offs0, offs1 - offs0)
-        val g2 = g.create() as Graphics2D
+        val g2 = g.create() as? Graphics2D ?: return
         val font = c.getFont()
         val metrics = g2.getFontMetrics(font)
         val ascent = metrics.ascent
