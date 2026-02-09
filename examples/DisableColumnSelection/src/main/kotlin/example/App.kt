@@ -61,7 +61,8 @@ fun makeUI(): Component {
   }
   t2.cellSelectionEnabled = true
   t2.columnModel.selectionModel = object : DefaultListSelectionModel() {
-    override fun isSelectedIndex(i: Int) = t2.convertColumnIndexToModel(i) == targetCol
+    override fun isSelectedIndex(i: Int) =
+      t2.convertColumnIndexToModel(i) == targetCol
   }
 
   val p = JPanel(GridLayout(0, 1))
