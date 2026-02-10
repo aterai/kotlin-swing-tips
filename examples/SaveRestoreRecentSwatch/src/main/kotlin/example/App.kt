@@ -114,7 +114,7 @@ private class MySwatchChooserPanel : AbstractColorChooserPanel() {
     val mainHolder = JPanel(BorderLayout())
     val outside = BorderFactory.createLineBorder(Color.BLACK)
     val inside = BorderFactory.createLineBorder(Color.WHITE)
-    val border: Border = BorderFactory.createCompoundBorder(outside, inside)
+    val border = BorderFactory.createCompoundBorder(outside, inside)
     mainHolder.setBorder(border)
     swatchPanel = MainSwatchPanel().also {
       it.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, displayName)
@@ -129,7 +129,8 @@ private class MySwatchChooserPanel : AbstractColorChooserPanel() {
     val recentHolder = JPanel(BorderLayout())
     recentHolder.setBorder(border)
     recentHolder.setInheritsPopupMenu(true)
-    val recentStr = UIManager.getString("ColorChooser.swatchesRecentText", getLocale())
+    val l = getLocale()
+    val recentStr = UIManager.getString("ColorChooser.swatchesRecentText", l)
     recentSwatchPanel = RecentSwatchPanel().also {
       it.putClientProperty(AccessibleContext.ACCESSIBLE_NAME_PROPERTY, recentStr)
       recentSwatchListener = RecentSwatchListener()
@@ -150,12 +151,12 @@ private class MySwatchChooserPanel : AbstractColorChooserPanel() {
     superHolder.add(mainHolder, gbc)
     gbc.insets = oldInsets
 
-    val l = JLabel(recentStr)
-    l.setLabelFor(recentSwatchPanel)
+    val label = JLabel(recentStr)
+    label.setLabelFor(recentSwatchPanel)
     gbc.gridwidth = GridBagConstraints.REMAINDER
     gbc.gridheight = 1
     gbc.weighty = 1.0
-    superHolder.add(l, gbc)
+    superHolder.add(label, gbc)
     gbc.weighty = 0.0
     gbc.gridheight = GridBagConstraints.REMAINDER
     gbc.insets = Insets(0, 0, 0, 2)
