@@ -98,7 +98,10 @@ private class CheckComboBoxEditor : ComboBoxEditor {
 
   override fun setItem(anObject: Any) {
     EventQueue.invokeLater {
-      val c = SwingUtilities.getAncestorOfClass(JComboBox::class.java, editorComponent)
+      val c = SwingUtilities.getAncestorOfClass(
+        JComboBox::class.java,
+        editorComponent,
+      )
       (c as? JComboBox<*>)?.also {
         val idx = it.selectedIndex
         if (idx >= 0 && idx != editor.editingIndex) {
