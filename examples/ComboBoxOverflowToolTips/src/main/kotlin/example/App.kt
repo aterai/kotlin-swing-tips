@@ -70,24 +70,27 @@ class ToolTipComboBox<E>(
       (c as? JComponent)?.also {
         val rect = SwingUtilities.calculateInnerArea(combo, null)
         val i = it.insets
-        var availableWidth = rect.width - i.top - i.bottom
+        var usableWidth = rect.width - i.top - i.bottom
         val str = value?.toString() ?: ""
         val fm = it.getFontMetrics(it.font)
-        val toolTipTxt = if (fm.stringWidth(str) > availableWidth) str else null
+        val toolTipTxt = if (needTips(str, fm, usableWidth)) str else null
         it.toolTipText = toolTipTxt
         if (index < 0) {
           val buttonSize = arrowButton?.width ?: rect.height
-          availableWidth -= buttonSize
+          usableWidth -= buttonSize
           (combo.getEditor().editorComponent as? JTextField)?.also { editor ->
             val margin = editor.margin
-            availableWidth -= margin.left + margin.right
-            combo.toolTipText = if (fm.stringWidth(str) > availableWidth) str else null
+            usableWidth -= margin.left + margin.right
+            combo.toolTipText = if (needTips(str, fm, usableWidth)) str else null
           }
         }
       }
     }
   }
 
-  private fun getArrowButton(combo: Container): JButton? =
+  private fun needTips(txt: String, fm: FontMetrics, usableWidth: Int) =
+    fm.stringWidth(txt) > usableWidth
+
+  private fun getArrowButton(combo: Container) =
     combo.components?.firstOrNull { it is JButton } as? JButton
 }
