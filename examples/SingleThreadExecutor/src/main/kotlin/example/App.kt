@@ -155,7 +155,7 @@ private open class WorkerModel : DefaultTableModel() {
     iv: Int,
     worker: SwingWorker<Int, Int>?,
   ) {
-    super.addRow(arrayOf(number, name, iv))
+    super.addRow(arrayOf<Any>(number, name, iv))
     worker?.also { workerMap[number] = it }
     number++
   }
