@@ -179,8 +179,9 @@ private class FishEyeTable(
     // for (i in 0..<viewRc) {
     //   viewH += fishEyeRowList[i].height
     // }
-    // val viewH = fishEyeRowList.filterIndexed { i, _ -> i < viewRc }.sumBy { it.height }
-    val viewH = fishEyeRowList.filterIndexed { i, _ -> i < viewRc }.sumOf { it.height }
+    val viewH = fishEyeRowList
+      .filterIndexed { i, _, -> i < viewRc }
+      .sumOf { it.height } // .sumBy { it.height }
     val restRc = rowCount - viewRc
     val restH = height - viewH
     val restRh = maxOf(1, restH / restRc)
