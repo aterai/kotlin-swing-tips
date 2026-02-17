@@ -40,9 +40,11 @@ fun makeUI(): Component {
   box.add(Box.createVerticalStrut(5))
   box.add(makeTitledPanel("default:", makeComboBox(20)))
   box.add(Box.createVerticalStrut(5))
-  box.add(makeTitledPanel("disable right click in drop-down list:", combo1))
+  val title1 = "disable right click in drop-down list:"
+  box.add(makeTitledPanel(title1, combo1))
   box.add(Box.createVerticalStrut(5))
-  box.add(makeTitledPanel("disable right click and scroll in drop-down list:", combo2))
+  val title2 = "disable right click and scroll in drop-down list:"
+  box.add(makeTitledPanel(title2, combo2))
   box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
 
   return JPanel(BorderLayout()).also {
