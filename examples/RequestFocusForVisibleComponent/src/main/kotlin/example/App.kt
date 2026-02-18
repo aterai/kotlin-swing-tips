@@ -15,7 +15,9 @@ fun makeUI(): Component {
       super.updateUI()
       val ui2 = if (ui is WindowsTabbedPaneUI) {
         object : WindowsTabbedPaneUI() {
-          override fun createMouseListener() = object : TabSelectionMouseListener(this) {
+          override fun createMouseListener() = object : TabSelectionMouseListener(
+            this,
+          ) {
             override fun mouseEntered(e: MouseEvent) {
               rolloverTab = tabForCoordinate(tabPane, e.x, e.y)
             }
@@ -27,7 +29,9 @@ fun makeUI(): Component {
         }
       } else {
         object : MetalTabbedPaneUI() {
-          override fun createMouseListener() = object : TabSelectionMouseListener(this) {
+          override fun createMouseListener() = object : TabSelectionMouseListener(
+            this,
+          ) {
             override fun mouseEntered(e: MouseEvent) {
               rolloverTab = tabForCoordinate(tabPane, e.x, e.y)
             }
