@@ -19,7 +19,9 @@ fun makeUI(): Component {
     1234567890987654321
   """.trimIndent()
   val doc = textArea.document
-  (doc as? AbstractDocument)?.documentFilter = NonEditableLineDocumentFilter(maskRange)
+  if (doc is AbstractDocument) {
+    doc.documentFilter = NonEditableLineDocumentFilter(maskRange)
+  }
   runCatching {
     val highlighter = textArea.highlighter
     val root = textArea.document.defaultRootElement
