@@ -215,6 +215,8 @@ class BarFactory(
     return mi
   }
 
+  private fun tokenize(txt: String?) = txt?.split("\\s".toRegex()) ?: emptyList()
+
   // fun getMenuItem(cmd: String) = menuItems[cmd]
 
   // fun getMenu(cmd: String) = menus[cmd]
@@ -227,8 +229,6 @@ class BarFactory(
     private const val ACTION_SUFFIX = "Action"
     private const val TIP_SUFFIX = "Tooltip"
     private const val MNE_SUFFIX = "Mnemonic"
-
-    private fun tokenize(input: String?) = input?.split("\\s".toRegex()) ?: emptyList()
   }
 }
 
