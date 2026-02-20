@@ -75,7 +75,7 @@ private class PopupLocationTable(
   }
 
   companion object {
-    private val IGNORE_KEYS = listOf<Int>(
+    private val IGNORE_KEYS = listOf(
       KeyEvent.VK_F1,
       KeyEvent.VK_F2,
       KeyEvent.VK_F3,
@@ -102,11 +102,8 @@ private class PopupLocationTable(
       KeyEvent.VK_CONTEXT_MENU,
     )
 
-    private fun isIgnoreKeys(e: EventObject?): Boolean =
-      e is KeyEvent &&
-        IGNORE_KEYS.contains(
-          e.getKeyCode(),
-        )
+    private fun isIgnoreKeys(e: EventObject?) =
+      e is KeyEvent && IGNORE_KEYS.contains(e.getKeyCode())
   }
 }
 
@@ -151,14 +148,12 @@ private class TablePopupMenu : JPopupMenu() {
 private class PopupLocationTree : JTree() {
   override fun getPopupLocation(e: MouseEvent?): Point? {
     val r = getRowBounds(getLeadSelectionRow())
-    return if (e == null && r != null) {
-      getKeyPopupLocation(r)
+    return if (e == null && r != null) { // Menu key pressed
+      Point(r.minX.toInt(), r.maxY.toInt())
     } else {
       super.getPopupLocation(e)
     }
   }
-
-  private fun getKeyPopupLocation(r: Rectangle) = Point(r.minX.toInt(), r.maxY.toInt())
 }
 
 fun main() {
