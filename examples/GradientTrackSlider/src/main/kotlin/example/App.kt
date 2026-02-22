@@ -197,8 +197,14 @@ private class GradientPalletSliderUI : MetalSliderUI() {
 
     if (slider.isEnabled) {
       val x = (fillRight - fillLeft) / (trackRight - trackLeft).toFloat()
-      g.color = GradientPalletUtils.getColorFromPallet(GRADIENT_PALLET, x, 0x64 shl 24)
-      g.fillRect(fillLeft + 1, fillTop + 1, fillRight - fillLeft, fillBottom - fillTop)
+      val alpha = 0x64 shl 24
+      g.color = GradientPalletUtils.getColorFromPallet(GRADIENT_PALLET, x, alpha)
+      g.fillRect(
+        fillLeft + 1,
+        fillTop + 1,
+        fillRight - fillLeft,
+        fillBottom - fillTop,
+      )
     } else {
       g.color = controlShadow
       g.fillRect(fillLeft, fillTop, fillRight - fillLeft, trackBottom - trackTop)
