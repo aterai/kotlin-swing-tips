@@ -318,9 +318,9 @@ private open class ListItemTransferHandler : TransferHandler() {
       info.transferable.getTransferData(FLAVOR) as? List<*>
     }.getOrNull().orEmpty()
     for (o in values) {
-      val i = index++
-      listModel.add(i, o)
-      target.addSelectionInterval(i, i)
+      listModel.add(index, o)
+      target.addSelectionInterval(index, index)
+      index += 1
     }
     addCount = values.size
     return addCount > 0

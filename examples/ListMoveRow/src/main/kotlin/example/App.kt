@@ -151,9 +151,9 @@ private class ListItemTransferHandler : TransferHandler() {
     @Suppress("UNCHECKED_CAST")
     (target.model as? DefaultListModel<Any>)?.also {
       for (o in values) {
-        val i = index++
-        it.add(i, o)
-        target.addSelectionInterval(i, i)
+        it.add(index, o)
+        target.addSelectionInterval(index, index)
+        index += 1
       }
     }
     addCount = if (info.isDrop) values.size else 0

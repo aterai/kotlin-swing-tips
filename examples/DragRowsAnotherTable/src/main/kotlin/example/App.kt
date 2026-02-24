@@ -114,9 +114,9 @@ private class TableRowTransferHandler : TransferHandler() {
       info.transferable.getTransferData(FLAVOR) as? List<*>
     }.getOrNull().orEmpty()
     for (o in values) {
-      val row = index++
-      model.insertRow(row, (o as? List<*>)?.toTypedArray())
-      target.selectionModel.addSelectionInterval(row, row)
+      model.insertRow(index, (o as? List<*>)?.toTypedArray())
+      target.selectionModel.addSelectionInterval(index, index)
+      index += 1
     }
     addCount = if (target == source && info.isDrop) values.size else 0
     target.requestFocusInWindow()

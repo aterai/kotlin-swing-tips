@@ -174,9 +174,9 @@ private class ListItemTransferHandler : TransferHandler() {
     @Suppress("UNCHECKED_CAST")
     (target.model as? DefaultListModel<Any>)?.also {
       for (o in values) {
-        val i = index++
-        it.add(i, o)
-        target.addSelectionInterval(i, i)
+        it.add(index, o)
+        target.addSelectionInterval(index, index)
+        index += 1
       }
     }
     addCount = if (info.isDrop) values.size else 0
@@ -306,10 +306,10 @@ private class TableRowTransferHandler : TransferHandler() {
       info.transferable.getTransferData(FLAVOR) as? List<*>
     }.getOrNull().orEmpty()
     values.filterIsInstance<List<*>>().forEach {
-      val i = index++
-      model.insertRow(i, it.toTypedArray())
-      target.selectionModel.addSelectionInterval(i, i)
+      model.insertRow(index, it.toTypedArray())
+      target.selectionModel.addSelectionInterval(index, index)
       target.requestFocusInWindow()
+      index += 1
     }
     addCount = if (info.isDrop) values.size else 0
     return values.isNotEmpty()
