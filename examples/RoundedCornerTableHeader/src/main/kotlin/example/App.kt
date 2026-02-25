@@ -22,8 +22,9 @@ private val monthTable = object : JTable() {
     val defaultRowHeight = height / rowCount
     var remainder = height % rowCount
     for (i in 0..<rowCount) {
-      val a = 1.coerceAtMost(0.coerceAtLeast(remainder--))
+      val a = 1.coerceAtMost(0.coerceAtLeast(remainder))
       setRowHeight(i, 1.coerceAtLeast(defaultRowHeight + a))
+      remainder -= 1
     }
   }
 
@@ -211,20 +212,17 @@ private class RoundedHeaderRenderer : DefaultTableCellRenderer() {
         RenderingHints.KEY_ANTIALIASING,
         RenderingHints.VALUE_ANTIALIAS_ON,
       )
-      g2.paint = background
-      val r = 8.0
-      val x = 0.0
-      val y = 0.0
       val w = width.toDouble()
       val h = height.toDouble()
       val p = Path2D.Double()
-      p.moveTo(x, y + r)
-      p.quadTo(x, y, x + r, y)
-      p.lineTo(x + w, y)
-      p.lineTo(x + w, y + h)
-      p.lineTo(x + r, y + h)
-      p.quadTo(x, y + h, x, y + h - r)
+      p.moveTo(0.0, ARC)
+      p.quadTo(0.0, 0.0, ARC, 0.0)
+      p.lineTo(w, 0.0)
+      p.lineTo(w, h)
+      p.lineTo(ARC, h)
+      p.quadTo(0.0, h, 0.0, h - ARC)
       p.closePath()
+      g2.paint = background
       g2.fill(p)
       g2.dispose()
       super.paintComponent(g)
@@ -237,20 +235,17 @@ private class RoundedHeaderRenderer : DefaultTableCellRenderer() {
         RenderingHints.KEY_ANTIALIASING,
         RenderingHints.VALUE_ANTIALIAS_ON,
       )
-      g2.paint = background
-      val r = 8.0
-      val x = 0.0
-      val y = 0.0
       val w = width.toDouble()
       val h = height.toDouble()
       val p = Path2D.Double()
-      p.moveTo(x, y)
-      p.lineTo(x + w - r, y)
-      p.quadTo(x + w, y, x + w, y + r)
-      p.lineTo(x + w, y + h - r)
-      p.quadTo(x + w, y + h, x + w - r, y + h)
-      p.lineTo(x, y + h)
+      p.moveTo(0.0, 0.0)
+      p.lineTo(w - ARC, 0.0)
+      p.quadTo(w, 0.0, w, ARC)
+      p.lineTo(w, h - ARC)
+      p.quadTo(w, h, w - ARC, h)
+      p.lineTo(0.0, h)
       p.closePath()
+      g2.paint = background
       g2.fill(p)
       g2.dispose()
       super.paintComponent(g)
@@ -292,6 +287,10 @@ private class RoundedHeaderRenderer : DefaultTableCellRenderer() {
     l.background = table.tableHeader.background
     l.horizontalAlignment = CENTER
     return l
+  }
+
+  companion object {
+    private const val ARC = 8.0
   }
 }
 

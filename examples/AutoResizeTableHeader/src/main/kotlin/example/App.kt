@@ -134,8 +134,9 @@ private class MonthTable : JTable() {
     val rowHeight = height / rowCount
     var remainder = height % rowCount
     for (i in 0..<rowCount) {
-      val a = rowHeight + min(1, max(0, remainder--))
+      val a = rowHeight + min(1, max(0, remainder))
       setRowHeight(i, max(a, 1))
+      remainder -= 1
     }
   }
 }

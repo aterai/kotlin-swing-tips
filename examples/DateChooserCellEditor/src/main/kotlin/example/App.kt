@@ -204,8 +204,9 @@ private class DateEditor :
       if ((height != prevHeight || rowCount != prevCount) && defaultRowHeight > 0) {
         var remainder = height % rowCount
         for (i in 0..<rowCount) {
-          val a = 1.coerceAtMost(0.coerceAtLeast(remainder--))
+          val a = 1.coerceAtMost(0.coerceAtLeast(remainder))
           setRowHeight(i, defaultRowHeight + a)
+          remainder -= 1
         }
       }
       prevHeight = height

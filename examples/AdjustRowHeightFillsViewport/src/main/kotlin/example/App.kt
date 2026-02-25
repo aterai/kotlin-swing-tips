@@ -28,8 +28,9 @@ private val table = object : JTable(model) {
       // var remainder = height - rowCount * defaultRowHeight
       var remainder = height % rowCount
       for (i in 0..<rowCount) {
-        val a = 1.coerceAtMost(0.coerceAtLeast(remainder--))
+        val a = 1.coerceAtMost(0.coerceAtLeast(remainder))
         setRowHeight(i, 1.coerceAtLeast(defaultRowHeight + a))
+        remainder -= 1
       }
     }
     prevHeight = height
