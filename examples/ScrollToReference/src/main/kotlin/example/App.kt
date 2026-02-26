@@ -84,7 +84,8 @@ private fun makeTree(model: DefaultTreeModel): JTree {
   // https://ateraimemo.com/Swing/ExpandAllNodes.html
   var row = 0
   while (row < tree.rowCount) {
-    tree.expandRow(row++)
+    tree.expandRow(row)
+    row += 1
   }
   tree.selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
   tree.addTreeSelectionListener { e ->

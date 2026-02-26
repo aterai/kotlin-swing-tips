@@ -103,7 +103,8 @@ fun makeTree(): JTree {
 private fun expandAllNodes(tree: JTree) {
   var row = 0
   while (row < tree.rowCount) {
-    tree.expandRow(row++)
+    tree.expandRow(row)
+    row += 1
   }
 }
 

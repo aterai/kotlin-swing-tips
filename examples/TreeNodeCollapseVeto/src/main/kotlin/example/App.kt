@@ -24,7 +24,8 @@ private fun makeTree(): JTree {
   tree.border = BorderFactory.createEmptyBorder(4, 4, 4, 4)
   var row = 0
   while (row < tree.rowCount) {
-    tree.expandRow(row++)
+    tree.expandRow(row)
+    row += 1
   }
   val handler = object : TreeWillExpandListener {
     // @Throws(ExpandVetoException::class)

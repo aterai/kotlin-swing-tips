@@ -38,7 +38,8 @@ fun makeUI(): Component {
   }
   var row = 0
   while (row < tree.rowCount) {
-    tree.expandRow(row++)
+    tree.expandRow(row)
+    row += 1
   }
   tree.model.addTreeModelListener(CheckBoxStatusUpdateListener())
   val handler = object : TreeWillExpandListener {
