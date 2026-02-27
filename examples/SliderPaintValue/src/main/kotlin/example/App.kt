@@ -78,14 +78,17 @@ private class SliderPopupListener : MouseAdapter() {
 
   fun updateToolTip(e: MouseEvent) {
     val slider = e.component as? JSlider ?: return
-    label.text = "%03d".format(slider.value)
-    val pt = e.point
-    pt.y = SwingUtilities.calculateInnerArea(slider, null).centerY.toInt()
-    SwingUtilities.convertPointToScreen(pt, e.component)
-    val h2 = slider.preferredSize.height / 2
-    val d = label.preferredSize
-    pt.translate(-d.width / 2, -d.height - h2)
-    toolTip.location = pt
+    val v = slider.value
+    label.text = "%03d".format(v)
+    if (v in slider.minimum + 1..<slider.maximum) {
+      val pt = e.point
+      pt.y = SwingUtilities.calculateInnerArea(slider, null).centerY.toInt()
+      SwingUtilities.convertPointToScreen(pt, e.component)
+      val h2 = slider.preferredSize.height / 2
+      val d = label.preferredSize
+      pt.translate(-d.width / 2, -d.height - h2)
+      toolTip.location = pt
+    }
   }
 
   override fun mouseDragged(e: MouseEvent) {
