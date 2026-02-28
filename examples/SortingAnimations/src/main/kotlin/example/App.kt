@@ -347,7 +347,8 @@ private open class SortingTask(
     var m = l
     for (i in l + 1..u) {
       if (array[i] < array[l]) {
-        swap(++m, i)
+        m += 1
+        swap(m, i)
       }
     }
     swap(l, m)

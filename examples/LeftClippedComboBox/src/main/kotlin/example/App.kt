@@ -150,7 +150,8 @@ private fun getLeftClippedText(
     if (textWidth > availableWidth) {
       break
     }
-    acp[--j] = cp
+    j -= 1
+    acp[j] = cp
     i = text.offsetByCodePoints(i, -1)
   }
   return dots + String(acp, j, acp.size - j)
