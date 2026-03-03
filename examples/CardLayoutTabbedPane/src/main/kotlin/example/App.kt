@@ -231,7 +231,11 @@ private open class BasicTabViewButtonUI : TabViewButtonUI() {
     g.color = c.background
     g.fillRect(0, 0, c.width, c.height)
     val model = c.model
-    g.color = if (model.isSelected || model.isArmed) Color.WHITE else Color(0xDC_DC_DC)
+    g.color = if (model.isSelected || model.isArmed) {
+      Color.WHITE
+    } else {
+      Color(0xDC_DC_DC)
+    }
     viewRect.also {
       g.fillRect(it.x, it.y, it.x + it.width, it.y + it.height)
       val color = Color(0xFF_78_28)
@@ -251,7 +255,8 @@ private open class BasicTabViewButtonUI : TabViewButtonUI() {
         g.drawLine(it.x, it.y + 2, it.x + it.width, it.y + 2)
       }
     }
-    (c.getClientProperty(BasicHTML.propertyKey) as? View)?.paint(g, textRect) ?: also {
+    val property = c.getClientProperty(BasicHTML.propertyKey)
+    (property as? View)?.paint(g, textRect) ?: also {
       if (model.isSelected) {
         textRect.y -= 2
         textRect.x -= 1
