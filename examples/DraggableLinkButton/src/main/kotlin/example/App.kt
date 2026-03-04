@@ -100,7 +100,7 @@ private class LinkViewButtonUI : BasicButtonUI() {
 
           override fun getTransferDataFlavors() = arrayOf(URI_FLAVOR)
 
-          override fun isDataFlavorSupported(flavor: DataFlavor) = flavor == URI_FLAVOR
+          override fun isDataFlavorSupported(df: DataFlavor) = df == URI_FLAVOR
         }
       }
       val ml = object : MouseAdapter() {
