@@ -65,7 +65,7 @@ private fun initComboBoxes(isColor: Boolean): List<JComboBox<*>> {
 
   list[0].also {
     it.isEditable = false
-    it.toolTipText = "it.isEditable = false"
+    it.toolTipText = "it.isEditable=false"
   }
 
   list[1].also { combo ->
@@ -75,7 +75,7 @@ private fun initComboBoxes(isColor: Boolean): List<JComboBox<*>> {
       val inside = getPaddingBorder(isColor)
       it.border = BorderFactory.createCompoundBorder(outside, inside)
     }
-    combo.toolTipText = "it.border = CompoundBorder(it.border, padding)"
+    combo.toolTipText = "it.border=CompoundBorder(it.border,padding)"
   }
 
   list[2].also { combo ->
@@ -83,7 +83,7 @@ private fun initComboBoxes(isColor: Boolean): List<JComboBox<*>> {
     (combo.editor.editorComponent as? JTextField)?.also {
       it.border = getPaddingBorder(isColor)
     }
-    combo.toolTipText = "it.border = padding"
+    combo.toolTipText = "it.border=padding"
   }
 
   list[3].also { combo ->
@@ -92,7 +92,7 @@ private fun initComboBoxes(isColor: Boolean): List<JComboBox<*>> {
       val i = it.insets
       it.margin = Insets(i.top, i.left + 5, i.bottom, i.right)
     }
-    combo.toolTipText = "val i = it.insets; it.margin = Insets(i.top, i.left + 5, ...)"
+    combo.toolTipText = "val i=it.insets;it.margin=Insets(i.top,i.left+5,...)"
   }
 
   list[4].also { combo ->
@@ -101,7 +101,7 @@ private fun initComboBoxes(isColor: Boolean): List<JComboBox<*>> {
       val m = it.margin
       it.margin = Insets(m.top, m.left + 5, m.bottom, m.right)
     }
-    combo.toolTipText = "val m = it.margin; it.margin = Insets(m.top, m.left + 5, ...)"
+    combo.toolTipText = "val m=it.margin;it.margin=Insets(m.top,m.left+5,...)"
   }
 
   list[5].also {
@@ -109,7 +109,7 @@ private fun initComboBoxes(isColor: Boolean): List<JComboBox<*>> {
     val outside = it.border
     val inside = getPaddingBorder(isColor)
     it.border = BorderFactory.createCompoundBorder(outside, inside)
-    it.toolTipText = "it.border = CompoundBorder(it.border, padding)"
+    it.toolTipText = "it.border=CompoundBorder(it.border,padding)"
   }
 
   list[6].also {
@@ -117,7 +117,7 @@ private fun initComboBoxes(isColor: Boolean): List<JComboBox<*>> {
     val outside = getPaddingBorder(isColor)
     val inside = it.border
     it.border = BorderFactory.createCompoundBorder(outside, inside)
-    it.toolTipText = "it.border = BorderFactory.createCompoundBorder(it, it.border)"
+    it.toolTipText = "it.border=BorderFactory.createCompoundBorder(it,it.border)"
   }
 
   if (isColor) {
