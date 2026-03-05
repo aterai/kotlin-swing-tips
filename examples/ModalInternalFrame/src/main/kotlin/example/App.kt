@@ -206,9 +206,9 @@ private class MyGlassPane : JDesktopPane() {
 
 private class PrintGlassPane : JDesktopPane() {
   override fun setVisible(isVisible: Boolean) {
-    val oldVisible = isVisible()
+    val oldVis = isVisible()
     super.setVisible(isVisible)
-    rootPane?.takeIf { isVisible() != oldVisible }?.layeredPane?.isVisible = !isVisible
+    rootPane?.takeIf { isVisible() != oldVis }?.layeredPane?.isVisible = !isVisible
   }
 
   override fun paintComponent(g: Graphics) {
