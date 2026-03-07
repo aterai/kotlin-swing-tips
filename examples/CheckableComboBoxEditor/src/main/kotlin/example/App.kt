@@ -58,10 +58,6 @@ private open class ComboItem(
     this === other || (other as? ComboItem)?.text == text
 
   override fun toString() = "%s: %b, %b".format(text, isEnabled, isEditable)
-
-  companion object {
-    private const val serialVersionUID = 1L
-  }
 }
 
 private class CheckComboBoxRenderer<E : ComboItem> : ListCellRenderer<E> {
