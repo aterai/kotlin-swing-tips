@@ -64,7 +64,7 @@ private class RoundedSelectionTree : JTree() {
     isOpaque = false
     setRowHeight(20)
     val d = UIDefaults()
-    d["Tree:TreeCell[Enabled+Selected].backgroundPainter"] = TransparentTreeCellPainter()
+    d["Tree:TreeCell[Enabled+Selected].backgroundPainter"] = TransparentCellPainter()
     putClientProperty("Nimbus.Overrides", d)
     putClientProperty("Nimbus.Overrides.InheritDefaults", false)
     addTreeSelectionListener { repaint() }
@@ -89,7 +89,8 @@ private class RoundedSelectionTree0 : JTree() {
       sr.map { getRowBounds(it) }.forEach { area.add(Area(it)) }
       val arc = 4.0
       for (a in GeomUtils.singularization(area)) {
-        g2.fill(GeomUtils.convertRoundedPath(GeomUtils.convertAreaToPoint2DList(a), arc))
+        val list = GeomUtils.convertAreaToPoint2DList(a)
+        g2.fill(GeomUtils.convertRoundedPath(list, arc))
       }
       g2.dispose()
     }
@@ -102,7 +103,7 @@ private class RoundedSelectionTree0 : JTree() {
     isOpaque = false
     setRowHeight(20)
     val d = UIDefaults()
-    d["Tree:TreeCell[Enabled+Selected].backgroundPainter"] = TransparentTreeCellPainter()
+    d["Tree:TreeCell[Enabled+Selected].backgroundPainter"] = TransparentCellPainter()
     putClientProperty("Nimbus.Overrides", d)
     putClientProperty("Nimbus.Overrides.InheritDefaults", false)
     addTreeSelectionListener { repaint() }
@@ -145,7 +146,7 @@ private class TransparentTreeCellRenderer : DefaultTreeCellRenderer() {
   }
 }
 
-private class TransparentTreeCellPainter : AbstractRegionPainter() {
+private class TransparentCellPainter : AbstractRegionPainter() {
   override fun doPaint(
     g: Graphics2D,
     c: JComponent,
