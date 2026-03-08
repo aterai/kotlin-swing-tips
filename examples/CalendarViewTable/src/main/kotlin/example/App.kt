@@ -65,7 +65,10 @@ fun makeUI(): Component {
 
   val selectionListener = ListSelectionListener { e ->
     if (!e.valueIsAdjusting) {
-      val o = monthTable.getValueAt(monthTable.selectedRow, monthTable.selectedColumn)
+      val o = monthTable.getValueAt(
+        monthTable.selectedRow,
+        monthTable.selectedColumn,
+      )
       (o as? LocalDate)?.also {
         dateLabel.text = it.toString()
       }

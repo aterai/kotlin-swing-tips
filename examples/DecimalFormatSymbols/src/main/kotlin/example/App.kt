@@ -83,7 +83,9 @@ private fun getJFormattedTextField(s: JSpinner) = (s.editor as? DefaultEditor)?.
   it.textField.also { ftf -> ftf.columns = 8 }
 }
 
-private fun makeFormatterFactory(dfs: DecimalFormatSymbols): DefaultFormatterFactory {
+private fun makeFormatterFactory(
+  dfs: DecimalFormatSymbols,
+): DefaultFormatterFactory {
   val format = DecimalFormat("0.00", dfs)
   val displayFormatter = NumberFormatter(format)
   displayFormatter.valueClass = Double::class.java

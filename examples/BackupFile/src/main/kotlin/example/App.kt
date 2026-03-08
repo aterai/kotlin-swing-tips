@@ -21,8 +21,14 @@ fun makeUI(): Component {
   jtp.isEditable = false
   val d = jtp.styledDocument
   val s = d.getStyle(StyleContext.DEFAULT_STYLE)
-  StyleConstants.setForeground(d.addStyle(MessageType.ERROR.toString(), s), Color.RED)
-  StyleConstants.setForeground(d.addStyle(MessageType.BLUE.toString(), s), Color.BLUE)
+  StyleConstants.setForeground(
+    d.addStyle(MessageType.ERROR.toString(), s),
+    Color.RED,
+  )
+  StyleConstants.setForeground(
+    d.addStyle(MessageType.BLUE.toString(), s),
+    Color.BLUE,
+  )
 
   val ok = JButton("Create new $FILE_NAME")
   ok.addActionListener { addActionPerformed() }

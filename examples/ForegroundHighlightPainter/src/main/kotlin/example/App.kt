@@ -46,7 +46,11 @@ private fun makeTextField(): JPanel {
       val painter1 = ForegroundPainter(Color.RED)
       highlighter.removeAllHighlights()
       runCatching {
-        highlighter.addHighlight(txt.indexOf("quick"), txt.indexOf("brown"), painter1)
+        highlighter.addHighlight(
+          txt.indexOf("quick"),
+          txt.indexOf("brown"),
+          painter1,
+        )
         highlighter.addHighlight(0, txt.length, painter0)
       }.onFailure {
         it.printStackTrace()

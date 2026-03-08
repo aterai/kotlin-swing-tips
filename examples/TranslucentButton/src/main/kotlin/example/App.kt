@@ -17,7 +17,7 @@ private fun makeTitleWithIcon(
   url: URL?,
   title: String,
   align: String,
-) = "<html><p align='$align'><img src='$url' align='$align' />&nbsp;$title</p></html>"
+) = "<html><p align='$align'><img src='$url' align='$align' />&nbsp;$title</p>"
 
 private fun makeButton(title: String) = object : JButton(title) {
   override fun updateUI() {

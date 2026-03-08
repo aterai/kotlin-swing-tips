@@ -53,8 +53,8 @@ private fun makeSampleEvents(ym: YearMonth): MutableList<EventPeriod> {
       "Project Meeting",
       LocalDate.of(ym.year, ym.month, 5),
       LocalDate.of(ym.year, ym.month, 7),
-      Color(100, 150, 255, 180)
-    )
+      Color(100, 150, 255, 180),
+    ),
   )
 
   // Event 2: 1-week training (overlaps with Event 1)
@@ -63,8 +63,8 @@ private fun makeSampleEvents(ym: YearMonth): MutableList<EventPeriod> {
       "New Employee Training",
       LocalDate.of(ym.year, ym.month, 6),
       LocalDate.of(ym.year, ym.month, 12),
-      Color(255, 180, 100, 180)
-    )
+      Color(255, 180, 100, 180),
+    ),
   )
 
   // Event 3: 2-day event
@@ -73,8 +73,8 @@ private fun makeSampleEvents(ym: YearMonth): MutableList<EventPeriod> {
       "Exhibition",
       LocalDate.of(ym.year, ym.month, 20),
       LocalDate.of(ym.year, ym.month, 21),
-      Color(150, 255, 150, 180)
-    )
+      Color(150, 255, 150, 180),
+    ),
   )
 
   // Event 4: Long-term task until month-end
@@ -83,8 +83,8 @@ private fun makeSampleEvents(ym: YearMonth): MutableList<EventPeriod> {
       "Year-End Processing",
       LocalDate.of(ym.year, ym.month, 18),
       LocalDate.of(ym.year, ym.month, ym.lengthOfMonth()),
-      Color(255, 150, 200, 180)
-    )
+      Color(255, 150, 200, 180),
+    ),
   )
 
   // Event 5: Another task overlapping with Event 4
@@ -93,13 +93,16 @@ private fun makeSampleEvents(ym: YearMonth): MutableList<EventPeriod> {
       "System Maintenance",
       LocalDate.of(ym.year, ym.month, 22),
       LocalDate.of(ym.year, ym.month, 26),
-      Color(200, 150, 255, 180)
-    )
+      Color(200, 150, 255, 180),
+    ),
   )
   return events
 }
 
-private fun makeLegendPanel(currentMonth: YearMonth, events: MutableList<EventPeriod>): JPanel {
+private fun makeLegendPanel(
+  currentMonth: YearMonth,
+  events: MutableList<EventPeriod>,
+): JPanel {
   val locale = Locale.getDefault()
   val fmt = CalendarUtils.getLocalizedYearMonthFormatter(locale)
   val txt = currentMonth.format(fmt.withLocale(locale))
@@ -111,9 +114,11 @@ private fun makeLegendPanel(currentMonth: YearMonth, events: MutableList<EventPe
       String.format(
         "%s (%d/%d-%d/%d)",
         ev.name,
-        ev.startDate.monthValue, ev.startDate.dayOfMonth,
-        ev.endDate.monthValue, ev.endDate.dayOfMonth,
-      )
+        ev.startDate.monthValue,
+        ev.startDate.dayOfMonth,
+        ev.endDate.monthValue,
+        ev.endDate.dayOfMonth,
+      ),
     )
     label.setOpaque(true)
     label.setBackground(ev.color)
@@ -174,7 +179,11 @@ private class CalendarCellRenderer : DefaultTableCellRenderer() {
     return c
   }
 
-  private fun getDayOfWeekColor(date: LocalDate, currentDate: LocalDate, isToday: Boolean): Color {
+  private fun getDayOfWeekColor(
+    date: LocalDate,
+    currentDate: LocalDate,
+    isToday: Boolean,
+  ): Color {
     val color: Color
     val isCurrentMonth = date.month == currentDate.month
     if (isCurrentMonth) {
@@ -204,7 +213,9 @@ private class CalendarCellRenderer : DefaultTableCellRenderer() {
   }
 }
 
-private class CalendarViewTableModel(date: LocalDate) : DefaultTableModel() {
+private class CalendarViewTableModel(
+  date: LocalDate,
+) : DefaultTableModel() {
   private val startDate: LocalDate
   private val weekFields: WeekFields = WeekFields.of(Locale.getDefault())
 
@@ -333,7 +344,10 @@ private class EventBarLayerUI(
   }
 
   private fun getConsecutiveDaysAndPaintBar(
-    g2: Graphics2D, tbl: JTable, ev: EventPeriod, cur: LocalDate
+    g2: Graphics2D,
+    tbl: JTable,
+    ev: EventPeriod,
+    cur: LocalDate,
   ): Int {
     val calendarStartDate = tbl.model.getValueAt(0, 0) as? LocalDate ?: return 0
     val sinceStart = ChronoUnit.DAYS.between(calendarStartDate, cur)

@@ -18,8 +18,8 @@ fun makeUI(): Component {
     it.isEditable = false
   }
 
-  val form = "<form action='#'><input type='text' name='word' value='12345' /></form>"
-  editor.text = "<html><h1>Form test</h1>$form"
+  val input = "<input type='text' name='word' value='12345' />"
+  editor.text = "<html><h1>Form test</h1><form action='#'>$input</form>"
   editor.addHyperlinkListener { e ->
     val data = (e as? FormSubmitEvent)?.data
     if (data != null) {

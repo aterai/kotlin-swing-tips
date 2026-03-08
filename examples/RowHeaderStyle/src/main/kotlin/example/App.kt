@@ -126,7 +126,8 @@ private class ComponentIcon(
 
   override fun getIconWidth() = 4000 // Short.MAX_VALUE
 
-  override fun getIconHeight() = cmp.preferredSize.height + 4 // XXX: +4 for Windows 7
+  // XXX: +4 for Windows 7
+  override fun getIconHeight() = cmp.preferredSize.height + 4
 }
 
 fun main() {

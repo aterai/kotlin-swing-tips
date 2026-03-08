@@ -18,7 +18,9 @@ fun makeUI(): Component {
   val b2 = JButton("Resizable(false)")
   b2.addActionListener { e ->
     val chooser = object : JFileChooser() {
-      override fun createDialog(parent: Component) = super.createDialog(parent).also {
+      override fun createDialog(
+        parent: Component,
+      ) = super.createDialog(parent).also {
         it.isResizable = false
       }
     }
@@ -31,7 +33,9 @@ fun makeUI(): Component {
   val b3 = JButton("MinimumSize(640, 480)")
   b3.addActionListener { e ->
     val chooser = object : JFileChooser() {
-      override fun createDialog(parent: Component) = super.createDialog(parent).also {
+      override fun createDialog(
+        parent: Component,
+      ) = super.createDialog(parent).also {
         it.minimumSize = Dimension(640, 480)
       }
     }

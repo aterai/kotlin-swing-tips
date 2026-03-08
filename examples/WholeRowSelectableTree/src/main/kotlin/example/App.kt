@@ -182,7 +182,6 @@ private class WholeRowSelectableTreeUI : BasicTreeUI() {
     }
     paintDropLine(g)
 
-    // Empty out the renderer pane, allowing renderers to be gc'ed.
     rendererPane.removeAll()
     drawingCache.clear()
   }
@@ -286,7 +285,11 @@ private class WholeRowSelectableTreeUI : BasicTreeUI() {
   }
 
   private fun getBackgroundSelectionColor(c: Component) =
-    if (c is DefaultTreeCellRenderer) c.backgroundSelectionColor else Color.LIGHT_GRAY
+    if (c is DefaultTreeCellRenderer) {
+      c.backgroundSelectionColor
+    } else {
+      Color.LIGHT_GRAY
+    }
 }
 
 private object LookAndFeelUtils {
