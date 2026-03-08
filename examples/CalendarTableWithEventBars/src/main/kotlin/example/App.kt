@@ -225,20 +225,18 @@ private class CalendarViewTableModel(
     startDate = firstDayOfMonth.minusDays(v.toLong())
   }
 
-  override fun getColumnClass(column: Int): Class<*> {
-    return LocalDate::class.java
-  }
+  override fun getColumnClass(column: Int) = LocalDate::class.java
 
-  override fun getColumnName(column: Int): String {
-    return weekFields.firstDayOfWeek.plus(column.toLong())
-      .getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault())
-  }
+  override fun getColumnName(column: Int): String = weekFields
+    .firstDayOfWeek
+    .plus(column.toLong())
+    .getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault())
 
   override fun getRowCount() = 6
 
   override fun getColumnCount() = 7
 
-  override fun getValueAt(row: Int, column: Int): Any? =
+  override fun getValueAt(row: Int, column: Int): Any =
     startDate.plusDays(row.toLong() * columnCount + column)
 
   override fun isCellEditable(row: Int, column: Int) = false
@@ -322,7 +320,8 @@ private class EventBarLayerUI(
       while (!current.isAfter(event.endDate)) {
         val sinceStart = ChronoUnit.DAYS.between(calendarStartDate, current)
         if (sinceStart in 0..<daysInTable) {
-          val consecutiveDays = getConsecutiveDaysAndPaintBar(g2, table, event, current)
+          val consecutiveDays =
+            getConsecutiveDaysAndPaintBar(g2, table, event, current)
           current = current.plusDays(consecutiveDays.toLong())
         } else {
           current = current.plusDays(1)
