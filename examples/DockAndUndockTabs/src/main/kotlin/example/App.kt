@@ -272,8 +272,7 @@ class DnDTabbedPane : JTabbedPane() {
 
   companion object {
     private const val SCROLL_SIZE = 20 // Test
-    private const val BUTTON_SIZE = 30
-    // XXX 30 is magic number of scroll button size
+    private const val BUTTON_SIZE = 30 // 30 is magic number of buttons
     private val RECT_BACKWARD = Rectangle()
     private val RECT_FORWARD = Rectangle()
   }
