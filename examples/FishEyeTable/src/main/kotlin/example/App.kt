@@ -180,7 +180,7 @@ private class FishEyeTable(
     //   viewH += fishEyeRowList[i].height
     // }
     val viewH = fishEyeRowList
-      .filterIndexed { i, _, -> i < viewRc }
+      .filterIndexed { i, _ -> i < viewRc }
       .sumOf { it.height } // .sumBy { it.height }
     val restRc = rowCount - viewRc
     val restH = height - viewH
