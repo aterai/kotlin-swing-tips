@@ -70,7 +70,7 @@ private fun makeJava2() = """
       <span style='color: rgb(170, 17, 17);'>return</span> makeMissingImage();
     }
   }).orElseGet(() -&gt; makeMissingImage());
-""".trimIndent()
+  """.trimIndent()
 
 private fun makeKotlin2(): String {
   val span = "<span style='color: rgb(17, 119, 0);'>read</span>"
