@@ -110,7 +110,9 @@ private class TransparentPopupMenuUI : BasicPopupMenuUI() {
   }
 }
 
-private class RoundPanel(private val radius: Int) : JPanel() {
+private class RoundPanel(
+  private val radius: Int,
+) : JPanel() {
   override fun updateUI() {
     super.updateUI()
     setOpaque(false)
@@ -119,7 +121,8 @@ private class RoundPanel(private val radius: Int) : JPanel() {
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(
-      RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
     )
     val w = getWidth().toDouble()
     val h = getHeight().toDouble()
@@ -133,7 +136,9 @@ private class RoundPanel(private val radius: Int) : JPanel() {
   }
 }
 
-private class RoundedToolBar(private val radius: Int) : JToolBar() {
+private class RoundedToolBar(
+  private val radius: Int,
+) : JToolBar() {
   override fun updateUI() {
     super.updateUI()
     setOpaque(false)
