@@ -15,7 +15,6 @@ import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import javax.accessibility.AccessibleContext
 import javax.swing.*
-import javax.swing.border.Border
 import javax.swing.colorchooser.AbstractColorChooserPanel
 
 fun makeUI(): Component {
