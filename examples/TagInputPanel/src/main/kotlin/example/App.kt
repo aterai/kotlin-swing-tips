@@ -50,7 +50,8 @@ private class TagInputPanel : JPanel(BorderLayout()) {
     }
     textField.addKeyListener(object : KeyAdapter() {
       override fun keyPressed(e: KeyEvent) {
-        if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE && textField.getText().isEmpty()) {
+        val b = e.getKeyCode() == KeyEvent.VK_BACK_SPACE
+        if (b && textField.getText().isEmpty()) {
           removeLastTag()
           e.consume()
         }
@@ -84,8 +85,7 @@ private class TagInputPanel : JPanel(BorderLayout()) {
     val color = UIManager.getColor("Table.selectionBackground")
     val outside = BorderFactory.createLineBorder(color)
     val inside = BorderFactory.createEmptyBorder(3, 5, 3, 5)
-    tag.setBorder(BorderFactory.createCompoundBorder(outside, inside)
-    )
+    tag.setBorder(BorderFactory.createCompoundBorder(outside, inside))
     tags.add(text)
     tag.add(JLabel(text))
     tag.add(makeCloseButton(tag), BorderLayout.EAST)
@@ -94,7 +94,7 @@ private class TagInputPanel : JPanel(BorderLayout()) {
   }
 
   private fun makeCloseButton(tag: JPanel): JButton {
-    val closeBtn = object : JButton("Å~") {
+    val closeBtn = object : JButton("√ó") {
       override fun updateUI() {
         super.updateUI()
         setContentAreaFilled(false)
