@@ -110,16 +110,14 @@ private fun makeLegendPanel(
   val panel = JPanel(FlowLayout(FlowLayout.LEFT))
   panel.setBorder(BorderFactory.createTitledBorder(title))
   events.forEach { ev ->
-    val label = JLabel(
-      String.format(
-        "%s (%d/%d-%d/%d)",
-        ev.name,
-        ev.startDate.monthValue,
-        ev.startDate.dayOfMonth,
-        ev.endDate.monthValue,
-        ev.endDate.dayOfMonth,
-      ),
+    val txt = "%s (%d/%d-%d/%d)".format(
+      ev.name,
+      ev.startDate.monthValue,
+      ev.startDate.dayOfMonth,
+      ev.endDate.monthValue,
+      ev.endDate.dayOfMonth,
     )
+    val label = JLabel(txt)
     label.setOpaque(true)
     label.setBackground(ev.color)
     label.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3))
@@ -246,13 +244,13 @@ private class CalendarViewTableModel(
   }
 }
 
-private class EventPeriod(
+private data class EventPeriod(
   val name: String,
   val startDate: LocalDate,
   val endDate: LocalDate,
   val color: Color,
 ) {
-  var track: Int = 0 // Track Number (for duplicate avoidance)
+  var track = 0 // Track Number (for duplicate avoidance)
 }
 
 private class EventBarLayerUI(
