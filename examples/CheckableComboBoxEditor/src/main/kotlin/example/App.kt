@@ -2,14 +2,12 @@ package example
 
 import java.awt.*
 import java.awt.event.ActionListener
-import java.io.Serializable
-import java.util.Objects
 import javax.swing.*
 
 fun makeUI(): Component {
   val box = Box.createVerticalBox()
   val combo0 = JComboBox(makeModel()).also {
-    it.renderer = CheckComboBoxRenderer<ComboItem>()
+    it.renderer = CheckComboBoxRenderer()
   }
   val title0 = "setEditable(false), setRenderer(...)"
   box.add(makeTitledPanel(title0, combo0))
@@ -18,7 +16,7 @@ fun makeUI(): Component {
   val combo1 = JComboBox(makeModel()).also {
     it.isEditable = true
     it.editor = CheckComboBoxEditor()
-    it.renderer = CheckComboBoxRenderer<ComboItem>()
+    it.renderer = CheckComboBoxRenderer()
   }
   val title1 = "setEditable(true), setRenderer(...), setEditor(...)"
   box.add(makeTitledPanel(title1, combo1))
@@ -47,26 +45,21 @@ private fun makeTitledPanel(
   return p
 }
 
-private open class ComboItem(
+private data class ComboItem(
   var isEnabled: Boolean = false,
   var isEditable: Boolean = false,
   var text: String? = "",
-) : Serializable {
-  override fun hashCode() = Objects.hash(text)
-
-  override fun equals(other: Any?) =
-    this === other || (other as? ComboItem)?.text == text
-
+) {
   override fun toString() = "%s: %b, %b".format(text, isEnabled, isEditable)
 }
 
-private class CheckComboBoxRenderer<E : ComboItem> : ListCellRenderer<E> {
+private class CheckComboBoxRenderer : ListCellRenderer<ComboItem> {
   private val bgc = Color(100, 200, 255)
   private val renderer = EditorPanel(ComboItem())
 
   override fun getListCellRendererComponent(
-    list: JList<out E>,
-    value: E,
+    list: JList<out ComboItem>,
+    value: ComboItem,
     index: Int,
     isSelected: Boolean,
     cellHasFocus: Boolean,
