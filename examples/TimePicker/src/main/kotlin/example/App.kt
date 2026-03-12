@@ -130,9 +130,7 @@ private class RoundFormattedTextField(
   step: Int,
   min: Int,
   max: Int,
-) : JFormattedTextField(
-  "%02d".format(value),
-  ) {
+) : JFormattedTextField("%02d".format(value)) {
   private var listener: FocusListener? = null
 
   init {
