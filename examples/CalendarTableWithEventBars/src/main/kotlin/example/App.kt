@@ -249,9 +249,8 @@ private data class EventPeriod(
   val startDate: LocalDate,
   val endDate: LocalDate,
   val color: Color,
-) {
-  var track = 0 // Track Number (for duplicate avoidance)
-}
+  val track: Int = 0, // Track Number (for duplicate avoidance)
+)
 
 private class EventBarLayerUI(
   private val events: MutableList<EventPeriod>,
@@ -282,12 +281,12 @@ private class EventBarLayerUI(
     val tracks = IntArray(events.size)
     val usedTracks = BooleanArray(events.size)
     for (i in events.indices) {
-      val event = events[i]
+      val ep = events[i]
       Arrays.fill(usedTracks, false)
       // Check for overlap with already processed events
       for (j in 0..<i) {
         val other = events[j]
-        if (isOverlapping(event, other)) {
+        if (isOverlapping(ep, other)) {
           usedTracks[tracks[j]] = true
         }
       }
@@ -297,7 +296,7 @@ private class EventBarLayerUI(
         track++
       }
       tracks[i] = track
-      event.track = track
+      events[i] = EventPeriod(ep.name, ep.startDate, ep.endDate, ep.color, track)
     }
   }
 
