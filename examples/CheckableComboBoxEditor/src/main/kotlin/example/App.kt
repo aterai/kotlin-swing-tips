@@ -45,7 +45,8 @@ private fun makeTitledPanel(
   return p
 }
 
-private data class ComboItem(
+@Suppress("UseDataClass")
+private class ComboItem(
   var isEnabled: Boolean = false,
   var isEditable: Boolean = false,
   var text: String? = "",
