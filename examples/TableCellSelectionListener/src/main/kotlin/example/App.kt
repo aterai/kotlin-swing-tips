@@ -103,7 +103,7 @@ private fun makeModel() = object : DefaultTableModel() {
 
   override fun getRowCount() = 6
 
-  override fun getColumnCount() = 7
+  override fun getColumnCount() = DayOfWeek.values().length // 7
 
   override fun getValueAt(
     row: Int,

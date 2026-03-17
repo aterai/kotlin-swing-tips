@@ -268,7 +268,7 @@ private class CalendarViewTableModel(
 
   override fun getRowCount() = 5
 
-  override fun getColumnCount() = 7
+  override fun getColumnCount() = DayOfWeek.values().length // 7
 
   override fun getValueAt(
     row: Int,
