@@ -328,7 +328,8 @@ private class TitleBarDragLayerUI : LayerUI<JComponent>() {
   override fun installUI(c: JComponent) {
     super.installUI(c)
     if (c is JLayer<*>) {
-      c.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
+      c.layerEventMask =
+        AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
     }
   }
 
