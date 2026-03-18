@@ -29,7 +29,7 @@ fun makeUI(): Component {
   val currentMonth = YearMonth.from(date)
   val events = makeSampleEvents(currentMonth)
   val layer = JLayer<JTable>(calendarTable, EventBarLayerUI(events))
-  val scroll: JScrollPane = object : JScrollPane(layer) {
+  val scroll = object : JScrollPane(layer) {
     override fun updateUI() {
       super.updateUI()
       setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS)
