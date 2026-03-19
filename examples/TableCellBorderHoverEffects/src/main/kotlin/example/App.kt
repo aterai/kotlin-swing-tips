@@ -203,8 +203,9 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
       c.verticalAlignment = TOP
       c.horizontalAlignment = CENTER
       updateCellWeekColor(value, c)
-      val nextWeekDay = value.plusDays(7)
-      val isLastRow = row == table.model.rowCount - 1
+      val model = table.model
+      val nextWeekDay = value.plusDays(model.columnCount.toLong())
+      val isLastRow = row == model.rowCount - 1
       val m1 = YearMonth.from(nextWeekDay).monthValue
       val m2 = YearMonth.from(currentLocalDate).monthValue
       if (isLastRow && m1 == m2) {
@@ -272,7 +273,7 @@ private class CalendarViewTableModel(
 
   override fun getRowCount() = 5
 
-  override fun getColumnCount() = DayOfWeek.values().length // 7
+  override fun getColumnCount() = DayOfWeek.entries.size // 7
 
   override fun getValueAt(
     row: Int,

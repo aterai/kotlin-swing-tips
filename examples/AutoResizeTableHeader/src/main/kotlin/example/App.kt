@@ -214,7 +214,8 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
       column,
     )
     if (value is LocalDate && c is JLabel && table is MonthTable) {
-      val nextWeekDay = value.plusDays(7)
+      val model = table.model
+      val nextWeekDay = value.plusDays(model.columnCount.toLong())
       c.text = value.dayOfMonth.toString()
       c.verticalAlignment = TOP
       c.horizontalAlignment = LEFT
@@ -223,7 +224,7 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
       updateWeekColor(value, table, c, selected)
 
       val lastRow = row == table.model.rowCount - 1
-      val m1 = YearMonth.from(value.plusDays(7)).monthValue
+      val m1 = YearMonth.from(nextWeekDay).monthValue
       val m2 = YearMonth.from(currentLocalDate).monthValue
       val split = m1 == m2
       if (lastRow && split) {
@@ -295,7 +296,7 @@ private class CalendarViewTableModel(
 
   override fun getRowCount() = 5
 
-  override fun getColumnCount() = DayOfWeek.values().length // 7
+  override fun getColumnCount() = DayOfWeek.entries.size // 7
 
   override fun getValueAt(
     row: Int,
