@@ -11,16 +11,15 @@ fun makeUI(): Component {
   p.add(JButton("button"))
   p.add(JTextField(16))
   p.add(JButton("button"))
-
+  val help = JLabel("JFrame:mouseClicked -> clearGlobalFocusOwner")
   return JPanel(BorderLayout()).also {
     it.add(p)
-    it.add(JLabel("JFrame:mouseClicked -> clearGlobalFocusOwner"), BorderLayout.SOUTH)
+    it.add(help, BorderLayout.SOUTH)
     EventQueue.invokeLater {
       val root = it.rootPane
       root.jMenuBar = createMenuBar()
       val ml = object : MouseAdapter() {
         override fun mouseClicked(e: MouseEvent) {
-          // println("clicked")
           KeyboardFocusManager
             .getCurrentKeyboardFocusManager()
             .clearGlobalFocusOwner()

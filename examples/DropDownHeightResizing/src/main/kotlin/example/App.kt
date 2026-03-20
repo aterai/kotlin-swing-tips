@@ -100,15 +100,17 @@ private class ResizePopupMenuListener : MouseInputAdapter() {
   private val startDim = Dimension()
 
   override fun mousePressed(e: MouseEvent) {
-    val popup = SwingUtilities.getAncestorOfClass(JPopupMenu::class.java, e.component)
+    val c = e.component
+    val popup = SwingUtilities.getAncestorOfClass(JPopupMenu::class.java, c)
     rect.size = popup.size
     startDim.size = popup.size
-    startPt.location = e.component.locationOnScreen
+    startPt.location = c.locationOnScreen
   }
 
   override fun mouseDragged(e: MouseEvent) {
     rect.height = startDim.height + e.locationOnScreen.y - startPt.y
-    val popup = SwingUtilities.getAncestorOfClass(JPopupMenu::class.java, e.component)
+    val c = e.component
+    val popup = SwingUtilities.getAncestorOfClass(JPopupMenu::class.java, c)
     if (popup is JPopupMenu) {
       popup.preferredSize = rect.size
       val w = SwingUtilities.getWindowAncestor(popup)
