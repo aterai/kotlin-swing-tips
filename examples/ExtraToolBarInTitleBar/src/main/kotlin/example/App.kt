@@ -15,7 +15,7 @@ fun makeUI(): Component = JPanel(BorderLayout()).also {
 // How to add icon to JFrame's title bar - Oracle Forums
 // https://forums.oracle.com/ords/apexds/post/how-to-add-icon-to-jframe-s-title-bar-5581
 private fun makeButton(title: String?, icon: Icon?): JButton {
-  val extraButton: JButton = object : JButton(title, icon) {
+  val extraButton = object : JButton(title, icon) {
     override fun getPreferredSize(): Dimension {
       val icon = UIManager.getIcon("InternalFrame.closeIcon")
       return Dimension(icon.iconWidth, icon.iconHeight)

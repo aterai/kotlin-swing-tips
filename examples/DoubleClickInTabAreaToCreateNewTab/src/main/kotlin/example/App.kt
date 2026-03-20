@@ -9,7 +9,7 @@ import javax.swing.*
 fun makeUI(): Component {
   val tabbedPane = JTabbedPane()
   tabbedPane.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
-  val addAction: Action = object : AbstractAction() {
+  val addAction = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       (e.source as? JTabbedPane)?.also {
         val cnt = it.tabCount

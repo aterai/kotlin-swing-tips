@@ -95,7 +95,7 @@ private class ColorTracker(
 private class ValueFormatter :
   AbstractFormatter(),
   FocusListener {
-  private val filter: DocumentFilter = object : DocumentFilter() {
+  private val filter = object : DocumentFilter() {
     @Throws(BadLocationException::class)
     override fun remove(
       fb: FilterBypass,

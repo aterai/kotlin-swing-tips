@@ -10,7 +10,7 @@ fun makeUI(): Component {
   val txt1 = "Default:"
   val textArea1 = JTextArea("$txt1\n$txt")
   val txt2 = "Disable middle mouseClicked paste:"
-  val textArea2: JTextArea = object : JTextArea("$txt2\n$txt") {
+  val textArea2 = object : JTextArea("$txt2\n$txt") {
     override fun updateUI() {
       setCaret(null)
       super.updateUI()

@@ -24,7 +24,7 @@ import javax.swing.table.TableCellEditor
 import javax.swing.table.TableModel
 
 fun makeUI(): Component {
-  val table: JTable = object : JTable(makeModel()) {
+  val table = object : JTable(makeModel()) {
     override fun updateUI() {
       super.updateUI()
       setCellSelectionEnabled(true)

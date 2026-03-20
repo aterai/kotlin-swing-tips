@@ -73,7 +73,7 @@ private class ArrowButtonEnlargeListener : MouseAdapter() {
 
   private fun makeArrowButton(spinner: JSpinner, isNext: Boolean): JButton {
     val direction = if (isNext) SwingConstants.NORTH else SwingConstants.SOUTH
-    val arrowButton: JButton = object : BasicArrowButton(direction) {
+    val arrowButton = object : BasicArrowButton(direction) {
       override fun getPreferredSize(): Dimension {
         val d = super.getPreferredSize()
         d.width *= 4

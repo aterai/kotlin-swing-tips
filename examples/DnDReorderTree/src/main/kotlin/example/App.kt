@@ -19,7 +19,7 @@ fun makeUI(): Component {
   tree.dropMode = DropMode.ON_OR_INSERT
   tree.transferHandler = TreeTransferHandler()
   tree.selectionModel.selectionMode = TreeSelectionModel.CONTIGUOUS_TREE_SELECTION
-  val empty: Action = object : AbstractAction() {
+  val empty = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       // do nothing
     }

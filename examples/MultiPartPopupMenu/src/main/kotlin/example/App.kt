@@ -52,7 +52,7 @@ private fun createIconButton(text: String?): JButton {
 }
 
 private fun createMenuButton(text: String?, parent: JPopupMenu): JButton {
-  val button: JButton = object : JButton(text) {
+  val button = object : JButton(text) {
     override fun updateUI() {
       super.updateUI()
       setAlignmentX(LEFT_ALIGNMENT)
