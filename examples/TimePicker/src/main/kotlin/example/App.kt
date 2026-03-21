@@ -75,7 +75,7 @@ private class TimePickerSplitField {
     panel.add(Box.createHorizontalGlue())
     panel.add(hour)
     val colon = JLabel(":")
-    colon.setFont(colon.getFont().deriveFont(42f))
+    colon.setFont(colon.getFont().deriveFont(Font.BOLD, 42f))
     colon.setBorder(BorderFactory.createEmptyBorder(0, 5, 10, 5))
     panel.add(colon)
     panel.add(minute)
@@ -97,7 +97,7 @@ private class TimePickerSplitField {
     }.onFailure {
       UIManager.getLookAndFeel().provideErrorFeedback(field)
     }
-    field.setFont(field.getFont().deriveFont(42f))
+    field.setFont(field.getFont().deriveFont(Font.BOLD, 42f))
     field.setHorizontalAlignment(JTextField.CENTER)
     field.setColumns(2)
     return field
@@ -153,6 +153,7 @@ private class RoundFormattedTextField(
     setSelectionColor(Color(0x0, true))
     setSelectedTextColor(getForeground())
     setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0))
+    setFont(getFont().deriveFont(Font.BOLD, 42f))
     setCaret(object : DefaultCaret() {
       override fun isVisible() = false
     })
