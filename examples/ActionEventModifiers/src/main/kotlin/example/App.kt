@@ -82,7 +82,8 @@ private fun makeManuBar(): JMenuBar {
     }
   }
   val item = menu.add(a2)
-  item.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_1, InputEvent.SHIFT_DOWN_MASK)
+  item.accelerator = KeyStroke.getKeyStroke("shift 1")
+  // getKeyStroke(KeyEvent.VK_1, InputEvent.SHIFT_DOWN_MASK)
   item.mnemonic = KeyEvent.VK_I
   item.addActionListener { e ->
     val isShiftDown = e.modifiers and ActionEvent.SHIFT_MASK != 0
