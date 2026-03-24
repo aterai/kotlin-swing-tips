@@ -36,10 +36,12 @@ fun makeUI(): Component {
       val pnt1 = src.viewPosition
       val dim2 = tgt.viewSize
       val siz2 = tgt.size
-      val d1 = pnt1.getY() / (dim1.height - siz1.height) * (dim2.height - siz2.height)
-      pnt1.y = d1.toInt()
-      val d2 = pnt1.getX() / (dim1.width - siz1.width) * (dim2.width - siz2.width)
-      pnt1.x = d2.toInt()
+      val h1 = dim1.height - siz1.height
+      val h2 = dim2.height - siz2.height
+      pnt1.y = (pnt1.getY() / h1 * h2).toInt()
+      val w1 = dim1.width - siz1.width
+      val w2 = dim2.width - siz2.width
+      pnt1.x = (pnt1.getX() / w1 * w2).toInt()
       tgt.viewPosition = pnt1
       adjusting = false
     }
