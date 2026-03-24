@@ -142,9 +142,13 @@ private class TooltipEditorKit : HTMLEditorKit() {
     override fun create(elem: Element): View {
       val a = elem.attributes
       val name = a.getAttribute(AbstractDocument.ElementNameAttribute)
-      val o = if (name == null) a.getAttribute(StyleConstants.NameAttribute) else null
-      if (o is HTML.Tag && o === HTML.Tag.DIV) {
-        return object : BlockView(elem, Y_AXIS) {
+      val o = if (name == null) {
+        a.getAttribute(StyleConstants.NameAttribute)
+      } else {
+        null
+      }
+      return if (o is HTML.Tag && o === HTML.Tag.DIV) {
+        object : BlockView(elem, Y_AXIS) {
           override fun getToolTipText(
             x: Float,
             y: Float,
@@ -152,8 +156,9 @@ private class TooltipEditorKit : HTMLEditorKit() {
           ) = super.getToolTipText(x, y, allocation)
             ?: element?.attributes?.getAttribute(HTML.Attribute.TITLE)?.toString()
         }
+      } else {
+        super.create(elem)
       }
-      return super.create(elem)
     }
   }
 }
