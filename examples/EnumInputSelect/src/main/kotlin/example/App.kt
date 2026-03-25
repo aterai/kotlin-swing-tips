@@ -12,7 +12,8 @@ fun makeUI(): Component {
   val bg1 = ButtonGroup()
   val handler1 = ItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      tabs1.tabPlacement = TabPlacement.valueOf(bg1.selection.actionCommand).placement
+      val cmd = bg1.selection.actionCommand
+      tabs1.tabPlacement = TabPlacement.valueOf(cmd).placement
     }
   }
   TabPlacement.entries.forEach { tp ->
@@ -31,7 +32,8 @@ fun makeUI(): Component {
   val bg2 = ButtonGroup()
   val handler2 = ItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      tabs2.tabPlacement = TabPlacement.valueOf(bg2.selection.actionCommand).placement
+      val cmd = bg2.selection.actionCommand
+      tabs2.tabPlacement = TabPlacement.valueOf(cmd).placement
     }
   }
   val box = Box.createHorizontalBox()
