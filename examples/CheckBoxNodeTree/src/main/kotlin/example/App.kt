@@ -111,7 +111,10 @@ private class CheckBoxNodeEditor :
     return checkBox
   }
 
-  override fun getCellEditorValue() = CheckBoxNode(checkBox.text, checkBox.isSelected)
+  override fun getCellEditorValue() = CheckBoxNode(
+    checkBox.text,
+    checkBox.isSelected,
+  )
 
   override fun isCellEditable(e: EventObject?) = (e as? MouseEvent)
     ?.let { it.component as? JTree }
