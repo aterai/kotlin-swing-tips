@@ -59,14 +59,14 @@ private class RoundedTitledBorder(
     )
     val b = getBorder()
     if (b is RoundedBorder) {
-      val d: Dimension = getLabel(c).getPreferredSize()
+      val d = getLabel(c).getPreferredSize()
       val i = b.getBorderInsets(c)
       val a2 = arc * 2
       val w = d.width + i.left + i.right + a2
       val h = d.height + i.top + i.bottom
       g2.clip = b.getBorderShape(x + i.left, y + i.top, w, h)
       g2.paint = Color.GRAY
-      val titleBg: Shape = RoundRectangle2D.Float(
+      val titleBg = RoundRectangle2D.Float(
         (x - a2).toFloat(),
         (y - a2).toFloat(),
         (w + a2).toFloat(),
@@ -123,17 +123,18 @@ private class RoundedBorder(
     g2.dispose()
   }
 
-  fun getBorderShape(x: Int, y: Int, w: Int, h: Int): Shape = RoundRectangle2D.Double(
-    x.toDouble(),
-    y.toDouble(),
-    (w - 1).toDouble(),
-    (h - 1).toDouble(),
-    arc.toDouble(),
-    arc.toDouble(),
-  )
+  fun getBorderShape(x: Int, y: Int, w: Int, h: Int) = RoundRectangle2D
+    .Double(
+      x.toDouble(),
+      y.toDouble(),
+      (w - 1).toDouble(),
+      (h - 1).toDouble(),
+      arc.toDouble(),
+      arc.toDouble(),
+    )
 
   companion object {
-    private val ALPHA_ZERO: Paint = Color(0x0, true)
+    private val ALPHA_ZERO = Color(0x0, true)
   }
 }
 
