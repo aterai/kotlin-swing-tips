@@ -48,11 +48,11 @@ fun makeUI(): Component {
       fixedCellHeight = monthList.fixedCellHeight
       val bgc = UIManager.getColor("TableHeader.background").darker()
       val renderer = cellRenderer
-      setCellRenderer { list, value, index, _, _ ->
-        renderer.getListCellRendererComponent(list, value, index, false, false).also {
+      setCellRenderer { lst, v, idx, _, _ ->
+        renderer.getListCellRendererComponent(lst, v, idx, false, false).also {
           (it as? JLabel)?.also { label ->
             label.horizontalAlignment = SwingConstants.CENTER
-            label.text = value.getDisplayName(TextStyle.SHORT_STANDALONE, l)
+            label.text = v.getDisplayName(TextStyle.SHORT_STANDALONE, l)
             label.background = bgc
           }
         }
