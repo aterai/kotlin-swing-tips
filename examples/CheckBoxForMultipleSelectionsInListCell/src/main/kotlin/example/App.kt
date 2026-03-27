@@ -252,9 +252,7 @@ private class MultipleSelectionList(
 
 private class SimpleListItemCellRenderer : ListCellRenderer<ListItem> {
   private val renderer = JLabel("")
-  private val focusBorder: Border = UIManager.getBorder(
-    "List.focusCellHighlightBorder",
-  )
+  private val focusBorder = UIManager.getBorder("List.focusCellHighlightBorder")
   private val noFocusBorder = getNoFocusBorder(focusBorder)
 
   init {
