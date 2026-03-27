@@ -7,8 +7,12 @@ fun makeUI(): Component {
   val button = JButton("show frame title")
   button.addActionListener { e ->
     (SwingUtilities.getWindowAncestor(e.source as? Component) as? Frame)?.also {
-      val msg = "parentFrame.getTitle(): " + it.title
-      JOptionPane.showMessageDialog(it, msg, "title", JOptionPane.INFORMATION_MESSAGE)
+      JOptionPane.showMessageDialog(
+        it,
+        "parentFrame.getTitle(): " + it.title,
+        "title",
+        JOptionPane.INFORMATION_MESSAGE,
+      )
     }
   }
   return JPanel(BorderLayout()).also {
