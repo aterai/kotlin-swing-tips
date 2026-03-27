@@ -129,8 +129,9 @@ private fun initIconComboBorder2(
       it.add(label)
       val ih = icon.iconHeight
       val ch = comboBox.preferredSize.height
+      val xx = b.getBorderInsets(it).left
       val yy = ((ch - ih) / 2f).roundToInt().coerceAtLeast(0)
-      label.setBounds(b.getBorderInsets(it).left, yy, icon.iconWidth, icon.iconHeight)
+      label.setBounds(xx, yy, icon.iconWidth, icon.iconHeight)
     }
   }
 }
