@@ -26,7 +26,7 @@ private fun createCustomPopup(): JPopupMenu {
   }
   popup.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
   popup.setLayout(BorderLayout(0, 8))
-  val toolbar: JToolBar = RoundedToolBar(15)
+  val toolbar = RoundedToolBar(15)
   toolbar.isFloatable = false
   toolbar.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5))
   listOf("📋", "💾", "🔍", "🔖", "🔋", "🔔").forEach {
