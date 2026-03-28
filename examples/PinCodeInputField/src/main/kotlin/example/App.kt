@@ -52,7 +52,10 @@ private fun makePasswordField(password: JPasswordField): Component {
   doc.addDocumentListener(object : DocumentListener {
     override fun insertUpdate(e: DocumentEvent) {
       if (e.document.length >= PinCodeDocumentFilter.MAX) {
-        JOptionPane.showMessageDialog(password.rootPane, "Try PIN code verification.")
+        JOptionPane.showMessageDialog(
+          password.rootPane,
+          "Try PIN code verification.",
+        )
         EventQueue.invokeLater { password.text = "" }
       }
     }
