@@ -70,10 +70,17 @@ private class CalendarTableRenderer : TableCellRenderer {
       super.paintComponent(g)
     }
 
-    private fun getShape(): Shape = if (background == Color.BLUE) {
-      Ellipse2D.Double(0.0, 0.0, size.width - 1.0, size.height - 1.0)
-    } else {
-      RoundRectangle2D.Double(0.0, 0.0, size.width - 1.0, size.height - 1.0, 5.0, 5.0)
+    private fun getShape(): Shape {
+      val dx = 0.0
+      val dy = 0.0
+      val dw = size.width - 1.0
+      val dh = size.height - 1.0
+      return if (background == Color.BLUE) {
+        Ellipse2D.Double(dx, dy, dw, dh)
+      } else {
+        val arc = 5.0
+        RoundRectangle2D.Double(dx, dy, dw, dh, arc, arc)
+      }
     }
   }
 
