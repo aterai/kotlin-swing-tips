@@ -172,9 +172,9 @@ private class AnimatableIcon(
     g2.dispose()
   }
 
-  override fun getIconWidth(): Int = icon.iconWidth
+  override fun getIconWidth() = icon.iconWidth
 
-  override fun getIconHeight(): Int = icon.iconHeight
+  override fun getIconHeight() = icon.iconHeight
 }
 
 fun main() {
