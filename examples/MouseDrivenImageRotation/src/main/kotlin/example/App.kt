@@ -150,7 +150,10 @@ private class DraggableImageMouseListener(
       radian = startRadian + atan2(e.y - centerPt.y, e.x - centerPt.x)
       e.component.repaint()
     } else if (moverHover) {
-      centerPt.setLocation(centerPt.x + e.x - startPt.x, centerPt.y + e.y - startPt.y)
+      centerPt.setLocation(
+        centerPt.x + e.x - startPt.x,
+        centerPt.y + e.y - startPt.y,
+      )
       setCirclesLocation(centerPt)
       startPt.setLocation(e.point)
       e.component.repaint()
