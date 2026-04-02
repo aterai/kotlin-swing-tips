@@ -3,7 +3,6 @@ package example
 import java.awt.*
 import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
-import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.awt.image.BufferedImage
 import java.awt.image.FilteredImageSource
@@ -37,12 +36,12 @@ fun makeUI(): Component {
     ) = false
   })
   val scroll = JScrollPane(table)
-  val tab = KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0)
-  val sTab = KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK)
+  val tab = KeyStroke.getKeyStroke("TAB")
+  val sTab = KeyStroke.getKeyStroke("shift TAB")
   val im = table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-  val enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)
+  val enter = KeyStroke.getKeyStroke("ENTER")
   im.put(tab, im[enter])
-  val sEnter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK)
+  val sEnter = KeyStroke.getKeyStroke("shift ENTER")
   im.put(sTab, im[sEnter])
   val orgColor = table.selectionBackground
   val tflColor = scroll.background
@@ -205,7 +204,9 @@ private class TablePopupMenu : JPopupMenu() {
         table.scrollRectToVisible(r)
       }
     }
-    add("clearSelection").addActionListener { (invoker as? JTable)?.clearSelection() }
+    add("clearSelection").addActionListener {
+      (invoker as? JTable)?.clearSelection()
+    }
     addSeparator()
     delete = add("delete")
     delete.addActionListener {
