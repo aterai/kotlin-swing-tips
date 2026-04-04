@@ -68,7 +68,10 @@ fun makeUI(): Component {
 
   val selectionListener = ListSelectionListener { e ->
     if (!e.valueIsAdjusting) {
-      val o = monthTable.getValueAt(monthTable.selectedRow, monthTable.selectedColumn)
+      val o = monthTable.getValueAt(
+        monthTable.selectedRow,
+        monthTable.selectedColumn,
+      )
       (o as? LocalDate)?.also {
         dateLabel.text = it.toString()
       }
@@ -93,7 +96,12 @@ fun makeUI(): Component {
   updateMonthView(realLocalDate, locale1)
 
   val prev = JButton("<")
-  prev.addActionListener { updateMonthView(currentLocalDate.minusMonths(1), locale1) }
+  prev.addActionListener {
+    updateMonthView(
+      currentLocalDate.minusMonths(1),
+      locale1,
+    )
+  }
 
   val next = JButton(">")
   next.addActionListener { updateMonthView(currentLocalDate.plusMonths(1), locale1) }
@@ -173,8 +181,8 @@ private class CalendarViewTableModel(
   date: LocalDate,
   locale: Locale,
 ) : DefaultTableModel() {
-  private val startDate: LocalDate = date.minusWeeks((WEEK_COUNT / 2).toLong())
-  private val weekFields: WeekFields = WeekFields.of(locale)
+  private val startDate = date.minusWeeks((WEEK_COUNT / 2).toLong())
+  private val weekFields = WeekFields.of(locale)
 
   override fun getColumnClass(column: Int) = LocalDate::class.java
 
