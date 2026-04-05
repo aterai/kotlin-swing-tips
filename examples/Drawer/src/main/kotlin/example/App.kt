@@ -113,12 +113,16 @@ private fun updateLayoutSizes() {
   mainConstants.repaint()
 }
 
-private fun getOpenX(w: Int): Int {
-  return if (position == DrawerPosition.LEFT) 0 else w - DRAWER_WIDTH
+private fun getOpenX(w: Int) = if (position == DrawerPosition.LEFT) {
+  0
+} else {
+  w - DRAWER_WIDTH
 }
 
-private fun getClosedX(w: Int): Int {
-  return if (position == DrawerPosition.LEFT) -DRAWER_WIDTH else w
+private fun getClosedX(w: Int) = if (position == DrawerPosition.LEFT) {
+  -DRAWER_WIDTH
+} else {
+  w
 }
 
 private fun toggleDrawer() {
@@ -161,14 +165,16 @@ private class OverlayPanel : JPanel() {
   }
 
   override fun paintComponent(g: Graphics) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.color = Color(0, 0, 0, 140)
     g2.fillRect(0, 0, getWidth(), getHeight())
     g2.dispose()
   }
 }
 
-private class NavButton(text: String) : JButton(text) {
+private class NavButton(
+  text: String,
+) : JButton(text) {
   private var mouseListener: MouseListener? = null
 
   override fun updateUI() {
@@ -203,9 +209,7 @@ private class NavButton(text: String) : JButton(text) {
     addMouseListener(mouseListener)
   }
 
-  override fun getMaximumSize(): Dimension {
-    return Dimension(DRAWER_WIDTH, 50)
-  }
+  override fun getMaximumSize() = Dimension(DRAWER_WIDTH, 50)
 
   override fun paintComponent(g: Graphics) {
     if (isOpaque) {
