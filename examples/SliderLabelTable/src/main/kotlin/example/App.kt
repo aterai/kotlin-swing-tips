@@ -71,7 +71,7 @@ private fun makeSlider2(): JSlider {
     labelTable2.forEach { (key, value) ->
       if (key is Int && value is JLabel) {
         value.text = list2[key]
-        value.foreground = Color(250, 100 - key * 10, 10)
+        value.foreground = Color(250, (100 - key * 10).coerceAtLeast(0), 10)
       }
     }
   }
