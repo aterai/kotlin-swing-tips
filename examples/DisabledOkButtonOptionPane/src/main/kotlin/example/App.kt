@@ -55,7 +55,12 @@ private fun makeButton2(log: JTextArea): JButton {
   val i = enabledBorder.getBorderInsets(field2)
   val disabledBorder = BorderFactory.createCompoundBorder(
     BorderFactory.createLineBorder(Color.RED),
-    BorderFactory.createEmptyBorder(i.top - 1, i.left - 1, i.bottom - 1, i.right - 1),
+    BorderFactory.createEmptyBorder(
+      i.top - 1,
+      i.left - 1,
+      i.bottom - 1,
+      i.right - 1,
+    ),
   )
   val disabledMessage = "Text is required to create ..."
   val label2 = JLabel(" ")
