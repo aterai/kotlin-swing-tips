@@ -187,7 +187,11 @@ private class EditableList(
       val idx = selectedIndex
       val item = selectedValue ?: return
       val rect = getCellBounds(idx, idx)
-      val p = SwingUtilities.convertPoint(this@EditableList, rect.location, glassPane)
+      val p = SwingUtilities.convertPoint(
+        this@EditableList,
+        rect.location,
+        glassPane,
+      )
       rect.location = p
       val h = editor.preferredSize.height
       rect.y += rect.height - h - 1
