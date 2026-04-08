@@ -5,14 +5,16 @@ import javax.swing.*
 
 fun makeUI(): Component {
   val tds1 = "border-right:1px solid green;border-top:1px solid blue"
-  val tbs1 = "border-left:1px solid red;border-bottom:1px solid red;background:yellow"
+  val tbs1 = "border-left:1px solid red;border-bottom:1px solid red"
+  val bgc1 = ";background:yellow"
   val padding1 = "cellspacing='0px' cellpadding='5px'"
-  val html1 = makeHtml(tbs1, padding1, tds1)
+  val html1 = makeHtml(tbs1, padding1, tds1 + bgc1)
 
   val tds2 = "border-right:1px solid red;border-bottom:1px solid blue"
-  val tbs2 = "border-left:1px solid red;border-top:1px solid red;background:yellow"
+  val tbs2 = "border-left:1px solid red;border-top:1px solid red"
+  val bgc2 = ";background:yellow"
   val padding2 = "cellspacing='0px' cellpadding='5px'"
-  val html2 = makeHtml(tbs2, padding2, tds2)
+  val html2 = makeHtml(tbs2, padding2, tds2 + bgc2)
 
   val style3 = "border:0px;background:red"
   val padding3 = "cellspacing='1px' cellpadding='5px'"
