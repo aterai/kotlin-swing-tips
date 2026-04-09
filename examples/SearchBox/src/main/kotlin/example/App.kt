@@ -20,7 +20,12 @@ fun makeUI(): Component {
       val selectedPath = tree.selectionPath
       tree.clearSelection()
       rollOverPathLists.clear()
-      TreeUtils.searchTree(tree, tree.getPathForRow(0), field.text, rollOverPathLists)
+      TreeUtils.searchTree(
+        tree,
+        tree.getPathForRow(0),
+        field.text,
+        rollOverPathLists,
+      )
       if (rollOverPathLists.isNotEmpty()) {
         val nextIdx = getNextIndex(rollOverPathLists, selectedPath)
         val p = rollOverPathLists[nextIdx]
