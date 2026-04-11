@@ -2,8 +2,6 @@ package example
 
 import java.awt.*
 import java.awt.event.ActionEvent
-import java.awt.event.InputEvent
-import java.awt.event.KeyEvent
 import javax.swing.*
 import javax.swing.text.AbstractDocument
 import javax.swing.text.AttributeSet
@@ -41,8 +39,8 @@ fun makeUI(): Component {
 
   val key = "Do-Nothing"
   val im = textPane.getInputMap(JComponent.WHEN_FOCUSED)
-  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), key)
-  im.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), key)
+  im.put(KeyStroke.getKeyStroke("ENTER"), key)
+  im.put(KeyStroke.getKeyStroke("TAB"), key)
   val action = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       // Do nothing
@@ -52,8 +50,8 @@ fun makeUI(): Component {
 
   val ftk = KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS
   val forwardKeys = HashSet(textPane.getFocusTraversalKeys(ftk))
-  forwardKeys.add(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0))
-  forwardKeys.add(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK))
+  forwardKeys.add(KeyStroke.getKeyStroke("TAB"))
+  forwardKeys.add(KeyStroke.getKeyStroke("shift TAB"))
   textPane.setFocusTraversalKeys(ftk, forwardKeys)
 
   val scrollPane = object : JScrollPane(textPane) {
@@ -129,8 +127,8 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
   ) {
     val root = defaultRootElement
     val content = getText(0, getLength())
-    val startLine: Int = root.getElementIndex(offset)
-    val endLine: Int = root.getElementIndex(offset + length)
+    val startLine = root.getElementIndex(offset)
+    val endLine = root.getElementIndex(offset + length)
     for (i in startLine..endLine) {
       applyHighlighting(content, i)
     }
