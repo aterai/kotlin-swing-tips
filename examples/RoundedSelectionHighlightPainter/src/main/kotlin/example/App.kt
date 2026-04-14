@@ -9,7 +9,6 @@ import javax.swing.event.DocumentListener
 import javax.swing.text.DefaultCaret
 import javax.swing.text.DefaultHighlighter
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
-import javax.swing.text.Highlighter.HighlightPainter
 import javax.swing.text.JTextComponent
 import javax.swing.text.Position
 import javax.swing.text.View
@@ -102,7 +101,7 @@ private object DocumentUtils {
       runCatching {
         val text = doc.getText(0, doc.length)
         val matcher = Pattern.compile(pattern).matcher(text)
-        val highlightPainter: HighlightPainter = RoundedHighlightPainter()
+        val highlightPainter = RoundedHighlightPainter()
         var pos = 0
         while (matcher.find(pos) && matcher.group().isNotEmpty()) {
           val start = matcher.start()
