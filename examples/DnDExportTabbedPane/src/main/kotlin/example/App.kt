@@ -143,7 +143,11 @@ class DnDTabbedPane : JTabbedPane() {
         backwardButton = b
       }
     }
-    val button = if (dir == ScrollDirection.FORWARD) forwardButton else backwardButton
+    val button = if (dir == ScrollDirection.FORWARD) {
+      forwardButton
+    } else {
+      backwardButton
+    }
     button?.takeIf { it.isEnabled }?.doClick()
   }
 
