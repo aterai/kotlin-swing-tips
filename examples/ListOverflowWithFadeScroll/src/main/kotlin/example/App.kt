@@ -41,7 +41,7 @@ private class FadeScrollLayerUI : LayerUI<JScrollPane>() {
       )
       // g2.clip = r
 
-      // 2. Top edge fade (background color ¨ transparent)
+      // 2. Top edge fade (background color -> transparent)
       if (m.minimum < m.value) {
         g2.paint = GradientPaint(
           0f,
@@ -49,12 +49,12 @@ private class FadeScrollLayerUI : LayerUI<JScrollPane>() {
           bgc,
           0f,
           (r.y + OVERFLOW).toFloat(),
-          transparent
+          transparent,
         )
         g2.fillRect(r.x, r.y, r.width, OVERFLOW)
       }
 
-      // 3. Bottom edge fade (transparent ¨ background color)
+      // 3. Bottom edge fade (transparent -> background color)
       if (m.value + m.extent < m.maximum) {
         val fadeTop = r.y + r.height - OVERFLOW
         g2.paint = GradientPaint(
@@ -63,7 +63,7 @@ private class FadeScrollLayerUI : LayerUI<JScrollPane>() {
           transparent,
           0f,
           (r.y + r.height).toFloat(),
-          bgc
+          bgc,
         )
         g2.fillRect(r.x, fadeTop, r.width, OVERFLOW)
       }
@@ -71,7 +71,9 @@ private class FadeScrollLayerUI : LayerUI<JScrollPane>() {
     }
   }
 
-  private fun getBgColor(scroll: JScrollPane) = scroll.getViewport().view
+  private fun getBgColor(scroll: JScrollPane) = scroll
+    .getViewport()
+    .view
     ?.getBackground()
     ?: UIManager.getColor("List.background")
     ?: Color.WHITE
