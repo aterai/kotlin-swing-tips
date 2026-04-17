@@ -12,20 +12,20 @@ import javax.swing.tree.TreeCellEditor
 import javax.swing.tree.TreeNode
 import javax.swing.tree.TreePath
 
-private val LOG = JTextArea()
+private val logArea = JTextArea()
 
 fun makeUI(): Component {
-  LOG.isEditable = false
-  val popup = JPopupMenu()
-  popup.add("clear").addActionListener { LOG.text = "" }
-  LOG.componentPopupMenu = popup
+  logArea.isEditable = false
+  val contextMenu = JPopupMenu()
+  contextMenu.add("clear").addActionListener { logArea.text = "" }
+  logArea.componentPopupMenu = contextMenu
 
   val tree = object : JTree() {
     override fun updateUI() {
       setCellEditor(null)
       super.updateUI()
       isEditable = true
-      setCellEditor(makeTreeCellEditor(this))
+      setCellEditor(createTreeCellEditor(this))
     }
 
     override fun isPathEditable(path: TreePath): Boolean {
@@ -41,45 +41,51 @@ fun makeUI(): Component {
       return (node as? TreeNode)?.isLeaf == true
     }
 
-    private fun makeTreeCellEditor(tree: JTree): TreeCellEditor {
+    private fun createTreeCellEditor(tree: JTree): TreeCellEditor {
       return object : DefaultTreeCellEditor(
         tree,
         tree.cellRenderer as? DefaultTreeCellRenderer,
       ) {
         override fun isCellEditable(e: EventObject?): Boolean {
           appendLog("TreeCellEditor#isCellEditable(EventObject)")
-          return if (e is MouseEvent) {
-            appendLog("  MouseEvent")
-            appendLog("  getPoint(): %s".format(e.point))
-            appendLog("  getClickCount: %d".format(e.clickCount))
-            appendLog("  isShiftDown: %s".format(e.isShiftDown))
-            appendLog("  isControlDown: %s".format(e.isControlDown))
-            e.clickCount >= 2 || e.isShiftDown || e.isControlDown
-          } else if (e is KeyEvent) {
-            appendLog("  KeyEvent")
-            super.isCellEditable(e)
-          } else { // e == null
-            appendLog("  startEditing Action(F2)")
-            super.isCellEditable(e)
+          return when (e) {
+            is MouseEvent -> {
+              appendLog("  MouseEvent")
+              appendLog("  getPoint(): %s".format(e.point))
+              appendLog("  getClickCount: %d".format(e.clickCount))
+              appendLog("  isShiftDown: %s".format(e.isShiftDown))
+              appendLog("  isControlDown: %s".format(e.isControlDown))
+              e.clickCount >= 2 || e.isShiftDown || e.isControlDown
+            }
+
+            is KeyEvent -> {
+              appendLog("  KeyEvent")
+              super.isCellEditable(e)
+            }
+
+            else -> { // e == null
+              appendLog("  startEditing Action(F2)")
+              super.isCellEditable(e)
+            }
           }
         }
       }
     }
   }
 
-  val sp = JSplitPane(JSplitPane.VERTICAL_SPLIT)
-  sp.resizeWeight = .5
-  sp.topComponent = JScrollPane(tree)
-  sp.bottomComponent = JScrollPane(LOG)
+  val splitPane = JSplitPane(JSplitPane.VERTICAL_SPLIT)
+  splitPane.resizeWeight = .5
+  splitPane.topComponent = JScrollPane(tree)
+  splitPane.bottomComponent = JScrollPane(logArea)
 
   return JPanel(BorderLayout()).also {
-    it.add(sp)
+    it.add(splitPane)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun appendLog(str: String) {
-  LOG.append(str + "\n")
+private fun appendLog(message: String) {
+  logArea.append(message + "\n")
 }
 
 fun main() {
