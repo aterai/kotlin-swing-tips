@@ -115,7 +115,7 @@ fun makeUI(): Component {
       model.rowCount = 0
       val c = componentChoices.getItemAt(componentChoices.selectedIndex)
       FocusType.entries.forEach {
-        loadBindingMap(it, c.getInputMap(it.id), c.actionMap)
+        loadBindingMap(it, it.getInputMap(c), c.actionMap)
       }
     }
   }
@@ -141,11 +141,13 @@ private data class Binding(
 }
 
 private enum class FocusType(
-  val id: Int,
+  private val id: Int,
 ) {
-  WHEN_FOCUSED(JComponent.WHEN_FOCUSED),
-  WHEN_IN_FOCUSED_WINDOW(JComponent.WHEN_IN_FOCUSED_WINDOW),
-  WHEN_ANCESTOR_OF_FOCUSED_COMPONENT(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT),
+  FOCUSED(JComponent.WHEN_FOCUSED),
+  WINDOW(JComponent.WHEN_IN_FOCUSED_WINDOW),
+  ANCESTOR(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+  fun getInputMap(c: JComponent): InputMap = c.getInputMap(id)
 }
 
 fun main() {
