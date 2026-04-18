@@ -39,7 +39,7 @@ private val list = object : JList<ListItem>(model) {
     fixedCellWidth = 56
     fixedCellHeight = 56
     border = BorderFactory.createEmptyBorder(5, 10, 5, 10)
-    cellRenderer = ListItemListCellRenderer()
+    cellRenderer = ListItemRenderer()
     handler = ClearSelectionListener()
     addMouseListener(handler)
   }
@@ -68,21 +68,21 @@ fun makeUI(): Component {
   r1.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
       comparator = null
-      sort()
+      sortList()
     }
   }
   r2.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
       comparator = Comparator.comparing(ListItem::title)
-      reversed()
-      sort()
+      reverseComparatorIfNeeded()
+      sortList()
     }
   }
   r3.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
       comparator = Comparator.comparing { it.color.rgb }
-      reversed()
-      sort()
+      reverseComparatorIfNeeded()
+      sortList()
     }
   }
 
@@ -98,7 +98,7 @@ fun makeUI(): Component {
   }
 }
 
-private fun reversed() {
+private fun reverseComparatorIfNeeded() {
   if (descending.isSelected) {
     comparator = comparator?.reversed()
   }
@@ -111,7 +111,7 @@ private fun makeDirectionBox(): Component {
   val listener = ItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
       comparator = comparator?.reversed()
-      sort()
+      sortList()
     }
   }
   directionList.forEach {
@@ -124,7 +124,7 @@ private fun makeDirectionBox(): Component {
   return box2
 }
 
-private fun sort() {
+private fun sortList() {
   val selected = list.selectedValuesList
   model.clear()
   directionList.forEach { item -> item.isEnabled = false }
@@ -138,7 +138,7 @@ private fun sort() {
   }
 }
 
-private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
+private class ListItemRenderer : ListCellRenderer<ListItem> {
   private val label = JLabel("", null, SwingConstants.CENTER)
   private val renderer = JPanel(BorderLayout())
   private val focusBorder = UIManager.getBorder("List.focusCellHighlightBorder")
@@ -220,9 +220,9 @@ private class ClearSelectionListener : MouseInputAdapter() {
 
   override fun mousePressed(e: MouseEvent) {
     val list = e.component as? JList<*> ?: return
-    startOutside = !contains(list, e.point)
+    startOutside = !containsPoint(list, e.point)
     if (startOutside) {
-      clearSelectionAndFocus(list)
+      clearSelectionAndResetFocus(list)
     }
   }
 
@@ -232,31 +232,29 @@ private class ClearSelectionListener : MouseInputAdapter() {
 
   override fun mouseDragged(e: MouseEvent) {
     val list = e.component as? JList<*> ?: return
-    if (contains(list, e.point)) {
+    if (containsPoint(list, e.point)) {
       startOutside = false
     } else if (startOutside) {
-      clearSelectionAndFocus(list)
+      clearSelectionAndResetFocus(list)
     }
   }
 
-  companion object {
-    private fun <E> clearSelectionAndFocus(list: JList<E>) {
-      list.clearSelection()
-      list.selectionModel.anchorSelectionIndex = -1
-      list.selectionModel.leadSelectionIndex = -1
-    }
+  private fun <E> clearSelectionAndResetFocus(list: JList<E>) {
+    list.clearSelection()
+    list.selectionModel.anchorSelectionIndex = -1
+    list.selectionModel.leadSelectionIndex = -1
+  }
 
-    private fun <E> contains(
-      list: JList<E>,
-      pt: Point,
-    ): Boolean {
-      for (i in 0..<list.model.size) {
-        if (list.getCellBounds(i, i).contains(pt)) {
-          return true
-        }
+  private fun <E> containsPoint(
+    list: JList<E>,
+    pt: Point,
+  ): Boolean {
+    for (i in 0..<list.model.size) {
+      if (list.getCellBounds(i, i).contains(pt)) {
+        return true
       }
-      return false
     }
+    return false
   }
 }
 
