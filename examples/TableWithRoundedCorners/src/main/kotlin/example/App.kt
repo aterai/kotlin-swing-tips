@@ -241,6 +241,7 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
     super.paintComponent(g)
   }
 
+  @Suppress("LongMethod")
   private fun buildRoundedRectPath(
     bounds: Rectangle,
     arcWidth: Double,
