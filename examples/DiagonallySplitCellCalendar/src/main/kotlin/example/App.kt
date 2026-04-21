@@ -19,11 +19,11 @@ private val monthTable = object : JTable() {
     super.doLayout()
     val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, this)
     if (c is JViewport) {
-      updateRowsHeight(c)
+      adjustRowHeights(c)
     }
   }
 
-  private fun updateRowsHeight(vp: JViewport) {
+  private fun adjustRowHeights(vp: JViewport) {
     val height = vp.extentSize.height
     val rowCount = model.rowCount
     val defaultRowHeight = height / rowCount

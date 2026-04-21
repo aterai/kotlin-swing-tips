@@ -20,7 +20,7 @@ private val table = object : JTable(model) {
   private var prevHeight = -1
   private var prevCount = -1
 
-  private fun updateRowsHeight(viewPort: JViewport) {
+  private fun adjustRowHeights(viewPort: JViewport) {
     val height = viewPort.extentSize.height
     val rowCount = model.rowCount
     val defaultRowHeight = height / rowCount
@@ -41,7 +41,7 @@ private val table = object : JTable(model) {
     super.doLayout()
     val clz = JViewport::class.java
     (SwingUtilities.getAncestorOfClass(clz, this) as? JViewport)?.also {
-      updateRowsHeight(it)
+      adjustRowHeights(it)
     }
   }
 }

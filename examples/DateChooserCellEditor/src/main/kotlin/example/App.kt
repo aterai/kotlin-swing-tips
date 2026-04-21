@@ -193,11 +193,11 @@ private class DateEditor :
       super.doLayout()
       val clz = JViewport::class.java
       (SwingUtilities.getAncestorOfClass(clz, this) as? JViewport)?.also {
-        updateRowsHeight(it)
+        adjustRowHeights(it)
       }
     }
 
-    private fun updateRowsHeight(viewPort: JViewport) {
+    private fun adjustRowHeights(viewPort: JViewport) {
       val height = viewPort.extentSize.height
       val rowCount = model.rowCount
       val defaultRowHeight = height / rowCount
