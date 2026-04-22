@@ -60,11 +60,11 @@ private fun createMenuBar(): JMenuBar {
   d["CheckBoxMenuItem[Enabled].checkIconPainter"] =
     MyCheckBoxMenuItemPainter(CheckIcon.ENABLED)
   d["CheckBoxMenuItem[MouseOver].checkIconPainter"] =
-    MyCheckBoxMenuItemPainter(CheckIcon.MOUSEOVER)
+    MyCheckBoxMenuItemPainter(CheckIcon.HOVER)
   d["CheckBoxMenuItem[Enabled+Selected].checkIconPainter"] =
     MyCheckBoxMenuItemPainter(CheckIcon.ENABLED_SELECTED)
   d["CheckBoxMenuItem[MouseOver+Selected].checkIconPainter"] =
-    MyCheckBoxMenuItemPainter(CheckIcon.SELECTED_MOUSEOVER)
+    MyCheckBoxMenuItemPainter(CheckIcon.SELECTED_HOVER)
 
   val menuBar = JMenuBar()
   val menu = JMenu("Menu")
@@ -89,9 +89,9 @@ private fun createMenuBar(): JMenuBar {
 
 private enum class CheckIcon {
   ENABLED_SELECTED,
-  SELECTED_MOUSEOVER,
+  SELECTED_HOVER,
   ENABLED,
-  MOUSEOVER,
+  HOVER,
 }
 
 private class MyCheckBoxMenuItemPainter(
@@ -106,9 +106,9 @@ private class MyCheckBoxMenuItemPainter(
   ) {
     when (state) {
       CheckIcon.ENABLED -> paintIconEnabled(g)
-      CheckIcon.MOUSEOVER -> paintIconMouseOver(g)
+      CheckIcon.HOVER -> paintIconMouseOver(g)
       CheckIcon.ENABLED_SELECTED -> paintIconEnabledAndSelected(g)
-      CheckIcon.SELECTED_MOUSEOVER -> paintIconSelectedAndMouseOver(g)
+      CheckIcon.SELECTED_HOVER -> paintIconSelectedAndMouseOver(g)
     }
   }
 
@@ -208,9 +208,7 @@ private class MultiLineTableCellRenderer :
     return maxH
   }
 
-  companion object {
-    private fun <E> createMutableList(initCapacity: Int) = ArrayList<E>(initCapacity)
-  }
+  private fun <E> createMutableList(initCapacity: Int) = ArrayList<E>(initCapacity)
 }
 
 fun main() {
