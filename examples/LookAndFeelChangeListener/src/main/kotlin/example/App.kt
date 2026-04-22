@@ -5,8 +5,8 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.*
 
-private val check1 = ActionCommandCheckBox(TreeDraws.DRAWS_FOCUS_BORDER_AROUND_ICON)
-private val check2 = ActionCommandCheckBox(TreeDraws.DRAW_DASHED_FOCUS_INDICATOR)
+private val check1 = ActionCommandCheckBox(TreeDraws.FOCUS_ICON_BORDER)
+private val check2 = ActionCommandCheckBox(TreeDraws.DASHED_FOCUS_IND)
 private val textArea = JTextArea()
 
 fun makeUI(): Component {
@@ -47,8 +47,8 @@ fun makeUI(): Component {
 private enum class TreeDraws(
   private val key: String,
 ) {
-  DRAWS_FOCUS_BORDER_AROUND_ICON("Tree.drawsFocusBorderAroundIcon"),
-  DRAW_DASHED_FOCUS_INDICATOR("Tree.drawDashedFocusIndicator"),
+  FOCUS_ICON_BORDER("Tree.drawsFocusBorderAroundIcon"),
+  DASHED_FOCUS_IND("Tree.drawDashedFocusIndicator"),
   ;
 
   override fun toString() = key
@@ -60,10 +60,10 @@ private fun descendants(me: MenuElement): List<MenuElement> =
 private fun updateCheckBox(str: String) {
   EventQueue.invokeLater {
     append("--------\n$str")
-    val focusKey = TreeDraws.DRAWS_FOCUS_BORDER_AROUND_ICON.toString()
+    val focusKey = TreeDraws.FOCUS_ICON_BORDER.toString()
     append(focusKey + ": " + UIManager.getBoolean(focusKey))
     check1.isSelected = UIManager.getBoolean(focusKey)
-    val dashedKey = TreeDraws.DRAW_DASHED_FOCUS_INDICATOR.toString()
+    val dashedKey = TreeDraws.DASHED_FOCUS_IND.toString()
     append(dashedKey + ": " + UIManager.getBoolean(dashedKey))
     check2.isSelected = UIManager.getBoolean(dashedKey)
   }
