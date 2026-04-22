@@ -13,10 +13,10 @@ import javax.swing.plaf.LayerUI
 
 fun makeUI(): Component {
   val p1 = JPanel(BorderLayout())
-  p1.setBorder(makeRoundedTitledBorder("Title001", 4))
+  p1.setBorder(createRoundedTitledBorder("Title001", 4))
   p1.add(JScrollPane(JTree()))
   val p2 = JPanel(BorderLayout())
-  p2.setBorder(makeRoundedTitledBorder("Title(2)", 8))
+  p2.setBorder(createRoundedTitledBorder("Title(2)", 8))
   p2.add(JScrollPane(JTable(5, 3)))
   val scroll = JScrollPane(JTextArea(10, 20))
   scroll.setBorder(RoundedBorder(8))
@@ -31,11 +31,12 @@ fun makeUI(): Component {
   }
 }
 
-private fun makeRoundedTitledBorder(text: String, arc: Int): Border {
-  val b = RoundedTitledBorder(text, arc)
-  b.setTitlePosition(TitledBorder.BELOW_TOP)
-  b.setTitleColor(Color.WHITE)
-  return b
+private fun createRoundedTitledBorder(
+  text: String,
+  arc: Int,
+) = RoundedTitledBorder(text, arc).also {
+  it.setTitlePosition(TitledBorder.BELOW_TOP)
+  it.setTitleColor(Color.WHITE)
 }
 
 private class RoundedTitledBorder(
