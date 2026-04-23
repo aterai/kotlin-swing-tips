@@ -145,7 +145,8 @@ private enum class FocusType(
 ) {
   FOCUSED(JComponent.WHEN_FOCUSED),
   WINDOW(JComponent.WHEN_IN_FOCUSED_WINDOW),
-  ANCESTOR(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+  ANCESTOR(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT),
+  ;
 
   fun getInputMap(c: JComponent): InputMap = c.getInputMap(id)
 }
