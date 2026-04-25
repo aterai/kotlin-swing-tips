@@ -9,81 +9,100 @@ import java.awt.geom.Ellipse2D
 import java.awt.geom.Line2D
 import javax.swing.*
 
-fun makeUI(): Component {
-  val pf1 = makePasswordField()
-  val b1 = JCheckBox("show passwords")
-  b1.addActionListener { e ->
-    val b = (e.source as? AbstractButton)?.isSelected == true
-    pf1.echoChar = if (b) '\u0000' else getUIEchoChar()
-  }
-  val p1 = JPanel(BorderLayout())
-  p1.add(pf1)
-  p1.add(b1, BorderLayout.SOUTH)
+fun createUI() = JPanel(GridLayout(0, 1, 0, 2)).also {
+  val p1 = createCheckBoxPasswordPanel()
+  it.add(createTitledPanel("BorderLayout + JCheckBox", p1))
+  val p2 = createToggleButtonPasswordPanel()
+  it.add(createTitledPanel("OverlayLayout + JToggleButton", p2))
+  val p3 = createCardLayoutPasswordPanel()
+  it.add(createTitledPanel("CardLayout + JTextField(can copy) + ...", p3))
+  val p4 = createHoldToShowPasswordPanel()
+  it.add(createTitledPanel("press and hold down the mouse button", p4))
+  it.border = BorderFactory.createEmptyBorder(2, 5, 2, 5)
+  it.preferredSize = Dimension(320, 240)
+}
 
-  val pf2 = makePasswordField()
-  val b2 = JToggleButton()
-  b2.addActionListener { e ->
+private fun createCheckBoxPasswordPanel(): JPanel {
+  val password = createPasswordField()
+  val button = JCheckBox("show passwords")
+  button.addActionListener { e ->
     val b = (e.source as? AbstractButton)?.isSelected == true
-    pf2.echoChar = if (b) '\u0000' else getUIEchoChar()
+    password.echoChar = if (b) '\u0000' else getUIEchoChar()
   }
-  initEyeButton(b2)
-  val p2 = makeOverlayLayoutPanel()
-  p2.add(b2)
-  p2.add(pf2)
+  val p = JPanel(BorderLayout())
+  p.add(password)
+  p.add(button, BorderLayout.SOUTH)
+  return p
+}
 
-  val pf3 = makePasswordField()
-  val tf3 = JTextField(24)
-  tf3.font = Font(Font.MONOSPACED, Font.PLAIN, 12)
-  tf3.enableInputMethods(false)
-  tf3.document = pf3.document
-  val cardLayout = CardLayout()
-  val p3 = object : JPanel(cardLayout) {
+private fun createToggleButtonPasswordPanel(): JPanel {
+  val password = createPasswordField()
+  val button = JToggleButton()
+  button.addActionListener { e ->
+    val b = (e.source as? AbstractButton)?.isSelected == true
+    password.echoChar = if (b) '\u0000' else getUIEchoChar()
+  }
+  configureEyeButton(button)
+  val p = createOverlayPanel()
+  p.add(button)
+  p.add(password)
+  return p
+}
+
+private fun createCardLayoutPasswordPanel(): JPanel {
+  val password = createPasswordField()
+  val field = JTextField(24)
+  field.font = Font(Font.MONOSPACED, Font.PLAIN, 12)
+  field.enableInputMethods(false)
+  field.document = password.document
+
+  val visibilityLayout = CardLayout()
+  val p = object : JPanel(visibilityLayout) {
     override fun updateUI() {
       super.updateUI()
-      alignmentX = Component.RIGHT_ALIGNMENT
+      alignmentX = RIGHT_ALIGNMENT
     }
   }
-  p3.add(pf3, PasswordField.HIDE.toString())
-  p3.add(tf3, PasswordField.SHOW.toString())
-  val b3 = JToggleButton()
-  b3.addActionListener { e ->
-    val b = (e.source as? AbstractButton)?.isSelected == true
-    val s = if (b) PasswordField.SHOW else PasswordField.HIDE
-    cardLayout.show(p3, s.toString())
-  }
-  initEyeButton(b3)
-  val pp3 = makeOverlayLayoutPanel()
-  pp3.add(b3)
-  pp3.add(p3)
+  p.add(password, PasswordVisibility.HIDDEN.toString())
+  p.add(field, PasswordVisibility.VISIBLE.toString())
 
-  val pf4 = makePasswordField()
-  val b4 = JButton()
-  val ml4 = object : MouseAdapter() {
+  val button = JToggleButton()
+  button.addActionListener { e ->
+    val b = (e.source as? AbstractButton)?.isSelected == true
+    val s = if (b) PasswordVisibility.VISIBLE else PasswordVisibility.HIDDEN
+    visibilityLayout.show(button, s.toString())
+  }
+  configureEyeButton(button)
+
+  val panel = createOverlayPanel()
+  panel.add(button)
+  panel.add(p)
+  return panel
+}
+
+private fun createHoldToShowPasswordPanel(): Container {
+  val passwordField = createPasswordField()
+  val button = JButton()
+  val mouseAdapter = object : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
-      pf4.echoChar = '\u0000'
+      passwordField.echoChar = '\u0000'
     }
 
     override fun mouseReleased(e: MouseEvent) {
-      pf4.echoChar = getUIEchoChar()
+      passwordField.echoChar = getUIEchoChar()
     }
   }
-  b4.addMouseListener(ml4)
-  initEyeButton(b4)
-  val p4 = makeOverlayLayoutPanel()
-  p4.add(b4)
-  p4.add(pf4)
-
-  return JPanel(GridLayout(0, 1, 0, 2)).also {
-    it.add(makeTitledPanel("OverlayLayout + JToggleButton", p2))
-    it.add(JLabel(EyeIcon(Color.BLACK)))
-    it.border = BorderFactory.createEmptyBorder(2, 5, 2, 5)
-    it.preferredSize = Dimension(320, 240)
-  }
+  button.addMouseListener(mouseAdapter)
+  configureEyeButton(button)
+  val panel = createOverlayPanel()
+  panel.add(button)
+  panel.add(passwordField)
+  return panel
 }
 
 private fun getUIEchoChar() = UIManager.get("PasswordField.echoChar") as? Char ?: '*'
 
-private fun initEyeButton(b: AbstractButton) {
+private fun configureEyeButton(b: AbstractButton) {
   b.isFocusable = false
   b.isOpaque = false
   b.isContentAreaFilled = false
@@ -97,18 +116,18 @@ private fun initEyeButton(b: AbstractButton) {
   b.toolTipText = "show/hide passwords"
 }
 
-private fun makeOverlayLayoutPanel() = object : JPanel() {
+private fun createOverlayPanel() = object : JPanel() {
   override fun isOptimizedDrawingEnabled() = false
 }.also {
   it.layout = OverlayLayout(it)
 }
 
-private fun makePasswordField() = JPasswordField(24).also {
+private fun createPasswordField() = JPasswordField(24).also {
   it.text = "1234567890"
   it.alignmentX = Component.RIGHT_ALIGNMENT
 }
 
-private fun makeTitledPanel(
+private fun createTitledPanel(
   title: String,
   cmp: Component,
 ): Component {
@@ -122,7 +141,7 @@ private fun makeTitledPanel(
   return p
 }
 
-private enum class PasswordField { SHOW, HIDE }
+private enum class PasswordVisibility { VISIBLE, HIDDEN }
 
 private class EyeIcon(
   private val color: Color,
@@ -182,7 +201,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
