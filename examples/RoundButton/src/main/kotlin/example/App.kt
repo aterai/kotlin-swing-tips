@@ -10,7 +10,7 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val button1 = object : JButton("RoundedCornerButtonUI") {
     override fun updateUI() {
       // IGNORE LnF change: super.updateUI()
@@ -310,7 +310,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

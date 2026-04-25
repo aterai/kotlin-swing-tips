@@ -26,7 +26,7 @@ private val sorter = TableRowSorter<DefaultTableModel>(model)
 private val table = JTable(model)
 private var linkViewRadioButtonUI: LinkViewRadioButtonUI? = null
 
-fun makeUI(): Component {
+fun createUI(): Component {
   table.fillsViewportHeight = true
   table.intercellSpacing = Dimension()
   table.setShowGrid(false)
@@ -223,7 +223,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

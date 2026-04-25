@@ -11,7 +11,7 @@ import javax.swing.event.AncestorListener
 import javax.swing.tree.TreeNode
 import javax.swing.tree.TreePath
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val searchBox = JPanel(BorderLayout())
   val handler = LayoutAnimator(searchBox)
   val p = object : JPanel(handler) {
@@ -236,7 +236,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -8,7 +8,7 @@ import javax.swing.table.TableModel
 const val FIXED_RANGE = 2
 private const val ES = ""
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val data = arrayOf<Array<Any>>(
     arrayOf(1, 11, "A", ES, ES),
     arrayOf(2, 22, ES, "B", ES),
@@ -84,7 +84,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

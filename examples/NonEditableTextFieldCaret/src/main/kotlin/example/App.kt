@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter
 import javax.swing.*
 import javax.swing.text.DefaultCaret
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val field1 = makeTextField("setEnabled(false)")
   field1.isEnabled = false
   val field2 = makeTextField("setEditable(false)")
@@ -139,7 +139,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

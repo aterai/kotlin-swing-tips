@@ -8,7 +8,7 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val circle = Ellipse2D.Double(0.0, 0.0, 100.0, 100.0)
   val ellipse = Ellipse2D.Double(0.0, 0.0, 128.0, 100.0)
   val p = JPanel().also {
@@ -86,7 +86,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

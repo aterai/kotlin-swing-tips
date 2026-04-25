@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.table.TableCellEditor
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val table1 = JTable(50, 50)
   table1.autoResizeMode = JTable.AUTO_RESIZE_OFF
 
@@ -72,7 +72,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

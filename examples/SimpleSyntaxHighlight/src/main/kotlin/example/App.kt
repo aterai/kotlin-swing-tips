@@ -8,7 +8,7 @@ import javax.swing.text.DefaultStyledDocument
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   val doc = SimpleSyntaxDocument()
   val def = doc.getStyle(StyleContext.DEFAULT_STYLE)
   StyleConstants.setForeground(doc.addStyle("red", def), Color.RED)
@@ -129,7 +129,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

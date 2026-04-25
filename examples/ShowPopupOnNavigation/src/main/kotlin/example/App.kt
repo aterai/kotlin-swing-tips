@@ -5,7 +5,7 @@ import javax.swing.*
 
 private const val SHOW_POPUP_NAVI = "ComboBox.showPopupOnNavigation"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val help = JLabel("This setting only responds to the upwards arrow key↑")
   help.alignmentX = Component.LEFT_ALIGNMENT
 
@@ -110,7 +110,7 @@ fun main() {
   EventQueue.invokeLater {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

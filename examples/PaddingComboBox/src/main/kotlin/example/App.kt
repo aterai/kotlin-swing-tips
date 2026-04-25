@@ -6,7 +6,7 @@ import javax.swing.*
 private val panel = JPanel()
 private val check = JCheckBox("color")
 
-fun makeUI(): Component {
+fun createUI(): Component {
   panel.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   check.addActionListener {
     layoutComboBoxPanel(panel, initComboBoxes(check.isSelected))
@@ -233,7 +233,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -10,7 +10,7 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val table = object : JTable(makeModel()) {
     private val evenColor = Color(0xFA_FA_FA)
 
@@ -234,7 +234,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

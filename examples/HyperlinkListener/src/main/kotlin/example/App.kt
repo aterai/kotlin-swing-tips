@@ -19,7 +19,7 @@ private const val HTML = """
 """
 private var tooltip: String? = null
 
-fun makeUI() = JSplitPane(JSplitPane.VERTICAL_SPLIT).also {
+fun createUI() = JSplitPane(JSplitPane.VERTICAL_SPLIT).also {
   it.resizeWeight = .5
   it.topComponent = JScrollPane(makeEditorPane(false))
   it.bottomComponent = JScrollPane(makeEditorPane(true))
@@ -158,7 +158,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

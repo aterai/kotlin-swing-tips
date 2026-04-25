@@ -6,7 +6,7 @@ import java.beans.PropertyChangeListener
 import javax.swing.*
 import javax.swing.plaf.basic.BasicProgressBarUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val progress = object : JProgressBar() {
     override fun updateUI() {
       super.updateUI()
@@ -106,7 +106,7 @@ fun main() {
   EventQueue.invokeLater {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

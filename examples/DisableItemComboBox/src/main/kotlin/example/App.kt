@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val field = JTextField("1, 2, 5")
   val combo = DisableItemComboBox(makeModel()).also {
     it.setDisableIndexSet(getDisableIndexFromTextField(field))
@@ -147,7 +147,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

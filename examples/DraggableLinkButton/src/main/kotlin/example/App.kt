@@ -11,7 +11,7 @@ import javax.swing.plaf.basic.BasicButtonUI
 import javax.swing.plaf.basic.BasicHTML
 import javax.swing.text.View
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel(FlowLayout(FlowLayout.LEADING, 5, 5))
   p.border = BorderFactory.createTitledBorder("Draggable Hyperlink")
   p.add(JLabel("D&D->Browser:"))
@@ -126,7 +126,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

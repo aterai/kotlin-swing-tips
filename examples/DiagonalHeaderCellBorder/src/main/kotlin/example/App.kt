@@ -8,7 +8,7 @@ import javax.swing.border.MatteBorder
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("", "Boolean1", "Boolean2", "Boolean3", "Boolean4")
   val data = arrayOf<Array<Any>>(
     arrayOf("aaa", true, true, false, true),
@@ -164,7 +164,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

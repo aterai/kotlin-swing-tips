@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val box = Box.createVerticalBox()
   box.border = BorderFactory.createEmptyBorder(20, 20, 20, 0)
   box.add(JSlider(0, 100, 100))
@@ -106,7 +106,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

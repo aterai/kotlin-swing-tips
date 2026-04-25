@@ -8,7 +8,7 @@ import javax.swing.*
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("A", "B", "C")
   val data = arrayOf(
     arrayOf("aaa", "ee ee", "l"),
@@ -140,7 +140,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

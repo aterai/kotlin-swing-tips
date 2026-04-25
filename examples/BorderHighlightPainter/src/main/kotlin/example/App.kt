@@ -56,7 +56,7 @@ private val checkWord = JCheckBox("Match whole word only")
 private val layerUI = PlaceholderLayerUI<JTextComponent>()
 private var current = 0
 
-fun makeUI(): Component {
+fun createUI(): Component {
   textArea.isEditable = false
 
   val prevButton = JButton("⋀")
@@ -232,7 +232,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

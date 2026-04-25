@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.plaf.basic.BasicComboBoxRenderer
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = arrayOf("Red", "Green", "Blue")
   val list = JList(model)
   val d = UIDefaults()
@@ -172,7 +172,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

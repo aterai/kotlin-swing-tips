@@ -6,7 +6,7 @@ import java.awt.event.WindowEvent
 import javax.swing.*
 import javax.swing.plaf.basic.BasicToolBarUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val key = "MenuItem.disabledAreNavigable"
   val b = UIManager.getBoolean(key)
   // println("$key: $b")
@@ -140,7 +140,7 @@ fun main() {
   EventQueue.invokeLater {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -10,7 +10,7 @@ import javax.swing.tree.TreePath
 
 @Transient var expandedState: Enumeration<TreePath>? = null
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val root = makeTreeRoot()
   val tree = JTree(DefaultTreeModel(root))
   val rootPath = TreePath(root)
@@ -116,7 +116,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

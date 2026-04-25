@@ -10,7 +10,7 @@ private val info = "JDesktopIcon: ${ICON_SIZE.width}x${ICON_SIZE.height}"
 private val check = JCheckBox(info)
 private var num = 0
 
-fun makeUI(): Component {
+fun createUI(): Component {
   check.isOpaque = false
   val desktop = JDesktopPane()
   desktop.desktopManager = object : DefaultDesktopManager() {
@@ -128,7 +128,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

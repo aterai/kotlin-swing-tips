@@ -5,7 +5,7 @@ import java.util.ArrayDeque
 import javax.swing.*
 import javax.swing.event.ChangeListener
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel(FlowLayout(FlowLayout.CENTER, 20, 10))
   p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10))
 
@@ -138,7 +138,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -8,7 +8,7 @@ import javax.swing.*
 import javax.swing.plaf.LayerUI
 import javax.swing.plaf.basic.BasicSliderUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val key = "Slider.paintThumbArrowShape"
   val slider0 = JSlider()
   slider0.putClientProperty(key, true)
@@ -121,7 +121,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -10,7 +10,7 @@ import javax.swing.table.DefaultTableModel
 
 private val logger = Logger.getLogger(MethodHandles.lookup().lookupClass().name)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("Name", "Class", "Value")
   val model = DefaultTableModel(columnNames, 0)
   val table = object : JTable(model) {
@@ -60,7 +60,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

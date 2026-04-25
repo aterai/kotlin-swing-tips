@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent
 import javax.swing.*
 import javax.swing.text.DefaultCaret
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val txt = "The quick brown fox jumps over the lazy dog.\n".repeat(3)
   val txt1 = "Default:"
   val textArea1 = JTextArea("$txt1\n$txt")
@@ -47,7 +47,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -18,7 +18,7 @@ import javax.swing.text.View
 
 val FONT = Font(Font.MONOSPACED, Font.PLAIN, 12)
 
-private fun makeUI(): Component {
+private fun createUI(): Component {
   val p = JPanel(GridLayout(0, 1, 5, 25))
   val p1 = makeTextField()
   p.add(makeTitledPanel("JTextField + HighlightFilter", p1))
@@ -363,7 +363,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

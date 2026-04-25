@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.text.html.HTMLEditorKit
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val editor = JEditorPane("text/html", "")
   (editor.editorKit as? HTMLEditorKit)?.styleSheet?.also {
     it.addRule(".number {font-size: 14}")
@@ -46,7 +46,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

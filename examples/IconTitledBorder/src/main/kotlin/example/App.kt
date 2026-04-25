@@ -5,7 +5,7 @@ import javax.swing.*
 import javax.swing.border.Border
 import javax.swing.border.TitledBorder
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/16x16.png")
   val path = url?.toString() ?: "html.missingImage"
@@ -106,7 +106,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

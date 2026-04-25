@@ -14,7 +14,7 @@ import javax.swing.text.PlainDocument
 import javax.swing.undo.CompoundEdit
 import javax.swing.undo.UndoManager
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val undoManager0 = UndoManager()
   val field0 = JTextField("default")
   field0.document.addUndoableEditListener(undoManager0)
@@ -153,7 +153,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

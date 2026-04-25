@@ -6,7 +6,7 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabbedPane = JTabbedPane()
   tabbedPane.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
   val addAction = object : AbstractAction() {
@@ -160,7 +160,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

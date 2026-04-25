@@ -18,7 +18,7 @@ private val check = JCheckBox("Antialiasing", true)
 private val label = JLabel()
 private val textArea = JTextArea()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   initStar()
   val cl = ChangeListener { initStar() }
   outer.addChangeListener(cl)
@@ -217,7 +217,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

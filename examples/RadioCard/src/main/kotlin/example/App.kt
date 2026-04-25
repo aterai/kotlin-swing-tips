@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.plaf.LayerUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val title1 = "<html><h3>Button title 001</h3>"
   val help1 = "1234567890<br>123456789012345<br>1234567890"
   val b1 = JToggleButton(title1 + help1)
@@ -63,7 +63,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

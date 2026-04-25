@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   object : SwingWorker<Unit?, Unit?>() {
     @Throws(InterruptedException::class)
     override fun doInBackground(): Unit? {
@@ -108,7 +108,7 @@ fun main() {
   worker.execute()
 
   frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-  frame.contentPane.add(makeUI())
+  frame.contentPane.add(createUI())
   frame.pack()
   frame.setLocationRelativeTo(null)
   EventQueue.invokeLater { frame.isVisible = true }

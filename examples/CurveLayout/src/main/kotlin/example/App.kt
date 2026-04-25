@@ -5,7 +5,7 @@ import javax.swing.*
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val a2 = 4.0
   val panel1 = JPanel(FlowLayout(FlowLayout.LEFT))
   val panel2 = object : JPanel() {
@@ -83,7 +83,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

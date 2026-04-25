@@ -13,7 +13,7 @@ import javax.swing.plaf.synth.SynthConstants
 import javax.swing.plaf.synth.SynthContext
 import javax.swing.plaf.synth.SynthLookAndFeel
 
-fun makeUI() = JPanel(GridLayout(2, 1)).also {
+fun createUI() = JPanel(GridLayout(2, 1)).also {
   it.add(makeOverlayTabbedPane())
   it.add(makeCardLayoutTabbedPane())
   it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
@@ -608,7 +608,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

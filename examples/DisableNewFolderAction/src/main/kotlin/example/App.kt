@@ -5,7 +5,7 @@ import java.io.File
 import javax.swing.*
 import javax.swing.filechooser.FileSystemView
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val log = JTextArea()
   val fc1 = JFileChooser()
   val button1 = JButton("Default")
@@ -56,7 +56,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

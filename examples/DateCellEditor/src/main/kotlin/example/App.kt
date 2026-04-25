@@ -9,7 +9,7 @@ import javax.swing.JSpinner.DateEditor
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellEditor
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("Integer", "String", "Date")
   val data = arrayOf<Array<Any>>(
     arrayOf(-1, "AAA", Date()),
@@ -95,7 +95,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

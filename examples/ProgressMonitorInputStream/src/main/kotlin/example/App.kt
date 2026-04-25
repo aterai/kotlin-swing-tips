@@ -15,7 +15,7 @@ private val textArea = JTextArea()
 private val runButton = JButton("Load")
 private var monitor: ProgressMonitor? = null
 
-private fun makeUI(): Component {
+private fun createUI(): Component {
   textArea.isEditable = false
   runButton.addActionListener { executeWorker(it) }
 
@@ -174,7 +174,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

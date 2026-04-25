@@ -10,7 +10,7 @@ import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.border.Border
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val area = JTextArea()
   area.foreground = Color.WHITE
   area.background = Color(0x0, true) // Nimbus
@@ -97,7 +97,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

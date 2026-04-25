@@ -17,7 +17,7 @@ a set of questions and exercises so you can test yourself on what you've learned
 https://docs.oracle.com/javase/tutorial/uiswing/learn/index.html
 """
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textArea1 = JTextArea("JTextArea#setMargin(Insets)$TEXT")
   textArea1.margin = Insets(5, 5, 5, 5)
   val scroll1 = JScrollPane(textArea1)
@@ -50,7 +50,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -5,7 +5,7 @@ import javax.swing.*
 import javax.swing.plaf.basic.BasicScrollBarUI
 import javax.swing.table.DefaultTableModel
 
-fun makeUI() = JPanel(GridLayout(1, 2)).also {
+fun createUI() = JPanel(GridLayout(1, 2)).also {
   it.add(JScrollPane(makeList()))
   it.add(makeTranslucentScrollBar(makeList()))
   it.preferredSize = Dimension(320, 240)
@@ -131,7 +131,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

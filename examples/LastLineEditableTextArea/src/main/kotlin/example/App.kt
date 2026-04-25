@@ -9,7 +9,7 @@ import javax.swing.text.DocumentFilter
 
 private const val MESSAGE = "Can only edit last line, version 0.0\n"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textArea = JTextArea()
   textArea.margin = Insets(2, 5, 2, 2)
   textArea.text = MESSAGE + NonEditableLineDocumentFilter.PROMPT
@@ -91,7 +91,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

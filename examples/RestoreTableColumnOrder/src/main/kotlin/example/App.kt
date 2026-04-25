@@ -6,7 +6,7 @@ import javax.swing.event.TableColumnModelEvent
 import javax.swing.table.DefaultTableColumnModel
 import javax.swing.table.DefaultTableModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val table = object : JTable(DefaultTableModel(8, 6)) {
     override fun createDefaultColumnModel() = SortableTableColumnModel()
   }
@@ -41,7 +41,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -44,7 +44,7 @@ private val table = object : JTable(model) {
   }
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   table.rowHeight = 40
   table.selectionBackground = Color.WHITE
   return JPanel(BorderLayout()).also {
@@ -132,7 +132,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

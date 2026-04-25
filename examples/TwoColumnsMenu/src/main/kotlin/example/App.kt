@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.border.Border
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val menu1 = JMenu("File")
   menu1.add("New")
   menu1.add("Open")
@@ -114,7 +114,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

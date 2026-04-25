@@ -11,7 +11,7 @@ import javax.swing.*
 
 private const val TEXT = "あいうえお かきくけこ さしすせそ たちつてと なにぬねの はひふへほ まみむめも"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val lbl1 = JLabel(TEXT)
   lbl1.border = makeTitledColorBorder("JLabel", Color.YELLOW)
   val lbl2 = WrappedLabel(TEXT)
@@ -130,7 +130,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

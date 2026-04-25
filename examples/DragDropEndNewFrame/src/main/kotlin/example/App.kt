@@ -21,7 +21,7 @@ import java.io.File
 import javax.swing.*
 import javax.swing.plaf.metal.MetalTabbedPaneUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val sub = DnDTabbedPane().also {
     it.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
     it.addTab("Title aa", JLabel("aaa"))
@@ -513,7 +513,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

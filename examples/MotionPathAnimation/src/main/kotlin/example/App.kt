@@ -7,7 +7,7 @@ import java.awt.geom.Point2D
 import java.awt.geom.RoundRectangle2D
 import javax.swing.*
 
-fun makeUI() = MotionPathAnimationPanel().also {
+fun createUI() = MotionPathAnimationPanel().also {
   it.preferredSize = Dimension(320, 240)
 }
 
@@ -141,7 +141,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

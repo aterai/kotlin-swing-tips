@@ -9,7 +9,7 @@ import javax.swing.tree.TreeCellEditor
 import javax.swing.tree.TreeCellRenderer
 import javax.swing.tree.TreeNode
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tree = object : JTree() {
     override fun updateUI() {
       setCellRenderer(null)
@@ -181,7 +181,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

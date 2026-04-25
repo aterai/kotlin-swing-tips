@@ -8,11 +8,11 @@ import javax.swing.*
 
 val COUNTER = AtomicInteger(0)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val button = JButton("New Frame")
   button.addActionListener { e ->
     val f = createFrame(null)
-    f.contentPane.add(makeUI())
+    f.contentPane.add(createUI())
     f.pack()
 
     val c = (e.source as? JComponent)?.topLevelAncestor
@@ -53,7 +53,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -6,7 +6,7 @@ import java.awt.geom.Area
 import java.awt.geom.Ellipse2D
 import javax.swing.*
 
-fun makeUI() = JPanel().also {
+fun createUI() = JPanel().also {
   val d = Dimension(64, 64)
   it.add(CompoundButton(d, ButtonLocation.NORTH))
   it.add(CompoundButton(d, ButtonLocation.SOUTH))
@@ -156,7 +156,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

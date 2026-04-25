@@ -12,7 +12,7 @@ private val textField1 = JTextField(TEXT)
 private val textField2 = JTextField(TEXT)
 private val textArea = JTextArea("$TEXT\n$TEXT\n")
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val font = textField2.font
   textField2.font = font.deriveFont(16f)
 
@@ -75,7 +75,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

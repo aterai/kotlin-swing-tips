@@ -5,7 +5,7 @@ import java.awt.event.HierarchyEvent
 import java.awt.image.BufferedImage
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   UIManager.put("OptionPane.background", Color.LIGHT_GRAY)
   val html = """
     <html>
@@ -136,7 +136,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

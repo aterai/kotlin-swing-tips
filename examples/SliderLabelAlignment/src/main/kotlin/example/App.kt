@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.plaf.LayerUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val slider1 = makeSlider()
   val labelTable1 = slider1.labelTable
   if (labelTable1 is Map<*, *>) {
@@ -105,7 +105,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

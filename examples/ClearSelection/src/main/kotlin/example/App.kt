@@ -6,7 +6,7 @@ import javax.swing.*
 import javax.swing.event.MouseInputAdapter
 import javax.swing.event.MouseInputListener
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel(GridLayout(1, 2))
   p.add(makeTitledPanel("Default", JScrollPane(JList(makeModel()))))
   p.add(makeTitledPanel("clearSelection", JScrollPane(makeList(makeModel()))))
@@ -106,7 +106,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

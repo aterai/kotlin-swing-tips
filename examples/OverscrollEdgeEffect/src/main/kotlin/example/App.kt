@@ -12,7 +12,7 @@ import javax.swing.*
 import javax.swing.plaf.LayerUI
 import kotlin.math.abs
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val label = JLabel(ImageIcon(makeMissingImage()))
   val scroll = JScrollPane(label)
   scroll.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
@@ -246,7 +246,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

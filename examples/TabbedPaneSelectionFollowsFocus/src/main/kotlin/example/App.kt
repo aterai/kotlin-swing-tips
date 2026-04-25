@@ -8,7 +8,7 @@ import javax.swing.plaf.metal.MetalTabbedPaneUI
 
 private var focusIdx = -1
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabs = object : JTabbedPane(TOP, SCROLL_TAB_LAYOUT) {
     override fun updateUI() {
       super.updateUI()
@@ -143,7 +143,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

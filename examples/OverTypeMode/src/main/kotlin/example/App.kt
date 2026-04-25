@@ -6,7 +6,7 @@ import javax.swing.*
 import javax.swing.text.Caret
 import javax.swing.text.DefaultCaret
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textArea = OvertypeTextArea()
   textArea.font = Font(Font.MONOSPACED, Font.PLAIN, 12)
   textArea.text =
@@ -124,7 +124,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

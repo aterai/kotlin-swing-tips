@@ -11,7 +11,7 @@ import javax.swing.*
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textArea = JTextArea("JFrame Conditional Close Test")
   val exitButton = JButton(SaveHandler.CMD_EXIT)
   val saveButton = JButton(SaveHandler.CMD_SAVE)
@@ -150,7 +150,7 @@ fun main() {
       // defaultCloseOperation = WindowConstants.HIDE_ON_CLOSE
       // defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
       // defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

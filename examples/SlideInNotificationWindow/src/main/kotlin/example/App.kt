@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import javax.swing.*
 import kotlin.math.pow
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val handler = SlideInNotification()
   val easeIn = JButton("easeIn")
   easeIn.addActionListener {
@@ -180,7 +180,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

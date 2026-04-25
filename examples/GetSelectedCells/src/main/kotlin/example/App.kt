@@ -13,7 +13,7 @@ import javax.swing.table.TableCellEditor
 
 private const val CELL_SIZE = 24
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("A", "B", "C", "D", "E", "F", "G", "H", "I")
   val data = arrayOf(
     arrayOf(true, false, true, false, true, true, false, true, true),
@@ -213,7 +213,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

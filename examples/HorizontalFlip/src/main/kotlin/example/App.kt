@@ -5,7 +5,7 @@ import java.awt.font.TextLayout
 import java.awt.geom.AffineTransform
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val font = Font(Font.MONOSPACED, Font.BOLD, 200)
   val at = AffineTransform.getScaleInstance(-1.0, 1.0)
   val c = object : JComponent() {
@@ -44,7 +44,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -27,7 +27,7 @@ private val highlightPainter = DefaultHighlightPainter(Color.YELLOW)
 private val field = JTextField("Swing")
 private val textArea = JTextArea(TEXT)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   textArea.isEditable = false
 
   val check = JCheckBox("DefaultHighlighter#setDrawsLayeredHighlights", true)
@@ -112,7 +112,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

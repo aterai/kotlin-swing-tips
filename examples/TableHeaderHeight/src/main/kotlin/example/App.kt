@@ -7,7 +7,7 @@ import javax.swing.table.TableColumn
 
 const val HEADER_HEIGHT = 32
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel(GridLayout(2, 1))
 
   val table1 = makeTable()
@@ -81,7 +81,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

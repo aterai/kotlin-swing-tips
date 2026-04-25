@@ -6,7 +6,7 @@ import javax.swing.*
 import javax.swing.plaf.LayerUI
 import javax.swing.table.JTableHeader
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val table = JTable(5, 3)
   val scroll = JScrollPane(table)
   scroll.columnHeader = object : JViewport() {
@@ -198,7 +198,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

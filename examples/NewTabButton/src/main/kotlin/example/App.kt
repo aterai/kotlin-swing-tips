@@ -7,7 +7,7 @@ import java.io.Serializable
 import javax.imageio.ImageIO
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   UIManager.put("example.TabButton", "TabViewButtonUI")
   UIManager.put("TabViewButtonUI", "example.OperaTabViewButtonUI")
   val tab = CardLayoutTabbedPane()
@@ -224,7 +224,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

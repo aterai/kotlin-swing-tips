@@ -5,7 +5,7 @@ import javax.swing.*
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val items = arrayOf(
     "<html><font color='red'>Sunday</font> <font color='gray'>(Sun.)",
     "<html><font color='black'>Monday</font> <font color='gray'>(Mon.)",
@@ -89,7 +89,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

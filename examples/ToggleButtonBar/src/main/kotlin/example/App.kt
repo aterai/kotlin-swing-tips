@@ -6,7 +6,7 @@ import java.awt.geom.Path2D
 import javax.swing.*
 import kotlin.math.sqrt
 
-fun makeUI() = JPanel().also {
+fun createUI() = JPanel().also {
   val roundIcon = ToggleButtonBarCellIcon()
   val rectIcon = CellIcon()
   it.add(makeToggleButtonBar(0xFF_74_00, roundIcon))
@@ -194,7 +194,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

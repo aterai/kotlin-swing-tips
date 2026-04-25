@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent
 import javax.swing.*
 import javax.swing.plaf.LayerUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = DefaultComboBoxModel(arrayOf("aaa", "bb", "c"))
   val combo = makeComboBox(model)
   combo.isEditable = true
@@ -76,7 +76,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -11,7 +11,7 @@ import javax.swing.event.PopupMenuListener
 import javax.swing.plaf.basic.BasicArrowButton
 import javax.swing.plaf.basic.BasicComboBoxUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val combo = object : JComboBox<String>(makeModel()) {
     private var listener: PopupMenuListener? = null
 
@@ -122,7 +122,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

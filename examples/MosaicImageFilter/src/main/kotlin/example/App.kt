@@ -10,7 +10,7 @@ import java.awt.image.FilteredImageSource
 import javax.imageio.ImageIO
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT)
   split.isContinuousLayout = true
   split.resizeWeight = .5
@@ -159,7 +159,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

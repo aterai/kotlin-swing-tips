@@ -6,7 +6,7 @@ import java.awt.event.ItemListener
 import javax.swing.*
 import javax.swing.JSpinner.DefaultEditor
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabs1 = makeTabbedPane()
   val menu = JMenu("JMenu")
   val bg1 = ButtonGroup()
@@ -123,7 +123,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

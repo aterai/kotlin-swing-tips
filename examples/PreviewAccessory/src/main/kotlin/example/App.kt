@@ -8,7 +8,7 @@ import java.io.File
 import javax.swing.*
 import kotlin.math.roundToInt
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val chooser = object : JFileChooser() {
     override fun updateUI() {
       super.updateUI()
@@ -150,7 +150,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

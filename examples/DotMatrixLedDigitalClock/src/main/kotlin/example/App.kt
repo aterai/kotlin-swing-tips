@@ -25,7 +25,7 @@ private val NUMBERS = listOf(
 )
 private val DOT = listOf(2, 4)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model1 = object : DefaultListModel<Boolean>() {
     override fun getElementAt(index: Int) = getHoursMinutesDotMatrix(time, index)
   }
@@ -204,7 +204,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

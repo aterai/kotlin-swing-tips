@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textField = JTextField("B", 1)
   val button = JButton("Button")
   button.addActionListener {
@@ -41,7 +41,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

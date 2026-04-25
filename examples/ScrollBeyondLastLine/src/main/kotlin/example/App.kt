@@ -7,7 +7,7 @@ import javax.swing.*
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textArea = object : JTextArea() {
     // https://stackoverflow.com/questions/32679335/java-jtextarea-allow-scrolling-beyond-end-of-text
     override fun getPreferredSize(): Dimension {
@@ -152,7 +152,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

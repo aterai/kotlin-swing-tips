@@ -8,7 +8,7 @@ import javax.swing.plaf.synth.SynthConstants
 import javax.swing.plaf.synth.SynthContext
 import javax.swing.plaf.synth.SynthLookAndFeel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabs = ClippedTitleTabbedPane()
   tabs.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
   addTab(tabs, "JTree", "example/wi0009-32.png", JScrollPane(JTree()))
@@ -107,7 +107,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -8,7 +8,7 @@ import java.awt.geom.Rectangle2D
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val arc8 = 8
   val scroll = object : JScrollPane(JTable(8, 5)) {
     override fun paintComponent(g: Graphics) {
@@ -140,7 +140,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

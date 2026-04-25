@@ -5,7 +5,7 @@ import java.awt.event.ActionListener
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val r1 = JRadioButton("prevent KeyStroke autoStartsEdit")
   val r2 = JRadioButton("prevent mouse from starting edit")
   val r3 = JRadioButton("start cell editing only F2")
@@ -69,7 +69,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -8,7 +8,7 @@ import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val table = makeTable(makeModel())
   table.setDefaultRenderer(RowData::class.java, makeRenderer())
   val rs = table.rowSorter
@@ -198,7 +198,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

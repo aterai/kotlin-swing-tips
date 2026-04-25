@@ -5,7 +5,7 @@ import javax.swing.*
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val table = JTable(DefaultTableModel(10, 4))
   table.cellSelectionEnabled = true
   table.autoCreateRowSorter = true
@@ -47,7 +47,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

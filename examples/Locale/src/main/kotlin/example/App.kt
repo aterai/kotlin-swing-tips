@@ -28,7 +28,7 @@ private val LOCALE_ARRAY = arrayOf(
   Locale.CANADA_FRENCH,
 )
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val log = JTextArea()
 
   UIManager.put("FileChooser.readOnly", true)
@@ -68,7 +68,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

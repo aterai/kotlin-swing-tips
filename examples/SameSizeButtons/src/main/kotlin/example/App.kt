@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val buttonAreaBorder = "OptionPane.buttonAreaBorder"
   val borderCheck = JCheckBox(buttonAreaBorder)
   val op = JOptionPane(
@@ -61,7 +61,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

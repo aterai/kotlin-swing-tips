@@ -8,7 +8,7 @@ import java.util.Date
 import javax.swing.*
 import javax.swing.JSpinner.DateEditor
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val dateFormat = "yyyy/MM/dd"
   val date = Date()
   val spinner1 = JSpinner(SpinnerDateModel(date, date, null, Calendar.DAY_OF_MONTH))
@@ -78,7 +78,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

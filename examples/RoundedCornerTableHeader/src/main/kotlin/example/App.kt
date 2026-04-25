@@ -65,7 +65,7 @@ private val monthThemeColor = listOf(
 var currentLocalDate: LocalDate = LocalDate.of(2021, 6, 21)
   private set
 
-fun makeUI(): Component {
+fun createUI(): Component {
   monthTable.tableHeader.also {
     it.foreground = Color.WHITE
     it.isOpaque = false
@@ -358,7 +358,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

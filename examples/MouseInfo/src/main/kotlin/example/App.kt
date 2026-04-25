@@ -10,7 +10,7 @@ private val racket = Racket(panelDim)
 private val absolute = JLabel("absolute:")
 private val relative = JLabel("relative:")
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = object : JPanel(BorderLayout()) {
     override fun getPreferredSize() = panelDim
 
@@ -93,7 +93,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

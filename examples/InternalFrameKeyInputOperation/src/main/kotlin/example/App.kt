@@ -5,7 +5,7 @@ import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val desktop = JDesktopPane()
 
   val im = desktop.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
@@ -96,7 +96,7 @@ fun main() {
   EventQueue.invokeLater {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

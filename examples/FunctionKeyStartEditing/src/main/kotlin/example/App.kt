@@ -7,7 +7,7 @@ import java.util.EventObject
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val check = JCheckBox("ignore: F1,F4-F7,F9-", true)
 
   val textarea = JTextArea("F2: startEditing\nF8: focusHeader\nF3: beep")
@@ -68,7 +68,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -7,7 +7,7 @@ import javax.swing.plaf.metal.MetalScrollBarUI
 
 private const val LF = "\n"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   UIManager.put("ScrollBar.minimumThumbSize", Dimension(32, 32))
   val buf = StringBuilder()
   for (i in 0..<1000) {
@@ -59,7 +59,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

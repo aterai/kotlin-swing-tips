@@ -6,7 +6,7 @@ import javax.swing.plaf.InsetsUIResource
 
 private val log = JTextArea()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val field1 = JTextField("1111111111")
   val m = field1.margin
   log.append("$m\n")
@@ -66,7 +66,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

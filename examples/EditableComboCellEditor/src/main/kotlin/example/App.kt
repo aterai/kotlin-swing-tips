@@ -6,7 +6,7 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("Column1", "Column2")
   val data = arrayOf(
     arrayOf("colors", makeModel("blue", "violet", "red", "yellow")),
@@ -103,7 +103,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

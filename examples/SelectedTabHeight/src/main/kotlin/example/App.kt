@@ -6,7 +6,7 @@ import java.awt.event.ItemEvent
 import javax.swing.*
 import javax.swing.plaf.basic.BasicTabbedPaneUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabbedPane = object : JTabbedPane(
     TOP,
     SCROLL_TAB_LAYOUT,
@@ -128,7 +128,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

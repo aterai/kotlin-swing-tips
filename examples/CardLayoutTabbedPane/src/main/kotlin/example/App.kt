@@ -8,7 +8,7 @@ import javax.swing.plaf.basic.BasicButtonUI
 import javax.swing.plaf.basic.BasicHTML
 import javax.swing.text.View
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tab1 = JTabbedPane()
   tab1.addTab("JTree", JScrollPane(JTree()))
   tab1.addTab("JLabel", JLabel("JLabel 1"))
@@ -404,7 +404,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

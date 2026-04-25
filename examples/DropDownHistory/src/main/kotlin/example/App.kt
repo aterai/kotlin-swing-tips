@@ -23,7 +23,7 @@ private val textArea = JTextArea()
 private val combo = JComboBox<String>()
 private val HIGHLIGHT = DefaultHighlightPainter(Color.YELLOW)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   textArea.text = TEXT
   textArea.lineWrap = true
   textArea.isEditable = false
@@ -116,7 +116,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

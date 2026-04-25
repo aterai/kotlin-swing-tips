@@ -8,7 +8,7 @@ import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.Timer
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
   val i1 = makeImage(cl.getResource("example/test.png"))
   val i2 = makeImage(cl.getResource("example/test.jpg"))
@@ -130,7 +130,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

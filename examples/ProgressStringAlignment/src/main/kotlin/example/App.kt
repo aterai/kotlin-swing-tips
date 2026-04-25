@@ -9,7 +9,7 @@ import javax.swing.event.ChangeListener
 
 private var worker: SwingWorker<String, Unit?>? = null
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = DefaultBoundedRangeModel()
   val progressBar1 = StringAlignmentProgressBar(model, SwingConstants.RIGHT)
   val progressBar2 = StringAlignmentProgressBar(model, SwingConstants.LEFT)
@@ -123,7 +123,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

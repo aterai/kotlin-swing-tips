@@ -7,7 +7,7 @@ import javax.swing.plaf.LayerUI
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.JTableHeader
 
-fun makeUI() = JSplitPane(JSplitPane.VERTICAL_SPLIT).also {
+fun createUI() = JSplitPane(JSplitPane.VERTICAL_SPLIT).also {
   val mb = JMenuBar()
   mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
@@ -132,7 +132,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

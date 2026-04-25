@@ -10,7 +10,7 @@ import javax.swing.tree.TreePath
 import javax.swing.tree.TreeSelectionModel
 import kotlin.math.min
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tree = JTree()
   val sm = tree.getSelectionModel()
   sm.selectionMode = TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION
@@ -158,7 +158,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

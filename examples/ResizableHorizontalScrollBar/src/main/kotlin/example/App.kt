@@ -6,7 +6,7 @@ import javax.swing.*
 import javax.swing.plaf.basic.BasicSplitPaneUI
 import javax.swing.table.DefaultTableModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val m1 = DefaultTableModel(100, 256)
   val table = JTable(m1)
   table.autoResizeMode = JTable.AUTO_RESIZE_OFF
@@ -85,7 +85,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

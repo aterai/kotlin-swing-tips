@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   UIManager.put("Button.disabledToolBarBorderBackground", Color.RED)
   UIManager.put("Button.toolBarBorderBackground", Color.GREEN)
 
@@ -40,7 +40,7 @@ fun main() {
   EventQueue.invokeLater {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

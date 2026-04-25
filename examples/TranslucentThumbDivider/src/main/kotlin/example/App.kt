@@ -13,7 +13,7 @@ import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.plaf.LayerUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/test.png")
   val source = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
@@ -264,7 +264,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

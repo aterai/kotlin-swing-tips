@@ -11,7 +11,7 @@ private val viewRect = Rectangle()
 private val iconRect = Rectangle()
 private val textRect = Rectangle()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val field = JTextField("#FFFFFF")
   field.isEditable = false
   field.font = Font(Font.MONOSPACED, Font.PLAIN, 11)
@@ -106,7 +106,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -7,7 +7,7 @@ import java.awt.event.MouseEvent
 import java.awt.geom.Point2D
 import javax.swing.*
 
-private fun makeUI(): Component {
+private fun createUI(): Component {
   val tabs = object : JTabbedPane() {
     override fun addTab(title: String, icon: Icon, component: Component) {
       super.addTab(title, icon, component, title)
@@ -175,7 +175,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

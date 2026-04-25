@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val key1 = "ComboBox.noActionOnKeyNavigation"
   val check1 = JCheckBox(key1, UIManager.getBoolean(key1))
   check1.addActionListener { e ->
@@ -71,7 +71,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       minimumSize = Dimension(256, 200)
       pack()
       setLocationRelativeTo(null)

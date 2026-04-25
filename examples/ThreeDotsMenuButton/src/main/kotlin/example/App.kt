@@ -7,7 +7,7 @@ import java.time.ZoneId
 import javax.swing.*
 import javax.swing.plaf.LayerUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val m = makeModel()
   val l = makeScrollPane(makeList(m))
   val r = JLayer(makeScrollPane(makeList(m)), RolloverLayerUI())
@@ -231,7 +231,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

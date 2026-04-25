@@ -4,7 +4,7 @@ import example.LookAndFeelUtils.createLookAndFeelMenu
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val desktop = JDesktopPane()
   addFrame(desktop, 0)
   addFrame(desktop, 1)
@@ -117,7 +117,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

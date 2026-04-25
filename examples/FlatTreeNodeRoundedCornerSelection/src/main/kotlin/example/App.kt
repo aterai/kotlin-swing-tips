@@ -13,7 +13,7 @@ import kotlin.math.max
 import kotlin.math.sign
 import kotlin.math.sqrt
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tree = JTree()
   tree.rowHeight = 20
   val mb = JMenuBar()
@@ -218,7 +218,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

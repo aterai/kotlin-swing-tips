@@ -7,7 +7,7 @@ import javax.swing.border.LineBorder
 import javax.swing.plaf.basic.BasicGraphicsUtils
 import javax.swing.tree.DefaultTreeCellRenderer
 
-fun makeUI(): Component {
+fun createUI(): Component {
   UIManager.put("Tree.closedIcon", ColorIcon(Color.RED))
   UIManager.put("Tree.openIcon", ColorIcon(Color.GREEN))
   val tree1 = JTree()
@@ -163,7 +163,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

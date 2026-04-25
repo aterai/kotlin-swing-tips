@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import kotlin.math.roundToInt
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val splitPane = JSplitPane(JSplitPane.VERTICAL_SPLIT)
   splitPane.topComponent = JScrollPane(JTextArea())
   splitPane.bottomComponent = JScrollPane(JTree())
@@ -70,7 +70,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

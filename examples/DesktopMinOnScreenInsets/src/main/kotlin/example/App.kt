@@ -9,7 +9,7 @@ import javax.swing.plaf.basic.BasicInternalFrameUI
 private const val OFFSET = 30
 private val OPEN_COUNTER = AtomicInteger()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val f = createInternalFrame()
   val d = (f.ui as? BasicInternalFrameUI)?.northPane?.preferredSize ?: Dimension()
   UIManager.put("Desktop.minOnScreenInsets", Insets(d.height, 16, 3, 16))
@@ -56,7 +56,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

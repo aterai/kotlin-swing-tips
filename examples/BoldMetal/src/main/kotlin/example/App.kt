@@ -12,7 +12,7 @@ import javax.swing.tree.TreePath
 private const val TAG = "<html><b>"
 private const val BOLD_METAL = "swing.boldMetal"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val check = JCheckBox(BOLD_METAL)
   check.addActionListener { e ->
     (e.source as? JCheckBox)?.also {
@@ -138,7 +138,7 @@ fun main() {
   EventQueue.invokeLater {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

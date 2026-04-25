@@ -12,7 +12,7 @@ import java.nio.file.Path
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = FileModel()
   val table = JTable(model)
   table.autoCreateRowSorter = true
@@ -129,7 +129,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

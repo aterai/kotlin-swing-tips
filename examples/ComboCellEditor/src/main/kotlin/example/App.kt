@@ -5,7 +5,7 @@ import javax.swing.*
 import javax.swing.plaf.basic.BasicComboBoxUI
 import javax.swing.table.DefaultTableModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val color = UIManager.getColor("TextField.foreground")
   UIManager.put("ComboBox.buttonDarkShadow", color)
   val comboModel = arrayOf("Name 0", "Name 1", "Name 2")
@@ -58,7 +58,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -8,7 +8,7 @@ import javax.swing.table.TableRowSorter
 
 private const val MAXIMUM_ROW_COUNT = 5
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val check1 = JCheckBox("Custom Sorting")
 
   val columnNames = arrayOf("String", "Integer", "Boolean")
@@ -84,7 +84,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

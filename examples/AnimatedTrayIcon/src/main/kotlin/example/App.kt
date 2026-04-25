@@ -77,7 +77,7 @@ private fun makeDefaultTrayImage(): Image {
   return bi
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   if (!SystemTray.isSupported()) {
     throw UnsupportedOperationException("SystemTray is not supported")
   }
@@ -107,7 +107,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.HIDE_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val sub0 = JMenu("JMenu(Default)").also {
     it.add("JMenuItem:0")
     it.add("JMenuItem:1")
@@ -129,7 +129,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

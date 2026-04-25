@@ -8,7 +8,7 @@ import javax.swing.plaf.basic.BasicTreeUI
 import javax.swing.tree.DefaultTreeCellRenderer
 import javax.swing.tree.TreePath
 
-fun makeUI(): Component {
+fun createUI(): Component {
   UIManager.put("Tree.paintLines", true)
   UIManager.put("Tree.repaintWholeRow", true)
   UIManager.put("Tree.hash", Color.DARK_GRAY)
@@ -350,7 +350,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

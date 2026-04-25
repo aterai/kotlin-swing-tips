@@ -9,7 +9,7 @@ import javax.swing.text.StyleContext
 import javax.swing.text.TabSet
 import javax.swing.text.TabStop
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("String", "Double", "ALIGN_DECIMAL")
   val data = arrayOf<Array<Any>>(
     arrayOf("aaa", 1.4142, 1.4142),
@@ -92,7 +92,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

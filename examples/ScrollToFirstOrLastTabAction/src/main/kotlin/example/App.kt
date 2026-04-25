@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.event.ActionEvent
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabs = JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT)
   val help = "Ctrl + ScrollButton Click: scroll to first/last tabs"
   tabs.addTab("title0", JLabel(help))
@@ -85,7 +85,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

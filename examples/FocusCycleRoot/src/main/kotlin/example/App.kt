@@ -5,7 +5,7 @@ import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p1 = JPanel()
   p1.border = BorderFactory.createTitledBorder("left")
   repeat(6) {
@@ -43,7 +43,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

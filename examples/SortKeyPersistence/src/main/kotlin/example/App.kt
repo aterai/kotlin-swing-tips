@@ -15,7 +15,7 @@ import java.nio.file.Files
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("A", "B")
   val data = arrayOf(arrayOf("aaa", "********"), arrayOf("bbb", "☀☁☂☃"))
   val table = JTable(DefaultTableModel(data, columnNames))
@@ -103,7 +103,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

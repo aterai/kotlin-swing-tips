@@ -15,7 +15,7 @@ import javax.jnlp.PersistenceService
 import javax.jnlp.ServiceManager
 import javax.swing.*
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   it.add(JScrollPane(JTree()))
   it.preferredSize = Dimension(320, 240)
 }
@@ -112,7 +112,7 @@ fun main() {
           Toolkit.getDefaultToolkit().beep()
         }
         frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-        frame.contentPane.add(makeUI())
+        frame.contentPane.add(createUI())
         frame.size = windowState.size
         frame.location = windowState.location
         frame.isVisible = true

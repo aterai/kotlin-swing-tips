@@ -8,7 +8,7 @@ import java.awt.event.WindowEvent
 import javax.swing.*
 import javax.swing.plaf.basic.BasicInternalFrameUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val closeButton = JButton("close")
   closeButton.addActionListener { e ->
     (SwingUtilities.getRoot(e.source as? Component) as? Window)?.also {
@@ -86,7 +86,7 @@ fun main() {
       isUndecorated = true
       minimumSize = Dimension(300, 120)
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       if (graphicsConfiguration?.isTranslucencyCapable == true) {
         background = Color(0x0, true)
       }

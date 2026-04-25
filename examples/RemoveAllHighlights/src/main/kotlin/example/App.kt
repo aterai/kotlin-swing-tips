@@ -30,7 +30,7 @@ https://docs.oracle.com/javase/tutorial/uiswing/learn/index.html
 """
 private val HIGHLIGHT = DefaultHighlightPainter(Color.YELLOW)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textArea = object : JTextArea() {
     private var handler: WordHighlightListener? = null
 
@@ -175,7 +175,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

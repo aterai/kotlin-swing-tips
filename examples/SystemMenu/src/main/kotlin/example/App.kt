@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val log = JTextArea()
   EventQueue.invokeLater {
     val menu = descendants(log.rootPane)
@@ -36,7 +36,7 @@ fun main() {
     JFrame.setDefaultLookAndFeelDecorated(true)
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

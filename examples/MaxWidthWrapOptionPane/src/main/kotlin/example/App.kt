@@ -37,7 +37,7 @@ private val textArea = object : JTextArea(1, 1) {
   }
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val scroll = JScrollPane(textArea)
   scroll.border = BorderFactory.createEmptyBorder()
   scroll.viewportBorder = BorderFactory.createEmptyBorder()
@@ -82,7 +82,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

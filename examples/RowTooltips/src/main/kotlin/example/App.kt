@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("String", "Integer", "Boolean")
   val data = arrayOf<Array<Any>>(
     arrayOf("aaa", 12, true),
@@ -50,7 +50,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

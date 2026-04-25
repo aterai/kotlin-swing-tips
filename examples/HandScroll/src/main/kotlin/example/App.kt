@@ -9,7 +9,7 @@ import javax.swing.*
 
 var weightMixing = false
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
   // CRW_3857_JFR.jpg: https://sozai-free.com/
   val url = cl.getResource("example/CRW_3857_JFR.jpg")
@@ -133,7 +133,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

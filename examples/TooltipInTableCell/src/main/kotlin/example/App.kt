@@ -59,7 +59,7 @@ private val table = object : JTable(model) {
   }
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   table.fillsViewportHeight = true
   table.autoCreateRowSorter = true
   table.rowHeight = 40
@@ -120,7 +120,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

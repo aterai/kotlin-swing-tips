@@ -11,7 +11,7 @@ import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
-fun makeUI() = JPanel(GridLayout(2, 3)).also {
+fun createUI() = JPanel(GridLayout(2, 3)).also {
   it.add(makeTitledPanel("GeneralPath", StarPanel1()))
   it.add(makeTitledPanel("Polygon", StarPanel2()))
   it.add(makeTitledPanel("Font(Outline)", StarPanel3()))
@@ -227,7 +227,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

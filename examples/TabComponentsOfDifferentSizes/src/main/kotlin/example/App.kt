@@ -13,7 +13,7 @@ private val splitPane = JSplitPane(JSplitPane.HORIZONTAL_SPLIT)
 private val tabAreaSize = Dimension(40, 40)
 private val renderer = JPanel()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabbedPane = JTabbedPane(SwingConstants.LEFT)
   tabbedPane.minimumSize = tabAreaSize
   tabbedPane.isFocusable = false
@@ -125,7 +125,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

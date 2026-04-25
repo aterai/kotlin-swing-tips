@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val combo0 = makeComboBox()
   val combo1 = makeComboBox()
   combo1.isLightWeightPopupEnabled = false
@@ -74,7 +74,7 @@ fun main() {
     }
     val frame = JFrame()
     frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-    frame.contentPane.add(makeUI())
+    frame.contentPane.add(createUI())
     frame.pack()
     frame.setLocationRelativeTo(null)
     frame.isVisible = true

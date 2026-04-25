@@ -25,7 +25,7 @@ private val TEXT = """
   });
 """.trimIndent()
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   it.add(JScrollPane(JTextArea(TEXT)))
   it.preferredSize = Dimension(320, 240)
 }
@@ -129,7 +129,7 @@ fun main() {
       Toolkit.getDefaultToolkit().beep()
     }
     JFrame().apply {
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

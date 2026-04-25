@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel()
   p.border = BorderFactory.createTitledBorder("JOptionPane")
   MessageType.entries.forEach { p.add(makeButton(p, it)) }
@@ -47,7 +47,7 @@ fun main() {
     JDialog.setDefaultLookAndFeelDecorated(true)
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

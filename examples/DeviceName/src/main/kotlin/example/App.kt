@@ -7,7 +7,7 @@ import javax.swing.*
 private val log = JTextArea()
 private const val DEVICE_NAME = "con.txt"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel(GridLayout(3, 1, 10, 10))
   p.add(makeTitledPanel("IOException: before 1.5", makeButton1()))
   p.add(makeTitledPanel("getCanonicalPath: before 1.5", makeButton2()))
@@ -104,7 +104,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -69,7 +69,7 @@ private fun makeBreadcrumbList(
   return p
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel(GridLayout(0, 1))
   p.border = BorderFactory.createEmptyBorder(20, 10, 20, 0)
   p.add(makeBreadcrumbList(0, Color.PINK, listOf("overlap1:", "0px", TXT)))
@@ -172,7 +172,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

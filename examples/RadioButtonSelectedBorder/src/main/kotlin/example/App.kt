@@ -5,7 +5,7 @@ import java.awt.geom.Path2D
 import javax.imageio.ImageIO
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val r1 = makeRadioButton("red", ColorIcon(Color.RED))
   r1.selectedIcon = SelectedIcon(r1.icon, Color.GREEN)
 
@@ -126,7 +126,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

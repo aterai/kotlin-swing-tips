@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.datatransfer.DataFlavor
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val label = JLabel()
 
   val button = JButton("get Clipboard DataFlavor")
@@ -49,7 +49,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -8,7 +8,7 @@ import java.beans.PropertyChangeEvent
 import javax.swing.*
 import javax.swing.plaf.LayerUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val table = JTable(16, 4)
   table.autoResizeMode = JTable.AUTO_RESIZE_OFF
   val scroll = JScrollPane(table)
@@ -124,7 +124,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

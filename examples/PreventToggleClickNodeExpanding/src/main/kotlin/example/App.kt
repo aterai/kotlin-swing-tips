@@ -13,7 +13,7 @@ import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.ExpandVetoException
 import javax.swing.tree.TreePath
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val dir = File(".")
   val root = DefaultMutableTreeNode(dir)
   val treeModel = DefaultTreeModel(root)
@@ -152,7 +152,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

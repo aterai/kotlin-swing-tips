@@ -11,7 +11,7 @@ import javax.swing.*
 import javax.swing.plaf.basic.BasicMenuItemUI
 import javax.swing.plaf.synth.SynthMenuItemUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   UIManager.put("MenuItem.borderPainted", false)
 
   val sub = makeMenu()
@@ -253,7 +253,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -45,7 +45,7 @@ private fun makeList() = listOf(
   },
 )
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val northBox = Box.createVerticalBox()
   val centerBox = Box.createVerticalBox()
   val southBox = Box.createVerticalBox()
@@ -171,7 +171,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

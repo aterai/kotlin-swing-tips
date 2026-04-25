@@ -30,7 +30,7 @@ fun start(frame: JFrame) {
   Thread(r).start()
 }
 
-private fun makeUI(): Component {
+private fun createUI(): Component {
   val label = JLabel("Draggable Label")
   val dwl = DragWindowListener()
   label.addMouseListener(dwl)
@@ -71,7 +71,7 @@ fun createSplashScreen(
 }
 
 fun showFrame(frame: JFrame) {
-  frame.contentPane.add(makeUI())
+  frame.contentPane.add(createUI())
   frame.minimumSize = Dimension(100, 100)
   frame.setSize(320, 240)
   frame.setLocationRelativeTo(null)
@@ -132,7 +132,7 @@ fun main() {
     JFrame().apply {
       isUndecorated = true
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       start(this)
     }
   }

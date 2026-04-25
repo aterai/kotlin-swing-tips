@@ -26,7 +26,7 @@ private var startX = 0
 private var targetX = 0
 private var isOpen = false
 
-fun makeUI(): Component {
+fun createUI(): Component {
   mainConstants.add(makeControlBox())
   mainConstants.setBackground(Color.GRAY)
   mainConstants.preferredSize = Dimension(320, 240)
@@ -230,7 +230,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

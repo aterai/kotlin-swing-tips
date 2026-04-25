@@ -35,7 +35,7 @@ private val encButton = JButton("XMLEncoder")
 private val decButton = JButton("XMLDecoder")
 private val clearButton = JButton("clear")
 
-fun makeUI(): Component {
+fun createUI(): Component {
   encButton.addActionListener {
     runCatching {
       val path = File.createTempFile("output", ".xml").toPath()
@@ -198,7 +198,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

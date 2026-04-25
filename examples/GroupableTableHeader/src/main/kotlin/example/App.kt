@@ -11,7 +11,7 @@ import javax.swing.table.JTableHeader
 import javax.swing.table.TableColumn
 import javax.swing.table.TableColumnModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   // http://www2.gol.com/users/tame/swing/examples/JTableExamples1.html
   val columnNames = arrayOf("SNo.", "1", "2", "Native", "2", "3")
   val data = arrayOf(
@@ -303,7 +303,7 @@ fun main() {
   EventQueue.invokeLater {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

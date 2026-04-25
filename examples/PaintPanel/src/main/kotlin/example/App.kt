@@ -7,7 +7,7 @@ import javax.swing.*
 import javax.swing.event.MouseInputAdapter
 import javax.swing.event.MouseInputListener
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   it.add(PaintPanel())
   it.preferredSize = Dimension(320, 240)
 }
@@ -68,7 +68,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

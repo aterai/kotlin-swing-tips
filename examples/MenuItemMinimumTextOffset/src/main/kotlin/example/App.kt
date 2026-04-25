@@ -5,7 +5,7 @@ import javax.swing.*
 
 private const val PRE = "RadioButtonMenuItem."
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val log = JTextArea()
   info(log)
   val popup = makePopup()
@@ -135,7 +135,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -7,7 +7,7 @@ import javax.swing.table.TableCellRenderer
 
 private const val AUTO_WRAP_COLUMN = 1
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("Default", "AutoWrap")
   val data = arrayOf(
     arrayOf("123456789012345678901234567890", "123456789012345678901234567890"),
@@ -111,7 +111,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

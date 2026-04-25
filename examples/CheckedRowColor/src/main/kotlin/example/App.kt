@@ -55,7 +55,7 @@ fun makeTable(model: TableModel): JTable {
   }
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("String", "Number", "Boolean")
   val data = arrayOf<Array<Any>>(
     arrayOf("aaa", 1, false),
@@ -113,7 +113,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

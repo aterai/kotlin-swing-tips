@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage
 import javax.swing.*
 import javax.swing.tree.DefaultTreeCellRenderer
 
-fun makeUI() = JPanel(GridLayout(1, 2, 2, 2)).also {
+fun createUI() = JPanel(GridLayout(1, 2, 2, 2)).also {
   it.add(makeTranslucentScrollPane(TranslucentTree()))
   it.add(makeTranslucentScrollPane(TransparentTree()))
   it.isOpaque = false
@@ -151,7 +151,7 @@ fun main() {
     }
     (frame.contentPane as? JComponent)?.isOpaque = false
     frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-    frame.contentPane.add(makeUI())
+    frame.contentPane.add(createUI())
     frame.pack()
     frame.setLocationRelativeTo(null)
     frame.isVisible = true

@@ -33,7 +33,7 @@ private val scroller2 = object : JScrollBar(HORIZONTAL) {
   }
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   scroller1.model = textField1.horizontalVisibility
   val handler = EmptyThumbHandler(textField1, scroller1)
 
@@ -204,7 +204,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.event.MouseEvent
 import javax.swing.*
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   it.add(JScrollPane(LinkCellList(makeModel())))
   it.preferredSize = Dimension(320, 240)
 }
@@ -104,7 +104,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

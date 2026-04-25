@@ -41,7 +41,7 @@ private val checkWord = JCheckBox("Match whole word only")
 private val layerUI = PlaceholderLayerUI<JTextComponent>()
 private val handler = HighlightHandler()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   textPane.isEditable = false
   textPane.text = TEXT
 
@@ -235,7 +235,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

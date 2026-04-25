@@ -10,7 +10,7 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableModel
 
-fun makeUI() = JPanel(GridLayout(2, 1)).also {
+fun createUI() = JPanel(GridLayout(2, 1)).also {
   it.add(JScrollPane(JTable(makeModel())))
   it.add(JScrollPane(CheckBoxTable(makeModel())))
   it.preferredSize = Dimension(320, 240)
@@ -127,7 +127,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

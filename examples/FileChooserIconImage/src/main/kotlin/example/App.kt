@@ -7,7 +7,7 @@ import java.awt.geom.Ellipse2D
 import java.awt.image.BufferedImage
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val button1 = JButton("default icon")
   button1.addActionListener {
     val fileChooser = JFileChooser()
@@ -83,7 +83,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

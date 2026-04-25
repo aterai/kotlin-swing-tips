@@ -23,7 +23,7 @@ private fun makePreferredSizeImage(
   return image
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   EventQueue.invokeLater {
     (check.topLevelAncestor as? Frame)?.also { f ->
       f.addWindowStateListener { e ->
@@ -132,7 +132,7 @@ fun main() {
       } else {
         WindowConstants.EXIT_ON_CLOSE
       }
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

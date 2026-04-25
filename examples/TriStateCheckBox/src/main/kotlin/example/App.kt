@@ -73,7 +73,7 @@ private val table = object : JTable(model) {
   }
 }
 
-fun makeUI() = JTabbedPane().also {
+fun createUI() = JTabbedPane().also {
   val mb = JMenuBar()
   mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
@@ -361,7 +361,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

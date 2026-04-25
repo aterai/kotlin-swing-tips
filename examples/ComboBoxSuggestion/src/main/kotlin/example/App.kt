@@ -5,7 +5,7 @@ import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val array = arrayOf(
     "111",
     "1111222",
@@ -156,7 +156,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

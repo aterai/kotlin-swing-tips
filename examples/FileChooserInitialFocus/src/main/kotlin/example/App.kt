@@ -4,7 +4,7 @@ import java.awt.*
 import java.io.File
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val fileChooser = JFileChooser()
   val field = JTextField("C:/temp/test.txt")
   val log = JTextArea()
@@ -72,7 +72,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

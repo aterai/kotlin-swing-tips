@@ -8,7 +8,7 @@ import javax.swing.text.DefaultHighlighter
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.text.Highlighter.HighlightPainter
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val desktop = JDesktopPane()
   desktop.add(makeInternalFrame("DefaultCaret", Point(10, 10), makeTextArea(false)))
   desktop.add(makeInternalFrame("FocusCaret", Point(50, 50), makeTextArea(true)))
@@ -91,7 +91,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

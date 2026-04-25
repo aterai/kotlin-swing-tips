@@ -16,7 +16,7 @@ private val layeredPane = object : JLayeredPane() {
 private val toolBar = JToolBar("Resizable Components")
 private val pt = Point()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val popup = object : JPopupMenu() {
     override fun show(
       c: Component?,
@@ -521,7 +521,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

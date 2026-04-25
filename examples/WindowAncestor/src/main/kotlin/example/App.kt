@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val button = JButton("show frame title")
   button.addActionListener { e ->
     (SwingUtilities.getWindowAncestor(e.source as? Component) as? Frame)?.also {
@@ -31,13 +31,13 @@ fun main() {
     }
     val frame1 = JFrame("frame1")
     frame1.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-    frame1.contentPane.add(makeUI())
+    frame1.contentPane.add(createUI())
     frame1.pack()
     frame1.setLocationRelativeTo(null)
 
     val frame2 = JFrame("frame2")
     frame2.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-    frame2.contentPane.add(makeUI())
+    frame2.contentPane.add(createUI())
     frame2.pack()
 
     val pt = frame1.location

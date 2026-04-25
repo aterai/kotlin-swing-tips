@@ -6,7 +6,7 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("String", "Integer", "Boolean")
   val data = arrayOf<Array<Any>>(
     arrayOf("AAA", 0, true),
@@ -53,7 +53,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

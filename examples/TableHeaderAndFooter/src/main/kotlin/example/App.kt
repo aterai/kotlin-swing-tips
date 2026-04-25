@@ -6,7 +6,7 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.JTableHeader
 import javax.swing.table.TableModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val table = JTable(makeModel())
   table.autoCreateRowSorter = true
   val footer = JTableHeader(table.columnModel)
@@ -60,7 +60,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

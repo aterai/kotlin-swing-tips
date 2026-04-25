@@ -18,7 +18,7 @@ private val BACKGROUND = Color.BLACK // RED
 private val FOREGROUND = Color.WHITE // YELLOW
 private val SELECTION_FOREGROUND = Color.CYAN
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val combo0 = JComboBox(makeModel())
   val combo1 = JComboBox(makeModel())
   val combo2 = JComboBox(makeModel())
@@ -321,7 +321,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

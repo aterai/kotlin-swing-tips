@@ -65,7 +65,7 @@ private fun appendLine(str: String?) {
   area.caretPosition = area.document.length
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   area.isEditable = false
   area.lineWrap = true
   runButton.addActionListener { executeWorker() }
@@ -224,7 +224,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

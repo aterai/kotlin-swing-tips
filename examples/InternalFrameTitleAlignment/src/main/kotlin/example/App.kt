@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.plaf.basic.BasicInternalFrameUI
 
-fun makeUI() = JDesktopPane().also {
+fun createUI() = JDesktopPane().also {
   addFrame(it, 0)
   addFrame(it, 1)
   it.preferredSize = Dimension(320, 240)
@@ -43,7 +43,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

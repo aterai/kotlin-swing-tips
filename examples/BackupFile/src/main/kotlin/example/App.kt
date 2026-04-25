@@ -17,7 +17,7 @@ private val spinner2 = JSpinner(model2)
 private val label = JLabel("2", SwingConstants.RIGHT)
 private val jtp = JTextPane()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   jtp.isEditable = false
   val d = jtp.styledDocument
   val s = d.getStyle(StyleContext.DEFAULT_STYLE)
@@ -272,7 +272,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

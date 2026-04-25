@@ -12,7 +12,7 @@ import javax.swing.text.JTextComponent
 import javax.swing.text.NumberFormatter
 import javax.swing.text.PlainDocument
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textField1 = JTextField("1000")
   textField1.horizontalAlignment = SwingConstants.RIGHT
   textField1.inputVerifier = IntegerInputVerifier()
@@ -183,7 +183,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

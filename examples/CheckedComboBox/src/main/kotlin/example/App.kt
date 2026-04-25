@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent
 import javax.swing.*
 import javax.swing.plaf.basic.ComboPopup
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel(GridLayout(0, 1))
   p.border = BorderFactory.createEmptyBorder(5, 20, 5, 20)
   p.add(JLabel("Default:"))
@@ -192,7 +192,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

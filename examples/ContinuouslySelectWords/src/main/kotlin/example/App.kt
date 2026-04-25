@@ -9,7 +9,7 @@ import javax.swing.text.JTextComponent
 import javax.swing.text.Position.Bias
 import javax.swing.text.Utilities
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val text = "The quick brown fox jumps over the lazy dog.\n".repeat(3)
   val textArea = object : JTextArea("setCaret\n$text") {
     override fun updateUI() {
@@ -166,7 +166,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

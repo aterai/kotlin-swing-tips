@@ -30,7 +30,7 @@ private val visualizerLabel = JLabel(MouseVisualizer())
 private val wheelResetTimer = Timer(100, null)
 private var wheelOffset = 0
 
-fun makeUI(): Component {
+fun createUI(): Component {
   visualizerLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10))
   visualizerLabel.addMouseListener(object : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
@@ -175,7 +175,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

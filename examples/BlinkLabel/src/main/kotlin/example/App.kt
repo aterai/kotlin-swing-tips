@@ -7,7 +7,7 @@ import javax.swing.*
 private const val BLACK_CIRCLE = "●" // "\u25CF"
 private const val WHITE_CIRCLE = "○" // "\u25CB"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val label1 = JLabel(BLACK_CIRCLE, SwingConstants.CENTER)
   val label2 = JLabel("", SwingConstants.CENTER)
   val p = JPanel(GridLayout(2, 1, 5, 5))
@@ -55,7 +55,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

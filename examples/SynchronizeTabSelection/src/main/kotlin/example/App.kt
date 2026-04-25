@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabs1 = JTabbedPane()
   tabs1.addTab("Java", makeEditor(makeJava1(), 36))
   tabs1.addTab("Kotlin", makeEditor(makeKotlin1(), 36))
@@ -91,7 +91,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -8,7 +8,7 @@ import java.awt.event.WindowEvent
 import javax.swing.*
 import javax.swing.plaf.basic.BasicInternalFrameUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val button = JButton("close")
   button.addActionListener {
     (button.topLevelAncestor as? Window)?.also {
@@ -148,7 +148,7 @@ fun main() {
         background = Color(0x0, true)
       }
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

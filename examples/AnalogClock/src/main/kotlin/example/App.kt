@@ -11,7 +11,7 @@ import java.time.ZoneId
 import javax.swing.*
 import kotlin.math.PI
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   it.add(AnalogClock())
   it.preferredSize = Dimension(320, 240)
 }
@@ -27,7 +27,7 @@ fun main() {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
       // defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

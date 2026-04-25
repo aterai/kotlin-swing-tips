@@ -9,7 +9,7 @@ const val BW1 = 1
 const val BW2 = 2
 const val CELL_SIZE = 18
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("1", "2", "3", "4", "5", "6", "7", "8", "9")
   val data = arrayOf<Array<Number>>(
     arrayOf(5, 3, 0, 0, 7, 0, 0, 0, 0),
@@ -164,7 +164,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

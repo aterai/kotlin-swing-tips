@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.text.DefaultCaret
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textArea = LineCursorTextArea("Line Cursor Test\n\n*******")
   val check = JCheckBox("LineWrap")
   check.addActionListener { e ->
@@ -75,7 +75,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

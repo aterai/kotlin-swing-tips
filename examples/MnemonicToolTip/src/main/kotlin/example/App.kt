@@ -5,7 +5,7 @@ import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val al = ActionListener { e ->
     (e.source as? JButton)?.also {
       it.mnemonic = when {
@@ -92,7 +92,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

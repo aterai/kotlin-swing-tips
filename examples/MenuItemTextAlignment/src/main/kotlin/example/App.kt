@@ -5,7 +5,7 @@ import javax.swing.*
 
 private val STRUT = ColorIcon(Color(0x0, true)) // MetalLookAndFeel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   UIManager.put("MenuItem.disabledForeground", Color.BLACK)
   val item0 = JMenuItem("JMenuItem.setEnabled(false);")
   item0.isEnabled = false
@@ -97,7 +97,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

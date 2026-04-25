@@ -6,7 +6,7 @@ import java.awt.geom.Rectangle2D
 import java.math.BigDecimal
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val font = Font(Font.SERIF, Font.PLAIN, 24)
   val label1 = FiveStarRatingLabel("3.5")
   label1.border = BorderFactory.createTitledBorder("3.5")
@@ -38,7 +38,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

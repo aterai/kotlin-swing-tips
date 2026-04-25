@@ -7,7 +7,7 @@ import java.awt.geom.RoundRectangle2D
 import javax.swing.*
 import javax.swing.plaf.basic.BasicPopupMenuUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val popup = createCustomPopup()
   val table = JTable(16, 3)
   table.setComponentPopupMenu(popup)
@@ -172,7 +172,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

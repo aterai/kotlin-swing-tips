@@ -15,7 +15,7 @@ private val sort2 = JRadioButton("2: selection sort")
 private val sort3 = JRadioButton("3: TimSort") // JDK 1.7.0
 private val reset = JRadioButton("reset")
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val box = JPanel(GridLayout(2, 2))
   val listener = ActionListener { e ->
     val check = e.source
@@ -221,7 +221,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

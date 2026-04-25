@@ -10,7 +10,7 @@ import java.util.EnumSet
 import javax.swing.*
 import kotlin.math.sqrt
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val corners = EnumSet.allOf(Corner::class.java)
   val types = EnumSet.allOf(Type::class.java)
   val p = object : JPanel() {
@@ -243,7 +243,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

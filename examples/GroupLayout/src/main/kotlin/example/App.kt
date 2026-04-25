@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.GroupLayout.Alignment.BASELINE
 
-fun makeUI(): Component {
+fun createUI(): Component {
   // GroupLayout
   val p1 = JPanel()
   p1.border = BorderFactory.createTitledBorder("GroupLayout")
@@ -71,7 +71,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

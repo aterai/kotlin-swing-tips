@@ -10,7 +10,7 @@ import javax.swing.*
 import javax.swing.plaf.basic.BasicComboPopup
 import javax.swing.text.JTextComponent
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textPane = JTextPane()
   textPane.text = "Shift+Tab: open EditorComboPopup\n"
 
@@ -135,7 +135,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

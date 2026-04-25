@@ -8,7 +8,7 @@ import java.awt.datatransfer.UnsupportedFlavorException
 import java.awt.event.InputEvent
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val list = makeList(makeModel())
 
   val check1 = JCheckBox("canExportAsDrag")
@@ -267,7 +267,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

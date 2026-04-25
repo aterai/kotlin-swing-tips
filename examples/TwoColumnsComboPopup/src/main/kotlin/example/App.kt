@@ -6,7 +6,7 @@ import javax.swing.border.Border
 import javax.swing.plaf.basic.ComboPopup
 import kotlin.math.max
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = makeModel()
   val combo = object : JComboBox<String>(model) {
     override fun getPreferredSize(): Dimension {
@@ -153,7 +153,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -60,7 +60,7 @@ private fun makeModel(): RowDataModel {
   return model
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = makeModel()
   val table = JTable(model)
   val sorter: TableRowSorter<out RowDataModel> = TableRowSorter(model)
@@ -161,7 +161,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -10,7 +10,7 @@ private val combo = JComboBox(makeComboBoxModel())
 private val textField = JTextField(20)
 private val button = JButton("Connect")
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val timer = Timer(DELAY, null)
   val awtEvent = AWTEventListener {
     if (timer.isRunning) {
@@ -81,7 +81,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

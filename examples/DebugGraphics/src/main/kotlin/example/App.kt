@@ -8,7 +8,7 @@ import javax.swing.DebugGraphics.LOG_OPTION
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val table = JTable(makeModel())
   table.autoCreateRowSorter = true
   val repaintManager = RepaintManager.currentManager(table)
@@ -42,7 +42,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

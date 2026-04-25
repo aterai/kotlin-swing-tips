@@ -8,7 +8,7 @@ import javax.swing.text.BadLocationException
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.text.DocumentFilter
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val maskRange = 2
   val highlightPainter = DefaultHighlightPainter(Color.GRAY)
   val textArea = JTextArea()
@@ -84,7 +84,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

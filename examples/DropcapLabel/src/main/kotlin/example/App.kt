@@ -15,7 +15,7 @@ private val text = """
    the Java programming language.
 """.trimIndent()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val label = DropcapLabel(text)
   label.font = Font(Font.SERIF, Font.PLAIN, 17)
   label.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
@@ -91,7 +91,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

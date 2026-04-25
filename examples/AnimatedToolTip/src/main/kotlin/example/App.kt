@@ -8,7 +8,7 @@ import java.util.Collections
 import javax.swing.*
 import javax.swing.Timer
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val l1 = object : JLabel("Timer Animated ToolTip") {
     override fun createToolTip(): JToolTip {
       val tip = AnimatedToolTip(AnimatedLabel(""))
@@ -190,7 +190,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -10,7 +10,7 @@ import javax.swing.event.PopupMenuListener
 
 private val popup = JPopupMenu()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val supported = SystemTray.isSupported()
   val scroll = JScrollPane(JTextArea("SystemTray.isSupported(): $supported"))
   return JPanel(BorderLayout()).also {
@@ -273,7 +273,7 @@ fun main() {
       } else {
         defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
       }
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

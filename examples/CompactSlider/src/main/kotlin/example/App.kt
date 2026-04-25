@@ -17,7 +17,7 @@ import javax.swing.text.DefaultFormatterFactory
 import javax.swing.text.JTextComponent
 import javax.swing.text.NumberFormatter
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel(GridLayout(0, 1, 15, 15))
   p.isOpaque = false
   p.add(makeCompactSlider1())
@@ -468,7 +468,7 @@ fun main() {
   EventQueue.invokeLater {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

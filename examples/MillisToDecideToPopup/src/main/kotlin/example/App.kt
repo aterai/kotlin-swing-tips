@@ -38,7 +38,7 @@ private fun executeWorker(
   worker.execute()
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val area = JTextArea()
   area.isEditable = false
   val dmy = ProgressMonitor(null, "message", "note", 0, 100)
@@ -129,7 +129,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

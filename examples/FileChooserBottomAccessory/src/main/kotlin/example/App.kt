@@ -7,7 +7,7 @@ import javax.swing.plaf.metal.MetalFileChooserUI
 
 val log = JTextArea()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val button1 = JButton("Metal")
   button1.addActionListener {
     val fileChooser = object : JFileChooser() {
@@ -133,7 +133,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

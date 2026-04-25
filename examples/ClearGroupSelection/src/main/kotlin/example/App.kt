@@ -7,7 +7,7 @@ import java.awt.image.RGBImageFilter
 import javax.imageio.ImageIO
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel(GridLayout(2, 2))
   p.border = BorderFactory.createTitledBorder("ButtonGroup")
 
@@ -74,7 +74,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

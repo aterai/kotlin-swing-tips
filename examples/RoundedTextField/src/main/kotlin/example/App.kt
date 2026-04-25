@@ -11,7 +11,7 @@ import javax.swing.border.AbstractBorder
 
 private val TEXTURE = makeCheckerTexture()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textField01 = object : JTextField(20) {
     // Unleash Your Creativity with Swing and the Java 2D API!
     // http://java.sun.com/products/jfc/tsc/articles/swing2d/index.html
@@ -208,7 +208,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

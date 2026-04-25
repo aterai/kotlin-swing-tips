@@ -15,7 +15,7 @@ private val scrollBar = JPanel()
 private val expand = Timer(10) { scrollBar.revalidate() }
 private val collapse = Timer(10) { scrollBar.revalidate() }
 
-fun makeUI() = JPanel(GridLayout(1, 2)).also {
+fun createUI() = JPanel(GridLayout(1, 2)).also {
   it.add(makeScrollBarOnHoverScrollPane())
   it.add(JLayer(makeTranslucentScrollBar(makeList()), ScrollBarOnHoverLayerUI()))
   it.preferredSize = Dimension(320, 240)
@@ -272,7 +272,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

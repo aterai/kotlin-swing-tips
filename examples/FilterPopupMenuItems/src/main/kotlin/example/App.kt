@@ -6,7 +6,7 @@ import javax.swing.*
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val mb = makeMenuBar()
   return JPanel(BorderLayout()).also {
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
@@ -83,7 +83,7 @@ fun main() {
   EventQueue.invokeLater {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

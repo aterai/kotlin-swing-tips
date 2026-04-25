@@ -9,7 +9,7 @@ import javax.swing.event.AncestorListener
 private val model = SpinnerNumberModel(0, -1, 3, 1)
 private val combo = JComboBox(SortOrder.entries.toTypedArray())
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val log = JTextArea()
   val fileChooser = makeFileChooser()
   val button = object : JButton("open") {
@@ -94,7 +94,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

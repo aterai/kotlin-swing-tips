@@ -39,7 +39,7 @@ private val tree = object : JTree() {
   }
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val icon = makeImageIcon("example/restore_to_background_color.gif")
   val root = DefaultMutableTreeNode("root")
   val s0 = DefaultMutableTreeNode(NodeObject("default", icon))
@@ -101,7 +101,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

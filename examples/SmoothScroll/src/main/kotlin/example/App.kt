@@ -12,7 +12,7 @@ private val model = SpinnerNumberModel(100, 1, 2000, 1)
 private val textArea = JTextArea()
 private val scroll = JScrollPane(textArea)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   textArea.text = "1111111111111\n".repeat(2000)
   scroll.setRowHeaderView(LineNumberView(textArea))
   textArea.border = BorderFactory.createEmptyBorder(0, 2, 0, 0)
@@ -164,7 +164,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -6,7 +6,7 @@ import java.awt.event.MouseEvent
 import java.awt.event.MouseMotionListener
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabbedPane = object : JTabbedPane() {
     private var hoverHandler: MouseMotionListener? = null
 
@@ -48,7 +48,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -14,7 +14,7 @@ private const val OFFSET = 30
 private val openFrameCount = AtomicInteger()
 private val desktop = JDesktopPane()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val immovableFrame = JInternalFrame("immovable", false, false, true, true)
   (immovableFrame.ui as? BasicInternalFrameUI)?.northPane?.also {
     val actions = it.getListeners(MouseMotionListener::class.java)
@@ -78,7 +78,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

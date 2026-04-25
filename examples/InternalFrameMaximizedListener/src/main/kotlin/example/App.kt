@@ -8,7 +8,7 @@ import javax.swing.event.InternalFrameListener
 
 private val textArea = JTextArea()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val frame = JInternalFrame("title", true, true, true, true)
   frame.addPropertyChangeListener { e ->
     val prop = e.propertyName
@@ -84,7 +84,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

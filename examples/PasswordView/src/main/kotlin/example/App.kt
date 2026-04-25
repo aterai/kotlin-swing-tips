@@ -11,7 +11,7 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val pf1 = JPasswordField()
   pf1.echoChar = '★'
   val pf2 = object : JPasswordField() {
@@ -126,7 +126,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

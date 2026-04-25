@@ -7,7 +7,7 @@ import javax.swing.*
 
 private val popup = JPopupMenu()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val check = object : JCheckBox("change accelerator") {
     override fun updateUI() {
       super.updateUI()
@@ -137,7 +137,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

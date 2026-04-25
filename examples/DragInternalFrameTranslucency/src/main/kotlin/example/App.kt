@@ -5,7 +5,7 @@ import javax.swing.*
 
 private var draggingFrame: JComponent? = null
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val desktop = JDesktopPane()
   desktop.desktopManager = object : DefaultDesktopManager() {
     override fun beginDraggingFrame(f: JComponent) {
@@ -74,7 +74,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

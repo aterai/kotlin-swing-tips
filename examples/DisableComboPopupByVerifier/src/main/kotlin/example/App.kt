@@ -10,7 +10,7 @@ import javax.swing.plaf.basic.BasicComboBoxUI
 import javax.swing.plaf.basic.BasicComboPopup
 import javax.swing.text.JTextComponent
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val field = JTextField()
   field.inputVerifier = LengthInputVerifier()
 
@@ -161,7 +161,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -8,7 +8,7 @@ import java.awt.event.WindowEvent
 import java.util.prefs.Preferences
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val handler = WindowPreferencesHandler()
 
   val clearButton = JButton("Preferences#clear() and JFrame#dispose()")
@@ -132,7 +132,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       // setLocationRelativeTo(null)
       isVisible = true

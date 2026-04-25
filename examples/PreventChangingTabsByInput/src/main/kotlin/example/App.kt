@@ -5,7 +5,7 @@ import java.awt.event.InputEvent
 import javax.swing.*
 import javax.swing.plaf.LayerUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabs0 = makeTabbedPane()
   tabs0.isEnabled = false
   tabs0.border = BorderFactory.createTitledBorder("setEnabled(false)")
@@ -86,7 +86,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

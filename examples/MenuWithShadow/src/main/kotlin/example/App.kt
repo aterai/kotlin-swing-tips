@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import javax.swing.*
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   EventQueue.invokeLater { it.rootPane.jMenuBar = createMenuBar() }
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/test.png")
@@ -84,7 +84,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

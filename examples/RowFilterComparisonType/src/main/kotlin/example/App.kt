@@ -10,7 +10,7 @@ import javax.swing.table.TableRowSorter
 
 private val model = SpinnerNumberModel(10, 0, 100, 5)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val m = makeModel()
   val table = JTable(m)
   val sorter = TableRowSorter(m)
@@ -83,7 +83,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

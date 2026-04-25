@@ -8,7 +8,7 @@ import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val log = JTextArea()
   val button1 = JButton("Default")
   button1.addActionListener {
@@ -123,7 +123,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.event.KeyEvent
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val key = "Menu.crossMenuMnemonic"
   val b = UIManager.getBoolean(key)
   // println("$key: $b")
@@ -125,7 +125,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

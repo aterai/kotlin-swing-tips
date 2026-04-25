@@ -30,7 +30,7 @@ private val p = object : JPanel(BorderLayout()) {
   }
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val button = JButton("JButton")
   button.font = FONT12
   p.addFontChangeListener { button.font = it.font }
@@ -106,7 +106,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

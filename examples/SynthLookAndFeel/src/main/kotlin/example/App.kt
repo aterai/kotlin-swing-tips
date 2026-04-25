@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.plaf.synth.SynthLookAndFeel
 
-fun makeUI() = JPanel().also {
+fun createUI() = JPanel().also {
   it.add(JButton("JButton1"))
   it.add(JButton("JButton2"))
   it.add(MyButton("MyButton"))
@@ -34,7 +34,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

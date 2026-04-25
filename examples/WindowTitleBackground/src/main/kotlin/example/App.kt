@@ -13,7 +13,7 @@ import javax.swing.table.TableCellEditor
 private const val KEY_COL = 0
 private const val COLOR_COL = 1
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("Key", "Color")
   val data = arrayOf(
     arrayOf("activeCaption", UIManager.getColor("activeCaption")),
@@ -238,7 +238,7 @@ fun main() {
   EventQueue.invokeLater {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

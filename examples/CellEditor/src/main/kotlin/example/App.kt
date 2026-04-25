@@ -5,7 +5,7 @@ import java.awt.event.ActionListener
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val modelCheck = JCheckBox("isCellEditable return false")
   val model = object : RowDataModel() {
     override fun isCellEditable(
@@ -98,7 +98,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

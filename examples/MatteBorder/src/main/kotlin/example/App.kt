@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val outside = BorderFactory.createMatteBorder(0, 10, 1, 0, Color(0x32_C8_32))
   val inside = BorderFactory.createEmptyBorder(0, 5, 0, 0)
   val label = JLabel("MANIFEST.MF")
@@ -45,7 +45,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

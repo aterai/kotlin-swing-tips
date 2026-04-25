@@ -9,7 +9,7 @@ private const val MW = 320
 private const val MH1 = 100
 private const val MH2 = 150
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val label = JLabel()
   val cl = object : ComponentAdapter() {
     override fun componentResized(e: ComponentEvent) {
@@ -76,7 +76,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

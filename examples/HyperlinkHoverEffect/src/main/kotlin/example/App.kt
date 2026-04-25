@@ -7,7 +7,7 @@ import javax.swing.text.Element
 import javax.swing.text.MutableAttributeSet
 import javax.swing.text.html.HTML
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val format = "<a href='%s' color='%s'>%s</a><br><br>"
   val site = "https://ateraimemo.com/"
   val s1 = format.format(site, "blue", site)
@@ -55,7 +55,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

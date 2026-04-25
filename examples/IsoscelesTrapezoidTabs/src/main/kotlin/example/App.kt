@@ -6,7 +6,7 @@ import java.awt.geom.GeneralPath
 import javax.swing.*
 import javax.swing.plaf.basic.BasicTabbedPaneUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabs = object : JTabbedPane() {
     override fun updateUI() {
       super.updateUI()
@@ -147,7 +147,7 @@ fun main() {
   EventQueue.invokeLater {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -11,7 +11,7 @@ import javax.swing.plaf.synth.SynthPainter
 import javax.swing.plaf.synth.SynthStyle
 import javax.swing.plaf.synth.SynthStyleFactory
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p1 = JPanel()
   p1.isOpaque = false
   val p2 = object : JPanel() {
@@ -161,7 +161,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.border.Border
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = makeModel()
   val box1 = Box.createVerticalBox().also {
     it.border = BorderFactory.createTitledBorder("setEditable(false)")
@@ -87,7 +87,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

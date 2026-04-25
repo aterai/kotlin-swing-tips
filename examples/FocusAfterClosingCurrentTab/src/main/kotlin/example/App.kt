@@ -17,7 +17,7 @@ import javax.swing.plaf.synth.SynthLookAndFeel
 
 private const val CLOSE_CURRENT_TAB = "close_current_tab"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabbedPane = object : ClippedTitleTabbedPane() {
     private val history = ArrayList<Component>(5)
 
@@ -257,7 +257,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

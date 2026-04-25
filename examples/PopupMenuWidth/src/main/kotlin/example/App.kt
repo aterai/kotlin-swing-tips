@@ -5,7 +5,7 @@ import java.awt.event.KeyEvent
 import javax.swing.*
 import javax.swing.plaf.basic.DefaultMenuLayout
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val mb = JMenuBar()
   makeMenu(mb.add(JMenu("Default")))
 
@@ -64,7 +64,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

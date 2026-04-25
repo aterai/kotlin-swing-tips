@@ -53,7 +53,7 @@ private val table = object : JTable(model) {
 private val deletedRowSet: MutableSet<Int> = TreeSet()
 private var number = 0
 
-fun makeUI(): Component {
+fun createUI(): Component {
   table.rowSorter = TableRowSorter(model)
   addProgressValue("Name 1", 100, null)
 
@@ -198,7 +198,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

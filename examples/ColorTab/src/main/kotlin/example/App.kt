@@ -5,7 +5,7 @@ import javax.swing.*
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-fun makeUI() = JTabbedPane().also {
+fun createUI() = JTabbedPane().also {
   it.componentPopupMenu = TabbedPanePopupMenu()
   it.addChangeListener(TabChangeListener())
   it.addTab("Title", JLabel("Tab"))
@@ -94,7 +94,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

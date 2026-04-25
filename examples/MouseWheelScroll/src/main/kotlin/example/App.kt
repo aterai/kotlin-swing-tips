@@ -16,7 +16,7 @@ private val r1 = JRadioButton(TXT1)
 private const val TXT2 = "SCROLLBAR_NEVER"
 private val r2 = JRadioButton(TXT2)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val label = JLabel(getIcon())
   val ml = DragScrollListener()
   label.addMouseMotionListener(ml)
@@ -164,7 +164,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

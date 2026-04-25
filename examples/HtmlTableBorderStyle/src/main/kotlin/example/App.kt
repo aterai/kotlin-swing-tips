@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tds1 = "border-right:1px solid green;border-top:1px solid blue"
   val tbs1 = "border-left:1px solid red;border-bottom:1px solid red"
   val bgc1 = ";background:yellow"
@@ -58,7 +58,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

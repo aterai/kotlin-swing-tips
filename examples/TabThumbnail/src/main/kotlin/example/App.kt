@@ -7,7 +7,7 @@ import java.io.File
 import javax.imageio.ImageIO
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   ToolTipManager.sharedInstance().dismissDelay = Int.MAX_VALUE
   val cl = Thread.currentThread().contextClassLoader
   val icon = cl
@@ -140,7 +140,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

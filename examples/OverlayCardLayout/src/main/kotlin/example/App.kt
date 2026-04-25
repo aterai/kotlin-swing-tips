@@ -11,7 +11,7 @@ private fun makePanel(color: Color): Component {
   return p
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = arrayOf("red", "green", "blue")
   val cardLayout = CardLayout()
   val cards = JPanel(cardLayout)
@@ -51,7 +51,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

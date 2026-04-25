@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/16x16.png")
   val image = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
@@ -50,7 +50,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

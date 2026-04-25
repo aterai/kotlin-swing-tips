@@ -10,7 +10,7 @@ import javax.swing.*
 
 private val logger = Logger.getLogger(MethodHandles.lookup().lookupClass().name)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val button = JButton("JButton JButton")
   val timer = Timer(4000) {
     printInfo(button, LocalTime.now(ZoneId.systemDefault()).toString())
@@ -97,7 +97,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

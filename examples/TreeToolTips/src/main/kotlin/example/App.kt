@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.event.MouseEvent
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tree1 = object : JTree() {
     override fun getToolTipText(e: MouseEvent) =
       getPathForLocation(e.x, e.y)?.lastPathComponent?.let { "getToolTipText: $it" }
@@ -62,7 +62,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

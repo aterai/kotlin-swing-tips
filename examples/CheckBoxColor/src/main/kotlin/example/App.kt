@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.plaf.metal.MetalCheckBoxIcon
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val cb1 = JCheckBox("111111")
   cb1.icon = CheckBoxIcon()
   val cb2 = JCheckBox("222222222222")
@@ -185,7 +185,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

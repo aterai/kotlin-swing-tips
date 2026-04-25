@@ -5,7 +5,7 @@ import javax.swing.*
 
 private const val TOOLTIP_MODE = "ToolTipManager.enableToolTipMode"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val mode = UIManager.getString(TOOLTIP_MODE)
   // println(mode)
   val allWindows = "allWindows"
@@ -60,7 +60,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

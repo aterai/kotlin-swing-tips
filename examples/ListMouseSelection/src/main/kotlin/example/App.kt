@@ -5,7 +5,7 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.*
 
-fun makeUI() = JPanel(GridLayout(1, 3)).also {
+fun createUI() = JPanel(GridLayout(1, 3)).also {
   it.add(makeTitledPanel("Default", JList(makeModel())))
   it.add(makeTitledPanel("MouseEvent", SingleMouseClickSelectList(makeModel())))
   it.add(makeTitledPanel("SelectionInterval", SingleClickSelectList(makeModel())))
@@ -176,7 +176,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

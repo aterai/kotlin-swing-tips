@@ -7,7 +7,7 @@ import javax.swing.*
 
 private const val SHOW_MNEMONICS = "Button.showMnemonics"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val showMnemonicsCheck = JCheckBox(SHOW_MNEMONICS)
   showMnemonicsCheck.isSelected = UIManager.getBoolean(SHOW_MNEMONICS)
   showMnemonicsCheck.mnemonic = KeyEvent.VK_B
@@ -100,7 +100,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

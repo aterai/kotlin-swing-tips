@@ -15,7 +15,7 @@ private const val TEST_HTML = """
   </html>
 """
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val styleSheet = StyleSheet().also {
     it.addRule("body{font-size:12pt;}")
     it.addRule(".highlight{color:red;background:green}")
@@ -43,7 +43,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

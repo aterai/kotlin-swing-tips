@@ -8,7 +8,7 @@ private const val KEY = "Button.defaultButtonFollowsFocus"
 private val b1 = JButton("Button1")
 private val b2 = JButton("Button2")
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val box = Box.createHorizontalBox()
   box.border = BorderFactory.createTitledBorder(KEY)
   val r1 = JRadioButton("TRUE")
@@ -89,7 +89,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -7,7 +7,7 @@ import javax.swing.event.AncestorListener
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.JTableHeader
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("AAA", "BBB", "CCC")
   val data = arrayOf(
     arrayOf("aaa", "eee", "fff"),
@@ -120,7 +120,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

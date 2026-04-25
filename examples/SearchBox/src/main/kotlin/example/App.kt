@@ -10,7 +10,7 @@ import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreeNode
 import javax.swing.tree.TreePath
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val field = JTextField("asd", 10)
   val tree = JTree(makeModel())
   val findNextAction = object : AbstractAction("Find Next") {
@@ -175,7 +175,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -18,7 +18,7 @@ import javax.swing.undo.UndoManager
 
 private val undoManager = UndoManager()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("Type", "Value")
   val data = arrayOf<Array<Any>>(
     arrayOf("String", "text"),
@@ -338,7 +338,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

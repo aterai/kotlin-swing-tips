@@ -7,7 +7,7 @@ import javax.swing.*
 import javax.swing.event.HyperlinkEvent
 import javax.swing.event.HyperlinkListener
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val m = DefaultListModel<SiteItem>()
   m.addElement(
     SiteItem("aterai", listOf("https://ateraimemo.com", "https://github.com/aterai")),
@@ -106,7 +106,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -9,7 +9,7 @@ import javax.swing.tree.TreePath
 private val countLabel = JLabel("PathCount: ")
 private val levelLabel = JLabel("Level: ")
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tree = JTree()
   tree.componentPopupMenu = TreePopupMenu()
   tree.selectionModel.addTreeSelectionListener { e ->
@@ -103,7 +103,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

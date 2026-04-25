@@ -7,7 +7,7 @@ import java.awt.geom.RoundRectangle2D
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val label0 = JLabel("JLabel + MatteBorder(Gradient Icon)")
   val fractions = floatArrayOf(0f, .25f, .5f, .75f, 1f)
   val colors = arrayOf(
@@ -120,7 +120,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

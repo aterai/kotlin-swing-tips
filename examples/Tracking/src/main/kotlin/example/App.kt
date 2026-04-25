@@ -7,7 +7,7 @@ import java.awt.geom.AffineTransform
 import java.awt.geom.Ellipse2D
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val text = "1234567890"
   val l1 = JLabel("$text TRACKING_TIGHT (-.04f)")
   l1.font = l1.font.deriveFont(
@@ -143,7 +143,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

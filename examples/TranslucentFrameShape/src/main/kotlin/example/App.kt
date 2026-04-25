@@ -6,7 +6,7 @@ import java.awt.event.MouseEvent
 import java.awt.geom.RoundRectangle2D
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val shape = RoundRectangle2D.Float(0f, 0f, 240f, 64f, 32f, 32f)
   val button1 = JButton("use Window#setShape(...)")
   button1.addActionListener { e ->
@@ -116,7 +116,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

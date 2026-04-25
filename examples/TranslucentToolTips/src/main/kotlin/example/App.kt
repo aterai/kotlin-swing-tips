@@ -81,7 +81,7 @@ private val weekList = object : JList<Contribution>(
   }
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val font = weekList.font.deriveFont(CELL_SIZE.height - 1f)
 
   val box = Box.createHorizontalBox()
@@ -334,7 +334,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import javax.swing.*
 
-fun makeUI() = JPanel().also {
+fun createUI() = JPanel().also {
   it.preferredSize = Dimension(320, 240)
 }
 
@@ -71,7 +71,7 @@ fun main() {
     } else {
       frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
     }
-    frame.contentPane.add(makeUI())
+    frame.contentPane.add(createUI())
     frame.pack()
     frame.setLocationRelativeTo(null)
     frame.isVisible = true

@@ -5,7 +5,7 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = DefaultListModel<String>().also {
     it.addElement("Name1-comment")
     it.addElement("Name2-test")
@@ -99,7 +99,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

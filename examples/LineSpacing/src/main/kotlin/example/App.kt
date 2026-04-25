@@ -16,7 +16,7 @@ import javax.swing.text.StyledEditorKit
 import javax.swing.text.View
 import javax.swing.text.ViewFactory
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val attr = SimpleAttributeSet()
   StyleConstants.setForeground(attr, Color.RED)
   StyleConstants.setFontSize(attr, 32)
@@ -82,7 +82,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

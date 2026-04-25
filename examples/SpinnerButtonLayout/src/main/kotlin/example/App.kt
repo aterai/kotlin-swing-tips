@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.plaf.basic.BasicSpinnerUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = SpinnerNumberModel(10, 0, 1000, 1)
   val box = Box.createVerticalBox()
   box.add(makeTitledPanel("Default", JSpinner(model)))
@@ -67,7 +67,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

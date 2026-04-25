@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val button0 = object : JButton("ToolTip1") {
     override fun createToolTip() = JToolTip().also {
       val b = BorderFactory.createTitledBorder("TitledBorder ToolTip")
@@ -53,7 +53,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

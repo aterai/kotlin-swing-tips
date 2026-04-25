@@ -17,7 +17,7 @@ private val button2 = JButton("JFrame#setUndecorated(true)")
 private val button3 = JButton("JWindow()")
 private val button4 = JButton("JWindow(owner)")
 
-fun makeUI(): Component {
+fun createUI(): Component {
   button1.addActionListener { e ->
     (e.source as? JButton)?.also {
       resetEditor(editor, it)
@@ -213,7 +213,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -11,7 +11,7 @@ import javax.swing.text.DefaultFormatter
 import javax.swing.text.DefaultFormatterFactory
 import javax.swing.text.NumberFormatter
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val spinner1 = JSpinner(makeLongModel())
   (spinner1.editor as? DefaultEditor)?.also {
     val formatter = it.textField.formatter
@@ -112,7 +112,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

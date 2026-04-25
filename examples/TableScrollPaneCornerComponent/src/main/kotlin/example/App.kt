@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   // val o = UIManager.get("Table.scrollPaneCornerComponent")
   val table = object : JTable(15, 3) {
     override fun getScrollableTracksViewportWidth(): Boolean {
@@ -34,7 +34,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

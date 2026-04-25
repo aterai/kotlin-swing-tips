@@ -7,7 +7,7 @@ import javax.swing.JSpinner.DefaultEditor
 
 private val TEXTURE = TextureUtils.createCheckerTexture(4, Color(0xEE_EE_EE))
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val d = UIDefaults()
   val painter1 = Painter<Component> { g, _, w, h ->
     g.color = Color(100, 100, 100, 100)
@@ -139,7 +139,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -7,7 +7,7 @@ import javax.swing.*
 import javax.swing.text.html.FormSubmitEvent
 import javax.swing.text.html.HTMLEditorKit
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val logger = JTextArea()
   logger.isEditable = false
 
@@ -54,7 +54,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

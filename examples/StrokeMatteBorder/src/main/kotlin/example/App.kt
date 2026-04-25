@@ -44,7 +44,7 @@ fun makeLabelTable(row: Int, column: Int): Component {
 
 private fun makeLabel(title: String) = JLabel(title, SwingConstants.CENTER)
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   it.add(makeLabelTable(6, 4))
   it.preferredSize = Dimension(320, 240)
 }
@@ -105,7 +105,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

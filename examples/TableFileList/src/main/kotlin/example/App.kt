@@ -14,7 +14,7 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("Name", "Comment")
   val data = arrayOf(
     arrayOf("test1.jpg", "111111"),
@@ -299,7 +299,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

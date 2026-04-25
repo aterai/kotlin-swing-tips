@@ -9,7 +9,7 @@ import javax.swing.event.DocumentListener
 
 private const val SHARP = '#'.code
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val sb = StringBuilder()
   val txt = "1111111111111111\n"
   val comment = "#comment\n"
@@ -143,7 +143,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

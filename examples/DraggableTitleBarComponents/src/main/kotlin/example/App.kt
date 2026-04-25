@@ -41,7 +41,7 @@ private val resizePanel = object : JPanel(BorderLayout()) {
 }
 val mainContentPane get() = contentPanel
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   it.add(JScrollPane(JTree()))
   it.preferredSize = Dimension(320, 240)
 }
@@ -417,7 +417,7 @@ fun main() {
     }
     makeFrame("title").apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       minimumSize = Dimension(100, 100)
       pack()
       setLocationRelativeTo(null)

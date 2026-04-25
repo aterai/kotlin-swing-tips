@@ -7,7 +7,7 @@ import javax.swing.border.AbstractBorder
 import javax.swing.border.Border
 import javax.swing.border.TitledBorder
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p1 = JPanel(BorderLayout()).also {
     it.border = TitledBorder("TitledBorder 1234567890")
     it.add(JScrollPane(JTree()))
@@ -151,7 +151,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

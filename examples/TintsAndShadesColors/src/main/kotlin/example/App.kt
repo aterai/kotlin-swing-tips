@@ -5,7 +5,7 @@ import javax.swing.*
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val list1 = makeCellList()
   val list2 = makeCellList()
   val list3 = makeCellList()
@@ -233,7 +233,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

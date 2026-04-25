@@ -14,7 +14,7 @@ private fun initTextField(item: Any?) {
   }
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   leftTextField.isEditable = false
   rightTextField.isEditable = false
   val model = DefaultComboBoxModel<PairItem>()
@@ -72,7 +72,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

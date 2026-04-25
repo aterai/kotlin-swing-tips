@@ -8,7 +8,7 @@ import java.awt.dnd.DragSource
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   val p = JPanel(GridLayout(2, 1))
   val handler = TableRowTransferHandler()
   p.border = BorderFactory.createTitledBorder("Drag & Drop JTable")
@@ -168,7 +168,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

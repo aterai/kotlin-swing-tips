@@ -10,7 +10,7 @@ import javax.swing.border.Border
 private val tabs = JTabbedPane()
 private val panel = JLabel("Preferences")
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val check = JCheckBox("Details")
   check.isFocusPainted = false
   check.addMouseListener(object : MouseAdapter() {
@@ -109,7 +109,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

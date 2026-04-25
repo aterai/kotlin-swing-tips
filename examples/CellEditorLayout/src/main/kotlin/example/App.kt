@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent
 import java.util.EventObject
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val table = JTable(8, 4)
   val cm = table.columnModel
   cm.getColumn(0).cellEditor = CustomComponentCellEditor(JTextField())
@@ -158,7 +158,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -14,7 +14,7 @@ import javax.swing.plaf.synth.SynthConstants
 import javax.swing.plaf.synth.SynthContext
 import javax.swing.plaf.synth.SynthLookAndFeel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabbedPane = object : JTabbedPane(LEFT) {
     override fun updateUI() {
       super.updateUI()
@@ -345,7 +345,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

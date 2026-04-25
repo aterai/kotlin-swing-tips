@@ -35,7 +35,7 @@ bbb2　　1 3 ccc3
 　日本語　
 """
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val editor = JTextPane()
   editor.font = Font(Font.MONOSPACED, Font.PLAIN, 12)
   editor.editorKit = CustomEditorKit()
@@ -182,7 +182,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

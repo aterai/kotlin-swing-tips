@@ -7,7 +7,7 @@ import javax.swing.*
 
 private val desktop = JDesktopPane()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val frame = JInternalFrame("AlwaysOnTop", true, false, true, true)
   frame.setSize(180, 180)
   val layer = JLayeredPane.MODAL_LAYER + 1
@@ -81,7 +81,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

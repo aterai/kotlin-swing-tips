@@ -8,7 +8,7 @@ import java.awt.dnd.DragSource
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val dp = JDesktopPane()
   val handler = TableRowTransferHandler()
   val f1 = JInternalFrame("11111111", true, true, true, true)
@@ -214,7 +214,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

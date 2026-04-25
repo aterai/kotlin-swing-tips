@@ -14,7 +14,7 @@ private val textArea1 = JTextArea()
 private val textArea2 = JTextArea()
 private var worker: SwingWorker<String, String>? = null
 
-fun makeUI(): Component {
+fun createUI(): Component {
   (textArea0.caret as? DefaultCaret)?.updatePolicy = DefaultCaret.UPDATE_WHEN_ON_EDT
   (textArea1.caret as? DefaultCaret)?.updatePolicy = DefaultCaret.ALWAYS_UPDATE
   (textArea2.caret as? DefaultCaret)?.updatePolicy = DefaultCaret.NEVER_UPDATE
@@ -117,7 +117,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

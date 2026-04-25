@@ -5,7 +5,7 @@ import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val key = "ProgressMonitor.progressText"
   val area = JTextArea()
   area.isEditable = false
@@ -112,7 +112,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -9,7 +9,7 @@ import java.util.Locale
 import javax.swing.*
 import javax.swing.colorchooser.AbstractColorChooserPanel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val label = object : JLabel() {
     override fun getPreferredSize() = Dimension(64, 64)
   }
@@ -166,7 +166,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

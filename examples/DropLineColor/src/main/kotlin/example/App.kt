@@ -14,7 +14,7 @@ import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.MutableTreeNode
 import javax.swing.tree.TreeSelectionModel
 
-fun makeUI() = JTabbedPane().also {
+fun createUI() = JTabbedPane().also {
   it.add("JList", makeListPanel())
   it.add("JTable", makeTablePanel())
   it.add("JTree", makeTreePanel())
@@ -456,7 +456,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -88,7 +88,7 @@ val p = object : JPanel() {
   override fun isOptimizedDrawingEnabled() = false
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val styleSheet = StyleSheet().also {
     it.addRule(".str{color:#008800}")
     it.addRule(".kwd{color:#000088}")
@@ -228,7 +228,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

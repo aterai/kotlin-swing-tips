@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.event.ItemEvent
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val combo = object : JComboBox<PairItem>(makeModel()) {
     override fun updateUI() {
       // setRenderer(null)
@@ -141,7 +141,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

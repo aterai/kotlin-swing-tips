@@ -5,7 +5,7 @@ import java.awt.font.FontRenderContext
 import javax.swing.*
 import javax.swing.border.Border
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val spinner1 = JSpinner(SpinnerNumberModel(0, 0, 1, .01))
   val editor1 = JSpinner.NumberEditor(spinner1, "0%")
   spinner1.editor = editor1
@@ -104,7 +104,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

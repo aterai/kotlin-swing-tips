@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tab = JTabbedPane()
   tab.addTab("<html>Test<p>Test</p></html>", JLabel("Test1"))
   tab.addTab("<html>Test<p>test", JLabel("Test2"))
@@ -40,7 +40,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

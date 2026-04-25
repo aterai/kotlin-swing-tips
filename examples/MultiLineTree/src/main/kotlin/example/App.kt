@@ -8,7 +8,7 @@ import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreeCellRenderer
 import javax.swing.tree.TreeModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tree1 = JTree(getDefaultTreeModel())
   tree1.rowHeight = 0
 
@@ -192,7 +192,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

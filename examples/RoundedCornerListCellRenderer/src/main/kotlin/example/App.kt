@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.geom.RoundRectangle2D
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = arrayOf("111", "2222", "33333")
   val combo1 = object : JComboBox<String>(model) {
     override fun updateUI() {
@@ -174,7 +174,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

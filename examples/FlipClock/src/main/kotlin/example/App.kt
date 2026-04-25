@@ -22,7 +22,7 @@ private const val SLIT_HEIGHT = 4
 private const val FONT_SIZE = 64
 private const val FONT_NAME = "Impact" // "Impact" or "Arial"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val now = LocalTime.now(ZoneId.systemDefault())
   val hourPair = FlipPair(now.hour)
   val minPair = FlipPair(now.minute)
@@ -180,7 +180,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

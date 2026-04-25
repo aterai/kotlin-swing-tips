@@ -22,7 +22,7 @@ import javax.swing.plaf.LayerUI
 import javax.swing.plaf.basic.BasicButtonUI
 import javax.swing.plaf.metal.MetalTabbedPaneUI
 
-fun makeUI(
+fun createUI(
   handler: TransferHandler,
   layerUI: LayerUI<DnDTabbedPane>,
 ): Component {
@@ -676,14 +676,14 @@ fun main() {
     val layerUI = DropLocationLayerUI()
     val frame = JFrame("main")
     frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-    frame.contentPane.add(makeUI(handler, layerUI))
+    frame.contentPane.add(createUI(handler, layerUI))
     frame.jMenuBar = menuBar
     frame.pack()
     frame.setLocationRelativeTo(null)
     val pt = frame.location
     pt.translate(360, 60)
     val sub = JFrame("sub")
-    sub.contentPane.add(makeUI(handler, layerUI))
+    sub.contentPane.add(createUI(handler, layerUI))
     sub.pack()
     sub.location = pt
     frame.isVisible = true

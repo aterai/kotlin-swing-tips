@@ -6,7 +6,7 @@ import java.awt.geom.AffineTransform
 import java.awt.geom.Rectangle2D
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val font = Font(Font.SERIF, Font.PLAIN, 64)
 
   val label1 = LineSplittingLabel("ABC")
@@ -101,7 +101,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

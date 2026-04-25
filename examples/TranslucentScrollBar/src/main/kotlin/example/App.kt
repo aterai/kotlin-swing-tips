@@ -6,7 +6,7 @@ import java.time.ZoneId
 import javax.swing.*
 import javax.swing.plaf.basic.BasicScrollBarUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   UIManager.put("ScrollBar.minimumThumbSize", Dimension(12, 20))
   val scroll = makeTranslucentScrollBar(makeList())
   return JPanel(GridLayout(1, 2)).also {
@@ -120,7 +120,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

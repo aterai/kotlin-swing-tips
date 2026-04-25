@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.image.BufferedImage
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel(GridLayout(4, 1, 5, 5))
   p.add(JLabel("Default JComboBox"))
   p.add(JComboBox(arrayOf("Google", "Yahoo!", "Bing")))
@@ -54,7 +54,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

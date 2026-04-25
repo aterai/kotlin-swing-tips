@@ -5,7 +5,7 @@ import javax.swing.*
 import javax.swing.tree.DefaultTreeCellEditor
 import javax.swing.tree.DefaultTreeCellRenderer
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val icon = ColorIcon(Color.RED)
 
   val tree1 = object : JTree() {
@@ -102,7 +102,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

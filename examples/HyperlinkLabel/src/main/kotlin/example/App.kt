@@ -13,7 +13,7 @@ import javax.swing.plaf.basic.BasicHTML
 import javax.swing.text.View
 import kotlin.collections.LinkedHashMap
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val link = "https://ateraimemo.com/"
   val editor = object : JEditorPane("text/html", "<html><a href='$link'>$link</a>") {
     override fun updateUI() {
@@ -171,7 +171,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

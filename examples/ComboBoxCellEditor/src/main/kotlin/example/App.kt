@@ -9,7 +9,7 @@ import javax.swing.event.TreeModelListener
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.TreeCellRenderer
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val root = DefaultMutableTreeNode(PluginNode("Plugins"))
   val model1 = listOf("Disabled", "Enabled", "Debug mode")
   root.add(DefaultMutableTreeNode(PluginNode("Plugin 1", model1)))
@@ -178,7 +178,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

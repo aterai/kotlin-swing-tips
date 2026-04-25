@@ -8,7 +8,7 @@ import javax.swing.*
 import javax.swing.text.DefaultEditorKit
 import javax.swing.text.JTextComponent
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val copyKey = "copy"
 
   val combo1 = JComboBox(makeModel(5))
@@ -125,7 +125,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

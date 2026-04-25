@@ -19,7 +19,7 @@ private val HELP = """
   Cancel editing: Esc-Key, title.isEmpty
 """.trimIndent()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val l1 = object : JScrollPane(JTree()) {
     override fun updateUI() {
       val title = (border as? TitledBorder)?.title ?: "JTree 111111111111111"
@@ -287,7 +287,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

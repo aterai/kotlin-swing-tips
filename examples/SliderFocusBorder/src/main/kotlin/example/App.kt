@@ -6,7 +6,7 @@ import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val slider1 = JSlider(0, 100, 0)
   initSlider(slider1)
 
@@ -80,7 +80,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

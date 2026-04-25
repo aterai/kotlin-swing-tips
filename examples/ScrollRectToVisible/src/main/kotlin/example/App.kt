@@ -26,7 +26,7 @@ private val listModel = DefaultListModel<LocalDateTime>()
 private val timer = Timer(100, null)
 private var hierarchyListener: HierarchyListener? = null
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val t = JTabbedPane()
 
   val table = JTable(model)
@@ -91,7 +91,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

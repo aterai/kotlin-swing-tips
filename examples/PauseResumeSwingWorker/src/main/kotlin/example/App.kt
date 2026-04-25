@@ -13,7 +13,7 @@ private val bar1 = JProgressBar()
 private val bar2 = JProgressBar()
 private var worker: BackgroundTask? = null
 
-fun makeUI(): Component {
+fun createUI(): Component {
   area.isEditable = false
 
   runButton.addActionListener {
@@ -200,7 +200,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

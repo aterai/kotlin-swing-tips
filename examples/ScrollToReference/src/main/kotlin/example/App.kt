@@ -15,7 +15,7 @@ import javax.swing.tree.TreeSelectionModel
 
 private val editor = JEditorPane()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val emptyIcon = EmptyIcon()
   UIManager.put("Tree.openIcon", emptyIcon)
   UIManager.put("Tree.closedIcon", emptyIcon)
@@ -237,7 +237,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

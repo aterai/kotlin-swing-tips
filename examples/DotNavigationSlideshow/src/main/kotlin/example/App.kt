@@ -19,7 +19,7 @@ private val animationPanel = AnimationPanel(images[0])
 private val dotPanel = JPanel(FlowLayout(FlowLayout.CENTER, 16, 16))
 private var currentIndex = 0
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val layeredPane = JLayeredPane()
   layeredPane.setLayout(OverlayLayout(layeredPane))
   layeredPane.add(animationPanel, JLayeredPane.DEFAULT_LAYER)
@@ -338,7 +338,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

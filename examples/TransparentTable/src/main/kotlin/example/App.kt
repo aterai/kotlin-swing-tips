@@ -12,7 +12,7 @@ import javax.swing.table.TableCellRenderer
 private val alphaZero = Color(0x0, true)
 private val color = Color(255, 0, 0, 50)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("String", "Integer", "Boolean")
   val data = arrayOf<Array<Any>>(
     arrayOf("aaa", 12, true),
@@ -159,7 +159,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

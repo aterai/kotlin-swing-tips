@@ -7,7 +7,7 @@ import javax.swing.*
 // private const val PAD = "<html><table cellpadding='0'>"
 private const val PAD = "<html><table><td style='padding:1'>"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val log = JTextArea()
   log.font = log.font.deriveFont(10f)
   log.append(info("Button.dashedRectGapX"))
@@ -62,7 +62,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

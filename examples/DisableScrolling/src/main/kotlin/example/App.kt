@@ -28,7 +28,7 @@ private val table = object : JTable(model) {
 }
 private val scroll = JScrollPane(table)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   for (i in 0..<100) {
     model.addRow(arrayOf<Any>("Name $i", i, false))
   }
@@ -102,7 +102,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

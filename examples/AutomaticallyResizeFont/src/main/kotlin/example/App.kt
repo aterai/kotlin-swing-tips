@@ -6,7 +6,7 @@ import kotlin.math.abs
 
 private const val TEST = "1234567890\nabc def ghi jkl mno"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val font = Font(Font.MONOSPACED, Font.PLAIN, 12)
   val editor1 = JTextPane()
   editor1.font = font
@@ -48,7 +48,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

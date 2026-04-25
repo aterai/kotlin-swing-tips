@@ -6,7 +6,7 @@ import java.awt.event.FocusEvent
 import javax.swing.*
 import javax.swing.text.JTextComponent
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val field = JTextField("111111111")
   val fl = object : FocusAdapter() {
     override fun focusGained(e: FocusEvent) {
@@ -46,7 +46,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

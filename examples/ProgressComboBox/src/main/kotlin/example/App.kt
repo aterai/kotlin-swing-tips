@@ -13,7 +13,7 @@ private val button = JButton("load")
 private var worker: SwingWorker<Array<String>, Int>? = null
 private var counter = 0
 
-fun makeUI(): Component {
+fun createUI(): Component {
   button.addActionListener {
     button.isEnabled = false
     combo.isEnabled = false
@@ -134,7 +134,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

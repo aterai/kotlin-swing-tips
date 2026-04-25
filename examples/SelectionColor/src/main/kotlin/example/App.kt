@@ -19,7 +19,7 @@ private val SELECTION = Color(0xC8_64_64_FF.toInt(), true)
 private val HIGHLIGHT = Color(0x64_FF_FF_32, true)
 private val editorPane = JEditorPane()
 
-private fun makeUI(): Component {
+private fun createUI(): Component {
   val check = JCheckBox("setSelectionColor(#C86464FF)", true)
   check.addActionListener { e ->
     val sc = if ((e.source as? JCheckBox)?.isSelected == true) SELECTION else null
@@ -164,7 +164,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

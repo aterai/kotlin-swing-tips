@@ -42,7 +42,7 @@ private val table = object : JTable(model) {
 private val deletedRowSet: MutableSet<Int> = TreeSet()
 private var number = 0
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val scrollPane = JScrollPane(table)
   scrollPane.viewport.background = Color.WHITE
 
@@ -216,7 +216,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

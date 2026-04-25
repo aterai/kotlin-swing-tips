@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.JComboBox.KeySelectionManager
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val box = Box.createVerticalBox()
   box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
 
@@ -55,7 +55,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

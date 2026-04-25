@@ -11,7 +11,7 @@ private const val ROW_TXT = "<tr bgColor='%s'><td>%s</td><td>%s</td></tr>"
 private const val TABLE_TXT = "<table id='log' border='1'></table>"
 private const val BODY_TXT = "<html><body>head${TABLE_TXT}tail</body></html>"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val htmlEditorKit = HTMLEditorKit()
   val editor = JEditorPane()
   editor.editorKit = htmlEditorKit
@@ -70,7 +70,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

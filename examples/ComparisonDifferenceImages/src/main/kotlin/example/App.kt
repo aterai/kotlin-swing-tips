@@ -8,7 +8,7 @@ import java.awt.image.PixelGrabber
 import javax.imageio.ImageIO
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val imageA = makeImage("example/a.png")
   val imageB = makeImage("example/b.png")
   val iconA = ImageIcon(imageA)
@@ -109,7 +109,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

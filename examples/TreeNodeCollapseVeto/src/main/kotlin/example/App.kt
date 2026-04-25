@@ -7,7 +7,7 @@ import javax.swing.event.TreeWillExpandListener
 import javax.swing.plaf.IconUIResource
 import javax.swing.tree.ExpandVetoException
 
-fun makeUI() = JPanel(GridLayout(1, 2, 5, 5)).also {
+fun createUI() = JPanel(GridLayout(1, 2, 5, 5)).also {
   it.add(JScrollPane(JTree()))
   it.add(JScrollPane(makeTree()))
   it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
@@ -67,7 +67,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

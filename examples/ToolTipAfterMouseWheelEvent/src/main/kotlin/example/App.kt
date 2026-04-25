@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.event.MouseEvent
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = DefaultListModel<String>()
   for (i in 0..7) {
     model.addElement("$i: 11111")
@@ -130,7 +130,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

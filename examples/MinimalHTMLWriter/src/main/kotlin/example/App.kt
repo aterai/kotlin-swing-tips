@@ -23,7 +23,7 @@ import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
 import javax.swing.text.html.MinimalHTMLWriter
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val doc = SimpleSyntaxDocument()
   val def = doc.getStyle(StyleContext.DEFAULT_STYLE)
   StyleConstants.setForeground(doc.addStyle("red", def), Color.RED)
@@ -333,7 +333,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       minimumSize = Dimension(256, 200)
       pack()
       setLocationRelativeTo(null)

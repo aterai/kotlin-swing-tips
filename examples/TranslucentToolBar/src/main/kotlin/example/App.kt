@@ -12,7 +12,7 @@ import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.Timer
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val image = makeImageIcon("example/test.png", Dimension(240, 180))
   val toolBar = makeTranslucientToolBar()
   val label = LabelWithToolBox(image, toolBar)
@@ -245,7 +245,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

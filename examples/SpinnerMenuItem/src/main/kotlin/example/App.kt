@@ -5,7 +5,7 @@ import javax.swing.*
 import kotlin.math.max
 import kotlin.math.min
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val menuBar = JMenuBar()
   menuBar.add(LookAndFeelUtils.createLookAndFeelMenu())
   menuBar.add(makeSpinnerMenu())
@@ -169,7 +169,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

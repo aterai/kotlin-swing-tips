@@ -7,7 +7,7 @@ import javax.swing.*
 
 private var mode = Fade.IN
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val animator = Timer(25, null)
   val alpha = AtomicInteger(10)
 
@@ -70,7 +70,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -9,7 +9,7 @@ import javax.swing.table.TableModel
 private const val HINT = "Input hint(beep)"
 private const val PLACEHOLDER = "<html>No data! <a href='#placeholder'>$HINT</a>"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val editor = JEditorPane("text/html", PLACEHOLDER)
   editor.isOpaque = false
   editor.isEditable = false
@@ -95,7 +95,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

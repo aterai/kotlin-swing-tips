@@ -9,7 +9,7 @@ import javax.swing.*
 
 private val check = JCheckBox("scroll tabs")
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabbedPane = object : JTabbedPane(TOP, SCROLL_TAB_LAYOUT) {
     private var handler: MouseWheelListener? = null
 
@@ -110,7 +110,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

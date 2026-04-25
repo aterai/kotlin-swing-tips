@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val table = object : JTable(100, 3) {
     // https://stackoverflow.com/questions/16368343/jtable-resize-only-selected-column-when-container-size-changes
     // https://stackoverflow.com/questions/23201818/jtable-columns-doesnt-resize-probably-when-jframe-resize
@@ -46,7 +46,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

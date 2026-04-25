@@ -37,7 +37,7 @@ private val resizePanel = object : JPanel(BorderLayout()) {
   }
 }
 
-fun makeUI() = JScrollPane(JTree()).also {
+fun createUI() = JScrollPane(JTree()).also {
   it.preferredSize = Dimension(320, 240)
 }
 
@@ -280,7 +280,7 @@ fun main() {
         background = Color(0x0, true)
       }
       contentPane = makeResizableContentPane("title")
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

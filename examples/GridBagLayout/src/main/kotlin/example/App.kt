@@ -40,7 +40,7 @@ fun makeGridBagLayoutPanel(
   return panel
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = arrayOf("000", "1111", "22222", "333333")
   val box = Box.createVerticalBox()
   box.add(Box.createVerticalStrut(20))
@@ -64,7 +64,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       minimumSize = Dimension(300, 120)
       pack()
       setLocationRelativeTo(null)

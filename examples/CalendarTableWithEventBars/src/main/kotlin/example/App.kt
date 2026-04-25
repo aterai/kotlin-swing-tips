@@ -21,7 +21,7 @@ import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 import kotlin.math.min
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val date = LocalDate.now(ZoneId.systemDefault())
   val calendarTable = CalendarTable()
   calendarTable.currentLocalDate = date
@@ -445,7 +445,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

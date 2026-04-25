@@ -16,7 +16,7 @@ import javax.swing.*
 import kotlin.math.PI
 import kotlin.math.atan2
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/test.png")
   val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
@@ -215,7 +215,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

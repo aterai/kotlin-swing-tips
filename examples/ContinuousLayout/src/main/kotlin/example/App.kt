@@ -4,7 +4,7 @@ import java.awt.*
 import java.beans.PropertyChangeListener
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val leftPane = JSplitPane(JSplitPane.VERTICAL_SPLIT)
   leftPane.topComponent = JScrollPane(JTextArea("1111111"))
   leftPane.bottomComponent = JScrollPane(JTextArea("2222"))
@@ -59,7 +59,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

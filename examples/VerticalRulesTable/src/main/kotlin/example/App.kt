@@ -8,7 +8,7 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val scroll = JScrollPane(makeTable())
   return JPanel(GridLayout(2, 1)).also {
     it.add(JScrollPane(makeTable()))
@@ -95,7 +95,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

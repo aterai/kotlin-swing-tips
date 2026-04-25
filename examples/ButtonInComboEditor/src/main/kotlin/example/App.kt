@@ -12,7 +12,7 @@ import java.awt.image.RGBImageFilter
 import javax.imageio.ImageIO
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val image1 = makeImage("example/favicon.png")
   val image2 = makeImage("example/16x16.png")
   val combo01 = JComboBox(makeModel(image1, image2))
@@ -263,7 +263,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

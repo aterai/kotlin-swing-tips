@@ -6,7 +6,7 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.JTableHeader
 import javax.swing.table.TableColumnModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   UIManager.put("CheckBoxMenuItem.doNotCloseOnMouseClick", true)
   val table = JTable(DefaultTableModel(12, 8))
   table.tableHeader.componentPopupMenu = TableHeaderPopupMenu(table)
@@ -75,7 +75,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -7,7 +7,7 @@ import javax.swing.*
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.text.Highlighter
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val list = listOf(
     "1111",
     "1111222",
@@ -214,7 +214,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableModel
 
-fun makeUI() = JPanel(GridBagLayout()).also {
+fun createUI() = JPanel(GridBagLayout()).also {
   val list = makeIconList()
   val ins = 2
   val icon = list.getElementAt(0).small
@@ -276,7 +276,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

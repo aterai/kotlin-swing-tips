@@ -24,7 +24,7 @@ import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.MutableTreeNode
 import javax.swing.tree.TreeNode
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tree = DnDTree()
   tree.model = makeModel()
   for (i in 0..<tree.rowCount) {
@@ -256,7 +256,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

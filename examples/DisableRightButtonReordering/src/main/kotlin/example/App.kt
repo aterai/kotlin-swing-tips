@@ -6,7 +6,7 @@ import javax.swing.*
 import javax.swing.plaf.LayerUI
 import javax.swing.table.JTableHeader
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   val c = JLayer(JScrollPane(makeTable()), DisableRightButtonSwapLayerUI())
   val p = JPanel(GridLayout(2, 1))
   p.add(makeTitledPanel("Default", JScrollPane(makeTable())))
@@ -82,7 +82,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

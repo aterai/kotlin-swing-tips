@@ -25,7 +25,7 @@ private var file: File? = null
     field = file
   }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   label.verticalTextPosition = SwingConstants.BOTTOM
   label.verticalAlignment = SwingConstants.CENTER
   label.horizontalTextPosition = SwingConstants.CENTER
@@ -132,7 +132,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -15,7 +15,7 @@ import javax.swing.text.StyledEditorKit
 import javax.swing.text.View
 import javax.swing.text.ViewFactory
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val editor = JEditorPane()
   editor.editorKit = MyEditorKit()
   editor.text = """
@@ -90,7 +90,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

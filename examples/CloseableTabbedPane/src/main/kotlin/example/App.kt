@@ -7,7 +7,7 @@ import java.time.ZoneId
 import javax.swing.*
 import javax.swing.plaf.LayerUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabbedPane0 = CloseableTabbedPane()
   val tabbedPane1 = JTabbedPane()
   listOf(tabbedPane0, tabbedPane1).forEach {
@@ -187,7 +187,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

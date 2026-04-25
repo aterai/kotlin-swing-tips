@@ -11,7 +11,7 @@ import javax.swing.*
 private val SIZE = Dimension(50, 50)
 private val FONT = Font(Font.SANS_SERIF, Font.PLAIN, SIZE.width)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val pieces = arrayOf("♔", "♕", "♖", "♗", "♘", "♙", "♚", "♛", "♜", "♝", "♞", "♟")
   return JPanel(GridLayout(4, 6, 0, 0)).also {
     for (i in pieces.indices) {
@@ -152,7 +152,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

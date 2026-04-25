@@ -10,7 +10,7 @@ import javax.swing.*
 import javax.swing.plaf.basic.BasicComboBoxUI
 import javax.swing.plaf.basic.BasicComboPopup
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val combo1 = makeComboBox(5)
   val ui1 = if (combo1.ui is WindowsComboBoxUI) {
     object : WindowsComboBoxUI() {
@@ -152,7 +152,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -9,7 +9,7 @@ import javax.swing.plaf.synth.SynthConstants
 import javax.swing.plaf.synth.SynthContext
 import javax.swing.plaf.synth.SynthLookAndFeel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabbedPane = ClippedTitleTabbedPane(SwingConstants.LEFT).also {
     it.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
     it.addTab("1111111111111111111", ColorIcon(Color.RED), JScrollPane(JTree()))
@@ -220,7 +220,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

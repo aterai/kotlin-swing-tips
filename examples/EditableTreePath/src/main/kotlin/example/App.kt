@@ -14,7 +14,7 @@ import javax.swing.tree.TreePath
 
 private val logArea = JTextArea()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   logArea.isEditable = false
   val contextMenu = JPopupMenu()
   contextMenu.add("clear").addActionListener { logArea.text = "" }
@@ -98,7 +98,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

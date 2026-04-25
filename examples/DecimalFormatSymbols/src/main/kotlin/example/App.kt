@@ -9,7 +9,7 @@ import javax.swing.JSpinner.DefaultEditor
 import javax.swing.text.DefaultFormatterFactory
 import javax.swing.text.NumberFormatter
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val s0 = JSpinner(makeSpinnerNumberModel())
   val s1 = makeSpinner1(makeSpinnerNumberModel())
   val s2 = makeSpinner2(makeSpinnerNumberModel())
@@ -104,7 +104,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

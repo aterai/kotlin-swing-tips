@@ -8,7 +8,7 @@ import javax.swing.*
 
 private const val HTML_TEXT = "<html>Html <font color='red'>label</font><br/> Test"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel(GridLayout(2, 3))
   val label0 = JLabel("Default JLabel")
   p.add(initTitledBorder("JLabel", label0))
@@ -104,7 +104,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

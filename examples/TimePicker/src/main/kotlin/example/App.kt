@@ -16,7 +16,7 @@ import javax.swing.text.DefaultFormatterFactory
 import javax.swing.text.JTextComponent
 import javax.swing.text.MaskFormatter
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val c1 = TimePickerSingleField().createPickerPanel()
   val c2 = TimePickerSplitField().createPickerPanel()
   return JPanel().also {
@@ -298,7 +298,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       minimumSize = Dimension(256, 200)
       isResizable = false
       pack()

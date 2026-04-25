@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val l1 = mkLbl("Color(0xFF0000)", Color(0xFF0000))
   val l2 = mkLbl("Color(0x88_88_88)", Color(0x88_88_88))
   val l3 = mkLbl("Color('00FF00'.toInt(16))", Color("00FF00".toInt(16)))
@@ -47,7 +47,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

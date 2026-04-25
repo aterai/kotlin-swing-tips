@@ -5,7 +5,7 @@ import javax.swing.*
 import javax.swing.text.html.HTMLEditorKit
 import javax.swing.text.html.StyleSheet
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel(GridLayout(0, 1))
   val path = "example/Burnstown Dam.ttf"
   val url = Thread.currentThread().contextClassLoader.getResource(path)
@@ -64,7 +64,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

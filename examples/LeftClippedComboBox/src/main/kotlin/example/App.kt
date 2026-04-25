@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.plaf.metal.MetalComboBoxUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = Box.createVerticalBox()
   val m = makeComboBoxModel()
   p.add(makeTitledPanel("Left clipped", LeftClippedComboBox<String>(m)))
@@ -215,7 +215,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

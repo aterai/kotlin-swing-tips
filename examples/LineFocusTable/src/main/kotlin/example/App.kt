@@ -12,7 +12,7 @@ import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   UIManager.put("Table.focusCellHighlightBorder", DotBorder(2, 2, 2, 2))
   val table = LineFocusTable(makeModel())
   table.rowSelectionAllowed = true
@@ -260,7 +260,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

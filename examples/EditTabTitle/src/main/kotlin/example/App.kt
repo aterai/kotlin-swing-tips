@@ -14,7 +14,7 @@ private val INFO = """
   Cancel editing: Esc-Key, title.isEmpty
 """.trimIndent()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val a = JTextArea(INFO)
   a.isEditable = false
   val tabbedPane = EditableTabbedPane().also {
@@ -139,7 +139,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

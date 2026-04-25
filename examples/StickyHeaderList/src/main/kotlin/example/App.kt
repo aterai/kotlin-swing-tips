@@ -9,7 +9,7 @@ import javax.swing.*
 import javax.swing.plaf.LayerUI
 import javax.swing.text.Position
 
-fun makeUI() = JPanel(GridLayout(1, 2)).also {
+fun createUI() = JPanel(GridLayout(1, 2)).also {
   UIManager.put("ScrollBar.minimumThumbSize", Dimension(12, 20))
   UIManager.put("List.lockToPositionOnScroll", false)
   val model = makeModel()
@@ -176,7 +176,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

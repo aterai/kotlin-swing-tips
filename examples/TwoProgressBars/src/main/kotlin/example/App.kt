@@ -11,7 +11,7 @@ private val bar1 = JProgressBar()
 private val bar2 = JProgressBar()
 private var worker: SwingWorker<String, Progress>? = null
 
-fun makeUI(): Component {
+fun createUI(): Component {
   logger.isEditable = false
   runButton.addActionListener {
     initStatusPanel(true)
@@ -146,7 +146,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

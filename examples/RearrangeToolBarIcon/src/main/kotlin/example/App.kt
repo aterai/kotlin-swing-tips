@@ -8,7 +8,7 @@ import javax.swing.*
 
 private const val PATH = "toolbarButtonGraphics/general/"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val toolBar = JToolBar("ToolBarButton")
   toolBar.isFloatable = false
   val dh = DragHandler()
@@ -164,7 +164,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -58,7 +58,7 @@ val monthList = object : JList<LocalDate>() {
 val realLocalDate: LocalDate = LocalDate.now(ZoneId.systemDefault())
 private var currentLocalDate = realLocalDate
 
-fun makeUI(): Component {
+fun createUI(): Component {
   installActions()
 
   val l = Locale.getDefault()
@@ -275,7 +275,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

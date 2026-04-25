@@ -20,7 +20,7 @@ import javax.swing.*
 
 private val logger = Logger.getLogger(MethodHandles.lookup().lookupClass().name)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textArea = JTextArea()
   textArea.isEditable = false
   logger.useParentHandlers = false
@@ -143,7 +143,7 @@ fun main() {
     JDialog().apply {
       defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
       addWindowListener(wl)
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

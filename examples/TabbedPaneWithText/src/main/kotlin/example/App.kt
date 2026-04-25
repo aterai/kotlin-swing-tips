@@ -5,7 +5,7 @@ import javax.swing.*
 
 const val TEXT = "<--1234567890"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabs = object : JTabbedPane() {
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
@@ -37,7 +37,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -10,7 +10,7 @@ import javax.imageio.ImageIO
 import javax.swing.*
 import kotlin.math.abs
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val scroll = JScrollPane().also {
     it.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
     it.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
@@ -268,7 +268,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

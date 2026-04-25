@@ -9,7 +9,7 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.JTableHeader
 import javax.swing.table.TableCellRenderer
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val table = JTable(makeModel())
   table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
   table.rowSelectionAllowed = true
@@ -403,7 +403,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

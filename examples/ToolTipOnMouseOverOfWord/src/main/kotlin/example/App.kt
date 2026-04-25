@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent
 import javax.swing.*
 import javax.swing.text.Utilities
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val txt = "The quick brown fox jumps over the lazy dog\n"
   val textArea = object : JTextArea(txt) {
     override fun getToolTipText(e: MouseEvent) = runCatching {
@@ -36,7 +36,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -12,7 +12,7 @@ import javax.swing.plaf.basic.BasicColorChooserUI
 private val defaultRadio = JRadioButton("Default")
 private val enabledRadio = JRadioButton("setEnabled(false)", true)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val label = JLabel()
   label.isOpaque = true
   label.background = Color.WHITE
@@ -126,7 +126,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

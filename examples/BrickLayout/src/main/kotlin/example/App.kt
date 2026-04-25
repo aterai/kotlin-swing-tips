@@ -7,7 +7,7 @@ private const val X_SIZE = 6
 private const val Y_SIZE = 8
 private const val WIDTH = 2
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val panel = JPanel(GridBagLayout())
   panel.border = BorderFactory.createTitledBorder("Brick Layout")
   val c = GridBagConstraints()
@@ -48,7 +48,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -36,7 +36,7 @@ val deleteAction = object : AbstractAction("delete") {
   }
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   table.fillsViewportHeight = true
   table.autoCreateRowSorter = true
   table.rowHeight = START_HEIGHT
@@ -114,7 +114,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -40,7 +40,7 @@ private val list = object : JList<ListItem>(model) {
 }
 private val field = JTextField(15)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   for (item in defaultModel) {
     model.addElement(item)
   }
@@ -181,7 +181,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -9,7 +9,7 @@ import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 import kotlin.math.max
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val list = listOf(
     "-Duser.country=JP",
     "-Duser.language=ja",
@@ -176,7 +176,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

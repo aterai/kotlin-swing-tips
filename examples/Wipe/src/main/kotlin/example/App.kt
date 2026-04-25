@@ -5,7 +5,7 @@ import javax.swing.*
 
 private var wipeMode = Wipe.IN
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val animator = Timer(5, null)
   val cl = Thread.currentThread().contextClassLoader
   val icon = ImageIcon(cl.getResource("example/test.png"))
@@ -74,7 +74,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

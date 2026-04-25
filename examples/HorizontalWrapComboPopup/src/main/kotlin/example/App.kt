@@ -6,7 +6,7 @@ import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 import javax.swing.plaf.basic.ComboPopup
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val c = GridBagConstraints()
   c.gridheight = 1
   c.gridwidth = 1
@@ -183,7 +183,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -45,7 +45,7 @@ private fun makeTable(): JTable {
   return table
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val table = makeTable()
   val focusCheck = JCheckBox("DefaultCellEditor:focusLost", true)
   (table.getDefaultEditor(Object::class.java) as? DefaultCellEditor)?.also {
@@ -120,7 +120,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -13,7 +13,7 @@ import javax.swing.tree.MutableTreeNode
 import javax.swing.tree.TreeNode
 import javax.swing.tree.TreeSelectionModel
 
-fun makeUI() = JPanel(GridLayout(1, 2)).also {
+fun createUI() = JPanel(GridLayout(1, 2)).also {
   val handler = TreeTransferHandler()
   it.add(JScrollPane(makeTree(handler)))
   it.add(JScrollPane(makeTree(handler)))
@@ -150,7 +150,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

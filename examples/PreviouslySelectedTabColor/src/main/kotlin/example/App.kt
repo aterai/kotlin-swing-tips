@@ -7,7 +7,7 @@ import javax.swing.event.ChangeListener
 import javax.swing.plaf.ColorUIResource
 import javax.swing.plaf.InsetsUIResource
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabs = LineFocusTabbedPane()
   tabs.addTab("JTree", ColorIcon(Color.RED), JScrollPane(JTree()))
   tabs.addTab("JTextArea", ColorIcon(Color.GREEN), JScrollPane(JTextArea()))
@@ -112,7 +112,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import kotlin.math.roundToInt
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val d = UIDefaults()
   d["Slider:SliderTrack[Enabled].backgroundPainter"] = object : Painter<JSlider> {
     override fun paint(
@@ -95,7 +95,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

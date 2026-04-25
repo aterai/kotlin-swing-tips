@@ -20,7 +20,7 @@ import javax.swing.text.StyledEditorKit
 import javax.swing.text.View
 import javax.swing.text.ViewFactory
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val editor0 = makeEditorPane("DefaultHighlightPainter")
   val caret0 = FocusCaret(
     DefaultHighlightPainter(Color(0xAA_CC_DD_FF.toInt(), true)),
@@ -220,7 +220,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

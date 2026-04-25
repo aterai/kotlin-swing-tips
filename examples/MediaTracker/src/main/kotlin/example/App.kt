@@ -20,7 +20,7 @@ private val table = JTable(model)
 private val scroll = JScrollPane(table)
 private var tracker: MediaTracker? = null
 
-fun makeUI(): Component {
+fun createUI(): Component {
   table.autoCreateRowSorter = true
   table.inheritsPopupMenu = true
   scroll.componentPopupMenu = TablePopupMenu()
@@ -183,7 +183,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p1 = JPanel(FlowLayout(FlowLayout.LEFT, 10, 10))
   val p2 = ScrollableWrapPanel(ScrollableWrapLayout(FlowLayout.LEFT, 10, 10))
   return JPanel(GridLayout(2, 1)).also {
@@ -152,7 +152,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

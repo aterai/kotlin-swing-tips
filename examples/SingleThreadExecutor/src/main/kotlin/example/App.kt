@@ -16,7 +16,7 @@ private val sorter = TableRowSorter(model)
 private val deleteRowSet = TreeSet<Int>()
 private val executor = Executors.newSingleThreadExecutor()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   table.rowSorter = sorter
   model.addProgressValue("Name 1", 100, null)
 
@@ -243,7 +243,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -11,7 +11,7 @@ private val centerRadio = JRadioButton("center")
 private val rightRadio = JRadioButton("right")
 private val customRadio = JRadioButton("custom")
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("Integer", "String", "Boolean")
   val data = arrayOf<Array<Any>>(
     arrayOf(12, "aaa", true),
@@ -130,7 +130,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

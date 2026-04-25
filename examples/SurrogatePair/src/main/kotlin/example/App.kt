@@ -10,7 +10,7 @@ import javax.swing.*
 import javax.swing.text.html.HTMLEditorKit
 import javax.swing.text.html.StyleSheet
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val styleSheet = StyleSheet()
   // styleSheet.addRule("body{font-size:24pt;font-family:IPAexGothic;}")
   val htmlEditorKit = HTMLEditorKit()
@@ -87,7 +87,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

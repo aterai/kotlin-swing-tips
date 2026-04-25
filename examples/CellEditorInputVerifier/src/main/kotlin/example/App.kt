@@ -13,7 +13,7 @@ import javax.swing.text.DocumentFilter
 import javax.swing.text.JTextComponent
 import javax.swing.text.NumberFormatter
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textField1 = JTextField()
   initBorderAndAlignment(textField1)
   (textField1.document as? AbstractDocument)?.documentFilter = IntegerDocumentFilter()
@@ -188,7 +188,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

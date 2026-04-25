@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.event.ItemEvent
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val arrays = arrayOf(
     arrayOf("blue", "violet", "red", "yellow"),
     arrayOf("basketball", "soccer", "football", "hockey"),
@@ -88,7 +88,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

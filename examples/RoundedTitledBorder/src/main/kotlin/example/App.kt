@@ -11,7 +11,7 @@ import javax.swing.border.EmptyBorder
 import javax.swing.border.TitledBorder
 import javax.swing.plaf.LayerUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p1 = JPanel(BorderLayout())
   p1.setBorder(createRoundedTitledBorder("Title001", 4))
   p1.add(JScrollPane(JTree()))
@@ -226,7 +226,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

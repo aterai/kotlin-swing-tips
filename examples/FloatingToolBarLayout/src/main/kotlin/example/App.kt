@@ -6,7 +6,7 @@ import javax.swing.plaf.basic.BasicToolBarUI
 
 private const val ICON_SIZE = 32
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   it.add(Box.createHorizontalStrut(10), BorderLayout.NORTH)
   it.add(Box.createHorizontalStrut(10), BorderLayout.SOUTH)
   it.add(makeVerticalToolBar(), BorderLayout.EAST)
@@ -65,7 +65,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

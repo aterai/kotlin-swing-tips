@@ -12,7 +12,7 @@ private val pause = makeButton("pause")
 private val reset = makeButton("reset")
 private var tickPos = 0L
 
-fun makeUI(): Component {
+fun createUI(): Component {
   pause.isEnabled = false
 
   val cl = Thread.currentThread().contextClassLoader
@@ -139,7 +139,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

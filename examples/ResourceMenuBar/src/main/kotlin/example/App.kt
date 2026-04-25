@@ -17,7 +17,7 @@ import javax.swing.plaf.basic.BasicToolBarUI
 // private val BAR_FACTORY = BarFactory("resources.Main")
 private val BAR_FACTORY = BarFactory("example.Main")
 
-private fun makeUI() = JPanel(BorderLayout()).also {
+private fun createUI() = JPanel(BorderLayout()).also {
   initActions(actions.toList())
   val menuBar = BAR_FACTORY.createMenuBar()
   EventQueue.invokeLater { it.rootPane.jMenuBar = menuBar }
@@ -287,7 +287,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

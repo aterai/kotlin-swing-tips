@@ -5,7 +5,7 @@ import javax.swing.*
 
 private const val TREE_KEY = "Tree.timeFactor"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val lv = UIManager.get(TREE_KEY) as? Number ?: 500
   val numberModel = SpinnerNumberModel(lv.toLong(), 0L, 5000L, 500L)
   UIManager.put(TREE_KEY, 5000L)
@@ -104,7 +104,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

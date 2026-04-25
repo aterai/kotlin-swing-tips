@@ -26,7 +26,7 @@ private fun makeLabel(): JLabel {
   return l
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p1 = CenterLinePanel()
   p1.layout = BoxLayout(p1, BoxLayout.X_AXIS)
   p1.add(Box.createHorizontalGlue())
@@ -84,7 +84,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

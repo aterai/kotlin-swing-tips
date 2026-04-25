@@ -11,7 +11,7 @@ import javax.swing.event.PopupMenuListener
 
 private val popup = JPopupMenu()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val group = ButtonGroup()
   val box = Box.createVerticalBox()
   for (info in UIManager.getInstalledLookAndFeels()) {
@@ -219,7 +219,7 @@ fun main() {
       } else {
         defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
       }
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

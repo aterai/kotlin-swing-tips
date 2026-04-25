@@ -41,7 +41,7 @@ private val textArea = object : JTextArea(TEXT) {
   }
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val title = "DefaultHighlighter#setDrawsLayeredHighlights"
   val check = JCheckBox(title, true)
   check.addActionListener { e ->
@@ -285,7 +285,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

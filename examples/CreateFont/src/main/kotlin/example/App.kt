@@ -6,7 +6,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textPane = JTextPane()
   val cl = Thread.currentThread().contextClassLoader
   makeFont(cl.getResource("example/mona.ttf"))?.also {
@@ -47,7 +47,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

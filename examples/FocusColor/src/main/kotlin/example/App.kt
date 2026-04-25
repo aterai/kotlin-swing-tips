@@ -5,7 +5,7 @@ import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val field1 = JTextField("01234567890")
   field1.addFocusListener(BackgroundFocusListener(Color(0xE6_E6_FF)))
 
@@ -60,7 +60,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

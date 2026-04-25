@@ -10,7 +10,7 @@ import javax.swing.*
 
 private val logger = Logger.getLogger(MethodHandles.lookup().lookupClass().name)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   logger.addHandler(ConsoleHandler())
   runCatching {
     Thread.sleep(5000)
@@ -81,7 +81,7 @@ fun main() {
 
   val frame = JFrame().apply {
     defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-    contentPane.add(makeUI())
+    contentPane.add(createUI())
     pack()
     setLocationRelativeTo(null)
     // isVisible = true

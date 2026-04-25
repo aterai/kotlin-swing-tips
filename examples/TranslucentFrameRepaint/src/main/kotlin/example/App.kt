@@ -13,7 +13,7 @@ import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.Timer
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
   val txt = LocalTime.now(ZoneId.systemDefault()).format(formatter)
   val label = JLabel(txt, SwingConstants.CENTER)
@@ -214,7 +214,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

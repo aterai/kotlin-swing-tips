@@ -44,7 +44,7 @@ private val layout = object : BorderLayout(5, 5) {
 }
 private val controls = JPanel(layout)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   button.isFocusable = false
   controls.border = BorderFactory.createTitledBorder("Search down")
   controls.add(JLabel("Find what:"), BorderLayout.WEST)
@@ -86,7 +86,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

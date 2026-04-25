@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent
 import java.io.IOException
 import javax.swing.*
 
-fun makeUI() {
+fun createUI() {
   val f1 = JFrame()
   val f2 = JFrame()
   f1.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
@@ -175,6 +175,6 @@ fun main() {
       it.printStackTrace()
       Toolkit.getDefaultToolkit().beep()
     }
-    makeUI()
+    createUI()
   }
 }

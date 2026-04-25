@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val s1 = JScrollPane(JTable(8, 3))
   val s2 = JScrollPane(JTree())
   val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, s1, s2)
@@ -107,7 +107,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

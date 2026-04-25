@@ -6,7 +6,7 @@ import javax.swing.plaf.BorderUIResource
 import javax.swing.plaf.basic.BasicPopupMenuUI
 import javax.swing.tree.DefaultTreeCellRenderer
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tree0 = JTree()
   tree0.componentPopupMenu = initPopupMenu(JPopupMenu())
 
@@ -145,7 +145,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

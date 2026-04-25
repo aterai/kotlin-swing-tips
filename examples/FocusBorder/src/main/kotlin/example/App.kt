@@ -9,7 +9,7 @@ import java.awt.geom.RoundRectangle2D
 import javax.swing.*
 import javax.swing.border.AbstractBorder
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val field1 = JTextField(20)
   field1.text = "1111111111111111"
 
@@ -216,7 +216,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

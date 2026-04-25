@@ -5,7 +5,7 @@ import javax.swing.*
 import javax.swing.plaf.ColorUIResource
 import javax.swing.plaf.basic.BasicSeparatorUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel(GridLayout(2, 1))
   p.add(makeTestPanel("JSeparator", JSeparator()))
   p.add(makeTestPanel("GradientSeparator", GradientSeparator(), 10))
@@ -129,7 +129,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   val m = makeComboBoxModel()
   val p1 = makeTitledPanel("Overflow ToolTip JComboBox", ToolTipComboBox(m))
   val p2 = makeTitledPanel("Default JComboBox", JComboBox(m))
@@ -42,7 +42,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

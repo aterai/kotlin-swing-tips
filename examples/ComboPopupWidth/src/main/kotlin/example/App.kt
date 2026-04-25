@@ -5,7 +5,7 @@ import javax.swing.*
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val combo00 = makeComboBox()
   combo00.isEditable = false
   val combo01 = makeComboBox()
@@ -89,7 +89,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

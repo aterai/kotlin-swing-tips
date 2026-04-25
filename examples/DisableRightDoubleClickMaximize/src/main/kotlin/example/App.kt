@@ -9,7 +9,7 @@ import javax.swing.plaf.LayerUI
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane
 import javax.swing.plaf.basic.BasicInternalFrameUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val desktop0 = makeDesktopPane()
   desktop0.add(createFrame("Default", 0))
 
@@ -159,7 +159,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -7,7 +7,7 @@ import javax.swing.*
 import javax.swing.table.DefaultTableModel
 import kotlin.math.abs
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("String", "Integer", "Boolean")
   val model = object : DefaultTableModel(columnNames, 0) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
@@ -113,7 +113,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

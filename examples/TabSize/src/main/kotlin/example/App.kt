@@ -7,7 +7,7 @@ import javax.swing.text.StyleContext
 import javax.swing.text.TabSet
 import javax.swing.text.TabStop
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textPane = JTextPane()
   textPane.font = Font(Font.MONOSPACED, Font.PLAIN, 12)
   val fm = textPane.getFontMetrics(textPane.font)
@@ -54,7 +54,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

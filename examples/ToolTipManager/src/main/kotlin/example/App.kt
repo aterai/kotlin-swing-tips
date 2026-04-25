@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.event.ItemEvent
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val label = JLabel("label")
   label.toolTipText = "JLabel - ToolTip"
 
@@ -60,7 +60,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

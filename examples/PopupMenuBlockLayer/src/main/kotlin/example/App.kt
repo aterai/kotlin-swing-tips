@@ -9,7 +9,7 @@ import javax.swing.*
 import javax.swing.plaf.LayerUI
 import javax.swing.table.DefaultTableModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("String", "Integer", "Boolean")
   val model = object : DefaultTableModel(columnNames, 0) {
     override fun getColumnClass(column: Int) = when (column) {
@@ -152,7 +152,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

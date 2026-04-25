@@ -5,7 +5,7 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val focusHandler = object : MouseAdapter() {
     override fun mouseClicked(e: MouseEvent) {
       (e.component as? JLabel)?.labelFor?.requestFocusInWindow()
@@ -70,7 +70,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.geom.AffineTransform
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val path = "example/duke.running.gif"
   val url = Thread.currentThread().contextClassLoader.getResource(path)
   val imageIcon = ImageIcon(url)
@@ -96,7 +96,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

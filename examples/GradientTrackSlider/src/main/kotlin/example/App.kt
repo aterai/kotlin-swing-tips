@@ -12,7 +12,7 @@ import javax.swing.plaf.metal.MetalSliderUI
 
 private val TEXTURE = TextureUtils.createCheckerTexture(6, Color(200, 150, 100, 50))
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val icon = object : Icon {
     override fun paintIcon(
       c: Component,
@@ -306,7 +306,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

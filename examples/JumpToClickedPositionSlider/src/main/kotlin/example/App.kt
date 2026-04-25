@@ -6,7 +6,7 @@ import java.awt.event.MouseEvent
 import javax.swing.*
 import javax.swing.plaf.metal.MetalSliderUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val slider1 = makeSlider(SwingConstants.VERTICAL, 0, 1000, 500)
   val box1 = Box.createHorizontalBox().also {
     it.border = BorderFactory.createEmptyBorder(20, 20, 20, 20)
@@ -127,7 +127,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

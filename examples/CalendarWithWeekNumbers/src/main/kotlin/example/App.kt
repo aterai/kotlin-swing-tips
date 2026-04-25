@@ -23,7 +23,7 @@ private val yearMonthLabel = JLabel("", SwingConstants.CENTER)
 private val monthList = MonthList(realLocalDate)
 private val weekNumberList = WeekNumberList()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   installActions()
   val l = Locale.getDefault()
   val weekModel = DefaultListModel<DayOfWeek>()
@@ -379,7 +379,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

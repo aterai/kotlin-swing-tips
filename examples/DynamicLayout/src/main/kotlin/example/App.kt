@@ -5,7 +5,7 @@ import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val label = JLabel("", SwingConstants.CENTER)
   val cmpListener = object : ComponentAdapter() {
     override fun componentResized(e: ComponentEvent) {
@@ -38,7 +38,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

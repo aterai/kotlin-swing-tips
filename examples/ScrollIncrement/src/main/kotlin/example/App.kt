@@ -5,7 +5,7 @@ import javax.swing.*
 
 private const val LF = "\n"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val buf = StringBuilder()
   for (i in 0..<100) {
     buf.append(i).append(LF)
@@ -46,7 +46,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

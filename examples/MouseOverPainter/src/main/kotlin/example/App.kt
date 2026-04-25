@@ -6,7 +6,7 @@ import javax.swing.*
 import javax.swing.event.MouseInputAdapter
 import javax.swing.event.MouseInputListener
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   val textArea = HighlightCursorTextArea()
   textArea.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
   textArea.text = "MouseOver Painter Test\n\n**********************"
@@ -78,7 +78,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

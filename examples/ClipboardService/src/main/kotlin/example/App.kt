@@ -17,7 +17,7 @@ private val clipboardService: ClipboardService?
     ServiceManager.lookup("javax.jnlp.ClipboardService") as? ClipboardService
   }.getOrNull()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val cs: ClipboardService? = clipboardService
   val textArea = object : JTextArea() {
     override fun copy() {
@@ -146,7 +146,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

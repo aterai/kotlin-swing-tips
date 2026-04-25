@@ -5,7 +5,7 @@ import javax.swing.*
 
 private val log = JTextArea()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel(GridLayout(2, 1)).also {
     it.add(makeDefaultChooserPanel())
     it.add(makeCustomChooserPanel())
@@ -75,7 +75,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

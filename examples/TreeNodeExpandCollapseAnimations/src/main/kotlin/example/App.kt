@@ -15,7 +15,7 @@ private const val START_HEIGHT = 8
 private const val END_HEIGHT = 16
 private const val DELAY = 10
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tree = object : JTree() {
     override fun updateUI() {
       super.updateUI()
@@ -167,7 +167,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

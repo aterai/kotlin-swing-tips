@@ -5,7 +5,7 @@ import javax.swing.*
 import javax.swing.text.SimpleAttributeSet
 import javax.swing.text.StyleConstants
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textPane = JTextPane()
   textPane.componentPopupMenu = HtmlColorPopupMenu()
   textPane.contentType = "text/html"
@@ -96,7 +96,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

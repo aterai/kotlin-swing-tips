@@ -10,7 +10,7 @@ val imageTexture = makeImageTexture()
 val checkerTexture = makeCheckerTexture()
 var texture: TexturePaint? = null
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = object : JPanel() {
     override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
@@ -108,7 +108,7 @@ fun main() {
         background = Color(0x0, true)
       }
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

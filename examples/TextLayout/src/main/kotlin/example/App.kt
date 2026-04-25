@@ -6,7 +6,7 @@ import java.awt.font.TextLayout
 import java.awt.geom.Line2D
 import javax.swing.*
 
-fun makeUI() = JPanel(GridLayout(2, 1)).also {
+fun createUI() = JPanel(GridLayout(2, 1)).also {
   it.add(TextLayoutPanel())
   it.add(GlyphVectorPanel())
   it.preferredSize = Dimension(320, 240)
@@ -91,7 +91,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

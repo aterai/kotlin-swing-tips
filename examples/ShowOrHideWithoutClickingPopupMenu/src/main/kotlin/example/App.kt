@@ -10,7 +10,7 @@ import javax.swing.event.PopupMenuListener
 
 private val log = JTextArea()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   log.isEditable = false
   val toolBar = JToolBar()
   toolBar.add(makeButton0())
@@ -166,7 +166,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

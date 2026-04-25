@@ -7,7 +7,7 @@ import java.awt.geom.Ellipse2D
 import java.util.Collections
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val scroll = JScrollPane(makeList())
   scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
   return JPanel(BorderLayout()).also {
@@ -178,7 +178,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

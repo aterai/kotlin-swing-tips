@@ -8,7 +8,7 @@ import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import javax.swing.*
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   val tabbedPane = EditableTabbedPane()
   tabbedPane.addTab("Title", JLabel("Tab1"))
   tabbedPane.addTab("aaa", JLabel("Tab2"))
@@ -197,7 +197,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

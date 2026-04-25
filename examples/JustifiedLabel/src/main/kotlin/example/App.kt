@@ -5,7 +5,7 @@ import java.awt.font.GlyphVector
 import java.awt.geom.Point2D
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel(GridBagLayout())
   val inside = BorderFactory.createEmptyBorder(10, 5 + 2, 10, 10 + 2)
   val outside = BorderFactory.createTitledBorder("JLabel text-align:justify")
@@ -101,7 +101,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -7,7 +7,7 @@ import java.awt.event.MouseEvent
 import javax.swing.*
 import javax.swing.plaf.basic.BasicScrollBarUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   UIManager.put("ScrollBar.allowsAbsolutePositioning", true)
   val h1 = "middle mouse click in the track will set"
   val h2 = " the position of the track to where the mouse is.\n"
@@ -115,7 +115,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -6,7 +6,7 @@ import java.net.URL
 import javax.swing.*
 import javax.swing.plaf.basic.ComboPopup
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
   val url1 = cl.getResource("example/favicon.png")
   val url2 = cl.getResource("example/animated.gif")
@@ -70,7 +70,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

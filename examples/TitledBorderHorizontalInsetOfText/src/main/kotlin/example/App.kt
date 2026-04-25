@@ -14,7 +14,7 @@ import javax.swing.plaf.basic.BasicHTML
 
 private const val TITLE = "TitledBorder Test"
 
-fun makeUI() = JPanel(GridLayout(0, 1, 5, 5)).also {
+fun createUI() = JPanel(GridLayout(0, 1, 5, 5)).also {
   val b1 = object : TitledBorder(TITLE + "1") {
     override fun paintBorder(
       c: Component,
@@ -395,7 +395,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

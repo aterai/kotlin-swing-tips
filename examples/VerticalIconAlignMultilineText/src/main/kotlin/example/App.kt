@@ -13,7 +13,7 @@ import kotlin.math.roundToInt
 private const val TEXT =
   "<html>The vertical alignment of this text gets offset when the font changes."
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val check1 = JCheckBox(TEXT)
   check1.verticalTextPosition = SwingConstants.TOP
 
@@ -210,7 +210,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

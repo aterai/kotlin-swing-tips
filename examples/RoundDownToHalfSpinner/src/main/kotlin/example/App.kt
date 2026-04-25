@@ -10,7 +10,7 @@ import javax.swing.text.DefaultFormatterFactory
 
 private val textArea = JTextArea()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val spinner0 = JSpinner(SpinnerNumberModel(8.85, 8.0, 72.0, .5))
   val spinner1 = JSpinner(RoundToHalfSpinnerModel(8.85, 8.0, 72.0, .5))
   val spinner2 = makeSpinner(makeDownFormatter())
@@ -125,7 +125,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

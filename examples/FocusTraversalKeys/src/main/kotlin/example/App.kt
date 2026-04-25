@@ -8,7 +8,7 @@ private const val HELP = """FORWARD_TRAVERSAL_KEYS: TAB, RIGHT, DOWN
 BACKWARD_TRAVERSAL_KEYS: SHIFT+TAB, LEFT, UP
 """
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val button = JButton("showOptionDialog")
   button.addActionListener { e ->
     when (JOptionPane.showConfirmDialog((e.source as? JComponent)?.rootPane, HELP)) {
@@ -61,7 +61,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

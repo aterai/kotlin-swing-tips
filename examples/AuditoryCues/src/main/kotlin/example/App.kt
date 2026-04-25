@@ -15,7 +15,7 @@ val AUDITORY_CUES = arrayOf(
   "OptionPane.warningSound",
 )
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val b1 = JButton("showMessageDialog1")
   b1.addActionListener {
     UIManager.put(KEY, AUDITORY_CUES)
@@ -135,7 +135,7 @@ fun main() {
     UIManager.put(KEY, AUDITORY_CUES)
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

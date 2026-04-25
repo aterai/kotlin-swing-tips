@@ -10,7 +10,7 @@ import javax.swing.plaf.LayerUI
 
 private var worker: SwingWorker<String, Unit?>? = null
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val m = DefaultBoundedRangeModel()
   val progressBar = JProgressBar(m)
   progressBar.orientation = SwingConstants.VERTICAL
@@ -180,7 +180,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

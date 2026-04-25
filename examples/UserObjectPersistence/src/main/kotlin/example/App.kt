@@ -24,7 +24,7 @@ import javax.swing.tree.TreeCellRenderer
 
 private val textArea = JTextArea()
 
-private fun makeUI(): Component {
+private fun createUI(): Component {
   val tree = makeTree()
 
   val save = JButton("save")
@@ -395,7 +395,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val table1 = JTable(1, 3)
   val scroll1 = JScrollPane(table1)
   val title1 = "AUTO_RESIZE_SUBSEQUENT_COLUMNS(Default)"
@@ -44,7 +44,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

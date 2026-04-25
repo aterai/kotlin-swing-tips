@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import javax.swing.*
 import javax.swing.Timer
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textArea = JTextArea()
   val label = JLabel()
   label.addHierarchyListener(AutomaticallyCloseListener())
@@ -85,7 +85,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -30,7 +30,7 @@ private val model = object : DefaultTableModel(data, columnNames) {
 private val sorter = TableRowSorter<TableModel>(model)
 private val table = JTable(model)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   table.fillsViewportHeight = true
   table.rowSorter = sorter
   table.setDefaultRenderer(String::class.java, renderer)
@@ -150,7 +150,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

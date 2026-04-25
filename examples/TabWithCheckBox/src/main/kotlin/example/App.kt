@@ -5,7 +5,7 @@ import javax.swing.*
 
 private var counter = 0
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabs = object : JTabbedPane() {
     override fun addTab(
       title: String?,
@@ -54,7 +54,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

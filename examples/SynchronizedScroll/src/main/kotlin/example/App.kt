@@ -5,7 +5,7 @@ import javax.swing.*
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val lbl1 = object : JLabel("11111111") {
     override fun getPreferredSize() = Dimension(1200, 600)
   }
@@ -65,7 +65,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

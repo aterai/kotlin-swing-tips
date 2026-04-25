@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val table = JTable(DefaultTableModel(15, 3))
   table.autoResizeMode = JTable.AUTO_RESIZE_OFF
   table.border = BorderFactory.createLineBorder(Color.GREEN, 5)
@@ -42,7 +42,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

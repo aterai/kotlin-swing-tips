@@ -9,7 +9,7 @@ import javax.swing.JSpinner.DefaultEditor
 import javax.swing.text.DateFormatter
 import javax.swing.text.DefaultFormatterFactory
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val c = Calendar.getInstance()
   c[Calendar.HOUR_OF_DAY] = 0
   c.clear(Calendar.MINUTE)
@@ -68,7 +68,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

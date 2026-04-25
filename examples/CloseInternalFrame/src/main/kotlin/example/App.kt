@@ -21,7 +21,7 @@ private var openFrameCount = 0
 private var row = 0
 private var col = 0
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textArea = JTextArea(2, 0)
   textArea.isEditable = false
   logger.useParentHandlers = false
@@ -223,7 +223,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -11,7 +11,7 @@ val r1 = JRadioButton("LEADING")
 val r2 = JRadioButton("CENTER")
 val r3 = JRadioButton("TRAILING")
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val il = ItemListener { e ->
     val alignment = when {
       e.itemSelectable === r1 -> SwingConstants.LEADING
@@ -131,7 +131,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -9,7 +9,7 @@ private val check1 = ActionCommandCheckBox(TreeDraws.FOCUS_ICON_BORDER)
 private val check2 = ActionCommandCheckBox(TreeDraws.DASHED_FOCUS_IND)
 private val textArea = JTextArea()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   append("MainPanel: init")
   UIManager.addPropertyChangeListener { e ->
     if ("lookAndFeel" == e.propertyName) {
@@ -151,7 +151,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

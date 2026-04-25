@@ -8,7 +8,7 @@ import java.awt.geom.AffineTransform
 import javax.swing.*
 import kotlin.math.roundToInt
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val d = UIDefaults()
   d["Slider.thumbWidth"] = 24
   d["Slider.thumbHeight"] = 24
@@ -174,7 +174,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

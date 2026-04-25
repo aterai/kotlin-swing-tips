@@ -5,7 +5,7 @@ import java.awt.event.ItemEvent
 import java.awt.event.ItemListener
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val scroll = JScrollPane(JTextArea())
   return JPanel(BorderLayout()).also {
     EventQueue.invokeLater {
@@ -135,7 +135,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

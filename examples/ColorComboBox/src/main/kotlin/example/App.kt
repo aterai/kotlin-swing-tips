@@ -5,7 +5,7 @@ import java.awt.event.ItemEvent
 import java.awt.event.ItemListener
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val combo01 = AlternateRowColorComboBox<String>(makeModel())
 
   val combo02 = AlternateRowColorComboBox<String>(makeModel())
@@ -119,7 +119,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

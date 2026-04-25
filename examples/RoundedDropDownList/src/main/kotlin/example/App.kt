@@ -20,7 +20,7 @@ private val SELECTION_FOREGROUND = Color.ORANGE
 private val PANEL_BACKGROUND = Color.GRAY
 private const val KEY = "ComboBox.border"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   UIManager.put("ComboBox.foreground", FOREGROUND)
   UIManager.put("ComboBox.background", BACKGROUND)
   UIManager.put("ComboBox.selectionForeground", SELECTION_FOREGROUND)
@@ -325,7 +325,7 @@ fun main() {
   EventQueue.invokeLater {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -22,7 +22,7 @@ import javax.swing.table.TableModel
 import kotlin.math.max
 import kotlin.math.min
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val monthLabel = JLabel("", SwingConstants.CENTER)
   val monthTable = MonthTable()
   updateMonthView(monthTable, monthLabel, LocalDate.now(ZoneId.systemDefault()))
@@ -377,7 +377,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

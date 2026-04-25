@@ -6,7 +6,7 @@ import java.awt.event.HierarchyListener
 import javax.swing.*
 import javax.swing.Timer
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val c1 = JPanel(GridLayout(10, 10))
   val c2 = JPanel(GridLayout(10, 10))
   val intRange = 0..255
@@ -137,7 +137,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

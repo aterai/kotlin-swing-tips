@@ -5,7 +5,7 @@ import java.awt.event.ItemEvent
 import java.awt.geom.Ellipse2D
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val box = Box.createHorizontalBox()
   box.isOpaque = true
   box.background = Color(120, 120, 160)
@@ -142,7 +142,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

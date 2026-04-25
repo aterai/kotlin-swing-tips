@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val log = JTextArea()
   // log.setText(UIManager.getString("FileChooser.fileSizeKiloBytes", Locale.getDefault()))
   // UIManager.put("FileView.fullRowSelection", Boolean.TRUE)
@@ -103,7 +103,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

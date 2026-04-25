@@ -14,7 +14,7 @@ private const val TXT = "********************"
 private const val SPAN = "<span style='background-color:red'>$TXT</span><br/>\n"
 private val label = JLabel("screenshot")
 
-fun makeUI(): Component {
+fun createUI(): Component {
   label.verticalAlignment = SwingConstants.CENTER
   label.verticalTextPosition = SwingConstants.BOTTOM
   label.horizontalAlignment = SwingConstants.CENTER
@@ -111,7 +111,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

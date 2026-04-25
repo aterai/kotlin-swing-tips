@@ -8,7 +8,7 @@ import javax.swing.*
 private const val MW = 300
 private const val MH = 200
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val checkbox = JCheckBox("Fixed aspect ratio, Minimum size: $MW*$MH")
   EventQueue.invokeLater {
     val frame = checkbox.topLevelAncestor
@@ -75,7 +75,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

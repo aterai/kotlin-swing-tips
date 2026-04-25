@@ -8,7 +8,7 @@ import java.awt.geom.AffineTransform
 import javax.imageio.ImageIO
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val path = "example/CRW_3857_JFR.jpg"
   val icon = Thread
     .currentThread()
@@ -166,7 +166,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -11,7 +11,7 @@ import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeCellRenderer
 import javax.swing.tree.DefaultTreeModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val fileSystemView = FileSystemView.getFileSystemView()
   val root = DefaultMutableTreeNode()
   val treeModel = DefaultTreeModel(root)
@@ -132,7 +132,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

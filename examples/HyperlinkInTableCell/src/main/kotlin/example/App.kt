@@ -10,7 +10,7 @@ import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("No.", "Name", "URI")
   val m = object : DefaultTableModel(columnNames, 0) {
     override fun getColumnClass(column: Int) = when (column) {
@@ -205,7 +205,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -6,7 +6,7 @@ import java.awt.event.ComponentEvent
 import java.util.concurrent.atomic.AtomicInteger
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val check = JCheckBox("Icons should be relocated", true)
   val desktop = JDesktopPane()
   desktop.desktopManager = ReIconifyDesktopManager()
@@ -96,7 +96,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

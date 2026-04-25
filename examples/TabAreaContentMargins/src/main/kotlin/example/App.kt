@@ -5,7 +5,7 @@ import javax.swing.*
 
 private const val KEY = "TabbedPane:TabbedPaneTabArea.contentMargins"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabbedPane = makeTabbedPane()
   val d = UIDefaults()
   d[KEY] = Insets(3, 30, 4, 30)
@@ -45,7 +45,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.image.BufferedImage
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val label1 = JLabel("ABC", SwingConstants.CENTER)
   label1.foreground = Color(0x64_FF_AA_AA, true)
   label1.background = Color(0x64_64_C8)
@@ -103,7 +103,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

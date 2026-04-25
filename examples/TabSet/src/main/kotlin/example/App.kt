@@ -7,7 +7,7 @@ import javax.swing.text.StyleContext
 import javax.swing.text.TabSet
 import javax.swing.text.TabStop
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val check = JCheckBox("vertical grid lines", true)
   check.addActionListener {
     (it.source as? JComponent)?.rootPane?.repaint()
@@ -65,7 +65,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

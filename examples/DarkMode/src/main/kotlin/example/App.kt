@@ -10,7 +10,7 @@ import javax.swing.text.html.HTMLEditorKit
 import javax.swing.text.html.StyleSheet
 import kotlin.streams.toList
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val sys = JRadioButtonMenuItem("System", true)
   val editor = object : JEditorPane() {
     override fun updateUI() {
@@ -221,7 +221,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

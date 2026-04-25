@@ -17,7 +17,7 @@ private val MODEL = arrayOf(
   "blue",
 )
 
-fun makeUI(): Component {
+fun createUI(): Component {
   UIManager.put("ComboBox.forceOpaque", false)
   val ins = UIManager.getInsets("ComboBox.padding")
   ins.right = 0
@@ -139,7 +139,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

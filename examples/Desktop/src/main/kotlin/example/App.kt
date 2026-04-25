@@ -7,7 +7,7 @@ import javax.swing.event.HyperlinkEvent
 
 private const val SITE = "https://ateraimemo.com/"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textArea = JTextArea()
   val editor = JEditorPane("text/html", "<html><a href='$SITE'>$SITE</a>")
   editor.isOpaque = false
@@ -47,7 +47,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

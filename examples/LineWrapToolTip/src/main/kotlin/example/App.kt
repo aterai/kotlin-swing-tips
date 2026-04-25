@@ -8,7 +8,7 @@ import java.text.AttributedString
 import javax.swing.*
 import kotlin.math.min
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val very = "very ".repeat(10)
   val txt = "A ${very}long tooltip that must be line wrap"
   val b1 = JButton("JToolTip(Default)")
@@ -196,7 +196,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

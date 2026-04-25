@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textPane = JTextPane()
   textPane.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true)
   textPane.replaceSelection(" Default: ")
@@ -43,7 +43,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

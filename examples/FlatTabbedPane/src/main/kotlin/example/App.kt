@@ -8,7 +8,7 @@ import javax.swing.plaf.basic.BasicTabbedPaneUI
 private val SELECTED_BG = Color(255, 150, 0)
 private val UNSELECTED_BG = Color(255, 50, 0)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   UIManager.put("TabbedPane.tabInsets", Insets(5, 10, 5, 10))
   // UIManager.put("TabbedPane.selectedTabPadInsets", Insets(2, 3, 2, 2))
   UIManager.put("TabbedPane.contentBorderInsets", Insets(5, 5, 5, 5))
@@ -158,7 +158,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

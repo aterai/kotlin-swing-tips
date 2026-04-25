@@ -119,7 +119,7 @@ private class HighlightIcon : Icon {
 private val THUMB_COLOR = Color(0, 0, 255, 50)
 private const val PATTERN = "Swing"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   for (i in 0..<100) {
     val o = if (i % 19 == 0 || i % 17 == 0) PATTERN else "Java"
     model.addRow(arrayOf(o, ""))
@@ -162,7 +162,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

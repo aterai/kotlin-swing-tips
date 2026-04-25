@@ -6,7 +6,7 @@ import java.awt.event.MouseEvent
 import java.awt.event.MouseListener
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val log = JTextArea("press and hold the button for 1000 milliseconds\n")
   log.isEditable = false
 
@@ -178,7 +178,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -9,7 +9,7 @@ import java.awt.geom.Point2D
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val field1 = makeTextField("Animated Border 1")
   field1.border = AnimatedBorder(field1)
 
@@ -191,7 +191,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

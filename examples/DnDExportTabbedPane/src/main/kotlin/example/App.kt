@@ -18,7 +18,7 @@ import java.io.IOException
 import javax.swing.*
 import javax.swing.plaf.metal.MetalTabbedPaneUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val sub = DnDTabbedPane().also {
     it.addTab("Title aa", JLabel("aaa"))
     it.addTab("Title bb", JScrollPane(JTree()))
@@ -561,7 +561,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

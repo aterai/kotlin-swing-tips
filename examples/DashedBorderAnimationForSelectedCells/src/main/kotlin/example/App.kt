@@ -15,7 +15,7 @@ import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val mb = JMenuBar()
   mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   val scroll = makeScrollPane(TranslucentCellSelectionTable(makeModel()))
@@ -352,7 +352,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

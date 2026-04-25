@@ -6,7 +6,7 @@ import java.awt.event.MouseEvent
 import java.util.EventObject
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabs = JTabbedPane()
   tabs.addTab("JTable", makeTablePanel())
   tabs.addTab("JTree", makeTreePanel())
@@ -166,7 +166,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

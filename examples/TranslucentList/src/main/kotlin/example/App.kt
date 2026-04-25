@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage
 import javax.swing.*
 import javax.swing.border.Border
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = DefaultListModel<ListItem>().also {
     it.addElement(ListItem("red", ColorIcon(Color.RED)))
     it.addElement(ListItem("green", ColorIcon(Color.GREEN)))
@@ -287,7 +287,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

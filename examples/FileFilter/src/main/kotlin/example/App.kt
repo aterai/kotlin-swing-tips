@@ -7,7 +7,7 @@ import javax.swing.*
 import javax.swing.filechooser.FileFilter
 import javax.swing.filechooser.FileNameExtensionFilter
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val fileChooser = JFileChooser()
   fileChooser.addChoosableFileFilter(PngFileFilter())
   fileChooser.addChoosableFileFilter(JpgFileFilter())
@@ -61,7 +61,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

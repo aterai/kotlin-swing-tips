@@ -6,7 +6,7 @@ import java.awt.event.WindowEvent
 import java.net.ServerSocket
 import javax.swing.*
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   it.add(JScrollPane(JTree()))
   it.preferredSize = Dimension(320, 240)
 }
@@ -25,7 +25,7 @@ fun main() {
         val frame = JFrame().apply {
           defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
           isResizable = false
-          contentPane.add(makeUI())
+          contentPane.add(createUI())
           pack()
           setLocationRelativeTo(null)
           isVisible = true

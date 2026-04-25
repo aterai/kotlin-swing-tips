@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   val label = JLabel()
   label.text = "<html>dockable: NORTH, SOUTH<br>undockable: EAST, WEST"
   label.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
@@ -45,7 +45,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

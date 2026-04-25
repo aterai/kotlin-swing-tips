@@ -6,7 +6,7 @@ import javax.swing.*
 
 private val check = JCheckBox("一時ウィンドウ(入力モード)->enterでセル編集開始", true)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val table = object : JTable(4, 3) {
     override fun processKeyBinding(
       ks: KeyStroke,
@@ -56,7 +56,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

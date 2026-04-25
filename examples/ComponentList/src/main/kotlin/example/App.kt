@@ -6,7 +6,7 @@ import javax.swing.*
 private val box = Box.createVerticalBox()
 private val glue = Box.createVerticalGlue()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   box.border = BorderFactory.createLineBorder(Color.RED, 10)
 
   val scroll = JScrollPane(box)
@@ -79,7 +79,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

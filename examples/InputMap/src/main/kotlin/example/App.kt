@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent
 import java.awt.event.KeyEvent
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val button1 = JButton("JOptionPane.showMessageDialog")
   button1.addActionListener {
     val owner = button1.rootPane
@@ -118,7 +118,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

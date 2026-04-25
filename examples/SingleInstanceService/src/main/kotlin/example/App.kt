@@ -6,7 +6,7 @@ import javax.jnlp.SingleInstanceListener
 import javax.jnlp.SingleInstanceService
 import javax.swing.*
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   it.add(JScrollPane(JTree()))
   it.preferredSize = Dimension(320, 240)
 }
@@ -30,7 +30,7 @@ fun main() {
         }
       })
       frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      frame.contentPane.add(makeUI())
+      frame.contentPane.add(createUI())
       frame.pack()
       frame.setLocationRelativeTo(null)
       frame.isVisible = true

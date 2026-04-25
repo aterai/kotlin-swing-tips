@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val list1 = listOf(
     SpinnerNumberModel(Byte.MAX_VALUE, 0.toByte(), Byte.MAX_VALUE, 1.toByte()),
     SpinnerNumberModel(Short.MAX_VALUE, 0.toShort(), Short.MAX_VALUE, 1.toShort()),
@@ -67,7 +67,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

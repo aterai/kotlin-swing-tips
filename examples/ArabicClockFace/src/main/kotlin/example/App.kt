@@ -16,7 +16,7 @@ import javax.swing.*
 import kotlin.math.PI
 import kotlin.math.abs
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val clock = AnalogClock()
   val attr = mapOf<TextAttribute, Any>(
     Pair(TextAttribute.TRACKING, TextAttribute.TRACKING_TIGHT),
@@ -46,7 +46,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

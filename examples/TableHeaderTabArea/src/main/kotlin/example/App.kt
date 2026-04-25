@@ -11,7 +11,7 @@ import javax.swing.table.TableColumn
 import javax.swing.table.TableColumnModel
 import javax.swing.text.View
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabs = TableHeaderTabbedPane()
   tabs.border = BorderFactory.createTitledBorder("CardLayout+JTableHeader")
   tabs.addTab("111", JScrollPane(JTree()))
@@ -254,7 +254,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -9,7 +9,7 @@ import javax.swing.event.PopupMenuListener
 private val log = JTextArea()
 private const val KEY = "ComboBox.isEnterSelectablePopup"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel(GridLayout(0, 1))
   p.add(JLabel("$KEY: false(default)", SwingConstants.LEFT))
   p.add(makeComboBox(false))
@@ -66,7 +66,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

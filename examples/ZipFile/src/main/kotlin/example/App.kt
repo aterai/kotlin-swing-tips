@@ -22,7 +22,7 @@ import javax.swing.*
 private val logger = Logger.getLogger(MethodHandles.lookup().lookupClass().name)
 private val textArea = JTextArea()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   logger.useParentHandlers = false
   textArea.isEditable = false
   logger.addHandler(TextAreaHandler(TextAreaOutputStream(textArea)))
@@ -245,7 +245,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -30,7 +30,7 @@ private val table = JTable(model)
 private val field = JTextField(2)
 private val label = JLabel("/ 1")
 
-fun makeUI(): Component {
+fun createUI(): Component {
   currentPageIndex = 1
   table.fillsViewportHeight = true
   table.rowSorter = sorter
@@ -224,7 +224,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -6,7 +6,7 @@ import javax.swing.JSeparator.HORIZONTAL
 import javax.swing.JSeparator.VERTICAL
 import kotlin.math.PI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val box1 = Box.createHorizontalBox()
   box1.add(JLabel("JLabel"))
   box1.add(WavyLineSeparator(VERTICAL))
@@ -123,7 +123,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

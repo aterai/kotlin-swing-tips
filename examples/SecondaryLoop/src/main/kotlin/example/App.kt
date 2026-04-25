@@ -13,7 +13,7 @@ private val layerUI = DisableInputLayerUI<JComponent>()
 
 private var worker: Thread? = null
 
-fun makeUI(): Component {
+fun createUI(): Component {
   cancel.isEnabled = false
   cancel.addActionListener { worker?.interrupt() }
 
@@ -133,7 +133,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

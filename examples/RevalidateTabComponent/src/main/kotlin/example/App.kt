@@ -10,7 +10,7 @@ import javax.swing.event.AncestorEvent
 import javax.swing.event.AncestorListener
 import javax.swing.plaf.basic.BasicButtonUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabbedPane = JTabbedPane()
   for (i in 0..<3) {
     val title = "Tab $i"
@@ -187,7 +187,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

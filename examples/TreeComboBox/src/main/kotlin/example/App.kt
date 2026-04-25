@@ -31,7 +31,7 @@ private fun makeTitledPanel(
   return p
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model1 = DefaultComboBoxModel<TreeNode>()
   val model2 = DefaultComboBoxModel<TreeNode>()
   (makeModel().root as? DefaultMutableTreeNode)?.also { root ->
@@ -148,7 +148,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

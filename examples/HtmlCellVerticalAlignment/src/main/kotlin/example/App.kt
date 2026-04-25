@@ -7,7 +7,7 @@ import javax.swing.table.DefaultTableModel
 
 private const val TEXT = "drag select table cells 1 22 333 4444 55555 666666 7777777"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("html")
   val data = arrayOf(
     arrayOf("<html><font color=red>font color red</font><br /> $TEXT"),
@@ -67,7 +67,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

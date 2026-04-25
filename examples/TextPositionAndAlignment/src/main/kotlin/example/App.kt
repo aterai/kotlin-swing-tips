@@ -10,7 +10,7 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val label = JLabel("Test Test", StarburstIcon(), SwingConstants.CENTER)
   label.isOpaque = true
   label.background = Color.WHITE
@@ -148,7 +148,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

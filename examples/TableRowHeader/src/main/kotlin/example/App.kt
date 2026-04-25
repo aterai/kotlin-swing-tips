@@ -7,7 +7,7 @@ import javax.swing.*
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.JTableHeader
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val listModel = DefaultListModel<String>()
   val model = RowDataModel(listModel)
   model.addRowData(RowData("Name 1", "comment"))
@@ -275,7 +275,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

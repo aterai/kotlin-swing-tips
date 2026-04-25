@@ -10,7 +10,7 @@ import java.awt.image.ConvolveOp
 import java.awt.image.Kernel
 import javax.swing.*
 
-fun makeUI() = MainPanel().also {
+fun createUI() = MainPanel().also {
   it.add(JButton("JButton"))
   it.preferredSize = Dimension(320, 240)
 }
@@ -80,7 +80,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

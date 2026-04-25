@@ -8,7 +8,7 @@ import javax.swing.*
 
 private val log = JTextArea()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val button1 = JButton("FileDialog(Frame)")
   button1.addActionListener {
     // val w = SwingUtilities.getWindowAncestor(button1)
@@ -80,7 +80,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

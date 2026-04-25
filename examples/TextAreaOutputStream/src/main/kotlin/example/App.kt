@@ -19,7 +19,7 @@ import javax.swing.*
 private val LOGGER_NAME = MethodHandles.lookup().lookupClass().name
 private val LOGGER = Logger.getLogger(LOGGER_NAME)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textArea = JTextArea()
   textArea.isEditable = false
 
@@ -117,7 +117,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

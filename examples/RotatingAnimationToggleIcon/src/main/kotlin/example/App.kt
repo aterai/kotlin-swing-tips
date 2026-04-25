@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import kotlin.math.abs
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val accordion = Box.createVerticalBox()
   accordion.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
   makeExpansionPanelList().forEach {
@@ -187,7 +187,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

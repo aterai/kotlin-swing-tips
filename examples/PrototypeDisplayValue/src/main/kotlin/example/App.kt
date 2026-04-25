@@ -5,7 +5,7 @@ import javax.swing.*
 
 private val TITLE = "M".repeat(20)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model1 = DefaultComboBoxModel(arrayOf("a", "b", "c"))
   val combo1 = JComboBox(model1)
   combo1.isEditable = false
@@ -146,7 +146,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

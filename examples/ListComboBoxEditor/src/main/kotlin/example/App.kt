@@ -11,7 +11,7 @@ import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 import javax.swing.plaf.basic.ComboPopup
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = makeModel()
   val list = NewspaperStyleList(model)
   val scroll = object : JScrollPane(list) {
@@ -331,7 +331,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

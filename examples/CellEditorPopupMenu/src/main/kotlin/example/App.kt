@@ -13,7 +13,7 @@ import javax.swing.text.DefaultEditorKit
 import javax.swing.text.JTextComponent
 import javax.swing.undo.UndoManager
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("String", "String")
   val data = arrayOf(
     arrayOf("Undo", "Ctrl Z"),
@@ -146,7 +146,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

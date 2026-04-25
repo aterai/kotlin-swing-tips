@@ -27,7 +27,7 @@ https://docs.oracle.com/javase/tutorial/uiswing/learn/index.html
   https://docs.oracle.com/javase/tutorial/uiswing/learn/index.html
 """
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textArea = JTextArea()
   textArea.isEditable = false
   textArea.text = INIT_TXT.repeat(3)
@@ -228,7 +228,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

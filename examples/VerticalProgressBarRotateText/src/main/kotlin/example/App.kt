@@ -8,7 +8,7 @@ import javax.swing.*
 
 private var worker: SwingWorker<String, Unit?>? = null
 
-fun makeUI(): Component {
+fun createUI(): Component {
   // UIManager.put("ProgressBar.rotateText", false)
   val progressBar1 = JProgressBar(SwingConstants.VERTICAL)
   progressBar1.isStringPainted = true
@@ -103,7 +103,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -11,7 +11,7 @@ private val field = JTextField("The quick brown fox")
 private val label = JLabel(field.text)
 private val log = JTextArea()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   log.isEditable = false
   field.document.addDocumentListener(object : DocumentListener {
     override fun insertUpdate(e: DocumentEvent) {
@@ -107,7 +107,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

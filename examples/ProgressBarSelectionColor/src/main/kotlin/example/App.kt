@@ -9,7 +9,7 @@ import javax.swing.plaf.basic.BasicProgressBarUI
 
 private var worker: SwingWorker<String, Unit?>? = null
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = DefaultBoundedRangeModel()
   val progressBar0 = JProgressBar(model)
   progressBar0.isStringPainted = true
@@ -123,7 +123,7 @@ fun main() {
   EventQueue.invokeLater {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

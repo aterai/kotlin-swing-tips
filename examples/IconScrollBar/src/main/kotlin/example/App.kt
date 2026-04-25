@@ -5,7 +5,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.plaf.basic.BasicScrollBarUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val label = object : JLabel("1234567890") {
     override fun getPreferredSize() = Dimension(1000, 1000)
   }
@@ -149,7 +149,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

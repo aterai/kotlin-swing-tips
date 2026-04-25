@@ -13,7 +13,7 @@ import javax.swing.plaf.synth.SynthTableHeaderUI
 import javax.swing.table.JTableHeader
 import javax.swing.table.TableColumn
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val sp = makeSplitPane(false)
   (sp.ui as? BasicSplitPaneUI)?.divider?.also {
     it.cursor = Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR)
@@ -211,7 +211,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -29,7 +29,7 @@ private val model = object : DefaultTableModel(data, columnNames) {
 private val sorter = TableRowSorter<DefaultTableModel>(model)
 private val addButton = JButton("add")
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val fixedTable = JTable(model)
   val table = JTable(model)
   fixedTable.selectionModel = table.selectionModel
@@ -351,7 +351,7 @@ fun main() {
   EventQueue.invokeLater {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

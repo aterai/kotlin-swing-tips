@@ -14,7 +14,7 @@ private val textArea = JTextArea().also {
 }
 private val label = JLabel(" ", SwingConstants.CENTER)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val sp1 = JScrollPane(textArea)
   sp1.border = BorderFactory.createTitledBorder("File -> String")
 
@@ -81,7 +81,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

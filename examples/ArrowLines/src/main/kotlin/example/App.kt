@@ -5,7 +5,7 @@ import java.awt.geom.AffineTransform
 import java.awt.geom.Path2D
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val arrows = listOf(
     Arrow(Point(50, 50), Point(100, 150)),
     Arrow(Point(250, 50), Point(150, 50)),
@@ -75,7 +75,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

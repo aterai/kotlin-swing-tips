@@ -8,7 +8,7 @@ import javax.swing.event.MouseInputAdapter
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().allFonts
   val m1 = DefaultListModel<String>()
   fonts.map { it.fontName }.forEach { m1.addElement(it) }
@@ -158,7 +158,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

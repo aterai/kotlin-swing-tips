@@ -7,7 +7,7 @@ import javax.swing.*
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textPane = JTextPane()
   textPane.isEditable = false
   textPane.margin = Insets(0, 10, 0, 0)
@@ -73,7 +73,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

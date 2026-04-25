@@ -8,7 +8,7 @@ import java.awt.geom.Path2D
 import javax.swing.*
 import javax.swing.plaf.LayerUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val list = listOf("aaa", "bb", "c")
 
   val p1 = JPanel(GridLayout(0, 1)).also {
@@ -328,7 +328,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

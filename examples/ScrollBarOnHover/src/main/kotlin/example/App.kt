@@ -6,7 +6,7 @@ import java.awt.event.MouseEvent
 import javax.swing.*
 import javax.swing.plaf.LayerUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val text = "1234567890\n".repeat(100)
   val textArea = JTextArea("Mouse cursor flickers over the JScrollBar.\n$text")
   val ml = object : MouseAdapter() {
@@ -87,7 +87,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

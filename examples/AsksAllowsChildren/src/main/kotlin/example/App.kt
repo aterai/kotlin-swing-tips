@@ -8,7 +8,7 @@ import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreePath
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val t = JTree(makeDefaultTreeModel())
   t.componentPopupMenu = TreePopupMenu()
 
@@ -182,7 +182,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

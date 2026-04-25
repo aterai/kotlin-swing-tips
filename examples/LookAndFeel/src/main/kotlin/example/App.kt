@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.event.ActionEvent
 import javax.swing.*
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   val menuBar = JMenuBar()
   menuBar.add(LookAndFeelUtils.createLookAndFeelMenu())
   EventQueue.invokeLater { it.rootPane.jMenuBar = menuBar }
@@ -135,7 +135,7 @@ fun main() {
   EventQueue.invokeLater {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

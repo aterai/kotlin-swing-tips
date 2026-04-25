@@ -10,7 +10,7 @@ private const val COLLAPSED_ICON_KEY = "Tree.collapsedIcon"
 private val expandedIcon = JCheckBox(EXPANDED_ICON_KEY, true)
 private val paintLines = JCheckBox("Tree.paintLines", true)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tree = JTree()
   tree.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
   val lci = UIManager.getInt("Tree.leftChildIndent")
@@ -88,7 +88,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

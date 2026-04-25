@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.event.ActionEvent
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model1 = SpinnerNumberModel(100, 10, 300, 10)
   val scroll1 = makeScrollPane(JTree(), model1)
   val model2 = SpinnerNumberModel(150, 10, 300, 10)
@@ -114,7 +114,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

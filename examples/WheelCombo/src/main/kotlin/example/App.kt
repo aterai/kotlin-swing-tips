@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.event.MouseWheelListener
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val combo = object : JComboBox<String>(makeModel()) {
     @Transient private var handler: MouseWheelListener? = null
 
@@ -63,7 +63,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

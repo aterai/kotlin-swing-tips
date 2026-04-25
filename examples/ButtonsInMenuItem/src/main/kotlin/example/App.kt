@@ -12,7 +12,7 @@ import javax.swing.plaf.LayerUI
 import javax.swing.text.DefaultEditorKit
 import kotlin.math.sqrt
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   EventQueue.invokeLater { it.rootPane.jMenuBar = makeMenuBar() }
   it.add(JScrollPane(JTextArea()))
   it.preferredSize = Dimension(320, 240)
@@ -272,7 +272,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

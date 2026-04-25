@@ -7,7 +7,7 @@ import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import javax.swing.*
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   it.add(JScrollPane(JTree()))
   it.preferredSize = Dimension(320, 240)
 }
@@ -150,7 +150,7 @@ fun main() {
     JFrame.setDefaultLookAndFeelDecorated(true)
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       minimumSize = Dimension(240, 120)
       pack()
       val bar = makeExtraBarWindow(this)

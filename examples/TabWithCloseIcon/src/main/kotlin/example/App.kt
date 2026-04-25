@@ -12,7 +12,7 @@ import javax.swing.event.EventListenerList
 import javax.swing.plaf.UIResource
 import javax.swing.plaf.basic.BasicTabbedPaneUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tab1 = TabbedPaneWithCloseButton()
   val tab2 = TabbedPaneWithCloseIcons()
   val tab3 = CloseableTabbedPane()
@@ -524,7 +524,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

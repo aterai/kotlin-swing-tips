@@ -10,7 +10,7 @@ import javax.swing.*
 
 private const val TEXT = "The quick brown fox jumps over the lazy dog."
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   val box = Box.createVerticalBox()
   box.border = BorderFactory.createEmptyBorder(10, 30, 10, 30)
   box.add(makeExpandingTextArea1())
@@ -120,7 +120,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -16,7 +16,7 @@ private val spinner = JSpinner(nm)
 private val fontPanel = GlyphPaintPanel()
 private var fontPaintFlag: Set<FontPaint> = EnumSet.allOf(FontPaint::class.java)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   nm.addChangeListener { fontPanel.repaint() }
   val editor = spinner.editor as? JSpinner.NumberEditor
   editor?.textField?.also {
@@ -152,7 +152,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

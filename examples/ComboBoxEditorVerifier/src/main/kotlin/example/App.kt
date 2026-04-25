@@ -12,7 +12,7 @@ import javax.swing.text.JTextComponent
 private const val MAX_HISTORY = 10
 private const val ENTER_PRESSED = "enterPressed"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = arrayOf("123456", "7890")
   val combo = JComboBox(model)
   combo.isEditable = true
@@ -143,7 +143,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

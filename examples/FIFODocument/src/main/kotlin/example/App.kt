@@ -15,7 +15,7 @@ private val timer = Timer(200) {
   textArea.append(if (textArea.document.length > 0) "\n$s" else s)
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   // (textArea.document as? AbstractDocument)?.documentFilter = FifoDocumentFilter()
   textArea.document.addDocumentListener(FifoDocumentListener(textArea))
   textArea.isEditable = false
@@ -108,7 +108,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

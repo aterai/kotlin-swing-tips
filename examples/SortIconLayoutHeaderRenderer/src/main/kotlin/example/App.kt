@@ -10,7 +10,7 @@ import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 
-fun makeUI(): Component {
+fun createUI(): Component {
   UIManager.put("TableHeader.rightAlignSortArrow", false)
   val columnNames = arrayOf("Name", "CPU", "Memory", "Disk")
   val data = arrayOf(
@@ -213,7 +213,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

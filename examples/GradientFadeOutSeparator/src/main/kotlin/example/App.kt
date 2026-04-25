@@ -7,7 +7,7 @@ import javax.swing.plaf.ColorUIResource
 import javax.swing.plaf.basic.BasicSeparatorUI
 import kotlin.math.max
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val mb = JMenuBar()
   mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   return JPanel(BorderLayout()).also {
@@ -160,7 +160,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

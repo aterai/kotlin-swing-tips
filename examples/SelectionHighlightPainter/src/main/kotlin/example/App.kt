@@ -7,7 +7,7 @@ import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.text.JTextComponent
 import javax.swing.text.View
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val field1 = JTextField("0987654321").also {
     it.selectedTextColor = Color.RED
     it.selectionColor = Color.GREEN
@@ -72,7 +72,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.geom.Path2D
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel(BorderLayout())
   EventQueue.invokeLater {
     val menuBar = JMenuBar()
@@ -65,7 +65,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

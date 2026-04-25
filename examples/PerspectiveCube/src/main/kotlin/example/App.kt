@@ -20,7 +20,7 @@ private val cube = listOf(
   Vertex(-SIDE_LENGTH, -SIDE_LENGTH, SIDE_LENGTH),
 )
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = object : JPanel() {
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
@@ -136,7 +136,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

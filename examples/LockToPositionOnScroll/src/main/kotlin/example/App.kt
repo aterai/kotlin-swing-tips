@@ -5,7 +5,7 @@ import javax.swing.*
 
 private val EVEN_BACKGROUND = Color(0xAA_DD_FF_FF.toInt(), true)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val key = "List.lockToPositionOnScroll"
   // UIManager.put(key, false)
   val model = DefaultListModel<String>()
@@ -59,7 +59,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

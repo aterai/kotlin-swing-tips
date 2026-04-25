@@ -7,7 +7,7 @@ import javax.swing.text.html.HTMLEditorKit
 private const val SITE = "https://ateraimemo.com/"
 private const val HREF = "<html><a href='$SITE'>$SITE</a>"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val kit = HTMLEditorKit()
   val styleSheet = kit.styleSheet
   styleSheet.addRule("a{color:#FF0000;}")
@@ -59,7 +59,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

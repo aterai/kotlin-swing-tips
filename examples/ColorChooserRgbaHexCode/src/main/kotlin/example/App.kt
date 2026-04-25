@@ -17,7 +17,7 @@ import javax.swing.text.BadLocationException
 import javax.swing.text.DefaultFormatterFactory
 import javax.swing.text.DocumentFilter
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val label = object : JLabel() {
     override fun getPreferredSize() = Dimension(32, 32)
   }
@@ -206,7 +206,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

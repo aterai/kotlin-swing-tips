@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.plaf.basic.BasicToolBarUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   UIManager.put("ToolBar.dockingBackground", Color(0x64_FF_00_00, true))
   UIManager.put("ToolBar.floatingBackground", Color(0x64_00_00_FF, true))
   UIManager.put("ToolBar.dockingForeground", Color.BLUE)
@@ -48,7 +48,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

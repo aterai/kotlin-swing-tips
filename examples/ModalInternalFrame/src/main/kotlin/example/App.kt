@@ -16,7 +16,7 @@ private val menuBar = JMenuBar()
 private val sampleBar = JMenuBar()
 private var openFrameCount = 0
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val button = JButton(ModalInternalFrameAction3("Show"))
   button.mnemonic = KeyEvent.VK_S
 
@@ -267,7 +267,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

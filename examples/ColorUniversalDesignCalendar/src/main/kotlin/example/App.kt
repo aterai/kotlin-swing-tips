@@ -140,7 +140,7 @@ private class CalendarTableRenderer : TableCellRenderer {
   }
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   monthTable.setDefaultRenderer(LocalDate::class.java, CalendarTableRenderer())
   monthTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
   monthTable.cellSelectionEnabled = true
@@ -215,7 +215,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -8,7 +8,7 @@ import java.awt.event.MouseListener
 import javax.swing.*
 import javax.swing.plaf.basic.BasicArrowButton
 
-private fun makeUI(): Component {
+private fun createUI(): Component {
   val p1 = JPanel(BorderLayout(5, 5))
   p1.setBorder(BorderFactory.createTitledBorder("Default JSpinner"))
   p1.add(JSpinner(SpinnerNumberModel(50, 0, 100, 1)))
@@ -211,7 +211,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -7,7 +7,7 @@ import javax.swing.*
 private val SELECTED_ICON = ScaledIcon(CheckBoxIcon(), 12, 12)
 private val EMPTY_ICON = EmptyIcon()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val style = listOf("Bold", "Italic", "Underline")
   val food = listOf("hot dogs", "pizza", "ravioli", "bananas")
   return JPanel().also {
@@ -197,7 +197,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

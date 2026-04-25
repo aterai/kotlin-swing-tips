@@ -15,7 +15,7 @@ private val scroll = JScrollPane(textArea)
 private val box = Box.createHorizontalBox()
 private val check = JCheckBox("setEditable", true)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   panel.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
   panel.add(scroll)
   panel.add(nb, BorderLayout.NORTH)
@@ -133,7 +133,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

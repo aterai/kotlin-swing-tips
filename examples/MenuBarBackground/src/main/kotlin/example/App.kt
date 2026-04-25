@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.image.BufferedImage
 import javax.swing.*
 
-fun makeUI() = JPanel().also {
+fun createUI() = JPanel().also {
   EventQueue.invokeLater { it.rootPane.jMenuBar = createMenuBar() }
   it.preferredSize = Dimension(320, 240)
 }
@@ -91,7 +91,7 @@ fun main() {
     // TEST: UIManager.put(key, false)
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

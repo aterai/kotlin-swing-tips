@@ -8,7 +8,7 @@ import javax.swing.*
 import javax.swing.plaf.nimbus.AbstractRegionPainter
 import javax.swing.tree.DefaultTreeCellRenderer
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tree = JTree()
   tree.rowHeight = 20
   val mb = JMenuBar()
@@ -205,7 +205,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

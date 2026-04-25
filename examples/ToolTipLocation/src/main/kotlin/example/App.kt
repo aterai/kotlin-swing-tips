@@ -6,7 +6,7 @@ import javax.swing.*
 import javax.swing.event.MouseInputAdapter
 import javax.swing.event.MouseInputListener
 
-fun makeUI() = object : JPanel() {
+fun createUI() = object : JPanel() {
   @Transient private var handler: MouseInputListener? = null
 
   init {
@@ -92,7 +92,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

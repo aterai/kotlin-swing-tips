@@ -6,7 +6,7 @@ import java.beans.PropertyChangeEvent
 import javax.swing.*
 import javax.swing.plaf.LayerUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val layerUI = DisableInputLayerUI<Component>()
   val stopper = Timer(5000) { layerUI.stop() }
   val button = JButton("Stop 5sec")
@@ -110,7 +110,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

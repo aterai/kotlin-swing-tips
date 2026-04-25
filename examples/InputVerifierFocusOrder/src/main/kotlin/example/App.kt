@@ -8,7 +8,7 @@ import javax.swing.text.JTextComponent
 
 private const val MAX_LEN = 6
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val button = JButton("Next")
   button.isEnabled = false
 
@@ -102,7 +102,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

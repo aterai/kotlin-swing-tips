@@ -17,7 +17,7 @@ import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreePath
 import javax.swing.tree.TreeSelectionModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tree = FileSystemViewTree()
   tree.isRootVisible = false
   tree.selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
@@ -311,7 +311,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

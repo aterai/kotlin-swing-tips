@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.border.TitledBorder
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val fileName = AlignedLabel("File Name:")
   val filesOfType = AlignedLabel("Files of Type:")
   val host = AlignedLabel("Host:")
@@ -113,7 +113,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

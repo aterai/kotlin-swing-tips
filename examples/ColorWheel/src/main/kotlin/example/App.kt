@@ -8,7 +8,7 @@ import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.hypot
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   it.add(ColorWheel())
   it.preferredSize = Dimension(320, 240)
 }
@@ -82,7 +82,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

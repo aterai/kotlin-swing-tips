@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.event.KeyEvent
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val button = JButton("Stop 5sec")
   button.addActionListener { e ->
     button.rootPane.glassPane.isVisible = true
@@ -88,7 +88,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

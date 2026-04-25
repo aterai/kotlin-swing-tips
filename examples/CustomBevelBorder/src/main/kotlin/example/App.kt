@@ -5,7 +5,7 @@ import javax.swing.*
 import javax.swing.border.BevelBorder
 import javax.swing.border.Border
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel(FlowLayout(FlowLayout.CENTER, 20, 20))
   p.border = BorderFactory.createEmptyBorder(20, 50, 20, 50)
 
@@ -178,7 +178,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

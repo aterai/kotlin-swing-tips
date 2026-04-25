@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.tree.DefaultMutableTreeNode
 
-private fun makeUI(): Component {
+private fun createUI(): Component {
   val tree = object : JTree() {
     override fun updateUI() {
       setCellRenderer(null)
@@ -96,7 +96,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

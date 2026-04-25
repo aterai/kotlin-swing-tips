@@ -11,7 +11,7 @@ private fun makeEditorPane(): JEditorPane {
   return editorPane
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val html = "<html><h2>H2</h2>text<ul><li>list: %s</li></ul></html>"
   val editor0 = makeEditorPane()
   editor0.text = html.format("Default")
@@ -51,7 +51,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

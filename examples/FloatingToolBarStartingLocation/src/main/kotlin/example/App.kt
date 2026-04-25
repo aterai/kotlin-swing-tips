@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.plaf.basic.BasicToolBarUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val toolBar = JToolBar("ToolBar")
   toolBar.add(JCheckBox("JCheckBox"))
   toolBar.add(JTextField(10))
@@ -36,7 +36,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

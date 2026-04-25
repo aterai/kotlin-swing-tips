@@ -9,7 +9,7 @@ import java.awt.geom.RoundRectangle2D
 import javax.swing.*
 import kotlin.math.sqrt
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val informationIcon = UIManager.getIcon("OptionPane.informationIcon")
   val errorIcon = UIManager.getIcon("OptionPane.errorIcon")
   val questionIcon = UIManager.getIcon("OptionPane.questionIcon")
@@ -107,7 +107,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

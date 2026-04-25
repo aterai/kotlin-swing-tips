@@ -33,7 +33,7 @@ private val clearAllAction = object : AbstractAction("clear all") {
   }
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   undoSupport.addUndoableEditListener(um)
   val box = Box.createHorizontalBox()
   box.add(Box.createHorizontalGlue())
@@ -127,7 +127,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

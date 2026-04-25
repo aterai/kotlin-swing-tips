@@ -10,7 +10,7 @@ import javax.swing.text.DefaultEditorKit
 import javax.swing.text.DocumentFilter
 import javax.swing.text.TextAction
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val field = JTextField(12)
   (field.document as? AbstractDocument)?.documentFilter = SizeFilter()
   // (field.document as? AbstractDocument)?.documentFilter = DocumentSizeFilter(5)
@@ -124,7 +124,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

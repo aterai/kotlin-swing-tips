@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent
 import javax.swing.*
 import javax.swing.JInternalFrame.JDesktopIcon
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val desktop = JDesktopPane()
   desktop.desktopManager = object : DefaultDesktopManager() {
     override fun iconifyFrame(f: JInternalFrame) {
@@ -82,7 +82,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

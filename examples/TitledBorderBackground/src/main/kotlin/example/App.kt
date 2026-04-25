@@ -5,7 +5,7 @@ import java.awt.geom.Area
 import javax.swing.*
 import javax.swing.border.TitledBorder
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p1 = object : JPanel() {
     override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
@@ -115,7 +115,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

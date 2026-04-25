@@ -7,7 +7,7 @@ import javax.swing.text.DefaultCaret
 
 private val textArea = JTextArea("11111111111111\n22222\n3333")
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val hidingCaret = object : DefaultCaret() {
     override fun isVisible() = false
   }
@@ -66,7 +66,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

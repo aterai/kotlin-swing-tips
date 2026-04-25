@@ -4,7 +4,7 @@ import java.awt.*
 import java.lang.Character.UnicodeBlock
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val label = JTextField()
   label.isEditable = false
   label.font = label.font.deriveFont(32f)
@@ -48,7 +48,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

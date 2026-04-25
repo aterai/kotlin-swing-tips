@@ -5,7 +5,7 @@ import javax.swing.*
 
 private const val KEY = "OptionPane.isYesLast"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val log = object : JTextArea() {
     override fun updateUI() {
       UIManager.put(KEY, null)
@@ -52,7 +52,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

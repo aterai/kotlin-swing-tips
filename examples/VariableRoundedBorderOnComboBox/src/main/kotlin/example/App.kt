@@ -13,7 +13,7 @@ import javax.swing.plaf.basic.BasicComboBoxUI
 import javax.swing.plaf.basic.BasicComboPopup
 import javax.swing.plaf.basic.BasicScrollBarUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = arrayOf("111", "2222", "33333")
   val combo0 = JComboBox(model)
   val combo1 = object : JComboBox<String>(model) {
@@ -447,7 +447,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

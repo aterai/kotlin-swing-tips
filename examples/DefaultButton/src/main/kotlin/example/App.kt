@@ -7,7 +7,7 @@ import javax.swing.*
 private val b1 = JButton("Button1")
 private val b2 = JButton("Button2")
 
-fun makeUI() = JPanel(BorderLayout(5, 5)).also {
+fun createUI() = JPanel(BorderLayout(5, 5)).also {
   it.add(makeRadioPane(), BorderLayout.NORTH)
   it.add(makeSampleTextComponent())
   it.add(makeDefaultButtonPanel(), BorderLayout.SOUTH)
@@ -66,7 +66,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

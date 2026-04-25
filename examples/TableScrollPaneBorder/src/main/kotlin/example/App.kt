@@ -7,7 +7,7 @@ import javax.swing.plaf.ColorUIResource
 import javax.swing.plaf.DimensionUIResource
 import javax.swing.table.DefaultTableModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val table = object : JTable(DefaultTableModel(15, 3)) {
     override fun updateUI() {
       val reset = ColorUIResource(Color.RED)
@@ -127,7 +127,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

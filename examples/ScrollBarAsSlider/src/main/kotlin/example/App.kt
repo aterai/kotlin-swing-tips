@@ -9,7 +9,7 @@ private const val MIN = 0
 private const val MAX = EXTENT * 10 // 200
 private const val VALUE = 50
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val scrollbar = JScrollBar(Adjustable.HORIZONTAL, VALUE, EXTENT, MIN, MAX + EXTENT)
   val model = SpinnerNumberModel(VALUE, MIN, MAX, STEP)
 
@@ -59,7 +59,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -9,7 +9,7 @@ import javax.imageio.ImageIO
 import javax.swing.*
 import kotlin.math.roundToInt
 
-fun makeUI(): Component {
+fun createUI(): Component {
   // symbol_scale_2.jpg: Real World Illustrator: Understanding 9-Slice Scaling
   // https://rwillustrator.blogspot.jp/2007/04/understanding-9-slice-scaling.html
   val img = makeBufferedImage("example/symbol_scale_2.jpg")
@@ -246,7 +246,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

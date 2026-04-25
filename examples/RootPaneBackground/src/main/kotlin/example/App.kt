@@ -12,7 +12,7 @@ import javax.swing.border.Border
 
 val TEXTURE = ImageUtils.makeCheckerTexture()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = object : JPanel() {
     override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
@@ -313,7 +313,7 @@ fun main() {
     val contentPane = frame.contentPane
     (contentPane as? JComponent)?.isOpaque = false
     frame.jMenuBar = ImageUtils.createMenuBar()
-    frame.contentPane.add(makeUI())
+    frame.contentPane.add(createUI())
     frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
     frame.pack()
     frame.setLocationRelativeTo(null)

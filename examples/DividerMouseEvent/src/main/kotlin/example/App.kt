@@ -7,7 +7,7 @@ import java.awt.event.MouseEvent
 import javax.swing.*
 import javax.swing.plaf.basic.BasicSplitPaneUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val s1 = JScrollPane(JTree())
   val s2 = JScrollPane(JTable(2, 3))
   val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, s1, s2).also {
@@ -82,7 +82,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.HIDE_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

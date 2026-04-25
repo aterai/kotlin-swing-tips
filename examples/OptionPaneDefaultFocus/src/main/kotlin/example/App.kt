@@ -11,7 +11,7 @@ import javax.swing.event.AncestorListener
 
 private const val DUMMY = "Hello"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val log = JTextArea()
   val p = JPanel(GridLayout(2, 2, 5, 5))
   val textField1 = JTextField(DUMMY)
@@ -129,7 +129,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -6,7 +6,7 @@ import javax.swing.*
 import javax.swing.plaf.metal.MetalScrollBarUI
 import kotlin.math.roundToInt
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val scroll = object : JScrollPane(JTable(20, 3)) {
     override fun updateUI() {
       super.updateUI()
@@ -152,7 +152,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

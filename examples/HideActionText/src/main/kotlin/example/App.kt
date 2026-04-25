@@ -5,7 +5,7 @@ import java.awt.event.ItemEvent
 import javax.swing.*
 import javax.swing.text.DefaultEditorKit
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val pasteAction = DefaultEditorKit.PasteAction()
   pasteAction.putValue(Action.LARGE_ICON_KEY, ColorIcon(Color.GREEN))
 
@@ -96,7 +96,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

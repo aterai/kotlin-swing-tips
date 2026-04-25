@@ -5,7 +5,7 @@ import java.awt.geom.Point2D
 import javax.swing.*
 import javax.swing.border.TitledBorder
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val title = "TitledBorder"
   val box = Box.createVerticalBox()
   box.add(TitledSeparator(title, TitledBorder.DEFAULT_POSITION))
@@ -110,7 +110,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

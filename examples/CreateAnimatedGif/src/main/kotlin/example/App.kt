@@ -37,7 +37,7 @@ fun makeLabel() = JLabel().also {
   it.horizontalTextPosition = SwingConstants.CENTER
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val label = makeLabel()
 
   // val file = File(System.getProperty("user.dir"), "anime.gif")
@@ -137,7 +137,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

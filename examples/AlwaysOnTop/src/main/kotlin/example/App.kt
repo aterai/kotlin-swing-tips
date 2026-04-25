@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val check = JCheckBox("Always On Top", true)
   check.addActionListener { e ->
     (e.source as? JCheckBox)?.also {
@@ -33,7 +33,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       isAlwaysOnTop = true
       pack()
       setLocationRelativeTo(null)

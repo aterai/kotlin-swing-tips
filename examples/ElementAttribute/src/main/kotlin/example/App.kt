@@ -32,7 +32,7 @@ private val HTML_TEXT = """
 """.trimIndent()
 private var tooltip: String? = null
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val editor1 = CustomTooltipEditorPane()
   editor1.editorKit = HTMLEditorKit()
   editor1.text = HTML_TEXT
@@ -173,7 +173,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

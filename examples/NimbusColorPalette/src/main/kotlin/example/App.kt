@@ -8,7 +8,7 @@ import javax.swing.*
 
 private var worker: SwingWorker<String, Unit?>? = null
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val def = UIManager.getLookAndFeelDefaults()
   def["nimbusOrange"] = Color(255, 220, 35, 200)
   val d = UIDefaults()
@@ -95,7 +95,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

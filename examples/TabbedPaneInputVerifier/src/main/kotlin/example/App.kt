@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.text.JTextComponent
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val field0 = JTextField("---")
   val field1 = JTextField("100")
   val list = listOf(field0, field1)
@@ -96,7 +96,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

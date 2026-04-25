@@ -6,7 +6,7 @@ import javax.swing.*
 private val info = JTextArea()
 private val spinner = JSpinner()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val box = Box.createVerticalBox()
   box.setBorder(BorderFactory.createEmptyBorder(16, 8, 16, 8))
   box.add(spinner)
@@ -104,7 +104,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

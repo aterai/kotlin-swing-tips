@@ -15,7 +15,7 @@ private const val STR1 = "GlyphVector GlyphVector GlyphVector GlyphVector"
 private const val STR2 = "JTextArea JTextArea JTextArea JTextArea"
 private const val STR3 = "***************************************"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("Default", "GlyphVector", "JTextArea")
   val data = arrayOf(
     arrayOf(STR0, STR1, STR2),
@@ -182,7 +182,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

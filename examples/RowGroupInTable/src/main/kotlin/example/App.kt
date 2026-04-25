@@ -8,7 +8,7 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableRowSorter
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val columnNames = arrayOf("Group", "Name", "Count")
   val model = object : DefaultTableModel(columnNames, 0) {
     override fun getColumnClass(column: Int) = RowData::class.java
@@ -128,7 +128,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -58,7 +58,7 @@ fun makeRowFilter(selected: String): RowFilter<TableModel, Int>? = when (selecte
   else -> null
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = CalendarViewTableModel(YearMonth.from(realDate))
   monthTable.model = model
   val sorter: TableRowSorter<out TableModel> = TableRowSorter(model)
@@ -195,7 +195,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

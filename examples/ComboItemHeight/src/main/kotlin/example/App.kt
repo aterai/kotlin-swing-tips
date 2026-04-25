@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = Box.createVerticalBox()
   val items = arrayOf("JComboBox 11111:", "JComboBox 222:", "JComboBox 33:")
   val combo1 = object : JComboBox<String>(items) {
@@ -133,7 +133,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

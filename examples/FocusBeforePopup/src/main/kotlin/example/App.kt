@@ -9,7 +9,7 @@ import javax.swing.event.PopupMenuListener
 import javax.swing.text.DefaultEditorKit
 import javax.swing.text.JTextComponent
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val log = JTextArea("")
   val popup1 = makePopupMenu(log)
 
@@ -138,7 +138,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

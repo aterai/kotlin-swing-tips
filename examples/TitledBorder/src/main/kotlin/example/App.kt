@@ -5,7 +5,7 @@ import java.awt.event.ItemEvent
 import javax.swing.*
 import javax.swing.border.TitledBorder
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val border = BorderFactory.createTitledBorder("Test Test")
   val panel = JPanel()
   panel.border = border
@@ -91,7 +91,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

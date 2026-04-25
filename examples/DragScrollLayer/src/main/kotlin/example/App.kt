@@ -6,7 +6,7 @@ import javax.swing.*
 import javax.swing.event.MouseInputAdapter
 import javax.swing.plaf.LayerUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val box1 = makeTestBox()
   box1.border = BorderFactory.createTitledBorder("DragScrollListener")
   val l = DragScrollListener()
@@ -141,7 +141,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

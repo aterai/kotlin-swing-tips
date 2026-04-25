@@ -24,7 +24,7 @@ private val progress2 = object : JProgressBar() {
   }
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   progress1.foreground = Color(0xFF_AA_AA)
   progress2.isStringPainted = true
   progress2.font = progress2.font.deriveFont(24f)
@@ -170,7 +170,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

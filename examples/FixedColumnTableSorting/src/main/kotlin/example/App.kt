@@ -8,7 +8,7 @@ import javax.swing.table.TableRowSorter
 private const val FIXED_RANGE = 2
 private const val ES = ""
 
-fun makeUI(): Component {
+fun createUI(): Component {
   // FixedColumnExample.java
   // @author Nobuo Tamemasa
   val data = arrayOf<Array<Any>>(
@@ -83,7 +83,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

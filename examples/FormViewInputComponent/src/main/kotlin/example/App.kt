@@ -43,7 +43,7 @@ private const val FORM3 = """
   </form>
 """
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val editor = JEditorPane()
   val kit = HTMLEditorKit()
   kit.isAutoFormSubmission = false
@@ -129,7 +129,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -83,7 +83,7 @@ private fun makeCheckerTexture(): TexturePaint {
   return TexturePaint(img, Rectangle(sz, sz))
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   // ecqlipse 2 PNG by chrfb on DeviantArt
   // https://www.deviantart.com/chrfb/art/ecqlipse-2-PNG-59941546
   val cl = Thread.currentThread().contextClassLoader
@@ -278,7 +278,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

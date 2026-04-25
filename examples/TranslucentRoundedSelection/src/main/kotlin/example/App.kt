@@ -36,7 +36,7 @@ This lesson explains the concepts you need to
 https://docs.oracle.com/javase/tutorial/uiswing/learn/index.html
 """
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textArea = object : JTextArea(TEXT) {
     override fun updateUI() {
       super.updateUI()
@@ -316,7 +316,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

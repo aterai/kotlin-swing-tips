@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.text.DefaultCaret
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textArea = HighlightCursorTextArea()
   textArea.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
   textArea.text = "Highlight Cursor Test\n\n**************************************"
@@ -74,7 +74,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

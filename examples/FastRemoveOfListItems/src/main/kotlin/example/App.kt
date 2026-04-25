@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.geom.Rectangle2D
 import javax.swing.*
 
-fun makeUI() = JTabbedPane().also {
+fun createUI() = JTabbedPane().also {
   it.addTab("default remove", makeCmp0())
   it.addTab("clear + addElement", makeCmp1())
   it.addTab("addAll + remove", makeCmp2())
@@ -234,7 +234,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

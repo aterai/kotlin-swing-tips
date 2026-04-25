@@ -5,7 +5,7 @@ import java.awt.event.ItemEvent
 import javax.swing.*
 import javax.swing.tree.TreeSelectionModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tree = JTree()
 
   val r0 = JRadioButton("DISCONTIGUOUS_TREE_SELECTION", true)
@@ -56,7 +56,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

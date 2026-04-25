@@ -9,7 +9,7 @@ import javax.swing.text.StyleContext
 
 private const val TEXT = "Quartz glyph job vex'd cwm finks."
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val label1 = JTextPane()
   val attr = label1.getStyle(StyleContext.DEFAULT_STYLE)
   StyleConstants.setLineSpacing(attr, -.2f)
@@ -67,7 +67,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

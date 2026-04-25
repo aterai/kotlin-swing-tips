@@ -15,7 +15,7 @@ import javax.swing.*
 
 private const val TEXT = "The quick brown fox jumps over the lazy dog."
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textArea = object : JTextArea(TEXT) {
     override fun updateUI() {
       super.updateUI()
@@ -147,7 +147,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

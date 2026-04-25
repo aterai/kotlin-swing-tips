@@ -10,7 +10,7 @@ import javax.swing.plaf.basic.BasicScrollBarUI
 
 private const val TABAREA_SIZE = 28
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabs = CardLayoutTabbedPane()
   tabs.addTab("JTree", ColorIcon(Color.RED), JScrollPane(JTree()))
   tabs.addTab("JTable", ColorIcon(Color.GREEN), JScrollPane(JTable(10, 3)))
@@ -436,7 +436,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

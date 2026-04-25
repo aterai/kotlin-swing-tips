@@ -9,7 +9,7 @@ import javax.swing.event.ChangeListener
 import javax.swing.plaf.basic.BasicSliderUI
 import kotlin.math.roundToInt
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val slider = RangeSliderPanel(0, 100, 25, 75)
   return JPanel(GridBagLayout()).also {
     it.add(slider)
@@ -260,7 +260,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

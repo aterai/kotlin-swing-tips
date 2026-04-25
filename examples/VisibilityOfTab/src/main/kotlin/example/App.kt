@@ -36,7 +36,7 @@ val tabbedPane2 = object : JTabbedPane() {
   }
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel(GridLayout(0, 1, 0, 2))
   val list = listOf(JTabbedPane(), tabbedPane1, tabbedPane2)
   list.forEach {
@@ -80,7 +80,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

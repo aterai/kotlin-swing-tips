@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.plaf.basic.ComboPopup
 
-fun makeUI(): Component {
+fun createUI(): Component {
   UIManager.put("ComboBox.selectionBackground", Color.PINK)
   UIManager.put("ComboBox.selectionForeground", Color.CYAN)
   val model = arrayOf("111", "2222", "33333")
@@ -78,7 +78,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

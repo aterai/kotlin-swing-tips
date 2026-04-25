@@ -52,7 +52,7 @@ private val r1 = JRadioButton("None", true)
 private val r2 = JRadioButton("Name")
 private val r3 = JRadioButton("Color")
 
-fun makeUI(): Component {
+fun createUI(): Component {
   defaultModel.forEach { model.addElement(it) }
   list.model = model
 
@@ -268,7 +268,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

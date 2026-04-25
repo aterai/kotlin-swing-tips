@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.text.Position.Bias
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = makeModel()
   val list = object : JList<String>(model) {
     override fun getNextMatch(
@@ -52,7 +52,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -119,7 +119,7 @@ private val monthTable = object : JTable() {
 var currentLocalDate: LocalDate = LocalDate.of(2021, 6, 21)
   private set
 
-fun makeUI(): Component {
+fun createUI(): Component {
   updateMonthView(LocalDate.of(2021, 6, 21))
 
   monthLabel.also {
@@ -388,7 +388,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

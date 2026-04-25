@@ -10,7 +10,7 @@ private val field1 = JTextField("1111111111111111")
 private val field2 = JTextField("9876543210987654")
 private val log = JTextArea()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   EventQueue.invokeLater { field0.requestFocusInWindow() }
   val al = ActionListener {
     val c = KeyboardFocusManager.getCurrentKeyboardFocusManager().focusOwner
@@ -111,7 +111,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -22,7 +22,7 @@ private val cancelButton = JButton("Cancel")
 private val chooseButton = JButton("Choose...")
 private var worker: SwingWorker<String, Message>? = null
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = DefaultComboBoxModel<String>()
   model.addElement(System.getProperty("user.dir"))
   dirCombo.model = model
@@ -289,7 +289,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

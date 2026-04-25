@@ -17,7 +17,7 @@ import javax.swing.text.JTextComponent
 
 private val tabbedPane = JTabbedPane()
 
-private fun makeUI(): Component {
+private fun createUI(): Component {
   EventQueue.invokeLater {
     val root = tabbedPane.rootPane
     root.transferHandler = FileTransferHandler()
@@ -142,7 +142,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.AlphaComposite
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val cardLayout = CardLayout(50, 5)
 
   val cards = object : JPanel(cardLayout) {
@@ -75,7 +75,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -19,7 +19,7 @@ private val model = FileModel()
 private val sorter = TableRowSorter(model)
 val deleteRowSet = mutableSetOf<Int>()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val table = JTable(model)
   table.rowSorter = sorter
   table.fillsViewportHeight = true
@@ -235,7 +235,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

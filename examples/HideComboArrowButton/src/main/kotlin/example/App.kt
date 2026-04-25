@@ -50,7 +50,7 @@ private fun makePanel(): Component {
   return p
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel(BorderLayout(5, 5))
   p.add(JLabel("JLabel:"), BorderLayout.WEST)
   p.add(JTextField("JTextField"))
@@ -77,7 +77,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

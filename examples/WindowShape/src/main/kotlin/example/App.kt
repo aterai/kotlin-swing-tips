@@ -11,7 +11,7 @@ import javax.swing.*
 private val FRC = FontRenderContext(null, true, true)
 private val FONT = Font(Font.SERIF, Font.PLAIN, 300)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val label = JLabel("", SwingConstants.CENTER)
   val frame = JFrame().also {
     it.isUndecorated = true
@@ -76,7 +76,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

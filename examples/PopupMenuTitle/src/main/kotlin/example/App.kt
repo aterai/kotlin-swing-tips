@@ -6,7 +6,7 @@ import javax.swing.border.Border
 import javax.swing.border.CompoundBorder
 import javax.swing.border.TitledBorder
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val popup0 = JPopupMenu("Default JPopupMenu")
   val tree0 = JTree()
   tree0.setComponentPopupMenu(initPopup(popup0))
@@ -122,7 +122,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

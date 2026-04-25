@@ -19,7 +19,7 @@ private val INFO = """
   Cancel editing: Esc-Key, title.isEmpty
 """.trimIndent()
 
-fun makeUI() = JTabbedPane().also {
+fun createUI() = JTabbedPane().also {
   val l = TabTitleEditListener(it)
   it.addChangeListener(l)
   it.addMouseListener(l)
@@ -153,7 +153,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

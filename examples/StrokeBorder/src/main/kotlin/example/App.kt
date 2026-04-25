@@ -10,7 +10,7 @@ private val label = JLabel()
 private val button = JButton("Change")
 private val DEFAULT_DASH_ARRAY = floatArrayOf(1f)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   button.addActionListener {
     val ecs = endcapCombo.getItemAt(endcapCombo.selectedIndex).style
     val js = joinCombo.getItemAt(joinCombo.selectedIndex).style
@@ -85,7 +85,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

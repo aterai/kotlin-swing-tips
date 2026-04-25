@@ -9,7 +9,7 @@ import javax.swing.*
 import javax.swing.plaf.basic.BasicTabbedPaneUI
 import javax.swing.plaf.metal.MetalTabbedPaneUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabbedPane = object : JTabbedPane() {
     override fun updateUI() {
       super.updateUI()
@@ -143,7 +143,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.geom.AffineTransform
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val informationIcon = UIManager.getIcon("OptionPane.informationIcon")
   val errorIcon = UIManager.getIcon("OptionPane.errorIcon")
   val questionIcon = UIManager.getIcon("OptionPane.questionIcon")
@@ -93,7 +93,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

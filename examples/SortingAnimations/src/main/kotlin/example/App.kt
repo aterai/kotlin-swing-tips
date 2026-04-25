@@ -34,7 +34,7 @@ val panel = object : JPanel() {
   }
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   genArray(number)
   startButton.addActionListener {
     setComponentEnabled(false)
@@ -394,7 +394,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       minimumSize = Dimension(256, 200)
       isResizable = false
       pack()

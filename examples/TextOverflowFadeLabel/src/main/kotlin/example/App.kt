@@ -5,7 +5,7 @@ import java.awt.font.TextLayout
 import java.awt.image.BufferedImage
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val text = "012345678901234567890123456789012345678901234567890123456789"
   val box = Box.createVerticalBox().also {
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
@@ -161,7 +161,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

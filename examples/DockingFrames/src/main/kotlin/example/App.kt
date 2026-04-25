@@ -5,7 +5,7 @@ import java.awt.event.ComponentEvent
 import java.awt.event.ComponentListener
 import javax.swing.*
 
-fun makeUI() = JPanel().also {
+fun createUI() = JPanel().also {
   it.preferredSize = Dimension(320, 100)
 }
 
@@ -63,13 +63,13 @@ fun main() {
       Toolkit.getDefaultToolkit().beep()
     }
     val frame1 = JFrame("main frame")
-    frame1.contentPane.add(makeUI())
+    frame1.contentPane.add(createUI())
     frame1.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
     frame1.pack()
     frame1.setLocationRelativeTo(null)
 
     val frame2 = JFrame("sub frame")
-    frame2.contentPane.add(makeUI())
+    frame2.contentPane.add(createUI())
     frame2.pack()
     DockingListener(frame1, frame2)
     frame1.isVisible = true

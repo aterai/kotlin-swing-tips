@@ -6,7 +6,7 @@ import javax.swing.plaf.basic.BasicInternalFrameTitlePane
 import javax.swing.plaf.basic.BasicInternalFrameUI
 import javax.swing.plaf.metal.MetalLookAndFeel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val f0 = JInternalFrame("metal(default)", true, true, true, true)
   f0.setSize(240, 100)
   f0.setLocation(20, 10)
@@ -68,7 +68,7 @@ fun main() {
   EventQueue.invokeLater {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -13,7 +13,7 @@ import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.Timer
 
-fun makeUI() = JPanel(GridLayout(1, 2)).also {
+fun createUI() = JPanel(GridLayout(1, 2)).also {
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/test.png")
   val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
@@ -256,7 +256,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -7,7 +7,7 @@ import javax.swing.*
 import javax.swing.plaf.LayerUI
 import javax.swing.text.JTextComponent
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val field1 = JTextField().also {
     val hint = "Please enter your E-mail address"
     val listener = PlaceholderFocusListener(hint)
@@ -144,7 +144,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

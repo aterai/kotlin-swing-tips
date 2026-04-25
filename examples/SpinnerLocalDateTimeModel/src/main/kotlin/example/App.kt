@@ -18,7 +18,7 @@ import javax.swing.JSpinner.DefaultEditor
 import javax.swing.text.DefaultFormatterFactory
 import javax.swing.text.InternationalFormatter
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val cal = Calendar.getInstance()
   cal.clear(Calendar.MILLISECOND)
   cal.clear(Calendar.SECOND)
@@ -188,7 +188,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

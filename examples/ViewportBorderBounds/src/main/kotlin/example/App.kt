@@ -15,7 +15,7 @@ import javax.swing.text.html.StyleSheet
 private val editor = JEditorPane()
 private val engine = createEngine()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   // https://github.com/google/code-prettify/blob/master/styles/desert.css
   val styleSheet = StyleSheet().also {
     it.addRule(".str{color:#ffa0a0}")
@@ -152,7 +152,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

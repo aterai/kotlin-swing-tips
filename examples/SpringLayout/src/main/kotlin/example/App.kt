@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.geom.Rectangle2D
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val layout = SpringLayout()
   val panel = JPanel(layout)
   panel.border = BorderFactory.createLineBorder(Color.GREEN, 10)
@@ -48,7 +48,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

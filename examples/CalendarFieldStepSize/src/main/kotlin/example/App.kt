@@ -8,7 +8,7 @@ import javax.swing.*
 import javax.swing.text.DateFormatter
 import javax.swing.text.DefaultFormatterFactory
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val calendar = Calendar.getInstance()
   calendar[Calendar.HOUR_OF_DAY] = 0
   calendar.clear(Calendar.MINUTE)
@@ -82,7 +82,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

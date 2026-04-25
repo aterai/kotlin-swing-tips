@@ -13,7 +13,7 @@ private fun makeTitledPanel(
   return p
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = DefaultComboBoxModel<String>().also {
     it.addElement("11111")
     it.addElement("222")
@@ -92,7 +92,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

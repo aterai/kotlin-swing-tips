@@ -18,7 +18,7 @@ private const val HTML_TEXT = """
   </html>
 """
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val hint = JEditorPane()
   hint.editorKit = HTMLEditorKit()
   hint.isEditable = false
@@ -147,7 +147,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

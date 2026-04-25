@@ -9,7 +9,7 @@ import javax.swing.text.BadLocationException
 import javax.swing.text.DocumentFilter
 import javax.swing.text.JTextComponent
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val field = JTextField()
   val doc = field.document
   if (doc is AbstractDocument) {
@@ -83,7 +83,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

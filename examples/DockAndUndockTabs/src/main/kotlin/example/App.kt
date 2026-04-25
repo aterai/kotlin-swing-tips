@@ -22,7 +22,7 @@ import javax.swing.plaf.LayerUI
 import javax.swing.plaf.basic.BasicButtonUI
 import javax.swing.plaf.metal.MetalTabbedPaneUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val sub = DnDTabbedPane().also {
     it.addTab("Title aa", JLabel("aaa"))
     it.addTab("Title bb", JScrollPane(JTree()))
@@ -619,7 +619,7 @@ fun main() {
     }
     val frame = JFrame()
     frame.defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-    frame.contentPane.add(makeUI())
+    frame.contentPane.add(createUI())
     frame.pack()
     frame.setLocationRelativeTo(null)
     frame.isVisible = true

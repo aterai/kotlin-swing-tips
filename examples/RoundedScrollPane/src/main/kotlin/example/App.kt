@@ -23,7 +23,7 @@ private val SELECTION_FOREGROUND = Color.BLUE
 private val THUMB = Color(0xCD_CD_CD)
 private const val KEY = "ComboBox.border"
 
-fun makeUI(): Component {
+fun createUI(): Component {
   UIManager.put("ScrollBar.width", 10)
   // ScrollBar.thumbHeight: GTKLookAndFeel, SynthLookAndFeel, NimbusLookAndFeel
   UIManager.put("ScrollBar.thumbHeight", 20)
@@ -391,7 +391,7 @@ fun main() {
   EventQueue.invokeLater {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

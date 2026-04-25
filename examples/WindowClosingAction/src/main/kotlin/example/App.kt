@@ -6,7 +6,7 @@ import java.awt.event.WindowEvent
 import javax.swing.*
 import javax.swing.plaf.basic.BasicToolBarUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val list = listOf<JComponent>(
     JMenuItem("Open"),
     JMenuItem("Save"),
@@ -71,7 +71,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

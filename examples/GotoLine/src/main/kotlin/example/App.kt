@@ -7,7 +7,7 @@ import javax.swing.*
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = SpinnerNumberModel(100, 1, 2000, 1)
   val textArea = JTextArea("1111111111111111\n".repeat(2000))
   textArea.border = BorderFactory.createEmptyBorder(0, 2, 0, 0)
@@ -143,7 +143,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

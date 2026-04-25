@@ -5,7 +5,7 @@ import java.awt.datatransfer.DataFlavor
 import java.io.File
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val log = JTextArea()
   val check = JCheckBox("isMultiSelection")
   val button1 = JButton("Default")
@@ -75,7 +75,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

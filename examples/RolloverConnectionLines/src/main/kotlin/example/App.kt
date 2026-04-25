@@ -7,7 +7,7 @@ import javax.swing.*
 import javax.swing.plaf.basic.BasicTreeUI
 import javax.swing.tree.TreePath
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tree = object : JTree() {
     private var rollover = false
     private var rolloverHandler: MouseAdapter? = null
@@ -102,7 +102,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.border.TitledBorder
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val b0 = BorderFactory.createLineBorder(Color.GRAY)
   val b1 = BorderFactory.createTitledBorder(b0, "TitledBorder")
   b1.titleJustification = TitledBorder.CENTER
@@ -39,7 +39,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

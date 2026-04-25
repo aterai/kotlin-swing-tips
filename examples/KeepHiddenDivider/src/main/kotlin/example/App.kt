@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent
 import javax.swing.*
 import javax.swing.plaf.basic.BasicSplitPaneUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val splitPane = JSplitPane(JSplitPane.VERTICAL_SPLIT)
   splitPane.topComponent = object : JScrollPane(JTable(5, 3)) {
     override fun getMinimumSize() = Dimension(0, 100)
@@ -105,7 +105,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -10,7 +10,7 @@ import javax.swing.*
 
 private val CELL_SIZE = Dimension(8, 8)
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel()
   val label1 = JLabel()
   p.add(label1)
@@ -156,7 +156,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

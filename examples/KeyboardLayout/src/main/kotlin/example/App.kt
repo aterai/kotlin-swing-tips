@@ -13,7 +13,7 @@ private val keys = arrayOf(
   arrayOf("Fn", "Alt", "                                 ", "Alt", "←", "↓", "→"),
 )
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val keyboard = makeKeyboardPanel()
   EventQueue.invokeLater { SwingUtilities.updateComponentTreeUI(keyboard) }
 
@@ -100,7 +100,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

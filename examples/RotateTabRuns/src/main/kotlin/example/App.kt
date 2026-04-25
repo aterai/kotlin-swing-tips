@@ -5,7 +5,7 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.plaf.metal.MetalTabbedPaneUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   UIManager.put("TabbedPane.tabRunOverlay", 0)
   UIManager.put("TabbedPane.selectedLabelShift", 0)
   UIManager.put("TabbedPane.labelShift", 0)
@@ -129,7 +129,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

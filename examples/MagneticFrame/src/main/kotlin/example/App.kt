@@ -4,7 +4,7 @@ import java.awt.*
 import javax.swing.*
 import kotlin.math.abs
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val desktop = JDesktopPane()
   desktop.background = Color.GRAY.brighter()
   desktop.dragMode = JDesktopPane.OUTLINE_DRAG_MODE
@@ -80,7 +80,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

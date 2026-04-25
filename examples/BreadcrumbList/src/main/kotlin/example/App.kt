@@ -9,7 +9,7 @@ import javax.swing.plaf.LayerUI
 import javax.swing.tree.MutableTreeNode
 import javax.swing.tree.TreePath
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val breadcrumb = makeContainer(10 + 1)
   val tree = JTree()
   tree.setSelectionRow(0)
@@ -250,7 +250,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

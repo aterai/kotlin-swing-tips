@@ -31,7 +31,7 @@ private fun makeVerticalTabIcon(
   return ImageIcon(bi)
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tabs1 = JTabbedPane(SwingConstants.LEFT)
   val tabs2 = JTabbedPane(SwingConstants.RIGHT)
   listOf("computer", "directory", "file").forEach {
@@ -57,7 +57,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

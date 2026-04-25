@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent
 import javax.swing.*
 import javax.swing.plaf.LayerUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, makeBox(), makeBox())
   split.dividerSize = 1
   split.resizeWeight = .5
@@ -111,7 +111,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

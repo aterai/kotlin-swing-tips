@@ -9,7 +9,7 @@ import javax.swing.plaf.basic.BasicSliderUI
 private const val MAXI = 80
 private const val MINI = 40
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val slider1 = makeSlider("ChangeListener")
   val slider2 = makeSlider("TrackListener")
   if (slider2.ui is WindowsSliderUI) {
@@ -95,7 +95,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

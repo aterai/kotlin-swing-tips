@@ -19,7 +19,7 @@ private val TEXT = """
   11-22_33
 """.trimIndent()
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val textArea = JTextArea(TEXT)
   val action = object : TextAction(DefaultEditorKit.selectWordAction) {
     override fun actionPerformed(e: ActionEvent) {
@@ -138,7 +138,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -8,7 +8,7 @@ import java.awt.image.RGBImageFilter
 import javax.swing.*
 import javax.swing.plaf.LayerUI
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val bg1 = Color(0xFE_FF_32_00.toInt(), true)
   val bg2 = Color(0x32_FF_32_00, true).darker()
 
@@ -189,7 +189,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

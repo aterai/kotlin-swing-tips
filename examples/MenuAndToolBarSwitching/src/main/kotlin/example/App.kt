@@ -7,7 +7,7 @@ import javax.swing.*
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val p = JPanel(BorderLayout())
   val mainMenuBar = makeMenuBar()
   val button = makeHamburgerMenuButton(mainMenuBar, p)
@@ -122,7 +122,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -12,7 +12,7 @@ import java.io.File
 import javax.swing.*
 import javax.swing.filechooser.FileSystemView
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val smallLabel = object : JLabel() {
     override fun getPreferredSize() = Dimension(16 + 1, 16 + 1)
 
@@ -98,7 +98,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

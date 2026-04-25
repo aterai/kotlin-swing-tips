@@ -10,7 +10,7 @@ import javax.swing.*
 import javax.swing.plaf.metal.MetalSliderUI
 import kotlin.math.roundToInt
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val slider0 = JSlider(0, 100, 50)
   slider0.border = BorderFactory.createTitledBorder("Default SnapToTicks")
 
@@ -183,7 +183,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

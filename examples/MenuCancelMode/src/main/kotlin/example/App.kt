@@ -6,7 +6,7 @@ import java.awt.event.ItemListener
 import java.awt.event.KeyEvent
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val key = "Menu.cancelMode"
   val cancelMode = UIManager.getString(key)
   // println("$key: $cancelMode")
@@ -119,7 +119,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

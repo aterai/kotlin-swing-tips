@@ -16,7 +16,7 @@ import javax.swing.border.Border
 import javax.swing.event.MouseInputAdapter
 import javax.swing.event.MouseInputListener
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = DefaultListModel<ListItem>().also {
     // [XP Style Icons - Download](https://xp-style-icons.en.softonic.com/)
     it.addElement(ListItem("wi0009-32", "example/wi0009-32.png"))
@@ -450,7 +450,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -9,7 +9,7 @@ import javax.swing.table.TableRowSorter
 
 private const val BUTTON_COLUMN = 3
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = RowDataModel().also {
     it.addRowData(RowData("Name 1", "Comment..."))
     it.addRowData(RowData("Name 2", "Test"))
@@ -158,7 +158,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -5,7 +5,7 @@ import java.awt.font.TextAttribute
 import java.util.concurrent.ConcurrentHashMap
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val code = "BC89FE5A"
   val field0 = JFormattedTextField(code)
   field0.setHorizontalAlignment(SwingConstants.RIGHT)
@@ -129,7 +129,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

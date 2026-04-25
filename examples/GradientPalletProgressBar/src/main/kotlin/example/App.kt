@@ -9,7 +9,7 @@ import java.beans.PropertyChangeListener
 import javax.swing.*
 import javax.swing.plaf.basic.BasicProgressBarUI
 
-fun makeUI() = JPanel(BorderLayout()).also {
+fun createUI() = JPanel(BorderLayout()).also {
   val p = JPanel(GridLayout(3, 1))
   p.add(makeProgressBar())
   p.add(makeProgressBar())
@@ -174,7 +174,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

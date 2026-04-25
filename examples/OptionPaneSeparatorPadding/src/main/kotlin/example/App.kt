@@ -7,7 +7,7 @@ import javax.swing.plaf.InsetsUIResource
 private val padding = SpinnerNumberModel(0, 0, 50, 1)
 private val margin = SpinnerNumberModel(15, 0, 50, 1)
 
-fun makeUI() = JPanel(GridLayout(2, 1)).also {
+fun createUI() = JPanel(GridLayout(2, 1)).also {
   val p = JPanel()
   p.add(makeButton1())
   p.add(makeButton2())
@@ -89,7 +89,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

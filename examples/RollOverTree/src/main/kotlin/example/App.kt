@@ -10,7 +10,7 @@ import javax.swing.tree.DefaultTreeCellRenderer
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreeModel
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val tree = object : JTree(makeModel()) {
     private val rolloverRowColor = Color(0xDC_F0_FF)
     private var rollOverRowIndex = -1
@@ -96,7 +96,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

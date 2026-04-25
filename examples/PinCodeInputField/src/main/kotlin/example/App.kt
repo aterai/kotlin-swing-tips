@@ -18,7 +18,7 @@ import javax.swing.text.PasswordView
 import javax.swing.text.Segment
 import javax.swing.text.Utilities
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val password = object : JPasswordField(6) {
     override fun updateUI() {
       super.updateUI()
@@ -217,7 +217,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

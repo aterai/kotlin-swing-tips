@@ -3,7 +3,7 @@ package example
 import java.awt.*
 import javax.swing.*
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val model = DefaultBoundedRangeModel(50, 0, 0, 100)
   val slider1 = JSlider(SwingConstants.VERTICAL)
   val slider2 = JSlider(SwingConstants.HORIZONTAL)
@@ -106,7 +106,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

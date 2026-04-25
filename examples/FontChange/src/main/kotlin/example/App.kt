@@ -27,7 +27,7 @@ fun makeToolBar(parent: JComponent): JToolBar {
   return toolBar
 }
 
-fun makeUI(): Component {
+fun createUI(): Component {
   val button = JButton("Dialog")
   button.addActionListener {
     val c = button.rootPane
@@ -99,7 +99,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true

@@ -5,7 +5,7 @@ import javax.swing.*
 import javax.swing.plaf.basic.BasicTreeUI
 import javax.swing.tree.TreePath
 
-fun makeUI(): Component {
+fun createUI(): Component {
   UIManager.put("Tree.paintLines", true)
   UIManager.put("Tree.lineTypeDashed", true)
   UIManager.put("Tree.line", Color.GREEN)
@@ -92,7 +92,7 @@ fun main() {
   EventQueue.invokeLater {
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
