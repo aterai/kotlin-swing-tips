@@ -6,7 +6,6 @@ import java.awt.geom.Area
 import java.awt.geom.Rectangle2D
 import java.awt.geom.RoundRectangle2D
 import javax.swing.*
-import javax.swing.border.Border
 import javax.swing.border.EmptyBorder
 import javax.swing.border.TitledBorder
 import javax.swing.plaf.LayerUI
