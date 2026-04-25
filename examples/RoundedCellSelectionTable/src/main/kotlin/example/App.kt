@@ -12,17 +12,17 @@ import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableModel
 
-fun makeUI(): Component {
-  val mb = JMenuBar()
-  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
+fun createUI(): Component {
+  val menuBar = JMenuBar()
+  menuBar.add(LookAndFeelUtils.createLookAndFeelMenu())
   return JPanel(BorderLayout()).also {
-    EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
-    it.add(makeScrollPane(RoundedCellSelectionTable(makeModel())))
+    EventQueue.invokeLater { it.rootPane.jMenuBar = menuBar }
+    it.add(createScrollPane(RoundedSelectionTable(createTableModel())))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeScrollPane(view: Component): JScrollPane {
+private fun createScrollPane(view: Component): JScrollPane {
   val scroll = JScrollPane(view)
   scroll.background = Color.WHITE
   scroll.viewport.setOpaque(false)
@@ -30,7 +30,7 @@ private fun makeScrollPane(view: Component): JScrollPane {
   return scroll
 }
 
-fun makeModel(): TableModel {
+fun createTableModel(): TableModel {
   val columnNames = arrayOf("String", "Integer", "Boolean")
   val data = arrayOf<Array<Any>>(
     arrayOf("aaa", 12, true),
@@ -47,7 +47,7 @@ fun makeModel(): TableModel {
   }
 }
 
-private class RoundedCellSelectionTable(
+private class RoundedSelectionTable(
   model: TableModel,
 ) : JTable(model) {
   override fun updateUI() {
@@ -175,11 +175,11 @@ private class SynthBooleanTableCellRenderer2 :
     horizontalAlignment = CENTER
     name = "Table.cellRenderer"
     if (isSelected) {
-      foreground = unwrap(table.selectionForeground)
-      background = unwrap(table.selectionBackground)
+      foreground = resolveColor(table.selectionForeground)
+      background = resolveColor(table.selectionBackground)
     } else {
-      foreground = unwrap(table.foreground)
-      background = unwrap(table.background)
+      foreground = resolveColor(table.foreground)
+      background = resolveColor(table.background)
     }
     setSelected(value as? Boolean == true)
     return this
@@ -187,7 +187,7 @@ private class SynthBooleanTableCellRenderer2 :
 
   override fun isOpaque() = false
 
-  private fun unwrap(c: Color) = if (c is UIResource) Color(c.rgb) else c
+  private fun resolveColor(c: Color) = if (c is UIResource) Color(c.rgb) else c
 }
 
 private object LookAndFeelUtils {
@@ -248,7 +248,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
-      contentPane.add(makeUI())
+      contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
       isVisible = true
