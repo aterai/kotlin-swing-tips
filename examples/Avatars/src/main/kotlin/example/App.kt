@@ -58,7 +58,9 @@ private fun createAvatarButton(i: Int, name: String, color: Color): JButton {
 
 // Custom Layout Manager
 // Arranges components based on gapFraction (0.0=stacked, 1.0=spread)
-private class StackedLayout(private var gapFraction: Double) : LayoutManager {
+private class StackedLayout(
+  private var gapFraction: Double,
+) : LayoutManager {
   fun setGapFraction(gapFraction: Double) {
     this.gapFraction = gapFraction
   }
@@ -106,9 +108,7 @@ private class StackedLayout(private var gapFraction: Double) : LayoutManager {
     return size
   }
 
-  override fun minimumLayoutSize(parent: Container): Dimension {
-    return preferredLayoutSize(parent)
-  }
+  override fun minimumLayoutSize(parent: Container): Dimension = preferredLayoutSize(parent)
 
   override fun addLayoutComponent(name: String, comp: Component) {
     // empty
@@ -120,7 +120,9 @@ private class StackedLayout(private var gapFraction: Double) : LayoutManager {
 }
 
 // Circular Avatar Button
-internal class AvatarButton(icon: Icon) : JButton(icon) {
+internal class AvatarButton(
+  icon: Icon,
+) : JButton(icon) {
   private var tip: JToolTip? = null
 
   override fun updateUI() {
@@ -143,16 +145,15 @@ internal class AvatarButton(icon: Icon) : JButton(icon) {
     return circle.contains(x.toDouble(), y.toDouble())
   }
 
-  override fun createToolTip(): JToolTip {
-    return tip ?: BalloonToolTip().also {
-      it.setComponent(this)
-    }
+  override fun createToolTip(): JToolTip = tip ?: BalloonToolTip().also {
+    it.setComponent(this)
   }
 
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(
-      RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
     )
 
     val w = getWidth()
@@ -167,14 +168,23 @@ internal class AvatarButton(icon: Icon) : JButton(icon) {
     val buffer = gc.createCompatibleImage(w, h, Transparency.TRANSLUCENT)
     val g2d = buffer.createGraphics()
     g2d.setRenderingHint(
-      RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
     )
     g2d.setRenderingHint(
-      RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR
+      RenderingHints.KEY_INTERPOLATION,
+      RenderingHints.VALUE_INTERPOLATION_BILINEAR,
     )
 
     g2d.composite = AlphaComposite.Src
-    g2d.fill(Ellipse2D.Double(INSETS.left.toDouble(), INSETS.top.toDouble(), DIAMETER.toDouble(), DIAMETER.toDouble()))
+    g2d.fill(
+      Ellipse2D.Double(
+        INSETS.left.toDouble(),
+        INSETS.top.toDouble(),
+        DIAMETER.toDouble(),
+        DIAMETER.toDouble(),
+      ),
+    )
 
     // Composite icon inside the circle using SrcAtop
     g2d.composite = AlphaComposite.SrcAtop
@@ -351,6 +361,7 @@ private class BalloonToolTip : JToolTip() {
 
   companion object {
     private const val TRI_HEIGHT = 4
+
     private fun isHeavyWeight(w: Window): Boolean {
       val isHeavyWeight = w.type == Window.Type.POPUP
       val gc = w.graphicsConfiguration
