@@ -49,7 +49,7 @@ private fun createAvatarGroup(names: Array<String>, colors: Array<Color>): JLaye
 
 private fun createAvatarButton(i: Int, name: String, color: Color): JButton {
   // Generate icons with varying sizes (100x100 to 200x200)
-  val randomSize = 100 + (i * 25)
+  val randomSize = 100 + i * 25
   val button = AvatarButton(UserIcon(name, color, randomSize))
   button.setToolTipText("User $name")
   button.addActionListener { Toolkit.getDefaultToolkit().beep() }
@@ -76,7 +76,7 @@ private class StackedLayout(
         val d = c.preferredSize
         c.setBounds(x, y, d.width, d.height)
         // Step calc: 60% of width as default overlap, 40% as animated spread
-        val step = (d.width * .6 + (d.width * .4 * gapFraction)).toInt()
+        val step = (d.width * .6 + d.width * .4 * gapFraction).toInt()
         x += step
       }
     }
@@ -94,7 +94,7 @@ private class StackedLayout(
         maxHeight = max(maxHeight, d.height)
         if (i < n - 1) {
           // Add overlap for all but the last component
-          val step = (d.width * .6 + (d.width * .4 * gapFraction)).toInt()
+          val step = (d.width * .6 + d.width * .4 * gapFraction).toInt()
           totalWidth += step
         } else {
           totalWidth += d.width
@@ -293,7 +293,7 @@ private class UserIcon(
     val fontMetrics = g2.fontMetrics
     val initial = name.substring(0, 1).uppercase()
     val textX = x + (size - fontMetrics.stringWidth(initial)) / 2
-    val textY = y + ((size - fontMetrics.height) / 2) + fontMetrics.ascent
+    val textY = y + (size - fontMetrics.height) / 2 + fontMetrics.ascent
     g2.drawString(initial, textX, textY)
     g2.dispose()
   }
