@@ -23,8 +23,8 @@ fun createUI(): Component {
     Color(0x4B_C0_C0),
     Color(0x99_66_FF),
   )
-  val layer1 = createAvatarGroup(names, colors)
-  val layer2 = createAvatarGroup(names, colors)
+  val layer1 = createAvatarGroup(names, colors, true)
+  val layer2 = createAvatarGroup(names, colors, false)
   return JPanel(BorderLayout()).also {
     it.add(layer1, BorderLayout.NORTH)
     it.add(layer2, BorderLayout.SOUTH)
@@ -33,14 +33,25 @@ fun createUI(): Component {
   }
 }
 
-private fun createAvatarGroup(names: Array<String>, colors: Array<Color>): JLayer<JPanel> {
+private fun createAvatarGroup(
+  names: Array<String>,
+  colors: Array<Color>,
+  leftForeground: Boolean,
+): JLayer<JPanel> {
   // Container for displaying avatars
-  val avatarPanel = JPanel(StackedLayout(0.0))
+  val avatarPanel = JPanel(StackedLayout(0.0, leftForeground))
   avatarPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
 
-  // Create 5 avatars
-  for (i in colors.indices) {
+  // leftForeground = true -> 0, 1, 2... (Add from left -> Left is front)
+  // leftForeground = false -> n-1, n-2... (Add from right -> Right is front)
+  val n = names.size
+  val start = if (leftForeground) 0 else n - 1
+  val end = if (leftForeground) n else -1
+  val step = if (leftForeground) 1 else -1
+  var i = start
+  while (i != end) {
     avatarPanel.add(createAvatarButton(i, names[i], colors[i]))
+    i += step
   }
 
   // Wrap with JLayer and apply animation UI
@@ -60,6 +71,7 @@ private fun createAvatarButton(i: Int, name: String, color: Color): JButton {
 // Arranges components based on gapFraction (0.0=stacked, 1.0=spread)
 private class StackedLayout(
   private var gapFraction: Double,
+  private val leftForeground: Boolean,
 ) : LayoutManager {
   fun setGapFraction(gapFraction: Double) {
     this.gapFraction = gapFraction
@@ -71,13 +83,17 @@ private class StackedLayout(
       val insets = parent.insets
       var x = insets.left
       val y = insets.top
-      for (i in 0..<n) {
+
+      val start = if (leftForeground) 0 else n - 1
+      val end = if (leftForeground) n else -1
+      val step = if (leftForeground) 1 else -1
+      var i = start
+      while (i != end) {
         val c = parent.getComponent(i)
         val d = c.preferredSize
         c.setBounds(x, y, d.width, d.height)
-        // Step calc: 60% of width as default overlap, 40% as animated spread
-        val step = (d.width * .6 + d.width * .4 * gapFraction).toInt()
-        x += step
+        x += (d.width * .6 + d.width * .4 * gapFraction).toInt()
+        i += step
       }
     }
   }
@@ -108,14 +124,14 @@ private class StackedLayout(
     return size
   }
 
-  override fun minimumLayoutSize(parent: Container): Dimension = preferredLayoutSize(parent)
+  override fun minimumLayoutSize(parent: Container) = preferredLayoutSize(parent)
 
   override fun addLayoutComponent(name: String, comp: Component) {
-    // empty
+    // not used
   }
 
   override fun removeLayoutComponent(comp: Component) {
-    // empty
+    // not used
   }
 }
 
@@ -232,13 +248,13 @@ private class AvatarLayerUI : LayerUI<JPanel?>() {
     l.setLayerEventMask(AWTEvent.MOUSE_EVENT_MASK)
     timer.addActionListener {
       (l.getView() as? JPanel)?.also {
-        animation(it)
+        updateAnimation(it)
       }
     }
   }
 
   // Ease-Out: Moves 25% closer to target per frame
-  private fun animation(panel: JPanel) {
+  private fun updateAnimation(panel: JPanel) {
     val diff = targetFraction - currentFraction
     val isEnd = abs(diff) < .1
     if (isEnd) {
