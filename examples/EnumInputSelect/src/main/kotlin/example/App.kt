@@ -82,7 +82,6 @@ private fun createSpinnerPanel(): JPanel {
   return createPanel(tabs, spinner)
 }
 
-
 private fun createPanel(
   tabs: JTabbedPane,
   c: JComponent?,

@@ -51,7 +51,7 @@ fun createUI(): Component {
 private fun handleHyperlinkEvent(
   e: HyperlinkEvent,
   editor: RichToolTipEditorPane,
-  hintEditor: JEditorPane
+  hintEditor: JEditorPane,
 ) {
   when (e.eventType) {
     HyperlinkEvent.EventType.ACTIVATED -> {
