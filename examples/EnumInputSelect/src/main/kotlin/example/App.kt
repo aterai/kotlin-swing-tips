@@ -6,73 +6,84 @@ import java.awt.event.ItemListener
 import javax.swing.*
 import javax.swing.JSpinner.DefaultEditor
 
-fun createUI(): Component {
-  val tabs1 = makeTabbedPane()
+fun createUI() = JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT).also {
+  it.addTab("JRadioButtonMenuItem", createRadioButtonMenuItemPanel())
+  it.addTab("JRadioButton", createRadioButtonPanel())
+  it.addTab("JComboBox", createComboBoxPanel())
+  it.addTab("JSpinner", createSpinnerPanel())
+  it.preferredSize = Dimension(320, 240)
+}
+
+private fun createRadioButtonMenuItemPanel(): JPanel {
+  val tabs = createTabbedPane()
   val menu = JMenu("JMenu")
-  val bg1 = ButtonGroup()
-  val handler1 = ItemListener { e ->
+  val buttonGroup = ButtonGroup()
+  val handler = ItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      val cmd = bg1.selection.actionCommand
-      tabs1.tabPlacement = TabPlacement.valueOf(cmd).placement
+      val cmd = buttonGroup.selection.actionCommand
+      tabs.tabPlacement = TabPlacement.valueOf(cmd).placement
     }
   }
   TabPlacement.entries.forEach { tp ->
     val item = JRadioButtonMenuItem(tp.name, tp == TabPlacement.TOP).also {
-      it.addItemListener(handler1)
+      it.addItemListener(handler)
       it.actionCommand = tp.name
     }
     menu.add(item)
-    bg1.add(item)
+    buttonGroup.add(item)
   }
   val mb = JMenuBar().also {
     it.add(menu)
   }
+  return createPanel(tabs, mb)
+}
 
-  val tabs2 = makeTabbedPane()
-  val bg2 = ButtonGroup()
-  val handler2 = ItemListener { e ->
+private fun createRadioButtonPanel(): JPanel {
+  val tabs = createTabbedPane()
+  val buttonGroup = ButtonGroup()
+  val handler = ItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      val cmd = bg2.selection.actionCommand
-      tabs2.tabPlacement = TabPlacement.valueOf(cmd).placement
+      val cmd = buttonGroup.selection.actionCommand
+      tabs.tabPlacement = TabPlacement.valueOf(cmd).placement
     }
   }
   val box = Box.createHorizontalBox()
   TabPlacement.entries.forEach { tp ->
     val radio = JRadioButton(tp.name, tp == TabPlacement.TOP).also {
-      it.addItemListener(handler2)
+      it.addItemListener(handler)
       it.actionCommand = tp.name
     }
     box.add(radio)
-    bg2.add(radio)
+    buttonGroup.add(radio)
   }
+  return createPanel(tabs, box)
+}
 
-  val tabs3 = makeTabbedPane()
+private fun createComboBoxPanel(): JPanel {
+  val tabs = createTabbedPane()
   val combo = JComboBox(TabPlacement.entries.toTypedArray())
   combo.addItemListener { e ->
     (e.item as? TabPlacement)?.takeIf { e.stateChange == ItemEvent.SELECTED }?.also {
-      tabs3.tabPlacement = it.placement
+      tabs.tabPlacement = it.placement
     }
   }
-
-  val tabs4 = makeTabbedPane()
-  val model4 = SpinnerListModel(TabPlacement.entries.toTypedArray())
-  val spinner = makeSpinner(model4)
-  spinner.addChangeListener {
-    (model4.value as? TabPlacement)?.also {
-      tabs4.tabPlacement = it.placement
-    }
-  }
-
-  return JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT).also {
-    it.addTab("JRadioButtonMenuItem", makePanel(tabs1, mb))
-    it.addTab("JRadioButton", makePanel(tabs2, box))
-    it.addTab("JComboBox", makePanel(tabs3, combo))
-    it.addTab("JSpinner", makePanel(tabs4, spinner))
-    it.preferredSize = Dimension(320, 240)
-  }
+  return createPanel(tabs, combo)
 }
 
-private fun makePanel(
+private fun createSpinnerPanel(): JPanel {
+  val tabs = createTabbedPane()
+  val model = SpinnerListModel(TabPlacement.entries.toTypedArray())
+  val spinner = createSpinner(model)
+  spinner.addChangeListener {
+    (model.value as? TabPlacement)?.also {
+      tabs.tabPlacement = it.placement
+    }
+  }
+  return createPanel(tabs, spinner)
+}
+
+
+private fun createPanel(
   tabs: JTabbedPane,
   c: JComponent?,
 ): JPanel {
@@ -84,7 +95,7 @@ private fun makePanel(
   return p
 }
 
-private fun makeTabbedPane(): JTabbedPane {
+private fun createTabbedPane(): JTabbedPane {
   val tabs = JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT)
   tabs.addTab("JTree", JScrollPane(JTree()))
   tabs.addTab("JTable", JScrollPane(JTable(5, 5)))
@@ -94,7 +105,7 @@ private fun makeTabbedPane(): JTabbedPane {
   return tabs
 }
 
-private fun makeSpinner(model: SpinnerListModel): JSpinner {
+private fun createSpinner(model: SpinnerListModel): JSpinner {
   val spinner = object : JSpinner(model) {
     override fun getNextValue() = super.getPreviousValue()
 
