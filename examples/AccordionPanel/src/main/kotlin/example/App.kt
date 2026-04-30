@@ -5,18 +5,19 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.*
 
-fun createUI(): Component {
-  val accordion = Box.createVerticalBox()
-  accordion.isOpaque = true
-  accordion.background = Color(0xB4_B4_FF)
-  accordion.border = BorderFactory.createEmptyBorder(10, 5, 5, 5)
-  makeExpansionPanelList().forEach {
-    accordion.add(it)
-    accordion.add(Box.createVerticalStrut(5))
-  }
-  accordion.add(Box.createVerticalGlue())
 
-  val scroll = object : JScrollPane(accordion) {
+fun createUI(): Component {
+  val sideMenuBox = Box.createVerticalBox()
+  sideMenuBox.isOpaque = true
+  sideMenuBox.background = Color(0xB4_B4_FF)
+  sideMenuBox.border = BorderFactory.createEmptyBorder(10, 5, 5, 5)
+  initAccordionSections().forEach {
+    sideMenuBox.add(it)
+    sideMenuBox.add(Box.createVerticalStrut(5))
+  }
+  sideMenuBox.add(Box.createVerticalGlue())
+
+  val scroll = object : JScrollPane(sideMenuBox) {
     override fun updateUI() {
       super.updateUI()
       horizontalScrollBarPolicy = HORIZONTAL_SCROLLBAR_NEVER
@@ -34,8 +35,8 @@ fun createUI(): Component {
   }
 }
 
-private fun makeExpansionPanelList() = listOf(
-  object : AbstractExpansionPanel("System Tasks") {
+private fun initAccordionSections() = listOf(
+  object : AccordionSectionPanel("System Tasks") {
     override fun makePanel() = JPanel(GridLayout(0, 1)).also { p ->
       listOf("111", "222222222")
         .map { title -> JCheckBox(title) }
@@ -45,14 +46,14 @@ private fun makeExpansionPanelList() = listOf(
         }
     }
   },
-  object : AbstractExpansionPanel("Other Places") {
+  object : AccordionSectionPanel("Other Places") {
     override fun makePanel() = JPanel(GridLayout(0, 1)).also { p ->
       listOf("Desktop", "My Network Places", "My Documents", "Shared Documents")
         .map { title -> JLabel(title) }
         .forEach { label -> p.add(label) }
     }
   },
-  object : AbstractExpansionPanel("Details") {
+  object : AccordionSectionPanel("Details") {
     override fun makePanel() = JPanel(GridLayout(0, 1)).also { p ->
       val bg = ButtonGroup()
       listOf("aaa", "bbb", "ccc", "ddd")
@@ -67,10 +68,10 @@ private fun makeExpansionPanelList() = listOf(
   },
 )
 
-abstract class AbstractExpansionPanel(
+abstract class AccordionSectionPanel(
   private val title: String,
 ) : JPanel(BorderLayout()) {
-  private val titleBar = object : JLabel("▼ $title") {
+  private val headerLabel = object : JLabel("▼ $title") {
     private val bgc = Color(0xC8_C8_FF)
 
     override fun paintComponent(g: Graphics) {
@@ -83,27 +84,27 @@ abstract class AbstractExpansionPanel(
       super.paintComponent(g)
     }
   }
-  private val panel: JPanel
+  private val contentPanel: JPanel
 
   init {
     val ml = object : MouseAdapter() {
       override fun mousePressed(e: MouseEvent) {
-        initPanel()
+        toggleExpansion()
       }
     }
-    titleBar.addMouseListener(ml)
-    titleBar.foreground = Color.BLUE
-    titleBar.border = BorderFactory.createEmptyBorder(2, 5, 2, 2)
-    add(titleBar, BorderLayout.NORTH)
+    headerLabel.addMouseListener(ml)
+    headerLabel.foreground = Color.BLUE
+    headerLabel.border = BorderFactory.createEmptyBorder(2, 5, 2, 2)
+    add(headerLabel, BorderLayout.NORTH)
 
-    panel = makePanel()
-    panel.isVisible = false
-    panel.isOpaque = true
-    panel.background = Color(0xF0_F0_FF)
-    val outsideBorder = BorderFactory.createMatteBorder(0, 2, 2, 2, Color.WHITE)
-    val insideBorder = BorderFactory.createEmptyBorder(10, 10, 10, 10)
-    panel.border = BorderFactory.createCompoundBorder(outsideBorder, insideBorder)
-    add(panel)
+    contentPanel = makePanel()
+    contentPanel.isVisible = false
+    contentPanel.isOpaque = true
+    contentPanel.background = Color(0xF0_F0_FF)
+    val outside = BorderFactory.createMatteBorder(0, 2, 2, 2, Color.WHITE)
+    val inside = BorderFactory.createEmptyBorder(10, 10, 10, 10)
+    contentPanel.border = BorderFactory.createCompoundBorder(outside, inside)
+    add(contentPanel)
   }
 
   abstract fun makePanel(): JPanel
@@ -114,21 +115,23 @@ abstract class AbstractExpansionPanel(
     super.add(comp, constraints)
   }
 
-  override fun getPreferredSize(): Dimension? = titleBar.preferredSize?.also {
-    panel.takeIf { it.isVisible }?.also { p ->
-      it.height += p.preferredSize.height
+  override fun getPreferredSize(): Dimension {
+    val d = headerLabel.getPreferredSize()
+    if (contentPanel.isVisible) {
+      d.height += contentPanel.getPreferredSize().height
     }
+    return d
   }
 
-  override fun getMaximumSize() = preferredSize?.also {
+  override fun getMaximumSize() = preferredSize.also {
     it.width = Short.MAX_VALUE.toInt()
   }
 
-  protected fun initPanel() {
-    panel.also {
+  protected fun toggleExpansion() {
+    contentPanel.also {
       it.isVisible = !it.isVisible
       val mark = if (it.isVisible) "△" else "▼"
-      titleBar.text = "$mark $title"
+      headerLabel.text = "$mark $title"
       revalidate()
       EventQueue.invokeLater { it.scrollRectToVisible(it.bounds) }
     }
