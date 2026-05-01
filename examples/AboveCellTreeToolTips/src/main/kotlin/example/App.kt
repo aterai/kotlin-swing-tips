@@ -8,35 +8,15 @@ import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreeModel
 
 fun createUI(): Component {
-  val tree0 = object : JTree(DefaultTreeModel(makeTreeRoot())) {
-    override fun updateUI() {
-      setCellRenderer(null)
-      super.updateUI()
-      val renderer = getCellRenderer()
-      setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-        renderer
-          .getTreeCellRendererComponent(
-            tree,
-            value,
-            selected,
-            expanded,
-            leaf,
-            row,
-            hasFocus,
-          ).also {
-            (it as? JComponent)?.toolTipText = value?.toString()
-          }
-      }
-    }
-  }
+  val tree0 = DefaultTooltipTree(DefaultTreeModel(createTreeRoot()))
   ToolTipManager.sharedInstance().registerComponent(tree0)
 
-  val tree1 = TooltipTree(DefaultTreeModel(makeTreeRoot()))
+  val tree1 = OverwrapTooltipTree(DefaultTreeModel(createTreeRoot()))
   ToolTipManager.sharedInstance().registerComponent(tree1)
 
   val p = JPanel(GridLayout(2, 1))
-  p.add(makeTitledPanel("Default location", tree0))
-  p.add(makeTitledPanel("Draw directly above the cell", tree1))
+  p.add(createTitledPanel("Default location", tree0))
+  p.add(createTitledPanel("Draw directly above the cell", tree1))
 
   return JSplitPane(JSplitPane.HORIZONTAL_SPLIT).also {
     it.leftComponent = p
@@ -47,7 +27,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeTreeRoot(): DefaultMutableTreeNode {
+private fun createTreeRoot(): DefaultMutableTreeNode {
   val set4 = DefaultMutableTreeNode("Set 00000004")
   set4.add(DefaultMutableTreeNode("222222111111111111111122222"))
   set4.add(DefaultMutableTreeNode("111111111111111"))
@@ -82,7 +62,7 @@ private fun makeTreeRoot(): DefaultMutableTreeNode {
   return root
 }
 
-private fun makeTitledPanel(
+private fun createTitledPanel(
   title: String,
   c: Component,
 ): Component {
@@ -94,15 +74,9 @@ private fun makeTitledPanel(
   return p
 }
 
-private class TooltipTree(
+private open class DefaultTooltipTree(
   model: TreeModel,
 ) : JTree(model) {
-  private val label = object : JLabel() {
-    override fun getPreferredSize() = super.getPreferredSize()?.also {
-      it.height = getRowHeight()
-    }
-  }
-
   override fun updateUI() {
     setCellRenderer(null)
     super.updateUI()
@@ -121,6 +95,16 @@ private class TooltipTree(
         ).also {
           (it as? JComponent)?.toolTipText = value?.toString()
         }
+    }
+  }
+}
+
+private class OverwrapTooltipTree(
+  model: TreeModel,
+) : DefaultTooltipTree(model) {
+  private val label = object : JLabel() {
+    override fun getPreferredSize() = super.getPreferredSize()?.also {
+      it.height = getRowHeight()
     }
   }
 
