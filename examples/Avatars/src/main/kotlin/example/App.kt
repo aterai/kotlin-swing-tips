@@ -209,7 +209,10 @@ internal class AvatarButton(
     val icon = getIcon()
     val scale = DIAMETER.toDouble() / max(icon.iconWidth, icon.iconHeight)
 
-    val at = AffineTransform.getTranslateInstance(INSETS.left.toDouble(), INSETS.top.toDouble())
+    val at = AffineTransform.getTranslateInstance(
+      INSETS.left.toDouble(),
+      INSETS.top.toDouble(),
+    )
     at.scale(scale, scale)
     g2d.transform(at)
 

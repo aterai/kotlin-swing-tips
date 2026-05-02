@@ -187,7 +187,9 @@ private class MultipleSelectionList(
         }
       }
     }
-    val focusBorder: Border = UIManager.getBorder("List.focusCellHighlightBorder")
+    val focusBorder: Border = UIManager.getBorder(
+      "List.focusCellHighlightBorder",
+    )
     val noFocusBorder = getNoFocusBorder(focusBorder)
 
     init {
