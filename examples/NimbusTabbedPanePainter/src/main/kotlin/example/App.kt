@@ -31,26 +31,28 @@ private object NimbusTabbedPanePainterUtils {
 
   fun configureUI() {
     val d = UIManager.getLookAndFeelDefaults()
-    val t = "TabbedPane:"
-    d["${t}TabbedPaneContent.contentMargins"] = Insets(0, 5, 5, 5)
-    d["${t}TabbedPaneTabArea.contentMargins"] = Insets(3, 10, OVER_PAINT, 10)
+    val content = "TabbedPane:TabbedPaneContent"
+    val tab = "TabbedPane:TabbedPaneTab"
+    val area = "TabbedPane:TabbedPaneTabArea"
+    d["$content.contentMargins"] = Insets(0, 5, 5, 5)
+    d["$area.contentMargins"] = Insets(3, 10, OVER_PAINT, 10)
     val tabAreaPainter = TabAreaPainter()
-    d["${t}TabbedPaneTabArea[Disabled].backgroundPainter"] = tabAreaPainter
-    d["${t}TabbedPaneTabArea[Enabled].backgroundPainter"] = tabAreaPainter
-    d["${t}TabbedPaneTabArea[Enabled+MouseOver].backgroundPainter"] = tabAreaPainter
-    d["${t}TabbedPaneTabArea[Enabled+Pressed].backgroundPainter"] = tabAreaPainter
-    d["${t}TabbedPaneContent.backgroundPainter"] = TabbedPaneContentPainter()
+    d["$area[Disabled].backgroundPainter"] = tabAreaPainter
+    d["$area[Enabled].backgroundPainter"] = tabAreaPainter
+    d["$area[Enabled+MouseOver].backgroundPainter"] = tabAreaPainter
+    d["$area[Enabled+Pressed].backgroundPainter"] = tabAreaPainter
+    d["$content.backgroundPainter"] = TabbedPaneContentPainter()
     val tabPainter = TabPainter(false)
-    d["${t}TabbedPaneTab[Enabled+MouseOver].backgroundPainter"] = tabPainter
-    d["${t}TabbedPaneTab[Enabled+Pressed].backgroundPainter"] = tabPainter
-    d["${t}TabbedPaneTab[Enabled].backgroundPainter"] = tabPainter
+    d["$tab[Enabled+MouseOver].backgroundPainter"] = tabPainter
+    d["$tab[Enabled+Pressed].backgroundPainter"] = tabPainter
+    d["$tab[Enabled].backgroundPainter"] = tabPainter
     val selTabPainter = TabPainter(true)
-    d["${t}TabbedPaneTab[Focused+MouseOver+Selected].backgroundPainter"] = selTabPainter
-    d["${t}TabbedPaneTab[Focused+Pressed+Selected].backgroundPainter"] = selTabPainter
-    d["${t}TabbedPaneTab[Focused+Selected].backgroundPainter"] = selTabPainter
-    d["${t}TabbedPaneTab[MouseOver+Selected].backgroundPainter"] = selTabPainter
-    d["${t}TabbedPaneTab[Selected].backgroundPainter"] = selTabPainter
-    d["${t}TabbedPaneTab[Pressed+Selected].backgroundPainter"] = selTabPainter
+    d["$tab[Focused+MouseOver+Selected].backgroundPainter"] = selTabPainter
+    d["$tab[Focused+Pressed+Selected].backgroundPainter"] = selTabPainter
+    d["$tab[Focused+Selected].backgroundPainter"] = selTabPainter
+    d["$tab[MouseOver+Selected].backgroundPainter"] = selTabPainter
+    d["$tab[Selected].backgroundPainter"] = selTabPainter
+    d["$tab[Pressed+Selected].backgroundPainter"] = selTabPainter
   }
 
   class TabPainter(
@@ -101,7 +103,9 @@ private object NimbusTabbedPanePainterUtils {
         // Over paint the overexposed area with the background color
         g2.color = TAB_TABAREA_MASK
         val yy = height + STROKE_SIZE
-        g2.fill(Rectangle2D.Double(0.0, yy, width.toDouble(), OVER_PAINT.toDouble()))
+        val dw = width.toDouble()
+        val dh = OVER_PAINT.toDouble()
+        g2.fill(Rectangle2D.Double(0.0, yy, dw, dh))
       }
       g2.dispose()
     }
