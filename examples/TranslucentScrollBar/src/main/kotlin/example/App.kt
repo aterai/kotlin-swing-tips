@@ -8,15 +8,15 @@ import javax.swing.plaf.basic.BasicScrollBarUI
 
 fun createUI(): Component {
   UIManager.put("ScrollBar.minimumThumbSize", Dimension(12, 20))
-  val scroll = makeTranslucentScrollBar(makeList())
+  val scroll = createTranslucentScrollPane(createSampleList())
   return JPanel(GridLayout(1, 2)).also {
-    it.add(JScrollPane(makeList()))
+    it.add(JScrollPane(createSampleList()))
     it.add(scroll)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeList(): Component {
+private fun createSampleList(): Component {
   val m = DefaultListModel<String>()
   for (i in 0..500) {
     m.addElement("%03d: %s".format(i, LocalDateTime.now(ZoneId.systemDefault())))
@@ -24,13 +24,13 @@ private fun makeList(): Component {
   return JList(m)
 }
 
-private fun makeTranslucentScrollBar(c: Component) = object : JScrollPane(c) {
+private fun createTranslucentScrollPane(c: Component) = object : JScrollPane(c) {
   override fun isOptimizedDrawingEnabled() = false // JScrollBar is overlap
 
   override fun updateUI() {
     super.updateUI()
-    setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS)
-    setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
+    setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS)
+    setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER)
     verticalScrollBar.also {
       it.setUI(TranslucentScrollBarUI())
       it.isOpaque = false
@@ -58,14 +58,14 @@ private class TranslucentScrollPaneLayout : ScrollPaneLayout() {
   }
 }
 
-private class ZeroSizeButton : JButton() {
+private class InvisibleButton : JButton() {
   override fun getPreferredSize() = Dimension()
 }
 
 private class TranslucentScrollBarUI : BasicScrollBarUI() {
-  override fun createDecreaseButton(orientation: Int) = ZeroSizeButton()
+  override fun createDecreaseButton(orientation: Int) = InvisibleButton()
 
-  override fun createIncreaseButton(orientation: Int) = ZeroSizeButton()
+  override fun createIncreaseButton(orientation: Int) = InvisibleButton()
 
   override fun paintTrack(
     g: Graphics,
