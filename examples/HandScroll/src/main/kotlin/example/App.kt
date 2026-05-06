@@ -7,47 +7,20 @@ import java.awt.event.MouseEvent
 import javax.imageio.ImageIO
 import javax.swing.*
 
-var weightMixing = false
+var isWeightMixing = false
 
 fun createUI(): Component {
-  val cl = Thread.currentThread().contextClassLoader
-  // CRW_3857_JFR.jpg: https://sozai-free.com/
-  val url = cl.getResource("example/CRW_3857_JFR.jpg")
-  val image = url?.openStream()?.use(ImageIO::read)
-  val icon = image?.let { ImageIcon(it) } ?: MissingIcon()
-  val label = JLabel(icon)
-
-  val viewport = object : JViewport() {
-    private var isAdjusting = false
-
-    override fun revalidate() {
-      if (weightMixing || !isAdjusting) {
-        super.revalidate()
-      }
-    }
-
-    override fun setViewPosition(p: Point) {
-      if (weightMixing) {
-        super.setViewPosition(p)
-      } else {
-        isAdjusting = true
-        super.setViewPosition(p)
-        isAdjusting = false
-      }
-    }
+  val scroll = object : JScrollPane(JLabel(createIcon())) {
+    override fun createViewport(): JViewport = CustomViewport()
   }
-  viewport.add(label)
-
-  val scroll = JScrollPane() // JScrollPane(label)
-  scroll.viewport = viewport
-
-  val hsl1 = HandScrollListener()
+  val hsl1 = HandDragScrollListener()
+  val viewport = scroll.getViewport()
   viewport.addMouseMotionListener(hsl1)
   viewport.addMouseListener(hsl1)
 
   val radio = JRadioButton("scrollRectToVisible", true)
   radio.addItemListener { e ->
-    hsl1.withinRangeMode = e.stateChange == ItemEvent.SELECTED
+    hsl1.setScrollRectToVisibleMode(e.stateChange == ItemEvent.SELECTED)
   }
 
   val box = Box.createHorizontalBox()
@@ -69,32 +42,64 @@ fun createUI(): Component {
   }
 }
 
-private class HandScrollListener : MouseAdapter() {
-  private val defCursor = Cursor.getDefaultCursor()
-  private val hndCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
-  private val pp = Point()
-  var withinRangeMode = true
+private fun createIcon(): Icon {
+  val cl = Thread.currentThread().contextClassLoader
+  val url = cl.getResource("example/CRW_3857_JFR.jpg")
+  val image = url?.openStream()?.use(ImageIO::read)
+  return image?.let { ImageIcon(it) } ?: MissingIcon()
+}
+
+private class CustomViewport : JViewport() {
+  private var isAdjusting = false
+
+  override fun revalidate() {
+    if (isWeightMixing || !isAdjusting) {
+      super.revalidate()
+    }
+  }
+
+  override fun setViewPosition(p: Point?) {
+    if (isWeightMixing) {
+      super.setViewPosition(p)
+    } else {
+      isAdjusting = true
+      super.setViewPosition(p)
+      isAdjusting = false
+    }
+  }
+}
+
+private class HandDragScrollListener : MouseAdapter() {
+  private val defaultCursor = Cursor.getDefaultCursor()
+  private val handCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
+  private val previousPoint = Point()
+  private var isBoundedMode = true
 
   override fun mouseDragged(e: MouseEvent) {
     val viewport = e.component as? JViewport ?: return
-    val cp = e.point
-    val rect = viewport.viewRect.also { it.translate(pp.x - cp.x, pp.y - cp.y) }
+    val cp = e.getPoint()
+    val rect = viewport.viewRect
+    rect.translate(previousPoint.x - cp.x, previousPoint.y - cp.y)
     val c = SwingUtilities.getUnwrappedView(viewport)
-    if (withinRangeMode && c is JComponent) {
+    if (isBoundedMode && c is JComponent) {
       c.scrollRectToVisible(rect)
     } else {
-      viewport.viewPosition = rect.location
+      viewport.setViewPosition(rect.location)
     }
-    pp.location = cp
+    previousPoint.location = cp
   }
 
   override fun mousePressed(e: MouseEvent) {
-    e.component.cursor = hndCursor
-    pp.location = e.point
+    e.component.setCursor(handCursor)
+    previousPoint.location = e.getPoint()
   }
 
   override fun mouseReleased(e: MouseEvent) {
-    e.component.cursor = defCursor
+    e.component.setCursor(defaultCursor)
+  }
+
+  fun setScrollRectToVisibleMode(b: Boolean) {
+    isBoundedMode = b
   }
 }
 
