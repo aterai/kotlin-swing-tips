@@ -180,7 +180,7 @@ private class CalendarViewListModel(
 
   override fun getSize() = DayOfWeek.entries.size * ROW_COUNT
 
-  override fun getElementAt(index: Int): LocalDate = startDate.plusDays(index.toLong())
+  override fun getElementAt(idx: Int): LocalDate = startDate.plusDays(idx.toLong())
 
   companion object {
     const val ROW_COUNT = 6
@@ -256,7 +256,7 @@ private class MonthList(
 
 private class WeekHeaderList :
   JList<DayOfWeek>(
-    makeDayOfWeekListModel(),
+    createDayOfWeekListModel(),
   ) {
   override fun updateUI() {
     setCellRenderer(null)
@@ -283,7 +283,7 @@ private class WeekHeaderList :
   companion object {
     val CELL_SIZE = Dimension(38, 26)
 
-    private fun makeDayOfWeekListModel(): ListModel<DayOfWeek> {
+    private fun createDayOfWeekListModel(): ListModel<DayOfWeek> {
       val weekModel = DefaultListModel<DayOfWeek>()
       val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
       for (i in DayOfWeek.entries.toTypedArray().indices) {
