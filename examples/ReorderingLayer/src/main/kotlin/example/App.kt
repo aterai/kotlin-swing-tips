@@ -49,6 +49,11 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
   private val gestureMotionThreshold = DragSource.getDragThreshold()
   private var draggingComponent: Component? = null
   private var fillerComponent: Component? = null
+  private val topHalf = Rectangle()
+  private val bottomHalf = Rectangle()
+  private val inner = Rectangle()
+  private val prev = Rectangle()
+  private val dragging = Rectangle()
 
   override fun paint(
     g: Graphics,
@@ -56,7 +61,7 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
   ) {
     super.paint(g, c)
     if (c is JLayer<*> && draggingComponent != null) {
-      SwingUtilities.paintComponent(g, draggingComponent, canvas, DRAGGING)
+      SwingUtilities.paintComponent(g, draggingComponent, canvas, dragging)
     }
   }
 
@@ -105,7 +110,7 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
         }
         return
       }
-      if (!PREV.contains(pt)) {
+      if (!prev.contains(pt)) {
         // update the filler panel location
         updateFillerLocation(parent, fillerComponent, pt)
       }
@@ -122,9 +127,9 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
     dragOffset: Point,
   ) {
     val pt = SwingUtilities.convertPoint(e.component, e.point, parent)
-    val r = SwingUtilities.calculateInnerArea(parent, INNER)
-    val y = (pt.y - dragOffset.y).coerceIn(r.y, r.y + r.height - DRAGGING.height)
-    DRAGGING.setLocation(r.x, y)
+    val r = SwingUtilities.calculateInnerArea(parent, inner)
+    val y = (pt.y - dragOffset.y).coerceIn(r.y, r.y + r.height - dragging.height)
+    dragging.setLocation(r.x, y)
   }
 
   private fun updateFillerLocation(
@@ -156,7 +161,7 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
     }
     draggingComponent = c
     val r = c.bounds
-    DRAGGING.bounds = r // save draggingComponent size
+    dragging.bounds = r // save draggingComponent size
     dragOffset.setLocation(pt.x - r.x, pt.y - r.y)
     fillerComponent = Box.createRigidArea(r.size)
     swapComponent(parent, c, fillerComponent, index)
@@ -170,11 +175,11 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
   ): Int {
     val r = c.bounds
     val ht2 = (r.height / 2f).roundToInt()
-    TOP_HALF.setBounds(r.x, r.y, r.width, ht2)
-    BOTTOM_HALF.setBounds(r.x, r.y + ht2, r.width, ht2)
+    topHalf.setBounds(r.x, r.y, r.width, ht2)
+    bottomHalf.setBounds(r.x, r.y + ht2, r.width, ht2)
     return when {
-      TOP_HALF.contains(pt) -> i.also { PREV.bounds = TOP_HALF }.takeIf { it > 1 } ?: 0
-      BOTTOM_HALF.contains(pt) -> i.also { PREV.bounds = BOTTOM_HALF }
+      topHalf.contains(pt) -> i.also { prev.bounds = topHalf }.takeIf { it > 1 } ?: 0
+      bottomHalf.contains(pt) -> i.also { prev.bounds = bottomHalf }
       else -> -1
     }
   }
@@ -191,14 +196,6 @@ private class ReorderingLayerUI<V : JComponent> : LayerUI<V>() {
     }
     parent.revalidate()
     parent.repaint()
-  }
-
-  companion object {
-    private val TOP_HALF = Rectangle()
-    private val BOTTOM_HALF = Rectangle()
-    private val INNER = Rectangle()
-    private val PREV = Rectangle()
-    private val DRAGGING = Rectangle()
   }
 }
 
