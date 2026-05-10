@@ -284,15 +284,20 @@ private class HtmlTableTransferHandler : TransferHandler() {
     o: Any?,
   ) {
     when (o) {
-      is Date -> buf.append("  <td><time>").append(o.toString()).append("</time></td>")
+      is Date -> {
+        val str = o.toString()
+        buf.append("  <td><time>").append(str).append("</time></td>")
+      }
 
-      is Color -> buf.append(
-        "  <td style='background-color:#%06X'>&nbsp;</td>%n".format(
-          o.rgb and 0xFF_FF_FF,
-        ),
-      )
+      is Color -> {
+        val bgc = "background-color:#%06X".format(o.rgb and 0xFF_FF_FF)
+        buf.append("  <td style='$bgc'>&nbsp;</td>\n")
+      }
 
-      else -> buf.append("  <td>").append(o?.toString() ?: "").append("</td>")
+      else -> {
+        val str = o?.toString() ?: ""
+        buf.append("  <td>").append(str).append("</td>")
+      }
     }
   }
 
