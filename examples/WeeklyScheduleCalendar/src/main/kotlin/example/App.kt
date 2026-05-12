@@ -6,8 +6,6 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.TextStyle
-import java.time.temporal.TemporalAdjusters
-import java.time.temporal.WeekFields
 import java.util.Locale
 import javax.swing.*
 import javax.swing.plaf.basic.BasicTabbedPaneUI
@@ -17,24 +15,50 @@ import javax.swing.plaf.synth.SynthContext
 import javax.swing.plaf.synth.SynthLookAndFeel
 
 fun createUI(): Component {
-  val tabs = ClippedTitleTabbedPane()
-  val locale = Locale.getDefault()
+  val tabs = DayScheduleTabbedPane()
   val today = LocalDate.now(ZoneId.systemDefault())
-  val firstDay = WeekFields.of(locale).firstDayOfWeek
-  val startOfWeek = today.with(TemporalAdjusters.previousOrSame(firstDay))
-  for (i in DayOfWeek.entries.toTypedArray().indices) {
-    val date = startOfWeek.plusDays(i.toLong())
-    tabs.addTab("", makeTabContent(date))
-    tabs.setTabComponentAt(i, makeDayTab(date, today, locale))
+  updateCalendar(tabs, today, today.minusDays(3))
+
+  val check = JCheckBox("Center Today", true)
+  check.addActionListener { e ->
+    val selected = (e.source as? JCheckBox)?.isSelected == true
+    handleCenterModeToggle(tabs, selected)
   }
+
   return JPanel(BorderLayout()).also {
     it.add(tabs)
+    it.add(check, BorderLayout.SOUTH)
     it.setBackground(ModernTabbedPaneUI.BG_DARK)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeTabContent(date: LocalDate?): JPanel {
+private fun handleCenterModeToggle(tabs: JTabbedPane, centering: Boolean) {
+  val today = LocalDate.now(ZoneId.systemDefault())
+  val start = if (centering) {
+    today.minusDays(3)
+  } else {
+    today.minusDays((today.getDayOfWeek().value - 1).toLong())
+  }
+  updateCalendar(tabs, today, start)
+}
+
+private fun updateCalendar(tabs: JTabbedPane, today: LocalDate, start: LocalDate) {
+  tabs.removeAll()
+  val locale = Locale.getDefault()
+  var todayIdx = 0
+  for (i in DayOfWeek.entries.toTypedArray().indices) {
+    val date = start.plusDays(i.toLong())
+    tabs.addTab("", createTabContent(date))
+    tabs.setTabComponentAt(i, createDayTab(date, today, locale))
+    if (date == today) {
+      todayIdx = i
+    }
+  }
+  tabs.setSelectedIndex(todayIdx)
+}
+
+private fun createTabContent(date: LocalDate): JPanel {
   val label = JLabel("Schedule for $date")
   label.setForeground(ModernTabbedPaneUI.TEXT_PRIMARY)
   val content = JPanel()
@@ -43,7 +67,7 @@ private fun makeTabContent(date: LocalDate?): JPanel {
   return content
 }
 
-private fun makeDayTab(date: LocalDate, today: LocalDate?, locale: Locale): JPanel {
+private fun createDayTab(date: LocalDate, today: LocalDate, locale: Locale): JPanel {
   val dayName = date.getDayOfWeek().getDisplayName(TextStyle.SHORT, locale)
   val lblDay = JLabel(dayName, SwingConstants.CENTER)
   lblDay.setFont(lblDay.getFont().deriveFont(11f))
@@ -59,11 +83,11 @@ private fun makeDayTab(date: LocalDate, today: LocalDate?, locale: Locale): JPan
   panel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
   panel.add(lblDay, BorderLayout.NORTH)
   panel.add(lblDate)
-  panel.add(makeIndicator(date, today), BorderLayout.SOUTH)
+  panel.add(createIndicator(date, today), BorderLayout.SOUTH)
   return panel
 }
 
-private fun makeIndicator(date: LocalDate, today: LocalDate?): JLabel {
+private fun createIndicator(date: LocalDate, today: LocalDate?): JLabel {
   val iw = 20
   val ih = 4
   val ir = 2
@@ -80,7 +104,7 @@ private fun makeIndicator(date: LocalDate, today: LocalDate?): JLabel {
   return lblIndicator
 }
 
-private class ClippedTitleTabbedPane : JTabbedPane() {
+private class DayScheduleTabbedPane : JTabbedPane() {
   override fun updateUI() {
     super.updateUI()
     UIManager.put("TabbedPane.selectedLabelShift", 0)
