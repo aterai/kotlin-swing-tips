@@ -28,18 +28,20 @@ private fun addFrame(
   desktop: JDesktopPane,
   idx: Int,
 ) {
-  val frame = object : JInternalFrame("JInternalFrame", true, true, true, true) {
+  val title = "JInternalFrame"
+  val key = "InternalFrame:InternalFrameTitlePane[Enabled].textForeground"
+  val frame = object : JInternalFrame(title, true, true, true, true) {
     override fun updateUI() {
       super.updateUI()
       val currentUI = ui
       if (currentUI is SynthInternalFrameUI) {
         val d = UIDefaults()
-        d["InternalFrame:InternalFrameTitlePane[Enabled].textForeground"] = Color.GREEN
+        d[key] = Color.GREEN
         currentUI.northPane.putClientProperty("Nimbus.Overrides", d)
       }
     }
   }
-  frame.add(makePanel())
+  frame.add(createPanel())
   frame.setSize(240, 100)
   frame.setLocation(10 + 60 * idx, 5 + 105 * idx)
   desktop.add(frame)
@@ -47,7 +49,7 @@ private fun addFrame(
   // desktop.desktopManager.activateFrame(frame)
 }
 
-private fun makePanel() = JPanel().also {
+private fun createPanel() = JPanel().also {
   it.add(JLabel("label"))
   it.add(JButton("button"))
 }
