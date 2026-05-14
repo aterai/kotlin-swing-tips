@@ -67,14 +67,14 @@ fun createUI(): Component {
   }
 
   return JPanel(GridLayout(2, 1)).also {
-    it.add(makeTitledPanel("JTextField", JTextField(str)))
-    it.add(makeTitledPanel("JTextPane+StyledDocument+JScrollPane", scrollPane))
+    it.add(createTitledPanel("JTextField", JTextField(str)))
+    it.add(createTitledPanel("JTextPane+StyledDocument+JScrollPane", scrollPane))
     it.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeTitledPanel(
+private fun createTitledPanel(
   title: String,
   cmp: Component,
 ): Component {
@@ -92,12 +92,12 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
   @Throws(BadLocationException::class)
   override fun insertString(
     offset: Int,
-    text: String?,
+    text: String,
     a: AttributeSet?,
   ) {
     var length = 0
     var str = text
-    if (str != null && str.indexOf(LB) >= 0) {
+    if (str.indexOf(LB) >= 0) {
       val filtered = StringBuilder(str)
       for (i in filtered.indices) {
         if (filtered[i] == LB) {
@@ -158,16 +158,14 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
     startOffset: Int,
     endOffset: Int,
   ) {
-    var index = startOffset
-    while (index <= endOffset) {
-      while (isDelimiter(content.substring(index, index + 1))) {
-        if (index < endOffset) {
-          index++
-        } else {
-          return
-        }
+    var i = startOffset
+    while (i <= endOffset) {
+      while (i <= endOffset && isDelimiter(content.substring(i, i + 1))) {
+        i++
       }
-      index = getOtherToken(content, index, endOffset)
+      if (i <= endOffset) {
+        i = getOtherToken(content, i, endOffset)
+      }
     }
   }
 
@@ -184,9 +182,8 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
       endOfToken++
     }
     val token = content.substring(startOffset, endOfToken)
-    val s = getStyle(token)
-    if (s != null) {
-      setCharacterAttributes(startOffset, endOfToken - startOffset, s, false)
+    getStyle(token)?.also {
+      setCharacterAttributes(startOffset, endOfToken - startOffset, it, false)
     }
     return endOfToken + 1
   }

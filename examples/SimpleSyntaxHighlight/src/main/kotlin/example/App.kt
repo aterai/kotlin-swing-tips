@@ -47,14 +47,13 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
   ) {
     val root = defaultRootElement
     val content = getText(0, getLength())
-    val startLine: Int = root.getElementIndex(offset)
-    val endLine: Int = root.getElementIndex(offset + length)
+    val startLine = root.getElementIndex(offset)
+    val endLine = root.getElementIndex(offset + length)
     for (i in startLine..endLine) {
       applyHighlighting(content, i)
     }
   }
 
-  @Throws(BadLocationException::class)
   private fun applyHighlighting(
     content: String,
     line: Int,
@@ -79,16 +78,14 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
     startOffset: Int,
     endOffset: Int,
   ) {
-    var index = startOffset
-    while (index <= endOffset) {
-      while (isDelimiter(content.substring(index, index + 1))) {
-        if (index < endOffset) {
-          index++
-        } else {
-          return
-        }
+    var i = startOffset
+    while (i <= endOffset) {
+      while (i <= endOffset && isDelimiter(content.substring(i, i + 1))) {
+        i++
       }
-      index = getOtherToken(content, index, endOffset)
+      if (i <= endOffset) {
+        i = getOtherToken(content, i, endOffset)
+      }
     }
   }
 
