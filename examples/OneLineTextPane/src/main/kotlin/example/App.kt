@@ -158,13 +158,13 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
     startOffset: Int,
     endOffset: Int,
   ) {
-    var i = startOffset
-    while (i <= endOffset) {
-      while (i <= endOffset && isDelimiter(content.substring(i, i + 1))) {
-        i++
+    var index = startOffset
+    while (index <= endOffset) {
+      while (index <= endOffset && isDelimiter(content[index])) {
+        index++
       }
-      if (i <= endOffset) {
-        i = getOtherToken(content, i, endOffset)
+      if (index <= endOffset) {
+        index = getOtherToken(content, index, endOffset)
       }
     }
   }
@@ -176,7 +176,7 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
   ): Int {
     var endOfToken = startOffset + 1
     while (endOfToken <= endOffset) {
-      if (isDelimiter(content.substring(endOfToken, endOfToken + 1))) {
+      if (isDelimiter(content[endOfToken])) {
         break
       }
       endOfToken++
@@ -188,8 +188,7 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
     return endOfToken + 1
   }
 
-  private fun isDelimiter(character: String) =
-    Character.isWhitespace(character[0]) || OPERANDS.contains(character)
+  fun isDelimiter(ch: Char) = Character.isWhitespace(ch) || OPERANDS.indexOf(ch) >= 0
 
   companion object {
     private const val LB = '\n'
