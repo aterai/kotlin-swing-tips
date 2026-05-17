@@ -28,13 +28,14 @@ fun createUI(): Component {
     it.maxWidth = 50
     it.resizable = false
   }
-  val dce = DefaultCellEditor(JTextField())
+  val defaultCellEditor = DefaultCellEditor(JTextField())
   val objectCheck = JCheckBox("setDefaultEditor(Object.class, null)")
   val editableCheck = JCheckBox("setEnabled(false)")
   val al = ActionListener {
     table.clearSelection()
     table.takeIf { it.isEditing }?.cellEditor?.stopCellEditing()
-    table.setDefaultEditor(Any::class.java, if (objectCheck.isSelected) null else dce)
+    val editor = if (objectCheck.isSelected) null else defaultCellEditor
+    table.setDefaultEditor(Any::class.java, editor)
     table.isEnabled = !editableCheck.isSelected
   }
   val p = JPanel(GridLayout(3, 1))
