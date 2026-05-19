@@ -86,27 +86,8 @@ private class HeaderRenderer : TableCellRenderer {
     row: Int,
     column: Int,
   ): Component {
-    if (value is Status) {
-      when (value) {
-        Status.SELECTED -> {
-          check.isSelected = true
-          check.isEnabled = true
-        }
-
-        Status.DESELECTED -> {
-          check.isSelected = false
-          check.isEnabled = true
-        }
-
-        Status.INDETERMINATE -> {
-          check.isSelected = true
-          check.isEnabled = false
-        }
-      }
-    } else {
-      check.isSelected = true
-      check.isEnabled = false
-    }
+    val status = value as? Status ?: Status.INDETERMINATE
+    status.configureHeaderCheckBox(check)
     check.isOpaque = false
     check.font = table.font
     val renderer = table.tableHeader.defaultRenderer
@@ -125,29 +106,6 @@ private class HeaderRenderer : TableCellRenderer {
     }
     return c
   }
-}
-
-private class ComponentIcon(
-  private val c: Component,
-) : Icon {
-  override fun paintIcon(
-    c: Component?,
-    g: Graphics,
-    x: Int,
-    y: Int,
-  ) {
-    SwingUtilities.paintComponent(g, this.c, c?.parent, x, y, iconWidth, iconHeight)
-  }
-
-  override fun getIconWidth() = c.preferredSize.width
-
-  override fun getIconHeight() = c.preferredSize.height
-}
-
-private enum class Status {
-  SELECTED,
-  DESELECTED,
-  INDETERMINATE,
 }
 
 private class TablePopupMenu : JPopupMenu() {
@@ -312,6 +270,46 @@ private class HeaderCheckBoxHandler(
       column.headerValue = if (b) Status.SELECTED else Status.DESELECTED
     }
   }
+}
+
+private class ComponentIcon(
+  private val cmp: Component,
+) : Icon {
+  override fun paintIcon(
+    c: Component?,
+    g: Graphics,
+    x: Int,
+    y: Int,
+  ) {
+    SwingUtilities.paintComponent(g, cmp, c?.parent, x, y, iconWidth, iconHeight)
+  }
+
+  override fun getIconWidth() = cmp.preferredSize.width
+
+  override fun getIconHeight() = cmp.preferredSize.height
+}
+
+private enum class Status {
+  SELECTED {
+    override fun configureHeaderCheckBox(check: JCheckBox) {
+      check.setSelected(true)
+      check.setEnabled(true)
+    }
+  },
+  DESELECTED {
+    override fun configureHeaderCheckBox(check: JCheckBox) {
+      check.setSelected(false)
+      check.setEnabled(true)
+    }
+  },
+  INDETERMINATE {
+    override fun configureHeaderCheckBox(check: JCheckBox) {
+      check.setSelected(true)
+      check.setEnabled(false)
+    }
+  }, ;
+
+  abstract fun configureHeaderCheckBox(check: JCheckBox)
 }
 
 fun main() {
