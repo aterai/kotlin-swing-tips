@@ -89,12 +89,7 @@ private class HeaderRenderer : TableCellRenderer {
     column: Int,
   ): Component {
     val status = value as? Status ?: Status.INDETERMINATE
-    when (status) {
-      Status.SELECTED -> updateCheckBox(isSelected = true, isEnabled = true)
-      Status.DESELECTED -> updateCheckBox(isSelected = false, isEnabled = true)
-      Status.INDETERMINATE -> updateCheckBox(isSelected = true, isEnabled = false)
-      // else -> throw AssertionError("Unknown Status")
-    }
+    status.configureHeaderCheckBox(check)
     check.isOpaque = false
     check.font = table.font
     val r = table.tableHeader.defaultRenderer
@@ -112,14 +107,6 @@ private class HeaderRenderer : TableCellRenderer {
       it.text = null // XXX: Nimbus???
     }
     return c
-  }
-
-  private fun updateCheckBox(
-    isSelected: Boolean,
-    isEnabled: Boolean,
-  ) {
-    check.isSelected = isSelected
-    check.isEnabled = isEnabled
   }
 }
 
@@ -203,9 +190,26 @@ private class ComponentIcon(
 }
 
 private enum class Status {
-  SELECTED,
-  DESELECTED,
-  INDETERMINATE,
+  SELECTED {
+    override fun configureHeaderCheckBox(check: JCheckBox) {
+      check.setSelected(true)
+      check.setEnabled(true)
+    }
+  },
+  DESELECTED {
+    override fun configureHeaderCheckBox(check: JCheckBox) {
+      check.setSelected(false)
+      check.setEnabled(true)
+    }
+  },
+  INDETERMINATE {
+    override fun configureHeaderCheckBox(check: JCheckBox) {
+      check.setSelected(true)
+      check.setEnabled(false)
+    }
+  }, ;
+
+  abstract fun configureHeaderCheckBox(check: JCheckBox)
 }
 
 fun main() {
