@@ -78,7 +78,8 @@ private open class BadgeLayerUI : LayerUI<BadgeLabel>() {
         label.iconTextGap,
       )
       val badge = getBadgeIcon(label.counter)
-      val pt = getBadgeLocation(label.badgePosition, badge)
+      val badgePosition = label.badgePosition
+      val pt = badgePosition.getLocation(iconRect, badge, OFFSET)
       g2.translate(pt.x, pt.y)
       badge.paintIcon(label, g2, 0, 0)
       g2.dispose()
@@ -87,31 +88,6 @@ private open class BadgeLayerUI : LayerUI<BadgeLabel>() {
 
   open fun getBadgeIcon(count: Int) =
     BadgeIcon(count, Color.WHITE, Color(0xAA_FF_16_16.toInt(), true))
-
-  protected fun getBadgeLocation(
-    pos: BadgePosition,
-    icon: Icon,
-  ) = when (pos) {
-    BadgePosition.NORTH_WEST -> Point(
-      iconRect.x - OFFSET.x,
-      iconRect.y - OFFSET.y,
-    )
-
-    BadgePosition.NORTH_EAST -> Point(
-      iconRect.x + iconRect.width - icon.iconWidth + OFFSET.x,
-      iconRect.y - OFFSET.y,
-    )
-
-    BadgePosition.SOUTH_WEST -> Point(
-      iconRect.x - OFFSET.x,
-      iconRect.y + iconRect.height - icon.iconHeight + OFFSET.y,
-    )
-
-    BadgePosition.SOUTH_EAST -> Point(
-      iconRect.x + iconRect.width - icon.iconWidth + OFFSET.x,
-      iconRect.y + iconRect.height - icon.iconHeight + OFFSET.y,
-    )
-  }
 
   companion object {
     private val OFFSET = Point(6, 2)
@@ -179,10 +155,48 @@ private open class BadgeIcon(
 }
 
 private enum class BadgePosition {
-  NORTH_WEST,
-  NORTH_EAST,
-  SOUTH_EAST,
-  SOUTH_WEST,
+  NORTH_WEST {
+    override fun getLocation(
+      iconRect: Rectangle,
+      icon: Icon,
+      offset: Point,
+    ) = Point(
+      iconRect.x - offset.x,
+      iconRect.y - offset.y,
+    )
+  },
+  NORTH_EAST {
+    override fun getLocation(
+      iconRect: Rectangle,
+      icon: Icon,
+      offset: Point,
+    ) = Point(
+      iconRect.x + iconRect.width - icon.iconWidth + offset.x,
+      iconRect.y - offset.y,
+    )
+  },
+  SOUTH_EAST {
+    override fun getLocation(
+      iconRect: Rectangle,
+      icon: Icon,
+      offset: Point,
+    ) = Point(
+      iconRect.x + iconRect.width - icon.iconWidth + offset.x,
+      iconRect.y + iconRect.height - icon.iconHeight + offset.y,
+    )
+  },
+  SOUTH_WEST {
+    override fun getLocation(
+      iconRect: Rectangle,
+      icon: Icon,
+      offset: Point,
+    ) = Point(
+      iconRect.x - offset.x,
+      iconRect.y + iconRect.height - icon.iconHeight + offset.y,
+    )
+  }, ;
+
+  abstract fun getLocation(iconRect: Rectangle, icon: Icon, offset: Point): Point
 }
 
 fun main() {
