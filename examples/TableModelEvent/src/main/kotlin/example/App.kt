@@ -75,7 +75,7 @@ fun createUI(): Component {
 }
 
 private class HeaderRenderer : TableCellRenderer {
-  private val check = JCheckBox("")
+  private val check = JCheckBox()
   private val label = JLabel("Check All")
 
   override fun getTableCellRendererComponent(
@@ -88,10 +88,8 @@ private class HeaderRenderer : TableCellRenderer {
   ): Component {
     val status = value as? Status ?: Status.INDETERMINATE
     status.configureHeaderCheckBox(check)
-    check.isOpaque = false
-    check.font = table.font
-    val renderer = table.tableHeader.defaultRenderer
-    val c = renderer.getTableCellRendererComponent(
+    val r = table.tableHeader.defaultRenderer
+    val c = r.getTableCellRendererComponent(
       table,
       value,
       isSelected,
@@ -99,10 +97,22 @@ private class HeaderRenderer : TableCellRenderer {
       row,
       column,
     )
-    label.icon = ComponentIcon(check)
     if (c is JLabel) {
-      c.icon = ComponentIcon(label)
-      c.text = null // XXX: Nimbus???
+      c.setOpaque(false)
+      check.setOpaque(false)
+      val isSynth = check
+        .getUI()
+        .javaClass
+        .getName()
+        .contains("Synth")
+      if (isSynth) {
+        check.setText(" ")
+        check.preferredSize = c.getPreferredSize()
+      }
+      label.setOpaque(false)
+      label.setIcon(ComponentIcon(check))
+      c.setIcon(ComponentIcon(label))
+      c.setText(null)
     }
     return c
   }

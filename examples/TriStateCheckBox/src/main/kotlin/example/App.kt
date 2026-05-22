@@ -32,7 +32,7 @@ private val model = object : DefaultTableModel(data, columnNames) {
   override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
 }
 private val table = object : JTable(model) {
-  protected var handler: HeaderCheckBoxHandler? = null
+  private var handler: HeaderCheckBoxHandler? = null
 
   override fun updateUI() {
     // Changing to Nimbus LAF and back doesn't reset look and feel of JTable completely
@@ -86,7 +86,8 @@ fun createUI() = JTabbedPane().also {
 }
 
 private class HeaderRenderer : TableCellRenderer {
-  private val check = TriStateCheckBox("Check All")
+  private val check = TriStateCheckBox()
+  private val label = JLabel("Check All")
 
   override fun getTableCellRendererComponent(
     table: JTable,
@@ -98,20 +99,31 @@ private class HeaderRenderer : TableCellRenderer {
   ): Component {
     val status = value as? Status ?: Status.INDETERMINATE
     status.configureHeaderCheckBox(check)
-    check.isOpaque = false
-    check.font = table.font
     val r = table.tableHeader.defaultRenderer
     val c = r.getTableCellRendererComponent(
       table,
-      status,
+      value,
       isSelected,
       hasFocus,
       row,
       column,
     )
-    (c as? JLabel)?.also {
-      it.icon = ComponentIcon(check)
-      it.text = null // XXX: Nimbus???
+    if (c is JLabel) {
+      c.setOpaque(false)
+      check.setOpaque(false)
+      val isSynth = check
+        .getUI()
+        .javaClass
+        .getName()
+        .contains("Synth")
+      if (isSynth) {
+        check.setText(" ")
+        check.preferredSize = c.getPreferredSize()
+      }
+      label.setOpaque(false)
+      label.setIcon(ComponentIcon(check))
+      c.setIcon(ComponentIcon(label))
+      c.setText(null)
     }
     return c
   }
@@ -193,62 +205,94 @@ private class IndeterminateIcon : Icon {
 
 private class HeaderCheckBoxHandler(
   private val table: JTable,
-  private val targetColumn: Int,
+  private val targetColumnIndex: Int,
 ) : MouseAdapter(),
   TableModelListener {
   override fun tableChanged(e: TableModelEvent) {
-    if (e.type == TableModelEvent.UPDATE && e.column == targetColumn) {
-      val vci = table.convertColumnIndexToView(targetColumn)
-      val column = table.columnModel.getColumn(vci)
-      val status = column.headerValue
+    if (e.getType() == TableModelEvent.UPDATE &&
+      e.getColumn() == targetColumnIndex
+    ) {
+      val vci = table.convertColumnIndexToView(targetColumnIndex)
+      val column = table.getColumnModel().getColumn(vci)
+      val status = column.getHeaderValue()
       val m = table.model
-      if (m is DefaultTableModel && fireUpdateEvent(m, column, status)) {
-        val h = table.tableHeader
+      if (updateHeaderState(m, column, status)) {
+        val h = table.getTableHeader()
         h.repaint(h.getHeaderRect(vci))
       }
     }
   }
 
-  private fun fireUpdateEvent(
-    m: DefaultTableModel,
+  private fun updateHeaderState(
+    model: TableModel,
     column: TableColumn,
-    status: Any,
-  ) = if (Status.INDETERMINATE == status) {
-    val dv = m.dataVector
-    val l = dv
-      .mapNotNull {
-        (it as? List<*>)?.get(targetColumn) as? Boolean
-      }.distinct()
-    val isOnlyOneSelected = l.size == 1
-    if (isOnlyOneSelected) {
-      // column.setHeaderValue(if (l.get(0)) Status.SELECTED else Status.DESELECTED)
-      column.headerValue = if (l.first()) Status.SELECTED else Status.DESELECTED
-      true
+    status: Any?,
+  ): Boolean {
+    val repaint: Boolean
+    if (status === Status.INDETERMINATE) {
+      repaint = updateIndeterminateHeaderState(model, column)
     } else {
-      false
+      setIndeterminateHeader(column)
+      repaint = true
     }
-  } else {
-    column.headerValue = Status.INDETERMINATE
-    true
+    return repaint
+  }
+
+  private fun setIndeterminateHeader(column: TableColumn) {
+    column.setHeaderValue(Status.INDETERMINATE)
+  }
+
+  private fun updateIndeterminateHeaderState(
+    model: TableModel,
+    column: TableColumn,
+  ): Boolean {
+    var repaint = false
+    val status = resolveHeaderState(model)
+    if (status != null) {
+      column.setHeaderValue(status)
+      repaint = true
+    }
+    return repaint
+  }
+
+  private fun resolveHeaderState(model: TableModel): Status? {
+    var status: Status? = null
+    val rowCount = model.rowCount
+    if (rowCount > 0) {
+      val values = (0..<rowCount)
+        .map { i -> model.getValueAt(i, targetColumnIndex) }
+        .filterIsInstance<Boolean>()
+        .distinct()
+        .take(2)
+        .toList()
+      val isOnlyOneSelected = values.size == 1
+      if (isOnlyOneSelected) {
+        val isSelected = values[0]
+        status = if (isSelected) Status.SELECTED else Status.DESELECTED
+      }
+    }
+    return status
   }
 
   override fun mouseClicked(e: MouseEvent) {
     val header = e.component as? JTableHeader
-    val tbl = header?.table
-    if (tbl == null || !header.isEnabled) {
-      return
-    }
-    val m = tbl.model
-    val vci = tbl.columnAtPoint(e.point)
-    val mci = tbl.convertColumnIndexToModel(vci)
-    if (mci == targetColumn && m.rowCount > 0) {
-      val columnModel = tbl.columnModel
-      val column = columnModel.getColumn(vci)
-      val b = Status.DESELECTED === column.headerValue
-      for (i in 0..<m.rowCount) {
-        m.setValueAt(b, i, mci)
+    if (header?.isEnabled == true) {
+      val tbl = header.getTable()
+      val model = tbl.model
+      val vci = tbl.columnAtPoint(e.getPoint())
+      val mci = tbl.convertColumnIndexToModel(vci)
+      if (mci == targetColumnIndex && model.rowCount > 0) {
+        val column = tbl.getColumnModel().getColumn(vci)
+        val select = column.getHeaderValue() === Status.DESELECTED
+        toggleAllRows(model, mci, select)
+        column.setHeaderValue(if (select) Status.SELECTED else Status.DESELECTED)
       }
-      column.headerValue = if (b) Status.SELECTED else Status.DESELECTED
+    }
+  }
+
+  private fun toggleAllRows(model: TableModel, columnIndex: Int, selected: Boolean) {
+    for (i in 0..<model.rowCount) {
+      model.setValueAt(selected, i, columnIndex)
     }
   }
 }
