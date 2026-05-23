@@ -1,6 +1,7 @@
 package example
 
 import java.awt.*
+import java.util.function.Function
 import javax.swing.*
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
@@ -9,8 +10,8 @@ import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter
 
 fun createUI(): Component {
-  val table = makeTable(makeModel())
-  table.setDefaultRenderer(RowData::class.java, makeRenderer())
+  val table = createTable(createModel())
+  table.setDefaultRenderer(RowData::class.java, createRenderer())
   val rs = table.rowSorter
   if (rs is TableRowSorter<*>) {
     rs.setComparator(0, Comparator.comparing(RowData::position))
@@ -33,7 +34,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeRenderer(): DefaultTableCellRenderer {
+private fun createRenderer(): DefaultTableCellRenderer {
   return object : DefaultTableCellRenderer() {
     override fun getTableCellRendererComponent(
       table: JTable,
@@ -54,28 +55,14 @@ private fun makeRenderer(): DefaultTableCellRenderer {
       if (c is JLabel && value is RowData) {
         val col = table.convertColumnIndexToModel(column)
         c.setHorizontalAlignment(if (col == 1) LEADING else CENTER)
-        c.setText(getColumnText(value, col))
+        c.setText(value.toString(col))
       }
       return c
     }
   }
 }
 
-private fun getColumnText(v: RowData, column: Int) =
-  when (column) {
-    0 -> v.position.toString()
-    1 -> v.team
-    2 -> v.matches.toString()
-    3 -> v.wins.toString()
-    4 -> v.draws.toString()
-    5 -> v.losses.toString()
-    6 -> v.goalsFor.toString()
-    7 -> v.goalsAgainst.toString()
-    8 -> v.goalDifference.let { if (it > 0) "+$it" else it.toString() }
-    else -> v.points.toString()
-  }
-
-private fun makeTable(model: TableModel) = object : JTable(model) {
+private fun createTable(model: TableModel) = object : JTable(model) {
   override fun prepareRenderer(
     renderer: TableCellRenderer,
     row: Int,
@@ -134,7 +121,7 @@ private fun initTableHeader(table: JTable) {
   }
 }
 
-private fun makeModel(): TableModel {
+private fun createModel(): TableModel {
   val columnNames = arrayOf("#", "Team", "MP", "W", "D", "L", "F", "A", "GD", "P")
   val model = object : DefaultTableModel(columnNames, 0) {
     override fun getColumnClass(column: Int) = RowData::class.java
@@ -178,6 +165,22 @@ private data class RowData(
   val goalsFor: Int,
   val goalsAgainst: Int,
 ) {
+  val columnConverters: List<Function<RowData, String>> = listOf(
+    Function<RowData, String> { r -> r.position.toString() },
+    Function<RowData, String> { r -> r.team },
+    Function<RowData, String> { r -> r.matches.toString() },
+    Function<RowData, String> { r -> r.wins.toString() },
+    Function<RowData, String> { r -> r.draws.toString() },
+    Function<RowData, String> { r -> r.losses.toString() },
+    Function<RowData, String> { r -> r.goalsFor.toString() },
+    Function<RowData, String> { r -> r.goalsAgainst.toString() },
+    Function<RowData, String> { r ->
+      val d = r.goalDifference
+      if (d > 0) "+$d" else d.toString()
+    },
+    Function<RowData, String> { r -> r.points.toString() },
+  )
+
   val goalDifference: Int
     get() = goalsFor - goalsAgainst
 
@@ -186,6 +189,12 @@ private data class RowData(
 
   val matches: Int
     get() = wins + draws + losses
+
+  fun toString(col: Int) = if (col >= 0 && col < columnConverters.size) {
+    columnConverters[col].apply(this)
+  } else {
+    points.toString()
+  }
 }
 
 fun main() {
