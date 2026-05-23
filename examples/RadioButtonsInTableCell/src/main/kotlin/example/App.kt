@@ -56,7 +56,7 @@ private class RadioButtonsPanel : JPanel() {
     group.elements.toList().forEach { group.remove(it) }
     removeAll()
     for (a in Answer.entries) {
-      val b = makeButton(a.name)
+      val b = createButton(a.name)
       add(b)
       group.add(b)
     }
@@ -65,12 +65,18 @@ private class RadioButtonsPanel : JPanel() {
   fun updateSelectedButton(v: Any?) {
     if (v is Answer) {
       initButtons()
-      (getComponent(v.ordinal) as? JRadioButton)?.isSelected = true
+      for (c in components) {
+        if (c is JRadioButton && v.name == c.getActionCommand()) {
+          c.setSelected(true)
+          break
+        }
+      }
+      // (getComponent(v.ordinal) as? JRadioButton)?.isSelected = true
     }
   }
 }
 
-private fun makeButton(title: String): JRadioButton {
+private fun createButton(title: String): JRadioButton {
   val b = JRadioButton(title)
   b.actionCommand = title
   b.isFocusable = false
