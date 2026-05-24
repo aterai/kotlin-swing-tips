@@ -3,12 +3,13 @@ package example
 import java.awt.*
 import javax.swing.*
 
-private const val PAUSE = "pause"
+private const val TXT_PAUSE = "pause"
+private const val TXT_RESUME = "resume"
 private val area = JTextArea()
 private val statusPanel = JPanel(BorderLayout())
 private val runButton = JButton("run")
 private val cancelButton = JButton("cancel")
-private val pauseButton = JButton(PAUSE)
+private val pauseButton = JButton(TXT_PAUSE)
 private val bar1 = JProgressBar()
 private val bar2 = JProgressBar()
 private var worker: BackgroundTask? = null
@@ -17,24 +18,19 @@ fun createUI(): Component {
   area.isEditable = false
 
   runButton.addActionListener {
-    runButton.isEnabled = false
-    cancelButton.isEnabled = true
-    pauseButton.isEnabled = true
-    bar1.value = 0
-    bar2.value = 0
-    statusPanel.add(bar1, BorderLayout.NORTH)
-    statusPanel.add(bar2, BorderLayout.SOUTH)
-    statusPanel.revalidate()
-    worker = ProgressTask().also { it.execute() }
+    updateButtonsAndStatusPanel(true)
+    worker = ProgressTask().also {
+      it.execute()
+    }
   }
 
   pauseButton.isEnabled = false
   pauseButton.addActionListener { e ->
     (e.source as? JButton)?.also { b ->
       b.text = worker?.let {
-        it.isPaused = it.isPaused xor true
-        if (it.isCancelled || it.isPaused) PAUSE else "resume"
-      } ?: PAUSE
+        it.toggle()
+        if (it.isCancelled || it.isPaused) TXT_PAUSE else TXT_RESUME
+      } ?: TXT_PAUSE
     }
   }
 
@@ -42,12 +38,11 @@ fun createUI(): Component {
   cancelButton.addActionListener {
     worker?.takeUnless { it.isDone }?.cancel(true)
     worker = null
-    pauseButton.text = PAUSE
+    pauseButton.text = TXT_PAUSE
     pauseButton.isEnabled = false
   }
-
-  val box = createRightAlignButtonBox4(pauseButton, cancelButton, runButton)
-
+  val buttons = listOf<Component>(pauseButton, cancelButton, runButton)
+  val box = createRightAlignBox(buttons, 80, 5)
   return JPanel(BorderLayout(5, 5)).also {
     it.add(JScrollPane(area))
     it.add(box, BorderLayout.NORTH)
@@ -60,7 +55,7 @@ fun createUI(): Component {
 private class ProgressTask : BackgroundTask() {
   override fun process(chunks: List<Progress>) {
     if (area.isDisplayable && !isCancelled) {
-      chunks.forEach { processChunks(it) }
+      chunks.forEach { updateProgress(it) }
     } else {
       cancel(true)
     }
@@ -68,35 +63,29 @@ private class ProgressTask : BackgroundTask() {
 
   override fun done() {
     if (area.isDisplayable) {
-      updateComponentDone()
-      val message = runCatching {
-        "%n%s%n".format(if (isCancelled) "Cancelled" else get())
-      }.getOrNull() ?: "%n%s%n".format("Interrupted")
-      appendLine(message)
+      updateButtonsAndStatusPanel(false)
+      appendLine("%n%s%n".format(doneMessage()))
     }
   }
 }
 
-fun updateComponentDone() {
-  runButton.requestFocusInWindow()
-  runButton.isEnabled = true
-  cancelButton.isEnabled = false
-  pauseButton.isEnabled = false
-  statusPanel.removeAll()
-  statusPanel.revalidate()
+private fun updateProgress(progress: Progress) {
+  progress.type.update(progress.value)
 }
 
-private fun processChunks(progress: Progress) {
-  when (progress.component) {
-    ProgressType.TOTAL -> bar1.value = progress.value as? Int ?: 0
-    ProgressType.FILE -> bar2.value = progress.value as? Int ?: 0
-    ProgressType.LOG -> area.append(progress.value.toString())
-    ProgressType.PAUSE -> textProgress(progress.value as? Boolean ?: false)
-    // else -> throw AssertionError("Unknown Progress")
-  }
+fun updateTotalProgress(value: Int) {
+  bar1.setValue(value)
 }
 
-private fun textProgress(append: Boolean) {
+fun updateFileProgress(value: Int) {
+  bar2.setValue(value)
+}
+
+fun appendLog(value: Any) {
+  area.append(value.toString())
+}
+
+fun updatePauseMarker(append: Boolean) {
   if (append) {
     area.append("*")
   } else {
@@ -107,26 +96,40 @@ private fun textProgress(append: Boolean) {
   }
 }
 
+private fun updateButtonsAndStatusPanel(running: Boolean) {
+  runButton.setEnabled(!running)
+  cancelButton.setEnabled(running)
+  pauseButton.setEnabled(running)
+  if (running) {
+    bar1.setValue(0)
+    bar2.setValue(0)
+    statusPanel.add(bar1, BorderLayout.NORTH)
+    statusPanel.add(bar2, BorderLayout.SOUTH)
+  } else {
+    runButton.requestFocusInWindow()
+    statusPanel.removeAll()
+  }
+  statusPanel.revalidate()
+}
+
 fun appendLine(str: String) {
   area.append(str)
   area.caretPosition = area.document.length
 }
 
-// @see https://ateraimemo.com/Swing/ButtonWidth.html
-private fun createRightAlignButtonBox4(vararg list: Component): Component {
-  val buttonWidth = 80
-  val gap = 5
+
+fun createRightAlignBox(list: List<Component>, width: Int, gap: Int): Component {
   val layout = SpringLayout()
   val p = object : JPanel(layout) {
     override fun getPreferredSize(): Dimension {
       val maxHeight = list.maxOfOrNull { it.preferredSize.height } ?: 0
-      return Dimension(buttonWidth * list.size + gap + gap, maxHeight + gap + gap)
+      return Dimension(width * list.size + gap * 2, maxHeight + gap * 2)
     }
   }
   var x = layout.getConstraint(SpringLayout.WIDTH, p)
   val y = Spring.constant(gap)
   val g = Spring.minus(Spring.constant(gap))
-  val w = Spring.constant(buttonWidth)
+  val w = Spring.constant(width)
   for (b in list) {
     val constraints = layout.getConstraints(b)
     x = Spring.sum(x, g)
@@ -140,16 +143,31 @@ private fun createRightAlignButtonBox4(vararg list: Component): Component {
 }
 
 private enum class ProgressType {
-  TOTAL,
-  FILE,
-  LOG,
-  PAUSE,
+  TOTAL {
+    override fun update(value: Any) {
+      updateTotalProgress((value as Int))
+    }
+  },
+  FILE {
+    override fun update(value: Any) {
+      updateFileProgress(value as Int)
+    }
+  },
+  LOG {
+    override fun update(value: Any) {
+      appendLog(value)
+    }
+  },
+  PAUSE {
+    override fun update(value: Any) {
+      updatePauseMarker(value as Boolean)
+    }
+  };
+
+  abstract fun update(value: Any)
 }
 
-private data class Progress(
-  val component: ProgressType,
-  val value: Any,
-)
+private class Progress(val type: ProgressType, val value: Any)
 
 private open class BackgroundTask : SwingWorker<String, Progress>() {
   var isPaused = false
@@ -161,9 +179,7 @@ private open class BackgroundTask : SwingWorker<String, Progress>() {
     publish(Progress(ProgressType.LOG, "Length Of Task: $lengthOfTask"))
     publish(Progress(ProgressType.LOG, "\n------------------------------\n"))
     while (current < lengthOfTask && !isCancelled) {
-      publish(Progress(ProgressType.TOTAL, 100 * current / lengthOfTask))
-      publish(Progress(ProgressType.LOG, "*"))
-      convertFileToSomething()
+      convertFileToSomething(100 * current / lengthOfTask)
       current++
     }
     publish(Progress(ProgressType.LOG, "\n"))
@@ -171,23 +187,46 @@ private open class BackgroundTask : SwingWorker<String, Progress>() {
   }
 
   @Throws(InterruptedException::class)
-  private fun convertFileToSomething() {
+  private fun convertFileToSomething(progress: Int) {
     var blinking = false
     var current = 0
     val lengthOfTask = (10..60).random()
+    publish(Progress(ProgressType.TOTAL, progress))
+    publish(Progress(ProgressType.LOG, "*"))
     while (current <= lengthOfTask && !isCancelled) {
       if (isPaused) {
-        Thread.sleep(500)
-        publish(Progress(ProgressType.PAUSE, blinking))
-        blinking = blinking xor true
+        pause(blinking)
+        blinking = !blinking
         continue
       }
-      val iv = 100 * current / lengthOfTask
-      Thread.sleep(20) // sample
-      publish(Progress(ProgressType.FILE, iv + 1))
+      doSomething(100 * current / lengthOfTask)
       current++
     }
   }
+
+  fun toggle() {
+    this.isPaused = !this.isPaused
+  }
+
+  @Throws(InterruptedException::class)
+  private fun pause(blinking: Boolean) {
+    Thread.sleep(500)
+    publish(Progress(ProgressType.PAUSE, blinking))
+  }
+
+  @Throws(InterruptedException::class)
+  private fun doSomething(progress: Int) {
+    Thread.sleep(20)
+    publish(Progress(ProgressType.FILE, progress + 1))
+  }
+
+  fun doneMessage() = runCatching {
+      if (isCancelled) "Cancelled" else get()
+    }.onFailure {
+      if (it is InterruptedException) {
+        Thread.currentThread().interrupt()
+      }
+    }.getOrNull() ?: "Error"
 }
 
 fun main() {
