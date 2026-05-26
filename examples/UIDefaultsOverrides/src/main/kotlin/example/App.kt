@@ -6,22 +6,10 @@ import javax.swing.border.Border
 import javax.swing.plaf.nimbus.AbstractRegionPainter
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
+import javax.swing.table.TableModel
 
 fun createUI(): Component {
-  val columnNames = arrayOf("A", "B", "C")
-  val data = arrayOf(
-    arrayOf("A0, Line1\nA0, Line2\nA0, Line3", "B0, Line1\nB0, Line2", "C0, Line1"),
-    arrayOf("A1, Line1", "B1, Line1\nB1, Line2", "C1, Line1"),
-    arrayOf("A2, Line1", "B2, Line1", "C2, Line1"),
-  )
-  val model = object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
-
-    override fun isCellEditable(
-      row: Int,
-      column: Int,
-    ) = false
-  }
+  val model = createModel()
   val table1 = JTable(model)
   table1.autoCreateRowSorter = true
   table1.setDefaultRenderer(String::class.java, MultiLineTableCellRenderer())
@@ -41,11 +29,12 @@ fun createUI(): Component {
     EventQueue.invokeLater { it.rootPane.jMenuBar = createMenuBar() }
     it.add(JScrollPane(table1))
     it.add(JScrollPane(table2))
+    it.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeCheckBoxMenuItem(
+private fun createCheckBoxMenuItem(
   title: String,
   d: UIDefaults,
 ): JMenuItem {
@@ -70,16 +59,16 @@ private fun createMenuBar(): JMenuBar {
   val menu = JMenu("Menu")
   menuBar.add(menu)
   menu.add(JCheckBoxMenuItem("Default"))
-  menu.add(makeCheckBoxMenuItem("Test1", d))
-  menu.add(makeCheckBoxMenuItem("Test2", d))
-  menu.add(makeCheckBoxMenuItem("Test3", d))
+  menu.add(createCheckBoxMenuItem("Test1", d))
+  menu.add(createCheckBoxMenuItem("Test2", d))
+  menu.add(createCheckBoxMenuItem("Test3", d))
 
-  val cmi1 = makeCheckBoxMenuItem("Test4", d)
+  val cmi1 = createCheckBoxMenuItem("Test4", d)
   cmi1.isSelected = true
   cmi1.isEnabled = false
   menu.add(cmi1)
 
-  val cmi2 = makeCheckBoxMenuItem("Test5", d)
+  val cmi2 = createCheckBoxMenuItem("Test5", d)
   cmi2.isSelected = false
   cmi2.isEnabled = false
   menu.add(cmi2)
@@ -87,56 +76,74 @@ private fun createMenuBar(): JMenuBar {
   return menuBar
 }
 
+private fun createModel(): TableModel {
+  val columnNames = arrayOf("A", "B", "C")
+  val data = arrayOf<Array<Any>>(
+    arrayOf("A0, Line1\nA0, Line2\nA0, Line3", "B0, Line1\nB0, Line2", "C0, Line1"),
+    arrayOf("A1, Line1", "B1, Line1\nB1, Line2", "C1, Line1"),
+    arrayOf("A2, Line1", "B2, Line1", "C2, Line1"),
+  )
+  return object : DefaultTableModel(data, columnNames) {
+    override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
+
+    override fun isCellEditable(
+      row: Int,
+      column: Int,
+    ) = false
+  }
+}
+
 private enum class CheckIcon {
-  ENABLED_SELECTED,
-  SELECTED_HOVER,
-  ENABLED,
-  HOVER,
+  ENABLED {
+    override fun paint(g: Graphics2D) {
+      g.paint = Color.GREEN
+      g.drawOval(0, 0, 10, 10)
+    }
+  },
+  HOVER {
+    override fun paint(g: Graphics2D) {
+      g.paint = Color.PINK
+      g.drawOval(0, 0, 10, 10)
+    }
+  },
+  ENABLED_SELECTED {
+    override fun paint(g: Graphics2D) {
+      g.paint = Color.ORANGE
+      g.fillOval(0, 0, 10, 10)
+    }
+  },
+  SELECTED_HOVER {
+    override fun paint(g: Graphics2D) {
+      g.paint = Color.CYAN
+      g.fillOval(0, 0, 10, 10)
+    }
+  }, ;
+
+  abstract fun paint(g: Graphics2D)
 }
 
 private class MyCheckBoxMenuItemPainter(
   private val state: CheckIcon,
 ) : AbstractRegionPainter() {
+  private val ctx: PaintContext
+
+  init {
+    val ins = Insets(5, 5, 5, 5)
+    val dim = Dimension(9, 10)
+    this.ctx = PaintContext(ins, dim, false, null, 1.0, 1.0)
+  }
+
   override fun doPaint(
     g: Graphics2D,
     c: JComponent,
     width: Int,
     height: Int,
-    keys: Array<Any>?,
+    keys: Array<Any>,
   ) {
-    when (state) {
-      CheckIcon.ENABLED -> paintIconEnabled(g)
-      CheckIcon.HOVER -> paintIconMouseOver(g)
-      CheckIcon.ENABLED_SELECTED -> paintIconEnabledAndSelected(g)
-      CheckIcon.SELECTED_HOVER -> paintIconSelectedAndMouseOver(g)
-    }
+    state.paint(g)
   }
 
-  override fun getPaintContext(): PaintContext {
-    val ins = Insets(5, 5, 5, 5)
-    val dim = Dimension(9, 10)
-    return PaintContext(ins, dim, false, null, 1.0, 1.0)
-  }
-
-  private fun paintIconEnabled(g: Graphics2D) {
-    g.paint = Color.GREEN
-    g.drawOval(0, 0, 10, 10)
-  }
-
-  private fun paintIconMouseOver(g: Graphics2D) {
-    g.paint = Color.PINK
-    g.drawOval(0, 0, 10, 10)
-  }
-
-  private fun paintIconEnabledAndSelected(g: Graphics2D) {
-    g.paint = Color.ORANGE
-    g.fillOval(0, 0, 10, 10)
-  }
-
-  private fun paintIconSelectedAndMouseOver(g: Graphics2D) {
-    g.paint = Color.CYAN
-    g.fillOval(0, 0, 10, 10)
-  }
+  override fun getPaintContext() = ctx
 }
 
 private class MultiLineTableCellRenderer :
@@ -192,23 +199,15 @@ private class MultiLineTableCellRenderer :
   ): Int {
     val prefH = preferredSize.height
     while (rowColHeight.size <= row) {
-      rowColHeight.add(createMutableList(column))
+      rowColHeight.add(mutableListOf())
     }
     val colHeights = rowColHeight[row]
     while (colHeights.size <= column) {
       colHeights.add(0)
     }
     colHeights[column] = prefH
-    var maxH = prefH
-    for (colHeight in colHeights) {
-      if (colHeight > maxH) {
-        maxH = colHeight
-      }
-    }
-    return maxH
+    return colHeights.max()
   }
-
-  private fun <E> createMutableList(initCapacity: Int) = ArrayList<E>(initCapacity)
 }
 
 fun main() {
