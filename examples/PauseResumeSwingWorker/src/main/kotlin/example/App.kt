@@ -117,7 +117,6 @@ fun appendLine(str: String) {
   area.caretPosition = area.document.length
 }
 
-
 fun createRightAlignBox(list: List<Component>, width: Int, gap: Int): Component {
   val layout = SpringLayout()
   val p = object : JPanel(layout) {
@@ -162,12 +161,15 @@ private enum class ProgressType {
     override fun update(value: Any) {
       updatePauseMarker(value as? Boolean ?: false)
     }
-  };
+  }, ;
 
   abstract fun update(value: Any)
 }
 
-private data class Progress(val type: ProgressType, val value: Any)
+private data class Progress(
+  val type: ProgressType,
+  val value: Any,
+)
 
 private open class BackgroundTask : SwingWorker<String, Progress>() {
   var isPaused = false
@@ -221,12 +223,12 @@ private open class BackgroundTask : SwingWorker<String, Progress>() {
   }
 
   fun doneMessage() = runCatching {
-      if (isCancelled) "Cancelled" else get()
-    }.onFailure {
-      if (it is InterruptedException) {
-        Thread.currentThread().interrupt()
-      }
-    }.getOrNull() ?: "Error"
+    if (isCancelled) "Cancelled" else get()
+  }.onFailure {
+    if (it is InterruptedException) {
+      Thread.currentThread().interrupt()
+    }
+  }.getOrNull() ?: "Error"
 }
 
 fun main() {
