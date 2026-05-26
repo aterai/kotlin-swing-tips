@@ -145,12 +145,12 @@ fun createRightAlignBox(list: List<Component>, width: Int, gap: Int): Component 
 private enum class ProgressType {
   TOTAL {
     override fun update(value: Any) {
-      updateTotalProgress((value as Int))
+      updateTotalProgress(value as? Int ?: 0)
     }
   },
   FILE {
     override fun update(value: Any) {
-      updateFileProgress(value as Int)
+      updateFileProgress(value as? Int ?: 0)
     }
   },
   LOG {
@@ -160,14 +160,14 @@ private enum class ProgressType {
   },
   PAUSE {
     override fun update(value: Any) {
-      updatePauseMarker(value as Boolean)
+      updatePauseMarker(value as? Boolean ?: false)
     }
   };
 
   abstract fun update(value: Any)
 }
 
-private class Progress(val type: ProgressType, val value: Any)
+private data class Progress(val type: ProgressType, val value: Any)
 
 private open class BackgroundTask : SwingWorker<String, Progress>() {
   var isPaused = false
