@@ -19,16 +19,17 @@ import java.util.zip.ZipFile
 import java.util.zip.ZipOutputStream
 import javax.swing.*
 
-private val logger = Logger.getLogger(MethodHandles.lookup().lookupClass().name)
+val LOGGER_NAME: String = MethodHandles.lookup().lookupClass().getName()
+private val LOGGER = Logger.getLogger(LOGGER_NAME)
 private val textArea = JTextArea()
 
 fun createUI(): Component {
-  logger.useParentHandlers = false
+  LOGGER.useParentHandlers = false
   textArea.isEditable = false
-  logger.addHandler(TextAreaHandler(TextAreaOutputStream(textArea)))
+  LOGGER.addHandler(TextAreaHandler(TextAreaOutputStream(textArea)))
   val p = JPanel(GridLayout(2, 1, 10, 10))
-  p.add(makeZipPanel())
-  p.add(makeUnzipPanel())
+  p.add(createZipPanel())
+  p.add(createUnzipPanel())
   return JPanel(BorderLayout()).also {
     it.add(p, BorderLayout.NORTH)
     it.add(JScrollPane(textArea))
@@ -36,110 +37,130 @@ fun createUI(): Component {
   }
 }
 
-private fun makeZipPanel(): Component {
+private fun createZipPanel(): Component {
   val field = JTextField(20)
-  val button = JButton("select directory")
-  button.addActionListener {
+  val selectButton = JButton("select directory")
+  selectButton.addActionListener {
     val fileChooser = JFileChooser()
-    fileChooser.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
-    val ret = fileChooser.showOpenDialog(button.rootPane)
+    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY)
+    val ret = fileChooser.showOpenDialog(selectButton.rootPane)
     if (ret == JFileChooser.APPROVE_OPTION) {
       field.text = fileChooser.selectedFile.absolutePath
     }
   }
 
-  val button1 = JButton("zip")
-  button1.addActionListener { zip(field.text) }
+  val zipButton = JButton("zip")
+  zipButton.addActionListener {
+    val text = field.getText()
+    val path = Paths.get(text)
+    if (!text.isEmpty() && path.toFile().exists()) {
+      val name = path.fileName.toString() + ".zip"
+      zip(path, path.resolveSibling(name))
+    }
+  }
 
   val p = JPanel(BorderLayout(5, 2))
-  p.border = BorderFactory.createTitledBorder("Zip")
+  p.setBorder(BorderFactory.createTitledBorder("Zip"))
   p.add(field)
-  p.add(button, BorderLayout.EAST)
-  p.add(button1, BorderLayout.SOUTH)
+  p.add(selectButton, BorderLayout.EAST)
+  p.add(zipButton, BorderLayout.SOUTH)
   return p
 }
 
-private fun makeUnzipPanel(): Component {
+private fun createUnzipPanel(): Component {
   val field = JTextField(20)
-  val button = JButton("select .zip file")
-  button.addActionListener {
+  val selectButton = JButton("select .zip file")
+  selectButton.addActionListener {
     val fileChooser = JFileChooser()
-    val ret = fileChooser.showOpenDialog(button.rootPane)
+    val ret = fileChooser.showOpenDialog(selectButton.rootPane)
     if (ret == JFileChooser.APPROVE_OPTION) {
       field.text = fileChooser.selectedFile.absolutePath
     }
   }
-  val button1 = JButton("unzip")
-  button1.addActionListener { unzip(field.text) }
+
+  val unzipButton = JButton("unzip")
+  unzipButton.addActionListener {
+    val text = field.getText()
+    createTargetDirPath(text)?.also {
+      unzip(Paths.get(text), it)
+    }
+  }
 
   val p = JPanel(BorderLayout(5, 2))
   p.border = BorderFactory.createTitledBorder("Unzip")
   p.add(field)
-  p.add(button, BorderLayout.EAST)
-  p.add(button1, BorderLayout.SOUTH)
+  p.add(selectButton, BorderLayout.EAST)
+  p.add(unzipButton, BorderLayout.SOUTH)
   return p
 }
 
-private fun zip(str: String) {
-  val path = Paths.get(str)
-  if (str.isEmpty() || !path.toFile().exists()) {
-    return
-  }
-  val name = path.fileName.toString() + ".zip"
-  val tgt = path.resolveSibling(name)
-  if (tgt.toFile().exists()) {
-    val m = "<html>$tgt already exists.<br>Do you want to overwrite it?"
-    val c = textArea.rootPane
-    val rv = JOptionPane.showConfirmDialog(c, m, "Zip", JOptionPane.YES_NO_OPTION)
-    if (rv != JOptionPane.YES_OPTION) {
-      return
-    }
-  }
+private fun zip(srcDir: Path, zipFile: Path) {
+  val parent = textArea.rootPane
   runCatching {
-    ZipUtils.zip(path, tgt)
+    if (canOverwrite(parent, zipFile, "Zip")) {
+      ZipUtils.zip(srcDir, zipFile)
+    }
   }.onFailure {
-    logger.info { "Cant zip! : $path" }
+    LOGGER.info { "Cant zip! : $zipFile" }
     UIManager.getLookAndFeel().provideErrorFeedback(textArea)
   }
 }
 
-private fun unzip(str: String) {
-  makeTargetDirPath(str)?.also { dstDir ->
-    val path = Paths.get(str)
-    runCatching {
-      if (dstDir.toFile().exists()) {
-        val rv = JOptionPane.showConfirmDialog(
-          textArea.rootPane,
-          "<html>$dstDir already exists.<br>Do you want to overwrite it?",
-          "Unzip",
-          JOptionPane.YES_NO_OPTION,
-        )
-        if (rv != JOptionPane.YES_OPTION) {
-          return
-        }
-      } else {
-        logger.info { "mkdir0: $dstDir" }
-        Files.createDirectories(dstDir)
-      }
-      ZipUtils.unzip(path, dstDir)
-    }.onFailure {
-      logger.info { "Cant unzip! : $path" }
-      UIManager.getLookAndFeel().provideErrorFeedback(textArea)
+private fun unzip(zipFile: Path, targetDir: Path) {
+  val parent = textArea.rootPane
+  runCatching {
+    if (canOverwrite(parent, targetDir, "Unzip")) {
+      createDirectoriesIfAbsent(targetDir)
+      ZipUtils.unzip(zipFile, targetDir)
     }
+  }.onFailure {
+    LOGGER.info { "Cant unzip! : $zipFile" }
+    UIManager.getLookAndFeel().provideErrorFeedback(textArea)
   }
 }
 
-private fun makeTargetDirPath(text: String): Path? {
+private fun canOverwrite(
+  parent: Component,
+  path: Path,
+  title: String,
+) = !path.toFile().exists() || showOverwriteConfirm(parent, path, title)
+
+private fun showOverwriteConfirm(
+  parent: Component,
+  path: Path,
+  title: String,
+): Boolean {
+  val s1 = "$path already exists."
+  val s2 = "Do you want to overwrite it?"
+  val ret = JOptionPane.showConfirmDialog(
+    parent,
+    "<html>$s1<br>$s2",
+    title,
+    JOptionPane.YES_NO_OPTION,
+  )
+  return ret == JOptionPane.YES_OPTION
+}
+
+@Throws(IOException::class)
+private fun createDirectoriesIfAbsent(dir: Path) {
+  if (!dir.toFile().exists()) {
+    LOGGER.info { "mkdir0: $dir" }
+    Files.createDirectories(dir)
+  }
+}
+
+private fun createTargetDirPath(text: String): Path? {
   val path = Paths.get(text)
-  if (text.isEmpty() || !path.toFile().exists()) {
-    return null
+  return if (text.isEmpty() || !path.toFile().exists()) {
+    null
+  } else {
+    var name = path.fileName.toString()
+    val lastDotPos = name.lastIndexOf('.')
+    if (lastDotPos > 0) {
+      name = name.take(lastDotPos)
+    }
+    path.resolveSibling(name)
   }
-  var name = path.fileName.toString()
-  val lastDotPos = name.lastIndexOf('.')
-  if (lastDotPos > 0) {
-    name = name.take(lastDotPos)
-  }
-  return path.resolveSibling(name)
 }
 
 private object ZipUtils {
@@ -152,11 +173,11 @@ private object ZipUtils {
       .walk(srcDir)
       .filter { it.toFile().isFile }
       .use {
-        val files = it.toList() // it.collect(Collectors.toList())
+        val files = it.toList()
         ZipOutputStream(Files.newOutputStream(zip)).use { zos ->
           for (path in files) {
             val relativePath = srcDir.relativize(path).toString().replace('\\', '/')
-            logger.info { "zip: $relativePath" }
+            LOGGER.info { "zip: $relativePath" }
             zos.putNextEntry(ZipEntry(relativePath))
             Files.copy(path, zos)
             zos.closeEntry()
@@ -175,14 +196,14 @@ private object ZipUtils {
         val name = entry.name
         val path = dstDir.resolve(name)
         if (name.endsWith("/")) {
-          logger.info { "mkdir1: $path" }
+          LOGGER.info { "mkdir1: $path" }
           Files.createDirectories(path)
         } else {
           path.parent?.takeUnless { it.toFile().exists() }?.also {
-            logger.info { "mkdir2: $it" }
+            LOGGER.info { "mkdir2: $it" }
             Files.createDirectories(it)
           }
-          logger.info { "copy: $path" }
+          LOGGER.info { "copy: $path" }
           Files.copy(
             zipFile.getInputStream(entry),
             path,
