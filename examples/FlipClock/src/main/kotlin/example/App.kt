@@ -109,10 +109,11 @@ private class FlipPair(
 
     val cx = getWidth() / 2
     val cy = getHeight() / 2
+    val centerPt = Point(cx, cy)
     val curStr = "%02d".format(currentVal)
     val nxtStr = "%02d".format(nextVal)
-    drawHalf(g2, nxtStr, cx, cy, true, CARD_UPPER_BG)
-    drawHalf(g2, curStr, cx, cy, false, CARD_LOWER_BG)
+    drawHalf(g2, nxtStr, centerPt, true, CARD_UPPER_BG)
+    drawHalf(g2, curStr, centerPt, false, CARD_LOWER_BG)
     if (isAnimating) {
       val rad = Math.toRadians(angle)
       val scaleY = abs(cos(rad))
@@ -121,7 +122,7 @@ private class FlipPair(
       val alpha = ((1.0 - scaleY) * SHADOW_MAX_ALPHA).toInt()
       val isTop = angle > 90
       val cbg = if (isTop) CARD_LOWER_BG else CARD_UPPER_BG
-      drawHalf(g2, curStr, 0, 0, isTop, cbg)
+      drawHalf(g2, curStr, Point(), isTop, cbg)
       drawShadow(g2, isTop, alpha)
     }
     drawSeparator(g2, cx, cy)
@@ -140,11 +141,12 @@ private class FlipPair(
   private fun drawHalf(
     g: Graphics,
     txt: String,
-    cx: Int,
-    cy: Int,
+    centerPt: Point,
     isTop: Boolean,
     bg: Color,
   ) {
+    val cx = centerPt.x
+    val cy = centerPt.y
     val x = cx - PNL_WIDTH / 2
     val height = PNL_HEIGHT / 2 - SLIT_HEIGHT / 2
     if (isTop) {
