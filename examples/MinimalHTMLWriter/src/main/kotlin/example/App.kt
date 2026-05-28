@@ -236,13 +236,12 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
     val root = defaultRootElement
     val content = getText(0, getLength())
     val startLine = root.getElementIndex(offset)
-    val endLine = root.getElementIndex(offset + length) + 1
-    for (i in startLine..<endLine) {
+    val endLine = root.getElementIndex(offset + length)
+    for (i in startLine..endLine) {
       applyHighlighting(content, i)
     }
   }
 
-  @Throws(BadLocationException::class)
   private fun applyHighlighting(
     content: String,
     line: Int,
@@ -269,14 +268,12 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
   ) {
     var index = startOffset
     while (index <= endOffset) {
-      while (isDelimiter(content.substring(index, index + 1))) {
-        if (index < endOffset) {
-          index++
-        } else {
-          return
-        }
+      while (index <= endOffset && isDelimiter(content[index])) {
+        index++
       }
-      index = getOtherToken(content, index, endOffset)
+      if (index <= endOffset) {
+        index = getOtherToken(content, index, endOffset)
+      }
     }
   }
 
@@ -287,7 +284,7 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
   ): Int {
     var endOfToken = startOffset + 1
     while (endOfToken <= endOffset) {
-      if (isDelimiter(content.substring(endOfToken, endOfToken + 1))) {
+      if (isDelimiter(content[endOfToken])) {
         break
       }
       endOfToken++
@@ -299,8 +296,7 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
     return endOfToken + 1
   }
 
-  private fun isDelimiter(character: String) =
-    Character.isWhitespace(character[0]) || OPERANDS.contains(character)
+  fun isDelimiter(ch: Char) = Character.isWhitespace(ch) || OPERANDS.indexOf(ch) >= 0
 
   companion object {
     private const val OPERANDS = ".,"
