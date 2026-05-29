@@ -76,8 +76,9 @@ private class WindowsZoomLevelsSliderUI(
   override fun createTrackListener(slider: JSlider) = object : TrackListener() {
     override fun mouseClicked(e: MouseEvent) {
       super.mouseClicked(e)
-      val isLeftDoubleClick = SwingUtilities.isLeftMouseButton(e) && e.clickCount >= 2
-      if (isLeftDoubleClick && thumbRect.contains(e.point)) {
+      val isDoubleClick = e.clickCount >= 2
+      val isLeftClick = SwingUtilities.isLeftMouseButton(e)
+      if (isDoubleClick && isLeftClick && thumbRect.contains(e.point)) {
         slider.value = 0
       }
     }
@@ -104,8 +105,9 @@ private class WindowsZoomLevelsSliderUI(
 private class MetalZoomLevelsSliderUI : MetalSliderUI() {
   override fun createTrackListener(slider: JSlider) = object : TrackListener() {
     override fun mouseClicked(e: MouseEvent) {
-      val isLeftDoubleClick = SwingUtilities.isLeftMouseButton(e) && e.clickCount >= 2
-      if (isLeftDoubleClick && thumbRect.contains(e.point)) {
+      val isDoubleClick = e.clickCount >= 2
+      val isLeftClick = SwingUtilities.isLeftMouseButton(e)
+      if (isDoubleClick && isLeftClick && thumbRect.contains(e.point)) {
         slider.value = 0
       } else {
         super.mouseClicked(e)
