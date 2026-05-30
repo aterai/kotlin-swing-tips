@@ -49,9 +49,10 @@ fun createUI(): Component {
   val r3 = JRadioButton("Lnf default", true)
   r3.addItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      val c = UIManager.getLookAndFeelDefaults().getColor("TextField.caretForeground")
+      val defaults = UIManager.getLookAndFeelDefaults()
+      val c = defaults.getColor("TextField.caretForeground")
       field.caretColor = c
-      // c = UIManager.getLookAndFeelDefaults().getColor("TextPane.caretForeground")
+      // c = defaults.getColor("TextPane.caretForeground")
       // editor.setCaretColor(c)
     }
   }
@@ -75,8 +76,9 @@ fun createUI(): Component {
   p.add(JScrollPane(area))
   p.add(JScrollPane(editor))
 
+  val title = "JTextComponent#setCaretColor(...)"
   return JPanel(BorderLayout(5, 5)).also {
-    it.border = BorderFactory.createTitledBorder("JTextComponent#setCaretColor(...)")
+    it.border = BorderFactory.createTitledBorder(title)
     it.add(box, BorderLayout.NORTH)
     it.add(p)
     it.preferredSize = Dimension(320, 240)
