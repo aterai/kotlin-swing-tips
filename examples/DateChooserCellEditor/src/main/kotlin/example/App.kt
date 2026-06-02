@@ -24,7 +24,7 @@ import javax.swing.table.TableCellEditor
 import javax.swing.table.TableModel
 
 fun createUI(): Component {
-  val table = object : JTable(makeModel()) {
+  val table = object : JTable(createModel()) {
     override fun updateUI() {
       super.updateUI()
       setCellSelectionEnabled(true)
@@ -37,7 +37,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeModel(): TableModel {
+private fun createModel(): TableModel {
   val columnNames = arrayOf("A", "B")
   val data = arrayOf<Array<Any>>(
     arrayOf(Date(), ""),
@@ -171,7 +171,7 @@ private class DateEditor :
       add(JScrollPane(monthTable))
     }
 
-    override fun getPreferredSize(): Dimension = Dimension(220, 143)
+    override fun getPreferredSize() = Dimension(220, 143)
   }
 
   private class MonthTable : JTable() {
