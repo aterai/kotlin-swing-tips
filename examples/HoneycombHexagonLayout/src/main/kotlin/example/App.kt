@@ -17,13 +17,13 @@ private const val TOTAL_ROWS = 3
 // Gap between adjacent hexagon edges in pixels
 // 0 = perfectly touching, positive = gap
 private const val BTN_GAP = 6
-private val BTN_BGC = Color(70, 130, 180) // Steel blue
+private val BTN_BGC = Color(0x46_82_B4) // Steel blue
 
 fun createUI(): Component {
   val evenCount = 2 * N - 1 // Buttons in even rows
   val oddCount = 2 * N // Buttons in odd  rows
   val p = JPanel(HoneycombLayout(TOTAL_ROWS, evenCount, oddCount, BTN_GAP))
-  p.setBackground(Color(45, 45, 45))
+  p.setBackground(Color(0x2D_2D_2D))
   p.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
 
   // Calculate total button count and add them
@@ -131,7 +131,7 @@ private class HexagonButton(
     // Draw border; glow effect on hover
     if (isHovered) {
       g2.stroke = BasicStroke(3f)
-      g2.color = Color(255, 255, 255, 100)
+      g2.color = Color(0x64_FF_FF_FF, true)
       g2.drawPolygon(hexagon)
       g2.stroke = BasicStroke(1.5f)
       g2.color = Color.WHITE
@@ -218,11 +218,11 @@ private class HoneycombLayout(
     return Dimension(buttonW, buttonH)
   }
 
-  override fun preferredLayoutSize(parent: Container): Dimension = Dimension(500, 400)
+  override fun preferredLayoutSize(parent: Container) = Dimension(500, 400)
 
-  override fun minimumLayoutSize(parent: Container): Dimension = Dimension(200, 150)
+  override fun minimumLayoutSize(parent: Container) = Dimension(200, 150)
 
-  override fun addLayoutComponent(name: String?, comp: Component) {
+  override fun addLayoutComponent(name: String, comp: Component) {
     // not needed
   }
 
