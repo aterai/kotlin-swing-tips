@@ -56,17 +56,14 @@ private class VerticalTitledBorder(
       val edge = if (border is TitledBorder) 0 else EDGE_SPACING
       val lbl = getTitleLabel(c)
       val size = lbl.preferredSize
-      val insets = makeComponentBorderInsets(border, c, Insets(0, 0, 0, 0))
+      val ins = createComponentBorderInsets(border, c, Insets(0, 0, 0, 0))
       var borderX = x + edge
       val borderY = y + edge
       var borderW = width - edge - edge
       val borderH = height - edge - edge
       val labelH = size.height
-      var labelW = height - insets.top - insets.bottom // TEST: - (edge * 8)
-      if (labelW > size.width) {
-        labelW = size.width
-      }
-      val left = edge + insets.left / 2 - labelH / 2
+      val labelW = (height - ins.top - ins.bottom).coerceAtMost(size.width)
+      val left = edge + ins.left / 2 - labelH / 2
       if (left < edge) {
         borderX -= left
         borderW += left
@@ -87,7 +84,7 @@ private class VerticalTitledBorder(
     insets: Insets,
   ): Insets {
     val border = getBorder()
-    val ins = makeComponentBorderInsets(border, c, insets)
+    val ins = createComponentBorderInsets(border, c, insets)
     val title = getTitle()
     if (title?.isNotEmpty() == true) {
       val edge = if (border is TitledBorder) 0 else EDGE_SPACING
@@ -128,7 +125,7 @@ private class VerticalTitledBorder(
   }
 }
 
-private fun makeComponentBorderInsets(
+private fun createComponentBorderInsets(
   border: Border?,
   c: Component,
   i: Insets,
