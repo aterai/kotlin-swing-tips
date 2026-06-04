@@ -5,40 +5,34 @@ import javax.swing.*
 
 fun createUI(): Component {
   val tabbedPane = JTabbedPane()
-  tabbedPane.addTab("SpringLayout", makeCmp1())
-  tabbedPane.addTab("Custom BorderLayout", makeCmp2())
+  tabbedPane.addTab("SpringLayout", createCmp1())
+  tabbedPane.addTab("Custom BorderLayout", createCmp2())
   return JPanel(BorderLayout()).also {
     it.add(tabbedPane)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeCmp1(): Component {
-  val model = DefaultListModel<String>()
-  model.addElement("l${"o".repeat(40)}ng")
-  for (i in 0..<5000) {
-    model.addElement(i.toString())
-  }
-
-  val leftList = makeList(model)
+private fun createCmp1(): Component {
+  val leftList = createList(createListModel())
   val lsp = JScrollPane(leftList)
   lsp.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
 
-  val rightList = makeList(DefaultListModel<String>())
+  val rightList = createList(DefaultListModel<String>())
   val rsp = JScrollPane(rightList)
   rsp.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
 
-  val button1 = makeButton(">")
+  val button1 = createButton(">")
   button1.addActionListener {
     move(leftList, rightList)
   }
 
-  val button2 = makeButton("<")
+  val button2 = createButton("<")
   button2.addActionListener {
     move(rightList, leftList)
   }
 
-  val box = makeCenterBox(button1, button2)
+  val box = createCenterBox(button1, button2)
   val layout = SpringLayout()
   val panel = JPanel(layout)
   panel.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
@@ -71,55 +65,45 @@ private fun makeCmp1(): Component {
   return panel
 }
 
-private fun makeCmp2(): Component {
-  val model = DefaultListModel<String>()
-  model.addElement("l${"o".repeat(40)}ng")
-  for (i in 0..<5000) {
-    model.addElement(i.toString())
-  }
-
-  val leftList = makeList(model)
+private fun createCmp2(): Component {
+  val leftList = createList(createListModel())
   val lsp = JScrollPane(leftList)
   lsp.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
-  val rightList = makeList(DefaultListModel<String>())
+  val rightList = createList(DefaultListModel<String>())
   val rsp = JScrollPane(rightList)
   rsp.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
 
-  val button1 = makeButton(">")
+  val button1 = createButton(">")
   button1.addActionListener {
     move(leftList, rightList)
   }
 
-  val button2 = makeButton("<")
+  val button2 = createButton("<")
   button2.addActionListener {
     move(rightList, leftList)
   }
 
-  val box = makeCenterBox(button1, button2)
+  val box = createCenterBox(button1, button2)
   val layout = object : BorderLayout(0, 0) {
     override fun layoutContainer(target: Container) {
       synchronized(target.treeLock) {
-        val insets = target.insets
-        val top = insets.top
-        val bottom = target.height - insets.bottom
-        val left = insets.left
-        val right = target.width - insets.right
-        val gap = hgap
-        var wc = right - left
+        val r = SwingUtilities.calculateInnerArea(target as? JComponent, null)
+        val hgp = getHgap()
+        var wc = r.width
         var we = wc / 2
         var ww = wc - we
 
         getLayoutComponent(CENTER)?.also {
           val d = it.preferredSize
-          wc -= d.width + gap + gap
+          wc -= d.width + hgp * 2
           we = wc / 2
           ww = wc - we
-          it.setBounds(left + gap + ww, top, wc, bottom - top)
+          it.setBounds(r.x + hgp + ww, r.y, wc, r.height)
         }
 
-        getLayoutComponent(EAST)?.setBounds(right - we, top, we, bottom - top)
+        getLayoutComponent(EAST)?.setBounds(r.x + r.width - we, r.y, we, r.height)
 
-        getLayoutComponent(WEST)?.setBounds(left, top, ww, bottom - top)
+        getLayoutComponent(WEST)?.setBounds(r.x, r.y, ww, r.height)
       }
     }
   }
@@ -159,7 +143,16 @@ private fun <E> move(
   }
 }
 
-private fun <E> makeList(model: ListModel<E>): JList<E> {
+private fun createListModel(): DefaultListModel<String> {
+  val model = DefaultListModel<String>()
+  model.addElement("l${"o".repeat(40)}ng")
+  for (i in 0..<5000) {
+    model.addElement(i.toString())
+  }
+  return model
+}
+
+private fun <E> createList(model: ListModel<E>): JList<E> {
   val list = JList(model)
   val popup = JPopupMenu()
   popup.add("reverse").addActionListener {
@@ -176,14 +169,14 @@ private fun <E> makeList(model: ListModel<E>): JList<E> {
   return list
 }
 
-private fun makeButton(title: String): JButton {
+private fun createButton(title: String): JButton {
   val button = JButton(title)
   button.isFocusable = false
   button.border = BorderFactory.createEmptyBorder(2, 8, 2, 8)
   return button
 }
 
-private fun makeCenterBox(vararg buttons: JButton): Component {
+private fun createCenterBox(vararg buttons: JButton): Component {
   val box = Box.createVerticalBox()
   box.border = BorderFactory.createEmptyBorder(0, 5, 0, 5)
   box.add(Box.createVerticalGlue())
