@@ -12,26 +12,26 @@ fun createUI(): Component {
   val def = UIManager.getLookAndFeelDefaults()
   def["Slider.thumbWidth"] = 40
   def["Slider.thumbHeight"] = 40
-  val slider0 = makeToggleSlider(def)
-  val d = makeSliderPainter()
-  val slider1 = makeToggleSlider(d)
+  val slider0 = createToggleSlider(def)
+  val d = createSliderPainter()
+  val slider1 = createToggleSlider(d)
   slider1.addMouseMotionListener(object : MouseAdapter() {
     override fun mouseDragged(e: MouseEvent) {
       super.mouseDragged(e)
       e.component.repaint()
     }
   })
-  val layer = JLayer(makeToggleSlider(d), ToggleSwitchLayerUI())
+  val layer = JLayer(createToggleSlider(d), ToggleSwitchLayerUI())
   return JPanel().also {
-    it.add(makeTitledPanel("Default", makeToggleSlider(null)))
-    it.add(makeTitledPanel("Thumb size", slider0))
-    it.add(makeTitledPanel("SliderTrack", slider1))
-    it.add(makeTitledPanel("JSlider + JLayer", layer))
+    it.add(createTitledPanel("Default", createToggleSlider(null)))
+    it.add(createTitledPanel("Thumb size", slider0))
+    it.add(createTitledPanel("SliderTrack", slider1))
+    it.add(createTitledPanel("JSlider + JLayer", layer))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeToggleSlider(d: UIDefaults?): JSlider {
+private fun createToggleSlider(d: UIDefaults?): JSlider {
   val slider = object : JSlider(0, 1, 0) {
     override fun getPreferredSize() = Dimension(100, 40)
   }
@@ -42,12 +42,12 @@ private fun makeToggleSlider(d: UIDefaults?): JSlider {
   return slider
 }
 
-private fun makeSliderPainter(): UIDefaults {
+private fun createSliderPainter(): UIDefaults {
   val d = UIDefaults()
   d["Slider.thumbWidth"] = 40
   d["Slider.thumbHeight"] = 40
-  d["Slider:SliderTrack[Enabled].backgroundPainter"] = makeBackgroundPainter()
-  val thumbPainter = makeThumbPainter()
+  d["Slider:SliderTrack[Enabled].backgroundPainter"] = createBackgroundPainter()
+  val thumbPainter = createThumbPainter()
   d["Slider:SliderThumb[Disabled].backgroundPainter"] = thumbPainter
   d["Slider:SliderThumb[Enabled].backgroundPainter"] = thumbPainter
   d["Slider:SliderThumb[Focused+MouseOver].backgroundPainter"] = thumbPainter
@@ -58,7 +58,7 @@ private fun makeSliderPainter(): UIDefaults {
   return d
 }
 
-private fun makeBackgroundPainter() = Painter<JSlider> { g, c, w, h ->
+private fun createBackgroundPainter() = Painter<JSlider> { g, c, w, h ->
   val arc = 40
   val fillLeft = 2
   val fillTop = 2
@@ -86,7 +86,7 @@ private fun makeBackgroundPainter() = Painter<JSlider> { g, c, w, h ->
   g.drawRoundRect(fillLeft, fillTop, trackWidth, trackHeight, arc, arc)
 }
 
-private fun makeThumbPainter() = Painter<JSlider> { g, _, w, h ->
+private fun createThumbPainter() = Painter<JSlider> { g, _, w, h ->
   val fillLeft = 8
   val fillTop = 8
   val trackWidth = w - fillLeft - fillLeft
@@ -100,22 +100,20 @@ private fun getPositionForValue(
   slider: JSlider,
   trackRect: Rectangle,
 ): Int {
-  val value = slider.value
   val min = slider.minimum
   val max = slider.maximum
   val trackLength = trackRect.width
   val valueRange = max.toFloat() - min.toFloat()
   val pixelsPerValue = trackLength.toFloat() / valueRange
+  val value = slider.value
   val trackLeft = trackRect.x
   val trackRight = trackRect.x + trackRect.width - 1
-  var xp = trackLeft
-  xp += (pixelsPerValue * (value.toFloat() - min)).roundToInt()
-  xp = trackLeft.coerceAtLeast(xp)
-  xp = trackRight.coerceAtMost(xp)
-  return xp
+  return (trackLeft + pixelsPerValue * (value.toFloat() - min))
+    .roundToInt()
+    .coerceIn(trackLeft..trackRight)
 }
 
-private fun makeTitledPanel(
+private fun createTitledPanel(
   title: String,
   c: Component,
 ): Component {
@@ -129,7 +127,8 @@ private class ToggleSwitchLayerUI : LayerUI<JSlider>() {
   override fun installUI(c: JComponent) {
     super.installUI(c)
     if (c is JLayer<*>) {
-      c.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
+      c.layerEventMask =
+        AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
     }
   }
 
