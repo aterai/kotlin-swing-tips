@@ -30,9 +30,9 @@ private class ScrollIndicator(
   }
 
   override fun getPercentComplete(): Double {
-    val span = (model.maximum - model.minimum).toLong()
-    val currentValue = (model.value + model.extent).toDouble()
-    return (currentValue - model.minimum) / span
+    val m = getModel()
+    val maxExtent = (m.maximum - m.extent - m.minimum).coerceAtLeast(0)
+    return (m.value - m.minimum) / maxExtent.toDouble()
   }
 
   override fun getPreferredSize(): Dimension {
@@ -57,7 +57,8 @@ private class ScrollIndicatorUI : BasicProgressBarUI() {
       if (progressBar.getOrientation() == SwingConstants.HORIZONTAL) {
         g2.fillRect(r.x, r.y, amountFull, r.height)
       } else { // VERTICAL
-        g2.fillRect(r.x, r.y + r.height - amountFull, r.width, amountFull)
+        g2.fillRect(r.x, r.y, r.width, amountFull)
+        // g2.fillRect(r.x, r.y + r.height - amountFull, r.width, amountFull)
       }
       if (progressBar.isStringPainted) {
         paintString(g2, r.x, r.y, r.width, r.height, amountFull, b)
