@@ -20,10 +20,10 @@ val FONT = Font(Font.MONOSPACED, Font.PLAIN, 12)
 
 private fun createUI(): Component {
   val p = JPanel(GridLayout(0, 1, 5, 25))
-  val p1 = makeTextField()
-  p.add(makeTitledPanel("JTextField + HighlightFilter", p1))
-  val p2 = makePasswordPanel()
-  p.add(makeTitledPanel("JPasswordField + HighlightFilter", p2))
+  val p1 = createTextField()
+  p.add(createTitledPanel("JTextField + HighlightFilter", p1))
+  val p2 = createPasswordPanel()
+  p.add(createTitledPanel("JPasswordField + HighlightFilter", p2))
   val mb = JMenuBar()
   mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   return JPanel(BorderLayout()).also {
@@ -34,7 +34,7 @@ private fun createUI(): Component {
   }
 }
 
-private fun makeTextField(): JPanel {
+private fun createTextField(): JPanel {
   val txt = "The quick brown fox jumps over the lazy dog."
   val field = object : JTextField(txt) {
     override fun updateUI() {
@@ -62,7 +62,7 @@ private fun makeTextField(): JPanel {
   return p
 }
 
-private fun makePasswordPanel(): JPanel {
+private fun createPasswordPanel(): JPanel {
   val password = DigitHighlightPasswordField(40)
   password.setFont(FONT)
   password.setAlignmentX(Component.RIGHT_ALIGNMENT)
@@ -70,7 +70,7 @@ private fun makePasswordPanel(): JPanel {
   val button = JToggleButton()
   button.addActionListener { e ->
     val b = (e.source as? AbstractButton)?.isSelected == true
-    password.echoChar = if (b) '\u0000' else getUIEchoChar()
+    password.echoChar = if (b) 0.toChar() else getUIEchoChar()
   }
   initEyeButton(button)
   val p = OverlayLayoutPanel()
@@ -95,7 +95,7 @@ private fun initEyeButton(b: AbstractButton) {
   b.toolTipText = "show/hide passwords"
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun createTitledPanel(title: String, c: Component): Component {
   val p = JPanel(BorderLayout())
   p.setBorder(BorderFactory.createTitledBorder(title))
   p.add(c)
@@ -120,7 +120,7 @@ private class DigitHighlightPasswordField(
   }
 
   private fun updateHighlightFilter(doc: AbstractDocument) {
-    if (echoChar == '\u0000') {
+    if (echoChar == 0.toChar()) {
       setForeground(Color(0x0, true))
       setSelectedTextColor(Color(0x0, true))
       doc.documentFilter = HighlightFilter(this)
@@ -266,13 +266,14 @@ private class ForegroundPainter(
     if (!r.isEmpty) {
       runCatching {
         val s = c.document.getText(offs0, offs1 - offs0)
-        val g2 = g.create() as? Graphics2D ?: return
-        val font = c.getFont()
-        val metrics = g2.getFontMetrics(font)
-        val ascent = metrics.ascent
-        g2.color = color
-        g2.drawString(s, r.x.toFloat(), (r.y + ascent).toFloat())
-        g2.dispose()
+        (g.create() as? Graphics2D)?.also { g2 ->
+          val font = c.getFont()
+          val metrics = g2.getFontMetrics(font)
+          val ascent = metrics.ascent
+          g2.color = color
+          g2.drawString(s, r.x.toFloat(), (r.y + ascent).toFloat())
+          g2.dispose()
+        }
       }.onFailure {
         it.printStackTrace()
       }
