@@ -27,7 +27,7 @@ private fun createCheckBoxPasswordPanel(): JPanel {
   val button = JCheckBox("show passwords")
   button.addActionListener { e ->
     val b = (e.source as? AbstractButton)?.isSelected == true
-    password.echoChar = if (b) '\u0000' else getUIEchoChar()
+    password.echoChar = if (b) 0.toChar() else getUIEchoChar()
   }
   val p = JPanel(BorderLayout())
   p.add(password)
@@ -40,7 +40,7 @@ private fun createToggleButtonPasswordPanel(): JPanel {
   val button = JToggleButton()
   button.addActionListener { e ->
     val b = (e.source as? AbstractButton)?.isSelected == true
-    password.echoChar = if (b) '\u0000' else getUIEchoChar()
+    password.echoChar = if (b) 0.toChar() else getUIEchoChar()
   }
   configureEyeButton(button)
   val p = createOverlayPanel()
@@ -85,7 +85,7 @@ private fun createHoldToShowPasswordPanel(): Container {
   val button = JButton()
   val mouseAdapter = object : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
-      passwordField.echoChar = '\u0000'
+      passwordField.echoChar = 0.toChar()
     }
 
     override fun mouseReleased(e: MouseEvent) {

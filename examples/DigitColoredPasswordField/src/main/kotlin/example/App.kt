@@ -33,10 +33,10 @@ val FONT = Font(Font.MONOSPACED, Font.PLAIN, 12)
 
 fun createUI(): Component {
   val p = JPanel(GridLayout(0, 1, 5, 25))
-  val p1 = makePasswordPanel1()
-  p.add(makeTitledPanel("JPasswordField#setEchoChar(...) + HighlightFilter", p1))
-  val p2 = makePasswordPanel2()
-  p.add(makeTitledPanel("CardLayout + (JPasswordField <> JTextPane)", p2))
+  val p1 = createPasswordPanel1()
+  p.add(createTitledPanel("JPasswordField#setEchoChar(...) + HighlightFilter", p1))
+  val p2 = createPasswordPanel2()
+  p.add(createTitledPanel("CardLayout + (JPasswordField <> JTextPane)", p2))
   return JPanel(BorderLayout()).also {
     it.add(p, BorderLayout.NORTH)
     it.border = BorderFactory.createEmptyBorder(25, 5, 5, 5)
@@ -44,7 +44,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makePasswordPanel1(): JPanel {
+private fun createPasswordPanel1(): JPanel {
   val password = DigitHighlightPasswordField(40)
   password.setFont(FONT)
   password.setAlignmentX(Component.RIGHT_ALIGNMENT)
@@ -53,7 +53,7 @@ private fun makePasswordPanel1(): JPanel {
   val button = JToggleButton()
   button.addActionListener { e ->
     val b = (e.source as? AbstractButton)?.isSelected == true
-    password.echoChar = if (b) '\u0000' else getUIEchoChar()
+    password.echoChar = if (b) 0.toChar() else getUIEchoChar()
   }
   initEyeButton(button)
   val p = OverlayLayoutPanel()
@@ -62,11 +62,11 @@ private fun makePasswordPanel1(): JPanel {
   return p
 }
 
-private fun makePasswordPanel2(): JPanel {
+private fun createPasswordPanel2(): JPanel {
   val password = JPasswordField(40)
   password.setFont(FONT)
   password.text = "!1l2c$%34e5&6#7=8g9O0"
-  val revealPassword = makeRevealPassword(password)
+  val revealPassword = createRevealPassword(password)
   val cardLayout = CardLayout()
   val p = object : JPanel(cardLayout) {
     override fun updateUI() {
@@ -122,7 +122,7 @@ private fun initEyeButton(b: AbstractButton) {
   b.toolTipText = "show/hide passwords"
 }
 
-private fun makeRevealPassword(password: JPasswordField): JTextPane {
+private fun createRevealPassword(password: JPasswordField): JTextPane {
   val textPane = OneLineTextPane()
   textPane.setBorder(password.border)
   textPane.setFont(password.getFont())
@@ -140,7 +140,7 @@ private fun makeRevealPassword(password: JPasswordField): JTextPane {
   return textPane
 }
 
-private fun makeTitledPanel(title: String, c: Component): Component {
+private fun createTitledPanel(title: String, c: Component): Component {
   val p = JPanel(BorderLayout())
   p.setBorder(BorderFactory.createTitledBorder(title))
   p.add(c)
@@ -156,7 +156,7 @@ private class DigitHighlightPasswordField(
     super.setEchoChar(c)
     val doc = document
     if (doc is AbstractDocument) {
-      val reveal = c == '\u0000'
+      val reveal = c == 0.toChar()
       if (reveal) {
         doc.documentFilter = HighlightFilter(this)
         runCatching {
