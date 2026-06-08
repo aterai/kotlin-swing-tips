@@ -27,7 +27,7 @@ fun createUI(): Component {
   }
   item2.add(mi2)
 
-  val item3 = JMenuItem("\u200B")
+  val item3 = JMenuItem("​") // U+200B ZERO WIDTH SPACE
   item3.border = BorderFactory.createEmptyBorder() // NimbusLookAndFeel
   item3.isEnabled = false
   val mi3 = object : JMenuItem("JMenuItem(disabled) with JMenuItem", STRUT) {
@@ -39,10 +39,10 @@ fun createUI(): Component {
   item3.add(mi3)
 
   val menuBar = JMenuBar().also {
-    it.add(makeMenu("Test0", item0))
-    it.add(makeMenu("Test1", item1))
-    it.add(makeMenu("Test2", item2))
-    it.add(makeMenu("Test3", item3))
+    it.add(createMenu("Test0", item0))
+    it.add(createMenu("Test1", item1))
+    it.add(createMenu("Test2", item2))
+    it.add(createMenu("Test3", item3))
   }
 
   return JPanel(BorderLayout()).also {
@@ -53,7 +53,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeMenu(
+private fun createMenu(
   title: String,
   item: Component,
 ): JMenu {
