@@ -10,38 +10,20 @@ import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableModel
 
 fun createUI(): Component {
-  val table1 = JTable(makeModel())
+  val table1 = JTable(createModel())
   table1.autoCreateRowSorter = true
-
-  val table2 = object : JTable(makeModel()) {
-    private var listener: MouseAdapter? = null
-
-    override fun updateUI() {
-      getTableHeader().removeMouseListener(listener)
-      getTableHeader().removeMouseMotionListener(listener)
-      super.updateUI()
-      cursor = Cursor.getDefaultCursor()
-      autoCreateRowSorter = true
-      val header = getTableHeader()
-      header.defaultRenderer = ButtonHeaderRenderer()
-      listener = HeaderMouseListener()
-      header.addMouseListener(listener)
-      header.addMouseMotionListener(listener)
-    }
-  }
-
-  val mb = JMenuBar()
-  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
-
+  val table2 = ButtonHeaderTable(createModel())
+  val menuBar = JMenuBar()
+  menuBar.add(LookAndFeelUtils.createLookAndFeelMenu())
   return JPanel(GridLayout(2, 1)).also {
-    EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
+    EventQueue.invokeLater { it.rootPane.jMenuBar = menuBar }
     it.add(JScrollPane(table1))
     it.add(JScrollPane(table2))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeModel(): TableModel {
+private fun createModel(): TableModel {
   val columnNames = arrayOf("String", "Integer", "Boolean")
   val data = arrayOf<Array<Any>>(
     arrayOf("aaa", 12, true),
@@ -51,6 +33,23 @@ private fun makeModel(): TableModel {
   )
   return object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
+  }
+}
+
+private class ButtonHeaderTable(model: TableModel) : JTable(model) {
+  private var listener: MouseAdapter? = null
+
+  override fun updateUI() {
+    getTableHeader().removeMouseListener(listener)
+    getTableHeader().removeMouseMotionListener(listener)
+    super.updateUI()
+    setAutoCreateRowSorter(true)
+    val header = getTableHeader()
+    header.setCursor(Cursor.getDefaultCursor())
+    header.defaultRenderer = ButtonHeaderRenderer()
+    listener = HeaderMouseListener()
+    header.addMouseListener(listener)
+    header.addMouseMotionListener(listener)
   }
 }
 
@@ -90,12 +89,7 @@ private class ButtonHeaderRenderer :
     if (table.rowSorter != null) {
       val sortKeys = table.rowSorter.sortKeys
       if (sortKeys.isNotEmpty() && sortKeys[0].column == modelColumn) {
-        val key = when (sortKeys[0].sortOrder) {
-          SortOrder.ASCENDING -> "Table.ascendingSortIcon"
-          SortOrder.DESCENDING -> "Table.descendingSortIcon"
-          SortOrder.UNSORTED, null -> "Table.naturalSortIcon"
-        }
-        sortIcon = UIManager.getIcon(key)
+        sortIcon = SortIconType.getIcon(sortKeys[0].sortOrder)
       }
     }
     icon = sortIcon
@@ -108,6 +102,27 @@ private class ButtonHeaderRenderer :
 
   fun setRolloverColumn(column: Int) {
     rolloverColumn = column
+  }
+}
+
+private enum class SortIconType(
+  private val sortOrder: SortOrder?,
+  private val uiKey: String,
+) {
+  ASCENDING(SortOrder.ASCENDING, "Table.ascendingSortIcon"),
+  DESCENDING(SortOrder.DESCENDING, "Table.descendingSortIcon"),
+  UNSORTED(null, "Table.naturalSortIcon");
+
+  val icon: Icon?
+    get() = UIManager.getIcon(uiKey)
+
+  companion object {
+    fun getIcon(order: SortOrder?): Icon? {
+      val iconType = entries
+        .firstOrNull { it.sortOrder == order }
+        ?: UNSORTED
+      return iconType.icon
+    }
   }
 }
 
