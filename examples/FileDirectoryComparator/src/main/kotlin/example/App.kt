@@ -3,6 +3,7 @@ package example
 import java.awt.*
 import java.awt.datatransfer.DataFlavor
 import java.awt.event.ItemEvent
+import java.awt.event.ItemListener
 import java.io.File
 import javax.swing.*
 import javax.swing.filechooser.FileSystemView
@@ -11,39 +12,25 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter
 
+private val check1 = JRadioButton("Default", true)
+private val check2 = JRadioButton("Directory < File", false)
+private val check3 = JRadioButton("Group Sorting", false)
+private val table = createTable()
+
 fun createUI(): Component {
-  val table = makeTable()
   val sorter = TableRowSorter(table.model)
   table.rowSorter = sorter
-  setDefaultComparator(sorter)
-
-  val check1 = JRadioButton("Default", true)
-  check1.addItemListener { e ->
-    if (e.stateChange == ItemEvent.SELECTED) {
-      setDefaultComparator(sorter)
+  setFileComparators(sorter)
+  val listener = ItemListener { e ->
+    if (e.getStateChange() == ItemEvent.SELECTED) {
+      setFileComparators(sorter)
     }
   }
-  val check2 = JRadioButton("Directory < File", false)
-  check2.addItemListener { e ->
-    if (e.stateChange == ItemEvent.SELECTED) {
-      for (i in 0..<3) {
-        sorter.setComparator(i, FileComparator(i))
-      }
-    }
-  }
-  val check3 = JRadioButton("Group Sorting", false)
-  check3.addItemListener { e ->
-    if (e.stateChange == ItemEvent.SELECTED) {
-      for (i in 0..<3) {
-        sorter.setComparator(i, FileGroupComparator(table, i))
-      }
-    }
-  }
-
   val p = JPanel()
-  val bg = ButtonGroup()
+  val group = ButtonGroup()
   listOf(check1, check2, check3).forEach {
-    bg.add(it)
+    it.addItemListener(listener)
+    group.add(it)
     p.add(it)
   }
 
@@ -54,13 +41,67 @@ fun createUI(): Component {
   }
 }
 
-private fun setDefaultComparator(sorter: TableRowSorter<TableModel>) {
-  for (i in 0..<3) {
-    sorter.setComparator(i, DefaultFileComparator(i))
-  }
+// Set Comparator in TableRowSorter at once depending on the selected radio button
+private fun setFileComparators(sorter: TableRowSorter<out TableModel>) {
+  (0..<3).forEach { sorter.setComparator(it, getFileComparator(it)) }
 }
 
-private fun makeTable(): JTable {
+// Get the underlying Comparator for each column
+private fun getFileComparator(index: Int): Comparator<File> {
+  val baseComp = getBaseFileComparator(index)
+  val finalComp: Comparator<File>?
+
+  if (check1.isSelected) {
+    // Default:
+    finalComp = baseComp
+  } else if (check2.isSelected) {
+    // Directory < File: Always prioritize directories
+    // (fixed at the top regardless of ascending or descending order)
+    finalComp = Comparator
+      .comparing<File, Boolean>({ it.isDirectory() }, Comparator.reverseOrder())
+      .thenComparing(baseComp)
+  } else if (check3.isSelected) {
+    // Group Sorting: Group according to sort direction
+    finalComp = Comparator { a, b ->
+      val dir = getSortOrderDirection(index)
+      // Multiplying the directory priority comparison result by the current
+      // sort direction (dir) controls the directory to be on top
+      // when in ascending order and below when in descending order.
+      val v = java.lang.Boolean.compare(b.isDirectory(), a.isDirectory())
+      if (v == 0) baseComp.compare(a, b) else v * dir
+    }
+  } else {
+    finalComp = baseComp
+  }
+  return finalComp
+}
+
+// Returns a basic File Comparator according to column index
+private fun getBaseFileComparator(column: Int): Comparator<File> = when (column) {
+  0 -> Comparator.comparing(
+    { it.getName() },
+    String.CASE_INSENSITIVE_ORDER,
+  )
+
+  1 -> Comparator.comparingLong { it.length() }
+
+  else -> Comparator.comparing(
+    { it.absolutePath },
+    String.CASE_INSENSITIVE_ORDER,
+  )
+}
+
+// Get the current sort direction of the specified column
+// (ascending: 1, descending: -1)
+private fun getSortOrderDirection(column: Int) = table
+  .rowSorter
+  .sortKeys
+  .firstOrNull()
+  ?.takeIf { it.column == column && it.sortOrder == SortOrder.DESCENDING }
+  ?.let { -1 }
+  ?: 1
+
+private fun createTable(): JTable {
   val columnNames = arrayOf("Name", "Size", "Full Path")
   val model = object : DefaultTableModel(columnNames, 0) {
     override fun getColumnClass(column: Int) = File::class.java
@@ -77,12 +118,12 @@ private fun makeTable(): JTable {
   table.transferHandler = FileTransferHandler()
   table.setDefaultRenderer(
     Any::class.java,
-    FileIconTableCellRenderer(FileSystemView.getFileSystemView()),
+    FileIconCellRenderer(FileSystemView.getFileSystemView()),
   )
   return table
 }
 
-private class FileIconTableCellRenderer(
+private class FileIconCellRenderer(
   private val fileSystemView: FileSystemView,
 ) : DefaultTableCellRenderer() {
   override fun getTableCellRendererComponent(
@@ -153,67 +194,20 @@ private class FileTransferHandler : TransferHandler() {
   override fun getSourceActions(component: JComponent) = COPY
 }
 
-private open class DefaultFileComparator(
-  protected val column: Int,
-) : Comparator<File> {
-  override fun compare(
-    a: File,
-    b: File,
-  ) = when (column) {
-    0 -> a.name.compareTo(b.name, ignoreCase = true)
-    1 -> a.length().compareTo(b.length())
-    else -> a.absolutePath.compareTo(b.absolutePath, ignoreCase = true)
-  }
-}
-
-private class FileComparator(
-  column: Int,
-) : DefaultFileComparator(column) {
-  override fun compare(
-    a: File,
-    b: File,
-  ) = when {
-    a.isDirectory && !b.isDirectory -> -1
-    !a.isDirectory && b.isDirectory -> 1
-    else -> super.compare(a, b)
-  }
-}
-
-// > dir /O:GN
-// > ls --group-directories-first
-private class FileGroupComparator(
-  private val table: JTable,
-  column: Int,
-) : DefaultFileComparator(column) {
-  override fun compare(
-    a: File,
-    b: File,
-  ): Int {
-    val key = table.rowSorter.sortKeys.firstOrNull()
-    val flag = key
-      ?.takeIf { it.column == column && it.sortOrder == SortOrder.DESCENDING }
-      ?.let { -1 }
-      ?: 1
-    return when {
-      a.isDirectory && !b.isDirectory -> -1 * flag
-      !a.isDirectory && b.isDirectory -> 1 * flag
-      else -> super.compare(a, b)
-    }
-  }
-}
-
 private class TablePopupMenu : JPopupMenu() {
   private val delete = add("delete")
 
   init {
-    delete.addActionListener {
-      val table = invoker as? JTable
-      val model = table?.model
-      if (model is DefaultTableModel) {
-        val selection = table.selectedRows
-        for (i in selection.indices.reversed()) {
-          model.removeRow(table.convertRowIndexToModel(selection[i]))
-        }
+    delete.addActionListener { deleteSelectedRows() }
+  }
+
+  private fun deleteSelectedRows() {
+    val table = getInvoker() as? JTable
+    val model = table?.model
+    if (model is DefaultTableModel) {
+      val selection = table.selectedRows
+      for (i in selection.indices.reversed()) {
+        model.removeRow(table.convertRowIndexToModel(selection[i]))
       }
     }
   }
