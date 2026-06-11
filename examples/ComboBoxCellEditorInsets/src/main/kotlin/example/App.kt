@@ -26,7 +26,7 @@ fun createUI(): Component {
       super.updateUI()
       setRowHeight(36)
       autoCreateRowSorter = true
-      val combo = makeComboBox()
+      val combo = createComboBox()
       getColumnModel().getColumn(0).also {
         it.setCellRenderer { table, value, isSelected, _, _, _ ->
           combo.removeAllItems()
@@ -43,7 +43,7 @@ fun createUI(): Component {
           }
           combo
         }
-        it.cellEditor = DefaultCellEditor(makeComboBox())
+        it.cellEditor = DefaultCellEditor(createComboBox())
       }
 
       getColumnModel().getColumn(1).also {
@@ -60,10 +60,10 @@ fun createUI(): Component {
   }
 }
 
-fun makeComboModel() = arrayOf("11111", "222", "3")
+fun createComboModel() = arrayOf("11111", "222", "3")
 
-fun makeComboBox(): JComboBox<String> {
-  val c = JComboBox(makeComboModel())
+fun createComboBox(): JComboBox<String> {
+  val c = JComboBox(createComboModel())
   c.isEditable = true
   val outsideBorder = BorderFactory.createEmptyBorder(8, 10, 8, 10)
   c.border = BorderFactory.createCompoundBorder(outsideBorder, c.border)
@@ -71,7 +71,7 @@ fun makeComboBox(): JComboBox<String> {
 }
 
 private class ComboBoxCellRenderer : TableCellRenderer {
-  private val comboBox = JComboBox(makeComboModel())
+  private val comboBox = JComboBox(createComboModel())
   private val panel = JPanel(GridBagLayout())
 
   override fun getTableCellRendererComponent(
@@ -82,27 +82,18 @@ private class ComboBoxCellRenderer : TableCellRenderer {
     row: Int,
     column: Int,
   ): Component {
-    val c = GridBagConstraints()
-    c.weightx = 1.0
-    c.insets = Insets(0, 10, 0, 10)
-    c.fill = GridBagConstraints.HORIZONTAL
-    comboBox.isEditable = true
-    panel.removeAll()
-    panel.add(comboBox, c)
-    comboBox.selectedIndex = 0
-    panel.isOpaque = true
-    panel.background = if (isSelected) table.selectionBackground else table.background
     value?.also {
       comboBox.setSelectedItem(it)
     }
-    return panel
+    val bgc = if (isSelected) table.selectionBackground else table.background
+    return resetRendererPanel(panel, comboBox, bgc)
   }
 }
 
 private class ComboBoxCellEditor :
   AbstractCellEditor(),
   TableCellEditor {
-  private val comboBox = JComboBox(makeComboModel())
+  private val comboBox = JComboBox(createComboModel())
   private val panel = JPanel(GridBagLayout())
 
   init {
@@ -122,18 +113,8 @@ private class ComboBoxCellEditor :
     row: Int,
     column: Int,
   ): Component {
-    val c = GridBagConstraints()
-    c.weightx = 1.0
-    c.insets = Insets(0, 10, 0, 10)
-    c.fill = GridBagConstraints.HORIZONTAL
-    comboBox.isEditable = true
-    panel.removeAll()
-    panel.add(comboBox, c)
-    comboBox.selectedIndex = 0
-    panel.isOpaque = true
-    panel.background = table.selectionBackground
     comboBox.selectedItem = value
-    return panel
+    return resetRendererPanel(panel, comboBox, table.selectionBackground)
   }
 
   override fun getCellEditorValue(): Any? = comboBox.selectedItem
@@ -152,6 +133,24 @@ private class ComboBoxCellEditor :
     fireEditingStopped()
     return true
   }
+}
+
+private fun resetRendererPanel(
+  panel: JPanel,
+  comboBox: JComboBox<*>,
+  bgc: Color,
+): JPanel {
+  comboBox.isEditable = true
+  comboBox.selectedIndex = 0
+  panel.removeAll()
+  panel.isOpaque = true
+  panel.background = bgc
+  val c = GridBagConstraints()
+  c.weightx = 1.0
+  c.insets = Insets(0, 10, 0, 10)
+  c.fill = GridBagConstraints.HORIZONTAL
+  panel.add(comboBox, c)
+  return panel
 }
 
 fun main() {
