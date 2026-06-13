@@ -36,7 +36,9 @@ private fun createModel(): TableModel {
   }
 }
 
-private class ButtonHeaderTable(model: TableModel) : JTable(model) {
+private class ButtonHeaderTable(
+  model: TableModel,
+) : JTable(model) {
   private var listener: MouseAdapter? = null
 
   override fun updateUI() {
@@ -85,14 +87,11 @@ private class ButtonHeaderRenderer :
         it.isSelected = isSelected
       }
     }
-    var sortIcon: Icon? = null
-    if (table.rowSorter != null) {
-      val sortKeys = table.rowSorter.sortKeys
-      if (sortKeys.isNotEmpty() && sortKeys[0].column == modelColumn) {
-        sortIcon = SortIconType.getIcon(sortKeys[0].sortOrder)
-      }
-    }
-    icon = sortIcon
+    icon = table.rowSorter
+      ?.sortKeys
+      ?.firstOrNull()
+      ?.takeIf { it.column == modelColumn }
+      ?.let { SortIconType.getIcon(it.sortOrder) }
     return this
   }
 
@@ -111,7 +110,8 @@ private enum class SortIconType(
 ) {
   ASCENDING(SortOrder.ASCENDING, "Table.ascendingSortIcon"),
   DESCENDING(SortOrder.DESCENDING, "Table.descendingSortIcon"),
-  UNSORTED(null, "Table.naturalSortIcon");
+  UNSORTED(null, "Table.naturalSortIcon"),
+  ;
 
   val icon: Icon?
     get() = UIManager.getIcon(uiKey)
