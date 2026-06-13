@@ -1,7 +1,6 @@
 package example
 
 import java.awt.*
-import java.io.Serializable
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableModel
@@ -43,31 +42,24 @@ fun createUI(): Component {
 private class RowComparator(
   private val table: JTable,
   private val column: Int,
-) : Comparator<String>,
-  Serializable {
+) : Comparator<String> {
   override fun compare(
     a: String,
     b: String,
   ): Int {
-    var flag = 1
-    val keys = table.rowSorter.sortKeys
-    if (keys.isNotEmpty()) {
-      val sortKey = keys[0]
-      if (sortKey.column == column && sortKey.sortOrder == SortOrder.DESCENDING) {
-        flag = -1
-      }
-    }
+    val dir = table.rowSorter
+      ?.sortKeys
+      ?.firstOrNull()
+      ?.takeIf { it.column == column && it.sortOrder == SortOrder.DESCENDING }
+      ?.let { -1 }
+      ?: 1
     return if (a.isEmpty() && b.isNotEmpty()) {
-      flag
+      dir
     } else if (a.isNotEmpty() && b.isEmpty()) {
-      -1 * flag
+      -1 * dir
     } else {
       a.compareTo(b)
     }
-  }
-
-  companion object {
-    private const val serialVersionUID = 1L
   }
 }
 

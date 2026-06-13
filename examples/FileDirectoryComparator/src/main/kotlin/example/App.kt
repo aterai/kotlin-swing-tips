@@ -43,7 +43,9 @@ fun createUI(): Component {
 
 // Set Comparator in TableRowSorter at once depending on the selected radio button
 private fun setFileComparators(sorter: TableRowSorter<out TableModel>) {
-  (0..<3).forEach { sorter.setComparator(it, getFileComparator(it)) }
+  for (i in 0..<sorter.model.columnCount) {
+    sorter.setComparator(i, getFileComparator(i))
+  }
 }
 
 // Get the underlying Comparator for each column
@@ -93,10 +95,9 @@ private fun getBaseFileComparator(column: Int): Comparator<File> = when (column)
 
 // Get the current sort direction of the specified column
 // (ascending: 1, descending: -1)
-private fun getSortOrderDirection(column: Int) = table
-  .rowSorter
-  .sortKeys
-  .firstOrNull()
+private fun getSortOrderDirection(column: Int) = table.rowSorter
+  ?.sortKeys
+  ?.firstOrNull()
   ?.takeIf { it.column == column && it.sortOrder == SortOrder.DESCENDING }
   ?.let { -1 }
   ?: 1

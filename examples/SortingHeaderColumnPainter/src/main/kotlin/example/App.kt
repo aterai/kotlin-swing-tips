@@ -10,8 +10,8 @@ import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableModel
 
 fun createUI(): Component {
-  val table1 = makeTable1()
-  val table2 = makeTable2()
+  val table1 = createTable1()
+  val table2 = createTable2()
   val tabs = JTabbedPane()
   tabs.addTab("HeaderRenderer", JScrollPane(table1))
   tabs.addTab("JLayer", JLayer(JScrollPane(table2), SortingLayerUI()))
@@ -29,7 +29,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeModel(): TableModel {
+private fun createModel(): TableModel {
   val columnNames = arrayOf("String", "Integer", "Boolean")
   val data = arrayOf<Array<Any>>(
     arrayOf("aaa", 12, true),
@@ -42,8 +42,8 @@ private fun makeModel(): TableModel {
   }
 }
 
-private fun makeTable1(): JTable {
-  val table = object : JTable(makeModel()) {
+private fun createTable1(): JTable {
+  val table = object : JTable(createModel()) {
     override fun updateUI() {
       super.updateUI()
       val cm = getColumnModel()
@@ -57,8 +57,8 @@ private fun makeTable1(): JTable {
   return table
 }
 
-private fun makeTable2(): JTable {
-  val table = JTable(makeModel())
+private fun createTable2(): JTable {
+  val table = JTable(createModel())
   table.setAutoCreateRowSorter(true)
   return table
 }
@@ -81,12 +81,10 @@ private class ColumnHeaderRenderer : TableCellRenderer {
     return c
   }
 
-  private fun isSortingColumn(table: JTable, column: Int) = table
-    .rowSorter
+  private fun isSortingColumn(table: JTable, column: Int) = table.rowSorter
     ?.sortKeys
-    ?.takeUnless { it.isEmpty() }
-    ?.let { it[0].column }
-    ?.let { column == table.convertColumnIndexToView(it) }
+    ?.firstOrNull()
+    ?.let { column == table.convertColumnIndexToView(it.column) }
     ?: false
 
   companion object {
@@ -149,12 +147,10 @@ private class SortingLayerUI : LayerUI<JScrollPane>() {
   }
 
   private fun getSortingColumnBounds(layer: JLayer<*>, table: JTable): Rectangle {
-    val sortingColumn = table
-      .rowSorter
+    val sortingColumn = table.rowSorter
       ?.sortKeys
-      ?.takeUnless { it.isEmpty() }
-      ?.let { it[0].column }
-      ?.let { table.convertColumnIndexToView(it) }
+      ?.firstOrNull()
+      ?.let { table.convertColumnIndexToView(it.column) }
       ?: -1
     return if (sortingColumn >= 0) {
       val r = getSortingRect(table, sortingColumn)

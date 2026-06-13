@@ -33,9 +33,11 @@ fun createUI(): Component {
       }
     }
 
-    fun isSortingColumn(column: Int) = rowSorter?.sortKeys?.let {
-      it.isNotEmpty() && column == convertColumnIndexToView(it[0].column)
-    } ?: false
+    fun isSortingColumn(column: Int) = rowSorter
+      ?.sortKeys
+      ?.firstOrNull()
+      ?.let { column == convertColumnIndexToView(it.column) }
+      ?: false
   }
   table.autoCreateRowSorter = true
 

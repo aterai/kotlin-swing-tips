@@ -122,10 +122,9 @@ private class SortIconLayoutHeaderRenderer(
     fun getColumnSortOrder(
       table: JTable,
       column: Int,
-    ) = table
-      .rowSorter
-      .sortKeys
-      .firstOrNull()
+    ) = table.rowSorter
+      ?.sortKeys
+      ?.firstOrNull()
       ?.takeIf { it.column == column }
       ?.sortOrder
       ?: SortOrder.UNSORTED

@@ -67,8 +67,9 @@ private class HyperlinkHeaderCellRenderer :
   ): Component {
     val str = value?.toString() ?: ""
     val modelColumn = table.convertColumnIndexToModel(column)
-    val sortTxt = table.rowSorter.sortKeys
-      .firstOrNull()
+    val sortTxt = table.rowSorter
+      ?.sortKeys
+      ?.firstOrNull()
       ?.takeIf { it.column == modelColumn }
       ?.let { if (it.sortOrder == SortOrder.ASCENDING) "▴" else "▾" }
       ?.let { "<small> $it" }
