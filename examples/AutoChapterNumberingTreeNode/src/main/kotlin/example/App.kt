@@ -6,16 +6,15 @@ import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreeModel
 
-private const val MARK = "\u00a7" // "Â§"
+private const val MARK = "˜" // U+00A7
 private const val CHAPTER = "Chapter"
 private const val SECTION = "Section"
 
 fun createUI(): Component {
-  val tree = object : JTree(makeModel()) {
+  val tree = object : JTree(createModel()) {
     override fun updateUI() {
       setCellRenderer(null)
       super.updateUI()
-      // setCellRenderer(ChapterNumberingTreeCellRenderer())
       val renderer = getCellRenderer()
       setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
         renderer
@@ -46,15 +45,15 @@ fun createUI(): Component {
   return p
 }
 
-private fun makeModel(): TreeModel {
+private fun createModel(): TreeModel {
   val root = DefaultMutableTreeNode("root")
   root.add(DefaultMutableTreeNode("Introduction"))
-  root.add(makePart())
-  root.add(makePart())
+  root.add(createPart())
+  root.add(createPart())
   return DefaultTreeModel(root)
 }
 
-private fun makePart(): DefaultMutableTreeNode {
+private fun createPart(): DefaultMutableTreeNode {
   val c1 = DefaultMutableTreeNode(CHAPTER)
   c1.add(DefaultMutableTreeNode(SECTION))
   c1.add(DefaultMutableTreeNode(SECTION))
@@ -68,36 +67,6 @@ private fun makePart(): DefaultMutableTreeNode {
   p1.add(c2)
   return p1
 }
-
-// class ChapterNumberingTreeCellRenderer : DefaultTreeCellRenderer() {
-//   override fun getTreeCellRendererComponent(
-//     tree: JTree,
-//     value: Any?,
-//     selected: Boolean,
-//     expanded: Boolean,
-//     leaf: Boolean,
-//     row: Int,
-//     hasFocus: Boolean
-//   ): Component {
-//     val c = super.getTreeCellRendererComponent(
-//         tree,
-//         value,
-//         selected,
-//         expanded,
-//         leaf,
-//         row,
-//         hasFocus,
-//     )
-//     if (value is DefaultMutableTreeNode) {
-//       val tn = value.path
-//       val s = (1..<tn.size) // ignore the root node by skipping index 0
-//         .map { 1 + tn[it - 1].getIndex(tn[it]) }
-//         .joinToString(".")
-//       (c as? JLabel)?.text = "$MARK$s $value"
-//     }
-//     return c
-//   }
-// }
 
 fun main() {
   EventQueue.invokeLater {
