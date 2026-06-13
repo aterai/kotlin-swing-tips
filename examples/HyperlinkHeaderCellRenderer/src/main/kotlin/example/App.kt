@@ -66,15 +66,13 @@ private class HyperlinkHeaderCellRenderer :
     column: Int,
   ): Component {
     val str = value?.toString() ?: ""
-    var sort = ""
-    val sorter = table.rowSorter
-    if (sorter != null && sorter.sortKeys.isNotEmpty()) {
-      val sortKey = sorter.sortKeys[0]
-      if (column == sortKey.column) {
-        val k = if (sortKey.sortOrder == SortOrder.ASCENDING) "▴" else "▾"
-        sort = "<small>$k"
-      }
-    }
+    val modelColumn = table.convertColumnIndexToModel(column)
+    val sortTxt = table.rowSorter.sortKeys
+      .firstOrNull()
+      ?.takeIf { it.column == modelColumn }
+      ?.let { if (it.sortOrder == SortOrder.ASCENDING) "▴" else "▾" }
+      ?.let { "<small> $it" }
+      ?: ""
     val c = super.getTableCellRendererComponent(
       table,
       value,
@@ -85,9 +83,9 @@ private class HyperlinkHeaderCellRenderer :
     )
     if (c is JLabel) {
       c.text = when {
-        col == column -> "<html><u><font color='blue'>$str</u>$sort"
-        hasFocus -> "<html><font color='blue'>$str$sort"
-        else -> "<html>$str$sort"
+        col == column -> "<html><u><font color='blue'>$str</u>$sortTxt"
+        hasFocus -> "<html><font color='blue'>$str$sortTxt"
+        else -> "<html>$str$sortTxt"
       }
       c.horizontalAlignment = LEADING
       c.isOpaque = false

@@ -99,7 +99,8 @@ private class SortIconLayoutHeaderRenderer(
     UIManager.put(ASCENDING, ascendingIcon)
     UIManager.put(DESCENDING, descendingIcon)
     if (c is JLabel) {
-      val sortOrder = getColumnSortOrder(table, column)
+      val modelColumn = table.convertColumnIndexToModel(column)
+      val sortOrder = getColumnSortOrder(table, modelColumn)
       val sortUri = when (sortOrder) {
         SortOrder.ASCENDING -> ascendingUri
         SortOrder.DESCENDING -> descendingUri
@@ -119,19 +120,15 @@ private class SortIconLayoutHeaderRenderer(
     private const val DESCENDING = "Table.descendingSortIcon"
 
     fun getColumnSortOrder(
-      table: JTable?,
+      table: JTable,
       column: Int,
-    ): SortOrder {
-      var rv = SortOrder.UNSORTED
-      if (table != null && table.rowSorter != null) {
-        val sortKeys = table.rowSorter.sortKeys
-        val mi = table.convertColumnIndexToModel(column)
-        if (sortKeys.isNotEmpty() && sortKeys[0].column == mi) {
-          rv = sortKeys[0].sortOrder
-        }
-      }
-      return rv
-    }
+    ) = table
+      .rowSorter
+      .sortKeys
+      .firstOrNull()
+      ?.takeIf { it.column == column }
+      ?.sortOrder
+      ?: SortOrder.UNSORTED
   }
 }
 

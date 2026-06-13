@@ -80,7 +80,8 @@ private class VerticalTableHeaderRenderer : TableCellRenderer {
     UIManager.put(ASCENDING, ascendingIcon)
     UIManager.put(DESCENDING, descendingIcon)
     if (c is JLabel) {
-      val sortOrder = getColumnSortOrder(table, column)
+      val modelColumnIndex = table.convertColumnIndexToModel(column)
+      val sortOrder = getColumnSortOrder(table, modelColumnIndex)
       val sortIcon = when (sortOrder) {
         SortOrder.ASCENDING -> ascendingIcon
         SortOrder.DESCENDING -> descendingIcon
@@ -90,13 +91,13 @@ private class VerticalTableHeaderRenderer : TableCellRenderer {
       label.icon = RotateIcon(sortIcon, 90)
       label.horizontalTextPosition = SwingConstants.LEFT
       label.border = BorderFactory.createEmptyBorder(0, 2, 0, 2)
-      c.setIcon(makeVerticalHeaderIcon(label))
+      c.setIcon(createVerticalHeaderIcon(label))
       c.setText(null)
     }
     return c
   }
 
-  private fun makeVerticalHeaderIcon(c: Component): Icon? {
+  private fun createVerticalHeaderIcon(c: Component): Icon? {
     val d = c.preferredSize
     val w = d.height
     val h = d.width
@@ -115,19 +116,15 @@ private class VerticalTableHeaderRenderer : TableCellRenderer {
     private const val DESCENDING = "Table.descendingSortIcon"
 
     fun getColumnSortOrder(
-      table: JTable?,
+      table: JTable,
       column: Int,
-    ): SortOrder {
-      var rv = SortOrder.UNSORTED
-      if (table != null && table.rowSorter != null) {
-        val sortKeys = table.rowSorter.sortKeys
-        val mi = table.convertColumnIndexToModel(column)
-        if (sortKeys.isNotEmpty() && sortKeys[0].column == mi) {
-          rv = sortKeys[0].sortOrder
-        }
-      }
-      return rv
-    }
+    ) = table
+      .rowSorter
+      .sortKeys
+      .firstOrNull()
+      ?.takeIf { it.column == column }
+      ?.sortOrder
+      ?: SortOrder.UNSORTED
   }
 }
 
