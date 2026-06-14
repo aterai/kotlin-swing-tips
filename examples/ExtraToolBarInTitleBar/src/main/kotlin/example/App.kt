@@ -51,6 +51,7 @@ private fun makeExtraBarWindow(frame: JFrame?): JWindow {
   return window
 }
 
+@Suppress("TooManyFunctions")
 private class ExtraBarPositionHandler(
   private val extraBar: JWindow,
 ) : WindowAdapter(),
