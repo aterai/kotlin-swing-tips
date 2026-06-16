@@ -6,12 +6,13 @@ import javax.swing.*
 import javax.swing.event.AncestorEvent
 import javax.swing.event.AncestorListener
 
+
 private val model = SpinnerNumberModel(0, -1, 3, 1)
 private val combo = JComboBox(SortOrder.entries.toTypedArray())
 
 fun createUI(): Component {
   val log = JTextArea()
-  val fileChooser = makeFileChooser()
+  val fileChooser = createFileChooser()
   val button = object : JButton("open") {
     override fun updateUI() {
       super.updateUI()
@@ -37,7 +38,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeFileChooser() = object : JFileChooser() {
+private fun createFileChooser() = object : JFileChooser() {
   private var handler: AncestorListener? = null
 
   override fun updateUI() {
@@ -50,14 +51,9 @@ private fun makeFileChooser() = object : JFileChooser() {
         descendants(e.component)
           .filterIsInstance<JTable>()
           .firstNotNullOf { table ->
-            val sortKeys = table.rowSorter.sortKeys
             val col = model.number.toInt()
-            if (col < 0) {
-              table.rowSorter.sortKeys = emptyList()
-            } else if (sortKeys.isEmpty() && col < table.columnCount) {
-              val order = combo.getItemAt(combo.selectedIndex)
-              table.rowSorter.sortKeys = listOf(RowSorter.SortKey(col, order))
-            }
+            val order = combo.getItemAt(combo.selectedIndex)
+            setTableSortKey(table, col, order)
           }
       }
 
@@ -70,6 +66,18 @@ private fun makeFileChooser() = object : JFileChooser() {
       }
     }
     addAncestorListener(handler)
+  }
+}
+
+private fun setTableSortKey(table: JTable, column: Int, order: SortOrder) {
+  val sorter = table.rowSorter
+  if (sorter != null) {
+    val sortKeys = sorter.sortKeys
+    if (column < 0) {
+      sorter.sortKeys = listOf<RowSorter.SortKey>()
+    } else if (sortKeys.isEmpty() && column < table.columnCount) {
+      sorter.sortKeys = listOf(RowSorter.SortKey(column, order))
+    }
   }
 }
 
