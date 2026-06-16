@@ -128,7 +128,11 @@ class DnDTabbedPane : JTabbedPane() {
         backwardButton = b
       }
     }
-    val button = if (dir == ScrollDirection.FORWARD) forwardButton else backwardButton
+    val button = if (dir == ScrollDirection.FORWARD) {
+      forwardButton
+    } else {
+      backwardButton
+    }
     button?.takeIf { it.isEnabled }?.doClick()
   }
 
@@ -388,7 +392,7 @@ private class TabTransferHandler : TransferHandler() {
     return canDrop
   }
 
-  private fun makeDragTabImage(tabs: DnDTabbedPane): BufferedImage {
+  private fun createDragTabImage(tabs: DnDTabbedPane): BufferedImage {
     val rect = tabs.getBoundsAt(tabs.dragTabIndex)
     val image = BufferedImage(tabs.width, tabs.height, BufferedImage.TYPE_INT_ARGB)
     val g2 = image.createGraphics()
@@ -414,7 +418,7 @@ private class TabTransferHandler : TransferHandler() {
     return if (src.dragTabIndex < 0) {
       NONE
     } else {
-      label.icon = ImageIcon(makeDragTabImage(src))
+      label.icon = ImageIcon(createDragTabImage(src))
       dialog = JWindow().also {
         it.add(label)
         it.opacity = .5f
@@ -515,9 +519,19 @@ private class DropLocationLayerUI : LayerUI<DnDTabbedPane>() {
     val r = tabs.getBoundsAt(a * (index - 1))
     val tp = tabs.tabPlacement
     if (tp == JTabbedPane.TOP || tp == JTabbedPane.BOTTOM) {
-      RECT_LINE.setBounds(r.x - LINE_SIZE / 2 + r.width * a, r.y, LINE_SIZE, r.height)
+      RECT_LINE.setBounds(
+        r.x - LINE_SIZE / 2 + r.width * a,
+        r.y,
+        LINE_SIZE,
+        r.height,
+      )
     } else {
-      RECT_LINE.setBounds(r.x, r.y - LINE_SIZE / 2 + r.height * a, r.width, LINE_SIZE)
+      RECT_LINE.setBounds(
+        r.x,
+        r.y - LINE_SIZE / 2 + r.height * a,
+        r.width,
+        LINE_SIZE,
+      )
     }
   }
 

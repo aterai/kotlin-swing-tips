@@ -65,12 +65,12 @@ fun createUI(): Component {
 
   return JPanel(BorderLayout()).also {
     it.add(p)
-    it.add(makeCheckBoxPanel(tabbedPane), BorderLayout.NORTH)
+    it.add(createCheckBoxPanel(tabbedPane), BorderLayout.NORTH)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeCheckBoxPanel(tabs: JTabbedPane): Component {
+private fun createCheckBoxPanel(tabs: JTabbedPane): Component {
   val tc = JCheckBox("Top", true)
   tc.addActionListener {
     tabs.tabPlacement = if (tc.isSelected) {
@@ -434,7 +434,7 @@ private class TabTransferHandler : TransferHandler() {
     return canDrop
   }
 
-  private fun makeDragTabImage(tabs: DnDTabbedPane): BufferedImage {
+  private fun createDragTabImage(tabs: DnDTabbedPane): BufferedImage {
     val rect = tabs.getBoundsAt(tabs.dragTabIndex)
     val image = BufferedImage(tabs.width, tabs.height, BufferedImage.TYPE_INT_ARGB)
     val g2 = image.createGraphics()
@@ -461,7 +461,7 @@ private class TabTransferHandler : TransferHandler() {
     return if (src.dragTabIndex < 0) {
       NONE
     } else {
-      dragImage = makeDragTabImage(src)
+      dragImage = createDragTabImage(src)
       src.rootPane.glassPane.isVisible = true
       MOVE
     }

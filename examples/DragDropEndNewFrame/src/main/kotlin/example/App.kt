@@ -47,13 +47,13 @@ fun createUI(): Component {
   }
 
   return JPanel(BorderLayout()).also {
-    it.add(makeCheckBoxPanel(tab), BorderLayout.NORTH)
+    it.add(createCheckBoxPanel(tab), BorderLayout.NORTH)
     it.add(tab)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeCheckBoxPanel(tab: DnDTabbedPane): Component {
+private fun createCheckBoxPanel(tab: DnDTabbedPane): Component {
   val check1 = JCheckBox("Tab Ghost", true)
   check1.addActionListener { tab.hasGhost = check1.isSelected }
 

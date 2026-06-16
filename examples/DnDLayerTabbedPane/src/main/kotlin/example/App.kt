@@ -74,7 +74,7 @@ fun createUI(
   p.add(JLayer(sub2, layerUI))
   return JPanel(BorderLayout()).also {
     it.add(p)
-    it.add(makeCheckBoxPanel(tabbedPane), BorderLayout.NORTH)
+    it.add(createCheckBoxPanel(tabbedPane), BorderLayout.NORTH)
     it.preferredSize = Dimension(320, 240)
   }
 }
@@ -87,7 +87,7 @@ private fun setTabComponent(
   tabbedPane.setToolTipTextAt(i, "tooltip: $i")
 }
 
-private fun makeCheckBoxPanel(tabs: JTabbedPane): Component {
+private fun createCheckBoxPanel(tabs: JTabbedPane): Component {
   val tc = JCheckBox("Top", true)
   tc.addActionListener {
     tabs.tabPlacement = if (tc.isSelected) {
@@ -161,7 +161,11 @@ class DnDTabbedPane : JTabbedPane() {
         backwardButton = b
       }
     }
-    val button = if (dir == ScrollDirection.FORWARD) forwardButton else backwardButton
+    val button = if (dir == ScrollDirection.FORWARD) {
+      forwardButton
+    } else {
+      backwardButton
+    }
     button?.takeIf { it.isEnabled }?.doClick()
   }
 
@@ -462,7 +466,7 @@ private class TabTransferHandler : TransferHandler() {
     return canDrop
   }
 
-  private fun makeDragTabImage(tabs: DnDTabbedPane): BufferedImage {
+  private fun createDragTabImage(tabs: DnDTabbedPane): BufferedImage {
     val rect = tabs.getBoundsAt(tabs.dragTabIndex)
     val image = BufferedImage(tabs.width, tabs.height, BufferedImage.TYPE_INT_ARGB)
     val g2 = image.createGraphics()
@@ -489,11 +493,11 @@ private class TabTransferHandler : TransferHandler() {
       NONE
     } else {
       if (mode === DragImageMode.HEAVYWEIGHT) {
-        label.icon = ImageIcon(makeDragTabImage(src))
+        label.icon = ImageIcon(createDragTabImage(src))
         dialog.pack()
         dialog.isVisible = true
       } else {
-        dragImage = makeDragTabImage(src)
+        dragImage = createDragTabImage(src)
       }
       MOVE
     }
@@ -557,9 +561,19 @@ private class DropLocationLayerUI : LayerUI<DnDTabbedPane>() {
     val r = tabs.getBoundsAt(a * (index - 1))
     val tabPlacement = tabs.tabPlacement
     if (tabPlacement == JTabbedPane.TOP || tabPlacement == JTabbedPane.BOTTOM) {
-      RECT_LINE.setBounds(r.x - LINE_SIZE / 2 + r.width * a, r.y, LINE_SIZE, r.height)
+      RECT_LINE.setBounds(
+        r.x - LINE_SIZE / 2 + r.width * a,
+        r.y,
+        LINE_SIZE,
+        r.height,
+      )
     } else {
-      RECT_LINE.setBounds(r.x, r.y - LINE_SIZE / 2 + r.height * a, r.width, LINE_SIZE)
+      RECT_LINE.setBounds(
+        r.x,
+        r.y - LINE_SIZE / 2 + r.height * a,
+        r.width,
+        LINE_SIZE,
+      )
     }
   }
 
