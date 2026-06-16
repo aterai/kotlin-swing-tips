@@ -58,9 +58,9 @@ private class WavyLineSeparator(
   override fun getPreferredSize(): Dimension {
     val i = insets
     return if (orientation == HORIZONTAL) {
-      Dimension(30, WavyLineIcon.ICON_SZ + i.top + i.bottom)
+      Dimension(30, WavyLineIcon.ICON_SIZE + i.top + i.bottom)
     } else {
-      Dimension(WavyLineIcon.ICON_SZ + i.left + i.right, 30)
+      Dimension(WavyLineIcon.ICON_SIZE + i.left + i.right, 30)
     }
   }
 
@@ -104,12 +104,20 @@ private class WavyLineIcon : Icon {
     g2.dispose()
   }
 
-  override fun getIconWidth() = if (orientation == VERTICAL) ICON_SZ else ICON_SZ * 2
+  override fun getIconWidth() = if (orientation == VERTICAL) {
+    ICON_SIZE
+  } else {
+    ICON_SIZE * 2
+  }
 
-  override fun getIconHeight() = if (orientation == VERTICAL) ICON_SZ * 2 else ICON_SZ
+  override fun getIconHeight() = if (orientation == VERTICAL) {
+    ICON_SIZE * 2
+  } else {
+    ICON_SIZE
+  }
 
   companion object {
-    const val ICON_SZ = 3
+    const val ICON_SIZE = 3
   }
 }
 
