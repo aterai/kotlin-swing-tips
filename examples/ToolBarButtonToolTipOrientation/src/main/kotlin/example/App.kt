@@ -25,7 +25,7 @@ fun createUI(): Component {
     }
     toolBar.revalidate()
   }
-  makeList().forEach {
+  createList().forEach {
     toolBar.add(createToolBarButton(it))
   }
   toolBar.add(check)
@@ -129,7 +129,7 @@ private fun getToolTipPoint(
   return Point((dx + .5).toInt(), (dy + .5).toInt())
 }
 
-private fun makeList() = listOf(
+private fun createList() = listOf(
   ColorItem("red", ColorIcon(Color.RED)),
   ColorItem("green", ColorIcon(Color.GREEN)),
   ColorItem("blue", ColorIcon(Color.BLUE)),
@@ -220,7 +220,9 @@ private class BalloonToolTip : JToolTip() {
     }
     val area = Area(RoundRectangle2D.Double(0.0, 0.0, w, h, ARC, ARC))
     area.add(Area(tail))
-    val at = AffineTransform.getTranslateInstance(i.left.toDouble(), i.top.toDouble())
+    val tx = i.left.toDouble()
+    val ty = i.top.toDouble()
+    val at = AffineTransform.getTranslateInstance(tx, ty)
     shape = at.createTransformedShape(area)
   }
 
