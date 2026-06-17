@@ -23,7 +23,7 @@ JTable, unsorted, F9
 """.trimIndent()
 
 fun createUI(): Component {
-  val table = object : JTable(makeModel()) {
+  val table = object : JTable(createModel()) {
     override fun updateUI() {
       super.updateUI()
       setCellSelectionEnabled(true)
@@ -47,7 +47,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeModel(): TableModel {
+private fun createModel(): TableModel {
   val columnNames = arrayOf("String", "Integer", "Boolean")
   val data = arrayOf<Array<Any>>(
     arrayOf("aaa", 12, true),
@@ -92,9 +92,9 @@ private fun columnSort(e: ActionEvent, order: SortOrder) {
 }
 
 private fun sort(table: JTable, col: Int, order: SortOrder) {
-  if (col >= 0) {
-    val sortKey = RowSorter.SortKey(col, order)
-    table.rowSorter.sortKeys = listOf(sortKey)
+  val rowSorter = table.rowSorter
+  if (rowSorter != null && col >= 0) {
+    rowSorter.sortKeys = listOf(RowSorter.SortKey(col, order))
   }
 }
 
