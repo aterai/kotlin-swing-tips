@@ -23,13 +23,25 @@ fun createUI(): Component {
       Short.MAX_VALUE.toLong(),
       1.toLong(),
     ),
-    SpinnerNumberModel(Int.MAX_VALUE.toLong(), 0.toLong(), Int.MAX_VALUE.toLong(), 1),
-    SpinnerNumberModel(Long.MAX_VALUE, 0.toLong(), Long.MAX_VALUE, 1.toLong()),
+    SpinnerNumberModel(
+      Int.MAX_VALUE.toLong(),
+      0.toLong(),
+      Int.MAX_VALUE.toLong(),
+      1,
+    ),
+    SpinnerNumberModel(
+      Long.MAX_VALUE,
+      0.toLong(),
+      Long.MAX_VALUE,
+      1.toLong(),
+    ),
   )
 
   val box = Box.createVerticalBox()
-  box.add(makeTitledPanel("Byte, Short, Integer, Long", makeSpinnerListPanel(list1)))
-  box.add(makeTitledPanel("Long.valueOf", makeSpinnerListPanel(list2)))
+  val title1 = "Byte, Short, Integer, Long"
+  box.add(createTitledPanel(title1, createSpinnerListPanel(list1)))
+  val title2 = "Long.valueOf"
+  box.add(createTitledPanel(title2, createSpinnerListPanel(list2)))
   box.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
 
   return JPanel(BorderLayout()).also {
@@ -38,7 +50,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeSpinnerListPanel(list: List<SpinnerNumberModel>): Box {
+private fun createSpinnerListPanel(list: List<SpinnerNumberModel>): Box {
   val box = Box.createVerticalBox()
   list.map { JSpinner(it) }.forEach {
     box.add(it)
@@ -47,7 +59,7 @@ private fun makeSpinnerListPanel(list: List<SpinnerNumberModel>): Box {
   return box
 }
 
-private fun makeTitledPanel(
+private fun createTitledPanel(
   title: String,
   c: Component,
 ): Component {
