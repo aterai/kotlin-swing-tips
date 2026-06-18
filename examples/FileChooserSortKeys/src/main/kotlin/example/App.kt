@@ -6,7 +6,6 @@ import javax.swing.*
 import javax.swing.event.AncestorEvent
 import javax.swing.event.AncestorListener
 
-
 private val model = SpinnerNumberModel(0, -1, 3, 1)
 private val combo = JComboBox(SortOrder.entries.toTypedArray())
 
