@@ -1,7 +1,10 @@
 package example
 
 import java.awt.*
-import java.awt.event.ActionListener
+import java.awt.event.ItemEvent
+import java.awt.event.ItemListener
+import java.awt.image.BufferedImage
+import javax.imageio.ImageIO
 import javax.swing.*
 import javax.swing.plaf.IconUIResource
 import javax.swing.table.DefaultTableModel
@@ -26,58 +29,98 @@ fun createUI(): Component {
   }
 
   return JPanel(BorderLayout()).also {
-    it.add(makeRadioPane(table), BorderLayout.NORTH)
+    it.add(createRadioPane(table), BorderLayout.NORTH)
     it.add(clearButton, BorderLayout.SOUTH)
     it.add(JScrollPane(table))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeRadioPane(table: JTable): Box {
-  val cl = Thread.currentThread().contextClassLoader
-  val ascendingPath = cl.getResource("example/ascending.png")
-  val descendingPath = cl.getResource("example/descending.png")
-  val r0 = JRadioButton("Default", true)
-  val r1 = JRadioButton("Empty")
-  val r2 = JRadioButton("Custom")
-  val al = ActionListener { e ->
-    val ascending: Icon
-    val descending: Icon
-    val r = e.source as? JRadioButton
-    when {
-      r == r2 && ascendingPath != null && descendingPath != null -> {
-        ascending = IconUIResource(ImageIcon(ascendingPath))
-        descending = IconUIResource(ImageIcon(descendingPath))
+private fun createRadioPane(table: JTable): Box {
+  val group = ButtonGroup()
+  val handler = ItemListener { e ->
+    if (e.getStateChange() == ItemEvent.SELECTED) {
+      val name = group.getSelection().actionCommand
+      val type = SortIconType.valueOf(name)
+      UIManager.put("Table.ascendingSortIcon", type.ascendingIcon)
+      UIManager.put("Table.descendingSortIcon", type.descendingIcon)
+      table.getTableHeader().repaint()
+    }
+  }
+  val box = Box.createHorizontalBox()
+  box.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5))
+  box.add(JLabel("Table Sort Icon: "))
+  SortIconType.entries.forEach { type ->
+    val name = type.name
+    val selected = type == SortIconType.DEFAULT
+    val radio = JRadioButton(name, selected)
+    radio.addItemListener(handler)
+    radio.actionCommand = name
+    box.add(radio)
+    group.add(radio)
+  }
+  box.add(Box.createHorizontalGlue())
+  return box
+}
+
+private enum class SortIconType {
+  DEFAULT,
+  EMPTY,
+  CUSTOM,
+  ;
+
+  val ascendingIcon: Icon
+    get() = when (this) {
+      DEFAULT -> {
+        UIManager
+          .getLookAndFeelDefaults()
+          .getIcon("Table.ascendingSortIcon")
       }
 
-      r == r1 -> {
-        val emptyIcon = EmptyIcon()
-        ascending = IconUIResource(emptyIcon)
-        descending = IconUIResource(emptyIcon)
+      EMPTY -> {
+        EmptyIcon()
       }
 
-      else -> {
-        val def = UIManager.getLookAndFeelDefaults()
-        ascending = def.getIcon("Table.ascendingSortIcon")
-        descending = def.getIcon("Table.descendingSortIcon")
+      CUSTOM -> {
+        createIcon("example/ascending.png")
       }
     }
-    UIManager.put("Table.ascendingSortIcon", ascending)
-    UIManager.put("Table.descendingSortIcon", descending)
-    table.tableHeader.repaint()
+
+  val descendingIcon: Icon
+    get() = when (this) {
+      DEFAULT -> {
+        UIManager
+          .getLookAndFeelDefaults()
+          .getIcon("Table.descendingSortIcon")
+      }
+
+      EMPTY -> {
+        EmptyIcon()
+      }
+
+      CUSTOM -> {
+        createIcon("example/descending.png")
+      }
+    }
+
+  companion object {
+    private fun createIcon(path: String): Icon {
+      val url = Thread.currentThread().contextClassLoader.getResource(path)
+      val image = url?.openStream()?.use(ImageIO::read) ?: createMissingImage()
+      return IconUIResource(ImageIcon(image))
+    }
+
+    private fun createMissingImage(): Image {
+      val missingIcon = UIManager.getIcon("html.missingImage")
+      val iw = missingIcon.iconWidth
+      val ih = missingIcon.iconHeight
+      val bi = BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
+      val g2 = bi.createGraphics()
+      missingIcon.paintIcon(null, g2, (16 - iw) / 2, (16 - ih) / 2)
+      g2.dispose()
+      return bi
+    }
   }
-  val box1 = Box.createHorizontalBox()
-  box1.border = BorderFactory.createEmptyBorder(0, 5, 0, 5)
-  val bg = ButtonGroup()
-  box1.add(JLabel("Table Sort Icon: "))
-  listOf(r0, r1, r2).forEach { rb ->
-    box1.add(rb)
-    box1.add(Box.createHorizontalStrut(5))
-    bg.add(rb)
-    rb.addActionListener(al)
-  }
-  box1.add(Box.createHorizontalGlue())
-  return box1
 }
 
 private class EmptyIcon : Icon {
