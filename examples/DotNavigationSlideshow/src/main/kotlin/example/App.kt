@@ -9,21 +9,18 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.MouseWheelEvent
 import java.awt.event.MouseWheelListener
+import java.awt.geom.Path2D
 import java.awt.image.BufferedImage
 import javax.swing.*
 import kotlin.math.min
 
 private const val TOTAL_IMAGES = 5
-private val images = makeDemoImages()
+private val images = createDemoImages()
 private val animationPanel = AnimationPanel(images[0])
 private val dotPanel = JPanel(FlowLayout(FlowLayout.CENTER, 16, 16))
 private var currentIndex = 0
 
 fun createUI(): Component {
-  val layeredPane = JLayeredPane()
-  layeredPane.setLayout(OverlayLayout(layeredPane))
-  layeredPane.add(animationPanel, JLayeredPane.DEFAULT_LAYER)
-
   dotPanel.setOpaque(false)
   setupDots()
 
@@ -34,10 +31,13 @@ fun createUI(): Component {
   val overlay = JPanel(BorderLayout())
   overlay.setOpaque(false)
   overlay.add(dotWrapper)
-  overlay.add(makeArrowButton(true), BorderLayout.WEST)
-  overlay.add(makeArrowButton(false), BorderLayout.EAST)
+  overlay.add(createArrowButton(true), BorderLayout.WEST)
+  overlay.add(createArrowButton(false), BorderLayout.EAST)
 
+  val layeredPane = JLayeredPane()
+  layeredPane.setLayout(OverlayLayout(layeredPane))
   layeredPane.add(overlay, JLayeredPane.PALETTE_LAYER)
+  layeredPane.add(animationPanel, JLayeredPane.DEFAULT_LAYER)
 
   return JPanel(BorderLayout()).also {
     val handler = NavigateHandler()
@@ -49,7 +49,7 @@ fun createUI(): Component {
   }
 }
 
-fun makeDemoImages(): List<ImageIcon> {
+fun createDemoImages(): List<ImageIcon> {
   val list = mutableListOf<ImageIcon>()
   for (i in 0..<TOTAL_IMAGES) {
     list.add(createDemoImageIcon(i))
@@ -57,7 +57,7 @@ fun makeDemoImages(): List<ImageIcon> {
   return list
 }
 
-private fun makeArrowButton(moveRight: Boolean): JButton {
+private fun createArrowButton(moveRight: Boolean): JButton {
   val button = HoverArrowButton(moveRight)
   button.addActionListener {
     val totalImages = images.size
@@ -74,13 +74,13 @@ private fun setupDots() {
   val totalImages = images.size
   val group = ButtonGroup()
   for (i in 0..<totalImages) {
-    val dot = makeDotButton(i)
+    val dot = createDotButton(i)
     group.add(dot)
     dotPanel.add(dot)
   }
 }
 
-private fun makeDotButton(index: Int): JToggleButton {
+private fun createDotButton(index: Int): JToggleButton {
   val dot = JToggleButton(DotIcon(), index == 0)
   dot.setBorderPainted(false)
   dot.setContentAreaFilled(false)
@@ -97,7 +97,7 @@ private fun makeDotButton(index: Int): JToggleButton {
 
 private fun navigateTo(index: Int, moveRight: Boolean) {
   val c = dotPanel.getComponent(index)
-  if (c is JToggleButton && !animationPanel.isAnimating()) {
+  if (c is JToggleButton && !animationPanel.isAnimating) {
     c.setSelected(true)
     val nextImage = images[index]
     currentIndex = index
@@ -162,6 +162,8 @@ private class AnimationPanel(
   private var nextImage: Image? = null
   private var animationProgress = 0.0 // 0.0 to 1.0
   private var moveRight = true
+  val isAnimating: Boolean
+    get() = timer.isRunning
 
   init {
     this.currentImage = initialImage.getImage()
@@ -205,8 +207,6 @@ private class AnimationPanel(
     animationProgress = 0.0
   }
 
-  fun isAnimating() = timer.isRunning
-
   private fun easeOut(t: Double) = t * (2.0 - t)
 
   override fun paintComponent(g: Graphics) {
@@ -217,17 +217,20 @@ private class AnimationPanel(
     val g2 = g.create() as? Graphics2D ?: return
     val width = getWidth()
     val height = getHeight()
-    if (isAnimating() && nextImage != null) {
+    if (isAnimating && nextImage != null) {
       val easedProgress = easeOut(animationProgress)
       val offsetX = (width * easedProgress).toInt()
       if (moveRight) {
+        // Slide to left (new image comes from right)
         g2.drawImage(currentImage, -offsetX, 0, width, height, this)
         g2.drawImage(nextImage, width - offsetX, 0, width, height, this)
       } else {
+        // Slide to right (new image comes from left)
         g2.drawImage(currentImage, offsetX, 0, width, height, this)
         g2.drawImage(nextImage, -width + offsetX, 0, width, height, this)
       }
     } else {
+      // Static state
       g2.drawImage(currentImage, 0, 0, width, height, this)
     }
     g2.dispose()
@@ -305,26 +308,29 @@ private class HoverArrowButton(
         RenderingHints.VALUE_ANTIALIAS_ON,
       )
       val rect = SwingUtilities.calculateInnerArea(this, null)
-      val arrowHeight = min(25, rect.height / 2)
-      val arrowWidth = arrowHeight / 2
-      val centerX = rect.centerX.toInt()
-      val centerY = rect.centerY.toInt()
-      val startX = centerX - arrowWidth / 2
-      val xpt = if (isLeft) { // <
-        intArrayOf(startX + arrowWidth, startX, startX + arrowWidth)
-      } else { // >
-        intArrayOf(startX, startX + arrowWidth, startX)
-      }
-      val ypt = intArrayOf(
-        centerY - arrowHeight / 2,
-        centerY,
-        centerY + arrowHeight / 2,
-      )
-      g2.color = Color.WHITE
-      g2.stroke = BasicStroke(3f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)
-      g2.drawPolyline(xpt, ypt, 3)
+      g2.draw(createArrowPath(rect, isLeft))
       g2.dispose()
     }
+  }
+
+  private fun createArrowPath(rect: Rectangle, left: Boolean): Path2D {
+    val arrowHeight = min(25.0, rect.height / 2.0)
+    val arrowWidth = arrowHeight / 2.0
+    val centerX = rect.centerX
+    val centerY = rect.centerY
+    val startX = centerX - (arrowWidth / 2.0)
+
+    val path: Path2D = Path2D.Double()
+    if (left) { // <
+      path.moveTo(startX + arrowWidth, centerY - arrowHeight / 2.0)
+      path.lineTo(startX, centerY)
+      path.lineTo(startX + arrowWidth, centerY + arrowHeight / 2.0)
+    } else { // >
+      path.moveTo(startX, centerY - arrowHeight / 2.0)
+      path.lineTo(startX + arrowWidth, centerY)
+      path.lineTo(startX, centerY + arrowHeight / 2.0)
+    }
+    return path
   }
 }
 

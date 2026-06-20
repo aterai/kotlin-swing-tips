@@ -4,6 +4,7 @@ import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.MouseEvent
+import java.awt.geom.Path2D
 import java.awt.geom.RoundRectangle2D
 import javax.swing.*
 import javax.swing.event.PopupMenuEvent
@@ -304,18 +305,18 @@ class ExpandableSplitButton(
     )
     val hover = UIManager.getColor("List.selectionForeground")
     g2.color = if (mouseOnArrow) getForeground() else hover.darker()
-    val arrowX = collapsedWidth + (EXTRA_WIDTH * progress).roundToInt() / 2
-    val arrowY = h / 2
-    val aw = 10
-    val ah = 6
-    val xp = intArrayOf(arrowX - aw / 2, arrowX + aw / 2, arrowX)
-    val yp = intArrayOf(arrowY - ah / 2, arrowY - ah / 2, arrowY + ah / 2)
+    val arrowX = collapsedWidth + (EXTRA_WIDTH * progress) / 2.0
+    val arrowY = h / 2.0
+    val aw = 10.0
+    val ah = 6.0
+
+    val path = Path2D.Double()
+    path.moveTo(arrowX - aw / 2.0, arrowY - ah / 2.0)
+    path.lineTo(arrowX, arrowY + ah / 2.0)
+    path.lineTo(arrowX + aw / 2.0, arrowY - ah / 2.0)
     g2.stroke = BasicStroke(2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)
-    g2.drawPolyline(
-      intArrayOf(xp[0], xp[2], xp[1]),
-      intArrayOf(yp[0], yp[2], yp[1]),
-      3,
-    )
+    g2.draw(path)
+
     g2.dispose()
   }
 
