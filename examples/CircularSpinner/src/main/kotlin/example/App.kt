@@ -23,7 +23,7 @@ fun createUI(): Component {
 
 // A value object that only holds the starting angle
 // and sweep angle of the arc for one frame.
-private class ArcAngles(
+private data class ArcAngles(
   val startAngle: Float,
   val sweepAngle: Float,
 )
