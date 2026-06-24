@@ -16,15 +16,15 @@ import javax.swing.plaf.LayerUI
 fun createUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/test.png")
-  val source = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+  val source = url?.openStream()?.use(ImageIO::read) ?: createMissingImage()
   val g = source.createGraphics()
   g.drawImage(source, 0, 0, null)
   g.dispose()
   val colorConvert = ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null)
   val destination = colorConvert.filter(source, null)
 
-  val before = makeBeforeCanvas(source)
-  val after = makeAfterCanvas(destination)
+  val before = createBeforeCanvas(source)
+  val after = createAfterCanvas(destination)
   val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, before, after).also {
     it.isContinuousLayout = true
     it.resizeWeight = .5
@@ -45,7 +45,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeBeforeCanvas(source: Image) = object : JComponent() {
+private fun createBeforeCanvas(source: Image) = object : JComponent() {
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     val iw = source.getWidth(this)
@@ -58,7 +58,7 @@ private fun makeBeforeCanvas(source: Image) = object : JComponent() {
   }
 }
 
-private fun makeAfterCanvas(destination: Image) = object : JComponent() {
+private fun createAfterCanvas(destination: Image) = object : JComponent() {
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     val c = SwingUtilities.getUnwrappedParent(this)
@@ -76,7 +76,7 @@ private fun makeAfterCanvas(destination: Image) = object : JComponent() {
   }
 }
 
-private fun makeMissingImage(): BufferedImage {
+private fun createMissingImage(): BufferedImage {
   val missingIcon = MissingIcon()
   val w = missingIcon.iconWidth
   val h = missingIcon.iconHeight
@@ -100,7 +100,8 @@ private class DividerLocationDragLayerUI : LayerUI<JSplitPane>() {
   override fun installUI(c: JComponent) {
     super.installUI(c)
     if (c is JLayer<*>) {
-      c.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
+      c.layerEventMask =
+        AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
     }
   }
 
