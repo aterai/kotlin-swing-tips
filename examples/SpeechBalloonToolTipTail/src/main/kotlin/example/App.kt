@@ -13,7 +13,7 @@ import java.awt.geom.RoundRectangle2D
 import javax.swing.*
 
 fun createUI(): Component {
-  val tabbedPane = makeTabbedPane()
+  val tabbedPane = createTabbedPane()
   val menu = JMenu("TabPlacement")
   val bg = ButtonGroup()
   val handler = ItemListener { e ->
@@ -42,7 +42,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeTabbedPane(): JTabbedPane {
+private fun createTabbedPane(): JTabbedPane {
   val tabs = object : JTabbedPane(TOP, SCROLL_TAB_LAYOUT) {
     private var tip: BalloonToolTip? = null
     private val label = JLabel(" ", CENTER)
@@ -60,13 +60,13 @@ private fun makeTabbedPane(): JTabbedPane {
     }
 
     private fun getToolTipPoint(r: Rectangle, d: Dimension) = when (tabPlacement) {
-      LEFT -> makePoint(r.maxX, r.centerY - d.getHeight() / 2.0)
-      RIGHT -> makePoint(r.minX - d.width, r.centerY - d.getHeight() / 2.0)
-      BOTTOM -> makePoint(r.centerX - d.getWidth() / 2.0, r.minY - d.height)
-      else -> makePoint(r.centerX - d.getWidth() / 2.0, r.maxY + 8.0)
+      LEFT -> createPoint(r.maxX, r.centerY - d.getHeight() / 2.0)
+      RIGHT -> createPoint(r.minX - d.width, r.centerY - d.getHeight() / 2.0)
+      BOTTOM -> createPoint(r.centerX - d.getWidth() / 2.0, r.minY - d.height)
+      else -> createPoint(r.centerX - d.getWidth() / 2.0, r.maxY + 8.0)
     }
 
-    private fun makePoint(x: Double, y: Double) = Point(
+    private fun createPoint(x: Double, y: Double) = Point(
       (x + .5).toInt(),
       (y + .5).toInt(),
     )
@@ -181,7 +181,9 @@ private class BalloonToolTip : JToolTip() {
     }
     val area = Area(RoundRectangle2D.Double(0.0, 0.0, w, h, ARC, ARC))
     area.add(Area(tail))
-    val at = AffineTransform.getTranslateInstance(i.left.toDouble(), i.top.toDouble())
+    val tx = i.left.toDouble()
+    val ty = i.top.toDouble()
+    val at = AffineTransform.getTranslateInstance(tx, ty)
     shape = at.createTransformedShape(area)
   }
 
