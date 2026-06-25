@@ -22,15 +22,15 @@ fun createUI(): Component {
   textField2.text = "2000"
 
   val textField3 = JTextField()
-  (textField3.document as? AbstractDocument)?.documentFilter = IntegerDocumentFilter()
+  val doc3 = textField3.document
+  (doc3 as? AbstractDocument)?.documentFilter = IntegerDocumentFilter()
   textField3.text = "3000"
 
   val textField4 = JFormattedTextField()
-  val formatter = NumberFormatter()
+  val fmt = NumberFormatter()
   // formatter.valueClass = java.lang.Integer::class.java
-  (formatter.format as? NumberFormat)?.isGroupingUsed = false
-  textField4.formatterFactory =
-    DefaultFormatterFactory(formatter, formatter, formatter)
+  (fmt.format as? NumberFormat)?.isGroupingUsed = false
+  textField4.formatterFactory = DefaultFormatterFactory(fmt, fmt, fmt)
   textField4.horizontalAlignment = SwingConstants.RIGHT
   textField4.value = 4000
 
