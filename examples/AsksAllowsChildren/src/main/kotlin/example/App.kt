@@ -9,10 +9,10 @@ import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreePath
 
 fun createUI(): Component {
-  val t = JTree(makeDefaultTreeModel())
+  val t = JTree(createDefaultTreeModel())
   t.componentPopupMenu = TreePopupMenu()
 
-  val model = makeDefaultTreeModel()
+  val model = createDefaultTreeModel()
   val tree = JTree(model)
   tree.componentPopupMenu = TreePopupMenu()
   // model.setAsksAllowsChildren(true)
@@ -28,13 +28,13 @@ fun createUI(): Component {
   p.add(check, BorderLayout.SOUTH)
 
   return JPanel(GridLayout(1, 2)).also {
-    it.add(makeTitledPanel("Default", JScrollPane(t)))
-    it.add(makeTitledPanel("setAsksAllowsChildren", p))
+    it.add(createTitledPanel("Default", JScrollPane(t)))
+    it.add(createTitledPanel("setAsksAllowsChildren", p))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeTitledPanel(
+private fun createTitledPanel(
   title: String,
   c: Component,
 ): Component {
@@ -44,7 +44,7 @@ private fun makeTitledPanel(
   return p
 }
 
-private fun makeDefaultTreeModel(): DefaultTreeModel {
+private fun createDefaultTreeModel(): DefaultTreeModel {
   val root = DefaultMutableTreeNode("Root")
   val n1 = DefaultMutableTreeNode("colors").also {
     it.add(DefaultMutableTreeNode("blue", false))
@@ -146,14 +146,15 @@ private class TreePopupMenu : JPopupMenu() {
   ) {
     if (c is JTree) {
       path = c.getPathForLocation(x, y)
-      path?.also { treePath ->
-        (treePath.lastPathComponent as? DefaultMutableTreeNode)?.also { node ->
-          val flag = node.allowsChildren
-          addFolderItem.isEnabled = flag
-          addNodeItem.isEnabled = flag
+      path
+        ?.lastPathComponent
+        ?.let { it as? DefaultMutableTreeNode }
+        ?.allowsChildren
+        ?.also {
+          addFolderItem.isEnabled = it
+          addNodeItem.isEnabled = it
           super.show(c, x, y)
         }
-      }
     }
   }
 }
