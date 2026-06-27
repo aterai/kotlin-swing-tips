@@ -25,14 +25,14 @@ fun createUI(): Component {
   }
 
   return JPanel(GridLayout(1, 3)).also {
-    it.add(makeTitledPanel("Default", JScrollPane(JTree())))
-    it.add(makeTitledPanel("Margin", JScrollPane(tree1)))
-    it.add(makeTitledPanel("Label", JScrollPane(tree2)))
+    it.add(createTitledPanel("Default", JScrollPane(JTree())))
+    it.add(createTitledPanel("Margin", JScrollPane(tree1)))
+    it.add(createTitledPanel("Label", JScrollPane(tree2)))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeTitledPanel(
+private fun createTitledPanel(
   title: String,
   c: Component,
 ): Component {
@@ -95,7 +95,8 @@ private class MarginTreeCellRenderer : DefaultTreeCellRenderer() {
     if (bgColor != null && fillBackground) {
       imageOffset = getLabelStartPosition()
       g.color = bgColor
-      g.fillRect(imageOffset - MARGIN, y, width + MARGIN - imageOffset, height)
+      val x1 = imageOffset - MARGIN
+      g.fillRect(x1, y, width + MARGIN - imageOffset, height)
     }
     super.paint(g)
     if (hasFocus) {
@@ -105,8 +106,9 @@ private class MarginTreeCellRenderer : DefaultTreeCellRenderer() {
         imageOffset = getLabelStartPosition()
       }
       g.color = bgColor
-      g.fillRect(imageOffset - MARGIN, y, MARGIN + 1, height)
-      val r = Rectangle(imageOffset - MARGIN, y, width + MARGIN - imageOffset, height)
+      val x2 = imageOffset - MARGIN
+      g.fillRect(x2, y, MARGIN + 1, height)
+      val r = Rectangle(x2, y, width + MARGIN - imageOffset, height)
       paintFocusRect(g, r, bgColor)
     }
   }
