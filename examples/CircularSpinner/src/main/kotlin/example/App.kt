@@ -34,7 +34,7 @@ private abstract class AbstractCircularSpinner(
   protected val size: Float,
   protected val stroke: Float,
 ) : JComponent() {
-  protected val timer: Timer = Timer(16) { repaint() }
+  protected val timer = Timer(16) { repaint() }
   protected val startTime = System.currentTimeMillis()
 
   init {
