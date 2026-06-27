@@ -60,7 +60,7 @@ private class Odometer(
     }
   }
 
-  override fun isOpaque(): Boolean = false
+  override fun isOpaque() = false
 }
 
 // A vertical rotating wheel component representing a single digit (0-9)
