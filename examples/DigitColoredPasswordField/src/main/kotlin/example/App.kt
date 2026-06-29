@@ -29,13 +29,14 @@ import javax.swing.text.StyledEditorKit
 import javax.swing.text.View
 import javax.swing.text.ViewFactory
 
-val FONT = Font(Font.MONOSPACED, Font.PLAIN, 12)
+private val FONT = Font(Font.MONOSPACED, Font.PLAIN, 12)
+private const val ECHO_CHAR_KEY = "PasswordField.echoChar"
 
 fun createUI(): Component {
   val p = JPanel(GridLayout(0, 1, 5, 25))
-  val p1 = createPasswordPanel1()
+  val p1 = createEchoCharStrategyPanel()
   p.add(createTitledPanel("JPasswordField#setEchoChar(...) + HighlightFilter", p1))
-  val p2 = createPasswordPanel2()
+  val p2 = createCardLayoutStrategyPanel()
   p.add(createTitledPanel("CardLayout + (JPasswordField <> JTextPane)", p2))
   return JPanel(BorderLayout()).also {
     it.add(p, BorderLayout.NORTH)
@@ -44,29 +45,11 @@ fun createUI(): Component {
   }
 }
 
-private fun createPasswordPanel1(): JPanel {
-  val password = DigitHighlightPasswordField(40)
-  password.setFont(FONT)
-  password.setAlignmentX(Component.RIGHT_ALIGNMENT)
-  password.text = "!1l2c$%34e5&6#7=8g9O0"
-
-  val button = JToggleButton()
-  button.addActionListener { e ->
-    val b = (e.source as? AbstractButton)?.isSelected == true
-    password.echoChar = if (b) 0.toChar() else getUIEchoChar()
-  }
-  initEyeButton(button)
-  val p = OverlayLayoutPanel()
-  p.add(button)
-  p.add(password)
-  return p
-}
-
-private fun createPasswordPanel2(): JPanel {
+private fun createCardLayoutStrategyPanel(): JPanel {
   val password = JPasswordField(40)
   password.setFont(FONT)
-  password.text = "!1l2c$%34e5&6#7=8g9O0"
-  val revealPassword = createRevealPassword(password)
+  password.setText("!1l2c$%34e5&6#7=8g9O0")
+  val visibleTextPane = PasswordUiUtils.createVisiblePasswordEditor(password)
   val cardLayout = CardLayout()
   val p = object : JPanel(cardLayout) {
     override fun updateUI() {
@@ -74,70 +57,50 @@ private fun createPasswordPanel2(): JPanel {
       setAlignmentX(RIGHT_ALIGNMENT)
     }
   }
-  p.add(password, PasswordField.HIDE.toString())
-  p.add(revealPassword, PasswordField.SHOW.toString())
+  p.setOpaque(false)
+  p.add(password, PasswordVisibility.HIDDEN.toString())
+  p.add(visibleTextPane, PasswordVisibility.VISIBLE.toString())
 
   val button = JToggleButton()
   button.addActionListener { e ->
     val b = (e.source as? AbstractButton)?.isSelected == true
     if (b) {
-      copyText(password.document, revealPassword.styledDocument)
-      cardLayout.show(p, PasswordField.SHOW.toString())
+      PasswordUiUtils.sync(password.document, visibleTextPane.styledDocument)
+      cardLayout.show(p, PasswordVisibility.VISIBLE.toString())
     } else {
-      copyText(revealPassword.styledDocument, password.document)
-      cardLayout.show(p, PasswordField.HIDE.toString())
+      PasswordUiUtils.sync(visibleTextPane.styledDocument, password.document)
+      cardLayout.show(p, PasswordVisibility.HIDDEN.toString())
     }
   }
-  initEyeButton(button)
+  PasswordUiUtils.setupVisibilityToggleButton(button)
 
-  val panel = OverlayLayoutPanel()
+  val panel = OverlapLayerPanel()
   panel.add(button)
   panel.add(p)
   return panel
 }
 
-private fun copyText(src: Document, dst: Document) {
-  runCatching {
-    dst.remove(0, dst.length)
-    val text = src.getText(0, src.length)
-    dst.insertString(0, text, null)
-  }.onFailure {
-    it.printStackTrace()
-  }
-}
+private fun createEchoCharStrategyPanel(): JPanel {
+  val password = DigitHighlightField(40)
+  password.setFont(FONT)
+  password.setAlignmentX(Component.RIGHT_ALIGNMENT)
+  password.setText("!1l2c$%34e5&6#7=8g9O0")
 
-private fun getUIEchoChar() = UIManager.get("PasswordField.echoChar") as? Char ?: '*'
-
-private fun initEyeButton(b: AbstractButton) {
-  b.isFocusable = false
-  b.isOpaque = false
-  b.isContentAreaFilled = false
-  b.border = BorderFactory.createEmptyBorder(0, 0, 0, 4)
-  b.alignmentX = Component.RIGHT_ALIGNMENT
-  b.alignmentY = Component.CENTER_ALIGNMENT
-  b.icon = EyeIcon(Color.BLUE)
-  b.rolloverIcon = EyeIcon(Color.DARK_GRAY)
-  b.selectedIcon = EyeIcon(Color.BLUE)
-  b.rolloverSelectedIcon = EyeIcon(Color.BLUE)
-  b.toolTipText = "show/hide passwords"
-}
-
-private fun createRevealPassword(password: JPasswordField): JTextPane {
-  val textPane = OneLineTextPane()
-  textPane.setBorder(password.border)
-  textPane.setFont(password.getFont())
-  val doc = textPane.styledDocument
-  if (doc is AbstractDocument) {
-    doc.documentFilter = HighlightDocumentFilter()
-    runCatching {
-      val length = password.document.length
-      val text = password.document.getText(0, length)
-      doc.insertString(0, text, SimpleAttributeSet())
-    }.onFailure {
-      UIManager.getLookAndFeel().provideErrorFeedback(textPane)
+  val button = JToggleButton()
+  button.addActionListener { e ->
+    val b = (e.getSource() as? AbstractButton)?.isSelected == true
+    val ch = if (b) {
+      0.toChar()
+    } else {
+      UIManager.get(ECHO_CHAR_KEY) as? Char ?: '*'
     }
+    password.setEchoChar(ch)
   }
-  return textPane
+  PasswordUiUtils.setupVisibilityToggleButton(button)
+  val p = OverlapLayerPanel()
+  p.add(button)
+  p.add(password)
+  return p
 }
 
 private fun createTitledPanel(title: String, c: Component): Component {
@@ -147,9 +110,9 @@ private fun createTitledPanel(title: String, c: Component): Component {
   return p
 }
 
-private enum class PasswordField { SHOW, HIDE }
+private enum class PasswordVisibility { VISIBLE, HIDDEN }
 
-private class DigitHighlightPasswordField(
+private class DigitHighlightField(
   columns: Int,
 ) : JPasswordField(columns) {
   override fun setEchoChar(c: Char) {
@@ -158,7 +121,8 @@ private class DigitHighlightPasswordField(
     if (doc is AbstractDocument) {
       val reveal = c == 0.toChar()
       if (reveal) {
-        doc.documentFilter = HighlightFilter(this)
+        val filter = BackgroundHighlightFilter(this, Color.YELLOW)
+        doc.documentFilter = filter
         runCatching {
           doc.remove(0, 0)
         }.onFailure {
@@ -172,10 +136,11 @@ private class DigitHighlightPasswordField(
   }
 }
 
-private class HighlightFilter(
+private class BackgroundHighlightFilter(
   private val field: JTextComponent,
+  color: Color,
 ) : DocumentFilter() {
-  private val painter = DefaultHighlightPainter(Color.YELLOW)
+  private val painter = DefaultHighlightPainter(color)
   private val pattern = Pattern.compile("\\d")
 
   @Throws(BadLocationException::class)
@@ -225,7 +190,7 @@ private class HighlightFilter(
   }
 }
 
-private class HighlightDocumentFilter : DocumentFilter() {
+private class TextForegroundFilter : DocumentFilter() {
   private val defAttr = SimpleAttributeSet()
   private val numAttr = SimpleAttributeSet()
   private val pattern = Pattern.compile("\\d")
@@ -276,7 +241,7 @@ private class HighlightDocumentFilter : DocumentFilter() {
   }
 }
 
-private class OverlayLayoutPanel : JPanel() {
+private class OverlapLayerPanel : JPanel() {
   override fun updateUI() {
     super.updateUI()
     setLayout(OverlayLayout(this))
@@ -333,20 +298,18 @@ private class EyeIcon(
   override fun getIconHeight() = 16
 }
 
-private class OneLineTextPane : JTextPane() {
+private open class OneLineTextPane : JTextPane() {
   override fun updateUI() {
     super.updateUI()
     val key = "Do-Nothing"
     val im = getInputMap(WHEN_FOCUSED)
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), key)
-    actionMap.put(
-      key,
-      object : AbstractAction() {
-        override fun actionPerformed(e: ActionEvent) {
-          // Do nothing
-        }
-      },
-    )
+    val action = object : AbstractAction() {
+      override fun actionPerformed(e: ActionEvent) {
+        // Do nothing
+      }
+    }
+    actionMap.put(key, action)
     editorKit = NoWrapEditorKit()
     enableInputMethods(false)
   }
@@ -383,6 +346,53 @@ private class NoWrapViewFactory : ViewFactory {
 
 private class NoWrapEditorKit : StyledEditorKit() {
   override fun getViewFactory() = NoWrapViewFactory()
+}
+
+private object PasswordUiUtils {
+  fun sync(src: Document, dst: Document) {
+    runCatching {
+      dst.remove(0, dst.length)
+      dst.insertString(0, src.getText(0, src.length), null)
+    }.onFailure {
+      it.printStackTrace()
+    }
+  }
+
+  fun setupVisibilityToggleButton(b: AbstractButton) {
+    b.setFocusable(false)
+    b.setOpaque(false)
+    b.setContentAreaFilled(false)
+    b.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 4))
+    b.setAlignmentX(Component.RIGHT_ALIGNMENT)
+    b.setAlignmentY(Component.CENTER_ALIGNMENT)
+
+    val fgc = UIManager.getColor("List.selectionBackground")
+
+    b.setIcon(EyeIcon(fgc))
+    b.setRolloverIcon(EyeIcon(Color.DARK_GRAY))
+    b.setSelectedIcon(EyeIcon(fgc))
+    b.setRolloverSelectedIcon(EyeIcon(fgc))
+  }
+
+  fun createVisiblePasswordEditor(password: JPasswordField): JTextPane {
+    val textPane = object : OneLineTextPane() {
+      override fun updateUI() {
+        super.updateUI()
+        setBorder(password.border)
+        setFont(password.getFont())
+        setupDocument(styledDocument)
+      }
+    }
+
+    setupDocument(textPane.styledDocument)
+    return textPane
+  }
+
+  private fun setupDocument(doc: StyledDocument?) {
+    if (doc is AbstractDocument) {
+      doc.documentFilter = TextForegroundFilter()
+    }
+  }
 }
 
 fun main() {
