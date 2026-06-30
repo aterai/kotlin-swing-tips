@@ -47,7 +47,7 @@ private fun initPopupMenu(frame: Frame) {
     .getResource(path)
     ?.openStream()
     ?.use(ImageIO::read)
-    ?: makeDefaultTrayImage()
+    ?: createDefaultTrayImage()
   val icon = TrayIcon(img, "TRAY", null)
   icon.addMouseListener(TrayIconPopupMenuHandler(popup, tmp))
   runCatching {
@@ -85,7 +85,7 @@ private fun initPopupMenu(frame: Frame) {
   }
 }
 
-private fun makeDefaultTrayImage(): Image {
+private fun createDefaultTrayImage(): Image {
   val icon = UIManager.getIcon("InternalFrame.icon")
   val w = icon.iconWidth
   val h = icon.iconHeight
@@ -125,7 +125,9 @@ private object TrayIconPopupMenuUtils {
     if (gc == null && popup.invoker != null) {
       gc = popup.invoker.graphicsConfiguration
     }
-    val screenBounds = gc?.bounds ?: Rectangle(Toolkit.getDefaultToolkit().screenSize)
+    val screenBounds = gc
+      ?.bounds
+      ?: Rectangle(Toolkit.getDefaultToolkit().screenSize)
     val size = popup.preferredSize
     val pw = p.x.toLong() + size.width.toLong()
     val ph = p.y.toLong() + size.height.toLong()
