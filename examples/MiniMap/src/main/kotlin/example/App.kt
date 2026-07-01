@@ -1,94 +1,70 @@
 package example
 
 import java.awt.*
+import java.awt.event.ActionEvent
+import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
-import java.io.File
-import java.nio.file.Files
-import java.nio.file.Paths
-import javax.script.Invocable
-import javax.script.ScriptEngine
-import javax.script.ScriptEngineManager
 import javax.swing.*
-import javax.swing.event.MouseInputAdapter
-import javax.swing.event.MouseInputListener
 import javax.swing.text.html.HTMLEditorKit
 import javax.swing.text.html.StyleSheet
+import kotlin.math.roundToInt
 
-private val THUMB_COLOR = Color(0x32_00_00_FF, true)
 private const val SCALE = .15
 
-val engine = createEngine()
-val editor = JEditorPane().also {
+private val editor = JEditorPane().also {
   it.selectedTextColor = null
   it.selectionColor = Color(0x64_88_AA_AA, true)
-  // TEST: it.setSelectionColor(null)
 }
-val scroll = JScrollPane(editor)
-val label = object : JLabel() {
-  private var handler: MouseInputListener? = null
-
-  override fun updateUI() {
-    removeMouseListener(handler)
-    removeMouseMotionListener(handler)
-    super.updateUI()
-    handler = MiniMapHandler()
-    addMouseListener(handler)
-    addMouseMotionListener(handler)
-  }
-
-  override fun paintComponent(g: Graphics) {
-    super.paintComponent(g)
-    val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, editor)
-    val viewport = c as? JViewport ?: return
-    val rect = SwingUtilities.calculateInnerArea(this, Rectangle())
-
-    val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(
-      RenderingHints.KEY_ANTIALIASING,
-      RenderingHints.VALUE_ANTIALIAS_ON,
-    )
-    val sy = rect.getHeight() / editor.bounds.getHeight()
-    val at = AffineTransform.getScaleInstance(1.0, sy)
-
-    // paint Thumb
-    val thumbRect = Rectangle(viewport.bounds)
-    thumbRect.y = viewport.viewPosition.y
-    val r = at.createTransformedShape(thumbRect).bounds
-    val y = rect.y + r.y
-    g2.color = THUMB_COLOR
-    g2.fillRect(0, y, rect.width, r.height)
-    g2.color = THUMB_COLOR.darker()
-    g2.drawRect(0, y, rect.width - 1, r.height - 1)
-    g2.dispose()
-  }
-}
-
-private open class MiniMapHandler : MouseInputAdapter() {
-  override fun mousePressed(e: MouseEvent) {
-    processMiniMapMouseEvent(e)
-  }
-
-  override fun mouseDragged(e: MouseEvent) {
-    processMiniMapMouseEvent(e)
-  }
-
-  fun processMiniMapMouseEvent(e: MouseEvent) {
-    val pt = e.point
-    val c = e.component
-    val m = scroll.verticalScrollBar.model
-    val vsm = m.maximum - m.minimum
-    val v = .5 - m.extent * .5 + pt.y * vsm / c.height.toDouble()
-    m.value = v.toInt()
-  }
-}
-
-val p = object : JPanel() {
+private val scroll = JScrollPane(editor)
+private val label = MiniMapLabel(scroll)
+private val p = object : JPanel() {
   override fun isOptimizedDrawingEnabled() = false
 }
 
 fun createUI(): Component {
+  val htmlEditorKit = HTMLEditorKit()
+  htmlEditorKit.styleSheet = createStyleSheet()
+
+  editor.editorKit = htmlEditorKit
+  editor.isEditable = false
+  editor.background = Color(0xEE_EE_EE)
+  editor.selectedTextColor = null
+  editor.selectionColor = Color(0x64_88_AA_AA, true)
+  loadHtml()
+
+  val button = JCheckBox("minimap", true)
+  button.addActionListener {
+    toggleMiniMap(it)
+  }
+
+  val pp = JPanel(BorderLayout(0, 0))
+  pp.add(label, BorderLayout.NORTH)
+
+  val minimap = JScrollPane(pp)
+  minimap.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
+  minimap.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+
+  val box = Box.createHorizontalBox()
+  box.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
+  box.add(Box.createHorizontalGlue())
+  box.add(button)
+
+  val verticalScrollBar = scroll.getVerticalScrollBar()
+  verticalScrollBar.model.addChangeListener { label.repaint() }
+
+  p.layout = MiniMapLayout()
+  p.add(minimap, BorderLayout.EAST)
+  p.add(scroll)
+  return JPanel(BorderLayout()).also {
+    it.add(p)
+    it.add(box, BorderLayout.SOUTH)
+    it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private fun createStyleSheet(): StyleSheet {
   val styleSheet = StyleSheet().also {
     it.addRule(".str{color:#008800}")
     it.addRule(".kwd{color:#000088}")
@@ -102,108 +78,43 @@ fun createUI(): Component {
     it.addRule(".atv{color:#008800}")
     it.addRule(".dec{color:#660066}")
   }
-
-  val htmlEditorKit = HTMLEditorKit()
-  htmlEditorKit.styleSheet = styleSheet
-
-  editor.editorKit = htmlEditorKit
-  editor.isEditable = false
-  editor.background = Color(0xEE_EE_EE)
-  editor.selectedTextColor = null
-  editor.selectionColor = Color(0x64_88_AA_AA, true)
-
-  val button = JButton("open")
-  button.addActionListener {
-    val fileChooser = JFileChooser()
-    val ret = fileChooser.showOpenDialog(button.rootPane)
-    if (ret == JFileChooser.APPROVE_OPTION) {
-      loadFile(fileChooser.selectedFile.absolutePath)
-      EventQueue.invokeLater {
-        label.icon = makeMiniMap(editor)
-        p.revalidate()
-        p.repaint()
-      }
-    }
-  }
-
-  scroll.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
-  scroll.verticalScrollBar.model.addChangeListener { label.repaint() }
-
-  val pp = JPanel(BorderLayout(0, 0))
-  pp.add(label, BorderLayout.NORTH)
-  val minimap = JScrollPane(pp)
-  minimap.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
-  minimap.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
-
-  val box = Box.createHorizontalBox()
-  box.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
-  box.add(Box.createHorizontalGlue())
-  box.add(button)
-
-  p.layout = object : BorderLayout(0, 0) {
-    override fun layoutContainer(parent: Container) {
-      synchronized(parent.treeLock) {
-        val insets = parent.insets
-        val width = parent.width
-        val height = parent.height
-        val top = insets.top
-        val bottom = height - insets.bottom
-        val left = insets.left
-        val right = width - insets.right
-        getLayoutComponent(parent, EAST)?.also {
-          val d = it.preferredSize
-          val vsb = scroll.verticalScrollBar
-          val vsw = if (vsb.isVisible) vsb.size.width else 0
-          it.setBounds(right - d.width - vsw, top, d.width, bottom - top)
-        }
-        val c = getLayoutComponent(parent, CENTER)
-        c?.setBounds(left, top, right - left, bottom - top)
-      }
-    }
-  }
-  p.add(minimap, BorderLayout.EAST)
-  p.add(scroll)
-  return JPanel(BorderLayout()).also {
-    it.add(p)
-    it.add(box, BorderLayout.SOUTH)
-    it.preferredSize = Dimension(320, 240)
-  }
+  return styleSheet
 }
 
-fun loadFile(path: String) {
-  val html = runCatching {
-    File(path).useLines { it.toList() }.joinToString("\n") {
-      it.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-    }
-  }.fold(
-    onSuccess = { prettify(engine, it) },
-    onFailure = { it.message },
-  )
-  editor.text = "<pre>$html\n</pre>"
-  editor.caretPosition = 0
-}
-
-fun createEngine(): ScriptEngine? {
-  val engine = ScriptEngineManager().getEngineByName("JavaScript")
+private fun loadHtml() {
   val cl = Thread.currentThread().contextClassLoader
-  val url = cl.getResource("example/prettify.js") ?: return null
-  return runCatching {
-    Files.newBufferedReader(Paths.get(url.toURI())).use {
-      engine.eval("var window={}, navigator=null;")
-      engine.eval(it)
+  cl.getResource("example/test.html")?.also { url ->
+    runCatching {
+      editor.page = url
+    }.onFailure {
+      UIManager.getLookAndFeel().provideErrorFeedback(editor)
+      editor.text = it.message
     }
-    engine
-  }.onFailure { it.printStackTrace() }.getOrNull()
+    editor.addPropertyChangeListener("page") {
+      label.setIcon(createMiniMapImageIcon())
+      label.rootPane.also {
+        it.revalidate()
+        it.repaint()
+      }
+    }
+  }
 }
 
-fun prettify(engine: ScriptEngine?, src: String) = runCatching {
-  val iv = engine as? Invocable
-  val name = "prettyPrintOne"
-  iv?.invokeMethod(engine["window"], name, src) as? String
-}.getOrNull() ?: "error"
+private fun toggleMiniMap(e: ActionEvent) {
+  val c = e.getSource() as? AbstractButton ?: return
+  if (c.isSelected) {
+    label.setIcon(createMiniMapImageIcon())
+  } else {
+    label.setIcon(null)
+  }
+  c.rootPane.also {
+    it.revalidate()
+    it.repaint()
+  }
+}
 
-private fun makeMiniMap(c: Component): Icon {
-  val d = c.size
+private fun createMiniMapImageIcon(): Icon {
+  val d = editor.size
   val newW = (d.width * SCALE).toInt()
   val newH = (d.height * SCALE).toInt()
   val image = BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB)
@@ -213,9 +124,106 @@ private fun makeMiniMap(c: Component): Icon {
     RenderingHints.VALUE_INTERPOLATION_BILINEAR,
   )
   g2.scale(SCALE, SCALE)
-  c.paint(g2)
+  editor.paint(g2)
   g2.dispose()
   return ImageIcon(image)
+}
+
+private class MiniMapLabel(private val scroll: JScrollPane) : JLabel() {
+  private var handler: MouseAdapter? = null
+
+  override fun updateUI() {
+    removeMouseListener(handler)
+    removeMouseMotionListener(handler)
+    super.updateUI()
+    handler = MiniMapHandler()
+    addMouseListener(handler)
+    addMouseMotionListener(handler)
+  }
+
+  override fun paintComponent(g: Graphics) {
+    super.paintComponent(g)
+    val r = computeThumbRect()
+    val g2 = g.create() as? Graphics2D ?: return
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.color = THUMB_COLOR
+    g2.fillRect(r.x, r.y, r.width, r.height)
+    g2.color = THUMB_COLOR.darker()
+    g2.drawRect(r.x, r.y, r.width - 1, r.height - 1)
+    g2.dispose()
+  }
+
+  // Calculating the thumb rectangle shared
+  // by paintComponent and processMiniMapMouseEvent
+  private fun computeThumbRect(): Rectangle {
+    val viewport = scroll.getViewport()
+    val er = viewport.view.bounds
+    val cr = SwingUtilities.calculateInnerArea(this, null)
+    val thumbRect = Rectangle(cr)
+    if (cr.height > 0 && er.getHeight() > 0) {
+      val sy = cr.getHeight() / er.getHeight()
+      val at = AffineTransform.getScaleInstance(1.0, sy)
+      val tr = Rectangle(viewport.bounds)
+      tr.y = viewport.getViewPosition().y
+      val r = at.createTransformedShape(tr).bounds
+      thumbRect.y += r.y
+      thumbRect.height = r.height
+    } else {
+      thumbRect.height = 0
+    }
+    return thumbRect
+  }
+
+  inner class MiniMapHandler : MouseAdapter() {
+    override fun mousePressed(e: MouseEvent) {
+      processMiniMapMouseEvent(e)
+    }
+
+    override fun mouseDragged(e: MouseEvent) {
+      processMiniMapMouseEvent(e)
+    }
+
+    fun processMiniMapMouseEvent(e: MouseEvent) {
+      val pt = e.getPoint()
+      val c = e.component
+      val m = scroll.getVerticalScrollBar().getModel()
+      val range = m.maximum - m.minimum
+      val fv = (pt.y * range / c.getHeight().toFloat() - m.extent / 2f)
+      m.value = fv.roundToInt() // Scroll main editor side
+
+      if (c is JComponent) {
+        // The display position of the minimap itself will also follow
+        // the position where the thumb (window) can be seen.
+        val thumbRect = computeThumbRect()
+        c.scrollRectToVisible(thumbRect)
+      }
+    }
+  }
+  companion object {
+    private val THUMB_COLOR = Color(0x32_00_00_FF, true)
+  }
+}
+
+private class MiniMapLayout : BorderLayout(0, 0) {
+  override fun layoutContainer(parent: Container) {
+    synchronized(parent.treeLock) {
+      val insets = parent.insets
+      val width = parent.width
+      val height = parent.height
+      val top = insets.top
+      val bottom = height - insets.bottom
+      val left = insets.left
+      val right = width - insets.right
+      getLayoutComponent(parent, EAST)?.also {
+        val d = it.preferredSize
+        val vsb = scroll.verticalScrollBar
+        val vsw = if (vsb.isVisible) vsb.size.width else 0
+        it.setBounds(right - d.width - vsw, top, d.width, bottom - top)
+      }
+      val c = getLayoutComponent(parent, CENTER)
+      c?.setBounds(left, top, right - left, bottom - top)
+    }
+  }
 }
 
 fun main() {
