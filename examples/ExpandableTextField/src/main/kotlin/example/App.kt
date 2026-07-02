@@ -48,7 +48,7 @@ private class ExpandableTextField : OverlayLayoutPanel() {
       removePopupMenuListener(listener)
       super.updateUI()
       val footer = JPanel(FlowLayout(FlowLayout.RIGHT, 0, 0))
-      footer.add(makeResizeLabel(this))
+      footer.add(createResizeLabel(this))
       setLayout(BorderLayout())
       add(JScrollPane(textArea))
       add(footer, BorderLayout.SOUTH)
@@ -59,7 +59,7 @@ private class ExpandableTextField : OverlayLayoutPanel() {
 
   init {
     val icon = ExpandArrowIcon()
-    val expandBtn = makeExpandButton(icon)
+    val expandBtn = createExpandButton(icon)
     expandBtn.addActionListener { popup.show(textField, 0, 0) }
     add(expandBtn)
     textField.setMargin(Insets(0, 0, 0, icon.getIconWidth()))
@@ -88,16 +88,16 @@ private class ExpandableTextField : OverlayLayoutPanel() {
   }
 
   companion object {
-    private fun makeResizeLabel(popup: JPopupMenu): JLabel {
+    private fun createResizeLabel(popup: JPopupMenu): JLabel {
       val resizeLabel = JLabel("◢")
       resizeLabel.setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR))
-      val resizer: MouseAdapter = Resizer(popup)
+      val resizer = Resizer(popup)
       resizeLabel.addMouseListener(resizer)
       resizeLabel.addMouseMotionListener(resizer)
       return resizeLabel
     }
 
-    private fun makeExpandButton(icon: ExpandArrowIcon?): JButton {
+    private fun createExpandButton(icon: ExpandArrowIcon?): JButton {
       val expandBtn = JButton(icon)
       expandBtn.setMargin(Insets(0, 0, 0, 0))
       expandBtn.setContentAreaFilled(false)

@@ -184,7 +184,7 @@ private class SplitButtonLayerUI : LayerUI<ExpandableSplitButton>() {
 class ExpandableSplitButton(
   title: String,
 ) : JButton(title) {
-  var mouseOnArrow: Boolean = false
+  var mouseOnArrow = false
   var collapsedWidth = 0
   val anim = AnimationController()
   private val popupCtrl = PopupController()
@@ -207,7 +207,7 @@ class ExpandableSplitButton(
     setMargin(Insets(6, 12, 6, 12))
   }
 
-  fun isPopupOpen(): Boolean = popupCtrl.isOpen
+  fun isPopupOpen() = popupCtrl.isOpen
 
   fun isOnArrowArea(p: Point): Boolean {
     val progress = easeInOut(anim.progress)
@@ -382,7 +382,7 @@ class ExpandableSplitButton(
   }
 
   private inner class PopupController : PopupMenuListener {
-    var isOpen: Boolean = false
+    var isOpen = false
       private set
 
     fun show(menu: JPopupMenu, invoker: Component) {
