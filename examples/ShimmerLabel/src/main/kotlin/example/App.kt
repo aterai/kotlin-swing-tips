@@ -126,14 +126,11 @@ private abstract class AbstractShimmerLabel(
     const val ALPHA = 200
 
     fun applyRenderingHints(g2: Graphics2D) {
-      g2.setRenderingHint(
-        RenderingHints.KEY_ANTIALIASING,
-        RenderingHints.VALUE_ANTIALIAS_ON,
-      )
-      g2.setRenderingHint(
-        RenderingHints.KEY_TEXT_ANTIALIASING,
-        RenderingHints.VALUE_TEXT_ANTIALIAS_ON,
-      )
+      val toolkit = Toolkit.getDefaultToolkit()
+      val hints = toolkit.getDesktopProperty("awt.font.desktophints")
+      if (hints is MutableMap<*, *>) {
+        g2.addRenderingHints(hints)
+      }
     }
   }
 }
@@ -142,7 +139,7 @@ private abstract class AbstractShimmerLabel(
 private class ShimmerLabel(
   text: String,
 ) : AbstractShimmerLabel(text, FPS, SPEED, BAND_WIDTH) {
-  private val colors = arrayOf<Color>(SHIMMER_BASE, SHIMMER_BRIGHT, SHIMMER_BASE)
+  private val colors = arrayOf(SHIMMER_BASE, SHIMMER_BRIGHT, SHIMMER_BASE)
 
   override fun isOpaque() = true
 
@@ -170,7 +167,10 @@ private class TextShimmerLabel(
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     val g2 = g.create() as? Graphics2D ?: return
-    applyRenderingHints(g2)
+    val isWindows = getUI().javaClass.getName().contains("Windows")
+    if (!isWindows) {
+      applyRenderingHints(g2)
+    }
 
     val rects = ShimmerLayout.layoutLabel(this, g2)
     val textRect = rects[1]
@@ -220,7 +220,7 @@ private class TextCompositeShimmerLabel(
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
     val g2 = g.create() as Graphics2D
-    applyRenderingHints(g2)
+    // applyRenderingHints(g2)
 
     val rects = ShimmerLayout.layoutLabel(this, g2)
     val textRect = rects[1]
@@ -242,7 +242,10 @@ private class TextCompositeShimmerLabel(
     g2.composite = AlphaComposite.Clear
     g2.fillRect(0, 0, w, h)
     g2.composite = AlphaComposite.SrcOver
-    applyRenderingHints(g2)
+    val isWindows = getUI().javaClass.getName().contains("Windows")
+    if (!isWindows) {
+      applyRenderingHints(g2)
+    }
 
     val rects = ShimmerLayout.layoutLabel(this, g2)
     val textRect = rects[1]
@@ -337,8 +340,10 @@ private class ShimmerLayerUI : LayerUI<JLabel>() {
   ): BufferedImage {
     val shimBuf = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
     val sg = shimBuf.createGraphics()
-
-    AbstractShimmerLabel.applyRenderingHints(sg)
+    val isWindows = label.getUI().javaClass.getName().contains("Windows")
+    if (!isWindows) {
+      AbstractShimmerLabel.applyRenderingHints(sg)
+    }
     val rects = ShimmerLayout.layoutLabel(label, sg)
     val textRect = rects[1]
     val fm = sg.getFontMetrics(label.getFont())
