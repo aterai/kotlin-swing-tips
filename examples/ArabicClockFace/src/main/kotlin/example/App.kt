@@ -46,6 +46,7 @@ fun main() {
     }
     JFrame().apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
+      // defaultCloseOperation = WindowConstants.DISPOSE_ON_CLOSE
       contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)
@@ -97,6 +98,10 @@ private class AnalogClock : JPanel() {
     g2.setRenderingHint(
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
+    )
+    g2.setRenderingHint(
+      RenderingHints.KEY_STROKE_CONTROL,
+      RenderingHints.VALUE_STROKE_PURE,
     )
     val rect = SwingUtilities.calculateInnerArea(this, null)
     g2.color = Color.DARK_GRAY
