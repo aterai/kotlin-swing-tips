@@ -6,7 +6,10 @@ import java.awt.event.ItemListener
 import javax.swing.*
 import javax.swing.JSpinner.DefaultEditor
 
-fun createUI() = JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT).also {
+fun createUI() = JTabbedPane(
+  SwingConstants.TOP,
+  JTabbedPane.SCROLL_TAB_LAYOUT,
+).also {
   it.addTab("JRadioButtonMenuItem", createRadioButtonMenuItemPanel())
   it.addTab("JRadioButton", createRadioButtonPanel())
   it.addTab("JComboBox", createComboBoxPanel())
