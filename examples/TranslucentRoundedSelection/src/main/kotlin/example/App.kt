@@ -64,7 +64,7 @@ fun createUI(): Component {
 
   val tabs = JTabbedPane()
   tabs.addTab("JTextArea", p)
-  tabs.add("JEditorPane", JScrollPane(makeEditorPane()))
+  tabs.add("JEditorPane", JScrollPane(createEditorPane()))
 
   return JPanel(BorderLayout()).also {
     it.add(tabs)
@@ -72,7 +72,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeEditorPane(): JEditorPane {
+private fun createEditorPane(): JEditorPane {
   val editor = object : JEditorPane() {
     override fun updateUI() {
       super.updateUI()
@@ -83,7 +83,7 @@ private fun makeEditorPane(): JEditorPane {
     }
   }
   val htmlEditorKit = HTMLEditorKit()
-  htmlEditorKit.styleSheet = makeStyleSheet()
+  htmlEditorKit.styleSheet = createStyleSheet()
   editor.editorKit = htmlEditorKit
   editor.isEditable = false
   editor.background = Color(0xEE_EE_EE)
@@ -99,7 +99,7 @@ private fun makeEditorPane(): JEditorPane {
   return editor
 }
 
-private fun makeStyleSheet(): StyleSheet {
+private fun createStyleSheet(): StyleSheet {
   val styleSheet = StyleSheet()
   styleSheet.addRule(".str{color:#008800}")
   styleSheet.addRule(".kwd{color:#000088}")
@@ -155,9 +155,9 @@ private class RoundedSelectionHighlightPainter : DefaultHighlightPainter(null) {
     g2.color = Color(rgba, true)
     runCatching {
       val area = getLinesArea(c, offs0, offs1)
-      for (a in GeomUtils.singularization(area)) {
+      for (a in GeomUtils.splitIntoSingleLoopAreas(area)) {
         val lst = GeomUtils.convertAreaToPoint2DList(a)
-        GeomUtils.flatteningStepsOnRightSide(lst, 3.0 * 2.0)
+        GeomUtils.snapShortRightEdges(lst, 3.0 * 2.0)
         g2.fill(GeomUtils.convertRoundedPath(lst, 3.0))
       }
     }
@@ -201,7 +201,7 @@ private object GeomUtils {
     return list
   }
 
-  fun flatteningStepsOnRightSide(
+  fun snapShortRightEdges(
     list: MutableList<Point2D>,
     arc: Double,
   ): List<Point2D> {
@@ -260,8 +260,8 @@ private object GeomUtils {
     return path
   }
 
-  fun singularization(rect: Area): List<Area> {
-    val list = mutableListOf<Area>()
+  fun splitIntoSingleLoopAreas(rect: Area): List<Area> {
+    val subArea = mutableListOf<Area>()
     val path = Path2D.Double()
     val pi = rect.getPathIterator(null)
     val coords = DoubleArray(6)
@@ -296,13 +296,13 @@ private object GeomUtils {
 
         PathIterator.SEG_CLOSE -> path.also {
           it.closePath()
-          list.add(Area(it))
+          subArea.add(Area(it))
           it.reset()
         }
       }
       pi.next()
     }
-    return list
+    return subArea
   }
 }
 

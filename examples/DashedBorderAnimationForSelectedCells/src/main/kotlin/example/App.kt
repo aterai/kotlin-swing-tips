@@ -18,7 +18,7 @@ import javax.swing.table.TableModel
 fun createUI(): Component {
   val mb = JMenuBar()
   mb.add(LookAndFeelUtils.createLookAndFeelMenu())
-  val scroll = makeScrollPane(TranslucentCellSelectionTable(makeModel()))
+  val scroll = createScrollPane(TranslucentCellSelectionTable(createModel()))
   return JPanel(BorderLayout()).also {
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.add(JLayer(scroll, TranslucentCellSelectionLayerUI()))
@@ -26,7 +26,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeScrollPane(view: Component): JScrollPane {
+private fun createScrollPane(view: Component): JScrollPane {
   val scroll = JScrollPane(view)
   scroll.background = Color.WHITE
   scroll.viewport.setOpaque(false)
@@ -34,7 +34,7 @@ private fun makeScrollPane(view: Component): JScrollPane {
   return scroll
 }
 
-fun makeModel(): TableModel {
+fun createModel(): TableModel {
   val columnNames = arrayOf("String", "Integer", "Boolean")
   val data = arrayOf<Array<Any>>(
     arrayOf("aaa", 12, true),
@@ -169,7 +169,7 @@ private class TranslucentCellSelectionLayerUI : LayerUI<JScrollPane>() {
         val ics = tbl.intercellSpacing
         val v = tbl.selectionBackground
         val sbc = Color(v.red, v.green, v.blue, 0x32)
-        for (a in singularization(area)) {
+        for (a in splitIntoSingleLoopAreas(area)) {
           val r = a.bounds
           r.width -= ics.width - 1
           r.height -= ics.height - 1
@@ -238,23 +238,49 @@ private class TranslucentCellSelectionLayerUI : LayerUI<JScrollPane>() {
       return table
     }
 
-    fun singularization(rect: Area): List<Area> {
-      val list = ArrayList<Area>()
+    fun splitIntoSingleLoopAreas(rect: Area): List<Area> {
+      val subArea = mutableListOf<Area>()
       val path = Path2D.Double()
       val pi = rect.getPathIterator(null)
-      val c = DoubleArray(6)
+      val coords = DoubleArray(6)
       while (!pi.isDone) {
-        when (pi.currentSegment(c)) {
-          PathIterator.SEG_MOVETO -> path.moveTo(c[0], c[1])
-          PathIterator.SEG_LINETO -> path.lineTo(c[0], c[1])
-          PathIterator.SEG_QUADTO -> path.quadTo(c[0], c[1], c[2], c[3])
-          PathIterator.SEG_CUBICTO -> path.curveTo(c[0], c[1], c[2], c[3], c[4], c[5])
-          PathIterator.SEG_CLOSE -> listAdd(path, list)
-          // else -> {}
+        val pathSegmentType = pi.currentSegment(coords)
+        when (pathSegmentType) {
+          PathIterator.SEG_MOVETO -> path.moveTo(
+            coords[0],
+            coords[1],
+          )
+
+          PathIterator.SEG_LINETO -> path.lineTo(
+            coords[0],
+            coords[1],
+          )
+
+          PathIterator.SEG_QUADTO -> path.quadTo(
+            coords[0],
+            coords[1],
+            coords[2],
+            coords[3],
+          )
+
+          PathIterator.SEG_CUBICTO -> path.curveTo(
+            coords[0],
+            coords[1],
+            coords[2],
+            coords[3],
+            coords[4],
+            coords[5],
+          )
+
+          PathIterator.SEG_CLOSE -> path.also {
+            it.closePath()
+            subArea.add(Area(it))
+            it.reset()
+          }
         }
         pi.next()
       }
-      return list
+      return subArea
     }
 
     private fun listAdd(path: Path2D.Double, list: ArrayList<Area>) {

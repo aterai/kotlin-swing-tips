@@ -20,14 +20,14 @@ fun createUI(): Component {
   mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   return JPanel(GridLayout(1, 0, 2, 2)).also {
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
-    it.add(makeScrollPane(tree))
-    it.add(makeScrollPane(RoundedSelectionTree0()))
-    it.add(makeScrollPane(RoundedSelectionTree()))
+    it.add(createScrollPane(tree))
+    it.add(createScrollPane(RoundedSelectionTree0()))
+    it.add(createScrollPane(RoundedSelectionTree()))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeScrollPane(view: Component): JScrollPane {
+private fun createScrollPane(view: Component): JScrollPane {
   val scroll = JScrollPane(view)
   scroll.background = Color.WHITE
   scroll.viewport.background = Color.WHITE
@@ -48,9 +48,9 @@ private class RoundedSelectionTree : JTree() {
       val area = Area()
       sr.map { getRowBounds(it) }.forEach { area.add(Area(it)) }
       val arc = 4.0
-      for (a in GeomUtils.singularization(area)) {
+      for (a in GeomUtils.splitIntoSingleLoopAreas(area)) {
         val lst = GeomUtils.convertAreaToPoint2DList(a)
-        GeomUtils.flatteningStepsOnRightSide(lst, arc * 2.0)
+        GeomUtils.snapShortRightEdges(lst, arc * 2.0)
         g2.fill(GeomUtils.convertRoundedPath(lst, arc))
       }
       g2.dispose()
@@ -88,7 +88,7 @@ private class RoundedSelectionTree0 : JTree() {
       val area = Area()
       sr.map { getRowBounds(it) }.forEach { area.add(Area(it)) }
       val arc = 4.0
-      for (a in GeomUtils.singularization(area)) {
+      for (a in GeomUtils.splitIntoSingleLoopAreas(area)) {
         val list = GeomUtils.convertAreaToPoint2DList(a)
         g2.fill(GeomUtils.convertRoundedPath(list, arc))
       }
@@ -243,7 +243,7 @@ private object GeomUtils {
     return list
   }
 
-  fun flatteningStepsOnRightSide(
+  fun snapShortRightEdges(
     list: MutableList<Point2D>,
     arc: Double,
   ): List<Point2D> {
@@ -302,8 +302,8 @@ private object GeomUtils {
     return path
   }
 
-  fun singularization(rect: Area): List<Area> {
-    val list = mutableListOf<Area>()
+  fun splitIntoSingleLoopAreas(rect: Area): List<Area> {
+    val subArea = mutableListOf<Area>()
     val path = Path2D.Double()
     val pi = rect.getPathIterator(null)
     val coords = DoubleArray(6)
@@ -338,12 +338,12 @@ private object GeomUtils {
 
         PathIterator.SEG_CLOSE -> path.also {
           it.closePath()
-          list.add(Area(it))
+          subArea.add(Area(it))
           it.reset()
         }
       }
       pi.next()
     }
-    return list
+    return subArea
   }
 }

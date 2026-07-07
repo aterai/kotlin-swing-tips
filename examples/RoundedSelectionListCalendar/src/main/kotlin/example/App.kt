@@ -46,7 +46,7 @@ val monthList = object : JList<LocalDate>() {
       g2.paint = Color(0xC8_00_78_D7.toInt(), true)
       val area = Area()
       indices.map { getCellBounds(it, it) }.forEach { area.add(Area(it)) }
-      for (a in GeomUtils.singularization(area)) {
+      for (a in GeomUtils.splitIntoSingleLoopAreas(area)) {
         val lst = GeomUtils.convertAreaToPoint2DList(a)
         g2.fill(GeomUtils.convertRoundedPath(lst, 4.0))
       }
@@ -77,13 +77,20 @@ fun createUI(): Component {
       fixedCellHeight = monthList.fixedCellHeight
       val renderer = cellRenderer
       setCellRenderer { list, value, index, _, _ ->
-        renderer.getListCellRendererComponent(list, value, index, false, false).also {
-          (it as? JLabel)?.also { label ->
-            label.horizontalAlignment = SwingConstants.CENTER
-            label.text = value.getDisplayName(TextStyle.SHORT_STANDALONE, l)
-            label.background = Color(0xDC_DC_DC)
+        renderer
+          .getListCellRendererComponent(
+            list,
+            value,
+            index,
+            false,
+            false,
+          ).also {
+            (it as? JLabel)?.also { label ->
+              label.horizontalAlignment = SwingConstants.CENTER
+              label.text = value.getDisplayName(TextStyle.SHORT_STANDALONE, l)
+              label.background = Color(0xDC_DC_DC)
+            }
           }
-        }
       }
     }
   }
@@ -329,8 +336,8 @@ private object GeomUtils {
     return path
   }
 
-  fun singularization(rect: Area): List<Area> {
-    val list = mutableListOf<Area>()
+  fun splitIntoSingleLoopAreas(rect: Area): List<Area> {
+    val subArea = mutableListOf<Area>()
     val path = Path2D.Double()
     val pi = rect.getPathIterator(null)
     val coords = DoubleArray(6)
@@ -365,12 +372,12 @@ private object GeomUtils {
 
         PathIterator.SEG_CLOSE -> path.also {
           it.closePath()
-          list.add(Area(it))
+          subArea.add(Area(it))
           it.reset()
         }
       }
       pi.next()
     }
-    return list
+    return subArea
   }
 }

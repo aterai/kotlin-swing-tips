@@ -15,13 +15,13 @@ fun createUI(): Component {
   mb.add(example.LookAndFeelUtils.createLookAndFeelMenu())
   return JPanel(GridLayout(1, 2, 2, 2)).also {
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
-    it.add(makeScrollPane(tree))
-    it.add(makeScrollPane(RoundedSelectionTree()))
+    it.add(createScrollPane(tree))
+    it.add(createScrollPane(RoundedSelectionTree()))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeScrollPane(view: Component): JScrollPane {
+private fun createScrollPane(view: Component): JScrollPane {
   val scroll = JScrollPane(view)
   scroll.background = Color.WHITE
   scroll.viewport.background = Color.WHITE
@@ -46,7 +46,7 @@ private class RoundedSelectionTree : JTree() {
         .map { Rectangle(innerArea.x, it.y, innerArea.width, it.height) }
         .forEach { area.add(Area(it)) }
       val arc = 10
-      for (a in singularization(area)) {
+      for (a in splitIntoSingleLoopAreas(area)) {
         val r = a.bounds
         g2.fillRoundRect(r.x, r.y, r.width - 1, r.height - 1, arc, arc)
       }
@@ -69,31 +69,49 @@ private class RoundedSelectionTree : JTree() {
     addTreeSelectionListener { repaint() }
   }
 
-  private fun singularization(rect: Area): List<Area> {
-    val list = mutableListOf<Area>()
+  fun splitIntoSingleLoopAreas(rect: Area): List<Area> {
+    val subArea = mutableListOf<Area>()
     val path = Path2D.Double()
     val pi = rect.getPathIterator(null)
     val coords = DoubleArray(6)
     while (!pi.isDone) {
       val pathSegmentType = pi.currentSegment(coords)
       when (pathSegmentType) {
-        PathIterator.SEG_MOVETO -> {
-          path.reset()
-          path.moveTo(coords[0], coords[1])
-        }
+        PathIterator.SEG_MOVETO -> path.moveTo(
+          coords[0],
+          coords[1],
+        )
 
-        PathIterator.SEG_LINETO -> {
-          path.lineTo(coords[0], coords[1])
-        }
+        PathIterator.SEG_LINETO -> path.lineTo(
+          coords[0],
+          coords[1],
+        )
 
-        PathIterator.SEG_CLOSE -> {
-          path.closePath()
-          list.add(Area(path))
+        PathIterator.SEG_QUADTO -> path.quadTo(
+          coords[0],
+          coords[1],
+          coords[2],
+          coords[3],
+        )
+
+        PathIterator.SEG_CUBICTO -> path.curveTo(
+          coords[0],
+          coords[1],
+          coords[2],
+          coords[3],
+          coords[4],
+          coords[5],
+        )
+
+        PathIterator.SEG_CLOSE -> path.also {
+          it.closePath()
+          subArea.add(Area(it))
+          it.reset()
         }
       }
       pi.next()
     }
-    return list
+    return subArea
   }
 
   companion object {
