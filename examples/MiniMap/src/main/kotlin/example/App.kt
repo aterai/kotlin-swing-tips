@@ -32,6 +32,13 @@ fun createUI(): Component {
   editor.background = Color(0xEE_EE_EE)
   editor.selectedTextColor = null
   editor.selectionColor = Color(0x64_88_AA_AA, true)
+  editor.addPropertyChangeListener("page") {
+    label.setIcon(createMiniMapImageIcon())
+    label.rootPane.also {
+      it.revalidate()
+      it.repaint()
+    }
+  }
   loadHtml()
 
   val button = JCheckBox("minimap", true)
@@ -89,13 +96,6 @@ private fun loadHtml() {
     }.onFailure {
       UIManager.getLookAndFeel().provideErrorFeedback(editor)
       editor.text = it.message
-    }
-    editor.addPropertyChangeListener("page") {
-      label.setIcon(createMiniMapImageIcon())
-      label.rootPane.also {
-        it.revalidate()
-        it.repaint()
-      }
     }
   }
 }

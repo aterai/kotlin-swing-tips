@@ -165,7 +165,7 @@ private class StickyHeaderTreeLayerUI : LayerUI<JScrollPane>() {
 
     val scroll = (c as? JLayer<*>)?.getView() as? JScrollPane ?: return
     val viewport = scroll.getViewport().bounds
-    val w = viewport.width
+    val r = Rectangle(viewport.x, viewport.y, viewport.width, HEADER_HEIGHT)
     val n = stickyPaths.size
 
     for (i in n - 1 downTo 0) {
@@ -173,25 +173,13 @@ private class StickyHeaderTreeLayerUI : LayerUI<JScrollPane>() {
       val offset = pushOffsets[i]
 
       val baseY = viewport.y + i * HEADER_HEIGHT
-      val y = baseY - offset
-
-      val depthIdx = depthIndex(path)
-      paintStickyHeader(g2, tree, c, path, viewport.x, y, w, HEADER_HEIGHT, depthIdx)
+      r.y = baseY - offset
+      paintStickyHeader(g2, tree, c, path, r, depthIndex(path))
 
       if (offset > 0 && nextSiblingPaths.size > i) {
         val nextSibling = nextSiblingPaths[i]
-        val nextY = baseY + HEADER_HEIGHT - offset
-        paintStickyHeader(
-          g2,
-          tree,
-          c,
-          nextSibling,
-          viewport.x,
-          nextY,
-          w,
-          HEADER_HEIGHT,
-          depthIndex(nextSibling),
-        )
+        r.y = baseY + HEADER_HEIGHT - offset
+        paintStickyHeader(g2, tree, c, nextSibling, r, depthIndex(nextSibling))
       }
     }
     g2.dispose()
@@ -246,19 +234,16 @@ private class StickyHeaderTreeLayerUI : LayerUI<JScrollPane>() {
       tree: JTree,
       layer: JComponent?,
       path: TreePath,
-      x: Int,
-      y: Int,
-      w: Int,
-      h: Int,
+      r: Rectangle,
       depthIdx: Int,
     ) {
       val oldClip = g2.clip
-      g2.setClip(x, y, w, h)
+      g2.clip = r
       g2.paint = Color.LIGHT_GRAY
-      g2.fillRect(x, y, w, h)
+      g2.fill(r)
 
       g2.color = BORDER_COLOR
-      g2.drawLine(x, y + h - 1, x + w - 1, y + h - 1)
+      g2.drawLine(r.x, r.y + r.height - 1, r.x + r.width - 1, r.y + r.height - 1)
 
       val renderer = tree.getCellRenderer()
       val node = path.lastPathComponent
@@ -283,9 +268,9 @@ private class StickyHeaderTreeLayerUI : LayerUI<JScrollPane>() {
         c.setOpaque(false)
         val icon = c.icon
         var iconW = 0
-        val iconX = x + 6 + indent
+        val iconX = r.x + 10 + indent
         if (icon != null) {
-          val iconY = y + (h - icon.iconHeight) / 2
+          val iconY = r.y + (r.height - icon.iconHeight) / 2
           icon.paintIcon(layer, g2, iconX, iconY)
           iconW = icon.iconWidth + 4
         }
@@ -294,14 +279,14 @@ private class StickyHeaderTreeLayerUI : LayerUI<JScrollPane>() {
         if (text != null && !text.isEmpty()) {
           val fm = g2.fontMetrics
           val textX = iconX + iconW
-          val textY = y + (h + fm.ascent - fm.descent) / 2
+          val textY = r.y + (r.height + fm.ascent - fm.descent) / 2
           g2.color = UIManager.getColor("Tree.foreground")
           g2.drawString(text, textX, textY)
         }
       } else {
         val tmp = JPanel()
-        c.setSize(w - indent, h)
-        val rect = Rectangle(x + indent, y, w - indent, h)
+        c.setSize(r.width - indent, r.height)
+        val rect = Rectangle(r.x + indent, r.y, r.width - indent, r.height)
         SwingUtilities.paintComponent(g2, c, tmp, rect)
       }
       g2.clip = oldClip
