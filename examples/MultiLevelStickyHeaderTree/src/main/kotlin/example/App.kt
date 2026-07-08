@@ -10,8 +10,8 @@ import kotlin.math.max
 fun createUI(): Component {
   val tree = createTree()
   tree.setRootVisible(false)
-  tree.setShowsRootHandles(true)
-  tree.setRowHeight(24)
+  tree.setShowsRootHandles(false)
+  tree.setRowHeight(StickyHeaderTreeLayerUI.HEADER_HEIGHT)
   expandAll(tree)
 
   val scroll = JScrollPane(tree)
@@ -174,19 +174,19 @@ private class StickyHeaderTreeLayerUI : LayerUI<JScrollPane>() {
 
       val baseY = viewport.y + i * HEADER_HEIGHT
       r.y = baseY - offset
-      paintStickyHeader(g2, tree, c, path, r, depthIndex(path))
+      paintStickyHeader(g2, tree, path, r, depthIndex(path))
 
       if (offset > 0 && nextSiblingPaths.size > i) {
         val nextSibling = nextSiblingPaths[i]
         r.y = baseY + HEADER_HEIGHT - offset
-        paintStickyHeader(g2, tree, c, nextSibling, r, depthIndex(nextSibling))
+        paintStickyHeader(g2, tree, nextSibling, r, depthIndex(nextSibling))
       }
     }
     g2.dispose()
   }
 
   companion object {
-    private const val HEADER_HEIGHT = 24
+    const val HEADER_HEIGHT = 24
     private const val DEPTH = 4
     private val BORDER_COLOR = Color(0x46_00_00_00, true)
 
@@ -232,7 +232,6 @@ private class StickyHeaderTreeLayerUI : LayerUI<JScrollPane>() {
     fun paintStickyHeader(
       g2: Graphics2D,
       tree: JTree,
-      layer: JComponent?,
       path: TreePath,
       r: Rectangle,
       depthIdx: Int,
@@ -262,34 +261,29 @@ private class StickyHeaderTreeLayerUI : LayerUI<JScrollPane>() {
         false,
       )
 
-      val indent = depthIdx * 10
-
       if (c is JLabel) {
-        c.setOpaque(false)
-        val icon = c.icon
-        var iconW = 0
-        val iconX = r.x + 10 + indent
-        if (icon != null) {
-          val iconY = r.y + (r.height - icon.iconHeight) / 2
-          icon.paintIcon(layer, g2, iconX, iconY)
-          iconW = icon.iconWidth + 4
-        }
-
-        val text = c.text
-        if (text != null && !text.isEmpty()) {
-          val fm = g2.fontMetrics
-          val textX = iconX + iconW
-          val textY = r.y + (r.height + fm.ascent - fm.descent) / 2
-          g2.color = UIManager.getColor("Tree.foreground")
-          g2.drawString(text, textX, textY)
-        }
-      } else {
-        val tmp = JPanel()
-        c.setSize(r.width - indent, r.height)
+        val label = cloneLabel(c)
+        val leftChildIndent = UIManager.getInt("Tree.leftChildIndent")
+        val rightChildIndent = UIManager.getInt("Tree.rightChildIndent")
+        val indent = depthIdx * (leftChildIndent + rightChildIndent)
+        label.setSize(r.width - indent, r.height)
         val rect = Rectangle(r.x + indent, r.y, r.width - indent, r.height)
-        SwingUtilities.paintComponent(g2, c, tmp, rect)
+        SwingUtilities.paintComponent(g2, label, JPanel(), rect)
+        // Lower border
+        g2.color = BORDER_COLOR
+        g2.drawLine(r.x, r.y + r.height - 1, r.x + r.width - 1, r.y + r.height - 1)
+
       }
       g2.clip = oldClip
+    }
+
+    private fun cloneLabel(src: JLabel): JLabel {
+      val label = JLabel(src.text)
+      label.setIcon(src.icon)
+      label.setIconTextGap(src.iconTextGap)
+      label.setOpaque(true)
+      label.setBackground(Color.LIGHT_GRAY)
+      return label
     }
 
     private fun depthIndex(path: TreePath): Int {
