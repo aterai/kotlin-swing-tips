@@ -76,11 +76,11 @@ private fun print(
 private class XmlTreeNode(
   private val xmlNode: Node?,
   private val parent: XmlTreeNode? = null,
-  private val showAttributes: Boolean? = true,
+  private val showAttributes: Boolean = true,
 ) : TreeNode {
   private var list: MutableList<XmlTreeNode>? = null
   private val isShowAttributes: Boolean
-    get() = showAttributes ?: parent?.isShowAttributes ?: false
+    get() = showAttributes
   private val xmlTag: String
     get() {
       if (xmlNode is Element && isShowAttributes) {
@@ -103,7 +103,7 @@ private class XmlTreeNode(
         }
         return buf.toString()
       } else if (xmlNode is Text) {
-        return xmlNode.getNodeValue()
+        return xmlNode.nodeValue
       }
       return xmlNode?.nodeName ?: ""
     }
@@ -115,10 +115,10 @@ private class XmlTreeNode(
       val ml = mutableListOf<XmlTreeNode>().also {
         for (i in 0..<count) {
           val c = cn.item(i)
-          if (c is Text && c.getNodeValue().isEmpty()) {
+          if (c is Text && c.nodeValue.isEmpty()) {
             continue
           }
-          it.add(makeXmlTreeNode(c))
+          it.add(createXmlTreeNode(c))
         }
       }
       list = ml
@@ -128,7 +128,7 @@ private class XmlTreeNode(
     }
   }
 
-  private fun makeXmlTreeNode(node: Node) = XmlTreeNode(node, this)
+  private fun createXmlTreeNode(node: Node) = XmlTreeNode(node, this)
 
   override fun children(): Enumeration<XmlTreeNode> {
     val iterator = loadChildren(list).iterator()
