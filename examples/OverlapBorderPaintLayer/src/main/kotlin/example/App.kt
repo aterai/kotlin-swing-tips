@@ -13,17 +13,17 @@ fun createUI(): Component {
 
   val p1 = JPanel(GridLayout(0, 1)).also {
     it.border = BorderFactory.createTitledBorder("Icon border")
-    it.add(makeBreadcrumb(list, Color.PINK, 1))
-    it.add(makeChevronBreadcrumb(list, Color.PINK, 11))
-    it.add(makeRibbonBreadcrumb(list, Color.PINK, 11))
+    it.add(createBreadcrumb(list, Color.PINK, 1))
+    it.add(createChevronBreadcrumb(list, Color.PINK, 11))
+    it.add(createRibbonBreadcrumb(list, Color.PINK, 11))
   }
 
   val p2 = JPanel(GridLayout(0, 1)).also {
     val layerUI = BreadcrumbLayerUI<Component>()
     it.border = BorderFactory.createTitledBorder("JLayer border")
-    it.add(JLayer(makeBreadcrumb(list, Color.ORANGE, 1), layerUI))
-    it.add(JLayer(makeChevronBreadcrumb(list, Color.ORANGE, 11), layerUI))
-    it.add(JLayer(makeRibbonBreadcrumb(list, Color.ORANGE, 11), layerUI))
+    it.add(JLayer(createBreadcrumb(list, Color.ORANGE, 1), layerUI))
+    it.add(JLayer(createChevronBreadcrumb(list, Color.ORANGE, 11), layerUI))
+    it.add(JLayer(createRibbonBreadcrumb(list, Color.ORANGE, 11), layerUI))
   }
 
   val p = JPanel(GridLayout(0, 1)).also {
@@ -37,7 +37,7 @@ fun createUI(): Component {
   }
 }
 
-fun makePanel(overlap: Int): JPanel {
+fun createPanel(overlap: Int): JPanel {
   val p = object : JPanel(FlowLayout(FlowLayout.LEADING, -overlap, 0)) {
     override fun isOptimizedDrawingEnabled() = false
   }
@@ -45,55 +45,55 @@ fun makePanel(overlap: Int): JPanel {
   return p
 }
 
-fun makeBreadcrumb(
+fun createBreadcrumb(
   list: List<String>,
   color: Color,
   overlap: Int,
 ): JPanel {
-  val p = makePanel(overlap)
+  val p = createPanel(overlap)
   p.border = BorderFactory.createEmptyBorder(5, overlap + 5, 5, 5)
   val bg = ButtonGroup()
   list.forEach {
-    val b = makeButton(it, SizeIcon(), color)
+    val b = createButton(it, SizeIcon(), color)
     p.add(b)
     bg.add(b)
   }
   return p
 }
 
-fun makeChevronBreadcrumb(
+fun createChevronBreadcrumb(
   list: List<String>,
   color: Color,
   overlap: Int,
 ): JPanel {
-  val p = makePanel(overlap)
+  val p = createPanel(overlap)
   p.border = BorderFactory.createEmptyBorder(5, overlap + 5, 5, 5)
   val bg = ButtonGroup()
   list.forEach {
-    val b = makeButton(it, ArrowToggleButtonIcon(), color)
+    val b = createButton(it, ArrowToggleButtonIcon(), color)
     p.add(b)
     bg.add(b)
   }
   return p
 }
 
-fun makeRibbonBreadcrumb(
+fun createRibbonBreadcrumb(
   list: List<String>,
   color: Color,
   overlap: Int,
 ): JPanel {
-  val p = makePanel(overlap)
+  val p = createPanel(overlap)
   p.border = BorderFactory.createEmptyBorder(5, overlap + 5, 5, 5)
   val bg = ButtonGroup()
   list.forEach {
-    val b = makeButton(it, RibbonToggleButtonIcon(), color)
+    val b = createButton(it, RibbonToggleButtonIcon(), color)
     p.add(b)
     bg.add(b)
   }
   return p
 }
 
-private fun makeButton(
+private fun createButton(
   title: String,
   icon: Icon,
   color: Color,
@@ -120,7 +120,7 @@ private open class ArrowToggleButtonIcon : Icon {
   var shape: Shape? = null
     private set
 
-  open fun makeShape(
+  open fun createShape(
     parent: Container,
     c: Component,
     x: Int,
@@ -152,7 +152,7 @@ private open class ArrowToggleButtonIcon : Icon {
     y: Int,
   ) {
     val parent = c.parent ?: return
-    shape = makeShape(parent, c, x, y)
+    shape = createShape(parent, c, x, y)
     var bgc = parent.background
     var borderColor = Color.GRAY.brighter()
     if (c is AbstractButton) {
@@ -186,7 +186,7 @@ private open class ArrowToggleButtonIcon : Icon {
 }
 
 private class SizeIcon : ArrowToggleButtonIcon() {
-  override fun makeShape(
+  override fun createShape(
     parent: Container,
     c: Component,
     x: Int,
@@ -194,7 +194,7 @@ private class SizeIcon : ArrowToggleButtonIcon() {
   ): Shape {
     val w = c.width - 1.0
     val h = c.height - 1.0
-    val p: Path2D = Path2D.Double()
+    val p = Path2D.Double()
     p.moveTo(0.0, 0.0)
     p.lineTo(w, 0.0)
     p.lineTo(w, h)
@@ -207,7 +207,7 @@ private class SizeIcon : ArrowToggleButtonIcon() {
 }
 
 private class RibbonToggleButtonIcon : ArrowToggleButtonIcon() {
-  override fun makeShape(
+  override fun createShape(
     parent: Container,
     c: Component,
     x: Int,
@@ -217,7 +217,7 @@ private class RibbonToggleButtonIcon : ArrowToggleButtonIcon() {
     val w = c.width - 1.0
     val h = c.height - 1.0
     val h2 = h * .5
-    val p: Path2D = Path2D.Double()
+    val p = Path2D.Double()
     p.moveTo(w - h2, 0.0)
     p.quadTo(w, 0.0, w, h2)
     p.quadTo(w, 0.0 + h, w - h2, h)

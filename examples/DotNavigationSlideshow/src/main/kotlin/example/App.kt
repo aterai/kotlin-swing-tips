@@ -171,7 +171,7 @@ private class AnimationPanel(
     timer = Timer(
       delay,
       object : ActionListener {
-        private var startTime: Long = 0
+        private var startTime = 0L
 
         override fun actionPerformed(e: ActionEvent?) {
           val b0 = animationProgress == 0.0
@@ -320,7 +320,7 @@ private class HoverArrowButton(
     val centerY = rect.centerY
     val startX = centerX - (arrowWidth / 2.0)
 
-    val path: Path2D = Path2D.Double()
+    val path = Path2D.Double()
     if (left) { // <
       path.moveTo(startX + arrowWidth, centerY - arrowHeight / 2.0)
       path.lineTo(startX, centerY)

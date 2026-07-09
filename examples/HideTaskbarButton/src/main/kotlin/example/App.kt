@@ -11,7 +11,7 @@ import kotlin.math.sin
 
 private val check = JCheckBox("Hide the TaskBar button when JFrame is minimized")
 
-private fun makePreferredSizeImage(
+private fun createPreferredSizeImage(
   icon: Icon,
   w: Int,
   h: Int,
@@ -57,7 +57,7 @@ fun createUI(): Component {
   popup.add(item1)
   popup.add(item2)
   val d = SystemTray.getSystemTray().trayIconSize
-  val image = makePreferredSizeImage(StarIcon(), d.width, d.height)
+  val image = createPreferredSizeImage(StarIcon(), d.width, d.height)
   runCatching {
     SystemTray.getSystemTray().add(TrayIcon(image, "TRAY", popup))
   }
@@ -80,7 +80,7 @@ private class StarIcon(
     val ir = r1.coerceAtMost(r2).toDouble()
     var agl = 0.0
     val add = PI / vc
-    val p: Path2D = Path2D.Double()
+    val p = Path2D.Double()
     p.moveTo(or, 0.0)
     for (i in 0..<vc * 2 - 1) {
       agl += add
@@ -124,8 +124,8 @@ fun main() {
     }
     JFrame().apply {
       iconImages = listOf(
-        makePreferredSizeImage(StarIcon(), 16, 16),
-        makePreferredSizeImage(StarIcon(16, 8, 5), 40, 40),
+        createPreferredSizeImage(StarIcon(), 16, 16),
+        createPreferredSizeImage(StarIcon(16, 8, 5), 40, 40),
       )
       defaultCloseOperation = if (SystemTray.isSupported()) {
         WindowConstants.DISPOSE_ON_CLOSE

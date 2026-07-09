@@ -135,7 +135,7 @@ private class DigitalNumber(
   private val width = 2.0 * isosceles
   private val height = width + isosceles
   val bounds = Rectangle()
-  private val numbers: List<Set<Seg>> = listOf(
+  private val numbers = listOf(
     EnumSet.of(Seg.A, Seg.B, Seg.C, Seg.D, Seg.E, Seg.F),
     EnumSet.of(Seg.B, Seg.C),
     EnumSet.of(Seg.A, Seg.B, Seg.D, Seg.E, Seg.G),
@@ -147,7 +147,7 @@ private class DigitalNumber(
     EnumSet.of(Seg.A, Seg.B, Seg.C, Seg.D, Seg.E, Seg.F, Seg.G),
     EnumSet.of(Seg.A, Seg.B, Seg.C, Seg.D, Seg.F, Seg.G),
   )
-  private var led: Set<Seg> = EnumSet.noneOf(Seg::class.java)
+  private var led = EnumSet.noneOf(Seg::class.java)
 
   init {
     bounds.setLocation((dx - isosceles).toInt(), (dy - height * 2.0).toInt())
@@ -282,7 +282,7 @@ private enum class Seg {
       height: Double,
       isosceles: Double,
     ): Path2D {
-      val path: Path2D = Path2D.Double()
+      val path = Path2D.Double()
       path.moveTo(0.0, 0.0)
       path.lineTo(isosceles, -isosceles)
       path.lineTo(isosceles, -isosceles - height)
@@ -296,7 +296,7 @@ private enum class Seg {
       width: Double,
       isosceles: Double,
     ): Path2D {
-      val path: Path2D = Path2D.Double()
+      val path = Path2D.Double()
       path.moveTo(0.0, 0.0)
       path.lineTo(isosceles, isosceles)
       path.lineTo(isosceles + width, isosceles)
@@ -339,7 +339,7 @@ private class HelpPanel : JPanel() {
     val sv = width / (help.bounds.width * 8.0)
     g2.scale(sv, sv)
     help.drawNumber(g2)
-    g2.paint = Color.RED
+    g2.color = Color.RED
     g2.font = font.deriveFont(32f)
     val r = help.bounds
     val fw = r.width.toFloat()
