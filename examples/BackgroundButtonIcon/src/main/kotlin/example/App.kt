@@ -10,7 +10,7 @@ private const val TXT = "***********************"
 private const val LINE_WIDTH = 1
 private const val BI_GAP = 2
 
-private fun makeButton(
+private fun createButton(
   title: String,
   color: Color,
   first: Boolean,
@@ -42,7 +42,7 @@ private fun makeButton(
   }
 }
 
-private fun makeContainer(overlap: Int): Container {
+private fun createContainer(overlap: Int): Container {
   // https://java-swing-tips.blogspot.com/2013/12/breadcrumb-navigation-with-jradiobutton.html
   val p = object : JPanel(FlowLayout(FlowLayout.LEADING, -overlap, 0)) {
     override fun isOptimizedDrawingEnabled() = false
@@ -52,16 +52,16 @@ private fun makeContainer(overlap: Int): Container {
   return p
 }
 
-private fun makeBreadcrumbList(
+private fun createBreadcrumbList(
   overlap: Int,
   color: Color,
   list: List<String>,
 ): Component {
-  val p = makeContainer(overlap + LINE_WIDTH)
+  val p = createContainer(overlap + LINE_WIDTH)
   val bg = ButtonGroup()
   var f = true
   for (title in list) {
-    val b = makeButton(title, color, f)
+    val b = createButton(title, color, f)
     p.add(b)
     bg.add(b)
     f = false
@@ -72,9 +72,9 @@ private fun makeBreadcrumbList(
 fun createUI(): Component {
   val p = JPanel(GridLayout(0, 1))
   p.border = BorderFactory.createEmptyBorder(20, 10, 20, 0)
-  p.add(makeBreadcrumbList(0, Color.PINK, listOf("overlap1:", "0px", TXT)))
-  p.add(makeBreadcrumbList(5, Color.CYAN, listOf("overlap2:", "5px", TXT)))
-  p.add(makeBreadcrumbList(9, Color.ORANGE, listOf("overlap3:", "9px", TXT)))
+  p.add(createBreadcrumbList(0, Color.PINK, listOf("overlap1:", "0px", TXT)))
+  p.add(createBreadcrumbList(5, Color.CYAN, listOf("overlap2:", "5px", TXT)))
+  p.add(createBreadcrumbList(9, Color.ORANGE, listOf("overlap3:", "9px", TXT)))
   p.preferredSize = Dimension(320, 240)
   return p
 }
@@ -85,7 +85,7 @@ private class ArrowToggleButtonBarCellIcon : Icon {
   var shape: Shape? = null
     private set
 
-  fun makeShape(
+  fun createShape(
     parent: Container,
     c: Component,
     x: Int,
@@ -95,7 +95,7 @@ private class ArrowToggleButtonBarCellIcon : Icon {
     val h = c.height - 1
     val h2 = (h * .5).roundToInt().toDouble()
     val w2 = TH.toDouble()
-    val p: Path2D = Path2D.Double()
+    val p = Path2D.Double()
     p.moveTo(0.0, 0.0)
     p.lineTo(w - w2, 0.0)
     p.lineTo(w.toDouble(), h2)
@@ -117,7 +117,7 @@ private class ArrowToggleButtonBarCellIcon : Icon {
     y: Int,
   ) {
     val parent = c?.parent ?: return
-    shape = makeShape(parent, c, x, y)
+    shape = createShape(parent, c, x, y)
     var bgc = parent.background
     var borderColor = Color.GRAY.brighter()
     if (c is AbstractButton) {

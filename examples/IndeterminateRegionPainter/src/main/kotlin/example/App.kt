@@ -20,8 +20,10 @@ fun createUI(): Component {
   progress1.putClientProperty("Nimbus.Overrides", d)
 
   val p = JPanel(GridLayout(2, 1)).also {
-    it.add(makeTitledPanel("Default", progress0))
-    it.add(makeTitledPanel("ProgressBar[Indeterminate].foregroundPainter", progress1))
+    it.add(createTitledPanel("Default", progress0))
+    it.add(
+      createTitledPanel("ProgressBar[Indeterminate].foregroundPainter", progress1),
+    )
   }
 
   val button = JButton("Test start")
@@ -55,7 +57,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeTitledPanel(
+private fun createTitledPanel(
   title: String,
   cmp: Component,
 ): Component {
@@ -132,7 +134,7 @@ private class IndeterminatePainter : AbstractRegionPainter() {
     decodeColor(NIMBUS_ORANGE, .0106654760f, -.27317524f, .2509803800f, 0)
   private val ctx = PaintContext(Insets(5, 5, 5, 5), Dimension(29, 19), false)
   private var rect = Rectangle2D.Float()
-  private var path: Path2D = Path2D.Float()
+  private var path = Path2D.Float()
 
   override fun doPaint(
     g: Graphics2D,

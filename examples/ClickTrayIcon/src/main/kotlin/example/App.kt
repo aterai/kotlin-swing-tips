@@ -30,7 +30,7 @@ fun createUI() = JPanel(BorderLayout()).also {
   it.preferredSize = Dimension(320, 240)
 }
 
-private fun makeTrayIcon(frame: JFrame): TrayIcon {
+private fun createTrayIcon(frame: JFrame): TrayIcon {
   val open = MenuItem("Option")
   open.addActionListener { frame.isVisible = true }
   val exit = MenuItem("Exit")
@@ -48,7 +48,7 @@ private fun makeTrayIcon(frame: JFrame): TrayIcon {
   popup.add(exit)
 
   val d = SystemTray.getSystemTray().trayIconSize
-  val image = makePreferredSizeImage(StarIcon(), d.width, d.height)
+  val image = createPreferredSizeImage(StarIcon(), d.width, d.height)
   val icon = TrayIcon(image, "Click Test", popup)
   val ml = object : MouseAdapter() {
     override fun mouseClicked(e: MouseEvent) {
@@ -65,7 +65,7 @@ private fun makeTrayIcon(frame: JFrame): TrayIcon {
   return icon
 }
 
-private fun makePreferredSizeImage(
+private fun createPreferredSizeImage(
   icon: Icon,
   w: Int,
   h: Int,
@@ -78,15 +78,15 @@ private fun makePreferredSizeImage(
 }
 
 private class StarIcon : Icon {
-  private val star = makeStar()
+  private val star = createStar()
 
-  private fun makeStar(): Path2D {
+  private fun createStar(): Path2D {
     val or = 8.0
     val ir = 4.0
     val vc = 5
     var agl = 0.0
     val add = PI / vc
-    val p: Path2D = Path2D.Double()
+    val p = Path2D.Double()
     p.moveTo(or, 0.0)
     for (i in 0..<vc * 2 - 1) {
       agl += add
@@ -136,7 +136,7 @@ fun main() {
       if (SystemTray.isSupported()) {
         defaultCloseOperation = WindowConstants.HIDE_ON_CLOSE
         runCatching {
-          SystemTray.getSystemTray().add(makeTrayIcon(this))
+          SystemTray.getSystemTray().add(createTrayIcon(this))
         }
       }
     }

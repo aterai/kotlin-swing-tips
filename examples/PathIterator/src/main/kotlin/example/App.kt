@@ -29,10 +29,10 @@ fun createUI(): Component {
   label.horizontalAlignment = SwingConstants.CENTER
   check.horizontalAlignment = SwingConstants.RIGHT
   val tab = JTabbedPane()
-  tab.addTab("Preview", makePreviewPanel())
-  tab.addTab("SVG", makeSvgPanel())
+  tab.addTab("Preview", createPreviewPanel())
+  tab.addTab("SVG", createSvgPanel())
   val panel = JPanel(BorderLayout())
-  panel.add(makePreferencesPanel(), BorderLayout.NORTH)
+  panel.add(createPreferencesPanel(), BorderLayout.NORTH)
   panel.add(tab)
   return JPanel(BorderLayout()).also {
     it.add(panel)
@@ -40,14 +40,14 @@ fun createUI(): Component {
   }
 }
 
-private fun makePreviewPanel(): Component {
+private fun createPreviewPanel(): Component {
   val p = JPanel(BorderLayout())
   p.add(check, BorderLayout.SOUTH)
   p.add(JScrollPane(label))
   return p
 }
 
-private fun makePreferencesPanel(): Component {
+private fun createPreferencesPanel(): Component {
   val p = JPanel(GridBagLayout())
   p.border = BorderFactory.createTitledBorder("Preferences")
   val c = GridBagConstraints()
@@ -66,7 +66,7 @@ private fun makePreferencesPanel(): Component {
   return p
 }
 
-private fun makeSvgPanel(): Component {
+private fun createSvgPanel(): Component {
   val button = JButton("set")
   button.addActionListener { initStar() }
 
@@ -87,7 +87,7 @@ private fun initStar() {
   val r2 = inner.number.toInt()
   val vc = vcModel.number.toInt()
   val antialiasing = check.isSelected
-  val star = SvgUtils.makeStar(r1, r2, vc)
+  val star = SvgUtils.createStar(r1, r2, vc)
   label.icon = StarIcon(star, antialiasing)
   val style = styleField.text.trim()
   val min = r1.coerceAtMost(r2)
@@ -97,11 +97,11 @@ private fun initStar() {
   """.trimIndent()
   val desc = fmt.format(max, min, vc)
   val pi = star.getPathIterator(null)
-  textArea.text = SvgUtils.makeStarburstSvg(pi, max * 2, style, desc)
+  textArea.text = SvgUtils.createStarburstSvg(pi, max * 2, style, desc)
 }
 
 private object SvgUtils {
-  fun makeStarburstSvg(
+  fun createStarburstSvg(
     pi: PathIterator,
     sz: Int,
     style: String?,
@@ -157,7 +157,7 @@ private object SvgUtils {
       """.trimIndent()
   }
 
-  fun makeStar(
+  fun createStar(
     r1: Int,
     r2: Int,
     vc: Int,
@@ -166,7 +166,7 @@ private object SvgUtils {
     val ir = r1.coerceAtMost(r2).toDouble()
     var agl = 0.0
     val add = PI / vc
-    val p: Path2D = Path2D.Double()
+    val p = Path2D.Double()
     p.moveTo(or, 0.0)
     for (i in 0..<vc * 2 - 1) {
       agl += add

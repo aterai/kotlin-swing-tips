@@ -311,7 +311,7 @@ private enum class Seg {
       width: Double,
       isosceles: Double,
     ): Path2D {
-      val path: Path2D = Path2D.Double()
+      val path = Path2D.Double()
       path.moveTo(isosceles, isosceles)
       path.lineTo(isosceles + width, isosceles)
       path.lineTo(3 * isosceles + width, -isosceles)
