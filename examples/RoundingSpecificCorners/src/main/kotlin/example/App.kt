@@ -37,33 +37,33 @@ fun createUI(): Component {
 
       if (types.contains(Type.SUBTRACT)) {
         g2.color = Color.RED
-        val shape0 = makeRoundedRect0(rect, aw, ah, corners)
+        val shape0 = createRoundedRect0(rect, aw, ah, corners)
         g2.draw(shape0)
       }
 
       if (types.contains(Type.PATH2D1)) {
         g2.color = Color.GREEN
-        val shape1: Shape = makeRoundedRect1(rect, aw, ah, corners)
+        val shape1 = createRoundedRect1(rect, aw, ah, corners)
         g2.draw(shape1)
       }
 
       if (types.contains(Type.PATH2D2)) {
         g2.color = Color.BLUE
-        val shape2 = makeRoundedRect2(rect, aw, ah, corners)
+        val shape2 = createRoundedRect2(rect, aw, ah, corners)
         g2.draw(shape2)
       }
 
       g2.dispose()
     }
   }
-  p.componentPopupMenu = makePopupMenu(p, corners, types)
+  p.componentPopupMenu = createPopupMenu(p, corners, types)
   return JPanel(BorderLayout()).also {
     it.add(p)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makePopupMenu(
+private fun createPopupMenu(
   p: JPanel,
   corners: EnumSet<Corner>,
   types: EnumSet<Type>,
@@ -97,7 +97,7 @@ private fun makePopupMenu(
   return popup
 }
 
-fun makeRoundedRect0(
+fun createRoundedRect0(
   rect: Rectangle2D,
   aw: Double,
   ah: Double,
@@ -134,7 +134,7 @@ fun makeRoundedRect0(
   return r
 }
 
-fun makeRoundedRect2(
+fun createRoundedRect2(
   r: Rectangle2D,
   aw: Double,
   ah: Double,
@@ -178,7 +178,7 @@ fun makeRoundedRect2(
   return p
 }
 
-fun makeRoundedRect1(
+fun createRoundedRect1(
   r: Rectangle2D,
   aw: Double,
   ah: Double,

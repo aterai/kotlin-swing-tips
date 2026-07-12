@@ -52,7 +52,7 @@ private class TriangleUI(
     val rightX = leftX + thumbRect.width
     val topY = if (isUpward) r.getY() else r.y + r.height - h
     val bottomY = topY + h
-    val triangle: Path2D = Path2D.Double()
+    val triangle = Path2D.Double()
     triangle.moveTo(leftX, if (isUpward) bottomY else topY)
     triangle.lineTo(centerX, if (isUpward) topY else bottomY)
     triangle.lineTo(rightX, if (isUpward) bottomY else topY)

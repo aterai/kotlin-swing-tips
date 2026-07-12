@@ -11,14 +11,14 @@ import javax.swing.*
 fun createUI(): Component {
   val path = "example/test.png"
   val url = Thread.currentThread().contextClassLoader.getResource(path)
-  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+  val img = url?.openStream()?.use(ImageIO::read) ?: createMissingImage()
   return JPanel(BorderLayout()).also {
     it.add(ImagePanel(img))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeMissingImage(): Image {
+private fun createMissingImage(): Image {
   val missingIcon = MissingIcon()
   val w = missingIcon.iconWidth
   val h = missingIcon.iconHeight
@@ -34,7 +34,7 @@ private class ImagePanel(
 ) : JPanel() {
   private var rbl: RubberBandingListener? = null
   private val stroke = BasicStroke(2f)
-  private val rubberBand: Path2D = Path2D.Double()
+  private val rubberBand = Path2D.Double()
 
   override fun updateUI() {
     removeMouseListener(rbl)
