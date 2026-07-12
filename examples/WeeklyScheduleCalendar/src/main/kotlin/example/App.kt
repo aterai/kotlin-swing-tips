@@ -94,11 +94,11 @@ private fun createIndicator(date: LocalDate, today: LocalDate?): JLabel {
   val lblIndicator = JLabel("", SwingConstants.CENTER)
   if (date == today) {
     val indicatorColor = ModernTabbedPaneUI.ACCENT_TODAY
-    val activeIcon: Icon = IndicatorIcon(indicatorColor, iw, ih, ir)
+    val activeIcon = IndicatorIcon(indicatorColor, iw, ih, ir)
     lblIndicator.setIcon(activeIcon)
   } else {
     val inactiveColor = Color(0x0, true)
-    val inactiveIcon: Icon = IndicatorIcon(inactiveColor, iw, ih, ir)
+    val inactiveIcon = IndicatorIcon(inactiveColor, iw, ih, ir)
     lblIndicator.setIcon(inactiveIcon)
   }
   return lblIndicator
