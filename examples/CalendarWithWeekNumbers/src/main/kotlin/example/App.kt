@@ -41,13 +41,20 @@ fun createUI(): Component {
       fixedCellHeight = monthList.fixedCellHeight
       val renderer = cellRenderer
       setCellRenderer { list, value, index, _, _ ->
-        renderer.getListCellRendererComponent(list, value, index, false, false).also {
-          (it as? JLabel)?.also { label ->
-            label.horizontalAlignment = SwingConstants.CENTER
-            label.text = value.getDisplayName(TextStyle.SHORT_STANDALONE, l)
-            label.background = Color(0xDC_DC_DC)
+        renderer
+          .getListCellRendererComponent(
+            list,
+            value,
+            index,
+            false,
+            false,
+          ).also {
+            (it as? JLabel)?.also { label ->
+              label.horizontalAlignment = SwingConstants.CENTER
+              label.text = value.getDisplayName(TextStyle.SHORT_STANDALONE, l)
+              label.background = Color(0xDC_DC_DC)
+            }
           }
-        }
       }
     }
   }
