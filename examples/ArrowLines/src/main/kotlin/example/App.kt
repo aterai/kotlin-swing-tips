@@ -41,11 +41,11 @@ private class Arrow(
   init {
     this.start.location = start
     this.end.location = end
-    arrowHead = makeArrowHead(Dimension(8, 8))
+    arrowHead = createArrowHead(Dimension(8, 8))
   }
 
-  fun makeArrowHead(size: Dimension): Path2D {
-    val path: Path2D = Path2D.Double()
+  fun createArrowHead(size: Dimension): Path2D {
+    val path = Path2D.Double()
     val t = size.height.toDouble()
     val w = size.width * .5
     path.moveTo(0.0, -w)
