@@ -340,7 +340,11 @@ private class ShimmerLayerUI : LayerUI<JLabel>() {
   ): BufferedImage {
     val shimBuf = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
     val sg = shimBuf.createGraphics()
-    val isWindows = label.getUI().javaClass.getName().contains("Windows")
+    val isWindows = label
+      .getUI()
+      .javaClass
+      .getName()
+      .contains("Windows")
     if (!isWindows) {
       AbstractShimmerLabel.applyRenderingHints(sg)
     }
