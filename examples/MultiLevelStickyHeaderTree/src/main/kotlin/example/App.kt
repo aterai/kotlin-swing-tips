@@ -272,7 +272,6 @@ private class StickyHeaderTreeLayerUI : LayerUI<JScrollPane>() {
         // Lower border
         g2.color = BORDER_COLOR
         g2.drawLine(r.x, r.y + r.height - 1, r.x + r.width - 1, r.y + r.height - 1)
-
       }
       g2.clip = oldClip
     }
