@@ -129,7 +129,9 @@ private fun createMiniMapImageIcon(): Icon {
   return ImageIcon(image)
 }
 
-private class MiniMapLabel(private val scroll: JScrollPane) : JLabel() {
+private class MiniMapLabel(
+  private val scroll: JScrollPane,
+) : JLabel() {
   private var handler: MouseAdapter? = null
 
   override fun updateUI() {
@@ -145,7 +147,10 @@ private class MiniMapLabel(private val scroll: JScrollPane) : JLabel() {
     super.paintComponent(g)
     val r = computeThumbRect()
     val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
     g2.color = THUMB_COLOR
     g2.fillRect(r.x, r.y, r.width, r.height)
     g2.color = THUMB_COLOR.darker()
@@ -199,6 +204,7 @@ private class MiniMapLabel(private val scroll: JScrollPane) : JLabel() {
       }
     }
   }
+
   companion object {
     private val THUMB_COLOR = Color(0x32_00_00_FF, true)
   }
