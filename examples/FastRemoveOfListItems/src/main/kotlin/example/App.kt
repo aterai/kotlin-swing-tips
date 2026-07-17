@@ -5,221 +5,259 @@ import java.awt.geom.Rectangle2D
 import javax.swing.*
 
 fun createUI() = JTabbedPane().also {
-  it.addTab("default remove", makeCmp0())
-  it.addTab("clear + addElement", makeCmp1())
-  it.addTab("addAll + remove", makeCmp2())
+  // Tab1: Removes selected items one at a time via DefaultListModel#remove(int).
+  it.addTab("default remove", createIndividualRemovalTab())
+  // Tab2: Collects the unselected elements and swaps in a brand-new model.
+  it.addTab("clear + addElement", createModelRebuildTab())
+  // Tab3: Uses a custom ListModel that batches removal into fewer events.
+  it.addTab("addAll + remove", createBatchArrayModelTab())
   it.preferredSize = Dimension(320, 240)
 }
 
-private fun makeCmp0(): Component {
+private fun createIndividualRemovalTab(): Component {
   val model = DefaultListModel<String>()
   for (i in 0..5000) {
     model.addElement(i.toString())
   }
-  val leftList = makeList(model)
+  val leftList = createSelectableList(model)
+  val rightList = createSelectableList<String>(DefaultListModel())
 
-  val rightList = makeList(DefaultListModel<String>())
+  val moveRightButton = createTransferButton(">")
+  moveRightButton.addActionListener {
+    transferSelectedByIndividualRemoval<String>(leftList, rightList)
+  }
 
-  val button1 = makeButton(">")
-  button1.addActionListener { move0(leftList, rightList) }
+  val moveLeftButton = createTransferButton("<")
+  moveLeftButton.addActionListener {
+    transferSelectedByIndividualRemoval(rightList, leftList)
+  }
 
-  val button2 = makeButton("<")
-  button2.addActionListener { move0(rightList, leftList) }
-
-  return SpringLayoutUtils.makePanel(leftList, rightList, button1, button2)
+  return SpringLayoutUtils.createDualListPanel(
+    leftList,
+    rightList,
+    moveRightButton,
+    moveLeftButton,
+  )
 }
 
-private fun makeCmp1(): Component {
+private fun createModelRebuildTab(): Component {
   val model = DefaultListModel<String>()
   for (i in 10_000..30_000) {
     model.addElement(i.toString())
   }
-  val leftList = makeList(model)
+  val leftList = createSelectableList<String>(model)
+  val rightList = createSelectableList<String>(DefaultListModel())
 
-  val rightList = makeList(DefaultListModel<String>())
+  val moveRightButton = createTransferButton(">")
+  moveRightButton.addActionListener {
+    transferSelectedByModelRebuild(leftList, rightList)
+  }
 
-  val button1 = makeButton(">")
-  button1.addActionListener { move1(leftList, rightList) }
+  val moveLeftButton = createTransferButton("<")
+  moveLeftButton.addActionListener {
+    transferSelectedByModelRebuild(rightList, leftList)
+  }
 
-  val button2 = makeButton("<")
-  button2.addActionListener { move1(rightList, leftList) }
-
-  return SpringLayoutUtils.makePanel(leftList, rightList, button1, button2)
+  return SpringLayoutUtils.createDualListPanel(
+    leftList,
+    rightList,
+    moveRightButton,
+    moveLeftButton,
+  )
 }
 
-private fun makeCmp2(): Component {
+private fun createBatchArrayModelTab(): Component {
   val model = ArrayListModel<String>()
   for (i in 30_000..50_000) {
     model.add(i.toString())
   }
-  val leftList = makeList(model)
+  val leftList = createSelectableList(model)
+  val rightList = createSelectableList<String>(ArrayListModel())
 
-  val rightList = makeList(ArrayListModel<String>())
+  val moveRightButton = createTransferButton(">")
+  moveRightButton.addActionListener {
+    transferSelectedByBatchArrayModel<String>(leftList, rightList)
+  }
 
-  val button1 = makeButton(">")
-  button1.addActionListener { move2(leftList, rightList) }
+  val moveLeftButton = createTransferButton("<")
+  moveLeftButton.addActionListener {
+    transferSelectedByBatchArrayModel(rightList, leftList)
+  }
 
-  val button2 = makeButton("<")
-  button2.addActionListener { move2(rightList, leftList) }
-
-  return SpringLayoutUtils.makePanel(leftList, rightList, button1, button2)
+  return SpringLayoutUtils.createDualListPanel(
+    leftList,
+    rightList,
+    moveRightButton,
+    moveLeftButton,
+  )
 }
 
-private fun <E> move0(
-  from: JList<E>,
-  to: JList<E>,
-) {
-  val selectedIndices = from.selectedIndices
-  val fromModel = from.model as? DefaultListModel<E>
-  val toModel = to.model as? DefaultListModel<E>
-  if (selectedIndices.isNotEmpty() && fromModel != null && toModel != null) {
-    for (i in selectedIndices) {
-      toModel.addElement(fromModel[i])
+private fun <E> transferSelectedByIndividualRemoval(src: JList<E>, dst: JList<E>) {
+  val selectedIndices = src.selectedIndices
+  if (selectedIndices.size > 0) {
+    val sourceModel = src.getModel() as DefaultListModel<E>
+    val destinationModel = dst.getModel() as DefaultListModel<E>
+    for (index in selectedIndices) {
+      destinationModel.addElement(sourceModel.get(index))
     }
     for (i in selectedIndices.indices.reversed()) {
-      fromModel.remove(selectedIndices[i])
+      sourceModel.remove(selectedIndices[i])
     }
   }
 }
 
-private fun <E> move1(
-  from: JList<E>,
-  to: JList<E>,
-) {
-  val sm = from.selectionModel
-  val selectedIndices = from.selectedIndices
+private fun <E> transferSelectedByModelRebuild(src: JList<E>, dst: JList<E>) {
+  val selectedIndices = src.selectedIndices
+  if (selectedIndices.size > 0) {
+    val sourceModel = src.getModel() as? DefaultListModel<E> ?: return
+    val destinationModel = dst.getModel() as? DefaultListModel<E> ?: return
+    val selectionModel = src.selectionModel
+    val unselectedValues = mutableListOf<E>()
+    for (i in 0..<sourceModel.size) {
+      if (!selectionModel.isSelectedIndex(i)) {
+        unselectedValues.add(sourceModel.getElementAt(i))
+      }
+    }
+    for (index in selectedIndices) {
+      destinationModel.addElement(sourceModel.get(index))
+    }
+    val rebuiltModel = DefaultListModel<E>()
+    unselectedValues.forEach { rebuiltModel.addElement(it) }
 
-  val fromModel = from.model as? DefaultListModel<E> ?: return
-  val toModel = to.model as? DefaultListModel<E> ?: return
-  val unselectedValues = mutableListOf<E>()
-  for (i in 0..<fromModel.size) {
-    if (!sm.isSelectedIndex(i)) {
-      unselectedValues.add(fromModel.getElementAt(i))
-    }
-  }
-  if (selectedIndices.isNotEmpty()) {
-    for (i in selectedIndices) {
-      toModel.addElement(fromModel[i])
-    }
-    val model = DefaultListModel<E>()
-    unselectedValues.forEach { model.addElement(it) }
-    from.model = model
+    // // Java 11:
+    // // https://bugs.openjdk.org/browse/JDK-8201289
+    // // Destination is a live model: batch the insert so it fires O(1)
+    // // events instead of one per selected element.
+    // destinationModel.addAll(src.getSelectedValuesList());
+    // DefaultListModel<E> rebuiltModel = new DefaultListModel<>();
+    // rebuiltModel.addAll(unselectedValues);
+    src.setModel(rebuiltModel)
   }
 }
 
-private fun <E> move2(
-  from: JList<E>,
-  to: JList<E>,
-) {
-  val selectedIndices = from.selectedIndices
-  if (selectedIndices.isNotEmpty()) {
-    (to.model as? ArrayListModel<E>)?.addAll(from.selectedValuesList)
-    (from.model as? ArrayListModel<E>)?.remove(selectedIndices)
+private fun <E> transferSelectedByBatchArrayModel(src: JList<E>, dst: JList<E>) {
+  val selectedIndices = src.selectedIndices
+  if (selectedIndices.size > 0) {
+    (dst.getModel() as? ArrayListModel<E>)?.addAll(src.getSelectedValuesList())
+    (src.getModel() as? ArrayListModel<E>)?.remove(*selectedIndices)
   }
 }
 
-private fun <E> makeList(model: ListModel<E>): JList<E> {
+private fun <E> createSelectableList(model: ListModel<E>): JList<E> {
   val list = JList(model)
   val popup = JPopupMenu()
   popup.add("reverse").addActionListener {
-    val sm = list.selectionModel
-    for (i in 0..<list.model.size) {
-      if (sm.isSelectedIndex(i)) {
-        sm.removeSelectionInterval(i, i)
+    val selectionModel = list.selectionModel
+    for (i in 0..<list.getModel().size) {
+      if (selectionModel.isSelectedIndex(i)) {
+        selectionModel.removeSelectionInterval(i, i)
       } else {
-        sm.addSelectionInterval(i, i)
+        selectionModel.addSelectionInterval(i, i)
       }
     }
   }
-  list.componentPopupMenu = popup
+  list.setComponentPopupMenu(popup)
   return list
 }
 
-private fun makeButton(title: String) = JButton(title).also {
-  it.isFocusable = false
-  it.border = BorderFactory.createEmptyBorder(2, 8, 2, 8)
+private fun createTransferButton(title: String): JButton {
+  val button = JButton(title)
+  button.setFocusable(false)
+  button.setBorder(BorderFactory.createEmptyBorder(2, 8, 2, 8))
+  return button
 }
 
 private class ArrayListModel<E> : AbstractListModel<E>() {
-  private val delegate = mutableListOf<E>()
+  private val items = mutableListOf<E>()
 
   fun add(element: E) {
-    val index = delegate.size
-    delegate.add(element)
+    val index = items.size
+    items.add(element)
     fireIntervalAdded(this, index, index)
   }
 
-  fun addAll(c: Collection<E>) {
-    delegate.addAll(c)
-    fireIntervalAdded(this, 0, delegate.size)
-  }
-
-  // fun remove(index: Int): E {
-  //   val rv = delegate[index]
-  //   delegate.removeAt(index)
-  //   fireIntervalRemoved(this, index, index)
-  //   return rv
-  // }
-
-  fun remove(selectedIndices: IntArray) {
-    if (selectedIndices.isNotEmpty()) {
-      val max = selectedIndices.size - 1
-      for (i in max downTo 0) {
-        delegate.removeAt(selectedIndices[i])
-      }
-      fireIntervalRemoved(this, selectedIndices[0], selectedIndices[max])
+  fun addAll(elements: MutableCollection<out E>) {
+    val firstAddedIndex = items.size
+    items.addAll(elements)
+    val lastAddedIndex = items.size - 1
+    if (lastAddedIndex >= firstAddedIndex) {
+      fireIntervalAdded(this, firstAddedIndex, lastAddedIndex)
     }
   }
 
-  override fun getElementAt(index: Int) = delegate[index]
+  fun remove(index: Int): E {
+    val removedElement = items[index]
+    items.removeAt(index)
+    fireIntervalRemoved(this, index, index)
+    return removedElement
+  }
 
-  override fun getSize() = delegate.size
+  fun remove(vararg indices: Int) {
+    if (indices.isEmpty()) {
+      return
+    }
+    var runEnd = indices.size - 1
+    while (runEnd >= 0) {
+      var runStart = runEnd
+      while (runStart > 0 && indices[runStart - 1] == indices[runStart] - 1) {
+        runStart--
+      }
+      val fromIndex = indices[runStart]
+      val toIndex = indices[runEnd]
+      items.subList(fromIndex, toIndex + 1).clear()
+      fireIntervalRemoved(this, fromIndex, toIndex)
+      runEnd = runStart - 1
+    }
+  }
+
+  override fun getElementAt(index: Int) = items[index]
+
+  override fun getSize() = items.size
 }
 
 private object SpringLayoutUtils {
   private fun setScaleAndAdd(
     parent: Container,
-    layout: SpringLayout,
     child: Component,
-    r: Rectangle2D.Float,
+    bounds: Rectangle2D,
   ) {
-    val pnlWidth = layout.getConstraint(SpringLayout.WIDTH, parent)
-    val pnlHeight = layout.getConstraint(SpringLayout.HEIGHT, parent)
-
-    val c = layout.getConstraints(child)
-    c.x = Spring.scale(pnlWidth, r.x)
-    c.y = Spring.scale(pnlHeight, r.y)
-    c.width = Spring.scale(pnlWidth, r.width)
-    c.height = Spring.scale(pnlHeight, r.height)
-
-    parent.add(child)
+    val layoutManager = parent.layout
+    if (layoutManager is SpringLayout) {
+      val parentWidth = layoutManager.getConstraint(SpringLayout.WIDTH, parent)
+      val parentHeight = layoutManager.getConstraint(SpringLayout.HEIGHT, parent)
+      val childConstraints = layoutManager.getConstraints(child)
+      childConstraints.setX(Spring.scale(parentWidth, bounds.x.toFloat()))
+      childConstraints.setY(Spring.scale(parentHeight, bounds.y.toFloat()))
+      childConstraints.setWidth(Spring.scale(parentWidth, bounds.width.toFloat()))
+      childConstraints.setHeight(Spring.scale(parentHeight, bounds.height.toFloat()))
+      parent.add(child)
+    }
   }
 
-  fun makePanel(
+  fun createDualListPanel(
     leftList: JList<*>,
     rightList: JList<*>,
-    l2rButton: JButton,
-    r2lButton: JButton,
+    moveRightBtn: JButton,
+    moveLeftBtn: JButton,
   ): Component {
-    val box = Box.createVerticalBox()
-    box.border = BorderFactory.createEmptyBorder(0, 2, 0, 2)
-    box.add(Box.createVerticalGlue())
-    box.add(l2rButton)
-    box.add(Box.createVerticalStrut(20))
-    box.add(r2lButton)
-    box.add(Box.createVerticalGlue())
+    val buttonBox = Box.createVerticalBox()
+    buttonBox.setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2))
+    buttonBox.add(Box.createVerticalGlue())
+    buttonBox.add(moveRightBtn)
+    buttonBox.add(Box.createVerticalStrut(20))
+    buttonBox.add(moveLeftBtn)
+    buttonBox.add(Box.createVerticalGlue())
 
-    val cpn = JPanel(GridBagLayout())
-    cpn.add(box)
+    val buttonPanel = JPanel(GridBagLayout())
+    buttonPanel.add(buttonBox)
 
-    val spl = JScrollPane(leftList)
-    val spr = JScrollPane(rightList)
+    val leftScroll = JScrollPane(leftList)
+    val rightScroll = JScrollPane(rightList)
 
-    val layout = SpringLayout()
-    val p = JPanel(layout)
-    setScaleAndAdd(p, layout, spl, Rectangle2D.Float(.05f, .05f, .40f, .90f))
-    setScaleAndAdd(p, layout, cpn, Rectangle2D.Float(.45f, .05f, .10f, .90f))
-    setScaleAndAdd(p, layout, spr, Rectangle2D.Float(.55f, .05f, .40f, .90f))
+    val p = JPanel(SpringLayout())
+    setScaleAndAdd(p, leftScroll, Rectangle2D.Float(.05f, .05f, .40f, .90f))
+    setScaleAndAdd(p, buttonPanel, Rectangle2D.Float(.45f, .05f, .10f, .90f))
+    setScaleAndAdd(p, rightScroll, Rectangle2D.Float(.55f, .05f, .40f, .90f))
     return p
   }
 }
