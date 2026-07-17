@@ -43,7 +43,7 @@ fun createUI(): Component {
   col.resizable = false
   val fgc = UIManager.getColor("TextField.foreground")
   UIManager.put("ComboBox.buttonDarkShadow", fgc)
-  val combo = makeComboBox(DefaultComboBoxModel(comboModel))
+  val combo = createComboBox(DefaultComboBoxModel(comboModel))
   col = table.columnModel.getColumn(1)
   col.cellRenderer = ComboCellRenderer()
   col.cellEditor = DefaultCellEditor(combo)
@@ -55,7 +55,9 @@ fun createUI(): Component {
   }
 }
 
-private fun <E> makeComboBox(model: ComboBoxModel<E>) = object : JComboBox<E>(model) {
+private fun <E> createComboBox(
+  model: ComboBoxModel<E>,
+) = object : JComboBox<E>(model) {
   override fun updateUI() {
     super.updateUI()
     border = BorderFactory.createEmptyBorder()
@@ -87,9 +89,9 @@ private class ComboCellRenderer : TableCellRenderer {
 
     override fun isOpaque(): Boolean {
       val back = background
-      val table = SwingUtilities.getAncestorOfClass(JTable::class.java, this)
+      val tbl = SwingUtilities.getAncestorOfClass(JTable::class.java, this)
       return if (table is JTable) {
-        val colorMatch = back != null && back == table.background && table.isOpaque
+        val colorMatch = back != null && back == tbl.background && tbl.isOpaque
         !colorMatch && super.isOpaque()
       } else {
         super.isOpaque()

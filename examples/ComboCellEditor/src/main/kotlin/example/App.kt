@@ -25,7 +25,8 @@ fun createUI(): Component {
   col.maxWidth = 60
   col.resizable = false
   col = table.columnModel.getColumn(1)
-  col.cellEditor = DefaultCellEditor(makeComboBox(DefaultComboBoxModel(comboModel)))
+  val comboBox = createComboBox(DefaultComboBoxModel(comboModel))
+  col.cellEditor = DefaultCellEditor(comboBox)
   table.autoCreateRowSorter = true
 
   return JPanel(BorderLayout()).also {
@@ -34,7 +35,9 @@ fun createUI(): Component {
   }
 }
 
-private fun <E> makeComboBox(model: ComboBoxModel<E>) = object : JComboBox<E>(model) {
+private fun <E> createComboBox(
+  model: ComboBoxModel<E>,
+) = object : JComboBox<E>(model) {
   override fun updateUI() {
     super.updateUI()
     border = BorderFactory.createEmptyBorder()

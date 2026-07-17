@@ -7,14 +7,14 @@ import javax.swing.plaf.LayerUI
 
 fun createUI(): Component {
   val model = DefaultComboBoxModel(arrayOf("aaa", "bb", "c"))
-  val combo = makeComboBox(model)
+  val combo = createComboBox(model)
   combo.isEditable = true
   val p = JPanel(GridLayout(0, 1, 5, 5))
   p.add(JLabel("setEditable(true)"))
   p.add(JLayer(combo, ToolTipLayerUI<JComboBox<*>>()))
   p.add(Box.createVerticalStrut(10))
   p.add(JLabel("setEditable(false)"))
-  p.add(JLayer(makeComboBox(model), ToolTipLayerUI<JComboBox<*>>()))
+  p.add(JLayer(createComboBox(model), ToolTipLayerUI<JComboBox<*>>()))
   return JPanel(BorderLayout()).also {
     it.add(p, BorderLayout.NORTH)
     it.border = BorderFactory.createEmptyBorder(5, 20, 5, 20)
@@ -22,7 +22,9 @@ fun createUI(): Component {
   }
 }
 
-private fun <E> makeComboBox(model: ComboBoxModel<E>) = object : JComboBox<E>(model) {
+private fun <E> createComboBox(
+  model: ComboBoxModel<E>,
+) = object : JComboBox<E>(model) {
   override fun updateUI() {
     setRenderer(null)
     super.updateUI()

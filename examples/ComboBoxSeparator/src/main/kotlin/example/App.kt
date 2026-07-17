@@ -7,7 +7,7 @@ import javax.swing.*
 
 fun createUI(): Component {
   val box = Box.createVerticalBox()
-  box.add(makeComboBox(makeModel()))
+  box.add(createComboBox(createModel()))
   box.border = BorderFactory.createTitledBorder("ComboBoxSeparator")
 
   return JPanel(BorderLayout()).also {
@@ -17,7 +17,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeModel(): ComboBoxModel<Any> {
+private fun createModel(): ComboBoxModel<Any> {
   val model = object : DefaultComboBoxModel<Any>() {
     override fun setSelectedItem(anObject: Any) {
       if (anObject !is JSeparator) {
@@ -39,7 +39,7 @@ private fun makeModel(): ComboBoxModel<Any> {
   return model
 }
 
-private fun <E> makeComboBox(model: ComboBoxModel<E>): JComboBox<E> {
+private fun <E> createComboBox(model: ComboBoxModel<E>): JComboBox<E> {
   val combo = object : JComboBox<E>(model) {
     override fun updateUI() {
       setRenderer(null)
