@@ -192,21 +192,13 @@ private class ArrayListModel<E> : AbstractListModel<E>() {
     return removedElement
   }
 
-  fun remove(vararg indices: Int) {
-    if (indices.isEmpty()) {
-      return
-    }
-    var runEnd = indices.size - 1
-    while (runEnd >= 0) {
-      var runStart = runEnd
-      while (runStart > 0 && indices[runStart - 1] == indices[runStart] - 1) {
-        runStart--
+  fun remove(selectedIndices: IntArray) {
+    if (selectedIndices.isNotEmpty()) {
+      val max = selectedIndices.size - 1
+      for (i in max downTo 0) {
+        items.removeAt(selectedIndices[i])
       }
-      val fromIndex = indices[runStart]
-      val toIndex = indices[runEnd]
-      items.subList(fromIndex, toIndex + 1).clear()
-      fireIntervalRemoved(this, fromIndex, toIndex)
-      runEnd = runStart - 1
+      fireIntervalRemoved(this, selectedIndices[0], selectedIndices[max])
     }
   }
 
