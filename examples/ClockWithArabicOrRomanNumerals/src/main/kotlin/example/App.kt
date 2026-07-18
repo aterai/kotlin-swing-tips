@@ -13,7 +13,9 @@ import java.awt.geom.Point2D
 import java.time.LocalTime
 import java.time.ZoneId
 import javax.swing.*
+import kotlin.math.max
 import kotlin.math.min
+
 
 fun createUI(): Component {
   val clock = AnalogClock()
@@ -54,6 +56,7 @@ fun main() {
 }
 
 private class AnalogClock : JPanel() {
+  private val fontRatio = .2f
   private val arabicNumerals = arrayOf(
     "12",
     "1",
@@ -131,7 +134,8 @@ private class AnalogClock : JPanel() {
     val hourMarkerLen = radius / 6.0 - 10.0
     val at = AffineTransform.getRotateInstance(0.0)
     g2.color = Color.WHITE
-    val font = g2.font
+    val dynamicFontSize = max((radius * fontRatio).toFloat(), 20f)
+    val font = g2.font.deriveFont(dynamicFontSize)
     val frc = g2.fontRenderContext
     if (isRomanNumerals) {
       val si = AffineTransform.getScaleInstance(1.0, 2.0)
@@ -139,7 +143,7 @@ private class AnalogClock : JPanel() {
         val s = getTextLayout(txt, font, frc).getOutline(si)
         val r = s.bounds2D
         val tx = r.centerX
-        val ty = radius - hourMarkerLen - r.height + r.centerY * .5
+        val ty = radius - hourMarkerLen - r.height + r.centerY * fontRatio
         val toCenter = AffineTransform.getTranslateInstance(-tx, -ty)
         g2.fill(at.createTransformedShape(toCenter.createTransformedShape(s)))
         at.rotate(Math.PI / 6.0)
@@ -149,7 +153,7 @@ private class AnalogClock : JPanel() {
       for (txt in arabicNumerals) {
         val s = getTextLayout(txt, font, frc).getOutline(null)
         val r = s.bounds2D
-        val ty = radius - hourMarkerLen - r.height - r.centerY * .5
+        val ty = radius - hourMarkerLen - r.height - r.centerY * fontRatio
         ptSrc.setLocation(0.0, -ty)
         val pt = at.transform(ptSrc, null)
         val dx = pt.x - r.centerX
