@@ -14,6 +14,7 @@ import java.time.LocalTime
 import java.time.ZoneId
 import javax.swing.*
 import kotlin.math.abs
+import kotlin.math.max
 import kotlin.math.min
 
 fun createUI(): Component {
@@ -55,6 +56,21 @@ fun main() {
 }
 
 private class AnalogClock : JPanel() {
+  private val fontRatio = .2f
+  private val arabicNumerals = arrayOf(
+    "12",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+  )
   private var secondRot = 0.0
   private var minuteRot = 0.0
   private var hourRot = 0.0
@@ -104,10 +120,11 @@ private class AnalogClock : JPanel() {
     val hourMarkerLen = radius / 6.0 - 10.0
     val at = AffineTransform.getRotateInstance(0.0)
     g2.color = Color.WHITE
-    val font = g2.font
+    val dynamicFontSize = max((radius * fontRatio).toFloat(), 20f)
+    val font = g2.font.deriveFont(dynamicFontSize)
     val frc = g2.fontRenderContext
     if (isRotate) {
-      for (txt in ARABIC_NUMERALS) {
+      for (txt in arabicNumerals) {
         val m00 = at.scaleX
         val d = if (m00 > 0.0 || abs(m00) < 0.0001) 1.0 else -1.0
         val si = AffineTransform.getScaleInstance(d, d)
@@ -115,17 +132,13 @@ private class AnalogClock : JPanel() {
         val r = s.bounds2D
         val tx = r.centerX
         val ty = radius - hourMarkerLen - r.height + r.centerY
-        val t = AffineTransform
-          .getTranslateInstance(
-            -tx,
-            -ty,
-          ).createTransformedShape(s)
-        g2.fill(at.createTransformedShape(t))
+        val toCenter = AffineTransform.getTranslateInstance(-tx, -ty)
+        g2.fill(at.createTransformedShape(toCenter.createTransformedShape(s)))
         at.rotate(Math.PI / 6.0)
       }
     } else {
       val ptSrc = Point2D.Double()
-      for (txt in ARABIC_NUMERALS) {
+      for (txt in arabicNumerals) {
         val s = getTextLayout(txt, font, frc).getOutline(null)
         val r = s.bounds2D
         val ty = radius - hourMarkerLen - r.height
@@ -133,9 +146,8 @@ private class AnalogClock : JPanel() {
         val pt = at.transform(ptSrc, null)
         val dx = pt.x - r.centerX
         val dy = pt.y - r.centerY
-        g2.fill(
-          AffineTransform.getTranslateInstance(dx, dy).createTransformedShape(s),
-        )
+        val transform = AffineTransform.getTranslateInstance(dx, dy)
+        g2.fill(transform.createTransformedShape(s))
         at.rotate(Math.PI / 6.0)
       }
     }
@@ -210,22 +222,5 @@ private class AnalogClock : JPanel() {
     g2.stroke = BasicStroke(strokeWidth)
     g2.paint = color
     g2.draw(AffineTransform.getRotateInstance(rot).createTransformedShape(hand))
-  }
-
-  companion object {
-    private val ARABIC_NUMERALS = arrayOf(
-      "12",
-      "1",
-      "2",
-      "3",
-      "4",
-      "5",
-      "6",
-      "7",
-      "8",
-      "9",
-      "10",
-      "11",
-    )
   }
 }

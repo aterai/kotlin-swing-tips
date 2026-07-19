@@ -16,7 +16,6 @@ import javax.swing.*
 import kotlin.math.max
 import kotlin.math.min
 
-
 fun createUI(): Component {
   val clock = AnalogClock()
   val attr = mapOf<TextAttribute, Any>(
@@ -138,12 +137,13 @@ private class AnalogClock : JPanel() {
     val font = g2.font.deriveFont(dynamicFontSize)
     val frc = g2.fontRenderContext
     if (isRomanNumerals) {
-      val si = AffineTransform.getScaleInstance(1.0, 2.0)
+      val scaleY = 2.0
+      val si = AffineTransform.getScaleInstance(1.0, scaleY)
       for (txt in romanNumerals) {
         val s = getTextLayout(txt, font, frc).getOutline(si)
         val r = s.bounds2D
         val tx = r.centerX
-        val ty = radius - hourMarkerLen - r.height + r.centerY * fontRatio
+        val ty = radius - hourMarkerLen - r.height + r.centerY / scaleY
         val toCenter = AffineTransform.getTranslateInstance(-tx, -ty)
         g2.fill(at.createTransformedShape(toCenter.createTransformedShape(s)))
         at.rotate(Math.PI / 6.0)
@@ -153,7 +153,7 @@ private class AnalogClock : JPanel() {
       for (txt in arabicNumerals) {
         val s = getTextLayout(txt, font, frc).getOutline(null)
         val r = s.bounds2D
-        val ty = radius - hourMarkerLen - r.height - r.centerY * fontRatio
+        val ty = radius - hourMarkerLen - r.height
         ptSrc.setLocation(0.0, -ty)
         val pt = at.transform(ptSrc, null)
         val dx = pt.x - r.centerX
