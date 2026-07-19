@@ -114,7 +114,7 @@ private fun getSelectedColumnIndex(header: JTableHeader): Int {
 }
 
 private class ColumnHeaderRenderer : TableCellRenderer {
-  var selectedColumnIndex: Int = -1
+  var selectedColumnIndex = -1
     private set
 
   override fun getTableCellRendererComponent(
