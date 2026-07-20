@@ -69,7 +69,9 @@ private fun makePanel(image: BufferedImage): Component {
 
   val close = JButton("close")
   close.addActionListener { e ->
-    (e.source as? Component)?.also { SwingUtilities.getWindowAncestor(it)?.dispose() }
+    (e.source as? Component)?.also {
+      SwingUtilities.getWindowAncestor(it)?.dispose()
+    }
   }
 
   val box = Box.createHorizontalBox().also {
