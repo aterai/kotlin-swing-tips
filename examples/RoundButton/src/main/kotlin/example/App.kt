@@ -33,13 +33,13 @@ fun createUI(): Component {
     it.add(button1)
     it.add(RoundedCornerButton("Rounded Corner Button"))
     it.add(button2)
-    it.add(ShapeButton(makeStar(25, 30, 20)))
+    it.add(ShapeButton(createStar(25, 30, 20)))
     it.add(RoundButton("Round Button"))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-fun makeStar(
+fun createStar(
   r1: Int,
   r2: Int,
   vc: Int,
@@ -90,10 +90,10 @@ open class RoundedCornerButton : JButton {
     isContentAreaFilled = false
     isFocusPainted = false
     background = Color(250, 250, 250)
-    initShape()
+    updateShapeIfResized()
   }
 
-  open fun initShape() {
+  open fun updateShapeIfResized() {
     if (bounds != base) {
       base = bounds
       shape = RoundRectangle2D.Double(
@@ -135,7 +135,7 @@ open class RoundedCornerButton : JButton {
   }
 
   override fun paintComponent(g: Graphics) {
-    initShape()
+    updateShapeIfResized()
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(
       RenderingHints.KEY_ANTIALIASING,
@@ -152,7 +152,7 @@ open class RoundedCornerButton : JButton {
   }
 
   override fun paintBorder(g: Graphics) {
-    initShape()
+    updateShapeIfResized()
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(
       RenderingHints.KEY_ANTIALIASING,
@@ -167,7 +167,7 @@ open class RoundedCornerButton : JButton {
     x: Int,
     y: Int,
   ): Boolean {
-    initShape()
+    updateShapeIfResized()
     return shape?.contains(Point(x, y)) ?: super.contains(x, y)
   }
 
@@ -199,7 +199,7 @@ open class RoundButton : RoundedCornerButton {
       it.setSize(s, s)
     }
 
-  override fun initShape() {
+  override fun updateShapeIfResized() {
     if (bounds != base) {
       base = bounds
       shape = Ellipse2D.Double(0.0, 0.0, width - 1.0, height - 1.0)
