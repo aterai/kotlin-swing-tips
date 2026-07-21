@@ -44,10 +44,10 @@ private class RadialGradientButton(
 ) : JButton(title) {
   private val timer1 = Timer(10, null)
   private val timer2 = Timer(10, null)
-  private val pt = Point()
+  private val hoverPoint = Point()
   private var radius = 0f
-  private var shape: Shape? = null
-  private var base: Rectangle? = null
+  private var buttonShape: Shape? = null
+  private var cachedBounds: Rectangle? = null
   private var listener: MouseAdapter? = null
 
   init {
@@ -86,27 +86,25 @@ private class RadialGradientButton(
       }
 
       override fun mouseMoved(e: MouseEvent) {
-        pt.location = e.point
+        hoverPoint.location = e.point
         e.component.repaint()
       }
 
       override fun mouseDragged(e: MouseEvent) {
         mouseMoved(e)
-        // pt.location = e.point
-        // repaint()
       }
     }
     addMouseListener(listener)
     addMouseMotionListener(listener)
-    update()
+    updateShapeIfBoundsChanged()
   }
 
-  private fun update() {
-    if (bounds != base) {
-      base = bounds
-      val fw = width - 1f
-      val fh = height - 1f
-      shape = RoundRectangle2D.Float(0f, 0f, fw, fh, ARC_WIDTH, ARC_HEIGHT)
+  private fun updateShapeIfBoundsChanged() {
+    if (bounds != cachedBounds) {
+      cachedBounds = bounds
+      val w = width - 1f
+      val h = height - 1f
+      buttonShape = RoundRectangle2D.Float(0f, 0f, w, h, ARC_WIDTH, ARC_HEIGHT)
     }
   }
 
@@ -114,55 +112,37 @@ private class RadialGradientButton(
     x: Int,
     y: Int,
   ): Boolean {
-    update()
-    return shape?.contains(Point(x, y)) ?: super.contains(x, y)
+    updateShapeIfBoundsChanged()
+    return buttonShape?.contains(Point(x, y)) ?: super.contains(x, y)
   }
 
-  // override fun paintBorder(g: Graphics) {
-  //   update()
-  //   val g2 = g.create() as? Graphics2D ?: return
-  //   g2.setRenderingHint(
-  //       RenderingHints.KEY_ANTIALIASING,
-  //       RenderingHints.VALUE_ANTIALIAS_ON
-  //   )
-  //   // g2.setStroke(BasicStroke(2.5f))
-  //   if (getModel().isArmed()) {
-  //     g2.paint = Color(0x64_44_05_F7, true)
-  //   } else {
-  //     g2.paint = Color(0xF7_23_59).darker()
-  //   }
-  //   g2.draw(shape)
-  //   g2.dispose()
-  // }
-
   override fun paintComponent(g: Graphics) {
-    update()
+    updateShapeIfBoundsChanged()
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
 
-    // g2.setComposite(AlphaComposite.Clear)
-    // g2.setPaint(Color(0x0, true))
-    // g2.fillRect(0, 0, getWidth(), getHeight())
-
     g2.composite = AlphaComposite.Src
     g2.paint = Color(if (getModel().isArmed) 0xFF_AA_AA else 0xF7_23_59)
-    g2.fill(shape)
+    g2.fill(buttonShape)
 
     if (radius > 0) {
-      val r2 = radius + radius
+      val diameter = radius + radius
       // Stunning hover effects with CSS variables ? Prototypr
       // https://blog.prototypr.io/stunning-hover-effects-with-css-variables-f855e7b95330
       val colors = arrayOf(
         Color(0x64_44_05_F7, true),
         Color(0x00_F7_23_59, true),
       )
-      g2.paint = RadialGradientPaint(pt, r2, floatArrayOf(0f, 1f), colors)
+      val fractions = floatArrayOf(0f, 1f)
+      g2.paint = RadialGradientPaint(hoverPoint, diameter, fractions, colors)
       g2.composite = AlphaComposite.SrcAtop
-      g2.clip = shape
-      g2.fill(Ellipse2D.Float(pt.x - radius, pt.y - radius, r2, r2))
+      g2.clip = buttonShape
+      val cx = hoverPoint.x - radius
+      val cy = hoverPoint.y - radius
+      g2.fill(Ellipse2D.Float(cx, cy, diameter, diameter))
     }
     g2.dispose()
 
@@ -181,10 +161,10 @@ private class RadialGradientPaintButton(
 ) : JButton(title) {
   private val timer1 = Timer(10, null)
   private val timer2 = Timer(10, null)
-  private val pt = Point()
+  private val hoverPoint = Point()
   private var radius = 0f
-  private var shape: Shape? = null
-  private var base: Rectangle? = null
+  private var buttonShape: Shape? = null
+  private var cachedBounds: Rectangle? = null
   private var buf: BufferedImage? = null
   private var listener: MouseAdapter? = null
 
@@ -224,30 +204,28 @@ private class RadialGradientPaintButton(
       }
 
       override fun mouseMoved(e: MouseEvent) {
-        pt.location = e.point
+        hoverPoint.location = e.point
         e.component.repaint()
       }
 
       override fun mouseDragged(e: MouseEvent) {
         mouseMoved(e)
-        // pt.location = e.point
-        // repaint()
       }
     }
     addMouseListener(listener)
     addMouseMotionListener(listener)
-    update()
+    updateShapeIfBoundsChanged()
   }
 
-  private fun update() {
-    if (bounds != base) {
-      base = bounds
+  private fun updateShapeIfBoundsChanged() {
+    if (bounds != cachedBounds) {
+      cachedBounds = bounds
       if (width > 0 && height > 0) {
         buf = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
       }
       val fw = width - 1f
       val fh = height - 1f
-      shape = RoundRectangle2D.Float(0f, 0f, fw, fh, ARC_WIDTH, ARC_HEIGHT)
+      buttonShape = RoundRectangle2D.Float(0f, 0f, fw, fh, ARC_WIDTH, ARC_HEIGHT)
     }
     val g2 = buf?.createGraphics() ?: return
     g2.setRenderingHint(
@@ -262,16 +240,21 @@ private class RadialGradientPaintButton(
 
     g2.composite = AlphaComposite.Src
     g2.paint = Color(if (getModel().isArmed) 0xFF_AA_AA else 0xF7_23_59)
-    g2.fill(shape)
+    g2.fill(buttonShape)
 
     if (radius > 0) {
       val r2 = radius + radius
       // val colors = arrayOf(c2, c1)
-      val colors = arrayOf(Color(0x64_44_05_F7, true), Color(0x00_F7_23_59, true))
-      g2.paint = RadialGradientPaint(pt, r2, floatArrayOf(0f, 1f), colors)
+      val colors = arrayOf(
+        Color(0x64_44_05_F7, true),
+        Color(0x00_F7_23_59, true),
+      )
+      val fractions = floatArrayOf(0f, 1f)
+      g2.paint = RadialGradientPaint(hoverPoint, r2, fractions, colors)
       g2.composite = AlphaComposite.SrcAtop
-      // g2.setClip(shape)
-      g2.fill(Ellipse2D.Float(pt.x - radius, pt.y - radius, r2, r2))
+      val cx = hoverPoint.x - radius
+      val cy = hoverPoint.y - radius
+      g2.fill(Ellipse2D.Float(cx, cy, r2, r2))
     }
     g2.dispose()
   }
@@ -280,12 +263,12 @@ private class RadialGradientPaintButton(
     x: Int,
     y: Int,
   ): Boolean {
-    update()
-    return shape?.contains(Point(x, y)) ?: super.contains(x, y)
+    updateShapeIfBoundsChanged()
+    return buttonShape?.contains(Point(x, y)) ?: super.contains(x, y)
   }
 
   override fun paintComponent(g: Graphics) {
-    update()
+    updateShapeIfBoundsChanged()
     g.drawImage(buf, 0, 0, this)
     super.paintComponent(g)
   }
