@@ -4,7 +4,7 @@ import java.awt.*
 import java.awt.event.ActionEvent
 import javax.swing.*
 
-private val disableIndexSet: MutableSet<Int> = HashSet()
+private val disableIndexSet = mutableSetOf<Int>()
 private val field = JTextField("1, 2, 5")
 
 fun initDisableIndex(set: MutableSet<Int>) {
@@ -26,7 +26,7 @@ fun initDisableIndex(set: MutableSet<Int>) {
   }
 }
 
-fun makeList(disableIndexSet: Set<Int>): JList<String> {
+fun createList(disableIndexSet: Set<Int>): JList<String> {
   val model = DefaultListModel<String>()
   model.addElement("11111111111")
   model.addElement("222222222222222222")
@@ -68,7 +68,7 @@ fun makeList(disableIndexSet: Set<Int>): JList<String> {
 }
 
 fun createUI(): Component {
-  val list = makeList(disableIndexSet)
+  val list = createList(disableIndexSet)
   initDisableIndex(disableIndexSet)
 
   val am = list.actionMap

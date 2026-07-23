@@ -4,7 +4,6 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableRowSorter
-import kotlin.collections.HashSet
 
 private val check1 = JCheckBox("!comment.isEmpty()")
 private val check2 = JCheckBox("idx % 2 == 0")
@@ -48,7 +47,7 @@ private class TablePopupMenu : JPopupMenu() {
   }
 }
 
-private fun makeModel(): RowDataModel {
+private fun createModel(): RowDataModel {
   val model = RowDataModel()
   model.addRowData(RowData("Name 1", "comment..."))
   model.addRowData(RowData("Name 2", "Test"))
@@ -61,14 +60,14 @@ private fun makeModel(): RowDataModel {
 }
 
 fun createUI(): Component {
-  val model = makeModel()
+  val model = createModel()
   val table = JTable(model)
   val sorter: TableRowSorter<out RowDataModel> = TableRowSorter(model)
   table.rowSorter = sorter
   table.componentPopupMenu = TablePopupMenu()
   table.fillsViewportHeight = true
   table.putClientProperty("terminateEditOnFocusLost", true)
-  val filters: MutableCollection<RowFilter<in RowDataModel, in Int>> = HashSet(2)
+  val filters = mutableSetOf<RowFilter<in RowDataModel, in Int>>()
   val filter1 = object : RowFilter<RowDataModel, Int>() {
     override fun include(entry: Entry<out RowDataModel, out Int>): Boolean {
       val m = entry.model
