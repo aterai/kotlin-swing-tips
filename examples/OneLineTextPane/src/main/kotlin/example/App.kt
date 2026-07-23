@@ -49,9 +49,10 @@ fun createUI(): Component {
   textPane.actionMap.put(key, action)
 
   val ftk = KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS
-  val forwardKeys = HashSet(textPane.getFocusTraversalKeys(ftk))
-  forwardKeys.add(KeyStroke.getKeyStroke("TAB"))
-  forwardKeys.add(KeyStroke.getKeyStroke("shift TAB"))
+  val forwardKeys = textPane.getFocusTraversalKeys(ftk).also {
+    it.add(KeyStroke.getKeyStroke("TAB"))
+    it.add(KeyStroke.getKeyStroke("shift TAB"))
+  }
   textPane.setFocusTraversalKeys(ftk, forwardKeys)
 
   val scrollPane = object : JScrollPane(textPane) {
