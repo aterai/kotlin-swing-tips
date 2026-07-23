@@ -27,12 +27,12 @@ fun createUI(): Component {
 
   val focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager()
   val ftk = KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS
-  val forwardKeys = HashSet(focusManager.getDefaultFocusTraversalKeys(ftk))
+  val forwardKeys = focusManager.getDefaultFocusTraversalKeys(ftk)
   forwardKeys.add(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0))
   forwardKeys.add(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0))
   focusManager.setDefaultFocusTraversalKeys(ftk, forwardKeys)
   val btk = KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS
-  val backwardKeys = HashSet(focusManager.getDefaultFocusTraversalKeys(btk))
+  val backwardKeys = focusManager.getDefaultFocusTraversalKeys(btk)
   backwardKeys.add(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0))
   backwardKeys.add(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0))
   focusManager.setDefaultFocusTraversalKeys(btk, backwardKeys)
