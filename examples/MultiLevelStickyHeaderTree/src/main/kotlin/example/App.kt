@@ -114,7 +114,7 @@ private class StickyHeaderTreeLayerUI : LayerUI<JScrollPane>() {
 
     val topPath = tree.getPathForRow(topRow) ?: return
     collectStickyPaths(tree, topPath)
-    if (!stickyPaths.isEmpty()) {
+    if (stickyPaths.isNotEmpty()) {
       calculatePushOffsets(tree, viewRect.y)
     }
   }

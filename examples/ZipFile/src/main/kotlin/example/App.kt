@@ -53,7 +53,7 @@ private fun createZipPanel(): Component {
   zipButton.addActionListener {
     val text = field.getText()
     val path = Paths.get(text)
-    if (!text.isEmpty() && path.toFile().exists()) {
+    if (text.isNotEmpty() && path.toFile().exists()) {
       val name = path.fileName.toString() + ".zip"
       zip(path, path.resolveSibling(name))
     }

@@ -180,7 +180,7 @@ private class BackgroundHighlightFilter(
       val text = doc.getText(0, doc.length)
       val matcher = pattern.matcher(text)
       var pos = 0
-      while (matcher.find(pos) && !matcher.group().isEmpty()) {
+      while (matcher.find(pos) && matcher.group().isNotEmpty()) {
         pos = matcher.end()
         highlighter.addHighlight(matcher.start(), pos, painter)
       }
