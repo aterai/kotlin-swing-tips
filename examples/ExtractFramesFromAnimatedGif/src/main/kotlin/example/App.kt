@@ -39,7 +39,7 @@ private fun loadFromStream(stream: ImageInputStream): List<Image> {
     .first { checkGifFormat(it) }
     ?: throw IOException("Can not read image format!")
   reader.setInput(stream, false, false)
-  val list = ArrayList<Image>()
+  val list = mutableListOf<Image>()
   for (i in 0..<reader.getNumImages(true)) {
     (reader.readAll(i, null).renderedImage as? Image)?.also { list.add(it) }
   }

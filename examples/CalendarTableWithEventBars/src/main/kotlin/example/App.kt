@@ -46,7 +46,7 @@ fun createUI(): Component {
 }
 
 private fun makeSampleEvents(ym: YearMonth): MutableList<EventPeriod> {
-  val events = ArrayList<EventPeriod>()
+  val events = mutableListOf<EventPeriod>()
   // Event 1: 3-day meeting
   events.add(
     EventPeriod(

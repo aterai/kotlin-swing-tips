@@ -38,7 +38,7 @@ fun createUI(): Component {
 private class Odometer(
   digitCount: Int,
 ) : JPanel(FlowLayout(FlowLayout.CENTER, 4, 0)) {
-  private val wheels = ArrayList<DigitWheel>()
+  private val wheels = mutableListOf<DigitWheel>()
 
   init {
     repeat(digitCount) {

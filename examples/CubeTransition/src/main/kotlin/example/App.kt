@@ -30,7 +30,7 @@ private class CubeTransitionPanel : JPanel() {
   private val screenArrY = DoubleArray(IMG_WIDTH + 1) // Top-left Y of each slice
   private val drawArrH = DoubleArray(IMG_WIDTH + 1) // Height of each slice
 
-  private val images: MutableList<BufferedImage> = ArrayList()
+  private val images = mutableListOf<BufferedImage>()
   private var currentIndex = 0
   private var nextIndex = 1
   private var angle = 0.0 // Current rotation angle in degrees: -90..90
