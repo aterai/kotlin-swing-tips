@@ -30,7 +30,7 @@ fun createUI(): Component {
 }
 
 private class TagInputPanel : JPanel(BorderLayout()) {
-  val tags = ArrayList<String>()
+  val tags = mutableListOf<String>()
   private val textField = JTextField(15)
   private val tagContainer = object : JPanel(FlowLayout(FlowLayout.LEFT)) {
     override fun updateUI() {
@@ -43,7 +43,7 @@ private class TagInputPanel : JPanel(BorderLayout()) {
     textField.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
     textField.addActionListener {
       val text = textField.getText().trim()
-      if (!text.isEmpty() && !tags.contains(text)) {
+      if (text.isNotEmpty() && !tags.contains(text)) {
         addTag(text)
         textField.text = ""
       }
@@ -88,12 +88,12 @@ private class TagInputPanel : JPanel(BorderLayout()) {
     tag.setBorder(BorderFactory.createCompoundBorder(outside, inside))
     tags.add(text)
     tag.add(JLabel(text))
-    tag.add(makeCloseButton(tag), BorderLayout.EAST)
+    tag.add(createCloseButton(tag), BorderLayout.EAST)
     tagContainer.add(tag, tagContainer.componentCount - 1)
     resizeAndRepaint()
   }
 
-  private fun makeCloseButton(tag: JPanel): JButton {
+  private fun createCloseButton(tag: JPanel): JButton {
     val closeBtn = object : JButton("×") {
       override fun updateUI() {
         super.updateUI()
