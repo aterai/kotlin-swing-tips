@@ -156,9 +156,9 @@ internal enum class Corner {
 
 private class CalendarTableRenderer : DefaultTableCellRenderer() {
   private val roundedCorners = EnumSet.noneOf(Corner::class.java)
-  private val realDate = LocalDate.now(ZoneId.systemDefault())
-  private var row = 0
-  private var column = 0
+  private val today = LocalDate.now(ZoneId.systemDefault())
+  private var renderedRow = 0
+  private var renderedColumn = 0
 
   override fun getTableCellRendererComponent(
     table: JTable,
@@ -177,8 +177,8 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
       column,
     )
     renderer.setBackground(table.getBackground())
-    this.row = row
-    this.column = column
+    this.renderedRow = row
+    this.renderedColumn = column
     updateCorners(table, row, column)
     if (value is LocalDate && renderer is JLabel && table is MonthTable) {
       renderer.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
@@ -194,7 +194,7 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
       } else {
         renderer.setFont(renderer.getFont().deriveFont(Font.PLAIN))
       }
-      if (value == realDate) {
+      if (value == today) {
         renderer.setIcon(IndicatorIcon(renderer.getForeground()))
       } else {
         renderer.setIcon(null)
@@ -225,7 +225,7 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
   override fun isOpaque() = false
 
   override fun paintComponent(g: Graphics) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
@@ -235,7 +235,13 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
     g2.paint = getBackground()
     g2.fill(bounds)
     g2.paint = UIManager.getColor("Table.gridColor")
-    val shape = buildRoundedRectPath(bounds, 16.0, 16.0, row, column)
+    val shape = buildRoundedRectPath(
+      bounds,
+      16.0,
+      16.0,
+      renderedRow,
+      renderedColumn,
+    )
     g2.draw(shape)
     g2.dispose()
     super.paintComponent(g)
