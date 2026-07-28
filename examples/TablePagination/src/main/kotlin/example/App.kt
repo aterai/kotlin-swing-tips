@@ -9,7 +9,7 @@ import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter
 import javax.swing.text.View
 
-private const val LR_PAGE_SIZE = 5
+private const val PAGE_LINK_RANGE = 5
 
 private val box = Box.createHorizontalBox()
 private val group = ButtonGroup()
@@ -38,7 +38,7 @@ fun createUI(): Component {
     model.addRow(arrayOf<Any>(year, "Test: $year", com))
   }
 
-  initLinkBox(100, 1)
+  updatePaginationBox(100, 1)
   box.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
 
   return JPanel(BorderLayout()).also {
@@ -48,7 +48,7 @@ fun createUI(): Component {
   }
 }
 
-private fun initLinkBox(
+private fun updatePaginationBox(
   itemsPerPage: Int,
   currentPageIndex: Int,
 ) {
@@ -60,7 +60,7 @@ private fun initLinkBox(
     }
   }
 
-  var startPageIndex = currentPageIndex - LR_PAGE_SIZE
+  var startPageIndex = currentPageIndex - PAGE_LINK_RANGE
   if (startPageIndex <= 0) {
     startPageIndex = 1
   }
@@ -68,12 +68,12 @@ private fun initLinkBox(
   val rowCount = model.rowCount
   val v = if (rowCount % itemsPerPage == 0) 0 else 1
   val maxPageIndex = rowCount / itemsPerPage + v
-  var endPageIndex = currentPageIndex + LR_PAGE_SIZE - 1
+  var endPageIndex = currentPageIndex + PAGE_LINK_RANGE - 1
   if (endPageIndex > maxPageIndex) {
     endPageIndex = maxPageIndex
   }
   if (startPageIndex < endPageIndex) {
-    initLinkBoxLayout(
+    updatePaginationBoxLayout(
       itemsPerPage,
       currentPageIndex,
       maxPageIndex,
@@ -85,7 +85,7 @@ private fun initLinkBox(
   }
 }
 
-private fun initLinkBoxLayout(
+private fun updatePaginationBoxLayout(
   itemsPerPage: Int,
   currentPageIndex: Int,
   maxPageIndex: Int,
@@ -95,19 +95,27 @@ private fun initLinkBoxLayout(
   box.removeAll()
   group.elements.toList().forEach { group.remove(it) }
 
-  val flg1 = currentPageIndex > 1
-  addButton(makePrevNextButton(itemsPerPage, 1, "|<", flg1))
-  addButton(makePrevNextButton(itemsPerPage, currentPageIndex - 1, "<", flg1))
+  val hasPrevPage = currentPageIndex > 1
+  addButton(
+    createPrevNextButton(itemsPerPage, 1, "|<", hasPrevPage),
+  )
+  addButton(
+    createPrevNextButton(itemsPerPage, currentPageIndex - 1, "<", hasPrevPage),
+  )
 
   box.add(Box.createHorizontalGlue())
   for (i in startPageIndex..endPageIndex) {
-    addButton(makeRadioButton(itemsPerPage, currentPageIndex, i))
+    addButton(createRadioButton(itemsPerPage, currentPageIndex, i))
   }
   box.add(Box.createHorizontalGlue())
 
-  val flg2 = currentPageIndex < maxPageIndex
-  addButton(makePrevNextButton(itemsPerPage, currentPageIndex + 1, ">", flg2))
-  addButton(makePrevNextButton(itemsPerPage, maxPageIndex, ">|", flg2))
+  val hasNextPage = currentPageIndex < maxPageIndex
+  addButton(
+    createPrevNextButton(itemsPerPage, currentPageIndex + 1, ">", hasNextPage),
+  )
+  addButton(
+    createPrevNextButton(itemsPerPage, maxPageIndex, ">|", hasNextPage),
+  )
 }
 
 private fun addButton(button: AbstractButton) {
@@ -115,7 +123,7 @@ private fun addButton(button: AbstractButton) {
   group.add(button)
 }
 
-private fun makeRadioButton(
+private fun createRadioButton(
   itemsPerPage: Int,
   current: Int,
   target: Int,
@@ -141,11 +149,11 @@ private fun makeRadioButton(
   if (target == current) {
     radio.isSelected = true
   }
-  radio.addActionListener { initLinkBox(itemsPerPage, target) }
+  radio.addActionListener { updatePaginationBox(itemsPerPage, target) }
   return radio
 }
 
-private fun makePrevNextButton(
+private fun createPrevNextButton(
   itemsPerPage: Int,
   target: Int,
   title: String,
@@ -154,7 +162,7 @@ private fun makePrevNextButton(
   it.foreground = Color.BLUE
   it.setUI(linkViewRadioButtonUI)
   it.isEnabled = flag
-  it.addActionListener { initLinkBox(itemsPerPage, target) }
+  it.addActionListener { updatePaginationBox(itemsPerPage, target) }
 }
 
 private class LinkViewRadioButtonUI : BasicRadioButtonUI() {
