@@ -12,7 +12,6 @@ import java.time.format.FormatStyle
 import java.time.format.TextStyle
 import java.time.temporal.ChronoUnit
 import java.time.temporal.WeekFields
-import java.util.Arrays
 import java.util.Locale
 import java.util.regex.Pattern
 import javax.swing.*
@@ -282,7 +281,7 @@ private class EventBarLayerUI(
     val usedTracks = BooleanArray(events.size)
     for (i in events.indices) {
       val ep = events[i]
-      Arrays.fill(usedTracks, false)
+      usedTracks.fill(false)
       // Check for overlap with already processed events
       for (j in 0..<i) {
         val other = events[j]
