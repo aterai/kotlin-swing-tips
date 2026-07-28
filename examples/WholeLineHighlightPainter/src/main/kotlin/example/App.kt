@@ -2,6 +2,7 @@ package example
 
 import java.awt.*
 import java.awt.event.FocusEvent
+import java.util.Objects
 import javax.swing.*
 import javax.swing.text.AbstractDocument
 import javax.swing.text.BoxView
@@ -127,14 +128,10 @@ private class FocusCaret(
     }
 
   override fun equals(other: Any?) =
-    if (this === other) {
-      true
-    } else {
-      super.equals(other) &&
+    this === other || super.equals(other) &&
         other is FocusCaret &&
         nonFocusPainter == other.nonFocusPainter &&
         getSelectionPainter() == other.getSelectionPainter()
-    }
 
   override fun hashCode() =
     Objects.hash(super.hashCode(), nonFocusPainter, getSelectionPainter())
