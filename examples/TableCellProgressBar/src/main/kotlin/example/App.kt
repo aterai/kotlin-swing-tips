@@ -61,11 +61,9 @@ private fun addActionPerformed() {
   worker.execute()
 }
 
-private fun rowIndexOf(worker: SwingWorker<*, *>?): Int {
-  return (0..model.rowCount)
-    .firstOrNull { model.getValueAt(it, WORKER_COLUMN) == worker }
-    ?: -1
-}
+private fun rowIndexOf(worker: SwingWorker<*, *>?) = (0 until model.rowCount)
+  .firstOrNull { model.getValueAt(it, WORKER_COLUMN) == worker }
+  ?: -1
 
 private fun setProgressValue(worker: SwingWorker<*, *>, value: Any) {
   val modelRow = rowIndexOf(worker)
@@ -102,7 +100,7 @@ private class ProgressRenderer : DefaultTableCellRenderer() {
     isSelected: Boolean,
     hasFocus: Boolean,
     row: Int,
-    column: Int
+    column: Int,
   ): Component? = if (value is Int) {
     if (0 <= value && value < progressBar.maximum) {
       progressBar.setValue(value)
@@ -110,12 +108,22 @@ private class ProgressRenderer : DefaultTableCellRenderer() {
     } else {
       val text = if (value < 0) "Canceled" else "Done(0ms)"
       super.getTableCellRendererComponent(
-        table, text, isSelected, hasFocus, row, column
+        table,
+        text,
+        isSelected,
+        hasFocus,
+        row,
+        column,
       )
     }
   } else {
     super.getTableCellRendererComponent(
-      table, value.toString(), isSelected, hasFocus, row, column
+      table,
+      value.toString(),
+      isSelected,
+      hasFocus,
+      row,
+      column,
     )
   }
 }
