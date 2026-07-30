@@ -61,7 +61,7 @@ private fun addActionPerformed() {
   worker.execute()
 }
 
-private fun rowIndexOf(worker: SwingWorker<*, *>?) = (0 until model.rowCount)
+private fun rowIndexOf(worker: SwingWorker<*, *>?) = (0..<model.rowCount)
   .firstOrNull { model.getValueAt(it, WORKER_COLUMN) == worker }
   ?: -1
 
