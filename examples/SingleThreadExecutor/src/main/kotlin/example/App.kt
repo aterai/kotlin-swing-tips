@@ -2,23 +2,31 @@ package example
 
 import java.awt.*
 import java.awt.event.HierarchyEvent
-import java.util.TreeSet
 import java.util.concurrent.Executors
 import javax.swing.*
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
-import javax.swing.table.TableModel
 import javax.swing.table.TableRowSorter
 
-private val model = WorkerModel()
-private val table = JTable(model)
-private val sorter = TableRowSorter(model)
-private val deleteRowSet = TreeSet<Int>()
+private const val PROGRESS_COLUMN = 2
+private const val WORKER_COLUMN = 3
+
+private val columnNames = arrayOf("No.", "Name", "Progress", "")
+private val model = DefaultTableModel(columnNames, 0)
+private val table = object : JTable(model) {
+  override fun updateUI() {
+    super.updateUI()
+    removeColumn(getColumnModel().getColumn(WORKER_COLUMN))
+    val progressColumn = getColumnModel().getColumn(PROGRESS_COLUMN)
+    progressColumn.setCellRenderer(ProgressRenderer())
+  }
+}
+private var rowNumber = 0
 private val executor = Executors.newSingleThreadExecutor()
 
 fun createUI(): Component {
-  table.rowSorter = sorter
-  model.addProgressValue("Name 1", 100, null)
+  table.rowSorter = TableRowSorter(model)
+  addProgressRow("Name 1", 100, null)
 
   val scrollPane = JScrollPane(table)
   scrollPane.viewport.background = Color.WHITE
@@ -33,7 +41,9 @@ fun createUI(): Component {
     it.minWidth = 60
     it.resizable = false
   }
-  table.columnModel.getColumn(2).cellRenderer = ProgressRenderer()
+
+  val button = JButton("add")
+  button.addActionListener { addActionPerformed() }
 
   return JPanel(BorderLayout()).also {
     it.addHierarchyListener { e ->
@@ -42,65 +52,89 @@ fun createUI(): Component {
         executor.shutdownNow()
       }
     }
-
-    val button = JButton("add")
-    button.addActionListener { addActionPerformed() }
     it.add(button, BorderLayout.SOUTH)
     it.add(scrollPane)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun addActionPerformed() {
-  val key = model.rowCount
-  val worker = object : BackgroundTask() {
-    override fun process(c: List<Int>) {
-      if (table.isDisplayable && !isCancelled) {
-        c.forEach { model.setValueAt(it, key, 2) }
-      } else {
-        cancel(true)
-        executor.shutdown()
-      }
-    }
+private fun addProgressRow(name: String, progress: Int, worker: SwingWorker<*, *>?) {
+  val rowData = arrayOf(rowNumber, name, progress, worker)
+  model.addRow(rowData)
+  rowNumber++
+}
 
-    override fun done() {
-      var i = -1
-      val message = runCatching {
-        i = get()
-        if (i >= 0) "Done" else "Disposed"
-      }.getOrNull() ?: "Interrupted"
-      model.setValueAt("$message(${i}ms)", key, 2)
-      // executor.remove(this)
-    }
-  }
-  model.addProgressValue("example", 0, worker)
+private fun addActionPerformed() {
+  val worker = ProgressWorker()
+  addProgressRow("example", 0, worker)
   executor.execute(worker)
 }
 
-private fun cancelActionPerformed() {
-  for (i in table.selectedRows) {
-    val mi = table.convertRowIndexToModel(i)
-    model.getSwingWorker(mi)?.takeUnless { it.isDone }?.cancel(true)
+private fun rowIndexOf(worker: SwingWorker<*, *>?) = (0..<model.rowCount)
+  .firstOrNull { model.getValueAt(it, WORKER_COLUMN) == worker }
+  ?: -1
+
+private fun setProgressValue(worker: SwingWorker<*, *>, value: Any) {
+  val modelRow = rowIndexOf(worker)
+  if (modelRow >= 0) {
+    model.setValueAt(value, modelRow, PROGRESS_COLUMN)
   }
-  table.repaint()
 }
 
-private fun deleteActionPerformed() {
-  val selection = table.selectedRows
-  if (selection.isEmpty()) {
-    return
+private class ProgressWorker : BackgroundTask() {
+  override fun process(chunks: MutableList<Int>) {
+    if (table.isDisplayable && !isCancelled) {
+      chunks.forEach { setProgressValue(this, it) }
+    } else {
+      cancel(true)
+    }
   }
-  for (i in selection) {
-    val mi = table.convertRowIndexToModel(i)
-    deleteRowSet.add(mi)
-    model.getSwingWorker(mi)?.takeUnless { it.isDone }?.cancel(true)
+
+  override fun done() {
+    val text = if (isCancelled) "Cancelled" else this.resultMessage
+    setProgressValue(this, text)
   }
-  sorter.rowFilter = object : RowFilter<TableModel, Int>() {
-    override fun include(entry: Entry<out TableModel, out Int>) =
-      !deleteRowSet.contains(entry.identifier)
+}
+
+private class ProgressRenderer : DefaultTableCellRenderer() {
+  private val progressBar = JProgressBar()
+
+  init {
+    progressBar.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
   }
-  table.clearSelection()
-  table.repaint()
+
+  override fun getTableCellRendererComponent(
+    table: JTable,
+    value: Any?,
+    isSelected: Boolean,
+    hasFocus: Boolean,
+    row: Int,
+    column: Int,
+  ): Component? = if (value is Int) {
+    if (0 <= value && value < progressBar.maximum) {
+      progressBar.setValue(value)
+      progressBar
+    } else {
+      val text = if (value < 0) "Canceled" else "Done(0ms)"
+      super.getTableCellRendererComponent(
+        table,
+        text,
+        isSelected,
+        hasFocus,
+        row,
+        column,
+      )
+    }
+  } else {
+    super.getTableCellRendererComponent(
+      table,
+      value.toString(),
+      isSelected,
+      hasFocus,
+      row,
+      column,
+    )
+  }
 }
 
 private class TablePopupMenu : JPopupMenu() {
@@ -116,120 +150,71 @@ private class TablePopupMenu : JPopupMenu() {
     deleteMenuItem.addActionListener { deleteActionPerformed() }
   }
 
-  override fun show(
-    c: Component?,
-    x: Int,
-    y: Int,
-  ) {
+  override fun show(c: Component?, x: Int, y: Int) {
     if (c is JTable) {
-      val flag = c.selectedRowCount > 0
-      cancelMenuItem.isEnabled = flag
-      deleteMenuItem.isEnabled = flag
+      val hasSelection = c.selectedRowCount > 0
+      cancelMenuItem.setEnabled(hasSelection)
+      deleteMenuItem.setEnabled(hasSelection)
       super.show(c, x, y)
     }
+  }
+
+  fun cancelWorker(modelRow: Int) {
+    val worker = model.getValueAt(modelRow, WORKER_COLUMN) as? SwingWorker<*, *>
+    if (worker?.isDone != true) {
+      worker?.cancel(true)
+    }
+  }
+
+  fun deleteActionPerformed() {
+    val modelRows = table.selectedRows
+      .map { viewRowIndex -> table.convertRowIndexToModel(viewRowIndex) }
+      .sorted()
+    for (i in modelRows.indices.reversed()) {
+      cancelWorker(modelRows[i])
+      model.removeRow(modelRows[i])
+    }
+    table.clearSelection()
+  }
+
+  fun cancelActionPerformed() {
+    val selection = table.selectedRows
+    for (viewRow in selection) {
+      cancelWorker(table.convertRowIndexToModel(viewRow))
+    }
+    table.repaint()
   }
 }
 
 private open class BackgroundTask : SwingWorker<Int, Int>() {
   private val randomSleep = (1..50).random()
+  protected val resultMessage: String
+    get() {
+      val message = runCatching {
+        val total = get()
+        if (total >= 0) "Done" else "Disposed"
+      }.getOrNull() ?: "Interrupted"
+      return message
+    }
 
   @Throws(InterruptedException::class)
   override fun doInBackground(): Int {
     val lengthOfTask = 120
     var current = 0
+    var total = 0
     while (current <= lengthOfTask && !isCancelled) {
       publish(100 * current / lengthOfTask)
-      Thread.sleep(randomSleep.toLong())
+      total += sleepRandomly()
       current++
     }
-    return randomSleep * lengthOfTask
-  }
-}
-
-private open class WorkerModel : DefaultTableModel() {
-  private val workerMap = mutableMapOf<Int, SwingWorker<Int, Int>>()
-  private var number = 0
-
-  fun addProgressValue(
-    name: String,
-    iv: Int,
-    worker: SwingWorker<Int, Int>?,
-  ) {
-    super.addRow(arrayOf<Any>(number, name, iv))
-    worker?.also { workerMap[number] = it }
-    number++
+    return total
   }
 
-  fun getSwingWorker(identifier: Int): SwingWorker<Int, Int>? {
-    val key = getValueAt(identifier, 0) as? Int ?: -1
-    return workerMap[key]
-  }
-
-  override fun isCellEditable(
-    row: Int,
-    col: Int,
-  ) = COLUMN_ARRAY[col].isEditable
-
-  override fun getColumnClass(column: Int) = COLUMN_ARRAY[column].columnClass
-
-  override fun getColumnCount() = COLUMN_ARRAY.size
-
-  override fun getColumnName(column: Int) = COLUMN_ARRAY[column].columnName
-
-  private data class ColumnContext(
-    val columnName: String,
-    val columnClass: Class<*>,
-    val isEditable: Boolean,
-  )
-
-  companion object {
-    private val COLUMN_ARRAY = arrayOf(
-      ColumnContext("No.", Number::class.java, false),
-      ColumnContext("Name", String::class.java, false),
-      ColumnContext("Progress", Number::class.java, false),
-    )
-  }
-}
-
-private class ProgressRenderer : DefaultTableCellRenderer() {
-  private val progress = JProgressBar()
-  private val renderer: JPanel? = JPanel(BorderLayout())
-
-  override fun getTableCellRendererComponent(
-    table: JTable,
-    value: Any?,
-    isSelected: Boolean,
-    hasFocus: Boolean,
-    row: Int,
-    column: Int,
-  ): Component {
-    var text = value
-    if (value is Int) {
-      text = "Done(0ms)"
-      if (value < 0) {
-        text = "Canceled"
-      } else if (value < progress.maximum && renderer != null) { // < 100
-        progress.value = value
-        renderer.add(progress)
-        renderer.isOpaque = false
-        renderer.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
-        return renderer
-      }
-    }
-    return super.getTableCellRendererComponent(
-      table,
-      text,
-      isSelected,
-      hasFocus,
-      row,
-      column,
-    )
-  }
-
-  override fun updateUI() {
-    super.updateUI()
-    isOpaque = false
-    renderer?.also { SwingUtilities.updateComponentTreeUI(it) }
+  @Throws(InterruptedException::class)
+  private fun sleepRandomly(): Int {
+    val sleepTime = randomSleep
+    Thread.sleep(sleepTime.toLong())
+    return sleepTime
   }
 }
 
