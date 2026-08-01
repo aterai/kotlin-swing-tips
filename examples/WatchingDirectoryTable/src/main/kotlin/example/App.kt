@@ -11,48 +11,23 @@ import java.nio.file.WatchEvent
 import java.nio.file.WatchService
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
-import javax.swing.table.TableModel
-import javax.swing.table.TableRowSorter
 
-private val logger = JTextArea()
-private val model = FileModel()
-private val sorter = TableRowSorter(model)
-val deleteRowSet = mutableSetOf<Int>()
+private const val FULL_PATH_COLUMN = 2
+
+private val logArea = JTextArea()
+private val model = FileTableModel()
 
 fun createUI(): Component {
   val table = JTable(model)
-  table.rowSorter = sorter
   table.fillsViewportHeight = true
   table.componentPopupMenu = TablePopupMenu()
 
-  val col = table.columnModel.getColumn(0)
-  col.minWidth = 30
-  col.maxWidth = 30
-  col.resizable = false
-
-  val dir = Paths.get(System.getProperty("java.io.tmpdir"))
-  val loop = Toolkit.getDefaultToolkit().systemEventQueue.createSecondaryLoop()
-  val worker = object : Thread() {
-    override fun run() {
-      runCatching {
-        FileSystems.getDefault().newWatchService()
-      }.onSuccess {
-        dir.register(
-          it,
-          StandardWatchEventKinds.ENTRY_CREATE,
-          StandardWatchEventKinds.ENTRY_DELETE,
-        )
-        append("register: $dir")
-        processEvents(dir, it)
-      }.onFailure {
-        append(it.message)
-      }
-      loop.exit()
-    }
-  }
+  val tk = Toolkit.getDefaultToolkit()
+  val loop = tk.getSystemEventQueue().createSecondaryLoop()
+  val worker = Thread(DirectoryWatcher(loop))
   worker.start()
   if (!loop.enter()) {
-    append("Error")
+    appendLog("Error")
   }
 
   val button = JButton("createTempFile")
@@ -60,108 +35,144 @@ fun createUI(): Component {
     runCatching {
       Files.createTempFile("_", ".tmp").toFile().deleteOnExit()
     }.onFailure {
-      append(it.message)
+      appendLog(it.message)
     }
   }
 
-  val p = JPanel()
-  p.add(button)
+  val buttonPanel = JPanel()
+  buttonPanel.add(button)
 
-  val sp = JSplitPane(JSplitPane.VERTICAL_SPLIT)
-  sp.topComponent = JScrollPane(table)
-  sp.bottomComponent = JScrollPane(logger)
-  sp.resizeWeight = .5
+  val centerPanel = JPanel(GridLayout(2, 1))
+  centerPanel.add(JScrollPane(table))
+  centerPanel.add(JScrollPane(logArea))
 
   return JPanel(BorderLayout()).also {
     it.addHierarchyListener { e ->
-      val b = e.changeFlags.toInt() and HierarchyEvent.DISPLAYABILITY_CHANGED != 0
-      if (b && !e.component.isDisplayable) {
+      val flags = e.changeFlags.toInt() and HierarchyEvent.DISPLAYABILITY_CHANGED
+      if (flags != 0 && !e.component.isDisplayable) {
         worker.interrupt()
       }
     }
-    it.add(p, BorderLayout.NORTH)
-    it.add(sp)
+    it.add(buttonPanel, BorderLayout.NORTH)
+    it.add(centerPanel)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-// Watching a Directory for Changes (The Java™ Tutorials > Essential Classes > Basic I/O)
-// https://docs.oracle.com/javase/tutorial/essential/io/notification.html
-// Process all events for keys queued to the watcher
-private fun processEvents(
-  dir: Path,
-  watcher: WatchService,
-) {
-  while (true) {
-    // wait for key to be signaled
-    val key = runCatching {
-      watcher.take()
-    }.onFailure {
-      EventQueue.invokeLater { append("Interrupted") }
-    }.getOrNull() ?: return
+fun appendLog(str: String?) {
+  logArea.append(str + "\n")
+}
 
-    for (event in key.pollEvents()) {
-      val kind = event.kind()
+private fun rowIndexOf(path: Path): Int {
+  val fullPath = path.toString()
+  return (0..<model.rowCount).firstOrNull {
+    val obj = model.getValueAt(it, FULL_PATH_COLUMN)
+    fullPath == obj.toString()
+  } ?: -1
+}
 
-      // This key is registered only for ENTRY_CREATE events,
-      // but an OVERFLOW event can occur regardless if events
-      // are lost or discarded.
-      if (kind === StandardWatchEventKinds.OVERFLOW) {
-        continue
+private class DirectoryWatcher(
+  private val loop: SecondaryLoop,
+) : Runnable {
+  override fun run() {
+    runCatching {
+      FileSystems.getDefault().newWatchService().use { watchService ->
+        val dir = Paths.get(System.getProperty("java.io.tmpdir"))
+        dir.register(
+          watchService,
+          StandardWatchEventKinds.ENTRY_CREATE,
+          StandardWatchEventKinds.ENTRY_DELETE,
+        )
+        appendLog("register: $dir")
+        processEvents(dir, watchService)
+        loop.exit()
       }
+    }.onFailure {
+      appendLog(it.message)
+    }
+    loop.exit()
+  }
 
-      (event.context() as? Path)?.also {
-        val child = dir.resolve(it)
+  fun processEvents(dir: Path, watchService: WatchService) {
+    while (true) {
+      val key = runCatching {
+        watchService.take()
+      }.onFailure {
+        EventQueue.invokeLater { appendLog("Interrupted") }
+        Thread.currentThread().interrupt()
+      }.getOrNull() ?: return
+
+      for (event in key.pollEvents()) {
+        val kind: WatchEvent.Kind<*>? = event.kind()
+        if (kind === StandardWatchEventKinds.OVERFLOW) {
+          continue
+        }
+        val filename = event.context() as Path
+        val child = dir.resolve(filename)
         EventQueue.invokeLater {
-          append("$kind: $child")
+          appendLog(String.format("%s: %s", kind, child))
           updateTable(kind, child)
         }
       }
-    }
-
-    // Reset the key -- this step is critical if you want to
-    // receive further watch events.  If the key is no longer valid,
-    // the directory is inaccessible so exit the loop.
-    val valid = key.reset()
-    if (!valid) {
-      break
-    }
-  }
-}
-
-private fun updateTable(
-  kind: WatchEvent.Kind<*>,
-  child: Path,
-) {
-  if (kind === StandardWatchEventKinds.ENTRY_CREATE) {
-    model.addPath(child)
-  } else if (kind === StandardWatchEventKinds.ENTRY_DELETE) {
-    for (i in 0..<model.rowCount) {
-      val path = model.getValueAt(i, 2)?.toString() ?: ""
-      if (path == child.toString()) {
-        deleteRowSet.add(i)
-        // model.removeRow(i)
+      val valid = key.reset()
+      if (!valid) {
         break
       }
     }
-    sorter.rowFilter = object : RowFilter<TableModel, Int>() {
-      override fun include(entry: Entry<out TableModel, out Int>) =
-        !deleteRowSet.contains(entry.identifier)
+  }
+
+  fun updateTable(kind: WatchEvent.Kind<*>?, child: Path) {
+    if (kind === StandardWatchEventKinds.ENTRY_CREATE) {
+      model.addPath(child)
+    } else if (kind === StandardWatchEventKinds.ENTRY_DELETE) {
+      val modelRow = rowIndexOf(child)
+      if (modelRow >= 0) {
+        model.removeRow(modelRow)
+      }
     }
   }
 }
 
-fun append(str: String?) {
-  logger.append(str + "\n")
+private class TablePopupMenu : JPopupMenu() {
+  private val deleteMenuItem = add("delete")
+
+  init {
+    deleteMenuItem.addActionListener { deleteActionPerformed() }
+  }
+
+  override fun show(c: Component?, x: Int, y: Int) {
+    if (c is JTable) {
+      deleteMenuItem.isEnabled = c.selectedRowCount > 0
+      super.show(c, x, y)
+    }
+  }
+
+  fun deleteActionPerformed() {
+    val table = invoker as? JTable
+    val model = table?.model
+    if (model is DefaultTableModel) {
+      val selection = table.selectedRows
+      for (i in selection.indices.reversed()) {
+        val idx = table.convertRowIndexToModel(selection[i])
+        model.getValueAt(idx, 2)?.toString()?.also {
+          runCatching {
+            Files.delete(Paths.get(it))
+          }.onFailure {
+            Toolkit.getDefaultToolkit().beep()
+          }
+        }
+      }
+    }
+  }
 }
 
-private class FileModel : DefaultTableModel() {
-  private var number = 0
+private class FileTableModel : DefaultTableModel() {
+  private var rowNumber = 0
 
   fun addPath(path: Path) {
-    val obj = arrayOf(number, path.fileName, path.toAbsolutePath())
+    val obj = arrayOf(rowNumber, path.fileName, path.toAbsolutePath())
     super.addRow(obj)
-    number++
+    rowNumber++
   }
 
   override fun isCellEditable(
@@ -187,41 +198,6 @@ private class FileModel : DefaultTableModel() {
       ColumnContext("Name", String::class.java, false),
       ColumnContext("Full Path", String::class.java, false),
     )
-  }
-}
-
-private class TablePopupMenu : JPopupMenu() {
-  private val delete = add("delete")
-
-  init {
-    delete.addActionListener {
-      val table = invoker as? JTable
-      val model = table?.model
-      if (model is DefaultTableModel) {
-        val selection = table.selectedRows
-        for (i in selection.indices.reversed()) {
-          val idx = table.convertRowIndexToModel(selection[i])
-          model.getValueAt(idx, 2)?.toString()?.also {
-            runCatching {
-              Files.delete(Paths.get(it))
-            }.onFailure {
-              Toolkit.getDefaultToolkit().beep()
-            }
-          }
-        }
-      }
-    }
-  }
-
-  override fun show(
-    c: Component?,
-    x: Int,
-    y: Int,
-  ) {
-    if (c is JTable) {
-      delete.isEnabled = c.selectedRowCount > 0
-      super.show(c, x, y)
-    }
   }
 }
 
