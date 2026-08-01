@@ -8,44 +8,42 @@ fun createUI(): Component {
   // UIManager.put("FileChooser.readOnly", true)
   val log = JTextArea()
 
-  val fileChooser0 = JFileChooser()
+  val chooser0 = JFileChooser()
   val button0 = JButton("default")
   button0.addActionListener {
-    setViewTypeDetails(fileChooser0)
-    // stream(fileChooser0)
+    setViewTypeDetails(chooser0)
+    // stream(chooser0)
     //     .filter(Predicate<Component> { JTable::class.java!!.isInstance(it) })
     //     .map(Function<Component, JTable> { JTable::class.java!!.cast(it) })
     //     .findFirst()
     //     .ifPresent { table -> append(log, "isEditing: ${table.isEditing()}") }
 
-    // stream(fileChooser0)
+    // stream(chooser0)
     //     .filter(JTable::class.java::isInstance)
     //     .map(JTable::class.java::cast)
     //     .findFirst()
     //     .ifPresent { append(log, "isEditing: ${it.isEditing()}") }
-    descendants(fileChooser0)
+    descendants(chooser0)
       .filterIsInstance<JTable>()
-      .firstNotNullOf {
-        append(log, "isEditing: ${it.isEditing}")
-      }
+      .firstNotNullOf { append(log, "isEditing: ${it.isEditing}") }
 
-    val retValue = fileChooser0.showOpenDialog(log.rootPane)
+    val retValue = chooser0.showOpenDialog(log.rootPane)
     if (retValue == JFileChooser.APPROVE_OPTION) {
-      append(log, fileChooser0.selectedFile.absolutePath)
+      append(log, chooser0.selectedFile.absolutePath)
     }
   }
 
-  val fileChooser1 = JFileChooser()
+  val chooser1 = JFileChooser()
   val button1 = JButton("removeEditor")
   button1.addActionListener {
-    setViewTypeDetails(fileChooser1)
-    // stream(fileChooser1)
+    setViewTypeDetails(chooser1)
+    // stream(chooser1)
     //     .filter(Predicate<Component> { JTable::class.java!!.isInstance(it) })
     //     .map(Function<Component, JTable> { JTable::class.java!!.cast(it) })
     //     .peek { table -> append(log, "isEditing: ${table.isEditing()}") }
     //     .findFirst().filter(Predicate<JTable> { it.isEditing() })
     //     .ifPresent(Consumer<JTable> { it.removeEditor() })
-    // stream(fileChooser1)
+    // stream(chooser1)
     //   .filter(JTable::class.java::isInstance)
     //   .map(JTable::class.java::cast)
     //   .peek { table -> append(log, "isEditing: ${table.isEditing()}") }
@@ -55,11 +53,14 @@ fun createUI(): Component {
     //   // .ifPresent { it.removeEditor() }
     //   .ifPresent(JTable::removeEditor)
 
-    descendants(fileChooser1).filterIsInstance<JTable>().firstOrNull()?.removeEditor()
+    descendants(chooser1)
+      .filterIsInstance<JTable>()
+      .firstOrNull()
+      ?.removeEditor()
 
-    val retValue = fileChooser1.showOpenDialog(log.rootPane)
+    val retValue = chooser1.showOpenDialog(log.rootPane)
     if (retValue == JFileChooser.APPROVE_OPTION) {
-      append(log, fileChooser1.selectedFile.absolutePath)
+      append(log, chooser1.selectedFile.absolutePath)
     }
   }
 
