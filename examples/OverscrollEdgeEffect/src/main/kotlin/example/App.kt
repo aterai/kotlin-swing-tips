@@ -357,9 +357,9 @@ private class MissingIcon : Icon {
     g2.dispose()
   }
 
-  override fun getIconWidth(): Int = 640
+  override fun getIconWidth() = 640
 
-  override fun getIconHeight(): Int = 1024
+  override fun getIconHeight() = 1024
 }
 
 fun main() {
