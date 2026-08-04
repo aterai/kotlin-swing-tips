@@ -282,12 +282,6 @@ private class TranslucentCellSelectionLayerUI : LayerUI<JScrollPane>() {
       }
       return subArea
     }
-
-    private fun listAdd(path: Path2D.Double, list: ArrayList<Area>) {
-      path.closePath()
-      list.add(Area(path))
-      path.reset()
-    }
   }
 }
 
