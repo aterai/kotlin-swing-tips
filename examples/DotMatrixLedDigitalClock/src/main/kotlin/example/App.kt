@@ -7,11 +7,15 @@ import java.time.LocalTime
 import java.time.ZoneId
 import javax.swing.*
 
-private val timer = Timer(100, null)
-private var time = LocalTime.now(ZoneId.systemDefault())
-private const val COLUMN = 4
-private const val ROW = 7
-private val NUMBERS = listOf(
+private const val RADIX = 10
+private const val BLOCK_GAP = 1
+private const val TIMER_DELAY_MS = 100
+private const val LIST_GAP = 10
+private const val DIGIT_COLUMNS = 4
+private const val DIGIT_ROWS = 7
+private val HOUR_MIN_DOT_SIZE = Dimension(10, 10)
+private val SECONDS_DOT_SIZE = Dimension(8, 8)
+private val DIGIT_PATTERNS = listOf(
   setOf(0, 1, 2, 3, 4, 5, 6, 7, 13, 14, 20, 21, 22, 23, 24, 25, 26, 27),
   setOf(21, 22, 23, 24, 25, 26, 27),
   setOf(0, 3, 4, 5, 6, 7, 10, 13, 14, 17, 20, 21, 22, 23, 24, 27),
@@ -23,31 +27,36 @@ private val NUMBERS = listOf(
   setOf(0, 1, 2, 3, 4, 5, 6, 7, 10, 13, 14, 17, 20, 21, 22, 23, 24, 25, 26, 27),
   setOf(0, 1, 2, 3, 6, 7, 10, 13, 14, 17, 20, 21, 22, 23, 24, 25, 26, 27),
 )
-private val DOT = listOf(2, 4)
+private val COLON_DOT_ROWS = listOf(2, 4)
+
+private val timer = Timer(TIMER_DELAY_MS, null)
+private var time = LocalTime.now(ZoneId.systemDefault())
 
 fun createUI(): Component {
-  val model1 = object : DefaultListModel<Boolean>() {
-    override fun getElementAt(index: Int) = getHoursMinutesDotMatrix(time, index)
+  val hoursMinutesModel = object : DefaultListModel<Boolean>() {
+    override fun getElementAt(index: Int) = isHourMinuteDotLit(time, index)
   }
-  model1.size = (COLUMN * 4 + 5) * ROW
-  val hoursMinutes = makeLedMatrixList(model1, Dimension(10, 10))
-  val model2 = object : DefaultListModel<Boolean>() {
-    override fun getElementAt(index: Int) = getSecondsDotMatrix(time, index)
+  hoursMinutesModel.setSize((DIGIT_COLUMNS * 4 + 5) * DIGIT_ROWS)
+  val hoursMinutesList = createLedDotMatrixList(hoursMinutesModel, HOUR_MIN_DOT_SIZE)
+
+  val secondsModel = object : DefaultListModel<Boolean>() {
+    override fun getElementAt(index: Int) = isSecondDotLit(time, index)
   }
-  model2.size = (COLUMN * 2 + 1) * ROW
-  val seconds = makeLedMatrixList(model2, Dimension(8, 8))
+  secondsModel.setSize((DIGIT_COLUMNS * 2 + 1) * DIGIT_ROWS)
+  val secondsList = createLedDotMatrixList(secondsModel, SECONDS_DOT_SIZE)
+
   timer.addActionListener {
     time = LocalTime.now(ZoneId.systemDefault())
-    hoursMinutes.repaint()
-    seconds.repaint()
+    hoursMinutesList.repaint()
+    secondsList.repaint()
   }
-  hoursMinutes.alignmentY = Component.BOTTOM_ALIGNMENT
-  seconds.alignmentY = Component.BOTTOM_ALIGNMENT
+  hoursMinutesList.alignmentY = Component.BOTTOM_ALIGNMENT
+  secondsList.alignmentY = Component.BOTTOM_ALIGNMENT
 
   val box = Box.createHorizontalBox()
-  box.add(hoursMinutes)
-  box.add(Box.createHorizontalStrut(10))
-  box.add(seconds)
+  box.add(hoursMinutesList)
+  box.add(Box.createHorizontalStrut(LIST_GAP))
+  box.add(secondsList)
 
   val p = object : JPanel(GridBagLayout()) {
     private var listener: HierarchyListener? = null
@@ -73,104 +82,114 @@ fun createUI(): Component {
   return p
 }
 
-private fun contains(
+private fun isDigitDotLit(
   index: Int,
-  start: Int,
-  end: Int,
-  num: Int,
-) = index < end * ROW && NUMBERS[num].contains(index - start * ROW)
+  blockStart: Int,
+  blockEnd: Int,
+  digit: Int,
+) = index < blockEnd * DIGIT_ROWS &&
+  DIGIT_PATTERNS[digit].contains(index - blockStart * DIGIT_ROWS)
 
-@Suppress("ReturnCount")
-private fun getHoursMinutesDotMatrix(
+private fun isHourMinuteDotLit(time: LocalTime, index: Int): Boolean {
+  val hour = time.hour
+  val hourTens = hour / RADIX
+  var blockStart = 0
+  var blockEnd = DIGIT_COLUMNS
+  // Blank the hour's leading zero: the tens digit only lights up when hour >= 10.
+  var lit = isDigitDotLit(index, blockStart, blockEnd, hourTens) && hour >= RADIX
+
+  val hourUnits = hour - hourTens * RADIX
+  blockStart = blockEnd + BLOCK_GAP
+  blockEnd = blockStart + DIGIT_COLUMNS
+  lit = lit or isDigitDotLit(index, blockStart, blockEnd, hourUnits)
+
+  // Blink the colon dots once per second, on for even seconds and off for odd seconds.
+  val secondUnits = time.second % RADIX
+  blockStart = blockEnd + BLOCK_GAP
+  blockEnd = blockStart + BLOCK_GAP
+  val b1 = index < blockEnd * DIGIT_ROWS
+  val b2 = secondUnits % 2 == 0
+  val b3 = COLON_DOT_ROWS.contains(index - blockStart * DIGIT_ROWS)
+  lit = lit or (b1 && b2 && b3)
+
+  val minute = time.minute
+  val minuteTens = minute / RADIX
+  blockStart = blockEnd + BLOCK_GAP
+  blockEnd = blockStart + DIGIT_COLUMNS
+  lit = lit or isDigitDotLit(index, blockStart, blockEnd, minuteTens)
+
+  val minuteUnits = minute - minuteTens * RADIX
+  blockStart = blockEnd + BLOCK_GAP
+  blockEnd = blockStart + DIGIT_COLUMNS
+  lit = lit or isDigitDotLit(index, blockStart, blockEnd, minuteUnits)
+
+  return lit
+}
+
+private fun isSecondDotLit(
   time: LocalTime,
   index: Int,
 ): Boolean {
-  val ten = 10
-  val hours = time.hour
-  val h1 = hours / ten
-  var start = 0
-  var end = COLUMN
-  if (contains(index, start, end, h1)) {
-    return hours >= ten
-  }
-  val gap = 1
-  val h2 = hours - h1 * ten
-  start = end + gap
-  end = start + COLUMN
-  if (contains(index, start, end, h2)) {
-    return true
-  }
-  val seconds = time.second
-  val s1 = seconds / ten
-  val s2 = seconds - s1 * ten
-  start = end + gap
-  end = start + gap
-  if (index < end * ROW && s2 % 2 == 0 && DOT.contains(index - start * ROW)) {
-    return true
-  }
-  val minutes = time.minute
-  val m1 = minutes / ten
-  start = end + gap
-  end = start + COLUMN
-  if (contains(index, start, end, m1)) {
-    return true
-  }
-  val m2 = minutes - m1 * ten
-  start = end + gap
-  end = start + COLUMN
-  return contains(index, start, end, m2)
+  val second = time.second
+  val secondTens = second / RADIX
+  var blockStart = 0
+  var blockEnd = DIGIT_COLUMNS
+  val lit = isDigitDotLit(index, blockStart, blockEnd, secondTens)
+
+  val secondUnits = second - secondTens * RADIX
+  blockStart = blockEnd + BLOCK_GAP
+  blockEnd = blockStart + DIGIT_COLUMNS
+  return lit || isDigitDotLit(index, blockStart, blockEnd, secondUnits)
 }
 
-private fun getSecondsDotMatrix(
-  time: LocalTime,
-  index: Int,
-): Boolean {
-  val ten = 10
-  val seconds = time.second
-  val s1 = seconds / ten
-  var start = 0
-  var end = COLUMN
-  if (contains(index, start, end, s1)) {
-    return true
-  }
-  val gap = 1
-  val s2 = seconds - s1 * ten
-  start = end + gap
-  end = start + COLUMN
-  return contains(index, start, end, s2)
-}
-
-private fun makeLedMatrixList(
+private fun createLedDotMatrixList(
   m: ListModel<Boolean>,
   d: Dimension,
 ) = object : JList<Boolean>(m) {
   override fun updateUI() {
     fixedCellWidth = d.width
     fixedCellHeight = d.height
-    visibleRowCount = ROW
+    visibleRowCount = DIGIT_ROWS
     cellRenderer = null
     super.updateUI()
     layoutOrientation = VERTICAL_WRAP
     isFocusable = false
-    val renderer = cellRenderer
-    val on = LedDotIcon(true, d)
-    val off = LedDotIcon(false, d)
-    cellRenderer = ListCellRenderer { list, value, index, _, _ ->
-      renderer.getListCellRendererComponent(list, null, index, false, false).also {
-        (it as? JLabel)?.icon = if (value) on else off
-      }
-    }
+    cellRenderer = LedListCellRenderer(cellRenderer, d)
     border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
     background = Color.BLACK
   }
 }
 
-private class LedDotIcon(
-  private val led: Boolean,
-  private val dim: Dimension,
-) : Icon {
-  private val on = Color(0x32_FF_AA)
+private class LedListCellRenderer : ListCellRenderer<Boolean> {
+  private var renderer: ListCellRenderer<in Boolean>
+  private var onIcon: Icon
+  private var offIcon: Icon
 
+  constructor(renderer: ListCellRenderer<in Boolean>, size: Dimension) {
+    this.renderer = renderer
+    this.onIcon = LedDotIcon(true, size)
+    this.offIcon = LedDotIcon(false, size)
+  }
+
+  override fun getListCellRendererComponent(
+    list: JList<out Boolean>,
+    value: Boolean?,
+    index: Int,
+    isSelected: Boolean,
+    cellHasFocus: Boolean,
+  ): Component? {
+    val c = renderer.getListCellRendererComponent(list, null, index, false, false)
+    if (c is JLabel) {
+      c.setIcon(if (value == true) onIcon else offIcon)
+    }
+    return c
+  }
+}
+
+private class LedDotIcon(
+  private val lit: Boolean,
+  private val size: Dimension,
+) : Icon {
   override fun paintIcon(
     c: Component,
     g: Graphics,
@@ -184,14 +203,18 @@ private class LedDotIcon(
     )
     // JList#setLayoutOrientation(VERTICAL_WRAP) + SynthLookAndFeel(Nimbus, GTK) bug???
     // g2.translate(x, y)
-    g2.paint = if (led) on else c.background
+    g2.paint = if (lit) ON_COLOR else c.background
     g2.fillOval(0, 0, iconWidth - 1, iconHeight - 1)
     g2.dispose()
   }
 
-  override fun getIconWidth() = dim.width
+  override fun getIconWidth() = size.width
 
-  override fun getIconHeight() = dim.height
+  override fun getIconHeight() = size.height
+
+  companion object {
+    private val ON_COLOR = Color(0x32_FF_AA)
+  }
 }
 
 fun main() {
