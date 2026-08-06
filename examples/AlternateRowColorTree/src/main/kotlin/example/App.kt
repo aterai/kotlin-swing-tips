@@ -18,7 +18,7 @@ fun createUI(): Component {
 private class AlternateRowColorTree : JTree() {
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
-    g2.paint = Color(0xCC_CC_CC)
+    g2.paint = ALTERNATE_COLOR
     for (i in 0..<rowCount) {
       if (i % 2 == 0) {
         val r = getRowBounds(i)
@@ -53,6 +53,7 @@ private class AlternateRowColorTree : JTree() {
 
   companion object {
     private val SELECTED_COLOR = Color(0x64_32_64_FF, true)
+    private val ALTERNATE_COLOR = Color(0xCC_CC_CC);
   }
 }
 
