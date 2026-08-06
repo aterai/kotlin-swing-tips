@@ -26,8 +26,8 @@ fun createUI(): Component {
     val highlighter = textArea.highlighter
     val root = textArea.document.defaultRootElement
     for (i in 0..<maskRange) {
-      val elem = root.getElement(i)
-      highlighter.addHighlight(elem.startOffset, elem.endOffset - 1, highlightPainter)
+      val e = root.getElement(i)
+      highlighter.addHighlight(e.startOffset, e.endOffset - 1, highlightPainter)
     }
   }
   return JPanel(BorderLayout()).also {
