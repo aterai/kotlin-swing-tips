@@ -46,7 +46,7 @@ fun createUI() = JPanel(BorderLayout()).also {
   it.preferredSize = Dimension(320, 240)
 }
 
-fun makeFrame(str: String): JFrame {
+fun createFrame(str: String): JFrame {
   val frame = object : JFrame(str) {
     override fun getContentPane() = mainContentPane
   }
@@ -65,16 +65,16 @@ fun makeFrame(str: String): JFrame {
   check.isFocusable = false
 
   val titleBox = Box.createHorizontalBox()
-  titleBox.add(makeComboBox(str))
+  titleBox.add(createComboBox(str))
   titleBox.add(Box.createHorizontalGlue())
   titleBox.add(check)
 
-  val button = makeTitleButton(ApplicationIcon())
+  val button = createTitleButton(ApplicationIcon())
   button.addActionListener { Toolkit.getDefaultToolkit().beep() }
   title.add(button, BorderLayout.WEST)
   title.add(titleBox)
 
-  val close = makeTitleButton(CloseIcon())
+  val close = createTitleButton(CloseIcon())
   close.addActionListener { e ->
     val w = (e.source as? JComponent)?.topLevelAncestor
     if (w is Window) {
@@ -106,22 +106,22 @@ fun makeFrame(str: String): JFrame {
 private fun initResizePanel(title: JPanel) {
   val titlePanel = JPanel(BorderLayout())
   titlePanel.add(top, BorderLayout.NORTH)
-  titlePanel.add(JLayer(title, TitleBarDragLayerUI()), BorderLayout.CENTER)
+  titlePanel.add(JLayer(title, TitleBarDragLayerUI()))
 
   val northPanel = JPanel(BorderLayout())
   northPanel.add(topLeft, BorderLayout.WEST)
-  northPanel.add(titlePanel, BorderLayout.CENTER)
+  northPanel.add(titlePanel)
   northPanel.add(topRight, BorderLayout.EAST)
 
   val southPanel = JPanel(BorderLayout())
   southPanel.add(bottomLeft, BorderLayout.WEST)
-  southPanel.add(bottom, BorderLayout.CENTER)
+  southPanel.add(bottom)
   southPanel.add(bottomRight, BorderLayout.EAST)
   resizePanel.add(left, BorderLayout.WEST)
   resizePanel.add(right, BorderLayout.EAST)
   resizePanel.add(northPanel, BorderLayout.NORTH)
   resizePanel.add(southPanel, BorderLayout.SOUTH)
-  resizePanel.add(contentPanel, BorderLayout.CENTER)
+  resizePanel.add(contentPanel)
   titlePanel.isOpaque = false
   northPanel.isOpaque = false
   southPanel.isOpaque = false
@@ -129,7 +129,7 @@ private fun initResizePanel(title: JPanel) {
   resizePanel.isOpaque = false
 }
 
-private fun makeTitleButton(icon: Icon): JButton {
+private fun createTitleButton(icon: Icon): JButton {
   val button = JButton(icon)
   button.isContentAreaFilled = false
   button.isFocusPainted = false
@@ -139,7 +139,7 @@ private fun makeTitleButton(icon: Icon): JButton {
   return button
 }
 
-private fun makeComboBox(title: String): JComboBox<String> {
+private fun createComboBox(title: String): JComboBox<String> {
   val items = arrayOf(title, "$title (1)", "$title (2)", "$title (3)")
   val combo = object : JComboBox<String>(items) {
     override fun updateUI() {
@@ -415,7 +415,7 @@ fun main() {
       it.printStackTrace()
       Toolkit.getDefaultToolkit().beep()
     }
-    makeFrame("title").apply {
+    createFrame("title").apply {
       defaultCloseOperation = WindowConstants.EXIT_ON_CLOSE
       contentPane.add(createUI())
       minimumSize = Dimension(100, 100)

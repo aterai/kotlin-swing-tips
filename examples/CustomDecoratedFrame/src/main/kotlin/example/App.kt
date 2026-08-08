@@ -41,7 +41,7 @@ fun createUI() = JScrollPane(JTree()).also {
   it.preferredSize = Dimension(320, 240)
 }
 
-fun makeResizableContentPane(title: String): Container {
+fun createResizableContentPane(title: String): Container {
   val titleBar = JPanel(BorderLayout())
   val dwl = DragWindowListener()
   titleBar.addMouseListener(dwl)
@@ -51,7 +51,7 @@ fun makeResizableContentPane(title: String): Container {
   val gap = 4
   titleBar.border = BorderFactory.createEmptyBorder(gap, gap, gap, gap)
   titleBar.add(JLabel(title, SwingConstants.CENTER))
-  titleBar.add(makeCloseButton(), BorderLayout.EAST)
+  titleBar.add(createCloseButton(), BorderLayout.EAST)
 
   val rwl = ResizeWindowListener()
   listOf(left, right, top, bottom, topLeft, topRight, bottomLeft, bottomRight)
@@ -62,20 +62,20 @@ fun makeResizableContentPane(title: String): Container {
 
   val titlePanel = JPanel(BorderLayout()).also {
     it.add(top, BorderLayout.NORTH)
-    it.add(titleBar, BorderLayout.CENTER)
+    it.add(titleBar)
     it.isOpaque = false
   }
 
   val northPanel = JPanel(BorderLayout()).also {
     it.add(topLeft, BorderLayout.WEST)
-    it.add(titlePanel, BorderLayout.CENTER)
+    it.add(titlePanel)
     it.add(topRight, BorderLayout.EAST)
     it.isOpaque = false
   }
 
   val southPanel = JPanel(BorderLayout()).also {
     it.add(bottomLeft, BorderLayout.WEST)
-    it.add(bottom, BorderLayout.CENTER)
+    it.add(bottom)
     it.add(bottomRight, BorderLayout.EAST)
     it.isOpaque = false
   }
@@ -89,7 +89,7 @@ fun makeResizableContentPane(title: String): Container {
   return resizePanel
 }
 
-private fun makeCloseButton() = JButton(CloseIcon()).also {
+private fun createCloseButton() = JButton(CloseIcon()).also {
   it.isContentAreaFilled = false
   it.isFocusPainted = false
   it.border = BorderFactory.createEmptyBorder()
@@ -279,7 +279,7 @@ fun main() {
       if (graphicsConfiguration?.isTranslucencyCapable == true) {
         background = Color(0x0, true)
       }
-      contentPane = makeResizableContentPane("title")
+      contentPane = createResizableContentPane("title")
       contentPane.add(createUI())
       pack()
       setLocationRelativeTo(null)

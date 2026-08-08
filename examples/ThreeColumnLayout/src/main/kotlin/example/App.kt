@@ -110,7 +110,7 @@ private fun createCmp2(): Component {
   val panel = JPanel(layout)
   panel.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
   panel.add(lsp, BorderLayout.WEST)
-  panel.add(box, BorderLayout.CENTER)
+  panel.add(box)
   panel.add(rsp, BorderLayout.EAST)
   return panel
 }

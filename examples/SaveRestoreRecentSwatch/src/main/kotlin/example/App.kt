@@ -122,7 +122,7 @@ private class MySwatchChooserPanel : AbstractColorChooserPanel() {
       mainSwatchListener = MainSwatchListener()
       it.addMouseListener(mainSwatchListener)
       it.addKeyListener(mainSwatchKeyListener)
-      mainHolder.add(it, BorderLayout.CENTER)
+      mainHolder.add(it)
     }
 
     val recentHolder = JPanel(BorderLayout())
@@ -137,7 +137,7 @@ private class MySwatchChooserPanel : AbstractColorChooserPanel() {
       it.addMouseListener(recentSwatchListener)
       it.addKeyListener(recentSwatchKeyListener)
       it.setInheritsPopupMenu(true)
-      recentHolder.add(it, BorderLayout.CENTER)
+      recentHolder.add(it)
     }
 
     val gbc = GridBagConstraints()

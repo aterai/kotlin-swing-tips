@@ -145,7 +145,7 @@ private class TimePickerPopup(
     listsPanel.add(createColumn(ampmLabel, ampmList, false), c)
 
     val root = JPanel(BorderLayout(0, 0))
-    root.add(listsPanel, BorderLayout.CENTER)
+    root.add(listsPanel)
     root.add(createFooter(), BorderLayout.SOUTH)
 
     setLayout(BorderLayout())
