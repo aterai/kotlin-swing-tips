@@ -21,7 +21,8 @@ fun createUI(): Component {
   val root = DefaultMutableTreeNode()
   val treeModel = DefaultTreeModel(root)
   fileSystemView.roots.forEach { fileSystemRoot ->
-    val node = DefaultMutableTreeNode(CheckBoxNode(fileSystemRoot, Status.DESELECTED))
+    val userObject = CheckBoxNode(fileSystemRoot, Status.DESELECTED)
+    val node = DefaultMutableTreeNode(userObject)
     root.add(node)
     fileSystemView
       .getFiles(fileSystemRoot, true)
