@@ -20,9 +20,8 @@ fun createUI(): Component {
   val table = JTable(500, 3)
   val scroll2 = JScrollPane(table)
   SwingUtilities.invokeLater {
-    table.scrollRectToVisible(
-      table.getCellRect(500, 0, true),
-    )
+    val max = table.getRowCount() - 1
+    table.scrollRectToVisible(table.getCellRect(max, 0, true))
   }
 
   val tabbedPane = JTabbedPane().also {
@@ -57,16 +56,22 @@ private class ScrollBackToTopIcon : Icon {
     } else {
       g2.paint = arrowColor
     }
-    val w2 = iconWidth / 2.0
-    val h2 = iconHeight / 2.0
-    val tw = w2 / 3.0
-    val th = h2 / 6.0
-    g2.stroke = BasicStroke(w2.toFloat() / 2f)
-    val p = Path2D.Float()
-    p.moveTo(w2 - tw, h2 + th)
-    p.lineTo(w2, h2 - th)
-    p.lineTo(w2 + tw, h2 + th)
-    g2.draw(p)
+    val centerX = getIconWidth() / 2f
+    val centerY = getIconHeight() / 2f
+    val arrowHalfWidth = centerX / 3f
+    val arrowHalfHeight = centerY / 6f
+    g2.stroke = BasicStroke(centerX / 2f)
+    val arrow = Path2D.Float()
+    arrow.moveTo(
+      (centerX - arrowHalfWidth).toDouble(),
+      (centerY + arrowHalfHeight).toDouble(),
+    )
+    arrow.lineTo(centerX.toDouble(), (centerY - arrowHalfHeight).toDouble())
+    arrow.lineTo(
+      (centerX + arrowHalfWidth).toDouble(),
+      (centerY + arrowHalfHeight).toDouble(),
+    )
+    g2.draw(arrow)
     g2.dispose()
   }
 
@@ -77,7 +82,7 @@ private class ScrollBackToTopIcon : Icon {
 
 private class ScrollBackToTopLayerUI<V : JScrollPane> : LayerUI<V>() {
   private val rubberStamp = JPanel()
-  private val mousePt = Point()
+  private val mousePoint = Point()
   private val button = object : JButton(ScrollBackToTopIcon()) {
     override fun updateUI() {
       super.updateUI()
@@ -88,7 +93,19 @@ private class ScrollBackToTopLayerUI<V : JScrollPane> : LayerUI<V>() {
       isRolloverEnabled = false
     }
   }
-  private val btnRct = Rectangle(button.preferredSize)
+  private val buttonRect = Rectangle(button.preferredSize)
+
+  override fun updateUI(l: JLayer<out V>) {
+    super.updateUI(l)
+    SwingUtilities.updateComponentTreeUI(button)
+  }
+
+  private fun updateButtonRect(scroll: JScrollPane) {
+    val viewport = scroll.viewport
+    val x = viewport.x + viewport.width - buttonRect.width - GAP
+    val y = viewport.y + viewport.height - buttonRect.height - GAP
+    buttonRect.setLocation(x, y)
+  }
 
   override fun paint(
     g: Graphics,
@@ -98,20 +115,16 @@ private class ScrollBackToTopLayerUI<V : JScrollPane> : LayerUI<V>() {
     val scroll = (c as? JLayer<*>)?.view as? JScrollPane ?: return
     updateButtonRect(scroll)
     if (scroll.viewport.viewRect.y > 0) {
-      button.model.isRollover = btnRct.contains(mousePt)
-      SwingUtilities.paintComponent(g, button, rubberStamp, btnRct)
+      button.model.isRollover = buttonRect.contains(mousePoint)
+      SwingUtilities.paintComponent(g, button, rubberStamp, buttonRect)
     }
-  }
-
-  override fun updateUI(l: JLayer<out V>) {
-    super.updateUI(l)
-    SwingUtilities.updateComponentTreeUI(button)
   }
 
   override fun installUI(c: JComponent) {
     super.installUI(c)
     if (c is JLayer<*>) {
-      c.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
+      c.layerEventMask =
+        AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
       c.glassPane.cursor = Cursor.getDefaultCursor()
     }
   }
@@ -126,16 +139,16 @@ private class ScrollBackToTopLayerUI<V : JScrollPane> : LayerUI<V>() {
     l: JLayer<out V>,
   ) {
     val scroll = l.view
-    val r = scroll.viewport.viewRect
-    val p = SwingUtilities.convertPoint(e.component, e.point, scroll)
-    mousePt.location = p
-    val id = e.id
-    val rollover = btnRct.contains(mousePt)
-    if (id == MouseEvent.MOUSE_CLICKED) {
+    val viewRect = scroll.viewport.viewRect
+    val pt = SwingUtilities.convertPoint(e.component, e.point, scroll)
+    mousePoint.location = pt
+    val eventId = e.id
+    val rollover = buttonRect.contains(mousePoint)
+    if (eventId == MouseEvent.MOUSE_CLICKED) {
       if (rollover) {
         scrollBackToTop(l.view)
       }
-    } else if (id == MouseEvent.MOUSE_PRESSED && r.y > 0 && rollover) {
+    } else if (eventId == MouseEvent.MOUSE_PRESSED && viewRect.y > 0 && rollover) {
       e.consume()
     }
   }
@@ -144,27 +157,20 @@ private class ScrollBackToTopLayerUI<V : JScrollPane> : LayerUI<V>() {
     e: MouseEvent,
     l: JLayer<out V>,
   ) {
-    val p = SwingUtilities.convertPoint(e.component, e.point, l.view)
-    mousePt.location = p
-    l.glassPane.isVisible = btnRct.contains(mousePt)
-    l.repaint(btnRct)
-  }
-
-  private fun updateButtonRect(scroll: JScrollPane) {
-    val viewport = scroll.viewport
-    val x = viewport.x + viewport.width - btnRct.width - GAP
-    val y = viewport.y + viewport.height - btnRct.height - GAP
-    btnRct.setLocation(x, y)
+    val pt = SwingUtilities.convertPoint(e.component, e.point, l.view)
+    mousePoint.location = pt
+    l.glassPane.isVisible = buttonRect.contains(mousePoint)
+    l.repaint(buttonRect)
   }
 
   private fun scrollBackToTop(scroll: JScrollPane) {
-    val c = scroll.viewport.view as? JComponent ?: return
-    val current = scroll.viewport.viewRect
+    val view = scroll.viewport.view as? JComponent ?: return
+    val target = scroll.viewport.viewRect
     Timer(20) { e ->
       (e.source as? Timer)?.also {
-        if (0 < current.y && it.isRunning) {
-          current.y -= 1.coerceAtLeast(current.y / 2)
-          c.scrollRectToVisible(current)
+        if (0 < target.y && it.isRunning) {
+          target.y -= 1.coerceAtLeast(target.y / 2)
+          view.scrollRectToVisible(target)
         } else {
           it.stop()
         }
@@ -180,13 +186,6 @@ private class ScrollBackToTopLayerUI<V : JScrollPane> : LayerUI<V>() {
 private class LineNumberView(
   private val textArea: JTextArea,
 ) : JComponent() {
-  private val componentWidth: Int
-    get() {
-      val maxDigits = 3.coerceAtLeast(textArea.lineCount.toString().length)
-      val fontMetrics = textArea.getFontMetrics(textArea.font)
-      return maxDigits * fontMetrics.stringWidth("0") + insets.left + insets.right
-    }
-
   init {
     val dl = object : DocumentListener {
       override fun insertUpdate(e: DocumentEvent) {
@@ -209,14 +208,27 @@ private class LineNumberView(
       }
     }
     textArea.addComponentListener(cmpListener)
-    val i = textArea.insets
-    border = BorderFactory.createCompoundBorder(
-      BorderFactory.createMatteBorder(0, 0, 0, 1, Color.GRAY),
-      BorderFactory.createEmptyBorder(i.top, MARGIN, i.bottom, MARGIN - 1),
-    )
-    isOpaque = true
-    background = Color.WHITE
-    font = textArea.font
+  }
+
+  override fun updateUI() {
+    super.updateUI()
+    setOpaque(true)
+    EventQueue.invokeLater {
+      val i = textArea.insets
+      border = BorderFactory.createCompoundBorder(
+        BorderFactory.createMatteBorder(0, 0, 0, 1, Color.GRAY),
+        BorderFactory.createEmptyBorder(i.top, MARGIN, i.bottom, MARGIN - 1),
+      )
+      isOpaque = true
+      background = Color.WHITE
+      font = textArea.font
+    }
+  }
+
+  private fun getComponentWidth(): Int {
+    val maxDigits = 3.coerceAtLeast(textArea.lineCount.toString().length)
+    val fontMetrics = textArea.getFontMetrics(textArea.font)
+    return maxDigits * fontMetrics.stringWidth("0") + insets.left + insets.right
   }
 
   private fun getLineAtPoint(y: Int): Int {
@@ -226,35 +238,36 @@ private class LineNumberView(
     return root.getElementIndex(pos)
   }
 
-  override fun updateUI() {
-    super.updateUI()
-    SwingUtilities.updateComponentTreeUI(textArea)
-  }
-
-  override fun getPreferredSize() = Dimension(componentWidth, textArea.height)
+  override fun getPreferredSize() = Dimension(
+    getComponentWidth(),
+    textArea.height,
+  )
 
   override fun paintComponent(g: Graphics) {
-    g.color = background
-    val clip = g.clipBounds
-    g.fillRect(clip.x, clip.y, clip.width, clip.height)
-    val fontMetrics = textArea.getFontMetrics(textArea.font)
-    val fontHeight = fontMetrics.height
+    val g2 = g.create() as? Graphics2D ?: return
+    g2.color = textArea.getBackground()
+    val clip = g2.clipBounds
+    g2.fillRect(clip.x, clip.y, clip.width, clip.height)
+
+    val font = textArea.getFont()
+    g2.font = font
+    g2.color = getForeground()
+    val startLine = getLineAtPoint(clip.y)
+    val endLine = getLineAtPoint(clip.y + clip.height)
+    val fontMetrics = g2.getFontMetrics(font)
     val fontAscent = fontMetrics.ascent
     val fontDescent = fontMetrics.descent
     val fontLeading = fontMetrics.leading
-    g.color = foreground
-    val base = clip.y
-    val start = getLineAtPoint(base)
-    val end = getLineAtPoint(base + clip.height)
-    var y = start * fontHeight
-    val rmg = insets.right
-    for (i in start..end) {
-      val text = (i + 1).toString()
-      val x = componentWidth - rmg - fontMetrics.stringWidth(text)
+    var y = startLine * fontMetrics.height
+    val rightMargin = getInsets().right
+    for (line in startLine..endLine) {
+      val text = (line + 1).toString()
+      val x = getComponentWidth() - rightMargin - fontMetrics.stringWidth(text)
       y += fontAscent
-      g.drawString(text, x, y)
+      g2.drawString(text, x, y)
       y += fontDescent + fontLeading
     }
+    g2.dispose()
   }
 
   companion object {
