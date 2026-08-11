@@ -90,10 +90,13 @@ private class TranslucentSynthStyle(
     type: ColorType,
   ): Color? = style.getColor(context, type)
 
-  override fun getFont(context: SynthContext?): Font? = style.getFont(context)
+  override fun getFont(
+    context: SynthContext?,
+  ): Font? = style.getFont(context)
 
-  override fun getGraphicsUtils(context: SynthContext?): SynthGraphicsUtils? =
-    style.getGraphicsUtils(context)
+  override fun getGraphicsUtils(
+    context: SynthContext?,
+  ): SynthGraphicsUtils? = style.getGraphicsUtils(context)
 
   override fun getIcon(
     context: SynthContext?,
@@ -111,20 +114,21 @@ private class TranslucentSynthStyle(
     defaultValue: Int,
   ) = style.getInt(context, key, defaultValue)
 
-  override fun getPainter(context: SynthContext?) =
-    object : SynthPainter() {
-      override fun paintInternalFrameBackground(
-        context: SynthContext?,
-        g: Graphics,
-        x: Int,
-        y: Int,
-        w: Int,
-        h: Int,
-      ) {
-        g.color = Color(100, 200, 100, 100)
-        g.fillRoundRect(x, y, w - 1, h - 1, 15, 15)
-      }
+  override fun getPainter(
+    context: SynthContext?,
+  ) = object : SynthPainter() {
+    override fun paintInternalFrameBackground(
+      context: SynthContext?,
+      g: Graphics,
+      x: Int,
+      y: Int,
+      w: Int,
+      h: Int,
+    ) {
+      g.color = Color(100, 200, 100, 100)
+      g.fillRoundRect(x, y, w - 1, h - 1, 15, 15)
     }
+  }
 
   override fun getString(
     context: SynthContext,
@@ -132,14 +136,17 @@ private class TranslucentSynthStyle(
     defaultValue: String,
   ): String? = style.getString(context, key, defaultValue)
 
-  override fun installDefaults(context: SynthContext) = style.installDefaults(context)
+  override fun installDefaults(
+    context: SynthContext,
+  ) = style.installDefaults(context)
 
   override fun uninstallDefaults(context: SynthContext) {
     style.uninstallDefaults(context)
   }
 
-  override fun isOpaque(context: SynthContext) =
-    context.region !== Region.INTERNAL_FRAME && style.isOpaque(context)
+  override fun isOpaque(
+    context: SynthContext,
+  ) = context.region !== Region.INTERNAL_FRAME && style.isOpaque(context)
 
   override fun getColorForState(
     context: SynthContext,
