@@ -23,7 +23,7 @@ fun createUI(): Component {
   p1.border = BorderFactory.createTitledBorder("JSpinner")
 
   val p2 = JPanel(BorderLayout(5, 5))
-  p2.add(makeColorSpinner(items))
+  p2.add(createColorSpinner(items))
   p2.border = BorderFactory.createTitledBorder("ColorSpinner(JComboBox)")
 
   val panel = JPanel(BorderLayout(25, 25))
@@ -37,7 +37,7 @@ fun createUI(): Component {
   }
 }
 
-private fun <E> makeColorSpinner(items: Array<E>): Component {
+private fun <E> createColorSpinner(items: Array<E>): Component {
   UIManager.put("ComboBox.squareButton", false)
   val comboBox = object : JComboBox<E>(items) {
     override fun updateUI() {
@@ -79,7 +79,9 @@ private fun <E> makeColorSpinner(items: Array<E>): Component {
   return p
 }
 
-private fun createArrowButton(direction: Int) = object : BasicArrowButton(direction) {
+private fun createArrowButton(
+  direction: Int,
+) = object : BasicArrowButton(direction) {
   override fun updateUI() {
     super.updateUI()
     val buttonBorder = UIManager.getBorder("Spinner.arrowButtonBorder")
