@@ -11,20 +11,21 @@ fun createUI(): Component {
   table.rowHeight = 24
   table.autoCreateRowSorter = true
   return JPanel(BorderLayout()).also {
-    it.add(JLayer(JScrollPane(table), RowHeightResizeLayer()))
+    it.add(JLayer(JScrollPane(table), RowHeightResizeLayerUI()))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private class RowHeightResizeLayer : LayerUI<JScrollPane>() {
-  private var mouseOffsetY = 0
+private class RowHeightResizeLayerUI : LayerUI<JScrollPane>() {
+  private var pressOffsetY = 0
   private var resizingRow = -1
-  private var otherCursor = RESIZE_CURSOR
+  private var previousCursor = RESIZE_CURSOR
 
   override fun installUI(c: JComponent) {
     super.installUI(c)
     if (c is JLayer<*>) {
-      c.layerEventMask = AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
+      c.layerEventMask =
+        AWTEvent.MOUSE_EVENT_MASK or AWTEvent.MOUSE_MOTION_EVENT_MASK
     }
   }
 
@@ -41,7 +42,7 @@ private class RowHeightResizeLayer : LayerUI<JScrollPane>() {
     if (table is JTable && e.id == MouseEvent.MOUSE_PRESSED) {
       resizingRow = getResizeTargetRow(table, e.point)
       if (resizingRow >= 0) {
-        mouseOffsetY = e.y - table.getRowHeight(resizingRow)
+        pressOffsetY = e.y - table.getRowHeight(resizingRow)
         e.consume()
       }
     }
@@ -58,13 +59,13 @@ private class RowHeightResizeLayer : LayerUI<JScrollPane>() {
         val row = getResizeTargetRow(table, e.point)
         if (row >= 0 != isResizing) {
           val tmp = table.cursor
-          table.cursor = otherCursor
-          otherCursor = tmp
+          table.cursor = previousCursor
+          previousCursor = tmp
         }
       }
 
       MouseEvent.MOUSE_DRAGGED -> {
-        val newHeight = e.y - mouseOffsetY
+        val newHeight = e.y - pressOffsetY
         if (newHeight > MIN_ROW_HEIGHT && resizingRow >= 0) {
           table.setRowHeight(resizingRow, newHeight)
         }
