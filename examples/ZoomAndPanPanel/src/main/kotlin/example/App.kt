@@ -19,12 +19,12 @@ fun createUI(): Component {
     ?.let { ImageIcon(it) }
     ?: MissingIcon()
   return JPanel(BorderLayout()).also {
-    it.add(JScrollPane(ZoomAndPanePanel(icon)))
+    it.add(JScrollPane(ZoomAndPanPanel(icon)))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private class ZoomAndPanePanel(
+private class ZoomAndPanPanel(
   private val icon: Icon,
 ) : JPanel() {
   private val zoomTransform = AffineTransform()
