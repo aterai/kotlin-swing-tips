@@ -19,7 +19,7 @@ private const val CLOSE_CURRENT_TAB = "close_current_tab"
 
 fun createUI(): Component {
   val tabbedPane = object : ClippedTitleTabbedPane() {
-    private val history = ArrayList<Component>(5)
+    private val history = mutableListOf<Component>()
 
     override fun setSelectedIndex(index: Int) {
       super.setSelectedIndex(index)
