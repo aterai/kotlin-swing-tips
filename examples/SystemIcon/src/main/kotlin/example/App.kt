@@ -60,7 +60,8 @@ fun createUI(): Component {
           (list as? List<*>)?.also {
             val file = it[0]
             if (file is File) {
-              smallLabel.icon = FileSystemView.getFileSystemView().getSystemIcon(file)
+              val fileSystemView = FileSystemView.getFileSystemView()
+              smallLabel.icon = fileSystemView.getSystemIcon(file)
               val shellFolder = ShellFolder.getShellFolder(file)
               largeLabel.icon = ImageIcon(shellFolder.getIcon(true))
             }
