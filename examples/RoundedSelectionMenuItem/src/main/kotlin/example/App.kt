@@ -160,12 +160,23 @@ private class BasicRoundMenuItemUI : BasicMenuItemUI() {
 private class WindowsRoundMenuItemUI : WindowsMenuItemUI() {
   private var buffer: BufferedImage? = null
 
-  override fun paintBackground(g: Graphics, menuItem: JMenuItem, bgColor: Color) {
-    val model = menuItem.model
-    val isSelected = menuItem is JMenu && model.isSelected
-    if (model.isArmed || isSelected) {
-      val width = menuItem.width
-      val height = menuItem.height
+  // Note: JDK-8348760 (backported to 21.0.12) makes WindowsMenuItemUI bypass
+  // the protected paintBackground(...) when Vista painting is active,
+  // so override paintMenuItem(...) instead
+  override fun paintMenuItem(
+    g: Graphics,
+    c: JComponent,
+    checkIcon: Icon,
+    arrowIcon: Icon,
+    background: Color,
+    foreground: Color,
+    textIconGap: Int,
+  ) {
+    val model = (c as JMenuItem).model
+    val isSelected = c is JMenu && model.isSelected
+    if (isSelected || model.isArmed) {
+      val width = c.width
+      val height = c.height
       val buf = buffer
         ?.takeIf { b -> b.width == width && b.height == height }
         ?: BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
@@ -175,15 +186,17 @@ private class WindowsRoundMenuItemUI : WindowsMenuItemUI() {
         RenderingHints.KEY_ANTIALIASING,
         RenderingHints.VALUE_ANTIALIAS_ON,
       )
-      val fw = width.toFloat()
-      val fh = height.toFloat()
-      g2.fill(RoundRectangle2D.Float(0f, 0f, fw, fh, 8f, 8f))
+      g2.composite = AlphaComposite.Clear
+      g2.fillRect(0, 0, width, height)
+      g2.setPaintMode()
+      g2.paint = Color.WHITE
+      g2.fill(RoundRectangle2D.Float(0f, 0f, width.toFloat(), height.toFloat(), 8f, 8f))
       g2.composite = AlphaComposite.SrcAtop
-      super.paintBackground(g2, menuItem, bgColor)
+      super.paintMenuItem(g2, c, checkIcon, arrowIcon, background, foreground, textIconGap)
       g2.dispose()
-      g.drawImage(buf, 0, 0, menuItem)
+      g.drawImage(buf, 0, 0, c)
     } else {
-      super.paintBackground(g, menuItem, bgColor)
+      super.paintMenuItem(g, c, checkIcon, arrowIcon, background, foreground, textIconGap)
     }
   }
 }
