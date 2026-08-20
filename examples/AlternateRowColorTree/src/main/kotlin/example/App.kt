@@ -53,7 +53,7 @@ private class AlternateRowColorTree : JTree() {
 
   companion object {
     private val SELECTED_COLOR = Color(0x64_32_64_FF, true)
-    private val ALTERNATE_COLOR = Color(0xCC_CC_CC);
+    private val ALTERNATE_COLOR = Color(0xCC_CC_CC)
   }
 }
 
