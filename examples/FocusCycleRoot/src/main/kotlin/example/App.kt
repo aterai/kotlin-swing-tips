@@ -24,7 +24,7 @@ fun createUI(): Component {
   )
   p2.setFocusTraversalKeys(
     KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,
-    setOf(KeyStroke.getKeyStroke("shift TAB"))
+    setOf(KeyStroke.getKeyStroke("shift TAB")),
   )
   p2.setFocusTraversalKeys(
     KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS,
