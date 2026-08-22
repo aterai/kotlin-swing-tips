@@ -1,65 +1,51 @@
 package example
 
-import com.sun.java.swing.plaf.windows.WindowsSliderUI
 import java.awt.*
 import java.awt.event.ActionEvent
-import java.awt.event.KeyEvent
 import java.awt.event.MouseEvent
 import java.awt.event.MouseWheelListener
 import javax.swing.*
-import javax.swing.plaf.metal.MetalSliderUI
+import javax.swing.plaf.basic.BasicSliderUI
 import kotlin.math.roundToInt
 
 fun createUI(): Component {
   val slider0 = JSlider(0, 100, 50)
   slider0.border = BorderFactory.createTitledBorder("Default SnapToTicks")
 
-  val slider1 = object : JSlider(0, 100, 50) {
-    private var handler: MouseWheelListener? = null
-
-    override fun updateUI() {
-      removeMouseWheelListener(handler)
-      super.updateUI()
-      val ui1 = if (ui is WindowsSliderUI) {
-        WindowsSnapToTicksDragSliderUI(this)
+  val slider1 = SnapToTicksDragSlider(0, 100, 50)
+  slider1.border = BorderFactory.createTitledBorder("Custom SnapToTicks")
+  val handler = MouseWheelListener { e ->
+    (e.component as? JSlider)?.also {
+      val hasMinorTick = it.minorTickSpacing > 0
+      val tickSpacing = if (hasMinorTick) {
+        it.minorTickSpacing
       } else {
-        MetalSnapToTicksDragSliderUI()
+        it.majorTickSpacing
       }
-      setUI(ui1)
-      inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0, false), "RIGHT_ARROW")
-      val a1 = object : AbstractAction() {
-        override fun actionPerformed(e: ActionEvent) {
-          val s = e.source as? JSlider ?: return
-          s.value += s.majorTickSpacing
-        }
-      }
-      actionMap.put("RIGHT_ARROW", a1)
-      inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0, false), "LEFT_ARROW")
-      val a2 = object : AbstractAction() {
-        override fun actionPerformed(e: ActionEvent) {
-          val s = e.source as? JSlider ?: return
-          s.value -= s.majorTickSpacing
-        }
-      }
-      actionMap.put("LEFT_ARROW", a2)
-      handler = MouseWheelListener { e ->
-        (e.component as? JSlider)?.also {
-          val hasMinorTickSp = it.minorTickSpacing > 0
-          val tickSp = if (hasMinorTickSp) {
-            it.minorTickSpacing
-          } else {
-            it.majorTickSpacing
-          }
-          val v = it.value - e.wheelRotation * tickSp
-          val m = it.model
-          // it.value = minOf(m.maximum, maxOf(v, m.minimum))
-          it.value = v.coerceIn(m.minimum, m.maximum)
-        }
-      }
-      addMouseWheelListener(handler)
+      it.value = it.value - e.wheelRotation * tickSpacing
     }
   }
-  slider1.border = BorderFactory.createTitledBorder("Custom SnapToTicks")
+  slider1.addMouseWheelListener(handler)
+  slider1.inputMap.put(KeyStroke.getKeyStroke("RIGHT"), "RIGHT_ARROW")
+  slider1.actionMap.put(
+    "RIGHT_ARROW",
+    object : AbstractAction() {
+      override fun actionPerformed(e: ActionEvent) {
+        val s = e.source as? JSlider ?: return
+        s.value += s.majorTickSpacing
+      }
+    },
+  )
+  slider1.inputMap.put(KeyStroke.getKeyStroke("LEFT"), "LEFT_ARROW")
+  slider1.actionMap.put(
+    "LEFT_ARROW",
+    object : AbstractAction() {
+      override fun actionPerformed(e: ActionEvent) {
+        val s = e.source as? JSlider ?: return
+        s.value -= s.majorTickSpacing
+      }
+    },
+  )
 
   val list = listOf(initSlider(slider0), initSlider(slider1))
   val check = JCheckBox("JSlider.setMinorTickSpacing(5)")
@@ -91,85 +77,68 @@ private fun initSlider(slider: JSlider): JSlider {
   return slider
 }
 
-private class WindowsSnapToTicksDragSliderUI(
-  slider: JSlider,
-) : WindowsSliderUI(slider) {
-  override fun createTrackListener(slider: JSlider): TrackListener {
-    return object : TrackListener() {
-      override fun mouseDragged(e: MouseEvent) {
-        if (!slider.snapToTicks || slider.majorTickSpacing == 0) {
-          super.mouseDragged(e)
-          return
-        }
-        // case HORIZONTAL:
-        val halfThumbWidth = thumbRect.width / 2
-        val trackLength = trackRect.width
-        val trackLeft = trackRect.x - halfThumbWidth
-        val trackRight = trackRect.x + trackRect.width - 1 + halfThumbWidth
-        val pos = e.x
-        val snappedPos = when {
-          pos <= trackLeft -> trackLeft
-          pos >= trackRight -> trackRight
-          else -> getSnappedPos(trackLength, pos, trackLeft)
-        }
-        e.translatePoint(snappedPos - pos, 0)
-        super.mouseDragged(e)
-      }
+// Snap the thumb to the nearest tick while dragging the mouse
+private class SnapToTicksDragSlider(
+  min: Int,
+  max: Int,
+  value: Int,
+) : JSlider(min, max, value) {
+  private val tickSpacing
+    get() = if (minorTickSpacing > 0) minorTickSpacing else majorTickSpacing
 
-      private fun getSnappedPos(trackLength: Int, pos: Int, trackLeft: Int): Int {
-        offset = 0
-        val possibleTickPos = slider.maximum - slider.minimum
-        val hasMinorTick = slider.minorTickSpacing > 0
-        val tickSpacing = if (hasMinorTick) {
-          slider.minorTickSpacing
-        } else {
-          slider.majorTickSpacing
-        }
-        val tickPixels = trackLength * tickSpacing / possibleTickPos.toFloat()
-        val px = pos - trackLeft
-        return ((px / tickPixels).roundToInt() * tickPixels).roundToInt() + trackLeft
+  // BasicSliderUI.TrackListener#mouseDragged(...) moves the thumb to the raw
+  // mouse location, and BasicSliderUI#calculateThumbLocation() that snaps the
+  // value is only called while BasicSliderUI#isDragging() returns false.
+  // Consuming MOUSE_PRESSED, MOUSE_DRAGGED and MOUSE_RELEASED keeps the
+  // TrackListener from starting a thumb drag, so the LookAndFeel itself places
+  // the thumb on the tick that matches the current value.
+  override fun processMouseEvent(e: MouseEvent) {
+    val id = e.id
+    val isPressed = id == MouseEvent.MOUSE_PRESSED
+    val isReleased = id == MouseEvent.MOUSE_RELEASED
+    if ((isPressed || isReleased) && isSnapDragEvent(e)) {
+      if (isPressed) {
+        startSnapDrag(e.point)
+      } else {
+        valueIsAdjusting = false
       }
+    } else {
+      super.processMouseEvent(e)
     }
   }
-}
 
-private class MetalSnapToTicksDragSliderUI : MetalSliderUI() {
-  override fun createTrackListener(slider: JSlider): TrackListener {
-    return object : TrackListener() {
-      override fun mouseDragged(e: MouseEvent) {
-        if (!slider.snapToTicks || slider.majorTickSpacing == 0) {
-          super.mouseDragged(e)
-          return
-        }
-        // case HORIZONTAL:
-        val halfThumbWidth = thumbRect.width / 2
-        val trackLength = trackRect.width
-        val trackLeft = trackRect.x - halfThumbWidth
-        val trackRight = trackRect.x + trackRect.width - 1 + halfThumbWidth
-        val pos = e.x
-        val snappedPos = when {
-          pos <= trackLeft -> trackLeft
-          pos >= trackRight -> trackRight
-          else -> getSnappedPos(trackLength, pos, trackLeft)
-        }
-        e.translatePoint(snappedPos - pos, 0)
-        super.mouseDragged(e)
-      }
-
-      private fun getSnappedPos(trackLength: Int, pos: Int, trackLeft: Int): Int {
-        offset = 0
-        val possibleTickPos = slider.maximum - slider.minimum
-        val hasMinorTick = slider.minorTickSpacing > 0
-        val tickSpacing = if (hasMinorTick) {
-          slider.minorTickSpacing
-        } else {
-          slider.majorTickSpacing
-        }
-        val tickPixels = trackLength * tickSpacing / possibleTickPos.toFloat()
-        val px = pos - trackLeft
-        return ((px / tickPixels).roundToInt() * tickPixels).roundToInt() + trackLeft
-      }
+  private fun startSnapDrag(pt: Point) {
+    if (isRequestFocusEnabled) {
+      requestFocusInWindow()
     }
+    valueIsAdjusting = true
+    value = getSnappedValue(pt)
+  }
+
+  override fun processMouseMotionEvent(e: MouseEvent) {
+    if (e.id == MouseEvent.MOUSE_DRAGGED && isSnapDragEvent(e)) {
+      value = getSnappedValue(e.point)
+    } else {
+      // MOUSE_MOVED is delegated to the TrackListener to keep the rollover state
+      super.processMouseMotionEvent(e)
+    }
+  }
+
+  private fun isSnapDragEvent(e: MouseEvent) =
+    isEnabled && snapToTicks && tickSpacing > 0 &&
+      ui is BasicSliderUI && SwingUtilities.isLeftMouseButton(e)
+
+  private fun getSnappedValue(pt: Point): Int {
+    val sliderUi = ui as? BasicSliderUI ?: return value
+    val horizontal = orientation == HORIZONTAL
+    val v = if (horizontal) {
+      sliderUi.valueForXPosition(pt.x)
+    } else {
+      sliderUi.valueForYPosition(pt.y)
+    }
+    val ts = tickSpacing
+    val snapped = minimum + ((v - minimum) / ts.toFloat()).roundToInt() * ts
+    return snapped.coerceIn(minimum, maximum)
   }
 }
 
