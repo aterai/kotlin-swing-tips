@@ -12,7 +12,7 @@ private var sequencer: Sequencer? = null
 private var isMovingSlider = false
 
 fun createUI(): Component {
-  val cl = Thread.currentThread().getContextClassLoader()
+  val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/Mozart_toruko_k.mid")
   initSequencer(url)
 
