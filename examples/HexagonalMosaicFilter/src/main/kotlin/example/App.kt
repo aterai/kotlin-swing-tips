@@ -10,8 +10,6 @@ import javax.imageio.ImageIO
 import javax.swing.*
 import kotlin.math.abs
 import kotlin.math.ceil
-import kotlin.math.max
-import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
@@ -178,7 +176,7 @@ private class HexagonalMosaicFilter(
     }
     val col = cq + MARGIN
     val row = (cr + ((cq - (cq and 1)) shr 1)) + MARGIN
-    return clamp(col, columns) + clamp(row, rows) * columns
+    return col.coerceIn(0..<columns) + row.coerceIn(0..<rows) * columns
   }
 
   override fun getBounds2D(src: BufferedImage) = Rectangle2D.Double(
@@ -204,7 +202,7 @@ private class HexagonalMosaicFilter(
   }
 
   override fun getRenderingHints() = RenderingHints(
-    mutableMapOf<RenderingHints.Key?, Any?>(),
+    mutableMapOf<RenderingHints.Key, Any>(),
   )
 
   companion object {
@@ -216,14 +214,12 @@ private class HexagonalMosaicFilter(
 
     private fun getGridSize(length: Int, pitch: Double) =
       ceil(length / pitch).toInt() + MARGIN * 2 + 1
-
-    private fun clamp(value: Int, size: Int) = min(max(value, 0), size - 1)
   }
 }
 
 private class MissingIcon : Icon {
   override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
-    val g2 = g.create() as Graphics2D
+    val g2 = g.create() as? Graphics2D ?: return
     val w = iconWidth
     val h = iconHeight
     val gap = w / 5
