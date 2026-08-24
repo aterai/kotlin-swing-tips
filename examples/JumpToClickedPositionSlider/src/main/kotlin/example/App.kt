@@ -1,13 +1,12 @@
 package example
 
-import com.sun.java.swing.plaf.windows.WindowsSliderUI
 import java.awt.*
 import java.awt.event.MouseEvent
 import javax.swing.*
-import javax.swing.plaf.metal.MetalSliderUI
+import javax.swing.plaf.basic.BasicSliderUI
 
 fun createUI(): Component {
-  val slider1 = makeSlider(SwingConstants.VERTICAL, 0, 1000, 500)
+  val slider1 = JumpToClickedPositionSlider(SwingConstants.VERTICAL, 0, 1000, 500)
   val box1 = Box.createHorizontalBox().also {
     it.border = BorderFactory.createEmptyBorder(20, 20, 20, 20)
     it.add(JSlider(SwingConstants.VERTICAL, 0, 1000, 100))
@@ -16,12 +15,12 @@ fun createUI(): Component {
     it.add(Box.createHorizontalGlue())
   }
 
-  val slider2 = makeSlider(SwingConstants.HORIZONTAL, 0, 1000, 500)
+  val slider2 = JumpToClickedPositionSlider(SwingConstants.HORIZONTAL, 0, 1000, 500)
   val box2 = Box.createVerticalBox().also {
     it.border = BorderFactory.createEmptyBorder(20, 0, 20, 20)
-    it.add(makeTitledPanel("Default", JSlider(0, 100, 100)))
+    it.add(createTitledPanel("Default", JSlider(0, 100, 100)))
     it.add(Box.createVerticalStrut(20))
-    it.add(makeTitledPanel("Jump to clicked position", slider2))
+    it.add(createTitledPanel("Jump to clicked position", slider2))
     it.add(Box.createVerticalGlue())
   }
 
@@ -32,34 +31,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeSlider(
-  orientation: Int,
-  min: Int,
-  max: Int,
-  value: Int,
-): JSlider {
-  return object : JSlider(orientation, min, max, value) {
-    override fun updateUI() {
-      super.updateUI()
-      val ui2 = if (ui is WindowsSliderUI) {
-        WindowsJumpToClickedPositionSliderUI(this)
-      } else {
-        val icon = UIManager.getIcon("html.missingImage")
-        UIManager.put("Slider.trackWidth", 0)
-        UIManager.put("Slider.majorTickLength", 0)
-        UIManager.put("Slider.verticalThumbIcon", icon)
-        UIManager.put("Slider.horizontalThumbIcon", icon)
-        MetalJumpToClickedPositionSliderUI()
-      }
-      setUI(ui2)
-    }
-  }
-  // slider.setSnapToTicks(false)
-  // slider.setPaintTicks(true)
-  // slider.setPaintLabels(true)
-}
-
-private fun makeTitledPanel(
+private fun createTitledPanel(
   title: String,
   c: Component,
 ): Component {
@@ -69,51 +41,26 @@ private fun makeTitledPanel(
   return p
 }
 
-private class WindowsJumpToClickedPositionSliderUI(
-  slider: JSlider,
-) : WindowsSliderUI(slider) {
-  override fun createTrackListener(slider: JSlider?): TrackListener {
-    return object : TrackListener() {
-      override fun mousePressed(e: MouseEvent) {
-        if (SwingUtilities.isLeftMouseButton(e)) {
-          val s = e.component as? JSlider ?: return
-          when (s.orientation) {
-            SwingConstants.VERTICAL -> s.value = valueForYPosition(e.y)
-            SwingConstants.HORIZONTAL -> s.value = valueForXPosition(e.x)
-            else -> error("orientation must be one of: VERTICAL, HORIZONTAL")
-          }
-          super.mousePressed(e) // isDragging = true
-          super.mouseDragged(e)
-        } else {
-          super.mousePressed(e)
-        }
-      }
-
-      override fun shouldScroll(direction: Int) = false
+private class JumpToClickedPositionSlider(
+  orientation: Int,
+  min: Int,
+  max: Int,
+  value: Int,
+) : JSlider(orientation, min, max, value) {
+  override fun processMouseEvent(e: MouseEvent) {
+    if (e.getID() == MouseEvent.MOUSE_PRESSED && isJumpEvent(e)) {
+      setValue(getValueForPoint(e.getPoint()))
     }
+    super.processMouseEvent(e)
   }
-}
 
-private class MetalJumpToClickedPositionSliderUI : MetalSliderUI() {
-  override fun createTrackListener(slider: JSlider?): TrackListener {
-    return object : TrackListener() {
-      override fun mousePressed(e: MouseEvent) {
-        if (SwingUtilities.isLeftMouseButton(e)) {
-          val s = e.component as? JSlider ?: return
-          when (s.orientation) {
-            SwingConstants.VERTICAL -> s.value = valueForYPosition(e.y)
-            SwingConstants.HORIZONTAL -> s.value = valueForXPosition(e.x)
-            else -> error("orientation must be one of: VERTICAL, HORIZONTAL")
-          }
-          super.mousePressed(e) // isDragging = true
-          super.mouseDragged(e)
-        } else {
-          super.mousePressed(e)
-        }
-      }
+  private fun isJumpEvent(e: MouseEvent) = isEnabled && getUI() is BasicSliderUI &&
+    SwingUtilities.isLeftMouseButton(e)
 
-      override fun shouldScroll(direction: Int) = false
-    }
+  private fun getValueForPoint(pt: Point): Int {
+    val ui = getUI() as? BasicSliderUI ?: return -1
+    val horizontal = getOrientation() == HORIZONTAL
+    return if (horizontal) ui.valueForXPosition(pt.x) else ui.valueForYPosition(pt.y)
   }
 }
 

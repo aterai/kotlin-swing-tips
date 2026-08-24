@@ -1,37 +1,30 @@
 package example
 
-import com.sun.java.swing.plaf.windows.WindowsSliderUI
 import java.awt.*
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.*
-import javax.swing.plaf.metal.MetalSliderUI
+import javax.swing.plaf.basic.BasicSliderUI
 
 fun createUI(): Component {
   val box = Box.createVerticalBox()
   box.add(Box.createVerticalStrut(5))
-  box.add(makeTitledPanel("Default", makeSlider(JSlider(0, 100, 0))))
+  box.add(createTitledPanel("Default", initSlider(JSlider(0, 100, 0))))
   box.add(Box.createVerticalStrut(25))
 
-  val slider = object : JSlider(0, 100, 0) {
+  val slider = object : JumpToClickedPositionSlider(HORIZONTAL, 0, 100, 0) {
     private var handler: MouseAdapter? = null
 
     override fun updateUI() {
       removeMouseMotionListener(handler)
       removeMouseListener(handler)
       super.updateUI()
-      val ui2 = if (ui is WindowsSliderUI) {
-        WindowsTooltipSliderUI(this)
-      } else {
-        MetalTooltipSliderUI()
-      }
-      setUI(ui2)
       handler = SliderPopupListener()
       addMouseMotionListener(handler)
       addMouseListener(handler)
     }
   }
-  box.add(makeTitledPanel("Show ToolTip", makeSlider(slider)))
+  box.add(createTitledPanel("Show ToolTip", initSlider(slider)))
   box.add(Box.createVerticalGlue())
 
   return JPanel(BorderLayout()).also {
@@ -41,7 +34,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeSlider(slider: JSlider): JSlider {
+private fun initSlider(slider: JSlider): JSlider {
   slider.paintTicks = true
   slider.majorTickSpacing = 10
   slider.minorTickSpacing = 5
@@ -53,7 +46,7 @@ private fun makeSlider(slider: JSlider): JSlider {
   return slider
 }
 
-private fun makeTitledPanel(
+private fun createTitledPanel(
   title: String,
   c: Component,
 ): Component {
@@ -63,49 +56,26 @@ private fun makeTitledPanel(
   return p
 }
 
-private class WindowsTooltipSliderUI(
-  slider: JSlider,
-) : WindowsSliderUI(slider) {
-  override fun createTrackListener(slider: JSlider?) = object : TrackListener() {
-    override fun mousePressed(e: MouseEvent) {
-      if (SwingUtilities.isLeftMouseButton(e)) {
-        (e.component as? JSlider)?.also {
-          if (it.orientation == SwingConstants.VERTICAL) {
-            it.value = valueForYPosition(e.y)
-          } else { // SwingConstants.HORIZONTAL
-            it.value = valueForXPosition(e.x)
-          }
-          super.mousePressed(e) // isDragging = true
-          super.mouseDragged(e)
-        }
-      } else {
-        super.mousePressed(e)
-      }
+private open class JumpToClickedPositionSlider(
+  orientation: Int,
+  min: Int,
+  max: Int,
+  value: Int,
+) : JSlider(orientation, min, max, value) {
+  override fun processMouseEvent(e: MouseEvent) {
+    if (e.getID() == MouseEvent.MOUSE_PRESSED && isJumpEvent(e)) {
+      setValue(getValueForPoint(e.getPoint()))
     }
-
-    override fun shouldScroll(direction: Int) = false
+    super.processMouseEvent(e)
   }
-}
 
-private class MetalTooltipSliderUI : MetalSliderUI() {
-  override fun createTrackListener(slider: JSlider?) = object : TrackListener() {
-    override fun mousePressed(e: MouseEvent) {
-      if (SwingUtilities.isLeftMouseButton(e)) {
-        (e.component as? JSlider)?.also {
-          if (it.orientation == SwingConstants.VERTICAL) {
-            it.value = valueForYPosition(e.y)
-          } else { // SwingConstants.HORIZONTAL
-            it.value = valueForXPosition(e.x)
-          }
-          super.mousePressed(e) // isDragging = true
-          super.mouseDragged(e)
-        }
-      } else {
-        super.mousePressed(e)
-      }
-    }
+  private fun isJumpEvent(e: MouseEvent) = isEnabled && getUI() is BasicSliderUI &&
+    SwingUtilities.isLeftMouseButton(e)
 
-    override fun shouldScroll(direction: Int) = false
+  private fun getValueForPoint(pt: Point): Int {
+    val ui = getUI() as? BasicSliderUI ?: return -1
+    val horizontal = getOrientation() == HORIZONTAL
+    return if (horizontal) ui.valueForXPosition(pt.x) else ui.valueForYPosition(pt.y)
   }
 }
 
