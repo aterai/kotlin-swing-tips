@@ -11,7 +11,7 @@ import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableModel
 
 fun createUI(): Component {
-  val table = object : JTable(makeModel()) {
+  val table = object : JTable(createModel()) {
     private val evenColor = Color(0xFA_FA_FA)
 
     override fun prepareRenderer(
@@ -52,7 +52,7 @@ fun createUI(): Component {
   }
 }
 
-fun makeModel(): TableModel {
+fun createModel(): TableModel {
   val columnNames = arrayOf("No.", "Name", "URI")
   val m = object : DefaultTableModel(columnNames, 0) {
     override fun getColumnClass(column: Int) = when (column) {
@@ -67,14 +67,14 @@ fun makeModel(): TableModel {
       col: Int,
     ) = false
   }
-  m.addRow(makeRow(0, "FrontPage", "https://ateraimemo.com/"))
-  m.addRow(makeRow(1, "Java Swing Tips", "https://ateraimemo.com/Swing.html"))
-  m.addRow(makeRow(2, "Example", "http://www.example.com/"))
-  m.addRow(makeRow(3, "Example.jp", "http://www.example.jp/"))
+  m.addRow(createRow(0, "FrontPage", "https://ateraimemo.com/"))
+  m.addRow(createRow(1, "Java Swing Tips", "https://ateraimemo.com/Swing.html"))
+  m.addRow(createRow(2, "Example", "http://www.example.com/"))
+  m.addRow(createRow(3, "Example.jp", "http://www.example.jp/"))
   return m
 }
 
-private fun makeRow(i: Int, title: String, path: String) = arrayOf<Any?>(
+private fun createRow(i: Int, title: String, path: String) = arrayOf<Any?>(
   i,
   title,
   runCatching { URI(path) }.getOrNull(),
@@ -207,7 +207,14 @@ private class UriRenderer :
     val col = table.columnAtPoint(p)
     val tcr = table.getCellRenderer(row, col)
     val value = table.getValueAt(row, col)
-    val cell = tcr.getTableCellRendererComponent(table, value, false, false, row, col)
+    val cell = tcr.getTableCellRendererComponent(
+      table,
+      value,
+      false,
+      false,
+      row,
+      col,
+    )
     val itemSize = cell.preferredSize
     val cellBounds = table.getCellRect(row, col, false).also {
       val i = (cell as? JComponent)?.insets ?: Insets(0, 0, 0, 0)
