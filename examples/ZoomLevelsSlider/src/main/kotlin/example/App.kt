@@ -1,37 +1,22 @@
 package example
 
-import com.sun.java.swing.plaf.windows.WindowsSliderUI
 import java.awt.*
 import java.awt.event.MouseEvent
 import javax.swing.*
-import javax.swing.plaf.metal.MetalSliderUI
+import javax.swing.plaf.basic.BasicSliderUI
+import kotlin.math.abs
+import kotlin.math.max
 
 fun createUI(): Component {
   val slider0 = JSlider(-100, 100, 0)
   initSlider(slider0)
   slider0.border = BorderFactory.createTitledBorder("Default")
 
-  val slider1 = object : JSlider(-100, 100, 0) {
-    override fun updateUI() {
-      super.updateUI()
-      if (getUI() is WindowsSliderUI) {
-        setUI(WindowsZoomLevelsSliderUI(this))
-      } else {
-        val icon = UIManager.getIcon("html.missingImage")
-        // Meaningless settings that are not used?
-        UIManager.put("Slider.trackWidth", 0)
-        // BasicSliderUI#getTickLength(): 8
-        UIManager.put("Slider.majorTickLength", 8)
-        UIManager.put("Slider.verticalThumbIcon", icon)
-        UIManager.put("Slider.horizontalThumbIcon", icon)
-        setUI(MetalZoomLevelsSliderUI())
-      }
-    }
-  }
+  val slider1 = ZoomLevelsSlider(-100, 100, 0)
   initSlider(slider1)
   val help1 = "Dragged: Snap to the center"
-  val help2 = "Clicked: Double-click the thumb to reset its value"
-  slider1.border = BorderFactory.createTitledBorder("<html>$help1<br>$help2")
+  val help2 = "Double-clicked: Reset to the initial value"
+  slider1.setBorder(BorderFactory.createTitledBorder("<html>$help1<br>$help2"))
 
   val box = Box.createVerticalBox()
   box.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
@@ -57,7 +42,7 @@ private fun initSlider(slider: JSlider) {
       }
     }
   }
-  slider.labelTable = labelTable // Update LabelTable
+  slider.labelTable = labelTable
 }
 
 private fun getLabel(
@@ -70,65 +55,62 @@ private fun getLabel(
   else -> " "
 }
 
-private class WindowsZoomLevelsSliderUI(
-  slider: JSlider,
-) : WindowsSliderUI(slider) {
-  override fun createTrackListener(slider: JSlider) = object : TrackListener() {
-    override fun mouseClicked(e: MouseEvent) {
-      super.mouseClicked(e)
-      val isDoubleClick = e.clickCount >= 2
-      val isLeftClick = SwingUtilities.isLeftMouseButton(e)
-      if (isDoubleClick && isLeftClick && thumbRect.contains(e.point)) {
-        slider.value = 0
+private class ZoomLevelsSlider(
+  min: Int,
+  max: Int,
+  private val defaultValue: Int,
+) : JSlider(min, max, defaultValue) {
+  override fun processMouseEvent(e: MouseEvent) {
+    val id = e.getID()
+    val isPressed = id == MouseEvent.MOUSE_PRESSED
+    val isReleased = id == MouseEvent.MOUSE_RELEASED
+    if ((isPressed || isReleased) && isThumbDragEvent(e)) {
+      if (isPressed) {
+        startThumbDrag(e)
+      } else {
+        setValueIsAdjusting(false)
       }
-    }
-
-    override fun mouseDragged(e: MouseEvent) {
-      // case HORIZONTAL:
-      val halfThumbWidth = thumbRect.width / 2
-      val trackLength = trackRect.width
-      val pos = e.x + halfThumbWidth
-      val possibleTickPos = slider.maximum - slider.minimum
-      val tickSp = slider.majorTickSpacing.coerceAtLeast(10)
-      val tickPixels = trackLength * tickSp / possibleTickPos
-      val tickPixels2 = tickPixels / 2
-      val trackCenter = trackRect.centerX.toInt()
-      if (trackCenter - tickPixels2 < pos && pos < trackCenter + tickPixels2) {
-        e.translatePoint(trackCenter - halfThumbWidth - e.x, 0)
-        offset = 0
-      }
-      super.mouseDragged(e)
+    } else {
+      super.processMouseEvent(e)
     }
   }
-}
 
-private class MetalZoomLevelsSliderUI : MetalSliderUI() {
-  override fun createTrackListener(slider: JSlider) = object : TrackListener() {
-    override fun mouseClicked(e: MouseEvent) {
-      val isDoubleClick = e.clickCount >= 2
-      val isLeftClick = SwingUtilities.isLeftMouseButton(e)
-      if (isDoubleClick && isLeftClick && thumbRect.contains(e.point)) {
-        slider.value = 0
-      } else {
-        super.mouseClicked(e)
-      }
+  private fun startThumbDrag(e: MouseEvent) {
+    if (isRequestFocusEnabled) {
+      requestFocusInWindow()
     }
+    setValueIsAdjusting(true)
+    val isDoubleClick = e.getClickCount() >= 2
+    setValue(if (isDoubleClick) defaultValue else getSnappedValue(e.getPoint()))
+  }
 
-    override fun mouseDragged(e: MouseEvent) {
-      // case HORIZONTAL:
-      val halfThumbWidth = thumbRect.width / 2
-      val trackLength = trackRect.width
-      val pos = e.x + halfThumbWidth
-      val possibleTickPos = slider.maximum - slider.minimum
-      val tickSp = slider.majorTickSpacing.coerceAtLeast(10)
-      val tickPixels = trackLength * tickSp / possibleTickPos
-      val trackCenter = trackRect.centerX.toInt()
-      if (trackCenter - tickPixels < pos && pos < trackCenter + tickPixels) {
-        e.translatePoint(trackCenter - halfThumbWidth - e.x, 0)
-        offset = 0
-      }
-      super.mouseDragged(e)
+  override fun processMouseMotionEvent(e: MouseEvent) {
+    if (e.getID() == MouseEvent.MOUSE_DRAGGED && isThumbDragEvent(e)) {
+      setValue(getSnappedValue(e.getPoint()))
+    } else {
+      super.processMouseMotionEvent(e)
     }
+  }
+
+  private fun isThumbDragEvent(e: MouseEvent) =
+    isEnabled && getUI() is BasicSliderUI &&
+      SwingUtilities.isLeftMouseButton(e)
+
+  private fun getSnappedValue(pt: Point): Int {
+    val ui = getUI() as BasicSliderUI
+    val horizontal = getOrientation() == HORIZONTAL
+    val value = if (horizontal) {
+      ui.valueForXPosition(pt.x)
+    } else {
+      ui.valueForYPosition(pt.y)
+    }
+    val tickSpacing = max(getMajorTickSpacing(), MIN_TICK_SPACING)
+    val nearDefaultValue = abs(value - defaultValue) < tickSpacing / 2
+    return if (nearDefaultValue) defaultValue else value
+  }
+
+  companion object {
+    private const val MIN_TICK_SPACING = 10
   }
 }
 
