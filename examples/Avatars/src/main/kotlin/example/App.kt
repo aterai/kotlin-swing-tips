@@ -10,9 +10,12 @@ import java.awt.geom.Ellipse2D
 import java.awt.geom.Path2D
 import java.awt.geom.RoundRectangle2D
 import javax.swing.*
+import javax.swing.border.Border
 import javax.swing.plaf.LayerUI
 import kotlin.math.abs
 import kotlin.math.max
+
+private const val PADDING = 5
 
 fun createUI(): Component {
   val names = arrayOf("Alice", "Bob", "Carol", "Dave", "Eve")
@@ -25,10 +28,11 @@ fun createUI(): Component {
   )
   val layer1 = createAvatarGroup(names, colors, true)
   val layer2 = createAvatarGroup(names, colors, false)
+
   return JPanel(BorderLayout()).also {
     it.add(layer1, BorderLayout.NORTH)
     it.add(layer2, BorderLayout.SOUTH)
-    it.border = BorderFactory.createEmptyBorder(50, 50, 50, 50)
+    it.border = BorderFactory.createEmptyBorder(20, 20, 20, 20)
     it.preferredSize = Dimension(320, 240)
   }
 }
@@ -40,11 +44,10 @@ private fun createAvatarGroup(
 ): JLayer<JPanel> {
   // Container for displaying avatars
   val avatarPanel = JPanel(StackedLayout(0.0, leftForeground))
-  avatarPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
 
   // leftForeground = true -> 0, 1, 2... (Add from left -> Left is front)
   // leftForeground = false -> n-1, n-2... (Add from right -> Right is front)
-  val n = names.size
+  val n = colors.size
   val start = if (leftForeground) 0 else n - 1
   val end = if (leftForeground) n else -1
   val step = if (leftForeground) 1 else -1
@@ -53,12 +56,26 @@ private fun createAvatarGroup(
     avatarPanel.add(createAvatarButton(i, names[i], colors[i]))
     i += step
   }
+  avatarPanel.setBorder(createToolTipMargin(avatarPanel))
 
   // Wrap with JLayer and apply animation UI
-  return JLayer<JPanel>(avatarPanel, AvatarLayerUI())
+  return JLayer(avatarPanel, AvatarLayerUI())
 }
 
-private fun createAvatarButton(i: Int, name: String, color: Color): JButton {
+private fun createToolTipMargin(avatarPanel: Container): Border {
+  var top = PADDING
+  var side = PADDING
+  for (c in avatarPanel.components) {
+    val b = c as AvatarButton
+    val r = b.getToolTipBounds(b.toolTipText)
+    val overhang = max(-r.x, r.x + r.width - b.getPreferredSize().width)
+    top = max(top, PADDING - r.y)
+    side = max(side, PADDING + overhang)
+  }
+  return BorderFactory.createEmptyBorder(top, side, PADDING, side)
+}
+
+private fun createAvatarButton(i: Int, name: String, color: Color): AvatarButton {
   // Generate icons with varying sizes (100x100 to 200x200)
   val randomSize = 100 + i * 25
   val button = AvatarButton(UserIcon(name, color, randomSize))
@@ -67,14 +84,12 @@ private fun createAvatarButton(i: Int, name: String, color: Color): JButton {
   return button
 }
 
-// Custom Layout Manager
-// Arranges components based on gapFraction (0.0=stacked, 1.0=spread)
 private class StackedLayout(
   private var gapFraction: Double,
   private val leftForeground: Boolean,
 ) : LayoutManager {
-  fun setGapFraction(gapFraction: Double) {
-    this.gapFraction = gapFraction
+  fun setGapFraction(gapFrac: Double) {
+    this.gapFraction = gapFrac
   }
 
   override fun layoutContainer(parent: Container) {
@@ -108,12 +123,10 @@ private class StackedLayout(
         val c = parent.getComponent(i)
         val d = c.preferredSize
         maxHeight = max(maxHeight, d.height)
-        if (i < n - 1) {
-          // Add overlap for all but the last component
-          val step = (d.width * .6 + d.width * .4 * gapFraction).toInt()
-          totalWidth += step
+        totalWidth += if (i < n - 1) {
+          (d.width * .6 + d.width * .4 * gapFraction).toInt()
         } else {
-          totalWidth += d.width
+          d.width
         }
       }
       val insets = parent.insets
@@ -135,8 +148,7 @@ private class StackedLayout(
   }
 }
 
-// Circular Avatar Button
-internal class AvatarButton(
+private class AvatarButton(
   icon: Icon,
 ) : JButton(icon) {
   private var tip: JToolTip? = null
@@ -175,7 +187,6 @@ internal class AvatarButton(
     val w = getWidth()
     val h = getHeight()
 
-    // 1. Draw the border with background color
     g2.color = getParent().getBackground()
     g2.fill(Ellipse2D.Double(0.0, 0.0, w.toDouble(), h.toDouble()))
 
@@ -223,24 +234,30 @@ internal class AvatarButton(
     g2.dispose()
   }
 
-  override fun getToolTipLocation(e: MouseEvent) = getToolTipText(e)?.let {
+  fun getToolTipBounds(toolTipText: String?): Rectangle {
     val toolTip = createToolTip()
     toolTip.setTipText(toolTipText)
-    val buttonBounds = SwingUtilities.calculateInnerArea(this, null)
     val tooltipSize = toolTip.getPreferredSize()
-    val centerX = (buttonBounds.centerX - tooltipSize.getWidth() / 2.0).toInt()
-    val topY = buttonBounds.y - tooltipSize.height - 2
-    Point(centerX, topY)
+    val buttonSize = getPreferredSize()
+    val insets = getInsets()
+    val centerX = insets.left + (buttonSize.width - insets.left - insets.right) / 2.0
+    val x = (centerX - tooltipSize.getWidth() / 2.0).toInt()
+    val y = insets.top - tooltipSize.height - TIP_GAP
+    return Rectangle(x, y, tooltipSize.width, tooltipSize.height)
   }
+
+  override fun getToolTipLocation(e: MouseEvent) = getToolTipText(e)
+        ?.let { this.getToolTipBounds(it) }
+        ?.location
 
   companion object {
     private const val DIAMETER = 24
+    private const val TIP_GAP = 2
     private val INSETS = Insets(2, 2, 2, 2)
   }
 }
 
-// LayerUI that controls animation on mouse hover
-private class AvatarLayerUI : LayerUI<JPanel?>() {
+private class AvatarLayerUI : LayerUI<JPanel>() {
   private val timer = Timer(15, null)
   private var currentFraction = 0.0
   private var targetFraction = 0.0
@@ -256,7 +273,6 @@ private class AvatarLayerUI : LayerUI<JPanel?>() {
     }
   }
 
-  // Ease-Out: Moves 25% closer to target per frame
   private fun updateAnimation(panel: JPanel) {
     val diff = targetFraction - currentFraction
     val isEnd = abs(diff) < .1
@@ -274,9 +290,10 @@ private class AvatarLayerUI : LayerUI<JPanel?>() {
   }
 
   override fun processMouseEvent(e: MouseEvent, l: JLayer<out JPanel>) {
-    if (e.getID() == MouseEvent.MOUSE_ENTERED) {
+    if (e.getID() == MouseEvent.MOUSE_ENTERED && e.component is AvatarButton) {
       startAnimation(1.0)
-    } else if (e.getID() == MouseEvent.MOUSE_EXITED) {
+    } else if (e.getID() == MouseEvent.MOUSE_EXITED && !contains(e, l)) {
+      hideToolTip()
       startAnimation(0.0)
     }
   }
@@ -286,6 +303,15 @@ private class AvatarLayerUI : LayerUI<JPanel?>() {
     if (!timer.isRunning) {
       timer.start()
     }
+  }
+
+  private fun contains(e: MouseEvent, l: JLayer<out JPanel>) = l
+    .contains(SwingUtilities.convertPoint(e.component, e.getPoint(), l))
+
+  private fun hideToolTip() {
+    val manager = ToolTipManager.sharedInstance()
+    manager.setEnabled(false)
+    manager.setEnabled(true)
   }
 }
 
@@ -378,14 +404,14 @@ private class BalloonToolTip : JToolTip() {
     return area
   }
 
+  private fun isHeavyWeight(w: Window): Boolean {
+    val isPopup = w.type == Window.Type.POPUP
+    val gc = w.graphicsConfiguration
+    return gc != null && gc.isTranslucencyCapable && isPopup
+  }
+
   companion object {
     private const val TRI_HEIGHT = 4
-
-    private fun isHeavyWeight(w: Window): Boolean {
-      val isHeavyWeight = w.type == Window.Type.POPUP
-      val gc = w.graphicsConfiguration
-      return gc != null && gc.isTranslucencyCapable && isHeavyWeight
-    }
   }
 }
 
