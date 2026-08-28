@@ -30,22 +30,22 @@ fun createUI(): Component {
         RenderingHints.VALUE_ANTIALIAS_ON,
       )
       val path = Path2D.Double()
-      path.moveTo(cube[0].vx, cube[0].vy)
-      path.lineTo(cube[1].vx, cube[1].vy)
-      path.lineTo(cube[2].vx, cube[2].vy)
-      path.lineTo(cube[3].vx, cube[3].vy)
-      path.lineTo(cube[0].vx, cube[0].vy)
-      path.lineTo(cube[4].vx, cube[4].vy)
-      path.lineTo(cube[5].vx, cube[5].vy)
-      path.lineTo(cube[6].vx, cube[6].vy)
-      path.lineTo(cube[7].vx, cube[7].vy)
-      path.lineTo(cube[4].vx, cube[4].vy)
-      path.moveTo(cube[1].vx, cube[1].vy)
-      path.lineTo(cube[5].vx, cube[5].vy)
-      path.moveTo(cube[2].vx, cube[2].vy)
-      path.lineTo(cube[6].vx, cube[6].vy)
-      path.moveTo(cube[3].vx, cube[3].vy)
-      path.lineTo(cube[7].vx, cube[7].vy)
+      path.moveTo(cube[0].screenX, cube[0].screenY)
+      path.lineTo(cube[1].screenX, cube[1].screenY)
+      path.lineTo(cube[2].screenX, cube[2].screenY)
+      path.lineTo(cube[3].screenX, cube[3].screenY)
+      path.lineTo(cube[0].screenX, cube[0].screenY)
+      path.lineTo(cube[4].screenX, cube[4].screenY)
+      path.lineTo(cube[5].screenX, cube[5].screenY)
+      path.lineTo(cube[6].screenX, cube[6].screenY)
+      path.lineTo(cube[7].screenX, cube[7].screenY)
+      path.lineTo(cube[4].screenX, cube[4].screenY)
+      path.moveTo(cube[1].screenX, cube[1].screenY)
+      path.lineTo(cube[5].screenX, cube[5].screenY)
+      path.moveTo(cube[2].screenX, cube[2].screenY)
+      path.lineTo(cube[6].screenX, cube[6].screenY)
+      path.moveTo(cube[3].screenX, cube[3].screenY)
+      path.lineTo(cube[7].screenX, cube[7].screenY)
       val r = SwingUtilities.calculateInnerArea(this, null)
       g2.paint = Color.WHITE
       g2.fill(r)
@@ -73,7 +73,7 @@ private class DragRotateHandler : MouseAdapter() {
     val rotX = (pt.y - pp.y) * .03
     val rotZ = 0.0
     for (v in cube) {
-      v.rotateTransformation(rotX, rotY, rotZ)
+      v.rotate(rotX, rotY, rotZ)
     }
     pp.location = pt
     e.component.repaint()
@@ -90,39 +90,41 @@ private class DragRotateHandler : MouseAdapter() {
 }
 
 private class Vertex(
-  private var dx: Double,
-  private var dy: Double,
-  private var dz: Double,
+  private var worldX: Double,
+  private var worldY: Double,
+  private var worldZ: Double,
 ) {
-  var vx = 0.0
-  var vy = 0.0
+  var screenX = 0.0
+  var screenY = 0.0
 
   init {
-    projectionTransformation()
+    applyProjection()
   }
 
-  private fun projectionTransformation() {
+  private fun applyProjection() {
     val screenDistance = 500.0
     val depth = 1000.0
-    val gz = dz + depth
-    vx = screenDistance * dx / gz
-    vy = screenDistance * dy / gz
+    val distanceZ = worldZ + depth
+    screenX = screenDistance * worldX / distanceZ
+    screenY = screenDistance * worldY / distanceZ
   }
 
-  fun rotateTransformation(
-    kx: Double,
-    ky: Double,
-    kz: Double,
+  fun rotate(
+    angleX: Double,
+    angleY: Double,
+    angleZ: Double,
   ) {
-    val x0 = dx * cos(ky) - dz * sin(ky)
-    val y0 = dy
-    val z0 = dx * sin(ky) + dz * cos(ky)
-    val y1 = y0 * cos(kx) - z0 * sin(kx)
-    val z1 = y0 * sin(kx) + z0 * cos(kx)
-    dx = x0 * cos(kz) - y1 * sin(kz)
-    dy = x0 * sin(kz) + y1 * cos(kz)
-    dz = z1
-    projectionTransformation()
+    // yaw: rotation around the y-axis
+    val yawX = worldX * cos(angleY) - worldZ * sin(angleY)
+    val yawZ = worldX * sin(angleY) + worldZ * cos(angleY)
+    // pitch: rotation around the x-axis
+    val pitchY = worldY * cos(angleX) - yawZ * sin(angleX)
+    val pitchZ = worldY * sin(angleX) + yawZ * cos(angleX)
+    // roll: rotation around the z-axis
+    worldX = yawX * cos(angleZ) - pitchY * sin(angleZ)
+    worldY = yawX * sin(angleZ) + pitchY * cos(angleZ)
+    worldZ = pitchZ
+    applyProjection()
   }
 }
 
