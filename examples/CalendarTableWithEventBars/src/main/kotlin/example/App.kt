@@ -26,7 +26,7 @@ fun createUI(): Component {
   calendarTable.currentLocalDate = date
   calendarTable.setModel(CalendarViewTableModel(date))
   val currentMonth = YearMonth.from(date)
-  val events = makeSampleEvents(currentMonth)
+  val events = createSampleEvents(currentMonth)
   val layer = JLayer<JTable>(calendarTable, EventBarLayerUI(events))
   val scroll = object : JScrollPane(layer) {
     override fun updateUI() {
@@ -35,8 +35,8 @@ fun createUI(): Component {
       setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER)
     }
   }
-  val comp = JScrollPane(makeLegendPanel(currentMonth, events))
-  val split = JSplitPane(JSplitPane.VERTICAL_SPLIT, scroll, comp)
+  val legend = JScrollPane(createLegendPanel(currentMonth, events))
+  val split = JSplitPane(JSplitPane.VERTICAL_SPLIT, scroll, legend)
   split.setResizeWeight(.8)
   return JPanel(BorderLayout()).also {
     it.add(split)
@@ -44,11 +44,11 @@ fun createUI(): Component {
   }
 }
 
-private fun makeSampleEvents(ym: YearMonth): MutableList<EventPeriod> {
-  val events = mutableListOf<EventPeriod>()
+private fun createSampleEvents(ym: YearMonth): MutableList<CalendarEvent> {
+  val events = mutableListOf<CalendarEvent>()
   // Event 1: 3-day meeting
   events.add(
-    EventPeriod(
+    CalendarEvent(
       "Project Meeting",
       LocalDate.of(ym.year, ym.month, 5),
       LocalDate.of(ym.year, ym.month, 7),
@@ -58,7 +58,7 @@ private fun makeSampleEvents(ym: YearMonth): MutableList<EventPeriod> {
 
   // Event 2: 1-week training (overlaps with Event 1)
   events.add(
-    EventPeriod(
+    CalendarEvent(
       "New Employee Training",
       LocalDate.of(ym.year, ym.month, 6),
       LocalDate.of(ym.year, ym.month, 12),
@@ -68,7 +68,7 @@ private fun makeSampleEvents(ym: YearMonth): MutableList<EventPeriod> {
 
   // Event 3: 2-day event
   events.add(
-    EventPeriod(
+    CalendarEvent(
       "Exhibition",
       LocalDate.of(ym.year, ym.month, 20),
       LocalDate.of(ym.year, ym.month, 21),
@@ -78,7 +78,7 @@ private fun makeSampleEvents(ym: YearMonth): MutableList<EventPeriod> {
 
   // Event 4: Long-term task until month-end
   events.add(
-    EventPeriod(
+    CalendarEvent(
       "Year-End Processing",
       LocalDate.of(ym.year, ym.month, 18),
       LocalDate.of(ym.year, ym.month, ym.lengthOfMonth()),
@@ -88,7 +88,7 @@ private fun makeSampleEvents(ym: YearMonth): MutableList<EventPeriod> {
 
   // Event 5: Another task overlapping with Event 4
   events.add(
-    EventPeriod(
+    CalendarEvent(
       "System Maintenance",
       LocalDate.of(ym.year, ym.month, 22),
       LocalDate.of(ym.year, ym.month, 26),
@@ -98,9 +98,9 @@ private fun makeSampleEvents(ym: YearMonth): MutableList<EventPeriod> {
   return events
 }
 
-private fun makeLegendPanel(
+private fun createLegendPanel(
   currentMonth: YearMonth,
-  events: MutableList<EventPeriod>,
+  events: MutableList<CalendarEvent>,
 ): JPanel {
   val locale = Locale.getDefault()
   val fmt = CalendarUtils.getLocalizedYearMonthFormatter(locale)
@@ -130,7 +130,7 @@ private class CalendarTable : JTable() {
 
   override fun updateUI() {
     super.updateUI()
-    setDefaultRenderer(LocalDate::class.java, CalendarCellRenderer())
+    setDefaultRenderer(LocalDate::class.java, CalendarTableRenderer())
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
     setCellSelectionEnabled(true)
     setFillsViewportHeight(true)
@@ -145,7 +145,7 @@ private class CalendarTable : JTable() {
   }
 }
 
-private class CalendarCellRenderer : DefaultTableCellRenderer() {
+private class CalendarTableRenderer : DefaultTableCellRenderer() {
   override fun getTableCellRendererComponent(
     table: JTable?,
     value: Any?,
@@ -170,13 +170,13 @@ private class CalendarCellRenderer : DefaultTableCellRenderer() {
       val txt = if (isToday) getCircledNumber(day) else day.toString()
       c.setText(txt)
       table.currentLocalDate?.also {
-        c.setForeground(getDayOfWeekColor(value, it, isToday))
+        c.setForeground(getDayTextColor(value, it, isToday))
       }
     }
     return c
   }
 
-  private fun getDayOfWeekColor(
+  private fun getDayTextColor(
     date: LocalDate,
     currentDate: LocalDate,
     isToday: Boolean,
@@ -229,7 +229,7 @@ private class CalendarViewTableModel(
     .plus(column.toLong())
     .getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault())
 
-  override fun getRowCount() = 6
+  override fun getRowCount() = WEEKS
 
   override fun getColumnCount() = DayOfWeek.entries.size // 7
 
@@ -243,7 +243,7 @@ private class CalendarViewTableModel(
   }
 }
 
-private data class EventPeriod(
+private data class CalendarEvent(
   val name: String,
   val startDate: LocalDate,
   val endDate: LocalDate,
@@ -252,7 +252,7 @@ private data class EventPeriod(
 )
 
 private class EventBarLayerUI(
-  private val events: MutableList<EventPeriod>,
+  private val events: MutableList<CalendarEvent>,
 ) : LayerUI<JTable?>() {
   override fun paint(g: Graphics, c: JComponent) {
     super.paint(g, c)
@@ -295,20 +295,20 @@ private class EventBarLayerUI(
         track++
       }
       tracks[i] = track
-      events[i] = EventPeriod(ep.name, ep.startDate, ep.endDate, ep.color, track)
+      events[i] = CalendarEvent(ep.name, ep.startDate, ep.endDate, ep.color, track)
     }
   }
 
   /**
    * Check if two event periods overlap.
    */
-  private fun isOverlapping(e1: EventPeriod, e2: EventPeriod): Boolean {
-    val b1 = e1.endDate.isBefore(e2.startDate)
-    val b2 = e2.endDate.isBefore(e1.startDate)
+  private fun isOverlapping(event: CalendarEvent, other: CalendarEvent): Boolean {
+    val b1 = event.endDate.isBefore(other.startDate)
+    val b2 = other.endDate.isBefore(event.startDate)
     return !(b1 || b2)
   }
 
-  private fun drawEventBars(g2: Graphics2D, table: JTable, event: EventPeriod) {
+  private fun drawEventBars(g2: Graphics2D, table: JTable, event: CalendarEvent) {
     val calendarStartDate = table.model.getValueAt(0, 0)
     if (calendarStartDate is LocalDate) {
       val daysInTable = DayOfWeek.entries.size * CalendarViewTableModel.WEEKS
@@ -316,8 +316,7 @@ private class EventBarLayerUI(
       while (!current.isAfter(event.endDate)) {
         val sinceStart = ChronoUnit.DAYS.between(calendarStartDate, current)
         if (sinceStart in 0..<daysInTable) {
-          val consecutiveDays =
-            getConsecutiveDaysAndPaintBar(g2, table, event, current)
+          val consecutiveDays = drawEventBarSegment(g2, table, event, current)
           current = current.plusDays(consecutiveDays.toLong())
         } else {
           current = current.plusDays(1)
@@ -326,7 +325,11 @@ private class EventBarLayerUI(
     }
   }
 
-  private fun drawEventBar(g2: Graphics2D, event: EventPeriod, barRect: Rectangle) {
+  private fun drawEventBar(
+    g2: Graphics2D,
+    event: CalendarEvent,
+    barRect: Rectangle,
+  ) {
     val clr = event.color
     g2.color = clr
     g2.fillRoundRect(barRect.x, barRect.y, barRect.width, barRect.height, 5, 5)
@@ -334,14 +337,14 @@ private class EventBarLayerUI(
     g2.drawRoundRect(barRect.x, barRect.y, barRect.width, barRect.height, 5, 5)
     val b = barRect.width > 60
     if (b) {
-      drawBarTitle(g2, event, barRect)
+      drawEventName(g2, event, barRect)
     }
   }
 
-  private fun getConsecutiveDaysAndPaintBar(
+  private fun drawEventBarSegment(
     g2: Graphics2D,
     tbl: JTable,
-    ev: EventPeriod,
+    ev: CalendarEvent,
     cur: LocalDate,
   ): Int {
     val calendarStartDate = tbl.model.getValueAt(0, 0) as? LocalDate ?: return 0
@@ -373,7 +376,7 @@ private class EventBarLayerUI(
     return consecutiveDays
   }
 
-  private fun drawBarTitle(g2: Graphics2D, event: EventPeriod, rect: Rectangle) {
+  private fun drawEventName(g2: Graphics2D, event: CalendarEvent, rect: Rectangle) {
     g2.color = Color.BLACK
     g2.font = g2.font.deriveFont(9f)
     val fm = g2.fontMetrics
