@@ -198,22 +198,29 @@ private class GlowingBorder(
       return img
     }
 
-    @Suppress("ReturnCount")
     private fun interpolateColorRgb(t: Double): Int {
-      if (t <= FRACTIONS[0]) {
-        return 0
-      }
       val last = FRACTIONS.size - 1
-      if (t >= FRACTIONS[last]) {
-        return COLORS[last].rgb
-      }
-      for (i in 0..<last) {
-        if (t <= FRACTIONS[i + 1]) {
-          val r = ((t - FRACTIONS[i]) / (FRACTIONS[i + 1] - FRACTIONS[i]))
-          return interpolateArgb(COLORS[i].rgb, COLORS[i + 1].rgb, r.toFloat())
+      return when {
+        t <= FRACTIONS[0] -> {
+          0
+        }
+
+        t >= FRACTIONS[last] -> {
+          COLORS[last].rgb
+        }
+
+        else -> {
+          var rgb = 0
+          for (i in 0..<last) {
+            if (t <= FRACTIONS[i + 1]) {
+              val r = ((t - FRACTIONS[i]) / (FRACTIONS[i + 1] - FRACTIONS[i]))
+              rgb = interpolateArgb(COLORS[i].rgb, COLORS[i + 1].rgb, r.toFloat())
+              break
+            }
+          }
+          rgb
         }
       }
-      return 0
     }
 
     private fun interpolateArgb(c0: Int, c1: Int, t: Float): Int {
