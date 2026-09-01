@@ -12,22 +12,22 @@ import kotlin.math.roundToInt
 fun createUI(): Component {
   // symbol_scale_2.jpg: Real World Illustrator: Understanding 9-Slice Scaling
   // https://rwillustrator.blogspot.jp/2007/04/understanding-9-slice-scaling.html
-  val img = makeBufferedImage("example/symbol_scale_2.jpg")
+  val img = createBufferedImage("example/symbol_scale_2.jpg")
   val b1 = ScalingButton("Scaling", img)
   val b2 = NineSliceScalingButton("9-Slice Scaling", img)
   val p1 = JPanel(GridLayout(1, 2, 5, 5))
   p1.add(b1)
   p1.add(b2)
 
-  val bi = makeBufferedImage("example/blue.png")
+  val bi = createBufferedImage("example/blue.png")
   val b3 = JButton("Scaling Icon", NineSliceScalingIcon(bi, 0, 0, 0, 0))
   b3.isContentAreaFilled = false
   b3.border = BorderFactory.createEmptyBorder()
   b3.foreground = Color.WHITE
   b3.horizontalTextPosition = SwingConstants.CENTER
-  val pressedImg = makeFilteredImage(bi, PressedImageFilter())
+  val pressedImg = createFilteredImage(bi, PressedImageFilter())
   b3.pressedIcon = NineSliceScalingIcon(pressedImg, 0, 0, 0, 0)
-  val rolloverImg = makeFilteredImage(bi, RolloverImageFilter())
+  val rolloverImg = createFilteredImage(bi, RolloverImageFilter())
   b3.rolloverIcon = NineSliceScalingIcon(rolloverImg, 0, 0, 0, 0)
 
   val b4 = JButton("9-Slice Scaling Icon", NineSliceScalingIcon(bi, 8, 8, 8, 8))
@@ -50,13 +50,13 @@ fun createUI(): Component {
   }
 }
 
-private fun makeBufferedImage(path: String): BufferedImage {
+private fun createBufferedImage(path: String): BufferedImage {
   val cl = Thread.currentThread().contextClassLoader
   return cl.getResource(path)?.openStream()?.use { ImageIO.read(it) }
-    ?: makeMissingImage()
+    ?: createMissingImage()
 }
 
-private fun makeMissingImage(): BufferedImage {
+private fun createMissingImage(): BufferedImage {
   val missingIcon = UIManager.getIcon("html.missingImage")
   val iw = missingIcon.iconWidth
   val ih = missingIcon.iconHeight
@@ -67,7 +67,7 @@ private fun makeMissingImage(): BufferedImage {
   return bi
 }
 
-private fun makeFilteredImage(
+private fun createFilteredImage(
   src: BufferedImage,
   filter: ImageFilter,
 ): BufferedImage {
@@ -108,7 +108,7 @@ private class ScalingButton(
 
 private class NineSliceScalingButton(
   title: String?,
-  private val img: BufferedImage,
+  private val image: BufferedImage,
 ) : JButton() {
   init {
     setModel(DefaultButtonModel())
@@ -122,32 +122,32 @@ private class NineSliceScalingButton(
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
-    val iw = img.getWidth(this)
-    val ih = img.getHeight(this)
-    val ww = width
-    val hh = height
-    val lw = 37
-    val rw = 36
-    val th = 36
-    val bh = 36
-    val sub1 = img.getSubimage(lw, th, iw - lw - rw, ih - th - bh)
-    g2.drawImage(sub1, lw, th, ww - lw - rw, hh - th - bh, this)
-    val sub2 = img.getSubimage(lw, 0, iw - lw - rw, th)
-    g2.drawImage(sub2, lw, 0, ww - lw - rw, th, this)
-    val sub3 = img.getSubimage(lw, ih - bh, iw - lw - rw, bh)
-    g2.drawImage(sub3, lw, hh - bh, ww - lw - rw, bh, this)
-    val sub4 = img.getSubimage(0, th, lw, ih - th - bh)
-    g2.drawImage(sub4, 0, th, lw, hh - th - bh, this)
-    val sub5 = img.getSubimage(iw - rw, th, rw, ih - th - bh)
-    g2.drawImage(sub5, ww - rw, th, rw, hh - th - bh, this)
-    val sub6 = img.getSubimage(0, 0, lw, th)
+    val iw = image.getWidth(this)
+    val ih = image.getHeight(this)
+    val bw = width
+    val bh = height
+    val left = 37
+    val right = 36
+    val top = 36
+    val bottom = 36
+    val sub1 = image.getSubimage(left, top, iw - left - right, ih - top - bottom)
+    g2.drawImage(sub1, left, top, bw - left - right, bh - top - bottom, this)
+    val sub2 = image.getSubimage(left, 0, iw - left - right, top)
+    g2.drawImage(sub2, left, 0, bw - left - right, top, this)
+    val sub3 = image.getSubimage(left, ih - bottom, iw - left - right, bottom)
+    g2.drawImage(sub3, left, bh - bottom, bw - left - right, bottom, this)
+    val sub4 = image.getSubimage(0, top, left, ih - top - bottom)
+    g2.drawImage(sub4, 0, top, left, bh - top - bottom, this)
+    val sub5 = image.getSubimage(iw - right, top, right, ih - top - bottom)
+    g2.drawImage(sub5, bw - right, top, right, bh - top - bottom, this)
+    val sub6 = image.getSubimage(0, 0, left, top)
     g2.drawImage(sub6, 0, 0, this)
-    val sub7 = img.getSubimage(iw - rw, 0, rw, th)
-    g2.drawImage(sub7, ww - rw, 0, this)
-    val sub8 = img.getSubimage(0, ih - bh, lw, bh)
-    g2.drawImage(sub8, 0, hh - bh, this)
-    val sub9 = img.getSubimage(iw - rw, ih - bh, rw, bh)
-    g2.drawImage(sub9, ww - rw, hh - bh, this)
+    val sub7 = image.getSubimage(iw - right, 0, right, top)
+    g2.drawImage(sub7, bw - right, 0, this)
+    val sub8 = image.getSubimage(0, ih - bottom, left, bottom)
+    g2.drawImage(sub8, 0, bh - bottom, this)
+    val sub9 = image.getSubimage(iw - right, ih - bottom, right, bottom)
+    g2.drawImage(sub9, bw - right, bh - bottom, this)
     g2.dispose()
     super.paintComponent(g)
   }
@@ -155,11 +155,12 @@ private class NineSliceScalingButton(
 
 private class NineSliceScalingIcon(
   private val image: BufferedImage,
-  private val lw: Int,
-  private val rw: Int,
-  private val th: Int,
-  private val bh: Int,
+  private val left: Int,
+  private val right: Int,
+  private val top: Int,
+  private val bottom: Int,
 ) : Icon {
+  private val innerArea = Rectangle()
   private var width = 0
   private var height = 0
 
@@ -178,38 +179,34 @@ private class NineSliceScalingIcon(
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
-    RECT.bounds = c.bounds
-    SwingUtilities.calculateInnerArea(c as? JComponent, RECT)
-    width = RECT.width
-    height = RECT.height
+    innerArea.bounds = c.bounds
+    SwingUtilities.calculateInnerArea(c as? JComponent, innerArea)
+    width = innerArea.width
+    height = innerArea.height
     val iw = image.getWidth(c)
     val ih = image.getHeight(c)
-    val sub = image.getSubimage(lw, th, iw - lw - rw, ih - th - bh)
-    g2.drawImage(sub, lw, th, width - lw - rw, height - th - bh, c)
-    // if (lw > 0 && rw > 0 && th > 0 && bh > 0) {
-    if (listOf(lw, rw, th, bh).filterNot { it > 0 }.isEmpty()) {
-      val sub1 = image.getSubimage(lw, 0, iw - lw - rw, th)
-      g2.drawImage(sub1, lw, 0, width - lw - rw, th, c)
-      val sub2 = image.getSubimage(lw, ih - bh, iw - lw - rw, bh)
-      g2.drawImage(sub2, lw, height - bh, width - lw - rw, bh, c)
-      val sub3 = image.getSubimage(0, th, lw, ih - th - bh)
-      g2.drawImage(sub3, 0, th, lw, height - th - bh, c)
-      val sub4 = image.getSubimage(iw - rw, th, rw, ih - th - bh)
-      g2.drawImage(sub4, width - rw, th, rw, height - th - bh, c)
-      val sub5 = image.getSubimage(0, 0, lw, th)
+    val sub = image.getSubimage(left, top, iw - left - right, ih - top - bottom)
+    g2.drawImage(sub, left, top, width - left - right, height - top - bottom, c)
+    // if (left > 0 && right > 0 && top > 0 && bottom > 0) {
+    if (listOf(left, right, top, bottom).filterNot { it > 0 }.isEmpty()) {
+      val sub1 = image.getSubimage(left, 0, iw - left - right, top)
+      g2.drawImage(sub1, left, 0, width - left - right, top, c)
+      val sub2 = image.getSubimage(left, ih - bottom, iw - left - right, bottom)
+      g2.drawImage(sub2, left, height - bottom, width - left - right, bottom, c)
+      val sub3 = image.getSubimage(0, top, left, ih - top - bottom)
+      g2.drawImage(sub3, 0, top, left, height - top - bottom, c)
+      val sub4 = image.getSubimage(iw - right, top, right, ih - top - bottom)
+      g2.drawImage(sub4, width - right, top, right, height - top - bottom, c)
+      val sub5 = image.getSubimage(0, 0, left, top)
       g2.drawImage(sub5, 0, 0, c)
-      val sub6 = image.getSubimage(iw - rw, 0, rw, th)
-      g2.drawImage(sub6, width - rw, 0, c)
-      val sub7 = image.getSubimage(0, ih - bh, lw, bh)
-      g2.drawImage(sub7, 0, height - bh, c)
-      val sub8 = image.getSubimage(iw - rw, ih - bh, rw, bh)
-      g2.drawImage(sub8, width - rw, height - bh, c)
+      val sub6 = image.getSubimage(iw - right, 0, right, top)
+      g2.drawImage(sub6, width - right, 0, c)
+      val sub7 = image.getSubimage(0, ih - bottom, left, bottom)
+      g2.drawImage(sub7, 0, height - bottom, c)
+      val sub8 = image.getSubimage(iw - right, ih - bottom, right, bottom)
+      g2.drawImage(sub8, width - right, height - bottom, c)
     }
     g2.dispose()
-  }
-
-  companion object {
-    private val RECT = Rectangle()
   }
 }
 
