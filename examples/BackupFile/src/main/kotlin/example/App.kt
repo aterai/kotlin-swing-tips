@@ -2,7 +2,6 @@ package example
 
 import java.awt.*
 import java.io.File
-import java.io.IOException
 import java.nio.file.Files
 import javax.swing.*
 import javax.swing.event.ChangeListener
@@ -10,11 +9,11 @@ import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
 
 private const val FILE_NAME = "example.txt"
-private val model1 = SpinnerNumberModel(0, 0, 6, 1)
-private val model2 = SpinnerNumberModel(2, 0, 6, 1)
-private val spinner1 = JSpinner(model1)
-private val spinner2 = JSpinner(model2)
-private val label = JLabel("2", SwingConstants.RIGHT)
+private val keepModel = SpinnerNumberModel(0, 0, 6, 1)
+private val rotationModel = SpinnerNumberModel(2, 0, 6, 1)
+private val keepSpinner = JSpinner(keepModel)
+private val rotationSpinner = JSpinner(rotationModel)
+private val totalLabel = JLabel("2", SwingConstants.RIGHT)
 private val jtp = JTextPane()
 
 fun createUI(): Component {
@@ -26,38 +25,39 @@ fun createUI(): Component {
     Color.RED,
   )
   StyleConstants.setForeground(
-    d.addStyle(MessageType.BLUE.toString(), s),
+    d.addStyle(MessageType.DETAIL.toString(), s),
     Color.BLUE,
   )
 
-  val ok = JButton("Create new $FILE_NAME")
-  ok.addActionListener { addActionPerformed() }
+  val createButton = JButton("Create new $FILE_NAME")
+  createButton.addActionListener { addActionPerformed() }
 
-  val clear = JButton("clear")
-  clear.addActionListener { jtp.text = "" }
+  val clearButton = JButton("clear")
+  clearButton.addActionListener { jtp.text = "" }
 
   val box = Box.createHorizontalBox().also {
     it.border = BorderFactory.createEmptyBorder(5, 0, 0, 0)
     it.add(Box.createHorizontalGlue())
-    it.add(ok)
+    it.add(createButton)
     it.add(Box.createHorizontalStrut(5))
-    it.add(clear)
+    it.add(clearButton)
   }
 
-  val editor1 = JSpinner.NumberEditor(spinner1, "0")
-  editor1.textField.isEditable = false
-  spinner1.editor = editor1
+  val keepEditor = JSpinner.NumberEditor(keepSpinner, "0")
+  keepEditor.textField.isEditable = false
+  keepSpinner.editor = keepEditor
 
-  val editor2 = JSpinner.NumberEditor(spinner2, "0")
-  editor2.textField.isEditable = false
-  spinner2.editor = editor2
+  val rotationEditor = JSpinner.NumberEditor(rotationSpinner, "0")
+  rotationEditor.textField.isEditable = false
+  rotationSpinner.editor = rotationEditor
 
   val cl = ChangeListener {
-    label.text = (model1.number.toInt() + model2.number.toInt()).toString()
+    val total = keepModel.number.toInt() + rotationModel.number.toInt()
+    totalLabel.text = total.toString()
   }
-  model1.addChangeListener(cl)
-  model2.addChangeListener(cl)
-  label.border = BorderFactory.createEmptyBorder(0, 0, 0, 16)
+  keepModel.addChangeListener(cl)
+  rotationModel.addChangeListener(cl)
+  totalLabel.border = BorderFactory.createEmptyBorder(0, 0, 0, 16)
 
   val scroll = JScrollPane(jtp).also {
     it.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
@@ -65,7 +65,7 @@ fun createUI(): Component {
   }
 
   return JPanel(BorderLayout()).also {
-    it.add(makeNorthBox(), BorderLayout.NORTH)
+    it.add(createSettingsPanel(), BorderLayout.NORTH)
     it.add(scroll)
     it.add(box, BorderLayout.SOUTH)
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
@@ -75,7 +75,9 @@ fun createUI(): Component {
 
 private fun addActionPerformed() {
   val file = File(System.getProperty("java.io.tmpdir"), FILE_NAME)
-  object : BackgroundTask(file, model1.number.toInt(), model2.number.toInt()) {
+  val keepCount = keepModel.number.toInt()
+  val rotationCount = rotationModel.number.toInt()
+  object : BackgroundTask(file, keepCount, rotationCount) {
     override fun process(chunks: List<Message>) {
       if (jtp.isDisplayable && !isCancelled) {
         chunks.forEach { append(it) }
@@ -89,51 +91,51 @@ private fun addActionPerformed() {
         val newFile = get()
         when {
           newFile == null -> append(
-            info("Failed to create backup file.", MessageType.ERROR),
+            makeMessage("Failed to create backup file.", MessageType.ERROR),
           )
 
           newFile.createNewFile() -> append(
-            info("Generated ${newFile.name}.", MessageType.REGULAR),
+            makeMessage("Generated ${newFile.name}.", MessageType.REGULAR),
           )
 
           else -> append(
-            info("Failed to generate ${newFile.name}.", MessageType.ERROR),
+            makeMessage("Failed to generate ${newFile.name}.", MessageType.ERROR),
           )
         }
       }.onFailure {
         if (it is InterruptedException) {
           Thread.currentThread().interrupt()
         }
-        append(info(it.message, MessageType.ERROR))
+        append(makeMessage(it.message, MessageType.ERROR))
       }
-      append(info("----------------------------------", MessageType.REGULAR))
+      append(makeMessage("----------------------------------", MessageType.REGULAR))
     }
   }.execute()
 }
 
-private fun makeNorthBox(): Component {
-  // val northBox = Box.createHorizontalBox()
-  val northBox = JPanel(GridLayout(3, 2, 5, 5))
-  northBox.add(JLabel("Number of backups to keep:", SwingConstants.RIGHT))
-  northBox.add(spinner1)
-  northBox.add(JLabel("Number of backups to delete in order:", SwingConstants.RIGHT))
-  northBox.add(spinner2)
-  northBox.add(JLabel("Total number of backups:", SwingConstants.RIGHT))
-  northBox.add(label)
-  return northBox
+private fun createSettingsPanel(): Component {
+  // val panel = Box.createHorizontalBox()
+  val panel = JPanel(GridLayout(3, 2, 5, 5))
+  panel.add(JLabel("Number of backups to keep:", SwingConstants.RIGHT))
+  panel.add(keepSpinner)
+  panel.add(JLabel("Number of backups to rotate:", SwingConstants.RIGHT))
+  panel.add(rotationSpinner)
+  panel.add(JLabel("Total number of backups:", SwingConstants.RIGHT))
+  panel.add(totalLabel)
+  return panel
 }
 
-fun append(m: Message) {
+fun append(msg: Message) {
   val doc = jtp.styledDocument
   runCatching {
-    doc.insertString(doc.length, "${m.text}\n", doc.getStyle(m.type.toString()))
+    doc.insertString(doc.length, "${msg.text}\n", doc.getStyle(msg.type.toString()))
   }
 }
 
 enum class MessageType {
   REGULAR,
   ERROR,
-  BLUE,
+  DETAIL,
 }
 
 data class Message(
@@ -142,123 +144,85 @@ data class Message(
 )
 
 private open class BackgroundTask(
-  private val orgFile: File,
-  private val oldIndex: Int,
-  private val newIndex: Int,
+  private val originalFile: File,
+  private val keepCount: Int,
+  private val rotationCount: Int,
 ) : SwingWorker<File, Message>() {
-  @Suppress("ReturnCount")
-  @Throws(IOException::class)
-  override fun doInBackground(): File? {
-    if (!orgFile.exists()) {
-      return orgFile
+  override fun doInBackground(): File? = runCatching {
+    if (originalFile.exists()) {
+      if (keepCount == 0 && rotationCount == 0) { // = backup off
+        Files.delete(originalFile.toPath())
+      } else {
+        createBackup(originalFile)
+      }
     }
-    val newFileName = orgFile.absolutePath
-    if (oldIndex == 0 && newIndex == 0) { // = backup off
-      return runCatching {
-        Files.delete(orgFile.toPath())
-        File(newFileName)
-      }.onFailure {
-        publish(info(it.message, MessageType.ERROR))
-      }.getOrNull()
-    }
-    val tmpFile = renameAndBackup(orgFile, newFileName)
-    if (tmpFile != null) {
-      return tmpFile
-    }
-    return if (renameAndShiftBackup(orgFile)) {
-      File(newFileName)
+    originalFile
+  }.onFailure {
+    publish(makeMessage(it.message, MessageType.ERROR))
+  }.getOrNull()
+
+  private fun createBackup(file: File) {
+    val unusedBackup = findUnusedBackupFile(file)
+    if (unusedBackup == null) {
+      deleteOldestRotatingBackup(file)
+      shiftBackupFileNumbers(file)
+      renameFile(file, makeBackupFile(file, keepCount + rotationCount))
     } else {
-      null
+      renameFile(file, unusedBackup)
     }
   }
 
-  @Throws(IOException::class)
-  private fun renameAndBackup(
-    file: File,
-    newFileName: String,
-  ): File? {
-    var simpleRename = false
-    var testFile: File? = null
-    for (i in 1..oldIndex) {
-      testFile = createBackupFile(file, i)
-      if (!testFile.exists()) {
-        simpleRename = true
-        break
-      }
-    }
-    if (!simpleRename) {
-      for (i in oldIndex + 1..oldIndex + newIndex) {
-        testFile = createBackupFile(file, i)
-        if (!testFile.exists()) {
-          simpleRename = true
-          break
-        }
-      }
-    }
-    if (testFile != null && simpleRename) {
-      val path = file.toPath()
-      return runCatching {
-        publish(info("Rename the older file", MessageType.REGULAR))
-        publish(info("  %s -> %s".format(file.name, testFile.name), MessageType.BLUE))
-        Files.move(path, path.resolveSibling(testFile.name))
-        File(newFileName)
-      }.onFailure {
-        publish(info(it.message, MessageType.ERROR))
-      }.getOrThrow()
-    }
-    return null
+  private fun findUnusedBackupFile(file: File) =
+    (1..keepCount + rotationCount)
+      .asSequence()
+      .map { makeBackupFile(file, it) }
+      .firstOrNull { !it.exists() }
+
+  private fun deleteOldestRotatingBackup(file: File) {
+    val oldest = makeBackupFile(file, keepCount + 1)
+    publish(makeMessage("Delete old backup file", MessageType.REGULAR))
+    publish(makeMessage("  del:" + oldest.absolutePath, MessageType.DETAIL))
+    Files.delete(oldest.toPath())
   }
 
-  @Suppress("ReturnCount")
-  private fun renameAndShiftBackup(file: File): Boolean {
-    val tmpFile3 = File(file.parentFile, getBackupName(file.name, oldIndex + 1))
-    publish(info("Delete old backup file", MessageType.REGULAR))
-    publish(info("  del:" + tmpFile3.absolutePath, MessageType.BLUE))
-    runCatching {
-      Files.delete(tmpFile3.toPath())
-    }.onFailure {
-      publish(info(it.message, MessageType.ERROR))
-      return false
+  private fun shiftBackupFileNumbers(file: File) {
+    for (i in keepCount + 2..keepCount + rotationCount) {
+      val src = makeBackupFile(file, i)
+      val dst = makeBackupFile(file, i - 1)
+      val path = src.toPath()
+      Files.move(path, path.resolveSibling(dst.name))
+      publish(makeMessage("Update old backup file numbers", MessageType.REGULAR))
+      publish(makeMessage("  ${src.name} -> ${dst.name}", MessageType.DETAIL))
     }
-    for (i in oldIndex + 2..oldIndex + newIndex) {
-      val tmpFile1 = createBackupFile(file, i)
-      val tmpFile2 = createBackupFile(file, i - 1)
-      val oldPath = tmpFile1.toPath()
-      runCatching {
-        Files.move(oldPath, oldPath.resolveSibling(tmpFile2.name))
-      }.onFailure {
-        publish(info(it.message, MessageType.ERROR))
-        return false
-      }
-      publish(info("Update old backup file numbers", MessageType.REGULAR))
-      publish(info("  " + tmpFile1.name + " -> " + tmpFile2.name, MessageType.BLUE))
-    }
-    val tmpFile = File(file.parentFile, getBackupName(file.name, oldIndex + newIndex))
-    publish(info("Rename the older file", MessageType.REGULAR))
-    publish(info("  " + file.name + " -> " + tmpFile.name, MessageType.BLUE))
-    val path = file.toPath()
-    return runCatching {
-      Files.move(path, path.resolveSibling(tmpFile.name))
-    }.onFailure {
-      publish(info(it.message, MessageType.ERROR))
-    }.isSuccess
+  }
+
+  private fun renameFile(
+    src: File,
+    dst: File,
+  ) {
+    publish(makeMessage("Rename the original file", MessageType.REGULAR))
+    publish(
+      makeMessage("  %s -> %s".format(src.name, dst.name), MessageType.DETAIL),
+    )
+    val path = src.toPath()
+    Files.move(path, path.resolveSibling(dst.name))
   }
 
   companion object {
-    fun info(
+    fun makeMessage(
       text: String?,
       type: MessageType,
     ) = Message(text, type)
 
-    private fun getBackupName(
+    private fun makeBackupFileName(
       name: String,
       num: Int,
     ) = "%s.%d~".format(name, num)
 
-    private fun createBackupFile(
+    private fun makeBackupFile(
       file: File,
       idx: Int,
-    ) = File(file.parentFile, getBackupName(file.name, idx))
+    ) = File(file.parentFile, makeBackupFileName(file.name, idx))
   }
 }
 
