@@ -31,7 +31,11 @@ fun createUI(): Component {
               it.background = list.selectionBackground
             } else {
               it.foreground = list.foreground
-              it.background = if (index % 2 == 0) EVEN_BACKGROUND else list.background
+              it.background = if (index % 2 == 0) {
+                EVEN_BACKGROUND
+              } else {
+                list.background
+              }
             }
           }
       }
