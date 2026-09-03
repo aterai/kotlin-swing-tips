@@ -65,7 +65,7 @@ private class LocalDateTimeTableCellRenderer : DefaultTableCellRenderer() {
   }
 }
 
-private class ZeroSizeButtonUI : BasicComboBoxUI() {
+private class InvisibleButtonUI : BasicComboBoxUI() {
   override fun createArrowButton() = object : JButton() {
     override fun getPreferredSize() = Dimension()
 
@@ -89,7 +89,7 @@ private class LocalDateTimeTableCellEditor :
       border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
       isOpaque = false
       setRenderer(LocalDateTimeCellRenderer())
-      setUI(ZeroSizeButtonUI())
+      setUI(InvisibleButtonUI())
     }
   }
   private var selectedDate: LocalDateTime? = null

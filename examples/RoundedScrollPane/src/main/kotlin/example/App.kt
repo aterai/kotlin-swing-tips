@@ -341,14 +341,14 @@ private class BottomRoundedCornerBorder : RoundedCornerBorder() {
   }
 }
 
-private class ZeroSizeButton : JButton() {
+private class InvisibleButton : JButton() {
   override fun getPreferredSize() = Dimension()
 }
 
 private class WithoutArrowButtonScrollBarUI : BasicScrollBarUI() {
-  override fun createDecreaseButton(orientation: Int) = ZeroSizeButton()
+  override fun createDecreaseButton(orientation: Int) = InvisibleButton()
 
-  override fun createIncreaseButton(orientation: Int) = ZeroSizeButton()
+  override fun createIncreaseButton(orientation: Int) = InvisibleButton()
 
   override fun paintTrack(
     g: Graphics,

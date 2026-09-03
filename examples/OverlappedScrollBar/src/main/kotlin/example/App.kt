@@ -71,14 +71,14 @@ private class OverlapScrollPaneLayout : ScrollPaneLayout() {
   }
 }
 
-private class ZeroSizeButton : JButton() {
+private class InvisibleButton : JButton() {
   override fun getPreferredSize() = Dimension()
 }
 
 private class OverlappedScrollBarUI : BasicScrollBarUI() {
-  override fun createDecreaseButton(orientation: Int) = ZeroSizeButton()
+  override fun createDecreaseButton(orientation: Int) = InvisibleButton()
 
-  override fun createIncreaseButton(orientation: Int) = ZeroSizeButton()
+  override fun createIncreaseButton(orientation: Int) = InvisibleButton()
 
   override fun paintTrack(
     g: Graphics,
