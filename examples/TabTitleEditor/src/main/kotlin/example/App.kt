@@ -12,6 +12,7 @@ import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
+import kotlin.math.max
 
 private val INFO = """
   Start editing: Double-Click, Enter-Key
@@ -31,50 +32,42 @@ fun createUI() = JTabbedPane().also {
 }
 
 private class TabTitleEditListener(
-  val tabs: JTabbedPane,
+  val tabbedPane: JTabbedPane,
 ) : MouseAdapter(),
   ChangeListener,
   DocumentListener {
   private val editor = JTextField()
   private var editingIdx = -1
-  private var len = -1
-  private var dim: Dimension? = null
+  private var minSize: Dimension? = null
   private var tabComponent: Component? = null
   private val startEditing = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      editingIdx = tabs.selectedIndex
-      tabComponent = tabs.getTabComponentAt(editingIdx)
-      tabs.setTabComponentAt(editingIdx, editor)
-      editor.isVisible = true
-      editor.text = tabs.getTitleAt(editingIdx)
-      editor.selectAll()
-      editor.requestFocusInWindow()
-      len = editor.text.length
-      dim = editor.preferredSize
-      editor.minimumSize = dim
+      val idx = tabbedPane.selectedIndex
+      if (editingIdx < 0 && idx >= 0) {
+        startEditingAt(idx)
+      }
     }
   }
-  private val renameTab = object : AbstractAction() {
+  private val renameTabTitle = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val title = editor.text.trim()
       if (editingIdx >= 0 && title.isNotEmpty()) {
-        tabs.setTitleAt(editingIdx, title)
+        tabbedPane.setTitleAt(editingIdx, title)
       }
       cancelEditing.actionPerformed(
-        ActionEvent(tabs, ActionEvent.ACTION_PERFORMED, CANCEL),
+        ActionEvent(tabbedPane, ActionEvent.ACTION_PERFORMED, CANCEL_EDITING),
       )
     }
   }
   private val cancelEditing = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       if (editingIdx >= 0) {
-        tabs.setTabComponentAt(editingIdx, tabComponent)
-        editor.isVisible = false
+        tabbedPane.setTabComponentAt(editingIdx, tabComponent)
         editingIdx = -1
-        len = -1
+        minSize = null
         tabComponent = null
         editor.preferredSize = null
-        tabs.requestFocusInWindow()
+        tabbedPane.requestFocusInWindow()
       }
     }
   }
@@ -83,26 +76,34 @@ private class TabTitleEditListener(
     editor.border = BorderFactory.createEmptyBorder()
     val fl = object : FocusAdapter() {
       override fun focusLost(e: FocusEvent) {
-        renameTab.actionPerformed(
-          ActionEvent(tabs, ActionEvent.ACTION_PERFORMED, RENAME),
+        renameTabTitle.actionPerformed(
+          ActionEvent(tabbedPane, ActionEvent.ACTION_PERFORMED, RENAME_TAB_TITLE),
         )
       }
     }
     editor.addFocusListener(fl)
-    val im = editor.getInputMap(JComponent.WHEN_FOCUSED)
-    val am = editor.actionMap
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), CANCEL)
-    am.put(CANCEL, cancelEditing)
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), RENAME)
-    am.put(RENAME, renameTab)
     editor.document.addDocumentListener(this)
-    val im2 = tabs.getInputMap(JComponent.WHEN_FOCUSED)
-    im2.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), START)
-    tabs.actionMap.put(START, startEditing)
+
+    val enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)
+    val im = editor.getInputMap(JComponent.WHEN_FOCUSED)
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), CANCEL_EDITING)
+    im.put(enterKey, RENAME_TAB_TITLE)
+
+    val am = editor.actionMap
+    am.put(CANCEL_EDITING, cancelEditing)
+    am.put(RENAME_TAB_TITLE, renameTabTitle)
+
+    tabbedPane.getInputMap(JComponent.WHEN_FOCUSED).put(enterKey, START_EDITING)
+    tabbedPane.actionMap.put(START_EDITING, startEditing)
   }
 
   override fun stateChanged(e: ChangeEvent) {
-    renameTab.actionPerformed(ActionEvent(tabs, ActionEvent.ACTION_PERFORMED, RENAME))
+    val a = ActionEvent(
+      tabbedPane,
+      ActionEvent.ACTION_PERFORMED,
+      RENAME_TAB_TITLE,
+    )
+    renameTabTitle.actionPerformed(a)
   }
 
   override fun insertUpdate(e: DocumentEvent) {
@@ -118,28 +119,48 @@ private class TabTitleEditListener(
   }
 
   override fun mouseClicked(e: MouseEvent) {
-    val r = tabs.getBoundsAt(tabs.selectedIndex)
-    val isDoubleClick = e.clickCount >= 2
-    if (isDoubleClick && r.contains(e.point)) {
-      startEditing.actionPerformed(
-        ActionEvent(tabs, ActionEvent.ACTION_PERFORMED, START),
-      )
+    val idx = tabbedPane.indexAtLocation(e.getX(), e.getY())
+    val isDoubleClick = e.getClickCount() >= 2
+    if (isDoubleClick && idx >= 0 && idx == tabbedPane.selectedIndex) {
+      val a = ActionEvent(tabbedPane, ActionEvent.ACTION_PERFORMED, START_EDITING)
+      startEditing.actionPerformed(a)
     } else {
-      renameTab.actionPerformed(
-        ActionEvent(tabs, ActionEvent.ACTION_PERFORMED, RENAME),
+      val a = ActionEvent(
+        tabbedPane,
+        ActionEvent.ACTION_PERFORMED,
+        RENAME_TAB_TITLE,
       )
+      renameTabTitle.actionPerformed(a)
     }
   }
 
-  private fun updateTabSize() {
-    editor.preferredSize = if (editor.text.length > len) null else dim
-    tabs.revalidate()
+  fun startEditingAt(index: Int) {
+    editingIdx = index
+    tabComponent = tabbedPane.getTabComponentAt(index)
+    tabbedPane.setTabComponentAt(index, editor)
+    // updateTabSize() called from setText(...) does nothing while minSize is null
+    editor.setPreferredSize(null)
+    editor.text = tabbedPane.getTitleAt(index)
+    minSize = editor.getPreferredSize()
+    editor.selectAll()
+    editor.requestFocusInWindow()
+  }
+
+  fun updateTabSize() {
+    if (minSize != null) {
+      // Grow to fit the text, but never shrink below the initial title width
+      editor.setPreferredSize(null)
+      val d = editor.getPreferredSize()
+      d.width = max(d.width, minSize!!.width)
+      editor.preferredSize = d
+      tabbedPane.revalidate()
+    }
   }
 
   companion object {
-    const val START = "start-editing"
-    const val CANCEL = "cancel-editing"
-    const val RENAME = "rename-tab-title"
+    private const val START_EDITING = "start-editing"
+    private const val CANCEL_EDITING = "cancel-editing"
+    private const val RENAME_TAB_TITLE = "rename-tab-title"
   }
 }
 
