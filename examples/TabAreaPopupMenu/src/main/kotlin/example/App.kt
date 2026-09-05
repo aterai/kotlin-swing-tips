@@ -109,7 +109,7 @@ private fun makeTabPopupMenu(): JPopupMenu {
   closeAll.addActionListener {
     (popup.invoker as? JTabbedPane)?.removeAll()
   }
-  val closeAllButActive = popup.add("Close all bat active")
+  val closeAllButActive = popup.add("Close all but active")
   closeAllButActive.addActionListener {
     (popup.invoker as? JTabbedPane)?.also {
       val idx = it.selectedIndex

@@ -58,7 +58,7 @@ private class TabbedPanePopupMenu : JPopupMenu() {
     closeAll.addActionListener {
       (invoker as? JTabbedPane)?.removeAll()
     }
-    closeAllButActive = add("Close all bat active")
+    closeAllButActive = add("Close all but active")
     closeAllButActive.addActionListener {
       (invoker as? JTabbedPane)?.also {
         val tabIdx = it.selectedIndex
