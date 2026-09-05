@@ -27,26 +27,29 @@ import javax.swing.text.View
 import javax.swing.text.ViewFactory
 
 fun createUI(): Component {
-  val model = DefaultListModel<ListItem>().also {
-    it.addElement(ListItem("red", ColorIcon(Color.RED)))
-    it.addElement(ListItem("green", ColorIcon(Color.GREEN)))
-    it.addElement(ListItem("blue", ColorIcon(Color.BLUE)))
-    it.addElement(ListItem("cyan", ColorIcon(Color.CYAN)))
-    it.addElement(ListItem("darkGray", ColorIcon(Color.DARK_GRAY)))
-    it.addElement(ListItem("gray", ColorIcon(Color.GRAY)))
-    it.addElement(ListItem("lightGray", ColorIcon(Color.LIGHT_GRAY)))
-    it.addElement(ListItem("magenta", ColorIcon(Color.MAGENTA)))
-    it.addElement(ListItem("orange", ColorIcon(Color.ORANGE)))
-    it.addElement(ListItem("pink", ColorIcon(Color.PINK)))
-    it.addElement(ListItem("yellow", ColorIcon(Color.YELLOW)))
-    it.addElement(ListItem("black", ColorIcon(Color.BLACK)))
-    it.addElement(ListItem("white", ColorIcon(Color.WHITE)))
-  }
-  val list = EditableList(model)
+  val list = EditableList(createSampleModel())
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(list))
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+private fun createSampleModel(): ListModel<ListItem> {
+  val model = DefaultListModel<ListItem>()
+  model.addElement(ListItem("red", ColorIcon(Color.RED)))
+  model.addElement(ListItem("green", ColorIcon(Color.GREEN)))
+  model.addElement(ListItem("blue", ColorIcon(Color.BLUE)))
+  model.addElement(ListItem("cyan", ColorIcon(Color.CYAN)))
+  model.addElement(ListItem("darkGray", ColorIcon(Color.DARK_GRAY)))
+  model.addElement(ListItem("gray", ColorIcon(Color.GRAY)))
+  model.addElement(ListItem("lightGray", ColorIcon(Color.LIGHT_GRAY)))
+  model.addElement(ListItem("magenta", ColorIcon(Color.MAGENTA)))
+  model.addElement(ListItem("orange", ColorIcon(Color.ORANGE)))
+  model.addElement(ListItem("pink", ColorIcon(Color.PINK)))
+  model.addElement(ListItem("yellow", ColorIcon(Color.YELLOW)))
+  model.addElement(ListItem("black", ColorIcon(Color.BLACK)))
+  model.addElement(ListItem("white", ColorIcon(Color.WHITE)))
+  return model
 }
 
 private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
@@ -106,7 +109,7 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   }
 
   companion object {
-    val SELECTED_COLOR = Color(0xAE_16_64_FF.toInt(), true)
+    private val SELECTED_COLOR = Color(0xAE_16_64_FF.toInt(), true)
   }
 }
 
@@ -155,16 +158,112 @@ private class EditableList(
       return d
     }
   }
-  private val startEditing = object : AbstractAction() {
+  private val startEditing = StartEditingAction()
+  private val renameTitle = RenameAction()
+
+  init {
+    initEditor()
+    initAction()
+    EventQueue.invokeLater(this::initHandler)
+  }
+
+  fun initAction() {
+    val enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)
+    val im = editor.getInputMap(WHEN_FOCUSED)
+    im.put(enterKey, RENAME_TITLE)
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), RENAME_TITLE)
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), CANCEL_EDITING)
+    val am = editor.actionMap
+    am.put(RENAME_TITLE, renameTitle)
+    val cancelEditing = object : AbstractAction() {
+      override fun actionPerformed(e: ActionEvent) {
+        window?.isVisible = false
+        editingIndex = -1
+      }
+    }
+    am.put(CANCEL_EDITING, cancelEditing)
+    getInputMap(WHEN_FOCUSED).put(enterKey, START_EDITING)
+    actionMap.put(START_EDITING, startEditing)
+  }
+
+  fun initEditor() {
+    editor.border = BorderFactory.createLineBorder(Color.GRAY)
+    editor.editorKit = WrapEditorKit()
+    editor.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true)
+    editor.font = UIManager.getFont("TextField.font")
+    val doc = editor.styledDocument
+    val center = SimpleAttributeSet()
+    StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER)
+    doc.setParagraphAttributes(0, doc.length, center, false)
+    editor.componentPopupMenu = TextComponentPopupMenu()
+    editor.document.addDocumentListener(ResizeHandler())
+  }
+
+  fun initHandler() {
+    val windowAncestor = SwingUtilities.getWindowAncestor(this)
+    windowAncestor.addMouseListener(object : MouseAdapter() {
+      override fun mousePressed(e: MouseEvent) {
+        resetEditor(editor)
+      }
+    })
+    windowAncestor.addComponentListener(object : ComponentAdapter() {
+      override fun componentResized(e: ComponentEvent) {
+        resetEditor(editor)
+      }
+
+      override fun componentMoved(e: ComponentEvent) {
+        resetEditor(editor)
+      }
+    })
+    val c = SwingUtilities.getAncestorOfClass(JScrollPane::class.java, this)
+    c?.addMouseWheelListener {
+      if (window?.isVisible == true && editingIndex >= 0) {
+        val id = ActionEvent.ACTION_PERFORMED
+        renameTitle.actionPerformed(ActionEvent(editor, id, ""))
+      }
+    }
+  }
+
+  private fun resetEditor(editor: Component?) {
+    val windowAncestor = SwingUtilities.getWindowAncestor(editor)
+    windowAncestor?.dispose()
+  }
+
+  override fun updateUI() {
+    removeMouseListener(handler)
+    removeMouseMotionListener(handler)
+    removeMouseWheelListener(handler)
+    selectionForeground = null
+    selectionBackground = null
+    cellRenderer = null
+    super.updateUI()
+    layoutOrientation = HORIZONTAL_WRAP
+    selectionModel.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
+    visibleRowCount = 0
+    fixedCellWidth = 72
+    fixedCellHeight = 64
+    border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
+    cellRenderer = ListItemListCellRenderer()
+    handler = EditingHandler()
+    addMouseListener(handler)
+    addMouseMotionListener(handler)
+  }
+
+  private fun getEditorHeight(): Int {
+    val rowHeight = editor.getFontMetrics(editor.getFont()).height
+    return rowHeight + editor.getInsets().top + editor.getInsets().bottom
+  }
+
+  private inner class StartEditingAction : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
       val idx = selectedIndex
+      val rect = getCellBounds(idx, idx) ?: return
       editingIndex = idx
-      val rect = getCellBounds(idx, idx)
       editorWidth = rect.width
-      editor.text = selectedValue.title
-      val rowHeight = editor.getFontMetrics(editor.font).height
-      rect.y += rect.height - rowHeight - 2 - 1
-      rect.height = editor.preferredSize.height
+      val h = getEditorHeight()
+      rect.y += rect.height - h - 1
+      rect.height = h
+      editor.text = model.getElementAt(idx).title
       editor.bounds = rect
       editor.selectAll()
       val p = Point(rect.location)
@@ -182,121 +281,45 @@ private class EditableList(
       editor.requestFocusInWindow()
     }
   }
-  private val cancelEditing = object : AbstractAction() {
+
+  private inner class RenameAction : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      window?.isVisible = false
-      editingIndex = -1
-    }
-  }
-  private val renameTitle = object : AbstractAction() {
-    override fun actionPerformed(e: ActionEvent) {
-      val title = editor.text.trim()
+      val title = editor.getText().trim()
       val index = editingIndex
+      editingIndex = -1
       window?.isVisible = false
       if (title.isNotEmpty() && index >= 0) {
-        val item = getModel().getElementAt(index)
-        item.title = title
+        model.getElementAt(index)?.title = title
         selectedIndex = index
-        EventQueue.invokeLater { selectedIndex = index }
-      }
-      editingIndex = -1
-    }
-  }
-
-  init {
-    editor.border = BorderFactory.createLineBorder(Color.GRAY)
-    editor.editorKit = WrapEditorKit()
-    editor.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, true)
-    editor.font = UIManager.getFont("TextField.font")
-    // editor.setHorizontalAlignment(SwingConstants.CENTER) // JTextField
-    // editor.setLineWrap(true) // JTextArea
-    val doc = editor.styledDocument
-    val center = SimpleAttributeSet()
-    StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER)
-    doc.setParagraphAttributes(0, doc.length, center, false)
-    editor.componentPopupMenu = TextComponentPopupMenu()
-    editor.document.addDocumentListener(object : DocumentListener {
-      private var prev = -1
-
-      private fun update() {
-        EventQueue.invokeLater {
-          val h = editor.preferredSize.height
-          if (prev != h) {
-            val rect = editor.bounds
-            rect.height = h
-            editor.bounds = rect
-            window?.pack()
-            editor.requestFocusInWindow()
-          }
-          prev = h
-        }
-      }
-
-      override fun insertUpdate(e: DocumentEvent) {
-        update()
-      }
-
-      override fun removeUpdate(e: DocumentEvent) {
-        update()
-      }
-
-      override fun changedUpdate(e: DocumentEvent) {
-        update()
-      }
-    })
-    val enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)
-    val im = editor.getInputMap(WHEN_FOCUSED)
-    im.put(enterKey, RENAME)
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), RENAME)
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), CANCEL)
-    val am = editor.actionMap
-    am.put(RENAME, renameTitle)
-    am.put(CANCEL, cancelEditing)
-    getInputMap(WHEN_FOCUSED).put(enterKey, EDITING)
-    actionMap.put(EDITING, startEditing)
-    EventQueue.invokeLater {
-      val windowAncestor = SwingUtilities.getWindowAncestor(this)
-      windowAncestor.addMouseListener(object : MouseAdapter() {
-        override fun mousePressed(e: MouseEvent) {
-          resetEditor(editor)
-        }
-      })
-      windowAncestor.addComponentListener(object : ComponentAdapter() {
-        override fun componentResized(e: ComponentEvent) {
-          resetEditor(editor)
-        }
-
-        override fun componentMoved(e: ComponentEvent) {
-          resetEditor(editor)
-        }
-      })
-      val c = SwingUtilities.getAncestorOfClass(JScrollPane::class.java, this)
-      c?.addMouseWheelListener {
-        if (window != null && window?.isVisible == true && editingIndex >= 0) {
-          val id = ActionEvent.ACTION_PERFORMED
-          renameTitle.actionPerformed(ActionEvent(editor, id, ""))
-        }
       }
     }
   }
 
-  override fun updateUI() {
-    removeMouseMotionListener(handler)
-    removeMouseWheelListener(handler)
-    selectionForeground = null
-    selectionBackground = null
-    cellRenderer = null
-    super.updateUI()
-    layoutOrientation = HORIZONTAL_WRAP
-    selectionModel.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
-    visibleRowCount = 0
-    fixedCellWidth = 72
-    fixedCellHeight = 64
-    border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-    cellRenderer = ListItemListCellRenderer()
-    handler = EditingHandler()
-    addMouseListener(handler)
-    addMouseMotionListener(handler)
+  private inner class ResizeHandler : DocumentListener {
+    private var prevHeight = -1
+
+    private fun update() {
+      EventQueue.invokeLater {
+        val h = editor.preferredSize.height
+        if (prevHeight != h) {
+          prevHeight = h
+          window?.pack()
+          editor.requestFocusInWindow()
+        }
+      }
+    }
+
+    override fun insertUpdate(e: DocumentEvent) {
+      EventQueue.invokeLater { update() }
+    }
+
+    override fun removeUpdate(e: DocumentEvent) {
+      EventQueue.invokeLater { update() }
+    }
+
+    override fun changedUpdate(e: DocumentEvent) {
+      EventQueue.invokeLater { update() }
+    }
   }
 
   private inner class EditingHandler : MouseAdapter() {
@@ -359,15 +382,10 @@ private class EditableList(
     }
   }
 
-  private fun resetEditor(editor: Component?) {
-    val windowAncestor = SwingUtilities.getWindowAncestor(editor)
-    windowAncestor?.dispose()
-  }
-
   companion object {
-    const val RENAME = "rename-title"
-    const val CANCEL = "cancel-editing"
-    const val EDITING = "start-editing"
+    private const val RENAME_TITLE = "rename-title"
+    private const val CANCEL_EDITING = "cancel-editing"
+    private const val START_EDITING = "start-editing"
   }
 }
 

@@ -4,40 +4,43 @@ import java.awt.*
 import java.awt.event.ActionEvent
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
+import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.*
 import javax.swing.border.Border
-import javax.swing.event.MouseInputAdapter
+import javax.swing.text.JTextComponent
 
 fun createUI(): Component {
-  val list = EditableList(makeModel())
+  val list = EditableList(createSampleModel())
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(list))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeModel(): ListModel<ListItem> {
-  val m = DefaultListModel<ListItem>()
-  m.addElement(ListItem("red", ColorIcon(Color.RED)))
-  m.addElement(ListItem("green", ColorIcon(Color.GREEN)))
-  m.addElement(ListItem("blue", ColorIcon(Color.BLUE)))
-  m.addElement(ListItem("cyan", ColorIcon(Color.CYAN)))
-  m.addElement(ListItem("darkGray", ColorIcon(Color.DARK_GRAY)))
-  m.addElement(ListItem("gray", ColorIcon(Color.GRAY)))
-  m.addElement(ListItem("lightGray", ColorIcon(Color.LIGHT_GRAY)))
-  m.addElement(ListItem("magenta", ColorIcon(Color.MAGENTA)))
-  m.addElement(ListItem("orange", ColorIcon(Color.ORANGE)))
-  m.addElement(ListItem("pink", ColorIcon(Color.PINK)))
-  m.addElement(ListItem("yellow", ColorIcon(Color.YELLOW)))
-  m.addElement(ListItem("black", ColorIcon(Color.BLACK)))
-  m.addElement(ListItem("white", ColorIcon(Color.WHITE)))
-  return m
+private fun createSampleModel(): ListModel<ListItem> {
+  val model = DefaultListModel<ListItem>()
+  model.addElement(ListItem("red", ColorIcon(Color.RED)))
+  model.addElement(ListItem("green", ColorIcon(Color.GREEN)))
+  model.addElement(ListItem("blue", ColorIcon(Color.BLUE)))
+  model.addElement(ListItem("cyan", ColorIcon(Color.CYAN)))
+  model.addElement(ListItem("darkGray", ColorIcon(Color.DARK_GRAY)))
+  model.addElement(ListItem("gray", ColorIcon(Color.GRAY)))
+  model.addElement(ListItem("lightGray", ColorIcon(Color.LIGHT_GRAY)))
+  model.addElement(ListItem("magenta", ColorIcon(Color.MAGENTA)))
+  model.addElement(ListItem("orange", ColorIcon(Color.ORANGE)))
+  model.addElement(ListItem("pink", ColorIcon(Color.PINK)))
+  model.addElement(ListItem("yellow", ColorIcon(Color.YELLOW)))
+  model.addElement(ListItem("black", ColorIcon(Color.BLACK)))
+  model.addElement(ListItem("white", ColorIcon(Color.WHITE)))
+  return model
 }
 
 private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
-  private val label = object : JLabel("", null, CENTER) {
+  private val icon = JLabel(null, null, SwingConstants.CENTER)
+  private val label = JLabel(" ", SwingConstants.CENTER)
+  private val renderer = object : JPanel(BorderLayout()) {
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
       if (SELECTED_COLOR == background) {
@@ -48,20 +51,20 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
       }
     }
   }
-  private val renderer = JPanel(BorderLayout())
   private val focusBorder = UIManager.getBorder("List.focusCellHighlightBorder")
   private val noFocusBorder = getNoFocusBorder(focusBorder)
 
   init {
+    renderer.border = noFocusBorder
+    renderer.isOpaque = true
     label.verticalTextPosition = SwingConstants.BOTTOM
     label.horizontalTextPosition = SwingConstants.CENTER
     label.foreground = renderer.foreground
     label.background = renderer.background
-    label.border = noFocusBorder
     label.isOpaque = false
-    renderer.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
-    renderer.add(label)
-    renderer.isOpaque = true
+    icon.isOpaque = false
+    renderer.add(icon)
+    renderer.add(label, BorderLayout.SOUTH)
   }
 
   private fun getNoFocusBorder(focusBorder: Border): Border {
@@ -80,7 +83,7 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
   ): Component {
     label.text = value.title
     label.icon = value.icon
-    label.border = if (cellHasFocus) focusBorder else noFocusBorder
+    renderer.border = if (cellHasFocus) focusBorder else noFocusBorder
     if (isSelected) {
       label.foreground = list.selectionForeground
       renderer.background = SELECTED_COLOR
@@ -90,11 +93,6 @@ private class ListItemListCellRenderer : ListCellRenderer<ListItem> {
     }
     return renderer
   }
-
-  // fun getNoFocusBorder(): Border {
-  //   val i = focusBorder.getBorderInsets(renderer)
-  //   return BorderFactory.createEmptyBorder(i.top, i.left, i.bottom, i.right)
-  // }
 
   companion object {
     val SELECTED_COLOR = Color(0xAE_16_64_FF.toInt(), true)
@@ -130,7 +128,7 @@ private class ColorIcon(
   override fun getIconHeight() = 32
 }
 
-private class ClearSelectionListener : MouseInputAdapter() {
+private open class ClearSelectionListener : MouseAdapter() {
   private var startOutside = false
 
   override fun mousePressed(e: MouseEvent) {
@@ -178,106 +176,125 @@ private class ClearSelectionListener : MouseInputAdapter() {
 private class EditableList(
   model: ListModel<ListItem>,
 ) : JList<ListItem>(model) {
-  private var handler: MouseInputAdapter? = null
   private val glassPane = EditorGlassPane()
   private val editor = JTextField()
-  private val startEditing = object : AbstractAction() {
+  private val startEditing = StartEditingAction()
+  private val renameTitle = RenameAction()
+  private var handler: MouseAdapter? = null
+
+  init {
+    editor.setBorder(
+      BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(Color.BLACK),
+        BorderFactory.createEmptyBorder(0, 2, 0, 0),
+      ),
+    )
+    editor.setHorizontalAlignment(SwingConstants.CENTER)
+
+    // editor.setLineWrap(true);
+    val enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)
+    val im = editor.getInputMap(WHEN_FOCUSED)
+    im.put(enterKey, RENAME_TITLE)
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), RENAME_TITLE)
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), CANCEL_EDITING)
+
+    val am = editor.actionMap
+    am.put(RENAME_TITLE, renameTitle)
+    val cancelEditing: Action = object : AbstractAction() {
+      override fun actionPerformed(e: ActionEvent?) {
+        glassPane.setVisible(false)
+      }
+    }
+    am.put(CANCEL_EDITING, cancelEditing)
+
+    getInputMap(WHEN_FOCUSED).put(enterKey, START_EDITING)
+    actionMap.put(START_EDITING, startEditing)
+  }
+
+  override fun updateUI() {
+    removeMouseListener(handler)
+    removeMouseMotionListener(handler)
+    setSelectionForeground(null)
+    setSelectionBackground(null)
+    setCellRenderer(null)
+    super.updateUI()
+    setLayoutOrientation(HORIZONTAL_WRAP)
+    selectionModel.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
+    setVisibleRowCount(0)
+    setFixedCellWidth(64)
+    setFixedCellHeight(64)
+    setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
+    setCellRenderer(ListItemListCellRenderer())
+    handler = object : ClearSelectionListener() {
+      override fun mouseClicked(e: MouseEvent) {
+        val rect = getEditorBounds(selectedIndex)
+        val isDoubleClick = e.getClickCount() >= 2
+        if (isDoubleClick && rect != null && rect.contains(e.getPoint())) {
+          val c = e.component
+          val ae = ActionEvent(c, ActionEvent.ACTION_PERFORMED, "")
+          startEditing.actionPerformed(ae)
+        }
+      }
+    }
+    addMouseListener(handler)
+    addMouseMotionListener(handler)
+  }
+
+  val editorTextField: JTextComponent
+    get() = editor
+
+  // Bounds of a single-line editor aligned with the title label of the cell
+  private fun getEditorBounds(index: Int): Rectangle? {
+    val rect = getCellBounds(index, index)
+    if (rect != null) {
+      val rowHeight = editor.getFontMetrics(editor.getFont()).height
+      val h = rowHeight + editor.getInsets().top + editor.getInsets().bottom
+      rect.y += rect.height - h - 1
+      rect.height = h
+    }
+    return rect
+  }
+
+  private inner class StartEditingAction : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      rootPane.glassPane = glassPane
       val idx = selectedIndex
-      val item = selectedValue ?: return
-      val rect = getCellBounds(idx, idx)
+      val rect = getEditorBounds(idx) ?: return
+      rootPane.setGlassPane(glassPane)
+      editor.text = model.getElementAt(idx)?.title
       val p = SwingUtilities.convertPoint(
         this@EditableList,
         rect.location,
         glassPane,
       )
       rect.location = p
-      val h = editor.preferredSize.height
-      rect.y += rect.height - h - 1
-      rect.height = h
-      rect.grow(-2, 0)
       editor.bounds = rect
-      editor.text = item.title
       editor.selectAll()
       glassPane.add(editor)
-      glassPane.isVisible = true
+      glassPane.setVisible(true)
       editor.requestFocusInWindow()
     }
   }
-  private val cancelEditing = object : AbstractAction() {
+
+  private inner class RenameAction : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      glassPane.isVisible = false
-    }
-  }
-  private val renameTitle = object : AbstractAction() {
-    override fun actionPerformed(e: ActionEvent) {
-      val title = editor.text.trim()
+      val title = editor.getText().trim { it <= ' ' }
       val index = selectedIndex
       if (title.isNotEmpty() && index >= 0) {
-        val item = getModel().getElementAt(index)
-        item.title = title
-        selectedIndex = index
+        model.getElementAt(index)?.title = title
       }
-      glassPane.isVisible = false
+      glassPane.setVisible(false)
     }
-  }
-
-  init {
-    editor.border = BorderFactory.createLineBorder(Color.BLACK)
-    editor.horizontalAlignment = SwingConstants.CENTER
-    // editor.setLineWrap(true)
-    val im = editor.getInputMap(WHEN_FOCUSED)
-    im.put(KeyStroke.getKeyStroke("ENTER"), RENAME)
-    im.put(KeyStroke.getKeyStroke("ESCAPE"), CANCEL)
-    val am = editor.actionMap
-    am.put(RENAME, renameTitle)
-    am.put(CANCEL, cancelEditing)
-    addMouseListener(object : MouseAdapter() {
-      override fun mouseClicked(e: MouseEvent) {
-        val idx = selectedIndex
-        val rect = getCellBounds(idx, idx) ?: return
-        val h = editor.preferredSize.height
-        rect.y += rect.height - h
-        rect.height = h
-        val isDoubleClick = e.clickCount >= 2
-        if (isDoubleClick && rect.contains(e.point)) {
-          startEditing.actionPerformed(
-            ActionEvent(e.component, ActionEvent.ACTION_PERFORMED, ""),
-          )
-        }
-      }
-    })
-    getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke("ENTER"), EDITING)
-    actionMap.put(EDITING, startEditing)
-  }
-
-  override fun updateUI() {
-    removeMouseListener(handler)
-    selectionForeground = null
-    selectionBackground = null
-    cellRenderer = null
-    super.updateUI()
-    layoutOrientation = HORIZONTAL_WRAP
-    selectionModel.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
-    visibleRowCount = 0
-    fixedCellWidth = 64
-    fixedCellHeight = 56
-    border = BorderFactory.createEmptyBorder(5, 10, 5, 10)
-    cellRenderer = ListItemListCellRenderer()
-    handler = ClearSelectionListener()
-    addMouseListener(handler)
   }
 
   private inner class EditorGlassPane : JComponent() {
     init {
       isOpaque = false
       focusTraversalPolicy = object : DefaultFocusTraversalPolicy() {
-        override fun accept(c: Component) = c == editor
+        override fun accept(c: Component) = c == editorTextField
       }
       addMouseListener(object : MouseAdapter() {
         override fun mouseClicked(e: MouseEvent) {
-          if (!editor.bounds.contains(e.point)) {
+          if (!editorTextField.bounds.contains(e.point)) {
             val c = e.component
             val id = ActionEvent.ACTION_PERFORMED
             renameTitle.actionPerformed(ActionEvent(c, id, ""))
@@ -299,9 +316,9 @@ private class EditableList(
   }
 
   companion object {
-    const val RENAME = "rename-title"
-    const val CANCEL = "cancel-editing"
-    const val EDITING = "start-editing"
+    private const val RENAME_TITLE = "rename-title"
+    private const val CANCEL_EDITING = "cancel-editing"
+    private const val START_EDITING = "start-editing"
   }
 }
 
