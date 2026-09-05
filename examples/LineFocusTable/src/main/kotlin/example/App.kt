@@ -54,11 +54,8 @@ private class LineFocusTable(
   private val emptyBorder = BorderFactory.createEmptyBorder(2, 2, 2, 2)
 
   override fun updateUI() {
-    // Changing to Nimbus LAF and back doesn't reset look and feel of JTable completely
-    // https://bugs.openjdk.org/browse/JDK-6788475
-    // Set a temporary ColorUIResource to avoid this issue
-    setSelectionForeground(ColorUIResource(Color.RED))
-    setSelectionBackground(ColorUIResource(Color.RED))
+    selectionForeground = ColorUIResource(Color.RED)
+    selectionBackground = ColorUIResource(Color.RED)
     super.updateUI()
     updateRenderer()
     remakeBooleanEditor()
@@ -128,7 +125,7 @@ private class LineFocusTable(
     val o = super.prepareRenderer(tcr, row, column)
     val c = o as? JComponent ?: return o
     (c as? JCheckBox)?.isBorderPainted = true
-    if (row == getSelectionModel().leadSelectionIndex) { // isRowSelected(row)) {
+    if (row == getSelectionModel().leadSelectionIndex) {
       c.border = dotBorder
       updateBorderType(dotBorder, column)
     } else {
@@ -223,7 +220,9 @@ private class TablePopupMenu : JPopupMenu() {
         table.scrollRectToVisible(r)
       }
     }
-    add("clearSelection").addActionListener { (invoker as? JTable)?.clearSelection() }
+    add("clearSelection").addActionListener {
+      (invoker as? JTable)?.clearSelection()
+    }
     addSeparator()
     delete = add("delete")
     delete.addActionListener {
