@@ -40,18 +40,10 @@ private class EditableTabbedPane : JTabbedPane() {
   private val editor = JTextField()
   private val startEditing = object : AbstractAction() {
     override fun actionPerformed(e: ActionEvent) {
-      rootPane.glassPane = glassPane
-      val rect = getBoundsAt(selectedIndex)
-      val src = this@EditableTabbedPane
-      val p = SwingUtilities.convertPoint(src, rect.location, glassPane)
-      rect.location = p
-      rect.grow(-2, -2)
-      editor.bounds = rect
-      editor.text = getTitleAt(selectedIndex)
-      editor.selectAll()
-      glassPane.add(editor)
-      glassPane.isVisible = true
-      editor.requestFocusInWindow()
+      val idx = selectedIndex
+      if (idx >= 0) {
+        startEditingAt(idx)
+      }
     }
   }
   private val cancelEditing = object : AbstractAction() {
@@ -102,8 +94,10 @@ private class EditableTabbedPane : JTabbedPane() {
     super.updateUI()
     listener = object : MouseAdapter() {
       override fun mouseClicked(e: MouseEvent) {
+        // Ignore a double-click on the empty area of the tab strip
+        val idx = indexAtLocation(e.x, e.y)
         val isDoubleClick = e.clickCount >= 2
-        if (isDoubleClick) {
+        if (isDoubleClick && idx >= 0 && idx == selectedIndex) {
           actionPerformed(e.component, startEditing, START_EDITING)
         }
       }
@@ -112,6 +106,20 @@ private class EditableTabbedPane : JTabbedPane() {
     EventQueue.invokeLater {
       SwingUtilities.updateComponentTreeUI(editor)
     }
+  }
+
+  private fun startEditingAt(index: Int) {
+    rootPane.glassPane = glassPane
+    val rect = getBoundsAt(index)
+    val p = SwingUtilities.convertPoint(this, rect.location, glassPane)
+    rect.location = p
+    rect.grow(-2, -2)
+    editor.bounds = rect
+    editor.text = getTitleAt(index)
+    editor.selectAll()
+    glassPane.add(editor)
+    glassPane.isVisible = true
+    editor.requestFocusInWindow()
   }
 
   private fun actionPerformed(
