@@ -265,7 +265,14 @@ private class FileListTable(
   ): Rectangle {
     val tcr = table.getCellRenderer(row, col)
     val value = table.getValueAt(row, col)
-    val cell = tcr.getTableCellRendererComponent(table, value, false, false, row, col)
+    val cell = tcr.getTableCellRendererComponent(
+      table,
+      value,
+      false,
+      false,
+      row,
+      col,
+    )
     val itemSize = cell.preferredSize
     val cellBounds = table.getCellRect(row, col, false)
     cellBounds.width = itemSize.width
