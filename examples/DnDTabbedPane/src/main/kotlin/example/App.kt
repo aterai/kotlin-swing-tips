@@ -16,7 +16,6 @@ import java.awt.dnd.DropTargetDragEvent
 import java.awt.dnd.DropTargetDropEvent
 import java.awt.dnd.DropTargetEvent
 import java.awt.dnd.DropTargetListener
-import java.awt.geom.Rectangle2D
 import java.awt.image.BufferedImage
 import javax.swing.*
 import javax.swing.plaf.metal.MetalTabbedPaneUI
@@ -180,92 +179,22 @@ private class DnDTabbedPane : JTabbedPane() {
 
   fun getTargetTabIndex(glassPt: Point): Int {
     val tabPt = SwingUtilities.convertPoint(glassPane, glassPt, this)
-    val horiz = isTopBottomTabPlacement(getTabPlacement())
-    return (0..<tabCount)
-      .map {
-        if (horiz) {
-          getHorizontalIndex(it, tabPt)
-        } else {
-          getVerticalIndex(it, tabPt)
-        }
-      }.firstOrNull { it >= 0 }
-      ?: -1
+    val count = tabCount
+    // firstOrNull is short-circuiting, so isFirstHalf(...) is evaluated
+    // only for the first tab that contains the point.
+    val idx = (0..<count).firstOrNull { getBoundsAt(it).contains(tabPt) }
+    return idx?.let { if (isFirstHalf(getBoundsAt(it), tabPt)) it else it + 1 }
+      ?: if (count == 0) -1 else count
   }
 
-  private fun getHorizontalIndex(i: Int, pt: Point): Int {
-    val r = getBoundsAt(i)
-    val cr = Rectangle2D.Double(r.centerX, r.getY(), .1, r.getHeight())
-    val iv = cr.outcode(pt)
-    val outLeft = iv and Rectangle2D.OUT_LEFT != 0
-    val outRight = iv and Rectangle2D.OUT_RIGHT != 0
-    val withInTab = r.contains(pt)
-    val firstHalf = withInTab && outLeft
-    val secondHalf = withInTab && outRight
-    val centerLine = cr.contains(pt)
-    val lastTab = i == tabCount - 1
-    return when {
-      firstHalf || centerLine -> i
-      secondHalf || lastTab -> i + 1
-      else -> -1
+  // Test whether the point is in the first half of the tab:
+  // the left half for TOP/BOTTOM, the upper half for LEFT/RIGHT.
+  private fun isFirstHalf(r: Rectangle, pt: Point) =
+    if (isTopBottomTabPlacement(getTabPlacement())) {
+      pt.getX() <= r.centerX
+    } else {
+      pt.getY() <= r.centerY
     }
-  }
-
-  private fun getVerticalIndex(i: Int, pt: Point): Int {
-    val r = getBoundsAt(i)
-    val cr = Rectangle2D.Double(r.getX(), r.centerY, r.getWidth(), .1)
-    val iv = cr.outcode(pt)
-    val outTop = iv and Rectangle2D.OUT_TOP != 0
-    val outBottom = iv and Rectangle2D.OUT_BOTTOM != 0
-    val withInTab = r.contains(pt)
-    val firstHalf = withInTab && outTop
-    val secondHalf = withInTab && outBottom
-    val centerLine = cr.contains(pt)
-    val lastTab = i == tabCount - 1
-    return when {
-      firstHalf || centerLine -> i
-      secondHalf || lastTab -> i + 1
-      else -> -1
-    }
-  }
-
-  // https://github.com/aterai/java-swing-tips/pull/24
-  // fun getTargetTabIndex(glassPt: Point): Int {
-  //   val count = tabCount
-  //   if (count == 0) {
-  //     return -1
-  //   }
-  //
-  //   val tabPt = SwingUtilities.convertPoint(glassPane, glassPt, this)
-  //   val isHorizontal = isTopBottomTabPlacement(getTabPlacement())
-  //   for (i in 0..<count) {
-  //     val r = getBoundsAt(i)
-  //
-  //     // First half.
-  //     if (isHorizontal) {
-  //       r.width = r.width / 2 + 1
-  //     } else {
-  //       r.height = r.height / 2 + 1
-  //     }
-  //     if (r.contains(tabPt)) {
-  //       return i
-  //     }
-  //
-  //     // Second half.
-  //     if (isHorizontal) {
-  //       r.x += r.width
-  //     } else {
-  //       r.y += r.height
-  //     }
-  //     if (r.contains(tabPt)) {
-  //       return i + 1
-  //     }
-  //   }
-  //
-  //   val lastRect = getBoundsAt(count - 1)
-  //   val d = if (isHorizontal) Point(1, 0) else Point(0, 1)
-  //   lastRect.translate(lastRect.width * d.x, lastRect.height * d.y)
-  //   return if (lastRect.contains(tabPt)) count else -1
-  // }
 
   fun convertTab(
     prev: Int,

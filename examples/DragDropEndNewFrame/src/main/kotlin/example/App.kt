@@ -166,29 +166,22 @@ private class DnDTabbedPane : JTabbedPane() {
 
   fun getTargetTabIndex(glassPt: Point): Int {
     val tabPt = SwingUtilities.convertPoint(glassPane, glassPt, this)
-    val tp = getTabPlacement()
-    val d = if (isTopBottomTabPlacement(tp)) Point(1, 0) else Point(0, 1)
-//    return (0..<getTabCount().taleIf { i ->
-//      val r = getBoundsAt(i)
-//      r.translate(-r.width * d.x / 2, -r.height * d.y / 2)
-//      r.contains(tabPt)
-//    }.findFirst().orElseGet {
-//      val count = getTabCount()
-//      val r = getBoundsAt(count - 1)
-//      r.translate(r.width * d.x / 2, r.height * d.y / 2)
-//      if (r.contains(tabPt)) count else -1
-//    }
-    for (i in 0..<tabCount) {
-      val r = getBoundsAt(i)
-      r.translate(-r.width * d.x / 2, -r.height * d.y / 2)
-      if (r.contains(tabPt)) {
-        return i
-      }
-    }
-    val r = getBoundsAt(tabCount - 1)
-    r.translate(r.width * d.x / 2, r.height * d.y / 2)
-    return if (r.contains(tabPt)) tabCount else -1
+    val count = tabCount
+    // firstOrNull is short-circuiting, so isFirstHalf(...) is evaluated
+    // only for the first tab that contains the point.
+    val idx = (0..<count).firstOrNull { getBoundsAt(it).contains(tabPt) }
+    return idx?.let { if (isFirstHalf(getBoundsAt(it), tabPt)) it else it + 1 }
+      ?: if (count == 0) -1 else count
   }
+
+  // Test whether the point is in the first half of the tab:
+  // the left half for TOP/BOTTOM, the upper half for LEFT/RIGHT.
+  private fun isFirstHalf(r: Rectangle, pt: Point) =
+    if (isTopBottomTabPlacement(getTabPlacement())) {
+      pt.getX() <= r.centerX
+    } else {
+      pt.getY() <= r.centerY
+    }
 
   fun convertTab(
     prev: Int,

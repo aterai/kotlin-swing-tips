@@ -10,7 +10,6 @@ import java.awt.dnd.DropTargetDropEvent
 import java.awt.dnd.DropTargetEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.awt.geom.Rectangle2D
 import java.awt.image.BufferedImage
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
@@ -98,9 +97,9 @@ class DnDTabbedPane : JTabbedPane() {
   var dropLocation: DropLocation? = null
   val tabAreaBounds: Rectangle
     get() {
-      val tabbedRect = bounds
-      val xx = tabbedRect.x
-      val yy = tabbedRect.y
+      // Start from the component coordinate system
+      // instead of bounds + translate(-x, -y).
+      val tabbedRect = Rectangle(size)
       val compRect = selectedComponent?.bounds ?: Rectangle()
       val tabPlacement = getTabPlacement()
       if (isTopBottomTabPlacement(tabPlacement)) {
@@ -114,7 +113,6 @@ class DnDTabbedPane : JTabbedPane() {
           tabbedRect.x += compRect.x + compRect.width
         }
       }
-      tabbedRect.translate(-xx, -yy)
       return tabbedRect
     }
 
@@ -153,73 +151,49 @@ class DnDTabbedPane : JTabbedPane() {
 
   fun autoScrollTest(pt: Point) {
     val r = tabAreaBounds
+    val backward = Rectangle()
+    val forward = Rectangle()
     if (isTopBottomTabPlacement(getTabPlacement())) {
-      RECT_BACKWARD.setBounds(r.x, r.y, SCROLL_SIZE, r.height)
-      RECT_FORWARD.setBounds(
+      backward.setBounds(r.x, r.y, SCROLL_SIZE, r.height)
+      forward.setBounds(
         r.x + r.width - SCROLL_SIZE - BUTTON_SIZE,
         r.y,
         SCROLL_SIZE + BUTTON_SIZE,
         r.height,
       )
     } else { // if (tabPlacement == LEFT || tabPlacement == RIGHT) {
-      RECT_BACKWARD.setBounds(r.x, r.y, r.width, SCROLL_SIZE)
-      RECT_FORWARD.setBounds(
+      backward.setBounds(r.x, r.y, r.width, SCROLL_SIZE)
+      forward.setBounds(
         r.x,
         r.y + r.height - SCROLL_SIZE - BUTTON_SIZE,
         r.width,
         SCROLL_SIZE + BUTTON_SIZE,
       )
     }
-    if (RECT_BACKWARD.contains(pt)) {
+    if (backward.contains(pt)) {
       clickArrowButton(ScrollDirection.BACKWARD)
-    } else if (RECT_FORWARD.contains(pt)) {
+    } else if (forward.contains(pt)) {
       clickArrowButton(ScrollDirection.FORWARD)
     }
   }
 
+  // Test whether the point is in the first half of the tab:
+  // the left half for TOP/BOTTOM, the upper half for LEFT/RIGHT.
+  private fun isFirstHalf(r: Rectangle, pt: Point) =
+    if (isTopBottomTabPlacement(getTabPlacement())) {
+      pt.getX() <= r.centerX
+    } else {
+      pt.getY() <= r.centerY
+    }
+
   fun tabDropLocationForPoint(p: Point): DropLocation {
-    val horiz = isTopBottomTabPlacement(getTabPlacement())
-    val idx = (0..<tabCount)
-      .map { if (horiz) getHorizontalIndex(it, p) else getVerticalIndex(it, p) }
-      .firstOrNull { it >= 0 }
-      ?: -1
+    val count = tabCount
+    // firstOrNull is short-circuiting, so isFirstHalf(...) is evaluated
+    // only for the first tab that contains the point.
+    val i = (0..<count).firstOrNull { getBoundsAt(it).contains(p) }
+    val idx = i?.let { if (isFirstHalf(getBoundsAt(it), p)) it else it + 1 }
+      ?: if (count == 0) -1 else count
     return DropLocation(p, idx)
-  }
-
-  private fun getHorizontalIndex(i: Int, pt: Point): Int {
-    val r = getBoundsAt(i)
-    val cr = Rectangle2D.Double(r.centerX, r.getY(), .1, r.getHeight())
-    val iv = cr.outcode(pt)
-    val outLeft = iv and Rectangle2D.OUT_LEFT != 0
-    val outRight = iv and Rectangle2D.OUT_RIGHT != 0
-    val withInTab = r.contains(pt)
-    val firstHalf = withInTab && outLeft
-    val secondHalf = withInTab && outRight
-    val centerLine = cr.contains(pt)
-    val lastTab = i == tabCount - 1
-    return when {
-      firstHalf || centerLine -> i
-      secondHalf || lastTab -> i + 1
-      else -> -1
-    }
-  }
-
-  private fun getVerticalIndex(i: Int, pt: Point): Int {
-    val r = getBoundsAt(i)
-    val cr = Rectangle2D.Double(r.getX(), r.centerY, r.getWidth(), .1)
-    val iv = cr.outcode(pt)
-    val outTop = iv and Rectangle2D.OUT_TOP != 0
-    val outBottom = iv and Rectangle2D.OUT_BOTTOM != 0
-    val withInTab = r.contains(pt)
-    val firstHalf = withInTab && outTop
-    val secondHalf = withInTab && outBottom
-    val centerLine = cr.contains(pt)
-    val lastTab = i == tabCount - 1
-    return when {
-      firstHalf || centerLine -> i
-      secondHalf || lastTab -> i + 1
-      else -> -1
-    }
   }
 
   fun updateTabDropLocation(
@@ -321,7 +295,6 @@ class DnDTabbedPane : JTabbedPane() {
         val isTabRunsRotated = isNotMetal && isWrapTabLayout
         dragTabIndex = if (isTabRunsRotated && idx != selIdx) selIdx else idx
         th.exportAsDrag(src, e, TransferHandler.MOVE)
-        // RECT_LINE.setBounds(0, 0, 0, 0)
         src.rootPane.glassPane.isVisible = true
         src.updateTabDropLocation(DropLocation(tabPt, -1), true)
         startPt = null
@@ -334,8 +307,6 @@ class DnDTabbedPane : JTabbedPane() {
   companion object {
     private const val SCROLL_SIZE = 20 // Test
     private const val BUTTON_SIZE = 30 // 30 is magic number of buttons
-    private val RECT_BACKWARD = Rectangle()
-    private val RECT_FORWARD = Rectangle()
   }
 }
 
@@ -435,24 +406,17 @@ private class TabTransferHandler : TransferHandler() {
   }
 
   private fun createDragTabImage(tabs: DnDTabbedPane): BufferedImage {
-    val rect = tabs.getBoundsAt(tabs.dragTabIndex)
-    val image = BufferedImage(tabs.width, tabs.height, BufferedImage.TYPE_INT_ARGB)
+    val rect = tabs.getBoundsAt(tabs.dragTabIndex).intersection(Rectangle(tabs.size))
+    val w = maxOf(1, rect.width)
+    val h = maxOf(1, rect.height)
+    val image = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
     val g2 = image.createGraphics()
+    // The clip of this Graphics2D is the tab bounds, so the children
+    // outside of it are skipped and no subimage is needed.
+    g2.translate(-rect.x, -rect.y)
     tabs.paint(g2)
     g2.dispose()
-    if (rect.x < 0) {
-      rect.translate(-rect.x, 0)
-    }
-    if (rect.y < 0) {
-      rect.translate(0, -rect.y)
-    }
-    if (rect.x + rect.width > image.width) {
-      rect.width = image.width - rect.x
-    }
-    if (rect.y + rect.height > image.height) {
-      rect.height = image.height - rect.y
-    }
-    return image.getSubimage(rect.x, rect.y, rect.width, rect.height)
+    return image
   }
 
   override fun getSourceActions(c: JComponent): Int {
@@ -508,7 +472,7 @@ private class GhostGlassPane(
   }
 
   override fun paintComponent(g: Graphics) {
-    getDropLineRect().also { rect ->
+    getDropLineRect()?.also { rect ->
       val g2 = g.create() as? Graphics2D ?: return
       val r = SwingUtilities.convertRectangle(tabbedPane, rect, this)
       g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f)
@@ -518,36 +482,24 @@ private class GhostGlassPane(
     }
   }
 
-  fun getDropLineRect(): Rectangle {
+  fun getDropLineRect(): Rectangle? {
     val index = tabbedPane.dropLocation?.index ?: -1
     if (index < 0) {
-      RECT_LINE.setBounds(0, 0, 0, 0)
-    } else {
-      val a = minOf(index, 1)
-      val r = tabbedPane.getBoundsAt(a * (index - 1))
-      val tp = tabbedPane.tabPlacement
-      if (tp == JTabbedPane.TOP || tp == JTabbedPane.BOTTOM) {
-        RECT_LINE.setBounds(
-          r.x - LINE_SIZE / 2 + r.width * a,
-          r.y,
-          LINE_SIZE,
-          r.height,
-        )
-      } else {
-        RECT_LINE.setBounds(
-          r.x,
-          r.y - LINE_SIZE / 2 + r.height * a,
-          r.width,
-          LINE_SIZE,
-        )
-      }
+      return null
     }
-    return RECT_LINE
+    val a = minOf(index, 1) // index == 0 ? 0 : 1
+    val r = tabbedPane.getBoundsAt(maxOf(index - 1, 0))
+    val tp = tabbedPane.tabPlacement
+    val rect = if (tp == JTabbedPane.TOP || tp == JTabbedPane.BOTTOM) {
+      Rectangle(r.x - LINE_SIZE / 2 + r.width * a, r.y, LINE_SIZE, r.height)
+    } else {
+      Rectangle(r.x, r.y - LINE_SIZE / 2 + r.height * a, r.width, LINE_SIZE)
+    }
+    return rect.takeUnless { it.isEmpty }
   }
 
   companion object {
     private const val LINE_SIZE = 3
-    private val RECT_LINE = Rectangle()
   }
 }
 
