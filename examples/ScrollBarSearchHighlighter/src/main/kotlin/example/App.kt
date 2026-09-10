@@ -2,7 +2,6 @@ package example
 
 import com.sun.java.swing.plaf.windows.WindowsScrollBarUI
 import java.awt.*
-import java.awt.geom.AffineTransform
 import javax.swing.*
 import javax.swing.plaf.metal.MetalScrollBarUI
 import javax.swing.plaf.synth.SynthScrollBarUI
@@ -111,41 +110,24 @@ private class HighlightIcon(
   private val textArea: JTextComponent,
   private val scrollbar: JScrollBar,
 ) : Icon {
-  private val thumbRect = Rectangle()
-
   override fun paintIcon(
     c: Component,
     g: Graphics,
     x: Int,
     y: Int,
   ) {
-    val top = scrollbar.insets.top
     val range = scrollbar.model
-    val sy = range.extent / (range.maximum - range.minimum).toDouble()
-    val at = AffineTransform.getScaleInstance(1.0, sy)
-    val highlighter = textArea.highlighter
-
-    // paint Highlight
+    val trackHeight = iconHeight
+    val viewHeight = range.maximum - range.minimum
     val g2 = g.create() as? Graphics2D ?: return
-    g2.translate(x, y)
+    g2.translate(x, y + scrollbar.insets.top)
     g2.paint = Color.RED
-
-    runCatching {
-      for (hh in highlighter.highlights) {
-        val r = textArea.modelToView(hh.startOffset)
-        val s = at.createTransformedShape(r).bounds
-        val h = 2 // Math.max(2, s.height - 2)
-        g2.fillRect(0, top + s.y, iconWidth, h)
-      }
-    }
-
-    // paint Thumb
+    HighlightMarkPainter.paintMarks(g2, textArea, iconWidth, trackHeight, viewHeight)
     if (scrollbar.isVisible) {
-      thumbRect.height = range.extent
-      thumbRect.y = range.value // viewport.getViewPosition().y
-      g2.color = THUMB_COLOR
-      val s = at.createTransformedShape(thumbRect).bounds
-      g2.fillRect(0, top + s.y, iconWidth, s.height)
+      g2.paint = THUMB_COLOR
+      val thumbY = HighlightMarkPainter.scale(range.value, trackHeight, viewHeight)
+      val thumbHeight = HighlightMarkPainter.scale(range.extent, trackHeight, viewHeight)
+      g2.fillRect(0, thumbY, iconWidth, thumbHeight)
     }
     g2.dispose()
   }
@@ -153,12 +135,58 @@ private class HighlightIcon(
   override fun getIconWidth() = 4
 
   override fun getIconHeight(): Int {
-    val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, textArea)
-    return (c as? JViewport)?.height ?: 0
+    val viewport = SwingUtilities.getAncestorOfClass(JViewport::class.java, textArea)
+    return (viewport as? JViewport)?.height ?: scrollbar.height
   }
 
   companion object {
     private val THUMB_COLOR = Color(0, 0, 255, 50)
+  }
+}
+
+private object HighlightMarkPainter {
+  private const val MARK_HEIGHT = 2
+
+  fun scale(
+    value: Int,
+    trackHeight: Int,
+    viewHeight: Int,
+  ) = if (viewHeight <= 0) {
+    0
+  } else {
+    (value * trackHeight / viewHeight.toDouble()).toInt()
+  }
+
+  fun paintMarks(
+    g: Graphics,
+    textArea: JTextComponent,
+    width: Int,
+    trackHeight: Int,
+    viewHeight: Int,
+  ) {
+    runCatching {
+      for (h in textArea.highlighter.highlights) {
+        // Java 9: val r = textArea.modelToView2D(h.startOffset).bounds
+        val r = textArea.modelToView(h.startOffset)
+        g.fillRect(0, scale(r.y, trackHeight, viewHeight), width, MARK_HEIGHT)
+      }
+    }
+  }
+
+  fun paintTrackMarks(
+    g: Graphics,
+    c: JComponent,
+    trackBounds: Rectangle,
+  ) {
+    val scroll = SwingUtilities.getAncestorOfClass(JScrollPane::class.java, c)
+    val view = (scroll as? JScrollPane)?.viewport?.view
+    if (view is JTextComponent) {
+      val g2 = g.create() as? Graphics2D ?: return
+      g2.translate(trackBounds.x, trackBounds.y)
+      g2.paint = Color.YELLOW
+      paintMarks(g2, view, trackBounds.width, trackBounds.height, view.height)
+      g2.dispose()
+    }
   }
 }
 
@@ -169,24 +197,7 @@ private class WindowsHighlightScrollBarUI : WindowsScrollBarUI() {
     trackBounds: Rectangle,
   ) {
     super.paintTrack(g, c, trackBounds)
-    val s = SwingUtilities.getAncestorOfClass(JScrollPane::class.java, c)
-    val v = (s as? JScrollPane)?.viewport?.view
-    if (v is JTextComponent) {
-      val textArea = v
-      val rect = textArea.bounds
-      val sy = trackBounds.getHeight() / rect.getHeight()
-      val at = AffineTransform.getScaleInstance(1.0, sy)
-      val highlighter = textArea.highlighter
-      g.color = Color.YELLOW
-      runCatching {
-        for (hh in highlighter.highlights) {
-          val r = textArea.modelToView(hh.startOffset)
-          val by = at.createTransformedShape(r).bounds.y
-          val h = 2
-          g.fillRect(trackBounds.x, trackBounds.y + by, trackBounds.width, h)
-        }
-      }
-    }
+    HighlightMarkPainter.paintTrackMarks(g, c, trackBounds)
   }
 }
 
@@ -197,24 +208,7 @@ private class MetalHighlightScrollBarUI : MetalScrollBarUI() {
     trackBounds: Rectangle,
   ) {
     super.paintTrack(g, c, trackBounds)
-    val s = SwingUtilities.getAncestorOfClass(JScrollPane::class.java, c)
-    val v = (s as? JScrollPane)?.viewport?.view
-    if (v is JTextComponent) {
-      val textArea = v
-      val rect = textArea.bounds
-      val sy = trackBounds.getHeight() / rect.getHeight()
-      val at = AffineTransform.getScaleInstance(1.0, sy)
-      val highlighter = textArea.highlighter
-      g.color = Color.YELLOW
-      runCatching {
-        for (hh in highlighter.highlights) {
-          val r = textArea.modelToView(hh.startOffset)
-          val by = at.createTransformedShape(r).bounds.y
-          val h = 2
-          g.fillRect(trackBounds.x, trackBounds.y + by, trackBounds.width, h)
-        }
-      }
-    }
+    HighlightMarkPainter.paintTrackMarks(g, c, trackBounds)
   }
 }
 
