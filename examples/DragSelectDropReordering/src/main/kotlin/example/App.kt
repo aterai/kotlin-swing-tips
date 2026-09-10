@@ -175,8 +175,8 @@ private class ReorderingList(
       val g = c.green
       val b = c.blue
       val v = when (val max = maxOf(r, g, b)) {
-        r -> max shl 8
-        g -> max shl 4
+        r -> max shl 16
+        g -> max shl 8
         else -> max
       }
       return Color(v)

@@ -56,10 +56,10 @@ fun createUI(): Component {
 private class RubberBandSelectionList(
   model: ListModel<ListItem>,
 ) : JList<ListItem>(model) {
-  private var rbl: ItemCheckBoxesListener? = null
+  private var rbl: RubberBandingListener? = null
   private var rubberBandColor: Color? = null
   private val rubberBand = Path2D.Double()
-  private var rollOverIndex = -1
+  private var rolloverIndex = -1
   private var checkedIndex = -1
 
   override fun updateUI() {
@@ -76,7 +76,7 @@ private class RubberBandSelectionList(
     fixedCellHeight = 60
     border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     setCellRenderer(ListItemCellRenderer())
-    rbl = ItemCheckBoxesListener()
+    rbl = RubberBandingListener()
     addMouseMotionListener(rbl)
     addMouseListener(rbl)
   }
@@ -125,13 +125,11 @@ private class RubberBandSelectionList(
     return r.width != 0 || r.height != 0
   }
 
-  private inner class ItemCheckBoxesListener : MouseAdapter() {
+  private inner class RubberBandingListener : MouseAdapter() {
     private val srcPoint = Point()
 
     override fun mouseDragged(e: MouseEvent) {
       checkedIndex = -1
-      val l = e.component as? JList<*> ?: return
-      // l.isFocusable = true
       val dstPoint = e.point
       rubberBand.reset()
       rubberBand.moveTo(srcPoint.getX(), srcPoint.getY())
@@ -139,63 +137,61 @@ private class RubberBandSelectionList(
       rubberBand.lineTo(dstPoint.getX(), dstPoint.getY())
       rubberBand.lineTo(srcPoint.getX(), dstPoint.getY())
       rubberBand.closePath()
-      val indices = (0..<l.model.size)
-        .filter { rubberBand.intersects(l.getCellBounds(it, it)) }
+      val indices = (0..<model.size)
+        .filter { rubberBand.intersects(getCellBounds(it, it)) }
         .toIntArray()
-      l.selectedIndices = indices
-      l.repaint()
+      selectedIndices = indices
+      repaint()
     }
 
     override fun mouseExited(e: MouseEvent) {
-      rollOverIndex = -1
-      e.component.repaint()
+      rolloverIndex = -1
+      repaint()
     }
 
     override fun mouseMoved(e: MouseEvent) {
-      val pt = e.getPoint()
-      var idx = locationToIndex(pt)
-      if (!getCellBounds(idx, idx).contains(pt)) {
-        idx = -1
-      }
-      val rect = Rectangle()
-      if (idx >= 0) {
-        rect.add(getCellBounds(idx, idx))
-        if (rollOverIndex >= 0 && idx != rollOverIndex) {
-          rect.add(getCellBounds(rollOverIndex, rollOverIndex))
+      val idx = getIndexAt(e.point)
+      if (idx != rolloverIndex) {
+        val rect = Rectangle()
+        if (idx >= 0) {
+          rect.add(getCellBounds(idx, idx))
         }
-        rollOverIndex = idx
-      } else {
-        if (rollOverIndex >= 0) {
-          rect.add(getCellBounds(rollOverIndex, rollOverIndex))
+        if (rolloverIndex >= 0) {
+          rect.add(getCellBounds(rolloverIndex, rolloverIndex))
         }
-        rollOverIndex = -1
+        rolloverIndex = idx
+        repaint(rect)
       }
-      (e.component as? JComponent)?.repaint(rect)
     }
 
     override fun mouseReleased(e: MouseEvent) {
       rubberBand.reset()
-      val c = e.component
-      // c.isFocusable = true
-      c.repaint()
+      repaint()
     }
 
     override fun mousePressed(e: MouseEvent) {
-      val l = e.component as? JList<*> ?: return
-      val index = l.locationToIndex(e.point)
-      if (l.getCellBounds(index, index).contains(e.point)) {
-        // l.isFocusable = true
+      val pt = e.point
+      val index = getIndexAt(pt)
+      if (index >= 0) {
         cellPressed(e, index)
       } else {
         EventQueue.invokeLater {
-          // l.isFocusable = false
-          l.clearSelection()
-          l.selectionModel.anchorSelectionIndex = -1
-          l.selectionModel.leadSelectionIndex = -1
+          selectionModel.anchorSelectionIndex = -1
+          selectionModel.leadSelectionIndex = -1
+          rolloverIndex = -1
+          checkedIndex = -1
+          clearSelection()
         }
       }
-      srcPoint.location = e.point
-      l.repaint()
+      srcPoint.location = pt
+      repaint()
+    }
+
+    // Returns the index of the cell that actually contains pt, or -1
+    private fun getIndexAt(pt: Point): Int {
+      val index = locationToIndex(pt)
+      val r = getCellBounds(index, index)
+      return if (r != null && r.contains(pt)) index else -1
     }
 
     private fun cellPressed(
@@ -210,7 +206,6 @@ private class RubberBandSelectionList(
         getDeepestButtonAt(e, index)?.also {
           checkedIndex = index
           if (isSelectedIndex(index)) {
-            setFocusable(false)
             removeSelectionInterval(index, index)
           } else {
             setSelectionInterval(index, index)
@@ -261,7 +256,6 @@ private class RubberBandSelectionList(
       label.verticalTextPosition = SwingConstants.TOP
       label.horizontalTextPosition = SwingConstants.CENTER
       label.foreground = itemPanel.foreground
-      label.background = itemPanel.background
       label.border = BorderFactory.createEmptyBorder(0, 0, 5, 0)
       label.isOpaque = false
       icon.horizontalTextPosition = SwingConstants.CENTER
@@ -302,20 +296,17 @@ private class RubberBandSelectionList(
       itemPanel.border = if (cellHasFocus) focusBorder else noFocusBorder
       icon.icon = value.icon
       check.isSelected = isSelected
-      check.model.isRollover = index == rollOverIndex
+      check.model.isRollover = index == rolloverIndex
+      val isRollover = index == rolloverIndex
+      check.isVisible = isSelected || isRollover
+      label.foreground =
+        if (isSelected) list.selectionForeground else list.foreground
       if (isSelected) {
-        label.foreground = list.selectionForeground
-        label.background = SELECTED_COLOR
         itemPanel.background = SELECTED_COLOR
-        check.isVisible = true
-      } else if (index == rollOverIndex) {
+      } else if (isRollover) {
         itemPanel.background = ROLLOVER_COLOR
-        check.isVisible = true
       } else {
-        label.foreground = list.foreground
-        label.background = list.background
         itemPanel.background = list.background
-        check.isVisible = false
       }
       return renderer
     }
@@ -326,8 +317,8 @@ private class RubberBandSelectionList(
     val g = c.green
     val b = c.blue
     val v = when (val max = maxOf(r, g, b)) {
-      r -> max shl 8
-      g -> max shl 4
+      r -> max shl 16
+      g -> max shl 8
       else -> max
     }
     return Color(v)
