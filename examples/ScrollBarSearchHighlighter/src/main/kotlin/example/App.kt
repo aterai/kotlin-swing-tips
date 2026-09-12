@@ -126,7 +126,11 @@ private class HighlightIcon(
     if (scrollbar.isVisible) {
       g2.paint = THUMB_COLOR
       val thumbY = HighlightMarkPainter.scale(range.value, trackHeight, viewHeight)
-      val thumbHeight = HighlightMarkPainter.scale(range.extent, trackHeight, viewHeight)
+      val thumbHeight = HighlightMarkPainter.scale(
+        range.extent,
+        trackHeight,
+        viewHeight,
+      )
       g2.fillRect(0, thumbY, iconWidth, thumbHeight)
     }
     g2.dispose()

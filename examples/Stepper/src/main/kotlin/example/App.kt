@@ -10,7 +10,8 @@ import kotlin.math.pow
 import kotlin.math.roundToInt
 
 private val root = JPanel(BorderLayout(5, 5))
-private val stepperPanel = StepperPanel("Order", "Your info", "Payment", "Confirmation")
+private val stepperPanel =
+  StepperPanel("Order", "Your info", "Payment", "Confirmation")
 private val prevButton = JButton("Previous Step")
 private val nextButton = JButton("Next Step")
 private val statusLabel = JLabel("", SwingConstants.CENTER)
@@ -203,7 +204,8 @@ private class StepperPanel(
     if (elapsed < ANIM_DURATION_NS) {
       val timeFraction = elapsed / ANIM_DURATION_NS.toFloat()
       val easedFraction = 1f - (1.0 - timeFraction).pow(3.0).toFloat()
-      animatedProgress = startProgress + (targetProgress - startProgress) * easedFraction
+      animatedProgress =
+        startProgress + (targetProgress - startProgress) * easedFraction
     } else {
       animatedProgress = targetProgress
       animTimer.stop()
