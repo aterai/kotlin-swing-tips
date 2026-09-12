@@ -1,7 +1,6 @@
 package example
 
 import java.awt.*
-import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.*
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
@@ -58,7 +57,7 @@ private data class ComboItem(
   override fun toString() = title
 }
 
-private class EditorPanel(
+private class ComboItemPanel(
   data: ComboItem,
 ) : JPanel(BorderLayout()) {
   private val checkBox = JCheckBox()
@@ -100,12 +99,12 @@ private class EditorPanel(
 private class CheckComboBoxRenderer(
   private val combo: JComboBox<ComboItem>,
 ) : ListCellRenderer<ComboItem> {
-  private val renderer: EditorPanel
+  private val renderer: ComboItemPanel
   private val label = JLabel()
 
   init {
     val proto = combo.prototypeDisplayValue ?: ComboItem("", "")
-    renderer = EditorPanel(proto)
+    renderer = ComboItemPanel(proto)
   }
 
   override fun getListCellRendererComponent(
@@ -142,20 +141,19 @@ private class CheckComboBoxRenderer(
 }
 
 private class WidePopupMenuListener : PopupMenuListener {
-  private val adjusting = AtomicBoolean()
-
   override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
     val combo = e.source as? JComboBox<*> ?: return
     val size = combo.size
-    if (size.width >= POPUP_MIN_WIDTH || adjusting.get()) {
-      return
-    }
-    adjusting.set(true)
-    combo.setSize(POPUP_MIN_WIDTH, size.height)
-    combo.showPopup()
-    EventQueue.invokeLater {
-      combo.size = size
-      adjusting.set(false)
+    if (size.width < POPUP_MIN_WIDTH) {
+      // Temporarily widen the combo box so that BasicComboPopup#getPopupLocation()
+      // sizes the popup from the widened bounds. The nested showPopup() fires this
+      // listener again, but the width check above prevents infinite recursion.
+      combo.setSize(POPUP_MIN_WIDTH, size.height)
+      combo.showPopup()
+      // The outer BasicComboPopup#show() still calls getPopupLocation() after this
+      // listener returns, so restoring the size synchronously would shrink the
+      // already visible popup back to the combo box width.
+      EventQueue.invokeLater { combo.size = size }
     }
   }
 

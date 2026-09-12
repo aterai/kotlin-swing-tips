@@ -21,7 +21,7 @@ fun createUI(): Component {
 
   c.gridx = 1
   c.weightx = 1.0
-  p.add(makeComboBox1(makeModel(), ColorIcon(Color.DARK_GRAY)), c)
+  p.add(IconComboBox(createModel()), c)
 
   c.gridx = 0
   c.gridy = 1
@@ -30,7 +30,7 @@ fun createUI(): Component {
 
   c.gridx = 1
   c.weightx = 1.0
-  p.add(makeComboBox2(makeModel(), ColorIcon(Color.DARK_GRAY)), c)
+  p.add(IconWrapComboBox(createModel()), c)
   return JPanel(BorderLayout()).also {
     it.add(p, BorderLayout.NORTH)
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
@@ -38,107 +38,113 @@ fun createUI(): Component {
   }
 }
 
-private fun makeComboBox1(
+private open class IconComboBox(
   model: ComboBoxModel<Icon>,
-  proto: Icon,
-): JComboBox<Icon> {
-  return object : JComboBox<Icon>(model) {
-    override fun getPreferredSize(): Dimension {
-      val i = insets
-      val w = proto.iconWidth
-      val h = proto.iconHeight
-      return Dimension(w * 3 + i.left + i.right, h + i.top + i.bottom)
-    }
+) : JComboBox<Icon>(model) {
+  override fun getPreferredSize(): Dimension {
+    val i = insets
+    val w = PROTOTYPE.iconWidth * getColumnCount(itemCount, ROW_COUNT)
+    val h = PROTOTYPE.iconHeight
+    return Dimension(w + i.left + i.right, h + i.top + i.bottom)
+  }
 
-    override fun updateUI() {
-      super.updateUI()
-      setMaximumRowCount(3)
-      prototypeDisplayValue = proto
-      val popup = getAccessibleContext().getAccessibleChild(0)
-      (popup as? ComboPopup)?.list?.also {
-        it.layoutOrientation = JList.HORIZONTAL_WRAP
-        it.visibleRowCount = 3
-        it.fixedCellWidth = proto.iconWidth
-        it.fixedCellHeight = proto.iconHeight
-      }
+  override fun updateUI() {
+    super.updateUI()
+    maximumRowCount = ROW_COUNT
+    prototypeDisplayValue = PROTOTYPE
+    (accessibleContext.getAccessibleChild(0) as? ComboPopup)?.list?.also {
+      it.layoutOrientation = JList.HORIZONTAL_WRAP
+      it.visibleRowCount = ROW_COUNT
+      it.fixedCellWidth = PROTOTYPE.iconWidth
+      it.fixedCellHeight = PROTOTYPE.iconHeight
     }
+  }
+
+  companion object {
+    val PROTOTYPE: Icon = ColorIcon(Color.DARK_GRAY)
+    const val ROW_COUNT = 3
+
+    // Number of columns needed to lay out itemCount cells in rowCount rows
+    fun getColumnCount(
+      itemCount: Int,
+      rowCount: Int,
+    ) = (itemCount + rowCount - 1) / rowCount
   }
 }
 
-private fun makeComboBox2(
+private class IconWrapComboBox(
   model: ComboBoxModel<Icon>,
-  proto: Icon,
-): JComboBox<Icon> {
-  val combo = object : JComboBox<Icon>(model) {
-    override fun getPreferredSize(): Dimension {
-      val i = insets
-      val w = proto.iconWidth
-      val h = proto.iconHeight
-      return Dimension(20 + w + i.left + i.right, h + i.top + i.bottom)
-    }
+) : IconComboBox(model) {
+  @Transient private var listener: PopupMenuListener? = null
 
-    override fun updateUI() {
-      setRenderer(null)
-      super.updateUI()
-      setMaximumRowCount(3)
-      prototypeDisplayValue = proto
-      val renderer = getRenderer()
-      setRenderer { list, value, index, isSelected, cellHasFocus ->
-        renderer
-          .getListCellRendererComponent(
-            list,
-            value,
-            index,
-            isSelected,
-            cellHasFocus,
-          ).also {
-            if (it is JLabel) {
-              it.icon = value
-              it.border = BorderFactory.createEmptyBorder()
-            }
+  override fun getPreferredSize(): Dimension {
+    val i = insets
+    val w = PROTOTYPE.iconWidth
+    val h = PROTOTYPE.iconHeight
+    val buttonWidth = 20 // ???
+    return Dimension(buttonWidth + w + i.left + i.right, h + i.top + i.bottom)
+  }
+
+  override fun updateUI() {
+    setRenderer(null)
+    removePopupMenuListener(listener)
+    super.updateUI()
+    val renderer = getRenderer()
+    setRenderer { list, value, index, isSelected, cellHasFocus ->
+      renderer
+        .getListCellRendererComponent(
+          list,
+          value,
+          index,
+          isSelected,
+          cellHasFocus,
+        ).also {
+          if (it is JLabel) {
+            it.icon = value
+            it.border = BorderFactory.createEmptyBorder()
           }
-      }
-      (getAccessibleContext().getAccessibleChild(0) as? ComboPopup)?.list?.also {
-        it.layoutOrientation = JList.HORIZONTAL_WRAP
-        it.visibleRowCount = 3
-        it.fixedCellWidth = proto.iconWidth
-        it.fixedCellHeight = proto.iconHeight
-      }
+        }
     }
+    listener = WidePopupMenuListener(ROW_COUNT, PROTOTYPE)
+    addPopupMenuListener(listener)
   }
-  val pl = object : PopupMenuListener {
-    private var adjusting = false
-
-    override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-      val comboBox = e.source as? JComboBox<*> ?: return
-      val i = comboBox.insets
-      val popupWidth = proto.iconWidth * 3 + i.left + i.right
-      val size = comboBox.size
-      if (size.width >= popupWidth || adjusting) {
-        return
-      }
-      adjusting = true
-      comboBox.setSize(popupWidth, size.height)
-      comboBox.showPopup()
-      EventQueue.invokeLater {
-        comboBox.size = size
-        adjusting = false
-      }
-    }
-
-    override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
-      // not needed
-    }
-
-    override fun popupMenuCanceled(e: PopupMenuEvent) {
-      // not needed
-    }
-  }
-  combo.addPopupMenuListener(pl)
-  return combo
 }
 
-private fun makeModel(): ComboBoxModel<Icon> {
+private class WidePopupMenuListener(
+  private val rowCount: Int,
+  private val prototype: Icon,
+) : PopupMenuListener {
+  override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
+    val combo = e.source as? JComboBox<*> ?: return
+    val i = combo.insets
+    val columnCount = IconComboBox.getColumnCount(combo.itemCount, rowCount)
+    val popupWidth = prototype.iconWidth * columnCount + i.left + i.right
+    val size = combo.size
+    if (size.width < popupWidth) {
+      // Temporarily widen the combo box so that BasicComboPopup#getPopupLocation()
+      // sizes the popup from the widened bounds. The nested showPopup() fires this
+      // listener again, but the width check above prevents infinite recursion.
+      combo.setSize(popupWidth, size.height)
+      combo.showPopup()
+      // // Java 8
+      // combo.size = size
+      // Java 21: the outer BasicComboPopup#show() still calls getPopupLocation()
+      // after this listener returns, so restoring the size synchronously would
+      // shrink the already visible popup back to the combo box width.
+      EventQueue.invokeLater { combo.size = size }
+    }
+  }
+
+  override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
+    // not needed
+  }
+
+  override fun popupMenuCanceled(e: PopupMenuEvent) {
+    // not needed
+  }
+}
+
+private fun createModel(): ComboBoxModel<Icon> {
   val model = DefaultComboBoxModel<Icon>()
   model.addElement(ColorIcon(Color.RED))
   model.addElement(ColorIcon(Color.GREEN))

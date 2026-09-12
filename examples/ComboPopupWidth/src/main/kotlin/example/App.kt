@@ -6,21 +6,21 @@ import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 
 fun createUI(): Component {
-  val combo00 = makeComboBox()
+  val combo00 = createComboBox()
   combo00.isEditable = false
-  val combo01 = makeComboBox()
+  val combo01 = createComboBox()
   combo01.isEditable = true
 
-  val combo02 = makeComboBox()
+  val combo02 = createComboBox()
   combo02.isEditable = false
   combo02.addPopupMenuListener(WidePopupMenuListener())
 
-  val combo03 = makeComboBox()
+  val combo03 = createComboBox()
   combo03.isEditable = true
   combo03.addPopupMenuListener(WidePopupMenuListener())
 
-  val g = 5
-  val p = JPanel(GridLayout(4, 2, g, g))
+  val gap = 5
+  val p = JPanel(GridLayout(4, 2, gap, gap))
   p.add(combo00)
   p.add(JLabel("<- normal"))
   p.add(combo01)
@@ -31,13 +31,13 @@ fun createUI(): Component {
   p.add(JLabel("<- wide, editable"))
 
   return JPanel(BorderLayout()).also {
-    it.border = BorderFactory.createEmptyBorder(g, g, g, g)
+    it.border = BorderFactory.createEmptyBorder(gap, gap, gap, gap)
     it.add(p, BorderLayout.NORTH)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeComboBox(): JComboBox<String> {
+private fun createComboBox(): JComboBox<String> {
   val model = DefaultComboBoxModel<String>()
   model.addElement("1111")
   model.addElement("22222222")
@@ -48,21 +48,24 @@ private fun makeComboBox(): JComboBox<String> {
   return JComboBox(model)
 }
 
+// How to widen the drop-down list in a JComboBox
+// https://community.oracle.com/thread/1368300
 private class WidePopupMenuListener : PopupMenuListener {
-  private var adjusting = false
-
   override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
     val combo = e.source as? JComboBox<*> ?: return
     val size = combo.size
-    if (size.width >= POPUP_MIN_WIDTH || adjusting) {
-      return
-    }
-    adjusting = true
-    combo.setSize(POPUP_MIN_WIDTH, size.height)
-    combo.showPopup()
-    EventQueue.invokeLater {
-      combo.size = size
-      adjusting = false
+    if (size.width < POPUP_MIN_WIDTH) {
+      // Temporarily widen the combo box so that BasicComboPopup#getPopupLocation()
+      // sizes the popup from the widened bounds. The nested showPopup() fires this
+      // listener again, but the width check above prevents infinite recursion.
+      combo.setSize(POPUP_MIN_WIDTH, size.height)
+      combo.showPopup()
+      // // Java 8
+      // combo.size = size
+      // Java 21: the outer BasicComboPopup#show() still calls getPopupLocation()
+      // after this listener returns, so restoring the size synchronously would
+      // shrink the already visible popup back to the combo box width.
+      EventQueue.invokeLater { combo.size = size }
     }
   }
 
