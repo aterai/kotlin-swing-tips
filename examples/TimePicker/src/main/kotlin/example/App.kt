@@ -7,18 +7,19 @@ import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.awt.event.MouseWheelEvent
+import java.awt.event.MouseWheelListener
 import java.awt.geom.RoundRectangle2D
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import javax.swing.*
 import javax.swing.text.DefaultCaret
 import javax.swing.text.DefaultFormatterFactory
-import javax.swing.text.JTextComponent
 import javax.swing.text.MaskFormatter
 
 fun createUI(): Component {
-  val c1 = TimePickerSingleField().createPickerPanel()
-  val c2 = TimePickerSplitField().createPickerPanel()
+  val c1 = TimePickerSingleField().createComponent()
+  val c2 = TimePickerSplitField().createComponent()
   return JPanel().also {
     it.add(c1)
     it.add(c2)
@@ -27,38 +28,45 @@ fun createUI(): Component {
   }
 }
 
+// A time picker made of two separate hour/minute fields,
+// each with its own up/down spinner buttons.
 private class TimePickerSplitField {
-  fun createPickerPanel(): JPanel {
-    val fieldHour = makeNumberField(12, 1, 0, 23)
-    val fieldMinute = makeNumberField(30, 1, 0, 59)
+  fun createComponent(): JPanel {
+    val hourField = makeNumberField(12, 1, 0, 23)
+    val minuteField = makeNumberField(30, 1, 0, 59)
 
-    val pnlUp = JPanel(GridLayout(1, 2))
-    pnlUp.add(makeCenteredBox(makeArrowButton(fieldHour, 1, 0, 23)))
-    pnlUp.add(makeCenteredBox(makeArrowButton(fieldMinute, 1, 0, 59)))
+    val upButtonPanel = JPanel(GridLayout(1, 2))
+    upButtonPanel.add(makeCenteredBox(makeArrowButton(hourField, 1)))
+    upButtonPanel.add(makeCenteredBox(makeArrowButton(minuteField, 1)))
 
-    val pnlDown = JPanel(GridLayout(1, 2))
-    pnlDown.add(makeCenteredBox(makeArrowButton(fieldHour, -1, 0, 23)))
-    pnlDown.add(makeCenteredBox(makeArrowButton(fieldMinute, -1, 0, 59)))
+    val downButtonPanel = JPanel(GridLayout(1, 2))
+    downButtonPanel.add(makeCenteredBox(makeArrowButton(hourField, -1)))
+    downButtonPanel.add(makeCenteredBox(makeArrowButton(minuteField, -1)))
 
     val panel = JPanel(BorderLayout(5, 5))
     panel.setOpaque(false)
-    panel.add(pnlUp, BorderLayout.NORTH)
-    panel.add(makeTimeFieldPanel(fieldHour, fieldMinute))
-    panel.add(pnlDown, BorderLayout.SOUTH)
+    panel.add(upButtonPanel, BorderLayout.NORTH)
+    panel.add(makeTimeFieldPanel(hourField, minuteField))
+    panel.add(downButtonPanel, BorderLayout.SOUTH)
     return panel
   }
 
-  fun makeArrowButton(field: JTextField, delta: Int, min: Int, max: Int): JButton {
-    val txt = if (delta > 0) "⏶" else "⏷"
-    val button = JButton(txt)
+  // Creates an up/down button that moves the field by one step,
+  // repeating while the button is held down.
+  private fun makeArrowButton(
+    field: RoundFormattedTextField,
+    direction: Int,
+  ): JButton {
+    val arrowLabel = if (direction > 0) "⏶" else "⏷"
+    val button = JButton(arrowLabel)
     button.setFocusable(false)
-    val handler = AutoRepeatHandler(field, delta, min, max)
+    val handler = AutoRepeatHandler { field.adjustValue(direction) }
     button.addActionListener(handler)
     button.addMouseListener(handler)
     return button
   }
 
-  private fun makeCenteredBox(button: JButton?): Box {
+  private fun makeCenteredBox(button: JButton): Box {
     val box = Box.createHorizontalBox()
     box.add(Box.createHorizontalGlue())
     box.add(button)
@@ -66,31 +74,35 @@ private class TimePickerSplitField {
     return box
   }
 
-  private fun makeTimeFieldPanel(hour: JTextField?, minute: JTextField?): JPanel {
+  private fun makeTimeFieldPanel(
+    hourField: JTextField,
+    minuteField: JTextField,
+  ): JPanel {
     val panel: JPanel = RoundPanel(8)
     panel.setLayout(BoxLayout(panel, BoxLayout.X_AXIS))
     panel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8))
     panel.setOpaque(false)
-    panel.setBackground(Color(0xDEDEDE))
+    panel.setBackground(PANEL_BACKGROUND)
     panel.add(Box.createHorizontalGlue())
-    panel.add(hour)
+    panel.add(hourField)
     val colon = JLabel(":")
     colon.setFont(colon.getFont().deriveFont(Font.BOLD, 42f))
     colon.setBorder(BorderFactory.createEmptyBorder(0, 5, 10, 5))
     panel.add(colon)
-    panel.add(minute)
+    panel.add(minuteField)
     panel.add(Box.createHorizontalGlue())
     return panel
   }
 
-  fun makeNumberField(
+  private fun makeNumberField(
     value: Int,
     step: Int,
     min: Int,
     max: Int,
-  ): JFormattedTextField {
+  ): RoundFormattedTextField {
     val field = RoundFormattedTextField(value, step, min, max)
     runCatching {
+      // "##" restricts input to exactly two digits (e.g. "07", "23").
       val mask = MaskFormatter("##")
       mask.placeholderCharacter = '0'
       field.setFormatterFactory(DefaultFormatterFactory(mask))
@@ -102,189 +114,203 @@ private class TimePickerSplitField {
     field.setColumns(2)
     return field
   }
+
+  companion object {
+    // Background color of the rounded panel that wraps the hour/minute fields.
+    private val PANEL_BACKGROUND = Color(0xDE_DE_DE)
+  }
 }
 
+// A JPanel that paints itself as a filled rounded rectangle using its background color.
 private class RoundPanel(
-  private val radius: Int,
+  private val arc: Int,
 ) : JPanel() {
   override fun paintComponent(g: Graphics) {
-    val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(
-      RenderingHints.KEY_ANTIALIASING,
-      RenderingHints.VALUE_ANTIALIAS_ON,
-    )
-    g2.color = getBackground()
-    val dw = getWidth().toDouble()
-    val dh = getHeight().toDouble()
-    val da = radius.toDouble()
-    g2.fill(RoundRectangle2D.Double(0.0, 0.0, dw, dh, da, da))
-    g2.color = getBackground().darker()
-    g2.draw(RoundRectangle2D.Double(0.0, 0.0, dw - 1, dh - 1, da, da))
-    g2.dispose()
+    paintRoundRect(g, this, arc)
     super.paintComponent(g)
   }
-}
 
-private class RoundFormattedTextField(
-  value: Int,
-  step: Int,
-  min: Int,
-  max: Int,
-) : JFormattedTextField("%02d".format(value)) {
-  private var listener: FocusListener? = null
-
-  init {
-    // setText(String.format("%02d", value));
-    addMouseWheelListener { e ->
-      val delta = if (e.getWheelRotation() < 0) 1 else -1
-      val c = e.component
-      if (c is JTextComponent) {
-        AutoRepeatHandler.adjust(c, delta * step, min, max)
-      }
-    }
-  }
-
-  override fun updateUI() {
-    removeFocusListener(listener)
-    super.updateUI()
-    setFocusable(true)
-    setOpaque(false)
-    setBackground(Color(0xCE_CE_CE))
-    setSelectionColor(Color(0x0, true))
-    setSelectedTextColor(getForeground())
-    setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0))
-    setFont(getFont().deriveFont(Font.BOLD, 42f))
-    setCaret(object : DefaultCaret() {
-      override fun isVisible() = false
-    })
-    setCursor(Cursor(Cursor.DEFAULT_CURSOR))
-    listener = object : FocusListener {
-      override fun focusGained(e: FocusEvent) {
-        val c = e.component
-        c.setForeground(UIManager.getColor("TextField.foreground"))
-      }
-
-      override fun focusLost(e: FocusEvent) {
-        e.component.setForeground(Color.DARK_GRAY)
-      }
-    }
-    addFocusListener(listener)
-  }
-
-  override fun paintComponent(g: Graphics) {
-    if (hasFocus()) {
+  companion object {
+    // Fills the component bounds with its background color
+    // and outlines it with a darker shade of the same color.
+    fun paintRoundRect(
+      g: Graphics,
+      c: Component,
+      arc: Int,
+    ) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.setRenderingHint(
         RenderingHints.KEY_ANTIALIASING,
         RenderingHints.VALUE_ANTIALIAS_ON,
       )
-      g2.color = getBackground()
-      val dw = getWidth().toDouble()
-      val dh = getHeight().toDouble()
-      g2.fill(RoundRectangle2D.Double(0.0, 0.0, dw, dh, 8.0, 8.0))
-      g2.color = getBackground().darker()
-      g2.draw(RoundRectangle2D.Double(0.0, 0.0, dw - 1, dh - 1, 8.0, 8.0))
+      val w = c.width.toDouble()
+      val h = c.height.toDouble()
+      val a = arc.toDouble()
+      g2.color = c.background
+      g2.fill(RoundRectangle2D.Double(0.0, 0.0, w, h, a, a))
+      g2.color = c.background.darker()
+      g2.draw(RoundRectangle2D.Double(0.0, 0.0, w - 1.0, h - 1.0, a, a))
       g2.dispose()
     }
-    super.paintComponent(g)
   }
 }
 
-private class AutoRepeatHandler(
-  private val view: JTextComponent,
-  private val delta: Int,
+// A two-digit numeric field with a rounded, focus-highlighted background
+// and mouse-wheel support. The value wraps around within [min, max].
+private class RoundFormattedTextField(
+  value: Int,
+  private val step: Int,
   private val min: Int,
   private val max: Int,
+) : JFormattedTextField("%02d".format(value)) {
+  private var handler: Handler? = null
+
+  override fun updateUI() {
+    removeFocusListener(handler)
+    removeMouseWheelListener(handler)
+    super.updateUI()
+    setOpaque(false)
+    setBackground(FIELD_BACKGROUND)
+    // Dimmed until the field gains the focus; see Handler#focusGained
+    setForeground(Color.DARK_GRAY)
+    setSelectionColor(TRANSPARENT)
+    setSelectedTextColor(UIManager.getColor("TextField.foreground"))
+    setBorder(BorderFactory.createEmptyBorder())
+    setCaret(object : DefaultCaret() {
+      override fun isVisible() = false
+    })
+    setCursor(Cursor.getDefaultCursor())
+    handler = Handler().also {
+      addFocusListener(it)
+      addMouseWheelListener(it)
+    }
+  }
+
+  // Moves the value by the given number of steps, wrapping around
+  // within [min, max] instead of clamping (e.g. 23 + 1 -> 0).
+  fun adjustValue(steps: Int) {
+    requestFocusInWindow()
+    val range = max - min + 1
+    val value = getText().toInt()
+    val next = Math.floorMod(value - min + steps * step, range) + min
+    text = "%02d".format(next)
+  }
+
+  override fun paintComponent(g: Graphics) {
+    if (hasFocus()) {
+      RoundPanel.paintRoundRect(g, this, ARC)
+    }
+    super.paintComponent(g)
+  }
+
+  private inner class Handler :
+    FocusListener,
+    MouseWheelListener {
+    override fun focusGained(e: FocusEvent) {
+      setForeground(UIManager.getColor("TextField.foreground"))
+    }
+
+    override fun focusLost(e: FocusEvent) {
+      setForeground(Color.DARK_GRAY)
+    }
+
+    override fun mouseWheelMoved(e: MouseWheelEvent) {
+      // Rotating the wheel away from the user (negative) increases the value
+      adjustValue(-e.getWheelRotation())
+    }
+  }
+
+  companion object {
+    // Background color used while the field is focused.
+    private val FIELD_BACKGROUND = Color(0xCE_CE_CE)
+
+    // Fully transparent so the selection itself is invisible;
+    // the focus highlight is drawn instead.
+    private val TRANSPARENT = Color(0x0, true)
+    private const val ARC = 8
+  }
+}
+
+// Runs an action when a button is clicked and keeps repeating it
+// while the button is held down, like the arrow buttons of a JSpinner.
+private class AutoRepeatHandler(
+  private val action: Runnable,
 ) : MouseAdapter(),
   ActionListener {
   private val autoRepeatTimer = Timer(60, this)
-  private var arrowButton: JButton? = null
+  private var arrowButton: AbstractButton? = null
 
   init {
     autoRepeatTimer.setInitialDelay(300)
   }
 
   override fun actionPerformed(e: ActionEvent) {
-    val o = e.getSource()
-    if (o is Timer) {
-      val released = arrowButton?.getModel()?.isPressed != true
-      if (released && autoRepeatTimer.isRunning) {
-        autoRepeatTimer.stop()
-      }
-    } else if (o is JButton) {
-      arrowButton = o
+    // The button itself fires once on release; the timer fires while held.
+    val released =
+      e.getSource() is Timer && arrowButton?.getModel()?.isPressed != true
+    if (released) {
+      // Safety net: stop repeating if the button was released
+      // without this handler receiving mouseReleased.
+      autoRepeatTimer.stop()
+    } else {
+      action.run()
     }
-    adjust(view, delta, min, max)
   }
 
   override fun mousePressed(e: MouseEvent) {
-    if (SwingUtilities.isLeftMouseButton(e) && e.component.isEnabled) {
+    val c = e.component
+    if (SwingUtilities.isLeftMouseButton(e) && c.isEnabled && c is AbstractButton) {
+      arrowButton = c
       autoRepeatTimer.start()
     }
   }
 
-  override fun mouseReleased(e: MouseEvent?) {
+  override fun mouseReleased(e: MouseEvent) {
     autoRepeatTimer.stop()
   }
 
-  override fun mouseExited(e: MouseEvent?) {
-    if (autoRepeatTimer.isRunning) {
-      autoRepeatTimer.stop()
-    }
-  }
-
-  companion object {
-    fun adjust(field: JTextComponent, delta: Int, min: Int, max: Int) {
-      field.requestFocusInWindow()
-      val range = max - min + 1
-      var value = field.getText().toInt()
-      value = (value - min + delta) % range
-      if (value < 0) {
-        value += range
-      }
-      value += min
-      field.text = "%02d".format(value)
-    }
+  override fun mouseExited(e: MouseEvent) {
+    autoRepeatTimer.stop()
   }
 }
 
+// A single "HH:mm" field where the mouse wheel adjusts
+// the hour or minute depending on the pointer position.
 private class TimePickerSingleField {
-  private var timeField: JFormattedTextField? = null
   private var currentTime = LocalTime.of(12, 30)
-  private val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
-  fun createPickerPanel(): Component {
-    val field = runCatching {
-      val mask = MaskFormatter("##:##").also {
-        it.placeholderCharacter = '0'
-      }
-      JFormattedTextField(mask)
-    }.getOrNull() ?: JFormattedTextField()
+  fun createComponent(): JFormattedTextField {
+    val field = makeMaskedField("##:##")
     field.setFont(Font("Monospaced", Font.BOLD, 42))
     field.setHorizontalAlignment(JTextField.CENTER)
     field.isEditable = false
-    field.setFocusable(true)
-    updateDisplay()
+    field.text = currentTime.format(TIME_FORMATTER)
     field.addMouseWheelListener { e ->
-      val isUp = e.getWheelRotation() < 0
-      val isHourSide = field.viewToModel(e.getPoint()) <= 2
-      adjustTime(isHourSide, isUp)
+      // Rotating the wheel away from the user (negative) increases the value
+      val steps = -e.getWheelRotation().toLong()
+      val isHourSide = field.viewToModel2D(e.getPoint()) <= HOUR_END_INDEX
+      // Unlike TimePickerSplitField, the minutes carry over into the hours (12:59 -> 13:00)
+      currentTime = if (isHourSide) {
+        currentTime.plusHours(steps)
+      } else {
+        currentTime.plusMinutes(steps)
+      }
+      field.text = currentTime.format(TIME_FORMATTER)
     }
-    timeField = field
     return field
   }
 
-  private fun adjustTime(isHour: Boolean, isUp: Boolean) {
-    currentTime = if (isHour) {
-      if (isUp) currentTime.plusHours(1) else currentTime.minusHours(1)
-    } else {
-      if (isUp) currentTime.plusMinutes(1) else currentTime.minusMinutes(1)
+  private fun makeMaskedField(pattern: String) = runCatching {
+    val mask = MaskFormatter(pattern).also {
+      it.placeholderCharacter = '0'
     }
-    updateDisplay()
-  }
+    JFormattedTextField(mask)
+  }.getOrNull() ?: JFormattedTextField()
 
-  private fun updateDisplay() {
-    timeField?.text = currentTime.format(timeFormatter)
+  companion object {
+    // Index of the colon in the "HH:mm" mask: caret positions 0-2 are over the hour digits.
+    private const val HOUR_END_INDEX = 2
+    private val TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
   }
 }
 
