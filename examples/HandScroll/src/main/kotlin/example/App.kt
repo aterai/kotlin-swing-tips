@@ -11,7 +11,7 @@ var isWeightMixing = false
 
 fun createUI(): Component {
   val scroll = object : JScrollPane(JLabel(createIcon())) {
-    override fun createViewport(): JViewport = CustomViewport()
+    override fun createViewport(): JViewport = OverscrollViewport()
   }
   val hsl1 = HandDragScrollListener()
   val viewport = scroll.getViewport()
@@ -49,23 +49,27 @@ private fun createIcon(): Icon {
   return image?.let { ImageIcon(it) } ?: MissingIcon()
 }
 
-private class CustomViewport : JViewport() {
-  private var isAdjusting = false
+// JViewport#setViewPosition(Point) calls revalidate() since JDK 1.7.0 (to keep
+// heavyweight/lightweight mixing consistent), and ViewportLayout then clamps
+// the view position back inside the view bounds. Skip that revalidate() while
+// the position is being set so the view can be scrolled beyond its edges.
+private class OverscrollViewport : JViewport() {
+  private var adjusting = false
 
   override fun revalidate() {
-    if (isWeightMixing || !isAdjusting) {
+    if (WEIGHT_MIXING || !adjusting) {
       super.revalidate()
     }
   }
 
-  override fun setViewPosition(p: Point?) {
-    if (isWeightMixing) {
-      super.setViewPosition(p)
-    } else {
-      isAdjusting = true
-      super.setViewPosition(p)
-      isAdjusting = false
-    }
+  override fun setViewPosition(p: Point) {
+    adjusting = true
+    super.setViewPosition(p)
+    adjusting = false
+  }
+
+  companion object {
+    private const val WEIGHT_MIXING = false
   }
 }
 
