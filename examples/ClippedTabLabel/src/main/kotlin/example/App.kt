@@ -9,8 +9,8 @@ import javax.swing.plaf.synth.SynthLookAndFeel
 
 fun createUI(): Component {
   val list = listOf(
-    makeTabbedPane(JTabbedPane()),
-    makeTabbedPane(ClippedTitleTabbedPane()),
+    createTabbedPane(JTabbedPane()),
+    createTabbedPane(ClippedTitleTabbedPane()),
   )
   val p = JPanel(GridLayout(list.size, 1))
   list.forEach { p.add(it) }
@@ -27,7 +27,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeTabbedPane(tabbedPane: JTabbedPane) = tabbedPane.also {
+private fun createTabbedPane(tabbedPane: JTabbedPane) = tabbedPane.also {
   it.tabLayoutPolicy = JTabbedPane.SCROLL_TAB_LAYOUT
   it.addTab("1111111111111111111", ColorIcon(Color.RED), JScrollPane(JTree()))
   it.addTab("2", ColorIcon(Color.GREEN), JLabel("JLabel 1"))
@@ -58,23 +58,19 @@ private class ClippedTitleTabbedPane : JTabbedPane() {
 
   override fun doLayout() {
     val tabCount = tabCount
-    if (tabCount == 0 || !isVisible) {
-      super.doLayout()
-      return
+    if (tabCount > 0 && isVisible) {
+      val tabIns = tabInsets
+      val tabAreaIns = tabAreaInsets
+      val ins = insets
+      val tabPlacement = getTabPlacement()
+      val areaWidth = width - tabAreaIns.left - tabAreaIns.right - ins.left - ins.right
+      val isSide = tabPlacement == LEFT || tabPlacement == RIGHT
+      var tabWidth = if (isSide) areaWidth / 4 else areaWidth / tabCount
+      val gap = if (isSide) 0 else areaWidth - tabWidth * tabCount
+      // "3" is magic number @see BasicTabbedPaneUI#calculateTabWidth
+      tabWidth -= tabIns.left + tabIns.right + 3
+      updateAllTabWidths(tabWidth, gap)
     }
-    val tabIns = tabInsets
-    val tabAreaIns = tabAreaInsets
-    val ins = insets
-    val tabPlacement = getTabPlacement()
-    val areaWidth = width - tabAreaIns.left - tabAreaIns.right - ins.left - ins.right
-    val isSide = tabPlacement == LEFT || tabPlacement == RIGHT
-    var tabWidth = if (isSide) areaWidth / 4 else areaWidth / tabCount
-    val gap = if (isSide) 0 else areaWidth - tabWidth * tabCount
-
-    // "3" is magic number @see BasicTabbedPaneUI#calculateTabWidth
-    tabWidth -= tabIns.left + tabIns.right + 3
-    updateAllTabWidth(tabWidth, gap)
-
     super.doLayout()
   }
 
@@ -89,19 +85,17 @@ private class ClippedTitleTabbedPane : JTabbedPane() {
     setTabComponentAt(index, JLabel(title, icon, CENTER))
   }
 
-  private fun updateAllTabWidth(
+  private fun updateAllTabWidths(
     tabWidth: Int,
     gap: Int,
   ) {
-    val dim = Dimension()
-    var rest = gap
     for (i in 0..<tabCount) {
-      val tab = getTabComponentAt(i) as? JComponent ?: continue
-      val a = if (i == tabCount - 1) rest else 1
-      val w = if (rest > 0) tabWidth + a else tabWidth
-      dim.setSize(w, tab.preferredSize.height)
-      tab.preferredSize = dim
-      rest -= a
+      val tab = getTabComponentAt(i)
+      if (tab is JComponent) {
+        val d = tab.getPreferredSize()
+        d.width = if (i < gap) tabWidth + 1 else tabWidth
+        tab.preferredSize = d
+      }
     }
   }
 }

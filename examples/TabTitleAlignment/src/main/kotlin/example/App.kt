@@ -100,7 +100,7 @@ private class ClippedTitleTabbedPane(
 
     // "3" is magic number @see BasicTabbedPaneUI#calculateTabWidth
     tabWidth -= tabIns.left + tabIns.right + 3
-    updateAllTabWidth(tabWidth, gap)
+    updateAllTabWidths(tabWidth, gap)
     super.doLayout()
   }
 
@@ -115,19 +115,16 @@ private class ClippedTitleTabbedPane(
     setTabComponentAt(index, ButtonTabComponent(this))
   }
 
-  private fun updateAllTabWidth(
+  private fun updateAllTabWidths(
     tabWidth: Int,
     gap: Int,
   ) {
-    val dim = Dimension()
-    var rest = gap
     for (i in 0..<tabCount) {
-      (getTabComponentAt(i) as? JComponent)?.also {
-        val a = if (i == tabCount - 1) rest else 1
-        val w = if (rest > 0) tabWidth + a else tabWidth
-        dim.setSize(w, it.preferredSize.height)
-        it.preferredSize = dim
-        rest -= a
+      val tab = getTabComponentAt(i)
+      if (tab is JComponent) {
+        val d = tab.getPreferredSize()
+        d.width = if (i < gap) tabWidth + 1 else tabWidth
+        tab.preferredSize = d
       }
     }
   }

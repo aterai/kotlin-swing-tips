@@ -138,23 +138,21 @@ private class DayScheduleTabbedPane : JTabbedPane() {
       var tabWidth = if (isTopBottom) areaWidth / tabCount else areaWidth / 4
       val gap = if (isTopBottom) areaWidth - tabWidth * tabCount else 0
       tabWidth -= tabIns.left + tabIns.right + 3
-      updateAllTabWidth(tabWidth, gap)
+      updateAllTabWidths(tabWidth, gap)
     }
     super.doLayout()
   }
 
-  private fun updateAllTabWidth(tabWidth: Int, gap: Int) {
-    val dim = Dimension()
-    var rest = gap
-    val count = tabCount
-    for (i in 0..<count) {
+  private fun updateAllTabWidths(
+    tabWidth: Int,
+    gap: Int,
+  ) {
+    for (i in 0..<tabCount) {
       val tab = getTabComponentAt(i)
       if (tab is JComponent) {
-        val a = if (i == count - 1) rest else 1
-        val w = if (rest > 0) tabWidth + a else tabWidth
-        dim.setSize(w, tab.getPreferredSize().height)
-        tab.preferredSize = dim
-        rest -= a
+        val d = tab.getPreferredSize()
+        d.width = if (i < gap) tabWidth + 1 else tabWidth
+        tab.preferredSize = d
       }
     }
   }
