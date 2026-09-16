@@ -11,6 +11,7 @@ import javax.swing.table.TableModel
 
 fun createUI(): Component {
   val table = makeTable(makeModel())
+  table.autoCreateRowSorter = true
   return JPanel(BorderLayout()).also {
     it.add(JLayer(JScrollPane(table), BorderPaintLayerUI()))
     it.preferredSize = Dimension(320, 240)
@@ -25,21 +26,19 @@ private fun makeTable(model: TableModel): JTable {
       column: Int,
     ): Component {
       val c = super.prepareRenderer(renderer, row, column)
-      val isSelected = isRowSelected(row)
-      if (!isSelected) {
-        val num = model.getValueAt(convertRowIndexToModel(row), 0) as? Int ?: -1
-        val bgc = when {
-          num <= 2 -> 0xCF_F3_C0
-          num <= 6 -> 0xCB_F7_F5
-          num >= 21 -> 0xFB_DC_DC
-          row % 2 == 0 -> 0xFF_FF_FF
-          else -> 0xF0_F0_F0
-        }
-        c.setBackground(Color(bgc))
+      if (!isRowSelected(row)) {
+        val position = model.getValueAt(convertRowIndexToModel(row), 0) as? Int ?: -1
+        c.background = getRowBackground(position, row)
       }
-      c.setForeground(Color.BLACK)
-      if (c is JLabel && column != 1) {
-        c.setHorizontalAlignment(SwingConstants.CENTER)
+      c.foreground = Color.BLACK
+      // use the model index so that the alignment survives column reordering
+      val isTeamColumn = convertColumnIndexToModel(column) == 1
+      if (c is JLabel) {
+        c.horizontalAlignment = if (isTeamColumn) {
+          SwingConstants.LEADING
+        } else {
+          SwingConstants.CENTER
+        }
       }
       return c
     }
@@ -57,14 +56,29 @@ private fun makeTable(model: TableModel): JTable {
       setIntercellSpacing(Dimension())
       setSelectionForeground(getForeground())
       setSelectionBackground(Color(0, 0, 100, 50))
-      setAutoCreateRowSorter(true)
       setFocusable(false)
-      initTableHeader(this)
+      initTableColumns(this)
     }
   }
 }
 
-private fun initTableHeader(table: JTable) {
+private val PROMOTION = Color(0xCF_F3_C0)
+private val PROMOTION_PLAYOFF = Color(0xCB_F7_F5)
+private val RELEGATION = Color(0xFB_DC_DC)
+private val ODD_ROW = Color(0xF0_F0_F0)
+
+private fun getRowBackground(
+  position: Int,
+  row: Int,
+) = when {
+  position <= 2 -> PROMOTION
+  position <= 6 -> PROMOTION_PLAYOFF
+  position >= 21 -> RELEGATION
+  row % 2 == 0 -> Color.WHITE
+  else -> ODD_ROW
+}
+
+private fun initTableColumns(table: JTable) {
   val header = table.tableHeader
   (header.defaultRenderer as? JLabel)?.setHorizontalAlignment(SwingConstants.CENTER)
   val columnModel = table.columnModel
@@ -73,6 +87,7 @@ private fun initTableHeader(table: JTable) {
       columnModel.getColumn(i).setMaxWidth(26)
     }
   }
+  // goal difference: prefix positive values with "+"
   columnModel.getColumn(8).setCellRenderer(object : DefaultTableCellRenderer() {
     override fun getTableCellRendererComponent(
       table: JTable,
@@ -82,12 +97,7 @@ private fun initTableHeader(table: JTable) {
       row: Int,
       column: Int,
     ): Component {
-      val sv = value?.toString() ?: ""
-      var txt = if (sv.startsWith("-")) sv else "+$sv"
-      if ("+0" == txt) {
-        txt = "0"
-      }
-      setHorizontalAlignment(RIGHT)
+      val txt = if (value is Int && value > 0) "+$value" else value
       return super.getTableCellRendererComponent(
         table,
         txt,
@@ -137,56 +147,79 @@ private class BorderPaintLayerUI : LayerUI<JScrollPane>() {
     c: JComponent,
   ) {
     super.paint(g, c)
-    val table = getTable(c)
-    val sorter = table?.rowSorter
-    if (sorter != null) {
-      val keys = sorter.sortKeys
-      val column = if (keys.isEmpty()) -1 else keys[0].column
-      if (column <= 0 || column == 9) {
-        val g2 = g.create() as? Graphics2D ?: return
-        val b1 = column == 0 && keys[0].sortOrder == SortOrder.ASCENDING
-        val b2 = column == 9 && keys[0].sortOrder == SortOrder.DESCENDING
-        if (column < 0 || b1 || b2) {
-          g2.paint = Color.GREEN.darker()
-          g2.draw(makeUnderline(c, table, 2))
-          g2.paint = Color.BLUE.darker()
-          g2.draw(makeUnderline(c, table, 6))
-          g2.paint = Color.RED.darker()
-          g2.draw(makeUnderline(c, table, 20))
-        } else {
-          g2.paint = Color.GREEN.darker()
-          g2.draw(makeUnderline(c, table, 22 - 2))
-          g2.paint = Color.BLUE.darker()
-          g2.draw(makeUnderline(c, table, 22 - 6))
-          g2.paint = Color.RED.darker()
-          g2.draw(makeUnderline(c, table, 22 - 20))
-        }
-        g2.dispose()
-      }
+    val table = getTable(c) ?: return
+    val key = table.rowSorter?.sortKeys?.firstOrNull()
+    if (key == null || isStandingsOrder(key)) {
+      paintLines(g, c, table, true)
+    } else if (isReversedStandingsOrder(key)) {
+      paintLines(g, c, table, false)
     }
   }
 
-  private fun getTable(c: Component): JTable? {
-    var table: JTable? = null
-    if (c is JLayer<*>) {
-      val c1 = c.view
-      if (c1 is JScrollPane) {
-        table = c1.viewport.view as? JTable
-      }
-    }
-    return table
+  // rows are ordered from first to last place
+  private fun isStandingsOrder(key: RowSorter.SortKey): Boolean {
+    val column = key.column
+    val order = key.sortOrder
+    return (column == POSITION_COLUMN && order == SortOrder.ASCENDING) ||
+      (column == POINTS_COLUMN && order == SortOrder.DESCENDING)
   }
+
+  // rows are ordered from last to first place
+  private fun isReversedStandingsOrder(key: RowSorter.SortKey): Boolean {
+    val column = key.column
+    val order = key.sortOrder
+    return (column == POSITION_COLUMN && order == SortOrder.DESCENDING) ||
+      (column == POINTS_COLUMN && order == SortOrder.ASCENDING)
+  }
+
+  private fun paintLines(
+    g: Graphics,
+    layer: JComponent,
+    table: JTable,
+    ascending: Boolean,
+  ) {
+    val g2 = g.create() as? Graphics2D ?: return
+    for (b in Boundary.entries) {
+      g2.paint = b.color
+      g2.draw(makeUnderline(layer, table, b.getViewRow(table.rowCount, ascending)))
+    }
+    g2.dispose()
+  }
+
+  private fun getTable(c: Component) =
+    ((c as? JLayer<*>)?.view as? JScrollPane)?.viewport?.view as? JTable
 
   private fun makeUnderline(
     c: JComponent,
     table: JTable,
-    idx: Int,
+    row: Int,
   ): Line2D {
-    val r0 = table.getCellRect(idx - 1, 0, false)
-    val r1 = table.getCellRect(idx - 1, table.columnCount - 1, false)
+    val r0 = table.getCellRect(row, 0, false)
+    val r1 = table.getCellRect(row, table.columnCount - 1, false)
     val r = SwingUtilities.convertRectangle(table, r0.union(r1), c)
     return Line2D.Double(r.minX, r.maxY, r.maxX, r.maxY)
   }
+
+  companion object {
+    private const val POSITION_COLUMN = 0
+    private const val POINTS_COLUMN = 9
+  }
+}
+
+// a line is drawn below the row of the last team in each zone
+private enum class Boundary(
+  private val lastPosition: Int,
+  val color: Color,
+) {
+  PROMOTION(2, Color.GREEN.darker()),
+  PROMOTION_PLAYOFF(6, Color.BLUE.darker()),
+  SAFETY(20, Color.RED.darker()),
+  ;
+
+  fun getViewRow(
+    rowCount: Int,
+    ascending: Boolean,
+  ) = if (ascending) lastPosition - 1 else rowCount - lastPosition - 1
 }
 
 fun main() {

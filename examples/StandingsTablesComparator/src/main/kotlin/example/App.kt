@@ -12,20 +12,21 @@ import javax.swing.table.TableRowSorter
 fun createUI(): Component {
   val table = createTable(createModel())
   table.setDefaultRenderer(RowData::class.java, createRenderer())
+  table.autoCreateRowSorter = true
   val rs = table.rowSorter
   if (rs is TableRowSorter<*>) {
-    rs.setComparator(0, Comparator.comparing(RowData::position))
+    rs.setComparator(0, Comparator.comparingInt(RowData::position))
     rs.setComparator(1, Comparator.comparing(RowData::team))
-    rs.setComparator(2, Comparator.comparing(RowData::matches))
-    rs.setComparator(3, Comparator.comparing(RowData::wins))
-    rs.setComparator(4, Comparator.comparing(RowData::draws))
-    rs.setComparator(5, Comparator.comparing(RowData::losses))
-    rs.setComparator(6, Comparator.comparing(RowData::goalsFor))
-    rs.setComparator(7, Comparator.comparing(RowData::goalsAgainst))
-    rs.setComparator(8, Comparator.comparing(RowData::goalDifference))
+    rs.setComparator(2, Comparator.comparingInt(RowData::matches))
+    rs.setComparator(3, Comparator.comparingInt(RowData::wins))
+    rs.setComparator(4, Comparator.comparingInt(RowData::draws))
+    rs.setComparator(5, Comparator.comparingInt(RowData::losses))
+    rs.setComparator(6, Comparator.comparingInt(RowData::goalsFor))
+    rs.setComparator(7, Comparator.comparingInt(RowData::goalsAgainst))
+    rs.setComparator(8, Comparator.comparingInt(RowData::goalDifference))
     val c9 = Comparator
-      .comparing(RowData::points)
-      .thenComparing(RowData::goalDifference)
+      .comparingInt(RowData::points)
+      .thenComparingInt(RowData::goalDifference)
     rs.setComparator(9, c9)
   }
   return JPanel(BorderLayout()).also {
@@ -55,7 +56,7 @@ private fun createRenderer(): DefaultTableCellRenderer {
       if (c is JLabel && value is RowData) {
         val col = table.convertColumnIndexToModel(column)
         c.setHorizontalAlignment(if (col == 1) LEADING else CENTER)
-        c.setText(value.toString(col))
+        c.setText(value.getColumnText(col))
       }
       return c
     }
@@ -69,24 +70,12 @@ private fun createTable(model: TableModel) = object : JTable(model) {
     column: Int,
   ): Component {
     val c = super.prepareRenderer(renderer, row, column)
-    val data = model.getValueAt(convertRowIndexToModel(row), 0)
+    // every cell in a row holds the same RowData, so no column conversion is needed
+    val data = getValueAt(row, column)
     if (!isRowSelected(row) && data is RowData) {
-      val num = data.position
-      val promotion = num <= 2
-      val promotionPlayOff = num <= 6
-      val relegation = num >= 21
-      c.background = when {
-        promotion -> Color(0xCF_F3_C0)
-        promotionPlayOff -> Color(0xCB_F7_F5)
-        relegation -> Color(0xFB_DC_DC)
-        row % 2 == 0 -> Color.WHITE
-        else -> Color(0xF0_F0_F0)
-      }
+      c.background = getRowBackground(data.position, row)
     }
-    c.setForeground(Color.BLACK)
-    if (c is JLabel && column != 1) {
-      c.setHorizontalAlignment(SwingConstants.CENTER)
-    }
+    c.foreground = Color.BLACK
     return c
   }
 
@@ -103,10 +92,25 @@ private fun createTable(model: TableModel) = object : JTable(model) {
     setIntercellSpacing(Dimension())
     setSelectionForeground(getForeground())
     setSelectionBackground(Color(0, 0, 100, 50))
-    setAutoCreateRowSorter(true)
     setFocusable(false)
     initTableHeader(this)
   }
+}
+
+private val PROMOTION = Color(0xCF_F3_C0)
+private val PROMOTION_PLAYOFF = Color(0xCB_F7_F5)
+private val RELEGATION = Color(0xFB_DC_DC)
+private val ODD_ROW = Color(0xF0_F0_F0)
+
+private fun getRowBackground(
+  position: Int,
+  row: Int,
+) = when {
+  position <= 2 -> PROMOTION
+  position <= 6 -> PROMOTION_PLAYOFF
+  position >= 21 -> RELEGATION
+  row % 2 == 0 -> Color.WHITE
+  else -> ODD_ROW
 }
 
 private fun initTableHeader(table: JTable) {
@@ -114,8 +118,8 @@ private fun initTableHeader(table: JTable) {
   (header.defaultRenderer as? JLabel)?.setHorizontalAlignment(SwingConstants.CENTER)
   val columnModel = table.columnModel
   for (i in 0..<columnModel.columnCount) {
-    val isNotTeam = i != 1
-    if (isNotTeam) {
+    val isTeamColumn = i == 1
+    if (!isTeamColumn) {
       columnModel.getColumn(i).setMaxWidth(26)
     }
   }
@@ -152,7 +156,7 @@ private fun createModel(): TableModel {
 }
 
 private fun addRow(model: DefaultTableModel, data: RowData) {
-  model.addRow((0..9).map { data }.toTypedArray())
+  model.addRow(Array<Any>(model.columnCount) { data })
 }
 
 @Suppress("LongParameterList")
@@ -190,10 +194,10 @@ private data class RowData(
   val matches: Int
     get() = wins + draws + losses
 
-  fun toString(col: Int) = if (col >= 0 && col < columnConverters.size) {
+  fun getColumnText(col: Int) = if (col >= 0 && col < columnConverters.size) {
     columnConverters[col].apply(this)
   } else {
-    points.toString()
+    ""
   }
 }
 
