@@ -5,6 +5,7 @@ import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
+import kotlin.math.max
 
 private val columnNames = arrayOf("String", "Integer", "Boolean")
 private val data = arrayOf<Array<Any>>(
@@ -17,31 +18,26 @@ private val model = object : DefaultTableModel(data, columnNames) {
   override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
 }
 private val table = object : JTable(model) {
-  private var prevHeight = -1
-  private var prevCount = -1
-
   private fun adjustRowHeights(viewPort: JViewport) {
     val height = viewPort.extentSize.height
     val rowCount = model.rowCount
-    val defaultRowHeight = height / rowCount
-    if ((height != prevHeight || rowCount != prevCount) && defaultRowHeight > 0) {
-      // var remainder = height - rowCount * defaultRowHeight
+    val baseRowHeight = height / rowCount
+    if (baseRowHeight > 0) {
       var remainder = height % rowCount
       for (i in 0..<rowCount) {
-        val a = 1.coerceAtMost(0.coerceAtLeast(remainder))
-        setRowHeight(i, 1.coerceAtLeast(defaultRowHeight + a))
-        remainder -= 1
+        val adjustedHeight = baseRowHeight + (if (i < remainder) 1 else 0)
+        setRowHeight(i, max(1, adjustedHeight))
       }
     }
-    prevHeight = height
-    prevCount = rowCount
   }
+
+  override fun getScrollableTracksViewportHeight() = getParent() is JViewport
 
   override fun doLayout() {
     super.doLayout()
-    val clz = JViewport::class.java
-    (SwingUtilities.getAncestorOfClass(clz, this) as? JViewport)?.also {
-      adjustRowHeights(it)
+    val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, this)
+    if (c is JViewport) {
+      adjustRowHeights(c)
     }
   }
 }

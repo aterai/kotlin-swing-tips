@@ -22,6 +22,7 @@ import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableModel
+import kotlin.math.max
 
 fun createUI(): Component {
   val table = object : JTable(createModel()) {
@@ -127,7 +128,7 @@ private class DateEditor :
         }
       }
     private val monthLabel = JLabel("", SwingConstants.CENTER)
-    private val monthTable = MonthTable()
+    private val monthTable = CalendarTable()
     private var currentLocalDate: LocalDate? = null
 
     init {
@@ -174,10 +175,8 @@ private class DateEditor :
     override fun getPreferredSize() = Dimension(220, 143)
   }
 
-  private class MonthTable : JTable() {
+  private class CalendarTable : JTable() {
     var highlighter: HighlightListener? = null
-    private var prevHeight = -1
-    private var prevCount = -1
 
     override fun updateUI() {
       removeMouseListener(highlighter)
@@ -189,28 +188,25 @@ private class DateEditor :
       addMouseMotionListener(highlighter)
     }
 
-    override fun doLayout() {
-      super.doLayout()
-      val clz = JViewport::class.java
-      (SwingUtilities.getAncestorOfClass(clz, this) as? JViewport)?.also {
-        adjustRowHeights(it)
+    private fun adjustRowHeights(viewport: JViewport) {
+      val height = viewport.extentSize.height
+      val rowCount = model.rowCount
+      val baseRowHeight = height / rowCount
+      val remainder = height % rowCount
+      for (i in 0..<rowCount) {
+        val adjustedHeight = baseRowHeight + (if (i < remainder) 1 else 0)
+        setRowHeight(i, max(1, adjustedHeight))
       }
     }
 
-    private fun adjustRowHeights(viewPort: JViewport) {
-      val height = viewPort.extentSize.height
-      val rowCount = model.rowCount
-      val defaultRowHeight = height / rowCount
-      if ((height != prevHeight || rowCount != prevCount) && defaultRowHeight > 0) {
-        var remainder = height % rowCount
-        for (i in 0..<rowCount) {
-          val a = 1.coerceAtMost(0.coerceAtLeast(remainder))
-          setRowHeight(i, defaultRowHeight + a)
-          remainder -= 1
-        }
+    override fun getScrollableTracksViewportHeight() = getParent() is JViewport
+
+    override fun doLayout() {
+      super.doLayout()
+      val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, this)
+      if (c is JViewport) {
+        adjustRowHeights(c)
       }
-      prevHeight = height
-      prevCount = rowCount
     }
   }
 

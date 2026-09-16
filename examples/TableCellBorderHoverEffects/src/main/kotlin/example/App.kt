@@ -17,23 +17,12 @@ import javax.swing.plaf.LayerUI
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
+import kotlin.math.max
 
 private val monthLabel = JLabel("", SwingConstants.CENTER)
 private val monthTable = object : JTable() {
   private val pt = Point(-1000, -1000)
   private var listener: MouseAdapter? = null
-
-  private fun adjustRowHeights(vp: JViewport) {
-    val height = vp.extentSize.height
-    val rowCount = model.rowCount
-    val defaultRowHeight = height / rowCount
-    var remainder = height % rowCount
-    for (i in 0..<rowCount) {
-      val a = 1.coerceAtMost(0.coerceAtLeast(remainder))
-      setRowHeight(i, 1.coerceAtLeast(defaultRowHeight + a))
-      remainder -= 1
-    }
-  }
 
   override fun updateUI() {
     removeMouseListener(listener)
@@ -61,6 +50,19 @@ private val monthTable = object : JTable() {
       addMouseMotionListener(it)
     }
   }
+
+  private fun adjustRowHeights(viewport: JViewport) {
+    val height = viewport.extentSize.height
+    val rowCount = model.rowCount
+    val baseRowHeight = height / rowCount
+    val remainder = height % rowCount
+    for (i in 0..<rowCount) {
+      val adjustedHeight = baseRowHeight + (if (i < remainder) 1 else 0)
+      setRowHeight(i, max(1, adjustedHeight))
+    }
+  }
+
+  override fun getScrollableTracksViewportHeight() = getParent() is JViewport
 
   override fun doLayout() {
     super.doLayout()

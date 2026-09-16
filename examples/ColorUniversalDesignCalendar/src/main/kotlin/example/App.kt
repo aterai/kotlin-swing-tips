@@ -14,32 +14,44 @@ import java.util.Locale
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
+import kotlin.math.max
 
 val realLocalDate: LocalDate = LocalDate.now(ZoneId.systemDefault())
 private val monthLabel = JLabel("", SwingConstants.CENTER)
-private val monthTable = object : JTable() {
-  override fun doLayout() {
-    super.doLayout()
-    val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, this)
-    if (c is JViewport) {
-      adjustRowHeights(c)
-    }
-  }
-
-  private fun adjustRowHeights(viewPort: JViewport) {
-    val height = viewPort.extentSize.height
-    val rowCount = model.rowCount
-    val defaultRowHeight = height / rowCount
-    var remainder = height % rowCount
-    for (i in 0..<rowCount) {
-      val a = 1.coerceAtMost(0.coerceAtLeast(remainder))
-      setRowHeight(i, 1.coerceAtLeast(defaultRowHeight + a))
-      remainder -= 1
-    }
-  }
-}
+private val monthTable = CalendarTable()
 var currentLocalDate: LocalDate? = null
   private set
+
+fun createUI(): Component {
+  monthTable.setDefaultRenderer(LocalDate::class.java, CalendarTableRenderer())
+  monthTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
+  monthTable.cellSelectionEnabled = true
+  monthTable.fillsViewportHeight = true
+  val header = monthTable.tableHeader
+  header.resizingAllowed = false
+  header.reorderingAllowed = false
+  (header.defaultRenderer as? JLabel)?.horizontalAlignment = SwingConstants.CENTER
+  updateMonthView(realLocalDate)
+  val prev = JButton("<")
+  prev.addActionListener {
+    updateMonthView(currentLocalDate?.minusMonths(1))
+  }
+  val next = JButton(">")
+  next.addActionListener {
+    updateMonthView(currentLocalDate?.plusMonths(1))
+  }
+  val p = JPanel(BorderLayout())
+  p.add(monthLabel)
+  p.add(prev, BorderLayout.WEST)
+  p.add(next, BorderLayout.EAST)
+
+  return JPanel(BorderLayout()).also {
+    it.add(p, BorderLayout.NORTH)
+    it.add(JScrollPane(monthTable))
+    it.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
+    it.preferredSize = Dimension(320, 240)
+  }
+}
 
 fun updateMonthView(localDate: LocalDate?) {
   currentLocalDate = localDate?.also {
@@ -48,6 +60,29 @@ fun updateMonthView(localDate: LocalDate?) {
       .withLocale(Locale.getDefault())
     monthLabel.text = it.format(formatter)
     monthTable.model = CalendarViewTableModel(it)
+  }
+}
+
+private class CalendarTable : JTable() {
+  private fun adjustRowHeights(viewport: JViewport) {
+    val height = viewport.extentSize.height
+    val rowCount = model.rowCount
+    val baseRowHeight = height / rowCount
+    val remainder = height % rowCount
+    for (i in 0..<rowCount) {
+      val adjustedHeight = baseRowHeight + (if (i < remainder) 1 else 0)
+      setRowHeight(i, max(1, adjustedHeight))
+    }
+  }
+
+  override fun getScrollableTracksViewportHeight() = getParent() is JViewport
+
+  override fun doLayout() {
+    super.doLayout()
+    val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, this)
+    if (c is JViewport) {
+      adjustRowHeights(c)
+    }
   }
 }
 
@@ -137,37 +172,6 @@ private class CalendarTableRenderer : TableCellRenderer {
     DayOfWeek.SUNDAY -> Color(0xFF_DC_DC)
     DayOfWeek.SATURDAY -> Color(0xDC_DC_FF)
     else -> table.background
-  }
-}
-
-fun createUI(): Component {
-  monthTable.setDefaultRenderer(LocalDate::class.java, CalendarTableRenderer())
-  monthTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
-  monthTable.cellSelectionEnabled = true
-  monthTable.fillsViewportHeight = true
-  val header = monthTable.tableHeader
-  header.resizingAllowed = false
-  header.reorderingAllowed = false
-  (header.defaultRenderer as? JLabel)?.horizontalAlignment = SwingConstants.CENTER
-  updateMonthView(realLocalDate)
-  val prev = JButton("<")
-  prev.addActionListener {
-    updateMonthView(currentLocalDate?.minusMonths(1))
-  }
-  val next = JButton(">")
-  next.addActionListener {
-    updateMonthView(currentLocalDate?.plusMonths(1))
-  }
-  val p = JPanel(BorderLayout())
-  p.add(monthLabel)
-  p.add(prev, BorderLayout.WEST)
-  p.add(next, BorderLayout.EAST)
-
-  return JPanel(BorderLayout()).also {
-    it.add(p, BorderLayout.NORTH)
-    it.add(JScrollPane(monthTable))
-    it.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
-    it.preferredSize = Dimension(320, 240)
   }
 }
 

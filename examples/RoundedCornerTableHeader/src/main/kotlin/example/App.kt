@@ -13,21 +13,10 @@ import javax.swing.*
 import javax.swing.plaf.LayerUI
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
+import kotlin.math.max
 
 private val monthLabel = JLabel("", SwingConstants.CENTER)
 private val monthTable = object : JTable() {
-  private fun adjustRowHeights(vp: JViewport) {
-    val height = vp.extentSize.height
-    val rowCount = model.rowCount
-    val defaultRowHeight = height / rowCount
-    var remainder = height % rowCount
-    for (i in 0..<rowCount) {
-      val a = 1.coerceAtMost(0.coerceAtLeast(remainder))
-      setRowHeight(i, 1.coerceAtLeast(defaultRowHeight + a))
-      remainder -= 1
-    }
-  }
-
   override fun updateUI() {
     super.updateUI()
     fillsViewportHeight = true
@@ -38,6 +27,19 @@ private val monthTable = object : JTable() {
     font = font.deriveFont(Font.BOLD)
     setDefaultRenderer(LocalDate::class.java, CalendarTableRenderer())
   }
+
+  private fun adjustRowHeights(viewport: JViewport) {
+    val height = viewport.extentSize.height
+    val rowCount = model.rowCount
+    val baseRowHeight = height / rowCount
+    val remainder = height % rowCount
+    for (i in 0..<rowCount) {
+      val adjustedHeight = baseRowHeight + (if (i < remainder) 1 else 0)
+      setRowHeight(i, max(1, adjustedHeight))
+    }
+  }
+
+  override fun getScrollableTracksViewportHeight() = getParent() is JViewport
 
   override fun doLayout() {
     super.doLayout()

@@ -20,12 +20,11 @@ import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableModel
 import kotlin.math.max
-import kotlin.math.min
 import kotlin.math.sqrt
 
 fun createUI(): Component {
   val monthLabel = JLabel("", SwingConstants.CENTER)
-  val monthTable = MonthTable()
+  val monthTable = CalendarTable()
   updateMonthView(monthTable, monthLabel, LocalDate.now(ZoneId.systemDefault()))
 
   val prevButton = JButton("<")
@@ -64,7 +63,7 @@ fun createUI(): Component {
   }
 }
 
-private fun updateMonthView(table: MonthTable, label: JLabel, date: LocalDate) {
+private fun updateMonthView(table: CalendarTable, label: JLabel, date: LocalDate) {
   table.currentDate = date
   val locale = Locale.getDefault()
   val formatter = CalendarUtils.getLocalizedYearMonthFormatter(locale)
@@ -87,9 +86,8 @@ private class MonthScrollPane(
   override fun isOpaque() = false
 }
 
-private class MonthTable : JTable() {
+private class CalendarTable : JTable() {
   var currentDate: LocalDate? = null
-  private var prevHeight = -1
 
   override fun updateUI() {
     super.updateUI()
@@ -110,7 +108,6 @@ private class MonthTable : JTable() {
 
   override fun setModel(dataModel: TableModel) {
     super.setModel(dataModel)
-    prevHeight = -1
     EventQueue.invokeLater { updateWeekHeaderRenderer() }
   }
 
@@ -123,27 +120,25 @@ private class MonthTable : JTable() {
     getTableHeader().repaint()
   }
 
-  override fun doLayout() {
-    super.doLayout()
-    val clz = JViewport::class.java
-    (SwingUtilities.getAncestorOfClass(clz, this) as? JViewport)?.also {
-      adjustRowHeights(it)
-    }
-  }
-
   private fun adjustRowHeights(viewport: JViewport) {
     val height = viewport.extentSize.height
     val rowCount = model.rowCount
     val baseRowHeight = height / rowCount
-    if (height != prevHeight && baseRowHeight > 0) {
-      var remainder = height % rowCount
-      for (i in 0..<rowCount) {
-        val adjustedHeight = baseRowHeight + min(max(remainder, 0), 1)
-        setRowHeight(i, max(1, adjustedHeight))
-        remainder -= 1
-      }
+    val remainder = height % rowCount
+    for (i in 0..<rowCount) {
+      val adjustedHeight = baseRowHeight + (if (i < remainder) 1 else 0)
+      setRowHeight(i, max(1, adjustedHeight))
     }
-    prevHeight = height
+  }
+
+  override fun getScrollableTracksViewportHeight() = getParent() is JViewport
+
+  override fun doLayout() {
+    super.doLayout()
+    val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, this)
+    if (c is JViewport) {
+      adjustRowHeights(c)
+    }
   }
 }
 
@@ -180,7 +175,7 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
     this.renderedRow = row
     this.renderedColumn = column
     updateCorners(table, row, column)
-    if (value is LocalDate && renderer is JLabel && table is MonthTable) {
+    if (value is LocalDate && renderer is JLabel && table is CalendarTable) {
       renderer.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
       renderer.setText(value.dayOfMonth.toString())
       renderer.setForeground(table.getForeground())
@@ -248,7 +243,7 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
   }
 
   @Suppress("LongMethod")
-  private fun buildRoundedRectPath(
+  fun buildRoundedRectPath(
     bounds: Rectangle,
     arcWidth: Double,
     arcHeight: Double,

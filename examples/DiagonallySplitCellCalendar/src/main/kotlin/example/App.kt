@@ -12,113 +12,12 @@ import javax.swing.*
 import javax.swing.plaf.LayerUI
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
+import kotlin.math.max
 
 private val monthLabel = JLabel("", SwingConstants.CENTER)
-private val monthTable = object : JTable() {
-  override fun doLayout() {
-    super.doLayout()
-    val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, this)
-    if (c is JViewport) {
-      adjustRowHeights(c)
-    }
-  }
-
-  private fun adjustRowHeights(vp: JViewport) {
-    val height = vp.extentSize.height
-    val rowCount = model.rowCount
-    val defaultRowHeight = height / rowCount
-    var remainder = height % rowCount
-    for (i in 0..<rowCount) {
-      val a = 1.coerceAtMost(0.coerceAtLeast(remainder))
-      setRowHeight(i, 1.coerceAtLeast(defaultRowHeight + a))
-      remainder -= 1
-    }
-  }
-}
+private val monthTable = CalendarTable()
 var currentLocalDate: LocalDate = LocalDate.of(2020, 8, 1)
   private set
-
-fun updateMonthView(localDate: LocalDate) {
-  val pattern = DateTimeFormatter
-    .ofPattern("yyyy / MM")
-    .withLocale(Locale.getDefault())
-  currentLocalDate = localDate
-  monthLabel.text = localDate.format(pattern)
-  monthTable.model = CalendarViewTableModel(localDate)
-}
-
-private class CalendarTableRenderer : DefaultTableCellRenderer() {
-  private val p = JPanel()
-
-  override fun getTableCellRendererComponent(
-    table: JTable,
-    value: Any?,
-    selected: Boolean,
-    focused: Boolean,
-    row: Int,
-    column: Int,
-  ): Component {
-    val c = super.getTableCellRendererComponent(
-      table,
-      value,
-      selected,
-      focused,
-      row,
-      column,
-    )
-    if (value is LocalDate && c is JLabel) {
-      val model = table.model
-      val nextWeekDay = value.plusDays(model.columnCount.toLong())
-      c.text = value.dayOfMonth.toString()
-      c.verticalAlignment = TOP
-      c.horizontalAlignment = LEFT
-      updateCellWeekColor(value, table, c, c)
-
-      val lastRow = row == model.rowCount - 1
-      val m1 = YearMonth.from(nextWeekDay).monthValue
-      val m2 = YearMonth.from(currentLocalDate).monthValue
-      if (lastRow && m1 == m2) {
-        val sub = JLabel(nextWeekDay.dayOfMonth.toString())
-        sub.font = c.font
-        sub.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
-        sub.isOpaque = false
-        sub.verticalAlignment = BOTTOM
-        sub.horizontalAlignment = RIGHT
-        p.removeAll()
-        p.layout = BorderLayout()
-        p.add(sub, BorderLayout.SOUTH)
-        p.add(c, BorderLayout.NORTH)
-        p.border = c.border
-        c.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
-        updateCellWeekColor(value, table, sub, p)
-        return JLayer(p, DiagonallySplitCellLayerUI())
-      }
-    }
-    return c
-  }
-
-  private fun updateCellWeekColor(
-    d: LocalDate,
-    table: JTable,
-    fgc: JComponent,
-    bgc: JComponent,
-  ) {
-    val m1 = YearMonth.from(d).monthValue
-    val m2 = YearMonth.from(currentLocalDate).monthValue
-    if (m1 == m2) {
-      fgc.foreground = table.foreground
-    } else {
-      fgc.foreground = Color.GRAY
-    }
-    bgc.background = getDayOfWeekColor(table, d.dayOfWeek)
-  }
-
-  private fun getDayOfWeekColor(table: JTable, dow: DayOfWeek) = when (dow) {
-    DayOfWeek.SUNDAY -> Color(0xFF_DC_DC)
-    DayOfWeek.SATURDAY -> Color(0xDC_DC_FF)
-    else -> table.background
-  }
-}
 
 fun createUI(): Component {
   monthTable.setDefaultRenderer(LocalDate::class.java, CalendarTableRenderer())
@@ -152,6 +51,115 @@ fun createUI(): Component {
     it.add(scroll)
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.preferredSize = Dimension(320, 240)
+  }
+}
+
+fun updateMonthView(localDate: LocalDate) {
+  val pattern = DateTimeFormatter
+    .ofPattern("yyyy / MM")
+    .withLocale(Locale.getDefault())
+  currentLocalDate = localDate
+  monthLabel.text = localDate.format(pattern)
+  monthTable.model = CalendarViewTableModel(localDate)
+}
+
+private class CalendarTableRenderer : DefaultTableCellRenderer {
+  private val cellBorder = BorderFactory.createEmptyBorder(1, 1, 1, 1)
+  private val sub = JLabel()
+  private val panel = JPanel(BorderLayout())
+  private val layer = JLayer(panel, DiagonallySplitCellLayerUI())
+
+  constructor() {
+    sub.setBorder(cellBorder)
+    sub.setOpaque(false)
+    sub.setVerticalAlignment(BOTTOM)
+    sub.setHorizontalAlignment(RIGHT)
+  }
+
+  override fun getTableCellRendererComponent(
+    table: JTable,
+    value: Any?,
+    selected: Boolean,
+    focused: Boolean,
+    row: Int,
+    column: Int,
+  ): Component {
+    val c = super.getTableCellRendererComponent(
+      table,
+      value,
+      selected,
+      focused,
+      row,
+      column,
+    )
+    return if (value is LocalDate && c is JLabel) {
+      val model = table.model
+      c.text = value.dayOfMonth.toString()
+      c.verticalAlignment = TOP
+      c.horizontalAlignment = LEFT
+      updateCellColors(value, table, c, c)
+      val isLastRow = row == model.rowCount - 1
+      val nextWeekDay = value.plusDays(model.columnCount.toLong())
+      if (isLastRow && isCurrentMonth(nextWeekDay)) {
+        sub.text = nextWeekDay.dayOfMonth.toString()
+        sub.font = c.font
+        sub.border = cellBorder
+        c.border = cellBorder
+        panel.removeAll()
+        panel.layout = BorderLayout()
+        panel.add(c, BorderLayout.NORTH)
+        panel.add(sub, BorderLayout.SOUTH)
+        panel.border = c.border
+        updateCellColors(value, table, sub, panel)
+        layer
+      } else {
+        c
+      }
+    } else {
+      c
+    }
+  }
+
+  private fun updateCellColors(
+    d: LocalDate,
+    table: JTable,
+    fgc: JComponent,
+    bgc: JComponent,
+  ) {
+    fgc.foreground = if (isCurrentMonth(d)) table.foreground else Color.GRAY
+    bgc.background = getDayOfWeekColor(table, d.getDayOfWeek())
+  }
+
+  private fun getDayOfWeekColor(table: JTable, dow: DayOfWeek) = when (dow) {
+    DayOfWeek.SUNDAY -> Color(0xFF_DC_DC)
+    DayOfWeek.SATURDAY -> Color(0xDC_DC_FF)
+    else -> table.background
+  }
+
+  private fun isCurrentMonth(d: LocalDate) =
+    YearMonth.from(d).equals(YearMonth.from(currentLocalDate))
+}
+
+private class CalendarTable : JTable() {
+  private fun adjustRowHeights(viewport: JViewport) {
+    val height = viewport.extentSize.height
+    val rowCount = model.rowCount
+    val baseRowHeight = height / rowCount
+    val remainder = height % rowCount
+    for (i in 0..<rowCount) {
+      val adjustedHeight = baseRowHeight + (if (i < remainder) 1 else 0)
+      setRowHeight(i, max(1, adjustedHeight))
+    }
+  }
+
+  override fun getScrollableTracksViewportHeight() = getParent() is JViewport
+
+  override fun doLayout() {
+    super.doLayout()
+    val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, this)
+    if (c is JViewport) {
+      adjustRowHeights(c)
+    }
   }
 }
 
