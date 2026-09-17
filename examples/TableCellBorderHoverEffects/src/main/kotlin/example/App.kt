@@ -19,6 +19,7 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 import kotlin.math.max
 
+
 private val monthLabel = JLabel("", SwingConstants.CENTER)
 private val monthTable = object : JTable() {
   private val pt = Point(-1000, -1000)
@@ -183,6 +184,7 @@ fun updateMonthView(localDate: LocalDate) {
 
 private class CalendarTableRenderer : DefaultTableCellRenderer() {
   private val p = JPanel(BorderLayout())
+  private val layer = JLayer(p, DiagonallySplitCellLayerUI())
 
   override fun getTableCellRendererComponent(
     table: JTable,
@@ -200,7 +202,7 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
       row,
       column,
     )
-    if (value is LocalDate && c is JLabel) {
+    return if (value is LocalDate && c is JLabel) {
       c.text = value.dayOfMonth.toString()
       c.verticalAlignment = TOP
       c.horizontalAlignment = CENTER
@@ -208,31 +210,32 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
       val model = table.model
       val nextWeekDay = value.plusDays(model.columnCount.toLong())
       val isLastRow = row == model.rowCount - 1
-      val m1 = YearMonth.from(nextWeekDay).monthValue
-      val m2 = YearMonth.from(currentLocalDate).monthValue
-      if (isLastRow && m1 == m2) {
-        val sub = JLabel(nextWeekDay.dayOfMonth.toString()).also {
-          updateCellWeekColor(nextWeekDay, it)
-          it.font = table.font
-          it.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
-          it.isOpaque = false
-          it.verticalAlignment = BOTTOM
-          it.horizontalAlignment = RIGHT
-        }
+      if (isLastRow && isDiagonallySplitCell(nextWeekDay)) {
+        val sub = JLabel(nextWeekDay.dayOfMonth.toString())
+        sub.font = table.font
+        sub.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
+        sub.isOpaque = false
+        sub.verticalAlignment = BOTTOM
+        sub.horizontalAlignment = RIGHT
         p.removeAll()
-        p.isOpaque = false
+        p.isOpaque = true
         p.foreground = getDayOfWeekColor(value.dayOfWeek)
+        p.background = c.background
         p.add(sub, BorderLayout.SOUTH)
         p.add(c, BorderLayout.NORTH)
-        p.border = c.border
-        c.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
         c.horizontalAlignment = LEFT
         updateCellWeekColor(value, sub)
-        return JLayer(p, DiagonallySplitCellLayerUI())
+        layer
+      } else {
+        c
       }
+    } else {
+      c
     }
-    return c
   }
+
+  private fun isDiagonallySplitCell(nextWeekDay: LocalDate) =
+      YearMonth.from(nextWeekDay) == YearMonth.from(currentLocalDate)
 
   private fun updateCellWeekColor(
     d: LocalDate,
