@@ -1,17 +1,15 @@
 package example
 
 import java.awt.*
-import java.awt.event.ActionEvent
+import java.awt.event.ComponentAdapter
+import java.awt.event.ComponentEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
 import javax.swing.*
 import javax.swing.text.html.HTMLEditorKit
 import javax.swing.text.html.StyleSheet
 import kotlin.math.roundToInt
-
-private const val SCALE = .15
 
 private val editor = JEditorPane().also {
   it.selectedTextColor = null
@@ -19,6 +17,7 @@ private val editor = JEditorPane().also {
 }
 private val scroll = JScrollPane(editor)
 private val label = MiniMapLabel(scroll)
+private val check = JCheckBox("minimap", true)
 private val p = object : JPanel() {
   override fun isOptimizedDrawingEnabled() = false
 }
@@ -32,19 +31,17 @@ fun createUI(): Component {
   editor.background = Color(0xEE_EE_EE)
   editor.selectedTextColor = null
   editor.selectionColor = Color(0x64_88_AA_AA, true)
-  editor.addPropertyChangeListener("page") {
-    label.setIcon(createMiniMapImageIcon())
-    label.rootPane.also {
-      it.revalidate()
-      it.repaint()
+  editor.addPropertyChangeListener("page") { updateMiniMap() }
+  editor.addComponentListener(object : ComponentAdapter() {
+    override fun componentResized(e: ComponentEvent) {
+      // The HTML is reflowed when the editor width changes,
+      // so the minimap image must be regenerated
+      updateMiniMap()
     }
-  }
+  })
   loadHtml()
 
-  val button = JCheckBox("minimap", true)
-  button.addActionListener {
-    toggleMiniMap(it)
-  }
+  check.addActionListener { updateMiniMap() }
 
   val pp = JPanel(BorderLayout(0, 0))
   pp.add(label, BorderLayout.NORTH)
@@ -56,7 +53,7 @@ fun createUI(): Component {
   val box = Box.createHorizontalBox()
   box.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
   box.add(Box.createHorizontalGlue())
-  box.add(button)
+  box.add(check)
 
   val verticalScrollBar = scroll.getVerticalScrollBar()
   verticalScrollBar.model.addChangeListener { label.repaint() }
@@ -100,33 +97,12 @@ private fun loadHtml() {
   }
 }
 
-private fun toggleMiniMap(e: ActionEvent) {
-  val c = e.getSource() as? AbstractButton ?: return
-  if (c.isSelected) {
-    label.setIcon(createMiniMapImageIcon())
-  } else {
-    label.setIcon(null)
-  }
-  c.rootPane.also {
+private fun updateMiniMap() {
+  label.setIcon(if (check.isSelected) MiniMapLabel.createMiniMapIcon(editor) else null)
+  p.rootPane.also {
     it.revalidate()
     it.repaint()
   }
-}
-
-private fun createMiniMapImageIcon(): Icon {
-  val d = editor.size
-  val newW = (d.width * SCALE).toInt()
-  val newH = (d.height * SCALE).toInt()
-  val image = BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB)
-  val g2 = image.createGraphics()
-  g2.setRenderingHint(
-    RenderingHints.KEY_INTERPOLATION,
-    RenderingHints.VALUE_INTERPOLATION_BILINEAR,
-  )
-  g2.scale(SCALE, SCALE)
-  editor.paint(g2)
-  g2.dispose()
-  return ImageIcon(image)
 }
 
 private class MiniMapLabel(
@@ -162,19 +138,18 @@ private class MiniMapLabel(
   // by paintComponent and processMiniMapMouseEvent
   private fun computeThumbRect(): Rectangle {
     val viewport = scroll.getViewport()
-    val er = viewport.view.bounds
-    val cr = SwingUtilities.calculateInnerArea(this, null)
-    val thumbRect = Rectangle(cr)
-    if (cr.height > 0 && er.getHeight() > 0) {
-      val sy = cr.getHeight() / er.getHeight()
-      val at = AffineTransform.getScaleInstance(1.0, sy)
-      val tr = Rectangle(viewport.bounds)
-      tr.y = viewport.getViewPosition().y
-      val r = at.createTransformedShape(tr).bounds
-      thumbRect.y += r.y
-      thumbRect.height = r.height
-    } else {
-      thumbRect.height = 0
+    val innerRect = SwingUtilities.calculateInnerArea(this, null)
+    val thumbRect = Rectangle(innerRect)
+    thumbRect.height = 0
+    val viewHeight = viewport.view.height
+    if (innerRect.height > 0 && viewHeight > 0) {
+      // Scale factor from the editor (view) height to the minimap label height
+      val sy = innerRect.getHeight() / viewHeight
+      val viewY = viewport.getViewPosition().y
+      val extent = viewport.extentSize.height
+      val y = (viewY * sy).roundToInt()
+      thumbRect.y += y
+      thumbRect.height = ((viewY + extent) * sy).roundToInt() - y
     }
     return thumbRect
   }
@@ -189,24 +164,41 @@ private class MiniMapLabel(
     }
 
     fun processMiniMapMouseEvent(e: MouseEvent) {
-      val pt = e.getPoint()
-      val c = e.component
-      val m = scroll.getVerticalScrollBar().getModel()
-      val range = m.maximum - m.minimum
-      val fv = (pt.y * range / c.getHeight().toFloat() - m.extent / 2f)
-      m.value = fv.roundToInt() // Scroll main editor side
+      val innerRect = SwingUtilities.calculateInnerArea(this@MiniMapLabel, null)
+      if (innerRect.height > 0) {
+        // Center the visible area (thumb) on the clicked position
+        val m = scroll.getVerticalScrollBar().getModel()
+        val range = m.maximum - m.minimum
+        val y = (e.y - innerRect.y) * range / innerRect.height.toFloat()
+        val value = m.minimum + (y - m.extent / 2f).roundToInt()
+        m.value = value // Scroll main editor side
 
-      if (c is JComponent) {
         // The display position of the minimap itself will also follow
         // the position where the thumb (window) can be seen.
-        val thumbRect = computeThumbRect()
-        c.scrollRectToVisible(thumbRect)
+        scrollRectToVisible(computeThumbRect())
       }
     }
   }
 
   companion object {
+    private const val SCALE = .15
     private val THUMB_COLOR = Color(0x32_00_00_FF, true)
+
+    fun createMiniMapIcon(c: Component): Icon {
+      val size = c.size
+      val width = maxOf(1, (size.width * SCALE).roundToInt())
+      val height = maxOf(1, (size.height * SCALE).roundToInt())
+      val image = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+      val g2 = image.createGraphics()
+      g2.setRenderingHint(
+        RenderingHints.KEY_INTERPOLATION,
+        RenderingHints.VALUE_INTERPOLATION_BILINEAR,
+      )
+      g2.scale(SCALE, SCALE)
+      c.print(g2)
+      g2.dispose()
+      return ImageIcon(image)
+    }
   }
 }
 
