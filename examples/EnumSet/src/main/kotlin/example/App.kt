@@ -9,6 +9,7 @@ import javax.swing.*
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
+import javax.swing.table.TableModel
 
 fun createUI(): Component {
   val columnNames = arrayOf("user", "rwx")
@@ -20,48 +21,18 @@ fun createUI(): Component {
   val model = object : DefaultTableModel(data, columnNames) {
     override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
   }
+  val label = JLabel()
+  val button = JButton("ls -l (chmod)")
+  button.addActionListener { label.text = createPermissionsText(model) }
+
   val table = object : JTable(model) {
     override fun updateUI() {
       super.updateUI()
       val c = getColumnModel().getColumn(1)
       c.cellRenderer = CheckBoxesRenderer()
       c.cellEditor = CheckBoxesEditor()
+      putClientProperty("terminateEditOnFocusLost", true)
     }
-  }
-  table.putClientProperty("terminateEditOnFocusLost", true)
-  val bitFlags = EnumMap<Permission, Int>(Permission::class.java)
-  bitFlags[Permission.READ] = 1 shl 2
-  bitFlags[Permission.WRITE] = 1 shl 1
-  bitFlags[Permission.EXECUTE] = 1
-  val label = JLabel()
-  val button = JButton("ls -l (chmod)")
-  button.addActionListener {
-    val octalBuf = StringBuilder(3)
-    val rwxBuf = StringBuilder(9)
-    for (i in 0..<model.rowCount) {
-      var bits = 0
-      val v = model.getValueAt(i, 1) as? Set<*> ?: continue
-      if (v.contains(Permission.READ)) {
-        bits = bitFlags[Permission.READ] ?: 0
-        rwxBuf.append('r')
-      } else {
-        rwxBuf.append('-')
-      }
-      if (v.contains(Permission.WRITE)) {
-        bits = bits or (bitFlags[Permission.WRITE] ?: 0)
-        rwxBuf.append('w')
-      } else {
-        rwxBuf.append('-')
-      }
-      if (v.contains(Permission.EXECUTE)) {
-        bits = bits or (bitFlags[Permission.EXECUTE] ?: 0)
-        rwxBuf.append('x')
-      } else {
-        rwxBuf.append('-')
-      }
-      octalBuf.append(bits)
-    }
-    label.text = " $octalBuf -$rwxBuf"
   }
   val p = JPanel(BorderLayout())
   p.add(label)
@@ -73,71 +44,83 @@ fun createUI(): Component {
   }
 }
 
-private enum class Permission {
-  EXECUTE,
-  WRITE,
-  READ,
+// e.g. " 740 -rwxr-----"
+private fun createPermissionsText(model: TableModel): String {
+  val octalBuf = StringBuilder(3)
+  val rwxBuf = StringBuilder(9)
+  for (i in 0..<model.rowCount) {
+    val permissions = model.getValueAt(i, 1) as? Set<*> ?: continue
+    var mode = 0
+    Permission.entries.forEach { perm ->
+      val granted = permissions.contains(perm)
+      mode = mode or if (granted) perm.mode else 0
+      rwxBuf.append(if (granted) perm.symbol else '-')
+    }
+    octalBuf.append(mode)
+  }
+  return " $octalBuf -$rwxBuf"
+}
+
+// Declared in "rwx" display order
+private enum class Permission(
+  val symbol: Char,
+  val mode: Int,
+) {
+  READ('r', 1 shl 2),
+  WRITE('w', 1 shl 1),
+  EXECUTE('x', 1),
 }
 
 private class CheckBoxesPanel : JPanel() {
-  val titles = arrayOf("r", "w", "x")
-  private val checkBoxes = titles.map { createCheckBox(it) }
-  private val alphaZero = Color(0x0, true)
+  private val checkBoxes = Permission.entries
+    .associateWithTo(EnumMap(Permission::class.java)) { createCheckBox(it) }
 
   override fun updateUI() {
     super.updateUI()
     isOpaque = false
-    background = alphaZero
+    background = TRANSPARENT
     layout = BoxLayout(this, BoxLayout.X_AXIS)
-    EventQueue.invokeLater { initButtons() }
   }
 
-  private fun initButtons() {
+  // Re-add the check boxes on every update to avoid ghost images on Windows Aero
+  private fun initCheckBoxes() {
     removeAll()
-    for (b in checkBoxes) {
-      add(b)
+    checkBoxes.values.forEach {
+      add(it)
       add(Box.createHorizontalStrut(5))
     }
   }
 
-  fun setSelectedPermissions(v: Any?) {
-    initButtons()
-    val f = v as? Set<*> ?: EnumSet.noneOf(Permission::class.java)
-    checkBoxes[0].isSelected = f.contains(Permission.READ)
-    checkBoxes[1].isSelected = f.contains(Permission.WRITE)
-    checkBoxes[2].isSelected = f.contains(Permission.EXECUTE)
+  fun updateCheckBoxes(value: Any?) {
+    initCheckBoxes()
+    val permissions = value as? Set<*> ?: emptySet<Permission>()
+    checkBoxes.forEach { (perm, b) -> b.isSelected = permissions.contains(perm) }
   }
 
-  fun doClickCheckBox(text: String) {
-    checkBoxes.firstOrNull { it.text == text }?.doClick()
+  fun toggleCheckBox(perm: Permission) {
+    checkBoxes[perm]?.doClick()
   }
 
-  fun getPermissions(): Set<Permission> {
-    val f = EnumSet.noneOf(Permission::class.java)
-    if (checkBoxes[0].isSelected) {
-      f.add(Permission.READ)
-    }
-    if (checkBoxes[1].isSelected) {
-      f.add(Permission.WRITE)
-    }
-    if (checkBoxes[2].isSelected) {
-      f.add(Permission.EXECUTE)
-    }
-    return f
-  }
+  fun getPermissions(): Set<Permission> = checkBoxes.entries
+    .filter { it.value.isSelected }
+    .mapTo(EnumSet.noneOf(Permission::class.java)) { it.key }
 
-  private fun createCheckBox(title: String): JCheckBox {
-    val b = JCheckBox(title)
-    b.isOpaque = false
-    b.isFocusable = false
-    b.isRolloverEnabled = false
-    b.background = alphaZero
-    return b
+  companion object {
+    private val TRANSPARENT = Color(0x0, true)
+
+    private fun createCheckBox(perm: Permission) = JCheckBox(
+      perm.symbol.toString(),
+    ).also {
+      it.isOpaque = false
+      it.isFocusable = false
+      it.isRolloverEnabled = false
+      it.background = TRANSPARENT
+    }
   }
 }
 
 private class CheckBoxesRenderer : TableCellRenderer {
-  private val panel = CheckBoxesPanel()
+  private val renderer = CheckBoxesPanel()
 
   override fun getTableCellRendererComponent(
     table: JTable,
@@ -147,31 +130,33 @@ private class CheckBoxesRenderer : TableCellRenderer {
     row: Int,
     column: Int,
   ): Component {
-    panel.setSelectedPermissions(value)
-    return panel
+    renderer.updateCheckBoxes(value)
+    return renderer
   }
 }
 
 private class CheckBoxesEditor :
   AbstractCellEditor(),
   TableCellEditor {
-  private val panel = CheckBoxesPanel()
+  private val editor = CheckBoxesPanel()
 
   init {
-    val am = panel.actionMap
-    panel.titles.forEach {
-      val a = object : AbstractAction(it) {
-        override fun actionPerformed(e: ActionEvent) {
-          panel.doClickCheckBox(it)
-          fireEditingStopped()
-        }
-      }
-      am.put(it, a)
+    val am = editor.actionMap
+    val im = editor.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+    Permission.entries.forEach { perm ->
+      val key = perm.name
+      am.put(key, createToggleAction(perm))
+      // 'r' -> KeyEvent.VK_R, 'w' -> KeyEvent.VK_W, 'x' -> KeyEvent.VK_X
+      val keyCode = KeyEvent.getExtendedKeyCodeForChar(perm.symbol.code)
+      im.put(KeyStroke.getKeyStroke(keyCode, 0), key)
     }
-    val im = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_R, 0), panel.titles[0])
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), panel.titles[1])
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, 0), panel.titles[2])
+  }
+
+  private fun createToggleAction(perm: Permission) = object : AbstractAction(perm.name) {
+    override fun actionPerformed(e: ActionEvent) {
+      editor.toggleCheckBox(perm)
+      fireEditingStopped()
+    }
   }
 
   override fun getTableCellEditorComponent(
@@ -181,11 +166,11 @@ private class CheckBoxesEditor :
     row: Int,
     column: Int,
   ): Component {
-    panel.setSelectedPermissions(value)
-    return panel
+    editor.updateCheckBoxes(value)
+    return editor
   }
 
-  override fun getCellEditorValue() = panel.getPermissions()
+  override fun getCellEditorValue() = editor.getPermissions()
 }
 
 fun main() {
