@@ -115,12 +115,7 @@ private class EmptyThumbHandler(
   private fun changeThumbModel() {
     EventQueue.invokeLater {
       val m = textField.horizontalVisibility
-      val iv = m.maximum - m.minimum - m.extent - 1 // -1: bug?
-      if (iv <= 0) {
-        scroller.model = emptyThumbModel
-      } else {
-        scroller.model = textField.horizontalVisibility
-      }
+      scroller.model = if (isScrollable(m)) m else emptyThumbModel
     }
   }
 
@@ -140,6 +135,9 @@ private class EmptyThumbHandler(
     changeThumbModel()
   }
 }
+
+// Ignore the caret's 1px margin so fully-visible text doesn't leave a spurious thumb.
+private fun isScrollable(m: BoundedRangeModel) = m.maximum - m.minimum - m.extent - 1 > 0
 
 private class InvisibleButton : JButton() {
   override fun getPreferredSize() = Dimension()
@@ -167,9 +165,7 @@ private class ArrowButtonlessScrollBarUI : BasicScrollBarUI() {
     r: Rectangle,
   ) {
     if (c is JScrollBar && c.isEnabled && !r.isEmpty) {
-      val m = c.model
-      val iv = m.maximum - m.minimum - m.extent - 1
-      if (iv > 0) {
+      if (isScrollable(c.model)) {
         val g2 = g.create() as? Graphics2D ?: return
         g2.setRenderingHint(
           RenderingHints.KEY_ANTIALIASING,
@@ -188,9 +184,9 @@ private class ArrowButtonlessScrollBarUI : BasicScrollBarUI() {
   }
 
   companion object {
-    private val DEFAULT_COLOR = Color(220, 100, 100, 100)
-    private val DRAGGING_COLOR = Color(200, 100, 100, 100)
-    private val ROLLOVER_COLOR = Color(255, 120, 100, 100)
+    private val DEFAULT_COLOR = Color(0xDC_64_64_64.toInt(), true)
+    private val DRAGGING_COLOR = Color(0xC8_64_64_64.toInt(), true)
+    private val ROLLOVER_COLOR = Color(0xFF_64_64_64.toInt(), true)
   }
 }
 
