@@ -21,11 +21,12 @@ fun createUI(): Component {
   val table = object : JTable(model) {
     override fun updateUI() {
       super.updateUI()
-      getColumnModel().getColumn(1).cellRenderer = CheckBoxesRenderer()
-      getColumnModel().getColumn(1).cellEditor = CheckBoxesEditor()
+      val c = getColumnModel().getColumn(1)
+      c.cellRenderer = CheckBoxesRenderer()
+      c.cellEditor = CheckBoxesEditor()
+      putClientProperty("terminateEditOnFocusLost", true)
     }
   }
-  table.putClientProperty("terminateEditOnFocusLost", true)
 
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(table))
@@ -34,54 +35,57 @@ fun createUI(): Component {
 }
 
 private open class CheckBoxesPanel : JPanel() {
-  private val bgc = Color(0x0, true)
-  protected val titles = arrayOf("r", "w", "x")
-  val buttons = mutableListOf<JCheckBox>()
+  private val checkBoxes = SYMBOLS.map { makeCheckBox(it) }
 
   override fun updateUI() {
     super.updateUI()
     isOpaque = false
-    background = bgc
+    background = TRANSPARENT
     layout = BoxLayout(this, BoxLayout.X_AXIS)
-    EventQueue.invokeLater { initButtons() }
   }
 
-  private fun initButtons() {
+  // Re-add the check boxes on every update to avoid ghost images on Windows Aero
+  private fun initCheckBoxes() {
     removeAll()
-    buttons.clear()
-    for (t in titles) {
-      val b = makeCheckBox(t)
-      buttons.add(b)
-      add(b)
+    checkBoxes.forEach {
+      add(it)
       add(Box.createHorizontalStrut(5))
     }
   }
 
-  fun updateButtons(value: Any?) {
-    initButtons()
-    val i = value as? Int ?: 0
-    buttons[0].isSelected = i and (1 shl 2) != 0
-    buttons[1].isSelected = i and (1 shl 1) != 0
-    buttons[2].isSelected = i and (1 shl 0) != 0
+  fun updateCheckBoxes(value: Any?) {
+    initCheckBoxes()
+    val mode = value as? Int ?: 0
+    checkBoxes.forEachIndexed { i, b -> b.isSelected = mode and getBit(i) != 0 }
   }
 
-  private fun makeCheckBox(title: String): JCheckBox {
-    val c = JCheckBox(title)
-    c.isOpaque = false
-    c.isFocusable = false
-    c.isRolloverEnabled = false
-    c.background = bgc
-    return c
+  fun toggleCheckBox(index: Int) {
+    checkBoxes[index].doClick()
+  }
+
+  fun getMode() = checkBoxes.indices
+    .filter { checkBoxes[it].isSelected }
+    .fold(0) { acc, i -> acc or getBit(i) }
+
+  companion object {
+    // Permission symbols in "rwx" display order; bit: r -> 4, w -> 2, x -> 1
+    val SYMBOLS = listOf("r", "w", "x")
+    private val TRANSPARENT = Color(0x0, true)
+
+    private fun makeCheckBox(title: String) = JCheckBox(title).also {
+      it.isOpaque = false
+      it.isFocusable = false
+      it.isRolloverEnabled = false
+      it.background = TRANSPARENT
+    }
+
+    // Convert an index in SYMBOLS to its chmod bit: 0 -> 4, 1 -> 2, 2 -> 1
+    private fun getBit(index: Int) = 1 shl (SYMBOLS.size - 1 - index)
   }
 }
 
-private class CheckBoxesRenderer :
-  CheckBoxesPanel(),
-  TableCellRenderer {
-  override fun updateUI() {
-    super.updateUI()
-    name = "Table.cellRenderer"
-  }
+private class CheckBoxesRenderer : TableCellRenderer {
+  private val renderer = CheckBoxesPanel()
 
   override fun getTableCellRendererComponent(
     table: JTable,
@@ -91,35 +95,31 @@ private class CheckBoxesRenderer :
     row: Int,
     column: Int,
   ): Component {
-    updateButtons(value)
-    return this
+    renderer.updateCheckBoxes(value)
+    return renderer
   }
-  // public static class UIResource extends CheckBoxesRenderer implements UIResource {}
 }
 
 private class CheckBoxesEditor :
   AbstractCellEditor(),
   TableCellEditor {
-  private val panel = object : CheckBoxesPanel() {
-    override fun updateUI() {
-      super.updateUI()
-      EventQueue.invokeLater {
-        val am = actionMap
-        for (i in buttons.indices) {
-          val t = titles[i]
-          val a = object : AbstractAction(t) {
-            override fun actionPerformed(e: ActionEvent) {
-              buttons.firstOrNull { it.text == t }?.doClick()
-              fireEditingStopped()
-            }
-          }
-          am.put(t, a)
-        }
-        val im = getInputMap(WHEN_IN_FOCUSED_WINDOW)
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_R, 0), titles[0])
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), titles[1])
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_X, 0), titles[2])
-      }
+  private val editor = CheckBoxesPanel()
+
+  init {
+    val am = editor.actionMap
+    val im = editor.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+    CheckBoxesPanel.SYMBOLS.forEachIndexed { i, symbol ->
+      am.put(symbol, createToggleAction(i))
+      // "r" -> KeyEvent.VK_R, "w" -> KeyEvent.VK_W, "x" -> KeyEvent.VK_X
+      val keyCode = KeyEvent.getExtendedKeyCodeForChar(symbol[0].code)
+      im.put(KeyStroke.getKeyStroke(keyCode, 0), symbol)
+    }
+  }
+
+  private fun createToggleAction(index: Int) = object : AbstractAction(CheckBoxesPanel.SYMBOLS[index]) {
+    override fun actionPerformed(e: ActionEvent) {
+      editor.toggleCheckBox(index)
+      fireEditingStopped()
     }
   }
 
@@ -130,16 +130,11 @@ private class CheckBoxesEditor :
     row: Int,
     column: Int,
   ): Component {
-    panel.updateButtons(value)
-    return panel
+    editor.updateCheckBoxes(value)
+    return editor
   }
 
-  override fun getCellEditorValue(): Any {
-    var i = if (panel.buttons[0].isSelected) 1 shl 2 or 0 else 0
-    i = if (panel.buttons[1].isSelected) 1 shl 1 or i else i
-    i = if (panel.buttons[2].isSelected) 1 or i else i
-    return i
-  }
+  override fun getCellEditorValue(): Any = editor.getMode()
 }
 
 fun main() {
