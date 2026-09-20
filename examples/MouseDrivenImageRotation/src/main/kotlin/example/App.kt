@@ -10,17 +10,16 @@ import java.awt.geom.Point2D
 import java.awt.geom.Rectangle2D
 import java.awt.geom.RoundRectangle2D
 import java.awt.image.BufferedImage
-import java.awt.image.ImageObserver
+import java.net.URL
 import javax.imageio.ImageIO
 import javax.swing.*
-import kotlin.math.PI
 import kotlin.math.atan2
 
 fun createUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/test.png")
-  val img = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
-  val di = DraggableImageMouseListener(ImageIcon(img))
+  val image = url?.let(::readImage) ?: makeMissingImage()
+  val listener = DraggableImageMouseListener(image)
   val p = object : JPanel() {
     override fun paintComponent(g: Graphics) {
       val g2 = g.create() as? Graphics2D ?: return
@@ -29,36 +28,43 @@ fun createUI(): Component {
       g2.paint = GradientPaint(50f, 0f, Color.GRAY, w, h, Color.DARK_GRAY, true)
       g2.fillRect(0, 0, width, height)
       g2.dispose()
-      di.paint(g, this)
+      listener.paint(g)
     }
   }
-  p.addMouseListener(di)
-  p.addMouseMotionListener(di)
+  p.addMouseListener(listener)
+  p.addMouseMotionListener(listener)
   p.preferredSize = Dimension(320, 240)
   return p
 }
 
+private fun readImage(url: URL) = runCatching {
+  url.openStream().use(ImageIO::read)
+}.getOrNull() ?: makeMissingImage()
+
+private enum class Handle {
+  NONE,
+  MOVER,
+  ROTATOR,
+}
+
 private class DraggableImageMouseListener(
-  ii: ImageIcon,
+  private val image: BufferedImage,
 ) : MouseAdapter() {
-  private val border: Shape
+  private val imageBorder: Shape
   private val polaroid: Shape
-  private val inner = Ellipse2D.Double(0.0, 0.0, IR, IR)
-  private val outer = Ellipse2D.Double(0.0, 0.0, OR, OR)
-  private val startPt = Point2D.Double() // drag start point
-  private val centerPt = Point2D.Double(100.0, 100.0) // center of Image
-  private val imageSz: Dimension
-  private val image = ii.image
-  private var radian = 45.0 / 180.0 * PI // Math.toRadians(45.0)
-  private var startRadian = 0.0 // drag start radian
-  private var moverHover = false
-  private var rotatorHover = false
+  private val innerCircle = Ellipse2D.Double()
+  private val outerCircle = Ellipse2D.Double()
+  private val dragStart = Point2D.Double()
+  private val center = Point2D.Double(100.0, 100.0) // center of the image
+  private var angle = Math.toRadians(45.0) // rotation angle in radians
+  private var angleOffset = 0.0 // angle - pointer angle at the start of a rotation drag
+  private var activeHandle = Handle.NONE
+  private var dragging = false
 
   init {
-    val width = ii.iconWidth
-    val height = ii.iconHeight
-    imageSz = Dimension(width, height)
-    border = RoundRectangle2D.Double(
+    val width = image.width
+    val height = image.height
+    imageBorder = RoundRectangle2D.Double(
       0.0,
       0.0,
       width.toDouble(),
@@ -67,96 +73,116 @@ private class DraggableImageMouseListener(
       10.0,
     )
     polaroid = Rectangle2D.Double(-2.0, -2.0, width + 4.0, height + 20.0)
-    setCirclesLocation(centerPt)
+    setCirclesCenter(center)
   }
 
-  private fun setCirclesLocation(center: Point2D) {
-    val cx = center.x
-    val cy = center.y
-    inner.setFrameFromCenter(cx, cy, cx + IR / 2.0, cy - IR / 2.0)
-    outer.setFrameFromCenter(cx, cy, cx + OR / 2.0, cy - OR / 2.0)
+  private fun setCirclesCenter(pt: Point2D) {
+    val cx = pt.x
+    val cy = pt.y
+    innerCircle.setFrameFromCenter(cx, cy, cx + INNER_RADIUS, cy + INNER_RADIUS)
+    outerCircle.setFrameFromCenter(cx, cy, cx + OUTER_RADIUS, cy + OUTER_RADIUS)
   }
 
-  fun paint(
-    g: Graphics,
-    observer: ImageObserver?,
+  private fun getHandleAt(pt: Point2D) = when {
+    innerCircle.contains(pt) -> Handle.MOVER
+    outerCircle.contains(pt) -> Handle.ROTATOR
+    else -> Handle.NONE
+  }
+
+  private fun setActiveHandle(
+    handle: Handle,
+    c: Component,
   ) {
+    if (activeHandle != handle) {
+      activeHandle = handle
+      c.cursor = Cursor.getPredefinedCursor(getCursorType(handle))
+      c.repaint()
+    }
+  }
+
+  private fun getCursorType(handle: Handle) = when (handle) {
+    Handle.MOVER -> Cursor.MOVE_CURSOR
+    Handle.ROTATOR -> Cursor.HAND_CURSOR
+    Handle.NONE -> Cursor.DEFAULT_CURSOR
+  }
+
+  private fun getPointerAngle(e: MouseEvent) = atan2(e.y - center.y, e.x - center.x)
+
+  fun paint(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
-    val w2 = imageSz.width / 2.0
-    val h2 = imageSz.height / 2.0
-    val at = AffineTransform.getTranslateInstance(centerPt.x - w2, centerPt.y - h2)
-    at.rotate(radian, w2, h2)
+    val w2 = image.width / 2.0
+    val h2 = image.height / 2.0
+    val at = AffineTransform.getTranslateInstance(center.x - w2, center.y - h2)
+    at.rotate(angle, w2, h2)
     g2.paint = BORDER_COLOR
     g2.stroke = BORDER_STROKE
     val s = at.createTransformedShape(polaroid)
     g2.fill(s)
     g2.draw(s)
-    g2.drawImage(image, at, observer)
-    if (rotatorHover) {
-      val donut = Area(outer)
-      donut.subtract(Area(inner))
+    g2.drawImage(image, at, null)
+    if (activeHandle == Handle.ROTATOR) {
+      val donut = Area(outerCircle)
+      donut.subtract(Area(innerCircle))
       g2.paint = HOVER_COLOR
       g2.fill(donut)
-    } else if (moverHover) {
+    } else if (activeHandle == Handle.MOVER) {
       g2.paint = HOVER_COLOR
-      g2.fill(inner)
+      g2.fill(innerCircle)
     }
     g2.paint = BORDER_COLOR
     g2.stroke = BORDER_STROKE
-    g2.draw(at.createTransformedShape(border))
+    g2.draw(at.createTransformedShape(imageBorder))
     g2.dispose()
   }
 
   override fun mouseMoved(e: MouseEvent) {
-    val pt = e.point
-    if (outer.contains(pt) && !inner.contains(pt)) {
-      moverHover = false
-      rotatorHover = true
-    } else if (inner.contains(pt)) {
-      moverHover = true
-      rotatorHover = false
-    } else {
-      moverHover = false
-      rotatorHover = false
+    setActiveHandle(getHandleAt(e.point), e.component)
+  }
+
+  override fun mouseExited(e: MouseEvent) {
+    if (!dragging) {
+      setActiveHandle(Handle.NONE, e.component)
+    }
+  }
+
+  override fun mousePressed(e: MouseEvent) {
+    if (!SwingUtilities.isLeftMouseButton(e)) {
+      return
+    }
+    val handle = getHandleAt(e.point)
+    setActiveHandle(handle, e.component)
+    dragging = handle != Handle.NONE
+    if (handle == Handle.ROTATOR) {
+      angleOffset = angle - getPointerAngle(e)
+    } else if (handle == Handle.MOVER) {
+      dragStart.setLocation(e.point)
+    }
+  }
+
+  override fun mouseDragged(e: MouseEvent) {
+    if (!dragging) {
+      return
+    }
+    if (activeHandle == Handle.ROTATOR) {
+      angle = angleOffset + getPointerAngle(e)
+    } else if (activeHandle == Handle.MOVER) {
+      val dx = e.x - dragStart.x
+      val dy = e.y - dragStart.y
+      center.setLocation(center.x + dx, center.y + dy)
+      setCirclesCenter(center)
+      dragStart.setLocation(e.point)
     }
     e.component.repaint()
   }
 
   override fun mouseReleased(e: MouseEvent) {
-    rotatorHover = false
-    moverHover = false
-    e.component.repaint()
-  }
-
-  override fun mousePressed(e: MouseEvent) {
-    val pt = e.point
-    if (outer.contains(pt) && !inner.contains(pt)) {
-      rotatorHover = true
-      startRadian = radian - atan2(e.y - centerPt.y, e.x - centerPt.x)
-      e.component.repaint()
-    } else if (inner.contains(pt)) {
-      moverHover = true
-      startPt.setLocation(e.point)
-      e.component.repaint()
-    }
-  }
-
-  override fun mouseDragged(e: MouseEvent) {
-    if (rotatorHover) {
-      radian = startRadian + atan2(e.y - centerPt.y, e.x - centerPt.x)
-      e.component.repaint()
-    } else if (moverHover) {
-      centerPt.setLocation(
-        centerPt.x + e.x - startPt.x,
-        centerPt.y + e.y - startPt.y,
-      )
-      setCirclesLocation(centerPt)
-      startPt.setLocation(e.point)
-      e.component.repaint()
+    if (dragging && SwingUtilities.isLeftMouseButton(e)) {
+      dragging = false
+      setActiveHandle(getHandleAt(e.point), e.component)
     }
   }
 
@@ -164,12 +190,12 @@ private class DraggableImageMouseListener(
     private val BORDER_STROKE = BasicStroke(4f)
     private val BORDER_COLOR = Color.WHITE
     private val HOVER_COLOR = Color(0x64_64_FF_C8, true)
-    private const val IR = 40.0
-    private const val OR = IR * 3.0
+    private const val INNER_RADIUS = 20.0
+    private const val OUTER_RADIUS = INNER_RADIUS * 3.0
   }
 }
 
-private fun makeMissingImage(): Image {
+private fun makeMissingImage(): BufferedImage {
   val missingIcon = MissingIcon()
   val w = missingIcon.iconWidth
   val h = missingIcon.iconHeight
