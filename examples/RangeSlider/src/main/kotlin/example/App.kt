@@ -18,10 +18,32 @@ fun createUI(): Component {
   }
 }
 
-private class TriangleUI(
-  b: JSlider,
-  private val isUpward: Boolean,
-) : BasicSliderUI(b) {
+/**
+ * A slider UI that paints only a small triangular thumb pointing up or down.
+ * The track, ticks and labels are painted by the [RangeBar] instead.
+ */
+private class TriangleSliderUI(
+  slider: JSlider,
+  private val upward: Boolean,
+) : BasicSliderUI(slider) {
+  override fun installDefaults(slider: JSlider) {
+    super.installDefaults(slider)
+    // Some LookAndFeels (e.g. Windows) reserve 2px focus insets, which would
+    // shift the thumb positions away from the values painted on the RangeBar.
+    focusInsets = Insets(0, 0, 0, 0)
+  }
+
+  override fun getThumbSize() = Dimension(THUMB_WIDTH, THUMB_HEIGHT)
+
+  override fun calculateTrackBuffer() {
+    if (slider.orientation == JSlider.HORIZONTAL) {
+      // Share the horizontal track range with the RangeBar
+      trackBuffer = RangeBar.TRACK_PADDING
+    } else {
+      super.calculateTrackBuffer()
+    }
+  }
+
   override fun paintTrack(g: Graphics?) {
     // nothing to paint
   }
@@ -30,133 +52,101 @@ private class TriangleUI(
     // nothing to paint
   }
 
-  override fun calculateTrackBuffer() {
-    if (slider.getOrientation() == JSlider.HORIZONTAL) {
-      trackBuffer = RangeBar.PAD
-    } else {
-      super.calculateTrackBuffer()
-    }
-  }
-
   override fun paintThumb(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
-    g2.color = Color(0x28_2C_34)
-    val r = SwingUtilities.calculateInnerArea(slider, null)
-    val h = 8.0
-    val leftX = thumbRect.getX()
-    val centerX = leftX + thumbRect.width / 2.0
-    val rightX = leftX + thumbRect.width
-    val topY = if (isUpward) r.getY() else r.y + r.height - h
-    val bottomY = topY + h
+    g2.color = THUMB_COLOR
+    // Anchor the apex to the edge of the thumb rectangle facing the RangeBar
+    val apexY = if (upward) thumbRect.minY else thumbRect.maxY
+    val baseY = if (upward) apexY + TRIANGLE_HEIGHT else apexY - TRIANGLE_HEIGHT
     val triangle = Path2D.Double()
-    triangle.moveTo(leftX, if (isUpward) bottomY else topY)
-    triangle.lineTo(centerX, if (isUpward) topY else bottomY)
-    triangle.lineTo(rightX, if (isUpward) bottomY else topY)
+    triangle.moveTo(thumbRect.minX, baseY)
+    triangle.lineTo(thumbRect.centerX, apexY)
+    triangle.lineTo(thumbRect.maxX, baseY)
     triangle.closePath()
     g2.fill(triangle)
     g2.dispose()
+  }
+
+  companion object {
+    private val THUMB_COLOR = Color(0x28_2C_34)
+    private const val THUMB_WIDTH = 11
+    private const val THUMB_HEIGHT = 10
+    private const val TRIANGLE_HEIGHT = 8
   }
 }
 
 private class RangeSliderPanel(
   min: Int,
   max: Int,
-  lowInit: Int,
-  highInit: Int,
-) : JPanel(BorderLayout(0, 0)) {
-  private val lowerSlider = createSlider(min, max, lowInit, true)
-  private val upperSlider = createSlider(min, max, highInit, false)
+  lowerValue: Int,
+  upperValue: Int,
+) : JPanel(BorderLayout()) {
+  private val lowerSlider = createSlider(min, max, lowerValue, true)
+  private val upperSlider = createSlider(min, max, upperValue, false)
 
   init {
-    val cl = ChangeListener { e ->
-      if (lowerSlider.value > upperSlider.value) {
-        if (e.getSource() == lowerSlider) {
-          lowerSlider.setValue(upperSlider.value)
-        } else {
-          upperSlider.setValue(lowerSlider.value)
-        }
-      }
-      repaint()
+    val rangeBar = RangeBar(lowerSlider, upperSlider)
+    val listener = ChangeListener { e ->
+      clampToOtherSlider(e.source)
+      rangeBar.repaint()
     }
-    lowerSlider.addChangeListener(cl)
-    upperSlider.addChangeListener(cl)
+    lowerSlider.addChangeListener(listener)
+    upperSlider.addChangeListener(listener)
 
     add(upperSlider, BorderLayout.NORTH)
-    add(RangeBar(lowerSlider, upperSlider))
+    add(rangeBar)
     add(lowerSlider, BorderLayout.SOUTH)
   }
 
-  private fun createSlider(min: Int, max: Int, v: Int, isUp: Boolean): JSlider {
-    return object : JSlider(min, max, v) {
+  // Keep lower <= upper: the slider being moved stops at the other one
+  private fun clampToOtherSlider(source: Any?) {
+    val lower = lowerSlider.value
+    val upper = upperSlider.value
+    if (lower > upper) {
+      if (source == lowerSlider) {
+        lowerSlider.value = upper
+      } else {
+        upperSlider.value = lower
+      }
+    }
+  }
+
+  private fun createSlider(min: Int, max: Int, value: Int, upward: Boolean) =
+    object : JSlider(min, max, value) {
       override fun updateUI() {
         super.updateUI()
-        setUI(TriangleUI(this, isUp))
-        setOpaque(false)
-        setPaintTicks(false)
-        setPaintLabels(false)
-      }
-
-      override fun getPreferredSize(): Dimension {
-        val d = super.getPreferredSize()
-        d.height = 10
-        return d
+        setUI(TriangleSliderUI(this, upward))
+        isOpaque = false
       }
     }
-  }
 }
 
+/**
+ * Paints the track, the tick marks, the selected range and its values
+ * between the two sliders, and lets the user drag the whole range.
+ */
 private class RangeBar(
-  private val low: JSlider,
-  private val up: JSlider,
+  private val lowerSlider: JSlider,
+  private val upperSlider: JSlider,
 ) : JLabel() {
-  private val dragStartPt = Point(0, 0)
-  private var slLow = 0
-  private var slUp = 0
-  private var dragListener: MouseAdapter? = null
+  private var mouseListener: MouseAdapter? = null
+  private var dragging = false
+  private var hovering = false
+  private var dragStartX = 0
+  private var lowerAtDragStart = 0
+  private var upperAtDragStart = 0
 
   override fun updateUI() {
-    removeMouseListener(dragListener)
-    removeMouseMotionListener(dragListener)
+    removeMouseListener(mouseListener)
+    removeMouseMotionListener(mouseListener)
     super.updateUI()
-    setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR))
-    dragListener = object : MouseAdapter() {
-      override fun mousePressed(e: MouseEvent) {
-        dragStartPt.location = e.getPoint()
-        slLow = low.value
-        slUp = up.value
-        repaint()
-      }
-
-      override fun mouseReleased(e: MouseEvent?) {
-        dragStartPt.setLocation(-100, -100)
-        repaint()
-      }
-
-      override fun mouseDragged(e: MouseEvent) {
-        if (dragStartPt.x >= 0) {
-          updateRange(e.getX() - dragStartPt.x)
-        }
-        repaint()
-      }
-    }
-    addMouseListener(dragListener)
-    addMouseMotionListener(dragListener)
-  }
-
-  private fun updateRange(diff: Int) {
-    val trackW = low.getWidth() - PAD * 2.0
-    val range = low.maximum - low.minimum
-    val delta = (diff * range / trackW).roundToInt()
-    val ln = slLow + delta
-    val un = slUp + delta
-    if (ln >= low.minimum && un <= low.maximum) {
-      low.setValue(ln)
-      up.setValue(un)
-    }
+    mouseListener = RangeMouseListener()
+    addMouseListener(mouseListener)
+    addMouseMotionListener(mouseListener)
   }
 
   override fun getPreferredSize() = Dimension(300, BAR_HEIGHT)
@@ -167,92 +157,182 @@ private class RangeBar(
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
-    val w = getWidth() - PAD * 2 - 1
-    val cy = getHeight() / 2
-    paintTrack(g2, w, cy)
-    paintTicks(g2, w, cy)
-    val lx = getPositionX(low)
-    val ux = getPositionX(up)
-    paintRangeBar(g2, cy, lx, ux)
-    paintNumber(g2, cy, lx, ux)
+    val track = getTrackBounds()
+    paintTrack(g2, track)
+    paintTicks(g2, track)
+    val range = getRangeBounds()
+    paintRange(g2, range)
+    paintValues(g2, range)
     g2.dispose()
   }
 
-  private fun paintNumber(g2: Graphics2D, cy: Int, lx: Int, ux: Int) {
-    g2.color = UIManager.getColor("Button.foreground")
-    val txtLow = low.value.toString()
-    val txtUp = up.value.toString()
-    val fm = g2.fontMetrics
-    val gap = 2
-    val ty = cy + fm.ascent / 2 - 1
-    g2.drawString(txtLow, lx - fm.stringWidth(txtLow) - gap, ty)
-    g2.drawString(txtUp, ux + gap, ty)
-  }
-
-  private fun paintTrack(g2: Graphics2D, w: Int, cy: Int) {
-    val barH = BAR_HEIGHT - 1f
-    g2.color = TRACK_BGC
-    val track = RoundRectangle2D.Float(
-      PAD.toFloat(),
-      cy - barH / 2f,
-      w.toFloat(),
-      barH,
-      4f,
-      4f,
+  private fun paintTrack(g2: Graphics2D, track: Rectangle) {
+    val shape = RoundRectangle2D.Double(
+      track.x.toDouble(),
+      track.y.toDouble(),
+      track.width.toDouble(),
+      track.height.toDouble(),
+      ARC,
+      ARC,
     )
-    g2.fill(track)
-    g2.color = TRACK_BGC.darker()
-    g2.draw(track)
+    g2.color = TRACK_COLOR
+    g2.fill(shape)
+    g2.color = TRACK_COLOR.darker()
+    g2.draw(shape)
   }
 
-  private fun paintTicks(g2: Graphics2D, w: Int, cy: Int) {
-    val barH = BAR_HEIGHT - 1
-    var i = 0
-    while (i <= 100) {
-      val tx = PAD + i * w / 100
-      if (i % 10 == 0) {
-        // MajorTick
+  private fun paintTicks(g2: Graphics2D, track: Rectangle) {
+    val min = lowerSlider.minimum
+    val max = lowerSlider.maximum
+    val minorTop = track.y + (track.height - MINOR_TICK_LENGTH) / 2
+    for (value in min..max step MINOR_TICK_STEP) {
+      val x = valueToX(value)
+      if ((value - min) % MAJOR_TICK_STEP == 0) {
         g2.color = MAJOR_TICK_COLOR
-        g2.drawLine(tx, cy - barH / 2, tx, cy + barH / 2)
+        g2.drawLine(x, track.y, x, track.y + track.height)
       } else {
-        // MinorTick
         g2.color = MINOR_TICK_COLOR
-        g2.drawLine(tx, cy - 4, tx, cy + 4)
+        g2.drawLine(x, minorTop, x, minorTop + MINOR_TICK_LENGTH)
       }
-      i += 2
     }
   }
 
-  private fun paintRangeBar(g2: Graphics2D, cy: Int, lx: Int, ux: Int) {
-    val barH = BAR_HEIGHT - 1f
-    g2.paint = RANGE_COLOR
-    val bar = RoundRectangle2D.Float(
-      lx.toFloat(),
-      cy - barH / 2f,
-      (ux - lx).toFloat(),
-      barH,
-      4f,
-      4f,
+  private fun paintRange(g2: Graphics2D, range: Rectangle) {
+    val shape = RoundRectangle2D.Double(
+      range.x.toDouble(),
+      range.y.toDouble(),
+      range.width.toDouble(),
+      range.height.toDouble(),
+      ARC,
+      ARC,
     )
-    g2.fill(bar)
+    g2.color = RANGE_COLOR
+    g2.fill(shape)
     g2.color = RANGE_COLOR.darker()
-    g2.draw(bar)
+    g2.draw(shape)
   }
 
-  private fun getPositionX(slider: JSlider): Int {
-    val iv = slider.value - slider.minimum
-    val range = slider.maximum - slider.minimum
-    val v = iv.toDouble() / range
-    val r = SwingUtilities.calculateInnerArea(slider, null)
-    return PAD + (v * (r.width - PAD * 2.0)).toInt()
+  private fun paintValues(g2: Graphics2D, range: Rectangle) {
+    g2.color = foreground
+    val lowerText = lowerSlider.value.toString()
+    val upperText = upperSlider.value.toString()
+    val fm = g2.fontMetrics
+    // Center the text vertically on the bar
+    val baseline = range.centerY + (fm.ascent - fm.descent) / 2.0
+    val y = baseline.roundToInt()
+    g2.drawString(lowerText, range.x - fm.stringWidth(lowerText) - TEXT_GAP, y)
+    g2.drawString(upperText, range.x + range.width + TEXT_GAP, y)
+  }
+
+  // The same width as the slider tracks, which use TRACK_PADDING as their
+  // trackBuffer (see TriangleSliderUI#calculateTrackBuffer()).
+  private fun getTrackWidth() = width - TRACK_PADDING * 2
+
+  private fun getTrackBounds(): Rectangle {
+    val height = BAR_HEIGHT - 1
+    val y = (getHeight() - height) / 2
+    return Rectangle(TRACK_PADDING, y, getTrackWidth() - 1, height)
+  }
+
+  private fun getRangeBounds(): Rectangle {
+    val track = getTrackBounds()
+    val lowerX = valueToX(lowerSlider.value)
+    val upperX = valueToX(upperSlider.value)
+    return Rectangle(lowerX, track.y, upperX - lowerX, track.height)
+  }
+
+  // Same mapping as BasicSliderUI#xPositionForValue(int) so that the values
+  // painted here line up with the slider thumbs.
+  private fun valueToX(value: Int): Int {
+    val min = lowerSlider.minimum
+    val max = lowerSlider.maximum
+    val trackWidth = getTrackWidth()
+    val pixelsPerValue = trackWidth.toDouble() / (max - min)
+    val x = (pixelsPerValue * (value - min)).roundToInt()
+    return TRACK_PADDING + minOf(x, trackWidth - 1)
+  }
+
+  // Slide the whole range by the horizontal drag distance, keeping its width.
+  private fun moveRange(dx: Int) {
+    val min = lowerSlider.minimum
+    val max = lowerSlider.maximum
+    val valuesPerPixel = (max - min) / getTrackWidth().toDouble()
+    // Stop at the ends of the track instead of ignoring the drag
+    val delta = (dx * valuesPerPixel)
+      .roundToInt()
+      .coerceIn(min - lowerAtDragStart, max - upperAtDragStart)
+    val lower = lowerAtDragStart + delta
+    val upper = upperAtDragStart + delta
+    // RangeSliderPanel clamps lower <= upper on every change, so when moving
+    // to the right the upper value has to be raised before the lower one.
+    if (lower > lowerSlider.value) {
+      upperSlider.value = upper
+      lowerSlider.value = lower
+    } else {
+      lowerSlider.value = lower
+      upperSlider.value = upper
+    }
+  }
+
+  private fun setRangeHovered(hovered: Boolean) {
+    if (hovering != hovered) {
+      hovering = hovered
+      cursor = Cursor.getPredefinedCursor(
+        if (hovered) Cursor.HAND_CURSOR else Cursor.DEFAULT_CURSOR,
+      )
+    }
+  }
+
+  private inner class RangeMouseListener : MouseAdapter() {
+    override fun mouseEntered(e: MouseEvent) {
+      mouseMoved(e)
+    }
+
+    override fun mouseMoved(e: MouseEvent) {
+      setRangeHovered(getRangeBounds().contains(e.point))
+    }
+
+    override fun mousePressed(e: MouseEvent) {
+      if (SwingUtilities.isLeftMouseButton(e) && getRangeBounds().contains(e.point)) {
+        dragging = true
+        setRangeHovered(true)
+        dragStartX = e.x
+        lowerAtDragStart = lowerSlider.value
+        upperAtDragStart = upperSlider.value
+      }
+    }
+
+    override fun mouseDragged(e: MouseEvent) {
+      if (dragging) {
+        moveRange(e.x - dragStartX)
+      }
+    }
+
+    override fun mouseReleased(e: MouseEvent) {
+      if (dragging && SwingUtilities.isLeftMouseButton(e)) {
+        dragging = false
+      }
+      mouseMoved(e)
+    }
+
+    override fun mouseExited(e: MouseEvent) {
+      if (!dragging) {
+        setRangeHovered(false)
+      }
+    }
   }
 
   companion object {
     const val BAR_HEIGHT = 24
-    const val PAD = 20
+    const val TRACK_PADDING = 20
+    private const val MAJOR_TICK_STEP = 10
+    private const val MINOR_TICK_STEP = 2
+    private const val MINOR_TICK_LENGTH = 8
+    private const val TEXT_GAP = 2
+    private const val ARC = 4.0
     private val MAJOR_TICK_COLOR = Color(0xB4_B4_B9)
     private val MINOR_TICK_COLOR = Color(0xD2_D2_D7)
-    private val TRACK_BGC = Color(0xE6_E6_EB)
+    private val TRACK_COLOR = Color(0xE6_E6_EB)
     private val RANGE_COLOR = Color(0x78_00_B4_FF, true)
   }
 }
