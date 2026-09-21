@@ -3,31 +3,21 @@ package example
 import java.awt.*
 import java.awt.event.HierarchyEvent
 import java.awt.event.HierarchyListener
-import java.awt.event.ItemEvent
-import java.awt.event.ItemListener
 import java.awt.event.MouseEvent
 import java.awt.geom.AffineTransform
 import java.awt.geom.Area
 import java.awt.geom.Path2D
 import java.awt.geom.RoundRectangle2D
 import javax.swing.*
+import kotlin.math.roundToInt
 
 fun createUI(): Component {
   val tabbedPane = createTabbedPane()
   val menu = JMenu("TabPlacement")
   val bg = ButtonGroup()
-  val handler = ItemListener { e ->
-    if (e.stateChange == ItemEvent.SELECTED) {
-      val tp = TabPlacement.valueOf(bg.selection.actionCommand)
-      tabbedPane.tabPlacement = tp.placement
-    }
-  }
-  TabPlacement.entries.forEach {
-    val name = it.name
-    val selected = it == TabPlacement.TOP
-    val item = JRadioButtonMenuItem(name, selected)
-    item.addItemListener(handler)
-    item.actionCommand = name
+  TabPlacement.entries.forEach { tp ->
+    val item = JRadioButtonMenuItem(tp.name, tp == TabPlacement.TOP)
+    item.addActionListener { tabbedPane.tabPlacement = tp.placement }
     menu.add(item)
     bg.add(item)
   }
@@ -45,92 +35,132 @@ fun createUI(): Component {
 private fun createTabbedPane(): JTabbedPane {
   val tabs = object : JTabbedPane(TOP, SCROLL_TAB_LAYOUT) {
     private var tip: BalloonToolTip? = null
-    private val label = JLabel(" ", CENTER)
 
     override fun getToolTipLocation(e: MouseEvent): Point? {
       val idx = indexAtLocation(e.x, e.y)
       val txt = if (idx >= 0) getToolTipTextAt(idx) else null
       return txt?.let {
-        val tips = createToolTip()
-        tips.tipText = it
-        label.text = it
-        (tips as? BalloonToolTip)?.updateBalloonShape(tabPlacement)
-        getToolTipPoint(getBoundsAt(idx), tips.preferredSize)
+        // ToolTipManager calls this before createToolTip() and setTipText(...),
+        // so set the text here to get the size of the balloon for this tab.
+        val t = getBalloonToolTip()
+        t.tipText = it
+        t.tailPlacement = tabPlacement
+        getTipLocation(getBoundsAt(idx), t.preferredSize)
       }
     }
 
-    private fun getToolTipPoint(r: Rectangle, d: Dimension) = when (tabPlacement) {
-      LEFT -> createPoint(r.maxX, r.centerY - d.getHeight() / 2.0)
-      RIGHT -> createPoint(r.minX - d.width, r.centerY - d.getHeight() / 2.0)
-      BOTTOM -> createPoint(r.centerX - d.getWidth() / 2.0, r.minY - d.height)
-      else -> createPoint(r.centerX - d.getWidth() / 2.0, r.maxY + 8.0)
+    // Place the tip of the tail at the center of the tab edge facing the content.
+    private fun getTipLocation(
+      tabRect: Rectangle,
+      tipSize: Dimension,
+    ) = when (tabPlacement) {
+      LEFT -> createPoint(
+        tabRect.maxX,
+        tabRect.centerY - tipSize.getHeight() / 2.0,
+      )
+
+      RIGHT -> createPoint(
+        tabRect.minX - tipSize.width,
+        tabRect.centerY - tipSize.getHeight() / 2.0,
+      )
+
+      BOTTOM -> createPoint(
+        tabRect.centerX - tipSize.getWidth() / 2.0,
+        tabRect.minY - tipSize.height,
+      )
+
+      else -> createPoint(
+        tabRect.centerX - tipSize.getWidth() / 2.0,
+        tabRect.maxY,
+      )
     }
 
-    private fun createPoint(x: Double, y: Double) = Point(
-      (x + .5).toInt(),
-      (y + .5).toInt(),
-    )
+    private fun createPoint(
+      x: Double,
+      y: Double,
+    ) = Point(x.roundToInt(), y.roundToInt())
 
-    override fun createToolTip(): JToolTip {
-      val t = tip ?: BalloonToolTip().also {
-        LookAndFeel.installColorsAndFont(
-          label,
-          "ToolTip.background",
-          "ToolTip.foreground",
-          "ToolTip.font",
-        )
-        it.add(label)
-        it.updateBalloonShape(tabPlacement)
-        it.component = this
-      }
-      tip = t
-      return t
+    override fun createToolTip(): JToolTip = getBalloonToolTip()
+
+    // The JTabbedPane constructor calls updateUI() before the tip property is
+    // initialized, so the tip is created here on demand instead of in updateUI()
+    private fun getBalloonToolTip() = tip ?: BalloonToolTip().also {
+      it.component = this
+      tip = it
     }
 
     override fun updateUI() {
+      // The cached tip is not a child of this pane, so discard it for the new LookAndFeel
       tip = null
       super.updateUI()
     }
   }
   tabs.addTab("000", ColorIcon(Color.RED), JScrollPane(JTree()), "00000")
   tabs.addTab("111", ColorIcon(Color.GREEN), JSplitPane(), "11111")
-  tabs.addTab("222", ColorIcon(Color.BLUE), JScrollPane(JTable(5, 5)), "22222")
-  tabs.addTab("333", ColorIcon(Color.ORANGE), JLabel("6"), "33333")
-  tabs.addTab("444", ColorIcon(Color.CYAN), JLabel("7"), "44444")
-  tabs.addTab("555", ColorIcon(Color.PINK), JLabel("8"), "55555")
+  tabs.addTab("222", ColorIcon(Color.BLUE), JScrollPane(JTable(5, 5)), "222")
+  tabs.addTab("333", ColorIcon(Color.ORANGE), JLabel("6"), "33333333333333")
+  tabs.addTab("444", ColorIcon(Color.CYAN), JLabel("7"), "4444444444444444444")
+  tabs.addTab("555", ColorIcon(Color.PINK), JLabel("8"), "555555555555555555555")
   return tabs
 }
 
 private class BalloonToolTip : JToolTip() {
+  // The text is painted by the JLabel instead of the ToolTipUI so that
+  // the LookAndFeel (e.g. NimbusLookAndFeel) does not paint its own background
+  private val label = JLabel("", SwingConstants.CENTER)
   private var listener: HierarchyListener? = null
-  private var shape: Shape? = null
+
+  // The side of the balloon on which the tail is drawn:
+  // one of SwingConstants.TOP, LEFT, BOTTOM or RIGHT
+  var tailPlacement = SwingConstants.TOP
+    set(placement) {
+      if (field != placement) {
+        field = placement
+        repaint()
+      }
+    }
+
+  init {
+    LookAndFeel.installColorsAndFont(
+      label,
+      "ToolTip.background",
+      "ToolTip.foreground",
+      "ToolTip.font",
+    )
+    label.border = BorderFactory.createEmptyBorder(2, 5, 2, 5)
+    layout = BorderLayout()
+    add(label)
+  }
 
   override fun updateUI() {
     removeHierarchyListener(listener)
     super.updateUI()
-    layout = BorderLayout()
     listener = HierarchyListener { e ->
       val c = e.component
       val f = e.changeFlags.toInt() and HierarchyEvent.SHOWING_CHANGED != 0
       if (f && c.isShowing) {
+        // Popup$HeavyWeightWindow: make the area outside the balloon transparent
         SwingUtilities
           .getWindowAncestor(c)
-          ?.takeIf { it.graphicsConfiguration?.isTranslucencyCapable == true }
-          ?.takeIf { it.type == Window.Type.POPUP }
+          ?.takeIf { isTranslucencyCapablePopup(it) }
           ?.background = Color(0x0, true)
       }
     }
     addHierarchyListener(listener)
     isOpaque = false
-    border = BorderFactory.createEmptyBorder(SIZE, SIZE, SIZE, SIZE)
+    // Leave room for the tail on every side
+    border = BorderFactory.createEmptyBorder(TAIL_SIZE, TAIL_SIZE, TAIL_SIZE, TAIL_SIZE)
   }
 
-  override fun getPreferredSize(): Dimension {
-    val d = super.getPreferredSize()
-    d.width += SIZE
-    d.height += SIZE
-    return d
+  private fun isTranslucencyCapablePopup(w: Window) =
+    w.graphicsConfiguration?.isTranslucencyCapable == true && w.type == Window.Type.POPUP
+
+  override fun setTipText(tipText: String?) {
+    super.setTipText(tipText)
+    label.text = tipText
   }
+
+  override fun getPreferredSize(): Dimension = layout.preferredLayoutSize(this)
 
   override fun paintComponent(g: Graphics) {
     val g2 = g.create() as? Graphics2D ?: return
@@ -138,45 +168,46 @@ private class BalloonToolTip : JToolTip() {
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
-    g2.color = getBackground()
-    g2.fill(shape)
-    g2.paint = getForeground()
-    g2.draw(shape)
+    val balloon = createBalloonShape()
+    g2.paint = background
+    g2.fill(balloon)
+    g2.paint = foreground
+    g2.draw(balloon)
     g2.dispose()
     // super.paintComponent(g)
   }
 
-  fun updateBalloonShape(placement: Int) {
+  private fun createBalloonShape(): Shape {
     val i = insets
-    val d = preferredSize
-    val tail = Path2D.Double()
-    val w = d.getWidth() - i.left - i.right - 1.0
-    val h = d.getHeight() - i.top - i.bottom - 1.0
+    // -1: keep the 1px outline inside the component bounds
+    val w = width - i.left - i.right - 1.0
+    val h = height - i.top - i.bottom - 1.0
     val cx = w / 2.0
     val cy = h / 2.0
-    when (placement) {
+    val tail = Path2D.Double()
+    when (tailPlacement) {
       SwingConstants.LEFT -> {
-        tail.moveTo(0.0, cy - SIZE)
-        tail.lineTo(-SIZE.toDouble(), cy)
-        tail.lineTo(0.0, cy + SIZE)
+        tail.moveTo(0.0, cy - TAIL_SIZE)
+        tail.lineTo(-TAIL_SIZE.toDouble(), cy)
+        tail.lineTo(0.0, cy + TAIL_SIZE)
       }
 
       SwingConstants.RIGHT -> {
-        tail.moveTo(w, cy - SIZE)
-        tail.lineTo(w + SIZE, cy)
-        tail.lineTo(w, cy + SIZE)
+        tail.moveTo(w, cy - TAIL_SIZE)
+        tail.lineTo(w + TAIL_SIZE, cy)
+        tail.lineTo(w, cy + TAIL_SIZE)
       }
 
       SwingConstants.BOTTOM -> {
-        tail.moveTo(cx - SIZE, h)
-        tail.lineTo(cx, h + SIZE)
-        tail.lineTo(cx + SIZE, h)
+        tail.moveTo(cx - TAIL_SIZE, h)
+        tail.lineTo(cx, h + TAIL_SIZE)
+        tail.lineTo(cx + TAIL_SIZE, h)
       }
 
       else -> {
-        tail.moveTo(cx - SIZE, 0.0)
-        tail.lineTo(cx, -SIZE.toDouble())
-        tail.lineTo(cx + SIZE, 0.0)
+        tail.moveTo(cx - TAIL_SIZE, 0.0)
+        tail.lineTo(cx, -TAIL_SIZE.toDouble())
+        tail.lineTo(cx + TAIL_SIZE, 0.0)
       }
     }
     val area = Area(RoundRectangle2D.Double(0.0, 0.0, w, h, ARC, ARC))
@@ -184,11 +215,11 @@ private class BalloonToolTip : JToolTip() {
     val tx = i.left.toDouble()
     val ty = i.top.toDouble()
     val at = AffineTransform.getTranslateInstance(tx, ty)
-    shape = at.createTransformedShape(area)
+    return at.createTransformedShape(area)
   }
 
   companion object {
-    private const val SIZE = 4
+    private const val TAIL_SIZE = 4
     private const val ARC = 4.0
   }
 }
