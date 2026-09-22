@@ -36,36 +36,36 @@ fun createUI(): Component {
 private class HeaderFooterComboPopup(
   combo: JComboBox<Any>,
 ) : BasicComboPopup(combo) {
-  private var header: JLabel? = null
-  private var footer: JMenuItem? = null
-
   override fun configurePopup() {
+    // BasicComboPopup#configurePopup() sets a vertical BoxLayout
+    // and adds the scroller that wraps the list.
     super.configurePopup()
-    configureHeader()
-    configureFooter()
-    add(header, 0)
-    add(footer)
+    add(createHeader(), 0)
+    add(createFooter())
   }
 
-  private fun configureHeader() {
-    header = JLabel("History").also {
-      it.border = BorderFactory.createEmptyBorder(5, 0, 5, 0)
-      it.maximumSize = Dimension(Short.MAX_VALUE.toInt(), 24)
-      it.alignmentX = Component.CENTER_ALIGNMENT
-    }
+  private fun createHeader(): JComponent {
+    val header = JLabel("History", SwingConstants.CENTER)
+    header.border = BorderFactory.createEmptyBorder(5, 0, 5, 0)
+    // The JLabel constructor sets LEFT_ALIGNMENT; match the CENTER_ALIGNMENT
+    // of the scroller and the footer so the BoxLayout does not shift it.
+    header.alignmentX = Component.CENTER_ALIGNMENT
+    // A JLabel does not stretch in a BoxLayout unless its maximum
+    // width is unbounded.
+    val height = header.preferredSize.height
+    header.maximumSize = Dimension(Short.MAX_VALUE.toInt(), height)
+    return header
   }
 
-  private fun configureFooter() {
+  private fun createFooter(): JComponent {
     val modifiers = InputEvent.CTRL_DOWN_MASK or InputEvent.SHIFT_DOWN_MASK
-    footer = JMenuItem("Show All Bookmarks").also {
-      it.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_B, modifiers)
-      it.addActionListener {
-        JOptionPane.showMessageDialog(
-          SwingUtilities.getWindowAncestor(invoker),
-          "Bookmarks",
-        )
-      }
+    val footer = JMenuItem("Show All Bookmarks")
+    footer.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_B, modifiers)
+    footer.addActionListener {
+      val w = SwingUtilities.getWindowAncestor(comboBox)
+      JOptionPane.showMessageDialog(w, "Bookmarks")
     }
+    return footer
   }
 }
 
