@@ -1,6 +1,7 @@
 package example
 
 import java.awt.*
+import java.awt.event.ItemEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.*
@@ -15,31 +16,37 @@ private val BORDER_COLOR = Color(0x64_64_64)
 
 fun createUI(): Component {
   val allFonts = GraphicsEnvironment.getLocalGraphicsEnvironment().allFonts
-  val fontListModel = DefaultListModel<String>()
-  allFonts.map { it.fontName }.forEach { fontListModel.addElement(it) }
-  val fontList = JList(fontListModel)
+  val fontNames = allFonts.map { it.fontName }.toTypedArray()
+  val fontList = JList(fontNames)
   fontList.selectionMode = ListSelectionModel.SINGLE_SELECTION
 
   val popupMenu = JPopupMenu()
   popupMenu.setBorder(BorderFactory.createEmptyBorder())
   popupMenu.setPopupSize(POPUP_WIDTH, POPUP_HEIGHT)
 
-  val fontComboBox = createFontComboBox(allFonts, fontList, popupMenu)
-  fontList.addListSelectionListener {
-    fontComboBox.selectedIndex = fontList.selectedIndex
+  val fontComboBox = createFontComboBox(fontNames, fontList, popupMenu)
+  // Selecting an item in the list updates the combo box selection to match.
+  fontList.addListSelectionListener { e ->
+    if (!e.valueIsAdjusting) {
+      fontComboBox.selectedIndex = fontList.selectedIndex
+    }
   }
+  // Double-clicking an item closes the popup;
+  // the selection is already synchronized by the ListSelectionListener.
   fontList.addMouseListener(object : MouseAdapter() {
     override fun mouseClicked(e: MouseEvent) {
-      if (e.getClickCount() - 1 > 0) {
-        fontComboBox.selectedIndex = fontList.selectedIndex
+      val isDoubleClick = e.clickCount >= 2
+      if (isDoubleClick) {
         popupMenu.setVisible(false)
       }
     }
   })
-  fontComboBox.addItemListener {
+  fontComboBox.addItemListener { e ->
     val idx = fontComboBox.getSelectedIndex()
-    fontList.setSelectedIndex(idx)
-    fontList.scrollRectToVisible(fontList.getCellBounds(idx, idx))
+    if (e.stateChange == ItemEvent.SELECTED && idx >= 0) {
+      fontList.setSelectedIndex(idx)
+      fontList.scrollRectToVisible(fontList.getCellBounds(idx, idx))
+    }
   }
 
   val scrollPane = JScrollPane(fontList)
@@ -54,13 +61,11 @@ fun createUI(): Component {
 }
 
 private fun createFontComboBox(
-  fonts: Array<Font>,
+  fontNames: Array<String>,
   fontList: JList<String>,
   popupMenu: JPopupMenu,
 ): JComboBox<String> {
-  val fontComboBoxModel = DefaultComboBoxModel<String>()
-  fonts.map { it.fontName }.forEach { fontComboBoxModel.addElement(it) }
-  val fontComboBox = object : JComboBox<String>(fontComboBoxModel) {
+  val fontComboBox = object : JComboBox<String>(fontNames) {
     private var listener: PopupMenuListener? = null
 
     override fun updateUI() {
@@ -111,36 +116,40 @@ private class ComboBoxPopupMenuHandler(
   }
 
   override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
-    // rect.setSize(window.getSize())
+    // not needed
   }
 
   override fun popupMenuCanceled(e: PopupMenuEvent) {
-    // rect.setSize(window.getSize())
+    // not needed
   }
 }
 
+// Resizes the enclosing JPopupMenu (and its underlying heavyweight/lightweight
+// popup window) vertically while the grip label is dragged.
 private class PopupMenuResizeHandler : MouseInputAdapter() {
-  private val newSize = Rectangle()
   private val dragStartPoint = Point()
   private val dragStartSize = Dimension()
 
   override fun mousePressed(e: MouseEvent) {
-    val c = e.component
-    val popup = SwingUtilities.getAncestorOfClass(JPopupMenu::class.java, c)
-    newSize.size = popup.size
-    dragStartSize.size = popup.size
-    dragStartPoint.location = c.locationOnScreen
+    val popup = SwingUtilities.getAncestorOfClass(JPopupMenu::class.java, e.component)
+    if (popup != null) {
+      dragStartSize.size = popup.size
+      dragStartPoint.location = e.locationOnScreen
+    }
   }
 
   override fun mouseDragged(e: MouseEvent) {
-    newSize.height = dragStartSize.height + e.locationOnScreen.y - dragStartPoint.y
     val c = SwingUtilities.getAncestorOfClass(JPopupMenu::class.java, e.component)
     if (c is JPopupMenu) {
-      c.preferredSize = newSize.size
+      val dy = e.locationOnScreen.y - dragStartPoint.y
+      val minHeight = c.minimumSize.height
+      val size =
+        Dimension(dragStartSize.width, maxOf(minHeight, dragStartSize.height + dy))
+      c.preferredSize = size
       val window = SwingUtilities.getWindowAncestor(c)
       if (window != null && window.type == Window.Type.POPUP) {
         // Popup$HeavyWeightWindow
-        window.setSize(newSize.width, newSize.height)
+        window.size = size
       } else {
         // Popup$LightWeightWindow
         c.pack()
@@ -154,10 +163,12 @@ private class ResizeGripIcon : Icon {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     g2.paint = Color.GRAY
-    val start = iconWidth / 2 - (DOT_COUNT - 1) * 2
-    val centerY = iconHeight / 2
+    // Center the row of dots in the icon
+    val dotsWidth = (DOT_COUNT - 1) * DOT_GAP + DOT_SIZE
+    val startX = (iconWidth - dotsWidth) / 2
+    val startY = (iconHeight - DOT_SIZE) / 2
     for (i in 0..<DOT_COUNT) {
-      g2.fillRect(start + DOT_GAP * i, centerY, DOT_SIZE, DOT_SIZE)
+      g2.fillRect(startX + DOT_GAP * i, startY, DOT_SIZE, DOT_SIZE)
     }
     g2.dispose()
   }
