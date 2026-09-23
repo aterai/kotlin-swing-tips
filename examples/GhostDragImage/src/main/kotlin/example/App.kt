@@ -87,7 +87,7 @@ private fun makeMissingImage(): BufferedImage {
 private class ReorderingList(
   model: ListModel<ListItem>,
 ) : JList<ListItem>(model) {
-  private var rbl: MouseInputListener? = null
+  private var rubberBanding: MouseInputListener? = null
   private var rubberBandColor: Color? = null
   private val rubberBand = Path2D.Double()
 
@@ -96,8 +96,8 @@ private class ReorderingList(
     selectionBackground = null // Nimbus
     cellRenderer = null
     transferHandler = null
-    removeMouseListener(rbl)
-    removeMouseMotionListener(rbl)
+    removeMouseListener(rubberBanding)
+    removeMouseMotionListener(rubberBanding)
     super.updateUI()
     rubberBandColor = makeRubberBandColor(selectionBackground)
     layoutOrientation = HORIZONTAL_WRAP
@@ -107,9 +107,9 @@ private class ReorderingList(
     border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
     cellRenderer = ListItemListCellRenderer()
 
-    rbl = RubberBandingListener()
-    addMouseMotionListener(rbl)
-    addMouseListener(rbl)
+    rubberBanding = RubberBandingListener()
+    addMouseMotionListener(rubberBanding)
+    addMouseListener(rubberBanding)
 
     // putClientProperty("List.isFileList", true)
     selectionModel.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
@@ -164,7 +164,7 @@ private class ReorderingList(
       val l = e.component as? JList<*> ?: return
       val index = l.locationToIndex(e.point)
       val rect = l.getCellBounds(index, index)
-      if (rect.contains(e.point)) {
+      if (rect?.contains(e.point) == true) {
         l.isFocusable = true
         if (l.dragEnabled) {
           return
@@ -261,14 +261,6 @@ private open class ListItemTransferHandler : TransferHandler() {
   private var addIndex = -1 // Location where items were added
   private var addCount = 0 // Number of items added.
 
-  init {
-    LABEL.isOpaque = true
-    LABEL.border = BorderFactory.createLineBorder(Color.GRAY)
-    LABEL.horizontalAlignment = SwingConstants.CENTER
-    LABEL.foreground = Color.WHITE
-    LABEL.background = Color(0, 0, 255, 200)
-  }
-
   override fun createTransferable(c: JComponent): Transferable {
     c.rootPane.glassPane.isVisible = true
     return object : Transferable {
@@ -293,13 +285,21 @@ private open class ListItemTransferHandler : TransferHandler() {
     info.isDrop && info.isDataFlavorSupported(FLAVOR)
 
   override fun getSourceActions(c: JComponent): Int {
-    c.rootPane.glassPane.cursor = DragSource.DefaultMoveDrop
-    if (c is JList<*>) {
-      dragImage = createDragImage(c)
-      c.getMousePosition()?.also { dragImageOffset = it }
-      return MOVE // TransferHandler.COPY_OR_MOVE
+    var action = NONE
+    if (c is JList<*> && !c.isSelectionEmpty) {
+      c.rootPane.glassPane.cursor = DragSource.DefaultMoveDrop
+      updateDragImage(c)
+      action = MOVE
     }
-    return NONE
+    return action
+  }
+
+  protected open fun updateDragImage(src: JList<*>) {
+    val bounds = getSelectedCellsBounds(src)
+    dragImage = createDragImage(src, bounds)
+    val pt = src.getMousePosition() ?: bounds.location
+    pt.translate(-bounds.x, -bounds.y)
+    dragImageOffset = pt
   }
 
   override fun importData(info: TransferSupport): Boolean {
@@ -331,8 +331,7 @@ private open class ListItemTransferHandler : TransferHandler() {
     data: Transferable,
     action: Int,
   ) {
-    val glassPane = c.rootPane.glassPane
-    glassPane.isVisible = false
+    c.rootPane.glassPane.isVisible = false
     cleanup(c, action == MOVE)
   }
 
@@ -357,21 +356,23 @@ private open class ListItemTransferHandler : TransferHandler() {
     addIndex = -1
   }
 
-  private fun <E> createDragImage(source: JList<E>): BufferedImage {
-    val w = source.width
-    val h = source.height
-    val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
+  private fun getSelectedCellsBounds(list: JList<*>) =
+    list.selectedIndices
+      .map { list.getCellBounds(it, it) }
+      .reduceOrNull(Rectangle::union) ?: Rectangle()
+
+  private fun <E> createDragImage(
+    list: JList<E>,
+    bounds: Rectangle,
+  ): BufferedImage {
+    val bi = BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_ARGB)
     val g2 = bi.createGraphics()
-    val renderer = source.cellRenderer
-    for (i in source.selectedIndices) {
-      val c = renderer.getListCellRendererComponent(
-        source,
-        source.model.getElementAt(i),
-        i,
-        false,
-        false,
-      )
-      SwingUtilities.paintComponent(g2, c, source, source.getCellBounds(i, i))
+    g2.translate(-bounds.x, -bounds.y)
+    val renderer = list.cellRenderer
+    for (i in list.selectedIndices) {
+      val value = list.model.getElementAt(i)
+      val c = renderer.getListCellRendererComponent(list, value, i, false, false)
+      SwingUtilities.paintComponent(g2, c, list, list.getCellBounds(i, i))
     }
     g2.dispose()
     return bi
@@ -379,64 +380,65 @@ private open class ListItemTransferHandler : TransferHandler() {
 
   companion object {
     private val FLAVOR = DataFlavor(List::class.java, "List of items")
-    val LABEL = object : JLabel() {
-      override fun getPreferredSize(): Dimension {
-        val d = super.getPreferredSize()
-        d.width = 32
-        return d
-      }
-    }
   }
 }
 
 private class CompactListItemTransferHandler : ListItemTransferHandler() {
-  override fun getSourceActions(c: JComponent): Int {
-    val glassPane = c.rootPane.glassPane
-    glassPane.cursor = DragSource.DefaultMoveDrop
-    if (c !is JList<*>) {
-      return NONE
-    }
-    val w = c.fixedCellWidth
-    val h = c.fixedCellHeight - 20
-    dragImage = createCompactDragImage(c, w, h)
+  override fun updateDragImage(src: JList<*>) {
+    // Cut off the title at the bottom of the cell and use only the icon area:
+    // title text height + title border(top: 2, bottom: 2) + cell border(bottom: 2)
+    val titleHeight = src.getFontMetrics(src.font).height + 6
+    val w = src.fixedCellWidth
+    val h = src.fixedCellHeight - titleHeight
+    dragImage = createCompactDragImage(src, w, h)
     dragImageOffset = Point(w / 2, h)
-    return MOVE // TransferHandler.COPY_OR_MOVE
   }
 
   private fun <E> createCompactDragImage(
-    source: JList<E>,
+    list: JList<E>,
     w: Int,
     h: Int,
-  ): BufferedImage? {
-    val gc = source.graphicsConfiguration
+  ): BufferedImage {
+    val gc = list.graphicsConfiguration
     require(w > 0 && h > 0 && gc != null) { "width and height must be > 0" }
-    val selectedIndices = source.selectedIndices
-    val br = gc.createCompatibleImage(w, h, Transparency.TRANSLUCENT)
-    val g2 = br.createGraphics()
-    val renderer = source.cellRenderer
-    val idx = selectedIndices[0]
-    val valueAt = source.model.getElementAt(idx)
-    val c = renderer.getListCellRendererComponent(source, valueAt, idx, false, false)
-    val rect = source.getCellBounds(idx, idx)
-    SwingUtilities.paintComponent(g2, c, source, 0, 0, rect.width, rect.height)
-    val selectedCount = selectedIndices.size
-    val oneOrMore = selectedCount > 1
-    if (oneOrMore) {
-      LABEL.text = selectedCount.toString()
-      val d = LABEL.preferredSize
-      SwingUtilities.paintComponent(
-        g2,
-        LABEL,
-        source,
-        (w - d.width) / 2,
-        (h - d.height) / 2,
-        d.width,
-        d.height,
-      )
+    val image = gc.createCompatibleImage(w, h, Transparency.TRANSLUCENT)
+    val g2 = image.createGraphics()
+    val idx = list.minSelectionIndex
+    val value = list.model.getElementAt(idx)
+    val renderer = list.cellRenderer
+    val c = renderer.getListCellRendererComponent(list, value, idx, false, false)
+    val rect = list.getCellBounds(idx, idx)
+    SwingUtilities.paintComponent(g2, c, list, 0, 0, rect.width, rect.height)
+    if (idx != list.maxSelectionIndex) { // two or more items are selected
+      COUNT_LABEL.text = list.selectedIndices.size.toString()
+      val d = COUNT_LABEL.preferredSize
+      val x = (w - d.width) / 2
+      val y = (h - d.height) / 2
+      SwingUtilities.paintComponent(g2, COUNT_LABEL, list, x, y, d.width, d.height)
     }
     g2.dispose()
-    br.coerceData(true)
-    return br
+    image.coerceData(true)
+    return image
+  }
+
+  companion object {
+    private val COUNT_LABEL = createCountLabel()
+
+    private fun createCountLabel(): JLabel {
+      val label = object : JLabel() {
+        override fun getPreferredSize(): Dimension {
+          val d = super.getPreferredSize()
+          d.width = 32
+          return d
+        }
+      }
+      label.isOpaque = true
+      label.border = BorderFactory.createLineBorder(Color.GRAY)
+      label.horizontalAlignment = SwingConstants.CENTER
+      label.foreground = Color.WHITE
+      label.background = Color(0, 0, 255, 200)
+      return label
+    }
   }
 }
 
