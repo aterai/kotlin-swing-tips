@@ -72,7 +72,7 @@ private fun makeMissingImage(): BufferedImage {
 private class ReorderingList(
   model: ListModel<ListItem>,
 ) : JList<ListItem>(model) {
-  private var rbl: MouseInputListener? = null
+  private var rubberBanding: MouseInputListener? = null
   private var rubberBandColor: Color? = null
   private val rubberBand = Path2D.Double()
 
@@ -81,8 +81,8 @@ private class ReorderingList(
     selectionBackground = null // Nimbus
     cellRenderer = null
     transferHandler = null
-    removeMouseListener(rbl)
-    removeMouseMotionListener(rbl)
+    removeMouseListener(rubberBanding)
+    removeMouseMotionListener(rubberBanding)
     super.updateUI()
     rubberBandColor = makeRubberBandColor(selectionBackground)
     layoutOrientation = HORIZONTAL_WRAP
@@ -92,9 +92,9 @@ private class ReorderingList(
     border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
     cellRenderer = ListItemListCellRenderer()
 
-    rbl = RubberBandingListener()
-    addMouseMotionListener(rbl)
-    addMouseListener(rbl)
+    rubberBanding = RubberBandingListener()
+    addMouseMotionListener(rubberBanding)
+    addMouseListener(rubberBanding)
 
     // putClientProperty("List.isFileList", true)
     selectionModel.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
@@ -140,7 +140,7 @@ private class ReorderingList(
       (e.component as? JList<*>)?.also {
         rubberBand.reset()
         it.isFocusable = true
-        it.dragEnabled = it.selectedIndices.isNotEmpty()
+        it.dragEnabled = !it.isSelectionEmpty
         it.repaint()
       }
     }
@@ -272,8 +272,12 @@ private class ListItemTransferHandler : TransferHandler() {
     info.isDrop && info.isDataFlavorSupported(FLAVOR)
 
   override fun getSourceActions(c: JComponent): Int {
-    c.rootPane.glassPane.cursor = DragSource.DefaultMoveDrop
-    return MOVE // COPY_OR_MOVE
+    var action = NONE
+    if (c is JList<*> && !c.isSelectionEmpty) {
+      c.rootPane.glassPane.cursor = DragSource.DefaultMoveDrop
+      action = MOVE
+    }
+    return action
   }
 
   override fun importData(info: TransferSupport): Boolean {
@@ -305,8 +309,7 @@ private class ListItemTransferHandler : TransferHandler() {
     data: Transferable,
     action: Int,
   ) {
-    val glassPane = c.rootPane.glassPane
-    glassPane.isVisible = false
+    c.rootPane.glassPane.isVisible = false
     cleanup(c, action == MOVE)
   }
 
