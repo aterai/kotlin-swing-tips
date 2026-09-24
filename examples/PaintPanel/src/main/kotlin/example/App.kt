@@ -6,6 +6,7 @@ import java.awt.geom.Path2D
 import javax.swing.*
 import javax.swing.event.MouseInputAdapter
 import javax.swing.event.MouseInputListener
+import kotlin.math.ceil
 
 fun createUI() = JPanel(BorderLayout()).also {
   it.add(PaintPanel())
@@ -20,24 +21,17 @@ private class PaintPanel : JPanel() {
     removeMouseMotionListener(handler)
     removeMouseListener(handler)
     super.updateUI()
-    handler = object : MouseInputAdapter() {
-      private var path: Path2D? = null
-
-      override fun mousePressed(e: MouseEvent) {
-        path = Path2D.Double().also {
-          it.moveTo(e.x.toDouble(), e.y.toDouble())
-          list.add(it)
-        }
-        e.component.repaint()
-      }
-
-      override fun mouseDragged(e: MouseEvent) {
-        path?.lineTo(e.x.toDouble(), e.y.toDouble())
-        e.component.repaint()
-      }
-    }
+    handler = MouseHandler()
     addMouseMotionListener(handler)
     addMouseListener(handler)
+  }
+
+  // Repaints only the area covered by the stroke of the segment from p0 to p1
+  private fun repaintSegment(p0: Point, p1: Point) {
+    val r = Rectangle(p0)
+    r.add(p1)
+    r.grow(PADDING, PADDING)
+    repaint(r)
   }
 
   override fun paintComponent(g: Graphics) {
@@ -49,9 +43,39 @@ private class PaintPanel : JPanel() {
     g2.dispose()
   }
 
+  private inner class MouseHandler : MouseInputAdapter() {
+    private val prevPoint = Point()
+    private var path: Path2D? = null
+
+    override fun mousePressed(e: MouseEvent) {
+      val pt = e.point
+      path = Path2D.Double().also {
+        it.moveTo(pt.getX(), pt.getY())
+        // A zero-length segment is needed to draw a dot with a round cap
+        it.lineTo(pt.getX(), pt.getY())
+        list.add(it)
+      }
+      prevPoint.location = pt
+      repaintSegment(pt, pt)
+    }
+
+    override fun mouseDragged(e: MouseEvent) {
+      path?.also {
+        val pt = e.point
+        it.lineTo(pt.getX(), pt.getY())
+        repaintSegment(prevPoint, pt)
+        prevPoint.location = pt
+      }
+    }
+  }
+
   companion object {
+    private const val STROKE_WIDTH = 3f
+
+    // Half of the stroke width plus a margin for rounding
+    private val PADDING = ceil(STROKE_WIDTH / 2f).toInt() + 1
     private val STROKE = BasicStroke(
-      3f,
+      STROKE_WIDTH,
       BasicStroke.CAP_ROUND,
       BasicStroke.JOIN_ROUND,
     )
