@@ -18,211 +18,175 @@ fun createUI(): Component {
     }
   }
   val cl = Thread.currentThread().contextClassLoader
-  val icon = ImageIcon(cl.getResource("example/16x16.png"))
+  val icon = cl.getResource("example/16x16.png")?.let { ImageIcon(it) }
+    ?: UIManager.getIcon("html.missingImage")
   val button2 = object : RoundButton(icon) {
-    override fun getPreferredSize() =
-      super.getPreferredSize()?.also { d ->
-        val r = 16 + (FOCUS_STROKE.toInt() + 4) * 2
-        d.setSize(r, r)
-      }
+    override fun getPreferredSize(): Dimension {
+      val margin = 4
+      val s = maxOf(icon.iconWidth, icon.iconHeight)
+      val size = s + (FOCUS_STROKE + margin) * 2
+      return Dimension(size, size)
+    }
   }
 
   return JPanel().also {
     it.add(JButton("Default JButton"))
-    // button.ui = RoundedCornerButtonUI()
     it.add(button1)
     it.add(RoundedCornerButton("Rounded Corner Button"))
     it.add(button2)
-    it.add(ShapeButton(createStar(25, 30, 20)))
+    it.add(ShapeButton(createStar(30.0, 25.0, 20)))
     it.add(RoundButton("Round Button"))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
 fun createStar(
-  r1: Int,
-  r2: Int,
-  vc: Int,
-): Path2D {
-  val ora = maxOf(r1, r2)
-  val ira = minOf(r1, r2)
-  var agl = 0.0
-  val add = 2 * PI / (vc * 2)
+  outerRadius: Double,
+  innerRadius: Double,
+  vertexCount: Int,
+): Shape {
+  val step = PI / vertexCount
+  var angle = -PI / 2.0 // start from the top vertex
   val p = Path2D.Double()
-  p.moveTo(ora * 1.0, ora * 0.0)
-  for (i in 0..<vc * 2 - 1) {
-    agl += add
-    val r = if (i % 2 == 0) ira else ora
-    p.lineTo(r * cos(agl), r * sin(agl))
+  p.moveTo(outerRadius * cos(angle), outerRadius * sin(angle))
+  for (i in 1..<vertexCount * 2) {
+    angle += step
+    val r = if (i % 2 == 0) outerRadius else innerRadius
+    p.lineTo(r * cos(angle), r * sin(angle))
   }
   p.closePath()
-  val at = AffineTransform.getRotateInstance(-PI / 2.0, ora.toDouble(), 0.0)
-  return Path2D.Double(p, at)
+  val b = p.bounds2D
+  val at = AffineTransform.getTranslateInstance(-b.x, -b.y)
+  return at.createTransformedShape(p)
 }
 
 open class RoundedCornerButton : JButton {
-  private val fc = Color(100, 150, 255, 200)
-  private val ac = Color(230, 230, 230)
-  private val rc = Color.ORANGE
-  protected var shape: Shape? = null
-  protected var border: Shape? = null
-  protected var base: Shape? = null
-
-  // constructor() : super()
+  private val cachedSize = Dimension()
+  private var shape: Shape? = null
+  private var innerShape: Shape? = null
 
   constructor(icon: Icon) : super(icon)
 
   constructor(text: String) : super(text)
 
-  // constructor(a: Action) : super(a)
-
-  // constructor(text: String, icon: Icon) : super(text, icon)
-  // {
-  //   // setModel(DefaultButtonModel())
-  //   // init(text, icon)
-  //   // setContentAreaFilled(false)
-  //   // setBackground(Color(250, 250, 250))
-  //   // initShape()
-  // }
-
   override fun updateUI() {
     super.updateUI()
     isContentAreaFilled = false
     isFocusPainted = false
-    background = Color(250, 250, 250)
-    updateShapeIfResized()
+    background = Color(0xFA_FA_FA)
   }
 
-  open fun updateShapeIfResized() {
-    if (bounds != base) {
-      base = bounds
-      shape = RoundRectangle2D.Double(
-        0.0,
-        0.0,
-        width - 1.0,
-        height - 1.0,
-        ARC_WIDTH,
-        ARC_HEIGHT,
-      )
-      border = RoundRectangle2D.Double(
-        FOCUS_STROKE,
-        FOCUS_STROKE,
-        width - 1 - FOCUS_STROKE * 2,
-        height - 1 - FOCUS_STROKE * 2,
-        ARC_WIDTH,
-        ARC_HEIGHT,
-      )
+  protected open fun createShape(
+    x: Double,
+    y: Double,
+    w: Double,
+    h: Double,
+  ): Shape = RoundRectangle2D.Double(x, y, w, h, ARC, ARC)
+
+  private fun updateShapeIfResized(): Shape {
+    val s0 = shape
+    if (s0 != null && cachedSize == size) {
+      return s0
     }
+    getSize(cachedSize)
+    val w = width - 1.0
+    val h = height - 1.0
+    val s = FOCUS_STROKE.toDouble()
+    innerShape = createShape(s, s, w - s * 2.0, h - s * 2.0)
+    return createShape(0.0, 0.0, w, h).also { shape = it }
   }
 
   private fun paintFocusAndRollover(
     g2: Graphics2D,
     color: Color,
   ) {
-    g2.paint =
-      GradientPaint(0f, 0f, color, width - 1f, height - 1f, color.brighter(), true)
+    val x2 = width - 1f
+    val y2 = height - 1f
+    g2.paint = GradientPaint(0f, 0f, color, x2, y2, color.brighter(), true)
     g2.fill(shape)
     g2.paint = background
-    g2.fill(border)
-  }
-
-  private fun paintArmed(
-    g2: Graphics2D,
-    color: Color,
-  ) {
-    g2.paint = color
-    g2.fill(shape)
+    g2.fill(innerShape)
   }
 
   override fun paintComponent(g: Graphics) {
-    updateShapeIfResized()
+    val s = updateShapeIfResized()
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
+    val m = model
     when {
-      model.isArmed -> paintArmed(g2, ac)
-      isRolloverEnabled && model.isRollover -> paintFocusAndRollover(g2, rc)
-      hasFocus() -> paintFocusAndRollover(g2, fc)
-      else -> paintArmed(g2, background)
+      m.isArmed -> {
+        g2.paint = PRESSED_COLOR
+        g2.fill(s)
+      }
+
+      isRolloverEnabled && m.isRollover -> paintFocusAndRollover(g2, ROLLOVER_COLOR)
+
+      hasFocus() -> paintFocusAndRollover(g2, FOCUS_COLOR)
+
+      else -> {
+        g2.paint = background
+        g2.fill(s)
+      }
     }
     g2.dispose()
     super.paintComponent(g)
   }
 
   override fun paintBorder(g: Graphics) {
-    updateShapeIfResized()
+    val s = updateShapeIfResized()
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
     g2.paint = foreground
-    g2.draw(shape)
+    g2.draw(s)
     g2.dispose()
   }
 
   override fun contains(
     x: Int,
     y: Int,
-  ): Boolean {
-    updateShapeIfResized()
-    return shape?.contains(Point(x, y)) ?: super.contains(x, y)
-  }
+  ) = updateShapeIfResized().contains(x.toDouble(), y.toDouble())
 
   companion object {
-    private const val ARC_WIDTH = 16.0
-    private const val ARC_HEIGHT = 16.0
-    const val FOCUS_STROKE = 2.0
+    const val FOCUS_STROKE = 2
+    val FOCUS_COLOR = Color(0xC8_64_96_FF.toInt(), true)
+    val PRESSED_COLOR = Color(0xE6_E6_E6)
+    val ROLLOVER_COLOR: Color = Color.ORANGE
+    private const val ARC = 16.0
   }
 }
 
 open class RoundButton : RoundedCornerButton {
-  // constructor() : super()
-
   constructor(icon: Icon) : super(icon)
 
   constructor(text: String) : super(text)
 
-  // constructor(a: Action) : super(a)
-
-  // constructor(text: String, icon: Icon) : super(text, icon)
-  // {
-  //   // setModel(DefaultButtonModel())
-  //   // init(text, icon)
-  // }
-
   override fun getPreferredSize() =
     super.getPreferredSize()?.also {
-      val s = maxOf(width, height)
+      val s = maxOf(it.width, it.height)
       it.setSize(s, s)
     }
 
-  override fun updateShapeIfResized() {
-    if (bounds != base) {
-      base = bounds
-      shape = Ellipse2D.Double(0.0, 0.0, width - 1.0, height - 1.0)
-      border = Ellipse2D.Double(
-        FOCUS_STROKE,
-        FOCUS_STROKE,
-        width - 1 - FOCUS_STROKE * 2,
-        height - 1 - FOCUS_STROKE * 2,
-      )
-    }
-  }
+  override fun createShape(
+    x: Double,
+    y: Double,
+    w: Double,
+    h: Double,
+  ): Shape = Ellipse2D.Double(x, y, w, h)
 }
 
 class ShapeButton(
-  private val shape: Shape?,
-) : JButton() {
-  private val fc = Color(100, 150, 255, 200)
-  private val ac = Color(230, 230, 230)
-  private val rc = Color.ORANGE
+  s: Shape,
+) : JButton("Shape", ShapeSizeIcon(s)) {
+  private val shape: Shape? = s
 
-  init {
-    setModel(DefaultButtonModel())
-    init("Shape", ShapeSizeIcon(shape))
+  override fun updateUI() {
+    super.updateUI()
     verticalAlignment = CENTER
     verticalTextPosition = CENTER
     horizontalAlignment = CENTER
@@ -230,23 +194,16 @@ class ShapeButton(
     border = BorderFactory.createEmptyBorder()
     isContentAreaFilled = false
     isFocusPainted = false
-    background = Color(250, 250, 250)
+    background = Color(0xFA_FA_FA)
   }
 
   private fun paintFocusAndRollover(
     g2: Graphics2D,
     color: Color,
   ) {
-    g2.paint =
-      GradientPaint(0f, 0f, color, width - 1f, height - 1f, color.brighter(), true)
-    g2.fill(shape)
-  }
-
-  private fun paintArmed(
-    g2: Graphics2D,
-    color: Color,
-  ) {
-    g2.paint = color
+    val x2 = width - 1f
+    val y2 = height - 1f
+    g2.paint = GradientPaint(0f, 0f, color, x2, y2, color.brighter(), true)
     g2.fill(shape)
   }
 
@@ -256,11 +213,21 @@ class ShapeButton(
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
+    val m = getModel()
     when {
-      getModel().isArmed -> paintArmed(g2, ac)
-      isRolloverEnabled && getModel().isRollover -> paintFocusAndRollover(g2, rc)
-      hasFocus() -> paintFocusAndRollover(g2, fc)
-      else -> paintArmed(g2, background)
+      m.isArmed -> {
+        g2.paint = PRESSED_COLOR
+        g2.fill(shape)
+      }
+
+      isRolloverEnabled && m.isRollover -> paintFocusAndRollover(g2, ROLLOVER_COLOR)
+
+      hasFocus() -> paintFocusAndRollover(g2, FOCUS_COLOR)
+
+      else -> {
+        g2.paint = background
+        g2.fill(shape)
+      }
     }
     g2.dispose()
     super.paintComponent(g)
@@ -280,12 +247,20 @@ class ShapeButton(
   override fun contains(
     x: Int,
     y: Int,
-  ) = shape?.contains(Point(x, y)) ?: super.contains(x, y)
+  ) = shape?.contains(x.toDouble(), y.toDouble()) ?: super.contains(x, y)
+
+  companion object {
+    private val FOCUS_COLOR = Color(0xC8_64_96_FF.toInt(), true)
+    private val PRESSED_COLOR = Color(0xE6_E6_E6)
+    private val ROLLOVER_COLOR = Color.ORANGE
+  }
 }
 
 class ShapeSizeIcon(
-  private val shape: Shape?,
+  shape: Shape,
 ) : Icon {
+  private val bounds = shape.bounds
+
   override fun paintIcon(
     c: Component,
     g: Graphics,
@@ -295,9 +270,9 @@ class ShapeSizeIcon(
     // Empty icon
   }
 
-  override fun getIconWidth() = shape?.bounds?.width ?: 0
+  override fun getIconWidth() = bounds.x + bounds.width + 1
 
-  override fun getIconHeight() = shape?.bounds?.height ?: 0
+  override fun getIconHeight() = bounds.y + bounds.height + 1
 }
 
 fun main() {
