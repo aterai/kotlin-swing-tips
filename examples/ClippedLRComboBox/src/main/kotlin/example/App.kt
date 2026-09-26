@@ -5,23 +5,25 @@ import java.awt.event.ItemEvent
 import javax.swing.*
 
 fun createUI(): Component {
-  val combo = object : JComboBox<PairItem>(makeModel()) {
+  val combo0 = JComboBox(createModel())
+  val box0 = createTitledBox("DefaultComboBox", combo0)
+
+  val combo1 = object : JComboBox<PairItem>(createModel()) {
     override fun updateUI() {
       // setRenderer(null)
       super.updateUI()
       setRenderer(MultiColumnCellRenderer())
     }
   }
-  val box1 = makeTitledBox("MultiColumnComboBox", combo)
-  val box2 = makeTitledBox("DefaultComboBox", JComboBox(makeModel()))
+  val box1 = createTitledBox("MultiColumnComboBox", combo1)
   return JPanel(BorderLayout()).also {
     it.add(box1, BorderLayout.NORTH)
-    it.add(box2, BorderLayout.SOUTH)
+    it.add(box0, BorderLayout.SOUTH)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeTitledBox(
+private fun createTitledBox(
   title: String,
   combo: JComboBox<*>,
 ): Box {
@@ -40,14 +42,23 @@ private fun makeTitledBox(
   combo.addItemListener { e ->
     val item = e.item
     if (e.stateChange == ItemEvent.SELECTED && item is PairItem) {
-      leftTextField.text = item.leftText
-      rightTextField.text = item.rightText
+      updateTextFields(item, leftTextField, rightTextField)
     }
   }
+  updateTextFields(combo.selectedItem as? PairItem, leftTextField, rightTextField)
   return box
 }
 
-private fun makeModel() = DefaultComboBoxModel<PairItem>().also {
+private fun updateTextFields(
+  item: PairItem?,
+  left: JTextField,
+  right: JTextField,
+) {
+  left.text = item?.leftText ?: ""
+  right.text = item?.rightText ?: ""
+}
+
+private fun createModel() = DefaultComboBoxModel<PairItem>().also {
   val name = "loooooooooooooooooooooooooooooooooong.1234567890.1234567890"
   it.addElement(PairItem("ccc", "846876"))
   it.addElement(PairItem("bbb", "111111111111111111111"))
@@ -72,7 +83,6 @@ private class MultiColumnCellRenderer : ListCellRenderer<PairItem> {
       super.updateUI()
       isOpaque = false
       border = BorderFactory.createEmptyBorder(0, 2, 0, 2)
-      foreground = Color.GRAY
       horizontalAlignment = RIGHT
     }
 
@@ -91,36 +101,46 @@ private class MultiColumnCellRenderer : ListCellRenderer<PairItem> {
     }
   }
 
+  init {
+    renderer.add(leftLabel)
+    renderer.add(rightLabel, BorderLayout.EAST)
+  }
+
   override fun getListCellRendererComponent(
     list: JList<out PairItem>,
-    value: PairItem,
+    value: PairItem?,
     index: Int,
     isSelected: Boolean,
     cellHasFocus: Boolean,
   ): Component {
-    leftLabel.text = value.leftText
-    rightLabel.text = value.rightText
-
+    leftLabel.text = value?.leftText ?: ""
+    rightLabel.text = value?.rightText ?: ""
     leftLabel.font = list.font
     rightLabel.font = list.font
-
-    renderer.add(leftLabel)
-    renderer.add(rightLabel, BorderLayout.EAST)
-
-    if (index < 0) {
-      leftLabel.foreground = list.foreground
-      renderer.isOpaque = false
+    val fgc: Color
+    val bgc: Color
+    if (index >= 0 && isSelected) {
+      fgc = list.selectionForeground
+      bgc = list.selectionBackground
     } else {
-      if (isSelected) {
-        leftLabel.foreground = list.selectionForeground
-        renderer.background = list.selectionBackground
-      } else {
-        leftLabel.foreground = list.foreground
-        renderer.background = list.background
-      }
-      renderer.isOpaque = true
+      fgc = list.foreground
+      bgc = list.background
     }
+    leftLabel.foreground = fgc
+    rightLabel.foreground = blend(fgc, bgc)
+    renderer.background = bgc
+    renderer.isOpaque = index >= 0
     return renderer
+  }
+
+  private fun blend(
+    c1: Color,
+    c2: Color,
+  ): Color {
+    val r = (c1.red + c2.red) / 2
+    val g = (c1.green + c2.green) / 2
+    val b = (c1.blue + c2.blue) / 2
+    return Color(r, g, b)
   }
 }
 
