@@ -1,7 +1,6 @@
 package example
 
 import java.awt.*
-import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
@@ -9,11 +8,12 @@ import javax.swing.*
 import javax.swing.event.TableModelEvent
 import javax.swing.event.TableModelListener
 import javax.swing.plaf.ColorUIResource
+import javax.swing.plaf.synth.SynthUI
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.JTableHeader
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
-import javax.swing.table.TableColumn
+import javax.swing.table.TableModel
 
 private const val CHECKBOX_COLUMN = 0
 private val checkBox = TriStateCheckBox("TriState JCheckBox")
@@ -29,7 +29,14 @@ private val data = arrayOf<Array<Any>>(
   arrayOf(false, 7, "HHH"),
 )
 private val model = object : DefaultTableModel(data, columnNames) {
-  override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
+  private val columnClasses = arrayOf(
+    Boolean::class.javaObjectType,
+    Int::class.javaObjectType,
+    String::class.java,
+  )
+
+  // getValueAt(0, column) throws an exception if the model has no rows
+  override fun getColumnClass(column: Int) = columnClasses[column]
 }
 private val table = object : JTable(model) {
   private var handler: HeaderCheckBoxHandler? = null
@@ -49,13 +56,13 @@ private val table = object : JTable(model) {
         val r = getDefaultRenderer(it.getColumnClass(i)) as? Component ?: continue
         SwingUtilities.updateComponentTreeUI(r)
       }
-      handler = HeaderCheckBoxHandler(this, CHECKBOX_COLUMN)
-      it.addTableModelListener(handler)
-      getTableHeader().addMouseListener(handler)
-    }
-    getColumnModel().getColumn(CHECKBOX_COLUMN).also {
-      it.headerRenderer = HeaderRenderer()
-      it.headerValue = Status.INDETERMINATE
+      val vci = convertColumnIndexToView(CHECKBOX_COLUMN)
+      getColumnModel().getColumn(vci).headerRenderer = HeaderRenderer()
+      handler = HeaderCheckBoxHandler(this, CHECKBOX_COLUMN).also { h ->
+        h.updateHeaderState()
+        it.addTableModelListener(h)
+        getTableHeader().addMouseListener(h)
+      }
     }
   }
 
@@ -88,6 +95,18 @@ fun createUI() = JTabbedPane().also {
 private class HeaderRenderer : TableCellRenderer {
   private val check = TriStateCheckBox()
   private val label = JLabel("Check All")
+  private val icon = ComponentIcon(label)
+
+  init {
+    check.isOpaque = false
+    label.isOpaque = false
+    label.icon = ComponentIcon(check)
+    if (isSynth()) {
+      check.text = " "
+    }
+  }
+
+  private fun isSynth() = check.ui is SynthUI
 
   override fun getTableCellRendererComponent(
     table: JTable,
@@ -97,8 +116,7 @@ private class HeaderRenderer : TableCellRenderer {
     row: Int,
     column: Int,
   ): Component {
-    val status = value as? Status ?: Status.INDETERMINATE
-    status.configureHeaderCheckBox(check)
+    check.status = value as? Status ?: Status.INDETERMINATE
     val r = table.tableHeader.defaultRenderer
     val c = r.getTableCellRendererComponent(
       table,
@@ -109,64 +127,52 @@ private class HeaderRenderer : TableCellRenderer {
       column,
     )
     if (c is JLabel) {
-      c.setOpaque(false)
-      check.setOpaque(false)
-      val isSynth = check
-        .getUI()
-        .javaClass
-        .getName()
-        .contains("Synth")
-      if (isSynth) {
-        check.setText(" ")
-        check.preferredSize = c.getPreferredSize()
+      c.isOpaque = false
+      if (isSynth()) {
+        check.preferredSize = c.preferredSize
       }
-      label.setOpaque(false)
-      label.setIcon(ComponentIcon(check))
-      c.setIcon(ComponentIcon(label))
-      c.setText(null)
+      c.icon = icon
+      c.text = null
     }
     return c
   }
 }
 
-private class TriStateActionListener : ActionListener {
-  private var currentIcon: Icon? = null
-
-  fun setIcon(icon: Icon?) {
-    this.currentIcon = icon
-  }
-
-  override fun actionPerformed(e: ActionEvent) {
-    val cb = e.source as? JCheckBox ?: return
-    if (cb.isSelected) {
-      cb.icon?.run {
-        cb.icon = null
-        cb.isSelected = false
-      }
-    } else {
-      cb.icon = currentIcon
-    }
-  }
-}
-
 private class TriStateCheckBox(
-  title: String,
+  title: String? = null,
 ) : JCheckBox(title) {
-  private var listener: TriStateActionListener? = null
+  private var listener: ActionListener? = null
+  private lateinit var indeterminateIcon: Icon
+  private var indeterminate = false
+
+  var status: Status
+    get() = when {
+      indeterminate -> Status.INDETERMINATE
+      isSelected -> Status.SELECTED
+      else -> Status.DESELECTED
+    }
+    set(status) {
+      indeterminate = status == Status.INDETERMINATE
+      isSelected = status == Status.SELECTED
+      icon = if (indeterminate) indeterminateIcon else null
+    }
 
   override fun updateUI() {
-    icon = null
     removeActionListener(listener)
     super.updateUI()
-    val indeterminateIcon = IndeterminateIcon()
-    val al = TriStateActionListener()
-    al.setIcon(indeterminateIcon)
-    listener = al
-    // currentIcon = indeterminateIcon
+    // The indeterminate icon depends on the CheckBox.icon of the current LookAndFeel
+    indeterminateIcon = IndeterminateIcon()
+    icon = if (indeterminate) indeterminateIcon else null
+    // Cycle: DESELECTED -> SELECTED -> INDETERMINATE -> DESELECTED
+    // The selection state of the button model has already been toggled here
+    listener = ActionListener { status = getNextStatus() }
     addActionListener(listener)
-    icon?.run {
-      icon = indeterminateIcon
-    }
+  }
+
+  private fun getNextStatus() = when {
+    indeterminate -> Status.DESELECTED
+    isSelected -> Status.SELECTED
+    else -> Status.INDETERMINATE
   }
 }
 
@@ -182,7 +188,7 @@ private class IndeterminateIcon : Icon {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
     icon.paintIcon(c, g2, 0, 0)
-    g2.paint = FOREGROUND
+    g2.paint = c?.foreground ?: Color.BLACK
     g2.fillRect(
       MARGIN,
       (iconHeight - HEIGHT) / 2,
@@ -197,7 +203,6 @@ private class IndeterminateIcon : Icon {
   override fun getIconHeight() = icon.iconHeight
 
   companion object {
-    private val FOREGROUND = Color.BLACK
     private const val MARGIN = 4
     private const val HEIGHT = 2
   }
@@ -209,90 +214,65 @@ private class HeaderCheckBoxHandler(
 ) : MouseAdapter(),
   TableModelListener {
   override fun tableChanged(e: TableModelEvent) {
-    if (e.getType() == TableModelEvent.UPDATE &&
-      e.getColumn() == targetColumnIndex
-    ) {
-      val vci = table.convertColumnIndexToView(targetColumnIndex)
-      val column = table.getColumnModel().getColumn(vci)
-      val status = column.getHeaderValue()
-      val m = table.model
-      if (updateHeaderState(m, column, status)) {
-        val h = table.getTableHeader()
-        h.repaint(h.getHeaderRect(vci))
-      }
+    val col = e.column
+    val targetChanged = col == targetColumnIndex || col == TableModelEvent.ALL_COLUMNS
+    if (targetChanged && e.firstRow != TableModelEvent.HEADER_ROW) {
+      updateHeaderState()
     }
   }
 
-  private fun updateHeaderState(
-    model: TableModel,
-    column: TableColumn,
-    status: Any?,
-  ): Boolean {
-    val repaint: Boolean
-    if (status === Status.INDETERMINATE) {
-      repaint = updateIndeterminateHeaderState(model, column)
-    } else {
-      setIndeterminateHeader(column)
-      repaint = true
+  fun updateHeaderState() {
+    val vci = table.convertColumnIndexToView(targetColumnIndex)
+    if (vci >= 0) {
+      setHeaderStatus(vci, resolveHeaderState(table.model))
     }
-    return repaint
   }
 
-  private fun setIndeterminateHeader(column: TableColumn) {
-    column.setHeaderValue(Status.INDETERMINATE)
+  private fun setHeaderStatus(vci: Int, status: Status) {
+    val column = table.columnModel.getColumn(vci)
+    if (column.headerValue !== status) {
+      column.headerValue = status
+      val h = table.tableHeader
+      h.repaint(h.getHeaderRect(vci))
+    }
   }
 
-  private fun updateIndeterminateHeaderState(
-    model: TableModel,
-    column: TableColumn,
-  ): Boolean {
-    var repaint = false
-    val status = resolveHeaderState(model)
-    if (status != null) {
-      column.setHeaderValue(status)
-      repaint = true
+  private fun resolveHeaderState(model: TableModel): Status {
+    val values = (0..<model.rowCount)
+      .asSequence()
+      .map { model.getValueAt(it, targetColumnIndex) == true }
+      .distinct()
+      .take(2)
+      .toList()
+    return when {
+      values.isEmpty() -> Status.DESELECTED
+      values.size == 1 -> if (values[0]) Status.SELECTED else Status.DESELECTED
+      else -> Status.INDETERMINATE
     }
-    return repaint
-  }
-
-  private fun resolveHeaderState(model: TableModel): Status? {
-    var status: Status? = null
-    val rowCount = model.rowCount
-    if (rowCount > 0) {
-      val values = (0..<rowCount)
-        .map { i -> model.getValueAt(i, targetColumnIndex) }
-        .filterIsInstance<Boolean>()
-        .distinct()
-        .take(2)
-        .toList()
-      val isOnlyOneSelected = values.size == 1
-      if (isOnlyOneSelected) {
-        val isSelected = values[0]
-        status = if (isSelected) Status.SELECTED else Status.DESELECTED
-      }
-    }
-    return status
   }
 
   override fun mouseClicked(e: MouseEvent) {
-    val header = e.component as? JTableHeader
-    if (header?.isEnabled == true) {
-      val tbl = header.getTable()
-      val model = tbl.model
-      val vci = tbl.columnAtPoint(e.getPoint())
-      val mci = tbl.convertColumnIndexToModel(vci)
-      if (mci == targetColumnIndex && model.rowCount > 0) {
-        val column = tbl.getColumnModel().getColumn(vci)
-        val select = column.getHeaderValue() === Status.DESELECTED
-        toggleAllRows(model, mci, select)
-        column.setHeaderValue(if (select) Status.SELECTED else Status.DESELECTED)
-      }
+    val header = e.component as? JTableHeader ?: return
+    val model = table.model
+    val vci = header.columnAtPoint(e.point)
+    val mci = table.convertColumnIndexToModel(vci)
+    if (header.isEnabled && mci == targetColumnIndex && model.rowCount > 0) {
+      val column = table.columnModel.getColumn(vci)
+      val selected = column.headerValue === Status.DESELECTED
+      setAllValues(model, selected)
+      setHeaderStatus(vci, if (selected) Status.SELECTED else Status.DESELECTED)
     }
   }
 
-  private fun toggleAllRows(model: TableModel, columnIndex: Int, selected: Boolean) {
-    for (i in 0..<model.rowCount) {
-      model.setValueAt(selected, i, columnIndex)
+  private fun setAllValues(model: TableModel, selected: Boolean) {
+    // Suppress the header state check for each row while updating all rows
+    model.removeTableModelListener(this)
+    try {
+      for (i in 0..<model.rowCount) {
+        model.setValueAt(selected, i, targetColumnIndex)
+      }
+    } finally {
+      model.addTableModelListener(this)
     }
   }
 }
@@ -315,26 +295,9 @@ private class ComponentIcon(
 }
 
 private enum class Status {
-  SELECTED {
-    override fun configureHeaderCheckBox(check: JCheckBox) {
-      check.setSelected(true)
-      check.setIcon(null)
-    }
-  },
-  DESELECTED {
-    override fun configureHeaderCheckBox(check: JCheckBox) {
-      check.setSelected(false)
-      check.setIcon(null)
-    }
-  },
-  INDETERMINATE {
-    override fun configureHeaderCheckBox(check: JCheckBox) {
-      check.setSelected(false)
-      check.setIcon(IndeterminateIcon())
-    }
-  }, ;
-
-  abstract fun configureHeaderCheckBox(check: JCheckBox)
+  SELECTED,
+  DESELECTED,
+  INDETERMINATE,
 }
 
 private object LookAndFeelUtils {

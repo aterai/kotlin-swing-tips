@@ -7,11 +7,11 @@ import javax.swing.*
 import javax.swing.event.TableModelEvent
 import javax.swing.event.TableModelListener
 import javax.swing.plaf.ColorUIResource
+import javax.swing.plaf.synth.SynthUI
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.JTableHeader
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
-import javax.swing.table.TableColumn
 import javax.swing.table.TableModel
 
 fun createUI(): Component {
@@ -27,7 +27,14 @@ fun createUI(): Component {
     arrayOf(false, 7, "HHH"),
   )
   val model = object : DefaultTableModel(data, columnNames) {
-    override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
+    private val columnClasses = arrayOf(
+      Boolean::class.javaObjectType,
+      Int::class.javaObjectType,
+      String::class.java,
+    )
+
+    // getValueAt(0, column) throws an exception after all rows are deleted
+    override fun getColumnClass(column: Int) = columnClasses[column]
   }
   val table = object : JTable(model) {
     private val CHECKBOX_COLUMN = 0
@@ -45,13 +52,13 @@ fun createUI(): Component {
         val r = getDefaultRenderer(m.getColumnClass(i))
         SwingUtilities.updateComponentTreeUI(r as? Component)
       }
-      getColumnModel().getColumn(CHECKBOX_COLUMN).also {
-        it.headerRenderer = HeaderRenderer()
-        it.headerValue = Status.INDETERMINATE
+      val vci = convertColumnIndexToView(CHECKBOX_COLUMN)
+      getColumnModel().getColumn(vci).headerRenderer = HeaderRenderer()
+      handler = HeaderCheckBoxHandler(this, CHECKBOX_COLUMN).also {
+        it.updateHeaderState()
+        m.addTableModelListener(it)
+        getTableHeader().addMouseListener(it)
       }
-      handler = HeaderCheckBoxHandler(this, CHECKBOX_COLUMN)
-      m.addTableModelListener(handler)
-      getTableHeader().addMouseListener(handler)
     }
 
     override fun prepareEditor(
@@ -77,6 +84,18 @@ fun createUI(): Component {
 private class HeaderRenderer : TableCellRenderer {
   private val check = JCheckBox()
   private val label = JLabel("Check All")
+  private val icon = ComponentIcon(label)
+
+  init {
+    check.isOpaque = false
+    label.isOpaque = false
+    label.icon = ComponentIcon(check)
+    if (isSynth()) {
+      check.text = " "
+    }
+  }
+
+  private fun isSynth() = check.ui is SynthUI
 
   override fun getTableCellRendererComponent(
     table: JTable,
@@ -98,21 +117,12 @@ private class HeaderRenderer : TableCellRenderer {
       column,
     )
     if (c is JLabel) {
-      c.setOpaque(false)
-      check.setOpaque(false)
-      val isSynth = check
-        .getUI()
-        .javaClass
-        .getName()
-        .contains("Synth")
-      if (isSynth) {
-        check.setText(" ")
-        check.preferredSize = c.getPreferredSize()
+      c.isOpaque = false
+      if (isSynth()) {
+        check.preferredSize = c.preferredSize
       }
-      label.setOpaque(false)
-      label.setIcon(ComponentIcon(check))
-      c.setIcon(ComponentIcon(label))
-      c.setText(null)
+      c.icon = icon
+      c.text = null
     }
     return c
   }
@@ -166,118 +176,107 @@ private class HeaderCheckBoxHandler(
 ) : MouseAdapter(),
   TableModelListener {
   override fun tableChanged(e: TableModelEvent) {
-    val vci = table.convertColumnIndexToView(targetColumnIndex)
-    val col = table.columnModel.getColumn(vci)
-    val hv = col.headerValue
-    val m = table.model
-    val repaint = when (e.type) {
-      TableModelEvent.DELETE -> {
-        fireDeleteEvent(m, col, hv)
-      }
-
-      TableModelEvent.INSERT -> {
-        hv !== Status.INDETERMINATE &&
-          fireInsertEvent(m, col, hv, e)
-      }
-
-      TableModelEvent.UPDATE -> {
-        e.column == targetColumnIndex &&
-          fireUpdateEvent(m, col, hv)
-      }
-
-      else -> {
-        false
+    val col = e.column
+    val targetChanged = col == targetColumnIndex || col == TableModelEvent.ALL_COLUMNS
+    if (targetChanged && e.firstRow != TableModelEvent.HEADER_ROW) {
+      val vci = table.convertColumnIndexToView(targetColumnIndex)
+      if (vci >= 0) {
+        val column = table.columnModel.getColumn(vci)
+        val status = column.headerValue as? Status ?: Status.INDETERMINATE
+        val newStatus = if (e.type == TableModelEvent.DELETE) {
+          getStatusAfterDelete(status)
+        } else {
+          getStatusAfterChange(status, e)
+        }
+        setHeaderStatus(vci, newStatus)
       }
     }
-    if (repaint) {
+  }
+
+  fun updateHeaderState() {
+    val vci = table.convertColumnIndexToView(targetColumnIndex)
+    if (vci >= 0) {
+      val m = table.model
+      setHeaderStatus(vci, resolveStatus(m, 0, m.rowCount - 1))
+    }
+  }
+
+  private fun setHeaderStatus(vci: Int, status: Status) {
+    val column = table.columnModel.getColumn(vci)
+    if (column.headerValue !== status) {
+      column.headerValue = status
       val h = table.tableHeader
       h.repaint(h.getHeaderRect(vci))
     }
   }
 
-  private fun fireDeleteEvent(
-    m: TableModel,
-    column: TableColumn,
-    status: Any,
-  ): Boolean {
-    if (m.rowCount == 0) {
-      column.headerValue = Status.DESELECTED
-    } else if (status === Status.INDETERMINATE) {
-      var selected = true
-      var deselected = true
-      for (i in 0..<m.rowCount) {
-        val b = m.getValueAt(i, targetColumnIndex) as? Boolean ?: false
-        selected = selected and b
-        deselected = deselected and !b
-      }
-      when {
-        deselected -> column.headerValue = Status.DESELECTED
-        selected -> column.headerValue = Status.SELECTED
-      }
+  // TableModelEvent.DELETE: the deleted rows no longer exist in the model
+  private fun getStatusAfterDelete(status: Status): Status {
+    val m = table.model
+    val rowCount = m.rowCount
+    return when {
+      rowCount == 0 -> Status.DESELECTED
+      status == Status.INDETERMINATE -> resolveStatus(m, 0, rowCount - 1)
+      // Deleting rows from a uniform column does not change its state
+      else -> status
     }
-    return true
   }
 
-  private fun fireInsertEvent(
-    m: TableModel,
-    column: TableColumn,
-    status: Any,
-    e: TableModelEvent,
-  ): Boolean {
-    var selected = status === Status.DESELECTED
-    var deselected = status === Status.SELECTED
-    for (i in e.firstRow..<e.lastRow + 1) {
-      val b = m.getValueAt(i, targetColumnIndex) as? Boolean ?: false
-      selected = selected and b
-      deselected = deselected and !b
-    }
-    if (selected && m.rowCount == 1) {
-      column.headerValue = Status.SELECTED
-    } else if (selected || deselected) {
-      column.headerValue = Status.INDETERMINATE
+  // TableModelEvent.INSERT or TableModelEvent.UPDATE
+  private fun getStatusAfterChange(status: Status, e: TableModelEvent): Status {
+    val m = table.model
+    val lastIndex = m.rowCount - 1
+    val firstRow = maxOf(0, e.firstRow)
+    // fireTableDataChanged() sets lastRow to Integer.MAX_VALUE
+    val lastRow = minOf(e.lastRow, lastIndex)
+    val allRowsChanged = firstRow == 0 && lastRow == lastIndex
+    val isUpdate = e.type == TableModelEvent.UPDATE
+    return if (allRowsChanged || isUpdate && status == Status.INDETERMINATE) {
+      resolveStatus(m, 0, lastIndex)
     } else {
-      return false
+      // The unchanged rows are uniform (or already mixed if INDETERMINATE),
+      // so only the changed rows need to be checked
+      val changed = resolveStatus(m, firstRow, lastRow)
+      if (changed == status) status else Status.INDETERMINATE
     }
-    return true
   }
 
-  private fun fireUpdateEvent(
-    m: TableModel,
-    column: TableColumn,
-    status: Any,
-  ): Boolean {
-    if (status === Status.INDETERMINATE) {
-      var selected = true
-      var deselected = true
-      for (i in 0..<m.rowCount) {
-        val b = m.getValueAt(i, targetColumnIndex) as? Boolean ?: false
-        selected = selected and b
-        deselected = deselected and !b
-        if (selected == deselected) {
-          return false
-        }
-      }
-      column.headerValue = if (deselected) Status.DESELECTED else Status.SELECTED
-    } else {
-      column.headerValue = Status.INDETERMINATE
+  private fun resolveStatus(m: TableModel, firstRow: Int, lastRow: Int): Status {
+    val values = (firstRow..lastRow)
+      .asSequence()
+      .map { m.getValueAt(it, targetColumnIndex) == true }
+      .distinct()
+      .take(2)
+      .toList()
+    return when {
+      values.isEmpty() -> Status.DESELECTED
+      values.size == 1 -> if (values[0]) Status.SELECTED else Status.DESELECTED
+      else -> Status.INDETERMINATE
     }
-    return true
   }
 
   override fun mouseClicked(e: MouseEvent) {
     val header = e.component as? JTableHeader ?: return
-    val tbl = header.table
-    val columnModel = tbl.columnModel
-    val m = tbl.model
-    val vci = columnModel.getColumnIndexAtX(e.x)
-    val mci = tbl.convertColumnIndexToModel(vci)
-    if (mci == targetColumnIndex && m.rowCount > 0) {
-      val column = columnModel.getColumn(vci)
-      val b = column.headerValue === Status.DESELECTED
-      for (i in 0..<m.rowCount) {
-        m.setValueAt(b, i, mci)
+    val model = table.model
+    val vci = header.columnAtPoint(e.point)
+    val mci = table.convertColumnIndexToModel(vci)
+    if (header.isEnabled && mci == targetColumnIndex && model.rowCount > 0) {
+      val column = table.columnModel.getColumn(vci)
+      val selected = column.headerValue === Status.DESELECTED
+      setAllValues(model, selected)
+      setHeaderStatus(vci, if (selected) Status.SELECTED else Status.DESELECTED)
+    }
+  }
+
+  private fun setAllValues(model: TableModel, selected: Boolean) {
+    // Suppress the header state check for each row while updating all rows
+    model.removeTableModelListener(this)
+    try {
+      for (i in 0..<model.rowCount) {
+        model.setValueAt(selected, i, targetColumnIndex)
       }
-      column.headerValue = if (b) Status.SELECTED else Status.DESELECTED
+    } finally {
+      model.addTableModelListener(this)
     }
   }
 }
@@ -299,27 +298,19 @@ private class ComponentIcon(
   override fun getIconHeight() = cmp.preferredSize.height
 }
 
-private enum class Status {
-  SELECTED {
-    override fun configureHeaderCheckBox(check: JCheckBox) {
-      check.setSelected(true)
-      check.setEnabled(true)
-    }
-  },
-  DESELECTED {
-    override fun configureHeaderCheckBox(check: JCheckBox) {
-      check.setSelected(false)
-      check.setEnabled(true)
-    }
-  },
-  INDETERMINATE {
-    override fun configureHeaderCheckBox(check: JCheckBox) {
-      check.setSelected(true)
-      check.setEnabled(false)
-    }
-  }, ;
+private enum class Status(
+  private val selected: Boolean,
+  private val enabled: Boolean,
+) {
+  SELECTED(true, true),
+  DESELECTED(false, true),
+  INDETERMINATE(true, false),
+  ;
 
-  abstract fun configureHeaderCheckBox(check: JCheckBox)
+  fun configureHeaderCheckBox(check: JCheckBox) {
+    check.isSelected = selected
+    check.isEnabled = enabled
+  }
 }
 
 fun main() {
