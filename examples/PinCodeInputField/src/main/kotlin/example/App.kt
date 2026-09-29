@@ -23,15 +23,15 @@ fun createUI(): Component {
     override fun updateUI() {
       super.updateUI()
       setUI(object : BasicPasswordFieldUI() {
-        override fun create(elem: Element) = PasswordView2(elem)
+        override fun create(elem: Element) = RevealLastCharPasswordView(elem)
       })
     }
   }
 
   val box = Box.createVerticalBox()
-  box.add(makePasswordField(JPasswordField(6)))
+  box.add(createPinField(JPasswordField(6)))
   box.add(Box.createVerticalStrut(10))
-  box.add(makePasswordField(password))
+  box.add(createPinField(password))
 
   return JPanel(GridBagLayout()).also {
     it.add(box)
@@ -39,7 +39,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makePasswordField(password: JPasswordField): Component {
+private fun createPinField(password: JPasswordField): Component {
   password.caret = object : DefaultCaret() {
     override fun isSelectionVisible() = false
   }
@@ -73,15 +73,27 @@ private fun makePasswordField(password: JPasswordField): Component {
 
 private class PinCodeDocumentFilter : DocumentFilter() {
   @Throws(BadLocationException::class)
+  override fun insertString(
+    fb: FilterBypass,
+    offset: Int,
+    text: String?,
+    attrs: AttributeSet?,
+  ) {
+    replace(fb, offset, 0, text, attrs)
+  }
+
+  @Throws(BadLocationException::class)
   override fun replace(
     fb: FilterBypass,
     offset: Int,
     length: Int,
-    text: String,
+    text: String?,
     attrs: AttributeSet?,
   ) {
-    val str = fb.document.getText(0, fb.document.length) + text
-    if (str.length <= MAX && str.matches("\\d+".toRegex())) {
+    val doc = fb.document
+    val sb = StringBuilder(doc.getText(0, doc.length))
+    sb.replace(offset, offset + length, text ?: "")
+    if (sb.length <= MAX && sb.toString().matches("\\d*".toRegex())) {
       super.replace(fb, offset, length, text, attrs)
     }
   }
@@ -91,7 +103,7 @@ private class PinCodeDocumentFilter : DocumentFilter() {
   }
 }
 
-private class PasswordView2(
+private class RevealLastCharPasswordView(
   elem: Element,
 ) : PasswordView(elem) {
   @Throws(BadLocationException::class)
@@ -124,7 +136,7 @@ private class PasswordView2(
       val n = p1 - p0
       for (i in 0..<n) {
         j = if (i == n - 1) {
-          drawLastChar(g2, j, y, i)
+          drawLastChar(g2, j, y, p0 + i)
         } else {
           drawEchoCharacter(g, j, y, echoChar)
         }
@@ -138,7 +150,7 @@ private class PasswordView2(
     g: Graphics,
     x: Int,
     y: Int,
-    p1: Int,
+    pos: Int,
   ): Int {
     val font = g.font
     val frc = g.fontMetrics.fontRenderContext
@@ -146,8 +158,8 @@ private class PasswordView2(
     val sz = ((font.size2D - w) / 2.0).toInt()
     val doc = document
     val s = Segment()
-    doc.getText(p1, 1, s)
-    return Utilities.drawTabbedText(s, x + sz, y, g, this, p1)
+    doc.getText(pos, 1, s)
+    return Utilities.drawTabbedText(s, x + sz, y, g, this, pos)
   }
 }
 
