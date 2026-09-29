@@ -8,7 +8,7 @@ fun createUI(): Component {
     it.add("JMenuItem:0")
     it.add("JMenuItem:1")
   }
-  val sub1 = makeMenu("JMenu(0..2000)", 2000).also {
+  val sub1 = createMenu("JMenu(0..2000)", 2000).also {
     it.add("JMenuItem:2")
     it.add("JMenuItem:3")
   }
@@ -22,7 +22,7 @@ fun createUI(): Component {
   model.addChangeListener { sub1.setDelay(model.number.toInt()) }
 
   val mb = JMenuBar()
-  mb.add(makeTopLevelMenu())
+  mb.add(createTopLevelMenu())
   mb.add(LookAndFeelUtils.createLookAndFeelMenu())
 
   return JPanel().also {
@@ -33,7 +33,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeTopLevelMenu(): JMenu {
+private fun createTopLevelMenu(): JMenu {
   val menu = JMenu("JMenu#setDelay(...)").also {
     it.add("JMenuItem1")
     it.add("JMenuItem2")
@@ -43,17 +43,17 @@ private fun makeTopLevelMenu(): JMenu {
     it.add("JMenuItem5")
   }
   menu.add(sub)
-  val sub0 = makeMenu("JMenu(0)", 0).also {
+  val sub0 = createMenu("JMenu(0)", 0).also {
     it.add("JMenuItem6")
     it.add("JMenuItem7")
   }
   menu.add(sub0)
-  val sub1 = makeMenu("JMenu(2000)", 2000).also {
+  val sub1 = createMenu("JMenu(2000)", 2000).also {
     it.add("JMenuItem8")
     it.add("JMenuItem9")
   }
   menu.add(sub1)
-  val sub2 = makeMenu("JMenu(500)", 500).also {
+  val sub2 = createMenu("JMenu(500)", 500).also {
     it.add("JMenuItem10")
     it.add("JMenuItem11")
   }
@@ -62,7 +62,7 @@ private fun makeTopLevelMenu(): JMenu {
   return menu
 }
 
-private fun makeMenu(
+private fun createMenu(
   title: String,
   delay: Int,
 ): JMenu {
@@ -104,8 +104,7 @@ private object LookAndFeelUtils {
     UnsupportedLookAndFeelException::class,
   )
   private fun setLookAndFeel(newLookAndFeel: String) {
-    val oldLookAndFeel = lookAndFeel
-    if (oldLookAndFeel != newLookAndFeel) {
+    if (lookAndFeel != newLookAndFeel) {
       UIManager.setLookAndFeel(newLookAndFeel)
       lookAndFeel = newLookAndFeel
       updateLookAndFeel()
