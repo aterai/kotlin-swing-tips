@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellEditor
 import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableModel
+import kotlin.math.ceil
 
 fun createUI(): Component {
   val mb = JMenuBar()
@@ -65,7 +66,7 @@ private class TranslucentCellSelectionTable(
     if (getUI() is SynthTableUI) {
       setDefaultRenderer(
         Boolean::class.javaObjectType,
-        SynthBooleanTableCellRenderer2(),
+        SynthBooleanTableCellRenderer(),
       )
     }
   }
@@ -113,15 +114,17 @@ private class TranslucentCellSelectionTable(
 }
 
 private class TranslucentCellSelectionLayerUI : LayerUI<JScrollPane>() {
-  private var table: JTable? = null
+  private var focusedTable: JTable? = null
   private var borderStroke = BORDER_STROKE1
-  private var flg = false
   private val animator = Timer(480) {
-    table?.also {
+    focusedTable?.also {
       if (!it.isEditing) {
-        borderStroke = if (flg) BORDER_STROKE1 else BORDER_STROKE2
-        repaintSelectedArea(it)
-        flg = !flg
+        borderStroke = if (borderStroke === BORDER_STROKE1) {
+          BORDER_STROKE2
+        } else {
+          BORDER_STROKE1
+        }
+        repaintSelectedCells(it)
       }
     }
   }
@@ -134,6 +137,7 @@ private class TranslucentCellSelectionLayerUI : LayerUI<JScrollPane>() {
   }
 
   override fun uninstallUI(c: JComponent?) {
+    animator.stop()
     if (c is JLayer<*>) {
       c.setLayerEventMask(0)
     }
@@ -141,47 +145,45 @@ private class TranslucentCellSelectionLayerUI : LayerUI<JScrollPane>() {
   }
 
   override fun processFocusEvent(e: FocusEvent, l: JLayer<out JScrollPane?>?) {
-    table = getTable(l)
+    super.processFocusEvent(e, l)
     if (e.getID() == FocusEvent.FOCUS_GAINED) {
+      focusedTable = getTable(l)
       animator.start()
     } else {
       animator.stop()
     }
-    super.processFocusEvent(e, l)
   }
 
   override fun paint(g: Graphics, c: JComponent?) {
     super.paint(g, c)
-    getTable(c)?.also { tbl ->
-      val cc = tbl.selectedColumnCount
-      val rc = tbl.selectedRowCount
-      if (cc != 0 && rc != 0 && !tbl.isEditing) {
-        val g2 = g.create() as? Graphics2D ?: return
-        g2.setRenderingHint(
-          RenderingHints.KEY_ANTIALIASING,
-          RenderingHints.VALUE_ANTIALIAS_ON,
-        )
-        val area = Area()
-        getSelectedArea(tbl).forEach { r ->
-          val rect = SwingUtilities.convertRectangle(tbl, r, c)
-          area.add(Area(rect))
-        }
-        val ics = tbl.intercellSpacing
-        val v = tbl.selectionBackground
-        val sbc = Color(v.red, v.green, v.blue, 0x32)
-        for (a in splitIntoSingleLoopAreas(area)) {
-          val r = a.bounds
-          r.width -= ics.width - 1
-          r.height -= ics.height - 1
-          g2.paint = sbc
-          g2.fill(r)
-          g2.paint = v
-          g2.stroke = borderStroke
-          g2.draw(r)
-        }
-        g2.dispose()
-      }
+    val tbl = getTable(c)
+    if (tbl == null || tbl.isEditing || !hasSelectedCells(tbl)) {
+      return
     }
+    val area = Area()
+    getSelectedCellRects(tbl).forEach { r ->
+      val rect = SwingUtilities.convertRectangle(tbl, r, c)
+      area.add(Area(rect))
+    }
+    val g2 = g.create() as? Graphics2D ?: return
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
+    val ics = tbl.intercellSpacing
+    val v = tbl.selectionBackground
+    val sbc = Color(v.red, v.green, v.blue, 0x32)
+    g2.stroke = borderStroke
+    for (a in splitIntoSingleLoopAreas(area)) {
+      val r = a.bounds
+      r.width -= ics.width - 1
+      r.height -= ics.height - 1
+      g2.paint = sbc
+      g2.fill(r)
+      g2.paint = v
+      g2.draw(r)
+    }
+    g2.dispose()
   }
 
   companion object {
@@ -205,7 +207,10 @@ private class TranslucentCellSelectionLayerUI : LayerUI<JScrollPane>() {
       2f,
     )
 
-    private fun getSelectedArea(tbl: JTable): MutableList<Rectangle> {
+    private fun hasSelectedCells(tbl: JTable) =
+      tbl.selectedRowCount > 0 && tbl.selectedColumnCount > 0
+
+    private fun getSelectedCellRects(tbl: JTable): List<Rectangle> {
       val list = mutableListOf<Rectangle>()
       for (row in tbl.selectedRows) {
         for (col in tbl.selectedColumns) {
@@ -217,25 +222,20 @@ private class TranslucentCellSelectionLayerUI : LayerUI<JScrollPane>() {
       return list
     }
 
-    private fun repaintSelectedArea(tbl: JTable) {
-      val cc = tbl.selectedColumnCount
-      val rc = tbl.selectedRowCount
-      if (cc != 0 && rc != 0) {
-        val area = Area()
-        getSelectedArea(tbl).forEach { area.add(Area(it)) }
-        tbl.repaint(area.bounds)
+    private fun repaintSelectedCells(tbl: JTable) {
+      getSelectedCellRects(tbl).reduceOrNull { a, b -> a.union(b) }?.also {
+        // Grow the dirty region by the stroke width, since the dashed border
+        // is drawn centered on the edge of the selected area.
+        val w = ceil(WIDTH).toInt()
+        it.grow(w, w)
+        tbl.repaint(it)
       }
     }
 
     private fun getTable(c: Component?): JTable? {
-      var table: JTable? = null
-      if (c is JLayer<*>) {
-        val c1: Component? = c.getView()
-        if (c1 is JScrollPane) {
-          table = c1.getViewport().view as? JTable
-        }
-      }
-      return table
+      val sp = (c as? JLayer<*>)?.view
+      val v = (sp as? JScrollPane)?.viewport?.view
+      return v as? JTable
     }
 
     fun splitIntoSingleLoopAreas(rect: Area): List<Area> {
@@ -285,7 +285,7 @@ private class TranslucentCellSelectionLayerUI : LayerUI<JScrollPane>() {
   }
 }
 
-private class SynthBooleanTableCellRenderer2 :
+private class SynthBooleanTableCellRenderer :
   JCheckBox(),
   TableCellRenderer {
   override fun getTableCellRendererComponent(
