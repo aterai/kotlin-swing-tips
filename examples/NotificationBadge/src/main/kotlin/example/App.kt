@@ -40,7 +40,7 @@ fun createUI(): Component {
 private class BadgeLabel(
   image: Icon?,
   val badgePosition: BadgePosition,
-  val counter: Int,
+  val count: Int,
 ) : JLabel(image)
 
 private open class BadgeLayerUI : LayerUI<BadgeLabel>() {
@@ -77,45 +77,49 @@ private open class BadgeLayerUI : LayerUI<BadgeLabel>() {
         textRect,
         label.iconTextGap,
       )
-      val badge = getBadgeIcon(label.counter)
-      val badgePosition = label.badgePosition
-      val pt = badgePosition.getLocation(iconRect, badge, OFFSET)
-      g2.translate(pt.x, pt.y)
-      badge.paintIcon(label, g2, 0, 0)
+      val badge = getBadgeIcon(label.count)
+      val pt = label.badgePosition.getLocation(iconRect, badge, OFFSET)
+      badge.paintIcon(label, g2, pt.x, pt.y)
       g2.dispose()
     }
   }
 
   open fun getBadgeIcon(count: Int) =
-    BadgeIcon(count, Color.WHITE, Color(0xAA_FF_16_16.toInt(), true))
+    BadgeIcon(count, Color.WHITE, BADGE_BACKGROUND)
 
   companion object {
     private val OFFSET = Point(6, 2)
+    private val BADGE_BACKGROUND = Color(0xAA_FF_16_16.toInt(), true)
   }
 }
 
 private class BadgeIconLayerUI : BadgeLayerUI() {
   override fun getBadgeIcon(count: Int) =
-    object : BadgeIcon(count, Color.WHITE, Color(0xAA_16_16_16.toInt(), true)) {
+    object : BadgeIcon(count, Color.WHITE, BADGE_BACKGROUND) {
       override val badgeShape: Shape
         get() = RoundRectangle2D.Double(
           0.0,
           0.0,
-          iconWidth.toDouble(),
-          iconHeight.toDouble(),
+          iconWidth - 1.0,
+          iconHeight - 1.0,
           5.0,
           5.0,
         )
     }
+
+  companion object {
+    private val BADGE_BACKGROUND = Color(0xAA_16_16_16.toInt(), true)
+  }
 }
 
 private open class BadgeIcon(
   private val value: Int,
-  private val badgeFgc: Color,
-  private val badgeBgc: Color,
+  private val foreground: Color,
+  private val background: Color,
 ) : Icon {
+  // Subtract 1px so that the outline stroke stays within the icon bounds
   open val badgeShape: Shape
-    get() = Ellipse2D.Double(0.0, 0.0, iconWidth.toDouble(), iconHeight.toDouble())
+    get() = Ellipse2D.Double(0.0, 0.0, iconWidth - 1.0, iconHeight - 1.0)
 
   override fun paintIcon(
     c: Component,
@@ -127,31 +131,36 @@ private open class BadgeIcon(
     if (value > 0 && g2 is Graphics2D) {
       g2.translate(x, y)
       val badge = badgeShape
-      g2.paint = badgeBgc
+      g2.paint = background
       g2.fill(badge)
-      g2.paint = badgeBgc.darker()
+      g2.paint = background.darker()
       g2.draw(badge)
-      g2.paint = badgeFgc
+      g2.paint = foreground
       val frc = g2.fontRenderContext
-      val txt = if (value > 999) "1K" else value.toString()
+      val txt = if (value < 1_000) value.toString() else "${minOf(value / 1_000, 99)}K"
       val at = if (txt.length < 3) {
         null
       } else {
         AffineTransform.getScaleInstance(.66, 1.0)
       }
       val shape = TextLayout(txt, g2.font, frc).getOutline(at)
-      val b = shape.bounds
-      val tx = iconWidth / 2.0 - b.centerX
-      val ty = iconHeight / 2.0 - b.centerY
+      val b = shape.bounds2D
+      val r = badge.bounds2D
+      val tx = r.centerX - b.centerX
+      val ty = r.centerY - b.centerY
       val toCenterAt = AffineTransform.getTranslateInstance(tx, ty)
       g2.fill(toCenterAt.createTransformedShape(shape))
     }
     g2.dispose()
   }
 
-  override fun getIconWidth() = 17
+  override fun getIconWidth() = SIZE
 
-  override fun getIconHeight() = 17
+  override fun getIconHeight() = SIZE
+
+  companion object {
+    private const val SIZE = 17
+  }
 }
 
 private enum class BadgePosition {
