@@ -171,16 +171,16 @@ private class TranslucentCellSelectionLayerUI : LayerUI<JScrollPane>() {
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
     val ics = tbl.intercellSpacing
-    val v = tbl.selectionBackground
-    val sbc = Color(v.red, v.green, v.blue, 0x32)
+    val sbc = tbl.selectionBackground
+    val fillColor = Color(sbc.red, sbc.green, sbc.blue, 0x32)
     g2.stroke = borderStroke
     for (a in splitIntoSingleLoopAreas(area)) {
       val r = a.bounds
       r.width -= ics.width - 1
       r.height -= ics.height - 1
-      g2.paint = sbc
+      g2.paint = fillColor
       g2.fill(r)
-      g2.paint = v
+      g2.paint = sbc
       g2.draw(r)
     }
     g2.dispose()
@@ -238,10 +238,10 @@ private class TranslucentCellSelectionLayerUI : LayerUI<JScrollPane>() {
       return v as? JTable
     }
 
-    fun splitIntoSingleLoopAreas(rect: Area): List<Area> {
-      val subArea = mutableListOf<Area>()
+    fun splitIntoSingleLoopAreas(area: Area): List<Area> {
+      val subAreas = mutableListOf<Area>()
       val path = Path2D.Double()
-      val pi = rect.getPathIterator(null)
+      val pi = area.getPathIterator(null)
       val coords = DoubleArray(6)
       while (!pi.isDone) {
         val pathSegmentType = pi.currentSegment(coords)
@@ -274,13 +274,13 @@ private class TranslucentCellSelectionLayerUI : LayerUI<JScrollPane>() {
 
           PathIterator.SEG_CLOSE -> path.also {
             it.closePath()
-            subArea.add(Area(it))
+            subAreas.add(Area(it))
             it.reset()
           }
         }
         pi.next()
       }
-      return subArea
+      return subAreas
     }
   }
 }
