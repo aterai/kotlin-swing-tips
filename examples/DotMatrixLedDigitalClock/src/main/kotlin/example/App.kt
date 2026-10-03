@@ -5,6 +5,7 @@ import java.awt.event.HierarchyEvent
 import java.awt.event.HierarchyListener
 import java.time.LocalTime
 import java.time.ZoneId
+import java.time.temporal.ChronoUnit
 import javax.swing.*
 
 private const val RADIX = 10
@@ -13,7 +14,14 @@ private const val TIMER_DELAY_MS = 100
 private const val LIST_GAP = 10
 private const val DIGIT_COLUMNS = 4
 private const val DIGIT_ROWS = 7
-private val HOUR_MIN_DOT_SIZE = Dimension(10, 10)
+private const val COLON_COLUMNS = 1
+
+// H H : M M -> 4 digits, 1 colon and 4 gaps between the blocks
+private const val HH_MM_COLUMNS = DIGIT_COLUMNS * 4 + COLON_COLUMNS + BLOCK_GAP * 4
+
+// S S -> 2 digits and 1 gap
+private const val SECONDS_COLUMNS = DIGIT_COLUMNS * 2 + BLOCK_GAP
+private val HH_MM_DOT_SIZE = Dimension(10, 10)
 private val SECONDS_DOT_SIZE = Dimension(8, 8)
 private val DIGIT_PATTERNS = listOf(
   setOf(0, 1, 2, 3, 4, 5, 6, 7, 13, 14, 20, 21, 22, 23, 24, 25, 26, 27),
@@ -30,25 +38,26 @@ private val DIGIT_PATTERNS = listOf(
 private val COLON_DOT_ROWS = listOf(2, 4)
 
 private val timer = Timer(TIMER_DELAY_MS, null)
-private var time = LocalTime.now(ZoneId.systemDefault())
+private var time = now()
 
 fun createUI(): Component {
-  val hoursMinutesModel = object : DefaultListModel<Boolean>() {
-    override fun getElementAt(index: Int) = isHourMinuteDotLit(time, index)
-  }
-  hoursMinutesModel.setSize((DIGIT_COLUMNS * 4 + 5) * DIGIT_ROWS)
-  val hoursMinutesList = createLedDotMatrixList(hoursMinutesModel, HOUR_MIN_DOT_SIZE)
-
-  val secondsModel = object : DefaultListModel<Boolean>() {
-    override fun getElementAt(index: Int) = isSecondDotLit(time, index)
-  }
-  secondsModel.setSize((DIGIT_COLUMNS * 2 + 1) * DIGIT_ROWS)
-  val secondsList = createLedDotMatrixList(secondsModel, SECONDS_DOT_SIZE)
+  val hoursMinutesList = createLedDotMatrixList(
+    createDotMatrixModel(HH_MM_COLUMNS) { isHoursMinutesDotLit(time, it) },
+    HH_MM_DOT_SIZE,
+  )
+  val secondsList = createLedDotMatrixList(
+    createDotMatrixModel(SECONDS_COLUMNS) { isSecondsDotLit(time, it) },
+    SECONDS_DOT_SIZE,
+  )
 
   timer.addActionListener {
-    time = LocalTime.now(ZoneId.systemDefault())
-    hoursMinutesList.repaint()
-    secondsList.repaint()
+    // The display only changes once per second, so skip redundant repaints.
+    val current = now()
+    if (current != time) {
+      time = current
+      hoursMinutesList.repaint()
+      secondsList.repaint()
+    }
   }
   hoursMinutesList.alignmentY = Component.BOTTOM_ALIGNMENT
   secondsList.alignmentY = Component.BOTTOM_ALIGNMENT
@@ -82,64 +91,58 @@ fun createUI(): Component {
   return p
 }
 
-private fun isDigitDotLit(
-  index: Int,
-  blockStart: Int,
-  blockEnd: Int,
-  digit: Int,
-) = index < blockEnd * DIGIT_ROWS &&
-  DIGIT_PATTERNS[digit].contains(index - blockStart * DIGIT_ROWS)
+private fun now() = LocalTime.now(ZoneId.systemDefault()).truncatedTo(ChronoUnit.SECONDS)
 
-private fun isHourMinuteDotLit(time: LocalTime, index: Int): Boolean {
-  val hour = time.hour
-  val hourTens = hour / RADIX
-  var blockStart = 0
-  var blockEnd = DIGIT_COLUMNS
-  // Blank the hour's leading zero: the tens digit only lights up when hour >= 10.
-  var lit = isDigitDotLit(index, blockStart, blockEnd, hourTens) && hour >= RADIX
+private fun createDotMatrixModel(
+  columns: Int,
+  isLit: (Int) -> Boolean,
+) = object : AbstractListModel<Boolean>() {
+  override fun getSize() = columns * DIGIT_ROWS
 
-  val hourUnits = hour - hourTens * RADIX
-  blockStart = blockEnd + BLOCK_GAP
-  blockEnd = blockStart + DIGIT_COLUMNS
-  lit = lit or isDigitDotLit(index, blockStart, blockEnd, hourUnits)
-
-  // Blink the colon dots once per second, on for even seconds and off for odd seconds.
-  val secondUnits = time.second % RADIX
-  blockStart = blockEnd + BLOCK_GAP
-  blockEnd = blockStart + BLOCK_GAP
-  val b1 = index < blockEnd * DIGIT_ROWS
-  val b2 = secondUnits % 2 == 0
-  val b3 = COLON_DOT_ROWS.contains(index - blockStart * DIGIT_ROWS)
-  lit = lit or (b1 && b2 && b3)
-
-  val minute = time.minute
-  val minuteTens = minute / RADIX
-  blockStart = blockEnd + BLOCK_GAP
-  blockEnd = blockStart + DIGIT_COLUMNS
-  lit = lit or isDigitDotLit(index, blockStart, blockEnd, minuteTens)
-
-  val minuteUnits = minute - minuteTens * RADIX
-  blockStart = blockEnd + BLOCK_GAP
-  blockEnd = blockStart + DIGIT_COLUMNS
-  lit = lit or isDigitDotLit(index, blockStart, blockEnd, minuteUnits)
-
-  return lit
+  override fun getElementAt(index: Int) = isLit(index)
 }
 
-private fun isSecondDotLit(
+// Every value in DIGIT_PATTERNS is within [0, DIGIT_COLUMNS * DIGIT_ROWS), so the
+// index relative to a block that starts at another column is either negative or
+// too large and simply misses the set: no bounds check is needed.
+private fun isDigitDotLit(
+  index: Int,
+  startColumn: Int,
+  digit: Int,
+) = DIGIT_PATTERNS[digit].contains(index - startColumn * DIGIT_ROWS)
+
+private fun isHoursMinutesDotLit(
+  time: LocalTime,
+  index: Int,
+): Boolean {
+  val hour = time.hour
+  var column = 0
+  // Blank the hour's leading zero: the tens digit only lights up when hour >= 10.
+  var lit = hour >= RADIX && isDigitDotLit(index, column, hour / RADIX)
+
+  column += DIGIT_COLUMNS + BLOCK_GAP
+  lit = lit || isDigitDotLit(index, column, hour % RADIX)
+
+  // Blink the colon dots once per second, on for even seconds and off for odd seconds.
+  column += DIGIT_COLUMNS + BLOCK_GAP
+  lit = lit || time.second % 2 == 0 &&
+    COLON_DOT_ROWS.contains(index - column * DIGIT_ROWS)
+
+  val minute = time.minute
+  column += COLON_COLUMNS + BLOCK_GAP
+  lit = lit || isDigitDotLit(index, column, minute / RADIX)
+
+  column += DIGIT_COLUMNS + BLOCK_GAP
+  return lit || isDigitDotLit(index, column, minute % RADIX)
+}
+
+private fun isSecondsDotLit(
   time: LocalTime,
   index: Int,
 ): Boolean {
   val second = time.second
-  val secondTens = second / RADIX
-  var blockStart = 0
-  var blockEnd = DIGIT_COLUMNS
-  val lit = isDigitDotLit(index, blockStart, blockEnd, secondTens)
-
-  val secondUnits = second - secondTens * RADIX
-  blockStart = blockEnd + BLOCK_GAP
-  blockEnd = blockStart + DIGIT_COLUMNS
-  return lit || isDigitDotLit(index, blockStart, blockEnd, secondUnits)
+  return isDigitDotLit(index, 0, second / RADIX) ||
+    isDigitDotLit(index, DIGIT_COLUMNS + BLOCK_GAP, second % RADIX)
 }
 
 private fun createLedDotMatrixList(
