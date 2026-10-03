@@ -4,69 +4,63 @@ import java.awt.*
 import java.awt.event.ItemEvent
 import java.awt.event.ItemListener
 import java.util.Collections
+import java.util.concurrent.ExecutionException
 import javax.swing.*
 
-private const val MIN_X = 5
-private const val MIN_Y = 5
-private const val MAX_X = 315
-private const val MAX_Y = 175
-private const val MIN_NUM = 50
-private const val MAX_NUM = 500
-private val DRAW_COLOR = Color.BLACK
-private val BACK_COLOR = Color.WHITE
+private val DOT_COLOR = Color.BLACK
+private val MARKER_COLOR = Color.RED
+private const val MIN_NUMBER = 50
+private const val MAX_NUMBER = 500
+private val plotArea = Rectangle(5, 5, 310, 170)
 
-private val array = mutableListOf<Double>()
-private var number = 150
-private var fax = 0.0
-private var fay = 0.0
-
-private var worker: SwingWorker<String, Rectangle>? = null
-private val distributionsCmb = JComboBox(GenerateInputs.entries.toTypedArray())
-private val algorithmsCmb = JComboBox(SortAlgorithms.entries.toTypedArray())
-private val model = SpinnerNumberModel(number, MIN_NUM, MAX_NUM, 10)
-private val spinner = JSpinner(model)
+// The list is modified by the SwingWorker thread and read by the EDT
+private val array = Collections.synchronizedList(ArrayList<Double>(MAX_NUMBER))
+private val distributionCombo = JComboBox(InputDistribution.entries.toTypedArray())
+private val algorithmCombo = JComboBox(SortAlgorithm.entries.toTypedArray())
+private val numberModel = SpinnerNumberModel(150, MIN_NUMBER, MAX_NUMBER, 10)
+private val numberSpinner = JSpinner(numberModel)
 private val startButton = JButton("Start")
 private val cancelButton = JButton("Cancel")
-val panel = object : JPanel() {
+private val canvas = object : JPanel() {
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
-    drawAllOval(g)
+    drawDots(g)
   }
 }
+private var worker: SwingWorker<String, Rectangle>? = null
+private var needsRegeneration = false
 
 fun createUI(): Component {
-  genArray(number)
-  startButton.addActionListener {
-    setComponentEnabled(false)
-    panel.toolTipText = null
-    workerExecute()
-  }
+  generateArray()
+  setComponentsEnabled(true)
+
+  startButton.addActionListener { startSorting() }
   cancelButton.addActionListener {
     worker?.takeUnless { it.isDone }?.cancel(true)
   }
-  val il = ItemListener { e ->
+
+  val listener = ItemListener { e ->
     if (e.stateChange == ItemEvent.SELECTED) {
-      genArray(number)
-      panel.toolTipText = null
-      panel.repaint()
+      resetArray()
     }
   }
-  distributionsCmb.addItemListener(il)
-  algorithmsCmb.addItemListener(il)
-  panel.background = BACK_COLOR
+  distributionCombo.addItemListener(listener)
+  algorithmCombo.addItemListener(listener)
+  numberSpinner.addChangeListener { resetArray() }
+  canvas.background = Color.WHITE
 
   val box1 = Box.createHorizontalBox().also {
     it.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
     it.add(JLabel(" Number:"))
-    it.add(spinner)
+    it.add(numberSpinner)
     it.add(JLabel(" Input:"))
-    it.add(distributionsCmb)
+    it.add(distributionCombo)
   }
 
   val box2 = Box.createHorizontalBox().also {
     it.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
     it.add(JLabel(" Algorithm:"))
-    it.add(algorithmsCmb)
+    it.add(algorithmCombo)
     it.add(startButton)
     it.add(cancelButton)
   }
@@ -79,82 +73,85 @@ fun createUI(): Component {
 
   return JPanel(BorderLayout()).also {
     it.add(p, BorderLayout.NORTH)
-    it.add(panel)
+    it.add(canvas)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-fun drawAllOval(g: Graphics) {
-  for (i in 0..<number) {
-    val px = (MIN_X + fax * i).toInt()
-    val py = MAX_Y - (fay * array[i]).toInt()
-    g.color = if (i % 5 == 0) Color.RED else DRAW_COLOR
-    g.drawOval(px, py, 4, 4)
+private fun drawDots(g: Graphics) {
+  val size = array.size
+  for (i in 0..<size) {
+    val r = SortingTask.getDotBounds(plotArea, size, i, array[i])
+    g.color = if (i % 5 == 0) MARKER_COLOR else DOT_COLOR
+    g.drawOval(r.x, r.y, r.width, r.height)
   }
 }
 
-fun setComponentEnabled(flag: Boolean) {
-  cancelButton.isEnabled = !flag
-  startButton.isEnabled = flag
-  spinner.isEnabled = flag
-  distributionsCmb.isEnabled = flag
-  algorithmsCmb.isEnabled = flag
+private fun setComponentsEnabled(enabled: Boolean) {
+  cancelButton.isEnabled = !enabled
+  startButton.isEnabled = enabled
+  numberSpinner.isEnabled = enabled
+  distributionCombo.isEnabled = enabled
+  algorithmCombo.isEnabled = enabled
 }
 
-fun genArray(n: Int) {
+private fun generateArray() {
+  val distribution = distributionCombo.getItemAt(distributionCombo.selectedIndex)
   array.clear()
-  fax = (MAX_X - MIN_X) / n.toDouble()
-  fay = MAX_Y.toDouble() - MIN_Y
-  distributionsCmb.getItemAt(distributionsCmb.selectedIndex).generate(array, n)
+  distribution.generate(array, numberModel.number.toInt())
+  needsRegeneration = false
 }
 
-fun workerExecute() {
-  val tmp = model.number.toInt()
-  if (tmp != number) {
-    number = tmp
-    genArray(number)
+private fun resetArray() {
+  generateArray()
+  canvas.toolTipText = null
+  canvas.repaint()
+}
+
+private fun startSorting() {
+  // The previous run has already sorted (or partially sorted) the array
+  if (needsRegeneration) {
+    generateArray()
+    canvas.repaint()
   }
-  val sa = algorithmsCmb.getItemAt(algorithmsCmb.selectedIndex)
-  val paintArea = Rectangle(MIN_X, MIN_Y, MAX_X - MIN_X, MAX_Y - MIN_Y)
-  worker = object : SortingTask(sa, number, array, paintArea, fax, fay) {
+  needsRegeneration = true
+  setComponentsEnabled(false)
+  canvas.toolTipText = null
+  val algorithm = algorithmCombo.getItemAt(algorithmCombo.selectedIndex)
+  worker = object : SortingTask(algorithm, array, plotArea) {
     override fun process(chunks: List<Rectangle>) {
-      if (panel.isDisplayable && !isCancelled) {
-        chunks.forEach(panel::repaint)
+      if (canvas.isDisplayable && !isCancelled) {
+        chunks.forEach(canvas::repaint)
       } else {
         cancel(true)
       }
     }
 
     override fun done() {
-      setComponentEnabled(true)
-      panel.toolTipText = runCatching {
-        if (isCancelled) "Cancelled" else get()
-      }.onFailure {
-        if (it is InterruptedException) {
-          Thread.currentThread().interrupt()
-        }
-        "Error: ${it.message}"
-      }.getOrNull()
-      panel.repaint()
+      if (canvas.isDisplayable) {
+        setComponentsEnabled(true)
+        canvas.toolTipText = getDoneMessage()
+        canvas.repaint()
+      }
     }
   }.also { it.execute() }
 }
 
-private enum class SortAlgorithms(
+private enum class SortAlgorithm(
   private val description: String,
 ) {
-  ISORT("Insertion Sort"),
-  SELSORT("Selection Sort"),
-  SHELLSORT("Shell Sort"),
-  HSORT("Heap Sort"),
-  QSORT("Quicksort"),
-  QSORT2("2-way Quicksort"),
+  INSERTION("Insertion Sort"),
+  SELECTION("Selection Sort"),
+  SHELL("Shell Sort"),
+  HEAP("Heap Sort"),
+  QUICK("Quicksort"),
+  TWO_WAY_QUICK("2-way Quicksort"),
   ;
 
   override fun toString() = description
 }
 
-private enum class GenerateInputs {
+private enum class InputDistribution {
   RANDOM {
     override fun generate(
       array: MutableList<Double>,
@@ -199,31 +196,35 @@ private enum class GenerateInputs {
 // http://www.cs.bell-labs.com/cm/cs/pearls/sortanim.html
 // modified by aterai aterai@outlook.com
 private open class SortingTask(
-  private val sortAlgorithm: SortAlgorithms,
-  private val number: Int,
-  private val array: List<Double>,
-  private val rect: Rectangle,
-  private val fax: Double,
-  private val fay: Double,
+  private val algorithm: SortAlgorithm,
+  private val array: MutableList<Double>,
+  area: Rectangle,
 ) : SwingWorker<String, Rectangle>() {
-  private val repaintArea = Rectangle(rect)
-
-  init {
-    repaintArea.grow(5, 5)
-  }
+  private val area = Rectangle(area)
 
   @Throws(InterruptedException::class)
   override fun doInBackground(): String {
-    when (sortAlgorithm) {
-      SortAlgorithms.ISORT -> isort(number)
-      SortAlgorithms.SELSORT -> ssort(number)
-      SortAlgorithms.SHELLSORT -> shellsort(number)
-      SortAlgorithms.HSORT -> heapsort(number)
-      SortAlgorithms.QSORT -> qsort(0, number - 1)
-      SortAlgorithms.QSORT2 -> qsort2(0, number - 1)
+    val n = array.size
+    when (algorithm) {
+      SortAlgorithm.INSERTION -> insertionSort(n)
+      SortAlgorithm.SELECTION -> selectionSort(n)
+      SortAlgorithm.SHELL -> shellSort(n)
+      SortAlgorithm.HEAP -> heapSort(n)
+      SortAlgorithm.QUICK -> quickSort(0, n - 1)
+      SortAlgorithm.TWO_WAY_QUICK -> twoWayQuickSort(0, n - 1)
     }
     return "Done"
   }
+
+  protected fun getDoneMessage() =
+    try {
+      if (isCancelled) "Cancelled" else get()
+    } catch (ex: InterruptedException) {
+      Thread.currentThread().interrupt()
+      "Interrupted"
+    } catch (ex: ExecutionException) {
+      "Error: ${ex.message}"
+    }
 
   @Throws(InterruptedException::class)
   private fun swap(
@@ -233,21 +234,26 @@ private open class SortingTask(
     if (isCancelled) {
       throw InterruptedException()
     }
-    var px = (rect.x + fax * i).toInt()
-    var py = rect.y + rect.height - (fay * array[i]).toInt()
-    publish(Rectangle(px, py, 4, 4))
-
+    // erase the dots at their old positions...
+    publishDirtyRegion(i)
+    publishDirtyRegion(j)
     Collections.swap(array, i, j)
-    px = (rect.x + fax * i).toInt()
-    py = rect.y + rect.height - (fay * array[i]).toInt()
-    publish(Rectangle(px, py, 4, 4))
-    publish(repaintArea)
-    Thread.sleep(5)
+    // ...and draw them at their new positions
+    publishDirtyRegion(i)
+    publishDirtyRegion(j)
+    Thread.sleep(DELAY)
+  }
+
+  private fun publishDirtyRegion(index: Int) {
+    val r = getDotBounds(area, array.size, index, array[index])
+    // Graphics#drawOval(x, y, w, h) covers (w + 1) x (h + 1) pixels
+    r.setSize(r.width + 1, r.height + 1)
+    publish(r)
   }
 
   // Sorting Algorithms
   @Throws(InterruptedException::class)
-  private fun isort(n: Int) {
+  private fun insertionSort(n: Int) {
     for (i in 1..<n) {
       var j = i
       while (j > 0 && array[j - 1] > array[j]) {
@@ -258,129 +264,139 @@ private open class SortingTask(
   }
 
   @Throws(InterruptedException::class)
-  private fun ssort(n: Int) {
+  private fun selectionSort(n: Int) {
     for (i in 0..<n - 1) {
-      for (j in i..<n) {
-        if (array[j] < array[i]) {
-          swap(i, j)
+      var min = i
+      for (j in i + 1..<n) {
+        if (array[j] < array[min]) {
+          min = j
         }
+      }
+      if (min != i) {
+        swap(i, min)
       }
     }
   }
 
-  @Suppress("NestedBlockDepth")
   @Throws(InterruptedException::class)
-  private fun shellsort(n: Int) {
-    var i: Int
-    var j: Int
+  private fun shellSort(n: Int) {
+    // Knuth's gap sequence: 1, 4, 13, 40, 121, ...
     var h = 1
-    while (h < n) {
+    while (h < n / 3) {
       h = 3 * h + 1
     }
-    while (true) {
-      h /= 3
-      if (h - 1 < 0) {
-        break
-      }
-      i = h
-      while (i < n) {
-        j = i
-        while (j >= h) {
-          if (array[j - h] < array[j]) {
-            break
-          }
+    while (h > 0) {
+      for (i in h..<n) {
+        var j = i
+        while (j >= h && array[j - h] > array[j]) {
           swap(j - h, j)
           j -= h
         }
-        i++
       }
+      h /= 3
     }
   }
 
   @Throws(InterruptedException::class)
-  private fun shiftDown(
-    l: Int,
-    u: Int,
+  private fun siftDown(
+    root: Int,
+    last: Int,
   ) {
-    var i = l
-    var c: Int
-    @Suppress("LoopWithTooManyJumpStatements")
-    while (true) {
-      c = 2 * i
-      if (c > u) {
+    var parent = root
+    var child = 2 * parent + 1
+    while (child <= last) {
+      if (child < last && array[child + 1] > array[child]) {
+        child++
+      }
+      if (array[parent] >= array[child]) {
         break
       }
-      if (c + 1 <= u && array[c + 1] > array[c]) {
-        c++
-      }
-      if (array[i] >= array[c]) {
-        break
-      }
-      swap(i, c)
-      i = c
+      swap(parent, child)
+      parent = child
+      child = 2 * parent + 1
     }
   }
 
   @Throws(InterruptedException::class)
-  private fun heapsort(n: Int) { // BEWARE!!! Sorts x[1..n-1]
-    var i = n / 2
-    while (i > 0) {
-      shiftDown(i, n - 1)
-      i--
+  private fun heapSort(n: Int) {
+    for (i in n / 2 - 1 downTo 0) {
+      siftDown(i, n - 1)
     }
-    i = n - 1
-    while (i >= 2) {
-      swap(1, i)
-      shiftDown(1, i - 1)
-      i--
+    for (i in n - 1 downTo 1) {
+      swap(0, i)
+      siftDown(0, i - 1)
     }
   }
 
   @Throws(InterruptedException::class)
-  private fun qsort(
-    l: Int,
-    u: Int,
+  private fun quickSort(
+    lower: Int,
+    upper: Int,
   ) {
-    if (l >= u) {
-      return
-    }
-    var m = l
-    for (i in l + 1..u) {
-      if (array[i] < array[l]) {
-        m += 1
-        swap(m, i)
+    if (lower < upper) {
+      var m = lower
+      for (i in lower + 1..upper) {
+        if (array[i] < array[lower]) {
+          m++
+          swap(m, i)
+        }
       }
+      swap(lower, m)
+      quickSort(lower, m - 1)
+      quickSort(m + 1, upper)
     }
-    swap(l, m)
-    qsort(l, m - 1)
-    qsort(m + 1, u)
   }
 
   @Throws(InterruptedException::class)
-  private fun qsort2(
-    l: Int,
-    u: Int,
+  private fun twoWayQuickSort(
+    lower: Int,
+    upper: Int,
   ) {
-    if (l >= u) {
-      return
+    if (lower < upper) {
+      val m = partition(lower, upper)
+      twoWayQuickSort(lower, m - 1)
+      twoWayQuickSort(m + 1, upper)
     }
-    var i = l
-    var j = u + 1
+  }
+
+  @Throws(InterruptedException::class)
+  private fun partition(
+    lower: Int,
+    upper: Int,
+  ): Int {
+    val pivot = array[lower]
+    var i = lower
+    var j = upper + 1
     while (true) {
       do {
         i++
-      } while (i <= u && array[i] < array[l])
+      } while (i <= upper && array[i] < pivot)
       do {
         j--
-      } while (array[j] > array[l])
+      } while (array[j] > pivot)
       if (i > j) {
         break
       }
       swap(i, j)
     }
-    swap(l, j)
-    qsort2(l, j - 1)
-    qsort2(j + 1, u)
+    swap(lower, j)
+    return j
+  }
+
+  companion object {
+    const val DOT_SIZE = 4
+    private const val DELAY = 5L
+
+    fun getDotBounds(
+      area: Rectangle,
+      size: Int,
+      index: Int,
+      value: Double,
+    ): Rectangle {
+      val x = area.x + (area.width * index / size.toDouble()).toInt()
+      val y = area.y + area.height - (area.height * value).toInt()
+      return Rectangle(x, y, DOT_SIZE, DOT_SIZE)
+    }
   }
 }
 
