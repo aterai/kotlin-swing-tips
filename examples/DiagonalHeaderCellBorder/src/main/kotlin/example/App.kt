@@ -23,13 +23,14 @@ fun createUI(): Component {
     override fun updateUI() {
       super.updateUI()
       setRowHeight(size)
-      val hr = VerticalTableHeaderRenderer()
+      val verticalRenderer = VerticalTableHeaderRenderer()
       val cm = getColumnModel()
-      cm.getColumn(0).headerRenderer = DiagonallySplitHeaderRenderer()
-      cm.getColumn(0).preferredWidth = size * 5
+      val firstColumn = cm.getColumn(0)
+      firstColumn.headerRenderer = DiagonallySplitHeaderRenderer()
+      firstColumn.preferredWidth = size * 5
       for (i in 1..<cm.columnCount) {
         val tc = cm.getColumn(i)
-        tc.headerRenderer = hr
+        tc.headerRenderer = verticalRenderer
         tc.preferredWidth = size
       }
     }
@@ -74,16 +75,25 @@ private class DiagonallySplitBorder(
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
     g2.paint = matteColor
-    g2.drawLine(0, 0, c.width - 1, c.height - 1)
+    g2.drawLine(0, 0, width - 1, height - 1)
     g2.dispose()
   }
 }
 
 private class DiagonallySplitHeaderRenderer : TableCellRenderer {
   private val panel = JPanel(BorderLayout())
-  private val trl = JLabel("TOP-RIGHT", null, SwingConstants.RIGHT)
-  private val bll = JLabel("BOTTOM-LEFT", null, SwingConstants.LEFT)
-  private val splitBorder = DiagonallySplitBorder(0, 0, 1, 1, Color.GRAY)
+
+  init {
+    val columnHeader = JLabel("TOP-RIGHT", null, SwingConstants.RIGHT)
+    columnHeader.border = BorderFactory.createEmptyBorder(8, 0, 0, 4)
+    val rowHeader = JLabel("BOTTOM-LEFT", null, SwingConstants.LEFT)
+    rowHeader.border = BorderFactory.createEmptyBorder(0, 4, 8, 0)
+    panel.isOpaque = true
+    panel.background = Color.WHITE
+    panel.border = DiagonallySplitBorder(0, 0, 1, 1, Color.GRAY)
+    panel.add(columnHeader, BorderLayout.NORTH)
+    panel.add(rowHeader, BorderLayout.SOUTH)
+  }
 
   override fun getTableCellRendererComponent(
     table: JTable,
@@ -92,21 +102,17 @@ private class DiagonallySplitHeaderRenderer : TableCellRenderer {
     hasFocus: Boolean,
     row: Int,
     column: Int,
-  ): Component {
-    trl.border = BorderFactory.createEmptyBorder(8, 0, 0, 4)
-    bll.border = BorderFactory.createEmptyBorder(0, 4, 8, 0)
-    panel.isOpaque = true
-    panel.background = Color.WHITE
-    panel.border = splitBorder
-    panel.add(trl, BorderLayout.NORTH)
-    panel.add(bll, BorderLayout.SOUTH)
-    return panel
-  }
+  ) = panel
 }
 
 private class VerticalTableHeaderRenderer : TableCellRenderer {
   private val intermediate = JPanel()
   private val label = JLabel("", null, SwingConstants.LEADING)
+
+  init {
+    label.horizontalTextPosition = SwingConstants.LEFT
+    label.border = BorderFactory.createEmptyBorder(0, 2, 0, 2)
+  }
 
   override fun getTableCellRendererComponent(
     table: JTable,
@@ -127,8 +133,8 @@ private class VerticalTableHeaderRenderer : TableCellRenderer {
     )
     if (c is JLabel) {
       label.text = c.text
-      label.horizontalTextPosition = SwingConstants.LEFT
-      label.border = BorderFactory.createEmptyBorder(0, 2, 0, 2)
+      label.font = c.font
+      label.foreground = c.foreground
       c.horizontalAlignment = SwingConstants.CENTER
       c.border = BorderFactory.createMatteBorder(0, 0, 1, 1, Color.GRAY)
       c.icon = makeVerticalHeaderIcon(label)
@@ -142,13 +148,11 @@ private class VerticalTableHeaderRenderer : TableCellRenderer {
     val w = d.height
     val h = d.width
     val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
-    val g2 = bi.graphics
-    if (g2 is Graphics2D) {
-      val at = AffineTransform.getTranslateInstance(0.0, h.toDouble())
-      at.quadrantRotate(-1)
-      g2.transform = at
-      SwingUtilities.paintComponent(g2, c, intermediate, 0, 0, h, w)
-    }
+    val g2 = bi.createGraphics()
+    val at = AffineTransform.getTranslateInstance(0.0, h.toDouble())
+    at.quadrantRotate(-1)
+    g2.transform = at
+    SwingUtilities.paintComponent(g2, c, intermediate, 0, 0, h, w)
     g2.dispose()
     return ImageIcon(bi)
   }
