@@ -1,6 +1,7 @@
 package example
 
 import java.awt.*
+import java.awt.geom.Ellipse2D
 import java.awt.geom.Line2D
 import java.awt.geom.Path2D
 import java.awt.geom.Point2D
@@ -65,6 +66,7 @@ private enum class GridStyle(
   NONE("None"),
   TICK("Tick marks"),
   POLYGON("Polygons"),
+  CIRCLE("Circles"),
   ;
 
   override fun toString() = label
@@ -204,12 +206,25 @@ private object RadarChart {
   private fun createRegularPolygon(sides: Int, value: Double) =
     createPolygon(DoubleArray(sides) { value })
 
+  private fun createCircle(value: Double): Ellipse2D {
+    val r = RADIUS * value / MAX_VALUE
+    return Ellipse2D.Double(CENTER - r, CENTER - r, r * 2.0, r * 2.0)
+  }
+
+  // Circle for GridStyle.CIRCLE, regular polygon otherwise
+  private fun createGridShape(sides: Int, value: Double, style: GridStyle): Shape =
+    if (style == GridStyle.CIRCLE) {
+      createCircle(value)
+    } else {
+      createRegularPolygon(sides, value)
+    }
+
   fun drawGrid(g2: Graphics2D, sides: Int, style: GridStyle) {
     g2.stroke = GRID_STROKE
-    if (style == GridStyle.POLYGON) {
+    if (style == GridStyle.POLYGON || style == GridStyle.CIRCLE) {
       g2.color = GRID_COLOR
       for (i in 1..<DIVISIONS) {
-        g2.draw(createRegularPolygon(sides, MAX_VALUE * i / DIVISIONS))
+        g2.draw(createGridShape(sides, MAX_VALUE * i / DIVISIONS, style))
       }
     }
     // Axes and the outer frame are always drawn
@@ -223,7 +238,7 @@ private object RadarChart {
         drawTicks(g2, i, sides)
       }
     }
-    g2.draw(createRegularPolygon(sides, MAX_VALUE))
+    g2.draw(createGridShape(sides, MAX_VALUE, style))
   }
 
   // Short lines perpendicular to the axis at each division
