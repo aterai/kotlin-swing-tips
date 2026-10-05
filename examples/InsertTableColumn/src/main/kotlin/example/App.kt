@@ -6,11 +6,12 @@ import java.awt.geom.Ellipse2D
 import java.awt.geom.Line2D
 import java.awt.geom.Rectangle2D
 import javax.swing.*
+import javax.swing.event.TableColumnModelEvent
 import javax.swing.plaf.LayerUI
 import javax.swing.table.DefaultTableModel
 import javax.swing.table.JTableHeader
-import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableColumn
+import javax.swing.table.TableColumnModel
 
 fun createUI(): Component {
   val scroll = JScrollPane(makeTable())
@@ -19,44 +20,32 @@ fun createUI(): Component {
   return JPanel(BorderLayout()).also {
     EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.add(JLayer(scroll, ColumnInsertLayerUI()))
+    it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
 private fun makeTable(): JTable {
   val table = object : JTable(5, 3) {
-    override fun createDefaultTableHeader() = object : JTableHeader(columnModel) {
-      override fun updateUI() {
-        super.updateUI()
-        EventQueue.invokeLater {
-          val renderer = defaultRenderer
-          defaultRenderer =
-            TableCellRenderer { table, value, isSelected, hasFocus, row, column ->
-              renderer
-                .getTableCellRendererComponent(
-                  table,
-                  value,
-                  isSelected,
-                  hasFocus,
-                  row,
-                  column,
-                ).also {
-                  if (it is JLabel) {
-                    it.text = convertToColumnTitle(column + 1)
-                    it.horizontalAlignment = SwingConstants.CENTER
-                  }
-                }
-            }
-        }
-      }
-    }
-
     override fun updateUI() {
       super.updateUI()
       setAutoCreateColumnsFromModel(false)
       setAutoResizeMode(AUTO_RESIZE_OFF)
     }
+
+    override fun columnAdded(e: TableColumnModelEvent) {
+      super.columnAdded(e)
+      updateHeaderValues(getColumnModel())
+    }
+
+    override fun columnMoved(e: TableColumnModelEvent) {
+      super.columnMoved(e)
+      if (e.fromIndex != e.toIndex) {
+        updateHeaderValues(getColumnModel())
+      }
+    }
   }
+  // println(toColumnTitle(16_384)) // -> XFD
   table.model = DefaultTableModel(5, 16_384)
   table.setValueAt("0-0", 0, 0)
   table.setValueAt("0-1", 0, 1)
@@ -64,124 +53,63 @@ private fun makeTable(): JTable {
   return table
 }
 
-private fun convertToColumnTitle(columnNumber: Int): String {
-  assert(columnNumber > 0) { "Input is not valid!" }
-  val sb = StringBuilder()
-  var num = columnNumber
-  while (num > 0) {
-    val mod = (num - 1) % 26
-    val code = 'A'.code + mod
-    sb.insert(0, code.toChar())
-    num = (num - mod) / 26
+// Name the columns in view order (A, B, ..., Z, AA, ...)
+private fun updateHeaderValues(columnModel: TableColumnModel) {
+  for (i in 0..<columnModel.columnCount) {
+    columnModel.getColumn(i).headerValue = toColumnTitle(i + 1)
   }
-  return sb.toString()
+}
+
+private const val RADIX = 26
+
+// Bijective base-26: 1 -> A, 26 -> Z, 27 -> AA, 16384 -> XFD
+private fun toColumnTitle(columnNumber: Int): String {
+  require(columnNumber > 0) { "columnNumber must be positive: $columnNumber" }
+  val sb = StringBuilder()
+  var n = columnNumber
+  while (n > 0) {
+    sb.append('A' + (n - 1) % RADIX)
+    n = (n - 1) / RADIX
+  }
+  return sb.reverse().toString()
 }
 
 private class ColumnInsertLayerUI : LayerUI<JScrollPane>() {
   private val line = Rectangle2D.Double()
-  private val plus = Ellipse2D.Double(0.0, 0.0, 10.0, 10.0)
+  private val plus = Ellipse2D.Double()
+  private var insertIndex = -1
 
   override fun paint(g: Graphics, c: JComponent) {
     super.paint(g, c)
-    val g2 = g.create()
-    if (c is JLayer<*> && !line.isEmpty && g2 is Graphics2D) {
-      val scroll = c.view as? JScrollPane
-      val header = (scroll?.viewport?.view as? JTable)?.tableHeader ?: return
+    val scroll = (c as? JLayer<*>)?.view as? JScrollPane
+    if (insertIndex >= 0 && scroll != null) {
+      val g2 = g.create() as? Graphics2D ?: return
       g2.setRenderingHint(
         RenderingHints.KEY_ANTIALIASING,
         RenderingHints.VALUE_ANTIALIAS_ON,
       )
-      val pt0 = line.bounds.location
-      val pt1 = SwingUtilities.convertPoint(header, pt0, c)
-      g2.translate(pt1.getX() - pt0.getX(), pt1.getY() - pt0.getY())
+      // Do not paint over the scroll bars
+      val clip = scroll.viewport.bounds
+      scroll.columnHeader?.also { clip.add(it.bounds) }
+      g2.clip(SwingUtilities.convertRectangle(scroll, clip, c))
+      // line and plus are in the JTableHeader coordinate system
+      val header = getTable(scroll).tableHeader
+      val pt = SwingUtilities.convertPoint(header, 0, 0, c)
+      g2.translate(pt.x, pt.y)
+      // paint Insert Line
       g2.paint = LINE_COLOR
       g2.fill(line)
+      // paint Plus Icon
       g2.paint = Color.WHITE
       g2.fill(plus)
       g2.paint = LINE_COLOR
       val cx = plus.centerX
       val cy = plus.centerY
-      val w2 = plus.width / 2.0
-      val h2 = plus.height / 2.0
-      g2.draw(Line2D.Double(cx - w2, cy, cx + w2, cy))
-      g2.draw(Line2D.Double(cx, cy - h2, cx, cy + h2))
+      val r = plus.width / 2.0
+      g2.draw(Line2D.Double(cx - r, cy, cx + r, cy))
+      g2.draw(Line2D.Double(cx, cy - r, cx, cy + r))
       g2.draw(plus)
-    }
-    g2.dispose()
-  }
-
-  private fun updateLineLocation(scroll: JScrollPane, loc: Point) {
-    val table = scroll.viewport.view as? JTable ?: return
-    val header = table.tableHeader
-    val size = table.columnCount
-    val d = Dimension(LINE_WIDTH, scroll.visibleRect.height)
-    for (i in 0..<size) {
-      val r = header.getHeaderRect(i)
-      val r1 = getWestRect(r, i)
-      val r2 = getEastRect(r)
-      val b = when {
-        r1.contains(loc) -> {
-          updateInsertLineLocation(r1, loc, d, header)
-          true
-        }
-
-        r2.contains(loc) -> {
-          updateInsertLineLocation(r2, loc, d, header)
-          true
-        }
-
-        r.contains(loc) -> {
-          line.setFrame(0.0, 0.0, 0.0, 0.0)
-          header.cursor = Cursor.getDefaultCursor()
-          true
-        }
-
-        else -> {
-          // continue
-          false
-        }
-      }
-      if (b) {
-        return
-      }
-    }
-  }
-
-  private fun getWestRect(r: Rectangle, i: Int): Rectangle {
-    val rect = r.bounds
-    val bounds = plus.bounds
-    if (i != 0) {
-      rect.x -= bounds.width / 2
-    }
-    rect.size = bounds.size
-    return rect
-  }
-
-  private fun getEastRect(r: Rectangle): Rectangle {
-    val rect = r.bounds
-    val bounds = plus.bounds
-    rect.x += rect.width - bounds.width / 2
-    rect.size = bounds.size
-    return rect
-  }
-
-  private fun updateInsertLineLocation(
-    r: Rectangle,
-    loc: Point,
-    d: Dimension,
-    c: Component,
-  ) {
-    if (r.contains(loc)) {
-      val cx = r.centerX
-      val cy = r.centerY
-      line.setFrame(cx - d.getWidth() / 2.0, r.getY(), d.getWidth(), d.getHeight())
-      val pw = plus.width / 2.0
-      val ph = plus.height / 2.0
-      plus.setFrameFromCenter(cx, cy, cx - pw, cy - ph)
-      c.cursor = Cursor.getDefaultCursor()
-    } else {
-      line.setFrame(0.0, 0.0, 0.0, 0.0)
-      c.cursor = Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR)
+      g2.dispose()
     }
   }
 
@@ -202,45 +130,99 @@ private class ColumnInsertLayerUI : LayerUI<JScrollPane>() {
 
   override fun processMouseEvent(e: MouseEvent, l: JLayer<out JScrollPane>) {
     super.processMouseEvent(e, l)
+    val header = e.component as? JTableHeader ?: return
     when (e.id) {
       MouseEvent.MOUSE_CLICKED -> {
-        val scroll = l.view
-        if (plus.contains(e.getPoint()) && !line.isEmpty) {
-          val table = scroll.viewport.view as? JTable ?: return
-          val model = table.model
-          val columnCount = table.columnCount
-          val maxColumn = model.columnCount
-          if (columnCount < maxColumn) {
-            val idx = table.columnAtPoint(line.bounds.location)
-            val column = TableColumn(columnCount)
-            column.headerValue = "Column$columnCount"
-            table.addColumn(column)
-            table.moveColumn(columnCount, idx + 1)
-          }
+        val pt = e.point
+        if (insertIndex >= 0 && plus.contains(pt)) {
+          insertColumn(header.table, insertIndex)
+          updateInsertLocation(l.view, header, pt)
+          l.repaint()
         }
-        l.repaint(scroll.bounds)
       }
 
-      MouseEvent.MOUSE_RELEASED -> {
-        l.repaint()
-      }
+      MouseEvent.MOUSE_EXITED -> clearInsertLocation(l)
     }
   }
 
   override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out JScrollPane>) {
     super.processMouseMotionEvent(e, l)
-    val view = l.view
-    if (e.id == MouseEvent.MOUSE_MOVED && e.component is JTableHeader) {
-      updateLineLocation(view, e.point)
+    val c = e.component
+    if (e.id == MouseEvent.MOUSE_MOVED && c is JTableHeader) {
+      updateInsertLocation(l.view, c, e.point)
+      l.repaint()
     } else {
-      line.setFrame(0.0, 0.0, 0.0, 0.0)
+      clearInsertLocation(l)
     }
-    l.repaint(view.bounds)
+  }
+
+  private fun clearInsertLocation(l: JLayer<out JScrollPane>) {
+    if (insertIndex >= 0) {
+      insertIndex = -1
+      l.repaint()
+    }
+  }
+
+  private fun updateInsertLocation(
+    scroll: JScrollPane,
+    header: JTableHeader,
+    pt: Point,
+  ) {
+    insertIndex = getInsertIndex(header, pt)
+    if (insertIndex >= 0) {
+      val x = getBoundaryX(header, insertIndex)
+      val height = header.height + scroll.viewport.height
+      val lx = maxOf(0, x - LINE_WIDTH / 2).toDouble()
+      line.setFrame(lx, 0.0, LINE_WIDTH.toDouble(), height.toDouble())
+      val cx = maxOf(x.toDouble(), PLUS_SIZE / 2.0)
+      val cy = header.height / 2.0
+      val s = PLUS_SIZE.toDouble()
+      plus.setFrame(cx - s / 2.0, cy - s / 2.0, s, s)
+    }
   }
 
   companion object {
     private val LINE_COLOR = Color(0x00_78_D7)
     private const val LINE_WIDTH = 4
+    private const val PLUS_SIZE = 10
+
+    // Returns the view index at which a new column is inserted, or -1 if the
+    // point is not near a column boundary
+    private fun getInsertIndex(header: JTableHeader, pt: Point): Int {
+      val column = header.columnAtPoint(pt)
+      var index = -1
+      if (column >= 0) {
+        val r = header.getHeaderRect(column)
+        // The left edge of the first column has no column on its left side,
+        // so the whole hit area is placed inside the first column
+        val west = if (column == 0) PLUS_SIZE else PLUS_SIZE / 2
+        if (pt.x < r.x + west) {
+          index = column
+        } else if (pt.x >= r.x + r.width - PLUS_SIZE / 2) {
+          index = column + 1
+        }
+      }
+      return index
+    }
+
+    private fun getBoundaryX(header: JTableHeader, index: Int) = if (index == 0) {
+      header.getHeaderRect(0).x
+    } else {
+      val r = header.getHeaderRect(index - 1)
+      r.x + r.width
+    }
+
+    // JTable and TableColumnModel have no method to insert a TableColumn at
+    // the specified position, so add it to the end and then move it
+    private fun insertColumn(table: JTable, index: Int) {
+      val viewCount = table.columnCount
+      if (viewCount < table.model.columnCount) {
+        table.addColumn(TableColumn(viewCount))
+        table.moveColumn(viewCount, index)
+      }
+    }
+
+    private fun getTable(scroll: JScrollPane) = scroll.viewport.view as JTable
   }
 }
 
