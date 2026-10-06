@@ -10,6 +10,7 @@ import javax.swing.text.BadLocationException
 import javax.swing.text.DefaultCaret
 import javax.swing.text.DefaultHighlighter
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
+import javax.swing.text.Highlighter
 import javax.swing.text.JTextComponent
 import javax.swing.text.Utilities
 import javax.swing.text.html.HTMLEditorKit
@@ -40,11 +41,10 @@ fun createUI(): Component {
   val textArea = object : JTextArea(TEXT) {
     override fun updateUI() {
       super.updateUI()
-      val caret = RoundedSelectionCaret()
-      caret.blinkRate = UIManager.getInt("TextArea.caretBlinkRate")
-      setCaret(caret)
-      (highlighter as? DefaultHighlighter)?.drawsLayeredHighlights = false
-      selectedTextColor = null
+      // PlainView ignores setSelectedTextColor(null) and keeps the current color
+      // of the Graphics (e.g. the background color), so use the foreground color
+      selectedTextColor = foreground
+      installRoundedSelection(this)
     }
   }
   val check = JCheckBox("setLineWrap / setWrapStyleWord:")
@@ -72,14 +72,20 @@ fun createUI(): Component {
   }
 }
 
+private fun installRoundedSelection(c: JTextComponent) {
+  val caret = RoundedSelectionCaret()
+  caret.blinkRate = c.caret.blinkRate
+  c.caret = caret
+  (c.highlighter as? DefaultHighlighter)?.drawsLayeredHighlights = false
+}
+
 private fun createEditorPane(): JEditorPane {
   val editor = object : JEditorPane() {
     override fun updateUI() {
       super.updateUI()
-      val caret = RoundedSelectionCaret()
-      caret.blinkRate = UIManager.getInt("TextArea.caretBlinkRate")
-      setCaret(caret)
-      (highlighter as? DefaultHighlighter)?.drawsLayeredHighlights = false
+      // GlyphView does not change the text color if the selected text color is null
+      selectedTextColor = null
+      installRoundedSelection(this)
     }
   }
   val htmlEditorKit = HTMLEditorKit()
@@ -116,23 +122,30 @@ private fun createStyleSheet(): StyleSheet {
 }
 
 private class RoundedSelectionCaret : DefaultCaret() {
-  override fun getSelectionPainter() = RoundedSelectionHighlightPainter()
+  override fun getSelectionPainter(): Highlighter.HighlightPainter = PAINTER
 
+  // The default damage area does not cover the rounded corners on the right side,
+  // so repaint the full width of the rows from the selection start to the end.
   @Synchronized
   override fun damage(r: Rectangle) {
     super.damage(r)
     val c = component
-    val startOffset = c.selectionStart
-    val endOffset = c.selectionEnd
     val mapper = c.ui
     runCatching {
-      val p0 = mapper.modelToView(c, startOffset)
-      val p1 = mapper.modelToView(c, endOffset)
-      val h = (p1.maxY - p0.minY).toInt()
-      c.repaint(Rectangle(0, p0.y, c.width, h))
+      // Java 9: mapper.modelToView2D(c, offs, Position.Bias.Forward).getBounds()
+      val p0: Rectangle? = mapper.modelToView(c, c.selectionStart)
+      val p1: Rectangle? = mapper.modelToView(c, c.selectionEnd)
+      if (p0 != null && p1 != null) {
+        val rect = p0.union(p1)
+        c.repaint(0, rect.y, c.width, rect.height)
+      }
     }.onFailure {
       UIManager.getLookAndFeel().provideErrorFeedback(c)
     }
+  }
+
+  companion object {
+    private val PAINTER = RoundedSelectionHighlightPainter()
   }
 }
 
@@ -149,56 +162,74 @@ private class RoundedSelectionHighlightPainter : DefaultHighlightPainter(null) {
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
-    // val color = c.selectionColor
-    // g2.color = Color(color.red, color.green, color.blue, 64)
-    val rgba = c.selectionColor.rgb and 0xFF_FF_FF or (64 shl 24)
-    g2.color = Color(rgba, true)
+    val rgb = c.selectionColor.rgb and 0xFF_FF_FF
+    g2.color = Color(ALPHA shl 24 or rgb, true)
     runCatching {
-      val area = getLinesArea(c, offs0, offs1)
-      for (a in GeomUtils.splitIntoSingleLoopAreas(area)) {
-        val lst = GeomUtils.convertAreaToPoint2DList(a)
-        GeomUtils.snapShortRightEdges(lst, 3.0 * 2.0)
-        g2.fill(GeomUtils.convertRoundedPath(lst, 3.0))
+      val area = getRowsArea(c, offs0, offs1)
+      for (polygon in GeomUtils.splitIntoPolygons(area)) {
+        GeomUtils.snapShortRightEdges(polygon, ARC * 2.0)
+        g2.fill(GeomUtils.convertRoundedPath(polygon, ARC.toDouble()))
       }
     }
     g2.dispose()
   }
 
+  // Union of the selected text bounds of each row (not the full width of the rows).
   @Throws(BadLocationException::class)
-  private fun getLinesArea(c: JTextComponent, offs0: Int, offs1: Int): Area {
+  private fun getRowsArea(c: JTextComponent, offs0: Int, offs1: Int): Area {
     val mapper = c.ui
     val area = Area()
     var cur = offs0
     do {
-      val startOffset = Utilities.getRowStart(c, cur)
-      val endOffset = Utilities.getRowEnd(c, cur)
-      val p0 = mapper.modelToView(c, max(startOffset, offs0))
-      val p1 = mapper.modelToView(c, min(endOffset, offs1))
-      if (offs1 > endOffset) {
-        p1.width += 6
+      val rowStart = Utilities.getRowStart(c, cur)
+      val rowEnd = Utilities.getRowEnd(c, cur)
+      if (rowStart < 0 || rowEnd < 0) {
+        break
+      }
+      val p0: Rectangle? = mapper.modelToView(c, max(rowStart, offs0))
+      val p1: Rectangle? = mapper.modelToView(c, min(rowEnd, offs1))
+      if (p0 == null || p1 == null) {
+        break
+      }
+      if (offs1 > rowEnd) {
+        // The line break is selected: extend the row by the arc diameter
+        p1.width += ARC * 2
       }
       area.add(Area(p0.union(p1)))
-      cur = endOffset + 1
+      cur = rowEnd + 1
     } while (cur < offs1)
     return area
+  }
+
+  companion object {
+    const val ARC = 3
+    private const val ALPHA = 64
   }
 }
 
 private object GeomUtils {
-  fun convertAreaToPoint2DList(area: Area): MutableList<Point2D> {
-    val list = mutableListOf<Point2D>()
+  private val KAPPA = 4.0 * (sqrt(2.0) - 1.0) / 3.0 // = 0.55228...
+
+  // Decompose a multi-loop Area into a list of polygons (single-loop vertex lists).
+  fun splitIntoPolygons(area: Area): List<MutableList<Point2D>> {
+    val polygons = mutableListOf<MutableList<Point2D>>()
+    var polygon = mutableListOf<Point2D>()
     val pi = area.getPathIterator(null)
     val coords = DoubleArray(6)
     while (!pi.isDone) {
-      val pathSegmentType = pi.currentSegment(coords)
-      when (pathSegmentType) {
+      when (pi.currentSegment(coords)) {
         PathIterator.SEG_MOVETO, PathIterator.SEG_LINETO -> {
-          list.add(Point2D.Double(coords[0], coords[1]))
+          polygon.add(Point2D.Double(coords[0], coords[1]))
+        }
+
+        PathIterator.SEG_CLOSE -> if (polygon.isNotEmpty()) {
+          polygons.add(polygon)
+          polygon = mutableListOf()
         }
       }
       pi.next()
     }
-    return list
+    return polygons
   }
 
   fun snapShortRightEdges(
@@ -232,8 +263,7 @@ private object GeomUtils {
   }
 
   fun convertRoundedPath(list: List<Point2D>, arc: Double): Path2D {
-    val kappa = 4.0 * (sqrt(2.0) - 1.0) / 3.0
-    val akv = arc - arc * kappa
+    val akv = arc - arc * KAPPA
     val pt0 = list[0]
     val path = Path2D.Double()
     val sz = list.size
@@ -258,51 +288,6 @@ private object GeomUtils {
     }
     path.closePath()
     return path
-  }
-
-  fun splitIntoSingleLoopAreas(rect: Area): List<Area> {
-    val subArea = mutableListOf<Area>()
-    val path = Path2D.Double()
-    val pi = rect.getPathIterator(null)
-    val coords = DoubleArray(6)
-    while (!pi.isDone) {
-      val pathSegmentType = pi.currentSegment(coords)
-      when (pathSegmentType) {
-        PathIterator.SEG_MOVETO -> path.moveTo(
-          coords[0],
-          coords[1],
-        )
-
-        PathIterator.SEG_LINETO -> path.lineTo(
-          coords[0],
-          coords[1],
-        )
-
-        PathIterator.SEG_QUADTO -> path.quadTo(
-          coords[0],
-          coords[1],
-          coords[2],
-          coords[3],
-        )
-
-        PathIterator.SEG_CUBICTO -> path.curveTo(
-          coords[0],
-          coords[1],
-          coords[2],
-          coords[3],
-          coords[4],
-          coords[5],
-        )
-
-        PathIterator.SEG_CLOSE -> path.also {
-          it.closePath()
-          subArea.add(Area(it))
-          it.reset()
-        }
-      }
-      pi.next()
-    }
-    return subArea
   }
 }
 
