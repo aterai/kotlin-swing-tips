@@ -22,23 +22,23 @@ fun createUI(): Component {
     null,
   )
   val downModelSpinner = createSpinner(
-    RoundToHalfSpinnerModel(INITIAL_VALUE, MIN_VALUE, MAX_VALUE, STEP_SIZE),
+    RoundDownToHalfSpinnerModel(INITIAL_VALUE, MIN_VALUE, MAX_VALUE, STEP_SIZE),
     null,
   )
-  val downFmtSpinner = createSpinner(
+  val downFormatSpinner = createSpinner(
     SpinnerNumberModel(INITIAL_VALUE, MIN_VALUE, MAX_VALUE, STEP_SIZE),
-    createHalfFormatter(RoundingMode.DOWN),
+    HalfFormatter(RoundingMode.DOWN, MIN_VALUE, MAX_VALUE),
   )
-  val halfUpFmtSpinner = createSpinner(
+  val halfUpSpinner = createSpinner(
     SpinnerNumberModel(INITIAL_VALUE, MIN_VALUE, MAX_VALUE, STEP_SIZE),
-    createHalfFormatter(RoundingMode.HALF_UP),
+    HalfFormatter(RoundingMode.HALF_UP, MIN_VALUE, MAX_VALUE),
   )
 
   val p = JPanel(GridLayout(0, 2, 5, 5))
   p.add(createTitledPanel("Default, stepSize: 0.5", defaultSpinner))
   p.add(createTitledPanel("Override SpinnerNumberModel", downModelSpinner))
-  p.add(createTitledPanel("Round down to half Formatter", downFmtSpinner))
-  p.add(createTitledPanel("Round to half Formatter", halfUpFmtSpinner))
+  p.add(createTitledPanel("Round down to half Formatter", downFormatSpinner))
+  p.add(createTitledPanel("Round to half Formatter", halfUpSpinner))
 
   return JPanel(BorderLayout()).also {
     it.add(p, BorderLayout.NORTH)
@@ -55,12 +55,12 @@ private fun createSpinner(
   val editor = spinner.editor
   if (formatter != null && editor is DefaultEditor) {
     editor.textField.setFormatterFactory(DefaultFormatterFactory(formatter))
-    info(formatter, model)
+    appendRoundedValue(formatter, model)
   }
   return spinner
 }
 
-private fun info(formatter: DefaultFormatter, model: SpinnerNumberModel) {
+private fun appendRoundedValue(formatter: DefaultFormatter, model: SpinnerNumberModel) {
   runCatching {
     val valueText = model.number.toString()
     val roundedValue = formatter.stringToValue(valueText)
@@ -70,23 +70,8 @@ private fun info(formatter: DefaultFormatter, model: SpinnerNumberModel) {
   }
 }
 
-private fun createHalfFormatter(roundingMode: RoundingMode?): DefaultFormatter {
-  return object : DefaultFormatter() {
-    override fun stringToValue(
-      text: String,
-    ): Any = roundToHalf(BigDecimal(text), roundingMode).toDouble()
-
-    @Throws(ParseException::class)
-    override fun valueToString(value: Any?): String {
-      if (value !is Number) {
-        throw ParseException("value is not a Number: $value", 0)
-      }
-      val doubleValue = value.toDouble()
-      return roundToHalf(BigDecimal.valueOf(doubleValue), roundingMode).toString()
-    }
-  }
-}
-
+// Round to a multiple of 0.5: double the value, round it to an integer
+// with the given RoundingMode, and then halve it.
 private fun roundToHalf(value: BigDecimal, roundingMode: RoundingMode?) = value
   .multiply(BigDecimal.valueOf(2))
   .setScale(0, roundingMode)
@@ -103,18 +88,60 @@ private fun createTitledPanel(title: String, cmp: Component): Component {
   return panel
 }
 
-private class RoundToHalfSpinnerModel(
+private class HalfFormatter(
+  private val roundingMode: RoundingMode?,
+  private val minimum: Double,
+  private val maximum: Double,
+) : DefaultFormatter() {
+  init {
+    // DefaultFormatter overwrites typed characters by default, unlike NumberFormatter
+    overwriteMode = false
+  }
+
+  @Throws(ParseException::class)
+  override fun stringToValue(text: String): Any {
+    val value = runCatching {
+      BigDecimal(text.trim())
+    }.getOrElse {
+      // DefaultFormatter must report invalid text as a ParseException
+      // so that JFormattedTextField can revert the edit
+      throw ParseException("Invalid number: $text", 0).also { pe -> pe.initCause(it) }
+    }
+    val rounded = roundToHalf(value, roundingMode).toDouble()
+    // This formatter replaces the NumberEditor's one, which checks the bounds of the model
+    if (rounded < minimum || rounded > maximum) {
+      throw ParseException("Out of range: $text", 0)
+    }
+    return rounded
+  }
+
+  @Throws(ParseException::class)
+  override fun valueToString(value: Any?): String {
+    if (value !is Number) {
+      throw ParseException("value is not a Number: $value", 0)
+    }
+    val doubleValue = value.toDouble()
+    return roundToHalf(BigDecimal.valueOf(doubleValue), roundingMode).toString()
+  }
+}
+
+private class RoundDownToHalfSpinnerModel(
   value: Double,
   min: Double,
   max: Double,
   step: Double,
 ) : SpinnerNumberModel(roundDownToHalf(value), min, max, step) {
   override fun setValue(value: Any) {
-    val number = requireNumber(value)
-    val roundedValue = roundDownToHalf(number.toDouble())
-    if (roundedValue != getValue()) {
+    val roundedValue = roundDownToHalf(requireNumber(value).toDouble())
+    if (roundedValue == getValue()) {
+      if (roundedValue != value) {
+        // The value is unchanged, but the editor still displays the unrounded text
+        // (e.g. 8.85 when the value is 8.5), so notify it to redisplay the current value
+        fireStateChanged()
+      }
+    } else {
+      // SpinnerNumberModel#setValue(...) fires a ChangeEvent by itself
       super.setValue(roundedValue)
-      fireStateChanged()
     }
   }
 
@@ -130,14 +157,6 @@ private class RoundToHalfSpinnerModel(
       BigDecimal.valueOf(value),
       RoundingMode.DOWN,
     ).toDouble()
-
-    fun roundToHalf(
-      value: BigDecimal,
-      roundingMode: RoundingMode?,
-    ): BigDecimal = value
-      .multiply(BigDecimal.valueOf(2))
-      .setScale(0, roundingMode)
-      .multiply(BigDecimal.valueOf(0.5))
   }
 }
 
