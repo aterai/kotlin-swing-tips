@@ -5,7 +5,7 @@ import java.awt.geom.Area
 import java.awt.geom.Path2D
 import java.awt.geom.PathIterator
 import javax.swing.*
-import javax.swing.event.ChangeEvent
+import javax.swing.event.ListSelectionEvent
 import javax.swing.plaf.LayerUI
 import javax.swing.plaf.UIResource
 import javax.swing.plaf.synth.SynthTableUI
@@ -53,18 +53,24 @@ fun createModel(): TableModel {
 private class TranslucentCellSelectionTable(
   model: TableModel,
 ) : JTable(model) {
+  init {
+    // The selection outline is painted over the whole JLayer, so repaint the
+    // entire table when editing starts, stops, or is canceled to hide/show it.
+    addPropertyChangeListener("tableCellEditor") { repaint() }
+  }
+
   override fun updateUI() {
     super.updateUI()
     setCellSelectionEnabled(true)
     setShowGrid(false)
     intercellSpacing = Dimension(3, 3)
     autoCreateRowSorter = true
-    background = Color(0x0, true)
+    background = TRANSPARENT
     setRowHeight(20)
     if (getUI() is SynthTableUI) {
       setDefaultRenderer(
         Boolean::class.javaObjectType,
-        SynthBooleanTableCellRenderer2(),
+        SynthBooleanTableCellRenderer(),
       )
     }
   }
@@ -79,7 +85,7 @@ private class TranslucentCellSelectionTable(
       c.isOpaque = false
     }
     c.foreground = foreground
-    c.background = Color(0x0, true)
+    c.background = TRANSPARENT
     return c
   }
 
@@ -95,34 +101,38 @@ private class TranslucentCellSelectionTable(
     return c
   }
 
-  override fun changeSelection(
-    rowIndex: Int,
-    columnIndex: Int,
-    toggle: Boolean,
-    extend: Boolean,
-  ) {
-    super.changeSelection(rowIndex, columnIndex, toggle, extend)
+  // JTable repaints only the changed rows or columns, which would leave a part
+  // of the old selection outline, so repaint the entire table on any selection
+  // change (mouse, keyboard, selectAll(), clearSelection(), etc.).
+  override fun valueChanged(e: ListSelectionEvent?) {
+    super.valueChanged(e)
     repaint()
   }
 
-  override fun editingStopped(e: ChangeEvent?) {
-    super.editingStopped(e)
+  override fun columnSelectionChanged(e: ListSelectionEvent?) {
+    super.columnSelectionChanged(e)
     repaint()
+  }
+
+  companion object {
+    private val TRANSPARENT = Color(0x0, true)
   }
 }
 
 private class TranslucentCellSelectionLayerUI : LayerUI<JScrollPane>() {
   override fun paint(g: Graphics, c: JComponent?) {
     super.paint(g, c)
-    val table = getTable(c) ?: return
-    val cc = table.selectedColumnCount
-    val rc = table.selectedRowCount
-    if (cc != 0 && rc != 0 && !table.isEditing) {
+    val scroll = getScrollPane(c) ?: return
+    val table = getTable(scroll) ?: return
+    if (hasSelectedCells(table) && !table.isEditing) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.setRenderingHint(
         RenderingHints.KEY_ANTIALIASING,
         RenderingHints.VALUE_ANTIALIAS_ON,
       )
+      // Clip to the viewport (including its border) so that the selection
+      // scrolled out of view is not painted over the header or scrollbars.
+      g2.clip(SwingUtilities.convertRectangle(scroll, scroll.viewportBorderBounds, c))
       val area = Area()
       for (row in table.selectedRows) {
         for (col in table.selectedColumns) {
@@ -130,16 +140,21 @@ private class TranslucentCellSelectionLayerUI : LayerUI<JScrollPane>() {
         }
       }
       val ics = table.intercellSpacing
-      val v = table.selectionBackground
-      val sbc = Color(v.red, v.green, v.blue, 0x32)
+      val selectionColor = table.selectionBackground
+      val translucentColor = Color(
+        selectionColor.red,
+        selectionColor.green,
+        selectionColor.blue,
+        0x32,
+      )
+      g2.stroke = BORDER_STROKE
       for (a in splitIntoSingleLoopAreas(area)) {
         val r = a.bounds
         r.width -= ics.width - 1
         r.height -= ics.height - 1
-        g2.paint = sbc
+        g2.paint = translucentColor
         g2.fill(r)
-        g2.paint = v
-        g2.stroke = BORDER_STROKE
+        g2.paint = selectionColor
         g2.draw(r)
       }
       g2.dispose()
@@ -148,6 +163,9 @@ private class TranslucentCellSelectionLayerUI : LayerUI<JScrollPane>() {
 
   companion object {
     private val BORDER_STROKE = BasicStroke(2f)
+
+    private fun hasSelectedCells(table: JTable) =
+      table.selectedRowCount > 0 && table.selectedColumnCount > 0
 
     private fun addArea(
       c: Component?,
@@ -162,21 +180,14 @@ private class TranslucentCellSelectionLayerUI : LayerUI<JScrollPane>() {
       }
     }
 
-    private fun getTable(c: Component?): JTable? {
-      var table: JTable? = null
-      if (c is JLayer<*>) {
-        val c1: Component? = c.getView()
-        if (c1 is JScrollPane) {
-          table = c1.getViewport().view as? JTable
-        }
-      }
-      return table
-    }
+    private fun getScrollPane(c: Component?) = (c as? JLayer<*>)?.view as? JScrollPane
 
-    fun splitIntoSingleLoopAreas(rect: Area): List<Area> {
+    private fun getTable(scroll: JScrollPane) = scroll.viewport.view as? JTable
+
+    fun splitIntoSingleLoopAreas(area: Area): List<Area> {
       val subArea = mutableListOf<Area>()
       val path = Path2D.Double()
-      val pi = rect.getPathIterator(null)
+      val pi = area.getPathIterator(null)
       val coords = DoubleArray(6)
       while (!pi.isDone) {
         val pathSegmentType = pi.currentSegment(coords)
@@ -220,7 +231,7 @@ private class TranslucentCellSelectionLayerUI : LayerUI<JScrollPane>() {
   }
 }
 
-private class SynthBooleanTableCellRenderer2 :
+private class SynthBooleanTableCellRenderer :
   JCheckBox(),
   TableCellRenderer {
   override fun getTableCellRendererComponent(
