@@ -1,6 +1,7 @@
 package example
 
 import java.awt.*
+import java.awt.event.InputEvent
 import java.awt.event.MouseEvent
 import javax.swing.*
 import javax.swing.plaf.LayerUI
@@ -27,6 +28,7 @@ fun createUI(): Component {
 
 private class ColumnDragLayerUI : LayerUI<JScrollPane>() {
   private val draggableRect = Rectangle()
+  private val dragAreaIcon = DragAreaIcon()
 
   override fun installUI(c: JComponent) {
     super.installUI(c)
@@ -46,12 +48,10 @@ private class ColumnDragLayerUI : LayerUI<JScrollPane>() {
   override fun paint(g: Graphics, c: JComponent) {
     super.paint(g, c)
     if (!draggableRect.isEmpty) {
-      val g2 = g.create() as? Graphics2D ?: return
-      val icon = DragAreaIcon()
-      val x = (draggableRect.centerX - icon.iconWidth / 2.0).toInt()
+      val iw = dragAreaIcon.iconWidth
+      val x = draggableRect.x + (draggableRect.width - iw) / 2
       val y = draggableRect.y + 1
-      icon.paintIcon(c, g2, x, y)
-      g2.dispose()
+      dragAreaIcon.paintIcon(c, g, x, y)
     }
   }
 
@@ -59,12 +59,16 @@ private class ColumnDragLayerUI : LayerUI<JScrollPane>() {
     super.processMouseEvent(e, l)
     val c = e.component
     if (c is JTableHeader) {
-      if (e.id == MouseEvent.MOUSE_PRESSED) {
-        val pt = e.point
-        updateIconAndCursor(c, pt, l)
-      } else if (e.id == MouseEvent.MOUSE_RELEASED) {
+      val id = e.id
+      if (id == MouseEvent.MOUSE_PRESSED) {
+        updateIconAndCursor(c, e.point, l)
+      } else if (id == MouseEvent.MOUSE_RELEASED) {
         c.cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
-        draggableRect.setSize(0, 0)
+        clearDraggableRect(c)
+      } else if (id == MouseEvent.MOUSE_EXITED && !isMouseButtonDown(e)) {
+        // Hide the drag handle icon when the cursor leaves the header,
+        // but keep it while dragging a column outside the header
+        clearDraggableRect(c)
       }
     }
   }
@@ -73,27 +77,35 @@ private class ColumnDragLayerUI : LayerUI<JScrollPane>() {
     val c = e.component
     if (c is JTableHeader) {
       if (e.id == MouseEvent.MOUSE_DRAGGED) {
-        val draggedColumn = c.draggedColumn
-        if (!draggableRect.isEmpty && draggedColumn != null) {
-          EventQueue.invokeLater {
-            val modelIndex = draggedColumn.modelIndex
-            val viewIndex = c.table.convertColumnIndexToView(modelIndex)
-            val rect = c.getHeaderRect(viewIndex)
-            rect.x += c.draggedDistance
-            draggableRect.setRect(SwingUtilities.convertRectangle(c, rect, l))
-            c.repaint(rect)
-          }
-        } else {
-          e.consume() // Refuse to start drag
-        }
+        mouseDragged(e, l, c)
       } else if (e.id == MouseEvent.MOUSE_MOVED) {
-        val pt = e.point
-        updateIconAndCursor(c, pt, l)
+        updateIconAndCursor(c, e.point, l)
         c.repaint()
       }
+    }
+  }
+
+  private fun mouseDragged(
+    e: MouseEvent,
+    l: JLayer<out JScrollPane>,
+    header: JTableHeader,
+  ) {
+    val draggedColumn = header.draggedColumn
+    if (!draggableRect.isEmpty && draggedColumn != null) {
+      // The dragged distance is updated by BasicTableHeaderUI after this
+      // event is processed, so read it later on the EDT
+      EventQueue.invokeLater {
+        // Using columnAtPoint(...) would make the rectangle jump at the moment
+        // the columns are swapped, so convert the model index of the dragged column
+        val modelIndex = draggedColumn.modelIndex
+        val viewIndex = header.table.convertColumnIndexToView(modelIndex)
+        val rect = header.getHeaderRect(viewIndex)
+        rect.x += header.draggedDistance
+        draggableRect.bounds = SwingUtilities.convertRectangle(header, rect, l)
+        header.repaint(rect)
+      }
     } else {
-      c.cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
-      draggableRect.setSize(0, 0)
+      e.consume() // Refuse to start drag
     }
   }
 
@@ -102,11 +114,25 @@ private class ColumnDragLayerUI : LayerUI<JScrollPane>() {
     r.height /= 2
     if (r.contains(pt)) {
       header.cursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)
-      draggableRect.setRect(SwingUtilities.convertRectangle(header, r, l))
+      draggableRect.bounds = SwingUtilities.convertRectangle(header, r, l)
     } else {
       header.cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
       draggableRect.setSize(0, 0)
     }
+  }
+
+  private fun clearDraggableRect(header: JTableHeader) {
+    if (!draggableRect.isEmpty) {
+      draggableRect.setSize(0, 0)
+      header.repaint()
+    }
+  }
+
+  private fun isMouseButtonDown(e: MouseEvent): Boolean {
+    val mask = InputEvent.BUTTON1_DOWN_MASK or
+      InputEvent.BUTTON2_DOWN_MASK or
+      InputEvent.BUTTON3_DOWN_MASK
+    return (e.modifiersEx and mask) != 0
   }
 }
 
@@ -114,15 +140,16 @@ private class DragAreaIcon : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.translate(x, y)
-    val count = 4
-    val diff = 3
-    val firstColumn = (iconWidth - diff * count) / 2
+    g2.paint = SQUARE_COLOR
+    // Center the 2 x 4 grid of squares horizontally
+    val gridWidth = COLUMN_STEP * (COLUMN_COUNT - 1) + SQUARE_SIZE
+    val firstColumn = (iconWidth - gridWidth) / 2
     val firstRow = 1
-    val secondRow = firstRow + diff
-    for (i in 0..<count) {
-      val column = firstColumn + i * diff
-      drawSquare(g2, column, firstRow)
-      drawSquare(g2, column, secondRow)
+    val secondRow = firstRow + ROW_STEP
+    for (i in 0..<COLUMN_COUNT) {
+      val column = firstColumn + i * COLUMN_STEP
+      g2.fillRect(column, firstRow, SQUARE_SIZE, SQUARE_SIZE)
+      g2.fillRect(column, secondRow, SQUARE_SIZE, SQUARE_SIZE)
     }
     g2.dispose()
   }
@@ -131,13 +158,12 @@ private class DragAreaIcon : Icon {
 
   override fun getIconHeight() = 12
 
-  private fun drawSquare(g: Graphics, x: Int, y: Int) {
-    g.color = SQUARE_COLOR
-    g.fillRect(x, y, 2, 2)
-  }
-
   companion object {
     private val SQUARE_COLOR = Color(0x64_64_64_64, true)
+    private const val SQUARE_SIZE = 2
+    private const val COLUMN_COUNT = 4
+    private const val COLUMN_STEP = 4
+    private const val ROW_STEP = 3
   }
 }
 
