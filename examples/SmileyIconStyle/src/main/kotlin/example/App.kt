@@ -4,10 +4,10 @@ import java.awt.*
 import javax.swing.*
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
-import javax.swing.text.DefaultStyledDocument
 import javax.swing.text.Document
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
+import javax.swing.text.StyledDocument
 import javax.swing.text.StyledEditorKit
 
 fun createUI(): Component {
@@ -32,18 +32,22 @@ fun createUI(): Component {
       d: Document,
       offset: Int,
     ) {
-      val doc = d as? DefaultStyledDocument ?: return
-      val elm = doc.getCharacterElement(offset)
+      val doc = d as? StyledDocument ?: return
+      // Limit the search range to the character element around the edited offset
+      val element = doc.getCharacterElement(offset)
+      // The document cannot be mutated inside a DocumentListener notification,
+      // so the attribute change is deferred to the EDT
       EventQueue.invokeLater {
         runCatching {
-          val start = elm.startOffset
-          val end = elm.endOffset
+          val start = element.startOffset
+          val end = element.endOffset
           val text = doc.getText(start, end - start)
+          val face = doc.getStyle(faceMark)
+          val length = faceMark.length
           var pos = text.indexOf(faceMark)
-          while (pos > -1) {
-            val face = doc.getStyle(faceMark)
-            doc.setCharacterAttributes(start + pos, faceMark.length, face, false)
-            pos = text.indexOf(faceMark, pos + faceMark.length)
+          while (pos >= 0) {
+            doc.setCharacterAttributes(start + pos, length, face, false)
+            pos = text.indexOf(faceMark, pos + length)
           }
         }
       }
