@@ -17,6 +17,7 @@ import javax.swing.text.ComponentView
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.text.Document
 import javax.swing.text.DocumentFilter
+import javax.swing.text.EditorKit
 import javax.swing.text.Element
 import javax.swing.text.IconView
 import javax.swing.text.JTextComponent
@@ -65,23 +66,23 @@ private fun createCardLayoutStrategyPanel(): JPanel {
   button.addActionListener { e ->
     val b = (e.source as? AbstractButton)?.isSelected == true
     if (b) {
-      PasswordUiUtils.sync(password.document, visibleTextPane.styledDocument)
+      PasswordUiUtils.copyText(password.document, visibleTextPane.styledDocument)
       cardLayout.show(p, PasswordVisibility.VISIBLE.toString())
     } else {
-      PasswordUiUtils.sync(visibleTextPane.styledDocument, password.document)
+      PasswordUiUtils.copyText(visibleTextPane.styledDocument, password.document)
       cardLayout.show(p, PasswordVisibility.HIDDEN.toString())
     }
   }
   PasswordUiUtils.setupVisibilityToggleButton(button)
 
-  val panel = OverlapLayerPanel()
+  val panel = OverlayLayoutPanel()
   panel.add(button)
   panel.add(p)
   return panel
 }
 
 private fun createEchoCharStrategyPanel(): JPanel {
-  val password = DigitHighlightField(40)
+  val password = DigitHighlightPasswordField(40)
   password.setFont(FONT)
   password.setAlignmentX(Component.RIGHT_ALIGNMENT)
   password.setText("!1l2c$%34e5&6#7=8g9O0")
@@ -97,7 +98,7 @@ private fun createEchoCharStrategyPanel(): JPanel {
     password.setEchoChar(ch)
   }
   PasswordUiUtils.setupVisibilityToggleButton(button)
-  val p = OverlapLayerPanel()
+  val p = OverlayLayoutPanel()
   p.add(button)
   p.add(password)
   return p
@@ -112,16 +113,16 @@ private fun createTitledPanel(title: String, c: Component): Component {
 
 private enum class PasswordVisibility { VISIBLE, HIDDEN }
 
-private class DigitHighlightField(
+private class DigitHighlightPasswordField(
   columns: Int,
 ) : JPasswordField(columns) {
   override fun setEchoChar(c: Char) {
     super.setEchoChar(c)
     val doc = document
     if (doc is AbstractDocument) {
-      val reveal = c == 0.toChar()
+      val reveal = c == 0.toChar() // the null character: show the password as plain text
       if (reveal) {
-        val filter = BackgroundHighlightFilter(this, Color.YELLOW)
+        val filter = DigitHighlightFilter(this, Color.YELLOW)
         doc.documentFilter = filter
         runCatching {
           doc.remove(0, 0)
@@ -129,14 +130,15 @@ private class DigitHighlightField(
           UIManager.getLookAndFeel().provideErrorFeedback(this)
         }
       } else {
-        highlighter.removeAllHighlights()
+        // setEchoChar(...) may be called by the UI delegate before the highlighter is installed
+        highlighter?.removeAllHighlights()
         doc.documentFilter = null
       }
     }
   }
 }
 
-private class BackgroundHighlightFilter(
+private class DigitHighlightFilter(
   private val field: JTextComponent,
   color: Color,
 ) : DocumentFilter() {
@@ -174,15 +176,12 @@ private class BackgroundHighlightFilter(
 
   private fun update(fb: FilterBypass) {
     val doc = fb.document
-    field.highlighter.removeAllHighlights()
+    val highlighter = field.highlighter
+    highlighter.removeAllHighlights()
     runCatching {
-      val highlighter = field.highlighter
-      val text = doc.getText(0, doc.length)
-      val matcher = pattern.matcher(text)
-      var pos = 0
-      while (matcher.find(pos) && matcher.group().isNotEmpty()) {
-        pos = matcher.end()
-        highlighter.addHighlight(matcher.start(), pos, painter)
+      val matcher = pattern.matcher(doc.getText(0, doc.length))
+      while (matcher.find()) {
+        highlighter.addHighlight(matcher.start(), matcher.end(), painter)
       }
     }.onFailure {
       UIManager.getLookAndFeel().provideErrorFeedback(field)
@@ -190,7 +189,7 @@ private class BackgroundHighlightFilter(
   }
 }
 
-private class TextForegroundFilter : DocumentFilter() {
+private class DigitForegroundFilter : DocumentFilter() {
   private val defAttr = SimpleAttributeSet()
   private val numAttr = SimpleAttributeSet()
   private val pattern = Pattern.compile("\\d")
@@ -241,7 +240,7 @@ private class TextForegroundFilter : DocumentFilter() {
   }
 }
 
-private class OverlapLayerPanel : JPanel() {
+private class OverlayLayoutPanel : JPanel() {
   override fun updateUI() {
     super.updateUI()
     setLayout(OverlayLayout(this))
@@ -268,7 +267,7 @@ private class EyeIcon(
     g2.paint = color
     val iw = iconWidth
     val ih = iconHeight
-    val s = iconWidth / 12.0
+    val s = iw / 12.0
     g2.stroke = BasicStroke(s.toFloat())
     val w = iw - s * 2.0
     val h = ih - s * 2.0
@@ -310,9 +309,13 @@ private open class OneLineTextPane : JTextPane() {
       }
     }
     actionMap.put(key, action)
-    editorKit = NoWrapEditorKit()
     enableInputMethods(false)
   }
+
+  // The JTextPane constructor calls setEditorKit(createDefaultEditorKit()) after updateUI(),
+  // so an editor kit set in updateUI() would be overwritten (and replacing it on a
+  // Look&Feel change would also discard the current document).
+  override fun createDefaultEditorKit(): EditorKit = NoWrapEditorKit()
 
   override fun scrollRectToVisible(rect: Rectangle) {
     rect.grow(getInsets().right, 0)
@@ -349,7 +352,7 @@ private class NoWrapEditorKit : StyledEditorKit() {
 }
 
 private object PasswordUiUtils {
-  fun sync(src: Document, dst: Document) {
+  fun copyText(src: Document, dst: Document) {
     runCatching {
       dst.remove(0, dst.length)
       dst.insertString(0, src.getText(0, src.length), null)
@@ -380,17 +383,16 @@ private object PasswordUiUtils {
         super.updateUI()
         setBorder(password.border)
         setFont(password.getFont())
-        setupDocument(styledDocument)
       }
     }
-
+    // Set the filter after construction, since the JTextPane constructor replaces the document
     setupDocument(textPane.styledDocument)
     return textPane
   }
 
   private fun setupDocument(doc: StyledDocument?) {
     if (doc is AbstractDocument) {
-      doc.documentFilter = TextForegroundFilter()
+      doc.documentFilter = DigitForegroundFilter()
     }
   }
 }
