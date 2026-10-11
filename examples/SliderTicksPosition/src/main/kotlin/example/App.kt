@@ -67,7 +67,9 @@ private class VerticalFlipLayerUI : LayerUI<JComponent>() {
   ) {
     if (c is JLayer<*>) {
       val g2 = g.create() as? Graphics2D ?: return
-      g2.transform = getAffineTransform(c.getSize())
+      // Concatenate the flip with the current transform instead of replacing it
+      // with the transform property, which would discard the translation and HiDPI scaling
+      g2.transform(getAffineTransform(c.getSize()))
       super.paint(g2, c)
       g2.dispose()
     } else {
@@ -94,12 +96,9 @@ private class VerticalFlipLayerUI : LayerUI<JComponent>() {
     l: JLayer<out JComponent>,
   ) {
     if (e is MouseEvent) {
-      val pt = e.point.let {
-        runCatching {
-          getAffineTransform(l.size).inverseTransform(it, null)
-        }.getOrNull()
-      } ?: Point()
-      e.translatePoint(0, pt.y.toInt() - e.y)
+      // The vertical flip is its own inverse: y -> height - y
+      // Horizontal: e.translatePoint(l.width - 2 * e.x, 0)
+      e.translatePoint(0, l.height - 2 * e.y)
       e.component.repaint()
     }
     super.eventDispatched(e, l)
