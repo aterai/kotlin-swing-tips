@@ -41,7 +41,11 @@ fun createUI(): Component {
   scroll.setRowHeaderView(LineNumberView(textArea))
 
   val check = JCheckBox("editable", true)
-  check.addActionListener { textArea.isEditable = check.isSelected }
+  check.addActionListener {
+    textArea.isEditable = check.isSelected
+    // setEditable(...) does not revalidate, so recalculate the preferred height here
+    textArea.revalidate()
+  }
 
   return JPanel(BorderLayout()).also {
     it.add(scroll)
@@ -58,16 +62,12 @@ private class LineNumberView(
   private val fontMetrics: FontMetrics
   private val fontAscent: Int
   private val fontHeight: Int
-  private val fontDescent: Int
-  private val fontLeading: Int
 
   init {
     val font = textArea.font
     fontMetrics = getFontMetrics(font)
     fontHeight = fontMetrics.height
     fontAscent = fontMetrics.ascent
-    fontDescent = fontMetrics.descent
-    fontLeading = fontMetrics.leading
 
     val documentListener = object : DocumentListener {
       override fun insertUpdate(e: DocumentEvent) {
@@ -117,17 +117,15 @@ private class LineNumberView(
     g.fillRect(clip.x, clip.y, clip.width, clip.height)
 
     g.color = foreground
-    val base = clip.y
-    val start = getLineAtPoint(base)
-    val end = getLineAtPoint(base + clip.height)
-    var y = start * fontHeight
-    val rmg = insets.right
+    val start = getLineAtPoint(clip.y)
+    val end = getLineAtPoint(clip.y + clip.height)
+    val right = getComponentWidth() - insets.right
+    // baseline of the first visible line
+    var y = start * fontHeight + fontAscent
     for (i in start..end) {
       val text = (i + 1).toString()
-      val x = getComponentWidth() - rmg - fontMetrics.stringWidth(text)
-      y += fontAscent
-      g.drawString(text, x, y)
-      y += fontDescent + fontLeading
+      g.drawString(text, right - fontMetrics.stringWidth(text), y)
+      y += fontHeight
     }
   }
 
