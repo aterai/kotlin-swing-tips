@@ -28,8 +28,6 @@ fun createUI(): Component {
   button.addActionListener {
     val cc = JColorChooser()
     cc.color = label.background
-    val panels = cc.chooserPanels
-    val choosers = panels.toMutableList()
     val ccp = getRgbChooser(cc)
     // Java 9: if (ccp.isColorTransparencySelectionEnabled() && ccp != null) {
     if (ccp != null) {
@@ -39,8 +37,10 @@ fun createUI(): Component {
           init(c)
         }
       }
+      // Pass a new array: setting the same array instance does not fire a
+      // property change event, so the chooser panels would not be reinstalled
+      cc.setChooserPanels(cc.chooserPanels.clone())
     }
-    cc.setChooserPanels(choosers.toTypedArray())
     val ok = ColorTracker(cc)
     val parent = button.rootPane
     val title = "JColorChooser"
@@ -132,7 +132,7 @@ private class ValueFormatter :
       }
     }
 
-    private fun isValidLength(len: Int) = len in 0..8
+    private fun isValidLength(len: Int) = len in 0..LENGTH
 
     private fun isValidCode(code: String) = code.codePoints().allMatch {
       Character.digit(it, 16) >= 0
@@ -140,29 +140,27 @@ private class ValueFormatter :
   }
 
   @Throws(ParseException::class)
-  override fun stringToValue(text: String) = try {
-    // val r = text.substring(0, 2).toInt(16)
-    // val g = text.substring(2, 4).toInt(16)
-    // val b = text.substring(4, 6).toInt(16)
-    // val a = text.substring(6).toInt(16)
-    // a shl 24 or (r shl 16) or (g shl 8) or b
-    Integer.parseUnsignedInt(rgbaToArgb(text), 16)
-  } catch (nfe: NumberFormatException) {
-    val pe = ParseException("illegal format", 0)
-    pe.initCause(nfe)
-    throw pe
+  override fun stringToValue(text: String?): Any {
+    // The DocumentFilter allows 0 to 8 digits, so an incomplete code must be
+    // rejected here, otherwise substring(...) throws StringIndexOutOfBoundsException
+    if (text == null || text.length != LENGTH) {
+      throw ParseException("illegal length", 0)
+    }
+    return try {
+      // Integer.valueOf(argb, 16) throws NumberFormatException if argb > 0x7FFFFFFF
+      Integer.parseUnsignedInt(rgbaToArgb(text), 16)
+    } catch (nfe: NumberFormatException) {
+      val pe = ParseException("illegal format", 0)
+      pe.initCause(nfe)
+      throw pe
+    }
   }
 
   @Throws(ParseException::class)
   override fun valueToString(obj: Any): String {
     if (obj is Int) {
-      var value: Int = obj
-      val array = CharArray(8)
-      for (i in array.indices.reversed()) {
-        array[i] = Character.forDigit(value and 0x0F, 16)
-        value = value shr 4
-      }
-      return argbToRgba(String(array).uppercase())
+      val argb = "%08X".format(Locale.ENGLISH, obj)
+      return argbToRgba(argb)
     }
     throw ParseException("illegal object", 0)
   }
@@ -183,17 +181,15 @@ private class ValueFormatter :
   override fun focusLost(e: FocusEvent) {
     // Do nothing
   }
+
+  companion object {
+    private const val LENGTH = 8
+  }
 }
 
 private fun getRgbChooser(colorChooser: JColorChooser): AbstractColorChooserPanel? {
   val rgbName = UIManager.getString("ColorChooser.rgbNameText", Locale.getDefault())
-  var rgbChooser: AbstractColorChooserPanel? = null
-  for (p in colorChooser.chooserPanels) {
-    if (rgbName == p.displayName) {
-      rgbChooser = p
-    }
-  }
-  return rgbChooser
+  return colorChooser.chooserPanels.firstOrNull { rgbName == it.displayName }
 }
 
 fun main() {
