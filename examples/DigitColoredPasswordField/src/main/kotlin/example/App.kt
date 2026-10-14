@@ -12,22 +12,17 @@ import javax.swing.*
 import javax.swing.text.AbstractDocument
 import javax.swing.text.AttributeSet
 import javax.swing.text.BadLocationException
-import javax.swing.text.BoxView
-import javax.swing.text.ComponentView
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.text.Document
 import javax.swing.text.DocumentFilter
 import javax.swing.text.EditorKit
 import javax.swing.text.Element
-import javax.swing.text.IconView
 import javax.swing.text.JTextComponent
-import javax.swing.text.LabelView
 import javax.swing.text.ParagraphView
 import javax.swing.text.SimpleAttributeSet
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyledDocument
 import javax.swing.text.StyledEditorKit
-import javax.swing.text.View
 import javax.swing.text.ViewFactory
 
 private val FONT = Font(Font.MONOSPACED, Font.PLAIN, 12)
@@ -130,7 +125,8 @@ private class DigitHighlightPasswordField(
           UIManager.getLookAndFeel().provideErrorFeedback(this)
         }
       } else {
-        // setEchoChar(...) may be called by the UI delegate before the highlighter is installed
+        // setEchoChar(...) may be called by the UI delegate before
+        // the highlighter is installed
         highlighter?.removeAllHighlights()
         doc.documentFilter = null
       }
@@ -312,9 +308,9 @@ private open class OneLineTextPane : JTextPane() {
     enableInputMethods(false)
   }
 
-  // The JTextPane constructor calls setEditorKit(createDefaultEditorKit()) after updateUI(),
-  // so an editor kit set in updateUI() would be overwritten (and replacing it on a
-  // Look&Feel change would also discard the current document).
+  // The JTextPane constructor calls setEditorKit(createDefaultEditorKit()) after
+  // updateUI(), so an editor kit set in updateUI() would be overwritten (and replacing
+  // it on a Look&Feel change would also discard the current document).
   override fun createDefaultEditorKit(): EditorKit = NoWrapEditorKit()
 
   override fun scrollRectToVisible(rect: Rectangle) {
@@ -337,18 +333,17 @@ private class NoWrapParagraphView(
   override fun getFlowSpan(index: Int) = Int.MAX_VALUE
 }
 
-private class NoWrapViewFactory : ViewFactory {
-  override fun create(elem: Element) = when (elem.name) {
-    AbstractDocument.ParagraphElementName -> NoWrapParagraphView(elem)
-    AbstractDocument.SectionElementName -> BoxView(elem, View.Y_AXIS)
-    StyleConstants.ComponentElementName -> ComponentView(elem)
-    StyleConstants.IconElementName -> IconView(elem)
-    else -> LabelView(elem)
-  }
-}
-
 private class NoWrapEditorKit : StyledEditorKit() {
-  override fun getViewFactory() = NoWrapViewFactory()
+  override fun getViewFactory(): ViewFactory {
+    val defaultFactory = super.getViewFactory()
+    return ViewFactory { elem ->
+      if (AbstractDocument.ParagraphElementName == elem.name) {
+        NoWrapParagraphView(elem)
+      } else {
+        defaultFactory.create(elem)
+      }
+    }
+  }
 }
 
 private object PasswordUiUtils {

@@ -3,17 +3,12 @@ package example
 import java.awt.*
 import javax.swing.*
 import javax.swing.text.AbstractDocument
-import javax.swing.text.BoxView
-import javax.swing.text.ComponentView
 import javax.swing.text.Element
-import javax.swing.text.IconView
-import javax.swing.text.LabelView
 import javax.swing.text.MutableAttributeSet
 import javax.swing.text.ParagraphView
 import javax.swing.text.SimpleAttributeSet
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyledEditorKit
-import javax.swing.text.View
 import javax.swing.text.ViewFactory
 
 fun createUI(): Component {
@@ -53,23 +48,22 @@ private fun setSampleText(
 }
 
 private class BottomInsetEditorKit : StyledEditorKit() {
-  override fun getViewFactory() = BottomInsetViewFactory()
+  override fun getViewFactory(): ViewFactory {
+    val defaultFactory = super.getViewFactory()
+    return ViewFactory { elem ->
+      if (AbstractDocument.ParagraphElementName == elem.name) {
+        BottomInsetParagraphView(elem)
+      } else {
+        defaultFactory.create(elem)
+      }
+    }
+  }
 }
 
-private class BottomInsetViewFactory : ViewFactory {
-  override fun create(elem: Element) = when (elem.name) {
-    AbstractDocument.ParagraphElementName -> object : ParagraphView(elem) {
-      override fun getBottomInset(): Short = 5
-    }
-
-    AbstractDocument.SectionElementName -> BoxView(elem, View.Y_AXIS)
-
-    StyleConstants.ComponentElementName -> ComponentView(elem)
-
-    StyleConstants.IconElementName -> IconView(elem)
-
-    else -> LabelView(elem)
-  }
+private class BottomInsetParagraphView(
+  element: Element,
+) : ParagraphView(element) {
+  override fun getBottomInset(): Short = 5
 }
 
 fun main() {

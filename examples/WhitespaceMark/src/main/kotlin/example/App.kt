@@ -3,11 +3,8 @@ package example
 import java.awt.*
 import javax.swing.*
 import javax.swing.text.AbstractDocument
-import javax.swing.text.BoxView
-import javax.swing.text.ComponentView
 import javax.swing.text.Document
 import javax.swing.text.Element
-import javax.swing.text.IconView
 import javax.swing.text.LabelView
 import javax.swing.text.ParagraphView
 import javax.swing.text.Position
@@ -17,7 +14,6 @@ import javax.swing.text.StyledDocument
 import javax.swing.text.StyledEditorKit
 import javax.swing.text.TabSet
 import javax.swing.text.TabStop
-import javax.swing.text.View
 import javax.swing.text.ViewFactory
 
 private val TAB_TXT = """
@@ -59,7 +55,18 @@ private class CustomEditorKit : StyledEditorKit() {
     super.install(c)
   }
 
-  override fun getViewFactory() = CustomViewFactory()
+  override fun getViewFactory(): ViewFactory {
+    // Replace only the paragraph and content views and delegate the other elements
+    // to the default StyledEditorKit factory
+    val defaultFactory = super.getViewFactory()
+    return ViewFactory { elem ->
+      when (elem.name) {
+        AbstractDocument.ParagraphElementName -> ParagraphWithEopmView(elem)
+        AbstractDocument.ContentElementName -> WhitespaceLabelView(elem)
+        else -> defaultFactory.create(elem)
+      }
+    }
+  }
 
   override fun createDefaultDocument(): Document {
     val d = super.createDefaultDocument()
@@ -72,17 +79,6 @@ private class CustomEditorKit : StyledEditorKit() {
   companion object {
     private val ATTRS = SimpleAttributeSet()
   }
-}
-
-private class CustomViewFactory : ViewFactory {
-  override fun create(elem: Element) =
-    when (elem.name) {
-      AbstractDocument.ParagraphElementName -> ParagraphWithEopmView(elem)
-      AbstractDocument.SectionElementName -> BoxView(elem, View.Y_AXIS)
-      StyleConstants.ComponentElementName -> ComponentView(elem)
-      StyleConstants.IconElementName -> IconView(elem)
-      else -> WhitespaceLabelView(elem)
-    }
 }
 
 private class ParagraphWithEopmView(

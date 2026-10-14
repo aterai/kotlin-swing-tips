@@ -10,7 +10,7 @@ import javax.swing.text.AttributeSet
 import javax.swing.text.Element
 import javax.swing.text.Position.Bias
 import javax.swing.text.StyleConstants
-import javax.swing.text.View
+import javax.swing.text.ViewFactory
 import javax.swing.text.html.BlockView
 import javax.swing.text.html.HTML
 import javax.swing.text.html.HTMLDocument
@@ -138,29 +138,33 @@ private class CustomTooltipEditorPane : JEditorPane() {
 }
 
 private class TooltipEditorKit : HTMLEditorKit() {
-  override fun getViewFactory() = object : HTMLFactory() {
-    override fun create(elem: Element): View {
-      val a = elem.attributes
-      val name = a.getAttribute(AbstractDocument.ElementNameAttribute)
-      val o = if (name == null) {
-        a.getAttribute(StyleConstants.NameAttribute)
+  override fun getViewFactory(): ViewFactory {
+    val defaultFactory = super.getViewFactory()
+    return ViewFactory { elem ->
+      if (isDiv(elem)) {
+        TooltipBlockView(elem)
       } else {
-        null
-      }
-      return if (o is HTML.Tag && o === HTML.Tag.DIV) {
-        object : BlockView(elem, Y_AXIS) {
-          override fun getToolTipText(
-            x: Float,
-            y: Float,
-            allocation: Shape,
-          ) = super.getToolTipText(x, y, allocation)
-            ?: element?.attributes?.getAttribute(HTML.Attribute.TITLE)?.toString()
-        }
-      } else {
-        super.create(elem)
+        defaultFactory.create(elem)
       }
     }
   }
+
+  private fun isDiv(elem: Element): Boolean {
+    val attrs = elem.attributes
+    val name = attrs.getAttribute(AbstractDocument.ElementNameAttribute)
+    return name == null && attrs.getAttribute(StyleConstants.NameAttribute) === HTML.Tag.DIV
+  }
+}
+
+private class TooltipBlockView(
+  elem: Element,
+) : BlockView(elem, Y_AXIS) {
+  override fun getToolTipText(
+    x: Float,
+    y: Float,
+    allocation: Shape,
+  ) = super.getToolTipText(x, y, allocation)
+    ?: element?.attributes?.getAttribute(HTML.Attribute.TITLE)?.toString()
 }
 
 fun main() {
