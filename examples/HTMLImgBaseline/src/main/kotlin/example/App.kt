@@ -5,7 +5,6 @@ import javax.swing.*
 import javax.swing.text.AbstractDocument
 import javax.swing.text.Element
 import javax.swing.text.StyleConstants
-import javax.swing.text.View
 import javax.swing.text.ViewFactory
 import javax.swing.text.html.HTML
 import javax.swing.text.html.HTMLEditorKit
@@ -42,34 +41,29 @@ private fun makeEditorPane(
 
 private class ImgBaselineHtmlEditorKit : HTMLEditorKit() {
   override fun getViewFactory(): ViewFactory {
-    return object : HTMLFactory() {
-      override fun create(elem: Element): View {
-        // val view = super.create(elem)
-        // if (view is LabelView) {
-        //   println("debug: " + view.getAlignment(View.Y_AXIS))
-        // }
-        val attrs = elem.attributes
-        val elementName = attrs.getAttribute(AbstractDocument.ElementNameAttribute)
-        val o = if (elementName == null) {
-          attrs.getAttribute(StyleConstants.NameAttribute)
-        } else {
-          null
-        }
-        return if (o is HTML.Tag && o === HTML.Tag.IMG) {
-          createImageView(elem)
-        } else {
-          super.create(elem)
-        }
+    val defaultFactory = super.getViewFactory()
+    return ViewFactory { elem ->
+      if (isImg(elem)) {
+        BaselineImageView(elem)
+      } else {
+        defaultFactory.create(elem)
       }
     }
   }
 
-  private fun createImageView(elem: Element) =
-    object : ImageView(elem) {
-      // .8125f magic number
-      override fun getAlignment(axis: Int) =
-        if (axis == Y_AXIS) .8125f else super.getAlignment(axis)
-    }
+  private fun isImg(elem: Element): Boolean {
+    val attrs = elem.attributes
+    val name = attrs.getAttribute(AbstractDocument.ElementNameAttribute)
+    return name == null && attrs.getAttribute(StyleConstants.NameAttribute) === HTML.Tag.IMG
+  }
+}
+
+private class BaselineImageView(
+  elem: Element,
+) : ImageView(elem) {
+  // .8125f magic number
+  override fun getAlignment(axis: Int) =
+    if (axis == Y_AXIS) .8125f else super.getAlignment(axis)
 }
 
 fun main() {

@@ -12,18 +12,13 @@ import javax.swing.border.Border
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.text.AbstractDocument
-import javax.swing.text.BoxView
-import javax.swing.text.ComponentView
 import javax.swing.text.DefaultEditorKit
 import javax.swing.text.Element
-import javax.swing.text.IconView
 import javax.swing.text.JTextComponent
 import javax.swing.text.LabelView
-import javax.swing.text.ParagraphView
 import javax.swing.text.SimpleAttributeSet
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyledEditorKit
-import javax.swing.text.View
 import javax.swing.text.ViewFactory
 
 fun createUI(): Component {
@@ -419,24 +414,22 @@ private class TextComponentPopupMenu : JPopupMenu() {
 }
 
 private class WrapEditorKit : StyledEditorKit() {
-  override fun getViewFactory() = WrapColumnFactory()
-}
-
-private class WrapColumnFactory : ViewFactory {
-  override fun create(element: Element) =
-    when (element.name) {
-      AbstractDocument.ContentElementName -> WrapLabelView(element)
-      AbstractDocument.ParagraphElementName -> ParagraphView(element)
-      AbstractDocument.SectionElementName -> BoxView(element, View.Y_AXIS)
-      StyleConstants.ComponentElementName -> ComponentView(element)
-      StyleConstants.IconElementName -> IconView(element)
-      else -> LabelView(element)
+  override fun getViewFactory(): ViewFactory {
+    val defaultFactory = super.getViewFactory()
+    return ViewFactory { elem ->
+      if (AbstractDocument.ContentElementName == elem.name) {
+        WrapLabelView(elem)
+      } else {
+        defaultFactory.create(elem)
+      }
     }
+  }
 }
 
 private class WrapLabelView(
   element: Element?,
 ) : LabelView(element) {
+  // https://stackoverflow.com/questions/30590031/jtextpane-line-wrap-behavior
   override fun getMinimumSpan(axis: Int) = if (axis == X_AXIS) {
     0f
   } else {

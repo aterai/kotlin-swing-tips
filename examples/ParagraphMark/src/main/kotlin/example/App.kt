@@ -3,21 +3,15 @@ package example
 import java.awt.*
 import javax.swing.*
 import javax.swing.text.AbstractDocument
-import javax.swing.text.BoxView
-import javax.swing.text.ComponentView
 import javax.swing.text.Element
-import javax.swing.text.IconView
-import javax.swing.text.LabelView
 import javax.swing.text.ParagraphView
 import javax.swing.text.Position
-import javax.swing.text.StyleConstants
 import javax.swing.text.StyledEditorKit
-import javax.swing.text.View
 import javax.swing.text.ViewFactory
 
 fun createUI(): Component {
   val editor = JEditorPane()
-  editor.editorKit = MyEditorKit()
+  editor.editorKit = ParagraphMarkEditorKit()
   editor.text = """
     1234123541341234123423
     12374612340
@@ -31,21 +25,22 @@ fun createUI(): Component {
   }
 }
 
-private class MyEditorKit : StyledEditorKit() {
-  override fun getViewFactory() = MyViewFactory()
-}
-
-private class MyViewFactory : ViewFactory {
-  override fun create(elem: Element) = when (elem.name) {
-    AbstractDocument.ParagraphElementName -> ParagraphWithEopmView(elem)
-    AbstractDocument.SectionElementName -> BoxView(elem, View.Y_AXIS)
-    StyleConstants.ComponentElementName -> ComponentView(elem)
-    StyleConstants.IconElementName -> IconView(elem)
-    else -> LabelView(elem)
+private class ParagraphMarkEditorKit : StyledEditorKit() {
+  override fun getViewFactory(): ViewFactory {
+    // Replace only the paragraph view and delegate the other elements
+    // to the default StyledEditorKit factory
+    val defaultFactory = super.getViewFactory()
+    return ViewFactory { elem ->
+      if (AbstractDocument.ParagraphElementName == elem.name) {
+        ParagraphMarkView(elem)
+      } else {
+        defaultFactory.create(elem)
+      }
+    }
   }
 }
 
-private class ParagraphWithEopmView(
+private class ParagraphMarkView(
   elem: Element?,
 ) : ParagraphView(elem) {
   override fun paint(
@@ -53,16 +48,17 @@ private class ParagraphWithEopmView(
     allocation: Shape,
   ) {
     super.paint(g, allocation)
-    paintCustomParagraph(g, allocation)
+    paintParagraphMark(g, allocation)
   }
 
-  private fun paintCustomParagraph(
+  private fun paintParagraphMark(
     g: Graphics,
     a: Shape,
   ) {
     runCatching {
-      val paragraph = modelToView(endOffset, a, Position.Bias.Backward)
-      val r = paragraph?.bounds ?: a.bounds
+      // Backward bias keeps the mark on the last row of a wrapped paragraph
+      val eop = modelToView(endOffset, a, Position.Bias.Backward)
+      val r = eop?.bounds ?: a.bounds
       val x = r.x
       val y = r.y
       val h = r.height

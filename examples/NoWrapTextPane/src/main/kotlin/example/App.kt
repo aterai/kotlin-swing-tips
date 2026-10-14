@@ -5,15 +5,9 @@ import java.awt.event.ActionListener
 import java.util.concurrent.Executors
 import javax.swing.*
 import javax.swing.text.AbstractDocument
-import javax.swing.text.BoxView
-import javax.swing.text.ComponentView
 import javax.swing.text.Element
-import javax.swing.text.IconView
-import javax.swing.text.LabelView
 import javax.swing.text.ParagraphView
-import javax.swing.text.StyleConstants
 import javax.swing.text.StyledEditorKit
-import javax.swing.text.View
 import javax.swing.text.ViewFactory
 
 private var text: String? = null
@@ -91,18 +85,17 @@ private class NoWrapParagraphView(
   override fun getFlowSpan(index: Int) = Int.MAX_VALUE
 }
 
-private class NoWrapViewFactory : ViewFactory {
-  override fun create(elem: Element) = when (elem.name) {
-    AbstractDocument.ParagraphElementName -> NoWrapParagraphView(elem)
-    AbstractDocument.SectionElementName -> BoxView(elem, View.Y_AXIS)
-    StyleConstants.ComponentElementName -> ComponentView(elem)
-    StyleConstants.IconElementName -> IconView(elem)
-    else -> LabelView(elem)
-  }
-}
-
 private class NoWrapEditorKit2 : StyledEditorKit() {
-  override fun getViewFactory() = NoWrapViewFactory()
+  override fun getViewFactory(): ViewFactory {
+    val defaultFactory = super.getViewFactory()
+    return ViewFactory { elem ->
+      if (AbstractDocument.ParagraphElementName == elem.name) {
+        NoWrapParagraphView(elem)
+      } else {
+        defaultFactory.create(elem)
+      }
+    }
+  }
 }
 
 fun main() {

@@ -5,18 +5,13 @@ import java.awt.event.FocusEvent
 import java.util.Objects
 import javax.swing.*
 import javax.swing.text.AbstractDocument
-import javax.swing.text.BoxView
-import javax.swing.text.ComponentView
 import javax.swing.text.DefaultCaret
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter
 import javax.swing.text.Element
 import javax.swing.text.Highlighter.HighlightPainter
-import javax.swing.text.IconView
 import javax.swing.text.JTextComponent
-import javax.swing.text.LabelView
 import javax.swing.text.ParagraphView
 import javax.swing.text.Position.Bias
-import javax.swing.text.StyleConstants
 import javax.swing.text.StyledEditorKit
 import javax.swing.text.View
 import javax.swing.text.ViewFactory
@@ -56,7 +51,7 @@ fun createUI(): Component {
 
 private fun makeEditorPane(txt: String): JEditorPane {
   val editor = JEditorPane()
-  editor.editorKit = MyEditorKit()
+  editor.editorKit = ParagraphMarkEditorKit()
   editor.text = """
     $txt
 
@@ -140,20 +135,17 @@ private class FocusCaret(
     .format(nonFocusPainter, selectionPainter)
 }
 
-private class MyEditorKit :
-  StyledEditorKit(),
-  ViewFactory {
-  override fun getViewFactory() = this
-
-  override fun create(elem: Element) =
-    when (elem.name ?: LabelView(elem)) {
-      AbstractDocument.ContentElementName -> LabelView(elem)
-      AbstractDocument.ParagraphElementName -> ParagraphWithEndMarkView(elem)
-      AbstractDocument.SectionElementName -> BoxView(elem, View.Y_AXIS)
-      StyleConstants.ComponentElementName -> ComponentView(elem)
-      StyleConstants.IconElementName -> IconView(elem)
-      else -> LabelView(elem)
+private class ParagraphMarkEditorKit : StyledEditorKit() {
+  override fun getViewFactory(): ViewFactory {
+    val defaultFactory = super.getViewFactory()
+    return ViewFactory { elem ->
+      if (AbstractDocument.ParagraphElementName == elem.name) {
+        ParagraphWithEndMarkView(elem)
+      } else {
+        defaultFactory.create(elem)
+      }
     }
+  }
 }
 
 private class ParagraphWithEndMarkView(
