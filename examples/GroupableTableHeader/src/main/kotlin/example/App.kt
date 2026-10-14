@@ -77,14 +77,14 @@ private class GroupableTableHeader(
     columnGroups.add(g)
   }
 
-  fun getColumnGroups(col: TableColumn): List<*> {
+  fun getColumnGroups(col: TableColumn): List<ColumnGroup> {
     for (cg in columnGroups) {
       val groups = cg.getColumnGroupList(col, mutableListOf())
       if (groups.isNotEmpty()) {
         return groups
       }
     }
-    return emptyList<Any>()
+    return emptyList()
   }
 
   @Throws(IOException::class)
@@ -111,48 +111,68 @@ private class GroupableTableHeaderUI : BasicTableHeaderUI() {
     g: Graphics,
     c: JComponent?,
   ) {
-    val clip = g.clipBounds
-    // val left = clip.getLocation()
-    // val right = Point(clip.x + clip.width - 1, clip.y)
     val cm = header.columnModel
-    val colMin = header.columnAtPoint(clip.location)
-    val colMax = header.columnAtPoint(Point(clip.x + clip.width - 1, clip.y))
+    if (cm.columnCount <= 0) {
+      return
+    }
+    val clip = g.clipBounds
+    // columnAtPoint(...) returns -1 if the point is outside the columns
+    // (e.g. AUTO_RESIZE_OFF and the header is wider than the total column width)
+    val colMin = maxOf(header.columnAtPoint(clip.location), 0)
+    val colMax = header
+      .columnAtPoint(Point(clip.x + clip.width - 1, clip.y))
+      .takeIf { it >= 0 } ?: cm.columnCount - 1
 
     val cellRect = header.getHeaderRect(colMin)
     val headerY = cellRect.y
     val headerHeight = cellRect.height
 
-    val map = hashMapOf<ColumnGroup, Rectangle>()
-    // val columnMargin = header.getColumnModel().getColumnMargin()
+    val groupRects = hashMapOf<ColumnGroup, Rectangle>()
     for (column in colMin..colMax) {
       val tc = cm.getColumn(column)
       cellRect.y = headerY
       cellRect.setSize(tc.width, headerHeight)
 
       var groupHeight = 0
-      for (o in (header as? GroupableTableHeader)?.getColumnGroups(tc).orEmpty()) {
-        val group = o as? ColumnGroup ?: continue
-        val groupRect = map[group] ?: makeGroupRect(cellRect, group, map)
-        paintCellGroup(g, groupRect, group)
+      for (cg in getColumnGroups(tc)) {
+        val y = cellRect.y
+        // The clip area may start in the middle of a group,
+        // so the group rectangle must start from its leftmost column
+        val groupRect = groupRects.getOrPut(cg) { createGroupRect(cg, y) }
+        paintCellGroup(g, groupRect, cg)
         groupHeight += groupRect.height
         cellRect.height = headerHeight - groupHeight
-        cellRect.y = groupHeight
+        cellRect.y = headerY + groupHeight
       }
-      paintCell(g, cellRect, column)
+      paintColumnCell(g, cellRect, column)
       cellRect.x += cellRect.width
     }
   }
 
-  private fun makeGroupRect(
-    cellRect: Rectangle,
-    columnGroup: ColumnGroup,
-    map: HashMap<ColumnGroup, Rectangle>,
-  ) = Rectangle(cellRect.location, columnGroup.getSize(header)).also {
-    map[columnGroup] = it
+  private fun getColumnGroups(tc: TableColumn) =
+    (header as? GroupableTableHeader)?.getColumnGroups(tc).orEmpty()
+
+  private fun createGroupRect(
+    cg: ColumnGroup,
+    y: Int,
+  ): Rectangle {
+    val d = cg.getSize(header)
+    return Rectangle(getGroupX(cg), y, d.width, d.height)
+  }
+
+  private fun getGroupX(cg: ColumnGroup): Int {
+    var x = 0
+    for (tc in header.columnModel.columns) {
+      if (getColumnGroups(tc).contains(cg)) {
+        break
+      }
+      x += tc.width
+    }
+    return x
   }
 
   // Copied from javax/swing/plaf/basic/BasicTableHeaderUI.java
-  private fun getHeaderRenderer(columnIndex: Int): Component {
+  private fun getColumnRendererComponent(columnIndex: Int): Component {
     val tc = header.columnModel.getColumn(columnIndex)
     val r = tc.headerRenderer ?: header.defaultRenderer
     val hasFocus = !header.isPaintingForPrint && header.hasFocus()
@@ -169,12 +189,12 @@ private class GroupableTableHeaderUI : BasicTableHeaderUI() {
   }
 
   // Copied from javax/swing/plaf/basic/BasicTableHeaderUI.java
-  private fun paintCell(
+  private fun paintColumnCell(
     g: Graphics,
     rect: Rectangle,
     columnIndex: Int,
   ) {
-    val c = getHeaderRenderer(columnIndex)
+    val c = getColumnRendererComponent(columnIndex)
     rendererPane.paintComponent(
       g,
       c,
@@ -207,15 +227,14 @@ private class GroupableTableHeaderUI : BasicTableHeaderUI() {
     )
   }
 
-  private fun getHeaderHeight(): Int {
+  private fun calcHeaderHeight(): Int {
     var height = 0
     val columnModel = header.columnModel
     for (column in 0..<columnModel.columnCount) {
       val tc = columnModel.getColumn(column)
-      val comp = getHeaderRenderer(column)
+      val comp = getColumnRendererComponent(column)
       var rendererHeight = comp.preferredSize.height
-      for (o in (header as? GroupableTableHeader)?.getColumnGroups(tc).orEmpty()) {
-        val cg = o as? ColumnGroup ?: continue
+      for (cg in getColumnGroups(tc)) {
         rendererHeight += cg.getSize(header).height
       }
       height = maxOf(height, rendererHeight)
@@ -226,7 +245,7 @@ private class GroupableTableHeaderUI : BasicTableHeaderUI() {
   // Copied from javax/swing/plaf/basic/BasicTableHeaderUI.java
   // private fun createHeaderSize(width: Long): Dimension {
   //   val w = minOf(width, Integer.MAX_VALUE.toLong())
-  //   return Dimension(w.toInt(), getHeaderHeight())
+  //   return Dimension(w.toInt(), calcHeaderHeight())
   // }
 
   override fun getPreferredSize(c: JComponent?): Dimension {
@@ -234,7 +253,7 @@ private class GroupableTableHeaderUI : BasicTableHeaderUI() {
       .toList()
       .sumOf { it.preferredWidth.toLong() }
     val w = minOf(width, Int.MAX_VALUE.toLong()).toInt()
-    val h = getHeaderHeight()
+    val h = calcHeaderHeight()
     return Dimension(w, h)
   }
 }
@@ -250,7 +269,7 @@ private class GroupableTableHeaderUI : BasicTableHeaderUI() {
 private class ColumnGroup(
   text: String,
 ) {
-  private val list = mutableListOf<Any>()
+  private val children = mutableListOf<Any>()
   val headerValue = text
 
   /**
@@ -258,18 +277,18 @@ private class ColumnGroup(
    * @param obj TableColumn or ColumnGroup
    */
   fun add(obj: Any?) {
-    obj?.also { list.add(it) }
+    obj?.also { children.add(it) }
   }
 
   fun getColumnGroupList(
     column: TableColumn,
-    groups: MutableList<Any>,
-  ): List<*> {
+    groups: MutableList<ColumnGroup>,
+  ): List<ColumnGroup> {
     groups.add(this)
-    return if (list.contains(column)) {
+    return if (children.contains(column)) {
       groups
     } else {
-      list
+      children
         .filterIsInstance<ColumnGroup>()
         .map { it.getColumnGroupList(column, groups) }
         .firstOrNull { it.isNotEmpty() }
@@ -288,7 +307,7 @@ private class ColumnGroup(
       -1,
     )
     var width = 0
-    for (o in list) {
+    for (o in children) {
       width += when (o) {
         is TableColumn -> o.width
         is ColumnGroup -> o.getSize(header).width
