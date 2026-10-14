@@ -55,7 +55,9 @@ fun createUI(): Component {
 
 private class TextAreaCellRenderer : TableCellRenderer {
   private val renderer = JTextArea()
-  private val rowAndCellHeights = mutableListOf<MutableList<Int>>()
+
+  // Caches the preferred height of each cell: cellHeights[row][column]
+  private val cellHeights = mutableListOf<MutableList<Int>>()
 
   init {
     renderer.lineWrap = true
@@ -73,31 +75,36 @@ private class TextAreaCellRenderer : TableCellRenderer {
   ): Component {
     renderer.font = table.font
     renderer.text = value?.toString() ?: ""
-    adjustRowHeight(table, row, column)
+    // The trick for this to work properly is to set the width of the column to the
+    // text area. The reason for this is that getPreferredSize(), without a width tries
+    // to place all the text in one line. By setting the size with the width of the column,
+    // getPreferredSize() returns the proper height which the row should have in
+    // order to make room for the text.
+    // http://blog.botunge.dk/post/2009/10/09/JTable-multiline-cell-renderer.aspx
+    renderer.bounds = table.getCellRect(row, column, false)
+    val maxHeight = updateCellHeight(row, column, renderer.preferredSize.height)
+    if (table.getRowHeight(row) != maxHeight) {
+      table.setRowHeight(row, maxHeight)
+    }
     return renderer
   }
 
-  // Calculate the new preferred height for a given row, and sets the height on the table.
-  // http://blog.botunge.dk/post/2009/10/09/JTable-multiline-cell-renderer.aspx
-  private fun adjustRowHeight(
-    table: JTable,
+  // Stores the preferred height of the given cell and returns the maximum
+  // cell height of the row, i.e. the height that the row should have.
+  private fun updateCellHeight(
     row: Int,
     column: Int,
-  ) {
-    renderer.bounds = table.getCellRect(row, column, false)
-    val preferredHeight = renderer.preferredSize.height
-    while (rowAndCellHeights.size <= row) {
-      rowAndCellHeights.add(ArrayList(column))
+    height: Int,
+  ): Int {
+    while (cellHeights.size <= row) {
+      cellHeights.add(mutableListOf())
     }
-    val list = rowAndCellHeights[row]
-    while (list.size <= column) {
-      list.add(0)
+    val colHeights = cellHeights[row]
+    while (colHeights.size <= column) {
+      colHeights.add(0)
     }
-    list[column] = preferredHeight
-    val max = list.maxOrNull() ?: 0
-    if (table.getRowHeight(row) != max) {
-      table.setRowHeight(row, max)
-    }
+    colHeights[column] = height
+    return colHeights.max()
   }
 }
 
