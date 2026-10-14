@@ -49,7 +49,6 @@ private open class CheckedComboBox(
   model: ComboBoxModel<CheckBoxItem>,
 ) : JComboBox<CheckBoxItem>(model) {
   protected var keepOpen = false
-  private val panel = JPanel(BorderLayout())
 
   override fun getPreferredSize() = Dimension(200, 20)
 
@@ -68,12 +67,13 @@ private open class CheckedComboBox(
         }
       })
     }
+    val panel = JPanel(BorderLayout())
     val renderer = DefaultListCellRenderer()
     val check = JCheckBox()
     check.isOpaque = false
     setRenderer { list, value, index, isSelected, cellHasFocus ->
       panel.removeAll()
-      val c = renderer.getListCellRendererComponent(
+      renderer.getListCellRendererComponent(
         list,
         value,
         index,
@@ -81,19 +81,19 @@ private open class CheckedComboBox(
         cellHasFocus,
       )
       if (index < 0) {
-        c.foreground = list.foreground
-        (c as? JLabel)?.also {
-          it.text = getCheckedItemString(list.model).ifEmpty { " " }
-          it.isOpaque = false
-        }
+        // JComboBox itself: show the checked items as a comma-separated text
+        // An empty string may collapse the height of the JComboBox
+        renderer.text = getCheckedItemString(list.model).ifEmpty { " " }
+        renderer.isOpaque = false
+        renderer.foreground = list.foreground
         panel.isOpaque = false
       } else {
         check.isSelected = value.isSelected
         panel.add(check, BorderLayout.WEST)
         panel.isOpaque = true
-        panel.background = c.background
+        panel.background = renderer.background
       }
-      panel.add(c)
+      panel.add(renderer)
       panel
     }
     initActionMap()
