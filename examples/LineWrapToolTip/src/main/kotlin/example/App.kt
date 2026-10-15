@@ -6,6 +6,8 @@ import java.awt.font.LineBreakMeasurer
 import java.awt.font.TextAttribute
 import java.text.AttributedString
 import javax.swing.*
+import kotlin.math.ceil
+import kotlin.math.max
 import kotlin.math.min
 
 fun createUI(): Component {
@@ -13,11 +15,11 @@ fun createUI(): Component {
   val txt = "A ${very}long tooltip that must be line wrap"
   val b1 = JButton("JToolTip(Default)")
   b1.toolTipText = "$txt: 1"
-  val b2 = makeButton("LineWrapToolTip: Long")
+  val b2 = createButton("LineWrapToolTip: Long")
   b2.toolTipText = "$txt: 2"
-  val b3 = makeButton("LineWrapToolTip: Short")
+  val b3 = createButton("LineWrapToolTip: Short")
   b3.toolTipText = "ToolTipText: 3"
-  val field = makeTextField("$txt: 4")
+  val field = createTextField("$txt: 4")
   field.toolTipText = field.text
   val box = Box.createVerticalBox()
   box.add(b1)
@@ -34,52 +36,49 @@ fun createUI(): Component {
   }
 }
 
-private fun makeButton(title: String) = object : JButton(title) {
+private fun createButton(title: String) = object : JButton(title) {
   private var tip: JToolTip? = null
 
   override fun createToolTip() = tip ?: LineWrapToolTip().also {
     it.setComponent(this)
+    tip = it
   }
 
   override fun getToolTipText(e: MouseEvent): String? {
     val tipText = super.getToolTipText(e)
-    EventQueue.invokeLater {
-      if (tip != null) {
-        SwingUtilities.getWindowAncestor(tip)?.also {
-          if (it.type == Window.Type.POPUP) {
-            it.pack()
-          }
-        }
-      }
-    }
+    packToolTipWindow(tip)
     return tipText
   }
 }
 
-private fun makeTextField(txt: String): JTextField {
+private fun createTextField(txt: String): JTextField {
   val field = object : JTextField(20) {
     private var tip: JToolTip? = null
 
     override fun createToolTip() = tip ?: LineWrapToolTip().also {
       it.setComponent(this)
+      tip = it
     }
 
     override fun getToolTipText(e: MouseEvent): String? {
       val tipText = text
-      EventQueue.invokeLater {
-        if (tip != null) {
-          SwingUtilities.getWindowAncestor(tip)?.also {
-            if (it.type == Window.Type.POPUP) {
-              it.pack()
-            }
-          }
-        }
-      }
+      packToolTipWindow(tip)
       return tipText
     }
   }
   field.text = txt
   return field
+}
+
+// The tooltip may not have been created yet when getToolTipText(...) is first called
+// (ToolTipManager calls it on mouseEntered), so a null check is required.
+private fun packToolTipWindow(tip: JToolTip?) {
+  EventQueue.invokeLater {
+    tip
+      ?.let { SwingUtilities.getWindowAncestor(it) }
+      ?.takeIf { it.type == Window.Type.POPUP }
+      ?.pack()
+  }
 }
 
 private class LineWrapToolTip : JToolTip() {
@@ -108,36 +107,46 @@ private class LineWrapToolTip : JToolTip() {
 
   override fun getPreferredSize(): Dimension {
     val d = layout.preferredLayoutSize(this)
-    val version = System.getProperty("java.specification.version")
-    return if (version.toDouble() >= JAVA_21) {
-      getTextAreaSize21(d)
-    } else {
-      getTextAreaSize8(d)
-    }
+    return if (JAVA21_OR_LATER) getPreferredSizeJava21(d) else getPreferredSizeJava8(d)
   }
 
-  private fun getTextAreaSize8(d: Dimension): Dimension {
+  private fun getPreferredSizeJava8(d: Dimension): Dimension {
     val font = textArea.font
     MEASURER.font = font
     MEASURER.text = textArea.text
-    val pad = getTextAreaPaddingWidth(insets)
+    val i = insets
+    val pad = getTextAreaPaddingWidth(i)
     d.width = min(TIP_WIDTH, MEASURER.preferredSize.width + pad)
-    val attr = AttributedString(textArea.text)
-    attr.addAttribute(TextAttribute.FONT, font)
-    val aci = attr.iterator
-    val fm = textArea.getFontMetrics(font)
-    val frc = fm.fontRenderContext
-    val lbm = LineBreakMeasurer(aci, frc)
-    var y = 0f
-    while (lbm.position < aci.endIndex) {
-      val tl = lbm.nextLayout(TIP_WIDTH.toFloat())
-      y += tl.descent + tl.leading + tl.ascent
-    }
-    d.height = y.toInt() + getTextAreaPaddingHeight(insets)
+
+    // JDK-8226513 JEditorPane is shown with incorrect size - Java Bug System
+    // https://bugs.openjdk.org/browse/JDK-8226513
+    // Wrap the text with the width actually available to the text,
+    // not the whole tooltip width.
+    val wrappingWidth = max(1f, (d.width - pad).toFloat())
+    d.height = ceil(getWrappedTextHeight(font, wrappingWidth)).toInt() +
+      getTextAreaPaddingHeight(i)
     return d
   }
 
-  private fun getTextAreaSize21(d: Dimension): Dimension {
+  private fun getWrappedTextHeight(font: Font, wrappingWidth: Float): Float {
+    val text = textArea.text
+    var height = 0f
+    // AttributedString#addAttribute(...) throws IllegalArgumentException for an empty text
+    if (!text.isNullOrEmpty()) {
+      val attr = AttributedString(text)
+      attr.addAttribute(TextAttribute.FONT, font)
+      val aci = attr.iterator
+      val frc = textArea.getFontMetrics(font).fontRenderContext
+      val lbm = LineBreakMeasurer(aci, frc)
+      while (lbm.position < aci.endIndex) {
+        val tl = lbm.nextLayout(wrappingWidth)
+        height += tl.ascent + tl.descent + tl.leading
+      }
+    }
+    return height
+  }
+
+  private fun getPreferredSizeJava21(d: Dimension): Dimension {
     MEASURER.font = textArea.font
     MEASURER.text = textArea.text
     val pad = getTextAreaPaddingWidth(insets)
@@ -180,9 +189,15 @@ private class LineWrapToolTip : JToolTip() {
   override fun getTipText(): String? = textArea?.text
 
   companion object {
-    private const val JAVA_21 = 21.0
+    private val JAVA21_OR_LATER = isJava21OrLater()
     private val MEASURER = JLabel(" ")
     private const val TIP_WIDTH = 200
+
+    private fun isJava21OrLater(): Boolean {
+      // "1.8", "11", "17", "21", ...
+      val version = System.getProperty("java.specification.version")
+      return version.toDouble() >= 21.0
+    }
   }
 }
 
