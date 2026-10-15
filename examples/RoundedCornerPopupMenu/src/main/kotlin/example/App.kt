@@ -7,19 +7,19 @@ import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreePath
 
 fun createUI(): Component {
-  val popup = makePopupMenu()
+  val popup = createPopupMenu()
   val tree = JTree()
   tree.componentPopupMenu = popup
   return JPanel(BorderLayout()).also {
-    val mb = JMenuBar()
-    mb.add(LookAndFeelUtils.createLookAndFeelMenu())
-    EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
+    val menuBar = JMenuBar()
+    menuBar.add(LookAndFeelUtils.createLookAndFeelMenu())
+    EventQueue.invokeLater { it.rootPane.jMenuBar = menuBar }
     it.add(JScrollPane(tree))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makePopupMenu(): JPopupMenu {
+private fun createPopupMenu(): JPopupMenu {
   val p = JPopupMenu()
   p.add("add").addActionListener {
     val tree = p.invoker as? JTree
