@@ -28,8 +28,8 @@ fun createUI(): Component {
   LOGGER.addHandler(TextAreaHandler(TextAreaOutputStream(textArea)))
   LOGGER.info { "test, TEST" }
 
-  val button = JButton("Clear")
-  button.addActionListener { textArea.text = "" }
+  val clearButton = JButton("Clear")
+  clearButton.addActionListener { textArea.text = "" }
 
   val textField = JTextField("aaa")
 
@@ -40,7 +40,7 @@ fun createUI(): Component {
   box.add(Box.createHorizontalStrut(5))
   box.add(JButton(EnterAction(textField)))
   box.add(Box.createHorizontalStrut(5))
-  box.add(button)
+  box.add(clearButton)
 
   return JPanel(BorderLayout()).also {
     it.add(JScrollPane(textArea))
@@ -73,8 +73,17 @@ private class TextAreaOutputStream(
 
   @Throws(IOException::class)
   override fun flush() {
-    textArea.append(buffer.toString("UTF-8"))
+    val text = buffer.toString("UTF-8")
     buffer.reset()
+    if (text.isEmpty()) {
+      return
+    }
+    // Logger may be called from any thread, so update the JTextArea on the EDT
+    if (EventQueue.isDispatchThread()) {
+      textArea.append(text)
+    } else {
+      EventQueue.invokeLater { textArea.append(text) }
+    }
   }
 
   override fun write(b: Int) {
@@ -91,8 +100,8 @@ private class TextAreaOutputStream(
 }
 
 private class TextAreaHandler(
-  os: OutputStream,
-) : StreamHandler(os, SimpleFormatter()) {
+  out: OutputStream,
+) : StreamHandler(out, SimpleFormatter()) {
   override fun getEncoding() = StandardCharsets.UTF_8.name()
 
   @Synchronized
