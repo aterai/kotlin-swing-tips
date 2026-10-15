@@ -6,10 +6,10 @@ import javax.imageio.ImageIO
 import javax.swing.*
 
 fun createUI(): Component {
-  val popup0 = JPopupMenu()
-  initPopupMenu(popup0)
-  val popup1 = DropShadowPopupMenu()
-  initPopupMenu(popup1)
+  val defaultPopup = JPopupMenu()
+  initPopupMenu(defaultPopup)
+  val shadowPopup: JPopupMenu = DropShadowPopupMenu()
+  initPopupMenu(shadowPopup)
 
   val cl = Thread.currentThread().contextClassLoader
   val icon = cl
@@ -19,12 +19,12 @@ fun createUI(): Component {
     ?.let { ImageIcon(it) }
     ?: MissingIcon()
   val label = JLabel(icon)
-  label.componentPopupMenu = popup1
+  label.componentPopupMenu = shadowPopup
 
   val check = JCheckBox("Paint Shadow", true)
   check.addActionListener { e ->
     val b = (e.source as? JCheckBox)?.isSelected == true
-    label.componentPopupMenu = if (b) popup1 else popup0
+    label.componentPopupMenu = if (b) shadowPopup else defaultPopup
   }
 
   return JPanel(BorderLayout()).also {
@@ -34,10 +34,10 @@ fun createUI(): Component {
   }
 }
 
-private fun initPopupMenu(p: JPopupMenu) {
-  listOf("Open", "Save", "Close").forEach { p.add("$it(test)") }
-  p.addSeparator()
-  p.add("Exit").addActionListener { e ->
+private fun initPopupMenu(popup: JPopupMenu) {
+  listOf("Open", "Save", "Close").forEach { popup.add("$it(test)") }
+  popup.addSeparator()
+  popup.add("Exit").addActionListener { e ->
     val m = e.source
     if (m is JMenuItem) {
       (SwingUtilities.getUnwrappedParent(m) as? JPopupMenu)?.invoker?.also {
@@ -48,7 +48,6 @@ private fun initPopupMenu(p: JPopupMenu) {
 }
 
 private class DropShadowPopupMenu : JPopupMenu() {
-  private val dim = Dimension()
   private var shadow: BufferedImage? = null
 
   override fun updateUI() {
@@ -77,8 +76,9 @@ private class DropShadowPopupMenu : JPopupMenu() {
     val d = preferredSize
     val w = d.width
     val h = d.height
-    if (dim.width != w || dim.height != h) {
-      dim.setSize(w, h)
+    // Recreate the shadow image only when the popup menu size has changed
+    val s = shadow
+    if (s == null || s.width != w || s.height != h) {
       shadow = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB).also {
         val g2 = it.createGraphics()
         g2.setRenderingHint(
@@ -103,8 +103,9 @@ private class DropShadowPopupMenu : JPopupMenu() {
     EventQueue.invokeLater {
       SwingUtilities
         .getWindowAncestor(this)
-        ?.takeIf { it.graphicsConfiguration?.isTranslucencyCapable == true }
+        // Popup$HeavyWeightWindow: make the window background transparent
         ?.takeIf { it.type == Window.Type.POPUP }
+        ?.takeIf { it.graphicsConfiguration?.isTranslucencyCapable == true }
         ?.background = Color(0x0, true)
     }
     super.show(c, x, y)
