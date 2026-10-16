@@ -1,8 +1,6 @@
 package example
 
 import java.awt.*
-import java.awt.event.MouseAdapter
-import java.awt.event.MouseEvent
 import java.awt.font.TextLayout
 import java.awt.geom.AffineTransform
 import javax.swing.*
@@ -31,18 +29,15 @@ fun createUI(): JPanel {
   overrides["Slider:SliderThumb[Focused].backgroundPainter"] = thumbPainter
   overrides["Slider:SliderThumb[MouseOver].backgroundPainter"] = thumbPainter
   overrides["Slider:SliderThumb[Pressed].backgroundPainter"] = thumbPainter
-  overrides["Slider:SliderTrack[Enabled].backgroundPainter"] = SliderTrackPainter()
+  overrides["Slider:SliderTrack[Enabled].backgroundPainter"] = SliderTrackPainter(THUMB_SIZE)
 
   val slider = JSlider()
   slider.snapToTicks = true
   slider.majorTickSpacing = 10
   slider.putClientProperty("Nimbus.Overrides", overrides)
-  slider.addMouseMotionListener(object : MouseAdapter() {
-    override fun mouseDragged(e: MouseEvent) {
-      super.mouseDragged(e)
-      e.component.repaint()
-    }
-  })
+  // While dragging, the UI repaints only the thumb area, so repaint the whole
+  // slider whenever the value changes to keep the filled track in sync.
+  slider.addChangeListener { e -> (e.source as? JComponent)?.repaint() }
 
   val box = Box.createVerticalBox()
   box.add(Box.createVerticalStrut(5))
@@ -68,50 +63,63 @@ private fun createTitledPanel(
   return panel
 }
 
-private class SliderTrackPainter : Painter<JSlider> {
+private class SliderTrackPainter(
+  private val thumbSize: Int,
+) : Painter<JSlider> {
   override fun paint(g: Graphics2D, slider: JSlider, width: Int, height: Int) {
-    val thumbSize = 24
-    val trackHeight = 8
-    val trackWidth = width - thumbSize
-    val arc = 10
-    val fillTop = (thumbSize - trackHeight) / 2
-    val fillLeft = thumbSize / 2
+    // The track starts and ends half a thumb inside the painted area.
+    val trackRect = Rectangle(
+      thumbSize / 2,
+      (thumbSize - TRACK_HEIGHT) / 2,
+      width - thumbSize,
+      TRACK_HEIGHT,
+    )
 
-    // Paint track
+    // Paint a thin track
     g.setRenderingHint(
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
     g.color = TRACK_COLOR
-    g.fillRoundRect(fillLeft, fillTop + 2, trackWidth, trackHeight - 4, arc, arc)
-
-    val fillBottom = fillTop + trackHeight
-    val trackRect = Rectangle(fillLeft, fillTop, trackWidth, fillBottom - fillTop)
+    g.fillRoundRect(
+      trackRect.x,
+      trackRect.y + 2,
+      trackRect.width,
+      trackRect.height - 4,
+      ARC,
+      ARC,
+    )
 
     // Paint the major tick marks on the track
-    g.color = TICK_COLOR
-    var value = slider.minimum
-    val tickSize = 4
-    while (value <= slider.maximum) {
-      val tickX = getPositionForValue(slider, trackRect, value.toFloat())
-      g.fillOval(tickX, trackRect.centerY.toInt() - tickSize / 2, tickSize, tickSize)
-      // Overflow checking
-      if (Int.MAX_VALUE - slider.getMajorTickSpacing() < value) {
-        break
+    val spacing = slider.majorTickSpacing
+    if (spacing > 0) { // a spacing of 0 or less would loop forever
+      g.color = TICK_COLOR
+      val tickY = trackRect.centerY.toInt() - TICK_SIZE / 2
+      val max = slider.maximum
+      var value = slider.minimum
+      while (value <= max) {
+        // Center the tick mark on the value position, like the thumb
+        val tickX = getPositionForValue(slider, trackRect, value.toFloat()) - TICK_SIZE / 2
+        g.fillOval(tickX, tickY, TICK_SIZE, TICK_SIZE)
+        // Overflow checking
+        if (Int.MAX_VALUE - spacing < value) {
+          break
+        }
+        value += spacing
       }
-      value += slider.getMajorTickSpacing()
     }
 
-    // JSlider.isFilled
+    // Fill the track up to the current value (like JSlider.isFilled),
+    // hiding the tick marks below the current value
     val fillRight = getPositionForValue(slider, trackRect, slider.value.toFloat())
     g.color = FILL_COLOR
     g.fillRoundRect(
-      fillLeft,
-      fillTop,
-      fillRight - fillLeft,
-      fillBottom - fillTop,
-      arc,
-      arc,
+      trackRect.x,
+      trackRect.y,
+      fillRight - trackRect.x,
+      trackRect.height,
+      ARC,
+      ARC,
     )
   }
 
@@ -133,6 +141,9 @@ private class SliderTrackPainter : Painter<JSlider> {
     private val TRACK_COLOR = Color(0xC6E4FC)
     private val TICK_COLOR = Color(0x31A8F8)
     private val FILL_COLOR = Color(0x2198F6)
+    private const val TRACK_HEIGHT = 8
+    private const val TICK_SIZE = 4
+    private const val ARC = 10
   }
 }
 
@@ -140,7 +151,7 @@ private class NumberIcon(
   private val value: Int,
 ) : Icon {
   fun getTextShape(g2: Graphics2D): Shape {
-    val txt = if (value > MAX_VALUE_LENGTH) "1K" else value.toString()
+    val txt = if (value > MAX_DISPLAY_VALUE) "1K" else value.toString()
     val at = if (txt.length < 3) {
       null
     } else {
@@ -174,7 +185,7 @@ private class NumberIcon(
 
   companion object {
     private const val ICON_SIZE = 20
-    private const val MAX_VALUE_LENGTH = 999
+    private const val MAX_DISPLAY_VALUE = 999
     private const val NARROW_SCALE_X = .66
   }
 }
