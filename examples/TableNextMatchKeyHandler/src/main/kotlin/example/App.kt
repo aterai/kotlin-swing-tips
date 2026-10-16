@@ -38,10 +38,10 @@ private class TableNextMatchKeyHandler : KeyAdapter() {
   private var typedString = ""
   private var lastTime = 0L
 
-  private fun isNavigationKey(event: KeyEvent): Boolean {
-    val table = event.component as? JTable ?: return false
+  private fun isNavigationKey(e: KeyEvent): Boolean {
+    val table = e.component as? JTable ?: return false
     val inputMap = table.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-    val key = KeyStroke.getKeyStrokeForEvent(event)
+    val key = KeyStroke.getKeyStrokeForEvent(e)
     return inputMap != null && inputMap[key] != null
   }
 
@@ -54,107 +54,94 @@ private class TableNextMatchKeyHandler : KeyAdapter() {
   }
 
   override fun keyTyped(e: KeyEvent) {
-    val src = e.component as? JTable ?: return
-    val max = src.rowCount
-    if (max == 0 || e.isAltDown || isNavigationKey(e)) {
-      return
+    val table = e.component as? JTable ?: return
+    if (table.rowCount > 0 && isPrefixKey(e)) {
+      val backward = e.isShiftDown
+      val startRow = updatePrefix(e.keyChar, e.getWhen(), table.selectedRow, backward)
+      selectNextMatch(table, startRow, backward)
     }
-    val c = e.keyChar
-    val increment = if (e.isShiftDown) -1 else 1
-    val time = e.getWhen()
-    var startIndex = src.selectedRow
+  }
+
+  private fun isPrefixKey(e: KeyEvent): Boolean {
+    val modified = e.isAltDown || e.isControlDown || e.isMetaDown
+    // Skip control characters such as Enter, Tab, Backspace or Escape
+    return !modified && !Character.isISOControl(e.keyChar) && !isNavigationKey(e)
+  }
+
+  private fun updatePrefix(
+    c: Char,
+    time: Long,
+    selectedRow: Int,
+    backward: Boolean,
+  ): Int {
+    var startRow = selectedRow
     if (time - lastTime < TIME_FACTOR) {
       typedString += c
       if (prefix.length == 1 && c == prefix[0]) {
-        startIndex += increment
+        // Subsequent same key presses move the keyboard focus to the next
+        // object that starts with the same letter.
+        startRow += if (backward) -1 else 1
       } else {
         prefix = typedString
       }
     } else {
-      startIndex += increment
+      startRow += if (backward) -1 else 1
       typedString = c.toString()
       prefix = typedString
     }
     lastTime = time
-    scrollNextMatch(src, max, e, prefix, startIndex)
+    return startRow
   }
 
-  private fun scrollNextMatch(
-    src: JTable,
-    max: Int,
-    e: KeyEvent,
-    prf: String,
-    startIdx: Int,
+  private fun selectNextMatch(
+    table: JTable,
+    startRow: Int,
+    backward: Boolean,
   ) {
-    var start = startIdx
-    var fromSelection = !src.selectionModel.isSelectionEmpty
-    if (start < 0 || start >= max) {
-      if (e.isShiftDown) {
-        start = max - 1
-      } else {
-        fromSelection = false
-        start = 0
-      }
+    val rowCount = table.rowCount
+    val start = if (startRow in 0..<rowCount) {
+      startRow
+    } else if (backward) {
+      rowCount - 1
+    } else {
+      0
     }
-    val bias = if (e.isShiftDown) Bias.Backward else Bias.Forward
-    var index = getNextMatch(src, prf, start, bias)
-    if (index >= 0) {
-      src.selectionModel.setSelectionInterval(index, index)
-      src.scrollRectToVisible(src.getCellRect(index, TARGET_COLUMN, true))
-    } else if (fromSelection) { // wrap
-      index = getNextMatch(src, prf, 0, bias)
-      if (index >= 0) {
-        src.selectionModel.setSelectionInterval(index, index)
-        src.scrollRectToVisible(src.getCellRect(index, TARGET_COLUMN, true))
-      }
+    val bias = if (backward) Bias.Backward else Bias.Forward
+    // getNextMatch(...) searches all rows cyclically, so no extra wrap search is needed
+    val row = getNextMatch(table, prefix, start, bias)
+    if (row >= 0) {
+      val column = maxOf(0, table.convertColumnIndexToView(TARGET_COLUMN))
+      // JTable#changeSelection(...) also scrolls the cell to visible if autoscrolls is true
+      table.changeSelection(row, column, false, false)
     }
   }
 
   companion object {
+    // model column index of the search target, independent of column reordering
     private const val TARGET_COLUMN = 0
     private const val TIME_FACTOR = 500L
 
     fun getNextMatch(
       table: JTable,
       prefix: String,
-      startingRow: Int,
+      startRow: Int,
       bias: Bias,
     ): Int {
-      val max = table.rowCount
-      require(startingRow in 0..<max) { "(0 <= startingRow < max) is false" }
-      val casePrefix = prefix.uppercase(Locale.ENGLISH)
+      val rowCount = table.rowCount
+      require(startRow in 0..<rowCount) { "(0 <= startRow < rowCount) is false" }
+      val upperPrefix = prefix.uppercase(Locale.ENGLISH)
+      val model = table.model
       // start search from the next/previous element from the
       // selected element
       val increment = if (bias == Bias.Forward) 1 else -1
-      return (0..<max)
-        .map { (startingRow + it + increment + max) % max }
-        .firstOrNull { startsWith(table, it, casePrefix) }
+      return (0..<rowCount)
+        .map { Math.floorMod(startRow + it * increment, rowCount) }
+        .firstOrNull { row ->
+          // the row index is a view index, convert it for the sorted table
+          val value = model.getValueAt(table.convertRowIndexToModel(row), TARGET_COLUMN)
+          value?.toString().orEmpty().uppercase(Locale.ENGLISH).startsWith(upperPrefix)
+        }
         ?: -1
-
-      // return IntStream.iterate(startingRow) { row -> (row + increment + max) % max }
-      //   .limit(max.toLong())
-      //   .filter { row ->
-      //     val text = table.getValueAt(row, TARGET_COLUMN).toString()
-      //     text.uppercase().startsWith(casePrefix)
-      //   }
-      //   .findFirst()
-      //   .orElse(-1)
-
-      // var row = startingRow
-      // do {
-      //   val value = table.getValueAt(row, TARGET_COLUMN)
-      //   val text = value.toString()
-      //   if (text.uppercase(Locale.ENGLISH).startsWith(casePrefix)) {
-      //     return row
-      //   }
-      //   row = (row + increment + max) % max
-      // } while (row != startingRow)
-      // return -1
-    }
-
-    private fun startsWith(table: JTable, row: Int, casePrefix: String): Boolean {
-      val text = table.getValueAt(row, TARGET_COLUMN).toString()
-      return text.uppercase().startsWith(casePrefix)
     }
   }
 }
