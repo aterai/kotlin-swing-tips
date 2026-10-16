@@ -99,6 +99,8 @@ private class ButtonHeaderRenderer :
     pressedColumn = column
   }
 
+  fun getRolloverColumn() = rolloverColumn
+
   fun setRolloverColumn(column: Int) {
     rolloverColumn = column
   }
@@ -128,42 +130,47 @@ private enum class SortIconType(
 
 private class HeaderMouseListener : MouseAdapter() {
   override fun mousePressed(e: MouseEvent) {
-    val header = e.component as? JTableHeader ?: return
-    val table = header.table
-    val renderer = header.defaultRenderer
-    val viewColumn = table.columnAtPoint(e.point)
-    if (viewColumn >= 0 && renderer is ButtonHeaderRenderer) {
-      val column = table.convertColumnIndexToModel(viewColumn)
-      renderer.setPressedColumn(column)
+    getButtonHeaderRenderer(e)?.also {
+      it.setPressedColumn(getModelColumn(e))
+      e.component.repaint()
     }
   }
 
   override fun mouseReleased(e: MouseEvent) {
-    val header = e.component as? JTableHeader ?: return
-    val renderer = header.defaultRenderer
-    if (renderer is ButtonHeaderRenderer) {
-      renderer.setPressedColumn(-1)
+    getButtonHeaderRenderer(e)?.also {
+      it.setPressedColumn(-1)
+      e.component.repaint()
     }
   }
 
   override fun mouseMoved(e: MouseEvent) {
-    val header = e.component as? JTableHeader ?: return
-    val table = header.table
-    val renderer = header.defaultRenderer
-    val viewColumn = table.columnAtPoint(e.point)
-    if (viewColumn >= 0 && renderer is ButtonHeaderRenderer) {
-      val column = table.convertColumnIndexToModel(viewColumn)
-      renderer.setRolloverColumn(column)
+    getButtonHeaderRenderer(e)?.also {
+      val column = getModelColumn(e)
+      // Repaint only when the rollover column changes, because
+      // BasicTableHeaderUI (e.g. MetalLookAndFeel) does not repaint it.
+      if (it.getRolloverColumn() != column) {
+        it.setRolloverColumn(column)
+        e.component.repaint()
+      }
     }
   }
 
   override fun mouseExited(e: MouseEvent) {
-    val header = e.component as? JTableHeader ?: return
-    val renderer = header.defaultRenderer
-    if (renderer is ButtonHeaderRenderer) {
-      renderer.setRolloverColumn(-1)
-      header.cursor = Cursor.getDefaultCursor()
+    getButtonHeaderRenderer(e)?.also {
+      it.setRolloverColumn(-1)
+      e.component.cursor = Cursor.getDefaultCursor()
+      e.component.repaint()
     }
+  }
+
+  private fun getButtonHeaderRenderer(e: MouseEvent) =
+    (e.component as? JTableHeader)?.defaultRenderer as? ButtonHeaderRenderer
+
+  // Returns -1 if the point is outside the columns (e.g. the empty area on the right).
+  private fun getModelColumn(e: MouseEvent): Int {
+    val header = e.component as? JTableHeader ?: return -1
+    val viewColumn = header.columnAtPoint(e.point)
+    return if (viewColumn < 0) -1 else header.table.convertColumnIndexToModel(viewColumn)
   }
 }
 
