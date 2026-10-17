@@ -8,12 +8,14 @@ import java.awt.event.MouseEvent
 import javax.swing.*
 import javax.swing.plaf.basic.ComboPopup
 
+private const val SELECTION_LIMIT = 3
+
 fun createUI(): Component {
   val p = JPanel()
   for (i in 0..<8) {
-    p.add(GroupCheckBox("JCheckBox$i"))
+    p.add(GroupCheckBox("JCheckBox$i", SELECTION_LIMIT))
   }
-  p.add(GroupCheckComboBox(makeModel(), 3))
+  p.add(GroupCheckComboBox(makeModel(), SELECTION_LIMIT))
   return JPanel(BorderLayout(5, 5)).also {
     it.add(p)
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
@@ -23,27 +25,26 @@ fun createUI(): Component {
 
 private class GroupCheckBox(
   title: String?,
+  private val maxSelectionCount: Int,
 ) : JCheckBox(title) {
-  override fun updateUI() {
-    super.updateUI()
+  init {
+    // Replace the model in the constructor rather than in updateUI(),
+    // so that the selection state is not lost when the Look&Feel is changed.
     model = object : ToggleButtonModel() {
-      private val GROUP_SIZE = 3
-
       override fun setSelected(selected: Boolean) {
-        if (selected) {
-          if (selectedObjects.size == GROUP_SIZE) {
-            UIManager.getLookAndFeel().provideErrorFeedback(this@GroupCheckBox)
-          } else {
-            super.setSelected(true)
-          }
+        // Reject only a new selection that would exceed the limit
+        // (re-selecting an already selected check box is not an error).
+        if (selected && !isSelected && selectedObjects.size >= maxSelectionCount) {
+          UIManager.getLookAndFeel().provideErrorFeedback(this@GroupCheckBox)
         } else {
-          super.setSelected(false)
+          super.setSelected(selected)
         }
       }
 
+      // Returns the selected buttons in the same parent container (the group).
+      // Before being added to a container, the group consists of this check box only.
       override fun getSelectedObjects() =
-        parent
-          .components
+        (parent?.components ?: arrayOf(this@GroupCheckBox))
           .filterIsInstance<AbstractButton>()
           .filter { it.isSelected }
           .toTypedArray()
@@ -54,10 +55,9 @@ private class GroupCheckBox(
 private fun makeModel(): ComboBoxModel<CheckItem> {
   val m = arrayOf(
     CheckItem("One", false),
-    CheckItem("Tow", true),
+    CheckItem("Two", true),
     CheckItem("Three", false),
-    CheckItem("Three", false),
-    CheckItem("Fore", false),
+    CheckItem("Four", false),
     CheckItem("Five", false),
   )
   return DefaultComboBoxModel(m)
@@ -107,6 +107,7 @@ private open class GroupCheckComboBox(
         cellHasFocus,
       )
       if (index < 0) {
+        // The combo box display area shows the comma-separated selected items
         c.foreground = list.foreground
         (c as? JLabel)?.also {
           it.text = selectedObjects.joinToString { o -> o.toString() }
@@ -169,7 +170,7 @@ private open class GroupCheckComboBox(
   override fun getSelectedObjects() =
     (0..<itemCount)
       .toList()
-      .map { model.getElementAt(it) }
+      .mapNotNull { getItemAt(it) }
       .filter(CheckItem::isSelected)
       .toTypedArray()
 }
