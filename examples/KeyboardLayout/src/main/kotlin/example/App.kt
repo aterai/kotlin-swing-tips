@@ -14,11 +14,8 @@ private val keys = arrayOf(
 )
 
 fun createUI(): Component {
-  val keyboard = makeKeyboardPanel()
-  EventQueue.invokeLater { SwingUtilities.updateComponentTreeUI(keyboard) }
-
   val box = JPanel(FlowLayout(FlowLayout.CENTER))
-  box.add(keyboard)
+  box.add(createKeyboardPanel())
 
   return JPanel(BorderLayout(2, 2)).also {
     it.add(box, BorderLayout.NORTH)
@@ -28,61 +25,69 @@ fun createUI(): Component {
   }
 }
 
-private fun makeKeyboardPanel() = JPanel(GridBagLayout()).also {
+private fun createKeyboardPanel() = JPanel(GridBagLayout()).also {
   val c = GridBagConstraints()
   c.fill = GridBagConstraints.BOTH
-  c.gridy = 50
-  for (i in 0..<keys[0].size * 2) {
-    c.gridx = i
-    it.add(Box.createHorizontalStrut(KeyButton.SIZE))
-  }
+  var columns = 0
   for (row in keys.indices) {
     c.gridx = 0
     c.gridy = row
     for (key in keys[row]) {
-      val len = key.length
-      c.gridwidth = getKeyButtonColumnGridWidth(len)
+      c.gridwidth = getGridWidth(key)
       val b = if (key.isEmpty()) {
         Box.createHorizontalStrut(KeyButton.SIZE)
       } else {
-        KeyButton(key, len <= 2)
+        KeyButton(key, key.length <= 2)
       }
       it.add(b, c)
       c.gridx += c.gridwidth
     }
+    columns = maxOf(columns, c.gridx)
+  }
+
+  // Guide row: zero-height struts that fix the width of every grid column
+  c.gridy = keys.size
+  c.gridwidth = 1
+  for (i in 0..<columns) {
+    c.gridx = i
+    it.add(Box.createHorizontalStrut(KeyButton.SIZE), c)
   }
 }
 
-private fun getKeyButtonColumnGridWidth(length: Int) = when (length) {
-  in 5..8 -> 4
-
-  // Shift, Enter
-  in 2..4 -> 3
-
-  // Alt, Ctrl, Esc, Tab, ...
-  1 -> 2
-
-  // A, B, C, ..., Z
+private fun getGridWidth(key: String) = when (key.length) {
+  // empty string: invisible spacer
   0 -> 1
 
-  // HorizontalStrut
-  else -> 14 // Space
+  // default keys
+  1 -> 2
+
+  // Tab, Ctrl, Alt, BS, Fn
+  in 2..4 -> 3
+
+  // Shift, Enter
+  in 5..10 -> 4
+
+  // space bar
+  else -> 14
 }
 
 private class KeyButton(
-  str: String,
-  private val square: Boolean = true,
-) : JButton(str) {
-  init {
-    isFocusable = false
+  text: String,
+  private val square: Boolean,
+) : JButton(text) {
+  override fun updateUI() {
+    // The size variant must be set before the UI delegate is installed,
+    // otherwise it is not applied until the next updateUI() call
     putClientProperty("JComponent.sizeVariant", "mini")
-    border = BorderFactory.createEmptyBorder(0, 0, 0, 0)
+    super.updateUI()
+    isFocusable = false
+    border = BorderFactory.createEmptyBorder()
   }
 
-  override fun getPreferredSize() = super.getPreferredSize()?.also {
-    if (square) {
-      it.setSize(SIZE * 2, SIZE * 2)
-    }
+  override fun getPreferredSize(): Dimension = if (square) {
+    Dimension(SIZE * 2, SIZE * 2)
+  } else {
+    super.getPreferredSize()
   }
 
   companion object {
