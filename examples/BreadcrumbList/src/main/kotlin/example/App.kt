@@ -6,33 +6,33 @@ import java.awt.geom.AffineTransform
 import java.awt.geom.Path2D
 import javax.swing.*
 import javax.swing.plaf.LayerUI
-import javax.swing.tree.MutableTreeNode
+import javax.swing.tree.TreeNode
 import javax.swing.tree.TreePath
 
 fun createUI(): Component {
-  val breadcrumb = makeContainer(10 + 1)
+  val breadcrumb = createContainer(10 + 1)
   val tree = JTree()
   tree.setSelectionRow(0)
   tree.addTreeSelectionListener {
     val o = tree.lastSelectedPathComponent
-    if (o is MutableTreeNode && !o.isLeaf) {
+    // A leaf node is not added to the breadcrumb trail, keep the current one
+    if (o is TreeNode && !o.isLeaf) {
       initBreadcrumbList(breadcrumb, tree)
-      breadcrumb.revalidate()
-      breadcrumb.repaint()
     }
   }
   initBreadcrumbList(breadcrumb, tree)
   return JPanel(BorderLayout()).also {
     it.add(JLayer(breadcrumb, BreadcrumbLayerUI<Component>()), BorderLayout.NORTH)
-    val c = makeBreadcrumbList(listOf("aaa", "bb", "c"))
+    val c = createBreadcrumbList(listOf("aaa", "bb", "c"))
     it.add(c, BorderLayout.SOUTH)
     it.add(JScrollPane(tree))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeContainer(overlap: Int): Container {
+private fun createContainer(overlap: Int): Container {
   val p = object : JPanel(FlowLayout(FlowLayout.LEADING, -overlap, 0)) {
+    // The child buttons overlap each other
     override fun isOptimizedDrawingEnabled() = false
   }
   p.border = BorderFactory.createEmptyBorder(4, overlap + 4, 4, 4)
@@ -44,22 +44,27 @@ private fun initBreadcrumbList(
   p: Container,
   tree: JTree,
 ) {
-  val treePath = tree.selectionPath ?: return
-  val paths = treePath.path
-  val bg = ButtonGroup()
   p.removeAll()
-  for (i in paths.indices) {
-    val b = makeButton(tree, TreePath(paths.copyOf(i + 1)), Color.ORANGE)
+  val bg = ButtonGroup()
+  val nodes = tree.selectionPath?.path ?: emptyArray()
+  for (i in nodes.indices) {
+    val path = TreePath(nodes.copyOf(i + 1))
+    val b = createButton(nodes[i].toString(), Color.ORANGE)
+    b.addActionListener { tree.selectionPath = path }
     p.add(b)
     bg.add(b)
+    // Highlight the button of the current (last) node
+    b.isSelected = i == nodes.lastIndex
   }
+  p.revalidate()
+  p.repaint()
 }
 
-private fun makeBreadcrumbList(list: List<String>): Component {
-  val p = makeContainer(5 + 1)
+private fun createBreadcrumbList(list: List<String>): Component {
+  val p = createContainer(5 + 1)
   val bg = ButtonGroup()
   list
-    .map { makeButton(null, TreePath(it), Color.PINK) }
+    .map { createButton(it, Color.PINK) }
     .forEach {
       p.add(it)
       bg.add(it)
@@ -67,26 +72,18 @@ private fun makeBreadcrumbList(list: List<String>): Component {
   return p
 }
 
-private fun makeButton(
-  tree: JTree?,
-  path: TreePath,
+private fun createButton(
+  title: String,
   color: Color,
 ): AbstractButton {
-  val b = object : JRadioButton(path.lastPathComponent.toString()) {
+  val b = object : JRadioButton(title) {
+    // Respond to the mouse only inside the arrow shape of the icon
     override fun contains(
       x: Int,
       y: Int,
     ) = (icon as? ArrowToggleButtonBarCellIcon)?.let {
       it.shape?.contains(Point(x, y))
     } ?: super.contains(x, y)
-  }
-  if (tree != null) {
-    b.addActionListener { e ->
-      (e.source as? JRadioButton)?.also {
-        tree.selectionPath = path
-        it.isSelected = true
-      }
-    }
   }
   b.icon = ArrowToggleButtonBarCellIcon()
   b.isContentAreaFilled = false
@@ -107,7 +104,7 @@ private class ArrowToggleButtonBarCellIcon : Icon {
   var shape: Shape? = null
     private set
 
-  private fun makeShape(
+  private fun createShape(
     parent: Container,
     c: Component,
     x: Int,
@@ -139,7 +136,7 @@ private class ArrowToggleButtonBarCellIcon : Icon {
     y: Int,
   ) {
     val parent = c.parent ?: return
-    shape = makeShape(parent, c, x, y)
+    shape = createShape(parent, c, x, y)
     var bgc = parent.background
     var borderColor = Color.GRAY.brighter()
     if (c is AbstractButton) {
