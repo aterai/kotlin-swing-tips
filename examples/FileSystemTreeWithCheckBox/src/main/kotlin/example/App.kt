@@ -3,6 +3,7 @@ package example
 import java.awt.*
 import java.awt.event.MouseEvent
 import java.io.File
+import java.util.EnumSet
 import java.util.EventObject
 import javax.swing.*
 import javax.swing.event.TreeModelEvent
@@ -246,22 +247,25 @@ private class FolderSelectionListener(
   val fileSystemView: FileSystemView,
 ) : TreeSelectionListener {
   override fun valueChanged(e: TreeSelectionEvent) {
+    // The event is also fired when the path is removed from the selection,
+    // so load the subdirectories only for a newly selected path
     val node = e.path.lastPathComponent
-    if (node !is DefaultMutableTreeNode || !node.isLeaf) {
+    if (!e.isAddedPath || node !is DefaultMutableTreeNode || !node.isLeaf) {
       return
     }
-    val cbn = node.userObject
+    val userObject = node.userObject
     val m = (e.source as? JTree)?.model
-    if (m is DefaultTreeModel && cbn is CheckBoxNode && cbn.file.isDirectory) {
-      val parentStatus = if (cbn.status == Status.SELECTED) {
+    if (m is DefaultTreeModel && userObject is CheckBoxNode && userObject.file.isDirectory) {
+      // A leaf node is never INDETERMINATE, so the child nodes inherit its check status
+      val status = if (userObject.status == Status.SELECTED) {
         Status.SELECTED
       } else {
         Status.DESELECTED
       }
-      val worker = object : BackgroundTask(fileSystemView, cbn.file) {
+      val worker = object : BackgroundTask(fileSystemView, userObject.file) {
         override fun process(chunks: List<File>) {
           chunks
-            .map { CheckBoxNode(it, parentStatus) }
+            .map { CheckBoxNode(it, status) }
             .map { DefaultMutableTreeNode(it) }
             .forEach { m.insertNodeInto(it, node, node.childCount) }
         }
@@ -289,52 +293,48 @@ private class CheckBoxStatusUpdateListener : TreeModelListener {
   private var adjusting = false
 
   override fun treeNodesChanged(e: TreeModelEvent) {
-    if (adjusting) {
+    // https://docs.oracle.com/javase/8/docs/api/javax/swing/event/TreeModelListener.html#treeNodesChanged-javax.swing.event.TreeModelEvent-
+    // To indicate the root has changed, childIndices and children will be null.
+    // The root of this sample has no CheckBoxNode, so there is nothing to update.
+    val children = e.children
+    val model = e.source as? DefaultTreeModel
+    if (adjusting || children == null || model == null) {
       return
     }
     adjusting = true
-    val model = e.source as? DefaultTreeModel ?: return
-    // https://docs.oracle.com/javase/8/docs/api/javax/swing/event/TreeModelListener.html#treeNodesChanged-javax.swing.event.TreeModelEvent-
-    // To indicate the root has changed, childIndices and children will be null.
-    val children = e.children
-    val isRoot = children == null
-
-    // If the parent node exists, update its status
-    if (!isRoot) {
-      val parent = e.treePath
-      var n = parent.lastPathComponent as? DefaultMutableTreeNode
-      while (n != null) {
-        updateParentUserObject(n)
-        n = n.parent as? DefaultMutableTreeNode ?: break
-      }
-      model.nodeChanged(n)
+    try {
+      // Update the status of all descendant nodes to be the same as the changed node status
+      children
+        .filterIsInstance<DefaultMutableTreeNode>()
+        .forEach { node ->
+          (node.userObject as? CheckBoxNode)?.also {
+            updateAllChildrenUserObject(node, it.status)
+            model.nodeChanged(node)
+          }
+        }
+      // Update the status of the ancestor nodes from the nearest parent up to the root
+      generateSequence(e.treePath) { it.parentPath }
+        .mapNotNull { it.lastPathComponent as? DefaultMutableTreeNode }
+        .forEach { parent ->
+          updateParentUserObject(parent)
+          model.nodeChanged(parent)
+        }
+    } finally {
+      // Always reset the flag, otherwise this listener stops working after an exception
+      adjusting = false
     }
-
-    // Update the status of all child nodes to be the same as the current node status
-    val isOnlyOneNodeSelected = children != null && children.size == 1
-    val current = if (isOnlyOneNodeSelected) children[0] else model.root
-    if (current is DefaultMutableTreeNode) {
-      val uo = current.userObject as? CheckBoxNode
-      val status = uo?.status ?: Status.INDETERMINATE
-      updateAllChildrenUserObject(current, status)
-      model.nodeChanged(current)
-    }
-    adjusting = false
   }
 
   private fun updateParentUserObject(parent: DefaultMutableTreeNode) {
-    val list = parent
-      .children()
-      .toList()
-      .filterIsInstance<DefaultMutableTreeNode>()
-      .mapNotNull { (it.userObject as? CheckBoxNode)?.status }
-
     (parent.userObject as? CheckBoxNode)?.also { node ->
-      val status = when {
-        list.all { it === Status.DESELECTED } -> Status.DESELECTED
-        list.all { it === Status.SELECTED } -> Status.SELECTED
-        else -> Status.INDETERMINATE
-      }
+      val set = parent
+        .children()
+        .toList()
+        .filterIsInstance<DefaultMutableTreeNode>()
+        .mapNotNull { (it.userObject as? CheckBoxNode)?.status }
+        .toCollection(EnumSet.noneOf(Status::class.java))
+      // SELECTED or DESELECTED only if all children have that same status
+      val status = set.singleOrNull() ?: Status.INDETERMINATE
       parent.userObject = CheckBoxNode(node.file, status)
     }
   }
