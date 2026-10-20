@@ -5,7 +5,6 @@ import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.Transferable
 import java.awt.datatransfer.UnsupportedFlavorException
 import java.awt.event.ActionEvent
-import java.util.concurrent.atomic.AtomicInteger
 import javax.swing.*
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
@@ -33,6 +32,7 @@ fun createUI(): Component {
 }
 
 private fun expandTree(tree: JTree) {
+  // The row count increases as the rows are expanded
   var row = 0
   while (row < tree.rowCount) {
     tree.expandRow(row)
@@ -104,12 +104,13 @@ private class TreeTransferHandler : TransferHandler() {
     val model = tree.model
     val nodes = getTransferData(transferable)
     if (parent is MutableTreeNode && model is DefaultTreeModel) {
-      val index = AtomicInteger(getDropIndex(parent, dl.childIndex))
-      nodes
-        .filterIsInstance<MutableTreeNode>()
-        .forEach {
-          model.insertNodeInto(it, parent, index.getAndIncrement())
+      var index = getDropIndex(parent, dl.childIndex)
+      for (n in nodes) {
+        if (n is MutableTreeNode) {
+          model.insertNodeInto(n, parent, index)
+          index++
         }
+      }
     }
     return nodes.isNotEmpty()
   }
@@ -155,31 +156,18 @@ fun canStartDragPaths(paths: Array<TreePath>) = paths
   .count { it != 0 } == 1
 
 fun canImportDropLocation(tree: JTree, dl: JTree.DropLocation): Boolean {
+  // Do not allow drop to descendant and drag-source selections
+  val dropPath = dl.path ?: return false
   val pt = dl.dropPoint
-  val dropRow = tree.getRowForLocation(pt.x, pt.y)
-  return tree.selectionRows?.asSequence()?.none {
-    it == dropRow || isDescendant(tree, it, dropRow)
+  // null if the drop point is not on a node (e.g. to the right of a node label)
+  val pointPath = tree.getPathForLocation(pt.x, pt.y)
+  // TreePath#isDescendant(...) returns true for the path itself or its descendants.
+  // Checking dropPath prevents a selected node from being dropped into its own subtree
+  // even if the drop point is outside the node bounds.
+  return tree.selectionPaths?.none {
+    it.isDescendant(dropPath) || it.isDescendant(pointPath)
   } ?: false
 }
-
-private fun isDescendant(tree: JTree, selRow: Int, dropRow: Int): Boolean {
-  val node = tree.getPathForRow(selRow).lastPathComponent
-  return node is DefaultMutableTreeNode && isDescendant2(tree, dropRow, node)
-}
-
-private fun isDescendant2(
-  tree: JTree,
-  dropRow: Int,
-  node: DefaultMutableTreeNode,
-) = node
-  .depthFirstEnumeration()
-  .asSequence()
-  .filterIsInstance<DefaultMutableTreeNode>()
-  .map { it.path }
-  .map { TreePath(it) }
-  .toList()
-  .map { tree.getRowForPath(it) }
-  .any { it == dropRow }
 
 fun deepCopy(
   src: MutableTreeNode,
