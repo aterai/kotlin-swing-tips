@@ -3,6 +3,7 @@ package example
 import java.awt.*
 import java.awt.event.ActionListener
 import java.awt.event.MouseEvent
+import java.util.EnumSet
 import java.util.EventObject
 import javax.swing.*
 import javax.swing.event.TreeModelEvent
@@ -17,53 +18,52 @@ class CheckBoxStatusUpdateListener : TreeModelListener {
   private var adjusting = false
 
   override fun treeNodesChanged(e: TreeModelEvent) {
-    if (adjusting) {
+    val model = e.source as? DefaultTreeModel
+    if (adjusting || model == null) {
       return
     }
     adjusting = true
-    val model = e.source as? DefaultTreeModel ?: return
-    // https://docs.oracle.com/javase/8/docs/api/javax/swing/event/TreeModelListener.html#treeNodesChanged-javax.swing.event.TreeModelEvent-
-    // To indicate the root has changed, childIndices and children will be null.
-    val children = e.children
-    val isRoot = children == null
+    try {
+      // https://docs.oracle.com/javase/8/docs/api/javax/swing/event/TreeModelListener.html#treeNodesChanged-javax.swing.event.TreeModelEvent-
+      // To indicate the root has changed, childIndices and children will be null.
+      val children = e.children
+      val isRoot = children == null
+      val changedNodes = children ?: arrayOf(model.root)
 
-    // If the parent node exists, update its status
-    if (!isRoot) {
-      val parent = e.treePath
-      var n = parent.lastPathComponent as? DefaultMutableTreeNode
-      while (n != null) {
-        updateParentUserObject(n)
-        n = n.parent as? DefaultMutableTreeNode ?: break
+      // Update the status of all descendant nodes to be the same as the changed node status
+      changedNodes.filterIsInstance<DefaultMutableTreeNode>().forEach { node ->
+        (node.userObject as? CheckBoxNode)?.also {
+          updateAllChildrenUserObject(node, it.status)
+          model.nodeChanged(node)
+        }
       }
-      model.nodeChanged(n)
-    }
 
-    // Update the status of all child nodes to be the same as the current node status
-    val isOnlyOneNodeSelected = children != null && children.size == 1
-    val current = if (isOnlyOneNodeSelected) children[0] else model.root
-    if (current is DefaultMutableTreeNode) {
-      val uo = current.userObject
-      val status = (uo as? CheckBoxNode)?.status ?: Status.INDETERMINATE
-      updateAllChildrenUserObject(current, status)
-      model.nodeChanged(current)
+      // If the parent node exists, update the status of the ancestor nodes up to the root
+      if (!isRoot) {
+        generateSequence(e.treePath) { it.parentPath }
+          .mapNotNull { it.lastPathComponent as? DefaultMutableTreeNode }
+          .forEach {
+            updateParentUserObject(it)
+            model.nodeChanged(it)
+          }
+      }
+    } finally {
+      // Always reset the flag, otherwise this listener stops working after an exception
+      adjusting = false
     }
-
-    adjusting = false
   }
 
   private fun updateParentUserObject(parent: DefaultMutableTreeNode) {
-    val list = parent
-      .children()
-      .toList()
-      .filterIsInstance<DefaultMutableTreeNode>()
-      .mapNotNull { (it.userObject as? CheckBoxNode)?.status }
-
     (parent.userObject as? CheckBoxNode)?.also { check ->
-      val status = when {
-        list.all { it === Status.DESELECTED } -> Status.DESELECTED
-        list.all { it === Status.SELECTED } -> Status.SELECTED
-        else -> Status.INDETERMINATE
-      }
+      val set = parent
+        .children()
+        .toList()
+        .filterIsInstance<DefaultMutableTreeNode>()
+        .mapNotNullTo(EnumSet.noneOf(Status::class.java)) {
+          (it.userObject as? CheckBoxNode)?.status
+        }
+      // SELECTED or DESELECTED only if all children have that same status
+      val status = set.singleOrNull() ?: Status.INDETERMINATE
       parent.userObject = CheckBoxNode(check.label, status)
     }
   }
@@ -77,9 +77,10 @@ class CheckBoxStatusUpdateListener : TreeModelListener {
       .toList()
       .filterIsInstance<DefaultMutableTreeNode>()
       .filter { it != parent }
-      .forEach {
-        val label = (it.userObject as? CheckBoxNode)?.label ?: ""
-        it.userObject = CheckBoxNode(label, status)
+      .forEach { node ->
+        (node.userObject as? CheckBoxNode)?.also {
+          node.userObject = CheckBoxNode(it.label, status)
+        }
       }
   }
 
@@ -100,6 +101,16 @@ class CheckBoxNodeRenderer : TreeCellRenderer {
   private val panel = JPanel(BorderLayout())
   private val checkBox = TriStateCheckBox()
   private val tcr = DefaultTreeCellRenderer()
+
+  init {
+    // These properties do not depend on the node, so set them only once
+    panel.isFocusable = false
+    panel.isRequestFocusEnabled = false
+    panel.isOpaque = false
+    panel.add(checkBox, BorderLayout.WEST)
+    checkBox.isFocusable = false
+    checkBox.isOpaque = false
+  }
 
   override fun getTreeCellRendererComponent(
     tree: JTree,
@@ -122,20 +133,14 @@ class CheckBoxNodeRenderer : TreeCellRenderer {
     c.font = tree.font
 
     val treeNode = value as? DefaultMutableTreeNode ?: return c
-    panel.isFocusable = false
-    panel.isRequestFocusEnabled = false
-    panel.isOpaque = false
     checkBox.isEnabled = tree.isEnabled
     checkBox.font = tree.font
-    checkBox.isFocusable = false
-    checkBox.isOpaque = false
     (treeNode.userObject as? CheckBoxNode)?.also {
       val indeterminate = it.status === Status.INDETERMINATE
       checkBox.icon = if (indeterminate) IndeterminateIcon() else null
       (c as? JLabel)?.text = it.label
       checkBox.isSelected = it.status === Status.SELECTED
     }
-    panel.add(checkBox, BorderLayout.WEST)
     panel.add(c)
     return panel
   }
@@ -158,7 +163,14 @@ class CheckBoxNodeEditor :
     }
   }
   private val renderer = DefaultTreeCellRenderer()
-  private var str: String? = null
+  private var label: String? = null
+
+  init {
+    panel.isFocusable = false
+    panel.isRequestFocusEnabled = false
+    panel.isOpaque = false
+    panel.add(checkBox, BorderLayout.WEST)
+  }
 
   override fun getTreeCellEditorComponent(
     tree: JTree,
@@ -180,9 +192,6 @@ class CheckBoxNodeEditor :
     c.font = tree.font
 
     val treeNode = value as? DefaultMutableTreeNode ?: return c
-    panel.isFocusable = false
-    panel.isRequestFocusEnabled = false
-    panel.isOpaque = false
     checkBox.isEnabled = tree.isEnabled
     checkBox.font = tree.font
     // checkBox.setFocusable(false)
@@ -195,16 +204,15 @@ class CheckBoxNodeEditor :
       }
       (c as? JLabel)?.text = it.label
       checkBox.isSelected = it.status === Status.SELECTED
-      str = it.label
+      label = it.label
     }
-    panel.add(checkBox, BorderLayout.WEST)
     panel.add(c)
     return panel
   }
 
   override fun getCellEditorValue(): Any {
     val v = if (checkBox.isSelected) Status.SELECTED else Status.DESELECTED
-    return CheckBoxNode(str ?: "", v)
+    return CheckBoxNode(label ?: "", v)
   }
 
   override fun isCellEditable(e: EventObject?): Boolean {
