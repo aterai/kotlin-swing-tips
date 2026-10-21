@@ -94,6 +94,7 @@ private class ScrollBackToTopLayerUI<V : JScrollPane> : LayerUI<V>() {
     }
   }
   private val buttonRect = Rectangle(button.preferredSize)
+  private var animator: Timer? = null
 
   override fun updateUI(l: JLayer<out V>) {
     super.updateUI(l)
@@ -114,7 +115,7 @@ private class ScrollBackToTopLayerUI<V : JScrollPane> : LayerUI<V>() {
     super.paint(g, c)
     val scroll = (c as? JLayer<*>)?.view as? JScrollPane ?: return
     updateButtonRect(scroll)
-    if (scroll.viewport.viewRect.y > 0) {
+    if (isButtonVisible(scroll)) {
       button.model.isRollover = buttonRect.contains(mousePoint)
       SwingUtilities.paintComponent(g, button, rubberStamp, buttonRect)
     }
@@ -138,18 +139,20 @@ private class ScrollBackToTopLayerUI<V : JScrollPane> : LayerUI<V>() {
     e: MouseEvent,
     l: JLayer<out V>,
   ) {
-    val scroll = l.view
-    val viewRect = scroll.viewport.viewRect
-    val pt = SwingUtilities.convertPoint(e.component, e.point, scroll)
-    mousePoint.location = pt
-    val eventId = e.id
-    val rollover = buttonRect.contains(mousePoint)
-    if (eventId == MouseEvent.MOUSE_CLICKED) {
-      if (rollover) {
-        scrollBackToTop(l.view)
+    updateMousePoint(e, l)
+    // The button is only painted (and clickable) while the top area is scrolled out
+    if (isButtonVisible(l.view) && buttonRect.contains(mousePoint)) {
+      when (e.id) {
+        MouseEvent.MOUSE_CLICKED -> {
+          scrollBackToTop(l.view)
+          e.consume()
+        }
+
+        MouseEvent.MOUSE_PRESSED -> {
+          // Prevent the child component (e.g. JTable cell selection) from handling the press
+          e.consume()
+        }
       }
-    } else if (eventId == MouseEvent.MOUSE_PRESSED && viewRect.y > 0 && rollover) {
-      e.consume()
     }
   }
 
@@ -157,29 +160,42 @@ private class ScrollBackToTopLayerUI<V : JScrollPane> : LayerUI<V>() {
     e: MouseEvent,
     l: JLayer<out V>,
   ) {
-    val pt = SwingUtilities.convertPoint(e.component, e.point, l.view)
+    updateMousePoint(e, l)
+  }
+
+  private fun updateMousePoint(
+    e: MouseEvent,
+    l: JLayer<out V>,
+  ) {
+    val scroll = l.view
+    val pt = SwingUtilities.convertPoint(e.component, e.point, scroll)
     mousePoint.location = pt
-    l.glassPane.isVisible = buttonRect.contains(mousePoint)
+    // Show the glass pane (default cursor) only while hovering over the visible button
+    l.glassPane.isVisible = isButtonVisible(scroll) && buttonRect.contains(mousePoint)
     l.repaint(buttonRect)
   }
 
   private fun scrollBackToTop(scroll: JScrollPane) {
+    if (animator?.isRunning == true) {
+      return
+    }
     val view = scroll.viewport.view as? JComponent ?: return
     val target = scroll.viewport.viewRect
-    Timer(20) { e ->
-      (e.source as? Timer)?.also {
-        if (0 < target.y && it.isRunning) {
-          target.y -= 1.coerceAtLeast(target.y / 2)
-          view.scrollRectToVisible(target)
-        } else {
-          it.stop()
-        }
+    animator = Timer(20) { e ->
+      if (target.y > 0) {
+        // Halve the remaining distance on each tick for an ease-out effect
+        target.y -= 1.coerceAtLeast(target.y / 2)
+        view.scrollRectToVisible(target)
+      } else {
+        (e.source as? Timer)?.stop()
       }
-    }.start()
+    }.also { it.start() }
   }
 
   companion object {
     private const val GAP = 5
+
+    private fun isButtonVisible(scroll: JScrollPane) = scroll.viewport.viewRect.y > 0
   }
 }
 
@@ -259,10 +275,10 @@ private class LineNumberView(
     val fontDescent = fontMetrics.descent
     val fontLeading = fontMetrics.leading
     var y = startLine * fontMetrics.height
-    val rightMargin = getInsets().right
+    val rightEdge = getComponentWidth() - getInsets().right
     for (line in startLine..endLine) {
       val text = (line + 1).toString()
-      val x = getComponentWidth() - rightMargin - fontMetrics.stringWidth(text)
+      val x = rightEdge - fontMetrics.stringWidth(text)
       y += fontAscent
       g2.drawString(text, x, y)
       y += fontDescent + fontLeading
