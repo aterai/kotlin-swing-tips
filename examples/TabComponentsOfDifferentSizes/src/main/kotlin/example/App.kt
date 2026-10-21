@@ -9,6 +9,8 @@ import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
 import javax.swing.*
 
+// The divider location used to expand the collapsed tab component
+private const val EXPANDED_SIZE = 120
 private val splitPane = JSplitPane(JSplitPane.HORIZONTAL_SPLIT)
 private val tabAreaSize = Dimension(40, 40)
 private val renderer = JPanel()
@@ -19,14 +21,18 @@ fun createUI(): Component {
   tabbedPane.isFocusable = false
   tabbedPane.addChangeListener { updateDividerLocation(tabbedPane) }
   tabbedPane.addMouseListener(object : MouseAdapter() {
-    private var prev = -1
+    private var prevIndex = -1
 
     override fun mouseClicked(e: MouseEvent) {
       val tabs = e.component as? JTabbedPane ?: return
-      if (prev == tabs.selectedIndex && SwingUtilities.isLeftMouseButton(e)) {
-        tabClicked(tabs)
+      val selected = tabs.selectedIndex
+      // Clicks on the tab component area are also delivered to the JTabbedPane,
+      // so only toggle when the already selected tab itself is clicked
+      val isSelectedTab = tabs.indexAtLocation(e.x, e.y) == selected
+      if (isSelectedTab && prevIndex == selected && SwingUtilities.isLeftMouseButton(e)) {
+        toggleCollapsed(tabs)
       }
-      prev = tabs.selectedIndex
+      prevIndex = selected
     }
   })
   listOf("computer", "directory", "file").forEach {
@@ -50,7 +56,7 @@ fun createUI(): Component {
   }
 }
 
-fun tabComponentResized(
+private fun tabComponentResized(
   e: ComponentEvent,
   tabs: JTabbedPane,
 ) {
@@ -66,7 +72,7 @@ fun tabComponentResized(
   }
 }
 
-fun updateDividerLocation(tabs: JTabbedPane) {
+private fun updateDividerLocation(tabs: JTabbedPane) {
   val c = tabs.selectedComponent
   if (isTopBottomTabPlacement(tabs.tabPlacement)) {
     splitPane.dividerLocation = c.preferredSize.height + tabAreaSize.height
@@ -75,21 +81,14 @@ fun updateDividerLocation(tabs: JTabbedPane) {
   }
 }
 
-fun tabClicked(tabs: JTabbedPane) {
-  val c = tabs.selectedComponent
-  if (isTopBottomTabPlacement(tabs.tabPlacement)) {
-    if (c.preferredSize.height == 0) {
-      splitPane.dividerLocation = 120
-    } else {
-      splitPane.dividerLocation = tabAreaSize.height
-    }
-  } else {
-    if (c.preferredSize.width == 0) {
-      splitPane.dividerLocation = 120
-    } else {
-      splitPane.dividerLocation = tabAreaSize.width
-    }
-  }
+// Toggle the collapsed state of the selected tab component: collapse it to the tab area size,
+// or expand it to the default size if it is already collapsed
+private fun toggleCollapsed(tabs: JTabbedPane) {
+  val isTopBottom = isTopBottomTabPlacement(tabs.tabPlacement)
+  val d = tabs.selectedComponent.preferredSize
+  val isCollapsed = (if (isTopBottom) d.height else d.width) == 0
+  val tabAreaLength = if (isTopBottom) tabAreaSize.height else tabAreaSize.width
+  splitPane.dividerLocation = if (isCollapsed) EXPANDED_SIZE else tabAreaLength
 }
 
 private fun makeVerticalTabIcon(
@@ -102,13 +101,12 @@ private fun makeVerticalTabIcon(
   val w = d.height
   val h = d.width
   val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
-  (bi.graphics as? Graphics2D)?.also { g2 ->
-    val at = AffineTransform.getTranslateInstance(0.0, h.toDouble())
-    at.quadrantRotate(-1)
-    g2.transform = at
-    SwingUtilities.paintComponent(g2, label, renderer, 0, 0, d.width, d.height)
-    g2.dispose()
-  }
+  val g2 = bi.createGraphics()
+  val at = AffineTransform.getTranslateInstance(0.0, h.toDouble())
+  at.quadrantRotate(-1)
+  g2.transform = at
+  SwingUtilities.paintComponent(g2, label, renderer, 0, 0, d.width, d.height)
+  g2.dispose()
   return ImageIcon(bi)
 }
 
