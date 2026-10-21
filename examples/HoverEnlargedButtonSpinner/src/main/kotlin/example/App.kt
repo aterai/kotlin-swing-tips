@@ -38,11 +38,15 @@ private class EnlargedButtonSpinner(
   private var listener: MouseAdapter? = null
 
   override fun updateUI() {
-    (editor as? DefaultEditor)?.textField?.also {
-      it.removeMouseListener(listener)
+    val field = (editor as? DefaultEditor)?.textField
+    if (field != null) {
+      field.removeMouseListener(listener)
       super.updateUI()
+      // Recreate the listener so that its JPopupMenu follows the new LookAndFeel
       listener = ArrowButtonEnlargeListener()
-      it.addMouseListener(listener)
+      field.addMouseListener(listener)
+    } else {
+      super.updateUI()
     }
   }
 }
@@ -50,28 +54,30 @@ private class EnlargedButtonSpinner(
 private class ArrowButtonEnlargeListener : MouseAdapter() {
   private val popup = JPopupMenu()
 
+  init {
+    popup.setLayout(GridLayout(2, 1))
+    popup.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY))
+    popup.setFocusable(false)
+  }
+
   override fun mousePressed(e: MouseEvent) {
     val c = e.component
     val spinner = SwingUtilities.getAncestorOfClass(JSpinner::class.java, c)
     if (SwingUtilities.isLeftMouseButton(e) && spinner is JSpinner) {
-      val bigNextBtn = makeArrowButton(spinner, true)
-      val bigPrevBtn = makeArrowButton(spinner, false)
-      popup.setLayout(GridLayout(2, 1))
-      popup.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY))
-      popup.setFocusable(false)
       popup.removeAll()
-      popup.add(bigNextBtn)
-      popup.add(bigPrevBtn)
+      popup.add(createArrowButton(spinner, true))
+      popup.add(createArrowButton(spinner, false))
       popup.pack()
+      // Show the popup to the right of the editor, vertically centered on it
       val editor = spinner.editor
       val r = SwingUtilities.calculateInnerArea(editor, null)
       val px = r.maxX.toInt()
-      val py = r.centerY.toInt() - bigNextBtn.getPreferredSize().height
+      val py = r.centerY.toInt() - popup.preferredSize.height / 2
       popup.show(editor, px, py)
     }
   }
 
-  private fun makeArrowButton(spinner: JSpinner, isNext: Boolean): JButton {
+  private fun createArrowButton(spinner: JSpinner, isNext: Boolean): JButton {
     val direction = if (isNext) SwingConstants.NORTH else SwingConstants.SOUTH
     val arrowButton = object : BasicArrowButton(direction) {
       override fun getPreferredSize(): Dimension {
@@ -103,17 +109,13 @@ private class ArrowButtonHandler(
   }
 
   override fun actionPerformed(e: ActionEvent) {
-    val src = e.getSource()
-    if (src is Timer) {
-      val b = arrowButton?.getModel()?.isPressed
-      if (b == false && repeatTimer.isRunning) {
-        repeatTimer.stop()
-        setArrowButton(null)
-      }
-    } else {
-      if (src is JButton) {
-        setArrowButton(src)
-      }
+    val released = arrowButton?.model?.isPressed == false
+    if (e.source is Timer && released) {
+      // The button was released without a mouseReleased event, stop repeating
+      // and do not change the value
+      repeatTimer.stop()
+      setArrowButton(null)
+      return
     }
     val value = if (isNext) spinner.nextValue else spinner.previousValue
     if (value != null) {
@@ -126,7 +128,9 @@ private class ArrowButtonHandler(
   }
 
   override fun mousePressed(e: MouseEvent) {
-    if (SwingUtilities.isLeftMouseButton(e) && e.component.isEnabled) {
+    val c = e.component
+    if (SwingUtilities.isLeftMouseButton(e) && c.isEnabled && c is JButton) {
+      setArrowButton(c)
       repeatTimer.start()
     }
   }
@@ -137,19 +141,18 @@ private class ArrowButtonHandler(
   }
 
   override fun mouseClicked(e: MouseEvent?) {
-    // no need
+    // not needed
   }
 
   override fun mouseEntered(e: MouseEvent?) {
-    // if (!repeatTimer.isRunning()) {
-    //   repeatTimer.start();
-    // }
+    // Resume repeating if the mouse comes back while the button is still pressed
+    if (arrowButton?.model?.isPressed == true && !repeatTimer.isRunning) {
+      repeatTimer.start()
+    }
   }
 
   override fun mouseExited(e: MouseEvent?) {
-    if (repeatTimer.isRunning) {
-      repeatTimer.stop()
-    }
+    repeatTimer.stop()
   }
 }
 
