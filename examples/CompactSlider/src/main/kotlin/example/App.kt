@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.math.BigInteger
 import java.text.NumberFormat
 import java.text.ParseException
 import javax.swing.*
@@ -14,16 +13,15 @@ import javax.swing.plaf.LayerUI
 import javax.swing.plaf.basic.BasicProgressBarUI
 import javax.swing.plaf.basic.BasicSliderUI
 import javax.swing.text.DefaultFormatterFactory
-import javax.swing.text.JTextComponent
 import javax.swing.text.NumberFormatter
 
 fun createUI(): Component {
   val p = JPanel(GridLayout(0, 1, 15, 15))
   p.isOpaque = false
-  p.add(makeCompactSlider1())
-  p.add(makeCompactSlider2())
-  p.add(makeCompactSlider3())
-  p.add(makeCompactSlider4())
+  p.add(createCompactSlider1())
+  p.add(createCompactSlider2())
+  p.add(createCompactSlider3())
+  p.add(createCompactSlider4())
   val mb = JMenuBar()
   mb.add(LookAndFeelUtils.createLookAndFeelMenu())
   return JPanel(BorderLayout()).also {
@@ -35,7 +33,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeCompactSlider1(): Component {
+private fun createCompactSlider1(): Component {
   val m = DefaultBoundedRangeModel(50, 0, 0, 100)
   val progressBar = CompactProgressBar(m)
   val spinner = makeSpinner(progressBar)
@@ -48,28 +46,9 @@ private fun makeSpinner(progressBar: JProgressBar): JSpinner {
   val value = m.value
   val min = m.minimum
   val max = m.maximum
-  return object : JSpinner(SpinnerNumberModel(value, min, max, 5)) {
+  // The transparent settings of the editor are inherited from FlatSpinner
+  return object : FlatSpinner(SpinnerNumberModel(value, min, max, 5)) {
     private val renderer = JPanel()
-
-    override fun updateUI() {
-      super.updateUI()
-      isOpaque = false
-      val editor = editor as? DefaultEditor ?: return
-      editor.isOpaque = false
-      val field = editor.textField
-      field.isOpaque = false
-      field.border = BorderFactory.createEmptyBorder()
-      val d = UIDefaults()
-      val painter = Painter { _: Graphics2D?, _: JComponent?, _: Int, _: Int -> }
-      d["Spinner:Panel:\"Spinner.formattedTextField\"[Enabled].backgroundPainter"] =
-        painter
-      d["Spinner:Panel:\"Spinner.formattedTextField\"[Focused].backgroundPainter"] =
-        painter
-      d["Spinner:Panel:\"Spinner.formattedTextField\"[Selected].backgroundPainter"] =
-        painter
-      field.putClientProperty("Nimbus.Overrides", d)
-      field.putClientProperty("Nimbus.Overrides.InheritDefaults", true)
-    }
 
     override fun paintComponent(g: Graphics) {
       super.paintComponent(g)
@@ -81,7 +60,7 @@ private fun makeSpinner(progressBar: JProgressBar): JSpinner {
   }
 }
 
-private fun makeCompactSlider2(): Component {
+private fun createCompactSlider2(): Component {
   val m = DefaultBoundedRangeModel(50, 0, 0, 100)
   val progressBar = CompactProgressBar(m)
   val spinner = makeSpinner2(m)
@@ -111,27 +90,7 @@ private fun makeSpinner2(m: BoundedRangeModel): JSpinner {
   val min = m.minimum
   val max = m.maximum
   val value = m.value
-  return object : JSpinner(SpinnerNumberModel(value, min, max, 5)) {
-    override fun updateUI() {
-      super.updateUI()
-      isOpaque = false
-      val editor = editor as? DefaultEditor ?: return
-      editor.isOpaque = false
-      val field = editor.textField
-      field.isOpaque = false
-      field.border = BorderFactory.createEmptyBorder()
-      val d = UIDefaults()
-      val painter = Painter { _: Graphics2D?, _: JComponent?, _: Int, _: Int -> }
-      d["Spinner:Panel:\"Spinner.formattedTextField\"[Enabled].backgroundPainter"] =
-        painter
-      d["Spinner:Panel:\"Spinner.formattedTextField\"[Focused].backgroundPainter"] =
-        painter
-      d["Spinner:Panel:\"Spinner.formattedTextField\"[Selected].backgroundPainter"] =
-        painter
-      field.putClientProperty("Nimbus.Overrides", d)
-      field.putClientProperty("Nimbus.Overrides.InheritDefaults", true)
-    }
-  }
+  return FlatSpinner(SpinnerNumberModel(value, min, max, 5))
 }
 
 private fun initListener(spinner: JSpinner, progressBar: JProgressBar) {
@@ -147,25 +106,24 @@ private fun initListener(spinner: JSpinner, progressBar: JProgressBar) {
     val model = source?.model
     if (source is JSpinner && model is SpinnerNumberModel) {
       val oldValue = source.value as? Number ?: 0
-      val intValue = oldValue.toInt() - e.wheelRotation * model.stepSize.toInt()
+      val newValue = oldValue.toInt() - e.wheelRotation * model.stepSize.toInt()
+      // Clamp so that min and max can be reached even if the value is not a multiple of step
       val max = model.maximum as? Number ?: 0
       val min = model.minimum as? Number ?: 0
-      if (intValue in min.toInt()..max.toInt()) {
-        source.value = intValue
-      }
+      source.value = newValue.coerceIn(min.toInt(), max.toInt())
     }
   }
 }
 
-private fun makeCompactSlider3(): Component {
+private fun createCompactSlider3(): Component {
   val m = DefaultBoundedRangeModel(50, 0, 0, 100)
   val progressBar = CompactProgressBar(m)
   val field = makeSpinner3(progressBar)
   val box = Box.createHorizontalBox()
   box.add(Box.createHorizontalGlue())
   box.add(field)
-  box.add(makeButton(-5, field, progressBar.model))
-  box.add(makeButton(+5, field, progressBar.model))
+  box.add(createButton(-5, m))
+  box.add(createButton(+5, m))
   box.add(Box.createHorizontalGlue())
   return box
 }
@@ -197,39 +155,29 @@ private fun makeSpinner3(progressBar: JProgressBar): JTextField {
       }
     }
   }
-  field.horizontalAlignment = SwingConstants.RIGHT
-  field.isOpaque = false
   field.columns = 16
-  field.value = 50
-  field.addMouseWheelListener { e ->
-    val source = e.component as? JFormattedTextField
-    val model = progressBar.model
-    val oldValue = source?.value as? Number ?: 0
-    val intValue = oldValue.toInt() - e.wheelRotation
-    val max = model.maximum
-    val min = model.minimum
-    if (intValue in min..max) {
-      source?.value = intValue
-      progressBar.value = intValue
-    }
-  }
+  val m = progressBar.model
+  field.value = m.value
+  // Keep the text field in sync when the value is changed by the buttons or the mouse wheel
+  m.addChangeListener { field.value = m.value }
+  // BoundedRangeModel#setValue(...) clamps the value to the range
+  field.addMouseWheelListener { e -> m.value = m.value - e.wheelRotation }
   return field
 }
 
-private fun makeButton(
+private fun createButton(
   step: Int,
-  view: JTextField,
   model: BoundedRangeModel,
 ): JButton {
   val title = "%+d".format(step)
   val button = JButton(title)
-  val handler = AutoRepeatHandler(step, view, model)
+  val handler = AutoRepeatHandler(step, model)
   button.addActionListener(handler)
   button.addMouseListener(handler)
   return button
 }
 
-private fun makeCompactSlider4(): Component {
+private fun createCompactSlider4(): Component {
   val slider = object : JSlider(0, 100, 50) {
     override fun updateUI() {
       super.updateUI()
@@ -260,24 +208,19 @@ private fun makeCompactSlider4(): Component {
   }
   field.columns = 3
   field.value = slider.value
-  field.horizontalAlignment = SwingConstants.RIGHT
   field.alignmentX = JComponent.RIGHT_ALIGNMENT
   slider.addChangeListener { e ->
     (e.source as? JSlider)?.also {
       field.value = it.value
+      // BasicSliderUI repaints only the thumb area while dragging,
+      // so repaint the whole slider to update the filled track
       it.repaint()
     }
   }
+  // JSlider#setValue(...) clamps the value to the range
   slider.addMouseWheelListener { e ->
     (e.source as? JSlider)?.also {
-      val oldValue = it.value
-      val intValue = oldValue - e.wheelRotation
-      val max = it.maximum
-      val min = it.minimum
-      if (intValue in min..max) {
-        it.value = intValue
-        field.value = intValue
-      }
+      it.value = it.value - e.wheelRotation
     }
   }
   val p = object : JPanel() {
@@ -293,8 +236,8 @@ private fun makeCompactSlider4(): Component {
   val box = Box.createHorizontalBox()
   box.add(p)
   box.add(Box.createHorizontalStrut(2))
-  box.add(makeButton(-5, field, slider.model))
-  box.add(makeButton(+5, field, slider.model))
+  box.add(createButton(-5, slider.model))
+  box.add(createButton(+5, slider.model))
   box.add(Box.createHorizontalGlue())
   val panel = JPanel(BorderLayout())
   panel.add(p)
@@ -313,30 +256,46 @@ private class CompactProgressBar(
   }
 }
 
-private class NumberFormatterFactory :
-  DefaultFormatterFactory(
-    numberFormatter,
-    numberFormatter,
-    numberFormatter,
-  ) {
-  companion object {
-    private val numberFormatter = NumberFormatter()
+private open class FlatSpinner(
+  model: SpinnerModel,
+) : JSpinner(model) {
+  override fun updateUI() {
+    super.updateUI()
+    isOpaque = false
+    val editor = editor as? DefaultEditor ?: return
+    editor.isOpaque = false
+    val field = editor.textField
+    field.isOpaque = false
+    field.border = BorderFactory.createEmptyBorder()
+    val d = UIDefaults()
+    val painter = Painter { _: Graphics2D?, _: JComponent?, _: Int, _: Int -> }
+    val key = "Spinner:Panel:\"Spinner.formattedTextField\""
+    d["$key[Enabled].backgroundPainter"] = painter
+    d["$key[Focused].backgroundPainter"] = painter
+    d["$key[Selected].backgroundPainter"] = painter
+    field.putClientProperty("Nimbus.Overrides", d)
+    field.putClientProperty("Nimbus.Overrides.InheritDefaults", true)
+  }
+}
 
-    init {
-      numberFormatter.valueClass = Integer::class.java
-      (numberFormatter.format as? NumberFormat)?.isGroupingUsed = false
-    }
+// An AbstractFormatter is installed into a single JFormattedTextField,
+// so create a new instance for each factory instead of sharing a static one
+private class NumberFormatterFactory : DefaultFormatterFactory(createFormatter()) {
+  companion object {
+    private fun createFormatter() =
+      NumberFormatter().also {
+        it.valueClass = Integer::class.java
+        (it.format as? NumberFormat)?.isGroupingUsed = false
+      }
   }
 }
 
 private class AutoRepeatHandler(
-  extent: Int,
-  private val view: JTextComponent,
+  private val step: Int,
   private val model: BoundedRangeModel,
 ) : MouseAdapter(),
   ActionListener {
   private val autoRepeatTimer = Timer(60, this)
-  private val extent = BigInteger.valueOf(extent.toLong())
   private var arrowButton: JButton? = null
 
   init {
@@ -354,9 +313,9 @@ private class AutoRepeatHandler(
     } else if (o is JButton) {
       arrowButton = o
     }
-    val iv = BigInteger(view.text)
-    model.value = iv.toInt()
-    view.text = iv.add(extent).toString()
+    // The text field is updated by the ChangeListener of the model,
+    // and BoundedRangeModel#setValue(...) clamps the value to the range
+    model.value = model.value + step
   }
 
   override fun mousePressed(e: MouseEvent) {
@@ -391,19 +350,15 @@ private class FlatSliderUI(
     if (slider.orientation == SwingConstants.HORIZONTAL) {
       val g2 = g.create() as? Graphics2D ?: return
       val middleOfThumb = thumbRect.x + thumbRect.width / 2
-      val fillWidth: Int
+      val r = SwingUtilities.calculateInnerArea(slider, null)
       if (drawInverted()) {
-        val trackRight = trackRect.width - 1
-        val fillRight = if (slider.isEnabled) trackRight - 2 else trackRight - 1
-        fillWidth = fillRight - middleOfThumb
+        // Fill from the thumb to the right edge
+        r.width = r.x + r.width - middleOfThumb
+        r.x = middleOfThumb
       } else {
-        val trackLeft = 0
-        val fillLeft = if (slider.isEnabled) trackLeft + 1 else trackLeft
-        fillWidth = middleOfThumb - fillLeft
+        r.width = middleOfThumb - r.x
       }
       g2.paint = slider.foreground
-      val r = SwingUtilities.calculateInnerArea(slider, null)
-      r.width = fillWidth
       g2.fill(r)
       g2.dispose()
     } else {
