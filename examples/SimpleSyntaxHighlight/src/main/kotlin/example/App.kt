@@ -5,6 +5,7 @@ import javax.swing.*
 import javax.swing.text.AttributeSet
 import javax.swing.text.BadLocationException
 import javax.swing.text.DefaultStyledDocument
+import javax.swing.text.Element
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
 
@@ -46,72 +47,54 @@ private class SimpleSyntaxDocument : DefaultStyledDocument() {
     length: Int,
   ) {
     val root = defaultRootElement
-    val content = getText(0, getLength())
     val startLine = root.getElementIndex(offset)
     val endLine = root.getElementIndex(offset + length)
     for (i in startLine..endLine) {
-      applyHighlighting(content, i)
+      applyHighlighting(root.getElement(i))
     }
   }
 
-  private fun applyHighlighting(
-    content: String,
-    line: Int,
-  ) {
-    val root = defaultRootElement
-    val startOffset = root.getElement(line).startOffset
-    var endOffset = root.getElement(line).endOffset - 1
-    val lineLength = endOffset - startOffset
-    val contentLength = content.length
-    endOffset = if (endOffset >= contentLength) contentLength - 1 else endOffset
+  @Throws(BadLocationException::class)
+  private fun applyHighlighting(line: Element) {
+    val startOffset = line.startOffset
+    // Exclude the trailing newline; the last line element also ends with
+    // an implied newline at getLength() + 1, so this never exceeds the length
+    val endOffset = line.endOffset - 1
+    // Fetch only the changed line instead of the whole document text
+    val text = getText(startOffset, endOffset - startOffset)
     setCharacterAttributes(
       startOffset,
-      lineLength,
+      text.length,
       getStyle(StyleContext.DEFAULT_STYLE),
       true,
     )
-    checkForTokens(content, startOffset, endOffset)
+    highlightKeywords(text, startOffset)
   }
 
-  private fun checkForTokens(
-    content: String,
-    startOffset: Int,
-    endOffset: Int,
+  private fun highlightKeywords(
+    text: String,
+    lineOffset: Int,
   ) {
-    var index = startOffset
-    while (index <= endOffset) {
-      while (index <= endOffset && isDelimiter(content[index])) {
+    val length = text.length
+    var index = 0
+    while (index < length) {
+      val tokenStart = index
+      while (index < length && !isDelimiter(text[index])) {
         index++
       }
-      if (index <= endOffset) {
-        index = getOtherToken(content, index, endOffset)
+      if (index > tokenStart) {
+        getStyle(text.substring(tokenStart, index))?.also {
+          setCharacterAttributes(lineOffset + tokenStart, index - tokenStart, it, false)
+        }
       }
+      index++ // skip the delimiter
     }
   }
 
-  private fun getOtherToken(
-    content: String,
-    startOffset: Int,
-    endOffset: Int,
-  ): Int {
-    var endOfToken = startOffset + 1
-    while (endOfToken <= endOffset) {
-      if (isDelimiter(content[endOfToken])) {
-        break
-      }
-      endOfToken++
-    }
-    val token = content.substring(startOffset, endOfToken)
-    getStyle(token)?.also {
-      setCharacterAttributes(startOffset, endOfToken - startOffset, it, false)
-    }
-    return endOfToken + 1
-  }
-
-  fun isDelimiter(ch: Char) = Character.isWhitespace(ch) || OPERANDS.indexOf(ch) >= 0
+  fun isDelimiter(ch: Char) = Character.isWhitespace(ch) || DELIMITERS.indexOf(ch) >= 0
 
   companion object {
-    private const val OPERANDS = ".,"
+    private const val DELIMITERS = ".,"
   }
 }
 
