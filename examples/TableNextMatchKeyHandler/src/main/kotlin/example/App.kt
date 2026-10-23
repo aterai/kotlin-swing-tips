@@ -139,7 +139,11 @@ private class TableNextMatchKeyHandler : KeyAdapter() {
         .firstOrNull { row ->
           // the row index is a view index, convert it for the sorted table
           val value = model.getValueAt(table.convertRowIndexToModel(row), TARGET_COLUMN)
-          value?.toString().orEmpty().uppercase(Locale.ENGLISH).startsWith(upperPrefix)
+          value
+            ?.toString()
+            .orEmpty()
+            .uppercase(Locale.ENGLISH)
+            .startsWith(upperPrefix)
         }
         ?: -1
     }
