@@ -122,9 +122,13 @@ open class RoundedCornerButton : JButton {
         g2.fill(s)
       }
 
-      isRolloverEnabled && m.isRollover -> paintFocusAndRollover(g2, ROLLOVER_COLOR)
+      isRolloverEnabled && m.isRollover -> {
+        paintFocusAndRollover(g2, ROLLOVER_COLOR)
+      }
 
-      hasFocus() -> paintFocusAndRollover(g2, FOCUS_COLOR)
+      hasFocus() -> {
+        paintFocusAndRollover(g2, FOCUS_COLOR)
+      }
 
       else -> {
         g2.paint = background
@@ -220,9 +224,13 @@ class ShapeButton(
         g2.fill(shape)
       }
 
-      isRolloverEnabled && m.isRollover -> paintFocusAndRollover(g2, ROLLOVER_COLOR)
+      isRolloverEnabled && m.isRollover -> {
+        paintFocusAndRollover(g2, ROLLOVER_COLOR)
+      }
 
-      hasFocus() -> paintFocusAndRollover(g2, FOCUS_COLOR)
+      hasFocus() -> {
+        paintFocusAndRollover(g2, FOCUS_COLOR)
+      }
 
       else -> {
         g2.paint = background
