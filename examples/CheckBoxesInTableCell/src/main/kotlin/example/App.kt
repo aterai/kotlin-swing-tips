@@ -116,7 +116,9 @@ private class CheckBoxesEditor :
     }
   }
 
-  private fun createToggleAction(index: Int) = object : AbstractAction(CheckBoxesPanel.SYMBOLS[index]) {
+  private fun createToggleAction(
+    index: Int,
+  ) = object : AbstractAction(CheckBoxesPanel.SYMBOLS[index]) {
     override fun actionPerformed(e: ActionEvent) {
       editor.toggleCheckBox(index)
       fireEditingStopped()
