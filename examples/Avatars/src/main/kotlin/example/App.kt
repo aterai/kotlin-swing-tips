@@ -247,8 +247,8 @@ private class AvatarButton(
   }
 
   override fun getToolTipLocation(e: MouseEvent) = getToolTipText(e)
-        ?.let { this.getToolTipBounds(it) }
-        ?.location
+    ?.let { this.getToolTipBounds(it) }
+    ?.location
 
   companion object {
     private const val DIAMETER = 24

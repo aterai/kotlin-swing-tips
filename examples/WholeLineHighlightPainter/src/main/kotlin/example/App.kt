@@ -124,9 +124,9 @@ private class FocusCaret(
 
   override fun equals(other: Any?) =
     this === other || super.equals(other) &&
-        other is FocusCaret &&
-        nonFocusPainter == other.nonFocusPainter &&
-        getSelectionPainter() == other.getSelectionPainter()
+      other is FocusCaret &&
+      nonFocusPainter == other.nonFocusPainter &&
+      getSelectionPainter() == other.getSelectionPainter()
 
   override fun hashCode() =
     Objects.hash(super.hashCode(), nonFocusPainter, getSelectionPainter())
