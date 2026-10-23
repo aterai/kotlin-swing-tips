@@ -19,7 +19,6 @@ import javax.swing.table.DefaultTableModel
 import javax.swing.table.TableCellRenderer
 import kotlin.math.max
 
-
 private val monthLabel = JLabel("", SwingConstants.CENTER)
 private val monthTable = object : JTable() {
   private val pt = Point(-1000, -1000)
@@ -235,7 +234,7 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
   }
 
   private fun isDiagonallySplitCell(nextWeekDay: LocalDate) =
-      YearMonth.from(nextWeekDay) == YearMonth.from(currentLocalDate)
+    YearMonth.from(nextWeekDay) == YearMonth.from(currentLocalDate)
 
   private fun updateCellWeekColor(
     d: LocalDate,
