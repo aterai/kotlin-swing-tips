@@ -216,7 +216,9 @@ private class HeaderCheckBoxHandler(
     val rowCount = m.rowCount
     return when {
       rowCount == 0 -> Status.DESELECTED
+
       status == Status.INDETERMINATE -> resolveStatus(m, 0, rowCount - 1)
+
       // Deleting rows from a uniform column does not change its state
       else -> status
     }
