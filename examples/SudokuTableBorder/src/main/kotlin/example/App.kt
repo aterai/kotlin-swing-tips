@@ -2,11 +2,12 @@ package example
 
 import java.awt.*
 import javax.swing.*
+import javax.swing.border.LineBorder
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 
-const val BW1 = 1
-const val BW2 = 2
+const val BORDER_WIDTH1 = 1
+const val BORDER_WIDTH2 = 2
 const val CELL_SIZE = 18
 
 fun createUI(): Component {
@@ -35,8 +36,7 @@ fun createUI(): Component {
     override fun getPreferredScrollableViewportSize() = super.getPreferredSize()
   }
   for (i in 0..<table.rowCount) {
-    val a = if ((i + 1) % 3 == 0) BW2 else BW1
-    table.setRowHeight(i, CELL_SIZE + a)
+    table.setRowHeight(i, getCellSize(i))
   }
 
   table.cellSelectionEnabled = true
@@ -44,44 +44,20 @@ fun createUI(): Component {
   table.autoResizeMode = JTable.AUTO_RESIZE_OFF
   table.tableHeader.reorderingAllowed = false
   table.border = BorderFactory.createEmptyBorder()
-
-  table.showVerticalLines = false
-  table.showHorizontalLines = false
-
+  table.setShowGrid(false)
+  // also sets the row margin and the column margin to 0
   table.intercellSpacing = Dimension()
-  table.rowMargin = 0
-  table.columnModel.columnMargin = 0
 
   val editor = JTextField()
   editor.horizontalAlignment = SwingConstants.CENTER
-  // editor.setBorder(BorderFactory.createLineBorder(Color.RED))
-  val cellEditor = object : DefaultCellEditor(editor) {
-    override fun getTableCellEditorComponent(
-      table: JTable,
-      value: Any?,
-      isSelected: Boolean,
-      row: Int,
-      column: Int,
-    ): Component {
-      val v = if (value == 0) "" else value
-      return super.getTableCellEditorComponent(table, v, isSelected, row, column)
-    }
-
-    override fun getCellEditorValue() = if (editor.text.isEmpty()) {
-      0
-    } else {
-      super.getCellEditorValue()
-    }
-  }
-  table.setDefaultEditor(Number::class.java, cellEditor)
+  table.setDefaultEditor(Number::class.java, SudokuCellEditor(editor))
   table.setDefaultRenderer(Number::class.java, SudokuCellRenderer(data))
 
-  val m = table.columnModel
-  m.selectionModel.selectionMode = ListSelectionModel.SINGLE_SELECTION
-  for (i in 0..<m.columnCount) {
-    val col = m.getColumn(i)
-    val a = if ((i + 1) % 3 == 0) BW2 else BW1
-    col.preferredWidth = CELL_SIZE + a
+  val columnModel = table.columnModel
+  columnModel.selectionModel.selectionMode = ListSelectionModel.SINGLE_SELECTION
+  for (i in 0..<columnModel.columnCount) {
+    val col = columnModel.getColumn(i)
+    col.preferredWidth = getCellSize(i)
     col.resizable = false
   }
 
@@ -89,7 +65,13 @@ fun createUI(): Component {
     it.verticalScrollBarPolicy = ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER
     it.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
     it.border = BorderFactory.createEmptyBorder()
-    it.viewportBorder = BorderFactory.createMatteBorder(BW2, BW2, 0, 0, Color.BLACK)
+    it.viewportBorder = BorderFactory.createMatteBorder(
+      BORDER_WIDTH2,
+      BORDER_WIDTH2,
+      0,
+      0,
+      Color.BLACK,
+    )
     it.columnHeader = JViewport()
     it.columnHeader.isVisible = false
   }
@@ -100,20 +82,74 @@ fun createUI(): Component {
   }
 }
 
+// The cell size including the right or bottom border width,
+// every third row or column has a thick block border.
+private fun getCellSize(index: Int): Int {
+  val isBlockEdge = (index + 1) % 3 == 0
+  return CELL_SIZE + if (isBlockEdge) BORDER_WIDTH2 else BORDER_WIDTH1
+}
+
+private class SudokuCellEditor(
+  private val textField: JTextField,
+) : DefaultCellEditor(textField) {
+  override fun getTableCellEditorComponent(
+    table: JTable,
+    value: Any?,
+    isSelected: Boolean,
+    row: Int,
+    column: Int,
+  ): Component {
+    textField.border = LineBorder(Color.BLACK)
+    val v = if (value == 0) "" else value
+    return super.getTableCellEditorComponent(table, v, isSelected, row, column)
+  }
+
+  // Accept only an empty string or a single digit from 1 to 9,
+  // otherwise keep editing and show a red border like JTable.GenericEditor.
+  override fun stopCellEditing(): Boolean {
+    val text = textField.text.trim()
+    val isValid = text.isEmpty() || text.matches("[1-9]".toRegex())
+    val stopped = isValid && super.stopCellEditing()
+    if (!isValid) {
+      textField.border = LineBorder(Color.RED)
+    }
+    return stopped
+  }
+
+  // Store an Int instead of the String returned by DefaultCellEditor,
+  // an empty cell is represented by 0.
+  override fun getCellEditorValue(): Any {
+    val text = textField.text.trim()
+    return if (text.isEmpty()) 0 else text.toInt()
+  }
+}
+
 private class SudokuCellRenderer(
   src: Array<Array<Number>>,
 ) : DefaultTableCellRenderer() {
-  private val b0 = BorderFactory.createMatteBorder(0, 0, BW1, BW1, Color.GRAY)
-  private val b1 = BorderFactory.createMatteBorder(0, 0, BW2, BW2, Color.BLACK)
-  private val b2 = BorderFactory.createCompoundBorder(
-    BorderFactory.createMatteBorder(0, 0, BW2, 0, Color.BLACK),
-    BorderFactory.createMatteBorder(0, 0, 0, BW1, Color.GRAY),
+  private val cellBorder = BorderFactory.createMatteBorder(
+    0,
+    0,
+    BORDER_WIDTH1,
+    BORDER_WIDTH1,
+    Color.GRAY,
   )
-  private val b3 = BorderFactory.createCompoundBorder(
-    BorderFactory.createMatteBorder(0, 0, 0, BW2, Color.BLACK),
-    BorderFactory.createMatteBorder(0, 0, BW1, 0, Color.GRAY),
+  private val blockCornerBorder = BorderFactory.createMatteBorder(
+    0,
+    0,
+    BORDER_WIDTH2,
+    BORDER_WIDTH2,
+    Color.BLACK,
   )
-  private val mask = Array(src.size) { i -> Array(src[i].size) { j -> src[i][j] } }
+  private val blockBottomBorder = BorderFactory.createCompoundBorder(
+    BorderFactory.createMatteBorder(0, 0, BORDER_WIDTH2, 0, Color.BLACK),
+    BorderFactory.createMatteBorder(0, 0, 0, BORDER_WIDTH1, Color.GRAY),
+  )
+  private val blockRightBorder = BorderFactory.createCompoundBorder(
+    BorderFactory.createMatteBorder(0, 0, 0, BORDER_WIDTH2, Color.BLACK),
+    BorderFactory.createMatteBorder(0, 0, BORDER_WIDTH1, 0, Color.GRAY),
+  )
+  private val puzzle = Array(src.size) { i -> Array(src[i].size) { j -> src[i][j] } }
 
   override fun getTableCellRendererComponent(
     table: JTable,
@@ -123,7 +159,7 @@ private class SudokuCellRenderer(
     row: Int,
     column: Int,
   ): Component {
-    val isEditable = mask[row][column] == 0
+    val isEditable = puzzle[row][column] == 0
     val b = isEditable && isSelected
     val c = super.getTableCellRendererComponent(
       table,
@@ -141,13 +177,13 @@ private class SudokuCellRenderer(
         c.text = " "
       }
       c.horizontalAlignment = CENTER
-      val rf = (row + 1) % 3 == 0
-      val cf = (column + 1) % 3 == 0
+      val isBlockBottom = (row + 1) % 3 == 0
+      val isBlockRight = (column + 1) % 3 == 0
       c.border = when {
-        rf && cf -> b1
-        rf -> b2
-        cf -> b3
-        else -> b0
+        isBlockBottom && isBlockRight -> blockCornerBorder
+        isBlockBottom -> blockBottomBorder
+        isBlockRight -> blockRightBorder
+        else -> cellBorder
       }
     }
     return c
