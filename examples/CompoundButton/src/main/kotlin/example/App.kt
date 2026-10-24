@@ -46,17 +46,18 @@ private enum class ButtonLocation(
 
 private class CompoundButton(
   private val dim: Dimension,
-  private val bl: ButtonLocation,
+  private val location: ButtonLocation,
 ) : JButton() {
   private var shape: Shape? = null
-  private var base: Shape? = null
+  private val shapeSize = Dimension()
 
   init {
     icon = object : Icon {
-      private val fc = Color(100, 150, 255, 200)
-      private val ac = Color(230, 230, 230)
-      private val rc = Color.ORANGE
+      private val focusColor = Color(100, 150, 255, 200)
+      private val armedColor = Color(230, 230, 230)
+      private val rolloverColor = Color.ORANGE
 
+      // The shape is in the button's coordinate space, so x and y are ignored
       override fun paintIcon(
         c: Component?,
         g: Graphics,
@@ -69,15 +70,15 @@ private class CompoundButton(
           RenderingHints.VALUE_ANTIALIAS_ON,
         )
         if (getModel().isArmed) {
-          g2.paint = ac
-          g2.fill(shape)
+          g2.paint = armedColor
+          g2.fill(getShape())
         } else if (isRolloverEnabled && getModel().isRollover) {
-          paintFocusAndRollover(g2, rc)
+          paintFocusAndRollover(g2, rolloverColor)
         } else if (hasFocus()) {
-          paintFocusAndRollover(g2, fc)
+          paintFocusAndRollover(g2, focusColor)
         } else {
           g2.paint = background
-          g2.fill(shape)
+          g2.fill(getShape())
         }
         g2.dispose()
       }
@@ -89,27 +90,48 @@ private class CompoundButton(
     isFocusPainted = false
     isContentAreaFilled = false
     background = Color(0xFA_FA_FA)
-    initShape()
   }
 
   override fun getPreferredSize() = dim
 
-  private fun initShape() {
-    if (bounds != base) {
-      base = bounds
-      val ww = width * .5
-      val xx = ww * .5
-      val inner = Ellipse2D.Double(xx, xx, ww, ww)
-      shape = if (ButtonLocation.CENTER == bl) {
-        inner
-      } else {
-        val dw = width - 2.0
-        val dh = height - 2.0
-        val outer = Arc2D.Double(1.0, 1.0, dw, dh, bl.startAngle, 90.0, Arc2D.PIE)
-        val area = Area(outer)
-        area.subtract(Area(inner))
-        area
-      }
+  // Create the shape lazily and rebuild it only when the size changes,
+  // so that contains(...) also works before the first paint
+  private fun getShape(): Shape {
+    val w = width
+    val h = height
+    val s = shape
+    return if (s == null || shapeSize.width != w || shapeSize.height != h) {
+      shapeSize.setSize(w, h)
+      createShape(w, h).also { shape = it }
+    } else {
+      s
+    }
+  }
+
+  private fun createShape(
+    w: Int,
+    h: Int,
+  ): Shape {
+    val ww = w * .5
+    val xx = ww * .5
+    val inner = Ellipse2D.Double(xx, xx, ww, ww)
+    return if (ButtonLocation.CENTER == location) {
+      inner
+    } else {
+      // The parent panel must return false from isOptimizedDrawingEnabled()
+      // because the bounds of these buttons overlap each other
+      val outer = Arc2D.Double(
+        1.0,
+        1.0,
+        w - 2.0,
+        h - 2.0,
+        location.startAngle,
+        90.0,
+        Arc2D.PIE,
+      )
+      val area = Area(outer)
+      area.subtract(Area(inner))
+      area
     }
   }
 
@@ -117,16 +139,10 @@ private class CompoundButton(
     g2: Graphics2D,
     color: Color,
   ) {
-    val fw = width - 1f
-    val fh = height - 1f
-    g2.paint = GradientPaint(0f, 0f, color, fw, fh, color.brighter(), true)
-    g2.fill(shape)
-    g2.paint = background
-  }
-
-  override fun paintComponent(g: Graphics) {
-    initShape()
-    super.paintComponent(g)
+    val x2 = width - 1f
+    val y2 = height - 1f
+    g2.paint = GradientPaint(0f, 0f, color, x2, y2, color.brighter(), true)
+    g2.fill(getShape())
   }
 
   override fun paintBorder(g: Graphics) {
@@ -136,14 +152,14 @@ private class CompoundButton(
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
     g2.paint = Color.GRAY
-    g2.draw(shape)
+    g2.draw(getShape())
     g2.dispose()
   }
 
   override fun contains(
     x: Int,
     y: Int,
-  ) = shape?.contains(Point(x, y)) ?: super.contains(x, y)
+  ) = getShape().contains(x.toDouble(), y.toDouble())
 }
 
 fun main() {
