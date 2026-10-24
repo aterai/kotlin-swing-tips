@@ -17,19 +17,9 @@ fun createUI(): Component {
   val swapButton = JToggleButton("JDesktopPane <-> JTabbedPane")
   swapButton.addActionListener { e ->
     if ((e.source as? AbstractButton)?.isSelected == true) {
-      desktopPane.allFrames.sortedBy { it.title }.forEach {
-        tabbedPane.addTab(it.title, it.frameIcon, it.contentPane)
-      }
-      desktopPane.selectedFrame?.also {
-        tabbedPane.selectedIndex = tabbedPane.indexOfTab(it.title)
-      }
-      cardLayout.show(panel, tabbedPane.javaClass.name)
+      moveFramesToTabs()
     } else {
-      desktopPane.allFrames.forEach {
-        val title = tabbedPane.indexOfTab(it.title)
-        it.contentPane = tabbedPane.getComponentAt(title) as? Container
-      }
-      cardLayout.show(panel, desktopPane.javaClass.name)
+      moveTabsToFrames()
     }
   }
   val addButton = JButton("add")
@@ -55,6 +45,27 @@ fun createUI(): Component {
     it.add(toolBar, BorderLayout.NORTH)
     it.preferredSize = Dimension(320, 240)
   }
+}
+
+private fun moveTabsToFrames() {
+  // Moving a component to another parent also removes its tab from the JTabbedPane
+  desktopPane.allFrames.forEach {
+    val i = tabbedPane.indexOfTab(it.title)
+    it.contentPane = tabbedPane.getComponentAt(i) as? Container
+  }
+  cardLayout.show(panel, desktopPane.javaClass.name)
+}
+
+private fun moveFramesToTabs() {
+  // Compare the length first so that "Document #10" comes after "Document #9"
+  val titleOrder = compareBy<String> { it.length }.thenBy { it }
+  desktopPane.allFrames.sortedWith(compareBy(titleOrder) { it.title }).forEach {
+    tabbedPane.addTab(it.title, it.frameIcon, it.contentPane)
+  }
+  desktopPane.selectedFrame?.also {
+    tabbedPane.selectedIndex = tabbedPane.indexOfTab(it.title)
+  }
+  cardLayout.show(panel, tabbedPane.javaClass.name)
 }
 
 private fun createInternalFrame(): JInternalFrame {
