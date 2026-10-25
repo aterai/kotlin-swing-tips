@@ -12,8 +12,8 @@ fun createUI(): Component {
   val field2 = JTextField("2222222222")
   initUndoRedo(field2)
   return JPanel(GridLayout(2, 1)).also {
-    it.add(makeTitledPanel("undo:Ctrl-z, redo:Ctrl-y", field1))
-    it.add(makeTitledPanel("test", field2))
+    it.add(makeTitledPanel("undo: Ctrl-Z, redo: Ctrl-Y or Ctrl-Shift-Z", field1))
+    it.add(makeTitledPanel("another JTextField with its own UndoManager", field2))
     it.border = BorderFactory.createEmptyBorder(10, 5, 10, 5)
     it.preferredSize = Dimension(320, 240)
   }
@@ -23,9 +23,10 @@ private class UndoAction(
   private val undoManager: UndoManager,
 ) : AbstractAction("undo") {
   override fun actionPerformed(e: ActionEvent) {
-    runCatching {
+    // Check canUndo() beforehand instead of catching CannotUndoException
+    if (undoManager.canUndo()) {
       undoManager.undo()
-    }.onFailure {
+    } else {
       UIManager.getLookAndFeel().provideErrorFeedback(e.source as? Component)
     }
   }
@@ -35,9 +36,10 @@ private class RedoAction(
   private val undoManager: UndoManager,
 ) : AbstractAction("redo") {
   override fun actionPerformed(e: ActionEvent) {
-    runCatching {
+    // Check canRedo() beforehand instead of catching CannotRedoException
+    if (undoManager.canRedo()) {
       undoManager.redo()
-    }.onFailure {
+    } else {
       UIManager.getLookAndFeel().provideErrorFeedback(e.source as? Component)
     }
   }
