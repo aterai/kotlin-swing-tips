@@ -8,13 +8,15 @@ import javax.swing.*
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 
+private const val DEFAULT_VOLUME = 80
+
 fun createUI(): Component {
   val popup = JPopupMenu()
   popup.layout = BorderLayout()
   popup.addMouseWheelListener { it.consume() }
   UIManager.put("Slider.paintValue", true)
   UIManager.put("Slider.focus", UIManager.get("Slider.background"))
-  val slider = object : JSlider(VERTICAL, 0, 100, 80) {
+  val slider = object : JSlider(VERTICAL, 0, 100, DEFAULT_VOLUME) {
     override fun getPreferredSize(): Dimension {
       val d = super.getPreferredSize()
       d.height = 120
@@ -36,13 +38,18 @@ fun createUI(): Component {
     override fun createToolTip(): JToolTip {
       val tip = super.createToolTip()
       tip.addHierarchyListener { e ->
-        val flg = e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong()
-        if (flg != 0L && e.component.isShowing) {
-          val d = popup.preferredSize
-          popup.show(this, (width - d.width) / 2, -d.height)
+        val showingChanged = (e.changeFlags and HierarchyEvent.SHOWING_CHANGED.toLong()) != 0L
+        if (showingChanged && e.component.isShowing) {
+          // Overlay the popup menu on top of the tooltip just shown
+          showPopup()
         }
       }
       return tip
+    }
+
+    fun showPopup() {
+      val d = popup.preferredSize
+      popup.show(this, (width - d.width) / 2, -d.height)
     }
 
     override fun getToolTipLocation(e: MouseEvent) = Point(width / 2, -height)
@@ -55,23 +62,28 @@ fun createUI(): Component {
   button.toolTipText = ""
   button.addMouseListener(object : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
-      val btn = e.component
-      if (!btn.isEnabled) {
-        slider.value = 80
-        btn.isEnabled = true
+      // A MouseListener is used instead of an ActionListener so that
+      // the popup also opens when the button is disabled (muted)
+      if (!button.isEnabled) {
+        slider.value = DEFAULT_VOLUME
+        button.isEnabled = true
       }
-      val d = popup.preferredSize
-      popup.show(btn, (btn.width - d.width) / 2, -d.height)
+      button.showPopup()
     }
 
     override fun mouseEntered(e: MouseEvent) {
-      if (!popup.isVisible) {
-        ToolTipManager.sharedInstance().isEnabled = true
-      }
+      enableToolTipIfPopupHidden()
     }
 
     override fun mouseExited(e: MouseEvent) {
-      mouseEntered(e)
+      enableToolTipIfPopupHidden()
+    }
+
+    // Restore the tooltip disabled by PopupMenuListener#popupMenuWillBecomeVisible(...)
+    private fun enableToolTipIfPopupHidden() {
+      if (!popup.isVisible) {
+        ToolTipManager.sharedInstance().isEnabled = true
+      }
     }
   })
   popup.addPopupMenuListener(object : PopupMenuListener {
@@ -89,8 +101,8 @@ fun createUI(): Component {
   })
   slider.model.addChangeListener { e ->
     (e.source as? BoundedRangeModel)?.also {
+      // button#setEnabled(...) also switches the icon text
       button.isEnabled = it.value > it.minimum
-      button.repaint()
     }
   }
 
