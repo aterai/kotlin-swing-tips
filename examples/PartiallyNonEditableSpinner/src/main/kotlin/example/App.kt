@@ -1,9 +1,10 @@
 package example
 
 import java.awt.*
-import java.awt.font.FontRenderContext
 import javax.swing.*
 import javax.swing.border.Border
+import javax.swing.plaf.synth.SynthUI
+import javax.swing.text.JTextComponent
 
 fun createUI(): Component {
   val spinner1 = JSpinner(SpinnerNumberModel(0, 0, 1, .01))
@@ -27,18 +28,20 @@ fun createUI(): Component {
   initTextFieldBorder(editor2.textField)
 
   return JPanel(GridLayout(2, 1)).also {
-    it.add(makeTitledPanel("JSpinner+Default", spinner1))
-    it.add(makeTitledPanel("JSpinner+StringBorder", spinner2))
+    it.add(createTitledPanel("JSpinner+Default", spinner1))
+    it.add(createTitledPanel("JSpinner+StringBorder", spinner2))
     it.border = BorderFactory.createEmptyBorder(10, 5, 10, 5)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-fun initTextFieldBorder(textField: JTextField) {
+private fun initTextFieldBorder(textField: JTextField) {
+  // The child JFormattedTextField is updated after this editor by
+  // SwingUtilities.updateComponentTreeUI(...), so wait until its new border is installed
   EventQueue.invokeLater {
-    val b = StringBorder(textField, "%")
-    val uiName = textField.ui.javaClass.name
-    textField.border = if (uiName.contains("SynthFormattedTextFieldUI")) {
+    val b = StringBorder("%")
+    // Synth(Nimbus) paints the text field background with its border, so keep it
+    textField.border = if (textField.ui is SynthUI) {
       val c = textField.border
       if (c != null) BorderFactory.createCompoundBorder(c, b) else b
     } else {
@@ -47,7 +50,7 @@ fun initTextFieldBorder(textField: JTextField) {
   }
 }
 
-private fun makeTitledPanel(
+private fun createTitledPanel(
   title: String,
   cmp: Component,
 ): Component {
@@ -62,19 +65,14 @@ private fun makeTitledPanel(
 }
 
 private class StringBorder(
-  parent: JComponent,
-  private val str: String,
+  private val text: String,
 ) : Border {
-  private val insets: Insets
-  private val rect: Rectangle
-
-  init {
-    val frc = FontRenderContext(null, true, true)
-    rect = parent.font.getStringBounds(str, frc).bounds
-    insets = Insets(0, 0, 0, rect.width)
+  override fun getBorderInsets(c: Component): Insets {
+    // Measure with the current font of the component so that the insets
+    // follow font and LookAndFeel changes
+    val w = c.getFontMetrics(c.font).stringWidth(text)
+    return Insets(0, 0, 0, w)
   }
-
-  override fun getBorderInsets(c: Component) = insets
 
   override fun isBorderOpaque() = false
 
@@ -87,9 +85,18 @@ private class StringBorder(
     height: Int,
   ) {
     val g2 = g.create() as? Graphics2D ?: return
-    val tx = (x + width - rect.width).toFloat()
-    val ty = y - rect.y + (height - rect.height) / 2f
-    g2.drawString(str, tx, ty)
+    // Use the same text antialiasing as the text field
+    val hints = Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints")
+    if (hints is Map<*, *>) {
+      g2.addRenderingHints(hints)
+    }
+    val font = c.font
+    g2.font = font
+    g2.paint = if (c is JTextComponent && !c.isEnabled) c.disabledTextColor else c.foreground
+    val fm = c.getFontMetrics(font)
+    val tx = x + width - fm.stringWidth(text)
+    val ty = y + (height - fm.height) / 2 + fm.ascent
+    g2.drawString(text, tx, ty)
     g2.dispose()
   }
 }
