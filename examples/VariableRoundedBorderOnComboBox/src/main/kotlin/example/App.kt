@@ -12,6 +12,7 @@ import javax.swing.event.PopupMenuListener
 import javax.swing.plaf.basic.BasicComboBoxUI
 import javax.swing.plaf.basic.BasicComboPopup
 import javax.swing.plaf.basic.BasicScrollBarUI
+import javax.swing.plaf.basic.ComboPopup
 
 fun createUI(): Component {
   val model = arrayOf("111", "2222", "33333")
@@ -27,7 +28,8 @@ fun createUI(): Component {
       setRenderer(RoundedCornerListCellRenderer<Any>())
       setUI(object : BasicComboBoxUI() {
         override fun createArrowButton(): JButton {
-          val b = JButton(ArrowIcon(Color.WHITE, Color.BLACK))
+          // A white arrow is invisible on the light background of the combo box
+          val b = JButton(ArrowIcon(Color.GRAY, Color.BLACK))
           b.isContentAreaFilled = false
           b.isFocusPainted = false
           b.border = BorderFactory.createEmptyBorder()
@@ -49,11 +51,8 @@ fun createUI(): Component {
       })
       listener = HeavyWeightContainerListener()
       addPopupMenuListener(listener)
-      val o = getAccessibleContext().getAccessibleChild(0)
-      if (o is JComponent) {
-        o.border = BottomRoundedCornerBorder()
-        o.background = Color.WHITE
-      }
+      (getAccessibleContext().getAccessibleChild(0) as? JComponent)?.border =
+        BottomRoundedCornerBorder()
     }
   }
 
@@ -149,18 +148,26 @@ private class RoundedCornerListCellRenderer<E> : ListCellRenderer<E> {
 private class HeavyWeightContainerListener : PopupMenuListener {
   override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
     val combo = e.source as? JComboBox<*> ?: return
-    combo.border = TopRoundedCornerBorder()
-    EventQueue.invokeLater {
+    // The popup window is not yet available here, so defer until it is shown
+    EventQueue.invokeLater { updatePopupBorder(combo) }
+  }
+
+  private fun updatePopupBorder(combo: JComboBox<*>) {
+    // The popup may already be closed before this deferred task runs
+    if (combo.isPopupVisible) {
+      combo.border = TopRoundedCornerBorder()
       val pop = combo.ui.getAccessibleChild(combo, 0)
       if (pop is JPopupMenu) {
         SwingUtilities
           .getWindowAncestor(pop)
-          ?.takeIf { it.graphicsConfiguration?.isTranslucencyCapable == true }
-          ?.takeIf { it is JWindow && it.type == Window.Type.POPUP }
+          ?.takeIf { isHeavyWeight(it) }
           ?.background = Color(0x0, true)
       }
     }
   }
+
+  private fun isHeavyWeight(w: Window) =
+    w.type == Window.Type.POPUP && w.graphicsConfiguration?.isTranslucencyCapable == true
 
   override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
     (e.source as? JComponent)?.border = RoundedCornerBorder()
@@ -220,29 +227,30 @@ private open class RoundedCornerBorder : AbstractBorder() {
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
-    val dr = ARC.toDouble() * 2.0
     val dx = x.toDouble()
     val dy = y.toDouble()
-    val dw = width.toDouble()
-    val dh = height.toDouble()
-    val round = Area(RoundRectangle2D.Double(dx, dy, dw - 1, dh - 1, dr, dr))
-    if (c is JPopupMenu) {
-      g2.paint = c.background
-      g2.fill(round)
-    } else {
-      c.parent?.also {
-        g2.paint = it.background
-        val corner = Area(Rectangle2D.Double(dx, dy, dw, dh))
-        corner.subtract(round)
-        g2.fill(corner)
-      }
+    val round = createBorderShape(dx, dy, width - 1.0, height - 1.0)
+    c.parent?.also {
+      // Fill the outside of the rounded corners with the parent background
+      g2.paint = it.background
+      val corner = Area(Rectangle2D.Double(dx, dy, width.toDouble(), height.toDouble()))
+      corner.subtract(round)
+      g2.fill(corner)
     }
     g2.paint = Color.GRAY
     g2.draw(round)
     g2.dispose()
   }
 
-  override fun getBorderInsets(c: Component) = Insets(4, 8, 4, 8)
+  protected open fun createBorderShape(
+    x: Double,
+    y: Double,
+    w: Double,
+    h: Double,
+  ): Area {
+    val r = ARC * 2.0
+    return Area(RoundRectangle2D.Double(x, y, w, h, r, r))
+  }
 
   override fun getBorderInsets(
     c: Component,
@@ -258,41 +266,16 @@ private open class RoundedCornerBorder : AbstractBorder() {
 
 private class TopRoundedCornerBorder : RoundedCornerBorder() {
   // https://ateraimemo.com/Swing/RoundedComboBox.html
-  override fun paintBorder(
-    c: Component,
-    g: Graphics,
-    x: Int,
-    y: Int,
-    width: Int,
-    height: Int,
-  ) {
-    val g2 = g.create() as? Graphics2D ?: return
-    g2.setRenderingHint(
-      RenderingHints.KEY_ANTIALIASING,
-      RenderingHints.VALUE_ANTIALIAS_ON,
-    )
-    if (c is JPopupMenu) {
-      g2.clearRect(x, y, width, height)
-    }
-    val dr = ARC.toDouble() * 2.0
-    val dx = x.toDouble()
-    val dy = y.toDouble()
-    val dw = width.toDouble()
-    val dh = height.toDouble()
-    val round = Area(RoundRectangle2D.Double(dx, dy, dw - 1.0, dh - 1.0, dr, dr))
-    val b = round.bounds
-    b.setBounds(b.x, b.y + ARC, b.width, b.height - ARC)
-    round.add(Area(b))
-
-    c.parent?.also {
-      g2.paint = it.background
-      val corner = Area(Rectangle2D.Double(dx, dy, dw, dh))
-      corner.subtract(round)
-      g2.fill(corner)
-    }
-    g2.paint = Color.GRAY
-    g2.draw(round)
-    g2.dispose()
+  override fun createBorderShape(
+    x: Double,
+    y: Double,
+    w: Double,
+    h: Double,
+  ): Area {
+    // Round only the top two corners by adding a rectangle over the bottom ones
+    val round = super.createBorderShape(x, y, w, h)
+    round.add(Area(Rectangle2D.Double(x, y + ARC, w, h - ARC)))
+    return round
   }
 }
 
@@ -310,6 +293,17 @@ private class BottomRoundedCornerBorder : RoundedCornerBorder() {
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
+    if (c is JPopupMenu) {
+      val w = SwingUtilities.getWindowAncestor(c)
+      if (w != null && w.type == Window.Type.POPUP) {
+        // Graphics#clearRect(...) ignores the Composite and fills with the background color,
+        // so fill with AlphaComposite.Clear to make the corners transparent
+        val cmp = g2.composite
+        g2.composite = AlphaComposite.Clear
+        g2.fillRect(x, y, width, height)
+        g2.composite = cmp
+      }
+    }
     val r = ARC.toDouble()
     val w = width - 1.0
     val h = height - 1.0
@@ -323,12 +317,15 @@ private class BottomRoundedCornerBorder : RoundedCornerBorder() {
     p.lineTo(x + w, y.toDouble())
     p.closePath()
 
-    g2.paint = c.background
+    // BasicComboPopup is not opaque, so the area between this border and the list is
+    // painted only here: fill it with the list background to avoid a frame of another color
+    val bgc = (c as? ComboPopup)?.list?.background ?: c.background
+    g2.paint = bgc
     g2.fill(p)
 
     g2.paint = Color.GRAY
     g2.draw(p)
-    g2.paint = c.background
+    g2.paint = bgc
     g2.drawLine(x + 1, y, x + width - 2, y)
     g2.dispose()
   }
