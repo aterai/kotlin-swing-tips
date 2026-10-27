@@ -16,14 +16,14 @@ import javax.swing.plaf.basic.BasicComboBoxUI
 
 private val BACKGROUND = Color.BLACK
 private val FOREGROUND = Color.WHITE
-private val SELECTION_FOREGROUND = Color.ORANGE
+private val SELECTION_COLOR = Color.ORANGE
 private val PANEL_BACKGROUND = Color.GRAY
 private const val KEY = "ComboBox.border"
 
 fun createUI(): Component {
   UIManager.put("ComboBox.foreground", FOREGROUND)
   UIManager.put("ComboBox.background", BACKGROUND)
-  UIManager.put("ComboBox.selectionForeground", SELECTION_FOREGROUND)
+  UIManager.put("ComboBox.selectionForeground", SELECTION_COLOR)
   UIManager.put("ComboBox.selectionBackground", BACKGROUND)
   UIManager.put("ComboBox.buttonDarkShadow", BACKGROUND)
   UIManager.put("ComboBox.buttonBackground", FOREGROUND)
@@ -117,16 +117,25 @@ private fun makeModel(): DefaultComboBoxModel<String> {
 
 private class HeavyWeightContainerListener : PopupMenuListener {
   override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-    val c = e.source as? JComboBox<*> ?: return
-    EventQueue.invokeLater {
-      val pop = c.ui.getAccessibleChild(c, 0)
+    val combo = e.source as? JComboBox<*> ?: return
+    // The popup window is not yet available here, so defer until it is shown
+    EventQueue.invokeLater { makePopupWindowTranslucent(combo) }
+  }
+
+  private fun makePopupWindowTranslucent(combo: JComboBox<*>) {
+    // The popup may already be closed before this deferred task runs
+    val pop = combo.ui.getAccessibleChild(combo, 0)
+    if (combo.isPopupVisible && pop is JPopupMenu) {
+      // https://ateraimemo.com/Swing/DropShadowPopup.html
       SwingUtilities
-        .getWindowAncestor(pop as? JPopupMenu)
-        ?.takeIf { it.graphicsConfiguration?.isTranslucencyCapable == true }
-        ?.takeIf { it.type == Window.Type.POPUP }
+        .getWindowAncestor(pop)
+        ?.takeIf { isHeavyWeight(it) }
         ?.background = Color(0x0, true)
     }
   }
+
+  private fun isHeavyWeight(w: Window) =
+    w.type == Window.Type.POPUP && w.graphicsConfiguration?.isTranslucencyCapable == true
 
   override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
     // not needed
@@ -160,7 +169,7 @@ private class ComboRolloverHandler : MouseAdapter() {
 
 private class ArrowIcon(
   private val color: Color,
-  private val rollover: Color,
+  private val rolloverColor: Color,
 ) : Icon {
   override fun paintIcon(
     c: Component,
@@ -177,7 +186,7 @@ private class ArrowIcon(
         shift = 1
       } else {
         if (m.isRollover) {
-          g2.paint = rollover
+          g2.paint = rolloverColor
         }
       }
     }
@@ -229,8 +238,6 @@ private open class RoundedCornerBorder : AbstractBorder() {
     g2.dispose()
   }
 
-  override fun getBorderInsets(c: Component) = Insets(4, 8, 4, 8)
-
   override fun getBorderInsets(
     c: Component,
     insets: Insets,
@@ -258,18 +265,17 @@ private class TopRoundedCornerBorder : RoundedCornerBorder() {
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
-    if (c is JPopupMenu) {
-      g2.clearRect(x, y, width, height)
-    }
     val dr = ARC.toDouble()
     val dx = x.toDouble()
     val dy = y.toDouble()
     val dw = width.toDouble()
     val dh = height.toDouble()
-    val round = Area(RoundRectangle2D.Double(dx, dy, dw - 1.0, dh - 1.0, dr, dr))
-    val b = round.bounds
-    b.setBounds(b.x, b.y + ARC, b.width, b.height - ARC)
-    round.add(Area(b))
+    val w = dw - 1.0
+    val h = dh - 1.0
+
+    // Round only the top corners by covering the bottom ones with a rectangle
+    val round = Area(RoundRectangle2D.Double(dx, dy, w, h, dr, dr))
+    round.add(Area(Rectangle2D.Double(dx, dy + ARC, w, h - ARC)))
 
     c.parent?.also {
       g2.paint = it.background
@@ -315,6 +321,7 @@ private class BottomRoundedCornerBorder : RoundedCornerBorder() {
 
     g2.paint = c.foreground
     g2.draw(p)
+    // Erase the top edge so that the list looks connected to the JComboBox
     g2.paint = c.background
     g2.drawLine(x + 1, y, x + width - 2, y)
     g2.dispose()
