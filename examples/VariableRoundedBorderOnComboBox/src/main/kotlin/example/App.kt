@@ -11,8 +11,8 @@ import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 import javax.swing.plaf.basic.BasicComboBoxUI
 import javax.swing.plaf.basic.BasicComboPopup
-import javax.swing.plaf.basic.ComboPopup
 import javax.swing.plaf.basic.BasicScrollBarUI
+import javax.swing.plaf.basic.ComboPopup
 
 fun createUI(): Component {
   val model = arrayOf("111", "2222", "33333")
