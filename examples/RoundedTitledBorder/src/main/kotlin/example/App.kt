@@ -52,33 +52,44 @@ private class RoundedTitledBorder(
     width: Int,
     height: Int,
   ) {
+    val b = getBorder()
+    if (b is RoundedBorder) {
+      paintTitleBackground(c, g, b, x, y)
+    }
+    super.paintBorder(c, g, x, y, width, height)
+  }
+
+  private fun paintTitleBackground(
+    c: Component,
+    g: Graphics,
+    b: RoundedBorder,
+    x: Int,
+    y: Int,
+  ) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
-    val b = getBorder()
-    if (b is RoundedBorder) {
-      val d = getLabel(c).getPreferredSize()
-      val i = b.getBorderInsets(c)
-      val a2 = arc * 2
-      val w = d.width + i.left + i.right + a2
-      val h = d.height + i.top + i.bottom
-      g2.clip = b.getBorderShape(x + i.left, y + i.top, w, h)
-      g2.paint = Color.GRAY
-      val titleBg = RoundRectangle2D.Float(
-        (x - a2).toFloat(),
-        (y - a2).toFloat(),
-        (w + a2).toFloat(),
-        (h + a2).toFloat(),
-        arc.toFloat(),
-        arc.toFloat(),
-      )
-      g2.fill(titleBg)
-      g2.dispose()
-    }
+    val d = getLabel(c).getPreferredSize()
+    val ins = b.getBorderInsets(c)
+    val arc2 = arc * 2
+    val w = d.width + ins.left + ins.right + arc2
+    val h = d.height + ins.top + ins.bottom
+    // Clip with the rounded border shape so that the top-left corner follows the border,
+    // and push the other corners outside the clip so that only the bottom-right is rounded
+    g2.clip = b.getBorderShape(x + ins.left, y + ins.top, w, h)
+    g2.paint = Color.GRAY
+    val titleBg = RoundRectangle2D.Float(
+      (x - arc2).toFloat(),
+      (y - arc2).toFloat(),
+      (w + arc2).toFloat(),
+      (h + arc2).toFloat(),
+      arc.toFloat(),
+      arc.toFloat(),
+    )
+    g2.fill(titleBg)
     g2.dispose()
-    super.paintBorder(c, g, x, y, width, height)
   }
 
   private fun getLabel(c: Component): JLabel {
@@ -154,8 +165,9 @@ private class TitleLayerUI(
     super.paint(g, c)
     if (c is JLayer<*>) {
       val sp = c.getView() as? JScrollPane ?: return
-      val r = SwingUtilities.calculateInnerArea(sp, sp.bounds)
-      if (r != null && !sp.viewport.view.hasFocus()) {
+      val view = sp.viewport.view
+      if (view != null && !view.hasFocus()) {
+        val r = SwingUtilities.calculateInnerArea(sp, null)
         val d = label.getPreferredSize()
         val x = r.x - 1
         val y = r.y - 1
@@ -199,14 +211,15 @@ private class TitleLayerUI(
         val d = getPreferredSize()
         val w = d.width - 1
         val h = d.height - 1
-        val h2 = h / 2
+        val halfHeight = h / 2
         val g2 = g.create() as? Graphics2D ?: return
         g2.setRenderingHint(
           RenderingHints.KEY_ANTIALIASING,
           RenderingHints.VALUE_ANTIALIAS_ON,
         )
         g2.paint = getBackground()
-        g2.fillRect(0, 0, w, h2)
+        // Fill the upper half to keep the top-right corner square
+        g2.fillRect(0, 0, w, halfHeight)
         g2.fillRoundRect(-arc, 0, w + arc, h, arc, arc)
         g2.dispose()
       }
