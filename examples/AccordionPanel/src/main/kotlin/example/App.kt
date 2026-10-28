@@ -10,7 +10,7 @@ fun createUI(): Component {
   sideMenuBox.isOpaque = true
   sideMenuBox.background = Color(0xB4_B4_FF)
   sideMenuBox.border = BorderFactory.createEmptyBorder(10, 5, 5, 5)
-  initAccordionSections().forEach {
+  createAccordionSections().forEach {
     sideMenuBox.add(it)
     sideMenuBox.add(Box.createVerticalStrut(5))
   }
@@ -34,41 +34,45 @@ fun createUI(): Component {
   }
 }
 
-private fun initAccordionSections() = listOf(
-  object : AccordionSectionPanel("System Tasks") {
-    override fun makePanel() = JPanel(GridLayout(0, 1)).also { p ->
-      listOf("111", "222222222")
-        .map { title -> JCheckBox(title) }
-        .forEach { check ->
-          check.isOpaque = false
-          p.add(check)
-        }
-    }
-  },
-  object : AccordionSectionPanel("Other Places") {
-    override fun makePanel() = JPanel(GridLayout(0, 1)).also { p ->
-      listOf("Desktop", "My Network Places", "My Documents", "Shared Documents")
-        .map { title -> JLabel(title) }
-        .forEach { label -> p.add(label) }
-    }
-  },
-  object : AccordionSectionPanel("Details") {
-    override fun makePanel() = JPanel(GridLayout(0, 1)).also { p ->
-      val bg = ButtonGroup()
-      listOf("aaa", "bbb", "ccc", "ddd")
-        .map { title -> JRadioButton(title) }
-        .forEach { radio ->
-          radio.isSelected = p.componentCount == 0
-          radio.isOpaque = false
-          p.add(radio)
-          bg.add(radio)
-        }
-    }
-  },
+private fun createAccordionSections() = listOf(
+  AccordionSectionPanel("System Tasks", createSystemTasksPanel()),
+  AccordionSectionPanel("Other Places", createOtherPlacesPanel()),
+  AccordionSectionPanel("Details", createDetailsPanel()),
 )
 
-abstract class AccordionSectionPanel(
+private fun createSystemTasksPanel() = JPanel(GridLayout(0, 1)).also { p ->
+  listOf("111", "222222222")
+    .map { title -> JCheckBox(title) }
+    .forEach { check ->
+      check.isOpaque = false
+      p.add(check)
+    }
+}
+
+private fun createOtherPlacesPanel() = JPanel(GridLayout(0, 1)).also { p ->
+  listOf("Desktop", "My Network Places", "My Documents", "Shared Documents")
+    .map { title -> JLabel(title) }
+    .forEach { label -> p.add(label) }
+}
+
+private fun createDetailsPanel() = JPanel(GridLayout(0, 1)).also { p ->
+  val bg = ButtonGroup()
+  listOf("aaa", "bbb", "ccc", "ddd")
+    .map { title -> JRadioButton(title) }
+    .forEach { radio ->
+      radio.isSelected = p.componentCount == 0
+      radio.isOpaque = false
+      p.add(radio)
+      bg.add(radio)
+    }
+}
+
+// The content is passed in instead of being created by an abstract factory
+// method called from the initializer, which would run before the
+// subclass properties are initialized.
+class AccordionSectionPanel(
   private val title: String,
+  private val contentPanel: JComponent,
 ) : JPanel(BorderLayout()) {
   private val headerLabel = object : JLabel("▼ $title") {
     private val bgc = Color(0xC8_C8_FF)
@@ -83,7 +87,6 @@ abstract class AccordionSectionPanel(
       super.paintComponent(g)
     }
   }
-  private val contentPanel: JPanel
 
   init {
     val ml = object : MouseAdapter() {
@@ -96,7 +99,6 @@ abstract class AccordionSectionPanel(
     headerLabel.border = BorderFactory.createEmptyBorder(2, 5, 2, 2)
     add(headerLabel, BorderLayout.NORTH)
 
-    contentPanel = makePanel()
     contentPanel.isVisible = false
     contentPanel.isOpaque = true
     contentPanel.background = Color(0xF0_F0_FF)
@@ -104,14 +106,6 @@ abstract class AccordionSectionPanel(
     val inside = BorderFactory.createEmptyBorder(10, 10, 10, 10)
     contentPanel.border = BorderFactory.createCompoundBorder(outside, inside)
     add(contentPanel)
-  }
-
-  abstract fun makePanel(): JPanel
-
-  final override fun add(comp: Component?): Component = super.add(comp)
-
-  final override fun add(comp: Component, constraints: Any?) {
-    super.add(comp, constraints)
   }
 
   override fun getPreferredSize(): Dimension {
@@ -126,13 +120,18 @@ abstract class AccordionSectionPanel(
     it.width = Short.MAX_VALUE.toInt()
   }
 
-  protected fun toggleExpansion() {
-    contentPanel.also {
-      it.isVisible = !it.isVisible
-      val mark = if (it.isVisible) "△" else "▼"
-      headerLabel.text = "$mark $title"
-      revalidate()
-      EventQueue.invokeLater { it.scrollRectToVisible(it.bounds) }
+  private fun toggleExpansion() {
+    val visible = !contentPanel.isVisible
+    contentPanel.isVisible = visible
+    val mark = if (visible) "△" else "▼"
+    headerLabel.text = "$mark $title"
+    revalidate()
+    if (visible) {
+      // scrollRectToVisible() takes a rectangle in the component's own coordinate
+      // space, so bounds (relative to the parent) would scroll too far
+      EventQueue.invokeLater {
+        contentPanel.scrollRectToVisible(Rectangle(contentPanel.size))
+      }
     }
   }
 }
