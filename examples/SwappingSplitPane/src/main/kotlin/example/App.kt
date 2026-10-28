@@ -4,9 +4,9 @@ import java.awt.*
 import javax.swing.*
 
 fun createUI(): Component {
-  val s1 = JScrollPane(JTree())
-  val s2 = JScrollPane(JTable(6, 3))
-  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, s1, s2).also {
+  val left = JScrollPane(JTree())
+  val right = JScrollPane(JTable(6, 3))
+  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, left, right).also {
     it.resizeWeight = .4
   }
 
@@ -14,22 +14,7 @@ fun createUI(): Component {
 
   val button = JButton("swap")
   button.isFocusable = false
-  button.addActionListener {
-    val left = split.leftComponent
-    val right = split.rightComponent
-    val loc = split.dividerLocation
-
-    split.remove(left)
-    split.remove(right)
-
-    split.leftComponent = right
-    split.rightComponent = left
-
-    split.resizeWeight = 1.0 - split.resizeWeight
-    if (check.isSelected) {
-      split.dividerLocation = loc
-    }
-  }
+  button.addActionListener { swap(split, check.isSelected) }
 
   val box = Box.createHorizontalBox().also {
     it.border = BorderFactory.createEmptyBorder(2, 5, 2, 5)
@@ -42,6 +27,25 @@ fun createUI(): Component {
     it.add(split)
     it.add(box, BorderLayout.SOUTH)
     it.preferredSize = Dimension(320, 240)
+  }
+}
+
+private fun swap(split: JSplitPane, keepLocation: Boolean) {
+  val left = split.leftComponent
+  val right = split.rightComponent
+
+  split.remove(left)
+  split.remove(right)
+
+  split.leftComponent = right
+  split.rightComponent = left
+
+  // Swap the distribution ratio of extra space as well
+  split.resizeWeight = 1.0 - split.resizeWeight
+  // Re-set the current location explicitly, otherwise the divider location
+  // is recalculated after the child components are replaced
+  if (keepLocation) {
+    split.dividerLocation = split.dividerLocation
   }
 }
 
