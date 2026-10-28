@@ -5,18 +5,25 @@ import java.awt.event.MouseEvent
 import javax.swing.*
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
+import javax.swing.tree.TreeCellRenderer
 import javax.swing.tree.TreeModel
 
 fun createUI(): Component {
-  val tree0 = DefaultTooltipTree(DefaultTreeModel(createTreeRoot()))
-  ToolTipManager.sharedInstance().registerComponent(tree0)
+  val defaultTree = object : JTree(DefaultTreeModel(createTreeRoot())) {
+    override fun updateUI() {
+      setCellRenderer(null)
+      super.updateUI()
+      setCellRenderer(ToolTipCellRenderer(getCellRenderer()))
+    }
+  }
+  ToolTipManager.sharedInstance().registerComponent(defaultTree)
 
-  val tree1 = OverwrapTooltipTree(DefaultTreeModel(createTreeRoot()))
-  ToolTipManager.sharedInstance().registerComponent(tree1)
+  val aboveCellTree = AboveCellToolTipTree(DefaultTreeModel(createTreeRoot()))
+  ToolTipManager.sharedInstance().registerComponent(aboveCellTree)
 
   val p = JPanel(GridLayout(2, 1))
-  p.add(createTitledPanel("Default location", tree0))
-  p.add(createTitledPanel("Draw directly above the cell", tree1))
+  p.add(createTitledPanel("Default location", defaultTree))
+  p.add(createTitledPanel("Draw directly above the cell", aboveCellTree))
 
   return JSplitPane(JSplitPane.HORIZONTAL_SPLIT).also {
     it.leftComponent = p
@@ -74,70 +81,68 @@ private fun createTitledPanel(
   return p
 }
 
-private open class DefaultTooltipTree(
-  model: TreeModel,
-) : JTree(model) {
-  override fun updateUI() {
-    setCellRenderer(null)
-    super.updateUI()
-    // rowHeight = 24
-    val renderer = getCellRenderer()
-    setCellRenderer { tree, value, selected, expanded, leaf, row, hasFocus ->
-      renderer
-        .getTreeCellRendererComponent(
-          tree,
-          value,
-          selected,
-          expanded,
-          leaf,
-          row,
-          hasFocus,
-        ).also {
-          (it as? JComponent)?.toolTipText = value?.toString()
-        }
-    }
+private class ToolTipCellRenderer(
+  private val renderer: TreeCellRenderer,
+) : TreeCellRenderer {
+  override fun getTreeCellRendererComponent(
+    tree: JTree,
+    value: Any?,
+    selected: Boolean,
+    expanded: Boolean,
+    leaf: Boolean,
+    row: Int,
+    hasFocus: Boolean,
+  ): Component {
+    val c = renderer.getTreeCellRendererComponent(
+      tree,
+      value,
+      selected,
+      expanded,
+      leaf,
+      row,
+      hasFocus,
+    )
+    (c as? JComponent)?.toolTipText = value?.toString()
+    return c
   }
 }
 
-private class OverwrapTooltipTree(
+private class AboveCellToolTipTree(
   model: TreeModel,
-) : DefaultTooltipTree(model) {
-  private val label = object : JLabel() {
-    override fun getPreferredSize() = super.getPreferredSize()?.also {
-      it.height = getRowHeight()
-    }
+) : JTree(model) {
+  private val label = JLabel()
+
+  override fun updateUI() {
+    setCellRenderer(null)
+    super.updateUI()
+    setCellRenderer(ToolTipCellRenderer(getCellRenderer()))
   }
 
   override fun getToolTipLocation(e: MouseEvent): Point? {
-    val p = e.point
-    val i = getRowForLocation(p.x, p.y)
-    val cellBounds = getRowBounds(i)
-    if (cellBounds?.contains(p) == true) {
-      val tsm = getSelectionModel()
-      val node = getPathForRow(i).lastPathComponent
-      val hasFocus = hasFocus() && tsm.leadSelectionRow == i
-      val leaf = model.isLeaf(node)
-      val r = getCellRenderer()
-      val selected = isRowSelected(i)
-      val expanded = isExpanded(i)
-      val tcr = r.getTreeCellRendererComponent(
-        this,
-        node,
-        selected,
-        expanded,
-        leaf,
-        i,
-        hasFocus,
-      )
-      if ((tcr as? JComponent)?.toolTipText != null) {
-        val pt = cellBounds.location
-        val ins = label.insets
-        pt.translate(-ins.left, -ins.top)
-        label.icon = RendererIcon(tcr, cellBounds)
-        return pt
-      }
+    // getPathForLocation(...) returns null unless the point is inside the node cell bounds
+    val path = getPathForLocation(e.x, e.y) ?: return null
+    val cellBounds = getPathBounds(path) ?: return null
+    val row = getRowForPath(path)
+    val node = path.lastPathComponent
+    val hasFocus = hasFocus() && leadSelectionRow == row
+    val isLeaf = model.isLeaf(node)
+    val c = getCellRenderer().getTreeCellRendererComponent(
+      this,
+      node,
+      isRowSelected(row),
+      isExpanded(row),
+      isLeaf,
+      row,
+      hasFocus,
+    )
+    var pt: Point? = null
+    if ((c as? JComponent)?.toolTipText != null) {
+      val ins = label.insets
+      pt = cellBounds.location
+      pt.translate(-ins.left, -ins.top)
+      label.icon = RendererIcon(c, this, cellBounds.size)
     }
-    return null
+    return pt
   }
 
   override fun createToolTip(): JToolTip {
@@ -154,30 +159,30 @@ private class OverwrapTooltipTree(
 
 private class RendererIcon(
   private val renderer: Component,
-  private val rect: Rectangle,
+  private val parent: Container,
+  private val size: Dimension,
 ) : Icon {
-  init {
-    rect.setLocation(0, 0)
-  }
-
   override fun paintIcon(
     c: Component?,
     g: Graphics,
     x: Int,
     y: Int,
   ) {
-    (c as? Container)?.also {
-      val g2 = g.create() as? Graphics2D ?: return
-      g2.clearRect(0, 0, c.width, c.height)
-      // g2.translate(x, y)
-      SwingUtilities.paintComponent(g2, renderer, it, rect)
-      g2.dispose()
-    }
+    val g2 = g.create() as? Graphics2D ?: return
+    // Fill with the tree background so the tooltip looks the same as the cell below it
+    g2.paint = parent.background
+    g2.fillRect(x, y, size.width, size.height)
+    // Paint the renderer through the CellRendererPane of the tree, not of the JToolTip.
+    // DefaultTreeCellRenderer discards FontUIResource and inherits the font of its parent,
+    // so painting it in the JToolTip would use the JToolTip font, which differs from
+    // the JTree font in some LookAndFeels (e.g. Metal) and does not fit the cell bounds.
+    SwingUtilities.paintComponent(g2, renderer, parent, x, y, size.width, size.height)
+    g2.dispose()
   }
 
-  override fun getIconWidth() = renderer.preferredSize.width
+  override fun getIconWidth() = size.width
 
-  override fun getIconHeight() = renderer.preferredSize.height
+  override fun getIconHeight() = size.height
 }
 
 fun main() {
