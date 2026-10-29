@@ -3,7 +3,6 @@ package example
 import java.awt.*
 import java.awt.geom.Point2D
 import java.awt.image.BufferedImage
-import java.awt.image.PixelGrabber
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 import javax.swing.*
@@ -22,7 +21,7 @@ private fun makeProgressBar(): Component {
   val progressBar = object : JProgressBar() {
     override fun updateUI() {
       super.updateUI()
-      setUI(GradientPalletProgressBarUI())
+      setUI(GradientPaletteProgressBarUI())
       isOpaque = false
     }
   }
@@ -82,45 +81,36 @@ class ProgressListener(
   }
 }
 
-class GradientPalletProgressBarUI : BasicProgressBarUI() {
-  private val pallet: IntArray
+class GradientPaletteProgressBarUI : BasicProgressBarUI() {
+  private val palette = makeGradientPalette()
 
-  init {
-    this.pallet = makeGradientPallet()
-  }
-
-  private fun makeGradientPallet(): IntArray {
-    val image = BufferedImage(100, 1, BufferedImage.TYPE_INT_RGB)
+  private fun makeGradientPalette(): IntArray {
+    val width = 100
+    val image = BufferedImage(width, 1, BufferedImage.TYPE_INT_RGB)
     val g2 = image.createGraphics()
     val start = Point2D.Float()
-    val end = Point2D.Float(99f, 0f)
+    val end = Point2D.Float(width - 1f, 0f)
     val dist = floatArrayOf(0f, .5f, 1f)
     val colors = arrayOf(Color.RED, Color.YELLOW, Color.GREEN)
     g2.paint = LinearGradientPaint(start, end, dist, colors)
-    g2.fillRect(0, 0, 100, 1)
+    g2.fillRect(0, 0, width, 1)
     g2.dispose()
-
-    val width = image.getWidth(null)
-    val pallet = IntArray(width)
-    runCatching {
-      PixelGrabber(image, 0, 0, width, 1, pallet, 0, width).grabPixels()
-    }.onFailure {
-      it.printStackTrace()
-      Toolkit.getDefaultToolkit().beep()
-    }
-    return pallet
+    // BufferedImage#getRGB(...) reads the pixels directly,
+    // so PixelGrabber and its InterruptedException handling are unnecessary
+    return image.getRGB(0, 0, width, 1, null, 0, width)
   }
 
-  private fun getColorFromPallet(
-    pallet: IntArray,
-    x: Float,
+  private fun getColorFromPalette(
+    palette: IntArray,
+    pos: Float,
   ): Color {
-    require(x in 0f..1f) { "Parameter outside of expected range" }
-    val max = pallet.size - 1
-    val index = (pallet.size * x).toInt().coerceIn(0, max)
-    return Color(pallet[index] and 0x00_FF_FF_FF)
+    require(pos in 0f..1f) { "Parameter outside of expected range" }
+    // pos == 1f gives palette.size, so clamp it to the last index
+    val index = minOf((palette.size * pos).toInt(), palette.size - 1)
+    // Color(Int) ignores the alpha bits of the TYPE_INT_RGB pixel
+    return Color(palette[index])
     // translucent
-    // val pix = pallet[index] & 0x00_FF_FF_FF | (0x64 << 24)
+    // val pix = palette[index] and 0x00_FF_FF_FF or (0x64 shl 24)
     // return Color(pix, true)
   }
 
@@ -128,32 +118,25 @@ class GradientPalletProgressBarUI : BasicProgressBarUI() {
     g: Graphics,
     c: JComponent,
   ) {
-    val b = progressBar.insets // area for border
-    // val barRectWidth = progressBar.width - b.right - b.left
-    // val barRectHeight = progressBar.height - b.top - b.bottom
-    // if (barRectWidth <= 0 || barRectHeight <= 0) {
-    //   return
-    // }
     val r = SwingUtilities.calculateInnerArea(progressBar, null)
     if (r.isEmpty) {
       return
     }
-    // val cellLength = getCellLength()
-    // val cellSpacing = getCellSpacing()
+    val b = progressBar.insets // area for border
     // amount of progress to draw
     val amountFull = getAmountFull(b, r.width, r.height)
-
-    // draw the cells
     when (progressBar.orientation) {
       SwingConstants.HORIZONTAL -> {
-        val x = amountFull / r.width.toFloat()
-        g.color = getColorFromPallet(pallet, x)
-        g.fillRect(r.x, r.y, amountFull, r.height)
+        g.color = getColorFromPalette(palette, amountFull / r.width.toFloat())
+        // fill from the right edge in a right-to-left orientation,
+        // same as BasicProgressBarUI
+        val ltr = progressBar.componentOrientation.isLeftToRight
+        val x = if (ltr) r.x else r.x + r.width - amountFull
+        g.fillRect(x, r.y, amountFull, r.height)
       }
 
       SwingConstants.VERTICAL -> {
-        val y = amountFull / r.height.toFloat()
-        g.color = getColorFromPallet(pallet, y)
+        g.color = getColorFromPalette(palette, amountFull / r.height.toFloat())
         g.fillRect(r.x, r.y + r.height - amountFull, r.width, amountFull)
       }
     }
