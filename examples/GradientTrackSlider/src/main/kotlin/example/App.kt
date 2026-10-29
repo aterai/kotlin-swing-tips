@@ -6,7 +6,6 @@ import java.awt.event.MouseEvent
 import java.awt.event.MouseWheelEvent
 import java.awt.geom.Point2D
 import java.awt.image.BufferedImage
-import java.awt.image.PixelGrabber
 import javax.swing.*
 import javax.swing.plaf.metal.MetalSliderUI
 
@@ -28,22 +27,19 @@ fun createUI(): Component {
     override fun getIconHeight() = 64
   }
   UIManager.put("Slider.horizontalThumbIcon", icon)
-  // println(UIManager.get("Slider.trackWidth"))
-  // println(UIManager.get("Slider.majorTickLength"))
-  // println(UIManager.getInt("Slider.trackWidth"))
-  // println(UIManager.getInt("Slider.majorTickLength"))
+  // WindowsLookAndFeel does not define these keys, but MetalSliderUI requires them
   UIManager.put("Slider.trackWidth", 64)
   UIManager.put("Slider.majorTickLength", 6)
 
-  val slider0 = makeSlider()
-  val slider1 = makeSlider()
-  slider1.setUI(GradientPalletSliderUI())
+  val slider0 = createSlider()
+  val slider1 = createSlider()
+  slider1.setUI(GradientPaletteSliderUI())
   slider1.model = slider0.model
 
   val box = Box.createVerticalBox()
-  box.add(makeTitledPanel("Default:", slider0))
+  box.add(createTitledPanel("Default:", slider0))
   box.add(Box.createVerticalStrut(5))
-  box.add(makeTitledPanel("Gradient translucent track JSlider:", slider1))
+  box.add(createTitledPanel("Gradient translucent track JSlider:", slider1))
   box.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
 
   val p = object : JPanel(BorderLayout()) {
@@ -61,7 +57,7 @@ fun createUI(): Component {
   return p
 }
 
-private fun makeSlider() = object : JSlider(HORIZONTAL, 0, 100, 50) {
+private fun createSlider() = object : JSlider(HORIZONTAL, 0, 100, 50) {
   private var handler: MouseAdapter? = null
 
   override fun updateUI() {
@@ -84,7 +80,7 @@ private fun makeSlider() = object : JSlider(HORIZONTAL, 0, 100, 50) {
   }
 }
 
-private fun makeTitledPanel(
+private fun createTitledPanel(
   title: String,
   c: Component,
 ) = JPanel(BorderLayout()).also {
@@ -93,7 +89,7 @@ private fun makeTitledPanel(
   it.add(c)
 }
 
-private class GradientPalletSliderUI : MetalSliderUI() {
+private class GradientPaletteSliderUI : MetalSliderUI() {
   private var controlDarkShadow = Color(0x64_64_64)
   private var controlHighlight = Color(0xC8_FF_C8)
   private var controlShadow = Color(0x00_64_00)
@@ -197,8 +193,7 @@ private class GradientPalletSliderUI : MetalSliderUI() {
 
     if (slider.isEnabled) {
       val x = (fillRight - fillLeft) / (trackRight - trackLeft).toFloat()
-      val alpha = 0x64 shl 24
-      g.color = GradientPalletUtils.getColorFromPallet(GRADIENT_PALLET, x, alpha)
+      g.color = GradientPaletteUtils.getColorFromPalette(GRADIENT_PALETTE, x, FILL_ALPHA)
       g.fillRect(
         fillLeft + 1,
         fillTop + 1,
@@ -220,52 +215,44 @@ private class GradientPalletSliderUI : MetalSliderUI() {
   ) {
     var yy = trackTop + (trackBottom - trackTop) / 2
     for (i in 10 downTo 0) {
-      g.color = makeColor(i * .07f)
-      g.drawLine(trackLeft + 2, yy, trackRight - trackLeft - 2, yy)
+      g.color = createColor(i * .07f)
+      g.drawLine(trackLeft + 2, yy, trackRight - 2, yy)
       yy--
     }
   }
 
-  private fun makeColor(alpha: Float) = Color(1f, 1f, 1f, alpha)
+  private fun createColor(alpha: Float) = Color(1f, 1f, 1f, alpha)
 
   companion object {
-    private val GRADIENT_PALLET = GradientPalletUtils.makeGradientPallet()
+    private const val FILL_ALPHA = 0x64 shl 24
+    private val GRADIENT_PALETTE = GradientPaletteUtils.createGradientPalette()
   }
 }
 
-private object GradientPalletUtils {
-  fun makeGradientPallet(): IntArray {
-    val image = BufferedImage(100, 1, BufferedImage.TYPE_INT_RGB)
+private object GradientPaletteUtils {
+  fun createGradientPalette(): IntArray {
+    val width = 100
+    val image = BufferedImage(width, 1, BufferedImage.TYPE_INT_RGB)
     val g2 = image.createGraphics()
     val start = Point2D.Float()
-    val end = Point2D.Float(99f, 0f)
+    val end = Point2D.Float(width - 1f, 0f)
     val dist = floatArrayOf(.0f, .5f, 1f)
     val colors = arrayOf(Color.RED, Color.YELLOW, Color.GREEN)
     g2.paint = LinearGradientPaint(start, end, dist, colors)
-    g2.fillRect(0, 0, 100, 1)
+    g2.fillRect(0, 0, width, 1)
     g2.dispose()
-
-    val width = image.getWidth(null)
-    val pallet = IntArray(width)
-    runCatching {
-      PixelGrabber(image, 0, 0, width, 1, pallet, 0, width).grabPixels()
-    }.onFailure {
-      Toolkit.getDefaultToolkit().beep()
-    }
-    return pallet
+    // BufferedImage#getRGB(...) reads the pixels directly,
+    // so PixelGrabber and its exception handling are unnecessary
+    return image.getRGB(0, 0, width, 1, null, 0, width)
   }
 
-  fun getColorFromPallet(
-    pallet: IntArray,
+  fun getColorFromPalette(
+    palette: IntArray,
     x: Float,
     alpha: Int,
   ): Color {
-    // val i = (pallet.size * x).toInt()
-    // val max = pallet.size - 1
-    // val index = minOf(maxOf(i, 0), max)
-    val index = (pallet.size * x).toInt().coerceIn(0, pallet.size - 1)
-    val pix = pallet[index] and 0x00_FF_FF_FF
-    // val alpha = 0x64 << 24
+    val index = (palette.size * x).toInt().coerceIn(0, palette.size - 1)
+    val pix = palette[index] and 0x00_FF_FF_FF
     return Color(alpha or pix, true)
   }
 }
