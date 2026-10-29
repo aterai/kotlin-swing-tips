@@ -5,7 +5,6 @@ import java.awt.geom.Arc2D
 import java.awt.geom.Area
 import java.awt.geom.Point2D
 import java.awt.image.BufferedImage
-import java.awt.image.PixelGrabber
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 import javax.swing.*
@@ -72,15 +71,9 @@ fun createUI(): Component {
 
 private class SolidGaugeUI(
   range: Int,
-  extent: Double,
+  private val extent: Double,
 ) : BasicProgressBarUI() {
-  private val pallet: IntArray
-  private val extent: Double
-
-  init {
-    pallet = makeGradientPallet(range)
-    this.extent = extent
-  }
+  private val palette = createGradientPalette(range)
 
   override fun paint(
     g: Graphics,
@@ -96,59 +89,83 @@ private class SolidGaugeUI(
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
     // val extent = -150d
-    val start = 90.0 + extent * .5
-    val degree = extent * progressBar.percentComplete
-    val or = rect.width.coerceAtMost(rect.height).toDouble()
+    val outerRadius = rect.width.coerceAtMost(rect.height).toDouble()
+    val innerRadius = outerRadius * .6
     val cx = rect.centerX
     val cy = rect.maxY
-    val sz = or * 2.0
-    val ir = or * .6
-    val inner = Arc2D.Double(
-      cx - ir,
-      cy - ir,
-      ir * 2.0,
-      ir * 2.0,
-      start,
-      -extent,
-      Arc2D.PIE,
-    )
-    val outer = Arc2D.Double(cx - or, cy - or, sz, sz, start, -extent, Arc2D.PIE)
-    val sector = Arc2D.Double(cx - or, cy - or, sz, sz, start, -degree, Arc2D.PIE)
-    val foreground = Area(sector)
-    val background = Area(outer)
-    val hole = Area(inner)
-    foreground.subtract(hole)
+    // Arc2D angles are counterclockwise from 3 o'clock,
+    // so the gauge starts at the upper left and sweeps clockwise (negative extent)
+    val start = 90.0 + extent * .5
+    val percent = progressBar.percentComplete
+    val degree = extent * percent
+    val background = createArc(cx, cy, outerRadius, start, -extent)
+    val foreground = createArc(cx, cy, outerRadius, start, -degree)
+    val hole = createArc(cx, cy, innerRadius, start, -extent)
     background.subtract(hole)
+    foreground.subtract(hole)
     // Draw the track
     g2.paint = Color(0xDD_DD_DD)
     g2.fill(background)
     // Draw the circular sector
-    g2.paint = getColorFromPallet(pallet, progressBar.percentComplete)
+    g2.paint = getColorFromPalette(palette, percent)
     g2.fill(foreground)
     // Draw minimum, maximum
-    val font = progressBar.font
-    val fsz = font.size2D
-    val min = (cx - or - fsz).toFloat()
-    val max = (cx + or + 4.0).toFloat()
     g2.paint = progressBar.foreground
-    g2.drawString(progressBar.minimum.toString(), min, cy.toFloat())
-    g2.drawString(progressBar.maximum.toString(), max, cy.toFloat())
+    drawMinMaxString(g2, cx, cy, outerRadius)
     // Deal with possible text painting
     if (progressBar.isStringPainted) {
-      val h = cy.toFloat() - fsz
-      val str = progressBar.value.toString()
-      val vx = cx.toFloat() - g2.fontMetrics.stringWidth(str) * .5f
-      g2.drawString(str, vx, h)
-      val ksz = fsz * 2f / 3f
-      g2.font = font.deriveFont(ksz)
-      val kmh = "㎞/h"
-      val tx = cx.toFloat() - g2.fontMetrics.stringWidth(kmh) * .5f
-      g2.drawString(kmh, tx, h + ksz)
+      drawProgressString(g2, cx.toFloat(), cy.toFloat())
     }
     g2.dispose()
   }
 
-  private fun makeGradientPallet(range: Int): IntArray {
+  private fun createArc(
+    cx: Double,
+    cy: Double,
+    r: Double,
+    start: Double,
+    extent: Double,
+  ): Area {
+    val d = r * 2.0
+    return Area(Arc2D.Double(cx - r, cy - r, d, d, start, extent, Arc2D.PIE))
+  }
+
+  private fun drawMinMaxString(
+    g2: Graphics2D,
+    cx: Double,
+    cy: Double,
+    r: Double,
+  ) {
+    val min = progressBar.minimum.toString()
+    val max = progressBar.maximum.toString()
+    val gap = 4.0
+    // Right-align the minimum label to the left end of the gauge
+    val minX = cx - r - gap - g2.fontMetrics.stringWidth(min)
+    val maxX = cx + r + gap
+    g2.drawString(min, minX.toFloat(), cy.toFloat())
+    g2.drawString(max, maxX.toFloat(), cy.toFloat())
+  }
+
+  private fun drawProgressString(
+    g2: Graphics2D,
+    x: Float,
+    y: Float,
+  ) {
+    val font = progressBar.font
+    val fontSize = font.size2D
+    val baseline = y - fontSize
+    val value = progressBar.value.toString()
+    val valueX = x - g2.fontMetrics.stringWidth(value) * .5f
+    g2.drawString(value, valueX, baseline)
+    // Draw the unit on the next line in a font 2/3 the size of the value
+    val unitSize = fontSize * 2f / 3f
+    g2.font = font.deriveFont(unitSize)
+    val unit = "㎞/h"
+    val unitX = x - g2.fontMetrics.stringWidth(unit) * .5f
+    g2.drawString(unit, unitX, baseline + unitSize)
+  }
+
+  private fun createGradientPalette(range: Int): IntArray {
     val image = BufferedImage(range, 1, BufferedImage.TYPE_INT_RGB)
     val g2 = image.createGraphics()
     val start = Point2D.Float()
@@ -158,27 +175,20 @@ private class SolidGaugeUI(
     g2.paint = LinearGradientPaint(start, end, dist, colors)
     g2.fillRect(0, 0, range, 1)
     g2.dispose()
-
-    val width = image.getWidth(null)
-    val pallet = IntArray(width)
-    runCatching {
-      PixelGrabber(image, 0, 0, width, 1, pallet, 0, width).grabPixels()
-    }.onFailure {
-      it.printStackTrace()
-      Toolkit.getDefaultToolkit().beep()
-    }
-    return pallet
+    // BufferedImage#getRGB(...) reads the pixels directly,
+    // so PixelGrabber and its InterruptedException handling are unnecessary
+    return image.getRGB(0, 0, range, 1, null, 0, range)
   }
 
-  private fun getColorFromPallet(
-    pallet: IntArray,
+  private fun getColorFromPalette(
+    palette: IntArray,
     pos: Double,
   ): Color {
     require(pos in 0.0..1.0) { "Parameter outside of expected range" }
-    val i = (pallet.size * pos).toInt()
-    val max = pallet.size - 1
-    val index = i.coerceAtLeast(0).coerceAtMost(max)
-    return Color(pallet[index] and 0x00_FF_FF_FF)
+    // pos == 1.0 gives palette.size, so clamp it to the last index
+    val index = (palette.size * pos).toInt().coerceAtMost(palette.size - 1)
+    // Color(Int) ignores the alpha bits of the TYPE_INT_RGB pixel
+    return Color(palette[index])
   }
 }
 
