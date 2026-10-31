@@ -9,20 +9,8 @@ import java.beans.PropertyChangeListener
 import javax.swing.*
 import javax.swing.plaf.basic.BasicProgressBarUI
 
-private val progress1 = object : JProgressBar() {
-  override fun updateUI() {
-    super.updateUI()
-    setUI(ProgressCircleUI())
-    border = BorderFactory.createEmptyBorder(25, 25, 25, 25)
-  }
-}
-private val progress2 = object : JProgressBar() {
-  override fun updateUI() {
-    super.updateUI()
-    setUI(ProgressCircleUI())
-    border = BorderFactory.createEmptyBorder(25, 25, 25, 25)
-  }
-}
+private val progress1 = makeProgressBar()
+private val progress2 = makeProgressBar()
 
 fun createUI(): Component {
   progress1.foreground = Color(0xFF_AA_AA)
@@ -78,6 +66,14 @@ fun createUI(): Component {
   }
 }
 
+private fun makeProgressBar() = object : JProgressBar() {
+  override fun updateUI() {
+    super.updateUI()
+    setUI(ProgressCircleUI())
+    border = BorderFactory.createEmptyBorder(25, 25, 25, 25)
+  }
+}
+
 private class ProgressCircleUI : BasicProgressBarUI() {
   override fun getPreferredSize(c: JComponent) = super.getPreferredSize(c)?.also {
     val v = maxOf(it.width, it.height)
@@ -98,18 +94,24 @@ private class ProgressCircleUI : BasicProgressBarUI() {
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
 
+    // Arc2D angles increase counterclockwise, so a negative extent draws clockwise
     val o = progressBar.getClientProperty("Slider.clockwise")
-    val dir = if (o as? Boolean == true) -1 else 1
-    val deg = dir * 360 * progressBar.percentComplete
-    val sz = minOf(rect.width, rect.height).toDouble()
+    val dir = if (o == true) -1 else 1
+    val size = minOf(rect.width, rect.height).toDouble()
     val cx = rect.centerX
     val cy = rect.centerY
-    val or = sz * .5
-    val ir = or * .5
-    val start = 90.0
-    val track = Area(Ellipse2D.Double(cx - or, cy - or, sz, sz))
-    val sector = Area(Arc2D.Double(cx - or, cy - or, sz, sz, start, deg, Arc2D.PIE))
-    val hole = Area(Ellipse2D.Double(cx - ir, cy - ir, ir * 2.0, ir * 2.0))
+    val outerRadius = size * .5
+    val innerRadius = outerRadius * .5
+    val start = 90.0 // 12 o'clock
+    val degree = dir * 360 * progressBar.percentComplete
+    val ox = cx - outerRadius
+    val oy = cy - outerRadius
+    val innerSize = innerRadius * 2.0
+    val track = Area(Ellipse2D.Double(ox, oy, size, size))
+    val sector = Area(Arc2D.Double(ox, oy, size, size, start, degree, Arc2D.PIE))
+    val hole = Area(
+      Ellipse2D.Double(cx - innerRadius, cy - innerRadius, innerSize, innerSize),
+    )
     track.subtract(hole)
     sector.subtract(hole)
 
