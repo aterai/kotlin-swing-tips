@@ -8,26 +8,8 @@ import javax.swing.*
 
 fun createUI(): Component {
   val shape = RoundRectangle2D.Float(0f, 0f, 240f, 64f, 32f, 32f)
-  val button1 = JButton("use Window#setShape(...)")
-  button1.addActionListener { e ->
-    val window = JWindow()
-    window.contentPane.add(makePanel(shape))
-    window.background = Color(0x0, true)
-    window.shape = shape
-    window.pack()
-    window.setLocationRelativeTo((e.source as? AbstractButton)?.rootPane)
-    window.isVisible = true
-  }
-
-  val button2 = JButton("not use Window#setShape(...)")
-  button2.addActionListener { e ->
-    val window = JWindow()
-    window.background = Color(0x0, true)
-    window.contentPane.add(makePanel(shape))
-    window.pack()
-    window.setLocationRelativeTo((e.source as? AbstractButton)?.rootPane)
-    window.isVisible = true
-  }
+  val button1 = createButton("use Window#setShape(...)", shape, true)
+  val button2 = createButton("not use Window#setShape(...)", shape, false)
 
   val p = JPanel(GridLayout(0, 1, 5, 5))
   p.border = BorderFactory.createEmptyBorder(0, 0, 5, 0)
@@ -42,7 +24,44 @@ fun createUI(): Component {
   }
 }
 
-private fun makePanel(shape: Shape): Component {
+private fun createButton(
+  title: String,
+  shape: Shape,
+  useSetShape: Boolean,
+): JButton {
+  val button = JButton(title)
+  button.addActionListener { e ->
+    val c = (e.source as? AbstractButton)?.rootPane
+    showWindow(c, shape, useSetShape)
+  }
+  return button
+}
+
+private fun showWindow(
+  parent: Component?,
+  shape: Shape,
+  useSetShape: Boolean,
+) {
+  val window = JWindow()
+  setTranslucencyBackground(window)
+  window.contentPane.add(createPanel(shape))
+  if (useSetShape) {
+    // Hard clipping: the edges of the window become jagged
+    window.shape = shape
+  }
+  window.pack()
+  window.setLocationRelativeTo(parent)
+  window.isVisible = true
+}
+
+private fun setTranslucencyBackground(window: JWindow) {
+  val gc = window.graphicsConfiguration
+  if (gc?.isTranslucencyCapable == true) {
+    window.background = Color(0x0, true)
+  }
+}
+
+private fun createPanel(shape: Shape): Component {
   val panel = object : JPanel(BorderLayout()) {
     override fun getPreferredSize() = shape.bounds.size
 
@@ -61,18 +80,25 @@ private fun makePanel(shape: Shape): Component {
   }
   panel.isOpaque = false
   panel.border = BorderFactory.createEmptyBorder(8, 8, 8, 8)
-
   val dwl = DragWindowListener()
   panel.addMouseListener(dwl)
   panel.addMouseMotionListener(dwl)
+  panel.add(createIconBox())
+  panel.add(createCloseButton(), BorderLayout.EAST)
+  return panel
+}
 
+private fun createIconBox(): Container {
   val p = JPanel()
   p.isOpaque = false
   p.add(JLabel(UIManager.getIcon("OptionPane.errorIcon")))
   p.add(JLabel(UIManager.getIcon("OptionPane.questionIcon")))
   p.add(JLabel(UIManager.getIcon("OptionPane.warningIcon")))
   p.add(JLabel(UIManager.getIcon("OptionPane.informationIcon")))
+  return p
+}
 
+private fun createCloseButton(): JButton {
   val close = JButton("<html><b>X")
   close.isContentAreaFilled = false
   close.border = BorderFactory.createEmptyBorder()
@@ -82,10 +108,7 @@ private fun makePanel(shape: Shape): Component {
       SwingUtilities.getWindowAncestor(it)?.dispose()
     }
   }
-
-  panel.add(p)
-  panel.add(close, BorderLayout.EAST)
-  return panel
+  return close
 }
 
 private class DragWindowListener : MouseAdapter() {
