@@ -9,76 +9,47 @@ import javax.swing.event.PopupMenuListener
 import javax.swing.plaf.LayerUI
 
 fun createUI(): Component {
-  val table = JTable(10, 5)
-  table.setFillsViewportHeight(true)
-  table.setComponentPopupMenu(makePopupMenu())
   val tabbedPane = JTabbedPane()
-  tabbedPane.addTab("Default", JScrollPane(table))
-  tabbedPane.addTab("MouseListener", JScrollPane(makeTable1()))
-  tabbedPane.addTab("PopupMenuListener", JScrollPane(makeTable2()))
-  val table3 = JTable(10, 5)
-  table3.setFillsViewportHeight(true)
-  table3.setComponentPopupMenu(makePopupMenu())
-  val scroll = JScrollPane(table3)
+  tabbedPane.addTab("Default", JScrollPane(createTable(createPopupMenu())))
+  tabbedPane.addTab("MouseListener", JScrollPane(createMouseListenerTable()))
+  tabbedPane.addTab("PopupMenuListener", JScrollPane(createPopupMenuListenerTable()))
+  val scroll = JScrollPane(createTable(createPopupMenu()))
   tabbedPane.addTab("JLayer", JLayer(scroll, RightMouseButtonLayerUI()))
-
   return JPanel(BorderLayout()).also {
     it.add(tabbedPane)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makeTable1(): JTable {
+private fun createTable(popup: JPopupMenu): JTable {
   val table = JTable(10, 5)
   table.setFillsViewportHeight(true)
-  table.setComponentPopupMenu(makePopupMenu())
+  table.setComponentPopupMenu(popup)
+  return table
+}
+
+private fun createMouseListenerTable(): JTable {
+  val table = createTable(createPopupMenu())
   table.addMouseListener(object : MouseAdapter() {
     override fun mousePressed(e: MouseEvent) {
-      val t = e.component
-      if (t is JTable && SwingUtilities.isRightMouseButton(e)) {
-        if (t.isEditing) {
-          t.removeEditor()
-        }
-        val pt = e.getPoint()
-        val r = getCellArea(t)
-        if (r.contains(pt)) {
-          val currentRow = t.rowAtPoint(pt)
-          val currentColumn = t.columnAtPoint(pt)
-          val none = table.selectedRows.none { it == currentRow }
-          if (none) {
-            t.changeSelection(currentRow, currentColumn, false, false)
-          }
-        } else {
-          t.clearSelection()
-        }
+      val c = e.component
+      if (c is JTable && SwingUtilities.isRightMouseButton(e)) {
+        updateSelection(c, e.point)
       }
     }
   })
   return table
 }
 
-private fun makeTable2(): JTable {
-  val table = JTable(10, 5)
-  table.setFillsViewportHeight(true)
-  val popup = makePopupMenu()
+private fun createPopupMenuListenerTable(): JTable {
+  val popup = createPopupMenu()
+  val table = createTable(popup)
   popup.addPopupMenuListener(object : PopupMenuListener {
     override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-      if (table.isEditing) {
-        table.removeEditor()
-      }
+      // The location of the JPopupMenu is not yet determined at this point
       SwingUtilities.invokeLater {
         val pt = SwingUtilities.convertPoint(popup, Point(), table)
-        val r = getCellArea(table)
-        if (r.contains(pt)) {
-          val currentRow = table.rowAtPoint(pt)
-          val currentColumn = table.columnAtPoint(pt)
-          val none = table.selectedRows.none { it == currentRow }
-          if (none) {
-            table.changeSelection(currentRow, currentColumn, false, false)
-          }
-        } else {
-          table.clearSelection()
-        }
+        updateSelection(table, pt)
       }
     }
 
@@ -90,11 +61,10 @@ private fun makeTable2(): JTable {
       // not needed
     }
   })
-  table.setComponentPopupMenu(popup)
   return table
 }
 
-private fun makePopupMenu(): JPopupMenu {
+private fun createPopupMenu(): JPopupMenu {
   val popup = JPopupMenu()
   popup.add("clearSelection").addActionListener {
     val c = popup.invoker
@@ -122,35 +92,30 @@ private class RightMouseButtonLayerUI : LayerUI<JScrollPane>() {
     e: MouseEvent,
     l: JLayer<out JScrollPane>,
   ) {
-    val table = e.component
-    if (table is JTable && SwingUtilities.isRightMouseButton(e)) {
-      if (table.isEditing) {
-        table.removeEditor()
-      }
-      val pt = e.getPoint()
-      val r = getCellArea(table)
-      if (r.contains(pt)) {
-        val currentRow = table.rowAtPoint(pt)
-        val currentColumn = table.columnAtPoint(pt)
-        val none = table.selectedRows.none { it == currentRow }
-        if (none) {
-          table.changeSelection(currentRow, currentColumn, false, false)
-        }
-      } else {
-        table.clearSelection()
-      }
-    } else {
-      super.processMouseEvent(e, l)
+    val c = e.component
+    // Update the selection only once on MOUSE_PRESSED, not on MOUSE_RELEASED or MOUSE_CLICKED
+    val pressed = e.id == MouseEvent.MOUSE_PRESSED
+    if (pressed && c is JTable && SwingUtilities.isRightMouseButton(e)) {
+      updateSelection(c, e.point)
     }
   }
 }
 
-fun getCellArea(table: JTable): Rectangle {
-  val start = table.getCellRect(0, 0, true)
-  val rc = table.getRowCount()
-  val cc = table.columnCount
-  val end = table.getCellRect(rc - 1, cc - 1, true)
-  return start.union(end)
+fun updateSelection(
+  table: JTable,
+  pt: Point,
+) {
+  if (table.isEditing) {
+    table.removeEditor()
+  }
+  val row = table.rowAtPoint(pt)
+  val column = table.columnAtPoint(pt)
+  // rowAtPoint(...) or columnAtPoint(...) returns -1 outside the cell area
+  if (row < 0 || column < 0) {
+    table.clearSelection()
+  } else if (!table.isRowSelected(row)) {
+    table.changeSelection(row, column, false, false)
+  }
 }
 
 fun main() {
