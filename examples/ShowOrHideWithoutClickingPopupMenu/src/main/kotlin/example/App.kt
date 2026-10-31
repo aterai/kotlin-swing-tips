@@ -13,9 +13,11 @@ private val log = JTextArea()
 fun createUI(): Component {
   log.isEditable = false
   val toolBar = JToolBar()
-  toolBar.add(makeButton0())
+  val listIcon = UIManager.getIcon("FileChooser.listViewIcon")
+  toolBar.add(createButton(listIcon, createExitClosePopupMenu()))
   toolBar.addSeparator(Dimension(25, 25))
-  toolBar.add(makeButton1())
+  val detailsIcon = UIManager.getIcon("FileChooser.detailsViewIcon")
+  toolBar.add(createButton(detailsIcon, createAutoClosePopupMenu()))
   return JPanel(BorderLayout()).also {
     it.add(toolBar, BorderLayout.NORTH)
     it.add(JScrollPane(log))
@@ -23,79 +25,70 @@ fun createUI(): Component {
   }
 }
 
-private fun makeButton0(): JButton {
+private fun createExitClosePopupMenu(): JPopupMenu {
   val popup = JPopupMenu()
   initPopupMenu(popup)
   popup.addMouseListener(object : MouseAdapter() {
-    override fun mouseExited(e: MouseEvent?) {
+    override fun mouseExited(e: MouseEvent) {
+      // mouseExited is also fired when the cursor moves onto a child JMenuItem,
+      // so wait until the armed state is updated and close only if no item is armed
       EventQueue.invokeLater {
-        var b = false
-        for (me in popup.getSubElements()) {
-          if (me is AbstractButton) {
-            b = b or ((me as? AbstractButton)?.getModel()?.isArmed == true)
-          }
-        }
-        if (!b) {
-          popup.setVisible(false)
+        val isArmed = popup.subElements
+          .filterIsInstance<AbstractButton>()
+          .any { it.model.isArmed }
+        if (!isArmed) {
+          popup.isVisible = false
         }
       }
     }
   })
-  val button = JButton(UIManager.getIcon("FileChooser.listViewIcon"))
-  button.setFocusPainted(false)
-  button.addActionListener { e ->
-    popup.show(button, 0, button.getHeight())
-    popup.requestFocusInWindow()
-  }
-  button.addMouseListener(object : MouseAdapter() {
-    override fun mouseEntered(e: MouseEvent) {
-      (e.component as? AbstractButton)?.doClick()
-    }
-  })
-  return button
+  return popup
 }
 
-private fun makeButton1(): JButton {
-  val popup: JPopupMenu = AutoClosePopupMenu()
+private fun createAutoClosePopupMenu(): JPopupMenu {
+  val popup = AutoClosePopupMenu()
   initPopupMenu(popup)
-  val button = JButton(UIManager.getIcon("FileChooser.detailsViewIcon"))
-  button.setFocusPainted(false)
-  button.addActionListener { e ->
-    popup.show(button, 0, button.getHeight())
+  return popup
+}
+
+private fun createButton(icon: Icon?, popup: JPopupMenu): JButton {
+  val button = JButton(icon)
+  button.isFocusPainted = false
+  button.addActionListener {
+    popup.show(button, 0, button.height)
     popup.requestFocusInWindow()
   }
   button.addMouseListener(object : MouseAdapter() {
     override fun mouseEntered(e: MouseEvent) {
-      (e.component as? AbstractButton)?.doClick()
+      button.doClick()
     }
   })
   return button
 }
 
 private fun initPopupMenu(popup: JPopupMenu) {
-  val bg = ButtonGroup()
-  makeMenuList()
-    .toList()
-    .map { makeMenuButton(it) }
-    .forEach {
-      it.addActionListener { e ->
-        val cmd = e.getActionCommand()
+  val group = ButtonGroup()
+  createMenuList()
+    .map { createMenuItem(it) }
+    .forEach { item ->
+      item.addActionListener { e ->
+        val cmd = e.actionCommand
         log.append("Selected JRadioButton command: %s%n".format(cmd))
       }
-      popup.add(it)
-      bg.add(it)
+      popup.add(item)
+      group.add(item)
     }
 }
 
-private fun makeMenuButton(m: MenuContext): AbstractButton {
-  val b = JRadioButtonMenuItem(m.command)
-  b.actionCommand = m.command
-  b.foreground = m.color
-  b.border = BorderFactory.createEmptyBorder()
-  return b
+private fun createMenuItem(context: MenuContext): AbstractButton {
+  val item = JRadioButtonMenuItem(context.command)
+  item.actionCommand = context.command
+  item.foreground = context.color
+  item.border = BorderFactory.createEmptyBorder()
+  return item
 }
 
-private fun makeMenuList() = listOf(
+private fun createMenuList() = listOf(
   MenuContext("BLUE", Color.BLUE),
   MenuContext("CYAN", Color.CYAN),
   MenuContext("GREEN", Color.GREEN),
@@ -118,9 +111,13 @@ private class AutoClosePopupMenu : JPopupMenu() {
 
   private fun checkAutoClose(e: MouseEvent) {
     val c = e.component
-    val r = bounds
+    // The mouse point is converted to this popup's coordinate system,
+    // so compare it with the local bounds rather than getBounds(),
+    // which depends on the container created by the PopupFactory.
+    val r = Rectangle(size)
+    // Allow a small vertical gap between the invoker and this popup
     r.grow(0, 5)
-    val pt = SwingUtilities.convertPoint(c, e.getPoint(), this)
+    val pt = SwingUtilities.convertPoint(c, e.point, this)
     if (!r.contains(pt) && c !is JButton) {
       setVisible(false)
     }
