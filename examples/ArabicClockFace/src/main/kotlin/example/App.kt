@@ -13,7 +13,6 @@ import java.awt.geom.Point2D
 import java.time.LocalTime
 import java.time.ZoneId
 import javax.swing.*
-import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -71,18 +70,30 @@ private class AnalogClock : JPanel() {
     "10",
     "11",
   )
-  private var secondRot = 0.0
-  private var minuteRot = 0.0
-  private var hourRot = 0.0
+  private var secondOfDay = -1
+  private var secondAngle = 0.0
+  private var minuteAngle = 0.0
+  private var hourAngle = 0.0
+
+  // The hands only move once per second, so skip repainting
+  // if the time has not changed since the previous Timer tick
   private val timer = Timer(200) {
-    val time = LocalTime.now(ZoneId.systemDefault())
-    secondRot = time.second * Math.PI / 30.0
-    minuteRot = time.minute * Math.PI / 30.0 + secondRot / 60.0
-    hourRot = time.hour * Math.PI / 6.0 + minuteRot / 12.0
-    repaint()
+    val sec = LocalTime.now(ZoneId.systemDefault()).toSecondOfDay()
+    if (sec != secondOfDay) {
+      secondOfDay = sec
+      secondAngle = sec % 60 * RAD_PER_MIN
+      minuteAngle = sec / 60 % 60 * RAD_PER_MIN + secondAngle / 60.0
+      hourAngle = sec / 3600 % 12 * RAD_PER_HOUR + minuteAngle / 12.0
+      repaint()
+    }
   }
   private var listener: HierarchyListener? = null
   var isRotate = true
+
+  init {
+    // Update the hands immediately on start instead of waiting for the first delay
+    timer.initialDelay = 0
+  }
 
   override fun updateUI() {
     removeHierarchyListener(listener)
@@ -105,36 +116,45 @@ private class AnalogClock : JPanel() {
     val rect = SwingUtilities.calculateInnerArea(this, null)
     paintBackground(g2, rect)
     val radius = min(rect.width, rect.height) / 2.0 - 10.0
-    g2.translate(rect.centerX, rect.centerY)
-
-    paintHourMarkers(g2, radius)
-    paintClockNumbers(g2, radius)
-    paintHourHand(g2, radius, hourRot)
-    paintMinuteHand(g2, radius, minuteRot)
-    paintSecondHand(g2, radius, secondRot)
+    // Skip drawing the dial if the panel is too small to contain it
+    if (radius >= MIN_RADIUS) {
+      // Clamp to zero so that the markers do not stick out of the dial
+      val hourMarkerLen = max(0.0, radius / 6.0 - 10.0)
+      g2.translate(rect.centerX, rect.centerY)
+      paintHourMarkers(g2, radius, hourMarkerLen)
+      paintClockNumbers(g2, radius, hourMarkerLen)
+      paintHourHand(g2, radius, hourAngle)
+      paintMinuteHand(g2, radius, minuteAngle)
+      paintSecondHand(g2, radius, secondAngle)
+    }
 
     g2.dispose()
   }
 
-  private fun paintClockNumbers(g2: Graphics2D, radius: Double) {
-    val hourMarkerLen = radius / 6.0 - 10.0
+  private fun paintClockNumbers(
+    g2: Graphics2D,
+    radius: Double,
+    hourMarkerLen: Double,
+  ) {
     val at = AffineTransform.getRotateInstance(0.0)
     g2.color = Color.WHITE
-    val dynamicFontSize = max((radius * fontRatio).toFloat(), 20f)
-    val font = g2.font.deriveFont(dynamicFontSize)
+    val fontSize = max((radius * fontRatio).toFloat(), 20f)
+    val font = g2.font.deriveFont(fontSize)
     val frc = g2.fontRenderContext
     if (isRotate) {
       for (txt in arabicNumerals) {
-        val m00 = at.scaleX
-        val d = if (m00 > 0.0 || abs(m00) < 0.0001) 1.0 else -1.0
-        val si = AffineTransform.getScaleInstance(d, d)
-        val s = getTextLayout(txt, font, frc).getOutline(si)
+        // m00 (= cos of the rotation angle) is negative in the lower half of the dial
+        // (4 to 8 o'clock), so flip the numerals upside down there to keep them readable.
+        // EPSILON keeps the 3 and 9 o'clock numerals (m00 is about zero) unflipped.
+        val sign = if (at.scaleX > -EPSILON) 1.0 else -1.0
+        val flip = AffineTransform.getScaleInstance(sign, sign)
+        val s = getTextLayout(txt, font, frc).getOutline(flip)
         val r = s.bounds2D
         val tx = r.centerX
         val ty = radius - hourMarkerLen - r.height + r.centerY
         val toCenter = AffineTransform.getTranslateInstance(-tx, -ty)
         g2.fill(at.createTransformedShape(toCenter.createTransformedShape(s)))
-        at.rotate(Math.PI / 6.0)
+        at.rotate(RAD_PER_HOUR)
       }
     } else {
       val ptSrc = Point2D.Double()
@@ -148,7 +168,7 @@ private class AnalogClock : JPanel() {
         val dy = pt.y - r.centerY
         val transform = AffineTransform.getTranslateInstance(dx, dy)
         g2.fill(transform.createTransformedShape(s))
-        at.rotate(Math.PI / 6.0)
+        at.rotate(RAD_PER_HOUR)
       }
     }
   }
@@ -169,20 +189,23 @@ private class AnalogClock : JPanel() {
     g2.fill(rect)
   }
 
-  private fun paintHourMarkers(g2: Graphics2D, radius: Double) {
-    val hourMarkerLen = radius / 6.0 - 10.0
+  private fun paintHourMarkers(
+    g2: Graphics2D,
+    radius: Double,
+    hourMarkerLen: Double,
+  ) {
     val hourMarker = Line2D.Double(0.0, hourMarkerLen - radius, 0.0, -radius)
     val minuteMarker = Line2D.Double(0.0, hourMarkerLen / 2.0 - radius, 0.0, -radius)
     val at = AffineTransform.getRotateInstance(0.0)
     g2.stroke = BasicStroke(2f)
     g2.color = Color.WHITE
-    for (i in 0..59) {
-      if (i % 5 == 0) {
+    for (i in 0..<MINUTES_PER_HOUR) {
+      if (i % MIN_PER_MARKER == 0) {
         g2.draw(at.createTransformedShape(hourMarker))
       } else {
         g2.draw(at.createTransformedShape(minuteMarker))
       }
-      at.rotate(Math.PI / 30.0)
+      at.rotate(RAD_PER_MIN)
     }
   }
 
@@ -192,23 +215,23 @@ private class AnalogClock : JPanel() {
     frc: FontRenderContext,
   ) = TextLayout(txt, font, frc)
 
-  private fun paintHourHand(g2: Graphics2D, radius: Double, hourRot: Double) {
+  private fun paintHourHand(g2: Graphics2D, radius: Double, hourAngle: Double) {
     val hourHandLen = radius / 2.0
     val hourHand = Line2D.Double(0.0, 0.0, 0.0, -hourHandLen)
-    paintHand(g2, hourHand, 8f, Color.LIGHT_GRAY, hourRot)
+    paintHand(g2, hourHand, 8f, Color.LIGHT_GRAY, hourAngle)
   }
 
-  private fun paintMinuteHand(g2: Graphics2D, radius: Double, minuteRot: Double) {
+  private fun paintMinuteHand(g2: Graphics2D, radius: Double, minuteAngle: Double) {
     val minuteHandLen = 5.0 * radius / 6.0
     val minuteHand = Line2D.Double(0.0, 0.0, 0.0, -minuteHandLen)
-    paintHand(g2, minuteHand, 4f, Color.WHITE, minuteRot)
+    paintHand(g2, minuteHand, 4f, Color.WHITE, minuteAngle)
   }
 
-  private fun paintSecondHand(g2: Graphics2D, radius: Double, secondRot: Double) {
+  private fun paintSecondHand(g2: Graphics2D, radius: Double, secondAngle: Double) {
     val r = radius / 6.0
     val secondHandLen = radius - r
     val secondHand = Line2D.Double(0.0, r, 0.0, -secondHandLen)
-    paintHand(g2, secondHand, 1f, Color.RED, secondRot)
+    paintHand(g2, secondHand, 1f, Color.RED, secondAngle)
     g2.fill(Ellipse2D.Double(-r / 4.0, -r / 4.0, r / 2.0, r / 2.0))
   }
 
@@ -217,10 +240,19 @@ private class AnalogClock : JPanel() {
     hand: Shape,
     strokeWidth: Float,
     color: Color,
-    rot: Double,
+    angle: Double,
   ) {
     g2.stroke = BasicStroke(strokeWidth)
     g2.paint = color
-    g2.draw(AffineTransform.getRotateInstance(rot).createTransformedShape(hand))
+    g2.draw(AffineTransform.getRotateInstance(angle).createTransformedShape(hand))
+  }
+
+  companion object {
+    private const val MINUTES_PER_HOUR = 60
+    private const val MIN_PER_MARKER = 5
+    private const val RAD_PER_MIN = 2.0 * Math.PI / MINUTES_PER_HOUR
+    private const val RAD_PER_HOUR = RAD_PER_MIN * MIN_PER_MARKER
+    private const val MIN_RADIUS = 1.0
+    private const val EPSILON = 1.0e-4
   }
 }
