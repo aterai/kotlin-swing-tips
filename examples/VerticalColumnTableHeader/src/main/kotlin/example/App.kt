@@ -50,11 +50,26 @@ fun createUI(): Component {
 }
 
 private class VerticalTableHeaderRenderer : TableCellRenderer {
-  private val ascendingIcon = UIManager.getLookAndFeelDefaults().getIcon(ASCENDING)
-  private val descendingIcon = UIManager.getLookAndFeelDefaults().getIcon(DESCENDING)
-  private val emptyIcon = EmptyIcon()
+  private val ascendingIcon: Icon
+  private val descendingIcon: Icon
+  private val emptyIcon: Icon
   private val intermediate = JPanel()
   private val label = JLabel("", null, SwingConstants.LEADING)
+
+  init {
+    val def = UIManager.getLookAndFeelDefaults()
+    val ascending = def.getIcon(ASCENDING_KEY)
+    val descending = def.getIcon(DESCENDING_KEY)
+    // The whole header label is rotated 90 degrees counterclockwise later,
+    // so rotate the sort icons 90 degrees clockwise in advance to keep them
+    // pointing up and down. The rotated icons are created only once here.
+    ascendingIcon = RotateIcon(ascending, 90)
+    descendingIcon = RotateIcon(descending, 90)
+    // Reserve the same space for the unsorted columns
+    emptyIcon = EmptyIcon(ascendingIcon.iconWidth, ascendingIcon.iconHeight)
+    label.horizontalTextPosition = SwingConstants.LEFT
+    label.border = BorderFactory.createEmptyBorder(0, 2, 0, 2)
+  }
 
   override fun getTableCellRendererComponent(
     table: JTable,
@@ -64,21 +79,24 @@ private class VerticalTableHeaderRenderer : TableCellRenderer {
     row: Int,
     column: Int,
   ): Component {
-    emptyIcon.width = ascendingIcon.iconWidth
-    emptyIcon.height = ascendingIcon.iconHeight
-    UIManager.put(ASCENDING, emptyIcon)
-    UIManager.put(DESCENDING, emptyIcon)
     val r = table.tableHeader.defaultRenderer
-    val c = r.getTableCellRendererComponent(
-      table,
-      value,
-      isSelected,
-      hasFocus,
-      row,
-      column,
-    )
-    UIManager.put(ASCENDING, ascendingIcon)
-    UIManager.put(DESCENDING, descendingIcon)
+    UIManager.put(ASCENDING_KEY, NO_SORT_ICON)
+    UIManager.put(DESCENDING_KEY, NO_SORT_ICON)
+    val c = try {
+      r.getTableCellRendererComponent(
+        table,
+        value,
+        isSelected,
+        hasFocus,
+        row,
+        column,
+      )
+    } finally {
+      // Putting null removes the temporary values from the developer defaults,
+      // so the LookAndFeel defaults are used again
+      UIManager.put(ASCENDING_KEY, null)
+      UIManager.put(DESCENDING_KEY, null)
+    }
     if (c is JLabel) {
       val modelColumnIndex = table.convertColumnIndexToModel(column)
       val sortOrder = getColumnSortOrder(table, modelColumnIndex)
@@ -88,21 +106,19 @@ private class VerticalTableHeaderRenderer : TableCellRenderer {
         else -> emptyIcon
       }
       label.text = c.text
-      label.icon = RotateIcon(sortIcon, 90)
-      label.horizontalTextPosition = SwingConstants.LEFT
-      label.border = BorderFactory.createEmptyBorder(0, 2, 0, 2)
+      label.icon = sortIcon
       c.setIcon(createVerticalHeaderIcon(label))
       c.setText(null)
     }
     return c
   }
 
-  private fun createVerticalHeaderIcon(c: Component): Icon? {
+  private fun createVerticalHeaderIcon(c: Component): Icon {
     val d = c.preferredSize
     val w = d.height
     val h = d.width
     val bi = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
-    val g2 = bi.graphics as? Graphics2D ?: return null
+    val g2 = bi.createGraphics()
     val at = AffineTransform.getTranslateInstance(0.0, h.toDouble())
     at.quadrantRotate(-1)
     g2.transform = at
@@ -112,8 +128,12 @@ private class VerticalTableHeaderRenderer : TableCellRenderer {
   }
 
   companion object {
-    private const val ASCENDING = "Table.ascendingSortIcon"
-    private const val DESCENDING = "Table.descendingSortIcon"
+    private const val ASCENDING_KEY = "Table.ascendingSortIcon"
+    private const val DESCENDING_KEY = "Table.descendingSortIcon"
+
+    // A non-Icon value makes UIManager#getIcon(...) and DefaultLookup return null,
+    // so the default header renderer neither shows nor paints its own sort icon
+    private const val NO_SORT_ICON = ""
 
     fun getColumnSortOrder(
       table: JTable,
@@ -127,10 +147,10 @@ private class VerticalTableHeaderRenderer : TableCellRenderer {
   }
 }
 
-private class EmptyIcon : Icon {
-  var width = 5
-  var height = 5
-
+private class EmptyIcon(
+  private val width: Int,
+  private val height: Int,
+) : Icon {
   override fun paintIcon(
     c: Component?,
     g: Graphics,
