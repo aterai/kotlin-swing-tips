@@ -7,11 +7,12 @@ import javax.swing.plaf.basic.BasicInternalFrameUI
 import javax.swing.plaf.metal.MetalLookAndFeel
 
 fun createUI(): Component {
-  val f0 = JInternalFrame("metal(default)", true, true, true, true)
-  f0.setSize(240, 100)
-  f0.setLocation(20, 10)
+  val metalFrame = JInternalFrame("metal(default)", true, true, true, true)
+  // TEST: metalFrame.setUI(BasicInternalFrameUI(metalFrame))
+  metalFrame.setSize(240, 100)
+  metalFrame.setLocation(20, 10)
 
-  val f1 = object : JInternalFrame("basic", true, true, true, true) {
+  val basicFrame = object : JInternalFrame("basic", true, true, true, true) {
     override fun updateUI() {
       super.updateUI()
       val ui1 = object : BasicInternalFrameUI(this) {
@@ -22,14 +23,16 @@ fun createUI(): Component {
       setUI(ui1)
     }
   }
-  f1.setSize(240, 100)
-  f1.setLocation(40, 120)
+  basicFrame.setSize(240, 100)
+  basicFrame.setLocation(40, 120)
 
   return JDesktopPane().also {
-    it.add(f0)
-    it.add(f1)
+    it.add(metalFrame)
+    it.add(basicFrame)
     EventQueue.invokeLater {
-      it.allFrames.forEach { f -> f.isVisible = true }
+      for (f in it.allFrames) {
+        f.isVisible = true
+      }
     }
     it.preferredSize = Dimension(320, 240)
   }
@@ -46,6 +49,7 @@ private class BumpsFreeInternalFrameTitlePane(
       MetalLookAndFeel.getControlDarkShadow()
     }
     g.color = shadow
+    // Same edges as MetalInternalFrameTitlePane: bottom line and top corner dots
     g.drawLine(0, height - 1, width, height - 1)
     g.drawLine(0, 0, 0, 0)
     g.drawLine(width - 1, 0, width - 1, 0)
@@ -59,6 +63,8 @@ private class BumpsFreeInternalFrameTitlePane(
     super.createButtons()
     listOf(closeButton, maxButton, iconButton).forEach {
       it.isContentAreaFilled = false
+      // Removes the button border; TitlePaneLayout sets fixed 16x14 bounds,
+      // so these insets do not enlarge the button
       it.border = BorderFactory.createEmptyBorder(2, 5, 2, 5)
     }
   }
