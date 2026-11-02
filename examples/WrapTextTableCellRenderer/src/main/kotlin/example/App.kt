@@ -2,7 +2,6 @@ package example
 
 import java.awt.*
 import java.awt.font.FontRenderContext
-import java.awt.font.GlyphMetrics
 import java.awt.font.GlyphVector
 import java.awt.geom.Point2D
 import javax.swing.*
@@ -34,7 +33,6 @@ fun createUI(): Component {
       getColumnModel().getColumn(1).cellRenderer = null
       getColumnModel().getColumn(2).cellRenderer = null
       super.updateUI()
-      setRowSelectionAllowed(true)
       setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
       setRowHeight(50)
       getColumnModel().getColumn(0).cellRenderer = DefaultTableCellRenderer()
@@ -75,8 +73,8 @@ private class WrappedLabelRenderer : TableCellRenderer {
       renderer.foreground = table.foreground
       renderer.background = table.background
     }
-    val b = if (value is Number) SwingConstants.RIGHT else SwingConstants.LEFT
-    renderer.horizontalAlignment = b
+    val isNumber = value is Number
+    renderer.horizontalAlignment = if (isNumber) SwingConstants.RIGHT else SwingConstants.LEFT
     renderer.font = table.font
     renderer.text = value?.toString() ?: ""
     return renderer
@@ -124,13 +122,12 @@ private open class WrappedLabel(
       val lineHeight = gv.logicalBounds.height.toFloat()
       var pos = 0f
       var lineCount = 0
-      var gm: GlyphMetrics
       for (i in 0..<gv.numGlyphs) {
-        gm = gv.getGlyphMetrics(i)
+        val gm = gv.getGlyphMetrics(i)
         val advance = gm.advance
-        val start = pos + 1
-        val end = pos + advance
-        if (width in start..end) {
+        // Wrap only if the line is not empty, so that a glyph wider than
+        // the cell does not leave a blank line above it
+        if (pos > 0f && pos + advance > width) {
           lineCount++
           pos = 0f
         }
