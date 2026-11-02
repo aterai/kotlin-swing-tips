@@ -36,8 +36,9 @@ private class VerticalTitledBorder(
   private val label = JLabel(title)
 
   init {
-    this.label.isOpaque = true
-    // this.label.putClientProperty(BasicHTML.propertyKey, null)
+    // Fill the label background so that the border line behind the title is hidden
+    label.isOpaque = true
+    // label.putClientProperty(BasicHTML.propertyKey, null)
   }
 
   override fun paintBorder(
@@ -54,27 +55,36 @@ private class VerticalTitledBorder(
       super.paintBorder(c, g, x, y, width, height)
     } else {
       val edge = if (border is TitledBorder) 0 else EDGE_SPACING
-      val lbl = getTitleLabel(c)
-      val size = lbl.preferredSize
-      val ins = createComponentBorderInsets(border, c, Insets(0, 0, 0, 0))
+      val titleLabel = getTitleLabel(c)
+      val size = titleLabel.preferredSize
+      val borderInsets = getInnerBorderInsets(border, c, Insets(0, 0, 0, 0))
+      val labelH = size.height
+      val labelW = (height - borderInsets.top - borderInsets.bottom).coerceAtMost(size.width)
       var borderX = x + edge
       val borderY = y + edge
       var borderW = width - edge - edge
       val borderH = height - edge - edge
-      val labelH = size.height
-      val labelW = (height - ins.top - ins.bottom).coerceAtMost(size.width)
-      val left = edge + ins.left / 2 - labelH / 2
+
+      // Center the title on the left border line, the same way as
+      // TitledBorder centers the title on the top border line
+      var labelX = x
+      val left = edge + borderInsets.left / 2 - labelH / 2
       if (left < edge) {
         borderX -= left
         borderW += left
+      } else {
+        labelX += left
       }
       border.paintBorder(c, g, borderX, borderY, borderW, borderH)
+
       val g2 = g.create() as? Graphics2D ?: return
-      g2.translate(0.0, (height + labelW) / 2.0)
+      // The (x, y) offset is not zero when nested in another border,
+      // e.g. a TitledBorder or a CompoundBorder
+      g2.translate(labelX.toDouble(), y + (height + labelW) / 2.0)
       g2.transform(AffineTransform.getQuadrantRotateInstance(-1))
       // or: g2.rotate(-PI / 2.0)
-      lbl.setSize(labelW, labelH)
-      lbl.paint(g2)
+      titleLabel.setSize(labelW, labelH)
+      titleLabel.paint(g2)
       g2.dispose()
     }
   }
@@ -84,56 +94,56 @@ private class VerticalTitledBorder(
     insets: Insets,
   ): Insets {
     val border = getBorder()
-    val ins = createComponentBorderInsets(border, c, insets)
+    val borderInsets = getInnerBorderInsets(border, c, insets)
     val title = getTitle()
     if (title?.isNotEmpty() == true) {
       val edge = if (border is TitledBorder) 0 else EDGE_SPACING
-      val lbl = getTitleLabel(c)
-      val size = lbl.preferredSize
-      if (ins.left < size.height) {
-        ins.left = size.height - edge
+      val size = getTitleLabel(c).preferredSize
+      if (borderInsets.left < size.height) {
+        borderInsets.left = size.height - edge
       }
-      ins.top += edge + TEXT_SPACING
-      ins.left += edge + TEXT_SPACING
-      ins.right += edge + TEXT_SPACING
-      ins.bottom += edge + TEXT_SPACING
+      borderInsets.top += edge + TEXT_SPACING
+      borderInsets.left += edge + TEXT_SPACING
+      borderInsets.right += edge + TEXT_SPACING
+      borderInsets.bottom += edge + TEXT_SPACING
     }
-    return ins
+    return borderInsets
   }
 
-  // Copied from TitledBorder
-  private fun getTitleColor(c: Component?): Color? {
-    val tc = getTitleColor()
-    val uic = UIManager.getColor("TitledBorder.titleColor")
-    return when {
-      tc != null -> tc
-      uic != null -> uic
-      else -> c?.foreground
-    }
-  }
+  // @see javax/swing/border/TitledBorder.java#getTitleColor(Component)
+  private fun getTitleColor(c: Component?): Color? =
+    getTitleColor()
+      ?: UIManager.getColor("TitledBorder.titleColor")
+      ?: c?.foreground
 
   private fun getTitleLabel(c: Component?): JLabel {
-    this.label.text = getTitle()
-    this.label.font = getFont(c)
-    this.label.foreground = getTitleColor(c)
+    label.text = getTitle()
+    label.font = getFont(c)
+    label.foreground = getTitleColor(c)
     if (c != null) {
-      this.label.componentOrientation = c.componentOrientation
-      this.label.isEnabled = c.isEnabled
-      this.label.background = c.background // ???
+      label.componentOrientation = c.componentOrientation
+      label.isEnabled = c.isEnabled
+      label.background = c.background
     }
-    return this.label
+    return label
   }
 }
 
-private fun createComponentBorderInsets(
+// @see javax/swing/border/TitledBorder.java#getBorderInsets(Border, Component, Insets)
+// Reinitialize and return the given insets, as AbstractBorder#getBorderInsets(...) does
+private fun getInnerBorderInsets(
   border: Border?,
   c: Component,
-  i: Insets,
+  insets: Insets,
 ): Insets {
-  var ins = Insets(i.top, i.left, i.bottom, i.right)
+  var ins = insets
   when (border) {
     null -> ins.set(0, 0, 0, 0)
-    is AbstractBorder -> ins = border.getBorderInsets(c, i)
+    is AbstractBorder -> ins = border.getBorderInsets(c, ins)
+    else -> {
+      val i = border.getBorderInsets(c)
+      ins.set(i.top, i.left, i.bottom, i.right)
+    }
   }
   return ins
 }
