@@ -74,15 +74,15 @@ private class GradientSeparator : JSeparator {
 }
 
 private class GradientSeparatorUI : BasicSeparatorUI() {
-  private var bgc: Color? = null
-  private var ssc: Color? = null
-  private var shc: Color? = null
+  private var background: Color? = null
+  private var shadow: Color? = null
+  private var highlight: Color? = null
 
   private fun updateColors(c: Component) {
-    val bc = c.background
-    bgc = UIManager.getColor("Panel.background") as? ColorUIResource ?: bc
-    ssc = UIManager.getColor("Separator.shadow") as? ColorUIResource ?: bc.brighter()
-    shc = UIManager.getColor("Separator.highlight") as? ColorUIResource ?: bc.darker()
+    val bgc = c.background
+    background = UIManager.getColor("Panel.background") as? ColorUIResource ?: bgc
+    shadow = UIManager.getColor("Separator.shadow") as? ColorUIResource ?: bgc.darker()
+    highlight = UIManager.getColor("Separator.highlight") as? ColorUIResource ?: bgc.brighter()
   }
 
   override fun installUI(c: JComponent) {
@@ -96,27 +96,35 @@ private class GradientSeparatorUI : BasicSeparatorUI() {
   ) {
     if (c is JSeparator) {
       val g2 = g.create() as? Graphics2D ?: return
-      val s = c.getSize()
-      if (c.orientation == SwingConstants.VERTICAL) {
-        g2.paint = GradientPaint(0f, 0f, ssc, 0f, s.height.toFloat(), bgc, true)
-        g2.fillRect(0, 0, 1, s.height)
-        g2.paint = GradientPaint(0f, 0f, shc, 0f, s.height.toFloat(), bgc, true)
-        g2.fillRect(1, 0, 1, s.height)
+      // Paint inside the border insets
+      val r = SwingUtilities.calculateInnerArea(c, null)
+      val x1 = r.x.toFloat()
+      val y1 = r.y.toFloat()
+      if (c.orientation == SwingConstants.HORIZONTAL) {
+        val x2 = (r.x + r.width).toFloat()
+        g2.paint = GradientPaint(x1, y1, shadow, x2, y1, background)
+        g2.fillRect(r.x, r.y, r.width, 1)
+        g2.paint = GradientPaint(x1, y1, highlight, x2, y1, background)
+        g2.fillRect(r.x, r.y + 1, r.width, 1)
       } else {
-        g2.paint = GradientPaint(0f, 0f, ssc, s.width.toFloat(), 0f, bgc, true)
-        g2.fillRect(0, 0, s.width, 1)
-        g2.paint = GradientPaint(0f, 0f, shc, s.width.toFloat(), 0f, bgc, true)
-        g2.fillRect(0, 1, s.width, 1)
+        val y2 = (r.y + r.height).toFloat()
+        g2.paint = GradientPaint(x1, y1, shadow, x1, y2, background)
+        g2.fillRect(r.x, r.y, 1, r.height)
+        g2.paint = GradientPaint(x1, y1, highlight, x1, y2, background)
+        g2.fillRect(r.x + 1, r.y, 1, r.height)
       }
       g2.dispose()
     }
   }
 
-  // companion object {
-  //   fun createUI(c: JComponent?): ComponentUI {
-  //     return GradientSeparatorUI()
-  //   }
-  // }
+  override fun getPreferredSize(c: JComponent): Dimension {
+    // BasicSeparatorUI ignores the border insets, so the line would be hidden by a Border
+    val d = super.getPreferredSize(c)
+    val i = c.insets
+    d.width += i.left + i.right
+    d.height += i.top + i.bottom
+    return d
+  }
 }
 
 fun main() {
