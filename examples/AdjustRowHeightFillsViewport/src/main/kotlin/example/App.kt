@@ -5,7 +5,6 @@ import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
-import kotlin.math.max
 
 private val columnNames = arrayOf("String", "Integer", "Boolean")
 private val data = arrayOf<Array<Any>>(
@@ -18,26 +17,34 @@ private val model = object : DefaultTableModel(data, columnNames) {
   override fun getColumnClass(column: Int) = getValueAt(0, column).javaClass
 }
 private val table = object : JTable(model) {
-  private fun adjustRowHeights(viewPort: JViewport) {
-    val height = viewPort.extentSize.height
-    val rowCount = model.rowCount
-    val baseRowHeight = height / rowCount
-    if (baseRowHeight > 0) {
-      var remainder = height % rowCount
-      for (i in 0..<rowCount) {
-        val adjustedHeight = baseRowHeight + (if (i < remainder) 1 else 0)
-        setRowHeight(i, max(1, adjustedHeight))
+  private var prevHeight = -1
+  private var prevRowCount = -1
+
+  private fun adjustRowHeights(height: Int) {
+    // Use the view row count, setRowHeight(int, int) takes a view index
+    val rowCount = this.rowCount
+    // setRowHeight(...) revalidates the table and calls doLayout() again,
+    // so skip the update if neither the height nor the row count has changed
+    if (rowCount > 0 && (height != prevHeight || rowCount != prevRowCount)) {
+      val baseRowHeight = height / rowCount
+      if (baseRowHeight > 0) {
+        val remainder = height % rowCount
+        // Distribute the remainder one pixel at a time to the first rows
+        for (i in 0..<rowCount) {
+          setRowHeight(i, baseRowHeight + if (i < remainder) 1 else 0)
+        }
       }
     }
+    prevHeight = height
+    prevRowCount = rowCount
   }
 
   override fun getScrollableTracksViewportHeight() = getParent() is JViewport
 
   override fun doLayout() {
     super.doLayout()
-    val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, this)
-    if (c is JViewport) {
-      adjustRowHeights(c)
+    (getParent() as? JViewport)?.also {
+      adjustRowHeights(it.extentSize.height)
     }
   }
 }
