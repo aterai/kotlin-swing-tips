@@ -7,7 +7,7 @@ import kotlin.math.abs
 fun createUI(): Component {
   val accordion = Box.createVerticalBox()
   accordion.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-  makeExpansionPanelList().forEach {
+  createExpansionPanelList().forEach {
     accordion.add(it)
     accordion.add(Box.createVerticalStrut(5))
   }
@@ -25,43 +25,41 @@ fun createUI(): Component {
   }
 }
 
-private fun makeExpansionPanelList() = listOf(
-  object : AbstractExpansionPanel("System Tasks") {
-    override fun makePanel(): JPanel {
-      val p = JPanel(GridLayout(0, 1))
-      listOf("1111", "222222")
-        .map { JCheckBox(it) }
-        .forEach { p.add(it) }
-      return p
-    }
-  },
-  object : AbstractExpansionPanel("Other Places") {
-    override fun makePanel(): JPanel {
-      val p = JPanel(GridLayout(0, 1))
-      listOf("Desktop", "My Network Places", "My Documents", "Shared Documents")
-        .map { JLabel(it) }
-        .forEach { p.add(it) }
-      return p
-    }
-  },
-  object : AbstractExpansionPanel("Details") {
-    override fun makePanel(): JPanel {
-      val p = JPanel(GridLayout(0, 1))
-      val bg = ButtonGroup()
-      listOf("aaa", "bbb", "ccc", "ddd")
-        .map { JRadioButton(it) }
-        .forEach {
-          it.setSelected(p.componentCount == 0)
-          p.add(it)
-          bg.add(it)
-        }
-      return p
-    }
-  },
+private fun createExpansionPanelList() = listOf(
+  ExpansionPanel("System Tasks", createSystemTasksPanel()),
+  ExpansionPanel("Other Places", createOtherPlacesPanel()),
+  ExpansionPanel("Details", createDetailsPanel()),
 )
 
-private abstract class AbstractExpansionPanel(
+private fun createSystemTasksPanel() = JPanel(GridLayout(0, 1)).also { p ->
+  listOf("1111", "222222")
+    .map { title -> JCheckBox(title) }
+    .forEach { check -> p.add(check) }
+}
+
+private fun createOtherPlacesPanel() = JPanel(GridLayout(0, 1)).also { p ->
+  listOf("Desktop", "My Network Places", "My Documents", "Shared Documents")
+    .map { title -> JLabel(title) }
+    .forEach { label -> p.add(label) }
+}
+
+private fun createDetailsPanel() = JPanel(GridLayout(0, 1)).also { p ->
+  val bg = ButtonGroup()
+  listOf("aaa", "bbb", "ccc", "ddd")
+    .map { title -> JRadioButton(title) }
+    .forEach { radio ->
+      radio.isSelected = p.componentCount == 0
+      p.add(radio)
+      bg.add(radio)
+    }
+}
+
+// The content is passed in instead of being created by an abstract factory
+// method called from the initializer, which would run before the
+// subclass properties are initialized.
+private class ExpansionPanel(
   title: String,
+  private val contentPanel: JComponent,
 ) : JPanel(BorderLayout()) {
   private val toggleButton = object : JToggleButton() {
     override fun updateUI() {
@@ -71,51 +69,47 @@ private abstract class AbstractExpansionPanel(
       setFocusable(false)
     }
   }
-  private val button = object : JButton() {
+  private val titleButton = object : JButton() {
     override fun updateUI() {
       super.updateUI()
       setLayout(BoxLayout(this, BoxLayout.X_AXIS))
       setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 0))
     }
   }
-  private val panel = makePanel()
 
   init {
     val arrowIcon = UIManager.getIcon("Menu.arrowIcon")
-    val animIcon = AnimatableIcon(arrowIcon, toggleButton)
-    toggleButton.setIcon(animIcon)
-    toggleButton.addActionListener { rotate(animIcon) }
-    button.add(JLabel(title))
-    button.add(Box.createHorizontalGlue())
-    button.add(toggleButton)
-    button.addActionListener {
-      toggleButton.setSelected(!toggleButton.isSelected)
-      EventQueue.invokeLater { rotate(animIcon) }
-    }
-    add(button, BorderLayout.NORTH)
-    panel.isVisible = false
-    panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10))
-    add(panel)
+    val animatedIcon = AnimatableIcon(arrowIcon, toggleButton)
+    toggleButton.setIcon(animatedIcon)
+    // An ItemListener is also notified by setSelected(), so it handles both buttons.
+    toggleButton.addItemListener { updateExpandedState(animatedIcon) }
+    titleButton.add(JLabel(title))
+    titleButton.add(Box.createHorizontalGlue())
+    titleButton.add(toggleButton)
+    titleButton.addActionListener { toggleButton.setSelected(!toggleButton.isSelected) }
+    add(titleButton, BorderLayout.NORTH)
+    contentPanel.isVisible = false
+    contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10))
+    add(contentPanel)
   }
 
-  private fun rotate(animeIcon: AnimatableIcon) {
-    if (toggleButton.isSelected) {
-      animeIcon.animateTo(90.0)
-      panel.isVisible = true
-    } else {
-      animeIcon.animateTo(0.0)
-      panel.isVisible = false
-    }
+  private fun updateExpandedState(animatedIcon: AnimatableIcon) {
+    val expanded = toggleButton.isSelected
+    animatedIcon.animateTo(if (expanded) 90.0 else 0.0)
+    contentPanel.isVisible = expanded
     revalidate()
-    EventQueue.invokeLater { panel.scrollRectToVisible(panel.bounds) }
+    if (expanded) {
+      // The rectangle is relative to contentPanel itself, so bounds cannot be used.
+      EventQueue.invokeLater {
+        contentPanel.scrollRectToVisible(Rectangle(contentPanel.size))
+      }
+    }
   }
-
-  abstract fun makePanel(): JPanel
 
   override fun getPreferredSize(): Dimension {
-    val d = button.getPreferredSize()
-    if (panel.isVisible) {
-      d.height += panel.getPreferredSize().height
+    val d = titleButton.getPreferredSize()
+    if (contentPanel.isVisible) {
+      d.height += contentPanel.getPreferredSize().height
     }
     return d
   }
@@ -129,52 +123,55 @@ private abstract class AbstractExpansionPanel(
 
 private class AnimatableIcon(
   private val icon: Icon,
-  private var parent: Component?,
+  private val parent: Component,
 ) : Icon {
-  private val timer = Timer(15, null)
+  private val timer = Timer(15) { updateAngle() }
+
+  // MetalIconFactory.MenuArrowIcon casts the component passed to paintIcon() to JMenuItem.
+  private val menuItem = JMenuItem()
   private var currentAngle = 0.0
   private var targetAngle = 0.0
 
-  init {
-    this.timer.addActionListener {
-      val step = .5
-      val diff = targetAngle - currentAngle
-      if (abs(diff) < step) {
-        currentAngle = targetAngle
-        timer.stop()
-      } else {
-        currentAngle += diff * step
-      }
-      this.parent?.repaint()
+  private fun updateAngle() {
+    val diff = targetAngle - currentAngle
+    if (abs(diff) < SNAP_THRESHOLD) {
+      currentAngle = targetAngle
+      timer.stop()
+    } else {
+      currentAngle += diff * EASING_RATE
     }
+    parent.repaint()
   }
 
   fun animateTo(angle: Double) {
-    this.targetAngle = angle
+    targetAngle = angle
     if (!timer.isRunning) {
       timer.start()
     }
   }
 
   override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
-    if (this.parent == null) {
-      this.parent = c
-    }
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
-    val cx = x + icon.iconWidth / 2
-    val cy = y + icon.iconHeight / 2
-    g2.rotate(Math.toRadians(currentAngle), cx.toDouble(), cy.toDouble())
-    icon.paintIcon(c, g2, x, y)
+    // Use floating point so that an icon with an odd size rotates around its true center.
+    val cx = x + icon.iconWidth / 2.0
+    val cy = y + icon.iconHeight / 2.0
+    g2.rotate(Math.toRadians(currentAngle), cx, cy)
+    icon.paintIcon(menuItem, g2, x, y)
     g2.dispose()
   }
 
   override fun getIconWidth() = icon.iconWidth
 
   override fun getIconHeight() = icon.iconHeight
+
+  private companion object {
+    const val EASING_RATE = .5
+    const val SNAP_THRESHOLD = .5
+  }
 }
 
 fun main() {
