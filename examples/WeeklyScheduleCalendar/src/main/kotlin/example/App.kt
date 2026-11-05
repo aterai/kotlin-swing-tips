@@ -6,24 +6,18 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.TextStyle
+import java.time.temporal.TemporalAdjusters
+import java.time.temporal.WeekFields
 import java.util.Locale
 import javax.swing.*
 import javax.swing.plaf.basic.BasicTabbedPaneUI
-import javax.swing.plaf.synth.Region
-import javax.swing.plaf.synth.SynthConstants
-import javax.swing.plaf.synth.SynthContext
-import javax.swing.plaf.synth.SynthLookAndFeel
 
 fun createUI(): Component {
   val tabs = DayScheduleTabbedPane()
-  val today = LocalDate.now(ZoneId.systemDefault())
-  updateCalendar(tabs, today, today.minusDays(3))
+  updateCalendar(tabs, true)
 
   val check = JCheckBox("Center Today", true)
-  check.addActionListener { e ->
-    val selected = (e.source as? JCheckBox)?.isSelected == true
-    handleCenterModeToggle(tabs, selected)
-  }
+  check.addActionListener { updateCalendar(tabs, check.isSelected) }
 
   return JPanel(BorderLayout()).also {
     it.add(tabs)
@@ -33,29 +27,30 @@ fun createUI(): Component {
   }
 }
 
-private fun handleCenterModeToggle(tabs: JTabbedPane, centering: Boolean) {
-  val today = LocalDate.now(ZoneId.systemDefault())
-  val start = if (centering) {
-    today.minusDays(3)
-  } else {
-    today.minusDays((today.getDayOfWeek().value - 1).toLong())
-  }
-  updateCalendar(tabs, today, start)
-}
-
-private fun updateCalendar(tabs: JTabbedPane, today: LocalDate, start: LocalDate) {
+private fun updateCalendar(tabs: JTabbedPane, centerToday: Boolean) {
   tabs.removeAll()
   val locale = Locale.getDefault()
-  var todayIdx = 0
-  for (i in DayOfWeek.entries.toTypedArray().indices) {
-    val date = start.plusDays(i.toLong())
+  val today = LocalDate.now(ZoneId.systemDefault())
+  val startDay = getStartDay(today, locale, centerToday)
+  var todayIndex = 0
+  for (i in DayOfWeek.entries.indices) {
+    val date = startDay.plusDays(i.toLong())
     tabs.addTab("", createTabContent(date))
     tabs.setTabComponentAt(i, createDayTab(date, today, locale))
     if (date == today) {
-      todayIdx = i
+      todayIndex = i
     }
   }
-  tabs.setSelectedIndex(todayIdx)
+  tabs.setSelectedIndex(todayIndex)
+}
+
+private fun getStartDay(today: LocalDate, locale: Locale, centerToday: Boolean): LocalDate {
+  val firstDay = WeekFields.of(locale).firstDayOfWeek
+  return if (centerToday) {
+    today.minusDays((DayOfWeek.entries.size / 2).toLong())
+  } else {
+    today.with(TemporalAdjusters.previousOrSame(firstDay))
+  }
 }
 
 private fun createTabContent(date: LocalDate): JPanel {
@@ -69,92 +64,36 @@ private fun createTabContent(date: LocalDate): JPanel {
 
 private fun createDayTab(date: LocalDate, today: LocalDate, locale: Locale): JPanel {
   val dayName = date.getDayOfWeek().getDisplayName(TextStyle.SHORT, locale)
-  val lblDay = JLabel(dayName, SwingConstants.CENTER)
-  lblDay.setFont(lblDay.getFont().deriveFont(11f))
-  lblDay.setForeground(ModernTabbedPaneUI.TEXT_PRIMARY)
+  val dayLabel = JLabel(dayName, SwingConstants.CENTER)
+  dayLabel.setFont(dayLabel.getFont().deriveFont(11f))
+  dayLabel.setForeground(ModernTabbedPaneUI.TEXT_PRIMARY)
 
   val dayOfMonth = date.dayOfMonth.toString()
-  val lblDate = JLabel(dayOfMonth, SwingConstants.CENTER)
-  lblDate.setFont(lblDate.getFont().deriveFont(Font.BOLD, 18f))
-  lblDate.setForeground(ModernTabbedPaneUI.TEXT_PRIMARY)
+  val dateLabel = JLabel(dayOfMonth, SwingConstants.CENTER)
+  dateLabel.setFont(dateLabel.getFont().deriveFont(Font.BOLD, 18f))
+  dateLabel.setForeground(ModernTabbedPaneUI.TEXT_PRIMARY)
 
   val panel = JPanel(BorderLayout(0, 2))
   panel.setOpaque(false)
   panel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
-  panel.add(lblDay, BorderLayout.NORTH)
-  panel.add(lblDate)
+  panel.add(dayLabel, BorderLayout.NORTH)
+  panel.add(dateLabel)
   panel.add(createIndicator(date, today), BorderLayout.SOUTH)
   return panel
 }
 
-private fun createIndicator(date: LocalDate, today: LocalDate?): JLabel {
-  val iw = 20
-  val ih = 4
-  val ir = 2
-  val lblIndicator = JLabel("", SwingConstants.CENTER)
-  if (date == today) {
-    val indicatorColor = ModernTabbedPaneUI.ACCENT_TODAY
-    val activeIcon = IndicatorIcon(indicatorColor, iw, ih, ir)
-    lblIndicator.setIcon(activeIcon)
-  } else {
-    val inactiveColor = Color(0x0, true)
-    val inactiveIcon = IndicatorIcon(inactiveColor, iw, ih, ir)
-    lblIndicator.setIcon(inactiveIcon)
-  }
-  return lblIndicator
+private fun createIndicator(date: LocalDate, today: LocalDate): JLabel {
+  // The transparent icon keeps the layout of the other tabs the same as today's tab
+  val color = if (date == today) ModernTabbedPaneUI.ACCENT_TODAY else Color(0x0, true)
+  return JLabel(IndicatorIcon(color, 20, 4, 2), SwingConstants.CENTER)
 }
 
 private class DayScheduleTabbedPane : JTabbedPane() {
   override fun updateUI() {
     super.updateUI()
-    UIManager.put("TabbedPane.selectedLabelShift", 0)
-    UIManager.put("TabbedPane.labelShift", 0)
+    // Synth-based LookAndFeels (e.g. Nimbus) turn this off, which skips paintTabBackground(...)
+    UIManager.put("TabbedPane.tabsOpaque", true)
     setUI(ModernTabbedPaneUI())
-  }
-
-  private fun getSynthInsets(region: Region): Insets {
-    val style = SynthLookAndFeel.getStyle(this, region)
-    val ctx = SynthContext(this, region, style, SynthConstants.ENABLED)
-    return style.getInsets(ctx, null)
-  }
-
-  private fun getTabInsets() =
-    UIManager.getInsets("TabbedPane.tabInsets")
-      ?: getSynthInsets(Region.TABBED_PANE_TAB)
-
-  private fun getTabAreaInsets() =
-    UIManager.getInsets("TabbedPane.tabAreaInsets")
-      ?: getSynthInsets(Region.TABBED_PANE_TAB_AREA)
-
-  override fun doLayout() {
-    val tabCount = getTabCount()
-    if (tabCount > 0 && isVisible) {
-      val tabIns = getTabInsets()
-      val areaIns = getTabAreaInsets()
-      val i = getInsets()
-      val tabPlacement = getTabPlacement()
-      val areaWidth = getWidth() - areaIns.left - areaIns.right - i.left - i.right
-      val isTopBottom = tabPlacement == TOP || tabPlacement == BOTTOM
-      var tabWidth = if (isTopBottom) areaWidth / tabCount else areaWidth / 4
-      val gap = if (isTopBottom) areaWidth - tabWidth * tabCount else 0
-      tabWidth -= tabIns.left + tabIns.right + 3
-      updateAllTabWidths(tabWidth, gap)
-    }
-    super.doLayout()
-  }
-
-  private fun updateAllTabWidths(
-    tabWidth: Int,
-    gap: Int,
-  ) {
-    for (i in 0..<tabCount) {
-      val tab = getTabComponentAt(i)
-      if (tab is JComponent) {
-        val d = tab.getPreferredSize()
-        d.width = if (i < gap) tabWidth + 1 else tabWidth
-        tab.preferredSize = d
-      }
-    }
   }
 }
 
@@ -162,7 +101,7 @@ private class IndicatorIcon(
   private val color: Color,
   private val width: Int,
   private val height: Int,
-  private val arcRadius: Int,
+  private val radius: Int,
 ) : Icon {
   override fun paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
@@ -171,13 +110,8 @@ private class IndicatorIcon(
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
     g2.color = color
-    if (c is JComponent) {
-      val r = SwingUtilities.calculateInnerArea(c, null)
-      val ox = r.centerX.toInt() - arcRadius
-      val oy = r.centerY.toInt() - arcRadius
-      val arcDiameter = arcRadius * 2
-      g2.fillOval(ox, oy, arcDiameter, arcDiameter)
-    }
+    val diameter = radius * 2
+    g2.fillOval(x + width / 2 - radius, y + height / 2 - radius, diameter, diameter)
     g2.dispose()
   }
 
@@ -187,6 +121,42 @@ private class IndicatorIcon(
 }
 
 private class ModernTabbedPaneUI : BasicTabbedPaneUI() {
+  override fun calculateTabWidth(
+    tabPlacement: Int,
+    tabIndex: Int,
+    metrics: FontMetrics,
+  ): Int {
+    val isTopBottom = tabPlacement == TOP || tabPlacement == BOTTOM
+    return if (isTopBottom && tabPane.width > 0) {
+      calculateEvenTabWidth(tabPlacement, tabIndex)
+    } else {
+      super.calculateTabWidth(tabPlacement, tabIndex, metrics)
+    }
+  }
+
+  private fun calculateEvenTabWidth(tabPlacement: Int, tabIndex: Int): Int {
+    val insets = tabPane.insets
+    val areaInsets = getTabAreaInsets(tabPlacement)
+    val horizontalInsets = insets.left + insets.right + areaInsets.left + areaInsets.right
+    val areaWidth = tabPane.width - horizontalInsets
+    val tabCount = tabPane.tabCount
+    // Integer pixel distribution: the leading tabs take one pixel each of the remainder
+    val extraPixel = if (tabIndex < areaWidth % tabCount) 1 else 0
+    return areaWidth / tabCount + extraPixel
+  }
+
+  override fun getTabLabelShiftX(
+    tabPlacement: Int,
+    tabIndex: Int,
+    isSelected: Boolean,
+  ) = 0
+
+  override fun getTabLabelShiftY(
+    tabPlacement: Int,
+    tabIndex: Int,
+    isSelected: Boolean,
+  ) = 0
+
   override fun paintTabBackground(
     g: Graphics,
     tabPlacement: Int,
@@ -202,7 +172,7 @@ private class ModernTabbedPaneUI : BasicTabbedPaneUI() {
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
-    g2.color = if (isSelected) BG_TAB_SEL else BG_TAB_IDLE
+    g2.color = if (isSelected) BG_TAB_SELECTED else BG_TAB_IDLE
     val arc = 12f
     g2.fill(RoundRectangle2D.Float(x + 2f, y + 2f, w - 4f, h - 2f, arc, arc))
     if (isSelected) {
@@ -249,7 +219,7 @@ private class ModernTabbedPaneUI : BasicTabbedPaneUI() {
   companion object {
     val BG_DARK = Color(0x0F_0F_13)
     val BG_TAB_IDLE = Color(0x22_22_2E)
-    val BG_TAB_SEL = Color(0x2A_2A_3C)
+    val BG_TAB_SELECTED = Color(0x2A_2A_3C)
     val ACCENT = Color(0x7C_6A_FF)
     val ACCENT_TODAY = Color(0xFF_6B_6B)
     val TEXT_PRIMARY = Color(0xF0_F0_F8)
