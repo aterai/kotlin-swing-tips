@@ -39,10 +39,19 @@ fun createUI(): Component {
   horizontalSplit.leftComponent = box
   horizontalSplit.rightComponent = scrollBox
 
-  return JPanel(BorderLayout()).also {
+  val mb = JMenuBar()
+  mb.add(LookAndFeelUtils.createLookAndFeelMenu())
+
+  return object : JPanel(BorderLayout()) {
+    override fun updateUI() {
+      super.updateUI()
+      // Re-read the color on every LookAndFeel change instead of a fixed Color.WHITE
+      background = UIManager.getColor("Table.background")
+    }
+  }.also {
+    EventQueue.invokeLater { it.rootPane.jMenuBar = mb }
     it.add(scroll)
     it.add(horizontalSplit, BorderLayout.SOUTH)
-    it.background = Color.WHITE
     it.border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
     it.preferredSize = Dimension(320, 240)
   }
@@ -62,27 +71,84 @@ private fun createRadioButton(
 }
 
 private fun createScrollSplitPane(): JSplitPane {
-  val split = JSplitPane(JSplitPane.HORIZONTAL_SPLIT)
-  split.background = Color.WHITE
+  val split = object : JSplitPane(HORIZONTAL_SPLIT) {
+    override fun updateUI() {
+      super.updateUI()
+      // The new SplitPaneUI creates a new divider,
+      // so the customization must be applied again after every LookAndFeel change
+      customizeDivider(this)
+    }
+  }
   split.isContinuousLayout = true
   split.border = BorderFactory.createEmptyBorder()
   EventQueue.invokeLater { split.setDividerLocation(.4) }
+  return split
+}
 
+private fun customizeDivider(split: JSplitPane) {
+  val bgc = UIManager.getColor("Table.background")
+  split.background = bgc
   val tripleColon = JLabel("⫶")
-  tripleColon.foreground = Color.GRAY
+  tripleColon.foreground = UIManager.getColor("Label.disabledForeground") ?: Color.GRAY
   tripleColon.border = BorderFactory.createEmptyBorder(3, 2, 0, 4)
-
   (split.ui as? BasicSplitPaneUI)?.divider?.also {
     it.layout = BorderLayout()
     it.border = BorderFactory.createEmptyBorder()
-    it.background = Color.WHITE
+    it.background = bgc
     it.add(tripleColon)
   }
   // Set the size via JSplitPane instead of BasicSplitPaneDivider#setDividerSize(...),
   // JSplitPane#getDividerSize() is used by setDividerLocation(double)
   // and it is propagated to the divider by BasicSplitPaneUI
   split.dividerSize = tripleColon.preferredSize.width
-  return split
+}
+
+private object LookAndFeelUtils {
+  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
+
+  fun createLookAndFeelMenu(): JMenu {
+    val menu = JMenu("LookAndFeel")
+    val buttonGroup = ButtonGroup()
+    for (info in UIManager.getInstalledLookAndFeels()) {
+      val b = JRadioButtonMenuItem(info.name, info.className == lookAndFeel)
+      initLookAndFeelAction(info, b)
+      menu.add(b)
+      buttonGroup.add(b)
+    }
+    return menu
+  }
+
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
+  ) {
+    val cmd = info.className
+    b.text = info.name
+    b.actionCommand = cmd
+    b.hideActionText = true
+    b.addActionListener { setLookAndFeel(cmd) }
+  }
+
+  @Throws(
+    ClassNotFoundException::class,
+    InstantiationException::class,
+    IllegalAccessException::class,
+    UnsupportedLookAndFeelException::class,
+  )
+  private fun setLookAndFeel(newLookAndFeel: String) {
+    val oldLookAndFeel = lookAndFeel
+    if (oldLookAndFeel != newLookAndFeel) {
+      UIManager.setLookAndFeel(newLookAndFeel)
+      lookAndFeel = newLookAndFeel
+      updateLookAndFeel()
+    }
+  }
+
+  private fun updateLookAndFeel() {
+    for (window in Window.getWindows()) {
+      SwingUtilities.updateComponentTreeUI(window)
+    }
+  }
 }
 
 fun main() {
