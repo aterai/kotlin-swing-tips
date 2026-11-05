@@ -9,36 +9,28 @@ fun createUI(): Component {
   val filesOfType = AlignedLabel("Files of Type:")
   val host = AlignedLabel("Host:")
   val port = AlignedLabel("Port:")
-  val user = AlignedLabel("User Name:")
+  val userName = AlignedLabel("User Name:")
   val password = AlignedLabel("Password:")
-  AlignedLabel.groupLabels(fileName, filesOfType, host, port, user, password)
+  AlignedLabel.groupLabels(fileName, filesOfType, host, port, userName, password)
 
-  val innerBorder = BorderFactory.createEmptyBorder(5, 2, 5, 5)
+  val fileChooserBox = createTitledBox("FileChooser")
+  fileChooserBox.add(createLabeledBox(fileName, JTextField()))
+  fileChooserBox.add(Box.createVerticalStrut(5))
+  fileChooserBox.add(createLabeledBox(filesOfType, JComboBox<String>()))
 
-  val box1 = Box.createVerticalBox()
-  val border1 = BorderFactory.createTitledBorder("FileChooser")
-  border1.titlePosition = TitledBorder.ABOVE_TOP
-  box1.border = BorderFactory.createCompoundBorder(border1, innerBorder)
-  box1.add(makeLabeledBox(fileName, JTextField()))
-  box1.add(Box.createVerticalStrut(5))
-  box1.add(makeLabeledBox(filesOfType, JComboBox<String>()))
-
-  val box2 = Box.createVerticalBox()
-  val border2 = BorderFactory.createTitledBorder("HTTP Proxy")
-  border2.titlePosition = TitledBorder.ABOVE_TOP
-  box2.border = BorderFactory.createCompoundBorder(border2, innerBorder)
-  box2.add(makeLabeledBox(host, JTextField()))
-  box2.add(Box.createVerticalStrut(5))
-  box2.add(makeLabeledBox(port, JTextField()))
-  box2.add(Box.createVerticalStrut(5))
-  box2.add(makeLabeledBox(user, JTextField()))
-  box2.add(Box.createVerticalStrut(5))
-  box2.add(makeLabeledBox(password, JPasswordField()))
+  val proxyBox = createTitledBox("HTTP Proxy")
+  proxyBox.add(createLabeledBox(host, JTextField()))
+  proxyBox.add(Box.createVerticalStrut(5))
+  proxyBox.add(createLabeledBox(port, JTextField()))
+  proxyBox.add(Box.createVerticalStrut(5))
+  proxyBox.add(createLabeledBox(userName, JTextField()))
+  proxyBox.add(Box.createVerticalStrut(5))
+  proxyBox.add(createLabeledBox(password, JPasswordField()))
 
   val box = Box.createVerticalBox()
-  box.add(box1)
+  box.add(fileChooserBox)
   box.add(Box.createVerticalStrut(10))
-  box.add(box2)
+  box.add(proxyBox)
 
   return JPanel(BorderLayout()).also {
     it.add(box, BorderLayout.NORTH)
@@ -47,58 +39,57 @@ fun createUI(): Component {
   }
 }
 
-private fun makeLabeledBox(
+private fun createTitledBox(title: String): Box {
+  val titledBorder = BorderFactory.createTitledBorder(title)
+  titledBorder.titlePosition = TitledBorder.ABOVE_TOP
+  val innerBorder = BorderFactory.createEmptyBorder(5, 2, 5, 5)
+  val box = Box.createVerticalBox()
+  box.border = BorderFactory.createCompoundBorder(titledBorder, innerBorder)
+  return box
+}
+
+private fun createLabeledBox(
   label: Component,
-  c: Component,
+  field: Component,
 ): Component {
   val box = Box.createHorizontalBox()
   box.add(label)
   box.add(Box.createHorizontalStrut(5))
-  box.add(c)
+  box.add(field)
   return box
 }
 
 // @see javax/swing/plaf/metal/MetalFileChooserUI.java
 private class AlignedLabel(
   text: String,
-) : JLabel(text) {
-  private var group = mutableListOf<AlignedLabel>()
-  private var maxWidth = 0
+) : JLabel(text, SwingConstants.RIGHT) {
+  // An ungrouped label is aligned only with itself.
+  private var group: List<AlignedLabel> = listOf(this)
 
-  init {
-    horizontalAlignment = RIGHT
-  }
-
-  override fun getPreferredSize(): Dimension? {
+  override fun getPreferredSize(): Dimension {
     val d = super.getPreferredSize()
     // Align the width with all other labels in group.
-    d?.width = getMaxWidth() + INDENT
+    d.width = getMaxWidth() + INDENT
     return d
   }
 
-  private fun getSuperPreferredWidth() = super.getPreferredSize().width
+  // BasicLabelUI calculates the minimum and maximum sizes without calling
+  // the overridden getPreferredSize(), so BoxLayout would resize the labels unevenly.
+  override fun getMinimumSize(): Dimension = preferredSize
 
-  private fun getMaxWidth(): Int {
-    // if (maxWidth == 0) {
-    //   // val max = group.stream().map { it.getSuperPreferredWidth() }.reduce(0, Integer::max)
-    //   // val max = group.map { it.getSuperPreferredWidth() }.fold(0) { a, b -> maxOf(a, b) }
-    //   // val max = group.map { it.getSuperPreferredWidth() }.fold(0, ::maxOf)
-    //   val max = group.map { it.getSuperPreferredWidth() }.maxOrNull() ?: 0
-    //   group.forEach { al -> al.maxWidth = max }
-    // }
-    if (maxWidth == 0 && group.isNotEmpty()) {
-      val max = group.maxOf(AlignedLabel::getSuperPreferredWidth)
-      group.forEach { al -> al.maxWidth = max }
-    }
-    return maxWidth
-  }
+  override fun getMaximumSize(): Dimension = preferredSize
+
+  // The width is not cached so that changes of the text or font are reflected.
+  private fun getMaxWidth() = group.maxOfOrNull(AlignedLabel::getSuperPreferredWidth) ?: 0
+
+  private fun getSuperPreferredWidth() = super.getPreferredSize().width
 
   companion object {
     private const val INDENT = 10
 
-    fun groupLabels(vararg list: AlignedLabel) {
-      val gp = list.toMutableList()
-      gp.forEach { label -> label.group = gp }
+    fun groupLabels(vararg labels: AlignedLabel) {
+      val group = labels.toList()
+      group.forEach { it.group = group }
     }
   }
 }
