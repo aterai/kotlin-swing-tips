@@ -39,8 +39,12 @@ fun createUI(): Component {
 
 private fun initLayeredPane() {
   val layeredPane = mainConstants.rootPane.getLayeredPane()
-  layeredPane.add(overlay, JLayeredPane.PALETTE_LAYER)
-  layeredPane.add(drawer, JLayeredPane.MODAL_LAYER)
+  // Kotlin resolves add(Component, Integer) to add(Component, int index),
+  // so the layer must be set explicitly
+  layeredPane.setLayer(overlay, JLayeredPane.PALETTE_LAYER)
+  layeredPane.add(overlay)
+  layeredPane.setLayer(drawer, JLayeredPane.MODAL_LAYER)
+  layeredPane.add(drawer)
   layeredPane.addComponentListener(object : ComponentAdapter() {
     override fun componentResized(e: ComponentEvent?) {
       updateLayoutSizes()
