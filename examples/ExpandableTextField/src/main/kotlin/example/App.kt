@@ -10,7 +10,7 @@ import javax.swing.event.PopupMenuListener
 import kotlin.math.max
 
 fun createUI(): Component {
-  val list = listOf(
+  val options = listOf(
     "-Duser.country=JP",
     "-Duser.language=ja",
     "-Dfile.encoding=UTF-8",
@@ -19,7 +19,7 @@ fun createUI(): Component {
     "--add-opens=java.desktop/sun.awt.shell=ALL-UNNAMED",
   )
   val expandableField = ExpandableTextField()
-  expandableField.setText(list.joinToString(" "))
+  expandableField.setText(options.joinToString(" "))
   val p = JPanel(FlowLayout(FlowLayout.CENTER, 5, 20))
   p.add(JLabel("VM Options:"))
   p.add(expandableField)
@@ -41,12 +41,26 @@ private open class OverlayLayoutPanel : JPanel() {
 private class ExpandableTextField : OverlayLayoutPanel() {
   private val textField = JTextField(20)
   private val textArea = JTextArea()
-  private val popup = object : JPopupMenu() {
+  private val popup = ExpandPopupMenu()
+
+  init {
+    val icon = ExpandArrowIcon()
+    val expandButton = createExpandButton(icon)
+    expandButton.addActionListener { popup.show(textField, 0, 0) }
+    add(expandButton)
+    textField.setMargin(Insets(0, 0, 0, icon.getIconWidth()))
+    textField.setAlignmentX(RIGHT_ALIGNMENT)
+    textField.setAlignmentY(CENTER_ALIGNMENT)
+    add(textField)
+  }
+
+  private inner class ExpandPopupMenu : JPopupMenu() {
     private var listener: PopupMenuListener? = null
 
     override fun updateUI() {
       removePopupMenuListener(listener)
       super.updateUI()
+      removeAll() // Avoid leaving the previous components when the UI is updated again
       val footer = JPanel(FlowLayout(FlowLayout.RIGHT, 0, 0))
       footer.add(createResizeLabel(this))
       setLayout(BorderLayout())
@@ -55,23 +69,18 @@ private class ExpandableTextField : OverlayLayoutPanel() {
       listener = ExpandPopupMenuListener()
       addPopupMenuListener(listener)
     }
-  }
 
-  init {
-    val icon = ExpandArrowIcon()
-    val expandBtn = createExpandButton(icon)
-    expandBtn.addActionListener { popup.show(textField, 0, 0) }
-    add(expandBtn)
-    textField.setMargin(Insets(0, 0, 0, icon.getIconWidth()))
-    textField.setAlignmentX(RIGHT_ALIGNMENT)
-    textField.setAlignmentY(CENTER_ALIGNMENT)
-    add(textField)
+    // Keep the popup at least as wide as the text field, even for short text
+    override fun getPreferredSize() = super.getPreferredSize().also {
+      it.width = max(it.width, textField.width)
+    }
   }
 
   private inner class ExpandPopupMenuListener : PopupMenuListener {
     override fun popupMenuWillBecomeVisible(e: PopupMenuEvent) {
       textArea.text = textField.getText().replace(" ", "\n") + "\n"
-      textArea.requestFocusInWindow()
+      // The popup is not showing yet, so request the focus after it is displayed
+      EventQueue.invokeLater { textArea.requestFocusInWindow() }
     }
 
     override fun popupMenuWillBecomeInvisible(e: PopupMenuEvent) {
@@ -79,7 +88,7 @@ private class ExpandableTextField : OverlayLayoutPanel() {
     }
 
     override fun popupMenuCanceled(e: PopupMenuEvent) {
-      // not need
+      // not needed
     }
   }
 
@@ -91,50 +100,55 @@ private class ExpandableTextField : OverlayLayoutPanel() {
     private fun createResizeLabel(popup: JPopupMenu): JLabel {
       val resizeLabel = JLabel("◢")
       resizeLabel.setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR))
-      val resizer = Resizer(popup)
+      val resizer = PopupMenuResizeHandler(popup)
       resizeLabel.addMouseListener(resizer)
       resizeLabel.addMouseMotionListener(resizer)
       return resizeLabel
     }
 
     private fun createExpandButton(icon: ExpandArrowIcon?): JButton {
-      val expandBtn = JButton(icon)
-      expandBtn.setMargin(Insets(0, 0, 0, 0))
-      expandBtn.setContentAreaFilled(false)
-      expandBtn.setFocusable(false)
-      expandBtn.setBorderPainted(false)
-      expandBtn.setAlignmentX(RIGHT_ALIGNMENT)
-      expandBtn.setAlignmentY(CENTER_ALIGNMENT)
-      return expandBtn
+      val expandButton = JButton(icon)
+      expandButton.setMargin(Insets(0, 0, 0, 0))
+      expandButton.setContentAreaFilled(false)
+      expandButton.setFocusable(false)
+      expandButton.setBorderPainted(false)
+      expandButton.setAlignmentX(RIGHT_ALIGNMENT)
+      expandButton.setAlignmentY(CENTER_ALIGNMENT)
+      return expandButton
     }
   }
 }
 
-private class Resizer(
+private class PopupMenuResizeHandler(
   private val popup: JPopupMenu,
 ) : MouseAdapter() {
-  private val startPt = Point()
-  private val startSize = Dimension()
+  private val dragStartPoint = Point()
+  private val dragStartSize = Dimension()
 
   override fun mousePressed(e: MouseEvent) {
-    startPt.location = e.locationOnScreen
-    startSize.size = popup.size
+    dragStartPoint.location = e.locationOnScreen
+    dragStartSize.size = popup.size
   }
 
   override fun mouseDragged(e: MouseEvent) {
-    val dx = e.locationOnScreen.x - startPt.x
-    val dy = e.locationOnScreen.y - startPt.y
+    val pt = e.locationOnScreen
     val minWidth = popup.getInvoker().getWidth()
-    val width = max(minWidth, startSize.width + dx)
-    val height = max(100, startSize.height + dy)
-    val newSize = Dimension(width, height)
-    popup.preferredSize = newSize
-    val w = SwingUtilities.getWindowAncestor(popup)
-    if (w != null && w.type == Window.Type.POPUP) {
-      w.setSize(newSize.width, newSize.height)
+    val width = max(minWidth, dragStartSize.width + pt.x - dragStartPoint.x)
+    val height = max(MIN_HEIGHT, dragStartSize.height + pt.y - dragStartPoint.y)
+    val size = Dimension(width, height)
+    popup.preferredSize = size
+    val window = SwingUtilities.getWindowAncestor(popup)
+    if (window != null && window.type == Window.Type.POPUP) {
+      // Popup$HeavyWeightWindow
+      window.size = size
     } else {
+      // Popup$LightWeightWindow
       popup.pack()
     }
+  }
+
+  companion object {
+    private const val MIN_HEIGHT = 100
   }
 }
 
