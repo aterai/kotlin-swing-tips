@@ -1,12 +1,8 @@
 package example
 
 import java.awt.*
-import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
-import java.awt.event.MouseAdapter
-import java.awt.event.MouseEvent
 import java.awt.event.MouseWheelEvent
 import java.awt.event.MouseWheelListener
 import java.awt.geom.Path2D
@@ -16,6 +12,8 @@ import kotlin.math.min
 
 private const val TOTAL_IMAGES = 5
 private val images = createDemoImages()
+private val dots = mutableListOf<JToggleButton>()
+private val mainPanel = JPanel(BorderLayout())
 private val animationPanel = AnimationPanel(images[0])
 private val dotPanel = JPanel(FlowLayout(FlowLayout.CENTER, 16, 16))
 private var currentIndex = 0
@@ -36,10 +34,14 @@ fun createUI(): Component {
 
   val layeredPane = JLayeredPane()
   layeredPane.setLayout(OverlayLayout(layeredPane))
-  layeredPane.add(overlay, JLayeredPane.PALETTE_LAYER)
-  layeredPane.add(animationPanel, JLayeredPane.DEFAULT_LAYER)
+  // Kotlin resolves add(Component, Integer) to add(Component, int index),
+  // so the layer must be set explicitly
+  layeredPane.setLayer(animationPanel, JLayeredPane.DEFAULT_LAYER)
+  layeredPane.add(animationPanel)
+  layeredPane.setLayer(overlay, JLayeredPane.PALETTE_LAYER)
+  layeredPane.add(overlay)
 
-  return JPanel(BorderLayout()).also {
+  return mainPanel.also {
     val handler = NavigateHandler()
     it.addKeyListener(handler)
     it.addMouseWheelListener(handler)
@@ -57,14 +59,13 @@ fun createDemoImages(): List<ImageIcon> {
   return list
 }
 
-private fun createArrowButton(moveRight: Boolean): JButton {
-  val button = HoverArrowButton(moveRight)
+private fun createArrowButton(left: Boolean): JButton {
+  val button = HoverArrowButton(left)
   button.addActionListener {
-    val totalImages = images.size
-    if (moveRight) {
-      navigateTo((currentIndex - 1 + totalImages) % totalImages, false)
+    if (left) {
+      navigatePrevious()
     } else {
-      navigateTo((currentIndex + 1) % totalImages, true)
+      navigateNext()
     }
   }
   return button
@@ -76,6 +77,7 @@ private fun setupDots() {
   for (i in 0..<totalImages) {
     val dot = createDotButton(i)
     group.add(dot)
+    dots.add(dot)
     dotPanel.add(dot)
   }
 }
@@ -87,45 +89,49 @@ private fun createDotButton(index: Int): JToggleButton {
   dot.setFocusPainted(false)
   dot.setBorder(BorderFactory.createEmptyBorder())
   dot.setCursor(Cursor(Cursor.HAND_CURSOR))
-  dot.addActionListener {
-    if (index != currentIndex) {
-      navigateTo(index, index > currentIndex)
-    }
-  }
+  dot.addActionListener { navigateTo(index, index > currentIndex) }
   return dot
 }
 
-private fun navigateTo(index: Int, moveRight: Boolean) {
-  val c = dotPanel.getComponent(index)
-  if (c is JToggleButton && !animationPanel.isAnimating) {
-    c.setSelected(true)
-    val nextImage = images[index]
+private fun navigatePrevious() {
+  val totalImages = images.size
+  navigateTo((currentIndex - 1 + totalImages) % totalImages, false)
+}
+
+private fun navigateNext() {
+  navigateTo((currentIndex + 1) % images.size, true)
+}
+
+private fun navigateTo(index: Int, forward: Boolean) {
+  mainPanel.requestFocusInWindow()
+  if (index != currentIndex && !animationPanel.isAnimating) {
     currentIndex = index
-    animationPanel.startAnimation(nextImage, moveRight)
-    animationPanel.requestFocusInWindow()
+    animationPanel.startAnimation(images[index], forward)
   }
+  // A clicked dot is already selected by the ButtonGroup, so the selection
+  // must be restored when the navigation is ignored during the animation
+  dots[currentIndex].setSelected(true)
 }
 
 class NavigateHandler :
   KeyAdapter(),
   MouseWheelListener {
   override fun keyPressed(e: KeyEvent) {
-    val totalImages = images.size
     val keyCode = e.getKeyCode()
     if (keyCode == KeyEvent.VK_LEFT) {
-      navigateTo((currentIndex - 1 + totalImages) % totalImages, false)
+      navigatePrevious()
     } else if (keyCode == KeyEvent.VK_RIGHT) {
-      navigateTo((currentIndex + 1) % totalImages, true)
+      navigateNext()
     }
   }
 
   override fun mouseWheelMoved(e: MouseWheelEvent) {
-    val totalImages = images.size
+    // A high-resolution wheel may report a rotation of 0
     val rotation = e.getWheelRotation()
     if (rotation < 0) {
-      navigateTo((currentIndex - 1 + totalImages) % totalImages, false)
-    } else {
-      navigateTo((currentIndex + 1) % totalImages, true)
+      navigatePrevious()
+    } else if (rotation > 0) {
+      navigateNext()
     }
   }
 }
@@ -157,70 +163,50 @@ private fun createDemoImageIcon(index: Int): ImageIcon {
 private class AnimationPanel(
   initialImage: ImageIcon,
 ) : JPanel() {
-  private val timer: Timer
-  private var currentImage: Image?
-  private var nextImage: Image? = null
+  private val timer = Timer(1000 / FRAME_RATE) { updateAnimation() }
+  private var currentImage: Image = initialImage.getImage()
+  private var nextImage: Image = currentImage
   private var animationProgress = 0.0 // 0.0 to 1.0
-  private var moveRight = true
+  private var slideForward = true
+  private var startTime = 0L
   val isAnimating: Boolean
     get() = timer.isRunning
 
   init {
-    this.currentImage = initialImage.getImage()
-    val delay = 1000 / FRAME_RATE
-    timer = Timer(
-      delay,
-      object : ActionListener {
-        private var startTime = 0L
-
-        override fun actionPerformed(e: ActionEvent?) {
-          val b0 = animationProgress == 0.0
-          if (b0) {
-            startTime = System.currentTimeMillis()
-            animationProgress = .001 // Start
-          } else {
-            val elapsed = System.currentTimeMillis() - startTime
-            animationProgress = elapsed.toDouble() / DURATION
-            val b1 = animationProgress >= 1.0
-            if (b1) {
-              animationProgress = 1.0
-              completeAnimation()
-            }
-          }
-          repaint()
-        }
-      },
-    )
     timer.setInitialDelay(0)
   }
 
-  fun startAnimation(nextImageIcon: ImageIcon, isMoveRight: Boolean) {
+  fun startAnimation(nextImageIcon: ImageIcon, forward: Boolean) {
     this.nextImage = nextImageIcon.getImage()
-    this.moveRight = isMoveRight
+    this.slideForward = forward
     this.animationProgress = 0.0
+    this.startTime = System.currentTimeMillis()
     timer.start()
+  }
+
+  private fun updateAnimation() {
+    val elapsed = System.currentTimeMillis() - startTime
+    animationProgress = elapsed.toDouble() / DURATION
+    if (elapsed >= DURATION) {
+      completeAnimation()
+    }
+    repaint()
   }
 
   private fun completeAnimation() {
     timer.stop()
     currentImage = nextImage // Swap images
-    animationProgress = 0.0
   }
-
-  private fun easeOut(t: Double) = t * (2.0 - t)
 
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
-    if (currentImage == null) {
-      return
-    }
     val g2 = g.create() as? Graphics2D ?: return
     val width = getWidth()
     val height = getHeight()
-    if (isAnimating && nextImage != null) {
+    if (isAnimating) {
       val easedProgress = easeOut(animationProgress)
       val offsetX = (width * easedProgress).toInt()
-      if (moveRight) {
+      if (slideForward) {
         // Slide to left (new image comes from right)
         g2.drawImage(currentImage, -offsetX, 0, width, height, this)
         g2.drawImage(nextImage, width - offsetX, 0, width, height, this)
@@ -239,6 +225,8 @@ private class AnimationPanel(
   companion object {
     private const val DURATION = 250 // ms
     private const val FRAME_RATE = 60
+
+    private fun easeOut(t: Double) = t * (2.0 - t)
   }
 }
 
@@ -250,7 +238,7 @@ private class DotIcon : Icon {
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
     val b = (c as? AbstractButton)?.model?.isSelected == true
-    g2.color = if (b) SEL_COLOR else DEF_COLOR
+    g2.color = if (b) SELECTED_COLOR else DEFAULT_COLOR
     val gap = if (b) 0 else 2
     g2.fillOval(x + gap, y + gap, iconWidth - gap * 2, iconHeight - gap * 2)
     g2.dispose()
@@ -261,37 +249,22 @@ private class DotIcon : Icon {
   override fun getIconHeight() = 18
 
   companion object {
-    private val SEL_COLOR = Color.WHITE
-    private val DEF_COLOR = Color(0x64_FF_FF_FF, true)
+    private val SELECTED_COLOR = Color.WHITE
+    private val DEFAULT_COLOR = Color(0x64_FF_FF_FF, true)
   }
 }
 
 private class HoverArrowButton(
-  private val isLeft: Boolean,
+  private val left: Boolean,
 ) : JButton() {
-  private var isHovered = false
-  private var mouseAdapter: MouseAdapter? = null
-
   override fun updateUI() {
-    removeMouseListener(mouseAdapter)
     super.updateUI()
     setContentAreaFilled(false)
     setFocusPainted(false)
     setOpaque(false)
+    setRolloverEnabled(true)
     setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
     setCursor(Cursor(Cursor.HAND_CURSOR))
-    mouseAdapter = object : MouseAdapter() {
-      override fun mouseEntered(e: MouseEvent?) {
-        isHovered = true
-        repaint()
-      }
-
-      override fun mouseExited(e: MouseEvent?) {
-        isHovered = false
-        repaint()
-      }
-    }
-    addMouseListener(mouseAdapter)
   }
 
   override fun getPreferredSize(): Dimension {
@@ -301,19 +274,21 @@ private class HoverArrowButton(
   }
 
   override fun paintComponent(g: Graphics) {
-    if (isHovered) {
+    if (getModel().isRollover) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.setRenderingHint(
         RenderingHints.KEY_ANTIALIASING,
         RenderingHints.VALUE_ANTIALIAS_ON,
       )
+      g2.color = Color.WHITE
+      g2.stroke = BasicStroke(3f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)
       val rect = SwingUtilities.calculateInnerArea(this, null)
-      g2.draw(createArrowPath(rect, isLeft))
+      g2.draw(createArrowPath(rect, left))
       g2.dispose()
     }
   }
 
-  private fun createArrowPath(rect: Rectangle, left: Boolean): Path2D {
+  private fun createArrowPath(rect: Rectangle, leftArrow: Boolean): Path2D {
     val arrowHeight = min(25.0, rect.height / 2.0)
     val arrowWidth = arrowHeight / 2.0
     val centerX = rect.centerX
@@ -321,7 +296,7 @@ private class HoverArrowButton(
     val startX = centerX - (arrowWidth / 2.0)
 
     val path = Path2D.Double()
-    if (left) { // <
+    if (leftArrow) { // <
       path.moveTo(startX + arrowWidth, centerY - arrowHeight / 2.0)
       path.lineTo(startX, centerY)
       path.lineTo(startX + arrowWidth, centerY + arrowHeight / 2.0)
