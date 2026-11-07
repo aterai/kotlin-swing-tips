@@ -19,14 +19,14 @@ fun createUI(): Component {
   val text = "JLayer Shimmer Label"
   val icon = UIManager.getIcon("InternalFrame.icon")
   val label = JLabel(text, icon, JLabel.LEADING)
-  addLabel(box, JLayer(label, ShimmerLayerUI()))
+  addComponent(box, JLayer(label, ShimmerLayerUI()))
   return JPanel(BorderLayout()).also {
     it.add(box, BorderLayout.NORTH)
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun addLabel(box: Box, component: JComponent) {
+private fun addComponent(box: Box, component: JComponent) {
   component.setAlignmentX(Component.LEFT_ALIGNMENT)
   box.add(component)
   box.add(Box.createVerticalStrut(20))
@@ -34,7 +34,7 @@ private fun addLabel(box: Box, component: JComponent) {
 
 private fun addLabel(box: Box, label: JLabel) {
   label.setIcon(UIManager.getIcon("InternalFrame.icon"))
-  addLabel(box, label as JComponent)
+  addComponent(box, label)
 }
 
 private object ShimmerColors {
@@ -51,7 +51,7 @@ private object ShimmerColors {
     ((v + .055) / 1.055).pow(2.4)
   }
 
-  fun shimmerBright(fg: Color, alpha: Int): Color {
+  fun highlightColor(fg: Color, alpha: Int): Color {
     val isDarkMode = luminance(fg) >= 0.5
     val r = if (isDarkMode) blend(fg.red, 255, 0.6) else 255
     val g = if (isDarkMode) blend(fg.green, 255, 0.6) else 255
@@ -59,14 +59,26 @@ private object ShimmerColors {
     return Color(r, g, b, alpha)
   }
 
+  // Returns the gradient colors of the shimmer band: transparent, highlight, transparent.
+  // LinearGradientPaint interpolates non-premultiplied colors, so the transparent ends
+  // keep the RGB of the highlight; fading to transparent black would darken the band edges.
+  fun gradientColors(fg: Color, alpha: Int): Array<Color> {
+    val highlight = highlightColor(fg, alpha)
+    val transparent = Color(highlight.rgb and 0xFF_FF_FF, true)
+    return arrayOf(transparent, highlight, transparent)
+  }
+
   fun blend(src: Int, dst: Int, t: Double) = (src + (dst - src) * t).roundToInt()
 }
 
 private object ShimmerLayout {
-  fun layoutLabel(label: JLabel, g2: Graphics2D): Array<Rectangle> {
+  // TextLayout rejects a null or empty string, so check this before creating one.
+  fun hasText(label: JLabel) = !label.text.isNullOrEmpty()
+
+  // Computes the text bounds of the given label using the Graphics2D context.
+  fun getTextRect(label: JLabel, g2: Graphics2D): Rectangle {
     val area = SwingUtilities.calculateInnerArea(label, null)
     val fm = g2.getFontMetrics(label.getFont())
-    val iconRect = Rectangle()
     val textRect = Rectangle()
     SwingUtilities.layoutCompoundLabel(
       label,
@@ -78,24 +90,24 @@ private object ShimmerLayout {
       label.verticalTextPosition,
       label.horizontalTextPosition,
       area,
-      iconRect,
+      Rectangle(),
       textRect,
       label.iconTextGap,
     )
-    return arrayOf(iconRect, textRect)
+    return textRect
   }
 }
 
 private abstract class AbstractShimmerLabel(
   text: String,
-  fps: Int,
+  delay: Int,
   speed: Float,
   bandWidth: Int,
 ) : JLabel(text) {
   protected val fractions = floatArrayOf(0f, .5f, 1f)
   protected var animX = 0f
 
-  private val shimmerTimer = Timer(fps) {
+  private val shimmerTimer = Timer(delay) {
     animX += speed
     if (animX > getWidth() + bandWidth) {
       animX = -bandWidth.toFloat()
@@ -103,11 +115,14 @@ private abstract class AbstractShimmerLabel(
     repaint()
   }
 
-  init {
+  override fun isOpaque() = false
+
+  // Run the timer only while displayable so that the animation
+  // also resumes when the label is added to a container again.
+  override fun addNotify() {
+    super.addNotify()
     shimmerTimer.start()
   }
-
-  override fun isOpaque() = false
 
   override fun removeNotify() {
     shimmerTimer.stop()
@@ -115,21 +130,25 @@ private abstract class AbstractShimmerLabel(
   }
 
   fun clearTextRect(g2: Graphics2D, textRect: Rectangle) {
-    val oldPaint = g2.paint
     g2.paint = getBackground()
-    g2.fillRect(textRect.x, textRect.y, textRect.width, textRect.height)
-    g2.paint = oldPaint
+    g2.fill(textRect)
   }
 
   companion object {
-    val TRANSPARENT = Color(0x0, true)
     const val ALPHA = 200
 
-    fun applyRenderingHints(g2: Graphics2D) {
-      val toolkit = Toolkit.getDefaultToolkit()
-      val hints = toolkit.getDesktopProperty("awt.font.desktophints")
-      if (hints is MutableMap<*, *>) {
-        g2.addRenderingHints(hints)
+    fun applyRenderingHints(label: JLabel, g2: Graphics2D) {
+      val isWindows = label
+        .getUI()
+        .javaClass
+        .getName()
+        .contains("Windows")
+      if (!isWindows) {
+        val toolkit = Toolkit.getDefaultToolkit()
+        val hints = toolkit.getDesktopProperty("awt.font.desktophints")
+        if (hints is MutableMap<*, *>) {
+          g2.addRenderingHints(hints)
+        }
       }
     }
   }
@@ -138,7 +157,7 @@ private abstract class AbstractShimmerLabel(
 // ShimmerLabel: Shimmer that sweeps the entire component rectangle.
 private class ShimmerLabel(
   text: String,
-) : AbstractShimmerLabel(text, FPS, SPEED, BAND_WIDTH) {
+) : AbstractShimmerLabel(text, DELAY, SPEED, BAND_WIDTH) {
   private val colors = arrayOf(SHIMMER_BASE, SHIMMER_BRIGHT, SHIMMER_BASE)
 
   override fun isOpaque() = true
@@ -153,7 +172,7 @@ private class ShimmerLabel(
   }
 
   companion object {
-    const val FPS = 15
+    const val DELAY = 15
     const val BAND_WIDTH = 80
     const val SPEED = 4f
     val SHIMMER_BASE = Color(0x00_FF_FF_FF, true)
@@ -163,17 +182,19 @@ private class ShimmerLabel(
 
 private class TextShimmerLabel(
   text: String,
-) : AbstractShimmerLabel(text, FPS, SPEED, BAND_WIDTH) {
+) : AbstractShimmerLabel(text, DELAY, SPEED, BAND_WIDTH) {
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
-    val g2 = g.create() as? Graphics2D ?: return
-    val isWindows = getUI().javaClass.getName().contains("Windows")
-    if (!isWindows) {
-      applyRenderingHints(g2)
+    if (ShimmerLayout.hasText(this)) {
+      paintShimmerText(g)
     }
+  }
 
-    val rects = ShimmerLayout.layoutLabel(this, g2)
-    val textRect = rects[1]
+  private fun paintShimmerText(g: Graphics) {
+    val g2 = g.create() as? Graphics2D ?: return
+    applyRenderingHints(this, g2)
+
+    val textRect = ShimmerLayout.getTextRect(this, g2)
     val fm = g2.getFontMetrics(getFont())
 
     val x = textRect.x.toFloat()
@@ -194,11 +215,7 @@ private class TextShimmerLabel(
     g2.clip(layout.getOutline(AffineTransform.getTranslateInstance(dx, dy)))
 
     // 3. Draw gradient inside clip
-    val colors = arrayOf(
-      TRANSPARENT,
-      ShimmerColors.shimmerBright(getForeground(), ALPHA),
-      TRANSPARENT,
-    )
+    val colors = ShimmerColors.gradientColors(getForeground(), ALPHA)
     val endX = animX + BAND_WIDTH
     g2.paint = LinearGradientPaint(animX, 0f, endX, 0f, fractions, colors)
     g2.fillRect(0, 0, getWidth(), getHeight())
@@ -206,7 +223,7 @@ private class TextShimmerLabel(
   }
 
   companion object {
-    private const val FPS = 15
+    private const val DELAY = 15
     private const val BAND_WIDTH = 100
     private const val SPEED = 4f
   }
@@ -214,56 +231,48 @@ private class TextShimmerLabel(
 
 private class TextCompositeShimmerLabel(
   text: String,
-) : AbstractShimmerLabel(text, FPS, SPEED, BAND_WIDTH) {
+) : AbstractShimmerLabel(text, DELAY, SPEED, BAND_WIDTH) {
   private var buffer: BufferedImage? = null
 
   override fun paintComponent(g: Graphics) {
     super.paintComponent(g)
-    val g2 = g.create() as Graphics2D
-    // applyRenderingHints(g2)
+    if (ShimmerLayout.hasText(this)) {
+      val g2 = g.create() as? Graphics2D ?: return
+      val textRect = ShimmerLayout.getTextRect(this, g2)
 
-    val rects = ShimmerLayout.layoutLabel(this, g2)
-    val textRect = rects[1]
-    clearTextRect(g2, textRect)
-    updateBuffer()
-    buffer?.also {
-      g2.drawImage(it, 0, 0, this)
+      // Clear the text area painted by super.paintComponent to avoid double-draw.
+      clearTextRect(g2, textRect)
+
+      updateBuffer(textRect)
+      g2.drawImage(buffer, 0, 0, this)
+      g2.dispose()
     }
-    g2.dispose()
   }
 
-  private fun updateBuffer() {
+  private fun updateBuffer(textRect: Rectangle) {
     val w = max(1, getWidth())
     val h = max(1, getHeight())
     if (buffer == null || buffer?.width != w || buffer?.height != h) {
       buffer = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
     }
     val g2 = buffer?.createGraphics() ?: return
+    applyRenderingHints(this, g2)
     g2.composite = AlphaComposite.Clear
     g2.fillRect(0, 0, w, h)
     g2.composite = AlphaComposite.SrcOver
-    val isWindows = getUI().javaClass.getName().contains("Windows")
-    if (!isWindows) {
-      applyRenderingHints(g2)
-    }
 
-    val rects = ShimmerLayout.layoutLabel(this, g2)
-    val textRect = rects[1]
     val fm = g2.getFontMetrics(getFont())
-
     val x = textRect.x.toFloat()
     val y = (textRect.y + fm.ascent).toFloat()
 
+    // 1. Draw base text into buffer.
     g2.paint = getForeground()
     val frc = g2.fontRenderContext
     TextLayout(text, getFont(), frc).draw(g2, x, y)
 
+    // 2. Composite shimmer gradient over text pixels only (SrcAtop).
     g2.composite = AlphaComposite.SrcAtop
-    val colors = arrayOf(
-      TRANSPARENT,
-      ShimmerColors.shimmerBright(getForeground(), ALPHA),
-      TRANSPARENT,
-    )
+    val colors = ShimmerColors.gradientColors(getForeground(), ALPHA)
     val endX = animX + BAND_WIDTH
     g2.paint = LinearGradientPaint(animX, 0f, endX, 0f, fractions, colors)
     g2.fillRect(0, 0, w, h)
@@ -271,14 +280,14 @@ private class TextCompositeShimmerLabel(
   }
 
   companion object {
-    private const val FPS = 15
+    private const val DELAY = 15
     private const val BAND_WIDTH = 160
     private const val SPEED = 4f
   }
 }
 
 private class ShimmerLayerUI : LayerUI<JLabel>() {
-  private val timer = Timer(FPS, null)
+  private val timer = Timer(DELAY, null)
   private val fractions = floatArrayOf(0f, .5f, 1f)
   private var animX = 0f
   private var buffer: BufferedImage? = null
@@ -297,104 +306,69 @@ private class ShimmerLayerUI : LayerUI<JLabel>() {
 
   override fun uninstallUI(c: JComponent?) {
     timer.stop()
+    // Otherwise reinstalling this UI would add a second listener and double the speed.
+    timer.actionListeners.forEach { timer.removeActionListener(it) }
     super.uninstallUI(c)
   }
 
+  // `super.paint()` draws the `JLabel` including its plain text, so the text area is
+  // cleared and then overlaid with the text-only shimmer buffer using SrcOver.
+  // Applying SrcAtop to the whole layer would cause the shimmer to affect the icon as well,
+  // so the text shimmer is composited in a separate buffer before being transferred.
   override fun paint(g: Graphics, c: JComponent?) {
-    // super.paint(g, c);
+    super.paint(g, c)
     val layer = c as JLayer<*>
     val label = layer.getView() as? JLabel
-    if (label == null || label.text == null || label.text.isEmpty()) {
-      super.paint(g, c)
-    } else {
-      val w = max(1, c.getWidth())
-      val h = max(1, c.getHeight())
-      ensureBuffer(w, h)
-      paintLayerToBuffer(c, w, h)
-      val shimBuf = createShimmerBuffer(label, c, w, h)
-      paintShimmerBuffer(shimBuf)
-      g.drawImage(buffer, 0, 0, c)
+    if (label != null && ShimmerLayout.hasText(label)) {
+      val g2 = g.create() as? Graphics2D ?: return
+      val textRect = ShimmerLayout.getTextRect(label, g2)
+      val labelOrigin = SwingUtilities.convertPoint(label, 0, 0, c)
+      textRect.translate(labelOrigin.x, labelOrigin.y)
+
+      g2.paint = label.getBackground()
+      g2.fill(textRect)
+
+      updateBuffer(label, textRect, c.size)
+      g2.drawImage(buffer, 0, 0, c)
+      g2.dispose()
     }
   }
 
-  private fun ensureBuffer(w: Int, h: Int) {
+  private fun updateBuffer(label: JLabel, textRect: Rectangle, size: Dimension) {
+    val w = max(1, size.width)
+    val h = max(1, size.height)
     if (buffer == null || buffer?.width != w || buffer?.height != h) {
       buffer = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
     }
-  }
+    val g2 = buffer?.createGraphics() ?: return
+    AbstractShimmerLabel.applyRenderingHints(label, g2)
+    g2.composite = AlphaComposite.Clear
+    g2.fillRect(0, 0, w, h)
+    g2.composite = AlphaComposite.SrcOver
 
-  private fun paintLayerToBuffer(c: JComponent, w: Int, h: Int) {
-    val buf = buffer?.createGraphics() ?: return
-    buf.composite = AlphaComposite.Clear
-    buf.fillRect(0, 0, w, h)
-    buf.composite = AlphaComposite.SrcOver
-    c.paint(buf)
-    buf.dispose()
-  }
-
-  private fun createShimmerBuffer(
-    label: JLabel,
-    c: JComponent,
-    w: Int,
-    h: Int,
-  ): BufferedImage {
-    val shimBuf = BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB)
-    val sg = shimBuf.createGraphics()
-    val isWindows = label
-      .getUI()
-      .javaClass
-      .getName()
-      .contains("Windows")
-    if (!isWindows) {
-      AbstractShimmerLabel.applyRenderingHints(sg)
-    }
-    val rects = ShimmerLayout.layoutLabel(label, sg)
-    val textRect = rects[1]
-    val fm = sg.getFontMetrics(label.getFont())
-    val labelOrigin = SwingUtilities.convertPoint(label, 0, 0, c)
-    val x = (labelOrigin.x + textRect.x).toFloat()
-    val y = (labelOrigin.y + textRect.y + fm.ascent).toFloat()
+    val fm = g2.getFontMetrics(label.getFont())
+    val x = textRect.x.toFloat()
+    val y = (textRect.y + fm.ascent).toFloat()
 
     // 1. Draw the text outline to the shimmer buffer (to serve as a mask).
-    sg.paint = label.getForeground()
-    val frc = sg.fontRenderContext
-    TextLayout(label.text, label.getFont(), frc).draw(sg, x, y)
+    g2.paint = label.getForeground()
+    val frc = g2.fontRenderContext
+    TextLayout(label.text, label.getFont(), frc).draw(g2, x, y)
 
     // 2. Compose the gradient using SrcAtop (masked by the text's alpha channel).
-    sg.composite = AlphaComposite.SrcAtop
-    val colors = arrayOf(
-      TRANSPARENT,
-      ShimmerColors.shimmerBright(label.getForeground(), ALPHA),
-      TRANSPARENT,
-    )
+    g2.composite = AlphaComposite.SrcAtop
+    val colors = ShimmerColors.gradientColors(label.getForeground(), ALPHA)
     val endX = animX + BAND_WIDTH
-    sg.paint = LinearGradientPaint(animX, 0f, endX, 0f, fractions, colors)
-    sg.fillRect(0, 0, w, h)
-    sg.dispose()
-
-    // Clear the text area painted
-    val buf = buffer!!.createGraphics()
-    // buf.setComposite(AlphaComposite.DstOut);
-    buf.paint = label.getBackground()
-    buf.fill(textRect)
-    buf.dispose()
-
-    return shimBuf
-  }
-
-  private fun paintShimmerBuffer(shimBuf: BufferedImage) {
-    val buf = buffer?.createGraphics() ?: return
-    buf.composite = AlphaComposite.SrcOver
-    buf.drawImage(shimBuf, 0, 0, null)
-    buf.dispose()
+    g2.paint = LinearGradientPaint(animX, 0f, endX, 0f, fractions, colors)
+    g2.fillRect(0, 0, w, h)
+    g2.dispose()
   }
 
   companion object {
-    private const val FPS = 16
+    private const val DELAY = 16
     private const val BAND_WIDTH = 100
     private const val SPEED = 4f
     private const val ALPHA = 180
-    private val TRANSPARENT = Color(0x0, true)
   }
 }
 
