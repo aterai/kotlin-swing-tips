@@ -12,7 +12,10 @@ fun createUI(): Component {
   palette.isVisible = true
 
   val desktop = JDesktopPane()
-  desktop.add(palette, JLayeredPane.PALETTE_LAYER)
+  // Kotlin resolves add(Component, Integer) to add(Component, int index),
+  // so the layer must be set explicitly
+  desktop.setLayer(palette, JLayeredPane.PALETTE_LAYER)
+  desktop.add(palette)
   desktop.add(createFrame(0))
   desktop.add(createFrame(1))
   desktop.add(createFrame(2))

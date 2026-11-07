@@ -103,7 +103,10 @@ private class ModalInternalFrameAction2(
   init {
     glass.isOpaque = false
     glass.isVisible = false
-    desktop.add(glass, JLayeredPane.MODAL_LAYER)
+    // Kotlin resolves add(Component, Integer) to add(Component, int index),
+    // so the layer must be set explicitly
+    desktop.setLayer(glass, JLayeredPane.MODAL_LAYER)
+    desktop.add(glass)
   }
 
   override fun actionPerformed(e: ActionEvent) {
