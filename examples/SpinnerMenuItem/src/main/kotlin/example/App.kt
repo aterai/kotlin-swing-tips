@@ -8,8 +8,8 @@ import kotlin.math.min
 fun createUI(): Component {
   val menuBar = JMenuBar()
   menuBar.add(LookAndFeelUtils.createLookAndFeelMenu())
-  menuBar.add(makeSpinnerMenu())
-  menuBar.add(makeSliderMenu())
+  menuBar.add(createSpinnerMenu())
+  menuBar.add(createSliderMenu())
   return JPanel(BorderLayout()).also {
     EventQueue.invokeLater { it.rootPane.jMenuBar = menuBar }
     it.add(JScrollPane(JTextArea()))
@@ -17,7 +17,7 @@ fun createUI(): Component {
   }
 }
 
-private fun makeMenuBox(title: String, c: Component): Component {
+private fun createMenuBox(title: String, c: Component): Component {
   val box = Box.createHorizontalBox()
   box.border = BorderFactory.createEmptyBorder(2, 2, 2, 2)
   box.add(JLabel(title))
@@ -25,7 +25,7 @@ private fun makeMenuBox(title: String, c: Component): Component {
   return box
 }
 
-private fun makeSpinnerMenuItem(title: String, c: Component): Component {
+private fun createComponentMenuItem(title: String, c: Component): Component {
   val item = object : JMenuItem() {
     override fun updateUI() {
       super.updateUI()
@@ -35,8 +35,13 @@ private fun makeSpinnerMenuItem(title: String, c: Component): Component {
     }
 
     override fun getPreferredSize(): Dimension {
+      // BasicMenuItemUI ignores child components when computing the size,
+      // so merge in the layout size (label, component and border insets)
+      // to avoid clipping the bottom border area or the leading label.
       val d = super.getPreferredSize()
-      d.height = max(d.height, c.preferredSize.height)
+      val p = layout.preferredLayoutSize(this)
+      d.width = max(d.width, p.width)
+      d.height = max(d.height, p.height)
       return d
     }
   }
@@ -45,15 +50,15 @@ private fun makeSpinnerMenuItem(title: String, c: Component): Component {
   return item
 }
 
-private fun makeSpinnerMenu(): JMenu {
+private fun createSpinnerMenu(): JMenu {
   val model1 = SpinnerNumberModel(100, 10, 300, 10)
   val model2 = SpinnerNumberModel(150, 10, 300, 10)
   val menu = JMenu("JSpinner")
-  menu.add(makeMenuBox("L: ", makeSpinner(model1)))
-  menu.add(makeMenuBox("R: ", makeSpinner(model2)))
+  menu.add(createMenuBox("L: ", createSpinner(model1)))
+  menu.add(createMenuBox("R: ", createSpinner(model2)))
   menu.add(JSeparator())
-  menu.add(makeSpinnerMenuItem("Left: ", makeSpinner(model1)))
-  menu.add(makeSpinnerMenuItem("Right: ", makeSpinner(model2)))
+  menu.add(createComponentMenuItem("Left: ", createSpinner(model1)))
+  menu.add(createComponentMenuItem("Right: ", createSpinner(model2)))
   menu.addSeparator()
   menu.add("JMenuItem1")
   menu.add("JMenuItem2")
@@ -61,29 +66,41 @@ private fun makeSpinnerMenu(): JMenu {
   return menu
 }
 
-private fun makeSpinner(model: SpinnerModel): JSpinner {
+private fun createSpinner(model: SpinnerModel): JSpinner {
   val spinner = JSpinner(model)
   (spinner.editor as? JSpinner.DefaultEditor)?.textField?.columns = 8
   spinner.addMouseWheelListener { e ->
     val s = e.component as? JSpinner
-    val m = s?.model
-    if (m is SpinnerNumberModel && s.isEnabled) {
-      m.value = m.number.toInt() - e.wheelRotation
+    if (s?.isEnabled == true) {
+      spin(s.model, e.wheelRotation)
     }
     e.consume()
   }
   return spinner
 }
 
-private fun makeSliderMenu(): JMenu {
+private fun spin(model: SpinnerModel, rotation: Int) {
+  // getNextValue()/getPreviousValue() respect the step size and bounds,
+  // whereas SpinnerNumberModel#setValue(...) does not check the bounds
+  val value = when {
+    rotation < 0 -> model.nextValue
+    rotation > 0 -> model.previousValue
+    else -> null
+  }
+  if (value != null) {
+    model.value = value
+  }
+}
+
+private fun createSliderMenu(): JMenu {
   val model1 = DefaultBoundedRangeModel(90, 1, 0, 100)
   val model2 = DefaultBoundedRangeModel(50, 1, 0, 100)
   val menu = JMenu("JSlider")
-  menu.add(makeMenuBox("L: ", makeSlider(model1)))
-  menu.add(makeMenuBox("R: ", makeSlider(model2)))
+  menu.add(createMenuBox("L: ", createSlider(model1)))
+  menu.add(createMenuBox("R: ", createSlider(model2)))
   menu.add(JSeparator())
-  menu.add(makeSpinnerMenuItem("Left: ", makeSlider(model1)))
-  menu.add(makeSpinnerMenuItem("Right: ", makeSlider(model2)))
+  menu.add(createComponentMenuItem("Left: ", createSlider(model1)))
+  menu.add(createComponentMenuItem("Right: ", createSlider(model2)))
   menu.addSeparator()
   menu.add("JMenuItem3")
   menu.add("JMenuItem4")
@@ -91,7 +108,7 @@ private fun makeSliderMenu(): JMenu {
   return menu
 }
 
-private fun makeSlider(model: BoundedRangeModel): JSlider {
+private fun createSlider(model: BoundedRangeModel): JSlider {
   val slider = object : JSlider(model) {
     override fun getPreferredSize(): Dimension {
       val d = super.getPreferredSize()
