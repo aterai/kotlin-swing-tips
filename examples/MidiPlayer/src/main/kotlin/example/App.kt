@@ -9,44 +9,37 @@ import javax.swing.*
 
 private val slider = JSlider(0, 100, 0)
 private var sequencer: Sequencer? = null
-private var isMovingSlider = false
+private var isSyncingSlider = false
 
 fun createUI(): Component {
   val cl = Thread.currentThread().contextClassLoader
   val url = cl.getResource("example/Mozart_toruko_k.mid")
-  initSequencer(url)
+  val loaded = initSequencer(url)
 
-  val timer = Timer(50) {
-    if (!isMovingSlider && sequencer?.isRunning == true) {
-      slider.setValue(sequencer?.tickPosition?.toInt() ?: 0)
-    }
+  val timer = Timer(50) { updateSlider() }
+  if (loaded) {
+    timer.start()
   }
-  timer.start()
 
   slider.addHierarchyListener { e ->
     val flg = e.getChangeFlags() and HierarchyEvent.DISPLAYABILITY_CHANGED.toLong()
     if (flg != 0L && !e.component.isDisplayable) {
-      sequencer?.close()
       timer.stop()
+      sequencer?.close()
     }
   }
 
+  slider.setEnabled(loaded)
   slider.addChangeListener {
-    if (slider.valueIsAdjusting) {
-      isMovingSlider = true
-    } else if (isMovingSlider) {
+    // Seek on any user operation (drag, track click, or key input), but not on Timer updates
+    if (!isSyncingSlider && !slider.valueIsAdjusting) {
       sequencer?.tickPosition = slider.value.toLong()
-      isMovingSlider = false
     }
   }
 
   val playButton = JButton("Play")
-  playButton.setEnabled(url != null)
-  playButton.addActionListener {
-    if (sequencer?.isRunning == false) {
-      sequencer?.start()
-    }
-  }
+  playButton.setEnabled(loaded)
+  playButton.addActionListener { play() }
 
   val box = Box.createHorizontalBox()
   box.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 0))
@@ -55,36 +48,62 @@ fun createUI(): Component {
   box.add(playButton)
 
   return JPanel(BorderLayout(5, 5)).also {
-    it.add(createTitleBox(it.getBackground()))
+    it.add(createTitleArea(it.getBackground()))
     it.add(box, BorderLayout.SOUTH)
     it.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun initSequencer(url: URL?) {
+private fun initSequencer(url: URL?): Boolean {
+  var loaded = false
   runCatching {
     sequencer = MidiSystem.getSequencer().also {
       if (url != null) {
         it.open()
         it.sequence = MidiSystem.getSequence(url)
         slider.setMaximum(it.tickLength.toInt())
+        loaded = true
       }
     }
+  }.onFailure {
+    it.printStackTrace()
+  }
+  return loaded
+}
+
+// Keep updating after the playback stops so that the slider reaches the end of the track
+private fun updateSlider() {
+  val seq = sequencer ?: return
+  if (!slider.valueIsAdjusting) {
+    isSyncingSlider = true
+    slider.setValue(seq.tickPosition.toInt())
+    isSyncingSlider = false
   }
 }
 
-private fun createTitleBox(bgc: Color): Component {
+private fun play() {
+  val seq = sequencer ?: return
+  if (!seq.isRunning) {
+    // Sequencer#start() stops immediately if the position is at the end of the track
+    if (seq.tickPosition >= seq.tickLength) {
+      seq.tickPosition = 0L
+    }
+    seq.start()
+  }
+}
+
+private fun createTitleArea(bgc: Color): Component {
   val txt = """
     Wolfgang Amadeus Mozart
     Piano Sonata No. 11 in A major, K 331
     (Turkish Rondo)
   """.trimIndent()
-  val label = JTextArea(txt)
-  label.setBorder(BorderFactory.createTitledBorder("MIDI"))
-  label.isEditable = false
-  label.setBackground(bgc)
-  return label
+  val textArea = JTextArea(txt)
+  textArea.setBorder(BorderFactory.createTitledBorder("MIDI"))
+  textArea.isEditable = false
+  textArea.setBackground(bgc)
+  return textArea
 }
 
 fun main() {
