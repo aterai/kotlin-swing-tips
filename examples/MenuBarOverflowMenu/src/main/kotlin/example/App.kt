@@ -21,7 +21,8 @@ private fun makeMenuBar(): JMenuBar {
     override fun updateUI() {
       super.updateUI()
       (layout as? OverflowMenuLayout)?.also {
-        SwingUtilities.updateComponentTreeUI(it.overflowMenu)
+        // The overflow menu may not be in the menu bar, update it explicitly
+      SwingUtilities.updateComponentTreeUI(it.overflowMenu)
       }
     }
   }
@@ -53,10 +54,10 @@ private fun makeOrientationMenu(menuBar: JMenuBar): JMenu {
       menuBar.revalidate()
     }
   }
-  val b = menuBar.getComponentOrientation().isLeftToRight
+  val isLeftToRight = menuBar.componentOrientation.isLeftToRight
   listOf(
-    JRadioButtonMenuItem("LEFT_TO_RIGHT", b),
-    JRadioButtonMenuItem("RIGHT_TO_LEFT", !b),
+    JRadioButtonMenuItem("LEFT_TO_RIGHT", isLeftToRight),
+    JRadioButtonMenuItem("RIGHT_TO_LEFT", !isLeftToRight),
   ).forEach {
     bg.add(it)
     menu.add(it)
@@ -80,47 +81,49 @@ private class OverflowMenuLayout : FlowLayout(LEADING, 0, 0) {
   val overflowMenu = JMenu("...")
 
   override fun layoutContainer(target: Container) {
+    // Move all menus back to the menu bar before laying them out, even if
+    // preferredLayoutSize(...) has not been called since the last layout
+    restoreOverflowedMenus(target)
     super.layoutContainer(target)
     val r = SwingUtilities.calculateInnerArea(target as? JComponent, null)
     val num = target.componentCount
-    if (target.getComponent(num - 1).getY() > r.y + getVgap()) {
+    // The menus wrapped to the second row or later overflow the menu bar
+    if (num > 0 && target.getComponent(num - 1).y > r.y + vgap) {
+      // Add the overflow menu before getting its preferred size, since a JMenu
+      // that is not in a JMenuBar is measured as a (larger) submenu item
       target.add(overflowMenu)
-      overflowMenu.size = overflowMenu.getPreferredSize()
-      val popupX = if (target.getComponentOrientation().isLeftToRight) {
-        r.x + r.width - overflowMenu.size.width
+      val d = overflowMenu.preferredSize
+      val x = if (target.componentOrientation.isLeftToRight) {
+        r.x + r.width - d.width
       } else {
         r.x
       }
-      overflowMenu.setLocation(popupX, r.y)
-      overflowMenu.isVisible = true
-    }
-    if (target.isAncestorOf(overflowMenu)) {
-      target
-        .components
-        .filter { shouldMoveToPopup(target, it) }
-        .forEach { overflowMenu.getPopupMenu().add(it) }
+      overflowMenu.setBounds(x, r.y, d.width, d.height)
+      target.components
+        .filter { shouldMoveToOverflowMenu(r, it) }
+        .forEach { overflowMenu.add(it) }
+      // `popupMenu.pack()` is not necessary in Java 8,
+      // but if you do not do this in Java 21,
+      // the JPopupMenu may not be displayed correctly.
       overflowMenu.popupMenu.pack()
     }
   }
 
-  private fun shouldMoveToPopup(target: Container, c: Component): Boolean {
-    val insets = target.insets
-    val y = insets.top + getVgap()
-    val pt = overflowMenu.location
-    if (!target.getComponentOrientation().isLeftToRight) {
-      pt.x += overflowMenu.getWidth()
+  private fun shouldMoveToOverflowMenu(r: Rectangle, c: Component): Boolean {
+    // Rectangle#intersects(...) excludes menus that are only adjacent to the overflow menu
+    val overlapped = c != overflowMenu && c.bounds.intersects(overflowMenu.bounds)
+    return c.y > r.y + vgap || overlapped
+  }
+
+  private fun restoreOverflowedMenus(target: Container) {
+    target.remove(overflowMenu)
+    for (c in overflowMenu.menuComponents) {
+      target.add(c)
     }
-    val b = c != overflowMenu && c.bounds.contains(pt)
-    return c.getY() > y || b
   }
 
   override fun preferredLayoutSize(target: Container): Dimension? {
-    overflowMenu.isVisible = false
-    target.remove(overflowMenu)
-    for (c in overflowMenu.getPopupMenu().components) {
-      target.add(c)
-    }
-    overflowMenu.removeAll()
+    restoreOverflowedMenus(target)
     return super.preferredLayoutSize(target)
   }
 }
