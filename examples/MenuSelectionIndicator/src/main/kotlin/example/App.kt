@@ -20,8 +20,8 @@ fun createUI(): Component {
   desktop.add(frame)
   frame.isVisible = true
 
-  val menuBar3 = MenuBarUtils.initMenuBar(JMenuBar())
-  val layer = JLayer<JMenuBar>(menuBar3, MenuHighlightLayerUI())
+  val bottomMenuBar = MenuBarUtils.initMenuBar(JMenuBar())
+  val layer = JLayer<JMenuBar>(bottomMenuBar, MenuHighlightLayerUI())
 
   return JPanel(BorderLayout()).also {
     EventQueue.invokeLater { it.rootPane.setJMenuBar(menuBar) }
@@ -39,11 +39,11 @@ private class SelectionIndicatorMenuBar : JMenuBar() {
     val manager = MenuSelectionManager.defaultManager()
     manager.removeChangeListener(listener)
     super.updateUI()
-    val inside = BorderFactory.createEmptyBorder(SZ + 1, 0, 0, 0)
+    val inside = BorderFactory.createEmptyBorder(THICKNESS + 1, 0, 0, 0)
     val outside = UIManager.getBorder("MenuBar.border")
     val border: Border = BorderFactory.createCompoundBorder(outside, inside)
     setBorder(border)
-    listener = ChangeListener { updateTopLevelMenuBorder(it) }
+    listener = ChangeListener { updateSelectionIndicator(it) }
     manager.addChangeListener(listener)
   }
 
@@ -52,69 +52,72 @@ private class SelectionIndicatorMenuBar : JMenuBar() {
     if (!rect.isEmpty) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.paint = SELECTION_COLOR
-      g2.fillRect(rect.x, rect.y - SZ, rect.width, SZ)
+      g2.fillRect(rect.x, rect.y - THICKNESS, rect.width, THICKNESS)
       g2.dispose()
     }
   }
 
-  private fun updateTopLevelMenuBorder(e: ChangeEvent) {
-    val o = e.getSource()
+  private fun updateSelectionIndicator(e: ChangeEvent) {
     rect.setSize(0, 0)
-    val p = (o as? MenuSelectionManager)?.getSelectedPath()
-    if (p != null && p.size > 1 && this == p[0].component) {
-      updateMenuIndicator(p[1].component)
+    val path = (e.source as? MenuSelectionManager)?.selectedPath ?: emptyArray()
+    if (path.size > 1 && this == path[0].component) {
+      // The element next to the JMenuBar in the selected path is the selected top-level menu.
+      val c = path[1].component
+      if (c is JMenu) {
+        rect.bounds = c.bounds
+      }
     }
     repaint()
   }
 
-  private fun updateMenuIndicator(menu: Component) {
-    if (menu is JMenu && menu.isTopLevelMenu) {
-      val m = menu.getModel()
-      if (m.isArmed || m.isPressed || m.isSelected) {
-        rect.bounds = menu.bounds
-      }
-    }
-  }
-
   companion object {
     private val SELECTION_COLOR = Color(0x00_AA_FF)
-    private const val SZ = 3
+    private const val THICKNESS = 3
   }
 }
 
 private class SelectionHighlightMenuBar : JMenuBar() {
   private var listener: ChangeListener? = null
+  private var selectedBorder: Border? = null
+  private var unselectedBorder: Border? = null
 
   override fun updateUI() {
     val manager = MenuSelectionManager.defaultManager()
     manager.removeChangeListener(listener)
     super.updateUI()
+    selectedBorder = makeMenuBorder(SELECTION_COLOR)
+    unselectedBorder = makeMenuBorder(ALPHA_ZERO)
     listener = ChangeListener { updateTopLevelMenuHighlight() }
     manager.addChangeListener(listener)
     EventQueue.invokeLater { updateTopLevelMenuHighlight() }
   }
 
   private fun updateTopLevelMenuHighlight() {
-    for (me in getSubElements()) {
-      updateMenuBorder(me.component)
+    // JMenuBar#getSubElements() returns only the direct children of this JMenuBar.
+    for (element in getSubElements()) {
+      updateMenuBorder(element.component)
     }
   }
 
-  private fun updateMenuBorder(menu: Component) {
-    if (menu is JMenu && menu.isTopLevelMenu && menu.getParent() == this) {
-      val model = menu.getModel()
-      val b = model.isArmed || model.isPressed || model.isSelected
-      val color: Color? = if (b) SELECTION_COLOR else ALPHA_ZERO
-      val inside = UIManager.getBorder("Menu.border")
-      val outside: Border = BorderFactory.createMatteBorder(0, 0, SZ, 0, color)
-      menu.setBorder(BorderFactory.createCompoundBorder(outside, inside))
+  private fun updateMenuBorder(c: Component) {
+    if (c is JMenu) {
+      val model = c.model
+      val selected = model.isArmed || model.isPressed || model.isSelected
+      // Reusing the same Border instance makes JComponent#setBorder(...) skip the repaint.
+      c.border = if (selected) selectedBorder else unselectedBorder
     }
   }
 
   companion object {
     private val ALPHA_ZERO = Color(0x0, true)
     private val SELECTION_COLOR = Color(0x00_AA_FF)
-    private const val SZ = 3
+    private const val THICKNESS = 3
+
+    private fun makeMenuBorder(color: Color): Border {
+      val inside = UIManager.getBorder("Menu.border")
+      val outside = BorderFactory.createMatteBorder(0, 0, THICKNESS, 0, color)
+      return BorderFactory.createCompoundBorder(outside, inside)
+    }
   }
 }
 
@@ -142,31 +145,35 @@ private class MenuHighlightLayerUI : LayerUI<JMenuBar>() {
     if (c is JLayer<*> && !rect.isEmpty) {
       val g2 = g.create() as? Graphics2D ?: return
       g2.paint = SELECTION_COLOR
-      g2.fillRect(rect.x, rect.y + rect.height - SZ, rect.width, SZ)
+      g2.fillRect(rect.x, rect.y + rect.height - THICKNESS, rect.width, THICKNESS)
       g2.dispose()
     }
   }
 
   override fun processMouseEvent(e: MouseEvent, l: JLayer<out JMenuBar>) {
     super.processMouseEvent(e, l)
-    if (e.getID() == MouseEvent.MOUSE_EXITED) {
-      rect.setSize(0, 0)
+    if (e.id == MouseEvent.MOUSE_EXITED) {
+      updateIndicator(l, Rectangle())
     }
   }
 
   override fun processMouseMotionEvent(e: MouseEvent, l: JLayer<out JMenuBar>) {
     super.processMouseMotionEvent(e, l)
     val c = e.component
-    if (c is JMenu) {
-      rect.bounds = c.bounds
-    } else {
-      rect.setSize(0, 0)
+    updateIndicator(l, if (c is JMenu) c.bounds else Rectangle())
+  }
+
+  private fun updateIndicator(l: JLayer<out JMenuBar>, r: Rectangle) {
+    if (rect != r) {
+      rect.bounds = r
+      // Some LookAndFeels, such as Metal, do not repaint a JMenu when the mouse hovers over it.
+      l.repaint()
     }
   }
 
   companion object {
     private val SELECTION_COLOR = Color(0x00_AA_FF)
-    private const val SZ = 3
+    private const val THICKNESS = 3
   }
 }
 
