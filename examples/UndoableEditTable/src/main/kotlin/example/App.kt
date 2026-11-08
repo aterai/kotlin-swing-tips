@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.Date
 import javax.swing.*
 import javax.swing.plaf.ColorUIResource
@@ -20,9 +22,12 @@ private val undoManager = UndoManager()
 
 fun createUI(): Component {
   val columnNames = arrayOf("Type", "Value")
+  // DateEditor commits only the date part, so the time of day is dropped here
+  // to keep an unchanged value from being recorded as an undoable edit
+  val today = LocalDate.now().atStartOfDay(ZoneId.systemDefault())
   val data = arrayOf<Array<Any>>(
     arrayOf("String", "text"),
-    arrayOf("Date", Date()),
+    arrayOf("Date", Date.from(today.toInstant())),
     arrayOf("Integer", 12),
     arrayOf("Double", 3.45),
     arrayOf("Boolean", true),
@@ -48,9 +53,9 @@ class PropertyTable : JTable {
     row: Int,
     column: Int,
   ): Class<*> {
-    val mc = convertColumnIndexToModel(column)
-    val mr = convertRowIndexToModel(row)
-    return model.getValueAt(mr, mc).javaClass
+    val modelColumn = convertColumnIndexToModel(column)
+    val modelRow = convertRowIndexToModel(row)
+    return model.getValueAt(modelRow, modelColumn).javaClass
   }
 
   private fun initUndoActions() {
@@ -77,15 +82,19 @@ class PropertyTable : JTable {
   }
 
   override fun setValueAt(newValue: Any?, row: Int, column: Int) {
-    if (isEditing) {
-      val mr = convertRowIndexToModel(row)
-      val mc = convertColumnIndexToModel(column)
-      val oldValue = getValueAt(mr, mc)
-      if (oldValue != newValue) {
-        undoManager.addEdit(UndoableCellEdit(model, mr, mc, oldValue, newValue))
+    // The default editor commits null for an emptied Number cell, but the cell
+    // class is derived from its value, so the current value is kept in that case
+    if (newValue != null) {
+      // JTable#getValueAt(...) takes view indices, the edit keeps model indices
+      val oldValue = getValueAt(row, column)
+      if (isEditing && oldValue != newValue) {
+        val modelRow = convertRowIndexToModel(row)
+        val modelColumn = convertColumnIndexToModel(column)
+        val edit = UndoableCellEdit(model, modelRow, modelColumn, oldValue, newValue)
+        undoManager.addEdit(edit)
       }
+      super.setValueAt(newValue, row, column)
     }
-    super.setValueAt(newValue, row, column)
   }
 
   override fun getCellRenderer(
@@ -139,11 +148,7 @@ class DateEditor :
       override fun focusGained(e: FocusEvent) {
         setArrowButtonEnabled(true)
         EventQueue.invokeLater {
-          (e.component as? JTextField)?.also {
-            it.caretPosition = 8
-            it.selectionStart = 8
-            it.selectionEnd = 10
-          }
+          (e.component as? JTextField)?.select(8, 10)
         }
       }
     }
@@ -151,9 +156,9 @@ class DateEditor :
     spinner.border = BorderFactory.createEmptyBorder()
   }
 
-  private fun setArrowButtonEnabled(flag: Boolean) {
+  private fun setArrowButtonEnabled(enabled: Boolean) {
     for (c in spinner.components) {
-      (c as? JButton)?.isEnabled = flag
+      (c as? JButton)?.isEnabled = enabled
     }
   }
 
@@ -290,8 +295,15 @@ class ColorIcon(
   override fun getIconHeight() = 10
 }
 
+// Discard the active edit first, otherwise the editor keeps showing a stale
+// value and committing it would overwrite the undone or redone cell value
+private fun cancelEditing(e: ActionEvent) {
+  (e.source as? JTable)?.takeIf { it.isEditing }?.cellEditor?.cancelCellEditing()
+}
+
 private class UndoAction : AbstractAction("undo") {
   override fun actionPerformed(e: ActionEvent) {
+    cancelEditing(e)
     runCatching {
       undoManager.undo()
     }.onFailure {
@@ -302,6 +314,7 @@ private class UndoAction : AbstractAction("undo") {
 
 private class RedoAction : AbstractAction("redo") {
   override fun actionPerformed(e: ActionEvent) {
+    cancelEditing(e)
     runCatching {
       undoManager.redo()
     }.onFailure {
