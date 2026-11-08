@@ -22,11 +22,12 @@ private const val ICON_ARC = 60f
 private const val WHEEL_W = 20
 private const val WHEEL_H = 30
 private const val WHEEL_ARC = 10f
+private const val WHEEL_SHIFT = 5
 private const val STROKE_W = 4f
 
 private val pressedButtons = EnumSet.noneOf(MouseButton::class.java)
 private val logArea = JTextArea()
-private val visualizerLabel = JLabel(MouseVisualizer())
+private val visualizerLabel = JLabel(MouseIcon())
 private val wheelResetTimer = Timer(100, null)
 private var wheelOffset = 0
 
@@ -57,7 +58,7 @@ fun createUI(): Component {
 }
 
 private fun updateButton(e: MouseEvent, isPressed: Boolean) {
-  val btn = if (SwingUtilities.isLeftMouseButton(e)) {
+  val button = if (SwingUtilities.isLeftMouseButton(e)) {
     MouseButton.LEFT
   } else if (SwingUtilities.isMiddleMouseButton(e)) {
     MouseButton.MIDDLE
@@ -66,24 +67,27 @@ private fun updateButton(e: MouseEvent, isPressed: Boolean) {
   } else {
     null
   }
-  if (btn != null) {
+  if (button != null) {
     if (isPressed) {
-      pressedButtons.add(btn)
+      pressedButtons.add(button)
     } else {
-      pressedButtons.remove(btn)
+      pressedButtons.remove(button)
     }
-    logEvent((if (isPressed) "Pressed: " else "Released: ") + btn)
+    logEvent((if (isPressed) "Pressed: " else "Released: ") + button)
     visualizerLabel.repaint()
   }
 }
 
 private fun handleWheel(e: MouseWheelEvent) {
-  val rotation = e.getWheelRotation()
-  val direction = if (rotation < 0) "UP" else "DOWN"
-  wheelOffset = if (rotation < 0) -5 else 5
-  logEvent("Wheel Moved: $direction (Amount: $rotation)")
-  visualizerLabel.repaint()
-  wheelResetTimer.restart()
+  val rotation = e.wheelRotation
+  // A high-resolution wheel reports 0 until the rotation reaches a full notch.
+  if (rotation != 0) {
+    val direction = if (rotation < 0) "UP" else "DOWN"
+    wheelOffset = if (rotation < 0) -WHEEL_SHIFT else WHEEL_SHIFT
+    logEvent("Wheel Moved: $direction (Amount: $rotation)")
+    visualizerLabel.repaint()
+    wheelResetTimer.restart()
+  }
 }
 
 private fun logEvent(msg: String) {
@@ -91,44 +95,46 @@ private fun logEvent(msg: String) {
   logArea.setCaretPosition(logArea.document.length)
 }
 
-private class MouseVisualizer : Icon {
+private class MouseIcon : Icon {
   override fun paintIcon(c: Component?, g: Graphics, x: Int, y: Int) {
     val g2 = g.create() as? Graphics2D ?: return
     g2.setRenderingHint(
       RenderingHints.KEY_ANTIALIASING,
       RenderingHints.VALUE_ANTIALIAS_ON,
     )
-    val xx = x + STROKE_W / 2f
-    val yy = y + STROKE_W / 2f
-    val w1 = iconWidth - STROKE_W
-    val h1 = iconHeight - STROKE_W
-    val body = Area(RoundRectangle2D.Float(xx, yy, w1, h1, ICON_ARC, ICON_ARC))
+    val bodyX = x + STROKE_W / 2f
+    val bodyY = y + STROKE_W / 2f
+    val bodyWidth = iconWidth - STROKE_W
+    val bodyHeight = iconHeight - STROKE_W
+    val body = Area(
+      RoundRectangle2D.Float(bodyX, bodyY, bodyWidth, bodyHeight, ICON_ARC, ICON_ARC),
+    )
     g2.color = COLOR_BODY
     g2.fill(body)
     g2.color = COLOR_LINE
     g2.stroke = BasicStroke(STROKE_W)
     g2.draw(body)
 
-    val w2 = w1 / 2f
-    val h2 = h1 / 2f
-    val left = Area(Rectangle2D.Float(xx, yy, w2, h2))
+    val halfWidth = bodyWidth / 2f
+    val halfHeight = bodyHeight / 2f
+    val left = Area(Rectangle2D.Float(bodyX, bodyY, halfWidth, halfHeight))
     left.intersect(body)
-    drawPart(g2, left, MouseButton.LEFT)
+    drawButton(g2, left, MouseButton.LEFT)
 
-    val right = Area(Rectangle2D.Float(xx + w2, yy, w2, h2))
+    val centerX = bodyX + halfWidth
+    val right = Area(Rectangle2D.Float(centerX, bodyY, halfWidth, halfHeight))
     right.intersect(body)
-    drawPart(g2, right, MouseButton.RIGHT)
+    drawButton(g2, right, MouseButton.RIGHT)
 
-    val wa = WHEEL_ARC
-    val wx = body.bounds.centerX.toFloat() - WHEEL_W / 2f
-    val wy = y + WHEEL_H / 2f + wheelOffset
+    val wheelX = centerX - WHEEL_W / 2f
+    val wheelY = y + WHEEL_H / 2f + wheelOffset
     val wheel = RoundRectangle2D.Float(
-      wx,
-      wy,
+      wheelX,
+      wheelY,
       WHEEL_W.toFloat(),
       WHEEL_H.toFloat(),
-      wa,
-      wa,
+      WHEEL_ARC,
+      WHEEL_ARC,
     )
     g2.color = getWheelColor()
     g2.fill(wheel)
@@ -149,13 +155,13 @@ private class MouseVisualizer : Icon {
     COLOR_WHEEL_IDLE
   }
 
-  fun drawPart(g2: Graphics2D, s: Shape, target: MouseButton) {
-    if (pressedButtons.contains(target)) {
+  private fun drawButton(g2: Graphics2D, shape: Shape, button: MouseButton) {
+    if (pressedButtons.contains(button)) {
       g2.color = COLOR_CLICK
-      g2.fill(s)
+      g2.fill(shape)
     }
     g2.color = COLOR_LINE
-    g2.draw(s)
+    g2.draw(shape)
   }
 }
 
