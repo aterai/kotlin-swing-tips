@@ -22,6 +22,12 @@ import kotlin.math.sqrt
 
 private val yearMonthLabel = JLabel("", SwingConstants.CENTER)
 val monthList = object : JList<LocalDate>() {
+  init {
+    // The rounded corners of the unchanged cells may also change, so repaint the whole list.
+    // Added here, not in updateUI(), so that it is not added again on every LookAndFeel change.
+    addListSelectionListener { repaint() }
+  }
+
   override fun updateUI() {
     cellRenderer = null
     super.updateUI()
@@ -32,7 +38,6 @@ val monthList = object : JList<LocalDate>() {
     cellRenderer = CalendarListRenderer()
     selectionModel.selectionMode = ListSelectionModel.SINGLE_INTERVAL_SELECTION
     isOpaque = false
-    addListSelectionListener { repaint() }
   }
 
   override fun paintComponent(g: Graphics) {
@@ -47,8 +52,8 @@ val monthList = object : JList<LocalDate>() {
       val area = Area()
       indices.map { getCellBounds(it, it) }.forEach { area.add(Area(it)) }
       for (a in GeomUtils.splitIntoSingleLoopAreas(area)) {
-        val lst = GeomUtils.convertAreaToPoint2DList(a)
-        g2.fill(GeomUtils.convertRoundedPath(lst, 4.0))
+        val points = GeomUtils.convertAreaToPoint2DList(a)
+        g2.fill(GeomUtils.convertRoundedPath(points, 4.0))
       }
       g2.dispose()
     }
@@ -149,7 +154,8 @@ private fun installActions() {
       val index = monthList.leadSelectionIndex
       if (index > 0) {
         monthList.setSelectedIndex(index - 1)
-      } else {
+      } else if (index == 0) {
+        // move to the last day of the previous month view
         val d = monthList.model.getElementAt(0).minusDays(1)
         updateMonthView(currentLocalDate.minusMonths(1))
         monthList.setSelectedValue(d, false)
@@ -164,7 +170,8 @@ private fun installActions() {
       if (index < monthList.model.size - 1) {
         monthList.setSelectedIndex(index + 1)
       } else {
-        val d = monthList.model.getElementAt(monthList.model.size - 1).plusDays(1)
+        val lastIndex = monthList.model.size - 1
+        val d = monthList.model.getElementAt(lastIndex).plusDays(1)
         updateMonthView(currentLocalDate.plusMonths(1))
         monthList.setSelectedValue(d, false)
       }
@@ -177,7 +184,8 @@ private fun installActions() {
     override fun actionPerformed(e: ActionEvent) {
       val index = monthList.leadSelectionIndex
       val weekLength = DayOfWeek.entries.size // 7
-      if (index < weekLength) {
+      // index < 0 means no lead selection, so delegate to the default action
+      if (index in 0..<weekLength) {
         val d = monthList.model.getElementAt(index).minusDays(weekLength.toLong())
         updateMonthView(currentLocalDate.minusMonths(1))
         monthList.setSelectedValue(d, false)
@@ -193,7 +201,8 @@ private fun installActions() {
     override fun actionPerformed(e: ActionEvent) {
       val index = monthList.leadSelectionIndex
       val weekLength = DayOfWeek.entries.size // 7
-      if (index > monthList.model.size - weekLength) {
+      // the last row starts at index (size - weekLength)
+      if (index >= monthList.model.size - weekLength) {
         val d = monthList.model.getElementAt(index).plusDays(weekLength.toLong())
         updateMonthView(currentLocalDate.plusMonths(1))
         monthList.setSelectedValue(d, false)
@@ -259,8 +268,9 @@ private class CalendarViewListModel(
 
   init {
     val firstDayOfMonth = YearMonth.from(date).atDay(1)
-    val v = firstDayOfMonth[weekFields.dayOfWeek()] - 1
-    startDate = firstDayOfMonth.minusDays(v.toLong())
+    // dayOfWeek() is localized: 1 is the first day of the week for this locale
+    val daysFromWeekStart = firstDayOfMonth[weekFields.dayOfWeek()] - 1
+    startDate = firstDayOfMonth.minusDays(daysFromWeekStart.toLong())
   }
 
   override fun getSize() = DayOfWeek.entries.size * ROW_COUNT
@@ -313,7 +323,11 @@ private object GeomUtils {
     val pt0 = list[0]
     val path = Path2D.Double()
     val sz = list.size
-    path.moveTo(pt0.x + arc, pt0.y)
+    val last = list[sz - 1]
+    // start where the rounded corner of pt0 begins on the edge coming from the last point
+    val sdx = sign(pt0.x - last.x)
+    val sdy = sign(pt0.y - last.y)
+    path.moveTo(pt0.x - sdx * arc, pt0.y - sdy * arc)
     for (i in 0..<sz) {
       val prv = list[(i - 1 + sz) % sz]
       val cur = list[i]
@@ -336,10 +350,10 @@ private object GeomUtils {
     return path
   }
 
-  fun splitIntoSingleLoopAreas(rect: Area): List<Area> {
+  fun splitIntoSingleLoopAreas(area: Area): List<Area> {
     val subArea = mutableListOf<Area>()
     val path = Path2D.Double()
-    val pi = rect.getPathIterator(null)
+    val pi = area.getPathIterator(null)
     val coords = DoubleArray(6)
     while (!pi.isDone) {
       val pathSegmentType = pi.currentSegment(coords)

@@ -123,7 +123,8 @@ private fun installActions() {
       val index = monthList.leadSelectionIndex
       if (index > 0) {
         monthList.setSelectedIndex(index - 1)
-      } else {
+      } else if (index == 0) {
+        // move to the last day of the previous month view
         val d = monthList.model.getElementAt(0).minusDays(1)
         updateMonthView(currentLocalDate.minusMonths(1))
         monthList.setSelectedValue(d, false)
@@ -138,7 +139,8 @@ private fun installActions() {
       if (index < monthList.model.size - 1) {
         monthList.setSelectedIndex(index + 1)
       } else {
-        val d = monthList.model.getElementAt(monthList.model.size - 1).plusDays(1)
+        val lastIndex = monthList.model.size - 1
+        val d = monthList.model.getElementAt(lastIndex).plusDays(1)
         updateMonthView(currentLocalDate.plusMonths(1))
         monthList.setSelectedValue(d, false)
       }
@@ -151,7 +153,8 @@ private fun installActions() {
     override fun actionPerformed(e: ActionEvent) {
       val index = monthList.leadSelectionIndex
       val weekLength = DayOfWeek.entries.size // 7
-      if (index < weekLength) {
+      // index < 0 means no lead selection, so delegate to the default action
+      if (index in 0..<weekLength) {
         val d = monthList.model.getElementAt(index).minusDays(weekLength.toLong())
         updateMonthView(currentLocalDate.minusMonths(1))
         monthList.setSelectedValue(d, false)
@@ -167,7 +170,8 @@ private fun installActions() {
     override fun actionPerformed(e: ActionEvent) {
       val index = monthList.leadSelectionIndex
       val weekLength = DayOfWeek.entries.size // 7
-      if (index > monthList.model.size - weekLength) {
+      // the last row starts at index (size - weekLength)
+      if (index >= monthList.model.size - weekLength) {
         val d = monthList.model.getElementAt(index).plusDays(weekLength.toLong())
         updateMonthView(currentLocalDate.plusMonths(1))
         monthList.setSelectedValue(d, false)
@@ -237,8 +241,9 @@ private class CalendarViewListModel(
 
   init {
     val firstDayOfMonth = YearMonth.from(date).atDay(1)
-    val v = firstDayOfMonth[weekFields.dayOfWeek()] - 1
-    startDate = firstDayOfMonth.minusDays(v.toLong())
+    // dayOfWeek() is localized: 1 is the first day of the week for this locale
+    val daysFromWeekStart = firstDayOfMonth[weekFields.dayOfWeek()] - 1
+    startDate = firstDayOfMonth.minusDays(daysFromWeekStart.toLong())
   }
 
   override fun getSize() = DayOfWeek.entries.size * ROW_COUNT
@@ -254,16 +259,21 @@ private class SingleIntervalMouseSelectionListener : MouseInputAdapter() {
   private var start = -1
 
   override fun mousePressed(e: MouseEvent) {
-    (e.component as? JList<*>)?.also {
-      start = it.locationToIndex(e.point)
-      it.selectionModel.addSelectionInterval(start, start)
+    val l = e.component as? JList<*> ?: return
+    // BasicListUI ignores non-left buttons and disabled lists, so do the same here
+    if (SwingUtilities.isLeftMouseButton(e) && l.isEnabled) {
+      start = l.locationToIndex(e.point)
+      l.selectionModel.addSelectionInterval(start, start)
+    } else {
+      start = -1
     }
   }
 
   override fun mouseDragged(e: MouseEvent) {
-    (e.component as? JList<*>)?.also {
-      val end = it.locationToIndex(e.point)
-      it.selectionModel.addSelectionInterval(start, end)
+    val l = e.component as? JList<*> ?: return
+    if (start >= 0 && SwingUtilities.isLeftMouseButton(e)) {
+      val end = l.locationToIndex(e.point)
+      l.selectionModel.addSelectionInterval(start, end)
     }
   }
 }
