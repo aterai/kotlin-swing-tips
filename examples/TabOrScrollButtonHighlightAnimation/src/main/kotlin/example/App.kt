@@ -3,7 +3,6 @@ package example
 import java.awt.*
 import java.awt.event.ActionListener
 import java.awt.event.HierarchyEvent
-import java.util.concurrent.atomic.AtomicInteger
 import javax.swing.*
 import javax.swing.plaf.LayerUI
 
@@ -23,26 +22,26 @@ fun createUI(): Component {
 }
 
 private class TabbedPanePopupMenu : JPopupMenu() {
-  private val closePage: JMenuItem
+  private val closeTab: JMenuItem
   private val closeAll: JMenuItem
   private val closeAllButActive: JMenuItem
+  private var counter = 0
 
   init {
-    val counter = AtomicInteger()
     add("New tab").addActionListener {
       (getInvoker() as? JTabbedPane)?.also {
-        addTab(counter, it)
+        addTab(it)
         it.setSelectedIndex(it.tabCount - 1)
       }
     }
     add("New tab Opens in Background").addActionListener {
       (getInvoker() as? JTabbedPane)?.also {
-        addTab(counter, it)
+        addTab(it)
       }
     }
     addSeparator()
-    closePage = add("Close")
-    closePage.addActionListener {
+    closeTab = add("Close")
+    closeTab.addActionListener {
       (getInvoker() as? JTabbedPane)?.also {
         it.remove(it.selectedIndex)
       }
@@ -55,32 +54,34 @@ private class TabbedPanePopupMenu : JPopupMenu() {
     closeAllButActive = add("Close all but active")
     closeAllButActive.addActionListener {
       (getInvoker() as? JTabbedPane)?.also {
-        val idx = it.selectedIndex
-        val title = it.getTitleAt(idx)
-        val cmp = it.getComponentAt(idx)
-        it.removeAll()
-        it.addTab(title, cmp)
+        val selected = it.selectedIndex
+        // Keep the active tab in place: re-adding it would start the highlight animation.
+        for (i in it.tabCount - 1 downTo 0) {
+          if (i != selected) {
+            it.removeTabAt(i)
+          }
+        }
       }
     }
   }
 
   override fun show(c: Component?, x: Int, y: Int) {
     if (c is JTabbedPane) {
-      closePage.setEnabled(c.indexAtLocation(x, y) >= 0)
+      closeTab.setEnabled(c.indexAtLocation(x, y) >= 0)
       closeAll.setEnabled(c.tabCount > 0)
       closeAllButActive.setEnabled(c.tabCount > 0)
       super.show(c, x, y)
     }
   }
 
-  private fun addTab(counter: AtomicInteger, tabs: JTabbedPane) {
-    val iv = counter.getAndIncrement()
-    tabs.addTab("Title: $iv", JLabel("Tab: $iv"))
+  private fun addTab(tabs: JTabbedPane) {
+    tabs.addTab("Title: $counter", JLabel("Tab: $counter"))
+    counter++
   }
 }
 
 private class TabHighlightLayerUI : LayerUI<JTabbedPane>() {
-  private val rect = Rectangle()
+  private val highlightRect = Rectangle()
   private val animator = Timer(10, null)
   private var listener: ActionListener? = null
   private var alpha = 0
@@ -89,80 +90,85 @@ private class TabHighlightLayerUI : LayerUI<JTabbedPane>() {
     super.installUI(c)
     if (c is JLayer<*>) {
       c.setLayerEventMask(AWTEvent.HIERARCHY_EVENT_MASK)
+      val l = ActionListener { updateAlpha(c) }
+      animator.addActionListener(l)
+      listener = l
     }
   }
 
   override fun uninstallUI(c: JComponent?) {
     if (c is JLayer<*>) {
       c.setLayerEventMask(0)
+      animator.stop()
+      animator.removeActionListener(listener)
+      alpha = 0
     }
     super.uninstallUI(c)
   }
 
   override fun paint(g: Graphics, c: JComponent?) {
     super.paint(g, c)
-    if (c is JLayer<*>) {
+    if (alpha > 0) {
       val g2 = g.create() as? Graphics2D ?: return
-      val a = alpha / 100f
-      g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, a)
+      g2.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha / 100f)
       g2.paint = Color.RED
-      g2.fill(rect)
+      g2.fill(highlightRect)
       g2.dispose()
     }
   }
 
   override fun processHierarchyEvent(e: HierarchyEvent, l: JLayer<out JTabbedPane>) {
     super.processHierarchyEvent(e, l)
-    val parent = e.getChangedParent()
-    val tabs = l.getView()
-    val flags = e.getChangeFlags()
-    if (parent == tabs && flags == HierarchyEvent.PARENT_CHANGED.toLong()) {
-      EventQueue.invokeLater { startAnime(l, e.component) }
+    // The same event is also dispatched to all descendants of the added component,
+    // such as the JViewport of a JScrollPane, so ignore everything but the component itself.
+    val c = e.component
+    val isAdded = c == e.changed && e.changedParent == l.view
+    if (isAdded && e.changeFlags == HierarchyEvent.PARENT_CHANGED.toLong()) {
+      EventQueue.invokeLater { startAnimation(l, c) }
     }
   }
 
-  private fun startAnime(l: JLayer<out JTabbedPane>, c: Component?) {
-    val tabs: JTabbedPane = l.getView()
+  private fun startAnimation(l: JLayer<out JTabbedPane>, c: Component?) {
+    val tabs = l.view
+    // The JTabbedPane also adds its own children, such as the scroll buttons,
+    // and the tab may already have been removed.
     val idx = tabs.indexOfComponent(c)
-    val tabRect = tabs.getBoundsAt(idx)
-    if (tabs.bounds.contains(tabRect)) {
-      rect.bounds = tabRect
-    } else {
-      val b = getScrollForwardButton(tabs)
-      if (b != null) {
-        rect.bounds = b.bounds
-      }
-    }
-    animator.start()
-    animator.removeActionListener(listener)
-    listener = ActionListener {
-      if (alpha < 32) {
-        alpha += 1
-      } else {
+    if (idx >= 0) {
+      getHighlightBounds(tabs, idx)?.also {
+        l.repaint(highlightRect) // Erase the highlight of the animation in progress
+        highlightRect.bounds = it
         alpha = 0
-        animator.stop()
+        animator.restart()
       }
-      l.paintImmediately(rect)
     }
-    animator.addActionListener(listener)
-    animator.start()
   }
 
-  private fun getScrollForwardButton(tabs: JTabbedPane): JButton? {
-    var button1: JButton? = null
-    var button2: JButton? = null
-    for (c in tabs.components) {
-      if (c is JButton) {
-        if (button1 == null) {
-          button1 = c
-        } else if (button2 == null) {
-          button2 = c
-        }
-      }
+  private fun updateAlpha(l: JLayer<*>) {
+    if (alpha < MAX_ALPHA) {
+      alpha += 1
+    } else {
+      alpha = 0
+      animator.stop()
     }
-    val x1 = button1?.getX() ?: -1
-    val x2 = button2?.getX() ?: -1
-    return if (x1 > x2) button1 else button2
+    l.paintImmediately(highlightRect)
+  }
+
+  private fun getHighlightBounds(tabs: JTabbedPane, idx: Int): Rectangle? {
+    val tabRect = tabs.getBoundsAt(idx)
+    // JTabbedPane#getBoundsAt(...) returns the bounds in the JTabbedPane coordinate system
+    return if (Rectangle(tabs.size).contains(tabRect)) {
+      tabRect
+    } else {
+      getScrollForwardButton(tabs)?.bounds
+    }
+  }
+
+  // The scrollTabsForward button is placed to the right of the scrollTabsBackward button.
+  private fun getScrollForwardButton(tabs: JTabbedPane) =
+    tabs.components.filterIsInstance<JButton>().maxByOrNull { it.x }
+
+  companion object {
+    private const val MAX_ALPHA = 32
   }
 }
 
