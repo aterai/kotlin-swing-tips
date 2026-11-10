@@ -101,7 +101,9 @@ private class MonthTable : JTable() {
 
   override fun setModel(dataModel: TableModel) {
     super.setModel(dataModel)
-    EventQueue.invokeLater { updateWeekHeaderRenderer() }
+    // The columns are recreated synchronously in JTable#setModel(...), so setting
+    // the renderer here prevents the default header from being painted even once.
+    updateWeekHeaderRenderer()
   }
 
   private fun updateWeekHeaderRenderer() {
@@ -110,7 +112,6 @@ private class MonthTable : JTable() {
     for (i in 0..<cm.columnCount) {
       cm.getColumn(i).setHeaderRenderer(r)
     }
-    getTableHeader()?.repaint()
   }
 }
 
@@ -133,27 +134,28 @@ private class WeekHeaderRenderer : DefaultTableCellRenderer() {
       row,
       column,
     )
-    val week = weekFields.firstDayOfWeek.plus(column.toLong())
-    when (week) {
+    val dayOfWeek = weekFields.firstDayOfWeek.plus(column.toLong())
+    when (dayOfWeek) {
       DayOfWeek.SUNDAY -> {
-        c.setForeground(table.getSelectionForeground())
-        c.setBackground(SUNDAY_BGC)
+        // Table.selectionForeground is dark in some LookAndFeels and unreadable here
+        c.foreground = Color.WHITE
+        c.background = SUNDAY_BGC
       }
 
       DayOfWeek.SATURDAY -> {
-        c.setForeground(table.getSelectionForeground())
-        c.setBackground(SATURDAY_BGC)
+        c.foreground = Color.WHITE
+        c.background = SATURDAY_BGC
       }
 
       else -> {
-        c.setForeground(table.getForeground())
-        c.setBackground(table.getTableHeader().getBackground())
+        val header = table.tableHeader
+        c.foreground = header.foreground
+        c.background = header.background
       }
     }
     if (c is JLabel) {
       c.setHorizontalAlignment(CENTER)
-      val gridColor = UIManager.getColor("Table.gridColor")
-      val border = BorderFactory.createMatteBorder(0, 0, 1, 1, gridColor)
+      val border = BorderFactory.createMatteBorder(0, 0, 1, 1, table.gridColor)
       val b = BorderFactory.createCompoundBorder(border, c.border)
       c.setBorder(b)
     }
@@ -161,14 +163,15 @@ private class WeekHeaderRenderer : DefaultTableCellRenderer() {
   }
 
   companion object {
-    val SUNDAY_BGC = Color(0xB0_12_1A)
-    val SATURDAY_BGC = Color(0x1A_12_B0)
+    private val SUNDAY_BGC = Color(0xB0_12_1A)
+    private val SATURDAY_BGC = Color(0x1A_12_B0)
   }
 }
 
 private class CalendarTableRenderer : DefaultTableCellRenderer() {
-  private val panel = JPanel()
-  private var currentLocalDate: LocalDate? = null
+  private val subLabel = createSubLabel()
+  private val panel = JPanel(BorderLayout())
+  private val layer = JLayer(panel, DiagonallySplitCellLayerUI())
 
   override fun getTableCellRendererComponent(
     table: JTable,
@@ -187,63 +190,63 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
       column,
     )
     if (value is LocalDate && c is JLabel && table is MonthTable) {
-      val model = table.model
-      val nextWeekDay = value.plusDays(model.columnCount.toLong())
       c.text = value.dayOfMonth.toString()
       c.verticalAlignment = TOP
       c.horizontalAlignment = LEFT
       panel.background = c.background
-      currentLocalDate = table.getCurrentLocalDate()
-      updateWeekColor(value, table, c, selected)
-      val lastRow = row == model.rowCount - 1
-      val m1 = YearMonth.from(nextWeekDay).monthValue
-      val m2 = YearMonth.from(currentLocalDate).monthValue
-      val split = m1 == m2
-      if (lastRow && split) {
-        val sub = JLabel(nextWeekDay.dayOfMonth.toString())
-        sub.font = c.font
-        sub.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
-        sub.isOpaque = false
-        sub.verticalAlignment = BOTTOM
-        sub.horizontalAlignment = RIGHT
+      val currentMonth = YearMonth.from(table.getCurrentLocalDate())
+      updateWeekColor(value, currentMonth, table, c, selected)
+      val model = table.model
+      val nextWeekDay = value.plusDays(model.columnCount.toLong()) // plus 7 days
+      val isLastRow = row == model.rowCount - 1
+      if (isLastRow && isDiagonallySplitCell(nextWeekDay, currentMonth)) {
+        subLabel.text = nextWeekDay.dayOfMonth.toString()
+        subLabel.font = c.font
+        updateWeekColor(nextWeekDay, currentMonth, table, subLabel, selected)
         panel.removeAll()
-        panel.layout = BorderLayout()
-        panel.add(sub, BorderLayout.SOUTH)
+        panel.add(subLabel, BorderLayout.SOUTH)
         panel.add(c, BorderLayout.NORTH)
         panel.border = c.border
         c.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
-        updateWeekColor(value, table, sub, selected)
-        return JLayer(panel, DiagonallySplitCellLayerUI())
+        return layer
       }
     }
     return c
   }
 
-  private fun updateWeekColor(
-    d: LocalDate,
-    table: JTable,
-    c: Component,
-    selected: Boolean,
-  ) {
-    if (selected) {
-      c.setForeground(table.getSelectionForeground())
-    } else {
-      val dayOfWeek = d.getDayOfWeek()
-      if (dayOfWeek == DayOfWeek.SUNDAY) {
-        c.setForeground(SUNDAY_FGC)
-      } else if (dayOfWeek == DayOfWeek.SATURDAY) {
-        c.setForeground(SATURDAY_FGC)
-      } else if (YearMonth.from(d).equals(YearMonth.from(currentLocalDate))) {
-        c.setForeground(table.getForeground())
+  companion object {
+    private val SUNDAY_FGC = Color(0xB0_12_1A)
+    private val SATURDAY_FGC = Color(0x1A_12_B0)
+
+    private fun createSubLabel() = JLabel().also {
+      it.border = BorderFactory.createEmptyBorder(1, 1, 1, 1)
+      it.verticalAlignment = BOTTOM
+      it.horizontalAlignment = RIGHT
+    }
+
+    private fun isDiagonallySplitCell(
+      nextWeekDay: LocalDate,
+      currentMonth: YearMonth,
+    ) = YearMonth.from(nextWeekDay) == currentMonth
+
+    private fun updateWeekColor(
+      d: LocalDate,
+      currentMonth: YearMonth,
+      table: JTable,
+      c: Component,
+      selected: Boolean,
+    ) {
+      c.foreground = if (selected) {
+        table.selectionForeground
       } else {
-        c.setForeground(Color.GRAY)
+        when {
+          d.dayOfWeek == DayOfWeek.SUNDAY -> SUNDAY_FGC
+          d.dayOfWeek == DayOfWeek.SATURDAY -> SATURDAY_FGC
+          YearMonth.from(d) == currentMonth -> table.foreground
+          else -> Color.GRAY
+        }
       }
     }
-  }
-
-  companion object {
-    val SUNDAY_FGC = Color(0xB0_12_1A)
-    val SATURDAY_FGC = Color(0x1A_12_B0)
   }
 }
 
@@ -317,13 +320,13 @@ private object CalendarUtils {
   }
 
   fun getLocalizedYearMonthText(str: String): String {
-    val list = str
+    val parts = str
       .split(" ".toRegex())
       .dropLastWhile { it.isEmpty() }
       .toTypedArray()
-    val isNumeric = list.all { it.toIntOrNull() != null }
+    val isNumeric = parts.all { it.toIntOrNull() != null }
     val separator = if (isNumeric) " / " else " "
-    return list.joinToString(separator)
+    return parts.joinToString(separator)
   }
 
   fun find(str: String, ptn: Pattern): String {
