@@ -2,18 +2,18 @@ package example
 
 import java.awt.*
 import java.awt.event.ActionEvent
-import java.awt.event.KeyEvent
+import java.awt.event.FocusEvent
 import javax.swing.*
-import javax.swing.border.Border
+import javax.swing.text.Position
 import javax.swing.tree.TreeNode
 
 fun createUI(): Component {
   val title0 = "Box + Multiple JList + JSeparator"
   val list0 = makeListBox()
   val title1 = "JSeparator + ListModel"
-  val list1 = GroupList(makeModel1())
+  val list1 = GroupList(makeSeparatorModel())
   val title2 = "CellRenderer + MatteBorder"
-  val list2 = GroupBorderList(makeModel2())
+  val list2 = GroupBorderList(makeTreeNodeModel())
   return JPanel(GridLayout(1, 0)).also {
     val mb = JMenuBar()
     mb.add(LookAndFeelUtils.createLookAndFeelMenu())
@@ -39,26 +39,23 @@ private fun makeTitledPanel(
 
 private fun makeListBox(): Container {
   val box = Box.createVerticalBox()
-  val tree = JTree()
-  val model = tree.model
-  val root = model.root as? TreeNode
-  root
-    ?.children()
-    ?.toList()
-    ?.forEach { node ->
-      if (!node.isLeaf) {
-        box.add(makeList(node.children().toList()))
-        box.add(JSeparator())
-      }
+  getGroups().forEach { node ->
+    box.add(makeList(getChildren(node)))
+    box.add(JSeparator())
+  }
+  val p = object : JPanel(BorderLayout()) {
+    override fun updateUI() {
+      super.updateUI()
+      // A color set only once would be reset to Panel.background by a LookAndFeel change
+      background = UIManager.getColor("List.background")
     }
-  val p = JPanel(BorderLayout())
-  p.setBackground(UIManager.getColor("List.background"))
+  }
   p.add(box, BorderLayout.NORTH)
   return p
 }
 
-private fun makeList(list: List<Any>): JList<Any> {
-  val c = object : JList<Any>(list.toTypedArray()) {
+private fun makeList(items: List<Any>): JList<Any> {
+  val list = object : JList<Any>(items.toTypedArray()) {
     override fun updateUI() {
       setCellRenderer(null)
       super.updateUI()
@@ -68,63 +65,54 @@ private fun makeList(list: List<Any>): JList<Any> {
         r.getListCellRendererComponent(l, v, index, selected, cellHasFocus)
       }
     }
+
+    override fun processFocusEvent(e: FocusEvent) {
+      super.processFocusEvent(e)
+      // ListUI repaints only the lead cell, but every selected cell depends on the focus
+      repaint()
+    }
   }
-  val height = c.getPreferredSize().height
-  c.maximumSize = Dimension(Short.MAX_VALUE.toInt(), height)
-  return c
+  val height = list.preferredSize.height
+  list.maximumSize = Dimension(Short.MAX_VALUE.toInt(), height)
+  return list
 }
 
-private fun makeModel1(): ListModel<Any> {
-  val tree = JTree()
-  val root = tree.model.root as? TreeNode
+private fun makeSeparatorModel(): ListModel<Any> {
   val model = DefaultListModel<Any>()
-  root
-    ?.children()
-    ?.toList()
-    ?.forEach { node ->
-      if (!node.isLeaf) {
-        node
-          .children()
-          .toList()
-          .forEach { model.addElement(it) }
-        model.addElement(JSeparator())
-      }
+  getGroups().forEach { node ->
+    if (!model.isEmpty) {
+      model.addElement(JSeparator())
     }
-  val last = model.size - 1
-  if (model.getElementAt(last) is JSeparator) {
-    model.remove(last)
+    getChildren(node).forEach { model.addElement(it) }
   }
   return model
 }
 
-private fun makeModel2(): ListModel<TreeNode> {
-  val tree = JTree()
-  val root = tree.model.root as? TreeNode
+private fun makeTreeNodeModel(): ListModel<TreeNode> {
   val model = DefaultListModel<TreeNode>()
-  root
-    ?.children()
-    ?.toList()
-    ?.forEach { node ->
-      if (!node.isLeaf) {
-        node
-          .children()
-          .toList()
-          .forEach { model.addElement(it) }
-      }
-    }
+  getGroups().flatMap { getChildren(it) }.forEach { model.addElement(it) }
   return model
 }
+
+private fun getGroups(): List<TreeNode> {
+  val root = JTree().model.root as? TreeNode ?: return emptyList()
+  return getChildren(root).filterNot { it.isLeaf }
+}
+
+private fun getChildren(parent: TreeNode): List<TreeNode> = parent.children().toList()
 
 private class GroupList<E>(
   model: ListModel<E>,
 ) : JList<E>(model) {
   init {
-    initActionMpa(this)
+    skipSeparator(actionMap, "selectPreviousRow")
+    skipSeparator(actionMap, "selectNextRow")
   }
 
   override fun updateUI() {
     setCellRenderer(null)
     super.updateUI()
+    // The JSeparator in the ListModel is out of the component tree and would keep the old UI
     val separator = JSeparator()
     val r = cellRenderer
     setCellRenderer { l, v, index, isSelected, cellHasFocus ->
@@ -136,37 +124,40 @@ private class GroupList<E>(
     }
   }
 
-  companion object {
-    private fun <E> initActionMpa(list: JList<E>) {
-      val am = list.actionMap
-      val selectPrevKey = "selectPreviousRow"
-      val selectNextKey = "selectNextRow"
-      overrideAction(am, "selectPreviousRow")
-      overrideAction(am, "selectNextRow")
-      val im = list.getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
-      im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), selectPrevKey)
-      im.put(KeyStroke.getKeyStroke(KeyEvent.VK_KP_UP, 0), selectPrevKey)
-      im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), selectNextKey)
-      im.put(KeyStroke.getKeyStroke(KeyEvent.VK_KP_DOWN, 0), selectNextKey)
-    }
+  override fun getNextMatch(
+    prefix: String,
+    startIndex: Int,
+    bias: Position.Bias,
+  ): Int {
+    // Keep the type-ahead search from matching JSeparator#toString()
+    val index = super.getNextMatch(prefix, startIndex, bias)
+    return if (isSeparator(this, index)) -1 else index
   }
 }
 
-private fun overrideAction(am: ActionMap, key: String) {
+private fun skipSeparator(
+  am: ActionMap,
+  key: String,
+) {
   val action = am.get(key)
   am.put(
     key,
     object : AbstractAction() {
       override fun actionPerformed(e: ActionEvent) {
         action.actionPerformed(e)
-        val l = e.getSource() as? JList<*> ?: return
-        if (l.model.getElementAt(l.selectedIndex) is JSeparator) {
+        val l = e.source as? JList<*> ?: return
+        if (isSeparator(l, l.selectedIndex)) {
           action.actionPerformed(e)
         }
       }
     },
   )
 }
+
+private fun isSeparator(
+  list: JList<*>,
+  index: Int,
+) = index >= 0 && list.model.getElementAt(index) is JSeparator
 
 private class GroupBorderList<E : TreeNode>(
   model: ListModel<E>,
@@ -175,28 +166,29 @@ private class GroupBorderList<E : TreeNode>(
     setCellRenderer(null)
     super.updateUI()
     val r = cellRenderer
-    setCellRenderer(
-      ListCellRenderer { l, v, index, isSelected, cellHasFocus ->
-        val c = r.getListCellRendererComponent(l, v, index, isSelected, cellHasFocus)
-        if (c is JComponent) {
-          val outside = getOutsideBorder(l, v, index)
-          val key = if (isSelected) "focusCellHighlightBorder" else "noFocusBorder"
-          val inside = UIManager.getBorder("List." + key)
-          c.setBorder(BorderFactory.createCompoundBorder(outside, inside))
-        }
-        c
-      },
-    )
+    setCellRenderer { l, v, index, isSelected, cellHasFocus ->
+      val c = r.getListCellRendererComponent(l, v, index, isSelected, cellHasFocus)
+      if (c is JComponent) {
+        // The default renderer resets its focus Border on every call, so it never nests
+        val outside = if (isGroupEnd(l, v, index)) GROUP_END else GROUP_ITEM
+        c.border = BorderFactory.createCompoundBorder(outside, c.border)
+      }
+      c
+    }
   }
 
-  private fun getOutsideBorder(l: JList<*>, v: TreeNode, index: Int): Border {
-    val max = l.getModel().size
-    val next = index + 1
-    val n = if (next < max) l.getModel().getElementAt(next) else null
-    return if (n is TreeNode && n.parent != v.parent) {
-      BorderFactory.createMatteBorder(0, 0, 1, 0, Color.GRAY)
-    } else {
-      BorderFactory.createMatteBorder(0, 0, 1, 0, l.getBackground())
+  companion object {
+    private val GROUP_END = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.GRAY)
+    private val GROUP_ITEM = BorderFactory.createEmptyBorder(0, 0, 1, 0)
+
+    private fun isGroupEnd(
+      l: JList<out TreeNode>,
+      v: TreeNode,
+      index: Int,
+    ): Boolean {
+      val m = l.model
+      val next = index + 1
+      return next < m.size && m.getElementAt(next).parent != v.parent
     }
   }
 }
