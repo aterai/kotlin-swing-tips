@@ -1,14 +1,10 @@
 package example
 
-import com.sun.java.swing.plaf.windows.WindowsMenuItemUI
-import sun.swing.MenuItemLayoutHelper
-import sun.swing.MenuItemLayoutHelper.LayoutResult
-import sun.swing.SwingUtilities2
 import java.awt.*
+import java.awt.event.ActionEvent
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import javax.swing.*
-import javax.swing.plaf.basic.BasicMenuItemUI
 
 fun createUI() = JPanel(BorderLayout()).also {
   EventQueue.invokeLater { it.rootPane.jMenuBar = createMenuBar() }
@@ -17,309 +13,206 @@ fun createUI() = JPanel(BorderLayout()).also {
 }
 
 private fun createMenuBar(): JMenuBar {
+  // Default: the accelerator text alignment depends on the LookAndFeel
+  val defaultMenu = JMenu("Default")
+  defaultMenu.mnemonic = KeyEvent.VK_D
+
+  // RightAlign: the accelerator text is always right-aligned
+  val rightAlignedMenu = JMenu("RightAlign")
+  rightAlignedMenu.mnemonic = KeyEvent.VK_R
+
+  addMenuItems(defaultMenu, rightAlignedMenu, "MenuItem", KeyEvent.VK_N, "alt N")
+  addMenuItems(defaultMenu, rightAlignedMenu, "aaa", KeyEvent.VK_1, "alt ESCAPE")
+  addMenuItems(defaultMenu, rightAlignedMenu, "12345", KeyEvent.VK_2, "alt ctrl SPACE")
+  val ks = "alt ctrl shift BACK_SPACE"
+  addMenuItems(defaultMenu, rightAlignedMenu, "c", KeyEvent.VK_3, ks)
+
   val menuBar = JMenuBar()
-  val menu0 = JMenu("Default")
-  val menu1 = JMenu("RightAcc")
-  menu0.mnemonic = KeyEvent.VK_D
-  menu1.mnemonic = KeyEvent.VK_R
-  menuBar.add(menu0)
-  menuBar.add(menu1)
-
-  val list = mutableListOf<JMenuItem>()
-  var menuItem = JMenuItem("mi")
-  menuItem.mnemonic = KeyEvent.VK_N
-  menuItem.accelerator = KeyStroke.getKeyStroke(
-    KeyEvent.VK_N,
-    InputEvent.ALT_DOWN_MASK,
-  )
-  list.add(menuItem)
-  menuItem = JMenuItem("aaa")
-  menuItem.mnemonic = KeyEvent.VK_1
-  menuItem.accelerator = KeyStroke.getKeyStroke(
-    KeyEvent.VK_ESCAPE,
-    InputEvent.ALT_DOWN_MASK,
-  )
-  list.add(menuItem)
-  menuItem = JMenuItem("bb")
-  menuItem.mnemonic = KeyEvent.VK_2
-
-  val msk2 = InputEvent.ALT_DOWN_MASK or
-    InputEvent.CTRL_DOWN_MASK
-  menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, msk2)
-  list.add(menuItem)
-  menuItem = JMenuItem("c")
-  menuItem.mnemonic = KeyEvent.VK_3
-
-  val msk3 = InputEvent.ALT_DOWN_MASK or
-    InputEvent.CTRL_DOWN_MASK or
-    InputEvent.SHIFT_DOWN_MASK
-  menuItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, msk3)
-  list.add(menuItem)
-
-  for (mi in list) {
-    menu0.add(mi)
-    menu1.add(makeMenuItem(mi))
-  }
+  menuBar.add(defaultMenu)
+  menuBar.add(rightAlignedMenu)
+  menuBar.add(LookAndFeelUtils.createLookAndFeelMenu())
   return menuBar
 }
 
-private fun makeMenuItem(mi: JMenuItem): JMenuItem {
-  val menuItem = object : JMenuItem(mi.text) {
-    override fun updateUI() {
-      super.updateUI()
-      val tmp = if (ui is WindowsMenuItemUI) {
-        RaaWindowsMenuItemUI()
-      } else {
-        RaaBasicMenuItemUI()
-      }
-      setUI(tmp)
-      // XXX: setLocale(Locale.JAPAN)
-    }
-  }
-  menuItem.mnemonic = mi.mnemonic
-  menuItem.accelerator = mi.accelerator
-  return menuItem
+// Add menu items that share the same accelerator to both menus for comparison
+private fun addMenuItems(
+  defaultMenu: JMenu,
+  rightAlignedMenu: JMenu,
+  text: String,
+  mnemonic: Int,
+  keyStroke: String,
+) {
+  val accelerator = KeyStroke.getKeyStroke(keyStroke)
+
+  val defaultItem = JMenuItem(text)
+  defaultItem.mnemonic = mnemonic
+  defaultItem.accelerator = accelerator
+  defaultMenu.add(defaultItem)
+
+  val rightAlignedItem = RightAlignedAcceleratorItem(text, accelerator)
+  rightAlignedItem.mnemonic = mnemonic
+  rightAlignedMenu.add(rightAlignedItem)
 }
 
-private object MenuItemHelper {
-  fun paintIcon(
-    g: Graphics,
-    lh: MenuItemLayoutHelper,
-    lr: LayoutResult,
-  ) {
-    lh.icon?.also {
-      val menuItem = lh.menuItem
-      val model = menuItem.model
-      val icon = if (model.isEnabled) {
-        if (model.isPressed && model.isArmed) {
-          menuItem.pressedIcon ?: menuItem.icon
-        } else {
-          menuItem.icon
-        }
+// A JMenuItem that paints its accelerator text right-aligned without using any
+// internal API such as sun.swing.MenuItemLayoutHelper.
+private class RightAlignedAcceleratorItem(
+  text: String,
+  private val acceleratorKey: KeyStroke?,
+) : JMenuItem(text) {
+  init {
+    // JMenuItem#setAccelerator(...) is intentionally not called, so the
+    // LookAndFeel never paints the accelerator text by itself.
+    // The binding is registered in the component's own InputMap/ActionMap,
+    // which survive updateUI() (a LookAndFeel only replaces their UI parent
+    // maps), so registering it once here is enough.
+    initAcceleratorBinding()
+  }
+
+  // JMenuBar#processKeyBinding(...) searches the whole menu hierarchy
+  // recursively, so a WHEN_IN_FOCUSED_WINDOW binding also works for a
+  // JMenuItem inside a JPopupMenu that is not showing.
+  private fun initAcceleratorBinding() {
+    val ks = acceleratorKey ?: return
+    val a = object : AbstractAction() {
+      override fun actionPerformed(e: ActionEvent) {
+        doClick(0)
+      }
+    }
+    actionMap.put(ACTION_KEY, a)
+    getInputMap(WHEN_IN_FOCUSED_WINDOW).put(ks, ACTION_KEY)
+  }
+
+  // @see javax.swing.plaf.basic.BasicMenuItemUI#getAcceleratorText()
+  private fun getAcceleratorText(): String {
+    val ks = acceleratorKey ?: return ""
+    val buf = StringBuilder()
+    val delimiter = UIManager.getString("MenuItem.acceleratorDelimiter") ?: "+"
+    val modifiers = ks.modifiers
+    if (modifiers > 0) {
+      buf.append(InputEvent.getModifiersExText(modifiers)).append(delimiter)
+    }
+    val keyCode = ks.keyCode
+    if (keyCode == 0) {
+      buf.append(ks.keyChar)
+    } else {
+      buf.append(KeyEvent.getKeyText(keyCode))
+    }
+    return buf.toString()
+  }
+
+  private fun getAcceleratorFont() = UIManager.getFont("MenuItem.acceleratorFont") ?: font
+
+  // NimbusLookAndFeel does not define MenuItem.acceleratorForeground and so on,
+  // so fall back to the Synth style keys and then to the item's own foreground.
+  private fun getAcceleratorColor(): Color {
+    val m = getModel()
+    val color = if (m.isEnabled) {
+      if (m.isArmed || isSelected) {
+        getUiColor(
+          "MenuItem.acceleratorSelectionForeground",
+          "MenuItem[MouseOver].textForeground",
+        )
       } else {
-        menuItem.disabledIcon
+        getUiColor("MenuItem.acceleratorForeground", "MenuItem[Enabled].textForeground")
       }
-      icon?.paintIcon(menuItem, g, lr.iconRect.x, lr.iconRect.y)
+    } else {
+      getUiColor("MenuItem.disabledForeground", "MenuItem[Disabled].textForeground")
     }
+    return color ?: foreground
   }
 
-  fun paintCheckIcon(
-    g: Graphics,
-    lh: MenuItemLayoutHelper,
-    lr: LayoutResult,
-    c: Color?,
-    foreground: Color?,
-  ) {
-    lh.checkIcon?.also {
-      val menuItem = lh.menuItem
-      val model = menuItem.model
-      g.color = when {
-        model.isArmed -> foreground
-        menuItem is JMenu && model.isSelected -> foreground
-        else -> c
-      }
-      if (lh.useCheckAndArrow()) {
-        it.paintIcon(menuItem, g, lr.checkRect.x, lr.checkRect.y)
-      }
+  override fun getPreferredSize(): Dimension? {
+    val d = super.getPreferredSize()
+    val txt = getAcceleratorText()
+    if (d != null && txt.isNotEmpty()) {
+      // Reserve the room the LookAndFeel would have used for the accelerator
+      d.width += iconTextGap + getFontMetrics(getAcceleratorFont()).stringWidth(txt)
     }
+    return d
   }
 
-  @Suppress("LongParameterList")
-  fun paintAccText(
-    g: Graphics,
-    lh: MenuItemLayoutHelper,
-    lr: LayoutResult,
-    disabledForeground: Color?,
-    acceleratorForeground: Color?,
-    acceleratorSelectionForeground: Color?,
-  ) {
-    val text = lh.accText
-    if (text.isEmpty()) {
+  override fun paintComponent(g: Graphics) {
+    super.paintComponent(g)
+    val txt = getAcceleratorText()
+    if (txt.isEmpty()) {
       return
     }
-    val viewRect = lh.viewRect
-    val accRect = lr.accRect
-    val ascent = lh.accFontMetrics.ascent
-    val menuItem = lh.menuItem
-    val model = menuItem.model
-    g.font = lh.accFontMetrics.font
-    if (model.isEnabled) { // *** paint the accText normally
-      if (model.isArmed) {
-        g.color = acceleratorSelectionForeground
-      } else if (menuItem is JMenu && model.isSelected) {
-        g.color = acceleratorSelectionForeground
-      } else {
-        g.color = acceleratorForeground
-      }
-      drawString(
-        menuItem,
-        g,
-        text,
-        viewRect.x + viewRect.width - menuItem.iconTextGap - accRect.width,
-        accRect.y + ascent,
-      )
-    } else { // *** paint the accText disabled
-      if (disabledForeground != null) {
-        g.color = disabledForeground
-        drawString(menuItem, g, text, accRect.x, accRect.y + ascent)
-      } else {
-        g.color = menuItem.background.brighter()
-        drawString(menuItem, g, text, accRect.x, accRect.y + ascent)
-        g.color = menuItem.background.darker()
-        drawString(
-          menuItem,
-          g,
-          text,
-          accRect.x - 1,
-          accRect.y + lh.fontMetrics.ascent - 1,
-        )
-      }
+    val g2 = g.create() as? Graphics2D ?: return
+    val hints = Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints")
+    if (hints is Map<*, *>) {
+      g2.addRenderingHints(hints)
     }
+    g2.font = getAcceleratorFont()
+    g2.color = getAcceleratorColor()
+    val fm = g2.fontMetrics
+    val i = insets
+    val gap = iconTextGap
+    // ComponentOrientation.RIGHT_TO_LEFT is also taken into account
+    val x = if (componentOrientation.isLeftToRight) {
+      width - i.right - gap - fm.stringWidth(txt)
+    } else {
+      i.left + gap
+    }
+    val y = (height - fm.height) / 2 + fm.ascent
+    g2.drawString(txt, x, y)
+    g2.dispose()
   }
 
-  private fun drawString(
-    c: JComponent,
-    g: Graphics,
-    text: String,
-    x: Int,
-    y: Int,
-  ) {
-    SwingUtilities2.drawString(c, g, text, x, y)
-    // Java 9: BasicGraphicsUtils.drawString(c, g as Graphics2D, text, x, y)
-  }
+  companion object {
+    private const val ACTION_KEY = "doClick"
 
-  fun paintArrowIcon(
-    g: Graphics,
-    lh: MenuItemLayoutHelper,
-    lr: LayoutResult,
-    foreground: Color?,
-  ) {
-    lh.arrowIcon?.also { arrowIcon ->
-      val menuItem = lh.menuItem
-      val model = menuItem.model
-      val isSelected = menuItem is JMenu && model.isSelected
-      if (model.isArmed || isSelected) {
-        g.color = foreground
-      }
-      if (lh.useCheckAndArrow()) {
-        arrowIcon.paintIcon(menuItem, g, lr.arrowRect.x, lr.arrowRect.y)
-      }
-    }
+    private fun getUiColor(
+      basicKey: String,
+      synthKey: String,
+    ): Color? = UIManager.getColor(basicKey) ?: UIManager.getColor(synthKey)
   }
 }
 
-private class RaaWindowsMenuItemUI : WindowsMenuItemUI() {
-  override fun paintMenuItem(
-    g: Graphics,
-    c: JComponent,
-    checkIcon: Icon,
-    arrowIcon: Icon,
-    background: Color,
-    foreground: Color,
-    textIconGap: Int,
-  ) { // // Save original graphics font and color
-    val g2 = g.create() as? Graphics2D ?: return
-    val mi = c as? JMenuItem ?: return
-    g2.font = mi.font
-    val viewRect = SwingUtilities.calculateInnerArea(mi, null)
-    val lh = MenuItemLayoutHelper(
-      mi,
-      checkIcon,
-      arrowIcon,
-      viewRect,
-      textIconGap,
-      "+",
-      true,
-      mi.font,
-      acceleratorFont,
-      MenuItemLayoutHelper.useCheckAndArrow(menuItem),
-      propertyPrefix,
-    )
-    val lr = lh.layoutMenuItem()
-    paintBackground(g2, mi, background)
-    MenuItemHelper.paintCheckIcon(g2, lh, lr, g.color, foreground)
-    MenuItemHelper.paintIcon(g2, lh, lr)
-    paintText(g2, lh, lr)
-    MenuItemHelper.paintAccText(
-      g2,
-      lh,
-      lr,
-      disabledForeground,
-      acceleratorForeground,
-      acceleratorSelectionForeground,
-    )
-    MenuItemHelper.paintArrowIcon(g2, lh, lr, foreground)
+private object LookAndFeelUtils {
+  private var lookAndFeel = UIManager.getLookAndFeel().javaClass.name
+
+  fun createLookAndFeelMenu(): JMenu {
+    val menu = JMenu("LookAndFeel")
+    val buttonGroup = ButtonGroup()
+    for (info in UIManager.getInstalledLookAndFeels()) {
+      val b = JRadioButtonMenuItem(info.name, info.className == lookAndFeel)
+      initLookAndFeelAction(info, b)
+      menu.add(b)
+      buttonGroup.add(b)
+    }
+    return menu
   }
 
-  private fun paintText(
-    g: Graphics,
-    lh: MenuItemLayoutHelper,
-    lr: LayoutResult,
+  fun initLookAndFeelAction(
+    info: UIManager.LookAndFeelInfo,
+    b: AbstractButton,
   ) {
-    if (lh.text.isNotEmpty()) {
-      if (lh.htmlView != null) {
-        lh.htmlView.paint(g, lr.textRect)
-      } else { // Text isn't HTML
-        paintText(g, lh.menuItem, lr.textRect, lh.text)
-      }
+    val cmd = info.className
+    b.text = info.name
+    b.actionCommand = cmd
+    b.hideActionText = true
+    b.addActionListener { setLookAndFeel(cmd) }
+  }
+
+  @Throws(
+    ClassNotFoundException::class,
+    InstantiationException::class,
+    IllegalAccessException::class,
+    UnsupportedLookAndFeelException::class,
+  )
+  private fun setLookAndFeel(newLookAndFeel: String) {
+    val oldLookAndFeel = lookAndFeel
+    if (oldLookAndFeel != newLookAndFeel) {
+      UIManager.setLookAndFeel(newLookAndFeel)
+      lookAndFeel = newLookAndFeel
+      updateLookAndFeel()
     }
   }
-}
 
-private class RaaBasicMenuItemUI : BasicMenuItemUI() {
-  override fun paintMenuItem(
-    g: Graphics,
-    c: JComponent,
-    checkIcon: Icon,
-    arrowIcon: Icon,
-    background: Color,
-    foreground: Color,
-    textIconGap: Int,
-  ) {
-    val g2 = g.create() as? Graphics2D ?: return
-    val mi = c as? JMenuItem ?: return
-    g2.font = mi.font
-    val viewRect = SwingUtilities.calculateInnerArea(mi, null)
-    val lh = MenuItemLayoutHelper(
-      mi,
-      checkIcon,
-      arrowIcon,
-      viewRect,
-      textIconGap,
-      "+",
-      true,
-      mi.font,
-      acceleratorFont,
-      MenuItemLayoutHelper.useCheckAndArrow(menuItem),
-      propertyPrefix,
-    )
-    val lr = lh.layoutMenuItem()
-    paintBackground(g2, mi, background)
-    MenuItemHelper.paintCheckIcon(g2, lh, lr, g.color, foreground)
-    MenuItemHelper.paintIcon(g2, lh, lr)
-    paintMenuText(g2, lh, lr)
-    MenuItemHelper.paintAccText(
-      g2,
-      lh,
-      lr,
-      disabledForeground,
-      acceleratorForeground,
-      acceleratorSelectionForeground,
-    )
-    MenuItemHelper.paintArrowIcon(g2, lh, lr, foreground)
-  }
-
-  private fun paintMenuText(
-    g: Graphics,
-    lh: MenuItemLayoutHelper,
-    lr: LayoutResult,
-  ) {
-    if (lh.text.isNotEmpty()) {
-      if (lh.htmlView != null) {
-        lh.htmlView.paint(g, lr.textRect)
-      } else { // Text isn't HTML
-        paintText(g, lh.menuItem, lr.textRect, lh.text)
-      }
+  private fun updateLookAndFeel() {
+    for (window in Window.getWindows()) {
+      SwingUtilities.updateComponentTreeUI(window)
     }
   }
 }
