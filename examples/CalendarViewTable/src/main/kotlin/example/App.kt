@@ -14,6 +14,7 @@ import javax.swing.event.ListSelectionListener
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.table.DefaultTableModel
 
+private val MONTH_FORMAT = DateTimeFormatter.ofPattern("yyyy / MM")
 private val realLocalDate = LocalDate.now(ZoneId.systemDefault())
 private var currentLocalDate = realLocalDate
 private val dateLabel = JLabel(realLocalDate.toString(), SwingConstants.CENTER)
@@ -45,11 +46,16 @@ private val monthTable = object : JTable() {
             val m1 = YearMonth.from(value).monthValue
             val m2 = YearMonth.from(currentLocalDate).monthValue
             val isSameMonth = m1 == m2
-            it.foreground = if (isSameMonth) table.foreground else Color.GRAY
-            it.background = if (value.isEqual(realLocalDate)) {
-              Color(0xDC_FF_DC)
+            if (selected) {
+              // keep the selection background set by DefaultTableCellRenderer
+              it.foreground = table.selectionForeground
             } else {
-              getDayOfWeekColor(table, value.dayOfWeek)
+              it.foreground = if (isSameMonth) table.foreground else Color.GRAY
+              it.background = if (value.isEqual(realLocalDate)) {
+                Color(0xDC_FF_DC)
+              } else {
+                getDayOfWeekColor(table, value.dayOfWeek)
+              }
             }
           }
         }
@@ -64,14 +70,11 @@ fun createUI(): Component {
   (header.defaultRenderer as? JLabel)?.horizontalAlignment = SwingConstants.CENTER
 
   val selectionListener = ListSelectionListener { e ->
-    if (!e.valueIsAdjusting) {
-      val o = monthTable.getValueAt(
-        monthTable.selectedRow,
-        monthTable.selectedColumn,
-      )
-      (o as? LocalDate)?.also {
-        dateLabel.text = it.toString()
-      }
+    val row = monthTable.selectedRow
+    val column = monthTable.selectedColumn
+    // The selection is cleared (-1) when the model is replaced by the prev/next buttons
+    if (!e.valueIsAdjusting && row >= 0 && column >= 0) {
+      dateLabel.text = monthTable.getValueAt(row, column).toString()
     }
   }
   monthTable.selectionModel.addListSelectionListener(selectionListener)
@@ -101,8 +104,7 @@ fun createUI(): Component {
 
 private fun updateMonthView(localDate: LocalDate) {
   currentLocalDate = localDate
-  val dtf = DateTimeFormatter.ofPattern("yyyy / MM").withLocale(Locale.getDefault())
-  monthLabel.text = localDate.format(dtf)
+  monthLabel.text = localDate.format(MONTH_FORMAT)
   monthTable.model = CalendarViewTableModel(localDate)
 }
 
@@ -120,9 +122,10 @@ private class CalendarViewTableModel(
 
   init {
     val firstDayOfMonth = YearMonth.from(date).atDay(1)
-    // val minusDays = firstDayOfMonth[WeekFields.SUNDAY_START.dayOfWeek()] - 1
-    val minusDays = firstDayOfMonth[weekFields.dayOfWeek()] - 1
-    startDate = firstDayOfMonth.minusDays(minusDays.toLong())
+    // number of days from the locale-dependent first day of the week to the first day of the month
+    // (use WeekFields.SUNDAY_START.dayOfWeek() to always start the week on Sunday)
+    val offset = firstDayOfMonth[weekFields.dayOfWeek()] - 1
+    startDate = firstDayOfMonth.minusDays(offset.toLong())
   }
 
   override fun getColumnClass(column: Int) = LocalDate::class.java
