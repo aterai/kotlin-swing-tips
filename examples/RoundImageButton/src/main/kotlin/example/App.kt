@@ -19,7 +19,7 @@ fun createUI(): Component {
     RoundButton("002.png", "002d.png", "002g.png"),
     RoundButton("004.png", "004d.png", "004g.png"),
   )
-  // TEST: buttons = makeButtonArray2(getClass()) // Set ButtonUI
+  // TEST: buttons = createButtonArray2(getClass()) // Set ButtonUI
   buttons.forEach {
     box.add(it)
     box.add(Box.createHorizontalStrut(5))
@@ -29,24 +29,24 @@ fun createUI(): Component {
   val check = JCheckBox("ButtonBorder Color")
   check.addActionListener { e ->
     val f = (e.source as? JCheckBox)?.isSelected ?: false
-    val bgc = if (f) Color.WHITE else Color.BLACK
-    buttons.forEach { it.background = bgc }
+    val color = if (f) Color.WHITE else Color.BLACK
+    buttons.forEach { it.background = color }
     box.repaint()
   }
 
   val p = JPanel()
   p.add(check)
 
-  val alignmentsChoices = JComboBox(ButtonAlignments.entries.toTypedArray())
-  alignmentsChoices.addItemListener { e ->
+  val alignmentChoices = JComboBox(ButtonAlignment.entries.toTypedArray())
+  alignmentChoices.addItemListener { e ->
     val item = e.item
-    if (e.stateChange == ItemEvent.SELECTED && item is ButtonAlignments) {
+    if (e.stateChange == ItemEvent.SELECTED && item is ButtonAlignment) {
       buttons.forEach { it.alignmentY = item.alignment }
       box.revalidate()
     }
   }
-  alignmentsChoices.selectedIndex = 1
-  p.add(alignmentsChoices)
+  alignmentChoices.selectedIndex = 1
+  p.add(alignmentChoices)
   p.border = BorderFactory.createEmptyBorder(10, 10, 10, 10)
 
   return JPanel(BorderLayout()).also {
@@ -57,16 +57,18 @@ fun createUI(): Component {
 }
 
 private class RoundButton(
-  i1: String,
-  i2: String,
-  i3: String,
-) : JButton(makeIcon(i1)) {
-  private var shape: Shape? = null
-  private var base: Shape? = null
+  iconPath: String,
+  pressedIconPath: String,
+  rolloverIconPath: String,
+) : JButton(createIcon(iconPath)) {
+  // lateinit has no initializer, so the shape created in updateUI()
+  // (called from the JButton constructor) is not reset afterwards
+  private lateinit var shape: Shape
+  private var baseBounds: Rectangle? = null
 
   init {
-    pressedIcon = makeIcon(i2)
-    rolloverIcon = makeIcon(i3)
+    pressedIcon = createIcon(pressedIconPath)
+    rolloverIcon = createIcon(rolloverIconPath)
   }
 
   override fun updateUI() {
@@ -82,14 +84,15 @@ private class RoundButton(
   override fun getPreferredSize() = super.getPreferredSize()?.also {
     val icon = icon
     val i = insets
-    val iw = maxOf(icon.iconWidth, icon.iconHeight)
-    it.setSize(iw + i.right + i.left, iw + i.top + i.bottom)
+    // Use a square of the longer icon side so that the border forms a circle
+    val size = maxOf(icon.iconWidth, icon.iconHeight)
+    it.setSize(size + i.right + i.left, size + i.top + i.bottom)
   }
 
   private fun initShape() {
-    if (bounds != base) {
+    if (bounds != baseBounds) {
       val s = preferredSize ?: Dimension(32, 32)
-      base = bounds
+      baseBounds = bounds
       shape = Ellipse2D.Double(0.0, 0.0, s.width - 1.0, s.height - 1.0)
     }
   }
@@ -111,16 +114,18 @@ private class RoundButton(
     y: Int,
   ): Boolean {
     initShape()
-    return shape?.contains(Point(x, y)) ?: super.contains(x, y)
+    // The shape is always created in updateUI() called from the constructor,
+    // so only the inside of the circle responds to the mouse
+    return shape.contains(x.toDouble(), y.toDouble())
   }
 }
 
-private fun makeIcon(path: String): Icon {
+private fun createIcon(path: String): Icon {
   val url = Thread.currentThread().contextClassLoader.getResource("example/$path")
   return url?.let { ImageIcon(url) } ?: UIManager.getIcon("OptionPane.errorIcon")
 }
 
-enum class ButtonAlignments(
+enum class ButtonAlignment(
   private val description: String,
   val alignment: Float,
 ) {
