@@ -18,16 +18,21 @@ fun createUI(): Component {
   val txt = LocalTime.now(ZoneId.systemDefault()).format(formatter)
   val label = JLabel(txt, SwingConstants.CENTER)
   val timer = Timer(100, null)
+  // The timer fires every 100ms, but the root pane only needs to be
+  // repainted when the displayed time actually changes
   timer.addActionListener {
-    label.text = LocalTime.now(ZoneId.systemDefault()).format(formatter)
-    val parent = SwingUtilities.getUnwrappedParent(label)
-    if (parent != null && parent.isOpaque) {
-      repaintWindowAncestor(label)
+    val now = LocalTime.now(ZoneId.systemDefault()).format(formatter)
+    if (now != label.text) {
+      label.text = now
+      val parent = SwingUtilities.getUnwrappedParent(label)
+      if (parent != null && parent.isOpaque) {
+        repaintRootPane(label)
+      }
     }
   }
   val cl = Thread.currentThread().contextClassLoader
   val ttf = cl.getResource("example/YournameS7ScientificHalf.ttf")
-  val tp = TextureUtils.makeTexturePanel(label, ttf)
+  val tp = TextureUtils.createTexturePanel(label, ttf)
   val digitalClock = JFrame()
   digitalClock.contentPane.add(tp)
   digitalClock.isUndecorated = true
@@ -48,14 +53,14 @@ fun createUI(): Component {
     val item = e.item
     if (e.stateChange == ItemEvent.SELECTED && item is TexturePaints) {
       tp.setTexturePaint(item.texturePaint)
-      repaintWindowAncestor(tp)
+      repaintRootPane(tp)
     }
   }
+  // The ItemListener of the JComboBox keeps the texture of the panel in sync
+  // with the selected item, so there is no need to set it again here
   val button = JToggleButton("timer")
   button.addActionListener { e ->
     if ((e.source as? AbstractButton)?.isSelected == true) {
-      val t = combo.getItemAt(combo.selectedIndex)
-      tp.setTexturePaint(t.texturePaint)
       timer.start()
       digitalClock.isVisible = true
     } else {
@@ -74,9 +79,14 @@ fun createUI(): Component {
   }
 }
 
-private fun repaintWindowAncestor(c: JComponent) {
+// Repaints the area of the JRootPane covered by the component so that the
+// transparent window is cleared before the translucent background is painted
+private fun repaintRootPane(c: JComponent) {
   c.rootPane?.also {
-    it.repaint(SwingUtilities.convertRectangle(c, c.bounds, it))
+    // c.bounds is relative to the parent of c,
+    // so the local bounds must be used as the source rectangle
+    val local = SwingUtilities.getLocalBounds(c)
+    it.repaint(SwingUtilities.convertRectangle(c, local, it))
   }
 }
 
@@ -111,8 +121,8 @@ private enum class TexturePaints(
 
   val texturePaint
     get() = when (this) {
-      IMAGE -> TextureUtils.makeImageTexture()
-      CHECKER -> TextureUtils.makeCheckerTexture()
+      IMAGE -> TextureUtils.createImageTexture()
+      CHECKER -> TextureUtils.createCheckerTexture()
       NULL -> null
     }
 
@@ -120,14 +130,14 @@ private enum class TexturePaints(
 }
 
 private object TextureUtils {
-  fun makeImageTexture(): TexturePaint {
+  fun createImageTexture(): TexturePaint {
     val path = "example/unkaku_w.png"
     val url = Thread.currentThread().contextClassLoader.getResource(path)
-    val bi = url?.openStream()?.use(ImageIO::read) ?: makeMissingImage()
+    val bi = url?.openStream()?.use(ImageIO::read) ?: createMissingImage()
     return TexturePaint(bi, Rectangle(bi.width, bi.height))
   }
 
-  private fun makeMissingImage(): BufferedImage {
+  private fun createMissingImage(): BufferedImage {
     val missingIcon = UIManager.getIcon("OptionPane.errorIcon")
     val w = missingIcon.iconWidth
     val h = missingIcon.iconHeight
@@ -138,7 +148,7 @@ private object TextureUtils {
     return bi
   }
 
-  fun makeCheckerTexture(): TexturePaint {
+  fun createCheckerTexture(): TexturePaint {
     val cs = 6
     val sz = cs * cs
     val bi = BufferedImage(sz, sz, BufferedImage.TYPE_INT_ARGB)
@@ -160,11 +170,11 @@ private object TextureUtils {
     return TexturePaint(bi, Rectangle(sz, sz))
   }
 
-  fun makeTexturePanel(
+  fun createTexturePanel(
     label: JLabel,
     url: URL?,
   ): TexturePanel {
-    val font = makeFont(url) ?: label.font
+    val font = createFont(url) ?: label.font
     label.font = font.deriveFont(80f)
     label.background = Color(0x0, true)
     label.isOpaque = false
@@ -179,7 +189,7 @@ private object TextureUtils {
     return p
   }
 
-  private fun makeFont(url: URL?): Font? = runCatching {
+  private fun createFont(url: URL?): Font? = runCatching {
     url?.openStream().use {
       Font.createFont(Font.TRUETYPE_FONT, it).deriveFont(12f)
     }
