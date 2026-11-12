@@ -7,6 +7,8 @@ import java.awt.event.ComponentEvent
 import javax.swing.*
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
+import javax.swing.text.DefaultEditorKit
+import javax.swing.text.TextAction
 
 fun createUI(): Component {
   val txt = makeSampleText()
@@ -44,35 +46,9 @@ private fun makeTitledPanel(title: String, editor: JTextArea): Component {
 private class CustomTextArea(
   text: String?,
 ) : JTextArea(text) {
-  private val selectAllAct = object : AbstractAction() {
-    override fun actionPerformed(e: ActionEvent) {
-      val r = visibleRect
-      actionMap["select-all"].actionPerformed(e)
-      EventQueue.invokeLater { scrollRectToVisible(r) }
-    }
-  }
-  private val caretUpAct = object : AbstractAction() {
-    override fun actionPerformed(e: ActionEvent) {
-      if (selectedText == null) {
-        actionMap["caret-up"].actionPerformed(e)
-      } else {
-        caret.moveDot(caret.mark)
-      }
-    }
-  }
-  private val caretForwardAct = object : AbstractAction() {
-    override fun actionPerformed(e: ActionEvent) {
-      if (selectedText == null) {
-        actionMap["caret-forward"].actionPerformed(e)
-      } else {
-        caret.moveDot(caret.mark)
-      }
-    }
-  }
-
   override fun updateUI() {
     super.updateUI()
-    EventQueue.invokeLater { this.initActionMap() }
+    initActionMap()
   }
 
   private fun initActionMap() {
@@ -80,46 +56,33 @@ private class CustomTextArea(
     val am = actionMap
     val selectAllKey = "select-all2"
     im.put(KeyStroke.getKeyStroke("ctrl A"), selectAllKey)
-    am.put(selectAllKey, selectAllAct)
-    val caretUpKey = "caret-up"
-    im.put(KeyStroke.getKeyStroke("UP"), caretUpKey + "2")
-    am.put(caretUpKey + "2", caretUpAct)
-    val caretForwardKey = "caret-forward"
-    im.put(KeyStroke.getKeyStroke("LEFT"), caretForwardKey + "2")
-    am.put(caretForwardKey + "2", caretForwardAct)
+    am.put(
+      selectAllKey,
+      object : AbstractAction() {
+        override fun actionPerformed(e: ActionEvent) {
+          val r = visibleRect
+          actionMap[DefaultEditorKit.selectAllAction]?.actionPerformed(e)
+          // Restore the visible rect after the caret has scrolled to the end of the text
+          EventQueue.invokeLater { scrollRectToVisible(r) }
+        }
+      },
+    )
+    // Visual Studio Code: UP and LEFT move the caret to the start of the selection
+    val upKey = "caret-up2"
+    im.put(KeyStroke.getKeyStroke("UP"), upKey)
+    am.put(upKey, CollapseSelectionAction(DefaultEditorKit.upAction, true))
+    val backwardKey = "caret-backward2"
+    im.put(KeyStroke.getKeyStroke("LEFT"), backwardKey)
+    am.put(backwardKey, CollapseSelectionAction(DefaultEditorKit.backwardAction, true))
   }
 }
 
 private class EmacsTextArea(
   text: String?,
 ) : JTextArea(text) {
-  private val selectAllAct = object : AbstractAction() {
-    override fun actionPerformed(e: ActionEvent) {
-      selectAll()
-    }
-  }
-  private val caretDownAct = object : AbstractAction() {
-    override fun actionPerformed(e: ActionEvent) {
-      if (selectedText == null) {
-        actionMap["caret-down"].actionPerformed(e)
-      } else {
-        caret.moveDot(caret.mark)
-      }
-    }
-  }
-  private val caretBackwardAct = object : AbstractAction() {
-    override fun actionPerformed(e: ActionEvent) {
-      if (selectedText == null) {
-        actionMap["caret-backward"].actionPerformed(e)
-      } else {
-        caret.moveDot(caret.mark)
-      }
-    }
-  }
-
   override fun updateUI() {
     super.updateUI()
-    EventQueue.invokeLater { this.initActionMap() }
+    initActionMap()
   }
 
   private fun initActionMap() {
@@ -127,23 +90,50 @@ private class EmacsTextArea(
     val am = actionMap
     val selectAllKey = "select-all2"
     im.put(KeyStroke.getKeyStroke("ctrl A"), selectAllKey)
-    am.put(selectAllKey, selectAllAct)
-    val caretDownKey = "caret-down"
-    im.put(KeyStroke.getKeyStroke("DOWN"), caretDownKey + "2")
-    am.put(caretDownKey + "2", caretDownAct)
-    val caretBackwardKey = "caret-backward"
-    im.put(KeyStroke.getKeyStroke("RIGHT"), caretBackwardKey + "2")
-    am.put(caretBackwardKey + "2", caretBackwardAct)
+    am.put(
+      selectAllKey,
+      object : AbstractAction() {
+        override fun actionPerformed(e: ActionEvent) {
+          selectAll()
+        }
+      },
+    )
+    // GNU Emacs: DOWN and RIGHT move the caret to the end of the selection
+    val downKey = "caret-down2"
+    im.put(KeyStroke.getKeyStroke("DOWN"), downKey)
+    am.put(downKey, CollapseSelectionAction(DefaultEditorKit.downAction, false))
+    val forwardKey = "caret-forward2"
+    im.put(KeyStroke.getKeyStroke("RIGHT"), forwardKey)
+    am.put(forwardKey, CollapseSelectionAction(DefaultEditorKit.forwardAction, false))
   }
 
   override fun selectAll() {
     val r = visibleRect
     val doc = document
     if (doc != null) {
+      // Select from the end to the beginning so that the caret stays at the top
       caretPosition = doc.length
       moveCaretPosition(0)
     }
     EventQueue.invokeLater { scrollRectToVisible(r) }
+  }
+}
+
+// Collapses the selection to its start or end, or performs the default caret
+// action when nothing is selected.
+private class CollapseSelectionAction(
+  private val defaultActionName: String,
+  private val toSelectionStart: Boolean,
+) : TextAction(defaultActionName) {
+  override fun actionPerformed(e: ActionEvent) {
+    val c = getTextComponent(e) ?: return
+    val start = c.selectionStart
+    val end = c.selectionEnd
+    if (start == end) {
+      c.actionMap[defaultActionName]?.actionPerformed(e)
+    } else {
+      c.caretPosition = if (toSelectionStart) start else end
+    }
   }
 }
 
@@ -219,10 +209,10 @@ private class LineNumberView(
     val start = getLineAtPoint(base)
     val end = getLineAtPoint(base + clip.height)
     var y = start * fontHeight
-    val rmg = insets.right
+    val right = componentWidth - insets.right
     for (i in start..end) {
       val text = (i + 1).toString()
-      val x = componentWidth - rmg - fontMetrics.stringWidth(text)
+      val x = right - fontMetrics.stringWidth(text)
       y += fontAscent
       g.drawString(text, x, y)
       y += fontDescent + fontLeading
