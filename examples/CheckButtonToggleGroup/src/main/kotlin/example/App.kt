@@ -8,17 +8,18 @@ private val SELECTED_ICON = ScaledIcon(CheckBoxIcon(), 12, 12)
 private val EMPTY_ICON = EmptyIcon()
 
 fun createUI(): Component {
-  val style = listOf("Bold", "Italic", "Underline")
-  val food = listOf("hot dogs", "pizza", "ravioli", "bananas")
+  val styles = listOf("Bold", "Italic", "Underline")
+  val foods = listOf("hot dogs", "pizza", "ravioli", "bananas")
   return JPanel().also {
-    it.add(makeButtonToggles(style))
-    it.add(makeMultipleSelection(food))
+    it.add(createSingleSelection(styles, 1))
+    it.add(createMultipleSelection(foods, 1))
     it.preferredSize = Dimension(320, 240)
   }
 }
 
-private fun makePanel(): JPanel {
-  return object : JPanel(FlowLayout(FlowLayout.CENTER, -1, 0)) {
+private fun createPanel(overlap: Int): JPanel {
+  // A negative hgap overlaps adjacent buttons so that their LineBorders are shared
+  val p = object : JPanel(FlowLayout(FlowLayout.CENTER, -overlap, 0)) {
     override fun isOptimizedDrawingEnabled() = false
 
     override fun getPreferredSize(): Dimension {
@@ -27,51 +28,41 @@ private fun makePanel(): JPanel {
       return d
     }
   }
+  p.border = BorderFactory.createEmptyBorder(5, overlap + 5, 5, 5)
+  return p
 }
 
-private fun makeButtonToggles(list: List<String>): JPanel {
-  val overlap = 1
-  val p = makePanel()
-  p.border = BorderFactory.createEmptyBorder(5, overlap + 5, 5, 5)
-  val bg = ToggleButtonGroup()
+private fun createSingleSelection(list: List<String>, overlap: Int): JPanel {
+  val p = createPanel(overlap)
+  val group = ToggleButtonGroup()
   list.forEach {
-    val b = makeCheckToggleButton(it)
+    val b = createCheckToggleButton(it)
     p.add(b)
-    bg.add(b)
+    group.add(b)
   }
   return p
 }
 
-private fun makeMultipleSelection(list: List<String>): JPanel {
-  val overlap = 1
-  val p = makePanel()
-  p.border = BorderFactory.createEmptyBorder(5, overlap + 5, 5, 5)
-  list.forEach {
-    p.add(makeCheckToggleButton(it))
-  }
+private fun createMultipleSelection(list: List<String>, overlap: Int): JPanel {
+  val p = createPanel(overlap)
+  list.forEach { p.add(createCheckToggleButton(it)) }
   return p
 }
 
-private fun makeCheckToggleButton(title: String): AbstractButton {
+private fun createCheckToggleButton(title: String): AbstractButton {
   val button = object : JToggleButton(title) {
     override fun updateUI() {
       super.updateUI()
       background = Color.GRAY
-      border = makeBorder(background)
+      border = createBorder(background)
       isContentAreaFilled = false
       isFocusPainted = false
       isOpaque = false
     }
   }
-  button.addActionListener { e ->
-    (e.source as? AbstractButton)
-      ?.parent
-      ?.also {
-        descendants(it)
-          .filterIsInstance<AbstractButton>()
-          .forEach { b -> updateButton(b) }
-      }
-  }
+  // An ItemEvent is also fired on a button deselected by the ButtonGroup,
+  // so each button only needs to update itself
+  button.addItemListener { updateButton(button) }
   return button
 }
 
@@ -87,14 +78,10 @@ private fun updateButton(button: AbstractButton) {
   }
 }
 
-private fun makeBorder(bgc: Color) = BorderFactory.createCompoundBorder(
-  BorderFactory.createLineBorder(bgc),
+private fun createBorder(color: Color) = BorderFactory.createCompoundBorder(
+  BorderFactory.createLineBorder(color),
   BorderFactory.createEmptyBorder(5, 8, 5, 8),
 )
-
-fun descendants(parent: Container): List<Component> = parent.components
-  .filterIsInstance<Container>()
-  .flatMap { listOf(it) + descendants(it) }
 
 private class ScaledIcon(
   private val icon: Icon,
@@ -134,25 +121,24 @@ private class CheckBoxIcon : Icon {
   ) {
     val g2 = g.create()
     if (g2 is Graphics2D && c is AbstractButton) {
-      val model = c.model
       g2.setRenderingHint(
         RenderingHints.KEY_ANTIALIASING,
         RenderingHints.VALUE_ANTIALIAS_ON,
       )
       g2.translate(x, y)
-      g2.paint = c.foreground
-      val s = iconWidth.coerceAtMost(iconHeight) * .05
-      val w = iconWidth - s - s
-      val h = iconHeight - s - s
-      val gw = w / 8.0
-      val gh = h / 8.0
-      g2.stroke = BasicStroke(s.toFloat())
-      if (model.isSelected) {
+      if (c.model.isSelected) {
+        g2.paint = c.foreground
+        val s = iconWidth.coerceAtMost(iconHeight) * .05
+        val w = iconWidth - s - s
+        val h = iconHeight - s - s
+        val gw = w / 8.0
+        val gh = h / 8.0
         g2.stroke = BasicStroke(3f * s.toFloat())
+        // The origin is already translated to (x, y), so do not add x and y again
         val p = Path2D.Double()
-        p.moveTo(x + 2f * gw, y + .5f * h)
-        p.lineTo(x + .4f * w, y + h - 2f * gh)
-        p.lineTo(x + w - 2f * gw, y + 2f * gh)
+        p.moveTo(2.0 * gw, .5 * h)
+        p.lineTo(.4 * w, h - 2.0 * gh)
+        p.lineTo(w - 2.0 * gw, 2.0 * gh)
         g2.draw(p)
       }
       g2.dispose()
