@@ -63,6 +63,7 @@ private class TableRowTransferHandler : TransferHandler() {
     val table = c as? JTable
     val model = table?.model as? DefaultTableModel
     val transferredRows = mutableListOf<Any>()
+    // Discard indices left over from a previous drag that did not reach exportDone
     selectedIndices.clear()
     if (model != null) {
       table.selectedRows.forEach {
@@ -138,17 +139,11 @@ private class TableRowTransferHandler : TransferHandler() {
   ) {
     c.rootPane.glassPane.isVisible = false
     if (remove && selectedIndices.isNotEmpty()) {
-      // If we are moving items around in the same list, we
-      // need to adjust the indices accordingly, since those
-      // after the insertion point have moved.
-      val selectedList = if (addCount > 0) {
-        selectedIndices.map { if (it >= addIndex) it + addCount else it }
-      } else {
-        selectedIndices.toList()
-      }
       ((c as? JTable)?.model as? DefaultTableModel)?.also { model ->
-        for (i in selectedList.indices.reversed()) {
-          model.removeRow(selectedList[i])
+        // Remove from the bottom so that the remaining indices stay valid.
+        // Rows at or after the drop location were shifted down by the inserted rows.
+        for (idx in selectedIndices.asReversed()) {
+          model.removeRow(if (addCount > 0 && idx >= addIndex) idx + addCount else idx)
         }
       }
     }
