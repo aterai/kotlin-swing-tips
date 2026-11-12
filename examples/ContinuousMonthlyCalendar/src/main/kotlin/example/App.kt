@@ -12,13 +12,14 @@ import java.time.temporal.WeekFields
 import java.util.Locale
 import javax.swing.*
 import javax.swing.event.ListSelectionListener
+import javax.swing.table.AbstractTableModel
 import javax.swing.table.DefaultTableCellRenderer
-import javax.swing.table.DefaultTableModel
 
-private val locale1 = Locale.getDefault()
-private val realLocalDate = LocalDate.now(ZoneId.systemDefault())
-private var currentLocalDate = realLocalDate
-private val dateLabel = JLabel(realLocalDate.toString(), SwingConstants.CENTER)
+private val MONTH_FORMATTER = DateTimeFormatter.ofPattern("yyyy / MM")
+private val defaultLocale = Locale.getDefault()
+private val today = LocalDate.now(ZoneId.systemDefault())
+private var currentLocalDate = today
+private val dateLabel = JLabel(today.toString(), SwingConstants.CENTER)
 private val monthLabel = JLabel("", SwingConstants.CENTER)
 private val monthTable = object : JTable() {
   override fun updateUI() {
@@ -28,6 +29,10 @@ private val monthTable = object : JTable() {
     cellSelectionEnabled = true
     rowHeight = 32
     fillsViewportHeight = true
+    val header = getTableHeader()
+    header.resizingAllowed = false
+    header.reorderingAllowed = false
+    (header.defaultRenderer as? JLabel)?.horizontalAlignment = SwingConstants.CENTER
     val renderer = DefaultTableCellRenderer()
     setDefaultRenderer(
       LocalDate::class.java,
@@ -44,11 +49,9 @@ private val monthTable = object : JTable() {
           if (it is JLabel && value is LocalDate) {
             it.horizontalAlignment = SwingConstants.CENTER
             it.text = value.dayOfMonth.toString()
-            val m1 = YearMonth.from(value).monthValue
-            val m2 = YearMonth.from(currentLocalDate).monthValue
-            val isSameMonth = m1 == m2
+            val isSameMonth = YearMonth.from(value) == YearMonth.from(currentLocalDate)
             it.foreground = if (isSameMonth) table.foreground else Color.GRAY
-            it.background = if (value.isEqual(realLocalDate)) {
+            it.background = if (value.isEqual(today)) {
               Color(0xDC_FF_DC)
             } else {
               getDayOfWeekColor(table, value.dayOfWeek)
@@ -61,27 +64,22 @@ private val monthTable = object : JTable() {
 private val scroll = JScrollPane(monthTable)
 
 fun createUI(): Component {
-  val header = monthTable.tableHeader
-  header.resizingAllowed = false
-  header.reorderingAllowed = false
-  (header.defaultRenderer as? JLabel)?.horizontalAlignment = SwingConstants.CENTER
-
+  // The renderer, selection mode, row height and header settings
+  // are configured in monthTable#updateUI()
   val selectionListener = ListSelectionListener { e ->
-    if (!e.valueIsAdjusting) {
-      val o = monthTable.getValueAt(
-        monthTable.selectedRow,
-        monthTable.selectedColumn,
-      )
-      (o as? LocalDate)?.also {
+    val row = monthTable.selectedRow
+    val column = monthTable.selectedColumn
+    // Ignore the intermediate state where only one of the row or column is selected
+    if (!e.valueIsAdjusting && row >= 0 && column >= 0) {
+      (monthTable.getValueAt(row, column) as? LocalDate)?.also {
         dateLabel.text = it.toString()
       }
     }
   }
   monthTable.selectionModel.addListSelectionListener(selectionListener)
   monthTable.columnModel.selectionModel.addListSelectionListener(selectionListener)
-  val date = getTopLeftCellDayOfMonth(realLocalDate, locale1)
-  val model = CalendarViewTableModel(date, locale1)
-  monthTable.model = model
+  val date = getTopLeftCellDayOfMonth(today, defaultLocale)
+  monthTable.model = CalendarViewTableModel(date, defaultLocale)
   val verticalScrollBar = object : JScrollBar(VERTICAL) {
     override fun getPreferredSize(): Dimension {
       val d = super.getPreferredSize()
@@ -93,18 +91,17 @@ fun createUI(): Component {
   scroll.verticalScrollBar = verticalScrollBar
   verticalScrollBar.model.addChangeListener { verticalScrollChanged() }
 
-  updateMonthView(realLocalDate, locale1)
+  updateMonthView(today, defaultLocale)
 
   val prev = JButton("<")
   prev.addActionListener {
-    updateMonthView(
-      currentLocalDate.minusMonths(1),
-      locale1,
-    )
+    updateMonthView(currentLocalDate.minusMonths(1), defaultLocale)
   }
 
   val next = JButton(">")
-  next.addActionListener { updateMonthView(currentLocalDate.plusMonths(1), locale1) }
+  next.addActionListener {
+    updateMonthView(currentLocalDate.plusMonths(1), defaultLocale)
+  }
 
   val p = JPanel(BorderLayout())
   p.add(monthLabel)
@@ -121,44 +118,47 @@ fun createUI(): Component {
 }
 
 private fun verticalScrollChanged() {
-  EventQueue.invokeLater {
-    val viewport = scroll.viewport
-    val pt = SwingUtilities.convertPoint(viewport, 0, 0, monthTable)
-    val row = monthTable.rowAtPoint(pt)
-    val col = 6 // monthTable.columnAtPoint(pt);
-    val localDate = monthTable.getValueAt(row, col)
-    if (localDate is LocalDate) {
-      currentLocalDate = localDate
-      updateMonthLabel(localDate, locale1)
+  EventQueue.invokeLater { updateCurrentMonth() }
+}
+
+private fun updateCurrentMonth() {
+  val viewport = scroll.viewport
+  val pt = SwingUtilities.convertPoint(viewport, 0, 0, monthTable)
+  val row = monthTable.rowAtPoint(pt)
+  if (row >= 0) {
+    // The top-right cell (the last day of the top week) always belongs to
+    // the month whose first week is displayed at the top
+    val column = monthTable.columnCount - 1
+    (monthTable.getValueAt(row, column) as? LocalDate)?.also {
+      currentLocalDate = it
+      updateMonthLabel(it, defaultLocale)
       viewport.repaint()
     }
   }
 }
 
-fun updateMonthView(
-  localDate: LocalDate,
+private fun updateMonthView(
+  date: LocalDate,
   locale: Locale,
 ) {
-  currentLocalDate = localDate
-  updateMonthLabel(localDate, locale)
-  val model = monthTable.model
-  val v = model.rowCount / 2
-  val startDate1 = getTopLeftCellDayOfMonth(realLocalDate, locale)
-  val startDate2 = getTopLeftCellDayOfMonth(localDate, locale)
-  val between = ChronoUnit.WEEKS.between(startDate1, startDate2).toInt()
-  // monthTable.revalidate();
-  val r = monthTable.getCellRect(v + between, 0, false)
+  currentLocalDate = date
+  updateMonthLabel(date, locale)
+  // The center row of the model is the first week of this month (today)
+  val centerRow = monthTable.rowCount / 2
+  val baseDate = getTopLeftCellDayOfMonth(today, locale)
+  val targetDate = getTopLeftCellDayOfMonth(date, locale)
+  val weeks = ChronoUnit.WEEKS.between(baseDate, targetDate).toInt()
+  val r = monthTable.getCellRect(centerRow + weeks, 0, false)
   r.height = scroll.viewport.viewRect.height
   monthTable.scrollRectToVisible(r)
   scroll.repaint()
 }
 
 private fun updateMonthLabel(
-  localDate: LocalDate,
+  date: LocalDate,
   locale: Locale,
 ) {
-  val fmt = DateTimeFormatter.ofPattern("yyyy / MM")
-  monthLabel.text = localDate.format(fmt.withLocale(locale))
+  monthLabel.text = date.format(MONTH_FORMATTER.withLocale(locale))
 }
 
 private fun getTopLeftCellDayOfMonth(
@@ -166,9 +166,9 @@ private fun getTopLeftCellDayOfMonth(
   locale: Locale,
 ): LocalDate {
   val weekFields = WeekFields.of(locale)
-  val firstDayOfMonth = YearMonth.from(date).atDay(1)
-  val v = firstDayOfMonth[weekFields.dayOfWeek()] - 1
-  return firstDayOfMonth.minusDays(v.toLong())
+  val firstDayOfMonth = date.withDayOfMonth(1)
+  val offset = firstDayOfMonth[weekFields.dayOfWeek()] - 1
+  return firstDayOfMonth.minusDays(offset.toLong())
 }
 
 private fun getDayOfWeekColor(table: JTable, dow: DayOfWeek) = when (dow) {
@@ -179,8 +179,8 @@ private fun getDayOfWeekColor(table: JTable, dow: DayOfWeek) = when (dow) {
 
 private class CalendarViewTableModel(
   date: LocalDate,
-  locale: Locale,
-) : DefaultTableModel() {
+  private val locale: Locale,
+) : AbstractTableModel() {
   private val startDate = date.minusWeeks((WEEK_COUNT / 2).toLong())
   private val weekFields = WeekFields.of(locale)
 
@@ -189,11 +189,11 @@ private class CalendarViewTableModel(
   override fun getColumnName(column: Int): String = weekFields
     .firstDayOfWeek
     .plus(column.toLong())
-    .getDisplayName(TextStyle.SHORT_STANDALONE, Locale.getDefault())
+    .getDisplayName(TextStyle.SHORT_STANDALONE, locale)
 
-  override fun getRowCount() = WEEK_COUNT // week
+  override fun getRowCount() = WEEK_COUNT
 
-  override fun getColumnCount() = DayOfWeek.entries.size // 7
+  override fun getColumnCount() = DayOfWeek.entries.size // 7 days a week
 
   override fun getValueAt(
     row: Int,
