@@ -47,8 +47,7 @@ fun createUI(): Component {
   check.addActionListener { e ->
     val dh = textArea.highlighter as? DefaultHighlighter
     dh?.drawsLayeredHighlights = (e.source as? JCheckBox)?.isSelected == true
-    DocumentUtils.updateHighlight(textArea, field)
-    textArea.select(textArea.selectionStart, textArea.selectionEnd)
+    reapplyHighlights()
   }
 
   field.document.addDocumentListener(HighlightDocumentListener())
@@ -74,6 +73,17 @@ fun createUI(): Component {
   }
 }
 
+// The drawsLayeredHighlights setting is only applied to highlights added
+// after the change, so re-add the search and selection highlights.
+private fun reapplyHighlights() {
+  DocumentUtils.updateHighlight(textArea, field)
+  val caret = textArea.caret
+  val mark = caret.mark
+  val dot = caret.dot
+  caret.dot = mark
+  caret.moveDot(dot) // keeps the selection direction, unlike select(start, end)
+}
+
 private class HighlightDocumentListener : DocumentListener {
   override fun insertUpdate(e: DocumentEvent) {
     DocumentUtils.updateHighlight(textArea, field)
@@ -95,19 +105,23 @@ private object DocumentUtils {
     field.background = Color.WHITE
     val pattern = field.text.trim { it <= ' ' }
     val highlighter = editor.highlighter
-    highlighter.removeAllHighlights()
+    // Remove only the search highlights and keep the selection highlight owned by the Caret
+    highlighter.highlights
+      .filter { it.painter is RoundedHighlightPainter }
+      .forEach { highlighter.removeHighlight(it) }
     if (pattern.isNotEmpty()) {
       val doc = editor.document
       runCatching {
         val text = doc.getText(0, doc.length)
         val matcher = Pattern.compile(pattern).matcher(text)
         val highlightPainter = RoundedHighlightPainter()
-        var pos = 0
-        while (matcher.find(pos) && matcher.group().isNotEmpty()) {
+        // Matcher#find() steps over empty matches by itself, so skip them and keep searching
+        while (matcher.find()) {
           val start = matcher.start()
           val end = matcher.end()
-          highlighter.addHighlight(start, end, highlightPainter)
-          pos = end
+          if (end > start) {
+            highlighter.addHighlight(start, end, highlightPainter)
+          }
         }
       }.onFailure {
         field.background = WARNING_COLOR
@@ -127,16 +141,17 @@ private class RoundedHighlightPainter : DefaultHighlightPainter(Color(0x0, true)
     c: JTextComponent,
   ) {
     runCatching {
+      val mapper = c.ui
+      val p0 = mapper.modelToView(c, offs0)
+      val p1 = mapper.modelToView(c, offs1)
+      // Create the Graphics after modelToView so that it is not leaked on BadLocationException
       val g2 = g.create() as? Graphics2D ?: return
       g2.setRenderingHint(
         RenderingHints.KEY_ANTIALIASING,
         RenderingHints.VALUE_ANTIALIAS_ON,
       )
-      val mapper = c.ui
-      val p0 = mapper.modelToView(c, offs0)
-      val p1 = mapper.modelToView(c, offs1)
       if (p0.y == p1.y) {
-        val s = makeRoundRectangle(p0.union(p1))
+        val s = createRoundRectangle(p0.union(p1))
         g2.color = Color.PINK
         g2.fill(s)
         g2.paint = Color.RED
@@ -174,7 +189,7 @@ private class RoundedHighlightPainter : DefaultHighlightPainter(Color(0x0, true)
         RenderingHints.VALUE_ANTIALIAS_ON,
       )
       g2.paint = Color.ORANGE
-      val r = makeRoundRectangle(s.bounds)
+      val r = createRoundRectangle(s.bounds)
       g2.fill(r)
       g2.paint = Color.RED
       g2.draw(r)
@@ -183,7 +198,7 @@ private class RoundedHighlightPainter : DefaultHighlightPainter(Color(0x0, true)
     return s
   }
 
-  private fun makeRoundRectangle(r: Rectangle): RoundRectangle2D = RoundRectangle2D
+  private fun createRoundRectangle(r: Rectangle): RoundRectangle2D = RoundRectangle2D
     .Float(
       r.x.toFloat(),
       r.y.toFloat(),
