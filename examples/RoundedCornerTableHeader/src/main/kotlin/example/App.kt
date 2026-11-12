@@ -1,7 +1,7 @@
 package example
 
 import java.awt.*
-import java.awt.geom.Path2D
+import java.awt.geom.RoundRectangle2D
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -11,10 +11,13 @@ import java.time.temporal.WeekFields
 import java.util.Locale
 import javax.swing.*
 import javax.swing.plaf.LayerUI
+import javax.swing.table.AbstractTableModel
 import javax.swing.table.DefaultTableCellRenderer
-import javax.swing.table.DefaultTableModel
+import javax.swing.table.JTableHeader
 import kotlin.math.max
 
+private const val HEADER_HEIGHT = 24
+private val MONTH_FORMATTER = DateTimeFormatter.ofPattern("yyyy / MM")
 private val monthLabel = JLabel("", SwingConstants.CENTER)
 private val monthTable = object : JTable() {
   override fun updateUI() {
@@ -28,14 +31,30 @@ private val monthTable = object : JTable() {
     setDefaultRenderer(LocalDate::class.java, CalendarTableRenderer())
   }
 
+  // Fix the header height in the header itself instead of replacing the
+  // JScrollPane column header viewport, which would drop the header on updateUI()
+  override fun createDefaultTableHeader() = object : JTableHeader(columnModel) {
+    override fun getPreferredSize(): Dimension {
+      val d = super.getPreferredSize()
+      d.height = HEADER_HEIGHT
+      return d
+    }
+  }
+
   private fun adjustRowHeights(viewport: JViewport) {
+    if (rowCount == 0) {
+      return
+    }
     val height = viewport.extentSize.height
-    val rowCount = model.rowCount
     val baseRowHeight = height / rowCount
     val remainder = height % rowCount
     for (i in 0..<rowCount) {
-      val adjustedHeight = baseRowHeight + (if (i < remainder) 1 else 0)
-      setRowHeight(i, max(1, adjustedHeight))
+      val adjustedHeight = max(1, baseRowHeight + (if (i < remainder) 1 else 0))
+      // Skip unchanged rows: setRowHeight(...) always revalidates the table,
+      // which would schedule another doLayout() call
+      if (getRowHeight(i) != adjustedHeight) {
+        setRowHeight(i, adjustedHeight)
+      }
     }
   }
 
@@ -43,13 +62,10 @@ private val monthTable = object : JTable() {
 
   override fun doLayout() {
     super.doLayout()
-    val c = SwingUtilities.getAncestorOfClass(JViewport::class.java, this)
-    if (c is JViewport) {
-      adjustRowHeights(c)
-    }
+    (parent as? JViewport)?.also { adjustRowHeights(it) }
   }
 }
-private val monthThemeColor = listOf(
+private val themeColors = listOf(
   Color(0xD5_0B_17),
   Color(0x02_6C_B6),
   Color(0xED_87_AD),
@@ -103,13 +119,6 @@ fun createUI(): Component {
   }
 
   val scroll = JScrollPane(monthTable).also {
-    it.columnHeader = object : JViewport() {
-      override fun getPreferredSize(): Dimension {
-        val d = super.getPreferredSize()
-        d.height = 24
-        return d
-      }
-    }
     it.border = BorderFactory.createEmptyBorder()
     it.viewportBorder = BorderFactory.createEmptyBorder()
     it.viewport.background = Color.WHITE
@@ -126,9 +135,8 @@ fun createUI(): Component {
 
 fun updateMonthView(localDate: LocalDate) {
   currentLocalDate = localDate
-  val color = monthThemeColor[localDate.monthValue - 1]
-  val fmt = DateTimeFormatter.ofPattern("yyyy / MM").withLocale(Locale.getDefault())
-  monthLabel.text = localDate.format(fmt)
+  val color = themeColors[localDate.monthValue - 1]
+  monthLabel.text = localDate.format(MONTH_FORMATTER)
   monthLabel.foreground = color
   monthTable.model = CalendarViewTableModel(localDate)
   monthTable.tableHeader.background = color
@@ -161,9 +169,8 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
       val model = table.model
       val nextWeekDay = value.plusDays(model.columnCount.toLong())
       val isLastRow = row == model.rowCount - 1
-      val nextMonth = YearMonth.from(nextWeekDay).month
-      val curMonth = YearMonth.from(currentLocalDate).month
-      if (isLastRow && nextMonth == curMonth) {
+      // The last row also shows the date of the following week if it is still in the current month
+      if (isLastRow && YearMonth.from(nextWeekDay) == YearMonth.from(currentLocalDate)) {
         val sub = JLabel(nextWeekDay.dayOfMonth.toString()).also {
           updateCellWeekColor(nextWeekDay, it)
           it.font = table.font
@@ -191,9 +198,7 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
     d: LocalDate,
     fgc: Component,
   ) {
-    val month = YearMonth.from(d).month
-    val curMonth = YearMonth.from(currentLocalDate).month
-    if (month == curMonth) {
+    if (YearMonth.from(d) == YearMonth.from(currentLocalDate)) {
       fgc.foreground = getDayOfWeekColor(d.dayOfWeek)
     } else {
       fgc.foreground = Color.GRAY
@@ -208,60 +213,8 @@ private class CalendarTableRenderer : DefaultTableCellRenderer() {
 }
 
 private class RoundedHeaderRenderer : DefaultTableCellRenderer() {
-  private val firstLabel = object : JLabel() {
-    override fun paintComponent(g: Graphics) {
-      val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(
-        RenderingHints.KEY_ANTIALIASING,
-        RenderingHints.VALUE_ANTIALIAS_ON,
-      )
-      val w = width.toDouble()
-      val h = height.toDouble()
-      val p = Path2D.Double()
-      p.moveTo(0.0, ARC)
-      p.quadTo(0.0, 0.0, ARC, 0.0)
-      p.lineTo(w, 0.0)
-      p.lineTo(w, h)
-      p.lineTo(ARC, h)
-      p.quadTo(0.0, h, 0.0, h - ARC)
-      p.closePath()
-      g2.paint = background
-      g2.fill(p)
-      g2.dispose()
-      super.paintComponent(g)
-    }
-  }
-  private val lastLabel = object : JLabel() {
-    override fun paintComponent(g: Graphics) {
-      val g2 = g.create() as? Graphics2D ?: return
-      g2.setRenderingHint(
-        RenderingHints.KEY_ANTIALIASING,
-        RenderingHints.VALUE_ANTIALIAS_ON,
-      )
-      val w = width.toDouble()
-      val h = height.toDouble()
-      val p = Path2D.Double()
-      p.moveTo(0.0, 0.0)
-      p.lineTo(w - ARC, 0.0)
-      p.quadTo(w, 0.0, w, ARC)
-      p.lineTo(w, h - ARC)
-      p.quadTo(w, h, w - ARC, h)
-      p.lineTo(0.0, h)
-      p.closePath()
-      g2.paint = background
-      g2.fill(p)
-      g2.dispose()
-      super.paintComponent(g)
-    }
-  }
-
-  init {
-    firstLabel.isOpaque = false
-    lastLabel.isOpaque = false
-    border = BorderFactory.createEmptyBorder(5, 5, 5, 5)
-    firstLabel.border = BorderFactory.createEmptyBorder(0, 5, 0, 5)
-    lastLabel.border = BorderFactory.createEmptyBorder(0, 5, 0, 5)
-  }
+  private val firstLabel = RoundedCornerLabel(true)
+  private val lastLabel = RoundedCornerLabel(false)
 
   override fun getTableCellRendererComponent(
     table: JTable,
@@ -271,35 +224,63 @@ private class RoundedHeaderRenderer : DefaultTableCellRenderer() {
     row: Int,
     column: Int,
   ): Component {
-    val c = super.getTableCellRendererComponent(
-      table,
-      value,
-      isSelected,
-      hasFocus,
-      row,
-      column,
-    )
-    val l = when (column) {
+    val l: JLabel = when (column) {
       0 -> firstLabel
+
       table.columnCount - 1 -> lastLabel
-      else -> c as? JLabel ?: JLabel()
+
+      else -> super.getTableCellRendererComponent(
+        table,
+        value,
+        isSelected,
+        hasFocus,
+        row,
+        column,
+      ) as? JLabel ?: this
     }
-    l.font = table.font
+    val header = table.tableHeader
     l.text = value?.toString() ?: ""
-    l.foreground = table.tableHeader.foreground
-    l.background = table.tableHeader.background
+    l.font = table.font
+    l.foreground = header.foreground
+    l.background = header.background
     l.horizontalAlignment = CENTER
     return l
   }
+}
+
+private class RoundedCornerLabel(
+  private val leading: Boolean,
+) : JLabel() {
+  override fun updateUI() {
+    super.updateUI()
+    isOpaque = false
+    border = BorderFactory.createEmptyBorder(0, 5, 0, 5)
+  }
+
+  override fun paintComponent(g: Graphics) {
+    val g2 = g.create() as? Graphics2D ?: return
+    g2.setRenderingHint(
+      RenderingHints.KEY_ANTIALIASING,
+      RenderingHints.VALUE_ANTIALIAS_ON,
+    )
+    g2.paint = background
+    // Extend the round rectangle beyond the opposite edge so that
+    // only the corners on the leading (or trailing) side are rounded
+    val x = if (leading) 0.0 else -ARC
+    val w = width + ARC
+    g2.fill(RoundRectangle2D.Double(x, 0.0, w, height.toDouble(), ARC, ARC))
+    g2.dispose()
+    super.paintComponent(g)
+  }
 
   companion object {
-    private const val ARC = 8.0
+    private const val ARC = 16.0
   }
 }
 
 private class CalendarViewTableModel(
   date: LocalDate,
-) : DefaultTableModel() {
+) : AbstractTableModel() {
   private val startDate: LocalDate
   private val weekFields = WeekFields.of(Locale.getDefault())
 
@@ -324,11 +305,6 @@ private class CalendarViewTableModel(
     row: Int,
     column: Int,
   ): Any = startDate.plusDays(row.toLong() * columnCount + column)
-
-  override fun isCellEditable(
-    row: Int,
-    column: Int,
-  ) = false
 }
 
 private class DiagonallySplitCellLayerUI : LayerUI<JPanel>() {
